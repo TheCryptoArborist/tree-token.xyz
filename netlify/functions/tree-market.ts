@@ -26,7 +26,8 @@ export default async (request: Request) => {
     const upstream = await fetch(apiUrl, {
       headers: {
         Accept: 'application/json',
-        'X-API-Key': apiKey,
+        'x-api-key': apiKey,
+        'x-chain': 'sui',
       },
     });
 

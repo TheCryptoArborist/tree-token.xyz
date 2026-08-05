@@ -3,8 +3,17 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>THICKQUIDITY — $TREE</title>
-<meta name="description" content="THICKQUIDITY ($TREE) — stake TREE/SUI LP on SuiFarm and farm Victory at boosted yield." />
+<title>TREE on Sui | NFTree, TreeDrop &amp; Garden Battles</title>
+<meta name="description" content="Official home of TREE on Sui. Explore NFTree minting, TreeDrop holder rewards, Garden Battles, Arboretum coming soon, TREE liquidity, and official ecosystem links." />
+<link rel="canonical" href="https://tree-token.xyz/" />
+<meta name="theme-color" content="#050714" />
+<meta property="og:title" content="TREE on Sui | NFTree, TreeDrop &amp; Garden Battles" />
+<meta property="og:description" content="Official home of TREE on Sui. Explore NFTree minting, TreeDrop holder rewards, Garden Battles, Arboretum coming soon, TREE liquidity, and official ecosystem links." />
+<meta property="og:url" content="https://tree-token.xyz/" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="TREE on Sui | NFTree, TreeDrop &amp; Garden Battles" />
+<meta name="twitter:description" content="Official home of TREE on Sui. Explore NFTree minting, TreeDrop holder rewards, Garden Battles, Arboretum coming soon, TREE liquidity, and official ecosystem links." />
 <link rel="icon" href="thick.png" />
 
 <script type="module" src="scripts/wallet.js"></script>
@@ -13,6 +22,17 @@
 <style>
 *{box-sizing:border-box}
 :root{
+  --ecosystem-bg:#050714;
+  --ecosystem-bg-soft:#09121a;
+  --ecosystem-panel:rgba(9,13,33,0.88);
+  --ecosystem-panel-strong:rgba(3,8,16,0.94);
+  --ecosystem-cyan:#22e7d7;
+  --ecosystem-green:#33f78f;
+  --ecosystem-gold:#ffd84b;
+  --ecosystem-purple:#7041c3;
+  --ecosystem-amber:#ffad32;
+  --ecosystem-text:#f4fbff;
+  --ecosystem-muted:#aeb7cc;
   --emerald:#00e090;
   --emerald-2:#34d399;
   --teal:#00c2b3;
@@ -84,6 +104,7 @@ header{
 .logo img{width:100%;height:100%;object-fit:contain;display:block}
 .brand-title{display:flex;flex-direction:column}
 .brand-title h1{margin:0;font-size:1.02rem;color:var(--gold);letter-spacing:0.06em}
+.brand-title .brand-name{margin:0;font-size:1.02rem;color:var(--ecosystem-gold);letter-spacing:.06em;font-weight:900}
 .brand-title p{margin:0;font-size:0.78rem;color:rgba(225,255,240,0.76)}
 
 .header-actions{
@@ -461,6 +482,7 @@ main{
   margin:0 0 6px;
   color:var(--emerald-2);
 }
+.mission-card h3{margin:0 0 6px;font-size:1rem}
 .mission-card p{margin:0;color:var(--muted)}
 .nft-row{
   display:flex;
@@ -821,11 +843,6 @@ footer{
   letter-spacing:0.3px;
   font-family:inherit;
   transition:transform .18s,box-shadow .18s,background .18s;
-  animation:fab-bounce 2.8s ease-in-out infinite;
-}
-@keyframes fab-bounce{
-  0%,100%{transform:translateY(0);}
-  50%{transform:translateY(-7px);}
 }
 .battle-fab{
   background:linear-gradient(135deg,#22c55e,#16a34a);
@@ -1281,6 +1298,61 @@ footer{
   .hero-title{font-size:1.55rem}
   .hero-sub{font-size:0.86rem}
 }
+/* PHASE 1 ECOSYSTEM POLISH */
+body{color:var(--ecosystem-text);background:var(--ecosystem-bg)}
+body::before{background:radial-gradient(circle at 14% 12%,rgba(51,247,143,.14),transparent 27%),radial-gradient(circle at 86% 16%,rgba(34,231,215,.13),transparent 27%),radial-gradient(circle at 72% 72%,rgba(112,65,195,.12),transparent 32%),linear-gradient(180deg,rgba(5,7,20,.18),rgba(5,7,20,.68)),url('background5.jpg') center/cover no-repeat fixed}
+body::after{background:linear-gradient(180deg,rgba(5,7,20,.12),rgba(5,7,20,.5)),radial-gradient(circle at center,transparent,rgba(5,7,20,.5) 82%)}
+header{background:linear-gradient(180deg,rgba(5,7,20,.94),rgba(5,7,20,.7));border-bottom-color:rgba(34,231,215,.12)}
+.brand-title h1,.section-title,.hero-title,.feature-card h3,.harvest-card h3{color:var(--ecosystem-gold)}
+.brand-title p,.hero-sub,.panel p,.feature-card p,.harvest-card p{color:var(--ecosystem-muted)}
+.panel,.feature-card,.harvest-card,.price-widget{background:var(--ecosystem-panel);border-color:rgba(34,231,215,.12)}
+.hero-shell{background:radial-gradient(circle at top right,rgba(34,231,215,.13),transparent 31%),radial-gradient(circle at bottom left,rgba(51,247,143,.14),transparent 28%),radial-gradient(circle at 74% 70%,rgba(112,65,195,.1),transparent 28%),linear-gradient(155deg,rgba(9,18,26,.92),rgba(5,7,20,.88));border-color:rgba(51,247,143,.16)}
+.hero-kicker{color:var(--ecosystem-green)}
+.hero-stat{background:rgba(9,18,26,.72);border-color:rgba(34,231,215,.12);border-left-color:var(--ecosystem-green)}
+.hero-stat b,.mission-card h3{color:var(--ecosystem-green)}
+.btn:focus-visible,.live-pill:focus-visible,.wallet-btn:focus-visible,.nav-toggle:focus-visible,.fab:focus-visible,.launch-popup__close:focus-visible,.coin-copy:focus-visible,.impact-image-link:focus-visible{outline:3px solid var(--ecosystem-cyan);outline-offset:3px}
+.btn.secondary{color:var(--ecosystem-cyan);border-color:rgba(34,231,215,.35)}
+.btn.purple{color:#ded2ff;border-color:rgba(112,65,195,.62);background:rgba(112,65,195,.18)}
+.panel-note{margin:12px 0 0;color:var(--ecosystem-muted);font-size:.86rem;line-height:1.55}
+.section-intro{margin:0 0 16px;color:var(--ecosystem-muted)}
+.coin-strip{margin-top:20px;padding:18px 20px;border-radius:18px;background:linear-gradient(110deg,rgba(255,216,75,.13),rgba(51,247,143,.09),rgba(34,231,215,.08));border:1px solid rgba(255,216,75,.26);box-shadow:var(--shadow-glow)}
+.coin-strip__top,.coin-strip__actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.coin-strip__top{justify-content:space-between}.coin-strip h2{margin:0;color:var(--ecosystem-gold);font-size:1.15rem}
+.coin-type{display:block;margin:12px 0;padding:11px 13px;border-radius:12px;background:rgba(3,8,16,.72);border:1px solid rgba(34,231,215,.18);color:var(--ecosystem-text);font:700 .82rem/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere;word-break:break-word}
+.network-badge,.status-badge,.supporting-label{display:inline-flex;align-items:center;width:max-content;max-width:100%;border-radius:999px;padding:6px 10px;font-size:.72rem;font-weight:900;letter-spacing:.07em;text-transform:uppercase}
+.network-badge,.status-live{color:#052216;background:rgba(51,247,143,.9)}
+.status-soon{color:#281600;background:var(--ecosystem-amber)}
+.supporting-label{color:#e9e0ff;background:rgba(112,65,195,.22);border:1px solid rgba(112,65,195,.55);white-space:normal}
+.ecosystem-section{margin-top:22px}.ecosystem-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ecosystem-card{display:flex;flex-direction:column;gap:12px;min-width:0;padding:18px;border-radius:18px;background:linear-gradient(155deg,rgba(9,18,26,.92),rgba(9,13,33,.84));border:1px solid rgba(51,247,143,.15)}
+.ecosystem-card.treedrop{border-color:rgba(112,65,195,.5);box-shadow:inset 3px 0 0 rgba(34,231,215,.5)}
+.ecosystem-card h3{margin:0;color:var(--ecosystem-gold);font-size:1.15rem}.ecosystem-card p{margin:0;color:var(--ecosystem-muted);line-height:1.62}.ecosystem-card .card-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+.ecosystem-art{width:100%;height:220px;object-fit:contain;border-radius:14px;background:rgba(3,8,16,.62)}
+.impact-panel{background:radial-gradient(circle at 10% 10%,rgba(51,247,143,.1),transparent 30%),radial-gradient(circle at 90% 90%,rgba(112,65,195,.12),transparent 32%),var(--ecosystem-panel)}
+.impact-grid{display:grid;grid-template-columns:minmax(260px,.85fr) minmax(0,1.15fr);gap:20px;align-items:center}
+.impact-image-link{display:block;border-radius:16px;padding:8px;background:rgba(3,8,16,.72);border:1px solid rgba(255,216,75,.25)}
+.impact-image{display:block;width:100%;max-height:520px;object-fit:contain;border-radius:10px}
+.impact-copy h3{margin:10px 0;color:var(--ecosystem-gold);font-size:clamp(1.35rem,2.5vw,2rem)}
+.impact-copy p{margin:0 0 10px}.historical-note{padding-left:12px;border-left:3px solid var(--ecosystem-purple);font-size:.86rem}
+.nft-row{align-items:flex-start}.nft-copy p{margin:0 0 9px}.card-actions,.join-actions{display:flex;gap:9px;flex-wrap:wrap}
+.footer-risk{max-width:900px;margin:14px auto 0;color:var(--ecosystem-muted);font-size:.82rem;line-height:1.6}
+.launch-popup__card{background:radial-gradient(circle at top right,rgba(34,231,215,.18),transparent 38%),radial-gradient(circle at bottom left,rgba(112,65,195,.18),transparent 42%),linear-gradient(160deg,var(--ecosystem-panel-strong),rgba(9,18,26,.98));border-color:rgba(51,247,143,.24)}
+.launch-popup__visual{background:radial-gradient(circle at 20% 0,rgba(51,247,143,.2),transparent 55%),radial-gradient(circle at 80% 100%,rgba(112,65,195,.2),transparent 52%),var(--ecosystem-panel-strong)}
+.launch-popup__pill-row{display:grid;grid-template-columns:1fr;gap:8px}.launch-pill{padding:9px 10px}.launch-popup__actions{gap:8px}.launch-popup__footerline{line-height:1.5}
+.fab{animation:none}.fab:hover{transform:translateY(-4px) scale(1.02)}
+.price-source{font-size:.76rem;color:var(--ecosystem-cyan)}
+@media(max-width:900px){.ecosystem-grid{grid-template-columns:1fr}.impact-grid{grid-template-columns:1fr}.impact-image-link{max-width:620px;margin:0 auto}.deck{grid-template-columns:1fr}}
+@media(max-width:768px){
+  body{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+  main{padding-bottom:28px}.hero-actions{flex-direction:row}.hero-actions .btn{flex:1 1 150px;justify-content:center}
+  .launch-popup__card{max-height:calc(100vh - 24px);overflow-y:auto;margin:12px auto}.launch-popup__content{padding-top:58px}
+  .fab-group{left:8px;right:8px;bottom:8px;min-height:56px;padding:6px;padding-bottom:calc(6px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;align-items:stretch;background:rgba(3,8,16,.96);border:1px solid rgba(51,247,143,.22);border-radius:16px;box-shadow:0 16px 60px rgba(0,0,0,.65);backdrop-filter:blur(14px)}
+  .fab{width:100%;min-width:0;min-height:48px;justify-content:center;padding:8px 6px;border-radius:11px;font-size:.82rem;white-space:nowrap}.fab:hover{transform:none}
+  .scroll-top{bottom:calc(84px + env(safe-area-inset-bottom));right:12px}
+  footer{padding-bottom:24px}.nft-row{flex-direction:column}.nft-thumb{width:120px}.ecosystem-art{height:190px}
+}
+@media(max-width:390px){.fab{font-size:.76rem}.hero-actions .btn{flex-basis:100%}.coin-strip{padding:15px}.ecosystem-card{padding:15px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
 </style>
 </head>
 <body>
@@ -1299,10 +1371,10 @@ footer{
 <header>
   <div class="header-inner" role="banner">
     <div class="brand-wrap">
-      <div class="logo"><img src="thick.png" alt="$TREE logo"></div>
+      <div class="logo"><img src="thick.png" alt="TREE ecosystem logo"></div>
       <div class="brand-title">
-        <h1>THICKQUIDITY</h1>
-        <p>$TREE</p>
+        <div class="brand-name">THICKQUIDITY</div>
+        <p>TREE on Sui</p>
       </div>
     </div>
 
@@ -1328,8 +1400,9 @@ footer{
           LIVE
         </button>
         <a href="#about">About</a>
-        <a href="#tokenomics">Tokenomics</a>
-        <a href="#nfts" class="nav-nft">🌳 NFTREE</a>
+        <a href="#ecosystem">Ecosystem</a>
+        <a href="#nftree" class="nav-nft">NFTree</a>
+        <a href="#impact">Impact</a>
         <a href="#litepaper">Litepaper</a>
         <a href="#join">Join</a>
       </nav>
@@ -1348,49 +1421,47 @@ footer{
     <div class="launch-popup__content">
       <div class="launch-popup__eyebrow">
         <span class="launch-dot"></span>
-        <span class="launch-popup__eyebrow-label">NEW ERA FOR $TREE</span>
+        <span class="launch-popup__eyebrow-label">TREE ECOSYSTEM UPDATE</span>
       </div>
 
-      <h2 id="launch-title">🌳 NFTREE Mint & ⚔️ Garden Battle are LIVE</h2>
+      <h2 id="launch-title">NFTree Minting, TreeDrop Rewards &amp; Garden Battles Are Live</h2>
 
       <p class="launch-popup__lead">
-        Step into the $TREE forest with on-chain NFTs and a live battle arena.
-        Mint your NFTREEs, send them into combat, and grow your stake in the ecosystem.
+        Mint an NFTree, check eligible holder rewards through TreeDrop, and enter Garden Battles through one connected ecosystem on Sui.
       </p>
 
       <div class="launch-popup__pill-row">
         <div class="launch-pill">
           <div class="launch-pill-ico">🌱</div>
           <div>
-            <h3>Mint your NFTREE</h3>
-            <p>Claim your spot in the Arboretum, unlock reward streams, and fuel $TREE buybacks while supporting treefund.org.</p>
+            <h3>NFTree Minting — Live</h3>
+            <p>Mint from the active NFTree sales pool.</p>
           </div>
         </div>
         <div class="launch-pill">
           <div class="launch-pill-ico">⚔️</div>
           <div>
-            <h3>Enter Garden Battle</h3>
-            <p>Deploy your NFTREEs into battle, climb the leaderboard, and flex your liquidity roots in the arena.</p>
+            <h3>TreeDrop Rewards — Live</h3>
+            <p>Connect the wallet holding your NFTrees and check active reward distributions.</p>
+          </div>
+        </div>
+        <div class="launch-pill">
+          <div class="launch-pill-ico" aria-hidden="true">⚔️</div>
+          <div>
+            <h3>Garden Battles — Live</h3>
+            <p>Use an NFTree in the live battle arena.</p>
           </div>
         </div>
       </div>
 
       <div class="launch-popup__actions">
-        <button class="launch-btn-primary" id="go-mint">
-          🌳 Go to NFT Mint
-        </button>
-
-        <button class="launch-btn-ghost" id="popup-buy-tree">
-          🌿 Buy $TREE
-        </button>
-
-        <button class="launch-btn-ghost" id="go-battle">
-          ⚔️ Enter Garden Battle
-        </button>
+        <a class="launch-btn-primary" id="go-mint" href="https://nftree.net/mint" target="_blank" rel="noopener noreferrer">Mint NFTree</a>
+        <a class="launch-btn-ghost" id="go-rewards" href="https://treedrop.xyz" target="_blank" rel="noopener noreferrer">Check Rewards</a>
+        <a class="launch-btn-ghost" id="go-battle" href="https://nftree.net/battle" target="_blank" rel="noopener noreferrer">Play Garden Battles</a>
       </div>
 
       <div class="launch-popup__footerline">
-        Built for early arborists — the deeper you go into the forest, the bigger your harvest.
+        Arboretum is coming soon with 100-day TREE payout cycles and expanded participation for holders using multiple NFTrees.
       </div>
     </div>
 
@@ -1400,11 +1471,10 @@ footer{
       <div class="launch-popup__visual-orbit"></div>
       <div class="launch-popup__visual-tag">
         <span class="seed"></span>
-        LIVE FOREST
+        ECOSYSTEM LIVE
       </div>
       <div class="launch-popup__visual-note">
-        <strong>Tip:</strong> Mint a few NFTREEs, stake them deep into the Arboretum,
-        then send your favorites into the Garden Battle to prove your bark and your bite.
+        <strong>Live now:</strong> NFTree minting, TreeDrop reward checks, and Garden Battles.
       </div>
     </div>
   </div>
@@ -1415,74 +1485,77 @@ footer{
   <section class="hero-shell">
     <div class="hero-grid">
       <div class="hero-copy">
-        <div class="hero-kicker"><span class="seed"></span> SUI ECOSYSTEM • THICK LIQUIDITY • LIVE FARMING</div>
-        <h1 class="hero-title" id="about">Planting the seeds to financial freedom on the SUI network.</h1>
+        <div class="hero-kicker"><span class="seed"></span> TREE • NFTREE • REWARDS • GAMES ON SUI</div>
+        <h1 class="hero-title" id="about">The TREE utility ecosystem is growing on Sui.</h1>
         <p class="hero-sub">
-          Join the $TREE movement — a fair launch ecosystem with real utility, thick liquidity, NFT expansion,
-          and a powerful new farming path through TREE/SUI LP on SuiFarm.
+          Trade TREE, mint NFTrees, claim eligible rewards through TreeDrop, and compete in Garden Battles through one connected ecosystem.
         </p>
 
         <div class="hero-stats">
           <div class="hero-stat">
-            <b>TREE/SUI LP</b>
-            <span>Now active for early harvesters</span>
+            <b>TREE / SUI</b>
+            <span>Token and liquidity access across recognized Sui markets</span>
           </div>
           <div class="hero-stat">
-            <b>Victory Farming</b>
-            <span>Boosted yield for ecosystem believers</span>
+            <b>NFTree</b>
+            <span>Minting, holder rewards, games, identity, and future utility</span>
           </div>
           <div class="hero-stat">
-            <b>SUI Native</b>
-            <span>Fast execution with low-cost participation</span>
+            <b>Live on Sui</b>
+            <span>TreeDrop rewards and Garden Battles are active now</span>
           </div>
         </div>
 
         <div class="hero-actions">
-          <a class="btn nft-primary" href="https://nftree.net/mint" target="_blank" rel="noopener noreferrer">🌳 Buy NFT</a>
-          <button class="btn hero-primary" onclick="openSwapModal()">🌿 Buy $TREE Now</button>
-          <a class="btn secondary" href="https://farm.suidex.org/farm" target="_blank" rel="noopener noreferrer">🚜 Stake LP on SuiFarm</a>
-          <a class="btn" href="#litepaper">📘 View Litepaper</a>
+          <button class="btn hero-primary js-buy-tree" type="button">Buy TREE</button>
+          <a class="btn nft-primary" href="https://nftree.net/mint" target="_blank" rel="noopener noreferrer">Mint NFTree</a>
+          <a class="btn purple" href="https://treedrop.xyz" target="_blank" rel="noopener noreferrer">Check Rewards</a>
+          <a class="btn secondary" href="https://nftree.net/battle" target="_blank" rel="noopener noreferrer">Play Garden Battles</a>
         </div>
       </div>
 
       <div class="hero-side">
         <div class="feature-card">
-          <h3>Thick liquidity. Real expansion.</h3>
-          <p>
-            The TREE ecosystem is entering its biggest growth phase yet — connecting token utility, LP farming,
-            community momentum, and future NFT-driven benefits into one stronger on-chain experience.
-          </p>
+          <h3>What’s Live</h3>
+          <p>One connected set of TREE utilities, with clear paths for token users and NFTree holders.</p>
         </div>
 
         <div class="harvest-card">
-          <h3>🔥 Join the Harvest</h3>
+          <h3>Available Across the Ecosystem</h3>
           <div class="harvest-steps">
             <div class="harvest-step">
               <div class="ic">🌿</div>
               <div>
-                <strong>Buy TREE</strong>
-                <span><a href="https://dex.suidex.org/" target="_blank" rel="noopener noreferrer">dex.suidex.org</a></span>
+                <strong>TREE markets and liquidity</strong>
+                <span>Access recognized Sui markets</span>
               </div>
             </div>
             <div class="harvest-step">
               <div class="ic">💧</div>
               <div>
-                <strong>Add TREE/SUI liquidity</strong>
-                <span>Provide LP to enter the next stage</span>
+                <strong>NFTree minting</strong>
+                <span>Active sales pool</span>
               </div>
             </div>
             <div class="harvest-step">
               <div class="ic">🚜</div>
               <div>
-                <strong>Stake LP on SuiFarm</strong>
-                <span><a href="https://farm.suidex.org/farm" target="_blank" rel="noopener noreferrer">farm.suidex.org/farm</a></span>
+                <strong>TreeDrop holder rewards</strong>
+                <span>Check active distributions</span>
               </div>
             </div>
             <div class="harvest-step">
               <div class="ic">🏆</div>
               <div>
-                <strong>Farm Victory nonstop</strong>
-                <span>Built for the earliest believers to win massively</span>
+                <strong>Garden Battles</strong>
+                <span>Live NFTree battle arena</span>
+              </div>
+            </div>
+            <div class="harvest-step">
+              <div class="ic" aria-hidden="true">🏛️</div>
+              <div>
+                <strong>Arboretum — Coming Soon</strong>
+                <span>Planned 100-day TREE cycles</span>
               </div>
             </div>
           </div>
@@ -1491,66 +1564,124 @@ footer{
     </div>
   </section>
 
+  <section class="coin-strip" aria-labelledby="coin-type-title">
+    <div class="coin-strip__top">
+      <h2 id="coin-type-title">Official TREE Coin Type</h2>
+      <span class="network-badge">Sui Mainnet</span>
+    </div>
+    <code class="coin-type" id="tree-coin-type">0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE</code>
+    <div class="coin-strip__actions">
+      <button class="btn coin-copy" id="copy-coin-type" type="button">Copy Coin Type</button>
+      <a class="btn secondary" href="https://noodles.fi/coins/0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE?trade=market" target="_blank" rel="noopener noreferrer">View Market Data</a>
+    </div>
+  </section>
+
+  <section class="panel ecosystem-section" id="ecosystem" aria-labelledby="ecosystem-title">
+    <h2 class="section-title" id="ecosystem-title">Explore the TREE Ecosystem</h2>
+    <p class="section-intro">TREE connects a growing set of live and planned products across rewards, NFTs, games, liquidity, and real-world impact.</p>
+    <div class="ecosystem-grid">
+      <article class="ecosystem-card">
+        <span class="status-badge status-live">Live</span>
+        <h3>NFTree</h3>
+        <p>Mint an NFTree from the active sales pool or select a listed NFTree through TradePort. NFTrees provide access to holder rewards, Garden Battles, identity features, and future TREE utilities.</p>
+        <div class="card-actions"><a class="btn nft-primary" href="https://nftree.net/mint" target="_blank" rel="noopener noreferrer">Mint NFTree</a><a class="btn secondary" href="https://nftree.net" target="_blank" rel="noopener noreferrer">Explore NFTree</a></div>
+      </article>
+      <article class="ecosystem-card treedrop">
+        <span class="status-badge status-live">Live</span>
+        <h3>TreeDrop</h3>
+        <p>Connect the wallet holding your NFTrees to check active reward distributions. Eligible NFTrees can claim SUI, TREE, and configured community-token rewards through protected distribution rounds.</p>
+        <p class="panel-note">Each eligible NFTree can claim once per applicable reward round.</p>
+        <div class="card-actions"><a class="btn purple" href="https://treedrop.xyz" target="_blank" rel="noopener noreferrer">Check NFTree Rewards</a></div>
+      </article>
+      <article class="ecosystem-card">
+        <span class="status-badge status-live">Live</span>
+        <h3>Garden Battles</h3>
+        <p>Use your NFTree in the live battle arena. Compete in supported game modes, build your battle record, and participate in NFTree-based leaderboard and badge systems.</p>
+        <div class="card-actions"><a class="btn secondary" href="https://nftree.net/battle" target="_blank" rel="noopener noreferrer">Play Garden Battles</a></div>
+      </article>
+      <article class="ecosystem-card">
+        <span class="status-badge status-soon">Coming Soon</span>
+        <h3>Arboretum</h3>
+        <img class="ecosystem-art" src="assets/arboretum-promo.png" loading="lazy" decoding="async" alt="Arboretum NFTree utility promotional artwork showing planned 100-day TREE cycles">
+        <p>Arboretum will introduce 100-day TREE payout cycles for NFTree holders. Participating with multiple NFTrees will produce a larger total Arboretum payout.</p>
+        <span class="supporting-label">Coming Soon • NFTree Utility • 100-Day TREE Cycles</span>
+        <div class="card-actions"><a class="btn nft-primary" href="https://nftree.net/#utility" target="_blank" rel="noopener noreferrer">Explore NFTree Utility</a></div>
+      </article>
+    </div>
+  </section>
+
   <div class="deck">
     <div>
       <section class="panel" aria-labelledby="about-copy">
-        <h2 id="about-copy" class="section-title">About $TREE</h2>
+        <h2 id="about-copy" class="section-title">About TREE</h2>
         <p style="margin:0 0 8px;color:var(--muted)">
-          THICKQUIDITY ($TREE) is a community-driven DeFi token on the SUI blockchain, offering staking rewards,
-          NFT utility, and a liquidity-first ecosystem designed to grow with its holders.
+          TREE is the utility token at the center of the Thickquidity ecosystem on Sui. It connects liquidity, NFTree access, holder reward infrastructure, games, and future applications through a growing set of independently usable products.
         </p>
         <p style="margin:0;color:var(--muted)">
-          Built on SUI's high-speed, low-cost infrastructure, $TREE is focused on sustainable growth, real participation,
-          and stronger on-chain utility through trading, LP farming, and future ecosystem expansion.
+          The ecosystem currently includes NFTree minting, TreeDrop holder rewards, Garden Battles, TREE liquidity across recognized Sui markets, and future utilities including Arboretum and TREE Prediction Games.
         </p>
       </section>
 
-      <section class="panel" id="tokenomics" style="margin-top:18px">
-        <h2 class="section-title">Tokenomics of $TREE</h2>
+      <section class="panel" id="token-facts" style="margin-top:18px">
+        <h2 class="section-title">TREE Token Facts</h2>
         <div class="grid">
-          <div class="stat"><span class="num">1B</span>Total $TREE Supply</div>
-          <div class="stat"><span class="num">NFTrees</span>Utility NFTs in development</div>
-          <div class="stat"><span class="num">SUI-Powered</span>Fast, scalable blockchain</div>
-          <div class="stat"><span class="num">Staking</span>Earn passive income in DeFi pools</div>
+          <div class="stat"><span class="num">1,000,000,000 TREE</span>Total supply</div>
+          <div class="stat"><span class="num">60.35M TREE</span>Effectively removed from circulation</div>
+          <div class="stat"><span class="num">54.53M TREE</span>Locked in Moonbags Treasury</div>
+          <div class="stat"><span class="num">Sui Mainnet</span>Native network</div>
         </div>
-        <p style="margin-top:12px;color:var(--muted)">
-          Total Supply: 1,000,000,000 $TREE tokens — building a strong foundation for ecosystem growth, liquidity participation, and future utility.
-        </p>
+        <p class="panel-note">Supply-removal and Moonbags lock figures are based on the June 22, 2026 project snapshot. “Effectively removed from circulation” does not mean the contract supply was reduced.</p>
       </section>
 
       <section class="panel" style="margin-top:18px">
         <h2 class="section-title">Our Mission</h2>
         <div class="mission-grid">
           <div class="mission-card">
-            <h4>Growth</h4>
-            <p>Empower financial prosperity through DeFi on SUI. Stake, trade, and grow with thick liquidity.</p>
+            <h3>Utility</h3>
+            <p>Connect TREE with usable applications, rewards infrastructure, NFTs, liquidity, and games.</p>
           </div>
           <div class="mission-card">
-            <h4>Ecosystem</h4>
-            <p>Build a robust environment where $TREE's liquidity supports stability, expansion, and shared upside.</p>
+            <h3>Community</h3>
+            <p>Give holders clear paths to participate through NFTree, TreeDrop, Garden Battles, and ecosystem events.</p>
           </div>
           <div class="mission-card">
-            <h4>Sustainability</h4>
-            <p>Focus on long-term wealth with transparent blockchain participation and durable utility.</p>
+            <h3>Real-World Impact</h3>
+            <p>Direct 5% of NFTree sale proceeds to TREE Fund in support of arboricultural research and education.</p>
           </div>
         </div>
       </section>
 
-      <section class="panel" id="nfts" style="margin-top:18px">
-        <h2 class="section-title">🌳 NFTREE — $TREE NFTs</h2>
+      <section class="panel" id="nftree" style="margin-top:18px">
+        <h2 class="section-title">NFTree — Access to the TREE Ecosystem</h2>
         <div class="nft-row">
-          <div class="nft-thumb"><img src="tree.jpg" alt="$TREE NFT Preview"></div>
-          <div>
-            <p style="margin:0 0 8px;color:var(--muted)">
-              $TREE NFTs unlock monthly SUI airdrops from staking pools, with 80% of sales fueling $TREE buybacks and 5% donated to treefund.org.
-            </p>
-            <p style="margin:0 0 8px;color:var(--muted)">
-              Holders also gain access to future ecosystem perks and gaming opportunities as NFT utility expands.
-            </p>
-            <p style="margin:0 0 12px;color:var(--gold);font-weight:800;font-size:0.95rem;line-height:1.55;border-left:3px solid rgba(255,209,102,0.5);padding-left:10px;">
-              🏛️ <strong>Arboretum</strong> — The Arboretum staking vault requires multiple NFTREEs to stake simultaneously. The more NFTs you hold and stake, the larger your payout each 100-day cycle in $TREE. Maximum yields are reserved for those who go deepest into the forest.
-            </p>
-            <a class="btn nft-primary" href="https://nftree.net/mint" target="_blank" rel="noopener noreferrer">🌳 Learn More &amp; Mint NFT</a>
+          <div class="nft-thumb"><img src="tree.jpg" alt="NFTree collection preview artwork"></div>
+          <div class="nft-copy">
+            <p>NFTree minting is live at a current mint price of 25 SUI. NFTrees can qualify for TreeDrop reward distributions and provide access to Garden Battles.</p>
+            <p>Arboretum and TREE Prediction Games are planned future utilities. Five percent of NFTree sale proceeds is allocated to TREE Fund.</p>
+            <p>NFTrees are not upgradeable in place; artwork and rarity are established at mint.</p>
+            <div class="card-actions">
+              <a class="btn nft-primary" href="https://nftree.net/mint" target="_blank" rel="noopener noreferrer">Mint NFTree</a>
+              <a class="btn secondary" href="https://www.tradeport.xyz/sui/collection/0xf6c6d439ea0da2f3e9ba79e4992a7a4c113215fbf54c442ac9020c315f953705::collection::NFT?tab=items" target="_blank" rel="noopener noreferrer">View NFTree Marketplace</a>
+              <a class="btn purple" href="https://treedrop.xyz" target="_blank" rel="noopener noreferrer">Check TreeDrop Rewards</a>
+              <a class="btn secondary" href="https://nftree.net/battle" target="_blank" rel="noopener noreferrer">Play Garden Battles</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel impact-panel" id="impact" style="margin-top:18px" aria-labelledby="impact-title">
+        <div class="impact-grid">
+          <a class="impact-image-link" href="assets/tree-fund-first-donation.png" target="_blank" rel="noopener noreferrer" aria-label="Open the full-resolution TREE Fund donation acknowledgment">
+            <img class="impact-image" src="assets/tree-fund-first-donation.png" loading="lazy" decoding="async" alt="Official TREE Fund donation acknowledgment dated May 23, 2026">
+          </a>
+          <div class="impact-copy">
+            <span class="status-badge status-live">First TREE Fund Donation Completed</span>
+            <h2 class="section-title" id="impact-title">Real-World Impact</h2>
+            <h3>NFTree growth supports arboricultural research.</h3>
+            <p>On May 23, 2026, the Thickquidity and NFTree community completed its first documented contribution to TREE Fund. The official acknowledgment records a $103.00 gift plus $4.05 in processing support, for a total contribution of $107.05.</p>
+            <p>The receipt identifies the contribution as representing 5% of NFTree sales. Five percent of NFTree sale proceeds continues to be allocated to TREE Fund in support of research, scholarships, and community-engagement programs.</p>
+            <p class="historical-note">The receipt is preserved as issued and displays the project’s former tree-token.net domain. Tree-token.xyz is the current official TREE website.</p>
+            <div class="card-actions"><a class="btn hero-primary" href="https://treefund.org" target="_blank" rel="noopener noreferrer">Learn About TREE Fund</a><a class="btn secondary" href="https://nftree.net" target="_blank" rel="noopener noreferrer">Explore NFTree</a></div>
           </div>
         </div>
       </section>
@@ -1567,29 +1698,30 @@ footer{
       </section>
 
       <section class="panel" style="margin-top:18px">
-        <h2 class="section-title">Social Outreach Utility</h2>
+        <h2 class="section-title">Community &amp; Updates</h2>
         <p style="margin:0 0 6px;color:var(--muted)">
-          Join @thecryptoarborist on YouTube for explosive $TREE content, deep dives into DeFi, SUI blockchain developments, and ecosystem growth.
+          Follow TREE updates, Sui ecosystem coverage, development progress, and community announcements across the project’s official channels.
         </p>
         <div class="social-row">
           <a class="btn" href="https://x.com/thickquidity" target="_blank" rel="noopener noreferrer">X</a>
           <a class="btn" href="https://www.youtube.com/@thecryptoarborist" target="_blank" rel="noopener noreferrer">YouTube</a>
           <a class="btn" href="https://t.me/thickquidity" target="_blank" rel="noopener noreferrer">Telegram</a>
-          <a class="btn secondary" href="https://sui.io" target="_blank" rel="noopener noreferrer">SUI Network</a>
+          <a class="btn secondary" href="https://sui.io" target="_blank" rel="noopener noreferrer">Sui</a>
           <a class="btn secondary" href="https://dex.suidex.org/" target="_blank" rel="noopener noreferrer">SuiDex</a>
         </div>
       </section>
 
       <section class="panel" id="join" style="margin-top:18px">
-        <h2 class="section-title">Join the $TREE Forest</h2>
+        <h2 class="section-title">Join the TREE Ecosystem</h2>
         <p style="margin:0 0 12px;color:var(--muted)">
-          Stake your $TREE, build LP, and take part in a growing ecosystem designed for strong community participation and long-term upside.
+          Choose the part of the ecosystem that fits your interests: trade TREE, mint an NFTree, check holder rewards, play Garden Battles, or provide TREE/SUI liquidity.
         </p>
-        <div style="display:flex;gap:12px;flex-wrap:wrap">
-          <button class="btn hero-primary" onclick="openSwapModal()">🌿 BUY $TREE</button>
-          <a class="btn" href="https://app.turbos.finance/#/trade?input=0x2::sui::SUI&output=0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE" target="_blank" rel="noopener noreferrer">Turbos</a>
-          <a class="btn secondary" href="https://farm.suidex.org/farm" target="_blank" rel="noopener noreferrer">Stake LP</a>
-          <a class="btn secondary" href="https://zapper.xyz/token/sui/0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE" target="_blank" rel="noopener noreferrer">📊 Zapper</a>
+        <div class="join-actions">
+          <button class="btn hero-primary js-buy-tree" type="button">Buy TREE</button>
+          <a class="btn nft-primary" href="https://nftree.net/mint" target="_blank" rel="noopener noreferrer">Mint NFTree</a>
+          <a class="btn purple" href="https://treedrop.xyz" target="_blank" rel="noopener noreferrer">Check Rewards</a>
+          <a class="btn secondary" href="https://nftree.net/battle" target="_blank" rel="noopener noreferrer">Play Garden Battles</a>
+          <a class="btn secondary" href="https://farm.suidex.org/farm" target="_blank" rel="noopener noreferrer">Provide Liquidity</a>
         </div>
       </section>
     </div>
@@ -1598,37 +1730,34 @@ footer{
     <aside class="aside">
       <div class="panel" style="display:flex;flex-direction:column;gap:12px">
         <div class="price-widget" id="price-widget" aria-live="polite">
-          <h4>$TREE Price</h4>
+          <h4>TREE Price</h4>
           <div style="display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px">
             <div class="price-big" id="price-value">—</div>
             <div id="price-change" class="price-change">—</div>
             <div id="price-meta" style="font-size:0.85rem;color:rgba(225,255,240,0.85)">Loading…</div>
-          </div>
-          <div style="display:flex;gap:8px;margin-top:12px;justify-content:center;flex-wrap:wrap">
-            <button class="btn" onclick="openSwapModal()">🌿 Buy</button>
-            <a class="btn secondary" href="https://farm.suidex.org/farm" target="_blank" rel="noopener noreferrer">Stake LP</a>
-            <a class="btn" href="https://noodles.fi/coins/0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE?trade=market" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem">🍜 Noodles.fi</a>
+            <div class="price-source">Data from Noodles.fi</div>
           </div>
         </div>
 
         <div class="panel" style="padding:12px">
           <div style="font-weight:800;color:var(--gold);margin-bottom:8px">Quick Links</div>
           <div style="display:flex;flex-direction:column;gap:8px">
-            <button class="btn" onclick="openSwapModal()">🌿 Buy TREE (Swap)</button>
-            <a class="btn secondary" href="https://app.turbos.finance/#/trade?input=0x2::sui::SUI&output=0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE" target="_blank" rel="noopener noreferrer">Buy (Turbos)</a>
-            <a class="btn nft-primary" href="https://nftree.net/mint" target="_blank" rel="noopener noreferrer" style="font-size:0.88rem">🌳 Mint NFTREE</a>
-            <a class="btn" href="https://farm.suidex.org/farm" target="_blank" rel="noopener noreferrer">Stake LP (SuiFarm)</a>
-            <a class="btn secondary" href="https://zapper.xyz/token/sui/0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE" target="_blank" rel="noopener noreferrer">📊 Portfolio (Zapper)</a>
+            <button class="btn js-buy-tree" type="button">Buy TREE</button>
+            <a class="btn nft-primary" href="https://nftree.net/mint" target="_blank" rel="noopener noreferrer">Mint NFTree</a>
+            <a class="btn purple" href="https://treedrop.xyz" target="_blank" rel="noopener noreferrer">Check TreeDrop Rewards</a>
+            <a class="btn secondary" href="https://nftree.net/battle" target="_blank" rel="noopener noreferrer">Play Garden Battles</a>
+            <a class="btn" href="https://farm.suidex.org/farm" target="_blank" rel="noopener noreferrer">Stake TREE/SUI LP</a>
+            <a class="btn secondary" href="https://noodles.fi/coins/0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE?trade=market" target="_blank" rel="noopener noreferrer">View Noodles Market Data</a>
           </div>
         </div>
 
         <div class="panel" style="padding:12px">
           <div style="font-weight:800;color:var(--gold);margin-bottom:8px">Stats</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-            <div style="padding:8px;background:rgba(255,255,255,0.02);border-radius:8px"><strong style="color:var(--emerald-2)">Market</strong><div style="font-size:0.85rem">$TREE</div></div>
-            <div style="padding:8px;background:rgba(255,255,255,0.02);border-radius:8px"><strong style="color:var(--emerald-2)">LP</strong><div style="font-size:0.85rem">TREE/SUI</div></div>
-            <div style="padding:8px;background:rgba(255,255,255,0.02);border-radius:8px"><strong style="color:var(--emerald-2)">Farm</strong><div style="font-size:0.85rem">SuiFarm</div></div>
-            <div style="padding:8px;background:rgba(255,255,255,0.02);border-radius:8px"><strong style="color:var(--emerald-2)">Donations</strong><div style="font-size:0.85rem">5% → treefund.org</div></div>
+            <div style="padding:8px;background:rgba(255,255,255,0.02);border-radius:8px"><strong style="color:var(--emerald-2)">Network</strong><div style="font-size:0.85rem">Sui</div></div>
+            <div style="padding:8px;background:rgba(255,255,255,0.02);border-radius:8px"><strong style="color:var(--emerald-2)">Token</strong><div style="font-size:0.85rem">TREE</div></div>
+            <div style="padding:8px;background:rgba(255,255,255,0.02);border-radius:8px"><strong style="color:var(--emerald-2)">NFT Utility</strong><div style="font-size:0.85rem">NFTree</div></div>
+            <div style="padding:8px;background:rgba(255,255,255,0.02);border-radius:8px"><strong style="color:var(--emerald-2)">Impact</strong><div style="font-size:0.85rem">5% to TREE Fund</div></div>
           </div>
           <a href="https://www.coingecko.com/en/coins/thickquidity" target="_blank" rel="noopener noreferrer" class="cg-badge" style="margin-top:8px">
             <img src="assets/CG.png" alt="CoinGecko">
@@ -1643,8 +1772,10 @@ footer{
 <!-- FOOTER -->
 <footer>
   <div style="max-width:1200px;margin:0 auto">
-    <p>© <span id="year"></span> THICKQUIDITY ($TREE). All rights reserved.</p>
-    <p style="margin-top:6px">Growing the future of finance, one branch at a time.</p>
+    <p>© <span id="year"></span> THICKQUIDITY (TREE). All rights reserved.</p>
+    <p style="margin-top:6px">Growing utility across TREE, NFTree, rewards, games, and the Sui ecosystem.</p>
+    <p class="footer-risk">TREE and related ecosystem products involve blockchain, digital-asset, smart-contract, liquidity, and transaction risk. Prices can fluctuate substantially. Always verify the official TREE coin type and review transaction details before signing. Nothing on this website is financial advice.</p>
+    <p class="panel-note">Official website: <a href="https://tree-token.xyz/">tree-token.xyz</a></p>
     <div style="margin-top:8px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
       <a class="btn" href="https://dex.suidex.org/" target="_blank" rel="noopener noreferrer">SuiDex</a>
       <a class="btn" href="https://farm.suidex.org/farm" target="_blank" rel="noopener noreferrer">SuiFarm</a>
@@ -1662,15 +1793,9 @@ footer{
 
 <!-- FAB GROUP -->
 <div class="fab-group">
-  <a class="fab battle-fab" href="https://nftree.net/battle" target="_blank" rel="noopener noreferrer" aria-label="Enter Garden Battle">
-    ⚔️ Battle
-  </a>
-  <a class="fab mint-fab" href="https://nftree.net/mint" target="_blank" rel="noopener noreferrer" aria-label="Mint NFTREE">
-    🌳 Mint NFT
-  </a>
-  <button class="fab buy-fab" onclick="openSwapModal()" aria-label="Buy $TREE">
-    🌿 Buy $TREE
-  </button>
+  <button class="fab buy-fab js-buy-tree" type="button" aria-label="Buy TREE">Buy</button>
+  <a class="fab mint-fab" href="https://nftree.net/mint" target="_blank" rel="noopener noreferrer" aria-label="Mint NFTree">Mint</a>
+  <a class="fab battle-fab" href="https://nftree.net/battle" target="_blank" rel="noopener noreferrer" aria-label="Play Garden Battles">Battle</a>
 </div>
 
 <!-- SWAP MODAL -->
@@ -1818,40 +1943,55 @@ const launchPopupClose    = document.getElementById('launch-popup-close');
 const launchPopupBackdrop = document.getElementById('launch-popup-backdrop');
 const reopenLaunchPopup   = document.getElementById('reopen-launch-popup');
 const goMintBtn           = document.getElementById('go-mint');
+const goRewardsBtn        = document.getElementById('go-rewards');
 const goBattleBtn         = document.getElementById('go-battle');
-const popupBuyTreeBtn     = document.getElementById('popup-buy-tree');
+const launchDismissKey    = 'tree.launchPopupDismissedAt';
+const launchDismissMs     = 7 * 24 * 60 * 60 * 1000;
+let launchPopupTrigger    = null;
 
-function openLaunchPopup(){
+function openLaunchPopup(trigger){
   if(!launchPopup) return;
+  launchPopupTrigger = trigger || document.activeElement;
   launchPopup.classList.add('open');
   launchPopup.setAttribute('aria-hidden','false');
+  requestAnimationFrame(()=>launchPopupClose?.focus());
 }
 function closeLaunchPopup(){
-  if(!launchPopup) return;
+  if(!launchPopup || !launchPopup.classList.contains('open')) return;
   launchPopup.classList.remove('open');
   launchPopup.setAttribute('aria-hidden','true');
+  try{ localStorage.setItem(launchDismissKey, String(Date.now())); }catch{}
+  if(launchPopupTrigger && typeof launchPopupTrigger.focus === 'function') launchPopupTrigger.focus();
+  launchPopupTrigger = null;
 }
 window.closeLaunchPopup = closeLaunchPopup;
 
-window.addEventListener('load',()=>{ setTimeout(()=>openLaunchPopup(),420); });
+window.addEventListener('load',()=>{
+  if(window.innerWidth <= 768) return;
+  let dismissedAt = 0;
+  try{ dismissedAt = Number(localStorage.getItem(launchDismissKey) || 0); }catch{}
+  if(!dismissedAt || Date.now() - dismissedAt >= launchDismissMs) setTimeout(()=>openLaunchPopup(),420);
+});
 launchPopupClose?.addEventListener('click',closeLaunchPopup);
 launchPopupBackdrop?.addEventListener('click',closeLaunchPopup);
-reopenLaunchPopup?.addEventListener('click',openLaunchPopup);
-document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeLaunchPopup(); });
+reopenLaunchPopup?.addEventListener('click',()=>openLaunchPopup(reopenLaunchPopup));
+document.addEventListener('keydown',e=>{ if(e.key==='Escape' && launchPopup?.classList.contains('open')) closeLaunchPopup(); });
 
-goMintBtn?.addEventListener('click',()=>{
-  window.open('https://nftree.net/mint','_blank','noopener');
-  closeLaunchPopup();
-});
-goBattleBtn?.addEventListener('click',()=>{
-  window.open('https://nftree.net/battle','_blank','noopener');
-  closeLaunchPopup();
-});
-popupBuyTreeBtn?.addEventListener('click',()=>{
-  if(typeof openSwapModal === 'function') {
-    openSwapModal();
+[goMintBtn,goRewardsBtn,goBattleBtn].forEach(btn=>btn?.addEventListener('click',closeLaunchPopup));
+
+/* SHARED TREE ACTIONS */
+document.querySelectorAll('.js-buy-tree').forEach(btn=>btn.addEventListener('click',()=>{
+  if(typeof openSwapModal === 'function') openSwapModal();
+}));
+
+const copyCoinTypeBtn = document.getElementById('copy-coin-type');
+copyCoinTypeBtn?.addEventListener('click',async()=>{
+  try{
+    await navigator.clipboard.writeText(TREE_ADDR);
+    showToast('TREE coin type copied');
+  }catch{
+    showToast('Unable to copy coin type');
   }
-  closeLaunchPopup();
 });
 
 /* PRICE WIDGET — fetch once */
@@ -1873,10 +2013,12 @@ popupBuyTreeBtn?.addEventListener('click',()=>{
       const liq   = '$'+Number(coin.liquidity).toLocaleString();
       const mcap  = coin.market_cap ? '$'+Number(coin.market_cap).toLocaleString() : '--';
       const fdv   = coin.fdv        ? '$'+Number(coin.fdv).toLocaleString()        : '--';
-      elVal.textContent    = '$'+price.toFixed(6);
+      const precision = price >= 1 ? 2 : price >= 0.01 ? 4 : price >= 0.0001 ? 6 : 10;
+      elVal.textContent    = '$'+price.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:precision});
       elChange.textContent = (ch>=0?'+':'')+ch.toFixed(2)+'% (24h)';
       elChange.className   = 'price-change '+(ch>=0?'up':'down');
-      elMeta.textContent   = `Liq: ${liq} • MCap: ${mcap} • FDV: ${fdv}`;
+      const updated = new Intl.DateTimeFormat(undefined,{hour:'numeric',minute:'2-digit'}).format(new Date());
+      elMeta.textContent   = `Liq: ${liq} • MCap: ${mcap} • FDV: ${fdv} • Updated ${updated}`;
     } catch{
       elVal.textContent    = '—';
       elChange.textContent = 'Price feed error';
