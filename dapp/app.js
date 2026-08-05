@@ -259,32 +259,62 @@ function updateYourRank() {
   const output = document.getElementById('yourRank');
   if (!window.playerAddress) { output.textContent = 'Connect a wallet to check.'; return; }
   if (leaderboardStatus === 'loading') { output.textContent = 'Checking leaderboard…'; return; }
-  if (leaderboardStatus === 'not-configured') { output.textContent = 'Leaderboard provider is not configured yet.'; return; }
+  if (leaderboardStatus === 'verification-incomplete') { output.textContent = 'Sui-native holder verification is incomplete.'; return; }
   if (leaderboardStatus === 'error') { output.textContent = 'Your rank is temporarily unavailable.'; return; }
-  if (leaderboardStatus === 'empty') { output.textContent = 'No ranked wallet data is currently available.'; return; }
   const row = leaderboardEntries.find((entry) => entry.wallet.toLowerCase() === window.playerAddress.toLowerCase());
-  output.textContent = row ? `#${row.rank} · ${row.tier}` : 'Wallet is outside the displayed Top 50.';
+  if (!row) { output.textContent = 'Wallet is outside the displayed Top 50.'; return; }
+  output.textContent = leaderboardStatus === 'stale'
+    ? `#${row.rank} · ${row.tier} · Last complete snapshot`
+    : `#${row.rank} · ${row.tier}`;
 }
 
 function renderLeaderboard(payload) {
   const state = document.getElementById('leaderboardState');
   const rows = document.getElementById('leaderboardRows');
-  leaderboardEntries = Array.isArray(payload.entries) ? payload.entries : [];
-  leaderboardStatus = payload.status === 'ok'
-    ? (leaderboardEntries.length ? 'ok' : 'empty')
-    : payload.status === 'not-configured' ? 'not-configured' : 'error';
-  state.textContent = payload.status === 'ok' ? 'Current' : payload.status === 'not-configured' ? 'Not configured' : 'Error';
-  state.className = `data-state ${payload.status === 'error' ? 'error' : ''}`;
+  const allowedStatus = ['ok', 'stale', 'verification-incomplete', 'error'];
+  leaderboardStatus = allowedStatus.includes(payload.status) ? payload.status : 'error';
+  leaderboardEntries = ['ok', 'stale'].includes(leaderboardStatus) && Array.isArray(payload.entries) ? payload.entries : [];
+  const stateLabels = { ok: 'Current', stale: 'Last Complete Snapshot', 'verification-incomplete': 'Verification Incomplete', error: 'Unavailable' };
+  state.textContent = stateLabels[leaderboardStatus];
+  state.className = `data-state ${leaderboardStatus}`;
+  const coverage = payload.coverage || {};
+  const skippedNonAddressOwned = ['objectOwnedObjectsSkipped', 'sharedObjectsSkipped', 'immutableObjectsSkipped', 'consensusOwnedObjectsSkipped', 'unknownOwnerObjectsSkipped']
+    .reduce((sum, field) => sum + (Number(coverage[field]) || 0), 0);
+  document.getElementById('leaderboardProvider').textContent = payload.provider || 'sui-graphql';
+  document.getElementById('leaderboardScanComplete').textContent = coverage.scanComplete === true ? 'Yes' : 'No';
+  document.getElementById('leaderboardPagesScanned').textContent = quantity.format(Number(coverage.pagesScanned) || 0);
+  document.getElementById('leaderboardObjectsScanned').textContent = quantity.format(Number(coverage.objectsScanned) || 0);
+  document.getElementById('leaderboardAddressObjects').textContent = quantity.format(Number(coverage.addressOwnedCoinObjects) || 0);
   document.getElementById('indexedHolderCount').textContent = payload.holderCount === null || payload.holderCount === undefined ? '—' : quantity.format(payload.holderCount);
+  document.getElementById('leaderboardSkippedOwners').textContent = quantity.format(skippedNonAddressOwned);
+  document.getElementById('leaderboardSnapshotTime').textContent = payload.snapshotGeneratedAt ? new Date(payload.snapshotGeneratedAt).toLocaleString() : 'None';
   document.getElementById('displayedWalletCount').textContent = quantity.format(payload.displayedCount ?? leaderboardEntries.length);
-  document.getElementById('excludedWalletCount').textContent = quantity.format(payload.sharedProtocolExcludedCount ?? payload.excludedCount ?? 0);
-  document.getElementById('leaderboardUpdated').textContent = `Last updated: ${payload.generatedAt ? new Date(payload.generatedAt).toLocaleString() : 'unavailable'}`;
+  document.getElementById('excludedWalletCount').textContent = quantity.format(payload.excludedCount ?? 0);
+  document.getElementById('leaderboardUpdated').textContent = `Refresh attempted: ${payload.generatedAt ? new Date(payload.generatedAt).toLocaleString() : 'unavailable'}`;
+  const refresh = payload.refreshCoverage;
+  const reconciliation = payload.reconciliation || {};
+  document.getElementById('leaderboardCoverageDetails').textContent = [
+    `Natural end reached: ${coverage.reachedEnd === true ? 'yes' : 'no'}.`,
+    `Malformed owners: ${quantity.format(Number(coverage.malformedOwnerAddresses) || 0)}.`,
+    `Malformed balances: ${quantity.format(Number(coverage.malformedBalances) || 0)}.`,
+    `Duplicate objects: ${quantity.format(Number(coverage.duplicateObjectIds) || 0)}.`,
+    `Reconciliation: ${reconciliation.valid === true ? 'valid' : 'incomplete'}.`,
+    `Address-owned TREE: ${reconciliation.addressOwnedTree ?? 'unavailable'}.`,
+    refresh && refresh !== coverage ? `Latest refresh scan complete: ${refresh.scanComplete === true ? 'yes' : 'no'}.` : '',
+  ].filter(Boolean).join(' ');
+  const warningBox = document.getElementById('leaderboardWarnings');
+  warningBox.textContent = Array.isArray(payload.warnings) ? payload.warnings.join(' ') : '';
+  warningBox.hidden = !warningBox.textContent;
   if (!leaderboardEntries.length) {
-    rows.innerHTML = `<tr><td colspan="5">${payload.status === 'not-configured' ? 'Leaderboard provider is not configured.' : payload.status === 'error' ? 'Leaderboard data is temporarily unavailable.' : 'No direct TREE holder rows were returned.'}</td></tr>`;
+    const emptyMessages = {
+      'verification-incomplete': 'Sui-native holder verification is incomplete. Partial ranks are not published.',
+      error: 'Sui-native leaderboard verification is temporarily unavailable.',
+    };
+    rows.innerHTML = `<tr><td colspan="5">${emptyMessages[leaderboardStatus] || 'No direct TREE holder rows were returned by the complete scan.'}</td></tr>`;
   } else {
     rows.replaceChildren(...leaderboardEntries.map((entry) => {
       const row = document.createElement('tr');
-      [entry.rank, shortened(entry.wallet), quantity.format(Number(entry.directTree)), entry.supplyPercent === null ? '—' : `${Number(entry.supplyPercent).toFixed(4)}%`, entry.tier].forEach((value, index) => {
+      [entry.rank, shortened(entry.wallet), entry.directTree, entry.supplyPercent === null || entry.supplyPercent === undefined ? '—' : `${entry.supplyPercent}%`, entry.tier].forEach((value, index) => {
         const cell = document.createElement('td'); cell.textContent = String(value);
         if (index > 2) cell.className = 'wide-column';
         if (index === 1) cell.title = entry.wallet;
@@ -382,4 +412,4 @@ if (typeof document !== 'undefined') {
   loadDisplayedRate();
 }
 
-export { DAPP_SWAP_EXECUTION_ENABLED, formatTreePrice, readDashboardCache, writeDashboardCache };
+export { DAPP_SWAP_EXECUTION_ENABLED, formatTreePrice, readDashboardCache, renderLeaderboard, updateYourRank, writeDashboardCache };
