@@ -5,6 +5,11 @@
 [functions]
   directory = "netlify/functions"
 
+[[redirects]]
+  from = "/dapp"
+  to = "/dapp/"
+  status = 301
+
 [[headers]]
   for = "/*"
   [headers.values]
