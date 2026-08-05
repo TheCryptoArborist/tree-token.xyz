@@ -1,0 +1,2192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>THICKQUIDITY — $TREE</title>
+<meta name="description" content="THICKQUIDITY ($TREE) — stake TREE/SUI LP on SuiFarm and farm Victory at boosted yield." />
+<link rel="icon" href="thick.png" />
+
+<script type="module" src="scripts/wallet.js"></script>
+<script type="module" src="scripts/swap.js"></script>
+
+<style>
+*{box-sizing:border-box}
+:root{
+  --emerald:#00e090;
+  --emerald-2:#34d399;
+  --teal:#00c2b3;
+  --gold:#ffd166;
+  --muted:rgba(225,255,240,0.95);
+  --muted-soft:rgba(225,255,240,0.72);
+  --glass-border:rgba(0,255,160,0.08);
+  --glass-border-strong:rgba(0,255,160,0.16);
+  --panel:rgba(4,10,7,0.68);
+  --panel-2:rgba(3,7,5,0.78);
+  --shadow-deep:0 24px 80px rgba(0,0,0,0.55);
+  --shadow-glow:0 0 0 1px rgba(255,255,255,0.02), 0 20px 60px rgba(0,255,160,0.08);
+  --radius:18px;
+}
+html,body{height:100%;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  color:var(--muted);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  background:#000;
+}
+body::before{
+  content:"";
+  position:fixed;inset:0;z-index:-6;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(0,224,144,0.12), transparent 24%),
+    radial-gradient(circle at 86% 18%, rgba(0,194,179,0.12), transparent 26%),
+    linear-gradient(180deg, rgba(0,0,0,0.14), rgba(0,0,0,0.52)),
+    url('background5.jpg') center/cover no-repeat fixed;
+  opacity:1;
+  will-change:transform;
+}
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-5;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0.14), rgba(0,0,0,0.40)),
+    radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.18) 72%, rgba(0,0,0,0.42) 100%);
+}
+
+/* ── HEADER ──────────────────────────────────────────────── */
+header{
+  position:fixed;top:0;left:0;right:0;height:82px;z-index:1200;
+  display:flex;align-items:center;justify-content:center;padding:0 6%;
+  background:linear-gradient(180deg,rgba(0,0,0,0.38),rgba(0,0,0,0.08));
+  backdrop-filter:blur(10px) saturate(130%);
+  border-bottom:1px solid rgba(255,255,255,0.04);
+}
+.header-inner{
+  width:100%;
+  max-width:1280px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+}
+.brand-wrap{display:flex;align-items:center;gap:12px}
+.logo{
+  width:58px;height:58px;border-radius:14px;overflow:hidden;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,rgba(0,0,0,0.52),rgba(6,12,10,0.7));
+  border:1px solid rgba(255,255,255,0.05);
+  box-shadow:0 8px 28px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.03);
+}
+.logo img{width:100%;height:100%;object-fit:contain;display:block}
+.brand-title{display:flex;flex-direction:column}
+.brand-title h1{margin:0;font-size:1.02rem;color:var(--gold);letter-spacing:0.06em}
+.brand-title p{margin:0;font-size:0.78rem;color:rgba(225,255,240,0.76)}
+
+.header-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.nav-toggle{
+  display:none;
+  align-items:center;
+  justify-content:center;
+  width:40px;
+  height:40px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.12);
+  background:rgba(255,255,255,0.04);
+  color:var(--muted);
+  cursor:pointer;
+  flex-shrink:0;
+}
+.nav-toggle:hover{background:rgba(255,255,255,0.08)}
+.nav-toggle svg{width:20px;height:20px;display:block}
+
+.nav-shell{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+nav a, .live-pill{
+  color:var(--muted);
+  text-decoration:none;
+  padding:9px 13px;
+  border-radius:999px;
+  font-weight:800;
+  font-size:0.88rem;
+  transition:all .18s;
+  border:1px solid transparent;
+  background:transparent;
+  font-family:inherit;
+}
+nav a:hover{
+  background:rgba(0,255,160,0.06);
+  color:var(--emerald-2);
+  transform:translateY(-2px);
+}
+/* Special NFT nav link */
+nav a.nav-nft{
+  color:var(--gold);
+  border:1px solid rgba(255,209,102,0.25);
+  background:rgba(255,209,102,0.06);
+}
+nav a.nav-nft:hover{
+  background:rgba(255,209,102,0.14);
+  border-color:rgba(255,209,102,0.45);
+  color:var(--gold);
+  box-shadow:0 0 18px rgba(255,209,102,0.2);
+}
+.live-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  cursor:pointer;
+  color:#04170f;
+  background:linear-gradient(90deg,var(--emerald-2),var(--teal));
+  box-shadow:0 8px 28px rgba(0,255,160,0.18);
+}
+.live-pill:hover{transform:translateY(-2px) scale(1.02)}
+.live-pill .pulse{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--gold);
+  box-shadow:0 0 0 rgba(255,209,102,0.7);
+  animation:livePulse 1.8s infinite;
+}
+@keyframes livePulse{
+  0%{box-shadow:0 0 0 0 rgba(255,209,102,0.65)}
+  70%{box-shadow:0 0 0 10px rgba(255,209,102,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,209,102,0)}
+}
+
+/* ── WALLET BUTTON ───────────────────────────────────────── */
+.wallet-btn{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:8px 14px;border-radius:999px;font-weight:800;font-size:0.8rem;
+  cursor:pointer;white-space:nowrap;
+  border:1px solid rgba(0,255,160,0.35);
+  background:linear-gradient(135deg,rgba(0,224,144,0.12),rgba(0,194,179,0.08));
+  color:var(--emerald-2);transition:all .2s;font-family:inherit;
+}
+.wallet-btn:hover{
+  background:linear-gradient(135deg,rgba(0,224,144,0.22),rgba(0,194,179,0.16));
+  transform:translateY(-2px);
+  box-shadow:0 8px 32px rgba(0,255,160,0.18)
+}
+.wallet-btn.connected{
+  color:var(--gold);
+  border-color:rgba(255,209,102,0.35);
+  background:linear-gradient(135deg,rgba(255,209,102,0.1),rgba(0,224,144,0.06))
+}
+.wallet-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none}
+.wdot{
+  width:7px;height:7px;border-radius:50%;flex-shrink:0;
+  background:rgba(255,255,255,0.2);
+  transition:background .3s,box-shadow .3s
+}
+.wdot.on{background:#4ade80;box-shadow:0 0 6px #4ade80;animation:pdot 2s infinite}
+@keyframes pdot{0%,100%{opacity:1}50%{opacity:0.35}}
+
+/* ── SHARED BUTTONS ──────────────────────────────────────── */
+.btn{
+  display:inline-flex;align-items:center;gap:8px;padding:11px 15px;border-radius:999px;
+  font-weight:800;font-size:0.95rem;border:1px solid rgba(255,255,255,0.06);
+  background:rgba(0,0,0,0.28);color:var(--muted);text-decoration:none;
+  transition:transform .16s,box-shadow .16s,background .18s,border-color .18s;
+  cursor:pointer;font-family:inherit
+}
+.btn:hover{
+  transform:translateY(-4px);
+  box-shadow:0 18px 60px rgba(0,255,160,0.08);
+  background:rgba(0,0,0,0.4);
+}
+.btn.secondary{
+  border:1px dashed rgba(0,255,160,0.16);
+  color:var(--emerald-2);
+}
+.btn.hero-primary{
+  background:linear-gradient(135deg,var(--emerald),var(--teal));
+  color:#021a10;
+  border:none;
+  box-shadow:0 10px 36px rgba(0,255,160,0.28);
+}
+.btn.hero-primary:hover{box-shadow:0 16px 54px rgba(0,255,160,0.35)}
+
+/* NFT button style — gold */
+.btn.nft-primary{
+  background:linear-gradient(135deg,#ffd166,#f4a40a);
+  color:#1a0e00;
+  border:none;
+  box-shadow:0 10px 36px rgba(255,209,102,0.32);
+  font-weight:900;
+}
+.btn.nft-primary:hover{
+  box-shadow:0 16px 54px rgba(255,209,102,0.45);
+  transform:translateY(-4px);
+}
+
+/* ── COINGECKO SHIMMER TEXT ──────────────────────────────── */
+@keyframes cgShimmer{
+  0%{background-position:200% center}
+  100%{background-position:-200% center}
+}
+.cg-shimmer-text{
+  background:linear-gradient(
+    90deg,
+    #8dc63f 0%,
+    #c8f06b 20%,
+    #ffd166 40%,
+    #c8f06b 60%,
+    #8dc63f 80%,
+    #c8f06b 100%
+  );
+  background-size:200% auto;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:cgShimmer 3s linear infinite;
+}
+
+/* ── HERO ────────────────────────────────────────────────── */
+main{
+  max-width:1200px;
+  margin:0 auto;
+  padding:128px 6% 24px;
+  z-index:40;
+  position:relative;
+}
+.hero-shell{
+  position:relative;
+  overflow:hidden;
+  border-radius:28px;
+  padding:30px;
+  background:
+    radial-gradient(circle at top right, rgba(0,224,144,0.10), transparent 24%),
+    radial-gradient(circle at bottom left, rgba(0,194,179,0.10), transparent 24%),
+    linear-gradient(160deg, rgba(4,11,8,0.82), rgba(3,8,5,0.64));
+  border:1px solid rgba(255,255,255,0.05);
+  box-shadow:var(--shadow-deep), var(--shadow-glow);
+}
+.hero-shell::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.035), transparent 24%),
+    linear-gradient(180deg, transparent, rgba(255,255,255,0.02));
+}
+.hero-grid{
+  position:relative;
+  z-index:2;
+  display:grid;
+  grid-template-columns:minmax(0,1.2fr) minmax(280px,0.8fr);
+  gap:22px;
+  align-items:stretch;
+}
+.hero-copy{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.hero-kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  width:max-content;
+  max-width:100%;
+  padding:8px 12px;
+  border-radius:999px;
+  background:rgba(255,255,255,0.045);
+  border:1px solid rgba(255,255,255,0.06);
+  color:var(--emerald-2);
+  font-weight:900;
+  letter-spacing:0.04em;
+  font-size:0.78rem;
+}
+.hero-kicker .seed{
+  width:9px;height:9px;border-radius:50%;
+  background:linear-gradient(90deg,var(--gold),var(--emerald));
+  box-shadow:0 0 18px rgba(255,209,102,0.45);
+}
+.hero-title{
+  color:var(--gold);
+  font-size:clamp(2rem,4vw,3.2rem);
+  line-height:1.02;
+  letter-spacing:-0.03em;
+  margin:14px 0 0;
+  max-width:16ch;
+}
+.hero-sub{
+  color:var(--muted);
+  font-size:1rem;
+  margin:14px 0 0;
+  line-height:1.6;
+  max-width:60ch;
+}
+.hero-stats{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+  margin-top:18px;
+}
+.hero-stat{
+  padding:12px 12px 12px 16px;
+  border-radius:16px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.05);
+  border-left:3px solid rgba(0,224,144,0.45);
+  backdrop-filter:blur(6px);
+}
+.hero-stat b{
+  display:block;
+  color:var(--emerald-2);
+  font-size:1.02rem;
+  margin-bottom:4px;
+}
+.hero-stat span{
+  color:var(--muted-soft);
+  font-size:0.88rem;
+}
+.hero-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:20px;
+}
+.hero-side{
+  display:grid;
+  gap:14px;
+}
+.feature-card,
+.harvest-card{
+  background:rgba(0,0,0,0.22);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:22px;
+  padding:18px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.02);
+}
+.feature-card h3,
+.harvest-card h3{
+  margin:0 0 8px;
+  color:var(--gold);
+  font-size:1.02rem;
+}
+.feature-card p,
+.harvest-card p{
+  margin:0;
+  color:var(--muted-soft);
+  line-height:1.6;
+}
+.harvest-steps{
+  display:grid;
+  gap:10px;
+  margin-top:10px;
+}
+.harvest-step{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  padding:10px 11px;
+  border-radius:16px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.05);
+}
+.harvest-step .ic{font-size:1.02rem;line-height:1.1}
+.harvest-step strong{display:block;color:var(--muted);margin-bottom:2px;font-size:0.95rem}
+.harvest-step span{color:var(--muted-soft);font-size:0.88rem}
+.harvest-step a{color:var(--emerald-2);text-decoration:none}
+
+/* ── LAYOUT ──────────────────────────────────────────────── */
+.deck{
+  display:grid;
+  grid-template-columns:1fr 360px;
+  gap:20px;
+  align-items:start;
+  margin-top:22px;
+}
+.panel{
+  background:var(--panel);
+  border-radius:18px;
+  padding:20px;
+  border:1px solid var(--glass-border);
+  box-shadow:0 18px 60px rgba(0,0,0,0.56);
+  backdrop-filter:blur(8px);
+}
+.section-title{
+  margin:0 0 12px;
+  color:var(--gold);
+  font-size:1.2rem;
+}
+.panel p{line-height:1.68}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+  gap:12px;
+  margin-top:12px;
+}
+.stat{
+  padding:14px;
+  border-radius:14px;
+  background:rgba(0,0,0,0.08);
+  border:1px solid rgba(255,255,255,0.03);
+}
+.stat .num{
+  display:block;
+  font-size:1.2rem;
+  color:var(--emerald-2);
+  font-weight:800;
+  margin-bottom:4px;
+}
+.mission-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:12px;
+}
+.mission-card{
+  padding:14px;
+  border-radius:14px;
+  background:rgba(0,0,0,0.08);
+  border:1px solid rgba(255,255,255,0.03);
+}
+.mission-card h4{
+  margin:0 0 6px;
+  color:var(--emerald-2);
+}
+.mission-card p{margin:0;color:var(--muted)}
+.nft-row{
+  display:flex;
+  gap:14px;
+  align-items:center;
+  margin-top:8px;
+}
+.nft-thumb{
+  width:148px;
+  aspect-ratio:1/1;
+  border-radius:16px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,0.05);
+  background:rgba(255,255,255,0.02);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.nft-thumb img{width:100%;height:100%;object-fit:contain;display:block}
+.aside .panel{display:flex;flex-direction:column;gap:12px}
+.price-widget{
+  padding:14px;
+  border-radius:14px;
+  background:rgba(0,0,0,0.08);
+  text-align:center;
+  border:1px solid rgba(255,255,255,0.04);
+}
+.price-widget h4{margin:0 0 6px;color:var(--gold)}
+.price-big{font-size:1.6rem;font-weight:900;color:var(--emerald-2)}
+.price-change.up{color:#4ade80}
+.price-change.down{color:#fb7185}
+.social-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+footer{
+  text-align:center;
+  padding:24px 6% 34px;
+  margin-top:24px;
+  color:rgba(220,255,240,0.9);
+}
+
+/* ── CoinGecko BADGE ─────────────────────────────────────── */
+.cg-badge{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:9px 12px;border-radius:12px;
+  background:linear-gradient(135deg,rgba(141,198,63,0.15),rgba(90,138,26,0.10));
+  border:1px solid rgba(141,198,63,0.3);
+  text-decoration:none;
+  font-weight:800;font-size:0.82rem;
+  transition:all .18s;
+}
+.cg-badge:hover{
+  background:linear-gradient(135deg,rgba(141,198,63,0.25),rgba(90,138,26,0.18));
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(141,198,63,0.2);
+}
+.cg-badge img{width:20px;height:20px;border-radius:50%}
+.cg-badge-text{
+  background:linear-gradient(90deg,#8dc63f,#ffd166,#8dc63f);
+  background-size:200% auto;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:cgShimmer 3s linear infinite;
+}
+
+/* ── PARALLAX ────────────────────────────────────────────── */
+.parallax-layer{
+  position:fixed;inset:0;pointer-events:none;z-index:10;
+  mix-blend-mode:screen;background-repeat:no-repeat;background-position:center;
+}
+.parallax-layer.layer1{background:none;opacity:0.65;will-change:transform}
+.parallax-layer.layer2{background:none;opacity:0.9;will-change:transform}
+.parallax-layer.layer3{background:none;opacity:0.6;will-change:transform}
+@media(min-width:1000px){.parallax-layer{display:none}}
+
+/* ── LIVE POPUP (NFT/Battle) ────────────────────────────── */
+.launch-popup{
+  position:fixed;inset:0;display:none;z-index:4000;
+}
+.launch-popup.open{display:block;}
+.launch-popup__backdrop{
+  position:absolute;inset:0;
+  background:radial-gradient(circle at top, rgba(0,224,144,0.12), transparent 45%), rgba(0,0,0,0.82);
+  backdrop-filter:blur(18px) saturate(140%);
+}
+.launch-popup__card{
+  position:relative;
+  width:min(840px, calc(100% - 24px));
+  margin:clamp(84px, 12vh, 126px) auto 0;
+  padding:0;
+  border-radius:30px;
+  background:
+    radial-gradient(circle at top right, rgba(0,224,144,0.22), transparent 38%),
+    radial-gradient(circle at bottom left, rgba(255,209,102,0.18), transparent 40%),
+    linear-gradient(160deg, rgba(5,16,10,0.98), rgba(7,20,16,0.96));
+  border:1px solid rgba(0,255,160,0.2);
+  box-shadow:0 40px 140px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.04);
+  color:var(--muted);
+  overflow:hidden;
+  display:grid;
+  grid-template-columns:minmax(0,1.25fr) minmax(0,0.9fr);
+}
+.launch-popup__content{
+  padding:22px 22px 20px 24px;
+  position:relative;
+  z-index:2;
+}
+.launch-popup__visual{
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(0,224,144,0.24), transparent 55%),
+    radial-gradient(circle at 80% 100%, rgba(255,209,102,0.22), transparent 52%),
+    linear-gradient(180deg, rgba(0,0,0,0.9), rgba(0,0,0,0.96));
+  border-left:1px solid rgba(0,255,160,0.18);
+}
+.launch-popup__visual-inner{
+  position:absolute;
+  inset:18px 16px;
+  border-radius:22px;
+  background:
+    radial-gradient(circle at top, rgba(0,224,144,0.18), transparent 55%),
+    url('tree.jpg') center/cover no-repeat;
+  filter:saturate(1.3) contrast(1.1);
+  box-shadow:inset 0 0 40px rgba(0,0,0,0.7);
+}
+.launch-popup__visual-orbit{
+  position:absolute;
+  inset:auto 10% 10% 10%;
+  border-radius:999px;
+  border:1px dashed rgba(255,255,255,0.22);
+  opacity:0.6;
+  animation:orbitGlow 11s linear infinite;
+}
+.launch-popup__visual-orbit::before{
+  content:"";
+  position:absolute;
+  width:12px;height:12px;border-radius:50%;
+  background:var(--gold);
+  box-shadow:0 0 20px rgba(255,209,102,0.9);
+  top:-6px;left:12%;
+}
+.launch-popup__visual-tag{
+  position:absolute;
+  left:24px;top:20px;
+  padding:6px 11px;
+  border-radius:999px;
+  background:rgba(0,0,0,0.54);
+  border:1px solid rgba(255,255,255,0.18);
+  font-size:0.78rem;
+  font-weight:800;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+.launch-popup__visual-tag span.seed{
+  width:8px;height:8px;border-radius:50%;
+  background:linear-gradient(90deg,var(--gold),var(--emerald));
+  box-shadow:0 0 14px rgba(255,209,102,0.7);
+}
+.launch-popup__visual-note{
+  position:absolute;
+  left:24px;bottom:24px;right:24px;
+  padding:10px 12px;
+  border-radius:14px;
+  background:linear-gradient(135deg,rgba(0,0,0,0.8),rgba(0,0,0,0.94));
+  border:1px solid rgba(0,255,160,0.25);
+  font-size:0.78rem;
+  color:rgba(225,255,240,0.85);
+}
+.launch-popup__visual-note strong{color:var(--gold);}
+.launch-popup__eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:16px;
+  padding:9px 13px;
+  border-radius:999px;
+  font-size:0.78rem;
+  font-weight:900;
+  letter-spacing:0.09em;
+  background:linear-gradient(135deg,rgba(0,224,144,0.18),rgba(0,194,179,0.14));
+  border:1px solid rgba(0,255,160,0.4);
+  box-shadow:0 4px 24px rgba(0,255,160,0.3);
+  text-transform:uppercase;
+}
+.launch-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--gold);
+  box-shadow:0 0 12px rgba(255,209,102,0.8);
+  animation:livePulse 1.8s infinite;
+}
+.launch-popup__card h2{
+  margin:0 0 10px;
+  font-size:clamp(1.7rem,3vw,2.3rem);
+  line-height:1.04;
+  color:var(--gold);
+  max-width:22ch;
+}
+.launch-popup__lead{
+  margin:0;
+  color:var(--muted);
+  font-size:0.95rem;
+  line-height:1.7;
+  max-width:62ch;
+}
+.launch-popup__pill-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:15px;
+}
+.launch-pill{
+  flex:1 1 200px;
+  padding:11px 12px;
+  border-radius:16px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.07);
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+}
+.launch-pill-ico{
+  font-size:1.1rem;
+  flex-shrink:0;
+}
+.launch-pill h3{
+  margin:0 0 4px;
+  font-size:0.98rem;
+  color:var(--emerald-2);
+}
+.launch-pill p{
+  margin:0;
+  font-size:0.86rem;
+  color:var(--muted-soft);
+}
+.launch-popup__actions{
+  display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;
+}
+.launch-btn-primary{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:11px 18px;border-radius:999px;
+  font-weight:900;font-size:0.95rem;cursor:pointer;
+  background:linear-gradient(135deg,#ffd166,#f4a40a);
+  border:none;
+  color:#1a0e00;
+  box-shadow:0 10px 40px rgba(255,209,102,0.4);
+  text-decoration:none;
+  font-family:inherit;
+  transition:all .18s;
+}
+.launch-btn-primary:hover{
+  transform:translateY(-3px);
+  box-shadow:0 18px 60px rgba(255,209,102,0.55);
+}
+.launch-btn-ghost{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:11px 16px;border-radius:999px;
+  font-weight:800;font-size:0.9rem;cursor:pointer;
+  background:rgba(0,0,0,0.5);
+  border:1px dashed rgba(0,255,160,0.3);
+  color:var(--emerald-2);
+  text-decoration:none;
+  font-family:inherit;
+  transition:all .18s;
+}
+.launch-btn-ghost:hover{
+  background:rgba(0,0,0,0.7);
+  box-shadow:0 10px 36px rgba(0,255,160,0.32);
+}
+.launch-popup__footerline{
+  margin-top:10px;
+  font-size:0.78rem;
+  color:var(--muted-soft);
+}
+.launch-popup__close{
+  position:absolute;top:14px;right:14px;
+  width:40px;height:40px;border-radius:12px;
+  border:1px solid rgba(255,255,255,0.12);
+  background:rgba(0,0,0,0.65);
+  color:var(--gold);font-size:1.2rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .18s;font-family:inherit;z-index:5;
+}
+.launch-popup__close:hover{
+  background:rgba(255,80,80,0.2);color:#ff8b8b;border-color:rgba(255,80,80,0.4);
+}
+@keyframes orbitGlow{
+  0%{transform:rotate(0deg);opacity:0.6}
+  50%{opacity:0.9}
+  100%{transform:rotate(360deg);opacity:0.6}
+}
+
+/* ── BOOKLET MODAL ───────────────────────────────────────── */
+.booklet-modal{
+  position:fixed;inset:0;display:none;align-items:center;justify-content:center;
+  background:rgba(0,0,0,0.82);z-index:9999;padding:18px;
+}
+.booklet-modal.open{display:flex;}
+.booklet-wrap{
+  width:min(1100px,96%);
+  height:min(760px,88vh);
+  background:#f6fff5;
+  border-radius:14px;
+  box-shadow:0 40px 140px rgba(0,0,0,0.7);
+  position:relative;padding:14px;
+}
+.booklet-inner{
+  width:100%;height:100%;display:flex;align-items:center;justify-content:center;perspective:1500px;position:relative;
+}
+.page{
+  width:48%;height:92%;background:white;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,0.12);
+  position:absolute;overflow:hidden;backface-visibility:hidden;
+}
+.page img{width:100%;height:100%;object-fit:contain}
+.page.left{left:1%;}
+.page.right{right:1%;}
+.nav-btn{
+  width:52px;height:52px;border-radius:50%;background:rgba(6,28,22,0.9);
+  border:1px solid rgba(0,255,160,0.06);color:var(--gold);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;position:absolute;top:50%;transform:translateY(-50%);font-weight:900;font-size:1.3rem;
+}
+.nav-btn.left{left:-72px;}
+.nav-btn.right{right:-72px;}
+.close-booklet{
+  position:absolute;top:14px;right:14px;width:44px;height:44px;background:#081915;color:var(--gold);
+  display:flex;align-items:center;justify-content:center;border-radius:10px;cursor:pointer;font-weight:800;
+}
+@media(max-width:950px){
+  .page{width:90%;left:5%;right:5%;}
+  .page.right{display:none;}
+  .nav-btn.left{left:8px;}
+  .nav-btn.right{right:8px;}
+}
+
+/* ── FAB STACK (Battle / Mint / Buy) ────────────────────── */
+.fab-group{
+  position:fixed;
+  bottom:28px;
+  right:28px;
+  z-index:1100;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:10px;
+}
+.fab{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 22px;
+  border-radius:999px;
+  font-weight:900;
+  font-size:0.95rem;
+  cursor:pointer;
+  text-decoration:none;
+  border:none;
+  letter-spacing:0.3px;
+  font-family:inherit;
+  transition:transform .18s,box-shadow .18s,background .18s;
+  animation:fab-bounce 2.8s ease-in-out infinite;
+}
+@keyframes fab-bounce{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-7px);}
+}
+.battle-fab{
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+  color:#021a10;
+  box-shadow:0 8px 32px rgba(34,197,94,0.45);
+}
+.mint-fab{
+  background:linear-gradient(135deg,#ffd166,#f4a40a);
+  color:#1a0e00;
+  box-shadow:0 8px 40px rgba(255,209,102,0.45);
+}
+.buy-fab{
+  background:linear-gradient(135deg,var(--emerald),var(--teal));
+  color:#021a10;
+  box-shadow:0 8px 40px rgba(0,255,160,0.4);
+}
+.fab:hover{
+  transform:translateY(-7px) scale(1.03);
+  box-shadow:0 18px 60px rgba(0,255,160,0.55);
+}
+
+/* ── SWAP MODAL ──────────────────────────────────────────── */
+.swap-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:3000;
+  background:rgba(0,0,0,0.85);
+  backdrop-filter:blur(14px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+}
+.swap-backdrop.open{display:flex;}
+.swap-card{
+  width:min(480px,98%);
+  border-radius:24px;
+  background:linear-gradient(160deg,#050f09,#071410);
+  border:1px solid rgba(0,255,160,0.16);
+  box-shadow:0 40px 120px rgba(0,0,0,0.9),inset 0 1px 0 rgba(0,255,160,0.07);
+  overflow:hidden;
+  animation:slide-up .28s cubic-bezier(.2,.8,.2,1);
+}
+@keyframes slide-up{
+  from{opacity:0;transform:translateY(28px) scale(0.97);}
+  to{opacity:1;transform:none;}
+}
+.swap-hdr{
+  padding:18px 22px 14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid rgba(0,255,160,0.08);
+}
+.swap-hdr-left{display:flex;align-items:center;gap:10px;}
+.swap-hdr-left .ico{font-size:1.6rem;}
+.swap-hdr-left h3{
+  margin:0;
+  color:var(--gold);
+  font-size:1.1rem;
+  font-weight:900;
+}
+.swap-hdr-left p{
+  margin:2px 0 0;
+  font-size:0.78rem;
+  color:rgba(225,255,240,0.5);
+}
+.swap-x{
+  width:34px;
+  height:34px;
+  border-radius:9px;
+  border:1px solid rgba(255,255,255,0.08);
+  background:rgba(255,255,255,0.04);
+  color:rgba(225,255,240,0.7);
+  font-size:1rem;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:all .15s;
+  font-family:inherit;
+}
+.swap-x:hover{
+  background:rgba(255,60,60,0.18);
+  color:#fb7185;
+  border-color:rgba(255,60,60,0.25);
+}
+.swap-tabs{
+  display:flex;
+  gap:4px;
+  padding:12px 22px 0;
+}
+.stab{
+  flex:1;
+  padding:9px 6px;
+  border-radius:10px;
+  font-weight:800;
+  font-size:0.82rem;
+  cursor:pointer;
+  text-align:center;
+  border:1px solid transparent;
+  background:transparent;
+  color:rgba(225,255,240,0.4);
+  transition:all .18s;
+  font-family:inherit;
+}
+.stab.active{
+  background:linear-gradient(135deg,rgba(0,224,144,0.14),rgba(0,194,179,0.08));
+  border-color:rgba(0,255,160,0.22);
+  color:var(--emerald-2);
+}
+.stab:hover:not(.active){
+  color:var(--muted);
+  background:rgba(255,255,255,0.03);
+}
+.swap-body{
+  padding:14px 22px 22px;
+}
+.modal-wbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:9px 13px;
+  border-radius:11px;
+  margin-bottom:12px;
+  background:rgba(0,0,0,0.35);
+  border:1px solid rgba(255,255,255,0.05);
+  font-size:0.8rem;
+}
+.modal-wbar .w-addr{
+  color:rgba(225,255,240,0.45);
+  font-family:monospace;
+  font-size:0.77rem;
+}
+.modal-wbar .w-bal{
+  color:var(--emerald-2);
+  font-weight:800;
+}
+.tok-group{margin-bottom:8px;}
+.tok-label{
+  font-size:0.73rem;
+  color:rgba(225,255,240,0.5);
+  margin-bottom:5px;
+  font-weight:700;
+  letter-spacing:0.5px;
+  text-transform:uppercase;
+}
+.tok-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:rgba(0,0,0,0.4);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:14px;
+  padding:11px 15px;
+  transition:border-color .18s;
+}
+.tok-row:focus-within{border-color:rgba(0,255,160,0.28);}
+.tok-pill{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  padding:5px 11px;
+  border-radius:999px;
+  font-weight:800;
+  font-size:0.84rem;
+  white-space:nowrap;
+  background:linear-gradient(135deg,rgba(0,224,144,0.2),rgba(0,194,179,0.12));
+  border:1px solid rgba(0,255,160,0.22);
+  color:var(--emerald-2);
+  flex-shrink:0;
+}
+.tok-pill.sui{
+  background:linear-gradient(135deg,rgba(96,165,250,0.2),rgba(59,130,246,0.12));
+  border-color:rgba(96,165,250,0.28);
+  color:#93c5fd;
+}
+.amt-input{
+  flex:1;
+  background:transparent;
+  border:none;
+  outline:none;
+  color:var(--muted);
+  font-size:1.1rem;
+  font-weight:700;
+  text-align:right;
+  min-width:0;
+  font-family:inherit;
+}
+.amt-input::placeholder{color:rgba(225,255,240,0.18);}
+.amt-input::-webkit-outer-spin-button,
+.amt-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.amt-input[type=number]{-moz-appearance:textfield;}
+.flip-row{
+  display:flex;
+  justify-content:space-between;
+  margin:4px 0;
+}
+.flip-btn{
+  width:34px;
+  height:34px;
+  border-radius:9px;
+  cursor:pointer;
+  background:rgba(0,224,144,0.1);
+  border:1px solid rgba(0,255,160,0.22);
+  color:var(--emerald-2);
+  font-size:1rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:all .18s;
+  font-family:inherit;
+}
+.flip-btn:hover{
+  background:rgba(0,224,144,0.22);
+  transform:rotate(180deg);
+}
+.rate-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:7px 11px;
+  border-radius:9px;
+  margin:8px 0;
+  background:rgba(0,0,0,0.2);
+  border:1px solid rgba(255,255,255,0.04);
+  font-size:0.78rem;
+  color:rgba(225,255,240,0.5);
+}
+.rate-val{
+  color:var(--emerald-2);
+  font-weight:700;
+}
+.action-btn{
+  width:100%;
+  padding:14px;
+  border-radius:13px;
+  font-weight:900;
+  font-size:1rem;
+  cursor:pointer;
+  border:none;
+  margin-top:10px;
+  transition:all .18s;
+  letter-spacing:0.3px;
+  font-family:inherit;
+}
+.action-btn.ready{
+  background:linear-gradient(135deg,var(--emerald),var(--teal));
+  color:#021a10;
+  box-shadow:0 8px 28px rgba(0,255,160,0.25);
+}
+.action-btn.ready:hover{
+  transform:translateY(-2px);
+  box-shadow:0 14px 48px rgba(0,255,160,0.4);
+}
+.action-btn.needs-wallet{
+  background:linear-gradient(135deg,rgba(0,224,144,0.14),rgba(0,194,179,0.08));
+  color:var(--emerald-2);
+  border:1px solid rgba(0,255,160,0.28);
+  box-shadow:none;
+}
+.action-btn.needs-wallet:hover{
+  background:linear-gradient(135deg,rgba(0,224,144,0.22),rgba(0,194,179,0.15));
+  box-shadow:0 6px 24px rgba(0,255,160,0.15);
+}
+.action-btn:disabled{
+  opacity:0.45;
+  cursor:not-allowed;
+  transform:none!important;
+  box-shadow:none!important;
+}
+.qlinks{
+  display:flex;
+  gap:6px;
+  margin-top:12px;
+  flex-wrap:wrap;
+}
+.qlink{
+  flex:1;
+  padding:8px;
+  border-radius:9px;
+  text-align:center;
+  font-weight:700;
+  font-size:0.78rem;
+  border:1px solid rgba(255,255,255,0.07);
+  background:rgba(255,255,255,0.025);
+  color:rgba(225,255,240,0.55);
+  text-decoration:none;
+  transition:all .18s;
+}
+.qlink:hover{
+  background:rgba(0,255,160,0.08);
+  color:var(--emerald-2);
+  border-color:rgba(0,255,160,0.22);
+}
+.swap-status{
+  margin-top:10px;
+  padding:9px 13px;
+  border-radius:9px;
+  font-size:0.8rem;
+  text-align:center;
+  min-height:36px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,0.22);
+  border:1px solid rgba(255,255,255,0.04);
+  color:rgba(225,255,240,0.55);
+  transition:all .25s;
+}
+.swap-status.err{
+  color:#fb7185;
+  border-color:rgba(251,113,133,0.22);
+  background:rgba(251,113,133,0.07);
+}
+.swap-status.ok{
+  color:#4ade80;
+  border-color:rgba(74,222,128,0.22);
+  background:rgba(74,222,128,0.07);
+}
+
+/* ── SCROLL TO TOP ───────────────────────────────────────── */
+.scroll-top{
+  position:fixed;bottom:90px;right:28px;z-index:1100;
+  width:42px;height:42px;border-radius:50%;
+  background:rgba(0,20,12,0.85);
+  border:1px solid rgba(0,255,160,0.22);
+  color:var(--emerald-2);font-size:1.1rem;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;opacity:0;pointer-events:none;
+  transition:opacity .3s,transform .2s;
+  backdrop-filter:blur(8px);
+  font-family:inherit;
+}
+.scroll-top.visible{opacity:1;pointer-events:auto}
+.scroll-top:hover{transform:translateY(-3px);background:rgba(0,40,24,0.9);box-shadow:0 8px 24px rgba(0,255,160,0.2)}
+
+/* ── TOAST ───────────────────────────────────────────────── */
+.toast{
+  position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(20px);
+  z-index:5000;padding:11px 20px;border-radius:999px;
+  background:rgba(4,20,12,0.96);border:1px solid rgba(0,255,160,0.22);
+  color:var(--emerald-2);font-weight:700;font-size:0.85rem;
+  opacity:0;transition:all .3s;pointer-events:none;
+  backdrop-filter:blur(12px);white-space:nowrap;
+  box-shadow:0 8px 32px rgba(0,0,0,0.5);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── PANEL ENTRANCE ANIMATIONS ──────────────────────────── */
+.panel{
+  opacity:0;transform:translateY(18px);
+  transition:opacity .5s ease,transform .5s ease;
+}
+.panel.in-view{opacity:1;transform:translateY(0)}
+.hero-shell{
+  animation:heroFade .7s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes heroFade{
+  from{opacity:0;transform:translateY(22px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.harvest-step{
+  transition:background .18s,border-color .18s,transform .18s;
+  cursor:default;
+}
+.harvest-step:hover{
+  background:rgba(0,255,160,0.05);
+  border-color:rgba(0,255,160,0.15);
+  transform:translateX(4px);
+}
+.mission-card{transition:background .18s,border-color .18s,transform .18s}
+.mission-card:hover{
+  background:rgba(0,255,160,0.04);
+  border-color:rgba(0,255,160,0.12);
+  transform:translateY(-3px);
+}
+.stat{transition:background .18s,border-color .18s,transform .18s}
+.stat:hover{
+  background:rgba(0,255,160,0.04);
+  border-color:rgba(0,255,160,0.1);
+  transform:translateY(-2px);
+}
+
+/* ── RESPONSIVE ─────────────────────────────────────────── */
+@media(max-width:768px){
+  main{padding-bottom:52px}
+  .scroll-top{bottom:130px;right:16px}
+  .fab-group{bottom:52px;right:18px}
+}
+@media(max-width:768px){
+  header{height:auto;padding:10px 4%}
+  .header-inner{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    grid-template-rows:auto auto;
+    row-gap:6px;
+    column-gap:10px;
+    align-items:center;
+  }
+  .brand-wrap{min-width:0}
+  .logo{width:44px;height:44px}
+  .brand-title h1{font-size:0.95rem}
+  .brand-title p{font-size:0.7rem}
+  .header-actions{justify-content:flex-end}
+  .wallet-btn{
+    grid-column:1 / -1;order:2;width:100%;justify-content:center;max-width:none;
+    font-size:0.8rem;padding:8px 12px;
+  }
+  #wallet-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .nav-toggle{display:inline-flex}
+  .nav-shell{
+    grid-column:1 / -1;justify-content:stretch;position:static;
+    display:none;flex-direction:column;align-items:stretch;margin-top:4px;
+    padding:12px;border-radius:18px;
+    background:linear-gradient(160deg,rgba(5,16,10,0.96),rgba(7,20,16,0.94));
+    border:1px solid rgba(0,255,160,0.16);box-shadow:0 18px 60px rgba(0,0,0,0.55);
+  }
+  .nav-shell.open{display:flex}
+  .nav-shell nav{flex-direction:column;align-items:stretch;gap:8px;width:100%}
+  .nav-shell nav a,.nav-shell .live-pill{
+    display:flex;justify-content:center;align-items:center;padding:10px 12px;font-size:0.86rem;white-space:nowrap;width:100%;
+  }
+  main{padding:160px 4% 60px}
+  .hero-shell{padding:18px 14px}
+  .hero-grid{grid-template-columns:1fr;gap:14px}
+  .hero-kicker{font-size:0.7rem;padding:7px 10px}
+  .hero-title{font-size:1.65rem;max-width:none}
+  .hero-sub{font-size:0.9rem}
+  .hero-stats{grid-template-columns:1fr;gap:8px}
+  .hero-stat{padding:10px 10px 10px 14px}
+  .hero-stat b{font-size:0.98rem}
+  .hero-stat span{font-size:0.86rem}
+  .hero-actions{flex-direction:column}
+  .btn{width:100%;justify-content:center;font-size:0.9rem}
+  .deck{grid-template-columns:1fr;display:flex;flex-direction:column}
+  .aside{order:-1}
+  .nft-row{flex-direction:column;align-items:flex-start}
+  .launch-popup__card{
+    width:min(94vw,560px);
+    margin:72px auto 0;
+    border-radius:24px;
+    grid-template-columns:1fr;
+  }
+  .launch-popup__visual{display:none;}
+  .fab-group{bottom:52px;right:18px}
+  .fab{padding:10px 18px;font-size:0.88rem}
+}
+@media(max-width:480px){
+  .brand-title h1{font-size:0.9rem}
+  .brand-title p{font-size:0.68rem}
+  .hero-kicker{font-size:0.68rem}
+  .hero-title{font-size:1.55rem}
+  .hero-sub{font-size:0.86rem}
+}
+</style>
+</head>
+<body>
+
+<div class="parallax-layer layer1" aria-hidden="true"></div>
+<div class="parallax-layer layer2" aria-hidden="true"></div>
+<div class="parallax-layer layer3" aria-hidden="true"></div>
+
+<!-- SCROLL TO TOP -->
+<button class="scroll-top" id="scroll-top" aria-label="Back to top">↑</button>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner" role="banner">
+    <div class="brand-wrap">
+      <div class="logo"><img src="thick.png" alt="$TREE logo"></div>
+      <div class="brand-title">
+        <h1>THICKQUIDITY</h1>
+        <p>$TREE</p>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M4 7h16"></path>
+          <path d="M4 12h16"></path>
+          <path d="M4 17h16"></path>
+        </svg>
+      </button>
+    </div>
+
+    <button class="wallet-btn" id="wallet-btn">
+      <span class="wdot" id="wdot"></span>
+      <span id="wallet-label">Connect Wallet</span>
+    </button>
+
+    <div class="nav-shell" id="mobile-nav">
+      <nav role="navigation" aria-label="Main">
+        <button class="live-pill" id="reopen-launch-popup" type="button">
+          <span class="pulse"></span>
+          LIVE
+        </button>
+        <a href="#about">About</a>
+        <a href="#tokenomics">Tokenomics</a>
+        <a href="#nfts" class="nav-nft">🌳 NFTREE</a>
+        <a href="#litepaper">Litepaper</a>
+        <a href="#join">Join</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<!-- LIVE ANNOUNCEMENT POPUP -->
+<div class="launch-popup" id="launch-popup" aria-hidden="true">
+  <div class="launch-popup__backdrop" id="launch-popup-backdrop"></div>
+
+  <div class="launch-popup__card" role="dialog" aria-modal="true" aria-labelledby="launch-title">
+    <button class="launch-popup__close" id="launch-popup-close" aria-label="Close announcement">×</button>
+
+    <!-- LEFT CONTENT -->
+    <div class="launch-popup__content">
+      <div class="launch-popup__eyebrow">
+        <span class="launch-dot"></span>
+        <span class="launch-popup__eyebrow-label">NEW ERA FOR $TREE</span>
+      </div>
+
+      <h2 id="launch-title">🌳 NFTREE Mint & ⚔️ Garden Battle are LIVE</h2>
+
+      <p class="launch-popup__lead">
+        Step into the $TREE forest with on-chain NFTs and a live battle arena.
+        Mint your NFTREEs, send them into combat, and grow your stake in the ecosystem.
+      </p>
+
+      <div class="launch-popup__pill-row">
+        <div class="launch-pill">
+          <div class="launch-pill-ico">🌱</div>
+          <div>
+            <h3>Mint your NFTREE</h3>
+            <p>Claim your spot in the Arboretum, unlock reward streams, and fuel $TREE buybacks while supporting treefund.org.</p>
+          </div>
+        </div>
+        <div class="launch-pill">
+          <div class="launch-pill-ico">⚔️</div>
+          <div>
+            <h3>Enter Garden Battle</h3>
+            <p>Deploy your NFTREEs into battle, climb the leaderboard, and flex your liquidity roots in the arena.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="launch-popup__actions">
+        <button class="launch-btn-primary" id="go-mint">
+          🌳 Go to NFT Mint
+        </button>
+
+        <button class="launch-btn-ghost" id="popup-buy-tree">
+          🌿 Buy $TREE
+        </button>
+
+        <button class="launch-btn-ghost" id="go-battle">
+          ⚔️ Enter Garden Battle
+        </button>
+      </div>
+
+      <div class="launch-popup__footerline">
+        Built for early arborists — the deeper you go into the forest, the bigger your harvest.
+      </div>
+    </div>
+
+    <!-- RIGHT VISUAL -->
+    <div class="launch-popup__visual">
+      <div class="launch-popup__visual-inner"></div>
+      <div class="launch-popup__visual-orbit"></div>
+      <div class="launch-popup__visual-tag">
+        <span class="seed"></span>
+        LIVE FOREST
+      </div>
+      <div class="launch-popup__visual-note">
+        <strong>Tip:</strong> Mint a few NFTREEs, stake them deep into the Arboretum,
+        then send your favorites into the Garden Battle to prove your bark and your bite.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main>
+  <section class="hero-shell">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <div class="hero-kicker"><span class="seed"></span> SUI ECOSYSTEM • THICK LIQUIDITY • LIVE FARMING</div>
+        <h1 class="hero-title" id="about">Planting the seeds to financial freedom on the SUI network.</h1>
+        <p class="hero-sub">
+          Join the $TREE movement — a fair launch ecosystem with real utility, thick liquidity, NFT expansion,
+          and a powerful new farming path through TREE/SUI LP on SuiFarm.
+        </p>
+
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <b>TREE/SUI LP</b>
+            <span>Now active for early harvesters</span>
+          </div>
+          <div class="hero-stat">
+            <b>Victory Farming</b>
+            <span>Boosted yield for ecosystem believers</span>
+          </div>
+          <div class="hero-stat">
+            <b>SUI Native</b>
+            <span>Fast execution with low-cost participation</span>
+          </div>
+        </div>
+
+        <div class="hero-actions">
+          <a class="btn nft-primary" href="https://nftree.net/mint" target="_blank" rel="noopener noreferrer">🌳 Buy NFT</a>
+          <button class="btn hero-primary" onclick="openSwapModal()">🌿 Buy $TREE Now</button>
+          <a class="btn secondary" href="https://farm.suidex.org/farm" target="_blank" rel="noopener noreferrer">🚜 Stake LP on SuiFarm</a>
+          <a class="btn" href="#litepaper">📘 View Litepaper</a>
+        </div>
+      </div>
+
+      <div class="hero-side">
+        <div class="feature-card">
+          <h3>Thick liquidity. Real expansion.</h3>
+          <p>
+            The TREE ecosystem is entering its biggest growth phase yet — connecting token utility, LP farming,
+            community momentum, and future NFT-driven benefits into one stronger on-chain experience.
+          </p>
+        </div>
+
+        <div class="harvest-card">
+          <h3>🔥 Join the Harvest</h3>
+          <div class="harvest-steps">
+            <div class="harvest-step">
+              <div class="ic">🌿</div>
+              <div>
+                <strong>Buy TREE</strong>
+                <span><a href="https://dex.suidex.org/" target="_blank" rel="noopener noreferrer">dex.suidex.org</a></span>
+              </div>
+            </div>
+            <div class="harvest-step">
+              <div class="ic">💧</div>
+              <div>
+                <strong>Add TREE/SUI liquidity</strong>
+                <span>Provide LP to enter the next stage</span>
+              </div>
+            </div>
+            <div class="harvest-step">
+              <div class="ic">🚜</div>
+              <div>
+                <strong>Stake LP on SuiFarm</strong>
+                <span><a href="https://farm.suidex.org/farm" target="_blank" rel="noopener noreferrer">farm.suidex.org/farm</a></span>
+              </div>
+            </div>
+            <div class="harvest-step">
+              <div class="ic">🏆</div>
+              <div>
+                <strong>Farm Victory nonstop</strong>
+                <span>Built for the earliest believers to win massively</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="deck">
+    <div>
+      <section class="panel" aria-labelledby="about-copy">
+        <h2 id="about-copy" class="section-title">About $TREE</h2>
+        <p style="margin:0 0 8px;color:var(--muted)">
+          THICKQUIDITY ($TREE) is a community-driven DeFi token on the SUI blockchain, offering staking rewards,
+          NFT utility, and a liquidity-first ecosystem designed to grow with its holders.
+        </p>
+        <p style="margin:0;color:var(--muted)">
+          Built on SUI's high-speed, low-cost infrastructure, $TREE is focused on sustainable growth, real participation,
+          and stronger on-chain utility through trading, LP farming, and future ecosystem expansion.
+        </p>
+      </section>
+
+      <section class="panel" id="tokenomics" style="margin-top:18px">
+        <h2 class="section-title">Tokenomics of $TREE</h2>
+        <div class="grid">
+          <div class="stat"><span class="num">1B</span>Total $TREE Supply</div>
+          <div class="stat"><span class="num">NFTrees</span>Utility NFTs in development</div>
+          <div class="stat"><span class="num">SUI-Powered</span>Fast, scalable blockchain</div>
+          <div class="stat"><span class="num">Staking</span>Earn passive income in DeFi pools</div>
+        </div>
+        <p style="margin-top:12px;color:var(--muted)">
+          Total Supply: 1,000,000,000 $TREE tokens — building a strong foundation for ecosystem growth, liquidity participation, and future utility.
+        </p>
+      </section>
+
+      <section class="panel" style="margin-top:18px">
+        <h2 class="section-title">Our Mission</h2>
+        <div class="mission-grid">
+          <div class="mission-card">
+            <h4>Growth</h4>
+            <p>Empower financial prosperity through DeFi on SUI. Stake, trade, and grow with thick liquidity.</p>
+          </div>
+          <div class="mission-card">
+            <h4>Ecosystem</h4>
+            <p>Build a robust environment where $TREE's liquidity supports stability, expansion, and shared upside.</p>
+          </div>
+          <div class="mission-card">
+            <h4>Sustainability</h4>
+            <p>Focus on long-term wealth with transparent blockchain participation and durable utility.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="nfts" style="margin-top:18px">
+        <h2 class="section-title">🌳 NFTREE — $TREE NFTs</h2>
+        <div class="nft-row">
+          <div class="nft-thumb"><img src="tree.jpg" alt="$TREE NFT Preview"></div>
+          <div>
+            <p style="margin:0 0 8px;color:var(--muted)">
+              $TREE NFTs unlock monthly SUI airdrops from staking pools, with 80% of sales fueling $TREE buybacks and 5% donated to treefund.org.
+            </p>
+            <p style="margin:0 0 8px;color:var(--muted)">
+              Holders also gain access to future ecosystem perks and gaming opportunities as NFT utility expands.
+            </p>
+            <p style="margin:0 0 12px;color:var(--gold);font-weight:800;font-size:0.95rem;line-height:1.55;border-left:3px solid rgba(255,209,102,0.5);padding-left:10px;">
+              🏛️ <strong>Arboretum</strong> — The Arboretum staking vault requires multiple NFTREEs to stake simultaneously. The more NFTs you hold and stake, the larger your payout each 100-day cycle in $TREE. Maximum yields are reserved for those who go deepest into the forest.
+            </p>
+            <a class="btn nft-primary" href="https://nftree.net/mint" target="_blank" rel="noopener noreferrer">🌳 Learn More &amp; Mint NFT</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="litepaper" style="margin-top:18px">
+        <h2 class="section-title">$TREE Litepaper</h2>
+        <p style="margin:0 0 12px;color:var(--muted)">
+          Explore the vision, tokenomics, community mission, and utility-driven growth plan behind THICKQUIDITY.
+        </p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <button class="btn" id="open-litepaper">📘 View Litepaper</button>
+          <a class="btn secondary" href="Litepaper.pdf" target="_blank" rel="noopener noreferrer">Download PDF</a>
+        </div>
+      </section>
+
+      <section class="panel" style="margin-top:18px">
+        <h2 class="section-title">Social Outreach Utility</h2>
+        <p style="margin:0 0 6px;color:var(--muted)">
+          Join @thecryptoarborist on YouTube for explosive $TREE content, deep dives into DeFi, SUI blockchain developments, and ecosystem growth.
+        </p>
+        <div class="social-row">
+          <a class="btn" href="https://x.com/thickquidity" target="_blank" rel="noopener noreferrer">X</a>
+          <a class="btn" href="https://www.youtube.com/@thecryptoarborist" target="_blank" rel="noopener noreferrer">YouTube</a>
+          <a class="btn" href="https://t.me/thickquidity" target="_blank" rel="noopener noreferrer">Telegram</a>
+          <a class="btn secondary" href="https://sui.io" target="_blank" rel="noopener noreferrer">SUI Network</a>
+          <a class="btn secondary" href="https://dex.suidex.org/" target="_blank" rel="noopener noreferrer">SuiDex</a>
+        </div>
+      </section>
+
+      <section class="panel" id="join" style="margin-top:18px">
+        <h2 class="section-title">Join the $TREE Forest</h2>
+        <p style="margin:0 0 12px;color:var(--muted)">
+          Stake your $TREE, build LP, and take part in a growing ecosystem designed for strong community participation and long-term upside.
+        </p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <button class="btn hero-primary" onclick="openSwapModal()">🌿 BUY $TREE</button>
+          <a class="btn" href="https://app.turbos.finance/#/trade?input=0x2::sui::SUI&output=0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE" target="_blank" rel="noopener noreferrer">Turbos</a>
+          <a class="btn secondary" href="https://farm.suidex.org/farm" target="_blank" rel="noopener noreferrer">Stake LP</a>
+          <a class="btn secondary" href="https://zapper.xyz/token/sui/0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE" target="_blank" rel="noopener noreferrer">📊 Zapper</a>
+        </div>
+      </section>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="aside">
+      <div class="panel" style="display:flex;flex-direction:column;gap:12px">
+        <div class="price-widget" id="price-widget" aria-live="polite">
+          <h4>$TREE Price</h4>
+          <div style="display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px">
+            <div class="price-big" id="price-value">—</div>
+            <div id="price-change" class="price-change">—</div>
+            <div id="price-meta" style="font-size:0.85rem;color:rgba(225,255,240,0.85)">Loading…</div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:12px;justify-content:center;flex-wrap:wrap">
+            <button class="btn" onclick="openSwapModal()">🌿 Buy</button>
+            <a class="btn secondary" href="https://farm.suidex.org/farm" target="_blank" rel="noopener noreferrer">Stake LP</a>
+            <a class="btn" href="https://noodles.fi/coins/0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE?trade=market" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem">🍜 Noodles.fi</a>
+          </div>
+        </div>
+
+        <div class="panel" style="padding:12px">
+          <div style="font-weight:800;color:var(--gold);margin-bottom:8px">Quick Links</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <button class="btn" onclick="openSwapModal()">🌿 Buy TREE (Swap)</button>
+            <a class="btn secondary" href="https://app.turbos.finance/#/trade?input=0x2::sui::SUI&output=0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE" target="_blank" rel="noopener noreferrer">Buy (Turbos)</a>
+            <a class="btn nft-primary" href="https://nftree.net/mint" target="_blank" rel="noopener noreferrer" style="font-size:0.88rem">🌳 Mint NFTREE</a>
+            <a class="btn" href="https://farm.suidex.org/farm" target="_blank" rel="noopener noreferrer">Stake LP (SuiFarm)</a>
+            <a class="btn secondary" href="https://zapper.xyz/token/sui/0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE" target="_blank" rel="noopener noreferrer">📊 Portfolio (Zapper)</a>
+          </div>
+        </div>
+
+        <div class="panel" style="padding:12px">
+          <div style="font-weight:800;color:var(--gold);margin-bottom:8px">Stats</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div style="padding:8px;background:rgba(255,255,255,0.02);border-radius:8px"><strong style="color:var(--emerald-2)">Market</strong><div style="font-size:0.85rem">$TREE</div></div>
+            <div style="padding:8px;background:rgba(255,255,255,0.02);border-radius:8px"><strong style="color:var(--emerald-2)">LP</strong><div style="font-size:0.85rem">TREE/SUI</div></div>
+            <div style="padding:8px;background:rgba(255,255,255,0.02);border-radius:8px"><strong style="color:var(--emerald-2)">Farm</strong><div style="font-size:0.85rem">SuiFarm</div></div>
+            <div style="padding:8px;background:rgba(255,255,255,0.02);border-radius:8px"><strong style="color:var(--emerald-2)">Donations</strong><div style="font-size:0.85rem">5% → treefund.org</div></div>
+          </div>
+          <a href="https://www.coingecko.com/en/coins/thickquidity" target="_blank" rel="noopener noreferrer" class="cg-badge" style="margin-top:8px">
+            <img src="assets/CG.png" alt="CoinGecko">
+            <span class="cg-badge-text">Listed on CoinGecko 🦎</span>
+          </a>
+        </div>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div style="max-width:1200px;margin:0 auto">
+    <p>© <span id="year"></span> THICKQUIDITY ($TREE). All rights reserved.</p>
+    <p style="margin-top:6px">Growing the future of finance, one branch at a time.</p>
+    <div style="margin-top:8px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+      <a class="btn" href="https://dex.suidex.org/" target="_blank" rel="noopener noreferrer">SuiDex</a>
+      <a class="btn" href="https://farm.suidex.org/farm" target="_blank" rel="noopener noreferrer">SuiFarm</a>
+      <a class="btn" href="https://app.turbos.finance/#/trade?input=0x2::sui::SUI&output=0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE" target="_blank" rel="noopener noreferrer">Turbos</a>
+      <a class="btn" href="https://zapper.xyz/token/sui/0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE" target="_blank" rel="noopener noreferrer">Zapper</a>
+      <a class="cg-badge" href="https://www.coingecko.com/en/coins/thickquidity" target="_blank" rel="noopener noreferrer" style="padding:9px 14px">
+        <img src="assets/CG.png" alt="CoinGecko" style="width:18px;height:18px">
+        <span class="cg-badge-text">CoinGecko</span>
+      </a>
+      <a class="btn" href="https://x.com/thickquidity" target="_blank" rel="noopener noreferrer">X</a>
+      <a class="btn" href="https://t.me/thickquidity" target="_blank" rel="noopener noreferrer">Telegram</a>
+    </div>
+  </div>
+</footer>
+
+<!-- FAB GROUP -->
+<div class="fab-group">
+  <a class="fab battle-fab" href="https://nftree.net/battle" target="_blank" rel="noopener noreferrer" aria-label="Enter Garden Battle">
+    ⚔️ Battle
+  </a>
+  <a class="fab mint-fab" href="https://nftree.net/mint" target="_blank" rel="noopener noreferrer" aria-label="Mint NFTREE">
+    🌳 Mint NFT
+  </a>
+  <button class="fab buy-fab" onclick="openSwapModal()" aria-label="Buy $TREE">
+    🌿 Buy $TREE
+  </button>
+</div>
+
+<!-- SWAP MODAL -->
+<div class="swap-backdrop" id="swap-backdrop" role="dialog" aria-modal="true" aria-label="Buy $TREE">
+  <div class="swap-card">
+    <div class="swap-hdr">
+      <div class="swap-hdr-left">
+        <span class="ico">🌳</span>
+        <div>
+          <h3>Buy $TREE</h3>
+          <p>Swap SUI → $TREE on SuiDex</p>
+        </div>
+      </div>
+      <button class="swap-x" id="swap-close" aria-label="Close">✕</button>
+    </div>
+    <div class="swap-tabs">
+      <button class="stab active" data-tab="widget">🔁 Quick Swap</button>
+    </div>
+    <div class="swap-body">
+      <div id="tab-widget">
+        <div class="modal-wbar">
+          <span class="w-addr" id="modal-addr">No wallet connected</span>
+          <span class="w-bal" id="modal-bal">—</span>
+        </div>
+        <div class="tok-group">
+          <div class="tok-label">You Pay</div>
+          <div class="tok-row">
+            <div class="tok-pill sui">💧 SUI</div>
+            <input class="amt-input" id="inp-sui" type="number" min="0" step="0.1" placeholder="0.00">
+          </div>
+        </div>
+<div class="tok-group">
+          <div class="tok-label">You Receive (Est.)</div>
+          <div class="tok-row">
+            <div class="tok-pill">🌿 TREE</div>
+            <input class="amt-input" id="inp-tree" type="number" min="0" step="1" placeholder="0.00" readonly aria-label="Estimated TREE received">
+          </div>
+        </div>
+        <div class="rate-row">
+          <span>Live Rate</span>
+          <span class="rate-val" id="rate-val">Loading…</span>
+        </div>
+        <button class="action-btn needs-wallet" id="action-btn">🔌 Connect Wallet to Swap</button>
+        <div class="qlinks">
+          <a class="qlink" href="https://dex.suidex.org/" target="_blank" rel="noopener noreferrer">SuiDex ↗</a>
+          <a class="qlink" href="https://app.turbos.finance/#/trade?input=0x2::sui::SUI&output=0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE" target="_blank" rel="noopener noreferrer">Turbos ↗</a>
+          <a class="qlink" href="https://farm.suidex.org/farm" target="_blank" rel="noopener noreferrer">Stake LP ↗</a>
+          <a class="qlink" href="https://zapper.xyz/token/sui/0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE" target="_blank" rel="noopener noreferrer">Zapper ↗</a>
+        </div>
+        <div class="swap-status" id="swap-status">Enter an amount above to get started</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LITEPAPER MODAL -->
+<div class="booklet-modal" id="booklet-modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="booklet-wrap" role="document">
+    <div class="booklet-inner" id="booklet-inner">
+      <div class="page left" id="page-left"><img id="img-left" src="" alt="Litepaper left page"></div>
+      <div class="page right" id="page-right"><img id="img-right" src="" alt="Litepaper right page"></div>
+    </div>
+    <div class="nav-btn left" id="book-prev" role="button" aria-label="Previous">◀</div>
+    <div class="nav-btn right" id="book-next" role="button" aria-label="Next">▶</div>
+    <div class="close-booklet" id="book-close" role="button" aria-label="Close">✕</div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+const TREE_ADDR    = '0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE';
+const SUI_ADDR     = '0x2::sui::SUI';
+const NOODLES_API  = '/api/tree-market';
+const PAIR_API     = 'https://api.dexscreener.com/latest/dex/pairs/sui/0xaa133ce1f8fd55d85b6fc87c1b3054cb717d83be477ef3635c661c21fbdfa0ee';
+
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* SCROLL TO TOP */
+const scrollTopBtn = document.getElementById('scroll-top');
+window.addEventListener('scroll',()=>{
+  scrollTopBtn.classList.toggle('visible', window.scrollY > 400);
+},{passive:true});
+scrollTopBtn.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+/* TOAST */
+function showToast(msg, duration=2800){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), duration);
+}
+window.showToast = showToast;
+
+/* PANEL ENTRANCE ANIMATIONS */
+const panelObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in-view'); });
+},{threshold:0.08});
+document.querySelectorAll('.panel').forEach(p=>panelObserver.observe(p));
+
+/* MOBILE NAV */
+const navToggle = document.getElementById('nav-toggle');
+const navShell  = document.getElementById('mobile-nav');
+const navLinks  = navShell ? navShell.querySelectorAll('a,button') : [];
+
+function closeMobileNav(){
+  if(!navShell||!navToggle) return;
+  navShell.classList.remove('open');
+  navToggle.setAttribute('aria-expanded','false');
+}
+function toggleMobileNav(){
+  if(!navShell||!navToggle) return;
+  const open = navShell.classList.toggle('open');
+  navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+}
+navToggle?.addEventListener('click', toggleMobileNav);
+navLinks.forEach(el => el.addEventListener('click', () => {
+  if(window.innerWidth <= 768) closeMobileNav();
+}));
+window.addEventListener('resize', () => {
+  if(window.innerWidth > 768) closeMobileNav();
+});
+
+/* MOBILE PARALLAX */
+(function(){
+  if(window.innerWidth >= 1000) return;
+  const l1=document.querySelector('.parallax-layer.layer1');
+  const l2=document.querySelector('.parallax-layer.layer2');
+  const l3=document.querySelector('.parallax-layer.layer3');
+  let t;
+  window.addEventListener('scroll',()=>{
+    clearTimeout(t);
+    t=setTimeout(()=>{
+      const s=window.scrollY;
+      if(l1) l1.style.transform=`translateY(${s*0.06}px)`;
+      if(l2) l2.style.transform=`translateY(${s*0.12}px)`;
+      if(l3) l3.style.transform=`translateY(${s*0.22}px)`;
+    },12);
+  });
+})();
+
+/* LIVE POPUP */
+const launchPopup         = document.getElementById('launch-popup');
+const launchPopupClose    = document.getElementById('launch-popup-close');
+const launchPopupBackdrop = document.getElementById('launch-popup-backdrop');
+const reopenLaunchPopup   = document.getElementById('reopen-launch-popup');
+const goMintBtn           = document.getElementById('go-mint');
+const goBattleBtn         = document.getElementById('go-battle');
+const popupBuyTreeBtn     = document.getElementById('popup-buy-tree');
+
+function openLaunchPopup(){
+  if(!launchPopup) return;
+  launchPopup.classList.add('open');
+  launchPopup.setAttribute('aria-hidden','false');
+}
+function closeLaunchPopup(){
+  if(!launchPopup) return;
+  launchPopup.classList.remove('open');
+  launchPopup.setAttribute('aria-hidden','true');
+}
+window.closeLaunchPopup = closeLaunchPopup;
+
+window.addEventListener('load',()=>{ setTimeout(()=>openLaunchPopup(),420); });
+launchPopupClose?.addEventListener('click',closeLaunchPopup);
+launchPopupBackdrop?.addEventListener('click',closeLaunchPopup);
+reopenLaunchPopup?.addEventListener('click',openLaunchPopup);
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeLaunchPopup(); });
+
+goMintBtn?.addEventListener('click',()=>{
+  window.open('https://nftree.net/mint','_blank','noopener');
+  closeLaunchPopup();
+});
+goBattleBtn?.addEventListener('click',()=>{
+  window.open('https://nftree.net/battle','_blank','noopener');
+  closeLaunchPopup();
+});
+popupBuyTreeBtn?.addEventListener('click',()=>{
+  if(typeof openSwapModal === 'function') {
+    openSwapModal();
+  }
+  closeLaunchPopup();
+});
+
+/* PRICE WIDGET — fetch once */
+(function(){
+  const elVal    = document.getElementById('price-value');
+  const elChange = document.getElementById('price-change');
+  const elMeta   = document.getElementById('price-meta');
+
+  async function fetchPrice(){
+    try{
+      const r = await fetch(NOODLES_API);
+      if(!r.ok) throw 0;
+      const j  = await r.json();
+      const coin = j.data?.coin;
+      const pc   = j.data?.price_change;
+      if(!coin||!pc) throw 0;
+      const price = Number(pc.price);
+      const ch    = Number(pc.price_change_1d||0);
+      const liq   = '$'+Number(coin.liquidity).toLocaleString();
+      const mcap  = coin.market_cap ? '$'+Number(coin.market_cap).toLocaleString() : '--';
+      const fdv   = coin.fdv        ? '$'+Number(coin.fdv).toLocaleString()        : '--';
+      elVal.textContent    = '$'+price.toFixed(6);
+      elChange.textContent = (ch>=0?'+':'')+ch.toFixed(2)+'% (24h)';
+      elChange.className   = 'price-change '+(ch>=0?'up':'down');
+      elMeta.textContent   = `Liq: ${liq} • MCap: ${mcap} • FDV: ${fdv}`;
+    } catch{
+      elVal.textContent    = '—';
+      elChange.textContent = 'Price feed error';
+      elMeta.textContent   = 'Unable to load data';
+    }
+  }
+
+  fetchPrice();
+})();
+
+/* LITEPAPER BOOKLET */
+(function(){
+  const modal   = document.getElementById('booklet-modal');
+  const openBtn = document.getElementById('open-litepaper');
+  const closeBtn= document.getElementById('book-close');
+  const prevBtn = document.getElementById('book-prev');
+  const nextBtn = document.getElementById('book-next');
+  const lImg    = document.getElementById('img-left');
+  const rImg    = document.getElementById('img-right');
+  const lPage   = document.getElementById('page-left');
+  const rPage   = document.getElementById('page-right');
+  const pages   = Array.from({length:12},(_,i)=>`assets/${i+1}.png`);
+
+  pages.forEach(p=>{ const i=new Image(); i.src=p; });
+
+  let idx=0;
+  const mob=()=>window.innerWidth<=950;
+  const clamp=i=>Math.max(0,Math.min(i,mob()?pages.length-1:pages.length-2));
+
+  function render(anim){
+    idx=clamp(idx);
+    if(mob()){
+      rPage.style.display='none';
+      lImg.src=pages[idx]||'';
+      prevBtn.style.display=idx===0?'none':'flex';
+      nextBtn.style.display=idx>=pages.length-1?'none':'flex';
+    } else {
+      rPage.style.display='block';
+      lImg.src=pages[idx]||'';
+      rImg.src=pages[idx+1]||'';
+      prevBtn.style.display=idx===0?'none':'flex';
+      nextBtn.style.display=idx>=pages.length-2?'none':'flex';
+    }
+    if(anim){
+      lPage.animate(
+        [{transform:'translateY(8px)',opacity:0},{transform:'translateY(0)',opacity:1}],
+        {duration:420,easing:'cubic-bezier(.2,.8,.2,1)'}
+      );
+    }
+  }
+
+  openBtn.addEventListener('click',()=>{
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden','false');
+    idx=0;
+    render(false);
+  });
+  closeBtn.addEventListener('click',()=>{
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden','true');
+  });
+  modal.addEventListener('click',e=>{
+    if(e.target===modal){
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden','true');
+    }
+  });
+  nextBtn.addEventListener('click',()=>{
+    idx=mob()?Math.min(idx+1,pages.length-1):Math.min(idx+2,pages.length-2);
+    render(true);
+  });
+  prevBtn.addEventListener('click',()=>{
+    idx=mob()?Math.max(idx-1,0):Math.max(idx-2,0);
+    render(true);
+  });
+  document.addEventListener('keydown',e=>{
+    if(!modal.classList.contains('open')) return;
+    if(e.key==='Escape'){
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden','true');
+    }
+    if(e.key==='ArrowRight') nextBtn.click();
+    if(e.key==='ArrowLeft')  prevBtn.click();
+  });
+  window.addEventListener('resize',()=>render(false));
+  render(false);
+})();
+
+/* WALLET */
+const walletBtn   = document.getElementById('wallet-btn');
+const wdot        = document.getElementById('wdot');
+const walletLabel = document.getElementById('wallet-label');
+let _connecting   = false;
+let _lastAddr     = null;
+
+function syncWalletUI(){
+  const addr = window.playerAddress || null;
+  if(addr){
+    wdot.className           = 'wdot on';
+    walletLabel.textContent  = addr.slice(0,6)+'…'+addr.slice(-4);
+    walletBtn.classList.add('connected');
+    walletBtn.title          = 'Click to disconnect';
+  } else {
+    wdot.className           = 'wdot';
+    walletLabel.textContent  = _connecting ? 'Connecting…' : 'Connect Wallet';
+    walletBtn.classList.remove('connected');
+    walletBtn.title          = '';
+  }
+  const mAddr = document.getElementById('modal-addr');
+  const mBal  = document.getElementById('modal-bal');
+  if(mAddr){
+    if(addr){
+      mAddr.textContent = addr.slice(0,6)+'…'+addr.slice(-4);
+      if(addr !== _lastAddr && typeof window.getBalance==='function'){
+        window.getBalance()
+          .then(b=>{ mBal.textContent=(Number(b)/1e9).toFixed(3)+' SUI'; })
+          .catch(()=>{ mBal.textContent='—'; });
+      }
+    } else {
+      mAddr.textContent='No wallet connected'; mBal.textContent='—';
+    }
+  }
+  _lastAddr = addr;
+  const aBtn = document.getElementById('action-btn');
+  if(aBtn){
+    if(addr){
+      aBtn.textContent='🚀 Swap on SuiDex';
+      aBtn.className='action-btn ready';
+    } else {
+      aBtn.textContent='🔌 Connect Wallet to Swap';
+      aBtn.className='action-btn needs-wallet';
+    }
+  }
+}
+
+async function doConnect(){
+  if(_connecting) return;
+  if(window.playerAddress){ doDisconnect(); return; }
+
+  if(typeof window.connectWallet !== 'function'){
+    let waited=0;
+    while(typeof window.connectWallet !== 'function' && waited<3000){
+      await new Promise(r=>setTimeout(r,100)); waited+=100;
+    }
+  }
+
+  const statusEl = document.getElementById('swap-status');
+  const setStatus=(msg,type)=>{ if(!statusEl) return; statusEl.textContent=msg; statusEl.className='swap-status'+(type?' '+type:''); };
+
+  if(typeof window.connectWallet !== 'function'){
+    setStatus('⚠️ wallet.js not loaded — check scripts/wallet.js exists','err'); return;
+  }
+
+  _connecting=true; walletLabel.textContent='Connecting…'; walletBtn.disabled=true;
+  setStatus('🔍 Connecting to wallet…','');
+
+  try{
+    const result = await window.connectWallet();
+    window.currentWallet  = result.wallet;
+    window.playerAddress  = result.address;
+    setStatus('✅ Wallet connected!','ok');
+  } catch(e){
+    const m  = (e&&e.message)||'';
+    const low= m.toLowerCase?.()||'';
+    if(m==='NO_WALLET')                               setStatus('⚠️ No Sui wallet detected. Make sure Slush or Sui Wallet is enabled.','err');
+    else if(m==='WRONG_NETWORK'||low.includes('mainnet')) setStatus('❌ Wrong network — switch wallet to Sui Mainnet.','err');
+    else if(low.includes('no accounts')||low.includes('authoris')) setStatus('❌ Wallet locked — unlock it and try again.','err');
+    else if(low.includes('reject')||low.includes('cancel'))        setStatus('Connection cancelled — approve the request in your wallet.','');
+    else{ setStatus('❌ '+(m||'Connection failed. Check wallet extension is unlocked.'),'err'); console.error('Connect failed:',e); }
+  } finally{
+    _connecting=false; walletBtn.disabled=false; syncWalletUI();
+  }
+}
+
+async function doDisconnect(){
+  try{ if(typeof window.disconnectWallet==='function') await window.disconnectWallet(); }catch{}
+  syncWalletUI();
+  const statusEl=document.getElementById('swap-status');
+  if(statusEl){ statusEl.textContent='Wallet disconnected.'; statusEl.className='swap-status'; }
+}
+
+walletBtn.addEventListener('click',doConnect);
+setInterval(syncWalletUI,5000);
+
+window.addEventListener('load',()=>{
+  if(typeof window.initializeWallet==='function') window.initializeWallet().catch(()=>{});
+});
+
+/* SWAP MODAL JS */
+const backdrop  = document.getElementById('swap-backdrop');
+const swapClose = document.getElementById('swap-close');
+const stabs     = document.querySelectorAll('.stab');
+const tabWidget = document.getElementById('tab-widget');
+const inpSui    = document.getElementById('inp-sui');
+const inpTree   = document.getElementById('inp-tree');
+const rateVal   = document.getElementById('rate-val');
+const actionBtn = document.getElementById('action-btn');
+const statusEl  = document.getElementById('swap-status');
+
+let treePerSui = null;
+
+window.openSwapModal = function(){
+  backdrop.classList.add('open');
+  syncWalletUI();
+};
+
+document.getElementById('modal-addr').addEventListener('click',()=>{
+  const addr = window.playerAddress;
+  if(!addr) return;
+  navigator.clipboard?.writeText(addr).then(()=>showToast('📋 Address copied!'));
+});
+swapClose.addEventListener('click',()=>backdrop.classList.remove('open'));
+backdrop.addEventListener('click',e=>{ if(e.target===backdrop) backdrop.classList.remove('open'); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') backdrop.classList.remove('open'); });
+
+stabs.forEach(btn=>btn.addEventListener('click',()=>{
+  stabs.forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  tabWidget.style.display='block';
+}));
+
+function setStatus(msg,type){
+  if(!statusEl) return;
+  statusEl.textContent=msg;
+  statusEl.className='swap-status'+(type?' '+type:'');
+}
+
+/* Rate via DexScreener */
+async function loadRate(){
+  try{
+    const r=await fetch(PAIR_API);
+    const j=await r.json();
+    const p=j.pair;
+    if(!p||!p.priceNative) throw 0;
+    const priceInSui=parseFloat(p.priceNative);
+    treePerSui=priceInSui>0?1/priceInSui:null;
+    rateVal.textContent=treePerSui?'1 SUI ≈ '+Math.round(treePerSui).toLocaleString()+' TREE':'Rate unavailable';
+    recalcTree();
+  } catch{
+    rateVal.textContent='Rate unavailable';
+  }
+}
+loadRate();
+setInterval(loadRate,15000);
+
+function recalcTree(){
+  const sui=parseFloat(inpSui.value);
+  if(treePerSui&&sui>0){
+    inpTree.value=Math.floor(sui*treePerSui).toString();
+  } else {
+    inpTree.value='';
+  }
+}
+function recalcSui(){
+  const tree=parseFloat((inpTree.value||'').replace(/,/g,''));
+  if(treePerSui&&tree>0){
+    inpSui.value=(tree/treePerSui).toFixed(4);
+  } else {
+    inpSui.value='';
+  }
+}
+inpSui.addEventListener('input',recalcTree);
+inpTree.addEventListener('input',recalcSui);
+
+actionBtn.addEventListener('click',async()=>{
+  try{
+    if(!window.playerAddress){
+      await doConnect();
+      if(!window.playerAddress) return;
+    }
+    if(!window.TREESwap){
+      setStatus('swap.js not loaded. Check scripts/swap.js path.','err');
+      return;
+    }
+
+    const suiVal  = (inpSui.value ||'').trim();
+    const treeVal = (inpTree.value||'').trim();
+    const dir     = 'SUI_TO_TREE';
+
+    if(dir==='SUI_TO_TREE'){
+      if(!suiVal||Number(suiVal)<=0){
+        setStatus('Enter a SUI amount first.','err');
+        return;
+      }
+      setStatus('Submitting SUI → TREE swap…','');
+      actionBtn.disabled=true;
+      const res=await window.TREESwap.swapSuiToTree({amount:suiVal,expectedOut:treeVal,slippageBps:100});
+      console.log('Swap success:',res);
+      setStatus('Swap submitted successfully!','ok');
+      showToast('🌿 Swap submitted successfully!');
+    } else {
+      if(!treeVal||Number(treeVal)<=0){
+        setStatus('Enter a TREE amount first.','err');
+        return;
+      }
+      setStatus('Submitting TREE → SUI swap…','');
+      actionBtn.disabled=true;
+      const res=await window.TREESwap.swapTreeToSui({amount:treeVal,expectedOut:suiVal,slippageBps:100});
+      console.log('Swap success:',res);
+      setStatus('Swap submitted successfully!','ok');
+      showToast('🌿 Swap submitted successfully!');
+    }
+    if(typeof syncWalletUI==='function') setTimeout(syncWalletUI,1200);
+  } catch(e){
+    console.error('Swap failed:',e);
+    setStatus(e?.message||'Swap failed.','err');
+  } finally{
+    actionBtn.disabled=false;
+  }
+});
+</script>
+</body>
+</html>
