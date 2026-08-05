@@ -49,6 +49,7 @@
 }
 html,body{height:100%;margin:0;padding:0}
 html{scroll-behavior:smooth}
+section[id]{scroll-margin-top:105px}
 body{
   font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
   color:var(--muted);
@@ -1343,6 +1344,7 @@ header{background:linear-gradient(180deg,rgba(5,7,20,.94),rgba(5,7,20,.7));borde
 .price-source{font-size:.76rem;color:var(--ecosystem-cyan)}
 @media(max-width:900px){.ecosystem-grid{grid-template-columns:1fr}.impact-grid{grid-template-columns:1fr}.impact-image-link{max-width:620px;margin:0 auto}.deck{grid-template-columns:1fr}}
 @media(max-width:768px){
+  section[id]{scroll-margin-top:150px}
   body{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
   main{padding-bottom:28px}.hero-actions{flex-direction:row}.hero-actions .btn{flex:1 1 150px;justify-content:center}
   .launch-popup__card{max-height:calc(100vh - 24px);overflow-y:auto;margin:12px auto}.launch-popup__content{padding-top:58px}
@@ -1365,7 +1367,12 @@ header{background:linear-gradient(180deg,rgba(5,7,20,.94),rgba(5,7,20,.7));borde
 <button class="scroll-top" id="scroll-top" aria-label="Back to top">↑</button>
 
 <!-- TOAST -->
-<div class="toast" id="toast"></div>
+<div
+  class="toast"
+  id="toast"
+  role="status"
+  aria-live="polite"
+></div>
 
 <!-- HEADER -->
 <header>
@@ -1432,14 +1439,14 @@ header{background:linear-gradient(180deg,rgba(5,7,20,.94),rgba(5,7,20,.7));borde
 
       <div class="launch-popup__pill-row">
         <div class="launch-pill">
-          <div class="launch-pill-ico">🌱</div>
+          <div class="launch-pill-ico" aria-hidden="true">🌱</div>
           <div>
             <h3>NFTree Minting — Live</h3>
             <p>Mint from the active NFTree sales pool.</p>
           </div>
         </div>
         <div class="launch-pill">
-          <div class="launch-pill-ico">⚔️</div>
+          <div class="launch-pill-ico" aria-hidden="true">🎁</div>
           <div>
             <h3>TreeDrop Rewards — Live</h3>
             <p>Connect the wallet holding your NFTrees and check active reward distributions.</p>
@@ -1486,7 +1493,7 @@ header{background:linear-gradient(180deg,rgba(5,7,20,.94),rgba(5,7,20,.7));borde
     <div class="hero-grid">
       <div class="hero-copy">
         <div class="hero-kicker"><span class="seed"></span> TREE • NFTREE • REWARDS • GAMES ON SUI</div>
-        <h1 class="hero-title" id="about">The TREE utility ecosystem is growing on Sui.</h1>
+        <h1 class="hero-title">The TREE utility ecosystem is growing on Sui.</h1>
         <p class="hero-sub">
           Trade TREE, mint NFTrees, claim eligible rewards through TreeDrop, and compete in Garden Battles through one connected ecosystem.
         </p>
@@ -1612,7 +1619,7 @@ header{background:linear-gradient(180deg,rgba(5,7,20,.94),rgba(5,7,20,.7));borde
 
   <div class="deck">
     <div>
-      <section class="panel" aria-labelledby="about-copy">
+      <section class="panel" id="about" aria-labelledby="about-copy">
         <h2 id="about-copy" class="section-title">About TREE</h2>
         <p style="margin:0 0 8px;color:var(--muted)">
           TREE is the utility token at the center of the Thickquidity ecosystem on Sui. It connects liquidity, NFTree access, holder reward infrastructure, games, and future applications through a growing set of independently usable products.
@@ -1721,7 +1728,7 @@ header{background:linear-gradient(180deg,rgba(5,7,20,.94),rgba(5,7,20,.7));borde
           <a class="btn nft-primary" href="https://nftree.net/mint" target="_blank" rel="noopener noreferrer">Mint NFTree</a>
           <a class="btn purple" href="https://treedrop.xyz" target="_blank" rel="noopener noreferrer">Check Rewards</a>
           <a class="btn secondary" href="https://nftree.net/battle" target="_blank" rel="noopener noreferrer">Play Garden Battles</a>
-          <a class="btn secondary" href="https://farm.suidex.org/farm" target="_blank" rel="noopener noreferrer">Provide Liquidity</a>
+          <a class="btn secondary" href="https://dex.suidex.org/pools/0x35a1be1f01f9edf7f5221d226f357d194d43c28f2a65cb38640935518d9a5bfc/add" target="_blank" rel="noopener noreferrer">Provide Liquidity</a>
         </div>
       </section>
     </div>
@@ -1902,14 +1909,16 @@ const navShell  = document.getElementById('mobile-nav');
 const navLinks  = navShell ? navShell.querySelectorAll('a,button') : [];
 
 function closeMobileNav(){
-  if(!navShell||!navToggle) return;
+  if(!navShell || !navToggle) return;
   navShell.classList.remove('open');
   navToggle.setAttribute('aria-expanded','false');
+  navToggle.setAttribute('aria-label','Open menu');
 }
 function toggleMobileNav(){
-  if(!navShell||!navToggle) return;
+  if(!navShell || !navToggle) return;
   const open = navShell.classList.toggle('open');
   navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  navToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
 }
 navToggle?.addEventListener('click', toggleMobileNav);
 navLinks.forEach(el => el.addEventListener('click', () => {
