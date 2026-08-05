@@ -4,7 +4,7 @@ import { mergeNoodlesFields, normalizeNoodlesCoinDetails, normalizeNoodlesPriceV
 const details = normalizeNoodlesCoinDetails({
   data: {
     coin: { liquidity: '14470.62', market_cap: '90000.12', fdv: '120000.50', holders: 321 },
-    changes: { price: '0.0000123456', price_change_1h: 1.1, price_change_1d: 2.2, price_change_7d: 3.3 },
+    price_change: { price: '0.0000123456', price_change_1h: 1.1, price_change_1d: 2.2, price_change_7d: 3.3 },
   },
 });
 assert.deepEqual({

@@ -9,6 +9,7 @@ const pairUrl = 'https://api.dexscreener.com/latest/dex/pairs/sui/0xaa133ce1f8fd
 const compactMoney = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 2 });
 const quantity = new Intl.NumberFormat('en-US', { maximumFractionDigits: 3 });
 let leaderboardEntries = [];
+let leaderboardStatus = 'loading';
 let treePerSui = null;
 let activeChartRange = '24h';
 
@@ -212,7 +213,11 @@ function drawMarketChart(candles) {
 
 async function loadChart(range = activeChartRange) {
   activeChartRange = range;
-  document.querySelectorAll('[data-chart-range]').forEach((button) => button.classList.toggle('active', button.dataset.chartRange === range));
+  document.querySelectorAll('[data-chart-range]').forEach((button) => {
+    const isActive = button.dataset.chartRange === range;
+    button.classList.toggle('active', isActive);
+    button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+  });
   setChartState('Loading', null, 'Loading chart…');
   try {
     const response = await fetch(`${chartUrl}?range=${encodeURIComponent(range)}`, { headers: { Accept: 'application/json' } });
@@ -253,6 +258,10 @@ function shortened(address) {
 function updateYourRank() {
   const output = document.getElementById('yourRank');
   if (!window.playerAddress) { output.textContent = 'Connect a wallet to check.'; return; }
+  if (leaderboardStatus === 'loading') { output.textContent = 'Checking leaderboard…'; return; }
+  if (leaderboardStatus === 'not-configured') { output.textContent = 'Leaderboard provider is not configured yet.'; return; }
+  if (leaderboardStatus === 'error') { output.textContent = 'Your rank is temporarily unavailable.'; return; }
+  if (leaderboardStatus === 'empty') { output.textContent = 'No ranked wallet data is currently available.'; return; }
   const row = leaderboardEntries.find((entry) => entry.wallet.toLowerCase() === window.playerAddress.toLowerCase());
   output.textContent = row ? `#${row.rank} · ${row.tier}` : 'Wallet is outside the displayed Top 50.';
 }
@@ -261,6 +270,9 @@ function renderLeaderboard(payload) {
   const state = document.getElementById('leaderboardState');
   const rows = document.getElementById('leaderboardRows');
   leaderboardEntries = Array.isArray(payload.entries) ? payload.entries : [];
+  leaderboardStatus = payload.status === 'ok'
+    ? (leaderboardEntries.length ? 'ok' : 'empty')
+    : payload.status === 'not-configured' ? 'not-configured' : 'error';
   state.textContent = payload.status === 'ok' ? 'Current' : payload.status === 'not-configured' ? 'Not configured' : 'Error';
   state.className = `data-state ${payload.status === 'error' ? 'error' : ''}`;
   document.getElementById('indexedHolderCount').textContent = payload.holderCount === null || payload.holderCount === undefined ? '—' : quantity.format(payload.holderCount);
