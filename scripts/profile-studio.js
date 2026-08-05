@@ -21,6 +21,7 @@ const badgeY = centerY + avatarRadius * 0.92;
 const assetUrls = {
   defaultPhoto: new URL('../assets/profile-nftree-art.jpg', import.meta.url).href,
   thickBadge: new URL('../assets/profile-thickquidity-logo.png', import.meta.url).href,
+  thickArt: new URL('../assets/profile-thickquidity-art.png', import.meta.url).href,
   leafyFrame: new URL('../assets/profile-leafy-sui-frame.png', import.meta.url).href,
   nftreeBadge: new URL('../assets/profile-nftree-art.jpg', import.meta.url).href,
   arboristBadge: new URL('../assets/profile-crypto-arborist-badge.png', import.meta.url).href,
@@ -35,6 +36,8 @@ const profileState = {
   objectUrl: null,
   assets: {},
   dragging: null,
+  ready: false,
+  bounds: { x: 0, y: 0 },
 };
 
 function loadImage(url) {
@@ -59,6 +62,30 @@ function drawCoverImage(context, image, x, y, width, height, zoom = 1, offsetX =
     drawnWidth,
     drawnHeight,
   );
+}
+
+function calculateProfileBounds() {
+  if (!profileState.photo) return { x: 0, y: 0 };
+  const sourceWidth = profileState.photo.naturalWidth || profileState.photo.width;
+  const sourceHeight = profileState.photo.naturalHeight || profileState.photo.height;
+  const diameter = avatarRadius * 2;
+  const coverScale = Math.max(diameter / sourceWidth, diameter / sourceHeight);
+  const scale = coverScale * profileState.zoom;
+  return {
+    x: Math.max(0, (sourceWidth * scale - diameter) / 2),
+    y: Math.max(0, (sourceHeight * scale - diameter) / 2),
+  };
+}
+
+function clampProfileOffsets() {
+  profileState.bounds = calculateProfileBounds();
+  profileState.offsetX = Math.max(-profileState.bounds.x, Math.min(profileState.bounds.x, profileState.offsetX));
+  profileState.offsetY = Math.max(-profileState.bounds.y, Math.min(profileState.bounds.y, profileState.offsetY));
+  if (profileEls.offsetY) {
+    profileEls.offsetY.min = String(Math.floor(-profileState.bounds.y));
+    profileEls.offsetY.max = String(Math.ceil(profileState.bounds.y));
+    profileEls.offsetY.value = String(Math.round(profileState.offsetY));
+  }
 }
 
 function drawProfilePhoto(context) {
@@ -131,7 +158,8 @@ function renderLeafyFrame(context) {
 }
 
 function renderProfileCanvas() {
-  if (!profileEls.canvas || !profileState.photo) return;
+  if (!profileEls.canvas || !profileState.photo || !profileState.ready) return;
+  clampProfileOffsets();
   const context = profileEls.canvas.getContext('2d');
   context.clearRect(0, 0, size, size);
   const background = context.createRadialGradient(centerX, centerY, 20, centerX, centerY, size * 0.68);
@@ -147,6 +175,7 @@ function renderProfileCanvas() {
     renderGeneratedFrame(context, profileState.frame);
     const badgeMap = {
       thick: [profileState.assets.thickBadge, ['#39f58b', '#f5c84c', '#7f45cc']],
+      'thick-art': [profileState.assets.thickArt, ['#39f58b', '#f5c84c', '#7f45cc']],
       nftree: [profileState.assets.nftreeBadge, ['#f5c84c', '#39f58b']],
       arborist: [profileState.assets.arboristBadge, ['#f5c84c', '#7f45cc']],
     };
@@ -173,25 +202,39 @@ async function loadProfileFile(event) {
   revokeProfileObjectUrl();
   const objectUrl = URL.createObjectURL(file);
   profileState.objectUrl = objectUrl;
+  profileState.ready = false;
+  profileEls.download.disabled = true;
   try {
     profileState.photo = await loadImage(objectUrl);
     profileState.zoom = 1;
     profileState.offsetX = 0;
     profileState.offsetY = 0;
     profileEls.zoom.value = '1';
-    profileEls.offsetY.value = '0';
+    clampProfileOffsets();
+    profileState.ready = true;
+    profileEls.download.disabled = false;
     profileEls.status.textContent = 'Photo loaded locally. It has not been uploaded.';
     renderProfileCanvas();
   } catch {
     revokeProfileObjectUrl();
+    profileState.photo = profileState.assets.defaultPhoto || null;
+    profileState.ready = Boolean(profileState.photo);
+    profileEls.download.disabled = !profileState.ready;
+    clampProfileOffsets();
+    renderProfileCanvas();
     profileEls.status.textContent = 'That image could not be read.';
   }
 }
 
 function downloadProfileCanvas() {
+  if (!profileState.ready || !profileState.photo) {
+    profileEls.status.textContent = 'Profile artwork is still loading.';
+    return;
+  }
   renderProfileCanvas();
   const filenames = {
     thick: 'tree-profile-frame.png',
+    'thick-art': 'tree-thickquidity-art-profile-frame.png',
     leafy: 'tree-leafy-profile-frame.png',
     nftree: 'tree-nftree-profile-frame.png',
     arborist: 'tree-crypto-arborist-profile-frame.png',
@@ -218,9 +261,11 @@ function resetProfileMaker() {
   profileState.zoom = 1;
   profileState.offsetX = 0;
   profileState.offsetY = 0;
+  profileState.ready = Boolean(profileState.assets.defaultPhoto);
   profileEls.upload.value = '';
   profileEls.zoom.value = '1';
-  profileEls.offsetY.value = '0';
+  clampProfileOffsets();
+  profileEls.download.disabled = !profileState.ready;
   profileEls.frameButtons.forEach((button) => button.classList.toggle('active', button.dataset.profileFrame === 'thick'));
   profileEls.status.textContent = 'Default local preview restored.';
   renderProfileCanvas();
@@ -228,31 +273,40 @@ function resetProfileMaker() {
 
 async function initProfileMaker() {
   if (!profileEls.root || !profileEls.canvas) return;
+  profileEls.download.disabled = true;
   profileEls.canvas.width = size;
   profileEls.canvas.height = size;
   try {
-    const [defaultPhoto, thickBadge, leafyFrame, nftreeBadge, arboristBadge] = await Promise.all([
+    const [defaultPhoto, thickBadge, thickArt, leafyFrame, nftreeBadge, arboristBadge] = await Promise.all([
       loadImage(assetUrls.defaultPhoto),
       loadImage(assetUrls.thickBadge),
+      loadImage(assetUrls.thickArt),
       loadImage(assetUrls.leafyFrame),
       loadImage(assetUrls.nftreeBadge),
       loadImage(assetUrls.arboristBadge),
     ]);
-    profileState.assets = { defaultPhoto, thickBadge, leafyFrame, nftreeBadge, arboristBadge };
+    profileState.assets = { defaultPhoto, thickBadge, thickArt, leafyFrame, nftreeBadge, arboristBadge };
     profileState.photo = defaultPhoto;
+    profileState.ready = true;
+    clampProfileOffsets();
+    profileEls.download.disabled = false;
     renderProfileCanvas();
     profileEls.status.textContent = 'Default local preview ready. Nothing has been uploaded.';
   } catch {
+    profileState.ready = false;
+    profileEls.download.disabled = true;
     profileEls.status.textContent = 'One or more approved local artwork files could not be loaded.';
   }
 
   profileEls.upload.addEventListener('change', loadProfileFile);
   profileEls.zoom.addEventListener('input', () => {
     profileState.zoom = Number(profileEls.zoom.value);
+    clampProfileOffsets();
     renderProfileCanvas();
   });
   profileEls.offsetY.addEventListener('input', () => {
     profileState.offsetY = Number(profileEls.offsetY.value);
+    clampProfileOffsets();
     renderProfileCanvas();
   });
   profileEls.frameButtons.forEach((button) => button.addEventListener('click', () => {
@@ -267,9 +321,9 @@ async function initProfileMaker() {
   profileEls.canvas.addEventListener('pointermove', (event) => {
     if (!profileState.dragging) return;
     const ratio = size / profileEls.canvas.getBoundingClientRect().width;
-    profileState.offsetX = Math.max(-360, Math.min(360, profileState.dragging.offsetX + (event.clientX - profileState.dragging.x) * ratio));
-    profileState.offsetY = Math.max(-360, Math.min(360, profileState.dragging.offsetY + (event.clientY - profileState.dragging.y) * ratio));
-    profileEls.offsetY.value = String(Math.round(profileState.offsetY));
+    profileState.offsetX = profileState.dragging.offsetX + (event.clientX - profileState.dragging.x) * ratio;
+    profileState.offsetY = profileState.dragging.offsetY + (event.clientY - profileState.dragging.y) * ratio;
+    clampProfileOffsets();
     renderProfileCanvas();
   });
   ['pointerup', 'pointercancel'].forEach((name) => profileEls.canvas.addEventListener(name, () => { profileState.dragging = null; }));

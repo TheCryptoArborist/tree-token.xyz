@@ -1,0 +1,22 @@
+[
+  {
+    "address": "0x0000000000000000000000000000000000000000000000000000000000000000",
+    "label": "Sui zero address",
+    "category": "system"
+  },
+  {
+    "address": "0x35a1be1f01f9edf7f5221d226f357d194d43c28f2a65cb38640935518d9a5bfc",
+    "label": "SuiDex V2 TREE/SUI pool",
+    "category": "shared-protocol-object"
+  },
+  {
+    "address": "0x9cdbbd092634efdc0e7033dc1c49d9ea5fc9bc5969ba708f55e05b6fcac12177",
+    "label": "SuiDex router",
+    "category": "shared-protocol-object"
+  },
+  {
+    "address": "0x81c286135713b4bf2e78c548f5643766b5913dcd27a8e76469f146ab811e922d",
+    "label": "SuiDex factory",
+    "category": "shared-protocol-object"
+  }
+]
