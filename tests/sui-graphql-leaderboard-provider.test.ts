@@ -60,25 +60,20 @@ assert.equal(malformedConfig.maxPages, DEFAULT_MAX_PAGES);
 assert.equal(malformedConfig.maxScanMs, DEFAULT_MAX_SCAN_MS);
 
 objectCounter = 0;
-const duplicateId = '0xduplicate';
 const exactA = 9_007_199_254_740_993n + 7n;
 const equalBalance = 5_000_000_000_000_000n;
 const pageOne = [
-  coinNode('AddressOwner', address('a'), '9007199254740993', { id: duplicateId }),
+  coinNode('AddressOwner', address('a'), '9007199254740993'),
   coinNode('AddressOwner', address('a'), '7'),
   coinNode('AddressOwner', address('b'), equalBalance.toString()),
   coinNode('ObjectOwner', address('d'), '100'),
   coinNode('Shared', null, '100'),
   coinNode('Immutable', null, '100'),
   coinNode('ConsensusAddressOwner', address('e'), '100'),
-  coinNode('MysteryOwner', null, '100'),
-  coinNode('AddressOwner', 'malformed', '100'),
-  coinNode('AddressOwner', address('f'), 'bad-balance'),
   coinNode('AddressOwner', pool, '1000', { fallback: true }),
 ];
 const pageTwo = [
   coinNode('AddressOwner', address('c'), equalBalance.toString()),
-  coinNode('AddressOwner', address('a'), '999999999999', { id: duplicateId }),
 ];
 const twoPages = queuedFetch([
   { payload: graphPage(pageOne, true, 'opaque-cursor-1') },
@@ -87,16 +82,17 @@ const twoPages = queuedFetch([
 const complete = await scanSuiGraphqlLeaderboard({ fetchImpl: twoPages.fetchImpl, pageSize: 50, maxPages: 4, maxScanMs: 10_000 });
 assert.equal(complete.outcome, 'complete');
 assert.equal(complete.coverage.scanComplete, true);
+assert.equal(complete.coverage.reachedEnd, true);
 assert.equal(complete.coverage.pagesScanned, 2);
-assert.equal(complete.coverage.objectsScanned, 13);
+assert.equal(complete.coverage.objectsScanned, 9);
 assert.equal(complete.coverage.objectOwnedObjectsSkipped, 1);
 assert.equal(complete.coverage.sharedObjectsSkipped, 1);
 assert.equal(complete.coverage.immutableObjectsSkipped, 1);
 assert.equal(complete.coverage.consensusOwnedObjectsSkipped, 1);
-assert.equal(complete.coverage.unknownOwnerObjectsSkipped, 1);
-assert.equal(complete.coverage.malformedOwnerAddresses, 1);
-assert.equal(complete.coverage.malformedBalances, 1);
-assert.equal(complete.coverage.duplicateObjectIds, 1);
+assert.equal(complete.coverage.unknownOwnerObjectsSkipped, 0);
+assert.equal(complete.coverage.malformedOwnerAddresses, 0);
+assert.equal(complete.coverage.malformedBalances, 0);
+assert.equal(complete.coverage.duplicateObjectIds, 0);
 assert.equal(complete.coverage.excludedAddresses, 1);
 assert.equal(complete.holderCount, 4);
 assert.equal(complete.entries.length, 3);
@@ -105,11 +101,60 @@ assert.equal(complete.entries[0].directTreeRaw, exactA.toString());
 assert.equal(complete.entries[0].directTree, '9007199.254741');
 assert.equal(complete.entries[0].coinObjectCount, 2);
 assert.deepEqual(complete.entries.slice(1).map((entry) => entry.wallet), [address('b'), address('c')]);
+assert.deepEqual(complete.entries.map((entry) => entry.rank), [1, 2, 3]);
+assert.equal(complete.entries.some((entry) => entry.wallet === pool), false);
 assert.equal(twoPages.requests[0].variables.after, null);
 assert.equal(twoPages.requests[1].variables.after, 'opaque-cursor-1');
 const expectedAddressOwnedRaw = exactA + equalBalance + equalBalance + 1000n;
+assert.equal(complete.reconciliation.valid, true);
 assert.equal(complete.reconciliation.addressOwnedRaw, expectedAddressOwnedRaw.toString());
 assert.equal(complete.reconciliation.nonAddressOwnedOrEmbeddedRawEstimate, (1_000_000_000_000_000_000n - expectedAddressOwnedRaw).toString());
+
+const malformedOwnerFetch = queuedFetch([{ payload: graphPage([
+  coinNode('AddressOwner', 'malformed', '100'),
+], false, null) }]);
+const malformedOwner = await scanSuiGraphqlLeaderboard({ fetchImpl: malformedOwnerFetch.fetchImpl });
+assert.equal(malformedOwner.coverage.reachedEnd, true);
+assert.equal(malformedOwner.coverage.malformedOwnerAddresses, 1);
+assert.equal(malformedOwner.coverage.scanComplete, false);
+assert.equal(malformedOwner.outcome, 'verification-incomplete');
+assert.deepEqual(malformedOwner.entries, []);
+assert.ok(malformedOwner.warnings.includes('Malformed address-owned wallet data prevented complete verification.'));
+
+const malformedBalanceFetch = queuedFetch([{ payload: graphPage([
+  coinNode('AddressOwner', address('f'), 'bad-balance'),
+], false, null) }]);
+const malformedBalance = await scanSuiGraphqlLeaderboard({ fetchImpl: malformedBalanceFetch.fetchImpl });
+assert.equal(malformedBalance.coverage.reachedEnd, true);
+assert.equal(malformedBalance.coverage.malformedBalances, 1);
+assert.equal(malformedBalance.coverage.scanComplete, false);
+assert.equal(malformedBalance.outcome, 'verification-incomplete');
+assert.deepEqual(malformedBalance.entries, []);
+assert.ok(malformedBalance.warnings.includes('Malformed TREE balance data prevented complete verification.'));
+
+const unknownOwnerFetch = queuedFetch([{ payload: graphPage([
+  coinNode('MysteryOwner', null, '100'),
+], false, null) }]);
+const unknownOwner = await scanSuiGraphqlLeaderboard({ fetchImpl: unknownOwnerFetch.fetchImpl });
+assert.equal(unknownOwner.coverage.reachedEnd, true);
+assert.equal(unknownOwner.coverage.unknownOwnerObjectsSkipped, 1);
+assert.equal(unknownOwner.coverage.scanComplete, false);
+assert.equal(unknownOwner.outcome, 'verification-incomplete');
+assert.deepEqual(unknownOwner.entries, []);
+assert.ok(unknownOwner.warnings.includes('An unknown Sui owner variant prevented complete verification.'));
+
+const duplicateId = '0xduplicate';
+const duplicateObjectFetch = queuedFetch([{ payload: graphPage([
+  coinNode('AddressOwner', address('a'), '100', { id: duplicateId }),
+  coinNode('AddressOwner', address('a'), '100', { id: duplicateId }),
+], false, null) }]);
+const duplicateObject = await scanSuiGraphqlLeaderboard({ fetchImpl: duplicateObjectFetch.fetchImpl });
+assert.equal(duplicateObject.coverage.reachedEnd, true);
+assert.equal(duplicateObject.coverage.duplicateObjectIds, 1);
+assert.equal(duplicateObject.coverage.scanComplete, false);
+assert.equal(duplicateObject.outcome, 'verification-incomplete');
+assert.deepEqual(duplicateObject.entries, []);
+assert.ok(duplicateObject.warnings.includes('Duplicate Coin<TREE> object IDs prevented complete verification.'));
 
 const limitedFetch = queuedFetch([{ payload: graphPage([coinNode('AddressOwner', address('a'), '1')], true, 'more') }]);
 const pageLimited = await scanSuiGraphqlLeaderboard({ fetchImpl: limitedFetch.fetchImpl, maxPages: 1, maxScanMs: 10_000 });

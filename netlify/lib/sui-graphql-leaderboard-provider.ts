@@ -416,13 +416,18 @@ export async function scanSuiGraphqlLeaderboard(options: Partial<SuiGraphqlConfi
   coverage.pageLimitReached = coverage.hasNextPage && coverage.pagesScanned >= config.maxPages && !coverage.reachedEnd;
   coverage.uniqueAddressOwners = allAddressOwners.size;
   coverage.elapsedMs = Math.max(0, now() - startedAt);
+  const dataIntegrityValid = coverage.malformedOwnerAddresses === 0
+    && coverage.malformedBalances === 0
+    && coverage.unknownOwnerObjectsSkipped === 0
+    && coverage.duplicateObjectIds === 0;
   coverage.scanComplete = coverage.reachedEnd
     && coverage.graphqlErrors.length === 0
     && !coverage.networkError
     && !coverage.rateLimited
     && !coverage.pageLimitReached
     && !coverage.timeLimitReached
-    && !coverage.cursorInconsistent;
+    && !coverage.cursorInconsistent
+    && dataIntegrityValid;
 
   const reconciliation = reconcile(addressOwnedRaw);
   const complete = coverage.scanComplete && reconciliation.valid;
@@ -435,6 +440,10 @@ export async function scanSuiGraphqlLeaderboard(options: Partial<SuiGraphqlConfi
   if (coverage.rateLimited) warnings.push('The public Sui GraphQL endpoint rate-limited the scan.');
   if (coverage.graphqlErrors.length) warnings.push('Sui GraphQL returned one or more errors.');
   if (coverage.networkError) warnings.push('The Sui GraphQL request failed before verification completed.');
+  if (coverage.malformedOwnerAddresses) warnings.push('Malformed address-owned wallet data prevented complete verification.');
+  if (coverage.malformedBalances) warnings.push('Malformed TREE balance data prevented complete verification.');
+  if (coverage.unknownOwnerObjectsSkipped) warnings.push('An unknown Sui owner variant prevented complete verification.');
+  if (coverage.duplicateObjectIds) warnings.push('Duplicate Coin<TREE> object IDs prevented complete verification.');
   if (coverage.excludedAddresses) warnings.push(`${excludedWallets.size} excluded protocol or system address(es) were omitted from ranking.`);
 
   return {
