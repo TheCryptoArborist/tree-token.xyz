@@ -90,7 +90,7 @@ jobs:
           assert 'TOP 50' in dapp
           assert 'leaderboardCards' in dapp
           assert 'shareRank' in dapp
-          assert 'downloadRankCard' in dapp
+          assert 'downloadRankCard' in app
           assert 'DAPP_SWAP_EXECUTION_ENABLED = false' in app
           assert 'scripts/swap.js' not in dapp
           PY
