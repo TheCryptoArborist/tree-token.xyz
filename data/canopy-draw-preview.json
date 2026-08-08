@@ -1,0 +1,13 @@
+{
+  "status": "development",
+  "acceptingEntries": false,
+  "dailyPrize": null,
+  "weeklyPrize": null,
+  "minimumQualifyingUsdConcept": 5,
+  "mainPrizeSharePercentConcept": 80,
+  "luckyPrizeSharePercentConcept": 20,
+  "maxStreakMultiplierConcept": 2.5,
+  "maxStreakDaysConcept": 15,
+  "randomness": "planned-sui-on-chain",
+  "legalReviewRequired": true
+}
