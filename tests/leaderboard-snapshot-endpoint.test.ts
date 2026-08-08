@@ -25,9 +25,10 @@ const snapshot: CompleteLeaderboardSnapshot = {
   sourceCheckpoint: { pagesScanned: 120, objectsScanned: 6000, reachedEnd: true, endCursorPresent: false },
 };
 const running: LeaderboardRefreshStatus = {
-  state: 'running', runId: 'run', startedAt: '2026-08-05T05:55:00.000Z', updatedAt: '2026-08-05T05:59:00.000Z', completedAt: null,
+  state: 'running', runId: 'internal-run-id-should-not-be-public', startedAt: '2026-08-05T05:55:00.000Z', updatedAt: '2026-08-05T05:59:00.000Z', completedAt: null,
   pagesScanned: 25, objectsScanned: 1250, addressOwnedCoinObjects: 1250, uniqueAddressOwners: 300, excludedAddresses: 5,
-  elapsedMs: 4000, hasNextPage: true, reachedEnd: false, scanComplete: false, message: 'running', commitRef: null, deployId: null,
+  elapsedMs: 4000, hasNextPage: true, reachedEnd: false, scanComplete: false, message: 'running',
+  commitRef: 'internal-commit-ref-should-not-be-public', deployId: 'internal-deploy-id-should-not-be-public',
 };
 const getEnv = (name: string) => name === 'TREE_LEADERBOARD_STALE_AFTER_MS' ? '21600000' : undefined;
 let fetchCalls = 0;
@@ -42,6 +43,19 @@ const refreshing = await resolveLeaderboardSnapshotPayload({ now: () => now, get
 assert.equal(refreshing.status, 'refreshing');
 assert.deepEqual(refreshing.entries, []);
 assert.equal(JSON.stringify(refreshing).includes(snapshot.entries[0].wallet), false);
+assert.ok(refreshing.refreshStatus);
+assert.equal(refreshing.refreshStatus.state, 'running');
+assert.equal(refreshing.refreshStatus.pagesScanned, 25);
+assert.equal(refreshing.refreshStatus.objectsScanned, 1250);
+assert.equal(refreshing.refreshStatus.addressOwnedCoinObjects, 1250);
+assert.equal(refreshing.refreshStatus.uniqueAddressOwners, 300);
+assert.equal(Object.hasOwn(refreshing.refreshStatus, 'runId'), false);
+assert.equal(Object.hasOwn(refreshing.refreshStatus, 'commitRef'), false);
+assert.equal(Object.hasOwn(refreshing.refreshStatus, 'deployId'), false);
+const refreshingText = JSON.stringify(refreshing);
+assert.equal(refreshingText.includes('internal-run-id-should-not-be-public'), false);
+assert.equal(refreshingText.includes('internal-commit-ref-should-not-be-public'), false);
+assert.equal(refreshingText.includes('internal-deploy-id-should-not-be-public'), false);
 
 const fresh = await resolveLeaderboardSnapshotPayload({ now: () => now, getEnv, readSnapshot: async () => snapshot, readRefreshStatus: async () => null });
 assert.equal(fresh.status, 'ok');
@@ -64,6 +78,9 @@ const responseText = await response.text();
 assert.equal(response.headers.get('Cache-Control'), 'no-store');
 assert.equal(responseText.includes('refresh-lock'), false);
 assert.equal(responseText.includes('endCursor'), false);
+assert.equal(responseText.includes('internal-run-id-should-not-be-public'), false);
+assert.equal(responseText.includes('internal-commit-ref-should-not-be-public'), false);
+assert.equal(responseText.includes('internal-deploy-id-should-not-be-public'), false);
 assert.equal(fetchCalls, 0);
 const publicFunctionSource = await readFile('netlify/functions/tree-leaderboard.ts', 'utf8');
 const backgroundWorkerSource = await readFile('netlify/lib/leaderboard-background-worker.ts', 'utf8');

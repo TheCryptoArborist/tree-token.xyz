@@ -15,11 +15,27 @@ export type SnapshotEndpointDependencies = {
   readRefreshStatus?: () => Promise<LeaderboardRefreshStatus | null>;
 };
 
-function publicRefreshStatus(status: LeaderboardRefreshStatus | null): LeaderboardRefreshStatus | null {
+export type PublicLeaderboardRefreshStatus = {
+  state: LeaderboardRefreshStatus['state'];
+  startedAt: string;
+  updatedAt: string;
+  completedAt: string | null;
+  pagesScanned: number;
+  objectsScanned: number;
+  addressOwnedCoinObjects: number;
+  uniqueAddressOwners: number;
+  excludedAddresses: number;
+  elapsedMs: number;
+  hasNextPage: boolean;
+  reachedEnd: boolean;
+  scanComplete: boolean;
+  message: string;
+};
+
+function publicRefreshStatus(status: LeaderboardRefreshStatus | null): PublicLeaderboardRefreshStatus | null {
   if (!status) return null;
   return {
     state: status.state,
-    runId: status.runId,
     startedAt: status.startedAt,
     updatedAt: status.updatedAt,
     completedAt: status.completedAt,
@@ -33,8 +49,6 @@ function publicRefreshStatus(status: LeaderboardRefreshStatus | null): Leaderboa
     reachedEnd: status.reachedEnd,
     scanComplete: status.scanComplete,
     message: status.message,
-    commitRef: status.commitRef,
-    deployId: status.deployId,
   };
 }
 
