@@ -8,5 +8,5 @@ export default async (_request: Request, context: NetlifyRuntimeContext): Promis
 };
 
 export const config = {
-  schedule: '17 */6 * * *',
+  schedule: '* * * * *',
 };
