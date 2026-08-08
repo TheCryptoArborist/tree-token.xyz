@@ -1,0 +1,70 @@
+name: Verify Command Center UI V2 Preview
+
+on:
+  push:
+    branches:
+      - feature/command-center-ui-v2
+    paths:
+      - '.github/workflows/command-center-ui-v2-preview-check.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/command-center-ui-v2
+          fetch-depth: 0
+
+      - name: Wait for Deploy Preview and verify live UI data
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://deploy-preview-2--tree-token.netlify.app"
+          sleep 60
+
+          for path in "/" "/dapp/" "/api/tree-dashboard" "/api/tree-chart?range=24h" "/api/tree-leaderboard-preview"; do
+            code=$(curl -L --retry 5 --retry-all-errors --retry-delay 5 -sS -o /tmp/tree-ui-response -w '%{http_code}' "${base}${path}")
+            echo "HTTP ${code} ${path}"
+            test "$code" = "200"
+          done
+
+          curl -L --retry 5 --retry-all-errors --retry-delay 5 -fsS "${base}/" -o /tmp/tree-home.html
+          curl -L --retry 5 --retry-all-errors --retry-delay 5 -fsS "${base}/dapp/" -o /tmp/tree-dapp.html
+          curl -L --retry 5 --retry-all-errors --retry-delay 5 -fsS "${base}/api/tree-leaderboard-preview" -o /tmp/tree-board.json
+
+          grep -q 'Open Command Center' /tmp/tree-home.html
+          grep -q 'command-center-preview-card' /tmp/tree-home.html
+          grep -q 'YOUR CANOPY RANK' /tmp/tree-dapp.html
+          grep -q 'TIER LADDER' /tmp/tree-dapp.html
+          grep -q 'TOP 50' /tmp/tree-dapp.html
+          grep -q 'leaderboardCards' /tmp/tree-dapp.html
+
+          jq -e '
+            (.status == "ok" or .status == "stale") and
+            .provider == "sui-graphql-snapshot" and
+            .methodologyVersion == "direct-tree-sui-graphql-poc-v2" and
+            .coinDecimals == 6 and
+            .coverage.scanComplete == true and
+            .coverage.reachedEnd == true and
+            .reconciliation.valid == true and
+            (.displayedCount > 0 and .displayedCount <= 50) and
+            ((.entries | length) > 0)
+          ' /tmp/tree-board.json >/dev/null
+
+          jq '{status, refreshState, provider, methodologyVersion, displayedCount, verifiedAddressOwners, eligibleRankedOwners, pagesScanned: .coverage.pagesScanned, objectsScanned: .coverage.objectsScanned}' /tmp/tree-board.json
+
+      - name: Remove one-time preview check
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/command-center-ui-v2-preview-check.yml
+          git config user.name "TheCryptoArborist"
+          git config user.email "190985450+TheCryptoArborist@users.noreply.github.com"
+          git add -A
+          git commit -m "Confirm Command Center UI V2 preview"
+          git push origin HEAD:feature/command-center-ui-v2
