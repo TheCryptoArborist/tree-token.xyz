@@ -59,12 +59,13 @@ jobs:
 
           app_path = Path('dapp/app.js')
           app = app_path.read_text(encoding='utf-8')
-          app = app.replace(
-              "const leaderboardUrl = '/api/tree-leaderboard';",
-              "const isDeployPreview = typeof location !== 'undefined' && /^deploy-preview-/.test(location.hostname);\nconst leaderboardUrl = isDeployPreview ? 'https://tree-token.xyz/api/tree-leaderboard' : '/api/tree-leaderboard';",
-              1,
-          )
-          old_load = """    renderLeaderboard(await response.json());"""
+          if 'const isDeployPreview' not in app:
+              app = app.replace(
+                  "const leaderboardUrl = '/api/tree-leaderboard';",
+                  "const isDeployPreview = typeof location !== 'undefined' && /^deploy-preview-/.test(location.hostname);\nconst leaderboardUrl = isDeployPreview ? '/api/tree-leaderboard-preview' : '/api/tree-leaderboard';",
+                  1,
+              )
+          old_load = "    renderLeaderboard(await response.json());"
           new_load = """    const payload = await response.json();
               if (isDeployPreview) {
                 payload.warnings = [...(Array.isArray(payload.warnings) ? payload.warnings : []), 'This visual preview uses the current complete production leaderboard snapshot.'];
@@ -74,14 +75,13 @@ jobs:
           if old_load not in app:
               raise SystemExit('Leaderboard render anchor not found')
           app = app.replace(old_load, new_load, 1)
-          old_nav = """  navLinks.forEach((link) => link.addEventListener('click', () => {
-                navLinks.forEach((item) => item.classList.remove('active'));
-                link.classList.add('active');
-              }));"""
-          new_nav = """  navLinks.forEach((link) => link.addEventListener('click', () => {
-                navLinks.forEach((item) => item.classList.remove('active'));
-                link.classList.add('active');
-              }));
+
+          nav_start = app.find("  const navLinks = [...document.querySelectorAll('.app-nav a[href^=\"#\"]')];")
+          nav_end = app.find("\n\n  window.addEventListener('load'", nav_start)
+          if nav_start < 0 or nav_end < 0:
+              raise SystemExit('Navigation anchor not found')
+          nav_block = app[nav_start:nav_end]
+          observer_block = """
               if (typeof IntersectionObserver !== 'undefined') {
                 const sectionLinks = new Map(navLinks.map((link) => [link.getAttribute('href')?.slice(1), link]));
                 const observer = new IntersectionObserver((entries) => {
@@ -94,10 +94,18 @@ jobs:
                 }, { rootMargin: '-28% 0px -58% 0px', threshold: [0.05, 0.2, 0.5] });
                 document.querySelectorAll('main section[id]').forEach((section) => observer.observe(section));
               }"""
-          if old_nav not in app:
-              raise SystemExit('Navigation anchor not found')
-          app = app.replace(old_nav, new_nav, 1)
+          app = app[:nav_start] + nav_block + observer_block + app[nav_end:]
           app_path.write_text(app, encoding='utf-8')
+
+          netlify_path = Path('netlify.toml')
+          netlify = netlify_path.read_text(encoding='utf-8')
+          proxy = '''\n[[redirects]]\n  from = "/api/tree-leaderboard-preview"\n  to = "https://tree-token.xyz/api/tree-leaderboard"\n  status = 200\n  force = true\n'''
+          if '/api/tree-leaderboard-preview' not in netlify:
+              insert_at = netlify.find('\n[[headers]]')
+              if insert_at < 0:
+                  raise SystemExit('Netlify redirect insertion point not found')
+              netlify = netlify[:insert_at] + proxy + netlify[insert_at:]
+          netlify_path.write_text(netlify, encoding='utf-8')
 
           Path('.github/workflows/command-center-ui-v2-refine.yml').unlink()
           PY
@@ -122,10 +130,12 @@ jobs:
           from pathlib import Path
           html = Path('dapp/index.html').read_text(encoding='utf-8')
           app = Path('dapp/app.js').read_text(encoding='utf-8')
+          netlify = Path('netlify.toml').read_text(encoding='utf-8')
           assert html.index('id="leaderboard"') < html.index('id="swap"') < html.index('id="stats"')
           assert 'class="active" href="#overview"' in html
-          assert "https://tree-token.xyz/api/tree-leaderboard" in app
+          assert "'/api/tree-leaderboard-preview'" in app
           assert 'IntersectionObserver' in app
+          assert '/api/tree-leaderboard-preview' in netlify
           assert 'DAPP_SWAP_EXECUTION_ENABLED = false' in app
           assert 'scripts/swap.js' not in html
           PY
