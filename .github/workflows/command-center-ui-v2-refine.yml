@@ -1,0 +1,141 @@
+name: Refine Command Center UI V2
+
+on:
+  push:
+    branches:
+      - feature/command-center-ui-v2
+    paths:
+      - '.github/workflows/command-center-ui-v2-refine.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  refine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/command-center-ui-v2
+          fetch-depth: 0
+
+      - name: Apply navigation and preview refinements
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          dapp_path = Path('dapp/index.html')
+          html = dapp_path.read_text(encoding='utf-8')
+
+          def section_block(source, section_id):
+              match = re.search(rf'<section\b[^>]*\bid="{re.escape(section_id)}"[^>]*>', source)
+              if not match:
+                  raise SystemExit(f'Missing section: {section_id}')
+              end = source.find('</section>', match.end())
+              if end < 0:
+                  raise SystemExit(f'Unclosed section: {section_id}')
+              return match.start(), end + len('</section>'), source[match.start():end + len('</section>')]
+
+          blocks = {name: section_block(html, name) for name in ('swap', 'stats', 'leaderboard')}
+          region_start = min(value[0] for value in blocks.values())
+          region_end = max(value[1] for value in blocks.values())
+          ordered = '\n\n'.join(blocks[name][2] for name in ('leaderboard', 'swap', 'stats'))
+          html = html[:region_start] + ordered + html[region_end:]
+          html = html.replace('<a href="#overview"><span aria-hidden="true">⌂</span><b>Overview</b></a>', '<a class="active" href="#overview"><span aria-hidden="true">⌂</span><b>Overview</b></a>', 1)
+          html = html.replace('<a class="active" href="#leaderboard"><span aria-hidden="true">♛</span><b>Board</b></a>', '<a href="#leaderboard"><span aria-hidden="true">♛</span><b>Board</b></a>', 1)
+          html = html.replace('<span>SUI</span><strong>Live market</strong>', '<span>SUI</span><strong>Sui Mainnet</strong>', 1)
+          dapp_path.write_text(html, encoding='utf-8')
+
+          home_path = Path('index.html')
+          home = home_path.read_text(encoding='utf-8')
+          home = home.replace('class="btn command-center-primary" href="/dapp/"', 'class="btn command-center-primary" href="/dapp/#leaderboard"', 1)
+          home = home.replace('class="command-center-preview-card" href="/dapp/"', 'class="command-center-preview-card" href="/dapp/#leaderboard"', 1)
+          home = home.replace('class="fab board-fab" href="/dapp/"', 'class="fab board-fab" href="/dapp/#leaderboard"', 1)
+          home_path.write_text(home, encoding='utf-8')
+
+          app_path = Path('dapp/app.js')
+          app = app_path.read_text(encoding='utf-8')
+          app = app.replace(
+              "const leaderboardUrl = '/api/tree-leaderboard';",
+              "const isDeployPreview = typeof location !== 'undefined' && /^deploy-preview-/.test(location.hostname);\nconst leaderboardUrl = isDeployPreview ? 'https://tree-token.xyz/api/tree-leaderboard' : '/api/tree-leaderboard';",
+              1,
+          )
+          old_load = """    renderLeaderboard(await response.json());"""
+          new_load = """    const payload = await response.json();
+              if (isDeployPreview) {
+                payload.warnings = [...(Array.isArray(payload.warnings) ? payload.warnings : []), 'This visual preview uses the current complete production leaderboard snapshot.'];
+                payload.message = 'Visual preview using the current complete production leaderboard snapshot.';
+              }
+              renderLeaderboard(payload);"""
+          if old_load not in app:
+              raise SystemExit('Leaderboard render anchor not found')
+          app = app.replace(old_load, new_load, 1)
+          old_nav = """  navLinks.forEach((link) => link.addEventListener('click', () => {
+                navLinks.forEach((item) => item.classList.remove('active'));
+                link.classList.add('active');
+              }));"""
+          new_nav = """  navLinks.forEach((link) => link.addEventListener('click', () => {
+                navLinks.forEach((item) => item.classList.remove('active'));
+                link.classList.add('active');
+              }));
+              if (typeof IntersectionObserver !== 'undefined') {
+                const sectionLinks = new Map(navLinks.map((link) => [link.getAttribute('href')?.slice(1), link]));
+                const observer = new IntersectionObserver((entries) => {
+                  const visible = entries.filter((entry) => entry.isIntersecting).sort((left, right) => right.intersectionRatio - left.intersectionRatio)[0];
+                  const link = visible ? sectionLinks.get(visible.target.id) : null;
+                  if (link) {
+                    navLinks.forEach((item) => item.classList.remove('active'));
+                    link.classList.add('active');
+                  }
+                }, { rootMargin: '-28% 0px -58% 0px', threshold: [0.05, 0.2, 0.5] });
+                document.querySelectorAll('main section[id]').forEach((section) => observer.observe(section));
+              }"""
+          if old_nav not in app:
+              raise SystemExit('Navigation anchor not found')
+          app = app.replace(old_nav, new_nav, 1)
+          app_path.write_text(app, encoding='utf-8')
+
+          Path('.github/workflows/command-center-ui-v2-refine.yml').unlink()
+          PY
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Validate refinements
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci
+          npm run build
+          node --check dapp/app.js
+          node tests/dashboard-cache.test.mjs
+          node tests/leaderboard-ui-state.test.mjs
+          for test in tests/*.ts; do npx --yes tsx "$test"; done
+          git diff --check
+          python - <<'PY'
+          from pathlib import Path
+          html = Path('dapp/index.html').read_text(encoding='utf-8')
+          app = Path('dapp/app.js').read_text(encoding='utf-8')
+          assert html.index('id="leaderboard"') < html.index('id="swap"') < html.index('id="stats"')
+          assert 'class="active" href="#overview"' in html
+          assert "https://tree-token.xyz/api/tree-leaderboard" in app
+          assert 'IntersectionObserver' in app
+          assert 'DAPP_SWAP_EXECUTION_ENABLED = false' in app
+          assert 'scripts/swap.js' not in html
+          PY
+
+      - name: Commit refinements
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "TheCryptoArborist"
+          git config user.email "190985450+TheCryptoArborist@users.noreply.github.com"
+          git add -A
+          git commit -m "Refine Command Center board navigation"
+          git push origin HEAD:feature/command-center-ui-v2
