@@ -2,7 +2,8 @@ const DAPP_SWAP_EXECUTION_ENABLED = false;
 const DASHBOARD_CACHE_KEY = 'tree-dashboard-last-success-v1';
 const CHART_CACHE_PREFIX = 'tree-chart-last-success-v1:';
 const dashboardUrl = '/api/tree-dashboard';
-const leaderboardUrl = '/api/tree-leaderboard';
+const isDeployPreview = typeof location !== 'undefined' && /^deploy-preview-/.test(location.hostname);
+const leaderboardUrl = isDeployPreview ? '/api/tree-leaderboard-preview' : '/api/tree-leaderboard';
 const chartUrl = '/api/tree-chart';
 const pairUrl = 'https://api.dexscreener.com/latest/dex/pairs/sui/0xaa133ce1f8fd55d85b6fc87c1b3054cb717d83be477ef3635c661c21fbdfa0ee';
 
@@ -570,7 +571,12 @@ async function loadLeaderboard() {
   try {
     const response = await fetch(leaderboardUrl, { headers: { Accept: 'application/json' } });
     if (!response.ok) throw new Error(`Leaderboard returned ${response.status}`);
-    renderLeaderboard(await response.json());
+    const payload = await response.json();
+    if (isDeployPreview) {
+      payload.warnings = [...(Array.isArray(payload.warnings) ? payload.warnings : []), 'This visual preview uses the current complete production leaderboard snapshot.'];
+      payload.message = 'Visual preview using the current complete production leaderboard snapshot.';
+    }
+    renderLeaderboard(payload);
   } catch (error) {
     renderLeaderboard({ status: 'error', generatedAt: new Date().toISOString(), entries: [], displayedCount: 0, excludedCount: 0, holderCount: null });
     console.error(error);
@@ -650,6 +656,18 @@ if (typeof document !== 'undefined') {
     navLinks.forEach((item) => item.classList.remove('active'));
     link.classList.add('active');
   }));
+    if (typeof IntersectionObserver !== 'undefined') {
+      const sectionLinks = new Map(navLinks.map((link) => [link.getAttribute('href')?.slice(1), link]));
+      const observer = new IntersectionObserver((entries) => {
+        const visible = entries.filter((entry) => entry.isIntersecting).sort((left, right) => right.intersectionRatio - left.intersectionRatio)[0];
+        const link = visible ? sectionLinks.get(visible.target.id) : null;
+        if (link) {
+          navLinks.forEach((item) => item.classList.remove('active'));
+          link.classList.add('active');
+        }
+      }, { rootMargin: '-28% 0px -58% 0px', threshold: [0.05, 0.2, 0.5] });
+      document.querySelectorAll('main section[id]').forEach((section) => observer.observe(section));
+    }
 
   window.addEventListener('load', async () => {
     try { await window.initializeWallet?.(); } catch { /* Optional session restoration. */ }

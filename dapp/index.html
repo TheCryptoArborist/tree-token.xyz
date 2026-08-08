@@ -12,7 +12,7 @@
 <body>
   <header class="app-shell">
     <div class="market-ribbon" aria-label="Live market summary">
-      <span><b class="token-dot sui-dot">S</b><span>SUI</span><strong>Live market</strong></span>
+      <span><b class="token-dot sui-dot">S</b><span>SUI</span><strong>Sui Mainnet</strong></span>
       <span><b class="token-dot tree-dot">T</b><span>TREE</span><strong data-market="price">Loading…</strong></span>
       <span class="market-change"><span>24H</span><strong data-market="priceChange24h">—</strong></span>
     </div>
@@ -21,10 +21,10 @@
       <button class="button wallet-control" id="dappWallet" type="button">Connect Wallet</button>
     </div>
     <nav class="app-nav" aria-label="Command Center navigation">
-      <a href="#overview"><span aria-hidden="true">⌂</span><b>Overview</b></a>
+      <a class="active" href="#overview"><span aria-hidden="true">⌂</span><b>Overview</b></a>
       <a href="#swap"><span aria-hidden="true">↕</span><b>Buy</b></a>
       <a href="#stats"><span aria-hidden="true">▥</span><b>Stats</b></a>
-      <a class="active" href="#leaderboard"><span aria-hidden="true">♛</span><b>Board</b></a>
+      <a href="#leaderboard"><span aria-hidden="true">♛</span><b>Board</b></a>
       <a href="#profile-studio"><span aria-hidden="true">◎</span><b>Profile</b></a>
       <a href="#canopy-draw"><span aria-hidden="true">✦</span><b>Draw</b></a>
       <a href="#nftree-next"><span aria-hidden="true">🌳</span><b>NFTree</b></a>
@@ -43,41 +43,6 @@
         <a class="button primary" href="#leaderboard">View Canopy Board</a>
         <a class="button gold" href="https://nftree.net/mint" target="_blank" rel="noopener noreferrer">Mint NFTree</a>
       </div>
-    </section>
-
-    <section class="section compact-section" id="swap" aria-labelledby="swap-title">
-      <div class="section-heading"><div><p class="eyebrow">SuiDex route</p><h2 id="swap-title">Buy TREE</h2></div><span class="section-note">Display estimate only</span></div>
-      <div class="split-grid">
-        <div class="card form-card">
-          <label for="swapSui">SUI to spend</label><input id="swapSui" type="number" min="0" step="0.001" inputmode="decimal" placeholder="10">
-          <label for="swapTree">Expected TREE output</label><input id="swapTree" type="text" inputmode="decimal" placeholder="Waiting for displayed rate" readonly>
-          <div class="estimate-grid"><span>Current displayed rate</span><strong id="displayedRate">Loading…</strong><span>Estimated TREE</span><strong id="estimatedTree">—</strong><span>Slippage setting</span><strong>1%</strong></div>
-          <p class="muted">Display estimate only — not an executable quote.</p>
-          <label class="check"><input id="reserveNftree" type="checkbox"> <span>Reserve SUI for one NFTree mint</span></label>
-          <p class="muted">This checkbox is informational and does not change the submitted amount.</p>
-          <button class="button primary" id="buyTree" type="button" disabled>Swap verification in progress</button>
-          <p id="swapStatus" class="status" role="status" aria-live="polite">On-site TREE purchases remain disabled pending quote, simulation, gas-reserve, and finality verification.</p>
-          <a class="button secondary" id="suiDexFallback" href="https://dex.suidex.org/swap?from=SUI&amp;to=Tree" target="_blank" rel="noopener noreferrer">Trade on SuiDex</a>
-        </div>
-        <aside class="card next-card"><span class="card-icon">🌱</span><h3>Plan the next step</h3><p>Planning to mint an NFTree next? Keep at least 25 SUI plus gas in your wallet.</p><strong>Next Step: Mint an NFTree for 25 SUI</strong><div class="actions"><a class="button gold" href="https://nftree.net/mint" target="_blank" rel="noopener noreferrer">Mint NFTree</a><a class="button secondary" href="https://nftree.net" target="_blank" rel="noopener noreferrer">Explore NFTree</a></div></aside>
-      </div>
-    </section>
-
-    <section class="section" id="stats" aria-labelledby="stats-title">
-      <div class="section-heading"><div><p class="eyebrow">Network overview</p><h2 id="stats-title">TREE Network Stats</h2></div><button class="button secondary" id="refreshStats" type="button">Refresh</button></div>
-      <div class="data-group" data-stats-group="market"><div class="group-heading"><div><h3>Market</h3><p>Noodles.fi primary market source</p></div><span class="data-state" data-group-state>Loading</span></div><p class="meta" data-group-meta>Source: Noodles.fi · Timestamp: pending · Status: loading</p><div class="stat-grid">
-        <article class="stat-card"><span>TREE Price</span><strong data-market="price">—</strong></article><article class="stat-card"><span>24h Change</span><strong data-market="priceChange24h">—</strong></article><article class="stat-card"><span>24h Volume</span><strong data-market="volume24h">—</strong></article><article class="stat-card"><span>Market Cap</span><strong data-market="marketCap">—</strong></article><article class="stat-card"><span>Recognized Liquidity</span><strong data-market="liquidity">—</strong></article><article class="stat-card"><span>Reported owner metric</span><strong data-market="holderCount">—</strong></article>
-      </div></div>
-      <div class="data-group chart-group" data-chart-group><div class="group-heading"><div><h3>TREE Market Chart</h3><p>Server-side Noodles.fi OHLCV</p></div><span class="data-state" id="chartState">Loading</span></div><p class="meta" id="chartMeta">Source: Noodles.fi · Timestamp: pending · Status: loading</p><div class="chart-controls" role="group" aria-label="Market chart range"><button class="button secondary active" type="button" data-chart-range="24h" aria-pressed="true">24H</button><button class="button secondary" type="button" data-chart-range="7d" aria-pressed="false">7D</button><button class="button secondary" type="button" data-chart-range="30d" aria-pressed="false">30D</button></div><div class="chart-shell"><canvas id="marketChart" width="1000" height="360" aria-label="TREE price and volume chart"></canvas><p id="chartMessage" class="chart-message" role="status" aria-live="polite">Loading chart…</p></div></div>
-      <div class="data-group" data-stats-group="supply"><div class="group-heading"><h3>Supply</h3><span class="data-state snapshot" data-group-state>Snapshot</span></div><p class="meta" data-group-meta>Source: TREE project records · Project snapshot — June 22, 2026 · Status: snapshot</p><div class="stat-grid">
-        <article class="stat-card"><span>Total Supply</span><strong data-snapshot="tree.totalSupply">—</strong></article><article class="stat-card"><span>Effectively Removed</span><strong data-snapshot="tree.zeroAddressBalance">—</strong></article><article class="stat-card"><span>Effective Supply</span><strong data-snapshot="tree.effectiveSupply">—</strong></article><article class="stat-card"><span>Locked in Moonbags Treasury</span><strong data-snapshot="tree.moonbagsLocked">—</strong></article><article class="stat-card"><span>Effective Removal Percentage</span><strong data-derived="removalPercent">—</strong></article>
-      </div></div>
-      <div class="data-group" data-stats-group="liquidity"><div class="group-heading"><h3>Liquidity venues</h3><span class="data-state snapshot" data-group-state>Snapshot</span></div><p class="meta" data-group-meta>Source: TREE project records · Project snapshot — June 22, 2026 · Status: snapshot</p><div class="stat-grid">
-        <article class="stat-card"><span>SuiDex V2</span><strong data-snapshot="liquidity.suiDexV2TvlUsd">—</strong></article><article class="stat-card"><span>SuiDex V3</span><strong data-snapshot="liquidity.suiDexV3TvlUsd">—</strong></article><article class="stat-card"><span>Turbos</span><strong data-snapshot="liquidity.turbosTvlUsd">—</strong></article><article class="stat-card"><span>V2 Farm APR</span><strong data-snapshot="liquidity.suiDexV2FarmApr">—</strong></article><article class="stat-card"><span>V2 LP Staked</span><strong data-snapshot="liquidity.suiDexV2LpStakedPercent">—</strong></article>
-      </div></div>
-      <div class="data-group" data-stats-group="nftree"><div class="group-heading"><h3>NFTree</h3><span class="data-state snapshot" data-group-state>Snapshot</span></div><p class="meta" data-group-meta>Source: TREE project records · Project snapshot — June 22, 2026 · Status: snapshot</p><div class="stat-grid">
-        <article class="stat-card"><span>Mint Price</span><strong data-snapshot="nftree.mintPriceSui">—</strong></article><article class="stat-card"><span>Minted / Loaded</span><strong data-snapshot="nftree.totalMintedOrLoaded">—</strong></article><article class="stat-card"><span>Holder-Owned</span><strong data-snapshot="nftree.holderOwned">—</strong></article><article class="stat-card"><span>Sale Pool</span><strong data-snapshot="nftree.salePool">—</strong></article><article class="stat-card"><span>Holder Wallets</span><strong data-snapshot="nftree.holderWallets">—</strong></article>
-      </div></div><div id="statsWarnings" class="warnings" hidden></div>
     </section>
 
     <section class="section leaderboard-section" id="leaderboard" aria-labelledby="leaderboard-title">
@@ -117,6 +82,41 @@
       <div id="leaderboardWarnings" class="warnings" hidden></div>
 
       <details class="coverage-details"><summary>Verification details</summary><p>A protected background worker scans all live Coin&lt;TREE&gt; objects, aggregates balances with exact bigint arithmetic, reconciles supply, and publishes rows only after natural pagination completion.</p><div class="coverage-metrics leaderboard-coverage"><span>Snapshot provider<strong id="leaderboardProvider">sui-graphql-snapshot</strong></span><span>Snapshot generated time<strong id="leaderboardSnapshotTime">None</strong></span><span>Snapshot age<strong id="leaderboardSnapshotAge">—</strong></span><span>Refresh state<strong id="leaderboardRefreshState">Idle</strong></span><span>Pages scanned<strong id="leaderboardPagesScanned">0</strong></span><span>Coin objects scanned<strong id="leaderboardObjectsScanned">0</strong></span><span>Excluded protocol/system coin objects<strong id="excludedCoinObjectCount">0</strong></span><span>Unique excluded protocol/system owners<strong id="excludedUniqueOwnerCount">0</strong></span><span>Reconciliation state<strong id="leaderboardReconciliation">Not available</strong></span></div><p id="leaderboardCoverageDetails">Coverage details load with the server response.</p><p>TREE not represented by address-owned Coin&lt;TREE&gt; objects may include balances inside shared objects, object-owned coins, wrapped or embedded balances, and other non-address-owned storage. This difference is not labeled burned or circulating.</p></details>
+    </section>
+
+<section class="section compact-section" id="swap" aria-labelledby="swap-title">
+      <div class="section-heading"><div><p class="eyebrow">SuiDex route</p><h2 id="swap-title">Buy TREE</h2></div><span class="section-note">Display estimate only</span></div>
+      <div class="split-grid">
+        <div class="card form-card">
+          <label for="swapSui">SUI to spend</label><input id="swapSui" type="number" min="0" step="0.001" inputmode="decimal" placeholder="10">
+          <label for="swapTree">Expected TREE output</label><input id="swapTree" type="text" inputmode="decimal" placeholder="Waiting for displayed rate" readonly>
+          <div class="estimate-grid"><span>Current displayed rate</span><strong id="displayedRate">Loading…</strong><span>Estimated TREE</span><strong id="estimatedTree">—</strong><span>Slippage setting</span><strong>1%</strong></div>
+          <p class="muted">Display estimate only — not an executable quote.</p>
+          <label class="check"><input id="reserveNftree" type="checkbox"> <span>Reserve SUI for one NFTree mint</span></label>
+          <p class="muted">This checkbox is informational and does not change the submitted amount.</p>
+          <button class="button primary" id="buyTree" type="button" disabled>Swap verification in progress</button>
+          <p id="swapStatus" class="status" role="status" aria-live="polite">On-site TREE purchases remain disabled pending quote, simulation, gas-reserve, and finality verification.</p>
+          <a class="button secondary" id="suiDexFallback" href="https://dex.suidex.org/swap?from=SUI&amp;to=Tree" target="_blank" rel="noopener noreferrer">Trade on SuiDex</a>
+        </div>
+        <aside class="card next-card"><span class="card-icon">🌱</span><h3>Plan the next step</h3><p>Planning to mint an NFTree next? Keep at least 25 SUI plus gas in your wallet.</p><strong>Next Step: Mint an NFTree for 25 SUI</strong><div class="actions"><a class="button gold" href="https://nftree.net/mint" target="_blank" rel="noopener noreferrer">Mint NFTree</a><a class="button secondary" href="https://nftree.net" target="_blank" rel="noopener noreferrer">Explore NFTree</a></div></aside>
+      </div>
+    </section>
+
+<section class="section" id="stats" aria-labelledby="stats-title">
+      <div class="section-heading"><div><p class="eyebrow">Network overview</p><h2 id="stats-title">TREE Network Stats</h2></div><button class="button secondary" id="refreshStats" type="button">Refresh</button></div>
+      <div class="data-group" data-stats-group="market"><div class="group-heading"><div><h3>Market</h3><p>Noodles.fi primary market source</p></div><span class="data-state" data-group-state>Loading</span></div><p class="meta" data-group-meta>Source: Noodles.fi · Timestamp: pending · Status: loading</p><div class="stat-grid">
+        <article class="stat-card"><span>TREE Price</span><strong data-market="price">—</strong></article><article class="stat-card"><span>24h Change</span><strong data-market="priceChange24h">—</strong></article><article class="stat-card"><span>24h Volume</span><strong data-market="volume24h">—</strong></article><article class="stat-card"><span>Market Cap</span><strong data-market="marketCap">—</strong></article><article class="stat-card"><span>Recognized Liquidity</span><strong data-market="liquidity">—</strong></article><article class="stat-card"><span>Reported owner metric</span><strong data-market="holderCount">—</strong></article>
+      </div></div>
+      <div class="data-group chart-group" data-chart-group><div class="group-heading"><div><h3>TREE Market Chart</h3><p>Server-side Noodles.fi OHLCV</p></div><span class="data-state" id="chartState">Loading</span></div><p class="meta" id="chartMeta">Source: Noodles.fi · Timestamp: pending · Status: loading</p><div class="chart-controls" role="group" aria-label="Market chart range"><button class="button secondary active" type="button" data-chart-range="24h" aria-pressed="true">24H</button><button class="button secondary" type="button" data-chart-range="7d" aria-pressed="false">7D</button><button class="button secondary" type="button" data-chart-range="30d" aria-pressed="false">30D</button></div><div class="chart-shell"><canvas id="marketChart" width="1000" height="360" aria-label="TREE price and volume chart"></canvas><p id="chartMessage" class="chart-message" role="status" aria-live="polite">Loading chart…</p></div></div>
+      <div class="data-group" data-stats-group="supply"><div class="group-heading"><h3>Supply</h3><span class="data-state snapshot" data-group-state>Snapshot</span></div><p class="meta" data-group-meta>Source: TREE project records · Project snapshot — June 22, 2026 · Status: snapshot</p><div class="stat-grid">
+        <article class="stat-card"><span>Total Supply</span><strong data-snapshot="tree.totalSupply">—</strong></article><article class="stat-card"><span>Effectively Removed</span><strong data-snapshot="tree.zeroAddressBalance">—</strong></article><article class="stat-card"><span>Effective Supply</span><strong data-snapshot="tree.effectiveSupply">—</strong></article><article class="stat-card"><span>Locked in Moonbags Treasury</span><strong data-snapshot="tree.moonbagsLocked">—</strong></article><article class="stat-card"><span>Effective Removal Percentage</span><strong data-derived="removalPercent">—</strong></article>
+      </div></div>
+      <div class="data-group" data-stats-group="liquidity"><div class="group-heading"><h3>Liquidity venues</h3><span class="data-state snapshot" data-group-state>Snapshot</span></div><p class="meta" data-group-meta>Source: TREE project records · Project snapshot — June 22, 2026 · Status: snapshot</p><div class="stat-grid">
+        <article class="stat-card"><span>SuiDex V2</span><strong data-snapshot="liquidity.suiDexV2TvlUsd">—</strong></article><article class="stat-card"><span>SuiDex V3</span><strong data-snapshot="liquidity.suiDexV3TvlUsd">—</strong></article><article class="stat-card"><span>Turbos</span><strong data-snapshot="liquidity.turbosTvlUsd">—</strong></article><article class="stat-card"><span>V2 Farm APR</span><strong data-snapshot="liquidity.suiDexV2FarmApr">—</strong></article><article class="stat-card"><span>V2 LP Staked</span><strong data-snapshot="liquidity.suiDexV2LpStakedPercent">—</strong></article>
+      </div></div>
+      <div class="data-group" data-stats-group="nftree"><div class="group-heading"><h3>NFTree</h3><span class="data-state snapshot" data-group-state>Snapshot</span></div><p class="meta" data-group-meta>Source: TREE project records · Project snapshot — June 22, 2026 · Status: snapshot</p><div class="stat-grid">
+        <article class="stat-card"><span>Mint Price</span><strong data-snapshot="nftree.mintPriceSui">—</strong></article><article class="stat-card"><span>Minted / Loaded</span><strong data-snapshot="nftree.totalMintedOrLoaded">—</strong></article><article class="stat-card"><span>Holder-Owned</span><strong data-snapshot="nftree.holderOwned">—</strong></article><article class="stat-card"><span>Sale Pool</span><strong data-snapshot="nftree.salePool">—</strong></article><article class="stat-card"><span>Holder Wallets</span><strong data-snapshot="nftree.holderWallets">—</strong></article>
+      </div></div><div id="statsWarnings" class="warnings" hidden></div>
     </section>
 
     <section class="section" id="canopy-draw" aria-labelledby="canopy-title">
