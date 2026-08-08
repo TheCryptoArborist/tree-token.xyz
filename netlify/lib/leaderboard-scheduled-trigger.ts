@@ -12,7 +12,7 @@ export type NetlifyRuntimeContext = {
 export type ScheduledTriggerResult = {
   attempted: boolean;
   accepted: boolean;
-  reason: 'not-production' | 'not-published' | 'missing-secret' | 'accepted' | 'unexpected-status' | 'network-error' | 'timeout';
+  reason: 'not-production' | 'missing-secret' | 'accepted' | 'unexpected-status' | 'network-error' | 'timeout';
 };
 
 export type ScheduledTriggerDependencies = {
@@ -35,10 +35,6 @@ export async function runLeaderboardScheduledTrigger(
     logger.info('TREE leaderboard scheduled refresh skipped outside production.');
     return { attempted: false, accepted: false, reason: 'not-production' };
   }
-  if (context.deploy.published !== true) {
-    logger.info('TREE leaderboard scheduled refresh skipped for an unpublished deploy.');
-    return { attempted: false, accepted: false, reason: 'not-published' };
-  }
 
   const getEnv = dependencies.getEnv ?? ((name) => Netlify.env.get(name));
   const secret = getEnv('TREE_LEADERBOARD_REFRESH_SECRET') || '';
@@ -47,9 +43,10 @@ export async function runLeaderboardScheduledTrigger(
     return { attempted: false, accepted: false, reason: 'missing-secret' };
   }
 
+  const siteUrl = context?.site?.url || getEnv('URL') || 'https://tree-token.xyz';
   let endpoint: URL;
   try {
-    endpoint = new URL(BACKGROUND_FUNCTION_PATH, context.site.url);
+    endpoint = new URL(BACKGROUND_FUNCTION_PATH, siteUrl);
   } catch {
     logger.error('TREE leaderboard scheduled refresh could not start.');
     return { attempted: false, accepted: false, reason: 'network-error' };
