@@ -259,58 +259,71 @@ function updateYourRank() {
   const output = document.getElementById('yourRank');
   if (!window.playerAddress) { output.textContent = 'Connect a wallet to check.'; return; }
   if (leaderboardStatus === 'loading') { output.textContent = 'Checking leaderboard…'; return; }
-  if (leaderboardStatus === 'verification-incomplete') { output.textContent = 'Sui-native holder verification is incomplete.'; return; }
+  if (leaderboardStatus === 'not-ready') { output.textContent = 'A verified leaderboard snapshot is not available yet.'; return; }
+  if (leaderboardStatus === 'refreshing') { output.textContent = 'The first verified leaderboard snapshot is being built.'; return; }
   if (leaderboardStatus === 'error') { output.textContent = 'Your rank is temporarily unavailable.'; return; }
   const row = leaderboardEntries.find((entry) => entry.wallet.toLowerCase() === window.playerAddress.toLowerCase());
   if (!row) { output.textContent = 'Wallet is outside the displayed Top 50.'; return; }
   output.textContent = leaderboardStatus === 'stale'
-    ? `#${row.rank} · ${row.tier} · Last complete snapshot`
+    ? `#${row.rank} · ${row.tier} · Last verified snapshot`
     : `#${row.rank} · ${row.tier}`;
+}
+
+function formatSnapshotAge(value) {
+  const milliseconds = Number(value);
+  if (!Number.isFinite(milliseconds) || milliseconds < 0) return '—';
+  if (milliseconds < 60_000) return `${Math.floor(milliseconds / 1000)}s`;
+  if (milliseconds < 3_600_000) return `${Math.floor(milliseconds / 60_000)}m`;
+  return `${Math.floor(milliseconds / 3_600_000)}h ${Math.floor((milliseconds % 3_600_000) / 60_000)}m`;
 }
 
 function renderLeaderboard(payload) {
   const state = document.getElementById('leaderboardState');
   const rows = document.getElementById('leaderboardRows');
-  const allowedStatus = ['ok', 'stale', 'verification-incomplete', 'error'];
+  const allowedStatus = ['not-ready', 'refreshing', 'ok', 'stale', 'error'];
   leaderboardStatus = allowedStatus.includes(payload.status) ? payload.status : 'error';
   leaderboardEntries = ['ok', 'stale'].includes(leaderboardStatus) && Array.isArray(payload.entries) ? payload.entries : [];
-  const stateLabels = { ok: 'Current', stale: 'Last Complete Snapshot', 'verification-incomplete': 'Verification Incomplete', error: 'Unavailable' };
+  const stateLabels = {
+    'not-ready': 'Verified Snapshot Not Ready',
+    refreshing: 'Building Verified Snapshot',
+    ok: 'Current Verified Snapshot',
+    stale: 'Last Verified Snapshot',
+    error: 'Leaderboard Unavailable',
+  };
   state.textContent = stateLabels[leaderboardStatus];
   state.className = `data-state ${leaderboardStatus}`;
-  const coverage = payload.coverage || {};
-  const skippedNonAddressOwned = ['objectOwnedObjectsSkipped', 'sharedObjectsSkipped', 'immutableObjectsSkipped', 'consensusOwnedObjectsSkipped', 'unknownOwnerObjectsSkipped']
-    .reduce((sum, field) => sum + (Number(coverage[field]) || 0), 0);
-  document.getElementById('leaderboardProvider').textContent = payload.provider || 'sui-graphql';
-  document.getElementById('leaderboardScanComplete').textContent = coverage.scanComplete === true ? 'Yes' : 'No';
+  const hasSnapshot = ['ok', 'stale'].includes(leaderboardStatus);
+  const coverage = hasSnapshot ? (payload.coverage || {}) : (payload.refreshStatus || {});
+  document.getElementById('leaderboardProvider').textContent = payload.provider || 'sui-graphql-snapshot';
+  document.getElementById('leaderboardSnapshotTime').textContent = payload.snapshotGeneratedAt ? new Date(payload.snapshotGeneratedAt).toLocaleString() : 'None';
+  document.getElementById('leaderboardSnapshotAge').textContent = formatSnapshotAge(payload.snapshotAgeMs);
+  document.getElementById('leaderboardRefreshState').textContent = payload.refreshState || 'idle';
   document.getElementById('leaderboardPagesScanned').textContent = quantity.format(Number(coverage.pagesScanned) || 0);
   document.getElementById('leaderboardObjectsScanned').textContent = quantity.format(Number(coverage.objectsScanned) || 0);
-  document.getElementById('leaderboardAddressObjects').textContent = quantity.format(Number(coverage.addressOwnedCoinObjects) || 0);
-  document.getElementById('indexedHolderCount').textContent = payload.holderCount === null || payload.holderCount === undefined ? '—' : quantity.format(payload.holderCount);
-  document.getElementById('leaderboardSkippedOwners').textContent = quantity.format(skippedNonAddressOwned);
-  document.getElementById('leaderboardSnapshotTime').textContent = payload.snapshotGeneratedAt ? new Date(payload.snapshotGeneratedAt).toLocaleString() : 'None';
+  const ownerCount = hasSnapshot ? payload.holderCount : coverage.uniqueAddressOwners;
+  document.getElementById('indexedHolderCount').textContent = ownerCount === null || ownerCount === undefined ? '—' : quantity.format(ownerCount);
   document.getElementById('displayedWalletCount').textContent = quantity.format(payload.displayedCount ?? leaderboardEntries.length);
-  document.getElementById('excludedWalletCount').textContent = quantity.format(payload.excludedCount ?? 0);
-  document.getElementById('leaderboardUpdated').textContent = `Refresh attempted: ${payload.generatedAt ? new Date(payload.generatedAt).toLocaleString() : 'unavailable'}`;
-  const refresh = payload.refreshCoverage;
+  document.getElementById('excludedWalletCount').textContent = quantity.format(payload.excludedCount ?? coverage.excludedAddresses ?? 0);
   const reconciliation = payload.reconciliation || {};
+  document.getElementById('leaderboardReconciliation').textContent = reconciliation.valid === true ? 'Valid' : 'Not available';
+  document.getElementById('leaderboardUpdated').textContent = payload.message || 'Snapshot status unavailable.';
   document.getElementById('leaderboardCoverageDetails').textContent = [
+    `Refresh state: ${payload.refreshState || 'idle'}.`,
     `Natural end reached: ${coverage.reachedEnd === true ? 'yes' : 'no'}.`,
-    `Malformed owners: ${quantity.format(Number(coverage.malformedOwnerAddresses) || 0)}.`,
-    `Malformed balances: ${quantity.format(Number(coverage.malformedBalances) || 0)}.`,
-    `Duplicate objects: ${quantity.format(Number(coverage.duplicateObjectIds) || 0)}.`,
-    `Reconciliation: ${reconciliation.valid === true ? 'valid' : 'incomplete'}.`,
-    `Address-owned TREE: ${reconciliation.addressOwnedTree ?? 'unavailable'}.`,
-    refresh && refresh !== coverage ? `Latest refresh scan complete: ${refresh.scanComplete === true ? 'yes' : 'no'}.` : '',
+    `Complete snapshot available: ${hasSnapshot ? 'yes' : 'no'}.`,
+    `Reconciliation: ${reconciliation.valid === true ? 'valid' : 'not available'}.`,
+    hasSnapshot ? `Address-owned TREE: ${reconciliation.addressOwnedTree ?? 'unavailable'}.` : 'Refresh progress contains aggregate counts only.',
   ].filter(Boolean).join(' ');
   const warningBox = document.getElementById('leaderboardWarnings');
   warningBox.textContent = Array.isArray(payload.warnings) ? payload.warnings.join(' ') : '';
   warningBox.hidden = !warningBox.textContent;
   if (!leaderboardEntries.length) {
     const emptyMessages = {
-      'verification-incomplete': 'Sui-native holder verification is incomplete. Partial ranks are not published.',
-      error: 'Sui-native leaderboard verification is temporarily unavailable.',
+      'not-ready': 'A complete verified TREE leaderboard snapshot is not available yet.',
+      refreshing: 'The first verified TREE leaderboard snapshot is being built. No partial ranks are published.',
+      error: 'The verified TREE leaderboard is temporarily unavailable.',
     };
-    rows.innerHTML = `<tr><td colspan="5">${emptyMessages[leaderboardStatus] || 'No direct TREE holder rows were returned by the complete scan.'}</td></tr>`;
+    rows.innerHTML = `<tr><td colspan="5">${emptyMessages[leaderboardStatus] || 'No ranked wallets are available in the verified snapshot.'}</td></tr>`;
   } else {
     rows.replaceChildren(...leaderboardEntries.map((entry) => {
       const row = document.createElement('tr');

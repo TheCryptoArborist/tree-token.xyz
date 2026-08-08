@@ -29,13 +29,13 @@ function graphPage(nodes: unknown[], hasNextPage: boolean, endCursor: string | n
     ? { errors }
     : { data: { objects: { pageInfo: { hasNextPage, endCursor }, nodes } } };
 }
-function queuedFetch(payloads: Array<{ payload?: unknown; status?: number }>) {
+function queuedFetch(payloads: Array<{ payload?: unknown; status?: number; headers?: Record<string, string> }>) {
   const requests: Array<Record<string, unknown>> = [];
   const fetchImpl = async (_url: string | URL | Request, init?: RequestInit) => {
     requests.push(JSON.parse(String(init?.body)));
     const next = payloads.shift();
     if (!next) throw new Error('Unexpected request');
-    return new Response(JSON.stringify(next.payload ?? {}), { status: next.status ?? 200, headers: { 'Content-Type': 'application/json' } });
+    return new Response(JSON.stringify(next.payload ?? {}), { status: next.status ?? 200, headers: { 'Content-Type': 'application/json', ...next.headers } });
   };
   return { fetchImpl: fetchImpl as typeof fetch, requests };
 }
@@ -174,6 +174,7 @@ const graphError = await scanSuiGraphqlLeaderboard({ fetchImpl: graphErrorFetch.
 assert.equal(graphError.outcome, 'error');
 assert.deepEqual(graphError.entries, []);
 assert.deepEqual(graphError.coverage.graphqlErrors, ['fixture error']);
+assert.equal(graphError.coverage.requestAttempts, 1);
 
 const rateFetch = queuedFetch([{ status: 429 }]);
 const rateLimited = await scanSuiGraphqlLeaderboard({ fetchImpl: rateFetch.fetchImpl });
@@ -200,5 +201,70 @@ assert.equal(invalidSupply.reconciliation.valid, false);
 assert.equal(invalidSupply.outcome, 'verification-incomplete');
 assert.deepEqual(invalidSupply.entries, []);
 
+let retryClock = 0;
+const retryDelays: number[] = [];
+const retryAfterFetch = queuedFetch([
+  { status: 429, headers: { 'Retry-After': '2' } },
+  { payload: graphPage([coinNode('AddressOwner', address('a'), '1')], false, null) },
+]);
+const retryAfter = await scanSuiGraphqlLeaderboard({
+  fetchImpl: retryAfterFetch.fetchImpl, maxRetries: 1, maxScanMs: 10_000, now: () => retryClock,
+  sleepImpl: async (milliseconds) => { retryDelays.push(milliseconds); retryClock += milliseconds; }, randomImpl: () => 0,
+});
+assert.equal(retryAfter.outcome, 'complete');
+assert.deepEqual(retryDelays, [2000]);
+assert.equal(retryAfter.coverage.rateLimitRetries, 1);
+
+retryClock = 0;
+const unreasonableDelays: number[] = [];
+const unreasonableFetch = queuedFetch([
+  { status: 429, headers: { 'Retry-After': '999999' } },
+  { payload: graphPage([coinNode('AddressOwner', address('a'), '1')], false, null) },
+]);
+const unreasonable = await scanSuiGraphqlLeaderboard({
+  fetchImpl: unreasonableFetch.fetchImpl, maxRetries: 1, maxScanMs: 3_000, now: () => retryClock,
+  sleepImpl: async (milliseconds) => { unreasonableDelays.push(milliseconds); retryClock += milliseconds; }, randomImpl: () => 0,
+});
+assert.equal(unreasonable.outcome, 'complete');
+assert.deepEqual(unreasonableDelays, [1000]);
+
+const exhaustedFetch = queuedFetch([{ status: 429 }, { status: 429 }, { status: 429 }]);
+const exhausted = await scanSuiGraphqlLeaderboard({ fetchImpl: exhaustedFetch.fetchImpl, maxRetries: 2, maxScanMs: 10_000, sleepImpl: async () => {}, randomImpl: () => 0 });
+assert.equal(exhausted.outcome, 'error');
+assert.equal(exhausted.coverage.rateLimited, true);
+assert.equal(exhausted.coverage.requestAttempts, 3);
+assert.deepEqual(exhausted.entries, []);
+
+const serverFetch = queuedFetch([
+  { status: 503 },
+  { payload: graphPage([coinNode('AddressOwner', address('a'), '1')], false, null) },
+]);
+const serverRecovered = await scanSuiGraphqlLeaderboard({ fetchImpl: serverFetch.fetchImpl, maxRetries: 1, maxScanMs: 10_000, sleepImpl: async () => {}, randomImpl: () => 0 });
+assert.equal(serverRecovered.outcome, 'complete');
+assert.equal(serverRecovered.coverage.serverErrorRetries, 1);
+
+let networkAttempts = 0;
+const networkRecovered = await scanSuiGraphqlLeaderboard({
+  fetchImpl: (async () => {
+    networkAttempts += 1;
+    if (networkAttempts === 1) throw new TypeError('transient');
+    return new Response(JSON.stringify(graphPage([coinNode('AddressOwner', address('a'), '1')], false, null)), { status: 200, headers: { 'Content-Type': 'application/json' } });
+  }) as typeof fetch,
+  maxRetries: 1, maxScanMs: 10_000, sleepImpl: async () => {}, randomImpl: () => 0,
+});
+assert.equal(networkRecovered.outcome, 'complete');
+assert.equal(networkRecovered.coverage.networkRetries, 1);
+
+const progressEvents: unknown[] = [];
+const progressFetch = queuedFetch([
+  { payload: graphPage([coinNode('AddressOwner', address('a'), '1')], true, 'cursor') },
+  { payload: graphPage([coinNode('AddressOwner', address('b'), '2')], false, null) },
+]);
+await scanSuiGraphqlLeaderboard({ fetchImpl: progressFetch.fetchImpl, progressIntervalPages: 1, onProgress: (progress) => progressEvents.push(progress) });
+assert.ok(progressEvents.length >= 2);
+assert.equal(JSON.stringify(progressEvents).includes('cursor'), false);
+assert.equal(JSON.stringify(progressEvents).includes(address('a')), false);
+
 console.log(`Sui GraphQL provider fixtures: PASS (exact aggregate ${exactA.toString()} raw)`);
+console.log('Sui GraphQL retry fixtures: PASS (bounded deadline-aware retries)');
 console.log(`Reconciliation fixture: PASS (${complete.reconciliation.addressOwnedRaw} raw address-owned)`);

@@ -92,7 +92,33 @@ export type ScanCoverage = {
   graphqlErrors: string[];
   networkError: string | null;
   cursorInconsistent: boolean;
+  requestAttempts: number;
+  retriedRequests: number;
+  rateLimitRetries: number;
+  networkRetries: number;
+  serverErrorRetries: number;
   scanComplete: boolean;
+};
+
+export type ScanProgress = {
+  pagesScanned: number;
+  objectsScanned: number;
+  addressOwnedCoinObjects: number;
+  uniqueAddressOwners: number;
+  excludedAddresses: number;
+  elapsedMs: number;
+  hasNextPage: boolean;
+};
+
+export type ScanOptions = Partial<SuiGraphqlConfig> & {
+  fetchImpl?: FetchLike;
+  now?: () => number;
+  onProgress?: (progress: ScanProgress) => Promise<void> | void;
+  progressIntervalPages?: number;
+  maxRetries?: number;
+  abortSignal?: AbortSignal;
+  sleepImpl?: (milliseconds: number) => Promise<void>;
+  randomImpl?: () => number;
 };
 
 export type Reconciliation = {
@@ -205,6 +231,11 @@ function initialCoverage(): ScanCoverage {
     graphqlErrors: [],
     networkError: null,
     cursorInconsistent: false,
+    requestAttempts: 0,
+    retriedRequests: 0,
+    rateLimitRetries: 0,
+    networkRetries: 0,
+    serverErrorRetries: 0,
     scanComplete: false,
   };
 }
@@ -272,10 +303,7 @@ function graphqlErrorMessages(value: unknown): string[] {
   });
 }
 
-export async function scanSuiGraphqlLeaderboard(options: Partial<SuiGraphqlConfig> & {
-  fetchImpl?: FetchLike;
-  now?: () => number;
-} = {}): Promise<SuiGraphqlScanResult> {
+export async function scanSuiGraphqlLeaderboard(options: ScanOptions = {}): Promise<SuiGraphqlScanResult> {
   const defaults = readSuiGraphqlConfig(() => undefined);
   const config: SuiGraphqlConfig = {
     endpoint: options.endpoint ?? defaults.endpoint,
@@ -285,6 +313,10 @@ export async function scanSuiGraphqlLeaderboard(options: Partial<SuiGraphqlConfi
   };
   const fetchImpl = options.fetchImpl ?? fetch;
   const now = options.now ?? Date.now;
+  const sleepImpl = options.sleepImpl ?? ((milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds)));
+  const randomImpl = options.randomImpl ?? Math.random;
+  const progressIntervalPages = Math.max(1, Math.floor(options.progressIntervalPages ?? 1));
+  const maxRetries = Math.max(0, Math.floor(options.maxRetries ?? 0));
   const startedAt = now();
   const generatedAt = new Date().toISOString();
   const coverage = initialCoverage();
@@ -295,7 +327,51 @@ export async function scanSuiGraphqlLeaderboard(options: Partial<SuiGraphqlConfi
   let addressOwnedRaw = 0n;
   let after: string | null = null;
   const controller = new AbortController();
+  const externalAbort = () => controller.abort();
+  options.abortSignal?.addEventListener('abort', externalAbort, { once: true });
+  if (options.abortSignal?.aborted) controller.abort();
   const timeout = setTimeout(() => controller.abort(), config.maxScanMs);
+
+  const remainingMs = () => Math.max(0, config.maxScanMs - (now() - startedAt));
+  const retryDelay = (retryIndex: number, response?: Response): number => {
+    const retryAfter = response?.headers.get('Retry-After');
+    if (retryAfter && /^\d+(\.\d+)?$/.test(retryAfter.trim())) {
+      const milliseconds = Number(retryAfter) * 1_000;
+      if (Number.isFinite(milliseconds) && milliseconds >= 0 && milliseconds < remainingMs()) return milliseconds;
+    }
+    const base = Math.min(10_000, 1_000 * (2 ** retryIndex));
+    return Math.min(10_000, base + Math.floor(base * 0.2 * Math.max(0, Math.min(1, randomImpl()))));
+  };
+  const waitForRetry = async (milliseconds: number): Promise<boolean> => {
+    if (milliseconds >= remainingMs() || controller.signal.aborted) {
+      coverage.timeLimitReached = true;
+      return false;
+    }
+    await sleepImpl(milliseconds);
+    if (now() - startedAt >= config.maxScanMs || controller.signal.aborted) {
+      coverage.timeLimitReached = true;
+      return false;
+    }
+    return true;
+  };
+  const emitProgress = async (): Promise<boolean> => {
+    if (!options.onProgress) return true;
+    try {
+      await options.onProgress({
+        pagesScanned: coverage.pagesScanned,
+        objectsScanned: coverage.objectsScanned,
+        addressOwnedCoinObjects: coverage.addressOwnedCoinObjects,
+        uniqueAddressOwners: allAddressOwners.size,
+        excludedAddresses: coverage.excludedAddresses,
+        elapsedMs: Math.max(0, now() - startedAt),
+        hasNextPage: coverage.hasNextPage,
+      });
+      return true;
+    } catch {
+      coverage.networkError = 'Leaderboard refresh progress could not be recorded';
+      return false;
+    }
+  };
 
   try {
     while (coverage.pagesScanned < config.maxPages) {
@@ -303,31 +379,53 @@ export async function scanSuiGraphqlLeaderboard(options: Partial<SuiGraphqlConfi
         coverage.timeLimitReached = true;
         break;
       }
-      let response: Response;
-      try {
-        response = await fetchImpl(config.endpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-            'x-sui-rpc-show-usage': 'true',
-          },
-          body: JSON.stringify({
-            query: TREE_COIN_OBJECTS_QUERY,
-            variables: { first: config.pageSize, after, coinObjectType: TREE_COIN_OBJECT_TYPE },
-          }),
-          signal: controller.signal,
-        });
-      } catch (error) {
-        if (controller.signal.aborted || now() - startedAt >= config.maxScanMs) coverage.timeLimitReached = true;
-        else coverage.networkError = error instanceof Error ? error.message : 'Sui GraphQL network request failed';
+      let response: Response | null = null;
+      for (let retryIndex = 0; ; retryIndex += 1) {
+        coverage.requestAttempts += 1;
+        try {
+          response = await fetchImpl(config.endpoint, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'application/json',
+              'x-sui-rpc-show-usage': 'true',
+            },
+            body: JSON.stringify({
+              query: TREE_COIN_OBJECTS_QUERY,
+              variables: { first: config.pageSize, after, coinObjectType: TREE_COIN_OBJECT_TYPE },
+            }),
+            signal: controller.signal,
+          });
+        } catch (error) {
+          if (controller.signal.aborted || now() - startedAt >= config.maxScanMs) {
+            coverage.timeLimitReached = true;
+            break;
+          }
+          if (retryIndex < maxRetries) {
+            coverage.retriedRequests += 1;
+            coverage.networkRetries += 1;
+            if (!await waitForRetry(retryDelay(retryIndex))) break;
+            continue;
+          }
+          coverage.networkError = error instanceof Error ? error.message : 'Sui GraphQL network request failed';
+          break;
+        }
+
+        const retryableStatus = response.status === 429 || [500, 502, 503, 504].includes(response.status);
+        if (retryableStatus && retryIndex < maxRetries) {
+          coverage.retriedRequests += 1;
+          if (response.status === 429) coverage.rateLimitRetries += 1;
+          else coverage.serverErrorRetries += 1;
+          if (!await waitForRetry(retryDelay(retryIndex, response))) break;
+          response = null;
+          continue;
+        }
+        if (response.status === 429) coverage.rateLimited = true;
+        else if (retryableStatus) coverage.networkError = `Sui GraphQL returned HTTP ${response.status}`;
         break;
       }
 
-      if (response.status === 429) {
-        coverage.rateLimited = true;
-        break;
-      }
+      if (!response || coverage.timeLimitReached || coverage.rateLimited || coverage.networkError) break;
       if (!response.ok) {
         coverage.networkError = `Sui GraphQL returned HTTP ${response.status}`;
         break;
@@ -345,8 +443,13 @@ export async function scanSuiGraphqlLeaderboard(options: Partial<SuiGraphqlConfi
         coverage.graphqlErrors.push(...errors);
         break;
       }
-      const objects = record(record(payload.data).objects);
-      const nodes = Array.isArray(objects.nodes) ? objects.nodes : [];
+      const objectsValue = record(payload.data).objects;
+      const objects = record(objectsValue);
+      if (!objectsValue || typeof objectsValue !== 'object' || !Array.isArray(objects.nodes) || !objects.pageInfo || typeof objects.pageInfo !== 'object') {
+        coverage.networkError = 'Sui GraphQL returned an unreadable response structure';
+        break;
+      }
+      const nodes = objects.nodes;
       const pageInfo = record(objects.pageInfo);
       coverage.pagesScanned += 1;
       coverage.objectsScanned += nodes.length;
@@ -408,14 +511,17 @@ export async function scanSuiGraphqlLeaderboard(options: Partial<SuiGraphqlConfi
         coverage.timeLimitReached = true;
         break;
       }
+      if (coverage.pagesScanned % progressIntervalPages === 0 && !await emitProgress()) break;
     }
   } finally {
     clearTimeout(timeout);
+    options.abortSignal?.removeEventListener('abort', externalAbort);
   }
 
   coverage.pageLimitReached = coverage.hasNextPage && coverage.pagesScanned >= config.maxPages && !coverage.reachedEnd;
   coverage.uniqueAddressOwners = allAddressOwners.size;
   coverage.elapsedMs = Math.max(0, now() - startedAt);
+  await emitProgress();
   const dataIntegrityValid = coverage.malformedOwnerAddresses === 0
     && coverage.malformedBalances === 0
     && coverage.unknownOwnerObjectsSkipped === 0

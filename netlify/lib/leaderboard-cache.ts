@@ -1,13 +1,16 @@
-import { getStore } from '@netlify/blobs';
+import { getDeployStore, getStore } from '@netlify/blobs';
 import {
-  DirectTreeEntry,
   METHODOLOGY_VERSION,
-  SUI_GRAPHQL_CACHED_PROVIDER,
   SUI_GRAPHQL_PROVIDER,
+  type DirectTreeEntry,
 } from './leaderboard-provider.ts';
 import type { Reconciliation, ScanCoverage, SuiGraphqlScanResult } from './sui-graphql-leaderboard-provider.ts';
 
 export const LEADERBOARD_STORE_NAME = 'tree-leaderboard';
+export const COMPLETE_SNAPSHOT_KEY = 'complete';
+export const REFRESH_STATUS_KEY = 'refresh-status';
+export const REFRESH_LOCK_KEY = 'refresh-lock';
+export const REFRESH_LOCK_TTL_MS = 20 * 60 * 1000;
 
 export type CompleteLeaderboardSnapshot = {
   generatedAt: string;
@@ -22,52 +25,92 @@ export type CompleteLeaderboardSnapshot = {
   sourceCheckpoint: SuiGraphqlScanResult['sourceCheckpoint'];
 };
 
+export type LeaderboardRefreshState = 'idle' | 'queued' | 'running' | 'complete' | 'verification-incomplete' | 'error';
+
+export type LeaderboardRefreshStatus = {
+  state: LeaderboardRefreshState;
+  runId: string;
+  startedAt: string;
+  updatedAt: string;
+  completedAt: string | null;
+  pagesScanned: number;
+  objectsScanned: number;
+  addressOwnedCoinObjects: number;
+  uniqueAddressOwners: number;
+  excludedAddresses: number;
+  elapsedMs: number;
+  hasNextPage: boolean;
+  reachedEnd: boolean;
+  scanComplete: boolean;
+  message: string;
+  commitRef: string | null;
+  deployId: string | null;
+};
+
+export type LeaderboardRefreshLock = {
+  runId: string;
+  startedAt: string;
+  expiresAt: string;
+  commitRef: string | null;
+  deployId: string | null;
+};
+
 export type LeaderboardStore = {
   get(key: string, options: { type: 'json' }): Promise<unknown>;
   setJSON(key: string, value: unknown): Promise<unknown>;
+  delete(key: string): Promise<unknown>;
 };
 
-export function sanitizeCacheScope(value: string | undefined, fallback: string): string {
-  const sanitized = (value || fallback)
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .slice(0, 120);
-  return sanitized || fallback;
+export type LeaderboardStoreFactories = {
+  getStore: (name: string, options: { consistency: 'strong' }) => unknown;
+  getDeployStore: (name: string) => unknown;
+};
+
+const defaultFactories: LeaderboardStoreFactories = {
+  getStore: (name, options) => getStore(name, options),
+  getDeployStore: (name) => getDeployStore(name),
+};
+
+export function selectLeaderboardStore(
+  context: string | undefined,
+  factories: LeaderboardStoreFactories = defaultFactories,
+): LeaderboardStore {
+  return (context === 'production'
+    ? factories.getStore(LEADERBOARD_STORE_NAME, { consistency: 'strong' })
+    : factories.getDeployStore(LEADERBOARD_STORE_NAME)) as LeaderboardStore;
 }
 
-export function leaderboardCacheKey(context: string | undefined, branch: string | undefined): string {
-  return `complete:${sanitizeCacheScope(context, 'dev')}:${sanitizeCacheScope(branch, 'local')}`;
+type StoreOptions = { context?: string; store?: LeaderboardStore };
+
+function resolveStore(options: StoreOptions): LeaderboardStore {
+  return options.store ?? selectLeaderboardStore(options.context);
 }
 
-function defaultStore(): LeaderboardStore {
-  return getStore({ name: LEADERBOARD_STORE_NAME, consistency: 'strong' }) as unknown as LeaderboardStore;
-}
-
-export async function readCompleteLeaderboardSnapshot(options: {
-  context?: string;
-  branch?: string;
-  store?: LeaderboardStore;
-}): Promise<CompleteLeaderboardSnapshot | null> {
-  const store = options.store ?? defaultStore();
-  const value = await store.get(leaderboardCacheKey(options.context, options.branch), { type: 'json' });
+export async function readCompleteLeaderboardSnapshot(options: StoreOptions = {}): Promise<CompleteLeaderboardSnapshot | null> {
+  const value = await resolveStore(options).get(COMPLETE_SNAPSHOT_KEY, { type: 'json' });
   if (!value || typeof value !== 'object') return null;
   const snapshot = value as CompleteLeaderboardSnapshot;
   if (snapshot.methodologyVersion !== METHODOLOGY_VERSION
     || snapshot.provider !== SUI_GRAPHQL_PROVIDER
+    || !Number.isFinite(Date.parse(snapshot.generatedAt))
     || !Array.isArray(snapshot.entries)
     || snapshot.coverage?.scanComplete !== true
+    || snapshot.coverage?.reachedEnd !== true
     || snapshot.reconciliation?.valid !== true) return null;
   return snapshot;
 }
 
-export async function writeCompleteLeaderboardSnapshot(scan: SuiGraphqlScanResult, options: {
-  context?: string;
-  branch?: string;
-  store?: LeaderboardStore;
-}): Promise<boolean> {
-  if (scan.outcome !== 'complete' || !scan.coverage.scanComplete || !scan.reconciliation.valid || scan.holderCount === null) return false;
+export async function writeCompleteLeaderboardSnapshot(scan: SuiGraphqlScanResult, options: StoreOptions = {}): Promise<boolean> {
+  const integrityValid = scan.coverage.malformedOwnerAddresses === 0
+    && scan.coverage.malformedBalances === 0
+    && scan.coverage.unknownOwnerObjectsSkipped === 0
+    && scan.coverage.duplicateObjectIds === 0;
+  if (scan.outcome !== 'complete'
+    || !scan.coverage.scanComplete
+    || !scan.coverage.reachedEnd
+    || !scan.reconciliation.valid
+    || !integrityValid
+    || scan.holderCount === null) return false;
   const snapshot: CompleteLeaderboardSnapshot = {
     generatedAt: scan.generatedAt,
     provider: SUI_GRAPHQL_PROVIDER,
@@ -80,59 +123,54 @@ export async function writeCompleteLeaderboardSnapshot(scan: SuiGraphqlScanResul
     reconciliation: scan.reconciliation,
     sourceCheckpoint: scan.sourceCheckpoint,
   };
-  const store = options.store ?? defaultStore();
-  await store.setJSON(leaderboardCacheKey(options.context, options.branch), snapshot);
+  await resolveStore(options).setJSON(COMPLETE_SNAPSHOT_KEY, snapshot);
   return true;
 }
 
-export function resolveLeaderboardRefresh(scan: SuiGraphqlScanResult, cached: CompleteLeaderboardSnapshot | null) {
-  if (scan.outcome === 'complete') {
-    return {
-      status: 'ok' as const,
-      provider: SUI_GRAPHQL_PROVIDER,
-      generatedAt: scan.generatedAt,
-      snapshotGeneratedAt: scan.generatedAt,
-      methodologyVersion: METHODOLOGY_VERSION,
-      coverage: scan.coverage,
-      refreshCoverage: null,
-      reconciliation: scan.reconciliation,
-      holderCount: scan.holderCount,
-      displayedCount: scan.displayedCount,
-      excludedCount: scan.excludedCount,
-      entries: scan.entries,
-      warnings: scan.warnings,
-    };
-  }
-  if (cached) {
-    return {
-      status: 'stale' as const,
-      provider: SUI_GRAPHQL_CACHED_PROVIDER,
-      generatedAt: scan.generatedAt,
-      snapshotGeneratedAt: cached.generatedAt,
-      methodologyVersion: METHODOLOGY_VERSION,
-      coverage: cached.coverage,
-      refreshCoverage: scan.coverage,
-      reconciliation: cached.reconciliation,
-      holderCount: cached.holderCount,
-      displayedCount: cached.displayedCount,
-      excludedCount: cached.excludedCount,
-      entries: cached.entries,
-      warnings: ['Displayed rows are from the last complete Sui-native scan.', ...scan.warnings],
-    };
-  }
+function sanitizeRefreshStatus(status: LeaderboardRefreshStatus): LeaderboardRefreshStatus {
   return {
-    status: scan.outcome === 'error' ? 'error' as const : 'verification-incomplete' as const,
-    provider: SUI_GRAPHQL_PROVIDER,
-    generatedAt: scan.generatedAt,
-    snapshotGeneratedAt: null,
-    methodologyVersion: METHODOLOGY_VERSION,
-    coverage: scan.coverage,
-    refreshCoverage: scan.coverage,
-    reconciliation: scan.reconciliation,
-    holderCount: null,
-    displayedCount: 0,
-    excludedCount: scan.excludedCount,
-    entries: [],
-    warnings: scan.warnings,
+    state: status.state,
+    runId: status.runId,
+    startedAt: status.startedAt,
+    updatedAt: status.updatedAt,
+    completedAt: status.completedAt,
+    pagesScanned: status.pagesScanned,
+    objectsScanned: status.objectsScanned,
+    addressOwnedCoinObjects: status.addressOwnedCoinObjects,
+    uniqueAddressOwners: status.uniqueAddressOwners,
+    excludedAddresses: status.excludedAddresses,
+    elapsedMs: status.elapsedMs,
+    hasNextPage: status.hasNextPage,
+    reachedEnd: status.reachedEnd,
+    scanComplete: status.scanComplete,
+    message: status.message,
+    commitRef: status.commitRef,
+    deployId: status.deployId,
   };
+}
+
+export async function readLeaderboardRefreshStatus(options: StoreOptions = {}): Promise<LeaderboardRefreshStatus | null> {
+  const value = await resolveStore(options).get(REFRESH_STATUS_KEY, { type: 'json' });
+  return value && typeof value === 'object' ? value as LeaderboardRefreshStatus : null;
+}
+
+export async function writeLeaderboardRefreshStatus(status: LeaderboardRefreshStatus, options: StoreOptions = {}): Promise<void> {
+  await resolveStore(options).setJSON(REFRESH_STATUS_KEY, sanitizeRefreshStatus(status));
+}
+
+export async function readRefreshLock(options: StoreOptions = {}): Promise<LeaderboardRefreshLock | null> {
+  const value = await resolveStore(options).get(REFRESH_LOCK_KEY, { type: 'json' });
+  return value && typeof value === 'object' ? value as LeaderboardRefreshLock : null;
+}
+
+export async function writeRefreshLock(lock: LeaderboardRefreshLock, options: StoreOptions = {}): Promise<void> {
+  await resolveStore(options).setJSON(REFRESH_LOCK_KEY, lock);
+}
+
+export async function clearRefreshLock(runId: string, options: StoreOptions = {}): Promise<boolean> {
+  const store = resolveStore(options);
+  const current = await readRefreshLock({ store });
+  if (!current || current.runId !== runId) return false;
+  await store.delete(REFRESH_LOCK_KEY);
+  return true;
 }
