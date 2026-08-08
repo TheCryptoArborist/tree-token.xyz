@@ -44,7 +44,6 @@ assert.deepEqual(unexpected, { attempted: true, accepted: false, reason: 'unexpe
 for (const [fixtureContext, fixtureEnv, reason] of [
   [context(), () => undefined, 'missing-secret'],
   [context('deploy-preview'), getEnv, 'not-production'],
-  [context('production', false), getEnv, 'not-published'],
 ] as const) {
   let requests = 0;
   const result = await runLeaderboardScheduledTrigger(fixtureContext, {
@@ -56,6 +55,15 @@ for (const [fixtureContext, fixtureEnv, reason] of [
   assert.equal(result.reason, reason);
   assert.equal(result.attempted, false);
 }
+
+let publishedFlagRequests = 0;
+const productionWithoutPublishedFlag = await runLeaderboardScheduledTrigger(context('production', false), {
+  getEnv,
+  fetchImpl: async () => { publishedFlagRequests += 1; return new Response(null, { status: 202 }); },
+  logger: { info() {}, error() {} },
+});
+assert.equal(publishedFlagRequests, 1);
+assert.deepEqual(productionWithoutPublishedFlag, { attempted: true, accepted: true, reason: 'accepted' });
 
 const networkFailure = await runLeaderboardScheduledTrigger(context(), {
   getEnv, fetchImpl: async () => { throw new TypeError('fixture network failure'); }, logger: { info() {}, error() {} },
