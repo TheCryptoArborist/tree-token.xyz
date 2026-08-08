@@ -67,7 +67,7 @@ function publicRefreshStatus(status: LeaderboardRefreshStatus | null): PublicLea
 export async function resolveLeaderboardSnapshotPayload(dependencies: SnapshotEndpointDependencies = {}) {
   const now = dependencies.now ?? Date.now;
   const getEnv = dependencies.getEnv ?? ((name) => Netlify.env.get(name));
-  const context = dependencies.context ?? getEnv('CONTEXT') ?? 'dev';
+  const context = dependencies.context || 'dev';
   const readSnapshot = dependencies.readSnapshot ?? (() => readCompleteLeaderboardSnapshot({ context }));
   const readStatus = dependencies.readRefreshStatus ?? (() => readLeaderboardRefreshStatus({ context }));
   const [snapshot, storedStatus] = await Promise.all([readSnapshot(), readStatus()]);

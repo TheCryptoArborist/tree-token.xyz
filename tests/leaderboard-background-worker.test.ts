@@ -68,7 +68,7 @@ const metadataInvalidScan: SuiGraphqlScanResult = {
 
 const secret = 'fixture-refresh-secret';
 const baseEnv = (name: string) => ({
-  TREE_LEADERBOARD_REFRESH_SECRET: secret, CONTEXT: 'deploy-preview', COMMIT_REF: 'commit', DEPLOY_ID: 'deploy',
+  TREE_LEADERBOARD_REFRESH_SECRET: secret, COMMIT_REF: 'commit', DEPLOY_ID: 'environment-deploy',
 }[name]);
 const request = (value = secret) => new Request('https://example.test/.netlify/functions/tree-leaderboard-refresh-background', {
   method: 'POST', headers: value ? { 'x-tree-refresh-secret': value } : {},
@@ -107,7 +107,8 @@ assert.equal(JSON.stringify(capturedLogs).includes(secret), false);
 const successfulStore = new MemoryStore();
 let successfulScans = 0;
 const successful = await runLeaderboardBackgroundWorker(request(), {
-  getEnv: baseEnv, store: successfulStore, now: () => Date.parse('2026-08-05T00:00:00.000Z'), createRunId: () => 'run-success',
+  getEnv: baseEnv, deployContext: 'deploy-preview', deployId: 'context-deploy', store: successfulStore,
+  now: () => Date.parse('2026-08-05T00:00:00.000Z'), createRunId: () => 'run-success',
   scan: async (options: ScanOptions) => {
     successfulScans += 1;
     await options.onProgress?.({ coinMetadataVerified: true, coinSymbol: 'Tree', coinDecimals: 6, totalSupplyRaw: '1000000000000000', pagesScanned: 1, objectsScanned: 2, addressOwnedCoinObjects: 2, uniqueAddressOwners: 1, excludedCoinObjects: 0, excludedUniqueOwners: 0, excludedAddresses: 0, elapsedMs: 5, hasNextPage: true });
@@ -118,6 +119,8 @@ assert.equal(successful.outcome, 'complete');
 assert.equal(successfulScans, 1);
 assert.ok(successfulStore.values.get(COMPLETE_SNAPSHOT_KEY));
 assert.equal(successfulStore.values.has(REFRESH_LOCK_KEY), false);
+const lockWrite = successfulStore.writes.find(({ key }) => key === REFRESH_LOCK_KEY)?.value as { deployId?: string };
+assert.equal(lockWrite.deployId, 'context-deploy');
 const statusStates = successfulStore.writes.filter(({ key }) => key === REFRESH_STATUS_KEY).map(({ value }) => (value as { state: string }).state);
 assert.deepEqual(statusStates, ['queued', 'running', 'running', 'complete']);
 assert.equal(JSON.stringify(successfulStore.values.get(REFRESH_STATUS_KEY)).includes('wallet'), false);

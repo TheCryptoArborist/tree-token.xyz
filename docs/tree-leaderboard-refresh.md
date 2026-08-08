@@ -36,3 +36,13 @@ ConvertTo-Json -Depth 12
 ```
 
 Completion requires a `complete` background refresh and a public `ok` or `stale` response containing the verified snapshot. Partial or failed refreshes never replace an existing complete snapshot.
+
+## Automatic production schedule
+
+The production schedule is `17 */6 * * *`. Cron uses UTC, so the scheduled function runs at 00:17, 06:17, 12:17, and 18:17 UTC on published production deploys only.
+
+The scheduled function invokes the protected Background Function and does not perform the complete Sui GraphQL scan itself. Deploy Previews do not run this schedule automatically; manual Deploy Preview refreshes remain available for testing.
+
+Configure `TREE_LEADERBOARD_REFRESH_SECRET` for the production context before creating the production deployment. The scheduled trigger sends that value only in the `x-tree-refresh-secret` request header. Never place a real secret in this repository; documentation examples must continue to use `<REFRESH_SECRET>`.
+
+The public leaderboard endpoint remains snapshot-only and never starts a Sui GraphQL scan.

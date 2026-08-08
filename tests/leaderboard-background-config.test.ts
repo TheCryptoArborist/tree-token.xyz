@@ -17,6 +17,7 @@ assert.equal(defaults.maxScanMs, DEFAULT_BACKGROUND_MAX_SCAN_MS);
 assert.equal(defaults.progressIntervalPages, DEFAULT_BACKGROUND_PROGRESS_PAGES);
 assert.equal(defaults.maxRetries, DEFAULT_BACKGROUND_MAX_RETRIES);
 assert.equal(readLeaderboardStaleAfterMs(() => undefined), DEFAULT_LEADERBOARD_STALE_AFTER_MS);
+assert.equal(DEFAULT_LEADERBOARD_STALE_AFTER_MS, 28_800_000);
 
 const valid = readSuiGraphqlBackgroundConfig((name) => ({
   SUI_GRAPHQL_URL: 'https://example.com/graphql', SUI_GRAPHQL_BACKGROUND_PAGE_SIZE: '1',
@@ -31,4 +32,5 @@ assert.equal(malformed.pageSize, DEFAULT_BACKGROUND_PAGE_SIZE);
 assert.equal(malformed.maxPages, DEFAULT_BACKGROUND_MAX_PAGES);
 assert.equal(malformed.maxScanMs, DEFAULT_BACKGROUND_MAX_SCAN_MS);
 assert.equal(readLeaderboardStaleAfterMs(() => '1'), DEFAULT_LEADERBOARD_STALE_AFTER_MS);
+assert.equal(readLeaderboardStaleAfterMs(() => '28800000'), 28_800_000);
 console.log('Leaderboard background configuration: PASS');

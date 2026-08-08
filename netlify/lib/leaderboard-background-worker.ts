@@ -16,8 +16,10 @@ import {
   type SuiGraphqlScanResult,
 } from './sui-graphql-leaderboard-provider.ts';
 
-type WorkerDependencies = {
+export type WorkerDependencies = {
   getEnv?: (name: string) => string | undefined;
+  deployContext?: string;
+  deployId?: string;
   now?: () => number;
   createRunId?: () => string;
   scan?: typeof scanSuiGraphqlLeaderboard;
@@ -74,10 +76,10 @@ export async function runLeaderboardBackgroundWorker(request: Request, dependenc
   const createRunId = dependencies.createRunId ?? randomUUID;
   const scan = dependencies.scan ?? scanSuiGraphqlLeaderboard;
   const logger = dependencies.logger ?? console;
-  const context = getEnv('CONTEXT') || 'dev';
-  const storeOptions = { context, store: dependencies.store };
+  const deployContext = dependencies.deployContext || 'dev';
+  const storeOptions = { context: deployContext, store: dependencies.store };
   const commitRef = getEnv('COMMIT_REF') || null;
-  const deployId = getEnv('DEPLOY_ID') || null;
+  const deployId = dependencies.deployId || getEnv('DEPLOY_ID') || null;
   const currentLock = await readRefreshLock(storeOptions);
   if (currentLock && Date.parse(currentLock.expiresAt) > now()) {
     logger.info('TREE leaderboard refresh is already active.');

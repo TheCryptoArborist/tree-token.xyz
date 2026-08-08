@@ -4,7 +4,7 @@ export const DEFAULT_BACKGROUND_MAX_PAGES = 5_000;
 export const DEFAULT_BACKGROUND_MAX_SCAN_MS = 840_000;
 export const DEFAULT_BACKGROUND_PROGRESS_PAGES = 25;
 export const DEFAULT_BACKGROUND_MAX_RETRIES = 5;
-export const DEFAULT_LEADERBOARD_STALE_AFTER_MS = 21_600_000;
+export const DEFAULT_LEADERBOARD_STALE_AFTER_MS = 28_800_000;
 
 export type SuiGraphqlBackgroundConfig = {
   endpoint: string;

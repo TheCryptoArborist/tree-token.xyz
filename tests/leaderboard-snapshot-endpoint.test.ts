@@ -35,7 +35,7 @@ const running: LeaderboardRefreshStatus = {
   elapsedMs: 4000, hasNextPage: true, reachedEnd: false, scanComplete: false, message: 'running',
   commitRef: 'internal-commit-ref-should-not-be-public', deployId: 'internal-deploy-id-should-not-be-public',
 };
-const getEnv = (name: string) => name === 'TREE_LEADERBOARD_STALE_AFTER_MS' ? '21600000' : undefined;
+const getEnv = (name: string) => name === 'TREE_LEADERBOARD_STALE_AFTER_MS' ? '28800000' : undefined;
 let fetchCalls = 0;
 const originalFetch = globalThis.fetch;
 globalThis.fetch = (async () => { fetchCalls += 1; throw new Error('GraphQL must not be called'); }) as typeof fetch;
@@ -84,6 +84,17 @@ assert.equal(fresh.excludedUniqueOwners, 3);
 const stale = await resolveLeaderboardSnapshotPayload({ now: () => now, getEnv: (name) => name === 'TREE_LEADERBOARD_STALE_AFTER_MS' ? '300000' : undefined, readSnapshot: async () => snapshot, readRefreshStatus: async () => null });
 assert.equal(stale.status, 'stale');
 assert.equal(stale.entries.length, 1);
+
+const belowEightHours = await resolveLeaderboardSnapshotPayload({
+  now: () => Date.parse('2026-08-05T13:29:59.999Z'), getEnv: () => undefined,
+  readSnapshot: async () => snapshot, readRefreshStatus: async () => null,
+});
+assert.equal(belowEightHours.status, 'ok');
+const aboveEightHours = await resolveLeaderboardSnapshotPayload({
+  now: () => Date.parse('2026-08-05T13:30:00.001Z'), getEnv: () => undefined,
+  readSnapshot: async () => snapshot, readRefreshStatus: async () => null,
+});
+assert.equal(aboveEightHours.status, 'stale');
 
 const refreshingWithSnapshot = await resolveLeaderboardSnapshotPayload({ now: () => now, getEnv, readSnapshot: async () => snapshot, readRefreshStatus: async () => running });
 assert.equal(refreshingWithSnapshot.status, 'ok');
