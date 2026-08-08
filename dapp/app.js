@@ -300,10 +300,17 @@ function renderLeaderboard(payload) {
   document.getElementById('leaderboardRefreshState').textContent = payload.refreshState || 'idle';
   document.getElementById('leaderboardPagesScanned').textContent = quantity.format(Number(coverage.pagesScanned) || 0);
   document.getElementById('leaderboardObjectsScanned').textContent = quantity.format(Number(coverage.objectsScanned) || 0);
-  const ownerCount = hasSnapshot ? payload.holderCount : coverage.uniqueAddressOwners;
-  document.getElementById('indexedHolderCount').textContent = ownerCount === null || ownerCount === undefined ? '—' : quantity.format(ownerCount);
+  const verifiedOwnerCount = hasSnapshot ? (payload.verifiedAddressOwners ?? payload.holderCount) : coverage.uniqueAddressOwners;
+  const eligibleOwnerCount = hasSnapshot
+    ? payload.eligibleRankedOwners
+    : Number.isFinite(Number(coverage.uniqueAddressOwners))
+      ? Math.max(0, Number(coverage.uniqueAddressOwners) - (Number(coverage.excludedUniqueOwners) || 0))
+      : null;
+  document.getElementById('verifiedAddressOwnerCount').textContent = verifiedOwnerCount === null || verifiedOwnerCount === undefined ? '—' : quantity.format(verifiedOwnerCount);
+  document.getElementById('eligibleRankedOwnerCount').textContent = eligibleOwnerCount === null || eligibleOwnerCount === undefined ? '—' : quantity.format(eligibleOwnerCount);
   document.getElementById('displayedWalletCount').textContent = quantity.format(payload.displayedCount ?? leaderboardEntries.length);
-  document.getElementById('excludedWalletCount').textContent = quantity.format(payload.excludedCount ?? coverage.excludedAddresses ?? 0);
+  document.getElementById('excludedCoinObjectCount').textContent = quantity.format(payload.excludedCoinObjects ?? payload.excludedCount ?? coverage.excludedCoinObjects ?? coverage.excludedAddresses ?? 0);
+  document.getElementById('excludedUniqueOwnerCount').textContent = quantity.format(payload.excludedUniqueOwners ?? coverage.excludedUniqueOwners ?? 0);
   const reconciliation = payload.reconciliation || {};
   document.getElementById('leaderboardReconciliation').textContent = reconciliation.valid === true ? 'Valid' : 'Not available';
   document.getElementById('leaderboardUpdated').textContent = payload.message || 'Snapshot status unavailable.';
@@ -311,6 +318,8 @@ function renderLeaderboard(payload) {
     `Refresh state: ${payload.refreshState || 'idle'}.`,
     `Natural end reached: ${coverage.reachedEnd === true ? 'yes' : 'no'}.`,
     `Complete snapshot available: ${hasSnapshot ? 'yes' : 'no'}.`,
+    `TREE metadata verified: ${coverage.coinMetadataVerified === true ? 'yes' : 'no'}.`,
+    hasSnapshot ? `TREE decimals: ${payload.coinDecimals ?? coverage.coinDecimals ?? 'unavailable'}.` : null,
     `Reconciliation: ${reconciliation.valid === true ? 'valid' : 'not available'}.`,
     hasSnapshot ? `Address-owned TREE: ${reconciliation.addressOwnedTree ?? 'unavailable'}.` : 'Refresh progress contains aggregate counts only.',
   ].filter(Boolean).join(' ');

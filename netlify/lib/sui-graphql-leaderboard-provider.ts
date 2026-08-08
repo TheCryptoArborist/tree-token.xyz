@@ -3,6 +3,7 @@ import {
   LEADERBOARD_COVERAGE,
   METHODOLOGY_VERSION,
   SUI_GRAPHQL_PROVIDER,
+  TREE_COIN_TYPE,
   TREE_COIN_OBJECT_TYPE,
   TREE_DECIMALS,
   TREE_TOTAL_SUPPLY_RAW,
@@ -16,6 +17,15 @@ export const DEFAULT_SUI_GRAPHQL_URL = 'https://graphql.mainnet.sui.io/graphql';
 export const DEFAULT_PAGE_SIZE = 50;
 export const DEFAULT_MAX_PAGES = 40;
 export const DEFAULT_MAX_SCAN_MS = 8_000;
+
+export const TREE_COIN_METADATA_QUERY = `query GetTreeCoinMetadata($coinType: String!) {
+  coinMetadata(coinType: $coinType) {
+    name
+    symbol
+    decimals
+    supply
+  }
+}`;
 
 export const TREE_COIN_OBJECTS_QUERY = `query TreeCoinObjects(
   $first: Int!
@@ -69,6 +79,10 @@ export type SuiGraphqlConfig = {
 };
 
 export type ScanCoverage = {
+  coinMetadataVerified: boolean;
+  coinSymbol: string | null;
+  coinDecimals: number | null;
+  totalSupplyRaw: string | null;
   pagesScanned: number;
   objectsScanned: number;
   addressOwnedCoinObjects: number;
@@ -80,6 +94,9 @@ export type ScanCoverage = {
   unknownOwnerObjectsSkipped: number;
   malformedOwnerAddresses: number;
   malformedBalances: number;
+  excludedCoinObjects: number;
+  excludedUniqueOwners: number;
+  /** @deprecated Use excludedCoinObjects. */
   excludedAddresses: number;
   duplicateObjectIds: number;
   elapsedMs: number;
@@ -101,10 +118,17 @@ export type ScanCoverage = {
 };
 
 export type ScanProgress = {
+  coinMetadataVerified: boolean;
+  coinSymbol: string | null;
+  coinDecimals: number | null;
+  totalSupplyRaw: string | null;
   pagesScanned: number;
   objectsScanned: number;
   addressOwnedCoinObjects: number;
   uniqueAddressOwners: number;
+  excludedCoinObjects: number;
+  excludedUniqueOwners: number;
+  /** @deprecated Use excludedCoinObjects. */
   excludedAddresses: number;
   elapsedMs: number;
   hasNextPage: boolean;
@@ -139,8 +163,18 @@ export type SuiGraphqlScanResult = {
   methodologyVersion: typeof METHODOLOGY_VERSION;
   coverage: ScanCoverage;
   reconciliation: Reconciliation;
+  coinSymbol: string | null;
+  coinDecimals: number | null;
+  totalSupplyRaw: string | null;
+  coinMetadataVerified: boolean;
+  verifiedAddressOwners: number | null;
+  eligibleRankedOwners: number | null;
+  excludedCoinObjects: number;
+  excludedUniqueOwners: number;
+  /** @deprecated Use verifiedAddressOwners. */
   holderCount: number | null;
   displayedCount: number;
+  /** @deprecated Alias of excludedCoinObjects. */
   excludedCount: number;
   entries: DirectTreeEntry[];
   warnings: string[];
@@ -153,6 +187,13 @@ export type SuiGraphqlScanResult = {
 };
 
 type Candidate = { wallet: string; raw: bigint; coinObjectCount: number };
+
+export type VerifiedTreeCoinMetadata = {
+  name: string | null;
+  symbol: string;
+  decimals: number;
+  supplyRaw: bigint;
+};
 
 function record(value: unknown): JsonRecord {
   return value && typeof value === 'object' && !Array.isArray(value) ? value as JsonRecord : {};
@@ -186,12 +227,28 @@ export function parseRawBalance(value: unknown): bigint | null {
   try { return BigInt(value); } catch { return null; }
 }
 
-export function formatBaseUnits(raw: bigint, decimals = TREE_DECIMALS): string {
+export function verifyTreeCoinMetadata(value: unknown): VerifiedTreeCoinMetadata | null {
+  const metadata = record(value);
+  const name = typeof metadata.name === 'string' && metadata.name.trim() ? metadata.name : null;
+  const symbol = typeof metadata.symbol === 'string' ? metadata.symbol : null;
+  const decimals = metadata.decimals;
+  const supplyRaw = parseRawBalance(metadata.supply);
+  if (!name
+    || !symbol
+    || symbol.trim().toUpperCase() !== 'TREE'
+    || typeof decimals !== 'number'
+    || !Number.isSafeInteger(decimals)
+    || decimals !== TREE_DECIMALS
+    || supplyRaw !== TREE_TOTAL_SUPPLY_RAW) return null;
+  return { name, symbol, decimals, supplyRaw };
+}
+
+export function formatBaseUnits(raw: bigint, coinDecimals: number): string {
   const negative = raw < 0n;
   const absolute = negative ? -raw : raw;
-  const base = 10n ** BigInt(decimals);
+  const base = 10n ** BigInt(coinDecimals);
   const whole = absolute / base;
-  const fraction = (absolute % base).toString().padStart(decimals, '0').replace(/0+$/, '');
+  const fraction = (absolute % base).toString().padStart(coinDecimals, '0').replace(/0+$/, '');
   return `${negative ? '-' : ''}${whole.toString()}${fraction ? `.${fraction}` : ''}`;
 }
 
@@ -208,6 +265,10 @@ export function formatPercentFromRaw(raw: bigint, total: bigint, precision = 9):
 
 function initialCoverage(): ScanCoverage {
   return {
+    coinMetadataVerified: false,
+    coinSymbol: null,
+    coinDecimals: null,
+    totalSupplyRaw: null,
     pagesScanned: 0,
     objectsScanned: 0,
     addressOwnedCoinObjects: 0,
@@ -219,6 +280,8 @@ function initialCoverage(): ScanCoverage {
     unknownOwnerObjectsSkipped: 0,
     malformedOwnerAddresses: 0,
     malformedBalances: 0,
+    excludedCoinObjects: 0,
+    excludedUniqueOwners: 0,
     excludedAddresses: 0,
     duplicateObjectIds: 0,
     elapsedMs: 0,
@@ -260,7 +323,7 @@ function addBalance(map: Map<string, Candidate>, wallet: string, raw: bigint) {
     : { wallet, raw, coinObjectCount: 1 });
 }
 
-function buildEntries(candidates: Map<string, Candidate>): DirectTreeEntry[] {
+function buildEntries(candidates: Map<string, Candidate>, coinDecimals: number, totalSupplyRaw: bigint): DirectTreeEntry[] {
   return [...candidates.values()]
     .sort((left, right) => compareBigIntDescending(left.raw, right.raw) || left.wallet.localeCompare(right.wallet))
     .slice(0, 50)
@@ -268,8 +331,8 @@ function buildEntries(candidates: Map<string, Candidate>): DirectTreeEntry[] {
       rank: index + 1,
       wallet: candidate.wallet,
       directTreeRaw: candidate.raw.toString(),
-      directTree: formatBaseUnits(candidate.raw),
-      supplyPercent: formatPercentFromRaw(candidate.raw, TREE_TOTAL_SUPPLY_RAW),
+      directTree: formatBaseUnits(candidate.raw, coinDecimals),
+      supplyPercent: formatPercentFromRaw(candidate.raw, totalSupplyRaw),
       tier: tierForRank(index + 1),
       coinObjectCount: candidate.coinObjectCount,
       moonbagsLocks: null,
@@ -280,17 +343,17 @@ function buildEntries(candidates: Map<string, Candidate>): DirectTreeEntry[] {
     }));
 }
 
-function reconcile(addressOwnedRaw: bigint): Reconciliation {
-  const valid = addressOwnedRaw <= TREE_TOTAL_SUPPLY_RAW;
-  const remainder = valid ? TREE_TOTAL_SUPPLY_RAW - addressOwnedRaw : null;
+export function reconcile(addressOwnedRaw: bigint, coinDecimals: number, totalSupplyRaw: bigint): Reconciliation {
+  const valid = addressOwnedRaw <= totalSupplyRaw;
+  const remainder = valid ? totalSupplyRaw - addressOwnedRaw : null;
   return {
     valid,
-    totalSupplyRaw: TREE_TOTAL_SUPPLY_RAW.toString(),
+    totalSupplyRaw: totalSupplyRaw.toString(),
     addressOwnedRaw: addressOwnedRaw.toString(),
-    addressOwnedTree: formatBaseUnits(addressOwnedRaw),
-    addressOwnedPercentOfTotal: formatPercentFromRaw(addressOwnedRaw, TREE_TOTAL_SUPPLY_RAW),
+    addressOwnedTree: formatBaseUnits(addressOwnedRaw, coinDecimals),
+    addressOwnedPercentOfTotal: formatPercentFromRaw(addressOwnedRaw, totalSupplyRaw),
     nonAddressOwnedOrEmbeddedRawEstimate: remainder?.toString() ?? null,
-    nonAddressOwnedOrEmbeddedTreeEstimate: remainder === null ? null : formatBaseUnits(remainder),
+    nonAddressOwnedOrEmbeddedTreeEstimate: remainder === null ? null : formatBaseUnits(remainder, coinDecimals),
     nonAddressOwnedOrEmbeddedLabel: 'TREE not represented by address-owned Coin<TREE> objects',
   };
 }
@@ -324,6 +387,7 @@ export async function scanSuiGraphqlLeaderboard(options: ScanOptions = {}): Prom
   const allAddressOwners = new Map<string, Candidate>();
   const rankingCandidates = new Map<string, Candidate>();
   const excludedWallets = new Set<string>();
+  let metadataVerificationFailed = false;
   let addressOwnedRaw = 0n;
   let after: string | null = null;
   const controller = new AbortController();
@@ -358,11 +422,17 @@ export async function scanSuiGraphqlLeaderboard(options: ScanOptions = {}): Prom
     if (!options.onProgress) return true;
     try {
       await options.onProgress({
+        coinMetadataVerified: coverage.coinMetadataVerified,
+        coinSymbol: coverage.coinSymbol,
+        coinDecimals: coverage.coinDecimals,
+        totalSupplyRaw: coverage.totalSupplyRaw,
         pagesScanned: coverage.pagesScanned,
         objectsScanned: coverage.objectsScanned,
         addressOwnedCoinObjects: coverage.addressOwnedCoinObjects,
         uniqueAddressOwners: allAddressOwners.size,
-        excludedAddresses: coverage.excludedAddresses,
+        excludedCoinObjects: coverage.excludedCoinObjects,
+        excludedUniqueOwners: excludedWallets.size,
+        excludedAddresses: coverage.excludedCoinObjects,
         elapsedMs: Math.max(0, now() - startedAt),
         hasNextPage: coverage.hasNextPage,
       });
@@ -373,76 +443,98 @@ export async function scanSuiGraphqlLeaderboard(options: ScanOptions = {}): Prom
     }
   };
 
+  const requestGraphql = async (body: JsonRecord): Promise<JsonRecord | null> => {
+    let response: Response | null = null;
+    for (let retryIndex = 0; ; retryIndex += 1) {
+      coverage.requestAttempts += 1;
+      try {
+        response = await fetchImpl(config.endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            'x-sui-rpc-show-usage': 'true',
+          },
+          body: JSON.stringify(body),
+          signal: controller.signal,
+        });
+      } catch (error) {
+        if (controller.signal.aborted || now() - startedAt >= config.maxScanMs) {
+          coverage.timeLimitReached = true;
+          return null;
+        }
+        if (retryIndex < maxRetries) {
+          coverage.retriedRequests += 1;
+          coverage.networkRetries += 1;
+          if (!await waitForRetry(retryDelay(retryIndex))) return null;
+          continue;
+        }
+        coverage.networkError = error instanceof Error ? error.message : 'Sui GraphQL network request failed';
+        return null;
+      }
+
+      const retryableStatus = response.status === 429 || [500, 502, 503, 504].includes(response.status);
+      if (retryableStatus && retryIndex < maxRetries) {
+        coverage.retriedRequests += 1;
+        if (response.status === 429) coverage.rateLimitRetries += 1;
+        else coverage.serverErrorRetries += 1;
+        if (!await waitForRetry(retryDelay(retryIndex, response))) return null;
+        response = null;
+        continue;
+      }
+      if (response.status === 429) coverage.rateLimited = true;
+      else if (retryableStatus) coverage.networkError = `Sui GraphQL returned HTTP ${response.status}`;
+      break;
+    }
+
+    if (!response || coverage.timeLimitReached || coverage.rateLimited || coverage.networkError) return null;
+    if (!response.ok) {
+      coverage.networkError = `Sui GraphQL returned HTTP ${response.status}`;
+      return null;
+    }
+    let payload: JsonRecord;
+    try {
+      payload = record(await response.json());
+    } catch {
+      coverage.networkError = 'Sui GraphQL returned an unreadable JSON response';
+      return null;
+    }
+    const errors = graphqlErrorMessages(payload.errors);
+    if (errors.length) {
+      coverage.graphqlErrors.push(...errors);
+      return null;
+    }
+    return payload;
+  };
+
   try {
-    while (coverage.pagesScanned < config.maxPages) {
+    const metadataPayload = await requestGraphql({
+      query: TREE_COIN_METADATA_QUERY,
+      variables: { coinType: TREE_COIN_TYPE },
+    });
+    const metadataValue = metadataPayload ? record(metadataPayload.data).coinMetadata : null;
+    const rawMetadata = record(metadataValue);
+    coverage.coinSymbol = typeof rawMetadata.symbol === 'string' ? rawMetadata.symbol : null;
+    coverage.coinDecimals = typeof rawMetadata.decimals === 'number' && Number.isSafeInteger(rawMetadata.decimals)
+      ? rawMetadata.decimals
+      : null;
+    coverage.totalSupplyRaw = typeof rawMetadata.supply === 'string' && /^\d+$/.test(rawMetadata.supply)
+      ? rawMetadata.supply
+      : null;
+    const verifiedMetadata = verifyTreeCoinMetadata(metadataValue);
+    coverage.coinMetadataVerified = verifiedMetadata !== null;
+    metadataVerificationFailed = !coverage.coinMetadataVerified;
+
+    while (coverage.coinMetadataVerified && coverage.pagesScanned < config.maxPages) {
       if (now() - startedAt >= config.maxScanMs) {
         coverage.timeLimitReached = true;
         break;
       }
-      let response: Response | null = null;
-      for (let retryIndex = 0; ; retryIndex += 1) {
-        coverage.requestAttempts += 1;
-        try {
-          response = await fetchImpl(config.endpoint, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Accept: 'application/json',
-              'x-sui-rpc-show-usage': 'true',
-            },
-            body: JSON.stringify({
-              query: TREE_COIN_OBJECTS_QUERY,
-              variables: { first: config.pageSize, after, coinObjectType: TREE_COIN_OBJECT_TYPE },
-            }),
-            signal: controller.signal,
-          });
-        } catch (error) {
-          if (controller.signal.aborted || now() - startedAt >= config.maxScanMs) {
-            coverage.timeLimitReached = true;
-            break;
-          }
-          if (retryIndex < maxRetries) {
-            coverage.retriedRequests += 1;
-            coverage.networkRetries += 1;
-            if (!await waitForRetry(retryDelay(retryIndex))) break;
-            continue;
-          }
-          coverage.networkError = error instanceof Error ? error.message : 'Sui GraphQL network request failed';
-          break;
-        }
-
-        const retryableStatus = response.status === 429 || [500, 502, 503, 504].includes(response.status);
-        if (retryableStatus && retryIndex < maxRetries) {
-          coverage.retriedRequests += 1;
-          if (response.status === 429) coverage.rateLimitRetries += 1;
-          else coverage.serverErrorRetries += 1;
-          if (!await waitForRetry(retryDelay(retryIndex, response))) break;
-          response = null;
-          continue;
-        }
-        if (response.status === 429) coverage.rateLimited = true;
-        else if (retryableStatus) coverage.networkError = `Sui GraphQL returned HTTP ${response.status}`;
-        break;
-      }
-
-      if (!response || coverage.timeLimitReached || coverage.rateLimited || coverage.networkError) break;
-      if (!response.ok) {
-        coverage.networkError = `Sui GraphQL returned HTTP ${response.status}`;
-        break;
-      }
-
-      let payload: JsonRecord;
-      try {
-        payload = record(await response.json());
-      } catch {
-        coverage.networkError = 'Sui GraphQL returned an unreadable JSON response';
-        break;
-      }
-      const errors = graphqlErrorMessages(payload.errors);
-      if (errors.length) {
-        coverage.graphqlErrors.push(...errors);
-        break;
-      }
+      const payload = await requestGraphql({
+        query: TREE_COIN_OBJECTS_QUERY,
+        variables: { first: config.pageSize, after, coinObjectType: TREE_COIN_OBJECT_TYPE },
+      });
+      if (!payload) break;
       const objectsValue = record(payload.data).objects;
       const objects = record(objectsValue);
       if (!objectsValue || typeof objectsValue !== 'object' || !Array.isArray(objects.nodes) || !objects.pageInfo || typeof objects.pageInfo !== 'object') {
@@ -489,7 +581,8 @@ export async function scanSuiGraphqlLeaderboard(options: ScanOptions = {}): Prom
         addressOwnedRaw += balance;
         addBalance(allAddressOwners, wallet, balance);
         if (excludedAddress(wallet)) {
-          coverage.excludedAddresses += 1;
+          coverage.excludedCoinObjects += 1;
+          coverage.excludedAddresses = coverage.excludedCoinObjects;
           excludedWallets.add(wallet);
           continue;
         }
@@ -520,13 +613,15 @@ export async function scanSuiGraphqlLeaderboard(options: ScanOptions = {}): Prom
 
   coverage.pageLimitReached = coverage.hasNextPage && coverage.pagesScanned >= config.maxPages && !coverage.reachedEnd;
   coverage.uniqueAddressOwners = allAddressOwners.size;
+  coverage.excludedUniqueOwners = excludedWallets.size;
   coverage.elapsedMs = Math.max(0, now() - startedAt);
   await emitProgress();
   const dataIntegrityValid = coverage.malformedOwnerAddresses === 0
     && coverage.malformedBalances === 0
     && coverage.unknownOwnerObjectsSkipped === 0
     && coverage.duplicateObjectIds === 0;
-  coverage.scanComplete = coverage.reachedEnd
+  coverage.scanComplete = coverage.coinMetadataVerified
+    && coverage.reachedEnd
     && coverage.graphqlErrors.length === 0
     && !coverage.networkError
     && !coverage.rateLimited
@@ -535,14 +630,33 @@ export async function scanSuiGraphqlLeaderboard(options: ScanOptions = {}): Prom
     && !coverage.cursorInconsistent
     && dataIntegrityValid;
 
-  const reconciliation = reconcile(addressOwnedRaw);
-  const complete = coverage.scanComplete && reconciliation.valid;
-  const providerError = coverage.graphqlErrors.length > 0 || Boolean(coverage.networkError) || coverage.rateLimited;
+  const verifiedCoinDecimals = coverage.coinMetadataVerified ? coverage.coinDecimals : null;
+  const verifiedTotalSupplyRaw = coverage.coinMetadataVerified && coverage.totalSupplyRaw
+    ? BigInt(coverage.totalSupplyRaw)
+    : null;
+  const reconciliation = verifiedCoinDecimals !== null && verifiedTotalSupplyRaw !== null
+    ? reconcile(addressOwnedRaw, verifiedCoinDecimals, verifiedTotalSupplyRaw)
+    : {
+      valid: false,
+      totalSupplyRaw: coverage.totalSupplyRaw ?? '',
+      addressOwnedRaw: addressOwnedRaw.toString(),
+      addressOwnedTree: '',
+      addressOwnedPercentOfTotal: '',
+      nonAddressOwnedOrEmbeddedRawEstimate: null,
+      nonAddressOwnedOrEmbeddedTreeEstimate: null,
+      nonAddressOwnedOrEmbeddedLabel: 'TREE not represented by address-owned Coin<TREE> objects' as const,
+    };
+  const complete = coverage.coinMetadataVerified && coverage.scanComplete && reconciliation.valid;
+  const providerError = !metadataVerificationFailed
+    && (coverage.graphqlErrors.length > 0 || Boolean(coverage.networkError) || coverage.rateLimited);
   const outcome = complete ? 'complete' : providerError ? 'error' : 'verification-incomplete';
-  const entries = complete ? buildEntries(rankingCandidates) : [];
-  const warnings = ['Phase 2.2A measures direct wallet-held TREE only, not total TREE exposure.'];
+  const entries = complete && verifiedCoinDecimals !== null && verifiedTotalSupplyRaw !== null
+    ? buildEntries(rankingCandidates, verifiedCoinDecimals, verifiedTotalSupplyRaw)
+    : [];
+  const warnings = ['Phase 2.2C measures direct address-owned TREE only, not total TREE exposure.'];
+  if (!coverage.coinMetadataVerified) warnings.push('TREE coin metadata could not be verified; rankings were not published.');
   if (!coverage.scanComplete) warnings.push('The Sui-native Coin<TREE> verification did not complete; partial ranks were not published.');
-  if (!reconciliation.valid) warnings.push('Address-owned raw TREE exceeded total supply; reconciliation is invalid and ranks were not published.');
+  if (coverage.coinMetadataVerified && !reconciliation.valid) warnings.push('Address-owned raw TREE exceeded total supply; reconciliation is invalid and ranks were not published.');
   if (coverage.rateLimited) warnings.push('The public Sui GraphQL endpoint rate-limited the scan.');
   if (coverage.graphqlErrors.length) warnings.push('Sui GraphQL returned one or more errors.');
   if (coverage.networkError) warnings.push('The Sui GraphQL request failed before verification completed.');
@@ -550,7 +664,7 @@ export async function scanSuiGraphqlLeaderboard(options: ScanOptions = {}): Prom
   if (coverage.malformedBalances) warnings.push('Malformed TREE balance data prevented complete verification.');
   if (coverage.unknownOwnerObjectsSkipped) warnings.push('An unknown Sui owner variant prevented complete verification.');
   if (coverage.duplicateObjectIds) warnings.push('Duplicate Coin<TREE> object IDs prevented complete verification.');
-  if (coverage.excludedAddresses) warnings.push(`${excludedWallets.size} excluded protocol or system address(es) were omitted from ranking.`);
+  if (coverage.excludedCoinObjects) warnings.push(`${coverage.excludedCoinObjects} excluded protocol or system Coin<TREE> object(s) across ${excludedWallets.size} unique owner(s) were omitted from ranking.`);
 
   return {
     outcome,
@@ -559,9 +673,17 @@ export async function scanSuiGraphqlLeaderboard(options: ScanOptions = {}): Prom
     methodologyVersion: METHODOLOGY_VERSION,
     coverage,
     reconciliation,
+    coinSymbol: coverage.coinMetadataVerified ? coverage.coinSymbol : null,
+    coinDecimals: verifiedCoinDecimals,
+    totalSupplyRaw: verifiedTotalSupplyRaw?.toString() ?? null,
+    coinMetadataVerified: coverage.coinMetadataVerified,
+    verifiedAddressOwners: complete ? allAddressOwners.size : null,
+    eligibleRankedOwners: complete ? rankingCandidates.size : null,
+    excludedCoinObjects: coverage.excludedCoinObjects,
+    excludedUniqueOwners: coverage.excludedUniqueOwners,
     holderCount: complete ? allAddressOwners.size : null,
     displayedCount: entries.length,
-    excludedCount: coverage.excludedAddresses,
+    excludedCount: coverage.excludedCoinObjects,
     entries,
     warnings,
     sourceCheckpoint: {

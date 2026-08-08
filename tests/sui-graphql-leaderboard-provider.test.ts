@@ -8,6 +8,8 @@ import {
   formatPercentFromRaw,
   parseRawBalance,
   readSuiGraphqlConfig,
+  reconcile,
+  verifyTreeCoinMetadata,
   scanSuiGraphqlLeaderboard,
 } from '../netlify/lib/sui-graphql-leaderboard-provider.ts';
 
@@ -29,10 +31,19 @@ function graphPage(nodes: unknown[], hasNextPage: boolean, endCursor: string | n
     ? { errors }
     : { data: { objects: { pageInfo: { hasNextPage, endCursor }, nodes } } };
 }
-function queuedFetch(payloads: Array<{ payload?: unknown; status?: number; headers?: Record<string, string> }>) {
+const liveMetadata = { name: 'Thickquidity', symbol: 'Tree', decimals: 6, supply: '1000000000000000' };
+const metadataPayload = (metadata: unknown = liveMetadata) => ({ data: { coinMetadata: metadata } });
+function queuedFetch(
+  payloads: Array<{ payload?: unknown; status?: number; headers?: Record<string, string> }>,
+  metadata: unknown = metadataPayload(),
+) {
   const requests: Array<Record<string, unknown>> = [];
   const fetchImpl = async (_url: string | URL | Request, init?: RequestInit) => {
-    requests.push(JSON.parse(String(init?.body)));
+    const request = JSON.parse(String(init?.body));
+    requests.push(request);
+    if (String(request.query).includes('GetTreeCoinMetadata')) {
+      return new Response(JSON.stringify(metadata), { status: 200, headers: { 'Content-Type': 'application/json' } });
+    }
     const next = payloads.shift();
     if (!next) throw new Error('Unexpected request');
     return new Response(JSON.stringify(next.payload ?? {}), { status: next.status ?? 200, headers: { 'Content-Type': 'application/json', ...next.headers } });
@@ -44,9 +55,22 @@ assert.equal(parseRawBalance('1234567890123'), 1234567890123n);
 assert.equal(parseRawBalance(123), null);
 assert.equal(parseRawBalance('-1'), null);
 assert.equal(parseRawBalance('1.5'), null);
-assert.equal(formatBaseUnits(1234567890123n), '1234.567890123');
-assert.equal(formatBaseUnits(1_000_000_000n), '1');
-assert.equal(formatPercentFromRaw(500_000_000_000_000_000n, 1_000_000_000_000_000_000n), '50');
+assert.equal(formatBaseUnits(1234567890123n, 6), '1234567.890123');
+assert.equal(formatBaseUnits(1_000_000n, 6), '1');
+assert.equal(formatPercentFromRaw(500_000_000_000_000n, 1_000_000_000_000_000n), '50');
+assert.equal(formatBaseUnits(458_434_574_514_958n, 6), '458434574.514958');
+assert.equal(formatPercentFromRaw(458_434_574_514_958n, 1_000_000_000_000_000n), '45.843457451');
+assert.equal(formatBaseUnits(1_000_000_000_000_000n - 458_434_574_514_958n, 6), '541565425.485042');
+const correctedCompletedScan = reconcile(458_434_574_514_958n, 6, 1_000_000_000_000_000n);
+assert.equal(correctedCompletedScan.addressOwnedTree, '458434574.514958');
+assert.equal(correctedCompletedScan.addressOwnedPercentOfTotal, '45.843457451');
+assert.equal(correctedCompletedScan.nonAddressOwnedOrEmbeddedTreeEstimate, '541565425.485042');
+const verifiedLiveMetadata = verifyTreeCoinMetadata(liveMetadata);
+assert.ok(verifiedLiveMetadata);
+assert.equal(verifiedLiveMetadata.name, 'Thickquidity');
+assert.equal(verifiedLiveMetadata.symbol, 'Tree');
+assert.equal(verifiedLiveMetadata.decimals, 6);
+assert.equal(verifiedLiveMetadata.supplyRaw, 1_000_000_000_000_000n);
 assert.deepEqual([3n, 1n, 2n].sort(compareBigIntDescending), [3n, 2n, 1n]);
 
 const malformedConfig = readSuiGraphqlConfig((name) => ({
@@ -60,10 +84,10 @@ assert.equal(malformedConfig.maxPages, DEFAULT_MAX_PAGES);
 assert.equal(malformedConfig.maxScanMs, DEFAULT_MAX_SCAN_MS);
 
 objectCounter = 0;
-const exactA = 9_007_199_254_740_993n + 7n;
-const equalBalance = 5_000_000_000_000_000n;
+const exactA = 400_000_000_000_001n + 7n;
+const equalBalance = 200_000_000_000_000n;
 const pageOne = [
-  coinNode('AddressOwner', address('a'), '9007199254740993'),
+  coinNode('AddressOwner', address('a'), '400000000000001'),
   coinNode('AddressOwner', address('a'), '7'),
   coinNode('AddressOwner', address('b'), equalBalance.toString()),
   coinNode('ObjectOwner', address('d'), '100'),
@@ -74,6 +98,7 @@ const pageOne = [
 ];
 const pageTwo = [
   coinNode('AddressOwner', address('c'), equalBalance.toString()),
+  coinNode('AddressOwner', pool, '500'),
 ];
 const twoPages = queuedFetch([
   { payload: graphPage(pageOne, true, 'opaque-cursor-1') },
@@ -84,7 +109,12 @@ assert.equal(complete.outcome, 'complete');
 assert.equal(complete.coverage.scanComplete, true);
 assert.equal(complete.coverage.reachedEnd, true);
 assert.equal(complete.coverage.pagesScanned, 2);
-assert.equal(complete.coverage.objectsScanned, 9);
+assert.equal(complete.coverage.objectsScanned, 10);
+assert.equal(complete.coverage.coinMetadataVerified, true);
+assert.equal(complete.coverage.coinSymbol, 'Tree');
+assert.equal(complete.coinSymbol, 'Tree');
+assert.equal(complete.coverage.coinDecimals, 6);
+assert.equal(complete.coverage.totalSupplyRaw, '1000000000000000');
 assert.equal(complete.coverage.objectOwnedObjectsSkipped, 1);
 assert.equal(complete.coverage.sharedObjectsSkipped, 1);
 assert.equal(complete.coverage.immutableObjectsSkipped, 1);
@@ -93,22 +123,26 @@ assert.equal(complete.coverage.unknownOwnerObjectsSkipped, 0);
 assert.equal(complete.coverage.malformedOwnerAddresses, 0);
 assert.equal(complete.coverage.malformedBalances, 0);
 assert.equal(complete.coverage.duplicateObjectIds, 0);
-assert.equal(complete.coverage.excludedAddresses, 1);
+assert.equal(complete.coverage.excludedCoinObjects, 2);
+assert.equal(complete.coverage.excludedUniqueOwners, 1);
+assert.equal(complete.coverage.excludedAddresses, 2);
 assert.equal(complete.holderCount, 4);
+assert.equal(complete.verifiedAddressOwners, 4);
+assert.equal(complete.eligibleRankedOwners, 3);
 assert.equal(complete.entries.length, 3);
 assert.equal(complete.entries[0].wallet, address('a'));
 assert.equal(complete.entries[0].directTreeRaw, exactA.toString());
-assert.equal(complete.entries[0].directTree, '9007199.254741');
+assert.equal(complete.entries[0].directTree, '400000000.000008');
 assert.equal(complete.entries[0].coinObjectCount, 2);
 assert.deepEqual(complete.entries.slice(1).map((entry) => entry.wallet), [address('b'), address('c')]);
 assert.deepEqual(complete.entries.map((entry) => entry.rank), [1, 2, 3]);
 assert.equal(complete.entries.some((entry) => entry.wallet === pool), false);
-assert.equal(twoPages.requests[0].variables.after, null);
-assert.equal(twoPages.requests[1].variables.after, 'opaque-cursor-1');
-const expectedAddressOwnedRaw = exactA + equalBalance + equalBalance + 1000n;
+assert.equal(twoPages.requests[1].variables.after, null);
+assert.equal(twoPages.requests[2].variables.after, 'opaque-cursor-1');
+const expectedAddressOwnedRaw = exactA + equalBalance + equalBalance + 1500n;
 assert.equal(complete.reconciliation.valid, true);
 assert.equal(complete.reconciliation.addressOwnedRaw, expectedAddressOwnedRaw.toString());
-assert.equal(complete.reconciliation.nonAddressOwnedOrEmbeddedRawEstimate, (1_000_000_000_000_000_000n - expectedAddressOwnedRaw).toString());
+assert.equal(complete.reconciliation.nonAddressOwnedOrEmbeddedRawEstimate, (1_000_000_000_000_000n - expectedAddressOwnedRaw).toString());
 
 const malformedOwnerFetch = queuedFetch([{ payload: graphPage([
   coinNode('AddressOwner', 'malformed', '100'),
@@ -174,7 +208,7 @@ const graphError = await scanSuiGraphqlLeaderboard({ fetchImpl: graphErrorFetch.
 assert.equal(graphError.outcome, 'error');
 assert.deepEqual(graphError.entries, []);
 assert.deepEqual(graphError.coverage.graphqlErrors, ['fixture error']);
-assert.equal(graphError.coverage.requestAttempts, 1);
+assert.equal(graphError.coverage.requestAttempts, 2);
 
 const rateFetch = queuedFetch([{ status: 429 }]);
 const rateLimited = await scanSuiGraphqlLeaderboard({ fetchImpl: rateFetch.fetchImpl });
@@ -183,17 +217,17 @@ assert.equal(rateLimited.coverage.rateLimited, true);
 assert.deepEqual(rateLimited.entries, []);
 
 const networkError = await scanSuiGraphqlLeaderboard({ fetchImpl: (async () => { throw new Error('fixture network failure'); }) as typeof fetch });
-assert.equal(networkError.outcome, 'error');
+assert.equal(networkError.outcome, 'verification-incomplete');
 assert.equal(networkError.coverage.networkError, 'fixture network failure');
 assert.deepEqual(networkError.entries, []);
 
 const invalidJson = await scanSuiGraphqlLeaderboard({ fetchImpl: (async () => new Response('not-json')) as typeof fetch });
-assert.equal(invalidJson.outcome, 'error');
+assert.equal(invalidJson.outcome, 'verification-incomplete');
 assert.match(invalidJson.coverage.networkError || '', /unreadable JSON/);
 assert.deepEqual(invalidJson.entries, []);
 
 const invalidSupplyFetch = queuedFetch([{ payload: graphPage([
-  coinNode('AddressOwner', address('a'), '1000000000000000001'),
+  coinNode('AddressOwner', address('a'), '1000000000000001'),
 ], false, null) }]);
 const invalidSupply = await scanSuiGraphqlLeaderboard({ fetchImpl: invalidSupplyFetch.fetchImpl });
 assert.equal(invalidSupply.coverage.scanComplete, true);
@@ -232,7 +266,7 @@ const exhaustedFetch = queuedFetch([{ status: 429 }, { status: 429 }, { status: 
 const exhausted = await scanSuiGraphqlLeaderboard({ fetchImpl: exhaustedFetch.fetchImpl, maxRetries: 2, maxScanMs: 10_000, sleepImpl: async () => {}, randomImpl: () => 0 });
 assert.equal(exhausted.outcome, 'error');
 assert.equal(exhausted.coverage.rateLimited, true);
-assert.equal(exhausted.coverage.requestAttempts, 3);
+assert.equal(exhausted.coverage.requestAttempts, 4);
 assert.deepEqual(exhausted.entries, []);
 
 const serverFetch = queuedFetch([
@@ -245,9 +279,13 @@ assert.equal(serverRecovered.coverage.serverErrorRetries, 1);
 
 let networkAttempts = 0;
 const networkRecovered = await scanSuiGraphqlLeaderboard({
-  fetchImpl: (async () => {
+  fetchImpl: (async (_url, init) => {
     networkAttempts += 1;
     if (networkAttempts === 1) throw new TypeError('transient');
+    const request = JSON.parse(String(init?.body));
+    if (String(request.query).includes('GetTreeCoinMetadata')) {
+      return new Response(JSON.stringify(metadataPayload()), { status: 200, headers: { 'Content-Type': 'application/json' } });
+    }
     return new Response(JSON.stringify(graphPage([coinNode('AddressOwner', address('a'), '1')], false, null)), { status: 200, headers: { 'Content-Type': 'application/json' } });
   }) as typeof fetch,
   maxRetries: 1, maxScanMs: 10_000, sleepImpl: async () => {}, randomImpl: () => 0,
@@ -264,6 +302,29 @@ await scanSuiGraphqlLeaderboard({ fetchImpl: progressFetch.fetchImpl, progressIn
 assert.ok(progressEvents.length >= 2);
 assert.equal(JSON.stringify(progressEvents).includes('cursor'), false);
 assert.equal(JSON.stringify(progressEvents).includes(address('a')), false);
+
+for (const [label, responsePayload] of [
+  ['missing metadata', metadataPayload(null)],
+  ['missing name', metadataPayload({ symbol: 'Tree', decimals: 6, supply: '1000000000000000' })],
+  ['missing decimals', metadataPayload({ name: 'Thickquidity', symbol: 'Tree', supply: '1000000000000000' })],
+  ['missing supply', metadataPayload({ name: 'Thickquidity', symbol: 'Tree', decimals: 6 })],
+  ['malformed decimals', metadataPayload({ ...liveMetadata, decimals: '6' })],
+  ['malformed raw supply', metadataPayload({ ...liveMetadata, supply: 'not-a-raw-supply' })],
+  ['wrong decimals', metadataPayload({ ...liveMetadata, decimals: 9 })],
+  ['wrong raw supply', metadataPayload({ ...liveMetadata, supply: '1000000000000001' })],
+  ['symbol mismatch', metadataPayload({ ...liveMetadata, symbol: 'NOT_TREE' })],
+  ['GraphQL metadata error', { errors: [{ message: 'metadata fixture error' }] }],
+] as const) {
+  const fixture = queuedFetch([], responsePayload);
+  const result = await scanSuiGraphqlLeaderboard({ fetchImpl: fixture.fetchImpl });
+  assert.equal(result.outcome, 'verification-incomplete', label);
+  assert.equal(result.coverage.coinMetadataVerified, false, label);
+  assert.equal(result.coverage.pagesScanned, 0, label);
+  assert.equal(result.holderCount, null, label);
+  assert.deepEqual(result.entries, [], label);
+  assert.equal(fixture.requests.length, 1, label);
+  assert.ok(result.warnings.some((warning) => warning.includes('metadata')), label);
+}
 
 console.log(`Sui GraphQL provider fixtures: PASS (exact aggregate ${exactA.toString()} raw)`);
 console.log('Sui GraphQL retry fixtures: PASS (bounded deadline-aware retries)');

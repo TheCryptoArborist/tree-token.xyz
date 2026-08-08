@@ -20,10 +20,16 @@ export type PublicLeaderboardRefreshStatus = {
   startedAt: string;
   updatedAt: string;
   completedAt: string | null;
+  coinMetadataVerified: boolean;
+  coinSymbol: string | null;
+  coinDecimals: number | null;
+  totalSupplyRaw: string | null;
   pagesScanned: number;
   objectsScanned: number;
   addressOwnedCoinObjects: number;
   uniqueAddressOwners: number;
+  excludedCoinObjects: number;
+  excludedUniqueOwners: number;
   excludedAddresses: number;
   elapsedMs: number;
   hasNextPage: boolean;
@@ -39,10 +45,16 @@ function publicRefreshStatus(status: LeaderboardRefreshStatus | null): PublicLea
     startedAt: status.startedAt,
     updatedAt: status.updatedAt,
     completedAt: status.completedAt,
+    coinMetadataVerified: status.coinMetadataVerified ?? false,
+    coinSymbol: status.coinSymbol ?? null,
+    coinDecimals: status.coinDecimals ?? null,
+    totalSupplyRaw: status.totalSupplyRaw ?? null,
     pagesScanned: status.pagesScanned,
     objectsScanned: status.objectsScanned,
     addressOwnedCoinObjects: status.addressOwnedCoinObjects,
     uniqueAddressOwners: status.uniqueAddressOwners,
+    excludedCoinObjects: status.excludedCoinObjects ?? status.excludedAddresses ?? 0,
+    excludedUniqueOwners: status.excludedUniqueOwners ?? 0,
     excludedAddresses: status.excludedAddresses,
     elapsedMs: status.elapsedMs,
     hasNextPage: status.hasNextPage,
@@ -77,11 +89,19 @@ export async function resolveLeaderboardSnapshotPayload(dependencies: SnapshotEn
       refreshState,
       refreshStatus,
       methodologyVersion: METHODOLOGY_VERSION,
+      coinSymbol: refreshStatus?.coinSymbol ?? null,
+      coinDecimals: refreshStatus?.coinDecimals ?? null,
+      totalSupplyRaw: refreshStatus?.totalSupplyRaw ?? null,
+      coinMetadataVerified: refreshStatus?.coinMetadataVerified ?? false,
       coverage: null,
       reconciliation: null,
+      verifiedAddressOwners: null,
+      eligibleRankedOwners: null,
       holderCount: null,
       displayedCount: 0,
-      excludedCount: refreshStatus?.excludedAddresses ?? 0,
+      excludedCoinObjects: refreshStatus?.excludedCoinObjects ?? 0,
+      excludedUniqueOwners: refreshStatus?.excludedUniqueOwners ?? 0,
+      excludedCount: refreshStatus?.excludedCoinObjects ?? 0,
       entries: [],
       warnings: refreshState === 'verification-incomplete' || refreshState === 'error'
         ? ['The latest background refresh did not produce a complete verified snapshot.']
@@ -102,10 +122,18 @@ export async function resolveLeaderboardSnapshotPayload(dependencies: SnapshotEn
     refreshState,
     refreshStatus,
     methodologyVersion: snapshot.methodologyVersion,
+    coinSymbol: snapshot.coinSymbol,
+    coinDecimals: snapshot.coinDecimals,
+    totalSupplyRaw: snapshot.totalSupplyRaw,
+    coinMetadataVerified: snapshot.coinMetadataVerified,
     coverage: snapshot.coverage,
     reconciliation: snapshot.reconciliation,
+    verifiedAddressOwners: snapshot.verifiedAddressOwners,
+    eligibleRankedOwners: snapshot.eligibleRankedOwners,
     holderCount: snapshot.holderCount,
     displayedCount: snapshot.displayedCount,
+    excludedCoinObjects: snapshot.excludedCoinObjects,
+    excludedUniqueOwners: snapshot.excludedUniqueOwners,
     excludedCount: snapshot.excludedCount,
     entries: snapshot.entries,
     warnings: stale ? [`Displayed rows are from the last verified snapshot at ${snapshot.generatedAt}.`] : [],
@@ -133,10 +161,18 @@ export async function createLeaderboardSnapshotResponse(request: Request, depend
       refreshState: 'error',
       refreshStatus: null,
       methodologyVersion: METHODOLOGY_VERSION,
+      coinSymbol: null,
+      coinDecimals: null,
+      totalSupplyRaw: null,
+      coinMetadataVerified: false,
       coverage: null,
       reconciliation: null,
+      verifiedAddressOwners: null,
+      eligibleRankedOwners: null,
       holderCount: null,
       displayedCount: 0,
+      excludedCoinObjects: 0,
+      excludedUniqueOwners: 0,
       excludedCount: 0,
       entries: [],
       warnings: ['The verified TREE leaderboard snapshot is temporarily unavailable.'],

@@ -24,35 +24,46 @@ class MemoryStore implements LeaderboardStore {
 }
 
 const coverage = {
+  coinMetadataVerified: true, coinSymbol: 'Tree', coinDecimals: 6, totalSupplyRaw: '1000000000000000',
   pagesScanned: 2, objectsScanned: 3, addressOwnedCoinObjects: 3, uniqueAddressOwners: 2,
   objectOwnedObjectsSkipped: 0, sharedObjectsSkipped: 0, immutableObjectsSkipped: 0,
   consensusOwnedObjectsSkipped: 0, unknownOwnerObjectsSkipped: 0, malformedOwnerAddresses: 0,
-  malformedBalances: 0, excludedAddresses: 0, duplicateObjectIds: 0, elapsedMs: 10,
+  malformedBalances: 0, excludedCoinObjects: 0, excludedUniqueOwners: 0, excludedAddresses: 0, duplicateObjectIds: 0, elapsedMs: 10,
   hasNextPage: false, endCursorPresent: false, reachedEnd: true, pageLimitReached: false,
   timeLimitReached: false, rateLimited: false, graphqlErrors: [], networkError: null,
   cursorInconsistent: false, requestAttempts: 2, retriedRequests: 0, rateLimitRetries: 0,
   networkRetries: 0, serverErrorRetries: 0, scanComplete: true,
 };
 const reconciliation = {
-  valid: true, totalSupplyRaw: '1000000000000000000', addressOwnedRaw: '3', addressOwnedTree: '0.000000003',
-  addressOwnedPercentOfTotal: '0', nonAddressOwnedOrEmbeddedRawEstimate: '999999999999999997',
-  nonAddressOwnedOrEmbeddedTreeEstimate: '999999999.999999997',
+  valid: true, totalSupplyRaw: '1000000000000000', addressOwnedRaw: '3', addressOwnedTree: '0.000003',
+  addressOwnedPercentOfTotal: '0', nonAddressOwnedOrEmbeddedRawEstimate: '999999999999997',
+  nonAddressOwnedOrEmbeddedTreeEstimate: '999999999.999997',
   nonAddressOwnedOrEmbeddedLabel: 'TREE not represented by address-owned Coin<TREE> objects' as const,
 };
 const completeScan: SuiGraphqlScanResult = {
   outcome: 'complete', provider: 'sui-graphql', generatedAt: '2026-08-05T00:00:00.000Z',
-  methodologyVersion: 'direct-tree-sui-graphql-poc-v1', coverage, reconciliation,
+  methodologyVersion: 'direct-tree-sui-graphql-poc-v2', coverage, reconciliation,
+  coinSymbol: 'Tree', coinDecimals: 6, totalSupplyRaw: '1000000000000000', coinMetadataVerified: true,
+  verifiedAddressOwners: 2, eligibleRankedOwners: 2, excludedCoinObjects: 0, excludedUniqueOwners: 0,
   holderCount: 2, displayedCount: 1, excludedCount: 0,
-  entries: [{ rank: 1, wallet: `0x${'a'.repeat(64)}`, directTreeRaw: '3', directTree: '0.000000003', supplyPercent: '0', tier: 'Ancient Grove', coinObjectCount: 1, moonbagsLocks: null, suiDexV2: null, suiDexV3: null, turbos: null, nftreeCount: null }],
+  entries: [{ rank: 1, wallet: `0x${'a'.repeat(64)}`, directTreeRaw: '3', directTree: '0.000003', supplyPercent: '0', tier: 'Ancient Grove', coinObjectCount: 1, moonbagsLocks: null, suiDexV2: null, suiDexV3: null, turbos: null, nftreeCount: null }],
   warnings: [], sourceCheckpoint: { pagesScanned: 2, objectsScanned: 3, reachedEnd: true, endCursorPresent: false },
 };
 const incompleteScan: SuiGraphqlScanResult = {
-  ...completeScan, outcome: 'verification-incomplete', holderCount: null, displayedCount: 0, entries: [],
+  ...completeScan, outcome: 'verification-incomplete', verifiedAddressOwners: null, eligibleRankedOwners: null, holderCount: null, displayedCount: 0, entries: [],
   coverage: { ...coverage, reachedEnd: false, hasNextPage: true, pageLimitReached: true, scanComplete: false },
 };
 const integrityFailureScan: SuiGraphqlScanResult = {
   ...incompleteScan,
   coverage: { ...incompleteScan.coverage, reachedEnd: true, hasNextPage: false, pageLimitReached: false, malformedOwnerAddresses: 1 },
+};
+const metadataInvalidScan: SuiGraphqlScanResult = {
+  ...incompleteScan,
+  coinDecimals: null,
+  coinSymbol: null,
+  totalSupplyRaw: null,
+  coinMetadataVerified: false,
+  coverage: { ...incompleteScan.coverage, coinMetadataVerified: false, coinDecimals: null, totalSupplyRaw: null },
 };
 
 const secret = 'fixture-refresh-secret';
@@ -99,7 +110,7 @@ const successful = await runLeaderboardBackgroundWorker(request(), {
   getEnv: baseEnv, store: successfulStore, now: () => Date.parse('2026-08-05T00:00:00.000Z'), createRunId: () => 'run-success',
   scan: async (options: ScanOptions) => {
     successfulScans += 1;
-    await options.onProgress?.({ pagesScanned: 1, objectsScanned: 2, addressOwnedCoinObjects: 2, uniqueAddressOwners: 1, excludedAddresses: 0, elapsedMs: 5, hasNextPage: true });
+    await options.onProgress?.({ coinMetadataVerified: true, coinSymbol: 'Tree', coinDecimals: 6, totalSupplyRaw: '1000000000000000', pagesScanned: 1, objectsScanned: 2, addressOwnedCoinObjects: 2, uniqueAddressOwners: 1, excludedCoinObjects: 0, excludedUniqueOwners: 0, excludedAddresses: 0, elapsedMs: 5, hasNextPage: true });
     return completeScan;
   },
 });
@@ -119,7 +130,7 @@ const expired = await runLeaderboardBackgroundWorker(request(), {
 });
 assert.equal(expired.started, true);
 
-for (const [scanResult, expected] of [[incompleteScan, 'verification-incomplete'], [integrityFailureScan, 'verification-incomplete'], [new Error('fixture'), 'error']] as const) {
+for (const [scanResult, expected] of [[incompleteScan, 'verification-incomplete'], [integrityFailureScan, 'verification-incomplete'], [metadataInvalidScan, 'verification-incomplete'], [new Error('fixture'), 'error']] as const) {
   const store = new MemoryStore();
   store.values.set(COMPLETE_SNAPSHOT_KEY, { preserved: true });
   const result = await runLeaderboardBackgroundWorker(request(), {

@@ -33,31 +33,42 @@ for (const context of ['deploy-preview', 'branch-deploy', 'dev', 'preview-server
 assert.deepEqual(calls, ['site:tree-leaderboard:strong', ...Array(5).fill('deploy:tree-leaderboard')]);
 
 const coverage = {
+  coinMetadataVerified: true, coinSymbol: 'Tree', coinDecimals: 6, totalSupplyRaw: '1000000000000000',
   pagesScanned: 2, objectsScanned: 3, addressOwnedCoinObjects: 3, uniqueAddressOwners: 2,
   objectOwnedObjectsSkipped: 0, sharedObjectsSkipped: 0, immutableObjectsSkipped: 0,
   consensusOwnedObjectsSkipped: 0, unknownOwnerObjectsSkipped: 0, malformedOwnerAddresses: 0,
-  malformedBalances: 0, excludedAddresses: 0, duplicateObjectIds: 0, elapsedMs: 10,
+  malformedBalances: 0, excludedCoinObjects: 0, excludedUniqueOwners: 0, excludedAddresses: 0, duplicateObjectIds: 0, elapsedMs: 10,
   hasNextPage: false, endCursorPresent: false, reachedEnd: true, pageLimitReached: false,
   timeLimitReached: false, rateLimited: false, graphqlErrors: [], networkError: null,
   cursorInconsistent: false, requestAttempts: 2, retriedRequests: 0, rateLimitRetries: 0,
   networkRetries: 0, serverErrorRetries: 0, scanComplete: true,
 };
 const reconciliation = {
-  valid: true, totalSupplyRaw: '1000000000000000000', addressOwnedRaw: '3', addressOwnedTree: '0.000000003',
-  addressOwnedPercentOfTotal: '0', nonAddressOwnedOrEmbeddedRawEstimate: '999999999999999997',
-  nonAddressOwnedOrEmbeddedTreeEstimate: '999999999.999999997',
+  valid: true, totalSupplyRaw: '1000000000000000', addressOwnedRaw: '3', addressOwnedTree: '0.000003',
+  addressOwnedPercentOfTotal: '0', nonAddressOwnedOrEmbeddedRawEstimate: '999999999999997',
+  nonAddressOwnedOrEmbeddedTreeEstimate: '999999999.999997',
   nonAddressOwnedOrEmbeddedLabel: 'TREE not represented by address-owned Coin<TREE> objects' as const,
 };
 const completeScan: SuiGraphqlScanResult = {
   outcome: 'complete', provider: 'sui-graphql', generatedAt: '2026-08-05T00:00:00.000Z',
-  methodologyVersion: 'direct-tree-sui-graphql-poc-v1', coverage, reconciliation,
+  methodologyVersion: 'direct-tree-sui-graphql-poc-v2', coverage, reconciliation,
+  coinSymbol: 'Tree', coinDecimals: 6, totalSupplyRaw: '1000000000000000', coinMetadataVerified: true,
+  verifiedAddressOwners: 2, eligibleRankedOwners: 2, excludedCoinObjects: 0, excludedUniqueOwners: 0,
   holderCount: 2, displayedCount: 1, excludedCount: 0,
-  entries: [{ rank: 1, wallet: `0x${'a'.repeat(64)}`, directTreeRaw: '3', directTree: '0.000000003', supplyPercent: '0', tier: 'Ancient Grove', coinObjectCount: 1, moonbagsLocks: null, suiDexV2: null, suiDexV3: null, turbos: null, nftreeCount: null }],
+  entries: [{ rank: 1, wallet: `0x${'a'.repeat(64)}`, directTreeRaw: '3', directTree: '0.000003', supplyPercent: '0', tier: 'Ancient Grove', coinObjectCount: 1, moonbagsLocks: null, suiDexV2: null, suiDexV3: null, turbos: null, nftreeCount: null }],
   warnings: [], sourceCheckpoint: { pagesScanned: 2, objectsScanned: 3, reachedEnd: true, endCursorPresent: false },
 };
 const incompleteScan: SuiGraphqlScanResult = {
-  ...completeScan, outcome: 'verification-incomplete', holderCount: null, displayedCount: 0, entries: [],
+  ...completeScan, outcome: 'verification-incomplete', verifiedAddressOwners: null, eligibleRankedOwners: null, holderCount: null, displayedCount: 0, entries: [],
   coverage: { ...coverage, hasNextPage: true, reachedEnd: false, pageLimitReached: true, scanComplete: false },
+};
+const metadataInvalidScan: SuiGraphqlScanResult = {
+  ...incompleteScan,
+  coinDecimals: null,
+  coinSymbol: null,
+  totalSupplyRaw: null,
+  coinMetadataVerified: false,
+  coverage: { ...incompleteScan.coverage, coinMetadataVerified: false, coinDecimals: null, totalSupplyRaw: null },
 };
 
 assert.equal(await writeCompleteLeaderboardSnapshot(completeScan, { store: productionStore }), true);
@@ -65,11 +76,17 @@ const saved = structuredClone(productionStore.values.get(COMPLETE_SNAPSHOT_KEY))
 assert.equal(await writeCompleteLeaderboardSnapshot(incompleteScan, { store: productionStore }), false);
 assert.deepEqual(productionStore.values.get(COMPLETE_SNAPSHOT_KEY), saved);
 assert.ok(await readCompleteLeaderboardSnapshot({ store: productionStore }));
+productionStore.values.set(COMPLETE_SNAPSHOT_KEY, { ...(saved as object), methodologyVersion: 'direct-tree-sui-graphql-poc-v1' });
+assert.equal(await readCompleteLeaderboardSnapshot({ store: productionStore }), null);
+productionStore.values.set(COMPLETE_SNAPSHOT_KEY, saved);
+assert.ok(await readCompleteLeaderboardSnapshot({ store: productionStore }));
+assert.equal(await writeCompleteLeaderboardSnapshot(metadataInvalidScan, { store: productionStore }), false);
+assert.deepEqual(productionStore.values.get(COMPLETE_SNAPSHOT_KEY), saved);
 
 await writeLeaderboardRefreshStatus({
   state: 'running', runId: 'run', startedAt: '2026-08-05T00:00:00.000Z', updatedAt: '2026-08-05T00:00:01.000Z',
-  completedAt: null, pagesScanned: 25, objectsScanned: 1250, addressOwnedCoinObjects: 1250,
-  uniqueAddressOwners: 300, excludedAddresses: 2, elapsedMs: 1000, hasNextPage: true,
+  completedAt: null, coinMetadataVerified: true, coinSymbol: 'Tree', coinDecimals: 6, totalSupplyRaw: '1000000000000000', pagesScanned: 25, objectsScanned: 1250, addressOwnedCoinObjects: 1250,
+  uniqueAddressOwners: 300, excludedCoinObjects: 2, excludedUniqueOwners: 1, excludedAddresses: 2, elapsedMs: 1000, hasNextPage: true,
   reachedEnd: false, scanComplete: false, message: 'running', commitRef: null, deployId: null,
   entries: completeScan.entries, wallet: completeScan.entries[0].wallet,
 } as never, { store: previewStore });

@@ -2,6 +2,8 @@ import { getDeployStore, getStore } from '@netlify/blobs';
 import {
   METHODOLOGY_VERSION,
   SUI_GRAPHQL_PROVIDER,
+  TREE_DECIMALS,
+  TREE_TOTAL_SUPPLY_RAW,
   type DirectTreeEntry,
 } from './leaderboard-provider.ts';
 import type { Reconciliation, ScanCoverage, SuiGraphqlScanResult } from './sui-graphql-leaderboard-provider.ts';
@@ -16,9 +18,19 @@ export type CompleteLeaderboardSnapshot = {
   generatedAt: string;
   provider: typeof SUI_GRAPHQL_PROVIDER;
   methodologyVersion: typeof METHODOLOGY_VERSION;
+  coinSymbol: string;
+  coinDecimals: number;
+  totalSupplyRaw: string;
+  coinMetadataVerified: true;
   entries: DirectTreeEntry[];
+  verifiedAddressOwners: number;
+  eligibleRankedOwners: number;
+  excludedCoinObjects: number;
+  excludedUniqueOwners: number;
+  /** @deprecated Use verifiedAddressOwners. */
   holderCount: number;
   displayedCount: number;
+  /** @deprecated Alias of excludedCoinObjects. */
   excludedCount: number;
   coverage: ScanCoverage;
   reconciliation: Reconciliation;
@@ -33,10 +45,17 @@ export type LeaderboardRefreshStatus = {
   startedAt: string;
   updatedAt: string;
   completedAt: string | null;
+  coinMetadataVerified: boolean;
+  coinSymbol: string | null;
+  coinDecimals: number | null;
+  totalSupplyRaw: string | null;
   pagesScanned: number;
   objectsScanned: number;
   addressOwnedCoinObjects: number;
   uniqueAddressOwners: number;
+  excludedCoinObjects: number;
+  excludedUniqueOwners: number;
+  /** @deprecated Use excludedCoinObjects. */
   excludedAddresses: number;
   elapsedMs: number;
   hasNextPage: boolean;
@@ -94,6 +113,14 @@ export async function readCompleteLeaderboardSnapshot(options: StoreOptions = {}
     || snapshot.provider !== SUI_GRAPHQL_PROVIDER
     || !Number.isFinite(Date.parse(snapshot.generatedAt))
     || !Array.isArray(snapshot.entries)
+    || snapshot.coinMetadataVerified !== true
+    || typeof snapshot.coinSymbol !== 'string'
+    || snapshot.coinSymbol.trim().toUpperCase() !== 'TREE'
+    || snapshot.coinDecimals !== TREE_DECIMALS
+    || snapshot.totalSupplyRaw !== TREE_TOTAL_SUPPLY_RAW.toString()
+    || snapshot.coverage?.coinMetadataVerified !== true
+    || snapshot.coverage?.coinDecimals !== TREE_DECIMALS
+    || snapshot.coverage?.totalSupplyRaw !== TREE_TOTAL_SUPPLY_RAW.toString()
     || snapshot.coverage?.scanComplete !== true
     || snapshot.coverage?.reachedEnd !== true
     || snapshot.reconciliation?.valid !== true) return null;
@@ -109,13 +136,28 @@ export async function writeCompleteLeaderboardSnapshot(scan: SuiGraphqlScanResul
     || !scan.coverage.scanComplete
     || !scan.coverage.reachedEnd
     || !scan.reconciliation.valid
+    || !scan.coinMetadataVerified
+    || !scan.coinSymbol
+    || scan.coinSymbol.trim().toUpperCase() !== 'TREE'
+    || scan.coinDecimals !== TREE_DECIMALS
+    || scan.totalSupplyRaw !== TREE_TOTAL_SUPPLY_RAW.toString()
     || !integrityValid
+    || scan.verifiedAddressOwners === null
+    || scan.eligibleRankedOwners === null
     || scan.holderCount === null) return false;
   const snapshot: CompleteLeaderboardSnapshot = {
     generatedAt: scan.generatedAt,
     provider: SUI_GRAPHQL_PROVIDER,
     methodologyVersion: METHODOLOGY_VERSION,
+    coinSymbol: scan.coinSymbol,
+    coinDecimals: scan.coinDecimals,
+    totalSupplyRaw: scan.totalSupplyRaw,
+    coinMetadataVerified: true,
     entries: scan.entries,
+    verifiedAddressOwners: scan.verifiedAddressOwners,
+    eligibleRankedOwners: scan.eligibleRankedOwners,
+    excludedCoinObjects: scan.excludedCoinObjects,
+    excludedUniqueOwners: scan.excludedUniqueOwners,
     holderCount: scan.holderCount,
     displayedCount: scan.displayedCount,
     excludedCount: scan.excludedCount,
@@ -134,10 +176,16 @@ function sanitizeRefreshStatus(status: LeaderboardRefreshStatus): LeaderboardRef
     startedAt: status.startedAt,
     updatedAt: status.updatedAt,
     completedAt: status.completedAt,
+    coinMetadataVerified: status.coinMetadataVerified,
+    coinSymbol: status.coinSymbol,
+    coinDecimals: status.coinDecimals,
+    totalSupplyRaw: status.totalSupplyRaw,
     pagesScanned: status.pagesScanned,
     objectsScanned: status.objectsScanned,
     addressOwnedCoinObjects: status.addressOwnedCoinObjects,
     uniqueAddressOwners: status.uniqueAddressOwners,
+    excludedCoinObjects: status.excludedCoinObjects,
+    excludedUniqueOwners: status.excludedUniqueOwners,
     excludedAddresses: status.excludedAddresses,
     elapsedMs: status.elapsedMs,
     hasNextPage: status.hasNextPage,
