@@ -1,0 +1,54 @@
+name: Validate Sui-native TREE badge indexes
+
+on:
+  push:
+    branches:
+      - feature/leaderboard-badges-v1
+    paths:
+      - '.github/workflows/validate-sui-native-badges.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/leaderboard-badges-v1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
+      - name: JavaScript checks
+        run: |
+          node --check dapp/app.js
+          node tests/dashboard-cache.test.mjs
+          node tests/leaderboard-ui-state.test.mjs
+      - name: TypeScript tests
+        run: |
+          set -euo pipefail
+          for test in tests/*.ts; do
+            echo "Running $test"
+            npx --yes tsx "$test"
+          done
+      - name: Static safeguards
+        run: |
+          set -euo pipefail
+          grep -q "sui-native-tree-trade-ledger-v3" netlify/lib/tree-activity-index.ts
+          ! grep -q "NOODLES_API_KEY" netlify/lib/tree-activity-index.ts
+          ! grep -q "/pool/event/all" netlify/lib/tree-activity-index.ts
+          grep -q "TREE_TOKEN_CREATION_CHECKPOINT = '169361209'" netlify/lib/tree-burn-index.ts
+          grep -q "wallets: rankedWallets" netlify/lib/tree-badge-background-worker.ts
+          grep -q "onProgress: (index) => writeInternalBadgeValue(TREE_ACTIVITY_INDEX_KEY" netlify/lib/tree-badge-background-worker.ts
+          grep -q "onProgress: (index) => writeInternalBadgeValue(TREE_BURN_INDEX_KEY" netlify/lib/tree-badge-background-worker.ts
+          ! grep -q "scanTreeTradingActivity" netlify/lib/tree-exposure-scan-runner.ts
+          ! grep -q "scanTreeBurnContributions" netlify/lib/tree-exposure-scan-runner.ts
+          grep -q "DAPP_SWAP_EXECUTION_ENABLED = false" dapp/app.js
+          git diff --check
