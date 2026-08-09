@@ -1,0 +1,107 @@
+name: Refine TREE header CTAs
+
+on:
+  push:
+    branches:
+      - feature/command-center-ui-v2
+    paths:
+      - '.github/workflows/refine-header-ctas.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  refine:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out preview branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/command-center-ui-v2
+          fetch-depth: 0
+
+      - name: Apply header CTA refinements
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+
+          impact_old = '<a href="#impact">Impact</a>'
+          impact_new = '<a href="#impact" class="nav-impact"><span class="nav-impact-icon" aria-hidden="true">♥</span><span>TREE Fund</span></a>'
+          join_old = '<a href="#join">Join</a>'
+          join_new = '<a href="#join" class="nav-get-started"><span>Get Started</span><span aria-hidden="true">→</span></a>'
+
+          for old, new, label in (
+              (impact_old, impact_new, 'Impact'),
+              (join_old, join_new, 'Join'),
+          ):
+              if old not in text:
+                  raise SystemExit(f'Expected {label} navigation link was not found.')
+              text = text.replace(old, new, 1)
+
+          css_anchor = 'nav a.nav-command:hover{color:#02130c;background:linear-gradient(135deg,#65ffab,#5cf1e7);box-shadow:0 12px 34px rgba(34,231,215,.27)}\n'
+          if css_anchor not in text:
+              raise SystemExit('Command Center navigation CSS anchor was not found.')
+
+          cta_css = '''nav a.nav-impact{display:inline-flex;align-items:center;gap:7px;color:var(--ecosystem-gold);border:1px solid rgba(255,216,75,.48);background:linear-gradient(135deg,rgba(255,216,75,.12),rgba(255,173,50,.06));box-shadow:0 8px 24px rgba(255,216,75,.08)}
+          nav a.nav-impact .nav-impact-icon{display:grid;place-items:center;width:18px;height:18px;border-radius:50%;background:rgba(255,216,75,.14);font-size:.72rem}
+          nav a.nav-impact:hover{color:#211500;border-color:var(--ecosystem-gold);background:linear-gradient(135deg,var(--ecosystem-gold),var(--ecosystem-amber));box-shadow:0 12px 34px rgba(255,216,75,.2)}
+          nav a.nav-get-started{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;color:#03150d;background:linear-gradient(135deg,var(--ecosystem-green),var(--ecosystem-cyan));border-color:transparent;font-weight:950;box-shadow:0 10px 30px rgba(34,231,215,.22)}
+          nav a.nav-get-started:hover{color:#02130c;transform:translateY(-2px);background:linear-gradient(135deg,#65ffab,#5cf1e7);box-shadow:0 14px 40px rgba(34,231,215,.3)}
+          nav a.nav-impact:focus-visible,nav a.nav-get-started:focus-visible{outline:3px solid var(--ecosystem-cyan);outline-offset:3px}
+          '''
+          text = text.replace(css_anchor, css_anchor + cta_css, 1)
+
+          mobile_old = '@media(max-width:768px){nav a.nav-command{justify-content:center}.command-center-preview-card{order:-1}.hero-actions .command-center-primary{flex-basis:100%}}'
+          mobile_new = '@media(max-width:768px){.nav-shell .live-pill{order:-4}nav a.nav-command{order:-3}nav a.nav-get-started{order:-2}nav a.nav-impact{order:-1}nav a.nav-command,nav a.nav-impact,nav a.nav-get-started{justify-content:center;min-height:48px}.command-center-preview-card{order:-1}.hero-actions .command-center-primary{flex-basis:100%}}'
+          if mobile_old not in text:
+              raise SystemExit('Command Center mobile CSS anchor was not found.')
+          text = text.replace(mobile_old, mobile_new, 1)
+
+          path.write_text(text, encoding='utf-8')
+          PY
+
+          rm -f .github/workflows/refine-header-ctas.yml
+
+      - name: Validate preview changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci
+          npm run build
+          git diff --check
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          html = Path('index.html').read_text(encoding='utf-8')
+          assert 'class="nav-impact"' in html
+          assert '>TREE Fund<' in html
+          assert 'class="nav-get-started"' in html
+          assert '>Get Started<' in html
+          assert '>Impact<' not in html
+          assert '>Join<' not in html
+          assert 'nav a.nav-impact{' in html
+          assert 'nav a.nav-get-started{' in html
+          assert 'href="/dapp/" class="nav-command"' in html
+          assert 'scripts/swap.js' not in Path('dapp/index.html').read_text(encoding='utf-8')
+          ids = re.findall(r'\bid="([^"]+)"', html)
+          duplicates = sorted({item for item in ids if ids.count(item) > 1})
+          assert not duplicates, f'duplicate homepage IDs: {duplicates}'
+          PY
+
+      - name: Commit preview refinement
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "TheCryptoArborist"
+          git config user.email "190985450+TheCryptoArborist@users.noreply.github.com"
+          git add index.html .github/workflows/refine-header-ctas.yml
+          git commit -m "Improve TREE Fund and Get Started header actions"
+          git push origin HEAD:feature/command-center-ui-v2
