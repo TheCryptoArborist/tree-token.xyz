@@ -106,6 +106,7 @@ const okResponse = await createExposureSnapshotResponse(
   new Request('https://example.test/api/tree-exposure'),
   {
     context: 'deploy-preview',
+    getEnv: () => undefined,
     readSnapshot: async () => snapshot,
     readRefreshStatus: async () => null,
     now: () => Date.parse('2026-08-09T04:45:10.000Z'),

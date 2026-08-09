@@ -260,12 +260,27 @@ export function validateCompleteExposureSnapshot(value: unknown): value is Compl
   let top50LpRaw = 0n;
   let lpProvider = 0;
   let lpMaxi = 0;
+  let previousTotalRaw: bigint | null = null;
+  let previousLiquidRaw: bigint | null = null;
+  let previousWallet: string | null = null;
   for (let index = 0; index < snapshot.entries.length; index += 1) {
     const entry = snapshot.entries[index];
     if (!validateEntry(entry, index + 1) || wallets.has(entry.wallet)) return false;
+    const currentTotalRaw = BigInt(entry.totalExposureRaw);
+    const currentLiquidRaw = BigInt(entry.liquidTreeRaw);
+    if (previousTotalRaw !== null && previousLiquidRaw !== null && previousWallet !== null) {
+      if (currentTotalRaw > previousTotalRaw
+        || (currentTotalRaw === previousTotalRaw && currentLiquidRaw > previousLiquidRaw)
+        || (currentTotalRaw === previousTotalRaw
+          && currentLiquidRaw === previousLiquidRaw
+          && entry.wallet.localeCompare(previousWallet) < 0)) return false;
+    }
+    previousTotalRaw = currentTotalRaw;
+    previousLiquidRaw = currentLiquidRaw;
+    previousWallet = entry.wallet;
     wallets.add(entry.wallet);
-    top50TotalRaw += BigInt(entry.totalExposureRaw);
-    top50LiquidRaw += BigInt(entry.liquidTreeRaw);
+    top50TotalRaw += currentTotalRaw;
+    top50LiquidRaw += currentLiquidRaw;
     top50LpRaw += BigInt(entry.lpTreeRaw);
     if (entry.badges.includes(LP_PROVIDER_BADGE)) lpProvider += 1;
     if (entry.badges.includes(LP_MAXI_BADGE)) lpMaxi += 1;
