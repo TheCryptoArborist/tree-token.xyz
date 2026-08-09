@@ -55,31 +55,21 @@ jobs:
 
           test_path = Path('tests/suins-name-resolver.test.ts')
           test = test_path.read_text(encoding='utf-8')
-          old_case = """        if (address === first) return { name: 'cryptoarborist.sui' };
-                if (address === second) throw new Error('NOT_FOUND');
-                throw new Error('name has expired');
-          """
-          new_case = """        if (address === first) return { name: 'cryptoarborist.sui' };
-                if (address === second) throw new Error('NOT_FOUND');
-                throw new Error('name%20has%20expired');
-          """
-          if old_case not in test:
-              raise SystemExit('Encoded expiration fixture anchor not found')
-          test = test.replace(old_case, new_case, 1)
-          insertion = """
+          if "throw new Error('name has expired');" not in test:
+              raise SystemExit('Expiration fixture anchor not found')
+          test = test.replace("throw new Error('name has expired');", "throw new Error('name%20has%20expired');", 1)
+          insertion_anchor = "assert.equal(success.complete, true);\n"
+          insertion = """assert.equal(success.complete, true);
+
           const numericNotFound = await resolveDefaultSuinsNames([first], {
             client: { core: { async defaultNameServiceName() { throw Object.assign(new Error('missing'), { code: 5 }); } } },
           });
           assert.equal(numericNotFound.complete, true);
           assert.equal(numericNotFound.names[first], null);
           """
-          anchor = """assert.equal(success.complete, true);
-
-          const failed = await resolveDefaultSuinsNames([first], {"""
-          if anchor not in test:
-              raise SystemExit('Numeric NOT_FOUND test insertion anchor not found')
-          test = test.replace(anchor, "assert.equal(success.complete, true);\n" + insertion + "\nconst failed = await resolveDefaultSuinsNames([first], {", 1)
-          test_path.write_text(test, encoding='utf-8')
+          if insertion_anchor not in test:
+              raise SystemExit('Numeric NOT_FOUND insertion anchor not found')
+          test_path.write_text(test.replace(insertion_anchor, insertion, 1), encoding='utf-8')
           PY
 
           rm -f \
