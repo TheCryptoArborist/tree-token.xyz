@@ -1,0 +1,84 @@
+name: Remove SuiFarm and Zapper footer links
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/remove-footer-links.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Remove footer links from production
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+          targets = [
+              '      <a class="btn" href="https://farm.suidex.org/farm" target="_blank" rel="noopener noreferrer">SuiFarm</a>\n',
+              '      <a class="btn" href="https://zapper.xyz/token/sui/0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE" target="_blank" rel="noopener noreferrer">Zapper</a>\n',
+          ]
+          for target in targets:
+              if target not in text:
+                  raise SystemExit(f'Expected footer link not found: {target.strip()}')
+              text = text.replace(target, '', 1)
+          path.write_text(text, encoding='utf-8')
+          PY
+          rm -f .github/workflows/remove-footer-links.yml
+          ! grep -q '>SuiFarm<' index.html
+          ! grep -q 'zapper.xyz/token' index.html
+          git diff --check
+
+      - name: Commit production removal
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "TheCryptoArborist"
+          git config user.email "190985450+TheCryptoArborist@users.noreply.github.com"
+          git add index.html .github/workflows/remove-footer-links.yml
+          git commit -m "Remove SuiFarm and Zapper footer links"
+          git push origin HEAD:main
+
+      - name: Remove the same links from Command Center UI V2
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin feature/command-center-ui-v2
+          git checkout -B feature/command-center-ui-v2 origin/feature/command-center-ui-v2
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+          targets = [
+              '      <a class="btn" href="https://farm.suidex.org/farm" target="_blank" rel="noopener noreferrer">SuiFarm</a>\n',
+              '      <a class="btn" href="https://zapper.xyz/token/sui/0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE" target="_blank" rel="noopener noreferrer">Zapper</a>\n',
+          ]
+          for target in targets:
+              if target not in text:
+                  raise SystemExit(f'Expected footer link not found on UI V2 branch: {target.strip()}')
+              text = text.replace(target, '', 1)
+          path.write_text(text, encoding='utf-8')
+          PY
+          ! grep -q '>SuiFarm<' index.html
+          ! grep -q 'zapper.xyz/token' index.html
+          git diff --check
+          git add index.html
+          git commit -m "Remove SuiFarm and Zapper footer links"
+          git push origin HEAD:feature/command-center-ui-v2
