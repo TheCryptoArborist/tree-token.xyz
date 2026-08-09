@@ -13,27 +13,125 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
-      - name: Read compact TREE badge Deploy Preview state
+      - name: Validate the complete exposure and badge contracts
         shell: bash
         run: |
           set -euo pipefail
-          curl --silent --show-error --location --max-time 60 \
-            'https://deploy-preview-6--tree-token.netlify.app/api/tree-badges?status_check=3' \
-            -o /tmp/tree-badges.json
+          BASE='https://deploy-preview-6--tree-token.netlify.app'
+          curl --silent --show-error --location --max-time 60 "$BASE/api/tree-exposure?final_validation=1" -o /tmp/exposure.json
+          curl --silent --show-error --location --max-time 60 "$BASE/api/tree-badges?final_validation=1" -o /tmp/badges.json
+          curl --silent --show-error --location --max-time 60 "$BASE/dapp/" -o /tmp/dapp.html
           node <<'NODE'
-          const p = require('/tmp/tree-badges.json');
+          const fs = require('node:fs');
+          const exposure = JSON.parse(fs.readFileSync('/tmp/exposure.json', 'utf8'));
+          const badges = JSON.parse(fs.readFileSync('/tmp/badges.json', 'utf8'));
+          const html = fs.readFileSync('/tmp/dapp.html', 'utf8');
+          const failures = [];
+          const check = (condition, message) => { if (!condition) failures.push(message); };
+          const toBig = (value) => typeof value === 'string' && /^\d+$/.test(value) ? BigInt(value) : null;
+
+          check(exposure.status === 'ok', 'Exposure status is not ok.');
+          check(exposure.refreshState === 'complete', 'Exposure refresh is not complete.');
+          check(exposure.coverage?.totalExposureComplete === true, 'Exposure coverage is incomplete.');
+          check(Array.isArray(exposure.entries) && exposure.entries.length === 50, 'Exposure entry count is not 50.');
+          check(badges.status === 'ok', 'Badge status is not ok.');
+          check(badges.refreshState === 'complete', 'Badge refresh is not complete.');
+          check(badges.source?.activity?.outcome === 'complete', 'Activity index is incomplete.');
+          check(badges.source?.burns?.outcome === 'complete', 'Burn index is incomplete.');
+          check(Array.isArray(badges.entries) && badges.entries.length === 50, 'Badge entry count is not 50.');
+          check(badges.exposureSnapshotGeneratedAt === exposure.snapshotGeneratedAt, 'Badge snapshot does not reference the displayed exposure snapshot.');
+
+          const exposureByWallet = new Map(exposure.entries.map((entry) => [entry.wallet, entry]));
+          const seen = new Set();
+          const calculated = { diamondHands: 0, paperHands: 0, accumulator: 0, burned: 0 };
+          let walletsWithBuys = 0;
+          let walletsWithSells = 0;
+          let totalBuyTransactions = 0;
+          let totalSellTransactions = 0;
+          let totalBuyRaw = 0n;
+          let totalSellRaw = 0n;
+          let totalBurnRaw = 0n;
+
+          for (const [index, entry] of badges.entries.entries()) {
+            check(entry.rank === index + 1, `Badge rank mismatch at ${index + 1}.`);
+            check(typeof entry.wallet === 'string' && exposureByWallet.has(entry.wallet), `Unknown badge wallet at ${index + 1}.`);
+            check(!seen.has(entry.wallet), `Duplicate badge wallet at ${index + 1}.`);
+            seen.add(entry.wallet);
+            const exposureEntry = exposureByWallet.get(entry.wallet);
+            check(exposureEntry?.rank === entry.rank, `Exposure/badge rank mismatch at ${index + 1}.`);
+
+            const activity = entry.activity30d;
+            const burn = entry.burn;
+            check(activity && typeof activity === 'object', `Missing activity evidence at ${index + 1}.`);
+            check(burn && typeof burn === 'object', `Missing burn evidence at ${index + 1}.`);
+            const buyRaw = toBig(activity?.buyTreeRaw);
+            const sellRaw = toBig(activity?.sellTreeRaw);
+            const burnedRaw = toBig(burn?.burnedTreeRaw);
+            check(buyRaw !== null && sellRaw !== null && burnedRaw !== null, `Malformed raw evidence at ${index + 1}.`);
+            if (buyRaw === null || sellRaw === null || burnedRaw === null) continue;
+            check(Number.isSafeInteger(activity.buyCount) && activity.buyCount >= 0, `Invalid buy count at ${index + 1}.`);
+            check(Number.isSafeInteger(activity.sellCount) && activity.sellCount >= 0, `Invalid sell count at ${index + 1}.`);
+            const list = Array.isArray(entry.badges) ? entry.badges : [];
+            const diamond = activity.sellCount === 0;
+            const paper = sellRaw > buyRaw && sellRaw >= 100_000_000_000n;
+            const accumulator = activity.buyCount >= 10 && buyRaw >= 100_000_000_000n && buyRaw > sellRaw;
+            const burned = burnedRaw >= 500_000_000_000n;
+            check(list.includes('diamond-hands') === diamond, `Diamond Hands mismatch at ${index + 1}.`);
+            check(list.includes('paper-hands') === paper, `Paper Hands mismatch at ${index + 1}.`);
+            check(list.includes('accumulator') === accumulator, `Accumulator mismatch at ${index + 1}.`);
+            check(list.includes('burned') === burned, `Burned mismatch at ${index + 1}.`);
+            check(!(list.includes('diamond-hands') && list.includes('paper-hands')), `Diamond/Paper conflict at ${index + 1}.`);
+            if (diamond) calculated.diamondHands += 1;
+            if (paper) calculated.paperHands += 1;
+            if (accumulator) calculated.accumulator += 1;
+            if (burned) calculated.burned += 1;
+            if (activity.buyCount > 0) walletsWithBuys += 1;
+            if (activity.sellCount > 0) walletsWithSells += 1;
+            totalBuyTransactions += activity.buyCount;
+            totalSellTransactions += activity.sellCount;
+            totalBuyRaw += buyRaw;
+            totalSellRaw += sellRaw;
+            totalBurnRaw += burnedRaw;
+          }
+
+          check(JSON.stringify(calculated) === JSON.stringify(badges.summary), 'Badge summary does not match entry evidence.');
+          for (const label of ['LP Provider', 'LP Maxi', 'Diamond Hands', 'Paper Hands', 'Accumulator', 'Burned']) {
+            check(html.includes(label), `DApp HTML is missing ${label}.`);
+          }
+          check(html.includes('Verified TREE Exposure Leaders'), 'DApp is missing the exposure leaderboard heading.');
+
+          if (failures.length) {
+            console.error(JSON.stringify({ failures }, null, 2));
+            process.exit(1);
+          }
           console.log(JSON.stringify({
-            status: p.status,
-            refreshState: p.refreshState,
-            refreshStatus: p.refreshStatus,
-            snapshotGeneratedAt: p.snapshotGeneratedAt,
-            exposureSnapshotGeneratedAt: p.exposureSnapshotGeneratedAt,
-            displayedCount: p.displayedCount,
-            source: p.source,
-            summary: p.summary,
-            warnings: p.warnings,
-            message: p.message,
+            classification: 'SUCCESS',
+            exposureSnapshotGeneratedAt: exposure.snapshotGeneratedAt,
+            badgeSnapshotGeneratedAt: badges.snapshotGeneratedAt,
+            displayedCount: badges.displayedCount,
+            activityMethodology: badges.source.activity.methodologyVersion,
+            activityWindow: {
+              start: badges.source.activity.windowStart,
+              end: badges.source.activity.windowEnd,
+              pools: badges.source.activity.poolCount,
+              classifiedTransactions: badges.source.activity.transactionCount,
+            },
+            burnMethodology: badges.source.burns.methodologyVersion,
+            burnIndexedThroughCheckpoint: badges.source.burns.indexedThroughCheckpoint,
+            badgeCounts: calculated,
+            activityEvidence: {
+              walletsWithBuys,
+              walletsWithSells,
+              totalBuyTransactions,
+              totalSellTransactions,
+              totalBuyRaw: totalBuyRaw.toString(),
+              totalSellRaw: totalSellRaw.toString(),
+            },
+            burnEvidence: {
+              walletsIndexed: badges.source.burns.walletCount,
+              totalBurnRawAcrossTop50: totalBurnRaw.toString(),
+            },
           }, null, 2));
           NODE
