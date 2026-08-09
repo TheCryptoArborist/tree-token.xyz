@@ -1,0 +1,28 @@
+name: Check TREE badge preview status
+
+on:
+  push:
+    branches:
+      - review/phase1
+    paths:
+      - '.github/workflows/check-badge-preview-status.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Read combined Deploy Preview state
+        shell: bash
+        run: |
+          set -euo pipefail
+          for endpoint in tree-exposure tree-badges; do
+            curl --silent --show-error --location --max-time 60 \
+              "https://deploy-preview-6--tree-token.netlify.app/api/${endpoint}?status_check=1" \
+              -o "/tmp/${endpoint}.json"
+            echo "=== ${endpoint} ==="
+            node -e "const p=require('/tmp/${endpoint}.json'); console.log(JSON.stringify(p,null,2))"
+          done
