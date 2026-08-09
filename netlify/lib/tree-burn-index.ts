@@ -492,7 +492,7 @@ export async function refreshTreeBurnIndex(
     };
   }
 
-  const getEnv = options.getEnv ?? ((name) => Netlify.env.get(name));
+  const getEnv = options.getEnv ?? ((name) => typeof Netlify !== 'undefined' ? Netlify.env.get(name) : undefined);
   const creationCheckpointValue = options.creationCheckpoint
     || getEnv('TREE_TOKEN_CREATION_CHECKPOINT')
     || TREE_TOKEN_CREATION_CHECKPOINT;

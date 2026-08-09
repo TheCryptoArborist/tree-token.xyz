@@ -748,7 +748,7 @@ export async function refreshTreeActivityIndex(
     };
   }
 
-  const getEnv = options.getEnv ?? ((name) => Netlify.env.get(name));
+  const getEnv = options.getEnv ?? ((name) => typeof Netlify !== 'undefined' ? Netlify.env.get(name) : undefined);
   const endpoint = getEnv('SUI_GRAPHQL_URL') || DEFAULT_GRAPHQL_URL;
   const fetchImpl = options.fetchImpl ?? fetch;
   const pageSize = Math.max(1, Math.min(50, Math.trunc(options.pageSize ?? DEFAULT_PAGE_SIZE)));
