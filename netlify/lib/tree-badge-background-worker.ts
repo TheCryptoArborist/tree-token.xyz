@@ -170,7 +170,7 @@ export async function runTreeBadgeBackgroundWorker(
       await saveStatus({
         state: activity.outcome === 'error' ? 'error' : 'verification-incomplete',
         stage: 'failed', completedAt: new Date(now()).toISOString(),
-        message: 'The activity index did not complete; the prior complete badge snapshot was preserved.',
+        message: `Activity index ${activity.outcome}: ${activity.warnings[0] || 'No diagnostic was returned.'} The prior complete badge snapshot was preserved.`,
       });
       return { accepted: true, started: true, outcome: activity.outcome === 'error' ? 'error' : 'verification-incomplete' };
     }
@@ -193,7 +193,7 @@ export async function runTreeBadgeBackgroundWorker(
       await saveStatus({
         state: burns.outcome === 'error' ? 'error' : 'verification-incomplete',
         stage: 'failed', completedAt: new Date(now()).toISOString(),
-        message: 'The burn index did not complete; the prior complete badge snapshot was preserved.',
+        message: `Burn index ${burns.outcome}: ${burns.warnings[0] || 'No diagnostic was returned.'} The prior complete badge snapshot was preserved.`,
       });
       return { accepted: true, started: true, outcome: burns.outcome === 'error' ? 'error' : 'verification-incomplete' };
     }
@@ -225,10 +225,11 @@ export async function runTreeBadgeBackgroundWorker(
     logger.info('TREE behavioral badge refresh completed.');
     return { accepted: true, started: true, outcome: 'complete' };
   } catch (error) {
-    logger.error(error instanceof Error ? error.message : 'TREE badge refresh failed.');
+    const errorMessage = error instanceof Error ? error.message : 'TREE badge refresh failed.';
+    logger.error(errorMessage);
     await saveStatus({
       state: 'error', stage: 'failed', completedAt: new Date(now()).toISOString(),
-      message: 'TREE badge refresh failed; the prior complete badge snapshot was preserved.',
+      message: `TREE badge refresh failed: ${errorMessage} The prior complete badge snapshot was preserved.`,
     });
     return { accepted: true, started: true, outcome: 'error' };
   } finally {

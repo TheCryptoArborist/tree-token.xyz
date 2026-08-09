@@ -51,6 +51,23 @@ const runningPayload = await running.json();
 assert.equal(runningPayload.status, 'refreshing');
 assert.equal(runningPayload.refreshState, 'running');
 
+const priorError = await createTreeBadgeResponse(request, {
+  context: 'deploy-preview',
+  getEnv: (name) => ({ TREE_BADGE_AUTO_BOOTSTRAP: 'true', TREE_BADGE_REFRESH_SECRET: 'fixture' }[name]),
+  readSnapshot: async () => null,
+  readStatus: async () => ({
+    state: 'error', stage: 'failed', runId: 'failed-run',
+    startedAt: '2026-08-09T14:00:00.000Z', updatedAt: '2026-08-09T14:01:00.000Z', completedAt: '2026-08-09T14:01:00.000Z',
+    exposureSnapshotGeneratedAt: '2026-08-09T14:00:30.000Z', activityOutcome: 'error', burnOutcome: 'pending', displayedCount: 0,
+    message: 'diagnostic', commitRef: null, deployId: null,
+  }),
+  triggerRefresh: async () => { throw new Error('failed states require an explicit new deploy or authenticated retry'); },
+});
+const priorErrorPayload = await priorError.json();
+assert.equal(priorErrorPayload.status, 'not-ready');
+assert.equal(priorErrorPayload.refreshState, 'error');
+assert.match(priorErrorPayload.message, /not available/i);
+
 const failedTrigger = await createTreeBadgeResponse(request, {
   context: 'deploy-preview',
   getEnv: (name) => ({ TREE_BADGE_AUTO_BOOTSTRAP: 'true', TREE_BADGE_REFRESH_SECRET: 'fixture' }[name]),

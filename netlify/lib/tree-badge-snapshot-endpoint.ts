@@ -152,6 +152,7 @@ export async function createTreeBadgeResponse(
     const getEnv = dependencies.getEnv ?? ((name) => Netlify.env.get(name));
     const context = dependencies.context || 'dev';
     if (payload.status === 'not-ready'
+      && payload.refreshState === 'idle'
       && context === 'deploy-preview'
       && enabled(getEnv('TREE_BADGE_AUTO_BOOTSTRAP'))) {
       const secret = getEnv('TREE_BADGE_REFRESH_SECRET')
