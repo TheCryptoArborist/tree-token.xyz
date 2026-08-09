@@ -4,7 +4,6 @@ import {
 } from './leaderboard-provider.ts';
 import { SUIDEX_V2_TREE_POOL_ID } from './suidex-v2-tree-lp-provider.ts';
 
-
 export const TREE_ACTIVITY_METHODOLOGY_VERSION = 'noodles-recognized-tree-pool-trades-v1';
 export const DIAMOND_HANDS_BADGE = 'diamond-hands';
 export const PAPER_HANDS_BADGE = 'paper-hands';
@@ -20,7 +19,7 @@ export const RECOGNIZED_TREE_TRADE_POOL_IDS = [
 ] as const;
 
 const DEFAULT_NOODLES_BASE_URL = 'https://api.noodles.fi';
-const DEFAULT_LIMIT = 500;
+const DEFAULT_LIMIT = 100;
 const DEFAULT_MAX_PAGES_PER_POOL = 100;
 const TREE_SCALE = 1_000_000;
 
@@ -177,7 +176,7 @@ export async function scanTreeTradingActivity(
     .map(normalizeSuiAddress)
     .filter((value): value is string => Boolean(value)))];
   coverage.poolsRequested = poolIds.length;
-  const limit = Math.max(1, Math.min(1_000, Math.trunc(options.limit ?? DEFAULT_LIMIT)));
+  const limit = Math.max(1, Math.min(100, Math.trunc(options.limit ?? DEFAULT_LIMIT)));
   const maxPagesPerPool = Math.max(1, Math.min(1_000, Math.trunc(options.maxPagesPerPool ?? DEFAULT_MAX_PAGES_PER_POOL)));
   const signedByTransaction = new Map<string, SignedTrade>();
   const eventKeys = new Set<string>();
@@ -199,8 +198,15 @@ export async function scanTreeTradingActivity(
         const response = await fetchImpl(url, {
           headers: { Accept: 'application/json', 'x-api-key': apiKey },
         });
-        if (!response.ok) throw new Error(`Noodles pool events returned ${response.status} for ${poolId}.`);
         const rawText = await response.text();
+        if (!response.ok) {
+          let detail = '';
+          try {
+            const errorPayload = record(JSON.parse(rawText));
+            detail = typeof errorPayload.message === 'string' ? `: ${errorPayload.message}` : '';
+          } catch { /* Preserve the status-only error for non-JSON responses. */ }
+          throw new Error(`Noodles pool events returned ${response.status} for ${poolId}${detail}.`);
+        }
         const payload = record(JSON.parse(rawText));
         const events = Array.isArray(payload.data) ? payload.data : [];
         coverage.pagesScanned += 1;
