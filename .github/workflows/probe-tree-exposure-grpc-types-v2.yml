@@ -1,0 +1,108 @@
+name: Probe TREE LP object types through native gRPC
+
+on:
+  push:
+    branches:
+      - feature/leaderboard-exposure-v1
+    paths:
+      - '.github/workflows/probe-tree-exposure-grpc-types-v2.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/leaderboard-exposure-v1
+          fetch-depth: 0
+
+      - name: Install native gRPC transport for probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci
+          npm install --no-save --package-lock=false @grpc/grpc-js @protobuf-ts/grpc-transport
+
+      - name: Scan Top-50 owned object types
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > scripts/probe-tree-exposure-grpc.ts <<'TS'
+          import { ChannelCredentials } from '@grpc/grpc-js';
+          import { GrpcTransport } from '@protobuf-ts/grpc-transport';
+          import { SuiGrpcClient } from '@mysten/sui/grpc';
+
+          const TREE = '0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE';
+          const leaderboardResponse = await fetch('https://tree-token.xyz/api/tree-leaderboard');
+          if (!leaderboardResponse.ok) throw new Error(`Leaderboard HTTP ${leaderboardResponse.status}`);
+          const leaderboard = await leaderboardResponse.json() as { entries?: Array<{ wallet: string }> };
+          const wallets = (leaderboard.entries || []).map((entry) => entry.wallet).filter(Boolean).slice(0, 50);
+          if (wallets.length !== 50) throw new Error(`Expected 50 leaderboard wallets; received ${wallets.length}`);
+
+          const client = new SuiGrpcClient({
+            network: 'mainnet',
+            transport: new GrpcTransport({
+              host: 'fullnode.mainnet.sui.io:443',
+              channelCredentials: ChannelCredentials.createSsl(),
+            }),
+          });
+
+          async function ownedTypes(owner: string) {
+            const rows: string[] = [];
+            let cursor: string | null | undefined = null;
+            for (let page = 0; page < 5; page += 1) {
+              const result = await client.core.listOwnedObjects({ owner, cursor: cursor || undefined, limit: 50 });
+              for (const object of result.objects || []) if (typeof object.type === 'string') rows.push(object.type);
+              if (!result.cursor) break;
+              cursor = result.cursor;
+            }
+            return rows;
+          }
+
+          const typeStats = new Map<string, { objects: number; owners: number }>();
+          let walletCursor = 0;
+          async function worker() {
+            while (walletCursor < wallets.length) {
+              const index = walletCursor++;
+              const types = await ownedTypes(wallets[index]);
+              const unique = new Set(types);
+              for (const type of types) {
+                const current = typeStats.get(type) || { objects: 0, owners: 0 };
+                current.objects += 1;
+                typeStats.set(type, current);
+              }
+              for (const type of unique) {
+                const current = typeStats.get(type);
+                if (current) current.owners += 1;
+              }
+            }
+          }
+          await Promise.all(Array.from({ length: 5 }, () => worker()));
+
+          const frameworkPrefixes = ['0x2::coin::Coin<', '0x2::kiosk::', '0x2::package::', '0x2::display::', '0x2::dynamic_field::', '0x2::transfer_policy::'];
+          const keyword = /(position|liquidity|pool|farm|stake|vault|lp_|_lp|receipt|locked|clmm)/i;
+          const rows = [...typeStats.entries()].map(([type, stats]) => ({ type, ...stats }));
+          const treeRelatedTypes = rows.filter((row) => row.type.includes(TREE)).sort((a, b) => b.owners - a.owners || b.objects - a.objects);
+          const candidateTypes = rows.filter((row) => keyword.test(row.type) && !frameworkPrefixes.some((prefix) => row.type.startsWith(prefix))).sort((a, b) => b.owners - a.owners || b.objects - a.objects);
+          const topNonFrameworkTypes = rows.filter((row) => !row.type.startsWith('0x2::') && !row.type.startsWith('0x1::')).sort((a, b) => b.owners - a.owners || b.objects - a.objects).slice(0, 120);
+
+          console.log(JSON.stringify({ walletsScanned: wallets.length, distinctObjectTypes: rows.length, treeRelatedTypes, candidateTypes, topNonFrameworkTypes }, null, 2));
+          TS
+          npx --yes tsx scripts/probe-tree-exposure-grpc.ts
+          rm -f scripts/probe-tree-exposure-grpc.ts
+
+      - name: Remove temporary probe
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/probe-tree-exposure-grpc-types-v2.yml scripts/probe-tree-exposure-grpc.ts
+          git config user.name "TheCryptoArborist"
+          git config user.email "190985450+TheCryptoArborist@users.noreply.github.com"
+          git add -A
+          git commit -m "Complete TREE exposure object-type discovery"
+          git push origin HEAD:feature/leaderboard-exposure-v1
