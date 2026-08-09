@@ -54,3 +54,7 @@ main{width:min(1060px,calc(100% - 30px));margin:auto;padding:28px 0 90px}
 .tier-row .tier-range{margin-top:2px;white-space:normal;line-height:1.35;color:var(--muted)}
 .tier-method-note{margin:13px 2px 0;padding:10px 12px;border-left:3px solid var(--cyan);border-radius:0 9px 9px 0;background:rgba(53,200,255,.045);color:var(--muted);font-size:.76rem;line-height:1.55}
 @media(max-width:760px){.tier-row{align-items:start}.tier-row .tier-range{display:block}}
+
+/* SuiNS leaderboard identity */
+.leader-address{margin-top:2px;color:var(--muted-2);font:.66rem var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.leader-wallet span{color:var(--text)}

@@ -278,6 +278,10 @@ function shortened(address) {
   return address.length > 14 ? `${address.slice(0, 7)}…${address.slice(-5)}` : address;
 }
 
+function displayNameForEntry(entry) {
+  const name = typeof entry?.suinsName === 'string' ? entry.suinsName.trim() : '';
+  return name || shortened(String(entry?.wallet || ''));
+}
 
 function elementById(id) {
   return typeof document === 'undefined' ? null : document.getElementById(id);
@@ -496,10 +500,11 @@ function renderLeaderboardCards() {
     const rank = document.createElement('span'); rank.className = 'leader-rank'; rank.textContent = entry.rank === 1 ? '🥇' : entry.rank === 2 ? '🥈' : entry.rank === 3 ? '🥉' : `#${entry.rank}`;
     const identity = document.createElement('div'); identity.className = 'leader-identity';
     const walletLine = document.createElement('div'); walletLine.className = 'leader-wallet';
-    const wallet = document.createElement('span'); wallet.textContent = shortened(entry.wallet); wallet.title = entry.wallet; walletLine.append(wallet);
+    const wallet = document.createElement('span'); wallet.textContent = displayNameForEntry(entry); wallet.title = entry.suinsName || entry.wallet; walletLine.append(wallet);
+    const addressLine = document.createElement('div'); addressLine.className = 'leader-address'; addressLine.textContent = shortened(entry.wallet); addressLine.title = entry.wallet;
     const tierDefinition = tierForEntry(entry);
     const tier = document.createElement('div'); tier.className = `leader-tier ${tierDefinition?.css || ''}`.trim(); tier.textContent = `${tierDefinition?.icon || '🌿'} ${tierDefinition?.name || entry.tier || 'Ranked'}`;
-    identity.append(walletLine, tier);
+    identity.append(walletLine, ...(entry.suinsName ? [addressLine] : []), tier);
     const balance = document.createElement('div'); balance.className = 'leader-balance';
     const amount = document.createElement('strong'); amount.textContent = `${entry.directTree} TREE`;
     const meta = document.createElement('span'); meta.textContent = `${entry.supplyPercent ?? '—'}% supply · ${entry.coinObjectCount ?? '—'} objects`; balance.append(amount, meta);
@@ -515,7 +520,7 @@ function rankShareText() {
   const row = currentLeaderboardRow();
   if (!row) return 'I’m checking the verified TREE Canopy Leaderboard on the TREE Command Center. https://tree-token.xyz/dapp/#leaderboard';
   const tier = tierForEntry(row)?.name || row.tier || 'Ranked';
-  return `I’m #${row.rank} on the verified TREE Canopy Leaderboard — ${tier} with ${row.directTree} direct TREE. https://tree-token.xyz/dapp/#leaderboard`;
+  return `I’m #${row.rank} on the verified TREE Canopy Leaderboard — ${displayNameForEntry(row)}, ${tier}, with ${row.directTree} direct TREE. https://tree-token.xyz/dapp/#leaderboard`;
 }
 
 async function shareRank() {
@@ -542,7 +547,8 @@ function downloadRankCard() {
   ctx.fillStyle = '#f5fbff'; ctx.font = '900 58px ui-monospace, monospace'; ctx.fillText((tierForEntry(row)?.name || row.tier || 'Ranked').toUpperCase(), 90, 540);
   ctx.fillStyle = '#35c8ff'; ctx.font = '900 68px ui-monospace, monospace'; ctx.fillText(`${row.directTree} TREE`, 90, 680);
   ctx.fillStyle = '#9aa9b8'; ctx.font = '600 32px ui-monospace, monospace'; ctx.fillText(`${row.supplyPercent ?? '—'}% OF TOTAL SUPPLY`, 90, 735);
-  ctx.fillStyle = '#f5fbff'; ctx.font = '700 34px ui-monospace, monospace'; ctx.fillText(shortened(row.wallet), 90, 890);
+  ctx.fillStyle = '#f5fbff'; ctx.font = '700 34px ui-monospace, monospace'; ctx.fillText(displayNameForEntry(row), 90, 870);
+  if (row.suinsName) { ctx.fillStyle = '#9aa9b8'; ctx.font = '600 27px ui-monospace, monospace'; ctx.fillText(shortened(row.wallet), 90, 915); }
   ctx.fillStyle = '#35f28c'; ctx.font = '800 34px ui-monospace, monospace'; ctx.fillText('tree-token.xyz/dapp', 90, 1050);
   canvas.toBlob((blob) => { if (!blob) return; const url = URL.createObjectURL(blob); const link = document.createElement('a'); link.href = url; link.download = `tree-canopy-rank-${row.rank}.png`; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); setText('rankShareStatus', 'Rank card downloaded.'); }, 'image/png');
 }
@@ -621,7 +627,7 @@ function renderLeaderboard(payload) {
     } else if (rows.replaceChildren) {
       rows.replaceChildren(...leaderboardEntries.map((entry) => {
         const row = document.createElement('tr');
-        [entry.rank, shortened(entry.wallet), entry.directTree, entry.supplyPercent === null || entry.supplyPercent === undefined ? '—' : `${entry.supplyPercent}%`, tierForEntry(entry)?.name || entry.tier || 'Ranked'].forEach((value, index) => {
+        [entry.rank, displayNameForEntry(entry), entry.directTree, entry.supplyPercent === null || entry.supplyPercent === undefined ? '—' : `${entry.supplyPercent}%`, tierForEntry(entry)?.name || entry.tier || 'Ranked'].forEach((value, index) => {
           const cell = document.createElement('td'); cell.textContent = String(value); if (index > 2) cell.className = 'wide-column'; if (index === 1) cell.title = entry.wallet; row.append(cell);
         });
         return row;
@@ -746,4 +752,4 @@ if (typeof document !== 'undefined') {
   loadDisplayedRate();
 }
 
-export { DAPP_SWAP_EXECUTION_ENABLED, TIER_DEFINITIONS, formatSupplyPercentFromRaw, formatTreePrice, readDashboardCache, renderLeaderboard, tierForEntry, updateYourRank, writeDashboardCache };
+export { DAPP_SWAP_EXECUTION_ENABLED, TIER_DEFINITIONS, displayNameForEntry, formatSupplyPercentFromRaw, formatTreePrice, readDashboardCache, renderLeaderboard, tierForEntry, updateYourRank, writeDashboardCache };

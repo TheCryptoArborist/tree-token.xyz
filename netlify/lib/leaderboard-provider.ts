@@ -27,6 +27,7 @@ export type LeaderboardProviderName = typeof SUI_GRAPHQL_PROVIDER | typeof SUI_G
 export type DirectTreeEntry = {
   rank: number;
   wallet: string;
+  suinsName?: string | null;
   directTreeRaw: string;
   directTree: string;
   supplyPercent: string;

@@ -10,12 +10,6 @@
   to = "/dapp/"
   status = 301
 
-[[redirects]]
-  from = "/api/tree-leaderboard-preview"
-  to = "https://tree-token.xyz/api/tree-leaderboard"
-  status = 200
-  force = true
-
 [[headers]]
   for = "/*"
   [headers.values]

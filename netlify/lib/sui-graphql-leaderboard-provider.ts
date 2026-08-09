@@ -330,6 +330,7 @@ function buildEntries(candidates: Map<string, Candidate>, coinDecimals: number, 
     .map((candidate, index) => ({
       rank: index + 1,
       wallet: candidate.wallet,
+      suinsName: null,
       directTreeRaw: candidate.raw.toString(),
       directTree: formatBaseUnits(candidate.raw, coinDecimals),
       supplyPercent: formatPercentFromRaw(candidate.raw, totalSupplyRaw),

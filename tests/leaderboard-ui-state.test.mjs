@@ -9,7 +9,7 @@ function element(id = '') {
   });
   return elements.get(id);
 }
-const { TIER_DEFINITIONS, formatSupplyPercentFromRaw, renderLeaderboard, tierForEntry } = await import('../dapp/app.js');
+const { TIER_DEFINITIONS, displayNameForEntry, formatSupplyPercentFromRaw, renderLeaderboard, tierForEntry } = await import('../dapp/app.js');
 globalThis.document = {
   getElementById: (id) => element(id),
   createElement: () => element(`created-${Math.random()}`),
@@ -21,6 +21,8 @@ const fixtureEntry = { rank: 1, wallet: window.playerAddress, directTree: '1234.
 
 assert.equal(TIER_DEFINITIONS.length, 13);
 assert.equal(tierForEntry({ rank: 1, directTree: '1' }).name, 'Champion Tree');
+assert.equal(displayNameForEntry({ wallet: `0x${'c'.repeat(64)}`, suinsName: 'cryptoarborist.sui' }), 'cryptoarborist.sui');
+assert.match(displayNameForEntry({ wallet: `0x${'c'.repeat(64)}`, suinsName: null }), /^0x/);
 const tierCases = [
   ['50000000', 'Ancient Grove'], ['25000000', 'Redwood Royalty'], ['10000000', 'Giant Sequoia'],
   ['5000000', 'Forest Titan'], ['2500000', 'Canopy Guardian'], ['1000000', 'Heritage Oak'],
