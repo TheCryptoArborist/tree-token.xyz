@@ -37,7 +37,7 @@
       <div>
         <p class="eyebrow">TREE ecosystem utilities on Sui</p>
         <h1 id="page-title">TREE Command Center</h1>
-        <p>Live market data, verified direct-TREE rankings, creator tools, and clear routes into the NFTree ecosystem.</p>
+        <p>Live market data, verified Liquid TREE plus LP exposure rankings, creator tools, and clear routes into the NFTree ecosystem.</p>
       </div>
       <div class="command-banner-actions">
         <a class="button primary" href="#leaderboard">View Canopy Board</a>
@@ -46,14 +46,14 @@
     </section>
 
     <section class="section leaderboard-section" id="leaderboard" aria-labelledby="leaderboard-title">
-      <div class="section-heading board-heading"><div><p class="eyebrow">Sui-native verified snapshots</p><h2 id="leaderboard-title">TREE Canopy Leaderboard</h2><p>Direct address-owned TREE only. Rankings never use partial scans.</p></div><span class="data-state" id="leaderboardState">Loading</span></div>
+      <div class="section-heading board-heading"><div><p class="eyebrow">Sui-native verified snapshots</p><h2 id="leaderboard-title">TREE Canopy Leaderboard</h2><p>Total verified exposure = Liquid TREE + current principal TREE in recognized SuiDex V2, SuiDex V3, and Turbos positions. Partial scans never publish ranks.</p></div><span class="data-state" id="leaderboardState">Loading</span></div>
 
       <div class="rank-dashboard">
         <article class="rank-command-card">
           <div class="rank-card-top"><span class="rank-kicker">YOUR CANOPY RANK</span><button class="button secondary" id="rankWallet" type="button">Connect Wallet</button></div>
           <strong class="rank-summary" id="yourRank">Connect a wallet to check.</strong>
           <div class="rank-identity"><span class="tier-emblem" id="rankTierIcon" aria-hidden="true">🌱</span><div><span id="rankTierName">Unranked</span><strong id="rankPosition">—</strong></div></div>
-          <div class="rank-balance"><span>Direct TREE</span><strong id="rankDirectTree">—</strong><small id="rankSupplyPercent">Connect a wallet to compare with the verified Top 50.</small></div>
+          <div class="rank-balance"><span>Total Verified Exposure</span><strong id="rankDirectTree">—</strong><small id="rankSupplyPercent">Connect a wallet to compare with the verified Top 50.</small><em id="rankExposureBreakdown" class="rank-exposure-breakdown">Liquid TREE and verified LP principal will appear here.</em></div>
           <div class="rank-progress-panel"><div><span>Next milestone</span><strong id="rankNextTier">Seedling</strong></div><p id="rankNextRequirement">Connect a wallet to calculate progress.</p><div class="progress-track" aria-hidden="true"><span id="rankProgressBar"></span></div></div>
           <div class="rank-actions"><button class="button rank-share" id="shareRank" type="button">Share Rank</button><button class="button secondary" id="createRankImage" type="button">Create Rank Card</button></div>
           <p class="status rank-share-status" id="rankShareStatus" role="status" aria-live="polite"></p>
@@ -64,24 +64,24 @@
           <span class="rank-kicker">VERIFIED SNAPSHOT</span>
           <div class="snapshot-highlight-grid">
             <div><span>Verified address owners</span><strong id="verifiedAddressOwnerCount">—</strong></div>
-            <div><span>Eligible ranked owners</span><strong id="eligibleRankedOwnerCount">—</strong></div>
-            <div><span>Address-owned TREE</span><strong id="leaderboardAddressOwnedTree">—</strong></div>
+            <div><span>Eligible exposure owners</span><strong id="eligibleRankedOwnerCount">—</strong></div>
+            <div><span>Top 50 verified exposure</span><strong id="leaderboardAddressOwnedTree">—</strong></div>
             <div><span>Snapshot updated</span><strong id="leaderboardSnapshotCardTime">—</strong></div>
           </div>
           <p id="leaderboardUpdated" class="meta">Snapshot status: pending</p>
-          <p class="snapshot-note">The leaderboard is served from the most recent complete, reconciled Sui-native scan. Partial refreshes never replace verified rankings.</p>
+          <p class="snapshot-note">The board is served from the most recent complete Liquid TREE plus LP snapshot. Incomplete venue scans never replace verified rankings.</p>
         </article>
       </div>
 
-      <article class="tier-ladder-card"><div class="card-title-row"><div><span class="rank-kicker">TIER LADDER</span><h3>Climb the Canopy</h3></div><span>Thresholds map to TREE's fixed 1B supply.</span></div><div class="tier-ladder" id="tierLadder"><p class="muted">Loading verified tier cutoffs…</p></div><p class="tier-method-note">Each tier displays both its TREE requirement and its share of the fixed 1,000,000,000-token supply. Champion Tree is reserved for the Top 5. This preview still uses direct address-owned TREE; verified LP exposure will be added separately.</p></article>
+      <article class="tier-ladder-card"><div class="card-title-row"><div><span class="rank-kicker">TIER LADDER</span><h3>Climb the Canopy</h3></div><span>Thresholds map to TREE's fixed 1B supply.</span></div><div class="tier-ladder" id="tierLadder"><p class="muted">Loading verified tier cutoffs…</p></div><p class="tier-method-note">Each tier displays both its TREE requirement and its share of the fixed 1,000,000,000-token supply. Champion Tree is reserved for the Top 5. Tier placement uses total verified exposure: Liquid TREE plus current principal TREE in recognized LP positions.</p></article>
 
-      <div class="top-board-heading"><div><span class="rank-kicker">TOP 50</span><h3>Verified Direct TREE Leaders</h3></div><span id="displayedWalletCount">0</span></div>
+      <div class="top-board-heading"><div><span class="rank-kicker">TOP 50</span><h3>Verified TREE Exposure Leaders</h3></div><span id="displayedWalletCount">0</span></div>
       <div class="leaderboard-cards" id="leaderboardCards"><p class="leaderboard-empty">Loading eligible ranked owners…</p></div>
 
-      <div class="table-wrap leaderboard-fallback-table" aria-hidden="true"><table><thead><tr><th>Rank</th><th>Wallet</th><th>Direct TREE</th><th class="wide-column">Supply %</th><th class="wide-column">Tier</th></tr></thead><tbody id="leaderboardRows"><tr><td colspan="5">Loading eligible ranked owners…</td></tr></tbody></table></div>
+      <div class="table-wrap leaderboard-fallback-table" aria-hidden="true"><table><thead><tr><th>Rank</th><th>Wallet</th><th>Total TREE</th><th class="wide-column">Liquid</th><th class="wide-column">LP</th><th class="wide-column">Tier</th></tr></thead><tbody id="leaderboardRows"><tr><td colspan="6">Loading eligible ranked owners…</td></tr></tbody></table></div>
       <div id="leaderboardWarnings" class="warnings" hidden></div>
 
-      <details class="coverage-details"><summary>Verification details</summary><p>A protected background worker scans all live Coin&lt;TREE&gt; objects, aggregates balances with exact bigint arithmetic, reconciles supply, and publishes rows only after natural pagination completion.</p><div class="coverage-metrics leaderboard-coverage"><span>Snapshot provider<strong id="leaderboardProvider">sui-graphql-snapshot</strong></span><span>Snapshot generated time<strong id="leaderboardSnapshotTime">None</strong></span><span>Snapshot age<strong id="leaderboardSnapshotAge">—</strong></span><span>Refresh state<strong id="leaderboardRefreshState">Idle</strong></span><span>Pages scanned<strong id="leaderboardPagesScanned">0</strong></span><span>Coin objects scanned<strong id="leaderboardObjectsScanned">0</strong></span><span>Excluded protocol/system coin objects<strong id="excludedCoinObjectCount">0</strong></span><span>Unique excluded protocol/system owners<strong id="excludedUniqueOwnerCount">0</strong></span><span>Reconciliation state<strong id="leaderboardReconciliation">Not available</strong></span></div><p id="leaderboardCoverageDetails">Coverage details load with the server response.</p><p>TREE not represented by address-owned Coin&lt;TREE&gt; objects may include balances inside shared objects, object-owned coins, wrapped or embedded balances, and other non-address-owned storage. This difference is not labeled burned or circulating.</p></details>
+      <details class="coverage-details"><summary>Verification details</summary><p>A protected background worker completes the direct Coin&lt;TREE&gt; scan and verifies current principal in SuiDex V2, SuiDex V3, and Turbos. Exact bigint/Q64 accounting is published only after every venue reaches natural completion and passes reconciliation.</p><div class="coverage-metrics leaderboard-coverage"><span>Snapshot provider<strong id="leaderboardProvider">sui-graphql-snapshot</strong></span><span>Snapshot generated time<strong id="leaderboardSnapshotTime">None</strong></span><span>Snapshot age<strong id="leaderboardSnapshotAge">—</strong></span><span>Refresh state<strong id="leaderboardRefreshState">Idle</strong></span><span>Pages scanned<strong id="leaderboardPagesScanned">0</strong></span><span>Coin objects scanned<strong id="leaderboardObjectsScanned">0</strong></span><span>LP Provider badges<strong id="excludedCoinObjectCount">0</strong></span><span>LP Maxi badges<strong id="excludedUniqueOwnerCount">0</strong></span><span>Exposure verification<strong id="leaderboardReconciliation">Not available</strong></span></div><p id="leaderboardCoverageDetails">Coverage details load with the server response.</p><p>LP exposure counts current principal TREE attributable to verified wallet-owned positions. Unclaimed trading fees, incentive rewards, Moonbags locks, and unidentified embedded balances are excluded from the exposure total.</p></details>
     </section>
 
 <section class="section compact-section" id="swap" aria-labelledby="swap-title">

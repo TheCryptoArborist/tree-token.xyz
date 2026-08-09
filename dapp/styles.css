@@ -58,3 +58,22 @@ main{width:min(1060px,calc(100% - 30px));margin:auto;padding:28px 0 90px}
 /* SuiNS leaderboard identity */
 .leader-address{margin-top:2px;color:var(--muted-2);font:.66rem var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .leader-wallet span{color:var(--text)}
+
+
+/* Verified exposure leaderboard */
+.rank-exposure-breakdown{display:block;margin-top:7px;color:var(--cyan);font:750 .78rem/1.4 var(--mono);font-style:normal;text-transform:none}
+.exposure-card{grid-template-columns:48px minmax(0,1.4fr) minmax(220px,.9fr) 74px}
+.leader-badges{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.leader-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 7px;border:1px solid rgba(255,255,255,.13);border-radius:999px;background:rgba(255,255,255,.045);font:800 .62rem/1 var(--mono);letter-spacing:.02em;white-space:nowrap}
+.badge-lp-provider{color:#79e4ff;border-color:rgba(53,200,255,.35);background:rgba(53,200,255,.09)}
+.badge-lp-maxi{color:#ffe26f;border-color:rgba(255,225,79,.36);background:linear-gradient(135deg,rgba(53,200,255,.11),rgba(255,225,79,.1))}
+.badge-diamond-hands{color:#c8b7ff;border-color:rgba(154,98,242,.38)}
+.badge-paper-hands{color:#ffc47a;border-color:rgba(255,179,38,.38)}
+.badge-accumulator{color:#7dffae;border-color:rgba(53,242,140,.38)}
+.badge-burned{color:#ff9b7b;border-color:rgba(255,123,82,.42)}
+.leader-balance small{display:block;margin-top:3px;color:var(--muted-2);font:.68rem var(--mono)}
+.leader-exposure-details{grid-column:2/-1;margin-top:2px;border-top:1px solid rgba(255,255,255,.06);padding-top:8px}
+.leader-exposure-details summary{width:max-content;max-width:100%;color:var(--cyan);cursor:pointer;font:750 .72rem var(--mono)}
+.lp-breakdown-grid{display:grid;grid-template-columns:minmax(150px,1fr) auto;gap:5px 18px;margin-top:9px;padding:11px;border:1px solid rgba(53,200,255,.13);border-radius:10px;background:rgba(2,8,12,.55)}
+.lp-breakdown-grid span{color:var(--muted);font-size:.74rem}.lp-breakdown-grid strong{color:var(--text);font:800 .74rem var(--mono);text-align:right}.lp-breakdown-grid strong:last-child{color:var(--gold)}
+@media(max-width:760px){.exposure-card{grid-template-columns:42px minmax(0,1fr) 34px}.exposure-card .leader-balance{grid-column:2/-1;text-align:left}.leader-exposure-details{grid-column:1/-1}.leader-badges{margin-bottom:4px}.lp-breakdown-grid{grid-template-columns:minmax(120px,1fr) auto}}

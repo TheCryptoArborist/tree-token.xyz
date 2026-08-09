@@ -9,7 +9,7 @@ function element(id = '') {
   });
   return elements.get(id);
 }
-const { TIER_DEFINITIONS, displayNameForEntry, formatSupplyPercentFromRaw, renderLeaderboard, tierForEntry } = await import('../dapp/app.js');
+const { TIER_DEFINITIONS, badgeDefinition, displayNameForEntry, entryIsExposure, formatSupplyPercentFromRaw, normalizeLeaderboardEntry, renderLeaderboard, tierForEntry } = await import('../dapp/app.js');
 globalThis.document = {
   getElementById: (id) => element(id),
   createElement: () => element(`created-${Math.random()}`),
@@ -23,6 +23,21 @@ assert.equal(TIER_DEFINITIONS.length, 13);
 assert.equal(tierForEntry({ rank: 1, directTree: '1' }).name, 'Champion Tree');
 assert.equal(displayNameForEntry({ wallet: `0x${'c'.repeat(64)}`, suinsName: 'cryptoarborist.sui' }), 'cryptoarborist.sui');
 assert.match(displayNameForEntry({ wallet: `0x${'c'.repeat(64)}`, suinsName: null }), /^0x/);
+const exposureEntry = normalizeLeaderboardEntry({
+  rank: 6, wallet: `0x${'d'.repeat(64)}`, suinsName: 'treeholder.sui',
+  liquidTreeRaw: '4000000000000', liquidTree: '4000000', lpTreeRaw: '6000000000000', lpTree: '6000000',
+  totalExposureRaw: '10000000000000', totalExposure: '10000000', supplyPercent: '1',
+  liquidCoinObjectCount: 3, lpPositionCount: 2,
+  lpBreakdown: { suiDexV2Raw: '1000000000000', suiDexV2: '1000000', suiDexV3Raw: '4500000000000', suiDexV3: '4500000', turbosRaw: '500000000000', turbos: '500000' },
+  badges: ['lp-provider', 'lp-maxi'],
+});
+assert.equal(entryIsExposure(exposureEntry), true);
+assert.equal(exposureEntry.directTree, '10000000');
+assert.equal(exposureEntry.directTreeRaw, '10000000000000');
+assert.equal(tierForEntry(exposureEntry).name, 'Giant Sequoia');
+assert.equal(badgeDefinition('lp-provider').label, 'LP Provider');
+assert.equal(badgeDefinition('lp-maxi').label, 'LP Maxi');
+assert.equal(badgeDefinition('burned').label, 'Burned');
 const tierCases = [
   ['50000000', 'Ancient Grove'], ['25000000', 'Redwood Royalty'], ['10000000', 'Giant Sequoia'],
   ['5000000', 'Forest Titan'], ['2500000', 'Canopy Guardian'], ['1000000', 'Heritage Oak'],
@@ -68,9 +83,9 @@ assert.equal(element('yourRank').textContent, 'Your rank is temporarily unavaila
 const dappMarkup = await readFile('dapp/index.html', 'utf8');
 assert.equal(dappMarkup.includes('>Holders<'), false);
 assert.equal(dappMarkup.includes('Verified address owners'), true);
-assert.equal(dappMarkup.includes('Eligible ranked owners'), true);
-assert.equal(dappMarkup.includes('Excluded protocol/system coin objects'), true);
-assert.equal(dappMarkup.includes('Unique excluded protocol/system owners'), true);
+assert.equal(dappMarkup.includes('Eligible exposure owners'), true);
+assert.equal(dappMarkup.includes('LP Provider badges'), true);
+assert.equal(dappMarkup.includes('LP Maxi badges'), true);
 assert.equal(dappMarkup.includes('fixed 1,000,000,000-token supply'), true);
-assert.equal(dappMarkup.includes('verified LP exposure will be added separately'), true);
+assert.equal(dappMarkup.includes('Liquid TREE plus current principal TREE'), true);
 console.log('Leaderboard UI status behavior: PASS (progress never renders as rankings)');
