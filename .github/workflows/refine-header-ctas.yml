@@ -85,8 +85,8 @@ jobs:
           assert '>TREE Fund<' in html
           assert 'class="nav-get-started"' in html
           assert '>Get Started<' in html
-          assert '>Impact<' not in html
-          assert '>Join<' not in html
+          assert '<a href="#impact">Impact</a>' not in html
+          assert '<a href="#join">Join</a>' not in html
           assert 'nav a.nav-impact{' in html
           assert 'nav a.nav-get-started{' in html
           assert 'href="/dapp/" class="nav-command"' in html
