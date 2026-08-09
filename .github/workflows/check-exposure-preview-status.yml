@@ -15,17 +15,30 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Inspect public Sui transaction and event schema
+      - name: Inspect recent SuiDex V3 TREE-pool transactions
         shell: bash
         run: |
           set -euo pipefail
           node <<'NODE'
-          const names=['Transaction','TransactionEffects','TransactionFilter','Event','EventConnection','EventFilter','BalanceChange','ProgrammableTransaction','MoveCall','TransactionKind'];
-          const query=`query Introspect(${names.map((_,i)=>`$n${i}:String!`).join(',')}){${names.map((_,i)=>`t${i}:__type(name:$n${i}){name kind fields{name args{name type{kind name ofType{kind name}}} type{kind name ofType{kind name}}} inputFields{name type{kind name ofType{kind name}}} possibleTypes{name}}`).join('')}}`;
-          const variables=Object.fromEntries(names.map((name,i)=>[`n${i}`,name]));
+          const query=`query PoolTransactions($pool:SuiAddress!){
+            transactions(last:8,filter:{affectedObject:$pool}){
+              pageInfo{hasPreviousPage startCursor}
+              nodes{
+                digest
+                sender{address}
+                transactionJson
+                effects{
+                  status
+                  timestamp
+                  checkpoint{sequenceNumber}
+                  balanceChanges(first:50){pageInfo{hasNextPage}nodes{owner{address}coinType{repr}amount}}
+                  events(first:50){pageInfo{hasNextPage}nodes{sender{address}timestamp sequenceNumber contents{json type{repr}}}}
+                }
+              }
+            }
+          }`;
+          const variables={pool:'0x39d5ba22e01e45bc4129ec28a0bef52e8fee8db5d07d337adf9540e3cb9074cf'};
           const response=await fetch('https://graphql.mainnet.sui.io/graphql',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({query,variables})});
           const payload=await response.json();
-          const output={};
-          for(let i=0;i<names.length;i++) output[names[i]]=payload.data?.[`t${i}`]||null;
-          console.log(JSON.stringify({errors:payload.errors,types:output},null,2));
+          console.log(JSON.stringify(payload,null,2));
           NODE
