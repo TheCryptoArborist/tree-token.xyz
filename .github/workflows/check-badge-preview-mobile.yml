@@ -18,7 +18,7 @@ jobs:
       - name: Install browser driver
         shell: bash
         run: npm install --no-save --ignore-scripts puppeteer-core@24
-      - name: Validate desktop and mobile layouts after Profile Studio containment
+      - name: Validate final desktop and mobile layouts
         shell: bash
         run: |
           set -euo pipefail
@@ -27,7 +27,7 @@ jobs:
           node <<'NODE'
           const puppeteer = require('puppeteer-core');
           (async () => {
-            const url = 'https://deploy-preview-6--tree-token.netlify.app/dapp/?profile_fix_qa=1#leaderboard';
+            const url = 'https://deploy-preview-6--tree-token.netlify.app/dapp/?profile_fix_qa=2#leaderboard';
             const viewports = [
               { width: 1440, height: 1000 },
               { width: 1024, height: 900 },
@@ -51,6 +51,7 @@ jobs:
               page.on('pageerror', (error) => consoleErrors.push(error.message));
               await page.goto(url, { waitUntil: 'networkidle2', timeout: 120000 });
               await page.waitForFunction(() => document.querySelectorAll('.leader-card').length === 50, { timeout: 120000 });
+              await page.waitForFunction(() => [...document.querySelectorAll('.leader-badge')].some((element) => element.textContent.includes('Diamond Hands')), { timeout: 120000 });
               await new Promise((resolve) => setTimeout(resolve, 1000));
               const metrics = await page.evaluate(() => {
                 const badgeLabels = [...document.querySelectorAll('.leader-badge')].map((element) => element.textContent.trim());
