@@ -19,6 +19,7 @@ let connectedBalanceAddress = null;
 const TREE_COIN_TYPE = '0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE';
 const TREE_DECIMALS = 6;
 const TREE_BASE_UNITS = 10n ** BigInt(TREE_DECIMALS);
+const TREE_TOTAL_SUPPLY_RAW = 1_000_000_000n * TREE_BASE_UNITS;
 const TIER_DEFINITIONS = [
   { name: 'Champion Tree', icon: '🏆', css: 'tier-champion', topRank: 5, minimumRaw: null, qualification: 'Top 5' },
   { name: 'Ancient Grove', icon: '🏛️', css: 'tier-ancient', minimumRaw: 50_000_000n * TREE_BASE_UNITS, qualification: '50M+' },
@@ -314,6 +315,34 @@ function compactTree(value) {
   return new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 2 }).format(numeric);
 }
 
+function formatSupplyPercentFromRaw(raw, maximumFractionDigits = 5) {
+  if (raw === null || raw === undefined) return '—';
+  const value = BigInt(raw);
+  const precision = 10n ** BigInt(maximumFractionDigits);
+  const scaled = value * 100n * precision / TREE_TOTAL_SUPPLY_RAW;
+  const whole = scaled / precision;
+  const fraction = (scaled % precision).toString().padStart(maximumFractionDigits, '0').replace(/0+$/, '');
+  return `${whole}${fraction ? `.${fraction}` : ''}%`;
+}
+
+function tierThresholdLabel(tier) {
+  if (tier.topRank) return `Top ${tier.topRank}`;
+  if (tier.minimumRaw === 0n) return 'Under 10K TREE';
+  return `${tier.qualification} TREE`;
+}
+
+function tierSupplyShareLabel(tier) {
+  if (tier.topRank) {
+    const cutoffEntry = rankCutoff(tier.topRank);
+    const cutoffRaw = parseTreeRaw(cutoffEntry);
+    return cutoffRaw === null
+      ? 'Top 5 · cutoff updates with each verified snapshot'
+      : `Current #${tier.topRank} cutoff: ${compactTree(cutoffEntry.directTree)} TREE · ${formatSupplyPercentFromRaw(cutoffRaw)} of supply`;
+  }
+  if (tier.minimumRaw === 0n) return 'Below 0.001% of the 1B supply';
+  return `${formatSupplyPercentFromRaw(tier.minimumRaw)}+ of the 1B supply`;
+}
+
 function tierForRaw(raw) {
   if (raw === null || raw === undefined) return null;
   const value = BigInt(raw);
@@ -443,9 +472,9 @@ function renderTierLadder() {
     const icon = document.createElement('span'); icon.className = 'tier-icon'; icon.textContent = tier.icon;
     const identity = document.createElement('div');
     const name = document.createElement('div'); name.className = 'tier-name'; name.textContent = tier.name;
-    const range = document.createElement('div'); range.className = 'tier-range'; range.textContent = tier.topRank ? 'Highest verified tier' : 'Direct TREE threshold';
+    const range = document.createElement('div'); range.className = 'tier-range'; range.textContent = tierSupplyShareLabel(tier);
     identity.append(name, range);
-    const cutoff = document.createElement('div'); cutoff.className = 'tier-cutoff'; cutoff.textContent = tier.topRank ? `Top ${tier.topRank}` : `${tier.qualification} TREE`;
+    const cutoff = document.createElement('div'); cutoff.className = 'tier-cutoff'; cutoff.textContent = tierThresholdLabel(tier);
     const count = document.createElement('div'); count.className = 'tier-count'; count.textContent = String(members.length); count.title = `${members.length} displayed owner${members.length === 1 ? '' : 's'} in this tier`;
     row.append(icon, identity, cutoff, count); return row;
   });
@@ -717,4 +746,4 @@ if (typeof document !== 'undefined') {
   loadDisplayedRate();
 }
 
-export { DAPP_SWAP_EXECUTION_ENABLED, TIER_DEFINITIONS, formatTreePrice, readDashboardCache, renderLeaderboard, tierForEntry, updateYourRank, writeDashboardCache };
+export { DAPP_SWAP_EXECUTION_ENABLED, TIER_DEFINITIONS, formatSupplyPercentFromRaw, formatTreePrice, readDashboardCache, renderLeaderboard, tierForEntry, updateYourRank, writeDashboardCache };

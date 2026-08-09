@@ -9,7 +9,7 @@ function element(id = '') {
   });
   return elements.get(id);
 }
-const { TIER_DEFINITIONS, renderLeaderboard, tierForEntry } = await import('../dapp/app.js');
+const { TIER_DEFINITIONS, formatSupplyPercentFromRaw, renderLeaderboard, tierForEntry } = await import('../dapp/app.js');
 globalThis.document = {
   getElementById: (id) => element(id),
   createElement: () => element(`created-${Math.random()}`),
@@ -28,6 +28,11 @@ const tierCases = [
   ['50000', 'Deep Roots'], ['10000', 'Sapling'], ['0', 'Seedling'],
 ];
 tierCases.forEach(([directTree, expected]) => assert.equal(tierForEntry({ rank: 6, directTree }).name, expected));
+assert.equal(formatSupplyPercentFromRaw(50_000_000n * 1_000_000n), '5%');
+assert.equal(formatSupplyPercentFromRaw(25_000_000n * 1_000_000n), '2.5%');
+assert.equal(formatSupplyPercentFromRaw(2_500_000n * 1_000_000n), '0.25%');
+assert.equal(formatSupplyPercentFromRaw(250_000n * 1_000_000n), '0.025%');
+assert.equal(formatSupplyPercentFromRaw(10_000n * 1_000_000n), '0.001%');
 
 renderLeaderboard({ status: 'not-ready', provider: 'sui-graphql-snapshot', refreshState: 'idle', refreshStatus: null, entries: [fixtureEntry], displayedCount: 1, warnings: [] });
 assert.equal(element('yourRank').textContent, 'A verified leaderboard snapshot is not available yet.');
@@ -64,4 +69,6 @@ assert.equal(dappMarkup.includes('Verified address owners'), true);
 assert.equal(dappMarkup.includes('Eligible ranked owners'), true);
 assert.equal(dappMarkup.includes('Excluded protocol/system coin objects'), true);
 assert.equal(dappMarkup.includes('Unique excluded protocol/system owners'), true);
+assert.equal(dappMarkup.includes('fixed 1,000,000,000-token supply'), true);
+assert.equal(dappMarkup.includes('verified LP exposure will be added separately'), true);
 console.log('Leaderboard UI status behavior: PASS (progress never renders as rankings)');
