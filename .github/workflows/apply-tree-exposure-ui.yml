@@ -25,6 +25,7 @@ jobs:
         run: |
           set -euo pipefail
           python scripts/apply-tree-exposure-ui.py
+          sed -i "s/Eligible ranked owners/Eligible exposure owners/g" tests/leaderboard-ui-state.test.mjs
           rm -f scripts/apply-tree-exposure-ui.py
           git diff --check
 
