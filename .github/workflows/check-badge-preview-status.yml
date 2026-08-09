@@ -15,13 +15,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Read corrected Deploy Preview badge state
+      - name: Read post-fix Deploy Preview badge state
         shell: bash
         run: |
           set -euo pipefail
           BASE='https://deploy-preview-6--tree-token.netlify.app'
           curl --silent --show-error --location --max-time 60 \
-            "$BASE/api/tree-badges?mobile_fix_bootstrap=2" \
+            "$BASE/api/tree-badges?profile_fix_bootstrap=1" \
             -o /tmp/tree-badges.json
           node <<'NODE'
           const badges = require('/tmp/tree-badges.json');
