@@ -87,3 +87,14 @@ html,body,.app-shell{max-width:100vw}
   .market-ribbon::-webkit-scrollbar{display:none}
   .market-ribbon>span{flex:0 0 auto}
 }
+
+
+/* Profile Studio narrow-screen containment */
+.profile-layout>*{min-width:0;max-width:100%}
+.canvas-shell,.profile-maker-controls,.profile-frame-options,.profile-tuning{min-width:0;min-inline-size:0;max-width:100%;width:100%}
+.profile-maker-controls label,.profile-maker-controls input{min-width:0;max-width:100%}
+.profile-maker-controls input[type="file"]{display:block;width:100%}
+@media(max-width:380px){
+  .profile-frame-options{grid-template-columns:minmax(0,1fr)}
+  .profile-frame-options .profile-action,.profile-maker-controls>.profile-action,.profile-maker-controls>.profile-reset{width:100%;max-width:100%}
+}
