@@ -9,7 +9,7 @@ function element(id = '') {
   });
   return elements.get(id);
 }
-const { renderLeaderboard } = await import('../dapp/app.js');
+const { TIER_DEFINITIONS, renderLeaderboard, tierForEntry } = await import('../dapp/app.js');
 globalThis.document = {
   getElementById: (id) => element(id),
   createElement: () => element(`created-${Math.random()}`),
@@ -18,6 +18,16 @@ globalThis.document = {
 globalThis.window = { playerAddress: `0x${'a'.repeat(64)}` };
 const refreshStatus = { state: 'running', pagesScanned: 25, objectsScanned: 1250, uniqueAddressOwners: 300, excludedCoinObjects: 5, excludedUniqueOwners: 2, excludedAddresses: 5, reachedEnd: false };
 const fixtureEntry = { rank: 1, wallet: window.playerAddress, directTree: '1234.56789', supplyPercent: '0.000123456', tier: 'Ancient Grove' };
+
+assert.equal(TIER_DEFINITIONS.length, 13);
+assert.equal(tierForEntry({ rank: 1, directTree: '1' }).name, 'Champion Tree');
+const tierCases = [
+  ['50000000', 'Ancient Grove'], ['25000000', 'Redwood Royalty'], ['10000000', 'Giant Sequoia'],
+  ['5000000', 'Forest Titan'], ['2500000', 'Canopy Guardian'], ['1000000', 'Heritage Oak'],
+  ['500000', 'Forest Keeper'], ['250000', 'TREE-mendous'], ['100000', 'Branch Manager'],
+  ['50000', 'Deep Roots'], ['10000', 'Sapling'], ['0', 'Seedling'],
+];
+tierCases.forEach(([directTree, expected]) => assert.equal(tierForEntry({ rank: 6, directTree }).name, expected));
 
 renderLeaderboard({ status: 'not-ready', provider: 'sui-graphql-snapshot', refreshState: 'idle', refreshStatus: null, entries: [fixtureEntry], displayedCount: 1, warnings: [] });
 assert.equal(element('yourRank').textContent, 'A verified leaderboard snapshot is not available yet.');
@@ -36,13 +46,13 @@ const completePayload = {
   excludedCoinObjects: 4, excludedUniqueOwners: 1, excludedCount: 4, entries: [fixtureEntry], warnings: [], message: 'verified',
 };
 renderLeaderboard({ ...completePayload, status: 'stale' });
-assert.equal(element('yourRank').textContent, '#1 · Ancient Grove · Last verified snapshot');
+assert.equal(element('yourRank').textContent, '#1 · Champion Tree · Last verified snapshot');
 renderLeaderboard({ ...completePayload, status: 'ok' });
 assert.equal(element('verifiedAddressOwnerCount').textContent, '2');
 assert.equal(element('eligibleRankedOwnerCount').textContent, '1');
 assert.equal(element('excludedCoinObjectCount').textContent, '4');
 assert.equal(element('excludedUniqueOwnerCount').textContent, '1');
-assert.equal(element('yourRank').textContent, '#1 · Ancient Grove');
+assert.equal(element('yourRank').textContent, '#1 · Champion Tree');
 window.playerAddress = `0x${'b'.repeat(64)}`;
 renderLeaderboard({ ...completePayload, status: 'ok' });
 assert.equal(element('yourRank').textContent, 'Wallet is outside the displayed Top 50.');

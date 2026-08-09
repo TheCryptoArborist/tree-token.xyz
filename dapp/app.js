@@ -18,12 +18,21 @@ let connectedTreeBalanceRaw = null;
 let connectedBalanceAddress = null;
 const TREE_COIN_TYPE = '0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE';
 const TREE_DECIMALS = 6;
+const TREE_BASE_UNITS = 10n ** BigInt(TREE_DECIMALS);
 const TIER_DEFINITIONS = [
-  { name: 'Ancient Grove', min: 1, max: 5, icon: '🌳', css: 'tier-ancient', targetRank: null },
-  { name: 'Giant Sequoia', min: 6, max: 10, icon: '🌲', css: 'tier-sequoia', targetRank: 5 },
-  { name: 'Heritage Oak', min: 11, max: 20, icon: '🛡️', css: 'tier-heritage', targetRank: 10 },
-  { name: 'Canopy Guardian', min: 21, max: 30, icon: '🍃', css: 'tier-guardian', targetRank: 20 },
-  { name: 'Forest Keeper', min: 31, max: 50, icon: '🌱', css: 'tier-keeper', targetRank: 30 },
+  { name: 'Champion Tree', icon: '🏆', css: 'tier-champion', topRank: 5, minimumRaw: null, qualification: 'Top 5' },
+  { name: 'Ancient Grove', icon: '🏛️', css: 'tier-ancient', minimumRaw: 50_000_000n * TREE_BASE_UNITS, qualification: '50M+' },
+  { name: 'Redwood Royalty', icon: '👑', css: 'tier-redwood', minimumRaw: 25_000_000n * TREE_BASE_UNITS, qualification: '25M+' },
+  { name: 'Giant Sequoia', icon: '🌲', css: 'tier-sequoia', minimumRaw: 10_000_000n * TREE_BASE_UNITS, qualification: '10M+' },
+  { name: 'Forest Titan', icon: '💪', css: 'tier-titan', minimumRaw: 5_000_000n * TREE_BASE_UNITS, qualification: '5M+' },
+  { name: 'Canopy Guardian', icon: '🛡️', css: 'tier-guardian', minimumRaw: 2_500_000n * TREE_BASE_UNITS, qualification: '2.5M+' },
+  { name: 'Heritage Oak', icon: '🌳', css: 'tier-heritage', minimumRaw: 1_000_000n * TREE_BASE_UNITS, qualification: '1M+' },
+  { name: 'Forest Keeper', icon: '🍃', css: 'tier-keeper', minimumRaw: 500_000n * TREE_BASE_UNITS, qualification: '500K+' },
+  { name: 'TREE-mendous', icon: '⚡', css: 'tier-tremendous', minimumRaw: 250_000n * TREE_BASE_UNITS, qualification: '250K+' },
+  { name: 'Branch Manager', icon: '💼', css: 'tier-branch', minimumRaw: 100_000n * TREE_BASE_UNITS, qualification: '100K+' },
+  { name: 'Deep Roots', icon: '🪵', css: 'tier-roots', minimumRaw: 50_000n * TREE_BASE_UNITS, qualification: '50K+' },
+  { name: 'Sapling', icon: '🌱', css: 'tier-sapling', minimumRaw: 10_000n * TREE_BASE_UNITS, qualification: '10K+' },
+  { name: 'Seedling', icon: '🌰', css: 'tier-seedling', minimumRaw: 0n, qualification: '0+' },
 ];
 
 function valueAt(object, path) {
@@ -305,9 +314,26 @@ function compactTree(value) {
   return new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 2 }).format(numeric);
 }
 
+function tierForRaw(raw) {
+  if (raw === null || raw === undefined) return null;
+  const value = BigInt(raw);
+  return TIER_DEFINITIONS.slice(1).find((tier) => value >= tier.minimumRaw) || TIER_DEFINITIONS.at(-1);
+}
+
 function tierForEntry(entry) {
   const rank = Number(entry?.rank);
-  return TIER_DEFINITIONS.find((tier) => rank >= tier.min && rank <= tier.max) || null;
+  const champion = TIER_DEFINITIONS[0];
+  if (Number.isInteger(rank) && rank >= 1 && rank <= champion.topRank) return champion;
+  return tierForRaw(parseTreeRaw(entry));
+}
+
+function membersForTier(tier) {
+  return leaderboardEntries.filter((entry) => tierForEntry(entry)?.name === tier.name);
+}
+
+function nextTierFor(tier) {
+  const index = TIER_DEFINITIONS.indexOf(tier);
+  return index > 0 ? TIER_DEFINITIONS[index - 1] : null;
 }
 
 function currentLeaderboardRow() {
@@ -330,7 +356,7 @@ function renderRankDetail(row) {
   if (!hasWallet) {
     setText('rankTierIcon', '🌱'); setText('rankTierName', 'Connect Wallet'); setText('rankPosition', '—');
     setText('rankDirectTree', '—'); setText('rankSupplyPercent', 'Connect a wallet to compare with the verified Top 50.');
-    setText('rankNextTier', 'Forest Keeper'); setText('rankNextRequirement', 'Connect a wallet to calculate progress.');
+    setText('rankNextTier', 'Seedling'); setText('rankNextRequirement', 'Connect a wallet to calculate progress.');
     const progress = elementById('rankProgressBar'); if (progress?.style) progress.style.width = '0%';
     return;
   }
@@ -345,31 +371,39 @@ function renderRankDetail(row) {
   }
 
   if (row) {
-    const tier = tierForEntry(row);
-    const currentRaw = parseTreeRaw(row);
-    setText('rankTierIcon', tier?.icon || '🌿'); setText('rankTierName', tier?.name || row.tier || 'Ranked'); setText('rankPosition', `#${row.rank}`);
-    setText('rankDirectTree', `${row.directTree} TREE`); setText('rankSupplyPercent', `${row.supplyPercent ?? '—'}% of total supply · ${row.coinObjectCount ?? '—'} Coin<TREE> objects`);
-    if (!tier?.targetRank) {
-      setText('rankNextTier', 'Ancient Grove'); setText('rankNextRequirement', 'Highest Canopy tier reached.');
-      const progress = elementById('rankProgressBar'); if (progress?.style) progress.style.width = '100%';
-    } else {
-      const target = rankCutoff(tier.targetRank);
-      const targetRaw = parseTreeRaw(target);
-      const need = currentRaw !== null && targetRaw !== null && targetRaw >= currentRaw ? targetRaw - currentRaw + 1n : 0n;
-      const nextTier = TIER_DEFINITIONS.find((definition) => definition.max === tier.targetRank);
-      setText('rankNextTier', nextTier?.name || `Top ${tier.targetRank}`);
-      setText('rankNextRequirement', need > 0n ? `Need ${formatTreeRaw(need)} more TREE to reach the current cutoff.` : 'Current balance meets the next verified cutoff.');
-      const progress = elementById('rankProgressBar'); if (progress?.style) progress.style.width = `${percentageToward(currentRaw, targetRaw)}%`;
+  const tier = tierForEntry(row);
+  const currentRaw = parseTreeRaw(row);
+  const nextTier = nextTierFor(tier);
+  setText('rankTierIcon', tier?.icon || '🌿'); setText('rankTierName', tier?.name || row.tier || 'Ranked'); setText('rankPosition', `#${row.rank}`);
+  setText('rankDirectTree', `${row.directTree} TREE`); setText('rankSupplyPercent', `${row.supplyPercent ?? '—'}% of total supply · ${row.coinObjectCount ?? '—'} Coin<TREE> objects`);
+  if (!nextTier) {
+    setText('rankNextTier', 'Champion Tree'); setText('rankNextRequirement', 'Highest TREE leaderboard tier reached.');
+    const progress = elementById('rankProgressBar'); if (progress?.style) progress.style.width = '100%';
+  } else {
+    const targetEntry = nextTier.topRank ? rankCutoff(nextTier.topRank) : null;
+    const targetRaw = nextTier.topRank ? parseTreeRaw(targetEntry) : nextTier.minimumRaw;
+    let need = 0n;
+    if (currentRaw !== null && targetRaw !== null) {
+      need = nextTier.topRank
+        ? (targetRaw >= currentRaw ? targetRaw - currentRaw + 1n : 0n)
+        : (targetRaw > currentRaw ? targetRaw - currentRaw : 0n);
     }
-    return;
+    setText('rankNextTier', nextTier.name);
+    const requirement = nextTier.topRank
+      ? (need > 0n ? `Need ${formatTreeRaw(need)} more TREE to reach the current Champion Tree cutoff.` : 'Current balance meets the Champion Tree cutoff.')
+      : (need > 0n ? `Need ${formatTreeRaw(need)} more TREE to reach the ${nextTier.qualification} TREE threshold.` : `Current balance meets the ${nextTier.name} threshold.`);
+    setText('rankNextRequirement', requirement);
+    const progress = elementById('rankProgressBar'); if (progress?.style) progress.style.width = `${percentageToward(currentRaw, targetRaw)}%`;
   }
+  return;
+}
 
-  const cutoff = rankCutoff(50);
+const cutoff = rankCutoff(50);
   const cutoffRaw = parseTreeRaw(cutoff);
   setText('rankTierIcon', '🌱'); setText('rankTierName', 'Outside Top 50'); setText('rankPosition', 'Unranked');
   setText('rankDirectTree', connectedTreeBalanceRaw === null ? 'Loading balance…' : `${formatTreeRaw(connectedTreeBalanceRaw)} TREE`);
   setText('rankSupplyPercent', 'Direct wallet-held TREE, compared with the current verified cutoff.');
-  setText('rankNextTier', 'Forest Keeper');
+  setText('rankNextTier', 'Top 50 Entry');
   if (connectedTreeBalanceRaw !== null && cutoffRaw !== null) {
     const need = cutoffRaw >= connectedTreeBalanceRaw ? cutoffRaw - connectedTreeBalanceRaw + 1n : 0n;
     setText('rankNextRequirement', need > 0n ? `Need ${formatTreeRaw(need)} more TREE to enter the current Top 50.` : 'Balance meets the current cutoff; the next snapshot may update your rank.');
@@ -401,18 +435,18 @@ function renderTierLadder() {
   if (!container?.replaceChildren) return;
   const currentTier = tierForEntry(currentLeaderboardRow());
   if (!leaderboardEntries.length) {
-    const empty = document.createElement('p'); empty.className = 'muted'; empty.textContent = 'Tier cutoffs appear after a complete verified snapshot.'; container.replaceChildren(empty); return;
+    const empty = document.createElement('p'); empty.className = 'muted'; empty.textContent = 'Tier counts appear after a complete verified snapshot.'; container.replaceChildren(empty); return;
   }
   const rows = TIER_DEFINITIONS.map((tier) => {
+    const members = membersForTier(tier);
     const row = document.createElement('div'); row.className = `tier-row ${tier.css}${currentTier?.name === tier.name ? ' current' : ''}`;
     const icon = document.createElement('span'); icon.className = 'tier-icon'; icon.textContent = tier.icon;
     const identity = document.createElement('div');
     const name = document.createElement('div'); name.className = 'tier-name'; name.textContent = tier.name;
-    const range = document.createElement('div'); range.className = 'tier-range'; range.textContent = tier.min === tier.max ? `#${tier.min}` : `Ranks ${tier.min}–${tier.max}`;
+    const range = document.createElement('div'); range.className = 'tier-range'; range.textContent = tier.topRank ? 'Highest verified tier' : 'Direct TREE threshold';
     identity.append(name, range);
-    const cutoffEntry = rankCutoff(tier.max) || leaderboardEntries.filter((entry) => Number(entry.rank) >= tier.min && Number(entry.rank) <= tier.max).at(-1);
-    const cutoff = document.createElement('div'); cutoff.className = 'tier-cutoff'; cutoff.textContent = cutoffEntry ? `${compactTree(cutoffEntry.directTree)}+ TREE` : '—';
-    const count = document.createElement('div'); count.className = 'tier-count'; count.textContent = `${leaderboardEntries.filter((entry) => Number(entry.rank) >= tier.min && Number(entry.rank) <= tier.max).length} ranked`;
+    const cutoff = document.createElement('div'); cutoff.className = 'tier-cutoff'; cutoff.textContent = tier.topRank ? `Top ${tier.topRank}` : `${tier.qualification} TREE`;
+    const count = document.createElement('div'); count.className = 'tier-count'; count.textContent = String(members.length); count.title = `${members.length} displayed owner${members.length === 1 ? '' : 's'} in this tier`;
     row.append(icon, identity, cutoff, count); return row;
   });
   container.replaceChildren(...rows);
@@ -434,7 +468,8 @@ function renderLeaderboardCards() {
     const identity = document.createElement('div'); identity.className = 'leader-identity';
     const walletLine = document.createElement('div'); walletLine.className = 'leader-wallet';
     const wallet = document.createElement('span'); wallet.textContent = shortened(entry.wallet); wallet.title = entry.wallet; walletLine.append(wallet);
-    const tier = document.createElement('div'); tier.className = 'leader-tier'; tier.textContent = `${tierForEntry(entry)?.icon || '🌿'} ${entry.tier}`;
+    const tierDefinition = tierForEntry(entry);
+    const tier = document.createElement('div'); tier.className = `leader-tier ${tierDefinition?.css || ''}`.trim(); tier.textContent = `${tierDefinition?.icon || '🌿'} ${tierDefinition?.name || entry.tier || 'Ranked'}`;
     identity.append(walletLine, tier);
     const balance = document.createElement('div'); balance.className = 'leader-balance';
     const amount = document.createElement('strong'); amount.textContent = `${entry.directTree} TREE`;
@@ -450,7 +485,8 @@ function renderLeaderboardCards() {
 function rankShareText() {
   const row = currentLeaderboardRow();
   if (!row) return 'I’m checking the verified TREE Canopy Leaderboard on the TREE Command Center. https://tree-token.xyz/dapp/#leaderboard';
-  return `I’m #${row.rank} on the verified TREE Canopy Leaderboard — ${row.tier} with ${row.directTree} direct TREE. https://tree-token.xyz/dapp/#leaderboard`;
+  const tier = tierForEntry(row)?.name || row.tier || 'Ranked';
+  return `I’m #${row.rank} on the verified TREE Canopy Leaderboard — ${tier} with ${row.directTree} direct TREE. https://tree-token.xyz/dapp/#leaderboard`;
 }
 
 async function shareRank() {
@@ -474,7 +510,7 @@ function downloadRankCard() {
   ctx.fillStyle = '#35f28c'; ctx.font = '900 54px ui-monospace, monospace'; ctx.fillText('TREE CANOPY LEADERBOARD', 90, 130);
   ctx.fillStyle = '#9aa9b8'; ctx.font = '700 30px ui-monospace, monospace'; ctx.fillText('VERIFIED DIRECT TREE SNAPSHOT', 90, 182);
   ctx.fillStyle = '#ffe14f'; ctx.font = '900 210px ui-monospace, monospace'; ctx.fillText(`#${row.rank}`, 90, 455);
-  ctx.fillStyle = '#f5fbff'; ctx.font = '900 58px ui-monospace, monospace'; ctx.fillText(row.tier.toUpperCase(), 90, 540);
+  ctx.fillStyle = '#f5fbff'; ctx.font = '900 58px ui-monospace, monospace'; ctx.fillText((tierForEntry(row)?.name || row.tier || 'Ranked').toUpperCase(), 90, 540);
   ctx.fillStyle = '#35c8ff'; ctx.font = '900 68px ui-monospace, monospace'; ctx.fillText(`${row.directTree} TREE`, 90, 680);
   ctx.fillStyle = '#9aa9b8'; ctx.font = '600 32px ui-monospace, monospace'; ctx.fillText(`${row.supplyPercent ?? '—'}% OF TOTAL SUPPLY`, 90, 735);
   ctx.fillStyle = '#f5fbff'; ctx.font = '700 34px ui-monospace, monospace'; ctx.fillText(shortened(row.wallet), 90, 890);
@@ -492,9 +528,10 @@ function updateYourRank() {
   if (leaderboardStatus === 'error') { output.textContent = 'Your rank is temporarily unavailable.'; renderRankDetail(null); return; }
   const row = currentLeaderboardRow();
   if (!row) { output.textContent = 'Wallet is outside the displayed Top 50.'; renderRankDetail(null); return; }
+  const tier = tierForEntry(row)?.name || row.tier || 'Ranked';
   output.textContent = leaderboardStatus === 'stale'
-    ? `#${row.rank} · ${row.tier} · Last verified snapshot`
-    : `#${row.rank} · ${row.tier}`;
+    ? `#${row.rank} · ${tier} · Last verified snapshot`
+    : `#${row.rank} · ${tier}`;
   renderRankDetail(row);
 }
 
@@ -555,7 +592,7 @@ function renderLeaderboard(payload) {
     } else if (rows.replaceChildren) {
       rows.replaceChildren(...leaderboardEntries.map((entry) => {
         const row = document.createElement('tr');
-        [entry.rank, shortened(entry.wallet), entry.directTree, entry.supplyPercent === null || entry.supplyPercent === undefined ? '—' : `${entry.supplyPercent}%`, entry.tier].forEach((value, index) => {
+        [entry.rank, shortened(entry.wallet), entry.directTree, entry.supplyPercent === null || entry.supplyPercent === undefined ? '—' : `${entry.supplyPercent}%`, tierForEntry(entry)?.name || entry.tier || 'Ranked'].forEach((value, index) => {
           const cell = document.createElement('td'); cell.textContent = String(value); if (index > 2) cell.className = 'wide-column'; if (index === 1) cell.title = entry.wallet; row.append(cell);
         });
         return row;
@@ -680,4 +717,4 @@ if (typeof document !== 'undefined') {
   loadDisplayedRate();
 }
 
-export { DAPP_SWAP_EXECUTION_ENABLED, formatTreePrice, readDashboardCache, renderLeaderboard, updateYourRank, writeDashboardCache };
+export { DAPP_SWAP_EXECUTION_ENABLED, TIER_DEFINITIONS, formatTreePrice, readDashboardCache, renderLeaderboard, tierForEntry, updateYourRank, writeDashboardCache };
