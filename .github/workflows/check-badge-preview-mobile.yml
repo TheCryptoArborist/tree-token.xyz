@@ -18,7 +18,7 @@ jobs:
       - name: Install browser driver
         shell: bash
         run: npm install --no-save --ignore-scripts puppeteer-core@24
-      - name: Validate desktop and mobile layouts after containment fix
+      - name: Validate desktop and mobile layouts after Profile Studio containment
         shell: bash
         run: |
           set -euo pipefail
@@ -27,7 +27,7 @@ jobs:
           node <<'NODE'
           const puppeteer = require('puppeteer-core');
           (async () => {
-            const url = 'https://deploy-preview-6--tree-token.netlify.app/dapp/?mobile_fix_qa=2#leaderboard';
+            const url = 'https://deploy-preview-6--tree-token.netlify.app/dapp/?profile_fix_qa=1#leaderboard';
             const viewports = [
               { width: 1440, height: 1000 },
               { width: 1024, height: 900 },
@@ -73,6 +73,7 @@ jobs:
                       right: Math.round(rect.right),
                     };
                   });
+                const canvas = document.querySelector('#profileCanvas');
                 return {
                   viewportWidth: innerWidth,
                   documentWidth: document.documentElement.scrollWidth,
@@ -82,6 +83,7 @@ jobs:
                   badgeCount: badgeLabels.length,
                   badgeLabels: [...new Set(badgeLabels)],
                   leaderboardState: document.querySelector('#leaderboardState')?.textContent?.trim() || null,
+                  profileCanvasInternalSize: canvas ? [canvas.width, canvas.height] : null,
                   unexpectedOverflow,
                 };
               });
@@ -94,6 +96,7 @@ jobs:
                 if (!metrics.badgeLabels.some((value) => value.includes(label))) failures.push(`missing visible ${label}`);
               }
               if (metrics.leaderboardState !== 'Current Exposure Snapshot') failures.push('leaderboard state');
+              if (JSON.stringify(metrics.profileCanvasInternalSize) !== JSON.stringify([1024, 1024])) failures.push('Profile Studio canvas size');
               if (consoleErrors.length) failures.push(`console errors: ${consoleErrors.join(' | ')}`);
               if (failures.length) {
                 console.error(JSON.stringify({ viewport, failures, metrics }, null, 2));
