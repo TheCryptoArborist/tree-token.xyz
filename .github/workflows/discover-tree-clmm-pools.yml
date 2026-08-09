@@ -1,0 +1,174 @@
+name: Discover verified TREE concentrated-liquidity pools
+
+on:
+  push:
+    branches:
+      - feature/leaderboard-exposure-v1
+    paths:
+      - '.github/workflows/discover-tree-clmm-pools.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/leaderboard-exposure-v1
+          fetch-depth: 0
+
+      - name: Inspect SuiDex V3 and Turbos TREE objects
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci
+          cat > scripts/discover-tree-clmm-pools.ts <<'TS'
+          import { ChannelCredentials } from '@grpc/grpc-js';
+          import { GrpcTransport } from '@protobuf-ts/grpc-transport';
+          import { SuiGrpcClient } from '@mysten/sui/grpc';
+
+          const GRAPHQL = 'https://graphql.mainnet.sui.io/graphql';
+          const TREE = '6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::tree';
+          const SUIDEX_V3_POSITION = '0xb5f529c1dcda6580a61bf7ee9fbd524b50be62f11044d137c8202c8cbace9e56::position::Position';
+          const TURBOS_POSITION_NFT = '0x91bfbc386a41afcfd9b2533058d7e915a1d3829089cc268ff4333d54d6339ca1::position_nft::TurbosPositionNFT';
+          const client = new SuiGrpcClient({
+            network: 'mainnet',
+            transport: new GrpcTransport({
+              host: 'fullnode.mainnet.sui.io:443',
+              channelCredentials: ChannelCredentials.createSsl(),
+            }),
+          });
+
+          type Rec = Record<string, unknown>;
+          const record = (value: unknown): Rec => value && typeof value === 'object' && !Array.isArray(value) ? value as Rec : {};
+          const normalizeType = (value: unknown) => typeof value === 'string'
+            ? value.toLowerCase().replace(/^0x/, '').replace(/^0+([0-9a-f]{64}::)/, '$1')
+            : '';
+          const containsTree = (value: unknown) => normalizeType(value).includes(TREE);
+          const ownerOf = (node: Rec) => {
+            const owner = record(node.owner);
+            const addressValue = owner.address;
+            const address = typeof addressValue === 'string' ? addressValue : record(addressValue).address;
+            return { kind: typeof owner.__typename === 'string' ? owner.__typename : 'Unknown', address: typeof address === 'string' ? address : null };
+          };
+          const idString = (value: unknown): string | null => typeof value === 'string' && /^(0x)?[0-9a-f]{64}$/i.test(value)
+            ? (value.startsWith('0x') ? value : `0x${value}`)
+            : null;
+
+          async function graphql(query: string, variables: Rec) {
+            const response = await fetch(GRAPHQL, {
+              method: 'POST',
+              headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+              body: JSON.stringify({ query, variables }),
+            });
+            if (!response.ok) throw new Error(`GraphQL HTTP ${response.status}`);
+            const payload = record(await response.json());
+            const errors = Array.isArray(payload.errors) ? payload.errors : [];
+            if (errors.length) throw new Error(errors.map((item) => String(record(item).message || 'GraphQL error')).join(' | '));
+            return record(payload.data);
+          }
+
+          async function scanType(type: string, maxPages = 300) {
+            const query = `query Scan($first: Int!, $after: String, $type: String!) {
+              objects(first: $first, after: $after, filter: { type: $type }) {
+                pageInfo { hasNextPage endCursor }
+                nodes {
+                  address
+                  owner {
+                    __typename
+                    ... on AddressOwner { address { address } }
+                    ... on ObjectOwner { address { address } }
+                  }
+                  asMoveObject { contents { json } }
+                }
+              }
+            }`;
+            const matches: Array<{ objectId: string; owner: ReturnType<typeof ownerOf>; json: Rec }> = [];
+            let after: string | null = null;
+            let scanned = 0;
+            for (let page = 0; page < maxPages; page += 1) {
+              const data = await graphql(query, { first: 50, after, type });
+              const connection = record(data.objects);
+              const nodes = Array.isArray(connection.nodes) ? connection.nodes.filter((item): item is Rec => Boolean(item && typeof item === 'object')) : [];
+              scanned += nodes.length;
+              for (const node of nodes) {
+                const objectId = idString(node.address);
+                const json = record(record(record(node.asMoveObject).contents).json);
+                if (!objectId) continue;
+                if (containsTree(json.type_x) || containsTree(json.type_y) || containsTree(json.coin_type_a) || containsTree(json.coin_type_b)) {
+                  matches.push({ objectId, owner: ownerOf(node), json });
+                }
+              }
+              const pageInfo = record(connection.pageInfo);
+              if (pageInfo.hasNextPage !== true) return { reachedEnd: true, pages: page + 1, scanned, matches };
+              if (typeof pageInfo.endCursor !== 'string' || !pageInfo.endCursor) return { reachedEnd: false, pages: page + 1, scanned, matches };
+              after = pageInfo.endCursor;
+            }
+            return { reachedEnd: false, pages: maxPages, scanned, matches };
+          }
+
+          async function getObject(id: string) {
+            const { object } = await client.core.getObject({ objectId: id, include: { json: true } });
+            return object ? { objectId: id, type: object.type, owner: object.owner, json: object.json } : null;
+          }
+
+          const officialPools: unknown[] = [];
+          try {
+            const response = await fetch('https://dex.suidex.org/api/v3/pools');
+            const payload = await response.json() as unknown;
+            const rows = Array.isArray(payload) ? payload : Array.isArray(record(payload).data) ? record(payload).data as unknown[] : [];
+            officialPools.push(...rows.filter((item) => {
+              const row = record(item);
+              return containsTree(row.token_x_type) || containsTree(row.token_y_type) || containsTree(row.type_x) || containsTree(row.type_y);
+            }));
+          } catch (error) {
+            officialPools.push({ error: error instanceof Error ? error.message : String(error) });
+          }
+
+          const [suidex, turbos] = await Promise.all([
+            scanType(SUIDEX_V3_POSITION),
+            scanType(TURBOS_POSITION_NFT),
+          ]);
+
+          const referencedIds = new Set<string>();
+          for (const item of [...suidex.matches, ...turbos.matches]) {
+            for (const key of ['pool_id', 'position_id']) {
+              const id = idString(item.json[key]);
+              if (id) referencedIds.add(id);
+            }
+          }
+          const referencedObjects = [];
+          for (const id of referencedIds) {
+            try {
+              const object = await getObject(id);
+              if (object) referencedObjects.push(object);
+            } catch (error) {
+              referencedObjects.push({ objectId: id, error: error instanceof Error ? error.message : String(error) });
+            }
+          }
+
+          console.log(JSON.stringify({
+            officialSuiDexTreePools: officialPools,
+            suiDexV3: suidex,
+            turbos,
+            referencedObjects,
+          }, null, 2));
+          TS
+          npx --yes tsx scripts/discover-tree-clmm-pools.ts
+
+      - name: Remove temporary discovery workflow
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/discover-tree-clmm-pools.yml scripts/discover-tree-clmm-pools.ts
+          git config user.name "TheCryptoArborist"
+          git config user.email "190985450+TheCryptoArborist@users.noreply.github.com"
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "Complete TREE concentrated-liquidity pool discovery"
+            git push origin HEAD:feature/leaderboard-exposure-v1
+          fi
