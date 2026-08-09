@@ -1,0 +1,69 @@
+name: Probe SuiNS Core API transports
+
+on:
+  push:
+    branches:
+      - feature/command-center-ui-v2
+    paths:
+      - '.github/workflows/probe-suins-core-api.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/command-center-ui-v2
+          fetch-depth: 0
+      - name: Probe gRPC and JSON-RPC reverse lookup
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci
+          node --input-type=module <<'JS'
+          import { SuiGrpcClient } from '@mysten/sui/grpc';
+          import { SuiJsonRpcClient } from '@mysten/sui/jsonRpc';
+
+          const response = await fetch('https://tree-token.xyz/api/tree-leaderboard');
+          if (!response.ok) throw new Error(`Leaderboard HTTP ${response.status}`);
+          const payload = await response.json();
+          const wallets = (payload.entries || []).map((entry) => entry.wallet).filter(Boolean).slice(0, 10);
+          if (!wallets.length) throw new Error('No leaderboard wallets');
+
+          async function probe(label, client) {
+            const started = Date.now();
+            const settled = await Promise.allSettled(wallets.map((address) => client.core.defaultNameServiceName({ address })));
+            const fulfilled = settled.filter((result) => result.status === 'fulfilled');
+            const names = fulfilled.filter((result) => Boolean(result.value?.name));
+            const errors = settled.filter((result) => result.status === 'rejected').map((result) => String(result.reason?.message || result.reason)).slice(0, 3);
+            console.log(JSON.stringify({
+              label,
+              requested: wallets.length,
+              fulfilled: fulfilled.length,
+              resolved: names.length,
+              rejected: errors.length,
+              sampleErrors: errors,
+              elapsedMs: Date.now() - started,
+            }, null, 2));
+            return { fulfilled: fulfilled.length, errors };
+          }
+
+          const grpc = new SuiGrpcClient({ network: 'mainnet', baseUrl: 'https://fullnode.mainnet.sui.io:443' });
+          const jsonRpc = new SuiJsonRpcClient({ network: 'mainnet', url: 'https://fullnode.mainnet.sui.io:443' });
+          await probe('grpc', grpc);
+          await probe('json-rpc', jsonRpc);
+          JS
+      - name: Remove temporary probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/probe-suins-core-api.yml
+          git config user.name "TheCryptoArborist"
+          git config user.email "190985450+TheCryptoArborist@users.noreply.github.com"
+          git add .github/workflows/probe-suins-core-api.yml
+          git commit -m "Remove temporary SuiNS transport probe"
+          git push origin HEAD:feature/command-center-ui-v2
