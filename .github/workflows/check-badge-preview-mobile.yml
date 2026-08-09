@@ -27,7 +27,7 @@ jobs:
           node <<'NODE'
           const puppeteer = require('puppeteer-core');
           (async () => {
-            const url = 'https://deploy-preview-6--tree-token.netlify.app/dapp/?mobile_fix_qa=1#leaderboard';
+            const url = 'https://deploy-preview-6--tree-token.netlify.app/dapp/?mobile_fix_qa=2#leaderboard';
             const viewports = [
               { width: 1440, height: 1000 },
               { width: 1024, height: 900 },
@@ -54,21 +54,41 @@ jobs:
               await new Promise((resolve) => setTimeout(resolve, 1000));
               const metrics = await page.evaluate(() => {
                 const badgeLabels = [...document.querySelectorAll('.leader-badge')].map((element) => element.textContent.trim());
+                const unexpectedOverflow = [...document.querySelectorAll('body *')]
+                  .filter((element) => {
+                    if (element.closest('.market-ribbon,.app-nav,.table-wrap')) return false;
+                    const style = getComputedStyle(element);
+                    if (style.position === 'fixed' || style.position === 'sticky' || style.display === 'none' || style.visibility === 'hidden') return false;
+                    const rect = element.getBoundingClientRect();
+                    return rect.width > 0 && (rect.left < -1 || rect.right > innerWidth + 1);
+                  })
+                  .slice(0, 10)
+                  .map((element) => {
+                    const rect = element.getBoundingClientRect();
+                    return {
+                      tag: element.tagName,
+                      id: element.id,
+                      className: String(element.className || ''),
+                      left: Math.round(rect.left),
+                      right: Math.round(rect.right),
+                    };
+                  });
                 return {
                   viewportWidth: innerWidth,
                   documentWidth: document.documentElement.scrollWidth,
-                  bodyWidth: document.body.scrollWidth,
+                  bodyClientWidth: Math.round(document.body.getBoundingClientRect().width),
                   cardCount: document.querySelectorAll('.leader-card').length,
                   exposureCardCount: document.querySelectorAll('.leader-card.exposure-card').length,
                   badgeCount: badgeLabels.length,
                   badgeLabels: [...new Set(badgeLabels)],
                   leaderboardState: document.querySelector('#leaderboardState')?.textContent?.trim() || null,
+                  unexpectedOverflow,
                 };
               });
               const filename = `/tmp/tree-badge-preview-${viewport.width}.png`;
               await page.screenshot({ path: filename, fullPage: true });
               const failures = [];
-              if (metrics.documentWidth > metrics.viewportWidth + 1 || metrics.bodyWidth > metrics.viewportWidth + 1) failures.push('page horizontal overflow');
+              if (metrics.documentWidth > metrics.viewportWidth + 1 || metrics.bodyClientWidth > metrics.viewportWidth + 1 || metrics.unexpectedOverflow.length) failures.push('page horizontal overflow');
               if (metrics.cardCount !== 50 || metrics.exposureCardCount !== 50) failures.push('leaderboard card count');
               for (const label of ['LP Provider', 'LP Maxi', 'Diamond Hands', 'Burned']) {
                 if (!metrics.badgeLabels.some((value) => value.includes(label))) failures.push(`missing visible ${label}`);
