@@ -46,3 +46,26 @@ new = """  let top50TotalRaw = 0n;
 if text.count(old) != 1:
     raise SystemExit('Expected exposure cache validation block was not found exactly once.')
 path.write_text(text.replace(old, new), encoding='utf-8')
+
+test_path = Path('tests/tree-exposure-snapshot-endpoint.test.ts')
+test = test_path.read_text(encoding='utf-8')
+old_test = """  {
+    context: 'deploy-preview',
+    readSnapshot: async () => snapshot,
+    readRefreshStatus: async () => null,
+    now: () => Date.parse('2026-08-09T04:45:10.000Z'),
+  },
+);
+assert.equal(okResponse.status, 200);"""
+new_test = """  {
+    context: 'deploy-preview',
+    getEnv: () => undefined,
+    readSnapshot: async () => snapshot,
+    readRefreshStatus: async () => null,
+    now: () => Date.parse('2026-08-09T04:45:10.000Z'),
+  },
+);
+assert.equal(okResponse.status, 200);"""
+if test.count(old_test) != 1:
+    raise SystemExit('Expected exposure endpoint response fixture was not found exactly once.')
+test_path.write_text(test.replace(old_test, new_test), encoding='utf-8')
