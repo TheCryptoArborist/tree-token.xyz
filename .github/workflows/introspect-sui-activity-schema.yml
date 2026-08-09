@@ -1,0 +1,58 @@
+name: Inspect Sui activity GraphQL schema
+
+on:
+  push:
+    branches:
+      - review/phase1
+    paths:
+      - '.github/workflows/introspect-sui-activity-schema.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Introspect transaction and checkpoint query types
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const query = `query Introspect {
+            queryType: __type(name: "Query") {
+              fields {
+                name
+                args { name type { kind name ofType { kind name ofType { kind name } } } }
+                type { kind name ofType { kind name } }
+              }
+            }
+            txFilter: __type(name: "TransactionBlockFilter") {
+              inputFields { name type { kind name ofType { kind name ofType { kind name } } } }
+            }
+            checkpointId: __type(name: "CheckpointId") {
+              inputFields { name type { kind name ofType { kind name } } }
+            }
+            checkpoint: __type(name: "Checkpoint") {
+              fields { name type { kind name ofType { kind name } } }
+            }
+            tx: __type(name: "TransactionBlock") {
+              fields { name type { kind name ofType { kind name } } }
+            }
+          }`;
+          const response = await fetch('https://graphql.mainnet.sui.io/graphql', {
+            method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ query }),
+          });
+          const payload = await response.json();
+          const q = payload.data?.queryType?.fields || [];
+          const selected = q.filter((field) => ['checkpoint','checkpoints','transactionBlock','transactionBlocks','transactions'].includes(field.name));
+          console.log(JSON.stringify({
+            errors: payload.errors || [],
+            queryFields: selected,
+            transactionFilter: payload.data?.txFilter,
+            checkpointId: payload.data?.checkpointId,
+            checkpointFields: payload.data?.checkpoint?.fields?.filter((field) => ['sequenceNumber','timestamp','transactions','networkTotalTransactions'].includes(field.name)),
+            transactionFields: payload.data?.tx?.fields?.filter((field) => ['digest','sender','transactionJson','effects'].includes(field.name)),
+          }, null, 2));
+          NODE
