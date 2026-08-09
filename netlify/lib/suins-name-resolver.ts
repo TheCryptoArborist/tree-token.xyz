@@ -43,7 +43,11 @@ function errorMessage(error: unknown): string {
 }
 
 function isExpectedMissingName(error: unknown): boolean {
-  const message = errorMessage(error).toLowerCase();
+  const source = error && typeof error === 'object' ? error as { code?: unknown; status?: unknown } : {};
+  if (source.code === 5 || source.status === 5 || source.code === 'NOT_FOUND' || source.status === 'NOT_FOUND') return true;
+  const rawMessage = errorMessage(error).toLowerCase();
+  let message = rawMessage;
+  try { message = decodeURIComponent(rawMessage.replace(/\+/g, ' ')); } catch { /* Preserve the raw message. */ }
   return message.includes('not_found')
     || message.includes('not found')
     || message.includes('name has expired')

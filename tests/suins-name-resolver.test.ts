@@ -12,7 +12,7 @@ const success = await resolveDefaultSuinsNames([first, second, third, first, 'in
         calls += 1;
         if (address === first) return { name: 'cryptoarborist.sui' };
         if (address === second) throw new Error('NOT_FOUND');
-        throw new Error('name has expired');
+        throw new Error('name%20has%20expired');
       },
     },
   },
@@ -24,6 +24,12 @@ assert.equal(success.names[first], 'cryptoarborist.sui');
 assert.equal(success.names[second], null);
 assert.equal(success.names[third], null);
 assert.equal(success.complete, true);
+
+const numericNotFound = await resolveDefaultSuinsNames([first], {
+  client: { core: { async defaultNameServiceName() { throw Object.assign(new Error('missing'), { code: 5 }); } } },
+});
+assert.equal(numericNotFound.complete, true);
+assert.equal(numericNotFound.names[first], null);
 
 const failed = await resolveDefaultSuinsNames([first], {
   client: { core: { async defaultNameServiceName() { throw new Error('transport unavailable'); } } },
