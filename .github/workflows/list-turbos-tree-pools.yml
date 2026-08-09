@@ -1,0 +1,79 @@
+name: List all recognized Turbos TREE pools
+
+on:
+  push:
+    branches:
+      - feature/leaderboard-exposure-v1
+    paths:
+      - '.github/workflows/list-turbos-tree-pools.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  list:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/leaderboard-exposure-v1
+          fetch-depth: 0
+
+      - name: Resolve every Turbos pool containing TREE
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci
+          npm install --no-save --package-lock=false turbos-clmm-sdk@4.0.1
+          cat > scripts/list-turbos-tree-pools.ts <<'TS'
+          import { Network, TurbosSdk } from 'turbos-clmm-sdk';
+
+          const TREE = '0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::tree';
+          const normalizeType = (value: unknown) => {
+            if (typeof value !== 'string') return '';
+            const parts = value.trim().toLowerCase().replace(/\s+/g, '').split('::');
+            if (parts.length !== 3) return '';
+            const address = parts[0].replace(/^0x/, '').replace(/^0+/, '') || '0';
+            return `0x${address}::${parts[1]}::${parts[2]}`;
+          };
+
+          const sdk = new TurbosSdk(Network.mainnet);
+          const pools = await sdk.pool.getPools(true);
+          const treePools = pools
+            .filter((pool) => pool.types.some((type) => normalizeType(type) === TREE))
+            .map((pool) => ({
+              objectId: pool.objectId,
+              type: pool.type,
+              tokenA: normalizeType(pool.types[0]),
+              tokenB: normalizeType(pool.types[1]),
+              feeType: normalizeType(pool.types[2]),
+              coinARaw: String(pool.coin_a),
+              coinBRaw: String(pool.coin_b),
+              liquidityRaw: String(pool.liquidity),
+              sqrtPriceRaw: String(pool.sqrt_price),
+              currentTick: pool.tick_current_index,
+              unlocked: pool.unlocked,
+            }))
+            .sort((left, right) => left.objectId.localeCompare(right.objectId));
+          console.log('TURBOS_TREE_POOLS=' + JSON.stringify({
+            totalPoolCount: pools.length,
+            treePoolCount: treePools.length,
+            treePools,
+          }));
+          TS
+          npx --yes tsx scripts/list-turbos-tree-pools.ts
+
+      - name: Remove temporary pool lister
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/list-turbos-tree-pools.yml scripts/list-turbos-tree-pools.ts
+          git config user.name "TheCryptoArborist"
+          git config user.email "190985450+TheCryptoArborist@users.noreply.github.com"
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "Complete Turbos TREE pool inventory"
+            git push origin HEAD:feature/leaderboard-exposure-v1
+          fi
