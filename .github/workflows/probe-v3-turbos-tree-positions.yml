@@ -1,0 +1,130 @@
+name: Probe SuiDex V3 and Turbos TREE position schemas
+
+on:
+  push:
+    branches:
+      - feature/leaderboard-exposure-v1
+    paths:
+      - '.github/workflows/probe-v3-turbos-tree-positions.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/leaderboard-exposure-v1
+          fetch-depth: 0
+      - name: Inspect concentrated-liquidity position schemas
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci
+          cat > scripts/probe-v3-turbos-positions.ts <<'TS'
+          import { ChannelCredentials } from '@grpc/grpc-js';
+          import { GrpcTransport } from '@protobuf-ts/grpc-transport';
+          import { SuiGrpcClient } from '@mysten/sui/grpc';
+
+          const GRAPHQL = 'https://graphql.mainnet.sui.io/graphql';
+          const TREE = '6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE';
+          const TYPES = {
+            candidateV3: '0xb5f529c1dcda6580a61bf7ee9fbd524b50be62f11044d137c8202c8cbace9e56::position::Position',
+            turbosNft: '0x91bfbc386a41afcfd9b2533058d7e915a1d3829089cc268ff4333d54d6339ca1::position_nft::TurbosPositionNFT',
+          };
+          const client = new SuiGrpcClient({
+            network: 'mainnet',
+            transport: new GrpcTransport({ host: 'fullnode.mainnet.sui.io:443', channelCredentials: ChannelCredentials.createSsl() }),
+          });
+
+          type Rec = Record<string, unknown>;
+          const record = (value: unknown): Rec => value && typeof value === 'object' && !Array.isArray(value) ? value as Rec : {};
+          const redact = (value: unknown, depth = 0): unknown => {
+            if (depth > 5) return '[depth-limit]';
+            if (Array.isArray(value)) return { kind: 'array', length: value.length, sample: value.slice(0, 2).map((item) => redact(item, depth + 1)) };
+            if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value as Rec).slice(0, 100).map(([key, child]) => [key, redact(child, depth + 1)]));
+            if (typeof value === 'string' && /^0x?[0-9a-f]{64}$/i.test(value)) return '[address-or-object-id]';
+            return value;
+          };
+          function objectIds(value: unknown, path = '', out: Array<{ path: string; id: string }> = []) {
+            if (Array.isArray(value)) value.forEach((item, index) => objectIds(item, `${path}[${index}]`, out));
+            else if (value && typeof value === 'object') for (const [key, child] of Object.entries(value as Rec)) objectIds(child, path ? `${path}.${key}` : key, out);
+            else if (typeof value === 'string' && /^(0x)?[0-9a-f]{64}$/i.test(value)) out.push({ path, id: value.startsWith('0x') ? value : `0x${value}` });
+            return out;
+          }
+          function numericLeaves(value: unknown, path = '', out: Array<{ path: string; value: string }> = []) {
+            if (Array.isArray(value)) value.slice(0, 5).forEach((item, index) => numericLeaves(item, `${path}[${index}]`, out));
+            else if (value && typeof value === 'object') for (const [key, child] of Object.entries(value as Rec)) numericLeaves(child, path ? `${path}.${key}` : key, out);
+            else if ((typeof value === 'string' && /^-?\d+$/.test(value)) || typeof value === 'number') out.push({ path, value: String(value) });
+            return out.slice(0, 100);
+          }
+          async function scan(type: string) {
+            const query = `query Scan($type: String!, $after: String) {
+              objects(first: 50, after: $after, filter: { type: $type }) {
+                pageInfo { hasNextPage endCursor }
+                nodes { address owner { __typename } asMoveObject { contents { json } } }
+              }
+            }`;
+            const nodes: Rec[] = [];
+            let after: string | null = null;
+            for (let page = 0; page < 20; page += 1) {
+              const response = await fetch(GRAPHQL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ query, variables: { type, after } }) });
+              if (!response.ok) throw new Error(`GraphQL HTTP ${response.status}`);
+              const payload = await response.json() as Rec;
+              const errors = Array.isArray(payload.errors) ? payload.errors : [];
+              if (errors.length) throw new Error(errors.map((item) => String(record(item).message || 'GraphQL error')).join(' | '));
+              const connection = record(record(payload.data).objects);
+              nodes.push(...(Array.isArray(connection.nodes) ? connection.nodes as Rec[] : []));
+              const pageInfo = record(connection.pageInfo);
+              if (pageInfo.hasNextPage !== true) return nodes;
+              if (typeof pageInfo.endCursor !== 'string') throw new Error('Missing cursor');
+              after = pageInfo.endCursor;
+            }
+            throw new Error('Page limit reached');
+          }
+
+          const result: Rec = {};
+          for (const [label, type] of Object.entries(TYPES)) {
+            const nodes = await scan(type);
+            const samples = nodes.slice(0, 5).map((node) => {
+              const json = record(record(record(node.asMoveObject).contents).json);
+              return { ownerKind: record(node.owner).__typename, schema: redact(json), numericLeaves: numericLeaves(json), referencedIds: objectIds(json).map(({ path }) => path) };
+            });
+            const referenced = new Map<string, { paths: Set<string>; count: number }>();
+            for (const node of nodes) {
+              const json = record(record(record(node.asMoveObject).contents).json);
+              for (const { path, id } of objectIds(json)) {
+                const prior = referenced.get(id) || { paths: new Set<string>(), count: 0 };
+                prior.paths.add(path); prior.count += 1; referenced.set(id, prior);
+              }
+            }
+            const objectDetails = [];
+            for (const [id, info] of [...referenced.entries()].slice(0, 30)) {
+              try {
+                const { object } = await client.core.getObject({ objectId: id, include: { json: true } });
+                if (!object) continue;
+                const typeString = String(object.type || '');
+                const json = object.json;
+                objectDetails.push({ referencePaths: [...info.paths], referenceCount: info.count, type: typeString, containsTree: typeString.toLowerCase().includes(TREE), schema: redact(json), numericLeaves: numericLeaves(json) });
+              } catch { /* Ignore references that are addresses rather than objects. */ }
+            }
+            result[label] = { type, objectCount: nodes.length, samples, referencedObjectDetails: objectDetails };
+          }
+          console.log(JSON.stringify(result, null, 2));
+          TS
+          npx --yes tsx scripts/probe-v3-turbos-positions.ts
+          rm -f scripts/probe-v3-turbos-positions.ts
+      - name: Remove temporary probe
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/probe-v3-turbos-tree-positions.yml scripts/probe-v3-turbos-positions.ts
+          git config user.name "TheCryptoArborist"
+          git config user.email "190985450+TheCryptoArborist@users.noreply.github.com"
+          git add -A
+          git commit -m "Complete V3 and Turbos position schema discovery"
+          git push origin HEAD:feature/leaderboard-exposure-v1
