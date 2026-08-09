@@ -15,37 +15,26 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Read corrected Deploy Preview state
+      - name: Read corrected Deploy Preview badge state
         shell: bash
         run: |
           set -euo pipefail
           BASE='https://deploy-preview-6--tree-token.netlify.app'
-          for endpoint in tree-exposure tree-badges; do
-            curl --silent --show-error --location --max-time 60 \
-              "$BASE/api/$endpoint?mobile_fix_bootstrap=1" \
-              -o "/tmp/$endpoint.json"
-          done
+          curl --silent --show-error --location --max-time 60 \
+            "$BASE/api/tree-badges?mobile_fix_bootstrap=2" \
+            -o /tmp/tree-badges.json
           node <<'NODE'
-          const exposure = require('/tmp/tree-exposure.json');
           const badges = require('/tmp/tree-badges.json');
           console.log(JSON.stringify({
-            exposure: {
-              status: exposure.status,
-              refreshState: exposure.refreshState,
-              stage: exposure.refreshStatus?.stage,
-              snapshotGeneratedAt: exposure.snapshotGeneratedAt,
-              displayedCount: exposure.displayedCount,
-              message: exposure.message,
-            },
-            badges: {
-              status: badges.status,
-              refreshState: badges.refreshState,
-              stage: badges.refreshStatus?.stage,
-              activityOutcome: badges.refreshStatus?.activityOutcome,
-              burnOutcome: badges.refreshStatus?.burnOutcome,
-              snapshotGeneratedAt: badges.snapshotGeneratedAt,
-              displayedCount: badges.displayedCount,
-              message: badges.message,
-            },
+            status: badges.status,
+            refreshState: badges.refreshState,
+            refreshStatus: badges.refreshStatus,
+            snapshotGeneratedAt: badges.snapshotGeneratedAt,
+            exposureSnapshotGeneratedAt: badges.exposureSnapshotGeneratedAt,
+            displayedCount: badges.displayedCount,
+            source: badges.source,
+            summary: badges.summary,
+            warnings: badges.warnings,
+            message: badges.message,
           }, null, 2));
           NODE
