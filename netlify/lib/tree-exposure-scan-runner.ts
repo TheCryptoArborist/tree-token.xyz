@@ -7,8 +7,6 @@ import {
 import { scanSuiDexV2TreeLp } from './suidex-v2-tree-lp-provider.ts';
 import { scanSuiDexV3TreeLp } from './suidex-v3-tree-lp-provider.ts';
 import { scanTurbosTreeLp } from './turbos-tree-lp-provider.ts';
-import { scanTreeTradingActivity } from './tree-trading-activity-provider.ts';
-import { scanTreeBurnContributions } from './tree-burn-badge-provider.ts';
 import {
   buildVerifiedExposureSnapshot,
   type ExposureSnapshot,
@@ -23,11 +21,6 @@ import {
 import {
   LP_MAXI_BADGE,
   LP_PROVIDER_BADGE,
-  DIAMOND_HANDS_BADGE,
-  PAPER_HANDS_BADGE,
-  ACCUMULATOR_BADGE,
-  BURNED_BADGE,
-  formatTreeRaw,
   type ExposureVenue,
   type ExposureVenueResult,
 } from './tree-exposure-types.ts';
@@ -61,8 +54,6 @@ export type ExposureScanRunnerDependencies = {
   suiDexV3Scan?: typeof scanSuiDexV3TreeLp;
   turbosScan?: typeof scanTurbosTreeLp;
   resolveSuins?: typeof resolveDefaultSuinsNames;
-  tradingActivityScan?: typeof scanTreeTradingActivity;
-  burnScan?: typeof scanTreeBurnContributions;
   directOptions?: ScanOptions;
   onProgress?: (progress: ExposureScanProgress) => Promise<void> | void;
   now?: () => number;
@@ -96,8 +87,6 @@ export async function runCompleteTreeExposureScan(
   const suiDexV3Scan = dependencies.suiDexV3Scan ?? scanSuiDexV3TreeLp;
   const turbosScan = dependencies.turbosScan ?? scanTurbosTreeLp;
   const resolveSuins = dependencies.resolveSuins ?? resolveDefaultSuinsNames;
-  const tradingActivityScan = dependencies.tradingActivityScan ?? scanTreeTradingActivity;
-  const burnScan = dependencies.burnScan ?? scanTreeBurnContributions;
   const now = dependencies.now ?? Date.now;
   const venueOutcomes: ExposureScanProgress['venueOutcomes'] = {
     suiDexV2: 'pending',
@@ -200,52 +189,16 @@ export async function runCompleteTreeExposureScan(
       );
     }
 
-    const rankedWallets = aggregate.entries.map((entry) => entry.wallet);
-    const [activity, burns] = await Promise.all([
-      tradingActivityScan(rankedWallets, { getEnv, now }),
-      burnScan(rankedWallets, { getEnv, now }),
-    ]);
-    const activityComplete = activity.outcome === 'complete';
-    const burnsComplete = burns.outcome === 'complete';
-    const badgeWarnings = [
-      ...activity.warnings,
-      ...burns.warnings,
-    ];
-    const badgeEntries = aggregate.entries.map((entry) => {
-      const activityStats = activityComplete ? activity.wallets[entry.wallet] : null;
-      const burnStats = burnsComplete ? burns.wallets[entry.wallet] : null;
-      const badges = [...entry.badges];
-      if (activityStats?.badges.includes(DIAMOND_HANDS_BADGE)) badges.push(DIAMOND_HANDS_BADGE);
-      if (activityStats?.badges.includes(PAPER_HANDS_BADGE)) badges.push(PAPER_HANDS_BADGE);
-      if (activityStats?.badges.includes(ACCUMULATOR_BADGE)) badges.push(ACCUMULATOR_BADGE);
-      if (burnStats?.qualifies) badges.push(BURNED_BADGE);
-      return {
-        ...entry,
-        activity30d: activityStats ? {
-          windowStart: activity.windowStart,
-          windowEnd: activity.windowEnd,
-          buyCount: activityStats.buyCount,
-          sellCount: activityStats.sellCount,
-          buyTreeRaw: activityStats.buyTreeRaw,
-          buyTree: formatTreeRaw(BigInt(activityStats.buyTreeRaw)),
-          sellTreeRaw: activityStats.sellTreeRaw,
-          sellTree: formatTreeRaw(BigInt(activityStats.sellTreeRaw)),
-        } : null,
-        burnedTreeRaw: burnStats ? burnStats.burnedTreeRaw : null,
-        burnedTree: burnStats ? formatTreeRaw(BigInt(burnStats.burnedTreeRaw)) : null,
-        badges,
-      };
-    });
 
     await emit('suins', 'Resolving verified default SuiNS names for the final Top 50.');
     let suins: SuinsResolutionResult;
     try {
-      suins = await resolveSuins(badgeEntries.map((entry) => entry.wallet));
+      suins = await resolveSuins(aggregate.entries.map((entry) => entry.wallet));
     } catch (error) {
       const message = error instanceof Error ? error.message : 'SuiNS resolution failed.';
       suins = {
-        names: Object.fromEntries(badgeEntries.map((entry) => [entry.wallet, null])),
-        requestedCount: badgeEntries.length,
+        names: Object.fromEntries(aggregate.entries.map((entry) => [entry.wallet, null])),
+        requestedCount: aggregate.entries.length,
         resolvedCount: 0,
         complete: false,
         graphqlErrors: [message],
@@ -256,7 +209,7 @@ export async function runCompleteTreeExposureScan(
     const suinsWarnings = suins.complete
       ? []
       : ['Some verified default SuiNS names could not be resolved; wallet exposure remains complete.'];
-    const entries = badgeEntries.map((entry) => ({
+    const entries = aggregate.entries.map((entry) => ({
       ...entry,
       suinsName: suins.names[entry.wallet] || null,
     }));
@@ -275,22 +228,6 @@ export async function runCompleteTreeExposureScan(
         suiDexV2: venueSummary(suiDexV2),
         suiDexV3: venueSummary(suiDexV3),
         turbos: venueSummary(turbos),
-      },
-      activity: {
-        outcome: activity.outcome,
-        methodologyVersion: activity.methodologyVersion,
-        generatedAt: activity.generatedAt,
-        windowStart: activity.windowStart,
-        windowEnd: activity.windowEnd,
-        coverage: activity.coverage,
-        warnings: activity.warnings,
-      },
-      burns: {
-        outcome: burns.outcome,
-        methodologyVersion: burns.methodologyVersion,
-        generatedAt: burns.generatedAt,
-        coverage: burns.coverage,
-        warnings: burns.warnings,
       },
       suins: {
         requestedCount: suins.requestedCount,
@@ -313,7 +250,7 @@ export async function runCompleteTreeExposureScan(
       totalSupplyRaw: TREE_TOTAL_SUPPLY_RAW.toString(),
       displayedCount: 50,
       entries,
-      warnings: [...aggregate.warnings, ...badgeWarnings, ...suinsWarnings],
+      warnings: [...aggregate.warnings, ...suinsWarnings],
       source,
       summary: {
         top50TotalRaw: top50TotalRaw.toString(),
@@ -323,10 +260,6 @@ export async function runCompleteTreeExposureScan(
         badgeCounts: {
           lpProvider: entries.filter((entry) => entry.badges.includes(LP_PROVIDER_BADGE)).length,
           lpMaxi: entries.filter((entry) => entry.badges.includes(LP_MAXI_BADGE)).length,
-          diamondHands: entries.filter((entry) => entry.badges.includes(DIAMOND_HANDS_BADGE)).length,
-          paperHands: entries.filter((entry) => entry.badges.includes(PAPER_HANDS_BADGE)).length,
-          accumulator: entries.filter((entry) => entry.badges.includes(ACCUMULATOR_BADGE)).length,
-          burned: entries.filter((entry) => entry.badges.includes(BURNED_BADGE)).length,
         },
       },
     };

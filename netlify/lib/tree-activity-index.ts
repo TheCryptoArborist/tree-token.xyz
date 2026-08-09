@@ -2,9 +2,9 @@ import { TREE_COIN_TYPE, normalizeSuiAddress } from './leaderboard-provider.ts';
 import {
   TREE_ACTIVITY_ACCUMULATOR_BUYS,
   TREE_ACTIVITY_MIN_VOLUME_RAW,
-  TREE_ACTIVITY_WINDOW_MS,
-  formatTreeRaw,
+  TREE_ACTIVITY_WINDOW_MS
 } from './tree-badge-types.ts';
+import { formatTreeRaw } from './tree-exposure-types.ts';
 
 export const TREE_ACTIVITY_INDEX_METHODOLOGY_VERSION = 'noodles-tree-trade-ledger-v2';
 const DEFAULT_NOODLES_BASE_URL = 'https://api.noodles.fi';

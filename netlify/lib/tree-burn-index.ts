@@ -1,5 +1,6 @@
 import { TREE_COIN_TYPE, normalizeSuiAddress } from './leaderboard-provider.ts';
-import { BURNED_BADGE_THRESHOLD_RAW, formatTreeRaw } from './tree-badge-types.ts';
+import { BURNED_BADGE_THRESHOLD_RAW } from './tree-badge-types.ts';
+import { formatTreeRaw } from './tree-exposure-types.ts';
 
 export const TREE_BURN_INDEX_METHODOLOGY_VERSION = 'sui-sender-burn-checkpoints-v2';
 export const SUI_ZERO_ADDRESS = `0x${'0'.repeat(64)}`;

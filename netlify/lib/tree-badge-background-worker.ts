@@ -163,9 +163,8 @@ export async function runTreeBadgeBackgroundWorker(
     const activity: TreeActivityRefreshResult = await refreshActivity(priorActivity, {
       getEnv,
       now,
-      sleepImpl,
       onPoolComplete: (index) => writeInternalBadgeValue(TREE_ACTIVITY_INDEX_KEY, index, storeOptions),
-    } as never);
+    });
     await saveStatus({ activityOutcome: activity.outcome === 'complete' ? 'complete' : activity.outcome === 'error' ? 'error' : 'verification-incomplete' });
     if (activity.outcome !== 'complete' || !activity.index) {
       await saveStatus({
