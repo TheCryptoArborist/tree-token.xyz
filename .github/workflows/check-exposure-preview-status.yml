@@ -13,40 +13,90 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 25
     steps:
-      - name: Read independent Deploy Preview snapshots
+      - name: Wait for independent exposure and badge snapshots
         shell: bash
         run: |
           set -euo pipefail
           BASE='https://deploy-preview-6--tree-token.netlify.app'
-          curl --silent --show-error --location --max-time 60 "$BASE/api/tree-exposure?diagnostic=1" -o /tmp/exposure.json
-          curl --silent --show-error --location --max-time 60 "$BASE/api/tree-badges?diagnostic=1" -o /tmp/badges.json
+          for attempt in $(seq 1 120); do
+            curl --silent --show-error --location --max-time 60 "$BASE/api/tree-exposure?poll=$attempt" -o /tmp/exposure.json
+            curl --silent --show-error --location --max-time 60 "$BASE/api/tree-badges?poll=$attempt" -o /tmp/badges.json
+            exposure_status=$(node -e "const p=require('/tmp/exposure.json');process.stdout.write(String(p.status||''))")
+            exposure_state=$(node -e "const p=require('/tmp/exposure.json');process.stdout.write(String(p.refreshState||''))")
+            badge_status=$(node -e "const p=require('/tmp/badges.json');process.stdout.write(String(p.status||''))")
+            badge_state=$(node -e "const p=require('/tmp/badges.json');process.stdout.write(String(p.refreshState||''))")
+            badge_stage=$(node -e "const p=require('/tmp/badges.json');process.stdout.write(String(p.refreshStatus?.stage||''))")
+            activity=$(node -e "const p=require('/tmp/badges.json');process.stdout.write(String(p.refreshStatus?.activityOutcome||''))")
+            burns=$(node -e "const p=require('/tmp/badges.json');process.stdout.write(String(p.refreshStatus?.burnOutcome||''))")
+            echo "attempt=$attempt exposure=$exposure_status/$exposure_state badges=$badge_status/$badge_state stage=${badge_stage:-unknown} activity=${activity:-unknown} burns=${burns:-unknown}"
+            if [[ ( "$exposure_status" == 'ok' || "$exposure_status" == 'stale' ) && ( "$badge_status" == 'ok' || "$badge_status" == 'stale' ) ]]; then
+              break
+            fi
+            if [[ "$badge_state" == 'error' || "$badge_state" == 'verification-incomplete' ]]; then
+              echo 'Badge worker ended without a complete snapshot.' >&2
+              cat /tmp/badges.json >&2
+              exit 1
+            fi
+            [[ "$attempt" != '120' ]] || { echo 'Preview verification timed out.' >&2; cat /tmp/exposure.json >&2; cat /tmp/badges.json >&2; exit 1; }
+            sleep 10
+          done
+
           node <<'NODE'
           const exposure=require('/tmp/exposure.json');
           const badges=require('/tmp/badges.json');
+          const errors=[];
+          const check=(condition,message)=>{if(!condition)errors.push(message)};
+          check(['ok','stale'].includes(exposure.status),'exposure-status');
+          check(exposure.refreshState==='complete','exposure-refresh');
+          check(exposure.displayedCount===50,'exposure-count');
+          check(exposure.coverage?.totalExposureComplete===true,'exposure-coverage');
+          check(['ok','stale'].includes(badges.status),'badge-status');
+          check(badges.refreshState==='complete','badge-refresh');
+          check(badges.displayedCount===50,'badge-count');
+          check(badges.exposureSnapshotGeneratedAt===exposure.snapshotGeneratedAt,'snapshot-alignment');
+          check(badges.source?.activity?.outcome==='complete','activity-complete');
+          check(badges.source?.burns?.outcome==='complete','burns-complete');
+          const byWallet=new Map(badges.entries.map((entry)=>[entry.wallet,entry]));
+          let lpProvider=0,lpMaxi=0,diamondHands=0,paperHands=0,accumulator=0,burned=0;
+          for(let index=0;index<exposure.entries.length;index++){
+            const entry=exposure.entries[index];
+            const behavior=byWallet.get(entry.wallet);
+            check(Boolean(behavior),`badge-wallet-${index+1}`);
+            check(behavior?.rank===entry.rank,`badge-rank-${index+1}`);
+            if(entry.badges.includes('lp-provider'))lpProvider++;
+            if(entry.badges.includes('lp-maxi'))lpMaxi++;
+            if(behavior?.badges.includes('diamond-hands'))diamondHands++;
+            if(behavior?.badges.includes('paper-hands'))paperHands++;
+            if(behavior?.badges.includes('accumulator'))accumulator++;
+            if(behavior?.badges.includes('burned'))burned++;
+            check(!(behavior?.badges.includes('diamond-hands')&&behavior?.badges.includes('paper-hands')),`exclusive-${index+1}`);
+          }
+          check(exposure.summary?.badgeCounts?.lpProvider===lpProvider,'lp-provider-summary');
+          check(exposure.summary?.badgeCounts?.lpMaxi===lpMaxi,'lp-maxi-summary');
+          check(badges.summary?.diamondHands===diamondHands,'diamond-summary');
+          check(badges.summary?.paperHands===paperHands,'paper-summary');
+          check(badges.summary?.accumulator===accumulator,'accumulator-summary');
+          check(badges.summary?.burned===burned,'burned-summary');
+          if(errors.length){console.error(JSON.stringify({errors},null,2));process.exit(1)}
           console.log(JSON.stringify({
             exposure:{
               status:exposure.status,
-              refreshState:exposure.refreshState,
-              refreshStatus:exposure.refreshStatus,
               snapshotGeneratedAt:exposure.snapshotGeneratedAt,
+              eligibleOwnerCount:exposure.eligibleOwnerCount,
               displayedCount:exposure.displayedCount,
               summary:exposure.summary,
-              warnings:exposure.warnings,
-              message:exposure.message,
+              source:exposure.source,
             },
             badges:{
               status:badges.status,
-              refreshState:badges.refreshState,
-              refreshStatus:badges.refreshStatus,
               snapshotGeneratedAt:badges.snapshotGeneratedAt,
               exposureSnapshotGeneratedAt:badges.exposureSnapshotGeneratedAt,
               displayedCount:badges.displayedCount,
               summary:badges.summary,
               source:badges.source,
-              warnings:badges.warnings,
-              message:badges.message,
             },
+            combinedBadgeCounts:{lpProvider,lpMaxi,diamondHands,paperHands,accumulator,burned},
           },null,2));
           NODE
