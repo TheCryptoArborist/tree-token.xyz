@@ -17,6 +17,7 @@ export type TreeBadgeEndpointDependencies = {
   getEnv?: (name: string) => string | undefined;
   readSnapshot?: () => Promise<CompleteTreeBadgeSnapshot | null>;
   readStatus?: () => Promise<TreeBadgeRefreshStatus | null>;
+  triggerRefresh?: (request: Request, secret: string) => Promise<number>;
 };
 
 function enabled(value: string | undefined): boolean {
@@ -46,6 +47,18 @@ function publicStatus(status: TreeBadgeRefreshStatus | null) {
     displayedCount: status.displayedCount,
     message: status.message,
   };
+}
+
+async function triggerBackgroundRefresh(request: Request, secret: string): Promise<number> {
+  const url = new URL('/.netlify/functions/tree-badges-refresh-background', request.url);
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'x-tree-badge-refresh-secret': secret,
+    },
+  });
+  return response.status;
 }
 
 export async function resolveTreeBadgePayload(dependencies: TreeBadgeEndpointDependencies = {}) {
@@ -131,10 +144,46 @@ export async function createTreeBadgeResponse(
     });
   }
   try {
-    const payload = await resolveTreeBadgePayload(dependencies);
+    let payload = await resolveTreeBadgePayload(dependencies);
     if (payload.status === 'disabled') {
       return Response.json(payload, { status: 404, headers: { 'Cache-Control': 'no-store' } });
     }
+
+    const getEnv = dependencies.getEnv ?? ((name) => Netlify.env.get(name));
+    const context = dependencies.context || 'dev';
+    if (payload.status === 'not-ready'
+      && context === 'deploy-preview'
+      && enabled(getEnv('TREE_BADGE_AUTO_BOOTSTRAP'))) {
+      const secret = getEnv('TREE_BADGE_REFRESH_SECRET')
+        || getEnv('TREE_LEADERBOARD_REFRESH_SECRET')
+        || '';
+      if (secret) {
+        try {
+          const triggerRefresh = dependencies.triggerRefresh ?? triggerBackgroundRefresh;
+          const triggerStatus = await triggerRefresh(request, secret);
+          if (triggerStatus === 202) {
+            payload = {
+              ...payload,
+              status: 'refreshing',
+              refreshState: 'queued',
+              warnings: [...payload.warnings],
+              message: 'The complete TREE behavioral badge refresh was accepted by the background runtime.',
+            };
+          } else {
+            payload = {
+              ...payload,
+              warnings: [...payload.warnings, `The badge background trigger returned ${triggerStatus}.`],
+            };
+          }
+        } catch {
+          payload = {
+            ...payload,
+            warnings: [...payload.warnings, 'The badge background trigger is temporarily unavailable.'],
+          };
+        }
+      }
+    }
+
     const cacheable = payload.status === 'ok' || payload.status === 'stale';
     return Response.json(payload, {
       headers: {
