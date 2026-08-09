@@ -23,7 +23,7 @@ const BURN_TRANSACTION_QUERY = `query TreeBurnTransactions($first: Int!, $after:
       digest
       sender { address }
       effects {
-        balanceChanges(first: 100) {
+        balanceChanges(first: 50) {
           nodes {
             owner { address }
             coinType { repr }
