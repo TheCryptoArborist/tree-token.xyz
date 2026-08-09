@@ -1,0 +1,115 @@
+name: Use native SuiNS gRPC transport
+
+on:
+  push:
+    branches:
+      - feature/command-center-ui-v2
+    paths:
+      - '.github/workflows/use-native-suins-transport.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/command-center-ui-v2
+          fetch-depth: 0
+
+      - name: Install native gRPC transport
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --save @protobuf-ts/grpc-transport @grpc/grpc-js
+
+      - name: Configure server-side native transport
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          resolver = Path('netlify/lib/suins-name-resolver.ts')
+          text = resolver.read_text(encoding='utf-8')
+          text = text.replace(
+              "import { SuiGrpcClient } from '@mysten/sui/grpc';\n",
+              "import { ChannelCredentials } from '@grpc/grpc-js';\nimport { GrpcTransport } from '@protobuf-ts/grpc-transport';\nimport { SuiGrpcClient } from '@mysten/sui/grpc';\n",
+              1,
+          )
+          text = text.replace(
+              "export const DEFAULT_SUINS_GRPC_URL = 'https://fullnode.mainnet.sui.io:443';",
+              "export const DEFAULT_SUINS_GRPC_HOST = 'fullnode.mainnet.sui.io:443';",
+              1,
+          )
+          text = text.replace(
+              "  endpoint?: string;\n",
+              "  endpoint?: string;\n",
+              1,
+          )
+          old_client = """  const endpoint = options.endpoint || DEFAULT_SUINS_GRPC_URL;
+            const client = options.client
+              ?? options.clientFactory?.(endpoint)
+              ?? new SuiGrpcClient({ network: 'mainnet', baseUrl: endpoint });"""
+          new_client = """  const endpoint = options.endpoint || DEFAULT_SUINS_GRPC_HOST;
+            const host = endpoint.replace(/^https?:\\/\\//, '');
+            const client = options.client
+              ?? options.clientFactory?.(host)
+              ?? new SuiGrpcClient({
+                network: 'mainnet',
+                transport: new GrpcTransport({
+                  host,
+                  channelCredentials: ChannelCredentials.createSsl(),
+                }),
+              });"""
+          if old_client not in text:
+              raise SystemExit('Native SuiNS client anchor not found')
+          resolver.write_text(text.replace(old_client, new_client, 1), encoding='utf-8')
+
+          preview = Path('netlify/functions/tree-leaderboard-preview.ts')
+          text = preview.read_text(encoding='utf-8')
+          old_metadata = """          complete: resolution.complete,
+                  generatedAt: resolution.generatedAt,"""
+          new_metadata = """          complete: resolution.complete,
+                  generatedAt: resolution.generatedAt,
+                  failureReason: resolution.complete ? null : resolution.networkError,"""
+          if old_metadata not in text:
+              raise SystemExit('Preview identity metadata anchor not found')
+          preview.write_text(text.replace(old_metadata, new_metadata, 1), encoding='utf-8')
+          PY
+          rm -f \
+            .github/workflows/use-native-suins-transport.yml \
+            .github/workflows/use-binary-suins-transport.yml
+          git diff --check
+
+      - name: Validate native transport
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run build
+          node --check dapp/app.js
+          node tests/dashboard-cache.test.mjs
+          node tests/leaderboard-ui-state.test.mjs
+          for test in tests/*.ts; do npx --yes tsx "$test"; done
+          node --input-type=module <<'JS'
+          const leaderboard = await fetch('https://tree-token.xyz/api/tree-leaderboard').then((response) => response.json());
+          const wallets = (leaderboard.entries || []).slice(0, 10).map((entry) => entry.wallet);
+          const { resolveDefaultSuinsNames } = await import('./netlify/lib/suins-name-resolver.ts');
+          const result = await resolveDefaultSuinsNames(wallets, { timeoutMs: 20_000 });
+          console.log(JSON.stringify({ requested: result.requestedCount, resolved: result.resolvedCount, complete: result.complete }, null, 2));
+          if (!result.complete || result.requestedCount !== wallets.length) process.exit(1);
+          JS
+          git diff --check
+
+      - name: Commit native transport
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "TheCryptoArborist"
+          git config user.email "190985450+TheCryptoArborist@users.noreply.github.com"
+          git add -A
+          git commit -m "Use native gRPC for TREE leaderboard SuiNS names"
+          git push origin HEAD:feature/command-center-ui-v2
