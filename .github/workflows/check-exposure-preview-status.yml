@@ -15,30 +15,19 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Trigger once and wait for the next badge stage
+      - name: Probe the documented public pool-events path without an API key
         shell: bash
         run: |
           set -euo pipefail
-          BASE='https://deploy-preview-6--tree-token.netlify.app'
-          for attempt in $(seq 1 18); do
-            curl --silent --show-error --location --max-time 60 "$BASE/api/tree-badges?limit_fix_check=$attempt" -o /tmp/badges.json
-            status=$(node -e "const p=require('/tmp/badges.json');process.stdout.write(String(p.status||''))")
-            state=$(node -e "const p=require('/tmp/badges.json');process.stdout.write(String(p.refreshState||''))")
-            stage=$(node -e "const p=require('/tmp/badges.json');process.stdout.write(String(p.refreshStatus?.stage||''))")
-            activity=$(node -e "const p=require('/tmp/badges.json');process.stdout.write(String(p.refreshStatus?.activityOutcome||''))")
-            burns=$(node -e "const p=require('/tmp/badges.json');process.stdout.write(String(p.refreshStatus?.burnOutcome||''))")
-            echo "attempt=$attempt status=$status state=$state stage=${stage:-unknown} activity=${activity:-unknown} burns=${burns:-unknown}"
-            if [[ "$status" == 'ok' || "$status" == 'stale' || "$state" == 'error' || "$state" == 'verification-incomplete' ]]; then
-              break
-            fi
-            sleep 10
-          done
-          curl --silent --show-error --location --max-time 60 "$BASE/api/tree-exposure?limit_fix_check=final" -o /tmp/exposure.json
+          NOW=$(date +%s000)
+          FROM=$((NOW-86400000))
+          URL="https://api.noodles.fi/api/v1/partner/pool/event/all?pool_address=0x39d5ba22e01e45bc4129ec28a0bef52e8fee8db5d07d337adf9540e3cb9074cf&action=buy,sell&from=${FROM}&to=${NOW}&desc=true&limit=1"
+          code=$(curl --silent --show-error --location --max-time 60 --output /tmp/noodles.json --write-out '%{http_code}' "$URL")
+          echo "http=$code"
           node <<'NODE'
-          const exposure=require('/tmp/exposure.json');
-          const badges=require('/tmp/badges.json');
-          console.log(JSON.stringify({
-            exposure:{status:exposure.status,refreshState:exposure.refreshState,snapshotGeneratedAt:exposure.snapshotGeneratedAt,displayedCount:exposure.displayedCount,summary:exposure.summary,message:exposure.message},
-            badges:{status:badges.status,refreshState:badges.refreshState,refreshStatus:badges.refreshStatus,snapshotGeneratedAt:badges.snapshotGeneratedAt,exposureSnapshotGeneratedAt:badges.exposureSnapshotGeneratedAt,displayedCount:badges.displayedCount,summary:badges.summary,source:badges.source,warnings:badges.warnings,message:badges.message},
-          },null,2));
+          const fs=require('node:fs');
+          const text=fs.readFileSync('/tmp/noodles.json','utf8');
+          let payload;
+          try{payload=JSON.parse(text)}catch{payload={raw:text.slice(0,500)}}
+          console.log(JSON.stringify({code:payload.code,message:payload.message,eventCount:Array.isArray(payload.data)?payload.data.length:null,pagination:payload.pagination,raw:payload.raw},null,2));
           NODE
