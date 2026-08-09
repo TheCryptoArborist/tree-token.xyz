@@ -20,14 +20,15 @@ jobs:
         run: |
           set -euo pipefail
           BASE='https://deploy-preview-6--tree-token.netlify.app'
-          curl --silent --show-error --location --max-time 60 "$BASE/api/tree-exposure?final_validation=1" -o /tmp/exposure.json
-          curl --silent --show-error --location --max-time 60 "$BASE/api/tree-badges?final_validation=1" -o /tmp/badges.json
+          curl --silent --show-error --location --max-time 60 "$BASE/api/tree-exposure?final_validation=2" -o /tmp/exposure.json
+          curl --silent --show-error --location --max-time 60 "$BASE/api/tree-badges?final_validation=2" -o /tmp/badges.json
           curl --silent --show-error --location --max-time 60 "$BASE/dapp/" -o /tmp/dapp.html
+          curl --silent --show-error --location --max-time 60 "$BASE/dapp/app.js" -o /tmp/dapp.js
           node <<'NODE'
           const fs = require('node:fs');
           const exposure = JSON.parse(fs.readFileSync('/tmp/exposure.json', 'utf8'));
           const badges = JSON.parse(fs.readFileSync('/tmp/badges.json', 'utf8'));
-          const html = fs.readFileSync('/tmp/dapp.html', 'utf8');
+          const client = `${fs.readFileSync('/tmp/dapp.html', 'utf8')}\n${fs.readFileSync('/tmp/dapp.js', 'utf8')}`;
           const failures = [];
           const check = (condition, message) => { if (!condition) failures.push(message); };
           const toBig = (value) => typeof value === 'string' && /^\d+$/.test(value) ? BigInt(value) : null;
@@ -98,9 +99,10 @@ jobs:
 
           check(JSON.stringify(calculated) === JSON.stringify(badges.summary), 'Badge summary does not match entry evidence.');
           for (const label of ['LP Provider', 'LP Maxi', 'Diamond Hands', 'Paper Hands', 'Accumulator', 'Burned']) {
-            check(html.includes(label), `DApp HTML is missing ${label}.`);
+            check(client.includes(label), `DApp client is missing ${label}.`);
           }
-          check(html.includes('Verified TREE Exposure Leaders'), 'DApp is missing the exposure leaderboard heading.');
+          check(client.includes('Verified TREE Exposure Leaders'), 'DApp is missing the exposure leaderboard heading.');
+          check(client.includes('/api/tree-badges'), 'DApp does not load the isolated badge endpoint.');
 
           if (failures.length) {
             console.error(JSON.stringify({ failures }, null, 2));
