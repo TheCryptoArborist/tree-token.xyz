@@ -1,0 +1,59 @@
+name: Fix SuiNS enrichment workflow
+
+on:
+  push:
+    branches:
+      - feature/command-center-ui-v2
+    paths:
+      - '.github/workflows/fix-suins-enrichment-workflow.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/command-center-ui-v2
+          fetch-depth: 0
+      - name: Make redirect removal robust
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('.github/workflows/add-suins-leaderboard-names.yml')
+          text = path.read_text(encoding='utf-8')
+          start_marker = '          redirect = """[[redirects]]\n'
+          end_marker = "          toml_path.write_text(toml.replace(redirect, '', 1), encoding='utf-8')\n"
+          start = text.find(start_marker)
+          end_start = text.find(end_marker, start)
+          if start < 0 or end_start < 0:
+              raise SystemExit('Unable to locate redirect-removal block in SuiNS workflow')
+          end = end_start + len(end_marker)
+          replacement = '''          import re
+          redirect_pattern = re.compile(
+              r'\\[\\[redirects\\]\\]\\s*from\\s*=\\s*"/api/tree-leaderboard-preview"\\s*to\\s*=\\s*"https://tree-token\\.xyz/api/tree-leaderboard"\\s*status\\s*=\\s*200\\s*force\\s*=\\s*true\\s*',
+              re.MULTILINE,
+          )
+          toml, removed = redirect_pattern.subn('', toml, count=1)
+          if removed != 1:
+              raise SystemExit('Preview redirect block not found')
+          toml_path.write_text(toml, encoding='utf-8')
+'''
+          path.write_text(text[:start] + replacement + text[end:], encoding='utf-8')
+          PY
+          rm -f .github/workflows/fix-suins-enrichment-workflow.yml
+          git diff --check
+      - name: Commit workflow correction
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "TheCryptoArborist"
+          git config user.email "190985450+TheCryptoArborist@users.noreply.github.com"
+          git add .github/workflows/add-suins-leaderboard-names.yml .github/workflows/fix-suins-enrichment-workflow.yml
+          git commit -m "Fix SuiNS enrichment workflow"
+          git push origin HEAD:feature/command-center-ui-v2
