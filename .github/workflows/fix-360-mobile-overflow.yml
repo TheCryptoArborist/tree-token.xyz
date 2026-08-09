@@ -28,18 +28,18 @@ jobs:
           path = Path('dapp/styles.css')
           text = path.read_text(encoding='utf-8')
           marker = '/* 360px overflow containment */'
+          css = (
+              '\n\n/* 360px overflow containment */\n'
+              'html,body,.app-shell{max-width:100vw}\n'
+              '.leaderboard-fallback-table{display:none!important;contain:strict!important;max-width:1px!important}\n'
+              '@media(max-width:760px){\n'
+              '  .market-ribbon{width:100%;max-width:100vw;min-width:0;gap:14px;padding-inline:10px;overscroll-behavior-inline:contain;scrollbar-width:none}\n'
+              '  .market-ribbon::-webkit-scrollbar{display:none}\n'
+              '  .market-ribbon>span{flex:0 0 auto}\n'
+              '}\n'
+          )
           if marker not in text:
-              text += '''
-
-/* 360px overflow containment */
-html,body,.app-shell{max-width:100vw}
-.leaderboard-fallback-table{display:none!important;contain:strict!important;max-width:1px!important}
-@media(max-width:760px){
-  .market-ribbon{width:100%;max-width:100vw;min-width:0;gap:14px;padding-inline:10px;overscroll-behavior-inline:contain;scrollbar-width:none}
-  .market-ribbon::-webkit-scrollbar{display:none}
-  .market-ribbon>span{flex:0 0 auto}
-}
-'''
+              text += css
           path.write_text(text, encoding='utf-8')
           PY
           rm -f .github/workflows/fix-360-mobile-overflow.yml
