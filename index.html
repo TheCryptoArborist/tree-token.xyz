@@ -1360,13 +1360,19 @@ header{background:linear-gradient(180deg,rgba(5,7,20,.94),rgba(5,7,20,.7));borde
 nav a.nav-command{display:inline-flex;align-items:center;gap:7px;color:#04170f;background:linear-gradient(135deg,var(--ecosystem-green),var(--ecosystem-cyan));border-color:transparent;box-shadow:0 8px 24px rgba(34,231,215,.18)}
 nav a.nav-command span{padding:2px 5px;border-radius:999px;background:rgba(4,23,15,.16);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase}
 nav a.nav-command:hover{color:#02130c;background:linear-gradient(135deg,#65ffab,#5cf1e7);box-shadow:0 12px 34px rgba(34,231,215,.27)}
+nav a.nav-impact{display:inline-flex;align-items:center;gap:7px;color:var(--ecosystem-gold);border:1px solid rgba(255,216,75,.48);background:linear-gradient(135deg,rgba(255,216,75,.12),rgba(255,173,50,.06));box-shadow:0 8px 24px rgba(255,216,75,.08)}
+nav a.nav-impact .nav-impact-icon{display:grid;place-items:center;width:18px;height:18px;border-radius:50%;background:rgba(255,216,75,.14);font-size:.72rem}
+nav a.nav-impact:hover{color:#211500;border-color:var(--ecosystem-gold);background:linear-gradient(135deg,var(--ecosystem-gold),var(--ecosystem-amber));box-shadow:0 12px 34px rgba(255,216,75,.2)}
+nav a.nav-get-started{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;color:#03150d;background:linear-gradient(135deg,var(--ecosystem-green),var(--ecosystem-cyan));border-color:transparent;font-weight:950;box-shadow:0 10px 30px rgba(34,231,215,.22)}
+nav a.nav-get-started:hover{color:#02130c;transform:translateY(-2px);background:linear-gradient(135deg,#65ffab,#5cf1e7);box-shadow:0 14px 40px rgba(34,231,215,.3)}
+nav a.nav-impact:focus-visible,nav a.nav-get-started:focus-visible{outline:3px solid var(--ecosystem-cyan);outline-offset:3px}
 .btn.command-center-primary{gap:10px;border:1px solid rgba(34,231,215,.45);background:linear-gradient(135deg,rgba(34,231,215,.2),rgba(51,247,143,.16));color:#eaffff;box-shadow:0 12px 36px rgba(34,231,215,.12)}
 .btn.command-center-primary:hover{border-color:var(--ecosystem-cyan);box-shadow:0 16px 48px rgba(34,231,215,.2)}
 .command-center-primary>span:last-child{display:grid;line-height:1.05;text-align:left}.command-center-primary small{margin-top:4px;color:var(--ecosystem-cyan);font-size:.58rem;letter-spacing:.13em}.command-center-icon{font-size:1.25rem}
 .command-center-preview-card{position:relative;display:grid;gap:7px;padding:17px;border:1px solid rgba(34,231,215,.28);border-radius:18px;background:radial-gradient(circle at 90% 10%,rgba(51,247,143,.16),transparent 35%),linear-gradient(145deg,rgba(8,20,28,.96),rgba(4,11,14,.94));text-decoration:none;color:var(--ecosystem-text);box-shadow:0 18px 55px rgba(0,0,0,.28);transition:.18s ease}
 .command-center-preview-card:hover{transform:translateY(-4px);border-color:rgba(34,231,215,.58);box-shadow:0 22px 66px rgba(34,231,215,.12)}
 .command-preview-badge{width:max-content;padding:4px 7px;border-radius:999px;background:rgba(34,231,215,.12);color:var(--ecosystem-cyan);font-size:.62rem;font-weight:900;letter-spacing:.12em}.command-preview-title{color:var(--ecosystem-gold);font-size:1.08rem;font-weight:900}.command-preview-copy{color:var(--ecosystem-muted);font-size:.86rem}.command-preview-action{color:var(--ecosystem-green);font-weight:850}.board-fab{background:linear-gradient(135deg,var(--ecosystem-cyan),var(--ecosystem-green));color:#03130c;border-color:transparent}
-@media(max-width:768px){nav a.nav-command{justify-content:center}.command-center-preview-card{order:-1}.hero-actions .command-center-primary{flex-basis:100%}}
+@media(max-width:768px){.nav-shell .live-pill{order:-4}nav a.nav-command{order:-3}nav a.nav-get-started{order:-2}nav a.nav-impact{order:-1}nav a.nav-command,nav a.nav-impact,nav a.nav-get-started{justify-content:center;min-height:48px}.command-center-preview-card{order:-1}.hero-actions .command-center-primary{flex-basis:100%}}
 
 </style>
 </head>
@@ -1423,9 +1429,9 @@ nav a.nav-command:hover{color:#02130c;background:linear-gradient(135deg,#65ffab,
         <a href="#ecosystem">Ecosystem</a>
         <a href="/dapp/" class="nav-command">Command Center <span>DApp</span></a>
         <a href="#nftree" class="nav-nft">NFTree</a>
-        <a href="#impact">Impact</a>
+        <a href="#impact" class="nav-impact"><span class="nav-impact-icon" aria-hidden="true">♥</span><span>TREE Fund</span></a>
         <a href="#litepaper">Litepaper</a>
-        <a href="#join">Join</a>
+        <a href="#join" class="nav-get-started"><span>Get Started</span><span aria-hidden="true">→</span></a>
       </nav>
     </div>
   </div>
