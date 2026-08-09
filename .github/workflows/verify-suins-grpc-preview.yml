@@ -1,0 +1,73 @@
+name: Verify SuiNS gRPC leaderboard preview
+
+on:
+  push:
+    branches:
+      - feature/command-center-ui-v2
+    paths:
+      - '.github/workflows/verify-suins-grpc-preview.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/command-center-ui-v2
+          fetch-depth: 0
+      - name: Verify live SuiNS-enriched preview
+        shell: bash
+        run: |
+          set -euo pipefail
+          endpoint="https://deploy-preview-2--tree-token.netlify.app/api/tree-leaderboard-preview?verify=${GITHUB_RUN_ID}"
+          temp_json="$(mktemp)"
+          for attempt in $(seq 1 12); do
+            if curl --fail --silent --show-error --max-time 60 "$endpoint&attempt=$attempt" -o "$temp_json"; then
+              if python - "$temp_json" <<'PY'
+          import json, sys
+          from pathlib import Path
+          payload = json.loads(Path(sys.argv[1]).read_text(encoding='utf-8'))
+          entries = payload.get('entries') or []
+          identity = payload.get('identityResolution') or {}
+          assert payload.get('status') in {'ok', 'stale'}, payload.get('status')
+          assert len(entries) == 50, len(entries)
+          assert identity.get('provider') == 'sui-grpc-default-suins-name', identity
+          assert identity.get('requestedCount') == 50, identity
+          assert isinstance(identity.get('resolvedCount'), int), identity
+          assert identity.get('complete') is True, identity
+          assert all('suinsName' in entry for entry in entries)
+          print(json.dumps({
+              'status': payload.get('status'),
+              'refreshState': payload.get('refreshState'),
+              'entries': len(entries),
+              'requestedNames': identity.get('requestedCount'),
+              'resolvedNames': identity.get('resolvedCount'),
+              'resolutionComplete': identity.get('complete'),
+              'provider': identity.get('provider'),
+          }, indent=2))
+          PY
+              then
+                rm -f "$temp_json"
+                exit 0
+              fi
+            fi
+            sleep 10
+          done
+          cat "$temp_json" | python -m json.tool || true
+          rm -f "$temp_json"
+          exit 1
+      - name: Remove temporary verifier
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/verify-suins-grpc-preview.yml
+          git config user.name "TheCryptoArborist"
+          git config user.email "190985450+TheCryptoArborist@users.noreply.github.com"
+          git add .github/workflows/verify-suins-grpc-preview.yml
+          git commit -m "Confirm SuiNS gRPC leaderboard preview"
+          git push origin HEAD:feature/command-center-ui-v2
