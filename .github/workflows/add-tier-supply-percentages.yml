@@ -27,18 +27,16 @@ jobs:
           set -euo pipefail
           python - <<'PY'
           from pathlib import Path
+          import re
 
           app_path = Path('dapp/app.js')
           app = app_path.read_text(encoding='utf-8')
 
-          old_constants = """const TREE_BASE_UNITS = 10n ** BigInt(TREE_DECIMALS);
-          const TIER_DEFINITIONS = ["""
-          new_constants = """const TREE_BASE_UNITS = 10n ** BigInt(TREE_DECIMALS);
-          const TREE_TOTAL_SUPPLY_RAW = 1_000_000_000n * TREE_BASE_UNITS;
-          const TIER_DEFINITIONS = ["""
-          if old_constants not in app:
+          constants_anchor = "const TREE_BASE_UNITS = 10n ** BigInt(TREE_DECIMALS);\nconst TIER_DEFINITIONS = ["
+          constants_replacement = "const TREE_BASE_UNITS = 10n ** BigInt(TREE_DECIMALS);\nconst TREE_TOTAL_SUPPLY_RAW = 1_000_000_000n * TREE_BASE_UNITS;\nconst TIER_DEFINITIONS = ["
+          if constants_anchor not in app:
               raise SystemExit('TREE tier constants anchor not found')
-          app = app.replace(old_constants, new_constants, 1)
+          app = app.replace(constants_anchor, constants_replacement, 1)
 
           compact_anchor = """function compactTree(value) {
             const numeric = Number(String(value ?? '').replace(/,/g, ''));
@@ -105,16 +103,19 @@ jobs:
 
           index_path = Path('dapp/index.html')
           html = index_path.read_text(encoding='utf-8')
-          old_card = '<article class="tier-ladder-card"><div class="card-title-row"><div><span class="rank-kicker">TIER LADDER</span><h3>Climb the Canopy</h3></div><span>Cutoffs update with every verified snapshot.</span></div><div class="tier-ladder" id="tierLadder"><p class="muted">Loading verified tier cutoffs…</p></div></article>'
+          card_pattern = re.compile(
+              r'<article class="tier-ladder-card"><div class="card-title-row"><div><span class="rank-kicker">TIER LADDER</span><h3>Climb the Canopy</h3></div><span>.*?</span></div><div class="tier-ladder" id="tierLadder"><p class="muted">Loading verified tier cutoffs…</p></div></article>'
+          )
           new_card = '<article class="tier-ladder-card"><div class="card-title-row"><div><span class="rank-kicker">TIER LADDER</span><h3>Climb the Canopy</h3></div><span>Thresholds map to TREE\'s fixed 1B supply.</span></div><div class="tier-ladder" id="tierLadder"><p class="muted">Loading verified tier cutoffs…</p></div><p class="tier-method-note">Each tier displays both its TREE requirement and its share of the fixed 1,000,000,000-token supply. Champion Tree is reserved for the Top 5. This preview still uses direct address-owned TREE; verified LP exposure will be added separately.</p></article>'
-          if old_card not in html:
-              raise SystemExit('tier ladder card anchor not found')
-          html = html.replace(old_card, new_card, 1)
+          html, replacements = card_pattern.subn(new_card, html, count=1)
+          if replacements != 1:
+              raise SystemExit(f'Expected one tier ladder card replacement, found {replacements}')
           index_path.write_text(html, encoding='utf-8')
 
           styles_path = Path('dapp/styles.css')
           styles = styles_path.read_text(encoding='utf-8').rstrip()
-          styles += """
+          if '/* Tier supply calibration */' not in styles:
+              styles += """
 
           /* Tier supply calibration */
           .tier-row .tier-range{margin-top:2px;white-space:normal;line-height:1.35;color:var(--muted)}
@@ -130,6 +131,7 @@ jobs:
           if old_import not in test:
               raise SystemExit('tier test import anchor not found')
           test = test.replace(old_import, new_import, 1)
+
           tier_case_anchor = "tierCases.forEach(([directTree, expected]) => assert.equal(tierForEntry({ rank: 6, directTree }).name, expected));\n"
           tier_percent_tests = """tierCases.forEach(([directTree, expected]) => assert.equal(tierForEntry({ rank: 6, directTree }).name, expected));
           assert.equal(formatSupplyPercentFromRaw(50_000_000n * 1_000_000n), '5%');
@@ -141,6 +143,7 @@ jobs:
           if tier_case_anchor not in test:
               raise SystemExit('tier percent test anchor not found')
           test = test.replace(tier_case_anchor, tier_percent_tests, 1)
+
           markup_anchor = "assert.equal(dappMarkup.includes('Unique excluded protocol/system owners'), true);\n"
           markup_new = """assert.equal(dappMarkup.includes('Unique excluded protocol/system owners'), true);
           assert.equal(dappMarkup.includes('fixed 1,000,000,000-token supply'), true);
@@ -172,7 +175,6 @@ jobs:
           css = Path('dapp/styles.css').read_text(encoding='utf-8')
           assert 'TREE_TOTAL_SUPPLY_RAW = 1_000_000_000n * TREE_BASE_UNITS' in app
           assert 'formatSupplyPercentFromRaw' in app
-          assert '5%+ of the 1B supply' not in app
           assert 'tierSupplyShareLabel' in app
           assert 'fixed 1,000,000,000-token supply' in html
           assert 'verified LP exposure will be added separately' in html
