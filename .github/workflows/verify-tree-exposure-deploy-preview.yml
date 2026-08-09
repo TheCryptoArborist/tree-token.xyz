@@ -8,12 +8,12 @@ on:
       - '.github/workflows/verify-tree-exposure-deploy-preview.yml'
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
         with:
@@ -27,7 +27,7 @@ jobs:
         run: |
           set -euo pipefail
           rm -f /tmp/tree-exposure.json /tmp/tree-exposure.headers
-          for attempt in $(seq 1 72); do
+          for attempt in $(seq 1 120); do
             code=$(curl --silent --show-error --location \
               --connect-timeout 15 --max-time 45 \
               --dump-header /tmp/tree-exposure.headers \
@@ -41,7 +41,7 @@ jobs:
             if [[ "$code" == "200" && ( "$status" == "ok" || "$status" == "stale" ) ]]; then
               break
             fi
-            if [[ "$attempt" == "72" ]]; then
+            if [[ "$attempt" == "120" ]]; then
               echo 'Exposure preview did not reach a complete snapshot within the verification window.' >&2
               cat /tmp/tree-exposure.json >&2 || true
               exit 1
@@ -173,13 +173,7 @@ jobs:
             [[ "$code" == "200" ]]
           done
 
-      - name: Remove one-time verifier and commit result
+      - name: Record successful verification
         shell: bash
         run: |
-          set -euo pipefail
-          rm -f .github/workflows/verify-tree-exposure-deploy-preview.yml
-          git config user.name "TheCryptoArborist"
-          git config user.email "190985450+TheCryptoArborist@users.noreply.github.com"
-          git add -A
-          git commit -m "Complete TREE exposure Deploy Preview verification"
-          git push origin HEAD:feature/leaderboard-exposure-v1
+          echo 'TREE exposure Deploy Preview verification completed successfully.'
