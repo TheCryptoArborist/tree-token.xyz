@@ -45,11 +45,6 @@ jobs:
               "export const DEFAULT_SUINS_GRPC_HOST = 'fullnode.mainnet.sui.io:443';",
               1,
           )
-          text = text.replace(
-              "  endpoint?: string;\n",
-              "  endpoint?: string;\n",
-              1,
-          )
           old_client = """  const endpoint = options.endpoint || DEFAULT_SUINS_GRPC_URL;
             const client = options.client
               ?? options.clientFactory?.(endpoint)
@@ -71,9 +66,9 @@ jobs:
 
           preview = Path('netlify/functions/tree-leaderboard-preview.ts')
           text = preview.read_text(encoding='utf-8')
-          old_metadata = """          complete: resolution.complete,
+          old_metadata = """        complete: resolution.complete,
                   generatedAt: resolution.generatedAt,"""
-          new_metadata = """          complete: resolution.complete,
+          new_metadata = """        complete: resolution.complete,
                   generatedAt: resolution.generatedAt,
                   failureReason: resolution.complete ? null : resolution.networkError,"""
           if old_metadata not in text:
