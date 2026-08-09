@@ -98,3 +98,15 @@ html,body,.app-shell{max-width:100vw}
   .profile-frame-options{grid-template-columns:minmax(0,1fr)}
   .profile-frame-options .profile-action,.profile-maker-controls>.profile-action,.profile-maker-controls>.profile-reset{width:100%;max-width:100%}
 }
+
+
+/* Canopy Board information hierarchy */
+.board-personal-layout{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+.board-personal-layout .rank-command-card{width:100%;display:grid;grid-template-columns:minmax(220px,.72fr) minmax(0,1.28fr);grid-template-areas:"top top" "summary summary" "identity balance" "progress progress" "actions status";column-gap:20px}
+.board-personal-layout .rank-card-top{grid-area:top}.board-personal-layout .rank-summary{grid-area:summary}.board-personal-layout .rank-identity{grid-area:identity;align-self:center}.board-personal-layout .rank-balance{grid-area:balance}.board-personal-layout .rank-progress-panel{grid-area:progress}.board-personal-layout .rank-actions{grid-area:actions}.board-personal-layout .rank-share-status{grid-area:status;align-self:center;margin:12px 0 0}
+.tier-progress-link{display:inline-flex;margin-top:10px;color:var(--cyan);font:800 .72rem var(--mono);text-decoration:none;text-transform:uppercase;letter-spacing:.06em}.tier-progress-link:hover{text-decoration:underline}
+.top-board-heading p{margin:5px 0 0;color:var(--muted);font-size:.78rem}
+.tier-guide-details{margin-top:18px;padding:0;overflow:hidden}
+.tier-guide-summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px;cursor:pointer;list-style:none;color:var(--text)}.tier-guide-summary::-webkit-details-marker{display:none}.tier-guide-summary::after{content:"+";display:grid;place-items:center;width:28px;height:28px;border:1px solid rgba(53,200,255,.25);border-radius:8px;color:var(--cyan);font:900 1rem var(--mono)}.tier-guide-details[open] .tier-guide-summary::after{content:"−"}.tier-guide-summary span{display:grid}.tier-guide-summary strong{font:850 1rem var(--mono)}.tier-guide-summary small{margin-top:4px;color:var(--muted)}.tier-guide-details[open] .tier-guide-summary{border-bottom:1px solid rgba(255,255,255,.06)}.tier-guide-body{padding:0 18px 18px}.tier-guide-body>.card-title-row{margin-top:16px}
+.ranking-methodology{margin-top:14px}.ranking-methodology>.snapshot-overview-card{margin:14px 0;box-shadow:none}.ranking-methodology>summary{font-size:.84rem}
+@media(max-width:760px){.board-personal-layout .rank-command-card{grid-template-columns:minmax(0,1fr);grid-template-areas:"top" "summary" "identity" "balance" "progress" "actions" "status"}.board-personal-layout .rank-share-status{margin-top:4px}.top-board-heading p{max-width:31rem}.tier-guide-summary{padding:15px}.tier-guide-body{padding:0 14px 14px}}
