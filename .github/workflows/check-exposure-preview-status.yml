@@ -15,24 +15,38 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Read current Deploy Preview exposure state
+      - name: Read independent Deploy Preview snapshots
         shell: bash
         run: |
           set -euo pipefail
-          curl --silent --show-error --location --max-time 60 \
-            'https://deploy-preview-4--tree-token.netlify.app/api/tree-exposure?diagnostic=3' \
-            -o /tmp/exposure.json
+          BASE='https://deploy-preview-6--tree-token.netlify.app'
+          curl --silent --show-error --location --max-time 60 "$BASE/api/tree-exposure?diagnostic=1" -o /tmp/exposure.json
+          curl --silent --show-error --location --max-time 60 "$BASE/api/tree-badges?diagnostic=1" -o /tmp/badges.json
           node <<'NODE'
-          const p=require('/tmp/exposure.json');
+          const exposure=require('/tmp/exposure.json');
+          const badges=require('/tmp/badges.json');
           console.log(JSON.stringify({
-            status:p.status,
-            refreshState:p.refreshState,
-            refreshStatus:p.refreshStatus,
-            snapshotGeneratedAt:p.snapshotGeneratedAt,
-            activity:p.source?.activity,
-            burns:p.source?.burns,
-            badgeCounts:p.summary?.badgeCounts,
-            warnings:p.warnings,
-            message:p.message,
+            exposure:{
+              status:exposure.status,
+              refreshState:exposure.refreshState,
+              refreshStatus:exposure.refreshStatus,
+              snapshotGeneratedAt:exposure.snapshotGeneratedAt,
+              displayedCount:exposure.displayedCount,
+              summary:exposure.summary,
+              warnings:exposure.warnings,
+              message:exposure.message,
+            },
+            badges:{
+              status:badges.status,
+              refreshState:badges.refreshState,
+              refreshStatus:badges.refreshStatus,
+              snapshotGeneratedAt:badges.snapshotGeneratedAt,
+              exposureSnapshotGeneratedAt:badges.exposureSnapshotGeneratedAt,
+              displayedCount:badges.displayedCount,
+              summary:badges.summary,
+              source:badges.source,
+              warnings:badges.warnings,
+              message:badges.message,
+            },
           },null,2));
           NODE
