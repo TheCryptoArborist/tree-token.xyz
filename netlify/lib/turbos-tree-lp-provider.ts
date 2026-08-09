@@ -171,7 +171,7 @@ function canonicalizeMoveType(value: unknown): string | null {
   if (typeof value !== 'string') return null;
   const compact = value.trim().toLowerCase().replace(/\s+/g, '');
   if (!compact) return null;
-  return compact.replace(/(0x)?[0-9a-f]+(?=::)/g, (address) => canonicalAddress(address));
+  return compact.replace(/(^|[<,])((?:0x)?[0-9a-f]+)(?=::)/g, (_match, prefix: string, address: string) => `${prefix}${canonicalAddress(address)}`);
 }
 
 const NORMALIZED_TREE = normalizeStructType(TREE_COIN_TYPE)!;
