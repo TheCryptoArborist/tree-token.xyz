@@ -20,7 +20,7 @@ jobs:
           ref: feature/leaderboard-exposure-v1
           fetch-depth: 0
 
-      - name: Add deterministic cache-order validation
+      - name: Add deterministic cache-order validation and corrected endpoint fixture
         shell: bash
         run: |
           set -euo pipefail
