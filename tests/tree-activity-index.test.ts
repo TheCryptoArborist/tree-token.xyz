@@ -52,6 +52,7 @@ const fetchImpl = async (input: RequestInfo | URL) => {
     }), { status: 200 });
   }
   if (url.pathname.endsWith('/pool/event/all')) {
+    assert.equal(url.searchParams.get('limit'), '50');
     return new Response(JSON.stringify({
       code: 200,
       data: events,

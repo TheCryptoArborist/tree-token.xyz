@@ -8,7 +8,7 @@ import { formatTreeRaw } from './tree-exposure-types.ts';
 
 export const TREE_ACTIVITY_INDEX_METHODOLOGY_VERSION = 'noodles-tree-trade-ledger-v2';
 const DEFAULT_NOODLES_BASE_URL = 'https://api.noodles.fi';
-const DEFAULT_EVENT_LIMIT = 100;
+const DEFAULT_EVENT_LIMIT = 50;
 const DEFAULT_MAX_PAGES_PER_POOL = 500;
 const TREE_SCALE = 1_000_000;
 
@@ -234,7 +234,7 @@ export async function refreshTreeActivityIndex(
   }
   const fetchImpl = options.fetchImpl ?? fetch;
   const baseUrl = (getEnv('NOODLES_API_BASE_URL') || DEFAULT_NOODLES_BASE_URL).replace(/\/$/, '');
-  const limit = Math.max(1, Math.min(100, Math.trunc(options.limit ?? DEFAULT_EVENT_LIMIT)));
+  const limit = Math.max(1, Math.min(50, Math.trunc(options.limit ?? DEFAULT_EVENT_LIMIT)));
   const maxPages = Math.max(1, Math.min(2_000, Math.trunc(options.maxPagesPerPool ?? DEFAULT_MAX_PAGES_PER_POOL)));
   const eventFingerprints = new Set<string>();
 
