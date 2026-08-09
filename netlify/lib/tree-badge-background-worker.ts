@@ -157,16 +157,19 @@ export async function runTreeBadgeBackgroundWorker(
     }
     await saveStatus({ exposureSnapshotGeneratedAt: exposure.generatedAt });
 
+    const rankedWallets = exposure.entries.map((entry) => entry.wallet);
     const priorActivity = await readInternalBadgeValue<TreeActivityIndex>(TREE_ACTIVITY_INDEX_KEY, storeOptions);
-    await saveStatus({ stage: 'activity', message: 'Refreshing the checkpointed rolling 30-day TREE trade ledger.' });
+    await saveStatus({ stage: 'activity', message: 'Refreshing the resumable Sui-native rolling 30-day TREE trade ledger.' });
     const refreshActivity = dependencies.refreshActivity ?? refreshTreeActivityIndex;
     const activity: TreeActivityRefreshResult = await refreshActivity(priorActivity, {
       getEnv,
       now,
-      onPoolComplete: (index) => writeInternalBadgeValue(TREE_ACTIVITY_INDEX_KEY, index, storeOptions),
+      wallets: rankedWallets,
+      onProgress: (index) => writeInternalBadgeValue(TREE_ACTIVITY_INDEX_KEY, index, storeOptions),
     });
     await saveStatus({ activityOutcome: activity.outcome === 'complete' ? 'complete' : activity.outcome === 'error' ? 'error' : 'verification-incomplete' });
     if (activity.outcome !== 'complete' || !activity.index) {
+      if (activity.index) await writeInternalBadgeValue(TREE_ACTIVITY_INDEX_KEY, activity.index, storeOptions);
       await saveStatus({
         state: activity.outcome === 'error' ? 'error' : 'verification-incomplete',
         stage: 'failed', completedAt: new Date(now()).toISOString(),
@@ -177,19 +180,21 @@ export async function runTreeBadgeBackgroundWorker(
     await writeInternalBadgeValue(TREE_ACTIVITY_INDEX_KEY, activity.index, storeOptions);
 
     const priorBurns = await readInternalBadgeValue<TreeBurnIndex>(TREE_BURN_INDEX_KEY, storeOptions);
-    await saveStatus({ stage: 'burns', message: 'Refreshing checkpointed lifetime TREE burn attribution for the current Top 50.' });
+    await saveStatus({ stage: 'burns', message: 'Refreshing the page-resumable lifetime TREE burn index for the current Top 50.' });
     const refreshBurns = dependencies.refreshBurns ?? refreshTreeBurnIndex;
     const burns: TreeBurnRefreshResult = await refreshBurns(
       priorBurns,
-      exposure.entries.map((entry) => entry.wallet),
+      rankedWallets,
       {
+        getEnv,
         now,
         sleepImpl,
-        onWalletComplete: (index) => writeInternalBadgeValue(TREE_BURN_INDEX_KEY, index, storeOptions),
+        onProgress: (index) => writeInternalBadgeValue(TREE_BURN_INDEX_KEY, index, storeOptions),
       },
     );
     await saveStatus({ burnOutcome: burns.outcome === 'complete' ? 'complete' : burns.outcome === 'error' ? 'error' : 'verification-incomplete' });
     if (burns.outcome !== 'complete' || !burns.index) {
+      if (burns.index) await writeInternalBadgeValue(TREE_BURN_INDEX_KEY, burns.index, storeOptions);
       await saveStatus({
         state: burns.outcome === 'error' ? 'error' : 'verification-incomplete',
         stage: 'failed', completedAt: new Date(now()).toISOString(),
