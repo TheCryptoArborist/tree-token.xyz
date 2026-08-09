@@ -1,0 +1,38 @@
+name: Check TREE exposure preview status
+
+on:
+  push:
+    branches:
+      - feature/leaderboard-exposure-v1
+    paths:
+      - '.github/workflows/check-tree-exposure-status.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fetch public exposure state
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --silent --show-error --location --max-time 60 \
+            'https://deploy-preview-4--tree-token.netlify.app/api/tree-exposure?status_probe=1' \
+            | tee /tmp/exposure.json
+          echo
+          node <<'NODE'
+          const fs = require('node:fs');
+          const p = JSON.parse(fs.readFileSync('/tmp/exposure.json','utf8'));
+          console.log(JSON.stringify({
+            status:p.status,
+            refreshState:p.refreshState,
+            refreshStatus:p.refreshStatus,
+            snapshotGeneratedAt:p.snapshotGeneratedAt,
+            displayedCount:p.displayedCount,
+            warnings:p.warnings,
+            message:p.message,
+          }, null, 2));
+          NODE
