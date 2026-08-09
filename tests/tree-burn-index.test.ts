@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {
   SUI_ZERO_ADDRESS,
+  TREE_BURN_INDEX_METHODOLOGY_VERSION,
   burnEvidenceForWallet,
   refreshTreeBurnIndex,
   validateTreeBurnIndex,
@@ -8,71 +9,116 @@ import {
 import { TREE_COIN_TYPE } from '../netlify/lib/leaderboard-provider.ts';
 
 const walletA = `0x${'a'.repeat(64)}`;
-const walletB = `0x${'b'.repeat(64)}`;
-const requests: Array<Record<string, unknown>> = [];
-const fetchImpl = async (_input: RequestInfo | URL, init?: RequestInit) => {
+const creationCheckpoint = '10';
+
+function latestResponse(sequenceNumber: string) {
+  return new Response(JSON.stringify({
+    data: { checkpoints: { nodes: [{ sequenceNumber }] } },
+  }), { status: 200 });
+}
+
+function burnNode(digest: string, checkpoint: number, amount: string) {
+  return {
+    digest,
+    sender: { address: walletA },
+    effects: {
+      status: 'SUCCESS',
+      checkpoint: { sequenceNumber: checkpoint },
+      balanceChanges: {
+        pageInfo: { hasNextPage: false },
+        nodes: amount === '0' ? [] : [{
+          owner: { address: SUI_ZERO_ADDRESS },
+          coinType: { repr: TREE_COIN_TYPE },
+          amount,
+        }],
+      },
+    },
+  };
+}
+
+const firstRequests: Array<Record<string, unknown>> = [];
+const firstFetch = async (_input: RequestInfo | URL, init?: RequestInit) => {
   const body = JSON.parse(String(init?.body || '{}')) as { query?: string; variables?: Record<string, unknown> };
-  requests.push(body.variables || {});
-  if (body.query?.includes('LatestCheckpoint')) {
-    return new Response(JSON.stringify({ data: { checkpoints: { nodes: [{ sequenceNumber: '100' }] } } }), { status: 200 });
-  }
-  const sender = String(body.variables?.sender || '');
-  const burnAmount = sender === walletA ? '500000000000' : '0';
-  const changes = burnAmount === '0' ? [] : [{
-    owner: { address: SUI_ZERO_ADDRESS },
-    coinType: { repr: TREE_COIN_TYPE },
-    amount: burnAmount,
-  }];
+  if (body.query?.includes('LatestCheckpoint')) return latestResponse('100');
+  firstRequests.push(body.variables || {});
+  return new Response(JSON.stringify({ data: { transactions: {
+    pageInfo: { hasNextPage: true, endCursor: 'cursor-1' },
+    nodes: [burnNode('burn-page-1', 20, '300000000000')],
+  } } }), { status: 200 });
+};
+
+let progressWrites = 0;
+const partial = await refreshTreeBurnIndex(null, [walletA], {
+  fetchImpl: firstFetch as typeof fetch,
+  now: () => 1_800_000_000_000,
+  creationCheckpoint,
+  concurrency: 1,
+  maxPagesPerWallet: 1,
+  sleepImpl: async () => {},
+  onProgress: () => { progressWrites += 1; },
+});
+assert.equal(partial.outcome, 'verification-incomplete');
+assert.ok(partial.index);
+assert.equal(partial.index.methodologyVersion, TREE_BURN_INDEX_METHODOLOGY_VERSION);
+assert.equal(validateTreeBurnIndex(partial.index), true);
+assert.equal(partial.index.wallets[walletA].completeBackfill, false);
+assert.equal(partial.index.wallets[walletA].progress?.nextCursor, 'cursor-1');
+assert.equal(partial.index.wallets[walletA].progress?.accumulatedBurnedTreeRaw, '300000000000');
+assert.equal(firstRequests[0].afterCheckpoint, 9);
+assert.equal(firstRequests[0].beforeCheckpoint, 101);
+assert.ok(progressWrites >= 2);
+
+const resumeRequests: Array<Record<string, unknown>> = [];
+const resumeFetch = async (_input: RequestInfo | URL, init?: RequestInit) => {
+  const body = JSON.parse(String(init?.body || '{}')) as { query?: string; variables?: Record<string, unknown> };
+  if (body.query?.includes('LatestCheckpoint')) return latestResponse('100');
+  resumeRequests.push(body.variables || {});
   return new Response(JSON.stringify({ data: { transactions: {
     pageInfo: { hasNextPage: false, endCursor: null },
-    nodes: [{
-      digest: `digest-${sender.slice(2, 4)}`,
-      sender: { address: sender },
-      effects: {
-        checkpoint: { sequenceNumber: '99' },
-        balanceChanges: { pageInfo: { hasNextPage: false }, nodes: changes },
-      },
-    }],
+    nodes: [burnNode('burn-page-2', 30, '200000000000')],
   } } }), { status: 200 });
 };
-
-let checkpointWrites = 0;
-const first = await refreshTreeBurnIndex(null, [walletA, walletB], {
-  fetchImpl: fetchImpl as typeof fetch,
-  now: () => 1_800_000_000_000,
-  concurrency: 2,
+const completed = await refreshTreeBurnIndex(partial.index, [walletA], {
+  fetchImpl: resumeFetch as typeof fetch,
+  now: () => 1_800_000_060_000,
+  creationCheckpoint,
+  concurrency: 1,
   sleepImpl: async () => {},
-  onWalletComplete: () => { checkpointWrites += 1; },
 });
-assert.equal(first.outcome, 'complete');
-assert.ok(first.index);
-assert.equal(validateTreeBurnIndex(first.index), true);
-assert.equal(first.coverage.walletsCompleted, 2);
-assert.equal(checkpointWrites, 2);
-assert.equal(burnEvidenceForWallet(first.index, walletA)?.qualifies, true);
-assert.equal(burnEvidenceForWallet(first.index, walletA)?.burnedTree, '500000');
-assert.equal(burnEvidenceForWallet(first.index, walletB)?.qualifies, false);
+assert.equal(completed.outcome, 'complete');
+assert.ok(completed.index);
+assert.equal(resumeRequests[0].after, 'cursor-1');
+assert.equal(resumeRequests[0].afterCheckpoint, 9);
+assert.equal(resumeRequests[0].beforeCheckpoint, 101);
+assert.equal(completed.index.wallets[walletA].progress, null);
+assert.equal(completed.index.wallets[walletA].indexedThroughCheckpoint, '100');
+assert.equal(completed.index.wallets[walletA].burnedTreeRaw, '500000000000');
+assert.equal(burnEvidenceForWallet(completed.index, walletA)?.qualifies, true);
+assert.equal(burnEvidenceForWallet(completed.index, walletA)?.burnedTree, '500000');
 
-let incrementalTransactionQueries = 0;
+let incrementalQueries = 0;
 const incrementalFetch = async (_input: RequestInfo | URL, init?: RequestInit) => {
   const body = JSON.parse(String(init?.body || '{}')) as { query?: string; variables?: Record<string, unknown> };
-  if (body.query?.includes('LatestCheckpoint')) {
-    return new Response(JSON.stringify({ data: { checkpoints: { nodes: [{ sequenceNumber: '105' }] } } }), { status: 200 });
-  }
-  incrementalTransactionQueries += 1;
-  assert.equal(body.variables?.afterCheckpoint, '100');
+  if (body.query?.includes('LatestCheckpoint')) return latestResponse('105');
+  incrementalQueries += 1;
+  assert.equal(body.variables?.afterCheckpoint, 100);
+  assert.equal(body.variables?.beforeCheckpoint, 106);
+  assert.equal(body.variables?.after, null);
   return new Response(JSON.stringify({ data: { transactions: {
-    pageInfo: { hasNextPage: false, endCursor: null }, nodes: [],
+    pageInfo: { hasNextPage: false, endCursor: null },
+    nodes: [],
   } } }), { status: 200 });
 };
-const second = await refreshTreeBurnIndex(first.index, [walletA, walletB], {
+const incremental = await refreshTreeBurnIndex(completed.index, [walletA], {
   fetchImpl: incrementalFetch as typeof fetch,
-  now: () => 1_800_000_060_000,
-  concurrency: 2,
+  now: () => 1_800_000_120_000,
+  creationCheckpoint,
+  concurrency: 1,
   sleepImpl: async () => {},
 });
-assert.equal(second.outcome, 'complete');
-assert.equal(incrementalTransactionQueries, 2);
-assert.equal(second.index?.wallets[walletA].burnedTreeRaw, '500000000000');
-assert.equal(second.index?.wallets[walletA].indexedThroughCheckpoint, '105');
-console.log('TREE burn index: PASS (lifetime backfill, per-wallet checkpoints, and incremental updates)');
+assert.equal(incremental.outcome, 'complete');
+assert.equal(incrementalQueries, 1);
+assert.equal(incremental.index?.wallets[walletA].burnedTreeRaw, '500000000000');
+assert.equal(incremental.index?.wallets[walletA].indexedThroughCheckpoint, '105');
+assert.equal(incremental.index?.indexedThroughCheckpoint, '105');
+console.log('TREE burn index: PASS (creation checkpoint, per-page cursor persistence, interrupted resume, exact burn totals, and incremental updates)');
