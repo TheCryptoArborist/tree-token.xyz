@@ -4,6 +4,10 @@ import { formatBaseUnits, formatPercentFromRaw } from './sui-graphql-leaderboard
 export const TREE_EXPOSURE_METHODOLOGY_VERSION = 'verified-tree-exposure-v1';
 export const LP_PROVIDER_BADGE = 'lp-provider';
 export const LP_MAXI_BADGE = 'lp-maxi';
+export const DIAMOND_HANDS_BADGE = 'diamond-hands';
+export const PAPER_HANDS_BADGE = 'paper-hands';
+export const ACCUMULATOR_BADGE = 'accumulator';
+export const BURNED_BADGE = 'burned';
 
 export type ExposureVenue = 'suiDexV2' | 'suiDexV3' | 'turbos';
 
@@ -52,6 +56,18 @@ export type VerifiedExposureEntry = {
     turbosRaw: string;
     turbos: string;
   };
+  activity30d?: {
+    windowStart: string;
+    windowEnd: string;
+    buyCount: number;
+    sellCount: number;
+    buyTreeRaw: string;
+    buyTree: string;
+    sellTreeRaw: string;
+    sellTree: string;
+  } | null;
+  burnedTreeRaw?: string | null;
+  burnedTree?: string | null;
   badges: string[];
 };
 

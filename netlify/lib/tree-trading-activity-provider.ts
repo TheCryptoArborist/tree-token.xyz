@@ -3,7 +3,7 @@ import {
   normalizeSuiAddress,
 } from './leaderboard-provider.ts';
 import { SUIDEX_V2_TREE_POOL_ID } from './suidex-v2-tree-lp-provider.ts';
-import { TURBOS_TREE_POOL_IDS } from './turbos-tree-lp-provider.ts';
+
 
 export const TREE_ACTIVITY_METHODOLOGY_VERSION = 'noodles-recognized-tree-pool-trades-v1';
 export const DIAMOND_HANDS_BADGE = 'diamond-hands';
@@ -16,7 +16,7 @@ export const SUIDEX_V3_TREE_POOL_ID = '0x39d5ba22e01e45bc4129ec28a0bef52e8fee8db
 export const RECOGNIZED_TREE_TRADE_POOL_IDS = [
   SUIDEX_V2_TREE_POOL_ID,
   SUIDEX_V3_TREE_POOL_ID,
-  ...TURBOS_TREE_POOL_IDS,
+  '0xaa133ce1f8fd55d85b6fc87c1b3054cb717d83be477ef3635c661c21fbdfa0ee',
 ] as const;
 
 const DEFAULT_NOODLES_BASE_URL = 'https://api.noodles.fi';

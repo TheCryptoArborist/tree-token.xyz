@@ -8,6 +8,10 @@ import type { ExposureSnapshot } from './tree-exposure-aggregator.ts';
 import {
   LP_MAXI_BADGE,
   LP_PROVIDER_BADGE,
+  DIAMOND_HANDS_BADGE,
+  PAPER_HANDS_BADGE,
+  ACCUMULATOR_BADGE,
+  BURNED_BADGE,
   TREE_EXPOSURE_METHODOLOGY_VERSION,
   formatTreeRaw,
   formatTreeSupplyPercent,
@@ -43,6 +47,8 @@ export type ExposureSourceSummary = {
     addressOwnedRaw: string;
   };
   venues: Record<ExposureVenue, ExposureVenueSourceSummary>;
+  activity?: { outcome: string; methodologyVersion: string; generatedAt: string; windowStart: string; windowEnd: string; coverage: Record<string, unknown>; warnings: string[] };
+  burns?: { outcome: string; methodologyVersion: string; generatedAt: string; coverage: Record<string, unknown>; warnings: string[] };
   suins: {
     requestedCount: number;
     resolvedCount: number;
@@ -60,6 +66,10 @@ export type ExposureSnapshotSummary = {
   badgeCounts: {
     lpProvider: number;
     lpMaxi: number;
+    diamondHands?: number;
+    paperHands?: number;
+    accumulator?: number;
+    burned?: number;
   };
 };
 
@@ -156,10 +166,30 @@ function safeSuinsName(value: unknown): boolean {
     && !/[\u0000-\u001f\u007f]/.test(value));
 }
 
-function expectedBadges(liquidRaw: bigint, lpRaw: bigint): string[] {
+function expectedBadges(liquidRaw: bigint, lpRaw: bigint, entry: Partial<VerifiedExposureEntry>): string[] | null {
   const badges: string[] = [];
   if (lpRaw > 0n) badges.push(LP_PROVIDER_BADGE);
   if (lpRaw > liquidRaw && lpRaw > 0n) badges.push(LP_MAXI_BADGE);
+  if (entry.activity30d !== undefined && entry.activity30d !== null) {
+    const activity = record(entry.activity30d);
+    const buyRaw = parseUnsignedRaw(activity.buyTreeRaw);
+    const sellRaw = parseUnsignedRaw(activity.sellTreeRaw);
+    if (buyRaw === null || sellRaw === null
+      || !safeNonNegativeInteger(activity.buyCount)
+      || !safeNonNegativeInteger(activity.sellCount)
+      || !safeGeneratedAt(activity.windowStart)
+      || !safeGeneratedAt(activity.windowEnd)
+      || activity.buyTree !== formatTreeRaw(buyRaw)
+      || activity.sellTree !== formatTreeRaw(sellRaw)) return null;
+    if (activity.sellCount === 0) badges.push(DIAMOND_HANDS_BADGE);
+    if (sellRaw > buyRaw && sellRaw >= 100_000_000_000n) badges.push(PAPER_HANDS_BADGE);
+    if (activity.buyCount >= 10 && buyRaw >= 100_000_000_000n && buyRaw > sellRaw) badges.push(ACCUMULATOR_BADGE);
+  }
+  if (entry.burnedTreeRaw !== undefined && entry.burnedTreeRaw !== null) {
+    const burnedRaw = parseUnsignedRaw(entry.burnedTreeRaw);
+    if (burnedRaw === null || entry.burnedTree !== formatTreeRaw(burnedRaw)) return null;
+    if (burnedRaw >= 500_000_000_000n) badges.push(BURNED_BADGE);
+  } else if (entry.burnedTree !== undefined && entry.burnedTree !== null) return null;
   return badges;
 }
 
@@ -192,7 +222,8 @@ function validateEntry(value: unknown, expectedRank: number): value is VerifiedE
     || !safeNonNegativeInteger(entry.lpPositionCount)) return false;
 
   const badges = Array.isArray(entry.badges) ? entry.badges : [];
-  const expected = expectedBadges(liquidRaw, lpRaw);
+  const expected = expectedBadges(liquidRaw, lpRaw, entry);
+  if (!expected) return false;
   return badges.length === expected.length && badges.every((badge, index) => badge === expected[index]);
 }
 
@@ -260,6 +291,10 @@ export function validateCompleteExposureSnapshot(value: unknown): value is Compl
   let top50LpRaw = 0n;
   let lpProvider = 0;
   let lpMaxi = 0;
+  let diamondHands = 0;
+  let paperHands = 0;
+  let accumulator = 0;
+  let burned = 0;
   let previousTotalRaw: bigint | null = null;
   let previousLiquidRaw: bigint | null = null;
   let previousWallet: string | null = null;
@@ -284,6 +319,10 @@ export function validateCompleteExposureSnapshot(value: unknown): value is Compl
     top50LpRaw += BigInt(entry.lpTreeRaw);
     if (entry.badges.includes(LP_PROVIDER_BADGE)) lpProvider += 1;
     if (entry.badges.includes(LP_MAXI_BADGE)) lpMaxi += 1;
+    if (entry.badges.includes(DIAMOND_HANDS_BADGE)) diamondHands += 1;
+    if (entry.badges.includes(PAPER_HANDS_BADGE)) paperHands += 1;
+    if (entry.badges.includes(ACCUMULATOR_BADGE)) accumulator += 1;
+    if (entry.badges.includes(BURNED_BADGE)) burned += 1;
   }
   if (top50TotalRaw > TREE_TOTAL_SUPPLY_RAW) return false;
 
@@ -295,6 +334,10 @@ export function validateCompleteExposureSnapshot(value: unknown): value is Compl
     && summary.rank50CutoffRaw === snapshot.entries[49].totalExposureRaw
     && badgeCounts.lpProvider === lpProvider
     && badgeCounts.lpMaxi === lpMaxi
+    && (badgeCounts.diamondHands === undefined || badgeCounts.diamondHands === diamondHands)
+    && (badgeCounts.paperHands === undefined || badgeCounts.paperHands === paperHands)
+    && (badgeCounts.accumulator === undefined || badgeCounts.accumulator === accumulator)
+    && (badgeCounts.burned === undefined || badgeCounts.burned === burned)
     && validateSource(snapshot);
 }
 

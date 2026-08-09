@@ -55,6 +55,9 @@ function entryForRank(rank: number): VerifiedExposureEntry {
       turbosRaw: turbosRaw.toString(),
       turbos: formatTreeRaw(turbosRaw),
     },
+    activity30d: null,
+    burnedTreeRaw: null,
+    burnedTree: null,
     badges,
   };
 }

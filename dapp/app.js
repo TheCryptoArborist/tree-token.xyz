@@ -694,7 +694,7 @@ function renderLeaderboard(payload) {
   const rows = elementById('leaderboardRows');
   const allowedStatus = ['not-ready', 'refreshing', 'ok', 'stale', 'error'];
   leaderboardStatus = allowedStatus.includes(payload.status) ? payload.status : 'error';
-  const exposurePayload = payload.methodologyVersion === 'verified-tree-exposure-v1'
+  const exposurePayload = String(payload.methodologyVersion || '').startsWith('verified-tree-exposure-v')
     || payload.provider === 'tree-exposure-snapshot';
   leaderboardMode = exposurePayload ? 'exposure' : 'direct';
   const rawEntries = ['ok', 'stale'].includes(leaderboardStatus) && Array.isArray(payload.entries) ? payload.entries : [];
@@ -790,7 +790,7 @@ async function loadLeaderboard() {
     const response = await fetch(leaderboardUrl, { headers: { Accept: 'application/json' } });
     if (!response.ok) throw new Error(`Leaderboard returned ${response.status}`);
     const payload = await response.json();
-    if (isDeployPreview && payload.methodologyVersion === 'verified-tree-exposure-v1') {
+    if (isDeployPreview && String(payload.methodologyVersion || '').startsWith('verified-tree-exposure-v')) {
       payload.warnings = [...(Array.isArray(payload.warnings) ? payload.warnings : []), 'Deploy Preview: ranks combine liquid TREE with current verified principal in SuiDex V2, SuiDex V3, and Turbos positions.'];
     }
     renderLeaderboard(payload);

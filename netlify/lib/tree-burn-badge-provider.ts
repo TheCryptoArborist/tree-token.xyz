@@ -66,6 +66,7 @@ export type TreeBurnBadgeOptions = {
   pageSize?: number;
   maxPages?: number;
   maxScanMs?: number;
+  getEnv?: (name: string) => string | undefined;
 };
 
 function record(value: unknown): JsonRecord {
@@ -138,6 +139,13 @@ export async function scanTreeBurnContributions(
     graphqlErrors: [],
     networkError: null,
   };
+  const getEnv = options.getEnv ?? ((name) => Netlify.env.get(name));
+  const enabled = Boolean(options.fetchImpl) || (getEnv('TREE_BURN_BADGES_ENABLED') || '').trim().toLowerCase() === 'true';
+  if (!enabled) {
+    return finish('verification-incomplete', generatedAt, targets, totals, coverage, [
+      'Lifetime TREE burn verification is disabled for this environment.',
+    ]);
+  }
   const fetchImpl = options.fetchImpl ?? fetch;
   const endpoint = options.endpoint || DEFAULT_GRAPHQL_URL;
   const pageSize = Math.max(1, Math.min(50, Math.trunc(options.pageSize ?? DEFAULT_PAGE_SIZE)));
