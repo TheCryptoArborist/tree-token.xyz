@@ -20,7 +20,7 @@ jobs:
         run: |
           set -euo pipefail
           curl --silent --show-error --location --max-time 60 \
-            'https://deploy-preview-4--tree-token.netlify.app/api/tree-exposure?diagnostic=1' \
+            'https://deploy-preview-4--tree-token.netlify.app/api/tree-exposure?diagnostic=2' \
             -o /tmp/exposure.json
           node <<'NODE'
           const p=require('/tmp/exposure.json');
