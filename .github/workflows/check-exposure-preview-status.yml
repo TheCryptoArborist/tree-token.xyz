@@ -15,13 +15,18 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Inspect current independent snapshot states
+      - name: Trigger once and capture the current badge diagnostic
         shell: bash
         run: |
           set -euo pipefail
           BASE='https://deploy-preview-6--tree-token.netlify.app'
-          curl --silent --show-error --location --max-time 60 "$BASE/api/tree-exposure?status_snapshot=3" -o /tmp/exposure.json
-          curl --silent --show-error --location --max-time 60 "$BASE/api/tree-badges?status_snapshot=3" -o /tmp/badges.json
+          curl --silent --show-error --location --max-time 60 "$BASE/api/tree-badges?diagnostic_trigger=1" -o /tmp/badges-first.json
+          first_status=$(node -e "const p=require('/tmp/badges-first.json');process.stdout.write(String(p.status||''))")
+          first_state=$(node -e "const p=require('/tmp/badges-first.json');process.stdout.write(String(p.refreshState||''))")
+          echo "first status=$first_status state=$first_state"
+          sleep 15
+          curl --silent --show-error --location --max-time 60 "$BASE/api/tree-exposure?diagnostic=4" -o /tmp/exposure.json
+          curl --silent --show-error --location --max-time 60 "$BASE/api/tree-badges?diagnostic=4" -o /tmp/badges.json
           node <<'NODE'
           const exposure=require('/tmp/exposure.json');
           const badges=require('/tmp/badges.json');
@@ -29,7 +34,6 @@ jobs:
             exposure:{
               status:exposure.status,
               refreshState:exposure.refreshState,
-              refreshStatus:exposure.refreshStatus,
               snapshotGeneratedAt:exposure.snapshotGeneratedAt,
               displayedCount:exposure.displayedCount,
               summary:exposure.summary,
