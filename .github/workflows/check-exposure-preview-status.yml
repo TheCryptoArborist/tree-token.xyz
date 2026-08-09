@@ -20,8 +20,8 @@ jobs:
         run: |
           set -euo pipefail
           BASE='https://deploy-preview-6--tree-token.netlify.app'
-          curl --silent --show-error --location --max-time 60 "$BASE/api/tree-exposure?status_snapshot=1" -o /tmp/exposure.json
-          curl --silent --show-error --location --max-time 60 "$BASE/api/tree-badges?status_snapshot=1" -o /tmp/badges.json
+          curl --silent --show-error --location --max-time 60 "$BASE/api/tree-exposure?status_snapshot=2" -o /tmp/exposure.json
+          curl --silent --show-error --location --max-time 60 "$BASE/api/tree-badges?status_snapshot=2" -o /tmp/badges.json
           node <<'NODE'
           const exposure=require('/tmp/exposure.json');
           const badges=require('/tmp/badges.json');
