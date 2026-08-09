@@ -1,0 +1,81 @@
+name: Verify complete TREE exposure snapshot
+
+on:
+  push:
+    branches:
+      - feature/leaderboard-exposure-v1
+    paths:
+      - '.github/workflows/verify-tree-exposure-complete.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Wait for completed snapshot and validate
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL='https://deploy-preview-4--tree-token.netlify.app/api/tree-exposure'
+          for attempt in $(seq 1 90); do
+            curl --silent --show-error --location --max-time 60 \
+              "$URL?completion_check=$attempt" -o /tmp/exposure.json
+            state=$(node -e "const p=require('/tmp/exposure.json');process.stdout.write(String(p.refreshState||''))")
+            status=$(node -e "const p=require('/tmp/exposure.json');process.stdout.write(String(p.status||''))")
+            stage=$(node -e "const p=require('/tmp/exposure.json');process.stdout.write(String(p.refreshStatus?.stage||''))")
+            echo "attempt=$attempt status=$status refresh=$state stage=${stage:-unknown}"
+            if [[ ( "$status" == 'ok' || "$status" == 'stale' ) && "$state" == 'complete' ]]; then
+              break
+            fi
+            [[ "$attempt" != '90' ]] || { cat /tmp/exposure.json; exit 1; }
+            sleep 10
+          done
+          node <<'NODE'
+          const fs = require('node:fs');
+          const p = JSON.parse(fs.readFileSync('/tmp/exposure.json','utf8'));
+          const errors = [];
+          const check = (condition, message) => { if (!condition) errors.push(message); };
+          check(['ok','stale'].includes(p.status), 'status');
+          check(p.refreshState === 'complete', 'refreshState');
+          check(p.refreshStatus?.totalExposureComplete === true, 'refreshStatus');
+          check(p.methodologyVersion === 'verified-tree-exposure-v1', 'methodology');
+          check(p.totalSupplyRaw === '1000000000000000', 'supply');
+          for (const key of ['directTreeComplete','suiDexV2Complete','suiDexV3Complete','turbosComplete','totalExposureComplete']) check(p.coverage?.[key] === true, key);
+          check(Array.isArray(p.entries) && p.entries.length === 50, 'entries');
+          let total=0n, liquid=0n, lp=0n, providers=0, maxis=0;
+          for (let i=0;i<p.entries.length;i++) {
+            const e=p.entries[i];
+            const l=BigInt(e.liquidTreeRaw), x=BigInt(e.lpTreeRaw), t=BigInt(e.totalExposureRaw);
+            const v2=BigInt(e.lpBreakdown.suiDexV2Raw), v3=BigInt(e.lpBreakdown.suiDexV3Raw), tb=BigInt(e.lpBreakdown.turbosRaw);
+            check(e.rank===i+1, `rank-${i+1}`);
+            check(t===l+x, `total-${i+1}`);
+            check(x===v2+v3+tb, `breakdown-${i+1}`);
+            check(e.badges.includes('lp-provider')===(x>0n), `provider-${i+1}`);
+            check(e.badges.includes('lp-maxi')===(x>l&&x>0n), `maxi-${i+1}`);
+            total+=t; liquid+=l; lp+=x;
+            if(e.badges.includes('lp-provider')) providers++;
+            if(e.badges.includes('lp-maxi')) maxis++;
+          }
+          check(total===liquid+lp,'aggregate');
+          check(p.summary.top50TotalRaw===total.toString(),'summary-total');
+          check(p.summary.top50LiquidRaw===liquid.toString(),'summary-liquid');
+          check(p.summary.top50LpRaw===lp.toString(),'summary-lp');
+          check(p.summary.badgeCounts.lpProvider===providers,'summary-provider');
+          check(p.summary.badgeCounts.lpMaxi===maxis,'summary-maxi');
+          if(errors.length){ console.error(JSON.stringify(errors,null,2)); process.exit(1); }
+          console.log(JSON.stringify({
+            status:p.status,
+            snapshotGeneratedAt:p.snapshotGeneratedAt,
+            eligibleOwnerCount:p.eligibleOwnerCount,
+            displayedCount:p.displayedCount,
+            top50TotalRaw:total.toString(),
+            top50LiquidRaw:liquid.toString(),
+            top50LpRaw:lp.toString(),
+            rank50CutoffRaw:p.entries[49].totalExposureRaw,
+            badgeCounts:{lpProvider:providers,lpMaxi:maxis},
+            source:p.source,
+          },null,2));
+          NODE
