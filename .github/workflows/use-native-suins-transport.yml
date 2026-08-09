@@ -89,14 +89,19 @@ jobs:
           node tests/dashboard-cache.test.mjs
           node tests/leaderboard-ui-state.test.mjs
           for test in tests/*.ts; do npx --yes tsx "$test"; done
-          node --input-type=module <<'JS'
-          const leaderboard = await fetch('https://tree-token.xyz/api/tree-leaderboard').then((response) => response.json());
+          cat > scripts/suins-native-smoke.ts <<'TS'
+          import { resolveDefaultSuinsNames } from '../netlify/lib/suins-name-resolver.ts';
+
+          const response = await fetch('https://tree-token.xyz/api/tree-leaderboard');
+          if (!response.ok) throw new Error(`Leaderboard returned ${response.status}`);
+          const leaderboard = await response.json() as { entries?: Array<{ wallet: string }> };
           const wallets = (leaderboard.entries || []).slice(0, 10).map((entry) => entry.wallet);
-          const { resolveDefaultSuinsNames } = await import('./netlify/lib/suins-name-resolver.ts');
           const result = await resolveDefaultSuinsNames(wallets, { timeoutMs: 20_000 });
           console.log(JSON.stringify({ requested: result.requestedCount, resolved: result.resolvedCount, complete: result.complete }, null, 2));
           if (!result.complete || result.requestedCount !== wallets.length) process.exit(1);
-          JS
+          TS
+          npx --yes tsx scripts/suins-native-smoke.ts
+          rm -f scripts/suins-native-smoke.ts
           git diff --check
 
       - name: Commit native transport
