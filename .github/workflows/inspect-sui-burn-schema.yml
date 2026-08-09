@@ -1,0 +1,30 @@
+name: Inspect Sui burn attribution schema
+
+on:
+  push:
+    branches:
+      - review/phase1
+    paths:
+      - '.github/workflows/inspect-sui-burn-schema.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Inspect public Sui GraphQL object and transaction fields
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const query = `query Introspect {
+            object: __type(name: "Object") { fields { name type { kind name ofType { kind name } } } }
+            tx: __type(name: "TransactionBlock") { fields { name type { kind name ofType { kind name } } } }
+            effects: __type(name: "TransactionBlockEffects") { fields { name type { kind name ofType { kind name } } } }
+          }`;
+          const r=await fetch('https://graphql.mainnet.sui.io/graphql',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({query})});
+          console.log(await r.text());
+          NODE
