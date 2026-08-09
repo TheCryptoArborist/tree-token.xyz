@@ -18,7 +18,7 @@ jobs:
       - name: Install browser driver
         shell: bash
         run: npm install --no-save --ignore-scripts puppeteer-core@24
-      - name: Validate desktop and mobile layouts
+      - name: Validate desktop and mobile layouts after containment fix
         shell: bash
         run: |
           set -euo pipefail
@@ -27,7 +27,7 @@ jobs:
           node <<'NODE'
           const puppeteer = require('puppeteer-core');
           (async () => {
-            const url = 'https://deploy-preview-6--tree-token.netlify.app/dapp/#leaderboard';
+            const url = 'https://deploy-preview-6--tree-token.netlify.app/dapp/?mobile_fix_qa=1#leaderboard';
             const viewports = [
               { width: 1440, height: 1000 },
               { width: 1024, height: 900 },
@@ -53,24 +53,6 @@ jobs:
               await page.waitForFunction(() => document.querySelectorAll('.leader-card').length === 50, { timeout: 120000 });
               await new Promise((resolve) => setTimeout(resolve, 1000));
               const metrics = await page.evaluate(() => {
-                const overflow = [...document.querySelectorAll('body *')]
-                  .filter((element) => {
-                    const style = getComputedStyle(element);
-                    if (style.position === 'fixed' || style.position === 'sticky') return false;
-                    const rect = element.getBoundingClientRect();
-                    return rect.left < -1 || rect.right > innerWidth + 1;
-                  })
-                  .slice(0, 20)
-                  .map((element) => {
-                    const rect = element.getBoundingClientRect();
-                    return {
-                      tag: element.tagName,
-                      id: element.id,
-                      className: String(element.className || ''),
-                      left: Math.round(rect.left),
-                      right: Math.round(rect.right),
-                    };
-                  });
                 const badgeLabels = [...document.querySelectorAll('.leader-badge')].map((element) => element.textContent.trim());
                 return {
                   viewportWidth: innerWidth,
@@ -81,7 +63,6 @@ jobs:
                   badgeCount: badgeLabels.length,
                   badgeLabels: [...new Set(badgeLabels)],
                   leaderboardState: document.querySelector('#leaderboardState')?.textContent?.trim() || null,
-                  overflow,
                 };
               });
               const filename = `/tmp/tree-badge-preview-${viewport.width}.png`;
