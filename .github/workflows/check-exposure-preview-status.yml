@@ -15,41 +15,30 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Trigger once and capture the current badge diagnostic
+      - name: Trigger once and wait for the next badge stage
         shell: bash
         run: |
           set -euo pipefail
           BASE='https://deploy-preview-6--tree-token.netlify.app'
-          curl --silent --show-error --location --max-time 60 "$BASE/api/tree-badges?diagnostic_trigger=1" -o /tmp/badges-first.json
-          first_status=$(node -e "const p=require('/tmp/badges-first.json');process.stdout.write(String(p.status||''))")
-          first_state=$(node -e "const p=require('/tmp/badges-first.json');process.stdout.write(String(p.refreshState||''))")
-          echo "first status=$first_status state=$first_state"
-          sleep 15
-          curl --silent --show-error --location --max-time 60 "$BASE/api/tree-exposure?diagnostic=4" -o /tmp/exposure.json
-          curl --silent --show-error --location --max-time 60 "$BASE/api/tree-badges?diagnostic=4" -o /tmp/badges.json
+          for attempt in $(seq 1 18); do
+            curl --silent --show-error --location --max-time 60 "$BASE/api/tree-badges?limit_fix_check=$attempt" -o /tmp/badges.json
+            status=$(node -e "const p=require('/tmp/badges.json');process.stdout.write(String(p.status||''))")
+            state=$(node -e "const p=require('/tmp/badges.json');process.stdout.write(String(p.refreshState||''))")
+            stage=$(node -e "const p=require('/tmp/badges.json');process.stdout.write(String(p.refreshStatus?.stage||''))")
+            activity=$(node -e "const p=require('/tmp/badges.json');process.stdout.write(String(p.refreshStatus?.activityOutcome||''))")
+            burns=$(node -e "const p=require('/tmp/badges.json');process.stdout.write(String(p.refreshStatus?.burnOutcome||''))")
+            echo "attempt=$attempt status=$status state=$state stage=${stage:-unknown} activity=${activity:-unknown} burns=${burns:-unknown}"
+            if [[ "$status" == 'ok' || "$status" == 'stale' || "$state" == 'error' || "$state" == 'verification-incomplete' ]]; then
+              break
+            fi
+            sleep 10
+          done
+          curl --silent --show-error --location --max-time 60 "$BASE/api/tree-exposure?limit_fix_check=final" -o /tmp/exposure.json
           node <<'NODE'
           const exposure=require('/tmp/exposure.json');
           const badges=require('/tmp/badges.json');
           console.log(JSON.stringify({
-            exposure:{
-              status:exposure.status,
-              refreshState:exposure.refreshState,
-              snapshotGeneratedAt:exposure.snapshotGeneratedAt,
-              displayedCount:exposure.displayedCount,
-              summary:exposure.summary,
-              message:exposure.message,
-            },
-            badges:{
-              status:badges.status,
-              refreshState:badges.refreshState,
-              refreshStatus:badges.refreshStatus,
-              snapshotGeneratedAt:badges.snapshotGeneratedAt,
-              exposureSnapshotGeneratedAt:badges.exposureSnapshotGeneratedAt,
-              displayedCount:badges.displayedCount,
-              summary:badges.summary,
-              source:badges.source,
-              warnings:badges.warnings,
-              message:badges.message,
-            },
+            exposure:{status:exposure.status,refreshState:exposure.refreshState,snapshotGeneratedAt:exposure.snapshotGeneratedAt,displayedCount:exposure.displayedCount,summary:exposure.summary,message:exposure.message},
+            badges:{status:badges.status,refreshState:badges.refreshState,refreshStatus:badges.refreshStatus,snapshotGeneratedAt:badges.snapshotGeneratedAt,exposureSnapshotGeneratedAt:badges.exposureSnapshotGeneratedAt,displayedCount:badges.displayedCount,summary:badges.summary,source:badges.source,warnings:badges.warnings,message:badges.message},
           },null,2));
           NODE
