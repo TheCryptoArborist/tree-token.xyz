@@ -15,14 +15,25 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Read combined Deploy Preview state
+      - name: Read compact TREE badge Deploy Preview state
         shell: bash
         run: |
           set -euo pipefail
-          for endpoint in tree-exposure tree-badges; do
-            curl --silent --show-error --location --max-time 60 \
-              "https://deploy-preview-6--tree-token.netlify.app/api/${endpoint}?status_check=1" \
-              -o "/tmp/${endpoint}.json"
-            echo "=== ${endpoint} ==="
-            node -e "const p=require('/tmp/${endpoint}.json'); console.log(JSON.stringify(p,null,2))"
-          done
+          curl --silent --show-error --location --max-time 60 \
+            'https://deploy-preview-6--tree-token.netlify.app/api/tree-badges?status_check=2' \
+            -o /tmp/tree-badges.json
+          node <<'NODE'
+          const p = require('/tmp/tree-badges.json');
+          console.log(JSON.stringify({
+            status: p.status,
+            refreshState: p.refreshState,
+            refreshStatus: p.refreshStatus,
+            snapshotGeneratedAt: p.snapshotGeneratedAt,
+            exposureSnapshotGeneratedAt: p.exposureSnapshotGeneratedAt,
+            displayedCount: p.displayedCount,
+            source: p.source,
+            summary: p.summary,
+            warnings: p.warnings,
+            message: p.message,
+          }, null, 2));
+          NODE
