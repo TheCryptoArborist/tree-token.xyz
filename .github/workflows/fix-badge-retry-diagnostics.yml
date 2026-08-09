@@ -1,0 +1,128 @@
+name: Harden TREE badge retries and diagnostics
+
+on:
+  push:
+    branches:
+      - feature/leaderboard-badges-v1
+    paths:
+      - '.github/workflows/fix-badge-retry-diagnostics.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/leaderboard-badges-v1
+          fetch-depth: 0
+      - name: Apply retry and diagnostic safeguards
+        shell: bash
+        run: |
+          set -euo pipefail
+          python <<'PY'
+          from pathlib import Path
+
+          endpoint_path=Path('netlify/lib/tree-badge-snapshot-endpoint.ts')
+          endpoint=endpoint_path.read_text(encoding='utf-8')
+          old="""    if (payload.status === 'not-ready'
+                && context === 'deploy-preview'
+                && enabled(getEnv('TREE_BADGE_AUTO_BOOTSTRAP'))) {"""
+          new="""    if (payload.status === 'not-ready'
+                && payload.refreshState === 'idle'
+                && context === 'deploy-preview'
+                && enabled(getEnv('TREE_BADGE_AUTO_BOOTSTRAP'))) {"""
+          if old not in endpoint:
+              raise SystemExit('badge endpoint bootstrap condition not found')
+          endpoint=endpoint.replace(old,new,1)
+          endpoint_path.write_text(endpoint,encoding='utf-8')
+
+          worker_path=Path('netlify/lib/tree-badge-background-worker.ts')
+          worker=worker_path.read_text(encoding='utf-8')
+          activity_old="message: 'The activity index did not complete; the prior complete badge snapshot was preserved.',"
+          activity_new="message: `Activity index ${activity.outcome}: ${activity.warnings[0] || 'No diagnostic was returned.'} The prior complete badge snapshot was preserved.`,"
+          burn_old="message: 'The burn index did not complete; the prior complete badge snapshot was preserved.',"
+          burn_new="message: `Burn index ${burns.outcome}: ${burns.warnings[0] || 'No diagnostic was returned.'} The prior complete badge snapshot was preserved.`,"
+          catch_old="""  } catch (error) {
+              logger.error(error instanceof Error ? error.message : 'TREE badge refresh failed.');
+              await saveStatus({
+                state: 'error', stage: 'failed', completedAt: new Date(now()).toISOString(),
+                message: 'TREE badge refresh failed; the prior complete badge snapshot was preserved.',
+              });"""
+          catch_new="""  } catch (error) {
+              const errorMessage = error instanceof Error ? error.message : 'TREE badge refresh failed.';
+              logger.error(errorMessage);
+              await saveStatus({
+                state: 'error', stage: 'failed', completedAt: new Date(now()).toISOString(),
+                message: `TREE badge refresh failed: ${errorMessage} The prior complete badge snapshot was preserved.`,
+              });"""
+          for old_text,new_text,label in [
+              (activity_old,activity_new,'activity diagnostic'),
+              (burn_old,burn_new,'burn diagnostic'),
+              (catch_old,catch_new,'worker catch diagnostic'),
+          ]:
+              if old_text not in worker:
+                  raise SystemExit(f'{label} not found')
+              worker=worker.replace(old_text,new_text,1)
+          worker_path.write_text(worker,encoding='utf-8')
+
+          test_path=Path('tests/tree-badge-snapshot-endpoint.test.ts')
+          test=test_path.read_text(encoding='utf-8')
+          anchor="""const failedTrigger = await createTreeBadgeResponse(request, {"""
+          guard="""const priorError = await createTreeBadgeResponse(request, {
+            context: 'deploy-preview',
+            getEnv: (name) => ({ TREE_BADGE_AUTO_BOOTSTRAP: 'true', TREE_BADGE_REFRESH_SECRET: 'fixture' }[name]),
+            readSnapshot: async () => null,
+            readStatus: async () => ({
+              state: 'error', stage: 'failed', runId: 'failed-run',
+              startedAt: '2026-08-09T14:00:00.000Z', updatedAt: '2026-08-09T14:01:00.000Z', completedAt: '2026-08-09T14:01:00.000Z',
+              exposureSnapshotGeneratedAt: '2026-08-09T14:00:30.000Z', activityOutcome: 'error', burnOutcome: 'pending', displayedCount: 0,
+              message: 'diagnostic', commitRef: null, deployId: null,
+            }),
+            triggerRefresh: async () => { throw new Error('failed states require an explicit new deploy or authenticated retry'); },
+          });
+          const priorErrorPayload = await priorError.json();
+          assert.equal(priorErrorPayload.status, 'not-ready');
+          assert.equal(priorErrorPayload.refreshState, 'error');
+          assert.match(priorErrorPayload.message, /not available/i);
+
+          """
+          if anchor not in test:
+              raise SystemExit('endpoint test anchor not found')
+          test=test.replace(anchor,guard+anchor,1)
+          test_path.write_text(test,encoding='utf-8')
+          PY
+          rm -f .github/workflows/fix-badge-retry-diagnostics.yml
+          git diff --check
+      - name: Validate all safeguards
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci
+          npm run build
+          node --check dapp/app.js
+          node tests/dashboard-cache.test.mjs
+          node tests/leaderboard-ui-state.test.mjs
+          for test in tests/*.ts; do npx --yes tsx "$test"; done
+          python <<'PY'
+          from pathlib import Path
+          endpoint=Path('netlify/lib/tree-badge-snapshot-endpoint.ts').read_text(encoding='utf-8')
+          worker=Path('netlify/lib/tree-badge-background-worker.ts').read_text(encoding='utf-8')
+          assert "payload.refreshState === 'idle'" in endpoint
+          assert 'Activity index ${activity.outcome}' in worker
+          assert 'Burn index ${burns.outcome}' in worker
+          assert 'TREE badge refresh failed: ${errorMessage}' in worker
+          PY
+          git diff --check
+      - name: Commit hardened badge flow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "TheCryptoArborist"
+          git config user.email "190985450+TheCryptoArborist@users.noreply.github.com"
+          git add -A
+          git commit -m "Harden TREE badge retry diagnostics"
+          git push origin HEAD:feature/leaderboard-badges-v1
