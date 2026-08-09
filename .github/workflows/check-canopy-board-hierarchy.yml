@@ -1,0 +1,134 @@
+name: Validate revised Canopy Board hierarchy
+
+on:
+  push:
+    branches:
+      - review/phase1
+    paths:
+      - '.github/workflows/check-canopy-board-hierarchy.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  browser-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Install browser driver
+        shell: bash
+        run: npm install --no-save --ignore-scripts puppeteer-core@24
+
+      - name: Validate connected-wallet-first board layout
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME=$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || command -v chromium-browser)
+          export CHROME
+          node <<'NODE'
+          const puppeteer = require('puppeteer-core');
+          (async () => {
+            const url = 'https://deploy-preview-6--tree-token.netlify.app/dapp/?canopy_hierarchy_qa=1#leaderboard';
+            const viewports = [
+              { width: 1440, height: 1000 },
+              { width: 390, height: 844 },
+              { width: 360, height: 800 },
+            ];
+            const browser = await puppeteer.launch({
+              headless: true,
+              executablePath: process.env.CHROME,
+              args: ['--no-sandbox', '--disable-dev-shm-usage'],
+            });
+            const results = [];
+            for (const viewport of viewports) {
+              const page = await browser.newPage();
+              await page.setViewport(viewport);
+              const consoleErrors = [];
+              page.on('console', (message) => {
+                if (message.type() === 'error') consoleErrors.push(message.text());
+              });
+              page.on('pageerror', (error) => consoleErrors.push(error.message));
+              await page.goto(url, { waitUntil: 'networkidle2', timeout: 120000 });
+              await page.waitForFunction(() => document.querySelectorAll('.leader-card').length === 50, { timeout: 180000 });
+              await page.waitForFunction(() => [...document.querySelectorAll('.leader-badge')].some((element) => element.textContent.includes('Diamond Hands')), { timeout: 180000 });
+              await new Promise((resolve) => setTimeout(resolve, 800));
+              const metrics = await page.evaluate(() => {
+                const leaderboard = document.querySelector('#leaderboard');
+                const personal = leaderboard?.querySelector('.rank-command-card');
+                const top50 = leaderboard?.querySelector('.top-board-heading');
+                const tiers = leaderboard?.querySelector('#tier-guide');
+                const methodology = leaderboard?.querySelector('.ranking-methodology');
+                const ordered = Boolean(personal && top50 && tiers && methodology
+                  && (personal.compareDocumentPosition(top50) & Node.DOCUMENT_POSITION_FOLLOWING)
+                  && (top50.compareDocumentPosition(tiers) & Node.DOCUMENT_POSITION_FOLLOWING)
+                  && (tiers.compareDocumentPosition(methodology) & Node.DOCUMENT_POSITION_FOLLOWING));
+                const unexpectedOverflow = [...document.querySelectorAll('body *')]
+                  .filter((element) => {
+                    if (element.closest('.market-ribbon,.app-nav,.table-wrap')) return false;
+                    const style = getComputedStyle(element);
+                    if (style.position === 'fixed' || style.position === 'sticky' || style.display === 'none' || style.visibility === 'hidden') return false;
+                    const rect = element.getBoundingClientRect();
+                    return rect.width > 0 && (rect.left < -1 || rect.right > innerWidth + 1);
+                  })
+                  .slice(0, 10)
+                  .map((element) => ({ tag: element.tagName, id: element.id, className: String(element.className || '') }));
+                const badgeLabels = [...document.querySelectorAll('.leader-badge')].map((element) => element.textContent.trim());
+                const canvas = document.querySelector('#profileCanvas');
+                return {
+                  heading: document.querySelector('#leaderboard-title')?.textContent?.trim(),
+                  redundantButtonPresent: document.querySelector('.command-banner')?.textContent?.includes('View Canopy Board') || false,
+                  personalLabel: personal?.querySelector('.rank-kicker')?.textContent?.trim(),
+                  top50Heading: top50?.querySelector('h3')?.textContent?.trim(),
+                  tierSummary: tiers?.querySelector('summary')?.textContent?.replace(/\s+/g, ' ').trim(),
+                  methodologySummary: methodology?.querySelector('summary')?.textContent?.trim(),
+                  tierClosedInitially: tiers ? !tiers.open : false,
+                  methodologyClosedInitially: methodology ? !methodology.open : false,
+                  ordered,
+                  cardCount: document.querySelectorAll('.leader-card').length,
+                  badgeLabels: [...new Set(badgeLabels)],
+                  documentWidth: document.documentElement.scrollWidth,
+                  viewportWidth: innerWidth,
+                  bodyClientWidth: Math.round(document.body.getBoundingClientRect().width),
+                  unexpectedOverflow,
+                  profileCanvasInternalSize: canvas ? [canvas.width, canvas.height] : null,
+                };
+              });
+              const failures = [];
+              if (metrics.heading !== 'Canopy Board') failures.push('board heading');
+              if (metrics.redundantButtonPresent) failures.push('redundant View Canopy Board button');
+              if (metrics.personalLabel !== 'YOUR CANOPY POSITION') failures.push('connected-wallet segment label');
+              if (metrics.top50Heading !== 'Top 50 Canopy Leaders') failures.push('Top 50 heading');
+              if (!metrics.tierSummary?.includes('How TREE Tiers Work')) failures.push('tier guide summary');
+              if (metrics.methodologySummary !== 'How Rankings Are Calculated') failures.push('methodology summary');
+              if (!metrics.tierClosedInitially || !metrics.methodologyClosedInitially) failures.push('supporting details should begin collapsed');
+              if (!metrics.ordered) failures.push('board content order');
+              if (metrics.cardCount !== 50) failures.push('leaderboard card count');
+              for (const label of ['LP Provider', 'LP Maxi', 'Diamond Hands', 'Burned']) {
+                if (!metrics.badgeLabels.some((value) => value.includes(label))) failures.push(`missing visible ${label}`);
+              }
+              if (metrics.documentWidth > metrics.viewportWidth + 1 || metrics.bodyClientWidth > metrics.viewportWidth + 1 || metrics.unexpectedOverflow.length) failures.push('horizontal overflow');
+              if (JSON.stringify(metrics.profileCanvasInternalSize) !== JSON.stringify([1024, 1024])) failures.push('Profile Studio canvas size');
+              if (consoleErrors.length) failures.push(`console errors: ${consoleErrors.join(' | ')}`);
+              if (failures.length) {
+                console.error(JSON.stringify({ viewport, failures, metrics }, null, 2));
+                await browser.close();
+                process.exit(1);
+              }
+              const screenshot = `/tmp/canopy-board-hierarchy-${viewport.width}.png`;
+              await page.screenshot({ path: screenshot, fullPage: true });
+              results.push({ viewport, metrics, screenshot });
+              await page.close();
+            }
+            await browser.close();
+            console.log(JSON.stringify({ classification: 'SUCCESS', results }, null, 2));
+          })().catch((error) => {
+            console.error(error);
+            process.exit(1);
+          });
+          NODE
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: canopy-board-hierarchy-screenshots
+          path: /tmp/canopy-board-hierarchy-*.png
+          retention-days: 7
