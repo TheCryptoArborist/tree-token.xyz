@@ -20,7 +20,7 @@ jobs:
         run: |
           set -euo pipefail
           curl --silent --show-error --location --max-time 60 \
-            'https://deploy-preview-6--tree-token.netlify.app/api/tree-badges?status_check=2' \
+            'https://deploy-preview-6--tree-token.netlify.app/api/tree-badges?status_check=3' \
             -o /tmp/tree-badges.json
           node <<'NODE'
           const p = require('/tmp/tree-badges.json');
