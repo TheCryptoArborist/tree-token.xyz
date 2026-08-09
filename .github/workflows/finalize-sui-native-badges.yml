@@ -1,0 +1,155 @@
+name: Finalize Sui-native TREE badge indexes
+
+on:
+  push:
+    branches:
+      - feature/leaderboard-badges-v1
+    paths:
+      - '.github/workflows/finalize-sui-native-badges.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/leaderboard-badges-v1
+          fetch-depth: 0
+
+      - name: Wire resumable Sui-native indexes into the isolated badge worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          python <<'PY'
+          from pathlib import Path
+
+          def replace_once(text: str, old: str, new: str, label: str) -> str:
+              if old not in text:
+                  raise SystemExit(f'Missing expected text for {label}')
+              return text.replace(old, new, 1)
+
+          worker_path = Path('netlify/lib/tree-badge-background-worker.ts')
+          worker = worker_path.read_text(encoding='utf-8')
+          worker = replace_once(
+              worker,
+              """    const activity: TreeActivityRefreshResult = await refreshActivity(priorActivity, {
+              getEnv,
+              now,
+              onPoolComplete: (index) => writeInternalBadgeValue(TREE_ACTIVITY_INDEX_KEY, index, storeOptions),
+            });""",
+              """    const activity: TreeActivityRefreshResult = await refreshActivity(priorActivity, {
+              getEnv,
+              now,
+              wallets: exposure.entries.map((entry) => entry.wallet),
+              onProgress: (index) => writeInternalBadgeValue(TREE_ACTIVITY_INDEX_KEY, index, storeOptions),
+            });""",
+              'activity worker options',
+          )
+          worker = replace_once(
+              worker,
+              """      {
+                now,
+                sleepImpl,
+                onWalletComplete: (index) => writeInternalBadgeValue(TREE_BURN_INDEX_KEY, index, storeOptions),
+              },""",
+              """      {
+                getEnv,
+                now,
+                sleepImpl,
+                onProgress: (index) => writeInternalBadgeValue(TREE_BURN_INDEX_KEY, index, storeOptions),
+              },""",
+              'burn worker options',
+          )
+          worker = worker.replace(
+              'Refreshing the checkpointed rolling 30-day TREE trade ledger.',
+              'Refreshing the resumable Sui-native rolling 30-day TREE trade ledger.',
+          )
+          worker = worker.replace(
+              'Refreshing checkpointed lifetime TREE burn attribution for the current Top 50.',
+              'Refreshing the page-resumable lifetime TREE burn index for the current Top 50.',
+          )
+          worker_path.write_text(worker, encoding='utf-8')
+
+          env_path = Path('.env.example')
+          env = env_path.read_text(encoding='utf-8')
+          if 'TREE_TOKEN_CREATION_CHECKPOINT=' not in env:
+              env = env.replace(
+                  'TREE_BADGE_STALE_AFTER_MS=21600000',
+                  'TREE_BADGE_STALE_AFTER_MS=21600000\nTREE_TOKEN_CREATION_CHECKPOINT=169361209',
+              )
+          env = env.replace(
+              '# TREE_BURN_BADGES_ENABLED gates the bounded lifetime zero-address transaction scan.\n# Trading badges use NOODLES_API_KEY and fail closed if the indexed 30-day pool scan is incomplete.',
+              '# TREE_BURN_BADGES_ENABLED is retained only for the legacy inline preview scanner and remains false.\n# The isolated badge worker uses Sui GraphQL for both the rolling activity index and lifetime burn index.',
+          )
+          env_path.write_text(env, encoding='utf-8')
+
+          docs_path = Path('docs/tree-leaderboard-badges.md')
+          docs = docs_path.read_text(encoding='utf-8')
+          docs += """
+
+## Sui-native indexing methodology
+
+The rolling activity index uses successful Sui transactions that affect a recognized TREE pool. A transaction is classified only when the ranked wallet is the sender, the transaction contains a recognized SuiDex V2, SuiDex V3, or Turbos swap MoveCall, and the sender has an exact nonzero TREE balance change. Positive TREE deltas are buys; negative TREE deltas are sells.
+
+The classifier rejects ordinary transfers, failed transactions, LP joins and exits, position changes, staking/farming operations, fee or reward collection, and zero-address burns. Routed transactions are deduplicated by wallet and transaction digest.
+
+The 30-day window is bounded by Sui checkpoints. Each recognized pool stores its checkpoint range and GraphQL cursor after every page, so throttled or interrupted scans resume rather than restart.
+
+The lifetime burn index starts at TREE package-creation checkpoint `169361209`. Each ranked wallet stores the current checkpoint range, page cursor, and accumulated exact TREE total after every page. A wallet receives `Burned` only after its full history reaches the latest checkpoint and cumulative zero-address TREE credits meet the 500,000 TREE threshold.
+"""
+          docs_path.write_text(docs, encoding='utf-8')
+          PY
+          rm -f .github/workflows/finalize-sui-native-badges.yml
+          git diff --check
+
+      - name: Validate the complete badge stack
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci
+          npm run build
+          node --check dapp/app.js
+          node tests/dashboard-cache.test.mjs
+          node tests/leaderboard-ui-state.test.mjs
+          for test in tests/*.ts; do
+            echo "Running $test"
+            npx --yes tsx "$test"
+          done
+          python <<'PY'
+          from pathlib import Path
+          activity = Path('netlify/lib/tree-activity-index.ts').read_text(encoding='utf-8')
+          burns = Path('netlify/lib/tree-burn-index.ts').read_text(encoding='utf-8')
+          worker = Path('netlify/lib/tree-badge-background-worker.ts').read_text(encoding='utf-8')
+          exposure = Path('netlify/lib/tree-exposure-scan-runner.ts').read_text(encoding='utf-8')
+          app = Path('dapp/app.js').read_text(encoding='utf-8')
+          env = Path('.env.example').read_text(encoding='utf-8')
+          assert 'sui-native-tree-trade-ledger-v3' in activity
+          assert 'NOODLES_API_KEY' not in activity
+          assert '/pool/event/all' not in activity
+          assert 'affectedObject' in activity and 'afterCheckpoint' in activity and 'beforeCheckpoint' in activity
+          assert 'onProgress' in activity
+          assert "TREE_TOKEN_CREATION_CHECKPOINT = '169361209'" in burns
+          assert 'nextCursor' in burns and 'accumulatedBurnedTreeRaw' in burns
+          assert 'wallets: exposure.entries.map' in worker
+          assert 'onProgress: (index) => writeInternalBadgeValue(TREE_ACTIVITY_INDEX_KEY' in worker
+          assert 'onProgress: (index) => writeInternalBadgeValue(TREE_BURN_INDEX_KEY' in worker
+          assert 'scanTreeTradingActivity' not in exposure
+          assert 'scanTreeBurnContributions' not in exposure
+          assert 'TREE_TOKEN_CREATION_CHECKPOINT=169361209' in env
+          assert 'DAPP_SWAP_EXECUTION_ENABLED = false' in app
+          PY
+          git diff --check
+
+      - name: Commit the verified Sui-native badge indexes
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "TheCryptoArborist"
+          git config user.email "190985450+TheCryptoArborist@users.noreply.github.com"
+          git add -A
+          git commit -m "Complete resumable Sui-native TREE badge indexes"
+          git push origin HEAD:feature/leaderboard-badges-v1
