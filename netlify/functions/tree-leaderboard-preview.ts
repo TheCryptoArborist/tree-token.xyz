@@ -40,7 +40,7 @@ export async function handleTreeLeaderboardPreviewRequest(
       ...payload,
       entries: enriched,
       identityResolution: {
-        provider: 'sui-graphql-default-suins-name',
+        provider: 'sui-grpc-default-suins-name',
         requestedCount: resolution.requestedCount,
         resolvedCount: resolution.resolvedCount,
         complete: resolution.complete,
@@ -50,7 +50,7 @@ export async function handleTreeLeaderboardPreviewRequest(
         ...(Array.isArray(payload.warnings) ? payload.warnings : []),
         ...(!resolution.complete ? ['Some default SuiNS names could not be resolved for this preview.'] : []),
       ],
-    }, 200, 'public, max-age=120, s-maxage=300');
+    }, 200, resolution.complete ? 'public, max-age=120, s-maxage=300' : 'no-store');
   } catch {
     return json({ status: 'error', message: 'Leaderboard preview enrichment failed.' }, 502);
   }

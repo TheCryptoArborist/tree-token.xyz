@@ -141,7 +141,7 @@ export async function runLeaderboardBackgroundWorker(request: Request, dependenc
     let snapshotResult = result;
     if (result.outcome === 'complete') {
       try {
-        const resolution = await resolveSuins(result.entries.map((entry) => entry.wallet), { endpoint: config.endpoint });
+        const resolution = await resolveSuins(result.entries.map((entry) => entry.wallet));
         snapshotResult = {
           ...result,
           entries: result.entries.map((entry) => ({ ...entry, suinsName: resolution.names[entry.wallet] || null })),
