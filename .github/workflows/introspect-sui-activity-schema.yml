@@ -15,27 +15,25 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Inspect package object and history fields
+      - name: Resolve TREE package creation checkpoint
         shell: bash
         run: |
           set -euo pipefail
           node <<'NODE'
-          const query = `query Introspect {
-            queryType: __type(name: "Query") {
-              fields { name args { name type { kind name ofType { kind name } } } }
-            }
-            objectType: __type(name: "Object") {
-              fields { name type { kind name ofType { kind name } } }
-            }
-            movePackage: __type(name: "MovePackage") {
-              fields { name type { kind name ofType { kind name } } }
+          const query = `query PackageCreation($address: SuiAddress!) {
+            object(address: $address) {
+              address
+              version
+              digest
+              previousTransaction {
+                digest
+                effects { status timestamp checkpoint { sequenceNumber timestamp } }
+              }
             }
           }`;
+          const variables = { address: '0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf' };
           const response = await fetch('https://graphql.mainnet.sui.io/graphql', {
-            method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ query }),
+            method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ query, variables }),
           });
-          const payload = await response.json();
-          const queryFields = (payload.data?.queryType?.fields || []).filter((field) => ['object','owner','address'].includes(field.name));
-          const objectFields = (payload.data?.objectType?.fields || []).filter((field) => /previous|transaction|version|address|digest|asMovePackage/i.test(field.name));
-          console.log(JSON.stringify({ errors: payload.errors || [], queryFields, objectFields, movePackageFields: payload.data?.movePackage?.fields }, null, 2));
+          console.log(JSON.stringify(await response.json(), null, 2));
           NODE
