@@ -1,0 +1,124 @@
+name: Finalize SuiNS leaderboard name resolution
+
+on:
+  push:
+    branches:
+      - feature/command-center-ui-v2
+    paths:
+      - '.github/workflows/finalize-suins-name-resolution.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/command-center-ui-v2
+          fetch-depth: 0
+
+      - name: Recognize encoded missing-name responses
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          resolver = Path('netlify/lib/suins-name-resolver.ts')
+          text = resolver.read_text(encoding='utf-8')
+          old = """function isExpectedMissingName(error: unknown): boolean {
+            const message = errorMessage(error).toLowerCase();
+            return message.includes('not_found')
+              || message.includes('not found')
+              || message.includes('name has expired')
+              || message.includes('name does not exist');
+          }
+          """
+          new = """function isExpectedMissingName(error: unknown): boolean {
+            const source = error && typeof error === 'object' ? error as { code?: unknown; status?: unknown } : {};
+            if (source.code === 5 || source.status === 5 || source.code === 'NOT_FOUND' || source.status === 'NOT_FOUND') return true;
+            const rawMessage = errorMessage(error).toLowerCase();
+            let message = rawMessage;
+            try { message = decodeURIComponent(rawMessage.replace(/\\+/g, ' ')); } catch { /* Preserve the raw message. */ }
+            return message.includes('not_found')
+              || message.includes('not found')
+              || message.includes('name has expired')
+              || message.includes('name does not exist');
+          }
+          """
+          if old not in text:
+              raise SystemExit('Expected missing-name classifier anchor not found')
+          resolver.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          test_path = Path('tests/suins-name-resolver.test.ts')
+          test = test_path.read_text(encoding='utf-8')
+          old_case = """        if (address === first) return { name: 'cryptoarborist.sui' };
+                if (address === second) throw new Error('NOT_FOUND');
+                throw new Error('name has expired');
+          """
+          new_case = """        if (address === first) return { name: 'cryptoarborist.sui' };
+                if (address === second) throw new Error('NOT_FOUND');
+                throw new Error('name%20has%20expired');
+          """
+          if old_case not in test:
+              raise SystemExit('Encoded expiration fixture anchor not found')
+          test = test.replace(old_case, new_case, 1)
+          insertion = """
+          const numericNotFound = await resolveDefaultSuinsNames([first], {
+            client: { core: { async defaultNameServiceName() { throw Object.assign(new Error('missing'), { code: 5 }); } } },
+          });
+          assert.equal(numericNotFound.complete, true);
+          assert.equal(numericNotFound.names[first], null);
+          """
+          anchor = """assert.equal(success.complete, true);
+
+          const failed = await resolveDefaultSuinsNames([first], {"""
+          if anchor not in test:
+              raise SystemExit('Numeric NOT_FOUND test insertion anchor not found')
+          test = test.replace(anchor, "assert.equal(success.complete, true);\n" + insertion + "\nconst failed = await resolveDefaultSuinsNames([first], {", 1)
+          test_path.write_text(test, encoding='utf-8')
+          PY
+
+          rm -f \
+            .github/workflows/finalize-suins-name-resolution.yml \
+            .github/workflows/use-binary-suins-transport.yml \
+            .github/workflows/use-native-suins-transport.yml
+          git diff --check
+
+      - name: Validate SuiNS name resolution
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci
+          npm run build
+          node --check dapp/app.js
+          node tests/dashboard-cache.test.mjs
+          node tests/leaderboard-ui-state.test.mjs
+          for test in tests/*.ts; do npx --yes tsx "$test"; done
+          cat > scripts/suins-live-smoke.ts <<'TS'
+          import { resolveDefaultSuinsNames } from '../netlify/lib/suins-name-resolver.ts';
+
+          const response = await fetch('https://tree-token.xyz/api/tree-leaderboard');
+          if (!response.ok) throw new Error(`Leaderboard returned ${response.status}`);
+          const payload = await response.json() as { entries?: Array<{ wallet: string }> };
+          const wallets = (payload.entries || []).slice(0, 10).map((entry) => entry.wallet);
+          const result = await resolveDefaultSuinsNames(wallets, { timeoutMs: 20_000 });
+          console.log(JSON.stringify({ requested: result.requestedCount, resolved: result.resolvedCount, complete: result.complete }, null, 2));
+          if (!result.complete || result.requestedCount !== wallets.length) process.exit(1);
+          TS
+          npx --yes tsx scripts/suins-live-smoke.ts
+          rm -f scripts/suins-live-smoke.ts
+          git diff --check
+
+      - name: Commit finalized SuiNS resolution
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "TheCryptoArborist"
+          git config user.email "190985450+TheCryptoArborist@users.noreply.github.com"
+          git add -A
+          git commit -m "Finalize TREE leaderboard SuiNS name resolution"
+          git push origin HEAD:feature/command-center-ui-v2
