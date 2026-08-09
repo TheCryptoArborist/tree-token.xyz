@@ -15,19 +15,17 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Probe the documented public pool-events path without an API key
+      - name: Inspect public Sui transaction and event schema
         shell: bash
         run: |
           set -euo pipefail
-          NOW=$(date +%s000)
-          FROM=$((NOW-86400000))
-          URL="https://api.noodles.fi/api/v1/partner/pool/event/all?pool_address=0x39d5ba22e01e45bc4129ec28a0bef52e8fee8db5d07d337adf9540e3cb9074cf&action=buy,sell&from=${FROM}&to=${NOW}&desc=true&limit=1"
-          code=$(curl --silent --show-error --location --max-time 60 --output /tmp/noodles.json --write-out '%{http_code}' "$URL")
-          echo "http=$code"
           node <<'NODE'
-          const fs=require('node:fs');
-          const text=fs.readFileSync('/tmp/noodles.json','utf8');
-          let payload;
-          try{payload=JSON.parse(text)}catch{payload={raw:text.slice(0,500)}}
-          console.log(JSON.stringify({code:payload.code,message:payload.message,eventCount:Array.isArray(payload.data)?payload.data.length:null,pagination:payload.pagination,raw:payload.raw},null,2));
+          const names=['Transaction','TransactionEffects','TransactionFilter','Event','EventConnection','EventFilter','BalanceChange','ProgrammableTransaction','MoveCall','TransactionKind'];
+          const query=`query Introspect(${names.map((_,i)=>`$n${i}:String!`).join(',')}){${names.map((_,i)=>`t${i}:__type(name:$n${i}){name kind fields{name args{name type{kind name ofType{kind name}}} type{kind name ofType{kind name}}} inputFields{name type{kind name ofType{kind name}}} possibleTypes{name}}`).join('')}}`;
+          const variables=Object.fromEntries(names.map((name,i)=>[`n${i}`,name]));
+          const response=await fetch('https://graphql.mainnet.sui.io/graphql',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({query,variables})});
+          const payload=await response.json();
+          const output={};
+          for(let i=0;i<names.length;i++) output[names[i]]=payload.data?.[`t${i}`]||null;
+          console.log(JSON.stringify({errors:payload.errors,types:output},null,2));
           NODE
