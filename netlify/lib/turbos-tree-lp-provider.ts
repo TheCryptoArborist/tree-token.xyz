@@ -23,7 +23,15 @@ export const TURBOS_PACKAGE = '0x91bfbc386a41afcfd9b2533058d7e915a1d3829089cc268
 export const TURBOS_POSITION_NFT_TYPE = `${TURBOS_PACKAGE}::position_nft::TurbosPositionNFT`;
 export const TURBOS_POSITION_TYPE = `${TURBOS_PACKAGE}::position_manager::Position`;
 export const TURBOS_PROVIDER = 'turbos-onchain';
-export const TURBOS_METHODOLOGY_VERSION = 'turbos-tree-principal-v1';
+export const TURBOS_METHODOLOGY_VERSION = 'turbos-tree-principal-pool-index-v2';
+export const TURBOS_POOL_POSITION_VALUE_TYPE = `${TURBOS_PACKAGE}::pool::Position`;
+export const TURBOS_TREE_POOL_IDS = [
+  '0x4a8c450d393fee360fc8c2a2ed30bf6f9e4de5077024e9628cd3510e272bf490',
+  '0xaa133ce1f8fd55d85b6fc87c1b3054cb717d83be477ef3635c661c21fbdfa0ee',
+  '0xc327fdc9b129602e91df9bd59cf3e4a921ce5509844a3b6c8adddc5ed320636d',
+  '0xd5d7d9a614327feed096a437f416aa98f440393d9ac52d97c87e6e0dd6e719bb',
+  '0xe1468ece8e4d2940b30dec776eaee9b235b23458868027da871bc42817263a12',
+] as const;
 
 const DEFAULT_GRAPHQL_URL = 'https://graphql.mainnet.sui.io/graphql';
 const DEFAULT_GRPC_HOST = 'fullnode.mainnet.sui.io:443';
@@ -31,20 +39,6 @@ const DEFAULT_MAX_PAGES = 2_000;
 const DEFAULT_PAGE_SIZE = 50;
 const DEFAULT_MAX_RETRIES = 6;
 
-const NFT_SCAN_QUERY = `query ScanTurbosPositionNfts($first: Int!, $after: String, $type: String!) {
-  objects(first: $first, after: $after, filter: { type: $type }) {
-    pageInfo { hasNextPage endCursor }
-    nodes {
-      address
-      owner {
-        __typename
-        ... on AddressOwner { address { address } }
-        ... on ObjectOwner { address { address } }
-      }
-      asMoveObject { contents { json } }
-    }
-  }
-}`;
 
 type JsonRecord = Record<string, unknown>;
 type FetchLike = typeof fetch;
@@ -177,6 +171,7 @@ function canonicalizeMoveType(value: unknown): string | null {
 const NORMALIZED_TREE = normalizeStructType(TREE_COIN_TYPE)!;
 const NORMALIZED_PACKAGE = canonicalAddress(TURBOS_PACKAGE);
 const NORMALIZED_POSITION_TYPE = canonicalizeMoveType(TURBOS_POSITION_TYPE)!;
+const NORMALIZED_POOL_POSITION_VALUE_TYPE = canonicalizeMoveType(TURBOS_POOL_POSITION_VALUE_TYPE)!;
 
 function ownerAddress(node: JsonRecord): { kind: string; address: string | null } {
   const owner = record(node.owner);
@@ -199,119 +194,160 @@ function graphqlErrors(value: unknown): string[] {
 }
 
 async function defaultScanNfts(
-  endpoint: string,
-  fetchImpl: FetchLike,
-  pageSize: number,
+  grpcHost: string,
   maxPages: number,
-  maxRetries: number,
-  sleepImpl: (milliseconds: number) => Promise<void>,
   coverage: TurbosCoverage,
 ): Promise<TurbosNftScan> {
-  const treeNodes: JsonRecord[] = [];
-  const seenObjectIds = new Set<string>();
-  let after: string | null = null;
+  const client = new SuiGrpcClient({
+    network: 'mainnet',
+    transport: new GrpcTransport({
+      host: grpcHost.replace(/^https?:\/\//, ''),
+      channelCredentials: ChannelCredentials.createSsl(),
+    }),
+  });
+  const positionFieldIds: string[] = [];
+  let pages = 0;
   let objectsScanned = 0;
   let malformedTypeObjects = 0;
   let malformedObjectIds = 0;
   let duplicateObjectIds = 0;
 
-  for (let page = 0; page < maxPages; page += 1) {
-    let payload: JsonRecord | null = null;
-    for (let retry = 0; retry <= maxRetries; retry += 1) {
+  for (const poolId of TURBOS_TREE_POOL_IDS) {
+    let cursor: string | undefined;
+    let reachedPoolEnd = false;
+    for (let page = 0; page < maxPages; page += 1) {
+      const result = await client.core.listDynamicFields({
+        parentId: poolId,
+        cursor,
+        limit: 1_000,
+      });
       coverage.requestAttempts += 1;
-      try {
-        const response = await fetchImpl(endpoint, {
-          method: 'POST',
-          headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            query: NFT_SCAN_QUERY,
-            variables: { first: pageSize, after, type: TURBOS_POSITION_NFT_TYPE },
-          }),
-        });
-        const retryable = response.status === 429 || [500, 502, 503, 504].includes(response.status);
-        if (retryable && retry < maxRetries) {
-          coverage.retriedRequests += 1;
-          if (response.status === 429) coverage.rateLimitRetries += 1;
-          else coverage.serverErrorRetries += 1;
-          await sleepImpl(Math.min(10_000, 500 * (2 ** retry)));
+      pages += 1;
+      const fields = Array.isArray(result.dynamicFields) ? result.dynamicFields : [];
+      objectsScanned += fields.length;
+      for (const field of fields) {
+        if (canonicalizeMoveType(field.valueType) !== NORMALIZED_POOL_POSITION_VALUE_TYPE) continue;
+        const fieldId = normalizeSuiAddress(field.fieldId);
+        if (!fieldId) {
+          malformedObjectIds += 1;
           continue;
         }
-        if (response.status === 429) coverage.rateLimited = true;
-        if (!response.ok) throw new Error(`Sui GraphQL returned HTTP ${response.status}`);
-        payload = record(await response.json());
-        const errors = graphqlErrors(payload.errors);
-        if (errors.length) {
-          coverage.graphqlErrors.push(...errors);
-          return {
-            treeNodes,
-            reachedEnd: false,
-            pages: page,
-            objectsScanned,
-            malformedTypeObjects,
-            malformedObjectIds,
-            duplicateObjectIds,
-          };
-        }
-        break;
-      } catch (error) {
-        if (retry < maxRetries) {
-          coverage.retriedRequests += 1;
-          coverage.networkRetries += 1;
-          await sleepImpl(Math.min(10_000, 500 * (2 ** retry)));
-          continue;
-        }
-        throw error;
+        positionFieldIds.push(fieldId);
       }
+      if (!result.hasNextPage) {
+        reachedPoolEnd = true;
+        break;
+      }
+      if (typeof result.cursor !== 'string' || !result.cursor) break;
+      cursor = result.cursor;
     }
-    if (!payload) throw new Error('Turbos GraphQL pagination returned no payload.');
-
-    const connection = record(record(payload.data).objects);
-    const pageInfo = record(connection.pageInfo);
-    const nodes = Array.isArray(connection.nodes)
-      ? connection.nodes.filter((item): item is JsonRecord => Boolean(item && typeof item === 'object'))
-      : [];
-    objectsScanned += nodes.length;
-    for (const node of nodes) {
-      const objectId = normalizeSuiAddress(node.address);
-      if (!objectId) { malformedObjectIds += 1; continue; }
-      if (seenObjectIds.has(objectId)) { duplicateObjectIds += 1; continue; }
-      seenObjectIds.add(objectId);
-      const json = record(record(record(node.asMoveObject).contents).json);
-      const tokenA = normalizeStructType(json.coin_type_a);
-      const tokenB = normalizeStructType(json.coin_type_b);
-      if (!tokenA || !tokenB) { malformedTypeObjects += 1; continue; }
-      if (tokenA === NORMALIZED_TREE || tokenB === NORMALIZED_TREE) treeNodes.push(node);
-    }
-
-    if (pageInfo.hasNextPage !== true) {
+    if (!reachedPoolEnd) {
       return {
-        treeNodes,
-        reachedEnd: true,
-        pages: page + 1,
-        objectsScanned,
-        malformedTypeObjects,
-        malformedObjectIds,
-        duplicateObjectIds,
-      };
-    }
-    if (typeof pageInfo.endCursor !== 'string' || !pageInfo.endCursor) {
-      return {
-        treeNodes,
+        treeNodes: [],
         reachedEnd: false,
-        pages: page + 1,
+        pages,
         objectsScanned,
         malformedTypeObjects,
         malformedObjectIds,
         duplicateObjectIds,
       };
     }
-    after = pageInfo.endCursor;
+  }
+
+  const nftReferences: Array<{ nftId: string; poolId: string }> = [];
+  const seenReferences = new Set<string>();
+  for (let index = 0; index < positionFieldIds.length; index += 50) {
+    const { objects } = await client.core.getObjects({
+      objectIds: positionFieldIds.slice(index, index + 50),
+      include: { json: true },
+    });
+    coverage.requestAttempts += 1;
+    for (const object of objects) {
+      if (object instanceof Error) throw object;
+      const json = record(object.json);
+      const nameValue = record(json.name).name;
+      const name = typeof nameValue === 'string' ? nameValue.trim().toLowerCase() : '';
+      const match = name.match(/^(?:0x)?([0-9a-f]{1,64})-/);
+      if (!match) {
+        malformedObjectIds += 1;
+        continue;
+      }
+      const nftId = normalizeSuiAddress(`0x${match[1].padStart(64, '0')}`);
+      const value = record(json.value);
+      const poolId = normalizeSuiAddress(value.pool_id ?? value.poolId);
+      if (!nftId) {
+        malformedObjectIds += 1;
+        continue;
+      }
+      const referenceKey = `${nftId}:${poolId || ''}`;
+      if (seenReferences.has(referenceKey)) {
+        duplicateObjectIds += 1;
+        continue;
+      }
+      seenReferences.add(referenceKey);
+      nftReferences.push({ nftId, poolId: poolId || '' });
+    }
+  }
+
+  const treeNodes: JsonRecord[] = [];
+  const seenLiveNfts = new Set<string>();
+  for (let index = 0; index < nftReferences.length; index += 50) {
+    const batch = nftReferences.slice(index, index + 50);
+    const { objects } = await client.core.getObjects({
+      objectIds: batch.map((item) => item.nftId),
+      include: { json: true },
+    });
+    coverage.requestAttempts += 1;
+    for (let offset = 0; offset < objects.length; offset += 1) {
+      const object = objects[offset];
+      const reference = batch[offset];
+      if (object instanceof Error) {
+        if (/not found/i.test(object.message)) continue;
+        throw object;
+      }
+      const nftId = normalizeSuiAddress(object.objectId);
+      if (!nftId || nftId !== reference.nftId) {
+        malformedObjectIds += 1;
+        continue;
+      }
+      if (seenLiveNfts.has(nftId)) {
+        duplicateObjectIds += 1;
+        continue;
+      }
+      seenLiveNfts.add(nftId);
+      if (canonicalizeMoveType(object.type) !== canonicalizeMoveType(TURBOS_POSITION_NFT_TYPE)) {
+        malformedTypeObjects += 1;
+        continue;
+      }
+      const json = record(object.json);
+      const poolId = normalizeSuiAddress(json.pool_id);
+      if (!poolId || !TURBOS_TREE_POOL_IDS.includes(poolId as typeof TURBOS_TREE_POOL_IDS[number])) {
+        malformedTypeObjects += 1;
+        continue;
+      }
+      if (reference.poolId && reference.poolId !== poolId) {
+        malformedTypeObjects += 1;
+        continue;
+      }
+      const ownerRecord = record(object.owner);
+      const ownerKind = typeof ownerRecord.$kind === 'string' ? ownerRecord.$kind : 'Unknown';
+      const ownerValue = ownerRecord[ownerKind];
+      const ownerAddressValue = typeof ownerValue === 'string' ? ownerValue : record(ownerValue).address;
+      treeNodes.push({
+        address: nftId,
+        owner: {
+          __typename: ownerKind,
+          address: ownerAddressValue ? { address: ownerAddressValue } : undefined,
+        },
+        asMoveObject: { contents: { json } },
+      });
+    }
   }
 
   return {
     treeNodes,
-    reachedEnd: false,
-    pages: maxPages,
+    reachedEnd: true,
+    pages,
     objectsScanned,
     malformedTypeObjects,
     malformedObjectIds,
@@ -429,12 +465,8 @@ export async function scanTurbosTreeLp(options: TurbosOptions = {}): Promise<Tur
     const maxRetries = Math.max(0, Math.min(10, Math.trunc(options.maxRetries ?? DEFAULT_MAX_RETRIES)));
     const sleepImpl = options.sleepImpl || ((milliseconds: number) => new Promise((resolve) => setTimeout(resolve, milliseconds)));
     const scan = await (options.scanNfts || (() => defaultScanNfts(
-      options.graphqlUrl || DEFAULT_GRAPHQL_URL,
-      options.fetchImpl || fetch,
-      pageSize,
+      options.grpcHost || DEFAULT_GRPC_HOST,
       maxPages,
-      maxRetries,
-      sleepImpl,
       coverage,
     )))();
     coverage.pagesScanned = scan.pages;

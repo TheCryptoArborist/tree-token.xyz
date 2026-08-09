@@ -6,13 +6,19 @@ import {
 } from '../netlify/lib/clmm-q64.ts';
 import {
   TURBOS_PACKAGE,
+  TURBOS_POOL_POSITION_VALUE_TYPE,
   TURBOS_POSITION_TYPE,
+  TURBOS_TREE_POOL_IDS,
   scanTurbosTreeLp,
 } from '../netlify/lib/turbos-tree-lp-provider.ts';
 
 const tree = '0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE';
 const sui = '0x2::sui::SUI';
 const fee = `${TURBOS_PACKAGE}::fee10000bps::FEE10000BPS`;
+assert.equal(TURBOS_TREE_POOL_IDS.length, 5);
+assert.equal(new Set(TURBOS_TREE_POOL_IDS).size, 5);
+assert.equal(TURBOS_POOL_POSITION_VALUE_TYPE, `${TURBOS_PACKAGE}::pool::Position`);
+
 const poolId = `0x${'9'.repeat(64)}`;
 const walletA = `0x${'a'.repeat(64)}`;
 const zero = `0x${'0'.repeat(64)}`;
