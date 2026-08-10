@@ -4,47 +4,105 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>TREE Command Center | Stats, Leaderboard &amp; TREE Utilities</title>
-  <meta name="description" content="TREE ecosystem stats, direct TREE leaderboard, Canopy Draw preview, Profile Studio, and NFTree next steps.">
+  <meta name="description" content="TREE ecosystem stats, verified Canopy leaderboard, Profile Studio, Canopy Draw preview, and NFTree utility links.">
   <link rel="icon" href="../thick.png">
   <link rel="stylesheet" href="styles.css">
   <script type="module" src="../scripts/wallet.js"></script>
 </head>
 <body>
-  <header class="site-header">
-    <a class="brand" href="/"><img src="../thick.png" alt=""><span>TREE</span></a>
-    <nav aria-label="Command Center navigation">
-      <a href="#swap">Buy TREE</a><a href="#stats">Stats</a><a href="#leaderboard">Leaderboard</a>
-      <a href="#canopy-draw">Canopy Draw</a><a href="#profile-studio">Profile Studio</a>
-      <a href="#nftree-next">NFTree</a><a href="/">Home</a>
+  <header class="app-shell">
+    <div class="market-ribbon" aria-label="Live market summary">
+      <span><b class="token-dot sui-dot">S</b><span>SUI</span><strong>Sui Mainnet</strong></span>
+      <span><b class="token-dot tree-dot">T</b><span>TREE</span><strong data-market="price">Loading…</strong></span>
+      <span class="market-change"><span>24H</span><strong data-market="priceChange24h">—</strong></span>
+    </div>
+    <div class="app-header-row">
+      <a class="brand" href="/" aria-label="TREE home"><img src="../thick.png" alt=""><span><strong>TREE</strong><small>Command Center</small></span></a>
+      <button class="button wallet-control" id="dappWallet" type="button">Connect Wallet</button>
+    </div>
+    <nav class="app-nav" aria-label="Command Center navigation">
+      <a class="active" href="#overview"><span aria-hidden="true">⌂</span><b>Overview</b></a>
+      <a href="#swap"><span aria-hidden="true">↕</span><b>Buy</b></a>
+      <a href="#stats"><span aria-hidden="true">▥</span><b>Stats</b></a>
+      <a href="#leaderboard"><span aria-hidden="true">♛</span><b>Board</b></a>
+      <a href="#profile-studio"><span aria-hidden="true">◎</span><b>Profile</b></a>
+      <a href="#canopy-draw"><span aria-hidden="true">✦</span><b>Draw</b></a>
+      <a href="#nftree-next"><span aria-hidden="true">🌳</span><b>NFTree</b></a>
+      <a href="/"><span aria-hidden="true">↩</span><b>Home</b></a>
     </nav>
   </header>
 
   <main>
-    <section class="hero" aria-labelledby="page-title">
-      <p class="eyebrow">TREE ecosystem utilities on Sui</p>
-      <h1 id="page-title">TREE Command Center</h1>
-      <p>Buy TREE, follow the ecosystem, check your Canopy rank, create a TREE profile frame, and take the next step into NFTree utility.</p>
+    <section class="command-banner" id="overview" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">TREE ecosystem utilities on Sui</p>
+        <h1 id="page-title">TREE Command Center</h1>
+        <p>Live market data, verified direct-TREE rankings, creator tools, and clear routes into the NFTree ecosystem.</p>
+      </div>
+      <div class="command-banner-actions">
+        <a class="button primary" href="#leaderboard">View Canopy Board</a>
+        <a class="button gold" href="https://nftree.net/mint" target="_blank" rel="noopener noreferrer">Mint NFTree</a>
+      </div>
     </section>
 
-    <section class="section" id="swap" aria-labelledby="swap-title">
-      <div class="section-heading"><div><p class="eyebrow">SuiDex route</p><h2 id="swap-title">Buy TREE</h2></div><button class="button secondary" id="dappWallet" type="button">Connect Wallet</button></div>
+    <section class="section leaderboard-section" id="leaderboard" aria-labelledby="leaderboard-title">
+      <div class="section-heading board-heading"><div><p class="eyebrow">Sui-native verified snapshots</p><h2 id="leaderboard-title">TREE Canopy Leaderboard</h2><p>Direct address-owned TREE only. Rankings never use partial scans.</p></div><span class="data-state" id="leaderboardState">Loading</span></div>
+
+      <div class="rank-dashboard">
+        <article class="rank-command-card">
+          <div class="rank-card-top"><span class="rank-kicker">YOUR CANOPY RANK</span><button class="button secondary" id="rankWallet" type="button">Connect Wallet</button></div>
+          <strong class="rank-summary" id="yourRank">Connect a wallet to check.</strong>
+          <div class="rank-identity"><span class="tier-emblem" id="rankTierIcon" aria-hidden="true">🌱</span><div><span id="rankTierName">Unranked</span><strong id="rankPosition">—</strong></div></div>
+          <div class="rank-balance"><span>Direct TREE</span><strong id="rankDirectTree">—</strong><small id="rankSupplyPercent">Connect a wallet to compare with the verified Top 50.</small></div>
+          <div class="rank-progress-panel"><div><span>Next milestone</span><strong id="rankNextTier">Seedling</strong></div><p id="rankNextRequirement">Connect a wallet to calculate progress.</p><div class="progress-track" aria-hidden="true"><span id="rankProgressBar"></span></div></div>
+          <div class="rank-actions"><button class="button rank-share" id="shareRank" type="button">Share Rank</button><button class="button secondary" id="createRankImage" type="button">Create Rank Card</button></div>
+          <p class="status rank-share-status" id="rankShareStatus" role="status" aria-live="polite"></p>
+          <canvas id="rankShareCanvas" width="1200" height="1200" hidden></canvas>
+        </article>
+
+        <article class="snapshot-overview-card">
+          <span class="rank-kicker">VERIFIED SNAPSHOT</span>
+          <div class="snapshot-highlight-grid">
+            <div><span>Verified address owners</span><strong id="verifiedAddressOwnerCount">—</strong></div>
+            <div><span>Eligible ranked owners</span><strong id="eligibleRankedOwnerCount">—</strong></div>
+            <div><span>Address-owned TREE</span><strong id="leaderboardAddressOwnedTree">—</strong></div>
+            <div><span>Snapshot updated</span><strong id="leaderboardSnapshotCardTime">—</strong></div>
+          </div>
+          <p id="leaderboardUpdated" class="meta">Snapshot status: pending</p>
+          <p class="snapshot-note">The leaderboard is served from the most recent complete, reconciled Sui-native scan. Partial refreshes never replace verified rankings.</p>
+        </article>
+      </div>
+
+      <article class="tier-ladder-card"><div class="card-title-row"><div><span class="rank-kicker">TIER LADDER</span><h3>Climb the Canopy</h3></div><span>Thresholds map to TREE's fixed 1B supply.</span></div><div class="tier-ladder" id="tierLadder"><p class="muted">Loading verified tier cutoffs…</p></div><p class="tier-method-note">Each tier displays both its TREE requirement and its share of the fixed 1,000,000,000-token supply. Champion Tree is reserved for the Top 5. This preview still uses direct address-owned TREE; verified LP exposure will be added separately.</p></article>
+
+      <div class="top-board-heading"><div><span class="rank-kicker">TOP 50</span><h3>Verified Direct TREE Leaders</h3></div><span id="displayedWalletCount">0</span></div>
+      <div class="leaderboard-cards" id="leaderboardCards"><p class="leaderboard-empty">Loading eligible ranked owners…</p></div>
+
+      <div class="table-wrap leaderboard-fallback-table" aria-hidden="true"><table><thead><tr><th>Rank</th><th>Wallet</th><th>Direct TREE</th><th class="wide-column">Supply %</th><th class="wide-column">Tier</th></tr></thead><tbody id="leaderboardRows"><tr><td colspan="5">Loading eligible ranked owners…</td></tr></tbody></table></div>
+      <div id="leaderboardWarnings" class="warnings" hidden></div>
+
+      <details class="coverage-details"><summary>Verification details</summary><p>A protected background worker scans all live Coin&lt;TREE&gt; objects, aggregates balances with exact bigint arithmetic, reconciles supply, and publishes rows only after natural pagination completion.</p><div class="coverage-metrics leaderboard-coverage"><span>Snapshot provider<strong id="leaderboardProvider">sui-graphql-snapshot</strong></span><span>Snapshot generated time<strong id="leaderboardSnapshotTime">None</strong></span><span>Snapshot age<strong id="leaderboardSnapshotAge">—</strong></span><span>Refresh state<strong id="leaderboardRefreshState">Idle</strong></span><span>Pages scanned<strong id="leaderboardPagesScanned">0</strong></span><span>Coin objects scanned<strong id="leaderboardObjectsScanned">0</strong></span><span>Excluded protocol/system coin objects<strong id="excludedCoinObjectCount">0</strong></span><span>Unique excluded protocol/system owners<strong id="excludedUniqueOwnerCount">0</strong></span><span>Reconciliation state<strong id="leaderboardReconciliation">Not available</strong></span></div><p id="leaderboardCoverageDetails">Coverage details load with the server response.</p><p>TREE not represented by address-owned Coin&lt;TREE&gt; objects may include balances inside shared objects, object-owned coins, wrapped or embedded balances, and other non-address-owned storage. This difference is not labeled burned or circulating.</p></details>
+    </section>
+
+<section class="section compact-section" id="swap" aria-labelledby="swap-title">
+      <div class="section-heading"><div><p class="eyebrow">SuiDex route</p><h2 id="swap-title">Buy TREE</h2></div><span class="section-note">Display estimate only</span></div>
       <div class="split-grid">
         <div class="card form-card">
           <label for="swapSui">SUI to spend</label><input id="swapSui" type="number" min="0" step="0.001" inputmode="decimal" placeholder="10">
           <label for="swapTree">Expected TREE output</label><input id="swapTree" type="text" inputmode="decimal" placeholder="Waiting for displayed rate" readonly>
           <div class="estimate-grid"><span>Current displayed rate</span><strong id="displayedRate">Loading…</strong><span>Estimated TREE</span><strong id="estimatedTree">—</strong><span>Slippage setting</span><strong>1%</strong></div>
-          <p class="muted">Display estimate only — not an executable quote</p>
+          <p class="muted">Display estimate only — not an executable quote.</p>
           <label class="check"><input id="reserveNftree" type="checkbox"> <span>Reserve SUI for one NFTree mint</span></label>
-          <p class="muted">This checkbox is informational in Phase 2.1 and does not change the submitted swap amount.</p>
+          <p class="muted">This checkbox is informational and does not change the submitted amount.</p>
           <button class="button primary" id="buyTree" type="button" disabled>Swap verification in progress</button>
-          <p id="swapStatus" class="status" role="status" aria-live="polite">On-site TREE purchases will be enabled after quote, simulation, gas-reserve, and finality verification in Phase 2.3.</p>
+          <p id="swapStatus" class="status" role="status" aria-live="polite">On-site TREE purchases remain disabled pending quote, simulation, gas-reserve, and finality verification.</p>
           <a class="button secondary" id="suiDexFallback" href="https://dex.suidex.org/swap?from=SUI&amp;to=Tree" target="_blank" rel="noopener noreferrer">Trade on SuiDex</a>
         </div>
-        <aside class="card next-card"><h3>Plan the next step</h3><p>Planning to mint an NFTree next? Keep at least 25 SUI plus gas in your wallet.</p><strong>Next Step: Mint an NFTree for 25 SUI</strong><div class="actions"><a class="button gold" href="https://nftree.net/mint" target="_blank" rel="noopener noreferrer">Mint NFTree</a><a class="button secondary" href="https://nftree.net" target="_blank" rel="noopener noreferrer">Explore NFTree</a></div></aside>
+        <aside class="card next-card"><span class="card-icon">🌱</span><h3>Plan the next step</h3><p>Planning to mint an NFTree next? Keep at least 25 SUI plus gas in your wallet.</p><strong>Next Step: Mint an NFTree for 25 SUI</strong><div class="actions"><a class="button gold" href="https://nftree.net/mint" target="_blank" rel="noopener noreferrer">Mint NFTree</a><a class="button secondary" href="https://nftree.net" target="_blank" rel="noopener noreferrer">Explore NFTree</a></div></aside>
       </div>
     </section>
 
-    <section class="section" id="stats" aria-labelledby="stats-title">
+<section class="section" id="stats" aria-labelledby="stats-title">
       <div class="section-heading"><div><p class="eyebrow">Network overview</p><h2 id="stats-title">TREE Network Stats</h2></div><button class="button secondary" id="refreshStats" type="button">Refresh</button></div>
       <div class="data-group" data-stats-group="market"><div class="group-heading"><div><h3>Market</h3><p>Noodles.fi primary market source</p></div><span class="data-state" data-group-state>Loading</span></div><p class="meta" data-group-meta>Source: Noodles.fi · Timestamp: pending · Status: loading</p><div class="stat-grid">
         <article class="stat-card"><span>TREE Price</span><strong data-market="price">—</strong></article><article class="stat-card"><span>24h Change</span><strong data-market="priceChange24h">—</strong></article><article class="stat-card"><span>24h Volume</span><strong data-market="volume24h">—</strong></article><article class="stat-card"><span>Market Cap</span><strong data-market="marketCap">—</strong></article><article class="stat-card"><span>Recognized Liquidity</span><strong data-market="liquidity">—</strong></article><article class="stat-card"><span>Reported owner metric</span><strong data-market="holderCount">—</strong></article>
@@ -59,16 +117,6 @@
       <div class="data-group" data-stats-group="nftree"><div class="group-heading"><h3>NFTree</h3><span class="data-state snapshot" data-group-state>Snapshot</span></div><p class="meta" data-group-meta>Source: TREE project records · Project snapshot — June 22, 2026 · Status: snapshot</p><div class="stat-grid">
         <article class="stat-card"><span>Mint Price</span><strong data-snapshot="nftree.mintPriceSui">—</strong></article><article class="stat-card"><span>Minted / Loaded</span><strong data-snapshot="nftree.totalMintedOrLoaded">—</strong></article><article class="stat-card"><span>Holder-Owned</span><strong data-snapshot="nftree.holderOwned">—</strong></article><article class="stat-card"><span>Sale Pool</span><strong data-snapshot="nftree.salePool">—</strong></article><article class="stat-card"><span>Holder Wallets</span><strong data-snapshot="nftree.holderWallets">—</strong></article>
       </div></div><div id="statsWarnings" class="warnings" hidden></div>
-    </section>
-
-    <section class="section" id="leaderboard" aria-labelledby="leaderboard-title">
-      <div class="section-heading"><div><p class="eyebrow">Sui-native verified snapshots — Phase 2.2C</p><h2 id="leaderboard-title">TREE Canopy Leaderboard</h2></div><span class="data-state" id="leaderboardState">Loading</span></div>
-      <div class="leader-grid"><article class="card"><h3>Your Rank</h3><strong id="yourRank">Connect a wallet to check.</strong><button class="button secondary" id="rankWallet" type="button">Connect Wallet</button></article><article class="card"><h3>Verified snapshot model</h3><p>The leaderboard is served from the most recent complete, reconciled Sui-native scan. Partial refreshes never replace verified rankings.</p><p>Verified address-owner counts measure direct address-owned TREE only and are not total ecosystem holder counts.</p><p id="leaderboardUpdated" class="meta">Snapshot status: pending</p></article></div>
-      <div class="coverage-metrics leaderboard-coverage"><span>Snapshot provider<strong id="leaderboardProvider">sui-graphql-snapshot</strong></span><span>Snapshot generated time<strong id="leaderboardSnapshotTime">None</strong></span><span>Snapshot age<strong id="leaderboardSnapshotAge">—</strong></span><span>Refresh state<strong id="leaderboardRefreshState">Idle</strong></span><span>Pages in last complete scan<strong id="leaderboardPagesScanned">0</strong></span><span>Coin objects in last complete scan<strong id="leaderboardObjectsScanned">0</strong></span><span>Verified address owners<strong id="verifiedAddressOwnerCount">—</strong></span><span>Eligible ranked owners<strong id="eligibleRankedOwnerCount">—</strong></span><span>Excluded protocol/system coin objects<strong id="excludedCoinObjectCount">0</strong></span><span>Unique excluded protocol/system owners<strong id="excludedUniqueOwnerCount">0</strong></span><span>Reconciliation state<strong id="leaderboardReconciliation">Not available</strong></span><span>Displayed wallets<strong id="displayedWalletCount">0</strong></span></div>
-      <div class="table-wrap"><table><thead><tr><th>Rank</th><th>Wallet</th><th>Direct TREE</th><th class="wide-column">Supply %</th><th class="wide-column">Tier</th></tr></thead><tbody id="leaderboardRows"><tr><td colspan="5">Loading eligible ranked owners…</td></tr></tbody></table></div>
-      <div id="leaderboardWarnings" class="warnings" hidden></div>
-      <details class="coverage-details"><summary>Methodology and coverage details</summary><p>A protected background worker scans all live Coin&lt;TREE&gt; objects, aggregates balances with exact bigint arithmetic, reconciles supply, and publishes rows only after natural pagination completion.</p><p id="leaderboardCoverageDetails">Coverage details load with the server response.</p><p>TREE not represented by address-owned Coin&lt;TREE&gt; objects may include balances inside shared objects, object-owned coins, wrapped or embedded balances, and other non-address-owned storage. This difference is not labeled burned or circulating.</p></details>
-      <div class="leader-grid"><article class="card"><h3>Tier Ladder</h3><ul><li>1–5: Ancient Grove</li><li>6–10: Giant Sequoia</li><li>11–20: Heritage Oak</li><li>21–30: Canopy Guardian</li><li>31–50: Forest Keeper</li></ul></article><article class="card"><h3>Future validation</h3><p>BlockVision remains optional for future comparison only. It is not required for the Sui-native proof.</p><p>Future badges remain reserved and are not awarded by this direct TREE view.</p></article></div>
     </section>
 
     <section class="section" id="canopy-draw" aria-labelledby="canopy-title">
@@ -99,7 +147,7 @@
       </div></div>
     </section>
 
-    <section class="section" id="nftree-next" aria-labelledby="nftree-title"><div class="section-heading"><div><p class="eyebrow">Next utility</p><h2 id="nftree-title">Take the next step into NFTree</h2></div></div><div class="card"><p>NFTrees connect identity, holder rewards, Garden Battles, and future TREE ecosystem utility.</p><div class="actions"><a class="button gold" href="https://nftree.net/mint" target="_blank" rel="noopener noreferrer">Mint for 25 SUI</a><a class="button secondary" href="https://nftree.net" target="_blank" rel="noopener noreferrer">Visit NFTree</a></div></div></section>
+    <section class="section" id="nftree-next" aria-labelledby="nftree-title"><div class="section-heading"><div><p class="eyebrow">Next utility</p><h2 id="nftree-title">Take the next step into NFTree</h2></div></div><div class="card nftree-cta"><span class="card-icon">🌳</span><div><p>NFTrees connect identity, holder rewards, Garden Battles, and future TREE ecosystem utility.</p><div class="actions"><a class="button gold" href="https://nftree.net/mint" target="_blank" rel="noopener noreferrer">Mint for 25 SUI</a><a class="button secondary" href="https://nftree.net" target="_blank" rel="noopener noreferrer">Visit NFTree</a></div></div></div></section>
   </main>
   <footer>Official TREE coin type: <code>0x6c5a…4895cf::tree::TREE</code></footer>
   <script type="module" src="app.js"></script>

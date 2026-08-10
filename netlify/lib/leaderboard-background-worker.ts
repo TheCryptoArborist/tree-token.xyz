@@ -15,6 +15,7 @@ import {
   type ScanProgress,
   type SuiGraphqlScanResult,
 } from './sui-graphql-leaderboard-provider.ts';
+import { resolveDefaultSuinsNames } from './suins-name-resolver.ts';
 
 export type WorkerDependencies = {
   getEnv?: (name: string) => string | undefined;
@@ -23,6 +24,7 @@ export type WorkerDependencies = {
   now?: () => number;
   createRunId?: () => string;
   scan?: typeof scanSuiGraphqlLeaderboard;
+  resolveSuins?: typeof resolveDefaultSuinsNames;
   store?: LeaderboardStore;
   logger?: Pick<Console, 'info' | 'error'>;
 };
@@ -75,6 +77,7 @@ export async function runLeaderboardBackgroundWorker(request: Request, dependenc
   const now = dependencies.now ?? Date.now;
   const createRunId = dependencies.createRunId ?? randomUUID;
   const scan = dependencies.scan ?? scanSuiGraphqlLeaderboard;
+  const resolveSuins = dependencies.resolveSuins ?? resolveDefaultSuinsNames;
   const logger = dependencies.logger ?? console;
   const deployContext = dependencies.deployContext || 'dev';
   const storeOptions = { context: deployContext, store: dependencies.store };
@@ -135,30 +138,50 @@ export async function runLeaderboardBackgroundWorker(request: Request, dependenc
         await writeLeaderboardRefreshStatus(status, storeOptions);
       },
     });
+    let snapshotResult = result;
+    if (result.outcome === 'complete') {
+      try {
+        const resolution = await resolveSuins(result.entries.map((entry) => entry.wallet));
+        snapshotResult = {
+          ...result,
+          entries: result.entries.map((entry) => ({ ...entry, suinsName: resolution.names[entry.wallet] || null })),
+          warnings: [
+            ...result.warnings,
+            ...(!resolution.complete ? ['Some default SuiNS names could not be resolved during this refresh.'] : []),
+          ],
+        };
+      } catch {
+        snapshotResult = {
+          ...result,
+          entries: result.entries.map((entry) => ({ ...entry, suinsName: null })),
+          warnings: [...result.warnings, 'Default SuiNS name resolution was unavailable during this refresh.'],
+        };
+      }
+    }
     const completedAt = new Date(now()).toISOString();
-    const terminalState = result.outcome === 'complete' ? 'complete' : result.outcome;
+    const terminalState = snapshotResult.outcome === 'complete' ? 'complete' : snapshotResult.outcome;
     let snapshotWritten = false;
-    if (terminalState === 'complete') snapshotWritten = await writeCompleteLeaderboardSnapshot(result, storeOptions);
+    if (terminalState === 'complete') snapshotWritten = await writeCompleteLeaderboardSnapshot(snapshotResult, storeOptions);
     const effectiveState = terminalState === 'complete' && !snapshotWritten ? 'verification-incomplete' : terminalState;
     status = {
       ...status,
       state: effectiveState,
       updatedAt: completedAt,
       completedAt,
-      coinMetadataVerified: result.coverage.coinMetadataVerified,
-      coinSymbol: result.coverage.coinSymbol,
-      coinDecimals: result.coverage.coinDecimals,
-      totalSupplyRaw: result.coverage.totalSupplyRaw,
-      pagesScanned: result.coverage.pagesScanned,
-      objectsScanned: result.coverage.objectsScanned,
-      addressOwnedCoinObjects: result.coverage.addressOwnedCoinObjects,
-      uniqueAddressOwners: result.coverage.uniqueAddressOwners,
-      excludedCoinObjects: result.coverage.excludedCoinObjects,
-      excludedUniqueOwners: result.coverage.excludedUniqueOwners,
-      excludedAddresses: result.coverage.excludedAddresses,
-      elapsedMs: result.coverage.elapsedMs,
-      hasNextPage: result.coverage.hasNextPage,
-      reachedEnd: result.coverage.reachedEnd,
+      coinMetadataVerified: snapshotResult.coverage.coinMetadataVerified,
+      coinSymbol: snapshotResult.coverage.coinSymbol,
+      coinDecimals: snapshotResult.coverage.coinDecimals,
+      totalSupplyRaw: snapshotResult.coverage.totalSupplyRaw,
+      pagesScanned: snapshotResult.coverage.pagesScanned,
+      objectsScanned: snapshotResult.coverage.objectsScanned,
+      addressOwnedCoinObjects: snapshotResult.coverage.addressOwnedCoinObjects,
+      uniqueAddressOwners: snapshotResult.coverage.uniqueAddressOwners,
+      excludedCoinObjects: snapshotResult.coverage.excludedCoinObjects,
+      excludedUniqueOwners: snapshotResult.coverage.excludedUniqueOwners,
+      excludedAddresses: snapshotResult.coverage.excludedAddresses,
+      elapsedMs: snapshotResult.coverage.elapsedMs,
+      hasNextPage: snapshotResult.coverage.hasNextPage,
+      reachedEnd: snapshotResult.coverage.reachedEnd,
       scanComplete: snapshotWritten,
       message: snapshotWritten
         ? 'A complete verified TREE leaderboard snapshot is available.'

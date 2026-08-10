@@ -114,10 +114,16 @@ const successful = await runLeaderboardBackgroundWorker(request(), {
     await options.onProgress?.({ coinMetadataVerified: true, coinSymbol: 'Tree', coinDecimals: 6, totalSupplyRaw: '1000000000000000', pagesScanned: 1, objectsScanned: 2, addressOwnedCoinObjects: 2, uniqueAddressOwners: 1, excludedCoinObjects: 0, excludedUniqueOwners: 0, excludedAddresses: 0, elapsedMs: 5, hasNextPage: true });
     return completeScan;
   },
+  resolveSuins: async (wallets) => ({
+    names: Object.fromEntries(wallets.map((wallet) => [wallet, 'cryptoarborist.sui'])),
+    requestedCount: wallets.length, resolvedCount: wallets.length, complete: true,
+    graphqlErrors: [], networkError: null, generatedAt: '2026-08-05T00:00:00.000Z',
+  }),
 });
 assert.equal(successful.outcome, 'complete');
 assert.equal(successfulScans, 1);
 assert.ok(successfulStore.values.get(COMPLETE_SNAPSHOT_KEY));
+assert.equal((successfulStore.values.get(COMPLETE_SNAPSHOT_KEY) as { entries: Array<{ suinsName?: string | null }> }).entries[0].suinsName, 'cryptoarborist.sui');
 assert.equal(successfulStore.values.has(REFRESH_LOCK_KEY), false);
 const lockWrite = successfulStore.writes.find(({ key }) => key === REFRESH_LOCK_KEY)?.value as { deployId?: string };
 assert.equal(lockWrite.deployId, 'context-deploy');

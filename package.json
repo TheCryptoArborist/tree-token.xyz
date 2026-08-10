@@ -9,9 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@grpc/grpc-js": "^1.14.4",
     "@mysten/dapp-kit": "latest",
     "@mysten/sui": "latest",
     "@netlify/blobs": "^10.7.12",
+    "@protobuf-ts/grpc-transport": "^2.11.1",
     "@tanstack/react-query": "^5.59.16",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
