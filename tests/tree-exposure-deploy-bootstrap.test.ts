@@ -25,7 +25,7 @@ const silentLogger = { info() {}, error() {} };
 let workerCalls = 0;
 const skippedContext = await runExposureDeployBootstrap({
   ...event,
-  deploy: { ...event.deploy, context: 'production' },
+  deploy: { ...event.deploy, context: 'branch-deploy' },
 }, {
   getEnv: env,
   readSnapshot: async () => null,
@@ -37,6 +37,40 @@ const skippedContext = await runExposureDeployBootstrap({
 });
 assert.deepEqual(skippedContext, { attempted: false, outcome: 'skipped-context' });
 assert.equal(workerCalls, 0);
+
+const productionDisabled = await runExposureDeployBootstrap({
+  ...event,
+  deploy: { ...event.deploy, context: 'production', branch: 'main' },
+}, {
+  getEnv: env,
+  readSnapshot: async () => null,
+  logger: silentLogger,
+});
+assert.deepEqual(productionDisabled, { attempted: false, outcome: 'disabled' });
+
+const productionComplete = await runExposureDeployBootstrap({
+  ...event,
+  deploy: { ...event.deploy, context: 'production', branch: 'main' },
+}, {
+  getEnv: (name) => ({
+    TREE_EXPOSURE_PRODUCTION_ENABLED: 'true',
+    TREE_EXPOSURE_AUTO_BOOTSTRAP: 'true',
+    TREE_EXPOSURE_REFRESH_SECRET: secret,
+  }[name]),
+  readSnapshot: async (context) => {
+    assert.equal(context, 'production');
+    return null;
+  },
+  runWorker: async (request, dependencies) => {
+    workerCalls += 1;
+    assert.equal(request.headers.get('x-tree-exposure-refresh-secret'), secret);
+    assert.equal(dependencies.deployContext, 'production');
+    return { accepted: true, started: true, outcome: 'complete' };
+  },
+  logger: silentLogger,
+});
+assert.deepEqual(productionComplete, { attempted: true, outcome: 'complete' });
+workerCalls = 0;
 
 const skippedBranch = await runExposureDeployBootstrap({
   ...event,

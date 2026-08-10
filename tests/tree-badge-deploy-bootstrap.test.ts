@@ -61,10 +61,30 @@ const failed = await runTreeBadgeDeployBootstrap(event, {
 });
 assert.deepEqual(failed, { attempted: true, outcome: 'trigger-failed' });
 
-const production = await runTreeBadgeDeployBootstrap({ ...event, deploy: { ...event.deploy, context: 'production' } }, {
+const productionDisabled = await runTreeBadgeDeployBootstrap({ ...event, deploy: { ...event.deploy, context: 'production', branch: 'main' } }, {
   getEnv: env,
   readSnapshot: async () => null,
   logger: { info() {}, error() {} },
 });
-assert.deepEqual(production, { attempted: false, outcome: 'skipped-context' });
+assert.deepEqual(productionDisabled, { attempted: false, outcome: 'disabled' });
+
+const productionAccepted = await runTreeBadgeDeployBootstrap({ ...event, deploy: { ...event.deploy, context: 'production', branch: 'main', url: 'https://tree-token.xyz' } }, {
+  getEnv: (name) => ({
+    TREE_BADGE_PRODUCTION_ENABLED: 'true',
+    TREE_BADGE_AUTO_BOOTSTRAP: 'true',
+    TREE_BADGE_REFRESH_SECRET: 'production-secret',
+    URL: 'https://tree-token.xyz',
+  }[name]),
+  readSnapshot: async (context) => {
+    assert.equal(context, 'production');
+    return null;
+  },
+  fetchImpl: async (input, init) => {
+    assert.equal(String(input), 'https://tree-token.xyz/.netlify/functions/tree-badges-refresh-background');
+    assert.equal(new Headers(init?.headers).get('x-tree-badge-refresh-secret'), 'production-secret');
+    return new Response(null, { status: 202 });
+  },
+  logger: { info() {}, error() {} },
+});
+assert.deepEqual(productionAccepted, { attempted: true, outcome: 'accepted' });
 console.log('TREE badge deploy bootstrap: PASS (202 background dispatch, guards, and no inline worker wait)');

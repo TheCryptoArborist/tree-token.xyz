@@ -35,20 +35,28 @@ export async function runTreeBadgeDeployBootstrap(
 ): Promise<{ attempted: boolean; outcome: BootstrapOutcome }> {
   const getEnv = dependencies.getEnv ?? ((name) => Netlify.env.get(name));
   const logger = dependencies.logger ?? console;
-  if (event.deploy.context !== 'deploy-preview') return { attempted: false, outcome: 'skipped-context' };
+  const context = event.deploy.context;
+  const isPreview = context === 'deploy-preview';
+  const isProduction = context === 'production';
+  if (!isPreview && !isProduction) return { attempted: false, outcome: 'skipped-context' };
 
-  const expectedBranch = (getEnv('TREE_BADGE_PREVIEW_BRANCH') || '').trim();
-  if (!expectedBranch || event.deploy.branch !== expectedBranch) {
-    return { attempted: false, outcome: 'skipped-branch' };
+  if (isPreview) {
+    const expectedBranch = (getEnv('TREE_BADGE_PREVIEW_BRANCH') || '').trim();
+    if (!expectedBranch || event.deploy.branch !== expectedBranch) {
+      return { attempted: false, outcome: 'skipped-branch' };
+    }
+  }
+  if (isProduction && !enabled(getEnv('TREE_BADGE_PRODUCTION_ENABLED'))) {
+    return { attempted: false, outcome: 'disabled' };
   }
   if (!enabled(getEnv('TREE_BADGE_AUTO_BOOTSTRAP'))) {
     return { attempted: false, outcome: 'disabled' };
   }
 
   const readSnapshot = dependencies.readSnapshot
-    ?? ((context) => readCompleteTreeBadgeSnapshot({ context }));
-  if (await readSnapshot(event.deploy.context)) {
-    logger.info(`TREE badge snapshot already exists for preview deploy ${event.deploy.id}.`);
+    ?? ((deployContext) => readCompleteTreeBadgeSnapshot({ context: deployContext }));
+  if (await readSnapshot(context)) {
+    logger.info(`TREE badge snapshot already exists for ${context} deploy ${event.deploy.id}.`);
     return { attempted: false, outcome: 'already-ready' };
   }
 
@@ -57,7 +65,10 @@ export async function runTreeBadgeDeployBootstrap(
     || '';
   if (!secret) return { attempted: false, outcome: 'missing-secret' };
 
-  const deployUrl = (getEnv('DEPLOY_PRIME_URL') || event.deploy.url || '').replace(/\/$/, '');
+  const deployUrl = (getEnv('DEPLOY_PRIME_URL')
+    || (isProduction ? getEnv('URL') : '')
+    || event.deploy.url
+    || '').replace(/\/$/, '');
   if (!deployUrl) return { attempted: false, outcome: 'missing-deploy-url' };
 
   const fetchImpl = dependencies.fetchImpl ?? fetch;
@@ -73,17 +84,20 @@ export async function runTreeBadgeDeployBootstrap(
     return { attempted: true, outcome: 'trigger-failed' };
   }
 
-  logger.info(`TREE badge background refresh accepted for preview deploy ${event.deploy.id}.`);
+  logger.info(`TREE badge background refresh accepted for ${context} deploy ${event.deploy.id}.`);
   return { attempted: true, outcome: 'accepted' };
 }
 
 export default {
   async deploySucceeded(event: DeploySucceededEvent): Promise<void> {
     const result = await runTreeBadgeDeployBootstrap(event);
-    if (result.outcome === 'missing-secret'
+    const failed = result.outcome === 'missing-secret'
       || result.outcome === 'missing-deploy-url'
-      || result.outcome === 'trigger-failed') {
+      || result.outcome === 'trigger-failed';
+    if (!failed) return;
+    if (event.deploy.context === 'deploy-preview') {
       throw new Error(`TREE badge preview bootstrap ended with ${result.outcome}.`);
     }
+    console.error(`TREE badge production bootstrap ended with ${result.outcome}; scheduled refresh will retry.`);
   },
 };

@@ -3,9 +3,9 @@ const DASHBOARD_CACHE_KEY = 'tree-dashboard-last-success-v1';
 const CHART_CACHE_PREFIX = 'tree-chart-last-success-v1:';
 const dashboardUrl = '/api/tree-dashboard';
 const isDeployPreview = typeof location !== 'undefined' && /^deploy-preview-/.test(location.hostname);
-const leaderboardUrl = isDeployPreview ? '/api/tree-exposure' : '/api/tree-leaderboard';
-const badgeUrl = isDeployPreview ? '/api/tree-badges' : null;
-let leaderboardMode = isDeployPreview ? 'exposure' : 'direct';
+const leaderboardUrl = '/api/tree-exposure';
+const badgeUrl = '/api/tree-badges';
+let leaderboardMode = 'exposure';
 const chartUrl = '/api/tree-chart';
 const pairUrl = 'https://api.dexscreener.com/latest/dex/pairs/sui/0xaa133ce1f8fd55d85b6fc87c1b3054cb717d83be477ef3635c661c21fbdfa0ee';
 

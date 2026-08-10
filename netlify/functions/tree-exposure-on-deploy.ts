@@ -46,13 +46,20 @@ export async function runExposureDeployBootstrap(
   const getEnv = dependencies.getEnv ?? ((name) => Netlify.env.get(name));
   const logger = dependencies.logger ?? console;
   const context = event.deploy.context;
-  if (context !== 'deploy-preview') {
+  const isPreview = context === 'deploy-preview';
+  const isProduction = context === 'production';
+  if (!isPreview && !isProduction) {
     return { attempted: false, outcome: 'skipped-context' };
   }
 
-  const expectedBranch = (getEnv('TREE_EXPOSURE_PREVIEW_BRANCH') || '').trim();
-  if (!expectedBranch || event.deploy.branch !== expectedBranch) {
-    return { attempted: false, outcome: 'skipped-branch' };
+  if (isPreview) {
+    const expectedBranch = (getEnv('TREE_EXPOSURE_PREVIEW_BRANCH') || '').trim();
+    if (!expectedBranch || event.deploy.branch !== expectedBranch) {
+      return { attempted: false, outcome: 'skipped-branch' };
+    }
+  }
+  if (isProduction && !enabled(getEnv('TREE_EXPOSURE_PRODUCTION_ENABLED'))) {
+    return { attempted: false, outcome: 'disabled' };
   }
   if (!enabled(getEnv('TREE_EXPOSURE_AUTO_BOOTSTRAP'))) {
     return { attempted: false, outcome: 'disabled' };
@@ -62,7 +69,7 @@ export async function runExposureDeployBootstrap(
     ?? ((deployContext) => readCompleteExposureSnapshot({ context: deployContext }));
   const existing = await readSnapshot(context);
   if (existing) {
-    logger.info(`TREE exposure snapshot already exists for preview deploy ${event.deploy.id}.`);
+    logger.info(`TREE exposure snapshot already exists for ${context} deploy ${event.deploy.id}.`);
     return { attempted: false, outcome: 'already-ready' };
   }
 
@@ -70,7 +77,7 @@ export async function runExposureDeployBootstrap(
     || getEnv('TREE_LEADERBOARD_REFRESH_SECRET')
     || '';
   if (!secret) {
-    logger.error('TREE exposure preview bootstrap has no configured refresh secret.');
+    logger.error('TREE exposure bootstrap has no configured refresh secret.');
     return { attempted: false, outcome: 'missing-secret' };
   }
 
@@ -79,7 +86,7 @@ export async function runExposureDeployBootstrap(
     headers: { 'x-tree-exposure-refresh-secret': secret },
   });
   const runWorker = dependencies.runWorker ?? runExposureBackgroundWorker;
-  logger.info(`Starting TREE exposure bootstrap for preview deploy ${event.deploy.id}.`);
+  logger.info(`Starting TREE exposure bootstrap for ${context} deploy ${event.deploy.id}.`);
   const result = await runWorker(request, {
     getEnv,
     deployContext: context,
@@ -92,11 +99,14 @@ export async function runExposureDeployBootstrap(
 export default {
   async deploySucceeded(event: DeploySucceededEvent): Promise<void> {
     const result = await runExposureDeployBootstrap(event);
-    if (result.outcome === 'verification-incomplete'
+    const failed = result.outcome === 'verification-incomplete'
       || result.outcome === 'error'
       || result.outcome === 'authentication-failed'
-      || result.outcome === 'missing-secret') {
+      || result.outcome === 'missing-secret';
+    if (!failed) return;
+    if (event.deploy.context === 'deploy-preview') {
       throw new Error(`TREE exposure preview bootstrap ended with ${result.outcome}.`);
     }
+    console.error(`TREE exposure production bootstrap ended with ${result.outcome}; scheduled refresh will retry.`);
   },
 };
