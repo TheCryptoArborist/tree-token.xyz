@@ -146,7 +146,8 @@ export async function runTreeBadgeBackgroundWorker(
     await saveStatus({ state: 'running', stage: 'waiting-for-exposure', message: 'Waiting for a complete TREE exposure snapshot.' });
     const readExposure = dependencies.readExposure
       ?? ((deployContext) => readCompleteExposureSnapshot({ context: deployContext }));
-    const waitMs = context === 'deploy-preview' ? 5 * 60 * 1000 : 0;
+    const shouldWaitForExposure = context === 'deploy-preview' || enabled(getEnv('TREE_BADGE_AUTO_BOOTSTRAP'));
+    const waitMs = shouldWaitForExposure ? 5 * 60 * 1000 : 0;
     const exposure = await waitForExposure(context, readExposure, sleepImpl, waitMs);
     if (!exposure) {
       await saveStatus({
