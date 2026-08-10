@@ -4,6 +4,7 @@ const CHART_CACHE_PREFIX = 'tree-chart-last-success-v1:';
 const dashboardUrl = '/api/tree-dashboard';
 const isDeployPreview = typeof location !== 'undefined' && /^deploy-preview-/.test(location.hostname);
 const leaderboardUrl = isDeployPreview ? '/api/tree-exposure' : '/api/tree-leaderboard';
+const badgeUrl = isDeployPreview ? '/api/tree-badges' : null;
 let leaderboardMode = isDeployPreview ? 'exposure' : 'direct';
 const chartUrl = '/api/tree-chart';
 const pairUrl = 'https://api.dexscreener.com/latest/dex/pairs/sui/0xaa133ce1f8fd55d85b6fc87c1b3054cb717d83be477ef3635c661c21fbdfa0ee';
@@ -785,13 +786,67 @@ function renderLeaderboard(payload) {
   updateYourRank();
 }
 
+
+function mergeBehaviorBadgeSnapshot(exposurePayload, badgePayload) {
+  if (!exposurePayload || !badgePayload
+    || !['ok', 'stale'].includes(exposurePayload.status)
+    || !['ok', 'stale'].includes(badgePayload.status)
+    || badgePayload.provider !== 'tree-badge-snapshot'
+    || badgePayload.exposureSnapshotGeneratedAt !== exposurePayload.snapshotGeneratedAt
+    || !Array.isArray(exposurePayload.entries)
+    || !Array.isArray(badgePayload.entries)
+    || badgePayload.entries.length !== 50) return { payload: exposurePayload, merged: false };
+
+  const byWallet = new Map(badgePayload.entries.map((entry) => [String(entry.wallet).toLowerCase(), entry]));
+  const entries = exposurePayload.entries.map((entry) => {
+    const behavior = byWallet.get(String(entry.wallet).toLowerCase());
+    if (!behavior || behavior.rank !== entry.rank) return entry;
+    return {
+      ...entry,
+      badges: [...new Set([...(Array.isArray(entry.badges) ? entry.badges : []), ...(Array.isArray(behavior.badges) ? behavior.badges : [])])],
+      activity30d: behavior.activity30d,
+      burn: behavior.burn,
+    };
+  });
+  if (entries.some((entry, index) => !byWallet.has(String(entry.wallet).toLowerCase()) || byWallet.get(String(entry.wallet).toLowerCase())?.rank !== index + 1)) {
+    return { payload: exposurePayload, merged: false };
+  }
+  return {
+    merged: true,
+    payload: {
+      ...exposurePayload,
+      entries,
+      behaviorBadgeSnapshot: {
+        status: badgePayload.status,
+        snapshotGeneratedAt: badgePayload.snapshotGeneratedAt,
+        summary: badgePayload.summary,
+        source: badgePayload.source,
+      },
+      warnings: [
+        ...(Array.isArray(exposurePayload.warnings) ? exposurePayload.warnings : []),
+        ...(Array.isArray(badgePayload.warnings) ? badgePayload.warnings : []),
+      ],
+    },
+  };
+}
+
 async function loadLeaderboard() {
   try {
-    const response = await fetch(leaderboardUrl, { headers: { Accept: 'application/json' } });
-    if (!response.ok) throw new Error(`Leaderboard returned ${response.status}`);
-    const payload = await response.json();
+    const [leaderboardResponse, badgeResponse] = await Promise.all([
+      fetch(leaderboardUrl, { headers: { Accept: 'application/json' } }),
+      badgeUrl ? fetch(badgeUrl, { headers: { Accept: 'application/json' } }).catch(() => null) : Promise.resolve(null),
+    ]);
+    if (!leaderboardResponse.ok) throw new Error(`Leaderboard returned ${leaderboardResponse.status}`);
+    let payload = await leaderboardResponse.json();
+    let badgePayload = null;
+    if (badgeResponse?.ok) badgePayload = await badgeResponse.json();
+    const merged = mergeBehaviorBadgeSnapshot(payload, badgePayload);
+    payload = merged.payload;
     if (isDeployPreview && String(payload.methodologyVersion || '').startsWith('verified-tree-exposure-v')) {
-      payload.warnings = [...(Array.isArray(payload.warnings) ? payload.warnings : []), 'Deploy Preview: ranks combine liquid TREE with current verified principal in SuiDex V2, SuiDex V3, and Turbos positions.'];
+      payload.warnings = [...(Array.isArray(payload.warnings) ? payload.warnings : []),
+        'Deploy Preview: ranks combine liquid TREE with current verified principal in SuiDex V2, SuiDex V3, and Turbos positions.',
+        ...(merged.merged ? ['All four behavioral badges are from a complete snapshot aligned to this exposure ranking.'] : ['Behavioral badges are still building or do not yet match this exposure snapshot.']),
+      ];
     }
     renderLeaderboard(payload);
   } catch (error) {
@@ -897,4 +952,4 @@ if (typeof document !== 'undefined') {
   loadDisplayedRate();
 }
 
-export { DAPP_SWAP_EXECUTION_ENABLED, TIER_DEFINITIONS, badgeDefinition, displayNameForEntry, entryIsExposure, formatSupplyPercentFromRaw, formatTreePrice, normalizeLeaderboardEntry, readDashboardCache, renderLeaderboard, tierForEntry, updateYourRank, writeDashboardCache };
+export { DAPP_SWAP_EXECUTION_ENABLED, TIER_DEFINITIONS, badgeDefinition, displayNameForEntry, entryIsExposure, formatSupplyPercentFromRaw, formatTreePrice, mergeBehaviorBadgeSnapshot, normalizeLeaderboardEntry, readDashboardCache, renderLeaderboard, tierForEntry, updateYourRank, writeDashboardCache };
