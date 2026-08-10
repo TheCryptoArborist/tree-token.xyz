@@ -104,7 +104,7 @@ const twoPages = queuedFetch([
   { payload: graphPage(pageOne, true, 'opaque-cursor-1') },
   { payload: graphPage(pageTwo, false, null) },
 ]);
-const complete = await scanSuiGraphqlLeaderboard({ fetchImpl: twoPages.fetchImpl, pageSize: 50, maxPages: 4, maxScanMs: 10_000 });
+const complete = await scanSuiGraphqlLeaderboard({ fetchImpl: twoPages.fetchImpl, pageSize: 50, maxPages: 4, maxScanMs: 10_000, includeExposureCandidates: true });
 assert.equal(complete.outcome, 'complete');
 assert.equal(complete.coverage.scanComplete, true);
 assert.equal(complete.coverage.reachedEnd, true);
@@ -137,6 +137,12 @@ assert.equal(complete.entries[0].coinObjectCount, 2);
 assert.deepEqual(complete.entries.slice(1).map((entry) => entry.wallet), [address('b'), address('c')]);
 assert.deepEqual(complete.entries.map((entry) => entry.rank), [1, 2, 3]);
 assert.equal(complete.entries.some((entry) => entry.wallet === pool), false);
+assert.ok(complete.exposureCandidates);
+assert.equal(complete.exposureCandidates.length, 3);
+assert.equal(complete.exposureCandidates[0].wallet, address('a'));
+assert.equal(complete.exposureCandidates[0].directTreeRaw, exactA.toString());
+assert.equal(complete.exposureCandidates[0].coinObjectCount, 2);
+assert.equal(complete.exposureCandidates.some((entry) => entry.wallet === pool), false);
 assert.equal(twoPages.requests[1].variables.after, null);
 assert.equal(twoPages.requests[2].variables.after, 'opaque-cursor-1');
 const expectedAddressOwnedRaw = exactA + equalBalance + equalBalance + 1500n;
@@ -195,6 +201,7 @@ const pageLimited = await scanSuiGraphqlLeaderboard({ fetchImpl: limitedFetch.fe
 assert.equal(pageLimited.outcome, 'verification-incomplete');
 assert.equal(pageLimited.coverage.pageLimitReached, true);
 assert.deepEqual(pageLimited.entries, []);
+assert.equal(pageLimited.exposureCandidates, null);
 
 const timedFetch = queuedFetch([{ payload: graphPage([coinNode('AddressOwner', address('a'), '1')], true, 'more') }]);
 const times = [0, 0, 2000, 2000, 2000];

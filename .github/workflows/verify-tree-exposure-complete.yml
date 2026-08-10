@@ -1,0 +1,102 @@
+name: Verify complete TREE exposure snapshot
+
+on:
+  push:
+    branches:
+      - feature/leaderboard-exposure-v1
+    paths:
+      - '.github/workflows/verify-tree-exposure-complete.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Wait for completed exposure and badge snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL='https://deploy-preview-4--tree-token.netlify.app/api/tree-exposure'
+          for attempt in $(seq 1 120); do
+            curl --silent --show-error --location --max-time 60 "$URL?badge_completion_check=$attempt" -o /tmp/exposure.json
+            state=$(node -e "const p=require('/tmp/exposure.json');process.stdout.write(String(p.refreshState||''))")
+            status=$(node -e "const p=require('/tmp/exposure.json');process.stdout.write(String(p.status||''))")
+            activity=$(node -e "const p=require('/tmp/exposure.json');process.stdout.write(String(p.source?.activity?.outcome||''))")
+            burns=$(node -e "const p=require('/tmp/exposure.json');process.stdout.write(String(p.source?.burns?.outcome||''))")
+            echo "attempt=$attempt status=$status refresh=$state activity=${activity:-unknown} burns=${burns:-unknown}"
+            if [[ ( "$status" == 'ok' || "$status" == 'stale' ) && "$state" == 'complete' && "$activity" == 'complete' && "$burns" == 'complete' ]]; then
+              break
+            fi
+            [[ "$attempt" != '120' ]] || { cat /tmp/exposure.json; exit 1; }
+            sleep 10
+          done
+          node <<'NODE'
+          const fs = require('node:fs');
+          const p = JSON.parse(fs.readFileSync('/tmp/exposure.json','utf8'));
+          const errors = [];
+          const check = (condition, message) => { if (!condition) errors.push(message); };
+          check(['ok','stale'].includes(p.status), 'status');
+          check(p.refreshState === 'complete', 'refreshState');
+          check(p.refreshStatus?.totalExposureComplete === true, 'refreshStatus');
+          check(p.methodologyVersion === 'verified-tree-exposure-v1', 'methodology');
+          check(p.totalSupplyRaw === '1000000000000000', 'supply');
+          for (const key of ['directTreeComplete','suiDexV2Complete','suiDexV3Complete','turbosComplete','totalExposureComplete']) check(p.coverage?.[key] === true, key);
+          check(p.source?.activity?.outcome === 'complete', 'activity-source');
+          check(p.source?.activity?.coverage?.reachedEnd === true, 'activity-natural-end');
+          check(p.source?.burns?.outcome === 'complete', 'burn-source');
+          check(p.source?.burns?.coverage?.reachedEnd === true, 'burn-natural-end');
+          check(Array.isArray(p.entries) && p.entries.length === 50, 'entries');
+          let total=0n, liquid=0n, lp=0n, providers=0, maxis=0, diamonds=0, papers=0, accumulators=0, burned=0;
+          for (let i=0;i<p.entries.length;i++) {
+            const e=p.entries[i];
+            const l=BigInt(e.liquidTreeRaw), x=BigInt(e.lpTreeRaw), t=BigInt(e.totalExposureRaw);
+            const v2=BigInt(e.lpBreakdown.suiDexV2Raw), v3=BigInt(e.lpBreakdown.suiDexV3Raw), tb=BigInt(e.lpBreakdown.turbosRaw);
+            const buy=BigInt(e.activity30d.buyTreeRaw), sell=BigInt(e.activity30d.sellTreeRaw), burn=BigInt(e.burnedTreeRaw);
+            check(e.rank===i+1, `rank-${i+1}`);
+            check(t===l+x, `total-${i+1}`);
+            check(x===v2+v3+tb, `breakdown-${i+1}`);
+            check(e.badges.includes('lp-provider')===(x>0n), `provider-${i+1}`);
+            check(e.badges.includes('lp-maxi')===(x>l&&x>0n), `maxi-${i+1}`);
+            check(e.badges.includes('diamond-hands')===(e.activity30d.sellCount===0), `diamond-${i+1}`);
+            check(e.badges.includes('paper-hands')===(sell>buy&&sell>=100000000000n), `paper-${i+1}`);
+            check(e.badges.includes('accumulator')===(e.activity30d.buyCount>=10&&buy>=100000000000n&&buy>sell), `accumulator-${i+1}`);
+            check(e.badges.includes('burned')===(burn>=500000000000n), `burned-${i+1}`);
+            check(!(e.badges.includes('diamond-hands')&&e.badges.includes('paper-hands')), `exclusive-${i+1}`);
+            total+=t; liquid+=l; lp+=x;
+            if(e.badges.includes('lp-provider')) providers++;
+            if(e.badges.includes('lp-maxi')) maxis++;
+            if(e.badges.includes('diamond-hands')) diamonds++;
+            if(e.badges.includes('paper-hands')) papers++;
+            if(e.badges.includes('accumulator')) accumulators++;
+            if(e.badges.includes('burned')) burned++;
+          }
+          check(total===liquid+lp,'aggregate');
+          check(p.summary.top50TotalRaw===total.toString(),'summary-total');
+          check(p.summary.top50LiquidRaw===liquid.toString(),'summary-liquid');
+          check(p.summary.top50LpRaw===lp.toString(),'summary-lp');
+          const counts=p.summary.badgeCounts;
+          check(counts.lpProvider===providers,'summary-provider');
+          check(counts.lpMaxi===maxis,'summary-maxi');
+          check(counts.diamondHands===diamonds,'summary-diamond');
+          check(counts.paperHands===papers,'summary-paper');
+          check(counts.accumulator===accumulators,'summary-accumulator');
+          check(counts.burned===burned,'summary-burned');
+          if(errors.length){ console.error(JSON.stringify({errors},null,2)); process.exit(1); }
+          console.log(JSON.stringify({
+            status:p.status,
+            snapshotGeneratedAt:p.snapshotGeneratedAt,
+            eligibleOwnerCount:p.eligibleOwnerCount,
+            displayedCount:p.displayedCount,
+            top50TotalRaw:total.toString(),
+            top50LiquidRaw:liquid.toString(),
+            top50LpRaw:lp.toString(),
+            rank50CutoffRaw:p.entries[49].totalExposureRaw,
+            badgeCounts:{lpProvider:providers,lpMaxi:maxis,diamondHands:diamonds,paperHands:papers,accumulator:accumulators,burned},
+            activity:p.source.activity,
+            burns:p.source.burns,
+            suins:p.source.suins,
+          },null,2));
+          NODE

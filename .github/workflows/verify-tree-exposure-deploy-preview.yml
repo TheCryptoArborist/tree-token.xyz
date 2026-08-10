@@ -1,0 +1,179 @@
+name: Verify TREE exposure Deploy Preview endpoint
+
+on:
+  push:
+    branches:
+      - feature/leaderboard-exposure-v1
+    paths:
+      - '.github/workflows/verify-tree-exposure-deploy-preview.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/leaderboard-exposure-v1
+          fetch-depth: 0
+
+      - name: Wait for complete preview-only exposure snapshot
+        shell: bash
+        env:
+          EXPOSURE_URL: https://deploy-preview-4--tree-token.netlify.app/api/tree-exposure
+        run: |
+          set -euo pipefail
+          rm -f /tmp/tree-exposure.json /tmp/tree-exposure.headers
+          for attempt in $(seq 1 120); do
+            code=$(curl --silent --show-error --location \
+              --connect-timeout 15 --max-time 45 \
+              --dump-header /tmp/tree-exposure.headers \
+              --output /tmp/tree-exposure.json \
+              --write-out '%{http_code}' \
+              "$EXPOSURE_URL?verification_attempt=$attempt" || true)
+            status=$(node -e "try{const p=require('/tmp/tree-exposure.json');process.stdout.write(String(p.status||''))}catch{}")
+            refresh=$(node -e "try{const p=require('/tmp/tree-exposure.json');process.stdout.write(String(p.refreshState||''))}catch{}")
+            stage=$(node -e "try{const p=require('/tmp/tree-exposure.json');process.stdout.write(String(p.refreshStatus?.stage||''))}catch{}")
+            echo "attempt=$attempt http=$code status=${status:-unknown} refresh=${refresh:-unknown} stage=${stage:-unknown}"
+            if [[ "$code" == "200" && ( "$status" == "ok" || "$status" == "stale" ) ]]; then
+              break
+            fi
+            if [[ "$attempt" == "120" ]]; then
+              echo 'Exposure preview did not reach a complete snapshot within the verification window.' >&2
+              cat /tmp/tree-exposure.json >&2 || true
+              exit 1
+            fi
+            sleep 10
+          done
+
+      - name: Validate complete snapshot contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('node:fs');
+          const payload = JSON.parse(fs.readFileSync('/tmp/tree-exposure.json', 'utf8'));
+          const requiredVenues = ['suiDexV2', 'suiDexV3', 'turbos'];
+          const failures = [];
+          const assert = (condition, message) => { if (!condition) failures.push(message); };
+          const digits = (value) => typeof value === 'string' && /^\d+$/.test(value);
+
+          assert(payload.status === 'ok' || payload.status === 'stale', 'status is not ok/stale');
+          assert(payload.provider === 'tree-exposure-snapshot', 'provider mismatch');
+          assert(payload.methodologyVersion === 'verified-tree-exposure-v1', 'methodology mismatch');
+          assert(payload.coinSymbol === 'TREE', 'coin symbol mismatch');
+          assert(payload.coinDecimals === 6, 'coin decimals mismatch');
+          assert(payload.totalSupplyRaw === '1000000000000000', 'total supply mismatch');
+          assert(payload.coverage?.directTreeComplete === true, 'direct TREE incomplete');
+          assert(payload.coverage?.suiDexV2Complete === true, 'SuiDex V2 incomplete');
+          assert(payload.coverage?.suiDexV3Complete === true, 'SuiDex V3 incomplete');
+          assert(payload.coverage?.turbosComplete === true, 'Turbos incomplete');
+          assert(payload.coverage?.totalExposureComplete === true, 'total exposure incomplete');
+          assert(payload.refreshState === 'complete', 'refresh state is not complete');
+          assert(payload.refreshStatus?.totalExposureComplete === true, 'refresh status is not complete');
+          assert(payload.displayedCount === 50, 'displayed count is not 50');
+          assert(Number.isSafeInteger(payload.eligibleOwnerCount) && payload.eligibleOwnerCount >= 50, 'eligible owner count invalid');
+          assert(Array.isArray(payload.entries) && payload.entries.length === 50, 'entry count is not 50');
+          assert(payload.source?.direct?.outcome === 'complete', 'direct source is not complete');
+          assert(payload.source?.direct?.exposureCandidateCount === payload.source?.direct?.eligibleDirectOwners, 'direct candidate reconciliation failed');
+          for (const venue of requiredVenues) {
+            assert(payload.source?.venues?.[venue]?.outcome === 'complete', `${venue} source is not complete`);
+            assert(digits(payload.source?.venues?.[venue]?.principalTreeRaw), `${venue} principal is invalid`);
+          }
+
+          const wallets = new Set();
+          let total = 0n;
+          let liquid = 0n;
+          let lp = 0n;
+          let lpProvider = 0;
+          let lpMaxi = 0;
+          let previous = null;
+          for (let index = 0; index < payload.entries.length; index += 1) {
+            const entry = payload.entries[index];
+            assert(entry.rank === index + 1, `rank mismatch at ${index + 1}`);
+            assert(typeof entry.wallet === 'string' && /^0x[0-9a-f]{64}$/.test(entry.wallet), `wallet invalid at ${index + 1}`);
+            assert(!wallets.has(entry.wallet), `duplicate wallet at ${index + 1}`);
+            wallets.add(entry.wallet);
+            assert(digits(entry.liquidTreeRaw), `liquid raw invalid at ${index + 1}`);
+            assert(digits(entry.lpTreeRaw), `LP raw invalid at ${index + 1}`);
+            assert(digits(entry.totalExposureRaw), `total raw invalid at ${index + 1}`);
+            const liquidRaw = BigInt(entry.liquidTreeRaw);
+            const lpRaw = BigInt(entry.lpTreeRaw);
+            const totalRaw = BigInt(entry.totalExposureRaw);
+            const v2 = BigInt(entry.lpBreakdown?.suiDexV2Raw || '-1');
+            const v3 = BigInt(entry.lpBreakdown?.suiDexV3Raw || '-1');
+            const turbos = BigInt(entry.lpBreakdown?.turbosRaw || '-1');
+            assert(lpRaw === v2 + v3 + turbos, `LP breakdown mismatch at ${index + 1}`);
+            assert(totalRaw === liquidRaw + lpRaw, `total exposure mismatch at ${index + 1}`);
+            assert(totalRaw > 0n && totalRaw <= 1_000_000_000_000_000n, `total exposure range invalid at ${index + 1}`);
+            if (previous) {
+              const ordered = totalRaw < previous.totalRaw
+                || (totalRaw === previous.totalRaw && liquidRaw < previous.liquidRaw)
+                || (totalRaw === previous.totalRaw && liquidRaw === previous.liquidRaw && entry.wallet.localeCompare(previous.wallet) >= 0);
+              assert(ordered, `deterministic sort order failed at ${index + 1}`);
+            }
+            previous = { totalRaw, liquidRaw, wallet: entry.wallet };
+            const badges = Array.isArray(entry.badges) ? entry.badges : [];
+            assert(badges.includes('lp-provider') === (lpRaw > 0n), `LP Provider badge mismatch at ${index + 1}`);
+            assert(badges.includes('lp-maxi') === (lpRaw > liquidRaw && lpRaw > 0n), `LP Maxi badge mismatch at ${index + 1}`);
+            if (badges.includes('lp-provider')) lpProvider += 1;
+            if (badges.includes('lp-maxi')) lpMaxi += 1;
+            total += totalRaw;
+            liquid += liquidRaw;
+            lp += lpRaw;
+          }
+
+          assert(payload.summary?.top50TotalRaw === total.toString(), 'Top-50 total summary mismatch');
+          assert(payload.summary?.top50LiquidRaw === liquid.toString(), 'Top-50 liquid summary mismatch');
+          assert(payload.summary?.top50LpRaw === lp.toString(), 'Top-50 LP summary mismatch');
+          assert(payload.summary?.rank50CutoffRaw === payload.entries[49].totalExposureRaw, 'rank-50 cutoff mismatch');
+          assert(payload.summary?.badgeCounts?.lpProvider === lpProvider, 'LP Provider count mismatch');
+          assert(payload.summary?.badgeCounts?.lpMaxi === lpMaxi, 'LP Maxi count mismatch');
+          assert(total === liquid + lp, 'Top-50 aggregate identity failed');
+
+          if (failures.length) {
+            console.error(JSON.stringify({ failures }, null, 2));
+            process.exit(1);
+          }
+          console.log(JSON.stringify({
+            status: payload.status,
+            snapshotGeneratedAt: payload.snapshotGeneratedAt,
+            snapshotAgeMs: payload.snapshotAgeMs,
+            refreshState: payload.refreshState,
+            displayedCount: payload.displayedCount,
+            eligibleOwnerCount: payload.eligibleOwnerCount,
+            top50TotalRaw: total.toString(),
+            top50LiquidRaw: liquid.toString(),
+            top50LpRaw: lp.toString(),
+            rank50CutoffRaw: payload.entries[49].totalExposureRaw,
+            badgeCounts: { lpProvider, lpMaxi },
+            suins: payload.source.suins,
+            direct: payload.source.direct,
+            venues: Object.fromEntries(requiredVenues.map((venue) => [venue, {
+              walletCount: payload.source.venues[venue].walletCount,
+              positionCount: payload.source.venues[venue].positionCount,
+              principalTreeRaw: payload.source.venues[venue].principalTreeRaw,
+            }])),
+          }, null, 2));
+          NODE
+
+      - name: Verify preview application routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          for url in \
+            'https://deploy-preview-4--tree-token.netlify.app/' \
+            'https://deploy-preview-4--tree-token.netlify.app/dapp/' \
+            'https://deploy-preview-4--tree-token.netlify.app/api/tree-leaderboard-preview'; do
+            code=$(curl --silent --show-error --location --output /dev/null --write-out '%{http_code}' --max-time 45 "$url")
+            echo "$code $url"
+            [[ "$code" == "200" ]]
+          done
+
+      - name: Record successful verification
+        shell: bash
+        run: |
+          echo 'TREE exposure Deploy Preview verification completed successfully.'

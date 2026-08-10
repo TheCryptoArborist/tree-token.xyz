@@ -12,6 +12,7 @@ import {
   normalizeSuiAddress,
   tierForRank,
 } from './leaderboard-provider.ts';
+import type { DirectExposureCandidate } from './tree-exposure-types.ts';
 
 export const DEFAULT_SUI_GRAPHQL_URL = 'https://graphql.mainnet.sui.io/graphql';
 export const DEFAULT_PAGE_SIZE = 50;
@@ -143,6 +144,7 @@ export type ScanOptions = Partial<SuiGraphqlConfig> & {
   abortSignal?: AbortSignal;
   sleepImpl?: (milliseconds: number) => Promise<void>;
   randomImpl?: () => number;
+  includeExposureCandidates?: boolean;
 };
 
 export type Reconciliation = {
@@ -177,6 +179,7 @@ export type SuiGraphqlScanResult = {
   /** @deprecated Alias of excludedCoinObjects. */
   excludedCount: number;
   entries: DirectTreeEntry[];
+  exposureCandidates: DirectExposureCandidate[] | null;
   warnings: string[];
   sourceCheckpoint: {
     pagesScanned: number;
@@ -341,6 +344,17 @@ function buildEntries(candidates: Map<string, Candidate>, coinDecimals: number, 
       suiDexV3: null,
       turbos: null,
       nftreeCount: null,
+    }));
+}
+
+function buildExposureCandidates(candidates: Map<string, Candidate>): DirectExposureCandidate[] {
+  return [...candidates.values()]
+    .sort((left, right) => compareBigIntDescending(left.raw, right.raw) || left.wallet.localeCompare(right.wallet))
+    .map((candidate) => ({
+      wallet: candidate.wallet,
+      suinsName: null,
+      directTreeRaw: candidate.raw.toString(),
+      coinObjectCount: candidate.coinObjectCount,
     }));
 }
 
@@ -654,6 +668,9 @@ export async function scanSuiGraphqlLeaderboard(options: ScanOptions = {}): Prom
   const entries = complete && verifiedCoinDecimals !== null && verifiedTotalSupplyRaw !== null
     ? buildEntries(rankingCandidates, verifiedCoinDecimals, verifiedTotalSupplyRaw)
     : [];
+  const exposureCandidates = complete && options.includeExposureCandidates
+    ? buildExposureCandidates(rankingCandidates)
+    : null;
   const warnings = ['Phase 2.2C measures direct address-owned TREE only, not total TREE exposure.'];
   if (!coverage.coinMetadataVerified) warnings.push('TREE coin metadata could not be verified; rankings were not published.');
   if (!coverage.scanComplete) warnings.push('The Sui-native Coin<TREE> verification did not complete; partial ranks were not published.');
@@ -686,6 +703,7 @@ export async function scanSuiGraphqlLeaderboard(options: ScanOptions = {}): Prom
     displayedCount: entries.length,
     excludedCount: coverage.excludedCoinObjects,
     entries,
+    exposureCandidates,
     warnings,
     sourceCheckpoint: {
       pagesScanned: coverage.pagesScanned,
