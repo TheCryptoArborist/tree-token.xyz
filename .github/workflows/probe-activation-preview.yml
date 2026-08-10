@@ -15,13 +15,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Read current exposure and badge states
+      - name: Read corrected exposure and badge states
         shell: bash
         run: |
           set -euo pipefail
           BASE='https://deploy-preview-7--tree-token.netlify.app'
-          curl --silent --show-error --location --max-time 60 "$BASE/api/tree-exposure?probe_state=1" -o /tmp/exposure.json
-          curl --silent --show-error --location --max-time 60 "$BASE/api/tree-badges?probe_state=1" -o /tmp/badges.json
+          curl --silent --show-error --location --max-time 60 "$BASE/api/tree-exposure?probe_state=2" -o /tmp/exposure.json
+          curl --silent --show-error --location --max-time 60 "$BASE/api/tree-badges?probe_state=2" -o /tmp/badges.json
           node <<'NODE'
           const exposure = require('/tmp/exposure.json');
           const badges = require('/tmp/badges.json');
@@ -42,6 +42,8 @@ jobs:
               snapshotGeneratedAt: badges.snapshotGeneratedAt,
               exposureSnapshotGeneratedAt: badges.exposureSnapshotGeneratedAt,
               displayedCount: badges.displayedCount,
+              source: badges.source,
+              summary: badges.summary,
               warnings: badges.warnings,
               message: badges.message,
             },
