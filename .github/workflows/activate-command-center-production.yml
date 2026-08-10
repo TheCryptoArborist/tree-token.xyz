@@ -25,6 +25,16 @@ jobs:
         run: |
           set -euo pipefail
           python scripts/activate-command-center-production.py
+          python <<'PY'
+          from pathlib import Path
+          path = Path('tests/tree-exposure-deploy-bootstrap.test.ts')
+          text = path.read_text(encoding='utf-8')
+          needle = "assert.deepEqual(productionComplete, { attempted: true, outcome: 'complete' });\n"
+          if needle not in text:
+              raise SystemExit('Production exposure fixture assertion was not found.')
+          text = text.replace(needle, needle + "workerCalls = 0;\n", 1)
+          path.write_text(text, encoding='utf-8')
+          PY
           rm -f scripts/activate-command-center-production.py .github/workflows/activate-command-center-production.yml
           git diff --check
 
