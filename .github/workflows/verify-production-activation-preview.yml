@@ -1,0 +1,178 @@
+name: Verify TREE production activation Deploy Preview
+
+on:
+  push:
+    branches:
+      - review/phase1
+    paths:
+      - '.github/workflows/verify-production-activation-preview.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Wait for complete exposure and badge snapshots
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='https://deploy-preview-7--tree-token.netlify.app'
+          for attempt in $(seq 1 120); do
+            curl --silent --show-error --location --max-time 60 "$BASE/api/tree-exposure?activation_preview=$attempt" -o /tmp/exposure.json
+            exposure_status=$(node -e "const p=require('/tmp/exposure.json');process.stdout.write(String(p.status||''))")
+            exposure_refresh=$(node -e "const p=require('/tmp/exposure.json');process.stdout.write(String(p.refreshState||''))")
+            exposure_count=$(node -e "const p=require('/tmp/exposure.json');process.stdout.write(String(p.displayedCount||0))")
+            curl --silent --show-error --location --max-time 60 "$BASE/api/tree-badges?activation_preview=$attempt" -o /tmp/badges.json
+            badge_status=$(node -e "const p=require('/tmp/badges.json');process.stdout.write(String(p.status||''))")
+            badge_refresh=$(node -e "const p=require('/tmp/badges.json');process.stdout.write(String(p.refreshState||''))")
+            badge_count=$(node -e "const p=require('/tmp/badges.json');process.stdout.write(String(p.displayedCount||0))")
+            echo "attempt=$attempt exposure=$exposure_status/$exposure_refresh/$exposure_count badges=$badge_status/$badge_refresh/$badge_count"
+            if [[ ( "$exposure_status" == 'ok' || "$exposure_status" == 'stale' ) && "$exposure_refresh" == 'complete' && "$exposure_count" == '50' \
+              && ( "$badge_status" == 'ok' || "$badge_status" == 'stale' ) && "$badge_refresh" == 'complete' && "$badge_count" == '50' ]]; then
+              break
+            fi
+            [[ "$attempt" != '120' ]] || { echo 'Deploy Preview snapshots did not complete.' >&2; cat /tmp/exposure.json >&2; cat /tmp/badges.json >&2; exit 1; }
+            sleep 10
+          done
+
+      - name: Validate complete-only snapshot contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const exposure = require('/tmp/exposure.json');
+          const badges = require('/tmp/badges.json');
+          const failures = [];
+          const check = (condition, message) => { if (!condition) failures.push(message); };
+          check(['ok','stale'].includes(exposure.status), 'exposure status');
+          check(exposure.refreshState === 'complete', 'exposure refresh');
+          check(exposure.provider === 'tree-exposure-snapshot', 'exposure provider');
+          check(exposure.methodologyVersion === 'verified-tree-exposure-v1', 'exposure methodology');
+          check(exposure.totalSupplyRaw === '1000000000000000', 'TREE supply');
+          check(exposure.coverage?.directTreeComplete === true, 'direct coverage');
+          check(exposure.coverage?.suiDexV2Complete === true, 'SuiDex V2 coverage');
+          check(exposure.coverage?.suiDexV3Complete === true, 'SuiDex V3 coverage');
+          check(exposure.coverage?.turbosComplete === true, 'Turbos coverage');
+          check(exposure.coverage?.totalExposureComplete === true, 'total exposure coverage');
+          check(Array.isArray(exposure.entries) && exposure.entries.length === 50, 'exposure entries');
+          check(['ok','stale'].includes(badges.status), 'badge status');
+          check(badges.refreshState === 'complete', 'badge refresh');
+          check(badges.provider === 'tree-badge-snapshot', 'badge provider');
+          check(badges.exposureSnapshotGeneratedAt === exposure.snapshotGeneratedAt, 'snapshot alignment');
+          check(Array.isArray(badges.entries) && badges.entries.length === 50, 'badge entries');
+          const behaviorByWallet = new Map(badges.entries.map((entry) => [entry.wallet.toLowerCase(), entry]));
+          let lpProvider = 0, lpMaxi = 0, diamondHands = 0, paperHands = 0, accumulator = 0, burned = 0;
+          for (let index = 0; index < exposure.entries.length; index += 1) {
+            const entry = exposure.entries[index];
+            const behavior = behaviorByWallet.get(entry.wallet.toLowerCase());
+            check(entry.rank === index + 1, `exposure rank ${index + 1}`);
+            check(Boolean(behavior) && behavior.rank === entry.rank, `badge rank ${index + 1}`);
+            const liquid = BigInt(entry.liquidTreeRaw);
+            const lp = BigInt(entry.lpTreeRaw);
+            const total = BigInt(entry.totalExposureRaw);
+            check(total === liquid + lp, `total identity ${index + 1}`);
+            check(lp === BigInt(entry.lpBreakdown.suiDexV2Raw) + BigInt(entry.lpBreakdown.suiDexV3Raw) + BigInt(entry.lpBreakdown.turbosRaw), `LP identity ${index + 1}`);
+            const allBadges = new Set([...(entry.badges || []), ...(behavior?.badges || [])]);
+            check(allBadges.has('lp-provider') === (lp > 0n), `LP Provider ${index + 1}`);
+            check(allBadges.has('lp-maxi') === (lp > liquid && lp > 0n), `LP Maxi ${index + 1}`);
+            if (allBadges.has('lp-provider')) lpProvider++;
+            if (allBadges.has('lp-maxi')) lpMaxi++;
+            if (allBadges.has('diamond-hands')) diamondHands++;
+            if (allBadges.has('paper-hands')) paperHands++;
+            if (allBadges.has('accumulator')) accumulator++;
+            if (allBadges.has('burned')) burned++;
+          }
+          check(exposure.summary?.badgeCounts?.lpProvider === lpProvider, 'LP Provider summary');
+          check(exposure.summary?.badgeCounts?.lpMaxi === lpMaxi, 'LP Maxi summary');
+          check(badges.summary?.diamondHands === diamondHands, 'Diamond Hands summary');
+          check(badges.summary?.paperHands === paperHands, 'Paper Hands summary');
+          check(badges.summary?.accumulator === accumulator, 'Accumulator summary');
+          check(badges.summary?.burned === burned, 'Burned summary');
+          if (failures.length) { console.error(JSON.stringify({ failures }, null, 2)); process.exit(1); }
+          console.log(JSON.stringify({
+            classification: 'SNAPSHOTS_VALID',
+            exposureSnapshotGeneratedAt: exposure.snapshotGeneratedAt,
+            badgeSnapshotGeneratedAt: badges.snapshotGeneratedAt,
+            displayedCount: exposure.entries.length,
+            eligibleOwnerCount: exposure.eligibleOwnerCount,
+            top50TotalRaw: exposure.summary.top50TotalRaw,
+            top50LiquidRaw: exposure.summary.top50LiquidRaw,
+            top50LpRaw: exposure.summary.top50LpRaw,
+            rank50CutoffRaw: exposure.summary.rank50CutoffRaw,
+            badgeCounts: { lpProvider, lpMaxi, diamondHands, paperHands, accumulator, burned },
+          }, null, 2));
+          NODE
+
+      - name: Install browser driver
+        run: npm install --no-save --ignore-scripts puppeteer-core@24
+
+      - name: Validate preview UI at desktop and mobile widths
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME=$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || command -v chromium-browser)
+          export CHROME
+          node <<'NODE'
+          const puppeteer = require('puppeteer-core');
+          (async () => {
+            const browser = await puppeteer.launch({ headless: true, executablePath: process.env.CHROME, args: ['--no-sandbox', '--disable-dev-shm-usage'] });
+            const results = [];
+            for (const viewport of [{width:1440,height:1000},{width:390,height:844},{width:360,height:800}]) {
+              const page = await browser.newPage();
+              await page.setViewport(viewport);
+              const errors = [];
+              page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
+              page.on('pageerror', (error) => errors.push(error.message));
+              await page.goto('https://deploy-preview-7--tree-token.netlify.app/dapp/?activation_qa=1#leaderboard', { waitUntil: 'networkidle2', timeout: 120000 });
+              await page.waitForFunction(() => document.querySelectorAll('.leader-card').length === 50, { timeout: 120000 });
+              await page.waitForFunction(() => [...document.querySelectorAll('.leader-badge')].some((node) => node.textContent.includes('Diamond Hands')), { timeout: 120000 });
+              const metrics = await page.evaluate(() => {
+                const unexpectedOverflow = [...document.querySelectorAll('body *')].filter((element) => {
+                  if (element.closest('.market-ribbon,.app-nav,.table-wrap')) return false;
+                  const style = getComputedStyle(element);
+                  if (style.position === 'fixed' || style.position === 'sticky' || style.display === 'none' || style.visibility === 'hidden') return false;
+                  const rect = element.getBoundingClientRect();
+                  return rect.width > 0 && (rect.left < -1 || rect.right > innerWidth + 1);
+                }).map((element) => `${element.tagName}.${String(element.className || '')}`).slice(0,10);
+                const labels = [...new Set([...document.querySelectorAll('.leader-badge')].map((node) => node.textContent.trim()))];
+                const board = document.querySelector('#leaderboard');
+                const personal = board?.querySelector('.rank-command-card');
+                const top50 = board?.querySelector('.top-board-heading');
+                const tiers = board?.querySelector('#tier-guide');
+                const methodology = board?.querySelector('.ranking-methodology');
+                const follows = (first, second) => Boolean(first && second && (first.compareDocumentPosition(second) & Node.DOCUMENT_POSITION_FOLLOWING));
+                const canvas = document.querySelector('#profileCanvas');
+                return {
+                  cards: document.querySelectorAll('.leader-card').length,
+                  exposureCards: document.querySelectorAll('.leader-card.exposure-card').length,
+                  labels,
+                  state: document.querySelector('#leaderboardState')?.textContent?.trim(),
+                  orderValid: follows(personal, top50) && follows(top50, tiers) && follows(tiers, methodology),
+                  tiersClosed: tiers ? !tiers.open : false,
+                  methodologyClosed: methodology ? !methodology.open : false,
+                  documentWidth: document.documentElement.scrollWidth,
+                  bodyWidth: Math.round(document.body.getBoundingClientRect().width),
+                  viewportWidth: innerWidth,
+                  unexpectedOverflow,
+                  canvasSize: canvas ? [canvas.width, canvas.height] : null,
+                };
+              });
+              const failures = [];
+              if (metrics.cards !== 50 || metrics.exposureCards !== 50) failures.push('card count');
+              for (const label of ['LP Provider','LP Maxi','Diamond Hands','Burned']) if (!metrics.labels.some((value) => value.includes(label))) failures.push(`missing ${label}`);
+              if (metrics.state !== 'Current Exposure Snapshot' && metrics.state !== 'Last Exposure Snapshot') failures.push('leaderboard state');
+              if (!metrics.orderValid || !metrics.tiersClosed || !metrics.methodologyClosed) failures.push('board hierarchy');
+              if (metrics.documentWidth > metrics.viewportWidth + 1 || metrics.bodyWidth > metrics.viewportWidth + 1 || metrics.unexpectedOverflow.length) failures.push('horizontal overflow');
+              if (JSON.stringify(metrics.canvasSize) !== JSON.stringify([1024,1024])) failures.push('Profile Studio canvas');
+              if (errors.length) failures.push(`console: ${errors.join(' | ')}`);
+              if (failures.length) throw new Error(JSON.stringify({ viewport, failures, metrics }, null, 2));
+              results.push({ viewport, metrics });
+              await page.close();
+            }
+            await browser.close();
+            console.log(JSON.stringify({ classification: 'BROWSER_QA_VALID', results }, null, 2));
+          })().catch((error) => { console.error(error); process.exit(1); });
+          NODE
