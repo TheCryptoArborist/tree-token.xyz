@@ -1,0 +1,156 @@
+name: Retry single-panel TREE Command Center navigation
+
+on:
+  push:
+    branches:
+      - feature/tree-navigation-v2
+    paths:
+      - '.github/workflows/retry-dapp-tabbed-navigation.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/tree-navigation-v2
+          fetch-depth: 0
+
+      - name: Apply the previously reviewed single-panel implementation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python <<'PY'
+          from pathlib import Path
+          import re
+          import textwrap
+
+          workflow = Path('.github/workflows/apply-dapp-tabbed-navigation.yml').read_text(encoding='utf-8')
+          router = workflow.split("cat > dapp/panel-router.js <<'JS'\n", 1)[1].split('\n          JS', 1)[0]
+          css = workflow.split("cat > dapp/panel-router.css <<'CSS'\n", 1)[1].split('\n          CSS', 1)[0]
+          router = textwrap.dedent(router)
+          css = textwrap.dedent(css)
+          router = router.replace(
+              "if (options.scrollTop !== false) window.scrollTo({ top: 0, left: 0, behavior: 'auto' });",
+              "if (options.scrollTop !== false) {\n    const resetScroll = () => window.scrollTo({ top: 0, left: 0, behavior: 'auto' });\n    resetScroll();\n    requestAnimationFrame(resetScroll);\n  }",
+              1,
+          )
+          Path('dapp/panel-router.js').write_text(router, encoding='utf-8')
+          Path('dapp/panel-router.css').write_text(css, encoding='utf-8')
+
+          path = Path('dapp/index.html')
+          text = path.read_text(encoding='utf-8')
+          if '<link rel="stylesheet" href="panel-router.css">' not in text:
+              text = text.replace('<link rel="stylesheet" href="styles.css">', '<link rel="stylesheet" href="styles.css">\n  <link rel="stylesheet" href="panel-router.css">', 1)
+          text = text.replace('      <a href="#profile-studio"><span aria-hidden="true">◎</span><b>Studio</b></a>\n', '', 1)
+          text = re.sub(r'\n    <section class="command-banner" id="overview"[\s\S]*?\n    </section>\n', '\n', text, count=1)
+          text = re.sub(r'\n    <section class="command-launcher"[\s\S]*?\n    </section>\n', '\n', text, count=1)
+          text = re.sub(r'\n    <section class="section" id="nftree-next"[\s\S]*?</section>\n', '\n', text, count=1)
+          text = re.sub(r'\n    <section class="command-bottom-metrics"[\s\S]*?\n    </section>\n', '\n', text, count=1)
+          text = text.replace('href="/#about"', 'href="/about/"')
+          text = text.replace('href="/#tokenomics"', 'href="/tokenomics/"')
+          text = text.replace('href="/#roadmap"', 'href="/roadmap/"')
+          text = text.replace('href="/#faq"', 'href="/faq/"')
+          if '<script type="module" src="panel-router.js"></script>' not in text:
+              text = text.replace('  <script type="module" src="../scripts/profile-studio.js"></script>\n', '  <script type="module" src="../scripts/profile-studio.js"></script>\n  <script type="module" src="panel-router.js"></script>\n', 1)
+          path.write_text(text, encoding='utf-8')
+          PY
+          rm -f .github/workflows/apply-dapp-tabbed-navigation.yml .github/workflows/retry-dapp-tabbed-navigation.yml
+          git diff --check
+
+      - name: Validate all existing systems
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci
+          npm run build
+          node --check dapp/app.js
+          node --check dapp/panel-router.js
+          node --check scripts/wallet.js
+          node tests/wallet-manager-core.test.mjs
+          node tests/wallet-manager-source.test.mjs
+          node tests/dashboard-cache.test.mjs
+          node tests/leaderboard-ui-state.test.mjs
+          for test in tests/*.ts; do npx --yes tsx "$test"; done
+          python <<'PY'
+          from pathlib import Path
+          import re
+          markup = Path('dapp/index.html').read_text(encoding='utf-8')
+          router = Path('dapp/panel-router.js').read_text(encoding='utf-8')
+          labels = re.findall(r'<b>(Swap|Limit|Earn|V3|Stats|Burn|Raffle|Board|Docs)</b>', markup)
+          assert labels == ['Swap','Limit','Earn','V3','Stats','Burn','Raffle','Board','Docs'], labels
+          assert '<b>Studio</b>' not in markup
+          assert 'class="command-banner"' not in markup
+          assert 'class="command-launcher"' not in markup
+          assert 'class="command-bottom-metrics"' not in markup
+          assert 'panel-router.css' in markup and 'panel-router.js' in markup
+          assert 'window.TREE_PANEL_ROUTER' in router
+          assert 'requestAnimationFrame(resetScroll)' in router
+          assert 'DAPP_SWAP_EXECUTION_ENABLED = false' in Path('dapp/app.js').read_text(encoding='utf-8')
+          PY
+          git diff --check
+
+      - name: Verify tab behavior in a browser
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save --ignore-scripts puppeteer-core@24
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/tree-panel-router.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
+          sleep 2
+          CHROME=$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || command -v chromium-browser)
+          export CHROME
+          node <<'NODE'
+          const puppeteer = require('puppeteer-core');
+          const BASE = 'http://127.0.0.1:4173';
+          const EXPECTED = ['swap','limit','earn','v3','stats','removed','canopy-draw','leaderboard','documents'];
+          (async () => {
+            const browser = await puppeteer.launch({ headless:true, executablePath:process.env.CHROME, args:['--no-sandbox','--disable-dev-shm-usage'] });
+            const results = [];
+            for (const viewport of [{width:1440,height:1000},{width:390,height:844},{width:360,height:800}]) {
+              const page = await browser.newPage();
+              await page.setViewport(viewport);
+              await page.goto(`${BASE}/dapp/#swap`, { waitUntil:'domcontentloaded', timeout:120000 });
+              await page.waitForSelector('html.app-tabbed', { timeout:60000 });
+              for (const id of EXPECTED) {
+                await page.click(`.app-nav a[href="#${id}"]`);
+                await page.waitForFunction((target) => document.body.dataset.activePanel === target, {}, id);
+                await new Promise((resolve) => setTimeout(resolve, 40));
+                const state = await page.evaluate(() => ({
+                  hash:location.hash,
+                  active:document.body.dataset.activePanel,
+                  visible:[...document.querySelectorAll('main > section[id]')].filter((node)=>!node.hidden).map((node)=>node.id),
+                  selected:[...document.querySelectorAll('.app-nav a[aria-selected="true"]')].map((node)=>node.getAttribute('href')),
+                  overflow:document.documentElement.scrollWidth-innerWidth,
+                  scrollY,
+                }));
+                if (state.hash !== `#${id}` || state.active !== id || state.visible.join('|') !== id || state.selected.join('|') !== `#${id}`) throw new Error(`Panel switch failed: ${JSON.stringify(state)}`);
+                if (state.overflow > 1 || state.scrollY > 80) throw new Error(`Panel layout failed: ${JSON.stringify(state)}`);
+              }
+              await page.click('.app-nav a[href="#documents"]');
+              await page.click('#documents a[href="#profile-studio"]');
+              await page.waitForFunction(() => document.body.dataset.activePanel === 'profile-studio');
+              const profile = await page.evaluate(() => ({active:document.body.dataset.activePanel,visible:[...document.querySelectorAll('main > section[id]')].filter((node)=>!node.hidden).map((node)=>node.id)}));
+              if (profile.active !== 'profile-studio' || profile.visible.join('|') !== 'profile-studio') throw new Error(`Profile routing failed: ${JSON.stringify(profile)}`);
+              results.push({viewport,profile});
+              await page.close();
+            }
+            await browser.close();
+            console.log(JSON.stringify({classification:'TREE_SINGLE_PANEL_NAV_VALID',results},null,2));
+          })().catch((error)=>{console.error(error);process.exit(1)});
+          NODE
+
+      - name: Commit and push
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "TheCryptoArborist"
+          git config user.email "190985450+TheCryptoArborist@users.noreply.github.com"
+          git add -A
+          git commit -m "Show one TREE utility panel at a time"
+          git push origin HEAD:feature/tree-navigation-v2
