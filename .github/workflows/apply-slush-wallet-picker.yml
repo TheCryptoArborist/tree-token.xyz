@@ -1,0 +1,117 @@
+name: Apply Slush wallet picker fix
+
+on:
+  push:
+    branches:
+      - fix/slush-wallet-picker
+    paths:
+      - '.github/workflows/apply-slush-wallet-picker.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/slush-wallet-picker
+          fetch-depth: 0
+
+      - name: Integrate the wallet manager with the Command Center
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/apply-wallet-manager-app-patch.py
+          rm -f scripts/apply-wallet-manager-app-patch.py .github/workflows/apply-slush-wallet-picker.yml
+          git diff --check
+
+      - name: Validate wallet logic and existing safeguards
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci
+          npm run build
+          node --check scripts/wallet-manager-core.js
+          node --check scripts/wallet.js
+          node --check dapp/app.js
+          node tests/wallet-manager-core.test.mjs
+          node tests/wallet-manager-source.test.mjs
+          node tests/dashboard-cache.test.mjs
+          node tests/leaderboard-ui-state.test.mjs
+          for test in tests/*.ts; do npx --yes tsx "$test"; done
+          git diff --check
+
+      - name: Verify the real browser wallet selector
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save --ignore-scripts puppeteer-core@24
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/tree-wallet-server.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
+          sleep 2
+          CHROME=$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || command -v chromium-browser)
+          export CHROME
+          node <<'NODE'
+          const puppeteer = require('puppeteer-core');
+          (async () => {
+            const browser = await puppeteer.launch({
+              headless: true,
+              executablePath: process.env.CHROME,
+              args: ['--no-sandbox', '--disable-dev-shm-usage'],
+            });
+            const results = [];
+            for (const viewport of [{ width: 1280, height: 900 }, { width: 390, height: 844 }, { width: 360, height: 800 }]) {
+              const page = await browser.newPage();
+              await page.setViewport(viewport);
+              await page.goto('http://127.0.0.1:4173/dapp/?wallet_picker_qa=1', {
+                waitUntil: 'domcontentloaded',
+                timeout: 120000,
+              });
+              await page.waitForFunction(() => typeof window.openWalletManager === 'function', { timeout: 120000 });
+              await page.click('#dappWallet');
+              await page.waitForSelector('#treeWalletDialog[open]', { timeout: 120000 });
+              await page.waitForFunction(() => document.querySelectorAll('.tree-wallet-option').length > 0, { timeout: 120000 });
+              const metrics = await page.evaluate(() => {
+                const dialog = document.querySelector('#treeWalletDialog');
+                const walletNames = [...document.querySelectorAll('.tree-wallet-option-copy strong')].map((node) => node.textContent.trim());
+                const slushLink = document.querySelector('[data-slush-link]');
+                const rect = dialog.getBoundingClientRect();
+                return {
+                  walletNames,
+                  slushVisible: walletNames.some((name) => /slush/i.test(name)),
+                  slushLink: slushLink?.href || '',
+                  switchWalletControl: Boolean(document.querySelector('[data-wallet-switch]')),
+                  disconnectForgetControl: document.querySelector('[data-wallet-disconnect]')?.textContent?.trim() || '',
+                  dialogWithinViewport: rect.left >= -1 && rect.right <= innerWidth + 1,
+                  playerAddress: window.playerAddress || null,
+                  documentWidth: document.documentElement.scrollWidth,
+                  viewportWidth: innerWidth,
+                };
+              });
+              if (!metrics.slushVisible) throw new Error(`Slush was not present: ${JSON.stringify(metrics)}`);
+              if (!metrics.slushLink.startsWith('https://my.slush.app/browse/')) throw new Error(`Slush deep link missing: ${JSON.stringify(metrics)}`);
+              if (!metrics.switchWalletControl || !/disconnect.*forget/i.test(metrics.disconnectForgetControl)) throw new Error(`Wallet management controls missing: ${JSON.stringify(metrics)}`);
+              if (!metrics.dialogWithinViewport || metrics.documentWidth > metrics.viewportWidth + 1) throw new Error(`Wallet dialog overflow: ${JSON.stringify(metrics)}`);
+              if (metrics.playerAddress !== null) throw new Error('Opening the selector connected a wallet without an explicit choice.');
+              results.push({ viewport, metrics });
+              await page.click('.tree-wallet-close');
+              await page.close();
+            }
+            await browser.close();
+            console.log(JSON.stringify({ classification: 'WALLET_PICKER_BROWSER_VALID', results }, null, 2));
+          })().catch((error) => { console.error(error); process.exit(1); });
+          NODE
+
+      - name: Commit and push the completed fix
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "TheCryptoArborist"
+          git config user.email "190985450+TheCryptoArborist@users.noreply.github.com"
+          git add -A
+          git commit -m "Fix Slush wallet selection and wallet switching"
+          git push origin HEAD:fix/slush-wallet-picker
