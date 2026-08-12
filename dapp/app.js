@@ -857,24 +857,53 @@ async function loadLeaderboard() {
 
 async function connectForDapp() {
   const status = document.getElementById('swapStatus');
-  if (window.playerAddress) {
-    await window.disconnectWallet?.(); syncWalletButtons();
-    status.textContent = 'Wallet disconnected.'; return;
-  }
   try {
-    if (typeof window.connectWallet !== 'function') throw new Error('Wallet module is still loading.');
-    await window.connectWallet(); syncWalletButtons();
+    if (typeof window.openWalletManager !== 'function') throw new Error('Wallet manager is still loading.');
+    const result = await window.openWalletManager();
+    syncWalletButtons();
+    if (result?.action === 'connected') {
+      status.textContent = `Connected with ${window.currentWallet?.name || 'Sui wallet'}.`;
+      status.className = 'status success';
+    } else if (result?.action === 'disconnected') {
+      status.textContent = 'Wallet disconnected and forgotten by this site.';
+      status.className = 'status';
+    }
   } catch (error) {
-    status.textContent = error?.message === 'NO_WALLET' ? 'No compatible Sui wallet was detected.' : error?.message || 'Wallet connection failed.';
+    if (error?.code === 'CANCELLED') return;
+    status.textContent = error?.message === 'NO_WALLET'
+      ? 'No compatible Sui wallet was detected.'
+      : error?.message || 'Wallet connection failed.';
     status.className = 'status error';
   }
 }
 
 function syncWalletButtons() {
-  const label = window.playerAddress ? shortened(window.playerAddress) : 'Connect Wallet';
-  document.getElementById('dappWallet').textContent = label;
-  document.getElementById('rankWallet').textContent = label;
-  if (!window.playerAddress) { connectedTreeBalanceRaw = null; connectedBalanceAddress = null; }
+  const address = window.playerAddress || null;
+  const walletName = window.currentWallet?.name || window.currentWalletName || '';
+  const compactAddress = address ? shortened(address) : '';
+  const headerLabel = address
+    ? `${walletName || 'Wallet'} · ${compactAddress}`
+    : 'Connect Wallet';
+  const rankLabel = address
+    ? `Manage ${walletName || 'Wallet'}`
+    : 'Connect Wallet';
+
+  const headerButton = document.getElementById('dappWallet');
+  const rankButton = document.getElementById('rankWallet');
+  headerButton.textContent = headerLabel;
+  rankButton.textContent = rankLabel;
+  const title = address
+    ? `Manage ${walletName || 'Sui wallet'} connection for ${address}`
+    : 'Choose a Sui wallet to connect';
+  headerButton.title = title;
+  rankButton.title = title;
+  headerButton.setAttribute('aria-label', title);
+  rankButton.setAttribute('aria-label', title);
+
+  if (!address) {
+    connectedTreeBalanceRaw = null;
+    connectedBalanceAddress = null;
+  }
   updateYourRank();
   loadConnectedTreeBalance();
 }
@@ -940,6 +969,22 @@ if (typeof document !== 'undefined') {
       }, { rootMargin: '-28% 0px -58% 0px', threshold: [0.05, 0.2, 0.5] });
       document.querySelectorAll('main section[id]').forEach((section) => observer.observe(section));
     }
+
+  window.addEventListener('tree:wallet-changed', (event) => {
+    syncWalletButtons();
+    const detail = event.detail || {};
+    const status = document.getElementById('swapStatus');
+    if (!status) return;
+    if (detail.status === 'connected') {
+      status.textContent = `Connected with ${detail.walletName || 'Sui wallet'}.`;
+      status.className = 'status success';
+    } else if (detail.status === 'disconnected') {
+      status.textContent = detail.reason === 'switch-wallet'
+        ? 'Current wallet disconnected. Choose another wallet.'
+        : 'Wallet disconnected and forgotten by this site.';
+      status.className = 'status';
+    }
+  });
 
   window.addEventListener('load', async () => {
     try { await window.initializeWallet?.(); } catch { /* Optional session restoration. */ }
