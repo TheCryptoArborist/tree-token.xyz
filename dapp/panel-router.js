@@ -19,7 +19,7 @@ const PANEL_LABELS = {
   stats: 'Stats',
   removed: 'Burn',
   'canopy-draw': 'Raffle',
-  leaderboard: 'Board',
+  leaderboard: 'Canopy',
   'profile-studio': 'Profile Studio',
   documents: 'Documents',
 };
