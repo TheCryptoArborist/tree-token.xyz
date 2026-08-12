@@ -15,38 +15,39 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - name: Install Mysten SDK
-        run: npm install --no-save --ignore-scripts @mysten/sui@2.23.1
-
-      - name: Identify shared V3 objects and configuration
+      - name: Locate V3 Version and shared configuration objects
         shell: bash
         run: |
           set -euo pipefail
-          node --input-type=module <<'NODE'
-          import { SuiGrpcClient } from '@mysten/sui/grpc';
-          const client = new SuiGrpcClient({ network: 'mainnet', baseUrl: 'https://fullnode.mainnet.sui.io:443' });
+          node <<'NODE'
+          const endpoint = 'https://graphql.mainnet.sui.io/graphql';
           const packageId = '0xb5f529c1dcda6580a61bf7ee9fbd524b50be62f11044d137c8202c8cbace9e56';
-          const known = [
-            packageId,
-            '0x0999bbc9c063580eca62e888b8f0d8e6e9159cd9db1b8a8c88e448a2b5dd4d4d',
-            '0x39d5ba22e01e45bc4129ec28a0bef52e8fee8db5d07d337adf9540e3cb9074cf',
+          const types = [
+            `${packageId}::version::Version`,
+            `${packageId}::version::VersionCap`,
+            `${packageId}::global_config::GlobalConfig`,
+            `${packageId}::global_config::AdminCap`,
+            `${packageId}::pool::Pool`,
           ];
-          const { object: pkg } = await client.core.getObject({ objectId: packageId, include: { previousTransaction: true } });
-          const digest = pkg?.previousTransaction;
-          if (!digest) throw new Error('Package previous transaction was not returned.');
-          const tx = await client.core.getTransaction({ digest, include: { effects: true, objectTypes: true, transaction: true, events: true } });
-          const record = tx.Transaction || tx.FailedTransaction;
-          const changed = record?.effects?.changedObjects || [];
-          const ids = [...new Set([...known, ...changed.map((item) => item.objectId).filter(Boolean)])];
-          const objects = [];
-          for (const objectId of ids) {
-            try {
-              const { object } = await client.core.getObject({ objectId, include: { json: true, display: true, previousTransaction: true } });
-              objects.push({ objectId, type: object?.type, owner: object?.owner, previousTransaction: object?.previousTransaction, json: object?.json, display: object?.display });
-            } catch (error) {
-              objects.push({ objectId, error: error?.message || String(error) });
+          const query = `query ObjectsByType($first: Int!, $type: String!) {
+            objects(first: $first, filter: { type: $type }) {
+              pageInfo { hasNextPage endCursor }
+              nodes {
+                address
+                owner { __typename ... on AddressOwner { address { address } } ... on ObjectOwner { address { address } } }
+                asMoveObject { contents { json } }
+              }
             }
+          }`;
+          const results = [];
+          for (const type of types) {
+            const response = await fetch(endpoint, {
+              method: 'POST',
+              headers: { 'content-type': 'application/json', accept: 'application/json' },
+              body: JSON.stringify({ query, variables: { first: 100, type } }),
+            });
+            const body = await response.json();
+            results.push({ type, status: response.status, errors: body.errors || [], data: body.data || null });
           }
-          console.log(JSON.stringify({ packageId, digest, effectsStatus: record?.effects?.status, changed, objectTypes: record?.objectTypes, objects }, null, 2));
+          console.log(JSON.stringify({ endpoint, results }, null, 2));
           NODE
-          git checkout -- package.json package-lock.json 2>/dev/null || true
