@@ -7,6 +7,7 @@
   <meta name="description" content="TREE ecosystem stats, verified Canopy leaderboard, Profile Studio, Canopy Draw preview, and NFTree utility links.">
   <link rel="icon" href="../thick.png">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="panel-router.css">
   <script type="module" src="../scripts/wallet.js"></script>
 </head>
 <body>
@@ -29,36 +30,12 @@
       <a href="#removed"><span aria-hidden="true">🔥</span><b>Burn</b></a>
       <a href="#canopy-draw"><span aria-hidden="true">🎟</span><b>Raffle</b></a>
       <a href="#leaderboard"><span aria-hidden="true">♛</span><b>Board</b></a>
-      <a href="#profile-studio"><span aria-hidden="true">◎</span><b>Studio</b></a>
       <a href="#documents"><span aria-hidden="true">▤</span><b>Docs</b></a>
     </nav>
   </header>
 
   <main>
-    <section class="command-banner" id="overview" aria-labelledby="page-title">
-      <div>
-        <p class="eyebrow">TREE ecosystem utilities on Sui</p>
-        <h1 id="page-title">TREE Command Center</h1>
-        <p>One organized app for trading routes, liquidity access, live stats, supply tracking, the Canopy Board, creator tools, and official documents.</p>
-      </div>
-      <div class="command-banner-actions"><a class="button gold" href="https://nftree.net/mint" target="_blank" rel="noopener noreferrer">Mint NFTree</a><a class="button secondary" href="/">Project Home</a></div>
-    </section>
 
-    <section class="command-launcher" aria-labelledby="command-launcher-title">
-      <div class="launcher-heading"><div><p class="eyebrow">Choose an action</p><h2 id="command-launcher-title">What do you want to do?</h2></div><p>Every major TREE destination in one consistent menu.</p></div>
-      <div class="command-action-grid">
-        <a href="#swap"><span>↕</span><strong>Swap</strong><small>Buy TREE</small><em>Live</em></a>
-        <a href="#limit"><span>⌁</span><strong>Limit</strong><small>Planned orders</small><em class="planned">Planned</em></a>
-        <a href="#earn"><span>✦</span><strong>Earn</strong><small>V2 farms</small><em>Live</em></a>
-        <a href="#v3"><span>◫</span><strong>V3</strong><small>Concentrated LP</small><em>Live</em></a>
-        <a href="#stats"><span>▥</span><strong>Stats</strong><small>Market data</small><em>Live</em></a>
-        <a href="#removed"><span>🔥</span><strong>Burn</strong><small>Supply removal</small><em>Tracked</em></a>
-        <a href="#canopy-draw"><span>🎟</span><strong>Raffle</strong><small>Canopy Draw</small><em class="planned">Development</em></a>
-        <a href="#leaderboard"><span>♛</span><strong>Board</strong><small>Top 50</small><em>Live</em></a>
-        <a href="#profile-studio"><span>◎</span><strong>Studio</strong><small>Profile maker</small><em>Live</em></a>
-        <a href="#documents"><span>▤</span><strong>Docs</strong><small>Verify TREE</small><em>Official</em></a>
-      </div>
-    </section>
 
 <section class="section compact-section" id="swap" aria-labelledby="swap-title">
       <div class="section-heading"><div><p class="eyebrow">SuiDex route</p><h2 id="swap-title">Buy TREE</h2></div><span class="section-note">Display estimate only</span></div>
@@ -209,26 +186,18 @@
       <div class="section-heading"><div><p class="eyebrow">Official resources</p><h2 id="documents-title">TREE Documents &amp; Verification</h2><p>Project information, investor-facing explanations, and the complete official coin type in one place.</p></div><span class="data-state ok">Official</span></div>
       <div class="document-grid">
         <article class="card document-tile"><span class="card-icon">▤</span><h3>Litepaper</h3><p>Review the ecosystem vision, tokenomics, utilities, and project direction.</p><a class="button secondary" href="../Litepaper.pdf" target="_blank" rel="noopener noreferrer">Open Litepaper</a></article>
-        <article class="card document-tile"><span class="card-icon">◎</span><h3>About TREE</h3><p>Start with a concise explanation of TREE, NFTree, live utilities, and real-world impact.</p><a class="button secondary" href="/#about">Read About TREE</a></article>
-        <article class="card document-tile"><span class="card-icon">▥</span><h3>Tokenomics</h3><p>See fixed supply, effective supply, zero-address holdings, locks, and terminology.</p><a class="button secondary" href="/#tokenomics">View Tokenomics</a></article>
-        <article class="card document-tile"><span class="card-icon">→</span><h3>Roadmap &amp; FAQ</h3><p>Separate completed work, active development, future plans, and common questions.</p><div class="actions"><a class="button secondary" href="/#roadmap">Roadmap</a><a class="button secondary" href="/#faq">FAQ</a></div></article>
+        <article class="card document-tile"><span class="card-icon">◎</span><h3>About TREE</h3><p>Start with a concise explanation of TREE, NFTree, live utilities, and real-world impact.</p><a class="button secondary" href="/about/">Read About TREE</a></article>
+        <article class="card document-tile"><span class="card-icon">▥</span><h3>Tokenomics</h3><p>See fixed supply, effective supply, zero-address holdings, locks, and terminology.</p><a class="button secondary" href="/tokenomics/">View Tokenomics</a></article>
+        <article class="card document-tile"><span class="card-icon">→</span><h3>Roadmap &amp; FAQ</h3><p>Separate completed work, active development, future plans, and common questions.</p><div class="actions"><a class="button secondary" href="/roadmap/">Roadmap</a><a class="button secondary" href="/faq/">FAQ</a></div></article>
       </div>
       <div class="coin-document"><span>Official TREE coin type · Sui Mainnet</span><code id="dappCoinType">0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE</code><div class="actions"><button class="button secondary" id="copyDappCoin" type="button">Copy Coin Type</button><a class="button secondary" href="https://noodles.fi/coins/0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE?trade=market" target="_blank" rel="noopener noreferrer">Open Noodles Market Page</a></div></div>
     </section>
 
-    <section class="section" id="nftree-next" aria-labelledby="nftree-title"><div class="section-heading"><div><p class="eyebrow">Next utility</p><h2 id="nftree-title">Take the next step into NFTree</h2></div></div><div class="card nftree-cta"><span class="card-icon">🌳</span><div><p>NFTrees connect identity, holder rewards, Garden Battles, and future TREE ecosystem utility.</p><div class="actions"><a class="button gold" href="https://nftree.net/mint" target="_blank" rel="noopener noreferrer">Mint for 25 SUI</a><a class="button secondary" href="https://nftree.net" target="_blank" rel="noopener noreferrer">Visit NFTree</a></div></div></div></section>
-    <section class="command-bottom-metrics" aria-label="TREE data points">
-      <article><span>Price</span><strong data-market="price">—</strong></article>
-      <article><span>24h Change</span><strong data-market="priceChange24h">—</strong></article>
-      <article><span>Market Cap</span><strong data-market="marketCap">—</strong></article>
-      <article><span>Liquidity</span><strong data-market="liquidity">—</strong></article>
-      <article><span>Total Supply</span><strong data-snapshot="tree.totalSupply">—</strong></article>
-      <article><span>Effectively Removed</span><strong data-snapshot="tree.zeroAddressBalance">—</strong></article>
-    </section>
   </main>
   <footer>Official TREE coin type: <code>0x6c5a…4895cf::tree::TREE</code></footer>
   <script type="module" src="app.js"></script>
   <script type="module" src="../scripts/canopy-draw.js"></script>
   <script type="module" src="../scripts/profile-studio.js"></script>
+  <script type="module" src="panel-router.js"></script>
 </body>
 </html>
