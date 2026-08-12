@@ -24,6 +24,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # The patch is deliberately applied in CI so the completed branch is validated before commit.
           python scripts/apply-wallet-manager-app-patch.py
           rm -f scripts/apply-wallet-manager-app-patch.py .github/workflows/apply-slush-wallet-picker.yml
           git diff --check
