@@ -8,6 +8,7 @@
   <link rel="icon" href="../thick.png">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="panel-router.css">
+  <link rel="stylesheet" href="swap-router.css">
   <script type="module" src="../scripts/wallet.js"></script>
 </head>
 <body>
@@ -38,20 +39,31 @@
 
 
 <section class="section compact-section" id="swap" aria-labelledby="swap-title">
-      <div class="section-heading"><div><p class="eyebrow">SuiDex route</p><h2 id="swap-title">Buy TREE</h2></div><span class="section-note">Display estimate only</span></div>
-      <div class="split-grid">
-        <div class="card form-card">
-          <label for="swapSui">SUI to spend</label><input id="swapSui" type="number" min="0" step="0.001" inputmode="decimal" placeholder="10">
-          <label for="swapTree">Expected TREE output</label><input id="swapTree" type="text" inputmode="decimal" placeholder="Waiting for displayed rate" readonly>
-          <div class="estimate-grid"><span>Current displayed rate</span><strong id="displayedRate">Loading…</strong><span>Estimated TREE</span><strong id="estimatedTree">—</strong><span>Slippage setting</span><strong>1%</strong></div>
-          <p class="muted">Display estimate only — not an executable quote.</p>
-          <label class="check"><input id="reserveNftree" type="checkbox"> <span>Reserve SUI for one NFTree mint</span></label>
-          <p class="muted">This checkbox is informational and does not change the submitted amount.</p>
-          <button class="button primary" id="buyTree" type="button" disabled>Swap verification in progress</button>
-          <p id="swapStatus" class="status" role="status" aria-live="polite">On-site TREE purchases remain disabled pending quote, simulation, gas-reserve, and finality verification.</p>
-          <a class="button secondary" id="suiDexFallback" href="https://dex.suidex.org/swap?from=SUI&amp;to=Tree" target="_blank" rel="noopener noreferrer">Trade on SuiDex</a>
+      <div class="section-heading"><div><p class="eyebrow">Best available TREE route</p><h2 id="swap-title">Swap SUI ↔ TREE</h2><p>The quote service compares the allowlisted SuiDex V2 and SuiDex V3 TREE pools for the entered amount and selects the highest output.</p></div><span class="data-state ok">Live quotes</span></div>
+      <div class="swap-workspace">
+        <div class="swap-card">
+          <div class="swap-card-header"><h3>Swap</h3><span class="swap-preview-badge">Mainnet preview</span></div>
+          <div class="swap-token-box">
+            <div class="swap-token-top"><span>You pay</span><span id="swapInputBalance" class="swap-balance">Balance —</span></div>
+            <div class="swap-token-input-row"><input id="swapAmountIn" type="text" inputmode="decimal" autocomplete="off" aria-label="Amount to swap" placeholder="0.0"><button class="swap-max" id="swapMax" type="button">MAX</button><span class="swap-token-pill"><span class="swap-token-icon sui" id="swapInputIcon">S</span><strong id="swapInputSymbol">SUI</strong></span></div>
+          </div>
+          <button class="swap-direction" id="swapDirection" type="button" aria-label="Reverse swap direction">⇅</button>
+          <div class="swap-token-box">
+            <div class="swap-token-top"><span>You receive</span><span id="swapOutputBalance" class="swap-balance">Balance —</span></div>
+            <div class="swap-token-input-row"><input id="swapAmountOut" type="text" aria-label="Quoted output" placeholder="0" readonly><span class="swap-token-pill"><span class="swap-token-icon tree" id="swapOutputIcon">T</span><strong id="swapOutputSymbol">TREE</strong></span></div>
+          </div>
+          <div class="swap-route-box">
+            <div class="swap-route-summary"><span>Best route</span><strong id="swapRouteLabel">Enter an amount</strong><span>Rate</span><strong id="swapRouteRate">—</strong><span>Minimum received</span><strong id="swapMinReceived">—</strong></div>
+            <div class="swap-route-stats"><div><span>Price impact</span><strong id="swapPriceImpact">—</strong></div><div><span>Estimated gas</span><strong id="swapGasEstimate">—</strong></div><div><span>Quote refresh</span><strong>15 seconds</strong></div></div>
+            <details class="swap-route-details"><summary>Compare available TREE routes</summary><div class="swap-route-candidates" id="swapRouteCandidates"></div></details>
+          </div>
+          <div class="swap-controls"><span>Slippage tolerance</span><div class="swap-slippage-options"><button type="button" data-swap-slippage="50">0.5%</button><button class="active" type="button" data-swap-slippage="100">1%</button><button type="button" data-swap-slippage="200">2%</button></div></div>
+          <label class="swap-reserve-row" id="swapReserveRow"><input id="reserveNftree" type="checkbox"><span>Keep 25 SUI plus gas available for one NFTree mint.</span></label>
+          <button class="button primary swap-action" id="buyTree" type="button">Connect Wallet</button>
+          <p id="swapStatus" class="status" role="status" aria-live="polite">Loading the TREE route verifier…</p>
+          <div class="swap-success" id="swapSuccess" hidden></div>
+          <p class="swap-fallback">Having trouble? <a id="suiDexFallback" href="https://dex.suidex.org/swap?from=SUI&amp;to=Tree" target="_blank" rel="noopener noreferrer">Open SuiDex ↗</a></p>
         </div>
-        <aside class="card next-card"><span class="card-icon">🌱</span><h3>Plan the next step</h3><p>Planning to mint an NFTree next? Keep at least 25 SUI plus gas in your wallet.</p><strong>Next Step: Mint an NFTree for 25 SUI</strong><div class="actions"><a class="button gold" href="https://nftree.net/mint" target="_blank" rel="noopener noreferrer">Mint NFTree</a><a class="button secondary" href="https://nftree.net" target="_blank" rel="noopener noreferrer">Explore NFTree</a></div></aside>
       </div>
     </section>
 
@@ -196,6 +208,7 @@
   </main>
   <footer>Official TREE coin type: <code>0x6c5a…4895cf::tree::TREE</code></footer>
   <script type="module" src="app.js"></script>
+  <script type="module" src="swap-router.js"></script>
   <script type="module" src="../scripts/canopy-draw.js"></script>
   <script type="module" src="../scripts/profile-studio.js"></script>
   <script type="module" src="panel-router.js"></script>

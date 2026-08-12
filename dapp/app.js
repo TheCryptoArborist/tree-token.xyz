@@ -908,49 +908,14 @@ function syncWalletButtons() {
   loadConnectedTreeBalance();
 }
 
-function updateDisplayedEstimate() {
-  const amount = Number(document.getElementById('swapSui').value);
-  const estimate = treePerSui && Number.isFinite(amount) && amount > 0 ? amount * treePerSui : null;
-  document.getElementById('swapTree').value = estimate ? Math.floor(estimate).toLocaleString('en-US') : '';
-  document.getElementById('estimatedTree').textContent = estimate ? `${Math.floor(estimate).toLocaleString('en-US')} TREE` : '—';
-}
-
-async function loadDisplayedRate() {
-  try {
-    const response = await fetch(pairUrl, { headers: { Accept: 'application/json' } });
-    if (!response.ok) throw new Error('Rate source unavailable');
-    const payload = await response.json();
-    const treePriceInSui = Number(payload.pair?.priceNative);
-    if (!Number.isFinite(treePriceInSui) || treePriceInSui <= 0) throw new Error('Rate unavailable');
-    treePerSui = 1 / treePriceInSui;
-    document.getElementById('displayedRate').textContent = `1 SUI ≈ ${Math.round(treePerSui).toLocaleString('en-US')} TREE`;
-    updateDisplayedEstimate();
-  } catch {
-    treePerSui = null;
-    document.getElementById('displayedRate').textContent = 'Unavailable';
-    updateDisplayedEstimate();
-  }
-}
-
-function buyTree() {
-  const status = document.getElementById('swapStatus');
-  if (!DAPP_SWAP_EXECUTION_ENABLED) {
-    status.textContent = 'On-site TREE purchases will be enabled after quote, simulation, gas-reserve, and finality verification in Phase 2.3.';
-    return;
-  }
-}
+// Swap quote and execution are isolated in swap-router.js.
 
 if (typeof document !== 'undefined') {
-  const buyButton = document.getElementById('buyTree');
-  buyButton.disabled = !DAPP_SWAP_EXECUTION_ENABLED;
-  buyButton.textContent = DAPP_SWAP_EXECUTION_ENABLED ? 'Submit TREE Purchase' : 'Swap verification in progress';
   document.getElementById('refreshStats').addEventListener('click', () => { loadDashboard(); loadChart(activeChartRange); });
   document.getElementById('dappWallet').addEventListener('click', connectForDapp);
   document.getElementById('rankWallet').addEventListener('click', connectForDapp);
   document.getElementById('shareRank')?.addEventListener('click', shareRank);
   document.getElementById('createRankImage')?.addEventListener('click', downloadRankCard);
-  buyButton.addEventListener('click', buyTree);
-  document.getElementById('swapSui').addEventListener('input', updateDisplayedEstimate);
   document.querySelectorAll('[data-chart-range]').forEach((button) => button.addEventListener('click', () => loadChart(button.dataset.chartRange)));
   const navLinks = [...document.querySelectorAll('.app-nav a[href^="#"]')];
   navLinks.forEach((link) => link.addEventListener('click', () => {
@@ -970,21 +935,7 @@ if (typeof document !== 'undefined') {
       document.querySelectorAll('main section[id]').forEach((section) => observer.observe(section));
     }
 
-  window.addEventListener('tree:wallet-changed', (event) => {
-    syncWalletButtons();
-    const detail = event.detail || {};
-    const status = document.getElementById('swapStatus');
-    if (!status) return;
-    if (detail.status === 'connected') {
-      status.textContent = `Connected with ${detail.walletName || 'Sui wallet'}.`;
-      status.className = 'status success';
-    } else if (detail.status === 'disconnected') {
-      status.textContent = detail.reason === 'switch-wallet'
-        ? 'Current wallet disconnected. Choose another wallet.'
-        : 'Wallet disconnected and forgotten by this site.';
-      status.className = 'status';
-    }
-  });
+  window.addEventListener('tree:wallet-changed', () => { syncWalletButtons(); });
 
   window.addEventListener('load', async () => {
     try { await window.initializeWallet?.(); } catch { /* Optional session restoration. */ }
@@ -994,7 +945,6 @@ if (typeof document !== 'undefined') {
   loadDashboard();
   loadChart();
   loadLeaderboard();
-  loadDisplayedRate();
 }
 
 
