@@ -1,0 +1,117 @@
+name: Verify TREE navigation v2 Deploy Preview
+
+on:
+  push:
+    branches:
+      - review/phase1
+    paths:
+      - '.github/workflows/verify-tree-navigation-preview.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Install browser driver
+        run: npm install --no-save --ignore-scripts puppeteer-core@24
+
+      - name: Verify published homepage and Command Center
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME=$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || command -v chromium-browser)
+          export CHROME
+          node <<'NODE'
+          const puppeteer = require('puppeteer-core');
+          const BASE = 'https://deploy-preview-9--tree-token.netlify.app';
+          (async () => {
+            const browser = await puppeteer.launch({ headless: true, executablePath: process.env.CHROME, args: ['--no-sandbox', '--disable-dev-shm-usage'] });
+            const results = [];
+            for (const viewport of [{ width: 1440, height: 1000 }, { width: 390, height: 844 }, { width: 360, height: 800 }]) {
+              const home = await browser.newPage();
+              const homeErrors = [];
+              home.on('console', (message) => {
+                const text = message.text();
+                const expected = /api\.slush\.app|fullnode\.mainnet\.sui\.io|metadata|Failed to load resource/i.test(text);
+                if (message.type() === 'error' && !expected) homeErrors.push(text);
+              });
+              home.on('pageerror', (error) => homeErrors.push(`pageerror:${error.message}`));
+              await home.setViewport(viewport);
+              await home.goto(`${BASE}/?navigation_preview=1`, { waitUntil: 'networkidle2', timeout: 120000 });
+              await home.waitForSelector('html.home-v2', { timeout: 120000 });
+              await home.waitForFunction(() => document.querySelectorAll('.home-action-card').length === 10, { timeout: 120000 });
+              await home.waitForFunction(() => {
+                const price = document.querySelector('[data-home-market="price"]')?.textContent || '';
+                return price.startsWith('$');
+              }, { timeout: 120000 });
+              const homeState = await home.evaluate(() => ({
+                nav: [...document.querySelectorAll('#mobile-nav nav a')].map((node) => node.textContent.trim()),
+                price: document.querySelector('[data-home-market="price"]')?.textContent,
+                marketCap: document.querySelector('[data-home-market="marketCap"]')?.textContent,
+                liquidity: document.querySelector('[data-home-market="liquidity"]')?.textContent,
+                holders: document.querySelector('[data-home-market="holderCount"]')?.textContent,
+                actions: document.querySelectorAll('.home-action-card').length,
+                popup: Boolean(document.querySelector('.launch-popup')),
+                fab: Boolean(document.querySelector('.fab-group')),
+                overflow: document.documentElement.scrollWidth - innerWidth,
+              }));
+              if (homeState.nav.join('|') !== 'About|Ecosystem|Tokenomics|Roadmap|FAQ|Documents') throw new Error(`Homepage navigation mismatch: ${JSON.stringify(homeState)}`);
+              if (!homeState.price.startsWith('$') || !homeState.marketCap.startsWith('$') || !homeState.liquidity.startsWith('$')) throw new Error(`Homepage live data missing: ${JSON.stringify(homeState)}`);
+              if (homeState.actions !== 10 || homeState.popup || homeState.fab || homeState.overflow > 1) throw new Error(`Homepage structure failed: ${JSON.stringify(homeState)}`);
+              if (homeErrors.length) throw new Error(`Homepage browser errors: ${JSON.stringify(homeErrors)}`);
+              await home.close();
+
+              const dapp = await browser.newPage();
+              const dappErrors = [];
+              dapp.on('console', (message) => {
+                const text = message.text();
+                const expected = /api\.slush\.app|fullnode\.mainnet\.sui\.io|metadata|Failed to load resource/i.test(text);
+                if (message.type() === 'error' && !expected) dappErrors.push(text);
+              });
+              dapp.on('pageerror', (error) => dappErrors.push(`pageerror:${error.message}`));
+              await dapp.setViewport(viewport);
+              await dapp.goto(`${BASE}/dapp/?navigation_preview=1`, { waitUntil: 'networkidle2', timeout: 120000 });
+              await dapp.waitForFunction(() => document.querySelectorAll('.leader-card').length === 50, { timeout: 120000 });
+              await dapp.waitForFunction(() => {
+                const value = document.querySelector('#removed [data-snapshot="tree.zeroAddressBalance"]')?.textContent || '';
+                return value && value !== '—' && !/loading|unavailable/i.test(value);
+              }, { timeout: 120000 });
+              const dappState = await dapp.evaluate(() => ({
+                nav: [...document.querySelectorAll('.app-nav b')].map((node) => node.textContent.trim()),
+                actionCards: document.querySelectorAll('.command-action-grid a').length,
+                leaders: document.querySelectorAll('.leader-card').length,
+                removed: document.querySelector('#removed [data-snapshot="tree.zeroAddressBalance"]')?.textContent,
+                bottomMetrics: document.querySelectorAll('.command-bottom-metrics article').length,
+                limitState: document.querySelector('#limit .data-state')?.textContent?.trim(),
+                raffleState: document.querySelector('#canopy-draw .development')?.textContent?.trim(),
+                overflow: document.documentElement.scrollWidth - innerWidth,
+              }));
+              if (dappState.nav.join('|') !== 'Swap|Limit|Earn|V3|Stats|Burn|Raffle|Board|Studio|Docs') throw new Error(`Command navigation mismatch: ${JSON.stringify(dappState)}`);
+              if (dappState.actionCards !== 10 || dappState.leaders !== 50 || dappState.bottomMetrics !== 6 || dappState.overflow > 1) throw new Error(`Command structure failed: ${JSON.stringify(dappState)}`);
+              if (!/planned/i.test(dappState.limitState) || !/development/i.test(dappState.raffleState)) throw new Error(`Live/planned labeling failed: ${JSON.stringify(dappState)}`);
+              if (dappErrors.length) throw new Error(`Command browser errors: ${JSON.stringify(dappErrors)}`);
+              results.push({ viewport, home: homeState, dapp: dappState });
+              await dapp.close();
+            }
+            await browser.close();
+            console.log(JSON.stringify({ classification: 'TREE_NAVIGATION_PREVIEW_VALID', results }, null, 2));
+          })().catch((error) => { console.error(error); process.exit(1); });
+          NODE
+
+      - name: Verify public routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          for url in \
+            'https://deploy-preview-9--tree-token.netlify.app/' \
+            'https://deploy-preview-9--tree-token.netlify.app/dapp/' \
+            'https://deploy-preview-9--tree-token.netlify.app/api/tree-dashboard' \
+            'https://deploy-preview-9--tree-token.netlify.app/api/tree-exposure' \
+            'https://deploy-preview-9--tree-token.netlify.app/api/tree-badges'; do
+            code=$(curl --silent --show-error --location --output /dev/null --write-out '%{http_code}' --max-time 60 "$url")
+            echo "$code $url"
+            [[ "$code" == '200' ]]
+          done
