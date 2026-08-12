@@ -1,0 +1,64 @@
+name: Inspect SuiDex V3 chain configuration
+
+on:
+  push:
+    branches:
+      - feature/tree-native-v3-v1
+    paths:
+      - '.github/workflows/inspect-suidex-v3-chain.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Install Mysten SDK
+        run: npm install --no-save --ignore-scripts @mysten/sui@2.23.1
+
+      - name: Inspect package publish effects, TREE pool, and enriched API
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { SuiGrpcClient } from '@mysten/sui/grpc';
+          const client = new SuiGrpcClient({ network: 'mainnet', baseUrl: 'https://fullnode.mainnet.sui.io:443' });
+          const digest = 'AG7TshWYrhGWB3akVumKesYhxyQs5XzrRaDQa6AoVDAd';
+          const packageId = '0xb5f529c1dcda6580a61bf7ee9fbd524b50be62f11044d137c8202c8cbace9e56';
+          const poolId = '0x39d5ba22e01e45bc4129ec28a0bef52e8fee8db5d07d337adf9540e3cb9074cf';
+
+          const tx = await client.core.getTransaction({
+            digest,
+            include: { effects: true, transaction: true, objectTypes: true, events: true, balanceChanges: true },
+          });
+          const transaction = tx.Transaction || tx.FailedTransaction;
+          const changed = transaction?.effects?.changedObjects || [];
+          const created = changed.map((item) => ({
+            objectId: item.objectId,
+            inputState: item.inputState,
+            outputState: item.outputState,
+            idOperation: item.idOperation,
+            type: transaction?.objectTypes?.[item.objectId] || null,
+          }));
+
+          const { object: pool } = await client.core.getObject({ objectId: poolId, include: { json: true, content: true, objectBcs: true } });
+          const api = await fetch('https://dex.suidex.org/api/v3/pools-enriched');
+          const apiBody = await api.json();
+          const treePool = (apiBody.pools || apiBody || []).find((item) => item.pool_id === poolId);
+
+          const allCandidates = [];
+          for (const item of created) {
+            if (!item.objectId) continue;
+            try {
+              const { object } = await client.core.getObject({ objectId: item.objectId, include: { json: true, display: true } });
+              allCandidates.push({ objectId: item.objectId, type: object?.type || item.type, owner: object?.owner, json: object?.json, display: object?.display });
+            } catch (error) {
+              allCandidates.push({ objectId: item.objectId, type: item.type, error: error?.message || String(error) });
+            }
+          }
+
+          console.log(JSON.stringify({ packageId, digest, created, allCandidates, pool: { objectId: pool?.objectId, type: pool?.type, owner: pool?.owner, json: pool?.json }, treePool }, null, 2));
+          NODE
+          git checkout -- package.json package-lock.json 2>/dev/null || true
