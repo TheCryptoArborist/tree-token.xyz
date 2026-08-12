@@ -1,0 +1,89 @@
+name: Verify leading-decimal TREE swap preview
+
+on:
+  push:
+    branches:
+      - review/phase1
+    paths:
+      - '.github/workflows/verify-leading-decimal-swap-preview.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Install browser driver
+        run: npm install --no-save --ignore-scripts puppeteer-core@24
+
+      - name: Confirm .1 and 0.1 produce the same quote request
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME=$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || command -v chromium-browser)
+          export CHROME
+          node <<'NODE'
+          const puppeteer = require('puppeteer-core');
+          const BASE = 'https://deploy-preview-11--tree-token.netlify.app';
+
+          (async () => {
+            const browser = await puppeteer.launch({
+              headless: true,
+              executablePath: process.env.CHROME,
+              args: ['--no-sandbox', '--disable-dev-shm-usage'],
+            });
+            const page = await browser.newPage();
+            const quoteRequests = [];
+            page.on('request', (request) => {
+              if (request.url().includes('/api/tree-swap-quote?')) quoteRequests.push(request.url());
+            });
+            await page.goto(`${BASE}/dapp/#swap`, { waitUntil: 'networkidle2', timeout: 120000 });
+            await page.waitForSelector('#swapAmountIn', { timeout: 120000 });
+
+            await page.type('#swapAmountIn', '.1');
+            await page.waitForFunction(() => {
+              const output = document.querySelector('#swapAmountOut')?.value || '';
+              return output.length > 0 && document.querySelectorAll('.swap-route-candidate').length === 2;
+            }, { timeout: 120000 });
+            const leading = await page.evaluate(() => ({
+              input: document.querySelector('#swapAmountIn')?.value,
+              output: document.querySelector('#swapAmountOut')?.value,
+              route: document.querySelector('#swapRouteLabel')?.textContent,
+              candidates: document.querySelectorAll('.swap-route-candidate').length,
+              status: document.querySelector('#swapStatus')?.textContent,
+            }));
+            const leadingRequest = [...quoteRequests].reverse().find((url) => new URL(url).searchParams.get('amountIn') === '100000000');
+            if (!leadingRequest) throw new Error(`.1 did not request 100000000 MIST: ${JSON.stringify(quoteRequests)}`);
+
+            await page.click('#swapAmountIn', { clickCount: 3 });
+            await page.keyboard.press('Backspace');
+            quoteRequests.length = 0;
+            await page.type('#swapAmountIn', '0.1');
+            await page.waitForFunction((priorOutput) => {
+              const output = document.querySelector('#swapAmountOut')?.value || '';
+              return output.length > 0 && document.querySelectorAll('.swap-route-candidate').length === 2 && output === priorOutput;
+            }, { timeout: 120000 }, leading.output);
+            const explicit = await page.evaluate(() => ({
+              input: document.querySelector('#swapAmountIn')?.value,
+              output: document.querySelector('#swapAmountOut')?.value,
+              route: document.querySelector('#swapRouteLabel')?.textContent,
+              candidates: document.querySelectorAll('.swap-route-candidate').length,
+            }));
+            const explicitRequest = [...quoteRequests].reverse().find((url) => new URL(url).searchParams.get('amountIn') === '100000000');
+            if (!explicitRequest) throw new Error(`0.1 did not request 100000000 MIST: ${JSON.stringify(quoteRequests)}`);
+            if (leading.output !== explicit.output) throw new Error(`Outputs differ: ${JSON.stringify({ leading, explicit })}`);
+
+            await browser.close();
+            console.log(JSON.stringify({
+              classification: 'TREE_LEADING_DECIMAL_PREVIEW_VERIFIED',
+              leading,
+              explicit,
+              amountInRaw: '100000000',
+            }, null, 2));
+          })().catch((error) => {
+            console.error(error);
+            process.exit(1);
+          });
+          NODE
