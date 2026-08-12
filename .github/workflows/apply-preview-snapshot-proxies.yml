@@ -1,0 +1,73 @@
+name: Use production snapshots in TREE Deploy Previews
+
+on:
+  push:
+    branches:
+      - feature/tree-navigation-v2
+    paths:
+      - '.github/workflows/apply-preview-snapshot-proxies.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/tree-navigation-v2
+          fetch-depth: 0
+
+      - name: Point Deploy Preview UI to safe production snapshot proxies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python <<'PY'
+          from pathlib import Path
+          path = Path('dapp/app.js')
+          text = path.read_text(encoding='utf-8')
+          old = "const leaderboardUrl = '/api/tree-exposure';\nconst badgeUrl = '/api/tree-badges';"
+          new = "const leaderboardUrl = isDeployPreview ? '/api/tree-exposure-preview' : '/api/tree-exposure';\nconst badgeUrl = isDeployPreview ? '/api/tree-badges-preview' : '/api/tree-badges';"
+          if old not in text:
+              raise SystemExit('Could not locate TREE production snapshot URLs.')
+          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
+          rm -f .github/workflows/apply-preview-snapshot-proxies.yml
+          git diff --check
+
+      - name: Validate preview-only proxy safeguards
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci
+          npm run build
+          node --check dapp/app.js
+          npx --yes tsx tests/production-snapshot-preview.test.ts
+          node tests/leaderboard-ui-state.test.mjs
+          for test in tests/*.ts; do npx --yes tsx "$test"; done
+          python <<'PY'
+          from pathlib import Path
+          app = Path('dapp/app.js').read_text(encoding='utf-8')
+          exposure = Path('netlify/functions/tree-exposure-preview.ts').read_text(encoding='utf-8')
+          badges = Path('netlify/functions/tree-badges-preview.ts').read_text(encoding='utf-8')
+          proxy = Path('netlify/lib/production-snapshot-preview.ts').read_text(encoding='utf-8')
+          assert "isDeployPreview ? '/api/tree-exposure-preview'" in app
+          assert "isDeployPreview ? '/api/tree-badges-preview'" in app
+          assert "context?.deploy?.context !== 'deploy-preview'" in proxy
+          assert 'https://tree-token.xyz/api/tree-exposure' in exposure
+          assert 'https://tree-token.xyz/api/tree-badges' in badges
+          assert 'DAPP_SWAP_EXECUTION_ENABLED = false' in app
+          PY
+          git diff --check
+
+      - name: Commit and push preview proxy support
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "TheCryptoArborist"
+          git config user.email "190985450+TheCryptoArborist@users.noreply.github.com"
+          git add -A
+          git commit -m "Show complete production snapshots in Deploy Previews"
+          git push origin HEAD:feature/tree-navigation-v2
