@@ -31,6 +31,8 @@ jobs:
           old = "const leaderboardUrl = '/api/tree-exposure';\nconst badgeUrl = '/api/tree-badges';"
           new = "const leaderboardUrl = isDeployPreview ? '/api/tree-exposure-preview' : '/api/tree-exposure';\nconst badgeUrl = isDeployPreview ? '/api/tree-badges-preview' : '/api/tree-badges';"
           if old not in text:
+              if new in text:
+                  raise SystemExit(0)
               raise SystemExit('Could not locate TREE production snapshot URLs.')
           path.write_text(text.replace(old, new, 1), encoding='utf-8')
           PY
