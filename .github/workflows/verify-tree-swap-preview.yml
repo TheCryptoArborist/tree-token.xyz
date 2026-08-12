@@ -1,0 +1,172 @@
+name: Verify the TREE best-route swap preview
+
+on:
+  push:
+    branches:
+      - review/phase1
+    paths:
+      - '.github/workflows/verify-tree-swap-preview.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Install browser driver
+        run: npm install --no-save --ignore-scripts puppeteer-core@24
+
+      - name: Verify published quotes, UI, and dry-run builders
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME=$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || command -v chromium-browser)
+          export CHROME
+          node <<'NODE'
+          const puppeteer = require('puppeteer-core');
+          const BASE = 'https://deploy-preview-11--tree-token.netlify.app';
+          const RPC = 'https://fullnode.mainnet.sui.io:443';
+          const SUI = '0x2::sui::SUI';
+          const TREE = '0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE';
+
+          async function rpc(method, params) {
+            const response = await fetch(RPC, {
+              method: 'POST',
+              headers: { 'content-type': 'application/json' },
+              body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }),
+            });
+            const payload = await response.json();
+            if (payload.error) throw new Error(`${method}: ${JSON.stringify(payload.error)}`);
+            return payload.result;
+          }
+
+          async function getBalance(owner, coinType) {
+            return BigInt((await rpc('suix_getBalance', [owner, coinType]))?.totalBalance || '0');
+          }
+
+          async function findDryRunOwner() {
+            const exposure = await (await fetch(`${BASE}/api/tree-exposure-preview`, { headers: { accept: 'application/json' } })).json();
+            if (exposure.status !== 'ok' || !Array.isArray(exposure.entries) || exposure.entries.length !== 50) throw new Error('Complete exposure snapshot unavailable.');
+            for (const entry of exposure.entries) {
+              const owner = entry.wallet || entry.address;
+              const liquidTree = BigInt(entry.liquidTreeRaw || entry.directTreeRaw || '0');
+              if (!/^0x[0-9a-f]{64}$/i.test(owner || '') || liquidTree < 1_000_000n * 1_000_000n) continue;
+              const sui = await getBalance(owner, SUI);
+              if (sui >= 2_000_000_000n) return { owner, sui, tree: liquidTree };
+            }
+            throw new Error('No ranked public wallet had enough SUI and liquid TREE for non-signing dry-run verification.');
+          }
+
+          function quoteUrl(tokenIn, tokenOut, amountIn) {
+            const query = new URLSearchParams({ tokenIn, tokenOut, amountIn, slippageBps: '100' });
+            return `${BASE}/api/tree-swap-quote?${query}`;
+          }
+
+          (async () => {
+            const [buyQuote, sellQuote, dryRunOwner] = await Promise.all([
+              fetch(quoteUrl(SUI, TREE, '1000000000')).then(async (response) => ({ status: response.status, body: await response.json() })),
+              fetch(quoteUrl(TREE, SUI, '100000000000')).then(async (response) => ({ status: response.status, body: await response.json() })),
+              findDryRunOwner(),
+            ]);
+            for (const [name, quote] of [['buy', buyQuote], ['sell', sellQuote]]) {
+              if (quote.status !== 200 || quote.body.status !== 'ok') throw new Error(`${name} quote failed: ${JSON.stringify(quote)}`);
+              if (!['suidex', 'v3'].includes(quote.body.selectedRoute?.venue)) throw new Error(`${name} selected unknown venue.`);
+              if (quote.body.routes.length < 2) throw new Error(`${name} did not return both direct TREE route candidates.`);
+              if (!quote.body.routes.some((route) => route.venue === 'suidex') || !quote.body.routes.some((route) => route.venue === 'v3')) throw new Error(`${name} route set missing V2 or V3.`);
+            }
+            if (buyQuote.body.decimalsIn !== 9 || buyQuote.body.decimalsOut !== 6 || sellQuote.body.decimalsIn !== 6 || sellQuote.body.decimalsOut !== 9) throw new Error('SUI/TREE decimal metadata is incorrect.');
+
+            const browser = await puppeteer.launch({ headless: true, executablePath: process.env.CHROME, args: ['--no-sandbox', '--disable-dev-shm-usage'] });
+            const browserResults = [];
+            for (const viewport of [{ width: 1440, height: 1000 }, { width: 390, height: 844 }, { width: 360, height: 800 }]) {
+              const page = await browser.newPage();
+              const errors = [];
+              page.on('console', (message) => {
+                const text = message.text();
+                const expected = /api\.slush\.app|metadata|Failed to load resource/i.test(text);
+                if (message.type() === 'error' && !expected) errors.push(text);
+              });
+              page.on('pageerror', (error) => errors.push(`pageerror:${error.message}`));
+              await page.setViewport(viewport);
+              await page.goto(`${BASE}/dapp/#swap`, { waitUntil: 'networkidle2', timeout: 120000 });
+              await page.waitForSelector('#swapAmountIn', { timeout: 120000 });
+              await page.type('#swapAmountIn', '1');
+              await page.waitForFunction(() => /SuiDex V[23]/.test(document.querySelector('#swapRouteLabel')?.textContent || ''), { timeout: 120000 });
+              const state = await page.evaluate(() => ({
+                active: document.body.dataset.activePanel,
+                output: document.querySelector('#swapAmountOut')?.value,
+                route: document.querySelector('#swapRouteLabel')?.textContent,
+                candidates: [...document.querySelectorAll('.swap-route-candidate')].map((node) => node.textContent.trim()),
+                minimum: document.querySelector('#swapMinReceived')?.textContent,
+                impact: document.querySelector('#swapPriceImpact')?.textContent,
+                button: document.querySelector('#buyTree')?.textContent,
+                disabled: document.querySelector('#buyTree')?.disabled,
+                overflow: document.documentElement.scrollWidth - innerWidth,
+              }));
+              if (state.active !== 'swap' || !state.output || state.candidates.length < 2 || !state.minimum || !state.impact || state.overflow > 1) throw new Error(`Swap UI invalid: ${JSON.stringify(state)}`);
+              if (state.button !== 'Connect Wallet' || state.disabled) throw new Error(`Disconnected swap action invalid: ${JSON.stringify(state)}`);
+              if (errors.length) throw new Error(`Browser errors: ${JSON.stringify(errors)}`);
+              browserResults.push({ viewport, state });
+              await page.close();
+            }
+
+            const page = await browser.newPage();
+            await page.goto(`${BASE}/dapp/#swap`, { waitUntil: 'networkidle2', timeout: 120000 });
+            const dryRuns = await page.evaluate(async ({ owner, quotes, rpcUrl }) => {
+              const module = await import('/dapp/swap-router.js');
+              const { SuiClient } = await import('https://esm.run/@mysten/sui@1.43.0/client');
+              const client = new SuiClient({ url: rpcUrl });
+              const results = [];
+              for (const [direction, quote] of Object.entries(quotes)) {
+                for (const route of quote.routes) {
+                  const transaction = await module.buildTransaction(owner, route, BigInt(quote.amountIn));
+                  const bytes = await transaction.build({ client });
+                  const dryRun = await client.dryRunTransactionBlock({ transactionBlock: bytes });
+                  results.push({
+                    direction,
+                    venue: route.venue,
+                    executionKind: route.executionKind,
+                    status: dryRun?.effects?.status?.status || null,
+                    error: dryRun?.effects?.status?.error || null,
+                    balanceChanges: Array.isArray(dryRun?.balanceChanges) ? dryRun.balanceChanges.length : null,
+                  });
+                }
+              }
+              return results;
+            }, { owner: dryRunOwner.owner, quotes: { buy: buyQuote.body, sell: sellQuote.body }, rpcUrl: RPC });
+            if (dryRuns.length !== 4 || dryRuns.some((result) => result.status !== 'success')) throw new Error(`Mainnet dry-run verification failed: ${JSON.stringify(dryRuns)}`);
+            await page.close();
+            await browser.close();
+
+            console.log(JSON.stringify({
+              classification: 'TREE_SWAP_PREVIEW_VERIFIED',
+              quoteSummary: {
+                buySelected: buyQuote.body.selectedRoute.venueLabel,
+                buyAmountOut: buyQuote.body.selectedRoute.amountOut,
+                sellSelected: sellQuote.body.selectedRoute.venueLabel,
+                sellAmountOut: sellQuote.body.selectedRoute.amountOut,
+                buyRoutes: buyQuote.body.routes.map((route) => ({ venue: route.venueLabel, amountOut: route.amountOut, impact: route.priceImpactPercent })),
+                sellRoutes: sellQuote.body.routes.map((route) => ({ venue: route.venueLabel, amountOut: route.amountOut, impact: route.priceImpactPercent })),
+              },
+              dryRunOwner: `${dryRunOwner.owner.slice(0, 8)}…${dryRunOwner.owner.slice(-6)}`,
+              dryRuns,
+              browserResults,
+            }, null, 2));
+          })().catch((error) => { console.error(error); process.exit(1); });
+          NODE
+
+      - name: Verify preview routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          for path in / /dapp/ /api/tree-swap-quote /api/tree-dashboard /api/tree-exposure-preview /api/tree-badges-preview; do
+            url="https://deploy-preview-11--tree-token.netlify.app${path}"
+            if [[ "$path" == '/api/tree-swap-quote' ]]; then
+              url="$url?tokenIn=0x2%3A%3Asui%3A%3ASUI&tokenOut=0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf%3A%3Atree%3A%3ATREE&amountIn=1000000000&slippageBps=100"
+            fi
+            code=$(curl --silent --show-error --location --output /dev/null --write-out '%{http_code}' --max-time 60 "$url")
+            echo "$code $url"
+            [[ "$code" == '200' ]]
+          done
