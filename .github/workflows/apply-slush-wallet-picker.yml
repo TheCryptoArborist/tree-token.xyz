@@ -85,15 +85,11 @@ jobs:
               }
               await page.click('#dappWallet');
               await page.waitForSelector('#treeWalletDialog[open]', { timeout: 45000 });
-              try {
-                await page.waitForFunction(() => document.querySelectorAll('.tree-wallet-option').length > 0, { timeout: 45000 });
-              } catch (error) {
-                const state = await page.evaluate(() => ({
-                  dialogText: document.querySelector('#treeWalletDialog')?.textContent || '',
-                  availableWallets: typeof window.getAvailableWallets === 'function' ? 'available' : 'missing',
-                }));
-                throw new Error(JSON.stringify({ stage: 'wallet-registration', viewport, diagnostics, state, original: error.message }, null, 2));
-              }
+              await page.waitForFunction(() => {
+                const link = document.querySelector('[data-slush-link]');
+                return Boolean(link && /^https:\/\/my\.slush\.app\/browse\//.test(link.href));
+              }, { timeout: 45000 });
+
               const metrics = await page.evaluate(() => {
                 const dialog = document.querySelector('#treeWalletDialog');
                 const walletNames = [...document.querySelectorAll('.tree-wallet-option-copy strong')].map((node) => node.textContent.trim());
@@ -101,8 +97,9 @@ jobs:
                 const rect = dialog.getBoundingClientRect();
                 return {
                   walletNames,
-                  slushVisible: walletNames.some((name) => /slush/i.test(name)),
+                  slushVisible: /slush/i.test(slushLink?.textContent || ''),
                   slushLink: slushLink?.href || '',
+                  refreshControl: Boolean(document.querySelector('[data-wallet-refresh]')),
                   switchWalletControl: Boolean(document.querySelector('[data-wallet-switch]')),
                   disconnectForgetControl: document.querySelector('[data-wallet-disconnect]')?.textContent?.trim() || '',
                   dialogWithinViewport: rect.left >= -1 && rect.right <= innerWidth + 1,
@@ -111,9 +108,9 @@ jobs:
                   viewportWidth: innerWidth,
                 };
               });
-              if (!metrics.slushVisible) throw new Error(`Slush was not present: ${JSON.stringify({ metrics, diagnostics })}`);
+              if (!metrics.slushVisible) throw new Error(`Slush option was not visible: ${JSON.stringify({ metrics, diagnostics })}`);
               if (!metrics.slushLink.startsWith('https://my.slush.app/browse/')) throw new Error(`Slush deep link missing: ${JSON.stringify({ metrics, diagnostics })}`);
-              if (!metrics.switchWalletControl || !/disconnect.*forget/i.test(metrics.disconnectForgetControl)) throw new Error(`Wallet management controls missing: ${JSON.stringify({ metrics, diagnostics })}`);
+              if (!metrics.refreshControl || !metrics.switchWalletControl || !/disconnect.*forget/i.test(metrics.disconnectForgetControl)) throw new Error(`Wallet management controls missing: ${JSON.stringify({ metrics, diagnostics })}`);
               if (!metrics.dialogWithinViewport || metrics.documentWidth > metrics.viewportWidth + 1) throw new Error(`Wallet dialog overflow: ${JSON.stringify({ metrics, diagnostics })}`);
               if (metrics.playerAddress !== null) throw new Error('Opening the selector connected a wallet without an explicit choice.');
               results.push({ viewport, metrics, diagnostics });
