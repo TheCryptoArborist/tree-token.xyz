@@ -53,7 +53,10 @@ function normalizeType(value) {
 }
 
 function exactType(value) {
-  return normalizeType(value) === normalizeType(SUI_TYPE) ? SUI_TYPE : TREE_TYPE;
+  const normalized = normalizeType(value);
+  if (normalized === normalizeType(SUI_TYPE)) return SUI_TYPE;
+  if (normalized === normalizeType(TREE_TYPE)) return TREE_TYPE;
+  throw new Error('Unsupported coin type in route metadata.');
 }
 
 function decimalsFor(type) {
@@ -347,7 +350,7 @@ async function buildV2Transaction(owner, route, amountIn) {
   tx.setSender(owner);
   const input = await inputCoin(tx, owner, route.tokenIn, amountIn);
   const token0ToToken1 = normalizeType(route.tokenIn) === normalizeType(SUI_TYPE);
-  const target = `${V2_PACKAGE}::router::${token0ToToken1 ? 'swap_exact_tokens0_for_tokens1' : 'swap_exact_tokens1_for_token0'}`;
+  const target = `${V2_PACKAGE}::router::${token0ToToken1 ? 'swap_exact_tokens0_for_tokens1' : 'swap_exact_tokens1_for_tokens0'}`;
   const deadline = BigInt(Math.floor(Date.now() / 1000) + 300);
   tx.moveCall({
     target,
