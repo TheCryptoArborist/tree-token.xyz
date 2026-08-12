@@ -1,0 +1,47 @@
+name: Extract public SuiDex swap executor
+
+on:
+  push:
+    branches:
+      - review/phase1
+    paths:
+      - '.github/workflows/extract-suidex-swap-executor.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Extract execution hooks, exported builders, and source maps
+        shell: bash
+        run: |
+          set -euo pipefail
+          python <<'PY'
+          import requests,re,json
+          urls=[
+            'https://dex.suidex.org/_next/static/chunks/app/swap/page-37d372a9a609765a.js',
+            'https://dex.suidex.org/_next/static/chunks/5162-fbf55ded1d6f82e0.js',
+          ]
+          out={}
+          for url in urls:
+            text=requests.get(url,timeout=60).text
+            entry={'size':len(text)}
+            contexts=[]
+            for needle in ['dryRunTransactionBlock','dryRunTransaction','devInspect','simulate','buildSplitRouteSwap','buildV3Swap','addV3SwapHop','buildCetusSwap','addCetusSwapHop','buildSuiDex','signAndExecute','waitForTransaction','executeSwap','No swap route provided','buildMetadata','useSwapExecution']:
+              start=0
+              for _ in range(15):
+                idx=text.find(needle,start)
+                if idx<0: break
+                contexts.append({'needle':needle,'offset':idx,'context':text[max(0,idx-1800):min(len(text),idx+3500)]})
+                start=idx+len(needle)
+            entry['contexts']=contexts
+            entry['webpack_exports']=[m.group(0) for m in re.finditer(r'n\.d\([^;]{0,2500}',text)][:80]
+            map_url=url+'.map'
+            map_response=requests.get(map_url,timeout=60)
+            entry['map']={'url':map_url,'status':map_response.status_code,'size':len(map_response.content),'content_type':map_response.headers.get('content-type'),'prefix':map_response.text[:200]}
+            out[url]=entry
+          print(json.dumps(out,indent=2))
+          PY
