@@ -1,0 +1,49 @@
+name: Extract public SuiDex quote contract
+
+on:
+  push:
+    branches:
+      - review/phase1
+    paths:
+      - '.github/workflows/extract-suidex-quote-contract.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Extract quote and route API details
+        shell: bash
+        run: |
+          set -euo pipefail
+          python <<'PY'
+          import re, requests, json
+          urls = [
+            'https://dex.suidex.org/_next/static/chunks/app/swap/page-37d372a9a609765a.js',
+            'https://dex.suidex.org/_next/static/chunks/5162-fbf55ded1d6f82e0.js',
+            'https://dex.suidex.org/_next/static/chunks/7831-3835071d43db5a1e.js',
+          ]
+          report = {}
+          for url in urls:
+            text = requests.get(url, timeout=60).text
+            item = {'url': url, 'size': len(text)}
+            strings = sorted(set(re.findall(r'["\']([^"\']{1,260})["\']', text)))
+            item['api_paths'] = [s for s in strings if ('/dex/' in s or '/api/' in s or 'route' in s.lower() or 'quote' in s.lower())][:500]
+            contexts=[]
+            needles=['directRoutes','bestRoute','buildData','totalAmountOut','find_routes','quote','routeLoading','selectedRoute','refresh:','setLocked','slippageBps']
+            for needle in needles:
+              start=0
+              hits=0
+              while hits<12:
+                idx=text.find(needle,start)
+                if idx<0: break
+                contexts.append({'needle':needle,'context':text[max(0,idx-900):min(len(text),idx+1800)]})
+                start=idx+len(needle)
+                hits+=1
+            item['contexts']=contexts
+            report[url]=item
+          print(json.dumps(report, indent=2))
+          PY
