@@ -69,8 +69,9 @@ function symbolFor(type) {
 
 function parseBaseUnits(value, decimals) {
   const text = String(value ?? '').trim();
-  if (!/^\d+(\.\d+)?$/.test(text)) throw new Error('Enter a valid positive amount.');
-  const [whole, fraction = ''] = text.split('.');
+  const normalizedText = text.startsWith('.') ? `0${text}` : text;
+  if (!/^\d+(\.\d+)?$/.test(normalizedText)) throw new Error('Enter a valid positive amount.');
+  const [whole, fraction = ''] = normalizedText.split('.');
   if (fraction.length > decimals) throw new Error(`${symbolFor(stateTokenIn())} supports at most ${decimals} decimal places.`);
   const raw = `${whole}${fraction.padEnd(decimals, '0')}`.replace(/^0+/, '') || '0';
   const amount = BigInt(raw);

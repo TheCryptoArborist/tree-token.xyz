@@ -12,6 +12,7 @@ assert.equal(markup.includes('Best available TREE route'), true);
 assert.equal(markup.includes('Display estimate only'), false);
 assert.equal(swap.includes('const TREE_DECIMALS = 6'), true);
 assert.equal(swap.includes('const SUI_DECIMALS = 9'), true);
+assert.equal(swap.includes("text.startsWith('.') ? `0${text}` : text"), true);
 assert.equal(swap.includes('client.core.simulateTransaction'), true);
 assert.equal(swap.includes('client.core.waitForTransaction'), true);
 assert.equal(swap.includes("/^deploy-preview-\\d+--tree-token\\.netlify\\.app$/i"), true);
