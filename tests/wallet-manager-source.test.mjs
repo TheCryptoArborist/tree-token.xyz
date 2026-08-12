@@ -7,6 +7,11 @@ const css = readFileSync(new URL('../dapp/wallet-manager.css', import.meta.url),
 const core = readFileSync(new URL('../scripts/wallet-manager-core.js', import.meta.url), 'utf8');
 
 assert.match(wallet, /@mysten\/slush-wallet@1\.1\.8/);
+assert.match(wallet, /@mysten\/wallet-standard@0\.21\.3/);
+assert.match(wallet, /@mysten\/sui@2\.23\.1\/grpc/);
+assert.match(wallet, /walletSignAndExecuteTransaction/);
+assert.match(wallet, /_getClient\(\)\.core\.getBalance/);
+assert.doesNotMatch(wallet, /new SuiClient|@mysten\/sui@1\.43\.0\/client/);
 assert.match(wallet, /registerSlushWallet\(APP_NAME, \{ network: NETWORK \}\)/);
 assert.match(wallet, /window\.openWalletManager = openWalletManager/);
 assert.match(wallet, /Disconnect &amp; forget/);

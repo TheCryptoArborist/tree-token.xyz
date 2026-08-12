@@ -1,7 +1,10 @@
 // wallet.js — TREE Command Center wallet selection and session management
 
-import { getWallets } from 'https://esm.run/@mysten/wallet-standard@0.13.0';
-import { SuiClient } from 'https://esm.run/@mysten/sui@1.43.0/client';
+import {
+  getWallets,
+  signAndExecuteTransaction as walletSignAndExecuteTransaction,
+} from 'https://esm.run/@mysten/wallet-standard@0.21.3';
+import { SuiGrpcClient } from 'https://esm.run/@mysten/sui@2.23.1/grpc';
 import {
   SUI_MAINNET_CHAIN,
   compatibleSuiWallets,
@@ -19,7 +22,7 @@ const NETWORK = 'mainnet';
 const CHAIN = SUI_MAINNET_CHAIN;
 const RPC_URL = 'https://fullnode.mainnet.sui.io:443';
 const SESSION_TTL_MS = 60 * 60 * 1000;
-const WALLET_STANDARD_URL = 'https://esm.run/@mysten/wallet-standard@0.13.0';
+const WALLET_STANDARD_URL = 'https://esm.run/@mysten/wallet-standard@0.21.3';
 const SLUSH_WALLET_URL = 'https://esm.run/@mysten/slush-wallet@1.1.8';
 const SESSION_KEYS = {
   address: 'tree:sui:address',
@@ -54,7 +57,9 @@ const _slushReady = (async () => {
 })();
 
 function _getClient() {
-  if (!_suiClient) _suiClient = new SuiClient({ url: RPC_URL });
+  if (!_suiClient) {
+    _suiClient = new SuiGrpcClient({ network: NETWORK, baseUrl: RPC_URL });
+  }
   return _suiClient;
 }
 
@@ -522,30 +527,20 @@ async function getAvailableWallets() {
 
 async function getBalance() {
   if (!window.playerAddress) throw new Error('Wallet not connected');
-  const balance = await _getClient().getBalance({ owner: window.playerAddress, coinType: '0x2::sui::SUI' });
-  return BigInt(balance.totalBalance);
+  const { balance } = await _getClient().core.getBalance({
+    owner: window.playerAddress,
+    coinType: '0x2::sui::SUI',
+  });
+  return BigInt(balance.balance);
 }
 
-async function signAndExecuteTransactionBlock(txb) {
+async function signAndExecuteTransactionBlock(transaction) {
   if (!_wallet || !_address || !_account) throw new Error('Wallet not connected');
-  const featureName = getSuiSignFeature(_wallet);
-  if (!featureName) throw new Error('Wallet does not support Sui transaction signing.');
-  const feature = _wallet.features[featureName];
-
-  if (featureName === 'sui:signAndExecuteTransaction') {
-    return feature.signAndExecuteTransaction({
-      account: _account,
-      chain: CHAIN,
-      transaction: txb,
-      options: { showEffects: true, showEvents: true },
-    });
-  }
-
-  return feature.signAndExecuteTransactionBlock({
+  if (!getSuiSignFeature(_wallet)) throw new Error('Wallet does not support Sui transaction signing.');
+  return walletSignAndExecuteTransaction(_wallet, {
     account: _account,
     chain: CHAIN,
-    transactionBlock: txb,
-    options: { showEffects: true, showEvents: true },
+    transaction,
   });
 }
 
