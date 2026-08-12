@@ -105,7 +105,6 @@ assert.match(wallet, /Switch wallet/);
 assert.match(wallet, /standard:disconnect/);
 assert.match(wallet, /standard:events/);
 assert.match(wallet, /tree:wallet-changed/);
-assert.match(wallet, /my\.slush\.app/);
 assert.doesNotMatch(wallet, /find\(\(w\) => \(w\.accounts \|\| \[\]\)\.length > 0\) \|\| suiWallets\[0\]/);
 
 assert.match(app, /window\.openWalletManager\(\)/);
@@ -116,6 +115,7 @@ assert.doesNotMatch(app, /await window\.disconnectWallet\?\.\(\); syncWalletButt
 
 assert.match(core, /compatibleSuiWallets/);
 assert.match(core, /isSlushWallet/);
+assert.match(core, /my\.slush\.app/);
 assert.match(css, /@media\(max-width:540px\)/);
 assert.match(css, /tree-wallet-dialog/);
 
