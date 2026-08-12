@@ -1,5 +1,5 @@
-import { Transaction } from 'https://esm.run/@mysten/sui@1.43.0/transactions';
-import { SuiClient } from 'https://esm.run/@mysten/sui@1.43.0/client';
+import { Transaction } from 'https://esm.run/@mysten/sui@2.23.1/transactions';
+import { SuiGrpcClient } from 'https://esm.run/@mysten/sui@2.23.1/grpc';
 
 const SUI_TYPE = '0x2::sui::SUI';
 const TREE_TYPE = '0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE';
@@ -21,7 +21,7 @@ const V3_POOL = '0x39d5ba22e01e45bc4129ec28a0bef52e8fee8db5d07d337adf9540e3cb907
 const CLOCK = '0x0000000000000000000000000000000000000000000000000000000000000006';
 const ALLOWED_MOVE_PACKAGES = new Set(['0x2', normalizeAddress(V2_PACKAGE), normalizeAddress(V3_PACKAGE)]);
 const PREVIEW_EXECUTION_ENABLED = /^deploy-preview-\d+--tree-token\.netlify\.app$/i.test(location.hostname) || ['localhost', '127.0.0.1'].includes(location.hostname);
-const client = new SuiClient({ url: RPC_URL });
+const client = new SuiGrpcClient({ network: 'mainnet', baseUrl: RPC_URL });
 
 const state = {
   direction: 'SUI_TO_TREE',
@@ -236,10 +236,13 @@ async function loadBalances(force = false) {
   if (!force && state.balanceAddress === address) return;
   try {
     const [sui, tree] = await Promise.all([
-      client.getBalance({ owner: address, coinType: SUI_TYPE }),
-      client.getBalance({ owner: address, coinType: TREE_TYPE }),
-    ]);
-    state.balances = { sui: BigInt(sui.totalBalance || '0'), tree: BigInt(tree.totalBalance || '0') };
+    client.core.getBalance({ owner: address, coinType: SUI_TYPE }),
+    client.core.getBalance({ owner: address, coinType: TREE_TYPE }),
+  ]);
+  state.balances = {
+    sui: BigInt(sui.balance.balance || '0'),
+    tree: BigInt(tree.balance.balance || '0'),
+  };
     state.balanceAddress = address;
     renderBalances();
     updateActionButton();
@@ -301,11 +304,13 @@ async function getAllCoins(owner, coinType) {
   const coins = [];
   let cursor = null;
   do {
-    const page = await client.getCoins({ owner, coinType, cursor, limit: 50 });
-    coins.push(...(page.data || []));
-    cursor = page.hasNextPage ? page.nextCursor : null;
+    const page = await client.core.listCoins({ owner, coinType, cursor, limit: 50 });
+    coins.push(...(page.objects || []));
+    cursor = page.hasNextPage ? page.cursor : null;
   } while (cursor);
-  return coins.filter((coin) => BigInt(coin.balance || '0') > 0n).sort((left, right) => BigInt(right.balance || '0') > BigInt(left.balance || '0') ? 1 : -1);
+  return coins
+    .filter((coin) => BigInt(coin.balance || '0') > 0n)
+    .sort((left, right) => BigInt(right.balance || '0') > BigInt(left.balance || '0') ? 1 : -1);
 }
 
 async function ownedCoinForAmount(tx, owner, coinType, amount) {
@@ -338,7 +343,11 @@ async function inputCoin(tx, owner, coinType, amount) {
 function validateRoute(route, amountIn) {
   if (!route || route.type !== 'direct') throw new Error('Only a direct TREE route can be executed in this release.');
   if (BigInt(route.amountIn) !== amountIn) throw new Error('The route amount no longer matches the form.');
-  if (normalizeType(route.tokenIn) !== normalizeType(stateTokenIn()) || normalizeType(route.tokenOut) !== normalizeType(stateTokenOut())) throw new Error('The route token pair no longer matches the form.');
+  const input = normalizeType(route.tokenIn);
+  const output = normalizeType(route.tokenOut);
+  const sui = normalizeType(SUI_TYPE);
+  const tree = normalizeType(TREE_TYPE);
+  if (!((input === sui && output === tree) || (input === tree && output === sui))) throw new Error('The route token pair is not SUI/TREE.');
   if (route.executionKind === 'suidex-v2-direct' && route.pairId !== V2_POOL) throw new Error('Unexpected SuiDex V2 pool.');
   if (route.executionKind === 'suidex-v3-direct' && route.pairId !== V3_POOL) throw new Error('Unexpected SuiDex V3 pool.');
   if (!['suidex-v2-direct', 'suidex-v3-direct'].includes(route.executionKind)) throw new Error('Unsupported route venue.');
@@ -421,8 +430,23 @@ async function buildTransaction(owner, route, amountIn) {
   return tx;
 }
 
-function dryRunSucceeded(result) {
-  return result?.effects?.status?.status === 'success' || result?.effects?.status?.success === true;
+function coreTransaction(result) {
+  if (result?.$kind === 'Transaction') return result.Transaction;
+  return result?.Transaction || null;
+}
+
+function coreFailureMessage(result, fallback = 'Sui transaction failed.') {
+  const failedError = result?.FailedTransaction?.status?.error;
+  if (typeof failedError === 'string') return failedError;
+  if (failedError?.message) return failedError.message;
+  const effectsError = coreTransaction(result)?.effects?.status?.error;
+  if (typeof effectsError === 'string') return effectsError;
+  if (effectsError?.message) return effectsError.message;
+  return fallback;
+}
+
+function coreTransactionSucceeded(result) {
+  return coreTransaction(result)?.effects?.status?.success === true;
 }
 
 function extractDigest(result) {
@@ -430,15 +454,15 @@ function extractDigest(result) {
 }
 
 async function waitForFinality(digest) {
-  if (typeof client.waitForTransactionBlock === 'function') {
-    return client.waitForTransactionBlock({ digest, timeout: 60_000, options: { showEffects: true, showBalanceChanges: true } });
-  }
-  if (typeof client.waitForTransaction === 'function') return client.waitForTransaction({ digest, timeout: 60_000 });
-  return client.getTransactionBlock({ digest, options: { showEffects: true, showBalanceChanges: true } });
+  return client.core.waitForTransaction({
+    digest,
+    timeout: 60_000,
+    include: { effects: true, balanceChanges: true },
+  });
 }
 
 function transactionSucceeded(result) {
-  return result?.effects?.status?.status === 'success' || result?.Transaction?.status?.success === true || result?.transaction?.status?.success === true;
+  return coreTransactionSucceeded(result);
 }
 
 async function executeSwap() {
@@ -465,15 +489,20 @@ async function executeSwap() {
     const tx = await buildTransaction(window.playerAddress, route, amountIn);
     setStatus('Simulating the exact transaction on Sui Mainnet. Your wallet has not been asked to sign yet.');
     const bytes = await tx.build({ client });
-    const dryRun = await client.dryRunTransactionBlock({ transactionBlock: bytes });
-    if (!dryRunSucceeded(dryRun)) throw new Error(dryRun?.effects?.status?.error || 'Transaction simulation failed.');
+  const simulation = await client.core.simulateTransaction({
+    transaction: bytes,
+    include: { effects: true, balanceChanges: true },
+  });
+  if (!coreTransactionSucceeded(simulation)) {
+    throw new Error(coreFailureMessage(simulation, 'Transaction simulation failed.'));
+  }
     setStatus(`Simulation passed. Review ${formatBaseUnits(amountIn, decimalsFor(stateTokenIn()), decimalsFor(stateTokenIn()))} ${symbolFor(stateTokenIn())} → at least ${formatBaseUnits(route.minAmountOut, decimalsFor(stateTokenOut()), decimalsFor(stateTokenOut()))} ${symbolFor(stateTokenOut())} in your wallet.`, 'success');
     const result = await window.signAndExecuteTransactionBlock(tx);
     const digest = extractDigest(result);
     if (!digest) throw new Error('The wallet returned no transaction digest.');
     setStatus(`Transaction submitted. Waiting for Sui finality: ${digest.slice(0, 12)}…`);
     const final = await waitForFinality(digest);
-    if (!transactionSucceeded(final)) throw new Error(final?.effects?.status?.error || 'The transaction did not finalize successfully.');
+    if (!transactionSucceeded(final)) throw new Error(coreFailureMessage(final, 'The transaction did not finalize successfully.'));
     elements.success.hidden = false;
     elements.success.innerHTML = `<strong>Swap confirmed on Sui Mainnet.</strong><a href="https://suiscan.xyz/mainnet/tx/${encodeURIComponent(digest)}" target="_blank" rel="noopener noreferrer">View transaction ${digest.slice(0, 12)}… ↗</a>`;
     setStatus(`Swap confirmed through ${routeLabel(route)}.`, 'success');
