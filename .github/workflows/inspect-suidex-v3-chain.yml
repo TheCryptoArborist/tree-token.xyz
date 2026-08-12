@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - name: Inspect V3 add-liquidity frontend builder and shared dependencies
+      - name: Extract shared V3 modules and transaction constants
         shell: bash
         run: |
           set -euo pipefail
@@ -25,34 +25,43 @@ jobs:
           const urls = [...new Set([...html.matchAll(/(?:src|href)="([^"]+\.js)"/g)].map((match) => new URL(match[1], pageUrl).href))];
           const known = 'https://dex.suidex.org/_next/static/chunks/app/pools/v3/%5BpoolId%5D/add/page-6d328606a4780cdd.js';
           if (!urls.includes(known)) urls.push(known);
-          const needles = [
-            'open_position', 'add_liquidity', 'remove_liquidity', 'close_position',
-            'collect::fee', 'collect::reward', 'increase_liquidity', 'decrease_liquidity',
-            'b5f529c1dcda6580a61bf7ee9fbd524b50be62f11044d137c8202c8cbace9e56',
-            '0999bbc9c063580eca62e888b8f0d8e6e9159cd9db1b8a8c88e448a2b5dd4d4d',
-            'version', 'tickLower', 'tickUpper', 'liquidityDelta',
-          ];
-          const results = [];
-          for (const url of urls) {
-            try {
-              const response = await fetch(url);
-              const text = await response.text();
-              const hits = [];
-              const lower = text.toLowerCase();
-              for (const needle of needles) {
-                let index = lower.indexOf(needle.toLowerCase());
-                let count = 0;
-                while (index >= 0 && count < 12) {
-                  hits.push({ needle, index, snippet: text.slice(Math.max(0, index - 2200), Math.min(text.length, index + needle.length + 6000)) });
-                  index = lower.indexOf(needle.toLowerCase(), index + needle.length);
-                  count += 1;
-                }
-              }
-              const addresses = [...new Set([...text.matchAll(/0x[0-9a-f]{64}/gi)].map((match) => match[0]))];
-              if (hits.length || url === known) results.push({ url, status: response.status, bytes: text.length, addresses, hits });
-            } catch (error) {
-              results.push({ url, error: error?.message || String(error) });
+
+          function moduleSlice(text, moduleId) {
+            const patterns = [`${moduleId}:`, `${moduleId}:(`];
+            let start = -1;
+            for (const pattern of patterns) {
+              start = text.indexOf(pattern);
+              if (start >= 0) break;
             }
+            if (start < 0) return null;
+            const candidates = [];
+            for (const match of text.slice(start + String(moduleId).length + 1).matchAll(/},\d{2,6}:/g)) {
+              candidates.push(start + String(moduleId).length + 1 + match.index + 1);
+              if (candidates.length >= 3) break;
+            }
+            const end = candidates[0] || Math.min(text.length, start + 50000);
+            return text.slice(start, end);
           }
-          console.log(JSON.stringify({ pageUrl, scripts: urls, results }, null, 2));
+
+          const modules = [];
+          const allAddresses = new Set();
+          for (const url of urls) {
+            const response = await fetch(url);
+            const text = await response.text();
+            for (const address of [...text.matchAll(/0x[0-9a-f]{64}/gi)].map((match) => match[0])) allAddresses.add(address);
+            for (const moduleId of [71045, 58425, 80393, 9117]) {
+              const slice = moduleSlice(text, moduleId);
+              if (slice) modules.push({ url, moduleId, bytes: slice.length, source: slice });
+            }
+            const exportHits = [];
+            for (const needle of ['Na:', 'z$:', 'vS:', 'function Na', 'function z$', 'function vS']) {
+              let index = text.indexOf(needle);
+              while (index >= 0 && exportHits.length < 30) {
+                exportHits.push({ needle, snippet: text.slice(Math.max(0, index - 2000), Math.min(text.length, index + 5000)) });
+                index = text.indexOf(needle, index + needle.length);
+              }
+            }
+            if (exportHits.length) modules.push({ url, moduleId: 'exports', source: exportHits });
+          }
+          console.log(JSON.stringify({ scripts: urls, addresses: [...allAddresses], modules }, null, 2));
           NODE
