@@ -53,7 +53,7 @@ jobs:
           anchor = "assert.equal(swap.includes('ALLOWED_MOVE_PACKAGES'), true);"
           addition = """assert.equal(swap.includes('ALLOWED_MOVE_PACKAGES'), true);
           assert.equal(swap.includes('swap_exact_tokens1_for_tokens0'), true);
-          assert.equal(swap.includes('swap_exact_tokens1_for_token0\''), false);
+          assert.equal(swap.includes(\"swap_exact_tokens1_for_token0'\"), false);
           assert.equal(swap.includes(\"throw new Error('Unsupported coin type in route metadata.')\"), true);"""
           if anchor not in test:
               raise SystemExit('Could not locate swap source-test anchor.')
