@@ -40,7 +40,7 @@ jobs:
               });
               home.on('pageerror', (error) => homeErrors.push(`pageerror:${error.message}`));
               await home.setViewport(viewport);
-              await home.goto(`${BASE}/?navigation_preview=1`, { waitUntil: 'networkidle2', timeout: 120000 });
+              await home.goto(`${BASE}/?navigation_preview=2`, { waitUntil: 'networkidle2', timeout: 120000 });
               await home.waitForSelector('html.home-v2', { timeout: 120000 });
               await home.waitForFunction(() => document.querySelectorAll('.home-action-card').length === 10, { timeout: 120000 });
               await home.waitForFunction(() => {
@@ -73,7 +73,7 @@ jobs:
               });
               dapp.on('pageerror', (error) => dappErrors.push(`pageerror:${error.message}`));
               await dapp.setViewport(viewport);
-              await dapp.goto(`${BASE}/dapp/?navigation_preview=1`, { waitUntil: 'networkidle2', timeout: 120000 });
+              await dapp.goto(`${BASE}/dapp/?navigation_preview=2`, { waitUntil: 'networkidle2', timeout: 120000 });
               await dapp.waitForFunction(() => document.querySelectorAll('.leader-card').length === 50, { timeout: 120000 });
               await dapp.waitForFunction(() => {
                 const value = document.querySelector('#removed [data-snapshot="tree.zeroAddressBalance"]')?.textContent || '';
@@ -109,8 +109,8 @@ jobs:
             'https://deploy-preview-9--tree-token.netlify.app/' \
             'https://deploy-preview-9--tree-token.netlify.app/dapp/' \
             'https://deploy-preview-9--tree-token.netlify.app/api/tree-dashboard' \
-            'https://deploy-preview-9--tree-token.netlify.app/api/tree-exposure' \
-            'https://deploy-preview-9--tree-token.netlify.app/api/tree-badges'; do
+            'https://deploy-preview-9--tree-token.netlify.app/api/tree-exposure-preview' \
+            'https://deploy-preview-9--tree-token.netlify.app/api/tree-badges-preview'; do
             code=$(curl --silent --show-error --location --output /dev/null --write-out '%{http_code}' --max-time 60 "$url")
             echo "$code $url"
             [[ "$code" == '200' ]]
