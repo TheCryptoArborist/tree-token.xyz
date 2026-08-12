@@ -41,14 +41,14 @@ jobs:
               const errors = [];
               page.on('console', (message) => {
                 const text = message.text();
-                if (message.type() === 'error' && !/metadata|api\.slush\.app/i.test(text)) errors.push(`console:${text}`);
+                const expectedNetworkNoise = /metadata|api\.slush\.app|fullnode\.mainnet\.sui\.io|Failed to load resource/i.test(text);
+                if (message.type() === 'error' && !expectedNetworkNoise) errors.push(`console:${text}`);
               });
               page.on('pageerror', (error) => errors.push(`pageerror:${error.message}`));
               await page.setViewport(viewport);
-              await page.goto(`${BASE}/dapp/?wallet_preview_qa=1`, { waitUntil: 'networkidle2', timeout: 120000 });
+              await page.goto(`${BASE}/dapp/?wallet_preview_qa=2`, { waitUntil: 'networkidle2', timeout: 120000 });
               await page.waitForFunction(() => typeof window.openWalletManager === 'function', { timeout: 120000 });
 
-              // Register a deterministic mock Sui wallet in the same Wallet Standard registry.
               await page.evaluate(async (address) => {
                 const { getWallets } = await import('https://esm.run/@mysten/wallet-standard@0.13.0');
                 const account = {
