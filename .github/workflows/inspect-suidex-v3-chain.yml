@@ -27,7 +27,6 @@ jobs:
             `${packageId}::version::VersionCap`,
             `${packageId}::global_config::GlobalConfig`,
             `${packageId}::global_config::AdminCap`,
-            `${packageId}::pool::Pool`,
           ];
           const query = `query ObjectsByType($first: Int!, $type: String!) {
             objects(first: $first, filter: { type: $type }) {
@@ -44,7 +43,7 @@ jobs:
             const response = await fetch(endpoint, {
               method: 'POST',
               headers: { 'content-type': 'application/json', accept: 'application/json' },
-              body: JSON.stringify({ query, variables: { first: 100, type } }),
+              body: JSON.stringify({ query, variables: { first: 50, type } }),
             });
             const body = await response.json();
             results.push({ type, status: response.status, errors: body.errors || [], data: body.data || null });
