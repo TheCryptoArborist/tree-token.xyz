@@ -324,8 +324,11 @@ async function ownedCoinForAmount(tx, owner, coinType, amount) {
   }
   if (total < amount) throw new Error(`Insufficient ${symbolFor(coinType)} balance.`);
   if (selected.length > 500) throw new Error('Too many TREE coin objects are required. Merge coin objects or use a smaller amount.');
-  const primary = tx.object(selected[0].coinObjectId);
-  const mergeObjects = selected.slice(1).map((coin) => tx.object(coin.coinObjectId));
+  if (selected.some((coin) => typeof coin.objectId !== 'string' || !coin.objectId.startsWith('0x'))) {
+  throw new Error('The Sui coin response did not contain valid object IDs.');
+}
+  const primary = tx.object(selected[0].objectId);
+  const mergeObjects = selected.slice(1).map((coin) => tx.object(coin.objectId));
   for (let index = 0; index < mergeObjects.length; index += 200) tx.mergeCoins(primary, mergeObjects.slice(index, index + 200));
   const [inputCoin] = tx.splitCoins(primary, [tx.pure.u64(amount)]);
   tx.transferObjects([primary], owner);

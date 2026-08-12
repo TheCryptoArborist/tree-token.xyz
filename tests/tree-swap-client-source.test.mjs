@@ -18,6 +18,9 @@ assert.equal(swap.includes("/^deploy-preview-\\d+--tree-token\\.netlify\\.app$/i
 assert.equal(swap.includes("location.hostname === 'tree-token.xyz'"), false);
 assert.equal(swap.includes('MAX_EXECUTABLE_PRICE_IMPACT = 5'), true);
 assert.equal(swap.includes('ALLOWED_MOVE_PACKAGES'), true);
+assert.equal(swap.includes('selected[0].objectId'), true);
+assert.equal(swap.includes('coin.objectId'), true);
+assert.equal(swap.includes('coinObjectId'), false);
 assert.equal(swap.includes('swap_exact_tokens1_for_tokens0'), true);
 assert.equal(swap.includes("swap_exact_tokens1_for_token0'"), false);
 assert.equal(swap.includes("throw new Error('Unsupported coin type in route metadata.')"), true);
