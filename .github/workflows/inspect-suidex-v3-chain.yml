@@ -15,44 +15,44 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - name: Install Mysten SDK
-        run: npm install --no-save --ignore-scripts @mysten/sui@2.23.1
-
-      - name: Inspect TREE pool, enriched API, and SuiDex frontend constants
+      - name: Inspect V3 add-liquidity frontend builder and shared dependencies
         shell: bash
         run: |
           set -euo pipefail
-          node --input-type=module <<'NODE'
-          import { SuiGrpcClient } from '@mysten/sui/grpc';
-          const client = new SuiGrpcClient({ network: 'mainnet', baseUrl: 'https://fullnode.mainnet.sui.io:443' });
-          const packageId = '0xb5f529c1dcda6580a61bf7ee9fbd524b50be62f11044d137c8202c8cbace9e56';
-          const poolId = '0x39d5ba22e01e45bc4129ec28a0bef52e8fee8db5d07d337adf9540e3cb9074cf';
-
-          const { object: pool } = await client.core.getObject({ objectId: poolId, include: { json: true, display: true } });
-          const apiBody = await (await fetch('https://dex.suidex.org/api/v3/pools-enriched')).json();
-          const treePool = (apiBody.pools || apiBody || []).find((item) => item.pool_id === poolId);
-
-          const chunkUrl = 'https://dex.suidex.org/_next/static/chunks/5162-fbf55ded1d6f82e0.js';
-          const chunk = await (await fetch(chunkUrl)).text();
-          const moduleStart = chunk.indexOf('9117:');
-          const moduleEndCandidates = [chunk.indexOf('},5960:', moduleStart), chunk.indexOf('},8761:', moduleStart)].filter((value) => value > moduleStart);
-          const moduleEnd = moduleEndCandidates.length ? Math.min(...moduleEndCandidates) : Math.min(chunk.length, moduleStart + 35000);
-          const constantsModule = chunk.slice(moduleStart, moduleEnd + 2);
-          const addresses = [...new Set([...chunk.matchAll(/0x[0-9a-f]{64}/gi)].map((match) => match[0]))];
-          const packageSnippets = [];
-          let cursor = chunk.indexOf(packageId.slice(2));
-          while (cursor >= 0 && packageSnippets.length < 20) {
-            packageSnippets.push(chunk.slice(Math.max(0, cursor - 1800), Math.min(chunk.length, cursor + 5000)));
-            cursor = chunk.indexOf(packageId.slice(2), cursor + 1);
+          node <<'NODE'
+          const pageUrl = 'https://dex.suidex.org/pools/v3/0x39d5ba22e01e45bc4129ec28a0bef52e8fee8db5d07d337adf9540e3cb9074cf/add';
+          const html = await (await fetch(pageUrl)).text();
+          const urls = [...new Set([...html.matchAll(/(?:src|href)="([^"]+\.js)"/g)].map((match) => new URL(match[1], pageUrl).href))];
+          const known = 'https://dex.suidex.org/_next/static/chunks/app/pools/v3/%5BpoolId%5D/add/page-6d328606a4780cdd.js';
+          if (!urls.includes(known)) urls.push(known);
+          const needles = [
+            'open_position', 'add_liquidity', 'remove_liquidity', 'close_position',
+            'collect::fee', 'collect::reward', 'increase_liquidity', 'decrease_liquidity',
+            'b5f529c1dcda6580a61bf7ee9fbd524b50be62f11044d137c8202c8cbace9e56',
+            '0999bbc9c063580eca62e888b8f0d8e6e9159cd9db1b8a8c88e448a2b5dd4d4d',
+            'version', 'tickLower', 'tickUpper', 'liquidityDelta',
+          ];
+          const results = [];
+          for (const url of urls) {
+            try {
+              const response = await fetch(url);
+              const text = await response.text();
+              const hits = [];
+              const lower = text.toLowerCase();
+              for (const needle of needles) {
+                let index = lower.indexOf(needle.toLowerCase());
+                let count = 0;
+                while (index >= 0 && count < 12) {
+                  hits.push({ needle, index, snippet: text.slice(Math.max(0, index - 2200), Math.min(text.length, index + needle.length + 6000)) });
+                  index = lower.indexOf(needle.toLowerCase(), index + needle.length);
+                  count += 1;
+                }
+              }
+              const addresses = [...new Set([...text.matchAll(/0x[0-9a-f]{64}/gi)].map((match) => match[0]))];
+              if (hits.length || url === known) results.push({ url, status: response.status, bytes: text.length, addresses, hits });
+            } catch (error) {
+              results.push({ url, error: error?.message || String(error) });
+            }
           }
-
-          console.log(JSON.stringify({
-            pool: { objectId: pool?.objectId, type: pool?.type, owner: pool?.owner, json: pool?.json, display: pool?.display },
-            treePool,
-            chunkUrl,
-            addresses,
-            constantsModule,
-            packageSnippets,
-          }, null, 2));
+          console.log(JSON.stringify({ pageUrl, scripts: urls, results }, null, 2));
           NODE
-          git checkout -- package.json package-lock.json 2>/dev/null || true
