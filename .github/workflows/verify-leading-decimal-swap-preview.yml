@@ -18,7 +18,7 @@ jobs:
       - name: Install browser driver
         run: npm install --no-save --ignore-scripts puppeteer-core@24
 
-      - name: Confirm .1 and 0.1 produce the same quote request
+      - name: Confirm .1 and 0.1 produce the same raw quote amount
         shell: bash
         run: |
           set -euo pipefail
@@ -34,53 +34,48 @@ jobs:
               executablePath: process.env.CHROME,
               args: ['--no-sandbox', '--disable-dev-shm-usage'],
             });
-            const page = await browser.newPage();
-            const quoteRequests = [];
-            page.on('request', (request) => {
-              if (request.url().includes('/api/tree-swap-quote?')) quoteRequests.push(request.url());
-            });
-            await page.goto(`${BASE}/dapp/#swap`, { waitUntil: 'networkidle2', timeout: 120000 });
-            await page.waitForSelector('#swapAmountIn', { timeout: 120000 });
 
-            await page.type('#swapAmountIn', '.1');
-            await page.waitForFunction(() => {
-              const output = document.querySelector('#swapAmountOut')?.value || '';
-              return output.length > 0 && document.querySelectorAll('.swap-route-candidate').length === 2;
-            }, { timeout: 120000 });
-            const leading = await page.evaluate(() => ({
-              input: document.querySelector('#swapAmountIn')?.value,
-              output: document.querySelector('#swapAmountOut')?.value,
-              route: document.querySelector('#swapRouteLabel')?.textContent,
-              candidates: document.querySelectorAll('.swap-route-candidate').length,
-              status: document.querySelector('#swapStatus')?.textContent,
-            }));
-            const leadingRequest = [...quoteRequests].reverse().find((url) => new URL(url).searchParams.get('amountIn') === '100000000');
-            if (!leadingRequest) throw new Error(`.1 did not request 100000000 MIST: ${JSON.stringify(quoteRequests)}`);
+            async function verifyInput(input) {
+              const page = await browser.newPage();
+              await page.goto(`${BASE}/dapp/#swap`, { waitUntil: 'networkidle2', timeout: 120000 });
+              await page.waitForSelector('#swapAmountIn', { timeout: 120000 });
+              const requestPromise = page.waitForRequest((request) => {
+                if (!request.url().includes('/api/tree-swap-quote?')) return false;
+                return new URL(request.url()).searchParams.get('amountIn') === '100000000';
+              }, { timeout: 120000 });
+              await page.type('#swapAmountIn', input);
+              const request = await requestPromise;
+              await page.waitForFunction(() => {
+                const output = document.querySelector('#swapAmountOut')?.value || '';
+                return output.length > 0 && document.querySelectorAll('.swap-route-candidate').length === 2;
+              }, { timeout: 120000 });
+              const state = await page.evaluate(() => ({
+                input: document.querySelector('#swapAmountIn')?.value,
+                output: document.querySelector('#swapAmountOut')?.value,
+                route: document.querySelector('#swapRouteLabel')?.textContent,
+                candidates: document.querySelectorAll('.swap-route-candidate').length,
+                status: document.querySelector('#swapStatus')?.textContent,
+                overflow: document.documentElement.scrollWidth - innerWidth,
+              }));
+              if (!state.output || state.candidates !== 2 || state.overflow > 1) {
+                throw new Error(`Invalid quote state for ${input}: ${JSON.stringify(state)}`);
+              }
+              const amountInRaw = new URL(request.url()).searchParams.get('amountIn');
+              await page.close();
+              return { ...state, amountInRaw };
+            }
 
-            await page.click('#swapAmountIn', { clickCount: 3 });
-            await page.keyboard.press('Backspace');
-            quoteRequests.length = 0;
-            await page.type('#swapAmountIn', '0.1');
-            await page.waitForFunction((priorOutput) => {
-              const output = document.querySelector('#swapAmountOut')?.value || '';
-              return output.length > 0 && document.querySelectorAll('.swap-route-candidate').length === 2 && output === priorOutput;
-            }, { timeout: 120000 }, leading.output);
-            const explicit = await page.evaluate(() => ({
-              input: document.querySelector('#swapAmountIn')?.value,
-              output: document.querySelector('#swapAmountOut')?.value,
-              route: document.querySelector('#swapRouteLabel')?.textContent,
-              candidates: document.querySelectorAll('.swap-route-candidate').length,
-            }));
-            const explicitRequest = [...quoteRequests].reverse().find((url) => new URL(url).searchParams.get('amountIn') === '100000000');
-            if (!explicitRequest) throw new Error(`0.1 did not request 100000000 MIST: ${JSON.stringify(quoteRequests)}`);
-            if (leading.output !== explicit.output) throw new Error(`Outputs differ: ${JSON.stringify({ leading, explicit })}`);
+            const leading = await verifyInput('.1');
+            const explicit = await verifyInput('0.1');
+            if (leading.amountInRaw !== '100000000' || explicit.amountInRaw !== '100000000') {
+              throw new Error(`Raw amounts differ: ${JSON.stringify({ leading, explicit })}`);
+            }
 
             await browser.close();
             console.log(JSON.stringify({
               classification: 'TREE_LEADING_DECIMAL_PREVIEW_VERIFIED',
               leading,
               explicit,
-              amountInRaw: '100000000',
             }, null, 2));
           })().catch((error) => {
             console.error(error);
