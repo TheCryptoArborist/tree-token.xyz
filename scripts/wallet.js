@@ -1,6 +1,6 @@
 // wallet.js — TREE Command Center wallet selection and session management
 
-import { getWallets } from 'https://esm.run/@mysten/wallet-standard@0.20.0';
+import { getWallets } from 'https://esm.run/@mysten/wallet-standard@0.13.0';
 import { SuiClient } from 'https://esm.run/@mysten/sui@1.43.0/client';
 import {
   SUI_MAINNET_CHAIN,
@@ -19,7 +19,7 @@ const NETWORK = 'mainnet';
 const CHAIN = SUI_MAINNET_CHAIN;
 const RPC_URL = 'https://fullnode.mainnet.sui.io:443';
 const SESSION_TTL_MS = 60 * 60 * 1000;
-const WALLET_STANDARD_URL = 'https://esm.run/@mysten/wallet-standard@0.20.0';
+const WALLET_STANDARD_URL = 'https://esm.run/@mysten/wallet-standard@0.13.0';
 const SLUSH_WALLET_URL = 'https://esm.run/@mysten/slush-wallet@1.1.8';
 const SESSION_KEYS = {
   address: 'tree:sui:address',
