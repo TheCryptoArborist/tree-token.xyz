@@ -1,0 +1,92 @@
+name: Verify the single-panel TREE Command Center preview
+
+on:
+  push:
+    branches:
+      - review/phase1
+    paths:
+      - '.github/workflows/verify-tabbed-command-center-preview.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Install browser driver
+        run: npm install --no-save --ignore-scripts puppeteer-core@24
+
+      - name: Verify each utility opens as one panel
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME=$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || command -v chromium-browser)
+          export CHROME
+          node <<'NODE'
+          const puppeteer = require('puppeteer-core');
+          const BASE = 'https://deploy-preview-9--tree-token.netlify.app';
+          const PANELS = ['swap','limit','earn','v3','stats','removed','canopy-draw','leaderboard','documents'];
+          (async () => {
+            const browser = await puppeteer.launch({ headless:true, executablePath:process.env.CHROME, args:['--no-sandbox','--disable-dev-shm-usage'] });
+            const results = [];
+            for (const viewport of [{width:1440,height:1000},{width:390,height:844},{width:360,height:800}]) {
+              const page = await browser.newPage();
+              const errors = [];
+              page.on('console', (message) => {
+                const text = message.text();
+                const expected = /api\.slush\.app|metadata|Failed to load resource/i.test(text);
+                if (message.type() === 'error' && !expected) errors.push(text);
+              });
+              page.on('pageerror', (error) => errors.push(`pageerror:${error.message}`));
+              await page.setViewport(viewport);
+              await page.goto(`${BASE}/dapp/#swap`, { waitUntil:'networkidle2', timeout:120000 });
+              await page.waitForSelector('html.app-tabbed', { timeout:120000 });
+              for (const id of PANELS) {
+                await page.click(`.app-nav a[href="#${id}"]`);
+                await page.waitForFunction((target) => document.body.dataset.activePanel === target, {}, id);
+                await new Promise((resolve) => setTimeout(resolve, 80));
+                const state = await page.evaluate(() => ({
+                  hash:location.hash,
+                  active:document.body.dataset.activePanel,
+                  visible:[...document.querySelectorAll('main > section[id]')].filter((node)=>!node.hidden).map((node)=>node.id),
+                  selected:[...document.querySelectorAll('.app-nav a[aria-selected="true"]')].map((node)=>node.getAttribute('href')),
+                  leaders:document.querySelectorAll('.leader-card').length,
+                  overflow:document.documentElement.scrollWidth-innerWidth,
+                  scrollY,
+                }));
+                if (state.hash !== `#${id}` || state.active !== id || state.visible.join('|') !== id || state.selected.join('|') !== `#${id}`) throw new Error(`Published panel switch failed: ${JSON.stringify(state)}`);
+                if (state.overflow > 1 || state.scrollY > 80) throw new Error(`Published panel layout failed: ${JSON.stringify(state)}`);
+                if (id === 'leaderboard' && state.leaders !== 50) throw new Error(`Canopy Board regression: ${JSON.stringify(state)}`);
+              }
+              await page.click('.app-nav a[href="#documents"]');
+              await page.click('#documents a[href="#profile-studio"]');
+              await page.waitForFunction(() => document.body.dataset.activePanel === 'profile-studio');
+              const profile = await page.evaluate(() => ({active:document.body.dataset.activePanel,visible:[...document.querySelectorAll('main > section[id]')].filter((node)=>!node.hidden).map((node)=>node.id),overflow:document.documentElement.scrollWidth-innerWidth}));
+              if (profile.active !== 'profile-studio' || profile.visible.join('|') !== 'profile-studio' || profile.overflow > 1) throw new Error(`Profile Studio routing failed: ${JSON.stringify(profile)}`);
+              if (errors.length) throw new Error(`Browser errors: ${JSON.stringify(errors)}`);
+              results.push({viewport,profile});
+              await page.close();
+            }
+            const home = await browser.newPage();
+            await home.goto(`${BASE}/?tab_preview=1`, { waitUntil:'networkidle2', timeout:120000 });
+            await home.waitForSelector('html.home-simple', { timeout:120000 });
+            const homeState = await home.evaluate(() => ({sections:document.querySelectorAll('main>section').length,overflow:document.documentElement.scrollWidth-innerWidth,hashLinks:[...document.querySelectorAll('.simple-site-nav a')].filter((node)=>node.getAttribute('href')?.startsWith('#')).length}));
+            if (homeState.sections !== 2 || homeState.overflow > 1 || homeState.hashLinks !== 0) throw new Error(`Homepage regression: ${JSON.stringify(homeState)}`);
+            await home.close();
+            await browser.close();
+            console.log(JSON.stringify({classification:'TREE_TABBED_COMMAND_CENTER_PREVIEW_VALID',results,homeState},null,2));
+          })().catch((error)=>{console.error(error);process.exit(1)});
+          NODE
+
+      - name: Verify public routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          for path in / /dapp/ /about/ /tokenomics/ /roadmap/ /faq/ /documents/ /api/tree-dashboard /api/tree-exposure-preview /api/tree-badges-preview; do
+            url="https://deploy-preview-9--tree-token.netlify.app${path}"
+            code=$(curl --silent --show-error --location --output /dev/null --write-out '%{http_code}' --max-time 60 "$url")
+            echo "$code $url"
+            [[ "$code" == '200' ]]
+          done
