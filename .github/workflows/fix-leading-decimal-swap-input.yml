@@ -1,0 +1,122 @@
+name: Fix leading-decimal TREE swap input
+
+on:
+  push:
+    branches:
+      - feature/tree-aggregated-swap-v1
+    paths:
+      - '.github/workflows/fix-leading-decimal-swap-input.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/tree-aggregated-swap-v1
+          fetch-depth: 0
+
+      - name: Accept amounts entered without a leading zero
+        shell: bash
+        run: |
+          set -euo pipefail
+          python <<'PY'
+          from pathlib import Path
+
+          path = Path('dapp/swap-router.js')
+          text = path.read_text(encoding='utf-8')
+          old = """function parseBaseUnits(value, decimals) {
+            const text = String(value ?? '').trim();
+            if (!/^\\d+(\\.\\d+)?$/.test(text)) throw new Error('Enter a valid positive amount.');
+            const [whole, fraction = ''] = text.split('.');
+            if (fraction.length > decimals) throw new Error(`${symbolFor(stateTokenIn())} supports at most ${decimals} decimal places.`);
+            const raw = `${whole}${fraction.padEnd(decimals, '0')}`.replace(/^0+/, '') || '0';
+            const amount = BigInt(raw);
+            if (amount <= 0n) throw new Error('Amount must be greater than zero.');
+            return amount;
+          }"""
+          new = """function parseBaseUnits(value, decimals) {
+            const text = String(value ?? '').trim();
+            const normalizedText = text.startsWith('.') ? `0${text}` : text;
+            if (!/^\\d+(\\.\\d+)?$/.test(normalizedText)) throw new Error('Enter a valid positive amount.');
+            const [whole, fraction = ''] = normalizedText.split('.');
+            if (fraction.length > decimals) throw new Error(`${symbolFor(stateTokenIn())} supports at most ${decimals} decimal places.`);
+            const raw = `${whole}${fraction.padEnd(decimals, '0')}`.replace(/^0+/, '') || '0';
+            const amount = BigInt(raw);
+            if (amount <= 0n) throw new Error('Amount must be greater than zero.');
+            return amount;
+          }"""
+          if old not in text:
+              raise SystemExit('Could not locate the current parseBaseUnits implementation.')
+          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          source_path = Path('tests/tree-swap-client-source.test.mjs')
+          source = source_path.read_text(encoding='utf-8')
+          anchor = "assert.equal(swap.includes('const SUI_DECIMALS = 9'), true);"
+          addition = """assert.equal(swap.includes('const SUI_DECIMALS = 9'), true);
+          assert.equal(swap.includes(\"text.startsWith('.') ? `0${text}` : text\"), true);"""
+          if anchor not in source:
+              raise SystemExit('Could not locate the swap source-test anchor.')
+          source_path.write_text(source.replace(anchor, addition, 1), encoding='utf-8')
+
+          Path('tests/tree-swap-decimal-input.test.mjs').write_text("""import assert from 'node:assert/strict';
+          import vm from 'node:vm';
+          import { readFile } from 'node:fs/promises';
+
+          const source = await readFile('dapp/swap-router.js', 'utf8');
+          const start = source.indexOf('function parseBaseUnits(value, decimals) {');
+          const end = source.indexOf('\\n\\nfunction formatBaseUnits', start);
+          assert.notEqual(start, -1, 'parseBaseUnits was not found');
+          assert.notEqual(end, -1, 'parseBaseUnits boundary was not found');
+          const implementation = source.slice(start, end);
+          const sandbox = {
+            outputs: null,
+            stateTokenIn: () => '0x2::sui::SUI',
+            symbolFor: () => 'SUI',
+          };
+          vm.runInNewContext(`${implementation}\noutputs = [
+            parseBaseUnits('.1', 9),
+            parseBaseUnits('0.1', 9),
+            parseBaseUnits('.000001', 6),
+            parseBaseUnits('1', 9),
+          ];`, sandbox);
+          assert.equal(sandbox.outputs[0], 100_000_000n);
+          assert.equal(sandbox.outputs[1], 100_000_000n);
+          assert.equal(sandbox.outputs[2], 1n);
+          assert.equal(sandbox.outputs[3], 1_000_000_000n);
+          console.log('TREE leading-decimal swap input: PASS (.1 equals 0.1)');
+          """, encoding='utf-8')
+          PY
+          rm -f .github/workflows/fix-leading-decimal-swap-input.yml
+          git diff --check
+
+      - name: Validate the fix and existing systems
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci
+          npm run build
+          node --check dapp/swap-router.js
+          node tests/tree-swap-decimal-input.test.mjs
+          node tests/tree-swap-client-source.test.mjs
+          npx --yes tsx tests/tree-swap-route.test.ts
+          node tests/wallet-manager-core.test.mjs
+          node tests/wallet-manager-source.test.mjs
+          node tests/dashboard-cache.test.mjs
+          node tests/leaderboard-ui-state.test.mjs
+          for test in tests/*.ts; do npx --yes tsx "$test"; done
+          git diff --check
+
+      - name: Commit and push
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "TheCryptoArborist"
+          git config user.email "190985450+TheCryptoArborist@users.noreply.github.com"
+          git add -A
+          git commit -m "Accept leading-decimal TREE swap amounts"
+          git push origin HEAD:feature/tree-aggregated-swap-v1
