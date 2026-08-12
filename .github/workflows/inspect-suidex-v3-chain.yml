@@ -13,55 +13,69 @@ permissions:
 jobs:
   inspect:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
-      - name: Extract shared V3 modules and transaction constants
+      - name: Install browser driver
+        run: npm install --no-save --ignore-scripts puppeteer-core@24
+
+      - name: Capture runtime-loaded V3 modules and constants
         shell: bash
         run: |
           set -euo pipefail
+          CHROME=$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || command -v chromium-browser)
+          export CHROME
           node <<'NODE'
+          const puppeteer = require('puppeteer-core');
           const pageUrl = 'https://dex.suidex.org/pools/v3/0x39d5ba22e01e45bc4129ec28a0bef52e8fee8db5d07d337adf9540e3cb9074cf/add';
-          const html = await (await fetch(pageUrl)).text();
-          const urls = [...new Set([...html.matchAll(/(?:src|href)="([^"]+\.js)"/g)].map((match) => new URL(match[1], pageUrl).href))];
-          const known = 'https://dex.suidex.org/_next/static/chunks/app/pools/v3/%5BpoolId%5D/add/page-6d328606a4780cdd.js';
-          if (!urls.includes(known)) urls.push(known);
 
           function moduleSlice(text, moduleId) {
-            const patterns = [`${moduleId}:`, `${moduleId}:(`];
-            let start = -1;
-            for (const pattern of patterns) {
-              start = text.indexOf(pattern);
-              if (start >= 0) break;
-            }
+            let start = text.indexOf(`${moduleId}:`);
             if (start < 0) return null;
-            const candidates = [];
-            for (const match of text.slice(start + String(moduleId).length + 1).matchAll(/},\d{2,6}:/g)) {
-              candidates.push(start + String(moduleId).length + 1 + match.index + 1);
-              if (candidates.length >= 3) break;
-            }
-            const end = candidates[0] || Math.min(text.length, start + 50000);
+            const tail = text.slice(start + String(moduleId).length + 1);
+            const match = tail.match(/},\d{2,6}:/);
+            const end = match ? start + String(moduleId).length + 1 + match.index + 1 : Math.min(text.length, start + 65000);
             return text.slice(start, end);
           }
 
-          const modules = [];
-          const allAddresses = new Set();
-          for (const url of urls) {
-            const response = await fetch(url);
-            const text = await response.text();
-            for (const address of [...text.matchAll(/0x[0-9a-f]{64}/gi)].map((match) => match[0])) allAddresses.add(address);
-            for (const moduleId of [71045, 58425, 80393, 9117]) {
-              const slice = moduleSlice(text, moduleId);
-              if (slice) modules.push({ url, moduleId, bytes: slice.length, source: slice });
-            }
-            const exportHits = [];
-            for (const needle of ['Na:', 'z$:', 'vS:', 'function Na', 'function z$', 'function vS']) {
-              let index = text.indexOf(needle);
-              while (index >= 0 && exportHits.length < 30) {
-                exportHits.push({ needle, snippet: text.slice(Math.max(0, index - 2000), Math.min(text.length, index + 5000)) });
-                index = text.indexOf(needle, index + needle.length);
+          (async () => {
+            const browser = await puppeteer.launch({ headless: true, executablePath: process.env.CHROME, args: ['--no-sandbox', '--disable-dev-shm-usage'] });
+            const page = await browser.newPage();
+            const scriptUrls = new Set();
+            page.on('response', (response) => {
+              const url = response.url();
+              if (/\.js(?:\?|$)/i.test(url)) scriptUrls.add(url);
+            });
+            await page.goto(pageUrl, { waitUntil: 'networkidle2', timeout: 120000 });
+            await new Promise((resolve) => setTimeout(resolve, 6000));
+            const body = await page.evaluate(() => ({ text: document.body.innerText.slice(0, 4000), scripts: [...document.scripts].map((script) => script.src).filter(Boolean) }));
+            body.scripts.forEach((url) => scriptUrls.add(url));
+            await browser.close();
+
+            const modules = [];
+            for (const url of [...scriptUrls]) {
+              try {
+                const response = await fetch(url);
+                const text = await response.text();
+                for (const moduleId of [71045, 58425, 80393, 9117]) {
+                  const source = moduleSlice(text, moduleId);
+                  if (source) modules.push({ url, moduleId, source });
+                }
+                const ids = [...text.matchAll(/0x[0-9a-f]{64}/gi)].map((match) => match[0]);
+                if (ids.some((id) => /b5f529c1|0999bbc9|39d5ba22/i.test(id))) {
+                  const snippets = [];
+                  for (const needle of ['b5f529c1', '0999bbc9', '39d5ba22', 'open_position', 'add_liquidity']) {
+                    let index = text.toLowerCase().indexOf(needle);
+                    while (index >= 0 && snippets.length < 15) {
+                      snippets.push({ needle, source: text.slice(Math.max(0, index - 2200), Math.min(text.length, index + 6500)) });
+                      index = text.toLowerCase().indexOf(needle, index + needle.length);
+                    }
+                  }
+                  modules.push({ url, moduleId: 'v3-hits', addresses: [...new Set(ids)], snippets });
+                }
+              } catch (error) {
+                modules.push({ url, moduleId: 'fetch-error', error: error?.message || String(error) });
               }
             }
-            if (exportHits.length) modules.push({ url, moduleId: 'exports', source: exportHits });
-          }
-          console.log(JSON.stringify({ scripts: urls, addresses: [...allAddresses], modules }, null, 2));
+            console.log(JSON.stringify({ pageUrl, body, scripts: [...scriptUrls], modules }, null, 2));
+          })().catch((error) => { console.error(error); process.exit(1); });
           NODE
