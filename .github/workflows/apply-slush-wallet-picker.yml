@@ -26,6 +26,7 @@ jobs:
           set -euo pipefail
           # The patch is deliberately applied in CI so the completed branch is validated before commit.
           python scripts/apply-wallet-manager-app-patch.py
+          sed -i 's/@mysten\/wallet-standard@0\.20\.0/@mysten\/wallet-standard@0.13.0/g' scripts/wallet.js
           rm -f scripts/apply-wallet-manager-app-patch.py .github/workflows/apply-slush-wallet-picker.yml
           git diff --check
 
@@ -67,15 +68,32 @@ jobs:
             const results = [];
             for (const viewport of [{ width: 1280, height: 900 }, { width: 390, height: 844 }, { width: 360, height: 800 }]) {
               const page = await browser.newPage();
+              const diagnostics = [];
+              page.on('console', (message) => diagnostics.push(`console:${message.type()}:${message.text()}`));
+              page.on('pageerror', (error) => diagnostics.push(`pageerror:${error.message}`));
+              page.on('requestfailed', (request) => diagnostics.push(`requestfailed:${request.url()}:${request.failure()?.errorText || 'unknown'}`));
               await page.setViewport(viewport);
               await page.goto('http://127.0.0.1:4173/dapp/?wallet_picker_qa=1', {
                 waitUntil: 'domcontentloaded',
                 timeout: 120000,
               });
-              await page.waitForFunction(() => typeof window.openWalletManager === 'function', { timeout: 120000 });
+              try {
+                await page.waitForFunction(() => typeof window.openWalletManager === 'function', { timeout: 45000 });
+              } catch (error) {
+                const resources = await page.evaluate(() => performance.getEntriesByType('resource').map((entry) => entry.name));
+                throw new Error(JSON.stringify({ stage: 'wallet-module-load', viewport, diagnostics, resources, original: error.message }, null, 2));
+              }
               await page.click('#dappWallet');
-              await page.waitForSelector('#treeWalletDialog[open]', { timeout: 120000 });
-              await page.waitForFunction(() => document.querySelectorAll('.tree-wallet-option').length > 0, { timeout: 120000 });
+              await page.waitForSelector('#treeWalletDialog[open]', { timeout: 45000 });
+              try {
+                await page.waitForFunction(() => document.querySelectorAll('.tree-wallet-option').length > 0, { timeout: 45000 });
+              } catch (error) {
+                const state = await page.evaluate(() => ({
+                  dialogText: document.querySelector('#treeWalletDialog')?.textContent || '',
+                  availableWallets: typeof window.getAvailableWallets === 'function' ? 'available' : 'missing',
+                }));
+                throw new Error(JSON.stringify({ stage: 'wallet-registration', viewport, diagnostics, state, original: error.message }, null, 2));
+              }
               const metrics = await page.evaluate(() => {
                 const dialog = document.querySelector('#treeWalletDialog');
                 const walletNames = [...document.querySelectorAll('.tree-wallet-option-copy strong')].map((node) => node.textContent.trim());
@@ -93,12 +111,12 @@ jobs:
                   viewportWidth: innerWidth,
                 };
               });
-              if (!metrics.slushVisible) throw new Error(`Slush was not present: ${JSON.stringify(metrics)}`);
-              if (!metrics.slushLink.startsWith('https://my.slush.app/browse/')) throw new Error(`Slush deep link missing: ${JSON.stringify(metrics)}`);
-              if (!metrics.switchWalletControl || !/disconnect.*forget/i.test(metrics.disconnectForgetControl)) throw new Error(`Wallet management controls missing: ${JSON.stringify(metrics)}`);
-              if (!metrics.dialogWithinViewport || metrics.documentWidth > metrics.viewportWidth + 1) throw new Error(`Wallet dialog overflow: ${JSON.stringify(metrics)}`);
+              if (!metrics.slushVisible) throw new Error(`Slush was not present: ${JSON.stringify({ metrics, diagnostics })}`);
+              if (!metrics.slushLink.startsWith('https://my.slush.app/browse/')) throw new Error(`Slush deep link missing: ${JSON.stringify({ metrics, diagnostics })}`);
+              if (!metrics.switchWalletControl || !/disconnect.*forget/i.test(metrics.disconnectForgetControl)) throw new Error(`Wallet management controls missing: ${JSON.stringify({ metrics, diagnostics })}`);
+              if (!metrics.dialogWithinViewport || metrics.documentWidth > metrics.viewportWidth + 1) throw new Error(`Wallet dialog overflow: ${JSON.stringify({ metrics, diagnostics })}`);
               if (metrics.playerAddress !== null) throw new Error('Opening the selector connected a wallet without an explicit choice.');
-              results.push({ viewport, metrics });
+              results.push({ viewport, metrics, diagnostics });
               await page.click('.tree-wallet-close');
               await page.close();
             }
