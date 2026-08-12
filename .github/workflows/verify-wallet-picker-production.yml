@@ -1,0 +1,186 @@
+name: Verify Slush wallet manager in production
+
+on:
+  push:
+    branches:
+      - review/phase1
+    paths:
+      - '.github/workflows/verify-wallet-picker-production.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Install browser driver
+        run: npm install --no-save --ignore-scripts puppeteer-core@24
+
+      - name: Verify production wallet selection and disconnect behavior
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME=$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || command -v chromium-browser)
+          export CHROME
+          node <<'NODE'
+          const puppeteer = require('puppeteer-core');
+          const BASE = 'https://tree-token.xyz';
+          const QA_ADDRESS = `0x${'b'.repeat(64)}`;
+
+          (async () => {
+            const browser = await puppeteer.launch({
+              headless: true,
+              executablePath: process.env.CHROME,
+              args: ['--no-sandbox', '--disable-dev-shm-usage'],
+            });
+            const results = [];
+            for (const viewport of [{ width: 1280, height: 900 }, { width: 390, height: 844 }, { width: 360, height: 800 }]) {
+              const page = await browser.newPage();
+              const errors = [];
+              page.on('console', (message) => {
+                const text = message.text();
+                const expectedNetworkNoise = /metadata|api\.slush\.app|fullnode\.mainnet\.sui\.io|Failed to load resource/i.test(text);
+                if (message.type() === 'error' && !expectedNetworkNoise) errors.push(`console:${text}`);
+              });
+              page.on('pageerror', (error) => errors.push(`pageerror:${error.message}`));
+              await page.setViewport(viewport);
+              await page.goto(`${BASE}/dapp/?wallet_production_qa=1#leaderboard`, { waitUntil: 'networkidle2', timeout: 120000 });
+              await page.waitForFunction(() => typeof window.openWalletManager === 'function', { timeout: 120000 });
+              await page.waitForFunction(() => document.querySelectorAll('.leader-card').length === 50, { timeout: 120000 });
+
+              await page.evaluate(async (address) => {
+                const { getWallets } = await import('https://esm.run/@mysten/wallet-standard@0.13.0');
+                const account = {
+                  address,
+                  publicKey: new Uint8Array(32),
+                  chains: ['sui:mainnet'],
+                  features: ['sui:signAndExecuteTransaction'],
+                };
+                const listeners = new Set();
+                const wallet = {
+                  version: '1.0.0',
+                  name: 'QA Sui Wallet',
+                  icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"/>',
+                  chains: ['sui:mainnet'],
+                  accounts: [],
+                  features: {
+                    'standard:connect': {
+                      version: '1.0.0',
+                      connect: async () => {
+                        wallet.accounts = [account];
+                        for (const listener of listeners) listener({ accounts: [account] });
+                        return { accounts: [account] };
+                      },
+                    },
+                    'standard:disconnect': {
+                      version: '1.0.0',
+                      disconnect: async () => {
+                        wallet.accounts = [];
+                        for (const listener of listeners) listener({ accounts: [] });
+                      },
+                    },
+                    'standard:events': {
+                      version: '1.0.0',
+                      on: (_event, listener) => {
+                        listeners.add(listener);
+                        return () => listeners.delete(listener);
+                      },
+                    },
+                    'sui:signAndExecuteTransaction': {
+                      version: '2.0.0',
+                      signAndExecuteTransaction: async () => ({ digest: 'qa' }),
+                    },
+                  },
+                };
+                window.__qaUnregister = getWallets().register(wallet);
+              }, QA_ADDRESS);
+
+              await page.click('#dappWallet');
+              await page.waitForSelector('#treeWalletDialog[open]', { timeout: 120000 });
+              await page.click('[data-wallet-refresh]');
+              await page.waitForFunction(() => [...document.querySelectorAll('.tree-wallet-option-copy strong')].some((node) => node.textContent === 'QA Sui Wallet'), { timeout: 120000 });
+
+              const chooser = await page.evaluate(() => {
+                const dialog = document.querySelector('#treeWalletDialog');
+                const slush = document.querySelector('[data-slush-link]');
+                const rect = dialog.getBoundingClientRect();
+                return {
+                  slushLabel: slush?.textContent?.trim() || '',
+                  slushHref: slush?.href || '',
+                  walletNames: [...document.querySelectorAll('.tree-wallet-option-copy strong')].map((node) => node.textContent.trim()),
+                  playerAddress: window.playerAddress || null,
+                  dialogWithinViewport: rect.left >= -1 && rect.right <= innerWidth + 1,
+                  documentWidth: document.documentElement.scrollWidth,
+                  viewportWidth: innerWidth,
+                  leaderCards: document.querySelectorAll('.leader-card').length,
+                };
+              });
+              if (!/slush/i.test(chooser.slushLabel)) throw new Error(`Slush option missing: ${JSON.stringify(chooser)}`);
+              if (!chooser.slushHref.startsWith('https://my.slush.app/browse/https://tree-token.xyz/dapp/')) throw new Error(`Production Slush link invalid: ${JSON.stringify(chooser)}`);
+              if (!chooser.walletNames.includes('QA Sui Wallet')) throw new Error(`Registered Sui wallet missing: ${JSON.stringify(chooser)}`);
+              if (chooser.playerAddress !== null) throw new Error('Production chooser auto-connected a wallet.');
+              if (!chooser.dialogWithinViewport || chooser.documentWidth > chooser.viewportWidth + 1) throw new Error(`Production chooser overflow: ${JSON.stringify(chooser)}`);
+              if (chooser.leaderCards !== 50) throw new Error(`Leaderboard regression: ${JSON.stringify(chooser)}`);
+
+              await page.evaluate(() => {
+                const button = [...document.querySelectorAll('.tree-wallet-option')]
+                  .find((node) => node.querySelector('.tree-wallet-option-copy strong')?.textContent === 'QA Sui Wallet');
+                button.click();
+              });
+              await page.waitForFunction((address) => window.playerAddress === address, { timeout: 120000 }, QA_ADDRESS);
+              await page.waitForFunction(() => !document.querySelector('#treeWalletDialog')?.open, { timeout: 120000 });
+              await page.click('#dappWallet');
+              await page.waitForSelector('#treeWalletDialog[open]', { timeout: 120000 });
+
+              const manager = await page.evaluate(() => ({
+                title: document.querySelector('#treeWalletTitle')?.textContent?.trim(),
+                current: document.querySelector('[data-wallet-current]')?.textContent?.trim(),
+                switchText: document.querySelector('[data-wallet-switch]')?.textContent?.trim(),
+                disconnectText: document.querySelector('[data-wallet-disconnect]')?.textContent?.trim(),
+                playerAddress: window.playerAddress,
+                headerText: document.querySelector('#dappWallet')?.textContent?.trim(),
+              }));
+              if (manager.title !== 'Manage Wallet' || !manager.current.includes('QA Sui Wallet') || manager.playerAddress !== QA_ADDRESS) throw new Error(`Production manager state invalid: ${JSON.stringify(manager)}`);
+              if (!/switch wallet/i.test(manager.switchText) || !/disconnect.*forget/i.test(manager.disconnectText)) throw new Error(`Production manager controls missing: ${JSON.stringify(manager)}`);
+              if (!manager.headerText.includes('QA Sui Wallet')) throw new Error(`Connected provider label missing: ${JSON.stringify(manager)}`);
+
+              await page.click('[data-wallet-disconnect]');
+              await page.waitForFunction(() => window.playerAddress === null, { timeout: 120000 });
+              const cleared = await page.evaluate(() => ({
+                playerAddress: window.playerAddress,
+                currentWallet: window.currentWallet,
+                oldAddress: sessionStorage.getItem('suiAddr'),
+                newAddress: sessionStorage.getItem('tree:sui:address'),
+                oldName: sessionStorage.getItem('suiName'),
+                newName: sessionStorage.getItem('tree:sui:wallet-name'),
+                headerText: document.querySelector('#dappWallet')?.textContent?.trim(),
+              }));
+              for (const key of ['playerAddress','currentWallet','oldAddress','newAddress','oldName','newName']) {
+                if (cleared[key] !== null) throw new Error(`Production disconnect retained ${key}: ${JSON.stringify(cleared)}`);
+              }
+              if (cleared.headerText !== 'Connect Wallet') throw new Error(`Disconnected header did not reset: ${JSON.stringify(cleared)}`);
+              if (errors.length) throw new Error(`Unexpected production browser errors: ${JSON.stringify(errors)}`);
+
+              results.push({ viewport, chooser, manager, cleared });
+              await page.close();
+            }
+            await browser.close();
+            console.log(JSON.stringify({ classification: 'SLUSH_WALLET_PRODUCTION_VALID', results }, null, 2));
+          })().catch((error) => { console.error(error); process.exit(1); });
+          NODE
+
+      - name: Verify published routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          for url in \
+            'https://tree-token.xyz/' \
+            'https://tree-token.xyz/dapp/' \
+            'https://tree-token.xyz/api/tree-exposure' \
+            'https://tree-token.xyz/api/tree-badges'; do
+            code=$(curl --silent --show-error --location --output /dev/null --write-out '%{http_code}' --max-time 60 "$url")
+            echo "$code $url"
+            [[ "$code" == '200' ]]
+          done
