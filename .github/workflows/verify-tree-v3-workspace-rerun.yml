@@ -33,7 +33,8 @@ jobs:
           npx --yes esbuild netlify/functions/tree-v3.ts --bundle --platform=node --format=esm --outfile=/tmp/tree-v3-function.mjs
           node tests/wallet-manager-core.test.mjs
           node tests/wallet-manager-source.test.mjs
-          node tests/tree-swap-ui.test.mjs
+          node tests/tree-swap-client-source.test.mjs
+          node tests/tree-swap-decimal-input.test.mjs
           npx --yes tsx tests/tree-swap-route.test.ts
           git diff --check
 
