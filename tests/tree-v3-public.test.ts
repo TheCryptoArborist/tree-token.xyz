@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict';
 import {
-  SUIDEX_V3_TREE_POOL,
   mergeTreeV3PageStats,
   normalizeSuiAddress,
   parseCompactNumber,
@@ -9,7 +8,7 @@ import {
   parseTreeV3PositionNode,
   visibleTextFromHtml,
 } from '../netlify/lib/tree-v3-public.ts';
-import { SUI_TYPE, TREE_TYPE } from '../netlify/lib/tree-swap-route.ts';
+import { SUI_TYPE, TREE_TYPE, SUIDEX_V3_TREE_POOL } from '../netlify/lib/tree-swap-route.ts';
 
 const poolHtml = `<!doctype html><html><body>
   <h1>SUI / Tree</h1><div>Pool APR</div><strong>45.0%</strong>
