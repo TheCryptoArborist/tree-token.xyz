@@ -44,12 +44,12 @@ jobs:
           npx --yes tsx <<'TS'
           import assert from 'node:assert/strict';
           import {
-            SUIDEX_V3_TREE_POOL,
             getSuiDexV3PageStats,
             getSuiDexV3PoolObject,
             getSuiDexV3Quote,
             scanTreeV3Positions,
           } from './netlify/lib/tree-v3-public.ts';
+          import { SUIDEX_V3_TREE_POOL } from './netlify/lib/tree-swap-route.ts';
           const [pool, pages, quote] = await Promise.all([
             getSuiDexV3PoolObject(),
             getSuiDexV3PageStats(),
