@@ -1,0 +1,64 @@
+name: Discover SuiDex V3 public data endpoints
+
+on:
+  push:
+    branches:
+      - feature/tree-v3-workspace-v1
+    paths:
+      - '.github/workflows/discover-suidex-v3-data.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Install browser driver
+        run: npm install --no-save --ignore-scripts puppeteer-core@24
+
+      - name: Capture SuiDex V3 network data
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME=$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || command -v chromium-browser)
+          export CHROME
+          node <<'NODE'
+          const puppeteer = require('puppeteer-core');
+          const pages = [
+            'https://dex.suidex.org/pools/v3/0x39d5ba22e01e45bc4129ec28a0bef52e8fee8db5d07d337adf9540e3cb9074cf/add',
+            'https://dex.suidex.org/pools/v3/analytics',
+            'https://dex.suidex.org/pools',
+          ];
+          (async () => {
+            const browser = await puppeteer.launch({ headless: true, executablePath: process.env.CHROME, args: ['--no-sandbox', '--disable-dev-shm-usage'] });
+            const results = [];
+            for (const pageUrl of pages) {
+              const page = await browser.newPage();
+              const responses = [];
+              page.on('response', async (response) => {
+                const request = response.request();
+                const type = request.resourceType();
+                const contentType = response.headers()['content-type'] || '';
+                const url = response.url();
+                if (!['xhr', 'fetch'].includes(type) && !contentType.includes('application/json')) return;
+                let body = '';
+                try { body = (await response.text()).slice(0, 20000); } catch {}
+                responses.push({ url, status: response.status(), type, contentType, body });
+              });
+              await page.goto(pageUrl, { waitUntil: 'networkidle2', timeout: 120000 });
+              await new Promise((resolve) => setTimeout(resolve, 7000));
+              const pageState = await page.evaluate(() => ({
+                title: document.title,
+                text: document.body.innerText.slice(0, 8000),
+                resources: performance.getEntriesByType('resource').map((entry) => entry.name).filter((url) => /api|pool|analytic|route|stats|volume|farm|reward/i.test(url)),
+                nextData: document.querySelector('#__NEXT_DATA__')?.textContent?.slice(0, 30000) || null,
+              }));
+              results.push({ pageUrl, pageState, responses });
+              await page.close();
+            }
+            await browser.close();
+            console.log(JSON.stringify({ classification: 'SUIDEX_V3_PUBLIC_ENDPOINT_DISCOVERY', results }, null, 2));
+          })().catch((error) => { console.error(error); process.exit(1); });
+          NODE
