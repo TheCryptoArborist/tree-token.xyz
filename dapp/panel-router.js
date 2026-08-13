@@ -1,3 +1,5 @@
+import './v3-workspace.js';
+
 const PANEL_IDS = [
   'swap',
   'limit',
