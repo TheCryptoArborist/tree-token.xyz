@@ -1,0 +1,80 @@
+name: Apply native TREE V3 Phase A
+
+on:
+  push:
+    branches:
+      - feature/tree-native-v3-v1
+    paths:
+      - '.github/workflows/apply-tree-v3-phase-a.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/tree-native-v3-v1
+          fetch-depth: 0
+
+      - name: Load the native V3 workspace and remove discovery workflows
+        shell: bash
+        run: |
+          set -euo pipefail
+          python <<'PY'
+          from pathlib import Path
+          path = Path('dapp/index.html')
+          text = path.read_text(encoding='utf-8')
+          script = '  <script type="module" src="v3-workspace.js"></script>\n'
+          if script.strip() not in text:
+              marker = '  <script type="module" src="panel-router.js"></script>\n'
+              if marker not in text:
+                  raise SystemExit('Could not locate panel-router script marker.')
+              text = text.replace(marker, script + marker, 1)
+          path.write_text(text, encoding='utf-8')
+          PY
+          rm -f .github/workflows/inspect-suidex-v3-chain.yml
+          rm -f .github/workflows/inspect-suidex-v3-interface.yml
+          rm -f .github/workflows/apply-tree-v3-phase-a.yml
+
+      - name: Validate build, functions, source, and existing safeguards
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci
+          npm run build
+          node --check dapp/v3-workspace.js
+          node tests/v3-workspace-source.test.mjs
+          npx --yes tsx tests/tree-v3-overview.test.ts
+          npx --yes esbuild netlify/functions/tree-v3-overview.ts --bundle --platform=node --format=esm --outfile=/tmp/tree-v3-overview.mjs
+          for test in tests/*.test.mjs; do node "$test"; done
+          for test in tests/*.test.ts; do npx --yes tsx "$test"; done
+          python <<'PY'
+          from pathlib import Path
+          html = Path('dapp/index.html').read_text(encoding='utf-8')
+          assert html.count('src="v3-workspace.js"') == 1
+          assert Path('dapp/v3-workspace.css').exists()
+          assert Path('dapp/v3-workspace.js').exists()
+          assert Path('netlify/functions/tree-v3-overview.ts').exists()
+          assert not Path('.github/workflows/inspect-suidex-v3-chain.yml').exists()
+          assert not Path('.github/workflows/inspect-suidex-v3-interface.yml').exists()
+          assert 'DAPP_SWAP_EXECUTION_ENABLED' in Path('dapp/swap-router.js').read_text(encoding='utf-8')
+          PY
+          git diff --check
+
+      - name: Commit the validated implementation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dapp/index.html dapp/v3-workspace.css dapp/v3-workspace.js netlify/functions/tree-v3-overview.ts netlify/lib/tree-v3-overview.ts tests/tree-v3-overview.test.ts tests/v3-workspace-source.test.mjs .github/workflows
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git commit -m "Build native read-only TREE V3 workspace"
+          git push origin HEAD:feature/tree-native-v3-v1
