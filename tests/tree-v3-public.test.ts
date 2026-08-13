@@ -67,8 +67,8 @@ const position = parseTreeV3PositionNode({
         type_x: SUI_TYPE,
         type_y: TREE_TYPE,
         liquidity: '1000000',
-        tick_lower_index: -100,
-        tick_upper_index: 100,
+        tick_lower_index: '4294967196',
+        tick_upper_index: '100',
         owed_coin_x: '500000000',
         owed_coin_y: '2500000',
       },
@@ -88,4 +88,4 @@ assert.equal(parseTreeV3PositionNode({
   asMoveObject: { contents: { json: { pool_id: SUIDEX_V3_TREE_POOL } } },
 }, 0), null);
 
-console.log('TREE V3 public provider: PASS (page stats, analytics row, exact pool/owner validation, position range and owed-token mapping)');
+console.log('TREE V3 public provider: PASS (page stats, analytics row, exact pool/owner validation, signed-tick decoding and owed-token mapping)');
