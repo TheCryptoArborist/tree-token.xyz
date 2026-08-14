@@ -1,0 +1,98 @@
+name: Discover SuiDex V3 create-position interface
+
+on:
+  push:
+    branches:
+      - feature/tree-v3-create-position-v1
+    paths:
+      - '.github/workflows/discover-suidex-v3-create-position.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Query normalized Move modules
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const endpoint = 'https://fullnode.mainnet.sui.io:443';
+          const packageId = '0xb5f529c1dcda6580a61bf7ee9fbd524b50be62f11044d137c8202c8cbace9e56';
+          const body = { jsonrpc: '2.0', id: 1, method: 'sui_getNormalizedMoveModulesByPackage', params: [packageId] };
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'content-type': 'application/json', accept: 'application/json' },
+            body: JSON.stringify(body),
+          });
+          const payload = await response.json();
+          const modules = payload.result || {};
+          const selected = {};
+          const matcher = /position|liquidity|pool|reward|fee|collect|close|tick|mint|open|create|increase|decrease|remove/i;
+          for (const [moduleName, module] of Object.entries(modules)) {
+            const exposed = module.exposedFunctions || {};
+            const functions = Object.fromEntries(Object.entries(exposed).filter(([name]) => matcher.test(name)));
+            if (Object.keys(functions).length || matcher.test(moduleName)) selected[moduleName] = { friends: module.friends, structs: module.structs, exposedFunctions: functions };
+          }
+          console.log(JSON.stringify({ status: response.status, error: payload.error || null, moduleNames: Object.keys(modules).sort(), selected }, null, 2));
+          NODE
+
+      - name: Inspect official SuiDex V3 frontend builder
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save --ignore-scripts puppeteer-core@24
+          CHROME=$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || command -v chromium-browser)
+          export CHROME
+          node <<'NODE'
+          const puppeteer = require('puppeteer-core');
+          const pageUrl = 'https://dex.suidex.org/pools/v3/0x39d5ba22e01e45bc4129ec28a0bef52e8fee8db5d07d337adf9540e3cb9074cf/add';
+          const packageNeedle = 'b5f529c1dcda6580a61bf7ee9fbd524b50be62f11044d137c8202c8cbace9e56';
+          const needles = [
+            packageNeedle,
+            'open_position', 'create_position', 'mint_position', 'add_liquidity', 'increase_liquidity',
+            'modify_liquidity', 'remove_liquidity', 'decrease_liquidity', 'collect_fee', 'collect_fees',
+            'claim_reward', 'claim_rewards', 'close_position', 'tick_lower', 'tick_upper', 'liquidity_delta',
+            'position::', 'clmm_pool::', 'pool::', 'liquidity::', 'version::',
+          ];
+          const browser = await puppeteer.launch({ headless: true, executablePath: process.env.CHROME, args: ['--no-sandbox', '--disable-dev-shm-usage'] });
+          const page = await browser.newPage();
+          const scripts = new Set();
+          page.on('response', (response) => {
+            const url = response.url();
+            if (/\.js(?:\?|$)/i.test(url)) scripts.add(url);
+          });
+          await page.goto(pageUrl, { waitUntil: 'networkidle2', timeout: 120000 });
+          await new Promise((resolve) => setTimeout(resolve, 5000));
+          const bodyText = await page.evaluate(() => document.body.innerText.slice(0, 8000));
+          [...await page.evaluate(() => [...document.scripts].map((script) => script.src).filter(Boolean))].forEach((url) => scripts.add(url));
+          await browser.close();
+
+          const findings = [];
+          for (const url of scripts) {
+            try {
+              const response = await fetch(url);
+              const text = await response.text();
+              const lower = text.toLowerCase();
+              const hits = [];
+              for (const needle of needles) {
+                let index = lower.indexOf(needle.toLowerCase());
+                let count = 0;
+                while (index >= 0 && count < 20) {
+                  hits.push({ needle, index, snippet: text.slice(Math.max(0, index - 3000), Math.min(text.length, index + needle.length + 9000)) });
+                  index = lower.indexOf(needle.toLowerCase(), index + needle.length);
+                  count += 1;
+                }
+              }
+              if (hits.some((hit) => hit.needle === packageNeedle) || hits.some((hit) => /position|liquidity/i.test(hit.needle))) {
+                findings.push({ url, status: response.status, bytes: text.length, hits });
+              }
+            } catch (error) {
+              findings.push({ url, error: error?.message || String(error) });
+            }
+          }
+          console.log(JSON.stringify({ pageUrl, bodyText, scripts: [...scripts], findings }, null, 2));
+          NODE
