@@ -1,0 +1,91 @@
+name: Inspect official SuiDex V3 position builder
+
+on:
+  push:
+    branches:
+      - feature/tree-v3-transactions-v1
+    paths:
+      - '.github/workflows/inspect-tree-v3-transaction-builder.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Install browser driver
+        run: npm install --no-save --ignore-scripts puppeteer-core@24
+
+      - name: Extract exact V3 position transaction construction
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME=$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || command -v chromium-browser)
+          export CHROME
+          node <<'NODE'
+          const puppeteer = require('puppeteer-core');
+          const packageId = '0xb5f529c1dcda6580a61bf7ee9fbd524b50be62f11044d137c8202c8cbace9e56';
+          const poolId = '0x39d5ba22e01e45bc4129ec28a0bef52e8fee8db5d07d337adf9540e3cb9074cf';
+          const pageUrl = `https://dex.suidex.org/pools/v3/${poolId}/add`;
+          const needles = [
+            'open_position',
+            'add_liquidity',
+            'remove_liquidity',
+            'collect_fee',
+            'collect_reward',
+            'close_position',
+            `${packageId}::liquidity`,
+            `${packageId}::collect`,
+            'tickLower',
+            'tickUpper',
+            'transferObjects',
+          ];
+          (async () => {
+            const browser = await puppeteer.launch({ headless: true, executablePath: process.env.CHROME, args: ['--no-sandbox', '--disable-dev-shm-usage'] });
+            const page = await browser.newPage();
+            const scripts = new Set();
+            const requests = [];
+            page.on('response', (response) => {
+              const url = response.url();
+              if (/\.js(?:\?|$)/i.test(url)) scripts.add(url);
+              if (/api|graphql|route|pool|position|quote/i.test(url)) requests.push({ status: response.status(), url });
+            });
+            await page.goto(pageUrl, { waitUntil: 'networkidle2', timeout: 120000 });
+            await new Promise((resolve) => setTimeout(resolve, 5000));
+            const state = await page.evaluate(() => ({
+              title: document.title,
+              text: document.body.innerText.slice(0, 3500),
+              scripts: [...document.scripts].map((node) => node.src).filter(Boolean),
+            }));
+            state.scripts.forEach((url) => scripts.add(url));
+            await browser.close();
+
+            const hits = [];
+            for (const url of [...scripts]) {
+              try {
+                const response = await fetch(url);
+                const source = await response.text();
+                const lower = source.toLowerCase();
+                for (const needle of needles) {
+                  let index = lower.indexOf(needle.toLowerCase());
+                  let count = 0;
+                  while (index >= 0 && count < 4) {
+                    hits.push({
+                      url,
+                      needle,
+                      index,
+                      snippet: source.slice(Math.max(0, index - 3200), Math.min(source.length, index + needle.length + 7600)),
+                    });
+                    index = lower.indexOf(needle.toLowerCase(), index + needle.length);
+                    count += 1;
+                  }
+                }
+              } catch (error) {
+                hits.push({ url, error: error?.message || String(error) });
+              }
+            }
+            console.log(JSON.stringify({ pageUrl, state, requests: requests.slice(0, 120), scriptCount: scripts.size, hits }, null, 2));
+          })().catch((error) => { console.error(error); process.exit(1); });
+          NODE
