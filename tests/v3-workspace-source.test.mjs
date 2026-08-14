@@ -15,6 +15,9 @@ assert.ok(source.includes('Rewards not verified'));
 assert.ok(source.includes('24H Volume'));
 assert.ok(source.includes('APR'));
 assert.ok(!source.includes('target="_blank"'));
+assert.ok(source.includes('window.playerAddress'));
+assert.ok(source.includes("'tree:wallet-changed'"));
+assert.ok(source.includes("value === null || value === undefined || value === ''"));
 assert.ok(css.includes('.v3-tabs'));
 assert.ok(css.includes('@media(max-width:390px)'));
 

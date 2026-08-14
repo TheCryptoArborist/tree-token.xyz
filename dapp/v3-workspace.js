@@ -25,6 +25,7 @@ function compactId(value) {
 }
 
 function formatUsd(value) {
+  if (value === null || value === undefined || value === '') return 'Not verified';
   const numeric = Number(value);
   if (!Number.isFinite(numeric)) return 'Not verified';
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', notation: numeric >= 100000 ? 'compact' : 'standard', maximumFractionDigits: numeric >= 1000 ? 1 : 2 }).format(numeric);
@@ -75,6 +76,8 @@ function addressFromCandidate(candidate) {
 }
 
 function resolveWalletAddress() {
+  const direct = safeAddress(window.playerAddress) || addressFromCandidate(window.currentAccount);
+  if (direct) return direct;
   const preferred = ['treeWallet', 'treeWalletManager', 'TREEWallet', 'walletManager', 'suiWalletManager'];
   for (const key of preferred) {
     const address = addressFromCandidate(window[key]);
@@ -221,7 +224,7 @@ function renderPool(payload) {
   document.getElementById('v3LiquidityRaw').textContent = Number(pool.liquidityRaw).toLocaleString('en-US', { notation: 'compact', maximumFractionDigits: 2 });
   const analytics = payload.analytics || {};
   document.getElementById('v3PoolVolume').textContent = formatUsd(analytics.volume24hUsd);
-  document.getElementById('v3PoolApr').textContent = Number.isFinite(Number(analytics.aprPercent)) ? `${Number(analytics.aprPercent).toFixed(1)}%` : 'Not verified';
+  document.getElementById('v3PoolApr').textContent = analytics.aprPercent !== null && analytics.aprPercent !== undefined && analytics.aprPercent !== '' && Number.isFinite(Number(analytics.aprPercent)) ? `${Number(analytics.aprPercent).toFixed(1)}%` : 'Not verified';
   document.getElementById('v3RewardChip').textContent = Array.isArray(analytics.rewards) && analytics.rewards.length ? analytics.rewards.join(' + ') : 'Rewards not verified';
   document.getElementById('v3AnalyticsNotice').textContent = payload.warnings?.[0] || 'Pool reserves are verified on chain. Volume, fees, APR, and rewards remain unpublished until a reliable source is integrated.';
   document.getElementById('v3PoolStatus').textContent = `Verified from Sui Mainnet · Updated ${new Date(payload.generatedAt).toLocaleTimeString()}`;
@@ -327,7 +330,7 @@ function bindWorkspace() {
   document.getElementById('v3RefreshPool')?.addEventListener('click', loadPool);
   document.getElementById('v3RefreshPositions')?.addEventListener('click', () => refreshWalletState(true));
   document.getElementById('v3OpenSwap')?.addEventListener('click', () => { window.location.hash = 'swap'; });
-  for (const eventName of ['tree-wallet-change', 'tree:wallet-change', 'wallet-change', 'wallet:change', 'sui-wallet-change', 'walletConnected', 'walletDisconnected']) {
+  for (const eventName of ['tree:wallet-changed', 'tree-wallet-change', 'tree:wallet-change', 'wallet-change', 'wallet:change', 'sui-wallet-change', 'walletConnected', 'walletDisconnected']) {
     window.addEventListener(eventName, () => setTimeout(() => refreshWalletState(true), 0));
   }
   setInterval(() => refreshWalletState(false), 1500);
