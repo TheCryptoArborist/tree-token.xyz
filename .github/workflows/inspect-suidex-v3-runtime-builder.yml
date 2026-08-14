@@ -1,0 +1,91 @@
+name: Inspect SuiDex V3 runtime builder exports
+
+on:
+  push:
+    branches:
+      - feature/tree-v3-create-position-v1
+    paths:
+      - '.github/workflows/inspect-suidex-v3-runtime-builder.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/tree-v3-create-position-v1
+          fetch-depth: 0
+
+      - name: Install browser driver
+        run: npm install --no-save --ignore-scripts puppeteer-core@24
+
+      - name: Inspect loaded webpack modules and exports
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME=$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || command -v chromium-browser)
+          export CHROME
+          node <<'NODE'
+          const fs = require('node:fs');
+          const puppeteer = require('puppeteer-core');
+          const pageUrl = 'https://dex.suidex.org/pools/v3/0x39d5ba22e01e45bc4129ec28a0bef52e8fee8db5d07d337adf9540e3cb9074cf/add';
+          const packageNeedle = 'b5f529c1dcda6580a61bf7ee9fbd524b50be62f11044d137c8202c8cbace9e56';
+          const matcher = /open_position|create_position|mint_position|add_liquidity|increase_liquidity|modify_liquidity|remove_liquidity|decrease_liquidity|collect_fee|collect_fees|claim_reward|claim_rewards|close_position|tick_lower|tick_upper|liquidity_delta|position::|clmm_pool::|global_config::|version::/i;
+
+          (async () => {
+            const browser = await puppeteer.launch({ headless: true, executablePath: process.env.CHROME, args: ['--no-sandbox', '--disable-dev-shm-usage'] });
+            const page = await browser.newPage();
+            await page.goto(pageUrl, { waitUntil: 'networkidle2', timeout: 120000 });
+            await new Promise((resolve) => setTimeout(resolve, 5000));
+            const result = await page.evaluate(({ packageNeedle, matcherSource }) => {
+              const chunk = window.webpackChunk_N_E;
+              if (!Array.isArray(chunk)) throw new Error('Next.js webpack chunk registry was not found.');
+              let requireFn = null;
+              const runtimeId = `tree-v3-${Date.now()}`;
+              chunk.push([[runtimeId], {}, (runtimeRequire) => { requireFn = runtimeRequire; }]);
+              if (!requireFn || !requireFn.m) throw new Error('Webpack runtime require was not captured.');
+              const matcher = new RegExp(matcherSource, 'i');
+              const modules = [];
+              for (const [id, factory] of Object.entries(requireFn.m)) {
+                const source = Function.prototype.toString.call(factory);
+                if (!source.toLowerCase().includes(packageNeedle.toLowerCase()) && !matcher.test(source)) continue;
+                let exportsObject = null;
+                let loadError = null;
+                try { exportsObject = requireFn(id); } catch (error) { loadError = error?.message || String(error); }
+                const exports = [];
+                if (exportsObject && (typeof exportsObject === 'object' || typeof exportsObject === 'function')) {
+                  for (const key of Object.keys(exportsObject)) {
+                    const value = exportsObject[key];
+                    exports.push({
+                      key,
+                      type: typeof value,
+                      source: typeof value === 'function' ? Function.prototype.toString.call(value).slice(0, 30000) : null,
+                    });
+                  }
+                }
+                modules.push({ id, bytes: source.length, source: source.slice(0, 100000), loadError, exports });
+              }
+              return { title: document.title, bodyText: document.body.innerText.slice(0, 5000), modules };
+            }, { packageNeedle, matcherSource: matcher.source });
+            await browser.close();
+            fs.mkdirSync('docs', { recursive: true });
+            fs.writeFileSync('docs/suidex-v3-runtime-builder.json', JSON.stringify({ pageUrl, packageNeedle, ...result }, null, 2));
+          })().catch((error) => { console.error(error); process.exit(1); });
+          NODE
+          test -s docs/suidex-v3-runtime-builder.json
+          rm -f .github/workflows/inspect-suidex-v3-runtime-builder.yml
+          git diff --check
+
+      - name: Commit runtime builder report and remove temporary workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/suidex-v3-runtime-builder.json .github/workflows/inspect-suidex-v3-runtime-builder.yml
+          git commit -m 'Record official SuiDex V3 runtime builder exports'
+          git push origin HEAD:feature/tree-v3-create-position-v1
