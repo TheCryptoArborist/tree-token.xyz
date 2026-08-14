@@ -1,0 +1,9 @@
+.v3-transaction-controls{display:grid;gap:.65rem;margin:1rem 0 .75rem;padding:.85rem;border:1px solid rgba(53,232,149,.16);border-radius:14px;background:rgba(3,12,17,.62)}
+.v3-slippage-row{display:flex;align-items:center;justify-content:space-between;gap:.75rem;color:#91a4b0;font-size:.78rem;font-weight:800}
+.v3-slippage-row>div{display:flex;gap:.35rem;flex-wrap:wrap;justify-content:flex-end}
+.v3-slippage-row button{min-height:34px;padding:.35rem .65rem;border:1px solid rgba(255,255,255,.1);border-radius:9px;color:#b8c7d0;background:rgba(255,255,255,.035);font:inherit;cursor:pointer}
+.v3-slippage-row button.active{border-color:rgba(53,232,149,.45);color:#35e895;background:rgba(53,232,149,.1)}
+#v3CreateStatus{margin:0;min-height:1.3em;color:#91a4b0;font-size:.76rem;line-height:1.5}
+#v3CreateStatus.ok{color:#35e895}#v3CreateStatus.error{color:#ff7e89}#v3CreateStatus.warning{color:#ffcf5a}
+#v3CreatePosition{width:100%;min-height:48px}
+@media(max-width:520px){.v3-slippage-row{align-items:flex-start;flex-direction:column}.v3-slippage-row>div{width:100%;justify-content:stretch}.v3-slippage-row button{flex:1}}
