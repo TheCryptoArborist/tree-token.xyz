@@ -1,5 +1,7 @@
 const V3_ENDPOINT = '/api/tree-v3-overview';
 const V3_POOL_ID = '0x39d5ba22e01e45bc4129ec28a0bef52e8fee8db5d07d337adf9540e3cb9074cf';
+const V3_MANAGEMENT_ENABLED = /^deploy-preview-\d+--tree-token\.netlify\.app$/.test(location.hostname)
+  || ['localhost', '127.0.0.1', '::1'].includes(location.hostname);
 
 const state = {
   overview: null,
@@ -266,8 +268,14 @@ function renderPositions(payload) {
       <article class="v3-position-card">
         <div class="v3-position-head"><div><h3>SUI / TREE Position</h3><code title="${position.objectId}">${compactId(position.objectId)}</code></div><span class="v3-position-state ${position.inRange ? '' : 'review'}">${position.inRange ? 'In range' : 'Out of range'}</span></div>
         <div class="v3-metrics"><div class="v3-metric"><span>Liquidity Units</span><strong>${Number(position.liquidityRaw).toLocaleString('en-US', { notation: 'compact', maximumFractionDigits: 2 })}</strong></div><div class="v3-metric"><span>Lower Tick</span><strong>${position.tickLower}</strong></div><div class="v3-metric"><span>Upper Tick</span><strong>${position.tickUpper}</strong></div><div class="v3-metric"><span>Current Tick</span><strong>${position.currentTick}</strong></div></div>
-        <div class="v3-position-actions" aria-label="Position actions awaiting verification"><button type="button" disabled>Increase</button><button type="button" disabled>Remove</button><button type="button" disabled>Collect Fees</button><button type="button" disabled>Claim Rewards</button><button type="button" disabled>Close</button></div>
-        <p class="v3-status">Position actions remain disabled until their exact SuiDex V3 transaction builders pass allowlisting and Mainnet simulation.</p>
+        <div class="v3-position-actions" aria-label="Position management actions"><button type="button" data-v3-increase-position="${position.objectId}" ${V3_MANAGEMENT_ENABLED ? '' : 'disabled'}>Increase</button><button type="button" disabled>Remove</button><button type="button" disabled>Collect Fees</button><button type="button" disabled>Claim Rewards</button><button type="button" disabled>Close</button></div>
+        <div class="v3-increase-panel" data-v3-increase-panel="${position.objectId}" hidden>
+          <div class="v3-form-grid"><label class="v3-field"><span>Maximum SUI</span><input inputmode="decimal" placeholder="0.001" data-v3-increase-sui></label><label class="v3-field"><span>Maximum TREE</span><input inputmode="decimal" placeholder="35.5" data-v3-increase-tree></label></div>
+          <div class="v3-slippage-row"><span>Increase slippage</span><div role="group" aria-label="Increase position slippage"><button class="active" type="button" data-v3-increase-slippage="50">0.5%</button><button type="button" data-v3-increase-slippage="100">1%</button><button type="button" data-v3-increase-slippage="200">2%</button></div></div>
+          <button class="button primary" type="button" data-v3-increase-submit="${position.objectId}">Simulate Increase</button>
+          <p class="v3-status" role="status" aria-live="polite" data-v3-increase-status>Nothing is signed until two Mainnet simulations pass and you confirm the exact deposit.</p>
+        </div>
+        <p class="v3-status">${V3_MANAGEMENT_ENABLED ? 'Increase liquidity is enabled for preview review. Remove, fee collection, rewards, and close remain disabled.' : 'Position management remains disabled on production during review.'}</p>
       </article>`).join('');
   }
   status.textContent = `Complete public scan · ${payload.coverage?.objectsScanned ?? 0} V3 objects checked · Updated ${new Date(payload.generatedAt).toLocaleTimeString()}`;

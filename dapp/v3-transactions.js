@@ -1,7 +1,7 @@
 import {
   SUI_COIN_TYPE, TREE_DECIMALS, SUI_DECIMALS, DEFAULT_SLIPPAGE_BPS, MIN_SUI_GAS_RESERVE_RAW,
   decimalToRaw, rawToDecimal, ticksFromDisplayedPrices, minimumAfterSlippage, validateVerifiedPool,
-  buildCreateTreeV3Position, extractAddLiquidityEvent, simulationSucceeded,
+  buildCreateTreeV3Position, buildIncreaseTreeV3Position, extractAddLiquidityEvent, simulationSucceeded,
 } from './v3-transaction-core.js';
 
 const PREVIEW_HOST_PATTERN = /^deploy-preview-\d+--tree-token\.netlify\.app$/;
@@ -9,6 +9,8 @@ const EXECUTION_ENABLED = PREVIEW_HOST_PATTERN.test(location.hostname) || ['loca
 const SDK_URL = 'https://esm.run/@mysten/sui@2.23.1/transactions';
 let slippageBps = DEFAULT_SLIPPAGE_BPS;
 let busy = false;
+const increaseBusy = new Set();
+const increaseSlippage = new Map();
 
 function validAddress(value) { return typeof value === 'string' && /^0x[0-9a-f]{64}$/i.test(value) ? value : null; }
 function addressFrom(value, depth = 0) {
@@ -77,7 +79,7 @@ async function waitForFinality(client, digest) {
 }
 function node(...ids) { for (const id of ids) { const found = document.getElementById(id); if (found) return found; } return null; }
 function setStatus(message, kind = '') { const target = node('v3CreateStatus','v3AddStatus','v3Status'); if (!target) return; target.textContent = message; target.classList.remove('ok','error','warning'); if (kind) target.classList.add(kind); }
-async function overview() { const response = await fetch('/api/tree-v3-overview', { headers: { Accept: 'application/json' }, cache: 'no-store' }); if (!response.ok) throw new Error(`V3 overview returned ${response.status}.`); const payload = await response.json(); validateVerifiedPool(payload?.pool); return payload; }
+async function overview(owner = null) { const query = owner ? `?owner=${encodeURIComponent(owner)}` : ''; const response = await fetch(`/api/tree-v3-overview${query}`, { headers: { Accept: 'application/json' }, cache: 'no-store' }); if (!response.ok) throw new Error(`V3 overview returned ${response.status}.`); const payload = await response.json(); validateVerifiedPool(payload?.pool); return payload; }
 function createButton() { return node('v3CreatePosition') || document.querySelector('#v3 .v3-disabled-action') || [...document.querySelectorAll('#v3 button')].find((item) => /position transaction builder|create.*position/i.test(item.textContent || '')); }
 function installControls(button) {
   if (!document.getElementById('v3TransactionControls')) {
@@ -100,6 +102,70 @@ function installControls(button) {
 function confirmText(data) {
   return ['Create this SUI/TREE V3 position?','',`Range ticks: ${data.tickLower} to ${data.tickUpper}`,`Maximum TREE supplied: ${rawToDecimal(data.treeRaw,TREE_DECIMALS,6)} TREE`,`Maximum SUI supplied: ${rawToDecimal(data.suiRaw,SUI_DECIMALS,9)} SUI`,`Simulated TREE deposit: ${rawToDecimal(data.preliminary.treeRaw,TREE_DECIMALS,6)} TREE`,`Simulated SUI deposit: ${rawToDecimal(data.preliminary.suiRaw,SUI_DECIMALS,9)} SUI`,`Minimum TREE deposit: ${rawToDecimal(data.minTreeRaw,TREE_DECIMALS,6)} TREE`,`Minimum SUI deposit: ${rawToDecimal(data.minSuiRaw,SUI_DECIMALS,9)} SUI`,`Slippage: ${(slippageBps/100).toFixed(2)}%`,'','The exact transaction was simulated again before this wallet request.'].join('\n');
 }
+function increasePanel(positionId) { return [...document.querySelectorAll('[data-v3-increase-panel]')].find((panel) => panel.dataset.v3IncreasePanel === positionId) || null; }
+function setIncreaseStatus(panel, message, kind = '') { const target = panel?.querySelector('[data-v3-increase-status]'); if (!target) return; target.textContent = message; target.classList.remove('ok','error','warning'); if (kind) target.classList.add(kind); }
+function increaseConfirmText(data) {
+  return ['Increase this SUI/TREE V3 position?','',`Position: ${data.positionId}`,`Maximum TREE supplied: ${rawToDecimal(data.treeRaw,TREE_DECIMALS,6)} TREE`,`Maximum SUI supplied: ${rawToDecimal(data.suiRaw,SUI_DECIMALS,9)} SUI`,`Simulated TREE deposit: ${rawToDecimal(data.preliminary.treeRaw,TREE_DECIMALS,6)} TREE`,`Simulated SUI deposit: ${rawToDecimal(data.preliminary.suiRaw,SUI_DECIMALS,9)} SUI`,`Minimum TREE deposit: ${rawToDecimal(data.minTreeRaw,TREE_DECIMALS,6)} TREE`,`Minimum SUI deposit: ${rawToDecimal(data.minSuiRaw,SUI_DECIMALS,9)} SUI`,`Slippage: ${(data.slippage/100).toFixed(2)}%`,'','The exact increase transaction was simulated again before this wallet request.'].join('\n');
+}
+async function increasePosition(positionId, panel, button) {
+  if (increaseBusy.has(positionId)) return;
+  increaseBusy.add(positionId); button.disabled = true;
+  try {
+    if (!EXECUTION_ENABLED) throw new Error('V3 position management is disabled on production during review.');
+    const owner = await connectedAddress(); if (!owner) throw new Error('Connect a Sui wallet before increasing a position.');
+    const client = await suiClient(); const data = await overview(owner);
+    const position = Array.isArray(data.positions) ? data.positions.find((item) => item.objectId === positionId) : null;
+    if (!position || validAddress(data.owner)?.toLowerCase() !== owner.toLowerCase()) throw new Error('This verified position is not owned by the connected wallet.');
+    const suiRaw = decimalToRaw(panel.querySelector('[data-v3-increase-sui]')?.value, SUI_DECIMALS);
+    const treeRaw = decimalToRaw(panel.querySelector('[data-v3-increase-tree]')?.value, TREE_DECIMALS);
+    const balanceResult = await client.core.getBalance({ owner, coinType: SUI_COIN_TYPE });
+    const suiBalance = BigInt(balanceResult?.balance?.balance ?? balanceResult?.balance ?? balanceResult?.totalBalance ?? 0);
+    if (suiBalance < suiRaw + MIN_SUI_GAS_RESERVE_RAW) throw new Error('Keep at least 0.05 SUI available for gas after the increase deposit.');
+    const { Transaction } = await import(SDK_URL);
+    setIncreaseStatus(panel,'Building and simulating the proposed liquidity increase…','warning');
+    const preliminaryTx = await buildIncreaseTreeV3Position({ Transaction, client, owner, positionId, treeRaw, suiRaw });
+    const preliminarySimulation = await simulate(client, preliminaryTx);
+    if (!simulationSucceeded(preliminarySimulation)) throw new Error('The proposed liquidity increase failed Sui Mainnet simulation.');
+    const preliminary = extractAddLiquidityEvent(preliminarySimulation, positionId);
+    if (!preliminary) throw new Error('SuiDex did not return verified increase amounts during simulation.');
+    const selectedSlippage = increaseSlippage.get(positionId) ?? 50;
+    const minTreeRaw = minimumAfterSlippage(preliminary.treeRaw, selectedSlippage);
+    const minSuiRaw = minimumAfterSlippage(preliminary.suiRaw, selectedSlippage);
+    const finalTx = await buildIncreaseTreeV3Position({ Transaction, client, owner, positionId, treeRaw, suiRaw, minTreeRaw, minSuiRaw });
+    const finalSimulation = await simulate(client, finalTx);
+    if (!simulationSucceeded(finalSimulation) || !extractAddLiquidityEvent(finalSimulation, positionId)) throw new Error('The slippage-protected increase failed Sui Mainnet simulation.');
+    if (!window.confirm(increaseConfirmText({ positionId, treeRaw, suiRaw, minTreeRaw, minSuiRaw, preliminary, slippage: selectedSlippage }))) { setIncreaseStatus(panel,'Liquidity increase cancelled before wallet approval.'); return; }
+    setIncreaseStatus(panel,'Review the exact SUI/TREE increase in your wallet…','warning');
+    const signed = await signAndExecute(finalTx); const digest = digestFrom(signed);
+    setIncreaseStatus(panel,'Wallet approved. Waiting for Sui finality…','warning');
+    const finalized = await waitForFinality(client, digest); if (!simulationSucceeded(finalized)) throw new Error('The submitted increase did not finalize successfully.');
+    setIncreaseStatus(panel,`Liquidity increased successfully. Digest: ${digest}`,'ok');
+    node('v3RefreshPositions')?.click();
+  } catch (error) {
+    const message = String(error?.message || error || 'V3 liquidity increase failed.');
+    setIncreaseStatus(panel,message,/reject|cancel|denied/i.test(message)?'':'error');
+  } finally { increaseBusy.delete(positionId); button.disabled = !EXECUTION_ENABLED; }
+}
+function bindIncreaseActions() {
+  document.addEventListener('click', (event) => {
+    const openButton = event.target.closest?.('[data-v3-increase-position]');
+    if (openButton) {
+      const positionId = openButton.dataset.v3IncreasePosition; const panel = increasePanel(positionId); if (!panel) return;
+      panel.hidden = !panel.hidden; openButton.textContent = panel.hidden ? 'Increase' : 'Cancel Increase';
+      if (!panel.hidden) setIncreaseStatus(panel,'Enter maximum token amounts. Two Mainnet simulations run before wallet approval.');
+      return;
+    }
+    const slippageButton = event.target.closest?.('[data-v3-increase-slippage]');
+    if (slippageButton) {
+      const panel = slippageButton.closest('[data-v3-increase-panel]'); const positionId = panel?.dataset.v3IncreasePanel; if (!positionId) return;
+      increaseSlippage.set(positionId, Number(slippageButton.dataset.v3IncreaseSlippage));
+      panel.querySelectorAll('[data-v3-increase-slippage]').forEach((item) => item.classList.toggle('active', item === slippageButton));
+      return;
+    }
+    const submitButton = event.target.closest?.('[data-v3-increase-submit]');
+    if (submitButton) { const positionId = submitButton.dataset.v3IncreaseSubmit; const panel = increasePanel(positionId); if (panel) increasePosition(positionId, panel, submitButton); }
+  });
+}
 async function createPosition(button) {
   if (busy) return; busy = true; button.disabled = true;
   try {
@@ -121,12 +187,13 @@ async function createPosition(button) {
     const finalSimulation = await simulate(client, finalTx); if (!simulationSucceeded(finalSimulation)) throw new Error('The slippage-protected V3 transaction failed Sui Mainnet simulation.');
     if (!window.confirm(confirmText({ tickLower, tickUpper, treeRaw, suiRaw, minTreeRaw, minSuiRaw, preliminary }))) { setStatus('Position creation cancelled before wallet approval.'); return; }
     setStatus('Review the exact SUI/TREE position transaction in your wallet…','warning'); const signed = await signAndExecute(finalTx); const digest = digestFrom(signed);
-    setStatus('Wallet approved. Waiting for Sui finality…','warning'); const finalized = await waitForFinality(client, digest); if (finalized?.effects && !simulationSucceeded(finalized)) throw new Error('The submitted V3 transaction did not finalize successfully.');
+    setStatus('Wallet approved. Waiting for Sui finality…','warning'); const finalized = await waitForFinality(client, digest); if (!simulationSucceeded(finalized)) throw new Error('The submitted V3 transaction did not finalize successfully.');
     setStatus(`Position created successfully. Digest: ${digest}`,'ok'); document.querySelector('[data-v3-tab="positions"],[data-v3-panel-target="positions"]')?.click(); node('v3RefreshPositions')?.click();
   } catch (error) { const message = String(error?.message || error || 'V3 position creation failed.'); setStatus(message,/reject|cancel|denied/i.test(message)?'':'error'); }
   finally { busy = false; button.disabled = !EXECUTION_ENABLED; }
 }
 function initialize() {
+  bindIncreaseActions();
   const activate = () => { const button = createButton(); if (!button || button.dataset.v3TransactionsReady === 'true') return false; installControls(button); button.addEventListener('click', () => createPosition(button)); return true; };
   if (activate()) return; const observer = new MutationObserver(() => { if (activate()) observer.disconnect(); }); observer.observe(document.documentElement,{childList:true,subtree:true}); setTimeout(() => observer.disconnect(),30000);
 }

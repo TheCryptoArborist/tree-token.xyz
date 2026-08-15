@@ -3,7 +3,7 @@ import {
   TREE_COIN_TYPE, SUI_COIN_TYPE, SUIDEX_V3_PACKAGE, SUIDEX_V3_POOL, SUIDEX_V3_VERSION,
   TREE_V3_TICK_SPACING, normalizeDecimalInput, decimalToRaw, encodeSignedI32, decodeSignedI32,
   ticksFromDisplayedPrices, minimumAfterSlippage, validateVerifiedPool, buildCreateTreeV3Position,
-  simulationSucceeded, extractAddLiquidityEvent,
+  buildIncreaseTreeV3Position, assertAllowedIncreaseV3Transaction, simulationSucceeded, extractAddLiquidityEvent,
 } from '../dapp/v3-transaction-core.js';
 
 assert.equal(normalizeDecimalInput('.1'), '0.1');
@@ -42,6 +42,14 @@ assert.deepEqual(calls[3].typeArguments, [SUI_COIN_TYPE, TREE_COIN_TYPE]); asser
 assert.ok(calls.every((call) => [SUIDEX_V3_PACKAGE].includes(call.package)));
 const transfers = tx.commands.filter((command) => command.$kind === 'TransferObjects');
 assert.ok(transfers.some((command) => command.TransferObjects.objects.some((item) => item?.result === 'liquidity::open_position')));
+const positionId = `0x${'3'.repeat(64)}`;
+const increaseTx = await buildIncreaseTreeV3Position({ Transaction: MockTransaction, client, owner, positionId, treeRaw: 1_000_000n, suiRaw: 100_000_000n, minTreeRaw: 995_000n, minSuiRaw: 99_500_000n });
+const increaseCalls = increaseTx.commands.filter((command) => command.$kind === 'MoveCall').map((command) => command.MoveCall);
+assert.deepEqual(increaseCalls.map((call) => `${call.module}::${call.function}`), ['liquidity::add_liquidity']);
+assert.equal(increaseCalls[0].arguments[1].object, positionId);
+assert.equal(increaseCalls[0].arguments[4].value, 99_500_000n);
+assert.equal(increaseCalls[0].arguments[5].value, 995_000n);
+assert.equal(assertAllowedIncreaseV3Transaction(increaseTx), true);
 const simulation = {
   $kind: 'Transaction',
   Transaction: {
@@ -54,4 +62,7 @@ const simulation = {
 };
 assert.equal(simulationSucceeded(simulation), true);
 assert.deepEqual(extractAddLiquidityEvent(simulation), { suiRaw: 100_000_000n, treeRaw: 1_000_000n, liquidityRaw: 123n });
+simulation.Transaction.events[0].json.position_id = positionId;
+assert.deepEqual(extractAddLiquidityEvent(simulation, positionId), { suiRaw: 100_000_000n, treeRaw: 1_000_000n, liquidityRaw: 123n });
+assert.equal(extractAddLiquidityEvent(simulation, `0x${'4'.repeat(64)}`), null);
 console.log('V3 transaction core tests passed.');
