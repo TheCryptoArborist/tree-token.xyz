@@ -87,7 +87,13 @@ function installControls(button) {
   }
   button.id = 'v3CreatePosition'; button.dataset.v3TransactionsReady = 'true'; button.disabled = !EXECUTION_ENABLED;
   button.textContent = EXECUTION_ENABLED ? 'Create SUI/TREE V3 Position' : 'V3 position execution under review';
-  if (EXECUTION_ENABLED) { button.classList.remove('secondary'); button.classList.add('primary'); setStatus('Preview mode: every position transaction is simulated twice before wallet approval.'); }
+  if (EXECUTION_ENABLED) {
+    const phaseBadge = document.querySelector('#v3 .section-heading .data-state');
+    const plannerNote = document.querySelector('#v3 .v3-add-card .v3-status');
+    if (phaseBadge) phaseBadge.textContent = 'Preview transaction review';
+    if (plannerNote) plannerNote.textContent = 'Preview builder enabled. Nothing is signed or submitted until you approve the final wallet request.';
+    button.classList.remove('secondary'); button.classList.add('primary'); setStatus('Preview mode: every position transaction is simulated twice before wallet approval.');
+  }
   else setStatus('Native V3 position execution remains disabled on production during review.');
 }
 function confirmText(data) {
