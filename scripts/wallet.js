@@ -3,7 +3,7 @@
 import {
   getWallets,
   signAndExecuteTransaction as walletSignAndExecuteTransaction,
-} from 'https://esm.run/@mysten/wallet-standard@0.21.3';
+} from 'https://esm.run/@mysten/wallet-standard@0.21.14';
 import { SuiGrpcClient } from 'https://esm.run/@mysten/sui@2.23.1/grpc';
 import {
   SUI_MAINNET_CHAIN,
@@ -22,8 +22,9 @@ const NETWORK = 'mainnet';
 const CHAIN = SUI_MAINNET_CHAIN;
 const RPC_URL = 'https://fullnode.mainnet.sui.io:443';
 const SESSION_TTL_MS = 60 * 60 * 1000;
-const WALLET_STANDARD_URL = 'https://esm.run/@mysten/wallet-standard@0.21.3';
-const SLUSH_WALLET_URL = 'https://esm.run/@mysten/slush-wallet@1.1.8';
+const WALLET_STANDARD_URL = 'https://esm.run/@mysten/wallet-standard@0.21.14';
+const SLUSH_WALLET_URL = 'https://esm.run/@mysten/slush-wallet@1.1.14';
+const WALLET_CONNECT_TIMEOUT_MS = 12_000;
 const SESSION_KEYS = {
   address: 'tree:sui:address',
   walletKey: 'tree:sui:wallet-key',
@@ -203,6 +204,17 @@ async function _compatibleWallets() {
   return compatibleSuiWallets(registry.get(), saved?.walletKey || '');
 }
 
+async function _requestWalletConnection(wallet, connect) {
+  let timeoutId;
+  const timeout = new Promise((_, reject) => {
+    timeoutId = setTimeout(() => {
+      reject(new Error(isSlushWallet(wallet) ? 'SLUSH_CONNECT_TIMEOUT' : 'WALLET_CONNECT_TIMEOUT'));
+    }, WALLET_CONNECT_TIMEOUT_MS);
+  });
+  try { return await Promise.race([connect(), timeout]); }
+  finally { clearTimeout(timeoutId); }
+}
+
 async function _connectToWallet(wallet, preferredAddress = null) {
   if (!wallet || getSuiSignFeature(wallet) === null) throw new Error('Wallet does not support Sui transaction signing.');
   if (_wallet && walletKey(_wallet) !== walletKey(wallet)) await disconnectWallet({ reason: 'switch-wallet' });
@@ -210,7 +222,7 @@ async function _connectToWallet(wallet, preferredAddress = null) {
   const connectFeature = wallet.features?.['standard:connect'];
   if (!connectFeature?.connect) throw new Error('This wallet does not expose a connection request.');
 
-  const result = await connectFeature.connect();
+  const result = await _requestWalletConnection(wallet, () => connectFeature.connect());
   const accounts = Array.isArray(result?.accounts) && result.accounts.length
     ? result.accounts
     : wallet.accounts;
@@ -418,6 +430,10 @@ async function _renderPicker() {
       } catch (error) {
         const message = error?.message === 'WRONG_NETWORK'
           ? 'Switch the wallet to Sui Mainnet and try again.'
+          : error?.message === 'SLUSH_CONNECT_TIMEOUT'
+            ? 'Slush did not open a connection window. Use “Open this site in Slush” below, or unlock the Slush extension and refresh the wallet list.'
+            : error?.message === 'WALLET_CONNECT_TIMEOUT'
+              ? `${wallet.name} did not respond. Unlock the wallet extension, refresh the wallet list, and try again.`
           : error?.message || 'Wallet connection failed.';
         _setManagerStatus(message, 'error');
         button.disabled = false;
