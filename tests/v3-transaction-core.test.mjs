@@ -1,11 +1,12 @@
 import assert from 'node:assert/strict';
 import {
-  TREE_COIN_TYPE, SUI_COIN_TYPE, SUIDEX_V3_PACKAGE, SUIDEX_V3_POOL, SUIDEX_V3_VERSION,
+  TREE_COIN_TYPE, SUI_COIN_TYPE, SUIDEX_V3_PACKAGE, SUIDEX_V3_POOL, SUIDEX_V3_VERSION, TREE_V3_REWARD_TOKENS,
   TREE_V3_TICK_SPACING, normalizeDecimalInput, decimalToRaw, encodeSignedI32, decodeSignedI32,
   ticksFromDisplayedPrices, minimumAfterSlippage, validateVerifiedPool, buildCreateTreeV3Position,
-  buildIncreaseTreeV3Position, buildRemoveTreeV3Position, buildCollectTreeV3Fees, assertAllowedIncreaseV3Transaction,
-  assertAllowedRemoveV3Transaction, assertAllowedCollectFeeV3Transaction, simulationSucceeded,
-  extractAddLiquidityEvent, extractRemoveLiquidityEvent, extractFeeCollectedEvent,
+  buildIncreaseTreeV3Position, buildRemoveTreeV3Position, buildCollectTreeV3Fees, buildCollectTreeV3Rewards,
+  assertAllowedIncreaseV3Transaction, assertAllowedRemoveV3Transaction, assertAllowedCollectFeeV3Transaction,
+  assertAllowedCollectRewardV3Transaction, simulationSucceeded,
+  extractAddLiquidityEvent, extractRemoveLiquidityEvent, extractFeeCollectedEvent, extractRewardCollectedEvents,
 } from '../dapp/v3-transaction-core.js';
 
 assert.equal(normalizeDecimalInput('.1'), '0.1');
@@ -30,7 +31,7 @@ class MockTransaction {
   mergeCoins(primary, others) { this.commands.push({ $kind: 'MergeCoins', MergeCoins: { primary, others } }); }
   splitCoins(coin, amounts) { const result = [{ split: ++next, coin, amounts }]; this.commands.push({ $kind: 'SplitCoins', SplitCoins: { coin, amounts } }); return result; }
   transferObjects(objects, owner) { this.commands.push({ $kind: 'TransferObjects', TransferObjects: { objects, owner } }); }
-  moveCall(call) { const [pkg, module, fn] = call.target.split('::'); this.commands.push({ $kind: 'MoveCall', MoveCall: { package: pkg, module, function: fn, ...call } }); if (fn === 'add_liquidity') return [{ result: 'sui-left' }, { result: 'tree-left' }]; if (fn === 'remove_liquidity') return [{ result: 'sui-out' }, { result: 'tree-out' }]; if (module === 'collect' && fn === 'fee') return [{ result: 'sui-fee' }, { result: 'tree-fee' }]; return { result: `${module}::${fn}` }; }
+  moveCall(call) { const [pkg, module, fn] = call.target.split('::'); this.commands.push({ $kind: 'MoveCall', MoveCall: { package: pkg, module, function: fn, ...call } }); if (fn === 'add_liquidity') return [{ result: 'sui-left' }, { result: 'tree-left' }]; if (fn === 'remove_liquidity') return [{ result: 'sui-out' }, { result: 'tree-out' }]; if (module === 'collect' && fn === 'fee') return [{ result: 'sui-fee' }, { result: 'tree-fee' }]; if (module === 'collect' && fn === 'reward') return { result: `reward-${call.typeArguments[2]}` }; return { result: `${module}::${fn}` }; }
   getData() { return { commands: this.commands }; }
 }
 const owner = `0x${'1'.repeat(64)}`;
@@ -66,6 +67,12 @@ assert.deepEqual(collectFeeCalls.map((call) => `${call.module}::${call.function}
 assert.deepEqual(collectFeeCalls[0].typeArguments, [SUI_COIN_TYPE, TREE_COIN_TYPE]);
 assert.equal(collectFeeCalls[0].arguments[1].object, positionId);
 assert.equal(assertAllowedCollectFeeV3Transaction(collectFeeTx), true);
+const collectRewardTx = buildCollectTreeV3Rewards({ Transaction: MockTransaction, owner, positionId });
+const collectRewardCalls = collectRewardTx.commands.filter((command) => command.$kind === 'MoveCall').map((command) => command.MoveCall);
+assert.deepEqual(collectRewardCalls.map((call) => `${call.module}::${call.function}`), ['collect::reward','collect::reward','collect::reward']);
+assert.deepEqual(collectRewardCalls.map((call) => call.typeArguments[2]), TREE_V3_REWARD_TOKENS.map((token) => token.coinType));
+assert.equal(assertAllowedCollectRewardV3Transaction(collectRewardTx), true);
+assert.throws(() => buildCollectTreeV3Rewards({ Transaction: MockTransaction, owner, positionId, rewardCoinTypes: ['0x2::sui::SUI'] }), /Invalid verified/);
 const simulation = {
   $kind: 'Transaction',
   Transaction: {
@@ -95,4 +102,11 @@ assert.deepEqual(extractFeeCollectedEvent(simulation, positionId), { suiRaw: 20n
 simulation.Transaction.events[0].json.amount_x = '0'; simulation.Transaction.events[0].json.amount_y = '0';
 assert.deepEqual(extractFeeCollectedEvent(simulation, positionId), { suiRaw: 0n, treeRaw: 0n });
 assert.equal(extractFeeCollectedEvent(simulation, `0x${'4'.repeat(64)}`), null);
+simulation.Transaction.events = TREE_V3_REWARD_TOKENS.map((token, index) => ({
+  eventType: `${SUIDEX_V3_PACKAGE}::collect::CollectPoolRewardEvent`,
+  json: { pool_id: SUIDEX_V3_POOL, position_id: positionId, reward_coin_type: token.coinType, amount: index === 0 ? '23447' : '0' },
+}));
+assert.deepEqual(extractRewardCollectedEvents(simulation, positionId).map((reward) => reward.amountRaw), [23_447n, 0n, 0n]);
+assert.deepEqual(extractRewardCollectedEvents(simulation, positionId)[0], { ...TREE_V3_REWARD_TOKENS[0], amountRaw: 23_447n });
+assert.deepEqual(extractRewardCollectedEvents(simulation, `0x${'4'.repeat(64)}`), []);
 console.log('V3 transaction core tests passed.');

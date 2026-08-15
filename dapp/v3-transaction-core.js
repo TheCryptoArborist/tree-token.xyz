@@ -9,6 +9,11 @@ export const TREE_DECIMALS = 6;
 export const TREE_V3_TICK_SPACING = 60;
 export const DEFAULT_SLIPPAGE_BPS = 100;
 export const MIN_SUI_GAS_RESERVE_RAW = 50_000_000n;
+export const TREE_V3_REWARD_TOKENS = Object.freeze([
+  Object.freeze({ coinType: '0xbfac5e1c6bf6ef29b12f7723857695fd2f4da9a11a7d88162c15e9124c243a4a::victory_token::VICTORY_TOKEN', symbol: 'VICTORY', decimals: 6 }),
+  Object.freeze({ coinType: TREE_COIN_TYPE, symbol: 'TREE', decimals: TREE_DECIMALS }),
+  Object.freeze({ coinType: '0xaafb102dd0902f5055cadecd687fb5b71ca82ef0e0285d90afde828ec58ca96b::btc::BTC', symbol: 'wBTC', decimals: 8 }),
+]);
 
 const U32_MODULUS = 0x1_0000_0000;
 const MIN_TICK = -443_636;
@@ -203,6 +208,27 @@ export function assertAllowedCollectFeeV3Transaction(transaction) {
   return true;
 }
 
+export function assertAllowedCollectRewardV3Transaction(transaction) {
+  const commands = transaction?.getData?.().commands || [];
+  const calls = commands.flatMap((command) => command?.MoveCall ? [command.MoveCall] : command?.$kind === 'MoveCall' ? [command.MoveCall] : []);
+  if (calls.length < 1 || calls.length > TREE_V3_REWARD_TOKENS.length) throw new Error('Unexpected V3 reward collection Move-call count.');
+  const allowedRewards = new Set(TREE_V3_REWARD_TOKENS.map((token) => normalizedCoinType(token.coinType)));
+  const seenRewards = new Set();
+  for (const call of calls) {
+    const target = call.target || `${call.package}::${call.module}::${call.function}`;
+    const parts = target.split('::');
+    if (normalizedAddress(parts[0]) !== normalizedAddress(SUIDEX_V3_PACKAGE)
+      || `${parts[1]}::${parts[2]}` !== 'collect::reward') throw new Error(`Move call is not allowlisted: ${target}`);
+    const types = call.typeArguments || [];
+    const rewardType = normalizedCoinType(types[2]);
+    if (normalizedCoinType(types[0]) !== normalizedCoinType(SUI_COIN_TYPE)
+      || normalizedCoinType(types[1]) !== normalizedCoinType(TREE_COIN_TYPE)
+      || !allowedRewards.has(rewardType) || seenRewards.has(rewardType)) throw new Error('Unexpected V3 reward collection type arguments.');
+    seenRewards.add(rewardType);
+  }
+  return true;
+}
+
 export async function buildCreateTreeV3Position({
   Transaction,
   client,
@@ -353,6 +379,37 @@ export function buildCollectTreeV3Fees({ Transaction, owner, positionId }) {
   return transaction;
 }
 
+export function buildCollectTreeV3Rewards({
+  Transaction,
+  owner,
+  positionId,
+  rewardCoinTypes = TREE_V3_REWARD_TOKENS.map((token) => token.coinType),
+}) {
+  if (typeof Transaction !== 'function') throw new Error('Sui transaction dependencies are unavailable.');
+  if (!normalizedAddress(owner)) throw new Error('A valid Sui owner address is required.');
+  if (!normalizedAddress(positionId)) throw new Error('A valid SuiDex V3 position ID is required.');
+  const allowedRewards = new Set(TREE_V3_REWARD_TOKENS.map((token) => normalizedCoinType(token.coinType)));
+  const normalizedRewards = rewardCoinTypes.map((coinType) => normalizedCoinType(coinType));
+  if (!normalizedRewards.length || normalizedRewards.length > allowedRewards.size
+    || new Set(normalizedRewards).size !== normalizedRewards.length
+    || normalizedRewards.some((coinType) => !allowedRewards.has(coinType))) throw new Error('Invalid verified V3 reward token selection.');
+  const transaction = new Transaction();
+  transaction.setSender(owner);
+  for (const rewardCoinType of rewardCoinTypes) {
+    const rewardCoin = transaction.moveCall({
+      target: `${SUIDEX_V3_PACKAGE}::collect::reward`,
+      typeArguments: [SUI_COIN_TYPE, TREE_COIN_TYPE, rewardCoinType],
+      arguments: [
+        transaction.object(SUIDEX_V3_POOL), transaction.object(positionId),
+        transaction.object(SUI_CLOCK), transaction.object(SUIDEX_V3_VERSION),
+      ],
+    });
+    transaction.transferObjects([rewardCoin], transaction.pure.address(owner));
+  }
+  assertAllowedCollectRewardV3Transaction(transaction);
+  return transaction;
+}
+
 function simulationTransaction(value) {
   return value?.Transaction || value?.transaction || value?.result?.Transaction || value;
 }
@@ -411,4 +468,23 @@ export function extractFeeCollectedEvent(value, expectedPositionId = null) {
   } catch {
     return null;
   }
+}
+
+export function extractRewardCollectedEvents(value, expectedPositionId = null) {
+  const transaction = simulationTransaction(value);
+  const events = transaction?.events || value?.events || [];
+  const tokenByType = new Map(TREE_V3_REWARD_TOKENS.map((token) => [normalizedCoinType(token.coinType), token]));
+  const rewards = [];
+  for (const event of events) {
+    if (!String(event?.eventType || event?.type || '').endsWith('::collect::CollectPoolRewardEvent')) continue;
+    const json = event?.json || event?.parsedJson || event?.parsed_json;
+    const token = tokenByType.get(normalizedCoinType(json?.reward_coin_type));
+    if (!json || !token || normalizedAddress(json.pool_id) !== normalizedAddress(SUIDEX_V3_POOL)
+      || (expectedPositionId && normalizedAddress(json.position_id) !== normalizedAddress(expectedPositionId))) continue;
+    try {
+      const amountRaw = BigInt(json.amount);
+      if (amountRaw >= 0n) rewards.push({ coinType: token.coinType, symbol: token.symbol, decimals: token.decimals, amountRaw });
+    } catch { }
+  }
+  return rewards;
 }

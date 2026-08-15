@@ -1,8 +1,8 @@
 import {
-  SUI_COIN_TYPE, TREE_DECIMALS, SUI_DECIMALS, DEFAULT_SLIPPAGE_BPS, MIN_SUI_GAS_RESERVE_RAW,
+  SUI_COIN_TYPE, TREE_DECIMALS, SUI_DECIMALS, DEFAULT_SLIPPAGE_BPS, MIN_SUI_GAS_RESERVE_RAW, TREE_V3_REWARD_TOKENS,
   decimalToRaw, rawToDecimal, ticksFromDisplayedPrices, minimumAfterSlippage, validateVerifiedPool,
-  buildCreateTreeV3Position, buildIncreaseTreeV3Position, buildRemoveTreeV3Position, buildCollectTreeV3Fees,
-  extractAddLiquidityEvent, extractRemoveLiquidityEvent, extractFeeCollectedEvent, simulationSucceeded,
+  buildCreateTreeV3Position, buildIncreaseTreeV3Position, buildRemoveTreeV3Position, buildCollectTreeV3Fees, buildCollectTreeV3Rewards,
+  extractAddLiquidityEvent, extractRemoveLiquidityEvent, extractFeeCollectedEvent, extractRewardCollectedEvents, simulationSucceeded,
 } from './v3-transaction-core.js';
 
 const PREVIEW_HOST_PATTERN = /^deploy-preview-\d+--tree-token\.netlify\.app$/;
@@ -16,6 +16,7 @@ const removeBusy = new Set();
 const removePercentage = new Map();
 const removeSlippage = new Map();
 const feeBusy = new Set();
+const rewardBusy = new Set();
 
 function validAddress(value) { return typeof value === 'string' && /^0x[0-9a-f]{64}$/i.test(value) ? value : null; }
 function addressFrom(value, depth = 0) {
@@ -121,6 +122,12 @@ function feePanel(positionId) { return [...document.querySelectorAll('[data-v3-f
 function setFeeStatus(panel, message, kind = '') { const target = panel?.querySelector('[data-v3-fee-status]'); if (!target) return; target.textContent = message; target.classList.remove('ok','error','warning'); if (kind) target.classList.add(kind); }
 function feeConfirmText(data) {
   return ['Collect all available fees from this SUI/TREE V3 position?','',`Position: ${data.positionId}`,`Verified SUI fees: ${rawToDecimal(data.suiRaw,SUI_DECIMALS,9)} SUI`,`Verified TREE fees: ${rawToDecimal(data.treeRaw,TREE_DECIMALS,6)} TREE`,'','The exact fee-collection call was simulated twice. Network gas is still charged.'].join('\n');
+}
+function rewardPanel(positionId) { return [...document.querySelectorAll('[data-v3-reward-panel]')].find((panel) => panel.dataset.v3RewardPanel === positionId) || null; }
+function setRewardStatus(panel, message, kind = '') { const target = panel?.querySelector('[data-v3-reward-status]'); if (!target) return; target.textContent = message; target.classList.remove('ok','error','warning'); if (kind) target.classList.add(kind); }
+function rewardSummary(rewards) { return rewards.map((reward) => `${rawToDecimal(reward.amountRaw,reward.decimals,reward.decimals)} ${reward.symbol}`).join(', '); }
+function rewardConfirmText(data) {
+  return ['Claim verified rewards from this SUI/TREE V3 position?','',`Position: ${data.positionId}`,...data.rewards.map((reward) => `${reward.symbol}: ${rawToDecimal(reward.amountRaw,reward.decimals,reward.decimals)}`),'','Only reward types with a positive simulation result are included. Network gas is still charged.'].join('\n');
 }
 async function increasePosition(positionId, panel, button) {
   if (increaseBusy.has(positionId)) return;
@@ -243,6 +250,48 @@ async function collectFees(positionId, panel, button) {
     setFeeStatus(panel,message,/reject|cancel|denied/i.test(message)?'':'error');
   } finally { feeBusy.delete(positionId); button.disabled = !EXECUTION_ENABLED; }
 }
+async function collectRewards(positionId, panel, button) {
+  if (rewardBusy.has(positionId)) return;
+  rewardBusy.add(positionId); button.disabled = true;
+  try {
+    if (!EXECUTION_ENABLED) throw new Error('V3 position management is disabled on production during review.');
+    const owner = await connectedAddress(); if (!owner) throw new Error('Connect a Sui wallet before claiming rewards.');
+    const client = await suiClient(); const data = await overview(owner);
+    const position = Array.isArray(data.positions) ? data.positions.find((item) => item.objectId === positionId) : null;
+    if (!position || validAddress(data.owner)?.toLowerCase() !== owner.toLowerCase()) throw new Error('This verified position is not owned by the connected wallet.');
+    const balanceResult = await client.core.getBalance({ owner, coinType: SUI_COIN_TYPE });
+    const suiBalance = BigInt(balanceResult?.balance?.balance ?? balanceResult?.balance ?? balanceResult?.totalBalance ?? 0);
+    if (suiBalance < MIN_SUI_GAS_RESERVE_RAW) throw new Error('Keep at least 0.05 SUI available for reward-claim gas.');
+    const { Transaction } = await import(SDK_URL);
+    setRewardStatus(panel,'Checking VICTORY, TREE, and wBTC rewards on Mainnet…','warning');
+    const preliminaryTx = buildCollectTreeV3Rewards({ Transaction, owner, positionId });
+    const preliminarySimulation = await simulate(client, preliminaryTx);
+    const preliminary = extractRewardCollectedEvents(preliminarySimulation, positionId);
+    if (!simulationSucceeded(preliminarySimulation) || preliminary.length !== TREE_V3_REWARD_TOKENS.length) throw new Error('The proposed reward claim did not verify every recognized pool reward.');
+    const positiveRewards = preliminary.filter((reward) => reward.amountRaw > 0n);
+    if (!positiveRewards.length) {
+      setRewardStatus(panel,'No verified VICTORY, TREE, or wBTC rewards are claimable right now. No wallet request was made.','ok');
+      return;
+    }
+    const rewardCoinTypes = positiveRewards.map((reward) => reward.coinType);
+    const finalTx = buildCollectTreeV3Rewards({ Transaction, owner, positionId, rewardCoinTypes });
+    const finalSimulation = await simulate(client, finalTx);
+    const verified = extractRewardCollectedEvents(finalSimulation, positionId);
+    if (!simulationSucceeded(finalSimulation) || verified.length !== rewardCoinTypes.length
+      || verified.some((reward) => reward.amountRaw <= 0n || !rewardCoinTypes.includes(reward.coinType))) throw new Error('The optimized reward claim failed its second Mainnet simulation.');
+    if (!window.confirm(rewardConfirmText({ positionId, rewards: verified }))) { setRewardStatus(panel,'Reward claim cancelled before wallet approval.'); return; }
+    setRewardStatus(panel,`Review the ${rewardSummary(verified)} reward claim in your wallet…`,'warning');
+    const signed = await signAndExecute(finalTx); const digest = digestFrom(signed);
+    setRewardStatus(panel,'Wallet approved. Waiting for Sui finality…','warning');
+    const finalized = await waitForFinality(client, digest); const claimed = extractRewardCollectedEvents(finalized, positionId);
+    if (!simulationSucceeded(finalized) || claimed.length !== rewardCoinTypes.length) throw new Error('The submitted reward claim did not finalize with the expected events.');
+    setRewardStatus(panel,`Rewards claimed successfully: ${rewardSummary(claimed)}. Digest: ${digest}`,'ok');
+    node('v3RefreshPositions')?.click();
+  } catch (error) {
+    const message = String(error?.message || error || 'V3 reward claim failed.');
+    setRewardStatus(panel,message,/reject|cancel|denied/i.test(message)?'':'error');
+  } finally { rewardBusy.delete(positionId); button.disabled = !EXECUTION_ENABLED; }
+}
 function bindIncreaseActions() {
   document.addEventListener('click', (event) => {
     const openButton = event.target.closest?.('[data-v3-increase-position]');
@@ -264,6 +313,13 @@ function bindIncreaseActions() {
       const positionId = feeButton.dataset.v3CollectFeesPosition; const panel = feePanel(positionId); if (!panel) return;
       panel.hidden = !panel.hidden; feeButton.textContent = panel.hidden ? 'Collect Fees' : 'Cancel Fees';
       if (!panel.hidden) setFeeStatus(panel,'Simulate to check current SUI and TREE fees. Zero fees will never open a wallet request.');
+      return;
+    }
+    const rewardButton = event.target.closest?.('[data-v3-claim-rewards-position]');
+    if (rewardButton) {
+      const positionId = rewardButton.dataset.v3ClaimRewardsPosition; const panel = rewardPanel(positionId); if (!panel) return;
+      panel.hidden = !panel.hidden; rewardButton.textContent = panel.hidden ? 'Claim Rewards' : 'Cancel Rewards';
+      if (!panel.hidden) setRewardStatus(panel,'Simulate to check the pool’s verified VICTORY, TREE, and wBTC rewards.');
       return;
     }
     const slippageButton = event.target.closest?.('[data-v3-increase-slippage]');
@@ -292,7 +348,9 @@ function bindIncreaseActions() {
     const removeSubmitButton = event.target.closest?.('[data-v3-remove-submit]');
     if (removeSubmitButton) { const positionId = removeSubmitButton.dataset.v3RemoveSubmit; const panel = removePanel(positionId); if (panel) removePosition(positionId, panel, removeSubmitButton); return; }
     const feeSubmitButton = event.target.closest?.('[data-v3-fee-submit]');
-    if (feeSubmitButton) { const positionId = feeSubmitButton.dataset.v3FeeSubmit; const panel = feePanel(positionId); if (panel) collectFees(positionId, panel, feeSubmitButton); }
+    if (feeSubmitButton) { const positionId = feeSubmitButton.dataset.v3FeeSubmit; const panel = feePanel(positionId); if (panel) collectFees(positionId, panel, feeSubmitButton); return; }
+    const rewardSubmitButton = event.target.closest?.('[data-v3-reward-submit]');
+    if (rewardSubmitButton) { const positionId = rewardSubmitButton.dataset.v3RewardSubmit; const panel = rewardPanel(positionId); if (panel) collectRewards(positionId, panel, rewardSubmitButton); }
   });
 }
 async function createPosition(button) {
