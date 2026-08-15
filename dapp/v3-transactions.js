@@ -1,7 +1,8 @@
 import {
   SUI_COIN_TYPE, TREE_DECIMALS, SUI_DECIMALS, DEFAULT_SLIPPAGE_BPS, MIN_SUI_GAS_RESERVE_RAW,
   decimalToRaw, rawToDecimal, ticksFromDisplayedPrices, minimumAfterSlippage, validateVerifiedPool,
-  buildCreateTreeV3Position, buildIncreaseTreeV3Position, extractAddLiquidityEvent, simulationSucceeded,
+  buildCreateTreeV3Position, buildIncreaseTreeV3Position, buildRemoveTreeV3Position,
+  extractAddLiquidityEvent, extractRemoveLiquidityEvent, simulationSucceeded,
 } from './v3-transaction-core.js';
 
 const PREVIEW_HOST_PATTERN = /^deploy-preview-\d+--tree-token\.netlify\.app$/;
@@ -11,6 +12,9 @@ let slippageBps = DEFAULT_SLIPPAGE_BPS;
 let busy = false;
 const increaseBusy = new Set();
 const increaseSlippage = new Map();
+const removeBusy = new Set();
+const removePercentage = new Map();
+const removeSlippage = new Map();
 
 function validAddress(value) { return typeof value === 'string' && /^0x[0-9a-f]{64}$/i.test(value) ? value : null; }
 function addressFrom(value, depth = 0) {
@@ -107,6 +111,11 @@ function setIncreaseStatus(panel, message, kind = '') { const target = panel?.qu
 function increaseConfirmText(data) {
   return ['Increase this SUI/TREE V3 position?','',`Position: ${data.positionId}`,`Maximum TREE supplied: ${rawToDecimal(data.treeRaw,TREE_DECIMALS,6)} TREE`,`Maximum SUI supplied: ${rawToDecimal(data.suiRaw,SUI_DECIMALS,9)} SUI`,`Simulated TREE deposit: ${rawToDecimal(data.preliminary.treeRaw,TREE_DECIMALS,6)} TREE`,`Simulated SUI deposit: ${rawToDecimal(data.preliminary.suiRaw,SUI_DECIMALS,9)} SUI`,`Minimum TREE deposit: ${rawToDecimal(data.minTreeRaw,TREE_DECIMALS,6)} TREE`,`Minimum SUI deposit: ${rawToDecimal(data.minSuiRaw,SUI_DECIMALS,9)} SUI`,`Slippage: ${(data.slippage/100).toFixed(2)}%`,'','The exact increase transaction was simulated again before this wallet request.'].join('\n');
 }
+function removePanel(positionId) { return [...document.querySelectorAll('[data-v3-remove-panel]')].find((panel) => panel.dataset.v3RemovePanel === positionId) || null; }
+function setRemoveStatus(panel, message, kind = '') { const target = panel?.querySelector('[data-v3-remove-status]'); if (!target) return; target.textContent = message; target.classList.remove('ok','error','warning'); if (kind) target.classList.add(kind); }
+function removeConfirmText(data) {
+  return ['Remove liquidity from this SUI/TREE V3 position?','',`Position: ${data.positionId}`,`Position share: ${data.percentage}%`,`Liquidity units removed: ${data.liquidityRaw}`,`Simulated SUI received: ${rawToDecimal(data.preliminary.suiRaw,SUI_DECIMALS,9)} SUI`,`Simulated TREE received: ${rawToDecimal(data.preliminary.treeRaw,TREE_DECIMALS,6)} TREE`,`Minimum SUI received: ${rawToDecimal(data.minSuiRaw,SUI_DECIMALS,9)} SUI`,`Minimum TREE received: ${rawToDecimal(data.minTreeRaw,TREE_DECIMALS,6)} TREE`,`Slippage: ${(data.slippage/100).toFixed(2)}%`,'','Removing 100% does not close the position object. The exact withdrawal transaction was simulated again before this wallet request.'].join('\n');
+}
 async function increasePosition(positionId, panel, button) {
   if (increaseBusy.has(positionId)) return;
   increaseBusy.add(positionId); button.disabled = true;
@@ -146,6 +155,49 @@ async function increasePosition(positionId, panel, button) {
     setIncreaseStatus(panel,message,/reject|cancel|denied/i.test(message)?'':'error');
   } finally { increaseBusy.delete(positionId); button.disabled = !EXECUTION_ENABLED; }
 }
+async function removePosition(positionId, panel, button) {
+  if (removeBusy.has(positionId)) return;
+  removeBusy.add(positionId); button.disabled = true;
+  try {
+    if (!EXECUTION_ENABLED) throw new Error('V3 position management is disabled on production during review.');
+    const owner = await connectedAddress(); if (!owner) throw new Error('Connect a Sui wallet before removing liquidity.');
+    const client = await suiClient(); const data = await overview(owner);
+    const position = Array.isArray(data.positions) ? data.positions.find((item) => item.objectId === positionId) : null;
+    if (!position || validAddress(data.owner)?.toLowerCase() !== owner.toLowerCase()) throw new Error('This verified position is not owned by the connected wallet.');
+    const availableLiquidity = BigInt(position.liquidityRaw);
+    const percentage = removePercentage.get(positionId) ?? 10;
+    const liquidityRaw = percentage === 100 ? availableLiquidity : availableLiquidity * BigInt(percentage) / 100n;
+    if (liquidityRaw <= 0n || liquidityRaw > availableLiquidity) throw new Error('The selected removal amount is invalid.');
+    const balanceResult = await client.core.getBalance({ owner, coinType: SUI_COIN_TYPE });
+    const suiBalance = BigInt(balanceResult?.balance?.balance ?? balanceResult?.balance ?? balanceResult?.totalBalance ?? 0);
+    if (suiBalance < MIN_SUI_GAS_RESERVE_RAW) throw new Error('Keep at least 0.05 SUI available for the removal transaction gas.');
+    const { Transaction } = await import(SDK_URL);
+    setRemoveStatus(panel,'Building and simulating the proposed liquidity removal…','warning');
+    const preliminaryTx = buildRemoveTreeV3Position({ Transaction, owner, positionId, liquidityRaw });
+    const preliminarySimulation = await simulate(client, preliminaryTx);
+    if (!simulationSucceeded(preliminarySimulation)) throw new Error('The proposed liquidity removal failed Sui Mainnet simulation.');
+    const preliminary = extractRemoveLiquidityEvent(preliminarySimulation, positionId);
+    if (!preliminary || preliminary.liquidityRaw !== liquidityRaw) throw new Error('SuiDex did not return the exact verified removal during simulation.');
+    const selectedSlippage = removeSlippage.get(positionId) ?? 50;
+    const minTreeRaw = minimumAfterSlippage(preliminary.treeRaw, selectedSlippage);
+    const minSuiRaw = minimumAfterSlippage(preliminary.suiRaw, selectedSlippage);
+    const finalTx = buildRemoveTreeV3Position({ Transaction, owner, positionId, liquidityRaw, minTreeRaw, minSuiRaw });
+    const finalSimulation = await simulate(client, finalTx);
+    const protectedRemoval = extractRemoveLiquidityEvent(finalSimulation, positionId);
+    if (!simulationSucceeded(finalSimulation) || !protectedRemoval || protectedRemoval.liquidityRaw !== liquidityRaw) throw new Error('The slippage-protected removal failed Sui Mainnet simulation.');
+    if (!window.confirm(removeConfirmText({ positionId, percentage, liquidityRaw, minTreeRaw, minSuiRaw, preliminary, slippage: selectedSlippage }))) { setRemoveStatus(panel,'Liquidity removal cancelled before wallet approval.'); return; }
+    setRemoveStatus(panel,'Review the exact SUI/TREE withdrawal in your wallet…','warning');
+    const signed = await signAndExecute(finalTx); const digest = digestFrom(signed);
+    setRemoveStatus(panel,'Wallet approved. Waiting for Sui finality…','warning');
+    const finalized = await waitForFinality(client, digest); const finalizedRemoval = extractRemoveLiquidityEvent(finalized, positionId);
+    if (!simulationSucceeded(finalized) || !finalizedRemoval || finalizedRemoval.liquidityRaw !== liquidityRaw) throw new Error('The submitted removal did not finalize with the expected result.');
+    setRemoveStatus(panel,`Liquidity removed successfully. Digest: ${digest}`,'ok');
+    node('v3RefreshPositions')?.click();
+  } catch (error) {
+    const message = String(error?.message || error || 'V3 liquidity removal failed.');
+    setRemoveStatus(panel,message,/reject|cancel|denied/i.test(message)?'':'error');
+  } finally { removeBusy.delete(positionId); button.disabled = !EXECUTION_ENABLED; }
+}
 function bindIncreaseActions() {
   document.addEventListener('click', (event) => {
     const openButton = event.target.closest?.('[data-v3-increase-position]');
@@ -153,6 +205,13 @@ function bindIncreaseActions() {
       const positionId = openButton.dataset.v3IncreasePosition; const panel = increasePanel(positionId); if (!panel) return;
       panel.hidden = !panel.hidden; openButton.textContent = panel.hidden ? 'Increase' : 'Cancel Increase';
       if (!panel.hidden) setIncreaseStatus(panel,'Enter maximum token amounts. Two Mainnet simulations run before wallet approval.');
+      return;
+    }
+    const removeButton = event.target.closest?.('[data-v3-remove-position]');
+    if (removeButton) {
+      const positionId = removeButton.dataset.v3RemovePosition; const panel = removePanel(positionId); if (!panel) return;
+      panel.hidden = !panel.hidden; removeButton.textContent = panel.hidden ? 'Remove' : 'Cancel Remove';
+      if (!panel.hidden) setRemoveStatus(panel,'Choose how much liquidity to remove. Two Mainnet simulations run before wallet approval.');
       return;
     }
     const slippageButton = event.target.closest?.('[data-v3-increase-slippage]');
@@ -163,7 +222,23 @@ function bindIncreaseActions() {
       return;
     }
     const submitButton = event.target.closest?.('[data-v3-increase-submit]');
-    if (submitButton) { const positionId = submitButton.dataset.v3IncreaseSubmit; const panel = increasePanel(positionId); if (panel) increasePosition(positionId, panel, submitButton); }
+    if (submitButton) { const positionId = submitButton.dataset.v3IncreaseSubmit; const panel = increasePanel(positionId); if (panel) increasePosition(positionId, panel, submitButton); return; }
+    const percentageButton = event.target.closest?.('[data-v3-remove-percent]');
+    if (percentageButton) {
+      const panel = percentageButton.closest('[data-v3-remove-panel]'); const positionId = panel?.dataset.v3RemovePanel; if (!positionId) return;
+      removePercentage.set(positionId, Number(percentageButton.dataset.v3RemovePercent));
+      panel.querySelectorAll('[data-v3-remove-percent]').forEach((item) => item.classList.toggle('active', item === percentageButton));
+      return;
+    }
+    const removeSlippageButton = event.target.closest?.('[data-v3-remove-slippage]');
+    if (removeSlippageButton) {
+      const panel = removeSlippageButton.closest('[data-v3-remove-panel]'); const positionId = panel?.dataset.v3RemovePanel; if (!positionId) return;
+      removeSlippage.set(positionId, Number(removeSlippageButton.dataset.v3RemoveSlippage));
+      panel.querySelectorAll('[data-v3-remove-slippage]').forEach((item) => item.classList.toggle('active', item === removeSlippageButton));
+      return;
+    }
+    const removeSubmitButton = event.target.closest?.('[data-v3-remove-submit]');
+    if (removeSubmitButton) { const positionId = removeSubmitButton.dataset.v3RemoveSubmit; const panel = removePanel(positionId); if (panel) removePosition(positionId, panel, removeSubmitButton); }
   });
 }
 async function createPosition(button) {

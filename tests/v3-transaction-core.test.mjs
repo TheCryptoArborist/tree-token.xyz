@@ -3,7 +3,8 @@ import {
   TREE_COIN_TYPE, SUI_COIN_TYPE, SUIDEX_V3_PACKAGE, SUIDEX_V3_POOL, SUIDEX_V3_VERSION,
   TREE_V3_TICK_SPACING, normalizeDecimalInput, decimalToRaw, encodeSignedI32, decodeSignedI32,
   ticksFromDisplayedPrices, minimumAfterSlippage, validateVerifiedPool, buildCreateTreeV3Position,
-  buildIncreaseTreeV3Position, assertAllowedIncreaseV3Transaction, simulationSucceeded, extractAddLiquidityEvent,
+  buildIncreaseTreeV3Position, buildRemoveTreeV3Position, assertAllowedIncreaseV3Transaction,
+  assertAllowedRemoveV3Transaction, simulationSucceeded, extractAddLiquidityEvent, extractRemoveLiquidityEvent,
 } from '../dapp/v3-transaction-core.js';
 
 assert.equal(normalizeDecimalInput('.1'), '0.1');
@@ -20,7 +21,7 @@ assert.equal(validateVerifiedPool({ verified: true, poolId: SUIDEX_V3_POOL, toke
 assert.throws(() => validateVerifiedPool({ verified: true, poolId: '0x0', tokenX: SUI_COIN_TYPE, tokenY: TREE_COIN_TYPE, tickSpacing: 60, currentTick: 1, priceSuiPerTree: 1 }), /pool ID/);
 
 let next = 0;
-class MockPure { u32(value) { return { pure: 'u32', value }; } u64(value) { return { pure: 'u64', value: BigInt(value) }; } address(value) { return { pure: 'address', value }; } }
+class MockPure { u32(value) { return { pure: 'u32', value }; } u64(value) { return { pure: 'u64', value: BigInt(value) }; } u128(value) { return { pure: 'u128', value: BigInt(value) }; } address(value) { return { pure: 'address', value }; } }
 class MockTransaction {
   constructor() { this.commands = []; this.pure = new MockPure(); this.gas = { gas: true }; }
   setSender(sender) { this.sender = sender; }
@@ -28,7 +29,7 @@ class MockTransaction {
   mergeCoins(primary, others) { this.commands.push({ $kind: 'MergeCoins', MergeCoins: { primary, others } }); }
   splitCoins(coin, amounts) { const result = [{ split: ++next, coin, amounts }]; this.commands.push({ $kind: 'SplitCoins', SplitCoins: { coin, amounts } }); return result; }
   transferObjects(objects, owner) { this.commands.push({ $kind: 'TransferObjects', TransferObjects: { objects, owner } }); }
-  moveCall(call) { const [pkg, module, fn] = call.target.split('::'); this.commands.push({ $kind: 'MoveCall', MoveCall: { package: pkg, module, function: fn, ...call } }); if (fn === 'add_liquidity') return [{ result: 'tree-left' }, { result: 'sui-left' }]; return { result: `${module}::${fn}` }; }
+  moveCall(call) { const [pkg, module, fn] = call.target.split('::'); this.commands.push({ $kind: 'MoveCall', MoveCall: { package: pkg, module, function: fn, ...call } }); if (fn === 'add_liquidity') return [{ result: 'sui-left' }, { result: 'tree-left' }]; if (fn === 'remove_liquidity') return [{ result: 'sui-out' }, { result: 'tree-out' }]; return { result: `${module}::${fn}` }; }
   getData() { return { commands: this.commands }; }
 }
 const owner = `0x${'1'.repeat(64)}`;
@@ -50,6 +51,14 @@ assert.equal(increaseCalls[0].arguments[1].object, positionId);
 assert.equal(increaseCalls[0].arguments[4].value, 99_500_000n);
 assert.equal(increaseCalls[0].arguments[5].value, 995_000n);
 assert.equal(assertAllowedIncreaseV3Transaction(increaseTx), true);
+const removeTx = buildRemoveTreeV3Position({ Transaction: MockTransaction, owner, positionId, liquidityRaw: 123_456n, minTreeRaw: 1_000n, minSuiRaw: 2_000n });
+const removeCalls = removeTx.commands.filter((command) => command.$kind === 'MoveCall').map((command) => command.MoveCall);
+assert.deepEqual(removeCalls.map((call) => `${call.module}::${call.function}`), ['liquidity::remove_liquidity']);
+assert.equal(removeCalls[0].arguments[1].object, positionId);
+assert.equal(removeCalls[0].arguments[2].value, 123_456n);
+assert.equal(removeCalls[0].arguments[3].value, 2_000n);
+assert.equal(removeCalls[0].arguments[4].value, 1_000n);
+assert.equal(assertAllowedRemoveV3Transaction(removeTx), true);
 const simulation = {
   $kind: 'Transaction',
   Transaction: {
@@ -65,4 +74,10 @@ assert.deepEqual(extractAddLiquidityEvent(simulation), { suiRaw: 100_000_000n, t
 simulation.Transaction.events[0].json.position_id = positionId;
 assert.deepEqual(extractAddLiquidityEvent(simulation, positionId), { suiRaw: 100_000_000n, treeRaw: 1_000_000n, liquidityRaw: 123n });
 assert.equal(extractAddLiquidityEvent(simulation, `0x${'4'.repeat(64)}`), null);
+simulation.Transaction.events = [{
+  eventType: `${SUIDEX_V3_PACKAGE}::liquidity::RemoveLiquidityEvent`,
+  json: { pool_id: SUIDEX_V3_POOL, position_id: positionId, amount_x: '2000', amount_y: '1000', liquidity: '123456' },
+}];
+assert.deepEqual(extractRemoveLiquidityEvent(simulation, positionId), { suiRaw: 2_000n, treeRaw: 1_000n, liquidityRaw: 123_456n });
+assert.equal(extractRemoveLiquidityEvent(simulation, `0x${'4'.repeat(64)}`), null);
 console.log('V3 transaction core tests passed.');
