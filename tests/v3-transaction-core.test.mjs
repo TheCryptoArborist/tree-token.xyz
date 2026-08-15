@@ -3,9 +3,9 @@ import {
   TREE_COIN_TYPE, SUI_COIN_TYPE, SUIDEX_V3_PACKAGE, SUIDEX_V3_POOL, SUIDEX_V3_VERSION, TREE_V3_REWARD_TOKENS,
   TREE_V3_TICK_SPACING, normalizeDecimalInput, decimalToRaw, encodeSignedI32, decodeSignedI32,
   ticksFromDisplayedPrices, minimumAfterSlippage, validateVerifiedPool, buildCreateTreeV3Position,
-  buildIncreaseTreeV3Position, buildRemoveTreeV3Position, buildCollectTreeV3Fees, buildCollectTreeV3Rewards,
+  buildIncreaseTreeV3Position, buildRemoveTreeV3Position, buildCollectTreeV3Fees, buildCollectTreeV3Rewards, buildCloseTreeV3Position,
   assertAllowedIncreaseV3Transaction, assertAllowedRemoveV3Transaction, assertAllowedCollectFeeV3Transaction,
-  assertAllowedCollectRewardV3Transaction, simulationSucceeded,
+  assertAllowedCollectRewardV3Transaction, assertAllowedCloseV3Transaction, simulationSucceeded, positionDeleted,
   extractAddLiquidityEvent, extractRemoveLiquidityEvent, extractFeeCollectedEvent, extractRewardCollectedEvents,
 } from '../dapp/v3-transaction-core.js';
 
@@ -73,6 +73,12 @@ assert.deepEqual(collectRewardCalls.map((call) => `${call.module}::${call.functi
 assert.deepEqual(collectRewardCalls.map((call) => call.typeArguments[2]), TREE_V3_REWARD_TOKENS.map((token) => token.coinType));
 assert.equal(assertAllowedCollectRewardV3Transaction(collectRewardTx), true);
 assert.throws(() => buildCollectTreeV3Rewards({ Transaction: MockTransaction, owner, positionId, rewardCoinTypes: ['0x2::sui::SUI'] }), /Invalid verified/);
+const closeTx = buildCloseTreeV3Position({ Transaction: MockTransaction, owner, positionId });
+const closeCalls = closeTx.commands.filter((command) => command.$kind === 'MoveCall').map((command) => command.MoveCall);
+assert.deepEqual(closeCalls.map((call) => `${call.module}::${call.function}`), ['liquidity::close_position']);
+assert.equal(closeCalls[0].arguments[0].object, positionId);
+assert.equal(closeCalls[0].arguments[1].object, SUIDEX_V3_VERSION);
+assert.equal(assertAllowedCloseV3Transaction(closeTx), true);
 const simulation = {
   $kind: 'Transaction',
   Transaction: {
@@ -109,4 +115,6 @@ simulation.Transaction.events = TREE_V3_REWARD_TOKENS.map((token, index) => ({
 assert.deepEqual(extractRewardCollectedEvents(simulation, positionId).map((reward) => reward.amountRaw), [23_447n, 0n, 0n]);
 assert.deepEqual(extractRewardCollectedEvents(simulation, positionId)[0], { ...TREE_V3_REWARD_TOKENS[0], amountRaw: 23_447n });
 assert.deepEqual(extractRewardCollectedEvents(simulation, `0x${'4'.repeat(64)}`), []);
+assert.equal(positionDeleted({ Transaction: { effects: { changedObjects: [{ objectId: positionId, outputState: 'DoesNotExist' }] } } }, positionId), true);
+assert.equal(positionDeleted({ Transaction: { effects: { changedObjects: [{ objectId: positionId, outputState: 'ObjectWrite' }] } } }, positionId), false);
 console.log('V3 transaction core tests passed.');

@@ -229,6 +229,19 @@ export function assertAllowedCollectRewardV3Transaction(transaction) {
   return true;
 }
 
+export function assertAllowedCloseV3Transaction(transaction) {
+  const commands = transaction?.getData?.().commands || [];
+  const calls = commands.flatMap((command) => command?.MoveCall ? [command.MoveCall] : command?.$kind === 'MoveCall' ? [command.MoveCall] : []);
+  if (calls.length !== 1) throw new Error('Unexpected V3 close Move-call count.');
+  const call = calls[0];
+  const target = call.target || `${call.package}::${call.module}::${call.function}`;
+  const parts = target.split('::');
+  if (normalizedAddress(parts[0]) !== normalizedAddress(SUIDEX_V3_PACKAGE)
+    || `${parts[1]}::${parts[2]}` !== 'liquidity::close_position') throw new Error(`Move call is not allowlisted: ${target}`);
+  if ((call.typeArguments || []).length !== 0) throw new Error('Unexpected V3 close type arguments.');
+  return true;
+}
+
 export async function buildCreateTreeV3Position({
   Transaction,
   client,
@@ -410,6 +423,20 @@ export function buildCollectTreeV3Rewards({
   return transaction;
 }
 
+export function buildCloseTreeV3Position({ Transaction, owner, positionId }) {
+  if (typeof Transaction !== 'function') throw new Error('Sui transaction dependencies are unavailable.');
+  if (!normalizedAddress(owner)) throw new Error('A valid Sui owner address is required.');
+  if (!normalizedAddress(positionId)) throw new Error('A valid SuiDex V3 position ID is required.');
+  const transaction = new Transaction();
+  transaction.setSender(owner);
+  transaction.moveCall({
+    target: `${SUIDEX_V3_PACKAGE}::liquidity::close_position`,
+    arguments: [transaction.object(positionId), transaction.object(SUIDEX_V3_VERSION)],
+  });
+  assertAllowedCloseV3Transaction(transaction);
+  return transaction;
+}
+
 function simulationTransaction(value) {
   return value?.Transaction || value?.transaction || value?.result?.Transaction || value;
 }
@@ -418,6 +445,15 @@ export function simulationSucceeded(value) {
   const transaction = simulationTransaction(value);
   const status = transaction?.status || transaction?.effects?.status || value?.effects?.status;
   return status?.success === true || status?.status === 'success' || status === 'success';
+}
+
+export function positionDeleted(value, expectedPositionId) {
+  const expected = normalizedAddress(expectedPositionId);
+  if (!expected) return false;
+  const transaction = simulationTransaction(value);
+  const changes = transaction?.effects?.changedObjects || value?.effects?.changedObjects || transaction?.objectChanges || value?.objectChanges || [];
+  return changes.some((change) => normalizedAddress(change?.objectId || change?.object_id) === expected
+    && (change?.outputState === 'DoesNotExist' || change?.type === 'deleted' || change?.changeType === 'deleted'));
 }
 
 export function extractAddLiquidityEvent(value, expectedPositionId = null) {

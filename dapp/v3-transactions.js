@@ -1,8 +1,9 @@
 import {
   SUI_COIN_TYPE, TREE_DECIMALS, SUI_DECIMALS, DEFAULT_SLIPPAGE_BPS, MIN_SUI_GAS_RESERVE_RAW, TREE_V3_REWARD_TOKENS,
+  SUIDEX_V3_POOL, SUIDEX_V3_PACKAGE,
   decimalToRaw, rawToDecimal, ticksFromDisplayedPrices, minimumAfterSlippage, validateVerifiedPool,
-  buildCreateTreeV3Position, buildIncreaseTreeV3Position, buildRemoveTreeV3Position, buildCollectTreeV3Fees, buildCollectTreeV3Rewards,
-  extractAddLiquidityEvent, extractRemoveLiquidityEvent, extractFeeCollectedEvent, extractRewardCollectedEvents, simulationSucceeded,
+  buildCreateTreeV3Position, buildIncreaseTreeV3Position, buildRemoveTreeV3Position, buildCollectTreeV3Fees, buildCollectTreeV3Rewards, buildCloseTreeV3Position,
+  extractAddLiquidityEvent, extractRemoveLiquidityEvent, extractFeeCollectedEvent, extractRewardCollectedEvents, simulationSucceeded, positionDeleted,
 } from './v3-transaction-core.js';
 
 const PREVIEW_HOST_PATTERN = /^deploy-preview-\d+--tree-token\.netlify\.app$/;
@@ -17,6 +18,7 @@ const removePercentage = new Map();
 const removeSlippage = new Map();
 const feeBusy = new Set();
 const rewardBusy = new Set();
+const closeBusy = new Set();
 
 function validAddress(value) { return typeof value === 'string' && /^0x[0-9a-f]{64}$/i.test(value) ? value : null; }
 function addressFrom(value, depth = 0) {
@@ -128,6 +130,11 @@ function setRewardStatus(panel, message, kind = '') { const target = panel?.quer
 function rewardSummary(rewards) { return rewards.map((reward) => `${rawToDecimal(reward.amountRaw,reward.decimals,reward.decimals)} ${reward.symbol}`).join(', '); }
 function rewardConfirmText(data) {
   return ['Claim verified rewards from this SUI/TREE V3 position?','',`Position: ${data.positionId}`,...data.rewards.map((reward) => `${reward.symbol}: ${rawToDecimal(reward.amountRaw,reward.decimals,reward.decimals)}`),'','Only reward types with a positive simulation result are included. Network gas is still charged.'].join('\n');
+}
+function closePanel(positionId) { return [...document.querySelectorAll('[data-v3-close-panel]')].find((panel) => panel.dataset.v3ClosePanel === positionId) || null; }
+function setCloseStatus(panel, message, kind = '') { const target = panel?.querySelector('[data-v3-close-status]'); if (!target) return; target.textContent = message; target.classList.remove('ok','error','warning'); if (kind) target.classList.add(kind); }
+function closeConfirmText(positionId) {
+  return ['Permanently close this empty SUI/TREE V3 position?','',`Position: ${positionId}`,'Liquidity: 0','Uncollected fees: 0','Unclaimed verified rewards: 0','','This deletes the position object and cannot be undone. The exact close transaction was simulated twice.'].join('\n');
 }
 async function increasePosition(positionId, panel, button) {
   if (increaseBusy.has(positionId)) return;
@@ -292,6 +299,53 @@ async function collectRewards(positionId, panel, button) {
     setRewardStatus(panel,message,/reject|cancel|denied/i.test(message)?'':'error');
   } finally { rewardBusy.delete(positionId); button.disabled = !EXECUTION_ENABLED; }
 }
+async function closePosition(positionId, panel, button) {
+  if (closeBusy.has(positionId)) return;
+  closeBusy.add(positionId); button.disabled = true;
+  try {
+    if (!EXECUTION_ENABLED) throw new Error('V3 position management is disabled on production during review.');
+    const owner = await connectedAddress(); if (!owner) throw new Error('Connect a Sui wallet before closing a position.');
+    const client = await suiClient(); const data = await overview(owner);
+    const position = Array.isArray(data.positions) ? data.positions.find((item) => item.objectId === positionId) : null;
+    if (!position || validAddress(data.owner)?.toLowerCase() !== owner.toLowerCase()) throw new Error('This verified position is not owned by the connected wallet.');
+    setCloseStatus(panel,'Verifying the complete live position object on Mainnet…','warning');
+    const liveResult = await client.core.getObject({ objectId: positionId, include: { json: true, owner: true } });
+    const live = liveResult?.object; const json = live?.json;
+    const liveOwner = validAddress(live?.owner?.AddressOwner);
+    if (!live || !json || liveOwner?.toLowerCase() !== owner.toLowerCase()
+      || String(live.type || '').toLowerCase() !== `${SUIDEX_V3_PACKAGE}::position::position`.toLowerCase()
+      || validAddress(json.pool_id)?.toLowerCase() !== SUIDEX_V3_POOL.toLowerCase()) throw new Error('The live SuiDex position object could not be verified for this wallet and pool.');
+    const remaining = [];
+    if (BigInt(json.liquidity ?? 0) !== 0n) remaining.push('liquidity');
+    if (BigInt(json.owed_coin_x ?? 0) !== 0n || BigInt(json.owed_coin_y ?? 0) !== 0n) remaining.push('fees');
+    if ((json.reward_infos || []).some((reward) => BigInt(reward?.coins_owed_reward ?? 0) !== 0n)) remaining.push('rewards');
+    if (remaining.length) {
+      setCloseStatus(panel,`Position cannot close yet: ${remaining.join(', ')} remain. No wallet request was made.`,'ok');
+      return;
+    }
+    const balanceResult = await client.core.getBalance({ owner, coinType: SUI_COIN_TYPE });
+    const suiBalance = BigInt(balanceResult?.balance?.balance ?? balanceResult?.balance ?? balanceResult?.totalBalance ?? 0);
+    if (suiBalance < MIN_SUI_GAS_RESERVE_RAW) throw new Error('Keep at least 0.05 SUI available for close-position gas.');
+    const { Transaction } = await import(SDK_URL);
+    const preliminaryTx = buildCloseTreeV3Position({ Transaction, owner, positionId });
+    const preliminarySimulation = await simulate(client, preliminaryTx);
+    if (!simulationSucceeded(preliminarySimulation) || !positionDeleted(preliminarySimulation, positionId)) throw new Error('The empty-position close failed its first Sui Mainnet simulation.');
+    const finalTx = buildCloseTreeV3Position({ Transaction, owner, positionId });
+    const finalSimulation = await simulate(client, finalTx);
+    if (!simulationSucceeded(finalSimulation) || !positionDeleted(finalSimulation, positionId)) throw new Error('The empty-position close failed its second Sui Mainnet simulation.');
+    if (!window.confirm(closeConfirmText(positionId))) { setCloseStatus(panel,'Position close cancelled before wallet approval.'); return; }
+    setCloseStatus(panel,'Review the permanent position deletion in your wallet…','warning');
+    const signed = await signAndExecute(finalTx); const digest = digestFrom(signed);
+    setCloseStatus(panel,'Wallet approved. Waiting for Sui finality…','warning');
+    const finalized = await waitForFinality(client, digest);
+    if (!simulationSucceeded(finalized) || !positionDeleted(finalized, positionId)) throw new Error('The submitted close did not finalize with the expected position deletion.');
+    setCloseStatus(panel,`Empty position closed successfully. Digest: ${digest}`,'ok');
+    node('v3RefreshPositions')?.click();
+  } catch (error) {
+    const message = String(error?.message || error || 'V3 position close failed.');
+    setCloseStatus(panel,message,/reject|cancel|denied/i.test(message)?'':'error');
+  } finally { closeBusy.delete(positionId); button.disabled = !EXECUTION_ENABLED; }
+}
 function bindIncreaseActions() {
   document.addEventListener('click', (event) => {
     const openButton = event.target.closest?.('[data-v3-increase-position]');
@@ -322,6 +376,13 @@ function bindIncreaseActions() {
       if (!panel.hidden) setRewardStatus(panel,'Simulate to check the pool’s verified VICTORY, TREE, and wBTC rewards.');
       return;
     }
+    const closeButton = event.target.closest?.('[data-v3-close-position]');
+    if (closeButton) {
+      const positionId = closeButton.dataset.v3ClosePosition; const panel = closePanel(positionId); if (!panel) return;
+      panel.hidden = !panel.hidden; closeButton.textContent = panel.hidden ? 'Close' : 'Cancel Close';
+      if (!panel.hidden) setCloseStatus(panel,'Check the live position. Any remaining liquidity, fees, or rewards will stop before Slush.');
+      return;
+    }
     const slippageButton = event.target.closest?.('[data-v3-increase-slippage]');
     if (slippageButton) {
       const panel = slippageButton.closest('[data-v3-increase-panel]'); const positionId = panel?.dataset.v3IncreasePanel; if (!positionId) return;
@@ -350,7 +411,9 @@ function bindIncreaseActions() {
     const feeSubmitButton = event.target.closest?.('[data-v3-fee-submit]');
     if (feeSubmitButton) { const positionId = feeSubmitButton.dataset.v3FeeSubmit; const panel = feePanel(positionId); if (panel) collectFees(positionId, panel, feeSubmitButton); return; }
     const rewardSubmitButton = event.target.closest?.('[data-v3-reward-submit]');
-    if (rewardSubmitButton) { const positionId = rewardSubmitButton.dataset.v3RewardSubmit; const panel = rewardPanel(positionId); if (panel) collectRewards(positionId, panel, rewardSubmitButton); }
+    if (rewardSubmitButton) { const positionId = rewardSubmitButton.dataset.v3RewardSubmit; const panel = rewardPanel(positionId); if (panel) collectRewards(positionId, panel, rewardSubmitButton); return; }
+    const closeSubmitButton = event.target.closest?.('[data-v3-close-submit]');
+    if (closeSubmitButton) { const positionId = closeSubmitButton.dataset.v3CloseSubmit; const panel = closePanel(positionId); if (panel) closePosition(positionId, panel, closeSubmitButton); }
   });
 }
 async function createPosition(button) {
