@@ -10,6 +10,7 @@ import {
   compatibleSuiWallets,
   getSuiSignFeature,
   isSlushWallet,
+  isSlushWebWallet,
   pickSuiAccount,
   safeWalletIcon,
   shortenSuiAddress,
@@ -400,6 +401,7 @@ async function _renderPicker() {
   }
 
   for (const wallet of wallets) {
+    const opensInSlush = isSlushWebWallet(wallet);
     const button = document.createElement('button');
     button.type = 'button';
     button.className = `tree-wallet-option${isSlushWallet(wallet) ? ' is-slush' : ''}`;
@@ -418,9 +420,13 @@ async function _renderPicker() {
 
     const action = document.createElement('span');
     action.className = 'tree-wallet-option-action';
-    action.textContent = 'Connect';
+    action.textContent = opensInSlush ? 'Open Slush' : 'Connect';
     button.append(copy, action);
     button.addEventListener('click', async () => {
+      if (opensInSlush) {
+        location.assign(slushBrowseUrl(`${location.origin}/dapp/`));
+        return;
+      }
       _setManagerStatus(`Connecting to ${wallet.name}…`);
       button.disabled = true;
       try {

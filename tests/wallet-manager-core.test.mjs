@@ -4,6 +4,7 @@ import {
   dedupeWallets,
   getSuiSignFeature,
   isSlushWallet,
+  isSlushWebWallet,
   pickSuiAccount,
   safeWalletIcon,
   shortenSuiAddress,
@@ -34,6 +35,8 @@ const nonSui = wallet('Other Chain', { features: { 'standard:connect': connect }
 assert.equal(getSuiSignFeature(slushWeb), 'sui:signAndExecuteTransaction');
 assert.equal(getSuiSignFeature(nonSui), null);
 assert.equal(isSlushWallet(slushWeb), true);
+assert.equal(isSlushWebWallet({ id: 'com.mystenlabs.suiwallet.web', name: 'Slush' }), true);
+assert.equal(isSlushWebWallet(slushExtension), false);
 assert.equal(isSlushWallet(phantom), false);
 assert.equal(walletKey(slushExtension), 'slush-extension');
 

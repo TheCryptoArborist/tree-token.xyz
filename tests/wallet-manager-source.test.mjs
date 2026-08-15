@@ -10,6 +10,8 @@ assert.match(wallet, /@mysten\/slush-wallet@1\.1\.14/);
 assert.match(wallet, /@mysten\/wallet-standard@0\.21\.14/);
 assert.match(wallet, /WALLET_CONNECT_TIMEOUT_MS/);
 assert.match(wallet, /SLUSH_CONNECT_TIMEOUT/);
+assert.match(wallet, /isSlushWebWallet/);
+assert.match(wallet, /location\.assign\(slushBrowseUrl/);
 assert.match(wallet, /@mysten\/sui@2\.23\.1\/grpc/);
 assert.match(wallet, /walletSignAndExecuteTransaction/);
 assert.match(wallet, /_getClient\(\)\.core\.getBalance/);

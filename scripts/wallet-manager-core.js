@@ -46,6 +46,10 @@ export function isSlushWallet(wallet) {
   return identity.includes('slush') || identity.includes('stashed') || identity.includes('sui wallet');
 }
 
+export function isSlushWebWallet(wallet) {
+  return wallet?.id === 'com.mystenlabs.suiwallet.web';
+}
+
 function preferredDuplicate(left, right) {
   const leftAccounts = Array.isArray(left?.accounts) ? left.accounts.length : 0;
   const rightAccounts = Array.isArray(right?.accounts) ? right.accounts.length : 0;
