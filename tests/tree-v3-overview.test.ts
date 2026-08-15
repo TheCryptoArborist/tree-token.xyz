@@ -4,6 +4,7 @@ import {
   TREE_V3_POOL_ID,
   formatRawAmount,
   normalizeCoinType,
+  parseSignedI32,
   parseTreeV3Pool,
   parseTreeV3Position,
 } from '../netlify/lib/tree-v3-overview.ts';
@@ -24,6 +25,8 @@ const pool = parseTreeV3Pool({
   liquidity: '9007199254741000',
   reserve_x: '25000000',
   reserve_y: '25000000000',
+  tick_spacing: 60,
+  swap_fee_rate: 2500,
 }, { suiUsd: 1, treeUsd: 0.001 });
 
 assert.ok(pool);
@@ -33,6 +36,10 @@ assert.equal(pool.reserveTree, '25');
 assert.equal(pool.reserveSui, '25');
 assert.equal(pool.tvlUsdEstimate, 25.025);
 assert.equal(pool.feePercent, 0.25);
+assert.equal(pool.tickSpacing, 60);
+assert.equal(pool.verified, true);
+assert.equal(parseSignedI32({ bits: 4294967246 }), -50);
+assert.equal(parseSignedI32({ bits: '4294967246' }), -50);
 
 const position = parseTreeV3Position({
   address: `0x${'b'.repeat(64)}`,
@@ -68,7 +75,7 @@ assert.equal(parseTreeV3Pool({
   type_y: TREE_COIN_TYPE,
   tick_index: 0,
   sqrt_price: Q64.toString(),
-  liquidity: '1', reserve_x: '1', reserve_y: '1',
+  liquidity: '1', reserve_x: '1', reserve_y: '1', tick_spacing: 60, swap_fee_rate: 2500,
 }), null);
 
 console.log('TREE V3 overview fixtures passed.');

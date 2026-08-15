@@ -4,7 +4,8 @@ import { readFile } from 'node:fs/promises';
 
 const source = await readFile('dapp/swap-router.js', 'utf8');
 const start = source.indexOf('function parseBaseUnits(value, decimals) {');
-const end = source.indexOf('\n\nfunction formatBaseUnits', start);
+const boundary = /\r?\n\r?\nfunction formatBaseUnits/.exec(source.slice(start));
+const end = boundary ? start + boundary.index : -1;
 assert.notEqual(start, -1, 'parseBaseUnits was not found');
 assert.notEqual(end, -1, 'parseBaseUnits boundary was not found');
 const implementation = source.slice(start, end);

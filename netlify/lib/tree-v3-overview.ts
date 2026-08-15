@@ -11,6 +11,7 @@ export const SUI_DECIMALS = 9;
 export type JsonRecord = Record<string, unknown>;
 
 export type TreeV3PoolView = {
+  verified: true;
   poolId: string;
   tokenX: string;
   tokenY: string;
@@ -24,6 +25,7 @@ export type TreeV3PoolView = {
   priceSuiPerTree: string;
   priceTreePerSui: string;
   feePercent: number;
+  tickSpacing: number;
   tvlUsdEstimate: number | null;
   tvlSource: 'onchain-reserves-plus-coingecko' | 'unavailable';
 };
@@ -61,10 +63,15 @@ export function parseUnsigned(value: unknown): bigint | null {
 }
 
 export function parseSignedI32(value: unknown): number | null {
-  if (typeof value === 'number' && Number.isInteger(value) && value >= -2147483648 && value <= 2147483647) return value;
-  if (typeof value !== 'string' || !/^-?\d+$/.test(value.trim())) return null;
-  const numeric = Number(value);
-  return Number.isInteger(numeric) && numeric >= -2147483648 && numeric <= 2147483647 ? numeric : null;
+  const nested = record(value).bits;
+  if (nested !== undefined) return parseSignedI32(nested);
+  const numeric = typeof value === 'number'
+    ? value
+    : typeof value === 'string' && /^-?\d+$/.test(value.trim())
+      ? Number(value)
+      : Number.NaN;
+  if (!Number.isInteger(numeric) || numeric < -2147483648 || numeric > 4294967295) return null;
+  return numeric > 2147483647 ? numeric - 4294967296 : numeric;
 }
 
 export function formatRawAmount(raw: bigint, decimals: number, maximumFractionDigits = decimals): string {
@@ -110,7 +117,9 @@ export function parseTreeV3Pool(jsonValue: unknown, prices?: { suiUsd?: number |
   const liquidity = parseUnsigned(json.liquidity);
   const reserveX = parseUnsigned(json.reserve_x);
   const reserveY = parseUnsigned(json.reserve_y);
-  if (poolId !== TREE_V3_POOL_ID || !tokenX || !tokenY || currentTick === null || sqrtPrice === null || sqrtPrice <= 0n || liquidity === null || reserveX === null || reserveY === null) return null;
+  const tickSpacing = Number(json.tick_spacing);
+  const swapFeeRate = Number(json.swap_fee_rate);
+  if (poolId !== TREE_V3_POOL_ID || !tokenX || !tokenY || currentTick === null || sqrtPrice === null || sqrtPrice <= 0n || liquidity === null || reserveX === null || reserveY === null || tickSpacing !== 60 || swapFeeRate !== 2500) return null;
   const pair = new Set([tokenX, tokenY]);
   if (!pair.has(NORMALIZED_TREE) || !pair.has(NORMALIZED_SUI) || pair.size !== 2) return null;
 
@@ -140,6 +149,7 @@ export function parseTreeV3Pool(jsonValue: unknown, prices?: { suiUsd?: number |
     : null;
 
   return {
+    verified: true,
     poolId,
     tokenX,
     tokenY,
@@ -153,6 +163,7 @@ export function parseTreeV3Pool(jsonValue: unknown, prices?: { suiUsd?: number |
     priceSuiPerTree: rationalToDecimal(suiPerTreeNumerator, suiPerTreeDenominator, 12),
     priceTreePerSui: rationalToDecimal(treePerSuiNumerator, treePerSuiDenominator, 6),
     feePercent: TREE_V3_FEE_PERCENT,
+    tickSpacing,
     tvlUsdEstimate: Number.isFinite(tvlUsdEstimate) ? tvlUsdEstimate : null,
     tvlSource: Number.isFinite(tvlUsdEstimate) ? 'onchain-reserves-plus-coingecko' : 'unavailable',
   };
