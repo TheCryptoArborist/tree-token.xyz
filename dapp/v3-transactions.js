@@ -92,7 +92,7 @@ function installControls(button) {
     const plannerNote = document.querySelector('#v3 .v3-add-card .v3-status');
     if (phaseBadge) phaseBadge.textContent = 'Preview transaction review';
     if (plannerNote) plannerNote.textContent = 'Preview builder enabled. Nothing is signed or submitted until you approve the final wallet request.';
-    button.classList.remove('secondary'); button.classList.add('primary'); setStatus('Preview mode: every position transaction is simulated twice before wallet approval.');
+    button.classList.remove('v3-disabled-action', 'secondary'); button.classList.add('button', 'primary'); setStatus('Preview mode: every position transaction is simulated twice before wallet approval.');
   }
   else setStatus('Native V3 position execution remains disabled on production during review.');
 }
