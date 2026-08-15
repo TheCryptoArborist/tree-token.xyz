@@ -268,7 +268,7 @@ function renderPositions(payload) {
       <article class="v3-position-card">
         <div class="v3-position-head"><div><h3>SUI / TREE Position</h3><code title="${position.objectId}">${compactId(position.objectId)}</code></div><span class="v3-position-state ${position.inRange ? '' : 'review'}">${position.inRange ? 'In range' : 'Out of range'}</span></div>
         <div class="v3-metrics"><div class="v3-metric"><span>Liquidity Units</span><strong>${Number(position.liquidityRaw).toLocaleString('en-US', { notation: 'compact', maximumFractionDigits: 2 })}</strong></div><div class="v3-metric"><span>Lower Tick</span><strong>${position.tickLower}</strong></div><div class="v3-metric"><span>Upper Tick</span><strong>${position.tickUpper}</strong></div><div class="v3-metric"><span>Current Tick</span><strong>${position.currentTick}</strong></div></div>
-        <div class="v3-position-actions" aria-label="Position management actions"><button type="button" data-v3-increase-position="${position.objectId}" ${V3_MANAGEMENT_ENABLED ? '' : 'disabled'}>Increase</button><button type="button" data-v3-remove-position="${position.objectId}" ${V3_MANAGEMENT_ENABLED ? '' : 'disabled'}>Remove</button><button type="button" disabled>Collect Fees</button><button type="button" disabled>Claim Rewards</button><button type="button" disabled>Close</button></div>
+        <div class="v3-position-actions" aria-label="Position management actions"><button type="button" data-v3-increase-position="${position.objectId}" ${V3_MANAGEMENT_ENABLED ? '' : 'disabled'}>Increase</button><button type="button" data-v3-remove-position="${position.objectId}" ${V3_MANAGEMENT_ENABLED ? '' : 'disabled'}>Remove</button><button type="button" data-v3-collect-fees-position="${position.objectId}" ${V3_MANAGEMENT_ENABLED ? '' : 'disabled'}>Collect Fees</button><button type="button" disabled>Claim Rewards</button><button type="button" disabled>Close</button></div>
         <div class="v3-increase-panel" data-v3-increase-panel="${position.objectId}" hidden>
           <div class="v3-form-grid"><label class="v3-field"><span>Maximum SUI</span><input inputmode="decimal" placeholder="0.001" data-v3-increase-sui></label><label class="v3-field"><span>Maximum TREE</span><input inputmode="decimal" placeholder="35.5" data-v3-increase-tree></label></div>
           <div class="v3-slippage-row"><span>Increase slippage</span><div role="group" aria-label="Increase position slippage"><button class="active" type="button" data-v3-increase-slippage="50">0.5%</button><button type="button" data-v3-increase-slippage="100">1%</button><button type="button" data-v3-increase-slippage="200">2%</button></div></div>
@@ -281,7 +281,12 @@ function renderPositions(payload) {
           <button class="button primary" type="button" data-v3-remove-submit="${position.objectId}">Simulate Removal</button>
           <p class="v3-status" role="status" aria-live="polite" data-v3-remove-status>Nothing is signed until two Mainnet simulations pass and you confirm the exact withdrawal.</p>
         </div>
-        <p class="v3-status">${V3_MANAGEMENT_ENABLED ? 'Increase and Remove liquidity are enabled for preview review. Fee collection, rewards, and close remain disabled.' : 'Position management remains disabled on production during review.'}</p>
+        <div class="v3-fee-panel" data-v3-fee-panel="${position.objectId}" hidden>
+          <p>Collects all currently available SUI and TREE trading fees for this position. If the simulation finds zero fees, no wallet request is made.</p>
+          <button class="button primary" type="button" data-v3-fee-submit="${position.objectId}">Simulate Fee Collection</button>
+          <p class="v3-status" role="status" aria-live="polite" data-v3-fee-status>Nothing is signed until Mainnet simulations verify collectible fees and you confirm the exact action.</p>
+        </div>
+        <p class="v3-status">${V3_MANAGEMENT_ENABLED ? 'Increase, Remove, and Collect Fees are enabled for preview review. Rewards and close remain disabled.' : 'Position management remains disabled on production during review.'}</p>
       </article>`).join('');
   }
   status.textContent = `Complete public scan · ${payload.coverage?.objectsScanned ?? 0} V3 objects checked · Updated ${new Date(payload.generatedAt).toLocaleTimeString()}`;

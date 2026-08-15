@@ -188,6 +188,21 @@ export function assertAllowedRemoveV3Transaction(transaction) {
   return true;
 }
 
+export function assertAllowedCollectFeeV3Transaction(transaction) {
+  const commands = transaction?.getData?.().commands || [];
+  const calls = commands.flatMap((command) => command?.MoveCall ? [command.MoveCall] : command?.$kind === 'MoveCall' ? [command.MoveCall] : []);
+  if (calls.length !== 1) throw new Error('Unexpected V3 fee collection Move-call count.');
+  const call = calls[0];
+  const target = call.target || `${call.package}::${call.module}::${call.function}`;
+  const parts = target.split('::');
+  if (normalizedAddress(parts[0]) !== normalizedAddress(SUIDEX_V3_PACKAGE)
+    || `${parts[1]}::${parts[2]}` !== 'collect::fee') throw new Error(`Move call is not allowlisted: ${target}`);
+  const types = call.typeArguments || [];
+  if (normalizedCoinType(types[0]) !== normalizedCoinType(SUI_COIN_TYPE)
+    || normalizedCoinType(types[1]) !== normalizedCoinType(TREE_COIN_TYPE)) throw new Error('Unexpected V3 fee collection type arguments.');
+  return true;
+}
+
 export async function buildCreateTreeV3Position({
   Transaction,
   client,
@@ -318,6 +333,26 @@ export function buildRemoveTreeV3Position({
   return transaction;
 }
 
+export function buildCollectTreeV3Fees({ Transaction, owner, positionId }) {
+  if (typeof Transaction !== 'function') throw new Error('Sui transaction dependencies are unavailable.');
+  if (!normalizedAddress(owner)) throw new Error('A valid Sui owner address is required.');
+  if (!normalizedAddress(positionId)) throw new Error('A valid SuiDex V3 position ID is required.');
+  const transaction = new Transaction();
+  transaction.setSender(owner);
+  const [suiCoin, treeCoin] = transaction.moveCall({
+    target: `${SUIDEX_V3_PACKAGE}::collect::fee`,
+    typeArguments: [SUI_COIN_TYPE, TREE_COIN_TYPE],
+    arguments: [
+      transaction.object(SUIDEX_V3_POOL), transaction.object(positionId),
+      transaction.object(SUI_CLOCK), transaction.object(SUIDEX_V3_VERSION),
+    ],
+  });
+  transaction.transferObjects([suiCoin], transaction.pure.address(owner));
+  transaction.transferObjects([treeCoin], transaction.pure.address(owner));
+  assertAllowedCollectFeeV3Transaction(transaction);
+  return transaction;
+}
+
 function simulationTransaction(value) {
   return value?.Transaction || value?.transaction || value?.result?.Transaction || value;
 }
@@ -357,6 +392,22 @@ export function extractRemoveLiquidityEvent(value, expectedPositionId = null) {
     const treeRaw = BigInt(json.amount_y);
     const liquidityRaw = BigInt(json.liquidity);
     return suiRaw >= 0n && treeRaw >= 0n && liquidityRaw > 0n ? { suiRaw, treeRaw, liquidityRaw } : null;
+  } catch {
+    return null;
+  }
+}
+
+export function extractFeeCollectedEvent(value, expectedPositionId = null) {
+  const transaction = simulationTransaction(value);
+  const events = transaction?.events || value?.events || [];
+  const event = events.find((item) => String(item?.eventType || item?.type || '').endsWith('::collect::FeeCollectedEvent'));
+  const json = event?.json || event?.parsedJson || event?.parsed_json;
+  if (!json || normalizedAddress(json.pool_id) !== normalizedAddress(SUIDEX_V3_POOL)
+    || (expectedPositionId && normalizedAddress(json.position_id) !== normalizedAddress(expectedPositionId))) return null;
+  try {
+    const suiRaw = BigInt(json.amount_x);
+    const treeRaw = BigInt(json.amount_y);
+    return suiRaw >= 0n && treeRaw >= 0n ? { suiRaw, treeRaw } : null;
   } catch {
     return null;
   }

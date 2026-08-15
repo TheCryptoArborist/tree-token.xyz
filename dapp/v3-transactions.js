@@ -1,8 +1,8 @@
 import {
   SUI_COIN_TYPE, TREE_DECIMALS, SUI_DECIMALS, DEFAULT_SLIPPAGE_BPS, MIN_SUI_GAS_RESERVE_RAW,
   decimalToRaw, rawToDecimal, ticksFromDisplayedPrices, minimumAfterSlippage, validateVerifiedPool,
-  buildCreateTreeV3Position, buildIncreaseTreeV3Position, buildRemoveTreeV3Position,
-  extractAddLiquidityEvent, extractRemoveLiquidityEvent, simulationSucceeded,
+  buildCreateTreeV3Position, buildIncreaseTreeV3Position, buildRemoveTreeV3Position, buildCollectTreeV3Fees,
+  extractAddLiquidityEvent, extractRemoveLiquidityEvent, extractFeeCollectedEvent, simulationSucceeded,
 } from './v3-transaction-core.js';
 
 const PREVIEW_HOST_PATTERN = /^deploy-preview-\d+--tree-token\.netlify\.app$/;
@@ -15,6 +15,7 @@ const increaseSlippage = new Map();
 const removeBusy = new Set();
 const removePercentage = new Map();
 const removeSlippage = new Map();
+const feeBusy = new Set();
 
 function validAddress(value) { return typeof value === 'string' && /^0x[0-9a-f]{64}$/i.test(value) ? value : null; }
 function addressFrom(value, depth = 0) {
@@ -116,6 +117,11 @@ function setRemoveStatus(panel, message, kind = '') { const target = panel?.quer
 function removeConfirmText(data) {
   return ['Remove liquidity from this SUI/TREE V3 position?','',`Position: ${data.positionId}`,`Position share: ${data.percentage}%`,`Liquidity units removed: ${data.liquidityRaw}`,`Simulated SUI received: ${rawToDecimal(data.preliminary.suiRaw,SUI_DECIMALS,9)} SUI`,`Simulated TREE received: ${rawToDecimal(data.preliminary.treeRaw,TREE_DECIMALS,6)} TREE`,`Minimum SUI received: ${rawToDecimal(data.minSuiRaw,SUI_DECIMALS,9)} SUI`,`Minimum TREE received: ${rawToDecimal(data.minTreeRaw,TREE_DECIMALS,6)} TREE`,`Slippage: ${(data.slippage/100).toFixed(2)}%`,'','Removing 100% does not close the position object. The exact withdrawal transaction was simulated again before this wallet request.'].join('\n');
 }
+function feePanel(positionId) { return [...document.querySelectorAll('[data-v3-fee-panel]')].find((panel) => panel.dataset.v3FeePanel === positionId) || null; }
+function setFeeStatus(panel, message, kind = '') { const target = panel?.querySelector('[data-v3-fee-status]'); if (!target) return; target.textContent = message; target.classList.remove('ok','error','warning'); if (kind) target.classList.add(kind); }
+function feeConfirmText(data) {
+  return ['Collect all available fees from this SUI/TREE V3 position?','',`Position: ${data.positionId}`,`Verified SUI fees: ${rawToDecimal(data.suiRaw,SUI_DECIMALS,9)} SUI`,`Verified TREE fees: ${rawToDecimal(data.treeRaw,TREE_DECIMALS,6)} TREE`,'','The exact fee-collection call was simulated twice. Network gas is still charged.'].join('\n');
+}
 async function increasePosition(positionId, panel, button) {
   if (increaseBusy.has(positionId)) return;
   increaseBusy.add(positionId); button.disabled = true;
@@ -198,6 +204,45 @@ async function removePosition(positionId, panel, button) {
     setRemoveStatus(panel,message,/reject|cancel|denied/i.test(message)?'':'error');
   } finally { removeBusy.delete(positionId); button.disabled = !EXECUTION_ENABLED; }
 }
+async function collectFees(positionId, panel, button) {
+  if (feeBusy.has(positionId)) return;
+  feeBusy.add(positionId); button.disabled = true;
+  try {
+    if (!EXECUTION_ENABLED) throw new Error('V3 position management is disabled on production during review.');
+    const owner = await connectedAddress(); if (!owner) throw new Error('Connect a Sui wallet before collecting fees.');
+    const client = await suiClient(); const data = await overview(owner);
+    const position = Array.isArray(data.positions) ? data.positions.find((item) => item.objectId === positionId) : null;
+    if (!position || validAddress(data.owner)?.toLowerCase() !== owner.toLowerCase()) throw new Error('This verified position is not owned by the connected wallet.');
+    const balanceResult = await client.core.getBalance({ owner, coinType: SUI_COIN_TYPE });
+    const suiBalance = BigInt(balanceResult?.balance?.balance ?? balanceResult?.balance ?? balanceResult?.totalBalance ?? 0);
+    if (suiBalance < MIN_SUI_GAS_RESERVE_RAW) throw new Error('Keep at least 0.05 SUI available for fee-collection gas.');
+    const { Transaction } = await import(SDK_URL);
+    setFeeStatus(panel,'Simulating current SUI and TREE fees on Mainnet…','warning');
+    const preliminaryTx = buildCollectTreeV3Fees({ Transaction, owner, positionId });
+    const preliminarySimulation = await simulate(client, preliminaryTx);
+    const preliminary = extractFeeCollectedEvent(preliminarySimulation, positionId);
+    if (!simulationSucceeded(preliminarySimulation) || !preliminary) throw new Error('The proposed fee collection failed Sui Mainnet simulation.');
+    if (preliminary.suiRaw === 0n && preliminary.treeRaw === 0n) {
+      setFeeStatus(panel,'No collectible SUI or TREE fees are available right now. No wallet request was made.','ok');
+      return;
+    }
+    const finalTx = buildCollectTreeV3Fees({ Transaction, owner, positionId });
+    const finalSimulation = await simulate(client, finalTx);
+    const verified = extractFeeCollectedEvent(finalSimulation, positionId);
+    if (!simulationSucceeded(finalSimulation) || !verified || (verified.suiRaw === 0n && verified.treeRaw === 0n)) throw new Error('The second fee-collection simulation did not verify collectible fees.');
+    if (!window.confirm(feeConfirmText({ positionId, ...verified }))) { setFeeStatus(panel,'Fee collection cancelled before wallet approval.'); return; }
+    setFeeStatus(panel,'Review the fee-collection transaction in your wallet…','warning');
+    const signed = await signAndExecute(finalTx); const digest = digestFrom(signed);
+    setFeeStatus(panel,'Wallet approved. Waiting for Sui finality…','warning');
+    const finalized = await waitForFinality(client, digest); const collected = extractFeeCollectedEvent(finalized, positionId);
+    if (!simulationSucceeded(finalized) || !collected) throw new Error('The submitted fee collection did not finalize with the expected event.');
+    setFeeStatus(panel,`Fees collected successfully: ${rawToDecimal(collected.suiRaw,SUI_DECIMALS,9)} SUI and ${rawToDecimal(collected.treeRaw,TREE_DECIMALS,6)} TREE. Digest: ${digest}`,'ok');
+    node('v3RefreshPositions')?.click();
+  } catch (error) {
+    const message = String(error?.message || error || 'V3 fee collection failed.');
+    setFeeStatus(panel,message,/reject|cancel|denied/i.test(message)?'':'error');
+  } finally { feeBusy.delete(positionId); button.disabled = !EXECUTION_ENABLED; }
+}
 function bindIncreaseActions() {
   document.addEventListener('click', (event) => {
     const openButton = event.target.closest?.('[data-v3-increase-position]');
@@ -212,6 +257,13 @@ function bindIncreaseActions() {
       const positionId = removeButton.dataset.v3RemovePosition; const panel = removePanel(positionId); if (!panel) return;
       panel.hidden = !panel.hidden; removeButton.textContent = panel.hidden ? 'Remove' : 'Cancel Remove';
       if (!panel.hidden) setRemoveStatus(panel,'Choose how much liquidity to remove. Two Mainnet simulations run before wallet approval.');
+      return;
+    }
+    const feeButton = event.target.closest?.('[data-v3-collect-fees-position]');
+    if (feeButton) {
+      const positionId = feeButton.dataset.v3CollectFeesPosition; const panel = feePanel(positionId); if (!panel) return;
+      panel.hidden = !panel.hidden; feeButton.textContent = panel.hidden ? 'Collect Fees' : 'Cancel Fees';
+      if (!panel.hidden) setFeeStatus(panel,'Simulate to check current SUI and TREE fees. Zero fees will never open a wallet request.');
       return;
     }
     const slippageButton = event.target.closest?.('[data-v3-increase-slippage]');
@@ -238,7 +290,9 @@ function bindIncreaseActions() {
       return;
     }
     const removeSubmitButton = event.target.closest?.('[data-v3-remove-submit]');
-    if (removeSubmitButton) { const positionId = removeSubmitButton.dataset.v3RemoveSubmit; const panel = removePanel(positionId); if (panel) removePosition(positionId, panel, removeSubmitButton); }
+    if (removeSubmitButton) { const positionId = removeSubmitButton.dataset.v3RemoveSubmit; const panel = removePanel(positionId); if (panel) removePosition(positionId, panel, removeSubmitButton); return; }
+    const feeSubmitButton = event.target.closest?.('[data-v3-fee-submit]');
+    if (feeSubmitButton) { const positionId = feeSubmitButton.dataset.v3FeeSubmit; const panel = feePanel(positionId); if (panel) collectFees(positionId, panel, feeSubmitButton); }
   });
 }
 async function createPosition(button) {

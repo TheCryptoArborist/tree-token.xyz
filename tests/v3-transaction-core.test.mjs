@@ -3,8 +3,9 @@ import {
   TREE_COIN_TYPE, SUI_COIN_TYPE, SUIDEX_V3_PACKAGE, SUIDEX_V3_POOL, SUIDEX_V3_VERSION,
   TREE_V3_TICK_SPACING, normalizeDecimalInput, decimalToRaw, encodeSignedI32, decodeSignedI32,
   ticksFromDisplayedPrices, minimumAfterSlippage, validateVerifiedPool, buildCreateTreeV3Position,
-  buildIncreaseTreeV3Position, buildRemoveTreeV3Position, assertAllowedIncreaseV3Transaction,
-  assertAllowedRemoveV3Transaction, simulationSucceeded, extractAddLiquidityEvent, extractRemoveLiquidityEvent,
+  buildIncreaseTreeV3Position, buildRemoveTreeV3Position, buildCollectTreeV3Fees, assertAllowedIncreaseV3Transaction,
+  assertAllowedRemoveV3Transaction, assertAllowedCollectFeeV3Transaction, simulationSucceeded,
+  extractAddLiquidityEvent, extractRemoveLiquidityEvent, extractFeeCollectedEvent,
 } from '../dapp/v3-transaction-core.js';
 
 assert.equal(normalizeDecimalInput('.1'), '0.1');
@@ -29,7 +30,7 @@ class MockTransaction {
   mergeCoins(primary, others) { this.commands.push({ $kind: 'MergeCoins', MergeCoins: { primary, others } }); }
   splitCoins(coin, amounts) { const result = [{ split: ++next, coin, amounts }]; this.commands.push({ $kind: 'SplitCoins', SplitCoins: { coin, amounts } }); return result; }
   transferObjects(objects, owner) { this.commands.push({ $kind: 'TransferObjects', TransferObjects: { objects, owner } }); }
-  moveCall(call) { const [pkg, module, fn] = call.target.split('::'); this.commands.push({ $kind: 'MoveCall', MoveCall: { package: pkg, module, function: fn, ...call } }); if (fn === 'add_liquidity') return [{ result: 'sui-left' }, { result: 'tree-left' }]; if (fn === 'remove_liquidity') return [{ result: 'sui-out' }, { result: 'tree-out' }]; return { result: `${module}::${fn}` }; }
+  moveCall(call) { const [pkg, module, fn] = call.target.split('::'); this.commands.push({ $kind: 'MoveCall', MoveCall: { package: pkg, module, function: fn, ...call } }); if (fn === 'add_liquidity') return [{ result: 'sui-left' }, { result: 'tree-left' }]; if (fn === 'remove_liquidity') return [{ result: 'sui-out' }, { result: 'tree-out' }]; if (module === 'collect' && fn === 'fee') return [{ result: 'sui-fee' }, { result: 'tree-fee' }]; return { result: `${module}::${fn}` }; }
   getData() { return { commands: this.commands }; }
 }
 const owner = `0x${'1'.repeat(64)}`;
@@ -59,6 +60,12 @@ assert.equal(removeCalls[0].arguments[2].value, 123_456n);
 assert.equal(removeCalls[0].arguments[3].value, 2_000n);
 assert.equal(removeCalls[0].arguments[4].value, 1_000n);
 assert.equal(assertAllowedRemoveV3Transaction(removeTx), true);
+const collectFeeTx = buildCollectTreeV3Fees({ Transaction: MockTransaction, owner, positionId });
+const collectFeeCalls = collectFeeTx.commands.filter((command) => command.$kind === 'MoveCall').map((command) => command.MoveCall);
+assert.deepEqual(collectFeeCalls.map((call) => `${call.module}::${call.function}`), ['collect::fee']);
+assert.deepEqual(collectFeeCalls[0].typeArguments, [SUI_COIN_TYPE, TREE_COIN_TYPE]);
+assert.equal(collectFeeCalls[0].arguments[1].object, positionId);
+assert.equal(assertAllowedCollectFeeV3Transaction(collectFeeTx), true);
 const simulation = {
   $kind: 'Transaction',
   Transaction: {
@@ -80,4 +87,12 @@ simulation.Transaction.events = [{
 }];
 assert.deepEqual(extractRemoveLiquidityEvent(simulation, positionId), { suiRaw: 2_000n, treeRaw: 1_000n, liquidityRaw: 123_456n });
 assert.equal(extractRemoveLiquidityEvent(simulation, `0x${'4'.repeat(64)}`), null);
+simulation.Transaction.events = [{
+  eventType: `${SUIDEX_V3_PACKAGE}::collect::FeeCollectedEvent`,
+  json: { pool_id: SUIDEX_V3_POOL, position_id: positionId, amount_x: '20', amount_y: '10' },
+}];
+assert.deepEqual(extractFeeCollectedEvent(simulation, positionId), { suiRaw: 20n, treeRaw: 10n });
+simulation.Transaction.events[0].json.amount_x = '0'; simulation.Transaction.events[0].json.amount_y = '0';
+assert.deepEqual(extractFeeCollectedEvent(simulation, positionId), { suiRaw: 0n, treeRaw: 0n });
+assert.equal(extractFeeCollectedEvent(simulation, `0x${'4'.repeat(64)}`), null);
 console.log('V3 transaction core tests passed.');
