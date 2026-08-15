@@ -7,6 +7,7 @@ assert.match(source, /PREVIEW_HOST_PATTERN/);
 assert.match(source, /Native V3 position execution is disabled on production/);
 assert.match(source, /Preview transaction review/);
 assert.match(source, /Nothing is signed or submitted until you approve/);
+assert.match(source, /validAddress\(window\.playerAddress\)/);
 assert.match(source, /classList\.remove\('v3-disabled-action', 'secondary'\)/);
 assert.match(source, /classList\.add\('button', 'primary'\)/);
 assert.match(source, /preliminarySimulation/);

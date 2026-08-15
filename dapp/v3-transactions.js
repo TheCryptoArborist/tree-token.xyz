@@ -22,6 +22,7 @@ function walletGlobals() {
   return Object.entries(window).filter(([name, value]) => value && (/(?:tree|sui).*wallet|wallet.*(?:tree|sui)|sign.*execute/i.test(name)));
 }
 async function connectedAddress() {
+  const sharedAddress = validAddress(window.playerAddress); if (sharedAddress) return sharedAddress;
   for (const [name, value] of walletGlobals()) {
     const direct = addressFrom(value); if (direct) return direct;
     if (typeof value === 'function' && /(?:get|current|connected).*(?:address|account|wallet|state)/i.test(name)) {
