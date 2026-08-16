@@ -181,11 +181,11 @@ async function loadDashboard() {
   }
 }
 
-function setChartState(state, timestamp, message) {
+function setChartState(state, timestamp, message, source = 'Market data') {
   const badge = document.getElementById('chartState');
   badge.textContent = state;
   badge.className = `data-state ${state.toLowerCase().replace(' ', '-')}`;
-  document.getElementById('chartMeta').textContent = `Source: Noodles.fi · Timestamp: ${timestamp || 'unavailable'} · Status: ${state.toLowerCase()}`;
+  document.getElementById('chartMeta').textContent = `Source: ${source} · Timestamp: ${timestamp || 'unavailable'} · Status: ${state.toLowerCase()}`;
   const messageElement = document.getElementById('chartMessage');
   messageElement.hidden = !message;
   messageElement.textContent = message || '';
@@ -250,24 +250,24 @@ async function loadChart(range = activeChartRange) {
     const payload = await response.json();
     if (payload.status === 'ok' && Array.isArray(payload.candles) && payload.candles.length) {
       drawMarketChart(payload.candles);
-      setChartState('Current', payload.generatedAt, null);
+      setChartState('Current', payload.generatedAt, null, payload.source || 'Market data');
       writeChartCache(range, payload);
     } else {
       const cached = readChartCache(range);
       if (cached?.candles?.length) {
         drawMarketChart(cached.candles);
-        setChartState('Stale', cached.generatedAt, 'Showing the last successful cached chart.');
+        setChartState('Stale', cached.generatedAt, 'Showing the last successful cached chart.', cached.source || 'Cached market data');
       } else {
         drawMarketChart([]);
         const label = payload.status === 'not-configured' ? 'Not configured' : payload.status === 'error' ? 'Error' : 'Empty';
-        setChartState(label, payload.generatedAt, label === 'Empty' ? 'No candles were returned for this range.' : payload.warnings?.[0] || label);
+        setChartState(label, payload.generatedAt, label === 'Empty' ? 'No candles were returned for this range.' : payload.warnings?.[0] || label, payload.source || 'Market data');
       }
     }
   } catch (error) {
     const cached = readChartCache(range);
     if (cached?.candles?.length) {
       drawMarketChart(cached.candles);
-      setChartState('Stale', cached.generatedAt, 'Showing the last successful cached chart.');
+      setChartState('Stale', cached.generatedAt, 'Showing the last successful cached chart.', cached.source || 'Cached market data');
     } else {
       drawMarketChart([]);
       setChartState('Error', null, 'Chart data is temporarily unavailable.');
