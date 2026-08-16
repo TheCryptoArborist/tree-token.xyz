@@ -34,10 +34,32 @@ function formatUsd(value) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', notation: numeric >= 100000 ? 'compact' : 'standard', maximumFractionDigits: numeric >= 1000 ? 1 : 2 }).format(numeric);
 }
 
+function formatPositionUsd(value) {
+  if (value === null || value === undefined || value === '') return 'Not verified';
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric) || numeric < 0) return 'Not verified';
+  if (numeric > 0 && numeric < 0.01) return '<$0.01';
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(numeric);
+}
+
 function formatNumber(value, maximumFractionDigits = 6) {
   const numeric = Number(value);
   if (!Number.isFinite(numeric)) return '—';
   return new Intl.NumberFormat('en-US', { maximumFractionDigits }).format(numeric);
+}
+
+function positionRangePercent(position) {
+  const lower = Number(position.tickLower);
+  const upper = Number(position.tickUpper);
+  const current = Number(position.currentTick);
+  if (![lower, upper, current].every(Number.isFinite) || upper <= lower) return 50;
+  return Math.max(0, Math.min(100, (current - lower) / (upper - lower) * 100));
+}
+
+function renderPositionRewards(position) {
+  if (!Array.isArray(position.rewards)) return '<div class="v3-earned-row unavailable"><span>Claimable rewards</span><strong>Not verified</strong></div>';
+  if (!position.rewards.length) return '<div class="v3-earned-row"><span>Claimable rewards</span><strong>None configured</strong></div>';
+  return position.rewards.map((reward) => `<div class="v3-earned-row"><span><b class="v3-reward-dot">${reward.symbol.slice(0, 1)}</b>${reward.symbol} rewards${reward.active ? '' : ' · ended'}</span><strong>${formatNumber(reward.amount, reward.decimals > 6 ? 8 : 4)} ${reward.symbol} <small>(${formatPositionUsd(reward.valueUsd)})</small></strong></div>`).join('');
 }
 
 function normalizeDecimalInput(value) {
@@ -279,9 +301,13 @@ function renderPositions(payload) {
   } else {
     list.innerHTML = positions.map((position) => `
       <article class="v3-position-card">
-        <div class="v3-position-head"><div><h3>SUI / TREE Position</h3><code title="${position.objectId}">${compactId(position.objectId)}</code></div><span class="v3-position-state ${position.inRange ? '' : 'review'}">${position.inRange ? 'In range' : 'Out of range'}</span></div>
-        <div class="v3-metrics"><div class="v3-metric"><span>Liquidity Units</span><strong>${Number(position.liquidityRaw).toLocaleString('en-US', { notation: 'compact', maximumFractionDigits: 2 })}</strong></div><div class="v3-metric"><span>Lower Tick</span><strong>${position.tickLower}</strong></div><div class="v3-metric"><span>Upper Tick</span><strong>${position.tickUpper}</strong></div><div class="v3-metric"><span>Current Tick</span><strong>${position.currentTick}</strong></div></div>
-        <div class="v3-position-actions" aria-label="Position management actions"><button type="button" data-v3-increase-position="${position.objectId}" ${V3_MANAGEMENT_ENABLED ? '' : 'disabled'}>Increase</button><button type="button" data-v3-remove-position="${position.objectId}" ${V3_MANAGEMENT_ENABLED ? '' : 'disabled'}>Remove</button><button type="button" data-v3-collect-fees-position="${position.objectId}" ${V3_MANAGEMENT_ENABLED ? '' : 'disabled'}>Collect Fees</button><button type="button" data-v3-claim-rewards-position="${position.objectId}" ${V3_MANAGEMENT_ENABLED ? '' : 'disabled'}>Claim Rewards</button><button type="button" data-v3-close-position="${position.objectId}" ${V3_MANAGEMENT_ENABLED ? '' : 'disabled'}>Close</button></div>
+        <div class="v3-position-head"><div><div class="v3-position-title"><h3>SUI / TREE</h3><span class="v3-chip">0.25% fee</span><span class="v3-position-state ${position.inRange ? '' : 'review'}">${position.inRange ? 'In range' : 'Out of range'}</span></div><code title="${position.objectId}">${compactId(position.objectId)}</code></div><strong class="v3-position-value">${formatPositionUsd(position.valueUsd)}</strong></div>
+        <div class="v3-token-balances"><span><b class="token-dot sui-dot">S</b>${formatNumber(position.principalSui, 6)} SUI <small>${formatPositionUsd(position.principalSuiUsd)}</small></span><span><b class="token-dot tree-dot">T</b>${formatNumber(position.principalTree, 4)} TREE <small>${formatPositionUsd(position.principalTreeUsd)}</small></span></div>
+        <div class="v3-range-visual" aria-label="Position range"><div class="v3-range-track"><span style="left:${positionRangePercent(position)}%"></span></div><div class="v3-range-labels"><span>Min: ${position.tickLower}</span><strong>Current: ${position.currentTick}</strong><span>Max: ${position.tickUpper}</span></div></div>
+        <div class="v3-earned-row fees"><span>Pending fees<small>${position.pendingFeeSui === null ? 'Accounting unavailable' : `${formatNumber(position.pendingFeeSui, 6)} SUI + ${formatNumber(position.pendingFeeTree, 4)} TREE`}</small></span><strong>${formatPositionUsd(position.pendingFeesUsd)}</strong></div>
+        <div class="v3-position-rewards">${renderPositionRewards(position)}</div>
+        <p class="v3-position-technical">Liquidity: ${Number(position.liquidityRaw).toLocaleString('en-US', { notation: 'compact', maximumFractionDigits: 2 })} units</p>
+        <div class="v3-position-actions" aria-label="Position management actions"><button class="add" type="button" data-v3-increase-position="${position.objectId}" ${V3_MANAGEMENT_ENABLED ? '' : 'disabled'}>+ Add</button><button type="button" data-v3-collect-fees-position="${position.objectId}" ${V3_MANAGEMENT_ENABLED ? '' : 'disabled'}>Fees</button><button class="claim" type="button" data-v3-claim-rewards-position="${position.objectId}" ${V3_MANAGEMENT_ENABLED ? '' : 'disabled'}>Claim</button><button type="button" data-v3-remove-position="${position.objectId}" ${V3_MANAGEMENT_ENABLED ? '' : 'disabled'}>Remove</button><button type="button" data-v3-close-position="${position.objectId}" ${V3_MANAGEMENT_ENABLED ? '' : 'disabled'}>Close</button></div>
         <div class="v3-increase-panel" data-v3-increase-panel="${position.objectId}" hidden>
           <div class="v3-form-grid"><label class="v3-field"><span>Maximum SUI</span><input inputmode="decimal" placeholder="0.001" data-v3-increase-sui></label><label class="v3-field"><span>Maximum TREE</span><input inputmode="decimal" placeholder="35.5" data-v3-increase-tree></label></div>
           <div class="v3-slippage-row"><span>Increase slippage</span><div role="group" aria-label="Increase position slippage"><button class="active" type="button" data-v3-increase-slippage="50">0.5%</button><button type="button" data-v3-increase-slippage="100">1%</button><button type="button" data-v3-increase-slippage="200">2%</button></div></div>
@@ -312,7 +338,7 @@ function renderPositions(payload) {
         <p class="v3-status">${V3_MANAGEMENT_ENABLED ? 'All position actions use guarded Mainnet simulations. Close only proceeds for a verified empty position.' : 'Position management is unavailable on this host.'}</p>
       </article>`).join('');
   }
-  status.textContent = `Complete public scan · ${payload.coverage?.objectsScanned ?? 0} V3 objects checked · Updated ${new Date(payload.generatedAt).toLocaleTimeString()}`;
+  status.textContent = `Complete wallet scan · ${payload.coverage?.objectsScanned ?? 0} V3 objects checked · Updated ${new Date(payload.generatedAt).toLocaleTimeString()}`;
   status.className = 'v3-status ok';
 }
 

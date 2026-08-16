@@ -6,8 +6,11 @@ import {
   normalizeCoinType,
   parseSignedI32,
   parseSuiDexV3Analytics,
+  parseTreeV3PoolAccounting,
+  parseTreeV3TickState,
   parseTreeV3Pool,
   parseTreeV3Position,
+  valueTreeV3Position,
 } from '../netlify/lib/tree-v3-overview.ts';
 import { TREE_COIN_TYPE } from '../netlify/lib/leaderboard-provider.ts';
 
@@ -54,6 +57,9 @@ const position = parseTreeV3Position({
     tick_upper_index: '10',
     owed_coin_x: '500000',
     owed_coin_y: '100000000',
+    fee_growth_inside_x_last: '800',
+    fee_growth_inside_y_last: '1700',
+    reward_infos: [{ reward_growth_inside_last: '4900', coins_owed_reward: '7' }],
   } } },
 }, owner, pool);
 
@@ -63,6 +69,41 @@ assert.equal(position.owedTreeRaw, '500000');
 assert.equal(position.owedSuiRaw, '100000000');
 assert.equal(position.tickLower, -10);
 assert.equal(position.tickUpper, 10);
+
+const accounting = parseTreeV3PoolAccounting({
+  id: TREE_V3_POOL_ID,
+  ticks: { id: `0x${'d'.repeat(64)}` },
+  fee_growth_global_x: '1000',
+  fee_growth_global_y: '2000',
+  reward_infos: [{
+    reward_coin_type: '0xbfac5e1c6bf6ef29b12f7723857695fd2f4da9a11a7d88162c15e9124c243a4a::victory_token::VICTORY_TOKEN',
+    reward_growth_global: '5000', reward_per_seconds: '0', last_update_time: '2000', ended_at_seconds: '2000',
+  }],
+}, pool);
+assert.ok(accounting);
+const lowerTick = parseTreeV3TickState({ bits: 4294967286 }, {
+  fee_growth_outside_x: '100', fee_growth_outside_y: '200', reward_growths_outside: ['10'],
+});
+const upperTick = parseTreeV3TickState({ bits: 10 }, {
+  fee_growth_outside_x: '20', fee_growth_outside_y: '30', reward_growths_outside: ['5'],
+});
+assert.ok(lowerTick);
+assert.ok(upperTick);
+const valued = valueTreeV3Position({ ...position, liquidityRaw: Q64.toString() }, pool, accounting, new Map([
+  [-10, lowerTick], [10, upperTick],
+]), {
+  suiUsd: 1,
+  treeUsd: 0.001,
+  rewardsUsd: { [accounting.rewards[0].coinType]: 2 },
+}, 2000);
+assert.equal(valued.accountingStatus, 'verified');
+assert.equal(valued.pendingFeeTreeRaw, '500080');
+assert.equal(valued.pendingFeeSuiRaw, '100000070');
+assert.equal(valued.rewards?.[0].amountRaw, '92');
+assert.equal(valued.rewards?.[0].symbol, 'VICTORY');
+assert.ok(Number(valued.principalSui) > 0);
+assert.ok(Number(valued.principalTree) > 0);
+assert.ok(valued.valueUsd !== null && valued.valueUsd > 0);
 
 assert.equal(parseTreeV3Position({
   address: `0x${'c'.repeat(64)}`,

@@ -5,7 +5,7 @@ const source = readFileSync(new URL('../dapp/v3-workspace.js', import.meta.url),
 const css = readFileSync(new URL('../dapp/v3-workspace.css', import.meta.url), 'utf8');
 
 for (const label of ['Pools', 'My Positions', 'Swap']) assert.ok(source.includes(`>${label}<`) || source.includes(`>${label}</button>`));
-for (const action of ['Increase', 'Remove', 'Collect Fees', 'Claim Rewards', 'Close']) assert.ok(source.includes(`>${action}<`));
+for (const action of ['+ Add', 'Remove', 'Fees', 'Claim', 'Close']) assert.ok(source.includes(`>${action}<`));
 assert.ok(source.includes('data-v3-increase-position'));
 assert.ok(source.includes('data-v3-remove-position'));
 assert.ok(source.includes('data-v3-collect-fees-position'));
@@ -26,6 +26,9 @@ assert.ok(source.includes("analytics.status === 'verified'"));
 assert.ok(source.includes('analytics.feeAprPercent'));
 assert.ok(source.includes("document.getElementById('v3AprBreakdown')"));
 assert.ok(source.includes('SuiDex verified analytics'));
+for (const metric of ['position.valueUsd', 'position.principalSui', 'position.principalTree', 'position.pendingFeesUsd', 'position.rewards', 'position.tickLower', 'position.currentTick', 'position.tickUpper']) assert.ok(source.includes(metric));
+assert.ok(source.includes('v3-range-track'));
+assert.ok(source.includes('renderPositionRewards'));
 assert.ok(!source.includes('3 verified rewards'));
 assert.ok(!source.includes('Rewards not verified'));
 assert.ok(source.includes('24H Volume'));
@@ -35,6 +38,8 @@ assert.ok(source.includes('window.playerAddress'));
 assert.ok(source.includes("'tree:wallet-changed'"));
 assert.ok(source.includes("value === null || value === undefined || value === ''"));
 assert.ok(css.includes('.v3-tabs'));
+assert.ok(css.includes('.v3-token-balances'));
+assert.ok(css.includes('.v3-earned-row'));
 assert.ok(css.includes('@media(max-width:390px)'));
 
 console.log('Native TREE V3 workspace source safeguards passed.');

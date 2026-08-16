@@ -1,4 +1,5 @@
 import { TREE_COIN_TYPE, normalizeSuiAddress } from './leaderboard-provider.ts';
+import { CLMM_Q64, amountsForLiquidityQ64, tickToSqrtPriceQ64 } from './clmm-q64.ts';
 
 export const TREE_V3_PACKAGE = '0xb5f529c1dcda6580a61bf7ee9fbd524b50be62f11044d137c8202c8cbace9e56';
 export const TREE_V3_POOL_ID = '0x39d5ba22e01e45bc4129ec28a0bef52e8fee8db5d07d337adf9540e3cb9074cf';
@@ -7,6 +8,11 @@ export const SUI_COIN_TYPE = '0x2::sui::SUI';
 export const TREE_V3_FEE_PERCENT = 0.25;
 export const TREE_DECIMALS = 6;
 export const SUI_DECIMALS = 9;
+export const TREE_V3_REWARD_TOKENS = Object.freeze([
+  Object.freeze({ coinType: '0xbfac5e1c6bf6ef29b12f7723857695fd2f4da9a11a7d88162c15e9124c243a4a::victory_token::VICTORY_TOKEN', symbol: 'VICTORY', decimals: 6 }),
+  Object.freeze({ coinType: TREE_COIN_TYPE, symbol: 'TREE', decimals: TREE_DECIMALS }),
+  Object.freeze({ coinType: '0xaafb102dd0902f5055cadecd687fb5b71ca82ef0e0285d90afde828ec58ca96b::btc::BTC', symbol: 'wBTC', decimals: 8 }),
+]);
 
 export type JsonRecord = Record<string, unknown>;
 
@@ -64,6 +70,67 @@ export type TreeV3PositionView = {
   inRange: boolean;
   owedSuiRaw: string;
   owedTreeRaw: string;
+  principalSuiRaw: string;
+  principalTreeRaw: string;
+  principalSui: string;
+  principalTree: string;
+  principalSuiUsd: number | null;
+  principalTreeUsd: number | null;
+  valueUsd: number | null;
+  pendingFeeSuiRaw: string | null;
+  pendingFeeTreeRaw: string | null;
+  pendingFeeSui: string | null;
+  pendingFeeTree: string | null;
+  pendingFeesUsd: number | null;
+  rewards: TreeV3PositionRewardView[] | null;
+  accountingStatus: 'verified' | 'unavailable';
+};
+
+export type TreeV3PositionRewardView = {
+  coinType: string;
+  symbol: string;
+  decimals: number;
+  amountRaw: string;
+  amount: string;
+  priceUsd: number | null;
+  valueUsd: number | null;
+  active: boolean;
+};
+
+export type TreeV3PositionState = Omit<TreeV3PositionView,
+  'principalSuiRaw' | 'principalTreeRaw' | 'principalSui' | 'principalTree'
+  | 'principalSuiUsd' | 'principalTreeUsd' | 'valueUsd'
+  | 'pendingFeeSuiRaw' | 'pendingFeeTreeRaw' | 'pendingFeeSui' | 'pendingFeeTree'
+  | 'pendingFeesUsd' | 'rewards' | 'accountingStatus'> & {
+  feeGrowthInsideSuiLastRaw: string;
+  feeGrowthInsideTreeLastRaw: string;
+  rewardStates: Array<{ growthInsideLastRaw: string; owedRaw: string }>;
+};
+
+export type TreeV3TickState = {
+  tick: number;
+  feeGrowthOutsideXRaw: string;
+  feeGrowthOutsideYRaw: string;
+  rewardGrowthsOutsideRaw: string[];
+};
+
+export type TreeV3PoolAccounting = {
+  ticksTableId: string;
+  feeGrowthGlobalXRaw: string;
+  feeGrowthGlobalYRaw: string;
+  rewards: Array<{
+    coinType: string;
+    rewardGrowthGlobalRaw: string;
+    rewardPerSecondX64Raw: string;
+    lastUpdateSeconds: number;
+    endsAtSeconds: number;
+  }>;
+};
+
+export type TreeV3ValuationPrices = {
+  suiUsd: number | null;
+  treeUsd: number | null;
+  rewardsUsd: Record<string, number>;
 };
 
 export function record(value: unknown): JsonRecord {
@@ -269,12 +336,12 @@ export function parseSuiDexV3Analytics(
   };
 }
 
-export function parseTreeV3Position(nodeValue: unknown, owner: string, pool: TreeV3PoolView): TreeV3PositionView | null {
+export function parseTreeV3Position(nodeValue: unknown, owner: string, pool: TreeV3PoolView): TreeV3PositionState | null {
   const node = record(nodeValue);
   const objectId = normalizeSuiAddress(node.address);
   const normalizedOwner = normalizeSuiAddress(owner);
   if (!objectId || !normalizedOwner || ownerAddress(node) !== normalizedOwner) return null;
-  const json = record(record(record(node.asMoveObject).contents).json);
+  const json = record(record(node.contents ?? record(node.asMoveObject).contents).json);
   const poolId = normalizeSuiAddress(json.pool_id);
   const tokenX = normalizeCoinType(json.type_x);
   const tokenY = normalizeCoinType(json.type_y);
@@ -284,6 +351,17 @@ export function parseTreeV3Position(nodeValue: unknown, owner: string, pool: Tre
   if (poolId !== pool.poolId || tokenX !== pool.tokenX || tokenY !== pool.tokenY || liquidity === null || tickLower === null || tickUpper === null || tickLower >= tickUpper) return null;
   const owedX = parseUnsigned(json.owed_coin_x) ?? 0n;
   const owedY = parseUnsigned(json.owed_coin_y) ?? 0n;
+  const feeGrowthXLast = parseUnsigned(json.fee_growth_inside_x_last);
+  const feeGrowthYLast = parseUnsigned(json.fee_growth_inside_y_last);
+  const rewardStates = Array.isArray(json.reward_infos) ? json.reward_infos.map((value) => {
+    const reward = record(value);
+    const growthInsideLast = parseUnsigned(reward.reward_growth_inside_last);
+    const owed = parseUnsigned(reward.coins_owed_reward);
+    return growthInsideLast === null || owed === null ? null : {
+      growthInsideLastRaw: growthInsideLast.toString(), owedRaw: owed.toString(),
+    };
+  }) : [];
+  if (feeGrowthXLast === null || feeGrowthYLast === null || rewardStates.some((value) => value === null)) return null;
   const treeIsX = tokenX === NORMALIZED_TREE;
   return {
     objectId,
@@ -295,5 +373,194 @@ export function parseTreeV3Position(nodeValue: unknown, owner: string, pool: Tre
     inRange: pool.currentTick >= tickLower && pool.currentTick < tickUpper,
     owedSuiRaw: (treeIsX ? owedY : owedX).toString(),
     owedTreeRaw: (treeIsX ? owedX : owedY).toString(),
+    feeGrowthInsideSuiLastRaw: (treeIsX ? feeGrowthYLast : feeGrowthXLast).toString(),
+    feeGrowthInsideTreeLastRaw: (treeIsX ? feeGrowthXLast : feeGrowthYLast).toString(),
+    rewardStates: rewardStates as Array<{ growthInsideLastRaw: string; owedRaw: string }>,
+  };
+}
+
+export function parseTreeV3PoolAccounting(jsonValue: unknown, pool: TreeV3PoolView): TreeV3PoolAccounting | null {
+  const json = record(jsonValue);
+  if (normalizeSuiAddress(json.id) !== pool.poolId) return null;
+  const ticksTableId = normalizeSuiAddress(record(json.ticks).id);
+  const feeGrowthGlobalX = parseUnsigned(json.fee_growth_global_x);
+  const feeGrowthGlobalY = parseUnsigned(json.fee_growth_global_y);
+  if (!ticksTableId || feeGrowthGlobalX === null || feeGrowthGlobalY === null) return null;
+  const rewards = [];
+  for (const value of Array.isArray(json.reward_infos) ? json.reward_infos : []) {
+    const reward = record(value);
+    const coinType = normalizeCoinType(reward.reward_coin_type);
+    const rewardGrowthGlobal = parseUnsigned(reward.reward_growth_global);
+    const rewardPerSecondX64 = parseUnsigned(reward.reward_per_seconds);
+    const lastUpdateSeconds = Number(reward.last_update_time);
+    const endsAtSeconds = Number(reward.ended_at_seconds);
+    if (!coinType || rewardGrowthGlobal === null || rewardPerSecondX64 === null
+      || !Number.isSafeInteger(lastUpdateSeconds) || lastUpdateSeconds < 0
+      || !Number.isSafeInteger(endsAtSeconds) || endsAtSeconds < 0) return null;
+    rewards.push({
+      coinType,
+      rewardGrowthGlobalRaw: rewardGrowthGlobal.toString(),
+      rewardPerSecondX64Raw: rewardPerSecondX64.toString(),
+      lastUpdateSeconds,
+      endsAtSeconds,
+    });
+  }
+  return {
+    ticksTableId,
+    feeGrowthGlobalXRaw: feeGrowthGlobalX.toString(),
+    feeGrowthGlobalYRaw: feeGrowthGlobalY.toString(),
+    rewards,
+  };
+}
+
+export function parseTreeV3TickState(nameValue: unknown, valueValue: unknown): TreeV3TickState | null {
+  const tick = parseSignedI32(nameValue);
+  const value = record(valueValue);
+  const feeGrowthOutsideX = parseUnsigned(value.fee_growth_outside_x);
+  const feeGrowthOutsideY = parseUnsigned(value.fee_growth_outside_y);
+  if (tick === null || feeGrowthOutsideX === null || feeGrowthOutsideY === null) return null;
+  const rewardGrowthsOutsideRaw = [];
+  for (const growthValue of Array.isArray(value.reward_growths_outside) ? value.reward_growths_outside : []) {
+    const growth = parseUnsigned(growthValue);
+    if (growth === null) return null;
+    rewardGrowthsOutsideRaw.push(growth.toString());
+  }
+  return {
+    tick,
+    feeGrowthOutsideXRaw: feeGrowthOutsideX.toString(),
+    feeGrowthOutsideYRaw: feeGrowthOutsideY.toString(),
+    rewardGrowthsOutsideRaw,
+  };
+}
+
+const U128_MODULUS = 1n << 128n;
+
+function subtractU128(left: bigint, right: bigint): bigint {
+  return (left - right + U128_MODULUS) % U128_MODULUS;
+}
+
+function growthInsideQ64(
+  global: bigint,
+  lowerOutside: bigint,
+  upperOutside: bigint,
+  currentTick: number,
+  lowerTick: number,
+  upperTick: number,
+): bigint {
+  const below = currentTick >= lowerTick ? lowerOutside : subtractU128(global, lowerOutside);
+  const above = currentTick < upperTick ? upperOutside : subtractU128(global, upperOutside);
+  return subtractU128(subtractU128(global, below), above);
+}
+
+function amountUsd(raw: bigint, decimals: number, priceUsd: number | null): number | null {
+  if (priceUsd === null || !Number.isFinite(priceUsd) || priceUsd <= 0) return null;
+  const amount = Number(formatRawAmount(raw, decimals));
+  const value = amount * priceUsd;
+  return Number.isFinite(value) && value >= 0 ? value : null;
+}
+
+export function valueTreeV3Position(
+  state: TreeV3PositionState,
+  pool: TreeV3PoolView,
+  accounting: TreeV3PoolAccounting | null,
+  tickStates: Map<number, TreeV3TickState>,
+  prices: TreeV3ValuationPrices,
+  nowSeconds = Math.floor(Date.now() / 1000),
+): TreeV3PositionView {
+  const liquidity = parseUnsigned(state.liquidityRaw) ?? 0n;
+  const amounts = amountsForLiquidityQ64(
+    BigInt(pool.sqrtPriceRaw),
+    tickToSqrtPriceQ64(state.tickLower),
+    tickToSqrtPriceQ64(state.tickUpper),
+    liquidity,
+  );
+  const treeIsX = pool.tokenX === NORMALIZED_TREE;
+  const principalSuiRaw = treeIsX ? amounts.amountY : amounts.amountX;
+  const principalTreeRaw = treeIsX ? amounts.amountX : amounts.amountY;
+  const principalSuiUsd = amountUsd(principalSuiRaw, SUI_DECIMALS, prices.suiUsd);
+  const principalTreeUsd = amountUsd(principalTreeRaw, TREE_DECIMALS, prices.treeUsd);
+  const base = {
+    objectId: state.objectId,
+    poolId: state.poolId,
+    liquidityRaw: state.liquidityRaw,
+    tickLower: state.tickLower,
+    tickUpper: state.tickUpper,
+    currentTick: state.currentTick,
+    inRange: state.inRange,
+    owedSuiRaw: state.owedSuiRaw,
+    owedTreeRaw: state.owedTreeRaw,
+    principalSuiRaw: principalSuiRaw.toString(),
+    principalTreeRaw: principalTreeRaw.toString(),
+    principalSui: formatRawAmount(principalSuiRaw, SUI_DECIMALS),
+    principalTree: formatRawAmount(principalTreeRaw, TREE_DECIMALS),
+    principalSuiUsd,
+    principalTreeUsd,
+    valueUsd: principalSuiUsd !== null && principalTreeUsd !== null ? principalSuiUsd + principalTreeUsd : null,
+  };
+  const unavailable = {
+    ...base,
+    pendingFeeSuiRaw: null,
+    pendingFeeTreeRaw: null,
+    pendingFeeSui: null,
+    pendingFeeTree: null,
+    pendingFeesUsd: null,
+    rewards: null,
+    accountingStatus: 'unavailable' as const,
+  };
+  const lower = tickStates.get(state.tickLower);
+  const upper = tickStates.get(state.tickUpper);
+  if (!accounting || !lower || !upper || accounting.rewards.length !== state.rewardStates.length) return unavailable;
+
+  const globalX = BigInt(accounting.feeGrowthGlobalXRaw);
+  const globalY = BigInt(accounting.feeGrowthGlobalYRaw);
+  const insideX = growthInsideQ64(globalX, BigInt(lower.feeGrowthOutsideXRaw), BigInt(upper.feeGrowthOutsideXRaw), state.currentTick, state.tickLower, state.tickUpper);
+  const insideY = growthInsideQ64(globalY, BigInt(lower.feeGrowthOutsideYRaw), BigInt(upper.feeGrowthOutsideYRaw), state.currentTick, state.tickLower, state.tickUpper);
+  const insideSui = treeIsX ? insideY : insideX;
+  const insideTree = treeIsX ? insideX : insideY;
+  const pendingFeeSuiRaw = BigInt(state.owedSuiRaw) + liquidity * subtractU128(insideSui, BigInt(state.feeGrowthInsideSuiLastRaw)) / CLMM_Q64;
+  const pendingFeeTreeRaw = BigInt(state.owedTreeRaw) + liquidity * subtractU128(insideTree, BigInt(state.feeGrowthInsideTreeLastRaw)) / CLMM_Q64;
+  const pendingFeeSuiUsd = amountUsd(pendingFeeSuiRaw, SUI_DECIMALS, prices.suiUsd);
+  const pendingFeeTreeUsd = amountUsd(pendingFeeTreeRaw, TREE_DECIMALS, prices.treeUsd);
+
+  const tokenRegistry = new Map(TREE_V3_REWARD_TOKENS.map((token) => [normalizeCoinType(token.coinType), token]));
+  const rewards: TreeV3PositionRewardView[] = [];
+  for (let index = 0; index < accounting.rewards.length; index += 1) {
+    const poolReward = accounting.rewards[index];
+    const token = tokenRegistry.get(poolReward.coinType);
+    if (!token) return unavailable;
+    let globalGrowth = BigInt(poolReward.rewardGrowthGlobalRaw);
+    const updateUntil = Math.min(nowSeconds, poolReward.endsAtSeconds);
+    if (updateUntil > poolReward.lastUpdateSeconds && liquidity >= 0n) {
+      const poolLiquidity = BigInt(pool.liquidityRaw);
+      if (poolLiquidity <= 0n) return unavailable;
+      globalGrowth += BigInt(poolReward.rewardPerSecondX64Raw) * BigInt(updateUntil - poolReward.lastUpdateSeconds) / poolLiquidity;
+    }
+    const lowerOutside = BigInt(lower.rewardGrowthsOutsideRaw[index] ?? '0');
+    const upperOutside = BigInt(upper.rewardGrowthsOutsideRaw[index] ?? '0');
+    const inside = growthInsideQ64(globalGrowth, lowerOutside, upperOutside, state.currentTick, state.tickLower, state.tickUpper);
+    const positionReward = state.rewardStates[index];
+    const amountRaw = BigInt(positionReward.owedRaw) + liquidity * subtractU128(inside, BigInt(positionReward.growthInsideLastRaw)) / CLMM_Q64;
+    const priceUsd = prices.rewardsUsd[poolReward.coinType] ?? null;
+    rewards.push({
+      coinType: poolReward.coinType,
+      symbol: token.symbol,
+      decimals: token.decimals,
+      amountRaw: amountRaw.toString(),
+      amount: formatRawAmount(amountRaw, token.decimals),
+      priceUsd,
+      valueUsd: amountUsd(amountRaw, token.decimals, priceUsd),
+      active: poolReward.endsAtSeconds > nowSeconds,
+    });
+  }
+
+  return {
+    ...base,
+    pendingFeeSuiRaw: pendingFeeSuiRaw.toString(),
+    pendingFeeTreeRaw: pendingFeeTreeRaw.toString(),
+    pendingFeeSui: formatRawAmount(pendingFeeSuiRaw, SUI_DECIMALS),
+    pendingFeeTree: formatRawAmount(pendingFeeTreeRaw, TREE_DECIMALS),
+    pendingFeesUsd: pendingFeeSuiUsd !== null && pendingFeeTreeUsd !== null ? pendingFeeSuiUsd + pendingFeeTreeUsd : null,
+    rewards,
+    accountingStatus: 'verified',
   };
 }
