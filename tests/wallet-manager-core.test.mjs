@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import {
   compatibleSuiWallets,
   dedupeWallets,
+  getSuiPersonalMessageFeature,
   getSuiSignFeature,
   isSlushWallet,
   isSlushWebWallet,
@@ -34,6 +35,9 @@ const nonSui = wallet('Other Chain', { features: { 'standard:connect': connect }
 
 assert.equal(getSuiSignFeature(slushWeb), 'sui:signAndExecuteTransaction');
 assert.equal(getSuiSignFeature(nonSui), null);
+assert.equal(getSuiPersonalMessageFeature({ features: { 'sui:signPersonalMessage': {} } }), 'sui:signPersonalMessage');
+assert.equal(getSuiPersonalMessageFeature({ features: { 'sui:signMessage': {} } }), 'sui:signMessage');
+assert.equal(getSuiPersonalMessageFeature(nonSui), null);
 assert.equal(isSlushWallet(slushWeb), true);
 assert.equal(isSlushWebWallet({ id: 'com.mystenlabs.suiwallet.web', name: 'Slush' }), true);
 assert.equal(isSlushWebWallet(slushExtension), false);

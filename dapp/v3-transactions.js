@@ -1,13 +1,14 @@
 import {
   SUI_COIN_TYPE, TREE_DECIMALS, SUI_DECIMALS, DEFAULT_SLIPPAGE_BPS, MIN_SUI_GAS_RESERVE_RAW, TREE_V3_REWARD_TOKENS,
   SUIDEX_V3_POOL, SUIDEX_V3_PACKAGE,
+  isTreeV3ExecutionHost,
   decimalToRaw, rawToDecimal, ticksFromDisplayedPrices, minimumAfterSlippage, validateVerifiedPool,
   buildCreateTreeV3Position, buildIncreaseTreeV3Position, buildRemoveTreeV3Position, buildCollectTreeV3Fees, buildCollectTreeV3Rewards, buildCloseTreeV3Position,
   extractAddLiquidityEvent, extractRemoveLiquidityEvent, extractFeeCollectedEvent, extractRewardCollectedEvents, simulationSucceeded, positionDeleted,
 } from './v3-transaction-core.js';
 
-const PREVIEW_HOST_PATTERN = /^deploy-preview-\d+--tree-token\.netlify\.app$/;
-const EXECUTION_ENABLED = PREVIEW_HOST_PATTERN.test(location.hostname) || ['localhost','127.0.0.1','::1'].includes(location.hostname);
+const EXECUTION_ENABLED = isTreeV3ExecutionHost(location.hostname);
+const PRODUCTION_EXECUTION = ['tree-token.xyz', 'www.tree-token.xyz'].includes(location.hostname.toLowerCase());
 const SDK_URL = 'https://esm.run/@mysten/sui@2.23.1/transactions';
 let slippageBps = DEFAULT_SLIPPAGE_BPS;
 let busy = false;
@@ -97,15 +98,15 @@ function installControls(button) {
     wrapper.querySelectorAll('[data-v3-position-slippage]').forEach((choice) => choice.addEventListener('click', () => { slippageBps = Number(choice.dataset.v3PositionSlippage); wrapper.querySelectorAll('[data-v3-position-slippage]').forEach((item) => item.classList.toggle('active', item === choice)); }));
   }
   button.id = 'v3CreatePosition'; button.dataset.v3TransactionsReady = 'true'; button.disabled = !EXECUTION_ENABLED;
-  button.textContent = EXECUTION_ENABLED ? 'Create SUI/TREE V3 Position' : 'V3 position execution under review';
+  button.textContent = EXECUTION_ENABLED ? 'Create SUI/TREE V3 Position' : 'V3 position execution unavailable';
   if (EXECUTION_ENABLED) {
     const phaseBadge = document.querySelector('#v3 .section-heading .data-state');
     const plannerNote = document.querySelector('#v3 .v3-add-card .v3-status');
-    if (phaseBadge) phaseBadge.textContent = 'Preview transaction review';
-    if (plannerNote) plannerNote.textContent = 'Preview builder enabled. Nothing is signed or submitted until you approve the final wallet request.';
-    button.classList.remove('v3-disabled-action', 'secondary'); button.classList.add('button', 'primary'); setStatus('Preview mode: every position transaction is simulated twice before wallet approval.');
+    if (phaseBadge) phaseBadge.textContent = PRODUCTION_EXECUTION ? 'Mainnet transactions live' : 'Preview transaction review';
+    if (plannerNote) plannerNote.textContent = 'Transaction builder enabled. Nothing is signed or submitted until you approve the final wallet request.';
+    button.classList.remove('v3-disabled-action', 'secondary'); button.classList.add('button', 'primary'); setStatus('Every position transaction is simulated twice before wallet approval.');
   }
-  else setStatus('Native V3 position execution remains disabled on production during review.');
+  else setStatus('Native V3 position execution is unavailable on this host.');
 }
 function confirmText(data) {
   return ['Create this SUI/TREE V3 position?','',`Range ticks: ${data.tickLower} to ${data.tickUpper}`,`Maximum TREE supplied: ${rawToDecimal(data.treeRaw,TREE_DECIMALS,6)} TREE`,`Maximum SUI supplied: ${rawToDecimal(data.suiRaw,SUI_DECIMALS,9)} SUI`,`Simulated TREE deposit: ${rawToDecimal(data.preliminary.treeRaw,TREE_DECIMALS,6)} TREE`,`Simulated SUI deposit: ${rawToDecimal(data.preliminary.suiRaw,SUI_DECIMALS,9)} SUI`,`Minimum TREE deposit: ${rawToDecimal(data.minTreeRaw,TREE_DECIMALS,6)} TREE`,`Minimum SUI deposit: ${rawToDecimal(data.minSuiRaw,SUI_DECIMALS,9)} SUI`,`Slippage: ${(slippageBps/100).toFixed(2)}%`,'','The exact transaction was simulated again before this wallet request.'].join('\n');
@@ -140,7 +141,7 @@ async function increasePosition(positionId, panel, button) {
   if (increaseBusy.has(positionId)) return;
   increaseBusy.add(positionId); button.disabled = true;
   try {
-    if (!EXECUTION_ENABLED) throw new Error('V3 position management is disabled on production during review.');
+    if (!EXECUTION_ENABLED) throw new Error('V3 position management is unavailable on this host.');
     const owner = await connectedAddress(); if (!owner) throw new Error('Connect a Sui wallet before increasing a position.');
     const client = await suiClient(); const data = await overview(owner);
     const position = Array.isArray(data.positions) ? data.positions.find((item) => item.objectId === positionId) : null;
@@ -179,7 +180,7 @@ async function removePosition(positionId, panel, button) {
   if (removeBusy.has(positionId)) return;
   removeBusy.add(positionId); button.disabled = true;
   try {
-    if (!EXECUTION_ENABLED) throw new Error('V3 position management is disabled on production during review.');
+    if (!EXECUTION_ENABLED) throw new Error('V3 position management is unavailable on this host.');
     const owner = await connectedAddress(); if (!owner) throw new Error('Connect a Sui wallet before removing liquidity.');
     const client = await suiClient(); const data = await overview(owner);
     const position = Array.isArray(data.positions) ? data.positions.find((item) => item.objectId === positionId) : null;
@@ -222,7 +223,7 @@ async function collectFees(positionId, panel, button) {
   if (feeBusy.has(positionId)) return;
   feeBusy.add(positionId); button.disabled = true;
   try {
-    if (!EXECUTION_ENABLED) throw new Error('V3 position management is disabled on production during review.');
+    if (!EXECUTION_ENABLED) throw new Error('V3 position management is unavailable on this host.');
     const owner = await connectedAddress(); if (!owner) throw new Error('Connect a Sui wallet before collecting fees.');
     const client = await suiClient(); const data = await overview(owner);
     const position = Array.isArray(data.positions) ? data.positions.find((item) => item.objectId === positionId) : null;
@@ -261,7 +262,7 @@ async function collectRewards(positionId, panel, button) {
   if (rewardBusy.has(positionId)) return;
   rewardBusy.add(positionId); button.disabled = true;
   try {
-    if (!EXECUTION_ENABLED) throw new Error('V3 position management is disabled on production during review.');
+    if (!EXECUTION_ENABLED) throw new Error('V3 position management is unavailable on this host.');
     const owner = await connectedAddress(); if (!owner) throw new Error('Connect a Sui wallet before claiming rewards.');
     const client = await suiClient(); const data = await overview(owner);
     const position = Array.isArray(data.positions) ? data.positions.find((item) => item.objectId === positionId) : null;
@@ -303,7 +304,7 @@ async function closePosition(positionId, panel, button) {
   if (closeBusy.has(positionId)) return;
   closeBusy.add(positionId); button.disabled = true;
   try {
-    if (!EXECUTION_ENABLED) throw new Error('V3 position management is disabled on production during review.');
+    if (!EXECUTION_ENABLED) throw new Error('V3 position management is unavailable on this host.');
     const owner = await connectedAddress(); if (!owner) throw new Error('Connect a Sui wallet before closing a position.');
     const client = await suiClient(); const data = await overview(owner);
     const position = Array.isArray(data.positions) ? data.positions.find((item) => item.objectId === positionId) : null;
@@ -419,7 +420,7 @@ function bindIncreaseActions() {
 async function createPosition(button) {
   if (busy) return; busy = true; button.disabled = true;
   try {
-    if (!EXECUTION_ENABLED) throw new Error('Native V3 position execution is disabled on production during review.');
+    if (!EXECUTION_ENABLED) throw new Error('Native V3 position execution is unavailable on this host.');
     const owner = await connectedAddress(); if (!owner) throw new Error('Connect a Sui wallet before creating a position.');
     const client = await suiClient(); const data = await overview();
     const suiRaw = decimalToRaw(node('v3SuiAmount','v3AmountSui')?.value, SUI_DECIMALS); const treeRaw = decimalToRaw(node('v3TreeAmount','v3AmountTree')?.value, TREE_DECIMALS);

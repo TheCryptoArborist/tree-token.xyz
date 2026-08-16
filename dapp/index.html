@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="panel-router.css">
   <link rel="stylesheet" href="swap-router.css">
+  <link rel="stylesheet" href="limit-orders.css">
   <link rel="stylesheet" href="v3-transactions.css">
   <script type="module" src="../scripts/wallet.js"></script>
 </head>
@@ -68,11 +69,33 @@
       </div>
     </section>
 
-<section class="section utility-route-section" id="limit" aria-labelledby="limit-title">
-      <div class="section-heading"><div><p class="eyebrow">Planned integration</p><h2 id="limit-title">TREE Limit Orders</h2><p>A dedicated home for target-price orders without presenting an unfinished transaction flow as live.</p></div><span class="data-state stale">Planned</span></div>
-      <div class="route-card-grid">
-        <article class="card route-card"><span class="card-icon">⌁</span><h3>Set a target instead of watching the chart</h3><p>The proposed flow will escrow the selected asset on Sui and fill only when the target price is reached. Contract, quote, fee, expiry, cancellation, and simulation requirements must be completed before launch.</p><strong>No TREE limit orders are accepted on this page today.</strong></article>
-        <article class="card route-card"><span class="card-icon">↕</span><h3>Use the live swap route now</h3><p>Until a verified TREE limit-order contract is integrated, use SuiDex for current market execution and review every wallet transaction before signing.</p><a class="button secondary" href="https://dex.suidex.org/swap" target="_blank" rel="noopener noreferrer">Open SuiDex Swap</a></article>
+<section class="section compact-section" id="limit" aria-labelledby="limit-title">
+      <div class="section-heading"><div><p class="eyebrow">Target-price execution</p><h2 id="limit-title">TREE Limit Orders</h2><p>Escrow SUI or TREE on Sui Mainnet and let Aftermath execute the order when your target becomes available.</p></div><span class="data-state ok">Aftermath Mainnet</span></div>
+      <div class="limit-workspace">
+        <div class="limit-card">
+          <div class="limit-card-header"><h3>Create order</h3><span class="limit-provider">Verified SUI/TREE route</span></div>
+          <div class="limit-direction" role="group" aria-label="Limit order direction"><button class="active" type="button" data-limit-direction="buy-tree">Buy TREE</button><button type="button" data-limit-direction="sell-tree">Sell TREE</button></div>
+          <label class="limit-field" for="limitAmount"><span id="limitAmountLabel">You allocate (SUI)</span><span id="limitInputBalance">Balance —</span></label>
+          <div class="limit-input-row"><input id="limitAmount" type="text" inputmode="decimal" autocomplete="off" placeholder="0.0"><button id="limitMax" type="button">MAX</button><strong id="limitInputSymbol">SUI</strong></div>
+          <label class="limit-field" for="limitTarget"><span>Target price</span><small>SUI per TREE</small></label>
+          <div class="limit-input-row"><input id="limitTarget" type="text" inputmode="decimal" autocomplete="off" placeholder="0.000025"><strong>SUI/TREE</strong></div>
+          <label class="limit-field" for="limitExpiry"><span>Expires after</span></label>
+          <select id="limitExpiry"><option value="1h">1 hour</option><option value="24h" selected>24 hours</option><option value="7d">7 days</option><option value="30d">30 days</option></select>
+          <div class="limit-summary">
+            <span>Current market</span><strong id="limitCurrentPrice">Loading…</strong>
+            <span>Estimated receive</span><strong id="limitEstimatedOutput">—</strong>
+            <span>Order condition</span><strong id="limitCondition">Enter a target</strong>
+            <span>Protocol minimum</span><strong id="limitMinimum">Loading…</strong>
+          </div>
+          <p class="limit-notice">Your allocation plus 0.05 SUI execution gas is held by Aftermath until the order fills, expires, or is canceled. Normal Sui network gas also applies.</p>
+          <button class="button primary limit-action" id="limitCreate" type="button">Connect Wallet</button>
+          <p class="status" id="limitStatus" role="status" aria-live="polite">Loading the TREE limit-order service…</p>
+        </div>
+        <div class="limit-orders-panel">
+          <div class="limit-orders-header"><div><h3>Your orders</h3><p>Authorization only proves wallet ownership. It does not submit a transaction.</p></div><button class="button secondary" id="limitRefresh" type="button">Authorize &amp; Refresh</button></div>
+          <div class="limit-order-tabs" role="tablist"><button class="active" id="limitActiveTab" type="button" role="tab" aria-selected="true">Active</button><button id="limitPastTab" type="button" role="tab" aria-selected="false">Past</button></div>
+          <div id="limitOrders" class="limit-orders-list"><p class="muted">Connect a wallet, then authorize a read-only order lookup.</p></div>
+        </div>
       </div>
     </section>
 
@@ -210,6 +233,7 @@
   <footer>Official TREE coin type: <code>0x6c5a…4895cf::tree::TREE</code></footer>
   <script type="module" src="app.js"></script>
   <script type="module" src="swap-router.js"></script>
+  <script type="module" src="limit-orders.js"></script>
   <script type="module" src="../scripts/canopy-draw.js"></script>
   <script type="module" src="../scripts/profile-studio.js"></script>
   <script type="module" src="v3-workspace.js"></script>

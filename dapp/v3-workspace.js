@@ -1,8 +1,9 @@
+import { isTreeV3ExecutionHost } from './v3-transaction-core.js';
+
 const V3_ENDPOINT = '/api/tree-v3-overview';
 const V3_POOL_ID = '0x39d5ba22e01e45bc4129ec28a0bef52e8fee8db5d07d337adf9540e3cb9074cf';
 const V3_VERIFIED_REWARD_SYMBOLS = ['VICTORY', 'TREE', 'wBTC'];
-const V3_MANAGEMENT_ENABLED = /^deploy-preview-\d+--tree-token\.netlify\.app$/.test(location.hostname)
-  || ['localhost', '127.0.0.1', '::1'].includes(location.hostname);
+const V3_MANAGEMENT_ENABLED = isTreeV3ExecutionHost(location.hostname);
 
 const state = {
   overview: null,
@@ -300,7 +301,7 @@ function renderPositions(payload) {
           <button class="button primary" type="button" data-v3-close-submit="${position.objectId}">Check Position and Simulate Close</button>
           <p class="v3-status" role="status" aria-live="polite" data-v3-close-status>No wallet request is made while anything remains in the position.</p>
         </div>
-        <p class="v3-status">${V3_MANAGEMENT_ENABLED ? 'All position actions are enabled for guarded preview review. Close only proceeds for a verified empty position.' : 'Position management remains disabled on production during review.'}</p>
+        <p class="v3-status">${V3_MANAGEMENT_ENABLED ? 'All position actions use guarded Mainnet simulations. Close only proceeds for a verified empty position.' : 'Position management is unavailable on this host.'}</p>
       </article>`).join('');
   }
   status.textContent = `Complete public scan · ${payload.coverage?.objectsScanned ?? 0} V3 objects checked · Updated ${new Date(payload.generatedAt).toLocaleTimeString()}`;

@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {
   TREE_COIN_TYPE, SUI_COIN_TYPE, SUIDEX_V3_PACKAGE, SUIDEX_V3_POOL, SUIDEX_V3_VERSION, TREE_V3_REWARD_TOKENS,
+  isTreeV3ExecutionHost,
   TREE_V3_TICK_SPACING, normalizeDecimalInput, decimalToRaw, encodeSignedI32, decodeSignedI32,
   ticksFromDisplayedPrices, minimumAfterSlippage, validateVerifiedPool, buildCreateTreeV3Position,
   buildIncreaseTreeV3Position, buildRemoveTreeV3Position, buildCollectTreeV3Fees, buildCollectTreeV3Rewards, buildCloseTreeV3Position,
@@ -9,6 +10,12 @@ import {
   extractAddLiquidityEvent, extractRemoveLiquidityEvent, extractFeeCollectedEvent, extractRewardCollectedEvents,
 } from '../dapp/v3-transaction-core.js';
 
+assert.equal(isTreeV3ExecutionHost('tree-token.xyz'), true);
+assert.equal(isTreeV3ExecutionHost('www.tree-token.xyz'), true);
+assert.equal(isTreeV3ExecutionHost('deploy-preview-16--tree-token.netlify.app'), true);
+assert.equal(isTreeV3ExecutionHost('localhost'), true);
+assert.equal(isTreeV3ExecutionHost('tree-token.netlify.app'), false);
+assert.equal(isTreeV3ExecutionHost('tree-token.xyz.attacker.example'), false);
 assert.equal(normalizeDecimalInput('.1'), '0.1');
 assert.equal(decimalToRaw('.1', 9), 100_000_000n);
 assert.equal(decimalToRaw('1000.123456', 6), 1_000_123_456n);

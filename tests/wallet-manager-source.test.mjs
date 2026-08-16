@@ -14,6 +14,8 @@ assert.match(wallet, /isSlushWebWallet/);
 assert.match(wallet, /location\.assign\(slushBrowseUrl/);
 assert.match(wallet, /@mysten\/sui@2\.23\.1\/grpc/);
 assert.match(wallet, /walletSignAndExecuteTransaction/);
+assert.match(wallet, /window\.signTreePersonalMessage = signTreePersonalMessage/);
+assert.match(wallet, /sui:signPersonalMessage/);
 assert.match(wallet, /_getClient\(\)\.core\.getBalance/);
 assert.doesNotMatch(wallet, /new SuiClient|@mysten\/sui@1\.43\.0\/client/);
 assert.match(wallet, /registerSlushWallet\(APP_NAME, \{ network: NETWORK \}\)/);

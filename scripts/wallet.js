@@ -8,6 +8,7 @@ import { SuiGrpcClient } from 'https://esm.run/@mysten/sui@2.23.1/grpc';
 import {
   SUI_MAINNET_CHAIN,
   compatibleSuiWallets,
+  getSuiPersonalMessageFeature,
   getSuiSignFeature,
   isSlushWallet,
   isSlushWebWallet,
@@ -566,6 +567,19 @@ async function signAndExecuteTransactionBlock(transaction) {
   });
 }
 
+async function signTreePersonalMessage(message) {
+  if (!_wallet || !_address || !_account) throw new Error('Wallet not connected');
+  if (!(message instanceof Uint8Array)) throw new Error('Personal message must be bytes.');
+  const featureName = getSuiPersonalMessageFeature(_wallet);
+  if (!featureName) throw new Error('Wallet does not support personal-message signing.');
+  const feature = _wallet.features[featureName];
+  if (featureName === 'sui:signPersonalMessage') {
+    return feature.signPersonalMessage({ message, account: _account, chain: CHAIN });
+  }
+  const result = await feature.signMessage({ message, account: _account });
+  return { bytes: result.messageBytes, signature: result.signature };
+}
+
 async function initializeWallet() {
   await _waitForWalletRegistration();
   const saved = _load();
@@ -606,6 +620,7 @@ window.getAvailableWallets = getAvailableWallets;
 window.initializeWallet = initializeWallet;
 window.getBalance = getBalance;
 window.signAndExecuteTransactionBlock = signAndExecuteTransactionBlock;
+window.signTreePersonalMessage = signTreePersonalMessage;
 window.checkBalanceAndNFT = checkBalanceAndNFT;
 window.initSuiClient = _getClient;
 window.TREE_WALLET_STANDARD_URL = WALLET_STANDARD_URL;

@@ -3,8 +3,9 @@ import { readFileSync } from 'node:fs';
 
 const source = readFileSync(new URL('../dapp/v3-transactions.js', import.meta.url), 'utf8');
 const core = readFileSync(new URL('../dapp/v3-transaction-core.js', import.meta.url), 'utf8');
-assert.match(source, /PREVIEW_HOST_PATTERN/);
-assert.match(source, /Native V3 position execution is disabled on production/);
+assert.match(source, /isTreeV3ExecutionHost/);
+assert.match(source, /Mainnet transactions live/);
+assert.match(source, /Native V3 position execution is unavailable on this host/);
 assert.match(source, /Preview transaction review/);
 assert.match(source, /Nothing is signed or submitted until you approve/);
 assert.match(source, /validAddress\(window\.playerAddress\)/);

@@ -5,6 +5,11 @@ export const SUI_SIGN_FEATURES = [
   'sui:signAndExecuteTransactionBlock',
 ];
 
+export const SUI_PERSONAL_MESSAGE_FEATURES = [
+  'sui:signPersonalMessage',
+  'sui:signMessage',
+];
+
 export function getSuiSignFeature(wallet) {
   for (const feature of SUI_SIGN_FEATURES) {
     if (wallet?.features?.[feature]) return feature;
@@ -44,6 +49,13 @@ export function walletKey(wallet) {
 export function isSlushWallet(wallet) {
   const identity = `${wallet?.id || ''} ${wallet?.name || ''}`.toLowerCase();
   return identity.includes('slush') || identity.includes('stashed') || identity.includes('sui wallet');
+}
+
+export function getSuiPersonalMessageFeature(wallet) {
+  for (const feature of SUI_PERSONAL_MESSAGE_FEATURES) {
+    if (wallet?.features?.[feature]) return feature;
+  }
+  return null;
 }
 
 export function isSlushWebWallet(wallet) {

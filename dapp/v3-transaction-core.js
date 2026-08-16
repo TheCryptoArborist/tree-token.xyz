@@ -15,6 +15,16 @@ export const TREE_V3_REWARD_TOKENS = Object.freeze([
   Object.freeze({ coinType: '0xaafb102dd0902f5055cadecd687fb5b71ca82ef0e0285d90afde828ec58ca96b::btc::BTC', symbol: 'wBTC', decimals: 8 }),
 ]);
 
+const TREE_V3_PREVIEW_HOST_PATTERN = /^deploy-preview-\d+--tree-token\.netlify\.app$/;
+const TREE_V3_PRODUCTION_HOSTS = new Set(['tree-token.xyz', 'www.tree-token.xyz']);
+
+export function isTreeV3ExecutionHost(value) {
+  const hostname = String(value ?? '').trim().toLowerCase().replace(/\.$/, '');
+  return TREE_V3_PRODUCTION_HOSTS.has(hostname)
+    || TREE_V3_PREVIEW_HOST_PATTERN.test(hostname)
+    || ['localhost', '127.0.0.1', '::1', '[::1]'].includes(hostname);
+}
+
 const U32_MODULUS = 0x1_0000_0000;
 const MIN_TICK = -443_636;
 const MAX_TICK = 443_636;
