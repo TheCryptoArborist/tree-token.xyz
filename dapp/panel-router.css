@@ -1,9 +1,9 @@
 html.app-tabbed{scroll-padding-top:0}
+.app-panel[hidden]{display:none!important}
 .app-tabbed body{min-height:100vh}
 .app-tabbed .app-nav{grid-template-columns:repeat(9,minmax(74px,1fr))}
 .app-tabbed main{width:min(1060px,calc(100% - 30px));min-height:calc(100vh - 170px);padding:24px 0 64px}
 .app-tabbed main>.section{margin-top:0}
-.app-tabbed .app-panel[hidden]{display:none!important}
 .app-tabbed .app-panel.active-panel{display:block;animation:treePanelIn .18s ease-out}
 .app-tabbed .app-panel:focus{outline:none}
 .app-tabbed .app-nav a[aria-selected="true"]{color:var(--text);border-color:var(--cyan);background:linear-gradient(180deg,rgba(53,200,255,.1),transparent)}

@@ -33,6 +33,8 @@ const nav = document.querySelector('.app-nav');
 const navLinks = [...(nav?.querySelectorAll('a[href^="#"]') || [])];
 let activePanelId = null;
 
+panels.forEach((panel) => panel.classList.add('app-panel'));
+
 function resolvePanelId(hash = location.hash) {
   const id = decodeURIComponent(String(hash || '').replace(/^#/, ''));
   if (panels.has(id)) return id;
