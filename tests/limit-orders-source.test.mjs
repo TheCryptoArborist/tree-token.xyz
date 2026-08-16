@@ -26,6 +26,9 @@ test('server has strict path, origin, proof, and no-integrator-fee controls', ()
   assert.match(server, /assertAllowedTreeLimitTransaction/);
   assert.match(server, /assertTreeLimitAccountProof/);
   assert.match(server, /assertTreeLimitCancelProof/);
+  assert.match(server, /sdkPromise = null/);
+  assert.match(server, /retrySafeAftermath/);
+  assert.match(server, /getCoinsToPrice/);
   assert.match(server, /outputToInputStopLossExchangeRate: 0/);
   assert.doesNotMatch(server, /integratorFeeBps/);
 });

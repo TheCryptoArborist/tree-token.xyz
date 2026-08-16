@@ -40,8 +40,25 @@ function allowedOrigin(request: Request) {
 }
 
 async function sdk() {
-  sdkPromise ||= Aftermath.create({ network: 'MAINNET' });
-  return sdkPromise;
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    sdkPromise ||= Aftermath.create({ network: 'MAINNET' });
+    try { return await sdkPromise; } catch (error) {
+      sdkPromise = null;
+      if (attempt === 1) throw error;
+    }
+  }
+  throw new Error('Aftermath Mainnet initialization failed.');
+}
+
+async function retrySafeAftermath<T>(operation: (aftermath: Aftermath) => Promise<T>) {
+  let lastError: unknown;
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try { return await operation(await sdk()); } catch (error) {
+      lastError = error;
+      sdkPromise = null;
+    }
+  }
+  throw lastError;
 }
 
 async function body(request: Request) {
@@ -63,33 +80,40 @@ export default async (request: Request) => {
   const url = new URL(request.url);
   const action = url.searchParams.get('action') || '';
   try {
-    const aftermath = await sdk();
-    const limitOrders = aftermath.LimitOrders();
     if (request.method === 'GET' && action === 'config') {
-      return json({ status: 'ok', provider: 'Aftermath Mainnet', minOrderSizeUsd: await limitOrders.getMinOrderSizeUsd() });
+      const config = await retrySafeAftermath(async (aftermath) => {
+        const [minOrderSizeUsd, coinPricesUsd] = await Promise.all([
+          aftermath.LimitOrders().getMinOrderSizeUsd(),
+          aftermath.Prices().getCoinsToPrice({ coins: [TREE_LIMIT_SUI_TYPE, TREE_LIMIT_TREE_TYPE] }),
+        ]);
+        return { minOrderSizeUsd, coinPricesUsd };
+      });
+      return json({ status: 'ok', provider: 'Aftermath Mainnet', ...config });
     }
     if (request.method === 'GET' && action === 'past') {
       const walletAddress = normalizeSuiAddress(url.searchParams.get('owner'));
       if (!walletAddress) return json({ status: 'error', error: 'invalid-owner' }, 400);
-      return json({ status: 'ok', orders: orders(await limitOrders.getPastLimitOrders({ walletAddress }), walletAddress) });
+      const values = await retrySafeAftermath((aftermath) => aftermath.LimitOrders().getPastLimitOrders({ walletAddress }));
+      return json({ status: 'ok', orders: orders(values, walletAddress) });
     }
     if (request.method !== 'POST') return json({ status: 'error', error: 'method-not-allowed' }, 405);
     const input = await body(request);
     if (action === 'user-key') {
       const walletAddress = normalizeSuiAddress(input.walletAddress);
       if (!walletAddress) return json({ status: 'error', error: 'invalid-owner' }, 400);
-      const publicKey = await aftermath.UserData().getUserPublicKey({ walletAddress });
+      const publicKey = await retrySafeAftermath((aftermath) => aftermath.UserData().getUserPublicKey({ walletAddress }));
       return json({ status: 'ok', registered: Boolean(publicKey) });
     }
     if (action === 'register-user') {
       const proof = validateTreeLimitProof(input);
       assertTreeLimitAccountProof(proof.bytes);
+      const aftermath = await sdk();
       const registered = await aftermath.UserData().createUserPublicKey(proof);
       return json({ status: registered ? 'ok' : 'error', registered: Boolean(registered) }, registered ? 200 : 502);
     }
     if (action === 'create') {
       const validated = validateTreeLimitCreate(input);
-      const transaction = await limitOrders.getCreateLimitOrderTx({
+      const transaction = await retrySafeAftermath((aftermath) => aftermath.LimitOrders().getCreateLimitOrderTx({
         walletAddress: validated.walletAddress,
         allocateCoinType: validated.allocateCoinType,
         allocateCoinAmount: validated.allocateCoinAmount,
@@ -98,7 +122,7 @@ export default async (request: Request) => {
         outputToInputExchangeRate: validated.outputToInputExchangeRate,
         outputToInputStopLossExchangeRate: 0,
         isSponsoredTx: false,
-      });
+      }));
       assertAllowedTreeLimitTransaction(transaction, validated);
       return json({
         status: 'ok',
@@ -117,13 +141,15 @@ export default async (request: Request) => {
     if (action === 'active') {
       const proof = validateTreeLimitProof(input);
       assertTreeLimitAccountProof(proof.bytes);
-      return json({ status: 'ok', orders: orders(await limitOrders.getActiveLimitOrders(proof), proof.walletAddress) });
+      const values = await retrySafeAftermath((aftermath) => aftermath.LimitOrders().getActiveLimitOrders(proof));
+      return json({ status: 'ok', orders: orders(values, proof.walletAddress) });
     }
     if (action === 'cancel') {
       const proof = validateTreeLimitProof(input);
       const orderId = validateTreeLimitOrderId(input.orderId);
       assertTreeLimitCancelProof(proof.bytes, orderId);
-      const canceled = await limitOrders.cancelLimitOrder(proof);
+      const aftermath = await sdk();
+      const canceled = await aftermath.LimitOrders().cancelLimitOrder(proof);
       return json({ status: canceled ? 'ok' : 'error', canceled: Boolean(canceled) }, canceled ? 200 : 502);
     }
     return json({ status: 'error', error: 'unknown-action' }, 400);
@@ -132,7 +158,8 @@ export default async (request: Request) => {
     const message = error instanceof Error && /^(A valid|Allocated|Choose|Enter|Limit|Target|Unexpected)/.test(error.message)
       ? error.message
       : 'The TREE limit-order service could not complete this request.';
-    return json({ status: 'error', error: 'limit-order-unavailable', message }, 502);
+    const retryable = ['config', 'past', 'user-key', 'create', 'active'].includes(action);
+    return json({ status: 'error', error: 'limit-order-unavailable', stage: action || 'service', retryable, message }, 502);
   }
 };
 

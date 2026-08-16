@@ -68,6 +68,14 @@ export function estimateLimitOutput({ direction, amount, targetPrice }) {
   return Number.isFinite(output) && output > 0 ? output : null;
 }
 
+export function minimumLimitInput({ minOrderSizeUsd, inputPriceUsd }) {
+  const minimum = Number(minOrderSizeUsd);
+  const price = Number(inputPriceUsd);
+  if (!(minimum > 0) || !(price > 0)) return null;
+  const amount = minimum / price;
+  return Number.isFinite(amount) && amount > 0 ? amount : null;
+}
+
 export function createLimitAccountMessage() { return { action: 'CREATE_USER_ACCOUNT' }; }
 export function cancelLimitMessage(orderId) {
   const normalized = normalizeLimitAddress(orderId);

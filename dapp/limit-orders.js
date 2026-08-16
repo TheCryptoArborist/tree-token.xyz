@@ -4,11 +4,11 @@ import {
   LIMIT_TREE_DECIMALS, LIMIT_TREE_TYPE, assertAllowedLimitTransaction, cancelLimitMessage,
   createLimitAccountMessage, encodeLimitMessage, estimateLimitOutput, extractCreatedLimitOrder,
   isFavorableLimitTarget, limitDecimalToRaw, limitDirection, limitRawToDecimal, limitSimulationSucceeded,
-  normalizeLimitAddress, treeLimitOrderDirection, validateLimitBalanceChanges, validateLimitTargetPrice,
+  minimumLimitInput, normalizeLimitAddress, treeLimitOrderDirection, validateLimitBalanceChanges, validateLimitTargetPrice,
 } from './limit-orders-core.js';
 
 const API = '/api/tree-limit-orders';
-const state = { direction: 'buy-tree', currentPrice: 0, minUsd: null, balances: { sui: 0n, tree: 0n }, balanceOwner: null, busy: false, tab: 'active', orders: [], accountProof: null };
+const state = { direction: 'buy-tree', currentPrice: 0, minUsd: null, coinPricesUsd: { sui: null, tree: null }, balances: { sui: 0n, tree: 0n }, balanceOwner: null, busy: false, tab: 'active', orders: [], accountProof: null };
 const el = {};
 
 function setStatus(message, kind = '') { el.status.textContent = message; el.status.className = `status${kind ? ` ${kind}` : ''}`; }
@@ -21,13 +21,21 @@ function currentWallet() { return normalizeLimitAddress(window.playerAddress); }
 async function client() { if (typeof window.initSuiClient !== 'function') throw new Error('The Sui Mainnet client is unavailable.'); return window.initSuiClient(); }
 
 async function api(action, options = {}) {
-  const response = await fetch(`${API}?action=${encodeURIComponent(action)}${options.query || ''}`, {
-    method: options.body ? 'POST' : 'GET', headers: options.body ? { 'Content-Type': 'application/json', Accept: 'application/json' } : { Accept: 'application/json' },
-    body: options.body ? JSON.stringify(options.body) : undefined, cache: 'no-store',
-  });
-  const payload = await response.json().catch(() => ({}));
-  if (!response.ok || payload.status !== 'ok') throw new Error(payload.message || 'The TREE limit-order service is unavailable.');
-  return payload;
+  const safeToRetry = ['config', 'past', 'user-key', 'create', 'active'].includes(action);
+  let lastPayload = {};
+  for (let attempt = 0; attempt < (safeToRetry ? 2 : 1); attempt += 1) {
+    const response = await fetch(`${API}?action=${encodeURIComponent(action)}${options.query || ''}`, {
+      method: options.body ? 'POST' : 'GET', headers: options.body ? { 'Content-Type': 'application/json', Accept: 'application/json' } : { Accept: 'application/json' },
+      body: options.body ? JSON.stringify(options.body) : undefined, cache: 'no-store',
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (response.ok && payload.status === 'ok') return payload;
+    lastPayload = payload;
+    if (!safeToRetry || payload.retryable === false || attempt === 1) break;
+    await new Promise((resolve) => setTimeout(resolve, 350));
+  }
+  const labels = { create: 'The order builder', 'user-key': 'Wallet registration lookup', active: 'Active-order lookup', past: 'Past-order lookup', config: 'The limit-order service' };
+  throw new Error(lastPayload.message || `${labels[action] || 'The TREE limit-order service'} could not complete this request. Please try again.`);
 }
 
 async function connectIfNeeded() {
@@ -76,6 +84,12 @@ function formPlan() {
   if (state.currentPrice > 0 && !isFavorableLimitTarget(state.direction, target.numeric, state.currentPrice)) {
     throw new Error(state.direction === 'buy-tree' ? 'A buy target must be below the current TREE price.' : 'A sell target must be above the current TREE price.');
   }
+  const inputPriceUsd = state.direction === 'buy-tree' ? state.coinPricesUsd.sui : state.coinPricesUsd.tree;
+  const requiredInput = minimumLimitInput({ minOrderSizeUsd: state.minUsd, inputPriceUsd });
+  const numericAmount = Number(amountText.replace(/,/g, ''));
+  if (requiredInput && numericAmount + Number.EPSILON < requiredInput) {
+    throw new Error(`The $${Number(state.minUsd).toFixed(2)} protocol minimum currently requires at least ${numberText(requiredInput, direction.inputDecimals === 9 ? 3 : 0)} ${direction.inputSymbol}.`);
+  }
   return { walletAddress: owner, direction: state.direction, allocateCoinAmount: allocateCoinAmount.toString(), targetPriceSuiPerTree: target.text, expiryDurationMs: expiryMs(), amountText, inputSymbol: direction.inputSymbol, outputSymbol: direction.outputSymbol };
 }
 
@@ -87,7 +101,9 @@ function renderForm() {
   const balance = state.direction === 'buy-tree' ? state.balances.sui : state.balances.tree;
   el.balance.textContent = currentWallet() ? `Balance ${limitRawToDecimal(balance, direction.inputDecimals, direction.inputDecimals === 9 ? 4 : 2)} ${direction.inputSymbol}` : 'Balance —';
   el.currentPrice.textContent = state.currentPrice > 0 ? `${numberText(state.currentPrice, 12)} SUI` : 'Unavailable';
-  el.minimum.textContent = state.minUsd ? `≈ $${Number(state.minUsd).toFixed(2)}` : '≈ $5.00';
+  const inputPriceUsd = state.direction === 'buy-tree' ? state.coinPricesUsd.sui : state.coinPricesUsd.tree;
+  const requiredInput = minimumLimitInput({ minOrderSizeUsd: state.minUsd, inputPriceUsd });
+  el.minimum.textContent = state.minUsd ? `≈ $${Number(state.minUsd).toFixed(2)}${requiredInput ? ` (at least ${numberText(requiredInput, direction.inputDecimals === 9 ? 3 : 0)} ${direction.inputSymbol})` : ''}` : '≈ $5.00';
   try {
     const target = validateLimitTargetPrice(el.target.value).numeric;
     const amount = Number(el.amount.value.replace(/,/g, ''));
@@ -245,6 +261,10 @@ async function initialize() {
   try {
     const [config, overview] = await Promise.all([api('config'), fetch('/api/tree-v3-overview', { headers: { Accept: 'application/json' }, cache: 'no-store' }).then((response) => response.ok ? response.json() : null)]);
     state.minUsd = config.minOrderSizeUsd;
+    state.coinPricesUsd = {
+      sui: Number(config.coinPricesUsd?.[LIMIT_SUI_TYPE]) || null,
+      tree: Number(config.coinPricesUsd?.[LIMIT_TREE_TYPE]) || null,
+    };
     const price = Number(overview?.pool?.priceSuiPerTree ?? overview?.priceSuiPerTree ?? overview?.market?.priceSuiPerTree ?? 0);
     state.currentPrice = Number.isFinite(price) ? price : 0;
     setStatus('Ready. Orders are restricted to TREE/SUI through Aftermath Mainnet.');

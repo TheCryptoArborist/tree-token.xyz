@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {
   LIMIT_AFTERMATH_PACKAGE, LIMIT_SUI_TYPE, LIMIT_TREE_TYPE, assertAllowedLimitTransaction,
   cancelLimitMessage, estimateLimitOutput, extractCreatedLimitOrder, isFavorableLimitTarget,
-  limitDecimalToRaw, limitRawToDecimal, validateLimitBalanceChanges,
+  limitDecimalToRaw, limitRawToDecimal, minimumLimitInput, validateLimitBalanceChanges,
 } from '../dapp/limit-orders-core.js';
 
 const owner = `0x${'1'.repeat(64)}`;
@@ -25,6 +25,8 @@ test('decimal conversion is exact and direction estimates are correct', () => {
   assert.equal(estimateLimitOutput({ direction: 'sell-tree', amount: 400000, targetPrice: 0.000025 }), 10);
   assert.equal(isFavorableLimitTarget('buy-tree', 0.00002, 0.00003), true);
   assert.equal(isFavorableLimitTarget('sell-tree', 0.00002, 0.00003), false);
+  assert.equal(minimumLimitInput({ minOrderSizeUsd: 5, inputPriceUsd: 0.675 }), 5 / 0.675);
+  assert.equal(minimumLimitInput({ minOrderSizeUsd: 5, inputPriceUsd: null }), null);
 });
 
 test('transaction allowlist accepts only the exact Aftermath SUI/TREE call', () => {
