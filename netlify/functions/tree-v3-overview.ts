@@ -6,6 +6,7 @@ import {
   TREE_V3_POSITION_TYPE,
   parseTreeV3Pool,
   parseTreeV3Position,
+  parseSuiDexV3Analytics,
   record,
   type JsonRecord,
 } from '../lib/tree-v3-overview.ts';
@@ -15,6 +16,7 @@ const GRAPHQL_URL = 'https://graphql.mainnet.sui.io/graphql';
 const GRPC_HOST = 'fullnode.mainnet.sui.io:443';
 const MAX_POSITION_PAGES = 20;
 const POSITION_PAGE_SIZE = 50;
+const SUIDEX_ANALYTICS_URL = 'https://dex.suidex.org/api/v3/pools-enriched';
 
 const POSITION_SCAN_QUERY = `query ScanTreeV3Positions($first: Int!, $after: String, $type: String!) {
   objects(first: $first, after: $after, filter: { type: $type }) {
@@ -73,6 +75,20 @@ async function getReferencePrices() {
   }
 }
 
+async function getSuiDexAnalyticsPayload() {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 5_000);
+  try {
+    const result = await fetch(SUIDEX_ANALYTICS_URL, { headers: { Accept: 'application/json' }, signal: controller.signal });
+    if (!result.ok) return null;
+    return result.json();
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 async function scanPositions(owner: string, pool: NonNullable<ReturnType<typeof parseTreeV3Pool>>) {
   const positions = [];
   const seen = new Set<string>();
@@ -124,9 +140,10 @@ export default async (request: Request) => {
   if (ownerInput && !owner) return response({ status: 'error', error: 'invalid-owner' }, 400, 'no-store');
 
   try {
-    const [poolObject, prices] = await Promise.all([getPoolObject(), getReferencePrices()]);
+    const [poolObject, prices, analyticsPayload] = await Promise.all([getPoolObject(), getReferencePrices(), getSuiDexAnalyticsPayload()]);
     const pool = parseTreeV3Pool(poolObject, prices);
     if (!pool) return response({ status: 'error', generatedAt, error: 'pool-verification-failed' }, 503, 'no-store');
+    const analytics = parseSuiDexV3Analytics(analyticsPayload, pool);
 
     if (!owner) {
       return response({
@@ -136,16 +153,17 @@ export default async (request: Request) => {
         provider: 'sui-grpc-plus-verified-config',
         market: { ...prices, source: prices.suiUsd || prices.treeUsd ? 'coingecko' : 'unavailable' },
         pool,
-        analytics: {
+        analytics: analytics ?? {
           volume24hUsd: null,
           fees24hUsd: null,
           aprPercent: null,
           rewards: [],
-          status: 'not-published-without-verified-source',
+          status: 'not-published-without-verified-source', source: null,
         },
-        warnings: pool.tvlUsdEstimate === null
-          ? ['Pool TVL estimate is unavailable because one or both reference prices could not be verified.']
-          : ['TVL is an estimate from current on-chain reserves and external USD reference prices.'],
+        warnings: [
+          ...(pool.tvlUsdEstimate === null ? ['Pool TVL estimate is unavailable because one or both reference prices could not be verified.'] : ['TVL is an estimate from current on-chain reserves and external USD reference prices.']),
+          ...(!analytics ? ['SuiDex volume, fee, and incentive analytics could not be independently validated.'] : []),
+        ],
       });
     }
 

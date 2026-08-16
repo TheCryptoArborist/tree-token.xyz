@@ -5,6 +5,7 @@ import {
   formatRawAmount,
   normalizeCoinType,
   parseSignedI32,
+  parseSuiDexV3Analytics,
   parseTreeV3Pool,
   parseTreeV3Position,
 } from '../netlify/lib/tree-v3-overview.ts';
@@ -77,5 +78,50 @@ assert.equal(parseTreeV3Pool({
   sqrt_price: Q64.toString(),
   liquidity: '1', reserve_x: '1', reserve_y: '1', tick_spacing: 60, swap_fee_rate: 2500,
 }), null);
+
+const victoryType = '0xbfac5e1c6bf6ef29b12f7723857695fd2f4da9a11a7d88162c15e9124c243a4a::victory_token::VICTORY_TOKEN';
+const analyticsTvl = pool.tvlUsdEstimate!;
+const analyticsFees = 2.5;
+const feeApr = analyticsFees * 365 / analyticsTvl * 100;
+const rewardApr = 100 * 1 * 365 / analyticsTvl * 100;
+const analytics = parseSuiDexV3Analytics({
+  pools: [{
+    pool_id: TREE_V3_POOL_ID,
+    token_x_type: TREE_COIN_TYPE,
+    token_y_type: SUI_COIN_TYPE,
+    fee_rate: 2500,
+    tick_spacing: 60,
+    approved: true,
+    tvl_usd: analyticsTvl,
+    volume_24h_usd: 1000,
+    fees_24h_usd: analyticsFees,
+    fee_apr: feeApr,
+    reward_apr: rewardApr,
+    total_apr: feeApr + rewardApr,
+    rewards: [{
+      coin_type: victoryType,
+      symbol: 'VICTORY_TOKEN',
+      decimals: 6,
+      per_day: '100000000',
+      price_usd: 1,
+      ended_at: 2_000_000_000,
+    }],
+  }],
+  tokenPrices: { [victoryType]: 1 },
+}, pool, 1_900_000_000);
+
+assert.ok(analytics);
+assert.equal(analytics.volume24hUsd, 1000);
+assert.equal(analytics.fees24hUsd, 2.5);
+assert.equal(analytics.rewards.length, 1);
+assert.equal(analytics.rewards[0].symbol, 'VICTORY');
+assert.equal(analytics.rewards[0].perDay, 100);
+assert.equal(analytics.aprPercent, feeApr + rewardApr);
+
+assert.equal(parseSuiDexV3Analytics({ pools: [{
+  pool_id: TREE_V3_POOL_ID, token_x_type: TREE_COIN_TYPE, token_y_type: SUI_COIN_TYPE,
+  fee_rate: 2500, tick_spacing: 60, approved: true, tvl_usd: analyticsTvl,
+  volume_24h_usd: 1000, fees_24h_usd: 999, fee_apr: 0, reward_apr: 0, total_apr: 0, rewards: [],
+}], tokenPrices: {} }, pool, 1_900_000_000), null);
 
 console.log('TREE V3 overview fixtures passed.');

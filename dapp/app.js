@@ -111,6 +111,28 @@ function formatTreePrice(value) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits }).format(price);
 }
 
+function formatSuiPrice(value) {
+  const price = Number(value);
+  if (!Number.isFinite(price) || price <= 0) return 'Not available';
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 4,
+  }).format(price);
+}
+
+async function loadSuiHeaderPrice() {
+  const targets = document.querySelectorAll('[data-sui-price]');
+  if (!targets.length) return;
+  try {
+    const response = await fetch('/api/tree-v3-overview', { headers: { Accept: 'application/json' } });
+    if (!response.ok) throw new Error(`SUI price returned ${response.status}`);
+    const payload = await response.json();
+    const label = formatSuiPrice(payload?.market?.suiUsd);
+    targets.forEach((target) => { target.textContent = label; });
+  } catch {
+    targets.forEach((target) => { target.textContent = 'Not available'; });
+  }
+}
+
 function formatMarket(field, value) {
   if (value === null || value === undefined || !Number.isFinite(Number(value))) return 'Not available';
   const number = Number(value);
@@ -974,6 +996,7 @@ if (typeof document !== 'undefined') {
   });
 
   loadDashboard().then(loadBurnOverview);
+  loadSuiHeaderPrice();
   loadChart();
   loadLeaderboard();
 }
@@ -1012,4 +1035,4 @@ if (typeof document !== 'undefined') {
   initDocumentActions();
 }
 
-export { DAPP_SWAP_EXECUTION_ENABLED, TIER_DEFINITIONS, badgeDefinition, displayNameForEntry, entryIsExposure, formatSupplyPercentFromRaw, formatTreePrice, mergeBehaviorBadgeSnapshot, normalizeLeaderboardEntry, readDashboardCache, renderLeaderboard, tierForEntry, updateYourRank, writeDashboardCache };
+export { DAPP_SWAP_EXECUTION_ENABLED, TIER_DEFINITIONS, badgeDefinition, displayNameForEntry, entryIsExposure, formatSuiPrice, formatSupplyPercentFromRaw, formatTreePrice, mergeBehaviorBadgeSnapshot, normalizeLeaderboardEntry, readDashboardCache, renderLeaderboard, tierForEntry, updateYourRank, writeDashboardCache };

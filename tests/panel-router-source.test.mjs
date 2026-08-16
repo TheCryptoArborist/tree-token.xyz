@@ -21,5 +21,6 @@ assert.match(router, /panel\.hidden = !selected/);
 assert.match(router, /history\.pushState/);
 assert.match(router, /addEventListener\('popstate'/);
 assert.match(css, /\.app-panel\[hidden\]\{display:none!important\}/);
+assert.match(css, /width:min\(560px,calc\(100% - 30px\)\)/);
 
 console.log('Tabbed panel router: PASS (single visible panel, direct hashes, and history navigation)');

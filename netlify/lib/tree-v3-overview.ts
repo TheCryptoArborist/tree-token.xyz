@@ -30,6 +30,30 @@ export type TreeV3PoolView = {
   tvlSource: 'onchain-reserves-plus-coingecko' | 'unavailable';
 };
 
+export type TreeV3RewardAprView = {
+  coinType: string;
+  symbol: string;
+  decimals: number;
+  perDayRaw: string;
+  perDay: number;
+  priceUsd: number;
+  dailyUsd: number;
+  aprPercent: number;
+  endsAt: string;
+};
+
+export type TreeV3AnalyticsView = {
+  source: 'suidex-v3-pools-enriched';
+  tvlUsd: number;
+  volume24hUsd: number;
+  fees24hUsd: number;
+  feeAprPercent: number;
+  rewardAprPercent: number;
+  aprPercent: number;
+  rewards: TreeV3RewardAprView[];
+  status: 'verified';
+};
+
 export type TreeV3PositionView = {
   objectId: string;
   poolId: string;
@@ -166,6 +190,82 @@ export function parseTreeV3Pool(jsonValue: unknown, prices?: { suiUsd?: number |
     tickSpacing,
     tvlUsdEstimate: Number.isFinite(tvlUsdEstimate) ? tvlUsdEstimate : null,
     tvlSource: Number.isFinite(tvlUsdEstimate) ? 'onchain-reserves-plus-coingecko' : 'unavailable',
+  };
+}
+
+function finiteNonNegative(value: unknown): number | null {
+  const numeric = Number(value);
+  return Number.isFinite(numeric) && numeric >= 0 ? numeric : null;
+}
+
+function approximatelyEqual(left: number, right: number, absoluteTolerance = 0.1, relativeTolerance = 0.03) {
+  return Math.abs(left - right) <= Math.max(absoluteTolerance, Math.max(Math.abs(left), Math.abs(right)) * relativeTolerance);
+}
+
+export function parseSuiDexV3Analytics(
+  payloadValue: unknown,
+  pool: TreeV3PoolView,
+  nowSeconds = Math.floor(Date.now() / 1000),
+): TreeV3AnalyticsView | null {
+  const payload = record(payloadValue);
+  const pools = Array.isArray(payload.pools) ? payload.pools : [];
+  const sourcePool = pools.map(record).find((item) => normalizeSuiAddress(item.pool_id) === pool.poolId);
+  if (!sourcePool || sourcePool.approved !== true) return null;
+  const tokenX = normalizeCoinType(sourcePool.token_x_type);
+  const tokenY = normalizeCoinType(sourcePool.token_y_type);
+  if (tokenX !== pool.tokenX || tokenY !== pool.tokenY
+    || Number(sourcePool.fee_rate) !== 2500
+    || Number(sourcePool.tick_spacing) !== 60) return null;
+
+  const tvlUsd = finiteNonNegative(sourcePool.tvl_usd);
+  const volume24hUsd = finiteNonNegative(sourcePool.volume_24h_usd);
+  const fees24hUsd = finiteNonNegative(sourcePool.fees_24h_usd);
+  if (tvlUsd === null || tvlUsd <= 0 || volume24hUsd === null || fees24hUsd === null) return null;
+  if (pool.tvlUsdEstimate !== null
+    && !approximatelyEqual(tvlUsd, pool.tvlUsdEstimate, 1, 0.15)) return null;
+  const expectedFees24h = volume24hUsd * pool.feePercent / 100;
+  if (!approximatelyEqual(fees24hUsd, expectedFees24h, 0.02, 0.1)) return null;
+
+  const tokenPrices = record(payload.tokenPrices);
+  const rewards: TreeV3RewardAprView[] = [];
+  const seenRewards = new Set<string>();
+  for (const rewardValue of Array.isArray(sourcePool.rewards) ? sourcePool.rewards : []) {
+    const reward = record(rewardValue);
+    const coinType = normalizeCoinType(reward.coin_type);
+    const symbolValue = typeof reward.symbol === 'string' ? reward.symbol.replace(/_TOKEN$/i, '').trim() : '';
+    const decimals = Number(reward.decimals);
+    const perDayRaw = parseUnsigned(reward.per_day);
+    const priceUsd = finiteNonNegative(reward.price_usd);
+    const endsAt = Number(reward.ended_at);
+    if (!coinType || seenRewards.has(coinType) || !/^[A-Za-z0-9._-]{1,24}$/.test(symbolValue)
+      || !Number.isInteger(decimals) || decimals < 0 || decimals > 18
+      || perDayRaw === null || priceUsd === null || priceUsd <= 0
+      || !Number.isSafeInteger(endsAt) || endsAt <= nowSeconds) continue;
+    const listedPrice = finiteNonNegative(tokenPrices[String(reward.coin_type)] ?? tokenPrices[coinType]);
+    if (listedPrice === null || !approximatelyEqual(priceUsd, listedPrice, 1e-12, 0.02)) continue;
+    const perDay = Number(formatRawAmount(perDayRaw, decimals));
+    if (!Number.isFinite(perDay) || perDay <= 0) continue;
+    const dailyUsd = perDay * priceUsd;
+    const aprPercent = dailyUsd * 365 / tvlUsd * 100;
+    seenRewards.add(coinType);
+    rewards.push({
+      coinType, symbol: symbolValue, decimals, perDayRaw: perDayRaw.toString(), perDay,
+      priceUsd, dailyUsd, aprPercent, endsAt: new Date(endsAt * 1000).toISOString(),
+    });
+  }
+  const feeAprPercent = fees24hUsd * 365 / tvlUsd * 100;
+  const rewardAprPercent = rewards.reduce((sum, reward) => sum + reward.aprPercent, 0);
+  const aprPercent = feeAprPercent + rewardAprPercent;
+  const publishedFeeApr = finiteNonNegative(sourcePool.fee_apr);
+  const publishedRewardApr = finiteNonNegative(sourcePool.reward_apr);
+  const publishedTotalApr = finiteNonNegative(sourcePool.total_apr);
+  if (publishedFeeApr === null || publishedRewardApr === null || publishedTotalApr === null
+    || !approximatelyEqual(feeAprPercent, publishedFeeApr)
+    || !approximatelyEqual(rewardAprPercent, publishedRewardApr)
+    || !approximatelyEqual(aprPercent, publishedTotalApr)) return null;
+  return {
+    source: 'suidex-v3-pools-enriched', tvlUsd, volume24hUsd, fees24hUsd,
+    feeAprPercent, rewardAprPercent, aprPercent, rewards, status: 'verified',
   };
 }
 

@@ -2,7 +2,6 @@ import { isTreeV3ExecutionHost } from './v3-transaction-core.js';
 
 const V3_ENDPOINT = '/api/tree-v3-overview';
 const V3_POOL_ID = '0x39d5ba22e01e45bc4129ec28a0bef52e8fee8db5d07d337adf9540e3cb9074cf';
-const V3_VERIFIED_REWARD_SYMBOLS = ['VICTORY', 'TREE', 'wBTC'];
 const V3_MANAGEMENT_ENABLED = isTreeV3ExecutionHost(location.hostname);
 
 const state = {
@@ -112,7 +111,7 @@ function workspaceMarkup() {
       <div class="v3-panel" data-v3-panel="pools">
         <article class="v3-pool-card">
           <div class="v3-pool-head">
-            <div class="v3-pair"><div class="v3-token-stack" aria-hidden="true"><span class="sui">S</span><span class="tree">T</span></div><div><h3>SUI / TREE</h3><div class="v3-pair-meta"><span class="v3-chip">0.25% fee</span><span class="v3-chip verified">Verified pool</span><span class="v3-chip reward" id="v3RewardChip" title="VICTORY, TREE, and wBTC reward assets verified">3 verified rewards</span></div></div></div>
+            <div class="v3-pair"><div class="v3-token-stack" aria-hidden="true"><span class="sui">S</span><span class="tree">T</span></div><div><h3>SUI / TREE</h3><div class="v3-pair-meta"><span class="v3-chip">0.25% fee</span><span class="v3-chip verified">Verified pool</span><span class="v3-chip reward" id="v3RewardChip">Loading incentives</span></div></div></div>
             <button class="v3-add-button" id="v3AddLiquidity" type="button">+ Add</button>
           </div>
           <div class="v3-metrics">
@@ -125,9 +124,10 @@ function workspaceMarkup() {
             <div class="v3-metric"><span>Current Tick</span><strong id="v3CurrentTick">Loading…</strong></div>
             <div class="v3-metric"><span>Liquidity Units</span><strong id="v3LiquidityRaw">Loading…</strong></div>
           </div>
+          <div class="v3-apr-breakdown" id="v3AprBreakdown" aria-label="APR breakdown">Loading verified fee and incentive APR…</div>
           <p class="v3-pool-id">Pool <code>${V3_POOL_ID}</code></p>
         </article>
-        <p class="v3-notice" id="v3AnalyticsNotice">Loading verified on-chain pool data. Reward assets are verified; volume, fees, APR, and reward rates remain unpublished until a reliable source is integrated.</p>
+        <p class="v3-notice" id="v3AnalyticsNotice">Loading verified on-chain pool and SuiDex analytics data.</p>
         <article class="v3-add-card" id="v3AddCard" hidden>
           <h3>Plan a SUI/TREE V3 position</h3>
           <p class="v3-status">This calculator is read-only. It does not construct, sign, or submit a transaction.</p>
@@ -227,13 +227,21 @@ function renderPool(payload) {
   document.getElementById('v3CurrentTick').textContent = String(pool.currentTick);
   document.getElementById('v3LiquidityRaw').textContent = Number(pool.liquidityRaw).toLocaleString('en-US', { notation: 'compact', maximumFractionDigits: 2 });
   const analytics = payload.analytics || {};
+  const analyticsVerified = analytics.status === 'verified';
   document.getElementById('v3PoolVolume').textContent = formatUsd(analytics.volume24hUsd);
   document.getElementById('v3PoolApr').textContent = analytics.aprPercent !== null && analytics.aprPercent !== undefined && analytics.aprPercent !== '' && Number.isFinite(Number(analytics.aprPercent)) ? `${Number(analytics.aprPercent).toFixed(1)}%` : 'Not verified';
-  document.getElementById('v3RewardChip').textContent = `${V3_VERIFIED_REWARD_SYMBOLS.length} verified rewards`;
+  const rewards = analyticsVerified && Array.isArray(analytics.rewards) ? analytics.rewards : [];
+  const rewardChip = document.getElementById('v3RewardChip');
+  rewardChip.textContent = analyticsVerified ? `${rewards.length} active reward${rewards.length === 1 ? '' : 's'}` : 'Incentives not verified';
+  rewardChip.title = rewards.length ? rewards.map((reward) => reward.symbol).join(', ') : 'No active verified incentive schedule';
+  const aprParts = analyticsVerified
+    ? [`Fees ${Number(analytics.feeAprPercent || 0).toFixed(1)}%`, ...rewards.map((reward) => `${reward.symbol} ${Number(reward.aprPercent).toFixed(1)}%`), `Total ${Number(analytics.aprPercent || 0).toFixed(1)}%`]
+    : ['APR breakdown not verified'];
+  document.getElementById('v3AprBreakdown').textContent = aprParts.join(' · ');
   const poolWarning = payload.warnings?.[0];
-  document.getElementById('v3AnalyticsNotice').textContent = poolWarning
-    ? `${poolWarning} Reward assets are verified; reward rates remain unpublished.`
-    : 'Pool reserves and reward assets are verified on chain. Volume, fees, APR, and reward rates remain unpublished until a reliable source is integrated.';
+  document.getElementById('v3AnalyticsNotice').textContent = analyticsVerified
+    ? `SuiDex verified analytics: ${formatUsd(analytics.volume24hUsd)} volume and ${formatUsd(analytics.fees24hUsd)} fees in the last 24 hours. APR is annualized from current fees and active incentive emissions; it is not guaranteed.`
+    : `${poolWarning || 'Pool reserves are verified on chain.'} Volume, fees, and APR remain unpublished when the SuiDex analytics cross-check fails.`;
   document.getElementById('v3PoolStatus').textContent = `Verified from Sui Mainnet · Updated ${new Date(payload.generatedAt).toLocaleTimeString()}`;
   document.getElementById('v3PoolStatus').className = 'v3-status ok';
   updateRangeFields();
