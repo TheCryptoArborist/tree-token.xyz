@@ -261,12 +261,14 @@ async function initialize() {
   try {
     const [config, overview] = await Promise.all([api('config'), fetch('/api/tree-v3-overview', { headers: { Accept: 'application/json' }, cache: 'no-store' }).then((response) => response.ok ? response.json() : null)]);
     state.minUsd = config.minOrderSizeUsd;
-    state.coinPricesUsd = {
-      sui: Number(config.coinPricesUsd?.[LIMIT_SUI_TYPE]) || null,
-      tree: Number(config.coinPricesUsd?.[LIMIT_TREE_TYPE]) || null,
-    };
     const price = Number(overview?.pool?.priceSuiPerTree ?? overview?.priceSuiPerTree ?? overview?.market?.priceSuiPerTree ?? 0);
     state.currentPrice = Number.isFinite(price) ? price : 0;
+    const suiUsd = Number(overview?.market?.suiUsd) || null;
+    const treeUsd = Number(overview?.market?.treeUsd) || (suiUsd && state.currentPrice > 0 ? suiUsd * state.currentPrice : null);
+    state.coinPricesUsd = {
+      sui: suiUsd,
+      tree: treeUsd,
+    };
     setStatus('Ready. Orders are restricted to TREE/SUI through Aftermath Mainnet.');
   } catch (error) { setStatus(error.message, 'error'); }
   await loadBalances(true).catch(() => {}); renderForm();

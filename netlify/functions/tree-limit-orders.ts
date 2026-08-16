@@ -81,14 +81,8 @@ export default async (request: Request) => {
   const action = url.searchParams.get('action') || '';
   try {
     if (request.method === 'GET' && action === 'config') {
-      const config = await retrySafeAftermath(async (aftermath) => {
-        const [minOrderSizeUsd, coinPricesUsd] = await Promise.all([
-          aftermath.LimitOrders().getMinOrderSizeUsd(),
-          aftermath.Prices().getCoinsToPrice({ coins: [TREE_LIMIT_SUI_TYPE, TREE_LIMIT_TREE_TYPE] }),
-        ]);
-        return { minOrderSizeUsd, coinPricesUsd };
-      });
-      return json({ status: 'ok', provider: 'Aftermath Mainnet', ...config });
+      const minOrderSizeUsd = await retrySafeAftermath((aftermath) => aftermath.LimitOrders().getMinOrderSizeUsd());
+      return json({ status: 'ok', provider: 'Aftermath Mainnet', minOrderSizeUsd });
     }
     if (request.method === 'GET' && action === 'past') {
       const walletAddress = normalizeSuiAddress(url.searchParams.get('owner'));

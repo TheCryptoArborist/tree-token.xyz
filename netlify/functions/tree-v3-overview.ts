@@ -134,6 +134,7 @@ export default async (request: Request) => {
         generatedAt,
         network: 'sui-mainnet',
         provider: 'sui-grpc-plus-verified-config',
+        market: { ...prices, source: prices.suiUsd || prices.treeUsd ? 'coingecko' : 'unavailable' },
         pool,
         analytics: {
           volume24hUsd: null,
@@ -155,6 +156,7 @@ export default async (request: Request) => {
       network: 'sui-mainnet',
       provider: 'sui-graphql-public-position-scan',
       owner,
+      market: { ...prices, source: prices.suiUsd || prices.treeUsd ? 'coingecko' : 'unavailable' },
       pool,
       positionCount: positionResult.positions.length,
       positions: positionResult.coverage.scanComplete ? positionResult.positions : [],
