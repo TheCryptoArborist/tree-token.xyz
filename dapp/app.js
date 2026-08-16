@@ -7,10 +7,12 @@ const leaderboardUrl = isDeployPreview ? '/api/tree-exposure-preview' : '/api/tr
 const badgeUrl = isDeployPreview ? '/api/tree-badges-preview' : '/api/tree-badges';
 let leaderboardMode = 'exposure';
 const chartUrl = '/api/tree-chart';
+const burnUrl = '/api/tree-burn-overview';
 const pairUrl = 'https://api.dexscreener.com/latest/dex/pairs/sui/0xaa133ce1f8fd55d85b6fc87c1b3054cb717d83be477ef3635c661c21fbdfa0ee';
 
 const compactMoney = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 2 });
 const quantity = new Intl.NumberFormat('en-US', { maximumFractionDigits: 3 });
+const burnQuantity = new Intl.NumberFormat('en-US', { maximumFractionDigits: 6 });
 let leaderboardEntries = [];
 let leaderboardStatus = 'loading';
 let treePerSui = null;
@@ -138,6 +140,35 @@ function renderSnapshot(snapshot) {
   const removal = snapshot?.tree?.totalSupply ? snapshot.tree.zeroAddressBalance / snapshot.tree.totalSupply * 100 : null;
   document.querySelectorAll('[data-derived="removalPercent"]').forEach((element) => { element.textContent = removal === null ? 'Not available' : `${removal.toFixed(2)}%`; });
   ['supply', 'liquidity', 'nftree'].forEach((group) => setGroupState(group, 'Snapshot', 'TREE project records', 'Project snapshot — June 22, 2026'));
+}
+
+function setBurnState(state, source, timestamp) {
+  const badge = document.getElementById('burnState');
+  if (badge) { badge.textContent = state; badge.className = `data-state ${state.toLowerCase()}`; }
+  const meta = document.getElementById('burnMeta');
+  if (meta) meta.textContent = `Source: ${source} · Timestamp: ${timestamp || 'unavailable'} · Status: ${state.toLowerCase()}`;
+}
+
+function renderBurnOverview(payload) {
+  document.querySelectorAll('[data-burn]').forEach((element) => {
+    const value = Number(payload?.[element.dataset.burn]);
+    element.textContent = Number.isFinite(value)
+      ? element.dataset.burn === 'removalPercentage' ? `${value.toFixed(4)}%` : burnQuantity.format(value)
+      : 'Not available';
+  });
+  setBurnState('Live', payload.source || 'Sui Mainnet gRPC', payload.generatedAt);
+}
+
+async function loadBurnOverview() {
+  setBurnState('Loading', 'Sui Mainnet gRPC', null);
+  try {
+    const response = await fetch(burnUrl, { headers: { Accept: 'application/json' }, cache: 'no-store' });
+    const payload = await response.json();
+    if (!response.ok || payload.status !== 'ok') throw new Error('Live burn overview unavailable.');
+    renderBurnOverview(payload);
+  } catch {
+    setBurnState('Snapshot', 'TREE project records fallback', 'Project snapshot — June 22, 2026');
+  }
 }
 
 function showWarnings(warnings) {
@@ -911,7 +942,7 @@ function syncWalletButtons() {
 // Swap quote and execution are isolated in swap-router.js.
 
 if (typeof document !== 'undefined') {
-  document.getElementById('refreshStats').addEventListener('click', () => { loadDashboard(); loadChart(activeChartRange); });
+  document.getElementById('refreshStats').addEventListener('click', () => { loadDashboard().then(loadBurnOverview); loadChart(activeChartRange); });
   document.getElementById('dappWallet').addEventListener('click', connectForDapp);
   document.getElementById('rankWallet').addEventListener('click', connectForDapp);
   document.getElementById('shareRank')?.addEventListener('click', shareRank);
@@ -942,7 +973,7 @@ if (typeof document !== 'undefined') {
     syncWalletButtons();
   });
 
-  loadDashboard();
+  loadDashboard().then(loadBurnOverview);
   loadChart();
   loadLeaderboard();
 }

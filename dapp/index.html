@@ -136,10 +136,11 @@
     </section>
 
     <section class="section removed-section" id="removed" aria-labelledby="removed-title">
-      <div class="section-heading"><div><p class="eyebrow">Supply transparency</p><h2 id="removed-title">TREE Burn &amp; Supply Removal Tracker</h2><p>Track zero-address holdings without implying the TREE contract's reported total supply was reduced.</p></div><span class="data-state snapshot">Project snapshot</span></div>
+      <div class="section-heading"><div><p class="eyebrow">Supply transparency</p><h2 id="removed-title">TREE Burn &amp; Supply Removal Tracker</h2><p>Track zero-address holdings without implying the TREE contract's reported total supply was reduced.</p></div><span class="data-state" id="burnState">Loading</span></div>
+      <p class="meta" id="burnMeta">Source: Sui Mainnet gRPC · Timestamp: pending · Status: loading</p>
       <div class="removed-hero-grid">
-        <article class="removed-primary"><span>Effectively removed from circulation</span><strong data-snapshot="tree.zeroAddressBalance">—</strong><small>TREE held by the Sui zero address</small></article>
-        <div class="removed-metrics"><article><span>Removal percentage</span><strong data-derived="removalPercent">—</strong></article><article><span>Effective supply</span><strong data-snapshot="tree.effectiveSupply">—</strong></article><article><span>Reported total supply</span><strong data-snapshot="tree.totalSupply">—</strong></article></div>
+        <article class="removed-primary"><span>Effectively removed from circulation</span><strong data-snapshot="tree.zeroAddressBalance" data-burn="zeroAddressBalance">—</strong><small>TREE held by the Sui zero address</small></article>
+        <div class="removed-metrics"><article><span>Removal percentage</span><strong data-derived="removalPercent" data-burn="removalPercentage">—</strong></article><article><span>Effective supply</span><strong data-snapshot="tree.effectiveSupply" data-burn="effectiveSupply">—</strong></article><article><span>Reported total supply</span><strong data-snapshot="tree.totalSupply" data-burn="totalSupply">—</strong></article></div>
       </div>
       <div class="removed-explainer"><h3>Why the wording matters</h3><p>Tokens held at <code>0x000…000</code> are inaccessible and treated by the project as effectively removed from circulation. They are not described as an on-chain supply burn unless the TREE contract itself reports a reduced total supply.</p><a class="button secondary" href="#documents">Review Official Coin Information</a></div>
     </section>
