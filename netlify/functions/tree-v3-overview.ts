@@ -81,18 +81,19 @@ async function getPoolObject() {
 
 async function getReferencePrices() {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 3500);
+  const timeout = setTimeout(() => controller.abort(), 6_000);
   try {
-    const url = 'https://api.coingecko.com/api/v3/simple/price?ids=sui,thickquidity&vs_currencies=usd';
+    const url = 'https://api.coingecko.com/api/v3/simple/price?ids=sui,thickquidity,bitcoin&vs_currencies=usd';
     const result = await fetch(url, { headers: { Accept: 'application/json' }, signal: controller.signal });
-    if (!result.ok) return { suiUsd: null, treeUsd: null };
+    if (!result.ok) return { suiUsd: null, treeUsd: null, btcUsd: null };
     const payload = record(await result.json());
     return {
       suiUsd: Number(record(payload.sui).usd) || null,
       treeUsd: Number(record(payload.thickquidity).usd) || null,
+      btcUsd: Number(record(payload.bitcoin).usd) || null,
     };
   } catch {
-    return { suiUsd: null, treeUsd: null };
+    return { suiUsd: null, treeUsd: null, btcUsd: null };
   } finally {
     clearTimeout(timeout);
   }
@@ -100,7 +101,7 @@ async function getReferencePrices() {
 
 async function getSuiDexAnalyticsPayload() {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 5_000);
+  const timeout = setTimeout(() => controller.abort(), 9_000);
   try {
     const result = await fetch(SUIDEX_ANALYTICS_URL, { headers: { Accept: 'application/json' }, signal: controller.signal });
     if (!result.ok) return null;
@@ -135,7 +136,7 @@ async function getTickStates(ticksTableId: string) {
   return tickStates;
 }
 
-function valuationPrices(prices: { suiUsd?: number | null; treeUsd?: number | null }, analyticsPayload: unknown) {
+function valuationPrices(prices: { suiUsd?: number | null; treeUsd?: number | null; btcUsd?: number | null }, analyticsPayload: unknown) {
   const tokenPrices = record(record(analyticsPayload).tokenPrices);
   const finitePrice = (value: unknown) => {
     const numeric = Number(value);
@@ -148,9 +149,14 @@ function valuationPrices(prices: { suiUsd?: number | null; treeUsd?: number | nu
     if (coinType && price !== null && TREE_V3_REWARD_TOKENS.some((token) => normalizeCoinType(token.coinType) === coinType)) rewardsUsd[coinType] = price;
   }
   const normalizedTree = normalizeCoinType(TREE_V3_REWARD_TOKENS[1].coinType)!;
+  const normalizedBtc = normalizeCoinType(TREE_V3_REWARD_TOKENS[2].coinType)!;
+  const treeUsd = finitePrice(prices.treeUsd) ?? rewardsUsd[normalizedTree] ?? null;
+  const btcUsd = finitePrice(prices.btcUsd) ?? rewardsUsd[normalizedBtc] ?? null;
+  if (treeUsd !== null) rewardsUsd[normalizedTree] = rewardsUsd[normalizedTree] ?? treeUsd;
+  if (btcUsd !== null) rewardsUsd[normalizedBtc] = rewardsUsd[normalizedBtc] ?? btcUsd;
   return {
     suiUsd: finitePrice(prices.suiUsd) ?? finitePrice(tokenPrices.sui),
-    treeUsd: finitePrice(prices.treeUsd) ?? rewardsUsd[normalizedTree] ?? null,
+    treeUsd,
     rewardsUsd,
   };
 }

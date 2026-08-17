@@ -11,6 +11,7 @@ const state = {
   activeTab: 'pools',
   addOpen: false,
   range: 'medium',
+  positionPrices: { suiUsd: null, treeUsd: null, btcUsd: null, rewardsUsd: {} },
 };
 
 function ensureStylesheet() {
@@ -46,6 +47,60 @@ function formatNumber(value, maximumFractionDigits = 6) {
   const numeric = Number(value);
   if (!Number.isFinite(numeric)) return '—';
   return new Intl.NumberFormat('en-US', { maximumFractionDigits }).format(numeric);
+}
+
+function verifiedPositive(value) {
+  const numeric = Number(value);
+  return Number.isFinite(numeric) && numeric > 0 ? numeric : null;
+}
+
+function rememberPositionPrices(payload) {
+  const market = payload?.market || {};
+  state.positionPrices.suiUsd = verifiedPositive(market.suiUsd) ?? state.positionPrices.suiUsd;
+  state.positionPrices.treeUsd = verifiedPositive(market.treeUsd) ?? state.positionPrices.treeUsd;
+  state.positionPrices.btcUsd = verifiedPositive(market.btcUsd) ?? state.positionPrices.btcUsd;
+  if (state.positionPrices.treeUsd) state.positionPrices.rewardsUsd.TREE = state.positionPrices.treeUsd;
+  if (state.positionPrices.btcUsd) state.positionPrices.rewardsUsd.wBTC = state.positionPrices.btcUsd;
+  const rewardRows = [
+    ...(Array.isArray(payload?.analytics?.rewards) ? payload.analytics.rewards : []),
+    ...(Array.isArray(payload?.positions) ? payload.positions.flatMap((position) => Array.isArray(position.rewards) ? position.rewards : []) : []),
+  ];
+  for (const reward of rewardRows) {
+    if (!['VICTORY', 'TREE', 'wBTC'].includes(reward?.symbol)) continue;
+    const price = verifiedPositive(reward.priceUsd);
+    if (price) state.positionPrices.rewardsUsd[reward.symbol] = price;
+  }
+}
+
+function usdFromVerifiedPrice(currentValue, amount, price) {
+  const current = Number(currentValue);
+  if (currentValue !== null && currentValue !== undefined && Number.isFinite(current) && current >= 0) return current;
+  const numericAmount = Number(amount);
+  return Number.isFinite(numericAmount) && numericAmount >= 0 && price ? numericAmount * price : null;
+}
+
+function restorePositionUsd(position) {
+  const principalSuiUsd = usdFromVerifiedPrice(position.principalSuiUsd, position.principalSui, state.positionPrices.suiUsd);
+  const principalTreeUsd = usdFromVerifiedPrice(position.principalTreeUsd, position.principalTree, state.positionPrices.treeUsd);
+  const currentPendingFeesUsd = Number(position.pendingFeesUsd);
+  const pendingFeeSuiUsd = usdFromVerifiedPrice(null, position.pendingFeeSui, state.positionPrices.suiUsd);
+  const pendingFeeTreeUsd = usdFromVerifiedPrice(null, position.pendingFeeTree, state.positionPrices.treeUsd);
+  const pendingFeesUsd = position.pendingFeesUsd !== null && position.pendingFeesUsd !== undefined && Number.isFinite(currentPendingFeesUsd) && currentPendingFeesUsd >= 0
+    ? currentPendingFeesUsd
+    : pendingFeeSuiUsd !== null && pendingFeeTreeUsd !== null ? pendingFeeSuiUsd + pendingFeeTreeUsd : null;
+  const rewards = Array.isArray(position.rewards) ? position.rewards.map((reward) => ({
+    ...reward,
+    priceUsd: verifiedPositive(reward.priceUsd) ?? state.positionPrices.rewardsUsd[reward.symbol] ?? null,
+    valueUsd: usdFromVerifiedPrice(reward.valueUsd, reward.amount, verifiedPositive(reward.priceUsd) ?? state.positionPrices.rewardsUsd[reward.symbol] ?? null),
+  })) : position.rewards;
+  return {
+    ...position,
+    principalSuiUsd,
+    principalTreeUsd,
+    valueUsd: principalSuiUsd !== null && principalTreeUsd !== null ? principalSuiUsd + principalTreeUsd : position.valueUsd,
+    pendingFeesUsd,
+    rewards,
+  };
 }
 
 function positionRangePercent(position) {
@@ -239,6 +294,7 @@ function updatePositionPlan() {
 
 function renderPool(payload) {
   state.overview = payload;
+  rememberPositionPrices(payload);
   const pool = payload.pool;
   const tvl = formatUsd(pool.tvlUsdEstimate);
   document.getElementById('v3SummaryTvl').textContent = tvl;
@@ -294,7 +350,8 @@ function renderPositions(payload) {
     summary.textContent = 'Verification incomplete';
     return;
   }
-  const positions = Array.isArray(payload.positions) ? payload.positions : [];
+  rememberPositionPrices(payload);
+  const positions = Array.isArray(payload.positions) ? payload.positions.map(restorePositionUsd) : [];
   summary.textContent = String(positions.length);
   if (!positions.length) {
     list.innerHTML = '<article class="v3-empty"><strong>No live SUI/TREE V3 position found</strong>This connected wallet has no verified address-owned position in the recognized pool.</article>';
@@ -417,3 +474,5 @@ function initialize() {
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initialize, { once: true });
 else initialize();
+
+export { rememberPositionPrices, restorePositionUsd };
