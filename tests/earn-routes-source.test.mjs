@@ -10,14 +10,16 @@ const v2Zap = 'https://dex.suidex.org/zap?pool=0x35a1be1f01f9edf7f5221d226f357d1
 const v3Zap = `${v3Pool}?zap=1`;
 
 assert.ok(earn, 'Earn section must remain present.');
-assert.match(earn, /Verified live/);
+assert.match(earn, /id="earnRoutesTab"/);
+assert.match(earn, /id="earnPositionsTab"/);
+assert.match(earn, /Verified SUI \/ TREE routes/);
 assert.match(earn, new RegExp(v2Pool.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
 assert.match(earn, /https:\/\/dex\.suidex\.org\/farms/);
 assert.match(earn, new RegExp(v3Pool.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
 assert.match(earn, /https:\/\/dex\.suidex\.org\/portfolio/);
 assert.ok(earn.includes(v2Zap), 'V2 Zap must preselect the exact TREE pool and Zap-to-Farm mode.');
 assert.ok(earn.includes(v3Zap), 'V3 Zap must preselect the exact TREE pool and enable Zap mode.');
-assert.match(earn, /Zap into V2 Farm/);
+assert.match(earn, /Zap &amp; Stake/);
 assert.match(earn, /Zap into V3/);
 assert.equal((earn.match(/target="_blank" rel="noopener noreferrer"/g) || []).length, 6);
 assert.match(earn, /explicit wallet approval/i);

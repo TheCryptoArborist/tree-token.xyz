@@ -13,6 +13,7 @@ const pairUrl = 'https://api.dexscreener.com/latest/dex/pairs/sui/0xaa133ce1f8fd
 const compactMoney = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 2 });
 const quantity = new Intl.NumberFormat('en-US', { maximumFractionDigits: 3 });
 const burnQuantity = new Intl.NumberFormat('en-US', { maximumFractionDigits: 6 });
+const compactBurnQuantity = new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 });
 let leaderboardEntries = [];
 let leaderboardStatus = 'loading';
 let treePerSui = null;
@@ -149,6 +150,15 @@ function renderMarket(data, state, timestamp, source) {
   setGroupState('market', state, source, timestamp);
 }
 
+function renderBurnProgress(value) {
+  const percentage = Number(value);
+  const progressLabel = document.getElementById('burnProgressLabel');
+  const progressBar = document.getElementById('burnProgressBar');
+  if (!Number.isFinite(percentage)) return;
+  if (progressLabel) progressLabel.textContent = `${percentage.toFixed(2)}%`;
+  if (progressBar) progressBar.style.width = `${Math.max(0, Math.min(100, (percentage - 5) * 20))}%`;
+}
+
 function renderSnapshot(snapshot) {
   document.querySelectorAll('[data-snapshot]').forEach((element) => {
     const path = element.dataset.snapshot;
@@ -157,10 +167,14 @@ function renderSnapshot(snapshot) {
     else if (path.includes('Usd')) element.textContent = compactMoney.format(Number(value));
     else if (path.includes('Apr') || path.includes('Percent')) element.textContent = `${Number(value).toFixed(2)}%`;
     else if (path === 'nftree.mintPriceSui') element.textContent = `${quantity.format(Number(value))} SUI`;
+    else if (element.dataset.burnFormat === 'compact') element.textContent = compactBurnQuantity.format(Number(value));
     else element.textContent = quantity.format(Number(value));
   });
   const removal = snapshot?.tree?.totalSupply ? snapshot.tree.zeroAddressBalance / snapshot.tree.totalSupply * 100 : null;
   document.querySelectorAll('[data-derived="removalPercent"]').forEach((element) => { element.textContent = removal === null ? 'Not available' : `${removal.toFixed(2)}%`; });
+  const locked = snapshot?.tree?.totalSupply ? snapshot.tree.moonbagsLocked / snapshot.tree.totalSupply * 100 : null;
+  document.querySelectorAll('[data-derived="lockedPercent"]').forEach((element) => { element.textContent = locked === null ? 'Not available' : `${locked.toFixed(2)}%`; });
+  renderBurnProgress(removal);
   ['supply', 'liquidity', 'nftree'].forEach((group) => setGroupState(group, 'Snapshot', 'TREE project records', 'Project snapshot — June 22, 2026'));
 }
 
@@ -174,10 +188,29 @@ function setBurnState(state, source, timestamp) {
 function renderBurnOverview(payload) {
   document.querySelectorAll('[data-burn]').forEach((element) => {
     const value = Number(payload?.[element.dataset.burn]);
-    element.textContent = Number.isFinite(value)
-      ? element.dataset.burn === 'removalPercentage' ? `${value.toFixed(4)}%` : burnQuantity.format(value)
-      : 'Not available';
+    if (!Number.isFinite(value)) { element.textContent = 'Not available'; return; }
+    element.textContent = element.dataset.burn === 'removalPercentage'
+      ? `${value.toFixed(4)}%`
+      : element.dataset.burnFormat === 'compact' ? compactBurnQuantity.format(value) : burnQuantity.format(value);
+    if (element.dataset.burnFormat === 'compact') element.title = burnQuantity.format(value);
   });
+  renderBurnProgress(payload?.removalPercentage);
+  const totalTransactions = document.getElementById('burnTotalTransactions');
+  if (totalTransactions) totalTransactions.textContent = Number.isSafeInteger(payload?.totalTransactions) ? quantity.format(payload.totalTransactions) : '—';
+  const recentList = document.getElementById('burnRecentList');
+  const recentBurns = Array.isArray(payload?.recentBurns) ? payload.recentBurns : [];
+  if (recentList && recentBurns.length) {
+    recentList.replaceChildren(...recentBurns.slice(0, 3).map((burn) => {
+      const row = document.createElement('div');
+      row.className = 'burn-recent-row';
+      const link = document.createElement('a');
+      link.href = `https://suivision.xyz/txblock/${encodeURIComponent(String(burn.digest || ''))}`;
+      link.target = '_blank'; link.rel = 'noopener noreferrer'; link.textContent = compact(String(burn.digest || ''));
+      const amount = document.createElement('strong'); amount.textContent = `-${compactBurnQuantity.format(Number(burn.amount || 0))}`;
+      const time = document.createElement('time'); time.textContent = burn.age || '—';
+      row.append(link, amount, time); return row;
+    }));
+  }
   setBurnState('Live', payload.source || 'Sui Mainnet gRPC', payload.generatedAt);
 }
 

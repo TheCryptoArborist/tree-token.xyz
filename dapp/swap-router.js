@@ -106,8 +106,8 @@ function setTokenPresentation() {
   const outputSymbol = symbolFor(stateTokenOut());
   elements.inputSymbol.textContent = inputSymbol;
   elements.outputSymbol.textContent = outputSymbol;
-  elements.inputIcon.textContent = inputSymbol === 'SUI' ? 'S' : 'T';
-  elements.outputIcon.textContent = outputSymbol === 'SUI' ? 'S' : 'T';
+  elements.inputIcon.textContent = '';
+  elements.outputIcon.textContent = '';
   elements.inputIcon.className = `swap-token-icon ${inputSymbol.toLowerCase()}`;
   elements.outputIcon.className = `swap-token-icon ${outputSymbol.toLowerCase()}`;
   elements.amountInput.placeholder = inputSymbol === 'SUI' ? '0.0' : '0';
@@ -568,6 +568,8 @@ function initialize() {
     status: document.getElementById('swapStatus'),
     reserveNftree: document.getElementById('reserveNftree'),
     reserveRow: document.getElementById('swapReserveRow'),
+    settingsToggle: document.getElementById('swapSettingsToggle'),
+    advanced: document.getElementById('swapAdvanced'),
     success: document.getElementById('swapSuccess'),
   });
   if (!elements.amountInput || !elements.action) return;
@@ -590,6 +592,12 @@ function initialize() {
     state.quote = null;
     scheduleQuote();
   }));
+  elements.settingsToggle.addEventListener('click', () => {
+    const open = elements.advanced.hidden;
+    elements.advanced.hidden = !open;
+    elements.settingsToggle.setAttribute('aria-expanded', String(open));
+    elements.settingsToggle.setAttribute('aria-label', open ? 'Close swap settings' : 'Open swap settings');
+  });
   elements.action.addEventListener('click', executeSwap);
   window.addEventListener('tree:wallet-changed', () => loadBalances(true));
   window.addEventListener('load', () => loadBalances(true));

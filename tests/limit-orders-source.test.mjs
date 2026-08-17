@@ -8,6 +8,7 @@ const server = readFileSync(new URL('../netlify/functions/tree-limit-orders.ts',
 
 test('limit UI exposes create, active, past, and cancellation controls', () => {
   for (const id of ['limitCreateView', 'limitOrdersView', 'limitCreatePanel', 'limitOrdersPanel', 'limitCreate', 'limitRefresh', 'limitActiveTab', 'limitPastTab', 'limitOrders']) assert.match(html, new RegExp(`id="${id}"`));
+  assert.match(html, /<details class="limit-advanced">/);
   assert.match(client, /showLimitView\('create'\)/);
   assert.match(client, /showLimitView\('orders'\)/);
   assert.match(client, /Cancel & Return Funds/);

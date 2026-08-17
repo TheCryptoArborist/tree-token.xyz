@@ -107,7 +107,8 @@ function renderForm() {
   const direction = limitDirection(state.direction);
   document.querySelectorAll('[data-limit-direction]').forEach((button) => button.classList.toggle('active', button.dataset.limitDirection === state.direction));
   el.amountLabel.textContent = `You allocate (${direction.inputSymbol})`;
-  el.inputSymbol.textContent = direction.inputSymbol;
+  el.inputSymbol.className = `limit-token-symbol ${direction.inputSymbol.toLowerCase()}`;
+  el.inputSymbol.querySelector('[data-limit-symbol]').textContent = direction.inputSymbol;
   const balance = state.direction === 'buy-tree' ? state.balances.sui : state.balances.tree;
   el.balance.textContent = currentWallet() ? `Balance ${limitRawToDecimal(balance, direction.inputDecimals, direction.inputDecimals === 9 ? 4 : 2)} ${direction.inputSymbol}` : 'Balance —';
   el.currentPrice.textContent = state.currentPrice > 0 ? `${numberText(state.currentPrice, 12)} SUI` : 'Unavailable';

@@ -22,5 +22,15 @@ assert.match(router, /history\.pushState/);
 assert.match(router, /addEventListener\('popstate'/);
 assert.match(css, /\.app-panel\[hidden\]\{display:none!important\}/);
 assert.match(css, /width:min\(472px,calc\(100% - 30px\)\)/);
+assert.match(router, /function showStatsView\(view\)/);
+for (const view of ['Market', 'Supply', 'Liquidity', 'Nftree']) {
+  assert.equal(html.includes(`id="stats${view}Tab"`), true);
+  assert.equal(html.includes(`id="stats${view}Panel"`), true);
+}
+assert.match(router, /function showRaffleView\(view\)/);
+for (const view of ['Daily', 'Weekly', 'Entries']) {
+  assert.equal(html.includes(`id="raffle${view}Tab"`), true);
+  assert.equal(html.includes(`id="raffle${view}Panel"`), true);
+}
 
 console.log('Tabbed panel router: PASS (single visible panel, direct hashes, and history navigation)');

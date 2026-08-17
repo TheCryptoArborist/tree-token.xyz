@@ -140,6 +140,53 @@ if (documentGrid && !documentGrid.querySelector('[data-profile-studio-card]')) {
   documentGrid.append(article);
 }
 
+const earnTabs = { routes: document.getElementById('earnRoutesTab'), positions: document.getElementById('earnPositionsTab') };
+const earnPanels = { routes: document.getElementById('earnRoutesPanel'), positions: document.getElementById('earnPositionsPanel') };
+function showEarnView(view) {
+  const selected = view === 'positions' ? 'positions' : 'routes';
+  Object.entries(earnPanels).forEach(([name, panel]) => { if (panel) panel.hidden = name !== selected; });
+  Object.entries(earnTabs).forEach(([name, tab]) => {
+    if (!tab) return;
+    const active = name === selected;
+    tab.classList.toggle('active', active);
+    tab.setAttribute('aria-selected', String(active));
+  });
+}
+earnTabs.routes?.addEventListener('click', () => showEarnView('routes'));
+earnTabs.positions?.addEventListener('click', () => showEarnView('positions'));
+
+const statsViews = ['market', 'supply', 'liquidity', 'nftree'];
+const statsTabs = Object.fromEntries(statsViews.map((view) => [view, document.getElementById(`stats${view[0].toUpperCase()}${view.slice(1)}Tab`)]));
+const statsPanels = Object.fromEntries(statsViews.map((view) => [view, document.getElementById(`stats${view[0].toUpperCase()}${view.slice(1)}Panel`)]));
+function showStatsView(view) {
+  const selected = statsViews.includes(view) ? view : 'market';
+  Object.entries(statsPanels).forEach(([name, panel]) => { if (panel) panel.hidden = name !== selected; });
+  Object.entries(statsTabs).forEach(([name, tab]) => {
+    if (!tab) return;
+    const active = name === selected;
+    tab.classList.toggle('active', active);
+    tab.setAttribute('aria-selected', String(active));
+    tab.setAttribute('tabindex', active ? '0' : '-1');
+  });
+}
+Object.entries(statsTabs).forEach(([view, tab]) => tab?.addEventListener('click', () => showStatsView(view)));
+
+const raffleViews = ['daily', 'weekly', 'entries'];
+const raffleTabs = Object.fromEntries(raffleViews.map((view) => [view, document.getElementById(`raffle${view[0].toUpperCase()}${view.slice(1)}Tab`)]));
+const rafflePanels = Object.fromEntries(raffleViews.map((view) => [view, document.getElementById(`raffle${view[0].toUpperCase()}${view.slice(1)}Panel`)]));
+function showRaffleView(view) {
+  const selected = raffleViews.includes(view) ? view : 'daily';
+  Object.entries(rafflePanels).forEach(([name, panel]) => { if (panel) panel.hidden = name !== selected; });
+  Object.entries(raffleTabs).forEach(([name, tab]) => {
+    if (!tab) return;
+    const active = name === selected;
+    tab.classList.toggle('active', active);
+    tab.setAttribute('aria-selected', String(active));
+    tab.setAttribute('tabindex', active ? '0' : '-1');
+  });
+}
+Object.entries(raffleTabs).forEach(([view, tab]) => tab?.addEventListener('click', () => showRaffleView(view)));
+
 window.addEventListener('hashchange', activateFromLocation);
 window.addEventListener('popstate', activateFromLocation);
 document.documentElement.classList.add('app-tabbed');

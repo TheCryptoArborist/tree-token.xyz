@@ -173,7 +173,7 @@ function resolveWalletAddress() {
 
 function workspaceMarkup() {
   return `
-    <div class="section-heading"><div><p class="eyebrow">Native SuiDex V3 workspace</p><h2 id="v3-title">V3 Concentrated Liquidity</h2><p>Review the verified SUI/TREE pool and your public V3 positions without leaving the TREE Command Center.</p></div><span class="data-state ok">Read-only Phase A</span></div>
+    <div class="v3-compact-heading"><h2 id="v3-title">V3 Concentrated Liquidity</h2><p>Earn fees with concentrated SUI / TREE liquidity.</p></div>
     <div class="v3-workspace">
       <div class="v3-summary" aria-label="TREE V3 summary">
         <article class="v3-summary-card"><span>Verified Pools</span><strong id="v3PoolCount">1</strong></article>
@@ -188,7 +188,7 @@ function workspaceMarkup() {
       <div class="v3-panel" data-v3-panel="pools">
         <article class="v3-pool-card">
           <div class="v3-pool-head">
-            <div class="v3-pair"><div class="v3-token-stack" aria-hidden="true"><span class="sui">S</span><span class="tree">T</span></div><div><h3>SUI / TREE</h3><div class="v3-pair-meta"><span class="v3-chip">0.25% fee</span><span class="v3-chip verified">Verified pool</span><span class="v3-chip reward" id="v3RewardChip">Loading incentives</span></div></div></div>
+            <div class="v3-pair"><div class="v3-token-stack" aria-hidden="true"><img src="../assets/sui-token.svg" alt=""><img src="../thick.png" alt=""></div><div><h3>SUI / TREE</h3><div class="v3-pair-meta"><span class="v3-chip">0.25% fee</span><span class="v3-chip verified">Verified pool</span><span class="v3-chip reward" id="v3RewardChip">Loading incentives</span></div></div></div>
             <button class="v3-add-button" id="v3AddLiquidity" type="button">+ Add</button>
           </div>
           <div class="v3-metrics">
@@ -196,15 +196,21 @@ function workspaceMarkup() {
             <div class="v3-metric"><span>24H Volume</span><strong id="v3PoolVolume">Not verified</strong></div>
             <div class="v3-metric"><span>APR</span><strong id="v3PoolApr">Not verified</strong></div>
             <div class="v3-metric"><span>Current Price</span><strong class="good" id="v3PoolPrice">Loading…</strong></div>
-            <div class="v3-metric"><span>SUI Reserve</span><strong id="v3SuiReserve">Loading…</strong></div>
-            <div class="v3-metric"><span>TREE Reserve</span><strong id="v3TreeReserve">Loading…</strong></div>
-            <div class="v3-metric"><span>Current Tick</span><strong id="v3CurrentTick">Loading…</strong></div>
-            <div class="v3-metric"><span>Liquidity Units</span><strong id="v3LiquidityRaw">Loading…</strong></div>
           </div>
-          <div class="v3-apr-breakdown" id="v3AprBreakdown" aria-label="APR breakdown">Loading verified fee and incentive APR…</div>
-          <p class="v3-pool-id">Pool <code>${V3_POOL_ID}</code></p>
+          <details class="v3-pool-details"><summary>Pool details</summary>
+            <div class="v3-technical-metrics">
+              <div class="v3-metric"><span>SUI Reserve</span><strong id="v3SuiReserve">Loading…</strong></div>
+              <div class="v3-metric"><span>TREE Reserve</span><strong id="v3TreeReserve">Loading…</strong></div>
+              <div class="v3-metric"><span>Current Tick</span><strong id="v3CurrentTick">Loading…</strong></div>
+              <div class="v3-metric"><span>Liquidity Units</span><strong id="v3LiquidityRaw">Loading…</strong></div>
+            </div>
+            <div class="v3-apr-breakdown" id="v3AprBreakdown" aria-label="APR breakdown">Loading verified fee and incentive APR…</div>
+            <p class="v3-pool-id">Pool <code>${V3_POOL_ID}</code></p>
+            <p class="v3-notice" id="v3AnalyticsNotice">Loading verified on-chain pool and SuiDex analytics data.</p>
+            <button class="button secondary v3-refresh" id="v3RefreshPool" type="button">Refresh Pool Data</button>
+            <p class="v3-status" id="v3PoolStatus" role="status" aria-live="polite">Loading V3 pool…</p>
+          </details>
         </article>
-        <p class="v3-notice" id="v3AnalyticsNotice">Loading verified on-chain pool and SuiDex analytics data.</p>
         <article class="v3-add-card" id="v3AddCard" hidden>
           <h3>Plan a SUI/TREE V3 position</h3>
           <p class="v3-status">This calculator is read-only. It does not construct, sign, or submit a transaction.</p>
@@ -218,8 +224,6 @@ function workspaceMarkup() {
           <div class="v3-estimate"><div><span>Current price</span><strong id="v3PlanCurrent">—</strong></div><div><span>Selected range</span><strong id="v3PlanRange">—</strong></div><div><span>Current status</span><strong id="v3PlanStatus">—</strong></div></div>
           <button class="v3-disabled-action" type="button" disabled>Position transaction builder in verification</button>
         </article>
-        <button class="button secondary v3-refresh" id="v3RefreshPool" type="button">Refresh Pool Data</button>
-        <p class="v3-status" id="v3PoolStatus" role="status" aria-live="polite">Loading V3 pool…</p>
       </div>
       <div class="v3-panel" data-v3-panel="positions" hidden>
         <div class="v3-position-list" id="v3PositionList"><article class="v3-empty"><strong>Connect your wallet</strong>Public SuiDex V3 positions will appear here after wallet connection.</article></div>
@@ -359,7 +363,7 @@ function renderPositions(payload) {
     list.innerHTML = positions.map((position) => `
       <article class="v3-position-card">
         <div class="v3-position-head"><div><div class="v3-position-title"><h3>SUI / TREE</h3><span class="v3-chip">0.25% fee</span><span class="v3-position-state ${position.inRange ? '' : 'review'}">${position.inRange ? 'In range' : 'Out of range'}</span></div><code title="${position.objectId}">${compactId(position.objectId)}</code></div><strong class="v3-position-value">${formatPositionUsd(position.valueUsd)}</strong></div>
-        <div class="v3-token-balances"><span><b class="token-dot sui-dot">S</b>${formatNumber(position.principalSui, 6)} SUI <small>${formatPositionUsd(position.principalSuiUsd)}</small></span><span><b class="token-dot tree-dot">T</b>${formatNumber(position.principalTree, 4)} TREE <small>${formatPositionUsd(position.principalTreeUsd)}</small></span></div>
+        <div class="v3-token-balances"><span><b class="token-dot sui-dot" aria-label="SUI"></b>${formatNumber(position.principalSui, 6)} SUI <small>${formatPositionUsd(position.principalSuiUsd)}</small></span><span><b class="token-dot tree-dot" aria-label="TREE"></b>${formatNumber(position.principalTree, 4)} TREE <small>${formatPositionUsd(position.principalTreeUsd)}</small></span></div>
         <div class="v3-range-visual" aria-label="Position range"><div class="v3-range-track"><span style="left:${positionRangePercent(position)}%"></span></div><div class="v3-range-labels"><span>Min: ${position.tickLower}</span><strong>Current: ${position.currentTick}</strong><span>Max: ${position.tickUpper}</span></div></div>
         <div class="v3-earned-row fees"><span>Pending fees<small>${position.pendingFeeSui === null ? 'Accounting unavailable' : `${formatNumber(position.pendingFeeSui, 6)} SUI + ${formatNumber(position.pendingFeeTree, 4)} TREE`}</small></span><strong>${formatPositionUsd(position.pendingFeesUsd)}</strong></div>
         <div class="v3-position-rewards">${renderPositionRewards(position)}</div>
