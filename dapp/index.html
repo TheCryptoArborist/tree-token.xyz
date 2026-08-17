@@ -70,8 +70,9 @@
 
 <section class="section compact-section app-panel" id="limit" aria-labelledby="limit-title" hidden>
       <div class="section-heading"><div><p class="eyebrow">Target-price execution</p><h2 id="limit-title">TREE Limit Orders</h2><p>Escrow SUI or TREE on Sui Mainnet and let Aftermath execute the order when your target becomes available.</p></div><span class="data-state ok">Aftermath Mainnet</span></div>
+      <div class="limit-view-tabs" role="tablist" aria-label="Limit order views"><button class="active" id="limitCreateView" type="button" role="tab" aria-selected="true" aria-controls="limitCreatePanel">Create order</button><button id="limitOrdersView" type="button" role="tab" aria-selected="false" aria-controls="limitOrdersPanel">Your orders</button></div>
       <div class="limit-workspace">
-        <div class="limit-card">
+        <div class="limit-card" id="limitCreatePanel" role="tabpanel" aria-labelledby="limitCreateView">
           <div class="limit-card-header"><h3>Create order</h3><span class="limit-provider">Verified SUI/TREE route</span></div>
           <div class="limit-direction" role="group" aria-label="Limit order direction"><button class="active" type="button" data-limit-direction="buy-tree">Buy TREE</button><button type="button" data-limit-direction="sell-tree">Sell TREE</button></div>
           <label class="limit-field" for="limitAmount"><span id="limitAmountLabel">You allocate (SUI)</span><span id="limitInputBalance">Balance —</span></label>
@@ -90,7 +91,7 @@
           <button class="button primary limit-action" id="limitCreate" type="button">Connect Wallet</button>
           <p class="status" id="limitStatus" role="status" aria-live="polite">Loading the TREE limit-order service…</p>
         </div>
-        <div class="limit-orders-panel">
+        <div class="limit-orders-panel" id="limitOrdersPanel" role="tabpanel" aria-labelledby="limitOrdersView" hidden>
           <div class="limit-orders-header"><div><h3>Your orders</h3><p>Authorization only proves wallet ownership. It does not submit a transaction.</p></div><button class="button secondary" id="limitRefresh" type="button">Authorize &amp; Refresh</button></div>
           <div class="limit-order-tabs" role="tablist"><button class="active" id="limitActiveTab" type="button" role="tab" aria-selected="true">Active</button><button id="limitPastTab" type="button" role="tab" aria-selected="false">Past</button></div>
           <div id="limitOrders" class="limit-orders-list"><p class="muted">Connect a wallet, then authorize a read-only order lookup.</p></div>

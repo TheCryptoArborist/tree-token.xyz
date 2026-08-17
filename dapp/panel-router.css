@@ -2,7 +2,7 @@ html.app-tabbed{scroll-padding-top:0}
 .app-panel[hidden]{display:none!important}
 .app-tabbed body{min-height:100vh}
 .app-tabbed .app-nav{grid-template-columns:repeat(9,minmax(74px,1fr))}
-.app-tabbed main{width:min(560px,calc(100% - 30px));min-height:calc(100vh - 170px);padding:24px 0 64px}
+.app-tabbed main{width:min(472px,calc(100% - 30px));min-height:calc(100vh - 170px);padding:24px 0 64px}
 .app-tabbed main>.section{margin-top:0}
 .app-tabbed .app-panel.active-panel{display:block;animation:treePanelIn .18s ease-out}
 .app-tabbed .app-panel:focus{outline:none}
@@ -22,7 +22,7 @@ html.app-tabbed{scroll-padding-top:0}
 .app-tabbed .leader-actions{display:none}
 @keyframes treePanelIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @media(max-width:760px){
-  .app-tabbed main{width:min(100% - 18px,560px);padding-top:14px}
+  .app-tabbed main{width:min(100% - 18px,472px);padding-top:14px}
   .app-tabbed .app-nav{grid-template-columns:repeat(9,minmax(70px,1fr));justify-content:flex-start}
   .app-tabbed .app-nav a{min-height:58px;padding:7px 5px}
 }

@@ -11,6 +11,16 @@ const API = '/api/tree-limit-orders';
 const state = { direction: 'buy-tree', currentPrice: 0, minUsd: null, coinPricesUsd: { sui: null, tree: null }, balances: { sui: 0n, tree: 0n }, balanceOwner: null, busy: false, tab: 'active', orders: [], accountProof: null };
 const el = {};
 
+function showLimitView(view) {
+  const showOrders = view === 'orders';
+  el.createPanel.hidden = showOrders;
+  el.ordersPanel.hidden = !showOrders;
+  el.createView.classList.toggle('active', !showOrders);
+  el.ordersView.classList.toggle('active', showOrders);
+  el.createView.setAttribute('aria-selected', String(!showOrders));
+  el.ordersView.setAttribute('aria-selected', String(showOrders));
+}
+
 function setStatus(message, kind = '') { el.status.textContent = message; el.status.className = `status${kind ? ` ${kind}` : ''}`; }
 function compact(value) { const text = String(value || ''); return text.length > 18 ? `${text.slice(0, 10)}…${text.slice(-6)}` : text; }
 function numberText(value, digits = 9) { return Number(value).toLocaleString('en-US', { maximumFractionDigits: digits }); }
@@ -251,10 +261,11 @@ async function cancelOrder(orderId) {
 }
 
 async function initialize() {
-  Object.assign(el, { amount: document.getElementById('limitAmount'), amountLabel: document.getElementById('limitAmountLabel'), balance: document.getElementById('limitInputBalance'), inputSymbol: document.getElementById('limitInputSymbol'), target: document.getElementById('limitTarget'), expiry: document.getElementById('limitExpiry'), currentPrice: document.getElementById('limitCurrentPrice'), estimated: document.getElementById('limitEstimatedOutput'), condition: document.getElementById('limitCondition'), minimum: document.getElementById('limitMinimum'), create: document.getElementById('limitCreate'), status: document.getElementById('limitStatus'), refresh: document.getElementById('limitRefresh'), orders: document.getElementById('limitOrders'), activeTab: document.getElementById('limitActiveTab'), pastTab: document.getElementById('limitPastTab'), max: document.getElementById('limitMax') });
+  Object.assign(el, { amount: document.getElementById('limitAmount'), amountLabel: document.getElementById('limitAmountLabel'), balance: document.getElementById('limitInputBalance'), inputSymbol: document.getElementById('limitInputSymbol'), target: document.getElementById('limitTarget'), expiry: document.getElementById('limitExpiry'), currentPrice: document.getElementById('limitCurrentPrice'), estimated: document.getElementById('limitEstimatedOutput'), condition: document.getElementById('limitCondition'), minimum: document.getElementById('limitMinimum'), create: document.getElementById('limitCreate'), status: document.getElementById('limitStatus'), refresh: document.getElementById('limitRefresh'), orders: document.getElementById('limitOrders'), activeTab: document.getElementById('limitActiveTab'), pastTab: document.getElementById('limitPastTab'), max: document.getElementById('limitMax'), createView: document.getElementById('limitCreateView'), ordersView: document.getElementById('limitOrdersView'), createPanel: document.getElementById('limitCreatePanel'), ordersPanel: document.getElementById('limitOrdersPanel') });
   if (!el.create) return;
   document.querySelectorAll('[data-limit-direction]').forEach((button) => button.addEventListener('click', () => { state.direction = button.dataset.limitDirection; el.amount.value = ''; renderForm(); }));
   el.amount.addEventListener('input', renderForm); el.target.addEventListener('input', renderForm); el.create.addEventListener('click', createOrder); el.refresh.addEventListener('click', refreshFromButton);
+  el.createView.addEventListener('click', () => showLimitView('create')); el.ordersView.addEventListener('click', () => showLimitView('orders'));
   el.activeTab.addEventListener('click', () => { state.tab = 'active'; refreshFromButton(); }); el.pastTab.addEventListener('click', () => { state.tab = 'past'; refreshFromButton(); });
   el.max.addEventListener('click', () => { const meta = limitDirection(state.direction); let raw = state.direction === 'buy-tree' ? state.balances.sui - LIMIT_MIN_WALLET_GAS_RAW : state.balances.tree; if (raw < 0n) raw = 0n; el.amount.value = limitRawToDecimal(raw, meta.inputDecimals, meta.inputDecimals); renderForm(); });
   window.addEventListener('tree:wallet-changed', () => { state.accountProof = null; loadBalances(true).catch(() => {}); });

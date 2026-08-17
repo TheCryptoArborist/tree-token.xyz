@@ -7,7 +7,9 @@ const client = readFileSync(new URL('../dapp/limit-orders.js', import.meta.url),
 const server = readFileSync(new URL('../netlify/functions/tree-limit-orders.ts', import.meta.url), 'utf8');
 
 test('limit UI exposes create, active, past, and cancellation controls', () => {
-  for (const id of ['limitCreate', 'limitRefresh', 'limitActiveTab', 'limitPastTab', 'limitOrders']) assert.match(html, new RegExp(`id="${id}"`));
+  for (const id of ['limitCreateView', 'limitOrdersView', 'limitCreatePanel', 'limitOrdersPanel', 'limitCreate', 'limitRefresh', 'limitActiveTab', 'limitPastTab', 'limitOrders']) assert.match(html, new RegExp(`id="${id}"`));
+  assert.match(client, /showLimitView\('create'\)/);
+  assert.match(client, /showLimitView\('orders'\)/);
   assert.match(client, /Cancel & Return Funds/);
   assert.match(html, /Aftermath Mainnet/);
 });
