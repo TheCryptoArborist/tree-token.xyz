@@ -8,7 +8,7 @@ kill_timeout = "10s"
 
 [env]
   KEEPER_DRY_RUN = "true"
-  KEEPER_CURSOR_BACKEND = "memory"
+  KEEPER_CURSOR_BACKEND = "supabase"
   POLL_INTERVAL_MS = "5000"
   PORT = "8080"
   SUI_GRAPHQL_URL = "https://graphql.mainnet.sui.io/graphql"
