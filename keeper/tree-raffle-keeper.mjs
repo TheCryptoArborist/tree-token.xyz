@@ -5,6 +5,7 @@ const SUI_GRAPHQL_URL = process.env.SUI_GRAPHQL_URL || 'https://graphql.mainnet.
 const PORT = Number(process.env.PORT || 8080);
 const POLL_INTERVAL_MS = Number(process.env.POLL_INTERVAL_MS || 5_000);
 const DRY_RUN = process.env.KEEPER_DRY_RUN !== 'false';
+export const GRAPHQL_PAGE_SIZE = 50;
 
 const V2_PACKAGE = '0xbfac5e1c6bf6ef29b12f7723857695fd2f4da9a11a7d88162c15e9124c243a4a';
 const V3_PACKAGE = '0xb5f529c1dcda6580a61bf7ee9fbd524b50be62f11044d137c8202c8cbace9e56';
@@ -74,7 +75,10 @@ async function graphql(query, variables) {
   });
   if (!response.ok) throw new Error(`Sui GraphQL returned ${response.status}.`);
   const payload = await response.json();
-  if (Array.isArray(payload.errors) && payload.errors.length) throw new Error('Sui GraphQL returned a query error.');
+  if (Array.isArray(payload.errors) && payload.errors.length) {
+    const detail = payload.errors.map((error) => error?.message).filter(Boolean).join('; ');
+    throw new Error(`Sui GraphQL returned a query error${detail ? `: ${detail}` : '.'}`);
+  }
   return payload.data;
 }
 
@@ -109,7 +113,7 @@ async function pollStream(stream) {
   if (!state.cursors.has(stream.id)) return bootstrapStream(stream);
   let cursor = state.cursors.get(stream.id);
   for (let pageNumber = 0; pageNumber < 10; pageNumber += 1) {
-    const page = await nextEvents(stream.eventType, cursor, 100);
+    const page = await nextEvents(stream.eventType, cursor, GRAPHQL_PAGE_SIZE);
     for (const event of page.nodes) {
       const digest = event?.transaction?.digest;
       if (isExactPoolCandidate(stream.id, event) && typeof digest === 'string') {

@@ -1,10 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { KEEPER_STREAMS, isExactPoolCandidate } from '../keeper/tree-raffle-keeper.mjs';
+import { GRAPHQL_PAGE_SIZE, KEEPER_STREAMS, isExactPoolCandidate } from '../keeper/tree-raffle-keeper.mjs';
 
 test('keeper watches only the three allowlisted venue event types', () => {
   assert.deepEqual(KEEPER_STREAMS.map((stream) => stream.id), ['suidex-v2', 'suidex-v3', 'turbos']);
   assert.ok(KEEPER_STREAMS.every((stream) => typeof stream.eventType === 'string'));
+});
+
+test('keeper respects the Sui GraphQL event page limit', () => {
+  assert.equal(GRAPHQL_PAGE_SIZE, 50);
 });
 
 test('V3 and Turbos discovery filters exact TREE pools before ingestion', () => {
