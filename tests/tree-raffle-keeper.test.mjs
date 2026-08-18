@@ -23,6 +23,7 @@ test('Fly configuration is explicitly staging-only and cannot autostop', async (
   const source = await (await import('node:fs/promises')).readFile(new URL('../fly.keeper.toml', import.meta.url), 'utf8');
   assert.match(source, /app = "tree-raffle-keeper-staging"/);
   assert.match(source, /KEEPER_DRY_RUN = "true"/);
+  assert.match(source, /KEEPER_CURSOR_BACKEND = "memory"/);
   assert.match(source, /auto_stop_machines = "off"/);
   assert.match(source, /min_machines_running = 1/);
   assert.match(source, /size = "shared-cpu-1x"/);

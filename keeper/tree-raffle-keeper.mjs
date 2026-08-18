@@ -1,10 +1,12 @@
 import http from 'node:http';
 import { pathToFileURL } from 'node:url';
+import { configuredSupabaseKeeperCursorStore } from './tree-raffle-supabase-cursors.mjs';
 
 const SUI_GRAPHQL_URL = process.env.SUI_GRAPHQL_URL || 'https://graphql.mainnet.sui.io/graphql';
 const PORT = Number(process.env.PORT || 8080);
 const POLL_INTERVAL_MS = Number(process.env.POLL_INTERVAL_MS || 5_000);
 const DRY_RUN = process.env.KEEPER_DRY_RUN !== 'false';
+const CURSOR_BACKEND = process.env.KEEPER_CURSOR_BACKEND || 'memory';
 export const GRAPHQL_PAGE_SIZE = 50;
 
 const V2_PACKAGE = '0xbfac5e1c6bf6ef29b12f7723857695fd2f4da9a11a7d88162c15e9124c243a4a';
@@ -52,6 +54,7 @@ const state = {
   candidateDigests: 0,
   cursors: new Map(),
 };
+let durableCursorStore = null;
 
 function normalizedAddress(value) {
   const body = String(value || '').toLowerCase().replace(/^0x/, '').replace(/^0+/, '') || '0';
@@ -102,10 +105,40 @@ async function submitDigest(digest) {
   throw new Error('Live entry submission is intentionally blocked until durable cursor storage is configured.');
 }
 
+async function initializeCursorPersistence() {
+  if (CURSOR_BACKEND === 'memory') return;
+  if (CURSOR_BACKEND !== 'supabase') throw new Error('KEEPER_CURSOR_BACKEND must be memory or supabase.');
+  durableCursorStore = configuredSupabaseKeeperCursorStore();
+  const rows = await durableCursorStore.load();
+  for (const row of rows) {
+    const stream = KEEPER_STREAMS.find(({ id }) => id === row.streamId);
+    if (!stream || stream.eventType !== row.eventType) {
+      throw new Error(`Stored keeper cursor event type does not match ${row.streamId}.`);
+    }
+    state.cursors.set(row.streamId, row.cursor);
+  }
+}
+
+async function persistCursor(stream, expectedCursor, nextCursor) {
+  if (!nextCursor) throw new Error(`Sui GraphQL returned a missing cursor for ${stream.id}.`);
+  if (durableCursorStore) {
+    const saved = await durableCursorStore.compareAndSet({
+      streamId: stream.id,
+      eventType: stream.eventType,
+      expectedCursor,
+      nextCursor,
+    });
+    state.cursors.set(stream.id, saved.cursor);
+    return;
+  }
+  state.cursors.set(stream.id, nextCursor);
+}
+
 async function bootstrapStream(stream) {
   const page = await latestEvent(stream.eventType);
   const latest = page.pageInfo?.startCursor || null;
-  state.cursors.set(stream.id, latest);
+  if (latest) await persistCursor(stream, null, latest);
+  else state.cursors.set(stream.id, null);
   console.log(JSON.stringify({ level: 'info', action: 'stream-bootstrap', stream: stream.id, cursor: latest }));
 }
 
@@ -121,8 +154,12 @@ async function pollStream(stream) {
         state.candidateDigests += 1;
       }
     }
-    if (page.pageInfo?.endCursor) cursor = page.pageInfo.endCursor;
-    state.cursors.set(stream.id, cursor);
+    if (page.nodes.length) {
+      const nextCursor = page.pageInfo?.endCursor;
+      if (nextCursor === cursor) throw new Error(`Sui GraphQL repeated the cursor for ${stream.id}.`);
+      await persistCursor(stream, cursor, nextCursor);
+      cursor = nextCursor;
+    }
     if (!page.pageInfo?.hasNextPage || !page.nodes.length) break;
   }
 }
@@ -138,7 +175,7 @@ function publicState() {
   return {
     status: state.lastError ? 'degraded' : 'ok',
     mode: DRY_RUN ? 'staging-dry-run' : 'blocked',
-    cursorPersistence: 'memory-only-staging',
+    cursorPersistence: CURSOR_BACKEND === 'supabase' ? 'supabase-compare-and-set' : 'memory-only-staging',
     startedAt: state.startedAt,
     lastPollAt: state.lastPollAt,
     lastSuccessAt: state.lastSuccessAt,
@@ -151,7 +188,8 @@ function publicState() {
 export async function startKeeper() {
   if (!Number.isInteger(PORT) || PORT < 1 || PORT > 65_535) throw new Error('PORT is invalid.');
   if (!Number.isInteger(POLL_INTERVAL_MS) || POLL_INTERVAL_MS < 2_000) throw new Error('POLL_INTERVAL_MS is invalid.');
-  if (!DRY_RUN) throw new Error('Live keeper mode requires the durable Supabase cursor adapter before it can start.');
+  if (!DRY_RUN) throw new Error('Live keeper mode remains blocked until verified ingestion is connected and reviewed.');
+  await initializeCursorPersistence();
 
   http.createServer((request, response) => {
     if (request.url !== '/healthz') {
