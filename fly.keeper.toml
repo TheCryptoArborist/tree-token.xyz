@@ -1,0 +1,31 @@
+app = "tree-raffle-keeper-staging"
+primary_region = "ord"
+kill_signal = "SIGINT"
+kill_timeout = "10s"
+
+[build]
+  dockerfile = "Dockerfile.keeper"
+
+[env]
+  KEEPER_DRY_RUN = "true"
+  POLL_INTERVAL_MS = "5000"
+  PORT = "8080"
+  SUI_GRAPHQL_URL = "https://graphql.mainnet.sui.io/graphql"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "off"
+  auto_start_machines = true
+  min_machines_running = 1
+
+  [[http_service.checks]]
+    interval = "15s"
+    timeout = "3s"
+    grace_period = "20s"
+    method = "GET"
+    path = "/healthz"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "256mb"
