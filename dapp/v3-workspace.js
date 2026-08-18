@@ -231,7 +231,7 @@ function workspaceMarkup() {
         <p class="v3-status" id="v3PositionStatus" role="status" aria-live="polite">No wallet connected.</p>
       </div>
       <div class="v3-panel v3-swap-link" data-v3-panel="swap" hidden>
-        <div><h3>Use the native best-route TREE swap</h3><p>The Swap panel compares the verified direct SuiDex V2 and V3 routes and selects the higher output for the entered amount.</p><button class="button primary" id="v3OpenSwap" type="button">Open TREE Swap</button></div>
+        <div><h3>Use the native best-route TREE swap</h3><p>The Swap panel compares verified direct SuiDex V2, SuiDex V3, and Turbos routes and selects the highest protected output for the entered amount.</p><button class="button primary" id="v3OpenSwap" type="button">Open TREE Swap</button></div>
       </div>
     </div>`;
 }

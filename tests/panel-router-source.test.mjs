@@ -22,6 +22,11 @@ assert.match(router, /history\.pushState/);
 assert.match(router, /addEventListener\('popstate'/);
 assert.match(css, /\.app-panel\[hidden\]\{display:none!important\}/);
 assert.match(css, /width:min\(472px,calc\(100% - 30px\)\)/);
+assert.match(css, /tree-command-watermark\.png/);
+assert.match(css, /main::before/);
+assert.match(css, /pointer-events:none/);
+assert.match(css, /opacity:\.061/, 'Desktop watermark must retain the approved 10% visibility increase.');
+assert.match(css, /width:min\(680px,72vw\)/, 'Desktop watermark must remain centered behind the compact panel.');
 assert.match(router, /function showStatsView\(view\)/);
 for (const view of ['Market', 'Supply', 'Liquidity', 'Nftree']) {
   assert.equal(html.includes(`id="stats${view}Tab"`), true);
