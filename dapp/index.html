@@ -10,6 +10,8 @@
   <link rel="stylesheet" href="panel-router.css">
   <link rel="stylesheet" href="swap-router.css">
   <link rel="stylesheet" href="limit-orders.css">
+  <link rel="stylesheet" href="earn-transactions.css">
+  <link rel="stylesheet" href="earn-v3-zap.css">
   <link rel="stylesheet" href="v3-transactions.css">
   <script type="module" src="../scripts/wallet.js"></script>
 </head>
@@ -106,12 +108,27 @@
       <div class="earn-panel" id="earnRoutesPanel" role="tabpanel" aria-labelledby="earnRoutesTab">
         <div class="earn-stat-card"><span>Verified SUI / TREE routes</span><strong>2</strong><small>Live through SuiDex V2 and V3</small></div>
         <div class="earn-route-list">
-          <article class="earn-route-row"><div class="earn-route-title"><span class="token-logo-stack" aria-hidden="true"><img src="../assets/sui-token.svg" alt=""><img src="../thick.png" alt=""></span><div><h3>SUI / TREE V2</h3><small>Classic liquidity + farm</small></div></div><div class="earn-route-actions"><a class="button secondary" href="https://dex.suidex.org/pools/0x35a1be1f01f9edf7f5221d226f357d194d43c28f2a65cb38640935518d9a5bfc/add" target="_blank" rel="noopener noreferrer">Add</a><a class="button gold" href="https://dex.suidex.org/zap?pool=0x35a1be1f01f9edf7f5221d226f357d194d43c28f2a65cb38640935518d9a5bfc&amp;stake=true" target="_blank" rel="noopener noreferrer">Zap &amp; Stake</a></div><details><summary>Route details</summary><p>Add equal-value SUI and TREE, or deposit one supported token into the exact V2 route. SuiDex calculates the split before explicit wallet approval.</p></details></article>
-          <article class="earn-route-row"><div class="earn-route-title"><span class="token-logo-stack" aria-hidden="true"><img src="../assets/sui-token.svg" alt=""><img src="../thick.png" alt=""></span><div><h3>SUI / TREE V3</h3><small>Concentrated liquidity + incentives</small></div></div><div class="earn-route-actions"><a class="button secondary" href="https://dex.suidex.org/pools/v3/0x39d5ba22e01e45bc4129ec28a0bef52e8fee8db5d07d337adf9540e3cb9074cf/add" target="_blank" rel="noopener noreferrer">Add Both</a><a class="button gold" href="https://dex.suidex.org/pools/v3/0x39d5ba22e01e45bc4129ec28a0bef52e8fee8db5d07d337adf9540e3cb9074cf/add?zap=1" target="_blank" rel="noopener noreferrer">Zap into V3</a></div><details><summary>Route details</summary><p>Deposit SUI or TREE into the verified V3 pool. Review the range, split, price impact, and slippage before explicit wallet approval.</p></details></article>
+          <article class="earn-route-row"><div class="earn-route-title"><span class="token-logo-stack" aria-hidden="true"><img src="../assets/sui-token.svg" alt=""><img src="../thick.png" alt=""></span><div><h3>SUI / TREE V2</h3><small>Classic liquidity + farm</small></div></div><div class="earn-route-actions"><button class="button gold" id="earnV2ZapOpen" type="button" aria-expanded="false" aria-controls="earnV2ZapPanel">Zap &amp; Stake</button></div><div class="earn-zap-panel" id="earnV2ZapPanel" hidden>
+            <div class="earn-zap-heading"><div><strong>Native V2 Zap &amp; Stake</strong><small>Runs here in TREE Command Center</small></div><span class="data-state ok">Sui Mainnet</span></div>
+            <label class="earn-zap-label" for="earnZapToken">Deposit token</label><select id="earnZapToken"><option value="SUI">SUI</option><option value="TREE">TREE</option></select>
+            <label class="earn-zap-label" for="earnZapAmount"><span>Amount</span><span id="earnZapBalance">Balance —</span></label><div class="earn-zap-input"><input id="earnZapAmount" type="text" inputmode="decimal" autocomplete="off" placeholder="0.0"><button id="earnZapMax" type="button">MAX</button><span id="earnZapSymbol">SUI</span></div>
+            <div class="earn-zap-summary"><span>Swap portion</span><strong id="earnZapSwap">—</strong><span>Liquidity portion</span><strong id="earnZapLiquidity">—</strong><span>Minimum paired token</span><strong id="earnZapMinimum">—</strong><span>Wallet approvals</span><strong>2 · Zap, then stake</strong></div>
+            <div class="earn-zap-slippage"><span>Slippage</span><div><button type="button" data-earn-slippage="50">0.5%</button><button class="active" type="button" data-earn-slippage="100">1%</button><button type="button" data-earn-slippage="200">2%</button></div></div>
+            <button class="button primary" id="earnZapAction" type="button">Connect Wallet</button><p class="status" id="earnZapStatus" role="status" aria-live="polite">Enter an amount to build the verified SUI/TREE V2 zap.</p><div class="swap-success" id="earnZapSuccess" hidden></div>
+          </div><details><summary>Route details</summary><p>Deposit SUI or TREE. TREE Command Center swaps approximately half, creates SUI/TREE LP, verifies the new LP balance, then opens a second wallet approval to stake it in the verified SuiDex farm.</p></details></article>
+          <article class="earn-route-row"><div class="earn-route-title"><span class="token-logo-stack" aria-hidden="true"><img src="../assets/sui-token.svg" alt=""><img src="../thick.png" alt=""></span><div><h3>SUI / TREE V3</h3><small>Concentrated liquidity + incentives</small></div></div><div class="earn-route-actions"><button class="button gold" id="earnV3ZapOpen" type="button" aria-expanded="false" aria-controls="earnV3ZapPanel">Zap into V3</button><button class="button secondary" type="button" data-open-panel="v3">Manage V3</button></div><div class="earn-zap-panel" id="earnV3ZapPanel" hidden>
+            <div class="earn-zap-heading"><div><strong>Native V3 Zap</strong><small>One-token position creation inside TREE Command Center</small></div><span class="data-state ok">Sui Mainnet</span></div>
+            <label class="earn-zap-label" for="earnV3ZapToken">Deposit token</label><select id="earnV3ZapToken"><option value="SUI">SUI</option><option value="TREE">TREE</option></select>
+            <label class="earn-zap-label" for="earnV3ZapAmount"><span>Amount</span><span id="earnV3ZapBalance">Balance —</span></label><div class="earn-zap-input"><input id="earnV3ZapAmount" type="text" inputmode="decimal" autocomplete="off" placeholder="0.0"><button id="earnV3ZapMax" type="button">MAX</button><span id="earnV3ZapSymbol">SUI</span></div>
+            <label class="earn-zap-label" for="earnV3ZapRange">Price range</label><select id="earnV3ZapRange"><option value="5">±5% around current price</option><option value="20" selected>±20% around current price</option><option value="full">Full range</option></select>
+            <div class="earn-zap-summary"><span>Current price</span><strong id="earnV3ZapCurrent">Loading…</strong><span>Selected range</span><strong id="earnV3ZapRangeText">—</strong><span>Swap portion</span><strong id="earnV3ZapSwap">—</strong><span>Minimum paired token</span><strong id="earnV3ZapMinimum">—</strong><span>Wallet approvals</span><strong>1 · Position + incentives</strong></div>
+            <div class="earn-zap-slippage"><span>Slippage</span><div><button type="button" data-earn-v3-slippage="50">0.5%</button><button class="active" type="button" data-earn-v3-slippage="100">1%</button><button type="button" data-earn-v3-slippage="200">2%</button></div></div>
+            <button class="button primary" id="earnV3ZapAction" type="button">Connect Wallet</button><p class="status" id="earnV3ZapStatus" role="status" aria-live="polite">Loading the verified SUI/TREE V3 pool…</p><div class="swap-success" id="earnV3ZapSuccess" hidden></div>
+          </div><details><summary>Route details</summary><p>Deposit SUI or TREE. TREE Command Center swaps approximately half in the verified SUI/TREE V3 pool and creates the selected concentrated-liquidity position after one explicit wallet approval. V3 incentives attach directly to the position, so there is no separate staking transaction.</p></details></article>
         </div>
       </div>
       <div class="earn-panel" id="earnPositionsPanel" role="tabpanel" aria-labelledby="earnPositionsTab" hidden>
-        <article class="earn-positions-card"><span class="card-icon">◉</span><h3>Your TREE liquidity</h3><p>Review positions, earned fees, staked LP, and claimable rewards using the same connected wallet on SuiDex.</p><a class="button primary" href="https://dex.suidex.org/portfolio" target="_blank" rel="noopener noreferrer">Manage Positions</a><a class="button secondary" href="https://dex.suidex.org/farms" target="_blank" rel="noopener noreferrer">Stake Existing LP</a></article>
+        <article class="earn-positions-card"><span class="card-icon">◉</span><h3>Your TREE liquidity</h3><p>Review V3 positions, fees, and rewards here. Native V2 LP staking is available through the Farms tab.</p><button class="button primary" type="button" data-open-panel="v3">Manage V3 Positions</button><button class="button secondary" id="earnStakeExisting" type="button">Stake Existing V2 LP</button><p class="status" id="earnStakeStatus" role="status" aria-live="polite"></p></article>
       </div>
     </section>
 
@@ -256,6 +273,8 @@
   <script type="module" src="app.js"></script>
   <script type="module" src="swap-router.js"></script>
   <script type="module" src="limit-orders.js"></script>
+  <script type="module" src="earn-transactions.js"></script>
+  <script type="module" src="earn-v3-zap.js"></script>
   <script type="module" src="../scripts/canopy-draw.js"></script>
   <script type="module" src="../scripts/profile-studio.js"></script>
   <script type="module" src="v3-workspace.js"></script>

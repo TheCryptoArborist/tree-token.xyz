@@ -3,10 +3,10 @@ import {
   TREE_COIN_TYPE, SUI_COIN_TYPE, SUIDEX_V3_PACKAGE, SUIDEX_V3_POOL, SUIDEX_V3_VERSION, TREE_V3_REWARD_TOKENS,
   isTreeV3ExecutionHost,
   TREE_V3_TICK_SPACING, normalizeDecimalInput, decimalToRaw, encodeSignedI32, decodeSignedI32,
-  ticksFromDisplayedPrices, minimumAfterSlippage, validateVerifiedPool, buildCreateTreeV3Position,
+  ticksFromDisplayedPrices, minimumAfterSlippage, optimalV3ZapSwapRaw, validateVerifiedPool, buildCreateTreeV3Position, buildCreateTreeV3ZapPosition,
   buildIncreaseTreeV3Position, buildRemoveTreeV3Position, buildCollectTreeV3Fees, buildCollectTreeV3Rewards, buildCloseTreeV3Position,
   assertAllowedIncreaseV3Transaction, assertAllowedRemoveV3Transaction, assertAllowedCollectFeeV3Transaction,
-  assertAllowedCollectRewardV3Transaction, assertAllowedCloseV3Transaction, simulationSucceeded, positionDeleted,
+  assertAllowedCollectRewardV3Transaction, assertAllowedCloseV3Transaction, assertAllowedV3ZapTransaction, simulationSucceeded, positionDeleted,
   extractAddLiquidityEvent, extractRemoveLiquidityEvent, extractFeeCollectedEvent, extractRewardCollectedEvents,
 } from '../dapp/v3-transaction-core.js';
 
@@ -26,11 +26,15 @@ const ticks = ticksFromDisplayedPrices({ currentTick: 35_704, currentPrice: 0.00
 assert.equal(ticks.lower % 60, 0); assert.equal(ticks.upper % 60, 0); assert.ok(ticks.lower < 35_704); assert.ok(ticks.upper > 35_704);
 assert.equal(minimumAfterSlippage(1_000_000n, 100), 990_000n);
 assert.throws(() => minimumAfterSlippage(1_000n, 501), /Slippage/);
+const optimizedSuiSwap = optimalV3ZapSwapRaw({ amountIn: 3_000_000_000n, inputType: SUI_COIN_TYPE, tickLower: 33_840, tickUpper: 37_920, sqrtPriceRaw: 109_832_094_206_034_578_535n, probeAmountIn: 1_500_000_000n, probeAmountOut: 53_043_816_679n });
+assert.ok(optimizedSuiSwap > 1_360_000_000n && optimizedSuiSwap < 1_370_000_000n);
+const optimizedTreeSwap = optimalV3ZapSwapRaw({ amountIn: 100_000_000_000n, inputType: TREE_COIN_TYPE, tickLower: 33_840, tickUpper: 37_920, sqrtPriceRaw: 109_832_094_206_034_578_535n, probeAmountIn: 50_000_000_000n, probeAmountOut: 1_400_000_000n });
+assert.ok(optimizedTreeSwap > 54_000_000_000n && optimizedTreeSwap < 56_000_000_000n);
 assert.equal(validateVerifiedPool({ verified: true, poolId: SUIDEX_V3_POOL, tokenX: SUI_COIN_TYPE, tokenY: TREE_COIN_TYPE, tickSpacing: 60, currentTick: 35_704, priceSuiPerTree: 0.000028 }), true);
 assert.throws(() => validateVerifiedPool({ verified: true, poolId: '0x0', tokenX: SUI_COIN_TYPE, tokenY: TREE_COIN_TYPE, tickSpacing: 60, currentTick: 1, priceSuiPerTree: 1 }), /pool ID/);
 
 let next = 0;
-class MockPure { u32(value) { return { pure: 'u32', value }; } u64(value) { return { pure: 'u64', value: BigInt(value) }; } u128(value) { return { pure: 'u128', value: BigInt(value) }; } address(value) { return { pure: 'address', value }; } }
+class MockPure { u32(value) { return { pure: 'u32', value }; } u64(value) { return { pure: 'u64', value: BigInt(value) }; } u128(value) { return { pure: 'u128', value: BigInt(value) }; } bool(value) { return { pure: 'bool', value }; } address(value) { return { pure: 'address', value }; } }
 class MockTransaction {
   constructor() { this.commands = []; this.pure = new MockPure(); this.gas = { gas: true }; }
   setSender(sender) { this.sender = sender; }
@@ -38,7 +42,7 @@ class MockTransaction {
   mergeCoins(primary, others) { this.commands.push({ $kind: 'MergeCoins', MergeCoins: { primary, others } }); }
   splitCoins(coin, amounts) { const result = [{ split: ++next, coin, amounts }]; this.commands.push({ $kind: 'SplitCoins', SplitCoins: { coin, amounts } }); return result; }
   transferObjects(objects, owner) { this.commands.push({ $kind: 'TransferObjects', TransferObjects: { objects, owner } }); }
-  moveCall(call) { const [pkg, module, fn] = call.target.split('::'); this.commands.push({ $kind: 'MoveCall', MoveCall: { package: pkg, module, function: fn, ...call } }); if (fn === 'add_liquidity') return [{ result: 'sui-left' }, { result: 'tree-left' }]; if (fn === 'remove_liquidity') return [{ result: 'sui-out' }, { result: 'tree-out' }]; if (module === 'collect' && fn === 'fee') return [{ result: 'sui-fee' }, { result: 'tree-fee' }]; if (module === 'collect' && fn === 'reward') return { result: `reward-${call.typeArguments[2]}` }; return { result: `${module}::${fn}` }; }
+  moveCall(call) { const [pkg, module, fn] = call.target.split('::'); this.commands.push({ $kind: 'MoveCall', MoveCall: { package: pkg, module, function: fn, ...call } }); if (fn === 'flash_swap') return [{ result: 'balance-a' }, { result: 'balance-b' }, { result: 'receipt' }]; if (fn === 'add_liquidity') return [{ result: 'sui-left' }, { result: 'tree-left' }]; if (fn === 'remove_liquidity') return [{ result: 'sui-out' }, { result: 'tree-out' }]; if (module === 'collect' && fn === 'fee') return [{ result: 'sui-fee' }, { result: 'tree-fee' }]; if (module === 'collect' && fn === 'reward') return { result: `reward-${call.typeArguments[2]}` }; return { result: `${module}::${fn}` }; }
   getData() { return { commands: this.commands }; }
 }
 const owner = `0x${'1'.repeat(64)}`;
@@ -52,6 +56,18 @@ assert.deepEqual(calls[3].typeArguments, [SUI_COIN_TYPE, TREE_COIN_TYPE]); asser
 assert.ok(calls.every((call) => [SUIDEX_V3_PACKAGE].includes(call.package)));
 const transfers = tx.commands.filter((command) => command.$kind === 'TransferObjects');
 assert.ok(transfers.some((command) => command.TransferObjects.objects.some((item) => item?.result === 'liquidity::open_position')));
+const zapTx = await buildCreateTreeV3ZapPosition({ Transaction: MockTransaction, client, owner, inputType: SUI_COIN_TYPE, amountIn: 100_000_000n, swapRaw: 50_000_000n, minSwapOutRaw: 1_000_000n, tickLower: 35_040, tickUpper: 36_360, minSuiRaw: 40_000_000n, minTreeRaw: 900_000n });
+const zapCalls = zapTx.commands.filter((command) => command.$kind === 'MoveCall').map((command) => command.MoveCall);
+assert.deepEqual(zapCalls.map((call) => `${call.module}::${call.function}`), ['coin::into_balance','trade::flash_swap','balance::zero','trade::repay_flash_swap','balance::destroy_zero','coin::from_balance','i32::from','i32::from','liquidity::open_position','liquidity::add_liquidity']);
+assert.equal(zapCalls[1].arguments[1].value, true);
+assert.equal(zapCalls[9].arguments[4].value, 40_000_000n);
+assert.equal(zapCalls[9].arguments[5].value, 900_000n);
+assert.equal(assertAllowedV3ZapTransaction(zapTx), true);
+const treeZapTx = await buildCreateTreeV3ZapPosition({ Transaction: MockTransaction, client, owner, inputType: TREE_COIN_TYPE, amountIn: 2_000_000n, swapRaw: 1_000_000n, minSwapOutRaw: 10_000_000n, tickLower: 35_040, tickUpper: 36_360 });
+const treeZapCalls = treeZapTx.commands.filter((command) => command.$kind === 'MoveCall').map((command) => command.MoveCall);
+assert.equal(treeZapCalls[1].arguments[1].value, false);
+assert.equal(treeZapCalls[2].typeArguments[0], SUI_COIN_TYPE);
+assert.equal(assertAllowedV3ZapTransaction(treeZapTx), true);
 const positionId = `0x${'3'.repeat(64)}`;
 const increaseTx = await buildIncreaseTreeV3Position({ Transaction: MockTransaction, client, owner, positionId, treeRaw: 1_000_000n, suiRaw: 100_000_000n, minTreeRaw: 995_000n, minSuiRaw: 99_500_000n });
 const increaseCalls = increaseTx.commands.filter((command) => command.$kind === 'MoveCall').map((command) => command.MoveCall);

@@ -28,6 +28,7 @@ export function isTreeV3ExecutionHost(value) {
 const U32_MODULUS = 0x1_0000_0000;
 const MIN_TICK = -443_636;
 const MAX_TICK = 443_636;
+export const TREE_V3_FULL_RANGE = Object.freeze({ lower: -443_580, upper: 443_580 });
 
 function normalizedAddress(value) {
   if (typeof value !== 'string') return null;
@@ -113,6 +114,32 @@ export function minimumAfterSlippage(value, slippageBps) {
   return amount * BigInt(10_000 - slippageBps) / 10_000n;
 }
 
+export function optimalV3ZapSwapRaw({ amountIn, inputType, tickLower, tickUpper, sqrtPriceRaw, probeAmountIn, probeAmountOut }) {
+  amountIn = BigInt(amountIn); probeAmountIn = BigInt(probeAmountIn); probeAmountOut = BigInt(probeAmountOut);
+  if (amountIn < 2n || probeAmountIn <= 0n || probeAmountOut <= 0n) throw new Error('Invalid V3 ratio quote amounts.');
+  if (!Number.isInteger(tickLower) || !Number.isInteger(tickUpper) || tickLower >= tickUpper) throw new Error('Invalid V3 ratio tick range.');
+  const currentSqrt = Number(BigInt(sqrtPriceRaw));
+  const q64 = 2 ** 64;
+  const lowerSqrt = q64 * Math.pow(1.0001, tickLower / 2);
+  const upperSqrt = q64 * Math.pow(1.0001, tickUpper / 2);
+  if (![currentSqrt, lowerSqrt, upperSqrt].every(Number.isFinite) || !(lowerSqrt < currentSqrt && currentSqrt < upperSqrt)) throw new Error('The selected V3 range must contain the current price.');
+  const token0PerLiquidity = (upperSqrt - currentSqrt) * q64 / (currentSqrt * upperSqrt);
+  const token1PerLiquidity = (currentSqrt - lowerSqrt) / q64;
+  const rawToken1PerToken0 = token1PerLiquidity / token0PerLiquidity;
+  const quoteRate = Number(probeAmountOut) / Number(probeAmountIn);
+  if (!(rawToken1PerToken0 > 0) || !Number.isFinite(rawToken1PerToken0) || !(quoteRate > 0) || !Number.isFinite(quoteRate)) throw new Error('The V3 position ratio could not be calculated.');
+  const inputIsSui = normalizedCoinType(inputType) === normalizedCoinType(SUI_COIN_TYPE);
+  if (!inputIsSui && normalizedCoinType(inputType) !== normalizedCoinType(TREE_COIN_TYPE)) throw new Error('V3 zap input must be SUI or TREE.');
+  const fraction = inputIsSui
+    ? rawToken1PerToken0 / (quoteRate + rawToken1PerToken0)
+    : 1 / (1 + rawToken1PerToken0 * quoteRate);
+  const clamped = Math.min(0.99, Math.max(0.01, fraction));
+  const partsPerMillion = BigInt(Math.round(clamped * 1_000_000));
+  const result = amountIn * partsPerMillion / 1_000_000n;
+  if (result <= 0n || result >= amountIn) throw new Error('The calculated V3 swap amount is invalid.');
+  return result;
+}
+
 export function validateVerifiedPool(pool) {
   if (!pool || pool.verified !== true) throw new Error('The V3 pool is not verified.');
   if (normalizedAddress(pool.poolId) !== normalizedAddress(SUIDEX_V3_POOL)) throw new Error('Unexpected V3 pool ID.');
@@ -168,6 +195,37 @@ export function assertAllowedV3Transaction(transaction) {
       const types = call.typeArguments || [];
       if (normalizedCoinType(types[0]) !== normalizedCoinType(SUI_COIN_TYPE)
         || normalizedCoinType(types[1]) !== normalizedCoinType(TREE_COIN_TYPE)) throw new Error('Unexpected V3 Move-call type arguments.');
+    }
+  });
+  return true;
+}
+
+export function assertAllowedV3ZapTransaction(transaction) {
+  const commands = transaction?.getData?.().commands || [];
+  const calls = commands.flatMap((command) => command?.MoveCall ? [command.MoveCall] : command?.$kind === 'MoveCall' ? [command.MoveCall] : []);
+  const expected = [
+    ['0x2', 'coin::into_balance'],
+    [SUIDEX_V3_PACKAGE, 'trade::flash_swap'],
+    ['0x2', 'balance::zero'],
+    [SUIDEX_V3_PACKAGE, 'trade::repay_flash_swap'],
+    ['0x2', 'balance::destroy_zero'],
+    ['0x2', 'coin::from_balance'],
+    [SUIDEX_V3_PACKAGE, 'i32::from'],
+    [SUIDEX_V3_PACKAGE, 'i32::from'],
+    [SUIDEX_V3_PACKAGE, 'liquidity::open_position'],
+    [SUIDEX_V3_PACKAGE, 'liquidity::add_liquidity'],
+  ];
+  if (calls.length !== expected.length) throw new Error('Unexpected V3 zap Move-call count.');
+  calls.forEach((call, index) => {
+    const target = call.target || `${call.package}::${call.module}::${call.function}`;
+    const parts = target.split('::');
+    const packageId = normalizedAddress(parts[0]);
+    const label = `${parts[1]}::${parts[2]}`;
+    if (packageId !== normalizedAddress(expected[index][0]) || label !== expected[index][1]) throw new Error(`Move call is not allowlisted: ${target}`);
+    if (packageId === normalizedAddress(SUIDEX_V3_PACKAGE) && ['trade::flash_swap', 'trade::repay_flash_swap', 'liquidity::open_position', 'liquidity::add_liquidity'].includes(label)) {
+      const types = call.typeArguments || [];
+      if (normalizedCoinType(types[0]) !== normalizedCoinType(SUI_COIN_TYPE)
+        || normalizedCoinType(types[1]) !== normalizedCoinType(TREE_COIN_TYPE)) throw new Error('Unexpected V3 zap type arguments.');
     }
   });
   return true;
@@ -307,6 +365,101 @@ export async function buildCreateTreeV3Position({
   transaction.transferObjects([remainingSui], transaction.pure.address(owner));
   transaction.transferObjects([remainingTree], transaction.pure.address(owner));
   assertAllowedV3Transaction(transaction);
+  return transaction;
+}
+
+export async function buildCreateTreeV3ZapPosition({
+  Transaction,
+  client,
+  owner,
+  inputType,
+  amountIn,
+  swapRaw,
+  minSwapOutRaw,
+  tickLower,
+  tickUpper,
+  minTreeRaw = 0n,
+  minSuiRaw = 0n,
+}) {
+  if (typeof Transaction !== 'function' || !client?.core?.listCoins) throw new Error('Sui transaction dependencies are unavailable.');
+  if (!normalizedAddress(owner)) throw new Error('A valid Sui owner address is required.');
+  const normalizedInput = normalizedCoinType(inputType);
+  const inputIsSui = normalizedInput === normalizedCoinType(SUI_COIN_TYPE);
+  if (!inputIsSui && normalizedInput !== normalizedCoinType(TREE_COIN_TYPE)) throw new Error('V3 zap input must be SUI or TREE.');
+  amountIn = BigInt(amountIn); swapRaw = BigInt(swapRaw); minSwapOutRaw = BigInt(minSwapOutRaw);
+  minTreeRaw = BigInt(minTreeRaw); minSuiRaw = BigInt(minSuiRaw);
+  if (amountIn < 2n || swapRaw <= 0n || swapRaw >= amountIn || minSwapOutRaw <= 0n) throw new Error('Invalid V3 zap amounts.');
+  if (minTreeRaw < 0n || minSuiRaw < 0n) throw new Error('Invalid minimum deposit amounts.');
+  if (!Number.isInteger(tickLower) || !Number.isInteger(tickUpper)
+    || tickLower % TREE_V3_TICK_SPACING !== 0 || tickUpper % TREE_V3_TICK_SPACING !== 0
+    || tickLower < MIN_TICK || tickUpper > MAX_TICK || tickLower >= tickUpper) throw new Error('Invalid SuiDex V3 tick range.');
+
+  const transaction = new Transaction();
+  transaction.setSender(owner);
+  let fullInput;
+  if (inputIsSui) {
+    [fullInput] = transaction.splitCoins(transaction.gas, [transaction.pure.u64(amountIn)]);
+  } else {
+    const treeCoins = await selectTreeCoins(client, owner, amountIn);
+    const treeSource = transaction.object(treeCoins[0].objectId);
+    if (treeCoins.length > 1) transaction.mergeCoins(treeSource, treeCoins.slice(1).map((coin) => transaction.object(coin.objectId)));
+    [fullInput] = transaction.splitCoins(treeSource, [transaction.pure.u64(amountIn)]);
+  }
+  const [swapCoin] = transaction.splitCoins(fullInput, [transaction.pure.u64(swapRaw)]);
+  const inputBalance = transaction.moveCall({
+    target: '0x2::coin::into_balance',
+    typeArguments: [inputType],
+    arguments: [swapCoin],
+  });
+  const aToB = inputIsSui;
+  const sqrtLimit = aToB ? 4_295_048_017n : 0xfffec4b135bb7f32a81b33aen;
+  const [balanceA, balanceB, receipt] = transaction.moveCall({
+    target: `${SUIDEX_V3_PACKAGE}::trade::flash_swap`,
+    typeArguments: [SUI_COIN_TYPE, TREE_COIN_TYPE],
+    arguments: [
+      transaction.object(SUIDEX_V3_POOL), transaction.pure.bool(aToB), transaction.pure.bool(true),
+      transaction.pure.u64(swapRaw), transaction.pure.u128(sqrtLimit), transaction.object(SUI_CLOCK), transaction.object(SUIDEX_V3_VERSION),
+    ],
+  });
+  let swappedCoin;
+  if (aToB) {
+    const zeroTree = transaction.moveCall({ target: '0x2::balance::zero', typeArguments: [TREE_COIN_TYPE], arguments: [] });
+    transaction.moveCall({
+      target: `${SUIDEX_V3_PACKAGE}::trade::repay_flash_swap`, typeArguments: [SUI_COIN_TYPE, TREE_COIN_TYPE],
+      arguments: [transaction.object(SUIDEX_V3_POOL), receipt, inputBalance, zeroTree, transaction.object(SUIDEX_V3_VERSION)],
+    });
+    transaction.moveCall({ target: '0x2::balance::destroy_zero', typeArguments: [SUI_COIN_TYPE], arguments: [balanceA] });
+    swappedCoin = transaction.moveCall({ target: '0x2::coin::from_balance', typeArguments: [TREE_COIN_TYPE], arguments: [balanceB] });
+  } else {
+    const zeroSui = transaction.moveCall({ target: '0x2::balance::zero', typeArguments: [SUI_COIN_TYPE], arguments: [] });
+    transaction.moveCall({
+      target: `${SUIDEX_V3_PACKAGE}::trade::repay_flash_swap`, typeArguments: [SUI_COIN_TYPE, TREE_COIN_TYPE],
+      arguments: [transaction.object(SUIDEX_V3_POOL), receipt, zeroSui, inputBalance, transaction.object(SUIDEX_V3_VERSION)],
+    });
+    transaction.moveCall({ target: '0x2::balance::destroy_zero', typeArguments: [TREE_COIN_TYPE], arguments: [balanceB] });
+    swappedCoin = transaction.moveCall({ target: '0x2::coin::from_balance', typeArguments: [SUI_COIN_TYPE], arguments: [balanceA] });
+  }
+  const [minimumCheck] = transaction.splitCoins(swappedCoin, [transaction.pure.u64(minSwapOutRaw)]);
+  transaction.mergeCoins(swappedCoin, [minimumCheck]);
+
+  const lower = transaction.moveCall({ target: `${SUIDEX_V3_PACKAGE}::i32::from`, arguments: [transaction.pure.u32(encodeSignedI32(tickLower))] });
+  const upper = transaction.moveCall({ target: `${SUIDEX_V3_PACKAGE}::i32::from`, arguments: [transaction.pure.u32(encodeSignedI32(tickUpper))] });
+  const position = transaction.moveCall({
+    target: `${SUIDEX_V3_PACKAGE}::liquidity::open_position`, typeArguments: [SUI_COIN_TYPE, TREE_COIN_TYPE],
+    arguments: [transaction.object(SUIDEX_V3_POOL), lower, upper, transaction.object(SUIDEX_V3_VERSION)],
+  });
+  const suiCoin = inputIsSui ? fullInput : swappedCoin;
+  const treeCoin = inputIsSui ? swappedCoin : fullInput;
+  const [remainingSui, remainingTree] = transaction.moveCall({
+    target: `${SUIDEX_V3_PACKAGE}::liquidity::add_liquidity`, typeArguments: [SUI_COIN_TYPE, TREE_COIN_TYPE],
+    arguments: [
+      transaction.object(SUIDEX_V3_POOL), position, suiCoin, treeCoin,
+      transaction.pure.u64(minSuiRaw), transaction.pure.u64(minTreeRaw),
+      transaction.object(SUI_CLOCK), transaction.object(SUIDEX_V3_VERSION),
+    ],
+  });
+  transaction.transferObjects([position, remainingSui, remainingTree], transaction.pure.address(owner));
+  assertAllowedV3ZapTransaction(transaction);
   return transaction;
 }
 
