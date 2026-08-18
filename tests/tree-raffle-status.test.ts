@@ -11,6 +11,10 @@ test('public raffle status exposes no active round, entries, or claims', () => {
   assert.equal(status.rounds.weekly.prize, null);
   assert.deepEqual(status.history, []);
   assert.deepEqual(status.safeguards, {
+    replaySafeLedgerModel: true,
+    finalizedBuyVerifierImplemented: true,
+    transactionalLedgerConfigured: false,
+    verifiedBuyIngestionEnabled: false,
     entriesRecorded: false,
     paymentsAccepted: false,
     winnerSelectionEnabled: false,

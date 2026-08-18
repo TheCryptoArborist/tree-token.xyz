@@ -15,6 +15,10 @@ export function treeRaffleStatus(generatedAt = new Date().toISOString()) {
     history: [],
     launchBlockers: raffleLaunchBlockers(),
     safeguards: {
+      replaySafeLedgerModel: true,
+      finalizedBuyVerifierImplemented: true,
+      transactionalLedgerConfigured: false,
+      verifiedBuyIngestionEnabled: false,
       entriesRecorded: false,
       paymentsAccepted: false,
       winnerSelectionEnabled: false,
