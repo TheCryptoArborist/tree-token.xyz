@@ -7,6 +7,11 @@ if (canopyRoot) {
   const formulaResult = canopyRoot.querySelector('#canopy-ticket-result');
   const streakInput = canopyRoot.querySelector('#canopy-streak-days');
   const streakResult = canopyRoot.querySelector('#canopy-streak-result');
+  const raffleEntryButton = canopyRoot.querySelector('#raffleEntryButton');
+  const raffleEntriesCount = canopyRoot.querySelector('#raffleEntriesCount');
+  const raffleEntriesStatus = canopyRoot.querySelector('#raffleEntriesStatus');
+  const raffleHistoryElement = canopyRoot.querySelector('#raffleHistory');
+  const launchNotActiveText = 'Launch not active';
   const raffleState = canopyRoot.querySelector('#raffleState');
   const raffleMeta = canopyRoot.querySelector('#raffleMeta');
   const raffleHistory = canopyRoot.querySelector('[data-raffle-history]');
@@ -51,7 +56,7 @@ if (canopyRoot) {
 
     if (!rawValue) {
       formulaInput.removeAttribute('aria-invalid');
-      formulaResult.textContent = 'Enter a demonstration amount to preview tickets.';
+      formulaResult.textContent = 'Enter an amount to preview tickets.';
       return;
     }
 
@@ -66,7 +71,7 @@ if (canopyRoot) {
     const minimumCents = BigInt(Math.round(minimum * 100));
     formulaInput.removeAttribute('aria-invalid');
     if (qualifyingUsdCents < minimumCents) {
-      formulaResult.textContent = `Below the $${minimum.toFixed(2)} qualifying concept: 0 example main tickets and 0 Lucky Leaf tickets.`;
+      formulaResult.textContent = `Below the $${minimum.toFixed(2)} qualifying threshold: 0 main tickets and 0 Lucky Leaf tickets.`;
       return;
     }
 
@@ -92,6 +97,40 @@ if (canopyRoot) {
     const multiplierBasisPoints = currentStreakMultiplierBasisPoints();
     streakResult.textContent = `Day ${days}: ${(multiplierBasisPoints / 10_000).toFixed(2)}x preview multiplier`;
     updateTicketPreview();
+  }
+
+  function setRaffleEntryUi(acceptingEntries) {
+    if (!raffleEntryButton) {
+      return;
+    }
+    if (acceptingEntries) {
+      raffleEntryButton.textContent = 'Buy TREE to enter';
+      raffleEntryButton.setAttribute('href', '#swap');
+      raffleEntryButton.removeAttribute('aria-disabled');
+      raffleEntryButton.classList.remove('button-staged-disabled');
+      raffleEntryButton.classList.remove('is-disabled');
+      raffleEntryButton.classList.remove('disabled');
+      raffleEntryButton.style.pointerEvents = '';
+      raffleEntryButton.style.opacity = '';
+      if (raffleEntriesStatus) {
+        raffleEntriesStatus.textContent = 'Entries are currently open to qualified purchases.';
+      }
+      if (raffleEntriesCount) {
+        raffleEntriesCount.textContent = raffleEntriesCount.textContent || '0';
+      }
+    } else {
+      raffleEntryButton.textContent = launchNotActiveText;
+      raffleEntryButton.setAttribute('href', '#canopy-draw');
+      raffleEntryButton.setAttribute('aria-disabled', 'true');
+      raffleEntryButton.style.pointerEvents = 'none';
+      raffleEntryButton.style.opacity = '0.72';
+      if (raffleEntriesStatus) {
+        raffleEntriesStatus.textContent = 'Entries are only tracked after launch activation.';
+      }
+      if (raffleEntriesCount && raffleEntriesCount.textContent === '0') {
+        raffleEntriesCount.textContent = '0';
+      }
+    }
   }
 
   const previewUrl = new URL('../data/canopy-draw-preview.json', import.meta.url);
@@ -122,11 +161,18 @@ if (canopyRoot) {
       streakInput.max = String(previewConfig.maxStreakDaysConcept);
       raffleState.textContent = rules.acceptingEntries ? 'Open' : 'Safely disabled';
       raffleState.className = rules.acceptingEntries ? 'data-state ok' : 'data-state stale';
+      setRaffleEntryUi(rules.acceptingEntries);
       const entriesText = rules.acceptingEntries ? 'Entries: enabled' : 'Entries: disabled';
       raffleMeta.textContent = `Rules: ${rules.version || 'not published'} · Updated: ${new Date(payload.generatedAt).toLocaleString()} · ${entriesText}`;
-      raffleHistory.textContent = Array.isArray(payload.history) && payload.history.length
+      const historyText = Array.isArray(payload.history) && payload.history.length
         ? `${payload.history.length} published draw records.`
         : 'No rounds have been scheduled and no draw history exists.';
+      if (raffleHistory) {
+        raffleHistory.textContent = historyText;
+      }
+      if (raffleHistoryElement && !payload.history?.length) {
+      raffleHistoryElement.textContent = 'No rounds have been scheduled.';
+      }
       raffleBlockers.textContent = Array.isArray(payload.launchBlockers)
         ? payload.launchBlockers.join(' ')
         : 'Launch requirements have not been approved.';
@@ -143,11 +189,13 @@ if (canopyRoot) {
         raffleState.textContent = 'Local safeguard';
         raffleState.className = 'data-state stale';
         raffleMeta.textContent = `Rules: ${config.version || 'local preview'} · Live status temporarily unavailable · Entries status unavailable`;
+        setRaffleEntryUi(false);
       })
       .catch(() => {
         raffleState.textContent = 'Unavailable';
         raffleState.className = 'data-state error';
         raffleMeta.textContent = 'Raffle status unavailable · Entries remain disabled';
+        setRaffleEntryUi(false);
       })
       .finally(() => {
         dailyPrize.textContent = unfundedLabel;
