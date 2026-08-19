@@ -42,7 +42,7 @@ export async function handleTreeExposurePreviewRequest(
       ...payload,
       entries: enriched,
       identityResolution: {
-        provider: 'sui-grpc-reverse-name-record',
+        provider: 'sui-graphql-default-name-record',
         requestedCount: resolution.requestedCount,
         resolvedCount: resolution.resolvedCount,
         complete: resolution.complete,

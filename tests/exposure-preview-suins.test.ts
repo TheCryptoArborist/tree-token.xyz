@@ -22,6 +22,6 @@ const payload = await response.json() as {
   identityResolution: { provider: string; resolvedCount: number };
 };
 assert.equal(payload.entries[0].suinsName, 'crypto-arborist.sui');
-assert.equal(payload.identityResolution.provider, 'sui-grpc-reverse-name-record');
+assert.equal(payload.identityResolution.provider, 'sui-graphql-default-name-record');
 assert.equal(payload.identityResolution.resolvedCount, 1);
 console.log('TREE exposure preview SuiNS enrichment: PASS');
