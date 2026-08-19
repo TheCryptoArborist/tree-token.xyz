@@ -20,3 +20,19 @@ test('public raffle status exposes no active round, entries, or claims', () => {
     winnerSelectionEnabled: false,
   });
 });
+
+test('public raffle status reflects launch flags from env', () => {
+  const status = treeRaffleStatus(
+    '2026-08-16T00:00:00.000Z',
+    {
+      TREE_RAFFLE_SUPABASE_URL: 'https://example.supabase.co',
+      TREE_RAFFLE_SUPABASE_SECRET_KEY: 'secret',
+      TREE_RAFFLE_INGEST_ENABLED: 'true',
+      TREE_RAFFLE_ACCEPTING_ENTRIES: 'true',
+    },
+  );
+  assert.equal(status.rules.acceptingEntries, true);
+  assert.equal(status.safeguards.transactionalLedgerConfigured, true);
+  assert.equal(status.safeguards.verifiedBuyIngestionEnabled, true);
+  assert.equal(status.launchBlockers.includes('Entry recording is disabled.'), false);
+});
