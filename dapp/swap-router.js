@@ -222,7 +222,8 @@ function updateActionButton() {
   }
   if (!SWAP_EXECUTION_ENABLED) {
     button.disabled = true;
-    button.textContent = 'Swap activation pending preview test';
+    button.textContent = 'Swap';
+    setStatus('Swap execution is temporarily disabled in preview.', 'error');
     return;
   }
   button.disabled = false;
