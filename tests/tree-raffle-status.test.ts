@@ -34,5 +34,6 @@ test('public raffle status reflects launch flags from env', () => {
   assert.equal(status.rules.acceptingEntries, true);
   assert.equal(status.safeguards.transactionalLedgerConfigured, true);
   assert.equal(status.safeguards.verifiedBuyIngestionEnabled, true);
+  assert.equal(status.safeguards.entriesRecorded, true);
   assert.equal(status.launchBlockers.includes('Entry recording is disabled.'), false);
 });

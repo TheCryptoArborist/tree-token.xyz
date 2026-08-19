@@ -7,8 +7,11 @@ kill_timeout = "10s"
   dockerfile = "Dockerfile.keeper"
 
 [env]
+  TREE_RAFFLE_INGEST_ENDPOINT = "https://your-production-tree-site.netlify.app/api/tree-raffle-ingest-buy"
+  TREE_RAFFLE_INGEST_SECRET = ""
   KEEPER_DRY_RUN = "true"
   KEEPER_CURSOR_BACKEND = "supabase"
+  KEEPER_INGEST_TIMEOUT_MS = "12000"
   POLL_INTERVAL_MS = "5000"
   PORT = "8080"
   SUI_GRAPHQL_URL = "https://graphql.mainnet.sui.io/graphql"

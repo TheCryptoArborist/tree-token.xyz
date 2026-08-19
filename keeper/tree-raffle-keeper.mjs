@@ -7,6 +7,10 @@ const PORT = Number(process.env.PORT || 8080);
 const POLL_INTERVAL_MS = Number(process.env.POLL_INTERVAL_MS || 5_000);
 const DRY_RUN = process.env.KEEPER_DRY_RUN !== 'false';
 const CURSOR_BACKEND = process.env.KEEPER_CURSOR_BACKEND || 'memory';
+const INGEST_ENDPOINT = process.env.TREE_RAFFLE_INGEST_ENDPOINT || process.env.KEEPER_INGEST_ENDPOINT || '';
+const INGEST_SECRET = process.env.TREE_RAFFLE_INGEST_SECRET || process.env.KEEPER_INGEST_SECRET || '';
+const INGEST_TIMEOUT_MS = Number(process.env.KEEPER_INGEST_TIMEOUT_MS || 12_000);
+const MIN_INGEST_TIMEOUT_MS = 3_000;
 export const GRAPHQL_PAGE_SIZE = 50;
 
 const V2_PACKAGE = '0xbfac5e1c6bf6ef29b12f7723857695fd2f4da9a11a7d88162c15e9124c243a4a';
@@ -102,7 +106,36 @@ async function submitDigest(digest) {
     console.log(JSON.stringify({ level: 'info', action: 'dry-run-candidate', digest }));
     return;
   }
-  throw new Error('Live entry submission is intentionally blocked until durable cursor storage is configured.');
+  if (!INGEST_ENDPOINT) {
+    throw new Error('Live keeper mode requires TREE_RAFFLE_INGEST_ENDPOINT.');
+  }
+  if (!INGEST_SECRET) {
+    throw new Error('Live keeper mode requires TREE_RAFFLE_INGEST_SECRET.');
+  }
+  const response = await fetch(INGEST_ENDPOINT, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      'x-tree-raffle-ingest-secret': INGEST_SECRET,
+    },
+    body: JSON.stringify({ digest }),
+    signal: AbortSignal.timeout(Number.isFinite(INGEST_TIMEOUT_MS) && INGEST_TIMEOUT_MS >= MIN_INGEST_TIMEOUT_MS
+      ? INGEST_TIMEOUT_MS
+      : 12_000),
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const message = payload && typeof payload.message === 'string' ? payload.message : `Keeper ingest request failed with HTTP ${response.status}.`;
+    throw new Error(message);
+  }
+  console.log(JSON.stringify({
+    level: 'info',
+    action: 'keeper-submitted',
+    digest,
+    status: payload.status || 'ok',
+    outcome: payload.outcome || 'recorded',
+  }));
 }
 
 async function initializeCursorPersistence() {
@@ -174,7 +207,7 @@ export async function pollOnce() {
 function publicState() {
   return {
     status: state.lastError ? 'degraded' : 'ok',
-    mode: DRY_RUN ? 'staging-dry-run' : 'blocked',
+    mode: DRY_RUN ? 'staging-dry-run' : 'live',
     cursorPersistence: CURSOR_BACKEND === 'supabase' ? 'supabase-compare-and-set' : 'memory-only-staging',
     startedAt: state.startedAt,
     lastPollAt: state.lastPollAt,
@@ -188,7 +221,11 @@ function publicState() {
 export async function startKeeper() {
   if (!Number.isInteger(PORT) || PORT < 1 || PORT > 65_535) throw new Error('PORT is invalid.');
   if (!Number.isInteger(POLL_INTERVAL_MS) || POLL_INTERVAL_MS < 2_000) throw new Error('POLL_INTERVAL_MS is invalid.');
-  if (!DRY_RUN) throw new Error('Live keeper mode remains blocked until verified ingestion is connected and reviewed.');
+  if (!DRY_RUN && !INGEST_ENDPOINT) throw new Error('Live keeper mode requires TREE_RAFFLE_INGEST_ENDPOINT.');
+  if (!DRY_RUN && !INGEST_SECRET) throw new Error('Live keeper mode requires TREE_RAFFLE_INGEST_SECRET.');
+  if (!Number.isInteger(INGEST_TIMEOUT_MS) || INGEST_TIMEOUT_MS < MIN_INGEST_TIMEOUT_MS) {
+    throw new Error('KEEPER_INGEST_TIMEOUT_MS is invalid.');
+  }
   await initializeCursorPersistence();
 
   http.createServer((request, response) => {

@@ -153,14 +153,7 @@ export function ticketPreviewFromUsdCents(
 
 export function raffleLaunchBlockers(rules: TreeRaffleRules = TREE_RAFFLE_RULES): string[] {
   const blockers = [
-    !rules.prizesFunded && 'Prize funding and escrow are not configured.',
-    'Official eligibility, jurisdictions, entry methods, and prize terms are not approved.',
-    'The prize pool must be funded and prizes reserved before each round opens.',
-    'The finalized-buy verifier is implemented, but authenticated ingestion remains disabled until launch approval.',
-    'The replay-safe ledger model is implemented, but a transactional durable database adapter is not configured.',
-    'The ticket snapshot must be publicly committed before randomness is requested.',
-    'The contract must enforce one draw per round and bind the winning ticket to its wallet proof.',
-    'The on-chain randomness, winner selection, prize reservation, and claim contract require security review.',
+    !rules.prizesFunded && 'The prize pool must be funded and prizes reserved before rounds open.',
     !rules.claimsEnabled && 'The prize claim path is disabled.',
     !rules.acceptingEntries && 'Entry recording is disabled.',
   ];

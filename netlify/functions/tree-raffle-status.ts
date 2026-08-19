@@ -16,6 +16,7 @@ export function treeRaffleStatus(
     && rules.acceptingEntries
     && transactionalLedgerConfigured
   );
+  const entriesRecorded = verifiedBuyIngestionEnabled;
 
   return {
     status: 'ok',
@@ -32,7 +33,7 @@ export function treeRaffleStatus(
       finalizedBuyVerifierImplemented: true,
       transactionalLedgerConfigured,
       verifiedBuyIngestionEnabled,
-      entriesRecorded: false,
+      entriesRecorded,
       paymentsAccepted: false,
       winnerSelectionEnabled: false,
     },

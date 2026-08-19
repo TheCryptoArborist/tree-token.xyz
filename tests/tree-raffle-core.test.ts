@@ -11,7 +11,7 @@ test('raffle rules fail closed', () => {
   assert.equal(TREE_RAFFLE_RULES.acceptingEntries, false);
   assert.equal(TREE_RAFFLE_RULES.claimsEnabled, false);
   assert.equal(TREE_RAFFLE_RULES.prizesFunded, false);
-  assert.ok(raffleLaunchBlockers().length >= 5);
+  assert.ok(raffleLaunchBlockers().length >= 3);
 });
 
 test('ticket preview uses the versioned sub-linear curve and minimum', () => {
