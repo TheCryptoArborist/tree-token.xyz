@@ -9,9 +9,9 @@ export const TREE_RAFFLE_STREAK_MULTIPLIERS_BASIS_POINTS = Object.freeze([
 export type TreeRaffleRules = {
   version: typeof TREE_RAFFLE_RULES_VERSION;
   status: 'development';
-  acceptingEntries: false;
-  claimsEnabled: false;
-  prizesFunded: false;
+  acceptingEntries: boolean;
+  claimsEnabled: boolean;
+  prizesFunded: boolean;
   minimumQualifyingUsdCents: number;
   ticketExponent: number;
   ticketCoefficient: number;
@@ -59,6 +59,23 @@ export const TREE_RAFFLE_RULES: TreeRaffleRules = Object.freeze({
     allowlistedRoutesRequired: true,
   }),
 });
+
+function parseBooleanEnv(value: string | undefined, fallback = false): boolean {
+  if (value === undefined || value === null) return fallback;
+  const normalized = String(value).trim().toLowerCase();
+  return normalized === '1' || normalized === 'true' || normalized === 'yes' || normalized === 'on';
+}
+
+export function treeRaffleRulesForEnvironment(
+  env: Record<string, string | undefined> = process.env,
+): TreeRaffleRules {
+  return {
+    ...TREE_RAFFLE_RULES,
+    acceptingEntries: parseBooleanEnv(env.TREE_RAFFLE_ACCEPTING_ENTRIES, TREE_RAFFLE_RULES.acceptingEntries),
+    claimsEnabled: parseBooleanEnv(env.TREE_RAFFLE_CLAIMS_ENABLED, TREE_RAFFLE_RULES.claimsEnabled),
+    prizesFunded: parseBooleanEnv(env.TREE_RAFFLE_PRIZES_FUNDED, TREE_RAFFLE_RULES.prizesFunded),
+  };
+}
 
 export function streakMultiplierBasisPoints(
   streakDays: number,

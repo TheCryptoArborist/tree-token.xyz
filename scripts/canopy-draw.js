@@ -122,7 +122,8 @@ if (canopyRoot) {
       streakInput.max = String(previewConfig.maxStreakDaysConcept);
       raffleState.textContent = rules.acceptingEntries ? 'Open' : 'Safely disabled';
       raffleState.className = rules.acceptingEntries ? 'data-state ok' : 'data-state stale';
-      raffleMeta.textContent = `Rules: ${rules.version || 'not published'} · Updated: ${new Date(payload.generatedAt).toLocaleString()} · Entries: disabled`;
+      const entriesText = rules.acceptingEntries ? 'Entries: enabled' : 'Entries: disabled';
+      raffleMeta.textContent = `Rules: ${rules.version || 'not published'} · Updated: ${new Date(payload.generatedAt).toLocaleString()} · ${entriesText}`;
       raffleHistory.textContent = Array.isArray(payload.history) && payload.history.length
         ? `${payload.history.length} published draw records.`
         : 'No rounds have been scheduled and no draw history exists.';
@@ -141,7 +142,7 @@ if (canopyRoot) {
         previewConfig = { ...previewConfig, ...config };
         raffleState.textContent = 'Local safeguard';
         raffleState.className = 'data-state stale';
-        raffleMeta.textContent = `Rules: ${config.version || 'local preview'} · Live status temporarily unavailable · Entries: disabled`;
+        raffleMeta.textContent = `Rules: ${config.version || 'local preview'} · Live status temporarily unavailable · Entries status unavailable`;
       })
       .catch(() => {
         raffleState.textContent = 'Unavailable';
@@ -158,3 +159,4 @@ if (canopyRoot) {
   formulaInput.addEventListener('input', updateTicketPreview);
   streakInput.addEventListener('input', updateStreakPreview);
 }
+
