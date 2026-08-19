@@ -24,9 +24,7 @@ const TURBOS_POOL = '0xaa133ce1f8fd55d85b6fc87c1b3054cb717d83be477ef3635c661c21f
 const TURBOS_FEE_TYPE = '0x91bfbc386a41afcfd9b2533058d7e915a1d3829089cc268ff4333d54d6339ca1::fee10000bps::FEE10000BPS';
 const CLOCK = '0x0000000000000000000000000000000000000000000000000000000000000006';
 const ALLOWED_MOVE_PACKAGES = new Set(['0x2', normalizeAddress(V2_PACKAGE), normalizeAddress(V3_PACKAGE), normalizeAddress(TURBOS_PACKAGE)]);
-const PREVIEW_EXECUTION_ENABLED = /^deploy-preview-\d+--tree-token\.netlify\.app$/i.test(location.hostname)
-  || /^[a-f0-9]+--tree-token\.netlify\.app$/i.test(location.hostname)
-  || ['localhost', '127.0.0.1'].includes(location.hostname);
+const SWAP_EXECUTION_ENABLED = true;
 const client = new SuiGrpcClient({ network: 'mainnet', baseUrl: RPC_URL });
 
 const state = {
@@ -222,7 +220,7 @@ function updateActionButton() {
     button.textContent = 'Reduce amount — impact above 5%';
     return;
   }
-  if (!PREVIEW_EXECUTION_ENABLED) {
+  if (!SWAP_EXECUTION_ENABLED) {
     button.disabled = true;
     button.textContent = 'Swap activation pending preview test';
     return;
@@ -516,7 +514,7 @@ async function executeSwap() {
     updateActionButton();
     return;
   }
-  if (!PREVIEW_EXECUTION_ENABLED) return;
+  if (!SWAP_EXECUTION_ENABLED) return;
   if (!quoteIsFresh()) {
     await requestQuote();
     if (!quoteIsFresh()) return;
@@ -648,12 +646,10 @@ function initialize() {
     }
   });
   state.refreshTimer = setInterval(() => { if (state.amount && !state.executing) requestQuote(); }, 15_000);
-  setStatus(PREVIEW_EXECUTION_ENABLED
-    ? 'Mainnet preview: enter an amount to compare SuiDex V2, SuiDex V3, and Turbos. A transaction is created only after simulation and explicit wallet approval.'
-    : 'Best-route quotes are active. On-site execution remains disabled in production until the controlled preview swap passes.');
+  setStatus('Mainnet: enter an amount to compare SuiDex V2, SuiDex V3, and Turbos. A transaction is created only after simulation and explicit wallet approval.');
   loadBalances(true);
 }
 
 initialize();
 
-export { PREVIEW_EXECUTION_ENABLED, buildTransaction, formatBaseUnits, normalizeType, parseBaseUnits, validateRoute };
+export { SWAP_EXECUTION_ENABLED, buildTransaction, formatBaseUnits, normalizeType, parseBaseUnits, validateRoute };
