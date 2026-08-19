@@ -11,7 +11,7 @@ if (canopyRoot) {
   const raffleEntriesCount = canopyRoot.querySelector('#raffleEntriesCount');
   const raffleEntriesStatus = canopyRoot.querySelector('#raffleEntriesStatus');
   const raffleHistoryElement = canopyRoot.querySelector('#raffleHistory');
-  const launchNotActiveText = 'Launch not active';
+  const launchNotActiveText = 'Raffle inactive';
   const raffleState = canopyRoot.querySelector('#raffleState');
   const raffleMeta = canopyRoot.querySelector('#raffleMeta');
   const raffleHistory = canopyRoot.querySelector('[data-raffle-history]');
