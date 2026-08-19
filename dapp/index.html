@@ -237,13 +237,27 @@
         <div class="card-title-row"><div><span class="rank-kicker">TIER LADDER</span><h3>Climb the Canopy</h3></div><span>Verified exposure thresholds and current member counts</span></div>
         <div class="tier-ladder" id="tierLadder"><p class="muted">Loading verified tier cutoffs…</p></div>
         <p class="tier-method-note">Champion Tree is reserved for the current Top 5. Every other tier maps to TREE's fixed 1,000,000,000-token supply and uses total verified exposure: Liquid TREE plus current principal TREE in recognized LP positions.</p>
+        <section class="badge-guide" aria-labelledby="badge-guide-title">
+          <div class="badge-guide-heading"><div><span class="rank-kicker">BADGE GUIDE</span><h4 id="badge-guide-title">How Canopy badges are earned</h4></div><small id="badgeGuideSnapshotState">Counts load with the verified snapshot.</small></div>
+          <div class="badge-guide-grid">
+            <article class="badge-guide-item badge-diamond-hands"><span class="badge-guide-icon" aria-hidden="true">💎</span><div><strong>Diamond Hands</strong><small>No verified TREE sells during the last 30 days.</small></div><b id="badgeGuideDiamondHands" title="Current verified holders">—</b></article>
+            <article class="badge-guide-item badge-paper-hands"><span class="badge-guide-icon" aria-hidden="true">📄</span><div><strong>Paper Hands</strong><small>More TREE sold than bought during the last 30 days.</small></div><b id="badgeGuidePaperHands" title="Current verified holders">—</b></article>
+            <article class="badge-guide-item badge-accumulator"><span class="badge-guide-icon" aria-hidden="true">🌱</span><div><strong>Accumulator</strong><small>Complete at least 10 qualifying TREE buys within 30 days.</small></div><b id="badgeGuideAccumulator" title="Current verified holders">—</b></article>
+            <article class="badge-guide-item badge-burned"><span class="badge-guide-icon" aria-hidden="true">🔥</span><div><strong>Burned</strong><small>Burn at least 500,000 TREE.</small></div><b id="badgeGuideBurned" title="Current verified holders">—</b></article>
+            <article class="badge-guide-item badge-lp-provider"><span class="badge-guide-icon" aria-hidden="true">💧</span><div><strong>LP Provider</strong><small>Hold verified TREE principal in a recognized liquidity pool.</small></div><b id="badgeGuideLpProvider" title="Current verified holders">—</b></article>
+            <article class="badge-guide-item badge-lp-maxi"><span class="badge-guide-icon" aria-hidden="true">🌊</span><div><strong>LP Maxi</strong><small>Hold more TREE in verified LP principal than as liquid TREE.</small></div><b id="badgeGuideLpMaxi" title="Current verified holders">—</b></article>
+          </div>
+        </section>
       </article>
 
       <div class="top-board-heading"><div><span class="rank-kicker">TOP 50</span><h3>Top 50 Canopy Leaders</h3><p>Rank, tier, wallet badges, liquid TREE, verified LP principal, and total exposure—visible at a glance.</p></div><span id="displayedWalletCount">0</span></div>
       <div class="leaderboard-cards" id="leaderboardCards"><p class="leaderboard-empty">Loading eligible ranked owners…</p></div>
 
       <div class="table-wrap leaderboard-fallback-table" aria-hidden="true"><table><thead><tr><th>Rank</th><th>Wallet</th><th>Total TREE</th><th class="wide-column">Liquid</th><th class="wide-column">LP</th><th class="wide-column">Tier</th></tr></thead><tbody id="leaderboardRows"><tr><td colspan="6">Loading eligible ranked owners…</td></tr></tbody></table></div>
-      <div id="leaderboardWarnings" class="warnings" hidden></div>
+      <details id="leaderboardDataNotes" class="leaderboard-data-notes" hidden>
+        <summary><span><strong id="leaderboardDataNotesTitle">Data notes</strong><small id="leaderboardDataNotesSummary">Verified snapshot and accounting details</small></span><b id="leaderboardDataNotesCount">0 notes</b></summary>
+        <ul id="leaderboardWarnings" class="leaderboard-data-note-list"></ul>
+      </details>
 
       <details class="coverage-details ranking-methodology">
         <summary>How Rankings Are Calculated</summary>

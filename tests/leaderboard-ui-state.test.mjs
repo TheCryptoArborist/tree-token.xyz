@@ -69,12 +69,32 @@ const completePayload = {
 };
 renderLeaderboard({ ...completePayload, status: 'stale' });
 assert.equal(element('yourRank').textContent, '#1 · Champion Tree · Last verified snapshot');
+renderLeaderboard({ ...completePayload, status: 'stale', warnings: ['Displayed exposure rows are from the last complete snapshot.', 'V3 principal excludes unclaimed rewards.'] });
+assert.equal(element('leaderboardDataNotes').hidden, false);
+assert.match(element('leaderboardDataNotes').className, /has-stale-snapshot/);
+assert.equal(element('leaderboardDataNotesTitle').textContent, 'Snapshot refresh needed');
+assert.equal(element('leaderboardDataNotesCount').textContent, '2 notes');
+assert.equal(element('leaderboardWarnings').children.length, 2);
 renderLeaderboard({ ...completePayload, status: 'ok' });
+assert.equal(element('leaderboardDataNotes').hidden, true);
 assert.equal(element('verifiedAddressOwnerCount').textContent, '2');
 assert.equal(element('eligibleRankedOwnerCount').textContent, '1');
 assert.equal(element('excludedCoinObjectCount').textContent, '4');
 assert.equal(element('excludedUniqueOwnerCount').textContent, '1');
 assert.equal(element('yourRank').textContent, '#1 · Champion Tree');
+renderLeaderboard({
+  status: 'stale', provider: 'tree-exposure-snapshot', methodologyVersion: 'verified-tree-exposure-v1', snapshotGeneratedAt: '2026-08-10T00:00:00.000Z', snapshotAgeMs: 1000,
+  refreshState: 'complete', coverage: { totalExposureComplete: true }, source: { direct: {}, venues: {} }, displayedCount: 1, eligibleOwnerCount: 1,
+  summary: { top50TotalRaw: '1000000000', badgeCounts: { lpProvider: 17, lpMaxi: 13 } }, entries: [exposureEntry], warnings: [],
+  behaviorBadgeSnapshot: { status: 'stale', summary: { diamondHands: 50, paperHands: 0, accumulator: 0, burned: 3 } },
+});
+assert.equal(element('badgeGuideDiamondHands').textContent, '50');
+assert.equal(element('badgeGuidePaperHands').textContent, '0');
+assert.equal(element('badgeGuideAccumulator').textContent, '0');
+assert.equal(element('badgeGuideBurned').textContent, '3');
+assert.equal(element('badgeGuideLpProvider').textContent, '17');
+assert.equal(element('badgeGuideLpMaxi').textContent, '13');
+assert.equal(element('badgeGuideSnapshotState').textContent, 'Last verified holder counts');
 window.playerAddress = `0x${'b'.repeat(64)}`;
 renderLeaderboard({ ...completePayload, status: 'ok' });
 assert.equal(element('yourRank').textContent, 'Wallet is outside the displayed Top 50.');
@@ -108,7 +128,13 @@ assert.equal(dappMarkup.includes('View Canopy Board'), false);
 assert.equal(dappMarkup.includes('YOUR CANOPY POSITION'), true);
 assert.equal(dappMarkup.includes('Top 50 Canopy Leaders'), true);
 assert.equal(dappMarkup.includes('TIER LADDER'), true);
+assert.equal(dappMarkup.includes('BADGE GUIDE'), true);
+assert.equal(dappMarkup.includes('How Canopy badges are earned'), true);
+assert.equal(dappMarkup.includes('More TREE sold than bought during the last 30 days.'), true);
+assert.equal(dappMarkup.includes('Complete at least 10 qualifying TREE buys within 30 days.'), true);
 assert.equal(dappMarkup.includes('How Rankings Are Calculated'), true);
+assert.equal(dappMarkup.includes('id="leaderboardDataNotes"'), true);
+assert.equal(dappMarkup.includes('id="leaderboardWarnings" class="warnings"'), false);
 assert.ok(dappMarkup.indexOf('YOUR CANOPY POSITION') < dappMarkup.indexOf('Top 50 Canopy Leaders'));
 assert.ok(dappMarkup.indexOf('TIER LADDER') < dappMarkup.indexOf('Top 50 Canopy Leaders'));
 assert.ok(dappMarkup.indexOf('Top 50 Canopy Leaders') < dappMarkup.indexOf('How Rankings Are Calculated'));

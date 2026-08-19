@@ -1,0 +1,43 @@
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+
+const source = await readFile(new URL('../scripts/home-v2.js', import.meta.url), 'utf8');
+const styles = await readFile(new URL('../styles/home-v2.css', import.meta.url), 'utf8');
+
+assert.equal((source.match(/>Buy TREE<\/a>/g) || []).length, 2);
+assert.match(source, /simple-header-socials/);
+assert.match(source, /import treeBrandLogoUrl from '\.\.\/assets\/tree-token-logo-official\.webp\?url';/);
+assert.match(source, /<img src="\$\{treeBrandLogoUrl\}" alt="TREE emblem">/);
+assert.match(source, /https:\/\/x\.com\/thickquidity/);
+assert.match(source, /https:\/\/t\.me\/thickquidity/);
+assert.match(source, /https:\/\/www\.youtube\.com\/@thecryptoarborist/);
+assert.match(source, /https:\/\/www\.coingecko\.com\/en\/coins\/thickquidity/);
+assert.match(source, /aria-label="TREE on X"/);
+assert.match(source, /aria-label="TREE on Telegram"/);
+assert.match(source, /aria-label="The Crypto Arborist on YouTube"/);
+assert.match(source, /aria-label="TREE on CoinGecko"/);
+assert.match(source, /import coinGeckoLogoUrl from '\.\.\/assets\/CG\.png\?url';/);
+assert.match(source, /Holding an NFTree is your access pass to every utility released across the TREE ecosystem\./);
+assert.equal((source.match(/<video/g) || []).length, 1);
+assert.match(source, /import treeHeroPosterUrl from '\.\.\/assets\/tree-hero-poster\.webp\?url';/);
+assert.match(source, /<video class="simple-hero-video" autoplay muted loop playsinline preload="auto" poster="\$\{treeHeroPosterUrl\}" aria-label=/);
+assert.match(source, /import treeHeroVideoUrl from '\.\.\/assets\/tree-hero-walking\.mp4\?url';/);
+assert.match(source, /<source src="\$\{treeHeroVideoUrl\}" type="video\/mp4">/);
+assert.match(source, /simple-video-toggle/);
+assert.match(source, /simple-video-actions/);
+assert.match(source, /href="\/dapp\/#swap">Buy TREE<\/a>/);
+assert.match(source, /href="https:\/\/nftree\.net\/mint"[^>]*>Mint NFTree<\/a>/);
+assert.equal((source.match(/>Mint NFTree<\/a>/g) || []).length, 1);
+assert.match(source, /class="simple-button primary simple-launch-app" href="\/dapp\/">Launch App<\/a>/);
+assert.match(source, /prefers-reduced-motion: reduce/);
+assert.equal(source.includes('simple-footer-links'), false);
+assert.match(styles, /\.simple-header-socials/);
+assert.match(styles, /\.simple-hero-video/);
+assert.match(styles, /\.simple-video-actions/);
+assert.match(styles, /\.simple-video-toggle\{[^}]*min-width:52px[^}]*font:850 \.59rem\/1 inherit/);
+assert.match(styles, /\.simple-launch-app\{[^}]*min-height:66px/);
+assert.match(styles, /\.simple-eyebrow\{[^}]*font-size:clamp\(\.82rem,1\.15vw,\.94rem\)/);
+assert.equal(styles.includes('.simple-video-feature'), false);
+assert.match(styles, /@media\(max-width:780px\)/);
+
+console.log('Simple homepage hierarchy: PASS (top social links, aligned hero actions, accessible autoplay video)');

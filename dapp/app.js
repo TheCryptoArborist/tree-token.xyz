@@ -1052,6 +1052,28 @@ function formatSnapshotAge(value) {
   return `${Math.floor(milliseconds / 3_600_000)}h ${Math.floor((milliseconds % 3_600_000) / 60_000)}m`;
 }
 
+function renderBadgeGuideCounts(payload) {
+  const behavior = payload?.behaviorBadgeSnapshot?.summary;
+  const liquidity = payload?.summary?.badgeCounts;
+  const counts = [
+    ['badgeGuideDiamondHands', behavior?.diamondHands],
+    ['badgeGuidePaperHands', behavior?.paperHands],
+    ['badgeGuideAccumulator', behavior?.accumulator],
+    ['badgeGuideBurned', behavior?.burned],
+    ['badgeGuideLpProvider', liquidity?.lpProvider],
+    ['badgeGuideLpMaxi', liquidity?.lpMaxi],
+  ];
+  for (const [id, value] of counts) {
+    const number = Number(value);
+    setText(id, Number.isFinite(number) && number >= 0 ? quantity.format(number) : '—');
+  }
+  const behaviorReady = behavior && typeof behavior === 'object';
+  const liquidityReady = liquidity && typeof liquidity === 'object';
+  setText('badgeGuideSnapshotState', behaviorReady && liquidityReady
+    ? `${payload.behaviorBadgeSnapshot.status === 'stale' || payload.status === 'stale' ? 'Last' : 'Current'} verified holder counts`
+    : 'Counts are awaiting an aligned verified snapshot.');
+}
+
 function renderLeaderboard(payload) {
   lastLeaderboardPayload = payload;
   const state = elementById('leaderboardState');
@@ -1124,8 +1146,28 @@ function renderLeaderboard(payload) {
     ].filter(Boolean).join(' '));
   }
 
+  const dataNotes = elementById('leaderboardDataNotes');
   const warningBox = elementById('leaderboardWarnings');
-  if (warningBox) { warningBox.textContent = Array.isArray(payload.warnings) ? payload.warnings.join(' ') : ''; warningBox.hidden = !warningBox.textContent; }
+  const warnings = Array.isArray(payload.warnings) ? [...new Set(payload.warnings.filter(Boolean))] : [];
+  const snapshotIsStale = leaderboardStatus === 'stale' || warnings.some((warning) => /last complete snapshot|stale/i.test(warning));
+  if (dataNotes) {
+    dataNotes.hidden = warnings.length === 0;
+    dataNotes.className = `leaderboard-data-notes${snapshotIsStale ? ' has-stale-snapshot' : ''}`;
+  }
+  setText('leaderboardDataNotesTitle', snapshotIsStale ? 'Snapshot refresh needed' : 'Data notes');
+  setText('leaderboardDataNotesSummary', snapshotIsStale ? 'Showing the last complete verified leaderboard snapshot' : 'Verified snapshot and accounting details');
+  setText('leaderboardDataNotesCount', `${warnings.length} ${warnings.length === 1 ? 'note' : 'notes'}`);
+  if (warningBox?.replaceChildren) {
+    warningBox.replaceChildren(...warnings.map((warning) => {
+      const item = document.createElement('li');
+      item.textContent = warning;
+      if (/last complete snapshot|stale/i.test(warning)) item.className = 'stale-note';
+      return item;
+    }));
+  } else if (warningBox) {
+    warningBox.textContent = warnings.join(' ');
+  }
+  renderBadgeGuideCounts(payload);
   if (rows) {
     if (!leaderboardEntries.length) {
       const emptyMessages = { 'not-ready': 'A complete verified TREE leaderboard snapshot is not available yet.', refreshing: 'The first verified TREE leaderboard snapshot is being built. No partial ranks are published.', error: 'The verified TREE leaderboard is temporarily unavailable.' };
