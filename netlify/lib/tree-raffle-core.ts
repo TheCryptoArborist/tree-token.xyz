@@ -159,3 +159,43 @@ export function raffleLaunchBlockers(rules: TreeRaffleRules = TREE_RAFFLE_RULES)
   ];
   return blockers.filter((value): value is string => Boolean(value));
 }
+
+export function raffleOperationalReadiness(
+  env: Record<string, string | undefined> = process.env,
+  rules: TreeRaffleRules = treeRaffleRulesForEnvironment(env),
+) {
+  const transactionalLedgerConfigured = Boolean(
+    (env.TREE_RAFFLE_SUPABASE_URL || '').trim()
+    && (env.TREE_RAFFLE_SUPABASE_SECRET_KEY || '').trim(),
+  );
+  const onchainPrizePoolConfigured = Boolean(
+    (env.TREE_RAFFLE_PACKAGE_ID || '').trim()
+    && (env.TREE_RAFFLE_PRIZE_POOL_ID || '').trim()
+    && (env.TREE_RAFFLE_ADMIN_CAP_ID || '').trim(),
+  );
+  const drawExecutorConfigured = (
+    env.TREE_RAFFLE_DRAW_EXECUTOR_READY === 'true'
+    && onchainPrizePoolConfigured
+  );
+  const verifiedBuyIngestionEnabled = Boolean(
+    env.TREE_RAFFLE_INGEST_ENABLED === 'true'
+    && rules.acceptingEntries
+    && rules.claimsEnabled
+    && rules.prizesFunded
+    && transactionalLedgerConfigured
+    && drawExecutorConfigured
+  );
+  const infrastructureBlockers = [
+    !transactionalLedgerConfigured && 'The transactional raffle ledger is not connected.',
+    !onchainPrizePoolConfigured && 'The on-chain prize pool is not published and configured.',
+    !drawExecutorConfigured && 'The verifiable draw executor is not ready.',
+  ].filter((value): value is string => Boolean(value));
+
+  return {
+    transactionalLedgerConfigured,
+    onchainPrizePoolConfigured,
+    drawExecutorConfigured,
+    verifiedBuyIngestionEnabled,
+    launchBlockers: [...raffleLaunchBlockers(rules), ...infrastructureBlockers],
+  };
+}

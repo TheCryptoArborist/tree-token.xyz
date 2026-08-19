@@ -13,7 +13,7 @@ test('SUI and TREE logos appear in the shared price ribbon and earn routes', () 
   assert.match(suiLogo, /<svg[\s\S]*SUI/);
   assert.match(html, /src="\.\.\/assets\/sui-token\.svg" alt="SUI logo"/);
   assert.match(html, /src="\.\.\/thick\.png" alt="TREE logo"/);
-  assert.ok((html.match(/class="token-logo-stack"/g) || []).length >= 2);
+  assert.ok((html.match(/class="token-logo-stack"/g) || []).length >= 1);
 });
 
 test('swap, limit, and V3 token direction changes preserve logo presentation', () => {

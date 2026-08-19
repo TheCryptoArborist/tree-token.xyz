@@ -3,13 +3,11 @@ import { SuiGrpcClient } from 'https://esm.run/@mysten/sui@2.23.1/grpc';
 import {
   SUI_COIN_TYPE, TREE_COIN_TYPE, SUI_DECIMALS, TREE_DECIMALS, MIN_SUI_GAS_RESERVE_RAW,
   TREE_V3_FULL_RANGE, buildCreateTreeV3ZapPosition, decimalToRaw, extractAddLiquidityEvent,
-  minimumAfterSlippage, optimalV3ZapSwapRaw, ticksFromDisplayedPrices, validateVerifiedPool,
+  isTreeV3ExecutionHost, minimumAfterSlippage, optimalV3ZapSwapRaw, ticksFromDisplayedPrices, validateVerifiedPool,
 } from './v3-transaction-core.js';
 
 const client = new SuiGrpcClient({ network: 'mainnet', baseUrl: 'https://fullnode.mainnet.sui.io:443' });
-const EXECUTION_ENABLED = /^deploy-preview-\d+--tree-token\.netlify\.app$/i.test(location.hostname)
-  || /^[a-f0-9]+--tree-token\.netlify\.app$/i.test(location.hostname)
-  || ['localhost', '127.0.0.1'].includes(location.hostname);
+const EXECUTION_ENABLED = isTreeV3ExecutionHost(location.hostname);
 const state = { token: 'SUI', amount: '', range: '20', slippageBps: 100, quote: null, swapRaw: null, pool: null, quoting: false, executing: false, timer: null, balances: { SUI: 0n, TREE: 0n } };
 const el = {};
 
@@ -51,7 +49,7 @@ function render() {
   el.minimum.textContent = route ? `${formatRaw(route.minAmountOut, decimalsFor(otherSymbol(state.token)), 6)} ${otherSymbol(state.token)}` : '—';
   if (state.executing) { el.action.disabled = true; el.action.textContent = 'Working…'; return; }
   if (!window.playerAddress) { el.action.disabled = false; el.action.textContent = 'Connect Wallet'; return; }
-  if (!EXECUTION_ENABLED) { el.action.disabled = true; el.action.textContent = 'Preview execution only'; return; }
+  if (!EXECUTION_ENABLED) { el.action.disabled = true; el.action.textContent = 'V3 transactions unavailable'; return; }
   if (!state.pool || !amount || !route) { el.action.disabled = true; el.action.textContent = state.quoting ? 'Loading quote…' : 'Enter an amount'; return; }
   el.action.disabled = false; el.action.textContent = 'Review V3 Zap';
 }
@@ -112,7 +110,8 @@ async function execute() {
 
 function init() {
   Object.assign(el, { open: document.getElementById('earnV3ZapOpen'), panel: document.getElementById('earnV3ZapPanel'), token: document.getElementById('earnV3ZapToken'), amount: document.getElementById('earnV3ZapAmount'), max: document.getElementById('earnV3ZapMax'), symbol: document.getElementById('earnV3ZapSymbol'), balance: document.getElementById('earnV3ZapBalance'), range: document.getElementById('earnV3ZapRange'), current: document.getElementById('earnV3ZapCurrent'), rangeText: document.getElementById('earnV3ZapRangeText'), swap: document.getElementById('earnV3ZapSwap'), minimum: document.getElementById('earnV3ZapMinimum'), action: document.getElementById('earnV3ZapAction'), status: document.getElementById('earnV3ZapStatus'), success: document.getElementById('earnV3ZapSuccess') });
-  if (!el.open || !el.action) return;
+  if (!el.open || !el.action || el.open.dataset.v3ZapBound === 'true') return;
+  el.open.dataset.v3ZapBound = 'true';
   el.open.addEventListener('click', () => { el.panel.hidden = !el.panel.hidden; el.open.setAttribute('aria-expanded', String(!el.panel.hidden)); if (!el.panel.hidden) { loadPool(); loadBalances(); } });
   el.token.addEventListener('change', () => { state.token = el.token.value; state.amount = ''; el.amount.value = ''; state.quote = null; state.swapRaw = null; setStatus('Enter an amount to build the verified SUI/TREE V3 zap.'); render(); });
   el.amount.addEventListener('input', () => { state.amount = el.amount.value; state.quote = null; state.swapRaw = null; render(); scheduleQuote(); });
@@ -120,5 +119,7 @@ function init() {
   el.range.addEventListener('change', () => { state.range = el.range.value; state.quote = null; state.swapRaw = null; render(); scheduleQuote(); });
   document.querySelectorAll('[data-earn-v3-slippage]').forEach((button) => button.addEventListener('click', () => { state.slippageBps = Number(button.dataset.earnV3Slippage); document.querySelectorAll('[data-earn-v3-slippage]').forEach((item) => item.classList.toggle('active', item === button)); state.quote = null; state.swapRaw = null; scheduleQuote(); }));
   el.action.addEventListener('click', execute); window.addEventListener('tree:wallet-changed', loadBalances); render();
+  if (!el.panel.hidden) { loadPool(); loadBalances(); }
 }
 document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', init, { once: true }) : init();
+document.addEventListener('tree:v3-workspace-ready', init);

@@ -16,12 +16,14 @@ export const TREE_V3_REWARD_TOKENS = Object.freeze([
 ]);
 
 const TREE_V3_PREVIEW_HOST_PATTERN = /^deploy-preview-\d+--tree-token\.netlify\.app$/;
+const TREE_V3_DRAFT_HOST_PATTERN = /^[a-f0-9]+--tree-token\.netlify\.app$/;
 const TREE_V3_PRODUCTION_HOSTS = new Set(['tree-token.xyz', 'www.tree-token.xyz']);
 
 export function isTreeV3ExecutionHost(value) {
   const hostname = String(value ?? '').trim().toLowerCase().replace(/\.$/, '');
   return TREE_V3_PRODUCTION_HOSTS.has(hostname)
     || TREE_V3_PREVIEW_HOST_PATTERN.test(hostname)
+    || TREE_V3_DRAFT_HOST_PATTERN.test(hostname)
     || ['localhost', '127.0.0.1', '::1', '[::1]'].includes(hostname);
 }
 
@@ -310,6 +312,29 @@ export function assertAllowedCloseV3Transaction(transaction) {
   return true;
 }
 
+function transactionWithMoveCalls(calls) {
+  return { getData: () => ({ commands: calls.map((MoveCall) => ({ MoveCall })) }) };
+}
+
+export function assertAllowedClaimAllV3Transaction(transaction) {
+  const commands = transaction?.getData?.().commands || [];
+  const calls = commands.flatMap((command) => command?.MoveCall ? [command.MoveCall] : command?.$kind === 'MoveCall' ? [command.MoveCall] : []);
+  if (calls.length < 1 || calls.length > TREE_V3_REWARD_TOKENS.length + 1) throw new Error('Unexpected V3 claim-all Move-call count.');
+  assertAllowedCollectFeeV3Transaction(transactionWithMoveCalls([calls[0]]));
+  if (calls.length > 1) assertAllowedCollectRewardV3Transaction(transactionWithMoveCalls(calls.slice(1)));
+  return true;
+}
+
+export function assertAllowedWithdrawAllAndCloseV3Transaction(transaction) {
+  const commands = transaction?.getData?.().commands || [];
+  const calls = commands.flatMap((command) => command?.MoveCall ? [command.MoveCall] : command?.$kind === 'MoveCall' ? [command.MoveCall] : []);
+  if (calls.length < 3 || calls.length > TREE_V3_REWARD_TOKENS.length + 3) throw new Error('Unexpected V3 withdraw-and-close Move-call count.');
+  assertAllowedRemoveV3Transaction(transactionWithMoveCalls([calls[0]]));
+  assertAllowedClaimAllV3Transaction(transactionWithMoveCalls(calls.slice(1, -1)));
+  assertAllowedCloseV3Transaction(transactionWithMoveCalls([calls.at(-1)]));
+  return true;
+}
+
 export async function buildCreateTreeV3Position({
   Transaction,
   client,
@@ -583,6 +608,94 @@ export function buildCollectTreeV3Rewards({
     transaction.transferObjects([rewardCoin], transaction.pure.address(owner));
   }
   assertAllowedCollectRewardV3Transaction(transaction);
+  return transaction;
+}
+
+function verifiedRewardCoinTypes(rewardCoinTypes, { allowEmpty = false } = {}) {
+  const allowedRewards = new Set(TREE_V3_REWARD_TOKENS.map((token) => normalizedCoinType(token.coinType)));
+  const normalizedRewards = rewardCoinTypes.map((coinType) => normalizedCoinType(coinType));
+  if ((!allowEmpty && !normalizedRewards.length) || normalizedRewards.length > allowedRewards.size
+    || new Set(normalizedRewards).size !== normalizedRewards.length
+    || normalizedRewards.some((coinType) => !allowedRewards.has(coinType))) throw new Error('Invalid verified V3 reward token selection.');
+  return rewardCoinTypes;
+}
+
+function appendCollectAllCalls(transaction, owner, positionId, rewardCoinTypes) {
+  const [suiFeeCoin, treeFeeCoin] = transaction.moveCall({
+    target: `${SUIDEX_V3_PACKAGE}::collect::fee`,
+    typeArguments: [SUI_COIN_TYPE, TREE_COIN_TYPE],
+    arguments: [
+      transaction.object(SUIDEX_V3_POOL), transaction.object(positionId),
+      transaction.object(SUI_CLOCK), transaction.object(SUIDEX_V3_VERSION),
+    ],
+  });
+  transaction.transferObjects([suiFeeCoin], transaction.pure.address(owner));
+  transaction.transferObjects([treeFeeCoin], transaction.pure.address(owner));
+  for (const rewardCoinType of rewardCoinTypes) {
+    const rewardCoin = transaction.moveCall({
+      target: `${SUIDEX_V3_PACKAGE}::collect::reward`,
+      typeArguments: [SUI_COIN_TYPE, TREE_COIN_TYPE, rewardCoinType],
+      arguments: [
+        transaction.object(SUIDEX_V3_POOL), transaction.object(positionId),
+        transaction.object(SUI_CLOCK), transaction.object(SUIDEX_V3_VERSION),
+      ],
+    });
+    transaction.transferObjects([rewardCoin], transaction.pure.address(owner));
+  }
+}
+
+export function buildClaimAllTreeV3Position({
+  Transaction,
+  owner,
+  positionId,
+  rewardCoinTypes = TREE_V3_REWARD_TOKENS.map((token) => token.coinType),
+}) {
+  if (typeof Transaction !== 'function') throw new Error('Sui transaction dependencies are unavailable.');
+  if (!normalizedAddress(owner)) throw new Error('A valid Sui owner address is required.');
+  if (!normalizedAddress(positionId)) throw new Error('A valid SuiDex V3 position ID is required.');
+  verifiedRewardCoinTypes(rewardCoinTypes, { allowEmpty: true });
+  const transaction = new Transaction();
+  transaction.setSender(owner);
+  appendCollectAllCalls(transaction, owner, positionId, rewardCoinTypes);
+  assertAllowedClaimAllV3Transaction(transaction);
+  return transaction;
+}
+
+export function buildWithdrawAllAndCloseTreeV3Position({
+  Transaction,
+  owner,
+  positionId,
+  liquidityRaw,
+  minTreeRaw = 0n,
+  minSuiRaw = 0n,
+  rewardCoinTypes = TREE_V3_REWARD_TOKENS.map((token) => token.coinType),
+}) {
+  if (typeof Transaction !== 'function') throw new Error('Sui transaction dependencies are unavailable.');
+  if (!normalizedAddress(owner)) throw new Error('A valid Sui owner address is required.');
+  if (!normalizedAddress(positionId)) throw new Error('A valid SuiDex V3 position ID is required.');
+  liquidityRaw = BigInt(liquidityRaw); minTreeRaw = BigInt(minTreeRaw); minSuiRaw = BigInt(minSuiRaw);
+  if (liquidityRaw <= 0n) throw new Error('Liquidity to withdraw must be greater than zero.');
+  if (minTreeRaw < 0n || minSuiRaw < 0n) throw new Error('Invalid minimum withdrawal amounts.');
+  verifiedRewardCoinTypes(rewardCoinTypes, { allowEmpty: true });
+  const transaction = new Transaction();
+  transaction.setSender(owner);
+  const [suiCoin, treeCoin] = transaction.moveCall({
+    target: `${SUIDEX_V3_PACKAGE}::liquidity::remove_liquidity`,
+    typeArguments: [SUI_COIN_TYPE, TREE_COIN_TYPE],
+    arguments: [
+      transaction.object(SUIDEX_V3_POOL), transaction.object(positionId), transaction.pure.u128(liquidityRaw),
+      transaction.pure.u64(minSuiRaw), transaction.pure.u64(minTreeRaw),
+      transaction.object(SUI_CLOCK), transaction.object(SUIDEX_V3_VERSION),
+    ],
+  });
+  transaction.transferObjects([suiCoin], transaction.pure.address(owner));
+  transaction.transferObjects([treeCoin], transaction.pure.address(owner));
+  appendCollectAllCalls(transaction, owner, positionId, rewardCoinTypes);
+  transaction.moveCall({
+    target: `${SUIDEX_V3_PACKAGE}::liquidity::close_position`,
+    arguments: [transaction.object(positionId), transaction.object(SUIDEX_V3_VERSION)],
+  });
+  assertAllowedWithdrawAllAndCloseV3Transaction(transaction);
   return transaction;
 }
 

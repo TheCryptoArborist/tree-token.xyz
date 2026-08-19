@@ -15,6 +15,7 @@ const chartUrl = '/api/tree-chart';
 const burnUrl = '/api/tree-burn-overview';
 const liquidityUrl = '/api/tree-liquidity';
 const volumeUrl = '/api/tree-volume';
+const nftreeUrl = '/api/tree-nftree';
 const pairUrl = 'https://api.dexscreener.com/latest/dex/pairs/sui/0xaa133ce1f8fd55d85b6fc87c1b3054cb717d83be477ef3635c661c21fbdfa0ee';
 
 const compactMoney = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 2 });
@@ -174,7 +175,6 @@ function renderSnapshot(snapshot) {
     if (!Number.isFinite(Number(value))) element.textContent = 'Not available';
     else if (path.includes('Usd')) element.textContent = compactMoney.format(Number(value));
     else if (path.includes('Apr') || path.includes('Percent')) element.textContent = `${Number(value).toFixed(2)}%`;
-    else if (path === 'nftree.mintPriceSui') element.textContent = `${quantity.format(Number(value))} SUI`;
     else if (element.dataset.burnFormat === 'compact') element.textContent = compactBurnQuantity.format(Number(value));
     else element.textContent = quantity.format(Number(value));
   });
@@ -183,7 +183,7 @@ function renderSnapshot(snapshot) {
   const locked = snapshot?.tree?.totalSupply ? snapshot.tree.moonbagsLocked / snapshot.tree.totalSupply * 100 : null;
   document.querySelectorAll('[data-derived="lockedPercent"]').forEach((element) => { element.textContent = locked === null ? 'Not available' : `${locked.toFixed(2)}%`; });
   renderBurnProgress(removal);
-  ['time-locks', 'nftree'].forEach((group) => setGroupState(group, 'Snapshot', 'TREE project records', 'Project snapshot — June 22, 2026'));
+  setGroupState('time-locks', 'Snapshot', 'TREE project records', 'Project snapshot — June 22, 2026');
 }
 
 function renderLiquidity(payload) {
@@ -205,6 +205,38 @@ async function loadLiquidity() {
   } catch {
     document.querySelectorAll('[data-liquidity], [data-market="liquidity"]').forEach((element) => { element.textContent = 'Not verified'; });
     setGroupState('liquidity', 'Error', 'Sui Mainnet reserves', null);
+  }
+}
+
+function renderNftree(payload) {
+  const nftree = payload?.nftree || {};
+  document.querySelectorAll('[data-nftree]').forEach((element) => {
+    const field = element.dataset.nftree;
+    const value = Number(nftree[field]);
+    if (!Number.isFinite(value)) { element.textContent = 'Not verified'; return; }
+    element.textContent = field === 'mintPriceSui' ? `${quantity.format(value)} SUI` : quantity.format(value);
+  });
+  setGroupState('nftree', 'Live', payload.source || 'Sui Mainnet GraphQL', payload.generatedAt);
+  const coverage = document.getElementById('nftreeCoverage');
+  if (coverage) coverage.textContent = [
+    `${quantity.format(Number(nftree.totalLoaded))} loaded = ${quantity.format(Number(nftree.holderOwned))} holder-owned + ${quantity.format(Number(nftree.salePool))} in the three official sale pools.`,
+    `${quantity.format(Number(nftree.directHolderOwned))} are directly wallet-owned; ${quantity.format(Number(nftree.marketplaceOrCustody))} are marketplace/object-custodied.`,
+    `The wallet total includes only ${quantity.format(Number(nftree.directHolderWallets))} directly verifiable address owners.`,
+  ].join(' ');
+}
+
+async function loadNftree() {
+  setGroupState('nftree', 'Loading', 'Sui Mainnet GraphQL', null);
+  try {
+    const response = await fetch(nftreeUrl, { headers: { Accept: 'application/json' }, cache: 'no-store' });
+    const payload = await response.json();
+    if (!response.ok || payload.status !== 'ok' || !payload.nftree) throw new Error('Live NFTree verification unavailable.');
+    renderNftree(payload);
+  } catch {
+    document.querySelectorAll('[data-nftree]').forEach((element) => { element.textContent = 'Not verified'; });
+    setGroupState('nftree', 'Error', 'Sui Mainnet GraphQL', null);
+    const coverage = document.getElementById('nftreeCoverage');
+    if (coverage) coverage.textContent = 'The complete collection and sale-pool reconciliation could not be verified. Dated or partial NFTree figures are not published.';
   }
 }
 
@@ -292,7 +324,7 @@ function showWarnings(warnings) {
 
 async function loadDashboard() {
   setGroupState('market', 'Loading', 'Noodles.fi', null);
-  ['time-locks', 'nftree'].forEach((group) => setGroupState(group, 'Loading', 'TREE project records', 'Project snapshot — June 22, 2026'));
+  setGroupState('time-locks', 'Loading', 'TREE project records', 'Project snapshot — June 22, 2026');
   try {
     const response = await fetch(dashboardUrl, { headers: { Accept: 'application/json' } });
     if (!response.ok) throw new Error(`Dashboard returned ${response.status}`);
@@ -318,7 +350,7 @@ async function loadDashboard() {
       const snapshotResponse = await fetch('../data/tree-project-snapshot.json');
       if (snapshotResponse.ok) renderSnapshot(await snapshotResponse.json());
     } catch {
-      ['time-locks', 'nftree'].forEach((group) => setGroupState(group, 'Error', 'TREE project records', 'Project snapshot — June 22, 2026'));
+      setGroupState('time-locks', 'Error', 'TREE project records', 'Project snapshot — June 22, 2026');
     }
     console.error(error);
   }
@@ -1242,7 +1274,7 @@ function syncWalletButtons() {
 // Swap quote and execution are isolated in swap-router.js.
 
 if (typeof document !== 'undefined') {
-  document.getElementById('refreshStats').addEventListener('click', () => { loadDashboard().then(loadBurnOverview); loadLiquidity(); loadVolume(); loadChart(activeChartRange); });
+  document.getElementById('refreshStats').addEventListener('click', () => { loadDashboard().then(loadBurnOverview); loadLiquidity(); loadVolume(); loadNftree(); loadChart(activeChartRange); });
   document.getElementById('dappWallet').addEventListener('click', connectForDapp);
   document.getElementById('rankWallet').addEventListener('click', connectForDapp);
   document.getElementById('shareRank')?.addEventListener('click', () => shareRank());
@@ -1276,6 +1308,7 @@ if (typeof document !== 'undefined') {
   loadDashboard().then(loadBurnOverview);
   loadLiquidity();
   loadVolume();
+  loadNftree();
   loadSuiHeaderPrice();
   loadChart();
   loadLeaderboard();

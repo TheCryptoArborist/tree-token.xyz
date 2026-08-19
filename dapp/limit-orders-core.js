@@ -5,7 +5,9 @@ export const LIMIT_SUI_DECIMALS = 9;
 export const LIMIT_TREE_DECIMALS = 6;
 export const LIMIT_EXECUTION_GAS_RAW = 50_000_000n;
 export const LIMIT_MIN_WALLET_GAS_RAW = 100_000_000n;
-export const LIMIT_EXPIRIES = Object.freeze({ '1h': 3_600_000, '24h': 86_400_000, '7d': 604_800_000, '30d': 2_592_000_000 });
+export const LIMIT_MIN_EXPIRY_MS = 3_600_000;
+export const LIMIT_MAX_EXPIRY_MS = 2_592_000_000;
+export const LIMIT_EXPIRY_UNITS_MS = Object.freeze({ hours: 3_600_000, days: 86_400_000, weeks: 604_800_000 });
 
 function record(value) { return value && typeof value === 'object' ? value : {}; }
 
@@ -57,7 +59,16 @@ export function validateLimitTargetPrice(value) {
 
 export function isFavorableLimitTarget(direction, target, current) {
   if (!(Number(target) > 0) || !(Number(current) > 0)) return false;
-  return direction === 'buy-tree' ? Number(target) < Number(current) : direction === 'sell-tree' && Number(target) > Number(current);
+  return direction === 'buy-tree' ? Number(target) <= Number(current) : direction === 'sell-tree' && Number(target) >= Number(current);
+}
+
+export function limitExpiryDurationMs(value, unit) {
+  const amount = Number(value);
+  const unitMs = LIMIT_EXPIRY_UNITS_MS[String(unit || '').toLowerCase()];
+  if (!Number.isInteger(amount) || amount <= 0 || !unitMs) throw new Error('Enter a valid whole-number expiration period.');
+  const duration = amount * unitMs;
+  if (!Number.isSafeInteger(duration) || duration < LIMIT_MIN_EXPIRY_MS || duration > LIMIT_MAX_EXPIRY_MS) throw new Error('Expiration must be between 1 hour and 30 days.');
+  return duration;
 }
 
 export function estimateLimitOutput({ direction, amount, targetPrice }) {

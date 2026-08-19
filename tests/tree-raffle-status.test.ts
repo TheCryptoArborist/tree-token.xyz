@@ -14,6 +14,8 @@ test('public raffle status exposes no active round, entries, or claims', () => {
     replaySafeLedgerModel: true,
     finalizedBuyVerifierImplemented: true,
     transactionalLedgerConfigured: false,
+    onchainPrizePoolConfigured: false,
+    drawExecutorConfigured: false,
     verifiedBuyIngestionEnabled: false,
     entriesRecorded: false,
     paymentsAccepted: false,
@@ -29,10 +31,18 @@ test('public raffle status reflects launch flags from env', () => {
       TREE_RAFFLE_SUPABASE_SECRET_KEY: 'secret',
       TREE_RAFFLE_INGEST_ENABLED: 'true',
       TREE_RAFFLE_ACCEPTING_ENTRIES: 'true',
+      TREE_RAFFLE_CLAIMS_ENABLED: 'true',
+      TREE_RAFFLE_PRIZES_FUNDED: 'true',
+      TREE_RAFFLE_PACKAGE_ID: '0xpackage',
+      TREE_RAFFLE_PRIZE_POOL_ID: '0xpool',
+      TREE_RAFFLE_ADMIN_CAP_ID: '0xcap',
+      TREE_RAFFLE_DRAW_EXECUTOR_READY: 'true',
     },
   );
   assert.equal(status.rules.acceptingEntries, true);
   assert.equal(status.safeguards.transactionalLedgerConfigured, true);
+  assert.equal(status.safeguards.onchainPrizePoolConfigured, true);
+  assert.equal(status.safeguards.drawExecutorConfigured, true);
   assert.equal(status.safeguards.verifiedBuyIngestionEnabled, true);
   assert.equal(status.safeguards.entriesRecorded, true);
   assert.equal(status.launchBlockers.includes('Entry recording is disabled.'), false);

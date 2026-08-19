@@ -17,7 +17,9 @@ assert.match(html, /data-burn="removalPercentage"/);
 assert.match(html, /data-stats-group="time-locks"[\s\S]*Project snapshot — June 22, 2026/);
 assert.match(app, /setGroupState\('supply', 'Live'/);
 assert.match(app, /setGroupState\('supply', 'Snapshot'/);
-assert.match(app, /\['time-locks', 'nftree'\]/);
+assert.match(app, /setGroupState\('time-locks', 'Snapshot'/);
+assert.doesNotMatch(app, /setGroupState\('nftree', 'Snapshot'/);
+assert.match(app, /const nftreeUrl = '\/api\/tree-nftree'/);
 assert.doesNotMatch(publicPages, /effectively removed|effective removal|removed from circulation/i);
 assert.match(publicPages, />Burned</);
 

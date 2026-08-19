@@ -1,5 +1,5 @@
 import {
-  raffleLaunchBlockers,
+  raffleOperationalReadiness,
   treeRaffleRulesForEnvironment,
 } from '../lib/tree-raffle-core.ts';
 
@@ -8,14 +8,13 @@ export function treeRaffleStatus(
   env: Record<string, string | undefined> = process.env,
 ) {
   const rules = treeRaffleRulesForEnvironment(env);
-  const hasConfiguredSupabaseUrl = Boolean((env.TREE_RAFFLE_SUPABASE_URL || '').trim());
-  const hasConfiguredSupabaseSecret = Boolean((env.TREE_RAFFLE_SUPABASE_SECRET_KEY || '').trim());
-  const transactionalLedgerConfigured = hasConfiguredSupabaseUrl && hasConfiguredSupabaseSecret;
-  const verifiedBuyIngestionEnabled = (
-    env.TREE_RAFFLE_INGEST_ENABLED === 'true'
-    && rules.acceptingEntries
-    && transactionalLedgerConfigured
-  );
+  const readiness = raffleOperationalReadiness(env, rules);
+  const {
+    transactionalLedgerConfigured,
+    onchainPrizePoolConfigured,
+    drawExecutorConfigured,
+    verifiedBuyIngestionEnabled,
+  } = readiness;
   const entriesRecorded = verifiedBuyIngestionEnabled;
 
   return {
@@ -27,15 +26,17 @@ export function treeRaffleStatus(
       weekly: { state: 'not-scheduled', cadence: 'Sunday at 10:05 America/New_York', prize: null, opensAt: null, closesAt: null },
     },
     history: [],
-    launchBlockers: raffleLaunchBlockers(rules),
+    launchBlockers: readiness.launchBlockers,
     safeguards: {
       replaySafeLedgerModel: true,
       finalizedBuyVerifierImplemented: true,
       transactionalLedgerConfigured,
+      onchainPrizePoolConfigured,
+      drawExecutorConfigured,
       verifiedBuyIngestionEnabled,
       entriesRecorded,
       paymentsAccepted: false,
-      winnerSelectionEnabled: false,
+      winnerSelectionEnabled: drawExecutorConfigured,
     },
   };
 }

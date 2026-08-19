@@ -159,10 +159,13 @@ if (canopyRoot) {
       dailyPrize.textContent = prizeLabel(payload.rounds?.daily?.prize);
       weeklyPrize.textContent = prizeLabel(payload.rounds?.weekly?.prize);
       streakInput.max = String(previewConfig.maxStreakDaysConcept);
-      raffleState.textContent = rules.acceptingEntries ? 'Open' : 'Safely disabled';
-      raffleState.className = rules.acceptingEntries ? 'data-state ok' : 'data-state stale';
-      setRaffleEntryUi(rules.acceptingEntries);
-      const entriesText = rules.acceptingEntries ? 'Entries: enabled' : 'Entries: disabled';
+      const entriesOpen = payload.safeguards?.verifiedBuyIngestionEnabled === true
+        && Array.isArray(payload.launchBlockers)
+        && payload.launchBlockers.length === 0;
+      raffleState.textContent = entriesOpen ? 'Open' : 'Preparing';
+      raffleState.className = entriesOpen ? 'data-state ok' : 'data-state stale';
+      setRaffleEntryUi(entriesOpen);
+      const entriesText = entriesOpen ? 'Entries: enabled' : 'Entries: not open yet';
       raffleMeta.textContent = `Rules: ${rules.version || 'not published'} · Updated: ${new Date(payload.generatedAt).toLocaleString()} · ${entriesText}`;
       const historyText = Array.isArray(payload.history) && payload.history.length
         ? `${payload.history.length} published draw records.`

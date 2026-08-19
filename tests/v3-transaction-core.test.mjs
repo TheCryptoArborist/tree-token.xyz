@@ -5,14 +5,17 @@ import {
   TREE_V3_TICK_SPACING, normalizeDecimalInput, decimalToRaw, encodeSignedI32, decodeSignedI32,
   ticksFromDisplayedPrices, minimumAfterSlippage, optimalV3ZapSwapRaw, validateVerifiedPool, buildCreateTreeV3Position, buildCreateTreeV3ZapPosition,
   buildIncreaseTreeV3Position, buildRemoveTreeV3Position, buildCollectTreeV3Fees, buildCollectTreeV3Rewards, buildCloseTreeV3Position,
+  buildClaimAllTreeV3Position, buildWithdrawAllAndCloseTreeV3Position,
   assertAllowedIncreaseV3Transaction, assertAllowedRemoveV3Transaction, assertAllowedCollectFeeV3Transaction,
-  assertAllowedCollectRewardV3Transaction, assertAllowedCloseV3Transaction, assertAllowedV3ZapTransaction, simulationSucceeded, positionDeleted,
+  assertAllowedCollectRewardV3Transaction, assertAllowedCloseV3Transaction, assertAllowedV3ZapTransaction,
+  assertAllowedClaimAllV3Transaction, assertAllowedWithdrawAllAndCloseV3Transaction, simulationSucceeded, positionDeleted,
   extractAddLiquidityEvent, extractRemoveLiquidityEvent, extractFeeCollectedEvent, extractRewardCollectedEvents,
 } from '../dapp/v3-transaction-core.js';
 
 assert.equal(isTreeV3ExecutionHost('tree-token.xyz'), true);
 assert.equal(isTreeV3ExecutionHost('www.tree-token.xyz'), true);
 assert.equal(isTreeV3ExecutionHost('deploy-preview-16--tree-token.netlify.app'), true);
+assert.equal(isTreeV3ExecutionHost('6a8527caed0ee021edd0b184--tree-token.netlify.app'), true);
 assert.equal(isTreeV3ExecutionHost('localhost'), true);
 assert.equal(isTreeV3ExecutionHost('tree-token.netlify.app'), false);
 assert.equal(isTreeV3ExecutionHost('tree-token.xyz.attacker.example'), false);
@@ -96,6 +99,20 @@ assert.deepEqual(collectRewardCalls.map((call) => `${call.module}::${call.functi
 assert.deepEqual(collectRewardCalls.map((call) => call.typeArguments[2]), TREE_V3_REWARD_TOKENS.map((token) => token.coinType));
 assert.equal(assertAllowedCollectRewardV3Transaction(collectRewardTx), true);
 assert.throws(() => buildCollectTreeV3Rewards({ Transaction: MockTransaction, owner, positionId, rewardCoinTypes: ['0x2::sui::SUI'] }), /Invalid verified/);
+const claimAllTx = buildClaimAllTreeV3Position({ Transaction: MockTransaction, owner, positionId });
+const claimAllCalls = claimAllTx.commands.filter((command) => command.$kind === 'MoveCall').map((command) => command.MoveCall);
+assert.deepEqual(claimAllCalls.map((call) => `${call.module}::${call.function}`), ['collect::fee','collect::reward','collect::reward','collect::reward']);
+assert.equal(assertAllowedClaimAllV3Transaction(claimAllTx), true);
+const feeOnlyClaimTx = buildClaimAllTreeV3Position({ Transaction: MockTransaction, owner, positionId, rewardCoinTypes: [] });
+assert.equal(assertAllowedClaimAllV3Transaction(feeOnlyClaimTx), true);
+const exitTx = buildWithdrawAllAndCloseTreeV3Position({ Transaction: MockTransaction, owner, positionId, liquidityRaw: 123_456n, minTreeRaw: 1_000n, minSuiRaw: 2_000n });
+const exitCalls = exitTx.commands.filter((command) => command.$kind === 'MoveCall').map((command) => command.MoveCall);
+assert.deepEqual(exitCalls.map((call) => `${call.module}::${call.function}`), ['liquidity::remove_liquidity','collect::fee','collect::reward','collect::reward','collect::reward','liquidity::close_position']);
+assert.equal(exitCalls[0].arguments[2].value, 123_456n);
+assert.equal(exitCalls[0].arguments[3].value, 2_000n);
+assert.equal(exitCalls[0].arguments[4].value, 1_000n);
+assert.equal(assertAllowedWithdrawAllAndCloseV3Transaction(exitTx), true);
+assert.throws(() => buildWithdrawAllAndCloseTreeV3Position({ Transaction: MockTransaction, owner, positionId, liquidityRaw: 1n, rewardCoinTypes: ['0x2::sui::SUI'] }), /Invalid verified/);
 const closeTx = buildCloseTreeV3Position({ Transaction: MockTransaction, owner, positionId });
 const closeCalls = closeTx.commands.filter((command) => command.$kind === 'MoveCall').map((command) => command.MoveCall);
 assert.deepEqual(closeCalls.map((call) => `${call.module}::${call.function}`), ['liquidity::close_position']);

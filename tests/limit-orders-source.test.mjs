@@ -13,6 +13,16 @@ test('limit UI exposes create, active, past, and cancellation controls', () => {
   assert.match(client, /showLimitView\('orders'\)/);
   assert.match(client, /Cancel & Return Funds/);
   assert.match(html, /Aftermath Mainnet/);
+  for (const id of ['limitLiveSuiPerTree', 'limitLiveTreePerSui', 'limitRateRefresh', 'limitRateGuidance', 'limitRateUpdated']) assert.match(html, new RegExp(`id="${id}"`));
+  for (const id of ['limitVsMarket', 'limitExpiryValue', 'limitExpiryUnit']) assert.match(html, new RegExp(`id="${id}"`));
+  for (const offset of ['0', '2', '5', '10']) assert.match(html, new RegExp(`data-limit-market-offset="${offset}"`));
+  assert.match(client, /applyMarketPreset/);
+  assert.match(client, /limitExpiryDurationMs/);
+  assert.match(html, /Live SUI \/ TREE reference/);
+  assert.match(client, /priceTreePerSui/);
+  assert.match(client, /loadLiveRatio/);
+  assert.match(client, /Buy targets must be below the live rate/);
+  assert.match(client, /Sell targets must be above the live rate/);
 });
 
 test('client performs two fresh server builds and simulations before signing', () => {
@@ -34,7 +44,7 @@ test('server has strict path, origin, proof, and no-integrator-fee controls', ()
   assert.match(server, /getMinOrderSizeUsd/);
   assert.doesNotMatch(server, /getCoinsToPrice/);
   assert.match(client, /overview\?\.market\?\.suiUsd/);
-  assert.match(client, /suiUsd \* state\.currentPrice/);
+  assert.match(client, /suiUsd \? suiUsd \* suiPerTree/);
   assert.match(server, /outputToInputStopLossExchangeRate: 0/);
   assert.doesNotMatch(server, /integratorFeeBps/);
 });

@@ -1,5 +1,5 @@
 import { createHash, timingSafeEqual } from 'node:crypto';
-import { treeRaffleRulesForEnvironment } from './tree-raffle-core.ts';
+import { raffleOperationalReadiness, treeRaffleRulesForEnvironment } from './tree-raffle-core.ts';
 import { fetchFinalizedTreeBuy } from './tree-raffle-buy-verifier.ts';
 import type { FinalizedTreeBuy } from './tree-raffle-buy-verifier.ts';
 import type { TransactionalTreeRaffleLedger, VerifiedTreeBuy } from './tree-raffle-ledger-core.ts';
@@ -50,7 +50,7 @@ export function createTreeRaffleIngestHandler(dependencies: Dependencies = {}) {
     if (request.method !== 'POST') return json({ status: 'error', error: 'method-not-allowed' }, 405);
     const rules = treeRaffleRulesForEnvironment(env);
     const enabled = env.TREE_RAFFLE_INGEST_ENABLED === 'true'
-      && (dependencies.allowEntries ?? rules.acceptingEntries);
+      && (dependencies.allowEntries ?? raffleOperationalReadiness(env, rules).verifiedBuyIngestionEnabled);
     if (!enabled) return json({ status: 'disabled', error: 'raffle-entries-disabled' }, 503);
     const configuredSecret = env.TREE_RAFFLE_INGEST_SECRET?.trim() || '';
     if (!secretMatches(request.headers.get('x-tree-raffle-ingest-secret') || '', configuredSecret)) {

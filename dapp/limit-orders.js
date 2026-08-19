@@ -1,14 +1,14 @@
 import { Transaction } from 'https://esm.run/@mysten/sui@2.23.1/transactions';
 import {
-  LIMIT_EXPIRIES, LIMIT_EXECUTION_GAS_RAW, LIMIT_MIN_WALLET_GAS_RAW, LIMIT_SUI_DECIMALS, LIMIT_SUI_TYPE,
+  LIMIT_EXECUTION_GAS_RAW, LIMIT_MIN_WALLET_GAS_RAW, LIMIT_SUI_DECIMALS, LIMIT_SUI_TYPE,
   LIMIT_TREE_DECIMALS, LIMIT_TREE_TYPE, assertAllowedLimitTransaction, cancelLimitMessage,
   createLimitAccountMessage, encodeLimitMessage, estimateLimitOutput, extractCreatedLimitOrder,
   isFavorableLimitTarget, limitDecimalToRaw, limitDirection, limitRawToDecimal, limitSimulationSucceeded,
-  minimumLimitInput, normalizeLimitAddress, treeLimitOrderDirection, validateLimitBalanceChanges, validateLimitTargetPrice,
+  limitExpiryDurationMs, minimumLimitInput, normalizeLimitAddress, treeLimitOrderDirection, validateLimitBalanceChanges, validateLimitTargetPrice,
 } from './limit-orders-core.js';
 
 const API = '/api/tree-limit-orders';
-const state = { direction: 'buy-tree', currentPrice: 0, minUsd: null, coinPricesUsd: { sui: null, tree: null }, balances: { sui: 0n, tree: 0n }, balanceOwner: null, busy: false, tab: 'active', orders: [], accountProof: null };
+const state = { direction: 'buy-tree', currentPrice: 0, currentTreePerSui: 0, rateUpdatedAt: null, rateLoading: false, targetPreset: 5, minUsd: null, coinPricesUsd: { sui: null, tree: null }, balances: { sui: 0n, tree: 0n }, balanceOwner: null, busy: false, tab: 'active', orders: [], accountProof: null };
 const el = {};
 
 function showLimitView(view) {
@@ -83,7 +83,17 @@ async function ensureAftermathUser() {
   if (!result.registered) throw new Error('Aftermath wallet registration did not complete.');
 }
 
-function expiryMs() { const value = LIMIT_EXPIRIES[el.expiry.value]; if (!value) throw new Error('Choose a supported expiration period.'); return value; }
+function expiryMs() { return limitExpiryDurationMs(el.expiryValue.value, el.expiryUnit.value); }
+function expiryLabel() { const value = Number(el.expiryValue.value); const unit = el.expiryUnit.value; return `${value} ${value === 1 ? unit.slice(0, -1) : unit}`; }
+function targetText(value) { return Number(value).toFixed(18).replace(/0+$/, '').replace(/\.$/, ''); }
+function applyMarketPreset(offset, shouldRender = true) {
+  const percentage = Number(offset);
+  if (!Number.isFinite(percentage) || percentage < 0 || state.currentPrice <= 0) return;
+  state.targetPreset = percentage;
+  const multiplier = state.direction === 'buy-tree' ? 1 - percentage / 100 : 1 + percentage / 100;
+  el.target.value = targetText(state.currentPrice * multiplier);
+  if (shouldRender) renderForm();
+}
 function formPlan() {
   const owner = currentWallet();
   if (!owner) throw new Error('Connect a Sui wallet to continue.');
@@ -92,7 +102,7 @@ function formPlan() {
   const allocateCoinAmount = limitDecimalToRaw(amountText, direction.inputDecimals);
   const target = validateLimitTargetPrice(el.target.value);
   if (state.currentPrice > 0 && !isFavorableLimitTarget(state.direction, target.numeric, state.currentPrice)) {
-    throw new Error(state.direction === 'buy-tree' ? 'A buy target must be below the current TREE price.' : 'A sell target must be above the current TREE price.');
+    throw new Error(state.direction === 'buy-tree' ? 'A buy target must be at or below the current TREE price.' : 'A sell target must be at or above the current TREE price.');
   }
   const inputPriceUsd = state.direction === 'buy-tree' ? state.coinPricesUsd.sui : state.coinPricesUsd.tree;
   const requiredInput = minimumLimitInput({ minOrderSizeUsd: state.minUsd, inputPriceUsd });
@@ -112,6 +122,15 @@ function renderForm() {
   const balance = state.direction === 'buy-tree' ? state.balances.sui : state.balances.tree;
   el.balance.textContent = currentWallet() ? `Balance ${limitRawToDecimal(balance, direction.inputDecimals, direction.inputDecimals === 9 ? 4 : 2)} ${direction.inputSymbol}` : 'Balance —';
   el.currentPrice.textContent = state.currentPrice > 0 ? `${numberText(state.currentPrice, 12)} SUI` : 'Unavailable';
+  el.liveSuiPerTree.textContent = state.currentPrice > 0 ? `${numberText(state.currentPrice, 12)} SUI per TREE` : state.rateLoading ? 'Loading…' : 'Unavailable';
+  el.liveTreePerSui.textContent = state.currentTreePerSui > 0 ? `1 SUI ≈ ${numberText(state.currentTreePerSui, 4)} TREE` : state.rateLoading ? 'Loading inverse rate…' : 'Inverse rate unavailable';
+  el.rateGuidance.textContent = state.direction === 'buy-tree' ? 'Buy targets must be below the live rate.' : 'Sell targets must be above the live rate.';
+  el.rateUpdated.textContent = state.rateUpdatedAt ? `SuiDex V3 · Updated ${new Date(state.rateUpdatedAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', second: '2-digit' })}` : 'Verified SuiDex V3 pool';
+  document.querySelectorAll('[data-limit-market-offset]').forEach((button) => {
+    const offset = Number(button.dataset.limitMarketOffset);
+    button.textContent = offset === 0 ? 'Market' : `${state.direction === 'buy-tree' ? '−' : '+'}${offset}%`;
+    button.classList.toggle('active', state.targetPreset === offset);
+  });
   const inputPriceUsd = state.direction === 'buy-tree' ? state.coinPricesUsd.sui : state.coinPricesUsd.tree;
   const requiredInput = minimumLimitInput({ minOrderSizeUsd: state.minUsd, inputPriceUsd });
   el.minimum.textContent = state.minUsd ? `≈ $${Number(state.minUsd).toFixed(2)}${requiredInput ? ` (at least ${numberText(requiredInput, direction.inputDecimals === 9 ? 3 : 0)} ${direction.inputSymbol})` : ''}` : '≈ $5.00';
@@ -121,15 +140,22 @@ function renderForm() {
     const estimate = estimateLimitOutput({ direction: state.direction, amount, targetPrice: target });
     el.estimated.textContent = estimate ? `${numberText(estimate, direction.outputDecimals)} ${direction.outputSymbol}` : '—';
     const favorable = state.currentPrice > 0 && isFavorableLimitTarget(state.direction, target, state.currentPrice);
+    const difference = state.currentPrice > 0 ? (target / state.currentPrice - 1) * 100 : null;
+    if (difference === null || !Number.isFinite(difference)) el.vsMarket.textContent = 'Rate unavailable';
+    else if (Math.abs(difference) < 0.005) el.vsMarket.textContent = 'At market';
+    else el.vsMarket.textContent = `${Math.abs(difference).toFixed(1)}% ${difference < 0 ? 'below' : 'above'}`;
+    el.vsMarket.classList.toggle('wrong-side', !favorable);
     el.condition.textContent = favorable ? (state.direction === 'buy-tree' ? 'Fills at or below target' : 'Fills at or above target') : 'Target must be beyond market';
     el.condition.className = favorable ? 'swap-positive' : 'swap-warning';
-  } catch { el.estimated.textContent = '—'; el.condition.textContent = 'Enter a target'; el.condition.className = ''; }
+  } catch { el.estimated.textContent = '—'; el.condition.textContent = 'Enter a target'; el.condition.className = ''; el.vsMarket.textContent = 'Enter a target'; el.vsMarket.classList.remove('wrong-side'); }
   updateAction();
 }
 
 function updateAction() {
   el.create.disabled = state.busy;
   el.refresh.disabled = state.busy;
+  el.rateRefresh.disabled = state.busy || state.rateLoading;
+  el.rateRefresh.textContent = state.rateLoading ? 'Loading…' : 'Refresh';
   if (state.busy) { el.create.textContent = 'Working…'; return; }
   el.create.textContent = currentWallet() ? 'Review Limit Order' : 'Connect Wallet';
 }
@@ -143,6 +169,28 @@ async function loadBalances(force = false) {
   state.balances = { sui: balanceValue(sui), tree: balanceValue(tree) };
   state.balanceOwner = owner;
   renderForm();
+}
+
+async function loadLiveRatio(announce = false) {
+  if (state.rateLoading) return;
+  state.rateLoading = true; renderForm();
+  try {
+    const response = await fetch('/api/tree-v3-overview', { headers: { Accept: 'application/json' }, cache: 'no-store' });
+    const overview = response.ok ? await response.json() : null;
+    const suiPerTree = Number(overview?.pool?.priceSuiPerTree ?? overview?.priceSuiPerTree ?? overview?.market?.priceSuiPerTree ?? 0);
+    const treePerSui = Number(overview?.pool?.priceTreePerSui ?? 0);
+    if (!overview || overview.status !== 'ok' || !Number.isFinite(suiPerTree) || suiPerTree <= 0) throw new Error('The live SUI/TREE reference rate is temporarily unavailable.');
+    state.currentPrice = suiPerTree;
+    state.currentTreePerSui = Number.isFinite(treePerSui) && treePerSui > 0 ? treePerSui : 1 / suiPerTree;
+    state.rateUpdatedAt = Date.parse(overview.generatedAt) || Date.now();
+    const suiUsd = Number(overview?.market?.suiUsd) || null;
+    const treeUsd = Number(overview?.market?.treeUsd) || (suiUsd ? suiUsd * suiPerTree : null);
+    state.coinPricesUsd = { sui: suiUsd, tree: treeUsd };
+    if (state.targetPreset !== null) applyMarketPreset(state.targetPreset, false);
+    if (announce) setStatus('Live SUI/TREE reference rate refreshed.', 'success');
+  } catch (error) {
+    if (announce) setStatus(error instanceof Error ? error.message : 'The live SUI/TREE reference rate is temporarily unavailable.', 'error');
+  } finally { state.rateLoading = false; renderForm(); }
 }
 
 function assertBalance(plan) {
@@ -179,8 +227,7 @@ async function createOrder() {
     const finalBuild = await api('create', { body: plan });
     const verified = await simulatePlan(finalBuild.transaction, plan);
     const estimate = estimateLimitOutput({ direction: plan.direction, amount: plan.amountText, targetPrice: plan.targetPriceSuiPerTree });
-    const expiryLabel = el.expiry.options[el.expiry.selectedIndex].textContent;
-    const confirmed = window.confirm(`Review TREE limit order\n\nEscrow: ${plan.amountText} ${plan.inputSymbol}\nTarget: ${plan.targetPriceSuiPerTree} SUI per TREE\nEstimated receive: ${numberText(estimate, limitDirection(plan.direction).outputDecimals)} ${plan.outputSymbol}\nExpires: ${expiryLabel}\nProvider: Aftermath Mainnet\nExecution gas held: 0.05 SUI plus normal network gas\n\nThe order can be canceled to return unspent funds. Continue to wallet approval?`);
+    const confirmed = window.confirm(`Review TREE limit order\n\nEscrow: ${plan.amountText} ${plan.inputSymbol}\nTarget: ${plan.targetPriceSuiPerTree} SUI per TREE\nEstimated receive: ${numberText(estimate, limitDirection(plan.direction).outputDecimals)} ${plan.outputSymbol}\nExpires: ${expiryLabel()}\nProvider: Aftermath Mainnet\nExecution gas held: 0.05 SUI plus normal network gas\n\nThe order can be canceled to return unspent funds. Continue to wallet approval?`);
     if (!confirmed) throw new Error('Order review was canceled. No transaction was submitted.');
     setStatus('Both simulations passed. Review the exact order in your wallet.');
     const submitted = await window.signAndExecuteTransactionBlock(verified.transaction);
@@ -262,28 +309,22 @@ async function cancelOrder(orderId) {
 }
 
 async function initialize() {
-  Object.assign(el, { amount: document.getElementById('limitAmount'), amountLabel: document.getElementById('limitAmountLabel'), balance: document.getElementById('limitInputBalance'), inputSymbol: document.getElementById('limitInputSymbol'), target: document.getElementById('limitTarget'), expiry: document.getElementById('limitExpiry'), currentPrice: document.getElementById('limitCurrentPrice'), estimated: document.getElementById('limitEstimatedOutput'), condition: document.getElementById('limitCondition'), minimum: document.getElementById('limitMinimum'), create: document.getElementById('limitCreate'), status: document.getElementById('limitStatus'), refresh: document.getElementById('limitRefresh'), orders: document.getElementById('limitOrders'), activeTab: document.getElementById('limitActiveTab'), pastTab: document.getElementById('limitPastTab'), max: document.getElementById('limitMax'), createView: document.getElementById('limitCreateView'), ordersView: document.getElementById('limitOrdersView'), createPanel: document.getElementById('limitCreatePanel'), ordersPanel: document.getElementById('limitOrdersPanel') });
+  Object.assign(el, { amount: document.getElementById('limitAmount'), amountLabel: document.getElementById('limitAmountLabel'), balance: document.getElementById('limitInputBalance'), inputSymbol: document.getElementById('limitInputSymbol'), target: document.getElementById('limitTarget'), expiryValue: document.getElementById('limitExpiryValue'), expiryUnit: document.getElementById('limitExpiryUnit'), vsMarket: document.getElementById('limitVsMarket'), currentPrice: document.getElementById('limitCurrentPrice'), liveSuiPerTree: document.getElementById('limitLiveSuiPerTree'), liveTreePerSui: document.getElementById('limitLiveTreePerSui'), rateGuidance: document.getElementById('limitRateGuidance'), rateUpdated: document.getElementById('limitRateUpdated'), rateRefresh: document.getElementById('limitRateRefresh'), estimated: document.getElementById('limitEstimatedOutput'), condition: document.getElementById('limitCondition'), minimum: document.getElementById('limitMinimum'), create: document.getElementById('limitCreate'), status: document.getElementById('limitStatus'), refresh: document.getElementById('limitRefresh'), orders: document.getElementById('limitOrders'), activeTab: document.getElementById('limitActiveTab'), pastTab: document.getElementById('limitPastTab'), max: document.getElementById('limitMax'), createView: document.getElementById('limitCreateView'), ordersView: document.getElementById('limitOrdersView'), createPanel: document.getElementById('limitCreatePanel'), ordersPanel: document.getElementById('limitOrdersPanel') });
   if (!el.create) return;
-  document.querySelectorAll('[data-limit-direction]').forEach((button) => button.addEventListener('click', () => { state.direction = button.dataset.limitDirection; el.amount.value = ''; renderForm(); }));
-  el.amount.addEventListener('input', renderForm); el.target.addEventListener('input', renderForm); el.create.addEventListener('click', createOrder); el.refresh.addEventListener('click', refreshFromButton);
+  document.querySelectorAll('[data-limit-direction]').forEach((button) => button.addEventListener('click', () => { state.direction = button.dataset.limitDirection; el.amount.value = ''; if (state.targetPreset !== null) applyMarketPreset(state.targetPreset); else renderForm(); }));
+  document.querySelectorAll('[data-limit-market-offset]').forEach((button) => button.addEventListener('click', () => applyMarketPreset(button.dataset.limitMarketOffset)));
+  el.amount.addEventListener('input', renderForm); el.target.addEventListener('input', () => { state.targetPreset = null; renderForm(); }); el.expiryValue.addEventListener('input', renderForm); el.expiryUnit.addEventListener('change', renderForm); el.create.addEventListener('click', createOrder); el.refresh.addEventListener('click', refreshFromButton);
+  el.rateRefresh.addEventListener('click', () => loadLiveRatio(true));
   el.createView.addEventListener('click', () => showLimitView('create')); el.ordersView.addEventListener('click', () => showLimitView('orders'));
   el.activeTab.addEventListener('click', () => { state.tab = 'active'; refreshFromButton(); }); el.pastTab.addEventListener('click', () => { state.tab = 'past'; refreshFromButton(); });
   el.max.addEventListener('click', () => { const meta = limitDirection(state.direction); let raw = state.direction === 'buy-tree' ? state.balances.sui - LIMIT_MIN_WALLET_GAS_RAW : state.balances.tree; if (raw < 0n) raw = 0n; el.amount.value = limitRawToDecimal(raw, meta.inputDecimals, meta.inputDecimals); renderForm(); });
   window.addEventListener('tree:wallet-changed', () => { state.accountProof = null; loadBalances(true).catch(() => {}); });
   try {
-    const [config, overview] = await Promise.all([api('config'), fetch('/api/tree-v3-overview', { headers: { Accept: 'application/json' }, cache: 'no-store' }).then((response) => response.ok ? response.json() : null)]);
+    const config = await api('config');
     state.minUsd = config.minOrderSizeUsd;
-    const price = Number(overview?.pool?.priceSuiPerTree ?? overview?.priceSuiPerTree ?? overview?.market?.priceSuiPerTree ?? 0);
-    state.currentPrice = Number.isFinite(price) ? price : 0;
-    const suiUsd = Number(overview?.market?.suiUsd) || null;
-    const treeUsd = Number(overview?.market?.treeUsd) || (suiUsd && state.currentPrice > 0 ? suiUsd * state.currentPrice : null);
-    state.coinPricesUsd = {
-      sui: suiUsd,
-      tree: treeUsd,
-    };
     setStatus('Ready. Orders are restricted to TREE/SUI through Aftermath Mainnet.');
   } catch (error) { setStatus(error.message, 'error'); }
-  await loadBalances(true).catch(() => {}); renderForm();
+  await Promise.all([loadBalances(true).catch(() => {}), loadLiveRatio(false)]); renderForm();
 }
 
 initialize();

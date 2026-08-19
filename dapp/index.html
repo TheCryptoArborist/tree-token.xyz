@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="swap-router.css">
   <link rel="stylesheet" href="limit-orders.css">
   <link rel="stylesheet" href="earn-transactions.css">
+  <link rel="stylesheet" href="earn-v2-rewards.css">
   <link rel="stylesheet" href="earn-v3-zap.css">
   <link rel="stylesheet" href="v3-transactions.css">
   <script type="module" src="../scripts/wallet.js"></script>
@@ -76,12 +77,19 @@
       <div class="limit-workspace">
         <div class="limit-card" id="limitCreatePanel" role="tabpanel" aria-labelledby="limitCreateView">
           <div class="limit-direction" role="group" aria-label="Limit order direction"><button class="active" type="button" data-limit-direction="buy-tree">Buy TREE</button><button type="button" data-limit-direction="sell-tree">Sell TREE</button></div>
+          <div class="limit-live-rate" aria-live="polite">
+            <div><span>Live SUI / TREE reference</span><strong id="limitLiveSuiPerTree">Loading…</strong><small id="limitLiveTreePerSui">Loading inverse rate…</small></div>
+            <button id="limitRateRefresh" type="button" aria-label="Refresh live SUI per TREE rate">Refresh</button>
+            <p id="limitRateGuidance">Buy targets must be below the live rate.</p><time id="limitRateUpdated">Verified SuiDex V3 pool</time>
+          </div>
           <label class="limit-field" for="limitAmount"><span id="limitAmountLabel">You allocate (SUI)</span><span id="limitInputBalance">Balance —</span></label>
           <div class="limit-input-row"><input id="limitAmount" type="text" inputmode="decimal" autocomplete="off" placeholder="0.0"><button id="limitMax" type="button">MAX</button><strong id="limitInputSymbol" class="limit-token-symbol sui"><span class="limit-token-logo" aria-hidden="true"></span><span data-limit-symbol>SUI</span></strong></div>
           <label class="limit-field" for="limitTarget"><span>Target price</span><small>SUI per TREE</small></label>
           <div class="limit-input-row"><input id="limitTarget" type="text" inputmode="decimal" autocomplete="off" placeholder="0.000025"><strong>SUI/TREE</strong></div>
-          <label class="limit-field" for="limitExpiry"><span>Expires after</span></label>
-          <select id="limitExpiry"><option value="1h">1 hour</option><option value="24h" selected>24 hours</option><option value="7d">7 days</option><option value="30d">30 days</option></select>
+          <div class="limit-market-presets" role="group" aria-label="Target price compared with market"><button type="button" data-limit-market-offset="0">Market</button><button type="button" data-limit-market-offset="2">−2%</button><button class="active" type="button" data-limit-market-offset="5">−5%</button><button type="button" data-limit-market-offset="10">−10%</button></div>
+          <div class="limit-vs-market"><span>vs Market</span><strong id="limitVsMarket">5.0% below</strong></div>
+          <label class="limit-field" for="limitExpiryValue"><span>Expires in</span></label>
+          <div class="limit-expiry-row"><input id="limitExpiryValue" type="number" inputmode="numeric" min="1" step="1" value="3" aria-label="Expiration amount"><select id="limitExpiryUnit" aria-label="Expiration unit"><option value="hours">Hours</option><option value="days">Days</option><option value="weeks" selected>Weeks</option></select></div>
           <details class="limit-advanced">
             <summary>Order details &amp; safeguards</summary>
             <div class="limit-summary">
@@ -106,7 +114,7 @@
     <section class="section utility-route-section app-panel" id="earn" aria-label="Earn with TREE Liquidity" hidden>
       <div class="earn-view-tabs" role="tablist" aria-label="Earn views"><button class="active" id="earnRoutesTab" type="button" role="tab" aria-selected="true" aria-controls="earnRoutesPanel">Farms</button><button id="earnPositionsTab" type="button" role="tab" aria-selected="false" aria-controls="earnPositionsPanel">My Positions</button></div>
       <div class="earn-panel" id="earnRoutesPanel" role="tabpanel" aria-labelledby="earnRoutesTab">
-        <div class="earn-stat-card"><span>Verified SUI / TREE routes</span><strong>2</strong><small>Live through SuiDex V2 and V3</small></div>
+        <div class="earn-stat-card"><span>Verified SUI / TREE farm</span><strong>V2</strong><small>Native zap and stake through SuiDex V2</small></div>
         <div class="earn-route-list">
           <article class="earn-route-row"><div class="earn-route-title"><span class="token-logo-stack" aria-hidden="true"><img src="../assets/sui-token.svg" alt=""><img src="../thick.png" alt=""></span><div><h3>SUI / TREE V2</h3><small>Classic liquidity + farm</small></div></div><div class="earn-route-actions"><button class="button gold" id="earnV2ZapOpen" type="button" aria-expanded="false" aria-controls="earnV2ZapPanel">Zap &amp; Stake</button></div><div class="earn-zap-panel" id="earnV2ZapPanel" hidden>
             <div class="earn-zap-heading"><div><strong>Native V2 Zap &amp; Stake</strong><small>Runs here in TREE Command Center</small></div><span class="data-state ok">Sui Mainnet</span></div>
@@ -116,19 +124,20 @@
             <div class="earn-zap-slippage"><span>Slippage</span><div><button type="button" data-earn-slippage="50">0.5%</button><button class="active" type="button" data-earn-slippage="100">1%</button><button type="button" data-earn-slippage="200">2%</button></div></div>
             <button class="button primary" id="earnZapAction" type="button">Connect Wallet</button><p class="status" id="earnZapStatus" role="status" aria-live="polite">Enter an amount to build the verified SUI/TREE V2 zap.</p><div class="swap-success" id="earnZapSuccess" hidden></div>
           </div><details><summary>Route details</summary><p>Deposit SUI or TREE. TREE Command Center swaps approximately half, creates SUI/TREE LP, verifies the new LP balance, then opens a second wallet approval to stake it in the verified SuiDex farm.</p></details></article>
-          <article class="earn-route-row"><div class="earn-route-title"><span class="token-logo-stack" aria-hidden="true"><img src="../assets/sui-token.svg" alt=""><img src="../thick.png" alt=""></span><div><h3>SUI / TREE V3</h3><small>Concentrated liquidity + incentives</small></div></div><div class="earn-route-actions"><button class="button gold" id="earnV3ZapOpen" type="button" aria-expanded="false" aria-controls="earnV3ZapPanel">Zap into V3</button><button class="button secondary" type="button" data-open-panel="v3">Manage V3</button></div><div class="earn-zap-panel" id="earnV3ZapPanel" hidden>
-            <div class="earn-zap-heading"><div><strong>Native V3 Zap</strong><small>One-token position creation inside TREE Command Center</small></div><span class="data-state ok">Sui Mainnet</span></div>
-            <label class="earn-zap-label" for="earnV3ZapToken">Deposit token</label><select id="earnV3ZapToken"><option value="SUI">SUI</option><option value="TREE">TREE</option></select>
-            <label class="earn-zap-label" for="earnV3ZapAmount"><span>Amount</span><span id="earnV3ZapBalance">Balance —</span></label><div class="earn-zap-input"><input id="earnV3ZapAmount" type="text" inputmode="decimal" autocomplete="off" placeholder="0.0"><button id="earnV3ZapMax" type="button">MAX</button><span id="earnV3ZapSymbol">SUI</span></div>
-            <label class="earn-zap-label" for="earnV3ZapRange">Price range</label><select id="earnV3ZapRange"><option value="5">±5% around current price</option><option value="20" selected>±20% around current price</option><option value="full">Full range</option></select>
-            <div class="earn-zap-summary"><span>Current price</span><strong id="earnV3ZapCurrent">Loading…</strong><span>Selected range</span><strong id="earnV3ZapRangeText">—</strong><span>Swap portion</span><strong id="earnV3ZapSwap">—</strong><span>Minimum paired token</span><strong id="earnV3ZapMinimum">—</strong><span>Wallet approvals</span><strong>1 · Position + incentives</strong></div>
-            <div class="earn-zap-slippage"><span>Slippage</span><div><button type="button" data-earn-v3-slippage="50">0.5%</button><button class="active" type="button" data-earn-v3-slippage="100">1%</button><button type="button" data-earn-v3-slippage="200">2%</button></div></div>
-            <button class="button primary" id="earnV3ZapAction" type="button">Connect Wallet</button><p class="status" id="earnV3ZapStatus" role="status" aria-live="polite">Loading the verified SUI/TREE V3 pool…</p><div class="swap-success" id="earnV3ZapSuccess" hidden></div>
-          </div><details><summary>Route details</summary><p>Deposit SUI or TREE. TREE Command Center swaps approximately half in the verified SUI/TREE V3 pool and creates the selected concentrated-liquidity position after one explicit wallet approval. V3 incentives attach directly to the position, so there is no separate staking transaction.</p></details></article>
         </div>
       </div>
       <div class="earn-panel" id="earnPositionsPanel" role="tabpanel" aria-labelledby="earnPositionsTab" hidden>
-        <article class="earn-positions-card"><span class="card-icon">◉</span><h3>Your TREE liquidity</h3><p>Review V3 positions, fees, and rewards here. Native V2 LP staking is available through the Farms tab.</p><button class="button primary" type="button" data-open-panel="v3">Manage V3 Positions</button><button class="button secondary" id="earnStakeExisting" type="button">Stake Existing V2 LP</button><p class="status" id="earnStakeStatus" role="status" aria-live="polite"></p></article>
+        <article class="earn-positions-card">
+          <div class="earn-v2-position-heading"><div><span class="card-icon">◉</span><h3>Your V2 farm position</h3><p>Live SUI/TREE V2 liquidity and VICTORY emissions for your connected wallet.</p></div><button class="button secondary" id="earnV2PositionRefresh" type="button">Refresh</button></div>
+          <div class="earn-v2-position-grid" aria-live="polite">
+            <div><span>Estimated SUI</span><strong id="earnV2PositionSui">—</strong></div><div><span>Estimated TREE</span><strong id="earnV2PositionTree">—</strong></div>
+            <div><span>Pool share</span><strong id="earnV2PositionShare">—</strong></div><div><span>Unstaked LP</span><strong id="earnV2UnstakedLp">—</strong></div>
+          </div>
+          <div class="earn-v2-reward-strip"><span>Claimable V2 farm rewards</span><strong id="earnV2ClaimableVictory">— VICTORY</strong><small id="earnV2RewardDetail">Connect your wallet to check live rewards.</small></div>
+          <div class="earn-v2-position-object"><span>Farm position</span><a id="earnV2PositionLink" href="#" target="_blank" rel="noopener noreferrer" hidden>View on Suiscan ↗</a><strong id="earnV2PositionId">—</strong></div>
+          <div class="earn-v2-position-actions"><button class="button secondary" id="earnStakeExisting" type="button">Stake Existing V2 LP</button><button class="button gold" id="earnClaimVictory" type="button">Claim VICTORY Rewards</button></div>
+          <p class="status" id="earnV2PositionStatus" role="status" aria-live="polite">Connect your wallet to load your V2 position.</p><p class="status" id="earnStakeStatus" role="status" aria-live="polite"></p><p class="status" id="earnClaimStatus" role="status" aria-live="polite"></p><div class="swap-success" id="earnClaimSuccess" hidden></div>
+        </article>
       </div>
     </section>
 
@@ -162,9 +171,9 @@
       <div id="statsLiquidityPanel" class="stats-view" role="tabpanel" aria-labelledby="statsLiquidityTab" hidden><div class="data-group" data-stats-group="liquidity"><div class="group-heading"><h3>Liquidity venues</h3><span class="data-state" data-group-state>Loading</span></div><p class="meta" data-group-meta>Source: Sui Mainnet · Timestamp: pending · Status: loading</p><div class="stat-grid">
         <article class="stat-card"><span>Recognized total</span><strong data-liquidity="recognizedLiquidityUsd">—</strong></article><article class="stat-card"><span>SuiDex V2</span><strong data-liquidity="suiDexV2TvlUsd">—</strong></article><article class="stat-card"><span>SuiDex V3</span><strong data-liquidity="suiDexV3TvlUsd">—</strong></article><article class="stat-card"><span>Turbos</span><strong data-liquidity="turbosTvlUsd">—</strong></article>
       </div><p class="stats-source-note">Live USD estimates use verified on-chain pool reserves and current external reference prices. Values fail closed when any recognized venue cannot be verified.</p></div></div>
-      <div id="statsNftreePanel" class="stats-view" role="tabpanel" aria-labelledby="statsNftreeTab" hidden><div class="data-group" data-stats-group="nftree"><div class="group-heading"><h3>NFTree</h3><span class="data-state snapshot" data-group-state>Snapshot</span></div><p class="meta" data-group-meta>Source: TREE project records · Project snapshot — June 22, 2026 · Status: snapshot</p><div class="stat-grid">
-        <article class="stat-card"><span>Mint Price</span><strong data-snapshot="nftree.mintPriceSui">—</strong></article><article class="stat-card"><span>Minted / Loaded</span><strong data-snapshot="nftree.totalMintedOrLoaded">—</strong></article><article class="stat-card"><span>Holder-Owned</span><strong data-snapshot="nftree.holderOwned">—</strong></article><article class="stat-card"><span>Sale Pool</span><strong data-snapshot="nftree.salePool">—</strong></article><article class="stat-card"><span>Holder Wallets</span><strong data-snapshot="nftree.holderWallets">—</strong></article>
-      </div></div></div><div id="statsWarnings" class="warnings" hidden></div>
+      <div id="statsNftreePanel" class="stats-view" role="tabpanel" aria-labelledby="statsNftreeTab" hidden><div class="data-group" data-stats-group="nftree"><div class="group-heading"><h3>NFTree</h3><span class="data-state" data-group-state>Loading</span></div><p class="meta" data-group-meta>Source: Sui Mainnet GraphQL · Timestamp: pending · Status: loading</p><div class="stat-grid">
+        <article class="stat-card"><span>On-Chain Mint Price</span><strong data-nftree="mintPriceSui">—</strong></article><article class="stat-card"><span>Loaded Supply</span><strong data-nftree="totalLoaded">—</strong></article><article class="stat-card"><span>Holder-Owned</span><strong data-nftree="holderOwned">—</strong></article><article class="stat-card"><span>Sale Pool Inventory</span><strong data-nftree="salePool">—</strong></article><article class="stat-card"><span>Direct Holder Wallets</span><strong data-nftree="directHolderWallets">—</strong></article><article class="stat-card"><span>Marketplace / Custody</span><strong data-nftree="marketplaceOrCustody">—</strong></article>
+      </div><p class="stats-source-note" id="nftreeCoverage">Verifying the complete NFTree collection and all three official sale pools.</p></div></div><div id="statsWarnings" class="warnings" hidden></div>
     </section>
 
     <section class="section removed-section app-panel" id="removed" aria-labelledby="removed-title" hidden>
@@ -181,7 +190,7 @@
     </section>
 
     <section class="section app-panel" id="canopy-draw" aria-labelledby="canopy-title" hidden>
-      <div class="section-heading"><div><p class="eyebrow">Fail-closed foundation</p><h2 id="canopy-title">TREE Canopy Draw Raffle</h2><p class="meta" id="raffleMeta">Loading public raffle status…</p></div><span class="data-state refreshing" id="raffleState">Loading</span></div>
+      <div class="section-heading"><div><p class="eyebrow">Daily + weekly on-chain draws</p><h2 id="canopy-title">TREE Canopy Draw Raffle</h2><p class="meta" id="raffleMeta">Loading public raffle status…</p></div><span class="data-state refreshing" id="raffleState">Loading</span></div>
       <div class="raffle-tabs" role="tablist" aria-label="TREE raffle views"><button id="raffleDailyTab" class="active" type="button" role="tab" aria-selected="true" aria-controls="raffleDailyPanel">Daily</button><button id="raffleWeeklyTab" type="button" role="tab" aria-selected="false" aria-controls="raffleWeeklyPanel">Weekly</button><button id="raffleEntriesTab" type="button" role="tab" aria-selected="false" aria-controls="raffleEntriesPanel">My Entries</button></div>
       <div id="raffleDailyPanel" class="raffle-view" role="tabpanel" aria-labelledby="raffleDailyTab"><article class="card raffle-prize-card"><span class="rank-kicker">DAILY SAPLING DRAW</span><strong class="prize" data-daily-prize>No active prize yet</strong><p>Scheduled for 10:00 AM (America/New_York) each trading day.</p><a class="button secondary" id="raffleEntryButton" href="#swap">Raffle inactive</a></article></div>
       <div id="raffleWeeklyPanel" class="raffle-view" role="tabpanel" aria-labelledby="raffleWeeklyTab" hidden><article class="card raffle-prize-card"><span class="rank-kicker">WEEKLY CANOPY JACKPOT</span><strong class="prize" data-weekly-prize>No active prize yet</strong><p>Scheduled weekly for Sunday at 10:05 AM (America/New_York). Daily tickets also enter the weekly drawing.</p></article><article class="card compact-raffle-card"><h3>Previous Draws</h3><p id="raffleHistory" data-raffle-history>No rounds have completed yet.</p></article></div>

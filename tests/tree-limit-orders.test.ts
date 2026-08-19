@@ -15,7 +15,8 @@ test('server create validation derives exact TREE/SUI types and exchange rate', 
   assert.equal(buy.allocateCoinType, TREE_LIMIT_SUI_TYPE);
   assert.equal(buy.buyCoinType, TREE_LIMIT_TREE_TYPE);
   assert.equal(buy.outputToInputExchangeRate, 0.000025);
-  assert.throws(() => validateTreeLimitCreate({ walletAddress: owner, direction: 'buy-tree', allocateCoinAmount: '10000000000', targetPriceSuiPerTree: '0.000025', expiryDurationMs: 123 }), /expiration/);
+  assert.throws(() => validateTreeLimitCreate({ walletAddress: owner, direction: 'buy-tree', allocateCoinAmount: '10000000000', targetPriceSuiPerTree: '0.000025', expiryDurationMs: 123 }), /[Ee]xpiration/);
+  assert.equal(validateTreeLimitCreate({ walletAddress: owner, direction: 'buy-tree', allocateCoinAmount: '10000000000', targetPriceSuiPerTree: '0.000025', expiryDurationMs: 1_814_400_000 }).expiryDurationMs, 1_814_400_000);
 });
 
 test('server allowlist rejects extra commands and non-TREE calls', () => {

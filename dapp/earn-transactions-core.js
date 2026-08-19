@@ -11,6 +11,8 @@ export const CLOCK = '0x00000000000000000000000000000000000000000000000000000000
 export const V2_LP_TYPE = `${V2_PACKAGE}::pair::LPCoin<${SUI_TYPE},${TREE_TYPE}>`;
 export const V2_LP_COIN_TYPE = `0x2::coin::Coin<${V2_LP_TYPE}>`;
 export const V2_STAKING_POSITION_TYPE = `${V2_PACKAGE}::farm::StakingPosition<${V2_LP_TYPE}>`;
+export const VICTORY_TYPE = `${V2_PACKAGE}::victory_token::VICTORY_TOKEN`;
+export const VICTORY_DECIMALS = 6;
 
 export function normalizeAddress(value) {
   const body = String(value || '').toLowerCase().replace(/^0x/, '').replace(/^0+/, '') || '0';
@@ -163,10 +165,29 @@ export async function getV2FarmPosition(client, owner) {
   if (!positions.length) return null;
   const position = positions[0];
   const vaultId = position?.json?.vault_id ?? position?.json?.vaultId;
+  const amount = position?.json?.amount ?? position?.json?.staked_amount ?? position?.json?.stakedAmount;
   if (!/^0x[0-9a-f]{64}$/i.test(position.objectId || '') || !/^0x[0-9a-f]{64}$/i.test(vaultId || '')) {
     throw new Error('The existing SUI/TREE V2 farm position could not be verified.');
   }
-  return { positionId: position.objectId, vaultId };
+  let stakedLpRaw;
+  try { stakedLpRaw = BigInt(amount ?? 0); } catch { throw new Error('The staked SUI/TREE V2 LP amount could not be verified.'); }
+  if (stakedLpRaw < 0n) throw new Error('The staked SUI/TREE V2 LP amount could not be verified.');
+  return { positionId: position.objectId, vaultId, stakedLpRaw };
+}
+
+export function estimateV2PositionUnderlying(stakedLpRaw, poolJson) {
+  const amount = BigInt(stakedLpRaw ?? 0);
+  const reserveSuiRaw = BigInt(poolJson?.reserve0 ?? poolJson?.balance0 ?? 0);
+  const reserveTreeRaw = BigInt(poolJson?.reserve1 ?? poolJson?.balance1 ?? 0);
+  const totalSupplyRaw = BigInt(poolJson?.total_supply ?? poolJson?.lp_supply?.value ?? 0);
+  if (amount < 0n || reserveSuiRaw < 0n || reserveTreeRaw < 0n || totalSupplyRaw <= 0n) {
+    throw new Error('The verified SUI/TREE V2 pool reserves are unavailable.');
+  }
+  return {
+    suiRaw: amount * reserveSuiRaw / totalSupplyRaw,
+    treeRaw: amount * reserveTreeRaw / totalSupplyRaw,
+    sharePpm: amount * 1_000_000n / totalSupplyRaw,
+  };
 }
 
 export async function buildV2StakeTransaction({ Transaction, client, owner, amount }) {
@@ -211,4 +232,62 @@ export async function buildV2StakeTransaction({ Transaction, client, owner, amou
     `${normalizeAddress(V2_PACKAGE)}::farm::add_to_position_lp`,
   ]));
   return transaction;
+}
+
+export async function buildV2ClaimRewardsTransaction({ Transaction, client, owner }) {
+  if (typeof Transaction !== 'function' || !client?.core?.listOwnedObjects || !/^0x[0-9a-f]{64}$/i.test(owner || '')) {
+    throw new Error('Sui V2 reward-claim dependencies are unavailable.');
+  }
+  const existingPosition = await getV2FarmPosition(client, owner);
+  if (!existingPosition) throw new Error('No SUI/TREE V2 farm position was found for this wallet.');
+  const transaction = new Transaction();
+  transaction.setSender(owner);
+  transaction.moveCall({
+    target: `${V2_PACKAGE}::farm::claim_rewards_lp`,
+    typeArguments: [SUI_TYPE, TREE_TYPE],
+    arguments: [
+      transaction.object(V2_FARM),
+      transaction.object(V2_REWARD_VAULT),
+      transaction.object(existingPosition.positionId),
+      transaction.object(V2_EMISSION_CONFIG),
+      transaction.object(CLOCK),
+    ],
+  });
+  assertAllowlisted(transaction, new Set([
+    `${normalizeAddress(V2_PACKAGE)}::farm::claim_rewards_lp`,
+  ]));
+  return { transaction, positionId: existingPosition.positionId };
+}
+
+function transactionResult(value) {
+  if (value?.$kind === 'Transaction') return value.Transaction;
+  return value?.Transaction || value?.transaction || value;
+}
+
+function balanceChangeOwner(change) {
+  const candidate = change?.address
+    ?? change?.owner?.address
+    ?? change?.owner?.AddressOwner
+    ?? change?.owner;
+  return typeof candidate === 'string' ? normalizeAddress(candidate) : null;
+}
+
+export function extractPositiveV2VictoryReward(value, owner) {
+  const result = transactionResult(value);
+  const changes = result?.balanceChanges
+    ?? result?.effects?.balanceChanges
+    ?? value?.balanceChanges
+    ?? value?.effects?.balanceChanges
+    ?? [];
+  const normalizedOwner = normalizeAddress(owner);
+  return (Array.isArray(changes) ? changes : []).reduce((total, change) => {
+    if (normalizeType(change?.coinType) !== normalizeType(VICTORY_TYPE)) return total;
+    if (balanceChangeOwner(change) !== normalizedOwner) return total;
+    try {
+      const amount = BigInt(change?.amount ?? 0);
+      return amount > 0n ? total + amount : total;
+    } catch {
+      return total;
+    }
+  }, 0n);
 }

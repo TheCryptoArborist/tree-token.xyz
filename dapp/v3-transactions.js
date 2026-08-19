@@ -1,9 +1,9 @@
 import {
   SUI_COIN_TYPE, TREE_DECIMALS, SUI_DECIMALS, DEFAULT_SLIPPAGE_BPS, MIN_SUI_GAS_RESERVE_RAW, TREE_V3_REWARD_TOKENS,
-  SUIDEX_V3_POOL, SUIDEX_V3_PACKAGE,
   isTreeV3ExecutionHost,
   decimalToRaw, rawToDecimal, ticksFromDisplayedPrices, minimumAfterSlippage, validateVerifiedPool,
-  buildCreateTreeV3Position, buildIncreaseTreeV3Position, buildRemoveTreeV3Position, buildCollectTreeV3Fees, buildCollectTreeV3Rewards, buildCloseTreeV3Position,
+  buildCreateTreeV3Position, buildIncreaseTreeV3Position, buildRemoveTreeV3Position,
+  buildClaimAllTreeV3Position, buildWithdrawAllAndCloseTreeV3Position,
   extractAddLiquidityEvent, extractRemoveLiquidityEvent, extractFeeCollectedEvent, extractRewardCollectedEvents, simulationSucceeded, positionDeleted,
 } from './v3-transaction-core.js';
 
@@ -17,9 +17,7 @@ const increaseSlippage = new Map();
 const removeBusy = new Set();
 const removePercentage = new Map();
 const removeSlippage = new Map();
-const feeBusy = new Set();
-const rewardBusy = new Set();
-const closeBusy = new Set();
+const claimAllBusy = new Set();
 
 function validAddress(value) { return typeof value === 'string' && /^0x[0-9a-f]{64}$/i.test(value) ? value : null; }
 function addressFrom(value, depth = 0) {
@@ -119,23 +117,36 @@ function increaseConfirmText(data) {
 function removePanel(positionId) { return [...document.querySelectorAll('[data-v3-remove-panel]')].find((panel) => panel.dataset.v3RemovePanel === positionId) || null; }
 function setRemoveStatus(panel, message, kind = '') { const target = panel?.querySelector('[data-v3-remove-status]'); if (!target) return; target.textContent = message; target.classList.remove('ok','error','warning'); if (kind) target.classList.add(kind); }
 function removeConfirmText(data) {
-  return ['Remove liquidity from this SUI/TREE V3 position?','',`Position: ${data.positionId}`,`Position share: ${data.percentage}%`,`Liquidity units removed: ${data.liquidityRaw}`,`Simulated SUI received: ${rawToDecimal(data.preliminary.suiRaw,SUI_DECIMALS,9)} SUI`,`Simulated TREE received: ${rawToDecimal(data.preliminary.treeRaw,TREE_DECIMALS,6)} TREE`,`Minimum SUI received: ${rawToDecimal(data.minSuiRaw,SUI_DECIMALS,9)} SUI`,`Minimum TREE received: ${rawToDecimal(data.minTreeRaw,TREE_DECIMALS,6)} TREE`,`Slippage: ${(data.slippage/100).toFixed(2)}%`,'','Removing 100% does not close the position object. The exact withdrawal transaction was simulated again before this wallet request.'].join('\n');
+  return ['Remove liquidity from this SUI/TREE V3 position?','',`Position: ${data.positionId}`,`Position share: ${data.percentage}%`,`Liquidity units removed: ${data.liquidityRaw}`,`Simulated SUI received: ${rawToDecimal(data.preliminary.suiRaw,SUI_DECIMALS,9)} SUI`,`Simulated TREE received: ${rawToDecimal(data.preliminary.treeRaw,TREE_DECIMALS,6)} TREE`,`Minimum SUI received: ${rawToDecimal(data.minSuiRaw,SUI_DECIMALS,9)} SUI`,`Minimum TREE received: ${rawToDecimal(data.minTreeRaw,TREE_DECIMALS,6)} TREE`,`Slippage: ${(data.slippage/100).toFixed(2)}%`,'','The exact withdrawal transaction was simulated again before this wallet request.'].join('\n');
 }
-function feePanel(positionId) { return [...document.querySelectorAll('[data-v3-fee-panel]')].find((panel) => panel.dataset.v3FeePanel === positionId) || null; }
-function setFeeStatus(panel, message, kind = '') { const target = panel?.querySelector('[data-v3-fee-status]'); if (!target) return; target.textContent = message; target.classList.remove('ok','error','warning'); if (kind) target.classList.add(kind); }
-function feeConfirmText(data) {
-  return ['Collect all available fees from this SUI/TREE V3 position?','',`Position: ${data.positionId}`,`Verified SUI fees: ${rawToDecimal(data.suiRaw,SUI_DECIMALS,9)} SUI`,`Verified TREE fees: ${rawToDecimal(data.treeRaw,TREE_DECIMALS,6)} TREE`,'','The exact fee-collection call was simulated twice. Network gas is still charged.'].join('\n');
-}
-function rewardPanel(positionId) { return [...document.querySelectorAll('[data-v3-reward-panel]')].find((panel) => panel.dataset.v3RewardPanel === positionId) || null; }
-function setRewardStatus(panel, message, kind = '') { const target = panel?.querySelector('[data-v3-reward-status]'); if (!target) return; target.textContent = message; target.classList.remove('ok','error','warning'); if (kind) target.classList.add(kind); }
+function claimPanel(positionId) { return [...document.querySelectorAll('[data-v3-claim-panel]')].find((panel) => panel.dataset.v3ClaimPanel === positionId) || null; }
+function setClaimStatus(panel, message, kind = '') { const target = panel?.querySelector('[data-v3-claim-status]'); if (!target) return; target.textContent = message; target.classList.remove('ok','error','warning'); if (kind) target.classList.add(kind); }
 function rewardSummary(rewards) { return rewards.map((reward) => `${rawToDecimal(reward.amountRaw,reward.decimals,reward.decimals)} ${reward.symbol}`).join(', '); }
-function rewardConfirmText(data) {
-  return ['Claim verified rewards from this SUI/TREE V3 position?','',`Position: ${data.positionId}`,...data.rewards.map((reward) => `${reward.symbol}: ${rawToDecimal(reward.amountRaw,reward.decimals,reward.decimals)}`),'','Only reward types with a positive simulation result are included. Network gas is still charged.'].join('\n');
+function claimAllConfirmText({ positionId, fees, rewards }) {
+  const lines = ['Claim all fees and rewards from this SUI/TREE V3 position?','',`Position: ${positionId}`,`SUI fees: ${rawToDecimal(fees.suiRaw,SUI_DECIMALS,9)} SUI`,`TREE fees: ${rawToDecimal(fees.treeRaw,TREE_DECIMALS,6)} TREE`];
+  if (rewards.length) lines.push(...rewards.map((reward) => `${reward.symbol}: ${rawToDecimal(reward.amountRaw,reward.decimals,reward.decimals)}`));
+  return [...lines,'','Fees and every positive verified reward are combined in one wallet transaction.'].join('\n');
 }
-function closePanel(positionId) { return [...document.querySelectorAll('[data-v3-close-panel]')].find((panel) => panel.dataset.v3ClosePanel === positionId) || null; }
-function setCloseStatus(panel, message, kind = '') { const target = panel?.querySelector('[data-v3-close-status]'); if (!target) return; target.textContent = message; target.classList.remove('ok','error','warning'); if (kind) target.classList.add(kind); }
-function closeConfirmText(positionId) {
-  return ['Permanently close this empty SUI/TREE V3 position?','',`Position: ${positionId}`,'Liquidity: 0','Uncollected fees: 0','Unclaimed verified rewards: 0','','This deletes the position object and cannot be undone. The exact close transaction was simulated twice.'].join('\n');
+function exitConfirmText({ positionId, liquidityRaw, preliminary, fees, rewards, minSuiRaw, minTreeRaw, slippage }) {
+  return ['Withdraw everything and permanently close this SUI/TREE V3 position?','',`Position: ${positionId}`,`Liquidity units removed: ${liquidityRaw}`,`Simulated SUI principal: ${rawToDecimal(preliminary.suiRaw,SUI_DECIMALS,9)} SUI`,`Simulated TREE principal: ${rawToDecimal(preliminary.treeRaw,TREE_DECIMALS,6)} TREE`,`Minimum SUI principal: ${rawToDecimal(minSuiRaw,SUI_DECIMALS,9)} SUI`,`Minimum TREE principal: ${rawToDecimal(minTreeRaw,TREE_DECIMALS,6)} TREE`,`SUI fees: ${rawToDecimal(fees.suiRaw,SUI_DECIMALS,9)} SUI`,`TREE fees: ${rawToDecimal(fees.treeRaw,TREE_DECIMALS,6)} TREE`,...rewards.filter((reward) => reward.amountRaw > 0n).map((reward) => `${reward.symbol}: ${rawToDecimal(reward.amountRaw,reward.decimals,reward.decimals)}`),`Slippage: ${(slippage/100).toFixed(2)}%`,'','This single atomic transaction withdraws all assets, claims fees and rewards, and deletes the position object.'].join('\n');
+}
+const POSITION_MANAGEMENT_PANEL_SELECTOR = '.v3-increase-panel,.v3-remove-panel,.v3-claim-panel';
+const POSITION_MANAGEMENT_BUTTON_SELECTOR = '[data-v3-increase-position],[data-v3-remove-position],[data-v3-claim-all-position]';
+function togglePositionManagementPanel(button, panel, onOpen) {
+  const card = button.closest('.v3-position-card');
+  const shouldOpen = panel.hidden;
+  if (card) {
+    card.querySelectorAll(POSITION_MANAGEMENT_PANEL_SELECTOR).forEach((item) => { item.hidden = true; });
+    card.querySelectorAll(POSITION_MANAGEMENT_BUTTON_SELECTOR).forEach((item) => {
+      item.setAttribute('aria-expanded', 'false');
+      item.classList.remove('active');
+    });
+  }
+  if (!shouldOpen) return;
+  panel.hidden = false;
+  button.setAttribute('aria-expanded', 'true');
+  button.classList.add('active');
+  onOpen?.();
 }
 async function increasePosition(positionId, panel, button) {
   if (increaseBusy.has(positionId)) return;
@@ -193,195 +204,108 @@ async function removePosition(positionId, panel, button) {
     const suiBalance = BigInt(balanceResult?.balance?.balance ?? balanceResult?.balance ?? balanceResult?.totalBalance ?? 0);
     if (suiBalance < MIN_SUI_GAS_RESERVE_RAW) throw new Error('Keep at least 0.05 SUI available for the removal transaction gas.');
     const { Transaction } = await import(SDK_URL);
-    setRemoveStatus(panel,'Building and simulating the proposed liquidity removal…','warning');
-    const preliminaryTx = buildRemoveTreeV3Position({ Transaction, owner, positionId, liquidityRaw });
+    const selectedSlippage = removeSlippage.get(positionId) ?? 50;
+    const closesPosition = percentage === 100;
+    setRemoveStatus(panel,closesPosition ? 'Simulating the complete withdrawal, claims, and position close…' : 'Building and simulating the proposed liquidity removal…','warning');
+    const preliminaryTx = closesPosition
+      ? buildWithdrawAllAndCloseTreeV3Position({ Transaction, owner, positionId, liquidityRaw })
+      : buildRemoveTreeV3Position({ Transaction, owner, positionId, liquidityRaw });
     const preliminarySimulation = await simulate(client, preliminaryTx);
-    if (!simulationSucceeded(preliminarySimulation)) throw new Error('The proposed liquidity removal failed Sui Mainnet simulation.');
+    if (!simulationSucceeded(preliminarySimulation)) throw new Error(closesPosition ? 'The complete withdrawal and close failed Sui Mainnet simulation.' : 'The proposed liquidity removal failed Sui Mainnet simulation.');
     const preliminary = extractRemoveLiquidityEvent(preliminarySimulation, positionId);
     if (!preliminary || preliminary.liquidityRaw !== liquidityRaw) throw new Error('SuiDex did not return the exact verified removal during simulation.');
-    const selectedSlippage = removeSlippage.get(positionId) ?? 50;
     const minTreeRaw = minimumAfterSlippage(preliminary.treeRaw, selectedSlippage);
     const minSuiRaw = minimumAfterSlippage(preliminary.suiRaw, selectedSlippage);
-    const finalTx = buildRemoveTreeV3Position({ Transaction, owner, positionId, liquidityRaw, minTreeRaw, minSuiRaw });
+    const preliminaryFees = closesPosition ? extractFeeCollectedEvent(preliminarySimulation, positionId) : null;
+    const preliminaryRewards = closesPosition ? extractRewardCollectedEvents(preliminarySimulation, positionId) : [];
+    if (closesPosition && (!preliminaryFees || preliminaryRewards.length !== TREE_V3_REWARD_TOKENS.length || !positionDeleted(preliminarySimulation, positionId))) throw new Error('The full-exit simulation did not verify every fee, reward, and position deletion.');
+    const finalTx = closesPosition
+      ? buildWithdrawAllAndCloseTreeV3Position({ Transaction, owner, positionId, liquidityRaw, minTreeRaw, minSuiRaw })
+      : buildRemoveTreeV3Position({ Transaction, owner, positionId, liquidityRaw, minTreeRaw, minSuiRaw });
     const finalSimulation = await simulate(client, finalTx);
     const protectedRemoval = extractRemoveLiquidityEvent(finalSimulation, positionId);
-    if (!simulationSucceeded(finalSimulation) || !protectedRemoval || protectedRemoval.liquidityRaw !== liquidityRaw) throw new Error('The slippage-protected removal failed Sui Mainnet simulation.');
-    if (!window.confirm(removeConfirmText({ positionId, percentage, liquidityRaw, minTreeRaw, minSuiRaw, preliminary, slippage: selectedSlippage }))) { setRemoveStatus(panel,'Liquidity removal cancelled before wallet approval.'); return; }
-    setRemoveStatus(panel,'Review the exact SUI/TREE withdrawal in your wallet…','warning');
+    const verifiedFees = closesPosition ? extractFeeCollectedEvent(finalSimulation, positionId) : null;
+    const verifiedRewards = closesPosition ? extractRewardCollectedEvents(finalSimulation, positionId) : [];
+    if (!simulationSucceeded(finalSimulation) || !protectedRemoval || protectedRemoval.liquidityRaw !== liquidityRaw
+      || (closesPosition && (!verifiedFees || verifiedRewards.length !== TREE_V3_REWARD_TOKENS.length || !positionDeleted(finalSimulation, positionId)))) throw new Error(closesPosition ? 'The protected full exit failed its second Mainnet simulation.' : 'The slippage-protected removal failed Sui Mainnet simulation.');
+    const confirmation = closesPosition
+      ? exitConfirmText({ positionId, liquidityRaw, preliminary: protectedRemoval, fees: verifiedFees, rewards: verifiedRewards, minSuiRaw, minTreeRaw, slippage: selectedSlippage })
+      : removeConfirmText({ positionId, percentage, liquidityRaw, minTreeRaw, minSuiRaw, preliminary, slippage: selectedSlippage });
+    if (!window.confirm(confirmation)) { setRemoveStatus(panel,closesPosition ? 'Full exit cancelled before wallet approval.' : 'Liquidity removal cancelled before wallet approval.'); return; }
+    setRemoveStatus(panel,closesPosition ? 'Review the complete withdrawal and position deletion in your wallet…' : 'Review the exact SUI/TREE withdrawal in your wallet…','warning');
     const signed = await signAndExecute(finalTx); const digest = digestFrom(signed);
     setRemoveStatus(panel,'Wallet approved. Waiting for Sui finality…','warning');
     const finalized = await waitForFinality(client, digest); const finalizedRemoval = extractRemoveLiquidityEvent(finalized, positionId);
-    if (!simulationSucceeded(finalized) || !finalizedRemoval || finalizedRemoval.liquidityRaw !== liquidityRaw) throw new Error('The submitted removal did not finalize with the expected result.');
-    setRemoveStatus(panel,`Liquidity removed successfully. Digest: ${digest}`,'ok');
+    if (!simulationSucceeded(finalized) || !finalizedRemoval || finalizedRemoval.liquidityRaw !== liquidityRaw
+      || (closesPosition && !positionDeleted(finalized, positionId))) throw new Error(closesPosition ? 'The submitted full exit did not finalize with the verified position deletion.' : 'The submitted removal did not finalize with the expected result.');
+    setRemoveStatus(panel,closesPosition ? `All assets claimed and withdrawn; position closed successfully. Digest: ${digest}` : `Liquidity removed successfully. Digest: ${digest}`,'ok');
     node('v3RefreshPositions')?.click();
   } catch (error) {
     const message = String(error?.message || error || 'V3 liquidity removal failed.');
     setRemoveStatus(panel,message,/reject|cancel|denied/i.test(message)?'':'error');
   } finally { removeBusy.delete(positionId); button.disabled = !EXECUTION_ENABLED; }
 }
-async function collectFees(positionId, panel, button) {
-  if (feeBusy.has(positionId)) return;
-  feeBusy.add(positionId); button.disabled = true;
+async function collectAll(positionId, panel, button) {
+  if (claimAllBusy.has(positionId)) return;
+  claimAllBusy.add(positionId); button.disabled = true;
   try {
     if (!EXECUTION_ENABLED) throw new Error('V3 position management is unavailable on this host.');
-    const owner = await connectedAddress(); if (!owner) throw new Error('Connect a Sui wallet before collecting fees.');
+    const owner = await connectedAddress(); if (!owner) throw new Error('Connect a Sui wallet before claiming fees and rewards.');
     const client = await suiClient(); const data = await overview(owner);
     const position = Array.isArray(data.positions) ? data.positions.find((item) => item.objectId === positionId) : null;
     if (!position || validAddress(data.owner)?.toLowerCase() !== owner.toLowerCase()) throw new Error('This verified position is not owned by the connected wallet.');
     const balanceResult = await client.core.getBalance({ owner, coinType: SUI_COIN_TYPE });
     const suiBalance = BigInt(balanceResult?.balance?.balance ?? balanceResult?.balance ?? balanceResult?.totalBalance ?? 0);
-    if (suiBalance < MIN_SUI_GAS_RESERVE_RAW) throw new Error('Keep at least 0.05 SUI available for fee-collection gas.');
+    if (suiBalance < MIN_SUI_GAS_RESERVE_RAW) throw new Error('Keep at least 0.05 SUI available for claim-all gas.');
     const { Transaction } = await import(SDK_URL);
-    setFeeStatus(panel,'Simulating current SUI and TREE fees on Mainnet…','warning');
-    const preliminaryTx = buildCollectTreeV3Fees({ Transaction, owner, positionId });
+    setClaimStatus(panel,'Checking all SUI/TREE fees and verified rewards on Mainnet…','warning');
+    const preliminaryTx = buildClaimAllTreeV3Position({ Transaction, owner, positionId });
     const preliminarySimulation = await simulate(client, preliminaryTx);
-    const preliminary = extractFeeCollectedEvent(preliminarySimulation, positionId);
-    if (!simulationSucceeded(preliminarySimulation) || !preliminary) throw new Error('The proposed fee collection failed Sui Mainnet simulation.');
-    if (preliminary.suiRaw === 0n && preliminary.treeRaw === 0n) {
-      setFeeStatus(panel,'No collectible SUI or TREE fees are available right now. No wallet request was made.','ok');
-      return;
-    }
-    const finalTx = buildCollectTreeV3Fees({ Transaction, owner, positionId });
-    const finalSimulation = await simulate(client, finalTx);
-    const verified = extractFeeCollectedEvent(finalSimulation, positionId);
-    if (!simulationSucceeded(finalSimulation) || !verified || (verified.suiRaw === 0n && verified.treeRaw === 0n)) throw new Error('The second fee-collection simulation did not verify collectible fees.');
-    if (!window.confirm(feeConfirmText({ positionId, ...verified }))) { setFeeStatus(panel,'Fee collection cancelled before wallet approval.'); return; }
-    setFeeStatus(panel,'Review the fee-collection transaction in your wallet…','warning');
-    const signed = await signAndExecute(finalTx); const digest = digestFrom(signed);
-    setFeeStatus(panel,'Wallet approved. Waiting for Sui finality…','warning');
-    const finalized = await waitForFinality(client, digest); const collected = extractFeeCollectedEvent(finalized, positionId);
-    if (!simulationSucceeded(finalized) || !collected) throw new Error('The submitted fee collection did not finalize with the expected event.');
-    setFeeStatus(panel,`Fees collected successfully: ${rawToDecimal(collected.suiRaw,SUI_DECIMALS,9)} SUI and ${rawToDecimal(collected.treeRaw,TREE_DECIMALS,6)} TREE. Digest: ${digest}`,'ok');
-    node('v3RefreshPositions')?.click();
-  } catch (error) {
-    const message = String(error?.message || error || 'V3 fee collection failed.');
-    setFeeStatus(panel,message,/reject|cancel|denied/i.test(message)?'':'error');
-  } finally { feeBusy.delete(positionId); button.disabled = !EXECUTION_ENABLED; }
-}
-async function collectRewards(positionId, panel, button) {
-  if (rewardBusy.has(positionId)) return;
-  rewardBusy.add(positionId); button.disabled = true;
-  try {
-    if (!EXECUTION_ENABLED) throw new Error('V3 position management is unavailable on this host.');
-    const owner = await connectedAddress(); if (!owner) throw new Error('Connect a Sui wallet before claiming rewards.');
-    const client = await suiClient(); const data = await overview(owner);
-    const position = Array.isArray(data.positions) ? data.positions.find((item) => item.objectId === positionId) : null;
-    if (!position || validAddress(data.owner)?.toLowerCase() !== owner.toLowerCase()) throw new Error('This verified position is not owned by the connected wallet.');
-    const balanceResult = await client.core.getBalance({ owner, coinType: SUI_COIN_TYPE });
-    const suiBalance = BigInt(balanceResult?.balance?.balance ?? balanceResult?.balance ?? balanceResult?.totalBalance ?? 0);
-    if (suiBalance < MIN_SUI_GAS_RESERVE_RAW) throw new Error('Keep at least 0.05 SUI available for reward-claim gas.');
-    const { Transaction } = await import(SDK_URL);
-    setRewardStatus(panel,'Checking VICTORY, TREE, and wBTC rewards on Mainnet…','warning');
-    const preliminaryTx = buildCollectTreeV3Rewards({ Transaction, owner, positionId });
-    const preliminarySimulation = await simulate(client, preliminaryTx);
-    const preliminary = extractRewardCollectedEvents(preliminarySimulation, positionId);
-    if (!simulationSucceeded(preliminarySimulation) || preliminary.length !== TREE_V3_REWARD_TOKENS.length) throw new Error('The proposed reward claim did not verify every recognized pool reward.');
-    const positiveRewards = preliminary.filter((reward) => reward.amountRaw > 0n);
-    if (!positiveRewards.length) {
-      setRewardStatus(panel,'No verified VICTORY, TREE, or wBTC rewards are claimable right now. No wallet request was made.','ok');
-      return;
-    }
+    const preliminaryFees = extractFeeCollectedEvent(preliminarySimulation, positionId);
+    const preliminaryRewards = extractRewardCollectedEvents(preliminarySimulation, positionId);
+    if (!simulationSucceeded(preliminarySimulation) || !preliminaryFees || preliminaryRewards.length !== TREE_V3_REWARD_TOKENS.length) throw new Error('The proposed claim-all transaction did not verify every fee and recognized reward.');
+    const positiveRewards = preliminaryRewards.filter((reward) => reward.amountRaw > 0n);
+    const hasFees = preliminaryFees.suiRaw > 0n || preliminaryFees.treeRaw > 0n;
+    if (!hasFees && !positiveRewards.length) { setClaimStatus(panel,'No fees or verified rewards are claimable right now. No wallet request was made.','ok'); return; }
     const rewardCoinTypes = positiveRewards.map((reward) => reward.coinType);
-    const finalTx = buildCollectTreeV3Rewards({ Transaction, owner, positionId, rewardCoinTypes });
+    const finalTx = buildClaimAllTreeV3Position({ Transaction, owner, positionId, rewardCoinTypes });
     const finalSimulation = await simulate(client, finalTx);
-    const verified = extractRewardCollectedEvents(finalSimulation, positionId);
-    if (!simulationSucceeded(finalSimulation) || verified.length !== rewardCoinTypes.length
-      || verified.some((reward) => reward.amountRaw <= 0n || !rewardCoinTypes.includes(reward.coinType))) throw new Error('The optimized reward claim failed its second Mainnet simulation.');
-    if (!window.confirm(rewardConfirmText({ positionId, rewards: verified }))) { setRewardStatus(panel,'Reward claim cancelled before wallet approval.'); return; }
-    setRewardStatus(panel,`Review the ${rewardSummary(verified)} reward claim in your wallet…`,'warning');
+    const verifiedFees = extractFeeCollectedEvent(finalSimulation, positionId);
+    const verifiedRewards = extractRewardCollectedEvents(finalSimulation, positionId);
+    if (!simulationSucceeded(finalSimulation) || !verifiedFees || verifiedRewards.length !== rewardCoinTypes.length
+      || verifiedRewards.some((reward) => reward.amountRaw <= 0n || !rewardCoinTypes.includes(reward.coinType))) throw new Error('The optimized claim-all transaction failed its second Mainnet simulation.');
+    if (!window.confirm(claimAllConfirmText({ positionId, fees: verifiedFees, rewards: verifiedRewards }))) { setClaimStatus(panel,'Claim All cancelled before wallet approval.'); return; }
+    setClaimStatus(panel,'Review the combined fee and reward claim in your wallet…','warning');
     const signed = await signAndExecute(finalTx); const digest = digestFrom(signed);
-    setRewardStatus(panel,'Wallet approved. Waiting for Sui finality…','warning');
-    const finalized = await waitForFinality(client, digest); const claimed = extractRewardCollectedEvents(finalized, positionId);
-    if (!simulationSucceeded(finalized) || claimed.length !== rewardCoinTypes.length) throw new Error('The submitted reward claim did not finalize with the expected events.');
-    setRewardStatus(panel,`Rewards claimed successfully: ${rewardSummary(claimed)}. Digest: ${digest}`,'ok');
+    setClaimStatus(panel,'Wallet approved. Waiting for Sui finality…','warning');
+    const finalized = await waitForFinality(client, digest); const claimedFees = extractFeeCollectedEvent(finalized, positionId); const claimedRewards = extractRewardCollectedEvents(finalized, positionId);
+    if (!simulationSucceeded(finalized) || !claimedFees || claimedRewards.length !== rewardCoinTypes.length) throw new Error('The submitted Claim All transaction did not finalize with the expected events.');
+    const claimedSummary = [`${rawToDecimal(claimedFees.suiRaw,SUI_DECIMALS,9)} SUI fees`,`${rawToDecimal(claimedFees.treeRaw,TREE_DECIMALS,6)} TREE fees`,rewardSummary(claimedRewards)].filter(Boolean).join(' · ');
+    setClaimStatus(panel,`Claim All completed: ${claimedSummary}. Digest: ${digest}`,'ok');
     node('v3RefreshPositions')?.click();
   } catch (error) {
-    const message = String(error?.message || error || 'V3 reward claim failed.');
-    setRewardStatus(panel,message,/reject|cancel|denied/i.test(message)?'':'error');
-  } finally { rewardBusy.delete(positionId); button.disabled = !EXECUTION_ENABLED; }
-}
-async function closePosition(positionId, panel, button) {
-  if (closeBusy.has(positionId)) return;
-  closeBusy.add(positionId); button.disabled = true;
-  try {
-    if (!EXECUTION_ENABLED) throw new Error('V3 position management is unavailable on this host.');
-    const owner = await connectedAddress(); if (!owner) throw new Error('Connect a Sui wallet before closing a position.');
-    const client = await suiClient(); const data = await overview(owner);
-    const position = Array.isArray(data.positions) ? data.positions.find((item) => item.objectId === positionId) : null;
-    if (!position || validAddress(data.owner)?.toLowerCase() !== owner.toLowerCase()) throw new Error('This verified position is not owned by the connected wallet.');
-    setCloseStatus(panel,'Verifying the complete live position object on Mainnet…','warning');
-    const liveResult = await client.core.getObject({ objectId: positionId, include: { json: true, owner: true } });
-    const live = liveResult?.object; const json = live?.json;
-    const liveOwner = validAddress(live?.owner?.AddressOwner);
-    if (!live || !json || liveOwner?.toLowerCase() !== owner.toLowerCase()
-      || String(live.type || '').toLowerCase() !== `${SUIDEX_V3_PACKAGE}::position::position`.toLowerCase()
-      || validAddress(json.pool_id)?.toLowerCase() !== SUIDEX_V3_POOL.toLowerCase()) throw new Error('The live SuiDex position object could not be verified for this wallet and pool.');
-    const remaining = [];
-    if (BigInt(json.liquidity ?? 0) !== 0n) remaining.push('liquidity');
-    if (BigInt(json.owed_coin_x ?? 0) !== 0n || BigInt(json.owed_coin_y ?? 0) !== 0n) remaining.push('fees');
-    if ((json.reward_infos || []).some((reward) => BigInt(reward?.coins_owed_reward ?? 0) !== 0n)) remaining.push('rewards');
-    if (remaining.length) {
-      setCloseStatus(panel,`Position cannot close yet: ${remaining.join(', ')} remain. No wallet request was made.`,'ok');
-      return;
-    }
-    const balanceResult = await client.core.getBalance({ owner, coinType: SUI_COIN_TYPE });
-    const suiBalance = BigInt(balanceResult?.balance?.balance ?? balanceResult?.balance ?? balanceResult?.totalBalance ?? 0);
-    if (suiBalance < MIN_SUI_GAS_RESERVE_RAW) throw new Error('Keep at least 0.05 SUI available for close-position gas.');
-    const { Transaction } = await import(SDK_URL);
-    const preliminaryTx = buildCloseTreeV3Position({ Transaction, owner, positionId });
-    const preliminarySimulation = await simulate(client, preliminaryTx);
-    if (!simulationSucceeded(preliminarySimulation) || !positionDeleted(preliminarySimulation, positionId)) throw new Error('The empty-position close failed its first Sui Mainnet simulation.');
-    const finalTx = buildCloseTreeV3Position({ Transaction, owner, positionId });
-    const finalSimulation = await simulate(client, finalTx);
-    if (!simulationSucceeded(finalSimulation) || !positionDeleted(finalSimulation, positionId)) throw new Error('The empty-position close failed its second Sui Mainnet simulation.');
-    if (!window.confirm(closeConfirmText(positionId))) { setCloseStatus(panel,'Position close cancelled before wallet approval.'); return; }
-    setCloseStatus(panel,'Review the permanent position deletion in your wallet…','warning');
-    const signed = await signAndExecute(finalTx); const digest = digestFrom(signed);
-    setCloseStatus(panel,'Wallet approved. Waiting for Sui finality…','warning');
-    const finalized = await waitForFinality(client, digest);
-    if (!simulationSucceeded(finalized) || !positionDeleted(finalized, positionId)) throw new Error('The submitted close did not finalize with the expected position deletion.');
-    setCloseStatus(panel,`Empty position closed successfully. Digest: ${digest}`,'ok');
-    node('v3RefreshPositions')?.click();
-  } catch (error) {
-    const message = String(error?.message || error || 'V3 position close failed.');
-    setCloseStatus(panel,message,/reject|cancel|denied/i.test(message)?'':'error');
-  } finally { closeBusy.delete(positionId); button.disabled = !EXECUTION_ENABLED; }
+    const message = String(error?.message || error || 'V3 Claim All failed.');
+    setClaimStatus(panel,message,/reject|cancel|denied/i.test(message)?'':'error');
+  } finally { claimAllBusy.delete(positionId); button.disabled = !EXECUTION_ENABLED; }
 }
 function bindIncreaseActions() {
   document.addEventListener('click', (event) => {
     const openButton = event.target.closest?.('[data-v3-increase-position]');
     if (openButton) {
       const positionId = openButton.dataset.v3IncreasePosition; const panel = increasePanel(positionId); if (!panel) return;
-      panel.hidden = !panel.hidden; openButton.textContent = panel.hidden ? 'Increase' : 'Cancel Increase';
-      if (!panel.hidden) setIncreaseStatus(panel,'Enter maximum token amounts. Two Mainnet simulations run before wallet approval.');
+      togglePositionManagementPanel(openButton, panel, () => setIncreaseStatus(panel,'Enter maximum token amounts. Two Mainnet simulations run before wallet approval.'));
       return;
     }
     const removeButton = event.target.closest?.('[data-v3-remove-position]');
     if (removeButton) {
       const positionId = removeButton.dataset.v3RemovePosition; const panel = removePanel(positionId); if (!panel) return;
-      panel.hidden = !panel.hidden; removeButton.textContent = panel.hidden ? 'Remove' : 'Cancel Remove';
-      if (!panel.hidden) setRemoveStatus(panel,'Choose how much liquidity to remove. Two Mainnet simulations run before wallet approval.');
+      togglePositionManagementPanel(removeButton, panel, () => setRemoveStatus(panel,'Choose how much liquidity to remove. Two Mainnet simulations run before wallet approval.'));
       return;
     }
-    const feeButton = event.target.closest?.('[data-v3-collect-fees-position]');
-    if (feeButton) {
-      const positionId = feeButton.dataset.v3CollectFeesPosition; const panel = feePanel(positionId); if (!panel) return;
-      panel.hidden = !panel.hidden; feeButton.textContent = panel.hidden ? 'Collect Fees' : 'Cancel Fees';
-      if (!panel.hidden) setFeeStatus(panel,'Simulate to check current SUI and TREE fees. Zero fees will never open a wallet request.');
-      return;
-    }
-    const rewardButton = event.target.closest?.('[data-v3-claim-rewards-position]');
-    if (rewardButton) {
-      const positionId = rewardButton.dataset.v3ClaimRewardsPosition; const panel = rewardPanel(positionId); if (!panel) return;
-      panel.hidden = !panel.hidden; rewardButton.textContent = panel.hidden ? 'Claim Rewards' : 'Cancel Rewards';
-      if (!panel.hidden) setRewardStatus(panel,'Simulate to check the pool’s verified VICTORY, TREE, and wBTC rewards.');
-      return;
-    }
-    const closeButton = event.target.closest?.('[data-v3-close-position]');
-    if (closeButton) {
-      const positionId = closeButton.dataset.v3ClosePosition; const panel = closePanel(positionId); if (!panel) return;
-      panel.hidden = !panel.hidden; closeButton.textContent = panel.hidden ? 'Close' : 'Cancel Close';
-      if (!panel.hidden) setCloseStatus(panel,'Check the live position. Any remaining liquidity, fees, or rewards will stop before Slush.');
+    const claimButton = event.target.closest?.('[data-v3-claim-all-position]');
+    if (claimButton) {
+      const positionId = claimButton.dataset.v3ClaimAllPosition; const panel = claimPanel(positionId); if (!panel) return;
+      togglePositionManagementPanel(claimButton, panel, () => setClaimStatus(panel,'Claim all SUI/TREE fees and every positive verified reward in one transaction.'));
       return;
     }
     const slippageButton = event.target.closest?.('[data-v3-increase-slippage]');
@@ -396,8 +320,12 @@ function bindIncreaseActions() {
     const percentageButton = event.target.closest?.('[data-v3-remove-percent]');
     if (percentageButton) {
       const panel = percentageButton.closest('[data-v3-remove-panel]'); const positionId = panel?.dataset.v3RemovePanel; if (!positionId) return;
-      removePercentage.set(positionId, Number(percentageButton.dataset.v3RemovePercent));
+      const percentage = Number(percentageButton.dataset.v3RemovePercent);
+      removePercentage.set(positionId, percentage);
       panel.querySelectorAll('[data-v3-remove-percent]').forEach((item) => item.classList.toggle('active', item === percentageButton));
+      const submit = panel.querySelector('[data-v3-remove-submit]');
+      if (submit) { submit.textContent = percentage === 100 ? 'Withdraw All & Close Position' : 'Simulate Removal'; submit.classList.toggle('danger', percentage === 100); }
+      setRemoveStatus(panel, percentage === 100 ? 'This atomic exit withdraws all liquidity, claims fees and rewards, and closes the position.' : 'Choose how much liquidity to remove. Two Mainnet simulations run before wallet approval.');
       return;
     }
     const removeSlippageButton = event.target.closest?.('[data-v3-remove-slippage]');
@@ -409,12 +337,8 @@ function bindIncreaseActions() {
     }
     const removeSubmitButton = event.target.closest?.('[data-v3-remove-submit]');
     if (removeSubmitButton) { const positionId = removeSubmitButton.dataset.v3RemoveSubmit; const panel = removePanel(positionId); if (panel) removePosition(positionId, panel, removeSubmitButton); return; }
-    const feeSubmitButton = event.target.closest?.('[data-v3-fee-submit]');
-    if (feeSubmitButton) { const positionId = feeSubmitButton.dataset.v3FeeSubmit; const panel = feePanel(positionId); if (panel) collectFees(positionId, panel, feeSubmitButton); return; }
-    const rewardSubmitButton = event.target.closest?.('[data-v3-reward-submit]');
-    if (rewardSubmitButton) { const positionId = rewardSubmitButton.dataset.v3RewardSubmit; const panel = rewardPanel(positionId); if (panel) collectRewards(positionId, panel, rewardSubmitButton); return; }
-    const closeSubmitButton = event.target.closest?.('[data-v3-close-submit]');
-    if (closeSubmitButton) { const positionId = closeSubmitButton.dataset.v3CloseSubmit; const panel = closePanel(positionId); if (panel) closePosition(positionId, panel, closeSubmitButton); }
+    const claimSubmitButton = event.target.closest?.('[data-v3-claim-submit]');
+    if (claimSubmitButton) { const positionId = claimSubmitButton.dataset.v3ClaimSubmit; const panel = claimPanel(positionId); if (panel) collectAll(positionId, panel, claimSubmitButton); }
   });
 }
 async function createPosition(button) {

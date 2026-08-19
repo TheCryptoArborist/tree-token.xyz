@@ -111,10 +111,21 @@ function positionRangePercent(position) {
   return Math.max(0, Math.min(100, (current - lower) / (upper - lower) * 100));
 }
 
+const V3_REWARD_LOGOS = Object.freeze({
+  VICTORY: '../assets/victory-token.png',
+  TREE: '../assets/tree-token.png',
+  wBTC: '../assets/wbtc-token.png',
+});
+
+function renderRewardLogo(symbol) {
+  const source = V3_REWARD_LOGOS[symbol];
+  return source ? `<img class="v3-reward-logo" src="${source}" alt="" aria-hidden="true">` : '';
+}
+
 function renderPositionRewards(position) {
   if (!Array.isArray(position.rewards)) return '<div class="v3-earned-row unavailable"><span>Claimable rewards</span><strong>Not verified</strong></div>';
   if (!position.rewards.length) return '<div class="v3-earned-row"><span>Claimable rewards</span><strong>None configured</strong></div>';
-  return position.rewards.map((reward) => `<div class="v3-earned-row"><span><b class="v3-reward-dot">${reward.symbol.slice(0, 1)}</b>${reward.symbol} rewards${reward.active ? '' : ' · ended'}</span><strong>${formatNumber(reward.amount, reward.decimals > 6 ? 8 : 4)} ${reward.symbol} <small>(${formatPositionUsd(reward.valueUsd)})</small></strong></div>`).join('');
+  return position.rewards.map((reward) => `<div class="v3-earned-row"><span>${renderRewardLogo(reward.symbol)}${reward.symbol} rewards${reward.active ? '' : ' · ended'}</span><strong>${formatNumber(reward.amount, reward.decimals > 6 ? 8 : 4)} ${reward.symbol} <small>(${formatPositionUsd(reward.valueUsd)})</small></strong></div>`).join('');
 }
 
 function normalizeDecimalInput(value) {
@@ -180,8 +191,9 @@ function workspaceMarkup() {
         <article class="v3-summary-card"><span>TVL</span><strong id="v3SummaryTvl">Loading…</strong></article>
         <article class="v3-summary-card"><span>Your Positions</span><strong id="v3SummaryPositions">Connect wallet</strong></article>
       </div>
-      <div class="v3-tabs" role="tablist" aria-label="V3 workspace">
+      <div class="v3-tabs" role="tablist" aria-label="V3 workspace" style="grid-template-columns:repeat(4,1fr)">
         <button class="v3-tab active" type="button" role="tab" aria-selected="true" data-v3-tab="pools">Pools</button>
+        <button class="v3-tab" type="button" role="tab" aria-selected="false" data-v3-tab="zap">Zap</button>
         <button class="v3-tab" type="button" role="tab" aria-selected="false" data-v3-tab="positions">My Positions</button>
         <button class="v3-tab" type="button" role="tab" aria-selected="false" data-v3-tab="swap">Swap</button>
       </div>
@@ -223,6 +235,22 @@ function workspaceMarkup() {
           </div>
           <div class="v3-estimate"><div><span>Current price</span><strong id="v3PlanCurrent">—</strong></div><div><span>Selected range</span><strong id="v3PlanRange">—</strong></div><div><span>Current status</span><strong id="v3PlanStatus">—</strong></div></div>
           <button class="v3-disabled-action" type="button" disabled>Position transaction builder in verification</button>
+        </article>
+      </div>
+      <div class="v3-panel" data-v3-panel="zap" hidden>
+        <article class="earn-route-row v3-zap-card">
+          <div class="earn-route-title"><span class="token-logo-stack" aria-hidden="true"><img src="../assets/sui-token.svg" alt=""><img src="../thick.png" alt=""></span><div><h3>SUI / TREE V3 Zap</h3><small>One-token concentrated-liquidity position</small></div></div>
+          <div class="earn-route-actions"><button class="button gold" id="earnV3ZapOpen" type="button" aria-expanded="true" aria-controls="earnV3ZapPanel">V3 Zap</button><button class="button secondary" type="button" data-v3-go-positions>Manage V3</button></div>
+          <div class="earn-zap-panel" id="earnV3ZapPanel">
+            <div class="earn-zap-heading"><div><strong>Native V3 Zap</strong><small>Runs inside the TREE V3 workspace</small></div><span class="data-state ok">Sui Mainnet</span></div>
+            <label class="earn-zap-label" for="earnV3ZapToken">Deposit token</label><select id="earnV3ZapToken"><option value="SUI">SUI</option><option value="TREE">TREE</option></select>
+            <label class="earn-zap-label" for="earnV3ZapAmount"><span>Amount</span><span id="earnV3ZapBalance">Balance —</span></label><div class="earn-zap-input"><input id="earnV3ZapAmount" type="text" inputmode="decimal" autocomplete="off" placeholder="0.0"><button id="earnV3ZapMax" type="button">MAX</button><span id="earnV3ZapSymbol">SUI</span></div>
+            <label class="earn-zap-label" for="earnV3ZapRange">Price range</label><select id="earnV3ZapRange"><option value="5">±5% around current price</option><option value="20" selected>±20% around current price</option><option value="full">Full range</option></select>
+            <div class="earn-zap-summary"><span>Current price</span><strong id="earnV3ZapCurrent">Loading…</strong><span>Selected range</span><strong id="earnV3ZapRangeText">—</strong><span>Swap portion</span><strong id="earnV3ZapSwap">—</strong><span>Minimum paired token</span><strong id="earnV3ZapMinimum">—</strong><span>Wallet approvals</span><strong>1 · Position + incentives</strong></div>
+            <div class="earn-zap-slippage"><span>Slippage</span><div><button type="button" data-earn-v3-slippage="50">0.5%</button><button class="active" type="button" data-earn-v3-slippage="100">1%</button><button type="button" data-earn-v3-slippage="200">2%</button></div></div>
+            <button class="button primary" id="earnV3ZapAction" type="button">Connect Wallet</button><p class="status" id="earnV3ZapStatus" role="status" aria-live="polite">Loading the verified SUI/TREE V3 pool…</p><div class="swap-success" id="earnV3ZapSuccess" hidden></div>
+          </div>
+          <details><summary>Route details</summary><p>Deposit SUI or TREE. TREE Command Center swaps the required portion in the verified SUI/TREE V3 pool and creates the selected concentrated-liquidity position after one explicit wallet approval. V3 incentives attach directly to the position.</p></details>
         </article>
       </div>
       <div class="v3-panel" data-v3-panel="positions" hidden>
@@ -389,7 +417,7 @@ function renderPositions(payload) {
         <div class="v3-earned-row fees"><span>Pending fees<small>${position.pendingFeeSui === null ? 'Accounting unavailable' : `${formatNumber(position.pendingFeeSui, 6)} SUI + ${formatNumber(position.pendingFeeTree, 4)} TREE`}</small></span><strong>${formatPositionUsd(position.pendingFeesUsd)}</strong></div>
         <div class="v3-position-rewards">${renderPositionRewards(position)}</div>
         <p class="v3-position-technical">Liquidity: ${Number(position.liquidityRaw).toLocaleString('en-US', { notation: 'compact', maximumFractionDigits: 2 })} units</p>
-        <div class="v3-position-actions" aria-label="Position management actions"><button class="add" type="button" data-v3-increase-position="${position.objectId}" ${V3_MANAGEMENT_ENABLED ? '' : 'disabled'}>+ Add</button><button type="button" data-v3-collect-fees-position="${position.objectId}" ${V3_MANAGEMENT_ENABLED ? '' : 'disabled'}>Fees</button><button class="claim" type="button" data-v3-claim-rewards-position="${position.objectId}" ${V3_MANAGEMENT_ENABLED ? '' : 'disabled'}>Claim</button><button type="button" data-v3-remove-position="${position.objectId}" ${V3_MANAGEMENT_ENABLED ? '' : 'disabled'}>Remove</button><button type="button" data-v3-close-position="${position.objectId}" ${V3_MANAGEMENT_ENABLED ? '' : 'disabled'}>Close</button></div>
+        <div class="v3-position-actions" aria-label="Position management actions"><button class="add" type="button" data-v3-increase-position="${position.objectId}" aria-expanded="false" ${V3_MANAGEMENT_ENABLED ? '' : 'disabled'}>Add</button><button type="button" data-v3-remove-position="${position.objectId}" aria-expanded="false" ${V3_MANAGEMENT_ENABLED ? '' : 'disabled'}>Remove</button><button class="claim" type="button" data-v3-claim-all-position="${position.objectId}" aria-expanded="false" ${V3_MANAGEMENT_ENABLED ? '' : 'disabled'}>Claim All</button></div>
         <div class="v3-increase-panel" data-v3-increase-panel="${position.objectId}" hidden>
           <div class="v3-form-grid"><label class="v3-field"><span>Maximum SUI</span><input inputmode="decimal" placeholder="0.001" data-v3-increase-sui></label><label class="v3-field"><span>Maximum TREE</span><input inputmode="decimal" placeholder="35.5" data-v3-increase-tree></label></div>
           <div class="v3-slippage-row"><span>Increase slippage</span><div role="group" aria-label="Increase position slippage"><button class="active" type="button" data-v3-increase-slippage="50">0.5%</button><button type="button" data-v3-increase-slippage="100">1%</button><button type="button" data-v3-increase-slippage="200">2%</button></div></div>
@@ -400,24 +428,14 @@ function renderPositions(payload) {
           <div class="v3-slippage-row"><span>Liquidity to remove</span><div role="group" aria-label="Percentage of position liquidity to remove"><button class="active" type="button" data-v3-remove-percent="10">10%</button><button type="button" data-v3-remove-percent="25">25%</button><button type="button" data-v3-remove-percent="50">50%</button><button type="button" data-v3-remove-percent="100">100%</button></div></div>
           <div class="v3-slippage-row"><span>Withdrawal slippage</span><div role="group" aria-label="Remove liquidity slippage"><button class="active" type="button" data-v3-remove-slippage="50">0.5%</button><button type="button" data-v3-remove-slippage="100">1%</button><button type="button" data-v3-remove-slippage="200">2%</button></div></div>
           <button class="button primary" type="button" data-v3-remove-submit="${position.objectId}">Simulate Removal</button>
-          <p class="v3-status" role="status" aria-live="polite" data-v3-remove-status>Nothing is signed until two Mainnet simulations pass and you confirm the exact withdrawal.</p>
+          <p class="v3-status" role="status" aria-live="polite" data-v3-remove-status>Partial removal keeps the position open. Selecting 100% withdraws everything, claims fees and rewards, and closes it.</p>
         </div>
-        <div class="v3-fee-panel" data-v3-fee-panel="${position.objectId}" hidden>
-          <p>Collects all currently available SUI and TREE trading fees for this position. If the simulation finds zero fees, no wallet request is made.</p>
-          <button class="button primary" type="button" data-v3-fee-submit="${position.objectId}">Simulate Fee Collection</button>
-          <p class="v3-status" role="status" aria-live="polite" data-v3-fee-status>Nothing is signed until Mainnet simulations verify collectible fees and you confirm the exact action.</p>
+        <div class="v3-claim-panel" data-v3-claim-panel="${position.objectId}" hidden>
+          <p>Collects all available SUI and TREE trading fees plus every positive verified VICTORY, TREE, and wBTC reward in one wallet transaction.</p>
+          <button class="button primary" type="button" data-v3-claim-submit="${position.objectId}">Simulate Claim All</button>
+          <p class="v3-status" role="status" aria-live="polite" data-v3-claim-status>Nothing is signed until two Mainnet simulations verify every claimable asset.</p>
         </div>
-        <div class="v3-reward-panel" data-v3-reward-panel="${position.objectId}" hidden>
-          <p>Checks the pool’s verified VICTORY, TREE, and wBTC rewards. Only reward types with a positive simulated balance are included in the wallet transaction.</p>
-          <button class="button primary" type="button" data-v3-reward-submit="${position.objectId}">Simulate Reward Claim</button>
-          <p class="v3-status" role="status" aria-live="polite" data-v3-reward-status>Nothing is signed until two Mainnet simulations verify claimable rewards and you confirm the exact claim.</p>
-        </div>
-        <div class="v3-close-panel" data-v3-close-panel="${position.objectId}" hidden>
-          <p>Closing permanently deletes the empty position object. The safety check refuses to continue until liquidity, fees, and all verified rewards are zero.</p>
-          <button class="button primary" type="button" data-v3-close-submit="${position.objectId}">Check Position and Simulate Close</button>
-          <p class="v3-status" role="status" aria-live="polite" data-v3-close-status>No wallet request is made while anything remains in the position.</p>
-        </div>
-        <p class="v3-status">${V3_MANAGEMENT_ENABLED ? 'All position actions use guarded Mainnet simulations. Close only proceeds for a verified empty position.' : 'Position management is unavailable on this host.'}</p>
+        <p class="v3-status">${V3_MANAGEMENT_ENABLED ? 'Every action uses two guarded Mainnet simulations before wallet approval.' : 'Position management is unavailable on this host.'}</p>
       </article>`).join('');
   }
   status.textContent = `Complete wallet scan · ${payload.coverage?.objectsScanned ?? 0} V3 objects checked · Updated ${new Date(payload.generatedAt).toLocaleTimeString()}`;
@@ -480,6 +498,7 @@ function bindWorkspace() {
   document.getElementById('v3RefreshPool')?.addEventListener('click', loadPool);
   document.getElementById('v3RefreshPositions')?.addEventListener('click', () => refreshWalletState(true));
   document.getElementById('v3OpenSwap')?.addEventListener('click', () => { window.location.hash = 'swap'; });
+  document.querySelector('[data-v3-go-positions]')?.addEventListener('click', () => setActiveTab('positions'));
   for (const eventName of ['tree:wallet-changed', 'tree-wallet-change', 'tree:wallet-change', 'wallet-change', 'wallet:change', 'sui-wallet-change', 'walletConnected', 'walletDisconnected']) {
     window.addEventListener(eventName, () => setTimeout(() => refreshWalletState(true), 0));
   }
@@ -495,6 +514,7 @@ function initialize() {
   bindWorkspace();
   loadPool();
   refreshWalletState(true);
+  document.dispatchEvent(new CustomEvent('tree:v3-workspace-ready'));
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initialize, { once: true });

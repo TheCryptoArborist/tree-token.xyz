@@ -2,7 +2,8 @@ export const TREE_LIMIT_SUI_TYPE = '0x2::sui::SUI';
 export const TREE_LIMIT_TREE_TYPE = '0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE';
 export const TREE_LIMIT_AFTERMATH_PACKAGE = '0xe57ee3613b7dece546f8a2d8a53145cbab41d32b86037b94f9ebfcbcfa66885a';
 export const TREE_LIMIT_EXECUTION_GAS_RAW = 50_000_000n;
-export const TREE_LIMIT_EXPIRIES_MS = Object.freeze([3_600_000, 86_400_000, 604_800_000, 2_592_000_000]);
+export const TREE_LIMIT_MIN_EXPIRY_MS = 3_600_000;
+export const TREE_LIMIT_MAX_EXPIRY_MS = 2_592_000_000;
 
 type JsonRecord = Record<string, unknown>;
 
@@ -56,7 +57,10 @@ export function validateTreeLimitCreate(value: unknown): ValidatedTreeLimitCreat
   const allocateCoinAmount = BigInt(input.allocateCoinAmount);
   if (allocateCoinAmount <= 0n || allocateCoinAmount > 1_000_000_000_000_000n) throw new Error('Allocated amount is outside the supported range.');
   const expiryDurationMs = Number(input.expiryDurationMs);
-  if (!TREE_LIMIT_EXPIRIES_MS.includes(expiryDurationMs)) throw new Error('Choose a supported expiration period.');
+  if (!Number.isSafeInteger(expiryDurationMs) || expiryDurationMs % TREE_LIMIT_MIN_EXPIRY_MS !== 0
+    || expiryDurationMs < TREE_LIMIT_MIN_EXPIRY_MS || expiryDurationMs > TREE_LIMIT_MAX_EXPIRY_MS) {
+    throw new Error('Expiration must be a whole number of hours between 1 hour and 30 days.');
+  }
   const price = decimalText(input.targetPriceSuiPerTree);
   const allocateCoinType = direction === 'buy-tree' ? TREE_LIMIT_SUI_TYPE : TREE_LIMIT_TREE_TYPE;
   const buyCoinType = direction === 'buy-tree' ? TREE_LIMIT_TREE_TYPE : TREE_LIMIT_SUI_TYPE;

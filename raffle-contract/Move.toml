@@ -1,0 +1,10 @@
+[package]
+name = "tree_raffle"
+edition = "2024"
+license = "Apache-2.0"
+authors = ["TREE Community"]
+
+[dependencies]
+
+[addresses]
+tree_raffle = "0x0"
