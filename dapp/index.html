@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>TREE Command Center | Stats, Leaderboard &amp; TREE Utilities</title>
   <meta name="description" content="TREE ecosystem stats, verified Canopy leaderboard, Profile Studio, Canopy Draw preview, and NFTree utility links.">
-  <link rel="icon" href="../thick.png">
+  <link rel="icon" type="image/png" href="../assets/tree-command-logo-v2-512.png">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="panel-router.css">
   <link rel="stylesheet" href="swap-router.css">
@@ -22,7 +22,7 @@
       <span><img class="token-logo tree-token-logo" src="../thick.png" alt="TREE logo"><span>TREE</span><strong data-market="price">Loading…</strong></span>
     </div>
     <div class="app-header-row">
-      <a class="brand" href="/" aria-label="TREE home"><img src="../thick.png" alt=""><span><strong>TREE</strong><small>Command Center</small></span></a>
+      <a class="brand" href="/" aria-label="TREE home"><img src="../assets/tree-command-logo-v2-512.png" alt="TREE Command Center emblem"><span><strong>TREE</strong><small>Command Center</small></span></a>
       <button class="button wallet-control" id="dappWallet" type="button">Connect Wallet</button>
     </div>
     <nav class="app-nav" aria-label="Command Center navigation">
@@ -147,16 +147,21 @@
       <div class="stats-tabs" role="tablist" aria-label="TREE statistics views"><button id="statsMarketTab" class="active" type="button" role="tab" aria-selected="true" aria-controls="statsMarketPanel">Market</button><button id="statsSupplyTab" type="button" role="tab" aria-selected="false" aria-controls="statsSupplyPanel">Supply</button><button id="statsLiquidityTab" type="button" role="tab" aria-selected="false" aria-controls="statsLiquidityPanel">Liquidity</button><button id="statsNftreeTab" type="button" role="tab" aria-selected="false" aria-controls="statsNftreePanel">NFTree</button></div>
       <div id="statsMarketPanel" class="stats-view" role="tabpanel" aria-labelledby="statsMarketTab">
         <div class="data-group" data-stats-group="market"><div class="group-heading"><div><h3>Market</h3><p>Noodles.fi primary market source</p></div><span class="data-state" data-group-state>Loading</span></div><p class="meta" data-group-meta>Source: Noodles.fi · Timestamp: pending · Status: loading</p><div class="stat-grid">
-          <article class="stat-card"><span>TREE Price</span><strong data-market="price">—</strong></article><article class="stat-card"><span>24h Change</span><strong data-market="priceChange24h">—</strong></article><article class="stat-card"><span>24h Volume</span><strong data-market="volume24h">—</strong></article><article class="stat-card"><span>Market Cap</span><strong data-market="marketCap">—</strong></article><article class="stat-card"><span>Recognized Liquidity</span><strong data-market="liquidity">—</strong></article><article class="stat-card"><span>Reported owner metric</span><strong data-market="holderCount">—</strong></article>
-        </div></div>
+          <article class="stat-card"><span>TREE Price</span><strong data-market="price">—</strong></article><article class="stat-card"><span>24h Change</span><strong data-market="priceChange24h">—</strong></article><article class="stat-card"><span>Verified 24h Volume</span><strong data-market="volume24h">—</strong></article><article class="stat-card"><span>Market Cap</span><strong data-market="marketCap">—</strong></article><article class="stat-card"><span>Verified Recognized Liquidity</span><strong data-market="liquidity">—</strong></article><article class="stat-card"><span>Reported owner metric</span><strong data-market="holderCount">—</strong></article>
+        </div><p class="stats-source-note" id="volumeBreakdown">Verifying 24-hour SuiDex V2, SuiDex V3, and Turbos swap events…</p></div>
         <details class="stats-chart-details"><summary>View TREE market chart</summary><div class="data-group chart-group" data-chart-group><div class="group-heading"><div><h3>TREE Market Chart</h3><p>Noodles.fi OHLCV with CoinGecko fallback</p></div><span class="data-state" id="chartState">Loading</span></div><p class="meta" id="chartMeta">Source: Market data · Timestamp: pending · Status: loading</p><div class="chart-controls" role="group" aria-label="Market chart range"><button class="button secondary active" type="button" data-chart-range="24h" aria-pressed="true">24H</button><button class="button secondary" type="button" data-chart-range="7d" aria-pressed="false">7D</button><button class="button secondary" type="button" data-chart-range="30d" aria-pressed="false">30D</button></div><div class="chart-shell"><canvas id="marketChart" width="1000" height="360" aria-label="TREE price and volume chart"></canvas><p id="chartMessage" class="chart-message" role="status" aria-live="polite">Loading chart…</p></div></div></details>
       </div>
-      <div id="statsSupplyPanel" class="stats-view" role="tabpanel" aria-labelledby="statsSupplyTab" hidden><div class="data-group" data-stats-group="supply"><div class="group-heading"><h3>Supply &amp; Time Locks</h3><span class="data-state snapshot" data-group-state>Snapshot</span></div><p class="meta" data-group-meta>Source: TREE project records · Project snapshot — June 22, 2026 · Status: snapshot</p><div class="stat-grid">
-        <article class="stat-card"><span>Total Supply</span><strong data-snapshot="tree.totalSupply">—</strong></article><article class="stat-card"><span>Effectively Removed</span><strong data-snapshot="tree.zeroAddressBalance">—</strong></article><article class="stat-card"><span>Effective Supply</span><strong data-snapshot="tree.effectiveSupply">—</strong></article><article class="stat-card"><span>Time-Locked TREE</span><strong data-snapshot="tree.moonbagsLocked">—</strong></article><article class="stat-card"><span>Locked Supply</span><strong data-derived="lockedPercent">—</strong></article><article class="stat-card"><span>2027 Unlock</span><strong data-snapshot="tree.nextUnlock2027">—</strong></article><article class="stat-card"><span>2028 Unlock</span><strong data-snapshot="tree.nextUnlock2028">—</strong></article><article class="stat-card"><span>Effective Removal Percentage</span><strong data-derived="removalPercent">—</strong></article>
-      </div></div><p class="stats-source-note">Time-lock figures are a dated project snapshot and remain excluded from personal Canopy ranks until verified on-chain.</p></div>
-      <div id="statsLiquidityPanel" class="stats-view" role="tabpanel" aria-labelledby="statsLiquidityTab" hidden><div class="data-group" data-stats-group="liquidity"><div class="group-heading"><h3>Liquidity venues</h3><span class="data-state snapshot" data-group-state>Snapshot</span></div><p class="meta" data-group-meta>Source: TREE project records · Project snapshot — June 22, 2026 · Status: snapshot</p><div class="stat-grid">
-        <article class="stat-card"><span>SuiDex V2</span><strong data-snapshot="liquidity.suiDexV2TvlUsd">—</strong></article><article class="stat-card"><span>SuiDex V3</span><strong data-snapshot="liquidity.suiDexV3TvlUsd">—</strong></article><article class="stat-card"><span>Turbos</span><strong data-snapshot="liquidity.turbosTvlUsd">—</strong></article><article class="stat-card"><span>V2 Farm APR</span><strong data-snapshot="liquidity.suiDexV2FarmApr">—</strong></article><article class="stat-card"><span>V2 LP Staked</span><strong data-snapshot="liquidity.suiDexV2LpStakedPercent">—</strong></article>
-      </div></div></div>
+      <div id="statsSupplyPanel" class="stats-view" role="tabpanel" aria-labelledby="statsSupplyTab" hidden>
+        <div class="data-group" data-stats-group="supply"><div class="group-heading"><h3>Supply</h3><span class="data-state" data-group-state>Loading</span></div><p class="meta" data-group-meta>Source: Sui Mainnet gRPC · Timestamp: pending · Status: loading</p><div class="stat-grid">
+          <article class="stat-card"><span>Total Supply</span><strong data-snapshot="tree.totalSupply" data-burn="totalSupply">—</strong></article><article class="stat-card"><span>Burned</span><strong data-snapshot="tree.zeroAddressBalance" data-burn="zeroAddressBalance">—</strong></article><article class="stat-card"><span>Circulating</span><strong data-snapshot="tree.effectiveSupply" data-burn="effectiveSupply">—</strong></article><article class="stat-card"><span>Burned Supply</span><strong data-derived="removalPercent" data-burn="removalPercentage">—</strong></article>
+        </div></div>
+        <div class="data-group" data-stats-group="time-locks"><div class="group-heading"><h3>Time Locks</h3><span class="data-state snapshot" data-group-state>Snapshot</span></div><p class="meta" data-group-meta>Source: TREE project records · Project snapshot — June 22, 2026 · Status: snapshot</p><div class="stat-grid">
+          <article class="stat-card"><span>Time-Locked TREE</span><strong data-snapshot="tree.moonbagsLocked">—</strong></article><article class="stat-card"><span>Locked Supply</span><strong data-derived="lockedPercent">—</strong></article><article class="stat-card"><span>January 1, 2027 Unlock</span><strong data-snapshot="tree.nextUnlock2027">—</strong></article><article class="stat-card"><span>January 1, 2028 Unlock</span><strong data-snapshot="tree.nextUnlock2028">—</strong></article>
+        </div></div><p class="stats-source-note">Time-lock figures are a dated project snapshot and remain excluded from personal Canopy ranks until verified on-chain.</p>
+      </div>
+      <div id="statsLiquidityPanel" class="stats-view" role="tabpanel" aria-labelledby="statsLiquidityTab" hidden><div class="data-group" data-stats-group="liquidity"><div class="group-heading"><h3>Liquidity venues</h3><span class="data-state" data-group-state>Loading</span></div><p class="meta" data-group-meta>Source: Sui Mainnet · Timestamp: pending · Status: loading</p><div class="stat-grid">
+        <article class="stat-card"><span>Recognized total</span><strong data-liquidity="recognizedLiquidityUsd">—</strong></article><article class="stat-card"><span>SuiDex V2</span><strong data-liquidity="suiDexV2TvlUsd">—</strong></article><article class="stat-card"><span>SuiDex V3</span><strong data-liquidity="suiDexV3TvlUsd">—</strong></article><article class="stat-card"><span>Turbos</span><strong data-liquidity="turbosTvlUsd">—</strong></article>
+      </div><p class="stats-source-note">Live USD estimates use verified on-chain pool reserves and current external reference prices. Values fail closed when any recognized venue cannot be verified.</p></div></div>
       <div id="statsNftreePanel" class="stats-view" role="tabpanel" aria-labelledby="statsNftreeTab" hidden><div class="data-group" data-stats-group="nftree"><div class="group-heading"><h3>NFTree</h3><span class="data-state snapshot" data-group-state>Snapshot</span></div><p class="meta" data-group-meta>Source: TREE project records · Project snapshot — June 22, 2026 · Status: snapshot</p><div class="stat-grid">
         <article class="stat-card"><span>Mint Price</span><strong data-snapshot="nftree.mintPriceSui">—</strong></article><article class="stat-card"><span>Minted / Loaded</span><strong data-snapshot="nftree.totalMintedOrLoaded">—</strong></article><article class="stat-card"><span>Holder-Owned</span><strong data-snapshot="nftree.holderOwned">—</strong></article><article class="stat-card"><span>Sale Pool</span><strong data-snapshot="nftree.salePool">—</strong></article><article class="stat-card"><span>Holder Wallets</span><strong data-snapshot="nftree.holderWallets">—</strong></article>
       </div></div></div><div id="statsWarnings" class="warnings" hidden></div>
@@ -172,7 +177,7 @@
         <article class="burn-stat"><strong id="burnTotalTransactions">—</strong><span>Total Txs</span></article>
       </div>
       <div class="burn-progress-card"><div><span>Progress to <strong>10%</strong></span><b id="burnProgressLabel">—</b></div><div class="burn-progress-track" aria-hidden="true"><span id="burnProgressBar"></span></div><div class="burn-progress-scale"><span>5%</span><span>10%</span></div></div>
-      <div class="burn-recent-card"><h3>Recent Burns</h3><div id="burnRecentList"><p>No verified transaction history is published by the live balance endpoint.</p></div></div>
+      <div class="burn-recent-card"><h3>Recent Burns</h3><div id="burnRecentList"><p>Loading verified burn transactions…</p></div></div>
     </section>
 
     <section class="section app-panel" id="canopy-draw" aria-labelledby="canopy-title" hidden>
@@ -198,7 +203,10 @@
           <div class="rank-card-top"><span class="rank-kicker">YOUR CANOPY POSITION</span><button class="button secondary" id="rankWallet" type="button">Connect Wallet</button></div>
           <strong class="rank-summary" id="yourRank">Connect a wallet to view your position.</strong>
           <div class="rank-identity"><span class="tier-emblem" id="rankTierIcon" aria-hidden="true">🌱</span><div><span id="rankTierName">Unranked</span><strong id="rankPosition">—</strong></div></div>
-          <div class="rank-balance"><span>Total Verified Exposure</span><strong id="rankDirectTree">—</strong><small id="rankSupplyPercent">Connect a wallet to compare with the verified Top 50.</small><em id="rankExposureBreakdown" class="rank-exposure-breakdown">Liquid TREE and verified LP principal will appear here.</em><em class="rank-lock-status">Wallet-linked time locks: Not yet verified</em></div>
+          <div class="rank-balance"><span>Total Verified Exposure</span><strong id="rankDirectTree">—</strong><small id="rankSupplyPercent">Connect a wallet to compare with the verified Top 50.</small></div>
+          <div class="rank-metric-grid" aria-label="Connected wallet exposure breakdown"><div><span>Wallet</span><strong id="rankLiquidTree">—</strong></div><div class="lp"><span>Verified LP</span><strong id="rankLpTree">—</strong></div><div><span>LP Positions</span><strong id="rankLpPositions">—</strong></div></div>
+          <div class="rank-achievements"><span>Wallet badges</span><div id="rankBadges" class="rank-badges"><small>Badges appear with a verified rank.</small></div></div>
+          <em id="rankExposureBreakdown" class="rank-exposure-breakdown">Liquid TREE and verified LP principal will appear here.</em>
           <div class="rank-progress-panel"><div><span>Next milestone</span><strong id="rankNextTier">Seedling</strong></div><p id="rankNextRequirement">Connect a wallet to calculate progress.</p><div class="progress-track" aria-hidden="true"><span id="rankProgressBar"></span></div><a class="tier-progress-link" href="#tier-guide">View all tiers</a></div>
           <div class="rank-actions"><button class="button rank-share" id="shareRank" type="button">Share Rank</button><button class="button secondary" id="createRankImage" type="button">Create Rank Card</button></div>
           <p class="status rank-share-status" id="rankShareStatus" role="status" aria-live="polite"></p>
@@ -210,24 +218,23 @@
         <summary><span><strong>⏳ TREE Time Locks</strong><small>Project snapshot · excluded from personal ranks</small></span><b data-snapshot="tree.moonbagsLocked">—</b></summary>
         <div class="canopy-lock-body">
           <div><span>Share of total supply</span><strong data-derived="lockedPercent">—</strong></div>
-          <div><span>2027 unlock</span><strong data-snapshot="tree.nextUnlock2027">—</strong></div>
-          <div><span>2028 unlock</span><strong data-snapshot="tree.nextUnlock2028">—</strong></div>
+          <div><span>January 1, 2027 unlock</span><strong data-snapshot="tree.nextUnlock2027">—</strong></div>
+          <div><span>January 1, 2028 unlock</span><strong data-snapshot="tree.nextUnlock2028">—</strong></div>
         </div>
         <p>These Moonbags treasury figures come from the dated TREE project snapshot. They will not affect a wallet's Canopy rank until the lock objects, ownership, and unlock terms are verified on-chain.</p>
       </details>
 
-      <div class="top-board-heading"><div><span class="rank-kicker">TOP 50</span><h3>Top 50 Canopy Leaders</h3><p>Ranked by total verified TREE exposure, including liquid TREE and supported LP principal.</p></div><span id="displayedWalletCount">0</span></div>
+      <article class="tier-ladder-card tier-guide-card" id="tier-guide">
+        <div class="card-title-row"><div><span class="rank-kicker">TIER LADDER</span><h3>Climb the Canopy</h3></div><span>Verified exposure thresholds and current member counts</span></div>
+        <div class="tier-ladder" id="tierLadder"><p class="muted">Loading verified tier cutoffs…</p></div>
+        <p class="tier-method-note">Champion Tree is reserved for the current Top 5. Every other tier maps to TREE's fixed 1,000,000,000-token supply and uses total verified exposure: Liquid TREE plus current principal TREE in recognized LP positions.</p>
+      </article>
+
+      <div class="top-board-heading"><div><span class="rank-kicker">TOP 50</span><h3>Top 50 Canopy Leaders</h3><p>Rank, tier, wallet badges, liquid TREE, verified LP principal, and total exposure—visible at a glance.</p></div><span id="displayedWalletCount">0</span></div>
       <div class="leaderboard-cards" id="leaderboardCards"><p class="leaderboard-empty">Loading eligible ranked owners…</p></div>
 
       <div class="table-wrap leaderboard-fallback-table" aria-hidden="true"><table><thead><tr><th>Rank</th><th>Wallet</th><th>Total TREE</th><th class="wide-column">Liquid</th><th class="wide-column">LP</th><th class="wide-column">Tier</th></tr></thead><tbody id="leaderboardRows"><tr><td colspan="6">Loading eligible ranked owners…</td></tr></tbody></table></div>
       <div id="leaderboardWarnings" class="warnings" hidden></div>
-
-      <details class="tier-ladder-card tier-guide-details" id="tier-guide">
-        <summary class="tier-guide-summary"><span><strong>How TREE Tiers Work</strong><small>View all 13 tiers and supply thresholds</small></span></summary>
-        <div class="tier-guide-body">
-          <div class="card-title-row"><div><span class="rank-kicker">TIER LADDER</span><h3>Climb the Canopy</h3></div><span>Thresholds map to TREE's fixed 1B supply.</span></div><div class="tier-ladder" id="tierLadder"><p class="muted">Loading verified tier cutoffs…</p></div><p class="tier-method-note">Each tier displays both its TREE requirement and its share of the fixed 1,000,000,000-token supply. Champion Tree is reserved for the Top 5. Tier placement uses total verified exposure: Liquid TREE plus current principal TREE in recognized LP positions.</p>
-        </div>
-      </details>
 
       <details class="coverage-details ranking-methodology">
         <summary>How Rankings Are Calculated</summary>
@@ -262,7 +269,7 @@
       <div class="document-grid">
         <article class="card document-tile"><span class="card-icon">▤</span><h3>Litepaper</h3><p>Review the ecosystem vision, tokenomics, utilities, and project direction.</p><a class="button secondary" href="../Litepaper.pdf" target="_blank" rel="noopener noreferrer">Open Litepaper</a></article>
         <article class="card document-tile"><span class="card-icon">◎</span><h3>About TREE</h3><p>Start with a concise explanation of TREE, NFTree, live utilities, and real-world impact.</p><a class="button secondary" href="/about/">Read About TREE</a></article>
-        <article class="card document-tile"><span class="card-icon">▥</span><h3>Tokenomics</h3><p>See fixed supply, effective supply, zero-address holdings, locks, and terminology.</p><a class="button secondary" href="/tokenomics/">View Tokenomics</a></article>
+        <article class="card document-tile"><span class="card-icon">▥</span><h3>Tokenomics</h3><p>See fixed supply, circulating supply, burned TREE, locks, and terminology.</p><a class="button secondary" href="/tokenomics/">View Tokenomics</a></article>
         <article class="card document-tile"><span class="card-icon">→</span><h3>Roadmap &amp; FAQ</h3><p>Separate completed work, active development, future plans, and common questions.</p><div class="actions"><a class="button secondary" href="/roadmap/">Roadmap</a><a class="button secondary" href="/faq/">FAQ</a></div></article>
       </div>
       <div class="coin-document"><span>Official TREE coin type · Sui Mainnet</span><code id="dappCoinType">0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE</code><div class="actions"><button class="button secondary" id="copyDappCoin" type="button">Copy Coin Type</button><a class="button secondary" href="https://noodles.fi/coins/0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE?trade=market" target="_blank" rel="noopener noreferrer">Open Noodles Market Page</a></div></div>

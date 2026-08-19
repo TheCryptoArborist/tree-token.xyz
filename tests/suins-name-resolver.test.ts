@@ -25,6 +25,18 @@ assert.equal(success.names[second], null);
 assert.equal(success.names[third], null);
 assert.equal(success.complete, true);
 
+const nativeFallback = await resolveDefaultSuinsNames([first], {
+  client: {
+    core: { async defaultNameServiceName() { return { name: null }; } },
+    nameService: {
+      async reverseLookupName() { return { response: { record: { name: 'crypto-arborist.sui' } } }; },
+    },
+  },
+});
+assert.equal(nativeFallback.names[first], 'crypto-arborist.sui');
+assert.equal(nativeFallback.resolvedCount, 1);
+assert.equal(nativeFallback.complete, true);
+
 const numericNotFound = await resolveDefaultSuinsNames([first], {
   client: { core: { async defaultNameServiceName() { throw Object.assign(new Error('missing'), { code: 5 }); } } },
 });
@@ -54,4 +66,11 @@ await resolveDefaultSuinsNames([first, second, third], {
   },
 });
 assert.ok(peak <= 2);
+
+const suspiciousAddresses = Array.from({ length: 10 }, (_, index) => `0x${index.toString(16).padStart(64, '0')}`);
+const suspiciousZero = await resolveDefaultSuinsNames(suspiciousAddresses, {
+  client: { core: { async defaultNameServiceName() { return { name: null }; } } },
+});
+assert.equal(suspiciousZero.complete, false);
+assert.match(suspiciousZero.networkError || '', /zero names for 10 addresses/);
 console.log('SuiNS gRPC resolver: PASS (deduplication, expected missing names, bounded concurrency, and safe failure)');

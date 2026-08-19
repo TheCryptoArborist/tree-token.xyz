@@ -234,7 +234,7 @@ export default async (request: Request) => {
           status: 'not-published-without-verified-source', source: null,
         },
         warnings: [
-          ...(pool.tvlUsdEstimate === null ? ['Pool TVL estimate is unavailable because one or both reference prices could not be verified.'] : ['TVL is an estimate from current on-chain reserves and external USD reference prices.']),
+          ...(analytics ? ['SuiDex TVL is verified against current on-chain reserves and independent USD reference prices.'] : ['Pool TVL is unpublished because the SuiDex analytics and on-chain reserve cross-check did not both pass.']),
           ...(!analytics ? ['SuiDex volume, fee, and incentive analytics could not be independently validated.'] : []),
         ],
       });

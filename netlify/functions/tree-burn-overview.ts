@@ -3,6 +3,7 @@ import { GrpcTransport } from '@protobuf-ts/grpc-transport';
 import { SuiGrpcClient } from '@mysten/sui/grpc';
 import { TREE_COIN_TYPE, TREE_DECIMALS, TREE_TOTAL_SUPPLY_RAW } from '../lib/leaderboard-provider.ts';
 import { SUI_ZERO_ADDRESS } from '../lib/tree-burn-index.ts';
+import { verifiedBurnHistory } from '../lib/tree-burn-history-snapshot.ts';
 
 function formatRaw(raw: bigint) {
   const base = 10n ** BigInt(TREE_DECIMALS);
@@ -57,7 +58,21 @@ export default async (request: Request) => {
   const generatedAt = new Date().toISOString();
   try {
     const overview = burnOverviewFromRaw(await liveZeroAddressBalance());
-    return Response.json({ status: 'ok', generatedAt, network: 'sui-mainnet', source: 'Sui Mainnet gRPC', ...overview, warnings: [] }, {
+    const history = verifiedBurnHistory(Date.parse(generatedAt));
+    const historyMatchesBalance = history.totalBurned === overview.zeroAddressBalance;
+    return Response.json({
+      status: 'ok',
+      generatedAt,
+      network: 'sui-mainnet',
+      source: 'Sui Mainnet gRPC',
+      ...overview,
+      totalTransactions: historyMatchesBalance ? history.totalTransactions : null,
+      burnCoinObjects: historyMatchesBalance ? history.coinObjects : null,
+      recentBurns: historyMatchesBalance ? history.recentBurns : [],
+      historyGeneratedAt: history.generatedAt,
+      historySource: history.source,
+      warnings: historyMatchesBalance ? [] : ['Burn history is refreshing to match the latest live balance.'],
+    }, {
       headers: { 'Cache-Control': 'public, max-age=15, s-maxage=30, stale-while-revalidate=120', 'X-Content-Type-Options': 'nosniff' },
     });
   } catch (error) {

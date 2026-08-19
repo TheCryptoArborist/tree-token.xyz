@@ -9,6 +9,9 @@ type NameServiceClient = {
   core: {
     defaultNameServiceName(input: { address: string }): Promise<{ name?: string | null }>;
   };
+  nameService?: {
+    reverseLookupName(input: { address: string }): Promise<{ response?: { record?: { name?: string | null } } }>;
+  };
 };
 
 export type SuinsResolutionResult = {
@@ -101,7 +104,15 @@ export async function resolveDefaultSuinsNames(
           client.core.defaultNameServiceName({ address }),
           deadline - now(),
         );
-        names[address] = safeName(response?.name);
+        let name = safeName(response?.name);
+        if (!name && client.nameService?.reverseLookupName) {
+          const reverse = await withTimeout(
+            client.nameService.reverseLookupName({ address }),
+            deadline - now(),
+          );
+          name = safeName(reverse?.response?.record?.name);
+        }
+        names[address] = name;
       } catch (error) {
         if (isExpectedMissingName(error)) {
           names[address] = null;
@@ -113,8 +124,11 @@ export async function resolveDefaultSuinsNames(
   }
 
   await Promise.all(Array.from({ length: Math.min(concurrency, normalized.length) }, () => worker()));
-  const uniqueErrors = [...new Set(unexpectedErrors)].slice(0, 10);
   const resolvedCount = Object.values(names).filter(Boolean).length;
+  if (normalized.length >= 10 && resolvedCount === 0 && unexpectedErrors.length === 0) {
+    unexpectedErrors.push(`SuiNS reverse lookup returned zero names for ${normalized.length} addresses.`);
+  }
+  const uniqueErrors = [...new Set(unexpectedErrors)].slice(0, 10);
   return {
     names,
     requestedCount: normalized.length,

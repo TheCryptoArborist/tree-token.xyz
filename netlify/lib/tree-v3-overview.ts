@@ -296,16 +296,17 @@ export function parseSuiDexV3Analytics(
   const tokenPrices = record(payload.tokenPrices);
   const rewards: TreeV3RewardAprView[] = [];
   const seenRewards = new Set<string>();
+  const rewardRegistry = new Map(TREE_V3_REWARD_TOKENS.map((token) => [normalizeCoinType(token.coinType), token]));
   for (const rewardValue of Array.isArray(sourcePool.rewards) ? sourcePool.rewards : []) {
     const reward = record(rewardValue);
     const coinType = normalizeCoinType(reward.coin_type);
-    const symbolValue = typeof reward.symbol === 'string' ? reward.symbol.replace(/_TOKEN$/i, '').trim() : '';
+    const registeredReward = coinType ? rewardRegistry.get(coinType) : undefined;
     const decimals = Number(reward.decimals);
     const perDayRaw = parseUnsigned(reward.per_day);
     const priceUsd = finiteNonNegative(reward.price_usd);
     const endsAt = Number(reward.ended_at);
-    if (!coinType || seenRewards.has(coinType) || !/^[A-Za-z0-9._-]{1,24}$/.test(symbolValue)
-      || !Number.isInteger(decimals) || decimals < 0 || decimals > 18
+    if (!coinType || !registeredReward || seenRewards.has(coinType)
+      || decimals !== registeredReward.decimals
       || perDayRaw === null || priceUsd === null || priceUsd <= 0
       || !Number.isSafeInteger(endsAt) || endsAt <= nowSeconds) continue;
     const listedPrice = finiteNonNegative(tokenPrices[String(reward.coin_type)] ?? tokenPrices[coinType]);
@@ -316,7 +317,7 @@ export function parseSuiDexV3Analytics(
     const aprPercent = dailyUsd * 365 / tvlUsd * 100;
     seenRewards.add(coinType);
     rewards.push({
-      coinType, symbol: symbolValue, decimals, perDayRaw: perDayRaw.toString(), perDay,
+      coinType, symbol: registeredReward.symbol, decimals, perDayRaw: perDayRaw.toString(), perDay,
       priceUsd, dailyUsd, aprPercent, endsAt: new Date(endsAt * 1000).toISOString(),
     });
   }

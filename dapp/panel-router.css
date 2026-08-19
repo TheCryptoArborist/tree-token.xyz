@@ -1,7 +1,15 @@
 html.app-tabbed{scroll-padding-top:0}
 .app-panel[hidden]{display:none!important}
 .app-tabbed body{min-height:100vh}
-.app-tabbed .app-nav{grid-template-columns:repeat(9,minmax(74px,1fr))}
+.app-tabbed .app-shell{display:grid;grid-template-columns:minmax(0,1fr)}
+.app-tabbed .market-ribbon{grid-column:1;grid-row:1;min-height:32px;gap:18px;padding:3px 12px;font-size:.64rem}
+.app-tabbed .market-ribbon .token-logo{width:16px;height:16px}.app-tabbed .market-ribbon strong{font-size:.72rem}
+.app-tabbed .app-header-row{grid-column:1;grid-row:2;z-index:2;width:min(1120px,calc(100% - 28px));height:60px;padding:0;pointer-events:none}
+.app-tabbed .app-header-row .brand,.app-tabbed .app-header-row .wallet-control{pointer-events:auto}
+.app-tabbed .brand img{width:34px;height:34px}.app-tabbed .brand strong{font-size:.83rem}.app-tabbed .brand small{font-size:.58rem}
+.app-tabbed .wallet-control{min-width:0;max-width:205px;min-height:34px;padding:7px 11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.72rem}
+.app-tabbed .app-nav{grid-column:1;grid-row:2;z-index:1;width:648px;max-width:100%;grid-template-columns:repeat(9,72px);justify-content:center}
+.app-tabbed .app-nav a{min-height:60px;padding:6px 3px;font-size:.68rem;letter-spacing:.055em;border-top-width:3px}.app-tabbed .app-nav a span{font-size:1.18rem}
 .app-tabbed main{position:relative;isolation:isolate;width:min(472px,calc(100% - 30px));min-height:calc(100vh - 170px);padding:24px 0 64px}
 .app-tabbed main::before{content:"";position:fixed;z-index:0;top:57%;left:50%;width:min(680px,72vw);aspect-ratio:900/952;transform:translate(-50%,-50%);pointer-events:none;background:url('../assets/tree-command-watermark.png') center/contain no-repeat;opacity:.061;filter:saturate(.9) contrast(.96)}
 .app-tabbed main>.app-panel{position:relative;z-index:1}
@@ -23,16 +31,36 @@ html.app-tabbed{scroll-padding-top:0}
 .app-tabbed .v3-field.full{grid-column:auto}
 .app-tabbed .v3-range-options{grid-template-columns:repeat(2,minmax(0,1fr))}
 .app-tabbed .v3-estimate{grid-template-columns:minmax(0,1fr)}
-.app-tabbed .board-personal-layout .rank-command-card{grid-template-columns:minmax(0,1fr);grid-template-areas:"top" "summary" "identity" "balance" "progress" "actions" "status"}
-.app-tabbed .leader-card,.app-tabbed .exposure-card{grid-template-columns:42px minmax(0,1fr) 34px}
-.app-tabbed .leader-card .leader-balance,.app-tabbed .exposure-card .leader-balance{grid-column:2/-1;text-align:left}
-.app-tabbed .leader-exposure-details{grid-column:1/-1}
+.app-tabbed #leaderboard{padding:12px;border-radius:14px}
+.app-tabbed #leaderboard>.board-heading{align-items:center;margin-bottom:10px;padding:0 0 9px;flex-wrap:nowrap}.app-tabbed #leaderboard>.board-heading .eyebrow,.app-tabbed #leaderboard>.board-heading p:not(.eyebrow){display:none}.app-tabbed #leaderboard>.board-heading h2{margin:0;font-size:.92rem;letter-spacing:.08em;text-transform:uppercase}.app-tabbed #leaderboard>.board-heading .data-state{padding:4px 7px;font-size:.56rem}
+.app-tabbed .board-personal-layout .rank-command-card{grid-template-columns:minmax(0,1fr);grid-template-areas:"top" "identity" "balance" "metrics" "achievements" "progress" "actions" "status";gap:0;padding:12px;border-radius:12px;box-shadow:none}
+.app-tabbed .rank-summary,.app-tabbed .rank-exposure-breakdown{display:none}
+.app-tabbed .rank-card-top{min-height:25px}.app-tabbed .rank-card-top .rank-kicker{font-size:.62rem}.app-tabbed .rank-card-top .button{min-height:28px;padding:4px 8px;border-radius:7px;font-size:.65rem}
+.app-tabbed .rank-identity{display:flex;align-items:center;gap:8px;margin:8px 0}.app-tabbed .tier-emblem{width:34px;height:34px;font-size:1rem}.app-tabbed .rank-identity span:not(.tier-emblem){font-size:.62rem}.app-tabbed .rank-identity strong{font-size:1.35rem}
+.app-tabbed .rank-balance{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:2px 10px;padding:8px 9px;border-radius:8px}.app-tabbed .rank-balance span{font-size:.61rem}.app-tabbed .rank-balance strong{grid-column:2;grid-row:1/3;margin:0;font-size:1.08rem;letter-spacing:-.02em;white-space:nowrap}.app-tabbed .rank-balance small{font-size:.62rem}
+.app-tabbed .rank-metric-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin-top:7px}.app-tabbed .rank-metric-grid>div{min-width:0;padding:7px 8px;border-radius:7px}.app-tabbed .rank-metric-grid span{font-size:.55rem}.app-tabbed .rank-metric-grid strong{margin-top:2px;font-size:.7rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.app-tabbed .rank-achievements{align-items:center;flex-direction:row;gap:8px;margin-top:7px;padding:7px 8px;border-radius:7px}.app-tabbed .rank-achievements>span{font-size:.55rem;white-space:nowrap}.app-tabbed .rank-badges{gap:4px}.app-tabbed .rank-badge{padding:3px 5px;font-size:.55rem}
+.app-tabbed .rank-progress-panel{margin-top:7px;padding:8px 9px;border-radius:8px}.app-tabbed .rank-progress-panel>div:first-child{display:flex}.app-tabbed .rank-progress-panel span{font-size:.6rem}.app-tabbed .rank-progress-panel strong{font-size:.66rem}.app-tabbed .rank-progress-panel p{margin:3px 0;font-size:.66rem}.app-tabbed .progress-track{height:4px}.app-tabbed .tier-progress-link{display:none}
+.app-tabbed .rank-actions{margin-top:7px;gap:5px}.app-tabbed .rank-actions .button{min-height:30px;padding:5px 8px;border-radius:7px;font-size:.64rem}.app-tabbed .rank-share-status{min-height:0;margin:3px 0 0;font-size:.58rem}
+.app-tabbed .canopy-lock-card{margin-top:8px;border-radius:9px}.app-tabbed .canopy-lock-card summary{padding:8px 9px}.app-tabbed .canopy-lock-card summary strong{font-size:.68rem}.app-tabbed .canopy-lock-card summary small{font-size:.55rem}.app-tabbed .canopy-lock-card summary>b{font-size:.68rem}.app-tabbed .canopy-lock-body{gap:4px;padding:0 8px}.app-tabbed .canopy-lock-body div{padding:6px}.app-tabbed .canopy-lock-card>p{margin:7px 9px 9px;font-size:.58rem}
+.app-tabbed .tier-guide-card{margin-top:9px;padding:11px;border-radius:11px;box-shadow:none}.app-tabbed .tier-guide-card .card-title-row{margin:0 0 6px}.app-tabbed .tier-guide-card .card-title-row h3,.app-tabbed .tier-guide-card .card-title-row>span{display:none}.app-tabbed .tier-guide-card .rank-kicker{font-size:.62rem}.app-tabbed .tier-guide-card .tier-ladder{gap:1px;margin-top:0}.app-tabbed .tier-guide-card .tier-row{grid-template-columns:20px minmax(0,1fr) auto 22px;gap:5px;min-height:27px;padding:3px 5px;border-radius:5px;background:transparent}.app-tabbed .tier-guide-card .tier-row.current{background:rgba(53,200,255,.11)}.app-tabbed .tier-guide-card .tier-icon{font-size:.78rem}.app-tabbed .tier-guide-card .tier-name{font-size:.6rem}.app-tabbed .tier-guide-card .tier-cutoff{font-size:.58rem}.app-tabbed .tier-guide-card .tier-count{min-width:20px;height:18px;padding:0 4px;border-radius:4px;font-size:.55rem}.app-tabbed .tier-guide-card .tier-method-note{display:none}
+.app-tabbed .top-board-heading{margin-top:9px;padding:8px 1px 6px}.app-tabbed .top-board-heading h3,.app-tabbed .top-board-heading p,.app-tabbed .top-board-heading>span{display:none}.app-tabbed .top-board-heading .rank-kicker{font-size:.62rem}
+.app-tabbed .leaderboard-cards{border-radius:11px}.app-tabbed .leader-card,.app-tabbed .exposure-card{grid-template-columns:28px minmax(0,1fr) auto;gap:7px;padding:7px 8px}.app-tabbed .leader-rank{width:24px;height:24px;font-size:.62rem;background:transparent}.app-tabbed .leader-wallet{font-size:.68rem}.app-tabbed .leader-address{display:none}.app-tabbed .leader-status-line{gap:3px;margin-top:2px}.app-tabbed .leader-tier{margin:0;padding:2px 4px;font-size:.49rem}.app-tabbed .leader-status-line .leader-badges{gap:2px}.app-tabbed .leader-status-line .leader-badge{width:16px;height:16px;font-size:.5rem}.app-tabbed .leader-card .leader-balance,.app-tabbed .exposure-card .leader-balance{grid-column:3;text-align:right}.app-tabbed .leader-balance strong{font-size:.72rem;white-space:nowrap}.app-tabbed .leader-balance span{font-size:.53rem;white-space:nowrap}.app-tabbed .leader-balance small{display:none}.app-tabbed .leader-exposure-details{display:none}
 .app-tabbed .leader-actions{display:none}
+.app-tabbed .leader-row-share{width:17px;height:17px;font-size:.5rem}
 @keyframes treePanelIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media(max-width:1050px){
+  .app-tabbed .app-header-row{grid-row:1;height:32px}
+  .app-tabbed .brand{gap:0}.app-tabbed .brand img{width:24px;height:24px}.app-tabbed .brand>span{display:none}
+  .app-tabbed .wallet-control{max-width:180px;min-height:26px;padding:3px 8px;border-radius:7px;font-size:.62rem}
+  .app-tabbed .app-nav{grid-row:2}
+}
 @media(max-width:760px){
   .app-tabbed main{width:min(100% - 18px,472px);padding-top:14px}
   .app-tabbed main::before{top:59%;width:min(560px,108vw);opacity:.05}
-  .app-tabbed .app-nav{grid-template-columns:repeat(9,minmax(70px,1fr));justify-content:flex-start}
-  .app-tabbed .app-nav a{min-height:58px;padding:7px 5px}
+  .app-tabbed .market-ribbon{justify-content:center;gap:12px;padding-inline:44px 152px;overflow:hidden}
+  .app-tabbed .app-header-row{width:calc(100% - 12px)}
+  .app-tabbed .app-nav{width:630px;max-width:none;grid-template-columns:repeat(9,70px);justify-content:flex-start}
+  .app-tabbed .app-nav a{min-width:0;min-height:56px;padding:6px 3px}
 }
 @media(prefers-reduced-motion:reduce){.app-tabbed .app-panel.active-panel{animation:none}}

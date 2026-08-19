@@ -30,9 +30,18 @@ for (const metric of ['position.valueUsd', 'position.principalSui', 'position.pr
 assert.ok(source.includes('v3-range-track'));
 assert.ok(source.includes('renderPositionRewards'));
 assert.ok(!source.includes('3 verified rewards'));
+assert.ok(source.includes("`Rewards: ${rewardSymbols.join(' + ')}`"));
+assert.ok(!source.includes("`${rewards.length} active reward"));
 assert.ok(!source.includes('Rewards not verified'));
 assert.ok(source.includes('24H Volume'));
 assert.ok(source.includes('APR'));
+assert.ok(source.includes('<span>TVL</span>'));
+assert.ok(!source.includes('Estimated TVL'));
+assert.ok(source.indexOf('id="v3AprBreakdown"') < source.indexOf('<details class="v3-pool-details">'));
+assert.ok(source.includes('analytics.tvlUsd'));
+assert.ok(source.includes('renderAprBreakdown'));
+assert.ok(source.includes('v3-apr-component'));
+assert.ok(css.includes('.v3-apr-component.reward'));
 assert.ok(!source.includes('target="_blank"'));
 assert.ok(source.includes('window.playerAddress'));
 assert.ok(source.includes("'tree:wallet-changed'"));

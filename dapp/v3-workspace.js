@@ -177,7 +177,7 @@ function workspaceMarkup() {
     <div class="v3-workspace">
       <div class="v3-summary" aria-label="TREE V3 summary">
         <article class="v3-summary-card"><span>Verified Pools</span><strong id="v3PoolCount">1</strong></article>
-        <article class="v3-summary-card"><span>Estimated TVL</span><strong id="v3SummaryTvl">Loading…</strong></article>
+        <article class="v3-summary-card"><span>TVL</span><strong id="v3SummaryTvl">Loading…</strong></article>
         <article class="v3-summary-card"><span>Your Positions</span><strong id="v3SummaryPositions">Connect wallet</strong></article>
       </div>
       <div class="v3-tabs" role="tablist" aria-label="V3 workspace">
@@ -192,11 +192,12 @@ function workspaceMarkup() {
             <button class="v3-add-button" id="v3AddLiquidity" type="button">+ Add</button>
           </div>
           <div class="v3-metrics">
-            <div class="v3-metric"><span>Estimated TVL</span><strong id="v3PoolTvl">Loading…</strong></div>
+            <div class="v3-metric"><span>TVL</span><strong id="v3PoolTvl">Loading…</strong></div>
             <div class="v3-metric"><span>24H Volume</span><strong id="v3PoolVolume">Not verified</strong></div>
             <div class="v3-metric"><span>APR</span><strong id="v3PoolApr">Not verified</strong></div>
             <div class="v3-metric"><span>Current Price</span><strong class="good" id="v3PoolPrice">Loading…</strong></div>
           </div>
+          <div class="v3-apr-breakdown" id="v3AprBreakdown" aria-label="APR breakdown">Loading verified fee and incentive APR…</div>
           <details class="v3-pool-details"><summary>Pool details</summary>
             <div class="v3-technical-metrics">
               <div class="v3-metric"><span>SUI Reserve</span><strong id="v3SuiReserve">Loading…</strong></div>
@@ -204,7 +205,6 @@ function workspaceMarkup() {
               <div class="v3-metric"><span>Current Tick</span><strong id="v3CurrentTick">Loading…</strong></div>
               <div class="v3-metric"><span>Liquidity Units</span><strong id="v3LiquidityRaw">Loading…</strong></div>
             </div>
-            <div class="v3-apr-breakdown" id="v3AprBreakdown" aria-label="APR breakdown">Loading verified fee and incentive APR…</div>
             <p class="v3-pool-id">Pool <code>${V3_POOL_ID}</code></p>
             <p class="v3-notice" id="v3AnalyticsNotice">Loading verified on-chain pool and SuiDex analytics data.</p>
             <button class="button secondary v3-refresh" id="v3RefreshPool" type="button">Refresh Pool Data</button>
@@ -296,11 +296,34 @@ function updatePositionPlan() {
   status.textContent = price && Number.isFinite(minValue) && Number.isFinite(maxValue) && minValue < price && price < maxValue ? 'Current price is in range' : 'Current price is outside range';
 }
 
+function renderAprBreakdown(analytics, rewards, verified) {
+  const breakdown = document.getElementById('v3AprBreakdown');
+  if (!breakdown) return;
+  const parts = verified
+    ? [
+      { label: 'Fees', value: analytics.feeAprPercent, className: 'fees' },
+      ...rewards.map((reward) => ({ label: reward.symbol, value: reward.aprPercent, className: 'reward' })),
+    ]
+    : [];
+  if (!parts.length) {
+    breakdown.textContent = 'APR breakdown not verified';
+    return;
+  }
+  breakdown.replaceChildren(...parts.map((part) => {
+    const component = document.createElement('span');
+    component.className = `v3-apr-component ${part.className}`;
+    component.textContent = `${part.label}: ${Number(part.value || 0).toFixed(1)}%`;
+    return component;
+  }));
+}
+
 function renderPool(payload) {
   state.overview = payload;
   rememberPositionPrices(payload);
   const pool = payload.pool;
-  const tvl = formatUsd(pool.tvlUsdEstimate);
+  const analytics = payload.analytics || {};
+  const analyticsVerified = analytics.status === 'verified';
+  const tvl = analyticsVerified ? formatUsd(analytics.tvlUsd) : 'Not verified';
   document.getElementById('v3SummaryTvl').textContent = tvl;
   document.getElementById('v3PoolTvl').textContent = tvl;
   document.getElementById('v3PoolPrice').textContent = `${pool.priceSuiPerTree} SUI / TREE`;
@@ -308,18 +331,16 @@ function renderPool(payload) {
   document.getElementById('v3TreeReserve').textContent = `${formatNumber(pool.reserveTree, 2)} TREE`;
   document.getElementById('v3CurrentTick').textContent = String(pool.currentTick);
   document.getElementById('v3LiquidityRaw').textContent = Number(pool.liquidityRaw).toLocaleString('en-US', { notation: 'compact', maximumFractionDigits: 2 });
-  const analytics = payload.analytics || {};
-  const analyticsVerified = analytics.status === 'verified';
   document.getElementById('v3PoolVolume').textContent = formatUsd(analytics.volume24hUsd);
   document.getElementById('v3PoolApr').textContent = analytics.aprPercent !== null && analytics.aprPercent !== undefined && analytics.aprPercent !== '' && Number.isFinite(Number(analytics.aprPercent)) ? `${Number(analytics.aprPercent).toFixed(1)}%` : 'Not verified';
   const rewards = analyticsVerified && Array.isArray(analytics.rewards) ? analytics.rewards : [];
   const rewardChip = document.getElementById('v3RewardChip');
-  rewardChip.textContent = analyticsVerified ? `${rewards.length} active reward${rewards.length === 1 ? '' : 's'}` : 'Incentives not verified';
-  rewardChip.title = rewards.length ? rewards.map((reward) => reward.symbol).join(', ') : 'No active verified incentive schedule';
-  const aprParts = analyticsVerified
-    ? [`Fees ${Number(analytics.feeAprPercent || 0).toFixed(1)}%`, ...rewards.map((reward) => `${reward.symbol} ${Number(reward.aprPercent).toFixed(1)}%`), `Total ${Number(analytics.aprPercent || 0).toFixed(1)}%`]
-    : ['APR breakdown not verified'];
-  document.getElementById('v3AprBreakdown').textContent = aprParts.join(' · ');
+  const rewardSymbols = rewards.map((reward) => String(reward.symbol || '').trim()).filter(Boolean);
+  rewardChip.textContent = analyticsVerified
+    ? rewardSymbols.length ? `Rewards: ${rewardSymbols.join(' + ')}` : 'No active rewards'
+    : 'Incentives not verified';
+  rewardChip.title = rewardSymbols.length ? `Active rewards: ${rewardSymbols.join(', ')}` : 'No active verified incentive schedule';
+  renderAprBreakdown(analytics, rewards, analyticsVerified);
   const poolWarning = payload.warnings?.[0];
   document.getElementById('v3AnalyticsNotice').textContent = analyticsVerified
     ? `SuiDex verified analytics: ${formatUsd(analytics.volume24hUsd)} volume and ${formatUsd(analytics.fees24hUsd)} fees in the last 24 hours. APR is annualized from current fees and active incentive emissions; it is not guaranteed.`

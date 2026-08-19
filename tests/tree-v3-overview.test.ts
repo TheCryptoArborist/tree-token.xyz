@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import {
   SUI_COIN_TYPE,
   TREE_V3_POOL_ID,
+  TREE_V3_REWARD_TOKENS,
   formatRawAmount,
   normalizeCoinType,
   parseSignedI32,
@@ -121,10 +122,13 @@ assert.equal(parseTreeV3Pool({
 }), null);
 
 const victoryType = '0xbfac5e1c6bf6ef29b12f7723857695fd2f4da9a11a7d88162c15e9124c243a4a::victory_token::VICTORY_TOKEN';
+const btcType = TREE_V3_REWARD_TOKENS.find((reward) => reward.symbol === 'wBTC')!.coinType;
 const analyticsTvl = pool.tvlUsdEstimate!;
 const analyticsFees = 2.5;
 const feeApr = analyticsFees * 365 / analyticsTvl * 100;
-const rewardApr = 100 * 1 * 365 / analyticsTvl * 100;
+const victoryRewardApr = 100 * 1 * 365 / analyticsTvl * 100;
+const btcRewardApr = 0.001 * 50_000 * 365 / analyticsTvl * 100;
+const rewardApr = victoryRewardApr + btcRewardApr;
 const analytics = parseSuiDexV3Analytics({
   pools: [{
     pool_id: TREE_V3_POOL_ID,
@@ -146,18 +150,34 @@ const analytics = parseSuiDexV3Analytics({
       per_day: '100000000',
       price_usd: 1,
       ended_at: 2_000_000_000,
+    }, {
+      coin_type: btcType,
+      symbol: 'BTC',
+      decimals: 8,
+      per_day: '100000',
+      price_usd: 50_000,
+      ended_at: 2_000_000_000,
     }],
   }],
-  tokenPrices: { [victoryType]: 1 },
+  tokenPrices: { [victoryType]: 1, [btcType]: 50_000 },
 }, pool, 1_900_000_000);
 
 assert.ok(analytics);
 assert.equal(analytics.volume24hUsd, 1000);
 assert.equal(analytics.fees24hUsd, 2.5);
-assert.equal(analytics.rewards.length, 1);
+assert.equal(analytics.rewards.length, 2);
 assert.equal(analytics.rewards[0].symbol, 'VICTORY');
+assert.equal(analytics.rewards[1].symbol, 'wBTC');
 assert.equal(analytics.rewards[0].perDay, 100);
 assert.equal(analytics.aprPercent, feeApr + rewardApr);
+
+assert.equal(parseSuiDexV3Analytics({ pools: [{
+  pool_id: TREE_V3_POOL_ID, token_x_type: TREE_COIN_TYPE, token_y_type: SUI_COIN_TYPE,
+  fee_rate: 2500, tick_spacing: 60, approved: true, tvl_usd: analyticsTvl,
+  volume_24h_usd: 1000, fees_24h_usd: analyticsFees, fee_apr: feeApr,
+  reward_apr: rewardApr, total_apr: feeApr + rewardApr,
+  rewards: [{ coin_type: '0x123::fake::FAKE', symbol: 'FAKE', decimals: 6, per_day: '1000000', price_usd: 1, ended_at: 2_000_000_000 }],
+}], tokenPrices: { '0x123::fake::FAKE': 1 } }, pool, 1_900_000_000), null);
 
 assert.equal(parseSuiDexV3Analytics({ pools: [{
   pool_id: TREE_V3_POOL_ID, token_x_type: TREE_COIN_TYPE, token_y_type: SUI_COIN_TYPE,
