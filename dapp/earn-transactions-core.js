@@ -61,7 +61,7 @@ async function listCoins(client, owner, coinType) {
   return coins.filter((coin) => BigInt(coin.balance || 0) > 0n);
 }
 
-async function coinForAmount(transaction, client, owner, coinType, amount) {
+export async function coinForAmount(transaction, client, owner, coinType, amount) {
   if (normalizeType(coinType) === normalizeType(SUI_TYPE)) {
     const [coin] = transaction.splitCoins(transaction.gas, [transaction.pure.u64(amount)]);
     return coin;
@@ -153,12 +153,21 @@ function quoteExactInput(amountIn, reserveIn, reserveOut, slippageBps) {
   return Object.freeze({ amountIn: input, amountOut, minAmountOut, priceImpactBps });
 }
 
-export function quoteVictoryV2Reinvest({ victorySuiPoolJson, suiTreePoolJson, amountIn, slippageBps = 100 }) {
+export function quoteVictoryToSui({ victorySuiPoolJson, amountIn, slippageBps = 100 }) {
   const victoryReserveRaw = BigInt(victorySuiPoolJson?.reserve1 ?? victorySuiPoolJson?.balance1 ?? 0);
-  const victoryPoolSuiRaw = BigInt(victorySuiPoolJson?.reserve0 ?? victorySuiPoolJson?.balance0 ?? 0);
+  const suiReserveRaw = BigInt(victorySuiPoolJson?.reserve0 ?? victorySuiPoolJson?.balance0 ?? 0);
+  return Object.freeze({
+    pairId: VICTORY_SUI_POOL,
+    amountIn: BigInt(amountIn),
+    slippageBps: Number(slippageBps),
+    ...quoteExactInput(amountIn, victoryReserveRaw, suiReserveRaw, slippageBps),
+  });
+}
+
+export function quoteVictoryV2Reinvest({ victorySuiPoolJson, suiTreePoolJson, amountIn, slippageBps = 100 }) {
   const treePoolSuiRaw = BigInt(suiTreePoolJson?.reserve0 ?? suiTreePoolJson?.balance0 ?? 0);
   const treeReserveRaw = BigInt(suiTreePoolJson?.reserve1 ?? suiTreePoolJson?.balance1 ?? 0);
-  const victoryToSui = quoteExactInput(amountIn, victoryReserveRaw, victoryPoolSuiRaw, slippageBps);
+  const victoryToSui = quoteVictoryToSui({ victorySuiPoolJson, amountIn, slippageBps });
   const suiSwapRaw = victoryToSui.minAmountOut / 2n;
   const liquiditySuiRaw = victoryToSui.minAmountOut - suiSwapRaw;
   const suiToTree = quoteExactInput(suiSwapRaw, treePoolSuiRaw, treeReserveRaw, slippageBps);

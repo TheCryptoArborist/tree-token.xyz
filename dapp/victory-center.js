@@ -5,7 +5,7 @@ import { confirmTransaction } from './transaction-review.js';
 import {
   SUI_TYPE, V2_POOL, VICTORY_DECIMALS, VICTORY_SUI_POOL, VICTORY_TYPE,
   buildV2StakeTransaction, buildVictoryV2ReinvestTransaction, extractPositiveV2Lp, getV2LpBalance,
-  parseAmount, quoteVictoryV2Reinvest,
+  parseAmount, quoteVictoryToSui, quoteVictoryV2Reinvest,
 } from './earn-transactions-core.js';
 import {
   VICTORY_LOCKER, VICTORY_LOCKED_VAULT, VICTORY_REWARD_VAULT, VICTORY_SUI_REWARD_VAULT,
@@ -14,6 +14,11 @@ import {
   decodeVictoryEmissionRate, extractSuiClaimedFromEvents, extractVictoryClaimEvents, extractVictoryClaimed,
   extractVictoryLockEvent, extractVictoryLocked, extractVictoryUnlockEvent, getVictoryLocks, parseVictoryLockerSnapshot,
 } from './victory-transaction-core.js';
+import {
+  SUIDEX_V3_POOL, SUI_COIN_TYPE, TREE_COIN_TYPE, TREE_V3_FULL_RANGE,
+  extractAddLiquidityEvent, minimumAfterSlippage, optimalV3ZapSwapRaw, ticksFromDisplayedPrices, validateVerifiedPool,
+} from './v3-transaction-core.js';
+import { buildVictoryV3ReinvestTransaction } from './victory-v3-reinvest-core.js';
 
 const client = new SuiGrpcClient({ network: 'mainnet', baseUrl: 'https://fullnode.mainnet.sui.io:443' });
 const EXECUTION_ENABLED = ['tree-token.xyz', 'www.tree-token.xyz'].includes(location.hostname.toLowerCase())
@@ -27,7 +32,7 @@ const state = {
   snapshot: null, emissionRateRaw: null, aprs: null, locks: [], victoryByLock: new Map(), suiClaims: [],
   claimableVictoryRaw: null, claimableSuiRaw: null, victoryPreviewError: '', suiPreviewError: '',
   loading: false, executing: false, claiming: '', unlockingLockId: '',
-  reinvest: { amount: '', mode: 'complete', reinvestBps: 5_000, lockDays: 90, slippageBps: 100, quote: null, quoting: false, executing: false, timer: null },
+  reinvest: { amount: '', mode: 'complete', destination: 'v2', reinvestBps: 5_000, lockDays: 90, slippageBps: 100, quote: null, quoting: false, executing: false, timer: null, v3Target: 'new', v3Range: '20', v3Pool: null, v3Positions: [] },
 };
 const el = {};
 const TERM_LABELS = Object.freeze({ 7: '7 days', 90: '90 days', 365: '1 year', 1095: '3 years' });
@@ -126,6 +131,34 @@ function reinvestAmounts() {
 }
 function setReinvestStatus(message, kind = '') { el.reinvestStatus.textContent = message; el.reinvestStatus.className = `status${kind ? ` ${kind}` : ''}`; }
 function formatImpactBps(value) { const bps = BigInt(value || 0); return `${bps / 100n}.${(bps % 100n).toString().padStart(2, '0')}%`; }
+function selectedV3Position() { return state.reinvest.v3Positions.find((position) => position.objectId === state.reinvest.v3Target && position.inRange); }
+function selectedV3Ticks() {
+  const position = selectedV3Position();
+  if (position) return { lower: Number(position.tickLower), upper: Number(position.tickUpper) };
+  const pool = state.reinvest.v3Pool;
+  if (!pool) throw new Error('The verified V3 pool is still loading.');
+  if (state.reinvest.v3Range === 'full') return TREE_V3_FULL_RANGE;
+  const percentage = Number(state.reinvest.v3Range) / 100; const currentPrice = Number(pool.priceSuiPerTree);
+  return ticksFromDisplayedPrices({ currentTick: Number(pool.currentTick), currentPrice, minPrice: currentPrice * (1 - percentage), maxPrice: currentPrice * (1 + percentage), tickSpacing: Number(pool.tickSpacing), displayedPriceIncreasesWithTick: false });
+}
+function v3RangeText() {
+  const position = selectedV3Position();
+  if (position) return `Add to ${position.objectId.slice(0, 8)}…${position.objectId.slice(-6)} · ticks ${position.tickLower} to ${position.tickUpper}`;
+  if (state.reinvest.v3Range === 'full') return 'New position · full protocol range';
+  return `New position · ±${state.reinvest.v3Range}% range`;
+}
+function renderV3Controls() {
+  const isV3 = state.reinvest.destination === 'v3'; el.v3Controls.hidden = !isV3; el.reinvestDestination.value = state.reinvest.destination;
+  el.reinvestHeading.textContent = `VICTORY → SUI/TREE ${isV3 ? 'V3' : 'V2'}`;
+  el.reinvestRouteCopy.textContent = isV3 ? 'Verified VICTORY/SUI conversion + native SuiDex V3 position' : 'Two verified pools · 0.30% swap fee per conversion';
+  if (!isV3) return;
+  const positions = state.reinvest.v3Positions.filter((position) => position.inRange);
+  const options = ['<option value="new">Create a new V3 position</option>', ...positions.map((position, index) => `<option value="${position.objectId}">Add to in-range position ${index + 1} · ${position.objectId.slice(0, 8)}…${position.objectId.slice(-6)}</option>`)].join('');
+  if (el.v3Target.dataset.options !== options) { el.v3Target.innerHTML = options; el.v3Target.dataset.options = options; }
+  if (state.reinvest.v3Target !== 'new' && !positions.some((position) => position.objectId === state.reinvest.v3Target)) state.reinvest.v3Target = 'new';
+  el.v3Target.value = state.reinvest.v3Target; el.v3Range.value = state.reinvest.v3Range; el.v3RangeControls.hidden = state.reinvest.v3Target !== 'new';
+  el.v3RouteSummary.textContent = state.reinvest.v3Pool ? `${v3RangeText()} · ${positions.length} eligible existing position${positions.length === 1 ? '' : 's'}` : 'Loading verified V3 pool…';
+}
 function renderReinvest() {
   const connected = Boolean(window.playerAddress); const amounts = reinvestAmounts(); const amount = amounts.totalRaw; const quote = state.reinvest.quote; const sustainable = state.reinvest.mode === 'sustainable';
   el.reinvestBalance.textContent = connected ? `Available ${formatRaw(state.victoryBalance, VICTORY_DECIMALS, 6)} VICTORY` : 'Available —';
@@ -133,12 +166,13 @@ function renderReinvest() {
   el.sustainableControls.hidden = !sustainable; el.reinvestPercent.textContent = `${state.reinvest.reinvestBps / 100}%`; el.lockPercent.textContent = `${100 - state.reinvest.reinvestBps / 100}%`;
   el.reinvestSplit.value = String(state.reinvest.reinvestBps / 100); el.sustainableLockTerm.value = String(state.reinvest.lockDays); el.sustainableUnlockDate.textContent = sustainable ? unlockDateForDays(state.reinvest.lockDays) : '—';
   el.reinvestAllocation.textContent = amounts.reinvestRaw ? `${formatRaw(amounts.reinvestRaw, VICTORY_DECIMALS, 6)} VICTORY` : '—'; el.lockAllocation.textContent = amounts.lockRaw > 0n ? `${formatRaw(amounts.lockRaw, VICTORY_DECIMALS, 6)} VICTORY` : 'None';
-  el.reinvestApprovals.textContent = sustainable ? '2 · Split + lock + liquidity, then stake' : '2 · Liquidity, then stake';
+  const isV3 = state.reinvest.destination === 'v3'; renderV3Controls();
+  el.reinvestApprovals.textContent = isV3 ? '1 · Conversion + position' : sustainable ? '2 · Split + lock + liquidity, then stake' : '2 · Liquidity, then stake';
   document.querySelectorAll('[data-victory-reinvest-mode]').forEach((button) => { const active = button.dataset.victoryReinvestMode === state.reinvest.mode; button.classList.toggle('active', active); button.setAttribute('aria-selected', String(active)); });
   document.querySelectorAll('[data-victory-reinvest-split]').forEach((button) => button.classList.toggle('active', Number(button.dataset.victoryReinvestSplit) * 100 === state.reinvest.reinvestBps));
   el.reinvestSuiMin.textContent = quote ? `${formatRaw(quote.victoryToSui.minAmountOut, 9, 9)} SUI` : '—';
-  el.reinvestTreeMin.textContent = quote ? `${formatRaw(quote.suiToTree.minAmountOut, 6, 6)} TREE` : '—';
-  el.reinvestImpact.textContent = quote ? formatImpactBps(quote.victoryToSui.priceImpactBps + quote.suiToTree.priceImpactBps) : '—';
+  el.reinvestTreeMin.textContent = quote ? `${formatRaw(isV3 ? quote.minSwapOutRaw : quote.suiToTree.minAmountOut, 6, 6)} TREE` : '—';
+  el.reinvestImpact.textContent = quote ? formatImpactBps(BigInt(quote.victoryToSui.priceImpactBps) + BigInt(isV3 ? quote.v3PriceImpactBps : quote.suiToTree.priceImpactBps)) : '—';
   document.querySelectorAll('[data-victory-reinvest-slippage]').forEach((button) => button.classList.toggle('active', Number(button.dataset.victoryReinvestSlippage) === state.reinvest.slippageBps));
   if (state.reinvest.executing) { el.reinvestAction.disabled = true; el.reinvestAction.textContent = 'Reinvesting…'; }
   else if (!connected) { el.reinvestAction.disabled = false; el.reinvestAction.textContent = 'Connect Wallet'; }
@@ -237,6 +271,12 @@ async function simulateTwice(transaction) {
     if (!success(result)) throw new Error(failure(result, `Sui Mainnet simulation ${pass + 1} failed.`)); verified = result;
   }
   return verified;
+}
+async function simulateOnce(transaction, fallback = 'The preliminary Sui Mainnet simulation failed.') {
+  const bytes = await transaction.build({ client });
+  const result = await client.core.simulateTransaction({ transaction: bytes, include: { effects: true, balanceChanges: true, events: true } });
+  if (!success(result)) throw new Error(failure(result, fallback));
+  return result;
 }
 async function submitAndFinalize(transaction) {
   if (typeof window.signAndExecuteTransactionBlock !== 'function') throw new Error('The connected wallet cannot sign this transaction.');
@@ -351,10 +391,41 @@ async function claimWeeklySui() {
 
 async function requestReinvestQuote() {
   const amounts = reinvestAmounts(); const amount = amounts.reinvestRaw; state.reinvest.quote = null;
-  if (!amount) { setReinvestStatus('Enter a VICTORY amount to build the verified V2 reinvest route.'); render(); return; }
+  if (!amount) { setReinvestStatus(`Enter a VICTORY amount to build the verified ${state.reinvest.destination.toUpperCase()} reinvest route.`); render(); return; }
   if (amount < 1_000n || (state.reinvest.mode === 'sustainable' && amounts.lockRaw <= 0n)) { setReinvestStatus('The selected sustainable split is too small for the verified route.', 'error'); render(); return; }
   state.reinvest.quoting = true; render();
   try {
+    if (state.reinvest.destination === 'v3') {
+      const owner = window.playerAddress || '';
+      const overviewQuery = owner ? `?owner=${encodeURIComponent(owner)}` : '';
+      const [victoryPoolResult, overviewResponse] = await Promise.all([
+        client.core.getObject({ objectId: VICTORY_SUI_POOL, include: { json: true } }),
+        fetch(`/api/tree-v3-overview${overviewQuery}`, { cache: 'no-store', headers: { Accept: 'application/json' } }),
+      ]);
+      const overview = await overviewResponse.json().catch(() => ({}));
+      if (!overviewResponse.ok) throw new Error(`The verified V3 pool service returned ${overviewResponse.status}.`);
+      validateVerifiedPool(overview.pool); state.reinvest.v3Pool = overview.pool;
+      state.reinvest.v3Positions = Array.isArray(overview.positions) ? overview.positions.filter((position) => /^0x[0-9a-f]{64}$/i.test(position?.objectId || '')) : [];
+      const position = selectedV3Position(); if (state.reinvest.v3Target !== 'new' && !position) throw new Error('The selected V3 position is not currently in range or verified for this wallet.');
+      const victoryToSui = quoteVictoryToSui({ victorySuiPoolJson: objectJson(victoryPoolResult), amountIn: amount, slippageBps: state.reinvest.slippageBps });
+      const fetchV3Route = async (swapAmount) => {
+        const query = new URLSearchParams({ tokenIn: SUI_COIN_TYPE, tokenOut: TREE_COIN_TYPE, amountIn: swapAmount.toString(), slippageBps: String(state.reinvest.slippageBps) });
+        const response = await fetch(`/api/tree-swap-quote?${query}`, { cache: 'no-store', headers: { Accept: 'application/json' } }); const payload = await response.json().catch(() => ({}));
+        const route = Array.isArray(payload.routes) ? payload.routes.find((candidate) => candidate.executionKind === 'suidex-v3-direct') : null;
+        if (!response.ok || payload.status !== 'ok' || !route) throw new Error(payload.message || 'A verified SuiDex V3 quote is unavailable.');
+        if (String(route.pairId).toLowerCase() !== SUIDEX_V3_POOL || BigInt(route.amountIn) !== swapAmount || BigInt(route.amountOut) <= 0n || BigInt(route.minAmountOut) <= 0n) throw new Error('The V3 quote does not match the verified SUI/TREE pool and amount.');
+        return route;
+      };
+      const availableSui = BigInt(victoryToSui.minAmountOut); const probeRaw = availableSui / 2n;
+      if (probeRaw <= 0n) throw new Error('The converted SUI amount is too small for V3 liquidity.');
+      const probe = await fetchV3Route(probeRaw); const ticks = selectedV3Ticks();
+      const optimizedRaw = optimalV3ZapSwapRaw({ amountIn: availableSui, inputType: SUI_COIN_TYPE, tickLower: ticks.lower, tickUpper: ticks.upper, sqrtPriceRaw: state.reinvest.v3Pool.sqrtPriceRaw, probeAmountIn: probeRaw, probeAmountOut: BigInt(probe.amountOut) });
+      const v3Route = optimizedRaw === probeRaw ? probe : await fetchV3Route(optimizedRaw);
+      if (reinvestAmounts().reinvestRaw !== amount || state.reinvest.destination !== 'v3') return;
+      state.reinvest.quote = Object.freeze({ amountIn: amount, slippageBps: state.reinvest.slippageBps, victoryToSui, v3SwapRaw: optimizedRaw, minSwapOutRaw: BigInt(v3Route.minAmountOut), v3PriceImpactBps: BigInt(v3Route.priceImpactBps || 0), tickLower: ticks.lower, tickUpper: ticks.upper, positionId: position?.objectId || null, generatedAt: Date.now() });
+      setReinvestStatus(`${state.reinvest.mode === 'sustainable' ? 'Verified sustainable split' : 'Verified VICTORY conversion'} ready for ${v3RangeText()}. One guarded wallet approval will complete the route.`, 'success');
+      return;
+    }
     const [victoryPool, treePool] = await Promise.all([
       client.core.getObject({ objectId: VICTORY_SUI_POOL, include: { json: true } }),
       client.core.getObject({ objectId: V2_POOL, include: { json: true } }),
@@ -363,10 +434,45 @@ async function requestReinvestQuote() {
     if (reinvestAmounts().reinvestRaw !== amount) return;
     state.reinvest.quote = quote;
     setReinvestStatus(state.reinvest.mode === 'sustainable' ? 'Verified sustainable split ready. The lock and liquidity route will be atomic in the first approval.' : 'Verified VICTORY → SUI → SUI/TREE V2 route ready. Minimum outputs include your selected slippage protection.', 'success');
-  } catch (error) { setReinvestStatus(`${String(error?.message || error || 'The V2 reinvest quote is unavailable.')} No transaction was created.`, 'error'); }
+  } catch (error) { setReinvestStatus(`${String(error?.message || error || `The ${state.reinvest.destination.toUpperCase()} reinvest quote is unavailable.`)} No transaction was created.`, 'error'); }
   finally { state.reinvest.quoting = false; render(); }
 }
 function scheduleReinvestQuote() { clearTimeout(state.reinvest.timer); state.reinvest.timer = setTimeout(requestReinvestQuote, 300); }
+
+async function executeVictoryV3Reinvest(amounts) {
+  state.reinvest.executing = true; el.reinvestSuccess.hidden = true; render();
+  try {
+    const owner = window.playerAddress; const quote = state.reinvest.quote; const sustainable = state.reinvest.mode === 'sustainable';
+    const lockDays = state.reinvest.lockDays; const reinvestBps = state.reinvest.reinvestBps; const selectedTarget = state.reinvest.v3Target; const selectedRange = state.reinvest.v3Range;
+    const base = { Transaction, client, owner, totalAmount: amounts.totalRaw, reinvestAmount: amounts.reinvestRaw, lockAmount: amounts.lockRaw, lockDays, quote, slippageBps: state.reinvest.slippageBps };
+    setReinvestStatus('Running a preliminary Sui Mainnet simulation to measure the exact V3 position deposits…', 'warning');
+    const preliminary = await buildVictoryV3ReinvestTransaction(base); const preliminarySimulation = await simulateOnce(preliminary.transaction);
+    const preliminaryAdded = extractAddLiquidityEvent(preliminarySimulation, quote.positionId || null);
+    const preliminaryLock = sustainable ? extractVictoryLockEvent(preliminarySimulation, owner, { amountRaw: amounts.lockRaw, lockDays }) : null;
+    if (!preliminaryAdded || extractVictoryLocked(preliminarySimulation, owner) !== amounts.totalRaw || (sustainable && !preliminaryLock)) throw new Error('The preliminary simulation did not verify the exact VICTORY allocation and V3 liquidity deposit.');
+    const finalBuilt = await buildVictoryV3ReinvestTransaction({
+      ...base,
+      minSuiRaw: minimumAfterSlippage(preliminaryAdded.suiRaw, state.reinvest.slippageBps),
+      minTreeRaw: minimumAfterSlippage(preliminaryAdded.treeRaw, state.reinvest.slippageBps),
+    });
+    setReinvestStatus('Running two final safety simulations of the exact V3 reinvest transaction…', 'warning');
+    const simulation = await simulateTwice(finalBuilt.transaction); const simulatedAdded = extractAddLiquidityEvent(simulation, quote.positionId || null);
+    const simulatedLock = sustainable ? extractVictoryLockEvent(simulation, owner, { amountRaw: amounts.lockRaw, lockDays }) : null;
+    if (!simulatedAdded || extractVictoryLocked(simulation, owner) !== amounts.totalRaw || (sustainable && !simulatedLock)) throw new Error('The final simulations did not verify the exact VICTORY allocation, lock, and V3 liquidity output.');
+    const readable = formatRaw(amounts.totalRaw, VICTORY_DECIMALS, VICTORY_DECIMALS); const reinvestReadable = formatRaw(amounts.reinvestRaw, VICTORY_DECIMALS, VICTORY_DECIMALS); const lockReadable = formatRaw(amounts.lockRaw, VICTORY_DECIMALS, VICTORY_DECIMALS);
+    const splitCopy = sustainable ? `\nReinvest: ${reinvestReadable} VICTORY (${reinvestBps / 100}%)\nLock: ${lockReadable} VICTORY for ${TERM_LABELS[lockDays] || `${lockDays} days`}\nEstimated unlock: ${unlockDateForDays(lockDays)}\n` : '';
+    if (!(await confirmTransaction(`${sustainable ? `Process ${readable} VICTORY with Sustainable Reinvest?` : `Reinvest ${readable} VICTORY into SUI/TREE V3?`}\n${splitCopy}\nDestination: ${v3RangeText()}\nTicks: ${quote.tickLower} to ${quote.tickUpper}\nMinimum SUI from VICTORY: ${formatRaw(quote.victoryToSui.minAmountOut, 9, 9)} SUI\nMinimum TREE from V3 swap: ${formatRaw(quote.minSwapOutRaw, 6, 6)} TREE\nCombined quoted impact: ${formatImpactBps(BigInt(quote.victoryToSui.priceImpactBps) + BigInt(quote.v3PriceImpactBps))}\nWallet approvals: 1\n\nThe exact combined transaction passed two final Sui Mainnet simulations.`, { title: sustainable ? 'Sustainable V3 Reinvest' : 'Complete V3 Reinvest', confirmLabel: 'Continue to Wallet' }))) { setReinvestStatus('V3 reinvest cancelled before wallet approval.'); return; }
+    if (window.playerAddress !== owner) throw new Error('The connected wallet changed before approval.');
+    if (state.reinvest.destination !== 'v3' || state.reinvest.mode !== (sustainable ? 'sustainable' : 'complete') || state.reinvest.reinvestBps !== reinvestBps || state.reinvest.lockDays !== lockDays || state.reinvest.v3Target !== selectedTarget || state.reinvest.v3Range !== selectedRange) throw new Error('The V3 reinvest settings changed before approval. Review the updated route again.');
+    setReinvestStatus('Review the verified VICTORY conversion and V3 position transaction in your wallet…', 'warning');
+    const { txDigest, finalized } = await submitAndFinalize(finalBuilt.transaction); const finalizedAdded = extractAddLiquidityEvent(finalized, quote.positionId || null);
+    const finalizedLock = sustainable ? extractVictoryLockEvent(finalized, owner, { amountRaw: amounts.lockRaw, lockDays }) : null;
+    if (!finalizedAdded || extractVictoryLocked(finalized, owner) !== amounts.totalRaw || (sustainable && !finalizedLock)) throw new Error('The finalized transaction did not reconcile with the verified VICTORY allocation and V3 liquidity output.');
+    el.reinvestSuccess.hidden = false; el.reinvestSuccess.innerHTML = `<strong>${sustainable ? `${lockReadable} VICTORY locked; ${reinvestReadable} VICTORY reinvested` : `${readable} VICTORY reinvested`} into SUI/TREE V3 successfully.</strong><a href="https://suiscan.xyz/mainnet/tx/${encodeURIComponent(txDigest)}" target="_blank" rel="noopener noreferrer">View ${txDigest.slice(0, 12)}… ↗</a><small>${quote.positionId ? 'Liquidity was added to the selected verified position.' : 'A new concentrated-liquidity position was created.'}</small>`;
+    state.reinvest.amount = ''; state.reinvest.quote = null; el.reinvestAmount.value = ''; setReinvestStatus(`${sustainable ? 'Sustainable' : 'Complete'} V3 reinvest confirmed on Sui Mainnet.`, 'success'); await load(); showVictoryView('reinvest');
+  } catch (error) { const message = String(error?.message || error || 'VICTORY V3 reinvest failed.'); setReinvestStatus(/reject|cancel|denied/i.test(message) ? 'Wallet approval was cancelled. Any confirmed lock or liquidity remains safely recorded on-chain.' : message, 'error'); }
+  finally { state.reinvest.executing = false; render(); }
+}
 
 async function executeVictoryReinvest() {
   if (!(await connectIfNeeded()) || !EXECUTION_ENABLED || state.reinvest.executing) return;
@@ -375,6 +481,7 @@ async function executeVictoryReinvest() {
   if (state.suiBalance < 100_000_000n) { setReinvestStatus('Keep at least 0.1 SUI available for the liquidity and staking transaction fees.', 'error'); return; }
   if (!state.reinvest.quote || Date.now() - Number(state.reinvest.quote.generatedAt || 0) > 15_000) { await requestReinvestQuote(); if (!state.reinvest.quote) return; }
   amounts = reinvestAmounts();
+  if (state.reinvest.destination === 'v3') { await executeVictoryV3Reinvest(amounts); return; }
   state.reinvest.executing = true; el.reinvestSuccess.hidden = true; render();
   try {
     const owner = window.playerAddress; const quote = state.reinvest.quote; const beforeLp = await getV2LpBalance(client, owner);
@@ -419,6 +526,7 @@ function init() {
     centerCard: document.getElementById('victoryCenterCard'), lockerTab: document.getElementById('victoryLockerTab'), locksTab: document.getElementById('victoryLocksTab'), reinvestTab: document.getElementById('victoryReinvestTab'), lockerView: document.getElementById('victoryLockerView'), locksView: document.getElementById('victoryLocksView'), reinvestView: document.getElementById('victoryReinvestView'), myLockCount: document.getElementById('victoryMyLockCount'), claimableVictory: document.getElementById('victoryClaimableTotal'), claimableSui: document.getElementById('victorySuiClaimableTotal'), claimRewards: document.getElementById('victoryClaimRewards'), claimSui: document.getElementById('victoryClaimSui'), lockList: document.getElementById('victoryLockList'), backToTop: document.getElementById('victoryBackToTop'),
     reinvestAmount: document.getElementById('victoryReinvestAmount'), reinvestAmountLabel: document.getElementById('victoryReinvestAmountLabel'), reinvestBalance: document.getElementById('victoryReinvestBalance'), reinvestMax: document.getElementById('victoryReinvestMax'), reinvestSuiMin: document.getElementById('victoryReinvestSuiMin'), reinvestTreeMin: document.getElementById('victoryReinvestTreeMin'), reinvestImpact: document.getElementById('victoryReinvestImpact'), reinvestAction: document.getElementById('victoryReinvestAction'), reinvestStatus: document.getElementById('victoryReinvestStatus'), reinvestSuccess: document.getElementById('victoryReinvestSuccess'),
     sustainableControls: document.getElementById('victorySustainableControls'), reinvestPercent: document.getElementById('victoryReinvestPercent'), lockPercent: document.getElementById('victoryLockPercent'), reinvestSplit: document.getElementById('victoryReinvestSplit'), sustainableLockTerm: document.getElementById('victorySustainableLockTerm'), sustainableUnlockDate: document.getElementById('victorySustainableUnlockDate'), reinvestAllocation: document.getElementById('victoryReinvestAllocation'), lockAllocation: document.getElementById('victoryLockAllocation'), reinvestApprovals: document.getElementById('victoryReinvestApprovals'),
+    reinvestDestination: document.getElementById('victoryReinvestDestination'), reinvestHeading: document.getElementById('victoryReinvestHeading'), reinvestRouteCopy: document.getElementById('victoryReinvestRouteCopy'), v3Controls: document.getElementById('victoryV3Controls'), v3Target: document.getElementById('victoryV3Target'), v3RangeControls: document.getElementById('victoryV3RangeControls'), v3Range: document.getElementById('victoryV3Range'), v3RouteSummary: document.getElementById('victoryV3RouteSummary'),
   });
   if (!el.action) return;
   el.amount.addEventListener('input', () => { state.amount = el.amount.value; render(); });
@@ -429,6 +537,9 @@ function init() {
   el.reinvestAmount.addEventListener('input', () => { state.reinvest.amount = el.reinvestAmount.value; state.reinvest.quote = null; render(); scheduleReinvestQuote(); });
   el.reinvestMax.addEventListener('click', () => { state.reinvest.amount = formatRaw(state.victoryBalance, VICTORY_DECIMALS, VICTORY_DECIMALS); el.reinvestAmount.value = state.reinvest.amount; state.reinvest.quote = null; render(); scheduleReinvestQuote(); });
   document.querySelectorAll('[data-victory-reinvest-mode]').forEach((button) => button.addEventListener('click', () => { state.reinvest.mode = button.dataset.victoryReinvestMode === 'sustainable' ? 'sustainable' : 'complete'; state.reinvest.quote = null; render(); scheduleReinvestQuote(); }));
+  el.reinvestDestination.addEventListener('change', () => { state.reinvest.destination = el.reinvestDestination.value === 'v3' ? 'v3' : 'v2'; state.reinvest.quote = null; render(); scheduleReinvestQuote(); });
+  el.v3Target.addEventListener('change', () => { state.reinvest.v3Target = el.v3Target.value; state.reinvest.quote = null; render(); scheduleReinvestQuote(); });
+  el.v3Range.addEventListener('change', () => { state.reinvest.v3Range = el.v3Range.value; state.reinvest.quote = null; render(); scheduleReinvestQuote(); });
   el.reinvestSplit.addEventListener('input', () => { state.reinvest.reinvestBps = Number(el.reinvestSplit.value) * 100; state.reinvest.quote = null; render(); scheduleReinvestQuote(); });
   document.querySelectorAll('[data-victory-reinvest-split]').forEach((button) => button.addEventListener('click', () => { state.reinvest.reinvestBps = Number(button.dataset.victoryReinvestSplit) * 100; state.reinvest.quote = null; render(); scheduleReinvestQuote(); }));
   el.sustainableLockTerm.addEventListener('change', () => { state.reinvest.lockDays = Number(el.sustainableLockTerm.value); render(); });
