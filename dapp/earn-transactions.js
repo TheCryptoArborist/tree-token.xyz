@@ -5,6 +5,7 @@ import {
   buildV2ClaimRewardsTransaction, buildV2StakeTransaction, buildV2ZapTransaction,
   estimateV2PositionUnderlying, extractPositiveV2VictoryReward, getV2FarmPosition, getV2LpBalance, parseAmount,
 } from './earn-transactions-core.js';
+import { confirmTransaction } from './transaction-review.js';
 
 const client = new SuiGrpcClient({ network: 'mainnet', baseUrl: 'https://fullnode.mainnet.sui.io:443' });
 const EXECUTION_ENABLED = ['tree-token.xyz', 'www.tree-token.xyz'].includes(location.hostname.toLowerCase())
@@ -165,7 +166,7 @@ async function stakeAmount(amount, statusTarget = el.status) {
   const transaction = await buildV2StakeTransaction({ Transaction, client, owner, amount });
   statusTarget.textContent = 'Simulating the exact farm stake twice on Sui Mainnet…'; statusTarget.className = 'status warning';
   await simulateTwice(transaction);
-  if (!window.confirm(`Stake ${amount.toString()} raw SUI/TREE LP units in the verified TREE farm?\n\nThis is the second and final wallet approval. The exact transaction passed two Mainnet simulations.`)) return null;
+  if (!(await confirmTransaction(`Stake ${amount.toString()} raw SUI/TREE LP units in the verified TREE farm?\n\nThis is the second and final wallet approval. The exact transaction passed two Mainnet simulations.`, { title: 'Stake V2 Liquidity' }))) return null;
   statusTarget.textContent = 'Review the verified SUI/TREE LP stake in your wallet…'; statusTarget.className = 'status warning';
   return signAndFinalize(transaction);
 }
@@ -184,7 +185,7 @@ async function executeZapAndStake() {
     setStatus('Simulating the exact swap-and-liquidity transaction twice on Sui Mainnet…', 'warning');
     await simulateTwice(built.transaction);
     const summary = `${formatRaw(amount, decimalsFor(state.token), 6)} ${state.token}`;
-    if (!window.confirm(`Create SUI/TREE V2 liquidity from ${summary}?\n\nStep 1 of 2: swap approximately half and create LP.\nStep 2: after confirmation, TREE will verify and offer to stake only the newly created LP.\n\nThe exact transaction passed two Mainnet simulations.`)) { setStatus('Zap cancelled before wallet approval.'); return; }
+    if (!(await confirmTransaction(`Create SUI/TREE V2 liquidity from ${summary}?\n\nStep 1 of 2: swap approximately half and create LP.\nStep 2: after confirmation, TREE will verify and offer to stake only the newly created LP.\n\nThe exact transaction passed two Mainnet simulations.`, { title: 'Create V2 Liquidity' }))) { setStatus('Zap cancelled before wallet approval.'); return; }
     setStatus('Review the verified swap-and-liquidity transaction in your wallet…', 'warning');
     const zapDigest = await signAndFinalize(built.transaction);
     setStatus('Liquidity confirmed. Verifying the newly created LP before staking…', 'warning');
@@ -238,7 +239,7 @@ async function claimVictoryRewards() {
       return;
     }
     const claimable = formatRaw(claimableRaw, VICTORY_DECIMALS, VICTORY_DECIMALS);
-    if (!window.confirm(`Claim ${claimable} VICTORY from the verified SUI/TREE V2 farm?\n\nFarm position: ${built.positionId}\n\nThe exact claim passed two Sui Mainnet simulations.`)) {
+    if (!(await confirmTransaction(`Claim ${claimable} VICTORY from the verified SUI/TREE V2 farm?\n\nFarm position: ${built.positionId}\n\nThe exact claim passed two Sui Mainnet simulations.`, { title: 'Claim V2 Rewards' }))) {
       status.textContent = 'VICTORY claim cancelled before wallet approval.'; status.className = 'status'; return;
     }
     status.textContent = `Review the ${claimable} VICTORY claim in your wallet…`; status.className = 'status warning';

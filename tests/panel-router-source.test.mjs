@@ -23,6 +23,8 @@ assert.match(router, /addEventListener\('popstate'/);
 assert.match(css, /\.app-panel\[hidden\]\{display:none!important\}/);
 assert.match(css, /width:min\(472px,calc\(100% - 30px\)\)/);
 assert.match(css, /width:648px;max-width:100%;grid-template-columns:repeat\(9,72px\)/, 'Desktop tabs must remain a compact centered ribbon.');
+assert.match(css, /\.app-tabbed \.app-nav\{width:100%;max-width:100%;min-width:0;grid-template-columns:repeat\(9,70px\)/, 'Mobile tabs must scroll inside a viewport-width ribbon.');
+assert.match(css, /overflow-x:auto;overscroll-behavior-inline:contain;-webkit-overflow-scrolling:touch;touch-action:pan-x/, 'Mobile tabs must preserve native horizontal touch scrolling.');
 assert.match(css, /font-size:\.68rem;letter-spacing:\.055em/, 'Compact navigation labels must retain the approved SuiTrump-scale typography.');
 assert.match(css, /\.app-tabbed \.app-header-row\{grid-column:1;grid-row:2/, 'Desktop brand and wallet must share the navigation row.');
 assert.match(css, /tree-command-watermark\.png/);

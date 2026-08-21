@@ -1,4 +1,5 @@
 import { Transaction } from 'https://esm.run/@mysten/sui@2.23.1/transactions';
+import { confirmTransaction } from './transaction-review.js';
 import { SuiGrpcClient } from 'https://esm.run/@mysten/sui@2.23.1/grpc';
 import {
   SUI_COIN_TYPE, TREE_COIN_TYPE, SUI_DECIMALS, TREE_DECIMALS, MIN_SUI_GAS_RESERVE_RAW,
@@ -100,7 +101,7 @@ async function execute() {
     setStatus('Running two final Sui Mainnet safety simulations…', 'warning');
     for (let pass = 0; pass < 2; pass += 1) { const result = await simulate(finalTx); if (!succeeded(result) || !extractAddLiquidityEvent(result)) throw new Error(failure(result, `Final V3 simulation ${pass + 1} failed.`)); }
     const summary = `${formatRaw(amountIn, decimalsFor(state.token), 6)} ${state.token}`;
-    if (!window.confirm(`Create a SUI/TREE V3 position from ${summary}?\n\nRange: ${rangeText()}\nTicks: ${tickLower} to ${tickUpper}\nWallet approvals: 1\n\nThe exact transaction passed two final Sui Mainnet simulations.`)) { setStatus('V3 zap cancelled before wallet approval.'); return; }
+    if (!(await confirmTransaction(`Create a SUI/TREE V3 position from ${summary}?\n\nRange: ${rangeText()}\nTicks: ${tickLower} to ${tickUpper}\nWallet approvals: 1\n\nThe exact transaction passed two final Sui Mainnet simulations.`, { title: 'Create V3 Position' }))) { setStatus('V3 zap cancelled before wallet approval.'); return; }
     setStatus('Review the verified V3 zap and position transaction in your wallet…', 'warning'); const txDigest = await signAndFinalize(finalTx);
     el.success.hidden = false; el.success.innerHTML = `<strong>V3 position confirmed on Sui Mainnet.</strong><a href="https://suiscan.xyz/mainnet/tx/${encodeURIComponent(txDigest)}" target="_blank" rel="noopener noreferrer">View ${txDigest.slice(0, 12)}… ↗</a><small>V3 incentives are attached directly to this position.</small>`;
     setStatus('Your SUI/TREE V3 position was created successfully.', 'success'); state.amount = ''; el.amount.value = ''; state.quote = null; state.swapRaw = null; await loadBalances();

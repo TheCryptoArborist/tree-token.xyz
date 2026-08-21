@@ -111,6 +111,8 @@ assert.equal(dappMarkup.includes('src="../assets/tree-command-logo-v2-512.png" a
 assert.equal(dappScript.includes("loadRankCardImage('../assets/tree-command-watermark.png')"), true);
 assert.equal(dappScript.includes('VERIFIED CANOPY SNAPSHOT'), true);
 assert.equal(dappScript.includes('VERIFIED WALLET BADGES'), true);
+assert.match(dappScript, /badge\.className = `leader-badge badge-\$\{slug\}`;[\s\S]*?badge\.title = definition\.label;/);
+assert.equal(dappMarkup.includes('<strong>Paper Hands</strong><small>More TREE sold than bought during the last 30 days.</small>'), true);
 assert.equal(dappScript.includes('SHARE YOUR PLACE IN THE CANOPY'), true);
 assert.equal(dappScript.includes('PUBLIC CANOPY RANK'), true);
 assert.equal(dappScript.includes("navigator.canShare?.(shareData)"), true);

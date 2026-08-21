@@ -8,6 +8,7 @@ node_modules/
 dist/
 .netlify/
 raffle-contract/build/
+supabase/.temp/
 
 # Logs and OS/editor files
 *.log

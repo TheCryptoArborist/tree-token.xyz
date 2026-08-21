@@ -5,6 +5,8 @@ const wallet = readFileSync(new URL('../scripts/wallet.js', import.meta.url), 'u
 const app = readFileSync(new URL('../dapp/app.js', import.meta.url), 'utf8');
 const css = readFileSync(new URL('../dapp/wallet-manager.css', import.meta.url), 'utf8');
 const core = readFileSync(new URL('../scripts/wallet-manager-core.js', import.meta.url), 'utf8');
+const phantom = readFileSync(new URL('../scripts/phantom-sui-provider.js', import.meta.url), 'utf8');
+const nightly = readFileSync(new URL('../scripts/nightly-sui-provider.js', import.meta.url), 'utf8');
 
 assert.match(wallet, /@mysten\/slush-wallet@1\.1\.14/);
 assert.match(wallet, /@mysten\/wallet-standard@0\.21\.14/);
@@ -13,6 +15,15 @@ assert.match(wallet, /SLUSH_CONNECT_TIMEOUT/);
 assert.match(wallet, /isSlushWebWallet/);
 assert.match(wallet, /location\.assign\(slushBrowseUrl/);
 assert.match(wallet, /@mysten\/sui@2\.23\.1\/grpc/);
+assert.match(wallet, /@mysten\/sui@2\.23\.1\/utils/);
+assert.match(wallet, /getPhantomSuiProvider\(window\)/);
+assert.match(wallet, /provider\.signTransaction/);
+assert.match(wallet, /provider\.signMessage/);
+assert.match(wallet, /networkID: CHAIN/);
+assert.match(wallet, /Get or open Phantom/);
+assert.match(wallet, /getNightlySuiWallet\(window\)/);
+assert.match(wallet, /Get or open Nightly/);
+assert.match(wallet, /nightly\.app\/download\?tab=browser/);
 assert.match(wallet, /walletSignAndExecuteTransaction/);
 assert.match(wallet, /window\.signTreePersonalMessage = signTreePersonalMessage/);
 assert.match(wallet, /sui:signPersonalMessage/);
@@ -25,6 +36,11 @@ assert.match(wallet, /Switch wallet/);
 assert.match(wallet, /standard:disconnect/);
 assert.match(wallet, /standard:events/);
 assert.match(wallet, /tree:wallet-changed/);
+assert.match(wallet, /WALLET_PREFERENCE_TTL_MS = 30 \* 24 \* 60 \* 60 \* 1000/);
+assert.match(wallet, /localStorage\.setItem/);
+assert.match(wallet, /connectFeature\.connect\(\{ silent: true \}\)/);
+assert.match(wallet, /RESTORE_REGISTRATION_WAIT_MS/);
+assert.match(wallet, /No private key or signing permission is stored/);
 assert.doesNotMatch(wallet, /find\(\(w\) => \(w\.accounts \|\| \[\]\)\.length > 0\) \|\| suiWallets\[0\]/);
 
 assert.match(app, /window\.openWalletManager\(\)/);
@@ -36,6 +52,12 @@ assert.doesNotMatch(app, /await window\.disconnectWallet\?\.\(\); syncWalletButt
 assert.match(core, /compatibleSuiWallets/);
 assert.match(core, /isSlushWallet/);
 assert.match(core, /my\.slush\.app/);
+assert.match(core, /tree:phantomSui/);
+assert.match(phantom, /window\.phantom|scope\?\.phantom\?\.sui|scope\?\.phantom\.sui/);
+assert.match(phantom, /requestAccount/);
+assert.match(phantom, /phantom-sui-direct/);
+assert.match(nightly, /scope\?\.nightly\?\.sui/);
+assert.match(nightly, /standardWallet/);
 assert.match(css, /@media\(max-width:540px\)/);
 assert.match(css, /tree-wallet-dialog/);
 

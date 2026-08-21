@@ -6,6 +6,7 @@ import {
   isFavorableLimitTarget, limitDecimalToRaw, limitDirection, limitRawToDecimal, limitSimulationSucceeded,
   limitExpiryDurationMs, minimumLimitInput, normalizeLimitAddress, treeLimitOrderDirection, validateLimitBalanceChanges, validateLimitTargetPrice,
 } from './limit-orders-core.js';
+import { confirmTransaction } from './transaction-review.js';
 
 const API = '/api/tree-limit-orders';
 const state = { direction: 'buy-tree', currentPrice: 0, currentTreePerSui: 0, rateUpdatedAt: null, rateLoading: false, targetPreset: 5, minUsd: null, coinPricesUsd: { sui: null, tree: null }, balances: { sui: 0n, tree: 0n }, balanceOwner: null, busy: false, tab: 'active', orders: [], accountProof: null };
@@ -227,7 +228,7 @@ async function createOrder() {
     const finalBuild = await api('create', { body: plan });
     const verified = await simulatePlan(finalBuild.transaction, plan);
     const estimate = estimateLimitOutput({ direction: plan.direction, amount: plan.amountText, targetPrice: plan.targetPriceSuiPerTree });
-    const confirmed = window.confirm(`Review TREE limit order\n\nEscrow: ${plan.amountText} ${plan.inputSymbol}\nTarget: ${plan.targetPriceSuiPerTree} SUI per TREE\nEstimated receive: ${numberText(estimate, limitDirection(plan.direction).outputDecimals)} ${plan.outputSymbol}\nExpires: ${expiryLabel()}\nProvider: Aftermath Mainnet\nExecution gas held: 0.05 SUI plus normal network gas\n\nThe order can be canceled to return unspent funds. Continue to wallet approval?`);
+    const confirmed = await confirmTransaction(`Escrow: ${plan.amountText} ${plan.inputSymbol}\nTarget: ${plan.targetPriceSuiPerTree} SUI per TREE\nEstimated receive: ${numberText(estimate, limitDirection(plan.direction).outputDecimals)} ${plan.outputSymbol}\nExpires: ${expiryLabel()}\nProvider: Aftermath Mainnet\nExecution gas held: 0.05 SUI plus normal network gas\n\nThe order can be canceled to return unspent funds.`, { title: 'Review TREE Limit Order', confirmLabel: 'Continue to Wallet' });
     if (!confirmed) throw new Error('Order review was canceled. No transaction was submitted.');
     setStatus('Both simulations passed. Review the exact order in your wallet.');
     const submitted = await window.signAndExecuteTransactionBlock(verified.transaction);
@@ -293,7 +294,7 @@ async function refreshOrders(tab = state.tab, authorize = true) {
 async function refreshFromButton() { state.busy = true; updateAction(); try { await connectIfNeeded(); await refreshOrders(state.tab, true); setStatus(`${state.orders.length} ${state.tab} TREE limit order${state.orders.length === 1 ? '' : 's'} loaded.`, 'success'); } catch (error) { setStatus(error.message, 'error'); } finally { state.busy = false; updateAction(); } }
 
 async function cancelOrder(orderId) {
-  if (!window.confirm(`Cancel order ${compact(orderId)} and return its unspent funds?`)) return;
+  if (!(await confirmTransaction(`Cancel order ${compact(orderId)} and return its unspent funds?`, { title: 'Cancel Limit Order', confirmLabel: 'Continue to Wallet' }))) return;
   state.busy = true; updateAction();
   try {
     setStatus('Approve the cancellation message in your wallet.');

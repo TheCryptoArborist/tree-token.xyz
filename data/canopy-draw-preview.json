@@ -4,8 +4,23 @@
   "acceptingEntries": false,
   "claimsEnabled": false,
   "prizesFunded": false,
-  "dailyPrize": null,
+  "dailyPrize": {
+    "symbol": "TREE",
+    "coinType": "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE",
+    "amountRaw": "50000000000",
+    "decimals": 6
+  },
+  "dailyLuckyLeaf": {
+    "status": "staged-inactive",
+    "symbol": "wBTC",
+    "coinType": "0xaafb102dd0902f5055cadecd687fb5b71ca82ef0e0285d90afde828ec58ca96b::btc::BTC",
+    "decimals": 8,
+    "mondayThroughSaturdayUsd": 2.5,
+    "sundayUsd": 10,
+    "weeklyBudgetUsd": 25
+  },
   "weeklyPrize": null,
+  "weeklyLuckyLeafPrize": null,
   "minimumQualifyingUsdConcept": 5,
   "ticketExponentConcept": 0.9457,
   "ticketCoefficientConcept": 0.288368,

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>TREE Command Center | Stats, Leaderboard &amp; TREE Utilities</title>
-  <meta name="description" content="TREE ecosystem stats, verified Canopy leaderboard, Profile Studio, Canopy Draw preview, and NFTree utility links.">
+  <meta name="description" content="TREE ecosystem stats, verified Canopy leaderboard, TREE Knowledge Trial, Profile Studio, and NFTree utility links.">
   <link rel="icon" type="image/png" href="../assets/tree-command-logo-v2-512.png">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="panel-router.css">
@@ -12,6 +12,8 @@
   <link rel="stylesheet" href="limit-orders.css">
   <link rel="stylesheet" href="earn-transactions.css">
   <link rel="stylesheet" href="earn-v2-rewards.css">
+  <link rel="stylesheet" href="victory-center.css">
+  <link rel="stylesheet" href="transaction-review.css">
   <link rel="stylesheet" href="earn-v3-zap.css">
   <link rel="stylesheet" href="v3-transactions.css">
   <script type="module" src="../scripts/wallet.js"></script>
@@ -33,7 +35,7 @@
       <a href="#v3"><span aria-hidden="true">◫</span><b>V3</b></a>
       <a href="#stats"><span aria-hidden="true">▥</span><b>Stats</b></a>
       <a href="#removed"><span aria-hidden="true">🔥</span><b>Burn</b></a>
-      <a href="#canopy-draw"><span aria-hidden="true">🎟</span><b>Raffle</b></a>
+      <a href="#canopy-draw"><span aria-hidden="true">🧠</span><b>Challenge</b></a>
       <a href="#leaderboard"><span aria-hidden="true">🌳</span><b>Canopy</b></a>
       <a href="#documents"><span aria-hidden="true">▤</span><b>Docs</b></a>
     </nav>
@@ -48,12 +50,12 @@
           <div class="swap-card-header"><h2 id="swap-title">Swap</h2><button class="swap-settings-toggle" id="swapSettingsToggle" type="button" aria-expanded="false" aria-controls="swapAdvanced" aria-label="Show swap details"><span>Details</span><span class="swap-details-chevron" aria-hidden="true">⌄</span></button></div>
           <div class="swap-token-box">
             <div class="swap-token-top"><span>You pay</span><span id="swapInputBalance" class="swap-balance">Balance —</span></div>
-            <div class="swap-token-input-row"><input id="swapAmountIn" type="text" inputmode="decimal" autocomplete="off" aria-label="Amount to swap" placeholder="0.0"><button class="swap-max" id="swapMax" type="button">MAX</button><span class="swap-token-pill"><span class="swap-token-icon sui" id="swapInputIcon" aria-hidden="true"></span><strong id="swapInputSymbol">SUI</strong></span></div>
+            <div class="swap-token-input-row"><div class="swap-amount-field"><input id="swapAmountIn" type="text" inputmode="decimal" autocomplete="off" aria-label="Amount to swap" placeholder="0.0"><span class="swap-usd-value" id="swapInputUsd" aria-label="Input value in US dollars">—</span></div><button class="swap-max" id="swapMax" type="button">MAX</button><span class="swap-token-pill"><img class="swap-token-icon sui" id="swapInputIcon" src="../assets/sui-token.svg" alt="SUI token logo"><strong id="swapInputSymbol">SUI</strong></span></div>
           </div>
           <button class="swap-direction" id="swapDirection" type="button" aria-label="Reverse swap direction">⇅</button>
           <div class="swap-token-box">
             <div class="swap-token-top"><span>You receive</span><span id="swapOutputBalance" class="swap-balance">Balance —</span></div>
-            <div class="swap-token-input-row"><input id="swapAmountOut" type="text" aria-label="Quoted output" placeholder="0" readonly><span class="swap-token-pill"><span class="swap-token-icon tree" id="swapOutputIcon" aria-hidden="true"></span><strong id="swapOutputSymbol">TREE</strong></span></div>
+            <div class="swap-token-input-row"><div class="swap-amount-field"><input id="swapAmountOut" type="text" aria-label="Quoted output" placeholder="0" readonly><span class="swap-usd-value" id="swapOutputUsd" aria-label="Output value in US dollars">—</span></div><span class="swap-token-pill"><img class="swap-token-icon tree" id="swapOutputIcon" src="../assets/tree-token.png" alt="TREE token logo"><strong id="swapOutputSymbol">TREE</strong></span></div>
           </div>
           <div class="swap-advanced" id="swapAdvanced" hidden>
             <div class="swap-route-box">
@@ -112,7 +114,7 @@
     </section>
 
     <section class="section utility-route-section app-panel" id="earn" aria-label="Earn with TREE Liquidity" hidden>
-      <div class="earn-view-tabs" role="tablist" aria-label="Earn views"><button class="active" id="earnRoutesTab" type="button" role="tab" aria-selected="true" aria-controls="earnRoutesPanel">Farms</button><button id="earnPositionsTab" type="button" role="tab" aria-selected="false" aria-controls="earnPositionsPanel">My Positions</button></div>
+      <div class="earn-view-tabs" role="tablist" aria-label="Earn views"><button class="active" id="earnRoutesTab" type="button" role="tab" aria-selected="true" aria-controls="earnRoutesPanel">Farms</button><button id="earnPositionsTab" type="button" role="tab" aria-selected="false" aria-controls="earnPositionsPanel">My Positions</button><button id="earnVictoryTab" type="button" role="tab" aria-selected="false" aria-controls="earnVictoryPanel">VICTORY</button></div>
       <div class="earn-panel" id="earnRoutesPanel" role="tabpanel" aria-labelledby="earnRoutesTab">
         <div class="earn-stat-card"><span>Verified SUI / TREE farm</span><strong>V2</strong><small>Native zap and stake through SuiDex V2</small></div>
         <div class="earn-route-list">
@@ -137,6 +139,45 @@
           <div class="earn-v2-position-object"><span>Farm position</span><a id="earnV2PositionLink" href="#" target="_blank" rel="noopener noreferrer" hidden>View on Suiscan ↗</a><strong id="earnV2PositionId">—</strong></div>
           <div class="earn-v2-position-actions"><button class="button secondary" id="earnStakeExisting" type="button">Stake Existing V2 LP</button><button class="button gold" id="earnClaimVictory" type="button">Claim VICTORY Rewards</button></div>
           <p class="status" id="earnV2PositionStatus" role="status" aria-live="polite">Connect your wallet to load your V2 position.</p><p class="status" id="earnStakeStatus" role="status" aria-live="polite"></p><p class="status" id="earnClaimStatus" role="status" aria-live="polite"></p><div class="swap-success" id="earnClaimSuccess" hidden></div>
+        </article>
+      </div>
+      <div class="earn-panel" id="earnVictoryPanel" role="tabpanel" aria-labelledby="earnVictoryTab" hidden>
+        <article class="victory-center-card">
+          <div class="victory-center-heading"><div class="victory-center-title"><img src="../assets/victory-token.png" alt="VICTORY token"><div><h3>VICTORY Center</h3><p>Live xVICTORY locker access on Sui Mainnet</p></div></div><button class="button secondary" id="victoryRefresh" type="button">Refresh</button></div>
+          <div class="victory-inner-tabs" role="tablist" aria-label="VICTORY views"><button class="active" id="victoryLockerTab" type="button" role="tab" aria-selected="true" aria-controls="victoryLockerView">Lock VICTORY</button><button id="victoryLocksTab" type="button" role="tab" aria-selected="false" aria-controls="victoryLocksView">My Locks &amp; Claims</button><button id="victoryReinvestTab" type="button" role="tab" aria-selected="false" aria-controls="victoryReinvestView">Reinvest</button></div>
+          <div class="victory-inner-view" id="victoryLockerView" role="tabpanel" aria-labelledby="victoryLockerTab">
+            <p class="victory-center-note"><strong>xVICTORY is a locked on-chain position, not a separate coin.</strong> Locking VICTORY creates a time-based locker position that can participate in the published VICTORY and SUI reward system.</p>
+            <div class="victory-stat-grid" aria-live="polite"><div><span>Your available balance</span><strong id="victoryWalletBalance">Connect wallet</strong></div><div><span>Total VICTORY locked</span><strong id="victoryTotalLocked">—</strong></div><div><span>Active locks</span><strong id="victoryActiveLocks">—</strong></div><div><span>VICTORY reward vault</span><strong id="victoryRewardVault">—</strong></div><div><span>SUI reward vault</span><strong id="victorySuiVault">—</strong></div></div>
+            <div class="victory-apr-heading"><div><h4>Current lock APRs</h4><p>Live VICTORY emissions only · variable rates</p></div><span id="victoryEmissionRate">—</span></div>
+            <div class="victory-apr-grid" aria-live="polite"><button type="button" data-victory-term="7"><span>7 days</span><strong data-victory-apr="7">—</strong></button><button type="button" data-victory-term="90"><span>90 days</span><strong data-victory-apr="90">—</strong></button><button type="button" data-victory-term="365"><span>1 year</span><strong data-victory-apr="365">—</strong></button><button type="button" data-victory-term="1095"><span>3 years</span><strong data-victory-apr="1095">—</strong></button></div>
+            <p class="victory-apr-note">APR uses the contract's current VICTORY emission rate, each term's current allocation, and the live VICTORY locked in that term. Weekly SUI revenue is variable and shown separately in My Locks.</p>
+            <div class="victory-lock-box"><h4>Create an xVICTORY lock</h4><p>Choose one of the four terms accepted by the published locker contract. Locked VICTORY cannot be withdrawn before its on-chain unlock time.</p><label class="victory-lock-label" for="victoryLockAmount"><span>Amount</span><span id="victoryLockBalance">Available —</span></label><div class="victory-lock-input"><input id="victoryLockAmount" type="text" inputmode="decimal" autocomplete="off" placeholder="0.0"><button id="victoryLockMax" type="button">MAX</button><span>VICTORY</span></div><label class="victory-lock-label" for="victoryLockTerm"><span>Lock term</span></label><select id="victoryLockTerm"><option value="7" data-victory-term-option="7">7 days</option><option value="90" data-victory-term-option="90" selected>90 days</option><option value="365" data-victory-term-option="365">1 year · 365 days</option><option value="1095" data-victory-term-option="1095">3 years · 1,095 days</option></select><div class="victory-unlock-row"><span>Estimated unlock date</span><strong id="victoryUnlockDate">—</strong></div><button class="button gold" id="victoryLockAction" type="button">Connect Wallet</button></div>
+          </div>
+          <div class="victory-inner-view" id="victoryLocksView" role="tabpanel" aria-labelledby="victoryLocksTab" hidden>
+            <div class="victory-claim-summary" aria-live="polite"><div><span>Your xVICTORY locks</span><strong id="victoryMyLockCount">—</strong></div><div><span>Claimable VICTORY</span><strong id="victoryClaimableTotal">—</strong></div><div><span>Claimable weekly SUI</span><strong id="victorySuiClaimableTotal">—</strong></div></div>
+            <div class="victory-claim-actions"><button class="button gold" id="victoryClaimRewards" type="button">Claim VICTORY Rewards</button><button class="button secondary" id="victoryClaimSui" type="button">Claim Weekly SUI</button></div>
+            <p class="victory-claim-note">VICTORY emissions accrue continuously. SUI revenue is allocated in completed weekly epochs and becomes claimable only after that epoch is finalized on-chain.</p>
+            <div class="victory-lock-list" id="victoryLockList"><p class="muted">Connect your wallet to load its current VICTORY locks and rewards.</p></div>
+          </div>
+          <div class="victory-inner-view" id="victoryReinvestView" role="tabpanel" aria-labelledby="victoryReinvestTab" hidden>
+            <p class="victory-center-note"><strong>Complete Reinvest</strong> sends all selected wallet VICTORY into SUI/TREE V2. <strong>Sustainable Reinvest</strong> atomically locks one portion as xVICTORY and sends the other portion into the same verified liquidity route. Claim rewards first if they are not yet in your wallet.</p>
+            <div class="victory-lock-box victory-reinvest-box">
+              <div class="victory-reinvest-heading"><div><h4>VICTORY → SUI/TREE V2</h4><p>Two verified pools · 0.30% swap fee per conversion</p></div><span>Sui Mainnet</span></div>
+              <div class="victory-reinvest-modes" role="tablist" aria-label="VICTORY reinvest mode"><button class="active" type="button" data-victory-reinvest-mode="complete" role="tab" aria-selected="true">Complete</button><button type="button" data-victory-reinvest-mode="sustainable" role="tab" aria-selected="false">Sustainable</button></div>
+              <label class="victory-lock-label" for="victoryReinvestAmount"><span id="victoryReinvestAmountLabel">Wallet VICTORY to reinvest</span><span id="victoryReinvestBalance">Available —</span></label><div class="victory-lock-input"><input id="victoryReinvestAmount" type="text" inputmode="decimal" autocomplete="off" placeholder="0.0"><button id="victoryReinvestMax" type="button">MAX</button><span>VICTORY</span></div>
+              <div class="victory-sustainable-controls" id="victorySustainableControls" hidden>
+                <div class="victory-split-heading"><span>VICTORY allocation</span><strong><span id="victoryReinvestPercent">50%</span> reinvest · <span id="victoryLockPercent">50%</span> lock</strong></div>
+                <input id="victoryReinvestSplit" type="range" min="10" max="90" step="5" value="50" aria-label="Percentage of VICTORY to reinvest">
+                <div class="victory-split-buttons"><button type="button" data-victory-reinvest-split="25">25% reinvest</button><button class="active" type="button" data-victory-reinvest-split="50">50% reinvest</button><button type="button" data-victory-reinvest-split="75">75% reinvest</button></div>
+                <label class="victory-lock-label" for="victorySustainableLockTerm"><span>xVICTORY lock term</span><span>Published terms</span></label><select id="victorySustainableLockTerm"><option value="7">7 days</option><option value="90" selected>90 days</option><option value="365">1 year</option><option value="1095">3 years</option></select>
+                <div class="victory-unlock-row"><span>Estimated unlock date</span><strong id="victorySustainableUnlockDate">—</strong></div>
+              </div>
+              <label class="victory-lock-label" for="victoryReinvestDestination"><span>Destination</span></label><select id="victoryReinvestDestination"><option value="v2">SuiDex V2 SUI/TREE · add liquidity + stake</option></select>
+              <div class="victory-reinvest-summary"><div><span>VICTORY reinvested</span><strong id="victoryReinvestAllocation">—</strong></div><div><span>VICTORY locked</span><strong id="victoryLockAllocation">—</strong></div><div><span>Minimum SUI from VICTORY</span><strong id="victoryReinvestSuiMin">—</strong></div><div><span>Minimum TREE for liquidity</span><strong id="victoryReinvestTreeMin">—</strong></div><div><span>Combined quoted impact</span><strong id="victoryReinvestImpact">—</strong></div><div><span>Wallet approvals</span><strong id="victoryReinvestApprovals">2 · Liquidity, then stake</strong></div></div>
+              <div class="victory-reinvest-slippage"><span>Slippage protection</span><div><button type="button" data-victory-reinvest-slippage="50">0.5%</button><button class="active" type="button" data-victory-reinvest-slippage="100">1%</button><button type="button" data-victory-reinvest-slippage="200">2%</button></div></div><button class="button gold" id="victoryReinvestAction" type="button">Connect Wallet</button><p class="status" id="victoryReinvestStatus" role="status" aria-live="polite">Connect your wallet and enter a VICTORY amount.</p><div class="swap-success" id="victoryReinvestSuccess" hidden></div>
+            </div>
+          </div>
+          <p class="status" id="victoryStatus" role="status" aria-live="polite">Loading the live VICTORY locker…</p><div class="swap-success" id="victorySuccess" hidden></div>
         </article>
       </div>
     </section>
@@ -190,18 +231,37 @@
     </section>
 
     <section class="section app-panel" id="canopy-draw" aria-labelledby="canopy-title" hidden>
-      <div class="section-heading"><div><p class="eyebrow">Daily + weekly on-chain draws</p><h2 id="canopy-title">TREE Canopy Draw Raffle</h2><p class="meta" id="raffleMeta">Loading public raffle status…</p></div><span class="data-state refreshing" id="raffleState">Loading</span></div>
-      <div class="raffle-tabs" role="tablist" aria-label="TREE raffle views"><button id="raffleDailyTab" class="active" type="button" role="tab" aria-selected="true" aria-controls="raffleDailyPanel">Daily</button><button id="raffleWeeklyTab" type="button" role="tab" aria-selected="false" aria-controls="raffleWeeklyPanel">Weekly</button><button id="raffleEntriesTab" type="button" role="tab" aria-selected="false" aria-controls="raffleEntriesPanel">My Entries</button></div>
-      <div id="raffleDailyPanel" class="raffle-view" role="tabpanel" aria-labelledby="raffleDailyTab"><article class="card raffle-prize-card"><span class="rank-kicker">DAILY SAPLING DRAW</span><strong class="prize" data-daily-prize>No active prize yet</strong><p>Scheduled for 10:00 AM (America/New_York) each trading day.</p><a class="button secondary" id="raffleEntryButton" href="#swap">Raffle inactive</a></article></div>
-      <div id="raffleWeeklyPanel" class="raffle-view" role="tabpanel" aria-labelledby="raffleWeeklyTab" hidden><article class="card raffle-prize-card"><span class="rank-kicker">WEEKLY CANOPY JACKPOT</span><strong class="prize" data-weekly-prize>No active prize yet</strong><p>Scheduled weekly for Sunday at 10:05 AM (America/New_York). Daily tickets also enter the weekly drawing.</p></article><article class="card compact-raffle-card"><h3>Previous Draws</h3><p id="raffleHistory" data-raffle-history>No rounds have completed yet.</p></article></div>
-      <div id="raffleEntriesPanel" class="raffle-view" role="tabpanel" aria-labelledby="raffleEntriesTab" hidden><article class="card compact-raffle-card"><h3>Your Entries</h3><strong class="prize" id="raffleEntriesCount">0</strong><p id="raffleEntriesStatus">Entries are only tracked after launch activation.</p></article><article class="card compact-raffle-card"><h3>Streak Ladder</h3><p>Multiplier preview: 1.0x to 2.5x over 15 days.</p><label for="canopy-streak-days">Streak day preview</label><input id="canopy-streak-days" type="range" min="1" max="15" value="1"><output id="canopy-streak-result" for="canopy-streak-days">Day 1: 1.00x preview multiplier</output></article><article class="card compact-raffle-card"><h3>Prize Claim</h3><p>Public draw transaction: Not published yet<br>Claim status: Not active</p></article></div>
-      <details class="raffle-details"><summary>Rules, ticket preview &amp; verification</summary><div class="draw-grid">
-        <article class="card"><h3>How It Works</h3><ul><li>Minimum qualifying purchase: $5 equivalent</li><li>Main tickets use a sub-linear 0.9457 exponent</li><li>One Lucky Leaf ticket per qualifying transaction</li><li>Potential one-time streak bonuses on days 7 and 15</li><li>Qualifying tickets enter both active rounds</li></ul></article>
-        <article class="card"><h3>Ticket Formula Preview</h3><p>Simulation only. Results are not recorded, connected to the swap, or valid tickets.</p><code>floor(USD^0.9457 × 0.288368 × streak)</code><label for="canopy-qualifying-usd">Example qualifying amount in USD</label><input id="canopy-qualifying-usd" type="number" min="0" step="0.01" inputmode="decimal"><output id="canopy-ticket-result" for="canopy-qualifying-usd">Enter an amount to preview tickets.</output></article>
-        <article class="card full"><h3>Fairness &amp; Methodology</h3><p>Every finalized buy must be independently verified. The ticket ledger must be publicly committed before one-time Sui randomness is requested, and the winning wallet must match that committed ticket range.</p><div class="flow">finalized SUI → TREE buy → effects independently verified → tickets committed → round closes → one on-chain draw → proof-bound winner → reserved prize claimed</div></article>
-        <article class="card full"><h3>Launch Requirements</h3><p data-raffle-blockers>Prize funding, official rules, public randomness, and claims must be approved before activation.</p><strong>No purchase method and jurisdiction rules are still under legal review.</strong></article>
+      <div class="section-heading"><div><p class="eyebrow">Purchase-gated · performance-ranked · no random winner</p><h2 id="canopy-title">TREE Knowledge Trial</h2><p class="meta" id="knowledgeTrialMeta">Loading the skill-challenge framework…</p></div><span class="data-state refreshing" id="knowledgeTrialState">Loading</span></div>
+      <div class="raffle-tabs" role="tablist" aria-label="TREE Knowledge Trial views"><button id="raffleDailyTab" class="active" type="button" role="tab" aria-selected="true" aria-controls="raffleDailyPanel">Overview</button><button id="raffleWeeklyTab" type="button" role="tab" aria-selected="false" aria-controls="raffleWeeklyPanel">Practice</button><button id="raffleEntriesTab" type="button" role="tab" aria-selected="false" aria-controls="raffleEntriesPanel">My Pass</button></div>
+      <article class="raffle-countdown-card knowledge-trial-summary" aria-live="polite">
+        <div><span>TRIAL DURATION</span><strong>03:00</strong></div>
+        <p>Accuracy ranks first. Completion time ranks equal scores.</p>
+      </article>
+      <div id="raffleDailyPanel" class="raffle-view" role="tabpanel" aria-labelledby="raffleDailyTab">
+        <article class="card raffle-prize-card knowledge-prize-card"><span class="rank-kicker">PLANNED DAILY SKILL PRIZE</span><strong class="prize">50,000 TREE</strong><p>A verified TREE purchase worth at least $5 unlocks one Challenge Pass. Public passes and prizes remain inactive during development.</p><div class="actions"><button class="button secondary" id="knowledgeTrialPracticeShortcut" type="button">Try Practice Trial</button><a class="button secondary" href="#swap">Open TREE Swap</a></div></article>
+        <article class="card compact-raffle-card knowledge-method-card"><h3>How the one daily winner is determined</h3><ol><li>Highest number of correct answers</li><li>Fastest verified completion time</li><li>Exact ties advance to timed sudden-death questions</li></ol><p>One daily winner receives the prize. No drawing, RNG, ticket weighting, streak multiplier, or random tie-breaker is used.</p></article>
+        <article class="card compact-raffle-card knowledge-method-card"><h3>One fair attempt</h3><p>Every participant receives the same five-question TREE ecosystem challenge and three-minute limit. One qualifying wallet can use one pass per round.</p></article>
+      </div>
+      <div id="raffleWeeklyPanel" class="raffle-view" role="tabpanel" aria-labelledby="raffleWeeklyTab" hidden>
+        <article class="card knowledge-trial-card" id="knowledgeTrialPracticeCard">
+          <div class="knowledge-trial-head"><div><span class="rank-kicker" id="knowledgeTrialModeLabel">PRACTICE MODE</span><h3 id="knowledgeTrialPracticeTitle">TREE Ecosystem Foundations</h3></div><strong id="knowledgeTrialTimer">03:00</strong></div>
+          <div id="knowledgeTrialIntro"><p>Take the complete five-question practice trial. Practice does not require a purchase, consume a Challenge Pass, affect a leaderboard, or award a prize.</p><div class="knowledge-rules"><span>5 questions</span><span>3 minutes</span><span>Accuracy first</span></div><button class="button gold" id="knowledgeTrialStartPractice" type="button">Start Practice Trial</button></div>
+          <form id="knowledgeTrialForm" hidden><div class="knowledge-progress"><span id="knowledgeTrialProgress">Question 1 of 5</span><span id="knowledgeTrialAnswered">0 answered</span></div><div class="knowledge-progress-track"><span id="knowledgeTrialProgressBar"></span></div><fieldset id="knowledgeTrialQuestion"></fieldset><div class="actions knowledge-trial-actions"><button class="button secondary" id="knowledgeTrialPrevious" type="button">Previous</button><button class="button secondary" id="knowledgeTrialNext" type="button">Next</button><button class="button gold" id="knowledgeTrialSubmit" type="submit">Submit Trial</button></div></form>
+          <div id="knowledgeTrialResult" class="knowledge-result" hidden aria-live="polite"></div>
+          <p class="status" id="knowledgeTrialStatus" role="status" aria-live="polite"></p>
+        </article>
+      </div>
+      <div id="raffleEntriesPanel" class="raffle-view" role="tabpanel" aria-labelledby="raffleEntriesTab" hidden>
+        <article class="card compact-raffle-card"><h3>Your Challenge Pass</h3><strong class="prize" id="knowledgeTrialPassState">Not active</strong><p id="knowledgeTrialPassCopy">Connect a wallet to prepare for eligibility checks. Production passes are not being issued yet.</p><div class="actions"><button class="button gold" id="knowledgeTrialStartLive" type="button" hidden>Start Daily Challenge</button><button class="button gold" id="knowledgeTrialClaimPrize" type="button" hidden>Claim 50,000 TREE</button><a class="button secondary" href="#swap">Buy TREE</a></div><p class="status" id="knowledgeTrialClaimStatus" role="status" aria-live="polite"></p></article>
+        <article class="card compact-raffle-card"><h3>Qualifying purchase</h3><p>A finalized SUI → TREE purchase worth at least $5 during the published purchase window is the planned requirement. One qualifying wallet receives one pass and one scored attempt per round.</p></article>
+        <article class="card compact-raffle-card"><h3>Activation safeguards</h3><ul id="knowledgeTrialActivation"><li>Legal approval pending</li><li>Production attempt ledger pending</li><li>Public activation manually disabled</li></ul></article>
+      </div>
+      <details class="raffle-details"><summary>Skill rules &amp; verification</summary><div class="draw-grid">
+        <article class="card"><h3>Scoring</h3><p>Correct answers are the primary score. Server-recorded elapsed time is the secondary score. An incorrect fast submission cannot outrank a slower submission with more correct answers.</p></article>
+        <article class="card"><h3>Verification</h3><p>The server verifies the qualifying purchase, wallet authorization, unused Challenge Pass, server start time, deadline, submitted answers, and score before a result can enter the leaderboard.</p></article>
+        <article class="card full"><h3>Development status</h3><p>The complete practice trial is available for testing. Paid Challenge Passes, scored public attempts, rankings, and prize execution remain disabled until the production ledger and final terms are approved.</p><div class="flow">verified $5+ TREE purchase → one Challenge Pass → one timed attempt → accuracy + speed ranking → sudden death if needed → one daily winner</div></article>
       </div></details>
-      <p class="compliance">TREE Canopy Draw is in launch-preview mode. Entries are currently disabled, and prizes are not yet live. Final eligibility rules, jurisdiction requirements, and prize terms are under legal and technical review.</p>
+      <p class="compliance knowledge-compliance"><strong>Skill competition framework—not an active raffle or drawing.</strong> Public purchase-gated attempts and prizes remain disabled while final eligibility, jurisdiction, and operating terms are reviewed.</p>
     </section>
 
     <section class="section leaderboard-section app-panel" id="leaderboard" aria-labelledby="leaderboard-title" hidden>
@@ -304,8 +364,9 @@
   <script type="module" src="swap-router.js"></script>
   <script type="module" src="limit-orders.js"></script>
   <script type="module" src="earn-transactions.js"></script>
+  <script type="module" src="victory-center.js"></script>
   <script type="module" src="earn-v3-zap.js"></script>
-  <script type="module" src="../scripts/canopy-draw.js"></script>
+  <script type="module" src="../scripts/tree-knowledge-trial.js"></script>
   <script type="module" src="../scripts/profile-studio.js"></script>
   <script type="module" src="v3-workspace.js"></script>
   <script type="module" src="v3-transactions.js"></script>

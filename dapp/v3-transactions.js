@@ -6,6 +6,7 @@ import {
   buildClaimAllTreeV3Position, buildWithdrawAllAndCloseTreeV3Position,
   extractAddLiquidityEvent, extractRemoveLiquidityEvent, extractFeeCollectedEvent, extractRewardCollectedEvents, simulationSucceeded, positionDeleted,
 } from './v3-transaction-core.js';
+import { confirmTransaction } from './transaction-review.js';
 
 const EXECUTION_ENABLED = isTreeV3ExecutionHost(location.hostname);
 const PRODUCTION_EXECUTION = ['tree-token.xyz', 'www.tree-token.xyz'].includes(location.hostname.toLowerCase());
@@ -175,7 +176,7 @@ async function increasePosition(positionId, panel, button) {
     const finalTx = await buildIncreaseTreeV3Position({ Transaction, client, owner, positionId, treeRaw, suiRaw, minTreeRaw, minSuiRaw });
     const finalSimulation = await simulate(client, finalTx);
     if (!simulationSucceeded(finalSimulation) || !extractAddLiquidityEvent(finalSimulation, positionId)) throw new Error('The slippage-protected increase failed Sui Mainnet simulation.');
-    if (!window.confirm(increaseConfirmText({ positionId, treeRaw, suiRaw, minTreeRaw, minSuiRaw, preliminary, slippage: selectedSlippage }))) { setIncreaseStatus(panel,'Liquidity increase cancelled before wallet approval.'); return; }
+    if (!(await confirmTransaction(increaseConfirmText({ positionId, treeRaw, suiRaw, minTreeRaw, minSuiRaw, preliminary, slippage: selectedSlippage }), { title: 'Increase V3 Liquidity' }))) { setIncreaseStatus(panel,'Liquidity increase cancelled before wallet approval.'); return; }
     setIncreaseStatus(panel,'Review the exact SUI/TREE increase in your wallet…','warning');
     const signed = await signAndExecute(finalTx); const digest = digestFrom(signed);
     setIncreaseStatus(panel,'Wallet approved. Waiting for Sui finality…','warning');
@@ -231,7 +232,7 @@ async function removePosition(positionId, panel, button) {
     const confirmation = closesPosition
       ? exitConfirmText({ positionId, liquidityRaw, preliminary: protectedRemoval, fees: verifiedFees, rewards: verifiedRewards, minSuiRaw, minTreeRaw, slippage: selectedSlippage })
       : removeConfirmText({ positionId, percentage, liquidityRaw, minTreeRaw, minSuiRaw, preliminary, slippage: selectedSlippage });
-    if (!window.confirm(confirmation)) { setRemoveStatus(panel,closesPosition ? 'Full exit cancelled before wallet approval.' : 'Liquidity removal cancelled before wallet approval.'); return; }
+    if (!(await confirmTransaction(confirmation, { title: closesPosition ? 'Close V3 Position' : 'Remove V3 Liquidity' }))) { setRemoveStatus(panel,closesPosition ? 'Full exit cancelled before wallet approval.' : 'Liquidity removal cancelled before wallet approval.'); return; }
     setRemoveStatus(panel,closesPosition ? 'Review the complete withdrawal and position deletion in your wallet…' : 'Review the exact SUI/TREE withdrawal in your wallet…','warning');
     const signed = await signAndExecute(finalTx); const digest = digestFrom(signed);
     setRemoveStatus(panel,'Wallet approved. Waiting for Sui finality…','warning');
@@ -274,7 +275,7 @@ async function collectAll(positionId, panel, button) {
     const verifiedRewards = extractRewardCollectedEvents(finalSimulation, positionId);
     if (!simulationSucceeded(finalSimulation) || !verifiedFees || verifiedRewards.length !== rewardCoinTypes.length
       || verifiedRewards.some((reward) => reward.amountRaw <= 0n || !rewardCoinTypes.includes(reward.coinType))) throw new Error('The optimized claim-all transaction failed its second Mainnet simulation.');
-    if (!window.confirm(claimAllConfirmText({ positionId, fees: verifiedFees, rewards: verifiedRewards }))) { setClaimStatus(panel,'Claim All cancelled before wallet approval.'); return; }
+    if (!(await confirmTransaction(claimAllConfirmText({ positionId, fees: verifiedFees, rewards: verifiedRewards }), { title: 'Claim V3 Fees & Rewards' }))) { setClaimStatus(panel,'Claim All cancelled before wallet approval.'); return; }
     setClaimStatus(panel,'Review the combined fee and reward claim in your wallet…','warning');
     const signed = await signAndExecute(finalTx); const digest = digestFrom(signed);
     setClaimStatus(panel,'Wallet approved. Waiting for Sui finality…','warning');
@@ -360,7 +361,7 @@ async function createPosition(button) {
     const minTreeRaw = minimumAfterSlippage(preliminary.treeRaw, slippageBps); const minSuiRaw = minimumAfterSlippage(preliminary.suiRaw, slippageBps);
     const finalTx = await buildCreateTreeV3Position({ Transaction, client, owner, treeRaw, suiRaw, tickLower, tickUpper, minTreeRaw, minSuiRaw });
     const finalSimulation = await simulate(client, finalTx); if (!simulationSucceeded(finalSimulation)) throw new Error('The slippage-protected V3 transaction failed Sui Mainnet simulation.');
-    if (!window.confirm(confirmText({ tickLower, tickUpper, treeRaw, suiRaw, minTreeRaw, minSuiRaw, preliminary }))) { setStatus('Position creation cancelled before wallet approval.'); return; }
+    if (!(await confirmTransaction(confirmText({ tickLower, tickUpper, treeRaw, suiRaw, minTreeRaw, minSuiRaw, preliminary }), { title: 'Create V3 Position' }))) { setStatus('Position creation cancelled before wallet approval.'); return; }
     setStatus('Review the exact SUI/TREE position transaction in your wallet…','warning'); const signed = await signAndExecute(finalTx); const digest = digestFrom(signed);
     setStatus('Wallet approved. Waiting for Sui finality…','warning'); const finalized = await waitForFinality(client, digest); if (!simulationSucceeded(finalized)) throw new Error('The submitted V3 transaction did not finalize successfully.');
     setStatus(`Position created successfully. Digest: ${digest}`,'ok'); document.querySelector('[data-v3-tab="positions"],[data-v3-panel-target="positions"]')?.click(); node('v3RefreshPositions')?.click();

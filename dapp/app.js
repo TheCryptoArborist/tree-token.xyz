@@ -792,7 +792,7 @@ function renderLeaderboardCards() {
       const badge = document.createElement('span');
       badge.className = `leader-badge badge-${slug}`;
       badge.textContent = definition.icon;
-      badge.title = definition.description;
+      badge.title = definition.label;
       badge.setAttribute?.('aria-label', definition.label);
       badges.append(badge);
     }

@@ -21,10 +21,19 @@ const E_ZERO_PRIZE: u64 = 5;
 const E_INSUFFICIENT_UNRESERVED_BALANCE: u64 = 6;
 const E_PRIZE_NOT_FOUND_OR_WRONG_TOKEN: u64 = 7;
 const E_NOT_WINNER: u64 = 8;
+const E_INVALID_LEDGER_COMMITMENT: u64 = 9;
 
 const MAX_DRAW_ID_BYTES: u64 = 96;
+const SHA256_COMMITMENT_BYTES: u64 = 32;
 
 public struct AdminCap has key, store {
+    id: UID,
+}
+
+/// Operational authority for the isolated raffle worker. It can execute a
+/// committed draw and reserve its winner, but it cannot withdraw unreserved
+/// treasury funds or control package upgrades.
+public struct OperatorCap has key, store {
     id: UID,
 }
 
@@ -47,6 +56,7 @@ public struct PrizeKey has copy, drop, store {
 }
 
 public struct DrawOutcome has store {
+    ledger_commitment: vector<u8>,
     winning_ticket: u64,
     total_tickets: u64,
     winner_registered: bool,
@@ -59,6 +69,7 @@ public struct WinnerPrize<phantom T> has store {
 
 public struct DrawExecuted has copy, drop {
     draw_id: vector<u8>,
+    ledger_commitment: vector<u8>,
     winning_ticket: u64,
     total_tickets: u64,
 }
@@ -93,6 +104,7 @@ fun init(ctx: &mut TxContext) {
     };
     transfer::share_object(pool);
     transfer::transfer(AdminCap { id: object::new(ctx) }, ctx.sender());
+    transfer::transfer(OperatorCap { id: object::new(ctx) }, ctx.sender());
 }
 
 fun assert_valid_draw_id(draw_id: &vector<u8>) {
@@ -101,7 +113,8 @@ fun assert_valid_draw_id(draw_id: &vector<u8>) {
 }
 
 /// Deposits prize funding. Deposits are intentionally permissionless so any
-/// wallet can replenish the pool; only the AdminCap can reserve or withdraw it.
+/// wallet can replenish the pool. OperatorCap can reserve prizes for verified
+/// winners; only AdminCap can withdraw unreserved funding.
 public fun deposit<T>(pool: &mut PrizePool, coin: Coin<T>) {
     let amount = coin.value();
     let incoming = coin.into_balance();
@@ -119,13 +132,15 @@ public fun deposit<T>(pool: &mut PrizePool, coin: Coin<T>) {
 /// emitted, preventing an operator from rerolling the same draw identifier.
 entry fun execute_draw(
     pool: &mut PrizePool,
-    _cap: &AdminCap,
+    _cap: &OperatorCap,
     random: &Random,
     draw_id: vector<u8>,
+    ledger_commitment: vector<u8>,
     total_tickets: u64,
     ctx: &mut TxContext,
 ) {
     assert_valid_draw_id(&draw_id);
+    assert!(ledger_commitment.length() == SHA256_COMMITMENT_BYTES, E_INVALID_LEDGER_COMMITMENT);
     assert!(total_tickets > 0, E_ZERO_TICKETS);
     let key = DrawKey { draw_id };
     assert!(!dynamic_field::exists(&pool.id, key), E_DRAW_ALREADY_EXECUTED);
@@ -140,20 +155,21 @@ entry fun execute_draw(
         &mut pool.id,
         key,
         DrawOutcome {
+            ledger_commitment,
             winning_ticket,
             total_tickets,
             winner_registered: false,
         },
     );
     pool.draw_count = pool.draw_count + 1;
-    event::emit(DrawExecuted { draw_id, winning_ticket, total_tickets });
+    event::emit(DrawExecuted { draw_id, ledger_commitment, winning_ticket, total_tickets });
 }
 
 /// Reserves the prize at registration time. Reserved balances are stored in a
 /// token-typed dynamic field and can no longer be removed by admin withdrawal.
 public fun register_winner<T>(
     pool: &mut PrizePool,
-    _cap: &AdminCap,
+    _cap: &OperatorCap,
     draw_id: vector<u8>,
     winner: address,
     amount: u64,
@@ -243,11 +259,12 @@ public fun unreserved_balance<T>(pool: &PrizePool): u64 {
 public fun draw_result(
     pool: &PrizePool,
     draw_id: vector<u8>,
-): (u64, u64, bool) {
+): (vector<u8>, u64, u64, bool) {
     let key = DrawKey { draw_id };
     assert!(dynamic_field::exists(&pool.id, key), E_DRAW_NOT_FOUND);
     let outcome: &DrawOutcome = dynamic_field::borrow(&pool.id, key);
     (
+        outcome.ledger_commitment,
         outcome.winning_ticket,
         outcome.total_tickets,
         outcome.winner_registered,
@@ -300,24 +317,27 @@ fun test_draw_reserves_and_claims_prize() {
     let random_state: Random = scenario.take_shared();
     let mut pool: PrizePool = scenario.take_shared();
     let cap: AdminCap = scenario.take_from_sender();
+    let operator: OperatorCap = scenario.take_from_sender();
 
     deposit(&mut pool, coin::mint_for_testing<SUI>(1_000, scenario.ctx()));
     assert!(unreserved_balance<SUI>(&pool) == 1_000);
 
     execute_draw(
         &mut pool,
-        &cap,
+        &operator,
         &random_state,
         draw_id,
+        x"0102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F20",
         100,
         scenario.ctx(),
     );
-    let (winning_ticket, total_tickets, registered) = draw_result(&pool, draw_id);
+    let (ledger_commitment, winning_ticket, total_tickets, registered) = draw_result(&pool, draw_id);
+    assert!(ledger_commitment == x"0102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F20");
     assert!(winning_ticket < 100);
     assert!(total_tickets == 100);
     assert!(!registered);
 
-    register_winner<SUI>(&mut pool, &cap, draw_id, winner, 250);
+    register_winner<SUI>(&mut pool, &operator, draw_id, winner, 250);
     assert!(unreserved_balance<SUI>(&pool) == 750);
     let (claimant, claimable_amount) = claimable_prize<SUI>(&pool, draw_id);
     assert!(claimant == winner);
@@ -326,6 +346,7 @@ fun test_draw_reserves_and_claims_prize() {
     ts::return_shared(pool);
     ts::return_shared(random_state);
     scenario.return_to_sender(cap);
+    scenario.return_to_sender(operator);
     scenario.next_tx(winner);
 
     let mut pool: PrizePool = scenario.take_shared();

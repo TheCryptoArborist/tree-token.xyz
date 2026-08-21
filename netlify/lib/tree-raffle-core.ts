@@ -1,5 +1,24 @@
 export const TREE_RAFFLE_RULES_VERSION = 'canopy-draw-proposal-v2';
 
+export const TREE_COIN_TYPE = '0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE';
+export const TREE_RAFFLE_WBTC_TYPE = '0xaafb102dd0902f5055cadecd687fb5b71ca82ef0e0285d90afde828ec58ca96b::btc::BTC';
+
+export const TREE_RAFFLE_DAILY_PRIZE = Object.freeze({
+  symbol: 'TREE',
+  coinType: TREE_COIN_TYPE,
+  amountRaw: '50000000000',
+  decimals: 6,
+});
+
+export const TREE_RAFFLE_DAILY_LUCKY_LEAF_PLAN = Object.freeze({
+  symbol: 'wBTC',
+  coinType: TREE_RAFFLE_WBTC_TYPE,
+  decimals: 8,
+  mondayThroughSaturdayUsdCents: 250,
+  sundayUsdCents: 1_000,
+  weeklyBudgetUsdCents: 2_500,
+});
+
 export const TREE_RAFFLE_STREAK_MULTIPLIERS_BASIS_POINTS = Object.freeze([
   10_000, 11_000, 12_500, 14_000, 15_000,
   16_000, 17_500, 18_500, 19_500, 20_000,
@@ -12,6 +31,9 @@ export type TreeRaffleRules = {
   acceptingEntries: boolean;
   claimsEnabled: boolean;
   prizesFunded: boolean;
+  dailyEnabled: boolean;
+  dailyLuckyLeafEnabled: boolean;
+  weeklyEnabled: boolean;
   minimumQualifyingUsdCents: number;
   ticketExponent: number;
   ticketCoefficient: number;
@@ -24,6 +46,12 @@ export type TreeRaffleRules = {
     timezone: 'America/New_York';
     daily: '10:00';
     weekly: 'Sunday 10:05';
+  };
+  prizes: {
+    dailyMain: typeof TREE_RAFFLE_DAILY_PRIZE;
+    dailyLuckyLeafPlan: typeof TREE_RAFFLE_DAILY_LUCKY_LEAF_PLAN;
+    weeklyMain: null;
+    weeklyLuckyLeaf: null;
   };
   eligibleTransaction: {
     network: 'sui-mainnet';
@@ -39,6 +67,9 @@ export const TREE_RAFFLE_RULES: TreeRaffleRules = Object.freeze({
   acceptingEntries: false,
   claimsEnabled: false,
   prizesFunded: false,
+  dailyEnabled: true,
+  dailyLuckyLeafEnabled: false,
+  weeklyEnabled: false,
   minimumQualifyingUsdCents: 500,
   ticketExponent: 0.9457,
   ticketCoefficient: 0.288368,
@@ -51,6 +82,12 @@ export const TREE_RAFFLE_RULES: TreeRaffleRules = Object.freeze({
     timezone: 'America/New_York',
     daily: '10:00',
     weekly: 'Sunday 10:05',
+  }),
+  prizes: Object.freeze({
+    dailyMain: TREE_RAFFLE_DAILY_PRIZE,
+    dailyLuckyLeafPlan: TREE_RAFFLE_DAILY_LUCKY_LEAF_PLAN,
+    weeklyMain: null,
+    weeklyLuckyLeaf: null,
   }),
   eligibleTransaction: Object.freeze({
     network: 'sui-mainnet',
@@ -74,7 +111,29 @@ export function treeRaffleRulesForEnvironment(
     acceptingEntries: parseBooleanEnv(env.TREE_RAFFLE_ACCEPTING_ENTRIES, TREE_RAFFLE_RULES.acceptingEntries),
     claimsEnabled: parseBooleanEnv(env.TREE_RAFFLE_CLAIMS_ENABLED, TREE_RAFFLE_RULES.claimsEnabled),
     prizesFunded: parseBooleanEnv(env.TREE_RAFFLE_PRIZES_FUNDED, TREE_RAFFLE_RULES.prizesFunded),
+    dailyEnabled: parseBooleanEnv(env.TREE_RAFFLE_DAILY_ENABLED, TREE_RAFFLE_RULES.dailyEnabled),
+    dailyLuckyLeafEnabled: parseBooleanEnv(
+      env.TREE_RAFFLE_DAILY_LUCKY_ENABLED,
+      TREE_RAFFLE_RULES.dailyLuckyLeafEnabled,
+    ),
+    weeklyEnabled: parseBooleanEnv(env.TREE_RAFFLE_WEEKLY_ENABLED, TREE_RAFFLE_RULES.weeklyEnabled),
   };
+}
+
+export function dailyLuckyLeafBudgetUsdCents(
+  raffleDate: string,
+  plan = TREE_RAFFLE_DAILY_LUCKY_LEAF_PLAN,
+): number {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(raffleDate)) {
+    throw new Error('Lucky Leaf raffle date must use YYYY-MM-DD.');
+  }
+  const parsed = new Date(`${raffleDate}T00:00:00.000Z`);
+  if (Number.isNaN(parsed.valueOf()) || parsed.toISOString().slice(0, 10) !== raffleDate) {
+    throw new Error('Lucky Leaf raffle date must be a real calendar date.');
+  }
+  return parsed.getUTCDay() === 0
+    ? plan.sundayUsdCents
+    : plan.mondayThroughSaturdayUsdCents;
 }
 
 export function streakMultiplierBasisPoints(
@@ -171,7 +230,7 @@ export function raffleOperationalReadiness(
   const onchainPrizePoolConfigured = Boolean(
     (env.TREE_RAFFLE_PACKAGE_ID || '').trim()
     && (env.TREE_RAFFLE_PRIZE_POOL_ID || '').trim()
-    && (env.TREE_RAFFLE_ADMIN_CAP_ID || '').trim(),
+    && (env.TREE_RAFFLE_OPERATOR_CAP_ID || '').trim(),
   );
   const drawExecutorConfigured = (
     env.TREE_RAFFLE_DRAW_EXECUTOR_READY === 'true'
@@ -179,6 +238,7 @@ export function raffleOperationalReadiness(
   );
   const verifiedBuyIngestionEnabled = Boolean(
     env.TREE_RAFFLE_INGEST_ENABLED === 'true'
+    && (rules.dailyEnabled || rules.weeklyEnabled)
     && rules.acceptingEntries
     && rules.claimsEnabled
     && rules.prizesFunded

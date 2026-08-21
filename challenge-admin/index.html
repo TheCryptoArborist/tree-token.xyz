@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>TREE Challenge Setup</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <main>
+    <header>
+      <span class="eyebrow">PRIVATE PREPARATION TOOL</span>
+      <h1>TREE Challenge Setup</h1>
+      <p>Prepare, review, and schedule a five-question daily round with private sudden-death backups. This tool cannot enable public attempts or move prizes.</p>
+    </header>
+
+    <section class="card access-card" aria-labelledby="access-title">
+      <div><h2 id="access-title">Draft details</h2><p>Dates use UTC. Answers are sent only to the protected server and private database.</p></div>
+      <label>Round date <input id="roundDate" type="date" required></label>
+      <label>Admin secret <input id="adminSecret" type="password" autocomplete="off" spellcheck="false" required></label>
+      <button id="checkDraft" type="button" class="secondary">Check Existing Draft</button>
+    </section>
+
+    <section class="fixed-rules" aria-label="Fixed round rules">
+      <article><strong>5</strong><span>Daily questions</span></article>
+      <article><strong>3:00</strong><span>Daily timer</span></article>
+      <article><strong>30 sec</strong><span>Each tie-break</span></article>
+      <article><strong>50,000 TREE</strong><span>Planned prize</span></article>
+    </section>
+
+    <form id="draftForm">
+      <section class="question-section">
+        <div class="section-head"><div><span class="step">1</span><h2>Daily questions</h2></div><p>Exactly five questions. Accuracy ranks first, then verified completion time.</p></div>
+        <div id="dailyQuestions" class="question-list"></div>
+      </section>
+
+      <section class="question-section">
+        <div class="section-head"><div><span class="step">2</span><h2>Sudden-death backups</h2></div><p>At least three private questions. Only exact tied leaders can receive them.</p></div>
+        <div id="tiebreakQuestions" class="question-list"></div>
+        <button id="addTiebreak" type="button" class="secondary add-button">+ Add Backup Question</button>
+      </section>
+
+      <section class="review-card">
+        <div><span class="step">3</span><div><h2>Prepare the draft</h2><p>Review every correct answer and explanation before saving. An existing non-draft round cannot be overwritten.</p></div></div>
+        <button id="prepareDraft" type="submit" class="primary">Validate &amp; Prepare Draft</button>
+      </section>
+    </form>
+
+    <section class="review-card schedule-card" aria-labelledby="schedule-title">
+      <div><span class="step">4</span><div><h2 id="schedule-title">Review and schedule</h2><p>A complete draft can be scheduled only once. Public attempts remain protected by separate production activation gates.</p></div></div>
+      <label class="review-confirmation"><input id="reviewConfirmed" type="checkbox" disabled> I reviewed the question counts, timing, and prize amount.</label>
+      <button id="scheduleRound" type="button" class="primary" disabled>Schedule Reviewed Round</button>
+    </section>
+
+    <p id="adminStatus" class="status" role="status" aria-live="polite">Nothing has been saved.</p>
+  </main>
+  <script src="admin.js" defer></script>
+</body>
+</html>

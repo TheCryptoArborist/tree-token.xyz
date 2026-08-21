@@ -18,7 +18,7 @@ const PANEL_LABELS = {
   v3: 'V3',
   stats: 'Stats',
   removed: 'Burn',
-  'canopy-draw': 'Raffle',
+  'canopy-draw': 'Challenge',
   leaderboard: 'Canopy',
   'profile-studio': 'Profile Studio',
   documents: 'Documents',
@@ -140,10 +140,11 @@ if (documentGrid && !documentGrid.querySelector('[data-profile-studio-card]')) {
   documentGrid.append(article);
 }
 
-const earnTabs = { routes: document.getElementById('earnRoutesTab'), positions: document.getElementById('earnPositionsTab') };
-const earnPanels = { routes: document.getElementById('earnRoutesPanel'), positions: document.getElementById('earnPositionsPanel') };
+const earnViews = ['routes', 'positions', 'victory'];
+const earnTabs = { routes: document.getElementById('earnRoutesTab'), positions: document.getElementById('earnPositionsTab'), victory: document.getElementById('earnVictoryTab') };
+const earnPanels = { routes: document.getElementById('earnRoutesPanel'), positions: document.getElementById('earnPositionsPanel'), victory: document.getElementById('earnVictoryPanel') };
 function showEarnView(view) {
-  const selected = view === 'positions' ? 'positions' : 'routes';
+  const selected = earnViews.includes(view) ? view : 'routes';
   Object.entries(earnPanels).forEach(([name, panel]) => { if (panel) panel.hidden = name !== selected; });
   Object.entries(earnTabs).forEach(([name, tab]) => {
     if (!tab) return;
@@ -154,6 +155,7 @@ function showEarnView(view) {
 }
 earnTabs.routes?.addEventListener('click', () => showEarnView('routes'));
 earnTabs.positions?.addEventListener('click', () => showEarnView('positions'));
+earnTabs.victory?.addEventListener('click', () => showEarnView('victory'));
 
 const statsViews = ['market', 'supply', 'liquidity', 'nftree'];
 const statsTabs = Object.fromEntries(statsViews.map((view) => [view, document.getElementById(`stats${view[0].toUpperCase()}${view.slice(1)}Tab`)]));

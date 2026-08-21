@@ -3,6 +3,7 @@ export const SUI_MAINNET_CHAIN = 'sui:mainnet';
 export const SUI_SIGN_FEATURES = [
   'sui:signAndExecuteTransaction',
   'sui:signAndExecuteTransactionBlock',
+  'tree:phantomSui',
 ];
 
 export const SUI_PERSONAL_MESSAGE_FEATURES = [
@@ -63,6 +64,10 @@ export function isSlushWebWallet(wallet) {
 }
 
 function preferredDuplicate(left, right) {
+  const leftSui = Boolean(getSuiSignFeature(left));
+  const rightSui = Boolean(getSuiSignFeature(right));
+  if (rightSui !== leftSui) return rightSui ? right : left;
+
   const leftAccounts = Array.isArray(left?.accounts) ? left.accounts.length : 0;
   const rightAccounts = Array.isArray(right?.accounts) ? right.accounts.length : 0;
   if (rightAccounts !== leftAccounts) return rightAccounts > leftAccounts ? right : left;

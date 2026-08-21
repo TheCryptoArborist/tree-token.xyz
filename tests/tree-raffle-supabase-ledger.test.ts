@@ -25,6 +25,7 @@ test('server-only Supabase config requires HTTPS and isolated raffle credentials
   }), {
     url: 'https://example.supabase.co',
     secretKey: 'secret-key',
+    weeklyEnabled: false,
   });
   assert.throws(() => treeRaffleSupabaseConfig({}), /URL is not configured/);
   assert.throws(() => treeRaffleSupabaseConfig({
@@ -50,11 +51,11 @@ test('ledger adapter calls only the atomic RPC and parses bigint JSON values saf
     });
   };
   const ledger = new SupabaseTreeRaffleLedger(
-    { url: 'https://example.supabase.co', secretKey: 'server-secret' },
+    { url: 'https://example.supabase.co', secretKey: 'server-secret', weeklyEnabled: false },
     fakeFetch as typeof fetch,
   );
   const result = await ledger.recordVerifiedBuy(BUY);
-  assert.equal(capturedUrl, 'https://example.supabase.co/rest/v1/rpc/record_tree_raffle_verified_buy');
+  assert.equal(capturedUrl, 'https://example.supabase.co/rest/v1/rpc/record_tree_raffle_verified_buy_daily_only');
   assert.equal(capturedInit?.method, 'POST');
   assert.equal((capturedInit?.headers as Record<string, string>).apikey, 'server-secret');
   assert.equal(JSON.parse(String(capturedInit?.body)).p_tx_digest, BUY.txDigest);
@@ -71,14 +72,31 @@ test('ledger adapter calls only the atomic RPC and parses bigint JSON values saf
 
 test('ledger adapter fails closed on RPC errors and malformed responses', async () => {
   const failed = new SupabaseTreeRaffleLedger(
-    { url: 'https://example.supabase.co', secretKey: 'server-secret' },
+    { url: 'https://example.supabase.co', secretKey: 'server-secret', weeklyEnabled: false },
     (async () => Response.json({ message: 'digest conflict' }, { status: 409 })) as typeof fetch,
   );
   await assert.rejects(() => failed.recordVerifiedBuy(BUY), /digest conflict/);
 
   const malformed = new SupabaseTreeRaffleLedger(
-    { url: 'https://example.supabase.co', secretKey: 'server-secret' },
+    { url: 'https://example.supabase.co', secretKey: 'server-secret', weeklyEnabled: false },
     (async () => Response.json({ outcome: 'maybe' })) as typeof fetch,
   );
   await assert.rejects(() => malformed.recordVerifiedBuy(BUY), /invalid raffle ledger outcome/);
+});
+
+test('ledger adapter uses the full daily and weekly RPC only when weekly is explicitly enabled', async () => {
+  let capturedUrl = '';
+  const ledger = new SupabaseTreeRaffleLedger(
+    { url: 'https://example.supabase.co', secretKey: 'server-secret', weeklyEnabled: true },
+    (async (url) => {
+      capturedUrl = String(url);
+      return Response.json({
+        outcome: 'recorded', qualifies: true, streakDays: 1,
+        mainTickets: 6, luckyLeafTickets: 1,
+        dailyRoundId: BUY.dailyRoundId, weeklyRoundId: BUY.weeklyRoundId,
+      });
+    }) as typeof fetch,
+  );
+  await ledger.recordVerifiedBuy(BUY);
+  assert.equal(capturedUrl, 'https://example.supabase.co/rest/v1/rpc/record_tree_raffle_verified_buy');
 });

@@ -1,16 +1,28 @@
 import http from 'node:http';
 import { pathToFileURL } from 'node:url';
 import { configuredSupabaseKeeperCursorStore } from './tree-raffle-supabase-cursors.mjs';
+import {
+  configuredDailyDrawExecutor,
+  configuredKnowledgeTrialAwardExecutor,
+  dueDailyRoundId,
+} from './tree-raffle-draw-executor.mjs';
 
 const SUI_GRAPHQL_URL = process.env.SUI_GRAPHQL_URL || 'https://graphql.mainnet.sui.io/graphql';
 const PORT = Number(process.env.PORT || 8080);
 const POLL_INTERVAL_MS = Number(process.env.POLL_INTERVAL_MS || 5_000);
+const GRAPHQL_TIMEOUT_MS = Number(process.env.GRAPHQL_TIMEOUT_MS || 20_000);
+const HEALTH_STALE_AFTER_MS = Number(process.env.HEALTH_STALE_AFTER_MS || 120_000);
 const DRY_RUN = process.env.KEEPER_DRY_RUN !== 'false';
 const CURSOR_BACKEND = process.env.KEEPER_CURSOR_BACKEND || 'memory';
 const INGEST_ENDPOINT = process.env.TREE_RAFFLE_INGEST_ENDPOINT || process.env.KEEPER_INGEST_ENDPOINT || '';
 const INGEST_SECRET = process.env.TREE_RAFFLE_INGEST_SECRET || process.env.KEEPER_INGEST_SECRET || '';
 const INGEST_TIMEOUT_MS = Number(process.env.KEEPER_INGEST_TIMEOUT_MS || 12_000);
 const MIN_INGEST_TIMEOUT_MS = 3_000;
+const DRAW_ENABLED = process.env.KEEPER_DRAW_ENABLED === 'true';
+const DRAW_DRY_RUN = process.env.KEEPER_DRAW_DRY_RUN !== 'false';
+const KNOWLEDGE_AWARD_ENABLED = process.env.KEEPER_KNOWLEDGE_AWARD_ENABLED === 'true';
+const KNOWLEDGE_AWARD_DRY_RUN = process.env.KEEPER_KNOWLEDGE_AWARD_DRY_RUN !== 'false';
+const KNOWLEDGE_AWARD_POLL_MS = Number(process.env.KEEPER_KNOWLEDGE_AWARD_POLL_MS || 60_000);
 export const GRAPHQL_PAGE_SIZE = 50;
 
 const V2_PACKAGE = '0xbfac5e1c6bf6ef29b12f7723857695fd2f4da9a11a7d88162c15e9124c243a4a';
@@ -56,9 +68,28 @@ const state = {
   lastSuccessAt: null,
   lastError: null,
   candidateDigests: 0,
+  pollInFlight: false,
+  skippedPolls: 0,
   cursors: new Map(),
+  streams: new Map(),
+  draw: {
+    lastAttemptedRound: null,
+    lastCompletedRound: null,
+    lastAttemptAt: null,
+    lastSuccessAt: null,
+    lastError: null,
+    lastResult: null,
+  },
+  knowledgeAward: {
+    lastAttemptAt: null,
+    lastSuccessAt: null,
+    lastError: null,
+    lastResult: null,
+  },
 };
 let durableCursorStore = null;
+let dailyDrawExecutor = null;
+let knowledgeTrialAwardExecutor = null;
 
 function normalizedAddress(value) {
   const body = String(value || '').toLowerCase().replace(/^0x/, '').replace(/^0+/, '') || '0';
@@ -78,7 +109,7 @@ async function graphql(query, variables) {
     method: 'POST',
     headers: { Accept: 'application/json', 'Content-Type': 'application/json', 'User-Agent': 'TREE-Raffle-Keeper/1.0' },
     body: JSON.stringify({ query, variables }),
-    signal: AbortSignal.timeout(10_000),
+    signal: AbortSignal.timeout(GRAPHQL_TIMEOUT_MS),
   });
   if (!response.ok) throw new Error(`Sui GraphQL returned ${response.status}.`);
   const payload = await response.json();
@@ -198,15 +229,108 @@ async function pollStream(stream) {
 }
 
 export async function pollOnce() {
+  if (state.pollInFlight) {
+    state.skippedPolls += 1;
+    return;
+  }
+  state.pollInFlight = true;
   state.lastPollAt = new Date().toISOString();
-  for (const stream of KEEPER_STREAMS) await pollStream(stream);
-  state.lastSuccessAt = new Date().toISOString();
-  state.lastError = null;
+  const failures = [];
+  try {
+    for (const stream of KEEPER_STREAMS) {
+      try {
+        await pollStream(stream);
+        state.streams.set(stream.id, { lastSuccessAt: new Date().toISOString(), lastError: null });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Keeper stream poll failed.';
+        state.streams.set(stream.id, {
+          ...(state.streams.get(stream.id) || {}),
+          lastError: message,
+        });
+        failures.push(`${stream.id}: ${message}`);
+      }
+    }
+    if (failures.length === 0) state.lastSuccessAt = new Date().toISOString();
+    state.lastError = failures.length ? failures.join('; ') : null;
+  } finally {
+    state.pollInFlight = false;
+  }
+}
+
+export async function pollDailyDraw(now = new Date()) {
+  if (!DRAW_ENABLED) return;
+  const roundId = dueDailyRoundId(now);
+  if (!roundId || state.draw.lastAttemptedRound === roundId) return;
+  state.draw.lastAttemptedRound = roundId;
+  state.draw.lastAttemptAt = now.toISOString();
+  state.draw.lastError = null;
+  if (DRAW_DRY_RUN) {
+    state.draw.lastResult = { status: 'dry-run-due', roundId };
+    console.log(JSON.stringify({ level: 'info', action: 'draw-dry-run-due', roundId }));
+    return;
+  }
+  try {
+    const result = await dailyDrawExecutor.run(roundId);
+    if (result?.status === 'no-round') {
+      state.draw.lastSuccessAt = new Date().toISOString();
+      state.draw.lastResult = { status: 'no-round', roundId };
+      console.log(JSON.stringify({ level: 'info', action: 'draw-no-round', roundId }));
+      return;
+    }
+    state.draw.lastCompletedRound = roundId;
+    state.draw.lastSuccessAt = new Date().toISOString();
+    state.draw.lastResult = {
+      status: 'completed', roundId, winner: result.winner,
+      drawTxDigest: result.drawTxDigest, registerTxDigest: result.registerTxDigest,
+    };
+    console.log(JSON.stringify({ level: 'info', action: 'draw-completed', ...state.draw.lastResult }));
+  } catch (error) {
+    state.draw.lastError = error instanceof Error ? error.message : 'Daily draw execution failed.';
+    console.error(JSON.stringify({ level: 'error', action: 'draw-failed', roundId, message: state.draw.lastError }));
+  }
+}
+
+export async function pollKnowledgeTrialAward(now = new Date()) {
+  if (!KNOWLEDGE_AWARD_ENABLED) return;
+  const lastAttemptMs = Date.parse(state.knowledgeAward.lastAttemptAt || '') || 0;
+  if (lastAttemptMs && now.getTime() - lastAttemptMs < KNOWLEDGE_AWARD_POLL_MS) return;
+  state.knowledgeAward.lastAttemptAt = now.toISOString();
+  state.knowledgeAward.lastError = null;
+  if (KNOWLEDGE_AWARD_DRY_RUN) {
+    state.knowledgeAward.lastResult = { status: 'dry-run' };
+    return;
+  }
+  try {
+    const result = await knowledgeTrialAwardExecutor.run();
+    state.knowledgeAward.lastSuccessAt = new Date().toISOString();
+    state.knowledgeAward.lastResult = result;
+    if (result?.status === 'awarded') {
+      console.log(JSON.stringify({
+        level: 'info', action: 'knowledge-award-completed',
+        roundId: result.roundId, wallet: result.wallet,
+        registerTxDigest: result.registerTxDigest,
+      }));
+    }
+  } catch (error) {
+    state.knowledgeAward.lastError = error instanceof Error ? error.message : 'Knowledge Trial award settlement failed.';
+    console.error(JSON.stringify({ level: 'error', action: 'knowledge-award-failed', message: state.knowledgeAward.lastError }));
+  }
+}
+
+export function keeperHealthStatus(snapshot, nowMs = Date.now(), staleAfterMs = HEALTH_STALE_AFTER_MS) {
+  const streamStates = KEEPER_STREAMS.map(({ id }) => snapshot.streams.get(id));
+  const latestSuccessMs = Math.max(
+    0,
+    ...streamStates.map((stream) => Date.parse(stream?.lastSuccessAt || '') || 0),
+  );
+  if (!latestSuccessMs || nowMs - latestSuccessMs > staleAfterMs) return 'unavailable';
+  return snapshot.lastError ? 'degraded' : 'ok';
 }
 
 function publicState() {
+  const status = keeperHealthStatus(state);
   return {
-    status: state.lastError ? 'degraded' : 'ok',
+    status,
     mode: DRY_RUN ? 'staging-dry-run' : 'live',
     cursorPersistence: CURSOR_BACKEND === 'supabase' ? 'supabase-compare-and-set' : 'memory-only-staging',
     startedAt: state.startedAt,
@@ -214,17 +338,43 @@ function publicState() {
     lastSuccessAt: state.lastSuccessAt,
     lastError: state.lastError,
     candidateDigests: state.candidateDigests,
-    streams: KEEPER_STREAMS.map(({ id }) => ({ id, initialized: state.cursors.has(id) })),
+    pollInFlight: state.pollInFlight,
+    skippedPolls: state.skippedPolls,
+    draw: {
+      enabled: DRAW_ENABLED,
+      mode: DRAW_DRY_RUN ? 'dry-run' : 'live',
+      ...state.draw,
+    },
+    knowledgeAward: {
+      enabled: KNOWLEDGE_AWARD_ENABLED,
+      mode: KNOWLEDGE_AWARD_DRY_RUN ? 'dry-run' : 'live',
+      ...state.knowledgeAward,
+    },
+    streams: KEEPER_STREAMS.map(({ id }) => ({
+      id,
+      initialized: state.cursors.has(id),
+      lastSuccessAt: state.streams.get(id)?.lastSuccessAt || null,
+      lastError: state.streams.get(id)?.lastError || null,
+    })),
   };
 }
 
 export async function startKeeper() {
   if (!Number.isInteger(PORT) || PORT < 1 || PORT > 65_535) throw new Error('PORT is invalid.');
   if (!Number.isInteger(POLL_INTERVAL_MS) || POLL_INTERVAL_MS < 2_000) throw new Error('POLL_INTERVAL_MS is invalid.');
+  if (!Number.isInteger(GRAPHQL_TIMEOUT_MS) || GRAPHQL_TIMEOUT_MS < 3_000) throw new Error('GRAPHQL_TIMEOUT_MS is invalid.');
+  if (!Number.isInteger(HEALTH_STALE_AFTER_MS) || HEALTH_STALE_AFTER_MS < 30_000) throw new Error('HEALTH_STALE_AFTER_MS is invalid.');
   if (!DRY_RUN && !INGEST_ENDPOINT) throw new Error('Live keeper mode requires TREE_RAFFLE_INGEST_ENDPOINT.');
   if (!DRY_RUN && !INGEST_SECRET) throw new Error('Live keeper mode requires TREE_RAFFLE_INGEST_SECRET.');
   if (!Number.isInteger(INGEST_TIMEOUT_MS) || INGEST_TIMEOUT_MS < MIN_INGEST_TIMEOUT_MS) {
     throw new Error('KEEPER_INGEST_TIMEOUT_MS is invalid.');
+  }
+  if (!Number.isInteger(KNOWLEDGE_AWARD_POLL_MS) || KNOWLEDGE_AWARD_POLL_MS < 10_000) {
+    throw new Error('KEEPER_KNOWLEDGE_AWARD_POLL_MS is invalid.');
+  }
+  if (DRAW_ENABLED && !DRAW_DRY_RUN) dailyDrawExecutor = configuredDailyDrawExecutor();
+  if (KNOWLEDGE_AWARD_ENABLED && !KNOWLEDGE_AWARD_DRY_RUN) {
+    knowledgeTrialAwardExecutor = configuredKnowledgeTrialAwardExecutor();
   }
   await initializeCursorPersistence();
 
@@ -233,20 +383,30 @@ export async function startKeeper() {
       response.writeHead(404, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
       return response.end(JSON.stringify({ status: 'not-found' }));
     }
-    response.writeHead(state.lastError ? 503 : 200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
-    return response.end(JSON.stringify(publicState()));
+    const health = publicState();
+    response.writeHead(health.status === 'unavailable' ? 503 : 200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
+    return response.end(JSON.stringify(health));
   }).listen(PORT, '0.0.0.0');
 
   const run = async () => {
     try {
       await pollOnce();
+      await pollDailyDraw();
+      await pollKnowledgeTrialAward();
     } catch (error) {
       state.lastError = error instanceof Error ? error.message : 'Keeper poll failed.';
       console.error(JSON.stringify({ level: 'error', action: 'poll-failed', message: state.lastError }));
     }
   };
   await run();
-  setInterval(run, POLL_INTERVAL_MS).unref();
+  const scheduleNext = () => {
+    const timer = setTimeout(async () => {
+      await run();
+      scheduleNext();
+    }, POLL_INTERVAL_MS);
+    timer.unref();
+  };
+  scheduleNext();
   console.log(JSON.stringify({ level: 'info', action: 'keeper-started', port: PORT, dryRun: DRY_RUN }));
 }
 

@@ -4,6 +4,7 @@ export const V2_PACKAGE = '0xbfac5e1c6bf6ef29b12f7723857695fd2f4da9a11a7d88162c1
 export const V2_ROUTER = '0x9cdbbd092634efdc0e7033dc1c49d9ea5fc9bc5969ba708f55e05b6fcac12177';
 export const V2_FACTORY = '0x81c286135713b4bf2e78c548f5643766b5913dcd27a8e76469f146ab811e922d';
 export const V2_POOL = '0x35a1be1f01f9edf7f5221d226f357d194d43c28f2a65cb38640935518d9a5bfc';
+export const VICTORY_SUI_POOL = '0xd5fb3cde57c8e792276c30580721599f9f8162f9136416bb4b2312cf79e6d6ae';
 export const V2_FARM = '0xc9c6844deb5031e87f14a9869736874327e4f7b9e2aef51c47f4e004c5b1053c';
 export const V2_REWARD_VAULT = '0x227929e900c085a1e55f7e455d3af66aa0f522cf26dc54ed3e111dc8797a3e00';
 export const V2_EMISSION_CONFIG = '0xfbd4d5f644cc82e7486ceb048b8951a6efffe39254a6646d99f0ea6b81b5c5f4';
@@ -20,10 +21,7 @@ export function normalizeAddress(value) {
 }
 
 export function normalizeType(value) {
-  const parts = String(value || '').split('::');
-  if (parts.length < 3) return String(value || '').toLowerCase();
-  const address = normalizeAddress(parts.shift());
-  return `${address}::${parts.join('::')}`.toLowerCase();
+  return String(value || '').trim().toLowerCase().replace(/0x[0-9a-f]+(?=::)/g, (address) => normalizeAddress(address));
 }
 
 export function parseAmount(value, decimals, symbol) {
@@ -76,8 +74,9 @@ async function coinForAmount(transaction, client, owner, coinType, amount) {
     total += BigInt(coin.balance || 0);
     if (total >= amount) break;
   }
-  if (total < amount) throw new Error('Insufficient TREE balance.');
-  if (selected.length > 500) throw new Error('Too many TREE coin objects are required. Merge coins or use a smaller amount.');
+  const symbol = normalizeType(coinType) === normalizeType(VICTORY_TYPE) ? 'VICTORY' : 'TREE';
+  if (total < amount) throw new Error(`Insufficient ${symbol} balance.`);
+  if (selected.length > 500) throw new Error(`Too many ${symbol} coin objects are required. Merge coins or use a smaller amount.`);
   const primary = transaction.object(selected[0].objectId);
   for (let index = 1; index < selected.length; index += 200) transaction.mergeCoins(primary, selected.slice(index, index + 200).map((coin) => transaction.object(coin.objectId)));
   const [coin] = transaction.splitCoins(primary, [transaction.pure.u64(amount)]);
@@ -139,6 +138,80 @@ export async function buildV2ZapTransaction({ Transaction, client, owner, inputT
     `${normalizeAddress(V2_PACKAGE)}::router::add_liquidity`,
   ]));
   return { transaction, swapRaw, liquidityInputRaw, desiredOutputRaw, minOutputRaw };
+}
+
+function quoteExactInput(amountIn, reserveIn, reserveOut, slippageBps) {
+  const input = BigInt(amountIn); const inputReserve = BigInt(reserveIn); const outputReserve = BigInt(reserveOut);
+  if (input < 1_000n) throw new Error('The reinvest amount is below the published router minimum.');
+  if (inputReserve <= 0n || outputReserve <= 0n) throw new Error('A verified SuiDex V2 reserve is unavailable.');
+  const inputAfterFee = input * 9_970n;
+  const amountOut = inputAfterFee * outputReserve / (inputReserve * 10_000n + inputAfterFee);
+  if (amountOut <= 0n || amountOut >= outputReserve) throw new Error('The verified V2 pool cannot quote this reinvest amount.');
+  const minAmountOut = minimumAfterSlippage(amountOut, slippageBps);
+  const spotAmountOut = input * outputReserve / inputReserve;
+  const priceImpactBps = spotAmountOut > amountOut ? (spotAmountOut - amountOut) * 10_000n / spotAmountOut : 0n;
+  return Object.freeze({ amountIn: input, amountOut, minAmountOut, priceImpactBps });
+}
+
+export function quoteVictoryV2Reinvest({ victorySuiPoolJson, suiTreePoolJson, amountIn, slippageBps = 100 }) {
+  const victoryReserveRaw = BigInt(victorySuiPoolJson?.reserve1 ?? victorySuiPoolJson?.balance1 ?? 0);
+  const victoryPoolSuiRaw = BigInt(victorySuiPoolJson?.reserve0 ?? victorySuiPoolJson?.balance0 ?? 0);
+  const treePoolSuiRaw = BigInt(suiTreePoolJson?.reserve0 ?? suiTreePoolJson?.balance0 ?? 0);
+  const treeReserveRaw = BigInt(suiTreePoolJson?.reserve1 ?? suiTreePoolJson?.balance1 ?? 0);
+  const victoryToSui = quoteExactInput(amountIn, victoryReserveRaw, victoryPoolSuiRaw, slippageBps);
+  const suiSwapRaw = victoryToSui.minAmountOut / 2n;
+  const liquiditySuiRaw = victoryToSui.minAmountOut - suiSwapRaw;
+  const suiToTree = quoteExactInput(suiSwapRaw, treePoolSuiRaw, treeReserveRaw, slippageBps);
+  const minLiquiditySuiRaw = minimumAfterSlippage(liquiditySuiRaw, slippageBps);
+  return Object.freeze({
+    pairIds: Object.freeze({ victorySui: VICTORY_SUI_POOL, suiTree: V2_POOL }),
+    amountIn: BigInt(amountIn), slippageBps: Number(slippageBps), victoryToSui, suiSwapRaw,
+    liquiditySuiRaw, minLiquiditySuiRaw, suiToTree, generatedAt: Date.now(),
+  });
+}
+
+export function validateVictoryReinvestQuote(quote, amountIn, slippageBps) {
+  if (!quote || String(quote?.pairIds?.victorySui).toLowerCase() !== VICTORY_SUI_POOL || String(quote?.pairIds?.suiTree).toLowerCase() !== V2_POOL) throw new Error('The VICTORY reinvest quote does not use both verified pools.');
+  if (BigInt(quote.amountIn) !== BigInt(amountIn) || Number(quote.slippageBps) !== Number(slippageBps)) throw new Error('The VICTORY reinvest quote no longer matches this request.');
+  if (BigInt(quote.victoryToSui?.minAmountOut ?? 0) <= 0n || BigInt(quote.suiSwapRaw ?? 0) !== BigInt(quote.victoryToSui.minAmountOut) / 2n) throw new Error('The VICTORY-to-SUI quote is invalid.');
+  if (BigInt(quote.suiToTree?.amountIn ?? 0) !== BigInt(quote.suiSwapRaw) || BigInt(quote.suiToTree?.minAmountOut ?? 0) <= 0n) throw new Error('The SUI-to-TREE reinvest quote is invalid.');
+  if (BigInt(quote.minLiquiditySuiRaw ?? 0) <= 0n || BigInt(quote.minLiquiditySuiRaw) > BigInt(quote.liquiditySuiRaw)) throw new Error('The liquidity minimum is invalid.');
+  return quote;
+}
+
+export async function buildVictoryV2ReinvestTransaction({ Transaction, client, owner, amountIn, quote, slippageBps = 100 }) {
+  if (typeof Transaction !== 'function' || !client?.core?.listCoins || !/^0x[0-9a-f]{64}$/i.test(owner || '')) throw new Error('VICTORY reinvest dependencies are unavailable.');
+  const amountRaw = BigInt(amountIn); validateVictoryReinvestQuote(quote, amountRaw, slippageBps);
+  const transaction = new Transaction(); transaction.setSender(owner);
+  const victoryCoin = await coinForAmount(transaction, client, owner, VICTORY_TYPE, amountRaw);
+  const suiCoin = transaction.moveCall({
+    target: `${V2_PACKAGE}::router::swap_exact_tokens1_for_tokens0_composable`,
+    typeArguments: [SUI_TYPE, VICTORY_TYPE],
+    arguments: [transaction.object(V2_ROUTER), transaction.object(V2_FACTORY), transaction.object(VICTORY_SUI_POOL), victoryCoin, transaction.pure.u256(quote.victoryToSui.minAmountOut), transaction.object(CLOCK)],
+  });
+  const [suiSwapCoin] = transaction.splitCoins(suiCoin, [transaction.pure.u64(quote.suiSwapRaw)]);
+  const treeCoin = transaction.moveCall({
+    target: `${V2_PACKAGE}::router::swap_exact_tokens0_for_tokens1_composable`,
+    typeArguments: [SUI_TYPE, TREE_TYPE],
+    arguments: [transaction.object(V2_ROUTER), transaction.object(V2_FACTORY), transaction.object(V2_POOL), suiSwapCoin, transaction.pure.u256(quote.suiToTree.minAmountOut), transaction.object(CLOCK)],
+  });
+  const deadline = BigInt(Math.floor(Date.now() / 1000) + 300);
+  transaction.moveCall({
+    target: `${V2_PACKAGE}::router::add_liquidity`,
+    typeArguments: [SUI_TYPE, TREE_TYPE],
+    arguments: [
+      transaction.object(V2_ROUTER), transaction.object(V2_FACTORY), transaction.object(V2_POOL), suiCoin, treeCoin,
+      transaction.pure.u256(quote.liquiditySuiRaw), transaction.pure.u256(quote.suiToTree.amountOut),
+      transaction.pure.u256(quote.minLiquiditySuiRaw), transaction.pure.u256(quote.suiToTree.minAmountOut),
+      transaction.pure.string(''), transaction.pure.string(''), transaction.pure.u64(deadline), transaction.object(CLOCK),
+    ],
+  });
+  assertAllowlisted(transaction, new Set([
+    `${normalizeAddress(V2_PACKAGE)}::router::swap_exact_tokens1_for_tokens0_composable`,
+    `${normalizeAddress(V2_PACKAGE)}::router::swap_exact_tokens0_for_tokens1_composable`,
+    `${normalizeAddress(V2_PACKAGE)}::router::add_liquidity`,
+  ]));
+  return { transaction, amountRaw, quote };
 }
 
 export async function getV2LpBalance(client, owner) {
@@ -289,5 +362,15 @@ export function extractPositiveV2VictoryReward(value, owner) {
     } catch {
       return total;
     }
+  }, 0n);
+}
+
+export function extractPositiveV2Lp(value, owner) {
+  const result = transactionResult(value);
+  const changes = result?.balanceChanges ?? result?.effects?.balanceChanges ?? value?.balanceChanges ?? value?.effects?.balanceChanges ?? [];
+  const normalizedOwner = normalizeAddress(owner);
+  return (Array.isArray(changes) ? changes : []).reduce((total, change) => {
+    if (normalizeType(change?.coinType) !== normalizeType(V2_LP_TYPE) || balanceChangeOwner(change) !== normalizedOwner) return total;
+    try { const amount = BigInt(change?.amount ?? 0); return amount > 0n ? total + amount : total; } catch { return total; }
   }, 0n);
 }

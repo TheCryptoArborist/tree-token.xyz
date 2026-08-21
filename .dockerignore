@@ -1,0 +1,9 @@
+.git
+.netlify
+assets
+dist
+node_modules
+raffle-contract
+supabase
+tests
+*.log

@@ -9,6 +9,7 @@ type FetchLike = typeof fetch;
 export type TreeRaffleSupabaseConfig = {
   url: string;
   secretKey: string;
+  weeklyEnabled: boolean;
 };
 
 function requiredConfigValue(value: string | undefined, label: string): string {
@@ -34,7 +35,11 @@ export function treeRaffleSupabaseConfig(
   if (parsed.protocol !== 'https:') {
     throw new Error('TREE_RAFFLE_SUPABASE_URL must use HTTPS.');
   }
-  return { url: parsed.origin, secretKey };
+  return {
+    url: parsed.origin,
+    secretKey,
+    weeklyEnabled: env.TREE_RAFFLE_WEEKLY_ENABLED === 'true',
+  };
 }
 
 function integerResult(value: unknown, label: string): number {
@@ -86,8 +91,11 @@ export class SupabaseTreeRaffleLedger implements TransactionalTreeRaffleLedger {
   }
 
   async recordVerifiedBuy(input: VerifiedTreeBuy): Promise<TreeRaffleLedgerResult> {
+    const rpc = this.config.weeklyEnabled
+      ? 'record_tree_raffle_verified_buy'
+      : 'record_tree_raffle_verified_buy_daily_only';
     const response = await this.fetchImpl(
-      `${this.config.url}/rest/v1/rpc/record_tree_raffle_verified_buy`,
+      `${this.config.url}/rest/v1/rpc/${rpc}`,
       {
         method: 'POST',
         headers: {

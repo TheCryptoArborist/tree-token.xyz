@@ -10,6 +10,7 @@ const NFTREE_RESERVE_RAW = 25n * 1_000_000_000n;
 const QUOTE_MAX_AGE_MS = 30_000;
 const MAX_EXECUTABLE_PRICE_IMPACT = 5;
 const QUOTE_URL = '/api/tree-swap-quote';
+const PRICE_URL = '/api/tree-v3-overview';
 const RPC_URL = 'https://fullnode.mainnet.sui.io:443';
 const V2_PACKAGE = '0xbfac5e1c6bf6ef29b12f7723857695fd2f4da9a11a7d88162c15e9124c243a4a';
 const V2_FACTORY = '0x81c286135713b4bf2e78c548f5643766b5913dcd27a8e76469f146ab811e922d';
@@ -40,7 +41,9 @@ const state = {
   executing: false,
   quoteTimer: null,
   refreshTimer: null,
+  priceTimer: null,
   requestController: null,
+  pricesUsd: { sui: null, tree: null },
 };
 
 const elements = {};
@@ -70,6 +73,50 @@ function decimalsFor(type) {
 
 function symbolFor(type) {
   return normalizeType(type) === normalizeType(SUI_TYPE) ? 'SUI' : 'TREE';
+}
+
+function positiveNumber(value) {
+  const number = Number(value);
+  return Number.isFinite(number) && number > 0 ? number : null;
+}
+
+function formatUsdValue(amount, price) {
+  const numericAmount = Number(String(amount || '').replace(/,/g, ''));
+  if (!Number.isFinite(numericAmount) || numericAmount <= 0 || !price) return null;
+  const value = numericAmount * price;
+  if (!Number.isFinite(value) || value < 0) return null;
+  if (value > 0 && value < 0.01) return '<$0.01';
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2,
+  }).format(value);
+}
+
+function renderUsdValues() {
+  if (!elements.inputUsd || !elements.outputUsd) return;
+  const inputPrice = state.direction === 'SUI_TO_TREE' ? state.pricesUsd.sui : state.pricesUsd.tree;
+  const outputPrice = state.direction === 'SUI_TO_TREE' ? state.pricesUsd.tree : state.pricesUsd.sui;
+  const inputLabel = formatUsdValue(state.amount, inputPrice);
+  const outputLabel = formatUsdValue(elements.amountOutput?.value, outputPrice);
+  elements.inputUsd.textContent = inputLabel || '—';
+  elements.outputUsd.textContent = outputLabel || '—';
+  elements.inputUsd.dataset.ready = String(Boolean(inputLabel));
+  elements.outputUsd.dataset.ready = String(Boolean(outputLabel));
+}
+
+async function loadUsdPrices() {
+  try {
+    const response = await fetch(PRICE_URL, { cache: 'no-store', headers: { Accept: 'application/json' } });
+    if (!response.ok) throw new Error(`Price service returned ${response.status}.`);
+    const overview = await response.json();
+    const sui = positiveNumber(overview?.market?.suiUsd);
+    const ratio = positiveNumber(overview?.pool?.priceSuiPerTree ?? overview?.market?.priceSuiPerTree);
+    const tree = positiveNumber(overview?.market?.treeUsd) ?? (sui && ratio ? sui * ratio : null);
+    if (!sui || !tree) throw new Error('Verified SUI and TREE prices are unavailable.');
+    state.pricesUsd = { sui, tree };
+  } catch {
+    state.pricesUsd = { sui: null, tree: null };
+  }
+  renderUsdValues();
 }
 
 function parseBaseUnits(value, decimals) {
@@ -111,13 +158,16 @@ function setTokenPresentation() {
   const outputSymbol = symbolFor(stateTokenOut());
   elements.inputSymbol.textContent = inputSymbol;
   elements.outputSymbol.textContent = outputSymbol;
-  elements.inputIcon.textContent = '';
-  elements.outputIcon.textContent = '';
   elements.inputIcon.className = `swap-token-icon ${inputSymbol.toLowerCase()}`;
   elements.outputIcon.className = `swap-token-icon ${outputSymbol.toLowerCase()}`;
+  elements.inputIcon.src = inputSymbol === 'SUI' ? '../assets/sui-token.svg' : '../assets/tree-token.png';
+  elements.outputIcon.src = outputSymbol === 'SUI' ? '../assets/sui-token.svg' : '../assets/tree-token.png';
+  elements.inputIcon.alt = `${inputSymbol} token logo`;
+  elements.outputIcon.alt = `${outputSymbol} token logo`;
   elements.amountInput.placeholder = inputSymbol === 'SUI' ? '0.0' : '0';
   elements.reserveRow.hidden = inputSymbol !== 'SUI';
   renderBalances();
+  renderUsdValues();
 }
 
 function renderBalances() {
@@ -148,6 +198,7 @@ function renderQuote() {
     elements.priceImpact.textContent = '—';
     elements.gasEstimate.textContent = '—';
     elements.routeCandidates.replaceChildren();
+    renderUsdValues();
     updateActionButton();
     return;
   }
@@ -169,6 +220,7 @@ function renderQuote() {
     row.innerHTML = `<span>${routeLabel(candidate)}${index === 0 ? ' · Best' : ''}</span><strong>${formatBaseUnits(candidate.amountOut, quote.decimalsOut, quote.decimalsOut)} ${symbolFor(quote.tokenOut)}</strong><small>${Number(candidate.priceImpactPercent).toFixed(2)}% impact · ${candidate.feePercent.toFixed(2)}% fee</small>`;
     return row;
   }));
+  renderUsdValues();
   updateActionButton();
 }
 
@@ -571,6 +623,7 @@ function useMax() {
   state.amount = formatBaseUnits(spendable, decimals, decimals).replace(/,/g, '');
   elements.amountInput.value = state.amount === '0' ? '' : state.amount;
   state.quote = null;
+  renderUsdValues();
   scheduleQuote();
   updateActionButton();
 }
@@ -598,6 +651,8 @@ function initialize() {
     outputIcon: document.getElementById('swapOutputIcon'),
     inputBalance: document.getElementById('swapInputBalance'),
     outputBalance: document.getElementById('swapOutputBalance'),
+    inputUsd: document.getElementById('swapInputUsd'),
+    outputUsd: document.getElementById('swapOutputUsd'),
     routeLabel: document.getElementById('swapRouteLabel'),
     routeRate: document.getElementById('swapRouteRate'),
     minReceived: document.getElementById('swapMinReceived'),
@@ -620,6 +675,7 @@ function initialize() {
     state.quote = null;
     state.quoteError = '';
     elements.success.hidden = true;
+    renderUsdValues();
     scheduleQuote();
     updateActionButton();
   });
@@ -644,12 +700,15 @@ function initialize() {
   window.addEventListener('tree:panel-shown', (event) => {
     if (event.detail?.panelId === 'swap') {
       loadBalances(true);
+      loadUsdPrices();
       if (state.amount) requestQuote();
     }
   });
   state.refreshTimer = setInterval(() => { if (state.amount && !state.executing) requestQuote(); }, 15_000);
+  state.priceTimer = setInterval(loadUsdPrices, 60_000);
   setStatus('Mainnet: enter an amount to compare SuiDex V2, SuiDex V3, and Turbos. A transaction is created only after simulation and explicit wallet approval.');
   loadBalances(true);
+  loadUsdPrices();
 }
 
 initialize();
