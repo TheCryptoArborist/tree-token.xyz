@@ -103,8 +103,10 @@ function buildHomepage() {
           <h1 id="simple-hero-title">Grow with the TREE ecosystem.</h1>
           <p class="simple-tagline"><strong>$TREE is the root token.</strong> Holding an NFTree is your access pass to every utility released across the TREE ecosystem.</p>
           <p class="simple-lead">TREE connects token tools, NFTree ownership and utility, and a growing arcade of ecosystem games from one clear starting point.</p>
-          <div class="simple-hero-actions">
+          <div class="simple-hero-actions" aria-label="TREE ecosystem destinations">
             <a class="simple-button primary simple-launch-app" href="/dapp/">Launch App</a>
+            <a class="simple-button secondary" href="https://nftree.net/" target="_blank" rel="noopener noreferrer">Explore NFTree</a>
+            <a class="simple-button arcade-button" href="/play">Enter TREE Arcade</a>
           </div>
         </div>
         <div class="simple-hero-visual" aria-label="TREE hero video">
@@ -117,10 +119,6 @@ function buildHomepage() {
             <button class="simple-video-toggle" type="button" aria-label="Pause hero video">Pause</button>
             <span class="simple-live-badge">LIVE ON SUI</span>
           </div>
-          <div class="simple-video-actions" aria-label="TREE hero actions">
-            <a class="simple-button primary" href="/dapp/#swap">Buy TREE</a>
-            <a class="simple-button secondary" href="https://nftree.net/mint" target="_blank" rel="noopener noreferrer">Mint NFTree</a>
-          </div>
         </div>
         <div class="simple-stat-strip" aria-label="TREE market summary">
           <article><span>Price</span><strong data-home-market="price">Loading…</strong></article>
@@ -128,30 +126,6 @@ function buildHomepage() {
           <article><span>Market Cap</span><strong data-home-market="marketCap">Loading…</strong></article>
           <article><span>Liquidity</span><strong data-home-market="liquidity">Loading…</strong></article>
           <article><span>Owners</span><strong data-home-market="holderCount">Loading…</strong></article>
-        </div>
-      </section>
-
-      <section class="simple-destinations" aria-labelledby="simple-destinations-title">
-        <div class="simple-destinations-heading">
-          <p class="simple-eyebrow">EXPLORE THE ECOSYSTEM</p>
-          <h2 id="simple-destinations-title">Choose your path.</h2>
-        </div>
-        <div class="simple-destination-grid">
-          <article class="simple-destination-card app-card">
-            <span class="simple-destination-icon" aria-hidden="true">↕</span>
-            <div><span class="simple-card-label">TOKEN UTILITIES</span><h3>APP</h3><p>Trading tools, stats, and TREE ecosystem data.</p></div>
-            <a class="simple-button primary" href="/dapp/">OPEN APP</a>
-          </article>
-          <article class="simple-destination-card nftree-card">
-            <span class="simple-destination-icon" aria-hidden="true">🌳</span>
-            <div><span class="simple-card-label">OWNERSHIP &amp; ACCESS</span><h3>NFTREE</h3><p>Mint an NFTree and explore NFTree ownership and utility.</p></div>
-            <a class="simple-button secondary" href="https://nftree.net/" target="_blank" rel="noopener noreferrer">EXPLORE NFTREE</a>
-          </article>
-          <article class="simple-destination-card arcade-card">
-            <span class="simple-destination-icon" aria-hidden="true">🕹️</span>
-            <div><span class="simple-card-label">ECOSYSTEM GAMES</span><h3>TREE ARCADE</h3><p>Play across the TREE ecosystem. Garden Battles, TREE FORCE '89, Arboretum, and more.</p></div>
-            <a class="simple-button arcade-button" href="/play">ENTER ARCADE</a>
-          </article>
         </div>
       </section>
     `;
