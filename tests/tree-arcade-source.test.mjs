@@ -20,6 +20,10 @@ assert.equal((arcade.match(/class="game-card /g) || []).length, 3);
 assert.equal((arcade.match(/href="https:\/\/nftree\.net\/battle\//g) || []).length, 1);
 assert.match(styles, /\.game-grid\{display:grid;grid-template-columns:repeat\(3/);
 assert.match(styles, /@media\(max-width:860px\)\{\.game-grid\{grid-template-columns:1fr\}/);
+assert.match(styles, /\.game-action\{justify-self:start;min-width:136px;min-height:42px/);
+assert.match(styles, /@media\(max-width:620px\)[\s\S]*\.game-action\{min-width:126px;min-height:44px/);
+assert.equal(styles.includes('.arcade-footer-actions a{flex:1'), false);
+assert.equal(styles.includes('grid-template-columns:1fr}.arcade-footer-cta'), false);
 assert.match(build, /'play'/);
 
 console.log('TREE Arcade source safeguards passed.');
