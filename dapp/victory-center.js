@@ -389,23 +389,36 @@ async function claimWeeklySui() {
   finally { state.claiming = ''; render(); }
 }
 
+async function loadVictoryV3Context() {
+  const owner = window.playerAddress || ''; const overviewQuery = owner ? `?owner=${encodeURIComponent(owner)}` : '';
+  const overviewResponse = await fetch(`/api/tree-v3-overview${overviewQuery}`, { cache: 'no-store', headers: { Accept: 'application/json' } });
+  const overview = await overviewResponse.json().catch(() => ({}));
+  if (!overviewResponse.ok) throw new Error(`The verified V3 pool service returned ${overviewResponse.status}.`);
+  validateVerifiedPool(overview.pool); state.reinvest.v3Pool = overview.pool;
+  state.reinvest.v3Positions = Array.isArray(overview.positions) ? overview.positions.filter((position) => /^0x[0-9a-f]{64}$/i.test(position?.objectId || '')) : [];
+  render(); return overview;
+}
+
 async function requestReinvestQuote() {
   const amounts = reinvestAmounts(); const amount = amounts.reinvestRaw; state.reinvest.quote = null;
-  if (!amount) { setReinvestStatus(`Enter a VICTORY amount to build the verified ${state.reinvest.destination.toUpperCase()} reinvest route.`); render(); return; }
+  if (!amount) {
+    if (state.reinvest.destination === 'v3') {
+      state.reinvest.quoting = true; render();
+      try { await loadVictoryV3Context(); setReinvestStatus('Verified V3 pool and wallet positions loaded. Enter a VICTORY amount to build the route.', 'success'); }
+      catch (error) { setReinvestStatus(`${String(error?.message || error || 'The V3 position list is unavailable.')} No transaction was created.`, 'error'); }
+      finally { state.reinvest.quoting = false; render(); }
+      return;
+    }
+    setReinvestStatus('Enter a VICTORY amount to build the verified V2 reinvest route.'); render(); return;
+  }
   if (amount < 1_000n || (state.reinvest.mode === 'sustainable' && amounts.lockRaw <= 0n)) { setReinvestStatus('The selected sustainable split is too small for the verified route.', 'error'); render(); return; }
   state.reinvest.quoting = true; render();
   try {
     if (state.reinvest.destination === 'v3') {
-      const owner = window.playerAddress || '';
-      const overviewQuery = owner ? `?owner=${encodeURIComponent(owner)}` : '';
-      const [victoryPoolResult, overviewResponse] = await Promise.all([
+      const [victoryPoolResult, overview] = await Promise.all([
         client.core.getObject({ objectId: VICTORY_SUI_POOL, include: { json: true } }),
-        fetch(`/api/tree-v3-overview${overviewQuery}`, { cache: 'no-store', headers: { Accept: 'application/json' } }),
+        loadVictoryV3Context(),
       ]);
-      const overview = await overviewResponse.json().catch(() => ({}));
-      if (!overviewResponse.ok) throw new Error(`The verified V3 pool service returned ${overviewResponse.status}.`);
-      validateVerifiedPool(overview.pool); state.reinvest.v3Pool = overview.pool;
-      state.reinvest.v3Positions = Array.isArray(overview.positions) ? overview.positions.filter((position) => /^0x[0-9a-f]{64}$/i.test(position?.objectId || '')) : [];
       const position = selectedV3Position(); if (state.reinvest.v3Target !== 'new' && !position) throw new Error('The selected V3 position is not currently in range or verified for this wallet.');
       const victoryToSui = quoteVictoryToSui({ victorySuiPoolJson: objectJson(victoryPoolResult), amountIn: amount, slippageBps: state.reinvest.slippageBps });
       const fetchV3Route = async (swapAmount) => {
@@ -551,7 +564,7 @@ function init() {
     const lock = state.locks.find((item) => item.id.toString() === button.dataset.victoryUnlock); if (lock) unlockVictoryLock(lock);
   });
   document.getElementById('earnVictoryTab')?.addEventListener('click', () => { if (LOCAL_LOCKS_PREVIEW) openLocalLocksPreview(); else load(); });
-  window.addEventListener('tree:wallet-changed', () => { state.victoryBalance = 0n; state.suiBalance = 0n; state.locks = []; state.claimableVictoryRaw = null; state.claimableSuiRaw = null; state.unlockingLockId = ''; state.reinvest.quote = null; load(); });
+  window.addEventListener('tree:wallet-changed', () => { state.victoryBalance = 0n; state.suiBalance = 0n; state.locks = []; state.claimableVictoryRaw = null; state.claimableSuiRaw = null; state.unlockingLockId = ''; state.reinvest.quote = null; load(); if (state.reinvest.destination === 'v3') scheduleReinvestQuote(); });
   showVictoryView('locker'); render(); if (!openLocalLocksPreview()) load();
 }
 document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', init, { once: true }) : init();
