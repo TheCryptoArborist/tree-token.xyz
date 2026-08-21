@@ -15,6 +15,7 @@ const staticDirectories = [
   'docs',
   'documents',
   'faq',
+  'play',
   'raffle-rules',
   'roadmap',
   'scripts',
