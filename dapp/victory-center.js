@@ -20,6 +20,8 @@ const EXECUTION_ENABLED = ['tree-token.xyz', 'www.tree-token.xyz'].includes(loca
   || /^deploy-preview-\d+--tree-token\.netlify\.app$/i.test(location.hostname)
   || /^[a-f0-9]+--tree-token\.netlify\.app$/i.test(location.hostname)
   || ['localhost', '127.0.0.1'].includes(location.hostname);
+const LOCAL_LOCKS_PREVIEW = ['localhost', '127.0.0.1'].includes(location.hostname)
+  && new URLSearchParams(location.search).get('victory-locks-preview') === '1';
 const state = {
   amount: '', lockDays: 90, activeView: 'locker', victoryBalance: 0n, suiBalance: 0n,
   snapshot: null, emissionRateRaw: null, aprs: null, locks: [], victoryByLock: new Map(), suiClaims: [],
@@ -53,12 +55,27 @@ function unlockDate() { return unlockDateForDays(state.lockDays); }
 function objectJson(result) { return result?.object?.json ?? result?.json ?? null; }
 function totalSuiEpochs() { return state.suiClaims.reduce((total, claim) => total + claim.epochs.length, 0); }
 
+function updateLocksBackToTop() {
+  if (!el.backToTop || !el.centerCard || !el.lockList) return;
+  const viewingLocks = state.activeView === 'locks' && !el.locksView.hidden;
+  const longList = el.lockList.scrollHeight > window.innerHeight * 0.8;
+  const pastTop = el.centerCard.getBoundingClientRect().top < -180;
+  el.backToTop.hidden = !(viewingLocks && longList && pastTop);
+}
+
+function scrollLocksToTop() {
+  const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  el.centerCard.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' });
+  el.locksTab.focus({ preventScroll: true });
+}
+
 function showVictoryView(view) {
   state.activeView = ['locks', 'reinvest'].includes(view) ? view : 'locker';
   el.lockerView.hidden = state.activeView !== 'locker'; el.locksView.hidden = state.activeView !== 'locks'; el.reinvestView.hidden = state.activeView !== 'reinvest';
   for (const [name, tab] of [['locker', el.lockerTab], ['locks', el.locksTab], ['reinvest', el.reinvestTab]]) {
     const active = name === state.activeView; tab.classList.toggle('active', active); tab.setAttribute('aria-selected', String(active));
   }
+  queueMicrotask(updateLocksBackToTop);
 }
 
 function renderAprs() {
@@ -91,6 +108,13 @@ function renderLocks() {
       return `<article class="victory-user-lock"><div class="victory-user-lock-head"><strong>Lock #${lockId}</strong><span class="${unlockReady ? 'unlock-ready' : ''}">${unlockReady ? 'Unlock ready' : 'Locked'}</span></div><div class="victory-user-lock-grid"><div><span>Principal</span><strong>${formatRaw(lock.amountRaw, VICTORY_DECIMALS, 6)} VICTORY</strong></div><div><span>Term</span><strong>${TERM_LABELS[lock.lockPeriod] || `${lock.lockPeriod} days`}</strong></div><div><span>Exact unlock date</span><strong>${formatDate(lock.lockEnd)}</strong></div><div><span>Claimable VICTORY</span><strong>${victoryRaw === undefined ? '—' : `${formatRaw(victoryRaw, VICTORY_DECIMALS, 6)} VICTORY`}</strong></div><div><span>Claimable weekly SUI</span><strong>${sui ? `${formatRaw(sui.totalRaw, 9, 6)} SUI` : '—'}</strong></div><div><span>Claimable SUI epochs</span><strong>${sui ? sui.epochs.length.toLocaleString() : '—'}</strong></div><div><span>VICTORY claimed to date</span><strong>${formatRaw(lock.totalVictoryClaimedRaw, VICTORY_DECIMALS, 6)} VICTORY</strong></div><div><span>SUI epochs claimed</span><strong>${lock.claimedSuiEpochs.length.toLocaleString()}</strong></div></div>${action}</article>`;
     }).join('');
   }
+}
+
+function openLocalLocksPreview() {
+  if (!LOCAL_LOCKS_PREVIEW) return false;
+  showVictoryView('locks'); el.myLockCount.textContent = '14'; el.claimableVictory.textContent = 'Preview'; el.claimableSui.textContent = 'Preview';
+  el.lockList.innerHTML = Array.from({ length: 14 }, (_, index) => `<article class="victory-user-lock"><div class="victory-user-lock-head"><strong>Preview lock #${index + 1}</strong><span>Locked</span></div><div class="victory-user-lock-grid"><div><span>Principal</span><strong>${(10_000 + index * 500).toLocaleString()} VICTORY</strong></div><div><span>Exact unlock date</span><strong>November 19, 2026</strong></div></div></article>`).join('');
+  queueMicrotask(updateLocksBackToTop); return true;
 }
 
 function reinvestRawAmount() { try { return parseAmount(state.reinvest.amount, VICTORY_DECIMALS, 'VICTORY'); } catch { return null; } }
@@ -392,7 +416,7 @@ function init() {
   Object.assign(el, {
     walletBalance: document.getElementById('victoryWalletBalance'), totalLocked: document.getElementById('victoryTotalLocked'), activeLocks: document.getElementById('victoryActiveLocks'), rewardVault: document.getElementById('victoryRewardVault'), suiVault: document.getElementById('victorySuiVault'), refresh: document.getElementById('victoryRefresh'),
     amount: document.getElementById('victoryLockAmount'), max: document.getElementById('victoryLockMax'), balance: document.getElementById('victoryLockBalance'), term: document.getElementById('victoryLockTerm'), unlockDate: document.getElementById('victoryUnlockDate'), action: document.getElementById('victoryLockAction'), status: document.getElementById('victoryStatus'), success: document.getElementById('victorySuccess'), emissionRate: document.getElementById('victoryEmissionRate'),
-    lockerTab: document.getElementById('victoryLockerTab'), locksTab: document.getElementById('victoryLocksTab'), reinvestTab: document.getElementById('victoryReinvestTab'), lockerView: document.getElementById('victoryLockerView'), locksView: document.getElementById('victoryLocksView'), reinvestView: document.getElementById('victoryReinvestView'), myLockCount: document.getElementById('victoryMyLockCount'), claimableVictory: document.getElementById('victoryClaimableTotal'), claimableSui: document.getElementById('victorySuiClaimableTotal'), claimRewards: document.getElementById('victoryClaimRewards'), claimSui: document.getElementById('victoryClaimSui'), lockList: document.getElementById('victoryLockList'),
+    centerCard: document.getElementById('victoryCenterCard'), lockerTab: document.getElementById('victoryLockerTab'), locksTab: document.getElementById('victoryLocksTab'), reinvestTab: document.getElementById('victoryReinvestTab'), lockerView: document.getElementById('victoryLockerView'), locksView: document.getElementById('victoryLocksView'), reinvestView: document.getElementById('victoryReinvestView'), myLockCount: document.getElementById('victoryMyLockCount'), claimableVictory: document.getElementById('victoryClaimableTotal'), claimableSui: document.getElementById('victorySuiClaimableTotal'), claimRewards: document.getElementById('victoryClaimRewards'), claimSui: document.getElementById('victoryClaimSui'), lockList: document.getElementById('victoryLockList'), backToTop: document.getElementById('victoryBackToTop'),
     reinvestAmount: document.getElementById('victoryReinvestAmount'), reinvestAmountLabel: document.getElementById('victoryReinvestAmountLabel'), reinvestBalance: document.getElementById('victoryReinvestBalance'), reinvestMax: document.getElementById('victoryReinvestMax'), reinvestSuiMin: document.getElementById('victoryReinvestSuiMin'), reinvestTreeMin: document.getElementById('victoryReinvestTreeMin'), reinvestImpact: document.getElementById('victoryReinvestImpact'), reinvestAction: document.getElementById('victoryReinvestAction'), reinvestStatus: document.getElementById('victoryReinvestStatus'), reinvestSuccess: document.getElementById('victoryReinvestSuccess'),
     sustainableControls: document.getElementById('victorySustainableControls'), reinvestPercent: document.getElementById('victoryReinvestPercent'), lockPercent: document.getElementById('victoryLockPercent'), reinvestSplit: document.getElementById('victoryReinvestSplit'), sustainableLockTerm: document.getElementById('victorySustainableLockTerm'), sustainableUnlockDate: document.getElementById('victorySustainableUnlockDate'), reinvestAllocation: document.getElementById('victoryReinvestAllocation'), lockAllocation: document.getElementById('victoryLockAllocation'), reinvestApprovals: document.getElementById('victoryReinvestApprovals'),
   });
@@ -410,13 +434,14 @@ function init() {
   el.sustainableLockTerm.addEventListener('change', () => { state.reinvest.lockDays = Number(el.sustainableLockTerm.value); render(); });
   document.querySelectorAll('[data-victory-reinvest-slippage]').forEach((button) => button.addEventListener('click', () => { state.reinvest.slippageBps = Number(button.dataset.victoryReinvestSlippage); state.reinvest.quote = null; render(); scheduleReinvestQuote(); }));
   el.action.addEventListener('click', executeLock); el.claimRewards.addEventListener('click', claimVictoryRewards); el.claimSui.addEventListener('click', claimWeeklySui); el.reinvestAction.addEventListener('click', executeVictoryReinvest); el.refresh.addEventListener('click', load);
+  el.backToTop.addEventListener('click', scrollLocksToTop); window.addEventListener('scroll', updateLocksBackToTop, { passive: true }); window.addEventListener('resize', updateLocksBackToTop);
   el.lockList.addEventListener('click', (event) => {
     const button = event.target.closest('[data-victory-unlock]'); if (!button) return;
     const lock = state.locks.find((item) => item.id.toString() === button.dataset.victoryUnlock); if (lock) unlockVictoryLock(lock);
   });
-  document.getElementById('earnVictoryTab')?.addEventListener('click', load);
+  document.getElementById('earnVictoryTab')?.addEventListener('click', () => { if (LOCAL_LOCKS_PREVIEW) openLocalLocksPreview(); else load(); });
   window.addEventListener('tree:wallet-changed', () => { state.victoryBalance = 0n; state.suiBalance = 0n; state.locks = []; state.claimableVictoryRaw = null; state.claimableSuiRaw = null; state.unlockingLockId = ''; state.reinvest.quote = null; load(); });
-  showVictoryView('locker'); render(); load();
+  showVictoryView('locker'); render(); if (!openLocalLocksPreview()) load();
 }
 document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', init, { once: true }) : init();
 

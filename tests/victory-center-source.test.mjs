@@ -13,6 +13,7 @@ assert.match(earn, /id="victoryLocksTab"/); assert.match(earn, /My Locks &amp; C
 assert.match(earn, /Current lock APRs/); assert.match(earn, /data-victory-apr="1095"/);
 assert.match(earn, /id="victoryClaimRewards"/); assert.match(earn, /Claim VICTORY Rewards/);
 assert.match(earn, /id="victoryClaimSui"/); assert.match(earn, /Claim Weekly SUI/);
+assert.match(earn, /id="victoryBackToTop"/); assert.match(earn, /Back to Top/);
 assert.match(earn, /id="victoryReinvestTab"/); assert.match(earn, /id="victoryReinvestView"/);
 assert.match(earn, /Complete Reinvest/); assert.match(earn, /Sustainable Reinvest/); assert.match(earn, /Two verified pools/);
 assert.match(earn, /data-victory-reinvest-mode="sustainable"/); assert.match(earn, /id="victoryReinvestSplit"/); assert.match(earn, /id="victorySustainableLockTerm"/);
@@ -26,6 +27,8 @@ assert.match(client, /quoteVictoryV2Reinvest/); assert.match(client, /buildVicto
 assert.match(client, /buildVictoryV2SustainableReinvestTransaction/); assert.match(client, /extractVictoryLockEvent/); assert.match(client, /Review Sustainable Reinvest/);
 assert.match(client, /V2 reinvest and staking confirmed/); assert.match(client, /newly created raw SUI\/TREE LP units/);
 assert.match(client, /Locked VICTORY cannot be withdrawn early/); assert.match(client, /tree:wallet-changed/);
+assert.match(client, /updateLocksBackToTop/); assert.match(client, /scrollIntoView/); assert.match(client, /prefers-reduced-motion/);
+assert.match(client, /victory-locks-preview/); assert.match(client, /localhost.*127\.0\.0\.1/);
 assert.doesNotMatch(earn, /Coming soon|Preview execution only/);
 
 console.log('VICTORY center source: PASS (locks, claims, guarded unlocks, complete reinvest, and sustainable reinvest)');

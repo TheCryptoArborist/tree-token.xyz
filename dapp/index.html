@@ -142,7 +142,7 @@
         </article>
       </div>
       <div class="earn-panel" id="earnVictoryPanel" role="tabpanel" aria-labelledby="earnVictoryTab" hidden>
-        <article class="victory-center-card">
+        <article class="victory-center-card" id="victoryCenterCard">
           <div class="victory-center-heading"><div class="victory-center-title"><img src="../assets/victory-token.png" alt="VICTORY token"><div><h3>VICTORY Center</h3><p>Live xVICTORY locker access on Sui Mainnet</p></div></div><button class="button secondary" id="victoryRefresh" type="button">Refresh</button></div>
           <div class="victory-inner-tabs" role="tablist" aria-label="VICTORY views"><button class="active" id="victoryLockerTab" type="button" role="tab" aria-selected="true" aria-controls="victoryLockerView">Lock VICTORY</button><button id="victoryLocksTab" type="button" role="tab" aria-selected="false" aria-controls="victoryLocksView">My Locks &amp; Claims</button><button id="victoryReinvestTab" type="button" role="tab" aria-selected="false" aria-controls="victoryReinvestView">Reinvest</button></div>
           <div class="victory-inner-view" id="victoryLockerView" role="tabpanel" aria-labelledby="victoryLockerTab">
@@ -158,6 +158,7 @@
             <div class="victory-claim-actions"><button class="button gold" id="victoryClaimRewards" type="button">Claim VICTORY Rewards</button><button class="button secondary" id="victoryClaimSui" type="button">Claim Weekly SUI</button></div>
             <p class="victory-claim-note">VICTORY emissions accrue continuously. SUI revenue is allocated in completed weekly epochs and becomes claimable only after that epoch is finalized on-chain.</p>
             <div class="victory-lock-list" id="victoryLockList"><p class="muted">Connect your wallet to load its current VICTORY locks and rewards.</p></div>
+            <button class="victory-back-to-top" id="victoryBackToTop" type="button" aria-label="Back to the top of My Locks and Claims" hidden><span aria-hidden="true">↑</span> Back to Top</button>
           </div>
           <div class="victory-inner-view" id="victoryReinvestView" role="tabpanel" aria-labelledby="victoryReinvestTab" hidden>
             <p class="victory-center-note"><strong>Complete Reinvest</strong> sends all selected wallet VICTORY into SUI/TREE V2. <strong>Sustainable Reinvest</strong> atomically locks one portion as xVICTORY and sends the other portion into the same verified liquidity route. Claim rewards first if they are not yet in your wallet.</p>
