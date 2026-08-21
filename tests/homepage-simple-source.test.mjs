@@ -1,9 +1,10 @@
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { readFile, stat } from 'node:fs/promises';
 
 const source = await readFile(new URL('../scripts/home-v2.js', import.meta.url), 'utf8');
 const styles = await readFile(new URL('../styles/home-v2.css', import.meta.url), 'utf8');
 const marketCore = await readFile(new URL('../scripts/home-market-core.js', import.meta.url), 'utf8');
+const heroVideo = await stat(new URL('../assets/tree-hero-walking.mp4', import.meta.url));
 
 assert.equal((source.match(/>Buy TREE<\/a>/g) || []).length, 1);
 assert.match(source, /simple-header-socials/);
@@ -25,6 +26,10 @@ assert.match(source, /<video class="simple-hero-video" autoplay muted loop plays
 assert.match(source, /import treeHeroVideoUrl from '\.\.\/assets\/tree-hero-walking\.mp4\?url';/);
 assert.match(source, /<source src="\$\{treeHeroVideoUrl\}" type="video\/mp4">/);
 assert.match(source, /simple-video-toggle/);
+assert.match(source, /heroVideo\.setAttribute\('webkit-playsinline', ''\)/);
+assert.match(source, /heroVideo\.addEventListener\('canplay', attemptAutoplay/);
+assert.match(source, /document\.addEventListener\('touchstart', attemptAutoplay/);
+assert.ok(heroVideo.size < 6_000_000, `Homepage video should remain mobile-ready; received ${heroVideo.size} bytes`);
 assert.match(source, /href="\/dapp\/#swap">Buy TREE<\/a>/);
 assert.match(source, /class="simple-button primary simple-launch-app" href="\/dapp\/">Launch App<\/a>/);
 assert.match(source, /href="https:\/\/nftree\.net\/"[^>]*>Explore NFTree<\/a>/);
@@ -40,7 +45,6 @@ assert.match(source, /cache: fresh \? 'no-store' : 'default'/);
 assert.match(marketCore, /resolved\.marketCap = resolved\.price \* totalSupply/);
 assert.match(source, /writeHomeMarketCache\(market\)/);
 assert.equal(source.includes('simple-live-row'), false);
-assert.match(source, /prefers-reduced-motion: reduce/);
 assert.equal(source.includes('simple-footer-links'), false);
 assert.match(styles, /\.simple-header-socials/);
 assert.match(styles, /\.simple-hero-video/);
@@ -53,5 +57,7 @@ assert.equal(styles.includes('.simple-destination-grid'), false);
 assert.match(styles, /\.simple-eyebrow\{[^}]*font-size:clamp\(\.82rem,1\.15vw,\.94rem\)/);
 assert.equal(styles.includes('.simple-video-feature'), false);
 assert.match(styles, /@media\(max-width:780px\)/);
+assert.match(styles, /\.simple-hero-visual\{grid-column:1;grid-row:2;min-height:220px\}/);
+assert.match(styles, /\.simple-hero-actions\{grid-column:1;grid-row:3;grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
 
 console.log('Simple homepage hierarchy: PASS (top social links, aligned hero actions, accessible autoplay video)');

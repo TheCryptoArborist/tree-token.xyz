@@ -99,11 +99,6 @@ function buildHomepage() {
           <h1 id="simple-hero-title">Grow with the TREE ecosystem.</h1>
           <p class="simple-tagline"><strong>$TREE is the root token.</strong> Holding an NFTree is your access pass to every utility released across the TREE ecosystem.</p>
           <p class="simple-lead">TREE connects token tools, NFTree ownership and utility, and a growing arcade of ecosystem games from one clear starting point.</p>
-          <div class="simple-hero-actions" aria-label="TREE ecosystem destinations">
-            <a class="simple-button primary simple-launch-app" href="/dapp/">Launch App</a>
-            <a class="simple-button secondary" href="https://nftree.net/" target="_blank" rel="noopener noreferrer">Explore NFTree</a>
-            <a class="simple-button arcade-button" href="/play">Enter TREE Arcade</a>
-          </div>
         </div>
         <div class="simple-hero-visual" aria-label="TREE hero video">
           <div class="simple-orbit orbit-one"></div>
@@ -115,6 +110,11 @@ function buildHomepage() {
             <button class="simple-video-toggle" type="button" aria-label="Pause hero video">Pause</button>
             <span class="simple-live-badge">LIVE ON SUI</span>
           </div>
+        </div>
+        <div class="simple-hero-actions" aria-label="TREE ecosystem destinations">
+          <a class="simple-button primary simple-launch-app" href="/dapp/">Launch App</a>
+          <a class="simple-button secondary" href="https://nftree.net/" target="_blank" rel="noopener noreferrer">Explore NFTree</a>
+          <a class="simple-button arcade-button" href="/play">Enter TREE Arcade</a>
         </div>
         <div class="simple-stat-strip" aria-label="TREE market summary">
           <article><span>Price</span><strong data-home-market="price">Loading…</strong></article>
@@ -131,19 +131,35 @@ function buildHomepage() {
     if (heroVideo instanceof HTMLVideoElement && videoToggle instanceof HTMLButtonElement) {
       heroVideo.muted = true;
       heroVideo.defaultMuted = true;
+      heroVideo.playsInline = true;
+      heroVideo.setAttribute('muted', '');
+      heroVideo.setAttribute('playsinline', '');
+      heroVideo.setAttribute('webkit-playsinline', '');
       const updateVideoToggle = () => {
         const paused = heroVideo.paused;
         videoToggle.textContent = paused ? 'Play' : 'Pause';
         videoToggle.setAttribute('aria-label', `${paused ? 'Play' : 'Pause'} hero video`);
       };
+      const attemptAutoplay = () => {
+        heroVideo.muted = true;
+        try {
+          const playback = heroVideo.play();
+          if (playback && typeof playback.then === 'function') playback.then(updateVideoToggle).catch(updateVideoToggle);
+          else updateVideoToggle();
+        } catch {
+          updateVideoToggle();
+        }
+      };
       videoToggle.addEventListener('click', () => {
-        if (heroVideo.paused) heroVideo.play().catch(updateVideoToggle);
+        if (heroVideo.paused) attemptAutoplay();
         else heroVideo.pause();
       });
       heroVideo.addEventListener('play', updateVideoToggle);
       heroVideo.addEventListener('pause', updateVideoToggle);
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) heroVideo.pause();
-      else heroVideo.play().catch(updateVideoToggle);
+      heroVideo.addEventListener('canplay', attemptAutoplay, { once: true });
+      window.addEventListener('pageshow', attemptAutoplay, { once: true });
+      document.addEventListener('touchstart', attemptAutoplay, { once: true, passive: true });
+      attemptAutoplay();
       updateVideoToggle();
     }
   }
