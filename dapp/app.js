@@ -2,15 +2,26 @@ const DAPP_SWAP_EXECUTION_ENABLED = false;
 const DASHBOARD_CACHE_KEY = 'tree-dashboard-last-success-v1';
 const CHART_CACHE_PREFIX = 'tree-chart-last-success-v1:';
 const dashboardUrl = '/api/tree-dashboard';
-const isDeployPreview = typeof location !== 'undefined' && /^deploy-preview-/.test(location.hostname);
+function isNetlifyReviewHost(hostname) {
+  const host = String(hostname || '').toLowerCase();
+  return /^deploy-preview-\d+--tree-token\.netlify\.app$/.test(host)
+    || /^[a-f0-9]{16,}--tree-token\.netlify\.app$/.test(host);
+}
+const isDeployPreview = typeof location !== 'undefined' && isNetlifyReviewHost(location.hostname);
 const leaderboardUrl = isDeployPreview ? '/api/tree-exposure-preview' : '/api/tree-exposure';
 const badgeUrl = isDeployPreview ? '/api/tree-badges-preview' : '/api/tree-badges';
 let leaderboardMode = 'exposure';
 const chartUrl = '/api/tree-chart';
+const burnUrl = '/api/tree-burn-overview';
+const liquidityUrl = '/api/tree-liquidity';
+const volumeUrl = '/api/tree-volume';
+const nftreeUrl = '/api/tree-nftree';
 const pairUrl = 'https://api.dexscreener.com/latest/dex/pairs/sui/0xaa133ce1f8fd55d85b6fc87c1b3054cb717d83be477ef3635c661c21fbdfa0ee';
 
 const compactMoney = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 2 });
 const quantity = new Intl.NumberFormat('en-US', { maximumFractionDigits: 3 });
+const burnQuantity = new Intl.NumberFormat('en-US', { maximumFractionDigits: 6 });
+const compactBurnQuantity = new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 });
 let leaderboardEntries = [];
 let leaderboardStatus = 'loading';
 let treePerSui = null;
@@ -109,6 +120,28 @@ function formatTreePrice(value) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits }).format(price);
 }
 
+function formatSuiPrice(value) {
+  const price = Number(value);
+  if (!Number.isFinite(price) || price <= 0) return 'Not available';
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 4,
+  }).format(price);
+}
+
+async function loadSuiHeaderPrice() {
+  const targets = document.querySelectorAll('[data-sui-price]');
+  if (!targets.length) return;
+  try {
+    const response = await fetch('/api/tree-v3-overview', { headers: { Accept: 'application/json' } });
+    if (!response.ok) throw new Error(`SUI price returned ${response.status}`);
+    const payload = await response.json();
+    const label = formatSuiPrice(payload?.market?.suiUsd);
+    targets.forEach((target) => { target.textContent = label; });
+  } catch {
+    targets.forEach((target) => { target.textContent = 'Not available'; });
+  }
+}
+
 function formatMarket(field, value) {
   if (value === null || value === undefined || !Number.isFinite(Number(value))) return 'Not available';
   const number = Number(value);
@@ -120,9 +153,19 @@ function formatMarket(field, value) {
 
 function renderMarket(data, state, timestamp, source) {
   document.querySelectorAll('[data-market]').forEach((element) => {
+    if (element.dataset.market === 'liquidity' || element.dataset.market === 'volume24h') return;
     element.textContent = formatMarket(element.dataset.market, data?.[element.dataset.market]);
   });
   setGroupState('market', state, source, timestamp);
+}
+
+function renderBurnProgress(value) {
+  const percentage = Number(value);
+  const progressLabel = document.getElementById('burnProgressLabel');
+  const progressBar = document.getElementById('burnProgressBar');
+  if (!Number.isFinite(percentage)) return;
+  if (progressLabel) progressLabel.textContent = `${percentage.toFixed(2)}%`;
+  if (progressBar) progressBar.style.width = `${Math.max(0, Math.min(100, (percentage - 5) * 20))}%`;
 }
 
 function renderSnapshot(snapshot) {
@@ -132,12 +175,144 @@ function renderSnapshot(snapshot) {
     if (!Number.isFinite(Number(value))) element.textContent = 'Not available';
     else if (path.includes('Usd')) element.textContent = compactMoney.format(Number(value));
     else if (path.includes('Apr') || path.includes('Percent')) element.textContent = `${Number(value).toFixed(2)}%`;
-    else if (path === 'nftree.mintPriceSui') element.textContent = `${quantity.format(Number(value))} SUI`;
+    else if (element.dataset.burnFormat === 'compact') element.textContent = compactBurnQuantity.format(Number(value));
     else element.textContent = quantity.format(Number(value));
   });
   const removal = snapshot?.tree?.totalSupply ? snapshot.tree.zeroAddressBalance / snapshot.tree.totalSupply * 100 : null;
   document.querySelectorAll('[data-derived="removalPercent"]').forEach((element) => { element.textContent = removal === null ? 'Not available' : `${removal.toFixed(2)}%`; });
-  ['supply', 'liquidity', 'nftree'].forEach((group) => setGroupState(group, 'Snapshot', 'TREE project records', 'Project snapshot — June 22, 2026'));
+  const locked = snapshot?.tree?.totalSupply ? snapshot.tree.moonbagsLocked / snapshot.tree.totalSupply * 100 : null;
+  document.querySelectorAll('[data-derived="lockedPercent"]').forEach((element) => { element.textContent = locked === null ? 'Not available' : `${locked.toFixed(2)}%`; });
+  renderBurnProgress(removal);
+  setGroupState('time-locks', 'Snapshot', 'TREE project records', 'Project snapshot — June 22, 2026');
+}
+
+function renderLiquidity(payload) {
+  document.querySelectorAll('[data-liquidity], [data-market="liquidity"]').forEach((element) => {
+    const field = element.dataset.liquidity || 'recognizedLiquidityUsd';
+    const value = Number(payload?.liquidity?.[field]);
+    element.textContent = Number.isFinite(value) ? compactMoney.format(value) : 'Not verified';
+  });
+  setGroupState('liquidity', 'Live', payload.source || 'Sui Mainnet reserves', payload.generatedAt);
+}
+
+async function loadLiquidity() {
+  setGroupState('liquidity', 'Loading', 'Sui Mainnet reserves', null);
+  try {
+    const response = await fetch(liquidityUrl, { headers: { Accept: 'application/json' }, cache: 'no-store' });
+    const payload = await response.json();
+    if (!response.ok || payload.status !== 'ok' || !payload.liquidity) throw new Error('Live liquidity unavailable.');
+    renderLiquidity(payload);
+  } catch {
+    document.querySelectorAll('[data-liquidity], [data-market="liquidity"]').forEach((element) => { element.textContent = 'Not verified'; });
+    setGroupState('liquidity', 'Error', 'Sui Mainnet reserves', null);
+  }
+}
+
+function renderNftree(payload) {
+  const nftree = payload?.nftree || {};
+  document.querySelectorAll('[data-nftree]').forEach((element) => {
+    const field = element.dataset.nftree;
+    const value = Number(nftree[field]);
+    if (!Number.isFinite(value)) { element.textContent = 'Not verified'; return; }
+    element.textContent = field === 'mintPriceSui' ? `${quantity.format(value)} SUI` : quantity.format(value);
+  });
+  setGroupState('nftree', 'Live', payload.source || 'Sui Mainnet GraphQL', payload.generatedAt);
+  const coverage = document.getElementById('nftreeCoverage');
+  if (coverage) coverage.textContent = [
+    `${quantity.format(Number(nftree.totalLoaded))} loaded = ${quantity.format(Number(nftree.holderOwned))} holder-owned + ${quantity.format(Number(nftree.salePool))} in the three official sale pools.`,
+    `${quantity.format(Number(nftree.directHolderOwned))} are directly wallet-owned; ${quantity.format(Number(nftree.marketplaceOrCustody))} are marketplace/object-custodied.`,
+    `The wallet total includes only ${quantity.format(Number(nftree.directHolderWallets))} directly verifiable address owners.`,
+  ].join(' ');
+}
+
+async function loadNftree() {
+  setGroupState('nftree', 'Loading', 'Sui Mainnet GraphQL', null);
+  try {
+    const response = await fetch(nftreeUrl, { headers: { Accept: 'application/json' }, cache: 'no-store' });
+    const payload = await response.json();
+    if (!response.ok || payload.status !== 'ok' || !payload.nftree) throw new Error('Live NFTree verification unavailable.');
+    renderNftree(payload);
+  } catch {
+    document.querySelectorAll('[data-nftree]').forEach((element) => { element.textContent = 'Not verified'; });
+    setGroupState('nftree', 'Error', 'Sui Mainnet GraphQL', null);
+    const coverage = document.getElementById('nftreeCoverage');
+    if (coverage) coverage.textContent = 'The complete collection and sale-pool reconciliation could not be verified. Dated or partial NFTree figures are not published.';
+  }
+}
+
+function renderVolume(payload) {
+  const total = Number(payload?.volume24hUsd);
+  document.querySelectorAll('[data-market="volume24h"]').forEach((element) => { element.textContent = Number.isFinite(total) ? compactMoney.format(total) : 'Not verified'; });
+  const venue = payload?.venues || {};
+  const breakdown = document.getElementById('volumeBreakdown');
+  if (breakdown) breakdown.textContent = `Rolling 24 hours · SuiDex V2 ${compactMoney.format(Number(venue.suiDexV2 || 0))} · SuiDex V3 ${compactMoney.format(Number(venue.suiDexV3 || 0))} · Turbos ${compactMoney.format(Number(venue.turbos || 0))} · Updated ${new Date(payload.generatedAt).toLocaleString()}`;
+}
+
+async function loadVolume() {
+  try {
+    const response = await fetch(volumeUrl, { headers: { Accept: 'application/json' }, cache: 'no-store' });
+    const payload = await response.json();
+    if (!response.ok || payload.status !== 'ok') throw new Error('Verified 24-hour volume unavailable.');
+    renderVolume(payload);
+  } catch {
+    document.querySelectorAll('[data-market="volume24h"]').forEach((element) => { element.textContent = 'Not verified'; });
+    const breakdown = document.getElementById('volumeBreakdown');
+    if (breakdown) breakdown.textContent = 'The complete recognized-pool scan could not be verified. Partial volume is not published.';
+  }
+}
+
+function setBurnState(state, source, timestamp) {
+  const badge = document.getElementById('burnState');
+  if (badge) { badge.textContent = state; badge.className = `data-state ${state.toLowerCase()}`; }
+  const meta = document.getElementById('burnMeta');
+  if (meta) meta.textContent = `Source: ${source} · Timestamp: ${timestamp || 'unavailable'} · Status: ${state.toLowerCase()}`;
+}
+
+function renderBurnOverview(payload) {
+  document.querySelectorAll('[data-burn]').forEach((element) => {
+    const value = Number(payload?.[element.dataset.burn]);
+    if (!Number.isFinite(value)) { element.textContent = 'Not available'; return; }
+    element.textContent = element.dataset.burn === 'removalPercentage'
+      ? `${value.toFixed(4)}%`
+      : element.dataset.burnFormat === 'compact' ? compactBurnQuantity.format(value) : burnQuantity.format(value);
+    if (element.dataset.burnFormat === 'compact') element.title = burnQuantity.format(value);
+  });
+  renderBurnProgress(payload?.removalPercentage);
+  setGroupState('supply', 'Live', payload.source || 'Sui Mainnet gRPC', payload.generatedAt);
+  const totalTransactions = document.getElementById('burnTotalTransactions');
+  if (totalTransactions) totalTransactions.textContent = Number.isSafeInteger(payload?.totalTransactions) ? quantity.format(payload.totalTransactions) : '—';
+  const recentList = document.getElementById('burnRecentList');
+  const recentBurns = Array.isArray(payload?.recentBurns) ? payload.recentBurns : [];
+  if (recentList && recentBurns.length) {
+    recentList.replaceChildren(...recentBurns.slice(0, 3).map((burn) => {
+      const row = document.createElement('div');
+      row.className = 'burn-recent-row';
+      const link = document.createElement('a');
+      link.href = `https://suiscan.xyz/mainnet/tx/${encodeURIComponent(String(burn.digest || ''))}`;
+      link.target = '_blank'; link.rel = 'noopener noreferrer'; link.textContent = compact(String(burn.digest || ''));
+      link.title = String(burn.digest || '');
+      const amount = document.createElement('strong'); amount.textContent = `-${compactBurnQuantity.format(Number(burn.amount || 0))}`;
+      const time = document.createElement('time'); time.textContent = burn.age || '—'; time.dateTime = String(burn.timestamp || '');
+      row.append(link, amount, time); return row;
+    }));
+  } else if (recentList) {
+    recentList.innerHTML = '<p>Verified burn history is refreshing.</p>';
+  }
+  setBurnState('Live', payload.source || 'Sui Mainnet gRPC', payload.generatedAt);
+}
+
+async function loadBurnOverview() {
+  setBurnState('Loading', 'Sui Mainnet gRPC', null);
+  setGroupState('supply', 'Loading', 'Sui Mainnet gRPC', null);
+  try {
+    const response = await fetch(burnUrl, { headers: { Accept: 'application/json' }, cache: 'no-store' });
+    const payload = await response.json();
+    if (!response.ok || payload.status !== 'ok') throw new Error('Live burn overview unavailable.');
+    renderBurnOverview(payload);
+  } catch {
+    setBurnState('Snapshot', 'TREE project records fallback', 'Project snapshot — June 22, 2026');
+    setGroupState('supply', 'Snapshot', 'TREE project records fallback', 'Project snapshot — June 22, 2026');
+  }
 }
 
 function showWarnings(warnings) {
@@ -149,7 +324,7 @@ function showWarnings(warnings) {
 
 async function loadDashboard() {
   setGroupState('market', 'Loading', 'Noodles.fi', null);
-  ['supply', 'liquidity', 'nftree'].forEach((group) => setGroupState(group, 'Loading', 'TREE project records', 'Project snapshot — June 22, 2026'));
+  setGroupState('time-locks', 'Loading', 'TREE project records', 'Project snapshot — June 22, 2026');
   try {
     const response = await fetch(dashboardUrl, { headers: { Accept: 'application/json' } });
     if (!response.ok) throw new Error(`Dashboard returned ${response.status}`);
@@ -175,17 +350,17 @@ async function loadDashboard() {
       const snapshotResponse = await fetch('../data/tree-project-snapshot.json');
       if (snapshotResponse.ok) renderSnapshot(await snapshotResponse.json());
     } catch {
-      ['supply', 'liquidity', 'nftree'].forEach((group) => setGroupState(group, 'Error', 'TREE project records', 'Project snapshot — June 22, 2026'));
+      setGroupState('time-locks', 'Error', 'TREE project records', 'Project snapshot — June 22, 2026');
     }
     console.error(error);
   }
 }
 
-function setChartState(state, timestamp, message) {
+function setChartState(state, timestamp, message, source = 'Market data') {
   const badge = document.getElementById('chartState');
   badge.textContent = state;
   badge.className = `data-state ${state.toLowerCase().replace(' ', '-')}`;
-  document.getElementById('chartMeta').textContent = `Source: Noodles.fi · Timestamp: ${timestamp || 'unavailable'} · Status: ${state.toLowerCase()}`;
+  document.getElementById('chartMeta').textContent = `Source: ${source} · Timestamp: ${timestamp || 'unavailable'} · Status: ${state.toLowerCase()}`;
   const messageElement = document.getElementById('chartMessage');
   messageElement.hidden = !message;
   messageElement.textContent = message || '';
@@ -250,24 +425,24 @@ async function loadChart(range = activeChartRange) {
     const payload = await response.json();
     if (payload.status === 'ok' && Array.isArray(payload.candles) && payload.candles.length) {
       drawMarketChart(payload.candles);
-      setChartState('Current', payload.generatedAt, null);
+      setChartState('Current', payload.generatedAt, null, payload.source || 'Market data');
       writeChartCache(range, payload);
     } else {
       const cached = readChartCache(range);
       if (cached?.candles?.length) {
         drawMarketChart(cached.candles);
-        setChartState('Stale', cached.generatedAt, 'Showing the last successful cached chart.');
+        setChartState('Stale', cached.generatedAt, 'Showing the last successful cached chart.', cached.source || 'Cached market data');
       } else {
         drawMarketChart([]);
         const label = payload.status === 'not-configured' ? 'Not configured' : payload.status === 'error' ? 'Error' : 'Empty';
-        setChartState(label, payload.generatedAt, label === 'Empty' ? 'No candles were returned for this range.' : payload.warnings?.[0] || label);
+        setChartState(label, payload.generatedAt, label === 'Empty' ? 'No candles were returned for this range.' : payload.warnings?.[0] || label, payload.source || 'Market data');
       }
     }
   } catch (error) {
     const cached = readChartCache(range);
     if (cached?.candles?.length) {
       drawMarketChart(cached.candles);
-      setChartState('Stale', cached.generatedAt, 'Showing the last successful cached chart.');
+      setChartState('Stale', cached.generatedAt, 'Showing the last successful cached chart.', cached.source || 'Cached market data');
     } else {
       drawMarketChart([]);
       setChartState('Error', null, 'Chart data is temporarily unavailable.');
@@ -312,6 +487,34 @@ function badgeDefinition(slug) {
     accumulator: { icon: '🌱', label: 'Accumulator', description: 'Completed at least 10 qualifying TREE buys during the verified 30-day window.' },
     burned: { icon: '🔥', label: 'Burned', description: 'Burned at least 500,000 TREE.' },
   }[slug] || null;
+}
+
+function renderRankBadges(slugs) {
+  const container = elementById('rankBadges');
+  if (!container?.replaceChildren) return;
+  const badges = (Array.isArray(slugs) ? slugs : []).map((slug) => {
+    const definition = badgeDefinition(slug);
+    if (!definition) return null;
+    const badge = document.createElement('span');
+    badge.className = `rank-badge badge-${slug}`;
+    badge.textContent = `${definition.icon} ${definition.label}`;
+    badge.title = definition.description;
+    return badge;
+  }).filter(Boolean);
+  if (badges.length) container.replaceChildren(...badges);
+  else {
+    const empty = document.createElement('small');
+    empty.textContent = 'No additional verified badges in this snapshot.';
+    container.replaceChildren(empty);
+  }
+}
+
+function setCompactTreeText(id, value, suffix = '') {
+  const target = elementById(id);
+  if (!target) return;
+  const exact = String(value ?? '0');
+  target.textContent = `${compactTree(exact)}${suffix}`;
+  target.title = `${exact} TREE`;
 }
 
 function exposureBreakdownText(entry) {
@@ -426,6 +629,7 @@ function renderRankDetail(row) {
     setText('rankTierIcon', '🌱'); setText('rankTierName', 'Connect Wallet'); setText('rankPosition', '—');
     setText('rankDirectTree', '—'); setText('rankSupplyPercent', 'Connect a wallet to compare with the verified Top 50.');
     setText('rankExposureBreakdown', 'Liquid TREE and verified LP principal will appear here.');
+    setText('rankLiquidTree', '—'); setText('rankLpTree', '—'); setText('rankLpPositions', '—'); renderRankBadges([]);
     setText('rankNextTier', 'Seedling'); setText('rankNextRequirement', 'Connect a wallet to calculate progress.');
     const progress = elementById('rankProgressBar'); if (progress?.style) progress.style.width = '0%';
     return;
@@ -436,6 +640,8 @@ function renderRankDetail(row) {
     setText('rankDirectTree', connectedTreeBalanceRaw === null ? '—' : `${formatTreeRaw(connectedTreeBalanceRaw)} TREE liquid`);
     setText('rankSupplyPercent', 'Verified rank data is not currently available.');
     setText('rankExposureBreakdown', 'Partial scans never produce total-exposure rankings.');
+    setText('rankLiquidTree', connectedTreeBalanceRaw === null ? '—' : `${compactTree(formatTreeRaw(connectedTreeBalanceRaw))} TREE`);
+    setText('rankLpTree', 'Pending'); setText('rankLpPositions', 'Pending'); renderRankBadges([]);
     setText('rankNextTier', 'Verification required'); setText('rankNextRequirement', 'Wait for a complete verified snapshot.');
     const progress = elementById('rankProgressBar'); if (progress?.style) progress.style.width = '0%';
     return;
@@ -449,10 +655,14 @@ function renderRankDetail(row) {
     setText('rankTierIcon', tier?.icon || '🌿');
     setText('rankTierName', tier?.name || row.tier || 'Ranked');
     setText('rankPosition', `#${row.rank}`);
-    setText('rankDirectTree', `${exposure ? row.totalExposure : row.directTree} TREE`);
+    setCompactTreeText('rankDirectTree', exposure ? row.totalExposure : row.directTree, ' TREE');
     setText('rankSupplyPercent', exposure
       ? `${row.supplyPercent ?? '—'}% of total supply · ${row.lpPositionCount ?? 0} verified LP position${row.lpPositionCount === 1 ? '' : 's'}`
       : `${row.supplyPercent ?? '—'}% of total supply · ${row.coinObjectCount ?? '—'} Coin<TREE> objects`);
+    setCompactTreeText('rankLiquidTree', exposure ? row.liquidTree : row.directTree, ' TREE');
+    setCompactTreeText('rankLpTree', exposure ? row.lpTree : '0', ' TREE');
+    setText('rankLpPositions', exposure ? String(row.lpPositionCount ?? 0) : '0');
+    renderRankBadges(row.badges);
     setText('rankExposureBreakdown', exposure
       ? exposureBreakdownText(row)
       : 'Direct address-owned TREE only.');
@@ -482,6 +692,8 @@ function renderRankDetail(row) {
   setText('rankTierIcon', '🌱'); setText('rankTierName', 'Outside Top 50'); setText('rankPosition', 'Unranked');
   setText('rankDirectTree', connectedTreeBalanceRaw === null ? 'Loading liquid balance…' : `${formatTreeRaw(connectedTreeBalanceRaw)} TREE liquid`);
   if (leaderboardMode === 'exposure') {
+    setText('rankLiquidTree', connectedTreeBalanceRaw === null ? 'Loading…' : `${compactTree(formatTreeRaw(connectedTreeBalanceRaw))} TREE`);
+    setText('rankLpTree', 'Snapshot required'); setText('rankLpPositions', '—'); renderRankBadges([]);
     setText('rankSupplyPercent', 'Liquid balance only. Total verified exposure also includes recognized LP principal.');
     setText('rankExposureBreakdown', 'LP exposure is resolved during the complete background snapshot, not estimated on demand.');
     setText('rankNextTier', 'Top 50 Entry');
@@ -494,6 +706,8 @@ function renderRankDetail(row) {
 
   const cutoffRaw = parseTreeRaw(cutoff);
   setText('rankSupplyPercent', 'Direct wallet-held TREE, compared with the current verified cutoff.');
+  setText('rankLiquidTree', connectedTreeBalanceRaw === null ? 'Loading…' : `${compactTree(formatTreeRaw(connectedTreeBalanceRaw))} TREE`);
+  setText('rankLpTree', '0 TREE'); setText('rankLpPositions', '0'); renderRankBadges([]);
   setText('rankExposureBreakdown', 'Direct address-owned TREE only.');
   setText('rankNextTier', 'Top 50 Entry');
   if (connectedTreeBalanceRaw !== null && cutoffRaw !== null) {
@@ -560,11 +774,16 @@ function renderLeaderboardCards() {
     const rank = document.createElement('span'); rank.className = 'leader-rank'; rank.textContent = entry.rank === 1 ? '🥇' : entry.rank === 2 ? '🥈' : entry.rank === 3 ? '🥉' : `#${entry.rank}`;
     const identity = document.createElement('div'); identity.className = 'leader-identity';
     const walletLine = document.createElement('div'); walletLine.className = 'leader-wallet';
-    const wallet = document.createElement('span'); wallet.textContent = displayNameForEntry(entry); wallet.title = entry.suinsName || entry.wallet; walletLine.append(wallet);
+    const wallet = document.createElement('span'); wallet.textContent = displayNameForEntry(entry); wallet.title = entry.suinsName || entry.wallet;
+    const share = document.createElement('button'); share.className = 'leader-row-share'; share.type = 'button'; share.textContent = '↗';
+    share.title = `Share ${displayNameForEntry(entry)}'s public Canopy rank`;
+    share.setAttribute?.('aria-label', share.title);
+    share.addEventListener?.('click', () => shareRank(entry, false));
+    walletLine.append(wallet, share);
     const addressLine = document.createElement('div'); addressLine.className = 'leader-address'; addressLine.textContent = shortened(entry.wallet); addressLine.title = entry.wallet;
     const tierDefinition = tierForEntry(entry);
     const tier = document.createElement('div'); tier.className = `leader-tier ${tierDefinition?.css || ''}`.trim(); tier.textContent = `${tierDefinition?.icon || '🌿'} ${tierDefinition?.name || entry.tier || 'Ranked'}`;
-    identity.append(walletLine, ...(entry.suinsName ? [addressLine] : []), tier);
+    identity.append(walletLine, ...(entry.suinsName ? [addressLine] : []));
 
     const badges = document.createElement('div'); badges.className = 'leader-badges';
     for (const slug of Array.isArray(entry.badges) ? entry.badges : []) {
@@ -572,17 +791,19 @@ function renderLeaderboardCards() {
       if (!definition) continue;
       const badge = document.createElement('span');
       badge.className = `leader-badge badge-${slug}`;
-      badge.textContent = `${definition.icon} ${definition.label}`;
-      badge.title = definition.description;
+      badge.textContent = definition.icon;
+      badge.title = definition.label;
+      badge.setAttribute?.('aria-label', definition.label);
       badges.append(badge);
     }
-    if (badges.children?.length || (Array.isArray(entry.badges) && entry.badges.length)) identity.append(badges);
+    const statusLine = document.createElement('div'); statusLine.className = 'leader-status-line'; statusLine.append(tier, badges); identity.append(statusLine);
 
     const balance = document.createElement('div'); balance.className = 'leader-balance';
-    const amount = document.createElement('strong'); amount.textContent = `${exposure ? entry.totalExposure : entry.directTree} TREE`;
+    const exactTotal = exposure ? entry.totalExposure : entry.directTree;
+    const amount = document.createElement('strong'); amount.textContent = `${compactTree(exactTotal)} TREE`; amount.title = `${exactTotal} TREE`;
     const meta = document.createElement('span');
     meta.textContent = exposure
-      ? `${entry.liquidTree} Liquid + ${entry.lpTree} LP`
+      ? `${compactTree(entry.liquidTree)} wallet + ${compactTree(entry.lpTree)} LP`
       : `${entry.supplyPercent ?? '—'}% supply · ${entry.coinObjectCount ?? '—'} objects`;
     const supply = document.createElement('small');
     supply.textContent = exposure ? `${entry.supplyPercent ?? '—'}% of supply` : '';
@@ -618,50 +839,192 @@ function renderLeaderboardCards() {
   container.replaceChildren(...cards);
 }
 
-function rankShareText() {
-  const row = currentLeaderboardRow();
-  if (!row) return 'I’m checking the verified TREE Canopy Leaderboard on the TREE Command Center. https://tree-token.xyz/dapp/#leaderboard';
+const RANK_SHARE_URL = 'https://tree-token.xyz/dapp/#leaderboard';
+
+function rankShareCaption(row, personal = true) {
+  if (!row) return `Explore the verified TREE Canopy Leaderboard on the TREE Command Center.`;
   const tier = tierForEntry(row)?.name || row.tier || 'Ranked';
+  const subject = personal ? 'I’m' : `${displayNameForEntry(row)} is`;
   if (entryIsExposure(row)) {
     const badges = (Array.isArray(row.badges) ? row.badges : []).map((slug) => badgeDefinition(slug)?.label).filter(Boolean);
-    return `I’m #${row.rank} on the verified TREE Canopy Leaderboard — ${displayNameForEntry(row)}, ${tier}, with ${row.totalExposure} TREE total verified exposure (${row.liquidTree} liquid + ${row.lpTree} LP)${badges.length ? ` · ${badges.join(' · ')}` : ''}. https://tree-token.xyz/dapp/#leaderboard`;
+    return `${subject} #${row.rank} on the verified TREE Canopy Leaderboard — ${tier}, with ${row.totalExposure} TREE total verified exposure (${row.liquidTree} liquid + ${row.lpTree} LP)${badges.length ? ` · ${badges.join(' · ')}` : ''}.`;
   }
-  return `I’m #${row.rank} on the verified TREE Canopy Leaderboard — ${displayNameForEntry(row)}, ${tier}, with ${row.directTree} direct TREE. https://tree-token.xyz/dapp/#leaderboard`;
+  return `${subject} #${row.rank} on the verified TREE Canopy Leaderboard — ${tier}, with ${row.directTree} direct TREE.`;
 }
 
-async function shareRank() {
-  const text = rankShareText();
+function rankShareText(row = currentLeaderboardRow(), personal = true) {
+  return `${rankShareCaption(row, personal)} ${RANK_SHARE_URL}`;
+}
+
+async function shareRank(row = currentLeaderboardRow(), personal = true) {
+  if (!row) { setText('rankShareStatus', 'Connect a ranked wallet to share a rank card.'); return; }
+  setText('rankShareStatus', 'Creating share-ready rank card…');
   try {
-    if (navigator.share) await navigator.share({ title: 'TREE Canopy Rank', text, url: 'https://tree-token.xyz/dapp/#leaderboard' });
-    else { await navigator.clipboard.writeText(text); setText('rankShareStatus', 'Rank text copied to clipboard.'); }
+    const blob = await createRankCardBlob(row, personal);
+    if (!blob) throw new Error('Rank card could not be created.');
+    const filename = `tree-canopy-rank-${row.rank}.png`;
+    const file = typeof File !== 'undefined' ? new File([blob], filename, { type: 'image/png' }) : null;
+    const shareData = file ? { files: [file] } : null;
+    const canShareImage = Boolean(navigator.share && file && navigator.canShare?.(shareData));
+    if (canShareImage) {
+      await navigator.share({ title: 'TREE Canopy Rank', text: rankShareCaption(row, personal), url: RANK_SHARE_URL, files: [file] });
+      setText('rankShareStatus', 'Rank card shared.');
+      return;
+    }
+    downloadRankCardBlob(blob, row);
+    let copied = false;
+    try { await navigator.clipboard.writeText(rankShareText(row, personal)); copied = true; } catch { /* Download remains available. */ }
+    setText('rankShareStatus', copied ? 'Rank card downloaded and caption copied.' : 'Rank card downloaded.');
   } catch (error) {
     if (error?.name !== 'AbortError') setText('rankShareStatus', 'Sharing was unavailable.');
   }
 }
 
-function downloadRankCard() {
+function rankCardTierColor(tier) {
+  return {
+    'tier-champion': '#ffe14f', 'tier-ancient': '#d7c7ff', 'tier-redwood': '#ffca55',
+    'tier-sequoia': '#71f59b', 'tier-titan': '#d59aff', 'tier-guardian': '#6fd8ff',
+    'tier-heritage': '#b5ef72', 'tier-keeper': '#63e9b2', 'tier-tremendous': '#b7ff59',
+    'tier-branch': '#70e7df', 'tier-roots': '#efb46f', 'tier-sapling': '#72f3a9',
+    'tier-seedling': '#a5b1bc',
+  }[tier?.css] || '#35f28c';
+}
+
+function rankCardRoundedRect(ctx, x, y, width, height, radius) {
+  const r = Math.min(radius, width / 2, height / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + width, y, x + width, y + height, r);
+  ctx.arcTo(x + width, y + height, x, y + height, r);
+  ctx.arcTo(x, y + height, x, y, r);
+  ctx.arcTo(x, y, x + width, y, r);
+  ctx.closePath();
+}
+
+function rankCardPanel(ctx, x, y, width, height, radius, fill, stroke = 'rgba(255,255,255,.1)') {
+  rankCardRoundedRect(ctx, x, y, width, height, radius);
+  ctx.fillStyle = fill; ctx.fill();
+  ctx.strokeStyle = stroke; ctx.lineWidth = 2; ctx.stroke();
+}
+
+function loadRankCardImage(source) {
+  return new Promise((resolve) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = () => resolve(null);
+    image.src = source;
+  });
+}
+
+function drawRankCardImage(ctx, image, x, y, width, height, alpha = 1) {
+  if (!image?.naturalWidth || !image?.naturalHeight) return;
+  const scale = Math.min(width / image.naturalWidth, height / image.naturalHeight);
+  const drawWidth = image.naturalWidth * scale; const drawHeight = image.naturalHeight * scale;
+  ctx.save(); ctx.globalAlpha = alpha;
+  ctx.drawImage(image, x + (width - drawWidth) / 2, y + (height - drawHeight) / 2, drawWidth, drawHeight);
+  ctx.restore();
+}
+
+function drawRankCardFittedText(ctx, text, x, y, maxWidth, startSize, minimumSize, color, weight = 900) {
+  let size = startSize;
+  do { ctx.font = `${weight} ${size}px ui-monospace, monospace`; size -= 2; } while (size >= minimumSize && ctx.measureText(text).width > maxWidth);
+  ctx.fillStyle = color; ctx.fillText(text, x, y);
+}
+
+async function createRankCardBlob(row = currentLeaderboardRow(), personal = true) {
   const canvas = elementById('rankShareCanvas');
-  const row = currentLeaderboardRow();
-  if (!canvas?.getContext || !row) { setText('rankShareStatus', 'Connect a ranked wallet to create a rank card.'); return; }
+  if (!canvas?.getContext || !row) return null;
   const exposure = entryIsExposure(row);
+  const tier = tierForEntry(row); const accent = rankCardTierColor(tier);
   const ctx = canvas.getContext('2d'); const size = canvas.width;
-  const gradient = ctx.createLinearGradient(0, 0, size, size); gradient.addColorStop(0, '#03080d'); gradient.addColorStop(.55, '#071b18'); gradient.addColorStop(1, '#07111d');
+  const [logo, watermark] = await Promise.all([
+    loadRankCardImage('../assets/tree-command-logo-v2-512.png'),
+    loadRankCardImage('../assets/tree-command-watermark.png'),
+  ]);
+  const gradient = ctx.createLinearGradient(0, 0, size, size);
+  gradient.addColorStop(0, '#02070b'); gradient.addColorStop(.5, '#061b16'); gradient.addColorStop(1, '#080b18');
   ctx.fillStyle = gradient; ctx.fillRect(0, 0, size, size);
-  ctx.strokeStyle = 'rgba(53,200,255,.32)'; ctx.lineWidth = 8; ctx.strokeRect(42, 42, size - 84, size - 84);
-  ctx.fillStyle = '#35f28c'; ctx.font = '900 54px ui-monospace, monospace'; ctx.fillText('TREE CANOPY LEADERBOARD', 90, 130);
-  ctx.fillStyle = '#9aa9b8'; ctx.font = '700 30px ui-monospace, monospace'; ctx.fillText(exposure ? 'VERIFIED LIQUID + LP SNAPSHOT' : 'VERIFIED DIRECT TREE SNAPSHOT', 90, 182);
-  ctx.fillStyle = '#ffe14f'; ctx.font = '900 210px ui-monospace, monospace'; ctx.fillText(`#${row.rank}`, 90, 455);
-  ctx.fillStyle = '#f5fbff'; ctx.font = '900 58px ui-monospace, monospace'; ctx.fillText((tierForEntry(row)?.name || row.tier || 'Ranked').toUpperCase(), 90, 540);
-  ctx.fillStyle = '#35c8ff'; ctx.font = '900 68px ui-monospace, monospace'; ctx.fillText(`${exposure ? row.totalExposure : row.directTree} TREE`, 90, 680);
-  ctx.fillStyle = '#9aa9b8'; ctx.font = '600 32px ui-monospace, monospace';
-  ctx.fillText(exposure ? `${row.liquidTree} LIQUID + ${row.lpTree} LP` : `${row.supplyPercent ?? '—'}% OF TOTAL SUPPLY`, 90, 735);
-  if (exposure) ctx.fillText(`${row.supplyPercent ?? '—'}% OF TOTAL SUPPLY`, 90, 785);
-  const badgeLine = exposure ? (row.badges || []).map((slug) => badgeDefinition(slug)?.label?.toUpperCase()).filter(Boolean).join(' · ') : '';
-  if (badgeLine) { ctx.fillStyle = '#ffe14f'; ctx.font = '800 27px ui-monospace, monospace'; ctx.fillText(badgeLine, 90, 840); }
-  ctx.fillStyle = '#f5fbff'; ctx.font = '700 34px ui-monospace, monospace'; ctx.fillText(displayNameForEntry(row), 90, 920);
-  if (row.suinsName) { ctx.fillStyle = '#9aa9b8'; ctx.font = '600 27px ui-monospace, monospace'; ctx.fillText(shortened(row.wallet), 90, 965); }
-  ctx.fillStyle = '#35f28c'; ctx.font = '800 34px ui-monospace, monospace'; ctx.fillText('tree-token.xyz/dapp', 90, 1050);
-  canvas.toBlob((blob) => { if (!blob) return; const url = URL.createObjectURL(blob); const link = document.createElement('a'); link.href = url; link.download = `tree-canopy-rank-${row.rank}.png`; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); setText('rankShareStatus', 'Rank card downloaded.'); }, 'image/png');
+  drawRankCardImage(ctx, watermark, 150, 185, 900, 950, .115);
+  rankCardRoundedRect(ctx, 34, 34, size - 68, size - 68, 34);
+  ctx.strokeStyle = accent; ctx.lineWidth = 10; ctx.stroke();
+  rankCardRoundedRect(ctx, 50, 50, size - 100, size - 100, 26);
+  ctx.strokeStyle = 'rgba(53,200,255,.24)'; ctx.lineWidth = 2; ctx.stroke();
+
+  rankCardPanel(ctx, 70, 68, 1060, 140, 24, 'rgba(2,8,13,.88)', 'rgba(255,255,255,.1)');
+  ctx.save(); ctx.beginPath(); ctx.arc(142, 138, 49, 0, Math.PI * 2); ctx.clip();
+  ctx.fillStyle = '#06140f'; ctx.fillRect(88, 84, 108, 108); drawRankCardImage(ctx, logo, 88, 84, 108, 108); ctx.restore();
+  ctx.fillStyle = '#ffe14f'; ctx.font = '900 43px ui-monospace, monospace'; ctx.fillText('TREE', 218, 132);
+  ctx.fillStyle = '#aab7c4'; ctx.font = '800 23px ui-monospace, monospace'; ctx.letterSpacing = '3px'; ctx.fillText('COMMAND CENTER', 218, 170); ctx.letterSpacing = '0px';
+  rankCardPanel(ctx, 762, 104, 330, 64, 18, 'rgba(53,200,255,.08)', 'rgba(53,200,255,.32)');
+  ctx.fillStyle = '#35c8ff'; ctx.font = '850 20px ui-monospace, monospace'; ctx.textAlign = 'center'; ctx.fillText('VERIFIED CANOPY SNAPSHOT', 927, 144); ctx.textAlign = 'left';
+
+  ctx.fillStyle = '#93a3b2'; ctx.font = '800 24px ui-monospace, monospace'; ctx.fillText(personal ? 'YOUR CANOPY RANK' : 'PUBLIC CANOPY RANK', 78, 270);
+  drawRankCardFittedText(ctx, `#${row.rank}`, 78, 433, 310, 178, 108, accent);
+  rankCardPanel(ctx, 386, 254, 744, 190, 24, 'rgba(4,12,18,.82)', `${accent}55`);
+  ctx.fillStyle = accent; ctx.font = '900 31px ui-monospace, monospace'; ctx.fillText(`${tier?.icon || '🌿'}  ${(tier?.name || row.tier || 'Ranked').toUpperCase()}`, 420, 310);
+  drawRankCardFittedText(ctx, displayNameForEntry(row), 420, 374, 665, 46, 28, '#f5fbff', 850);
+  ctx.fillStyle = '#8999a8'; ctx.font = '650 24px ui-monospace, monospace'; ctx.fillText(shortened(row.wallet), 420, 416);
+
+  rankCardPanel(ctx, 70, 482, 1060, 288, 26, 'rgba(3,11,16,.9)', 'rgba(53,200,255,.24)');
+  ctx.fillStyle = '#93a3b2'; ctx.font = '800 22px ui-monospace, monospace'; ctx.fillText('TOTAL VERIFIED EXPOSURE', 98, 526);
+  drawRankCardFittedText(ctx, `${exposure ? row.totalExposure : row.directTree} TREE`, 98, 620, 1000, 82, 48, accent);
+  const metricWidth = 318; const metricY = 650;
+  const metrics = exposure
+    ? [['WALLET TREE', row.liquidTree], ['VERIFIED LP', row.lpTree], ['TOTAL SUPPLY', `${row.supplyPercent ?? '—'}%`]]
+    : [['DIRECT TREE', row.directTree], ['TOTAL SUPPLY', `${row.supplyPercent ?? '—'}%`], ['CANOPY TIER', tier?.qualification || 'Ranked']];
+  metrics.forEach(([label, value], index) => {
+    const x = 94 + index * 340;
+    rankCardPanel(ctx, x, metricY, metricWidth, 92, 16, index === 1 ? 'rgba(53,242,140,.07)' : 'rgba(255,255,255,.035)', 'rgba(255,255,255,.08)');
+    ctx.fillStyle = '#8695a3'; ctx.font = '750 17px ui-monospace, monospace'; ctx.fillText(label, x + 18, metricY + 31);
+    drawRankCardFittedText(ctx, String(value), x + 18, metricY + 69, metricWidth - 36, 28, 19, index === 1 ? '#35f28c' : '#f5fbff', 850);
+  });
+
+  rankCardPanel(ctx, 70, 794, 1060, 142, 24, 'rgba(2,9,14,.84)', 'rgba(255,225,79,.18)');
+  ctx.fillStyle = '#93a3b2'; ctx.font = '800 19px ui-monospace, monospace'; ctx.fillText('VERIFIED WALLET BADGES', 98, 833);
+  const badgeDefinitions = (Array.isArray(row.badges) ? row.badges : []).map((slug) => badgeDefinition(slug)).filter(Boolean);
+  let badgeX = 98; let badgeY = 856;
+  if (!badgeDefinitions.length) {
+    ctx.fillStyle = '#7f8d99'; ctx.font = '700 21px ui-monospace, monospace'; ctx.fillText('No additional badges in this snapshot', badgeX, badgeY + 38);
+  } else {
+    for (const badge of badgeDefinitions) {
+      const label = `${badge.icon}  ${badge.label.toUpperCase()}`;
+      ctx.font = '800 19px ui-monospace, monospace'; const width = Math.min(300, Math.ceil(ctx.measureText(label).width + 34));
+      if (badgeX + width > 1102) { badgeX = 98; badgeY += 54; }
+      rankCardPanel(ctx, badgeX, badgeY, width, 42, 14, 'rgba(255,225,79,.075)', 'rgba(255,225,79,.3)');
+      ctx.fillStyle = '#ffe14f'; ctx.fillText(label, badgeX + 16, badgeY + 28); badgeX += width + 12;
+    }
+  }
+
+  rankCardPanel(ctx, 70, 964, 1060, 166, 24, 'rgba(2,8,13,.9)', 'rgba(53,242,140,.22)');
+  ctx.fillStyle = '#35f28c'; ctx.font = '900 28px ui-monospace, monospace'; ctx.fillText(personal ? 'SHARE YOUR PLACE IN THE CANOPY' : 'PUBLIC TOP 50 CANOPY POSITION', 98, 1011);
+  ctx.fillStyle = '#f5fbff'; ctx.font = '850 35px ui-monospace, monospace'; ctx.fillText('tree-token.xyz/dapp/#leaderboard', 98, 1063);
+  ctx.fillStyle = '#8293a1'; ctx.font = '650 19px ui-monospace, monospace'; ctx.fillText(exposure ? 'SUI-NATIVE • VERIFIED LIQUID TREE + LP PRINCIPAL' : 'SUI-NATIVE • VERIFIED DIRECT TREE', 98, 1102);
+  ctx.fillStyle = accent; ctx.fillRect(70, 1145, 1060, 5);
+
+  return new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
+}
+
+function downloadRankCardBlob(blob, row) {
+  const url = URL.createObjectURL(blob); const link = document.createElement('a'); link.href = url;
+  link.download = `tree-canopy-rank-${row.rank}.png`; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+async function downloadRankCard() {
+  const row = currentLeaderboardRow();
+  if (!row) { setText('rankShareStatus', 'Connect a ranked wallet to create a rank card.'); return; }
+  const button = elementById('createRankImage');
+  if (button) button.disabled = true;
+  setText('rankShareStatus', 'Creating branded rank card…');
+  try {
+    const blob = await createRankCardBlob(row, true);
+    if (!blob) throw new Error('Rank card could not be created.');
+    downloadRankCardBlob(blob, row);
+    setText('rankShareStatus', 'Branded rank card downloaded.');
+  } catch {
+    setText('rankShareStatus', 'Rank card could not be created.');
+  } finally {
+    if (button) button.disabled = false;
+  }
 }
 
 function updateYourRank() {
@@ -687,6 +1050,28 @@ function formatSnapshotAge(value) {
   if (milliseconds < 60_000) return `${Math.floor(milliseconds / 1000)}s`;
   if (milliseconds < 3_600_000) return `${Math.floor(milliseconds / 60_000)}m`;
   return `${Math.floor(milliseconds / 3_600_000)}h ${Math.floor((milliseconds % 3_600_000) / 60_000)}m`;
+}
+
+function renderBadgeGuideCounts(payload) {
+  const behavior = payload?.behaviorBadgeSnapshot?.summary;
+  const liquidity = payload?.summary?.badgeCounts;
+  const counts = [
+    ['badgeGuideDiamondHands', behavior?.diamondHands],
+    ['badgeGuidePaperHands', behavior?.paperHands],
+    ['badgeGuideAccumulator', behavior?.accumulator],
+    ['badgeGuideBurned', behavior?.burned],
+    ['badgeGuideLpProvider', liquidity?.lpProvider],
+    ['badgeGuideLpMaxi', liquidity?.lpMaxi],
+  ];
+  for (const [id, value] of counts) {
+    const number = Number(value);
+    setText(id, Number.isFinite(number) && number >= 0 ? quantity.format(number) : '—');
+  }
+  const behaviorReady = behavior && typeof behavior === 'object';
+  const liquidityReady = liquidity && typeof liquidity === 'object';
+  setText('badgeGuideSnapshotState', behaviorReady && liquidityReady
+    ? `${payload.behaviorBadgeSnapshot.status === 'stale' || payload.status === 'stale' ? 'Last' : 'Current'} verified holder counts`
+    : 'Counts are awaiting an aligned verified snapshot.');
 }
 
 function renderLeaderboard(payload) {
@@ -761,8 +1146,28 @@ function renderLeaderboard(payload) {
     ].filter(Boolean).join(' '));
   }
 
+  const dataNotes = elementById('leaderboardDataNotes');
   const warningBox = elementById('leaderboardWarnings');
-  if (warningBox) { warningBox.textContent = Array.isArray(payload.warnings) ? payload.warnings.join(' ') : ''; warningBox.hidden = !warningBox.textContent; }
+  const warnings = Array.isArray(payload.warnings) ? [...new Set(payload.warnings.filter(Boolean))] : [];
+  const snapshotIsStale = leaderboardStatus === 'stale' || warnings.some((warning) => /last complete snapshot|stale/i.test(warning));
+  if (dataNotes) {
+    dataNotes.hidden = warnings.length === 0;
+    dataNotes.className = `leaderboard-data-notes${snapshotIsStale ? ' has-stale-snapshot' : ''}`;
+  }
+  setText('leaderboardDataNotesTitle', snapshotIsStale ? 'Snapshot refresh needed' : 'Data notes');
+  setText('leaderboardDataNotesSummary', snapshotIsStale ? 'Showing the last complete verified leaderboard snapshot' : 'Verified snapshot and accounting details');
+  setText('leaderboardDataNotesCount', `${warnings.length} ${warnings.length === 1 ? 'note' : 'notes'}`);
+  if (warningBox?.replaceChildren) {
+    warningBox.replaceChildren(...warnings.map((warning) => {
+      const item = document.createElement('li');
+      item.textContent = warning;
+      if (/last complete snapshot|stale/i.test(warning)) item.className = 'stale-note';
+      return item;
+    }));
+  } else if (warningBox) {
+    warningBox.textContent = warnings.join(' ');
+  }
+  renderBadgeGuideCounts(payload);
   if (rows) {
     if (!leaderboardEntries.length) {
       const emptyMessages = { 'not-ready': 'A complete verified TREE leaderboard snapshot is not available yet.', refreshing: 'The first verified TREE leaderboard snapshot is being built. No partial ranks are published.', error: 'The verified TREE leaderboard is temporarily unavailable.' };
@@ -911,10 +1316,10 @@ function syncWalletButtons() {
 // Swap quote and execution are isolated in swap-router.js.
 
 if (typeof document !== 'undefined') {
-  document.getElementById('refreshStats').addEventListener('click', () => { loadDashboard(); loadChart(activeChartRange); });
+  document.getElementById('refreshStats').addEventListener('click', () => { loadDashboard().then(loadBurnOverview); loadLiquidity(); loadVolume(); loadNftree(); loadChart(activeChartRange); });
   document.getElementById('dappWallet').addEventListener('click', connectForDapp);
   document.getElementById('rankWallet').addEventListener('click', connectForDapp);
-  document.getElementById('shareRank')?.addEventListener('click', shareRank);
+  document.getElementById('shareRank')?.addEventListener('click', () => shareRank());
   document.getElementById('createRankImage')?.addEventListener('click', downloadRankCard);
   document.querySelectorAll('[data-chart-range]').forEach((button) => button.addEventListener('click', () => loadChart(button.dataset.chartRange)));
   const navLinks = [...document.querySelectorAll('.app-nav a[href^="#"]')];
@@ -942,7 +1347,11 @@ if (typeof document !== 'undefined') {
     syncWalletButtons();
   });
 
-  loadDashboard();
+  loadDashboard().then(loadBurnOverview);
+  loadLiquidity();
+  loadVolume();
+  loadNftree();
+  loadSuiHeaderPrice();
   loadChart();
   loadLeaderboard();
 }
@@ -981,4 +1390,4 @@ if (typeof document !== 'undefined') {
   initDocumentActions();
 }
 
-export { DAPP_SWAP_EXECUTION_ENABLED, TIER_DEFINITIONS, badgeDefinition, displayNameForEntry, entryIsExposure, formatSupplyPercentFromRaw, formatTreePrice, mergeBehaviorBadgeSnapshot, normalizeLeaderboardEntry, readDashboardCache, renderLeaderboard, tierForEntry, updateYourRank, writeDashboardCache };
+export { DAPP_SWAP_EXECUTION_ENABLED, TIER_DEFINITIONS, badgeDefinition, displayNameForEntry, entryIsExposure, formatSuiPrice, formatSupplyPercentFromRaw, formatTreePrice, mergeBehaviorBadgeSnapshot, normalizeLeaderboardEntry, readDashboardCache, renderLeaderboard, tierForEntry, updateYourRank, writeDashboardCache };

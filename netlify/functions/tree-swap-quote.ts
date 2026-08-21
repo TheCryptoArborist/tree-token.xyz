@@ -1,6 +1,17 @@
 import { normalizeTreeSwapQuote, validateSwapRequest } from '../lib/tree-swap-route.ts';
+import { quoteTurbosTreeSwap } from '../lib/turbos-tree-swap.ts';
 
 const UPSTREAM_URL = 'https://dex.suidex.org/api/v3/route';
+
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: string): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error(message)), timeoutMs);
+    promise.then(
+      (value) => { clearTimeout(timer); resolve(value); },
+      (error) => { clearTimeout(timer); reject(error); },
+    );
+  });
+}
 
 function json(body: unknown, status = 200, cacheControl = 'no-store') {
   return Response.json(body, {
@@ -36,13 +47,22 @@ export default async (request: Request) => {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 12_000);
   try {
-    const response = await fetch(upstream, {
-      signal: controller.signal,
-      cache: 'no-store',
-      headers: { Accept: 'application/json', 'User-Agent': 'TREE-Command-Center/1.0' },
-    });
-    if (!response.ok) throw new Error(`Route service returned ${response.status}.`);
-    const normalized = normalizeTreeSwapQuote(await response.json(), { ...validated, generatedAt: new Date().toISOString() });
+    const [suiDexResult, turbosResult] = await Promise.allSettled([
+      fetch(upstream, {
+        signal: controller.signal,
+        cache: 'no-store',
+        headers: { Accept: 'application/json', 'User-Agent': 'TREE-Command-Center/1.0' },
+      }).then(async (response) => {
+        if (!response.ok) throw new Error(`SuiDex route service returned ${response.status}.`);
+        return response.json();
+      }),
+      withTimeout(quoteTurbosTreeSwap(validated), 12_000, 'The Turbos quote timed out.'),
+    ]);
+    const suiDexPayload = suiDexResult.status === 'fulfilled' ? suiDexResult.value : {};
+    const additionalRoutes = turbosResult.status === 'fulfilled' ? [turbosResult.value] : [];
+    const normalized = normalizeTreeSwapQuote(suiDexPayload, { ...validated, generatedAt: new Date().toISOString() }, additionalRoutes);
+    if (suiDexResult.status === 'rejected') normalized.warnings.push('SuiDex quotes were temporarily unavailable.');
+    if (turbosResult.status === 'rejected') normalized.warnings.push('The Turbos quote was temporarily unavailable.');
     return json(normalized);
   } catch (error) {
     console.error('TREE swap quote failed', error);

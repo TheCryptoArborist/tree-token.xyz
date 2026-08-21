@@ -18,7 +18,7 @@ const PANEL_LABELS = {
   v3: 'V3',
   stats: 'Stats',
   removed: 'Burn',
-  'canopy-draw': 'Raffle',
+  'canopy-draw': 'Challenge',
   leaderboard: 'Canopy',
   'profile-studio': 'Profile Studio',
   documents: 'Documents',
@@ -32,6 +32,8 @@ const panels = new Map(
 const nav = document.querySelector('.app-nav');
 const navLinks = [...(nav?.querySelectorAll('a[href^="#"]') || [])];
 let activePanelId = null;
+
+panels.forEach((panel) => panel.classList.add('app-panel'));
 
 function resolvePanelId(hash = location.hash) {
   const id = decodeURIComponent(String(hash || '').replace(/^#/, ''));
@@ -137,6 +139,55 @@ if (documentGrid && !documentGrid.querySelector('[data-profile-studio-card]')) {
   article.innerHTML = '<span class="card-icon">◎</span><h3>Profile Studio</h3><p>Create a TREE profile image locally in your browser.</p><a class="button secondary" href="#profile-studio">Open Profile Studio</a>';
   documentGrid.append(article);
 }
+
+const earnViews = ['routes', 'positions', 'victory'];
+const earnTabs = { routes: document.getElementById('earnRoutesTab'), positions: document.getElementById('earnPositionsTab'), victory: document.getElementById('earnVictoryTab') };
+const earnPanels = { routes: document.getElementById('earnRoutesPanel'), positions: document.getElementById('earnPositionsPanel'), victory: document.getElementById('earnVictoryPanel') };
+function showEarnView(view) {
+  const selected = earnViews.includes(view) ? view : 'routes';
+  Object.entries(earnPanels).forEach(([name, panel]) => { if (panel) panel.hidden = name !== selected; });
+  Object.entries(earnTabs).forEach(([name, tab]) => {
+    if (!tab) return;
+    const active = name === selected;
+    tab.classList.toggle('active', active);
+    tab.setAttribute('aria-selected', String(active));
+  });
+}
+earnTabs.routes?.addEventListener('click', () => showEarnView('routes'));
+earnTabs.positions?.addEventListener('click', () => showEarnView('positions'));
+earnTabs.victory?.addEventListener('click', () => showEarnView('victory'));
+
+const statsViews = ['market', 'supply', 'liquidity', 'nftree'];
+const statsTabs = Object.fromEntries(statsViews.map((view) => [view, document.getElementById(`stats${view[0].toUpperCase()}${view.slice(1)}Tab`)]));
+const statsPanels = Object.fromEntries(statsViews.map((view) => [view, document.getElementById(`stats${view[0].toUpperCase()}${view.slice(1)}Panel`)]));
+function showStatsView(view) {
+  const selected = statsViews.includes(view) ? view : 'market';
+  Object.entries(statsPanels).forEach(([name, panel]) => { if (panel) panel.hidden = name !== selected; });
+  Object.entries(statsTabs).forEach(([name, tab]) => {
+    if (!tab) return;
+    const active = name === selected;
+    tab.classList.toggle('active', active);
+    tab.setAttribute('aria-selected', String(active));
+    tab.setAttribute('tabindex', active ? '0' : '-1');
+  });
+}
+Object.entries(statsTabs).forEach(([view, tab]) => tab?.addEventListener('click', () => showStatsView(view)));
+
+const raffleViews = ['daily', 'weekly', 'entries'];
+const raffleTabs = Object.fromEntries(raffleViews.map((view) => [view, document.getElementById(`raffle${view[0].toUpperCase()}${view.slice(1)}Tab`)]));
+const rafflePanels = Object.fromEntries(raffleViews.map((view) => [view, document.getElementById(`raffle${view[0].toUpperCase()}${view.slice(1)}Panel`)]));
+function showRaffleView(view) {
+  const selected = raffleViews.includes(view) ? view : 'daily';
+  Object.entries(rafflePanels).forEach(([name, panel]) => { if (panel) panel.hidden = name !== selected; });
+  Object.entries(raffleTabs).forEach(([name, tab]) => {
+    if (!tab) return;
+    const active = name === selected;
+    tab.classList.toggle('active', active);
+    tab.setAttribute('aria-selected', String(active));
+    tab.setAttribute('tabindex', active ? '0' : '-1');
+  });
+}
+Object.entries(raffleTabs).forEach(([view, tab]) => tab?.addEventListener('click', () => showRaffleView(view)));
 
 window.addEventListener('hashchange', activateFromLocation);
 window.addEventListener('popstate', activateFromLocation);

@@ -1,0 +1,45 @@
+app = "tree-raffle-keeper-staging"
+primary_region = "ord"
+kill_signal = "SIGINT"
+kill_timeout = "10s"
+
+[build]
+  dockerfile = "Dockerfile.keeper"
+
+[env]
+  TREE_RAFFLE_INGEST_ENDPOINT = "https://your-production-tree-site.netlify.app/api/tree-raffle-ingest-buy"
+  KEEPER_DRY_RUN = "true"
+  KEEPER_CURSOR_BACKEND = "supabase"
+  KEEPER_INGEST_TIMEOUT_MS = "12000"
+  POLL_INTERVAL_MS = "15000"
+  GRAPHQL_TIMEOUT_MS = "20000"
+  HEALTH_STALE_AFTER_MS = "120000"
+  KEEPER_DRAW_ENABLED = "false"
+  KEEPER_DRAW_DRY_RUN = "true"
+  KEEPER_KNOWLEDGE_AWARD_ENABLED = "true"
+  KEEPER_KNOWLEDGE_AWARD_DRY_RUN = "false"
+  KEEPER_KNOWLEDGE_AWARD_POLL_MS = "60000"
+  TREE_RAFFLE_PACKAGE_ID = "0xf732666a9e373afc1058229a9d6c46cd58ad401471e0c55362b0accca54ae00e"
+  TREE_RAFFLE_PRIZE_POOL_ID = "0x4b46d5f0543b6c036641875145b86d792f858b4315ddc08cc97d4619202438d9"
+  TREE_RAFFLE_OPERATOR_CAP_ID = "0x1e5d3ec49134d716ed0385444e47a100a6b2cfb0e677dc77c2b9f5c94a7b9477"
+  TREE_RAFFLE_OPERATOR_ADDRESS = "0x1896338f7e89b7f457476c28fd02fcbf08e8855918dde5606d90e660c90c6208"
+  PORT = "8080"
+  SUI_GRAPHQL_URL = "https://graphql.mainnet.sui.io/graphql"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "off"
+  auto_start_machines = true
+  min_machines_running = 1
+
+  [[http_service.checks]]
+    interval = "15s"
+    timeout = "3s"
+    grace_period = "20s"
+    method = "GET"
+    path = "/healthz"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "256mb"

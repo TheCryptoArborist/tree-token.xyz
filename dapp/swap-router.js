@@ -10,6 +10,7 @@ const NFTREE_RESERVE_RAW = 25n * 1_000_000_000n;
 const QUOTE_MAX_AGE_MS = 30_000;
 const MAX_EXECUTABLE_PRICE_IMPACT = 5;
 const QUOTE_URL = '/api/tree-swap-quote';
+const PRICE_URL = '/api/tree-v3-overview';
 const RPC_URL = 'https://fullnode.mainnet.sui.io:443';
 const V2_PACKAGE = '0xbfac5e1c6bf6ef29b12f7723857695fd2f4da9a11a7d88162c15e9124c243a4a';
 const V2_FACTORY = '0x81c286135713b4bf2e78c548f5643766b5913dcd27a8e76469f146ab811e922d';
@@ -18,9 +19,14 @@ const V2_POOL = '0x35a1be1f01f9edf7f5221d226f357d194d43c28f2a65cb38640935518d9a5
 const V3_PACKAGE = '0xb5f529c1dcda6580a61bf7ee9fbd524b50be62f11044d137c8202c8cbace9e56';
 const V3_GLOBAL_CONFIG = '0x0999bbc9c063580eca62e888b8f0d8e6e9159cd9db1b8a8c88e448a2b5dd4d4d';
 const V3_POOL = '0x39d5ba22e01e45bc4129ec28a0bef52e8fee8db5d07d337adf9540e3cb9074cf';
+const TURBOS_PACKAGE = '0xa5a0c25c79e428eba04fb98b3fb2a34db45ab26d4c8faf0d7e39d66a63891e64';
+const TURBOS_VERSIONED = '0xf1cf0e81048df168ebeb1b8030fad24b3e0b53ae827c25053fff0779c1445b6f';
+const TURBOS_POOL = '0xaa133ce1f8fd55d85b6fc87c1b3054cb717d83be477ef3635c661c21fbdfa0ee';
+const TURBOS_FEE_TYPE = '0x91bfbc386a41afcfd9b2533058d7e915a1d3829089cc268ff4333d54d6339ca1::fee10000bps::FEE10000BPS';
+const DEPLOY_PREVIEW_HOST_RE = /^deploy-preview-\d+--tree-token\.netlify\.app$/i;
 const CLOCK = '0x0000000000000000000000000000000000000000000000000000000000000006';
-const ALLOWED_MOVE_PACKAGES = new Set(['0x2', normalizeAddress(V2_PACKAGE), normalizeAddress(V3_PACKAGE)]);
-const PREVIEW_EXECUTION_ENABLED = /^deploy-preview-\d+--tree-token\.netlify\.app$/i.test(location.hostname) || ['localhost', '127.0.0.1'].includes(location.hostname);
+const ALLOWED_MOVE_PACKAGES = new Set(['0x2', normalizeAddress(V2_PACKAGE), normalizeAddress(V3_PACKAGE), normalizeAddress(TURBOS_PACKAGE)]);
+const SWAP_EXECUTION_ENABLED = true;
 const client = new SuiGrpcClient({ network: 'mainnet', baseUrl: RPC_URL });
 
 const state = {
@@ -35,7 +41,9 @@ const state = {
   executing: false,
   quoteTimer: null,
   refreshTimer: null,
+  priceTimer: null,
   requestController: null,
+  pricesUsd: { sui: null, tree: null },
 };
 
 const elements = {};
@@ -65,6 +73,50 @@ function decimalsFor(type) {
 
 function symbolFor(type) {
   return normalizeType(type) === normalizeType(SUI_TYPE) ? 'SUI' : 'TREE';
+}
+
+function positiveNumber(value) {
+  const number = Number(value);
+  return Number.isFinite(number) && number > 0 ? number : null;
+}
+
+function formatUsdValue(amount, price) {
+  const numericAmount = Number(String(amount || '').replace(/,/g, ''));
+  if (!Number.isFinite(numericAmount) || numericAmount <= 0 || !price) return null;
+  const value = numericAmount * price;
+  if (!Number.isFinite(value) || value < 0) return null;
+  if (value > 0 && value < 0.01) return '<$0.01';
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2,
+  }).format(value);
+}
+
+function renderUsdValues() {
+  if (!elements.inputUsd || !elements.outputUsd) return;
+  const inputPrice = state.direction === 'SUI_TO_TREE' ? state.pricesUsd.sui : state.pricesUsd.tree;
+  const outputPrice = state.direction === 'SUI_TO_TREE' ? state.pricesUsd.tree : state.pricesUsd.sui;
+  const inputLabel = formatUsdValue(state.amount, inputPrice);
+  const outputLabel = formatUsdValue(elements.amountOutput?.value, outputPrice);
+  elements.inputUsd.textContent = inputLabel || '—';
+  elements.outputUsd.textContent = outputLabel || '—';
+  elements.inputUsd.dataset.ready = String(Boolean(inputLabel));
+  elements.outputUsd.dataset.ready = String(Boolean(outputLabel));
+}
+
+async function loadUsdPrices() {
+  try {
+    const response = await fetch(PRICE_URL, { cache: 'no-store', headers: { Accept: 'application/json' } });
+    if (!response.ok) throw new Error(`Price service returned ${response.status}.`);
+    const overview = await response.json();
+    const sui = positiveNumber(overview?.market?.suiUsd);
+    const ratio = positiveNumber(overview?.pool?.priceSuiPerTree ?? overview?.market?.priceSuiPerTree);
+    const tree = positiveNumber(overview?.market?.treeUsd) ?? (sui && ratio ? sui * ratio : null);
+    if (!sui || !tree) throw new Error('Verified SUI and TREE prices are unavailable.');
+    state.pricesUsd = { sui, tree };
+  } catch {
+    state.pricesUsd = { sui: null, tree: null };
+  }
+  renderUsdValues();
 }
 
 function parseBaseUnits(value, decimals) {
@@ -106,13 +158,16 @@ function setTokenPresentation() {
   const outputSymbol = symbolFor(stateTokenOut());
   elements.inputSymbol.textContent = inputSymbol;
   elements.outputSymbol.textContent = outputSymbol;
-  elements.inputIcon.textContent = inputSymbol === 'SUI' ? 'S' : 'T';
-  elements.outputIcon.textContent = outputSymbol === 'SUI' ? 'S' : 'T';
   elements.inputIcon.className = `swap-token-icon ${inputSymbol.toLowerCase()}`;
   elements.outputIcon.className = `swap-token-icon ${outputSymbol.toLowerCase()}`;
+  elements.inputIcon.src = inputSymbol === 'SUI' ? '../assets/sui-token.svg' : '../assets/tree-token.png';
+  elements.outputIcon.src = outputSymbol === 'SUI' ? '../assets/sui-token.svg' : '../assets/tree-token.png';
+  elements.inputIcon.alt = `${inputSymbol} token logo`;
+  elements.outputIcon.alt = `${outputSymbol} token logo`;
   elements.amountInput.placeholder = inputSymbol === 'SUI' ? '0.0' : '0';
   elements.reserveRow.hidden = inputSymbol !== 'SUI';
   renderBalances();
+  renderUsdValues();
 }
 
 function renderBalances() {
@@ -130,7 +185,7 @@ function quoteIsFresh() {
 }
 
 function routeLabel(route) {
-  return route?.venueLabel || (route?.venue === 'v3' ? 'SuiDex V3' : route?.venue === 'suidex' ? 'SuiDex V2' : 'Unavailable');
+  return route?.venueLabel || (route?.venue === 'v3' ? 'SuiDex V3' : route?.venue === 'suidex' ? 'SuiDex V2' : route?.venue === 'turbos' ? 'Turbos' : 'Unavailable');
 }
 
 function renderQuote() {
@@ -143,6 +198,7 @@ function renderQuote() {
     elements.priceImpact.textContent = '—';
     elements.gasEstimate.textContent = '—';
     elements.routeCandidates.replaceChildren();
+    renderUsdValues();
     updateActionButton();
     return;
   }
@@ -164,6 +220,7 @@ function renderQuote() {
     row.innerHTML = `<span>${routeLabel(candidate)}${index === 0 ? ' · Best' : ''}</span><strong>${formatBaseUnits(candidate.amountOut, quote.decimalsOut, quote.decimalsOut)} ${symbolFor(quote.tokenOut)}</strong><small>${Number(candidate.priceImpactPercent).toFixed(2)}% impact · ${candidate.feePercent.toFixed(2)}% fee</small>`;
     return row;
   }));
+  renderUsdValues();
   updateActionButton();
 }
 
@@ -216,9 +273,10 @@ function updateActionButton() {
     button.textContent = 'Reduce amount — impact above 5%';
     return;
   }
-  if (!PREVIEW_EXECUTION_ENABLED) {
+  if (!SWAP_EXECUTION_ENABLED) {
     button.disabled = true;
-    button.textContent = 'Swap activation pending preview test';
+    button.textContent = 'Swap';
+    setStatus('Swap execution is temporarily disabled in preview.', 'error');
     return;
   }
   button.disabled = false;
@@ -354,7 +412,14 @@ function validateRoute(route, amountIn) {
   if (!((input === sui && output === tree) || (input === tree && output === sui))) throw new Error('The route token pair is not SUI/TREE.');
   if (route.executionKind === 'suidex-v2-direct' && route.pairId !== V2_POOL) throw new Error('Unexpected SuiDex V2 pool.');
   if (route.executionKind === 'suidex-v3-direct' && route.pairId !== V3_POOL) throw new Error('Unexpected SuiDex V3 pool.');
-  if (!['suidex-v2-direct', 'suidex-v3-direct'].includes(route.executionKind)) throw new Error('Unsupported route venue.');
+  if (route.executionKind === 'turbos-direct') {
+    if (route.pairId !== TURBOS_POOL) throw new Error('Unexpected Turbos SUI/TREE pool.');
+    if (!route.coinAType || !route.coinBType || normalizeType(route.feeType) !== normalizeType(TURBOS_FEE_TYPE)) throw new Error('Turbos route type metadata is invalid.');
+    if (typeof route.aToB !== 'boolean' || !Number.isInteger(route.nextTickIndex)) throw new Error('Turbos route direction metadata is invalid.');
+    const expectedInput = route.aToB ? route.coinAType : route.coinBType;
+    if (normalizeType(expectedInput) !== input) throw new Error('Turbos route direction does not match the input token.');
+  }
+  if (!['suidex-v2-direct', 'suidex-v3-direct', 'turbos-direct'].includes(route.executionKind)) throw new Error('Unsupported route venue.');
   if (BigInt(route.minAmountOut) <= 0n) throw new Error('The route does not contain a valid minimum output.');
 }
 
@@ -416,12 +481,37 @@ async function buildV3Transaction(owner, route, amountIn) {
   return tx;
 }
 
+async function buildTurbosTransaction(owner, route, amountIn) {
+  const tx = new Transaction();
+  tx.setSender(owner);
+  const coinAType = exactType(route.coinAType);
+  const coinBType = exactType(route.coinBType);
+  const expectedAtoB = normalizeType(route.tokenIn) === normalizeType(coinAType);
+  if (route.aToB !== expectedAtoB || normalizeType(route.feeType) !== normalizeType(TURBOS_FEE_TYPE)) throw new Error('Turbos route metadata no longer matches the reviewed direction.');
+  const input = await inputCoin(tx, owner, route.tokenIn, amountIn);
+  const inputVector = tx.makeMoveVec({ elements: [input] });
+  const sqrtPriceLimit = route.aToB ? 4_295_048_016n : 79_226_673_515_401_279_992_447_579_055n;
+  tx.moveCall({
+    target: `${TURBOS_PACKAGE}::swap_router::${route.aToB ? 'swap_a_b' : 'swap_b_a'}`,
+    typeArguments: [coinAType, coinBType, TURBOS_FEE_TYPE],
+    arguments: [
+      tx.object(TURBOS_POOL), inputVector, tx.pure.u64(amountIn), tx.pure.u64(BigInt(route.minAmountOut)),
+      tx.pure.u128(sqrtPriceLimit), tx.pure.bool(true), tx.pure.address(owner),
+      tx.pure.u64(BigInt(Date.now() + 180_000)), tx.object(CLOCK), tx.object(TURBOS_VERSIONED),
+    ],
+  });
+  return tx;
+}
+
 function validateTransactionPackages(tx) {
   for (const command of tx.getData().commands || []) {
     const call = command?.MoveCall || (command?.$kind === 'MoveCall' ? command.MoveCall : null);
     if (!call?.package) continue;
     const packageId = normalizeAddress(call.package);
     if (!ALLOWED_MOVE_PACKAGES.has(packageId)) throw new Error(`Transaction contains a non-allowlisted package: ${call.package}`);
+    if (packageId === normalizeAddress(TURBOS_PACKAGE) && (call.module !== 'swap_router' || !['swap_a_b', 'swap_b_a'].includes(call.function))) {
+      throw new Error(`Transaction contains a non-allowlisted Turbos call: ${call.module}::${call.function}`);
+    }
   }
 }
 
@@ -429,7 +519,9 @@ async function buildTransaction(owner, route, amountIn) {
   validateRoute(route, amountIn);
   const tx = route.executionKind === 'suidex-v2-direct'
     ? await buildV2Transaction(owner, route, amountIn)
-    : await buildV3Transaction(owner, route, amountIn);
+    : route.executionKind === 'suidex-v3-direct'
+      ? await buildV3Transaction(owner, route, amountIn)
+      : await buildTurbosTransaction(owner, route, amountIn);
   validateTransactionPackages(tx);
   return tx;
 }
@@ -476,7 +568,7 @@ async function executeSwap() {
     updateActionButton();
     return;
   }
-  if (!PREVIEW_EXECUTION_ENABLED) return;
+  if (!SWAP_EXECUTION_ENABLED) return;
   if (!quoteIsFresh()) {
     await requestQuote();
     if (!quoteIsFresh()) return;
@@ -531,6 +623,7 @@ function useMax() {
   state.amount = formatBaseUnits(spendable, decimals, decimals).replace(/,/g, '');
   elements.amountInput.value = state.amount === '0' ? '' : state.amount;
   state.quote = null;
+  renderUsdValues();
   scheduleQuote();
   updateActionButton();
 }
@@ -545,7 +638,7 @@ function reverseDirection() {
   elements.success.hidden = true;
   setTokenPresentation();
   renderQuote();
-  setStatus('Enter an amount to compare the current SuiDex V2 and V3 TREE routes.');
+  setStatus('Enter an amount to compare the current SuiDex V2, SuiDex V3, and Turbos TREE routes.');
 }
 
 function initialize() {
@@ -558,6 +651,8 @@ function initialize() {
     outputIcon: document.getElementById('swapOutputIcon'),
     inputBalance: document.getElementById('swapInputBalance'),
     outputBalance: document.getElementById('swapOutputBalance'),
+    inputUsd: document.getElementById('swapInputUsd'),
+    outputUsd: document.getElementById('swapOutputUsd'),
     routeLabel: document.getElementById('swapRouteLabel'),
     routeRate: document.getElementById('swapRouteRate'),
     minReceived: document.getElementById('swapMinReceived'),
@@ -568,6 +663,8 @@ function initialize() {
     status: document.getElementById('swapStatus'),
     reserveNftree: document.getElementById('reserveNftree'),
     reserveRow: document.getElementById('swapReserveRow'),
+    settingsToggle: document.getElementById('swapSettingsToggle'),
+    advanced: document.getElementById('swapAdvanced'),
     success: document.getElementById('swapSuccess'),
   });
   if (!elements.amountInput || !elements.action) return;
@@ -578,6 +675,7 @@ function initialize() {
     state.quote = null;
     state.quoteError = '';
     elements.success.hidden = true;
+    renderUsdValues();
     scheduleQuote();
     updateActionButton();
   });
@@ -590,22 +688,29 @@ function initialize() {
     state.quote = null;
     scheduleQuote();
   }));
+  elements.settingsToggle.addEventListener('click', () => {
+    const open = elements.advanced.hidden;
+    elements.advanced.hidden = !open;
+    elements.settingsToggle.setAttribute('aria-expanded', String(open));
+    elements.settingsToggle.setAttribute('aria-label', open ? 'Hide swap details' : 'Show swap details');
+  });
   elements.action.addEventListener('click', executeSwap);
   window.addEventListener('tree:wallet-changed', () => loadBalances(true));
   window.addEventListener('load', () => loadBalances(true));
   window.addEventListener('tree:panel-shown', (event) => {
     if (event.detail?.panelId === 'swap') {
       loadBalances(true);
+      loadUsdPrices();
       if (state.amount) requestQuote();
     }
   });
   state.refreshTimer = setInterval(() => { if (state.amount && !state.executing) requestQuote(); }, 15_000);
-  setStatus(PREVIEW_EXECUTION_ENABLED
-    ? 'Mainnet preview: enter an amount to compare SuiDex V2 and V3. A transaction is created only after simulation and explicit wallet approval.'
-    : 'Best-route quotes are active. On-site execution remains disabled in production until the controlled preview swap passes.');
+  state.priceTimer = setInterval(loadUsdPrices, 60_000);
+  setStatus('Mainnet: enter an amount to compare SuiDex V2, SuiDex V3, and Turbos. A transaction is created only after simulation and explicit wallet approval.');
   loadBalances(true);
+  loadUsdPrices();
 }
 
 initialize();
 
-export { PREVIEW_EXECUTION_ENABLED, buildTransaction, formatBaseUnits, normalizeType, parseBaseUnits, validateRoute };
+export { SWAP_EXECUTION_ENABLED, buildTransaction, formatBaseUnits, normalizeType, parseBaseUnits, validateRoute };

@@ -39,6 +39,14 @@ body.tree-wallet-modal-open{overflow:hidden}
 .tree-wallet-slush-link:hover,.tree-wallet-slush-link:focus-visible{border-color:rgba(53,242,140,.62);box-shadow:0 12px 34px rgba(0,0,0,.25)}
 .tree-wallet-slush-mark{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:linear-gradient(145deg,#68bfff,#2475d9);font-weight:900}
 .tree-wallet-slush-link strong,.tree-wallet-slush-link small{display:block}.tree-wallet-slush-link small{color:var(--muted,#9aa9b8)}
+.tree-wallet-phantom-link{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:11px;margin-top:10px;padding:13px;border:1px solid rgba(171,122,255,.34);border-radius:13px;background:linear-gradient(135deg,rgba(171,122,255,.1),rgba(92,54,185,.07));color:var(--text,#f5fbff);text-decoration:none}
+.tree-wallet-phantom-link[hidden]{display:none}.tree-wallet-phantom-link:hover,.tree-wallet-phantom-link:focus-visible{border-color:rgba(171,122,255,.7);box-shadow:0 12px 34px rgba(0,0,0,.25)}
+.tree-wallet-phantom-mark{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:linear-gradient(145deg,#ab7aff,#5c36b9);font-weight:900}
+.tree-wallet-phantom-link strong,.tree-wallet-phantom-link small{display:block}.tree-wallet-phantom-link small{color:var(--muted,#9aa9b8)}
+.tree-wallet-nightly-link{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:11px;margin-top:10px;padding:13px;border:1px solid rgba(126,148,255,.34);border-radius:13px;background:linear-gradient(135deg,rgba(86,111,255,.11),rgba(207,90,255,.07));color:var(--text,#f5fbff);text-decoration:none}
+.tree-wallet-nightly-link[hidden]{display:none}.tree-wallet-nightly-link:hover,.tree-wallet-nightly-link:focus-visible{border-color:rgba(126,148,255,.72);box-shadow:0 12px 34px rgba(0,0,0,.25)}
+.tree-wallet-nightly-mark{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:linear-gradient(145deg,#7e94ff,#9a46db);font-weight:900}
+.tree-wallet-nightly-link strong,.tree-wallet-nightly-link small{display:block}.tree-wallet-nightly-link small{color:var(--muted,#9aa9b8)}
 .tree-wallet-note{margin:13px 0 0;padding:11px 12px;border-left:3px solid rgba(255,225,79,.55);border-radius:8px;background:rgba(255,225,79,.055);color:var(--muted,#9aa9b8);font-size:.78rem}
 .tree-wallet-empty{padding:15px;border:1px dashed rgba(255,255,255,.16);border-radius:12px;color:var(--muted,#9aa9b8);text-align:center}
 .tree-wallet-status{min-height:1.4em;margin:11px 0 0;color:var(--cyan,#35c8ff);font-size:.84rem}

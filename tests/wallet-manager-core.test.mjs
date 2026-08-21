@@ -2,8 +2,10 @@ import assert from 'node:assert/strict';
 import {
   compatibleSuiWallets,
   dedupeWallets,
+  getSuiPersonalMessageFeature,
   getSuiSignFeature,
   isSlushWallet,
+  isSlushWebWallet,
   pickSuiAccount,
   safeWalletIcon,
   shortenSuiAddress,
@@ -30,10 +32,23 @@ const slushWeb = wallet('Slush', { id: 'slush-web' });
 const slushExtension = wallet('Slush', { id: 'slush-extension', accounts: [account('0x' + '1'.repeat(64))] });
 const phantom = wallet('Phantom', { id: 'phantom-sui', accounts: [account('0x' + '2'.repeat(64))] });
 const nonSui = wallet('Other Chain', { features: { 'standard:connect': connect } });
+const directPhantom = wallet('Phantom', {
+  id: 'phantom-sui-direct',
+  features: {
+    'standard:connect': connect,
+    'tree:phantomSui': { version: '1.0.0', provider: {} },
+  },
+});
 
 assert.equal(getSuiSignFeature(slushWeb), 'sui:signAndExecuteTransaction');
 assert.equal(getSuiSignFeature(nonSui), null);
+assert.equal(getSuiSignFeature(directPhantom), 'tree:phantomSui');
+assert.equal(getSuiPersonalMessageFeature({ features: { 'sui:signPersonalMessage': {} } }), 'sui:signPersonalMessage');
+assert.equal(getSuiPersonalMessageFeature({ features: { 'sui:signMessage': {} } }), 'sui:signMessage');
+assert.equal(getSuiPersonalMessageFeature(nonSui), null);
 assert.equal(isSlushWallet(slushWeb), true);
+assert.equal(isSlushWebWallet({ id: 'com.mystenlabs.suiwallet.web', name: 'Slush' }), true);
+assert.equal(isSlushWebWallet(slushExtension), false);
 assert.equal(isSlushWallet(phantom), false);
 assert.equal(walletKey(slushExtension), 'slush-extension');
 
@@ -48,6 +63,9 @@ assert.equal(compatible.some((candidate) => candidate.name === 'Other Chain'), f
 const preferred = compatibleSuiWallets([slushExtension, phantom], 'phantom-sui');
 assert.equal(preferred[0].name, 'Phantom');
 assert.equal(preferred.some((candidate) => candidate.name === 'Slush'), true);
+
+const directPreferredOverNonSuiDuplicate = compatibleSuiWallets([nonSui, directPhantom]);
+assert.deepEqual(directPreferredOverNonSuiDuplicate.map((candidate) => candidate.name), ['Phantom']);
 
 const testnet = account('0x' + '3'.repeat(64), ['sui:testnet']);
 const mainnet = account('0x' + '4'.repeat(64), ['sui:mainnet']);

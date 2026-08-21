@@ -4,6 +4,8 @@ export const SUI_DECIMALS = 9;
 export const TREE_DECIMALS = 6;
 export const SUIDEX_V2_TREE_POOL = '0x35a1be1f01f9edf7f5221d226f357d194d43c28f2a65cb38640935518d9a5bfc';
 export const SUIDEX_V3_TREE_POOL = '0x39d5ba22e01e45bc4129ec28a0bef52e8fee8db5d07d337adf9540e3cb9074cf';
+export const TURBOS_SUI_TREE_POOL = '0xaa133ce1f8fd55d85b6fc87c1b3054cb717d83be477ef3635c661c21fbdfa0ee';
+export const TURBOS_SUI_TREE_FEE_TYPE = '0x91bfbc386a41afcfd9b2533058d7e915a1d3829089cc268ff4333d54d6339ca1::fee10000bps::FEE10000BPS';
 
 const ROUTE_MAX_AGE_MS = 30_000;
 const MAX_TREE_RAW = 1_000_000_000n * 1_000_000n;
@@ -21,9 +23,9 @@ export type SwapQuoteRequest = {
 
 export type SafeTreeRoute = {
   type: 'direct';
-  venue: 'suidex' | 'v3';
-  venueLabel: 'SuiDex V2' | 'SuiDex V3';
-  executionKind: 'suidex-v2-direct' | 'suidex-v3-direct';
+  venue: 'suidex' | 'v3' | 'turbos';
+  venueLabel: 'SuiDex V2' | 'SuiDex V3' | 'Turbos';
+  executionKind: 'suidex-v2-direct' | 'suidex-v3-direct' | 'turbos-direct';
   pairId: string;
   tokenIn: string;
   tokenOut: string;
@@ -36,6 +38,9 @@ export type SafeTreeRoute = {
   feePercent: number;
   coinAType: string | null;
   coinBType: string | null;
+  feeType?: string;
+  aToB?: boolean;
+  nextTickIndex?: number;
 };
 
 export function normalizeMoveType(type: unknown): string {
@@ -147,7 +152,37 @@ function sanitizeRoute(root: RecordValue, routeValue: unknown, request: SwapQuot
   };
 }
 
-export function normalizeTreeSwapQuote(payload: unknown, requestInput: SwapQuoteRequest) {
+function sanitizeTurbosRoute(routeValue: unknown, request: SwapQuoteRequest): SafeTreeRoute | null {
+  const route = record(routeValue);
+  if (route.type !== 'direct' || route.venue !== 'turbos' || route.executionKind !== 'turbos-direct') return null;
+  const pairId = String(route.pairId || '').toLowerCase();
+  if (pairId !== TURBOS_SUI_TREE_POOL) return null;
+  if (normalizeMoveType(route.tokenIn) !== normalizeMoveType(request.tokenIn) || normalizeMoveType(route.tokenOut) !== normalizeMoveType(request.tokenOut)) return null;
+  const amountIn = unsigned(route.amountIn);
+  const amountOut = unsigned(route.amountOut);
+  const minAmountOut = unsigned(route.minAmountOut);
+  if (!amountIn || !amountOut || !minAmountOut || amountIn !== request.amountIn || BigInt(minAmountOut) > BigInt(amountOut)) return null;
+  const coinAType = String(route.coinAType || '');
+  const coinBType = String(route.coinBType || '');
+  const feeType = String(route.feeType || '');
+  if (!isTreeSwapPair(coinAType, coinBType)) return null;
+  if (normalizeMoveType(feeType) !== normalizeMoveType(TURBOS_SUI_TREE_FEE_TYPE)) return null;
+  const aToB = route.aToB === true;
+  if (normalizeMoveType(request.tokenIn) !== normalizeMoveType(aToB ? coinAType : coinBType)) return null;
+  const nextTickIndex = Number(route.nextTickIndex);
+  if (!Number.isInteger(nextTickIndex) || nextTickIndex < -443636 || nextTickIndex > 443636) return null;
+  const priceImpactPercent = finite(route.priceImpactPercent, -1);
+  const feePercent = finite(route.feePercent, -1);
+  if (priceImpactPercent < 0 || priceImpactPercent > 100 || feePercent < 0 || feePercent > 10) return null;
+  return {
+    type: 'direct', venue: 'turbos', venueLabel: 'Turbos', executionKind: 'turbos-direct', pairId,
+    tokenIn: request.tokenIn, tokenOut: request.tokenOut, amountIn, amountOut, minAmountOut,
+    priceImpactPercent, priceImpactTier: String(route.priceImpactTier || 'unknown'),
+    gasEstimate: unsigned(route.gasEstimate) || '0', feePercent, coinAType, coinBType, feeType, aToB, nextTickIndex,
+  };
+}
+
+export function normalizeTreeSwapQuote(payload: unknown, requestInput: SwapQuoteRequest, additionalRoutes: unknown[] = []) {
   const request = validateSwapRequest(requestInput);
   const root = record(payload);
   const routeValues = [root.bestRoute, ...(Array.isArray(root.directRoutes) ? root.directRoutes : [])].filter(Boolean);
@@ -158,12 +193,17 @@ export function normalizeTreeSwapQuote(payload: unknown, requestInput: SwapQuote
     const key = `${route.venue}:${route.pairId}:${route.amountOut}`;
     deduped.set(key, route);
   }
+  for (const value of additionalRoutes) {
+    const route = sanitizeTurbosRoute(value, request);
+    if (!route) continue;
+    deduped.set(`${route.venue}:${route.pairId}:${route.amountOut}`, route);
+  }
   const routes = [...deduped.values()].sort((left, right) => {
-    const amountOrder = BigInt(right.amountOut) > BigInt(left.amountOut) ? 1 : BigInt(right.amountOut) < BigInt(left.amountOut) ? -1 : 0;
+    const amountOrder = BigInt(right.minAmountOut) > BigInt(left.minAmountOut) ? 1 : BigInt(right.minAmountOut) < BigInt(left.minAmountOut) ? -1 : 0;
     if (amountOrder) return amountOrder;
     return BigInt(left.gasEstimate || '0') < BigInt(right.gasEstimate || '0') ? -1 : 1;
   });
-  if (!routes.length) throw new Error('No allowlisted direct SuiDex V2 or V3 route was returned.');
+  if (!routes.length) throw new Error('No allowlisted direct SuiDex or Turbos route was returned.');
   const generatedAt = requestInput.generatedAt || new Date().toISOString();
   const generatedMs = Date.parse(generatedAt);
   const expiresAt = new Date((Number.isFinite(generatedMs) ? generatedMs : Date.now()) + ROUTE_MAX_AGE_MS).toISOString();
@@ -171,8 +211,8 @@ export function normalizeTreeSwapQuote(payload: unknown, requestInput: SwapQuote
     status: 'ok' as const,
     generatedAt,
     expiresAt,
-    source: 'SuiDex route service',
-    executionScope: 'Direct SuiDex V2 and SuiDex V3 TREE routes',
+    source: 'TREE verified multi-venue route service',
+    executionScope: 'Direct SuiDex V2, SuiDex V3, and Turbos SUI/TREE routes',
     tokenIn: request.tokenIn,
     tokenOut: request.tokenOut,
     decimalsIn: normalizeMoveType(request.tokenIn) === normalizeMoveType(SUI_TYPE) ? SUI_DECIMALS : TREE_DECIMALS,
@@ -181,6 +221,6 @@ export function normalizeTreeSwapQuote(payload: unknown, requestInput: SwapQuote
     slippageBps: request.slippageBps,
     selectedRoute: routes[0],
     routes,
-    warnings: routes.length < 2 ? ['Only one allowlisted TREE route was available for this amount.'] : [],
+    warnings: routes.length < 3 ? ['One or more allowlisted TREE venues were unavailable for this amount.'] : [],
   };
 }

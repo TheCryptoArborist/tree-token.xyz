@@ -1,0 +1,4 @@
+#earnV3ZapStatus{margin:0;font-size:.7rem;line-height:1.45}
+#earnV3ZapStatus.error{color:#ff6e78}
+#earnV3ZapStatus.success{color:var(--green)}
+#earnV3ZapStatus.warning{color:#ffd84d}

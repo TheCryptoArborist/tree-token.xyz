@@ -3,13 +3,25 @@
 import {
   getWallets,
   signAndExecuteTransaction as walletSignAndExecuteTransaction,
-} from 'https://esm.run/@mysten/wallet-standard@0.21.3';
+} from 'https://esm.run/@mysten/wallet-standard@0.21.14';
 import { SuiGrpcClient } from 'https://esm.run/@mysten/sui@2.23.1/grpc';
+import { fromBase64, toBase64 } from 'https://esm.run/@mysten/sui@2.23.1/utils';
+import {
+  PHANTOM_SUI_FEATURE,
+  createPhantomSuiWallet,
+  getPhantomSuiProvider,
+  isPhantomSuiWallet,
+  phantomSignature,
+  phantomTransactionBytes,
+} from './phantom-sui-provider.js';
+import { getNightlySuiWallet, isNightlySuiWallet } from './nightly-sui-provider.js';
 import {
   SUI_MAINNET_CHAIN,
   compatibleSuiWallets,
+  getSuiPersonalMessageFeature,
   getSuiSignFeature,
   isSlushWallet,
+  isSlushWebWallet,
   pickSuiAccount,
   safeWalletIcon,
   shortenSuiAddress,
@@ -21,9 +33,11 @@ const APP_NAME = 'TREE Command Center';
 const NETWORK = 'mainnet';
 const CHAIN = SUI_MAINNET_CHAIN;
 const RPC_URL = 'https://fullnode.mainnet.sui.io:443';
-const SESSION_TTL_MS = 60 * 60 * 1000;
-const WALLET_STANDARD_URL = 'https://esm.run/@mysten/wallet-standard@0.21.3';
-const SLUSH_WALLET_URL = 'https://esm.run/@mysten/slush-wallet@1.1.8';
+const WALLET_PREFERENCE_TTL_MS = 30 * 24 * 60 * 60 * 1000;
+const RESTORE_REGISTRATION_WAIT_MS = 2_000;
+const WALLET_STANDARD_URL = 'https://esm.run/@mysten/wallet-standard@0.21.14';
+const SLUSH_WALLET_URL = 'https://esm.run/@mysten/slush-wallet@1.1.14';
+const WALLET_CONNECT_TIMEOUT_MS = 12_000;
 const SESSION_KEYS = {
   address: 'tree:sui:address',
   walletKey: 'tree:sui:wallet-key',
@@ -44,6 +58,8 @@ let _managerResult = { action: 'cancel' };
 let _managerMode = 'picker';
 let _dialog = null;
 let _dialogNodes = null;
+let _phantomProvider = null;
+let _phantomWallet = null;
 
 const _slushReady = (async () => {
   try {
@@ -64,15 +80,24 @@ function _getClient() {
 }
 
 function _storageSet(key, value) {
-  try { sessionStorage.setItem(key, value); } catch (_) {}
+  try { localStorage.setItem(key, value); } catch (_) {}
 }
 
 function _storageRemove(key) {
+  try { localStorage.removeItem(key); } catch (_) {}
   try { sessionStorage.removeItem(key); } catch (_) {}
 }
 
+function _storageGet(key) {
+  try {
+    return localStorage.getItem(key) || sessionStorage.getItem(key);
+  } catch (_) {
+    return null;
+  }
+}
+
 function _save(address, wallet) {
-  const expiry = Date.now() + SESSION_TTL_MS;
+  const expiry = Date.now() + WALLET_PREFERENCE_TTL_MS;
   const key = walletKey(wallet);
   const name = wallet?.name || 'Sui Wallet';
   Object.assign(_mem, { address, walletKey: key, walletName: name, expiry });
@@ -96,14 +121,15 @@ function _clearSession() {
 function _load() {
   if (_mem.address && Date.now() < _mem.expiry) return { ..._mem };
   try {
-    const address = sessionStorage.getItem(SESSION_KEYS.address) || sessionStorage.getItem('suiAddr');
-    const walletName = sessionStorage.getItem(SESSION_KEYS.walletName) || sessionStorage.getItem('suiName');
-    const storedKey = sessionStorage.getItem(SESSION_KEYS.walletKey) || '';
-    const expiry = Number.parseInt(sessionStorage.getItem(SESSION_KEYS.expiry) || sessionStorage.getItem('suiExpiry') || '0', 10);
+    const address = _storageGet(SESSION_KEYS.address) || _storageGet('suiAddr');
+    const walletName = _storageGet(SESSION_KEYS.walletName) || _storageGet('suiName');
+    const storedKey = _storageGet(SESSION_KEYS.walletKey) || '';
+    const expiry = Number.parseInt(_storageGet(SESSION_KEYS.expiry) || _storageGet('suiExpiry') || '0', 10);
     if (address && walletName && Date.now() < expiry) {
       Object.assign(_mem, { address, walletKey: storedKey, walletName, expiry });
       return { ..._mem };
     }
+    if (address || walletName || storedKey || expiry) _clearSession();
   } catch (_) {}
   return null;
 }
@@ -197,10 +223,35 @@ async function _waitForWalletRegistration() {
   await new Promise((resolve) => setTimeout(resolve, 80));
 }
 
+function _walletCandidates() {
+  const provider = getPhantomSuiProvider(window);
+  if (provider !== _phantomProvider) {
+    _phantomProvider = provider;
+    _phantomWallet = createPhantomSuiWallet(provider);
+  }
+  const nightlyWallet = getNightlySuiWallet(window);
+  return [
+    ...(_phantomWallet ? [_phantomWallet] : []),
+    ...(nightlyWallet ? [nightlyWallet] : []),
+    ...registry.get(),
+  ];
+}
+
 async function _compatibleWallets() {
   await _waitForWalletRegistration();
   const saved = _load();
-  return compatibleSuiWallets(registry.get(), saved?.walletKey || '');
+  return compatibleSuiWallets(_walletCandidates(), saved?.walletKey || '');
+}
+
+async function _requestWalletConnection(wallet, connect) {
+  let timeoutId;
+  const timeout = new Promise((_, reject) => {
+    timeoutId = setTimeout(() => {
+      reject(new Error(isSlushWallet(wallet) ? 'SLUSH_CONNECT_TIMEOUT' : 'WALLET_CONNECT_TIMEOUT'));
+    }, WALLET_CONNECT_TIMEOUT_MS);
+  });
+  try { return await Promise.race([connect(), timeout]); }
+  finally { clearTimeout(timeoutId); }
 }
 
 async function _connectToWallet(wallet, preferredAddress = null) {
@@ -210,7 +261,7 @@ async function _connectToWallet(wallet, preferredAddress = null) {
   const connectFeature = wallet.features?.['standard:connect'];
   if (!connectFeature?.connect) throw new Error('This wallet does not expose a connection request.');
 
-  const result = await connectFeature.connect();
+  const result = await _requestWalletConnection(wallet, () => connectFeature.connect());
   const accounts = Array.isArray(result?.accounts) && result.accounts.length
     ? result.accounts
     : wallet.accounts;
@@ -290,7 +341,17 @@ function _createDialog() {
             <span><strong>Open this site in Slush</strong><small>Best option for the Slush mobile app or web wallet</small></span>
             <span aria-hidden="true">↗</span>
           </a>
-          <p class="tree-wallet-note">Only Sui-compatible wallets are shown. Slush is registered as a web-wallet option, while installed wallets such as Slush and Phantom are detected through the Sui Wallet Standard.</p>
+          <a class="tree-wallet-phantom-link" data-phantom-link href="https://phantom.com/" target="_blank" rel="noopener noreferrer" hidden>
+            <span class="tree-wallet-phantom-mark" aria-hidden="true">P</span>
+            <span><strong>Get or open Phantom</strong><small>Install the extension, or open TREE inside Phantom's mobile browser</small></span>
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a class="tree-wallet-nightly-link" data-nightly-link href="https://nightly.app/download?tab=browser" target="_blank" rel="noopener noreferrer" hidden>
+            <span class="tree-wallet-nightly-mark" aria-hidden="true">N</span>
+            <span><strong>Get or open Nightly</strong><small>Install Nightly's Sui-compatible browser or mobile wallet</small></span>
+            <span aria-hidden="true">↗</span>
+          </a>
+          <p class="tree-wallet-note">Installed Sui wallets are detected automatically. TREE supports Phantom directly and preserves Wallet Standard support for Slush, Nightly, Suiet, OKX, and other compatible wallets.</p>
         </section>
         <section class="tree-wallet-section" data-wallet-panel="manage" hidden>
           <div class="tree-wallet-current" data-wallet-current></div>
@@ -299,7 +360,7 @@ function _createDialog() {
             <button class="tree-wallet-action" type="button" data-wallet-switch>Switch wallet</button>
             <button class="tree-wallet-action danger" type="button" data-wallet-disconnect>Disconnect &amp; forget</button>
           </div>
-          <p class="tree-wallet-note">Disconnect &amp; forget clears this site's saved wallet and asks the wallet to disconnect. Some wallet apps retain Connected Apps permission until it is also removed in the wallet's own settings.</p>
+          <p class="tree-wallet-note">This device remembers your selected wallet for up to 30 days and silently restores it when the wallet still permits access. No private key or signing permission is stored. Disconnect &amp; forget removes the saved preference and asks the wallet to disconnect.</p>
         </section>
         <p class="tree-wallet-status" data-wallet-status role="status" aria-live="polite"></p>
       </div>
@@ -317,6 +378,8 @@ function _createDialog() {
     accounts: dialog.querySelector('[data-wallet-accounts]'),
     status: dialog.querySelector('[data-wallet-status]'),
     slushLink: dialog.querySelector('[data-slush-link]'),
+    phantomLink: dialog.querySelector('[data-phantom-link]'),
+    nightlyLink: dialog.querySelector('[data-nightly-link]'),
   };
 
   dialog.querySelector('.tree-wallet-close').addEventListener('click', () => _closeWalletManager({ action: 'cancel' }));
@@ -376,8 +439,10 @@ async function _renderPicker() {
   const wallets = await _compatibleWallets();
   _dialogNodes.list.replaceChildren();
   _dialogNodes.title.textContent = 'Connect a Sui Wallet';
-  _dialogNodes.subtitle.textContent = 'Select Slush, Phantom, or another compatible Sui wallet.';
+  _dialogNodes.subtitle.textContent = 'Select Slush, Phantom, Nightly, or another compatible Sui wallet.';
   _dialogNodes.slushLink.href = slushBrowseUrl(`${location.origin}/dapp/`);
+  _dialogNodes.phantomLink.hidden = wallets.some(isPhantomSuiWallet);
+  _dialogNodes.nightlyLink.hidden = wallets.some(isNightlySuiWallet);
 
   if (!wallets.length) {
     const empty = document.createElement('div');
@@ -388,6 +453,7 @@ async function _renderPicker() {
   }
 
   for (const wallet of wallets) {
+    const opensInSlush = isSlushWebWallet(wallet);
     const button = document.createElement('button');
     button.type = 'button';
     button.className = `tree-wallet-option${isSlushWallet(wallet) ? ' is-slush' : ''}`;
@@ -399,16 +465,24 @@ async function _renderPicker() {
     const name = document.createElement('strong');
     name.textContent = wallet.name;
     const detail = document.createElement('span');
-    detail.textContent = isSlushWallet(wallet)
+    detail.textContent = isPhantomSuiWallet(wallet)
+      ? 'Phantom Sui extension or mobile in-app browser'
+      : isNightlySuiWallet(wallet)
+      ? 'Nightly Sui extension or mobile wallet'
+      : isSlushWallet(wallet)
       ? 'Slush extension or secure Slush web wallet'
       : `${wallet.accounts?.length || 0} authorized account${wallet.accounts?.length === 1 ? '' : 's'}`;
     copy.append(name, detail);
 
     const action = document.createElement('span');
     action.className = 'tree-wallet-option-action';
-    action.textContent = 'Connect';
+    action.textContent = opensInSlush ? 'Open Slush' : 'Connect';
     button.append(copy, action);
     button.addEventListener('click', async () => {
+      if (opensInSlush) {
+        location.assign(slushBrowseUrl(`${location.origin}/dapp/`));
+        return;
+      }
       _setManagerStatus(`Connecting to ${wallet.name}…`);
       button.disabled = true;
       try {
@@ -418,6 +492,10 @@ async function _renderPicker() {
       } catch (error) {
         const message = error?.message === 'WRONG_NETWORK'
           ? 'Switch the wallet to Sui Mainnet and try again.'
+          : error?.message === 'SLUSH_CONNECT_TIMEOUT'
+            ? 'Slush did not open a connection window. Use “Open this site in Slush” below, or unlock the Slush extension and refresh the wallet list.'
+            : error?.message === 'WALLET_CONNECT_TIMEOUT'
+              ? `${wallet.name} did not respond. Unlock the wallet extension, refresh the wallet list, and try again.`
           : error?.message || 'Wallet connection failed.';
         _setManagerStatus(message, 'error');
         button.disabled = false;
@@ -536,12 +614,59 @@ async function getBalance() {
 
 async function signAndExecuteTransactionBlock(transaction) {
   if (!_wallet || !_address || !_account) throw new Error('Wallet not connected');
-  if (!getSuiSignFeature(_wallet)) throw new Error('Wallet does not support Sui transaction signing.');
+  const signFeature = getSuiSignFeature(_wallet);
+  if (!signFeature) throw new Error('Wallet does not support Sui transaction signing.');
+  if (signFeature === PHANTOM_SUI_FEATURE) {
+    const provider = _wallet.features[PHANTOM_SUI_FEATURE]?.provider;
+    if (!provider?.signTransaction) throw new Error('Phantom Sui transaction signing is unavailable.');
+
+    transaction.setSenderIfNotSet?.(_address);
+    const fallbackBytes = await transaction.build({ client: _getClient() });
+    const signed = await provider.signTransaction({
+      transaction: await transaction.toJSON(),
+      address: _address,
+      networkID: CHAIN,
+    });
+    const signature = phantomSignature(signed);
+    const encodedBytes = phantomTransactionBytes(signed);
+    const bytes = encodedBytes instanceof Uint8Array
+      ? encodedBytes
+      : typeof encodedBytes === 'string'
+        ? fromBase64(encodedBytes)
+        : fallbackBytes;
+    if (!signature) throw new Error('Phantom returned an incomplete Sui transaction signature.');
+    return _getClient().executeTransaction({
+      transaction: bytes,
+      signatures: [signature],
+      include: { effects: true, events: true, balanceChanges: true, bcs: true },
+    });
+  }
   return walletSignAndExecuteTransaction(_wallet, {
     account: _account,
     chain: CHAIN,
     transaction,
   });
+}
+
+async function signTreePersonalMessage(message) {
+  if (!_wallet || !_address || !_account) throw new Error('Wallet not connected');
+  if (!(message instanceof Uint8Array)) throw new Error('Personal message must be bytes.');
+  if (isPhantomSuiWallet(_wallet)) {
+    const provider = _wallet.features[PHANTOM_SUI_FEATURE]?.provider;
+    if (!provider?.signMessage) throw new Error('Phantom does not expose Sui message signing in this browser.');
+    const result = await provider.signMessage(message, _address);
+    const signature = phantomSignature(result);
+    if (!signature) throw new Error('Phantom returned an incomplete Sui message signature.');
+    return { bytes: toBase64(message), signature };
+  }
+  const featureName = getSuiPersonalMessageFeature(_wallet);
+  if (!featureName) throw new Error('Wallet does not support personal-message signing.');
+  const feature = _wallet.features[featureName];
+  if (featureName === 'sui:signPersonalMessage') {
+    return feature.signPersonalMessage({ message, account: _account, chain: CHAIN });
+  }
+  const result = await feature.signMessage({ message, account: _account });
+  return { bytes: result.messageBytes, signature: result.signature };
 }
 
 async function initializeWallet() {
@@ -550,12 +675,32 @@ async function initializeWallet() {
   if (!saved) return null;
 
   try {
-    const wallets = compatibleSuiWallets(registry.get(), saved.walletKey || '');
-    const wallet = wallets.find((candidate) => walletKey(candidate) === saved.walletKey)
-      || wallets.find((candidate) => candidate.name === saved.walletName);
+    const deadline = Date.now() + RESTORE_REGISTRATION_WAIT_MS;
+    let wallet = null;
+    do {
+      const wallets = compatibleSuiWallets(_walletCandidates(), saved.walletKey || '');
+      wallet = wallets.find((candidate) => walletKey(candidate) === saved.walletKey)
+        || wallets.find((candidate) => candidate.name === saved.walletName)
+        || null;
+      if (wallet || Date.now() >= deadline) break;
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    } while (!wallet);
     if (!wallet) return null;
 
-    const account = pickSuiAccount(wallet.accounts || [], saved.address);
+    let accounts = Array.isArray(wallet.accounts) ? wallet.accounts : [];
+    let account = pickSuiAccount(accounts, saved.address);
+    if (!account) {
+      const connectFeature = wallet.features?.['standard:connect'];
+      if (!connectFeature?.connect) return null;
+      let result;
+      try {
+        result = await _requestWalletConnection(wallet, () => connectFeature.connect({ silent: true }));
+      } catch {
+        return null;
+      }
+      accounts = Array.isArray(result?.accounts) && result.accounts.length ? result.accounts : wallet.accounts;
+      account = pickSuiAccount(accounts || [], saved.address);
+    }
     if (!account) return null;
     _setConnection(wallet, account, 'session-restored');
     return { wallet, address: account.address, account };
@@ -575,6 +720,10 @@ function _refreshOpenPicker() {
 
 try { registry.on?.('register', _refreshOpenPicker); } catch (_) {}
 try { registry.on?.('unregister', _refreshOpenPicker); } catch (_) {}
+window.addEventListener('focus', _refreshOpenPicker);
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') _refreshOpenPicker();
+});
 
 window.connectWallet = connectWallet;
 window.disconnectWallet = disconnectWallet;
@@ -584,6 +733,7 @@ window.getAvailableWallets = getAvailableWallets;
 window.initializeWallet = initializeWallet;
 window.getBalance = getBalance;
 window.signAndExecuteTransactionBlock = signAndExecuteTransactionBlock;
+window.signTreePersonalMessage = signTreePersonalMessage;
 window.checkBalanceAndNFT = checkBalanceAndNFT;
 window.initSuiClient = _getClient;
 window.TREE_WALLET_STANDARD_URL = WALLET_STANDARD_URL;

@@ -1,0 +1,27 @@
+{
+  "network": "sui-mainnet",
+  "chainId": "35834a8a",
+  "publishedAt": "2026-08-20T17:15:49.038Z",
+  "publisher": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+  "publishTransactionDigest": "EjEZHEMNwrqDLW9QARYGyKqN7sWFQ3N8t6ZsCv64vk9d",
+  "packageId": "0xf732666a9e373afc1058229a9d6c46cd58ad401471e0c55362b0accca54ae00e",
+  "prizePoolId": "0x4b46d5f0543b6c036641875145b86d792f858b4315ddc08cc97d4619202438d9",
+  "operatorCapId": "0x1e5d3ec49134d716ed0385444e47a100a6b2cfb0e677dc77c2b9f5c94a7b9477",
+  "operator": {
+    "wallet": "0x1896338f7e89b7f457476c28fd02fcbf08e8855918dde5606d90e660c90c6208",
+    "handoffTransactionDigest": "7ZUtvwJ2yXAy2MRzdbUbM5BEX8D4KqQPmYeSHRGAfXcE",
+    "gasAllowanceMist": "1000000000"
+  },
+  "adminCapId": "0x8511bd67bd00a73f623875132c68bf59dfc7392e4cac777626f5954328fd2d30",
+  "upgradeCapId": "0x90877602b1798846364b8814ce6f8dcd611a1a7f7875201704cfece00ef7c3f7",
+  "initialSharedVersion": "967706478",
+  "funding": {
+    "transactionDigest": "DHj5Pczoc1KH4eQJVZyDEKTTuNaBnTYpwiLyPC1NEDQd",
+    "coinType": "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE",
+    "amountRaw": "350000000000",
+    "amountDisplay": "350000 TREE",
+    "dailyPrizeRaw": "50000000000",
+    "dailyPrizeDisplay": "50000 TREE",
+    "fundedDailyPrizes": 7
+  }
+}

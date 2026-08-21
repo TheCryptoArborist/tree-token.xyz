@@ -1,5 +1,8 @@
+import { isTreeV3ExecutionHost } from './v3-transaction-core.js';
+
 const V3_ENDPOINT = '/api/tree-v3-overview';
 const V3_POOL_ID = '0x39d5ba22e01e45bc4129ec28a0bef52e8fee8db5d07d337adf9540e3cb9074cf';
+const V3_MANAGEMENT_ENABLED = isTreeV3ExecutionHost(location.hostname);
 
 const state = {
   overview: null,
@@ -8,6 +11,7 @@ const state = {
   activeTab: 'pools',
   addOpen: false,
   range: 'medium',
+  positionPrices: { suiUsd: null, treeUsd: null, btcUsd: null, rewardsUsd: {} },
 };
 
 function ensureStylesheet() {
@@ -31,10 +35,97 @@ function formatUsd(value) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', notation: numeric >= 100000 ? 'compact' : 'standard', maximumFractionDigits: numeric >= 1000 ? 1 : 2 }).format(numeric);
 }
 
+function formatPositionUsd(value) {
+  if (value === null || value === undefined || value === '') return 'Not verified';
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric) || numeric < 0) return 'Not verified';
+  if (numeric > 0 && numeric < 0.01) return '<$0.01';
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(numeric);
+}
+
 function formatNumber(value, maximumFractionDigits = 6) {
   const numeric = Number(value);
   if (!Number.isFinite(numeric)) return '—';
   return new Intl.NumberFormat('en-US', { maximumFractionDigits }).format(numeric);
+}
+
+function verifiedPositive(value) {
+  const numeric = Number(value);
+  return Number.isFinite(numeric) && numeric > 0 ? numeric : null;
+}
+
+function rememberPositionPrices(payload) {
+  const market = payload?.market || {};
+  state.positionPrices.suiUsd = verifiedPositive(market.suiUsd) ?? state.positionPrices.suiUsd;
+  state.positionPrices.treeUsd = verifiedPositive(market.treeUsd) ?? state.positionPrices.treeUsd;
+  state.positionPrices.btcUsd = verifiedPositive(market.btcUsd) ?? state.positionPrices.btcUsd;
+  if (state.positionPrices.treeUsd) state.positionPrices.rewardsUsd.TREE = state.positionPrices.treeUsd;
+  if (state.positionPrices.btcUsd) state.positionPrices.rewardsUsd.wBTC = state.positionPrices.btcUsd;
+  const rewardRows = [
+    ...(Array.isArray(payload?.analytics?.rewards) ? payload.analytics.rewards : []),
+    ...(Array.isArray(payload?.positions) ? payload.positions.flatMap((position) => Array.isArray(position.rewards) ? position.rewards : []) : []),
+  ];
+  for (const reward of rewardRows) {
+    if (!['VICTORY', 'TREE', 'wBTC'].includes(reward?.symbol)) continue;
+    const price = verifiedPositive(reward.priceUsd);
+    if (price) state.positionPrices.rewardsUsd[reward.symbol] = price;
+  }
+}
+
+function usdFromVerifiedPrice(currentValue, amount, price) {
+  const current = Number(currentValue);
+  if (currentValue !== null && currentValue !== undefined && Number.isFinite(current) && current >= 0) return current;
+  const numericAmount = Number(amount);
+  return Number.isFinite(numericAmount) && numericAmount >= 0 && price ? numericAmount * price : null;
+}
+
+function restorePositionUsd(position) {
+  const principalSuiUsd = usdFromVerifiedPrice(position.principalSuiUsd, position.principalSui, state.positionPrices.suiUsd);
+  const principalTreeUsd = usdFromVerifiedPrice(position.principalTreeUsd, position.principalTree, state.positionPrices.treeUsd);
+  const currentPendingFeesUsd = Number(position.pendingFeesUsd);
+  const pendingFeeSuiUsd = usdFromVerifiedPrice(null, position.pendingFeeSui, state.positionPrices.suiUsd);
+  const pendingFeeTreeUsd = usdFromVerifiedPrice(null, position.pendingFeeTree, state.positionPrices.treeUsd);
+  const pendingFeesUsd = position.pendingFeesUsd !== null && position.pendingFeesUsd !== undefined && Number.isFinite(currentPendingFeesUsd) && currentPendingFeesUsd >= 0
+    ? currentPendingFeesUsd
+    : pendingFeeSuiUsd !== null && pendingFeeTreeUsd !== null ? pendingFeeSuiUsd + pendingFeeTreeUsd : null;
+  const rewards = Array.isArray(position.rewards) ? position.rewards.map((reward) => ({
+    ...reward,
+    priceUsd: verifiedPositive(reward.priceUsd) ?? state.positionPrices.rewardsUsd[reward.symbol] ?? null,
+    valueUsd: usdFromVerifiedPrice(reward.valueUsd, reward.amount, verifiedPositive(reward.priceUsd) ?? state.positionPrices.rewardsUsd[reward.symbol] ?? null),
+  })) : position.rewards;
+  return {
+    ...position,
+    principalSuiUsd,
+    principalTreeUsd,
+    valueUsd: principalSuiUsd !== null && principalTreeUsd !== null ? principalSuiUsd + principalTreeUsd : position.valueUsd,
+    pendingFeesUsd,
+    rewards,
+  };
+}
+
+function positionRangePercent(position) {
+  const lower = Number(position.tickLower);
+  const upper = Number(position.tickUpper);
+  const current = Number(position.currentTick);
+  if (![lower, upper, current].every(Number.isFinite) || upper <= lower) return 50;
+  return Math.max(0, Math.min(100, (current - lower) / (upper - lower) * 100));
+}
+
+const V3_REWARD_LOGOS = Object.freeze({
+  VICTORY: '../assets/victory-token.png',
+  TREE: '../assets/tree-token.png',
+  wBTC: '../assets/wbtc-token.png',
+});
+
+function renderRewardLogo(symbol) {
+  const source = V3_REWARD_LOGOS[symbol];
+  return source ? `<img class="v3-reward-logo" src="${source}" alt="" aria-hidden="true">` : '';
+}
+
+function renderPositionRewards(position) {
+  if (!Array.isArray(position.rewards)) return '<div class="v3-earned-row unavailable"><span>Claimable rewards</span><strong>Not verified</strong></div>';
+  if (!position.rewards.length) return '<div class="v3-earned-row"><span>Claimable rewards</span><strong>None configured</strong></div>';
+  return position.rewards.map((reward) => `<div class="v3-earned-row"><span>${renderRewardLogo(reward.symbol)}${reward.symbol} rewards${reward.active ? '' : ' · ended'}</span><strong>${formatNumber(reward.amount, reward.decimals > 6 ? 8 : 4)} ${reward.symbol} <small>(${formatPositionUsd(reward.valueUsd)})</small></strong></div>`).join('');
 }
 
 function normalizeDecimalInput(value) {
@@ -93,37 +184,45 @@ function resolveWalletAddress() {
 
 function workspaceMarkup() {
   return `
-    <div class="section-heading"><div><p class="eyebrow">Native SuiDex V3 workspace</p><h2 id="v3-title">V3 Concentrated Liquidity</h2><p>Review the verified SUI/TREE pool and your public V3 positions without leaving the TREE Command Center.</p></div><span class="data-state ok">Read-only Phase A</span></div>
+    <div class="v3-compact-heading"><h2 id="v3-title">V3 Concentrated Liquidity</h2><p>Earn fees with concentrated SUI / TREE liquidity.</p></div>
     <div class="v3-workspace">
       <div class="v3-summary" aria-label="TREE V3 summary">
         <article class="v3-summary-card"><span>Verified Pools</span><strong id="v3PoolCount">1</strong></article>
-        <article class="v3-summary-card"><span>Estimated TVL</span><strong id="v3SummaryTvl">Loading…</strong></article>
+        <article class="v3-summary-card"><span>TVL</span><strong id="v3SummaryTvl">Loading…</strong></article>
         <article class="v3-summary-card"><span>Your Positions</span><strong id="v3SummaryPositions">Connect wallet</strong></article>
       </div>
-      <div class="v3-tabs" role="tablist" aria-label="V3 workspace">
+      <div class="v3-tabs" role="tablist" aria-label="V3 workspace" style="grid-template-columns:repeat(4,1fr)">
         <button class="v3-tab active" type="button" role="tab" aria-selected="true" data-v3-tab="pools">Pools</button>
+        <button class="v3-tab" type="button" role="tab" aria-selected="false" data-v3-tab="zap">Zap</button>
         <button class="v3-tab" type="button" role="tab" aria-selected="false" data-v3-tab="positions">My Positions</button>
         <button class="v3-tab" type="button" role="tab" aria-selected="false" data-v3-tab="swap">Swap</button>
       </div>
       <div class="v3-panel" data-v3-panel="pools">
         <article class="v3-pool-card">
           <div class="v3-pool-head">
-            <div class="v3-pair"><div class="v3-token-stack" aria-hidden="true"><span class="sui">S</span><span class="tree">T</span></div><div><h3>SUI / TREE</h3><div class="v3-pair-meta"><span class="v3-chip">0.25% fee</span><span class="v3-chip verified">Verified pool</span><span class="v3-chip reward" id="v3RewardChip">Rewards not verified</span></div></div></div>
+            <div class="v3-pair"><div class="v3-token-stack" aria-hidden="true"><img src="../assets/sui-token.svg" alt=""><img src="../thick.png" alt=""></div><div><h3>SUI / TREE</h3><div class="v3-pair-meta"><span class="v3-chip">0.25% fee</span><span class="v3-chip verified">Verified pool</span><span class="v3-chip reward" id="v3RewardChip">Loading incentives</span></div></div></div>
             <button class="v3-add-button" id="v3AddLiquidity" type="button">+ Add</button>
           </div>
           <div class="v3-metrics">
-            <div class="v3-metric"><span>Estimated TVL</span><strong id="v3PoolTvl">Loading…</strong></div>
+            <div class="v3-metric"><span>TVL</span><strong id="v3PoolTvl">Loading…</strong></div>
             <div class="v3-metric"><span>24H Volume</span><strong id="v3PoolVolume">Not verified</strong></div>
             <div class="v3-metric"><span>APR</span><strong id="v3PoolApr">Not verified</strong></div>
             <div class="v3-metric"><span>Current Price</span><strong class="good" id="v3PoolPrice">Loading…</strong></div>
-            <div class="v3-metric"><span>SUI Reserve</span><strong id="v3SuiReserve">Loading…</strong></div>
-            <div class="v3-metric"><span>TREE Reserve</span><strong id="v3TreeReserve">Loading…</strong></div>
-            <div class="v3-metric"><span>Current Tick</span><strong id="v3CurrentTick">Loading…</strong></div>
-            <div class="v3-metric"><span>Liquidity Units</span><strong id="v3LiquidityRaw">Loading…</strong></div>
           </div>
-          <p class="v3-pool-id">Pool <code>${V3_POOL_ID}</code></p>
+          <div class="v3-apr-breakdown" id="v3AprBreakdown" aria-label="APR breakdown">Loading verified fee and incentive APR…</div>
+          <details class="v3-pool-details"><summary>Pool details</summary>
+            <div class="v3-technical-metrics">
+              <div class="v3-metric"><span>SUI Reserve</span><strong id="v3SuiReserve">Loading…</strong></div>
+              <div class="v3-metric"><span>TREE Reserve</span><strong id="v3TreeReserve">Loading…</strong></div>
+              <div class="v3-metric"><span>Current Tick</span><strong id="v3CurrentTick">Loading…</strong></div>
+              <div class="v3-metric"><span>Liquidity Units</span><strong id="v3LiquidityRaw">Loading…</strong></div>
+            </div>
+            <p class="v3-pool-id">Pool <code>${V3_POOL_ID}</code></p>
+            <p class="v3-notice" id="v3AnalyticsNotice">Loading verified on-chain pool and SuiDex analytics data.</p>
+            <button class="button secondary v3-refresh" id="v3RefreshPool" type="button">Refresh Pool Data</button>
+            <p class="v3-status" id="v3PoolStatus" role="status" aria-live="polite">Loading V3 pool…</p>
+          </details>
         </article>
-        <p class="v3-notice" id="v3AnalyticsNotice">Loading verified on-chain pool data. Volume, fees, APR, and rewards remain unpublished until a reliable source is integrated.</p>
         <article class="v3-add-card" id="v3AddCard" hidden>
           <h3>Plan a SUI/TREE V3 position</h3>
           <p class="v3-status">This calculator is read-only. It does not construct, sign, or submit a transaction.</p>
@@ -137,8 +236,22 @@ function workspaceMarkup() {
           <div class="v3-estimate"><div><span>Current price</span><strong id="v3PlanCurrent">—</strong></div><div><span>Selected range</span><strong id="v3PlanRange">—</strong></div><div><span>Current status</span><strong id="v3PlanStatus">—</strong></div></div>
           <button class="v3-disabled-action" type="button" disabled>Position transaction builder in verification</button>
         </article>
-        <button class="button secondary v3-refresh" id="v3RefreshPool" type="button">Refresh Pool Data</button>
-        <p class="v3-status" id="v3PoolStatus" role="status" aria-live="polite">Loading V3 pool…</p>
+      </div>
+      <div class="v3-panel" data-v3-panel="zap" hidden>
+        <article class="earn-route-row v3-zap-card">
+          <div class="earn-route-title"><span class="token-logo-stack" aria-hidden="true"><img src="../assets/sui-token.svg" alt=""><img src="../thick.png" alt=""></span><div><h3>SUI / TREE V3 Zap</h3><small>One-token concentrated-liquidity position</small></div></div>
+          <div class="earn-route-actions"><button class="button gold" id="earnV3ZapOpen" type="button" aria-expanded="true" aria-controls="earnV3ZapPanel">V3 Zap</button><button class="button secondary" type="button" data-v3-go-positions>Manage V3</button></div>
+          <div class="earn-zap-panel" id="earnV3ZapPanel">
+            <div class="earn-zap-heading"><div><strong>Native V3 Zap</strong><small>Runs inside the TREE V3 workspace</small></div><span class="data-state ok">Sui Mainnet</span></div>
+            <label class="earn-zap-label" for="earnV3ZapToken">Deposit token</label><select id="earnV3ZapToken"><option value="SUI">SUI</option><option value="TREE">TREE</option></select>
+            <label class="earn-zap-label" for="earnV3ZapAmount"><span>Amount</span><span id="earnV3ZapBalance">Balance —</span></label><div class="earn-zap-input"><input id="earnV3ZapAmount" type="text" inputmode="decimal" autocomplete="off" placeholder="0.0"><button id="earnV3ZapMax" type="button">MAX</button><span id="earnV3ZapSymbol">SUI</span></div>
+            <label class="earn-zap-label" for="earnV3ZapRange">Price range</label><select id="earnV3ZapRange"><option value="5">±5% around current price</option><option value="20" selected>±20% around current price</option><option value="full">Full range</option></select>
+            <div class="earn-zap-summary"><span>Current price</span><strong id="earnV3ZapCurrent">Loading…</strong><span>Selected range</span><strong id="earnV3ZapRangeText">—</strong><span>Swap portion</span><strong id="earnV3ZapSwap">—</strong><span>Minimum paired token</span><strong id="earnV3ZapMinimum">—</strong><span>Wallet approvals</span><strong>1 · Position + incentives</strong></div>
+            <div class="earn-zap-slippage"><span>Slippage</span><div><button type="button" data-earn-v3-slippage="50">0.5%</button><button class="active" type="button" data-earn-v3-slippage="100">1%</button><button type="button" data-earn-v3-slippage="200">2%</button></div></div>
+            <button class="button primary" id="earnV3ZapAction" type="button">Connect Wallet</button><p class="status" id="earnV3ZapStatus" role="status" aria-live="polite">Loading the verified SUI/TREE V3 pool…</p><div class="swap-success" id="earnV3ZapSuccess" hidden></div>
+          </div>
+          <details><summary>Route details</summary><p>Deposit SUI or TREE. TREE Command Center swaps the required portion in the verified SUI/TREE V3 pool and creates the selected concentrated-liquidity position after one explicit wallet approval. V3 incentives attach directly to the position.</p></details>
+        </article>
       </div>
       <div class="v3-panel" data-v3-panel="positions" hidden>
         <div class="v3-position-list" id="v3PositionList"><article class="v3-empty"><strong>Connect your wallet</strong>Public SuiDex V3 positions will appear here after wallet connection.</article></div>
@@ -146,8 +259,12 @@ function workspaceMarkup() {
         <p class="v3-status" id="v3PositionStatus" role="status" aria-live="polite">No wallet connected.</p>
       </div>
       <div class="v3-panel v3-swap-link" data-v3-panel="swap" hidden>
-        <div><h3>Use the native best-route TREE swap</h3><p>The Swap panel compares the verified direct SuiDex V2 and V3 routes and selects the higher output for the entered amount.</p><button class="button primary" id="v3OpenSwap" type="button">Open TREE Swap</button></div>
+        <div><h3>Use the native best-route TREE swap</h3><p>The Swap panel compares verified direct SuiDex V2, SuiDex V3, and Turbos routes and selects the highest protected output for the entered amount.</p><button class="button primary" id="v3OpenSwap" type="button">Open TREE Swap</button></div>
       </div>
+      <article class="v3-victory-reinvest-card">
+        <div class="v3-victory-reinvest-copy"><img src="../assets/victory-token.png" alt="VICTORY token"><div><span>VICTORY → V3</span><h3>Reinvest VICTORY into SUI / TREE V3</h3><p>Choose Complete Reinvest, or lock one portion as xVICTORY with Sustainable Reinvest.</p></div></div>
+        <button class="button gold" id="v3OpenVictoryReinvest" type="button">Reinvest VICTORY</button>
+      </article>
     </div>`;
 }
 
@@ -211,10 +328,34 @@ function updatePositionPlan() {
   status.textContent = price && Number.isFinite(minValue) && Number.isFinite(maxValue) && minValue < price && price < maxValue ? 'Current price is in range' : 'Current price is outside range';
 }
 
+function renderAprBreakdown(analytics, rewards, verified) {
+  const breakdown = document.getElementById('v3AprBreakdown');
+  if (!breakdown) return;
+  const parts = verified
+    ? [
+      { label: 'Fees', value: analytics.feeAprPercent, className: 'fees' },
+      ...rewards.map((reward) => ({ label: reward.symbol, value: reward.aprPercent, className: 'reward' })),
+    ]
+    : [];
+  if (!parts.length) {
+    breakdown.textContent = 'APR breakdown not verified';
+    return;
+  }
+  breakdown.replaceChildren(...parts.map((part) => {
+    const component = document.createElement('span');
+    component.className = `v3-apr-component ${part.className}`;
+    component.textContent = `${part.label}: ${Number(part.value || 0).toFixed(1)}%`;
+    return component;
+  }));
+}
+
 function renderPool(payload) {
   state.overview = payload;
+  rememberPositionPrices(payload);
   const pool = payload.pool;
-  const tvl = formatUsd(pool.tvlUsdEstimate);
+  const analytics = payload.analytics || {};
+  const analyticsVerified = analytics.status === 'verified';
+  const tvl = analyticsVerified ? formatUsd(analytics.tvlUsd) : 'Not verified';
   document.getElementById('v3SummaryTvl').textContent = tvl;
   document.getElementById('v3PoolTvl').textContent = tvl;
   document.getElementById('v3PoolPrice').textContent = `${pool.priceSuiPerTree} SUI / TREE`;
@@ -222,11 +363,20 @@ function renderPool(payload) {
   document.getElementById('v3TreeReserve').textContent = `${formatNumber(pool.reserveTree, 2)} TREE`;
   document.getElementById('v3CurrentTick').textContent = String(pool.currentTick);
   document.getElementById('v3LiquidityRaw').textContent = Number(pool.liquidityRaw).toLocaleString('en-US', { notation: 'compact', maximumFractionDigits: 2 });
-  const analytics = payload.analytics || {};
   document.getElementById('v3PoolVolume').textContent = formatUsd(analytics.volume24hUsd);
   document.getElementById('v3PoolApr').textContent = analytics.aprPercent !== null && analytics.aprPercent !== undefined && analytics.aprPercent !== '' && Number.isFinite(Number(analytics.aprPercent)) ? `${Number(analytics.aprPercent).toFixed(1)}%` : 'Not verified';
-  document.getElementById('v3RewardChip').textContent = Array.isArray(analytics.rewards) && analytics.rewards.length ? analytics.rewards.join(' + ') : 'Rewards not verified';
-  document.getElementById('v3AnalyticsNotice').textContent = payload.warnings?.[0] || 'Pool reserves are verified on chain. Volume, fees, APR, and rewards remain unpublished until a reliable source is integrated.';
+  const rewards = analyticsVerified && Array.isArray(analytics.rewards) ? analytics.rewards : [];
+  const rewardChip = document.getElementById('v3RewardChip');
+  const rewardSymbols = rewards.map((reward) => String(reward.symbol || '').trim()).filter(Boolean);
+  rewardChip.textContent = analyticsVerified
+    ? rewardSymbols.length ? `Rewards: ${rewardSymbols.join(' + ')}` : 'No active rewards'
+    : 'Incentives not verified';
+  rewardChip.title = rewardSymbols.length ? `Active rewards: ${rewardSymbols.join(', ')}` : 'No active verified incentive schedule';
+  renderAprBreakdown(analytics, rewards, analyticsVerified);
+  const poolWarning = payload.warnings?.[0];
+  document.getElementById('v3AnalyticsNotice').textContent = analyticsVerified
+    ? `SuiDex verified analytics: ${formatUsd(analytics.volume24hUsd)} volume and ${formatUsd(analytics.fees24hUsd)} fees in the last 24 hours. APR is annualized from current fees and active incentive emissions; it is not guaranteed.`
+    : `${poolWarning || 'Pool reserves are verified on chain.'} Volume, fees, and APR remain unpublished when the SuiDex analytics cross-check fails.`;
   document.getElementById('v3PoolStatus').textContent = `Verified from Sui Mainnet · Updated ${new Date(payload.generatedAt).toLocaleTimeString()}`;
   document.getElementById('v3PoolStatus').className = 'v3-status ok';
   updateRangeFields();
@@ -257,20 +407,42 @@ function renderPositions(payload) {
     summary.textContent = 'Verification incomplete';
     return;
   }
-  const positions = Array.isArray(payload.positions) ? payload.positions : [];
+  rememberPositionPrices(payload);
+  const positions = Array.isArray(payload.positions) ? payload.positions.map(restorePositionUsd) : [];
   summary.textContent = String(positions.length);
   if (!positions.length) {
     list.innerHTML = '<article class="v3-empty"><strong>No live SUI/TREE V3 position found</strong>This connected wallet has no verified address-owned position in the recognized pool.</article>';
   } else {
     list.innerHTML = positions.map((position) => `
       <article class="v3-position-card">
-        <div class="v3-position-head"><div><h3>SUI / TREE Position</h3><code title="${position.objectId}">${compactId(position.objectId)}</code></div><span class="v3-position-state ${position.inRange ? '' : 'review'}">${position.inRange ? 'In range' : 'Out of range'}</span></div>
-        <div class="v3-metrics"><div class="v3-metric"><span>Liquidity Units</span><strong>${Number(position.liquidityRaw).toLocaleString('en-US', { notation: 'compact', maximumFractionDigits: 2 })}</strong></div><div class="v3-metric"><span>Lower Tick</span><strong>${position.tickLower}</strong></div><div class="v3-metric"><span>Upper Tick</span><strong>${position.tickUpper}</strong></div><div class="v3-metric"><span>Current Tick</span><strong>${position.currentTick}</strong></div></div>
-        <div class="v3-position-actions" aria-label="Position actions awaiting verification"><button type="button" disabled>Increase</button><button type="button" disabled>Remove</button><button type="button" disabled>Collect Fees</button><button type="button" disabled>Claim Rewards</button><button type="button" disabled>Close</button></div>
-        <p class="v3-status">Position actions remain disabled until their exact SuiDex V3 transaction builders pass allowlisting and Mainnet simulation.</p>
+        <div class="v3-position-head"><div><div class="v3-position-title"><h3>SUI / TREE</h3><span class="v3-chip">0.25% fee</span><span class="v3-position-state ${position.inRange ? '' : 'review'}">${position.inRange ? 'In range' : 'Out of range'}</span></div><code title="${position.objectId}">${compactId(position.objectId)}</code></div><strong class="v3-position-value">${formatPositionUsd(position.valueUsd)}</strong></div>
+        <div class="v3-token-balances"><span><b class="token-dot sui-dot" aria-label="SUI"></b>${formatNumber(position.principalSui, 6)} SUI <small>${formatPositionUsd(position.principalSuiUsd)}</small></span><span><b class="token-dot tree-dot" aria-label="TREE"></b>${formatNumber(position.principalTree, 4)} TREE <small>${formatPositionUsd(position.principalTreeUsd)}</small></span></div>
+        <div class="v3-range-visual" aria-label="Position range"><div class="v3-range-track"><span style="left:${positionRangePercent(position)}%"></span></div><div class="v3-range-labels"><span>Min: ${position.tickLower}</span><strong>Current: ${position.currentTick}</strong><span>Max: ${position.tickUpper}</span></div></div>
+        <div class="v3-earned-row fees"><span>Pending fees<small>${position.pendingFeeSui === null ? 'Accounting unavailable' : `${formatNumber(position.pendingFeeSui, 6)} SUI + ${formatNumber(position.pendingFeeTree, 4)} TREE`}</small></span><strong>${formatPositionUsd(position.pendingFeesUsd)}</strong></div>
+        <div class="v3-position-rewards">${renderPositionRewards(position)}</div>
+        <p class="v3-position-technical">Liquidity: ${Number(position.liquidityRaw).toLocaleString('en-US', { notation: 'compact', maximumFractionDigits: 2 })} units</p>
+        <div class="v3-position-actions" aria-label="Position management actions"><button class="add" type="button" data-v3-increase-position="${position.objectId}" aria-expanded="false" ${V3_MANAGEMENT_ENABLED ? '' : 'disabled'}>Add</button><button type="button" data-v3-remove-position="${position.objectId}" aria-expanded="false" ${V3_MANAGEMENT_ENABLED ? '' : 'disabled'}>Remove</button><button class="claim" type="button" data-v3-claim-all-position="${position.objectId}" aria-expanded="false" ${V3_MANAGEMENT_ENABLED ? '' : 'disabled'}>Claim All</button></div>
+        <div class="v3-increase-panel" data-v3-increase-panel="${position.objectId}" hidden>
+          <div class="v3-form-grid"><label class="v3-field"><span>Maximum SUI</span><input inputmode="decimal" placeholder="0.001" data-v3-increase-sui></label><label class="v3-field"><span>Maximum TREE</span><input inputmode="decimal" placeholder="35.5" data-v3-increase-tree></label></div>
+          <div class="v3-slippage-row"><span>Increase slippage</span><div role="group" aria-label="Increase position slippage"><button class="active" type="button" data-v3-increase-slippage="50">0.5%</button><button type="button" data-v3-increase-slippage="100">1%</button><button type="button" data-v3-increase-slippage="200">2%</button></div></div>
+          <button class="button primary" type="button" data-v3-increase-submit="${position.objectId}">Simulate Increase</button>
+          <p class="v3-status" role="status" aria-live="polite" data-v3-increase-status>Nothing is signed until two Mainnet simulations pass and you confirm the exact deposit.</p>
+        </div>
+        <div class="v3-remove-panel" data-v3-remove-panel="${position.objectId}" data-v3-position-liquidity="${position.liquidityRaw}" hidden>
+          <div class="v3-slippage-row"><span>Liquidity to remove</span><div role="group" aria-label="Percentage of position liquidity to remove"><button class="active" type="button" data-v3-remove-percent="10">10%</button><button type="button" data-v3-remove-percent="25">25%</button><button type="button" data-v3-remove-percent="50">50%</button><button type="button" data-v3-remove-percent="100">100%</button></div></div>
+          <div class="v3-slippage-row"><span>Withdrawal slippage</span><div role="group" aria-label="Remove liquidity slippage"><button class="active" type="button" data-v3-remove-slippage="50">0.5%</button><button type="button" data-v3-remove-slippage="100">1%</button><button type="button" data-v3-remove-slippage="200">2%</button></div></div>
+          <button class="button primary" type="button" data-v3-remove-submit="${position.objectId}">Simulate Removal</button>
+          <p class="v3-status" role="status" aria-live="polite" data-v3-remove-status>Partial removal keeps the position open. Selecting 100% withdraws everything, claims fees and rewards, and closes it.</p>
+        </div>
+        <div class="v3-claim-panel" data-v3-claim-panel="${position.objectId}" hidden>
+          <p>Collects all available SUI and TREE trading fees plus every positive verified VICTORY, TREE, and wBTC reward in one wallet transaction.</p>
+          <button class="button primary" type="button" data-v3-claim-submit="${position.objectId}">Simulate Claim All</button>
+          <p class="v3-status" role="status" aria-live="polite" data-v3-claim-status>Nothing is signed until two Mainnet simulations verify every claimable asset.</p>
+        </div>
+        <p class="v3-status">${V3_MANAGEMENT_ENABLED ? 'Every action uses two guarded Mainnet simulations before wallet approval.' : 'Position management is unavailable on this host.'}</p>
       </article>`).join('');
   }
-  status.textContent = `Complete public scan · ${payload.coverage?.objectsScanned ?? 0} V3 objects checked · Updated ${new Date(payload.generatedAt).toLocaleTimeString()}`;
+  status.textContent = `Complete wallet scan · ${payload.coverage?.objectsScanned ?? 0} V3 objects checked · Updated ${new Date(payload.generatedAt).toLocaleTimeString()}`;
   status.className = 'v3-status ok';
 }
 
@@ -330,6 +502,16 @@ function bindWorkspace() {
   document.getElementById('v3RefreshPool')?.addEventListener('click', loadPool);
   document.getElementById('v3RefreshPositions')?.addEventListener('click', () => refreshWalletState(true));
   document.getElementById('v3OpenSwap')?.addEventListener('click', () => { window.location.hash = 'swap'; });
+  document.getElementById('v3OpenVictoryReinvest')?.addEventListener('click', () => {
+    history.pushState({ panelId: 'earn' }, '', '#earn');
+    window.TREE_PANEL_ROUTER?.showPanel?.('earn');
+    document.getElementById('earnVictoryTab')?.click();
+    document.getElementById('victoryReinvestTab')?.click();
+    const destination = document.getElementById('victoryReinvestDestination');
+    if (destination) { destination.value = 'v3'; destination.dispatchEvent(new Event('change', { bubbles: true })); }
+    requestAnimationFrame(() => document.getElementById('victoryReinvestView')?.scrollIntoView({ block: 'start' }));
+  });
+  document.querySelector('[data-v3-go-positions]')?.addEventListener('click', () => setActiveTab('positions'));
   for (const eventName of ['tree:wallet-changed', 'tree-wallet-change', 'tree:wallet-change', 'wallet-change', 'wallet:change', 'sui-wallet-change', 'walletConnected', 'walletDisconnected']) {
     window.addEventListener(eventName, () => setTimeout(() => refreshWalletState(true), 0));
   }
@@ -345,7 +527,10 @@ function initialize() {
   bindWorkspace();
   loadPool();
   refreshWalletState(true);
+  document.dispatchEvent(new CustomEvent('tree:v3-workspace-ready'));
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initialize, { once: true });
 else initialize();
+
+export { rememberPositionPrices, restorePositionUsd };
