@@ -2,36 +2,32 @@ import treeHeroVideoUrl from '../assets/tree-hero-walking.mp4?url';
 import treeHeroPosterUrl from '../assets/tree-hero-poster.webp?url';
 import treeBrandLogoUrl from '../assets/tree-token-logo-official.webp?url';
 import coinGeckoLogoUrl from '../assets/CG.png?url';
+import { HOME_MARKET_FIELDS, formatMarket, resolveHomeMarket, validMarketValue } from './home-market-core.js';
 
 const TREE_COIN_TYPE = '0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE';
 const DASHBOARD_URL = '/api/tree-dashboard';
+const HOME_MARKET_CACHE_KEY = 'tree-home-market-last-success-v1';
 
-const compactMoney = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
-  notation: 'compact',
-  maximumFractionDigits: 2,
-});
-const wholeNumber = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
-
-function formatPrice(value) {
-  const number = Number(value);
-  if (!Number.isFinite(number)) return 'Unavailable';
-  const digits = number < 0.0001 ? 10 : number < 0.01 ? 7 : 4;
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: digits,
-  }).format(number);
+function readHomeMarketCache() {
+  try {
+    const cached = JSON.parse(localStorage.getItem(HOME_MARKET_CACHE_KEY) || 'null');
+    return cached && typeof cached.data === 'object' ? cached.data : null;
+  } catch {
+    try { localStorage.removeItem(HOME_MARKET_CACHE_KEY); } catch { /* storage is optional */ }
+    return null;
+  }
 }
 
-function formatMarket(field, value) {
-  const number = Number(value);
-  if (!Number.isFinite(number)) return 'Unavailable';
-  if (field === 'price') return formatPrice(number);
-  if (field === 'priceChange24h') return `${number >= 0 ? '+' : ''}${number.toFixed(2)}%`;
-  if (field === 'holderCount') return wholeNumber.format(number);
-  return compactMoney.format(number);
+function writeHomeMarketCache(data) {
+  if (!HOME_MARKET_FIELDS.every((field) => validMarketValue(data?.[field]))) return;
+  try { localStorage.setItem(HOME_MARKET_CACHE_KEY, JSON.stringify({ savedAt: new Date().toISOString(), data })); } catch { /* storage is optional */ }
+}
+
+async function requestDashboard(fresh = false) {
+  const url = fresh ? `${DASHBOARD_URL}?fresh=${Date.now()}` : DASHBOARD_URL;
+  const response = await fetch(url, { headers: { Accept: 'application/json' }, cache: fresh ? 'no-store' : 'default' });
+  if (!response.ok) throw new Error(`Dashboard returned ${response.status}`);
+  return response.json();
 }
 
 function buildHeader() {
@@ -165,10 +161,12 @@ function buildHomepage() {
 
 async function loadDashboard() {
   try {
-    const response = await fetch(DASHBOARD_URL, { headers: { Accept: 'application/json' } });
-    if (!response.ok) throw new Error(`Dashboard returned ${response.status}`);
-    const payload = await response.json();
-    const market = payload?.live?.data || null;
+    let payload = await requestDashboard();
+    if (!HOME_MARKET_FIELDS.every((field) => validMarketValue(payload?.live?.data?.[field]))) {
+      try { payload = await requestDashboard(true); } catch { /* retain the first response and verified cache */ }
+    }
+    const market = resolveHomeMarket(payload, readHomeMarketCache());
+    writeHomeMarketCache(market);
     document.querySelectorAll('[data-home-market]').forEach((element) => {
       const field = element.dataset.homeMarket;
       element.textContent = formatMarket(field, market?.[field]);

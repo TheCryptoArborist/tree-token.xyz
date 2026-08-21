@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises';
 
 const source = await readFile(new URL('../scripts/home-v2.js', import.meta.url), 'utf8');
 const styles = await readFile(new URL('../styles/home-v2.css', import.meta.url), 'utf8');
+const marketCore = await readFile(new URL('../scripts/home-market-core.js', import.meta.url), 'utf8');
 
 assert.equal((source.match(/>Buy TREE<\/a>/g) || []).length, 1);
 assert.match(source, /simple-header-socials/);
@@ -32,6 +33,12 @@ assert.match(source, /href="\/play">Play<\/a>/);
 assert.equal(source.includes('simple-destination-card'), false);
 assert.equal(source.includes('Choose your path.'), false);
 assert.equal(source.includes('simple-video-actions'), false);
+assert.match(marketCore, /value !== null && value !== undefined && value !== ''/);
+assert.match(source, /tree-home-market-last-success-v1/);
+assert.match(source, /requestDashboard\(true\)/);
+assert.match(source, /cache: fresh \? 'no-store' : 'default'/);
+assert.match(marketCore, /resolved\.marketCap = resolved\.price \* totalSupply/);
+assert.match(source, /writeHomeMarketCache\(market\)/);
 assert.equal(source.includes('simple-live-row'), false);
 assert.match(source, /prefers-reduced-motion: reduce/);
 assert.equal(source.includes('simple-footer-links'), false);
