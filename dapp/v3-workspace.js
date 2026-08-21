@@ -261,6 +261,10 @@ function workspaceMarkup() {
       <div class="v3-panel v3-swap-link" data-v3-panel="swap" hidden>
         <div><h3>Use the native best-route TREE swap</h3><p>The Swap panel compares verified direct SuiDex V2, SuiDex V3, and Turbos routes and selects the highest protected output for the entered amount.</p><button class="button primary" id="v3OpenSwap" type="button">Open TREE Swap</button></div>
       </div>
+      <article class="v3-victory-reinvest-card">
+        <div class="v3-victory-reinvest-copy"><img src="../assets/victory-token.png" alt="VICTORY token"><div><span>VICTORY → V3</span><h3>Reinvest VICTORY into SUI / TREE V3</h3><p>Choose Complete Reinvest, or lock one portion as xVICTORY with Sustainable Reinvest.</p></div></div>
+        <button class="button gold" id="v3OpenVictoryReinvest" type="button">Reinvest VICTORY</button>
+      </article>
     </div>`;
 }
 
@@ -498,6 +502,15 @@ function bindWorkspace() {
   document.getElementById('v3RefreshPool')?.addEventListener('click', loadPool);
   document.getElementById('v3RefreshPositions')?.addEventListener('click', () => refreshWalletState(true));
   document.getElementById('v3OpenSwap')?.addEventListener('click', () => { window.location.hash = 'swap'; });
+  document.getElementById('v3OpenVictoryReinvest')?.addEventListener('click', () => {
+    history.pushState({ panelId: 'earn' }, '', '#earn');
+    window.TREE_PANEL_ROUTER?.showPanel?.('earn');
+    document.getElementById('earnVictoryTab')?.click();
+    document.getElementById('victoryReinvestTab')?.click();
+    const destination = document.getElementById('victoryReinvestDestination');
+    if (destination) { destination.value = 'v3'; destination.dispatchEvent(new Event('change', { bubbles: true })); }
+    requestAnimationFrame(() => document.getElementById('victoryReinvestView')?.scrollIntoView({ block: 'start' }));
+  });
   document.querySelector('[data-v3-go-positions]')?.addEventListener('click', () => setActiveTab('positions'));
   for (const eventName of ['tree:wallet-changed', 'tree-wallet-change', 'tree:wallet-change', 'wallet-change', 'wallet:change', 'sui-wallet-change', 'walletConnected', 'walletDisconnected']) {
     window.addEventListener(eventName, () => setTimeout(() => refreshWalletState(true), 0));

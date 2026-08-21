@@ -27,6 +27,11 @@ assert.ok(source.includes("analytics.status === 'verified'"));
 assert.ok(source.includes('analytics.feeAprPercent'));
 assert.ok(source.includes("document.getElementById('v3AprBreakdown')"));
 assert.ok(source.includes('SuiDex verified analytics'));
+assert.ok(source.includes('Reinvest VICTORY into SUI / TREE V3'));
+assert.ok(source.includes('id="v3OpenVictoryReinvest"'));
+assert.ok(source.indexOf('v3OpenVictoryReinvest') > source.indexOf('data-v3-panel="swap"'));
+assert.ok(source.includes("destination.value = 'v3'"));
+assert.ok(source.includes("window.TREE_PANEL_ROUTER?.showPanel?.('earn')"));
 for (const metric of ['position.valueUsd', 'position.principalSui', 'position.principalTree', 'position.pendingFeesUsd', 'position.rewards', 'position.tickLower', 'position.currentTick', 'position.tickUpper']) assert.ok(source.includes(metric));
 assert.ok(source.includes('v3-range-track'));
 assert.ok(source.includes('renderPositionRewards'));
@@ -54,6 +59,7 @@ assert.ok(source.includes("value === null || value === undefined || value === ''
 assert.ok(css.includes('.v3-tabs'));
 assert.ok(css.includes('.v3-token-balances'));
 assert.ok(css.includes('.v3-earned-row'));
+assert.ok(css.includes('.v3-victory-reinvest-card'));
 assert.ok(css.includes('@media(max-width:390px)'));
 
 console.log('Native TREE V3 workspace source safeguards passed.');
