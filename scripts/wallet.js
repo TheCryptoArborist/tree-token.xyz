@@ -1,12 +1,17 @@
 // wallet.js — TREE Command Center wallet selection and session management
 
-import { getWallets } from 'https://esm.run/@mysten/wallet-standard@0.13.0';
-import { SuiClient } from 'https://esm.run/@mysten/sui@1.43.0/client';
+import {
+  getWallets,
+  signAndExecuteTransaction as walletSignAndExecuteTransaction,
+} from 'https://esm.run/@mysten/wallet-standard@0.21.14';
+import { SuiGrpcClient } from 'https://esm.run/@mysten/sui@2.23.1/grpc';
 import {
   SUI_MAINNET_CHAIN,
   compatibleSuiWallets,
+  getSuiPersonalMessageFeature,
   getSuiSignFeature,
   isSlushWallet,
+  isSlushWebWallet,
   pickSuiAccount,
   safeWalletIcon,
   shortenSuiAddress,
@@ -19,8 +24,9 @@ const NETWORK = 'mainnet';
 const CHAIN = SUI_MAINNET_CHAIN;
 const RPC_URL = 'https://fullnode.mainnet.sui.io:443';
 const SESSION_TTL_MS = 60 * 60 * 1000;
-const WALLET_STANDARD_URL = 'https://esm.run/@mysten/wallet-standard@0.13.0';
-const SLUSH_WALLET_URL = 'https://esm.run/@mysten/slush-wallet@1.1.8';
+const WALLET_STANDARD_URL = 'https://esm.run/@mysten/wallet-standard@0.21.14';
+const SLUSH_WALLET_URL = 'https://esm.run/@mysten/slush-wallet@1.1.14';
+const WALLET_CONNECT_TIMEOUT_MS = 12_000;
 const SESSION_KEYS = {
   address: 'tree:sui:address',
   walletKey: 'tree:sui:wallet-key',
@@ -54,7 +60,9 @@ const _slushReady = (async () => {
 })();
 
 function _getClient() {
-  if (!_suiClient) _suiClient = new SuiClient({ url: RPC_URL });
+  if (!_suiClient) {
+    _suiClient = new SuiGrpcClient({ network: NETWORK, baseUrl: RPC_URL });
+  }
   return _suiClient;
 }
 
@@ -198,6 +206,17 @@ async function _compatibleWallets() {
   return compatibleSuiWallets(registry.get(), saved?.walletKey || '');
 }
 
+async function _requestWalletConnection(wallet, connect) {
+  let timeoutId;
+  const timeout = new Promise((_, reject) => {
+    timeoutId = setTimeout(() => {
+      reject(new Error(isSlushWallet(wallet) ? 'SLUSH_CONNECT_TIMEOUT' : 'WALLET_CONNECT_TIMEOUT'));
+    }, WALLET_CONNECT_TIMEOUT_MS);
+  });
+  try { return await Promise.race([connect(), timeout]); }
+  finally { clearTimeout(timeoutId); }
+}
+
 async function _connectToWallet(wallet, preferredAddress = null) {
   if (!wallet || getSuiSignFeature(wallet) === null) throw new Error('Wallet does not support Sui transaction signing.');
   if (_wallet && walletKey(_wallet) !== walletKey(wallet)) await disconnectWallet({ reason: 'switch-wallet' });
@@ -205,7 +224,7 @@ async function _connectToWallet(wallet, preferredAddress = null) {
   const connectFeature = wallet.features?.['standard:connect'];
   if (!connectFeature?.connect) throw new Error('This wallet does not expose a connection request.');
 
-  const result = await connectFeature.connect();
+  const result = await _requestWalletConnection(wallet, () => connectFeature.connect());
   const accounts = Array.isArray(result?.accounts) && result.accounts.length
     ? result.accounts
     : wallet.accounts;
@@ -383,6 +402,7 @@ async function _renderPicker() {
   }
 
   for (const wallet of wallets) {
+    const opensInSlush = isSlushWebWallet(wallet);
     const button = document.createElement('button');
     button.type = 'button';
     button.className = `tree-wallet-option${isSlushWallet(wallet) ? ' is-slush' : ''}`;
@@ -401,9 +421,13 @@ async function _renderPicker() {
 
     const action = document.createElement('span');
     action.className = 'tree-wallet-option-action';
-    action.textContent = 'Connect';
+    action.textContent = opensInSlush ? 'Open Slush' : 'Connect';
     button.append(copy, action);
     button.addEventListener('click', async () => {
+      if (opensInSlush) {
+        location.assign(slushBrowseUrl(`${location.origin}/dapp/`));
+        return;
+      }
       _setManagerStatus(`Connecting to ${wallet.name}…`);
       button.disabled = true;
       try {
@@ -413,6 +437,10 @@ async function _renderPicker() {
       } catch (error) {
         const message = error?.message === 'WRONG_NETWORK'
           ? 'Switch the wallet to Sui Mainnet and try again.'
+          : error?.message === 'SLUSH_CONNECT_TIMEOUT'
+            ? 'Slush did not open a connection window. Use “Open this site in Slush” below, or unlock the Slush extension and refresh the wallet list.'
+            : error?.message === 'WALLET_CONNECT_TIMEOUT'
+              ? `${wallet.name} did not respond. Unlock the wallet extension, refresh the wallet list, and try again.`
           : error?.message || 'Wallet connection failed.';
         _setManagerStatus(message, 'error');
         button.disabled = false;
@@ -522,31 +550,34 @@ async function getAvailableWallets() {
 
 async function getBalance() {
   if (!window.playerAddress) throw new Error('Wallet not connected');
-  const balance = await _getClient().getBalance({ owner: window.playerAddress, coinType: '0x2::sui::SUI' });
-  return BigInt(balance.totalBalance);
+  const { balance } = await _getClient().core.getBalance({
+    owner: window.playerAddress,
+    coinType: '0x2::sui::SUI',
+  });
+  return BigInt(balance.balance);
 }
 
-async function signAndExecuteTransactionBlock(txb) {
+async function signAndExecuteTransactionBlock(transaction) {
   if (!_wallet || !_address || !_account) throw new Error('Wallet not connected');
-  const featureName = getSuiSignFeature(_wallet);
-  if (!featureName) throw new Error('Wallet does not support Sui transaction signing.');
-  const feature = _wallet.features[featureName];
-
-  if (featureName === 'sui:signAndExecuteTransaction') {
-    return feature.signAndExecuteTransaction({
-      account: _account,
-      chain: CHAIN,
-      transaction: txb,
-      options: { showEffects: true, showEvents: true },
-    });
-  }
-
-  return feature.signAndExecuteTransactionBlock({
+  if (!getSuiSignFeature(_wallet)) throw new Error('Wallet does not support Sui transaction signing.');
+  return walletSignAndExecuteTransaction(_wallet, {
     account: _account,
     chain: CHAIN,
-    transactionBlock: txb,
-    options: { showEffects: true, showEvents: true },
+    transaction,
   });
+}
+
+async function signTreePersonalMessage(message) {
+  if (!_wallet || !_address || !_account) throw new Error('Wallet not connected');
+  if (!(message instanceof Uint8Array)) throw new Error('Personal message must be bytes.');
+  const featureName = getSuiPersonalMessageFeature(_wallet);
+  if (!featureName) throw new Error('Wallet does not support personal-message signing.');
+  const feature = _wallet.features[featureName];
+  if (featureName === 'sui:signPersonalMessage') {
+    return feature.signPersonalMessage({ message, account: _account, chain: CHAIN });
+  }
+  const result = await feature.signMessage({ message, account: _account });
+  return { bytes: result.messageBytes, signature: result.signature };
 }
 
 async function initializeWallet() {
@@ -589,6 +620,7 @@ window.getAvailableWallets = getAvailableWallets;
 window.initializeWallet = initializeWallet;
 window.getBalance = getBalance;
 window.signAndExecuteTransactionBlock = signAndExecuteTransactionBlock;
+window.signTreePersonalMessage = signTreePersonalMessage;
 window.checkBalanceAndNFT = checkBalanceAndNFT;
 window.initSuiClient = _getClient;
 window.TREE_WALLET_STANDARD_URL = WALLET_STANDARD_URL;
