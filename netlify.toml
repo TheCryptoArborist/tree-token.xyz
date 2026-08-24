@@ -1,5 +1,5 @@
 [build]
-  command = "echo Static site - no build step"
+  command = "npm run build:yield-vacuum"
   publish = "."
 
 [functions]
@@ -21,3 +21,8 @@
   for = "/Litepaper.pdf"
   [headers.values]
     Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/topaz-yield-vacuum/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"

@@ -1,0 +1,225 @@
+.splashScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 43%, rgba(255, 80, 14, 0.22), transparent 24%),
+    radial-gradient(circle at 50% 50%, #270a03 0, #080201 42%, #000 76%);
+  isolation: isolate;
+}
+
+.splashScreen::before {
+  content: "";
+  position: absolute;
+  inset: -35%;
+  z-index: -2;
+  background: repeating-conic-gradient(from 0deg, rgba(255, 78, 14, 0.08) 0 1deg, transparent 1deg 13deg);
+  -webkit-mask-image: radial-gradient(circle, #000 0 25%, transparent 68%);
+  mask-image: radial-gradient(circle, #000 0 25%, transparent 68%);
+  animation: splashSpin 18s linear infinite;
+}
+
+.splashScreen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(transparent 49.5%, rgba(255, 95, 30, 0.18) 50%, transparent 50.5%);
+  transform: scaleX(0);
+  animation: horizonStrike 0.8s 0.55s cubic-bezier(.2,.8,.2,1) both;
+}
+
+.splashAtmosphere {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.splashAtmosphere i {
+  position: absolute;
+  left: 50%;
+  top: 44%;
+  width: 34vmin;
+  aspect-ratio: 1;
+  border: 1px solid rgba(255, 105, 48, 0.22);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0.2);
+  opacity: 0;
+  animation: energyWave 2.6s 0.8s ease-out infinite;
+}
+
+.splashAtmosphere i:nth-child(2) { animation-delay: 1.35s; }
+.splashAtmosphere i:nth-child(3) { animation-delay: 1.9s; }
+
+.splashPresents {
+  margin: 0 0 18px;
+  color: #ff9a6d;
+  font-size: clamp(8px, 1.5vw, 12px);
+  font-weight: 900;
+  letter-spacing: 0.42em;
+  opacity: 0;
+  transform: translateY(-12px);
+  animation: splashTextIn 0.65s 0.15s ease-out both;
+}
+
+.splashLogoStage {
+  position: relative;
+  width: min(34vw, 240px);
+  height: min(34vw, 240px);
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  margin-bottom: 28px;
+}
+
+.splashLogoStage img {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  transform: scale(0.2) rotateX(72deg);
+  filter: brightness(2.5) drop-shadow(0 0 8px #fff) drop-shadow(0 0 42px #ff4b0b);
+  animation: topazReveal 1.25s 0.48s cubic-bezier(.12,.88,.18,1.08) both;
+}
+
+.splashRing {
+  position: absolute;
+  width: 78%;
+  aspect-ratio: 1;
+  border: 2px solid rgba(255, 85, 20, 0.45);
+  border-radius: 50%;
+  box-shadow: 0 0 45px rgba(255, 70, 8, 0.38), inset 0 0 35px rgba(255, 70, 8, 0.18);
+  opacity: 0;
+  transform: scale(0.25);
+  animation: ringIgnite 1.25s 0.42s ease-out both;
+}
+
+.splashTitle {
+  position: relative;
+  z-index: 4;
+  margin: 0;
+  line-height: 0.82;
+  letter-spacing: -0.065em;
+  opacity: 0;
+  transform: translateY(28px);
+  animation: titleRise 0.85s 1.42s cubic-bezier(.16,.85,.28,1) both;
+}
+
+.splashTitle span,
+.splashTitle strong {
+  display: block;
+  font-weight: 1000;
+}
+
+.splashTitle span {
+  color: #fff;
+  font-size: clamp(54px, 11vw, 112px);
+  text-shadow: 0 8px 38px #000;
+}
+
+.splashTitle strong {
+  margin-top: 11px;
+  color: #ff5310;
+  font-size: clamp(31px, 6vw, 64px);
+  letter-spacing: 0.2em;
+  transform: translateX(0.1em);
+  text-shadow: 0 0 28px rgba(255, 83, 16, 0.55);
+}
+
+.splashNetwork {
+  margin: 24px 0 18px;
+  color: #9b6e5e;
+  font-size: clamp(7px, 1.25vw, 10px);
+  font-weight: 900;
+  letter-spacing: 0.26em;
+  opacity: 0;
+  animation: splashTextIn 0.7s 1.95s ease-out both;
+}
+
+.splashEnter {
+  border: 1px solid rgba(255, 130, 73, 0.65);
+  background: linear-gradient(135deg, #ff7438, #da3505);
+  color: #fff;
+  padding: 15px 30px;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.17em;
+  cursor: pointer;
+  box-shadow: 0 0 32px rgba(255, 72, 12, 0.3);
+  opacity: 0;
+  transform: translateY(16px);
+  animation: splashTextIn 0.65s 2.25s ease-out both, enterPulse 1.8s 3s ease-in-out infinite;
+}
+
+.splashEnter:hover,
+.splashEnter:focus-visible {
+  filter: brightness(1.15);
+  outline: 2px solid #ffb28f;
+  outline-offset: 4px;
+}
+
+@keyframes splashSpin { to { transform: rotate(360deg); } }
+@keyframes horizonStrike { to { transform: scaleX(1); } }
+@keyframes energyWave {
+  0% { opacity: 0.7; transform: translate(-50%, -50%) scale(0.2); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(2.4); }
+}
+@keyframes topazReveal {
+  0% { opacity: 0; transform: scale(0.2) rotateX(72deg); filter: brightness(3.2) drop-shadow(0 0 8px #fff); }
+  58% { opacity: 1; transform: scale(1.08) rotateX(0); filter: brightness(1.65) drop-shadow(0 0 55px #ff4b0b); }
+  100% { opacity: 1; transform: scale(1) rotateX(0); filter: brightness(1.05) drop-shadow(0 0 28px rgba(255, 75, 10, 0.78)); }
+}
+@keyframes ringIgnite {
+  0% { opacity: 0; transform: scale(0.25); }
+  55% { opacity: 0.95; }
+  100% { opacity: 0.28; transform: scale(1.45); }
+}
+@keyframes titleRise { to { opacity: 1; transform: translateY(0); } }
+@keyframes splashTextIn { to { opacity: 1; transform: translateY(0); } }
+@keyframes enterPulse {
+  0%, 100% { box-shadow: 0 0 25px rgba(255, 72, 12, 0.25); }
+  50% { box-shadow: 0 0 48px rgba(255, 72, 12, 0.55); }
+}
+
+@media (max-width: 620px) {
+  .splashScreen { padding: 18px; }
+  .splashLogoStage {
+    width: min(54vw, 210px);
+    height: min(54vw, 210px);
+    margin-bottom: 22px;
+  }
+  .splashPresents { margin-bottom: 12px; }
+  .splashTitle strong { margin-top: 9px; }
+  .splashNetwork { margin: 20px 0 16px; }
+}
+
+@media (max-height: 720px) {
+  .splashScreen { padding-block: 16px; }
+  .splashPresents { margin-bottom: 10px; }
+  .splashLogoStage {
+    width: min(29vh, 190px);
+    height: min(29vh, 190px);
+    margin-bottom: 18px;
+  }
+  .splashTitle span { font-size: clamp(48px, 9vh, 76px); }
+  .splashTitle strong { font-size: clamp(29px, 5.3vh, 46px); }
+  .splashNetwork { margin: 16px 0 13px; }
+  .splashEnter { padding: 13px 26px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .splashScreen *, .splashScreen::before, .splashScreen::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

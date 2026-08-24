@@ -1,0 +1,12 @@
+/* The temporary TREE-hosted build is intentionally unlisted and score-local. */
+.leaderboardButton,
+.scoreSubmit,
+.leaderboardBackdrop {
+  display: none !important;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
