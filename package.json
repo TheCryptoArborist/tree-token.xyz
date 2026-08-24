@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:yield-vacuum": "vite build --config yield-vacuum.vite.config.js",
     "preview": "vite preview"
   },
   "dependencies": {
