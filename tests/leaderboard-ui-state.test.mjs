@@ -82,8 +82,8 @@ renderLeaderboard({ status: 'error', provider: 'sui-graphql-snapshot', refreshSt
 assert.equal(element('yourRank').textContent, 'Your rank is temporarily unavailable.');
 const dappMarkup = await readFile('dapp/index.html', 'utf8');
 const dappScript = await readFile('dapp/app.js', 'utf8');
-assert.equal(dappScript.includes("const leaderboardUrl = '/api/tree-exposure';"), true);
-assert.equal(dappScript.includes("const badgeUrl = '/api/tree-badges';"), true);
+assert.equal(dappScript.includes("const leaderboardUrl = isDeployPreview ? '/api/tree-exposure-preview' : '/api/tree-exposure';"), true);
+assert.equal(dappScript.includes("const badgeUrl = isDeployPreview ? '/api/tree-badges-preview' : '/api/tree-badges';"), true);
 assert.equal(dappMarkup.includes('>Holders<'), false);
 assert.equal(dappMarkup.includes('Verified address owners'), true);
 assert.equal(dappMarkup.includes('Eligible exposure owners'), true);
