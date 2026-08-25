@@ -3,8 +3,8 @@ const DASHBOARD_CACHE_KEY = 'tree-dashboard-last-success-v1';
 const CHART_CACHE_PREFIX = 'tree-chart-last-success-v1:';
 const dashboardUrl = '/api/tree-dashboard';
 const isDeployPreview = typeof location !== 'undefined' && /^deploy-preview-/.test(location.hostname);
-const leaderboardUrl = '/api/tree-exposure';
-const badgeUrl = '/api/tree-badges';
+const leaderboardUrl = isDeployPreview ? '/api/tree-exposure-preview' : '/api/tree-exposure';
+const badgeUrl = isDeployPreview ? '/api/tree-badges-preview' : '/api/tree-badges';
 let leaderboardMode = 'exposure';
 const chartUrl = '/api/tree-chart';
 const pairUrl = 'https://api.dexscreener.com/latest/dex/pairs/sui/0xaa133ce1f8fd55d85b6fc87c1b3054cb717d83be477ef3635c661c21fbdfa0ee';
@@ -136,7 +136,7 @@ function renderSnapshot(snapshot) {
     else element.textContent = quantity.format(Number(value));
   });
   const removal = snapshot?.tree?.totalSupply ? snapshot.tree.zeroAddressBalance / snapshot.tree.totalSupply * 100 : null;
-  document.querySelector('[data-derived="removalPercent"]').textContent = removal === null ? 'Not available' : `${removal.toFixed(2)}%`;
+  document.querySelectorAll('[data-derived="removalPercent"]').forEach((element) => { element.textContent = removal === null ? 'Not available' : `${removal.toFixed(2)}%`; });
   ['supply', 'liquidity', 'nftree'].forEach((group) => setGroupState(group, 'Snapshot', 'TREE project records', 'Project snapshot — June 22, 2026'));
 }
 
@@ -908,49 +908,14 @@ function syncWalletButtons() {
   loadConnectedTreeBalance();
 }
 
-function updateDisplayedEstimate() {
-  const amount = Number(document.getElementById('swapSui').value);
-  const estimate = treePerSui && Number.isFinite(amount) && amount > 0 ? amount * treePerSui : null;
-  document.getElementById('swapTree').value = estimate ? Math.floor(estimate).toLocaleString('en-US') : '';
-  document.getElementById('estimatedTree').textContent = estimate ? `${Math.floor(estimate).toLocaleString('en-US')} TREE` : '—';
-}
-
-async function loadDisplayedRate() {
-  try {
-    const response = await fetch(pairUrl, { headers: { Accept: 'application/json' } });
-    if (!response.ok) throw new Error('Rate source unavailable');
-    const payload = await response.json();
-    const treePriceInSui = Number(payload.pair?.priceNative);
-    if (!Number.isFinite(treePriceInSui) || treePriceInSui <= 0) throw new Error('Rate unavailable');
-    treePerSui = 1 / treePriceInSui;
-    document.getElementById('displayedRate').textContent = `1 SUI ≈ ${Math.round(treePerSui).toLocaleString('en-US')} TREE`;
-    updateDisplayedEstimate();
-  } catch {
-    treePerSui = null;
-    document.getElementById('displayedRate').textContent = 'Unavailable';
-    updateDisplayedEstimate();
-  }
-}
-
-function buyTree() {
-  const status = document.getElementById('swapStatus');
-  if (!DAPP_SWAP_EXECUTION_ENABLED) {
-    status.textContent = 'On-site TREE purchases will be enabled after quote, simulation, gas-reserve, and finality verification in Phase 2.3.';
-    return;
-  }
-}
+// Swap quote and execution are isolated in swap-router.js.
 
 if (typeof document !== 'undefined') {
-  const buyButton = document.getElementById('buyTree');
-  buyButton.disabled = !DAPP_SWAP_EXECUTION_ENABLED;
-  buyButton.textContent = DAPP_SWAP_EXECUTION_ENABLED ? 'Submit TREE Purchase' : 'Swap verification in progress';
   document.getElementById('refreshStats').addEventListener('click', () => { loadDashboard(); loadChart(activeChartRange); });
   document.getElementById('dappWallet').addEventListener('click', connectForDapp);
   document.getElementById('rankWallet').addEventListener('click', connectForDapp);
   document.getElementById('shareRank')?.addEventListener('click', shareRank);
   document.getElementById('createRankImage')?.addEventListener('click', downloadRankCard);
-  buyButton.addEventListener('click', buyTree);
-  document.getElementById('swapSui').addEventListener('input', updateDisplayedEstimate);
   document.querySelectorAll('[data-chart-range]').forEach((button) => button.addEventListener('click', () => loadChart(button.dataset.chartRange)));
   const navLinks = [...document.querySelectorAll('.app-nav a[href^="#"]')];
   navLinks.forEach((link) => link.addEventListener('click', () => {
@@ -970,21 +935,7 @@ if (typeof document !== 'undefined') {
       document.querySelectorAll('main section[id]').forEach((section) => observer.observe(section));
     }
 
-  window.addEventListener('tree:wallet-changed', (event) => {
-    syncWalletButtons();
-    const detail = event.detail || {};
-    const status = document.getElementById('swapStatus');
-    if (!status) return;
-    if (detail.status === 'connected') {
-      status.textContent = `Connected with ${detail.walletName || 'Sui wallet'}.`;
-      status.className = 'status success';
-    } else if (detail.status === 'disconnected') {
-      status.textContent = detail.reason === 'switch-wallet'
-        ? 'Current wallet disconnected. Choose another wallet.'
-        : 'Wallet disconnected and forgotten by this site.';
-      status.className = 'status';
-    }
-  });
+  window.addEventListener('tree:wallet-changed', () => { syncWalletButtons(); });
 
   window.addEventListener('load', async () => {
     try { await window.initializeWallet?.(); } catch { /* Optional session restoration. */ }
@@ -994,7 +945,40 @@ if (typeof document !== 'undefined') {
   loadDashboard();
   loadChart();
   loadLeaderboard();
-  loadDisplayedRate();
+}
+
+
+function initCommandNavigation() {
+  const links = [...document.querySelectorAll('.app-nav a[href^="#"]')];
+  const sections = links.map((link) => document.querySelector(link.getAttribute('href'))).filter(Boolean);
+  const activate = (id) => links.forEach((link) => link.classList.toggle('active', link.getAttribute('href') === `#${id}`));
+  links.forEach((link) => link.addEventListener('click', () => activate(link.getAttribute('href').slice(1))));
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (visible?.target?.id) activate(visible.target.id);
+    }, { rootMargin: '-22% 0px -62% 0px', threshold: [0.05, 0.2, 0.45] });
+    sections.forEach((section) => observer.observe(section));
+  }
+  const requested = location.hash.slice(1);
+  activate(sections.some((section) => section.id === requested) ? requested : 'swap');
+}
+
+function initDocumentActions() {
+  document.getElementById('copyDappCoin')?.addEventListener('click', async () => {
+    const status = document.getElementById('swapStatus');
+    try {
+      await navigator.clipboard.writeText(TREE_COIN_TYPE);
+      if (status) { status.textContent = 'Official TREE coin type copied.'; status.className = 'status success'; }
+    } catch {
+      if (status) { status.textContent = 'Coin type copy was unavailable.'; status.className = 'status error'; }
+    }
+  });
+}
+
+if (typeof document !== 'undefined') {
+  initCommandNavigation();
+  initDocumentActions();
 }
 
 export { DAPP_SWAP_EXECUTION_ENABLED, TIER_DEFINITIONS, badgeDefinition, displayNameForEntry, entryIsExposure, formatSupplyPercentFromRaw, formatTreePrice, mergeBehaviorBadgeSnapshot, normalizeLeaderboardEntry, readDashboardCache, renderLeaderboard, tierForEntry, updateYourRank, writeDashboardCache };
