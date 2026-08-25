@@ -3,8 +3,8 @@ const DASHBOARD_CACHE_KEY = 'tree-dashboard-last-success-v1';
 const CHART_CACHE_PREFIX = 'tree-chart-last-success-v1:';
 const dashboardUrl = '/api/tree-dashboard';
 const isDeployPreview = typeof location !== 'undefined' && /^deploy-preview-/.test(location.hostname);
-const leaderboardUrl = '/api/tree-exposure';
-const badgeUrl = '/api/tree-badges';
+const leaderboardUrl = isDeployPreview ? '/api/tree-exposure-preview' : '/api/tree-exposure';
+const badgeUrl = isDeployPreview ? '/api/tree-badges-preview' : '/api/tree-badges';
 let leaderboardMode = 'exposure';
 const chartUrl = '/api/tree-chart';
 const pairUrl = 'https://api.dexscreener.com/latest/dex/pairs/sui/0xaa133ce1f8fd55d85b6fc87c1b3054cb717d83be477ef3635c661c21fbdfa0ee';
@@ -136,7 +136,7 @@ function renderSnapshot(snapshot) {
     else element.textContent = quantity.format(Number(value));
   });
   const removal = snapshot?.tree?.totalSupply ? snapshot.tree.zeroAddressBalance / snapshot.tree.totalSupply * 100 : null;
-  document.querySelector('[data-derived="removalPercent"]').textContent = removal === null ? 'Not available' : `${removal.toFixed(2)}%`;
+  document.querySelectorAll('[data-derived="removalPercent"]').forEach((element) => { element.textContent = removal === null ? 'Not available' : `${removal.toFixed(2)}%`; });
   ['supply', 'liquidity', 'nftree'].forEach((group) => setGroupState(group, 'Snapshot', 'TREE project records', 'Project snapshot — June 22, 2026'));
 }
 
@@ -995,6 +995,40 @@ if (typeof document !== 'undefined') {
   loadChart();
   loadLeaderboard();
   loadDisplayedRate();
+}
+
+
+function initCommandNavigation() {
+  const links = [...document.querySelectorAll('.app-nav a[href^="#"]')];
+  const sections = links.map((link) => document.querySelector(link.getAttribute('href'))).filter(Boolean);
+  const activate = (id) => links.forEach((link) => link.classList.toggle('active', link.getAttribute('href') === `#${id}`));
+  links.forEach((link) => link.addEventListener('click', () => activate(link.getAttribute('href').slice(1))));
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (visible?.target?.id) activate(visible.target.id);
+    }, { rootMargin: '-22% 0px -62% 0px', threshold: [0.05, 0.2, 0.45] });
+    sections.forEach((section) => observer.observe(section));
+  }
+  const requested = location.hash.slice(1);
+  activate(sections.some((section) => section.id === requested) ? requested : 'swap');
+}
+
+function initDocumentActions() {
+  document.getElementById('copyDappCoin')?.addEventListener('click', async () => {
+    const status = document.getElementById('swapStatus');
+    try {
+      await navigator.clipboard.writeText(TREE_COIN_TYPE);
+      if (status) { status.textContent = 'Official TREE coin type copied.'; status.className = 'status success'; }
+    } catch {
+      if (status) { status.textContent = 'Coin type copy was unavailable.'; status.className = 'status error'; }
+    }
+  });
+}
+
+if (typeof document !== 'undefined') {
+  initCommandNavigation();
+  initDocumentActions();
 }
 
 export { DAPP_SWAP_EXECUTION_ENABLED, TIER_DEFINITIONS, badgeDefinition, displayNameForEntry, entryIsExposure, formatSupplyPercentFromRaw, formatTreePrice, mergeBehaviorBadgeSnapshot, normalizeLeaderboardEntry, readDashboardCache, renderLeaderboard, tierForEntry, updateYourRank, writeDashboardCache };
