@@ -9,6 +9,7 @@
   <link rel="canonical" href="https://tree-token.xyz/play">
   <link rel="icon" href="../assets/tree-token-logo-official.webp">
   <link rel="stylesheet" href="../styles/tree-arcade.css">
+  <link rel="stylesheet" href="../styles/tree-arcade-branding.css">
 </head>
 <body>
   <header class="arcade-header">
@@ -28,25 +29,59 @@
 
   <main>
     <section class="arcade-hero" aria-labelledby="arcade-title">
-      <p class="arcade-eyebrow">TREE ECOSYSTEM GAMES</p>
+      <div class="arcade-cabinet-lights" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <p class="arcade-eyebrow">INSERT NFTREE · ENTER THE ECOSYSTEM</p>
       <h1 id="arcade-title">TREE ARCADE</h1>
-      <p>One home for Garden Battles, TREE FORCE '89: Canopy Command, Arboretum, and future games growing across the TREE ecosystem.</p>
+      <p>One portal for Garden Battles, Arboretum, TREE FORCE '89: Canopy Command, and future games growing across the TREE ecosystem.</p>
+      <div class="nftree-access-card">
+        <img src="../assets/tree-command-logo-v2-512.png" alt="TREE ecosystem emblem">
+        <div><span>PLAYER ACCESS KEY</span><strong>YOUR NFTREE UNLOCKS THE ARCADE</strong><p>An NFTree is your key to accessing TREE ecosystem games and the utilities released around them.</p></div>
+        <a href="https://nftree.net/" target="_blank" rel="noopener noreferrer">EXPLORE NFTREE <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="arcade-marquee"><span>NOW PLAYING</span><strong>GARDEN BATTLES</strong><i aria-hidden="true">◆</i><span>UP NEXT</span><strong>ARBORETUM · TREE FORCE '89</strong></div>
       <div class="arcade-status"><span aria-hidden="true"></span> 1 LIVE GAME · MORE GROWING</div>
     </section>
 
     <section class="game-grid" aria-label="TREE ecosystem games">
       <article class="game-card live-card">
-        <div class="game-card-top"><span class="game-icon" aria-hidden="true">⚔️</span><span class="status live">LIVE</span></div>
+        <div class="game-card-top"><img class="game-brand-logo garden-logo" src="../assets/garden-battles-logo.webp" alt="The Garden Battles logo"><span class="status live">LIVE</span></div>
         <div>
           <p class="game-label">NFTREE BATTLE ARENA</p>
           <h2>GARDEN BATTLES</h2>
-          <p>Bring your NFTree into the live battle arena, compete in supported game modes, and build your record across the forest.</p>
+          <p>Bring your NFTree into four distinct battle modes and build your record across the forest.</p>
+          <div class="garden-mode-panel" aria-label="Four Garden Battles modes">
+            <p class="garden-mode-heading">4 BATTLE MODES</p>
+            <ul class="garden-mode-grid">
+              <li><strong>Garden Bot</strong><span>Solo ranked</span></li>
+              <li><strong>PvP Battle</strong><span>Live arena</span></li>
+              <li><strong>Arborist Trials</strong><span>Daily challenge</span></li>
+              <li><strong>Canopy Clash</strong><span>Tournaments</span></li>
+            </ul>
+          </div>
         </div>
         <a class="game-action play-action" href="https://nftree.net/battle/" target="_blank" rel="noopener noreferrer">PLAY <span aria-hidden="true">→</span></a>
       </article>
 
+      <article class="game-card arboretum-card">
+        <div class="game-card-top"><img class="game-brand-logo" src="../assets/arboretum-logo-black.webp" alt="Arboretum logo"><span class="status testing">IN TESTING</span></div>
+        <div>
+          <p class="game-label">GROWTH STRATEGY</p>
+          <h2>ARBORETUM</h2>
+          <p>Plant NFTree-backed Seeds, water daily, and use items to build Growth Points. Your share of the cycle's Growth Points determines your reward from the monthly SUI Growth Pool.</p>
+          <div class="arboretum-earn-panel" aria-label="Ways to earn SUI in Arboretum">
+            <p class="arboretum-earn-heading">COMPETE FOR A SHARE OF THE MONTHLY SUI GROWTH POOL</p>
+            <div class="arboretum-earn-grid">
+              <div><strong>Your Growth Points determine your share</strong><span>Climb the monthly leaderboard to earn more SUI</span></div>
+              <div><strong>Earn a 10% referral reward</strong><span>When someone plants through your invite link</span></div>
+              <div><strong>Earn a 1% referral reward</strong><span>When someone buys a crate through your invite link</span></div>
+            </div>
+          </div>
+        </div>
+        <span class="game-action disabled" aria-disabled="true">IN TESTING</span>
+      </article>
+
       <article class="game-card force-card">
-        <div class="game-card-top"><span class="game-icon pixel" aria-hidden="true">🚀</span><span class="status soon">COMING SOON</span></div>
+        <div class="game-card-top"><img class="game-brand-logo" src="../assets/tree-force-89-logo-black.webp" alt="TREE FORCE '89: Canopy Command logo"><span class="status soon">COMING SOON</span></div>
         <div>
           <p class="game-label">RETRO FORMATION SHOOTER</p>
           <h2>TREE FORCE '89</h2>
@@ -54,16 +89,6 @@
           <p>A retro arcade formation shooter being designed for the TREE ecosystem. The canopy is assembling.</p>
         </div>
         <span class="game-action disabled" aria-disabled="true">COMING SOON</span>
-      </article>
-
-      <article class="game-card arboretum-card">
-        <div class="game-card-top"><span class="game-icon" aria-hidden="true">🌱</span><span class="status testing">IN TESTING</span></div>
-        <div>
-          <p class="game-label">GROWTH STRATEGY</p>
-          <h2>ARBORETUM</h2>
-          <p>A TREE ecosystem growth strategy game where players cultivate, expand, and develop their place in the forest.</p>
-        </div>
-        <span class="game-action disabled" aria-disabled="true">IN TESTING</span>
       </article>
     </section>
 
