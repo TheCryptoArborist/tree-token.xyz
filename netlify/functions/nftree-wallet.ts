@@ -1,7 +1,9 @@
-import { NFTREE_HOLDERS_QUERY, NFTREE_TYPE, type NftreeObjectNode } from '../lib/tree-nftree-overview.ts';
-import { countNftreesForWallet, nftreeOwnerRoots, normalizeSuiAddress } from '../lib/nftree-wallet-verification.ts';
+import { NFTREE_TYPE } from '../lib/tree-nftree-overview.ts';
+import { normalizeSuiAddress } from '../lib/nftree-wallet-verification.ts';
 
 const GRAPHQL_URL = 'https://graphql.mainnet.sui.io/graphql';
+const KIOSK_OWNER_CAP_TYPE = '0x2::kiosk::KioskOwnerCap';
+const KIOSK_ITEM_SUFFIX = '::kiosk::Item';
 
 function response(body: unknown, status = 200, cache = 'no-store') {
   return Response.json(body, { status, headers: { 'Cache-Control': cache, 'X-Content-Type-Options': 'nosniff' } });
@@ -18,67 +20,82 @@ async function graphql(query: string, variables: Record<string, unknown>, signal
   return payload.data;
 }
 
-async function getNftreeObjects(signal: AbortSignal) {
-  const nodes: NftreeObjectNode[] = [];
+const OWNED_OBJECTS_QUERY = `query OwnedObjects($first: Int!, $after: String, $type: String!, $owner: SuiAddress!) {
+  objects(first: $first, after: $after, filter: { type: $type, owner: $owner }) {
+    pageInfo { hasNextPage endCursor }
+    nodes { address asMoveObject { contents { json } } }
+  }
+}`;
+
+async function getOwnedObjects(owner: string, type: string, signal: AbortSignal) {
+  const nodes: Array<{ address?: unknown; asMoveObject?: { contents?: { json?: unknown } } | null }> = [];
   const ids = new Set<string>();
   let after: string | null = null;
   for (let pageNumber = 0; pageNumber < 100; pageNumber += 1) {
-    const data = await graphql(NFTREE_HOLDERS_QUERY, { first: 50, after, type: NFTREE_TYPE }, signal) as {
-      objects?: { pageInfo?: { hasNextPage?: boolean; endCursor?: string | null }; nodes?: NftreeObjectNode[] };
+    const data = await graphql(OWNED_OBJECTS_QUERY, { first: 50, after, type, owner }, signal) as {
+      objects?: { pageInfo?: { hasNextPage?: boolean; endCursor?: string | null }; nodes?: typeof nodes };
     };
     const connection = data?.objects;
-    if (!Array.isArray(connection?.nodes)) throw new Error('NFTree object page was unavailable.');
+    if (!Array.isArray(connection?.nodes)) throw new Error('Owned object page was unavailable.');
     for (const node of connection.nodes) {
       const id = normalizeSuiAddress(node?.address);
-      if (!id || ids.has(id)) throw new Error('NFTree object scan was invalid.');
+      if (!id || ids.has(id)) throw new Error('Owned object identities were invalid.');
       ids.add(id);
       nodes.push(node);
     }
     if (connection.pageInfo?.hasNextPage !== true) return nodes;
     after = connection.pageInfo?.endCursor || null;
-    if (!after) throw new Error('NFTree object scan lacked a cursor.');
+    if (!after) throw new Error('Owned object scan lacked a cursor.');
   }
-  throw new Error('NFTree object scan did not reach its end.');
+  throw new Error('Owned object scan did not reach its end.');
 }
 
-async function resolveObjectOwners(roots: string[], signal: AbortSignal) {
-  const unresolved = new Map(roots.map((root) => [root, root]));
-  const visited = new Map(roots.map((root) => [root, new Set([root])]));
-  const resolved = new Map<string, string>();
-  for (let depth = 0; depth < 12 && unresolved.size; depth += 1) {
-    const currentIds = [...new Set(unresolved.values())];
-    const ownerByObject = new Map<string, { kind: string; address: string | null }>();
-    const batches = [];
-    for (let offset = 0; offset < currentIds.length; offset += 20) batches.push(currentIds.slice(offset, offset + 20));
-    const batchResults = await Promise.all(batches.map(async (batch) => {
-      const fields = batch.map((id, index) => `o${index}: object(address: "${id}") { owner { __typename ... on AddressOwner { address { address } } ... on ObjectOwner { address { address } } } }`).join('\n');
-      const data = await graphql(`query ResolveNftreeOwners { ${fields} }`, {}, signal) as Record<string, { owner?: { __typename?: unknown; address?: { address?: unknown } | null } } | null>;
-      return { batch, data };
-    }));
-    batchResults.forEach(({ batch, data }) => {
-      batch.forEach((id, index) => {
-        const owner = data?.[`o${index}`]?.owner;
-        ownerByObject.set(id, { kind: String(owner?.__typename || ''), address: normalizeSuiAddress(owner?.address?.address) });
-      });
-    });
-    for (const [root, current] of [...unresolved]) {
-      const owner = ownerByObject.get(current);
-      if (!owner?.address) throw new Error('An NFTree object-owner chain was unavailable.');
-      if (owner.kind === 'AddressOwner') {
-        resolved.set(root, owner.address);
-        unresolved.delete(root);
-      } else if (owner.kind === 'ObjectOwner') {
-        const seen = visited.get(root)!;
-        if (seen.has(owner.address)) throw new Error('An NFTree object-owner cycle was detected.');
-        seen.add(owner.address);
-        unresolved.set(root, owner.address);
-      } else {
-        throw new Error('An NFTree object-owner chain was unsupported.');
-      }
+const KIOSK_FIELDS_QUERY = `query KioskFields($kiosk: SuiAddress!, $first: Int!, $after: String) {
+  object(address: $kiosk) {
+    dynamicFields(first: $first, after: $after) {
+      pageInfo { hasNextPage endCursor }
+      nodes { name { type { repr } json } }
     }
   }
-  if (unresolved.size) throw new Error('An NFTree object-owner chain exceeded the verification limit.');
-  return resolved;
+}`;
+
+async function getKioskItemIds(kiosk: string, signal: AbortSignal) {
+  const ids = new Set<string>();
+  let after: string | null = null;
+  for (let pageNumber = 0; pageNumber < 100; pageNumber += 1) {
+    const data = await graphql(KIOSK_FIELDS_QUERY, { kiosk, first: 50, after }, signal) as {
+      object?: { dynamicFields?: { pageInfo?: { hasNextPage?: boolean; endCursor?: string | null }; nodes?: Array<{ name?: { type?: { repr?: unknown }; json?: { id?: unknown } } }> } } | null;
+    };
+    const fields = data?.object?.dynamicFields;
+    if (!Array.isArray(fields?.nodes)) throw new Error('Kiosk contents were unavailable.');
+    for (const node of fields.nodes) {
+      if (!String(node?.name?.type?.repr || '').endsWith(KIOSK_ITEM_SUFFIX)) continue;
+      const id = normalizeSuiAddress(node?.name?.json?.id);
+      if (!id || ids.has(id)) throw new Error('Kiosk item identities were invalid.');
+      ids.add(id);
+    }
+    if (fields.pageInfo?.hasNextPage !== true) return [...ids];
+    after = fields.pageInfo?.endCursor || null;
+    if (!after) throw new Error('Kiosk scan lacked a cursor.');
+  }
+  throw new Error('Kiosk scan did not reach its end.');
+}
+
+async function getObjectTypes(ids: string[], signal: AbortSignal) {
+  const result = new Map<string, string>();
+  const batches = [];
+  for (let offset = 0; offset < ids.length; offset += 20) batches.push(ids.slice(offset, offset + 20));
+  const responses = await Promise.all(batches.map(async (batch) => {
+    const fields = batch.map((id, index) => `o${index}: object(address: "${id}") { asMoveObject { contents { type { repr } } } }`).join('\n');
+    const data = await graphql(`query KioskItemTypes { ${fields} }`, {}, signal) as Record<string, { asMoveObject?: { contents?: { type?: { repr?: unknown } } } | null } | null>;
+    return { batch, data };
+  }));
+  responses.forEach(({ batch, data }) => batch.forEach((id, index) => {
+    const type = String(data?.[`o${index}`]?.asMoveObject?.contents?.type?.repr || '');
+    if (!type) throw new Error('A Kiosk item type was unavailable.');
+    result.set(id, type);
+  }));
+  return result;
 }
 
 export default async (request: Request) => {
@@ -88,13 +105,22 @@ export default async (request: Request) => {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 26_000);
   try {
-    const nodes = await getNftreeObjects(controller.signal);
-    const roots = nftreeOwnerRoots(nodes);
-    const resolvedOwners = await resolveObjectOwners(roots, controller.signal);
-    const ownership = countNftreesForWallet(nodes, resolvedOwners, address);
+    const [directNftrees, ownerCaps] = await Promise.all([
+      getOwnedObjects(address, NFTREE_TYPE, controller.signal),
+      getOwnedObjects(address, KIOSK_OWNER_CAP_TYPE, controller.signal),
+    ]);
+    const kioskIds = ownerCaps.map((cap) => normalizeSuiAddress((cap.asMoveObject?.contents?.json as { for?: unknown } | undefined)?.for));
+    if (kioskIds.some((id) => !id) || new Set(kioskIds).size !== kioskIds.length) throw new Error('Kiosk ownership capabilities were invalid.');
+    const kioskItems = (await Promise.all(kioskIds.map((id) => getKioskItemIds(id!, controller.signal)))).flat();
+    if (new Set(kioskItems).size !== kioskItems.length) throw new Error('Kiosk item identities overlapped.');
+    const itemTypes = await getObjectTypes(kioskItems, controller.signal);
+    const kioskCount = kioskItems.filter((id) => itemTypes.get(id) === NFTREE_TYPE).length;
+    const directCount = directNftrees.length;
     return response({
       status: 'ok', address, network: 'sui-mainnet', nftreeType: NFTREE_TYPE,
-      methodology: 'canonical-nftree-current-owner-v1', ...ownership,
+      methodology: 'canonical-nftree-direct-and-kiosk-cap-v2',
+      nftreeCount: directCount + kioskCount, directCount, kioskCount,
+      kiosksScanned: kioskIds.length, kioskItemsScanned: kioskItems.length,
     }, 200, 'public, max-age=15, s-maxage=30, stale-while-revalidate=60');
   } catch (error) {
     console.error('NFTree wallet verification failed:', error);

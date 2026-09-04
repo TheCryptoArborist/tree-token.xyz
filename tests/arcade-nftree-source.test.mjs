@@ -13,10 +13,11 @@ assert.match(client, /Holder verified/);
 assert.match(client, /No NFTree detected/);
 assert.match(client, /payload\?\.address !== address/);
 assert.match(endpoint, /NFTREE_TYPE/);
-assert.match(endpoint, /canonical-nftree-current-owner-v1/);
-assert.match(endpoint, /resolveObjectOwners/);
+assert.match(endpoint, /canonical-nftree-direct-and-kiosk-cap-v2/);
+assert.match(endpoint, /KioskOwnerCap/);
+assert.match(endpoint, /dynamicFields/);
+assert.match(endpoint, /KIOSK_ITEM_SUFFIX/);
 assert.match(endpoint, /Promise\.all\(batches\.map/);
-assert.match(endpoint, /ObjectOwner/);
 assert.match(endpoint, /path: '\/api\/nftree-wallet'/);
 assert.doesNotMatch(client, /signTreePersonalMessage|signAndExecuteTransactionBlock|signPersonalMessage|signMessage|executeTransaction/);
 
