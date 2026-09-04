@@ -1,10 +1,26 @@
 export const ROBINHOOD_TESTNET = Object.freeze({
+  key: 'robinhood',
   chainId: 46630,
   chainIdHex: '0xb626',
   chainName: 'Robinhood Chain Testnet',
   rpcUrl: 'https://rpc.testnet.chain.robinhood.com',
   explorerUrl: 'https://explorer.testnet.chain.robinhood.com',
   nativeCurrency: Object.freeze({ name: 'Ether', symbol: 'ETH', decimals: 18 }),
+});
+
+export const BNB_TESTNET = Object.freeze({
+  key: 'bnb',
+  chainId: 97,
+  chainIdHex: '0x61',
+  chainName: 'BNB Smart Chain Testnet',
+  rpcUrl: 'https://bsc-testnet-dataseed.bnbchain.org',
+  explorerUrl: 'https://testnet.bscscan.com',
+  nativeCurrency: Object.freeze({ name: 'Testnet BNB', symbol: 'tBNB', decimals: 18 }),
+});
+
+export const SUPPORTED_NETWORKS = Object.freeze({
+  [ROBINHOOD_TESTNET.key]: ROBINHOOD_TESTNET,
+  [BNB_TESTNET.key]: BNB_TESTNET,
 });
 
 export const SAFE_WALLET_METHODS = Object.freeze([
@@ -24,6 +40,12 @@ export function normalizeChainId(value) {
 
 export function isRobinhoodTestnet(value) {
   return normalizeChainId(value) === ROBINHOOD_TESTNET.chainId;
+}
+
+export function getSupportedNetwork(value) {
+  const normalized = normalizeChainId(value);
+  if (normalized === null) return null;
+  return Object.values(SUPPORTED_NETWORKS).find((network) => network.chainId === normalized) ?? null;
 }
 
 export function formatEvmAddress(value) {

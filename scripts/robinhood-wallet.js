@@ -1,9 +1,9 @@
 import {
-  ROBINHOOD_TESTNET,
   SAFE_WALLET_METHODS,
+  SUPPORTED_NETWORKS,
   formatEvmAddress,
+  getSupportedNetwork,
   getWalletErrorMessage,
-  isRobinhoodTestnet,
   normalizeChainId,
 } from './robinhood-wallet-core.js';
 
@@ -17,7 +17,7 @@ if (root instanceof HTMLElement) {
   const addressOutput = root.querySelector('[data-wallet-address]');
   const networkOutput = root.querySelector('[data-wallet-network]');
   const connectButton = root.querySelector('[data-wallet-connect]');
-  const switchButton = root.querySelector('[data-wallet-switch]');
+  const switchButtons = [...root.querySelectorAll('[data-wallet-switch]')];
 
   const safeMethods = new Set(SAFE_WALLET_METHODS);
   let provider = null;
@@ -48,28 +48,32 @@ if (root instanceof HTMLElement) {
 
   const render = () => {
     const connected = Boolean(account);
-    const onTestnet = isRobinhoodTestnet(chainId);
+    const activeNetwork = getSupportedNetwork(chainId);
     const detectedChain = normalizeChainId(chainId);
 
-    root.dataset.walletState = !provider ? 'missing' : connected && onTestnet ? 'ready' : connected ? 'wrong-network' : 'available';
-    setText(heading, !provider ? 'MetaMask not detected' : connected && onTestnet ? 'Robinhood testnet ready' : connected ? 'Wallet connected' : 'MetaMask available');
+    root.dataset.walletState = !provider ? 'missing' : connected && activeNetwork ? 'ready' : connected ? 'wrong-network' : 'available';
+    setText(heading, !provider ? 'MetaMask not detected' : connected && activeNetwork ? `${activeNetwork.chainName} ready` : connected ? 'Wallet connected' : 'MetaMask available');
     setText(status, notice ?? (!provider
       ? 'Install or enable MetaMask to use this connection preview.'
-      : connected && onTestnet
-        ? 'Connected to Robinhood Chain Testnet. No signature or transaction was requested.'
+      : connected && activeNetwork
+        ? `Connected to ${activeNetwork.chainName}. No signature or transaction was requested.`
         : connected
-          ? 'Your wallet is connected, but Robinhood Chain Testnet is not active.'
+          ? 'Your wallet is connected. Choose a supported test network below.'
           : 'Connect MetaMask to read your public address and current network.'));
     setText(addressOutput, formatEvmAddress(account) ?? 'Not connected');
-    setText(networkOutput, onTestnet ? 'Robinhood Chain Testnet (46630)' : detectedChain === null ? 'Unknown' : `Chain ID ${detectedChain}`);
+    setText(networkOutput, activeNetwork ? `${activeNetwork.chainName} (${activeNetwork.chainId})` : detectedChain === null ? 'Unknown' : `Chain ID ${detectedChain}`);
 
     if (details instanceof HTMLElement) details.hidden = !connected;
     if (connectButton instanceof HTMLButtonElement) {
       connectButton.disabled = busy || !provider;
       connectButton.textContent = connected ? 'REFRESH CONNECTION' : 'CONNECT METAMASK';
     }
-    if (switchButton instanceof HTMLButtonElement) switchButton.disabled = busy || !provider || onTestnet;
-    if (light instanceof HTMLElement) light.setAttribute('aria-label', connected && onTestnet ? 'Ready' : 'Not ready');
+    switchButtons.forEach((button) => {
+      if (!(button instanceof HTMLButtonElement)) return;
+      const network = SUPPORTED_NETWORKS[button.dataset.walletSwitch];
+      button.disabled = busy || !provider || activeNetwork?.key === network?.key;
+    });
+    if (light instanceof HTMLElement) light.setAttribute('aria-label', connected && activeNetwork ? 'Ready' : 'Not ready');
   };
 
   const refresh = async ({ requestAccess = false, preserveNotice = false } = {}) => {
@@ -91,33 +95,36 @@ if (root instanceof HTMLElement) {
 
   connectButton?.addEventListener('click', () => refresh({ requestAccess: true }));
 
-  switchButton?.addEventListener('click', async () => {
-    if (!provider) return;
-    notice = null;
-    busy = true;
-    render();
-    try {
-      await request('wallet_switchEthereumChain', [{ chainId: ROBINHOOD_TESTNET.chainIdHex }]);
-    } catch (error) {
-      if (Number(error?.code) === 4902) {
-        try {
-          await request('wallet_addEthereumChain', [{
-            chainId: ROBINHOOD_TESTNET.chainIdHex,
-            chainName: ROBINHOOD_TESTNET.chainName,
-            nativeCurrency: ROBINHOOD_TESTNET.nativeCurrency,
-            rpcUrls: [ROBINHOOD_TESTNET.rpcUrl],
-            blockExplorerUrls: [ROBINHOOD_TESTNET.explorerUrl],
-          }]);
-        } catch (addError) {
-          notice = getWalletErrorMessage(addError);
+  switchButtons.forEach((button) => {
+    button.addEventListener('click', async () => {
+      const network = SUPPORTED_NETWORKS[button.dataset.walletSwitch];
+      if (!provider || !network) return;
+      notice = null;
+      busy = true;
+      render();
+      try {
+        await request('wallet_switchEthereumChain', [{ chainId: network.chainIdHex }]);
+      } catch (error) {
+        if (Number(error?.code) === 4902) {
+          try {
+            await request('wallet_addEthereumChain', [{
+              chainId: network.chainIdHex,
+              chainName: network.chainName,
+              nativeCurrency: network.nativeCurrency,
+              rpcUrls: [network.rpcUrl],
+              blockExplorerUrls: [network.explorerUrl],
+            }]);
+          } catch (addError) {
+            notice = getWalletErrorMessage(addError);
+          }
+        } else {
+          notice = getWalletErrorMessage(error);
         }
-      } else {
-        notice = getWalletErrorMessage(error);
+      } finally {
+        busy = false;
+        await refresh({ preserveNotice: Boolean(notice) });
       }
-    } finally {
-      busy = false;
-      await refresh({ preserveNotice: Boolean(notice) });
-    }
+    });
   });
 
   provider = findMetaMask();

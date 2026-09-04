@@ -42,17 +42,23 @@
       <div class="arcade-status"><span aria-hidden="true"></span> 1 LIVE GAME · MORE GROWING</div>
     </section>
 
-    <section class="chain-access-panel" aria-labelledby="robinhood-access-title" data-robinhood-wallet>
+    <section class="chain-access-panel" aria-labelledby="multichain-access-title" data-robinhood-wallet>
       <div class="chain-access-copy">
         <p class="arcade-eyebrow">MULTICHAIN PREVIEW · TESTNET</p>
-        <h2 id="robinhood-access-title">Connect MetaMask to Robinhood Chain</h2>
+        <h2 id="multichain-access-title">Connect MetaMask to TREE Arcade</h2>
         <p>This first connection check only reads your public EVM address and active network. It cannot sign messages, send transactions, approve tokens, or move TREE or NFTrees.</p>
-        <div class="chain-network-facts" aria-label="Robinhood Chain Testnet network details">
-          <span><small>NETWORK</small><strong>Robinhood Chain Testnet</strong></span>
-          <span><small>CHAIN ID</small><strong>46630</strong></span>
-          <span><small>GAS TOKEN</small><strong>ETH</strong></span>
+        <div class="chain-network-options" aria-label="Supported test networks">
+          <article>
+            <strong>Robinhood Chain Testnet</strong>
+            <div class="chain-network-facts"><span><small>CHAIN ID</small><b>46630</b></span><span><small>GAS</small><b>ETH</b></span></div>
+            <a class="chain-docs-link" href="https://docs.robinhood.com/chain/add-network-to-wallet/" target="_blank" rel="noopener noreferrer">ROBINHOOD DOCS <span aria-hidden="true">↗</span></a>
+          </article>
+          <article>
+            <strong>BNB Smart Chain Testnet</strong>
+            <div class="chain-network-facts"><span><small>CHAIN ID</small><b>97</b></span><span><small>GAS</small><b>tBNB</b></span></div>
+            <a class="chain-docs-link" href="https://docs.bnbchain.org/bnb-smart-chain/developers/json_rpc/json-rpc-endpoint/" target="_blank" rel="noopener noreferrer">BNB CHAIN DOCS <span aria-hidden="true">↗</span></a>
+          </article>
         </div>
-        <a class="chain-docs-link" href="https://docs.robinhood.com/chain/add-network-to-wallet/" target="_blank" rel="noopener noreferrer">VERIFY IN ROBINHOOD DOCS <span aria-hidden="true">↗</span></a>
       </div>
       <div class="chain-wallet-console">
         <div class="chain-wallet-heading"><span class="chain-status-light" data-wallet-light aria-hidden="true"></span><strong data-wallet-heading>MetaMask not connected</strong></div>
@@ -63,7 +69,8 @@
         </dl>
         <div class="chain-wallet-actions">
           <button type="button" data-wallet-connect>CONNECT METAMASK</button>
-          <button class="secondary" type="button" data-wallet-switch disabled>SWITCH TO TESTNET</button>
+          <button class="secondary" type="button" data-wallet-switch="robinhood" disabled>USE ROBINHOOD TESTNET</button>
+          <button class="secondary bnb" type="button" data-wallet-switch="bnb" disabled>USE BNB TESTNET</button>
         </div>
         <p class="chain-wallet-safety">No signature · No payment · No token approval</p>
       </div>
