@@ -15,6 +15,7 @@ assert.match(client, /payload\?\.address !== address/);
 assert.match(endpoint, /NFTREE_TYPE/);
 assert.match(endpoint, /canonical-nftree-current-owner-v1/);
 assert.match(endpoint, /resolveObjectOwners/);
+assert.match(endpoint, /Promise\.all\(batches\.map/);
 assert.match(endpoint, /ObjectOwner/);
 assert.match(endpoint, /path: '\/api\/nftree-wallet'/);
 assert.doesNotMatch(client, /signTreePersonalMessage|signAndExecuteTransactionBlock|signPersonalMessage|signMessage|executeTransaction/);

@@ -48,15 +48,19 @@ async function resolveObjectOwners(roots: string[], signal: AbortSignal) {
   for (let depth = 0; depth < 12 && unresolved.size; depth += 1) {
     const currentIds = [...new Set(unresolved.values())];
     const ownerByObject = new Map<string, { kind: string; address: string | null }>();
-    for (let offset = 0; offset < currentIds.length; offset += 20) {
-      const batch = currentIds.slice(offset, offset + 20);
+    const batches = [];
+    for (let offset = 0; offset < currentIds.length; offset += 20) batches.push(currentIds.slice(offset, offset + 20));
+    const batchResults = await Promise.all(batches.map(async (batch) => {
       const fields = batch.map((id, index) => `o${index}: object(address: "${id}") { owner { __typename ... on AddressOwner { address { address } } ... on ObjectOwner { address { address } } } }`).join('\n');
       const data = await graphql(`query ResolveNftreeOwners { ${fields} }`, {}, signal) as Record<string, { owner?: { __typename?: unknown; address?: { address?: unknown } | null } } | null>;
+      return { batch, data };
+    }));
+    batchResults.forEach(({ batch, data }) => {
       batch.forEach((id, index) => {
         const owner = data?.[`o${index}`]?.owner;
         ownerByObject.set(id, { kind: String(owner?.__typename || ''), address: normalizeSuiAddress(owner?.address?.address) });
       });
-    }
+    });
     for (const [root, current] of [...unresolved]) {
       const owner = ownerByObject.get(current);
       if (!owner?.address) throw new Error('An NFTree object-owner chain was unavailable.');
@@ -82,7 +86,7 @@ export default async (request: Request) => {
   const address = normalizeSuiAddress(new URL(request.url).searchParams.get('address'));
   if (!address) return response({ status: 'error', error: 'invalid-address' }, 400);
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 18_000);
+  const timeout = setTimeout(() => controller.abort(), 26_000);
   try {
     const nodes = await getNftreeObjects(controller.signal);
     const roots = nftreeOwnerRoots(nodes);
