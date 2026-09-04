@@ -80,7 +80,7 @@
       <div class="chain-access-copy">
         <p class="arcade-eyebrow">SUI MAINNET · CANONICAL NFTREE</p>
         <h2 id="sui-access-title">Connect Your Sui Wallet</h2>
-        <p>Your Sui wallet is where the original NFTree collection lives. This step only connects your public Sui address. NFTree ownership verification and Arcade access gating will be added after this connector is tested.</p>
+        <p>Your Sui wallet is where the original NFTree collection lives. TREE Arcade checks current ownership of the exact canonical NFTree type, including NFTrees held inside a wallet-owned Sui Kiosk. Games remain open while this access system is tested.</p>
         <div class="sui-wallet-support" aria-label="Supported Sui wallets">
           <span>SLUSH</span><span>PHANTOM</span><span>NIGHTLY</span><span>WALLET STANDARD</span>
         </div>
@@ -92,11 +92,13 @@
           <div><dt>Wallet</dt><dd data-sui-wallet-name>—</dd></div>
           <div><dt>Address</dt><dd data-sui-wallet-address>—</dd></div>
           <div><dt>Network</dt><dd data-sui-wallet-network>Sui Mainnet</dd></div>
+          <div><dt>NFTree access</dt><dd data-sui-nftree-result>Checking…</dd></div>
         </dl>
         <div class="chain-wallet-actions">
           <button type="button" data-sui-wallet-connect>CONNECT SUI WALLET</button>
+          <button class="secondary" type="button" data-sui-nftree-refresh hidden>RECHECK NFTREE OWNERSHIP</button>
         </div>
-        <p class="chain-wallet-safety">No signature · No transaction · No gas</p>
+        <p class="chain-wallet-safety">Read-only ownership check · No signature · No transaction · No gas</p>
       </div>
     </section>
 
