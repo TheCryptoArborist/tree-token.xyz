@@ -102,6 +102,31 @@
       </div>
     </section>
 
+    <section class="wallet-link-panel" aria-labelledby="wallet-link-title" data-arcade-wallet-link>
+      <div class="chain-access-copy">
+        <p class="arcade-eyebrow">TREE ACCOUNT · SIGNED WALLET LINK</p>
+        <h2 id="wallet-link-title">Use one NFTree across multiple chains</h2>
+        <p>Link your verified Sui holder wallet to MetaMask by signing one identical, plain-language access statement with each wallet. The signatures prove wallet control without sending an on-chain transaction.</p>
+        <div class="wallet-link-facts" aria-label="Wallet-link safety details">
+          <span>7-DAY DEVICE PROOF</span><span>DOMAIN-BOUND</span><span>NO GAS</span><span>NO TOKEN APPROVAL</span>
+        </div>
+      </div>
+      <div class="chain-wallet-console wallet-link-console">
+        <div class="chain-wallet-heading"><span class="chain-status-light" aria-hidden="true"></span><strong data-link-heading>Connect both wallets</strong></div>
+        <p class="chain-wallet-status" data-link-status role="status" aria-live="polite">Connect your Sui wallet first.</p>
+        <dl class="chain-wallet-details">
+          <div><dt>Sui holder</dt><dd data-link-sui>—</dd></div>
+          <div><dt>MetaMask</dt><dd data-link-evm>—</dd></div>
+          <div><dt>TREE access</dt><dd data-link-access>Not linked</dd></div>
+        </dl>
+        <div class="chain-wallet-actions">
+          <button type="button" data-link-button disabled>LINK SUI + METAMASK</button>
+          <button class="secondary" type="button" data-link-clear hidden>REMOVE DEVICE LINK</button>
+        </div>
+        <p class="chain-wallet-safety">Message signatures only · No transaction · No payment · No approval</p>
+      </div>
+    </section>
+
     <section class="game-grid" aria-label="TREE ecosystem games">
       <article class="game-card live-card">
         <div class="game-card-top"><img class="game-brand-logo garden-logo" src="../assets/garden-battles-logo.webp" alt="The Garden Battles logo"><span class="status live">LIVE</span></div>
@@ -164,5 +189,6 @@
   </footer>
   <script type="module" src="../scripts/robinhood-wallet.js"></script>
   <script type="module" src="../scripts/arcade-sui-wallet.js"></script>
+  <script type="module" src="../scripts/arcade-wallet-link.js"></script>
 </body>
 </html>

@@ -98,10 +98,7 @@ async function getObjectTypes(ids: string[], signal: AbortSignal) {
   return result;
 }
 
-export default async (request: Request) => {
-  if (request.method !== 'GET') return response({ status: 'error', error: 'method-not-allowed' }, 405);
-  const address = normalizeSuiAddress(new URL(request.url).searchParams.get('address'));
-  if (!address) return response({ status: 'error', error: 'invalid-address' }, 400);
+export async function getCanonicalNftreeOwnership(address: string) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 26_000);
   try {
@@ -116,17 +113,27 @@ export default async (request: Request) => {
     const itemTypes = await getObjectTypes(kioskItems, controller.signal);
     const kioskCount = kioskItems.filter((id) => itemTypes.get(id) === NFTREE_TYPE).length;
     const directCount = directNftrees.length;
-    return response({
-      status: 'ok', address, network: 'sui-mainnet', nftreeType: NFTREE_TYPE,
+    return {
+      address, network: 'sui-mainnet', nftreeType: NFTREE_TYPE,
       methodology: 'canonical-nftree-direct-and-kiosk-cap-v2',
       nftreeCount: directCount + kioskCount, directCount, kioskCount,
       kiosksScanned: kioskIds.length, kioskItemsScanned: kioskItems.length,
-    }, 200, 'public, max-age=15, s-maxage=30, stale-while-revalidate=60');
+    };
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+export default async (request: Request) => {
+  if (request.method !== 'GET') return response({ status: 'error', error: 'method-not-allowed' }, 405);
+  const address = normalizeSuiAddress(new URL(request.url).searchParams.get('address'));
+  if (!address) return response({ status: 'error', error: 'invalid-address' }, 400);
+  try {
+    const ownership = await getCanonicalNftreeOwnership(address);
+    return response({ status: 'ok', ...ownership }, 200, 'public, max-age=15, s-maxage=30, stale-while-revalidate=60');
   } catch (error) {
     console.error('NFTree wallet verification failed:', error);
     return response({ status: 'error', error: 'nftree-verification-unavailable' }, 503);
-  } finally {
-    clearTimeout(timeout);
   }
 };
 

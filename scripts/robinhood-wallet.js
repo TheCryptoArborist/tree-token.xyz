@@ -26,6 +26,12 @@ if (root instanceof HTMLElement) {
   let busy = false;
   let notice = null;
 
+  const publishWalletState = () => {
+    const detail = { address: account, chainId: normalizeChainId(chainId), network: getSupportedNetwork(chainId)?.key || null };
+    window.treeEvmWallet = { provider, ...detail };
+    window.dispatchEvent(new CustomEvent('tree:evm-wallet-changed', { detail }));
+  };
+
   const findMetaMask = () => {
     const injected = window.ethereum;
     if (!injected) return null;
@@ -90,7 +96,18 @@ if (root instanceof HTMLElement) {
     } finally {
       busy = false;
       render();
+      publishWalletState();
     }
+  };
+
+  const signTreeEvmMessage = async (message) => {
+    if (!provider || !account) throw new Error('MetaMask is not connected.');
+    if (typeof message !== 'string' || !message.length || message.length > 8_000) throw new Error('Wallet-link message is invalid.');
+    const bytes = new TextEncoder().encode(message);
+    const hexMessage = `0x${[...bytes].map((byte) => byte.toString(16).padStart(2, '0')).join('')}`;
+    const signature = await request('personal_sign', [hexMessage, account]);
+    if (typeof signature !== 'string' || !/^0x[a-f0-9]+$/i.test(signature)) throw new Error('MetaMask returned an invalid signature.');
+    return signature;
   };
 
   connectButton?.addEventListener('click', () => refresh({ requestAccess: true }));
@@ -133,14 +150,18 @@ if (root instanceof HTMLElement) {
       notice = null;
       account = Array.isArray(accounts) && typeof accounts[0] === 'string' ? accounts[0] : null;
       render();
+      publishWalletState();
     });
     provider.on('chainChanged', (nextChainId) => {
       notice = null;
       chainId = nextChainId;
       render();
+      publishWalletState();
     });
   }
 
+  window.signTreeEvmMessage = signTreeEvmMessage;
   render();
+  publishWalletState();
   refresh();
 }

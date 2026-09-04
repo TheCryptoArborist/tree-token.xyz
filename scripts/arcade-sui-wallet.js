@@ -22,6 +22,11 @@ if (root instanceof HTMLElement) {
     if (element) element.textContent = value;
   };
 
+  const publishVerification = () => {
+    window.treeNftreeVerification = { ...verification };
+    window.dispatchEvent(new CustomEvent('tree:nftree-verification', { detail: { ...verification } }));
+  };
+
   const render = () => {
     const address = typeof window.playerAddress === 'string' ? window.playerAddress : null;
     const name = window.currentWallet?.name || window.currentWalletName || 'Sui Wallet';
@@ -62,6 +67,7 @@ if (root instanceof HTMLElement) {
     if (!address) {
       verification = { state: 'idle', address: null, count: null };
       render();
+      publishVerification();
       return;
     }
     const controller = new AbortController();
@@ -88,6 +94,7 @@ if (root instanceof HTMLElement) {
     } finally {
       if (verificationController === controller) verificationController = null;
       render();
+      publishVerification();
     }
   };
 

@@ -21,10 +21,13 @@ assert.match(core, /chainIdHex:\s*'0x61'/);
 assert.match(core, /https:\/\/bsc-testnet-dataseed\.bnbchain\.org/);
 assert.match(source, /new Set\(SAFE_WALLET_METHODS\)/);
 assert.match(source, /safeMethods\.has\(method\)/);
+assert.match(core, /'personal_sign'/);
+assert.match(source, /window\.signTreeEvmMessage/);
+assert.match(source, /tree:evm-wallet-changed/);
 assert.match(styles, /\.chain-access-panel/);
 assert.match(styles, /\[data-wallet-state="ready"\]/);
 
-for (const forbiddenMethod of ['eth_sendTransaction', 'eth_sendRawTransaction', 'eth_sign', 'personal_sign', 'wallet_watchAsset']) {
+for (const forbiddenMethod of ['eth_sendTransaction', 'eth_sendRawTransaction', 'eth_sign', 'wallet_watchAsset']) {
   assert.equal(combined.includes(forbiddenMethod), false, `${forbiddenMethod} must not be present in the read-only wallet milestone`);
 }
 

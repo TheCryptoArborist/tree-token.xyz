@@ -27,6 +27,7 @@ export const SAFE_WALLET_METHODS = Object.freeze([
   'eth_accounts',
   'eth_chainId',
   'eth_requestAccounts',
+  'personal_sign',
   'wallet_switchEthereumChain',
   'wallet_addEthereumChain',
 ]);

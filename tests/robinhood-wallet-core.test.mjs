@@ -54,11 +54,12 @@ test('displays only valid shortened EVM addresses', () => {
   assert.equal(formatEvmAddress('0x1234'), null);
 });
 
-test('wallet method allowlist contains only connection and network methods', () => {
+test('wallet method allowlist contains only connection, network, and explicit message-signing methods', () => {
   assert.deepEqual(SAFE_WALLET_METHODS, [
     'eth_accounts',
     'eth_chainId',
     'eth_requestAccounts',
+    'personal_sign',
     'wallet_switchEthereumChain',
     'wallet_addEthereumChain',
   ]);
