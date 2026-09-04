@@ -76,6 +76,30 @@
       </div>
     </section>
 
+    <section class="sui-access-panel" aria-labelledby="sui-access-title" data-arcade-sui-wallet>
+      <div class="chain-access-copy">
+        <p class="arcade-eyebrow">SUI MAINNET · CANONICAL NFTREE</p>
+        <h2 id="sui-access-title">Connect Your Sui Wallet</h2>
+        <p>Your Sui wallet is where the original NFTree collection lives. This step only connects your public Sui address. NFTree ownership verification and Arcade access gating will be added after this connector is tested.</p>
+        <div class="sui-wallet-support" aria-label="Supported Sui wallets">
+          <span>SLUSH</span><span>PHANTOM</span><span>NIGHTLY</span><span>WALLET STANDARD</span>
+        </div>
+      </div>
+      <div class="chain-wallet-console sui-wallet-console">
+        <div class="chain-wallet-heading"><span class="chain-status-light" aria-hidden="true"></span><strong data-sui-wallet-heading>Sui wallet not connected</strong></div>
+        <p class="chain-wallet-status" data-sui-wallet-status role="status" aria-live="polite">Checking for a saved Sui wallet connection…</p>
+        <dl class="chain-wallet-details" data-sui-wallet-details hidden>
+          <div><dt>Wallet</dt><dd data-sui-wallet-name>—</dd></div>
+          <div><dt>Address</dt><dd data-sui-wallet-address>—</dd></div>
+          <div><dt>Network</dt><dd data-sui-wallet-network>Sui Mainnet</dd></div>
+        </dl>
+        <div class="chain-wallet-actions">
+          <button type="button" data-sui-wallet-connect>CONNECT SUI WALLET</button>
+        </div>
+        <p class="chain-wallet-safety">No signature · No transaction · No gas</p>
+      </div>
+    </section>
+
     <section class="game-grid" aria-label="TREE ecosystem games">
       <article class="game-card live-card">
         <div class="game-card-top"><img class="game-brand-logo garden-logo" src="../assets/garden-battles-logo.webp" alt="The Garden Battles logo"><span class="status live">LIVE</span></div>
@@ -137,5 +161,6 @@
     <p>Part of the TREE ecosystem on Sui.</p>
   </footer>
   <script type="module" src="../scripts/robinhood-wallet.js"></script>
+  <script type="module" src="../scripts/arcade-sui-wallet.js"></script>
 </body>
 </html>

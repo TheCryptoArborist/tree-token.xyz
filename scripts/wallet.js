@@ -437,10 +437,11 @@ function _walletIconNode(wallet, className) {
 
 async function _renderPicker() {
   const wallets = await _compatibleWallets();
+  const returnUrl = `${location.origin}${location.pathname}${location.search}`;
   _dialogNodes.list.replaceChildren();
   _dialogNodes.title.textContent = 'Connect a Sui Wallet';
   _dialogNodes.subtitle.textContent = 'Select Slush, Phantom, Nightly, or another compatible Sui wallet.';
-  _dialogNodes.slushLink.href = slushBrowseUrl(`${location.origin}/dapp/`);
+  _dialogNodes.slushLink.href = slushBrowseUrl(returnUrl);
   _dialogNodes.phantomLink.hidden = wallets.some(isPhantomSuiWallet);
   _dialogNodes.nightlyLink.hidden = wallets.some(isNightlySuiWallet);
 
@@ -480,7 +481,7 @@ async function _renderPicker() {
     button.append(copy, action);
     button.addEventListener('click', async () => {
       if (opensInSlush) {
-        location.assign(slushBrowseUrl(`${location.origin}/dapp/`));
+        location.assign(slushBrowseUrl(returnUrl));
         return;
       }
       _setManagerStatus(`Connecting to ${wallet.name}…`);

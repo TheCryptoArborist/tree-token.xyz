@@ -373,6 +373,50 @@
   text-align: center;
 }
 
+.sui-access-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(290px, 0.65fr);
+  gap: 22px;
+  margin-top: 18px;
+  padding: clamp(22px, 4vw, 34px);
+  border: 1px solid rgba(53, 239, 145, 0.28);
+  border-radius: 22px;
+  background: radial-gradient(circle at 100% 0, rgba(53, 239, 145, 0.11), transparent 38%), linear-gradient(145deg, rgba(7, 19, 27, 0.97), rgba(3, 9, 14, 0.98));
+  box-shadow: 0 22px 64px rgba(0, 0, 0, 0.28);
+}
+
+.sui-wallet-support {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 17px;
+}
+
+.sui-wallet-support span {
+  padding: 7px 9px;
+  border: 1px solid rgba(53, 239, 145, 0.22);
+  border-radius: 8px;
+  color: var(--green);
+  background: rgba(53, 239, 145, 0.055);
+  font-size: 0.59rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+}
+
+.sui-wallet-console {
+  border-color: rgba(53, 239, 145, 0.24);
+}
+
+[data-sui-wallet-state="connected"] .chain-status-light {
+  background: var(--green);
+  box-shadow: 0 0 13px var(--green);
+}
+
+[data-sui-wallet-state="error"] .chain-status-light {
+  background: #ff7c7c;
+  box-shadow: 0 0 13px rgba(255, 124, 124, 0.6);
+}
+
 .garden-mode-panel {
   margin-top: 16px;
   padding: 11px;
@@ -487,7 +531,8 @@
 }
 
 @media (max-width: 620px) {
-  .chain-access-panel {
+  .chain-access-panel,
+  .sui-access-panel {
     grid-template-columns: 1fr;
     padding: 19px;
   }
