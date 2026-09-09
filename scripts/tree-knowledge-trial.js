@@ -106,7 +106,7 @@ if (root) {
       nodes.passCopy.textContent = `Connected wallet ${wallet.slice(0, 6)}…${wallet.slice(-4)}. Eligible tied leaders can verify their wallet and begin the current 30-second sudden-death question.`;
     } else if (wallet && liveReady) {
       nodes.passState.textContent = 'Ready to verify';
-      nodes.passCopy.textContent = `Connected wallet ${wallet.slice(0, 6)}…${wallet.slice(-4)}. Start the daily challenge to verify a qualifying $5+ TREE purchase and sign one wallet-ownership message.`;
+      nodes.passCopy.textContent = `Connected wallet ${wallet.slice(0, 6)}…${wallet.slice(-4)}. Press Start Daily Challenge to check your qualifying $5+ TREE purchase. Your Challenge Pass is issued only after the purchase is found and you approve one wallet-ownership message.`;
     } else if (wallet && state.config?.publicAttemptsEnabled && state.publicRound?.state === 'open' && roundTiming === 'scheduled') {
       nodes.passState.textContent = 'Scheduled';
       nodes.passCopy.textContent = `The next scored challenge opens ${new Date(state.publicRound.challengeOpensAt).toLocaleString()}. Your wallet can be checked when the window begins.`;
@@ -372,8 +372,10 @@ if (root) {
     setStatus('Checking your qualifying TREE purchase…');
     try {
       const requested = await post('challenge', { wallet, roundId });
+      nodes.passState.textContent = 'Purchase verified';
+      nodes.passCopy.textContent = 'Your qualifying TREE purchase was recognized for this round. Approve the wallet-ownership message to issue your Challenge Pass.';
       if (typeof window.signTreePersonalMessage !== 'function') throw new Error('This wallet cannot sign the required ownership message.');
-      setStatus('Approve the wallet-ownership message. This does not move funds.');
+      setStatus('Purchase verified. Approve the wallet-ownership message. This does not move funds.');
       const signed = await window.signTreePersonalMessage(new TextEncoder().encode(requested.challenge.message));
       const started = await post('start', {
         wallet,
@@ -518,6 +520,9 @@ if (root) {
   nodes.next?.addEventListener('click', () => { if (state.current < state.questions.length - 1) { state.current += 1; renderQuestion(); } });
   nodes.form?.addEventListener('submit', (event) => { event.preventDefault(); submitCurrent(false); });
   window.addEventListener('tree:wallet-changed', updateWalletState);
+  window.addEventListener('hashchange', () => {
+    if (window.location.hash === '#canopy-draw') loadTrial();
+  });
   window.addEventListener('beforeunload', () => clearInterval(state.timerId));
 
   updateWalletState();
