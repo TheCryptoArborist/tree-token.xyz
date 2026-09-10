@@ -1,0 +1,10 @@
+{
+  "name": "tree-raffle-keeper",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@grpc/grpc-js": "^1.14.4",
+    "@mysten/sui": "2.26.1",
+    "@protobuf-ts/grpc-transport": "^2.11.1"
+  }
+}

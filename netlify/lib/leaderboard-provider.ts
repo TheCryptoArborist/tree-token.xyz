@@ -1,4 +1,4 @@
-import exclusions from '../../data/tree-leaderboard-exclusions.json';
+import exclusions from '../../data/tree-leaderboard-exclusions.json' with { type: 'json' };
 
 export const TREE_COIN_TYPE = '0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE';
 export const TREE_COIN_OBJECT_TYPE = `0x2::coin::Coin<${TREE_COIN_TYPE}>`;

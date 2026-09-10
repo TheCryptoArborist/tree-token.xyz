@@ -1,4 +1,13 @@
 import snapshot from '../../data/tree-project-snapshot.json';
+import seedMarket from '../../data/tree-market-last-verified.json';
+import {
+  hasCoreMarketFields,
+  mergeLiveFields,
+  readCachedTreeMarket,
+  validCachedTreeMarket,
+  writeCachedTreeMarket,
+  type CachedTreeMarket,
+} from '../lib/tree-dashboard-cache.ts';
 import {
   emptyLive,
   mergeNoodlesFields,
@@ -93,17 +102,42 @@ export default async (request: Request) => {
 
   const noodlesSucceeded = detailsStatus === 'ok' || volumeStatus === 'ok';
   const noodlesData = mergeNoodlesFields(details, volume);
+  const seededMarket = validCachedTreeMarket(seedMarket) ? seedMarket as CachedTreeMarket : null;
+  let cachedMarket: CachedTreeMarket | null = null;
+  try {
+    cachedMarket = await readCachedTreeMarket();
+  } catch (error) {
+    warnings.push('The durable market cache is temporarily unavailable.');
+    console.error(error);
+  }
+  const lastVerified = cachedMarket ?? seededMarket;
   let status: LiveStatus;
   let source: 'Noodles.fi' | 'CoinGecko' | null;
   let liveData: LiveFields | null;
-  if (noodlesSucceeded) {
-    status = 'ok'; source = 'Noodles.fi'; liveData = noodlesData;
+  let verifiedAt: string | null = lastVerified?.generatedAt ?? null;
+  if (noodlesSucceeded && hasCoreMarketFields(noodlesData)) {
+    status = 'ok'; source = 'Noodles.fi'; liveData = noodlesData; verifiedAt = generatedAt;
+    try {
+      await writeCachedTreeMarket({ generatedAt, source: 'Noodles.fi', data: noodlesData });
+    } catch (error) {
+      warnings.push('The latest verified market snapshot could not be saved.');
+      console.error(error);
+    }
+  } else if (noodlesSucceeded && lastVerified) {
+    status = 'fallback'; source = 'Noodles.fi'; liveData = mergeLiveFields(noodlesData, lastVerified.data);
+    warnings.push('Displaying available live Noodles fields with the last verified market snapshot.');
   } else if (coinGeckoStatus === 'ok' && crossCheck) {
-    status = 'fallback'; source = 'CoinGecko'; liveData = crossCheck;
-    warnings.push('Displaying CoinGecko fallback fields; holder count and recognized protocol liquidity are unavailable.');
+    status = 'fallback'; source = 'CoinGecko'; liveData = lastVerified ? mergeLiveFields(crossCheck, lastVerified.data) : crossCheck;
+    warnings.push(lastVerified
+      ? 'Displaying current CoinGecko fields with the last verified Noodles market snapshot.'
+      : 'Displaying CoinGecko fallback fields; holder count and recognized protocol liquidity are unavailable.');
+  } else if (lastVerified) {
+    status = 'fallback'; source = 'Noodles.fi'; liveData = lastVerified.data;
+    warnings.push(`Displaying the last verified market snapshot from ${lastVerified.generatedAt} because the live provider is temporarily unavailable.`);
   } else {
     const anyConfigured = Boolean(noodlesKey || coinGeckoKey);
     status = anyConfigured ? 'error' : 'not-configured'; source = null; liveData = null;
+    verifiedAt = null;
   }
 
   if (noodlesData.price !== null && crossCheck?.price !== null && crossCheck?.price !== undefined) {
@@ -118,7 +152,7 @@ export default async (request: Request) => {
 
   return Response.json({
     generatedAt,
-    live: { status, source, data: liveData },
+    live: { status, source, data: liveData, verifiedAt },
     snapshot,
     sources: {
       displayed: { name: source, status },

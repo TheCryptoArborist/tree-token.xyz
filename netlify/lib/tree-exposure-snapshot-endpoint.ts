@@ -6,6 +6,7 @@ import {
   type ExposureRefreshStatus,
 } from './tree-exposure-cache.ts';
 import { TREE_EXPOSURE_METHODOLOGY_VERSION } from './tree-exposure-types.ts';
+import { resolveDefaultSuinsNames } from './suins-name-resolver.ts';
 
 export const DEFAULT_EXPOSURE_STALE_AFTER_MS = 6 * 60 * 60 * 1000;
 
@@ -15,6 +16,7 @@ export type ExposureSnapshotEndpointDependencies = {
   getEnv?: (name: string) => string | undefined;
   readSnapshot?: () => Promise<CompleteExposureSnapshot | null>;
   readRefreshStatus?: () => Promise<ExposureRefreshStatus | null>;
+  resolveNames?: typeof resolveDefaultSuinsNames;
 };
 
 export type PublicExposureRefreshStatus = {
@@ -117,6 +119,37 @@ export async function resolveExposureSnapshotPayload(
 
   const snapshotAgeMs = Math.max(0, now() - Date.parse(snapshot.generatedAt));
   const stale = snapshotAgeMs > readStaleAfterMs(getEnv);
+  let entries = snapshot.entries;
+  let source = snapshot.source;
+  const identityWarnings: string[] = [];
+  const snapshotHasResolvedNames = entries.some((entry) => Boolean(entry.suinsName));
+  if (!snapshotHasResolvedNames && entries.length) {
+    try {
+      const resolution = await (dependencies.resolveNames ?? resolveDefaultSuinsNames)(
+        entries.map((entry) => entry.wallet),
+      );
+      entries = entries.map((entry) => ({
+        ...entry,
+        suinsName: resolution.names[entry.wallet] || null,
+      }));
+      const warning = resolution.complete
+        ? []
+        : ['Some current SuiNS names could not be resolved.'];
+      source = {
+        ...snapshot.source,
+        suins: {
+          requestedCount: resolution.requestedCount,
+          resolvedCount: resolution.resolvedCount,
+          complete: resolution.complete,
+          generatedAt: resolution.generatedAt,
+          warnings: warning,
+        },
+      };
+      identityWarnings.push(...warning);
+    } catch {
+      identityWarnings.push('Current SuiNS identity enrichment was temporarily unavailable.');
+    }
+  }
   return {
     status: stale ? 'stale' as const : 'ok' as const,
     provider: snapshot.provider,
@@ -132,11 +165,12 @@ export async function resolveExposureSnapshotPayload(
     coverage: snapshot.coverage,
     eligibleOwnerCount: snapshot.eligibleOwnerCount,
     displayedCount: snapshot.displayedCount,
-    source: snapshot.source,
+    source,
     summary: snapshot.summary,
-    entries: snapshot.entries,
+    entries,
     warnings: [
       ...snapshot.warnings,
+      ...identityWarnings,
       ...(stale ? [`Displayed exposure rows are from the last complete snapshot at ${snapshot.generatedAt}.`] : []),
     ],
     message: stale

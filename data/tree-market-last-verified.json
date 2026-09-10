@@ -1,0 +1,16 @@
+{
+  "generatedAt": "2026-08-21T21:28:47.928Z",
+  "source": "Noodles.fi",
+  "data": {
+    "price": 0.0000234,
+    "priceChange1h": 0,
+    "priceChange24h": 12.72,
+    "priceChange7d": 24.14,
+    "volume24h": 74.43,
+    "liquidity": 16443,
+    "marketCap": 23408,
+    "fdv": 23408,
+    "holderCount": 602,
+    "sourceUpdatedAt": null
+  }
+}

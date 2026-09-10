@@ -7,12 +7,6 @@ const productionContext = {
 };
 const silent = { info() {}, error() {} };
 
-const outside = await runTreeSnapshotScheduledTrigger('exposure', {
-  ...productionContext,
-  deploy: { ...productionContext.deploy, context: 'deploy-preview' },
-}, { logger: silent });
-assert.deepEqual(outside, { attempted: false, accepted: false, reason: 'not-production' });
-
 const disabled = await runTreeSnapshotScheduledTrigger('exposure', productionContext, {
   getEnv: () => undefined,
   logger: silent,
@@ -42,6 +36,24 @@ const exposureAccepted = await runTreeSnapshotScheduledTrigger('exposure', produ
 });
 assert.deepEqual(exposureAccepted, { attempted: true, accepted: true, reason: 'accepted' });
 assert.equal(exposureCalls, 1);
+
+let scheduledContextCalls = 0;
+const acceptedWithoutDeployMetadata = await runTreeSnapshotScheduledTrigger('exposure', {
+  site: { url: 'https://tree-token.xyz' },
+}, {
+  getEnv: (name) => ({
+    TREE_EXPOSURE_PRODUCTION_ENABLED: 'true',
+    TREE_EXPOSURE_REFRESH_SECRET: 'exposure-secret',
+  }[name]),
+  fetchImpl: async (input) => {
+    scheduledContextCalls += 1;
+    assert.equal(String(input), 'https://tree-token.xyz/.netlify/functions/tree-exposure-refresh-background');
+    return new Response(null, { status: 202 });
+  },
+  logger: silent,
+});
+assert.deepEqual(acceptedWithoutDeployMetadata, { attempted: true, accepted: true, reason: 'accepted' });
+assert.equal(scheduledContextCalls, 1);
 
 const badgeAccepted = await runTreeSnapshotScheduledTrigger('badges', productionContext, {
   getEnv: (name) => ({
@@ -81,4 +93,4 @@ const timeout = await runTreeSnapshotScheduledTrigger('exposure', productionCont
 });
 assert.deepEqual(timeout, { attempted: true, accepted: false, reason: 'timeout' });
 
-console.log('TREE snapshot scheduled triggers: PASS (production guards, dedicated secrets, accepted dispatch, timeout and failure handling)');
+console.log('TREE snapshot scheduled triggers: PASS (real scheduled context, enable flags, dedicated secrets, accepted dispatch, timeout and failure handling)');

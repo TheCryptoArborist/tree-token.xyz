@@ -1,13 +1,37 @@
 {
+  "version": "canopy-draw-proposal-v2",
   "status": "development",
   "acceptingEntries": false,
-  "dailyPrize": null,
+  "claimsEnabled": false,
+  "prizesFunded": false,
+  "dailyPrize": {
+    "symbol": "TREE",
+    "coinType": "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE",
+    "amountRaw": "50000000000",
+    "decimals": 6
+  },
+  "dailyLuckyLeaf": {
+    "status": "staged-inactive",
+    "symbol": "wBTC",
+    "coinType": "0xaafb102dd0902f5055cadecd687fb5b71ca82ef0e0285d90afde828ec58ca96b::btc::BTC",
+    "decimals": 8,
+    "mondayThroughSaturdayUsd": 2.5,
+    "sundayUsd": 10,
+    "weeklyBudgetUsd": 25
+  },
   "weeklyPrize": null,
+  "weeklyLuckyLeafPrize": null,
   "minimumQualifyingUsdConcept": 5,
-  "mainPrizeSharePercentConcept": 80,
-  "luckyPrizeSharePercentConcept": 20,
+  "ticketExponentConcept": 0.9457,
+  "ticketCoefficientConcept": 0.288368,
+  "streakMultipliersConcept": [1, 1.1, 1.25, 1.4, 1.5, 1.6, 1.75, 1.85, 1.95, 2, 2.1, 2.2, 2.3, 2.4, 2.5],
+  "milestoneBonusUsdConcept": { "7": 50, "15": 200 },
   "maxStreakMultiplierConcept": 2.5,
   "maxStreakDaysConcept": 15,
   "randomness": "planned-sui-on-chain",
-  "legalReviewRequired": true
+  "legalReviewRequired": true,
+  "scheduleTimezoneConcept": "America/New_York",
+  "dailyDrawTimeConcept": "10:00",
+  "weeklyDrawTimeConcept": "Sunday 10:05",
+  "statusEndpoint": "/api/tree-raffle-status"
 }
