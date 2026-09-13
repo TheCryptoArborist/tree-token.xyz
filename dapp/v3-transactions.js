@@ -1,5 +1,5 @@
 import {
-  SUI_COIN_TYPE, TREE_DECIMALS, SUI_DECIMALS, DEFAULT_SLIPPAGE_BPS, MIN_SUI_GAS_RESERVE_RAW, TREE_V3_REWARD_TOKENS,
+  SUI_COIN_TYPE, TREE_COIN_TYPE, TREE_DECIMALS, SUI_DECIMALS, DEFAULT_SLIPPAGE_BPS, MIN_SUI_GAS_RESERVE_RAW, TREE_V3_REWARD_TOKENS,
   isTreeV3ExecutionHost,
   decimalToRaw, rawToDecimal, ticksFromDisplayedPrices, minimumAfterSlippage, validateVerifiedPool,
   buildCreateTreeV3Position, buildIncreaseTreeV3Position, buildRemoveTreeV3Position,
@@ -88,6 +88,13 @@ async function waitForFinality(client, digest) {
 function node(...ids) { for (const id of ids) { const found = document.getElementById(id); if (found) return found; } return null; }
 function setStatus(message, kind = '') { const target = node('v3CreateStatus','v3AddStatus','v3Status'); if (!target) return; target.textContent = message; target.classList.remove('ok','error','warning'); if (kind) target.classList.add(kind); }
 async function overview(owner = null) { const query = owner ? `?owner=${encodeURIComponent(owner)}` : ''; const response = await fetch(`/api/tree-v3-overview${query}`, { headers: { Accept: 'application/json' }, cache: 'no-store' }); if (!response.ok) throw new Error(`V3 overview returned ${response.status}.`); const payload = await response.json(); validateVerifiedPool(payload?.pool); return payload; }
+function rawBalanceValue(result) {
+  const value = result?.balance?.balance ?? result?.balance?.totalBalance ?? result?.balance ?? result?.totalBalance ?? 0;
+  try { return BigInt(value); } catch { throw new Error('Sui returned an invalid wallet balance.'); }
+}
+async function rawCoinBalance(client, owner, coinType) {
+  return rawBalanceValue(await client.core.getBalance({ owner, coinType }));
+}
 function createButton() { return node('v3CreatePosition') || document.querySelector('#v3 .v3-disabled-action') || [...document.querySelectorAll('#v3 button')].find((item) => /position transaction builder|create.*position/i.test(item.textContent || '')); }
 function installControls(button) {
   if (!document.getElementById('v3TransactionControls')) {
@@ -160,9 +167,12 @@ async function increasePosition(positionId, panel, button) {
     if (!position || validAddress(data.owner)?.toLowerCase() !== owner.toLowerCase()) throw new Error('This verified position is not owned by the connected wallet.');
     const suiRaw = decimalToRaw(panel.querySelector('[data-v3-increase-sui]')?.value, SUI_DECIMALS);
     const treeRaw = decimalToRaw(panel.querySelector('[data-v3-increase-tree]')?.value, TREE_DECIMALS);
-    const balanceResult = await client.core.getBalance({ owner, coinType: SUI_COIN_TYPE });
-    const suiBalance = BigInt(balanceResult?.balance?.balance ?? balanceResult?.balance ?? balanceResult?.totalBalance ?? 0);
+    const [suiBalance, treeBalance] = await Promise.all([
+      rawCoinBalance(client, owner, SUI_COIN_TYPE),
+      rawCoinBalance(client, owner, TREE_COIN_TYPE),
+    ]);
     if (suiBalance < suiRaw + MIN_SUI_GAS_RESERVE_RAW) throw new Error('Keep at least 0.05 SUI available for gas after the increase deposit.');
+    if (treeBalance < treeRaw) throw new Error('The connected wallet does not have enough TREE for this position.');
     const { Transaction } = await import(SDK_URL);
     setIncreaseStatus(panel,'Building and simulating the proposed liquidity increase…','warning');
     const preliminaryTx = await buildIncreaseTreeV3Position({ Transaction, client, owner, positionId, treeRaw, suiRaw });
@@ -349,8 +359,9 @@ async function createPosition(button) {
     const owner = await connectedAddress(); if (!owner) throw new Error('Connect a Sui wallet before creating a position.');
     const client = await suiClient(); const data = await overview();
     const suiRaw = decimalToRaw(node('v3SuiAmount','v3AmountSui')?.value, SUI_DECIMALS); const treeRaw = decimalToRaw(node('v3TreeAmount','v3AmountTree')?.value, TREE_DECIMALS);
-    const balanceResult = await client.core.getBalance({ owner, coinType: SUI_COIN_TYPE }); const suiBalance = BigInt(balanceResult?.balance?.balance ?? balanceResult?.balance ?? balanceResult?.totalBalance ?? 0);
+    const [suiBalance, treeBalance] = await Promise.all([rawCoinBalance(client, owner, SUI_COIN_TYPE), rawCoinBalance(client, owner, TREE_COIN_TYPE)]);
     if (suiBalance < suiRaw + MIN_SUI_GAS_RESERVE_RAW) throw new Error('Keep at least 0.05 SUI available for gas after the position deposit.');
+    if (treeBalance < treeRaw) throw new Error('The connected wallet does not have enough TREE for this position.');
     const minPrice = Number(node('v3MinPrice','v3MinimumPrice')?.value); const maxPrice = Number(node('v3MaxPrice','v3MaximumPrice')?.value);
     const { lower: tickLower, upper: tickUpper } = ticksFromDisplayedPrices({ currentTick: Number(data.pool.currentTick), currentPrice: Number(data.pool.priceSuiPerTree), minPrice, maxPrice, tickSpacing: Number(data.pool.tickSpacing), displayedPriceIncreasesWithTick: false });
     const { Transaction } = await import(SDK_URL);
