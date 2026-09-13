@@ -1,0 +1,1 @@
+Temporary validation note for the V3 balance normalization patch. The production-facing change is limited to `dapp/v3-transactions.js`: SUI and TREE balances are now read as raw integer base units and compared against raw deposit requirements for both create and increase flows.
