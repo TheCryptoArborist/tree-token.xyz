@@ -3,7 +3,7 @@
   publish = "dist"
 
 [context.deploy-preview]
-  command = "node --test tests/tree-account*.test.mjs && npm run build"
+  command = "node --test tests/tree-account*.test.mjs tests/canopy-credits-simulation.test.mjs && npm run build"
 
 [functions]
   directory = "netlify/functions"
