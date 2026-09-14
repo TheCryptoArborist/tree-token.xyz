@@ -1,5 +1,7 @@
 /** Backend-only foundation. No signer, wallet calls, transaction submission or HTTP route. */
 import { createHash, createHmac, randomUUID, timingSafeEqual } from 'node:crypto';
+import { CC_SALES_RECIPIENT } from './sales-recipient.mjs';
+export { CC_SALES_RECIPIENT };
 export const TREE_TYPE = '0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE';
 export const NETWORK = 'sui:mainnet';
 export const LIVE_CHECKOUT_ENABLED = false;
@@ -24,6 +26,7 @@ export function verifyQuote(terms,signature,key) {
 function configCheck(c) {
   check(c?.network===NETWORK && c.coinType===TREE_TYPE,'wrong-payment-network-or-coin');
   address(c.recipient); address(c.checkoutPackage);
+  check(c.recipient===CC_SALES_RECIPIENT,'unapproved-sales-recipient');
   check(c.eventType===`${c.checkoutPackage}::checkout::Purchase`,'unreviewed-event-contract');
   check(c.metadataVerified===true && Number.isInteger(c.decimals) && c.decimals>=0 && c.decimals<=18,'verified-coin-metadata-required');
   check(typeof c.policyVersion==='string'&&c.policyVersion.length>0&&c.policyVersion.length<=80,'pricing-policy-required');
@@ -31,7 +34,7 @@ function configCheck(c) {
   check(typeof c.chainIdentifier==='string'&&/^[0-9a-f]{8}$/.test(c.chainIdentifier),'chain-identifier-required');
   check(uint(c.maxBaseCC)>0n,'pilot-cap-required');
 }
-/** Builds frozen draft terms, not a live payment authorization. Config has NO defaults for price/recipient. */
+/** Builds frozen draft terms, not a live payment authorization. Recipient is pinned; other required config has no defaults. */
 export function draftOrder({accountId,payer,baseCC,orderId=randomUUID()},config,price,key,now=Date.now()) {
   configCheck(config); uuid(accountId); uuid(orderId); address(payer);
   check(payer!==config.recipient,'self-payment-not-supported');
@@ -55,6 +58,7 @@ export function validateStoredTerms(t) {
   check(t&&typeof t==='object','missing-order');
   const {quoteHash,...committed}=t; check(/^[a-f0-9]{64}$/.test(quoteHash||'')&&hash(committed)===quoteHash,'order-commitment-mismatch');
   uuid(t.accountId);uuid(t.orderId);address(t.payer);address(t.recipient);address(t.checkoutPackage);
+  check(t.recipient===CC_SALES_RECIPIENT,'unapproved-sales-recipient');
   check(t.payer!==t.recipient,'self-payment-not-supported');
   check(t.network===NETWORK&&t.coinType===TREE_TYPE,'wrong-payment-network-or-coin');
   check(t.eventType===`${t.checkoutPackage}::checkout::Purchase`,'unreviewed-event-contract');

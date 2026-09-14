@@ -1,10 +1,11 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {randomUUID,randomBytes} from 'node:crypto';
-import {TREE_TYPE,NETWORK,LIVE_CHECKOUT_ENABLED,draftOrder,verifyQuote,verifyFromReader,beginLiveCheckout,validateStoredTerms} from '../mainnet-payment.mjs';
+import {TREE_TYPE,NETWORK,LIVE_CHECKOUT_ENABLED,CC_SALES_RECIPIENT,hash,draftOrder,verifyQuote,verifyFromReader,beginLiveCheckout,validateStoredTerms} from '../mainnet-payment.mjs';
 import {runtimeLedger,settlementWorker,validateCommand} from '../ledger.mjs';
 const now=1800000000000,key=randomBytes(32),addr=n=>'0x'+String(n).repeat(64),digest='A'.repeat(43);
-const config={network:NETWORK,coinType:TREE_TYPE,recipient:addr(2),checkoutPackage:addr(3),eventType:addr(3)+'::checkout::Purchase',
+// Recipient is the founder-approved public setting; all chain responses below are fictional fixtures.
+const config={network:NETWORK,coinType:TREE_TYPE,recipient:CC_SALES_RECIPIENT,checkoutPackage:addr(3),eventType:addr(3)+'::checkout::Purchase',
   metadataVerified:true,decimals:6,policyVersion:'UNIT-TEST-NOT-MARKET-PRICE',bonusBps:1000,chainIdentifier:'1234abcd',maxBaseCC:'1000'};
 const price={policyVersion:config.policyVersion,source:'reviewed-policy',observedAtMs:now,usdMicroPerTree:'3000'};
 function fixture(){
@@ -53,3 +54,20 @@ test('runtime SQL uses parameters and serializes BIGINT values without rounding'
 test('settlement worker reads saved terms; does not accept client evidence',async()=>{const f=fixture(),calls=[];const db={query:async(sql,params)=>{calls.push({sql,params});return{rows:[{result:sql.includes('get_order')?f.terms:{credited:'1100'}}]}}};const actor={authenticated:true,accountId:f.terms.accountId,environment:'isolated-ledger',identityMappingReviewed:true};const r=await settlementWorker(db,f.reader).settle(actor,randomUUID(),f.terms.orderId,digest,'0');assert.equal(r.credited,'1100');assert.equal(calls.length,2);assert.equal(JSON.parse(calls[1].params[3]).evidenceHash.length,64)});
 test('bad payment never reaches the crediting query',async()=>{const f=fixture();f.tx.status='failed';let queries=0;const db={query:async()=>{queries++;return{rows:[{result:f.terms}]}}};await assert.rejects(settlementWorker(db,f.reader).settle({authenticated:true,accountId:f.terms.accountId,environment:'isolated-ledger',identityMappingReviewed:true},randomUUID(),f.terms.orderId,digest,'0'));assert.equal(queries,1)});
 test('missing/empty/null run and reservation identifiers are rejected before DB access',()=>{for(const runId of [null,'',undefined])assert.throws(()=>validateCommand({action:'recover',runId}));for(const reservationId of [null,'',undefined])assert.throws(()=>validateCommand({action:'release',reservationId}));});
+test('sales recipient is the exact founder-supplied address in every new draft',()=>{
+  assert.equal(CC_SALES_RECIPIENT,'0x6f1020c2fd6c91129f7cb5e0d651295e87f7245f96b7d090715c89b38197e77f');
+  assert.match(CC_SALES_RECIPIENT,/^0x[0-9a-f]{64}$/);
+  assert.equal(fixture().terms.recipient,CC_SALES_RECIPIENT);
+});
+test('configuration cannot redirect sales to another well-formed wallet',()=>{
+  assert.throws(()=>draftOrder(fixture().args,{...config,recipient:addr(2)},price,key,now),/unapproved-sales-recipient/);
+});
+test('a rehashed order to an unapproved recipient is rejected before chain or credit writes',async()=>{
+  const f=fixture();const {quoteHash,...changed}=f.terms;changed.recipient=addr(2);
+  const altered={...changed,quoteHash:hash(changed)};
+  assert.throws(()=>validateStoredTerms(altered),/unapproved-sales-recipient/);
+  let queries=0;const db={query:async()=>{queries++;return{rows:[{result:altered}]}}};
+  const reader={getNetworkIdentity:async()=>{throw Error('reader must not be called')},getFinalizedTransaction:async()=>{throw Error('reader must not be called')}};
+  await assert.rejects(settlementWorker(db,reader).settle({authenticated:true,accountId:f.terms.accountId,environment:'isolated-ledger',identityMappingReviewed:true},randomUUID(),f.terms.orderId,digest,'0'),/unapproved-sales-recipient/);
+  assert.equal(queries,1);
+});
