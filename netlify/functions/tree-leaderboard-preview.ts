@@ -40,7 +40,7 @@ export async function handleTreeLeaderboardPreviewRequest(
       ...payload,
       entries: enriched,
       identityResolution: {
-        provider: 'sui-grpc-default-suins-name',
+        provider: 'sui-graphql-default-name-record',
         requestedCount: resolution.requestedCount,
         resolvedCount: resolution.resolvedCount,
         complete: resolution.complete,

@@ -1,0 +1,85 @@
+name: Apply and validate native V3 position transactions
+
+on:
+  push:
+    branches:
+      - feature/tree-v3-transactions-v1
+    paths:
+      - '.github/workflows/apply-tree-v3-transactions.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/tree-v3-transactions-v1
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Wire the V3 transaction controller and remove inspection files
+        shell: bash
+        run: |
+          set -euo pipefail
+          python <<'PY'
+          from pathlib import Path
+          path = Path('dapp/index.html')
+          source = path.read_text(encoding='utf-8')
+          if 'v3-transactions.css' not in source:
+              if '<link rel="stylesheet" href="v3-workspace.css">' in source:
+                  source = source.replace('<link rel="stylesheet" href="v3-workspace.css">', '<link rel="stylesheet" href="v3-workspace.css">\n  <link rel="stylesheet" href="v3-transactions.css">')
+              else:
+                  source = source.replace('</head>', '  <link rel="stylesheet" href="v3-transactions.css">\n</head>')
+          if 'v3-transactions.js' not in source:
+              if '<script type="module" src="v3-workspace.js"></script>' in source:
+                  source = source.replace('<script type="module" src="v3-workspace.js"></script>', '<script type="module" src="v3-workspace.js"></script>\n  <script type="module" src="v3-transactions.js"></script>')
+              else:
+                  source = source.replace('</body>', '  <script type="module" src="v3-transactions.js"></script>\n</body>')
+          path.write_text(source, encoding='utf-8')
+          PY
+          rm -f .github/workflows/inspect-tree-v3-transaction-builder.yml
+          rm -f .github/workflows/inspect-suidex-v3-chain.yml
+          rm -f .github/workflows/inspect-suidex-v3-interface.yml
+          rm -f .github/workflows/apply-tree-v3-transactions.yml
+
+      - name: Validate implementation and non-signing Mainnet simulation
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci
+          npm run build
+          node --check dapp/v3-transaction-core.js
+          node --check dapp/v3-transactions.js
+          node tests/v3-transaction-core.test.mjs
+          node tests/v3-transactions-source.test.mjs
+          node tests/v3-workspace.test.mjs
+          node tests/wallet-manager-core.test.mjs
+          node tests/wallet-manager-source.test.mjs
+          node tests/swap-router.test.mjs
+          node scripts/simulate-tree-v3-create-position.mjs
+          git diff --check
+          test "$(grep -c 'v3-transactions.css' dapp/index.html)" -eq 1
+          test "$(grep -c 'v3-transactions.js' dapp/index.html)" -eq 1
+          ! grep -q 'v3-transactions.js' index.html
+
+      - name: Commit verified implementation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Enable preview-gated native V3 position creation'
+          git push origin HEAD:feature/tree-v3-transactions-v1

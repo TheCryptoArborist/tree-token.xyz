@@ -6,7 +6,10 @@
     "effectiveSupply": 939645875.445367,
     "moonbagsLocked": 54532780.688377,
     "nextUnlock2027": 34151744.570978,
-    "nextUnlock2028": 20381036.117399
+    "nextUnlock2027Date": "2027-01-01T06:00:00.000Z",
+    "nextUnlock2028": 20381036.117399,
+    "nextUnlock2028Date": "2028-01-01T06:00:00.000Z",
+    "timeLockSource": "Moonbags open TREE lock contracts"
   },
   "liquidity": {
     "recognizedLiquidityUsd": 14470.62,
