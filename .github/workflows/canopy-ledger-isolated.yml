@@ -1,0 +1,41 @@
+name: Canopy ledger isolated PostgreSQL checks
+on:
+  push:
+    branches: [feature/canopy-credits-mainnet-ledger]
+    paths: ['services/canopy-credits/**', '.github/workflows/canopy-ledger-isolated.yml']
+permissions:
+  contents: read
+jobs:
+  ledger:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: canopy_ci
+          POSTGRES_USER: canopy_ci
+          POSTGRES_PASSWORD: disposable-ci-only
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd 'pg_isready -U canopy_ci -d canopy_ci'
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: 127.0.0.1
+      PGPORT: '5432'
+      PGDATABASE: canopy_ci
+      PGUSER: canopy_ci
+      PGPASSWORD: disposable-ci-only
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Ensure disposable database client
+        run: command -v psql || (sudo apt-get update && sudo apt-get install -y postgresql-client)
+      - name: Payment verifier and server adapter checks
+        run: node --test services/canopy-credits/tests/payment.test.mjs
+      - name: Real PostgreSQL schema, isolation and concurrent accounting checks
+        run: python3 services/canopy-credits/tests/postgres_test.py
