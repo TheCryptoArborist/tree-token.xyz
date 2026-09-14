@@ -16,14 +16,12 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '22'
-      - name: Install isolated pinned SDK without lifecycle scripts
+      - name: Install isolated locked SDK without lifecycle scripts
         working-directory: services/canopy-credits/reader
         run: |
-          npm install --ignore-scripts --no-audit --no-fund
-          echo SDK_LOCK_BEGIN
-          cat package-lock.json
-          echo SDK_LOCK_END
+          npm ci --ignore-scripts --no-audit --no-fund
+          git diff --exit-code -- package.json package-lock.json
       - name: Offline reader and existing payment validation
-        run: node --test services/canopy-credits/tests/mainnet-reader.test.mjs services/canopy-credits/tests/payment.test.mjs services/canopy-credits/reader/transport.test.mjs
+        run: node --test --test-reporter=spec services/canopy-credits/tests/*reader*.test.mjs services/canopy-credits/tests/payment.test.mjs services/canopy-credits/reader/transport.test.mjs
       - name: Bounded read-only mainnet acceptance; no transaction submission
         run: node services/canopy-credits/reader/smoke.mjs
