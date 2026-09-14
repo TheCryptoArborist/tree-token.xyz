@@ -11,14 +11,14 @@ jobs:
     timeout-minutes: 10
     services:
       postgres:
-        image: postgres:17
+        image: postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675
         env:
           POSTGRES_DB: canopy_ci
           POSTGRES_USER: canopy_ci
           POSTGRES_PASSWORD: disposable-ci-only
         ports: ['5432:5432']
         options: >-
-          --health-cmd 'pg_isready -U canopy_ci -d canopy_ci'
+          --health-cmd "pg_isready -U canopy_ci -d canopy_ci"
           --health-interval 5s --health-timeout 5s --health-retries 10
     env:
       PGHOST: 127.0.0.1
@@ -27,10 +27,10 @@ jobs:
       PGUSER: canopy_ci
       PGPASSWORD: disposable-ci-only
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '22'
       - name: Ensure disposable database client
