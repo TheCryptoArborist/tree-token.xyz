@@ -9,7 +9,7 @@ export function validateCommand(c) {
   check(c&&typeof c==='object'&&!Array.isArray(c)&&Object.hasOwn(commandFields,c.action),'invalid-command');
   const keys=commandFields[c.action];
   check(Object.keys(c).length===keys.length+1&&keys.every(k=>Object.hasOwn(c,k))&&Object.keys(c).every(k=>k==='action'||keys.includes(k)),'unexpected-command-fields');
-  if(c.runId)uuid(c.runId);if(c.reservationId)uuid(c.reservationId);
+  if(keys.includes('runId'))uuid(c.runId);if(keys.includes('reservationId'))uuid(c.reservationId);
   if(c.action==='open_run')check(typeof c.ruleset==='string'&&c.ruleset.length>0&&c.ruleset.length<=100,'invalid-ruleset');
   if(c.action==='reserve')check(c.sku==='treeforce89.continue.v1','unsupported-sku');
   if(['commit','deliver'].includes(c.action))check(typeof c.checkpointRef==='string'&&/^[a-f0-9]{64}$/.test(c.checkpointRef),'checkpoint-required');

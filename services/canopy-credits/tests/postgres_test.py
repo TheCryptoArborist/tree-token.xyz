@@ -26,8 +26,11 @@ def query(sql, role=None, fail=False):
         if r.returncode == 0: raise AssertionError('Statement unexpectedly succeeded: ' + sql)
         return r.stderr
     if r.returncode: raise AssertionError(r.stderr)
-    lines = [x for x in r.stdout.splitlines() if x.strip()]
-    return json.loads(lines[-1]) if lines and lines[-1][0] in '{[' else (lines[-1] if lines else None)
+    # PostgreSQL json_agg may contain embedded newlines; decode the complete
+    # result instead of treating the last line as a separate result row.
+    output = r.stdout.strip()
+    if not output: return None
+    return json.loads(output) if output[0] in '{[' else output.splitlines()[-1]
 
 def execute(account, cmd, request=None, fail=False):
     return query(f'SELECT canopy_credits_v1.execute({literal(account)},{literal(request or uid())},{jb(cmd)})', 'canopy_cc_runtime', fail)
