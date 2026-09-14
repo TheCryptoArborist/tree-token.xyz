@@ -1,5 +1,5 @@
 /** Offline unsigned transaction construction for review. No client, signer, execution,
- * simulation, publication, or live UI. Object inventories must later come from a trusted resolver.
+ * simulation, publication, or live UI. Object inventories must come from a trusted resolver.
  */
 import { Transaction } from '@mysten/sui/transactions';
 import { check, uint, address, TREE_TYPE, CC_SALES_RECIPIENT } from '../../mainnet-payment.mjs';
@@ -15,7 +15,9 @@ function coinRef(c, payer, type) {
   check(uint(c.balance, U64) > 0n, 'empty-coin');
   return { objectId: c.objectId, version: c.version, digest: c.digest };
 }
-export async function buildCheckoutForReview({ terms, deployment, envelope, paymentCoins, gasCoins, gasBudget, gasPrice, maxGasBudget, epoch }, now = Date.now()) {
+export async function buildCheckoutForReview(input, now = Date.now()) {
+  // Snapshot before the first await: later caller mutation cannot change the review summary.
+  const { terms, deployment, envelope, paymentCoins, gasCoins, gasBudget, gasPrice, maxGasBudget, epoch } = structuredClone(input);
   const d = deploymentConfig(deployment);
   const proof = validateQuoteEnvelope(terms, d, envelope, now);
   check(Array.isArray(paymentCoins) && paymentCoins.length > 0 && paymentCoins.length <= 32, 'payment-coins-required');
@@ -42,7 +44,6 @@ export async function buildCheckoutForReview({ terms, deployment, envelope, paym
     payment, tx.pure.vector('u8', proof.bytes), tx.pure.vector('u8', proof.signature),
     tx.sharedObjectRef({ objectId: CLOCK, initialSharedVersion: '1', mutable: false }),
   ] });
-  // All inputs, sender and gas are resolved above: do NOT supply a network client.
   const bytes = await tx.build();
   return Object.freeze({ transaction: tx, bytes, payable: false,
     summary: Object.freeze({ network: 'sui:mainnet', recipient: CC_SALES_RECIPIENT,

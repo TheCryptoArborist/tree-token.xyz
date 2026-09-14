@@ -34,7 +34,7 @@ function configCheck(c) {
   check(typeof c.chainIdentifier==='string'&&/^[0-9a-f]{8}$/.test(c.chainIdentifier),'chain-identifier-required');
   check(uint(c.maxBaseCC)>0n,'pilot-cap-required');
 }
-/** Builds frozen draft terms, not a live payment authorization. Recipient is pinned; other required config has no defaults. */
+/** Frozen draft terms, not live payment authorization. Recipient is pinned. */
 export function draftOrder({accountId,payer,baseCC,orderId=randomUUID()},config,price,key,now=Date.now()) {
   configCheck(config); uuid(accountId); uuid(orderId); address(payer);
   check(payer!==config.recipient,'self-payment-not-supported');
@@ -67,9 +67,8 @@ export function validateStoredTerms(t) {
   check(uint(t.requiredRaw,U64)>0n,'invalid-payment-terms');
   check(Number.isSafeInteger(t.issuedAtMs)&&Number.isSafeInteger(t.expiresAtMs)&&t.expiresAtMs>t.issuedAtMs&&t.expiresAtMs-t.issuedAtMs<=60000,'invalid-quote-window');
 }
-/** Normalized evidence contract for a REVIEWED gRPC/GraphQL reader. Not a wire API schema.
- * The future checkout package must emit the committed order fields; this code does not claim it exists.
- * Never give callers a route accepting an evidence object or arbitrary RPC URL.
+/** Normalized server-only gRPC evidence. No route may accept client-supplied evidence.
+ * Checkout BCS must be decoded by the configured package/instance-specific codec.
  */
 export async function verifyFromReader(terms,digest,eventIndex,reader) {
   validateStoredTerms(terms);
@@ -80,21 +79,33 @@ export async function verifyFromReader(terms,digest,eventIndex,reader) {
   const tx=await reader.getFinalizedTransaction(digest);
   check(tx?.digest===digest && tx.status==='success' && tx.finalized===true && tx.simulated===false,'unfinalized-or-unsuccessful');
   uint(tx.checkpoint,U64);
-  check(Number.isSafeInteger(tx.timestampMs)&&tx.timestampMs>=terms.issuedAtMs&&tx.timestampMs<=terms.expiresAtMs,'payment-outside-quote-window');
+  check(Number.isSafeInteger(tx.timestampMs)&&tx.timestampMs>=terms.issuedAtMs,'payment-outside-quote-window');
   check(tx.sender===terms.payer,'payer-mismatch');
   check(Array.isArray(tx.events)&&Array.isArray(tx.balanceChanges),'incomplete-chain-data');
   const selected=tx.events.filter(e=>e.index===eventIndex);check(selected.length===1,'receipt-not-unique');
   const e=selected[0];check(e.type===terms.eventType&&e.packageId===terms.checkoutPackage,'receipt-package-mismatch');
   const expected={orderId:terms.orderId,accountId:terms.accountId,payer:terms.payer,recipient:terms.recipient,coinType:TREE_TYPE,amountRaw:terms.requiredRaw,quoteHash:terms.quoteHash};
   check(e.fields&&Object.entries(expected).every(([k,v])=>e.fields[k]===v),'receipt-fields-mismatch');
-  // Conservative first-pilot rule: no extra TREE moves in the same checkout PTB.
+  let stamp=tx.timestampMs, receiptContext={};
+  if (Object.hasOwn(e.fields,'checkoutId') || Object.hasOwn(e.fields,'paidAtMs')) {
+    // The contract's Clock is authoritative for quote expiry. A containing checkpoint
+    // can be recorded later than execution; never reject an on-time paid receipt merely
+    // because checkpoint inclusion or the worker's observation came after expiry.
+    address(e.fields.checkoutId); check(uint(e.fields.keyEpoch)>0n,'invalid-receipt-key-epoch');
+    check(e.fields.issuedAtMs===String(terms.issuedAtMs)&&e.fields.expiresAtMs===String(terms.expiresAtMs),'receipt-order-window-mismatch');
+    stamp=Number(uint(e.fields.paidAtMs,BigInt(Number.MAX_SAFE_INTEGER)));
+    check(stamp<=tx.timestampMs,'receipt-time-after-checkpoint');
+    receiptContext={checkoutId:e.fields.checkoutId,keyEpoch:e.fields.keyEpoch,
+      checkpointTimestampMs:tx.timestampMs,paymentTimeSource:'checkout-clock'};
+  }
+  check(stamp>=terms.issuedAtMs&&stamp<=terms.expiresAtMs,'payment-outside-quote-window');
   const delta=who=>tx.balanceChanges.filter(b=>b.owner===who&&b.coinType===TREE_TYPE).reduce((sum,b)=>{
     check(typeof b.amount==='string'&&/^-?(0|[1-9][0-9]*)$/.test(b.amount),'invalid-balance-change');return sum+BigInt(b.amount);
   },0n);
   const amount=uint(terms.requiredRaw,U64);
   check(delta(terms.recipient)===amount&&delta(terms.payer)===-amount,'payment-effects-mismatch');
   const evidence={source:'chain-reader',network:NETWORK,finalized:true,status:'success',digest,eventIndex,checkpoint:tx.checkpoint,
-    timestampMs:tx.timestampMs,eventType:e.type,...expected};
+    timestampMs:stamp,eventType:e.type,...expected,...receiptContext};
   evidence.evidenceHash=hash(evidence);
   return Object.freeze(evidence);
 }

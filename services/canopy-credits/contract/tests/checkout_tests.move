@@ -31,7 +31,7 @@ fun run_case(which: u8) {
         else if (which == 18) vectors::short_order()
         else if (which == 20) vectors::zero()
         else vectors::base();
-    if (which == 11) sig[0] = sig[0] ^ 1;
+    if (which == 11) { let bad = sig[0] ^ 1; *vector::borrow_mut(&mut sig, 0) = bad; };
     if (which == 19) bytes.push_back(0);
     if (which == 22) {
         checkout::configure(&mut c,&cap,vectors::key(),2000000,3000000,vector[PAYER]);
