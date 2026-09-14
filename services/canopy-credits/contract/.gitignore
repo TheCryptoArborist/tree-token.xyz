@@ -1,0 +1,3 @@
+build/
+Move.lock
+tests/vectors.move
