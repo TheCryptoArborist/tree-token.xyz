@@ -1,0 +1,32 @@
+name: Apply Kelpie TREE vault integration
+on:
+  push:
+    branches: [feature/kelpie-managed-tree-vault]
+    paths:
+      - scripts/apply-kelpie-tree-vault.mjs
+      - .github/workflows/apply-kelpie-tree-vault.yml
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/kelpie-managed-tree-vault
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/apply-kelpie-tree-vault.mjs
+      - name: Verify integration
+        run: |
+          grep -F 'Kelpie Automated SUI / TREE V3 Vault' dapp/index.html
+          grep -F '0x39d5ba22e01e45bc4129ec28a0bef52e8fee8db5d07d337adf9540e3cb9074cf?protocol=suidex' dapp/index.html
+      - name: Commit integration
+        run: |
+          if git diff --quiet -- dapp/index.html; then exit 0; fi
+          git config user.name 'TREE Fix Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add dapp/index.html
+          git commit -m 'Add Kelpie managed TREE liquidity option'
+          git push

@@ -1,0 +1,9 @@
+import fs from 'node:fs';
+const path='dapp/index.html';
+let s=fs.readFileSync(path,'utf8');
+const anchor='<div class="earn-route-list">\n          <article class="earn-route-row"><div class="earn-route-title"><span class="token-logo-stack" aria-hidden="true"><img src="../assets/sui-token.svg" alt=""><img src="../thick.png" alt=""></span><div><h3>SUI / TREE V2</h3><small>Classic liquidity + farm</small></div></div>';
+if(!s.includes(anchor)) throw new Error('Earn route anchor not found');
+const kelpie=`<div class="earn-route-list">\n          <article class="earn-route-row kelpie-managed-route"><div class="earn-route-title"><span class="token-logo-stack" aria-hidden="true"><img src="../assets/sui-token.svg" alt=""><img src="../thick.png" alt=""></span><div><h3>Kelpie Automated SUI / TREE V3 Vault</h3><small>Official TREE managed-liquidity option · SuiDex V3</small></div></div><div class="earn-route-actions"><a class="button gold" href="https://kelpie.network/earn/0x39d5ba22e01e45bc4129ec28a0bef52e8fee8db5d07d337adf9540e3cb9074cf?protocol=suidex" target="_blank" rel="noopener noreferrer">Open TREE Vault ↗</a></div><details><summary>Managed liquidity details</summary><p>Prefer hands-off V3 liquidity management? Open the verified SUI/TREE SuiDex V3 pool through Kelpie. Kelpie manages the concentrated-liquidity position while TREE Command Center keeps native V3 tools available for advanced LPs who want full manual range control.</p><p><strong>Managed option:</strong> Kelpie. <strong>Manual option:</strong> TREE Command Center native V3.</p></details></article>\n          <article class="earn-route-row"><div class="earn-route-title"><span class="token-logo-stack" aria-hidden="true"><img src="../assets/sui-token.svg" alt=""><img src="../thick.png" alt=""></span><div><h3>SUI / TREE V2</h3><small>Classic liquidity + farm</small></div></div>`;
+s=s.replace(anchor,kelpie);
+fs.writeFileSync(path,s);
+console.log('Kelpie TREE vault added to Earn routes.');

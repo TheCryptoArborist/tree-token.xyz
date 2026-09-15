@@ -17,7 +17,7 @@ const partial = resolveHomeMarket({
 assert.equal(partial.marketCap, 23_400);
 assert.equal(partial.liquidity, 16_443);
 assert.equal(partial.holderCount, 602);
-assert.equal(formatMarket('marketCap', partial.marketCap), '$23.4K');
+assert.equal(formatMarket('marketCap', partial.marketCap), '$23.40K');
 
 const empty = resolveHomeMarket({ live: { data: null }, snapshot: { tree: {} } }, null);
 assert.equal(empty.marketCap, null);
