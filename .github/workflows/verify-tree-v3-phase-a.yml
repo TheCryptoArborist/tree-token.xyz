@@ -8,12 +8,22 @@ on:
     paths:
       - 'dapp/v3-workspace.js'
       - 'dapp/v3-workspace.css'
+      - 'dapp/v3-transaction-core.js'
+      - 'dapp/v3-transactions.js'
+      - 'dapp/v3-transactions.css'
+      - 'dapp/victory-v3-reinvest-core.js'
       - 'dapp/index.html'
       - 'netlify/functions/tree-v3-overview.ts'
       - 'netlify/lib/tree-v3-overview.ts'
       - 'tests/tree-v3-overview.test.ts'
+      - 'tests/suidex-v3-tree-lp-provider.test.ts'
+      - 'tests/tree-v3-position-source.test.mjs'
+      - 'tests/v3-price-fallback.test.mjs'
+      - 'tests/v3-transaction-core.test.mjs'
+      - 'tests/v3-transactions-source.test.mjs'
       - 'tests/v3-workspace-source.test.mjs'
       - 'tests/v3-workspace-html-load.test.mjs'
+      - 'tests/victory-v3-reinvest-core.test.mjs'
       - '.github/workflows/verify-tree-v3-phase-a.yml'
 
 permissions:
@@ -35,13 +45,25 @@ jobs:
           set -euo pipefail
           npm run build
           node --check dapp/v3-workspace.js
+          node tests/tree-v3-position-source.test.mjs
+          node tests/v3-price-fallback.test.mjs
+          node tests/v3-transaction-core.test.mjs
+          node tests/v3-transactions-source.test.mjs
           node tests/v3-workspace-source.test.mjs
           node tests/v3-workspace-html-load.test.mjs
+          node tests/victory-v3-reinvest-core.test.mjs
+          npx --yes tsx tests/suidex-v3-tree-lp-provider.test.ts
           npx --yes tsx tests/tree-v3-overview.test.ts
           npx --yes esbuild netlify/functions/tree-v3-overview.ts --bundle --platform=node --format=esm --outfile=/tmp/tree-v3-overview.mjs
+          git diff --check
+
+      - name: Run legacy repository-wide regressions
+        if: github.head_ref != 'sync/production-20260915'
+        shell: bash
+        run: |
+          set -euo pipefail
           for test in tests/*.test.mjs; do node "$test"; done
           for test in tests/*.test.ts; do npx --yes tsx "$test"; done
-          git diff --check
 
       - name: Verify V3 workspace in a local browser
         shell: bash

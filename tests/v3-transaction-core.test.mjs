@@ -39,9 +39,10 @@ assert.throws(() => validateVerifiedPool({ verified: true, poolId: '0x0', tokenX
 let next = 0;
 class MockPure { u32(value) { return { pure: 'u32', value }; } u64(value) { return { pure: 'u64', value: BigInt(value) }; } u128(value) { return { pure: 'u128', value: BigInt(value) }; } bool(value) { return { pure: 'bool', value }; } address(value) { return { pure: 'address', value }; } }
 class MockTransaction {
-  constructor() { this.commands = []; this.pure = new MockPure(); this.gas = { gas: true }; }
+  constructor() { this.commands = []; this.coinRequests = []; this.pure = new MockPure(); this.gas = { gas: true }; }
   setSender(sender) { this.sender = sender; }
   object(id) { return { object: id }; }
+  coin(input) { this.coinRequests.push({ ...input, balance: BigInt(input.balance) }); return { coin: input.type, balance: BigInt(input.balance) }; }
   mergeCoins(primary, others) { this.commands.push({ $kind: 'MergeCoins', MergeCoins: { primary, others } }); }
   splitCoins(coin, amounts) { const result = [{ split: ++next, coin, amounts }]; this.commands.push({ $kind: 'SplitCoins', SplitCoins: { coin, amounts } }); return result; }
   transferObjects(objects, owner) { this.commands.push({ $kind: 'TransferObjects', TransferObjects: { objects, owner } }); }
@@ -49,7 +50,10 @@ class MockTransaction {
   getData() { return { commands: this.commands }; }
 }
 const owner = `0x${'1'.repeat(64)}`;
-const client = { core: { listCoins: async () => ({ objects: [{ objectId: `0x${'2'.repeat(64)}`, balance: '5000000000' }], cursor: null }) } };
+const client = { core: {
+  getBalance: async () => ({ balance: { balance: '5000000000' } }),
+  listCoins: async () => ({ objects: [{ objectId: `0x${'2'.repeat(64)}`, balance: '5000000000' }], cursor: null }),
+} };
 const tx = await buildCreateTreeV3Position({ Transaction: MockTransaction, client, owner, treeRaw: 1_000_000n, suiRaw: 100_000_000n, tickLower: 35_040, tickUpper: 36_360, minTreeRaw: 990_000n, minSuiRaw: 99_000_000n });
 const calls = tx.commands.filter((command) => command.$kind === 'MoveCall').map((command) => command.MoveCall);
 assert.deepEqual(calls.map((call) => `${call.module}::${call.function}`), ['i32::from','i32::from','liquidity::open_position','liquidity::add_liquidity']);
@@ -78,6 +82,7 @@ assert.deepEqual(increaseCalls.map((call) => `${call.module}::${call.function}`)
 assert.equal(increaseCalls[0].arguments[1].object, positionId);
 assert.equal(increaseCalls[0].arguments[4].value, 99_500_000n);
 assert.equal(increaseCalls[0].arguments[5].value, 995_000n);
+assert.deepEqual(increaseTx.coinRequests, [{ type: TREE_COIN_TYPE, balance: 1_000_000n }]);
 assert.equal(assertAllowedIncreaseV3Transaction(increaseTx), true);
 const removeTx = buildRemoveTreeV3Position({ Transaction: MockTransaction, owner, positionId, liquidityRaw: 123_456n, minTreeRaw: 1_000n, minSuiRaw: 2_000n });
 const removeCalls = removeTx.commands.filter((command) => command.$kind === 'MoveCall').map((command) => command.MoveCall);
