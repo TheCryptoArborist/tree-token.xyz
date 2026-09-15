@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import {
   VICTORY_SUI_POOL,
   VICTORY_TYPE,
+  VICTORY_DECIMALS,
+  parseAmount,
   quoteVictoryToSui,
 } from '../dapp/earn-transactions-core.js';
 import {
@@ -50,6 +52,7 @@ class MockTransaction {
   constructor() { this.commands = []; this.pure = new MockPure(); this.gas = { gas: true }; }
   setSender(sender) { this.sender = sender; }
   object(id) { return { object: id }; }
+  coin(options) { this.funding = options; return { fundedCoin: options }; }
   mergeCoins(primary, others) { this.commands.push({ $kind: 'MergeCoins', MergeCoins: { primary, others } }); }
   splitCoins(coin, amounts) { const result = [{ split: ++resultId, coin, amounts }]; this.commands.push({ $kind: 'SplitCoins', SplitCoins: { coin, amounts } }); return result; }
   transferObjects(objects, owner) { this.commands.push({ $kind: 'TransferObjects', TransferObjects: { objects, owner } }); }
@@ -102,5 +105,59 @@ assert.equal(`${sustainableCalls.at(-1).module}::${sustainableCalls.at(-1).funct
 assert.equal(sustainableCalls.at(-1).arguments[1].object, positionId);
 assert.equal(sustainableCalls.some((call) => call.function === 'open_position'), false);
 assert.equal(assertAllowedVictoryV3ReinvestTransaction(sustainable.transaction, { sustainable: true, newPosition: false }), true);
+
+// Reported wallet: 616,934.117238 available; 600,000 requested, 75%/25%.
+const availableRaw = parseAmount('616934.117238', VICTORY_DECIMALS, 'VICTORY');
+const requestedRaw = parseAmount('600000', VICTORY_DECIMALS, 'VICTORY');
+assert.equal(availableRaw, 616_934_117_238n);
+assert.equal(requestedRaw, 600_000_000_000n);
+const reinvestRaw = requestedRaw * 7_500n / 10_000n;
+const lockRaw = requestedRaw - reinvestRaw;
+assert.equal(reinvestRaw, 450_000_000_000n);
+assert.equal(lockRaw, 150_000_000_000n);
+const reportedQuote = {
+  ...sustainableQuote, amountIn: reinvestRaw,
+  victoryToSui: { ...victoryToSui, amountIn: reinvestRaw },
+};
+function balanceClient(coinRaw, addressRaw) {
+  return { core: {
+    listCoins: async () => ({ objects: coinRaw ? [{ objectId: victoryCoinId, balance: String(coinRaw) }] : [], hasNextPage: false, cursor: null }),
+    getBalance: async ({ owner: requestedOwner, coinType }) => {
+      assert.equal(requestedOwner, owner);
+      assert.equal(coinType, VICTORY_TYPE);
+      return { balance: { coinType, balance: String(coinRaw + addressRaw), coinBalance: String(coinRaw), addressBalance: String(addressRaw) } };
+    },
+  } };
+}
+const reportedRequest = {
+  Transaction: MockTransaction, owner, totalAmount: requestedRaw,
+  reinvestAmount: reinvestRaw, lockAmount: lockRaw, lockDays: 90,
+  quote: reportedQuote, slippageBps: 100, minSuiRaw: 10n, minTreeRaw: 20n,
+};
+for (const coinRaw of [0n, 500_000_000_000n, availableRaw]) {
+  const result = await buildVictoryV3ReinvestTransaction({
+    ...reportedRequest, client: balanceClient(coinRaw, availableRaw - coinRaw),
+  });
+  assert.equal(result.totalRaw, requestedRaw);
+  assert.equal(result.reinvestRaw, reinvestRaw);
+  assert.equal(result.lockRaw, lockRaw);
+  if (coinRaw < requestedRaw) assert.deepEqual(result.transaction.funding, { type: VICTORY_TYPE, balance: requestedRaw });
+  else assert.equal(result.transaction.funding, undefined);
+  const calls = result.transaction.commands.filter((c) => c.MoveCall).map((c) => c.MoveCall);
+  assert.equal(calls[0].arguments[2].amounts[0].value, lockRaw);
+  assert.equal(calls[0].arguments[3].value, 90n);
+  assert.equal(calls[1].arguments[4].value, reportedQuote.victoryToSui.minAmountOut);
+  assert.equal(calls.at(-1).arguments[1].object, positionId);
+  assert.equal(calls.at(-1).arguments[4].value, 10n);
+  assert.equal(calls.at(-1).arguments[5].value, 20n);
+  assert.equal(assertAllowedVictoryV3ReinvestTransaction(result.transaction, { sustainable: true, newPosition: false }), true);
+}
+// Funding must cover the full request, not just the 450,000 reinvest portion.
+await assert.rejects(buildVictoryV3ReinvestTransaction({
+  ...reportedRequest, client: balanceClient(0n, requestedRaw - 1n),
+}), /Insufficient VICTORY balance/);
+await assert.doesNotReject(buildVictoryV3ReinvestTransaction({
+  ...reportedRequest, client: balanceClient(0n, requestedRaw),
+}));
 
 console.log('VICTORY V3 reinvest core tests passed.');
