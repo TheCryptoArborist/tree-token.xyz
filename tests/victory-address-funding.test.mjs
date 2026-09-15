@@ -6,7 +6,7 @@ const { Transaction } = await import(process.env.SUI_TRANSACTION_MODULE || '@mys
 const owner = `0x${'1'.repeat(64)}`;
 const amount = 600_000_000_000n;
 const available = 616_934_117_238n;
-for (const coinRaw of [0n, 500_000_000_000n]) {
+for (const coinRaw of [0n, 597_457_783_698n]) {
   const client = { core: {
     getBalance: async () => ({ balance: {
       coinType: VICTORY_TYPE, balance: String(available),

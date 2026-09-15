@@ -134,7 +134,7 @@ const reportedRequest = {
   reinvestAmount: reinvestRaw, lockAmount: lockRaw, lockDays: 90,
   quote: reportedQuote, slippageBps: 100, minSuiRaw: 10n, minTreeRaw: 20n,
 };
-for (const coinRaw of [0n, 500_000_000_000n, availableRaw]) {
+for (const coinRaw of [0n, 597_457_783_698n, availableRaw]) {
   const result = await buildVictoryV3ReinvestTransaction({
     ...reportedRequest, client: balanceClient(coinRaw, availableRaw - coinRaw),
   });
