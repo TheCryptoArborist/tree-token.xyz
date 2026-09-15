@@ -90,11 +90,11 @@ jobs:
                 innerTabs: [...document.querySelectorAll('[data-v3-tab]')].map((node) => node.textContent.trim()),
                 visiblePanels: [...document.querySelectorAll('[data-v3-panel]')].filter((node) => !node.hidden).length,
                 restrictedActionsDisabled: [...document.querySelectorAll('.v3-position-actions button')].every((node) => node.disabled),
-                createPositionReady: document.querySelector('#v3CreatePosition')?.disabled === false,
+                zapActionReady: document.querySelector('#earnV3ZapAction')?.disabled === false,
                 overflow: document.documentElement.scrollWidth - innerWidth,
               }));
-              if (state.innerTabs.join('|') !== 'Pools|My Positions|Swap') throw new Error(`Internal V3 tabs invalid: ${JSON.stringify(state)}`);
-              if (state.visiblePanels !== 1 || !state.restrictedActionsDisabled || !state.createPositionReady || state.overflow > 1) throw new Error(`V3 workspace regression: ${JSON.stringify(state)}`);
+              if (state.innerTabs.join('|') !== 'Pools|Zap|Positions|Swap') throw new Error(`Internal V3 tabs invalid: ${JSON.stringify(state)}`);
+              if (state.visiblePanels !== 1 || !state.restrictedActionsDisabled || !state.zapActionReady || state.overflow > 1) throw new Error(`V3 workspace regression: ${JSON.stringify(state)}`);
               await page.click('[data-v3-tab="positions"]');
               await page.waitForFunction(() => [...document.querySelectorAll('[data-v3-panel]')].filter((node) => !node.hidden).length === 1);
               await page.click('[data-v3-tab="swap"]');
