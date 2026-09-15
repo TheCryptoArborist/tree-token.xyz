@@ -42,94 +42,9 @@
       <div class="arcade-status"><span aria-hidden="true"></span> 1 LIVE GAME · MORE GROWING</div>
     </section>
 
-    <section class="chain-access-panel" aria-labelledby="multichain-access-title" data-robinhood-wallet>
-      <div class="chain-access-copy">
-        <p class="arcade-eyebrow">MULTICHAIN PREVIEW · TESTNET</p>
-        <h2 id="multichain-access-title">Connect MetaMask to TREE Arcade</h2>
-        <p>This first connection check only reads your public EVM address and active network. It cannot sign messages, send transactions, approve tokens, or move TREE or NFTrees.</p>
-        <div class="chain-network-options" aria-label="Supported test networks">
-          <article>
-            <strong>Robinhood Chain Testnet</strong>
-            <div class="chain-network-facts"><span><small>CHAIN ID</small><b>46630</b></span><span><small>GAS</small><b>ETH</b></span></div>
-            <a class="chain-docs-link" href="https://docs.robinhood.com/chain/add-network-to-wallet/" target="_blank" rel="noopener noreferrer">ROBINHOOD DOCS <span aria-hidden="true">↗</span></a>
-          </article>
-          <article>
-            <strong>BNB Smart Chain Testnet</strong>
-            <div class="chain-network-facts"><span><small>CHAIN ID</small><b>97</b></span><span><small>GAS</small><b>tBNB</b></span></div>
-            <a class="chain-docs-link" href="https://docs.bnbchain.org/bnb-smart-chain/developers/json_rpc/json-rpc-endpoint/" target="_blank" rel="noopener noreferrer">BNB CHAIN DOCS <span aria-hidden="true">↗</span></a>
-          </article>
-        </div>
-      </div>
-      <div class="chain-wallet-console">
-        <div class="chain-wallet-heading"><span class="chain-status-light" data-wallet-light aria-hidden="true"></span><strong data-wallet-heading>MetaMask not connected</strong></div>
-        <p class="chain-wallet-status" data-wallet-status role="status" aria-live="polite">Checking for MetaMask…</p>
-        <dl class="chain-wallet-details" data-wallet-details hidden>
-          <div><dt>Wallet</dt><dd data-wallet-address>—</dd></div>
-          <div><dt>Network</dt><dd data-wallet-network>—</dd></div>
-        </dl>
-        <div class="chain-wallet-actions">
-          <button type="button" data-wallet-connect>CONNECT METAMASK</button>
-          <button class="secondary" type="button" data-wallet-switch="robinhood" disabled>USE ROBINHOOD TESTNET</button>
-          <button class="secondary bnb" type="button" data-wallet-switch="bnb" disabled>USE BNB TESTNET</button>
-        </div>
-        <p class="chain-wallet-safety">No signature · No payment · No token approval</p>
-      </div>
-    </section>
-
-    <section class="sui-access-panel" aria-labelledby="sui-access-title" data-arcade-sui-wallet>
-      <div class="chain-access-copy">
-        <p class="arcade-eyebrow">SUI MAINNET · CANONICAL NFTREE</p>
-        <h2 id="sui-access-title">Connect Your Sui Wallet</h2>
-        <p>Your Sui wallet is where the original NFTree collection lives. TREE Arcade checks current ownership of the exact canonical NFTree type, including NFTrees held inside a wallet-owned Sui Kiosk. Games remain open while this access system is tested.</p>
-        <div class="sui-wallet-support" aria-label="Supported Sui wallets">
-          <span>SLUSH</span><span>PHANTOM</span><span>NIGHTLY</span><span>WALLET STANDARD</span>
-        </div>
-      </div>
-      <div class="chain-wallet-console sui-wallet-console">
-        <div class="chain-wallet-heading"><span class="chain-status-light" aria-hidden="true"></span><strong data-sui-wallet-heading>Sui wallet not connected</strong></div>
-        <p class="chain-wallet-status" data-sui-wallet-status role="status" aria-live="polite">Checking for a saved Sui wallet connection…</p>
-        <dl class="chain-wallet-details" data-sui-wallet-details hidden>
-          <div><dt>Wallet</dt><dd data-sui-wallet-name>—</dd></div>
-          <div><dt>Address</dt><dd data-sui-wallet-address>—</dd></div>
-          <div><dt>Network</dt><dd data-sui-wallet-network>Sui Mainnet</dd></div>
-          <div><dt>NFTree access</dt><dd data-sui-nftree-result>Checking…</dd></div>
-        </dl>
-        <div class="chain-wallet-actions">
-          <button type="button" data-sui-wallet-connect>CONNECT SUI WALLET</button>
-          <button class="secondary" type="button" data-sui-nftree-refresh hidden>RECHECK NFTREE OWNERSHIP</button>
-        </div>
-        <p class="chain-wallet-safety">Read-only ownership check · No signature · No transaction · No gas</p>
-      </div>
-    </section>
-
-    <section class="wallet-link-panel" aria-labelledby="wallet-link-title" data-arcade-wallet-link>
-      <div class="chain-access-copy">
-        <p class="arcade-eyebrow">TREE ACCOUNT · SIGNED WALLET LINK</p>
-        <h2 id="wallet-link-title">Use one NFTree across multiple chains</h2>
-        <p>Link your verified Sui holder wallet to MetaMask by signing one identical, plain-language access statement with each wallet. The signatures prove wallet control without sending an on-chain transaction.</p>
-        <div class="wallet-link-facts" aria-label="Wallet-link safety details">
-          <span>7-DAY DEVICE PROOF</span><span>DOMAIN-BOUND</span><span>NO GAS</span><span>NO TOKEN APPROVAL</span>
-        </div>
-      </div>
-      <div class="chain-wallet-console wallet-link-console">
-        <div class="chain-wallet-heading"><span class="chain-status-light" aria-hidden="true"></span><strong data-link-heading>Connect both wallets</strong></div>
-        <p class="chain-wallet-status" data-link-status role="status" aria-live="polite">Connect your Sui wallet first.</p>
-        <dl class="chain-wallet-details">
-          <div><dt>Sui holder</dt><dd data-link-sui>—</dd></div>
-          <div><dt>MetaMask</dt><dd data-link-evm>—</dd></div>
-          <div><dt>TREE access</dt><dd data-link-access>Not linked</dd></div>
-        </dl>
-        <div class="chain-wallet-actions">
-          <button type="button" data-link-button disabled>LINK SUI + METAMASK</button>
-          <button class="secondary" type="button" data-link-clear hidden>REMOVE DEVICE LINK</button>
-        </div>
-        <p class="chain-wallet-safety">Message signatures only · No transaction · No payment · No approval</p>
-      </div>
-    </section>
-
     <section class="game-grid" aria-label="TREE ecosystem games">
       <article class="game-card live-card">
-        <div class="game-card-top"><img class="game-brand-logo garden-logo" src="../assets/garden-battles-logo.webp" alt="The Garden Battles logo"><span class="status live">LIVE</span></div>
+        <div class="game-card-top"><img class="game-brand-logo garden-logo" src="../assets/garden-battles-logo.png" alt="The Garden Battles logo"><span class="status live">LIVE</span></div>
         <div>
           <p class="game-label">NFTREE BATTLE ARENA</p>
           <h2>GARDEN BATTLES</h2>
@@ -148,7 +63,7 @@
       </article>
 
       <article class="game-card arboretum-card">
-        <div class="game-card-top"><img class="game-brand-logo" src="../assets/arboretum-logo-black.webp" alt="Arboretum logo"><span class="status testing">IN TESTING</span></div>
+        <div class="game-card-top"><img class="game-brand-logo" src="../assets/arboretum-logo-black.png" alt="Arboretum logo"><span class="status testing">IN TESTING</span></div>
         <div>
           <p class="game-label">GROWTH STRATEGY</p>
           <h2>ARBORETUM</h2>
@@ -166,7 +81,7 @@
       </article>
 
       <article class="game-card force-card">
-        <div class="game-card-top"><img class="game-brand-logo" src="../assets/tree-force-89-logo-black.webp" alt="TREE FORCE '89: Canopy Command logo"><span class="status soon">COMING SOON</span></div>
+        <div class="game-card-top"><img class="game-brand-logo" src="../assets/tree-force-89-logo-black.png" alt="TREE FORCE '89: Canopy Command logo"><span class="status soon">COMING SOON</span></div>
         <div>
           <p class="game-label">RETRO FORMATION SHOOTER</p>
           <h2>TREE FORCE '89</h2>
@@ -187,8 +102,5 @@
     <strong>THICKQUIDITY · TREE ARCADE</strong>
     <p>Part of the TREE ecosystem on Sui.</p>
   </footer>
-  <script type="module" src="../scripts/robinhood-wallet.js"></script>
-  <script type="module" src="../scripts/arcade-sui-wallet.js"></script>
-  <script type="module" src="../scripts/arcade-wallet-link.js"></script>
 </body>
 </html>

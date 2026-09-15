@@ -341,9 +341,9 @@ function _createDialog() {
             <span><strong>Open this site in Slush</strong><small>Best option for the Slush mobile app or web wallet</small></span>
             <span aria-hidden="true">↗</span>
           </a>
-          <a class="tree-wallet-phantom-link" data-phantom-link href="https://phantom.com/" target="_blank" rel="noopener noreferrer" hidden>
+          <a class="tree-wallet-phantom-link" data-phantom-link href="https://help.phantom.com/articles/ending-support-for-sui-in-phantom-53868478441491" target="_blank" rel="noopener noreferrer">
             <span class="tree-wallet-phantom-mark" aria-hidden="true">P</span>
-            <span><strong>Get or open Phantom</strong><small>Install the extension, or open TREE inside Phantom's mobile browser</small></span>
+            <span><strong>Phantom Sui support ends September 24, 2026</strong><small>Existing users: review the official transition steps. New Sui users should choose another compatible wallet.</small></span>
             <span aria-hidden="true">↗</span>
           </a>
           <a class="tree-wallet-nightly-link" data-nightly-link href="https://nightly.app/download?tab=browser" target="_blank" rel="noopener noreferrer" hidden>
@@ -351,7 +351,7 @@ function _createDialog() {
             <span><strong>Get or open Nightly</strong><small>Install Nightly's Sui-compatible browser or mobile wallet</small></span>
             <span aria-hidden="true">↗</span>
           </a>
-          <p class="tree-wallet-note">Installed Sui wallets are detected automatically. TREE supports Phantom directly and preserves Wallet Standard support for Slush, Nightly, Suiet, OKX, and other compatible wallets.</p>
+          <p class="tree-wallet-note">Installed Sui wallets are detected automatically. For a new setup, choose Slush, Nightly, Suiet, OKX, or another compatible Sui wallet. Existing Phantom connections remain available only during its Sui transition.</p>
         </section>
         <section class="tree-wallet-section" data-wallet-panel="manage" hidden>
           <div class="tree-wallet-current" data-wallet-current></div>
@@ -437,12 +437,11 @@ function _walletIconNode(wallet, className) {
 
 async function _renderPicker() {
   const wallets = await _compatibleWallets();
-  const returnUrl = `${location.origin}${location.pathname}${location.search}`;
   _dialogNodes.list.replaceChildren();
   _dialogNodes.title.textContent = 'Connect a Sui Wallet';
-  _dialogNodes.subtitle.textContent = 'Select Slush, Phantom, Nightly, or another compatible Sui wallet.';
-  _dialogNodes.slushLink.href = slushBrowseUrl(returnUrl);
-  _dialogNodes.phantomLink.hidden = wallets.some(isPhantomSuiWallet);
+  _dialogNodes.subtitle.textContent = 'Select Slush, Nightly, or another compatible Sui wallet. Existing Phantom users can review the transition notice below.';
+  _dialogNodes.slushLink.href = slushBrowseUrl(`${location.origin}/dapp/`);
+  _dialogNodes.phantomLink.hidden = false;
   _dialogNodes.nightlyLink.hidden = wallets.some(isNightlySuiWallet);
 
   if (!wallets.length) {
@@ -467,7 +466,7 @@ async function _renderPicker() {
     name.textContent = wallet.name;
     const detail = document.createElement('span');
     detail.textContent = isPhantomSuiWallet(wallet)
-      ? 'Phantom Sui extension or mobile in-app browser'
+      ? 'Phantom transition access · Sui support ends September 24, 2026'
       : isNightlySuiWallet(wallet)
       ? 'Nightly Sui extension or mobile wallet'
       : isSlushWallet(wallet)
@@ -481,7 +480,7 @@ async function _renderPicker() {
     button.append(copy, action);
     button.addEventListener('click', async () => {
       if (opensInSlush) {
-        location.assign(slushBrowseUrl(returnUrl));
+        location.assign(slushBrowseUrl(`${location.origin}/dapp/`));
         return;
       }
       _setManagerStatus(`Connecting to ${wallet.name}…`);
@@ -738,3 +737,4 @@ window.signTreePersonalMessage = signTreePersonalMessage;
 window.checkBalanceAndNFT = checkBalanceAndNFT;
 window.initSuiClient = _getClient;
 window.TREE_WALLET_STANDARD_URL = WALLET_STANDARD_URL;
+window.dispatchEvent(new CustomEvent('tree:wallet-manager-ready'));

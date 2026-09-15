@@ -26,6 +26,8 @@ let leaderboardEntries = [];
 let leaderboardStatus = 'loading';
 let treePerSui = null;
 let activeChartRange = '24h';
+let activeChartPair = 'usd';
+let activeChartCandles = [];
 let lastLeaderboardPayload = null;
 let connectedTreeBalanceRaw = null;
 let connectedBalanceAddress = null;
@@ -78,24 +80,24 @@ function writeDashboardCache(value) {
   }
 }
 
-function readChartCache(range) {
+function readChartCache(range, pair = activeChartPair) {
   try {
-    const raw = localStorage.getItem(`${CHART_CACHE_PREFIX}${range}`);
+    const raw = localStorage.getItem(`${CHART_CACHE_PREFIX}${pair}:${range}`);
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     if (!parsed || !Array.isArray(parsed.candles)) {
-      localStorage.removeItem(`${CHART_CACHE_PREFIX}${range}`);
+      localStorage.removeItem(`${CHART_CACHE_PREFIX}${pair}:${range}`);
       return null;
     }
     return parsed;
   } catch {
-    try { localStorage.removeItem(`${CHART_CACHE_PREFIX}${range}`); } catch { /* Storage can be unavailable. */ }
+    try { localStorage.removeItem(`${CHART_CACHE_PREFIX}${pair}:${range}`); } catch { /* Storage can be unavailable. */ }
     return null;
   }
 }
 
-function writeChartCache(range, value) {
-  try { localStorage.setItem(`${CHART_CACHE_PREFIX}${range}`, JSON.stringify(value)); } catch { /* Cache is optional. */ }
+function writeChartCache(range, pair, value) {
+  try { localStorage.setItem(`${CHART_CACHE_PREFIX}${pair}:${range}`, JSON.stringify(value)); } catch { /* Cache is optional. */ }
 }
 
 function setGroupState(groupName, state, source, timestamp) {
@@ -153,8 +155,15 @@ function formatMarket(field, value) {
 
 function renderMarket(data, state, timestamp, source) {
   document.querySelectorAll('[data-market]').forEach((element) => {
-    if (element.dataset.market === 'liquidity' || element.dataset.market === 'volume24h') return;
-    element.textContent = formatMarket(element.dataset.market, data?.[element.dataset.market]);
+    if (['liquidity', 'volume24h', 'holderCount'].includes(element.dataset.market)) return;
+    const field = element.dataset.market;
+    const value = data?.[field];
+    element.textContent = formatMarket(field, value);
+    if (field === 'priceChange24h') {
+      const number = Number(value);
+      element.classList.toggle('positive', Number.isFinite(number) && number >= 0);
+      element.classList.toggle('negative', Number.isFinite(number) && number < 0);
+    }
   });
   setGroupState('market', state, source, timestamp);
 }
@@ -175,8 +184,17 @@ function renderSnapshot(snapshot) {
     if (!Number.isFinite(Number(value))) element.textContent = 'Not available';
     else if (path.includes('Usd')) element.textContent = compactMoney.format(Number(value));
     else if (path.includes('Apr') || path.includes('Percent')) element.textContent = `${Number(value).toFixed(2)}%`;
+    else if (element.dataset.snapshotFormat === 'compact') element.textContent = `${compactBurnQuantity.format(Number(value))} TREE`;
     else if (element.dataset.burnFormat === 'compact') element.textContent = compactBurnQuantity.format(Number(value));
     else element.textContent = quantity.format(Number(value));
+  });
+  document.querySelectorAll('[data-snapshot-date]').forEach((element) => {
+    const value = valueAt(snapshot, element.dataset.snapshotDate);
+    const date = new Date(value);
+    element.textContent = Number.isNaN(date.getTime())
+      ? 'Not available'
+      : date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'America/Chicago' });
+    if (!Number.isNaN(date.getTime())) element.dateTime = date.toISOString();
   });
   const removal = snapshot?.tree?.totalSupply ? snapshot.tree.zeroAddressBalance / snapshot.tree.totalSupply * 100 : null;
   document.querySelectorAll('[data-derived="removalPercent"]').forEach((element) => { element.textContent = removal === null ? 'Not available' : `${removal.toFixed(2)}%`; });
@@ -244,8 +262,14 @@ function renderVolume(payload) {
   const total = Number(payload?.volume24hUsd);
   document.querySelectorAll('[data-market="volume24h"]').forEach((element) => { element.textContent = Number.isFinite(total) ? compactMoney.format(total) : 'Not verified'; });
   const venue = payload?.venues || {};
+  const venueKeys = { suiDexV2: 'suiDexV2', suiDexV3: 'suiDexV3', turbos: 'turbos', cetus: 'cetus' };
+  Object.entries(venueKeys).forEach(([key, field]) => {
+    document.querySelectorAll(`[data-chart-venue="${key}"] strong, [data-venue-volume="${key}"]`).forEach((target) => {
+      target.textContent = compactMoney.format(Number(venue[field] || 0));
+    });
+  });
   const breakdown = document.getElementById('volumeBreakdown');
-  if (breakdown) breakdown.textContent = `Rolling 24 hours · SuiDex V2 ${compactMoney.format(Number(venue.suiDexV2 || 0))} · SuiDex V3 ${compactMoney.format(Number(venue.suiDexV3 || 0))} · Turbos ${compactMoney.format(Number(venue.turbos || 0))} · Updated ${new Date(payload.generatedAt).toLocaleString()}`;
+  if (breakdown) breakdown.textContent = `Rolling 24 hours · SuiDex V2 ${compactMoney.format(Number(venue.suiDexV2 || 0))} · SuiDex V3 ${compactMoney.format(Number(venue.suiDexV3 || 0))} · Turbos ${compactMoney.format(Number(venue.turbos || 0))} · Cetus ${compactMoney.format(Number(venue.cetus || 0))} · Updated ${new Date(payload.generatedAt).toLocaleString()}`;
 }
 
 async function loadVolume() {
@@ -258,6 +282,7 @@ async function loadVolume() {
     document.querySelectorAll('[data-market="volume24h"]').forEach((element) => { element.textContent = 'Not verified'; });
     const breakdown = document.getElementById('volumeBreakdown');
     if (breakdown) breakdown.textContent = 'The complete recognized-pool scan could not be verified. Partial volume is not published.';
+    document.querySelectorAll('[data-chart-venue] strong, [data-venue-volume]').forEach((element) => { element.textContent = 'Not verified'; });
   }
 }
 
@@ -281,6 +306,9 @@ function renderBurnOverview(payload) {
   setGroupState('supply', 'Live', payload.source || 'Sui Mainnet gRPC', payload.generatedAt);
   const totalTransactions = document.getElementById('burnTotalTransactions');
   if (totalTransactions) totalTransactions.textContent = Number.isSafeInteger(payload?.totalTransactions) ? quantity.format(payload.totalTransactions) : '—';
+  document.querySelectorAll('[data-burn-total-transactions]').forEach((element) => {
+    element.textContent = Number.isSafeInteger(payload?.totalTransactions) ? quantity.format(payload.totalTransactions) : '—';
+  });
   const recentList = document.getElementById('burnRecentList');
   const recentBurns = Array.isArray(payload?.recentBurns) ? payload.recentBurns : [];
   if (recentList && recentBurns.length) {
@@ -323,7 +351,7 @@ function showWarnings(warnings) {
 }
 
 async function loadDashboard() {
-  setGroupState('market', 'Loading', 'Noodles.fi', null);
+  setGroupState('market', 'Loading', 'CoinGecko', null);
   setGroupState('time-locks', 'Loading', 'TREE project records', 'Project snapshot — June 22, 2026');
   try {
     const response = await fetch(dashboardUrl, { headers: { Accept: 'application/json' } });
@@ -331,7 +359,7 @@ async function loadDashboard() {
     const payload = await response.json();
     renderSnapshot(payload.snapshot);
     if ((payload.live?.status === 'ok' || payload.live?.status === 'fallback') && payload.live.data) {
-      const source = payload.live.source || payload.sources?.displayed?.name || 'Noodles.fi';
+      const source = payload.live.source || payload.sources?.displayed?.name || 'CoinGecko';
       const state = payload.live.status === 'fallback' ? 'Fallback' : 'Live';
       renderMarket(payload.live.data, state, payload.live.data.sourceUpdatedAt || payload.generatedAt, source);
       writeDashboardCache({ generatedAt: payload.generatedAt, source, data: payload.live.data });
@@ -366,22 +394,62 @@ function setChartState(state, timestamp, message, source = 'Market data') {
   messageElement.textContent = message || '';
 }
 
-function drawMarketChart(candles) {
+function formatChartPrice(value, pair = activeChartPair) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return 'Not available';
+  if (pair === 'usd') return formatTreePrice(number);
+  return `${new Intl.NumberFormat('en-US', { maximumFractionDigits: 12 }).format(number)} SUI`;
+}
+
+function renderChartSummary(candles, pair = activeChartPair) {
+  const latest = candles.at(-1);
+  const first = candles[0];
+  const latestPrice = document.getElementById('chartLatestPrice');
+  const rangeChange = document.getElementById('chartRangeChange');
+  const latestVolume = document.getElementById('chartLatestVolume');
+  if (!latest || !first) {
+    if (latestPrice) latestPrice.textContent = '—';
+    if (rangeChange) { rangeChange.textContent = '—'; rangeChange.className = ''; }
+    if (latestVolume) latestVolume.textContent = '—';
+    return;
+  }
+  const change = Number(first.close) > 0 ? (Number(latest.close) / Number(first.close) - 1) * 100 : null;
+  if (latestPrice) latestPrice.textContent = formatChartPrice(latest.close, pair);
+  if (rangeChange) {
+    rangeChange.textContent = Number.isFinite(change) ? `${change >= 0 ? '+' : ''}${change.toFixed(2)}%` : '—';
+    rangeChange.className = Number.isFinite(change) ? change >= 0 ? 'positive' : 'negative' : '';
+  }
+  if (latestVolume) latestVolume.textContent = compactMoney.format(Number(latest.volume) || 0);
+}
+
+function formatChartTime(timestamp, range = activeChartRange) {
+  const options = ['1h', '24h'].includes(range)
+    ? { hour: 'numeric', minute: '2-digit' }
+    : range === '7d'
+      ? { weekday: 'short', hour: 'numeric' }
+      : { month: 'short', day: 'numeric', year: range === 'all' ? '2-digit' : undefined };
+  return new Date(timestamp).toLocaleString([], options);
+}
+
+function drawMarketChart(candles, pair = activeChartPair) {
   const canvas = document.getElementById('marketChart');
   const context = canvas.getContext('2d');
   const width = canvas.width;
   const height = canvas.height;
-  const padding = { top: 24, right: 28, bottom: 64, left: 28 };
+  const padding = { top: 34, right: 28, bottom: 78, left: 28 };
+  activeChartCandles = candles;
+  canvas.dataset.pair = pair;
   context.clearRect(0, 0, width, height);
   context.fillStyle = '#050714';
   context.fillRect(0, 0, width, height);
+  renderChartSummary(candles, pair);
   if (!candles.length) return;
   const closes = candles.map((candle) => Number(candle.close)).filter(Number.isFinite);
   const volumes = candles.map((candle) => Number(candle.volume)).filter(Number.isFinite);
   const min = Math.min(...closes);
   const max = Math.max(...closes);
   const spread = max - min || Math.max(max * 0.02, 1e-12);
-  const plotHeight = height - padding.top - padding.bottom;
+  const plotHeight = height - padding.top - padding.bottom - 38;
   const plotWidth = width - padding.left - padding.right;
   const maxVolume = Math.max(...volumes, 1);
   context.strokeStyle = 'rgba(174,183,204,.12)';
@@ -391,60 +459,88 @@ function drawMarketChart(candles) {
     context.beginPath(); context.moveTo(padding.left, y); context.lineTo(width - padding.right, y); context.stroke();
   }
   const barWidth = Math.max(1, plotWidth / candles.length * 0.7);
-  context.fillStyle = 'rgba(34,231,215,.22)';
+  context.fillStyle = 'rgba(34,231,215,.25)';
   candles.forEach((candle, index) => {
     const x = padding.left + plotWidth * index / Math.max(1, candles.length - 1);
     const barHeight = Number(candle.volume) / maxVolume * 42;
-    context.fillRect(x - barWidth / 2, height - padding.bottom + 48 - barHeight, barWidth, barHeight);
+    context.fillRect(x - barWidth / 2, height - padding.bottom + 52 - barHeight, barWidth, barHeight);
   });
+  const points = candles.map((candle, index) => ({
+    x: padding.left + plotWidth * index / Math.max(1, candles.length - 1),
+    y: padding.top + (max - Number(candle.close)) / spread * plotHeight,
+  }));
+  const area = context.createLinearGradient(0, padding.top, 0, padding.top + plotHeight);
+  area.addColorStop(0, 'rgba(53,242,140,.2)'); area.addColorStop(1, 'rgba(53,242,140,0)');
+  context.beginPath(); context.moveTo(points[0].x, padding.top + plotHeight);
+  points.forEach((point) => context.lineTo(point.x, point.y));
+  context.lineTo(points.at(-1).x, padding.top + plotHeight); context.closePath(); context.fillStyle = area; context.fill();
   const gradient = context.createLinearGradient(padding.left, 0, width - padding.right, 0);
   gradient.addColorStop(0, '#33f78f'); gradient.addColorStop(1, '#22e7d7');
   context.strokeStyle = gradient; context.lineWidth = 4; context.lineJoin = 'round'; context.beginPath();
-  candles.forEach((candle, index) => {
-    const x = padding.left + plotWidth * index / Math.max(1, candles.length - 1);
-    const y = padding.top + (max - Number(candle.close)) / spread * plotHeight;
-    if (index === 0) context.moveTo(x, y); else context.lineTo(x, y);
-  });
+  points.forEach((point, index) => { if (index === 0) context.moveTo(point.x, point.y); else context.lineTo(point.x, point.y); });
   context.stroke();
-  context.fillStyle = '#aeb7cc'; context.font = '24px system-ui';
-  context.fillText(formatTreePrice(max), padding.left, 20);
-  context.fillText(formatTreePrice(min), padding.left, height - 8);
+  context.fillStyle = '#aeb7cc'; context.font = '22px system-ui';
+  context.fillText(formatChartPrice(max, pair), padding.left, 24);
+  context.fillStyle = '#72818d'; context.font = '20px system-ui';
+  context.fillText(formatChartTime(candles[0].timestamp), padding.left, height - 14);
+  const endLabel = formatChartTime(candles.at(-1).timestamp);
+  context.fillText(endLabel, width - padding.right - context.measureText(endLabel).width, height - 14);
 }
 
-async function loadChart(range = activeChartRange) {
+function updateChartTooltip(event) {
+  const canvas = document.getElementById('marketChart');
+  const tooltip = document.getElementById('chartTooltip');
+  if (!canvas || !tooltip || !activeChartCandles.length) return;
+  const rect = canvas.getBoundingClientRect();
+  const x = Math.max(0, Math.min(rect.width, event.clientX - rect.left));
+  const index = Math.max(0, Math.min(activeChartCandles.length - 1, Math.round(x / Math.max(1, rect.width) * (activeChartCandles.length - 1))));
+  const candle = activeChartCandles[index];
+  tooltip.innerHTML = `<strong>${formatChartPrice(candle.close, activeChartPair)}</strong><span>${new Date(candle.timestamp).toLocaleString()}</span><span>Volume ${compactMoney.format(Number(candle.volume) || 0)}</span>`;
+  tooltip.style.left = `${Math.max(8, Math.min(rect.width - 142, x + 12))}px`;
+  tooltip.style.top = '10px';
+  tooltip.hidden = false;
+}
+
+async function loadChart(range = activeChartRange, pair = activeChartPair, silent = false) {
   activeChartRange = range;
+  activeChartPair = pair;
   document.querySelectorAll('[data-chart-range]').forEach((button) => {
     const isActive = button.dataset.chartRange === range;
     button.classList.toggle('active', isActive);
     button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
   });
-  setChartState('Loading', null, 'Loading chart…');
+  document.querySelectorAll('[data-chart-pair]').forEach((button) => {
+    const isActive = button.dataset.chartPair === pair;
+    button.classList.toggle('active', isActive);
+    button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+  });
+  if (!silent) setChartState('Loading', null, 'Loading chart…');
   try {
-    const response = await fetch(`${chartUrl}?range=${encodeURIComponent(range)}`, { headers: { Accept: 'application/json' } });
+    const response = await fetch(`${chartUrl}?range=${encodeURIComponent(range)}&pair=${encodeURIComponent(pair)}`, { headers: { Accept: 'application/json' } });
     if (!response.ok) throw new Error(`Chart returned ${response.status}`);
     const payload = await response.json();
     if (payload.status === 'ok' && Array.isArray(payload.candles) && payload.candles.length) {
-      drawMarketChart(payload.candles);
+      drawMarketChart(payload.candles, pair);
       setChartState('Current', payload.generatedAt, null, payload.source || 'Market data');
-      writeChartCache(range, payload);
+      writeChartCache(range, pair, payload);
     } else {
-      const cached = readChartCache(range);
+      const cached = readChartCache(range, pair);
       if (cached?.candles?.length) {
-        drawMarketChart(cached.candles);
+        drawMarketChart(cached.candles, pair);
         setChartState('Stale', cached.generatedAt, 'Showing the last successful cached chart.', cached.source || 'Cached market data');
       } else {
-        drawMarketChart([]);
+        drawMarketChart([], pair);
         const label = payload.status === 'not-configured' ? 'Not configured' : payload.status === 'error' ? 'Error' : 'Empty';
         setChartState(label, payload.generatedAt, label === 'Empty' ? 'No candles were returned for this range.' : payload.warnings?.[0] || label, payload.source || 'Market data');
       }
     }
   } catch (error) {
-    const cached = readChartCache(range);
+    const cached = readChartCache(range, pair);
     if (cached?.candles?.length) {
-      drawMarketChart(cached.candles);
+      drawMarketChart(cached.candles, pair);
       setChartState('Stale', cached.generatedAt, 'Showing the last successful cached chart.', cached.source || 'Cached market data');
     } else {
-      drawMarketChart([]);
+      drawMarketChart([], pair);
       setChartState('Error', null, 'Chart data is temporarily unavailable.');
     }
     console.error(error);
@@ -1146,6 +1242,15 @@ function renderLeaderboard(payload) {
     ].filter(Boolean).join(' '));
   }
 
+  const statsHolderCount = exposurePayload
+    ? payload.source?.direct?.verifiedAddressOwners
+    : (hasSnapshot ? (payload.verifiedAddressOwners ?? payload.holderCount) : coverage.uniqueAddressOwners);
+  if (Number.isFinite(Number(statsHolderCount))) {
+    document.querySelectorAll('[data-market="holderCount"]').forEach((element) => {
+      element.textContent = quantity.format(Number(statsHolderCount));
+    });
+  }
+
   const dataNotes = elementById('leaderboardDataNotes');
   const warningBox = elementById('leaderboardWarnings');
   const warnings = Array.isArray(payload.warnings) ? [...new Set(payload.warnings.filter(Boolean))] : [];
@@ -1263,7 +1368,16 @@ async function loadLeaderboard() {
 async function connectForDapp() {
   const status = document.getElementById('swapStatus');
   try {
-    if (typeof window.openWalletManager !== 'function') throw new Error('Wallet manager is still loading.');
+    if (typeof window.openWalletManager !== 'function') {
+      await new Promise((resolve) => {
+        const timeout = window.setTimeout(resolve, 8_000);
+        window.addEventListener('tree:wallet-manager-ready', () => {
+          window.clearTimeout(timeout);
+          resolve();
+        }, { once: true });
+      });
+    }
+    if (typeof window.openWalletManager !== 'function') throw new Error('Wallet choices are taking longer than expected. Tap Connect Wallet again.');
     const result = await window.openWalletManager();
     syncWalletButtons();
     if (result?.action === 'connected') {
@@ -1322,6 +1436,10 @@ if (typeof document !== 'undefined') {
   document.getElementById('shareRank')?.addEventListener('click', () => shareRank());
   document.getElementById('createRankImage')?.addEventListener('click', downloadRankCard);
   document.querySelectorAll('[data-chart-range]').forEach((button) => button.addEventListener('click', () => loadChart(button.dataset.chartRange)));
+  document.querySelectorAll('[data-chart-pair]').forEach((button) => button.addEventListener('click', () => loadChart(activeChartRange, button.dataset.chartPair)));
+  const marketChartCanvas = document.getElementById('marketChart');
+  marketChartCanvas?.addEventListener('pointermove', updateChartTooltip);
+  marketChartCanvas?.addEventListener('pointerleave', () => { const tooltip = document.getElementById('chartTooltip'); if (tooltip) tooltip.hidden = true; });
   const navLinks = [...document.querySelectorAll('.app-nav a[href^="#"]')];
   navLinks.forEach((link) => link.addEventListener('click', () => {
     navLinks.forEach((item) => item.classList.remove('active'));
@@ -1354,6 +1472,11 @@ if (typeof document !== 'undefined') {
   loadSuiHeaderPrice();
   loadChart();
   loadLeaderboard();
+  window.setInterval(() => {
+    const stats = document.getElementById('stats');
+    const market = document.getElementById('statsMarketPanel');
+    if (document.visibilityState === 'visible' && stats && !stats.hidden && market && !market.hidden) loadChart(activeChartRange, activeChartPair, true);
+  }, 60_000);
 }
 
 

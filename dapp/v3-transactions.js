@@ -1,12 +1,13 @@
 import {
   SUI_COIN_TYPE, TREE_COIN_TYPE, TREE_DECIMALS, SUI_DECIMALS, DEFAULT_SLIPPAGE_BPS, MIN_SUI_GAS_RESERVE_RAW, TREE_V3_REWARD_TOKENS,
   isTreeV3ExecutionHost,
-  decimalToRaw, rawToDecimal, ticksFromDisplayedPrices, minimumAfterSlippage, validateVerifiedPool,
+  decimalToRaw, rawToDecimal, ticksFromDisplayedPrices, minimumAfterSlippage, pairedV3IncreaseRaw, validateVerifiedPool,
   buildCreateTreeV3Position, buildIncreaseTreeV3Position, buildRemoveTreeV3Position,
   buildClaimAllTreeV3Position, buildWithdrawAllAndCloseTreeV3Position,
   extractAddLiquidityEvent, extractRemoveLiquidityEvent, extractFeeCollectedEvent, extractRewardCollectedEvents, simulationSucceeded, positionDeleted,
-} from './v3-transaction-core.js';
+} from './v3-transaction-core.js?v=20260913-paired1';
 import { confirmTransaction } from './transaction-review.js';
+import { prepareExistingSuiZap } from './v3-existing-zap.js?v=20260913-zap1';
 
 const EXECUTION_ENABLED = isTreeV3ExecutionHost(location.hostname);
 const PRODUCTION_EXECUTION = ['tree-token.xyz', 'www.tree-token.xyz'].includes(location.hostname.toLowerCase());
@@ -88,13 +89,6 @@ async function waitForFinality(client, digest) {
 function node(...ids) { for (const id of ids) { const found = document.getElementById(id); if (found) return found; } return null; }
 function setStatus(message, kind = '') { const target = node('v3CreateStatus','v3AddStatus','v3Status'); if (!target) return; target.textContent = message; target.classList.remove('ok','error','warning'); if (kind) target.classList.add(kind); }
 async function overview(owner = null) { const query = owner ? `?owner=${encodeURIComponent(owner)}` : ''; const response = await fetch(`/api/tree-v3-overview${query}`, { headers: { Accept: 'application/json' }, cache: 'no-store' }); if (!response.ok) throw new Error(`V3 overview returned ${response.status}.`); const payload = await response.json(); validateVerifiedPool(payload?.pool); return payload; }
-function rawBalanceValue(result) {
-  const value = result?.balance?.balance ?? result?.balance?.totalBalance ?? result?.balance ?? result?.totalBalance ?? 0;
-  try { return BigInt(value); } catch { throw new Error('Sui returned an invalid wallet balance.'); }
-}
-async function rawCoinBalance(client, owner, coinType) {
-  return rawBalanceValue(await client.core.getBalance({ owner, coinType }));
-}
 function createButton() { return node('v3CreatePosition') || document.querySelector('#v3 .v3-disabled-action') || [...document.querySelectorAll('#v3 button')].find((item) => /position transaction builder|create.*position/i.test(item.textContent || '')); }
 function installControls(button) {
   if (!document.getElementById('v3TransactionControls')) {
@@ -117,8 +111,86 @@ function installControls(button) {
 function confirmText(data) {
   return ['Create this SUI/TREE V3 position?','',`Range ticks: ${data.tickLower} to ${data.tickUpper}`,`Maximum TREE supplied: ${rawToDecimal(data.treeRaw,TREE_DECIMALS,6)} TREE`,`Maximum SUI supplied: ${rawToDecimal(data.suiRaw,SUI_DECIMALS,9)} SUI`,`Simulated TREE deposit: ${rawToDecimal(data.preliminary.treeRaw,TREE_DECIMALS,6)} TREE`,`Simulated SUI deposit: ${rawToDecimal(data.preliminary.suiRaw,SUI_DECIMALS,9)} SUI`,`Minimum TREE deposit: ${rawToDecimal(data.minTreeRaw,TREE_DECIMALS,6)} TREE`,`Minimum SUI deposit: ${rawToDecimal(data.minSuiRaw,SUI_DECIMALS,9)} SUI`,`Slippage: ${(slippageBps/100).toFixed(2)}%`,'','The exact transaction was simulated again before this wallet request.'].join('\n');
 }
-function increasePanel(positionId) { return [...document.querySelectorAll('[data-v3-increase-panel]')].find((panel) => panel.dataset.v3IncreasePanel === positionId) || null; }
+function increasePanel(positionId, contextNode = null) {
+  const card = contextNode?.closest?.('.v3-position-card');
+  const contextual = card ? [...card.querySelectorAll('[data-v3-increase-panel]')].find((panel) => panel.dataset.v3IncreasePanel === positionId) : null;
+  return contextual || [...document.querySelectorAll('[data-v3-increase-panel]')].find((panel) => panel.dataset.v3IncreasePanel === positionId) || null;
+}
 function setIncreaseStatus(panel, message, kind = '') { const target = panel?.querySelector('[data-v3-increase-status]'); if (!target) return; target.textContent = message; target.classList.remove('ok','error','warning'); if (kind) target.classList.add(kind); }
+function balanceRaw(result) { return BigInt(result?.balance?.balance ?? result?.balance ?? result?.totalBalance ?? 0); }
+function displayBalance(raw, decimals, maximumFractionDigits) { return Number(rawToDecimal(raw, decimals, maximumFractionDigits)).toLocaleString('en-US', { maximumFractionDigits }); }
+async function refreshIncreaseBalances(panel) {
+  const suiOutput = panel?.querySelector('[data-v3-increase-sui-balance]');
+  const treeOutput = panel?.querySelector('[data-v3-increase-tree-balance]');
+  const maxButtons = panel?.querySelectorAll('[data-v3-increase-max]') || [];
+  if (!panel || !suiOutput || !treeOutput) return;
+  maxButtons.forEach((button) => { button.disabled = true; });
+  suiOutput.textContent = 'Loading…'; treeOutput.textContent = 'Loading…';
+  try {
+    const owner = await connectedAddress();
+    if (!owner) throw new Error('Connect wallet');
+    const client = await suiClient();
+    const [suiResult, treeResult] = await Promise.all([
+      client.core.getBalance({ owner, coinType: SUI_COIN_TYPE }),
+      client.core.getBalance({ owner, coinType: TREE_COIN_TYPE }),
+    ]);
+    const suiRaw = balanceRaw(suiResult); const treeRaw = balanceRaw(treeResult);
+    const spendableSuiRaw = suiRaw > MIN_SUI_GAS_RESERVE_RAW ? suiRaw - MIN_SUI_GAS_RESERVE_RAW : 0n;
+    panel.dataset.v3SuiBalanceRaw = suiRaw.toString();
+    panel.dataset.v3SuiSpendableRaw = spendableSuiRaw.toString();
+    panel.dataset.v3TreeBalanceRaw = treeRaw.toString();
+    suiOutput.textContent = `${displayBalance(suiRaw, SUI_DECIMALS, 6)} SUI`;
+    treeOutput.textContent = `${displayBalance(treeRaw, TREE_DECIMALS, 4)} TREE`;
+    maxButtons.forEach((button) => { button.disabled = false; });
+  } catch (error) {
+    const message = /connect wallet/i.test(String(error?.message || error)) ? 'Connect wallet' : 'Balance unavailable';
+    suiOutput.textContent = message; treeOutput.textContent = message;
+    delete panel.dataset.v3SuiBalanceRaw; delete panel.dataset.v3SuiSpendableRaw; delete panel.dataset.v3TreeBalanceRaw;
+  }
+}
+function updatePairedIncrease(panel, inputToken) {
+  if (!panel) return;
+  if (panel.dataset.v3SuiZap === 'true') {
+    setIncreaseStatus(panel, 'Your total SUI amount funds the swap and deposit. No wallet TREE is required. Select Simulate SUI Zap to review the split.');
+    return;
+  }
+  const input = panel.querySelector(inputToken === 'sui' ? '[data-v3-increase-sui]' : '[data-v3-increase-tree]');
+  const pairedInput = panel.querySelector(inputToken === 'sui' ? '[data-v3-increase-tree]' : '[data-v3-increase-sui]');
+  const estimate = panel.querySelector('[data-v3-increase-estimate]');
+  if (!input || !pairedInput) return;
+  const value = String(input.value || '').trim();
+  if (!value) {
+    pairedInput.value = '';
+    if (estimate) estimate.textContent = 'Enter either token amount. The paired amount updates automatically for this position’s current range.';
+    return;
+  }
+  try {
+    const inputType = inputToken === 'sui' ? SUI_COIN_TYPE : TREE_COIN_TYPE;
+    const inputDecimals = inputToken === 'sui' ? SUI_DECIMALS : TREE_DECIMALS;
+    const pairedDecimals = inputToken === 'sui' ? TREE_DECIMALS : SUI_DECIMALS;
+    const amountRaw = decimalToRaw(value, inputDecimals);
+    const pairedRaw = pairedV3IncreaseRaw({
+      amountRaw,
+      inputType,
+      tickLower: Number(panel.dataset.v3TickLower),
+      tickUpper: Number(panel.dataset.v3TickUpper),
+      sqrtPriceRaw: panel.dataset.v3SqrtPriceRaw,
+    });
+    pairedInput.value = rawToDecimal(pairedRaw, pairedDecimals, pairedDecimals);
+    const inputSymbol = inputToken === 'sui' ? 'SUI' : 'TREE';
+    const pairedSymbol = inputToken === 'sui' ? 'TREE' : 'SUI';
+    if (estimate) estimate.textContent = `${displayBalance(amountRaw, inputDecimals, inputDecimals)} ${inputSymbol} pairs with approximately ${displayBalance(pairedRaw, pairedDecimals, pairedDecimals)} ${pairedSymbol} for this range.`;
+    const pairedBalanceRaw = BigInt(inputToken === 'sui' ? panel.dataset.v3TreeBalanceRaw || '0' : panel.dataset.v3SuiSpendableRaw || '0');
+    setIncreaseStatus(panel, pairedRaw > pairedBalanceRaw
+      ? `The calculated ${pairedSymbol} amount is above your available wallet balance. Reduce the ${inputSymbol} amount or use MAX on ${pairedSymbol}.`
+      : 'Paired amount calculated. Two Mainnet simulations will confirm the exact deposit before wallet approval.', pairedRaw > pairedBalanceRaw ? 'warning' : 'ok');
+  } catch (error) {
+    pairedInput.value = '';
+    const message = String(error?.message || error || 'The paired amount could not be calculated.');
+    if (estimate) estimate.textContent = message;
+    setIncreaseStatus(panel, message, 'error');
+  }
+}
 function increaseConfirmText(data) {
   return ['Increase this SUI/TREE V3 position?','',`Position: ${data.positionId}`,`Maximum TREE supplied: ${rawToDecimal(data.treeRaw,TREE_DECIMALS,6)} TREE`,`Maximum SUI supplied: ${rawToDecimal(data.suiRaw,SUI_DECIMALS,9)} SUI`,`Simulated TREE deposit: ${rawToDecimal(data.preliminary.treeRaw,TREE_DECIMALS,6)} TREE`,`Simulated SUI deposit: ${rawToDecimal(data.preliminary.suiRaw,SUI_DECIMALS,9)} SUI`,`Minimum TREE deposit: ${rawToDecimal(data.minTreeRaw,TREE_DECIMALS,6)} TREE`,`Minimum SUI deposit: ${rawToDecimal(data.minSuiRaw,SUI_DECIMALS,9)} SUI`,`Slippage: ${(data.slippage/100).toFixed(2)}%`,'','The exact increase transaction was simulated again before this wallet request.'].join('\n');
 }
@@ -157,6 +229,7 @@ function togglePositionManagementPanel(button, panel, onOpen) {
   onOpen?.();
 }
 async function increasePosition(positionId, panel, button) {
+  if (panel.dataset.v3SuiZap === 'true') return increasePositionWithSuiZap(positionId, panel, button);
   if (increaseBusy.has(positionId)) return;
   increaseBusy.add(positionId); button.disabled = true;
   try {
@@ -167,12 +240,9 @@ async function increasePosition(positionId, panel, button) {
     if (!position || validAddress(data.owner)?.toLowerCase() !== owner.toLowerCase()) throw new Error('This verified position is not owned by the connected wallet.');
     const suiRaw = decimalToRaw(panel.querySelector('[data-v3-increase-sui]')?.value, SUI_DECIMALS);
     const treeRaw = decimalToRaw(panel.querySelector('[data-v3-increase-tree]')?.value, TREE_DECIMALS);
-    const [suiBalance, treeBalance] = await Promise.all([
-      rawCoinBalance(client, owner, SUI_COIN_TYPE),
-      rawCoinBalance(client, owner, TREE_COIN_TYPE),
-    ]);
+    const balanceResult = await client.core.getBalance({ owner, coinType: SUI_COIN_TYPE });
+    const suiBalance = BigInt(balanceResult?.balance?.balance ?? balanceResult?.balance ?? balanceResult?.totalBalance ?? 0);
     if (suiBalance < suiRaw + MIN_SUI_GAS_RESERVE_RAW) throw new Error('Keep at least 0.05 SUI available for gas after the increase deposit.');
-    if (treeBalance < treeRaw) throw new Error('The connected wallet does not have enough TREE for this position.');
     const { Transaction } = await import(SDK_URL);
     setIncreaseStatus(panel,'Building and simulating the proposed liquidity increase…','warning');
     const preliminaryTx = await buildIncreaseTreeV3Position({ Transaction, client, owner, positionId, treeRaw, suiRaw });
@@ -197,6 +267,52 @@ async function increasePosition(positionId, panel, button) {
     const message = String(error?.message || error || 'V3 liquidity increase failed.');
     setIncreaseStatus(panel,message,/reject|cancel|denied/i.test(message)?'':'error');
   } finally { increaseBusy.delete(positionId); button.disabled = !EXECUTION_ENABLED; }
+}
+async function increasePositionWithSuiZap(positionId, panel, button) {
+  if (increaseBusy.has(positionId)) return;
+  increaseBusy.add(positionId);
+  const controls = [...panel.querySelectorAll('input,button')];
+  const disabled = controls.map(control => control.disabled);
+  controls.forEach(control => { control.disabled = true; });
+  try {
+    if (!EXECUTION_ENABLED) throw new Error('V3 position management is unavailable on this host.');
+    const owner = await connectedAddress();
+    if (!owner) throw new Error('Connect a Sui wallet before zapping into a position.');
+    const client = await suiClient();
+    const amountIn = decimalToRaw(panel.querySelector('[data-v3-increase-sui]').value, SUI_DECIMALS);
+    const slippage = Number(panel.querySelector('[data-v3-increase-slippage].active')?.dataset.v3IncreaseSlippage ?? 50);
+    const { Transaction } = await import(SDK_URL);
+    setIncreaseStatus(panel, 'Quoting the SUI split and simulating the swap plus deposit twice…', 'warning');
+    const plan = await prepareExistingSuiZap({ Transaction, client, owner, positionId, amountIn, slippageBps: slippage });
+    const summary = [
+      'Zap SUI into this existing position?', '', `Position: ${positionId}`,
+      `Total SUI budget: ${rawToDecimal(amountIn, SUI_DECIMALS)} SUI (plus gas)`,
+      `SUI swapped to TREE: ${rawToDecimal(plan.swapRaw, SUI_DECIMALS)} SUI`,
+      `SUI kept for deposit: ${rawToDecimal(amountIn - plan.swapRaw, SUI_DECIMALS)} SUI`,
+      'TREE taken from your wallet: 0',
+      `Existing range: ${plan.tickLower} to ${plan.tickUpper}`,
+      `Simulated deposit: ${rawToDecimal(plan.final.added.suiRaw, SUI_DECIMALS)} SUI + ${rawToDecimal(plan.final.added.treeRaw, TREE_DECIMALS)} TREE`,
+      `Minimum swap output: ${rawToDecimal(plan.route.minAmountOut, TREE_DECIMALS)} TREE`,
+      `Minimum deposit: ${rawToDecimal(plan.minSuiRaw, SUI_DECIMALS)} SUI + ${rawToDecimal(plan.minTreeRaw, TREE_DECIMALS)} TREE`,
+      `Slippage: ${slippage / 100}%`, '',
+      'One transaction. Unused tokens return to your wallet. Both Mainnet simulations passed.',
+    ].join('\n');
+    setIncreaseStatus(panel, `Simulation passed: ${rawToDecimal(plan.swapRaw, SUI_DECIMALS)} of your ${rawToDecimal(amountIn, SUI_DECIMALS)} SUI swaps to TREE.`, 'ok');
+    if (!(await confirmTransaction(summary, { title: 'Zap SUI into Existing Position' }))) return;
+    if ((await connectedAddress())?.toLowerCase() !== owner.toLowerCase()) throw new Error('Wallet changed. Simulate the zap again.');
+    const signed = await signAndExecute(plan.transaction);
+    const digest = digestFrom(signed);
+    setIncreaseStatus(panel, 'Wallet approved. Waiting for Sui finality…', 'warning');
+    const finalized = await waitForFinality(client, digest);
+    if (!simulationSucceeded(finalized)) throw new Error('The submitted zap did not finalize successfully.');
+    setIncreaseStatus(panel, `SUI zap added to your existing position. Digest: ${digest}`, 'ok');
+    node('v3RefreshPositions')?.click();
+  } catch (error) {
+    setIncreaseStatus(panel, String(error?.message || error || 'Existing-position zap failed.'), 'error');
+  } finally {
+    increaseBusy.delete(positionId);
+    controls.forEach((control, index) => { control.disabled = disabled[index]; });
+  }
 }
 async function removePosition(positionId, panel, button) {
   if (removeBusy.has(positionId)) return;
@@ -300,11 +416,20 @@ async function collectAll(positionId, panel, button) {
   } finally { claimAllBusy.delete(positionId); button.disabled = !EXECUTION_ENABLED; }
 }
 function bindIncreaseActions() {
+  document.addEventListener('input', (event) => {
+    const input = event.target.closest?.('[data-v3-increase-sui],[data-v3-increase-tree]');
+    if (!input) return;
+    const panel = input.closest('[data-v3-increase-panel]');
+    if (!panel) return;
+    const inputToken = input.matches('[data-v3-increase-sui]') ? 'sui' : 'tree';
+    clearTimeout(panel._v3PairTimer);
+    panel._v3PairTimer = setTimeout(() => updatePairedIncrease(panel, inputToken), 180);
+  });
   document.addEventListener('click', (event) => {
     const openButton = event.target.closest?.('[data-v3-increase-position]');
     if (openButton) {
-      const positionId = openButton.dataset.v3IncreasePosition; const panel = increasePanel(positionId); if (!panel) return;
-      togglePositionManagementPanel(openButton, panel, () => setIncreaseStatus(panel,'Enter maximum token amounts. Two Mainnet simulations run before wallet approval.'));
+      const positionId = openButton.dataset.v3IncreasePosition; const panel = increasePanel(positionId, openButton); if (!panel) return;
+      togglePositionManagementPanel(openButton, panel, () => { setIncreaseStatus(panel, panel.dataset.v3SuiZap === 'true' ? 'Enter the total SUI to zap. Part swaps to TREE; both tokens enter this existing position.' : 'Enter either token amount. The paired amount will be calculated for this position’s current range.'); refreshIncreaseBalances(panel); });
       return;
     }
     const removeButton = event.target.closest?.('[data-v3-remove-position]');
@@ -326,8 +451,24 @@ function bindIncreaseActions() {
       panel.querySelectorAll('[data-v3-increase-slippage]').forEach((item) => item.classList.toggle('active', item === slippageButton));
       return;
     }
+    const maxButton = event.target.closest?.('[data-v3-increase-max]');
+    if (maxButton) {
+      const panel = maxButton.closest('[data-v3-increase-panel]');
+      const token = maxButton.dataset.v3IncreaseMax;
+      const raw = token === 'sui' ? panel?.dataset.v3SuiSpendableRaw : panel?.dataset.v3TreeBalanceRaw;
+      const input = panel?.querySelector(token === 'sui' ? '[data-v3-increase-sui]' : '[data-v3-increase-tree]');
+      if (input && /^\d+$/.test(raw || '')) {
+        input.value = rawToDecimal(BigInt(raw), token === 'sui' ? SUI_DECIMALS : TREE_DECIMALS);
+        updatePairedIncrease(panel, token);
+      }
+      if (token === 'sui') {
+        const status = panel?.querySelector('[data-v3-increase-status]');
+        if (status && !status.classList.contains('warning')) status.textContent = `MAX keeps 0.05 SUI in the wallet for gas. ${status.textContent}`;
+      }
+      return;
+    }
     const submitButton = event.target.closest?.('[data-v3-increase-submit]');
-    if (submitButton) { const positionId = submitButton.dataset.v3IncreaseSubmit; const panel = increasePanel(positionId); if (panel) increasePosition(positionId, panel, submitButton); return; }
+    if (submitButton) { const positionId = submitButton.dataset.v3IncreaseSubmit; const panel = increasePanel(positionId, submitButton); if (panel) increasePosition(positionId, panel, submitButton); return; }
     const percentageButton = event.target.closest?.('[data-v3-remove-percent]');
     if (percentageButton) {
       const panel = percentageButton.closest('[data-v3-remove-panel]'); const positionId = panel?.dataset.v3RemovePanel; if (!positionId) return;
@@ -352,6 +493,9 @@ function bindIncreaseActions() {
     if (claimSubmitButton) { const positionId = claimSubmitButton.dataset.v3ClaimSubmit; const panel = claimPanel(positionId); if (panel) collectAll(positionId, panel, claimSubmitButton); }
   });
 }
+window.addEventListener('tree:wallet-changed', () => {
+  document.querySelectorAll('[data-v3-increase-panel]:not([hidden])').forEach((panel) => refreshIncreaseBalances(panel));
+});
 async function createPosition(button) {
   if (busy) return; busy = true; button.disabled = true;
   try {
@@ -359,9 +503,8 @@ async function createPosition(button) {
     const owner = await connectedAddress(); if (!owner) throw new Error('Connect a Sui wallet before creating a position.');
     const client = await suiClient(); const data = await overview();
     const suiRaw = decimalToRaw(node('v3SuiAmount','v3AmountSui')?.value, SUI_DECIMALS); const treeRaw = decimalToRaw(node('v3TreeAmount','v3AmountTree')?.value, TREE_DECIMALS);
-    const [suiBalance, treeBalance] = await Promise.all([rawCoinBalance(client, owner, SUI_COIN_TYPE), rawCoinBalance(client, owner, TREE_COIN_TYPE)]);
+    const balanceResult = await client.core.getBalance({ owner, coinType: SUI_COIN_TYPE }); const suiBalance = BigInt(balanceResult?.balance?.balance ?? balanceResult?.balance ?? balanceResult?.totalBalance ?? 0);
     if (suiBalance < suiRaw + MIN_SUI_GAS_RESERVE_RAW) throw new Error('Keep at least 0.05 SUI available for gas after the position deposit.');
-    if (treeBalance < treeRaw) throw new Error('The connected wallet does not have enough TREE for this position.');
     const minPrice = Number(node('v3MinPrice','v3MinimumPrice')?.value); const maxPrice = Number(node('v3MaxPrice','v3MaximumPrice')?.value);
     const { lower: tickLower, upper: tickUpper } = ticksFromDisplayedPrices({ currentTick: Number(data.pool.currentTick), currentPrice: Number(data.pool.priceSuiPerTree), minPrice, maxPrice, tickSpacing: Number(data.pool.tickSpacing), displayedPriceIncreasesWithTick: false });
     const { Transaction } = await import(SDK_URL);

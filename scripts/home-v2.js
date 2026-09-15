@@ -1,11 +1,18 @@
-import treeHeroVideoUrl from '../assets/tree-hero-walking.mp4?url';
-import treeHeroPosterUrl from '../assets/tree-hero-poster.webp?url';
-import treeBrandLogoUrl from '../assets/tree-token-logo-official.webp?url';
-import coinGeckoLogoUrl from '../assets/CG.png?url';
 import { HOME_MARKET_FIELDS, formatMarket, resolveHomeMarket, validMarketValue } from './home-market-core.js';
+
+// Production serves this module directly without a Vite build. Keep asset URLs
+// browser-native so embedded wallet browsers can evaluate the module.
+const treeHeroVideoUrl = '/assets/tree-hero-walking.mp4';
+const treeHeroPosterUrl = '/assets/tree-hero-poster.webp';
+const treeBrandLogoUrl = '/assets/tree-token-logo-official.webp';
+const coinGeckoLogoUrl = '/assets/CG.png';
+const treeFundContributionUrl = '/assets/tree-fund-first-donation.png';
+const salutingBranchesLogoUrl = '/assets/saluting-branches-logo.svg';
+const nftreeArtworkUrl = '/assets/profile-nftree-art.jpg';
 
 const TREE_COIN_TYPE = '0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE';
 const DASHBOARD_URL = '/api/tree-dashboard';
+const VERIFIED_LIQUIDITY_URL = '/api/tree-liquidity';
 const HOME_MARKET_CACHE_KEY = 'tree-home-market-last-success-v1';
 
 function readHomeMarketCache() {
@@ -28,6 +35,14 @@ async function requestDashboard(fresh = false) {
   const response = await fetch(url, { headers: { Accept: 'application/json' }, cache: fresh ? 'no-store' : 'default' });
   if (!response.ok) throw new Error(`Dashboard returned ${response.status}`);
   return response.json();
+}
+
+async function requestVerifiedLiquidity() {
+  const response = await fetch(`${VERIFIED_LIQUIDITY_URL}?fresh=${Date.now()}`, { headers: { Accept: 'application/json' }, cache: 'no-store' });
+  const payload = await response.json().catch(() => ({}));
+  const value = Number(payload?.liquidity?.recognizedLiquidityUsd);
+  if (!response.ok || payload?.status !== 'ok' || !Number.isFinite(value) || value <= 0) throw new Error('Verified TREE liquidity is unavailable.');
+  return value;
 }
 
 function buildHeader() {
@@ -88,7 +103,7 @@ function buildHeader() {
 function buildHomepage() {
   document.documentElement.classList.remove('home-v2');
   document.documentElement.classList.add('home-simple');
-  document.querySelectorAll('.launch-popup,.fab-group,.swap-backdrop,.booklet-modal,.scroll-top,.toast,.parallax-layer').forEach((node) => node.remove());
+  document.querySelectorAll('.launch-popup,.fab-group,.swap-backdrop,.booklet-modal,.simple-impact-modal,.scroll-top,.toast,.parallax-layer').forEach((node) => node.remove());
 
   const main = document.querySelector('main');
   if (main) {
@@ -107,14 +122,29 @@ function buildHomepage() {
             <video class="simple-hero-video" autoplay muted loop playsinline preload="auto" poster="${treeHeroPosterUrl}" aria-label="TREE hero walking through the ecosystem">
               <source src="${treeHeroVideoUrl}" type="video/mp4">
             </video>
-            <button class="simple-video-toggle" type="button" aria-label="Pause hero video">Pause</button>
+            <button class="simple-video-toggle" type="button" aria-label="Pause hero video" title="Pause video"><span aria-hidden="true">⏸</span></button>
             <span class="simple-live-badge">LIVE ON SUI</span>
           </div>
         </div>
         <div class="simple-hero-actions" aria-label="TREE ecosystem destinations">
-          <a class="simple-button primary simple-launch-app" href="/dapp/">Launch App</a>
-          <a class="simple-button secondary" href="https://nftree.net/" target="_blank" rel="noopener noreferrer">Explore NFTree</a>
-          <a class="simple-button arcade-button" href="/play">Enter TREE Arcade</a>
+          <a class="simple-button primary simple-launch-app simple-destination-button" href="/dapp/">
+            <span class="simple-destination-icon"><img src="${treeBrandLogoUrl}" alt=""></span>
+            <span class="simple-destination-copy"><strong>Open TREE App</strong><small>Trade · Earn · Explore</small></span>
+            <b class="simple-destination-arrow" aria-hidden="true">→</b>
+          </a>
+          <div class="simple-action-stack nftree-action-stack">
+            <a class="simple-button secondary simple-destination-button nftree-market-button" href="https://nftree.net/" target="_blank" rel="noopener noreferrer">
+              <span class="simple-destination-icon"><img src="${nftreeArtworkUrl}" alt=""></span>
+              <span class="simple-destination-copy"><strong>NFTree Marketplace</strong><small>Your ecosystem access pass</small></span>
+              <b class="simple-destination-arrow" aria-hidden="true">↗</b>
+            </a>
+            <a class="simple-sub-button nftree-rewards-button" href="https://www.treedrop.xyz/" target="_blank" rel="noopener noreferrer"><span class="simple-reward-spark" aria-hidden="true">◆</span> Claim NFTree Rewards <span aria-hidden="true">↗</span></a>
+          </div>
+          <a class="simple-button arcade-button simple-destination-button" href="/play">
+            <span class="simple-arcade-pixel" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <span class="simple-destination-copy"><strong>Enter TREE Arcade</strong><small>Play TREE games</small></span>
+            <b class="simple-destination-arrow" aria-hidden="true">→</b>
+          </a>
         </div>
         <div class="simple-stat-strip" aria-label="TREE market summary">
           <article><span>Price</span><strong data-home-market="price">Loading…</strong></article>
@@ -124,6 +154,102 @@ function buildHomepage() {
           <article><span>Owners</span><strong data-home-market="holderCount">Loading…</strong></article>
         </div>
       </section>
+      <section class="simple-utility" aria-labelledby="simple-utility-title">
+        <div class="simple-utility-heading">
+          <div>
+            <p class="simple-impact-kicker">UTILITY YOU CAN USE TODAY</p>
+            <h2 id="simple-utility-title">What You Can Do With TREE</h2>
+          </div>
+          <p>Trade, earn, compete, and access a growing ecosystem from one connected wallet.</p>
+        </div>
+        <div class="simple-utility-grid">
+          <a class="simple-utility-card utility-trade" href="/dapp/#swap">
+            <span class="simple-utility-icon" aria-hidden="true">↕</span>
+            <span><strong>Trade &amp; Earn</strong><small>Swap TREE, provide V2/V3 liquidity, manage positions, and put Victory rewards to work.</small></span>
+            <b aria-hidden="true">→</b>
+          </a>
+          <a class="simple-utility-card utility-compete" href="/dapp/#canopy-draw">
+            <span class="simple-utility-icon" aria-hidden="true">◆</span>
+            <span><strong>Compete &amp; Build Rank</strong><small>Enter the TREE Knowledge Trial and climb the verified Canopy Top 50.</small></span>
+            <b aria-hidden="true">→</b>
+          </a>
+          <a class="simple-utility-card utility-access" href="/play">
+            <span class="simple-utility-icon" aria-hidden="true">♣</span>
+            <span><strong>Access the Ecosystem</strong><small>NFTree ownership unlocks games, rewards, and new TREE utilities as they are released.</small></span>
+            <b aria-hidden="true">→</b>
+          </a>
+        </div>
+        <div class="simple-live-now" aria-label="TREE features available now">
+          <strong><span aria-hidden="true"></span> Live Now</strong>
+          <p>Swap <i>·</i> Limit Orders <i>·</i> V2/V3 Liquidity <i>·</i> Victory Center <i>·</i> Knowledge Trial <i>·</i> Canopy</p>
+        </div>
+        <div class="simple-onboarding-row">
+          <a class="simple-beginner-path" href="/sui-guide/">
+            <span class="simple-beginner-number" aria-hidden="true">123</span>
+            <span><small>New to Sui?</small><strong>Open the Getting Started guide</strong></span>
+            <b aria-hidden="true">→</b>
+          </a>
+          <div class="simple-trust-strip" aria-label="TREE ecosystem verification">
+            <span>Built on Sui</span>
+            <span>Liquidity across SuiDex, Turbos &amp; Cetus</span>
+            <span>Live on-chain statistics</span>
+            <button class="simple-coin-copy" type="button" data-copy-tree-coin title="Copy the official TREE coin type">
+              <span>Verified TREE coin type</span><code>0x6c5a…4895cf</code><b>Copy</b>
+            </button>
+            <small class="simple-copy-status" aria-live="polite"></small>
+          </div>
+        </div>
+      </section>
+      <section class="simple-causes" id="causes-i-support" aria-labelledby="simple-causes-title">
+        <div class="simple-causes-heading">
+          <div>
+            <p class="simple-impact-kicker">GROWING GOOD BEYOND THE ECOSYSTEM</p>
+            <h2 id="simple-causes-title">Causes I Support</h2>
+          </div>
+          <p class="simple-causes-summary">I donate 5% of NFTree sales to causes like TREE Fund and Saluting Branches.</p>
+        </div>
+        <div class="simple-causes-grid">
+          <article class="simple-impact simple-impact-tree-fund">
+            <div class="simple-impact-preview simple-impact-proof-preview" aria-hidden="true">
+              <img src="${treeFundContributionUrl}" alt="">
+            </div>
+            <div class="simple-impact-copy">
+              <h3>TREE Fund</h3>
+              <div class="simple-impact-actions">
+                <a class="simple-button primary" href="https://treefund.org/" target="_blank" rel="noopener noreferrer">Learn About TREE Fund <span aria-hidden="true">↗</span></a>
+                <button class="simple-button secondary simple-impact-proof-open" type="button">View Contribution</button>
+              </div>
+            </div>
+          </article>
+          <article class="simple-impact simple-impact-saluting-branches">
+            <div class="simple-impact-preview simple-impact-logo-preview">
+              <img src="${salutingBranchesLogoUrl}" alt="Saluting Branches logo">
+            </div>
+            <div class="simple-impact-copy">
+              <h3>Saluting Branches</h3>
+              <div class="simple-impact-actions">
+                <a class="simple-button primary" href="https://www.salutingbranches.org/" target="_blank" rel="noopener noreferrer">Visit Saluting Branches <span aria-hidden="true">↗</span></a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+      <div class="simple-impact-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="simple-impact-modal-title">
+        <div class="simple-impact-modal-card">
+          <div class="simple-impact-modal-header">
+            <div>
+              <p class="simple-impact-kicker">DOCUMENTED CONTRIBUTION</p>
+              <h2 id="simple-impact-modal-title">TREE Fund contribution</h2>
+            </div>
+            <button class="simple-impact-modal-close" type="button" aria-label="Close contribution proof">×</button>
+          </div>
+          <div class="simple-impact-document">
+            <img src="${treeFundContributionUrl}" alt="TREE Fund acknowledgment documenting a total contribution of $107.05 on May 23, 2026">
+            <span class="simple-impact-redaction" aria-hidden="true"></span>
+          </div>
+          <p class="simple-impact-privacy-note">The personal greeting is concealed; the contribution date, amount, and NFTree proceeds explanation remain visible.</p>
+        </div>
+      </div>
     `;
 
     const heroVideo = main.querySelector('.simple-hero-video');
@@ -137,8 +263,10 @@ function buildHomepage() {
       heroVideo.setAttribute('webkit-playsinline', '');
       const updateVideoToggle = () => {
         const paused = heroVideo.paused;
-        videoToggle.textContent = paused ? 'Play' : 'Pause';
+        const icon = videoToggle.querySelector('span');
+        if (icon) icon.textContent = paused ? '▶' : '⏸';
         videoToggle.setAttribute('aria-label', `${paused ? 'Play' : 'Pause'} hero video`);
+        videoToggle.setAttribute('title', `${paused ? 'Play' : 'Pause'} video`);
       };
       const attemptAutoplay = () => {
         heroVideo.muted = true;
@@ -162,6 +290,53 @@ function buildHomepage() {
       attemptAutoplay();
       updateVideoToggle();
     }
+
+    const impactModal = main.querySelector('.simple-impact-modal');
+    const impactOpen = main.querySelector('.simple-impact-proof-open');
+    const impactClose = main.querySelector('.simple-impact-modal-close');
+    if (impactModal instanceof HTMLElement) document.body.append(impactModal);
+    let impactReturnFocus = null;
+    const closeImpactProof = () => {
+      if (!(impactModal instanceof HTMLElement)) return;
+      impactModal.classList.remove('open');
+      impactModal.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('simple-impact-modal-open');
+      if (impactReturnFocus instanceof HTMLElement) impactReturnFocus.focus();
+    };
+    const openImpactProof = () => {
+      if (!(impactModal instanceof HTMLElement)) return;
+      impactReturnFocus = document.activeElement;
+      impactModal.classList.add('open');
+      impactModal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('simple-impact-modal-open');
+      if (impactClose instanceof HTMLButtonElement) impactClose.focus();
+    };
+    impactOpen?.addEventListener('click', openImpactProof);
+    impactClose?.addEventListener('click', closeImpactProof);
+    impactModal?.addEventListener('click', (event) => {
+      if (event.target === impactModal) closeImpactProof();
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && impactModal?.classList.contains('open')) closeImpactProof();
+    });
+
+    const copyCoinButton = main.querySelector('[data-copy-tree-coin]');
+    const copyCoinStatus = main.querySelector('.simple-copy-status');
+    copyCoinButton?.addEventListener('click', async () => {
+      const label = copyCoinButton.querySelector('b');
+      try {
+        await navigator.clipboard.writeText(TREE_COIN_TYPE);
+        if (label) label.textContent = 'Copied';
+        if (copyCoinStatus) copyCoinStatus.textContent = 'Official TREE coin type copied.';
+      } catch {
+        if (label) label.textContent = 'Copy unavailable';
+        if (copyCoinStatus) copyCoinStatus.textContent = 'Copy was unavailable. The complete coin type is shown in the Command Center.';
+      }
+      window.setTimeout(() => {
+        if (label) label.textContent = 'Copy';
+        if (copyCoinStatus) copyCoinStatus.textContent = '';
+      }, 2400);
+    });
   }
 
   const footer = document.querySelector('footer');
@@ -177,11 +352,18 @@ function buildHomepage() {
 
 async function loadDashboard() {
   try {
+    const cached = readHomeMarketCache();
     let payload = await requestDashboard();
     if (!HOME_MARKET_FIELDS.every((field) => validMarketValue(payload?.live?.data?.[field]))) {
       try { payload = await requestDashboard(true); } catch { /* retain the first response and verified cache */ }
     }
-    const market = resolveHomeMarket(payload, readHomeMarketCache());
+    const market = resolveHomeMarket(payload, cached);
+    try {
+      market.liquidity = await requestVerifiedLiquidity();
+    } catch (liquidityError) {
+      market.liquidity = validMarketValue(cached?.liquidity) ? Number(cached.liquidity) : null;
+      console.error('Verified TREE homepage liquidity unavailable:', liquidityError);
+    }
     writeHomeMarketCache(market);
     document.querySelectorAll('[data-home-market]').forEach((element) => {
       const field = element.dataset.homeMarket;
@@ -198,10 +380,16 @@ async function loadDashboard() {
 }
 
 function initializeSimpleHome() {
-  buildHeader();
-  buildHomepage();
-  loadDashboard();
-  window.TREE_COIN_TYPE = TREE_COIN_TYPE;
+  try {
+    buildHeader();
+    buildHomepage();
+    loadDashboard();
+    window.TREE_COIN_TYPE = TREE_COIN_TYPE;
+  } finally {
+    // The source document still contains the legacy fallback markup. Keep it
+    // from painting, then reveal only after the current homepage is assembled.
+    document.documentElement.classList.remove('home-pending');
+  }
 }
 
 initializeSimpleHome();

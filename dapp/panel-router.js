@@ -3,6 +3,7 @@ const PANEL_IDS = [
   'limit',
   'earn',
   'v3',
+  'victory',
   'stats',
   'removed',
   'canopy-draw',
@@ -16,6 +17,7 @@ const PANEL_LABELS = {
   limit: 'Limit',
   earn: 'Earn',
   v3: 'V3',
+  victory: 'VICTORY',
   stats: 'Stats',
   removed: 'Burn',
   'canopy-draw': 'Challenge',
@@ -35,12 +37,21 @@ let activePanelId = null;
 
 panels.forEach((panel) => panel.classList.add('app-panel'));
 
+function panelIdForTarget(target) {
+  let node = target instanceof Element ? target : null;
+  while (node) {
+    if (node.id && panels.has(node.id)) return node.id;
+    node = node.parentElement;
+  }
+  return null;
+}
+
 function resolvePanelId(hash = location.hash) {
   const id = decodeURIComponent(String(hash || '').replace(/^#/, ''));
   if (panels.has(id)) return id;
   const target = id ? document.getElementById(id) : null;
-  const containingPanel = target?.closest('section[id]');
-  if (containingPanel && panels.has(containingPanel.id)) return containingPanel.id;
+  const containingPanelId = panelIdForTarget(target);
+  if (containingPanelId) return containingPanelId;
   return 'swap';
 }
 
@@ -123,7 +134,7 @@ document.addEventListener('click', (event) => {
   const rawId = link.getAttribute('href')?.slice(1);
   if (!rawId) return;
   const target = document.getElementById(rawId);
-  const targetPanel = panels.has(rawId) ? rawId : target?.closest('section[id]')?.id;
+  const targetPanel = panels.has(rawId) ? rawId : panelIdForTarget(target);
   if (!targetPanel || !panels.has(targetPanel) || targetPanel === activePanelId) return;
   event.preventDefault();
   history.pushState({ panelId: targetPanel }, '', `#${rawId}`);
@@ -140,9 +151,9 @@ if (documentGrid && !documentGrid.querySelector('[data-profile-studio-card]')) {
   documentGrid.append(article);
 }
 
-const earnViews = ['routes', 'positions', 'victory'];
-const earnTabs = { routes: document.getElementById('earnRoutesTab'), positions: document.getElementById('earnPositionsTab'), victory: document.getElementById('earnVictoryTab') };
-const earnPanels = { routes: document.getElementById('earnRoutesPanel'), positions: document.getElementById('earnPositionsPanel'), victory: document.getElementById('earnVictoryPanel') };
+const earnViews = ['routes', 'positions'];
+const earnTabs = { routes: document.getElementById('earnRoutesTab'), positions: document.getElementById('earnPositionsTab') };
+const earnPanels = { routes: document.getElementById('earnRoutesPanel'), positions: document.getElementById('earnPositionsPanel') };
 function showEarnView(view) {
   const selected = earnViews.includes(view) ? view : 'routes';
   Object.entries(earnPanels).forEach(([name, panel]) => { if (panel) panel.hidden = name !== selected; });
@@ -155,7 +166,6 @@ function showEarnView(view) {
 }
 earnTabs.routes?.addEventListener('click', () => showEarnView('routes'));
 earnTabs.positions?.addEventListener('click', () => showEarnView('positions'));
-earnTabs.victory?.addEventListener('click', () => showEarnView('victory'));
 
 const statsViews = ['market', 'supply', 'liquidity', 'nftree'];
 const statsTabs = Object.fromEntries(statsViews.map((view) => [view, document.getElementById(`stats${view[0].toUpperCase()}${view.slice(1)}Tab`)]));
@@ -172,6 +182,7 @@ function showStatsView(view) {
   });
 }
 Object.entries(statsTabs).forEach(([view, tab]) => tab?.addEventListener('click', () => showStatsView(view)));
+document.querySelectorAll('[data-open-tree-chart]').forEach((link) => link.addEventListener('click', () => showStatsView('market')));
 
 const raffleViews = ['daily', 'weekly', 'entries'];
 const raffleTabs = Object.fromEntries(raffleViews.map((view) => [view, document.getElementById(`raffle${view[0].toUpperCase()}${view.slice(1)}Tab`)]));

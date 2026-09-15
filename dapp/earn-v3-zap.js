@@ -22,6 +22,7 @@ function succeeded(result) { return coreTransaction(result)?.effects?.status?.su
 function failure(result, fallback) { return result?.FailedTransaction?.status?.error?.message || result?.FailedTransaction?.status?.error || coreTransaction(result)?.effects?.status?.error?.message || coreTransaction(result)?.effects?.status?.error || fallback; }
 function digest(result) { return result?.digest || result?.Transaction?.digest || result?.effects?.transactionDigest || result?.transactionBlockDigest || null; }
 function setStatus(message, kind = '') { el.status.textContent = message; el.status.className = `status${kind ? ` ${kind}` : ''}`; }
+function ownerAddress() { return window.resolveTreeV3WalletAddress?.() || window.resolveTreeWalletAddress?.() || window.playerAddress || document.getElementById('dappWallet')?.dataset?.address || null; }
 
 function selectedTicks() {
   if (!state.pool) throw new Error('The verified V3 pool is still loading.');
@@ -35,21 +36,24 @@ function rangeText() {
   const price = Number(state.pool.priceSuiPerTree); const ratio = Number(state.range) / 100;
   return `${(price * (1 - ratio)).toPrecision(6)} – ${(price * (1 + ratio)).toPrecision(6)} SUI/TREE`;
 }
-async function balance(symbol) { if (!window.playerAddress) return 0n; const result = await client.core.getBalance({ owner: window.playerAddress, coinType: typeFor(symbol) }); return BigInt(result?.balance?.balance ?? result?.balance ?? result?.totalBalance ?? 0); }
-async function loadBalances() { if (!window.playerAddress) { state.balances = { SUI: 0n, TREE: 0n }; render(); return; } try { const [SUI, TREE] = await Promise.all([balance('SUI'), balance('TREE')]); state.balances = { SUI, TREE }; } catch { setStatus('Wallet balances could not be refreshed.', 'error'); } render(); }
+async function balance(symbol, owner = ownerAddress()) { if (!owner) return 0n; const result = await client.core.getBalance({ owner, coinType: typeFor(symbol) }); return BigInt(result?.balance?.balance ?? result?.balance ?? result?.totalBalance ?? 0); }
+async function loadBalances() { const owner = ownerAddress(); if (!owner) { state.balances = { SUI: 0n, TREE: 0n }; render(); return; } try { const [SUI, TREE] = await Promise.all([balance('SUI', owner), balance('TREE', owner)]); state.balances = { SUI, TREE }; } catch { setStatus('Wallet balances could not be refreshed.', 'error'); } render(); }
 async function loadPool() { try { const response = await fetch('/api/tree-v3-overview', { cache: 'no-store', headers: { Accept: 'application/json' } }); const payload = await response.json().catch(() => ({})); if (!response.ok) throw new Error(`The verified V3 pool service returned ${response.status}.`); validateVerifiedPool(payload?.pool); state.pool = payload.pool; setStatus('Verified SUI/TREE V3 pool ready. Enter an amount to create a position.', 'success'); } catch (error) { setStatus(String(error?.message || error), 'error'); } render(); }
 
 function render() {
   if (!el.action) return;
   const amount = rawAmount(); const route = state.quote;
   el.symbol.textContent = state.token;
-  el.balance.textContent = window.playerAddress ? `Balance ${formatRaw(state.balances[state.token], decimalsFor(state.token), 6)} ${state.token}` : 'Balance —';
+  const owner = ownerAddress();
+  el.balance.textContent = owner ? `Balance ${formatRaw(state.balances[state.token], decimalsFor(state.token), 6)} ${state.token}` : 'Balance —';
+  el.suiBalance.textContent = owner ? `${formatRaw(state.balances.SUI, SUI_DECIMALS, 6)} SUI` : 'Connect wallet';
+  el.treeBalance.textContent = owner ? `${formatRaw(state.balances.TREE, TREE_DECIMALS, 4)} TREE` : 'Connect wallet';
   el.current.textContent = state.pool ? `${state.pool.priceSuiPerTree} SUI / TREE` : 'Loading…';
   el.rangeText.textContent = rangeText();
   el.swap.textContent = amount && state.swapRaw ? `≈ ${formatRaw(state.swapRaw, decimalsFor(state.token), 6)} ${state.token}` : amount ? 'Calculating…' : '—';
   el.minimum.textContent = route ? `${formatRaw(route.minAmountOut, decimalsFor(otherSymbol(state.token)), 6)} ${otherSymbol(state.token)}` : '—';
   if (state.executing) { el.action.disabled = true; el.action.textContent = 'Working…'; return; }
-  if (!window.playerAddress) { el.action.disabled = false; el.action.textContent = 'Connect Wallet'; return; }
+  if (!owner) { el.action.disabled = false; el.action.textContent = 'Connect Wallet'; return; }
   if (!EXECUTION_ENABLED) { el.action.disabled = true; el.action.textContent = 'V3 transactions unavailable'; return; }
   if (!state.pool || !amount || !route) { el.action.disabled = true; el.action.textContent = state.quoting ? 'Loading quote…' : 'Enter an amount'; return; }
   el.action.disabled = false; el.action.textContent = 'Review V3 Zap';
@@ -82,7 +86,7 @@ async function simulate(transaction) { const bytes = await transaction.build({ c
 async function signAndFinalize(transaction) { if (typeof window.signAndExecuteTransactionBlock !== 'function') throw new Error('The connected wallet cannot sign this transaction.'); const signed = await window.signAndExecuteTransactionBlock(transaction); const txDigest = digest(signed); if (!txDigest) throw new Error('The wallet returned no transaction digest.'); const finalized = await client.core.waitForTransaction({ digest: txDigest, timeout: 60_000, include: { effects: true, balanceChanges: true, events: true } }); if (!succeeded(finalized)) throw new Error(failure(finalized, 'The V3 zap did not finalize successfully.')); return txDigest; }
 
 async function execute() {
-  if (!window.playerAddress) { await window.openWalletManager?.({ mode: 'picker' }); await loadBalances(); return; }
+  if (!ownerAddress()) { await window.openWalletManager?.({ mode: 'picker' }); await loadBalances(); return; }
   if (!EXECUTION_ENABLED || state.executing) return;
   if (!state.quote) { await requestQuote(); if (!state.quote) return; }
   const amountIn = rawAmount(); if (!amountIn) return;
@@ -90,7 +94,7 @@ async function execute() {
   if (state.token === 'TREE' && state.balances.TREE < amountIn) { setStatus('Insufficient TREE balance.', 'error'); return; }
   state.executing = true; render(); el.success.hidden = true;
   try {
-    const owner = window.playerAddress; const swapRaw = state.swapRaw; const { lower: tickLower, upper: tickUpper } = selectedTicks();
+    const owner = ownerAddress(); const swapRaw = state.swapRaw; const { lower: tickLower, upper: tickUpper } = selectedTicks();
     if (!swapRaw || BigInt(state.quote.amountIn) !== swapRaw) throw new Error('The optimized V3 ratio quote has expired. Refresh the amount and try again.');
     const base = { Transaction, client, owner, inputType: typeFor(state.token), amountIn, swapRaw, minSwapOutRaw: BigInt(state.quote.minAmountOut), tickLower, tickUpper };
     setStatus('Running a preliminary Sui Mainnet simulation to measure the exact position deposits…', 'warning');
@@ -110,17 +114,19 @@ async function execute() {
 }
 
 function init() {
-  Object.assign(el, { open: document.getElementById('earnV3ZapOpen'), panel: document.getElementById('earnV3ZapPanel'), token: document.getElementById('earnV3ZapToken'), amount: document.getElementById('earnV3ZapAmount'), max: document.getElementById('earnV3ZapMax'), symbol: document.getElementById('earnV3ZapSymbol'), balance: document.getElementById('earnV3ZapBalance'), range: document.getElementById('earnV3ZapRange'), current: document.getElementById('earnV3ZapCurrent'), rangeText: document.getElementById('earnV3ZapRangeText'), swap: document.getElementById('earnV3ZapSwap'), minimum: document.getElementById('earnV3ZapMinimum'), action: document.getElementById('earnV3ZapAction'), status: document.getElementById('earnV3ZapStatus'), success: document.getElementById('earnV3ZapSuccess') });
-  if (!el.open || !el.action || el.open.dataset.v3ZapBound === 'true') return;
-  el.open.dataset.v3ZapBound = 'true';
-  el.open.addEventListener('click', () => { el.panel.hidden = !el.panel.hidden; el.open.setAttribute('aria-expanded', String(!el.panel.hidden)); if (!el.panel.hidden) { loadPool(); loadBalances(); } });
+  Object.assign(el, { panel: document.getElementById('v3AddCard'), token: document.getElementById('earnV3ZapToken'), amount: document.getElementById('earnV3ZapAmount'), max: document.getElementById('earnV3ZapMax'), symbol: document.getElementById('earnV3ZapSymbol'), balance: document.getElementById('earnV3ZapBalance'), suiBalance: document.getElementById('earnV3ZapSuiBalance'), treeBalance: document.getElementById('earnV3ZapTreeBalance'), range: document.getElementById('earnV3ZapRange'), current: document.getElementById('earnV3ZapCurrent'), rangeText: document.getElementById('earnV3ZapRangeText'), swap: document.getElementById('earnV3ZapSwap'), minimum: document.getElementById('earnV3ZapMinimum'), action: document.getElementById('earnV3ZapAction'), status: document.getElementById('earnV3ZapStatus'), success: document.getElementById('earnV3ZapSuccess') });
+  if (!el.action || el.action.dataset.v3ZapBound === 'true') return;
+  el.action.dataset.v3ZapBound = 'true';
   el.token.addEventListener('change', () => { state.token = el.token.value; state.amount = ''; el.amount.value = ''; state.quote = null; state.swapRaw = null; setStatus('Enter an amount to build the verified SUI/TREE V3 zap.'); render(); });
   el.amount.addEventListener('input', () => { state.amount = el.amount.value; state.quote = null; state.swapRaw = null; render(); scheduleQuote(); });
   el.max.addEventListener('click', () => { let value = state.balances[state.token]; if (state.token === 'SUI') value = value > MIN_SUI_GAS_RESERVE_RAW ? value - MIN_SUI_GAS_RESERVE_RAW : 0n; state.amount = formatRaw(value, decimalsFor(state.token), decimalsFor(state.token)); el.amount.value = state.amount; state.quote = null; state.swapRaw = null; render(); scheduleQuote(); });
   el.range.addEventListener('change', () => { state.range = el.range.value; state.quote = null; state.swapRaw = null; render(); scheduleQuote(); });
   document.querySelectorAll('[data-earn-v3-slippage]').forEach((button) => button.addEventListener('click', () => { state.slippageBps = Number(button.dataset.earnV3Slippage); document.querySelectorAll('[data-earn-v3-slippage]').forEach((item) => item.classList.toggle('active', item === button)); state.quote = null; state.swapRaw = null; scheduleQuote(); }));
-  el.action.addEventListener('click', execute); window.addEventListener('tree:wallet-changed', loadBalances); render();
-  if (!el.panel.hidden) { loadPool(); loadBalances(); }
+  el.action.addEventListener('click', execute);
+  for (const eventName of ['tree:wallet-changed', 'tree-wallet-change', 'tree:wallet-change', 'wallet-change', 'wallet:change', 'sui-wallet-change', 'walletConnected', 'walletDisconnected', 'tree:v3-zap-shown']) window.addEventListener(eventName, loadBalances);
+  render();
+  loadPool();
+  loadBalances();
 }
 document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', init, { once: true }) : init();
 document.addEventListener('tree:v3-workspace-ready', init);

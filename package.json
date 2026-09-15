@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node scripts/copy-static-build.mjs",
-    "preview": "vite preview"
+    "build": "node scripts/build-production-snapshot.mjs",
+    "preview": "vite preview",
+    "build:source": "vite build && node scripts/copy-static-build.mjs",
+    "verify:production": "node scripts/verify-production-snapshot.mjs"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.14.4",

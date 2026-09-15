@@ -7,6 +7,7 @@ const secretNode = document.getElementById('adminSecret');
 const dateNode = document.getElementById('roundDate');
 const prepareButton = document.getElementById('prepareDraft');
 const checkButton = document.getElementById('checkDraft');
+const generateButton = document.getElementById('generateRotation');
 const addButton = document.getElementById('addTiebreak');
 const reviewConfirmedNode = document.getElementById('reviewConfirmed');
 const scheduleButton = document.getElementById('scheduleRound');
@@ -109,6 +110,31 @@ async function checkDraft() {
   }
 }
 
+async function generateRotation() {
+  let credentialsValue;
+  try { credentialsValue = credentials(); } catch (error) { setStatus(error.message, 'error'); return; }
+  generateButton.disabled = true;
+  setStatus('Selecting today\'s balanced questions from the private rotation bank…');
+  try {
+    const response = await fetch(API, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-tree-knowledge-admin-secret': credentialsValue.secret,
+      },
+      body: JSON.stringify({ action: 'prepare-rotating', roundDate: credentialsValue.roundDate }),
+    });
+    const payload = await responsePayload(response);
+    renderSetup(payload.setup);
+    setStatus(`${payload.setup.roundId} now has a private rotating set of ${payload.setup.dailyQuestionCount} daily questions and ${payload.setup.tiebreakQuestionCount} tie-break questions. Review and schedule it when ready.`, 'success');
+  } catch (error) {
+    setStatus(error instanceof Error ? error.message : 'The rotating draft could not be generated.', 'error');
+  } finally {
+    generateButton.disabled = false;
+  }
+}
+
 async function prepareDraft(event) {
   event.preventDefault();
   if (!form.reportValidity()) return;
@@ -170,13 +196,14 @@ async function scheduleRound() {
 }
 
 dateNode.value = tomorrowUtc();
-for (let index = 0; index < 5; index += 1) addQuestion(dailyRoot, 'daily');
+for (let index = 0; index < 3; index += 1) addQuestion(dailyRoot, 'daily');
 for (let index = 0; index < 3; index += 1) addQuestion(tiebreakRoot, 'tiebreak');
 addButton.addEventListener('click', () => {
   if (tiebreakRoot.children.length >= 10) return setStatus('A draft can contain at most ten sudden-death questions.', 'error');
   addQuestion(tiebreakRoot, 'tiebreak');
 });
 checkButton.addEventListener('click', checkDraft);
+generateButton.addEventListener('click', generateRotation);
 form.addEventListener('submit', prepareDraft);
 reviewConfirmedNode.addEventListener('change', () => renderSetup(currentSetup));
 scheduleButton.addEventListener('click', scheduleRound);

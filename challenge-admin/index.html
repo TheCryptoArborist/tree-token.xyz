@@ -12,26 +12,27 @@
     <header>
       <span class="eyebrow">PRIVATE PREPARATION TOOL</span>
       <h1>TREE Challenge Setup</h1>
-      <p>Prepare, review, and schedule a five-question daily round with private sudden-death backups. This tool cannot enable public attempts or move prizes.</p>
+      <p>Generate, review, and schedule a rotating three-question daily round with private sudden-death backups. This tool cannot enable public attempts or move prizes.</p>
     </header>
 
     <section class="card access-card" aria-labelledby="access-title">
       <div><h2 id="access-title">Draft details</h2><p>Dates use UTC. Answers are sent only to the protected server and private database.</p></div>
       <label>Round date <input id="roundDate" type="date" required></label>
       <label>Admin secret <input id="adminSecret" type="password" autocomplete="off" spellcheck="false" required></label>
+      <button id="generateRotation" type="button" class="primary">Generate Rotating Draft</button>
       <button id="checkDraft" type="button" class="secondary">Check Existing Draft</button>
     </section>
 
     <section class="fixed-rules" aria-label="Fixed round rules">
-      <article><strong>5</strong><span>Daily questions</span></article>
-      <article><strong>3:00</strong><span>Daily timer</span></article>
+      <article><strong>3</strong><span>Daily questions</span></article>
+      <article><strong>1:30</strong><span>Daily timer</span></article>
       <article><strong>30 sec</strong><span>Each tie-break</span></article>
       <article><strong>50,000 TREE</strong><span>Planned prize</span></article>
     </section>
 
     <form id="draftForm">
       <section class="question-section">
-        <div class="section-head"><div><span class="step">1</span><h2>Daily questions</h2></div><p>Exactly five questions. Accuracy ranks first, then verified completion time.</p></div>
+        <div class="section-head"><div><span class="step">1</span><h2>Daily questions</h2></div><p>Exactly three questions. The automatic generator selects one easy, one medium, and one difficult question.</p></div>
         <div id="dailyQuestions" class="question-list"></div>
       </section>
 

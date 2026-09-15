@@ -1,0 +1,44 @@
+functionsDirectory = "C:\\Users\\peter\\.codex\\.chatgpt-projects\\g-p-687e42c6116881919802ba8a01351f3d\\tree-token-v3-repair\\netlify\\functions"
+functionsDirectoryOrigin = "config"
+headersOrigin = "config"
+plugins = []
+redirects = []
+
+[build]
+publish = "C:\\Users\\peter\\.codex\\.chatgpt-projects\\g-p-687e42c6116881919802ba8a01351f3d\\tree-token-v3-repair"
+publishOrigin = "config"
+commandOrigin = "config"
+command = "echo Static site - no build step"
+functions = "C:\\Users\\peter\\.codex\\.chatgpt-projects\\g-p-687e42c6116881919802ba8a01351f3d\\tree-token-v3-repair\\netlify\\functions"
+
+  [build.environment]
+
+  [build.processing]
+
+    [build.processing.css]
+
+    [build.processing.html]
+
+    [build.processing.images]
+
+    [build.processing.js]
+
+  [build.services]
+
+[functions]
+
+  [functions."*"]
+
+[[headers]]
+for = "/*"
+
+  [headers.values]
+  X-Content-Type-Options = "nosniff"
+  Referrer-Policy = "strict-origin-when-cross-origin"
+  Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+[[headers]]
+for = "/Litepaper.pdf"
+
+  [headers.values]
+  Cache-Control = "public, max-age=86400"

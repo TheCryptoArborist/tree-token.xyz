@@ -1,50 +1,31 @@
 # TREE Token Website
 
-Canonical source for the redeployed original TREE Token website.
+GitHub and local production baseline for tree-token.xyz, synchronized from live deploy `6aa70deff0b74e2bfe8b7725` on September 15, 2026.
 
-## Production
+## Current status
 
-- Hosting: Netlify
-- Production branch: `main`
-- Publish directory: repository root (`.`)
-- Build step: none; this is a static HTML/CSS/JavaScript site
-- Server-side market-data proxy: `netlify/functions/tree-market.ts`
+- All 166 deployed site files are recovered and hash verified.
+- All 35 server-function identities and five schedules are recorded; 30 exact function ZIPs are backed up.
+- Five Knowledge Trial packages still require source/package reconciliation. Their live Netlify packages remain in place. Local candidates are preserved separately and are not verified replacements.
+- VICTORY PR #22 and Kelpie PR #21 remain separate preview work.
 
-## Required Netlify environment variables
+Read [the production record](production/README.md) and [manifest](production/manifest.json) before deployment work.
 
-Create these in **Netlify → Site configuration → Environment variables**:
+## Local verification
 
-- `NOODLES_API_KEY`
-- `NOODLES_API_URL`
+Use Node.js 24. The recovery build has no external dependencies.
 
-Use `.env.example` only as a list of required variable names. Never commit a populated `.env` file.
+```sh
+npm run verify:production
+npm run build
+```
 
-The API key present in the source archive must be treated as exposed and rotated before production use.
+`dist` contains exactly the captured deployed files. Preserve any previous development build elsewhere first. Server-function packages and recovery candidates are excluded from the public build.
 
-## Local preview
+The homepage's compiled bundle is retained exactly. Earlier editable source remains in Git history. Future development belongs on a feature branch with preview validation and an updated release manifest.
 
-The static page can be previewed with any local web server. To exercise the Netlify Function and environment variables, use Netlify Dev from the repository root.
+## Secrets and deployment
 
-## Important launch validation
+Keep credentials and populated environment files out of Git. Use `.env.example` for variable names and Netlify's environment configuration for runtime values.
 
-Before publishing the custom domain:
-
-1. Test the homepage at desktop and mobile widths.
-2. Confirm the Noodles market widget loads through `/api/tree-market`.
-3. Confirm `assets/CG.png` and `Litepaper.pdf` load on the case-sensitive Netlify filesystem.
-4. Test NFTree mint and Garden Battles links.
-5. Test wallet connection with a non-custodial test wallet.
-6. Validate the embedded SuiDex transaction with a very small amount before exposing it broadly.
-7. Confirm all package, router, factory, pool, token, and clock object IDs against current mainnet state.
-
-## Archive cleanup applied
-
-- Excluded `node_modules/`
-- Removed the populated `.env`
-- Removed the Noodles API key from browser-delivered source
-- Added a Netlify Function for authenticated market-data requests
-- Fixed case-sensitive asset links
-- Removed requests for three parallax files absent from the archive
-- Updated NFTree links from the old Netlify subdomain to `nftree.net`
-- Corrected whole-number quote conversion used by the swap minimum-output calculation
-- Removed the nonfunctional swap-direction flip from the buy-only modal
+Production publishing is locked to the existing deployment while backend parity remains unresolved. Synchronizing GitHub does not deploy the site. Do not use a broad production deployment to reconcile source drift.

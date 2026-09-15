@@ -18,6 +18,7 @@ const staticDirectories = [
   'play',
   'raffle-rules',
   'roadmap',
+  'sui-guide',
   'scripts',
   'styles',
   'tokenomics',

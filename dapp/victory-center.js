@@ -238,6 +238,8 @@ async function load() {
     state.claimableVictoryRaw = requestedOwner ? 0n : null; state.claimableSuiRaw = requestedOwner ? 0n : null;
     if (requestedOwner) {
       state.locks = await getVictoryLocks({ client, owner: requestedOwner, lockerJson, bcs });
+      setStatus(`${state.locks.length.toLocaleString()} VICTORY lock${state.locks.length === 1 ? '' : 's'} loaded from Sui Mainnet. Checking claimable rewards…`, 'success');
+      render();
       if (state.locks.length) {
         const rewardPreview = buildVictoryRewardsClaimTransaction({ Transaction, owner: requestedOwner, locks: state.locks });
         const suiPreview = buildSuiClaimPreviewTransaction({ Transaction, owner: requestedOwner, locks: state.locks });
@@ -397,6 +399,28 @@ async function loadVictoryV3Context() {
   validateVerifiedPool(overview.pool); state.reinvest.v3Pool = overview.pool;
   state.reinvest.v3Positions = Array.isArray(overview.positions) ? overview.positions.filter((position) => /^0x[0-9a-f]{64}$/i.test(position?.objectId || '')) : [];
   render(); return overview;
+}
+
+async function openVictoryV3Compound({ positionId, mode = 'complete', lockDays = 90, reinvestPercent = 60 } = {}) {
+  const normalizedMode = mode === 'sustainable' ? 'sustainable' : 'complete';
+  const normalizedLockDays = [7, 90, 365, 1095].includes(Number(lockDays)) ? Number(lockDays) : 90;
+  const normalizedPercent = Math.max(10, Math.min(90, Math.round(Number(reinvestPercent) / 5) * 5 || 60));
+  state.reinvest.destination = 'v3';
+  state.reinvest.mode = normalizedMode;
+  state.reinvest.lockDays = normalizedLockDays;
+  state.reinvest.reinvestBps = normalizedPercent * 100;
+  state.reinvest.quote = null;
+  showVictoryView('reinvest');
+  render();
+  await loadVictoryV3Context();
+  const requested = String(positionId || '').toLowerCase();
+  const position = state.reinvest.v3Positions.find((item) => String(item.objectId || '').toLowerCase() === requested && item.inRange);
+  if (!position) throw new Error('This V3 position is not currently in range or could not be verified for the connected wallet.');
+  state.reinvest.v3Target = position.objectId;
+  state.reinvest.quote = null;
+  render();
+  setReinvestStatus(`${normalizedMode === 'sustainable' ? `Sustainable Compound is set to reinvest ${normalizedPercent}% and lock ${100 - normalizedPercent}% for ${normalizedLockDays} days.` : 'Compound is ready for this exact V3 position.'} Enter a VICTORY amount or select MAX to review the route.`, 'success');
+  requestAnimationFrame(() => el.reinvestView.scrollIntoView({ behavior: 'smooth', block: 'start' }));
 }
 
 async function requestReinvestQuote() {
@@ -563,7 +587,15 @@ function init() {
     const button = event.target.closest('[data-victory-unlock]'); if (!button) return;
     const lock = state.locks.find((item) => item.id.toString() === button.dataset.victoryUnlock); if (lock) unlockVictoryLock(lock);
   });
-  document.getElementById('earnVictoryTab')?.addEventListener('click', () => { if (LOCAL_LOCKS_PREVIEW) openLocalLocksPreview(); else load(); });
+  document.querySelectorAll('[data-victory-source]').forEach((button) => button.addEventListener('click', () => {
+    const v3 = button.dataset.victorySource === 'v3'; const panelId = v3 ? 'v3' : 'earn';
+    history.pushState({ panelId }, '', `#${panelId}`); window.TREE_PANEL_ROUTER?.showPanel?.(panelId);
+    requestAnimationFrame(() => (v3 ? document.querySelector('[data-v3-tab="positions"]') : document.getElementById('earnPositionsTab'))?.click());
+  }));
+  window.TREE_OPEN_V3_COMPOUND = openVictoryV3Compound;
+  window.addEventListener('tree:panel-shown', (event) => {
+    if (event.detail?.panelId === 'victory') { if (LOCAL_LOCKS_PREVIEW) openLocalLocksPreview(); else load(); }
+  });
   window.addEventListener('tree:wallet-changed', () => { state.victoryBalance = 0n; state.suiBalance = 0n; state.locks = []; state.claimableVictoryRaw = null; state.claimableSuiRaw = null; state.unlockingLockId = ''; state.reinvest.quote = null; load(); if (state.reinvest.destination === 'v3') scheduleReinvestQuote(); });
   showVictoryView('locker'); render(); if (!openLocalLocksPreview()) load();
 }

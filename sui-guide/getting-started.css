@@ -1,0 +1,216 @@
+.hero-support {
+  max-width: 730px;
+  margin: 8px auto 0;
+  color: var(--muted);
+  font-size: .86rem;
+}
+
+.hero-copy strong {
+  color: #f4fbff;
+}
+
+.terms-section,
+.first-action-section,
+.deposit-section {
+  margin-top: 16px;
+  padding: 22px;
+  border: 1px solid rgba(53, 200, 255, .16);
+  border-radius: 20px;
+  background: linear-gradient(145deg, rgba(8, 19, 27, .95), rgba(3, 10, 15, .96));
+  box-shadow: 0 24px 80px rgba(0, 0, 0, .3);
+}
+
+.terms-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.phantom-transition {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 10px 14px;
+  align-items: center;
+  margin: 14px 0;
+  padding: 13px 15px;
+  border: 1px solid rgba(255, 179, 38, .35);
+  border-radius: 12px;
+  background: rgba(255, 179, 38, .07);
+}
+
+.phantom-transition strong {
+  color: var(--amber);
+  font: 850 .78rem var(--mono);
+}
+
+.phantom-transition p {
+  margin: 0;
+  color: #d8c6a4;
+  font-size: .73rem;
+}
+
+.phantom-transition a {
+  color: var(--cyan);
+  font-size: .69rem;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.wallet-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.terms-grid article {
+  padding: 14px;
+  border: 1px solid rgba(53, 242, 140, .14);
+  border-radius: 12px;
+  background: rgba(3, 10, 15, .65);
+}
+
+.terms-grid strong {
+  color: var(--gold);
+  font: 850 .82rem var(--mono);
+}
+
+.terms-grid p {
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: .75rem;
+  line-height: 1.5;
+}
+
+.first-action-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.first-action-list li {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid rgba(53, 242, 140, .15);
+  border-radius: 12px;
+  background: rgba(3, 10, 15, .68);
+}
+
+.first-action-list li > span {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--green);
+  background: rgba(53, 242, 140, .1);
+  font: 900 .78rem var(--mono);
+}
+
+.first-action-list strong {
+  color: #f4fbff;
+  font: 850 .8rem var(--mono);
+}
+
+.first-action-list p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: .74rem;
+}
+
+.first-action-button {
+  margin-top: 14px;
+}
+
+.deposit-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  border-color: rgba(255, 225, 79, .19);
+  background: linear-gradient(145deg, rgba(25, 22, 10, .36), rgba(3, 10, 15, .96));
+}
+
+.deposit-section h2,
+.deposit-section p {
+  margin: 0;
+}
+
+.deposit-section h2 {
+  margin-top: 5px;
+  color: var(--gold);
+  font: 850 1.2rem var(--mono);
+}
+
+.deposit-section > div:first-child > p:last-child {
+  max-width: 700px;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: .78rem;
+}
+
+.deposit-actions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 8px;
+}
+
+.deposit-actions .button {
+  white-space: nowrap;
+}
+
+@media (max-width: 800px) {
+  .terms-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .first-action-list {
+    grid-template-columns: 1fr;
+  }
+
+  .deposit-section {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .deposit-actions {
+    width: 100%;
+  }
+
+  .deposit-actions .button {
+    flex: 1;
+  }
+
+  .phantom-transition {
+    grid-template-columns: 1fr;
+  }
+
+  .phantom-transition a {
+    white-space: normal;
+  }
+}
+
+@media (max-width: 430px) {
+  .terms-section,
+  .first-action-section,
+  .deposit-section {
+    padding: 16px;
+    border-radius: 15px;
+  }
+
+  .terms-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .deposit-actions {
+    display: grid;
+  }
+
+  .deposit-actions .button {
+    width: 100%;
+  }
+}

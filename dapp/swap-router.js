@@ -23,9 +23,12 @@ const TURBOS_PACKAGE = '0xa5a0c25c79e428eba04fb98b3fb2a34db45ab26d4c8faf0d7e39d6
 const TURBOS_VERSIONED = '0xf1cf0e81048df168ebeb1b8030fad24b3e0b53ae827c25053fff0779c1445b6f';
 const TURBOS_POOL = '0xaa133ce1f8fd55d85b6fc87c1b3054cb717d83be477ef3635c661c21fbdfa0ee';
 const TURBOS_FEE_TYPE = '0x91bfbc386a41afcfd9b2533058d7e915a1d3829089cc268ff4333d54d6339ca1::fee10000bps::FEE10000BPS';
+const CETUS_POOL = '0x2ebaff75b8745896404085babb9ef3a77ccbb6c7d3f4db31626cefff04f7f355';
+const CETUS_INTEGRATE_PACKAGE = '0xae9c208cf58fd5ba36737c9ee5dcfa7f152d0fb5a5a99eebb7c881ebc2fe59e0';
+const CETUS_SDK_URL = 'https://esm.run/@cetusprotocol/sui-clmm-sdk@1.4.7';
 const DEPLOY_PREVIEW_HOST_RE = /^deploy-preview-\d+--tree-token\.netlify\.app$/i;
 const CLOCK = '0x0000000000000000000000000000000000000000000000000000000000000006';
-const ALLOWED_MOVE_PACKAGES = new Set(['0x2', normalizeAddress(V2_PACKAGE), normalizeAddress(V3_PACKAGE), normalizeAddress(TURBOS_PACKAGE)]);
+const ALLOWED_MOVE_PACKAGES = new Set(['0x2', normalizeAddress(V2_PACKAGE), normalizeAddress(V3_PACKAGE), normalizeAddress(TURBOS_PACKAGE), normalizeAddress(CETUS_INTEGRATE_PACKAGE)]);
 const SWAP_EXECUTION_ENABLED = true;
 const client = new SuiGrpcClient({ network: 'mainnet', baseUrl: RPC_URL });
 
@@ -185,7 +188,7 @@ function quoteIsFresh() {
 }
 
 function routeLabel(route) {
-  return route?.venueLabel || (route?.venue === 'v3' ? 'SuiDex V3' : route?.venue === 'suidex' ? 'SuiDex V2' : route?.venue === 'turbos' ? 'Turbos' : 'Unavailable');
+  return route?.venueLabel || (route?.venue === 'v3' ? 'SuiDex V3' : route?.venue === 'suidex' ? 'SuiDex V2' : route?.venue === 'turbos' ? 'Turbos' : route?.venue === 'cetus' ? 'Cetus V3' : 'Unavailable');
 }
 
 function renderQuote() {
@@ -206,7 +209,7 @@ function renderQuote() {
   const output = formatBaseUnits(route.amountOut, quote.decimalsOut, quote.decimalsOut);
   const minimum = formatBaseUnits(route.minAmountOut, quote.decimalsOut, quote.decimalsOut);
   elements.amountOutput.value = output;
-  elements.routeLabel.textContent = `${routeLabel(route)} · Best output`;
+  elements.routeLabel.textContent = `${routeLabel(route)} · Best quoted output`;
   const inputHuman = Number(formatBaseUnits(route.amountIn, quote.decimalsIn, Math.min(quote.decimalsIn, 9)).replace(/,/g, ''));
   const outputHuman = Number(output.replace(/,/g, ''));
   elements.routeRate.textContent = inputHuman > 0 && Number.isFinite(outputHuman) ? `1 ${symbolFor(quote.tokenIn)} ≈ ${(outputHuman / inputHuman).toLocaleString('en-US', { maximumFractionDigits: quote.decimalsOut })} ${symbolFor(quote.tokenOut)}` : '—';
@@ -214,10 +217,16 @@ function renderQuote() {
   elements.priceImpact.textContent = `${Number(route.priceImpactPercent).toFixed(2)}%`;
   elements.priceImpact.className = Number(route.priceImpactPercent) > MAX_EXECUTABLE_PRICE_IMPACT ? 'swap-danger' : Number(route.priceImpactPercent) > 1 ? 'swap-warning' : 'swap-positive';
   elements.gasEstimate.textContent = route.gasEstimate !== '0' ? `≈ ${formatBaseUnits(route.gasEstimate, SUI_DECIMALS, 4)} SUI` : 'Estimated in simulation';
+  const bestOutput = BigInt(route.amountOut);
   elements.routeCandidates.replaceChildren(...quote.routes.map((candidate, index) => {
     const row = document.createElement('div');
     row.className = `swap-route-candidate${index === 0 ? ' selected' : ''}`;
-    row.innerHTML = `<span>${routeLabel(candidate)}${index === 0 ? ' · Best' : ''}</span><strong>${formatBaseUnits(candidate.amountOut, quote.decimalsOut, quote.decimalsOut)} ${symbolFor(quote.tokenOut)}</strong><small>${Number(candidate.priceImpactPercent).toFixed(2)}% impact · ${candidate.feePercent.toFixed(2)}% fee</small>`;
+    const candidateOutput = BigInt(candidate.amountOut);
+    const difference = bestOutput > candidateOutput ? bestOutput - candidateOutput : 0n;
+    const comparison = index === 0
+      ? 'Highest executable output'
+      : `${formatBaseUnits(difference, quote.decimalsOut, quote.decimalsOut)} ${symbolFor(quote.tokenOut)} less than best`;
+    row.innerHTML = `<span>${routeLabel(candidate)}${index === 0 ? ' · Best' : ''}</span><strong>${formatBaseUnits(candidate.amountOut, quote.decimalsOut, quote.decimalsOut)} ${symbolFor(quote.tokenOut)}</strong><small>${Number(candidate.priceImpactPercent).toFixed(2)}% impact · ${candidate.feePercent.toFixed(2)}% fee · ${comparison}</small>`;
     return row;
   }));
   renderUsdValues();
@@ -340,7 +349,13 @@ async function requestQuote() {
     if (payload.amountIn !== raw.toString() || normalizeType(payload.tokenIn) !== normalizeType(stateTokenIn()) || normalizeType(payload.tokenOut) !== normalizeType(stateTokenOut())) throw new Error('Quote response did not match the requested swap.');
     state.quote = payload;
     state.quoteError = '';
-    setStatus(`Best available direct TREE route: ${routeLabel(payload.selectedRoute)}. Quote refreshes every 15 seconds.`, 'success');
+    const best = payload.selectedRoute;
+    const runnerUp = payload.routes?.[1] || null;
+    const output = `${formatBaseUnits(best.amountOut, payload.decimalsOut, payload.decimalsOut)} ${symbolFor(payload.tokenOut)}`;
+    const runnerUpCopy = runnerUp
+      ? ` The next-best quote is ${routeLabel(runnerUp)} at ${formatBaseUnits(runnerUp.amountOut, payload.decimalsOut, payload.decimalsOut)} ${symbolFor(payload.tokenOut)}.`
+      : '';
+    setStatus(`Best executable output: ${routeLabel(best)} returns ${output}.${runnerUpCopy} Pool fees and price impact are included; the quote refreshes every 15 seconds.`, 'success');
   } catch (error) {
     if (controller.signal.aborted) return;
     state.quote = null;
@@ -419,7 +434,12 @@ function validateRoute(route, amountIn) {
     const expectedInput = route.aToB ? route.coinAType : route.coinBType;
     if (normalizeType(expectedInput) !== input) throw new Error('Turbos route direction does not match the input token.');
   }
-  if (!['suidex-v2-direct', 'suidex-v3-direct', 'turbos-direct'].includes(route.executionKind)) throw new Error('Unsupported route venue.');
+  if (route.executionKind === 'cetus-v3-direct') {
+    if (route.pairId !== CETUS_POOL) throw new Error('Unexpected Cetus SUI/TREE pool.');
+    if (!route.coinAType || !route.coinBType || Number(route.feePercent) !== 0.25) throw new Error('Cetus route type metadata is invalid.');
+    if (typeof route.aToB !== 'boolean' || normalizeType(route.aToB ? route.coinAType : route.coinBType) !== input) throw new Error('Cetus route direction does not match the input token.');
+  }
+  if (!['suidex-v2-direct', 'suidex-v3-direct', 'turbos-direct', 'cetus-v3-direct'].includes(route.executionKind)) throw new Error('Unsupported route venue.');
   if (BigInt(route.minAmountOut) <= 0n) throw new Error('The route does not contain a valid minimum output.');
 }
 
@@ -503,6 +523,27 @@ async function buildTurbosTransaction(owner, route, amountIn) {
   return tx;
 }
 
+async function buildCetusTransaction(owner, route, amountIn) {
+  const coinAType = exactType(route.coinAType);
+  const coinBType = exactType(route.coinBType);
+  const expectedAtoB = normalizeType(route.tokenIn) === normalizeType(coinAType);
+  if (route.aToB !== expectedAtoB || route.pairId !== CETUS_POOL) throw new Error('Cetus route metadata no longer matches the reviewed direction.');
+  const { CetusClmmSDK } = await import(CETUS_SDK_URL);
+  const sdk = CetusClmmSDK.createSDK({ env: 'mainnet', sui_client: client });
+  sdk.setSenderAddress(owner);
+  const tx = await sdk.Swap.createSwapPayload({
+    pool_id: CETUS_POOL,
+    coin_type_a: coinAType,
+    coin_type_b: coinBType,
+    a2b: route.aToB,
+    by_amount_in: true,
+    amount: amountIn.toString(),
+    amount_limit: BigInt(route.minAmountOut).toString(),
+  });
+  tx.setSenderIfNotSet?.(owner);
+  return tx;
+}
+
 function validateTransactionPackages(tx) {
   for (const command of tx.getData().commands || []) {
     const call = command?.MoveCall || (command?.$kind === 'MoveCall' ? command.MoveCall : null);
@@ -511,6 +552,10 @@ function validateTransactionPackages(tx) {
     if (!ALLOWED_MOVE_PACKAGES.has(packageId)) throw new Error(`Transaction contains a non-allowlisted package: ${call.package}`);
     if (packageId === normalizeAddress(TURBOS_PACKAGE) && (call.module !== 'swap_router' || !['swap_a_b', 'swap_b_a'].includes(call.function))) {
       throw new Error(`Transaction contains a non-allowlisted Turbos call: ${call.module}::${call.function}`);
+    }
+    if (packageId === normalizeAddress(CETUS_INTEGRATE_PACKAGE)
+      && (call.module !== 'pool_script_v2' || !['swap_a2b', 'swap_b2a'].includes(call.function))) {
+      throw new Error(`Transaction contains a non-allowlisted Cetus call: ${call.module}::${call.function}`);
     }
   }
 }
@@ -521,7 +566,9 @@ async function buildTransaction(owner, route, amountIn) {
     ? await buildV2Transaction(owner, route, amountIn)
     : route.executionKind === 'suidex-v3-direct'
       ? await buildV3Transaction(owner, route, amountIn)
-      : await buildTurbosTransaction(owner, route, amountIn);
+      : route.executionKind === 'turbos-direct'
+        ? await buildTurbosTransaction(owner, route, amountIn)
+        : await buildCetusTransaction(owner, route, amountIn);
   validateTransactionPackages(tx);
   return tx;
 }
@@ -600,7 +647,32 @@ async function executeSwap() {
     const final = await waitForFinality(digest);
     if (!transactionSucceeded(final)) throw new Error(coreFailureMessage(final, 'The transaction did not finalize successfully.'));
     elements.success.hidden = false;
-    elements.success.innerHTML = `<strong>Swap confirmed on Sui Mainnet.</strong><a href="https://suiscan.xyz/mainnet/tx/${encodeURIComponent(digest)}" target="_blank" rel="noopener noreferrer">View transaction ${digest.slice(0, 12)}… ↗</a>`;
+    elements.success.replaceChildren();
+    const confirmation = document.createElement('strong');
+    confirmation.textContent = 'Swap confirmed on Sui Mainnet.';
+    const explorer = document.createElement('a');
+    explorer.href = `https://suiscan.xyz/mainnet/tx/${encodeURIComponent(digest)}`;
+    explorer.target = '_blank';
+    explorer.rel = 'noopener noreferrer';
+    explorer.textContent = `View transaction ${digest.slice(0, 12)}… ↗`;
+    elements.success.append(confirmation, explorer);
+    if (state.direction === 'SUI_TO_TREE') {
+      const inputSui = Number(formatBaseUnits(amountIn, SUI_DECIMALS, SUI_DECIMALS).replace(/,/g, ''));
+      const estimatedUsd = state.pricesUsd.sui ? inputSui * state.pricesUsd.sui : null;
+      const eligibilityCopy = document.createElement('p');
+      eligibilityCopy.textContent = estimatedUsd != null && estimatedUsd >= 5
+        ? 'This purchase appears to meet the $5 Challenge requirement. Verification can take a short time.'
+        : 'Challenge eligibility is confirmed after the purchase reaches the verified ledger.';
+      const challengeLink = document.createElement('a');
+      challengeLink.className = 'button secondary swap-challenge-link';
+      challengeLink.href = '#canopy-draw';
+      challengeLink.dataset.openChallengePass = '';
+      challengeLink.textContent = 'Go to Challenge →';
+      elements.success.append(eligibilityCopy, challengeLink);
+      window.dispatchEvent(new CustomEvent('tree:qualifying-purchase-submitted', {
+        detail: { digest, wallet: window.playerAddress, estimatedUsd },
+      }));
+    }
     setStatus(`Swap confirmed through ${routeLabel(route)}.`, 'success');
     state.amount = '';
     elements.amountInput.value = '';
