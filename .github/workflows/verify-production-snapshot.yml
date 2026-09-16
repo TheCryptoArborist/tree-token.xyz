@@ -3,13 +3,16 @@ name: Verify production snapshot
 on:
   push:
     branches: [main, sync/production-20260915]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  verify:
+  production-snapshot:
+    name: production-snapshot
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
