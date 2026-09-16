@@ -1,11 +1,11 @@
 export type NetlifyScheduledContext = {
-  deploy: {
+  deploy?: {
     context: string;
     id: string;
     published?: boolean;
   };
-  site: {
-    url: string;
+  site?: {
+    url?: string;
   };
 };
 
@@ -14,7 +14,7 @@ export type TreeSnapshotKind = 'exposure' | 'badges';
 export type TreeSnapshotScheduledResult = {
   attempted: boolean;
   accepted: boolean;
-  reason: 'not-production' | 'disabled' | 'missing-secret' | 'accepted' | 'unexpected-status' | 'network-error' | 'timeout';
+  reason: 'disabled' | 'missing-secret' | 'accepted' | 'unexpected-status' | 'network-error' | 'timeout';
 };
 
 export type TreeSnapshotScheduledDependencies = {
@@ -54,11 +54,6 @@ export async function runTreeSnapshotScheduledTrigger(
 ): Promise<TreeSnapshotScheduledResult> {
   const settings = CONFIG[kind];
   const logger = dependencies.logger ?? console;
-  if (context?.deploy?.context !== 'production' || context?.deploy?.published === false) {
-    logger.info(`${settings.label} scheduled refresh skipped outside published production.`);
-    return { attempted: false, accepted: false, reason: 'not-production' };
-  }
-
   const getEnv = dependencies.getEnv ?? ((name) => Netlify.env.get(name));
   if (!enabled(getEnv(settings.enabledEnv))) {
     logger.info(`${settings.label} scheduled refresh is disabled.`);

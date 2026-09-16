@@ -1,9 +1,53 @@
 import assert from 'node:assert/strict';
-import { resolveDefaultSuinsNames } from '../netlify/lib/suins-name-resolver.ts';
+import { buildDefaultSuinsQuery, resolveDefaultSuinsNames } from '../netlify/lib/suins-name-resolver.ts';
 
 const first = `0x${'a'.repeat(64)}`;
 const second = `0x${'b'.repeat(64)}`;
 const third = `0x${'c'.repeat(64)}`;
+
+const query = buildDefaultSuinsQuery([first, second]);
+assert.match(query.query, /defaultNameRecord \{ domain \}/);
+assert.equal(query.variables.address0, first);
+assert.equal(query.variables.address1, second);
+
+let graphqlBody = '';
+const graphqlSuccess = await resolveDefaultSuinsNames([first, second], {
+  fetchImpl: async (_url, init) => {
+    graphqlBody = String(init?.body || '');
+    return Response.json({
+      data: {
+        name0: { defaultNameRecord: { domain: 'crypto-arborist.sui' } },
+        name1: { defaultNameRecord: null },
+      },
+    });
+  },
+});
+assert.match(graphqlBody, /defaultNameRecord/);
+assert.equal(graphqlSuccess.names[first], 'crypto-arborist.sui');
+assert.equal(graphqlSuccess.names[second], null);
+assert.equal(graphqlSuccess.resolvedCount, 1);
+assert.equal(graphqlSuccess.complete, true);
+
+const top50 = Array.from({ length: 50 }, (_, index) => `0x${index.toString(16).padStart(64, '0')}`);
+const graphqlPayloadSizes: number[] = [];
+const top50Resolution = await resolveDefaultSuinsNames(top50, {
+  fetchImpl: async (_url, init) => {
+    const body = String(init?.body || '');
+    graphqlPayloadSizes.push(Buffer.byteLength(body));
+    const variables = Object.keys((JSON.parse(body) as { variables: Record<string, string> }).variables);
+    return Response.json({
+      data: Object.fromEntries(variables.map((_, index) => [
+        `name${index}`,
+        { defaultNameRecord: index === 0 ? { domain: `batch-${graphqlPayloadSizes.length}.sui` } : null },
+      ])),
+    });
+  },
+});
+assert.deepEqual(graphqlPayloadSizes.length, 3);
+assert.ok(graphqlPayloadSizes.every((size) => size < 5_000));
+assert.equal(top50Resolution.resolvedCount, 3);
+assert.equal(top50Resolution.complete, true);
+
 let calls = 0;
 const success = await resolveDefaultSuinsNames([first, second, third, first, 'invalid'], {
   client: {
@@ -24,6 +68,18 @@ assert.equal(success.names[first], 'cryptoarborist.sui');
 assert.equal(success.names[second], null);
 assert.equal(success.names[third], null);
 assert.equal(success.complete, true);
+
+const nativeFallback = await resolveDefaultSuinsNames([first], {
+  client: {
+    core: { async defaultNameServiceName() { return { name: null }; } },
+    nameService: {
+      async reverseLookupName() { return { response: { record: { name: 'crypto-arborist.sui' } } }; },
+    },
+  },
+});
+assert.equal(nativeFallback.names[first], 'crypto-arborist.sui');
+assert.equal(nativeFallback.resolvedCount, 1);
+assert.equal(nativeFallback.complete, true);
 
 const numericNotFound = await resolveDefaultSuinsNames([first], {
   client: { core: { async defaultNameServiceName() { throw Object.assign(new Error('missing'), { code: 5 }); } } },
@@ -54,4 +110,11 @@ await resolveDefaultSuinsNames([first, second, third], {
   },
 });
 assert.ok(peak <= 2);
-console.log('SuiNS gRPC resolver: PASS (deduplication, expected missing names, bounded concurrency, and safe failure)');
+
+const suspiciousAddresses = Array.from({ length: 10 }, (_, index) => `0x${index.toString(16).padStart(64, '0')}`);
+const suspiciousZero = await resolveDefaultSuinsNames(suspiciousAddresses, {
+  client: { core: { async defaultNameServiceName() { return { name: null }; } } },
+});
+assert.equal(suspiciousZero.complete, false);
+assert.match(suspiciousZero.networkError || '', /zero names for 10 addresses/);
+console.log('SuiNS resolver: PASS (current GraphQL schema, client fallback, deduplication, bounded concurrency, and safe failure)');

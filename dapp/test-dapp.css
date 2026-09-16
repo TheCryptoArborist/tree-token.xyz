@@ -1,0 +1,107 @@
+.test-dapp-banner{display:none}.tree-test-dapp .test-dapp-banner{position:sticky;top:0;z-index:90;display:flex;align-items:center;justify-content:center;gap:12px;min-height:36px;padding:6px 14px;border-bottom:1px solid rgba(255,221,82,.34);background:radial-gradient(circle at 50% -120%,rgba(255,213,66,.2),transparent 58%),linear-gradient(90deg,#171204,#3d2b07 50%,#171204);box-shadow:0 7px 22px rgba(0,0,0,.34),inset 0 -1px rgba(255,225,79,.08);color:#f4df9d;font:800 .68rem/1.2 var(--mono);letter-spacing:.04em;text-align:center;text-transform:uppercase}.tree-test-dapp .test-dapp-banner strong{padding:4px 7px;border:1px solid rgba(255,225,79,.45);border-radius:6px;background:linear-gradient(135deg,#ffe14f,#ffb326);box-shadow:0 0 16px rgba(255,202,54,.12);color:#211500;font-weight:950}.tree-test-dapp .test-dapp-banner span{color:#d9c681}.tree-test-dapp .test-dapp-banner b{color:#fff4ca;font-weight:900}.tree-test-dapp .app-shell{top:36px}.tree-test-dapp .section{scroll-margin-top:164px}@media(max-width:620px){.tree-test-dapp .test-dapp-banner{justify-content:flex-start;gap:7px;min-height:38px;padding-inline:8px;overflow-x:auto;white-space:nowrap;scrollbar-width:none}.tree-test-dapp .test-dapp-banner::-webkit-scrollbar{display:none}.tree-test-dapp .test-dapp-banner span:nth-of-type(2){display:none}.tree-test-dapp .test-dapp-banner b{font-size:.6rem}.tree-test-dapp .app-shell{top:38px}}
+
+/* Test DApp V3 color hierarchy: TREE green actions, Sui cyan controls, gold for status only. */
+.tree-test-dapp .v3-workspace{
+  --muted:#aebdc7;
+  --muted-2:#8799a5;
+}
+.tree-test-dapp .v3-zap-intro,
+.tree-test-dapp .v3-swap-intro{
+  border-color:rgba(53,200,255,.25);
+  background:radial-gradient(circle at 0 0,rgba(53,242,140,.07),transparent 42%),linear-gradient(135deg,rgba(7,30,36,.92),rgba(4,14,21,.96));
+  box-shadow:inset 0 1px rgba(255,255,255,.025);
+}
+.tree-test-dapp .v3-zap-intro h3,
+.tree-test-dapp .v3-swap-intro h3{color:#f5fbff}
+.tree-test-dapp .v3-zap-intro p,
+.tree-test-dapp .v3-swap-intro p,
+.tree-test-dapp .earn-zap-label,
+.tree-test-dapp .earn-zap-slippage{color:#aebdc7}
+.tree-test-dapp .v3-zap-intro .button.secondary,
+.tree-test-dapp .v3-zap-existing-heading .button.secondary{
+  border-color:rgba(53,200,255,.34);
+  background:rgba(53,200,255,.075);
+  color:#eaf8ff;
+}
+.tree-test-dapp .v3-zap-mode-switch{
+  border-color:rgba(53,200,255,.2);
+  background:linear-gradient(180deg,rgba(3,12,18,.94),rgba(2,8,13,.9));
+}
+.tree-test-dapp .v3-zap-mode-switch button{color:#aab9c3}
+.tree-test-dapp .v3-zap-mode-switch button.active{
+  border-color:rgba(53,242,140,.5);
+  background:linear-gradient(135deg,rgba(30,151,105,.24),rgba(18,80,100,.19));
+  box-shadow:inset 0 0 0 1px rgba(53,242,140,.08),0 0 20px rgba(53,242,140,.07);
+  color:#f7fffb;
+}
+.tree-test-dapp .v3-zap-mode-switch button.active small{color:#54f0a3}
+.tree-test-dapp .earn-zap-panel select,
+.tree-test-dapp #earnV3ZapToken,
+.tree-test-dapp #earnV3ZapRange,
+.tree-test-dapp .v3-field select{
+  color-scheme:dark;
+  border-color:rgba(53,200,255,.3);
+  background:#07141c;
+  color:#f3fbff;
+  box-shadow:inset 0 1px rgba(255,255,255,.025);
+}
+.tree-test-dapp .earn-zap-panel select:hover,
+.tree-test-dapp #earnV3ZapToken:hover,
+.tree-test-dapp #earnV3ZapRange:hover,
+.tree-test-dapp .v3-field select:hover{border-color:rgba(53,200,255,.48)}
+.tree-test-dapp .earn-zap-panel select:focus,
+.tree-test-dapp #earnV3ZapToken:focus,
+.tree-test-dapp #earnV3ZapRange:focus,
+.tree-test-dapp .v3-field select:focus{
+  border-color:rgba(53,200,255,.7);
+  box-shadow:0 0 0 3px rgba(53,200,255,.09);
+  outline:0;
+}
+.tree-test-dapp .earn-zap-panel select option,
+.tree-test-dapp #earnV3ZapToken option,
+.tree-test-dapp #earnV3ZapRange option,
+.tree-test-dapp .v3-field select option{background:#07141c;color:#f3fbff}
+.tree-test-dapp .v3-zap-wallet-balances>div{
+  border-color:rgba(53,200,255,.2);
+  background:linear-gradient(145deg,rgba(8,27,37,.9),rgba(4,16,23,.92));
+}
+.tree-test-dapp .v3-zap-wallet-balances>div:last-child{border-color:rgba(53,242,140,.2)}
+.tree-test-dapp .v3-zap-wallet-balances>div:first-child strong{color:#7fd6ff}
+.tree-test-dapp .v3-zap-wallet-balances>div:last-child strong{color:#52eca2}
+.tree-test-dapp .earn-zap-input{
+  border-color:rgba(53,200,255,.28);
+  background:#030c12;
+}
+.tree-test-dapp .earn-zap-input:focus-within{
+  border-color:rgba(53,200,255,.65);
+  box-shadow:0 0 0 3px rgba(53,200,255,.08);
+}
+.tree-test-dapp .earn-zap-input button{
+  border:1px solid rgba(53,200,255,.2);
+  background:rgba(53,200,255,.11);
+  color:#65d2ff;
+}
+.tree-test-dapp .earn-zap-summary{
+  border:1px solid rgba(255,255,255,.055);
+  background:rgba(8,22,30,.72);
+}
+.tree-test-dapp .earn-zap-summary span{color:#9fb0ba}
+.tree-test-dapp .earn-zap-slippage button{color:#9fb0ba}
+.tree-test-dapp .earn-zap-slippage button.active{
+  border-color:rgba(53,200,255,.55);
+  background:rgba(53,200,255,.11);
+  color:#6ed6ff;
+}
+.tree-test-dapp #earnV3ZapAction.button.primary{
+  border:1px solid rgba(53,242,140,.38);
+  background:linear-gradient(135deg,#25d77f,#22c8a0);
+  box-shadow:0 8px 22px rgba(26,192,119,.12);
+  color:#02120b;
+}
+.tree-test-dapp #earnV3ZapAction.button.primary:disabled{
+  border-color:rgba(53,242,140,.16);
+  background:linear-gradient(135deg,rgba(35,160,104,.72),rgba(27,139,117,.72));
+  color:#07170f;
+  box-shadow:none;
+}
+.tree-test-dapp #earnV3ZapStatus.success{color:#55efa4}

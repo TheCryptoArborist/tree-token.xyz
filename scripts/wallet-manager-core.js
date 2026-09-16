@@ -3,6 +3,12 @@ export const SUI_MAINNET_CHAIN = 'sui:mainnet';
 export const SUI_SIGN_FEATURES = [
   'sui:signAndExecuteTransaction',
   'sui:signAndExecuteTransactionBlock',
+  'tree:phantomSui',
+];
+
+export const SUI_PERSONAL_MESSAGE_FEATURES = [
+  'sui:signPersonalMessage',
+  'sui:signMessage',
 ];
 
 export function getSuiSignFeature(wallet) {
@@ -46,7 +52,22 @@ export function isSlushWallet(wallet) {
   return identity.includes('slush') || identity.includes('stashed') || identity.includes('sui wallet');
 }
 
+export function getSuiPersonalMessageFeature(wallet) {
+  for (const feature of SUI_PERSONAL_MESSAGE_FEATURES) {
+    if (wallet?.features?.[feature]) return feature;
+  }
+  return null;
+}
+
+export function isSlushWebWallet(wallet) {
+  return wallet?.id === 'com.mystenlabs.suiwallet.web';
+}
+
 function preferredDuplicate(left, right) {
+  const leftSui = Boolean(getSuiSignFeature(left));
+  const rightSui = Boolean(getSuiSignFeature(right));
+  if (rightSui !== leftSui) return rightSui ? right : left;
+
   const leftAccounts = Array.isArray(left?.accounts) ? left.accounts.length : 0;
   const rightAccounts = Array.isArray(right?.accounts) ? right.accounts.length : 0;
   if (rightAccounts !== leftAccounts) return rightAccounts > leftAccounts ? right : left;

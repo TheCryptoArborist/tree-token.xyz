@@ -1,5 +1,5 @@
 import {
-  DirectTreeEntry,
+  type DirectTreeEntry,
   LEADERBOARD_COVERAGE,
   METHODOLOGY_VERSION,
   SUI_GRAPHQL_PROVIDER,

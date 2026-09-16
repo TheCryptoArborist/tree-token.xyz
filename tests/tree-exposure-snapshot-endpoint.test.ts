@@ -116,6 +116,34 @@ assert.equal(okResponse.status, 200);
 assert.match(okResponse.headers.get('cache-control') || '', /s-maxage=30/);
 assert.equal((await okResponse.json() as { entries: unknown[] }).entries.length, 50);
 
+const snapshotWithoutNames = structuredClone(snapshot);
+snapshotWithoutNames.entries = snapshotWithoutNames.entries.map((entry) => ({ ...entry, suinsName: null }));
+snapshotWithoutNames.source.suins = {
+  requestedCount: 50,
+  resolvedCount: 0,
+  complete: true,
+  generatedAt: snapshot.generatedAt,
+  warnings: [],
+};
+const enriched = await resolveExposureSnapshotPayload({
+  context: 'deploy-preview',
+  getEnv: () => undefined,
+  readSnapshot: async () => snapshotWithoutNames,
+  readRefreshStatus: async () => null,
+  resolveNames: async (wallets) => ({
+    names: Object.fromEntries(wallets.map((wallet, index) => [wallet, index === 0 ? 'crypto-arborist.sui' : null])),
+    requestedCount: wallets.length,
+    resolvedCount: 1,
+    complete: true,
+    graphqlErrors: [],
+    networkError: null,
+    generatedAt: '2026-08-19T06:00:00.000Z',
+  }),
+  now: () => Date.parse('2026-08-09T04:45:10.000Z'),
+});
+assert.equal(enriched.entries[0].suinsName, 'crypto-arborist.sui');
+assert.equal(enriched.source?.suins.resolvedCount, 1);
+
 const errorResponse = await createExposureSnapshotResponse(
   new Request('https://example.test/api/tree-exposure'),
   {
