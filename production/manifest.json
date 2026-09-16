@@ -438,14 +438,14 @@
     {
       "path": "/dapp/v3-workspace.js",
       "source": "dapp/v3-workspace.js",
-      "sha1": "efae047c791382835fd1f73cfd195f94f55169a7",
-      "size": 88264
+      "sha1": "93ab9192a65316d20c4b1d39034c649fa2e89120",
+      "size": 88923
     },
     {
       "path": "/dapp/v3-workspace.css",
       "source": "dapp/v3-workspace.css",
-      "sha1": "e34b560b5d8d0a3c46ab45ee726a52e1dd945133",
-      "size": 47550
+      "sha1": "5a5c2e1769e3b2da9ba99d6a3a4393c133acafd0",
+      "size": 48587
     },
     {
       "path": "/dapp/v3-transactions.js",
