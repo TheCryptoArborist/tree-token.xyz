@@ -36,7 +36,7 @@ assert.match(v3Workspace, /tree:v3-workspace-ready/);
 assert.doesNotMatch(earn, /https:\/\/dex\.suidex\.org/);
 assert.match(earn, /Kelpie Automated SUI \/ TREE V3 Vault/);
 assert.ok(earn.includes(`href="${KELPIE_TREE_VAULT}"`), 'Earn must link to the verified Kelpie TREE SuiDex V3 vault.');
-const externalEarnLinks = [...earn.matchAll(/<a\\b[^>]*href="([^"]+)"[^>]*target="_blank" rel="noopener noreferrer"[^>]*>/g)].map((match) => match[1]);
+const externalEarnLinks = [...earn.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*target="_blank" rel="noopener noreferrer"[^>]*>/g)].map((match) => match[1]);
 assert.equal(externalEarnLinks.length, 2, 'Earn may expose only the V2 position explorer and verified Kelpie TREE vault as external links.');
 assert.deepEqual(externalEarnLinks.filter((href) => href.startsWith('https://kelpie.network/')), [KELPIE_TREE_VAULT], 'Only the verified Kelpie TREE vault may use the Kelpie domain.');
 assert.match(earn, /second wallet approval/i);
