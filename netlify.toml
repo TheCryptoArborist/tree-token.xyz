@@ -2,6 +2,9 @@
   command = "npm run build"
   publish = "dist"
 
+[context.deploy-preview]
+  command = "npm run build:preview"
+
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
