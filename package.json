@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "node scripts/build-production-snapshot.mjs",
+    "build:preview": "node scripts/build-feature-preview.mjs",
     "preview": "vite preview",
     "build:source": "vite build && node scripts/copy-static-build.mjs",
     "verify:production": "node scripts/verify-production-snapshot.mjs"
