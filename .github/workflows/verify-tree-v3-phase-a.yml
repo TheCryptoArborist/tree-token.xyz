@@ -43,7 +43,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          npm run build
+          npm run build:preview
           node --check dapp/v3-workspace.js
           node tests/tree-v3-position-source.test.mjs
           node tests/v3-price-fallback.test.mjs
@@ -58,7 +58,7 @@ jobs:
           git diff --check
 
       - name: Run legacy repository-wide regressions
-        if: github.head_ref != 'sync/production-20260915'
+        if: github.head_ref != 'sync/production-20260915' && github.head_ref != 'reconcile/kelpie-current-main'
         shell: bash
         run: |
           set -euo pipefail

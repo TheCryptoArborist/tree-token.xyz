@@ -469,6 +469,10 @@ function workspaceMarkup() {
             <div class="v3-venue-identity"><img class="v3-dex-logo" src="https://dex.suidex.org/apple-touch-icon.png" alt="SuiDex logo" referrerpolicy="no-referrer"><div class="v3-venue-copy"><span class="v3-venue-name">SuiDex</span><div class="v3-pair-line"><div class="v3-token-stack" aria-hidden="true"><img src="../assets/sui-token.svg" alt=""><img src="../thick.png" alt=""></div><h3>SUI / TREE</h3></div><p class="v3-venue-subtitle"><span>0.25% fee</span><span>Verified pool</span><span id="v3RewardChip">Loading incentives</span></p></div></div>
             <button class="v3-add-button" id="v3AddLiquidity" type="button" aria-controls="v3ZapPanel">Zap into V3</button>
           </div>
+          <aside class="v3-kelpie-option" aria-label="Managed V3 option">
+            <div><span>Managed V3 Option — Kelpie</span><strong>Automated SUI / TREE range management</strong><p>Kelpie manages the concentrated-liquidity range and compounds fees for this verified SuiDex V3 pool. Use TREE's native V3 tools when you prefer manual control.</p></div>
+            <a class="v3-kelpie-link" href="https://kelpie.network/earn/0x39d5ba22e01e45bc4129ec28a0bef52e8fee8db5d07d337adf9540e3cb9074cf?protocol=suidex" target="_blank" rel="noopener noreferrer" aria-label="Open TREE vault on Kelpie (opens in a new tab)">Open TREE Vault ↗</a>
+          </aside>
           <div class="v3-metrics">
             <div class="v3-metric"><span>Combined TVL</span><strong id="v3PoolTvl">Loading…</strong></div>
             <div class="v3-metric"><span>24H Volume</span><strong id="v3PoolVolume">Not verified</strong></div>
