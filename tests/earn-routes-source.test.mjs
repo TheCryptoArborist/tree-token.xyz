@@ -6,6 +6,7 @@ const earn = markup.match(/<section[^>]*id="earn"[^>]*>[\s\S]*?<\/section>/)?.[0
 const v3Workspace = await readFile(new URL('../dapp/v3-workspace.js', import.meta.url), 'utf8');
 const earnTransactions = await readFile(new URL('../dapp/earn-transactions.js', import.meta.url), 'utf8');
 const v3ZapTransactions = await readFile(new URL('../dapp/earn-v3-zap.js', import.meta.url), 'utf8');
+const KELPIE_TREE_VAULT = 'https://kelpie.network/earn/0x39d5ba22e01e45bc4129ec28a0bef52e8fee8db5d07d337adf9540e3cb9074cf?protocol=suidex';
 
 assert.ok(earn, 'Earn section must remain present.');
 assert.match(earn, /id="earnRoutesTab"/);
@@ -26,16 +27,20 @@ assert.match(earn, /id="earnV2PositionLink"/);
 assert.doesNotMatch(earn, /id="earnV3ZapOpen"/);
 assert.doesNotMatch(earn, /Manage V3/);
 assert.match(v3Workspace, /data-v3-tab="zap"/);
-assert.match(v3Workspace, /id="earnV3ZapOpen"/);
-assert.match(v3Workspace, /id="earnV3ZapPanel"/);
+assert.match(v3Workspace, /id="v3AddLiquidity"/);
+assert.match(v3Workspace, /id="v3ZapPanel"/);
 assert.match(v3Workspace, /id="earnV3ZapAction"/);
 assert.match(v3Workspace, /Wallet approvals[\s\S]*1 · Position \+ incentives/);
 assert.match(v3Workspace, /data-v3-go-positions/);
 assert.match(v3Workspace, /tree:v3-workspace-ready/);
 assert.doesNotMatch(earn, /https:\/\/dex\.suidex\.org/);
-assert.equal((earn.match(/target="_blank" rel="noopener noreferrer"/g) || []).length, 1, 'Only the live V2 position object may open an external explorer.');
+assert.match(earn, /Kelpie Automated SUI \/ TREE V3 Vault/);
+assert.ok(earn.includes(`href="${KELPIE_TREE_VAULT}"`), 'Earn must link to the verified Kelpie TREE SuiDex V3 vault.');
+const externalEarnLinks = [...earn.matchAll(/<a\\b[^>]*href="([^"]+)"[^>]*target="_blank" rel="noopener noreferrer"[^>]*>/g)].map((match) => match[1]);
+assert.equal(externalEarnLinks.length, 2, 'Earn may expose only the V2 position explorer and verified Kelpie TREE vault as external links.');
+assert.deepEqual(externalEarnLinks.filter((href) => href.startsWith('https://kelpie.network/')), [KELPIE_TREE_VAULT], 'Only the verified Kelpie TREE vault may use the Kelpie domain.');
 assert.match(earn, /second wallet approval/i);
-assert.match(v3Workspace, /explicit wallet approval/i);
+assert.match(v3Workspace, /before one wallet approval/i);
 assert.match(earnTransactions, /'tree-token\.xyz', 'www\.tree-token\.xyz'/);
 assert.match(earnTransactions, /buildV2ClaimRewardsTransaction/);
 assert.match(earnTransactions, /extractPositiveV2VictoryReward/);
@@ -49,4 +54,4 @@ assert.match(v3ZapTransactions, /isTreeV3ExecutionHost\(location\.hostname\)/);
 assert.match(v3ZapTransactions, /tree:v3-workspace-ready/);
 assert.doesNotMatch(v3ZapTransactions, /Preview execution only/);
 
-console.log('Earn routes source: PASS (native V2 farm only; V3 zap and management live in V3)');
+console.log('Earn routes source: PASS (native V2 farm plus verified Kelpie managed V3 route; native V3 zap and management remain in V3)');
