@@ -37,10 +37,10 @@ const state = {
 const el = {};
 const TERM_LABELS = Object.freeze({ 7: '7 days', 90: '90 days', 365: '1 year', 1095: '3 years' });
 
-function formatRaw(value, decimals, precision = 2) {
+function formatRaw(value, decimals, precision = 2, groupDigits = true) {
   const raw = BigInt(value || 0); const scale = 10n ** BigInt(decimals); const whole = raw / scale;
   const fraction = (raw % scale).toString().padStart(decimals, '0').slice(0, precision).replace(/0+$/, '');
-  return `${whole.toLocaleString()}${fraction ? `.${fraction}` : ''}`;
+  return `${groupDigits ? whole.toLocaleString() : whole.toString()}${fraction ? `.${fraction}` : ''}`;
 }
 function formatApr(value) {
   if (value === null || value === undefined) return '—';
@@ -567,12 +567,12 @@ function init() {
   });
   if (!el.action) return;
   el.amount.addEventListener('input', () => { state.amount = el.amount.value; render(); });
-  el.max.addEventListener('click', () => { state.amount = formatRaw(state.victoryBalance, VICTORY_DECIMALS, VICTORY_DECIMALS); el.amount.value = state.amount; render(); });
+  el.max.addEventListener('click', () => { state.amount = formatRaw(state.victoryBalance, VICTORY_DECIMALS, VICTORY_DECIMALS, false); el.amount.value = state.amount; render(); });
   el.term.addEventListener('change', () => { state.lockDays = Number(el.term.value); render(); });
   document.querySelectorAll('[data-victory-term]').forEach((button) => button.addEventListener('click', () => { state.lockDays = Number(button.dataset.victoryTerm); el.term.value = String(state.lockDays); render(); }));
   el.lockerTab.addEventListener('click', () => showVictoryView('locker')); el.locksTab.addEventListener('click', () => showVictoryView('locks')); el.reinvestTab.addEventListener('click', () => showVictoryView('reinvest'));
   el.reinvestAmount.addEventListener('input', () => { state.reinvest.amount = el.reinvestAmount.value; state.reinvest.quote = null; render(); scheduleReinvestQuote(); });
-  el.reinvestMax.addEventListener('click', () => { state.reinvest.amount = formatRaw(state.victoryBalance, VICTORY_DECIMALS, VICTORY_DECIMALS); el.reinvestAmount.value = state.reinvest.amount; state.reinvest.quote = null; render(); scheduleReinvestQuote(); });
+  el.reinvestMax.addEventListener('click', () => { state.reinvest.amount = formatRaw(state.victoryBalance, VICTORY_DECIMALS, VICTORY_DECIMALS, false); el.reinvestAmount.value = state.reinvest.amount; state.reinvest.quote = null; render(); scheduleReinvestQuote(); });
   document.querySelectorAll('[data-victory-reinvest-mode]').forEach((button) => button.addEventListener('click', () => { state.reinvest.mode = button.dataset.victoryReinvestMode === 'sustainable' ? 'sustainable' : 'complete'; state.reinvest.quote = null; render(); scheduleReinvestQuote(); }));
   el.reinvestDestination.addEventListener('change', () => { state.reinvest.destination = el.reinvestDestination.value === 'v3' ? 'v3' : 'v2'; state.reinvest.quote = null; render(); scheduleReinvestQuote(); });
   el.v3Target.addEventListener('change', () => { state.reinvest.v3Target = el.v3Target.value; state.reinvest.quote = null; render(); scheduleReinvestQuote(); });
