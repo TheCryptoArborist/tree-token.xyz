@@ -420,8 +420,8 @@
     {
       "path": "/dapp/victory-transaction-core.js",
       "source": "dapp/victory-transaction-core.js",
-      "sha1": "929a97aa820a46b5d0164153c3fb35f59900b243",
-      "size": 25622
+      "sha1": "af81164c4cd3e260160b3cab8bf45f1ba8e73e0b",
+      "size": 23642
     },
     {
       "path": "/dapp/victory-center.js",

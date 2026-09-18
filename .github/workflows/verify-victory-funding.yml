@@ -25,6 +25,7 @@ jobs:
           node tests/victory-v3-reinvest-core.test.mjs
           node tests/victory-address-funding.test.mjs
           node tests/victory-max-input.test.mjs
+          node tests/victory-lock-address-funding.test.mjs
           node tests/victory-transaction-core.test.mjs
           node tests/earn-routes-source.test.mjs
           node tests/v3-workspace-source.test.mjs
