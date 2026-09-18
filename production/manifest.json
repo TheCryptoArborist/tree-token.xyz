@@ -420,14 +420,14 @@
     {
       "path": "/dapp/victory-transaction-core.js",
       "source": "dapp/victory-transaction-core.js",
-      "sha1": "929a97aa820a46b5d0164153c3fb35f59900b243",
-      "size": 25622
+      "sha1": "af81164c4cd3e260160b3cab8bf45f1ba8e73e0b",
+      "size": 23642
     },
     {
       "path": "/dapp/victory-center.js",
       "source": "dapp/victory-center.js",
-      "sha1": "d2e081dcf278084d2732f16138f87d78faee6f97",
-      "size": 68567
+      "sha1": "e4461fc5249448c5228c7310542bd2a42f6f6a10",
+      "size": 68634
     },
     {
       "path": "/dapp/victory-center.css",
@@ -618,8 +618,8 @@
     {
       "path": "/dapp/earn-transactions-core.js",
       "source": "dapp/earn-transactions-core.js",
-      "sha1": "427f17cd505c2ea23f437be7b973a312c9982c7c",
-      "size": 21821
+      "sha1": "10476fe1c83f8c6e3d1f134baf659a80e0df20f9",
+      "size": 22451
     },
     {
       "path": "/dapp/coinbase-mark.svg",

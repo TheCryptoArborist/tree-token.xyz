@@ -1,6 +1,6 @@
 import {
   SUI_TYPE, TREE_TYPE, V2_FACTORY, V2_PACKAGE, V2_POOL, V2_ROUTER, VICTORY_SUI_POOL, VICTORY_TYPE,
-  normalizeAddress, normalizeType, validateVictoryReinvestQuote,
+  coinForAmount, normalizeAddress, normalizeType, validateVictoryReinvestQuote,
 } from './earn-transactions-core.js';
 
 export const VICTORY_LOCKER = '0xb604843d501173f9ea0762fbaa7cadaea3454c942deb527cb8905861ce39798b';
@@ -20,17 +20,6 @@ function requireUnsigned(value, label) {
   } catch {
     throw new Error(`${label} is unavailable.`);
   }
-}
-
-async function listVictoryCoins(client, owner) {
-  const coins = [];
-  let cursor = null;
-  do {
-    const page = await client.core.listCoins({ owner, coinType: VICTORY_TYPE, cursor, limit: 50 });
-    coins.push(...(page.objects || []));
-    cursor = page.hasNextPage ? page.cursor : null;
-  } while (cursor);
-  return coins.filter((coin) => BigInt(coin.balance || 0) > 0n);
 }
 
 function assertLockOnly(transaction) {
@@ -61,26 +50,9 @@ export async function buildVictoryLockTransaction({ Transaction, client, owner, 
   if (amountRaw <= 0n) throw new Error('Enter a VICTORY amount greater than zero.');
   if (!VICTORY_LOCK_TERMS.includes(days)) throw new Error('Choose a verified VICTORY lock term.');
 
-  const coins = (await listVictoryCoins(client, owner))
-    .sort((a, b) => BigInt(a.balance || 0) > BigInt(b.balance || 0) ? -1 : 1);
-  const selected = [];
-  let total = 0n;
-  for (const coin of coins) {
-    selected.push(coin);
-    total += BigInt(coin.balance || 0);
-    if (total >= amountRaw) break;
-  }
-  if (total < amountRaw) throw new Error('Insufficient VICTORY balance.');
-  if (selected.length > 500) throw new Error('Too many VICTORY coin objects are required. Merge coins or use a smaller amount.');
-
   const transaction = new Transaction();
   transaction.setSender(owner);
-  const primary = transaction.object(selected[0].objectId);
-  for (let index = 1; index < selected.length; index += 200) {
-    transaction.mergeCoins(primary, selected.slice(index, index + 200).map((coin) => transaction.object(coin.objectId)));
-  }
-  const [lockCoin] = transaction.splitCoins(primary, [transaction.pure.u64(amountRaw)]);
-  transaction.transferObjects([primary], owner);
+  const lockCoin = await coinForAmount(transaction, client, owner, VICTORY_TYPE, amountRaw);
   transaction.moveCall({
     target: `${V2_PACKAGE}::victory_token_locker::lock_tokens`,
     arguments: [
@@ -108,16 +80,8 @@ export async function buildVictoryV2SustainableReinvestTransaction({ Transaction
   if (reinvestRaw < 1_000n || lockRaw <= 0n) throw new Error('The selected split is too small for the verified sustainable route.');
   validateVictoryReinvestQuote(quote, reinvestRaw, slippageBps);
 
-  const coins = (await listVictoryCoins(client, owner)).sort((a, b) => BigInt(a.balance || 0) > BigInt(b.balance || 0) ? -1 : 1);
-  const selected = []; let selectedTotal = 0n;
-  for (const coin of coins) { selected.push(coin); selectedTotal += BigInt(coin.balance || 0); if (selectedTotal >= totalRaw) break; }
-  if (selectedTotal < totalRaw) throw new Error('Insufficient VICTORY balance.');
-  if (selected.length > 500) throw new Error('Too many VICTORY coin objects are required. Merge coins or use a smaller amount.');
-
   const transaction = new Transaction(); transaction.setSender(owner);
-  const primary = transaction.object(selected[0].objectId);
-  for (let index = 1; index < selected.length; index += 200) transaction.mergeCoins(primary, selected.slice(index, index + 200).map((coin) => transaction.object(coin.objectId)));
-  const [sustainableCoin] = transaction.splitCoins(primary, [transaction.pure.u64(totalRaw)]); transaction.transferObjects([primary], owner);
+  const sustainableCoin = await coinForAmount(transaction, client, owner, VICTORY_TYPE, totalRaw);
   const [lockCoin] = transaction.splitCoins(sustainableCoin, [transaction.pure.u64(lockRaw)]);
   transaction.moveCall({
     target: `${V2_PACKAGE}::victory_token_locker::lock_tokens`,
