@@ -1,0 +1,730 @@
+{
+  "id": "6aad931f45a27f392303e229",
+  "previous": "6aab518ae43d1d6da6d7fadb",
+  "commit": "06211bf3f558b775ced7eb5dba2c90461f2487da",
+  "locked": true,
+  "changedFiles": [
+    "/dapp/earn-transactions-core.js",
+    "/dapp/victory-center.js",
+    "/dapp/victory-transaction-core.js"
+  ],
+  "fileCount": 166,
+  "functionsPreserved": 35,
+  "schedulesPreserved": 5,
+  "url": "https://tree-token.xyz/dapp/#victory",
+  "publishedAt": "2026-09-18T19:38:09.963Z",
+  "sourceCommit": "06211bf3f558b775ced7eb5dba2c90461f2487da",
+  "files": {
+    "/tree.jpg": "5ca16c779edf1d559e5be5a02a6edd2e626d9c2f",
+    "/tokenomics/index.html": "7e838cb7bdf00d911b22023003b399f11589e05a",
+    "/thick.png": "ad280e7b551f15631f84ffe01bc5373746590da6",
+    "/sui-guide/wallet-logos.css": "1fa76f676461dca6e9b466fa25848df242d99e70",
+    "/sui-guide/tree-branding.css": "b4f785aed892b877316fbacc6f8ed2ec973420ca",
+    "/sui-guide/styles.css": "baae0dcd55d5ae4556a9f607ee33bcd1103149a8",
+    "/sui-guide/index.html": "7e2f2461df9016898d78544db15c48c63a2e64dd",
+    "/sui-guide/getting-started.css": "35f3f6ad4a2aacc9c5f17942d3c256e751584e70",
+    "/sui-guide/assets/slush-symbol.svg": "79f709188d8c49c734ab0cd63d717b538feb68bd",
+    "/sui-guide/assets/phantom-symbol.svg": "0403683177ebdf7acd30732aad8c173737312f48",
+    "/sui-guide/assets/nightly-symbol.svg": "99fb96151d90ee0124de4dcaf3a35bb596c21b6c",
+    "/sui-guide/assets/sources.md": "46b4d0e5660cf632ce66faaecab9ed79dbc6c42c",
+    "/styles/tree-arcade.css": "ad41f00891a42b0d619b26fecfeb0df868212d3b",
+    "/styles/tree-arcade-branding.css": "7cff715edd4e2c0db4c1a59179cc94e3cd1e17f5",
+    "/styles/raffle-rules.css": "74f96cc9a11470ae974aa5d86c9ef1f62fb2263c",
+    "/styles/info-page.css": "1406981fe9ce8191ae717ab403d48f9f2c26e547",
+    "/styles/home-v2.css": "ceafd02797e3794d1523321ff0537545103a4204",
+    "/scripts/wallet.js": "946acd5f351c9e86fbb32109b25d51cebe9c7836",
+    "/scripts/wallet-manager-core.js": "df927c430923973da4359e83267a61f4c3aea215",
+    "/scripts/verify-turbos-locked-claim.mjs": "85c3f3f5db804d1a6846d23408e71e3224fde432",
+    "/scripts/verify-turbos-claim-all.mjs": "47d8d7b0ba17920fbe746a875de14d08c01077f8",
+    "/scripts/verify-cetus-v3-lifecycle.mjs": "aef5b4755d0c05ab12f5a58c0003d88ed3e91b4f",
+    "/scripts/verify-cetus-v3-batch-actions.mjs": "0b860b28cfaf4580b82dba8a12446ef47a43f788",
+    "/scripts/tree-knowledge-trial.js": "fdb0bc50c98e403d2439a3e1c1f6aea6031b46a5",
+    "/scripts/swap.js": "211ee06831cf5d19841eb1eb89ae2fb6d0286025",
+    "/scripts/simulate-victory-v3-reinvest.mjs": "21e1f969d48ce8f0da57c43310985a37ed6d7fd5",
+    "/scripts/simulate-victory-sustainable-reinvest.mjs": "668c0e43a87cb69d861663061c58120a7aa6f47d",
+    "/scripts/simulate-tree-v3-zap.mjs": "bd93530a55b8a6b3c4e49926c13d5fd1ed9e7c45",
+    "/scripts/simulate-tree-v3-remove-position.mjs": "cd6a82c6cc6f3f9c72bbf7ae114976429009f605",
+    "/scripts/simulate-tree-v3-increase-position.mjs": "18f53019be0bcd7949d78285c9eb6d065600ac6e",
+    "/scripts/simulate-tree-v3-create-position.mjs": "a84b340b75fad7ed1c95b5f47e4c035b924e186e",
+    "/scripts/simulate-tree-v2-stake.mjs": "c81c6ba9de8cf40addb446a276c16c87f47c5518",
+    "/scripts/simulate-tree-turbos-swap.mjs": "89c9fbf5621c0d5aae08be97769b1dbe666b3973",
+    "/scripts/profile-studio.js": "25d36d17d5893e9a1d66c2a9941f33411ed89c13",
+    "/scripts/probe-tree-v3-full-actions.mjs": "9d1f5ee6627739030dd90fe1ccb94126b28daf66",
+    "/scripts/probe-tree-v3-collect-rewards.mjs": "593e8f030cf31118baad3b4244fce23363ed7fc8",
+    "/scripts/probe-tree-v3-collect-fees.mjs": "a6c8c2eae66dcf9d47917ccad17a3ea01d7c9f9e",
+    "/scripts/probe-tree-sui-graphql.mjs": "5bcfced441d466aacd8bd5b3683da5667a204d18",
+    "/scripts/probe-tree-limit-order.mjs": "00d805cb54e0a450a7272c3ca7d374fbda3d5fba",
+    "/scripts/probe-nftree-stats.mjs": "374f97a6e82316a09d097d08c8bca995b3bf3b50",
+    "/scripts/probe-knowledge-prize-claim.mjs": "9d0564921c53e2829eaf33c8ca150a93fb5d95d0",
+    "/scripts/prepare-test-dapp-build.mjs": "cc1274e8ba1b52b99b2b2e648f98c57cb5c72499",
+    "/scripts/phantom-sui-provider.js": "ebd2a52ce1af236267e0a9fa701e5b6b96d58b1c",
+    "/scripts/nightly-sui-provider.js": "10c05e869197a63c6aba363e0cfdbf82750695da",
+    "/scripts/info-page.js": "3c606f8336662f19d2a2f9b3b89a96fefe53a956",
+    "/scripts/home-v2.js": "420028bbe52f9e895e111f7d19c6627579979a66",
+    "/scripts/home-market-core.js": "dfb259b070e83446d93c63302d8a670386f7f88e",
+    "/scripts/copy-static-build.mjs": "a451fcc47c6ad4bd8ca91351f135207f1aca875c",
+    "/scripts/check-tree-swap-aggregator.mjs": "f10070ef991bbd94ddc6c8b39c28dd08a04e3911",
+    "/scripts/canopy-draw.js": "a23f798c56e07e7391f9228767e3711ca6844b6c",
+    "/roadmap/index.html": "6597c20c44a9aac623f685679962fb2fc100c5db",
+    "/raffle-rules/index.html": "442ca8e3abf867d7dab3dc1857f1e21182e9addc",
+    "/play/index.html": "a6033e80406b2cd7f622f9c203697c78f953a8c4",
+    "/netlify.toml": "439a3a719a5f9be042caf2fb881c7b309ba24bea",
+    "/mascot.png": "9f5e5db66e2f6c3eee41d70b1800094fe014a473",
+    "/index.html": "763df4406f1edd78adf6a8f256b40d40a3da8824",
+    "/hero.png": "15fa5856c63652fa6089010f683169d8b0c0dca5",
+    "/faq/index.html": "ce2ac9460306624a3ce06d46c9dcd91ccc443006",
+    "/documents/index.html": "c88d0014edf7975c7d72f5fb5158a05601078246",
+    "/docs/victory-integration-backlog.md": "9345eeabcd9d51320fc8a1098eecc20624e3081b",
+    "/docs/tree-v3-phase-a.md": "689483b0bd262df87e23b66f329c407ac68908d5",
+    "/docs/tree-leaderboard-refresh.md": "aa118540dcb3fa8004a878c8d2a6c8cf2aa06df6",
+    "/docs/tree-leaderboard-badges.md": "ad27e0e2bf5d042ea145a90837051a87e64aacec",
+    "/docs/knowledge-trial-lucky-leaf-plan.md": "f962fb297b1809c93b9e66a02d3638adb0bbbdba",
+    "/docs/incident-reports/2026-08-26-cetus-challenge-eligibility.md": "7e3b8c8f13c4ca7698eecebeabdbe10f3945b5b9",
+    "/data/tree-project-snapshot.json": "ead484ee1c766a540a2fa7136eed7ec240a82127",
+    "/data/tree-leaderboard-exclusions.json": "46c01941d62caf34c74ec795a677b4436a942223",
+    "/data/canopy-draw-preview.json": "a779d958745f298c162853ae33bbf01e6538baae",
+    "/dapp/wallet-manager.css": "845434c7bb69305cd4911290f50573dfe1185602",
+    "/dapp/victory-v3-reinvest-core.js": "113a53348c5dd16892c400ac4e8b168c22afb765",
+    "/dapp/victory-transaction-core.js": "af81164c4cd3e260160b3cab8bf45f1ba8e73e0b",
+    "/dapp/victory-center.js": "e4461fc5249448c5228c7310542bd2a42f6f6a10",
+    "/dapp/victory-center.css": "ed5155ef72a64e5bc3bc5f8479832f4f47e9045e",
+    "/dapp/v3-workspace.js": "93ab9192a65316d20c4b1d39034c649fa2e89120",
+    "/dapp/v3-workspace.css": "5a5c2e1769e3b2da9ba99d6a3a4393c133acafd0",
+    "/dapp/v3-transactions.js": "8bf07dd1e2f22bfeb4012399c6174eb0e63d69c1",
+    "/dapp/v3-transactions.css": "3a3e46ea11fc7aad24f78062c9328229ffb85a7a",
+    "/dapp/v3-transaction-core.js": "3894865f8eee0ea8e8c742b43739e0dfe20051a4",
+    "/dapp/v3-rebalance-test.js": "cf0d1973908c7015a6e3ceb730d938262b4431cb",
+    "/dapp/v3-existing-zap.js": "e9d1498759f2878fd05f1cbf8df5ac7f25c41841",
+    "/dapp/turbos-v3-manager.js": "aef64091c07a2a53a85640e0598f3a95fb8187e9",
+    "/dapp/turbos-position-core.js": "3f3c1c7a97391716b2fc317af229712d1a53af8d",
+    "/dapp/turbos-locked-claim-core.js": "23114d2f1e5dd319b05f60d6b05ad818bb6bd026",
+    "/dapp/transaction-review.js": "fb459be26191fd9e1cb01027e1685e2eb6012c8a",
+    "/dapp/transaction-review.css": "ab03d485e6931bbefd68c0a1f64bc19b6b57d72d",
+    "/dapp/test-dapp.js": "a96f3adba6c693d0b8df24eaccb942a4d80168da",
+    "/dapp/test-dapp.css": "3441bc97897b762c641f5b2cca51ecc3d07dd63b",
+    "/dapp/swap-router.js": "882f547e3a66028da1815569cc6397be2c1b7346",
+    "/dapp/swap-router.css": "6e33d3b9841098cf692de50bd92108b66e19499c",
+    "/dapp/sui-onboarding-guide.css": "e95475797f075eb0fca34e29f088b40e38d09f16",
+    "/dapp/styles.css": "1bb10205354049d9e29468418c3be6f1ebcf6316",
+    "/dapp/raffle-transaction-core.js": "e22b53444d6007d6a56432d7e97a999881982b9a",
+    "/dapp/panel-router.js": "3064000549d9eac55c1d28e78174e543a7f96eed",
+    "/dapp/panel-router.css": "a5e7480c38dcd3f45847bfcf8f0bb557a1cf0384",
+    "/dapp/limit-orders.js": "8b2c6be8c57c12bd319a1fc85aa6832cb5f160ab",
+    "/dapp/limit-orders.css": "fea27e0964e8a8b5120295de57cc5d0a1d17c566",
+    "/dapp/limit-orders-core.js": "b8be25ebe611096ee87bb1f892e5fa3a35271ef2",
+    "/dapp/interaction-bootstrap.js": "75892b9d4af3e01d42fd792dac25d031dfacab69",
+    "/dapp/index.html": "60fbfbd9f59e4c0133bb84ed46a593432731680f",
+    "/dapp/earn-v3-zap.js": "00485a5f168cc22affdfb8b48523280467711705",
+    "/dapp/earn-v3-zap.css": "be19ca679ccc0b57a20a8a634a11226bc09a6062",
+    "/dapp/earn-v2-rewards.css": "88cddc7aa14000ddb368073226cbd47ac12d50af",
+    "/dapp/earn-transactions.js": "d13f1091f5c9f806e67a65774e9272e2b27033ad",
+    "/dapp/earn-transactions.css": "f63c761eb143c8c6abc4c6416f0a7d5633128401",
+    "/dapp/earn-transactions-core.js": "10476fe1c83f8c6e3d1f134baf659a80e0df20f9",
+    "/dapp/coinbase-mark.svg": "ca9314f151392a0f9e79b3f8db9d66bfeadefa3d",
+    "/dapp/cetus-v3-manager.js": "819e5f075092e0090aab39da537f26ad9223a5cc",
+    "/dapp/cetus-v3-core.js": "ccb69d86ac76c14df476deadb817b1bb64835f07",
+    "/dapp/app.js": "177fed9f6ebb4aa7f52d9be71cfaa747070c376b",
+    "/challenge-admin/index.html": "c3ed77bcd380de970f7fa0842433785f6f275744",
+    "/challenge-admin/admin.js": "69117a5a572e41982438a99877420120bcfea74d",
+    "/challenge-admin/admin.css": "5c434d091becc009222552f8b945c7d9ac220840",
+    "/backgroundtest/background6.jpg": "cda1c03bd0acb85b0933b145611fdf84e61b3d36",
+    "/backgroundtest/background4.jpg": "6e890b2e800b9075960b034581926633b729e034",
+    "/backgroundtest/background3.jpg": "6ca2d5f92c01347d2c68e7adaa563d787e8b5ae9",
+    "/backgroundtest/background1.jpg": "575a71f1c4916cca172ac1505873e28f3dda0cab",
+    "/background5.jpg": "486828dd8df5119470901c5833ea0be6edf6f8ae",
+    "/assets/wbtc-token.png": "84aab7ab3f401839993ed54f7bc55481b508e0d6",
+    "/assets/wallet-manager-bcxijryq.css": "845434c7bb69305cd4911290f50573dfe1185602",
+    "/assets/victory-token.png": "2aec218a813e63e57e1a38fe2bfd85ec8cf08436",
+    "/assets/tree-token.png": "a24a9e63fe5b6188ab37c39e95b52f6edd83627b",
+    "/assets/tree-token-logo-official.webp": "fb6600ba506a3a97e3e813402b6f60e73610cfb1",
+    "/assets/tree-hero-walking.mp4": "fb11861b43a8595fee0bed6ce8b1ce509a34d772",
+    "/assets/tree-hero-poster.webp": "ee5366c153bff3549604d6bddb7f4ef30bcf96de",
+    "/assets/tree-fund-first-donation.png": "77df0e225c0dff1f460f9da50671042524cb758d",
+    "/assets/tree-fund-first-donation-d0qlq4o7.png": "77df0e225c0dff1f460f9da50671042524cb758d",
+    "/assets/tree-force-89-logo.jpg": "db50f049582605b85fee897c9dac093a175f7925",
+    "/assets/tree-force-89-logo-black.png": "f32911279e177ea6abf17ff3f28c23f0c452e4cf",
+    "/assets/tree-command-watermark.png": "667399709bd81ac5cb04ff9a67cfe1ea6ff35e45",
+    "/assets/tree-command-logo-v2-512.png": "4390f9723c27bd4809bf960119dc3ef4916be739",
+    "/assets/tree-arcade-world-bg.png": "7f9359ba56dd150926c7e1b6b40e5b8f7d5881d1",
+    "/assets/tree-arcade-world-bg-v2.png": "5092e32121299a0f58251e723afca794e56f492c",
+    "/assets/tree-arcade-world-bg-v2-bgjvvdzs.png": "5092e32121299a0f58251e723afca794e56f492c",
+    "/assets/tree-bbolhjse.jpg": "5ca16c779edf1d559e5be5a02a6edd2e626d9c2f",
+    "/assets/thick-dwqrmagk.png": "ad280e7b551f15631f84ffe01bc5373746590da6",
+    "/assets/sui-token.svg": "6dc36bc04b869215cb2ff084a6fe9c2c50acb96e",
+    "/assets/saluting-branches-logo.svg": "919d596ac9c7185428996c157ce797d65ab9a2d9",
+    "/assets/profile-thickquidity-logo.png": "5dc43095dd3ec93f624cf36188ad0f85f6ced3e1",
+    "/assets/profile-thickquidity-art.png": "04400222f29cdf9ee0672718084a124051571c5f",
+    "/assets/profile-nftree-art.jpg": "5ca16c779edf1d559e5be5a02a6edd2e626d9c2f",
+    "/assets/profile-leafy-sui-frame.png": "93d63121f1d12644e89c05dbfa8f06df59402286",
+    "/assets/profile-crypto-arborist-badge.png": "bbd67dea6ca24e9e59b4d996261ec1abb75530d5",
+    "/assets/index-ciludop1.js": "cb9e8b67a2a7fc90c1783cc506b44642008e704b",
+    "/assets/index-bjzd7icz.css": "b9b124d27bb2c52219b79a7d505497f49565eae6",
+    "/assets/garden-battles-logo.png": "f18c4f1ff42a1f3be19f8632c579de3faebbcdeb",
+    "/assets/background5-dfotcuir.jpg": "486828dd8df5119470901c5833ea0be6edf6f8ae",
+    "/assets/arboretum-promo.png": "c7814650098073bc2ffc26891024dfd0200210d1",
+    "/assets/arboretum-promo-dubcl4il.png": "c7814650098073bc2ffc26891024dfd0200210d1",
+    "/assets/arboretum-logo.jpg": "4fc1372dcee81ec6b5009f8f1ab870cf877ed6a3",
+    "/assets/arboretum-logo-black.png": "1bc5ad51b81113a07f34cb75334604b87e31548c",
+    "/assets/cg.png": "5ff0c825f8c7bef9abb10d0d839689263b160580",
+    "/assets/cg-5g0mbrjk.png": "5ff0c825f8c7bef9abb10d0d839689263b160580",
+    "/assets/9.png": "bc6041f6b0bc4a7ef218e3a9be86fb9d4ccb6408",
+    "/assets/8.png": "815af2b0fb37f3108519aadac24c81823ce835cc",
+    "/assets/7.png": "b190fa50292f143664631b78dd08a699f0e18600",
+    "/assets/6.png": "008a50e83f454b579c0a7ddc5dea42c379a2715c",
+    "/assets/5.png": "b3de0b71addc4725f9a1139b6bb0935db2aad959",
+    "/assets/4.png": "e8af2de696ce12de0398db9be80eeab9cb76eeb0",
+    "/assets/3.png": "2ebf6347cc6fbe98b8bbc76488ef8b2eba7102d7",
+    "/assets/2.png": "8fccb7adb785bd2227a74c23d1c5f4b1f0758bae",
+    "/assets/12.png": "0c6ea86c3a909e1bafd33f712f7c9aba4c41a35f",
+    "/assets/11.png": "9ee8b5e4d84753897e30505f9df66a1478ac0adf",
+    "/assets/10.png": "cebf851c07be58d9f8cde8c06af6d8baad8c6ff1",
+    "/assets/1.png": "edf227e098fd7426ca48ca8bc02c04a93a2ceb31",
+    "/about/index.html": "aede2f8c419acc6a738f79c4d8cc8378ebdd20c4",
+    "/litepaper.pdf": "30a58b5440cdfb24e32466ca52562e04be19205a"
+  },
+  "functionDigests": {
+    "tree-badges": "1fa9354ecdacfc2a8d6c3fc8a17746d21affeeb4724df0ce59748cae4b5f818e",
+    "tree-badges-on-deploy": "2f959c2968df65e727773a5699ad3765921a20e36c081631920d70582f6190e8",
+    "tree-badges-preview": "284c7712aef080e9faaee5d299818363647ec8b9a58a5e6e4dcea21452620f29",
+    "tree-badges-refresh-background": "b6895933cb94130714a02498e49db4d915ab410966099291312001d31387d118",
+    "tree-badges-refresh-scheduled": "1eb38644ac33c1478f9cdfc738756798df33f5e862b236c1a1fbfc76d85f6a25",
+    "tree-burn-overview": "ec3a02b7db411c9c57e1064b5c36bc3c8a870d5cf5c12a425b0ccc8802902ea8",
+    "tree-chart": "6502ffd09a9199f9b9d570dfd718f3493358acd0f15cf596b2b9ec75a5516129",
+    "tree-dashboard": "a4efb6c1957ab6fdf54e820cb194a13a9a3f09097e0985eb0ea2d392e13550db",
+    "tree-exposure": "1810442e3836b9e031bcc96fffa6cde9535e7e13c92620f8a0e3d69749ac539a",
+    "tree-exposure-on-deploy": "4296a22d47fb8c47c4ef2af3c8f74ea49ec95ae25168d2127dcf527ea43eb90e",
+    "tree-exposure-preview": "5ebada1e659bb10daa5cf6ca4e18ff5f0c2e094be55122f887698e277782b33b",
+    "tree-exposure-refresh-background": "e70bf339f16a5803dc71f9e0da7f928df637205b89547329087cd2240fdddb90",
+    "tree-exposure-refresh-scheduled": "5807fbd70e3e342e10a303420730e2e271c8cc7204d18090cef28b1ba9f92c58",
+    "tree-knowledge-trial": "a56b56f53359c5851a63054727e0837e66ac348254ab1eb4cb8cb2dda70b61e6",
+    "tree-knowledge-trial-admin": "dc75c3f15ef8b987d4e5e2f5e52a7cc63b49370fd70d0f05b0038402d0f1df2e",
+    "tree-knowledge-trial-claim": "0dab480cbaf6685a8856510a71610777fca73d8110beb3ca4947290eb21066e7",
+    "tree-knowledge-trial-claim-test": "7d5f68df10afbbb3af507a7001fdc51786270ae52917f01f1d01a3b31e5b3009",
+    "tree-knowledge-trial-resolver": "cea6704c22e402c27a2d4c688612b360af61b9b067aaec55413bc8f5a20ad17f",
+    "tree-knowledge-trial-rotation-on-deploy": "4e5265469d8531285e844d6fc263fd94d50d13c750fb15448c70cfd19be833f7",
+    "tree-knowledge-trial-rotation-scheduled": "844c238d00d934fabcdcd790441eb8c9809a234072b949f871e671675311b53e",
+    "tree-knowledge-trial-test": "20948d4440269ab26639a1170aad6b1b94d389bf9d49aef74ae901972b01fa9f",
+    "tree-leaderboard": "c095e6857df8ed7511d31a48556f6f9c20299ecca142e2e90c90d0bc8a9aa953",
+    "tree-leaderboard-preview": "6c397ca4ddce95a31edabcb2e790eab52fb1d74fc87a293acd5684ba2bed2c86",
+    "tree-leaderboard-refresh-background": "d3e8471cc035588782ac03ccf4754fbb4d3b111a62acdc3c16b31482294d2b2b",
+    "tree-leaderboard-refresh-scheduled": "aea00262fed154e2ad0645ec169c55d80ff8ee7ec957c5f992853e8f3e01f4a8",
+    "tree-limit-orders": "e5157f6cd4385ad47facefa496e5f1359f4aa485a925b0bbe6dca89326a9b321",
+    "tree-liquidity": "9ae29ae9ef1e8f71bb50598ce0d585a727c289153a16edd93aa7e8da8e027041",
+    "tree-market": "0d186ed95aed6f4a07e47808109b80742e4dd776b14d8317278a30da4a01bced",
+    "tree-nftree": "63959df9c9cd5086d3519bf19c628e1dc222bd07c128ac997b80c22c267f25c0",
+    "tree-raffle-claim": "c61bda58adda56cb0ef8953ee364450d43ac6ca5d34be44a197d937c9a66c808",
+    "tree-raffle-ingest-buy": "4087e1ba5885cc6b4a419f5f66a97a926231cd27b3bea073d878f5bfb939c397",
+    "tree-raffle-status": "4ab44e7cfb5df2047b6edc41a197a9562e6b1730399b7cac7d55b4b1b4ea5f67",
+    "tree-swap-quote": "928451362dac1a0f9f71c117c99b93474b7f40dd3d493371d7beda81ca26ff6a",
+    "tree-v3-overview": "828c526ffde22b33a8a723b619dcab134dc8373f71f95971010c6cad32fe6953",
+    "tree-volume": "6b2b698a4c6fb248e7bb267208ba04ba76655cb719d30837b5121bbed5341847"
+  },
+  "functionConfigurations": {
+    "tree-badges": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2",
+      "routes": [
+        {
+          "pattern": "/api/tree-badges",
+          "literal": "/api/tree-badges",
+          "prefer_static": false
+        }
+      ]
+    },
+    "tree-badges-on-deploy": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2"
+    },
+    "tree-badges-preview": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2",
+      "routes": [
+        {
+          "pattern": "/api/tree-badges-preview",
+          "literal": "/api/tree-badges-preview",
+          "prefer_static": false
+        }
+      ]
+    },
+    "tree-badges-refresh-background": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2"
+    },
+    "tree-badges-refresh-scheduled": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2"
+    },
+    "tree-burn-overview": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2",
+      "routes": [
+        {
+          "pattern": "/api/tree-burn-overview",
+          "literal": "/api/tree-burn-overview",
+          "prefer_static": false
+        }
+      ]
+    },
+    "tree-chart": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2",
+      "routes": [
+        {
+          "pattern": "/api/tree-chart",
+          "literal": "/api/tree-chart",
+          "prefer_static": false
+        }
+      ]
+    },
+    "tree-dashboard": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2",
+      "routes": [
+        {
+          "pattern": "/api/tree-dashboard",
+          "literal": "/api/tree-dashboard",
+          "prefer_static": false
+        }
+      ]
+    },
+    "tree-exposure": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2",
+      "routes": [
+        {
+          "pattern": "/api/tree-exposure",
+          "literal": "/api/tree-exposure",
+          "prefer_static": false
+        }
+      ]
+    },
+    "tree-exposure-on-deploy": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2"
+    },
+    "tree-exposure-preview": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2",
+      "routes": [
+        {
+          "pattern": "/api/tree-exposure-preview",
+          "literal": "/api/tree-exposure-preview",
+          "prefer_static": false
+        }
+      ]
+    },
+    "tree-exposure-refresh-background": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2"
+    },
+    "tree-exposure-refresh-scheduled": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2"
+    },
+    "tree-knowledge-trial": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2",
+      "routes": [
+        {
+          "pattern": "/api/tree-knowledge-trial",
+          "literal": "/api/tree-knowledge-trial",
+          "prefer_static": false
+        }
+      ]
+    },
+    "tree-knowledge-trial-admin": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2",
+      "routes": [
+        {
+          "pattern": "/api/tree-knowledge-trial-admin",
+          "literal": "/api/tree-knowledge-trial-admin",
+          "prefer_static": false
+        }
+      ]
+    },
+    "tree-knowledge-trial-claim": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2",
+      "routes": [
+        {
+          "pattern": "/api/tree-knowledge-trial-claim",
+          "literal": "/api/tree-knowledge-trial-claim",
+          "prefer_static": false
+        }
+      ]
+    },
+    "tree-knowledge-trial-claim-test": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2",
+      "routes": [
+        {
+          "pattern": "/api/tree-knowledge-trial-claim-test",
+          "literal": "/api/tree-knowledge-trial-claim-test",
+          "prefer_static": false
+        }
+      ]
+    },
+    "tree-knowledge-trial-resolver": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2"
+    },
+    "tree-knowledge-trial-rotation-on-deploy": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2"
+    },
+    "tree-knowledge-trial-rotation-scheduled": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2"
+    },
+    "tree-knowledge-trial-test": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2",
+      "routes": [
+        {
+          "pattern": "/api/tree-knowledge-trial-test",
+          "literal": "/api/tree-knowledge-trial-test",
+          "prefer_static": false
+        }
+      ]
+    },
+    "tree-leaderboard": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2",
+      "routes": [
+        {
+          "pattern": "/api/tree-leaderboard",
+          "literal": "/api/tree-leaderboard",
+          "prefer_static": false
+        }
+      ]
+    },
+    "tree-leaderboard-preview": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2",
+      "routes": [
+        {
+          "pattern": "/api/tree-leaderboard-preview",
+          "literal": "/api/tree-leaderboard-preview",
+          "prefer_static": false
+        }
+      ]
+    },
+    "tree-leaderboard-refresh-background": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2"
+    },
+    "tree-leaderboard-refresh-scheduled": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2"
+    },
+    "tree-limit-orders": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2",
+      "routes": [
+        {
+          "pattern": "/api/tree-limit-orders",
+          "literal": "/api/tree-limit-orders",
+          "prefer_static": false
+        }
+      ]
+    },
+    "tree-liquidity": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2",
+      "routes": [
+        {
+          "pattern": "/api/tree-liquidity",
+          "literal": "/api/tree-liquidity",
+          "prefer_static": false
+        }
+      ]
+    },
+    "tree-market": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2",
+      "routes": [
+        {
+          "pattern": "/api/tree-market",
+          "literal": "/api/tree-market",
+          "prefer_static": false
+        }
+      ]
+    },
+    "tree-nftree": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2",
+      "routes": [
+        {
+          "pattern": "/api/tree-nftree",
+          "literal": "/api/tree-nftree",
+          "prefer_static": false
+        }
+      ]
+    },
+    "tree-raffle-claim": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2",
+      "routes": [
+        {
+          "pattern": "/api/tree-raffle-claim",
+          "literal": "/api/tree-raffle-claim",
+          "prefer_static": false
+        }
+      ]
+    },
+    "tree-raffle-ingest-buy": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2",
+      "routes": [
+        {
+          "pattern": "/api/tree-raffle-ingest-buy",
+          "literal": "/api/tree-raffle-ingest-buy",
+          "prefer_static": false
+        }
+      ]
+    },
+    "tree-raffle-status": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2",
+      "routes": [
+        {
+          "pattern": "/api/tree-raffle-status",
+          "literal": "/api/tree-raffle-status",
+          "prefer_static": false
+        }
+      ]
+    },
+    "tree-swap-quote": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2",
+      "routes": [
+        {
+          "pattern": "/api/tree-swap-quote",
+          "literal": "/api/tree-swap-quote",
+          "prefer_static": false
+        }
+      ]
+    },
+    "tree-v3-overview": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2",
+      "routes": [
+        {
+          "pattern": "/api/tree-v3-overview",
+          "literal": "/api/tree-v3-overview",
+          "prefer_static": false
+        }
+      ]
+    },
+    "tree-volume": {
+      "build_data": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "memory": 1024,
+      "priority": 10,
+      "region": "us-east-2",
+      "routes": [
+        {
+          "pattern": "/api/tree-volume",
+          "literal": "/api/tree-volume",
+          "prefer_static": false
+        }
+      ]
+    }
+  },
+  "schedules": [
+    {
+      "name": "tree-badges-refresh-scheduled",
+      "cron": "47 */6 * * *"
+    },
+    {
+      "name": "tree-exposure-refresh-scheduled",
+      "cron": "27 */6 * * *"
+    },
+    {
+      "name": "tree-knowledge-trial-resolver",
+      "cron": "5 * * * *"
+    },
+    {
+      "name": "tree-knowledge-trial-rotation-scheduled",
+      "cron": "15 * * * *"
+    },
+    {
+      "name": "tree-leaderboard-refresh-scheduled",
+      "cron": "17 */6 * * *"
+    }
+  ],
+  "configurationNote": "The live /netlify.toml digest is recorded above and was preserved unchanged. production/deployed-netlify.toml remains a historical recovery artifact; do not replace the live configuration with it."
+}

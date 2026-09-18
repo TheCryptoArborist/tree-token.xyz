@@ -1,3 +1,15 @@
+# Current production — 2026-09-18
+
+VICTORY funding and MAX fixes are published and locked as deploy `6aad931f45a27f392303e229`, from GitHub commit `06211bf3f558b775ced7eb5dba2c90461f2487da` (PR #26). See [current-release.json](current-release.json) for the complete live static-file inventory, backend digests/configurations, five schedules, and previous deployment.
+
+Only three public files changed: `dapp/earn-transactions-core.js`, `dapp/victory-center.js`, and `dapp/victory-transaction-core.js`. All 35 backend functions and the live generated Netlify configuration were preserved. The release reused the existing `kelpie-v3-release-safe` deployment context before promotion; this is a hosting context label, not the source branch. Kelpie remains V3-only.
+
+The source snapshot manifest verifies repository file bytes. Its original deployment metadata and archived generated `deployed-netlify.toml` are historical; the current live configuration differs from that archive. Use `current-release.json` as the live deployment inventory, and preserve configuration directly from the published deployment for frontend-only releases.
+
+Validation: nine focused suites, SDK funding checks, two unsigned seven-day-lock mainnet simulations, desktop/mobile browser checks, and user wallet preview confirmation passed. Unrelated legacy Arcade diagnostics remain non-blocking and visibly failing.
+
+---
+
 # Production baseline — 2026-09-15
 
 This directory records the live TREE deployment `6aa70deff0b74e2bfe8b7725`, published September 13, 2026. Synchronizing this baseline does not publish a new deployment.
