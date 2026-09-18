@@ -75,6 +75,17 @@ export async function coinForAmount(transaction, client, owner, coinType, amount
     if (total >= amount) break;
   }
   const symbol = normalizeType(coinType) === normalizeType(VICTORY_TYPE) ? 'VICTORY' : 'TREE';
+  if (total < amount && symbol === 'VICTORY' && client.core.getBalance && transaction.coin) {
+    // getBalance includes address-held funds, which listCoins cannot enumerate.
+    // Keep both sides in raw units and let the SDK fund the exact total before
+    // the existing reinvest/lock split is applied.
+    const { balance } = await client.core.getBalance({ owner, coinType });
+    const addressRaw = BigInt(balance?.addressBalance ?? 0);
+    const availableRaw = BigInt(balance?.balance ?? 0);
+    if (addressRaw > 0n && availableRaw >= amount) {
+      return transaction.coin({ type: coinType, balance: amount });
+    }
+  }
   if (total < amount) throw new Error(`Insufficient ${symbol} balance.`);
   if (selected.length > 500) throw new Error(`Too many ${symbol} coin objects are required. Merge coins or use a smaller amount.`);
   const primary = transaction.object(selected[0].objectId);

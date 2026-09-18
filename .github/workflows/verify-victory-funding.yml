@@ -1,0 +1,33 @@
+name: Verify VICTORY funding
+
+on:
+  pull_request:
+    paths:
+      - 'dapp/earn-transactions-core.js'
+      - 'dapp/victory-*.js'
+      - 'tests/victory-*.test.mjs'
+      - '.github/workflows/verify-victory-funding.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: |
+          node tests/victory-v3-reinvest-core.test.mjs
+          node tests/victory-address-funding.test.mjs
+          node tests/victory-transaction-core.test.mjs
+          node tests/earn-routes-source.test.mjs
+          node tests/v3-workspace-source.test.mjs
+          node tests/earn-transactions-core.test.mjs
+          node tests/v3-transaction-core.test.mjs
+          npm run build
+          git diff --check
