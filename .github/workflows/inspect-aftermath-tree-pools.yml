@@ -10,10 +10,17 @@ on:
       - 'netlify/lib/aftermath-tree-discovery.ts'
       - 'netlify/lib/tree-venue-discovery.ts'
       - 'netlify/lib/tree-swap-route.ts'
+      - 'netlify/lib/*simulation.ts'
+      - 'netlify/lib/tree-bridge-quotes.ts'
+      - 'scripts/simulate-tree-liquidity-routes.mjs'
+      - 'tests/tree-route-simulation.test.ts'
+      - 'tests/tree-bridge-quotes.test.ts'
+      - 'tests/tree-simulation-replay.test.ts'
   workflow_dispatch:
 jobs:
   inspect:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: read
     steps:
@@ -23,5 +30,14 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: node --experimental-strip-types --test tests/tree-route-simulation.test.ts tests/tree-bridge-quotes.test.ts tests/tree-simulation-replay.test.ts tests/tree-liquidity-discovery.test.ts tests/tree-liquidity-graph.test.ts tests/tree-venue-discovery.test.ts tests/aftermath-tree-discovery.test.ts tests/tree-swap-route.test.ts
       - run: node --experimental-strip-types scripts/inspect-aftermath-tree-pools.mjs
       - run: node --experimental-strip-types scripts/inspect-aftermath-tree-pool-health.mjs
+      - run: node --experimental-strip-types scripts/simulate-tree-liquidity-routes.mjs
+        env:
+          TREE_SIMULATION_OUTPUT_DIR: artifacts/tree-liquidity
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tree-liquidity-read-only-simulation
+          path: artifacts/tree-liquidity/

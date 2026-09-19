@@ -23,7 +23,11 @@ type ObjectLike = {
 };
 
 function collectMoveTypes(value: unknown, out = new Set<string>()): Set<string> {
-  if (typeof value === 'string' && value.includes('::')) out.add(value);
+  if (typeof value === 'string' && value.includes('::')) {
+    // Generic pool types embed the constituent types inside <...>; storing the
+    // entire generic string prevents every approved-coin comparison from matching.
+    for (const type of value.match(/0x[0-9a-fA-F]+::[A-Za-z_][A-Za-z0-9_]*::[A-Za-z_][A-Za-z0-9_]*/g) ?? []) out.add(type);
+  }
   else if (Array.isArray(value)) for (const item of value) collectMoveTypes(item, out);
   else if (value && typeof value === 'object') for (const item of Object.values(value as Record<string, unknown>)) collectMoveTypes(item, out);
   return out;
