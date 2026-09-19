@@ -3,6 +3,11 @@
 Observed September 19, 2026, 02:47:34–02:47:49 UTC (September 18, 21:47 CDT).
 Branch: `feature/tree-liquidity-graph`; draft PR #28. No production Best Swap changes.
 
+**Follow-up:** [on-chain composition validation](../tree-composition/README.md)
+supersedes the execution assumptions below. The SHOCK 50/100 SUI rejection was
+an SDK guard, not an on-chain contract limit. Complete paths simulated successfully,
+and the Aftermath SDK estimates were slightly optimistic versus Move execution.
+
 ## Result
 
 Direct SuiDex V3 returned the most TREE for all three tested inputs. The strongest
@@ -44,7 +49,7 @@ The new filter has three stages:
 3. Quote exact amounts through the official Aftermath SDK, including its fees
    and input/output reserve limits. Zero output, reserve exhaustion, SDK failures,
    or stale state reject the route. The SDK's 30% reserve bound (with its own
-   margin) is a venue constraint, not a new TREE liquidity threshold.
+   margin) is an SDK guard, not a confirmed on-chain limit or new TREE TVL threshold.
 
 All 1,855 Aftermath pools were scanned so bridge pools without TREE were retained.
 At 10 SUI, only BOOM/TREE and SHOCK/TREE survived the terminal reserve bound;

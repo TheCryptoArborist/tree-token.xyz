@@ -16,6 +16,11 @@ on:
       - 'tests/tree-route-simulation.test.ts'
       - 'tests/tree-bridge-quotes.test.ts'
       - 'tests/tree-simulation-replay.test.ts'
+      - 'netlify/lib/tree-composition-validation.ts'
+      - 'scripts/inspect-tree-bridge-chain.mjs'
+      - 'scripts/simulate-tree-composed-paths.mjs'
+      - 'scripts/lib/tree-composed-transaction.mjs'
+      - 'tests/tree-composition-validation.test.ts'
   workflow_dispatch:
 jobs:
   inspect:
@@ -36,6 +41,18 @@ jobs:
       - run: node --experimental-strip-types scripts/simulate-tree-liquidity-routes.mjs
         env:
           TREE_SIMULATION_OUTPUT_DIR: artifacts/tree-liquidity
+      - run: node --experimental-strip-types --test tests/tree-composition-validation.test.ts
+      - run: node --experimental-strip-types scripts/inspect-tree-bridge-chain.mjs
+        env:
+          TREE_COMPOSITION_OUTPUT_DIR: artifacts/tree-composition
+      - run: node --experimental-strip-types scripts/simulate-tree-composed-paths.mjs
+        env:
+          TREE_COMPOSITION_OUTPUT_DIR: artifacts/tree-composition
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tree-composition-read-only-simulation
+          path: artifacts/tree-composition/
       - uses: actions/upload-artifact@v4
         if: always()
         with:
