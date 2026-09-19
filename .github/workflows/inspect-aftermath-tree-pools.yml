@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/inspect-aftermath-tree-pools.yml'
       - 'scripts/inspect-aftermath-tree-pools.mjs'
+      - 'scripts/inspect-aftermath-tree-pool-health.mjs'
       - 'netlify/lib/aftermath-tree-discovery.ts'
       - 'netlify/lib/tree-venue-discovery.ts'
       - 'netlify/lib/tree-swap-route.ts'
@@ -23,3 +24,4 @@ jobs:
           cache: npm
       - run: npm ci
       - run: node --experimental-strip-types scripts/inspect-aftermath-tree-pools.mjs
+      - run: node --experimental-strip-types scripts/inspect-aftermath-tree-pool-health.mjs
