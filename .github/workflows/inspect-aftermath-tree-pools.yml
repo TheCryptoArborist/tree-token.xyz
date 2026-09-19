@@ -1,0 +1,16 @@
+name: Inspect Aftermath TREE pools
+on:
+  workflow_dispatch:
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: node --experimental-strip-types scripts/inspect-aftermath-tree-pools.mjs
