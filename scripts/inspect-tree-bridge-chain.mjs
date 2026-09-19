@@ -1,0 +1,15 @@
+import {SuiGrpcClient} from '@mysten/sui/grpc';
+import {mkdirSync,writeFileSync} from 'node:fs';
+import {SUIDEX_V3_PACKAGE} from '../dapp/v3-transaction-core.js';
+import {V2_PACKAGE} from '../dapp/earn-transactions-core.js';
+const client=new SuiGrpcClient({network:'mainnet',baseUrl:'https://fullnode.mainnet.sui.io:443'});
+const ids=['0x21e920ad49b2b3e49e1fe8e6d5bcb721378833178e1d3b50dc077799513876ac','0x3f155c4c82d36b85dd36de72a922626188e20643048b6b8ab972ffee9bb0c158','0x2eb0b762b9625ddb82b296542662c74d297cfc508e04523f69f3ebf73c372334','0x637c93e47274c1d5cf2f8f230dfebf22875e227c220c2156469578f8f4504c53'];
+const objects=[];
+for(const objectId of ids) objects.push(await client.core.getObject({objectId,include:{json:true,owner:true},signal:AbortSignal.timeout(20000)}));
+const functions=[];
+for(const [packageId,moduleName,name] of [[SUIDEX_V3_PACKAGE,'trade','flash_swap'],[SUIDEX_V3_PACKAGE,'trade','repay_flash_swap'],[V2_PACKAGE,'router','swap_exact_tokens0_for_tokens1_composable']]) functions.push({packageId,moduleName,name,...await client.core.getMoveFunction({packageId,moduleName,name,signal:AbortSignal.timeout(20000)})});
+const dir=process.env.TREE_COMPOSITION_OUTPUT_DIR || 'reports/tree-composition';
+mkdirSync(dir,{recursive:true});
+const result={observedAt:new Date().toISOString(),objects,functions};
+writeFileSync(`${dir}/chain-inspection.json`,JSON.stringify(result,(_,v)=>typeof v==='bigint'?String(v):v,2));
+console.log(JSON.stringify(result,(_,v)=>typeof v==='bigint'?String(v):v,2));

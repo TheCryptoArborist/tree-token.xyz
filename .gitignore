@@ -17,3 +17,9 @@ supabase/.temp/
 Thumbs.db
 .vscode/
 .idea/
+
+# Local exploratory captures; the scoped simulation evidence is tracked.
+reports/tree-liquidity/pool-snapshot.json
+reports/tree-liquidity/direct-probe.json
+reports/tree-liquidity/bridge-probe.json
+artifacts/
