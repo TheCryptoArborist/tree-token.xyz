@@ -97,8 +97,11 @@ nonconvergence rejection, exact-cost evidence and three-leg final-output protect
 
 ## Safest next step
 
+The [opt-in comparison tool](COMPARISON-TOOL.md) now implements fresh three-round
+comparison and reproducibility checks without changing production routing.
+
 Keep Best Swap on its existing direct routes and keep this PR in draft. The evidence
-does not justify enabling BOOM/SHOCK split execution. A useful next development
-step would be an opt-in read-only comparison tool that refreshes state and flags
-a reproducible net improvement; execution integration should wait for that evidence.
+does not justify enabling BOOM/SHOCK split execution. Use the opt-in comparison
+tool to refresh state and flag a reproducible net improvement; execution
+integration should wait for that evidence.
 The current study does not schedule monitoring or enable any ongoing network work.

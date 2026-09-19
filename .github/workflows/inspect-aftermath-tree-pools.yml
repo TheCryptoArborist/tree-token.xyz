@@ -24,6 +24,9 @@ on:
       - 'scripts/study-tree-splits.mjs'
       - 'scripts/lib/tree-split-*.mjs'
       - 'tests/tree-split-study.test.ts'
+      - 'scripts/compare-tree-routes.mjs'
+      - 'scripts/lib/tree-comparison-session.mjs'
+      - 'tests/tree-comparison-session.test.ts'
   workflow_dispatch:
 jobs:
   inspect:
@@ -51,7 +54,7 @@ jobs:
       - run: node --experimental-strip-types scripts/simulate-tree-composed-paths.mjs
         env:
           TREE_COMPOSITION_OUTPUT_DIR: artifacts/tree-composition
-      - run: node --experimental-strip-types --test tests/tree-split-study.test.ts
+      - run: node --experimental-strip-types --test tests/tree-split-study.test.ts tests/tree-comparison-session.test.ts
       - run: node --experimental-strip-types scripts/study-tree-splits.mjs
         env:
           TREE_SPLIT_OUTPUT_DIR: artifacts/tree-splits
