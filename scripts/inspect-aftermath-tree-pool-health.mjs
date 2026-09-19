@@ -24,4 +24,4 @@ const rows = treePools.map((pool, index) => ({
   stats: stats[index] ?? null,
 }));
 
-console.log(JSON.stringify({ generatedAt: new Date().toISOString(), count: rows.length, pools: rows }, null, 2));
+console.log(JSON.stringify({ generatedAt: new Date().toISOString(), count: rows.length, pools: rows }, (_key, value) => typeof value === 'bigint' ? value.toString() : value, 2));
