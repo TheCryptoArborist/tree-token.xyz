@@ -21,6 +21,9 @@ on:
       - 'scripts/simulate-tree-composed-paths.mjs'
       - 'scripts/lib/tree-composed-transaction.mjs'
       - 'tests/tree-composition-validation.test.ts'
+      - 'scripts/study-tree-splits.mjs'
+      - 'scripts/lib/tree-split-*.mjs'
+      - 'tests/tree-split-study.test.ts'
   workflow_dispatch:
 jobs:
   inspect:
@@ -48,6 +51,15 @@ jobs:
       - run: node --experimental-strip-types scripts/simulate-tree-composed-paths.mjs
         env:
           TREE_COMPOSITION_OUTPUT_DIR: artifacts/tree-composition
+      - run: node --experimental-strip-types --test tests/tree-split-study.test.ts
+      - run: node --experimental-strip-types scripts/study-tree-splits.mjs
+        env:
+          TREE_SPLIT_OUTPUT_DIR: artifacts/tree-splits
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tree-split-read-only-study
+          path: artifacts/tree-splits/
       - uses: actions/upload-artifact@v4
         if: always()
         with:

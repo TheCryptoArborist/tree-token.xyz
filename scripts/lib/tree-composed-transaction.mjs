@@ -13,12 +13,9 @@ function v3(tx,pool,outType,coin,amount) {
   tx.moveCall({target:'0x2::balance::destroy_zero',typeArguments:[SUI_TYPE],arguments:[a]});
   return tx.moveCall({target:'0x2::coin::from_balance',typeArguments:[outType],arguments:[b]});
 }
-// Simulation-only: fixed dummy sender, server-mocked gas; no public API imports.
-export function buildComposedSimulation({path,amount,minOutput,api,pool}) {
-  if (!['DIRECT','BOOM','SHOCK'].includes(path) || typeof amount!=='bigint' || amount<=0n || amount>100_000_000_000n || typeof minOutput!=='bigint' || minOutput<=0n || minOutput>=2n**64n) throw new Error('invalid-simulation-input');
+export function appendComposedLeg({tx,path,amount,input,api,pool}) {
+  if (!['DIRECT','BOOM','SHOCK'].includes(path) || typeof amount!=='bigint' || amount<=0n || amount>100_100_000_000n) throw new Error('invalid-simulation-leg');
   if(path!=='DIRECT' && pool?.pool?.objectId!==TAILS[path]) throw new Error('unexpected-tail-pool');
-  const tx=new Transaction();tx.setSender(SIMULATION_SENDER);tx.setGasBudget(1_000_000_000n);
-  const [input]=tx.splitCoins(tx.gas,[tx.pure.u64(amount)]);
   let output;
   if(path==='DIRECT') output=v3(tx,SUIDEX_V3_POOL,TREE_TYPE,input,amount);
   else {
@@ -28,6 +25,14 @@ export function buildComposedSimulation({path,amount,minOutput,api,pool}) {
     const params={tx,coinInId:bridge,coinInType:PARTNERS[path],coinOutType:TREE_TYPE,lpCoinType:pool.pool.lpCoinType,expectedCoinOutAmount:1n,slippage:0,withTransfer:false};
     output=pool.pool.daoFeePoolObject?api.Pools().daoFeePoolTradeTx({...params,daoFeePoolId:pool.pool.daoFeePoolObject.objectId}):api.Pools().tradeTx({...params,poolId:pool.pool.objectId});
   }
+  return output;
+}
+// Simulation-only: fixed dummy sender, server-mocked gas; no public API imports.
+export function buildComposedSimulation({path,amount,minOutput,api,pool}) {
+  if (!['DIRECT','BOOM','SHOCK'].includes(path) || typeof amount!=='bigint' || amount<=0n || amount>100_000_000_000n || typeof minOutput!=='bigint' || minOutput<=0n || minOutput>=2n**64n) throw new Error('invalid-simulation-input');
+  const tx=new Transaction();tx.setSender(SIMULATION_SENDER);tx.setGasBudget(1_000_000_000n);
+  const [input]=tx.splitCoins(tx.gas,[tx.pure.u64(amount)]);
+  const output=appendComposedLeg({tx,path,amount,input,api,pool});
   // An insufficient output aborts the entire PTB at this split. Merging restores
   // the full output before transfer. No intermediate token is transferred away.
   const minimumCommand=tx.getData().commands.length;

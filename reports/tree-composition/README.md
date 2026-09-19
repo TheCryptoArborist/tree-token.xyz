@@ -3,6 +3,9 @@
 Observed September 19, 2026 at 03:03:44–03:03:48 UTC (September 18, 22:03 CDT).
 Branch `feature/tree-liquidity-graph`, draft PR #28. Production Best Swap is unchanged.
 
+Follow-up: the [chain-authoritative small-split study](../tree-splits/README.md)
+found no improvement in its tested grid, including gas at equal total SUI cost.
+
 ## Result
 
 All nine paths passed full Move transaction simulation with checks enabled:
