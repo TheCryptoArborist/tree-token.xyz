@@ -1,5 +1,14 @@
 name: Inspect Aftermath TREE pools
 on:
+  push:
+    branches:
+      - feature/tree-liquidity-graph
+    paths:
+      - '.github/workflows/inspect-aftermath-tree-pools.yml'
+      - 'scripts/inspect-aftermath-tree-pools.mjs'
+      - 'netlify/lib/aftermath-tree-discovery.ts'
+      - 'netlify/lib/tree-venue-discovery.ts'
+      - 'netlify/lib/tree-swap-route.ts'
   workflow_dispatch:
 jobs:
   inspect:
