@@ -1,0 +1,14 @@
+{
+  "checkedAt": "2026-09-22T05:46:53.819Z",
+  "status": "BLOCKED_BACKEND_REUSE",
+  "production": "6aad931f45a27f392303e229",
+  "locked": true,
+  "functionsPreserved": 35,
+  "schedulesPreserved": 5,
+  "diagnosticDeploy": "6ab216210f88f76636b95573",
+  "diagnosticState": "error",
+  "requiredFunctionUploads": 35,
+  "sourceCommit": "9eb0b48bdc40bfef6c71d1e690b79ba596b74d06",
+  "approvedPreview": "https://6ab212c288a3dad932ee49ae--tree-token.netlify.app/dapp/#stats",
+  "nextRequirement": "Restore reuse of existing production function packages in Netlify or recover and verify the five missing exact packages before promotion."
+}
