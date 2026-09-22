@@ -219,7 +219,8 @@ function _clearConnection({ clearSession = true, reason = 'disconnected' } = {})
 }
 
 async function _waitForWalletRegistration() {
-  await _slushReady;
+  // Optional web-wallet downloads must never block installed wallet discovery.
+  // Late registration refreshes the open picker through the registry listener.
   await new Promise((resolve) => setTimeout(resolve, 80));
 }
 
