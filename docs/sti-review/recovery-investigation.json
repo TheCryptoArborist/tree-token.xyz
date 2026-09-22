@@ -1,0 +1,40 @@
+{
+  "checkedAt": "2026-09-22T05:53:16.384Z",
+  "archiveCount": 219,
+  "currentPackagesMatched": 30,
+  "missing": [
+    {
+      "name": "tree-knowledge-trial",
+      "sha256": "a56b56f53359c5851a63054727e0837e66ac348254ab1eb4cb8cb2dda70b61e6"
+    },
+    {
+      "name": "tree-knowledge-trial-admin",
+      "sha256": "dc75c3f15ef8b987d4e5e2f5e52a7cc63b49370fd70d0f05b0038402d0f1df2e"
+    },
+    {
+      "name": "tree-knowledge-trial-resolver",
+      "sha256": "cea6704c22e402c27a2d4c688612b360af61b9b067aaec55413bc8f5a20ad17f"
+    },
+    {
+      "name": "tree-knowledge-trial-rotation-on-deploy",
+      "sha256": "4e5265469d8531285e844d6fc263fd94d50d13c750fb15448c70cfd19be833f7"
+    },
+    {
+      "name": "tree-knowledge-trial-rotation-scheduled",
+      "sha256": "844c238d00d934fabcdcd790441eb8c9809a234072b949f871e671675311b53e"
+    }
+  ],
+  "successfulRequestComparison": {
+    "functions": true,
+    "functions_config": true,
+    "function_schedules": true,
+    "branch": true
+  },
+  "githubArtifacts": 11,
+  "deploymentArchivesListed": 0,
+  "limitations": [
+    "Two unrelated temporary directories were unreadable",
+    "Search covered available local archives, reachable Git history, and listed GitHub artifacts; not every possible external backup."
+  ],
+  "supportRequestSent": false
+}
