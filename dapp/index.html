@@ -239,12 +239,14 @@
           <p class="chart-footnote">Price history: CoinGecko. Venue totals: verified on-chain SuiDex V2, SuiDex V3, Turbos, and Cetus swaps. Auto-refreshes every 60 seconds while this chart is visible.</p>
         </section>
         <section class="data-group stats-sti" aria-labelledby="statsStiTitle">
-          <div class="group-heading"><div><p class="eyebrow">External ecosystem index</p><h3 id="statsStiTitle">TREE &amp; the Sui Trenches Index (STI)</h3><p>STI is an independent Sui token index, not operated by TREE.</p></div></div>
           <div class="sti-card">
-            <div class="sti-card-brand"><img src="../assets/tree-token.png" alt="" width="40" height="40"><div><strong>TREE × STI</strong><span id="stiMembership">Loading index data…</span></div></div>
-            <div class="sti-metrics"><div><span>TREE share</span><strong id="stiShare">—</strong></div><div><span>TREE held by STI</span><strong id="stiHeld">—</strong></div><div><span>STI holders</span><strong id="stiHolders">—</strong></div></div>
+            <div class="sti-card-brand"><img src="../assets/tree-token.png" alt="" width="40" height="40"><div><h3 id="statsStiTitle">Tree</h3><span id="stiMembership">Loading index data…</span></div></div>
+            <p class="sti-share"><strong id="stiShare">—</strong> of the basket</p>
+            <div class="sti-metrics"><div><strong id="stiHeld">—</strong><span>Tree in the vault</span></div><div><strong id="stiHolders">—</strong><span>STI holders</span></div><div><strong id="stiSince">—</strong><span>member since</span></div></div>
+            <p id="stiMintNote" class="sti-note" hidden>Every STI minted buys Tree.</p>
             <p id="stiDataStatus" class="sti-note" role="status">Source: STI public index feed.</p>
-            <button id="stiOpenBuy" class="button" type="button" aria-expanded="false" aria-controls="stiPurchase">Buy STI with SUI</button>
+            <button id="stiOpenBuy" class="button" type="button" aria-expanded="false" aria-controls="stiPurchase">Get STI</button>
+            <p class="sti-note">STI is independently operated, not operated by TREE.</p>
           </div>
           <div id="stiPurchase" class="sti-purchase" hidden>
             <div class="sti-purchase-heading"><h4>Buy STI</h4><button id="stiCloseBuy" class="button secondary" type="button" aria-label="Close STI purchase">Close</button></div>

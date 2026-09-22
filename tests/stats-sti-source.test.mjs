@@ -11,8 +11,8 @@ test('STI appears once in Stats Market between chart and burn/supply details', (
   assert.ok(html.indexOf(section) < html.indexOf('aria-labelledby="statsPublicBurnTitle"'));
   assert.ok(html.indexOf(section) < html.indexOf('id="statsSupplyPanel"'));
   assert.match(section, /aria-labelledby="statsStiTitle"/);
-  assert.match(section, /id="statsStiTitle">TREE &amp; the Sui Trenches Index \(STI\)/);
-  assert.match(section, /independent Sui token index, not operated by TREE/);
+  assert.match(section, /id="statsStiTitle">Tree<\/h3>/);
+  assert.match(section, /STI is independently operated, not operated by TREE/);
 });
 test('only the local native widget executes; no external iframe or redirect', () => {
   const scripts = [...section.matchAll(/<script\b([^>]*)>/g)];

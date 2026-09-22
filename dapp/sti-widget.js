@@ -1,6 +1,6 @@
 import {STI,SUI,POOL,FEED,GAS_RESERVE,QUOTE_TTL,parseSui,units,validatePool,makeQuote,validateQuote,requireBalance,buildPurchase,checkSimulation,parseFeed} from './sti-purchase-core.js';
 
-const el = Object.fromEntries(['Membership','Share','Held','Holders','DataStatus','OpenBuy','CloseBuy','Purchase','Amount','Balance','QuoteButton','QuoteDetails','Estimated','Minimum','Fee','Impact','Expiry','BuyButton','PurchaseStatus','Receipt'].map(key=>[key,document.getElementById('sti'+key)]));
+const el = Object.fromEntries(['Membership','Share','Held','Since','MintNote','Holders','DataStatus','OpenBuy','CloseBuy','Purchase','Amount','Balance','QuoteButton','QuoteDetails','Estimated','Minimum','Fee','Impact','Expiry','BuyButton','PurchaseStatus','Receipt'].map(key=>[key,document.getElementById('sti'+key)]));
 let runtimePromise, quote = null, busy = false, quoting = false, generation = 0, balance = null, balanceOwner = null, pendingDigest = null;
 const owner = () => window.playerAddress || null;
 const status = (message,error=false) => {el.PurchaseStatus.textContent=message;el.PurchaseStatus.dataset.error=String(error);};
@@ -109,12 +109,14 @@ async function loadFeed() {
   try {
     const response=await fetch(FEED,{credentials:'omit',referrerPolicy:'no-referrer',cache:'no-store',signal:AbortSignal.timeout(12_000)});
     if(!response.ok)throw Error('Feed unavailable');const data=parseFeed(await response.json());
-    el.Membership.textContent=data.member?'TREE is held in the STI basket':'TREE is not currently an active basket member';
+    el.Membership.textContent=data.member?'is in the Sui Trenches Index':'TREE is not currently an active basket member';
     el.Share.textContent=data.member?(data.share*100).toFixed(2)+'%':'—';
     el.Held.textContent=data.member?new Intl.NumberFormat('en',{notation:'compact',maximumFractionDigits:2}).format(Number(data.held)/1e6):'—';
     el.Holders.textContent=data.member?data.holders.toLocaleString():'—';
+    el.Since.textContent=data.member?(data.since===null?'Day one':data.since?new Date(data.since).toLocaleDateString('en',{month:'short',year:'numeric'}):'—'):'—';
+    el.MintNote.hidden=!data.member;
     el.DataStatus.textContent=`Source: STI public feed · Updated ${new Date(data.at).toLocaleTimeString()}`;
-  } catch {el.Membership.textContent='Index data temporarily unavailable';el.Share.textContent=el.Held.textContent=el.Holders.textContent='—';el.DataStatus.textContent='STI data could not be verified. Purchase quotes are checked separately against the live pool.';}
+  } catch {el.Membership.textContent='Index data temporarily unavailable';el.Share.textContent=el.Held.textContent=el.Holders.textContent=el.Since.textContent='—';el.MintNote.hidden=true;el.DataStatus.textContent='STI data could not be verified. Purchase quotes are checked separately against the live pool.';}
   finally {feedLoading=false;}
 }
 el.OpenBuy.addEventListener('click',()=>{el.Purchase.hidden=false;el.OpenBuy.setAttribute('aria-expanded','true');el.Amount.focus();loadBalance();render();});

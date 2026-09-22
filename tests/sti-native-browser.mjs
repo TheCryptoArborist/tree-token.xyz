@@ -19,7 +19,7 @@ try{
   await page.goto(url,{waitUntil:'domcontentloaded'});await page.locator('.stats-sti').scrollIntoViewIfNeeded();
   await page.waitForFunction(()=>!document.getElementById('stiMembership').textContent.startsWith('Loading'));
   const membership=await page.locator('#stiMembership').textContent();
-  assert.match(membership,/held in the STI basket|temporarily unavailable/);
+  assert.match(membership,/is in the Sui Trenches Index|temporarily unavailable/);
   if(membership.includes('unavailable'))assert.equal(await page.locator('#stiShare').textContent(),'—');
   assert.equal(await page.locator('.stats-sti iframe').count(),0);
   const section=await page.locator('.stats-sti').boundingBox(),market=await page.locator('[data-stats-group="market"]').boundingBox(),burn=await page.locator('.stats-public-burn').boundingBox();

@@ -91,5 +91,5 @@ export function parseFeed(data, now = Date.now()) {
   if (!coin || coin.retiring) return {member:false, at:data.at};
   const share = coin.share;
   if (coin.decimals !== 6 || !/^[0-9]+$/.test(coin.held) || !Number.isFinite(share) || share < 0 || share > 1 || !Number.isSafeInteger(data.holders) || data.holders < 0) throw new Error('STI returned invalid index data.');
-  return {member:true,at:data.at,share,held:coin.held,holders:data.holders};
+  return {member:true,at:data.at,share,held:coin.held,holders:data.holders,since:coin.since===null?null:(Number.isSafeInteger(coin.since)&&coin.since>0&&coin.since<=now?coin.since:undefined)};
 }
