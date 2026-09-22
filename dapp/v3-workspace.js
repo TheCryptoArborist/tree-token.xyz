@@ -27,6 +27,9 @@ const state = {
   suiDexTvlUsd: null,
   cetusTvlUsd: null,
   turbosTvlUsd: null,
+  suiDexVolumeUsd: null,
+  cetusVolumeUsd: null,
+  turbosVolumeUsd: null,
   positionPrices: { suiUsd: null, treeUsd: null, btcUsd: null, rewardsUsd: {} },
 };
 
@@ -684,13 +687,15 @@ function renderPool(payload) {
   const analytics = payload.analytics || {};
   const analyticsVerified = analytics.status === 'verified';
   state.suiDexTvlUsd = analyticsVerified ? verifiedPositive(analytics.tvlUsd) : null;
+  state.suiDexVolumeUsd = analyticsVerified && Number.isFinite(Number(analytics.volume24hUsd)) && Number(analytics.volume24hUsd) >= 0 ? Number(analytics.volume24hUsd) : null;
   updateCombinedV3Tvl();
+  updateCombinedV3Volume();
   document.getElementById('v3PoolPrice').textContent = `${pool.priceSuiPerTree} SUI / TREE`;
   document.getElementById('v3SuiReserve').textContent = `${formatNumber(pool.reserveSui, 6)} SUI`;
   document.getElementById('v3TreeReserve').textContent = `${formatNumber(pool.reserveTree, 2)} TREE`;
   document.getElementById('v3CurrentTick').textContent = String(pool.currentTick);
   document.getElementById('v3LiquidityRaw').textContent = Number(pool.liquidityRaw).toLocaleString('en-US', { notation: 'compact', maximumFractionDigits: 2 });
-  document.getElementById('v3PoolVolume').textContent = formatUsd(analytics.volume24hUsd);
+  updateCombinedV3Volume();
   document.getElementById('v3PoolApr').textContent = analytics.aprPercent !== null && analytics.aprPercent !== undefined && analytics.aprPercent !== '' && Number.isFinite(Number(analytics.aprPercent)) ? `${Number(analytics.aprPercent).toFixed(1)}%` : 'Not verified';
   const allPositions = document.getElementById('v3SummaryAllPositions');
   const allPositionCount = payload.allPositionCount === null || payload.allPositionCount === undefined ? null : Number(payload.allPositionCount);
@@ -722,6 +727,16 @@ function updateCombinedV3Tvl() {
   if (poolTvl) poolTvl.textContent = combined;
 }
 
+function updateCombinedV3Volume() {
+  const expectedValues = [state.suiDexVolumeUsd, state.cetusVolumeUsd, state.turbosVolumeUsd];
+  const values = expectedValues.filter((value) => Number.isFinite(value) && value >= 0);
+  const volume = document.getElementById('v3PoolVolume');
+  if (!volume) return;
+  volume.textContent = values.length === expectedValues.length
+    ? formatUsd(values.reduce((total, value) => total + value, 0))
+    : 'Not verified';
+}
+
 async function loadExternalPoolMetrics() {
   const tvl = document.getElementById('v3CetusTvl');
   const volume = document.getElementById('v3CetusVolume');
@@ -743,6 +758,7 @@ async function loadExternalPoolMetrics() {
     const cetusPool = liquidityPayload.liquidity?.cetusPool;
     const cetusVolume24h = Number(volumePayload.pools?.[CETUS_POOL_ID]?.volume24hUsd);
     state.cetusTvlUsd = verifiedPositive(cetusPool?.tvlUsd);
+    state.cetusVolumeUsd = Number.isFinite(cetusVolume24h) && cetusVolume24h >= 0 ? cetusVolume24h : null;
     const cetusFeeApr = annualizedFeeApr(cetusVolume24h, state.cetusTvlUsd, cetusPool?.feePercent);
     if (!state.cetusTvlUsd || cetusPool?.poolId !== CETUS_POOL_ID || cetusPool?.active !== true || !Number.isFinite(cetusVolume24h)
       || !verifiedPositive(cetusPool?.priceSuiPerTree) || cetusFeeApr === null) throw new Error('Cetus metrics were incomplete.');
@@ -757,6 +773,7 @@ async function loadExternalPoolMetrics() {
       : null;
     const turbosPoolVolume = volumePayload.pools?.[TURBOS_TREE_POOL_ID];
     state.turbosTvlUsd = verifiedPositive(turbosPool?.tvlUsd);
+    state.turbosVolumeUsd = Number.isFinite(Number(turbosPoolVolume?.volume24hUsd)) && Number(turbosPoolVolume?.volume24hUsd) >= 0 ? Number(turbosPoolVolume.volume24hUsd) : null;
     const turbosFeeApr = annualizedFeeApr(turbosPoolVolume?.volume24hUsd, state.turbosTvlUsd, turbosPool?.feePercent);
     if (!state.turbosTvlUsd || turbosPool?.active !== true || !Number.isFinite(Number(turbosPoolVolume?.volume24hUsd))
       || !verifiedPositive(turbosPool?.priceSuiPerTree) || turbosFeeApr === null) throw new Error('Turbos SUI/TREE pool metrics were incomplete.');
@@ -766,9 +783,12 @@ async function loadExternalPoolMetrics() {
     if (turbosPrice) turbosPrice.textContent = formatPoolPrice(turbosPool.priceSuiPerTree);
     if (turbosNotice) turbosNotice.textContent = `Verified Sui Mainnet spot price · APR annualizes trailing 24H LP fees and excludes incentives · Updated ${new Date(liquidityPayload.generatedAt).toLocaleTimeString()}`;
     updateCombinedV3Tvl();
+    updateCombinedV3Volume();
   } catch {
     state.cetusTvlUsd = null;
     state.turbosTvlUsd = null;
+    state.cetusVolumeUsd = null;
+    state.turbosVolumeUsd = null;
     if (tvl) tvl.textContent = 'Not verified';
     if (volume) volume.textContent = 'Not verified';
     if (cetusApr) cetusApr.textContent = 'Not verified';
