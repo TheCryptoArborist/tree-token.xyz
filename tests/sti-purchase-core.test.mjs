@@ -15,6 +15,8 @@ test('rejects wrong pool, pair, fees, paused swaps and empty liquidity',()=>{
 });
 test('protects full input, minimum output, and 3% price impact',()=>{
  const q=quote();assert.equal(q.minOut,5947812620156n);assert.ok(q.impactBps<300n);
+ const spot=100000000n*(1n<<128n)/(BigInt(pool.current_sqrt_price)**2n);
+ assert.throws(()=>makeQuote(pool,{...raw,estimated_amount_out:String(spot*9600n/10000n)},100000000n,now),/This quote has 4\.0[01]% price impact, above the 3% limit.*No purchase was submitted/);
  for(const change of [{is_exceed:true},{a2b:true},{by_amount_in:false},{pool_address:'0x1'},{amount:'1'},{estimated_amount_in:'90000000'},{estimated_amount_out:'0'},{estimated_amount_out:'100000000'}])assert.throws(()=>makeQuote(pool,{...raw,...change},100000000n,now));
 });
 test('expired, future, changed amount or modified protection cannot execute',()=>{

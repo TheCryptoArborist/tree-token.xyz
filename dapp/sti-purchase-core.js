@@ -40,7 +40,7 @@ export function makeQuote(pool, response, amount, startedAt = Date.now()) {
   const spotOut = amount * Q128 / (sqrt * sqrt);
   if (spotOut <= 0n) throw new Error('The pool price is unavailable.');
   const impactBps = out >= spotOut ? 0n : ((spotOut - out) * 10000n + spotOut - 1n) / spotOut;
-  if (impactBps > 300n) throw new Error('Price impact exceeds 3%. Try a smaller amount.');
+  if (impactBps > 300n) throw new Error(`This quote has ${(Number(impactBps)/100).toFixed(2)}% price impact, above the 3% limit. Enter a smaller SUI amount and get a new quote. No purchase was submitted.`);
   const minOut = out * (10000n - SLIPPAGE_BPS) / 10000n;
   if (minOut <= 0n) throw new Error('This amount is too small.');
   return Object.freeze({pool:POOL, amount, out, minOut, impactBps, fee:BigInt(response.estimated_fee_amount || 0), at:startedAt});
