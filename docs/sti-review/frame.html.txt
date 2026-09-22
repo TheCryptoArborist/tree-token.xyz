@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>In the Sui Trenches Index</title>
+<!--
+  The embeddable badge: a basket coin's own site shows that the coin is in the
+  Sui Trenches Index. Loaded in an iframe by /embed.js (or directly):
+    /embed/?coin=SHOCK            symbol or full coin type
+           &style=card|strip      default card
+           &theme=dark|light|auto default dark
+           &accent=ff5a1f         default: read from the coin's logo
+  One request to the keeper's /badge feed; no RPC, no wallet. The badge links
+  to the site. A coin that isn't in the basket but has an inclusion campaign
+  (coin = its campaign key or type) gets the campaign card, with its standing
+  against the other campaigns; the same tag becomes the member badge if the
+  coin gets in. Anything else gets the plain index card: a badge must never
+  claim a membership that has ended.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@125,800&family=Instrument+Sans:wght@400;600&family=Spline+Sans+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0E2A33; --ink:#EEF2F0; --mute:#8FAAA7; --line:rgba(238,242,240,.13); --strata:#EEF2F0;
+  --accent:#D98F2B; --on-accent:#0E2A33;
+}
+.light{ --bg:#FFFFFF; --ink:#0E2A33; --mute:#4D6A69; --line:#DCE4E1; --strata:#0E2A33; }
+*{box-sizing:border-box;margin:0}
+html,body{background:transparent}
+body{font:13px/1.45 "Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+.num{font-family:"Spline Sans Mono",ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
+a{color:var(--ink);text-decoration:none;display:block}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
+[hidden]{display:none!important}
+
+/* ── card ──────────────────────────────────────────────────────────────── */
+.card{
+  position:relative;overflow:hidden;border:1px solid var(--line);border-radius:14px;padding:16px 18px 15px;
+  background:radial-gradient(130% 95% at 0% 0%, color-mix(in srgb, var(--accent) 17%, transparent), transparent 62%), var(--bg);
+}
+.head{display:flex;align-items:center;gap:12px}
+.logo{width:44px;height:44px;border-radius:50%;object-fit:cover;flex:none;background:var(--line);box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--accent)}
+.logo.letter{display:grid;place-items:center;font:800 20px "Anybody",sans-serif;color:var(--on-accent);background:var(--accent)}
+.who{min-width:0;flex:1}
+.sym{font:800 22px/1.05 "Anybody","Instrument Sans",sans-serif;font-stretch:125%;letter-spacing:.015em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.is{color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sti{display:flex;align-items:center;gap:6px;align-self:flex-start;font:800 13px "Anybody",sans-serif;font-stretch:125%;letter-spacing:.04em;color:var(--mute)}
+.sti img{width:18px;height:18px}
+
+/* the core sample: every coin a stratum, this one lit */
+.core{display:flex;gap:2px;height:14px;margin-top:18px;border-radius:4px;overflow:hidden}
+.core i{display:block;min-width:2px;background:var(--strata);opacity:.16}
+.core i:nth-child(3n+1){opacity:.26}
+.core i:nth-child(3n+2){opacity:.2}
+.core i.me{min-width:9px;background:var(--accent);opacity:1}
+.tick{position:relative;height:30px;color:var(--ink)}
+.tick::before{content:"";position:absolute;left:var(--x,50%);top:0;width:1px;height:9px;background:var(--accent)}
+.tick.flat::before{display:none}
+.tick.flat span{top:7px}
+.tick span{position:absolute;top:10px;white-space:nowrap;font-size:12px}
+.tick span b{font-weight:500;color:var(--accent-ink,var(--accent))}
+
+.facts{display:grid;grid-template-columns:1.35fr .8fr 1fr;gap:10px;margin-top:6px;padding-top:12px;border-top:1px solid var(--line)}
+.facts .v{font-size:15px;line-height:1.2;white-space:nowrap}
+.facts .k{color:var(--mute);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px}
+.foot p{color:var(--mute);font-size:12px;min-width:0}
+.go{flex:none;background:var(--accent);color:var(--on-accent);font-weight:600;font-size:13px;border-radius:999px;padding:7px 14px;white-space:nowrap;transition:filter .15s}
+a:hover .go{filter:brightness(1.08)}
+.plain .lede{margin-top:12px;color:var(--ink);font-size:14px;max-width:34ch}
+@media (max-width:330px){
+  .card{padding:14px 14px 13px}
+  .sti{display:none}
+  .facts{grid-template-columns:1fr 1fr}.facts div:nth-child(3){display:none}
+  .foot p{display:none}.go{width:100%;text-align:center}
+}
+
+/* a campaign: one lane, drawn against the leader's */
+.lane{height:14px;margin-top:18px;border-radius:4px;overflow:hidden;background:color-mix(in srgb, var(--strata) 14%, transparent)}
+.lane i{display:block;height:100%;min-width:9px;border-radius:4px;background:var(--accent)}
+.strip .lane{position:absolute;left:0;right:0;bottom:0;height:3px;margin:0;border-radius:0}
+.strip .lane i{border-radius:0}
+
+/* ── strip ─────────────────────────────────────────────────────────────── */
+.strip{position:relative;display:flex;align-items:center;gap:11px;height:56px;padding:0 8px 3px 10px;border:1px solid var(--line);border-radius:12px;overflow:hidden;
+  background:linear-gradient(90deg, color-mix(in srgb, var(--accent) 15%, transparent), transparent 45%), var(--bg)}
+.strip .logo{width:32px;height:32px;box-shadow:0 0 0 2px var(--accent)}
+.strip .logo.letter{font-size:15px}
+.strip .t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--mute)}
+.strip .t b{font:800 15px "Anybody",sans-serif;font-stretch:125%;letter-spacing:.015em;color:var(--ink);margin-right:.25em}
+.strip .pct{color:var(--ink);font-size:13px}
+.strip .core{position:absolute;left:0;right:0;bottom:0;height:3px;margin:0;border-radius:0;gap:1px}
+@media (max-width:400px){.strip{gap:9px}.strip .pct,.strip .go .w{display:none}.strip .t{font-size:12px}.strip .go{padding:7px 11px}}
+@media (max-width:300px){.strip .t .rest{display:none}}
+
+/* the core is drilled left to right, then this coin's stratum lights */
+@media (prefers-reduced-motion:no-preference){
+  .intro .core,.intro .lane i{animation:drill .7s cubic-bezier(.3,.7,.2,1) both}
+  .intro .core i.me{animation:light .5s .65s both}
+  .intro .tick{animation:light .4s .9s both}
+}
+@keyframes drill{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes light{from{opacity:0}to{opacity:1}}
+</style>
+</head>
+<body>
+<a id="badge" target="_blank" rel="noopener" hidden></a>
+<script>
+(() => {
+  const FEED = 'https://sti-keeper-production.up.railway.app';
+  const CAMPAIGNS = 'https://sti-campaigns-production.up.railway.app';
+  const SITE = 'https://sti.boombots.fun';
+  const q = new URLSearchParams(location.search);
+  const want = (q.get('coin') || '').trim();
+  const strip = q.get('style') === 'strip';
+  const theme = q.get('theme') || 'dark';
+  const light = theme === 'light' || (theme === 'auto' && matchMedia('(prefers-color-scheme: light)').matches);
+  const root = document.getElementById('badge');
+  if (light) document.documentElement.classList.add('light');
+
+  const el = (tag, cls, text) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text !== undefined) n.textContent = text;
+    return n;
+  };
+  const norm = (t) => t.toLowerCase().replace(/^0x0*/, '0x');
+  const key = (s) => s.toUpperCase().replace(/[^A-Z0-9]/g, '');
+  const compact = (raw, decimals) => {
+    const n = Number(raw) / 10 ** decimals;
+    const [d, u] = n >= 1e9 ? [1e9, 'B'] : n >= 1e6 ? [1e6, 'M'] : n >= 1e3 ? [1e3, 'K'] : [1, ''];
+    const v = n / d;
+    return `${v >= 100 ? Math.round(v) : v >= 10 ? v.toFixed(1) : v.toFixed(2)}${u}`;
+  };
+  const percent = (x) => `${(x * 100).toFixed(x < 0.1 ? 1 : 0)}%`;
+
+  // ── the accent: the logo's own colour ──────────────────────────────────
+  const hsl = (h, s, l) => `hsl(${Math.round(h)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%)`;
+  const BG = light ? [255, 255, 255] : [14, 42, 51];
+  function toRgb(h, s, l) {
+    const k = (n) => (n + h / 30) % 12, a = s * Math.min(l, 1 - l);
+    return [0, 8, 4].map((n) => 255 * (l - a * Math.max(-1, Math.min(k(n) - 3, 9 - k(n), 1))));
+  }
+  const lum = (rgb) => rgb.map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; })
+    .reduce((a, v, i) => a + v * [0.2126, 0.7152, 0.0722][i], 0);
+  const contrast = (a, b) => (Math.max(lum(a), lum(b)) + 0.05) / (Math.min(lum(a), lum(b)) + 0.05);
+  /**
+   * The accent from a logo's hue. The fill keeps the brand's own lightness
+   * within reason; the text colour is walked lighter (or darker, on the light
+   * theme) until it reads on the card: a deep blue logo still gets legible numbers.
+   */
+  function setAccent(h, s, l) {
+    const S = Math.max(s, 0.5);
+    const fill = Math.min(Math.max(l, light ? 0.36 : 0.5), light ? 0.52 : 0.68);
+    let ink = fill;
+    while (contrast(toRgb(h, S, ink), BG) < 4.5 && ink > 0.05 && ink < 0.95) ink += light ? -0.02 : 0.02;
+    const st = document.documentElement.style;
+    st.setProperty('--accent', hsl(h, S, fill));
+    st.setProperty('--accent-ink', hsl(h, S, ink));
+    st.setProperty('--on-accent', contrast(toRgb(h, S, fill), [255, 255, 255]) >= contrast(toRgb(h, S, fill), [14, 42, 51]) ? '#FFFFFF' : '#0E2A33');
+  }
+  function toHsl(r, g, b) {
+    r /= 255; g /= 255; b /= 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b), l = (max + min) / 2, d = max - min;
+    if (!d) return [0, 0, l];
+    const s = d / (1 - Math.abs(2 * l - 1));
+    const h = max === r ? ((g - b) / d + 6) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+    return [h * 60, s, l];
+  }
+  /** The logo's dominant colour: pixels vote by hue, the vivid ones count most. */
+  function accentFrom(img) {
+    try {
+      const c = document.createElement('canvas');
+      c.width = c.height = 32;
+      const ctx = c.getContext('2d', { willReadFrequently: true });
+      ctx.drawImage(img, 0, 0, 32, 32);
+      const px = ctx.getImageData(0, 0, 32, 32).data;
+      const bins = Array.from({ length: 18 }, () => ({ w: 0, x: 0, y: 0, s: 0, l: 0 }));
+      for (let i = 0; i < px.length; i += 4) {
+        if (px[i + 3] < 200) continue;
+        const [h, s, l] = toHsl(px[i], px[i + 1], px[i + 2]);
+        if (s < 0.25 || l < 0.15 || l > 0.9) continue;
+        const w = s * (1 - Math.abs(l - 0.5));
+        const b = bins[Math.floor(h / 20) % 18];
+        b.w += w; b.s += s * w; b.l += l * w;
+        b.x += Math.cos(h * Math.PI / 180) * w; b.y += Math.sin(h * Math.PI / 180) * w;
+      }
+      const best = bins.reduce((a, b) => (b.w > a.w ? b : a));
+      if (best.w < 8) return;                       // a black-and-white logo keeps the index's amber
+      setAccent((Math.atan2(best.y, best.x) * 180 / Math.PI + 360) % 360, best.s / best.w, best.l / best.w);
+    } catch { /* keep the default */ }
+  }
+  const given = (q.get('accent') || '').replace('#', '');
+  if (/^[0-9a-f]{6}$/i.test(given)) {
+    setAccent(...toHsl(parseInt(given.slice(0, 2), 16), parseInt(given.slice(2, 4), 16), parseInt(given.slice(4, 6), 16)));
+  }
+
+  function logo(coin) {
+    const letter = () => el('div', 'logo letter', coin.symbol.slice(0, 1));
+    if (!coin.icon) return letter();
+    const img = el('img', 'logo');
+    const src = typeof coin.icon === 'string' ? coin.icon : `${FEED}/icon/${coin.key}`;
+    img.alt = '';
+    img.crossOrigin = 'anonymous';
+    img.onload = () => { if (!given) accentFrom(img); };
+    img.onerror = () => img.replaceWith(letter());
+    img.src = src;
+    return img;
+  }
+
+  function core(feed, coin) {
+    const bar = el('div', 'core');
+    const parts = feed.coins.map((c) => ({ c, w: c.share ?? c.targetBps / 10_000 })).sort((a, b) => b.w - a.w);
+    for (const p of parts) {
+      const i = el('i', coin && p.c.key === coin.key ? 'me' : '');
+      i.style.flex = `${Math.max(p.w, 0.002) * 1000} 1 0`;
+      bar.append(i);
+    }
+    return bar;
+  }
+
+  function place() {
+    const me = root.querySelector('.card .core .me');
+    const tick = root.querySelector('.tick');
+    if (!me || !tick) return;
+    const x = me.offsetLeft - me.parentElement.offsetLeft + me.offsetWidth / 2;
+    const span = tick.firstElementChild;
+    tick.style.setProperty('--x', `${x}px`);
+    const w = span.offsetWidth, room = tick.offsetWidth;
+    span.style.left = `${Math.min(Math.max(x - 10, 0), Math.max(room - w, 0))}px`;
+  }
+
+  /** A long symbol shrinks to fit rather than being cut off. */
+  function fit() {
+    const sym = root.querySelector('.card .sym');
+    if (!sym) return;
+    let size = 22;
+    sym.style.fontSize = '';
+    while (sym.scrollWidth > sym.clientWidth && size > 13) sym.style.fontSize = `${--size}px`;
+  }
+
+  function tell() {
+    if (parent === window) return;
+    parent.postMessage({ sti: 'badge-size', id: q.get('id'), height: Math.ceil(root.getBoundingClientRect().height) }, '*');
+  }
+
+  /** The card for a coin that is campaigning for a place. c: its row from the campaigns service. */
+  function renderCampaign(feed, c, all) {
+    const active = all.filter((x) => x.rank).length;
+    const ahead = all.find((x) => x.rank === c.rank - 1);
+    const standing = !c.rank ? 'No votes this week. One vote puts it back in the race.'
+      : c.rank === 1 ? (active > 1 ? `Leading ${active} campaigns` : 'Leading the race')
+        : `#${c.rank} of ${active} · ${c.behind.toLocaleString()} behind ${ahead ? ahead.symbol : 'the next'}`;
+    root.replaceChildren();
+    root.className = strip ? 'strip' : 'card';
+    root.href = `${SITE}/#campaign-${encodeURIComponent(c.key)}`;
+    root.setAttribute('aria-label', `${c.symbol} is campaigning for a place in the Sui Trenches Index. ${standing}. Vote on sti.boombots.fun (opens in a new tab)`);
+    const lane = el('div', 'lane');
+    const fill = el('i');
+    fill.style.width = `${c.rank && c.leader ? Math.max(3, (c.points / c.leader) * 100) : 0}%`;
+    lane.append(fill);
+    const go = el('span', 'go');
+    go.append(el('span', 'w', 'Vote '), 'today ↗');
+    if (strip) {
+      const t = el('span', 't');
+      t.append(el('b', '', c.symbol), 'is campaigning for the ', el('span', 'rest', 'Sui Trenches '), 'Index');
+      root.append(logo(c), t);
+      if (c.rank) root.append(el('span', 'pct num', `#${c.rank}`));
+      root.append(go, lane);
+    } else {
+      const head = el('div', 'head');
+      const who = el('div', 'who');
+      who.append(el('div', 'sym', c.symbol), el('div', 'is', 'is campaigning for the Sui Trenches Index'));
+      const s = el('div', 'sti'); const i = el('img'); i.src = '/icon.svg'; i.alt = ''; s.append(i, el('span', '', 'STI'));
+      head.append(logo(c), who, s);
+      const tick = el('div', 'tick flat');
+      const label = el('span');
+      label.append(standing);
+      tick.append(label);
+      tick.style.height = '26px';
+      const facts = el('div', 'facts');
+      const fact = (v, k) => { const d = el('div'); d.append(el('div', 'v num', v), el('div', 'k', k)); return d; };
+      facts.append(fact(c.points.toLocaleString(), 'points, last 7 days'), fact(String(c.votersToday), 'voters today'), fact(String(c.supporters), 'supporters'));
+      const foot = el('div', 'foot');
+      foot.append(el('p', '', 'One free vote a day. No gas.'), go);
+      root.append(head, lane, tick, facts, foot);
+    }
+    root.hidden = false;
+    document.documentElement.classList.toggle('intro', !painted);
+    painted = true;
+    fit(); tell();
+  }
+
+  /** A coin outside the basket: is it campaigning? */
+  async function campaignFor(feed) {
+    if (!want) return false;
+    const list = await fetch(`${CAMPAIGNS}/campaigns`).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+    const c = list && list.campaigns.find((x) => x.key.toLowerCase() === want.toLowerCase() || norm(x.coin) === norm(want));
+    if (!c || c.stage === 'included') return false;
+    c.icon = c.icon ? `${CAMPAIGNS}/icon/${encodeURIComponent(c.key)}` : null;
+    renderCampaign(feed, c, list.campaigns);
+    return true;
+  }
+
+  let painted = false;
+  function render(feed) {
+    const coin = feed && feed.coins.find((c) => c.key === key(want) || norm(c.type) === norm(want));
+    const member = coin && !coin.retiring;
+    root.replaceChildren();
+    root.className = `${strip ? 'strip' : 'card'}${member ? '' : ' plain'}`;
+    root.href = member ? `${SITE}/?from=${encodeURIComponent(coin.key)}` : `${SITE}/`;
+    const share = member ? (coin.share ?? coin.targetBps / 10_000) : 0;
+    root.setAttribute('aria-label', member
+      ? `${coin.symbol} is ${percent(share)} of the Sui Trenches Index. Get STI on sti.boombots.fun (opens in a new tab)`
+      : 'The Sui Trenches Index. Get STI on sti.boombots.fun (opens in a new tab)');
+
+    const mark = () => { const s = el('div', 'sti'); const i = el('img'); i.src = '/icon.svg'; i.alt = ''; s.append(i, el('span', '', 'STI')); return s; };
+
+    if (strip) {
+      const t = el('span', 't');
+      if (member) { t.append(el('b', '', coin.symbol), 'is in the ', el('span', 'rest', 'Sui Trenches '), 'Index'); root.append(logo(coin)); }
+      else { const i = el('img', 'logo'); i.src = '/icon.svg'; i.alt = ''; i.style.boxShadow = 'none'; t.append(el('b', '', 'STI'), 'the Sui Trenches Index'); root.append(i); }
+      root.append(t);
+      if (member) root.append(el('span', 'pct num', percent(share)));
+      const go = el('span', 'go');
+      go.append(el('span', 'w', 'Get '), 'STI ↗');
+      root.append(go);
+      if (feed) root.append(core(feed, member ? coin : null));
+    } else if (member) {
+      const head = el('div', 'head');
+      const who = el('div', 'who');
+      who.append(el('div', 'sym', coin.symbol), el('div', 'is', 'is in the Sui Trenches Index'));
+      head.append(logo(coin), who, mark());
+      const tick = el('div', 'tick');
+      const label = el('span');
+      label.append(el('b', 'num', percent(share)), ' of the basket');
+      tick.append(label);
+      const facts = el('div', 'facts');
+      const fact = (v, k) => { const d = el('div'); d.append(el('div', 'v num', v), el('div', 'k', k)); return d; };
+      facts.append(fact(compact(coin.held, coin.decimals), `${coin.symbol} in the vault`));
+      if (feed.holders) facts.append(fact(String(feed.holders), 'STI holders'));
+      facts.append(fact(coin.since ? new Date(coin.since).toLocaleDateString('en', { month: 'short', year: 'numeric' }) : 'Day one', 'member since'));
+      const foot = el('div', 'foot');
+      foot.append(el('p', '', `Every STI minted buys ${coin.symbol}.`), el('span', 'go', 'Get STI ↗'));
+      root.append(head, core(feed, coin), tick, facts, foot);
+    } else {
+      const head = el('div', 'head');
+      const i = el('img', 'logo'); i.src = '/icon.svg'; i.alt = ''; i.style.boxShadow = 'none'; i.style.background = 'none';
+      const who = el('div', 'who');
+      who.append(el('div', 'sym', 'STI'), el('div', 'is', 'Sui Trenches Index'));
+      head.append(i, who);
+      const foot = el('div', 'foot');
+      foot.append(el('p', '', feed?.holders ? `${feed.holders} holders` : ''), el('span', 'go', 'Get STI ↗'));
+      root.append(head);
+      if (feed) root.append(core(feed, null));
+      root.append(el('p', 'lede', feed ? `One token that holds ${feed.coins.length} Sui small caps, run by its holders.` : 'One token that holds a basket of Sui small caps, run by its holders.'), foot);
+    }
+    root.hidden = false;
+    document.documentElement.classList.toggle('intro', !painted);   // the core is drilled once, not on every refresh
+    painted = true;
+    fit(); place(); tell();
+  }
+
+  addEventListener('resize', () => { fit(); place(); tell(); });
+  document.fonts?.ready.then(() => { fit(); place(); tell(); });
+
+  // the last good feed paints at once; the fresh one replaces it
+  let shown = false;
+  try {
+    const kept = JSON.parse(localStorage.getItem('sti-badge') || 'null');
+    // only a member's badge paints from the cache: a campaign's standing has to be fresh
+    if (kept?.coins?.some((c) => c.key === key(want) || norm(c.type) === norm(want))) { render(kept); shown = true; }
+  } catch { /* no storage here */ }
+  fetch(`${FEED}/badge`).then((r) => (r.ok ? r.json() : Promise.reject(new Error(r.status)))).then(async (feed) => {
+    try { localStorage.setItem('sti-badge', JSON.stringify(feed)); } catch { /* fine */ }
+    const member = feed.coins.some((c) => (c.key === key(want) || norm(c.type) === norm(want)) && !c.retiring);
+    if (member || !(await campaignFor(feed))) render(feed);
+  }).catch(() => { if (!shown) render(null); });
+})();
+</script>
+</body>
+</html>

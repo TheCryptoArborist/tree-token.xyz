@@ -1,0 +1,204 @@
+[
+  {
+    "name": "desktop",
+    "width": 1440,
+    "height": 1000,
+    "dimensions": {
+      "width": 406,
+      "height": 239,
+      "parent": 406
+    },
+    "contentHeight": 239,
+    "requests": [
+      {
+        "url": "https://sti.boombots.fun/embed.js",
+        "type": "script",
+        "method": "GET"
+      },
+      {
+        "url": "https://sti.boombots.fun/embed/?coin=TREE&id=sti-badge-1",
+        "type": "document",
+        "method": "GET"
+      },
+      {
+        "url": "https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@125,800&family=Instrument+Sans:wght@400;600&family=Spline+Sans+Mono:wght@500&display=swap",
+        "type": "stylesheet",
+        "method": "GET"
+      },
+      {
+        "url": "https://sti-keeper-production.up.railway.app/badge",
+        "type": "fetch",
+        "method": "GET"
+      },
+      {
+        "url": "https://sti.boombots.fun/cdn-cgi/rum?",
+        "type": "xhr",
+        "method": "POST"
+      },
+      {
+        "url": "https://fonts.gstatic.com/s/anybody/v13/VuJbdNvK2Ib2ppdWYq311GH32hxIv0sv5grncSUi2F_Wim4JV2f_qc_C.woff2",
+        "type": "font",
+        "method": "GET"
+      },
+      {
+        "url": "https://fonts.gstatic.com/s/instrumentsans/v4/pxiTypc9vsFDm051Uf6KVwgkfoSxQ0GsQv8ToedPibnr0SZe1Q.woff2",
+        "type": "font",
+        "method": "GET"
+      },
+      {
+        "url": "https://fonts.gstatic.com/s/splinesansmono/v13/R70MjzAei_CDNLfgZxrW6wrZOF2WdZ6xabUGSVtNuGBQMotSwYY.woff2",
+        "type": "font",
+        "method": "GET"
+      },
+      {
+        "url": "https://sti-keeper-production.up.railway.app/icon/TREE",
+        "type": "image",
+        "method": "GET"
+      },
+      {
+        "url": "https://sti.boombots.fun/icon.svg",
+        "type": "image",
+        "method": "GET"
+      }
+    ],
+    "errors": []
+  },
+  {
+    "name": "mobile",
+    "width": 390,
+    "height": 844,
+    "dimensions": {
+      "width": 306,
+      "height": 235,
+      "parent": 306
+    },
+    "contentHeight": 235,
+    "requests": [
+      {
+        "url": "https://sti.boombots.fun/embed.js",
+        "type": "script",
+        "method": "GET"
+      },
+      {
+        "url": "https://sti.boombots.fun/embed/?coin=TREE&id=sti-badge-1",
+        "type": "document",
+        "method": "GET"
+      },
+      {
+        "url": "https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@125,800&family=Instrument+Sans:wght@400;600&family=Spline+Sans+Mono:wght@500&display=swap",
+        "type": "stylesheet",
+        "method": "GET"
+      },
+      {
+        "url": "https://sti-keeper-production.up.railway.app/badge",
+        "type": "fetch",
+        "method": "GET"
+      },
+      {
+        "url": "https://sti.boombots.fun/cdn-cgi/rum?",
+        "type": "xhr",
+        "method": "POST"
+      },
+      {
+        "url": "https://fonts.gstatic.com/s/anybody/v13/VuJbdNvK2Ib2ppdWYq311GH32hxIv0sv5grncSUi2F_Wim4JV2f_qc_C.woff2",
+        "type": "font",
+        "method": "GET"
+      },
+      {
+        "url": "https://fonts.gstatic.com/s/instrumentsans/v4/pxiTypc9vsFDm051Uf6KVwgkfoSxQ0GsQv8ToedPibnr0SZe1Q.woff2",
+        "type": "font",
+        "method": "GET"
+      },
+      {
+        "url": "https://fonts.gstatic.com/s/splinesansmono/v13/R70MjzAei_CDNLfgZxrW6wrZOF2WdZ6xabUGSVtNuGBQMotSwYY.woff2",
+        "type": "font",
+        "method": "GET"
+      },
+      {
+        "url": "https://sti-keeper-production.up.railway.app/icon/TREE",
+        "type": "image",
+        "method": "GET"
+      },
+      {
+        "url": "https://sti.boombots.fun/icon.svg",
+        "type": "image",
+        "method": "GET"
+      }
+    ],
+    "errors": []
+  },
+  {
+    "name": "small-mobile",
+    "width": 320,
+    "height": 740,
+    "dimensions": {
+      "width": 236,
+      "height": 235,
+      "parent": 236
+    },
+    "contentHeight": 235,
+    "requests": [
+      {
+        "url": "https://sti.boombots.fun/embed.js",
+        "type": "script",
+        "method": "GET"
+      },
+      {
+        "url": "https://sti.boombots.fun/embed/?coin=TREE&id=sti-badge-1",
+        "type": "document",
+        "method": "GET"
+      },
+      {
+        "url": "https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@125,800&family=Instrument+Sans:wght@400;600&family=Spline+Sans+Mono:wght@500&display=swap",
+        "type": "stylesheet",
+        "method": "GET"
+      },
+      {
+        "url": "https://sti-keeper-production.up.railway.app/badge",
+        "type": "fetch",
+        "method": "GET"
+      },
+      {
+        "url": "https://sti.boombots.fun/cdn-cgi/rum?",
+        "type": "xhr",
+        "method": "POST"
+      },
+      {
+        "url": "https://fonts.gstatic.com/s/anybody/v13/VuJbdNvK2Ib2ppdWYq311GH32hxIv0sv5grncSUi2F_Wim4JV2f_qc_C.woff2",
+        "type": "font",
+        "method": "GET"
+      },
+      {
+        "url": "https://fonts.gstatic.com/s/instrumentsans/v4/pxiTypc9vsFDm051Uf6KVwgkfoSxQ0GsQv8ToedPibnr0SZe1Q.woff2",
+        "type": "font",
+        "method": "GET"
+      },
+      {
+        "url": "https://fonts.gstatic.com/s/splinesansmono/v13/R70MjzAei_CDNLfgZxrW6wrZOF2WdZ6xabUGSVtNuGBQMotSwYY.woff2",
+        "type": "font",
+        "method": "GET"
+      },
+      {
+        "url": "https://sti-keeper-production.up.railway.app/icon/TREE",
+        "type": "image",
+        "method": "GET"
+      },
+      {
+        "url": "https://sti.boombots.fun/icon.svg",
+        "type": "image",
+        "method": "GET"
+      }
+    ],
+    "errors": []
+  },
+  {
+    "mode": "blocked",
+    "fallbackVisible": true,
+    "unreviewedScriptExecuted": false
+  },
+  {
+    "mode": "integrity-mismatch",
+    "fallbackVisible": true,
+    "unreviewedScriptExecuted": false
+  }
+]
