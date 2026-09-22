@@ -6,6 +6,8 @@ const output = resolve(root, 'dist');
 const manifest = JSON.parse(await readFile(resolve(root, 'production/manifest.json'), 'utf8'));
 const outputPath = file => file.path === '/netlify.toml' ? 'netlify.toml' : file.source;
 const allowed = new Set(manifest.files.map(file => outputPath(file).toLowerCase()));
+const additions = ['dapp/sti-widget.js', 'dapp/sti-purchase-core.js'];
+for (const file of additions) allowed.add(file);
 
 async function rejectUntrackedOutput(directory, prefix = '') {
   let entries;
@@ -29,5 +31,6 @@ for (const file of manifest.files) {
   await cp(resolve(root, file.source), destination);
 }
 
-console.log(`Built a ${manifest.files.length}-file feature preview from the verified production file set.`);
+for (const file of additions) await cp(resolve(root, file), resolve(output, file));
+console.log(`Built a ${manifest.files.length + additions.length}-file feature preview from the verified production file set and explicit STI additions.`);
 console.log('The production manifest and recovered function packages were not changed.');

@@ -239,12 +239,34 @@
           <p class="chart-footnote">Price history: CoinGecko. Venue totals: verified on-chain SuiDex V2, SuiDex V3, Turbos, and Cetus swaps. Auto-refreshes every 60 seconds while this chart is visible.</p>
         </section>
         <section class="data-group stats-sti" aria-labelledby="statsStiTitle">
-          <div class="group-heading"><div><p class="eyebrow">External ecosystem index</p><h3 id="statsStiTitle">TREE in the Sui Trenches Index (STI)</h3><p>STI is an external Sui ecosystem index, independently operated and not operated by TREE. The widget shows information supplied by STI.</p></div></div>
-          <div class="stats-sti-widget">
-            <!-- Reviewed loader pinned on 2026-09-22. Re-review before changing integrity. -->
-            <script async src="https://sti.boombots.fun/embed.js" data-coin="TREE" integrity="sha384-9BaWPHPi50ws2eIyK33Am3ijob9N5GQKNcml/uQdVxkCcfeBG/+Z0LbDMlBmknSY" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+          <div class="group-heading"><div><p class="eyebrow">External ecosystem index</p><h3 id="statsStiTitle">TREE &amp; the Sui Trenches Index (STI)</h3><p>STI is an external Sui ecosystem index, independently operated and not operated by TREE.</p></div></div>
+          <div class="sti-card">
+            <div class="sti-card-brand"><img src="../assets/tree-token.png" alt="" width="40" height="40"><div><strong>TREE × STI</strong><span id="stiMembership">Loading index data…</span></div></div>
+            <div class="sti-metrics"><div><span>TREE share</span><strong id="stiShare">—</strong></div><div><span>TREE held by STI</span><strong id="stiHeld">—</strong></div><div><span>STI holders</span><strong id="stiHolders">—</strong></div></div>
+            <p id="stiDataStatus" class="sti-note" role="status">Source: STI public index feed.</p>
+            <button id="stiOpenBuy" class="button" type="button" aria-expanded="false" aria-controls="stiPurchase">Buy STI with SUI</button>
           </div>
-          <p class="stats-source-note">If the widget is unavailable, <a href="https://sti.boombots.fun/" target="_blank" rel="noopener noreferrer">visit the STI site <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a>.</p>
+          <div id="stiPurchase" class="sti-purchase" hidden>
+            <div class="sti-purchase-heading"><h4>Buy STI</h4><button id="stiCloseBuy" class="button secondary" type="button" aria-label="Close STI purchase">Close</button></div>
+            <p class="sti-note">Pay with SUI through the STI/SUI pool on Cetus. This purchase stays on TREE. Your wallet opens only when you connect or approve.</p>
+            <label for="stiAmount">You pay · SUI</label>
+            <input id="stiAmount" type="text" inputmode="decimal" autocomplete="off" placeholder="0.00" aria-describedby="stiBalance">
+            <p id="stiBalance" class="sti-note">Connect your wallet to check your balance.</p>
+            <button id="stiQuoteButton" class="button secondary" type="button">Get quote</button>
+            <dl id="stiQuoteDetails" class="sti-quote" hidden>
+              <div><dt>Estimated STI</dt><dd id="stiEstimated">—</dd></div>
+              <div><dt>Minimum STI received</dt><dd id="stiMinimum">—</dd></div>
+              <div><dt>Pool fee · included</dt><dd id="stiFee">0.25%</dd></div>
+              <div><dt>Price impact · includes fee</dt><dd id="stiImpact">—</dd></div>
+              <div><dt>Slippage limit</dt><dd>1%</dd></div>
+              <div><dt>Quote valid for</dt><dd id="stiExpiry">—</dd></div>
+            </dl>
+            <p class="sti-note">Pool purchase only; does not compare STI’s basket-minting option. No added TREE fee. Network gas is extra; keep 0.1 SUI available.</p>
+            <button id="stiBuyButton" class="button" type="button">Connect wallet</button>
+            <p id="stiPurchaseStatus" class="sti-note" role="status" aria-live="polite">Enter an amount to see what you will receive.</p>
+            <p id="stiReceipt" class="sti-receipt" hidden></p>
+          </div>
+          <script type="module" src="sti-widget.js"></script>
         </section>
         <section class="data-group stats-public-burn" aria-labelledby="statsPublicBurnTitle"><div class="group-heading"><div><h3 id="statsPublicBurnTitle">Burn Tracker</h3><p>Verified TREE burned on Sui Mainnet</p></div></div><div class="stat-grid"><article class="stat-card burned"><span>Tokens Burned</span><strong data-burn="zeroAddressBalance">—</strong></article><article class="stat-card burned"><span>Supply Burned</span><strong data-burn="removalPercentage">—</strong></article><article class="stat-card"><span>Circulating</span><strong data-burn="effectiveSupply">—</strong></article><article class="stat-card"><span>Burn Txs</span><strong data-burn-total-transactions>—</strong></article></div></section>
         <details class="stats-public-locks">

@@ -168,3 +168,5 @@
 /production/deployed-index.html -text
 /production/functions/*.zip binary
 /docs/sti-review/*.txt -text
+/dapp/sti-widget.js -text
+/dapp/sti-purchase-core.js -text

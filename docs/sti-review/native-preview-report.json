@@ -1,0 +1,26 @@
+{
+  "id": "6ab20b357712f7a0f83335ab",
+  "url": "https://6ab20b357712f7a0f83335ab--tree-token.netlify.app/dapp/#stats",
+  "production": "6aad931f45a27f392303e229",
+  "productionLocked": true,
+  "changedFiles": [
+    "/dapp/index.html",
+    "/dapp/styles.css",
+    "/dapp/sti-widget.js",
+    "/dapp/sti-purchase-core.js"
+  ],
+  "previewOnlyFiles": [
+    "/_redirects"
+  ],
+  "files": 169,
+  "functionsDeployed": 0,
+  "productionFunctionsPreserved": 35,
+  "forwardedReadOnlyStatsRoutes": [
+    "tree-dashboard",
+    "tree-chart",
+    "tree-burn-overview",
+    "tree-liquidity",
+    "tree-volume",
+    "tree-nftree"
+  ]
+}

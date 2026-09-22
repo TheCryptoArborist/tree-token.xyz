@@ -1,52 +1,49 @@
-# STI TREE widget review — 2026-09-22 UTC
+# Native STI widget and purchase preview
 
-Decision: reasonable for this external informational card with the reviewed loader pinned by Subresource Integrity (SRI). This is a point-in-time code and browser review, not a guarantee about future iframe content. No production promotion was performed.
+The external iframe has been replaced by TREE-owned HTML and JavaScript. The new card uses STI's public feed, identifies STI as independently operated, and opens a purchase panel inside the Stats section. It has no external navigation link or automatic redirect. Wallet connection and approval may open the user's wallet.
 
-## Reviewed code and behavior
+Preview: https://6ab20b357712f7a0f83335ab--tree-token.netlify.app/dapp/#stats
 
-- `https://sti.boombots.fun/embed.js`: 2,327 bytes; exact reviewed bytes in `embed.js.txt`. SHA-384 SRI: `sha384-9BaWPHPi50ws2eIyK33Am3ijob9N5GQKNcml/uQdVxkCcfeBG/+Z0LbDMlBmknSY`. The server supplies `Access-Control-Allow-Origin: *`, allowing anonymous CORS/SRI loading.
-- Executes an IIFE in the embedding TREE page. Reads `document.currentScript` and its dataset; fallback scans matching script tags. Sets `window.__stiBadges`, `window.__stiBadgeListener`, and `tag.__stiDone`. Creates one lazy iframe immediately before the script, with an accessible title, 100% width, default maximum width 420px, and initial height 240px. It does not fetch APIs, access storage/cookies, invoke wallets, or inject another parent-page script.
-- Iframe URL for this integration: `https://sti.boombots.fun/embed/?coin=TREE&id=sti-badge-1`. The inline script builds the card with DOM creation and `textContent`, not untrusted HTML insertion. It sizes text, samples logo pixels in a 32×32 canvas to select an accent color, and sends `{sti:'badge-size', id, height}` to its parent on render/resize/font readiness. There is one initial feed fetch per load, not a polling loop. It renders membership, campaign, or generic index content based on returned data.
-- The iframe reads/writes `localStorage['sti-badge']` on STI's origin for its last successful feed. Storage failure is caught. No TREE-origin storage, wallet provider, account request, signing, Sui RPC, or transaction operation was found in any reviewed widget script. Cross-origin isolation prevents direct iframe reads of TREE's DOM/storage. The parent loader itself has normal page-script privileges; its comment claiming isolation applies to the iframe, not the loader.
-- The live feed contains TREE's expected coin type, with `retiring:false`. Copy deliberately does not hardcode membership or a basket percentage, because the upstream state can change. The actual product name in the code and rendered card is **Sui Trenches Index**, so the section uses that name instead of the proposed “Sui Token Index.”
+Branch: `feature/sti-tree-stats`. No production promotion has occurred.
 
-## Network destinations and additional code
+## Purchase scope
 
-| Destination | Purpose / conditions |
-| --- | --- |
-| `sti.boombots.fun/embed.js` | Parent loader, pinned with SRI. |
-| `sti.boombots.fun/embed/` | Cross-origin iframe HTML and its inline JavaScript. |
-| `sti-keeper-production.up.railway.app/badge` | GET index feed, once per iframe load. |
-| `sti-keeper-production.up.railway.app/icon/TREE` | Current TREE logo; anonymous image request. |
-| `sti.boombots.fun/icon.svg` | STI logo image. |
-| `fonts.googleapis.com` | Google Fonts CSS for Anybody, Instrument Sans, Spline Sans Mono. |
-| `fonts.gstatic.com` | Font files referenced by that CSS. |
-| `sti-campaigns-production.up.railway.app/campaigns` | Conditional GET if TREE is not a current member; campaign logo from `/icon/<encoded key>`. This branch was statically inspected, not reached by the live member test. |
-| `static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495` | **Additional browser-injected module script in the iframe**, absent from the initial curl HTML. Captured and reviewed in `cloudflare-beacon.js.txt`; supplied with its own SHA-512 integrity attribute. |
-| `sti.boombots.fun/cdn-cgi/rum?` | Cloudflare analytics POST, observed in Chromium. |
-| `a.nel.cloudflare.com/report/v4?...` | Network error reporting endpoint advertised in HTTP NEL/Report-To headers; not observed in this test. |
+SUI → STI, through the single verified Cetus STI/SUI pool. This version does not implement basket minting, selling, redemption, or claim to find the cheapest route across those options. That limitation appears in the purchase panel. The pool charges 0.25%; TREE adds no fee. Quotes include the pool fee, disclose estimated and minimum STI, apply 1% slippage protection, and reject price impact above 3% (including the pool fee). Gas is additional; 0.1 SUI must remain available and transaction gas budget is capped at 0.05 SUI.
 
-The Cloudflare beacon collects iframe navigation/performance timings, web vitals, element selectors/geometry for performance attribution, browser engine/version and OS version, JS heap statistics when available, referrer and cleaned iframe URL, a generated page-load ID, and its public site token. It observes visibility, navigation and interaction timing; it does not collect entered text or access a wallet in the reviewed code. It may patch iframe `history.pushState` for SPA measurement, registers performance observers, and provides Array method polyfills. It adds no further scripts. No cookie/localStorage access was found in that beacon. Its generic code supports configured forwarding and `https://cloudflareinsights.com/cdn-cgi/rum` fallback, but the delivered configuration uses the same-origin `/cdn-cgi/rum` route with no forwarding. The observed payload included the preview origin as referrer (the loader's no-referrer attribute does not propagate to its generated iframe). Like all remote resources, these destinations receive ordinary connection metadata such as IP address.
+The STI site's published app supplied the initial token and pool identifiers. These were independently checked through Sui Mainnet, including token metadata, pair, pool availability, and fee. `native-pool-verification.json` records the returned state. The code uses these fixed identities:
 
-The feed can also specify a string `coin.icon` URL, which the iframe loads as an image without a hostname allowlist. Current TREE data uses the fixed keeper icon endpoint. Thus future image destinations are data-dependent and cannot be permanently enumerated. Clicking the badge opens the fixed STI origin with `?from=TREE`, or a campaign anchor if applicable, in a new tab with `noopener`. The TREE-owned fallback link uses the verified STI homepage with `noopener noreferrer`.
+- STI: `0x054e8315e419c9768faf889e36a0a12c90287e14669903f20f92f0ce9a8013c2::sti::STI`, 9 decimals.
+- Pool: `0xc9fb86078a0e88c31cee675386047edcb29b5a1f5ebe6358a968f1f816e9caa4`.
+- Cetus configuration: `0xdaa46292632c3c4d8f31f23ea0f9b36a28ff3677e9684980e4438403a67a3d8f`.
+- Entry point: `0xae9c208cf58fd5ba36737c9ee5dcfa7f152d0fb5a5a99eebb7c881ebc2fe59e0::pool_script_v2::swap_b2a`.
 
-## Residual risks and protection
+The transaction is built locally with an empty STI coin, an exact SUI split from gas, and the fixed Cetus swap call. No transaction bytes, recipient address, Move targets, or pool identities are accepted from STI's data feed. Cetus transfers outputs to the sender. Minimum output is enforced by the on-chain swap call.
 
-- The parent message listener verifies `e.origin === 'https://sti.boombots.fun'` and a height greater than 0 and less than 1000. It does **not** validate `e.source` or restrict the supplied ID to its iframe. An STI-origin window with a reference to this page could alter the height of another element with a known ID. This is a bounded layout weakness, not observed wallet/storage access. The original loader remains unmodified to preserve the requested embed.
-- The iframe is cross-origin but unsandboxed. Its future HTML, scripts, data and links remain controlled by STI/Cloudflare. SRI pins only the parent loader; it does not pin that iframe. Normal third-party content, analytics, availability and navigation risks remain.
-- An upstream loader edit fails closed under SRI. Browser tests confirmed changed code does not execute and the fallback stays available. Review the new code and its dependencies before updating the integrity hash.
-- The section labels STI as externally operated, uses no TREE wallet integration, preserves existing market/chart/burn/supply content, and remains within Stats. A fallback link remains available with blocked scripts.
+Before wallet approval, the app rechecks wallet identity, amount, quote age (30 seconds), and live SUI balance, builds and simulates the exact transaction, verifies STI received by the buyer and bounds SUI spending, then passes those same resolved transaction bytes to TREE's existing mainnet wallet connector. Quote/account changes or failed simulation prevent signing. Buttons prevent duplicate submissions; a returned transaction ID remains pending until finality is checked, so a delayed confirmation does not trigger another purchase. Wallet rejection clears the quote and does not retry automatically.
 
-## Preview and checks
+## Data and code trust
 
-Preview: https://6ab205ad636c382b6a3abee1--tree-token.netlify.app/dapp/#stats
+Only JSON is fetched from `https://sti-keeper-production.up.railway.app/badge`, with credentials omitted and no referrer. The widget uses the full TREE coin type, validates fields and a five-minute freshness window, and writes display values with `textContent`. Failed/stale feeds show unavailable values, not old membership claims. Pool quotes are independent of that informational feed.
 
-Baseline: `main` commit `dc557de`. Feature branch: `feature/sti-tree-stats`.
+The widget no longer loads STI's iframe, its executable scripts, Google Fonts, or Cloudflare telemetry. The original review and source captures remain in `original-embed-review.md` and related files as historical evidence, not the current implementation.
 
-The safe draft workflow reused the published 166-file inventory and replaced only `/dapp/index.html` and `/dapp/styles.css`; one preview-only `_redirects` file forwards six existing GET-only Stats endpoints. No functions were built or deployed. The preview contains 167 files. Published deployment `6aad931f45a27f392303e229` remains locked and all 35 function identities were verified unchanged. Other server-dependent preview features are unavailable; this is a Stats review preview, not a complete backend test environment.
+Purchasing lazily loads versioned SDK modules from `esm.run`: Mysten Sui 2.23.1 (transactions and gRPC) and Cetus CLMM 1.4.7. These are the SDK versions already used by the site's transaction integrations. The CDN and transitive dependencies remain part of the code trust boundary; no claim of complete transitive integrity pinning is made. Chain identity and STI metadata are checked against the fixed public Sui Mainnet gRPC endpoint before quoting/purchasing. The native card's local TREE logo avoids arbitrary upstream image URLs.
 
-Passed: three new source regression tests (placement/identity, source/data-coin/SRI, external fallback), existing Stats supply and NFTree tests, and the 166-file feature preview build. Browser checks and screenshot inspection passed at 1440×1000, 390×844 and 320×740: loaded TREE card; after market metrics/before burn; no page overflow or iframe clipping; Stats→Swap→Stats routing; no duplicate widget; blocked-loader fallback; SRI mismatch rejection. No page JavaScript exceptions occurred. At 320px the upstream badge intentionally truncates its subtitle and hides its third statistic; TREE's surrounding title/disclosure remain readable.
+## Verification
 
-The legacy `panel-router-source.test.mjs` also ran and failed on its pre-existing nine-tab width assertion. Both that test and `panel-router.css` are unchanged from main; current production has ten navigation tabs. This failure was recorded, not treated as an STI regression or silently repaired. The production snapshot verification/build is intentionally not a feature build: its baseline digests remain unchanged pending an authorized release. Use `build:preview` for this branch.
+- 11 new/updated source and core tests pass: placement and ownership; removal of external embed/navigation; precise amounts; wrong token/pool/fee and paused pool rejection; exact input/minimum output; high price impact; stale/changed quotes; gas reserve; malformed/stale feed and membership changes; fixed transaction construction; simulated output, recipient and spending checks.
+- Existing Stats supply and NFTree tests pass; feature build produces 168 files (166 baseline plus two explicitly listed modules).
+- Unsigned mainnet simulations for 0.001, 0.1 and 1 SUI succeeded with sufficient STI credited to the test address. This address is public and was used only as a simulation sender; no key or wallet was accessed. Details in `native-simulations.json`.
+- Chromium browser checks pass at 1440×1000, 390×844 and 320×740, including actual live pool quotes, card placement, no page overflow, no STI iframe/scripts/telemetry, no new tab or navigation, amount-edit invalidation, quote expiry, routing back to Stats, and feed failure with independent quoting.
+- A non-signing browser wallet stub received the resolved transaction only after a successful real mainnet simulation, then rejected it. The UI handled cancellation correctly. No transaction was signed, submitted, or paid for. Real user wallet approval and successful settlement are not claimed as tested.
+- Screenshots were inspected. See `native-mobile-purchase.png`, `native-desktop-card.png`, and `native-browser-report.json`.
 
-Re-run source checks with `node --test tests/stats-sti-source.test.mjs tests/stats-live-supply-source.test.mjs tests/stats-nftree-source.test.mjs`. Run `tests/stats-sti-browser.mjs` with `STI_PREVIEW_URL` and optionally `PLAYWRIGHT_MODULE`, `CHROME_PATH`, `STI_QA_OUTPUT`. Browser QA evidence and the deployment report are alongside this review.
+Run `node --test tests/stats-sti-source.test.mjs tests/sti-purchase-core.test.mjs tests/stats-live-supply-source.test.mjs tests/stats-nftree-source.test.mjs`, then `npm run build:preview`. For browser QA, run `tests/sti-native-browser.mjs` with `STI_PREVIEW_URL`; optional `PLAYWRIGHT_MODULE`, `CHROME_PATH`, and `STI_QA_OUTPUT` select the installed test runtime and output path.
+
+## Deployment boundaries
+
+The draft preserves the current production inventory and changes only `/dapp/index.html`, `/dapp/styles.css`, plus new `/dapp/sti-widget.js` and `/dapp/sti-purchase-core.js`. One preview-only `_redirects` file forwards existing GET-only Stats endpoints. Total preview files: 169. No functions were deployed or rebuilt. Other server-dependent features are not a complete preview backend.
+
+Production deployment `6aad931f45a27f392303e229` remains locked, and all 35 backend function identities were verified unchanged. Production manifests intentionally remain the published baseline. Feature previews use `build:preview`; production snapshot verification is not a feature-release build. The previously documented unrelated legacy navigation assertion remains outside this change.
+
+Production promotion remains a separate decision after this preview review, using the existing workflow that preserves unrecovered backend packages.
