@@ -1,3 +1,11 @@
+# Current production — 2026-09-23
+
+Deploy `6ab31e7878c67aff72b0dc54` is published and locked from merged PR #30, source commit `dae05c8e9fdd675fb77caeac7e5507616b38cf98`. The V3 headline displays the verified SuiDex + Cetus + Turbos sum and fails closed. The only public-file change from the previous live release is `dapp/v3-workspace.js`. Knowledge Trial is preserved byte-for-byte; only the two read-only metrics functions were updated. All other 35 functions and five schedules are preserved. The STI Stats branch remains separate.
+
+Validation: 24 focused tests, both GitHub workflows, production verification/build, live API and file-hash checks, and browser navigation checks passed. At verification, $16.46 + $59.692141830144 + $5.449790692352001 = $81.601932522496, displayed as $81.60. Stats navigation worked with its existing last-verified market snapshot fallback during a provider outage. See `current-release.json` and `verification-20260923.json`.
+
+---
+
 # Corrective release candidate — 2026-09-23
 
 The release snapshot now reconciles all 189 files from locked production deploy `6ab219d0f2e18c9096895bf6`. The only intended public-file change relative to that deployment is `dapp/v3-workspace.js`: combine verified SuiDex, Cetus and Turbos 24-hour volume, reject missing/invalid values, and clear the headline while loading or on failure. Zero remains valid.
