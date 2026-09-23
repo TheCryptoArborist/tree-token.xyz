@@ -12,9 +12,9 @@ test('Challenge navigation and practice interface are present', () => {
   assert.match(html, /<b>Challenge<\/b>/);
   assert.match(html, /TREE Knowledge Trial/);
   assert.match(html, /id="knowledgeTrialStartPractice"/);
-  assert.match(html, /id="knowledgeTrialTimer">03:00/);
-  assert.match(html, /five-question TREE ecosystem challenge/i);
-  assert.match(html, /<span>5 questions<\/span>/i);
+  assert.match(html, /id="knowledgeTrialTimer">01:30/);
+  assert.match(html, /three-question TREE ecosystem challenge/i);
+  assert.match(html, /<span>3 questions<\/span>/i);
   assert.match(html, /No drawing, RNG, ticket weighting, streak multiplier, or random tie-breaker/);
   assert.match(html, /one daily winner/i);
   assert.match(html, /sudden-death questions/i);

@@ -13,4 +13,4 @@ for (const fn of manifest.functions.filter(fn => fn.artifact)) {
   if (createHash('sha256').update(bytes).digest('hex') !== fn.sha256) throw new Error(`Function package mismatch: ${fn.name}`);
 }
 console.log(`Verified ${manifest.files.length} production files and ${manifest.functions.filter(fn => fn.artifact).length}/${manifest.functions.length} exact function packages for ${manifest.deployId}.`);
-console.log('Five function packages remain on Netlify; source candidates are not verified production replacements.');
+console.log('Reuse deployed function packages. Local sources are not verified production replacements.');

@@ -1,7 +1,7 @@
 {
   "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
-  "deployId": "6aa70deff0b74e2bfe8b7725",
-  "publishedAt": "2026-09-13T20:56:17.498Z",
+  "deployId": "6ab219d0f2e18c9096895bf6",
+  "publishedAt": "2026-09-22T21:53:56.014Z",
   "files": [
     {
       "path": "/tree.jpg",
@@ -130,6 +130,12 @@
       "size": 2816
     },
     {
+      "path": "/scripts/verify-production-snapshot.mjs",
+      "source": "production/live-static/scripts/verify-production-snapshot.mjs",
+      "sha1": "8d9e0b86951bd37611281fd5d2b5621fa90aa30b",
+      "size": 1079
+    },
+    {
       "path": "/scripts/verify-cetus-v3-lifecycle.mjs",
       "source": "scripts/verify-cetus-v3-lifecycle.mjs",
       "sha1": "aef5b4755d0c05ab12f5a58c0003d88ed3e91b4f",
@@ -144,8 +150,8 @@
     {
       "path": "/scripts/tree-knowledge-trial.js",
       "source": "scripts/tree-knowledge-trial.js",
-      "sha1": "fdb0bc50c98e403d2439a3e1c1f6aea6031b46a5",
-      "size": 46305
+      "sha1": "7640351ac8ee5991ca380935c78fefa80a1ab16e",
+      "size": 47699
     },
     {
       "path": "/scripts/swap.js",
@@ -200,6 +206,18 @@
       "source": "scripts/simulate-tree-turbos-swap.mjs",
       "sha1": "89c9fbf5621c0d5aae08be97769b1dbe666b3973",
       "size": 5168
+    },
+    {
+      "path": "/scripts/robinhood-wallet.js",
+      "source": "production/live-static/scripts/robinhood-wallet.js",
+      "sha1": "fd6b03edb4e3df0f70e4234deaf8e17fcb8d6127",
+      "size": 6702
+    },
+    {
+      "path": "/scripts/robinhood-wallet-core.js",
+      "source": "production/live-static/scripts/robinhood-wallet-core.js",
+      "sha1": "2feff5a79c2d4f85b895cf2ed7430de7a5307c39",
+      "size": 2266
     },
     {
       "path": "/scripts/profile-studio.js",
@@ -304,6 +322,30 @@
       "size": 22515
     },
     {
+      "path": "/scripts/build-production-snapshot.mjs",
+      "source": "production/live-static/scripts/build-production-snapshot.mjs",
+      "sha1": "e398b9f1456c91bfd4f0eb98911ea24c275591e2",
+      "size": 1478
+    },
+    {
+      "path": "/scripts/build-feature-preview.mjs",
+      "source": "production/live-static/scripts/build-feature-preview.mjs",
+      "sha1": "fe542fa1ba65354e3ddd2185d796d27d31769866",
+      "size": 1483
+    },
+    {
+      "path": "/scripts/arcade-wallet-link.js",
+      "source": "production/live-static/scripts/arcade-wallet-link.js",
+      "sha1": "f0cbb56a4c5b8f561d48fe278b53af013e27d660",
+      "size": 6076
+    },
+    {
+      "path": "/scripts/arcade-sui-wallet.js",
+      "source": "production/live-static/scripts/arcade-sui-wallet.js",
+      "sha1": "25cdec64fb85cfcbe6b7f706841f105e351c3b36",
+      "size": 5364
+    },
+    {
       "path": "/roadmap/index.html",
       "source": "roadmap/index.html",
       "sha1": "6597c20c44a9aac623f685679962fb2fc100c5db",
@@ -330,8 +372,8 @@
     {
       "path": "/index.html",
       "source": "index.html",
-      "sha1": "763df4406f1edd78adf6a8f256b40d40a3da8824",
-      "size": 97307
+      "sha1": "1dba30e928a617b53d698561fb77dcffa6205ccd",
+      "size": 97397
     },
     {
       "path": "/hero.png",
@@ -376,6 +418,12 @@
       "size": 3593
     },
     {
+      "path": "/docs/production-recovery-20260902.md",
+      "source": "production/live-static/docs/production-recovery-20260902.md",
+      "sha1": "ef15e255df9ce6e26d971350ccc2399e7ad6525e",
+      "size": 2451
+    },
+    {
       "path": "/docs/knowledge-trial-lucky-leaf-plan.md",
       "source": "docs/knowledge-trial-lucky-leaf-plan.md",
       "sha1": "f962fb297b1809c93b9e66a02d3638adb0bbbdba",
@@ -392,6 +440,12 @@
       "source": "data/tree-project-snapshot.json",
       "sha1": "ead484ee1c766a540a2fa7136eed7ec240a82127",
       "size": 1009
+    },
+    {
+      "path": "/data/tree-market-last-verified.json",
+      "source": "production/live-static/data/tree-market-last-verified.json",
+      "sha1": "c88342a391693fe123443479bb8caa96a5443c9f",
+      "size": 338
     },
     {
       "path": "/data/tree-leaderboard-exclusions.json",
@@ -438,8 +492,8 @@
     {
       "path": "/dapp/v3-workspace.js",
       "source": "dapp/v3-workspace.js",
-      "sha1": "38f7cdfe76a6331bbdecb579a529dcbed744949d",
-      "size": 89976
+      "sha1": "5af8d40e6c6290a6089d4781c22a6a0f42791283",
+      "size": 89960
     },
     {
       "path": "/dapp/v3-workspace.css",
@@ -470,6 +524,12 @@
       "source": "dapp/v3-rebalance-test.js",
       "sha1": "cf0d1973908c7015a6e3ceb730d938262b4431cb",
       "size": 26635
+    },
+    {
+      "path": "/dapp/v3-existing-zap.js",
+      "source": "dapp/v3-existing-zap.js",
+      "sha1": "e9d1498759f2878fd05f1cbf8df5ac7f25c41841",
+      "size": 4056
     },
     {
       "path": "/dapp/turbos-v3-manager.js",
@@ -706,6 +766,12 @@
       "size": 8501
     },
     {
+      "path": "/assets/wallet-manager-bcxijryq-bcxijryq.css",
+      "source": "production/live-static/assets/wallet-manager-bcxijryq-bcxijryq.css",
+      "sha1": "845434c7bb69305cd4911290f50573dfe1185602",
+      "size": 8501
+    },
+    {
       "path": "/assets/victory-token.png",
       "source": "assets/victory-token.png",
       "sha1": "2aec218a813e63e57e1a38fe2bfd85ec8cf08436",
@@ -748,10 +814,22 @@
       "size": 775590
     },
     {
+      "path": "/assets/tree-fund-first-donation-d0qlq4o7-d0qlq4o7.png",
+      "source": "production/live-static/assets/tree-fund-first-donation-d0qlq4o7-d0qlq4o7.png",
+      "sha1": "77df0e225c0dff1f460f9da50671042524cb758d",
+      "size": 775590
+    },
+    {
       "path": "/assets/tree-force-89-logo.jpg",
       "source": "assets/tree-force-89-logo.jpg",
       "sha1": "db50f049582605b85fee897c9dac093a175f7925",
       "size": 595261
+    },
+    {
+      "path": "/assets/tree-force-89-logo-black.webp",
+      "source": "production/live-static/assets/tree-force-89-logo-black.webp",
+      "sha1": "322dc5787379679a458dbad694de2fdc56a07594",
+      "size": 230226
     },
     {
       "path": "/assets/tree-force-89-logo-black.png",
@@ -778,6 +856,12 @@
       "size": 1866203
     },
     {
+      "path": "/assets/tree-arcade-world-bg-v2.webp",
+      "source": "production/live-static/assets/tree-arcade-world-bg-v2.webp",
+      "sha1": "d2e4bd23aad38f34ae19e4eff6bb0f8a54b13474",
+      "size": 156258
+    },
+    {
       "path": "/assets/tree-arcade-world-bg-v2.png",
       "source": "assets/tree-arcade-world-bg-v2.png",
       "sha1": "5092e32121299a0f58251e723afca794e56f492c",
@@ -790,14 +874,32 @@
       "size": 2057876
     },
     {
+      "path": "/assets/tree-arcade-world-bg-v2-bgjvvdzs-bgjvvdzs.png",
+      "source": "production/live-static/assets/tree-arcade-world-bg-v2-bgjvvdzs-bgjvvdzs.png",
+      "sha1": "5092e32121299a0f58251e723afca794e56f492c",
+      "size": 2057876
+    },
+    {
       "path": "/assets/tree-bbolhjse.jpg",
       "source": "assets/tree-BbolhJsE.jpg",
       "sha1": "5ca16c779edf1d559e5be5a02a6edd2e626d9c2f",
       "size": 37233
     },
     {
+      "path": "/assets/tree-bbolhjse-bbolhjse.jpg",
+      "source": "production/live-static/assets/tree-bbolhjse-bbolhjse.jpg",
+      "sha1": "5ca16c779edf1d559e5be5a02a6edd2e626d9c2f",
+      "size": 37233
+    },
+    {
       "path": "/assets/thick-dwqrmagk.png",
       "source": "assets/thick-DWQrMagK.png",
+      "sha1": "ad280e7b551f15631f84ffe01bc5373746590da6",
+      "size": 1004336
+    },
+    {
+      "path": "/assets/thick-dwqrmagk-dwqrmagk.png",
+      "source": "production/live-static/assets/thick-dwqrmagk-dwqrmagk.png",
       "sha1": "ad280e7b551f15631f84ffe01bc5373746590da6",
       "size": 1004336
     },
@@ -844,16 +946,34 @@
       "size": 410909
     },
     {
+      "path": "/assets/index-w-qgkwyr.js",
+      "source": "production/live-static/assets/index-w-qgkwyr.js",
+      "sha1": "496ecaaf129325c0d750bbc4fd73e03ce5188fe5",
+      "size": 49443
+    },
+    {
       "path": "/assets/index-ciludop1.js",
       "source": "assets/index-CiLUDOp1.js",
       "sha1": "cb9e8b67a2a7fc90c1783cc506b44642008e704b",
       "size": 48754
     },
     {
+      "path": "/assets/index-csxroco2.css",
+      "source": "production/live-static/assets/index-csxroco2.css",
+      "sha1": "2b2c770ac8ebf3308b0fdf645f37c55072d07eb1",
+      "size": 28478
+    },
+    {
       "path": "/assets/index-bjzd7icz.css",
       "source": "assets/index-BJZd7ICz.css",
       "sha1": "b9b124d27bb2c52219b79a7d505497f49565eae6",
       "size": 28469
+    },
+    {
+      "path": "/assets/garden-battles-logo.webp",
+      "source": "production/live-static/assets/garden-battles-logo.webp",
+      "sha1": "c541ed208b0051b741d198ce4d3715d4acbc81b2",
+      "size": 35706
     },
     {
       "path": "/assets/garden-battles-logo.png",
@@ -864,6 +984,12 @@
     {
       "path": "/assets/background5-dfotcuir.jpg",
       "source": "assets/background5-DfOTCuIr.jpg",
+      "sha1": "486828dd8df5119470901c5833ea0be6edf6f8ae",
+      "size": 130199
+    },
+    {
+      "path": "/assets/background5-dfotcuir-dfotcuir.jpg",
+      "source": "production/live-static/assets/background5-dfotcuir-dfotcuir.jpg",
       "sha1": "486828dd8df5119470901c5833ea0be6edf6f8ae",
       "size": 130199
     },
@@ -880,10 +1006,22 @@
       "size": 1982229
     },
     {
+      "path": "/assets/arboretum-promo-dubcl4il-dubcl4il.png",
+      "source": "production/live-static/assets/arboretum-promo-dubcl4il-dubcl4il.png",
+      "sha1": "c7814650098073bc2ffc26891024dfd0200210d1",
+      "size": 1982229
+    },
+    {
       "path": "/assets/arboretum-logo.jpg",
       "source": "assets/arboretum-logo.jpg",
       "sha1": "4fc1372dcee81ec6b5009f8f1ab870cf877ed6a3",
       "size": 340979
+    },
+    {
+      "path": "/assets/arboretum-logo-black.webp",
+      "source": "production/live-static/assets/arboretum-logo-black.webp",
+      "sha1": "63cd379971069e3b2bc1883f87a8d7f6bedb695c",
+      "size": 117678
     },
     {
       "path": "/assets/arboretum-logo-black.png",
@@ -900,6 +1038,12 @@
     {
       "path": "/assets/cg-5g0mbrjk.png",
       "source": "assets/CG-5G0MBrjK.png",
+      "sha1": "5ff0c825f8c7bef9abb10d0d839689263b160580",
+      "size": 75477
+    },
+    {
+      "path": "/assets/cg-5g0mbrjk-5g0mbrjk.png",
+      "source": "production/live-static/assets/cg-5g0mbrjk-5g0mbrjk.png",
       "sha1": "5ff0c825f8c7bef9abb10d0d839689263b160580",
       "size": 75477
     },
@@ -984,302 +1128,238 @@
     {
       "path": "/litepaper.pdf",
       "source": "Litepaper.pdf",
-      "sha1": "30a58b5440cdfb24e32466ca52562e04be19205a",
-      "size": 38054067
+      "sha1": "0ea54513eb38c0377bbccedfa4d41781d42b6c27",
+      "size": 22937600
     },
     {
       "path": "/netlify.toml",
       "source": "production/deployed-netlify.toml",
-      "sha1": "3a217a515e04d6a355a5c928520617ca3df17d29",
-      "size": 1104
-    },
-    {
-      "path": "/dapp/v3-existing-zap.js",
-      "source": "dapp/v3-existing-zap.js",
-      "sha1": "e9d1498759f2878fd05f1cbf8df5ac7f25c41841",
-      "size": 4056
+      "sha1": "ac47414c8205343f1a87a5b7b48131aaa7b92856",
+      "size": 1034
     }
   ],
   "functions": [
     {
+      "name": "arcade-wallet-link",
+      "sha256": "e781292400491060bf282b14700d121f685dfd8e62efd7bd1b4869e14c710ffd",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
+    },
+    {
+      "name": "nftree-wallet",
+      "sha256": "264784b5390b42b7786219d7d4b1e3c68cd1a7a4ce68fe6d01cd44d67c81d9bf",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
+    },
+    {
       "name": "tree-badges-on-deploy",
-      "sha256": "2f959c2968df65e727773a5699ad3765921a20e36c081631920d70582f6190e8",
-      "artifact": "production/functions/tree-badges-on-deploy.zip",
-      "status": "exact-deployed-package",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "sha256": "d4242903bd0f954a2daa352272d49da4eee37f9d8151e122e36800461691ea25",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-badges-preview",
-      "sha256": "284c7712aef080e9faaee5d299818363647ec8b9a58a5e6e4dcea21452620f29",
-      "artifact": "production/functions/tree-badges-preview.zip",
-      "status": "exact-deployed-package",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "sha256": "54f1ff759f8f065e50d61b77b76aefdcb5cf3c5e18b1f18c6d97af42a1b12a04",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-badges-refresh-background",
-      "sha256": "b6895933cb94130714a02498e49db4d915ab410966099291312001d31387d118",
-      "artifact": "production/functions/tree-badges-refresh-background.zip",
-      "status": "exact-deployed-package",
-      "runtime": "nodejs24.x",
-      "invocationMode": "background"
+      "sha256": "310c5613c32091eee7418f01fdd351051022b48e9ffbc3b92e87e5f7ac3d17cd",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-badges-refresh-scheduled",
-      "sha256": "1eb38644ac33c1478f9cdfc738756798df33f5e862b236c1a1fbfc76d85f6a25",
-      "artifact": "production/functions/tree-badges-refresh-scheduled.zip",
-      "status": "exact-deployed-package",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "sha256": "2e9c307249846b18b8aef9b4ed6ea77a216b4a3cb3fee27775e23cece8d6dd7b",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-badges",
-      "sha256": "1fa9354ecdacfc2a8d6c3fc8a17746d21affeeb4724df0ce59748cae4b5f818e",
-      "artifact": "production/functions/tree-badges.zip",
-      "status": "exact-deployed-package",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "sha256": "6194a0cc2c267f83ea5563358d40eb086afe6cac9eeace0d824bfb8713300b23",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-burn-overview",
-      "sha256": "ec3a02b7db411c9c57e1064b5c36bc3c8a870d5cf5c12a425b0ccc8802902ea8",
-      "artifact": "production/functions/tree-burn-overview.zip",
-      "status": "exact-deployed-package",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "sha256": "57c70ac651d690490e56bcc8da473cffba29d41f9b52032748c5da9973beee8b",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-chart",
-      "sha256": "6502ffd09a9199f9b9d570dfd718f3493358acd0f15cf596b2b9ec75a5516129",
-      "artifact": "production/functions/tree-chart.zip",
-      "status": "exact-deployed-package",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "sha256": "f5da2bd06cdf448803d88b9cc4ed9d0ddaf6b4df90ad46f6512411271958ecb5",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-dashboard",
-      "sha256": "a4efb6c1957ab6fdf54e820cb194a13a9a3f09097e0985eb0ea2d392e13550db",
-      "artifact": "production/functions/tree-dashboard.zip",
-      "status": "exact-deployed-package",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "sha256": "a43f88698248c49f4bb624827c03789332a8e7da71831359466579432c17b87e",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-exposure-on-deploy",
-      "sha256": "4296a22d47fb8c47c4ef2af3c8f74ea49ec95ae25168d2127dcf527ea43eb90e",
-      "artifact": "production/functions/tree-exposure-on-deploy.zip",
-      "status": "exact-deployed-package",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "sha256": "03ae7f1792d436b4a92edeb7c151f467df758404c10eedb34c414a8979c6f566",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-exposure-preview",
-      "sha256": "5ebada1e659bb10daa5cf6ca4e18ff5f0c2e094be55122f887698e277782b33b",
-      "artifact": "production/functions/tree-exposure-preview.zip",
-      "status": "exact-deployed-package",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "sha256": "1592d108af4ec154312d2bed07421aeedecdcb1ad2c109abebbbf6657f0d870b",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-exposure-refresh-background",
-      "sha256": "e70bf339f16a5803dc71f9e0da7f928df637205b89547329087cd2240fdddb90",
-      "artifact": "production/functions/tree-exposure-refresh-background.zip",
-      "status": "exact-deployed-package",
-      "runtime": "nodejs24.x",
-      "invocationMode": "background"
+      "sha256": "3d6a035553a680ee0b4b93970bad8f6fb4fcde818085c31fad008009327f3b5d",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-exposure-refresh-scheduled",
-      "sha256": "5807fbd70e3e342e10a303420730e2e271c8cc7204d18090cef28b1ba9f92c58",
-      "artifact": "production/functions/tree-exposure-refresh-scheduled.zip",
-      "status": "exact-deployed-package",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "sha256": "e5c783d1de5cc03b9fbff24d98d03c5d7d774203436b50dc385b0840ccd0361c",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-exposure",
-      "sha256": "1810442e3836b9e031bcc96fffa6cde9535e7e13c92620f8a0e3d69749ac539a",
-      "artifact": "production/functions/tree-exposure.zip",
-      "status": "exact-deployed-package",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "sha256": "08124aefb63d46375f17090d3321d0aee7a4f0e80a1fd413314942dc0e85fcd0",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-knowledge-trial-admin",
-      "sha256": "2019ec7b8caca1e9ed7cdc955596f49b23cc1d59451b343b6cbe2794c165ccba",
+      "sha256": "9e2fd87781a64e527d76a1df0fc57feb22d7eeab07345af8b5bfbc30986c2223",
       "artifact": null,
-      "status": "retained-on-netlify; local package differs",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-knowledge-trial-claim-test",
-      "sha256": "7d5f68df10afbbb3af507a7001fdc51786270ae52917f01f1d01a3b31e5b3009",
-      "artifact": "production/functions/tree-knowledge-trial-claim-test.zip",
-      "status": "exact-deployed-package",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "sha256": "7f812603ff1a63b10bb40eb0d1280c1c9ac273a53c788723ab458ed8db059cea",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-knowledge-trial-claim",
-      "sha256": "0dab480cbaf6685a8856510a71610777fca73d8110beb3ca4947290eb21066e7",
-      "artifact": "production/functions/tree-knowledge-trial-claim.zip",
-      "status": "exact-deployed-package",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "sha256": "40cd9a6a9dd43e5f3d3dbdfdd53ed9ca8fc31577fa92220d5e0765e46816fa9c",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-knowledge-trial-resolver",
-      "sha256": "9d5989bef74eb7bd9c657cbad775e7d0a18d1986387e79a435dc240ec20ce3b6",
+      "sha256": "d21cee9557d513574432865b1926a3359c0fcef1b75d67e1e72a8570984f61e3",
       "artifact": null,
-      "status": "retained-on-netlify; local package differs",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-knowledge-trial-rotation-on-deploy",
-      "sha256": "f3449a7e4c1e3b67fa76782aba0f5bbb982dff84d8fd8c6d71db902b8acb9e01",
+      "sha256": "47f03a587b1979f4b8aa5127b744d43518a5b18ad66be1b5272612bf3fd076ec",
       "artifact": null,
-      "status": "retained-on-netlify; local package differs",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-knowledge-trial-rotation-scheduled",
-      "sha256": "6580266a8255f32bbd09f15720aaf90a826e528289638e90b653c325886316d6",
+      "sha256": "238d396c1789428a3b61fbdb1050d45646f6dc2e82325aa546c0d50939439146",
       "artifact": null,
-      "status": "retained-on-netlify; local package differs",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-knowledge-trial-test",
-      "sha256": "20948d4440269ab26639a1170aad6b1b94d389bf9d49aef74ae901972b01fa9f",
-      "artifact": "production/functions/tree-knowledge-trial-test.zip",
-      "status": "exact-deployed-package",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "sha256": "4f2d82f2824a50fe316e0a21a0e2e11667569ca87c7153126f26d19c30c631ed",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-knowledge-trial",
-      "sha256": "785276616496962b418d0cd3319625fb415b90893f1bb2aac182ceb4f0487382",
+      "sha256": "27e679d6907aa33ca42df39f63c4e82d60b6bc7dc5f4b2a69ba0be8dafdcf4c6",
       "artifact": null,
-      "status": "retained-on-netlify; local package differs",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-leaderboard-preview",
-      "sha256": "6c397ca4ddce95a31edabcb2e790eab52fb1d74fc87a293acd5684ba2bed2c86",
-      "artifact": "production/functions/tree-leaderboard-preview.zip",
-      "status": "exact-deployed-package",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "sha256": "26886c4bea35d22c63828d0964df9de2ab9862d4d72583f57b13c3f49d9dc434",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-leaderboard-refresh-background",
-      "sha256": "d3e8471cc035588782ac03ccf4754fbb4d3b111a62acdc3c16b31482294d2b2b",
-      "artifact": "production/functions/tree-leaderboard-refresh-background.zip",
-      "status": "exact-deployed-package",
-      "runtime": "nodejs24.x",
-      "invocationMode": "background"
+      "sha256": "dddf55b36dc2eb8b6da644eb50fa5b7be758a57b87c625ffc5f4651761457c83",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-leaderboard-refresh-scheduled",
-      "sha256": "aea00262fed154e2ad0645ec169c55d80ff8ee7ec957c5f992853e8f3e01f4a8",
-      "artifact": "production/functions/tree-leaderboard-refresh-scheduled.zip",
-      "status": "exact-deployed-package",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "sha256": "0a202c04886d259bfb5994b5d7d5d602c22e8328a560312da7e7473438a9722b",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-leaderboard",
-      "sha256": "c095e6857df8ed7511d31a48556f6f9c20299ecca142e2e90c90d0bc8a9aa953",
-      "artifact": "production/functions/tree-leaderboard.zip",
-      "status": "exact-deployed-package",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "sha256": "f97a886c3621eaf9d8cdbe72f2006bda3ae1a1257c643b116107e0c8a99fc232",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-limit-orders",
-      "sha256": "e5157f6cd4385ad47facefa496e5f1359f4aa485a925b0bbe6dca89326a9b321",
-      "artifact": "production/functions/tree-limit-orders.zip",
-      "status": "exact-deployed-package",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "sha256": "5a30c23110f0ddf00de8c9da1a8ae6309e35c08d6a574006f7bb5d9713888b09",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-liquidity",
-      "sha256": "9ae29ae9ef1e8f71bb50598ce0d585a727c289153a16edd93aa7e8da8e027041",
-      "artifact": "production/functions/tree-liquidity.zip",
-      "status": "exact-deployed-package",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "sha256": "840cfff838eb1e5e2e49124deba44ff301d0428c286c21617a2ff9e01cd45e0f",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-market",
-      "sha256": "0d186ed95aed6f4a07e47808109b80742e4dd776b14d8317278a30da4a01bced",
-      "artifact": "production/functions/tree-market.zip",
-      "status": "exact-deployed-package",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "sha256": "80b3d9809ba6914612853ad996089723a81ae72b1d703565a180abddf82777ba",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-nftree",
-      "sha256": "63959df9c9cd5086d3519bf19c628e1dc222bd07c128ac997b80c22c267f25c0",
-      "artifact": "production/functions/tree-nftree.zip",
-      "status": "exact-deployed-package",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "sha256": "80b76f1c5ebf832808f874f372f08532ec8abebe165e4186991a613969cd699e",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-raffle-claim",
-      "sha256": "c61bda58adda56cb0ef8953ee364450d43ac6ca5d34be44a197d937c9a66c808",
-      "artifact": "production/functions/tree-raffle-claim.zip",
-      "status": "exact-deployed-package",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "sha256": "2737d04a17192fb1cfcd509e2036ef7c4882c818b2b76ffd8432a96edf3c4993",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-raffle-ingest-buy",
-      "sha256": "4087e1ba5885cc6b4a419f5f66a97a926231cd27b3bea073d878f5bfb939c397",
-      "artifact": "production/functions/tree-raffle-ingest-buy.zip",
-      "status": "exact-deployed-package",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "sha256": "af37f89080ffdbf4102592d70e641fb6ee811acffde757fb900329246a2bc42c",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-raffle-status",
-      "sha256": "4ab44e7cfb5df2047b6edc41a197a9562e6b1730399b7cac7d55b4b1b4ea5f67",
-      "artifact": "production/functions/tree-raffle-status.zip",
-      "status": "exact-deployed-package",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "sha256": "cec015dd4e7520ee48ca3fa8a7c89d6e676f8730a1e77594b98f1aecbcabff62",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-swap-quote",
-      "sha256": "928451362dac1a0f9f71c117c99b93474b7f40dd3d493371d7beda81ca26ff6a",
-      "artifact": "production/functions/tree-swap-quote.zip",
-      "status": "exact-deployed-package",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "sha256": "6037ab8ad9932a2c23116c8832eea9dbfbb7fc4f915c2a34dc108c41fcbe8a0f",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-v3-overview",
-      "sha256": "828c526ffde22b33a8a723b619dcab134dc8373f71f95971010c6cad32fe6953",
-      "artifact": "production/functions/tree-v3-overview.zip",
-      "status": "exact-deployed-package",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "sha256": "49b413b9360247a3e196909814b73829319dabeb36e25498f279ef75023036fc",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
       "name": "tree-volume",
-      "sha256": "6b2b698a4c6fb248e7bb267208ba04ba76655cb719d30837b5121bbed5341847",
-      "artifact": "production/functions/tree-volume.zip",
-      "status": "exact-deployed-package",
-      "runtime": "nodejs24.x",
-      "invocationMode": "stream"
+      "sha256": "f49bd426b253d95d66864a8fd9b422a2d025c6b27e5a940811007b5e1660d957",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
     }
   ],
   "schedules": [
@@ -1306,32 +1386,74 @@
   ],
   "functionConfigurations": [
     {
-      "n": "tree-badges-on-deploy",
-      "d": "2f959c2968df65e727773a5699ad3765921a20e36c081631920d70582f6190e8",
+      "n": "arcade-wallet-link",
+      "d": "e781292400491060bf282b14700d121f685dfd8e62efd7bd1b4869e14c710ffd",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
+      "ro": [
+        {
+          "p": "/api/arcade-wallet-link",
+          "l": "/api/arcade-wallet-link",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
       "p": 10,
-      "id": "b81bc4b9b9cd533350f43c0f52a850ee4a04121f48200f5e9e9971b4f36aeed2",
-      "s": 88504,
-      "r": "nodejs24.x",
-      "c": "2026-08-25T15:17:58.208Z",
-      "a": "099096387579",
-      "oid": "fb9d6c2508f6629ff0876833dd9d3dfa6749d90bd1d8685f65b54c4637c48024",
+      "id": "9050c8876d5c1fc9abc5710e638e94d79c53acebb998940f56fcf0eef893a1ba",
+      "s": 2214279,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:10:12.124Z",
+      "a": "689786375862",
+      "oid": "7e75bff74dfa67f54e25780db82b91a7b5b936665e099e2e867cd04556cf6361",
+      "im": "stream"
+    },
+    {
+      "n": "nftree-wallet",
+      "d": "264784b5390b42b7786219d7d4b1e3c68cd1a7a4ce68fe6d01cd44d67c81d9bf",
+      "dn": null,
+      "g": null,
+      "bd": null,
+      "ro": [
+        {
+          "p": "/api/nftree-wallet",
+          "l": "/api/nftree-wallet",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "39436ac43ba4d0de5ceb4fe7f51ce4d59dd72ea245f783b13b2b633dd70cbc4f",
+      "s": 356991,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:10:17.595Z",
+      "a": "962604107123",
+      "oid": "219261d78cf0d0b2b90dd34229b8b36d91fa02240a92ab64fbb3a85ae5da57c5",
+      "im": "stream"
+    },
+    {
+      "n": "tree-badges-on-deploy",
+      "d": "d4242903bd0f954a2daa352272d49da4eee37f9d8151e122e36800461691ea25",
+      "dn": null,
+      "g": null,
+      "bd": null,
+      "p": 10,
+      "id": "7b516c9c26a6337bec4caf7338d8b663e8c201e0fca4419cb60300ab1de4c82f",
+      "s": 381657,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:10:17.675Z",
+      "a": "256666722258",
+      "oid": "14e15606b3dcd56d1792082e7d9031f913ba1c778fd9cf3de51230a7be783ee5",
       "im": "stream"
     },
     {
       "n": "tree-badges-preview",
-      "d": "284c7712aef080e9faaee5d299818363647ec8b9a58a5e6e4dcea21452620f29",
+      "d": "54f1ff759f8f065e50d61b77b76aefdcb5cf3c5e18b1f18c6d97af42a1b12a04",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "ro": [
         {
           "p": "/api/tree-badges-preview",
@@ -1342,59 +1464,50 @@
         }
       ],
       "p": 10,
-      "id": "6bac648d9d2fa45c142d112efcd4b3c521d94cf2f39622deaa444a8a73299165",
-      "s": 61396,
-      "r": "nodejs24.x",
-      "c": "2026-08-25T15:17:58.184Z",
-      "a": "762350920524",
-      "oid": "81b4c2915e05edbab5efd4d3b5f87fd7544a19e408196cdf74fe9b8370b9f594",
+      "id": "ad6876740c969a34ce76aaba5182eacd916ab57cac7eb25526a92a5727471a1b",
+      "s": 355273,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:10:17.568Z",
+      "a": "924105187622",
+      "oid": "f00b872ad42cd5104541b8e32f002bef1a67ffd1202ebde5e43dcd0f9da64e54",
       "im": "stream"
     },
     {
       "n": "tree-badges-refresh-background",
-      "d": "b6895933cb94130714a02498e49db4d915ab410966099291312001d31387d118",
+      "d": "310c5613c32091eee7418f01fdd351051022b48e9ffbc3b92e87e5f7ac3d17cd",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "p": 10,
-      "id": "b881cf381ba4f8b30fe5df2f11f21ce8d49b954dbab01c05b23df3a3f443a233",
-      "s": 790040,
-      "r": "nodejs24.x",
-      "c": "2026-08-25T15:17:58.400Z",
-      "a": "721675016263",
-      "oid": "b72ceab6016829cd371f99f91a4b735a59fdd2eb2408e1e7b143bbe46e7d21c4",
+      "id": "e0f0f4c7186ea5d4de7a2b3b10e598a98f1e8295f6c5bbc1d811f78a4f49823f",
+      "s": 1082889,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:10:17.672Z",
+      "a": "609931985304",
+      "oid": "f3e876a5eaca059bb7f32f7bfe2629fadd8d7ea7e2d6370c674378425be133c0",
       "im": "background"
     },
     {
       "n": "tree-badges-refresh-scheduled",
-      "d": "1eb38644ac33c1478f9cdfc738756798df33f5e862b236c1a1fbfc76d85f6a25",
+      "d": "2e9c307249846b18b8aef9b4ed6ea77a216b4a3cb3fee27775e23cece8d6dd7b",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "p": 10,
-      "id": "cc4cb03ac342ec932a83977da654c74c04906a6c0ee18d7a1907a20c5bfe2f88",
-      "s": 61829,
-      "r": "nodejs24.x",
-      "c": "2026-08-25T15:17:58.262Z",
-      "a": "693192995752",
-      "oid": "264b9b736580ffa710dc6eb93911d2f7d1782debba768778bbc27c0b7211ee1a",
+      "id": "dbf8987ea6b3917f71979f0e198c4b74c420fec206d21893c368185af1f6a6ae",
+      "s": 355706,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:10:23.779Z",
+      "a": "822334503436",
+      "oid": "4eea8e5923741197f01f01351c5162880f022cad6af8cfb613b945ff9aec5f9d",
       "im": "stream"
     },
     {
       "n": "tree-badges",
-      "d": "1fa9354ecdacfc2a8d6c3fc8a17746d21affeeb4724df0ce59748cae4b5f818e",
+      "d": "6194a0cc2c267f83ea5563358d40eb086afe6cac9eeace0d824bfb8713300b23",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "ro": [
         {
           "p": "/api/tree-badges",
@@ -1405,23 +1518,20 @@
         }
       ],
       "p": 10,
-      "id": "9efd66bb945d78e54734e4ba82ff1b9327ee84203961a85d86bf915012b707d1",
-      "s": 89647,
-      "r": "nodejs24.x",
-      "c": "2026-08-25T15:17:58.261Z",
-      "a": "622714853058",
-      "oid": "1dcaa6ec08d1ee1aca4e99884c08a63800f749e0b2499ff501dbe8b7df8c75af",
+      "id": "36e419fb2b1cd50807d831c5faadb87aead1d8262adfdf44b1d94712d6f7d3a7",
+      "s": 382800,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:10:29.256Z",
+      "a": "786465436847",
+      "oid": "d68048416b53492d61d553146ca18669f8977a7d5a324698d709b779546b9f1b",
       "im": "stream"
     },
     {
       "n": "tree-burn-overview",
-      "d": "ec3a02b7db411c9c57e1064b5c36bc3c8a870d5cf5c12a425b0ccc8802902ea8",
+      "d": "57c70ac651d690490e56bcc8da473cffba29d41f9b52032748c5da9973beee8b",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "ro": [
         {
           "p": "/api/tree-burn-overview",
@@ -1432,23 +1542,20 @@
         }
       ],
       "p": 10,
-      "id": "51cd31a9a165dc06d9d8a168a35f0372e62e63316354568bba5a944cc807c5ec",
-      "s": 749540,
-      "r": "nodejs24.x",
-      "c": "2026-08-28T02:09:54.385Z",
-      "a": "576197671174",
-      "oid": "4472107bbb3febe0908bd257bf8181ee6abef6aba59a8607937e788437b46fd2",
+      "id": "cde085e6c584b01ff194cc3eaf698e5bcd99ae4bacc531b01fbfc11cf05d8f36",
+      "s": 1041396,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:10:29.576Z",
+      "a": "272797940975",
+      "oid": "89cbda3f5cd6a5d14290ec6472867e3694fb7408dd8cab914e6fe4eeaa88a3f8",
       "im": "stream"
     },
     {
       "n": "tree-chart",
-      "d": "6502ffd09a9199f9b9d570dfd718f3493358acd0f15cf596b2b9ec75a5516129",
+      "d": "f5da2bd06cdf448803d88b9cc4ed9d0ddaf6b4df90ad46f6512411271958ecb5",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "ro": [
         {
           "p": "/api/tree-chart",
@@ -1459,27 +1566,20 @@
         }
       ],
       "p": 10,
-      "id": "562a632ebc286dad881e964596add3eede4a029278c4993511290122588fabd1",
-      "a": "720546724483",
-      "c": "2026-09-01T00:35:40.968Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "77100d8a3b354776dacfe73d1a735c5a9be5bf445c91d5f484b80cc53138ba59",
-      "r": "nodejs24.x",
-      "rg": "us-east-2",
-      "s": 87696
+      "id": "199667ef016d219842a7109ce4613e751a5ce7b16d46fc2e952c7e33e97f4216",
+      "s": 356616,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:10:29.729Z",
+      "a": "924105187622",
+      "oid": "a7e36d98fbfb8fc0dd52de8d00408d31c9a8978f30ce3cc2aea8220efd266052",
+      "im": "stream"
     },
     {
       "n": "tree-dashboard",
-      "d": "a4efb6c1957ab6fdf54e820cb194a13a9a3f09097e0985eb0ea2d392e13550db",
+      "d": "a43f88698248c49f4bb624827c03789332a8e7da71831359466579432c17b87e",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "ro": [
         {
           "p": "/api/tree-dashboard",
@@ -1490,45 +1590,35 @@
         }
       ],
       "p": 10,
-      "id": "8244115a385cae18cf6a94ac52966efdacef0f8f1d36d9ac418490562ed791c7",
-      "a": "681352277317",
-      "c": "2026-09-01T00:35:40.939Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "7a45108e835832cbf85cddd6ed689e4bb50c30e7b6dddbc603ada35da0a444ed",
-      "r": "nodejs24.x",
-      "rg": "us-east-2",
-      "s": 87558
+      "id": "e5974ac9af56c8fc2eec81b7011cea56944a31ead541f549961ab6667fa99800",
+      "s": 382573,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:10:29.520Z",
+      "a": "313043143894",
+      "oid": "d79438e3a5609dbd4e93d2d799404e0c4d6f52aa02ced42bdaf6e45150177069",
+      "im": "stream"
     },
     {
       "n": "tree-exposure-on-deploy",
-      "d": "4296a22d47fb8c47c4ef2af3c8f74ea49ec95ae25168d2127dcf527ea43eb90e",
+      "d": "03ae7f1792d436b4a92edeb7c151f467df758404c10eedb34c414a8979c6f566",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "p": 10,
-      "id": "bbc55998e8e4df9f4271af052e4d9385293cb9532e605b51fe71c16eca26bcbb",
-      "s": 799957,
-      "r": "nodejs24.x",
-      "c": "2026-08-25T15:18:04.537Z",
-      "a": "612884065763",
-      "oid": "3afe2ccf2c5e544477731c5bc797ce78c18039d3d5a27b93ae6e2423531e68c8",
+      "id": "106a1ea9e8e20cabac45c794ad5f68af18b13678eb70d7f7dda1f9d326a689ef",
+      "s": 1093110,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:10:35.284Z",
+      "a": "831147333159",
+      "oid": "b78daf5565f55d07528e3941d7d802cc141629328910f2534192cb7d207e244a",
       "im": "stream"
     },
     {
       "n": "tree-exposure-preview",
-      "d": "5ebada1e659bb10daa5cf6ca4e18ff5f0c2e094be55122f887698e277782b33b",
+      "d": "1592d108af4ec154312d2bed07421aeedecdcb1ad2c109abebbbf6657f0d870b",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "ro": [
         {
           "p": "/api/tree-exposure-preview",
@@ -1539,59 +1629,50 @@
         }
       ],
       "p": 10,
-      "id": "9064c42113e09f1e671162cd805ec713517f3852f6957c9f8862f38cd54d1af5",
-      "s": 64932,
-      "r": "nodejs24.x",
-      "c": "2026-08-25T15:18:04.598Z",
-      "a": "560477221814",
-      "oid": "5ad00d4313e2b027a54c0cb904da2a4a48820bfc19e38b976f5d1dd2e7fd52c1",
+      "id": "e7dd987a61b550d84da45fdea2437aef3dfa8dbd30690bd6d7ef4393dd6d1c6f",
+      "s": 358809,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:10:42.240Z",
+      "a": "205114915445",
+      "oid": "ec9e170dc80db377d612c390d0cd726c3e8edb91f2388849888c91ffa7e23387",
       "im": "stream"
     },
     {
       "n": "tree-exposure-refresh-background",
-      "d": "e70bf339f16a5803dc71f9e0da7f928df637205b89547329087cd2240fdddb90",
+      "d": "3d6a035553a680ee0b4b93970bad8f6fb4fcde818085c31fad008009327f3b5d",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "p": 10,
-      "id": "92422bac1fa71ddc8856d3501e10dde91b4d441d6e759ab7e85462b817812f30",
-      "s": 799155,
-      "r": "nodejs24.x",
-      "c": "2026-08-25T15:18:10.749Z",
-      "a": "022731369924",
-      "oid": "f8d4bb886f303fbc6a80e9af611bfaad82d8153796290617f2848d6a3f334aac",
+      "id": "fec4576045eee001be16cc3ff96a6eb736dbd62adf755059508bfcd6c8bcd14d",
+      "s": 1092308,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:10:42.143Z",
+      "a": "761546455604",
+      "oid": "4ed7b7a93e46ccbcb6fe85345d913666788c9a7ab87927c46099f75098383de9",
       "im": "background"
     },
     {
       "n": "tree-exposure-refresh-scheduled",
-      "d": "5807fbd70e3e342e10a303420730e2e271c8cc7204d18090cef28b1ba9f92c58",
+      "d": "e5c783d1de5cc03b9fbff24d98d03c5d7d774203436b50dc385b0840ccd0361c",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "p": 10,
-      "id": "2604ebed5ec175613c0955f15be434fb369cc8ce956f483fbd09a0e531466581",
-      "s": 61832,
-      "r": "nodejs24.x",
-      "c": "2026-08-25T15:18:10.647Z",
-      "a": "517001624662",
-      "oid": "e416e119fa4955caee9a2c6ad43c220ac5dcdb73c9cb53b762946cbd3fa5d354",
+      "id": "a159b551f527dfcf2e9af719e62bc6ee9734b2de9d98887c47cb71d3010a2c0a",
+      "s": 355709,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:10:42.249Z",
+      "a": "995560814037",
+      "oid": "7911d43b3bb1e190d3d609428f1d5204d8edd906154cf127f377608daac1c9a1",
       "im": "stream"
     },
     {
       "n": "tree-exposure",
-      "d": "1810442e3836b9e031bcc96fffa6cde9535e7e13c92620f8a0e3d69749ac539a",
+      "d": "08124aefb63d46375f17090d3321d0aee7a4f0e80a1fd413314942dc0e85fcd0",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "ro": [
         {
           "p": "/api/tree-exposure",
@@ -1602,23 +1683,20 @@
         }
       ],
       "p": 10,
-      "id": "37a971c882997dfcdad3bbce763b301a66e0ea3f96f10137fd8fd73e91280569",
-      "s": 93192,
-      "r": "nodejs24.x",
-      "c": "2026-08-25T15:18:11.382Z",
-      "a": "514810512156",
-      "oid": "7c1ddb674f3f5f5b489016a78466533fc3521fbdefa36e8c5163d3595dbed4bb",
+      "id": "002b5ed6c8422b4faad8f05291527df19142c6754dad00fb5c20bcf6bd9f43b2",
+      "s": 386345,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:10:42.073Z",
+      "a": "070800196974",
+      "oid": "247dd3c83b3ce7b900174a73d01693be260a1592185272e8bf42a1f10e9e6b6f",
       "im": "stream"
     },
     {
       "n": "tree-knowledge-trial-admin",
-      "d": "2019ec7b8caca1e9ed7cdc955596f49b23cc1d59451b343b6cbe2794c165ccba",
+      "d": "9e2fd87781a64e527d76a1df0fc57feb22d7eeab07345af8b5bfbc30986c2223",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "ro": [
         {
           "p": "/api/tree-knowledge-trial-admin",
@@ -1629,23 +1707,20 @@
         }
       ],
       "p": 10,
-      "id": "9f3a13cdfc5d5265d49b456cefdc0ec75e520c996609082248243b13a3d1d468",
-      "s": 74843,
-      "r": "nodejs24.x",
-      "c": "2026-08-28T02:09:54.259Z",
-      "a": "124686620172",
-      "oid": "123af73793e3fa5f400917a1456f3cebd5a89427ee46137d8be9bbb65056f606",
+      "id": "c452b7b3e911fd6657051264ac5964379d918e5d1172ca270fba8550a90d9c3b",
+      "s": 370427,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:10:47.266Z",
+      "a": "242038277235",
+      "oid": "eb816ba1a9029da65db46cb1c7804c485c43a3b38fd107e74a44e41cb55b3601",
       "im": "stream"
     },
     {
       "n": "tree-knowledge-trial-claim-test",
-      "d": "7d5f68df10afbbb3af507a7001fdc51786270ae52917f01f1d01a3b31e5b3009",
+      "d": "7f812603ff1a63b10bb40eb0d1280c1c9ac273a53c788723ab458ed8db059cea",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "ro": [
         {
           "p": "/api/tree-knowledge-trial-claim-test",
@@ -1656,23 +1731,20 @@
         }
       ],
       "p": 10,
-      "id": "125673b73323dbc0c02609601bd3a609a975407449bc3c922790dfa75db89d6a",
-      "s": 61920,
-      "r": "nodejs24.x",
-      "c": "2026-08-27T19:27:06.963Z",
-      "a": "375708248955",
-      "oid": "c730793d1335a56b1810291418d2f988e295e74f5ebeaf5bba44534299282572",
+      "id": "d58444dd84180aea98a15e4121ed390b00d40f6c007baf9a5a3a0d44b8ece560",
+      "s": 355797,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:10:54.300Z",
+      "a": "365020585580",
+      "oid": "abf4ba5f988cc4a0582ca6d29a832e21ca74a8e6480cc79f981f84373086ecbb",
       "im": "stream"
     },
     {
       "n": "tree-knowledge-trial-claim",
-      "d": "0dab480cbaf6685a8856510a71610777fca73d8110beb3ca4947290eb21066e7",
+      "d": "40cd9a6a9dd43e5f3d3dbdfdd53ed9ca8fc31577fa92220d5e0765e46816fa9c",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "ro": [
         {
           "p": "/api/tree-knowledge-trial-claim",
@@ -1683,77 +1755,65 @@
         }
       ],
       "p": 10,
-      "id": "6f434a55fac2ea0fb317d43213cf1cc631e213e555083658a7aff01567a79b86",
-      "s": 68184,
-      "r": "nodejs24.x",
-      "c": "2026-08-28T03:08:52.079Z",
-      "a": "896953663382",
-      "oid": "caa5c72cf74e509fc1715e776b09d58b4dc870101c29f7ee45cd250914eaf3c8",
+      "id": "0ce3ad0403af5cbe93828166ddc844c8d83f5689335ecc1c20869ed9be24e1aa",
+      "s": 361963,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:10:54.397Z",
+      "a": "248678918660",
+      "oid": "9c4c6ec222c6e034445d7191aeb88aaf69fe274f9ec14efab8a0ecebfc2e7f17",
       "im": "stream"
     },
     {
       "n": "tree-knowledge-trial-resolver",
-      "d": "9d5989bef74eb7bd9c657cbad775e7d0a18d1986387e79a435dc240ec20ce3b6",
+      "d": "d21cee9557d513574432865b1926a3359c0fcef1b75d67e1e72a8570984f61e3",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "p": 10,
-      "id": "fcea2513a6cd7ce266d89474fc7a9bed8e7bbe00dc3d6e40bf44920dff65eb0f",
-      "s": 70923,
-      "r": "nodejs24.x",
-      "c": "2026-08-28T02:09:54.285Z",
-      "a": "724897335367",
-      "oid": "19f2d3f35662c1631f57561ec1035ee7065bff2996b4d0be20d681258650b965",
+      "id": "70b6b9e0f8f95b061ddce7e771f7e10b33e481c4f8ff0c279fe20235fa88456f",
+      "s": 366434,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:10:54.207Z",
+      "a": "205114915445",
+      "oid": "6e972d6d55bc43eb767889b711a3deb1e3dbd9ff84eba5575cc0836a14b68b26",
       "im": "stream"
     },
     {
       "n": "tree-knowledge-trial-rotation-on-deploy",
-      "d": "f3449a7e4c1e3b67fa76782aba0f5bbb982dff84d8fd8c6d71db902b8acb9e01",
+      "d": "47f03a587b1979f4b8aa5127b744d43518a5b18ad66be1b5272612bf3fd076ec",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "p": 10,
-      "id": "fd344361ccc5c15c3691c5bf48c0597b1d9e8156ec13adc2eee1239447c46e40",
-      "s": 72787,
-      "r": "nodejs24.x",
-      "c": "2026-08-28T02:09:54.257Z",
-      "a": "022731369924",
-      "oid": "9ba11492eac27379c1bec3a38c504a53bffd36050110a8d0cec119ce9742fb62",
+      "id": "034e93b998d637046d7e7055b802623022f29c89deb453ad835ecbfd7cdbbe9c",
+      "s": 368398,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:10:54.405Z",
+      "a": "643318452420",
+      "oid": "9f810c4c683ae23c0fc9dbc918fd5b76bceae7b72e4c6ca6da0010c80fbb42d7",
       "im": "stream"
     },
     {
       "n": "tree-knowledge-trial-rotation-scheduled",
-      "d": "6580266a8255f32bbd09f15720aaf90a826e528289638e90b653c325886316d6",
+      "d": "238d396c1789428a3b61fbdb1050d45646f6dc2e82325aa546c0d50939439146",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "p": 10,
-      "id": "bf15a3dc296c7cb62a3060dac1165acf1c671d42139c5ebd8c37a9bf3c1d39c2",
-      "s": 72631,
-      "r": "nodejs24.x",
-      "c": "2026-08-28T02:10:00.371Z",
-      "a": "539293845005",
-      "oid": "269b7904800fc6e77d8c0f9bb9acf9da562b842445b3d04f73b2964344cdd557",
+      "id": "321df206f5ccabb79b6ccd50d0c5d19ad2c359b334e0769e47a979563d6e3f73",
+      "s": 368252,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:12:04.363Z",
+      "a": "693192995752",
+      "oid": "ffc65eb595194a231d4e66af6392fe00c8360c1b9a689ca9bccdc81ce667d3fe",
       "im": "stream"
     },
     {
       "n": "tree-knowledge-trial-test",
-      "d": "20948d4440269ab26639a1170aad6b1b94d389bf9d49aef74ae901972b01fa9f",
+      "d": "4f2d82f2824a50fe316e0a21a0e2e11667569ca87c7153126f26d19c30c631ed",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "ro": [
         {
           "p": "/api/tree-knowledge-trial-test",
@@ -1764,23 +1824,20 @@
         }
       ],
       "p": 10,
-      "id": "10641510fbbf221444d0e1e3990fae318190862d15ee9c0bc403be04e6d2fd76",
-      "s": 61899,
-      "r": "nodejs24.x",
-      "c": "2026-08-27T19:27:06.974Z",
-      "a": "770208316574",
-      "oid": "5290f8ac57bc69549bbba59c0d9294af1dd080841d2b7f121452edbe675b8e13",
+      "id": "8d4b380ae29c6875ed5409e94d865a15edfc4c44cbfa523e2956a85ad67e73d2",
+      "s": 355776,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:12:10.779Z",
+      "a": "512455082512",
+      "oid": "657f97dcd4d84f4fe2beda522df74867aaefc0589f5176a671124b7ff789035e",
       "im": "stream"
     },
     {
       "n": "tree-knowledge-trial",
-      "d": "785276616496962b418d0cd3319625fb415b90893f1bb2aac182ceb4f0487382",
+      "d": "27e679d6907aa33ca42df39f63c4e82d60b6bc7dc5f4b2a69ba0be8dafdcf4c6",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "ro": [
         {
           "p": "/api/tree-knowledge-trial",
@@ -1791,23 +1848,24 @@
         }
       ],
       "p": 10,
-      "id": "16da903e7d66dba76dc2eb610c71ecb0eefe7d8e2f071f23b9333005f3a99529",
-      "s": 762801,
-      "r": "nodejs24.x",
-      "c": "2026-08-28T02:10:00.524Z",
-      "a": "041063310524",
-      "oid": "8f0e1875587ab4bdbe48421aed573d636cb962c775859b99fd49a5327ba8afb4",
-      "im": "stream"
+      "id": "703c1aa755d40d5db879b1c23b5b3f1dbd907cac57cfb818233730ab8df4c15a",
+      "a": "554032339015",
+      "c": "2026-09-22T06:02:32.744Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "a101132f4bb26207acc4eff069002aa6c920686a098ce4017b18b7aae2af64d2",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 1064266
     },
     {
       "n": "tree-leaderboard-preview",
-      "d": "6c397ca4ddce95a31edabcb2e790eab52fb1d74fc87a293acd5684ba2bed2c86",
+      "d": "26886c4bea35d22c63828d0964df9de2ab9862d4d72583f57b13c3f49d9dc434",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "ro": [
         {
           "p": "/api/tree-leaderboard-preview",
@@ -1818,59 +1876,50 @@
         }
       ],
       "p": 10,
-      "id": "7ba037013d7cb4a3a635f3ed002412c8d71d7f10302cee20dc804da5ccc0ed6e",
-      "s": 64628,
-      "r": "nodejs24.x",
-      "c": "2026-08-25T15:18:16.933Z",
-      "a": "689786375862",
-      "oid": "d9841c4816718f67b655271d4ea94e56f745ed50033da4945caa5558ed99344b",
+      "id": "f00bd8a9b57fd4ce0068427b1bf64fa8650fc240ffdbb9ee9f5adccd4db02b0e",
+      "s": 358505,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:12:10.753Z",
+      "a": "848941468638",
+      "oid": "76856c8ba4c25b7c4fbdcbb66288a9fe2a3ca7a7544ebd3ac4a5aa1d32129d74",
       "im": "stream"
     },
     {
       "n": "tree-leaderboard-refresh-background",
-      "d": "d3e8471cc035588782ac03ccf4754fbb4d3b111a62acdc3c16b31482294d2b2b",
+      "d": "dddf55b36dc2eb8b6da644eb50fa5b7be758a57b87c625ffc5f4651761457c83",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "p": 10,
-      "id": "90a879bf5c679b1a78c97cc03372b2abccf59e78459c82561ba1f95c463fcdcc",
-      "s": 97580,
-      "r": "nodejs24.x",
-      "c": "2026-08-25T15:18:17.526Z",
-      "a": "551936673993",
-      "oid": "30c1d214e515fc9c9a9b4d23dd9c245d78a696a38faebf41cee418c80d47a186",
+      "id": "88de47f16bd7307fc4182210f4767f1c5ed76c976df5973543c165b39b2547f3",
+      "s": 390733,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:12:10.878Z",
+      "a": "012004486566",
+      "oid": "e39a0193d59e3cf47a5b91da8120dbe26cb8e15eb878b9e03d3f814fb41ff077",
       "im": "background"
     },
     {
       "n": "tree-leaderboard-refresh-scheduled",
-      "d": "aea00262fed154e2ad0645ec169c55d80ff8ee7ec957c5f992853e8f3e01f4a8",
+      "d": "0a202c04886d259bfb5994b5d7d5d602c22e8328a560312da7e7473438a9722b",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "p": 10,
-      "id": "a55d2fe4ac35216060cde988d3f87a626f630babfa271a1e6452bc753b57b15c",
-      "s": 61623,
-      "r": "nodejs24.x",
-      "c": "2026-08-25T15:18:22.928Z",
-      "a": "224833515367",
-      "oid": "ac9162982ff921d57d609bced04d4e67132f41eccaeb428781b7a3f3523bfb5f",
+      "id": "7d3235cb7f8cc5cbd6bab45f685a22f70115d5fc206023dfd91c73e0b8d27551",
+      "s": 355500,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:12:16.961Z",
+      "a": "848941468638",
+      "oid": "fd0f1bdf7a1f0333cea90fde18252ee25a9f13bc6ceac345de3ae1b65e2feda3",
       "im": "stream"
     },
     {
       "n": "tree-leaderboard",
-      "d": "c095e6857df8ed7511d31a48556f6f9c20299ecca142e2e90c90d0bc8a9aa953",
+      "d": "f97a886c3621eaf9d8cdbe72f2006bda3ae1a1257c643b116107e0c8a99fc232",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "ro": [
         {
           "p": "/api/tree-leaderboard",
@@ -1881,23 +1930,20 @@
         }
       ],
       "p": 10,
-      "id": "181b9b23739dd41921a0a9fe24f9f81f0a04ab1a7c324be7730a629dec573ed1",
-      "s": 88045,
-      "r": "nodejs24.x",
-      "c": "2026-08-25T15:18:22.914Z",
-      "a": "547386967757",
-      "oid": "6403acc946739fe3187bf2ebd79dc210c9d06c8073da5938efa9c652656dc96e",
+      "id": "fc52f1f6f13b23b9c36f8096b23dd11acd70c9011c00af0c2c5c1251444bc4a9",
+      "s": 381198,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:12:22.839Z",
+      "a": "622714853058",
+      "oid": "93c9af1ea685b32ea56ba15554f7209c25bb41376a3b10f6c5e82ccef14fabe4",
       "im": "stream"
     },
     {
       "n": "tree-limit-orders",
-      "d": "e5157f6cd4385ad47facefa496e5f1359f4aa485a925b0bbe6dca89326a9b321",
+      "d": "5a30c23110f0ddf00de8c9da1a8ae6309e35c08d6a574006f7bb5d9713888b09",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "ro": [
         {
           "p": "/api/tree-limit-orders",
@@ -1908,23 +1954,20 @@
         }
       ],
       "p": 10,
-      "id": "75c40ad3048f12a6710fa1347d2b7f7722f0a5e431274a1da1c3c16a3621e1a9",
-      "s": 1789593,
-      "r": "nodejs24.x",
-      "c": "2026-08-25T15:18:23.354Z",
-      "a": "791439993187",
-      "oid": "babce10654d4aedf7795cf864ba5a1127088d4e321625f646225261bfd7ee524",
+      "id": "2fc24d4d4ebaeaf058428b3a565834b61c9379736bf728aef1ec03733e93ba90",
+      "s": 2083470,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:12:22.750Z",
+      "a": "385216822393",
+      "oid": "dcde5dca1a1bcfffd5c776577138f0bea971af1f81f15c5f543ccc2b102d2efc",
       "im": "stream"
     },
     {
       "n": "tree-liquidity",
-      "d": "9ae29ae9ef1e8f71bb50598ce0d585a727c289153a16edd93aa7e8da8e027041",
+      "d": "840cfff838eb1e5e2e49124deba44ff301d0428c286c21617a2ff9e01cd45e0f",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "ro": [
         {
           "p": "/api/tree-liquidity",
@@ -1935,23 +1978,20 @@
         }
       ],
       "p": 10,
-      "id": "4c225df050c9a838c0715d4a3e51fa889fdffe3cef3965c7ed695a7aa29c11e5",
-      "s": 752215,
-      "r": "nodejs24.x",
-      "c": "2026-08-25T15:18:23.195Z",
-      "a": "564250524218",
-      "oid": "e76eb90ea5d80e679d05db98b624e22ede86d3cfa2ed605a64706231ce35104e",
+      "id": "59079c76891f7a51cabf075109c89e83ba7137f76471a75c43d92826c18554bc",
+      "s": 1045087,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:12:22.837Z",
+      "a": "205114915445",
+      "oid": "75f82162235297a2e06415f63125f788b87d021fb94ee61314950ea6f1a8a6ed",
       "im": "stream"
     },
     {
       "n": "tree-market",
-      "d": "0d186ed95aed6f4a07e47808109b80742e4dd776b14d8317278a30da4a01bced",
+      "d": "80b3d9809ba6914612853ad996089723a81ae72b1d703565a180abddf82777ba",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "ro": [
         {
           "p": "/api/tree-market",
@@ -1962,27 +2002,20 @@
         }
       ],
       "p": 10,
-      "id": "d4b07b1c96e5c5b048381e66d8a16fc64f3bac2ff3aed60598f6845521a7a942",
-      "a": "527111402132",
-      "c": "2026-09-01T00:35:41.081Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "5d2b147fdc0bf0e59b15e39bc2a861ac7175f6e46b522ce0361695db0757cb5b",
-      "r": "nodejs24.x",
-      "rg": "us-east-2",
-      "s": 62099
+      "id": "9377645688f4aa7679af7874c7abe0df8bd83e5c461f34016909669816365040",
+      "s": 355121,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:12:23.016Z",
+      "a": "184816615194",
+      "oid": "f15f098d8b534ee8ac7c5723603361cbc4645b8c3aad461363d4b3bf61fe68df",
+      "im": "stream"
     },
     {
       "n": "tree-nftree",
-      "d": "63959df9c9cd5086d3519bf19c628e1dc222bd07c128ac997b80c22c267f25c0",
+      "d": "80b76f1c5ebf832808f874f372f08532ec8abebe165e4186991a613969cd699e",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "ro": [
         {
           "p": "/api/tree-nftree",
@@ -1993,23 +2026,20 @@
         }
       ],
       "p": 10,
-      "id": "bd384b132ca8f57f27b036c3c702685255b3e80fb04697f03691a10adaf33880",
-      "s": 64035,
-      "r": "nodejs24.x",
-      "c": "2026-08-25T15:18:29.010Z",
-      "a": "250705260819",
-      "oid": "1c7cfdd165393d48e95c6e28d1a2268610f5fa39db22e68d24c74f47dad3eeba",
+      "id": "cc401234832fd50470d0873f2a9455f52e1b9ac2b7e6b4c3c5dbaab1760c1a13",
+      "s": 357912,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:12:28.520Z",
+      "a": "517001624662",
+      "oid": "951e6e03a211dde8dccdac7e2f48168d45b8080fb3a1644df9d99592a13878d5",
       "im": "stream"
     },
     {
       "n": "tree-raffle-claim",
-      "d": "c61bda58adda56cb0ef8953ee364450d43ac6ca5d34be44a197d937c9a66c808",
+      "d": "2737d04a17192fb1cfcd509e2036ef7c4882c818b2b76ffd8432a96edf3c4993",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "ro": [
         {
           "p": "/api/tree-raffle-claim",
@@ -2020,23 +2050,20 @@
         }
       ],
       "p": 10,
-      "id": "393cb080c6b210c248a17e8dc7e6fba77dca3289ce6a0e9029cb087833d10564",
-      "s": 68076,
-      "r": "nodejs24.x",
-      "c": "2026-08-28T03:08:52.089Z",
-      "a": "270454320665",
-      "oid": "e48246b8cadcb4a2bc821ba7172ddf589d682668e5d589585f063aa558fa2d37",
+      "id": "57decd266a743a8b0f9e8f1c053271367ab2d06c6921b12e333b0ed18f0de40f",
+      "s": 361848,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:12:35.242Z",
+      "a": "831991502077",
+      "oid": "0aebd65b143bc2be98555719e748dfb03cf58f215187b27e8bf29000229e5a1a",
       "im": "stream"
     },
     {
       "n": "tree-raffle-ingest-buy",
-      "d": "4087e1ba5885cc6b4a419f5f66a97a926231cd27b3bea073d878f5bfb939c397",
+      "d": "af37f89080ffdbf4102592d70e641fb6ee811acffde757fb900329246a2bc42c",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "ro": [
         {
           "p": "/api/tree-raffle-ingest-buy",
@@ -2047,23 +2074,20 @@
         }
       ],
       "p": 10,
-      "id": "8e25e2a9c489309e34b04e4c40e67d7e59b2524de89907a87b2b340b29838021",
-      "s": 70154,
-      "r": "nodejs24.x",
-      "c": "2026-08-25T15:18:29.392Z",
-      "a": "617891814415",
-      "oid": "c3de5f24879638bea2d56dcd378d01124a58b40b7c57c7c4adbe2ebf378e722b",
+      "id": "87f24070aa06b47011a76720f13fc37ade668df7d5875efcd81fd9e01ee0e5d5",
+      "s": 363497,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:12:34.937Z",
+      "a": "453753634007",
+      "oid": "eb28baa26f68499f0d0d1d8448c565ec3a10ef6d4e262039d879a004ca3d725b",
       "im": "stream"
     },
     {
       "n": "tree-raffle-status",
-      "d": "4ab44e7cfb5df2047b6edc41a197a9562e6b1730399b7cac7d55b4b1b4ea5f67",
+      "d": "cec015dd4e7520ee48ca3fa8a7c89d6e676f8730a1e77594b98f1aecbcabff62",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "ro": [
         {
           "p": "/api/tree-raffle-status",
@@ -2074,23 +2098,20 @@
         }
       ],
       "p": 10,
-      "id": "70e1fd2184a5ea69879f9bb6364cac01011c48f4368a62d241b0759c9e029c4a",
-      "s": 64623,
-      "r": "nodejs24.x",
-      "c": "2026-08-25T15:18:29.509Z",
-      "a": "755834921685",
-      "oid": "04b59385a7b51ce9d672a7e2e092d0f6f98be5440406882d3c47ff9bc41bcd70",
+      "id": "f24caee13886e63234bb489ca0314b792cd839d4467a5216a93122c9e002db0a",
+      "s": 358500,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:12:35.121Z",
+      "a": "796555058691",
+      "oid": "81657224639c01d763a991743bb2b6f2f808fb7737c410290407b5bca4df4769",
       "im": "stream"
     },
     {
       "n": "tree-swap-quote",
-      "d": "928451362dac1a0f9f71c117c99b93474b7f40dd3d493371d7beda81ca26ff6a",
+      "d": "6037ab8ad9932a2c23116c8832eea9dbfbb7fc4f915c2a34dc108c41fcbe8a0f",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "ro": [
         {
           "p": "/api/tree-swap-quote",
@@ -2101,23 +2122,20 @@
         }
       ],
       "p": 10,
-      "id": "4e1a6a078b67c3d3eb667bb4ab45ad5a563df48fc3d4d0851053d8d82a03bc48",
-      "s": 2069120,
-      "r": "nodejs24.x",
-      "c": "2026-08-25T15:18:29.912Z",
-      "a": "022731369924",
-      "oid": "441f720aa5d44452d1f47ed3bb540f49a0b042c416c620cb5ca92e71a87d6067",
+      "id": "982eb1b5755f003ab962fc714af99824318c609809bb002fa8cc5120f84fbfbf",
+      "s": 1555771,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:12:35.155Z",
+      "a": "746848447824",
+      "oid": "abfcc63c2fc51104d4ab614b547ea001c6cde0752903b3ce2d92a9ea72e0b422",
       "im": "stream"
     },
     {
       "n": "tree-v3-overview",
-      "d": "828c526ffde22b33a8a723b619dcab134dc8373f71f95971010c6cad32fe6953",
+      "d": "49b413b9360247a3e196909814b73829319dabeb36e25498f279ef75023036fc",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "ro": [
         {
           "p": "/api/tree-v3-overview",
@@ -2128,23 +2146,20 @@
         }
       ],
       "p": 10,
-      "id": "b3ff06356d7743d96ddce1031ed7c13e30b36bd283b9007836000e741dc9a737",
-      "s": 756631,
-      "r": "nodejs24.x",
-      "c": "2026-08-29T03:06:31.303Z",
-      "a": "368064623203",
-      "oid": "e4e7cff9646ccb4dac0ce593bd8a77b59d3b8abf6a49b630042a1fdf9e79d4ce",
+      "id": "f1c3504d9737f3572e05aba5c7538effcf2cbdca4303a86bacb925eb0723757a",
+      "s": 1050175,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:12:40.623Z",
+      "a": "042287751506",
+      "oid": "3e371d325ef95014d702f7d7ad272ad89d33f7379ac4872c6098e386bb15b2bf",
       "im": "stream"
     },
     {
       "n": "tree-volume",
-      "d": "6b2b698a4c6fb248e7bb267208ba04ba76655cb719d30837b5121bbed5341847",
+      "d": "f49bd426b253d95d66864a8fd9b422a2d025c6b27e5a940811007b5e1660d957",
       "dn": null,
       "g": null,
-      "bd": {
-        "bootstrapVersion": "2.18.0",
-        "runtimeAPIVersion": 2
-      },
+      "bd": null,
       "ro": [
         {
           "p": "/api/tree-volume",
@@ -2155,12 +2170,12 @@
         }
       ],
       "p": 10,
-      "id": "ec5ae2e88b96102cc9e14c92e06113461fbea204e980ced3659cbf454e38f7a6",
-      "s": 751239,
-      "r": "nodejs24.x",
-      "c": "2026-08-27T19:27:07.362Z",
-      "a": "242038277235",
-      "oid": "c10c38addbe55ec8a45d0a81fa0ec3cd63b487e03ecc05b4b367abc5d7fa0524",
+      "id": "f84353d65e2d93ba2dd54924c3d5323163fd1dd347d610310bbe7881b4b7f61e",
+      "s": 1044029,
+      "r": "nodejs22.x",
+      "c": "2026-09-20T20:12:46.851Z",
+      "a": "822334503436",
+      "oid": "bc05b2603d770864720f87cee1840cd27670a17f83468cee9b7df1a78e86d226",
       "im": "stream"
     }
   ]

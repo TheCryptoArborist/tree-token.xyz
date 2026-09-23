@@ -6,7 +6,7 @@ const root = resolve(import.meta.dirname, '..');
 const output = resolve(root, 'dist');
 const manifest = JSON.parse(await readFile(resolve(root, 'production/manifest.json'), 'utf8'));
 // Reject unrelated build output while allowing this snapshot to be rebuilt.
-const outputPath = file => file.path === '/netlify.toml' ? 'netlify.toml' : file.source;
+const outputPath = file => file.path.slice(1);
 const allowed = new Set(manifest.files.map(file => outputPath(file).toLowerCase()));
 async function checkOutput(directory, prefix = '') {
   let entries;

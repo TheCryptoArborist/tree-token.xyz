@@ -68,6 +68,13 @@ function formatNumber(value, maximumFractionDigits = 6) {
   return new Intl.NumberFormat('en-US', { maximumFractionDigits }).format(numeric);
 }
 
+function verifiedVolume(value) {
+  if (typeof value !== 'number' && typeof value !== 'string') return null;
+  if (typeof value === 'string' && value.trim() === '') return null;
+  const numeric = Number(value);
+  return Number.isFinite(numeric) && numeric >= 0 ? numeric : null;
+}
+
 function verifiedPositive(value) {
   const numeric = Number(value);
   return Number.isFinite(numeric) && numeric > 0 ? numeric : null;
@@ -687,7 +694,7 @@ function renderPool(payload) {
   const analytics = payload.analytics || {};
   const analyticsVerified = analytics.status === 'verified';
   state.suiDexTvlUsd = analyticsVerified ? verifiedPositive(analytics.tvlUsd) : null;
-  state.suiDexVolumeUsd = analyticsVerified && Number.isFinite(Number(analytics.volume24hUsd)) && Number(analytics.volume24hUsd) >= 0 ? Number(analytics.volume24hUsd) : null;
+  state.suiDexVolumeUsd = analyticsVerified ? verifiedVolume(analytics.volume24hUsd) : null;
   updateCombinedV3Tvl();
   updateCombinedV3Volume();
   document.getElementById('v3PoolPrice').textContent = `${pool.priceSuiPerTree} SUI / TREE`;
@@ -738,6 +745,9 @@ function updateCombinedV3Volume() {
 }
 
 async function loadExternalPoolMetrics() {
+  state.cetusVolumeUsd = null;
+  state.turbosVolumeUsd = null;
+  updateCombinedV3Volume();
   const tvl = document.getElementById('v3CetusTvl');
   const volume = document.getElementById('v3CetusVolume');
   const cetusApr = document.getElementById('v3CetusApr');
@@ -756,9 +766,9 @@ async function loadExternalPoolMetrics() {
     const [liquidityPayload, volumePayload] = await Promise.all([liquidityResponse.json(), volumeResponse.json()]);
     if (!liquidityResponse.ok || liquidityPayload.status !== 'ok' || !volumeResponse.ok || volumePayload.status !== 'ok') throw new Error('External V3 venue metrics could not be completely verified.');
     const cetusPool = liquidityPayload.liquidity?.cetusPool;
-    const cetusVolume24h = Number(volumePayload.pools?.[CETUS_POOL_ID]?.volume24hUsd);
+    const cetusVolume24h = verifiedVolume(volumePayload.pools?.[CETUS_POOL_ID]?.volume24hUsd);
     state.cetusTvlUsd = verifiedPositive(cetusPool?.tvlUsd);
-    state.cetusVolumeUsd = Number.isFinite(cetusVolume24h) && cetusVolume24h >= 0 ? cetusVolume24h : null;
+    state.cetusVolumeUsd = cetusVolume24h;
     const cetusFeeApr = annualizedFeeApr(cetusVolume24h, state.cetusTvlUsd, cetusPool?.feePercent);
     if (!state.cetusTvlUsd || cetusPool?.poolId !== CETUS_POOL_ID || cetusPool?.active !== true || !Number.isFinite(cetusVolume24h)
       || !verifiedPositive(cetusPool?.priceSuiPerTree) || cetusFeeApr === null) throw new Error('Cetus metrics were incomplete.');
@@ -773,9 +783,9 @@ async function loadExternalPoolMetrics() {
       : null;
     const turbosPoolVolume = volumePayload.pools?.[TURBOS_TREE_POOL_ID];
     state.turbosTvlUsd = verifiedPositive(turbosPool?.tvlUsd);
-    state.turbosVolumeUsd = Number.isFinite(Number(turbosPoolVolume?.volume24hUsd)) && Number(turbosPoolVolume?.volume24hUsd) >= 0 ? Number(turbosPoolVolume.volume24hUsd) : null;
+    state.turbosVolumeUsd = verifiedVolume(turbosPoolVolume?.volume24hUsd);
     const turbosFeeApr = annualizedFeeApr(turbosPoolVolume?.volume24hUsd, state.turbosTvlUsd, turbosPool?.feePercent);
-    if (!state.turbosTvlUsd || turbosPool?.active !== true || !Number.isFinite(Number(turbosPoolVolume?.volume24hUsd))
+    if (!state.turbosTvlUsd || turbosPool?.active !== true || !Number.isFinite(state.turbosVolumeUsd)
       || !verifiedPositive(turbosPool?.priceSuiPerTree) || turbosFeeApr === null) throw new Error('Turbos SUI/TREE pool metrics were incomplete.');
     if (turbosTvl) turbosTvl.textContent = formatUsd(state.turbosTvlUsd);
     if (turbosVolume) turbosVolume.textContent = formatUsd(turbosPoolVolume.volume24hUsd);
@@ -800,10 +810,13 @@ async function loadExternalPoolMetrics() {
     if (turbosPrice) turbosPrice.textContent = 'Not verified';
     if (turbosNotice) turbosNotice.textContent = 'Turbos data is temporarily unavailable. Partial values are not published.';
     updateCombinedV3Tvl();
+    updateCombinedV3Volume();
   }
 }
 
 async function loadPool() {
+  state.suiDexVolumeUsd = null;
+  updateCombinedV3Volume();
   const status = document.getElementById('v3PoolStatus');
   if (status) { status.textContent = 'Loading verified V3 pool…'; status.className = 'v3-status'; }
   try {
@@ -812,6 +825,8 @@ async function loadPool() {
     if (!response.ok || payload.status !== 'ok' || payload.pool?.poolId !== V3_POOL_ID) throw new Error(payload.message || payload.error || `V3 endpoint returned ${response.status}`);
     renderPool(payload);
   } catch (error) {
+    state.suiDexVolumeUsd = null;
+    updateCombinedV3Volume();
     if (status) { status.textContent = `V3 pool unavailable: ${error instanceof Error ? error.message : error}`; status.className = 'v3-status error'; }
   }
 }

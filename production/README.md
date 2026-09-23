@@ -1,3 +1,15 @@
+# Corrective release candidate — 2026-09-23
+
+The release snapshot now reconciles all 189 files from locked production deploy `6ab219d0f2e18c9096895bf6`. The only intended public-file change relative to that deployment is `dapp/v3-workspace.js`: combine verified SuiDex, Cetus and Turbos 24-hour volume, reject missing/invalid values, and clear the headline while loading or on failure. Zero remains valid.
+
+Knowledge Trial purchase verification, the live homepage/assets and litepaper are recovered byte-for-byte. All 37 current backend packages and five schedules must be reused, not rebuilt. None of the historical local ZIP archives are verified matches for the current packages. `release-baseline-20260923.json` records the live baseline; `manifest.json` describes candidate static bytes and required backend identities.
+
+Use the authenticated preserved-package release script for preview and promotion. Do not deploy the root functions directory through an ordinary full-build deploy. Keep automatic publication locked. The STI Stats branch is excluded.
+
+The production verification/build checks snapshot byte integrity; it does not assert backend source parity. Newly recovered supplementary deployed files are stored under `production/live-static` and built at their recorded public paths.
+
+---
+
 # Current production — 2026-09-18
 
 VICTORY funding and MAX fixes are published and locked as deploy `6aad931f45a27f392303e229`, from GitHub commit `06211bf3f558b775ced7eb5dba2c90461f2487da` (PR #26). See [current-release.json](current-release.json) for the complete live static-file inventory, backend digests/configurations, five schedules, and previous deployment.

@@ -325,6 +325,35 @@ if (root) {
     }
   }
 
+  async function verifySubmittedPurchase(detail) {
+    const wallet = String(window.playerAddress || '').toLowerCase();
+    const selectedRoundId = state.publicRound?.roundId;
+    const digest = typeof detail?.digest === 'string' ? detail.digest.trim() : '';
+    const submittedWallet = typeof detail?.wallet === 'string' ? detail.wallet.toLowerCase() : '';
+    if (!wallet || !selectedRoundId || !digest || submittedWallet !== wallet || state.eligibilityChecking) return;
+    state.eligibilityChecking = true;
+    renderEligibility();
+    try {
+      const payload = await post('verify-purchase', { wallet, roundId: selectedRoundId, digest });
+      if (String(window.playerAddress || '').toLowerCase() !== wallet) return;
+      state.eligibilityWallet = wallet;
+      state.eligibilityResult = payload.eligibility;
+      nodes.claimStatus.textContent = payload.eligibility?.eligible
+        ? 'Purchase verified. Your daily challenge is ready.'
+        : 'The purchase was verified, but it does not meet this round’s eligibility rules.';
+    } catch (error) {
+      state.eligibilityWallet = wallet;
+      state.eligibilityResult = null;
+      nodes.claimStatus.textContent = error instanceof Error
+        ? error.message
+        : 'The purchase could not be verified automatically.';
+    } finally {
+      state.eligibilityChecking = false;
+      renderEligibility();
+      updateWalletState();
+    }
+  }
+
   function updateWalletState() {
     const wallet = String(window.playerAddress || '');
     const normalizedWallet = wallet.toLowerCase();
@@ -867,11 +896,11 @@ if (root) {
     renderActivity();
     if (window.playerAddress && state.publicRound?.roundId) checkEligibility({ automatic: true });
   });
-  window.addEventListener('tree:qualifying-purchase-submitted', () => {
+  window.addEventListener('tree:qualifying-purchase-submitted', (event) => {
     selectTab(nodes.passTab);
     nodes.eligibility.className = 'knowledge-eligibility checking';
-    nodes.eligibility.textContent = 'Purchase submitted. The verified ledger is checking your Challenge eligibility now.';
-    window.setTimeout(() => checkEligibility({ automatic: true }), 15_000);
+    nodes.eligibility.textContent = 'Purchase finalized. Verifying it independently for Challenge eligibility now.';
+    verifySubmittedPurchase(event.detail).catch(() => {});
   });
   window.addEventListener('beforeunload', () => clearInterval(state.timerId));
 
