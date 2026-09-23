@@ -1,0 +1,33 @@
+import { cp, mkdir, readFile, readdir } from 'node:fs/promises';
+import { dirname, resolve } from 'node:path';
+
+const root = resolve(import.meta.dirname, '..');
+const output = resolve(root, 'dist');
+const manifest = JSON.parse(await readFile(resolve(root, 'production/manifest.json'), 'utf8'));
+const outputPath = file => file.path === '/netlify.toml' ? 'netlify.toml' : file.source;
+const allowed = new Set(manifest.files.map(file => outputPath(file).toLowerCase()));
+
+async function rejectUntrackedOutput(directory, prefix = '') {
+  let entries;
+  try {
+    entries = await readdir(directory, { withFileTypes: true });
+  } catch (error) {
+    if (error.code === 'ENOENT') return;
+    throw error;
+  }
+  for (const entry of entries) {
+    const relative = prefix + entry.name;
+    if (entry.isDirectory()) await rejectUntrackedOutput(resolve(directory, entry.name), `${relative}/`);
+    else if (!allowed.has(relative.toLowerCase())) throw new Error(`Preserve or remove the old preview build before continuing: dist/${relative}`);
+  }
+}
+
+await rejectUntrackedOutput(output);
+for (const file of manifest.files) {
+  const destination = resolve(output, outputPath(file));
+  await mkdir(dirname(destination), { recursive: true });
+  await cp(resolve(root, file.source), destination);
+}
+
+console.log(`Built a ${manifest.files.length}-file feature preview from the verified production file set.`);
+console.log('The production manifest and recovered function packages were not changed.');

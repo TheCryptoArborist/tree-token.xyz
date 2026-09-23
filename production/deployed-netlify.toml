@@ -1,15 +1,16 @@
-functionsDirectory = "C:\\Users\\peter\\.codex\\.chatgpt-projects\\g-p-687e42c6116881919802ba8a01351f3d\\tree-token-v3-repair\\netlify\\functions"
+functionsDirectory = "/workspace/scratch/bcf43ac6a92c/tree-token-challenge-v3/netlify/functions"
 functionsDirectoryOrigin = "config"
 headersOrigin = "config"
 plugins = []
 redirects = []
 
 [build]
-publish = "C:\\Users\\peter\\.codex\\.chatgpt-projects\\g-p-687e42c6116881919802ba8a01351f3d\\tree-token-v3-repair"
+publish = "/workspace/scratch/bcf43ac6a92c/tree-token-challenge-v3/dist"
 publishOrigin = "config"
+base = "/workspace/scratch/bcf43ac6a92c/tree-token-challenge-v3"
+command = "npm run build"
 commandOrigin = "config"
-command = "echo Static site - no build step"
-functions = "C:\\Users\\peter\\.codex\\.chatgpt-projects\\g-p-687e42c6116881919802ba8a01351f3d\\tree-token-v3-repair\\netlify\\functions"
+functions = "/workspace/scratch/bcf43ac6a92c/tree-token-challenge-v3/netlify/functions"
 
   [build.environment]
 
@@ -28,6 +29,7 @@ functions = "C:\\Users\\peter\\.codex\\.chatgpt-projects\\g-p-687e42c61168819198
 [functions]
 
   [functions."*"]
+  node_bundler = "esbuild"
 
 [[headers]]
 for = "/*"

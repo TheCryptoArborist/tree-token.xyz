@@ -1,19 +1,32 @@
-import { TREE_VOLUME_SOURCES, parseVolumeTransaction, type VolumePrices, type VolumeSource } from '../lib/tree-volume-overview.ts';
+import { collectVolumeEventPages, TREE_VOLUME_SOURCES, parseVolumeTransaction, type VolumePrices, type VolumeSource } from '../lib/tree-volume-overview.ts';
 
 const GRAPHQL_URL = 'https://graphql.mainnet.sui.io/graphql';
 const PAGE_SIZE = 50;
 const MAX_PAGES_PER_POOL = 20;
-const QUERY = `query RecentPoolTransactions($pool: SuiAddress!, $last: Int!, $before: String) {
+const EVENT_PAGE_SIZE = 50;
+const MAX_EVENT_PAGES_PER_TRANSACTION = 20;
+const EVENT_FIELDS = `nodes { contents { type { repr } json } }`;
+const QUERY = `query RecentPoolTransactions($pool: SuiAddress!, $last: Int!, $before: String, $eventFirst: Int!) {
   transactions(last: $last, before: $before, filter: { affectedObject: $pool }) {
     pageInfo { hasPreviousPage startCursor }
     nodes {
       digest
       effects {
         status timestamp
-        events(first: 50) {
-          pageInfo { hasNextPage }
-          nodes { contents { type { repr } json } }
+        events(first: $eventFirst) {
+          pageInfo { hasNextPage endCursor }
+          ${EVENT_FIELDS}
         }
+      }
+    }
+  }
+}`;
+const EVENT_PAGE_QUERY = `query TransactionEventPage($digest: String!, $first: Int!, $after: String!) {
+  transaction(digest: $digest) {
+    effects {
+      events(first: $first, after: $after) {
+        pageInfo { hasNextPage endCursor }
+        ${EVENT_FIELDS}
       }
     }
   }
@@ -22,30 +35,57 @@ const QUERY = `query RecentPoolTransactions($pool: SuiAddress!, $last: Int!, $be
 type JsonRecord = Record<string, unknown>;
 function record(value: unknown): JsonRecord { return value && typeof value === 'object' && !Array.isArray(value) ? value as JsonRecord : {}; }
 
+async function requestGraphql(query: string, variables: Record<string, unknown>, timeoutMs = 8_000) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(GRAPHQL_URL, {
+      method: 'POST', signal: controller.signal,
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query, variables }),
+    });
+    if (!response.ok) throw new Error(`Sui GraphQL returned HTTP ${response.status}.`);
+    const payload = record(await response.json());
+    if (Array.isArray(payload.errors) && payload.errors.length) throw new Error('Sui GraphQL returned transaction errors.');
+    return payload;
+  } finally { clearTimeout(timeout); }
+}
+
+async function completeTransactionEvents(node: JsonRecord, digest: string) {
+  const effects = record(node.effects);
+  const initialEvents = record(effects.events);
+  const collected = await collectVolumeEventPages(initialEvents, async (after) => {
+    const payload = await requestGraphql(EVENT_PAGE_QUERY, { digest, first: EVENT_PAGE_SIZE, after });
+    const transaction = record(record(payload.data).transaction);
+    const nextEffects = record(transaction.effects);
+    const events = record(nextEffects.events);
+    if (!Object.keys(transaction).length || !Object.keys(nextEffects).length || !Object.keys(events).length) {
+      throw new Error(`Sui GraphQL did not return event page data for transaction ${digest}.`);
+    }
+    return events;
+  }, MAX_EVENT_PAGES_PER_TRANSACTION);
+  return {
+    node: { ...node, effects: { ...effects, events: { nodes: collected.nodes, pageInfo: { hasNextPage: false } } } },
+    eventPages: collected.pages,
+  };
+}
+
 async function requestPool(source: VolumeSource, prices: VolumePrices, start: number, end: number) {
   let before: string | null = null;
   let volumeUsd = 0;
   let swaps = 0;
   let transactions = 0;
   let pages = 0;
+  let eventPages = 0;
   let complete = false;
   const seen = new Set<string>();
   for (let page = 0; page < MAX_PAGES_PER_POOL; page += 1) {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8_000);
-    let response: Response;
-    try {
-      response = await fetch(GRAPHQL_URL, {
-        method: 'POST', signal: controller.signal,
-        headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: QUERY, variables: { pool: source.poolId, last: PAGE_SIZE, before } }),
-      });
-    } finally { clearTimeout(timeout); }
-    if (!response.ok) throw new Error(`Sui GraphQL returned HTTP ${response.status}.`);
-    const payload = record(await response.json());
-    if (Array.isArray(payload.errors) && payload.errors.length) throw new Error('Sui GraphQL returned transaction errors.');
+    const payload = await requestGraphql(QUERY, { pool: source.poolId, last: PAGE_SIZE, before, eventFirst: EVENT_PAGE_SIZE });
     const connection = record(record(payload.data).transactions);
-    const nodes = Array.isArray(connection.nodes) ? connection.nodes : [];
+    if (!Array.isArray(connection.nodes) || typeof record(connection.pageInfo).hasPreviousPage !== 'boolean') {
+      throw new Error('Pool transaction coverage was not verified.');
+    }
+    const nodes = connection.nodes;
     pages += 1;
     let oldest = Number.POSITIVE_INFINITY;
     for (const nodeValue of nodes) {
@@ -55,7 +95,11 @@ async function requestPool(source: VolumeSource, prices: VolumePrices, start: nu
       if (Number.isFinite(timestamp)) oldest = Math.min(oldest, timestamp);
       if (!digest || seen.has(digest)) continue;
       seen.add(digest);
-      const parsed = parseVolumeTransaction(node, source, prices, start, end);
+      const effects = record(node.effects);
+      if (effects.status !== 'SUCCESS' || !Number.isFinite(timestamp) || timestamp < start || timestamp > end) continue;
+      const completed = await completeTransactionEvents(node, digest);
+      eventPages += completed.eventPages;
+      const parsed = parseVolumeTransaction(completed.node, source, prices, start, end);
       if (!parsed) continue;
       volumeUsd += parsed.volumeUsd;
       swaps += parsed.swaps;
@@ -68,7 +112,7 @@ async function requestPool(source: VolumeSource, prices: VolumePrices, start: nu
     before = cursor;
   }
   if (!complete) throw new Error(`The 24-hour scan exceeded its verified bound for ${source.poolId}.`);
-  return { source, volumeUsd, swaps, transactions, pages };
+  return { source, volumeUsd, swaps, transactions, pages, eventPages };
 }
 
 async function getPrices(): Promise<VolumePrices> {
@@ -95,20 +139,23 @@ export default async (request: Request) => {
   try {
     const prices = await getPrices();
     const results = await Promise.all(TREE_VOLUME_SOURCES.map((source) => requestPool(source, prices, windowStartMs, windowEndMs)));
-    const venues = { suiDexV2: 0, suiDexV3: 0, turbos: 0 };
+    const venues = { suiDexV2: 0, suiDexV3: 0, turbos: 0, cetus: 0 };
+    const pools: Record<string, { venue: string; volume24hUsd: number; swaps: number; transactions: number }> = {};
     let swaps = 0;
     let transactions = 0;
     let pages = 0;
+    let eventPages = 0;
     for (const result of results) {
       venues[result.source.venue] += result.volumeUsd;
-      swaps += result.swaps; transactions += result.transactions; pages += result.pages;
+      pools[result.source.poolId] = { venue: result.source.venue, volume24hUsd: result.volumeUsd, swaps: result.swaps, transactions: result.transactions };
+      swaps += result.swaps; transactions += result.transactions; pages += result.pages; eventPages += result.eventPages;
     }
-    const volume24hUsd = venues.suiDexV2 + venues.suiDexV3 + venues.turbos;
+    const volume24hUsd = venues.suiDexV2 + venues.suiDexV3 + venues.turbos + venues.cetus;
     return response({
       status: 'ok', generatedAt: new Date(windowEndMs).toISOString(), network: 'sui-mainnet',
-      source: 'Verified Sui Mainnet swap events', methodology: 'recognized-tree-swap-volume-v1',
+      source: 'Verified Sui Mainnet swap events', methodology: 'recognized-tree-swap-volume-v2',
       windowStart: new Date(windowStartMs).toISOString(), windowEnd: new Date(windowEndMs).toISOString(),
-      volume24hUsd, venues, prices, coverage: { poolsChecked: TREE_VOLUME_SOURCES.length, swaps, transactions, pages, complete: true },
+      volume24hUsd, venues, pools, prices, coverage: { poolsChecked: TREE_VOLUME_SOURCES.length, swaps, transactions, pages, eventPages, complete: true },
       warnings: ['USD volume uses the non-TREE side of each successful recognized swap and current external reference prices.'],
     });
   } catch (error) {
