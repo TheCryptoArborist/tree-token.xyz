@@ -1309,9 +1309,9 @@
     },
     {
       "name": "tree-liquidity",
-      "sha256": "840cfff838eb1e5e2e49124deba44ff301d0428c286c21617a2ff9e01cd45e0f",
-      "artifact": null,
-      "note": "Reuse exact deployed package; source parity is unverified."
+      "sha256": "0d63883ef7d84e050d9477c51e06e57b7218997b7376e449fbbdde767f505c87",
+      "artifact": "production/metrics-functions/tree-liquidity.zip",
+      "note": "Verified corrective metrics package; unrelated deployed functions are reused."
     },
     {
       "name": "tree-market",
@@ -1357,9 +1357,9 @@
     },
     {
       "name": "tree-volume",
-      "sha256": "f49bd426b253d95d66864a8fd9b422a2d025c6b27e5a940811007b5e1660d957",
-      "artifact": null,
-      "note": "Reuse exact deployed package; source parity is unverified."
+      "sha256": "57f085fecd6597c85b00ffed5a00cfd3127561b4c6a65542cec110e97f4b2601",
+      "artifact": "production/metrics-functions/tree-volume.zip",
+      "note": "Verified corrective metrics package; unrelated deployed functions are reused."
     }
   ],
   "schedules": [

@@ -19,6 +19,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+      - run: npm ci --ignore-scripts
+      - run: node --test tests/tree-volume-overview.test.ts tests/tree-liquidity-overview.test.ts tests/metrics-endpoints-fail-closed.test.ts
       - run: node --test tests/v3-volume-fail-closed.test.mjs tests/v3-workspace-source.test.mjs tests/v3-workspace-html-load.test.mjs tests/tree-knowledge-trial-source.test.mjs
       - run: npm run verify:production
       - run: npm run build

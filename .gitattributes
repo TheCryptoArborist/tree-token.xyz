@@ -169,3 +169,4 @@
 /production/functions/*.zip binary
 /production/live-static/** -text
 /index.html whitespace=cr-at-eol
+/production/metrics-functions/*.zip binary

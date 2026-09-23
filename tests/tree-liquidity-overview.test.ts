@@ -5,6 +5,7 @@ import { TREE_COIN_TYPE } from '../netlify/lib/leaderboard-provider.ts';
 import { SUIDEX_V2_PACKAGE, SUIDEX_V2_TREE_POOL_ID } from '../netlify/lib/suidex-v2-tree-lp-provider.ts';
 import { TURBOS_PACKAGE, TURBOS_TREE_POOL_IDS } from '../netlify/lib/turbos-tree-lp-provider.ts';
 import { SUI_COIN_TYPE, TREE_V3_PACKAGE, TREE_V3_POOL_ID } from '../netlify/lib/tree-v3-overview.ts';
+import { CETUS_CLMM_PACKAGE, CETUS_TREE_POOL_ID } from '../netlify/lib/cetus-tree-constants.ts';
 
 const prices = { suiUsd: 1, treeUsd: 0.01, usdcUsd: 1, wbtcUsd: 100_000 };
 const objects = [
@@ -13,18 +14,27 @@ const objects = [
   ...TURBOS_TREE_POOL_IDS.map((id, index) => ({
     address: id,
     type: `${TURBOS_PACKAGE}::pool::Pool<${TREE_COIN_TYPE},${index === 1 ? SUI_COIN_TYPE : index === 4 ? WBTC_COIN_TYPE : USDC_COIN_TYPE},0x1::fee::FEE>`,
-    json: { id, coin_a: index === 1 ? '310000000' : '10', coin_b: index === 1 ? '2100000000' : '10', protocol_fees_a: index === 1 ? '10000000' : '10', protocol_fees_b: index === 1 ? '100000000' : '10', liquidity: index === 1 ? '1' : '0' },
+    json: { id, coin_a: index === 1 ? '310000000' : '10', coin_b: index === 1 ? '2100000000' : '10', protocol_fees_a: index === 1 ? '10000000' : '10', protocol_fees_b: index === 1 ? '100000000' : '10', liquidity: index === 1 ? '1' : '0', sqrt_price: index === 1 ? (1n << 64n).toString() : undefined, fee: index === 1 ? 10000 : undefined },
   })),
+  { address: CETUS_TREE_POOL_ID, type: `${CETUS_CLMM_PACKAGE}::pool::Pool<${TREE_COIN_TYPE},${SUI_COIN_TYPE}>`, json: { id: CETUS_TREE_POOL_ID, coin_a: '100000000', coin_b: '1000000000', fee_protocol_coin_a: '0', fee_protocol_coin_b: '0', liquidity: '1', current_sqrt_price: (1n << 64n).toString(), fee_rate: '2500' } },
 ];
 
-test('combines verified live SuiDex V2, V3, and active Turbos reserves', () => {
+test('combines verified live SuiDex V2, V3, active Turbos, and Cetus reserves', () => {
   const result = calculateTreeLiquidity(objects, prices);
   assert.ok(result);
   assert.equal(result.suiDexV2TvlUsd, 2);
   assert.equal(result.suiDexV3TvlUsd, 4);
   assert.equal(result.turbosTvlUsd, 5);
-  assert.equal(result.recognizedLiquidityUsd, 11);
+  assert.equal(result.cetusTvlUsd, 2);
+  assert.equal(result.recognizedLiquidityUsd, 13);
   assert.equal(result.activeTurbosPools, 1);
+  assert.equal(result.turbosPools.length, 5);
+  assert.deepEqual(result.turbosPools.find((pool) => pool.poolId === TURBOS_TREE_POOL_IDS[1]), {
+    poolId: TURBOS_TREE_POOL_IDS[1], tvlUsd: 5, active: true, coinTypeA: TREE_COIN_TYPE, coinTypeB: SUI_COIN_TYPE, feePercent: 1, priceSuiPerTree: 0.001,
+  });
+  assert.deepEqual(result.cetusPool, {
+    poolId: CETUS_TREE_POOL_ID, tvlUsd: 2, active: true, coinTypeA: TREE_COIN_TYPE, coinTypeB: SUI_COIN_TYPE, feePercent: 0.25, priceSuiPerTree: 0.001,
+  });
 });
 
 test('fails closed when a recognized pool is missing', () => {

@@ -1,17 +1,19 @@
 import { normalizeSuiAddress } from './leaderboard-provider.ts';
+import { CETUS_CLMM_PACKAGE, CETUS_TREE_POOL_ID } from './cetus-tree-constants.ts';
 import { SUIDEX_V2_PACKAGE, SUIDEX_V2_TREE_POOL_ID } from './suidex-v2-tree-lp-provider.ts';
 import { SUIDEX_V3_PACKAGE } from './suidex-v3-tree-lp-provider.ts';
 import { TURBOS_TREE_POOL_IDS } from './turbos-tree-lp-provider.ts';
 import { TREE_V3_POOL_ID } from './tree-v3-overview.ts';
 
 export const TURBOS_EVENT_PACKAGE = '0x91bfbc386a41afcfd9b2533058d7e915a1d3829089cc268ff4333d54d6339ca1';
-export type VolumeVenue = 'suiDexV2' | 'suiDexV3' | 'turbos';
+export type VolumeVenue = 'suiDexV2' | 'suiDexV3' | 'turbos' | 'cetus';
 export type QuoteKind = 'sui' | 'usdc' | 'wbtc';
 export type VolumeSource = { poolId: string; venue: VolumeVenue; quote: QuoteKind };
 
 export const TREE_VOLUME_SOURCES: readonly VolumeSource[] = [
   { poolId: SUIDEX_V2_TREE_POOL_ID, venue: 'suiDexV2', quote: 'sui' },
   { poolId: TREE_V3_POOL_ID, venue: 'suiDexV3', quote: 'sui' },
+  { poolId: CETUS_TREE_POOL_ID, venue: 'cetus', quote: 'sui' },
   { poolId: TURBOS_TREE_POOL_IDS[0], venue: 'turbos', quote: 'usdc' },
   { poolId: TURBOS_TREE_POOL_IDS[1], venue: 'turbos', quote: 'sui' },
   { poolId: TURBOS_TREE_POOL_IDS[2], venue: 'turbos', quote: 'usdc' },
@@ -24,6 +26,39 @@ export type VolumePrices = { suiUsd: number; usdcUsd: number; wbtcUsd: number };
 
 function record(value: unknown): JsonRecord {
   return value && typeof value === 'object' && !Array.isArray(value) ? value as JsonRecord : {};
+}
+
+export type VolumeEventPageResult = { nodes: unknown[]; pages: number };
+
+export async function collectVolumeEventPages(
+  initialValue: unknown,
+  fetchNextPage: (after: string) => Promise<unknown>,
+  maxPages = 20,
+): Promise<VolumeEventPageResult> {
+  if (!Number.isSafeInteger(maxPages) || maxPages < 1) throw new Error('Transaction event page bound is invalid.');
+  function checkedConnection(value: unknown) {
+    const connection = record(value);
+    if (!Array.isArray(connection.nodes) || typeof record(connection.pageInfo).hasNextPage !== 'boolean') {
+      throw new Error('Transaction event coverage was not verified.');
+    }
+    return connection;
+  }
+  let connection = checkedConnection(initialValue);
+  const nodes = Array.isArray(connection.nodes) ? [...connection.nodes] : [];
+  let pageInfo = record(connection.pageInfo);
+  let pages = 1;
+  const seenCursors = new Set<string>();
+  while (pageInfo.hasNextPage === true) {
+    if (pages >= maxPages) throw new Error(`Transaction events exceeded the verified ${maxPages}-page bound.`);
+    const after = typeof pageInfo.endCursor === 'string' ? pageInfo.endCursor : '';
+    if (!after || seenCursors.has(after)) throw new Error('Transaction event cursor was missing or repeated.');
+    seenCursors.add(after);
+    connection = checkedConnection(await fetchNextPage(after));
+    if (Array.isArray(connection.nodes)) nodes.push(...connection.nodes);
+    pageInfo = record(connection.pageInfo);
+    pages += 1;
+  }
+  return { nodes, pages };
 }
 
 function unsigned(value: unknown): bigint | null {
@@ -55,7 +90,7 @@ export function parseVolumeTransaction(
   const timestamp = Date.parse(String(effects.timestamp || ''));
   if (effects.status !== 'SUCCESS' || !Number.isFinite(timestamp) || timestamp < windowStartMs || timestamp > windowEndMs) return null;
   const events = record(effects.events);
-  if (record(events.pageInfo).hasNextPage === true) throw new Error('Transaction events exceeded the verified page bound.');
+  if (record(events.pageInfo).hasNextPage === true) throw new Error('Transaction events were not fully paginated.');
   let volumeUsd = 0;
   let swaps = 0;
   for (const eventValue of Array.isArray(events.nodes) ? events.nodes : []) {
@@ -77,6 +112,10 @@ export function parseVolumeTransaction(
       && type === `${TURBOS_EVENT_PACKAGE}::pool::swapevent`
       && normalizeSuiAddress(json.pool) === source.poolId) {
       raw = unsigned(json.amount_b);
+    } else if (source.venue === 'cetus'
+      && type === `${CETUS_CLMM_PACKAGE}::pool::swapevent`
+      && normalizeSuiAddress(json.pool) === source.poolId) {
+      raw = json.atob === false ? unsigned(json.amount_in) : json.atob === true ? unsigned(json.amount_out) : null;
     }
     if (raw !== null && raw > 0n) { volumeUsd += amountUsd(raw, source.quote, prices); swaps += 1; }
   }

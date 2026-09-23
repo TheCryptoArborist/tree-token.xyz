@@ -2,7 +2,7 @@
 
 The release snapshot now reconciles all 189 files from locked production deploy `6ab219d0f2e18c9096895bf6`. The only intended public-file change relative to that deployment is `dapp/v3-workspace.js`: combine verified SuiDex, Cetus and Turbos 24-hour volume, reject missing/invalid values, and clear the headline while loading or on failure. Zero remains valid.
 
-Knowledge Trial purchase verification, the live homepage/assets and litepaper are recovered byte-for-byte. All 37 current backend packages and five schedules must be reused, not rebuilt. None of the historical local ZIP archives are verified matches for the current packages. `release-baseline-20260923.json` records the live baseline; `manifest.json` describes candidate static bytes and required backend identities.
+Knowledge Trial purchase verification, the live homepage/assets and litepaper are recovered byte-for-byte. 35 current backend packages and all five schedules must be reused, not rebuilt. Only tree-volume and tree-liquidity are updated: per-pool Cetus/Turbos coverage, bounded event pagination, and fail-closed incomplete coverage. Their reviewed source and exact packages are tracked under production/metrics-functions. None of the historical local ZIP archives are verified matches for the current packages. `release-baseline-20260923.json` records the live baseline; `manifest.json` describes candidate static bytes and required backend identities.
 
 Use the authenticated preserved-package release script for preview and promotion. Do not deploy the root functions directory through an ordinary full-build deploy. Keep automatic publication locked. The STI Stats branch is excluded.
 
