@@ -16,3 +16,4 @@ jobs:
           node-version: 24
       - run: node --test tests/stats-sti-source.test.mjs tests/sti-purchase-core.test.mjs tests/sti-stats-core.test.mjs tests/stats-live-supply-source.test.mjs tests/stats-nftree-source.test.mjs
       - run: node --test tests/sti-preview-build.test.mjs tests/sti-preview-proxy.test.ts
+      - run: node --test tests/sti-release-inventory.test.mjs
