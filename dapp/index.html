@@ -240,8 +240,11 @@
         </section>
         <section class="data-group stats-sti" aria-labelledby="statsStiTitle">
           <div class="sti-card">
-            <div class="sti-card-brand"><img src="../assets/tree-token.png" alt="" width="40" height="40"><div><h3 id="statsStiTitle">Tree</h3><span id="stiMembership">Loading index data…</span></div></div>
+            <div class="sti-card-header"><div class="sti-card-brand"><img src="../assets/tree-token.png" alt="" width="40" height="40"><div><h3 id="statsStiTitle">Tree</h3><span id="stiMembership">Loading index data…</span></div></div><div class="sti-index-mark" aria-label="Sui Trenches Index"><img src="../assets/sti-icon.svg" alt="" width="22" height="22"><span>STI</span></div></div>
+            <div id="stiBasket" class="sti-basket" role="img" aria-label="Basket composition unavailable" hidden></div>
             <p class="sti-share"><strong id="stiShare">—</strong> of the basket</p>
+            <div class="sti-prices" aria-label="STI price statistics"><div><span>STI price · SUI</span><strong id="stiPrice">—</strong><small>per STI · Cetus pool</small></div><div><span>Backing per STI · SUI</span><strong id="stiNav">—</strong><small>Index NAV · STI feed</small></div></div>
+            <p id="stiPriceStatus" class="sti-note" role="status">Loading pool price…</p>
             <div class="sti-metrics"><div><strong id="stiHeld">—</strong><span>Tree in the vault</span></div><div><strong id="stiHolders">—</strong><span>STI holders</span></div><div><strong id="stiSince">—</strong><span>member since</span></div></div>
             <p id="stiMintNote" class="sti-note" hidden>Every STI minted buys Tree.</p>
             <p id="stiDataStatus" class="sti-note" role="status">Source: STI public index feed.</p>

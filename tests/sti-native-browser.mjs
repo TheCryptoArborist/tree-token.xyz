@@ -17,11 +17,16 @@ try{
   page.on('pageerror',e=>errors.push(e.message));page.on('popup',()=>popups++);
   page.on('request',r=>requests.push(r.url()));
   if(process.env.STI_DEBUG==='1')page.on('requestfailed',r=>console.error(r.url(),r.failure()?.errorText));
+  if(process.env.STI_DEBUG==='1')page.on('response',async r=>{if(r.url().includes('graphql.mainnet.sui.io'))console.error('STI price response',r.status(),(await r.text().catch(()=>'' )).slice(0,400));});
   await page.goto(url,{waitUntil:'domcontentloaded'});await page.locator('.stats-sti').scrollIntoViewIfNeeded();
   await page.waitForFunction(()=>!document.getElementById('stiMembership').textContent.startsWith('Loading'));
   const membership=await page.locator('#stiMembership').textContent();
+  await page.waitForFunction(()=>!document.getElementById('stiPriceStatus').textContent.startsWith('Loading'));
+  const price=await page.locator('#stiPrice').textContent(),nav=await page.locator('#stiNav').textContent();
+  assert.match(price,/^0\.\d+$/,'Live STI pool price is available');
   assert.match(membership,/is in the Sui Trenches Index|temporarily unavailable/);
   if(membership.includes('unavailable'))assert.equal(await page.locator('#stiShare').textContent(),'—');
+  else {assert.match(nav,/^0\.\d+$/);assert.equal(await page.locator('.sti-basket-segment.is-tree').count(),1);}
   assert.equal(await page.locator('.stats-sti iframe').count(),0);
   const section=await page.locator('.stats-sti').boundingBox(),market=await page.locator('[data-stats-group="market"]').boundingBox(),burn=await page.locator('.stats-public-burn').boundingBox();
   assert.ok(section.y>=market.y+market.height&&burn.y>=section.y+section.height);
@@ -42,7 +47,7 @@ try{
   await page.locator('#stiCloseBuy').click();assert.equal(await page.locator('#stiPurchase').isVisible(),false);
   await page.locator('.app-nav a[href="#swap"]').click();assert.equal(await page.locator('.stats-sti').isVisible(),false);
   await page.locator('.app-nav a[href="#stats"]').click();assert.equal(await page.locator('.stats-sti').isVisible(),true);
-  report.push({name,width,height,membership,errors,requests:requests.filter(r=>/sti-|fullnode|esm.run/.test(r)),noNavigation:true});
+  report.push({name,width,height,membership,price,nav,errors,requests:requests.filter(r=>/sti-|graphql|fullnode|esm.run/.test(r)),noNavigation:true});
   assert.deepEqual(errors,[]);
   await context.close();
  }
@@ -79,6 +84,7 @@ try{
   await page.goto(url,{waitUntil:'domcontentloaded'});await page.locator('.stats-sti').scrollIntoViewIfNeeded();
   await page.waitForFunction(()=>document.getElementById('stiMembership').textContent.includes('unavailable'));
   assert.equal(await page.locator('#stiShare').textContent(),'—');
+  assert.equal(await page.locator('#stiNav').textContent(),'—');assert.equal(await page.locator('#stiBasket').isVisible(),false);
   await page.locator('#stiOpenBuy').click();await quote(page,'0.1');assert.equal(await page.locator('#stiQuoteDetails').isVisible(),true);
   await page.locator('.stats-sti').screenshot({path:`${output}/feed-unavailable.png`});
   report.push({case:'feed failure',staleMetricsHidden:true,poolQuoteIndependent:true});await context.close();

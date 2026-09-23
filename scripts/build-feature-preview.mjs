@@ -7,7 +7,7 @@ const output = resolve(root, 'dist-preview');
 const manifest = JSON.parse(await readFile(resolve(root, 'production/manifest.json'), 'utf8'));
 const outputPath = file => file.path.slice(1);
 const allowed = new Set(manifest.files.map(file => outputPath(file).toLowerCase()));
-const additions = ['dapp/sti-widget.js', 'dapp/sti-purchase-core.js'];
+const additions = ['dapp/sti-widget.js', 'dapp/sti-purchase-core.js', 'dapp/sti-stats-core.js', 'assets/sti-icon.svg'];
 const overlays = ['dapp/index.html', 'dapp/styles.css', 'dapp/interaction-bootstrap.js', 'scripts/wallet.js'];
 for (const file of additions) allowed.add(file);
 

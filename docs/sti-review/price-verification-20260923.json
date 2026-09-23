@@ -1,0 +1,227 @@
+{
+  "checkedAt": "2026-09-23T02:46:48.754Z",
+  "base": "34b2ca9df25653bf3ed0b427ef7131784431c688",
+  "productionBaseline": "6ab31e7878c67aff72b0dc54",
+  "productionFiles": 189,
+  "previewFiles": 193,
+  "focusedChecks": 52,
+  "productionVerification": true,
+  "productionBuild": true,
+  "featureBuild": true,
+  "visualReview": [
+    "1440x1000",
+    "390x844",
+    "320x740"
+  ],
+  "fixtureBrowser": [
+    {
+      "name": "desktop",
+      "width": 1440,
+      "height": 1000,
+      "price": "0.000016582",
+      "nav": "0.000015737",
+      "segments": 7,
+      "localLogo": true,
+      "staleValuesCleared": true,
+      "noOverflow": true
+    },
+    {
+      "name": "mobile",
+      "width": 390,
+      "height": 844,
+      "price": "0.000016582",
+      "nav": "0.000015737",
+      "segments": 7,
+      "localLogo": true,
+      "staleValuesCleared": true,
+      "noOverflow": true
+    },
+    {
+      "name": "small-mobile",
+      "width": 320,
+      "height": 740,
+      "price": "0.000016582",
+      "nav": "0.000015737",
+      "segments": 7,
+      "localLogo": true,
+      "staleValuesCleared": true,
+      "noOverflow": true
+    },
+    {
+      "case": "invalid statistics",
+      "badValuesCleared": true,
+      "treeMembershipPreserved": true,
+      "purchasePanelAvailable": true
+    }
+  ],
+  "liveBrowser": [
+    {
+      "name": "desktop",
+      "width": 1440,
+      "height": 1000,
+      "membership": "is in the Sui Trenches Index",
+      "price": "0.000016582",
+      "nav": "0.000015737",
+      "errors": [],
+      "requests": [
+        "http://localhost:4173/assets/sti-icon.svg",
+        "http://localhost:4173/dapp/sti-widget.js",
+        "https://esm.run/@mysten/wallet-standard@0.21.14",
+        "https://esm.run/@mysten/sui@2.23.1/grpc",
+        "https://esm.run/@mysten/sui@2.23.1/utils",
+        "https://esm.run/@mysten/sui@2.23.1/transactions",
+        "http://localhost:4173/dapp/sti-purchase-core.js",
+        "http://localhost:4173/dapp/sti-stats-core.js",
+        "https://esm.run/@mysten/sui@2.23.1/bcs",
+        "https://esm.run/@mysten/slush-wallet@1.1.14",
+        "https://sti-keeper-production.up.railway.app/badge",
+        "https://graphql.mainnet.sui.io/graphql",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/BatchGetObjects",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/BatchGetObjects",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/BatchGetObjects",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/BatchGetObjects",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.TransactionExecutionService/SimulateTransaction",
+        "https://esm.run/@cetusprotocol/sui-clmm-sdk@1.4.7",
+        "https://cdn.jsdelivr.net/npm/@mysten/sui@2.20.1/graphql/schema/+esm",
+        "https://cdn.jsdelivr.net/npm/@mysten/sui@2.20.1/graphql/+esm",
+        "https://cdn.jsdelivr.net/npm/graphql@16.14.2/+esm",
+        "https://cdn.jsdelivr.net/npm/@0no-co/graphql.web@1.3.2/+esm",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/GetServiceInfo",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.StateService/GetCoinInfo",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/BatchGetObjects",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.TransactionExecutionService/SimulateTransaction",
+        "https://sti-keeper-production.up.railway.app/badge",
+        "https://graphql.mainnet.sui.io/graphql"
+      ],
+      "noNavigation": true
+    },
+    {
+      "name": "mobile",
+      "width": 390,
+      "height": 844,
+      "membership": "is in the Sui Trenches Index",
+      "price": "0.000016582",
+      "nav": "0.000015737",
+      "errors": [],
+      "requests": [
+        "http://localhost:4173/assets/sti-icon.svg",
+        "http://localhost:4173/dapp/sti-widget.js",
+        "http://localhost:4173/dapp/sti-purchase-core.js",
+        "http://localhost:4173/dapp/sti-stats-core.js",
+        "https://esm.run/@mysten/sui@2.23.1/transactions",
+        "https://esm.run/@mysten/sui@2.23.1/grpc",
+        "https://esm.run/@mysten/wallet-standard@0.21.14",
+        "https://esm.run/@mysten/sui@2.23.1/utils",
+        "https://esm.run/@mysten/sui@2.23.1/bcs",
+        "https://esm.run/@mysten/slush-wallet@1.1.14",
+        "https://sti-keeper-production.up.railway.app/badge",
+        "https://graphql.mainnet.sui.io/graphql",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/BatchGetObjects",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/BatchGetObjects",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/BatchGetObjects",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/BatchGetObjects",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.TransactionExecutionService/SimulateTransaction",
+        "https://esm.run/@cetusprotocol/sui-clmm-sdk@1.4.7",
+        "https://cdn.jsdelivr.net/npm/@mysten/sui@2.20.1/graphql/schema/+esm",
+        "https://cdn.jsdelivr.net/npm/@mysten/sui@2.20.1/graphql/+esm",
+        "https://cdn.jsdelivr.net/npm/graphql@16.14.2/+esm",
+        "https://cdn.jsdelivr.net/npm/@0no-co/graphql.web@1.3.2/+esm",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/GetServiceInfo",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.StateService/GetCoinInfo",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/BatchGetObjects",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.TransactionExecutionService/SimulateTransaction",
+        "https://sti-keeper-production.up.railway.app/badge",
+        "https://graphql.mainnet.sui.io/graphql"
+      ],
+      "noNavigation": true
+    },
+    {
+      "name": "small-mobile",
+      "width": 320,
+      "height": 740,
+      "membership": "is in the Sui Trenches Index",
+      "price": "0.000016582",
+      "nav": "0.000015737",
+      "errors": [],
+      "requests": [
+        "http://localhost:4173/assets/sti-icon.svg",
+        "http://localhost:4173/dapp/sti-widget.js",
+        "https://esm.run/@mysten/wallet-standard@0.21.14",
+        "https://esm.run/@mysten/sui@2.23.1/grpc",
+        "https://esm.run/@mysten/sui@2.23.1/utils",
+        "http://localhost:4173/dapp/sti-purchase-core.js",
+        "http://localhost:4173/dapp/sti-stats-core.js",
+        "https://esm.run/@mysten/sui@2.23.1/transactions",
+        "https://esm.run/@mysten/sui@2.23.1/bcs",
+        "https://esm.run/@mysten/slush-wallet@1.1.14",
+        "https://sti-keeper-production.up.railway.app/badge",
+        "https://graphql.mainnet.sui.io/graphql",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/BatchGetObjects",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/BatchGetObjects",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/BatchGetObjects",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/BatchGetObjects",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.TransactionExecutionService/SimulateTransaction",
+        "https://esm.run/@cetusprotocol/sui-clmm-sdk@1.4.7",
+        "https://cdn.jsdelivr.net/npm/@mysten/sui@2.20.1/graphql/schema/+esm",
+        "https://cdn.jsdelivr.net/npm/@mysten/sui@2.20.1/graphql/+esm",
+        "https://cdn.jsdelivr.net/npm/graphql@16.14.2/+esm",
+        "https://cdn.jsdelivr.net/npm/@0no-co/graphql.web@1.3.2/+esm",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/GetServiceInfo",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.StateService/GetCoinInfo",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/BatchGetObjects",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.TransactionExecutionService/SimulateTransaction",
+        "https://sti-keeper-production.up.railway.app/badge",
+        "https://graphql.mainnet.sui.io/graphql"
+      ],
+      "noNavigation": true
+    },
+    {
+      "case": "real browser simulation with non-signing wallet stub",
+      "signBoundaryReached": 1,
+      "expiredQuoteBlocked": true,
+      "rejectionHandled": true,
+      "transactionsSubmitted": 0
+    },
+    {
+      "case": "feed failure",
+      "staleMetricsHidden": true,
+      "poolQuoteIndependent": true
+    }
+  ],
+  "note": "One initial live price read returned unavailable; the complete live suite passed on rerun. No transaction signed or submitted.",
+  "sourceDigests": {
+    "dapp/index.html": "ce2cd8ce509144322984e06012a9a40fb0e157025c77c8a67e34f99757233784",
+    "dapp/styles.css": "cc2646c65eb878e1d06a23aba248e981fb87a68552de924288cafd7e10cd4a33",
+    "dapp/sti-widget.js": "a8b9a590657882bd4a1cff8baa199bebd06c8eccc047727e3eccdb3015006443",
+    "dapp/sti-stats-core.js": "3480502fd3bcbfcfb5be00895645b03de5dddabd52435426a534735bf62965d6",
+    "dapp/sti-purchase-core.js": "6ff9c42b9d619294cb9558e45894b3cbf4b74dafe4bbe26b30a82b63f44366ab",
+    "assets/sti-icon.svg": "f635f3c240228f8c24304653fa4b407b6dad49ba0df6cf7ae02790c7324e57f1"
+  },
+  "headerWallet": [
+    {
+      "width": 1440,
+      "pickerOpenedWithSlushPending": true,
+      "reopened": true
+    },
+    {
+      "width": 390,
+      "pickerOpenedWithSlushPending": true,
+      "reopened": true
+    }
+  ],
+  "walletBootstrap": [
+    {
+      "scenario": "dashboard-unavailable",
+      "passed": true
+    },
+    {
+      "scenario": "wallet-unavailable",
+      "passed": true
+    },
+    {
+      "scenario": "manager-error",
+      "passed": true
+    }
+  ],
+  "browserSuitesPassed": 4
+}

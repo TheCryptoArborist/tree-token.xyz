@@ -1,6 +1,7 @@
 import {STI,SUI,POOL,FEED,GAS_RESERVE,QUOTE_TTL,parseSui,units,validatePool,makeQuote,validateQuote,requireBalance,buildPurchase,checkSimulation,parseFeed} from './sti-purchase-core.js';
+import {PRICE_ENDPOINT,PRICE_QUERY,DATA_TTL,parsePoolPrice,parseNav,parseBasket} from './sti-stats-core.js';
 
-const el = Object.fromEntries(['Membership','Share','Held','Since','MintNote','Holders','DataStatus','OpenBuy','CloseBuy','Purchase','Amount','Balance','QuoteButton','QuoteDetails','Estimated','Minimum','Fee','Impact','Expiry','BuyButton','PurchaseStatus','Receipt'].map(key=>[key,document.getElementById('sti'+key)]));
+const el = Object.fromEntries(['Membership','Share','Basket','Price','Nav','PriceStatus','Held','Since','MintNote','Holders','DataStatus','OpenBuy','CloseBuy','Purchase','Amount','Balance','QuoteButton','QuoteDetails','Estimated','Minimum','Fee','Impact','Expiry','BuyButton','PurchaseStatus','Receipt'].map(key=>[key,document.getElementById('sti'+key)]));
 let runtimePromise, quote = null, busy = false, quoting = false, generation = 0, balance = null, balanceOwner = null, pendingDigest = null;
 const owner = () => window.playerAddress || null;
 const status = (message,error=false) => {el.PurchaseStatus.textContent=message;el.PurchaseStatus.dataset.error=String(error);};
@@ -102,28 +103,62 @@ async function purchase() {
     else {invalidate();status(/reject|cancel/i.test(error.message)?'Purchase cancelled in your wallet. No automatic retry will occur.':error.message||'Purchase unavailable. Check your wallet activity before trying again.',true);}
   } finally {busy=false;render();}
 }
-let feedLoading=false;
+let feedLoading=false, priceLoading=false, feedAt=null, priceAt=null;
+const statsVisible = () => !document.hidden && !document.getElementById('stats').hidden;
+const readOptions = () => ({credentials:'omit',referrerPolicy:'no-referrer',cache:'no-store',redirect:'error',signal:AbortSignal.timeout(12_000)});
+function clearBasket() {el.Basket.replaceChildren();el.Basket.hidden=true;el.Basket.setAttribute('aria-label','Basket composition unavailable');}
+function clearFeed() {
+  feedAt=null;el.Membership.textContent='Index data temporarily unavailable';el.Share.textContent=el.Held.textContent=el.Holders.textContent=el.Since.textContent=el.Nav.textContent='—';
+  clearBasket();el.MintNote.hidden=true;el.DataStatus.textContent='STI data could not be verified. Purchase quotes are checked separately against the live pool.';
+}
+function clearPrice() {priceAt=null;el.Price.textContent='—';el.PriceStatus.textContent='Pool price temporarily unavailable. Get a fresh purchase quote below.';}
+function clearExpired() {
+  if(feedAt!==null && Date.now()-feedAt>DATA_TTL)clearFeed();
+  if(priceAt!==null && Date.now()-priceAt>DATA_TTL)clearPrice();
+}
+async function loadPrice() {
+  if(priceLoading||!statsVisible())return;
+  priceLoading=true;
+  try {
+    const response=await fetch(PRICE_ENDPOINT,{...readOptions(),method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:PRICE_QUERY})});
+    if(!response.ok)throw Error('Pool price unavailable');
+    const data=parsePoolPrice(await response.json());priceAt=data.at;
+    el.Price.textContent=units(data.priceMist);
+    el.PriceStatus.textContent=`Source: Cetus STI/SUI · Updated ${new Date(data.at).toLocaleTimeString()} · Refreshes every minute`;
+  } catch {clearPrice();}
+  finally {priceLoading=false;}
+}
 async function loadFeed() {
-  if(feedLoading||document.hidden||document.getElementById('stats').hidden)return;
+  if(feedLoading||!statsVisible())return;
   feedLoading=true;
   try {
-    const response=await fetch(FEED,{credentials:'omit',referrerPolicy:'no-referrer',cache:'no-store',signal:AbortSignal.timeout(12_000)});
-    if(!response.ok)throw Error('Feed unavailable');const data=parseFeed(await response.json());
+    const response=await fetch(FEED,readOptions());
+    if(!response.ok)throw Error('Feed unavailable');const raw=await response.json(),data=parseFeed(raw);feedAt=data.at;
     el.Membership.textContent=data.member?'is in the Sui Trenches Index':'TREE is not currently an active basket member';
     el.Share.textContent=data.member?(data.share*100).toFixed(2)+'%':'—';
     el.Held.textContent=data.member?new Intl.NumberFormat('en',{notation:'compact',maximumFractionDigits:2}).format(Number(data.held)/1e6):'—';
     el.Holders.textContent=data.member?data.holders.toLocaleString():'—';
     el.Since.textContent=data.member?(data.since===null?'Day one':data.since?new Date(data.since).toLocaleDateString('en',{month:'short',year:'numeric'}):'—'):'—';
     el.MintNote.hidden=!data.member;
-    el.DataStatus.textContent=`Source: STI public feed · Updated ${new Date(data.at).toLocaleTimeString()}`;
-  } catch {el.Membership.textContent='Index data temporarily unavailable';el.Share.textContent=el.Held.textContent=el.Holders.textContent=el.Since.textContent='—';el.MintNote.hidden=true;el.DataStatus.textContent='STI data could not be verified. Purchase quotes are checked separately against the live pool.';}
+    const unavailable=[];
+    try {el.Nav.textContent=units(parseNav(raw).priceMist);}catch{el.Nav.textContent='—';unavailable.push('Backing unavailable.');}
+    try {
+      const parts=parseBasket(raw);el.Basket.replaceChildren();
+      for(const part of parts){const segment=document.createElement('span');segment.className='sti-basket-segment'+(part.tree?' is-tree':'');segment.style.flexGrow=String(part.share);segment.title=`${part.symbol}: ${(part.share*100).toFixed(2)}%`;segment.setAttribute('aria-hidden','true');el.Basket.append(segment);}
+      el.Basket.hidden=false;el.Basket.setAttribute('aria-label',`STI basket: ${parts.map(part=>`${part.tree?'TREE':part.symbol} ${(part.share*100).toFixed(2)}%`).join(', ')}`);
+    }catch{clearBasket();unavailable.push('Basket composition unavailable.');}
+    el.DataStatus.textContent=`Source: STI public feed · Updated ${new Date(data.at).toLocaleTimeString()}${unavailable.length?' · '+unavailable.join(' '):''}`;
+  } catch {clearFeed();}
   finally {feedLoading=false;}
 }
+function loadStats(){clearExpired();loadFeed();loadPrice();}
 el.OpenBuy.addEventListener('click',()=>{el.Purchase.hidden=false;el.OpenBuy.setAttribute('aria-expanded','true');el.Amount.focus();loadBalance();render();});
 el.CloseBuy.addEventListener('click',()=>{if(busy)return;el.Purchase.hidden=true;el.OpenBuy.setAttribute('aria-expanded','false');invalidate();el.OpenBuy.focus();});
 el.Amount.addEventListener('input',()=>{invalidate();status('Amount changed. Get a new quote.');});
 el.QuoteButton.addEventListener('click',getQuote);el.BuyButton.addEventListener('click',purchase);
 window.addEventListener('tree:wallet-changed',()=>{invalidate();if(!el.Purchase.hidden)loadBalance();});
-new MutationObserver(()=>{loadFeed();if(document.getElementById('stats').hidden)invalidate();}).observe(document.getElementById('stats'),{attributes:true,attributeFilter:['hidden']});
+new MutationObserver(()=>{loadStats();if(document.getElementById('stats').hidden)invalidate();}).observe(document.getElementById('stats'),{attributes:true,attributeFilter:['hidden']});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)loadStats();});
 setInterval(()=>{if(!el.Purchase.hidden)render();},1000);
-setInterval(loadFeed,60_000);loadFeed();render();
+setInterval(clearExpired,10_000);
+setInterval(loadStats,60_000);loadStats();render();

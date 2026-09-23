@@ -27,5 +27,5 @@ test('purchase starts closed and discloses protection and pool-only route', () =
   assert.match(section, /Minimum STI received/);
   assert.match(section, /does not compare STI’s basket-minting option/);
   const build=readFileSync(new URL('../scripts/build-feature-preview.mjs',import.meta.url),'utf8');
-  assert.match(build,/\['dapp\/sti-widget.js', 'dapp\/sti-purchase-core.js'\]/);
+  for(const file of ['dapp/sti-widget.js','dapp/sti-purchase-core.js','dapp/sti-stats-core.js','assets/sti-icon.svg'])assert.ok(build.includes(`'${file}'`));
 });

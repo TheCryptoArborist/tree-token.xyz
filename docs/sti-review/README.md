@@ -1,5 +1,13 @@
 # Native STI widget and purchase preview
 
+## Badge visuals and price tracking — 2026-09-23
+
+The badge now restores the locally hosted STI icon/name and segmented basket bar, highlighting TREE. It adds the same two SUI-denominated metrics distinguished by STI's site: Cetus pool price per STI and basket backing per STI (NAV). Both refresh every minute while Stats is visible, with separate source/update times and five-minute expiry. Price/NAV failures never authorize or block an independent purchase quote. The reviewed purchase core, wallet integration and production baseline are unchanged.
+
+All 52 focused checks, four browser suites, production verification and both builds passed. Desktop/mobile screenshots were visually reviewed. Evidence: `price-verification-20260923.json` and `price-{desktop,mobile,small-mobile}.png`.
+
+The feature build now contains 193 static files, including the new display-validation module and local SVG. See `price-tracking.md` for source provenance, definitions, data validation and regression commands. Updated review build: https://deploy-preview-32--tree-token.netlify.app/dapp/#stats. The reconciliation results below describe the preceding candidate.
+
 ## Current reconciliation — 2026-09-23
 
 Current `main` (`506edda`, PRs #30/#31) is merged into `feature/sti-tree-stats`. Native STI purchase code and its reviewed security decisions are preserved. Production V3 combined volume, Knowledge Trial purchase verification, the current homepage/assets and the published backend inventory remain intact.
