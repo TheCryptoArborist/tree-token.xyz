@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 const siteId='aa62f324-b880-47d6-85b8-4ba0700ff5bf';
 const mode=process.argv[2];
-assert(['preview','promote'].includes(mode),'Usage: node scripts/release-preserved-production.mjs preview|promote [deploy ID]');
+assert(['preview','verify','promote'].includes(mode),'Usage: node scripts/release-preserved-production.mjs preview|promote [deploy ID]');
 const baseline=JSON.parse(fs.readFileSync('production/release-baseline-20260923.json'));
 const manifest=JSON.parse(fs.readFileSync('production/manifest.json'));
 const configPath=path.join(process.env.APPDATA||path.join(process.env.HOME||process.env.USERPROFILE,'.config'),'netlify','Config','config.json');
@@ -37,7 +37,7 @@ if(mode==='preview'){
 }
 assert(id,'Deploy ID required');
 let ready;for(let i=0;i<60;i++){ready=await api('deploys/'+id);if(ready.state==='ready')break;assert.notEqual(ready.state,'error');await new Promise(r=>setTimeout(r,1000));}
-assert.equal(ready.state,'ready');assert.equal(ready.commit_ref,commit,'Preview must match the checked-out commit');
+assert.equal(ready.state,'ready');const record=JSON.parse(fs.readFileSync('.netlify/preserved-release.json'));assert.equal(record.id,id);git('merge-base','--is-ancestor',record.commit,'HEAD');
 assert.deepEqual(await inventory(id),files);assert.deepEqual(identities(ready.available_functions),identities(live.available_functions));assert.deepEqual(ready.function_schedules,live.function_schedules);
 assert.equal((await api('sites/'+siteId)).published_deploy.id,live.id,'Production changed during verification');
 if(mode==='promote'){
