@@ -1,0 +1,40 @@
+[
+  {
+    "name": "tree-volume",
+    "path": "production/metrics-functions/tree-volume.zip",
+    "sha256": "57f085fecd6597c85b00ffed5a00cfd3127561b4c6a65542cec110e97f4b2601",
+    "runtimeVersion": "nodejs22.x",
+    "runtimeAPIVersion": 2,
+    "buildData": {
+      "bootstrapVersion": "2.18.0",
+      "runtimeAPIVersion": 2
+    },
+    "invocationMode": "stream",
+    "routes": [
+      {
+        "pattern": "/api/tree-volume",
+        "literal": "/api/tree-volume",
+        "methods": []
+      }
+    ]
+  },
+  {
+    "name": "tree-liquidity",
+    "path": "production/metrics-functions/tree-liquidity.zip",
+    "sha256": "0d63883ef7d84e050d9477c51e06e57b7218997b7376e449fbbdde767f505c87",
+    "runtimeVersion": "nodejs22.x",
+    "runtimeAPIVersion": 2,
+    "buildData": {
+      "bootstrapVersion": "2.18.0",
+      "runtimeAPIVersion": 2
+    },
+    "invocationMode": "stream",
+    "routes": [
+      {
+        "pattern": "/api/tree-liquidity",
+        "literal": "/api/tree-liquidity",
+        "methods": []
+      }
+    ]
+  }
+]

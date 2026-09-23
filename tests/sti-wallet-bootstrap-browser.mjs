@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
-const browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_PATH||undefined});
-const url=process.env.STI_PREVIEW_URL;assert.ok(url?.startsWith('https://'));
+const browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_PATH||undefined,proxy:process.env.STI_TEST_PROXY?{server:process.env.STI_TEST_PROXY,bypass:'localhost,127.0.0.1'}:undefined});
+const url=process.env.STI_PREVIEW_URL;assert.ok(url?.startsWith('https://')||url?.startsWith('http://localhost'));
 try {for(const scenario of ['dashboard-unavailable','wallet-unavailable','manager-error']){
  const page=await browser.newPage({viewport:{width:390,height:844}});
  if(process.env.LOCAL_BOOTSTRAP==='1')await page.route('**/dapp/interaction-bootstrap.js*',r=>r.fulfill({contentType:'text/javascript',body:fs.readFileSync(new URL('../dapp/interaction-bootstrap.js',import.meta.url),'utf8')}));

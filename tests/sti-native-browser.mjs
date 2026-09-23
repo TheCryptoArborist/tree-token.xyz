@@ -4,7 +4,7 @@ const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const url=process.env.STI_PREVIEW_URL;
 assert.ok(url?.startsWith('https://')||url?.startsWith('http://localhost'));
 const output=process.env.STI_QA_OUTPUT||'sti-native-qa';fs.mkdirSync(output,{recursive:true});
-const browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_PATH||undefined});
+const browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_PATH||undefined,proxy:process.env.STI_TEST_PROXY?{server:process.env.STI_TEST_PROXY,bypass:'localhost,127.0.0.1'}:undefined});
 const report=[];
 async function quote(page,amount){
  await page.locator('#stiAmount').fill(amount);await page.locator('#stiQuoteButton').click();
@@ -16,6 +16,7 @@ try{
   const errors=[],requests=[];let popups=0;
   page.on('pageerror',e=>errors.push(e.message));page.on('popup',()=>popups++);
   page.on('request',r=>requests.push(r.url()));
+  if(process.env.STI_DEBUG==='1')page.on('requestfailed',r=>console.error(r.url(),r.failure()?.errorText));
   await page.goto(url,{waitUntil:'domcontentloaded'});await page.locator('.stats-sti').scrollIntoViewIfNeeded();
   await page.waitForFunction(()=>!document.getElementById('stiMembership').textContent.startsWith('Loading'));
   const membership=await page.locator('#stiMembership').textContent();

@@ -1,0 +1,25 @@
+{
+  "deployId": "6ab31e7878c67aff72b0dc54",
+  "locked": true,
+  "sourceCommit": "dae05c8e9fdd675fb77caeac7e5507616b38cf98",
+  "verifiedAt": "2026-09-23T00:38:33.373Z",
+  "values": {
+    "suidex": 16.46,
+    "cetus": 59.692141830144,
+    "turbos": 5.449790692352001
+  },
+  "sum": 81.601932522496,
+  "apiStatus": "all four APIs returned HTTP 200 and ok",
+  "staticHashes": "V3, Knowledge Trial, dapp and homepage match main",
+  "browser": {
+    "v3Headline": "$81.60",
+    "suidexDetails": "$16.46",
+    "sumMatches": true,
+    "refreshClearsHeadline": true,
+    "knowledgeTrialNavigation": "passed",
+    "practiceNavigation": "passed",
+    "statsNavigation": "passed",
+    "statsNote": "Market provider temporarily unavailable; existing last-verified-snapshot fallback displayed."
+  },
+  "failureChecks": "24 focused tests passed, including null, invalid, missing, failed venue requests and incomplete event coverage. Live source hash matches tested source."
+}

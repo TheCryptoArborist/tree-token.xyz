@@ -1,5 +1,15 @@
 # Native STI widget and purchase preview
 
+## Current reconciliation — 2026-09-23
+
+Current `main` (`506edda`, PRs #30/#31) is merged into `feature/sti-tree-stats`. Native STI purchase code and its reviewed security decisions are preserved. Production V3 combined volume, Knowledge Trial purchase verification, the current homepage/assets and the published backend inventory remain intact.
+
+Production verification/build now reproduces the current 189-file baseline. The feature build outputs 191 files to `dist-preview/`, with four explicit frontend overlays and two STI modules. Four baseline source copies are archived without changing their published digests. Preview hosting uses a separate GET-only public-data proxy; it never rebuilds historical backend source or invokes production jobs. Backend writes and Knowledge Trial submissions are unavailable in the review preview. See `production/README.md` for the release boundary. The reports and preview URLs below are historical evidence from the earlier review, not verification of this merged candidate.
+
+Run the source/core command below, `node --test tests/sti-preview-build.test.mjs tests/sti-preview-proxy.test.ts`, and the production V3/Knowledge Trial safeguards. Browser suites are `sti-native-browser.mjs`, `sti-header-wallet-browser.mjs`, and `sti-wallet-bootstrap-browser.mjs`. They accept `STI_PREVIEW_URL`, `STI_QA_OUTPUT`, `PLAYWRIGHT_MODULE`, `CHROME_PATH`, and optional `STI_TEST_PROXY`. For local review, run `node tests/serve-sti-preview.mjs` after building the candidate.
+
+## Earlier native review
+
 The external iframe has been replaced by TREE-owned HTML and JavaScript. The new card uses STI's public feed, identifies STI as independently operated, and opens a purchase panel inside the Stats section. It has no external navigation link or automatic redirect. Wallet connection and approval may open the user's wallet.
 
 Preview: https://6ab20b357712f7a0f83335ab--tree-token.netlify.app/dapp/#stats

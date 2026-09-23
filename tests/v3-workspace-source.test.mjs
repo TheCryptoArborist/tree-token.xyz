@@ -67,4 +67,12 @@ assert.ok(css.includes('.v3-earned-row'));
 assert.ok(css.includes('.v3-victory-reinvest-card'));
 assert.ok(css.includes('@media(max-width:390px)'));
 
+assert.match(source, /suiDexVolumeUsd:\s*null/);
+assert.match(source, /cetusVolumeUsd:\s*null/);
+assert.match(source, /turbosVolumeUsd:\s*null/);
+assert.match(source, /function updateCombinedV3Volume\(\)/);
+assert.match(source, /\[state\.suiDexVolumeUsd, state\.cetusVolumeUsd, state\.turbosVolumeUsd\]/);
+assert.match(source, /values\.length === expectedValues\.length/);
+assert.match(source, /volume\.textContent = values\.length === expectedValues\.length/);
+
 console.log('Native TREE V3 workspace source safeguards passed.');

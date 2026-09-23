@@ -170,3 +170,6 @@
 /docs/sti-review/*.txt -text
 /dapp/sti-widget.js -text
 /dapp/sti-purchase-core.js -text
+/production/live-static/** -text
+/index.html whitespace=cr-at-eol
+/production/metrics-functions/*.zip binary

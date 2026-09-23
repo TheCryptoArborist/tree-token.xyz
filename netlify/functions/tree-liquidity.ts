@@ -1,10 +1,11 @@
 import { calculateTreeLiquidity, type ChainPoolObject } from '../lib/tree-liquidity-overview.ts';
+import { CETUS_TREE_POOL_ID } from '../lib/cetus-tree-constants.ts';
 import { SUIDEX_V2_TREE_POOL_ID } from '../lib/suidex-v2-tree-lp-provider.ts';
 import { TURBOS_TREE_POOL_IDS } from '../lib/turbos-tree-lp-provider.ts';
 import { TREE_V3_POOL_ID, record } from '../lib/tree-v3-overview.ts';
 
 const GRAPHQL_URL = 'https://graphql.mainnet.sui.io/graphql';
-const POOL_IDS = [SUIDEX_V2_TREE_POOL_ID, TREE_V3_POOL_ID, ...TURBOS_TREE_POOL_IDS];
+const POOL_IDS = [SUIDEX_V2_TREE_POOL_ID, TREE_V3_POOL_ID, ...TURBOS_TREE_POOL_IDS, CETUS_TREE_POOL_ID];
 
 function response(body: unknown, status = 200, cache = 'public, max-age=20, s-maxage=30, stale-while-revalidate=60') {
   return Response.json(body, { status, headers: { 'Cache-Control': cache, 'X-Content-Type-Options': 'nosniff' } });
@@ -58,8 +59,8 @@ export default async (request: Request) => {
     return response({
       status: 'ok', generatedAt, network: 'sui-mainnet',
       source: 'Sui Mainnet reserves + CoinGecko USD prices',
-      methodology: 'recognized-tree-liquidity-v1', prices, liquidity,
-      coverage: { suiDexV2Pools: 1, suiDexV3Pools: 1, turbosPoolsChecked: TURBOS_TREE_POOL_IDS.length, activeTurbosPools: liquidity.activeTurbosPools },
+      methodology: 'recognized-tree-liquidity-v2', prices, liquidity,
+      coverage: { suiDexV2Pools: 1, suiDexV3Pools: 1, turbosPoolsChecked: TURBOS_TREE_POOL_IDS.length, activeTurbosPools: liquidity.activeTurbosPools, cetusPools: 1 },
       warnings: ['USD liquidity is estimated from current verified on-chain reserves and current external reference prices.'],
     });
   } catch (error) {

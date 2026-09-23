@@ -27,6 +27,9 @@ const state = {
   suiDexTvlUsd: null,
   cetusTvlUsd: null,
   turbosTvlUsd: null,
+  suiDexVolumeUsd: null,
+  cetusVolumeUsd: null,
+  turbosVolumeUsd: null,
   positionPrices: { suiUsd: null, treeUsd: null, btcUsd: null, rewardsUsd: {} },
 };
 
@@ -63,6 +66,13 @@ function formatNumber(value, maximumFractionDigits = 6) {
   const numeric = Number(value);
   if (!Number.isFinite(numeric)) return '—';
   return new Intl.NumberFormat('en-US', { maximumFractionDigits }).format(numeric);
+}
+
+function verifiedVolume(value) {
+  if (typeof value !== 'number' && typeof value !== 'string') return null;
+  if (typeof value === 'string' && value.trim() === '') return null;
+  const numeric = Number(value);
+  return Number.isFinite(numeric) && numeric >= 0 ? numeric : null;
 }
 
 function verifiedPositive(value) {
@@ -684,13 +694,15 @@ function renderPool(payload) {
   const analytics = payload.analytics || {};
   const analyticsVerified = analytics.status === 'verified';
   state.suiDexTvlUsd = analyticsVerified ? verifiedPositive(analytics.tvlUsd) : null;
+  state.suiDexVolumeUsd = analyticsVerified ? verifiedVolume(analytics.volume24hUsd) : null;
   updateCombinedV3Tvl();
+  updateCombinedV3Volume();
   document.getElementById('v3PoolPrice').textContent = `${pool.priceSuiPerTree} SUI / TREE`;
   document.getElementById('v3SuiReserve').textContent = `${formatNumber(pool.reserveSui, 6)} SUI`;
   document.getElementById('v3TreeReserve').textContent = `${formatNumber(pool.reserveTree, 2)} TREE`;
   document.getElementById('v3CurrentTick').textContent = String(pool.currentTick);
   document.getElementById('v3LiquidityRaw').textContent = Number(pool.liquidityRaw).toLocaleString('en-US', { notation: 'compact', maximumFractionDigits: 2 });
-  document.getElementById('v3PoolVolume').textContent = formatUsd(analytics.volume24hUsd);
+  updateCombinedV3Volume();
   document.getElementById('v3PoolApr').textContent = analytics.aprPercent !== null && analytics.aprPercent !== undefined && analytics.aprPercent !== '' && Number.isFinite(Number(analytics.aprPercent)) ? `${Number(analytics.aprPercent).toFixed(1)}%` : 'Not verified';
   const allPositions = document.getElementById('v3SummaryAllPositions');
   const allPositionCount = payload.allPositionCount === null || payload.allPositionCount === undefined ? null : Number(payload.allPositionCount);
@@ -722,7 +734,20 @@ function updateCombinedV3Tvl() {
   if (poolTvl) poolTvl.textContent = combined;
 }
 
+function updateCombinedV3Volume() {
+  const expectedValues = [state.suiDexVolumeUsd, state.cetusVolumeUsd, state.turbosVolumeUsd];
+  const values = expectedValues.filter((value) => Number.isFinite(value) && value >= 0);
+  const volume = document.getElementById('v3PoolVolume');
+  if (!volume) return;
+  volume.textContent = values.length === expectedValues.length
+    ? formatUsd(values.reduce((total, value) => total + value, 0))
+    : 'Not verified';
+}
+
 async function loadExternalPoolMetrics() {
+  state.cetusVolumeUsd = null;
+  state.turbosVolumeUsd = null;
+  updateCombinedV3Volume();
   const tvl = document.getElementById('v3CetusTvl');
   const volume = document.getElementById('v3CetusVolume');
   const cetusApr = document.getElementById('v3CetusApr');
@@ -741,8 +766,9 @@ async function loadExternalPoolMetrics() {
     const [liquidityPayload, volumePayload] = await Promise.all([liquidityResponse.json(), volumeResponse.json()]);
     if (!liquidityResponse.ok || liquidityPayload.status !== 'ok' || !volumeResponse.ok || volumePayload.status !== 'ok') throw new Error('External V3 venue metrics could not be completely verified.');
     const cetusPool = liquidityPayload.liquidity?.cetusPool;
-    const cetusVolume24h = Number(volumePayload.pools?.[CETUS_POOL_ID]?.volume24hUsd);
+    const cetusVolume24h = verifiedVolume(volumePayload.pools?.[CETUS_POOL_ID]?.volume24hUsd);
     state.cetusTvlUsd = verifiedPositive(cetusPool?.tvlUsd);
+    state.cetusVolumeUsd = cetusVolume24h;
     const cetusFeeApr = annualizedFeeApr(cetusVolume24h, state.cetusTvlUsd, cetusPool?.feePercent);
     if (!state.cetusTvlUsd || cetusPool?.poolId !== CETUS_POOL_ID || cetusPool?.active !== true || !Number.isFinite(cetusVolume24h)
       || !verifiedPositive(cetusPool?.priceSuiPerTree) || cetusFeeApr === null) throw new Error('Cetus metrics were incomplete.');
@@ -757,8 +783,9 @@ async function loadExternalPoolMetrics() {
       : null;
     const turbosPoolVolume = volumePayload.pools?.[TURBOS_TREE_POOL_ID];
     state.turbosTvlUsd = verifiedPositive(turbosPool?.tvlUsd);
+    state.turbosVolumeUsd = verifiedVolume(turbosPoolVolume?.volume24hUsd);
     const turbosFeeApr = annualizedFeeApr(turbosPoolVolume?.volume24hUsd, state.turbosTvlUsd, turbosPool?.feePercent);
-    if (!state.turbosTvlUsd || turbosPool?.active !== true || !Number.isFinite(Number(turbosPoolVolume?.volume24hUsd))
+    if (!state.turbosTvlUsd || turbosPool?.active !== true || !Number.isFinite(state.turbosVolumeUsd)
       || !verifiedPositive(turbosPool?.priceSuiPerTree) || turbosFeeApr === null) throw new Error('Turbos SUI/TREE pool metrics were incomplete.');
     if (turbosTvl) turbosTvl.textContent = formatUsd(state.turbosTvlUsd);
     if (turbosVolume) turbosVolume.textContent = formatUsd(turbosPoolVolume.volume24hUsd);
@@ -766,9 +793,12 @@ async function loadExternalPoolMetrics() {
     if (turbosPrice) turbosPrice.textContent = formatPoolPrice(turbosPool.priceSuiPerTree);
     if (turbosNotice) turbosNotice.textContent = `Verified Sui Mainnet spot price · APR annualizes trailing 24H LP fees and excludes incentives · Updated ${new Date(liquidityPayload.generatedAt).toLocaleTimeString()}`;
     updateCombinedV3Tvl();
+    updateCombinedV3Volume();
   } catch {
     state.cetusTvlUsd = null;
     state.turbosTvlUsd = null;
+    state.cetusVolumeUsd = null;
+    state.turbosVolumeUsd = null;
     if (tvl) tvl.textContent = 'Not verified';
     if (volume) volume.textContent = 'Not verified';
     if (cetusApr) cetusApr.textContent = 'Not verified';
@@ -780,10 +810,13 @@ async function loadExternalPoolMetrics() {
     if (turbosPrice) turbosPrice.textContent = 'Not verified';
     if (turbosNotice) turbosNotice.textContent = 'Turbos data is temporarily unavailable. Partial values are not published.';
     updateCombinedV3Tvl();
+    updateCombinedV3Volume();
   }
 }
 
 async function loadPool() {
+  state.suiDexVolumeUsd = null;
+  updateCombinedV3Volume();
   const status = document.getElementById('v3PoolStatus');
   if (status) { status.textContent = 'Loading verified V3 pool…'; status.className = 'v3-status'; }
   try {
@@ -792,6 +825,8 @@ async function loadPool() {
     if (!response.ok || payload.status !== 'ok' || payload.pool?.poolId !== V3_POOL_ID) throw new Error(payload.message || payload.error || `V3 endpoint returned ${response.status}`);
     renderPool(payload);
   } catch (error) {
+    state.suiDexVolumeUsd = null;
+    updateCombinedV3Volume();
     if (status) { status.textContent = `V3 pool unavailable: ${error instanceof Error ? error.message : error}`; status.className = 'v3-status error'; }
   }
 }
