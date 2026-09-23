@@ -37,5 +37,5 @@ for (const file of [...overlays, ...additions]) {
   await mkdir(dirname(resolve(output, file)), { recursive: true });
   await cp(resolve(root, file), resolve(output, file));
 }
-console.log(`Built a ${manifest.files.length + additions.length}-file feature preview from the verified production file set and explicit STI additions.`);
+console.log(`Built a ${allowed.size}-file feature preview from the verified production file set and explicit STI additions.`);
 console.log('The production manifest and recovered function packages were not changed.');

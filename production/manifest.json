@@ -1,7 +1,7 @@
 {
   "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
-  "deployId": "6ab31e7878c67aff72b0dc54",
-  "publishedAt": "2026-09-23T00:37:37.499Z",
+  "deployId": "6ab345e1b9c190b8487f1d7b",
+  "publishedAt": "2026-09-23T03:37:48.596Z",
   "files": [
     {
       "path": "/tree.jpg",
@@ -107,9 +107,9 @@
     },
     {
       "path": "/scripts/wallet.js",
-      "source": "production/live-static/scripts/wallet.js",
-      "sha1": "946acd5f351c9e86fbb32109b25d51cebe9c7836",
-      "size": 30871
+      "source": "scripts/wallet.js",
+      "sha1": "a401cb82afb8de801eb9c9effbc961cdbbd0e46a",
+      "size": 32193
     },
     {
       "path": "/scripts/wallet-manager-core.js",
@@ -593,9 +593,9 @@
     },
     {
       "path": "/dapp/styles.css",
-      "source": "production/live-static/dapp/styles.css",
-      "sha1": "1bb10205354049d9e29468418c3be6f1ebcf6316",
-      "size": 47177
+      "source": "dapp/styles.css",
+      "sha1": "549d0bf0e2976c707f5382ad518237fda706e556",
+      "size": 51275
     },
     {
       "path": "/dapp/raffle-transaction-core.js",
@@ -635,15 +635,15 @@
     },
     {
       "path": "/dapp/interaction-bootstrap.js",
-      "source": "production/live-static/dapp/interaction-bootstrap.js",
-      "sha1": "75892b9d4af3e01d42fd792dac25d031dfacab69",
-      "size": 1498
+      "source": "dapp/interaction-bootstrap.js",
+      "sha1": "cad4a5eb555aa6ab1025cf074ca426ea719bf5b2",
+      "size": 2449
     },
     {
       "path": "/dapp/index.html",
-      "source": "production/live-static/dapp/index.html",
-      "sha1": "60fbfbd9f59e4c0133bb84ed46a593432731680f",
-      "size": 73333
+      "source": "dapp/index.html",
+      "sha1": "71825ab2738e5b2db0f2c06e7980b46abd6bab46",
+      "size": 77147
     },
     {
       "path": "/dapp/earn-v3-zap.js",
@@ -1136,6 +1136,30 @@
       "source": "production/deployed-netlify.toml",
       "sha1": "ac47414c8205343f1a87a5b7b48131aaa7b92856",
       "size": 1034
+    },
+    {
+      "path": "/dapp/sti-widget.js",
+      "source": "dapp/sti-widget.js",
+      "sha1": "897fad214c824e89bf40fc252c949e62ec600bbc",
+      "size": 13091
+    },
+    {
+      "path": "/dapp/sti-purchase-core.js",
+      "source": "dapp/sti-purchase-core.js",
+      "sha1": "1d6f5669d809a7a8bbabaaeccef6f7387e7e3bbd",
+      "size": 6635
+    },
+    {
+      "path": "/dapp/sti-stats-core.js",
+      "source": "dapp/sti-stats-core.js",
+      "sha1": "42d765fa40df491f7b64fcf6c4209b7e39bb5e24",
+      "size": 3446
+    },
+    {
+      "path": "/assets/sti-icon.svg",
+      "source": "assets/sti-icon.svg",
+      "sha1": "388b5e3728ef821050f6a9a2312926bdfc7a65dc",
+      "size": 739
     }
   ],
   "functions": [
