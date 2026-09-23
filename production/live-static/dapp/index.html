@@ -19,7 +19,7 @@
   <link rel="stylesheet" href="v3-transactions.css?v=20260830-2">
   <link rel="stylesheet" href="test-dapp.css?v=20260830-2">
   <script src="panel-router.js?v=20260826-1" defer></script>
-  <script src="interaction-bootstrap.js?v=20260922-wallet2" defer></script>
+  <script src="interaction-bootstrap.js?v=20260826-1" defer></script>
   <script type="module" src="app.js?v=20260901-1"></script>
   <script type="module" src="../scripts/wallet.js?v=20260826-1"></script>
   <script type="module" src="test-dapp.js?v=20260826-1"></script>
@@ -237,42 +237,6 @@
           <div class="chart-shell"><canvas id="marketChart" width="1000" height="430" aria-label="Interactive TREE price and volume chart"></canvas><div class="chart-tooltip" id="chartTooltip" hidden></div><p id="chartMessage" class="chart-message" role="status" aria-live="polite">Loading chart…</p></div>
           <div class="chart-venue-strip" aria-label="Recognized TREE trading venues"><span>Verified 24h venues</span><article data-chart-venue="suiDexV2"><i aria-hidden="true"></i><b>SuiDex V2</b><strong>Verifying…</strong></article><article data-chart-venue="suiDexV3"><i aria-hidden="true"></i><b>SuiDex V3</b><strong>Verifying…</strong></article><article data-chart-venue="turbos"><i aria-hidden="true"></i><b>Turbos</b><strong>Verifying…</strong></article><article data-chart-venue="cetus"><i aria-hidden="true"></i><b>Cetus V3</b><strong>Verifying…</strong></article></div>
           <p class="chart-footnote">Price history: CoinGecko. Venue totals: verified on-chain SuiDex V2, SuiDex V3, Turbos, and Cetus swaps. Auto-refreshes every 60 seconds while this chart is visible.</p>
-        </section>
-        <section class="data-group stats-sti" aria-labelledby="statsStiTitle">
-          <div class="sti-card">
-            <div class="sti-card-header"><div class="sti-card-brand"><img src="../assets/tree-token.png" alt="" width="40" height="40"><div><h3 id="statsStiTitle">Tree</h3><span id="stiMembership">Loading index data…</span></div></div><div class="sti-index-mark" aria-label="Sui Trenches Index"><img src="../assets/sti-icon.svg" alt="" width="22" height="22"><span>STI</span></div></div>
-            <div id="stiBasket" class="sti-basket" role="img" aria-label="Basket composition unavailable" hidden></div>
-            <p class="sti-share"><strong id="stiShare">—</strong> of the basket</p>
-            <div class="sti-prices" aria-label="STI price statistics"><div><span>STI price · SUI</span><strong id="stiPrice">—</strong><small>per STI · Cetus pool</small></div><div><span>Backing per STI · SUI</span><strong id="stiNav">—</strong><small>Index NAV · STI feed</small></div></div>
-            <p id="stiPriceStatus" class="sti-note" role="status">Loading pool price…</p>
-            <div class="sti-metrics"><div><strong id="stiHeld">—</strong><span>Tree in the vault</span></div><div><strong id="stiHolders">—</strong><span>STI holders</span></div><div><strong id="stiSince">—</strong><span>member since</span></div></div>
-            <p id="stiMintNote" class="sti-note" hidden>Every STI minted buys Tree.</p>
-            <p id="stiDataStatus" class="sti-note" role="status">Source: STI public index feed.</p>
-            <button id="stiOpenBuy" class="button" type="button" aria-expanded="false" aria-controls="stiPurchase">Get STI</button>
-            <p class="sti-note">STI is independently operated, not operated by TREE.</p>
-          </div>
-          <div id="stiPurchase" class="sti-purchase" hidden>
-            <div class="sti-purchase-heading"><h4>Buy STI</h4><button id="stiCloseBuy" class="button secondary" type="button" aria-label="Close STI purchase">Close</button></div>
-            <p class="sti-note">Pay with SUI through the STI/SUI pool on Cetus. This purchase stays on TREE. Your wallet opens only when you connect or approve.</p>
-            <label for="stiAmount">You pay · SUI</label>
-            <input id="stiAmount" type="text" inputmode="decimal" autocomplete="off" placeholder="0.00" aria-describedby="stiBalance">
-            <p id="stiBalance" class="sti-note">Connect your wallet to check your balance.</p>
-            <button id="stiQuoteButton" class="button secondary" type="button">Get quote</button>
-            <dl id="stiQuoteDetails" class="sti-quote" hidden>
-              <div><dt>Estimated STI</dt><dd id="stiEstimated">—</dd></div>
-              <div><dt>Minimum STI received</dt><dd id="stiMinimum">—</dd></div>
-              <div><dt>Pool fee · included</dt><dd id="stiFee">0.25%</dd></div>
-              <div><dt>Price impact · includes fee</dt><dd id="stiImpact">—</dd></div>
-              <div><dt>Slippage limit</dt><dd>1%</dd></div>
-              <div><dt>Quote valid for</dt><dd id="stiExpiry">—</dd></div>
-            </dl>
-            <p class="sti-note">Quotes above 3% price impact are blocked. Larger purchases may need a smaller amount.</p>
-            <p class="sti-note">Pool purchase only; does not compare STI’s basket-minting option. No added TREE fee. Network gas is extra; keep 0.1 SUI available.</p>
-            <button id="stiBuyButton" class="button" type="button">Connect wallet</button>
-            <p id="stiPurchaseStatus" class="sti-note" role="status" aria-live="polite">Enter an amount to see what you will receive.</p>
-            <p id="stiReceipt" class="sti-receipt" hidden></p>
-          </div>
-          <script type="module" src="sti-widget.js"></script>
         </section>
         <section class="data-group stats-public-burn" aria-labelledby="statsPublicBurnTitle"><div class="group-heading"><div><h3 id="statsPublicBurnTitle">Burn Tracker</h3><p>Verified TREE burned on Sui Mainnet</p></div></div><div class="stat-grid"><article class="stat-card burned"><span>Tokens Burned</span><strong data-burn="zeroAddressBalance">—</strong></article><article class="stat-card burned"><span>Supply Burned</span><strong data-burn="removalPercentage">—</strong></article><article class="stat-card"><span>Circulating</span><strong data-burn="effectiveSupply">—</strong></article><article class="stat-card"><span>Burn Txs</span><strong data-burn-total-transactions>—</strong></article></div></section>
         <details class="stats-public-locks">

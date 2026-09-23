@@ -1,0 +1,76 @@
+{
+  "data": {
+    "chainIdentifier": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S",
+    "checkpoint": {
+      "timestamp": "2026-09-23T02:34:01.235Z"
+    },
+    "object": {
+      "address": "0xc9fb86078a0e88c31cee675386047edcb29b5a1f5ebe6358a968f1f816e9caa4",
+      "asMoveObject": {
+        "contents": {
+          "type": {
+            "repr": "0x1eabed72c53feb3805120a081dc15963c204dc8d091542592abaf7a35689b2fb::pool::Pool<0x054e8315e419c9768faf889e36a0a12c90287e14669903f20f92f0ce9a8013c2::sti::STI,0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI>"
+          },
+          "json": {
+            "id": "0xc9fb86078a0e88c31cee675386047edcb29b5a1f5ebe6358a968f1f816e9caa4",
+            "coin_a": "4823553640504039",
+            "coin_b": "79998855596",
+            "tick_spacing": 60,
+            "fee_rate": "2500",
+            "liquidity": "19616957339841",
+            "current_sqrt_price": "75118023302009553",
+            "current_tick_index": {
+              "bits": 4294857218
+            },
+            "fee_growth_global_a": "34643375115460147134",
+            "fee_growth_global_b": "669595346599121",
+            "fee_protocol_coin_a": "5624567309408",
+            "fee_protocol_coin_b": "104142652",
+            "tick_manager": {
+              "tick_spacing": 60,
+              "ticks": {
+                "id": "0x330919e4cfa6cf44b67a185167a10e169dd8b1ccf60d796fd77baf754a5f259f",
+                "head": [
+                  {
+                    "is_none": false,
+                    "v": "56"
+                  }
+                ],
+                "tail": {
+                  "is_none": false,
+                  "v": "887216"
+                },
+                "level": "1",
+                "max_level": "16",
+                "list_p": "2",
+                "size": "2",
+                "random": {
+                  "seed": "5808298847561069509"
+                }
+              }
+            },
+            "rewarder_manager": {
+              "rewarders": [],
+              "points_released": "7625939340303749766709248000000",
+              "points_growth_global": "802430023338780389",
+              "last_updated_time": "1790010092"
+            },
+            "position_manager": {
+              "tick_spacing": 60,
+              "position_index": "3",
+              "positions": {
+                "id": "0xcc48d7d2ddea6ce0094363f5fadf9b3cc7fe562ffe799e9253f1e24dd3fe86d5",
+                "head": "0xdc0e2dff9ead7a556e55f40c4be90766e5f03d231ed3a8d398a9a3bf4f37d8e4",
+                "tail": "0xf1cd4dd3e1c64ad2455b3c05b788d7b8ceec173147df3d468d0eb37c80fff935",
+                "size": "2"
+              }
+            },
+            "is_pause": false,
+            "index": "44255",
+            "url": "https://bq7bkvdje7gvgmv66hrxdy7wx5h5ggtrrnmt66rdkkehb64rvz3q.arweave.net/DD4VVGknzVMyvvHjceP2v0_TGnGLWT96I1KIcPuRrnc"
+          }
+        }
+      }
+    }
+  }
+}

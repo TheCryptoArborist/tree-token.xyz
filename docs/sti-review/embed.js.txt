@@ -1,0 +1,51 @@
+/*
+ * Sui Trenches Index — the "we're in the index" badge.
+ *
+ *   <script async src="https://sti.boombots.fun/embed.js" data-coin="SHOCK"></script>
+ *
+ * The badge appears where the tag is. Options, all optional:
+ *   data-style="card|strip"        card (default) or a one-line strip
+ *   data-theme="dark|light|auto"   default dark
+ *   data-accent="#ff5a1f"          default: taken from the coin's logo
+ *   data-width="420"               widest the badge may grow, in px (the strip fills its container)
+ *
+ * It is an iframe to sti.boombots.fun/embed/: it cannot read or change the
+ * page it sits on, asks for no wallet, and only links out to the index.
+ * This file's address is permanent — sites link to it. Never rename it.
+ */
+(function () {
+  var ORIGIN = 'https://sti.boombots.fun';
+  var me = document.currentScript;
+  var tags = me ? [me] : Array.prototype.slice.call(document.querySelectorAll('script[src*="/embed.js"][data-coin]'));
+  window.__stiBadges = window.__stiBadges || 0;
+
+  if (!window.__stiBadgeListener) {
+    window.__stiBadgeListener = true;
+    window.addEventListener('message', function (e) {
+      if (e.origin !== ORIGIN || !e.data || e.data.sti !== 'badge-size') return;
+      var f = document.getElementById(e.data.id);
+      var h = Number(e.data.height);
+      if (f && h > 0 && h < 1000) f.style.height = h + 'px';
+    });
+  }
+
+  tags.forEach(function (tag) {
+    if (tag.__stiDone) return;
+    tag.__stiDone = true;
+    var d = tag.dataset;
+    var strip = d.style === 'strip';
+    var id = 'sti-badge-' + (++window.__stiBadges);
+    var q = ['coin=' + encodeURIComponent(d.coin || ''), 'id=' + id];
+    if (strip) q.push('style=strip');
+    if (d.theme) q.push('theme=' + encodeURIComponent(d.theme));
+    if (d.accent) q.push('accent=' + encodeURIComponent(d.accent.replace('#', '')));
+    var f = document.createElement('iframe');
+    f.id = id;
+    f.src = ORIGIN + '/embed/?' + q.join('&');
+    f.title = (d.coin || 'This coin') + ' in the Sui Trenches Index';
+    f.loading = 'lazy';
+    f.setAttribute('scrolling', 'no');
+    f.style.cssText = 'display:block;border:0;width:100%;max-width:' + (parseInt(d.width, 10) || (strip ? 720 : 420)) + 'px;height:' + (strip ? 56 : 240) + 'px;background:transparent;overflow:hidden';
+    tag.parentNode.insertBefore(f, tag);
+  });
+})();

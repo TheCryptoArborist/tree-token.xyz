@@ -1,0 +1,56 @@
+[
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@125,800&family=Instrument+Sans:wght@400;600&family=Spline+Sans+Mono:wght@500&display=swap",
+    "method": "GET",
+    "type": "stylesheet",
+    "postData": null
+  },
+  {
+    "url": "https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495",
+    "method": "GET",
+    "type": "script",
+    "postData": null
+  },
+  {
+    "url": "https://sti-keeper-production.up.railway.app/badge",
+    "method": "GET",
+    "type": "fetch",
+    "postData": null
+  },
+  {
+    "url": "https://sti.boombots.fun/cdn-cgi/rum?",
+    "method": "POST",
+    "type": "xhr",
+    "postData": "{\"startTime\":1790051850378,\"pageloadId\":\"d6d868e7-a5b1-4506-bf1e-b98a82a317bc\",\"eventType\":1,\"nt\":\"navigate\",\"location\":\"https://sti.boombots.fun/embed/\",\"referrer\":\"https://6ab205ad636c382b6a3abee1--tree-token.netlify.app/\",\"versions\":{\"fl\":\"2024.11.0\",\"js\":\"2026.9.1\",\"timings\":2},\"bi\":{\"be\":\"Blink\",\"bev\":\"149\",\"bv\":\"149\",\"ov\":\"11\"},\"memory\":{\"totalJSHeapSize\":1887270,\"usedJSHeapSize\":1128102,\"jsHeapSizeLimit\":4395630592},\"firstPaint\":0,\"firstContentfulPaint\":0,\"timingsV2\":{\"nextHopProtocol\":\"h2\",\"domainLookupStart\":5,\"domainLookupEnd\":15,\"connectStart\":15,\"connectEnd\":105,\"secureConnectionStart\":54,\"requestStart\":105,\"responseStart\":134,\"responseEnd\":177,\"domInteractive\":282,\"domComplete\":301,\"loadEventStart\":301,\"loadEventEnd\":301,\"finalResponseHeadersStart\":171,\"firstInterimResponseStart\":134,\"transferSize\":8116,\"decodedBodySize\":21488},\"siteToken\":\"445b573833c749ddbbf917f88af78c85\",\"st\":2}"
+  },
+  {
+    "url": "https://fonts.gstatic.com/s/anybody/v13/VuJbdNvK2Ib2ppdWYq311GH32hxIv0sv5grncSUi2F_Wim4JV2f_qc_C.woff2",
+    "method": "GET",
+    "type": "font",
+    "postData": null
+  },
+  {
+    "url": "https://fonts.gstatic.com/s/instrumentsans/v4/pxiTypc9vsFDm051Uf6KVwgkfoSxQ0GsQv8ToedPibnr0SZe1Q.woff2",
+    "method": "GET",
+    "type": "font",
+    "postData": null
+  },
+  {
+    "url": "https://fonts.gstatic.com/s/splinesansmono/v13/R70MjzAei_CDNLfgZxrW6wrZOF2WdZ6xabUGSVtNuGBQMotSwYY.woff2",
+    "method": "GET",
+    "type": "font",
+    "postData": null
+  },
+  {
+    "url": "https://sti-keeper-production.up.railway.app/icon/TREE",
+    "method": "GET",
+    "type": "image",
+    "postData": null
+  },
+  {
+    "url": "https://sti.boombots.fun/icon.svg",
+    "method": "GET",
+    "type": "image",
+    "postData": null
+  }
+]

@@ -1,0 +1,19 @@
+name: Verify STI Stats integration
+on:
+  push:
+    branches: [feature/sti-tree-stats]
+  pull_request:
+    paths: ['dapp/index.html', 'dapp/styles.css', 'dapp/interaction-bootstrap.js', 'dapp/sti-*.js', 'assets/sti-icon.svg', 'scripts/wallet.js', 'scripts/build-*.mjs', 'production/**', 'netlify.toml', 'netlify/preview-functions/**', 'tests/*sti*', 'tests/fixtures/sti-*.json', 'docs/sti-review/**', '.github/workflows/verify-sti-stats.yml']
+permissions:
+  contents: read
+jobs:
+  stats:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node --test tests/stats-sti-source.test.mjs tests/sti-purchase-core.test.mjs tests/sti-stats-core.test.mjs tests/stats-live-supply-source.test.mjs tests/stats-nftree-source.test.mjs
+      - run: node --test tests/sti-preview-build.test.mjs tests/sti-preview-proxy.test.ts
+      - run: node --test tests/sti-release-inventory.test.mjs

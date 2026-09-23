@@ -167,6 +167,9 @@
 /dapp/v3-existing-zap.js -text
 /production/deployed-index.html -text
 /production/functions/*.zip binary
+/docs/sti-review/*.txt -text
+/dapp/sti-widget.js -text
+/dapp/sti-purchase-core.js -text
 /production/live-static/** -text
 /index.html whitespace=cr-at-eol
 /production/metrics-functions/*.zip binary

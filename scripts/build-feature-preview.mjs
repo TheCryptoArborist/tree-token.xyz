@@ -2,10 +2,14 @@ import { cp, mkdir, readFile, readdir } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 
 const root = resolve(import.meta.dirname, '..');
-const output = resolve(root, 'dist');
+// Keep the candidate separate from the byte-exact published snapshot in dist/.
+const output = resolve(root, 'dist-preview');
 const manifest = JSON.parse(await readFile(resolve(root, 'production/manifest.json'), 'utf8'));
-const outputPath = file => file.path === '/netlify.toml' ? 'netlify.toml' : file.source;
+const outputPath = file => file.path.slice(1);
 const allowed = new Set(manifest.files.map(file => outputPath(file).toLowerCase()));
+const additions = ['dapp/sti-widget.js', 'dapp/sti-purchase-core.js', 'dapp/sti-stats-core.js', 'assets/sti-icon.svg'];
+const overlays = ['dapp/index.html', 'dapp/styles.css', 'dapp/interaction-bootstrap.js', 'scripts/wallet.js'];
+for (const file of additions) allowed.add(file);
 
 async function rejectUntrackedOutput(directory, prefix = '') {
   let entries;
@@ -18,7 +22,7 @@ async function rejectUntrackedOutput(directory, prefix = '') {
   for (const entry of entries) {
     const relative = prefix + entry.name;
     if (entry.isDirectory()) await rejectUntrackedOutput(resolve(directory, entry.name), `${relative}/`);
-    else if (!allowed.has(relative.toLowerCase())) throw new Error(`Preserve or remove the old preview build before continuing: dist/${relative}`);
+    else if (!allowed.has(relative.toLowerCase())) throw new Error(`Preserve or remove the old preview build before continuing: dist-preview/${relative}`);
   }
 }
 
@@ -29,5 +33,9 @@ for (const file of manifest.files) {
   await cp(resolve(root, file.source), destination);
 }
 
-console.log(`Built a ${manifest.files.length}-file feature preview from the verified production file set.`);
+for (const file of [...overlays, ...additions]) {
+  await mkdir(dirname(resolve(output, file)), { recursive: true });
+  await cp(resolve(root, file), resolve(output, file));
+}
+console.log(`Built a ${manifest.files.length + additions.length}-file feature preview from the verified production file set and explicit STI additions.`);
 console.log('The production manifest and recovered function packages were not changed.');

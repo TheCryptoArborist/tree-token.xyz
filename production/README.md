@@ -1,3 +1,11 @@
+# STI integration review — 2026-09-23
+
+The STI branch includes current main through PRs #30/#31. Published file digests, release metadata, backend identities and schedules remain unchanged. Four original published files (`dapp/index.html`, `dapp/styles.css`, `dapp/interaction-bootstrap.js`, `scripts/wallet.js`) are archived under `production/live-static/`; the manifest now reads those copies to retain a reproducible production snapshot while the editable files contain the reviewed native STI integration.
+
+`npm run verify:production` and `npm run build` verify/build the 189-file published baseline in `dist/`. `npm run build:preview` builds a separate 193-file candidate in `dist-preview/`, using public manifest paths (including supplementary assets), four explicit frontend overlays, and three explicit STI modules plus the local STI icon. `tests/sti-preview-build.test.mjs` checks every output digest and the complete candidate inventory.
+
+Netlify Deploy Previews use only the separate public read proxy in `netlify/preview-functions/`. It accepts GET requests on explicit public endpoints, including Knowledge Trial status and the Canopy exposure/badge snapshots, and does not forward credentials or non-status actions. Existing production functions, schedules and state-changing APIs are not rebuilt. Knowledge Trial submissions and backend writes are deliberately unavailable in this review environment. STI quotes and unsigned simulations use the reviewed Mainnet path. Do not promote this review deployment or unlock automatic publication; an eventual production release must preserve all current backend packages and use a separately verified release inventory.
+
 # Current production — 2026-09-23
 
 Deploy `6ab31e7878c67aff72b0dc54` is published and locked from merged PR #30, source commit `dae05c8e9fdd675fb77caeac7e5507616b38cf98`. The V3 headline displays the verified SuiDex + Cetus + Turbos sum and fails closed. The only public-file change from the previous live release is `dapp/v3-workspace.js`. Knowledge Trial is preserved byte-for-byte; only the two read-only metrics functions were updated. All other 35 functions and five schedules are preserved. The STI Stats branch remains separate.

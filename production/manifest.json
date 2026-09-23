@@ -107,7 +107,7 @@
     },
     {
       "path": "/scripts/wallet.js",
-      "source": "scripts/wallet.js",
+      "source": "production/live-static/scripts/wallet.js",
       "sha1": "946acd5f351c9e86fbb32109b25d51cebe9c7836",
       "size": 30871
     },
@@ -593,7 +593,7 @@
     },
     {
       "path": "/dapp/styles.css",
-      "source": "dapp/styles.css",
+      "source": "production/live-static/dapp/styles.css",
       "sha1": "1bb10205354049d9e29468418c3be6f1ebcf6316",
       "size": 47177
     },
@@ -635,13 +635,13 @@
     },
     {
       "path": "/dapp/interaction-bootstrap.js",
-      "source": "dapp/interaction-bootstrap.js",
+      "source": "production/live-static/dapp/interaction-bootstrap.js",
       "sha1": "75892b9d4af3e01d42fd792dac25d031dfacab69",
       "size": 1498
     },
     {
       "path": "/dapp/index.html",
-      "source": "dapp/index.html",
+      "source": "production/live-static/dapp/index.html",
       "sha1": "60fbfbd9f59e4c0133bb84ed46a593432731680f",
       "size": 73333
     },

@@ -4,6 +4,11 @@
 
 [context.deploy-preview]
   command = "npm run build:preview"
+  publish = "dist-preview"
+
+# Review builds must never rebuild the unrecovered production functions.
+[context.deploy-preview.functions]
+  directory = "netlify/preview-functions"
 
 [functions]
   directory = "netlify/functions"

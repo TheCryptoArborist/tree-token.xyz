@@ -1,0 +1,79 @@
+{
+  "pool": {
+    "id": "0xc9fb86078a0e88c31cee675386047edcb29b5a1f5ebe6358a968f1f816e9caa4",
+    "pool_type": "0x1eabed72c53feb3805120a081dc15963c204dc8d091542592abaf7a35689b2fb::pool::Pool<0x054e8315e419c9768faf889e36a0a12c90287e14669903f20f92f0ce9a8013c2::sti::STI, 0x2::sui::SUI>",
+    "coin_type_a": "0x054e8315e419c9768faf889e36a0a12c90287e14669903f20f92f0ce9a8013c2::sti::STI",
+    "coin_type_b": "0x2::sui::SUI",
+    "coin_amount_a": "4823553640504039",
+    "coin_amount_b": "79998855596",
+    "current_sqrt_price": "75118023302009553",
+    "current_tick_index": -110078,
+    "fee_growth_global_a": "34643375115460147134",
+    "fee_growth_global_b": "669595346599121",
+    "fee_protocol_coin_a": "5624567309408",
+    "fee_protocol_coin_b": "104142652",
+    "fee_rate": "2500",
+    "pool_status": {
+      "disable_add_liquidity": false,
+      "disable_remove_liquidity": false,
+      "disable_swap": false,
+      "disable_flash_loan": false,
+      "disable_collect_fee": false,
+      "disable_collect_reward": false
+    },
+    "liquidity": "19616957339841",
+    "position_manager": {
+      "positions_handle": "0xcc48d7d2ddea6ce0094363f5fadf9b3cc7fe562ffe799e9253f1e24dd3fe86d5",
+      "size": "2"
+    },
+    "rewarder_infos": [],
+    "rewarder_last_updated_time": "1790010092",
+    "tick_spacing": 60,
+    "ticks_handle": "0x330919e4cfa6cf44b67a185167a10e169dd8b1ccf60d796fd77baf754a5f259f",
+    "uri": "https://bq7bkvdje7gvgmv66hrxdy7wx5h5ggtrrnmt66rdkkehb64rvz3q.arweave.net/DD4VVGknzVMyvvHjceP2v0_TGnGLWT96I1KIcPuRrnc",
+    "index": 44255,
+    "name": "STI-SUI[60]"
+  },
+  "metadata": {
+    "coinMetadata": {
+      "id": "0xd7d063e17701c6114212bbdf35af419ccf214285636a9f66638b001b29f1a8e7",
+      "decimals": 9,
+      "name": "Sui Trenches Index",
+      "symbol": "STI",
+      "description": "A redeemable on-chain basket of the Sui trenches, governed by its holders.",
+      "iconUrl": "https://sti.boombots.fun/sti-coin.png"
+    }
+  },
+  "quote": {
+    "pool_address": "0xc9fb86078a0e88c31cee675386047edcb29b5a1f5ebe6358a968f1f816e9caa4",
+    "current_sqrt_price": "75118023302009553",
+    "estimated_amount_in": "100000000",
+    "estimated_amount_out": "6007891535512",
+    "estimated_end_sqrt_price": "75211822900462849",
+    "estimated_fee_amount": "250000",
+    "is_exceed": false,
+    "amount": "100000000",
+    "a2b": false,
+    "by_amount_in": true
+  },
+  "config": {
+    "integrate": {
+      "package_id": "0x996c4d9480708fb8b92aa7acf819fb0497b5ec8e65ba06601cae2fb6db3312c3",
+      "published_at": "0xae9c208cf58fd5ba36737c9ee5dcfa7f152d0fb5a5a99eebb7c881ebc2fe59e0",
+      "version": 16
+    },
+    "clmm_pool": {
+      "package_id": "0x1eabed72c53feb3805120a081dc15963c204dc8d091542592abaf7a35689b2fb",
+      "published_at": "0x25ebb9a7c50eb17b3fa9c5a30fb8b5ad8f97caaf4928943acbcff7153dfee5e3",
+      "version": 14,
+      "config": {
+        "pools_id": "0xf699e7f2276f5c9a75944b37a0c5b5d9ddfd2471bf6242483b03ab2887d198d0",
+        "pools_handle": "0x4c9ab808d50ca1358cc699bb53b6334b9471d4718fb19bb621ff41c2e93bbce4",
+        "global_config_id": "0xdaa46292632c3c4d8f31f23ea0f9b36a28ff3677e9684980e4438403a67a3d8f",
+        "global_vault_id": "0xce7bceef26d3ad1f6d9b6f13a953f053e6ed3ca77907516481ce99ae8e588f2b",
+        "admin_cap_id": "0x89c1a321291d15ddae5a086c9abc533dff697fde3d89e0ca836c41af73e36a75",
+        "partners_id": "0xac30897fa61ab442f6bff518c5923faa1123c94b36bd4558910e9c783adfa204"
+      }
+    }
+  }
+}
