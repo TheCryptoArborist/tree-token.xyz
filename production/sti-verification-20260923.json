@@ -1,0 +1,118 @@
+{
+  "mode": "promote",
+  "id": "6ab345e1b9c190b8487f1d7b",
+  "commit": "1fc415b63b2eeab0afc5a1ab8372085517a004b7",
+  "sourceCommit": "804d5d24c1007e9540c95d877a57c14d2d8ee8c9",
+  "approvedSourceCommit": "5e4f6094e1647ca1d5bace65d9fd5d41ee671f17",
+  "previous": "6ab31e7878c67aff72b0dc54",
+  "url": "https://6ab345e1b9c190b8487f1d7b--tree-token.netlify.app",
+  "files": 193,
+  "functionsPreserved": 37,
+  "schedulesPreserved": 5,
+  "productionChanged": true,
+  "publishedAt": "2026-09-23T03:37:48.596Z",
+  "locked": true,
+  "requiredChecks": [
+    "stats",
+    "verify",
+    "production-snapshot"
+  ],
+  "focusedTestsPassed": 56,
+  "walletRestorationBrowserScenariosPassed": 6,
+  "pickerViewports": [
+    1440,
+    390
+  ],
+  "bootstrapFailureScenariosPassed": 3,
+  "approvedVisualViewports": [
+    1440,
+    390,
+    320
+  ],
+  "transactionsSigned": 0,
+  "transactionsSubmitted": 0,
+  "liveChecks": {
+    "checkedAt": "2026-09-23T03:38:59.063Z",
+    "origin": "https://tree-token.xyz",
+    "changedFiles": [
+      {
+        "path": "/dapp/index.html",
+        "http": 200,
+        "sha1": "71825ab2738e5b2db0f2c06e7980b46abd6bab46"
+      },
+      {
+        "path": "/dapp/styles.css",
+        "http": 200,
+        "sha1": "549d0bf0e2976c707f5382ad518237fda706e556"
+      },
+      {
+        "path": "/dapp/interaction-bootstrap.js",
+        "http": 200,
+        "sha1": "cad4a5eb555aa6ab1025cf074ca426ea719bf5b2"
+      },
+      {
+        "path": "/scripts/wallet.js",
+        "http": 200,
+        "sha1": "a401cb82afb8de801eb9c9effbc961cdbbd0e46a"
+      },
+      {
+        "path": "/dapp/sti-widget.js",
+        "http": 200,
+        "sha1": "897fad214c824e89bf40fc252c949e62ec600bbc"
+      },
+      {
+        "path": "/dapp/sti-purchase-core.js",
+        "http": 200,
+        "sha1": "1d6f5669d809a7a8bbabaaeccef6f7387e7e3bbd"
+      },
+      {
+        "path": "/dapp/sti-stats-core.js",
+        "http": 200,
+        "sha1": "42d765fa40df491f7b64fcf6c4209b7e39bb5e24"
+      },
+      {
+        "path": "/assets/sti-icon.svg",
+        "http": 200,
+        "sha1": "388b5e3728ef821050f6a9a2312926bdfc7a65dc"
+      }
+    ],
+    "publicApis": [
+      {
+        "path": "/api/tree-v3-overview",
+        "http": 200,
+        "status": "ok"
+      },
+      {
+        "path": "/api/tree-volume",
+        "http": 200,
+        "status": "ok"
+      },
+      {
+        "path": "/api/tree-liquidity",
+        "http": 200,
+        "status": "ok"
+      },
+      {
+        "path": "/api/tree-knowledge-trial?action=status",
+        "http": 200,
+        "status": "ok"
+      },
+      {
+        "path": "/api/tree-exposure",
+        "http": 200,
+        "status": "not-ready",
+        "entries": 0
+      },
+      {
+        "path": "/api/tree-badges",
+        "http": 200,
+        "status": "not-ready",
+        "entries": 0
+      }
+    ]
+  },
+  "knownExistingDiagnostics": [
+    "Non-blocking legacy Arcade source diagnostic remains unchanged.",
+    "Canopy exposure and badge snapshot endpoints return HTTP 200/not-ready, as before this release."
+  ]
+}

@@ -21,6 +21,6 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
   }
   for (const file of additions) assert.equal(digest(new URL(`dist-preview${file}`, root)), digest(new URL(file.slice(1), root)));
   const files = readdirSync(new URL('dist-preview/', root), { recursive: true, withFileTypes: true }).filter(f => f.isFile());
-  assert.equal(files.length, manifest.files.length + additions.length);
+  assert.equal(files.length, new Set([...manifest.files.map(f => f.path), ...additions]).size);
   assert.ok(!files.some(f => /production|recovery|netlify\/functions/.test(f.parentPath.split('dist-preview')[1])));
 });

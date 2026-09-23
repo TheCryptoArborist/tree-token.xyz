@@ -1,3 +1,15 @@
+# Current production — STI release, 2026-09-23
+
+Deploy `6ab345e1b9c190b8487f1d7b` is published and locked after PR #32, merged commit `1fc415b63b2eeab0afc5a1ab8372085517a004b7` (candidate source `804d5d24c1007e9540c95d877a57c14d2d8ee8c9`). Native STI Stats includes the restored local index icon, basket segments, live Cetus STI/SUI price and index backing per STI. The reviewed native purchase route and safeguards remain intact; no third-party embed executes. Late Slush session restoration and preview Canopy reads were corrected before release.
+
+All 193 static files are recorded in `manifest.json` and `current-release.json`. Both production and feature-preview builds now contain 193 unique files. All 37 existing production function packages, routes/configuration and five schedules were retained without rebuilding; only two exact function packages are available locally. Keep automatic production publishing locked and preserve running backend packages for frontend-only releases.
+
+Validation: 56 focused tests, STI browser/visual QA at 1440/390/320 widths, six wallet-restoration scenarios, desktop/mobile nonblocking wallet picker checks, three bootstrap failure cases, required CI checks, production snapshot verification/build, exact hosted file inventory and eight changed public file hashes. Live V3, volume, liquidity and Knowledge Trial status APIs returned HTTP 200/ok. No transaction was signed or submitted. See `sti-verification-20260923.json` and the review evidence under `docs/sti-review/`.
+
+The Canopy exposure/badge snapshots still return their pre-existing not-ready state. The unrelated legacy Arcade diagnostic remains non-blocking. The historical notes below describe earlier deployments and are not current release instructions.
+
+---
+
 # STI integration review — 2026-09-23
 
 The STI branch includes current main through PRs #30/#31. Published file digests, release metadata, backend identities and schedules remain unchanged. Four original published files (`dapp/index.html`, `dapp/styles.css`, `dapp/interaction-bootstrap.js`, `scripts/wallet.js`) are archived under `production/live-static/`; the manifest now reads those copies to retain a reproducible production snapshot while the editable files contain the reviewed native STI integration.

@@ -1,21 +1,27 @@
 {
-  "id": "6ab31e7878c67aff72b0dc54",
-  "previous": "6ab219d0f2e18c9096895bf6",
-  "commit": "dae05c8e9fdd675fb77caeac7e5507616b38cf98",
-  "sourceCommit": "dae05c8e9fdd675fb77caeac7e5507616b38cf98",
+  "id": "6ab345e1b9c190b8487f1d7b",
+  "previous": "6ab31e7878c67aff72b0dc54",
+  "commit": "1fc415b63b2eeab0afc5a1ab8372085517a004b7",
+  "sourceCommit": "804d5d24c1007e9540c95d877a57c14d2d8ee8c9",
+  "approvedSourceCommit": "5e4f6094e1647ca1d5bace65d9fd5d41ee671f17",
   "locked": true,
   "changedFiles": [
-    "/dapp/v3-workspace.js"
+    "/dapp/index.html",
+    "/dapp/styles.css",
+    "/dapp/interaction-bootstrap.js",
+    "/scripts/wallet.js",
+    "/dapp/sti-widget.js",
+    "/dapp/sti-purchase-core.js",
+    "/dapp/sti-stats-core.js",
+    "/assets/sti-icon.svg"
   ],
-  "fileCount": 189,
-  "functionsPreserved": 35,
-  "functionsUpdated": [
-    "tree-volume",
-    "tree-liquidity"
-  ],
+  "fileCount": 193,
+  "functionsPreserved": 37,
+  "functionsUpdated": [],
   "schedulesPreserved": 5,
-  "url": "https://tree-token.xyz/dapp/#v3",
-  "publishedAt": "2026-09-23T00:37:37.499Z",
+  "url": "https://tree-token.xyz/dapp/#stats",
+  "previewUrl": "https://6ab345e1b9c190b8487f1d7b--tree-token.netlify.app",
+  "publishedAt": "2026-09-23T03:37:48.596Z",
   "files": [
     {
       "path": "/tree.jpg",
@@ -87,7 +93,7 @@
     },
     {
       "path": "/scripts/wallet.js",
-      "sha": "946acd5f351c9e86fbb32109b25d51cebe9c7836"
+      "sha": "a401cb82afb8de801eb9c9effbc961cdbbd0e46a"
     },
     {
       "path": "/scripts/wallet-manager-core.js",
@@ -411,7 +417,7 @@
     },
     {
       "path": "/dapp/styles.css",
-      "sha": "1bb10205354049d9e29468418c3be6f1ebcf6316"
+      "sha": "549d0bf0e2976c707f5382ad518237fda706e556"
     },
     {
       "path": "/dapp/raffle-transaction-core.js",
@@ -439,11 +445,11 @@
     },
     {
       "path": "/dapp/interaction-bootstrap.js",
-      "sha": "75892b9d4af3e01d42fd792dac25d031dfacab69"
+      "sha": "cad4a5eb555aa6ab1025cf074ca426ea719bf5b2"
     },
     {
       "path": "/dapp/index.html",
-      "sha": "60fbfbd9f59e4c0133bb84ed46a593432731680f"
+      "sha": "71825ab2738e5b2db0f2c06e7980b46abd6bab46"
     },
     {
       "path": "/dapp/earn-v3-zap.js",
@@ -772,6 +778,22 @@
     {
       "path": "/netlify.toml",
       "sha": "ac47414c8205343f1a87a5b7b48131aaa7b92856"
+    },
+    {
+      "path": "/dapp/sti-widget.js",
+      "sha": "897fad214c824e89bf40fc252c949e62ec600bbc"
+    },
+    {
+      "path": "/dapp/sti-purchase-core.js",
+      "sha": "1d6f5669d809a7a8bbabaaeccef6f7387e7e3bbd"
+    },
+    {
+      "path": "/dapp/sti-stats-core.js",
+      "sha": "42d765fa40df491f7b64fcf6c4209b7e39bb5e24"
+    },
+    {
+      "path": "/assets/sti-icon.svg",
+      "sha": "388b5e3728ef821050f6a9a2312926bdfc7a65dc"
     }
   ],
   "functionDigests": {
@@ -1642,5 +1664,5 @@
       "cron": "17 */6 * * *"
     }
   ],
-  "configurationNote": "Live configuration and all unrelated function packages preserved. Direct restore/promote succeeded while the previous production deploy remained locked; new production is locked. STI branch excluded."
+  "configurationNote": "Verified native STI frontend published after PR #32 merge. All 37 existing function identities, digests, routes, configuration and five schedules preserved using the existing branch context. Automatic production publication remains locked. No backend rebuild."
 }
