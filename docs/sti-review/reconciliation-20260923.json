@@ -1,0 +1,232 @@
+{
+  "verifiedOn": "2026-09-23",
+  "sourceCommit": "e51b981acd65399b3043f2be5c43d7c298e3a0d7",
+  "mergedMain": "506edda5c4a2dbc062086af0f7c54aca0c8b73a1",
+  "pullRequest": 32,
+  "preview": {
+    "id": "6ab336273b25710008638c62",
+    "url": "https://6ab336273b25710008638c62--tree-token.netlify.app/dapp/#stats",
+    "context": "deploy-preview",
+    "functions": [
+      "review-data"
+    ],
+    "schedules": [],
+    "backendWritesAvailable": false,
+    "publicReadEndpoints": 8,
+    "staticCandidateFiles": 191
+  },
+  "production": {
+    "id": "6ab31e7878c67aff72b0dc54",
+    "locked": true,
+    "publishedStaticFiles": 189,
+    "staticDigestsUnchanged": true,
+    "functionIdentitiesUnchanged": 37,
+    "schedulesUnchanged": 5,
+    "deployedToProduction": false
+  },
+  "validation": {
+    "focusedTestsPassed": 46,
+    "productionSnapshotVerification": "passed",
+    "productionBuild": "passed",
+    "featureBuild": "passed",
+    "exactOutputInventory": "passed",
+    "netlifyPreviewConfiguration": "verified with Netlify config resolver and deployed function inventory",
+    "ci": {
+      "Verify production snapshot": "success",
+      "Verify STI Stats integration": "success",
+      "Verify TREE V3 Phase A": "success"
+    },
+    "nativeStiCode": "byte-identical to the reviewed feature branch",
+    "hostedChecks": [
+      "STI feed and live 0.1 SUI quote",
+      "V3 combined volume displayed $90.83",
+      "Knowledge Trial purchase-verification screen",
+      "Knowledge Trial practice navigation"
+    ],
+    "transactionsSigned": 0,
+    "transactionsSubmitted": 0,
+    "realWalletApprovalAndSettlementTested": false
+  },
+  "nativeBrowser": [
+    {
+      "name": "desktop",
+      "width": 1440,
+      "height": 1000,
+      "membership": "is in the Sui Trenches Index",
+      "errors": [],
+      "requests": [
+        "http://localhost:4173/dapp/sti-widget.js",
+        "http://localhost:4173/dapp/sti-purchase-core.js",
+        "https://esm.run/@mysten/sui@2.23.1/transactions",
+        "https://esm.run/@mysten/sui@2.23.1/grpc",
+        "https://esm.run/@mysten/wallet-standard@0.21.14",
+        "https://esm.run/@mysten/sui@2.23.1/utils",
+        "https://esm.run/@mysten/sui@2.23.1/bcs",
+        "https://esm.run/@mysten/slush-wallet@1.1.14",
+        "https://sti-keeper-production.up.railway.app/badge",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/BatchGetObjects",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/BatchGetObjects",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/BatchGetObjects",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/BatchGetObjects",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.TransactionExecutionService/SimulateTransaction",
+        "https://esm.run/@cetusprotocol/sui-clmm-sdk@1.4.7",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/GetServiceInfo",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.StateService/GetCoinInfo",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/BatchGetObjects",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.TransactionExecutionService/SimulateTransaction",
+        "https://sti-keeper-production.up.railway.app/badge"
+      ],
+      "noNavigation": true
+    },
+    {
+      "name": "mobile",
+      "width": 390,
+      "height": 844,
+      "membership": "is in the Sui Trenches Index",
+      "errors": [],
+      "requests": [
+        "http://localhost:4173/dapp/sti-widget.js",
+        "http://localhost:4173/dapp/sti-purchase-core.js",
+        "https://esm.run/@mysten/sui@2.23.1/transactions",
+        "https://esm.run/@mysten/sui@2.23.1/grpc",
+        "https://esm.run/@mysten/wallet-standard@0.21.14",
+        "https://esm.run/@mysten/sui@2.23.1/utils",
+        "https://esm.run/@mysten/sui@2.23.1/bcs",
+        "https://esm.run/@mysten/slush-wallet@1.1.14",
+        "https://sti-keeper-production.up.railway.app/badge",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/BatchGetObjects",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/BatchGetObjects",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/BatchGetObjects",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/BatchGetObjects",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.TransactionExecutionService/SimulateTransaction",
+        "https://esm.run/@cetusprotocol/sui-clmm-sdk@1.4.7",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/GetServiceInfo",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.StateService/GetCoinInfo",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/BatchGetObjects",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.TransactionExecutionService/SimulateTransaction",
+        "https://sti-keeper-production.up.railway.app/badge"
+      ],
+      "noNavigation": true
+    },
+    {
+      "name": "small-mobile",
+      "width": 320,
+      "height": 740,
+      "membership": "is in the Sui Trenches Index",
+      "errors": [],
+      "requests": [
+        "http://localhost:4173/dapp/sti-widget.js",
+        "https://esm.run/@mysten/sui@2.23.1/transactions",
+        "https://esm.run/@mysten/sui@2.23.1/grpc",
+        "https://esm.run/@mysten/wallet-standard@0.21.14",
+        "https://esm.run/@mysten/sui@2.23.1/utils",
+        "http://localhost:4173/dapp/sti-purchase-core.js",
+        "https://esm.run/@mysten/sui@2.23.1/bcs",
+        "https://esm.run/@mysten/slush-wallet@1.1.14",
+        "https://sti-keeper-production.up.railway.app/badge",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/BatchGetObjects",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/BatchGetObjects",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/BatchGetObjects",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/BatchGetObjects",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.TransactionExecutionService/SimulateTransaction",
+        "https://esm.run/@cetusprotocol/sui-clmm-sdk@1.4.7",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/GetServiceInfo",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.StateService/GetCoinInfo",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.LedgerService/BatchGetObjects",
+        "https://fullnode.mainnet.sui.io/sui.rpc.v2.TransactionExecutionService/SimulateTransaction",
+        "https://sti-keeper-production.up.railway.app/badge"
+      ],
+      "noNavigation": true
+    },
+    {
+      "case": "real browser simulation with non-signing wallet stub",
+      "signBoundaryReached": 1,
+      "expiredQuoteBlocked": true,
+      "rejectionHandled": true,
+      "transactionsSubmitted": 0
+    },
+    {
+      "case": "feed failure",
+      "staleMetricsHidden": true,
+      "poolQuoteIndependent": true
+    }
+  ],
+  "headerWalletBrowser": [
+    {
+      "width": 1440,
+      "pickerOpenedWithSlushPending": true,
+      "reopened": true
+    },
+    {
+      "width": 390,
+      "pickerOpenedWithSlushPending": true,
+      "reopened": true
+    }
+  ],
+  "walletFailureBrowser": [
+    {
+      "scenario": "dashboard-unavailable",
+      "passed": true
+    },
+    {
+      "scenario": "wallet-unavailable",
+      "passed": true
+    },
+    {
+      "scenario": "manager-error",
+      "passed": true
+    }
+  ],
+  "hostedFileDigests": [
+    {
+      "path": "/dapp/index.html",
+      "sha1": "9299ffbb6b80716c0f6b2d271d1ad78c451cb8b0",
+      "matchesCandidate": true
+    },
+    {
+      "path": "/dapp/styles.css",
+      "sha1": "a02c82173e56f46d5f73458ada2a243c2eb33f9f",
+      "matchesCandidate": true
+    },
+    {
+      "path": "/dapp/interaction-bootstrap.js",
+      "sha1": "cad4a5eb555aa6ab1025cf074ca426ea719bf5b2",
+      "matchesCandidate": true
+    },
+    {
+      "path": "/scripts/wallet.js",
+      "sha1": "79e2dfe7eab090b2fc6d6f263747162822002d39",
+      "matchesCandidate": true
+    },
+    {
+      "path": "/dapp/sti-widget.js",
+      "sha1": "7896a75ed97901c77f48ddba1b609f6468786682",
+      "matchesCandidate": true
+    },
+    {
+      "path": "/dapp/sti-purchase-core.js",
+      "sha1": "1d6f5669d809a7a8bbabaaeccef6f7387e7e3bbd",
+      "matchesCandidate": true
+    },
+    {
+      "path": "/dapp/v3-workspace.js",
+      "sha1": "5af8d40e6c6290a6089d4781c22a6a0f42791283",
+      "matchesCandidate": true
+    },
+    {
+      "path": "/scripts/tree-knowledge-trial.js",
+      "sha1": "7640351ac8ee5991ca380935c78fefa80a1ab16e",
+      "matchesCandidate": true
+    },
+    {
+      "path": "/index.html",
+      "sha1": "1dba30e928a617b53d698561fb77dcffa6205ccd",
+      "matchesCandidate": true
+    },
+    {
+      "path": "/assets/index-w-qgkwyr.js",
+      "sha1": "496ecaaf129325c0d750bbc4fd73e03ce5188fe5",
+      "matchesCandidate": true
+    }
+  ]
+}
