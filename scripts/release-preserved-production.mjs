@@ -18,7 +18,7 @@ if(!token){const cfg=JSON.parse(fs.readFileSync(configPath));const a=cfg.users[c
 const headers={Authorization:'Bearer '+token};
 async function api(p,method='GET',body){const r=await fetch('https://api.netlify.com/api/v1/'+p,{method,headers:{...headers,...(body?{'Content-Type':'application/json'}:{})},body:body?JSON.stringify(body):undefined});if(!r.ok)throw Error(method+' '+p+' '+r.status);return r.json();}
 async function inventory(id){const rows=[];for(let page=1;;page++){const batch=await api(`deploys/${id}/files?per_page=100&page=${page}`);rows.push(...batch);if(batch.length<100)return Object.fromEntries(rows.map(f=>[f.path,f.sha]));}}
-const identity=f=>Object.fromEntries(['n','d','ro','p','m','rg','r','im'].filter(k=>f[k]!=null).map(k=>[k,f[k]]));
+const identity=f=>{const normalized={...f,m:f.m??f.mo,rg:f.rg??f.rgo};return Object.fromEntries(['n','d','id','oid','ro','p','m','rg','r','im'].filter(k=>normalized[k]!=null).map(k=>[k,normalized[k]]));};
 const identities=a=>a.map(identity).sort((a,b)=>a.n.localeCompare(b.n));
 const sha=b=>crypto.createHash('sha1').update(b).digest('hex');
 const files=Object.fromEntries(manifest.files.map(f=>{const bytes=fs.readFileSync(f.source);assert.equal(sha(bytes),f.sha1,f.source);return [f.path,f.sha1];}));
