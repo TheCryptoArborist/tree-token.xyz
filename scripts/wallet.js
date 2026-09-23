@@ -60,6 +60,9 @@ let _dialog = null;
 let _dialogNodes = null;
 let _phantomProvider = null;
 let _phantomWallet = null;
+let _restorePromise = null;
+let _restoreAgain = false;
+let _restoreCancelled = false;
 
 const _slushReady = (async () => {
   try {
@@ -256,6 +259,8 @@ async function _requestWalletConnection(wallet, connect) {
 }
 
 async function _connectToWallet(wallet, preferredAddress = null) {
+  // A deliberate wallet choice takes precedence over any pending silent restore.
+  _restoreCancelled = true;
   if (!wallet || getSuiSignFeature(wallet) === null) throw new Error('Wallet does not support Sui transaction signing.');
   if (_wallet && walletKey(_wallet) !== walletKey(wallet)) await disconnectWallet({ reason: 'switch-wallet' });
 
@@ -290,6 +295,7 @@ async function connectWallet(walletReference = null) {
 }
 
 async function disconnectWallet({ reason = 'disconnect-and-forget' } = {}) {
+  _restoreCancelled = true;
   const wallet = _wallet;
   try {
     if (wallet?.features?.['standard:disconnect']?.disconnect) {
@@ -670,15 +676,19 @@ async function signTreePersonalMessage(message) {
   return { bytes: result.messageBytes, signature: result.signature };
 }
 
-async function initializeWallet() {
+async function _restoreSavedWallet() {
   await _waitForWalletRegistration();
   const saved = _load();
-  if (!saved) return null;
+  const canRestore = () => !_restoreCancelled && !_wallet && saved
+    && saved.expiry > Date.now() && _load()?.address === saved.address
+    && _load()?.walletKey === saved.walletKey;
+  if (!canRestore()) return null;
 
   try {
     const deadline = Date.now() + RESTORE_REGISTRATION_WAIT_MS;
     let wallet = null;
     do {
+      if (!canRestore()) return null;
       const wallets = compatibleSuiWallets(_walletCandidates(), saved.walletKey || '');
       wallet = wallets.find((candidate) => walletKey(candidate) === saved.walletKey)
         || wallets.find((candidate) => candidate.name === saved.walletName)
@@ -686,7 +696,7 @@ async function initializeWallet() {
       if (wallet || Date.now() >= deadline) break;
       await new Promise((resolve) => setTimeout(resolve, 100));
     } while (!wallet);
-    if (!wallet) return null;
+    if (!wallet || !canRestore()) return null;
 
     let accounts = Array.isArray(wallet.accounts) ? wallet.accounts : [];
     let account = pickSuiAccount(accounts, saved.address);
@@ -702,13 +712,28 @@ async function initializeWallet() {
       accounts = Array.isArray(result?.accounts) && result.accounts.length ? result.accounts : wallet.accounts;
       account = pickSuiAccount(accounts || [], saved.address);
     }
-    if (!account) return null;
+    if (!account || !canRestore()) return null;
     _setConnection(wallet, account, 'session-restored');
     return { wallet, address: account.address, account };
   } catch (error) {
     console.warn('Wallet session restore skipped.', error);
     return null;
   }
+}
+
+function initializeWallet() {
+  if (_restoreCancelled) return Promise.resolve(null);
+  if (_wallet && _account) return Promise.resolve({ wallet: _wallet, address: _address, account: _account });
+  if (!_restorePromise) {
+    _restorePromise = _restoreSavedWallet().finally(() => {
+      _restorePromise = null;
+      if (_restoreAgain) {
+        _restoreAgain = false;
+        void initializeWallet();
+      }
+    });
+  }
+  return _restorePromise;
 }
 
 async function checkBalanceAndNFT() {
@@ -719,7 +744,13 @@ function _refreshOpenPicker() {
   if (_dialog?.open && _managerMode === 'picker') _renderWalletManager();
 }
 
-try { registry.on?.('register', _refreshOpenPicker); } catch (_) {}
+try { registry.on?.('register', () => {
+  _refreshOpenPicker();
+  // Registration may happen after the initial bounded discovery window.
+  // Coalesce concurrent attempts and retain an event arriving during a restore.
+  if (_restorePromise) _restoreAgain = true;
+  else void initializeWallet();
+}); } catch (_) {}
 try { registry.on?.('unregister', _refreshOpenPicker); } catch (_) {}
 window.addEventListener('focus', _refreshOpenPicker);
 document.addEventListener('visibilitychange', () => {

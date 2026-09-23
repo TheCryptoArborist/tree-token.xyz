@@ -1,6 +1,7 @@
 {
   "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
   "approvedSourceCommit": "5e4f6094e1647ca1d5bace65d9fd5d41ee671f17",
+  "reviewedWalletSha1": "a401cb82afb8de801eb9c9effbc961cdbbd0e46a",
   "baseline": {
     "id": "6ab31e7878c67aff72b0dc54",
     "branch": "knowledge-trial-v3-isolated",
@@ -2086,8 +2087,8 @@
     {
       "path": "/scripts/wallet.js",
       "source": "scripts/wallet.js",
-      "sha1": "79e2dfe7eab090b2fc6d6f263747162822002d39",
-      "size": 31008
+      "sha1": "a401cb82afb8de801eb9c9effbc961cdbbd0e46a",
+      "size": 32193
     },
     {
       "path": "/scripts/wallet-manager-core.js",

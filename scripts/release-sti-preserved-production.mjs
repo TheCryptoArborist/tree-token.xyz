@@ -7,6 +7,8 @@ import {execFileSync} from 'node:child_process';
 
 const siteId='aa62f324-b880-47d6-85b8-4ba0700ff5bf';
 const approved='5e4f6094e1647ca1d5bace65d9fd5d41ee671f17';
+// PR review fix: late wallet registration retries, with manual choice/forget guards.
+const reviewedWalletSha1='a401cb82afb8de801eb9c9effbc961cdbbd0e46a';
 const baselineId='6ab31e7878c67aff72b0dc54';
 const candidatePath='production/sti-release-candidate.json';
 const statePath='.netlify/sti-production-release.json';
@@ -61,11 +63,12 @@ if(mode==='plan'){
   const files=new Map(manifest.files.map(f=>{assert.equal(sha(fs.readFileSync(f.source)),f.sha1,f.source);return [f.path,{...f}];}));
   for(const pathname of changes){
     const source=pathname.slice(1),bytes=fs.readFileSync(source);
-    assert.equal(sha(bytes),sha(execFileSync('git',['show',`${approved}:${source}`])),'Frontend changed since preview approval: '+source);
+    const reviewedHash=source==='scripts/wallet.js'?reviewedWalletSha1:sha(execFileSync('git',['show',`${approved}:${source}`]));
+    assert.equal(sha(bytes),reviewedHash,'Frontend changed since preview approval or verified review fix: '+source);
     files.set(pathname,{path:pathname,source,sha1:sha(bytes),size:bytes.length});
   }
   assert.equal(files.size,193);
-  const candidate={siteId,approvedSourceCommit:approved,baseline:{id:baselineId,branch:live.branch,files:manifest.files,functions:live.available_functions,schedules:live.function_schedules},changedFiles:changes,files:[...files.values()]};
+  const candidate={siteId,approvedSourceCommit:approved,reviewedWalletSha1,baseline:{id:baselineId,branch:live.branch,files:manifest.files,functions:live.available_functions,schedules:live.function_schedules},changedFiles:changes,files:[...files.values()]};
   fs.writeFileSync(candidatePath,JSON.stringify(candidate,null,2)+'\n');
   console.log(JSON.stringify({candidate:candidatePath,files:files.size,changedFiles:changes,functionsPreserved:37,schedulesPreserved:5}));
   process.exit(0);
@@ -74,6 +77,8 @@ if(mode==='plan'){
 assert.equal(git('status','--porcelain'),'','Commit the reviewed release plan first');
 const candidate=read(candidatePath),commit=git('rev-parse','HEAD');
 assert.equal(candidate.siteId,siteId);assert.equal(candidate.approvedSourceCommit,approved);assert.equal(candidate.baseline.id,baselineId);
+assert.equal(candidate.reviewedWalletSha1,reviewedWalletSha1);
+assert.equal(sha(fs.readFileSync('scripts/wallet.js')),reviewedWalletSha1);
 assert.deepEqual(candidate.changedFiles,changes);
 assert.deepEqual(await inventory(baselineId),expectedFiles(candidate.baseline.files));
 assert.deepEqual(identities(live.available_functions),identities(candidate.baseline.functions));

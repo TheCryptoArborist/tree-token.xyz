@@ -5,7 +5,15 @@ export const config = {
     '/api/tree-dashboard', '/api/tree-chart', '/api/tree-burn-overview',
     '/api/tree-liquidity', '/api/tree-volume', '/api/tree-nftree',
     '/api/tree-v3-overview', '/api/tree-knowledge-trial',
+    '/api/tree-exposure', '/api/tree-badges',
+    '/api/tree-exposure-preview', '/api/tree-badges-preview',
   ],
+};
+const canopyReads: Record<string, string> = {
+  '/api/tree-exposure': '/api/tree-exposure',
+  '/api/tree-exposure-preview': '/api/tree-exposure',
+  '/api/tree-badges': '/api/tree-badges',
+  '/api/tree-badges-preview': '/api/tree-badges',
 };
 
 export default async function handler(request: Request) {
@@ -16,7 +24,10 @@ export default async function handler(request: Request) {
     return new Response('Only public status is available in this preview', { status: 403 });
   }
   try {
-    const upstream = await fetch(`https://tree-token.xyz${url.pathname}${url.search}`, {
+    // Canopy needs no query parameters. Always read the production snapshots,
+    // never the preview bootstrap endpoints or caller-supplied destinations.
+    const target = canopyReads[url.pathname] || `${url.pathname}${url.search}`;
+    const upstream = await fetch(`https://tree-token.xyz${target}`, {
       method: 'GET', credentials: 'omit', redirect: 'error',
       headers: { Accept: 'application/json' }, signal: AbortSignal.timeout(20_000),
     });

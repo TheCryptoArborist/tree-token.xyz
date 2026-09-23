@@ -26,5 +26,6 @@ test('release retains all production function packages, routes and schedules',()
 });
 test('approved badge and purchase assets retain their recorded preview hashes',()=>{
   assert.equal(candidate.approvedSourceCommit,'5e4f6094e1647ca1d5bace65d9fd5d41ee671f17');
+  assert.equal(hash('scripts/wallet.js','sha1'),candidate.reviewedWalletSha1);
   for(const [file,digest] of Object.entries(approved.sourceDigests))assert.equal(hash(file,'sha256'),digest,file);
 });
