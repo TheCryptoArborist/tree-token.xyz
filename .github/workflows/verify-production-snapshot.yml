@@ -22,4 +22,3 @@ jobs:
       - run: node --test tests/v3-volume-fail-closed.test.mjs tests/v3-workspace-source.test.mjs tests/v3-workspace-html-load.test.mjs tests/tree-knowledge-trial-source.test.mjs
       - run: npm run verify:production
       - run: npm run build
-

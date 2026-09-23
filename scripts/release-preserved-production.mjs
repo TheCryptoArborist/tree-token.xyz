@@ -29,7 +29,7 @@ let id=process.argv[3];
 if(mode==='preview'){
  const functions={},functions_config={};
  for(const f of live.available_functions){functions[f.n]=f.d;const c={};for(const [a,b]of Object.entries({dn:'display_name',g:'generator',bd:'build_data',m:'memory',p:'priority',rg:'region'}))if(f[a]!=null)c[b]=f[a];if(f.ro)c.routes=f.ro.map(r=>Object.fromEntries(Object.entries({pattern:r.p,literal:r.l,expression:r.e,methods:r.m,prefer_static:r.ps}).filter(([,v])=>v!=null)));functions_config[f.n]=c;}
- const body={files,functions,functions_config,function_schedules:live.function_schedules,draft:true,async:false,branch:live.branch,commit_ref:commit};
+ const body={files,functions,functions_config,function_schedules:live.function_schedules,draft:false,async:false,branch:live.branch,commit_ref:commit};
  const deploy=await api('sites/'+siteId+'/deploys?title=Verified%20V3%20volume%20and%20preserved%20Knowledge%20Trial','POST',body);id=deploy.id;
  fs.mkdirSync('.netlify',{recursive:true});fs.writeFileSync('.netlify/preserved-release.json',JSON.stringify({id,commit,baseline:live.id},null,2));
  assert.equal(deploy.required_functions?.length||0,0,'Refuse backend rebuild');assert.equal(deploy.required_edge_functions?.length||0,0);
