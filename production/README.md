@@ -1,4 +1,32 @@
-# Current production — STI release, 2026-09-23
+# Current production — STI wallet approval fix, 2026-09-24
+
+Deploy `6ab52b651469a000c65232e3` is published and locked after PR #35,
+merged commit `cb937a40855650d25ec1f30f45b75c5789396708`, reviewed source
+`8ac47c26e96596307d4b8b77764a4bdb19ac7214`.
+
+Only three public paths changed: `dapp/index.html`, `dapp/sti-widget.js`,
+and `scripts/wallet.js`. STI now exposes explicit connect/manage controls,
+requires an actual signer session, and separates asynchronous purchase review
+from the final wallet approval gesture. Generic `sui` account metadata remains
+compatible with the existing connection validation.
+
+All 193 static files were verified. All 37 function package/provider identities,
+routes, runtime/invocation modes and five schedules were preserved. Netlify now
+serializes the documented 1024 MB and Ohio defaults explicitly in some function
+records; both deployments report `cmh` and effective settings match. No backend
+was rebuilt. Automatic publication remains locked.
+
+53 focused checks passed, along with desktop/390px/320px approval browser tests
+and required CI. The user reported a successful preview transaction; no
+transaction was signed or submitted by the assistant. See
+`sti-wallet-release-candidate.json`, `sti-wallet-release-report.json`, and
+`current-release.json`. The previous STI bytes remain archived under
+`sti-release-static/`. Historical STI inventory tests verify those archived
+bytes, while current production verification uses the new manifest.
+
+---
+
+# Historical production — STI release, 2026-09-23
 
 Deploy `6ab345e1b9c190b8487f1d7b` is published and locked after PR #32, merged commit `1fc415b63b2eeab0afc5a1ab8372085517a004b7` (candidate source `804d5d24c1007e9540c95d877a57c14d2d8ee8c9`). Native STI Stats includes the restored local index icon, basket segments, live Cetus STI/SUI price and index backing per STI. The reviewed native purchase route and safeguards remain intact; no third-party embed executes. Late Slush session restoration and preview Canopy reads were corrected before release.
 
