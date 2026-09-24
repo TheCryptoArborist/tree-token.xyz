@@ -59,6 +59,7 @@ try{
   await page.waitForFunction(()=>typeof window.signAndExecuteTransactionBlock==='function');
   await page.evaluate(()=>{
    window.__stiSignCalls=0;window.playerAddress='0x0de00c55730739622b2f7acc92ca571d3c344b219e7c0d63a3660d58774c83f1';
+   window.getWalletConnectionState=()=>({connected:true,address:window.playerAddress,name:'Non-signing test wallet'});
    window.signAndExecuteTransactionBlock=async tx=>{window.__stiSignCalls++;window.__stiSignedData=tx.getData();throw Error('User rejected test purchase');};
    window.dispatchEvent(new CustomEvent('tree:wallet-changed'));
   });
@@ -69,6 +70,9 @@ try{
   assert.equal(await page.evaluate(()=>window.__stiSignCalls),0);
   await page.evaluate(()=>{Date.now=window.__originalNow;});
   await quote(page,'0.1');
+  await page.locator('#stiBuyButton').click();
+  await page.waitForFunction(()=>document.getElementById('stiBuyButton').textContent==='Approve purchase in wallet',{},{timeout:60000});
+  assert.equal(await page.evaluate(()=>window.__stiSignCalls),0);
   await page.locator('#stiBuyButton').click();
   await page.waitForFunction(()=>document.getElementById('stiPurchaseStatus').textContent.includes('cancelled'),{},{timeout:60000});
   assert.equal(await page.evaluate(()=>window.__stiSignCalls),1);

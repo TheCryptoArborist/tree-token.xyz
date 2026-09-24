@@ -764,14 +764,6 @@ window.switchWalletAccount = switchWalletAccount;
 window.getAvailableWallets = getAvailableWallets;
 window.initializeWallet = initializeWallet;
 window.getBalance = getBalance;
-// Report the actual signer session, never a cached/public address alone.
-window.getWalletConnectionState = () => {
-  const connected = Boolean(_wallet && _account && _address
-    && _account.address === _address && window.playerAddress === _address
-    && getSuiSignFeature(_wallet)
-    && (!Array.isArray(_account.chains) || !_account.chains.length || _account.chains.includes(CHAIN)));
-  return { connected, address: connected ? _address : null, name: connected ? _wallet.name : null };
-};
 window.signAndExecuteTransactionBlock = signAndExecuteTransactionBlock;
 window.signTreePersonalMessage = signTreePersonalMessage;
 window.checkBalanceAndNFT = checkBalanceAndNFT;

@@ -107,7 +107,7 @@
     },
     {
       "path": "/scripts/wallet.js",
-      "source": "scripts/wallet.js",
+      "source": "production/sti-release-static/scripts/wallet.js",
       "sha1": "a401cb82afb8de801eb9c9effbc961cdbbd0e46a",
       "size": 32193
     },
@@ -641,7 +641,7 @@
     },
     {
       "path": "/dapp/index.html",
-      "source": "dapp/index.html",
+      "source": "production/sti-release-static/dapp/index.html",
       "sha1": "71825ab2738e5b2db0f2c06e7980b46abd6bab46",
       "size": 77147
     },
@@ -1139,7 +1139,7 @@
     },
     {
       "path": "/dapp/sti-widget.js",
-      "source": "dapp/sti-widget.js",
+      "source": "production/sti-release-static/dapp/sti-widget.js",
       "sha1": "897fad214c824e89bf40fc252c949e62ec600bbc",
       "size": 13091
     },

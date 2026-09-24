@@ -6,7 +6,10 @@ const read=path=>JSON.parse(fs.readFileSync(new URL('../'+path,import.meta.url))
 const candidate=read('production/sti-release-candidate.json');
 const current=read('production/current-release.json');
 const approved=read('docs/sti-review/price-verification-20260923.json');
-const hash=(file,algorithm)=>crypto.createHash(algorithm).update(fs.readFileSync(new URL('../'+file,import.meta.url))).digest('hex');
+const manifest=read('production/manifest.json');
+// These checks describe the already-published release, not the editable preview.
+const publishedSource=file=>manifest.files.find(f=>f.path==='/'+file)?.source||file;
+const hash=(file,algorithm)=>crypto.createHash(algorithm).update(fs.readFileSync(new URL('../'+publishedSource(file),import.meta.url))).digest('hex');
 test('release inventory preserves every baseline file and changes only the approved eight frontend paths',()=>{
   const base=new Map(candidate.baseline.files.map(f=>[f.path,f.sha1]));
   const next=new Map(candidate.files.map(f=>[f.path,f.sha1]));
