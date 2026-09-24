@@ -8,7 +8,8 @@ const current=read('production/current-release.json');
 const approved=read('docs/sti-review/price-verification-20260923.json');
 const manifest=read('production/manifest.json');
 // These checks describe the already-published release, not the editable preview.
-const publishedSource=file=>manifest.files.find(f=>f.path==='/'+file)?.source||file;
+const archivedStiFiles=['dapp/index.html','dapp/sti-widget.js','scripts/wallet.js'];
+const publishedSource=file=>archivedStiFiles.includes(file)?'production/sti-release-static/'+file:manifest.files.find(f=>f.path==='/'+file)?.source||file;
 const hash=(file,algorithm)=>crypto.createHash(algorithm).update(fs.readFileSync(new URL('../'+publishedSource(file),import.meta.url))).digest('hex');
 test('release inventory preserves every baseline file and changes only the approved eight frontend paths',()=>{
   const base=new Map(candidate.baseline.files.map(f=>[f.path,f.sha1]));
