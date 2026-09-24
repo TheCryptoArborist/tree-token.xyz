@@ -17,3 +17,21 @@ jobs:
       - run: node --test tests/stats-sti-source.test.mjs tests/sti-purchase-core.test.mjs tests/sti-stats-core.test.mjs tests/stats-live-supply-source.test.mjs tests/stats-nftree-source.test.mjs
       - run: node --test tests/sti-preview-build.test.mjs tests/sti-preview-proxy.test.ts
       - run: node --test tests/sti-release-inventory.test.mjs
+      - run: node --test tests/sti-approval-flow.test.mjs tests/sti-wallet-session.test.mjs
+      - run: npm install --no-save --package-lock=false --ignore-scripts playwright@1.56.1
+      - run: npx playwright install --with-deps chromium
+      - name: Browser approval and wallet regression tests (mocked wallets, no signing)
+        env:
+          STI_PREVIEW_URL: http://localhost:4173/dapp/#stats
+        run: |
+          node tests/serve-sti-preview.mjs > /tmp/sti-preview.log 2>&1 &
+          server=$!
+          trap 'kill "$server"' EXIT
+          for attempt in $(seq 1 30); do curl -fsS http://localhost:4173/dapp/ > /dev/null && break; sleep 1; done
+          node tests/sti-approval-browser.mjs
+          node tests/sti-wallet-restore-browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sti-approval-browser-evidence
+          path: sti-approval-qa/
