@@ -17,7 +17,7 @@ jobs:
       - run: node --test tests/stats-sti-source.test.mjs tests/sti-purchase-core.test.mjs tests/sti-stats-core.test.mjs tests/stats-live-supply-source.test.mjs tests/stats-nftree-source.test.mjs
       - run: node --test tests/sti-preview-build.test.mjs tests/sti-preview-proxy.test.ts
       - run: node --test tests/sti-release-inventory.test.mjs
-      - run: node --test tests/sti-approval-flow.test.mjs
+      - run: node --test tests/sti-approval-flow.test.mjs tests/sti-wallet-session.test.mjs
       - run: npm install --no-save --package-lock=false --ignore-scripts playwright@1.56.1
       - run: npx playwright install --with-deps chromium
       - name: Browser approval and wallet regression tests (mocked wallets, no signing)

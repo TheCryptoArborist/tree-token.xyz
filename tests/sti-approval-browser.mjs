@@ -14,7 +14,7 @@ try {
   if(process.env.STI_DEBUG==='1'){page.on('console',m=>console.log(m.type(),m.text()));page.on('requestfailed',r=>console.log('requestfailed',r.url(),r.failure()));}
   await page.route('https://**/*',route=>route.abort());
   await page.route('**/@mysten/wallet-standard@*',route=>route.fulfill({contentType:'text/javascript',body:`
-    const account={address:'0x'+'1'.repeat(64),chains:['sui:mainnet'],features:['sui:signAndExecuteTransaction'],publicKey:new Uint8Array(32)};
+    const account={address:'0x'+'1'.repeat(64),chains:['${width===320?'sui':'sui:mainnet'}'],features:['sui:signAndExecuteTransaction'],publicKey:new Uint8Array(32)};
     const wallet={name:'Test Sui Wallet',id:'test-sui',version:'1.0.0',accounts:[],features:{
       'standard:connect':{connect:async()=>{wallet.accounts=[account];return {accounts:wallet.accounts};}},
       'standard:disconnect':{disconnect:async()=>{wallet.accounts=[];}},
