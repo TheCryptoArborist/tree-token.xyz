@@ -11,6 +11,7 @@ try {
  for(const width of [1440,390,320]) {
   const context=await browser.newContext({viewport:{width,height:900}}),page=await context.newPage();
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  if(process.env.STI_DEBUG==='1'){page.on('console',m=>console.log(m.type(),m.text()));page.on('requestfailed',r=>console.log('requestfailed',r.url(),r.failure()));}
   await page.route('https://**/*',route=>route.abort());
   await page.route('**/@mysten/wallet-standard@*',route=>route.fulfill({contentType:'text/javascript',body:`
     const account={address:'0x'+'1'.repeat(64),chains:['sui:mainnet'],features:['sui:signAndExecuteTransaction'],publicKey:new Uint8Array(32)};
@@ -35,7 +36,7 @@ try {
   await page.route('**/@cetusprotocol/sui-clmm-sdk@*',route=>route.fulfill({contentType:'text/javascript',body:`
     export const CetusClmmSDK={createSDK:()=>({Pool:{getPool:async()=>({id:'${POOL}',coin_type_a:'${STI}',coin_type_b:'${SUI}',fee_rate:'2500',pool_status:{disable_swap:false},liquidity:'19616957339841',current_sqrt_price:'75118023302009553'})},Swap:{preSwap:async({amount})=>({pool_address:'${POOL}',estimated_amount_in:amount,estimated_amount_out:'6007891535512',estimated_fee_amount:'250000',is_exceed:false,amount,a2b:false,by_amount_in:true})}})};
   `}));
-  await page.route('**/dapp/sti-approval-test.html',route=>route.fulfill({contentType:'text/html',body:`<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/dapp/styles.css"><link rel="stylesheet" href="/dapp/wallet-manager.css"></head><body><main style="max-width:700px;margin:auto;padding:12px"><div id="stats">${section}</div></main><script type="module" src="/scripts/wallet.js"></script></body></html>`}));
+  await page.route('**/dapp/sti-approval-test.html',route=>route.fulfill({contentType:'text/html',body:`<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/dapp/styles.css"><link rel="stylesheet" href="/dapp/wallet-manager.css"></head><body><main style="max-width:700px;margin:auto;padding:12px"><div id="stats">${section}</div></main><script type="module" src="/scripts/wallet.js"></script></body></html>`}));
   await page.goto(origin+'/dapp/sti-approval-test.html');
   await page.waitForFunction(()=>typeof window.getWalletConnectionState==='function');
   // Reproduce the misleading cached/public address without an internal session.
