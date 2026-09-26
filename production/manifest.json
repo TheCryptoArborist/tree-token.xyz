@@ -1,7 +1,7 @@
 {
   "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
-  "deployId": "6ab52b651469a000c65232e3",
-  "publishedAt": "2026-09-24T13:59:06.764Z",
+  "deployId": "6ab81d9ca3cdab704f81a86b",
+  "publishedAt": "2026-09-26T19:33:33.504Z",
   "files": [
     {
       "path": "/tree.jpg",
@@ -149,9 +149,9 @@
     },
     {
       "path": "/scripts/tree-knowledge-trial.js",
-      "source": "production/challenge-funding-baseline/scripts/tree-knowledge-trial.js",
-      "sha1": "7640351ac8ee5991ca380935c78fefa80a1ab16e",
-      "size": 47699
+      "source": "scripts/tree-knowledge-trial.js",
+      "sha1": "461961345f81221ba8653c25c283b0dec776734f",
+      "size": 61547
     },
     {
       "path": "/scripts/swap.js",
@@ -611,9 +611,9 @@
     },
     {
       "path": "/dapp/panel-router.css",
-      "source": "production/challenge-funding-baseline/dapp/panel-router.css",
-      "sha1": "a5e7480c38dcd3f45847bfcf8f0bb557a1cf0384",
-      "size": 40486
+      "source": "dapp/panel-router.css",
+      "sha1": "3b89f6ab610d25bc78808eca2e2c7ee81ec2b02b",
+      "size": 43955
     },
     {
       "path": "/dapp/limit-orders.js",
@@ -641,9 +641,9 @@
     },
     {
       "path": "/dapp/index.html",
-      "source": "production/challenge-funding-baseline/dapp/index.html",
-      "sha1": "a64bafdceb532a93ae809ff29d325bb78f61dd7d",
-      "size": 77362
+      "source": "dapp/index.html",
+      "sha1": "098785f774cb4ba49878a933ab6efcc799d1199b",
+      "size": 79786
     },
     {
       "path": "/dapp/earn-v3-zap.js",
@@ -1160,6 +1160,12 @@
       "source": "assets/sti-icon.svg",
       "sha1": "388b5e3728ef821050f6a9a2312926bdfc7a65dc",
       "size": 739
+    },
+    {
+      "path": "/dapp/challenge-funding-core.js",
+      "source": "dapp/challenge-funding-core.js",
+      "sha1": "ec5abe343e8330a19d08404e7ca0bafa924809c5",
+      "size": 4037
     }
   ],
   "functions": [
@@ -1415,6 +1421,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "ro": [
         {
           "p": "/api/arcade-wallet-link",
@@ -1441,6 +1449,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "ro": [
         {
           "p": "/api/nftree-wallet",
@@ -1467,6 +1477,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "p": 10,
       "id": "7b516c9c26a6337bec4caf7338d8b663e8c201e0fca4419cb60300ab1de4c82f",
       "rg": "us-east-2",
@@ -1484,6 +1496,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "ro": [
         {
           "p": "/api/tree-badges-preview",
@@ -1510,6 +1524,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "p": 10,
       "id": "e0f0f4c7186ea5d4de7a2b3b10e598a98f1e8295f6c5bbc1d811f78a4f49823f",
       "rg": "us-east-2",
@@ -1527,6 +1543,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "p": 10,
       "id": "dbf8987ea6b3917f71979f0e198c4b74c420fec206d21893c368185af1f6a6ae",
       "rg": "us-east-2",
@@ -1544,6 +1562,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "ro": [
         {
           "p": "/api/tree-badges",
@@ -1570,6 +1590,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "ro": [
         {
           "p": "/api/tree-burn-overview",
@@ -1596,6 +1618,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "ro": [
         {
           "p": "/api/tree-chart",
@@ -1622,6 +1646,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "ro": [
         {
           "p": "/api/tree-dashboard",
@@ -1648,6 +1674,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "p": 10,
       "id": "106a1ea9e8e20cabac45c794ad5f68af18b13678eb70d7f7dda1f9d326a689ef",
       "rg": "us-east-2",
@@ -1665,6 +1693,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "ro": [
         {
           "p": "/api/tree-exposure-preview",
@@ -1691,6 +1721,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "p": 10,
       "id": "fec4576045eee001be16cc3ff96a6eb736dbd62adf755059508bfcd6c8bcd14d",
       "rg": "us-east-2",
@@ -1708,6 +1740,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "p": 10,
       "id": "a159b551f527dfcf2e9af719e62bc6ee9734b2de9d98887c47cb71d3010a2c0a",
       "rg": "us-east-2",
@@ -1725,6 +1759,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "ro": [
         {
           "p": "/api/tree-exposure",
@@ -1751,6 +1787,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "ro": [
         {
           "p": "/api/tree-knowledge-trial-admin",
@@ -1777,6 +1815,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "ro": [
         {
           "p": "/api/tree-knowledge-trial-claim-test",
@@ -1803,6 +1843,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "ro": [
         {
           "p": "/api/tree-knowledge-trial-claim",
@@ -1829,6 +1871,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "p": 10,
       "id": "70b6b9e0f8f95b061ddce7e771f7e10b33e481c4f8ff0c279fe20235fa88456f",
       "rg": "us-east-2",
@@ -1846,6 +1890,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "p": 10,
       "id": "034e93b998d637046d7e7055b802623022f29c89deb453ad835ecbfd7cdbbe9c",
       "rg": "us-east-2",
@@ -1863,6 +1909,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "p": 10,
       "id": "321df206f5ccabb79b6ccd50d0c5d19ad2c359b334e0769e47a979563d6e3f73",
       "rg": "us-east-2",
@@ -1880,6 +1928,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "ro": [
         {
           "p": "/api/tree-knowledge-trial-test",
@@ -1934,6 +1984,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "ro": [
         {
           "p": "/api/tree-leaderboard-preview",
@@ -1960,6 +2012,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "p": 10,
       "id": "88de47f16bd7307fc4182210f4767f1c5ed76c976df5973543c165b39b2547f3",
       "rg": "us-east-2",
@@ -1977,6 +2031,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "p": 10,
       "id": "7d3235cb7f8cc5cbd6bab45f685a22f70115d5fc206023dfd91c73e0b8d27551",
       "rg": "us-east-2",
@@ -1994,6 +2050,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "ro": [
         {
           "p": "/api/tree-leaderboard",
@@ -2020,6 +2078,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "ro": [
         {
           "p": "/api/tree-limit-orders",
@@ -2077,6 +2137,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "ro": [
         {
           "p": "/api/tree-market",
@@ -2103,6 +2165,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "ro": [
         {
           "p": "/api/tree-nftree",
@@ -2129,6 +2193,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "ro": [
         {
           "p": "/api/tree-raffle-claim",
@@ -2155,6 +2221,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "ro": [
         {
           "p": "/api/tree-raffle-ingest-buy",
@@ -2181,6 +2249,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "ro": [
         {
           "p": "/api/tree-raffle-status",
@@ -2207,6 +2277,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "ro": [
         {
           "p": "/api/tree-swap-quote",
@@ -2233,6 +2305,8 @@
       "dn": null,
       "g": null,
       "bd": null,
+      "rgo": "us-east-2",
+      "mo": 1024,
       "ro": [
         {
           "p": "/api/tree-v3-overview",
