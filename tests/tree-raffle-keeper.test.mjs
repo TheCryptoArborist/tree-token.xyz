@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {
   GRAPHQL_PAGE_SIZE,
   KEEPER_STREAMS,
+  activeCursorRows,
   isExactPoolCandidate,
   keeperHealthStatus,
 } from '../keeper/tree-raffle-keeper.mjs';
@@ -10,6 +11,20 @@ import {
 test('keeper watches only the three allowlisted venue event types', () => {
   assert.deepEqual(KEEPER_STREAMS.map((stream) => stream.id), ['suidex-v2', 'suidex-v3', 'turbos']);
   assert.ok(KEEPER_STREAMS.every((stream) => typeof stream.eventType === 'string'));
+});
+
+test('keeper ignores a validated legacy cursor that is no longer an active stream', () => {
+  const active = KEEPER_STREAMS.map((stream) => ({
+    streamId: stream.id, eventType: stream.eventType, cursor: `${stream.id}-cursor`, version: 1,
+  }));
+  const rows = [{
+    streamId: 'cetus', eventType: 'legacy-event-type', cursor: 'cetus-cursor', version: 1,
+  }, ...active];
+
+  assert.deepEqual(activeCursorRows(rows), active);
+  assert.throws(() => activeCursorRows([{
+    ...active[0], eventType: 'unexpected-event-type',
+  }]), /event type does not match/);
 });
 
 test('keeper respects the Sui GraphQL event page limit', () => {

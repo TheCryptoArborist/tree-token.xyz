@@ -48,6 +48,17 @@ export const KEEPER_STREAMS = Object.freeze([
   },
 ]);
 
+export function activeCursorRows(rows, streams = KEEPER_STREAMS) {
+  return rows.filter((row) => {
+    const stream = streams.find(({ id }) => id === row.streamId);
+    if (!stream) return false;
+    if (stream.eventType !== row.eventType) {
+      throw new Error(`Stored keeper cursor event type does not match ${row.streamId}.`);
+    }
+    return true;
+  });
+}
+
 const LATEST_EVENT_QUERY = `query KeeperLatest($type: String!) {
   events(last: 1, filter: { type: $type }) {
     pageInfo { startCursor }
@@ -174,11 +185,7 @@ async function initializeCursorPersistence() {
   if (CURSOR_BACKEND !== 'supabase') throw new Error('KEEPER_CURSOR_BACKEND must be memory or supabase.');
   durableCursorStore = configuredSupabaseKeeperCursorStore();
   const rows = await durableCursorStore.load();
-  for (const row of rows) {
-    const stream = KEEPER_STREAMS.find(({ id }) => id === row.streamId);
-    if (!stream || stream.eventType !== row.eventType) {
-      throw new Error(`Stored keeper cursor event type does not match ${row.streamId}.`);
-    }
+  for (const row of activeCursorRows(rows)) {
     state.cursors.set(row.streamId, row.cursor);
   }
 }
