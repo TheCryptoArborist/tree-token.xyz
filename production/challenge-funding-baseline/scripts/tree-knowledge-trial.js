@@ -1,17 +1,5 @@
 import { buildTreeRaffleBrowserClaim } from '../dapp/raffle-transaction-core.js';
 import { confirmTransaction } from '../dapp/transaction-review.js';
-import {
-  CHALLENGE_FUNDING_WALLET,
-  DAILY_CHALLENGE_PRIZE_RAW,
-  TREE_RAFFLE_PACKAGE_ID,
-  TREE_RAFFLE_PRIZE_POOL_ID,
-  TREE_TYPE,
-  buildChallengePoolFundingTransaction,
-  formatTreeRaw,
-  isChallengeFundingWallet,
-  parseTreeFundingAmount,
-  summarizeChallengeKeeper,
-} from '../dapp/challenge-funding-core.js';
 
 const root = document.getElementById('canopy-draw');
 
@@ -74,19 +62,6 @@ if (root) {
     verifyStepState: root.querySelector('#knowledgeTrialVerifyStepState'),
     challengeStep: root.querySelector('#knowledgeTrialChallengeStep'),
     challengeStepState: root.querySelector('#knowledgeTrialChallengeStepState'),
-    fundingControl: root.querySelector('#knowledgeFundingControl'),
-    fundingPoolState: root.querySelector('#knowledgeFundingPoolState'),
-    fundingPoolBalance: root.querySelector('#knowledgeFundingPoolBalance'),
-    fundingReservedBalance: root.querySelector('#knowledgeFundingReservedBalance'),
-    fundingTotalBalance: root.querySelector('#knowledgeFundingTotalBalance'),
-    fundingCoverage: root.querySelector('#knowledgeFundingCoverage'),
-    fundingWalletBalance: root.querySelector('#knowledgeFundingWalletBalance'),
-    fundingQueueState: root.querySelector('#knowledgeFundingQueueState'),
-    fundingAmount: root.querySelector('#knowledgeFundingAmount'),
-    fundingAmountHelp: root.querySelector('#knowledgeFundingAmountHelp'),
-    fundingSubmit: root.querySelector('#knowledgeFundingSubmit'),
-    fundingStatus: root.querySelector('#knowledgeFundingStatus'),
-    fundingPresets: [...root.querySelectorAll('[data-knowledge-funding-amount]')],
   };
   const state = {
     config: null,
@@ -110,13 +85,6 @@ if (root) {
     eligibilityResult: null,
     eligibilityWallet: '',
     eligibilityChecking: false,
-    fundingPoolRaw: 0n,
-    fundingReservedRaw: 0n,
-    fundingQueueReady: false,
-    fundingUnresolvedRoundCount: 0,
-    fundingWalletRaw: 0n,
-    fundingRefreshing: false,
-    fundingSubmitting: false,
   };
 
   const tabPairs = [
@@ -462,7 +430,6 @@ if (root) {
         : 'Connect a wallet to check eligibility when the next daily challenge window opens.';
     }
     renderEligibility();
-    renderFundingAccess();
   }
 
   function renderActivation(trial) {
@@ -486,10 +453,7 @@ if (root) {
     state.participation = payload.participation || state.participation;
     state.leaderboard = Array.isArray(payload.leaderboard) ? payload.leaderboard : [];
     state.recentRounds = Array.isArray(payload.recentRounds) ? payload.recentRounds : [];
-    state.fundingQueueReady = true;
-    state.fundingUnresolvedRoundCount = state.recentRounds.filter((round) => round?.state === 'scored' && !round?.award).length;
     renderActivity();
-    renderFundingAmount();
   }
 
   async function refreshPublicSnapshot({ refreshEligibility = false } = {}) {
@@ -700,193 +664,6 @@ if (root) {
       ?? value?.transaction?.effects?.status?.status
       ?? value?.Transaction?.effects?.status?.status;
     return String(status || '').toLowerCase() === 'success';
-  }
-
-  async function suiGraphql(query) {
-    const response = await fetch('https://graphql.mainnet.sui.io/graphql', {
-      method: 'POST',
-      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query }),
-      cache: 'no-store',
-    });
-    const payload = await response.json().catch(() => ({}));
-    if (!response.ok || payload.errors?.length) throw new Error('The Sui prize-pool balance is temporarily unavailable.');
-    return payload.data;
-  }
-
-  async function readDynamicFields(address, pageSize = 50) {
-    const nodes = [];
-    const seenCursors = new Set();
-    let after = null;
-    for (let page = 0; page < 100; page += 1) {
-      const afterArgument = after ? `, after: ${JSON.stringify(after)}` : '';
-      const data = await suiGraphql(`query { address(address: "${address}") { dynamicFields(first: ${pageSize}${afterArgument}) { pageInfo { hasNextPage endCursor } nodes { name { type { repr } } value { __typename ... on MoveValue { type { repr } json } } } } } }`);
-      const connection = data?.address?.dynamicFields;
-      if (!connection || !Array.isArray(connection.nodes)) throw new Error('The verified Challenge prize-pool fields could not be read.');
-      nodes.push(...connection.nodes);
-      if (!connection.pageInfo?.hasNextPage) return nodes;
-      const nextCursor = String(connection.pageInfo?.endCursor || '');
-      if (!nextCursor || seenCursors.has(nextCursor)) throw new Error('The Challenge prize-pool field list could not be completed.');
-      seenCursors.add(nextCursor);
-      after = nextCursor;
-    }
-    throw new Error('The Challenge prize-pool field list exceeded the safe pagination limit.');
-  }
-
-  async function readChallengePoolState() {
-    const poolData = await suiGraphql(`query { object(address: "${TREE_RAFFLE_PRIZE_POOL_ID}") { asMoveObject { contents { json } } } }`);
-    const bagId = poolData?.object?.asMoveObject?.contents?.json?.unreserved_balances?.id;
-    if (!/^0x[0-9a-f]{64}$/i.test(String(bagId || ''))) throw new Error('The verified Challenge prize pool could not be read.');
-    const [bagFields, prizeFields] = await Promise.all([
-      readDynamicFields(bagId),
-      readDynamicFields(TREE_RAFFLE_PRIZE_POOL_ID),
-    ]);
-    const expectedKey = `::prize_pool::TokenKey<${TREE_TYPE}>`.toLowerCase();
-    const entry = bagFields.find((node) => String(node?.name?.type?.repr || '').toLowerCase().endsWith(expectedKey));
-    return summarizeChallengeKeeper({
-      availableRaw: entry?.value?.json ?? 0,
-      poolFields: prizeFields,
-      recentRounds: state.recentRounds,
-    });
-  }
-
-  function fundingBalanceValue(result) {
-    return BigInt(result?.balance?.balance ?? result?.balance ?? result?.totalBalance ?? 0);
-  }
-
-  function renderFundingAccess() {
-    if (!nodes.fundingControl) return;
-    const allowed = isChallengeFundingWallet(window.playerAddress);
-    nodes.fundingControl.hidden = !allowed;
-    if (!allowed) {
-      state.fundingWalletRaw = 0n;
-      nodes.fundingSubmit.disabled = true;
-      return;
-    }
-    renderFundingAmount();
-  }
-
-  function renderFundingAmount() {
-    if (!nodes.fundingAmount || !nodes.fundingSubmit) return;
-    const queueChecking = !state.fundingQueueReady;
-    if (nodes.fundingQueueState) {
-      nodes.fundingQueueState.className = `knowledge-funding-queue ${queueChecking ? 'checking' : state.fundingUnresolvedRoundCount > 0 ? 'warning' : 'clear'}`;
-      const detail = nodes.fundingQueueState.querySelector('span');
-      if (detail) detail.textContent = queueChecking
-        ? 'Checking completed rounds before enabling another deposit…'
-        : state.fundingUnresolvedRoundCount > 0
-          ? `${state.fundingUnresolvedRoundCount} completed round${state.fundingUnresolvedRoundCount === 1 ? '' : 's'} still await settlement. Deposited TREE may be assigned to those older awards before it becomes available for a new daily prize.`
-          : 'No unresolved completed rounds are visible. Deposits may proceed after the Mainnet safety checks.';
-    }
-    try {
-      const raw = parseTreeFundingAmount(nodes.fundingAmount.value);
-      const display = formatTreeRaw(raw, 6);
-      const fullDays = raw / DAILY_CHALLENGE_PRIZE_RAW;
-      nodes.fundingSubmit.textContent = state.fundingSubmitting ? 'Preparing Deposit…' : `Review ${display} TREE Deposit`;
-      nodes.fundingAmountHelp.textContent = fullDays > 0n
-        ? `${display} TREE covers ${fullDays.toLocaleString()} full daily prize${fullDays === 1n ? '' : 's'} at the current 50,000 TREE rate.`
-        : 'This amount is less than one 50,000 TREE daily prize.';
-      nodes.fundingSubmit.disabled = state.fundingSubmitting || queueChecking || raw > state.fundingWalletRaw;
-    } catch (error) {
-      nodes.fundingSubmit.textContent = 'Enter a Valid TREE Amount';
-      nodes.fundingSubmit.disabled = true;
-      nodes.fundingAmountHelp.textContent = error instanceof Error ? error.message : 'Enter a valid TREE amount.';
-    }
-  }
-
-  async function refreshFundingBalances() {
-    const wallet = String(window.playerAddress || '').toLowerCase();
-    if (!isChallengeFundingWallet(wallet) || state.fundingRefreshing) return;
-    state.fundingRefreshing = true;
-    nodes.fundingPoolState.textContent = 'Checking';
-    nodes.fundingPoolState.className = 'data-state refreshing';
-    try {
-      const client = typeof window.initSuiClient === 'function'
-        ? await window.initSuiClient()
-        : null;
-      if (!client?.core?.getBalance) throw new Error('The Sui Mainnet client is unavailable.');
-      const [keeper, walletBalance] = await Promise.all([
-        readChallengePoolState(),
-        client.core.getBalance({ owner: CHALLENGE_FUNDING_WALLET, coinType: TREE_TYPE }),
-      ]);
-      if (!isChallengeFundingWallet(window.playerAddress)) return;
-      state.fundingPoolRaw = keeper.availableRaw;
-      state.fundingReservedRaw = keeper.reservedRaw;
-      state.fundingUnresolvedRoundCount = keeper.unresolvedRoundCount;
-      state.fundingWalletRaw = fundingBalanceValue(walletBalance);
-      nodes.fundingPoolBalance.textContent = `${formatTreeRaw(keeper.availableRaw, 6)} TREE`;
-      nodes.fundingReservedBalance.textContent = `${formatTreeRaw(keeper.reservedRaw, 6)} TREE · ${keeper.reservedPrizeCount} prize${keeper.reservedPrizeCount === 1 ? '' : 's'}`;
-      nodes.fundingTotalBalance.textContent = `${formatTreeRaw(keeper.totalRaw, 6)} TREE`;
-      const coverage = keeper.availableRaw / DAILY_CHALLENGE_PRIZE_RAW;
-      nodes.fundingCoverage.textContent = `${coverage.toLocaleString()} day${coverage === 1n ? '' : 's'}`;
-      nodes.fundingWalletBalance.textContent = `${formatTreeRaw(state.fundingWalletRaw, 2)} TREE`;
-      nodes.fundingPoolState.textContent = state.fundingUnresolvedRoundCount > 0 ? 'Prior awards pending' : keeper.availableRaw >= DAILY_CHALLENGE_PRIZE_RAW ? 'Funded' : 'Funding needed';
-      nodes.fundingPoolState.className = `data-state ${state.fundingUnresolvedRoundCount > 0 ? 'staged' : keeper.availableRaw >= DAILY_CHALLENGE_PRIZE_RAW ? 'live' : 'staged'}`;
-      renderFundingAmount();
-    } catch (error) {
-      nodes.fundingPoolState.textContent = 'Unavailable';
-      nodes.fundingPoolState.className = 'data-state error';
-      nodes.fundingStatus.textContent = error instanceof Error ? error.message : 'Challenge funding balances could not be loaded.';
-    } finally {
-      state.fundingRefreshing = false;
-    }
-  }
-
-  async function fundChallengePool() {
-    const wallet = String(window.playerAddress || '').toLowerCase();
-    if (state.fundingSubmitting) return;
-    if (!isChallengeFundingWallet(wallet)) throw new Error('Connect the designated Challenge funding wallet.');
-    if (!state.fundingQueueReady) throw new Error('Wait for the historical settlement queue check to finish.');
-    const amountRaw = parseTreeFundingAmount(nodes.fundingAmount.value);
-    if (amountRaw > state.fundingWalletRaw) throw new Error('The designated wallet does not have enough TREE for this deposit.');
-    state.fundingSubmitting = true;
-    renderFundingAmount();
-    try {
-      nodes.fundingStatus.textContent = 'Building and checking the exact prize-pool deposit…';
-      const [{ Transaction }, client] = await Promise.all([
-        import('https://esm.run/@mysten/sui@2.23.1/transactions'),
-        typeof window.initSuiClient === 'function'
-          ? window.initSuiClient()
-          : Promise.reject(new Error('The Sui Mainnet client is unavailable.')),
-      ]);
-      const built = await buildChallengePoolFundingTransaction({ Transaction, client, owner: wallet, amountRaw });
-      for (let pass = 0; pass < 2; pass += 1) {
-        const simulation = await client.core.simulateTransaction({
-          transaction: built.transaction,
-          checksEnabled: true,
-          include: { effects: true, events: true, balanceChanges: true },
-        });
-        if (!transactionSucceeded(simulation)) throw new Error(`The Challenge pool deposit failed Sui Mainnet safety check ${pass + 1}.`);
-      }
-      const display = formatTreeRaw(amountRaw, 6);
-      const approved = await confirmTransaction(
-        `Deposit ${display} TREE into the verified Challenge prize pool?\n\nPool: ${TREE_RAFFLE_PRIZE_POOL_ID}\nAvailable now: ${formatTreeRaw(state.fundingPoolRaw, 6)} TREE\nReserved for existing winners: ${formatTreeRaw(state.fundingReservedRaw, 6)} TREE\nOlder scored rounds awaiting settlement: ${state.fundingUnresolvedRoundCount}\nDaily prize: 50,000 TREE\n\nDeposited TREE may settle older awards first. The deposit transaction passed two Sui Mainnet simulations. This control cannot withdraw funds.`,
-        { title: 'Fund Challenge Pool', confirmLabel: 'Continue to Wallet' },
-      );
-      if (!approved) {
-        nodes.fundingStatus.textContent = 'Challenge funding cancelled before wallet approval.';
-        return;
-      }
-      if (!isChallengeFundingWallet(window.playerAddress)) throw new Error('The connected wallet changed before approval.');
-      if (typeof window.signAndExecuteTransactionBlock !== 'function') throw new Error('The connected wallet cannot sign this transaction.');
-      nodes.fundingStatus.textContent = `Review the ${display} TREE deposit in your wallet…`;
-      const submitted = await window.signAndExecuteTransactionBlock(built.transaction);
-      const digest = transactionDigest(submitted);
-      if (!digest) throw new Error('The wallet returned no transaction digest.');
-      nodes.fundingStatus.textContent = 'Waiting for the Challenge funding transaction to finalize…';
-      const finalized = await client.core.waitForTransaction({
-        digest,
-        timeout: 60_000,
-        include: { effects: true, events: true, balanceChanges: true },
-      });
-      if (!transactionSucceeded(finalized)) throw new Error('The Challenge funding transaction did not finalize successfully.');
-      nodes.fundingStatus.textContent = `${display} TREE deposited successfully · ${digest.slice(0, 8)}…${digest.slice(-6)}`;
-      await refreshFundingBalances();
-    } finally {
-      state.fundingSubmitting = false;
-      renderFundingAmount();
-      renderFundingAccess();
-    }
   }
 
   async function claimPrize(round = state.publicRound, statusNode = nodes.claimStatus) {
@@ -1109,19 +886,6 @@ if (root) {
   nodes.claim?.addEventListener('click', () => claimPrize().catch((error) => {
     nodes.claimStatus.textContent = error instanceof Error ? error.message : 'The prize claim could not be completed.';
   }));
-  nodes.fundingPresets.forEach((preset) => preset.addEventListener('click', () => {
-    const amount = preset.dataset.knowledgeFundingAmount;
-    nodes.fundingAmount.value = amount;
-    nodes.fundingPresets.forEach((candidate) => candidate.classList.toggle('active', candidate === preset));
-    renderFundingAmount();
-  }));
-  nodes.fundingAmount?.addEventListener('input', () => {
-    nodes.fundingPresets.forEach((preset) => preset.classList.toggle('active', preset.dataset.knowledgeFundingAmount === nodes.fundingAmount.value.replace(/,/g, '')));
-    renderFundingAmount();
-  });
-  nodes.fundingSubmit?.addEventListener('click', () => fundChallengePool().catch((error) => {
-    nodes.fundingStatus.textContent = error instanceof Error ? error.message : 'The Challenge pool could not be funded.';
-  }));
   nodes.previous?.addEventListener('click', () => { if (state.current > 0) { state.current -= 1; renderQuestion(); } });
   nodes.next?.addEventListener('click', () => { if (state.current < state.questions.length - 1) { state.current += 1; renderQuestion(); } });
   nodes.form?.addEventListener('submit', (event) => { event.preventDefault(); submitCurrent(false); });
@@ -1131,7 +895,6 @@ if (root) {
     updateWalletState();
     renderActivity();
     if (window.playerAddress && state.publicRound?.roundId) checkEligibility({ automatic: true });
-    if (isChallengeFundingWallet(window.playerAddress)) refreshFundingBalances();
   });
   window.addEventListener('tree:qualifying-purchase-submitted', (event) => {
     selectTab(nodes.passTab);
@@ -1142,7 +905,5 @@ if (root) {
   window.addEventListener('beforeunload', () => clearInterval(state.timerId));
 
   updateWalletState();
-  renderFundingAmount();
-  if (isChallengeFundingWallet(window.playerAddress)) refreshFundingBalances();
   loadTrial();
 }
