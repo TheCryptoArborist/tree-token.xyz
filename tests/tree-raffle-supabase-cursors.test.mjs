@@ -39,6 +39,16 @@ test('cursor store loads and compare-and-sets through service-role RPCs', async 
   });
 });
 
+test('cursor store accepts the known legacy Cetus cursor without weakening row validation', async () => {
+  const store = new SupabaseKeeperCursorStore(
+    { url: 'https://example.supabase.co', secretKey: 'secret' },
+    async () => Response.json([{
+      streamId: 'cetus', eventType: 'legacy-event-type', cursor: 'cursor-1', version: 1,
+    }]),
+  );
+  assert.equal((await store.load())[0].streamId, 'cetus');
+});
+
 test('cursor store fails closed on malformed and conflicting RPC responses', async () => {
   const malformed = new SupabaseKeeperCursorStore(
     { url: 'https://example.supabase.co', secretKey: 'secret' },
