@@ -714,19 +714,38 @@ if (root) {
     return payload.data;
   }
 
+  async function readDynamicFields(address, pageSize = 50) {
+    const nodes = [];
+    const seenCursors = new Set();
+    let after = null;
+    for (let page = 0; page < 100; page += 1) {
+      const afterArgument = after ? `, after: ${JSON.stringify(after)}` : '';
+      const data = await suiGraphql(`query { address(address: "${address}") { dynamicFields(first: ${pageSize}${afterArgument}) { pageInfo { hasNextPage endCursor } nodes { name { type { repr } } value { __typename ... on MoveValue { type { repr } json } } } } } }`);
+      const connection = data?.address?.dynamicFields;
+      if (!connection || !Array.isArray(connection.nodes)) throw new Error('The verified Challenge prize-pool fields could not be read.');
+      nodes.push(...connection.nodes);
+      if (!connection.pageInfo?.hasNextPage) return nodes;
+      const nextCursor = String(connection.pageInfo?.endCursor || '');
+      if (!nextCursor || seenCursors.has(nextCursor)) throw new Error('The Challenge prize-pool field list could not be completed.');
+      seenCursors.add(nextCursor);
+      after = nextCursor;
+    }
+    throw new Error('The Challenge prize-pool field list exceeded the safe pagination limit.');
+  }
+
   async function readChallengePoolState() {
     const poolData = await suiGraphql(`query { object(address: "${TREE_RAFFLE_PRIZE_POOL_ID}") { asMoveObject { contents { json } } } }`);
     const bagId = poolData?.object?.asMoveObject?.contents?.json?.unreserved_balances?.id;
     if (!/^0x[0-9a-f]{64}$/i.test(String(bagId || ''))) throw new Error('The verified Challenge prize pool could not be read.');
-    const [bagData, prizeData] = await Promise.all([
-      suiGraphql(`query { address(address: "${bagId}") { dynamicFields(first: 50) { nodes { name { type { repr } } value { __typename ... on MoveValue { type { repr } json } } } } } }`),
-      suiGraphql(`query { address(address: "${TREE_RAFFLE_PRIZE_POOL_ID}") { dynamicFields(first: 100) { nodes { name { type { repr } } value { __typename ... on MoveValue { type { repr } json } } } } } }`),
+    const [bagFields, prizeFields] = await Promise.all([
+      readDynamicFields(bagId),
+      readDynamicFields(TREE_RAFFLE_PRIZE_POOL_ID),
     ]);
     const expectedKey = `::prize_pool::TokenKey<${TREE_TYPE}>`.toLowerCase();
-    const entry = bagData?.address?.dynamicFields?.nodes?.find((node) => String(node?.name?.type?.repr || '').toLowerCase().endsWith(expectedKey));
+    const entry = bagFields.find((node) => String(node?.name?.type?.repr || '').toLowerCase().endsWith(expectedKey));
     return summarizeChallengeKeeper({
       availableRaw: entry?.value?.json ?? 0,
-      poolFields: prizeData?.address?.dynamicFields?.nodes || [],
+      poolFields: prizeFields,
       recentRounds: state.recentRounds,
     });
   }

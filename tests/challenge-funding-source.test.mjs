@@ -34,3 +34,10 @@ test('funding UI distinguishes available, reserved, and total keeper TREE', () =
   assert.doesNotMatch(script, /Resolve the historical Challenge settlement queue before depositing more TREE/);
   assert.match(script, /Reserved for existing winners/);
 });
+
+test('funding balance reads paginate every prize-pool dynamic field', () => {
+  assert.match(script, /pageInfo \{ hasNextPage endCursor \}/);
+  assert.match(script, /after: \$\{JSON\.stringify\(after\)\}/);
+  assert.match(script, /seenCursors\.has\(nextCursor\)/);
+  assert.match(script, /readDynamicFields\(TREE_RAFFLE_PRIZE_POOL_ID\)/);
+});
