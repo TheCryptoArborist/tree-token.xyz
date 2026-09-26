@@ -1,3 +1,28 @@
+# Current production — Challenge claim correction, 2026-09-26
+
+Deploy `6ab83984d79aa57ee13aadd3` is published and locked after PR #43,
+merged commit `a185d1ecc40f40a844014cfd20f46b57a7d041bf`.
+
+The September 22 Challenge award was immutably registered for 1,000 TREE, but
+the browser had hard-coded the claim button, review, and success copy to say
+50,000 TREE. `dapp/index.html` and `scripts/tree-knowledge-trial.js` now render
+each award's recorded `amountRaw` and fail closed if that amount is malformed.
+The claim path also passes the `Transaction` instance through simulation and
+wallet approval without pre-building transaction bytes.
+
+The `tree-knowledge-trial-claim` function now accepts the base64 `vector<u8>`
+event representation returned by live Sui GraphQL, in addition to typed byte
+arrays. This repaired post-claim reconciliation for transaction
+`Ej9Wyaf8fWyLUf9sBAwu65wn2QWaVZYWkeY5DtfqyRvA`; the September 22 award is now
+recorded as claimed. This release did not create or submit a Sui transaction.
+
+All 194 static files were verified. The other 36 function packages and all five
+schedules were preserved, while the exact updated claim-function ZIP is now
+archived locally. Twenty focused tests, required CI, the protected candidate
+inventory, live GraphQL verification, and production HTTP checks passed.
+
+---
+
 # Current production — Challenge funding panel, 2026-09-26
 
 Deploy `6ab81d9ca3cdab704f81a86b` is published and locked after PR #41,

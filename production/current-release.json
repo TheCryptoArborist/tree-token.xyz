@@ -1,23 +1,23 @@
 {
-  "id": "6ab81d9ca3cdab704f81a86b",
-  "previous": "6ab52b651469a000c65232e3",
-  "commit": "ebeeb05732eef41432566c51ea2cf7fabea16bf2",
-  "sourceCommit": "ebeeb05732eef41432566c51ea2cf7fabea16bf2",
-  "approvedSourceCommit": "ebeeb05732eef41432566c51ea2cf7fabea16bf2",
+  "id": "6ab83984d79aa57ee13aadd3",
+  "previous": "6ab81d9ca3cdab704f81a86b",
+  "commit": "a185d1ecc40f40a844014cfd20f46b57a7d041bf",
+  "sourceCommit": "a185d1ecc40f40a844014cfd20f46b57a7d041bf",
+  "approvedSourceCommit": "a185d1ecc40f40a844014cfd20f46b57a7d041bf",
   "locked": true,
   "changedFiles": [
     "/dapp/index.html",
-    "/dapp/panel-router.css",
-    "/scripts/tree-knowledge-trial.js",
-    "/dapp/challenge-funding-core.js"
+    "/scripts/tree-knowledge-trial.js"
   ],
   "fileCount": 194,
-  "functionsPreserved": 37,
-  "functionsUpdated": [],
+  "functionsPreserved": 36,
+  "functionsUpdated": [
+    "tree-knowledge-trial-claim"
+  ],
   "schedulesPreserved": 5,
   "url": "https://tree-token.xyz/dapp/#canopy-draw",
-  "previewUrl": "https://6ab81d9ca3cdab704f81a86b--tree-token.netlify.app",
-  "publishedAt": "2026-09-26T19:33:33.504Z",
+  "previewUrl": "https://6ab83984d79aa57ee13aadd3--tree-token.netlify.app",
+  "publishedAt": "2026-09-26T21:34:01.006Z",
   "files": [
     {
       "path": "/tree.jpg",
@@ -117,7 +117,7 @@
     },
     {
       "path": "/scripts/tree-knowledge-trial.js",
-      "sha": "461961345f81221ba8653c25c283b0dec776734f"
+      "sha": "a19d5e5a74d5c8973dd14f68bdecfbafa2bcd6ce"
     },
     {
       "path": "/scripts/swap.js",
@@ -445,7 +445,7 @@
     },
     {
       "path": "/dapp/index.html",
-      "sha": "098785f774cb4ba49878a933ab6efcc799d1199b"
+      "sha": "7f79e6609171a0b061a2743a6c7ff1832e1c85f7"
     },
     {
       "path": "/dapp/earn-v3-zap.js",
@@ -814,7 +814,7 @@
     "tree-exposure": "08124aefb63d46375f17090d3321d0aee7a4f0e80a1fd413314942dc0e85fcd0",
     "tree-knowledge-trial-admin": "9e2fd87781a64e527d76a1df0fc57feb22d7eeab07345af8b5bfbc30986c2223",
     "tree-knowledge-trial-claim-test": "7f812603ff1a63b10bb40eb0d1280c1c9ac273a53c788723ab458ed8db059cea",
-    "tree-knowledge-trial-claim": "40cd9a6a9dd43e5f3d3dbdfdd53ed9ca8fc31577fa92220d5e0765e46816fa9c",
+    "tree-knowledge-trial-claim": "6fd0f4534b29efcd00f2aa0f633ae88a1bbd260649ca1ba8aa169f456350efb3",
     "tree-knowledge-trial-resolver": "d21cee9557d513574432865b1926a3359c0fcef1b75d67e1e72a8570984f61e3",
     "tree-knowledge-trial-rotation-on-deploy": "47f03a587b1979f4b8aa5127b744d43518a5b18ad66be1b5272612bf3fd076ec",
     "tree-knowledge-trial-rotation-scheduled": "238d396c1789428a3b61fbdb1050d45646f6dc2e82325aa546c0d50939439146",
@@ -1260,10 +1260,13 @@
     },
     {
       "n": "tree-knowledge-trial-claim",
-      "d": "40cd9a6a9dd43e5f3d3dbdfdd53ed9ca8fc31577fa92220d5e0765e46816fa9c",
+      "d": "6fd0f4534b29efcd00f2aa0f633ae88a1bbd260649ca1ba8aa169f456350efb3",
       "dn": null,
       "g": null,
-      "bd": null,
+      "bd": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
       "rgo": "us-east-2",
       "mo": 1024,
       "ro": [
@@ -1276,15 +1279,17 @@
         }
       ],
       "p": 10,
-      "id": "0ce3ad0403af5cbe93828166ddc844c8d83f5689335ecc1c20869ed9be24e1aa",
-      "rg": "us-east-2",
+      "id": "6d1e278e0c03c511dd1f0cf9f07b622bbced1b2aed08a48369aa3e35171bd66e",
+      "a": "643318452420",
+      "c": "2026-09-26T21:30:56.867Z",
+      "im": "stream",
       "m": 1024,
-      "s": 361963,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "14367222af50326a06a206b3bdca618e62eb8ad633a24302fea036a92b3b8e2b",
       "r": "nodejs22.x",
-      "c": "2026-09-20T20:10:54.397Z",
-      "a": "248678918660",
-      "oid": "9c4c6ec222c6e034445d7191aeb88aaf69fe274f9ec14efab8a0ecebfc2e7f17",
-      "im": "stream"
+      "rg": "us-east-2",
+      "s": 344793
     },
     {
       "n": "tree-knowledge-trial-resolver",
@@ -1802,5 +1807,5 @@
       "cron": "17 */6 * * *"
     }
   ],
-  "configurationNote": "PR #41 Challenge funding panel. Four reviewed frontend paths changed, including one new funding module. All 37 package/provider identities, routes, runtime and invocation modes and five schedules were preserved. Automatic publication remains locked. No backend was rebuilt and no Sui transaction was signed or submitted by the assistant."
+  "configurationNote": "PR #43 Challenge claim incident repair. Two frontend paths now render each immutable award amount instead of a hard-coded 50,000 TREE label. The tree-knowledge-trial-claim function now reconciles the base64 vector<u8> shape returned by live Sui GraphQL. The other 36 functions and all five schedules were preserved. The September 22 claim was independently verified and recorded; no Sui transaction was submitted by the assistant."
 }

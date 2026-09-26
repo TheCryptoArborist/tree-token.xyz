@@ -1,7 +1,7 @@
 {
   "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
-  "deployId": "6ab81d9ca3cdab704f81a86b",
-  "publishedAt": "2026-09-26T19:33:33.504Z",
+  "deployId": "6ab83984d79aa57ee13aadd3",
+  "publishedAt": "2026-09-26T21:34:01.006Z",
   "files": [
     {
       "path": "/tree.jpg",
@@ -149,9 +149,9 @@
     },
     {
       "path": "/scripts/tree-knowledge-trial.js",
-      "source": "production/challenge-prize-baseline/scripts/tree-knowledge-trial.js",
-      "sha1": "461961345f81221ba8653c25c283b0dec776734f",
-      "size": 61547
+      "source": "scripts/tree-knowledge-trial.js",
+      "sha1": "a19d5e5a74d5c8973dd14f68bdecfbafa2bcd6ce",
+      "size": 61992
     },
     {
       "path": "/scripts/swap.js",
@@ -641,9 +641,9 @@
     },
     {
       "path": "/dapp/index.html",
-      "source": "production/challenge-prize-baseline/dapp/index.html",
-      "sha1": "098785f774cb4ba49878a933ab6efcc799d1199b",
-      "size": 79786
+      "source": "dapp/index.html",
+      "sha1": "7f79e6609171a0b061a2743a6c7ff1832e1c85f7",
+      "size": 79784
     },
     {
       "path": "/dapp/earn-v3-zap.js",
@@ -1273,9 +1273,9 @@
     },
     {
       "name": "tree-knowledge-trial-claim",
-      "sha256": "40cd9a6a9dd43e5f3d3dbdfdd53ed9ca8fc31577fa92220d5e0765e46816fa9c",
-      "artifact": null,
-      "note": "Reuse exact deployed package; source parity is unverified."
+      "sha256": "6fd0f4534b29efcd00f2aa0f633ae88a1bbd260649ca1ba8aa169f456350efb3",
+      "artifact": "production/functions/tree-knowledge-trial-claim.zip",
+      "note": "Verified PR #43 claim-reconciliation package; accepts live Sui GraphQL vector<u8> encoding."
     },
     {
       "name": "tree-knowledge-trial-resolver",
@@ -1839,10 +1839,13 @@
     },
     {
       "n": "tree-knowledge-trial-claim",
-      "d": "40cd9a6a9dd43e5f3d3dbdfdd53ed9ca8fc31577fa92220d5e0765e46816fa9c",
+      "d": "6fd0f4534b29efcd00f2aa0f633ae88a1bbd260649ca1ba8aa169f456350efb3",
       "dn": null,
       "g": null,
-      "bd": null,
+      "bd": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
       "rgo": "us-east-2",
       "mo": 1024,
       "ro": [
@@ -1855,15 +1858,17 @@
         }
       ],
       "p": 10,
-      "id": "0ce3ad0403af5cbe93828166ddc844c8d83f5689335ecc1c20869ed9be24e1aa",
-      "rg": "us-east-2",
+      "id": "6d1e278e0c03c511dd1f0cf9f07b622bbced1b2aed08a48369aa3e35171bd66e",
+      "a": "643318452420",
+      "c": "2026-09-26T21:30:56.867Z",
+      "im": "stream",
       "m": 1024,
-      "s": 361963,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "14367222af50326a06a206b3bdca618e62eb8ad633a24302fea036a92b3b8e2b",
       "r": "nodejs22.x",
-      "c": "2026-09-20T20:10:54.397Z",
-      "a": "248678918660",
-      "oid": "9c4c6ec222c6e034445d7191aeb88aaf69fe274f9ec14efab8a0ecebfc2e7f17",
-      "im": "stream"
+      "rg": "us-east-2",
+      "s": 344793
     },
     {
       "n": "tree-knowledge-trial-resolver",
