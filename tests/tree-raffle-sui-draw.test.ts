@@ -121,4 +121,16 @@ test('claim verifier accepts only the winner, token, draw ID, and reserved amoun
   assert.equal(verify(base).digest, '5'.repeat(40));
   assert.throws(() => verify(base, '999'), /does not match/);
   assert.throws(() => verify({ ...base, events: [...base.events, ...base.events] }), /event count/);
+  const graphqlBase64 = {
+    ...base,
+    effects: { status: 'success' },
+    events: [{
+      ...base.events[0],
+      json: {
+        ...base.events[0].json,
+        draw_id: Buffer.from(DRAW_ID, 'utf8').toString('base64'),
+      },
+    }],
+  };
+  assert.equal(verify(graphqlBase64).digest, '5'.repeat(40));
 });
