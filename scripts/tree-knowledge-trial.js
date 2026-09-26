@@ -135,6 +135,12 @@ if (root) {
     });
   }
 
+  function awardPrizeLabel(award) {
+    const amountRaw = String(award?.amountRaw || '');
+    if (!/^[1-9][0-9]*$/.test(amountRaw)) return 'TREE prize';
+    return `${formatTreeRaw(BigInt(amountRaw), 6)} TREE`;
+  }
+
   tabPairs.forEach(([tab]) => tab?.addEventListener('click', () => {
     selectTab(tab);
     if (tab === nodes.standingsTab) refreshPublicSnapshot({ refreshEligibility: true });
@@ -276,7 +282,7 @@ if (root) {
           const ownsAward = Boolean(connectedWallet && award.wallet === connectedWallet);
           claim.type = 'button';
           claim.className = 'button gold knowledge-history-claim';
-          claim.textContent = ownsAward ? 'Claim 50,000 TREE' : `Prize reserved for ${maskedWallet(award.wallet)}`;
+          claim.textContent = ownsAward ? `Claim ${awardPrizeLabel(award)}` : `Prize reserved for ${maskedWallet(award.wallet)}`;
           claim.disabled = !ownsAward || state.claiming;
           claimStatus.className = 'status knowledge-history-claim-status';
           claimStatus.setAttribute('role', 'status');
@@ -288,7 +294,7 @@ if (root) {
         } else if (award?.claimed) {
           const claimed = document.createElement('span');
           claimed.className = 'knowledge-history-claimed';
-          claimed.textContent = 'Prize claimed';
+          claimed.textContent = `${awardPrizeLabel(award)} claimed`;
           row.append(claimed);
         }
         nodes.recentRounds.append(row);
@@ -431,12 +437,13 @@ if (root) {
       attemptComplete ? 'complete' : canStart ? 'current' : 'locked');
     nodes.claim.hidden = !canClaim;
     nodes.claim.disabled = state.claiming;
+    nodes.claim.textContent = `Claim ${awardPrizeLabel(award)}`;
     if (isWinner && award?.claimed) {
       nodes.passState.textContent = 'Prize claimed';
-      nodes.passCopy.textContent = 'Your 50,000 TREE Knowledge Trial prize has been claimed and reconciled on Sui.';
+      nodes.passCopy.textContent = `Your ${awardPrizeLabel(award)} Knowledge Trial prize has been claimed and reconciled on Sui.`;
     } else if (canClaim) {
       nodes.passState.textContent = 'You won';
-      nodes.passCopy.textContent = 'Your 50,000 TREE prize is reserved in the on-chain prize pool. Claim it with the winning wallet.';
+      nodes.passCopy.textContent = `Your ${awardPrizeLabel(award)} prize is reserved in the on-chain prize pool. Claim it with the winning wallet.`;
     } else if (wallet && eligibility?.attemptCompleted) {
       nodes.passState.textContent = 'Attempt complete';
       nodes.passCopy.textContent = 'Your verified daily result is recorded. Your score and time are locked—there is no retry for this round. Final standings will appear after the round closes.';
@@ -903,6 +910,8 @@ if (root) {
     state.claiming = true;
     updateWalletState();
     try {
+      const prizeLabel = awardPrizeLabel(award);
+      if (prizeLabel === 'TREE prize') throw new Error('The recorded prize amount is invalid. Do not approve a claim transaction.');
       statusNode.textContent = 'Checking the prize claim before wallet approval…';
       const [{ Transaction }, client] = await Promise.all([
         import('https://esm.run/@mysten/sui@2.23.1/transactions'),
@@ -917,14 +926,13 @@ if (root) {
         tokenType: award.tokenType,
       });
       if (typeof transaction.setSender === 'function') transaction.setSender(wallet);
-      const transactionBytes = await transaction.build({ client });
       const simulation = await client.core.simulateTransaction({
-        transaction: transactionBytes,
+        transaction,
         checksEnabled: true,
         include: { effects: true, events: true, balanceChanges: true },
       });
-      if (!transactionSucceeded(simulation)) throw new Error('The 50,000 TREE claim did not pass the Sui Mainnet safety check.');
-      if (!(await confirmTransaction('Claim your 50,000 TREE Knowledge Trial prize?', { title: 'Claim Knowledge Trial Prize' }))) return;
+      if (!transactionSucceeded(simulation)) throw new Error(`The ${prizeLabel} claim did not pass the Sui Mainnet safety check.`);
+      if (!(await confirmTransaction(`Claim your ${prizeLabel} Knowledge Trial prize?`, { title: 'Claim Knowledge Trial Prize' }))) return;
       if (typeof window.signAndExecuteTransactionBlock !== 'function') throw new Error('The connected wallet cannot sign this transaction.');
       statusNode.textContent = 'Review and approve the prize claim in your wallet.';
       const submitted = await window.signAndExecuteTransactionBlock(transaction);
@@ -946,7 +954,7 @@ if (root) {
       if (!response.ok || payload.status !== 'ok') {
         throw new Error('The claim finalized, but its Knowledge Trial record has not reconciled yet. Keep the transaction digest and refresh shortly.');
       }
-      statusNode.textContent = `50,000 TREE claimed successfully · ${digest.slice(0, 8)}…${digest.slice(-6)}`;
+      statusNode.textContent = `${prizeLabel} claimed successfully · ${digest.slice(0, 8)}…${digest.slice(-6)}`;
       await loadTrial();
     } finally {
       state.claiming = false;
