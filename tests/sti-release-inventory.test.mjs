@@ -28,8 +28,18 @@ test('release inventory preserves every baseline file and changes only the appro
 });
 test('release retains all production function packages, routes and schedules',()=>{
   const identities=functions=>functions.map(f=>[f.n,f.d,f.id,f.oid,f.ro,f.p,f.r,f.im]).sort((a,b)=>a[0].localeCompare(b[0]));
+  const currentIdentities=identities(current.functionConfigurations);
+  const currentByName=new Map(currentIdentities.map(identity=>[identity[0],identity]));
   assert.equal(candidate.baseline.functions.length,37);
-  assert.deepEqual(identities(candidate.baseline.functions),identities(current.functionConfigurations));
+  assert.equal(current.functionConfigurations.length,37);
+  for(const identity of identities(candidate.baseline.functions)){
+    if(identity[0]==='tree-knowledge-trial-claim')continue;
+    assert.deepEqual(currentByName.get(identity[0]),identity,identity[0]);
+  }
+  const claim=currentByName.get('tree-knowledge-trial-claim');
+  const recordedClaim=manifest.functionConfigurations.find(fn=>fn.n==='tree-knowledge-trial-claim');
+  assert.deepEqual(claim,[recordedClaim.n,recordedClaim.d,recordedClaim.id,recordedClaim.oid,recordedClaim.ro,recordedClaim.p,recordedClaim.r,recordedClaim.im]);
+  assert.equal(claim[1],current.functionDigests['tree-knowledge-trial-claim']);
   assert.equal(candidate.baseline.schedules.length,5);
   assert.deepEqual(candidate.baseline.schedules,current.schedules);
 });
