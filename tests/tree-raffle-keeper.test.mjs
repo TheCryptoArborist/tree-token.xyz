@@ -66,6 +66,11 @@ test('Fly keeps raffle ingestion and random draws staged while skill awards stay
   assert.match(source, /POLL_INTERVAL_MS = "15000"/);
   assert.match(source, /GRAPHQL_TIMEOUT_MS = "20000"/);
   assert.match(source, /HEALTH_STALE_AFTER_MS = "120000"/);
+  assert.match(source, /path = "\/livez"/);
   assert.match(source, /size = "shared-cpu-1x"/);
   assert.match(source, /memory = "256mb"/);
+
+  const keeperSource = await (await import('node:fs/promises')).readFile(new URL('../keeper/tree-raffle-keeper.mjs', import.meta.url), 'utf8');
+  assert.match(keeperSource, /request\.url === '\/livez'/);
+  assert.match(keeperSource, /request\.url !== '\/healthz'/);
 });

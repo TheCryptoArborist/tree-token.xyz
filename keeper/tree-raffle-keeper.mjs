@@ -386,6 +386,10 @@ export async function startKeeper() {
   await initializeCursorPersistence();
 
   http.createServer((request, response) => {
+    if (request.url === '/livez') {
+      response.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
+      return response.end(JSON.stringify({ status: 'ok' }));
+    }
     if (request.url !== '/healthz') {
       response.writeHead(404, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
       return response.end(JSON.stringify({ status: 'not-found' }));
