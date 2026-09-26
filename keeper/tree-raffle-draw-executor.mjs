@@ -96,6 +96,9 @@ function validateSnapshot(snapshot, roundId) {
 }
 
 function validateKnowledgeAward(snapshot) {
+  const amountRaw = String(snapshot?.amountRaw || '');
+  const validAmount = /^[1-9][0-9]*$/.test(amountRaw)
+    && BigInt(amountRaw) <= 18_446_744_073_709_551_615n;
   if (!snapshot
     || !/^knowledge:\d{4}-\d{2}-\d{2}$/.test(snapshot.roundId)
     || snapshot.onchainDrawId !== `${snapshot.roundId}:award`
@@ -104,7 +107,7 @@ function validateKnowledgeAward(snapshot) {
     || snapshot.totalTickets !== '1'
     || !SUI_ADDRESS_PATTERN.test(snapshot.wallet)
     || snapshot.tokenType !== TREE_TYPE
-    || snapshot.amountRaw !== DAILY_PRIZE_RAW) {
+    || !validAmount) {
     throw new Error('Supabase returned an invalid Knowledge Trial award snapshot.');
   }
   return {
