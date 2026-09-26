@@ -10,6 +10,7 @@ export const RANDOM_OBJECT_ID = '0x8';
 const DRAW_ID_PATTERN = /^[a-z0-9][a-z0-9:_-]{2,95}$/;
 const SUI_ADDRESS_PATTERN = /^0x[0-9a-f]{64}$/;
 const DIGEST_PATTERN = /^[1-9A-HJ-NP-Za-km-z]{40,64}$/;
+const MAX_U64 = 18_446_744_073_709_551_615n;
 
 const DrawKeyBcs = bcs.struct('DrawKey', { draw_id: bcs.vector(bcs.u8()) });
 const PrizeKeyBcs = bcs.struct('PrizeKey', { draw_id: bcs.vector(bcs.u8()) });
@@ -54,6 +55,11 @@ function digestOf(result) {
 
 function successful(result) {
   return (result?.effects?.status?.status ?? result?.effects?.status) === 'success';
+}
+
+function validRawAmount(value) {
+  const amountRaw = String(value || '');
+  return /^[1-9][0-9]*$/.test(amountRaw) && BigInt(amountRaw) <= MAX_U64;
 }
 
 function datePartsInNewYork(now) {
@@ -104,7 +110,7 @@ function validateKnowledgeAward(snapshot) {
     || snapshot.totalTickets !== '1'
     || !SUI_ADDRESS_PATTERN.test(snapshot.wallet)
     || snapshot.tokenType !== TREE_TYPE
-    || snapshot.amountRaw !== DAILY_PRIZE_RAW) {
+    || !validRawAmount(snapshot.amountRaw)) {
     throw new Error('Supabase returned an invalid Knowledge Trial award snapshot.');
   }
   return {
@@ -289,7 +295,7 @@ export class SuiDailyDrawChain {
     }
   }
 
-  async registerWinner(snapshot, winner) {
+  async registerWinner(snapshot, winner, amountRaw = DAILY_PRIZE_RAW) {
     const existing = await this.readPrize(snapshot);
     if (existing) return existing;
     const transaction = new Transaction();
@@ -299,21 +305,21 @@ export class SuiDailyDrawChain {
       arguments: [
         transaction.object(this.poolId), transaction.object(this.operatorCapId),
         transaction.pure.vector('u8', utf8(snapshot.onchainDrawId)),
-        transaction.pure.address(winner), transaction.pure.u64(DAILY_PRIZE_RAW),
+        transaction.pure.address(winner), transaction.pure.u64(amountRaw),
       ],
     });
     await this.finalized(transaction);
     const persisted = await this.readPrize(snapshot);
-    if (!persisted || persisted.winner !== winner || persisted.amountRaw !== DAILY_PRIZE_RAW) {
+    if (!persisted || persisted.winner !== winner || persisted.amountRaw !== amountRaw) {
       throw new Error('The finalized raffle winner registration does not match the verified winner.');
     }
     return persisted;
   }
 
   async settleKnowledgeAward(snapshot) {
-    if (snapshot.tokenType !== TREE_TYPE || snapshot.amountRaw !== DAILY_PRIZE_RAW
+    if (snapshot.tokenType !== TREE_TYPE || !validRawAmount(snapshot.amountRaw)
       || snapshot.totalTickets !== '1' || !SUI_ADDRESS_PATTERN.test(snapshot.wallet)) {
-      throw new Error('The Knowledge Trial award does not match the approved TREE prize.');
+      throw new Error('The Knowledge Trial award does not contain a valid recorded TREE prize.');
     }
     const existing = await this.readPrize(snapshot);
     if (existing) {
@@ -325,7 +331,7 @@ export class SuiDailyDrawChain {
 
     const persistedDraw = await this.readDraw(snapshot);
     if (persistedDraw) {
-      const registered = await this.registerWinner(snapshot, snapshot.wallet);
+      const registered = await this.registerWinner(snapshot, snapshot.wallet, snapshot.amountRaw);
       return { drawTxDigest: persistedDraw.digest, registerTxDigest: registered.digest };
     }
 

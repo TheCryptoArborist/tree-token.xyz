@@ -2,7 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   DAILY_PRIZE_RAW,
+  SuiDailyDrawChain,
   SupabaseDailyDrawStore,
+  SupabaseKnowledgeTrialAwardStore,
   dueDailyRoundId,
   runDailyDraw,
   runNextKnowledgeTrialAward,
@@ -41,6 +43,78 @@ test('Knowledge Trial award orchestration reserves only the resolved 50,000 TREE
   assert.equal(recorded.roundId, snapshot.roundId);
   assert.equal(recorded.wallet, wallet);
   assert.equal(recorded.resolutionCommitment, snapshot.resolutionCommitment);
+});
+
+test('Knowledge Trial award validation honors a positive historical TREE prize snapshot', async () => {
+  const snapshot = {
+    roundId: 'knowledge:2026-09-17',
+    onchainDrawId: 'knowledge:2026-09-17:award',
+    resolutionCommitment: 'ab'.repeat(32),
+    totalTickets: '1',
+    wallet: `0x${'3'.repeat(64)}`,
+    tokenType: '0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE',
+    amountRaw: '1000000000',
+  };
+  const store = new SupabaseKnowledgeTrialAwardStore({
+    url: 'https://example.supabase.co',
+    secretKey: 'server-secret',
+    fetchImpl: async () => new Response(JSON.stringify(snapshot), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    }),
+  });
+
+  assert.deepEqual(await store.lockNext(), {
+    ...snapshot,
+    ledgerCommitment: snapshot.resolutionCommitment,
+    totalTickets: '1',
+  });
+});
+
+test('Knowledge Trial award validation rejects an amount above the Sui u64 limit', async () => {
+  const store = new SupabaseKnowledgeTrialAwardStore({
+    url: 'https://example.supabase.co',
+    secretKey: 'server-secret',
+    fetchImpl: async () => new Response(JSON.stringify({
+      roundId: 'knowledge:2026-09-17',
+      onchainDrawId: 'knowledge:2026-09-17:award',
+      resolutionCommitment: 'ab'.repeat(32),
+      totalTickets: '1',
+      wallet: `0x${'3'.repeat(64)}`,
+      tokenType: '0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE',
+      amountRaw: '18446744073709551616',
+    }), { status: 200, headers: { 'Content-Type': 'application/json' } }),
+  });
+
+  await assert.rejects(() => store.lockNext(), /invalid Knowledge Trial award snapshot/);
+});
+
+test('Knowledge Trial settlement preserves the historical recorded amount when a draw already exists', async () => {
+  const wallet = `0x${'3'.repeat(64)}`;
+  const snapshot = {
+    roundId: 'knowledge:2026-09-17',
+    onchainDrawId: 'knowledge:2026-09-17:award',
+    resolutionCommitment: 'ab'.repeat(32),
+    ledgerCommitment: 'ab'.repeat(32),
+    totalTickets: '1',
+    wallet,
+    tokenType: '0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE',
+    amountRaw: '1000000000',
+  };
+  const chain = Object.create(SuiDailyDrawChain.prototype);
+  chain.readPrize = async () => null;
+  chain.readDraw = async () => ({ digest: '1'.repeat(40) });
+  let registeredAmount;
+  chain.registerWinner = async (_snapshot, winner, amountRaw) => {
+    registeredAmount = amountRaw;
+    return { digest: '2'.repeat(40), winner, amountRaw };
+  };
+
+  assert.deepEqual(await chain.settleKnowledgeAward(snapshot), {
+    drawTxDigest: '1'.repeat(40),
+    registerTxDigest: '2'.repeat(40),
+  });
+  assert.equal(registeredAmount, snapshot.amountRaw);
 });
 
 test('Knowledge Trial award orchestration is a clean no-op without a scored winner', async () => {
