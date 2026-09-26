@@ -38,7 +38,7 @@ kill_timeout = "10s"
     timeout = "3s"
     grace_period = "20s"
     method = "GET"
-    path = "/healthz"
+    path = "/livez"
 
 [[vm]]
   size = "shared-cpu-1x"
