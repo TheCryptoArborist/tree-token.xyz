@@ -335,32 +335,9 @@ export class SuiDailyDrawChain {
       return { drawTxDigest: persistedDraw.digest, registerTxDigest: registered.digest };
     }
 
-    const transaction = new Transaction();
-    transaction.moveCall({
-      target: `${this.packageId}::prize_pool::execute_draw`,
-      arguments: [
-        transaction.object(this.poolId), transaction.object(this.operatorCapId),
-        transaction.object(RANDOM_OBJECT_ID), transaction.pure.vector('u8', utf8(snapshot.onchainDrawId)),
-        transaction.pure.vector('u8', hex(snapshot.resolutionCommitment)),
-        transaction.pure.u64(1),
-      ],
-    });
-    transaction.moveCall({
-      target: `${this.packageId}::prize_pool::register_winner`,
-      typeArguments: [snapshot.tokenType],
-      arguments: [
-        transaction.object(this.poolId), transaction.object(this.operatorCapId),
-        transaction.pure.vector('u8', utf8(snapshot.onchainDrawId)),
-        transaction.pure.address(snapshot.wallet), transaction.pure.u64(snapshot.amountRaw),
-      ],
-    });
-    const finalized = await this.finalized(transaction);
-    const digest = digestOf(finalized);
-    const registered = await this.readPrize(snapshot);
-    if (!registered || registered.winner !== snapshot.wallet || registered.amountRaw !== snapshot.amountRaw) {
-      throw new Error('The finalized Knowledge Trial award was not persisted correctly.');
-    }
-    return { drawTxDigest: digest, registerTxDigest: digest };
+    const executed = await this.executeDraw(snapshot);
+    const registered = await this.registerWinner(snapshot, snapshot.wallet, snapshot.amountRaw);
+    return { drawTxDigest: executed.digest, registerTxDigest: registered.digest };
   }
 }
 
