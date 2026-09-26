@@ -149,7 +149,7 @@
     },
     {
       "path": "/scripts/tree-knowledge-trial.js",
-      "source": "scripts/tree-knowledge-trial.js",
+      "source": "production/challenge-prize-baseline/scripts/tree-knowledge-trial.js",
       "sha1": "461961345f81221ba8653c25c283b0dec776734f",
       "size": 61547
     },
@@ -641,7 +641,7 @@
     },
     {
       "path": "/dapp/index.html",
-      "source": "dapp/index.html",
+      "source": "production/challenge-prize-baseline/dapp/index.html",
       "sha1": "098785f774cb4ba49878a933ab6efcc799d1199b",
       "size": 79786
     },
