@@ -126,10 +126,21 @@ export function buildTreeRaffleClaimTransaction(
 }
 
 function byteArray(value: unknown, label: string): number[] {
-  if (!Array.isArray(value) || value.some((byte) => !Number.isInteger(byte) || byte < 0 || byte > 255)) {
-    throw new Error(`Sui returned an invalid TREE raffle ${label}.`);
+  if (Array.isArray(value)
+    && !value.some((byte) => !Number.isInteger(byte) || byte < 0 || byte > 255)) {
+    return value as number[];
   }
-  return value as number[];
+  if (typeof value === 'string'
+    && value.length > 0
+    && value.length % 4 === 0
+    && /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(value)) {
+    try {
+      return [...atob(value)].map((character) => character.charCodeAt(0));
+    } catch {
+      // Fall through to the same fail-closed error used for malformed arrays.
+    }
+  }
+  throw new Error(`Sui returned an invalid TREE raffle ${label}.`);
 }
 
 function normalizedSuiId(value: string): string {
