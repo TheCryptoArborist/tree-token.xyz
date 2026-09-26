@@ -149,7 +149,7 @@
     },
     {
       "path": "/scripts/tree-knowledge-trial.js",
-      "source": "scripts/tree-knowledge-trial.js",
+      "source": "production/challenge-funding-baseline/scripts/tree-knowledge-trial.js",
       "sha1": "7640351ac8ee5991ca380935c78fefa80a1ab16e",
       "size": 47699
     },
@@ -611,7 +611,7 @@
     },
     {
       "path": "/dapp/panel-router.css",
-      "source": "dapp/panel-router.css",
+      "source": "production/challenge-funding-baseline/dapp/panel-router.css",
       "sha1": "a5e7480c38dcd3f45847bfcf8f0bb557a1cf0384",
       "size": 40486
     },
@@ -641,7 +641,7 @@
     },
     {
       "path": "/dapp/index.html",
-      "source": "dapp/index.html",
+      "source": "production/challenge-funding-baseline/dapp/index.html",
       "sha1": "a64bafdceb532a93ae809ff29d325bb78f61dd7d",
       "size": 77362
     },

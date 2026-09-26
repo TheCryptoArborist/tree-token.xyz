@@ -7,8 +7,8 @@ const output = resolve(root, 'dist-preview');
 const manifest = JSON.parse(await readFile(resolve(root, 'production/manifest.json'), 'utf8'));
 const outputPath = file => file.path.slice(1);
 const allowed = new Set(manifest.files.map(file => outputPath(file).toLowerCase()));
-const additions = ['dapp/sti-widget.js', 'dapp/sti-purchase-core.js', 'dapp/sti-stats-core.js', 'assets/sti-icon.svg'];
-const overlays = ['dapp/index.html', 'dapp/styles.css', 'dapp/interaction-bootstrap.js', 'scripts/wallet.js'];
+const additions = ['dapp/sti-widget.js', 'dapp/sti-purchase-core.js', 'dapp/sti-stats-core.js', 'dapp/challenge-funding-core.js', 'assets/sti-icon.svg'];
+const overlays = ['dapp/index.html', 'dapp/styles.css', 'dapp/panel-router.css', 'dapp/interaction-bootstrap.js', 'scripts/wallet.js', 'scripts/tree-knowledge-trial.js'];
 for (const file of additions) allowed.add(file);
 
 async function rejectUntrackedOutput(directory, prefix = '') {

@@ -331,15 +331,6 @@
           <p class="knowledge-attempt-rule"><strong>One scored attempt per wallet daily.</strong> Practice first—your live result cannot be retried.</p>
           <button class="button gold knowledge-claim-button" id="knowledgeTrialClaimPrize" type="button" hidden>Claim 50,000 TREE</button><p class="status" id="knowledgeTrialClaimStatus" role="status" aria-live="polite"></p>
         </article>
-        <article class="card compact-raffle-card knowledge-funding-card" id="knowledgeFundingControl" hidden>
-          <div class="knowledge-funding-head"><div><span class="rank-kicker">DESIGNATED WALLET CONTROL</span><h3>Fund Challenge Pool</h3><p>Deposit TREE directly into the verified on-chain prize pool. Available TREE can fund new awards; reserved TREE already belongs to registered winners. This control cannot withdraw funds.</p></div><span class="data-state refreshing" id="knowledgeFundingPoolState">Checking</span></div>
-          <div class="knowledge-funding-stats"><div><span>Available</span><strong id="knowledgeFundingPoolBalance">—</strong></div><div><span>Reserved prizes</span><strong id="knowledgeFundingReservedBalance">—</strong></div><div><span>Total in keeper</span><strong id="knowledgeFundingTotalBalance">—</strong></div><div><span>Available coverage</span><strong id="knowledgeFundingCoverage">—</strong></div><div><span>Wallet TREE</span><strong id="knowledgeFundingWalletBalance">—</strong></div></div>
-          <div class="knowledge-funding-queue checking" id="knowledgeFundingQueueState" role="status" aria-live="polite"><strong>Settlement queue check</strong><span>Checking completed rounds before enabling another deposit…</span></div>
-          <div class="knowledge-funding-presets" aria-label="Funding amount presets"><button type="button" data-knowledge-funding-amount="50000">50,000</button><button class="active" type="button" data-knowledge-funding-amount="350000">350,000</button><button type="button" data-knowledge-funding-amount="1500000">1,500,000</button></div>
-          <label class="knowledge-funding-field" for="knowledgeFundingAmount"><span>Amount to deposit</span><div><input id="knowledgeFundingAmount" type="text" inputmode="decimal" autocomplete="off" value="350000" aria-describedby="knowledgeFundingAmountHelp"><b>TREE</b></div><small id="knowledgeFundingAmountHelp">350,000 TREE covers seven daily prizes at the current 50,000 TREE rate.</small></label>
-          <button class="button gold knowledge-funding-submit" id="knowledgeFundingSubmit" type="button">Review 350,000 TREE Deposit</button>
-          <p class="status" id="knowledgeFundingStatus" role="status" aria-live="polite">Only the connected designated wallet can create this deposit transaction. Deposits are enabled only after the historical settlement queue is clear.</p>
-        </article>
       </div>
       <div id="raffleDailyPanel" class="raffle-view" role="tabpanel" aria-labelledby="raffleDailyTab" hidden>
         <article class="card raffle-prize-card knowledge-prize-card"><span class="rank-kicker">DAILY SKILL PRIZE</span><strong class="prize">50,000 TREE</strong><p>One daily winner is determined by knowledge and verified completion time—not chance.</p><div class="actions"><button class="button secondary" id="knowledgeTrialPracticeShortcut" type="button">Try Practice Trial</button><button class="button gold" type="button" data-open-challenge-pass>Go to Start Here</button></div></article>
@@ -471,7 +462,7 @@
   <script type="module" src="earn-transactions.js"></script>
   <script type="module" src="victory-center.js?v=20260828-1"></script>
   <script type="module" src="earn-v3-zap.js?v=20260830-1"></script>
-  <script type="module" src="../scripts/tree-knowledge-trial.js?v=20260926-funding2"></script>
+  <script type="module" src="../scripts/tree-knowledge-trial.js?v=20260826-2"></script>
   <script type="module" src="../scripts/profile-studio.js"></script>
   <script type="module" src="v3-workspace.js?v=20260913-zap1"></script>
   <script type="module" src="v3-transactions.js?v=20260913-paired1"></script>
