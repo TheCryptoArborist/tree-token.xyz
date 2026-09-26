@@ -1,3 +1,25 @@
+# Current production — Challenge funding panel, 2026-09-26
+
+Deploy `6ab81d9ca3cdab704f81a86b` is published and locked after PR #41,
+merged commit `ebeeb05732eef41432566c51ea2cf7fabea16bf2`.
+
+Four public paths changed: `dapp/index.html`, `dapp/panel-router.css`,
+`scripts/tree-knowledge-trial.js`, and the new
+`dapp/challenge-funding-core.js`. The Challenge tab now exposes a funding panel
+only to the designated funding wallet. The panel reads the live pool state,
+warns when older scored awards may consume funding first, simulates the
+deposit-only transaction twice, hands the `Transaction` instance to the wallet,
+and waits for finalized effects.
+
+All 194 static files were verified. All 37 function package/provider identities,
+routes, runtime/invocation modes and five schedules were preserved. No backend
+was rebuilt. Automatic publication remains locked. Fifteen focused checks,
+production verification, the preview build, required CI, and a live browser
+check passed. No Sui or TREE transaction was signed or submitted by the
+assistant.
+
+---
+
 # Current production — STI wallet approval fix, 2026-09-24
 
 Deploy `6ab52b651469a000c65232e3` is published and locked after PR #35,
