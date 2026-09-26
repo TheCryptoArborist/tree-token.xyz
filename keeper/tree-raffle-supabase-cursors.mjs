@@ -20,7 +20,7 @@ export function keeperSupabaseConfig(env = process.env) {
 function cursorRow(value) {
   if (!value || typeof value !== 'object') throw new Error('Supabase returned an invalid keeper cursor.');
   const row = value;
-  if (!['suidex-v2', 'suidex-v3', 'turbos'].includes(row.streamId)
+  if (!['cetus', 'suidex-v2', 'suidex-v3', 'turbos'].includes(row.streamId)
     || typeof row.eventType !== 'string' || !row.eventType
     || typeof row.cursor !== 'string' || !row.cursor
     || !Number.isSafeInteger(Number(row.version)) || Number(row.version) < 1) {
