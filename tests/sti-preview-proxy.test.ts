@@ -9,6 +9,7 @@ test('preview proxy rejects writes, unknown routes and non-status Knowledge Tria
   try {
     for (const [path, method, status] of [
       ['/api/tree-dashboard', 'POST', 405], ['/api/tree-knowledge-trial', 'POST', 405],
+      ['/api/tree-knowledge-trial-correction', 'POST', 405],
       ['/api/admin', 'GET', 404], ['/api/tree-knowledge-trial?action=start', 'GET', 403],
       ['/api/tree-exposure-preview', 'POST', 405], ['/api/tree-badges-preview', 'POST', 405],
       ['/api/tree-badges-refresh-background', 'GET', 404],
@@ -56,5 +57,20 @@ test('preview public reads use a fixed upstream and never forward credentials', 
     const response = await handler(new Request('https://preview.test/api/tree-volume?window=24h', { headers: { Cookie: 'private', Authorization: 'private' } }));
     assert.equal(response.status, 200);
     assert.deepEqual(await response.json(), { status: 'ok' });
+  } finally { globalThis.fetch = original; }
+});
+
+test('preview exposes the public correction status through the fixed production origin', async () => {
+  const original = globalThis.fetch;
+  globalThis.fetch = async (url, options) => {
+    assert.equal(url, 'https://tree-token.xyz/api/tree-knowledge-trial-correction');
+    assert.equal(options.method, 'GET');
+    assert.equal(options.credentials, 'omit');
+    return Response.json({ status: 'ok', correction: { status: 'pending-registration' } });
+  };
+  try {
+    const response = await handler(new Request('https://preview.test/api/tree-knowledge-trial-correction'));
+    assert.equal(response.status, 200);
+    assert.equal((await response.json()).correction.status, 'pending-registration');
   } finally { globalThis.fetch = original; }
 });

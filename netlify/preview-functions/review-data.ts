@@ -5,6 +5,7 @@ export const config = {
     '/api/tree-dashboard', '/api/tree-chart', '/api/tree-burn-overview',
     '/api/tree-liquidity', '/api/tree-volume', '/api/tree-nftree',
     '/api/tree-v3-overview', '/api/tree-knowledge-trial',
+    '/api/tree-knowledge-trial-correction',
     '/api/tree-exposure', '/api/tree-badges',
     '/api/tree-exposure-preview', '/api/tree-badges-preview',
   ],

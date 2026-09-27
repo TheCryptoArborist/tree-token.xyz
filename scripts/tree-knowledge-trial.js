@@ -563,7 +563,7 @@ if (root) {
       const payload = await response.json();
       if (!response.ok || payload.status !== 'ok' || !payload.publicRound) throw new Error('Challenge activity is temporarily unavailable.');
       applyPublicSnapshot(payload);
-      await refreshCorrection();
+      void refreshCorrection();
       if (refreshEligibility && window.playerAddress && state.publicRound?.roundId) {
         await checkEligibility({ automatic: true });
       }
@@ -582,7 +582,6 @@ if (root) {
       state.config = payload.trial;
       state.contracts = payload.contracts;
       applyPublicSnapshot(payload);
-      await refreshCorrection();
       state.practiceQuestions = payload.practice.questions;
       state.questions = state.practiceQuestions;
       nodes.meta.textContent = `${payload.trial.questionCount} questions · ${payload.trial.durationSeconds} seconds · $${(payload.trial.minimumQualifyingUsdCents / 100).toFixed(2)} minimum TREE purchase · one attempt per daily round`;
@@ -596,6 +595,7 @@ if (root) {
       updateWalletState();
       if (window.playerAddress && state.publicRound?.roundId) checkEligibility({ automatic: true });
       setStatus('Practice mode is ready. It does not create a scored entry or prize claim.', 'success');
+      void refreshCorrection();
     } catch (error) {
       nodes.meta.textContent = 'The practice question service could not be loaded.';
       nodes.state.textContent = 'Unavailable';

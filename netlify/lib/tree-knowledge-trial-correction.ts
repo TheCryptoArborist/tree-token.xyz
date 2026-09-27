@@ -71,6 +71,7 @@ async function fetchEvents(eventType: string, dependencies: Dependencies): Promi
   const fetchImpl = dependencies.fetchImpl ?? fetch;
   const events: ChainEvent[] = [];
   let before: string | null = null;
+  let reachedBeginning = false;
   for (let page = 0; page < 10; page += 1) {
     const response = await fetchImpl(SUI_GRAPHQL_URL, {
       method: 'POST',
@@ -93,11 +94,15 @@ async function fetchEvents(eventType: string, dependencies: Dependencies): Promi
       });
     }
     const pageInfo = record(connection.pageInfo);
-    if (pageInfo.hasPreviousPage !== true) break;
+    if (pageInfo.hasPreviousPage !== true) {
+      reachedBeginning = true;
+      break;
+    }
     const previous = String(pageInfo.startCursor || '');
     if (!previous || previous === before) throw new Error('Sui correction lookup returned an invalid cursor.');
     before = previous;
   }
+  if (!reachedBeginning) throw new Error('Sui correction lookup exceeded its safe event scan limit.');
   return events;
 }
 

@@ -65,3 +65,13 @@ test('supplemental correction reconciliation accepts only the exact approved cla
   });
   assert.equal((await handler(wrongWallet)).status, 400);
 });
+
+test('correction lookup fails closed instead of treating a truncated event scan as absence', async () => {
+  const fetchImpl = async () => Response.json({
+    data: { events: { nodes: [], pageInfo: { hasPreviousPage: true, startCursor: crypto.randomUUID() } } },
+  });
+  await assert.rejects(
+    () => readSupplementalCorrection({ env: ENV, fetchImpl: fetchImpl as typeof fetch }),
+    /safe event scan limit/,
+  );
+});
