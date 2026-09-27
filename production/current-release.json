@@ -1,23 +1,22 @@
 {
-  "id": "6ab98b196c39224cbc5e954d",
-  "previous": "6ab83984d79aa57ee13aadd3",
-  "commit": "0bd1192c8b58cef1786831bb11a635026c8fa136",
-  "sourceCommit": "0bd1192c8b58cef1786831bb11a635026c8fa136",
-  "approvedSourceCommit": "0bd1192c8b58cef1786831bb11a635026c8fa136",
+  "id": "6ab98d13bb2c68685be79ba8",
+  "previous": "6ab98b196c39224cbc5e954d",
+  "commit": "1ace17ed98ee41dba4ae20aa5d3c56d8618d26a5",
+  "sourceCommit": "1ace17ed98ee41dba4ae20aa5d3c56d8618d26a5",
+  "approvedSourceCommit": "1ace17ed98ee41dba4ae20aa5d3c56d8618d26a5",
   "locked": true,
   "changedFiles": [
-    "/dapp/index.html",
     "/scripts/tree-knowledge-trial.js"
   ],
   "fileCount": 194,
   "functionsPreserved": 37,
-  "functionsAdded": [
+  "functionsUpdated": [
     "tree-knowledge-trial-correction"
   ],
   "schedulesPreserved": 5,
   "url": "https://tree-token.xyz/dapp/#canopy-draw",
-  "previewUrl": "https://6ab98b196c39224cbc5e954d--tree-token.netlify.app",
-  "publishedAt": "2026-09-27T21:32:52.207Z",
+  "previewUrl": "https://6ab98d13bb2c68685be79ba8--tree-token.netlify.app",
+  "publishedAt": "2026-09-27T21:40:44.681Z",
   "files": [
     {
       "path": "/tree.jpg",
@@ -117,7 +116,7 @@
     },
     {
       "path": "/scripts/tree-knowledge-trial.js",
-      "sha": "91b0dea94758ffde79cad61f664de59205a7fb3f"
+      "sha": "d5aade2ae34b0ca7cae4118ed717b14ddf2dc51d"
     },
     {
       "path": "/scripts/swap.js",
@@ -834,7 +833,7 @@
     "tree-swap-quote": "6037ab8ad9932a2c23116c8832eea9dbfbb7fc4f915c2a34dc108c41fcbe8a0f",
     "tree-v3-overview": "49b413b9360247a3e196909814b73829319dabeb36e25498f279ef75023036fc",
     "tree-volume": "57f085fecd6597c85b00ffed5a00cfd3127561b4c6a65542cec110e97f4b2601",
-    "tree-knowledge-trial-correction": "059039cf97f2b168531902dda2c082723d2e98cc5a81e9390cca682dab849259"
+    "tree-knowledge-trial-correction": "bb9f177839931c33a3da6012b66090ae74edd324ba3e1f3ced1d37947e7044c8"
   },
   "functionConfigurations": [
     {
@@ -1787,7 +1786,7 @@
     },
     {
       "n": "tree-knowledge-trial-correction",
-      "d": "059039cf97f2b168531902dda2c082723d2e98cc5a81e9390cca682dab849259",
+      "d": "bb9f177839931c33a3da6012b66090ae74edd324ba3e1f3ced1d37947e7044c8",
       "dn": null,
       "g": null,
       "bd": {
@@ -1806,17 +1805,17 @@
         }
       ],
       "p": 10,
-      "id": "49f3ee9033c4ec9dcac42d56f704343919e5184bf7850bc5a1639dcc76d5705d",
-      "a": "643318452420",
-      "c": "2026-09-27T21:31:17.210Z",
+      "id": "691eae308cac82d468bb48185ed4b402d4d4953b034eecc2e6db8f1416bd88e9",
+      "a": "796555058691",
+      "c": "2026-09-27T21:39:37.790Z",
       "im": "stream",
       "m": 1024,
       "obl": "netlify-observability-extension",
       "oblv": 34,
-      "oid": "e139ad4753b11696c1295d098365d1392c61969097a93c6cc48a61d3b9821708",
+      "oid": "fd8366fd3b0233b4ff54c3b3e15f21530dad14959593d382b030886eae4d7131",
       "r": "nodejs24.x",
       "rg": "us-east-2",
-      "s": 343242
+      "s": 343304
     }
   ],
   "schedules": [
@@ -1841,5 +1840,5 @@
       "cron": "17 */6 * * *"
     }
   ],
-  "configurationNote": "PR #45 September 22 Challenge payout correction. Two frontend paths add an exact 49,000 TREE supplemental claim. The new chain-backed correction function was added; the existing 37 functions and all five schedules were preserved. No Sui transaction was submitted during the Netlify release."
+  "configurationNote": "PR #45 review hardening for the September 22 correction. Trial startup no longer waits on correction status, preview status is available read-only, and the correction event scan fails closed at its safety limit. The other 37 functions and all five schedules were preserved. No Sui transaction was submitted during the Netlify release."
 }
