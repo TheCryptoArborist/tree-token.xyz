@@ -51,7 +51,7 @@ test('health tolerates one transient stream failure and fails only after all str
   assert.equal(keeperHealthStatus({ streams, lastError: 'timeout' }, now + 180_000, 120_000), 'unavailable');
 });
 
-test('Fly keeps raffle ingestion and random draws staged while skill awards stay always-on', async () => {
+test('Fly keeps raffle ingestion and random draws staged while skill awards and the correction stay enabled', async () => {
   const source = await (await import('node:fs/promises')).readFile(new URL('../fly.keeper.toml', import.meta.url), 'utf8');
   assert.match(source, /app = "tree-raffle-keeper-staging"/);
   assert.match(source, /KEEPER_DRY_RUN = "true"/);
@@ -59,6 +59,7 @@ test('Fly keeps raffle ingestion and random draws staged while skill awards stay
   assert.match(source, /KEEPER_DRAW_DRY_RUN = "true"/);
   assert.match(source, /KEEPER_KNOWLEDGE_AWARD_ENABLED = "true"/);
   assert.match(source, /KEEPER_KNOWLEDGE_AWARD_DRY_RUN = "false"/);
+  assert.match(source, /KEEPER_SUPPLEMENTAL_CORRECTION_ENABLED = "true"/);
   assert.match(source, /KEEPER_CURSOR_BACKEND = "supabase"/);
   assert.doesNotMatch(source, /TREE_RAFFLE_SUPABASE_SECRET_KEY/);
   assert.match(source, /auto_stop_machines = "off"/);

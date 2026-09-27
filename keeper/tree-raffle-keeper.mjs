@@ -4,6 +4,7 @@ import { configuredSupabaseKeeperCursorStore } from './tree-raffle-supabase-curs
 import {
   configuredDailyDrawExecutor,
   configuredKnowledgeTrialAwardExecutor,
+  configuredSupplementalCorrectionExecutor,
   dueDailyRoundId,
 } from './tree-raffle-draw-executor.mjs';
 
@@ -23,6 +24,7 @@ const DRAW_DRY_RUN = process.env.KEEPER_DRAW_DRY_RUN !== 'false';
 const KNOWLEDGE_AWARD_ENABLED = process.env.KEEPER_KNOWLEDGE_AWARD_ENABLED === 'true';
 const KNOWLEDGE_AWARD_DRY_RUN = process.env.KEEPER_KNOWLEDGE_AWARD_DRY_RUN !== 'false';
 const KNOWLEDGE_AWARD_POLL_MS = Number(process.env.KEEPER_KNOWLEDGE_AWARD_POLL_MS || 60_000);
+const SUPPLEMENTAL_CORRECTION_ENABLED = process.env.KEEPER_SUPPLEMENTAL_CORRECTION_ENABLED === 'true';
 export const GRAPHQL_PAGE_SIZE = 50;
 
 const V2_PACKAGE = '0xbfac5e1c6bf6ef29b12f7723857695fd2f4da9a11a7d88162c15e9124c243a4a';
@@ -97,10 +99,18 @@ const state = {
     lastError: null,
     lastResult: null,
   },
+  supplementalCorrection: {
+    completed: false,
+    lastAttemptAt: null,
+    lastSuccessAt: null,
+    lastError: null,
+    lastResult: null,
+  },
 };
 let durableCursorStore = null;
 let dailyDrawExecutor = null;
 let knowledgeTrialAwardExecutor = null;
+let supplementalCorrectionExecutor = null;
 
 function normalizedAddress(value) {
   const body = String(value || '').toLowerCase().replace(/^0x/, '').replace(/^0+/, '') || '0';
@@ -324,6 +334,28 @@ export async function pollKnowledgeTrialAward(now = new Date()) {
   }
 }
 
+export async function pollSupplementalCorrection(now = new Date()) {
+  if (!SUPPLEMENTAL_CORRECTION_ENABLED || state.supplementalCorrection.completed) return;
+  state.supplementalCorrection.lastAttemptAt = now.toISOString();
+  state.supplementalCorrection.lastError = null;
+  try {
+    const result = await supplementalCorrectionExecutor.run();
+    state.supplementalCorrection.completed = result?.status === 'registered' || result?.status === 'claimed';
+    state.supplementalCorrection.lastSuccessAt = new Date().toISOString();
+    state.supplementalCorrection.lastResult = result;
+    console.log(JSON.stringify({
+      level: 'info', action: 'supplemental-correction-ready',
+      incidentId: result.incidentId, status: result.status, digest: result.digest,
+    }));
+  } catch (error) {
+    state.supplementalCorrection.lastError = error instanceof Error ? error.message : 'Supplemental correction failed.';
+    console.error(JSON.stringify({
+      level: 'error', action: 'supplemental-correction-failed',
+      message: state.supplementalCorrection.lastError,
+    }));
+  }
+}
+
 export function keeperHealthStatus(snapshot, nowMs = Date.now(), staleAfterMs = HEALTH_STALE_AFTER_MS) {
   const streamStates = KEEPER_STREAMS.map(({ id }) => snapshot.streams.get(id));
   const latestSuccessMs = Math.max(
@@ -357,6 +389,10 @@ function publicState() {
       mode: KNOWLEDGE_AWARD_DRY_RUN ? 'dry-run' : 'live',
       ...state.knowledgeAward,
     },
+    supplementalCorrection: {
+      enabled: SUPPLEMENTAL_CORRECTION_ENABLED,
+      ...state.supplementalCorrection,
+    },
     streams: KEEPER_STREAMS.map(({ id }) => ({
       id,
       initialized: state.cursors.has(id),
@@ -383,6 +419,9 @@ export async function startKeeper() {
   if (KNOWLEDGE_AWARD_ENABLED && !KNOWLEDGE_AWARD_DRY_RUN) {
     knowledgeTrialAwardExecutor = configuredKnowledgeTrialAwardExecutor();
   }
+  if (SUPPLEMENTAL_CORRECTION_ENABLED) {
+    supplementalCorrectionExecutor = configuredSupplementalCorrectionExecutor();
+  }
   await initializeCursorPersistence();
 
   http.createServer((request, response) => {
@@ -404,6 +443,7 @@ export async function startKeeper() {
       await pollOnce();
       await pollDailyDraw();
       await pollKnowledgeTrialAward();
+      await pollSupplementalCorrection();
     } catch (error) {
       state.lastError = error instanceof Error ? error.message : 'Keeper poll failed.';
       console.error(JSON.stringify({ level: 'error', action: 'poll-failed', message: state.lastError }));

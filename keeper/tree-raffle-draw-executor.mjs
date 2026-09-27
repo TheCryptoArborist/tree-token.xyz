@@ -6,6 +6,18 @@ import { Transaction } from '@mysten/sui/transactions';
 export const TREE_TYPE = '0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE';
 export const DAILY_PRIZE_RAW = '50000000000';
 export const RANDOM_OBJECT_ID = '0x8';
+export const SEPTEMBER_22_SUPPLEMENTAL_CORRECTION = Object.freeze({
+  incidentId: 'knowledge:2026-09-22:display-correction',
+  originalRoundId: 'knowledge:2026-09-22',
+  originalDrawId: 'knowledge:2026-09-22:award',
+  originalClaimDigest: 'Ej9Wyaf8fWyLUf9sBAwu65wn2QWaVZYWkeY5DtfqyRvA',
+  onchainDrawId: 'knowledge:2026-09-22:correction',
+  ledgerCommitment: '834ce8bda59700cdbc51e04f146c300b52881dff7d36cc81cb5da9e73bab5a84',
+  wallet: '0x18d72fc2a3df6d92d0806da3b04d92be056e2d6d35882a56c16ddb25f48d35d6',
+  tokenType: TREE_TYPE,
+  amountRaw: '49000000000',
+  totalTickets: '1',
+});
 
 const DRAW_ID_PATTERN = /^[a-z0-9][a-z0-9:_-]{2,95}$/;
 const SUI_ADDRESS_PATTERN = /^0x[0-9a-f]{64}$/;
@@ -316,6 +328,42 @@ export class SuiDailyDrawChain {
     return persisted;
   }
 
+  async registerSupplementalCorrection(correction = SEPTEMBER_22_SUPPLEMENTAL_CORRECTION) {
+    const snapshot = {
+      onchainDrawId: correction.onchainDrawId,
+      ledgerCommitment: correction.ledgerCommitment,
+      totalTickets: correction.totalTickets,
+    };
+    const existingPrize = await this.readPrize(snapshot);
+    if (existingPrize) {
+      if (existingPrize.winner !== correction.wallet || existingPrize.amountRaw !== correction.amountRaw) {
+        throw new Error('The persisted supplemental correction conflicts with the approved incident record.');
+      }
+      return { status: 'registered', digest: existingPrize.digest, ...existingPrize };
+    }
+    const existingDraw = await this.readDraw(snapshot);
+    if (existingDraw) {
+      if (existingDraw.winnerRegistered) return { status: 'claimed', digest: existingDraw.digest };
+    }
+
+    // Sui requires a command using the Random object to be the last meaningful
+    // command in its transaction. Persist the exact committed draw first, then
+    // register the award. A retry resumes registration from the verified draw.
+    const draw = existingDraw ?? await this.executeDraw(snapshot);
+    const registered = await this.registerWinner(snapshot, correction.wallet, correction.amountRaw);
+    const persisted = await this.readPrize(snapshot);
+    if (!persisted || persisted.winner !== correction.wallet || persisted.amountRaw !== correction.amountRaw) {
+      throw new Error('The finalized supplemental correction does not match the approved incident record.');
+    }
+    return {
+      status: 'registered',
+      digest: persisted.digest,
+      drawTxDigest: draw.digest,
+      registerTxDigest: registered.digest,
+      ...persisted,
+    };
+  }
+
   async settleKnowledgeAward(snapshot) {
     if (snapshot.tokenType !== TREE_TYPE || !validRawAmount(snapshot.amountRaw)
       || snapshot.totalTickets !== '1' || !SUI_ADDRESS_PATTERN.test(snapshot.wallet)) {
@@ -383,6 +431,19 @@ export async function runNextKnowledgeTrialAward({ store, chain }) {
   };
 }
 
+export async function runSupplementalCorrection({ chain, correction = SEPTEMBER_22_SUPPLEMENTAL_CORRECTION }) {
+  if (correction.tokenType !== TREE_TYPE
+    || correction.totalTickets !== '1'
+    || !DRAW_ID_PATTERN.test(correction.onchainDrawId)
+    || !/^[0-9a-f]{64}$/.test(correction.ledgerCommitment)
+    || !SUI_ADDRESS_PATTERN.test(correction.wallet)
+    || !validRawAmount(correction.amountRaw)) {
+    throw new Error('Invalid supplemental Challenge correction configuration.');
+  }
+  const result = await chain.registerSupplementalCorrection(correction);
+  return { ...result, incidentId: correction.incidentId, onchainDrawId: correction.onchainDrawId };
+}
+
 export function configuredDailyDrawExecutor(env = process.env) {
   const store = new SupabaseDailyDrawStore({
     url: env.TREE_RAFFLE_SUPABASE_URL,
@@ -411,4 +472,15 @@ export function configuredKnowledgeTrialAwardExecutor(env = process.env) {
     privateKey: env.TREE_RAFFLE_OPERATOR_PRIVATE_KEY,
   });
   return { run: () => runNextKnowledgeTrialAward({ store, chain }) };
+}
+
+export function configuredSupplementalCorrectionExecutor(env = process.env) {
+  const chain = new SuiDailyDrawChain({
+    packageId: env.TREE_RAFFLE_PACKAGE_ID,
+    poolId: env.TREE_RAFFLE_PRIZE_POOL_ID,
+    operatorCapId: env.TREE_RAFFLE_OPERATOR_CAP_ID,
+    operatorAddress: env.TREE_RAFFLE_OPERATOR_ADDRESS,
+    privateKey: env.TREE_RAFFLE_OPERATOR_PRIVATE_KEY,
+  });
+  return { run: () => runSupplementalCorrection({ chain }) };
 }
