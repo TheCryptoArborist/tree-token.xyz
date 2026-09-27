@@ -1,23 +1,22 @@
 {
-  "id": "6ab83984d79aa57ee13aadd3",
-  "previous": "6ab81d9ca3cdab704f81a86b",
-  "commit": "a185d1ecc40f40a844014cfd20f46b57a7d041bf",
-  "sourceCommit": "a185d1ecc40f40a844014cfd20f46b57a7d041bf",
-  "approvedSourceCommit": "a185d1ecc40f40a844014cfd20f46b57a7d041bf",
+  "id": "6ab98d13bb2c68685be79ba8",
+  "previous": "6ab98b196c39224cbc5e954d",
+  "commit": "1ace17ed98ee41dba4ae20aa5d3c56d8618d26a5",
+  "sourceCommit": "1ace17ed98ee41dba4ae20aa5d3c56d8618d26a5",
+  "approvedSourceCommit": "1ace17ed98ee41dba4ae20aa5d3c56d8618d26a5",
   "locked": true,
   "changedFiles": [
-    "/dapp/index.html",
     "/scripts/tree-knowledge-trial.js"
   ],
   "fileCount": 194,
-  "functionsPreserved": 36,
+  "functionsPreserved": 37,
   "functionsUpdated": [
-    "tree-knowledge-trial-claim"
+    "tree-knowledge-trial-correction"
   ],
   "schedulesPreserved": 5,
   "url": "https://tree-token.xyz/dapp/#canopy-draw",
-  "previewUrl": "https://6ab83984d79aa57ee13aadd3--tree-token.netlify.app",
-  "publishedAt": "2026-09-26T21:34:01.006Z",
+  "previewUrl": "https://6ab98d13bb2c68685be79ba8--tree-token.netlify.app",
+  "publishedAt": "2026-09-27T21:40:44.681Z",
   "files": [
     {
       "path": "/tree.jpg",
@@ -117,7 +116,7 @@
     },
     {
       "path": "/scripts/tree-knowledge-trial.js",
-      "sha": "a19d5e5a74d5c8973dd14f68bdecfbafa2bcd6ce"
+      "sha": "d5aade2ae34b0ca7cae4118ed717b14ddf2dc51d"
     },
     {
       "path": "/scripts/swap.js",
@@ -445,7 +444,7 @@
     },
     {
       "path": "/dapp/index.html",
-      "sha": "7f79e6609171a0b061a2743a6c7ff1832e1c85f7"
+      "sha": "764e53ff209b4ae89cf4aefcbd2a8907d4ef75d9"
     },
     {
       "path": "/dapp/earn-v3-zap.js",
@@ -833,7 +832,8 @@
     "tree-raffle-status": "cec015dd4e7520ee48ca3fa8a7c89d6e676f8730a1e77594b98f1aecbcabff62",
     "tree-swap-quote": "6037ab8ad9932a2c23116c8832eea9dbfbb7fc4f915c2a34dc108c41fcbe8a0f",
     "tree-v3-overview": "49b413b9360247a3e196909814b73829319dabeb36e25498f279ef75023036fc",
-    "tree-volume": "57f085fecd6597c85b00ffed5a00cfd3127561b4c6a65542cec110e97f4b2601"
+    "tree-volume": "57f085fecd6597c85b00ffed5a00cfd3127561b4c6a65542cec110e97f4b2601",
+    "tree-knowledge-trial-correction": "bb9f177839931c33a3da6012b66090ae74edd324ba3e1f3ced1d37947e7044c8"
   },
   "functionConfigurations": [
     {
@@ -1280,16 +1280,16 @@
       ],
       "p": 10,
       "id": "6d1e278e0c03c511dd1f0cf9f07b622bbced1b2aed08a48369aa3e35171bd66e",
-      "a": "643318452420",
-      "c": "2026-09-26T21:30:56.867Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "14367222af50326a06a206b3bdca618e62eb8ad633a24302fea036a92b3b8e2b",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 344793
+      "m": 1024,
+      "s": 344793,
+      "r": "nodejs22.x",
+      "c": "2026-09-26T21:30:56.867Z",
+      "a": "643318452420",
+      "oid": "14367222af50326a06a206b3bdca618e62eb8ad633a24302fea036a92b3b8e2b",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-knowledge-trial-resolver",
@@ -1783,6 +1783,39 @@
       "a": "194385697179",
       "oid": "45f0771a25d49eb70fb021ac5395887bdb642e47d673989706d8c7f732f13399",
       "im": "stream"
+    },
+    {
+      "n": "tree-knowledge-trial-correction",
+      "d": "bb9f177839931c33a3da6012b66090ae74edd324ba3e1f3ced1d37947e7044c8",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-knowledge-trial-correction",
+          "l": "/api/tree-knowledge-trial-correction",
+          "e": null,
+          "m": [],
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "691eae308cac82d468bb48185ed4b402d4d4953b034eecc2e6db8f1416bd88e9",
+      "a": "796555058691",
+      "c": "2026-09-27T21:39:37.790Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "fd8366fd3b0233b4ff54c3b3e15f21530dad14959593d382b030886eae4d7131",
+      "r": "nodejs24.x",
+      "rg": "us-east-2",
+      "s": 343304
     }
   ],
   "schedules": [
@@ -1807,5 +1840,5 @@
       "cron": "17 */6 * * *"
     }
   ],
-  "configurationNote": "PR #43 Challenge claim incident repair. Two frontend paths now render each immutable award amount instead of a hard-coded 50,000 TREE label. The tree-knowledge-trial-claim function now reconciles the base64 vector<u8> shape returned by live Sui GraphQL. The other 36 functions and all five schedules were preserved. The September 22 claim was independently verified and recorded; no Sui transaction was submitted by the assistant."
+  "configurationNote": "PR #45 review hardening for the September 22 correction. Trial startup no longer waits on correction status, preview status is available read-only, and the correction event scan fails closed at its safety limit. The other 37 functions and all five schedules were preserved. No Sui transaction was submitted during the Netlify release."
 }

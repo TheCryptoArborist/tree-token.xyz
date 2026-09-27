@@ -18,3 +18,11 @@ test('Challenge claim simulation passes the Transaction instance to the wallet f
   assert.doesNotMatch(script, /transaction\.build\(\{ client \}\)/);
   assert.match(script, /signAndExecuteTransactionBlock\(transaction\)/);
 });
+
+test('Challenge History renders and reconciles the isolated supplemental correction', () => {
+  assert.match(script, /const CORRECTION_API = '\/api\/tree-knowledge-trial-correction'/);
+  assert.match(script, /Sep 22 correction/);
+  assert.match(script, /supplemental award/);
+  assert.match(script, /isCorrection \? CORRECTION_API : CLAIM_API/);
+  assert.match(script, /isCorrection \? \{ digest, wallet \} : \{ digest, wallet, roundId \}/);
+});

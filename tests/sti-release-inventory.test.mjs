@@ -31,7 +31,7 @@ test('release retains all production function packages, routes and schedules',()
   const currentIdentities=identities(current.functionConfigurations);
   const currentByName=new Map(currentIdentities.map(identity=>[identity[0],identity]));
   assert.equal(candidate.baseline.functions.length,37);
-  assert.equal(current.functionConfigurations.length,37);
+  assert.equal(current.functionConfigurations.length,38);
   for(const identity of identities(candidate.baseline.functions)){
     if(identity[0]==='tree-knowledge-trial-claim')continue;
     assert.deepEqual(currentByName.get(identity[0]),identity,identity[0]);
@@ -40,6 +40,10 @@ test('release retains all production function packages, routes and schedules',()
   const recordedClaim=manifest.functionConfigurations.find(fn=>fn.n==='tree-knowledge-trial-claim');
   assert.deepEqual(claim,[recordedClaim.n,recordedClaim.d,recordedClaim.id,recordedClaim.oid,recordedClaim.ro,recordedClaim.p,recordedClaim.r,recordedClaim.im]);
   assert.equal(claim[1],current.functionDigests['tree-knowledge-trial-claim']);
+  const correction=currentByName.get('tree-knowledge-trial-correction');
+  const recordedCorrection=manifest.functionConfigurations.find(fn=>fn.n==='tree-knowledge-trial-correction');
+  assert.deepEqual(correction,[recordedCorrection.n,recordedCorrection.d,recordedCorrection.id,recordedCorrection.oid,recordedCorrection.ro,recordedCorrection.p,recordedCorrection.r,recordedCorrection.im]);
+  assert.equal(correction[1],current.functionDigests['tree-knowledge-trial-correction']);
   assert.equal(candidate.baseline.schedules.length,5);
   assert.deepEqual(candidate.baseline.schedules,current.schedules);
 });

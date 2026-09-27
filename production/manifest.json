@@ -1,7 +1,7 @@
 {
   "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
-  "deployId": "6ab83984d79aa57ee13aadd3",
-  "publishedAt": "2026-09-26T21:34:01.006Z",
+  "deployId": "6ab98d13bb2c68685be79ba8",
+  "publishedAt": "2026-09-27T21:40:44.681Z",
   "files": [
     {
       "path": "/tree.jpg",
@@ -150,8 +150,8 @@
     {
       "path": "/scripts/tree-knowledge-trial.js",
       "source": "scripts/tree-knowledge-trial.js",
-      "sha1": "a19d5e5a74d5c8973dd14f68bdecfbafa2bcd6ce",
-      "size": 61992
+      "sha1": "d5aade2ae34b0ca7cae4118ed717b14ddf2dc51d",
+      "size": 65307
     },
     {
       "path": "/scripts/swap.js",
@@ -642,8 +642,8 @@
     {
       "path": "/dapp/index.html",
       "source": "dapp/index.html",
-      "sha1": "7f79e6609171a0b061a2743a6c7ff1832e1c85f7",
-      "size": 79784
+      "sha1": "764e53ff209b4ae89cf4aefcbd2a8907d4ef75d9",
+      "size": 79789
     },
     {
       "path": "/dapp/earn-v3-zap.js",
@@ -1182,6 +1182,12 @@
       "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
+      "name": "tree-badges",
+      "sha256": "6194a0cc2c267f83ea5563358d40eb086afe6cac9eeace0d824bfb8713300b23",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
+    },
+    {
       "name": "tree-badges-on-deploy",
       "sha256": "d4242903bd0f954a2daa352272d49da4eee37f9d8151e122e36800461691ea25",
       "artifact": null,
@@ -1206,12 +1212,6 @@
       "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
-      "name": "tree-badges",
-      "sha256": "6194a0cc2c267f83ea5563358d40eb086afe6cac9eeace0d824bfb8713300b23",
-      "artifact": null,
-      "note": "Reuse exact deployed package; source parity is unverified."
-    },
-    {
       "name": "tree-burn-overview",
       "sha256": "57c70ac651d690490e56bcc8da473cffba29d41f9b52032748c5da9973beee8b",
       "artifact": null,
@@ -1226,6 +1226,12 @@
     {
       "name": "tree-dashboard",
       "sha256": "a43f88698248c49f4bb624827c03789332a8e7da71831359466579432c17b87e",
+      "artifact": null,
+      "note": "Reuse exact deployed package; source parity is unverified."
+    },
+    {
+      "name": "tree-exposure",
+      "sha256": "08124aefb63d46375f17090d3321d0aee7a4f0e80a1fd413314942dc0e85fcd0",
       "artifact": null,
       "note": "Reuse exact deployed package; source parity is unverified."
     },
@@ -1254,8 +1260,8 @@
       "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
-      "name": "tree-exposure",
-      "sha256": "08124aefb63d46375f17090d3321d0aee7a4f0e80a1fd413314942dc0e85fcd0",
+      "name": "tree-knowledge-trial",
+      "sha256": "27e679d6907aa33ca42df39f63c4e82d60b6bc7dc5f4b2a69ba0be8dafdcf4c6",
       "artifact": null,
       "note": "Reuse exact deployed package; source parity is unverified."
     },
@@ -1266,16 +1272,22 @@
       "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
+      "name": "tree-knowledge-trial-claim",
+      "sha256": "6fd0f4534b29efcd00f2aa0f633ae88a1bbd260649ca1ba8aa169f456350efb3",
+      "artifact": "production/functions/tree-knowledge-trial-claim.zip",
+      "note": "Verified PR #43 claim-reconciliation package; accepts live Sui GraphQL vector<u8> encoding."
+    },
+    {
       "name": "tree-knowledge-trial-claim-test",
       "sha256": "7f812603ff1a63b10bb40eb0d1280c1c9ac273a53c788723ab458ed8db059cea",
       "artifact": null,
       "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
-      "name": "tree-knowledge-trial-claim",
-      "sha256": "6fd0f4534b29efcd00f2aa0f633ae88a1bbd260649ca1ba8aa169f456350efb3",
-      "artifact": "production/functions/tree-knowledge-trial-claim.zip",
-      "note": "Verified PR #43 claim-reconciliation package; accepts live Sui GraphQL vector<u8> encoding."
+      "name": "tree-knowledge-trial-correction",
+      "sha256": "bb9f177839931c33a3da6012b66090ae74edd324ba3e1f3ced1d37947e7044c8",
+      "artifact": "production/functions/tree-knowledge-trial-correction.zip",
+      "note": "Verified September 22 supplemental claim package with fail-closed event scan."
     },
     {
       "name": "tree-knowledge-trial-resolver",
@@ -1302,8 +1314,8 @@
       "note": "Reuse exact deployed package; source parity is unverified."
     },
     {
-      "name": "tree-knowledge-trial",
-      "sha256": "27e679d6907aa33ca42df39f63c4e82d60b6bc7dc5f4b2a69ba0be8dafdcf4c6",
+      "name": "tree-leaderboard",
+      "sha256": "f97a886c3621eaf9d8cdbe72f2006bda3ae1a1257c643b116107e0c8a99fc232",
       "artifact": null,
       "note": "Reuse exact deployed package; source parity is unverified."
     },
@@ -1322,12 +1334,6 @@
     {
       "name": "tree-leaderboard-refresh-scheduled",
       "sha256": "0a202c04886d259bfb5994b5d7d5d602c22e8328a560312da7e7473438a9722b",
-      "artifact": null,
-      "note": "Reuse exact deployed package; source parity is unverified."
-    },
-    {
-      "name": "tree-leaderboard",
-      "sha256": "f97a886c3621eaf9d8cdbe72f2006bda3ae1a1257c643b116107e0c8a99fc232",
       "artifact": null,
       "note": "Reuse exact deployed package; source parity is unverified."
     },
@@ -1859,16 +1865,16 @@
       ],
       "p": 10,
       "id": "6d1e278e0c03c511dd1f0cf9f07b622bbced1b2aed08a48369aa3e35171bd66e",
-      "a": "643318452420",
-      "c": "2026-09-26T21:30:56.867Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "14367222af50326a06a206b3bdca618e62eb8ad633a24302fea036a92b3b8e2b",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 344793
+      "m": 1024,
+      "s": 344793,
+      "r": "nodejs22.x",
+      "c": "2026-09-26T21:30:56.867Z",
+      "a": "643318452420",
+      "oid": "14367222af50326a06a206b3bdca618e62eb8ad633a24302fea036a92b3b8e2b",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-knowledge-trial-resolver",
@@ -2362,6 +2368,39 @@
       "a": "194385697179",
       "oid": "45f0771a25d49eb70fb021ac5395887bdb642e47d673989706d8c7f732f13399",
       "im": "stream"
+    },
+    {
+      "n": "tree-knowledge-trial-correction",
+      "d": "bb9f177839931c33a3da6012b66090ae74edd324ba3e1f3ced1d37947e7044c8",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-knowledge-trial-correction",
+          "l": "/api/tree-knowledge-trial-correction",
+          "e": null,
+          "m": [],
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "691eae308cac82d468bb48185ed4b402d4d4953b034eecc2e6db8f1416bd88e9",
+      "a": "796555058691",
+      "c": "2026-09-27T21:39:37.790Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "fd8366fd3b0233b4ff54c3b3e15f21530dad14959593d382b030886eae4d7131",
+      "r": "nodejs24.x",
+      "rg": "us-east-2",
+      "s": 343304
     }
   ]
 }

@@ -21,6 +21,7 @@ if (root) {
     || location.hostname.endsWith('--tree-token-test-dapp.netlify.app');
   const API = isTestDapp ? '/api/tree-knowledge-trial-test' : '/api/tree-knowledge-trial';
   const CLAIM_API = isTestDapp ? '/api/tree-knowledge-trial-claim-test' : '/api/tree-knowledge-trial-claim';
+  const CORRECTION_API = '/api/tree-knowledge-trial-correction';
   const nodes = {
     meta: root.querySelector('#knowledgeTrialMeta'),
     state: root.querySelector('#knowledgeTrialState'),
@@ -107,6 +108,7 @@ if (root) {
     participation: { verifiedPasses: 0, attemptsStarted: 0, completedAttempts: 0, completionRatePercent: 0 },
     leaderboard: [],
     recentRounds: [],
+    correction: null,
     eligibilityResult: null,
     eligibilityWallet: '',
     eligibilityChecking: false,
@@ -260,6 +262,49 @@ if (root) {
     }
 
     nodes.recentRounds.replaceChildren();
+    const correction = state.correction;
+    if (correction) {
+      const row = document.createElement('div');
+      row.className = 'knowledge-history-row knowledge-history-correction';
+      const date = document.createElement('strong');
+      date.textContent = 'Sep 22 correction';
+      const reason = document.createElement('span');
+      reason.textContent = 'Payout correction';
+      const detail = document.createElement('span');
+      detail.textContent = `${awardPrizeLabel(correction)} supplemental award`;
+      row.append(date, reason, detail);
+      if (correction.claimable) {
+        const claim = document.createElement('button');
+        const claimStatus = document.createElement('p');
+        const connectedWallet = String(window.playerAddress || '').toLowerCase();
+        const ownsAward = Boolean(connectedWallet && correction.wallet === connectedWallet);
+        claim.type = 'button';
+        claim.className = 'button gold knowledge-history-claim';
+        claim.textContent = ownsAward ? `Claim ${awardPrizeLabel(correction)}` : `Correction reserved for ${maskedWallet(correction.wallet)}`;
+        claim.disabled = !ownsAward || state.claiming;
+        claimStatus.className = 'status knowledge-history-claim-status';
+        claimStatus.setAttribute('role', 'status');
+        claimStatus.setAttribute('aria-live', 'polite');
+        claim.addEventListener('click', () => claimPrize({
+          roundId: correction.incidentId,
+          award: { ...correction, correction: true },
+        }, claimStatus).catch((error) => {
+          claimStatus.textContent = error instanceof Error ? error.message : 'The correction claim could not be completed.';
+        }));
+        row.append(claim, claimStatus);
+      } else if (correction.claimed) {
+        const claimed = document.createElement('span');
+        claimed.className = 'knowledge-history-claimed';
+        claimed.textContent = `${awardPrizeLabel(correction)} correction claimed`;
+        row.append(claimed);
+      } else {
+        const pending = document.createElement('span');
+        pending.className = 'knowledge-history-claimed';
+        pending.textContent = 'Correction registration pending';
+        row.append(pending);
+      }
+      nodes.recentRounds.append(row);
+    }
     if (state.recentRounds.length) {
       state.recentRounds.forEach((round) => {
         const row = document.createElement('div');
@@ -299,7 +344,7 @@ if (root) {
         }
         nodes.recentRounds.append(row);
       });
-    } else {
+    } else if (!correction) {
       const empty = document.createElement('p');
       empty.className = 'muted';
       empty.textContent = 'Completed rounds will appear after public competition begins.';
@@ -499,12 +544,26 @@ if (root) {
     renderFundingAmount();
   }
 
+  async function refreshCorrection({ render = true } = {}) {
+    try {
+      const response = await fetch(CORRECTION_API, { headers: { Accept: 'application/json' }, cache: 'no-store' });
+      const payload = await response.json();
+      if (!response.ok || payload.status !== 'ok' || !payload.correction) throw new Error('Correction unavailable.');
+      state.correction = payload.correction;
+    } catch (error) {
+      console.error('TREE Knowledge Trial correction refresh failed', error);
+      state.correction = null;
+    }
+    if (render) renderActivity();
+  }
+
   async function refreshPublicSnapshot({ refreshEligibility = false } = {}) {
     try {
       const response = await fetch(`${API}?action=status`, { headers: { Accept: 'application/json' }, cache: 'no-store' });
       const payload = await response.json();
       if (!response.ok || payload.status !== 'ok' || !payload.publicRound) throw new Error('Challenge activity is temporarily unavailable.');
       applyPublicSnapshot(payload);
+      void refreshCorrection();
       if (refreshEligibility && window.playerAddress && state.publicRound?.roundId) {
         await checkEligibility({ automatic: true });
       }
@@ -536,6 +595,7 @@ if (root) {
       updateWalletState();
       if (window.playerAddress && state.publicRound?.roundId) checkEligibility({ automatic: true });
       setStatus('Practice mode is ready. It does not create a scored entry or prize claim.', 'success');
+      void refreshCorrection();
     } catch (error) {
       nodes.meta.textContent = 'The practice question service could not be loaded.';
       nodes.state.textContent = 'Unavailable';
@@ -900,6 +960,7 @@ if (root) {
     const wallet = String(window.playerAddress || '').toLowerCase();
     const award = round?.award;
     const roundId = round?.roundId;
+    const isCorrection = award?.correction === true;
     if (state.claiming) return;
     if (!/^0x[0-9a-f]{64}$/.test(wallet) || award?.wallet !== wallet || !award?.claimable || !roundId) {
       throw new Error('Connect the winning wallet before claiming this prize.');
@@ -932,7 +993,10 @@ if (root) {
         include: { effects: true, events: true, balanceChanges: true },
       });
       if (!transactionSucceeded(simulation)) throw new Error(`The ${prizeLabel} claim did not pass the Sui Mainnet safety check.`);
-      if (!(await confirmTransaction(`Claim your ${prizeLabel} Knowledge Trial prize?`, { title: 'Claim Knowledge Trial Prize' }))) return;
+      const confirmation = isCorrection
+        ? `Claim your ${prizeLabel} supplemental Challenge correction?`
+        : `Claim your ${prizeLabel} Knowledge Trial prize?`;
+      if (!(await confirmTransaction(confirmation, { title: isCorrection ? 'Claim Challenge Correction' : 'Claim Knowledge Trial Prize' }))) return;
       if (typeof window.signAndExecuteTransactionBlock !== 'function') throw new Error('The connected wallet cannot sign this transaction.');
       statusNode.textContent = 'Review and approve the prize claim in your wallet.';
       const submitted = await window.signAndExecuteTransactionBlock(transaction);
@@ -945,10 +1009,10 @@ if (root) {
         include: { effects: true, events: true, balanceChanges: true },
       });
       if (!transactionSucceeded(finalized)) throw new Error('The TREE prize claim did not finalize successfully.');
-      const response = await fetch(CLAIM_API, {
+      const response = await fetch(isCorrection ? CORRECTION_API : CLAIM_API, {
         method: 'POST',
         headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ digest, wallet, roundId }),
+        body: JSON.stringify(isCorrection ? { digest, wallet } : { digest, wallet, roundId }),
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok || payload.status !== 'ok') {

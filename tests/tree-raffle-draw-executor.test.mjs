@@ -8,8 +8,50 @@ import {
   dueDailyRoundId,
   runDailyDraw,
   runNextKnowledgeTrialAward,
+  runSupplementalCorrection,
+  SEPTEMBER_22_SUPPLEMENTAL_CORRECTION,
   winnerForTicket,
 } from '../keeper/tree-raffle-draw-executor.mjs';
+
+test('supplemental correction reserves the exact missing 49,000 TREE for the incident wallet', async () => {
+  let received;
+  const result = await runSupplementalCorrection({
+    chain: {
+      registerSupplementalCorrection: async (correction) => {
+        received = correction;
+        return { status: 'registered', digest: '3'.repeat(40) };
+      },
+    },
+  });
+  assert.equal(received.amountRaw, '49000000000');
+  assert.equal(received.wallet, '0x18d72fc2a3df6d92d0806da3b04d92be056e2d6d35882a56c16ddb25f48d35d6');
+  assert.equal(received.onchainDrawId, 'knowledge:2026-09-22:correction');
+  assert.equal(received, SEPTEMBER_22_SUPPLEMENTAL_CORRECTION);
+  assert.equal(result.status, 'registered');
+});
+
+test('supplemental correction resumes registration from its exact persisted draw', async () => {
+  const chain = Object.create(SuiDailyDrawChain.prototype);
+  let prizeReads = 0;
+  let executeCalls = 0;
+  chain.readPrize = async () => {
+    prizeReads += 1;
+    return prizeReads === 1 ? null : {
+      digest: '4'.repeat(40),
+      winner: SEPTEMBER_22_SUPPLEMENTAL_CORRECTION.wallet,
+      amountRaw: SEPTEMBER_22_SUPPLEMENTAL_CORRECTION.amountRaw,
+    };
+  };
+  chain.readDraw = async () => ({ digest: '2'.repeat(40), winnerRegistered: false });
+  chain.executeDraw = async () => { executeCalls += 1; };
+  chain.registerWinner = async (_snapshot, winner, amountRaw) => ({ digest: '3'.repeat(40), winner, amountRaw });
+
+  const result = await chain.registerSupplementalCorrection();
+  assert.equal(executeCalls, 0);
+  assert.equal(result.drawTxDigest, '2'.repeat(40));
+  assert.equal(result.registerTxDigest, '3'.repeat(40));
+  assert.equal(result.amountRaw, '49000000000');
+});
 
 test('daily scheduler selects only the previous New York raffle date after 10:05', () => {
   assert.equal(dueDailyRoundId(new Date('2026-08-20T14:04:00.000Z')), null);
