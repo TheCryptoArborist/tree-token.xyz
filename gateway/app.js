@@ -1,3 +1,4 @@
+import { routeDraft, readDraft } from './review-core.js';
 import { SOURCES, SUI, USDC, TREE, amountToRaw } from './options.js';
 const $ = id => document.getElementById(id);
 const viaBase = () => ['bsc', 'robinhood'].includes($('chain').value);
@@ -101,3 +102,36 @@ async function catalog() {
 }
 $('catalog-refresh').addEventListener('click', catalog);
 catalog();
+
+window.addEventListener('gateway-wallet-change', reset);
+let walletsLoading = false;
+$('wallet-review').addEventListener('toggle', async () => {
+  if (!$('wallet-review').open || walletsLoading) return;
+  walletsLoading = true;
+  try { await import('./wallet-bundle.js'); }
+  catch { walletsLoading = false; $('wallet-summary').textContent = 'Wallet controls could not load. Close and reopen this section to retry. Quotes and saved route choices remain available.'; }
+});
+const savedKey = 'tree-gateway-route-v1';
+$('save-route').addEventListener('click', () => {
+  try {
+    const draft = routeDraft(Object.fromEntries(['chain', 'asset', 'amount', 'destination', 'settlement'].map(id => [id, $(id).value.trim()])));
+    localStorage.setItem(savedKey, JSON.stringify(draft));
+    $('saved-status').textContent = 'Route setup saved in this browser. No wallet addresses, quotes or transaction progress were saved.';
+  } catch (error) { $('saved-status').textContent = 'Could not save: ' + error.message; }
+});
+$('restore-route').addEventListener('click', () => {
+  try {
+    const text = localStorage.getItem(savedKey);
+    if (!text) throw Error('No saved route setup found.');
+    const draft = readDraft(text);
+    $('chain').value = draft.chain;
+    $('chain').dispatchEvent(new Event('change'));
+    for (const id of ['asset', 'amount', 'destination', 'settlement']) $(id).value = draft[id];
+    destinationChanged();
+    $('saved-status').textContent = 'Route choices restored. Verify connected wallets and request a fresh quote. No transfer is in progress.';
+  } catch (error) { $('saved-status').textContent = 'Could not restore: ' + error.message; }
+});
+$('clear-route').addEventListener('click', () => {
+  try { localStorage.removeItem(savedKey); $('saved-status').textContent = 'Saved route setup cleared.'; }
+  catch { $('saved-status').textContent = 'Browser storage is unavailable.'; }
+});

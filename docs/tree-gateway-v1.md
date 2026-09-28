@@ -1,3 +1,15 @@
+## Wallet review and saved setup
+
+The preview includes optional EVM browser wallet discovery (EIP-6963 with a legacy injected-provider fallback), source network checks and explicit switching, and a Sui receiving-wallet control using @mysten/dapp-kit-core 1.6.34 and @mysten/sui 2.33.1. These dependencies are isolated under gateway/wallet-kit; the existing site SDK dependencies are unchanged. Wallet code is bundled locally into the preview and loaded only when the wallet-review section opens.
+
+There are no transaction or message-signing controls. The source adapter allowlists account access, chain reads, balance reads and an explicitly requested network switch only. Account/network changes clear the source selection and all quote/gas review state. Solana wallet connection and mobile WalletConnect are not implemented; Solana quotes remain available.
+
+The Base gas endpoint accepts only a valid EVM address and performs a fixed eth_getBalance read against mainnet.base.org. Unknown or failed reads never imply a funded account. Positive balances do not establish gas sufficiency; transaction-specific gas estimation remains pending. Public addresses are sent for balance checks only on user request.
+
+Save/restore stores a validated, versioned set of route choices in this browser only. It excludes wallet addresses, quote payloads, balances and transaction stages. Restoring requires a new quote and wallet verification. This is not resumable transaction tracking.
+
+Validation: 18 focused tests, including fixed-upstream gas requests, rejected signing methods, invalid saved choices and source identity/quote safety; exact production snapshot and preview builds. Current MystenLabs frontend-apps/SKILL.md, setup.md and non-react.md informed the wallet integration.
+
 ## Relay routes in the review preview
 
 The preview supports BNB Chain (56) and Robinhood Chain (4663) with live, non-executable Relay quotes (`indicativeQuote: true`). The server validates origin identity, exact input amount, Base chain ID 8453, native Base USDC address/decimals, and positive bounded integer output amounts. Only sanitized display fields reach the browser. Relay transaction steps, signing data and the documentation example quote identity are never exposed as deposit instructions.
