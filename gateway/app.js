@@ -19,7 +19,7 @@ function reset() {
 function destinationChanged() {
   const tree = $('destination').value === 'TREE';
   $('settlement-label').hidden = !tree;
-  $('destination-note').textContent = tree ? 'Choose SUI settlement to estimate the onward TREE swap. Each stage needs a fresh quote before any future transfer.' : (viaBase() ? 'Relay to Base USDC, then Mayan into this asset on Sui.' : 'Request a direct Mayan estimate into this asset on Sui.');
+  $('destination-note').textContent = tree ? 'SUI settlement includes a TREE estimate. Refresh quotes at each stage.' : (viaBase() ? 'Relay to Base USDC, then Mayan into this asset on Sui.' : 'Request a direct Mayan estimate into this asset on Sui.');
   reset();
 }
 $('chain').addEventListener('change', () => {
