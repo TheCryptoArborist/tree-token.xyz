@@ -7,7 +7,7 @@ const now = Date.now();
 function fixture(raw = '1234567891') {
   return { status: 'ok', tokenIn: SUI, tokenOut: TREE, amountIn: raw, decimalsIn: 9, decimalsOut: 6, slippageBps: 100,
     generatedAt: new Date(now).toISOString(), expiresAt: new Date(now + 30_000).toISOString(),
-    selectedRoute: { type: 'direct', venue: 'turbos', pairId: '0xaa133ce1f8fd55d85b6fc87c1b3054cb717d83be477ef3635c661c21fbdfa0ee', tokenIn: SUI, tokenOut: TREE, amountIn: raw, amountOut: '9007199254740993', minAmountOut: '8907199254740993', priceImpactPercent: 1.2, feePercent: 1, transaction: 'never-return' } };
+    selectedRoute: { type: 'direct', venue: 'turbos', pairId: '0xaa133ce1f8fd55d85b6fc87c1b3054cb717d83be477ef3635c661c21fbdfa0ee', tokenIn: SUI, tokenOut: TREE, amountIn: raw, amountOut: '9007199254740993', minAmountOut: '8997199254740993', priceImpactPercent: 1.2, feePercent: 1, transaction: 'never-return' } };
 }
 test('TREE amounts retain raw precision, expiry is bounded, transaction data is stripped', () => {
   const result = summarizeTree(fixture(), '1234567891', now + 15_000, now);
@@ -24,7 +24,7 @@ test('TREE rejects stale data, wrong pair/input/pool/decimals and invalid financ
     q => q.generatedAt = new Date(now - 40_000).toISOString(),
     q => q.expiresAt = new Date(now - 1).toISOString(),
     q => q.selectedRoute.minAmountOut = '9999999999999999',
-    q => q.selectedRoute.amountOut = '1e9', q => q.selectedRoute.priceImpactPercent = NaN,
+    q => q.selectedRoute.minAmountOut = '8000000000000000', q => q.selectedRoute.amountOut = '1e9', q => q.selectedRoute.priceImpactPercent = NaN,
     q => q.selectedRoute.feePercent = -1,
   ]) { const q = fixture(); change(q); assert.throws(() => summarizeTree(q, '1234567891', now + 30_000, now)); }
 });
@@ -61,4 +61,11 @@ test('Gateway feeds exact bridge minimum into fixed read-only TREE service', asy
     assert.equal(body.executionEnabled, false);
     assert.equal(body.gatewayFeeIncluded, false);
   } finally { globalThis.fetch = original; }
+});
+
+test('TREE chooses a compliant alternative when upstream selection exceeds 1% slippage', () => {
+  const q = fixture();
+  q.routes = [structuredClone(q.selectedRoute)];
+  q.selectedRoute.minAmountOut = '8000000000000000';
+  assert.equal(summarizeTree(q, '1234567891', now + 30_000, now).minAmountOut, '8997199254.740993');
 });

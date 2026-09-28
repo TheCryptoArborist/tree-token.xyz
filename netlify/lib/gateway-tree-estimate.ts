@@ -10,7 +10,7 @@ function units(raw: string, decimals: number) {
   const text = raw.padStart(decimals + 1, '0');
   return `${text.slice(0, -decimals)}.${text.slice(-decimals)}`;
 }
-export function summarizeTree(body: any, raw: string, bridgeExpiry: number, now = Date.now()) {
+function summarizeCandidate(body: any, raw: string, bridgeExpiry: number, now = Date.now()) {
   const route = body?.selectedRoute;
   const positive = (value: unknown) => typeof value === 'string' && /^[1-9]\d{0,19}$/.test(value) && BigInt(value) <= 18446744073709551615n;
   const generated = Date.parse(body?.generatedAt);
@@ -19,10 +19,23 @@ export function summarizeTree(body: any, raw: string, bridgeExpiry: number, now 
       !Number.isFinite(generated) || generated > now + 5_000 || !Number.isFinite(expiry) || expiry <= now ||
       route?.type !== 'direct' || !Object.hasOwn(POOLS, route.venue) || route.pairId !== POOLS[route.venue] ||
       route.tokenIn !== SUI || route.tokenOut !== TREE || route.amountIn !== raw ||
-      !positive(route.amountOut) || !positive(route.minAmountOut) || BigInt(route.minAmountOut) > BigInt(route.amountOut) ||
+      !positive(route.amountOut) || !positive(route.minAmountOut) || BigInt(route.minAmountOut) > BigInt(route.amountOut) || BigInt(route.minAmountOut) < BigInt(route.amountOut) * 9900n / 10000n ||
       typeof route.priceImpactPercent !== 'number' || !Number.isFinite(route.priceImpactPercent) || route.priceImpactPercent < 0 || route.priceImpactPercent > 100 ||
       typeof route.feePercent !== 'number' || !Number.isFinite(route.feePercent) || route.feePercent < 0 || route.feePercent > 10) throw Error('Invalid TREE estimate');
   return { status: 'ok', provider: LABELS[route.venue], inputAmount: units(raw, 9), expectedAmountOut: units(route.amountOut, 6), minAmountOut: units(route.minAmountOut, 6), priceImpactPercent: route.priceImpactPercent, feePercent: route.feePercent, expiresAt: expiry };
+}
+export function summarizeTree(body: any, raw: string, bridgeExpiry: number, now = Date.now()) {
+  const candidates = [body?.selectedRoute, ...(Array.isArray(body?.routes) ? body.routes : [])];
+  const valid = candidates.flatMap(selectedRoute => {
+    try { return [summarizeCandidate({ ...body, selectedRoute }, raw, bridgeExpiry, now)]; } catch { return []; }
+  });
+  valid.sort((a, b) => {
+    const left = BigInt(a.minAmountOut.replace('.', ''));
+    const right = BigInt(b.minAmountOut.replace('.', ''));
+    return left > right ? -1 : left < right ? 1 : 0;
+  });
+  if (!valid.length) throw Error('No TREE estimate meets the route checks and slippage limit');
+  return valid[0];
 }
 export async function estimateTree(settlement: string, bridge: any) {
   if (settlement !== SUI) return { status: 'unsupported', message: 'USDC → TREE is not connected. Choose SUI settlement for a final TREE estimate.' };
