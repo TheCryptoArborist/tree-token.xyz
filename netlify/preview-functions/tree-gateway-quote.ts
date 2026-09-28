@@ -1,4 +1,5 @@
 import { SOURCES, SUI, USDC, TREE, amountToRaw } from '../../gateway/options.js';
+import { estimateTree } from '../lib/gateway-tree-estimate.ts';
 
 const RELAY_ORIGINS = { bsc: 56, robinhood: 4663 };
 // Documentation example identity for non-executable estimates, never a deposit recipient.
@@ -59,7 +60,9 @@ export default async function handler(request: Request) {
     const quotes = (Array.isArray(body.quotes) ? body.quotes : []).map(q => summarizeQuote(q, mayanChain, mayanSource, target, now)).filter(Boolean);
     if (relay) for (const q of quotes) q.expiresAt = Math.min(q.expiresAt, startedAt + 30_000);
     quotes.sort((a, b) => Number(b.expectedAmountOut) - Number(a.expectedAmountOut));
-    return reply({ status: quotes.length ? 'ok' : 'no-route', fetchedAt: new Date(now).toISOString(), executionEnabled: false, destination, settlement: target, requiresTreeSwap: destination === TREE, gatewayFeeBps: 25, gatewayFeeIncluded: false, slippageBps: 100, routeKind: relay ? 'via-base' : 'direct', relay, indicativeOnly: Boolean(relay), quotes });
+    const treeSwap = destination === TREE && quotes.length ? await estimateTree(target, quotes[0]) : null;
+    if (treeSwap?.status === 'ok') quotes[0].expiresAt = Math.min(quotes[0].expiresAt, treeSwap.expiresAt);
+    return reply({ status: quotes.length ? 'ok' : 'no-route', fetchedAt: new Date(now).toISOString(), executionEnabled: false, destination, settlement: target, requiresTreeSwap: destination === TREE, treeSwap, gatewayFeeBps: 25, gatewayFeeIncluded: false, slippageBps: 100, routeKind: relay ? 'via-base' : 'direct', relay, indicativeOnly: Boolean(relay) || destination === TREE, quotes });
   } catch { return reply({ error: 'Route quote service is temporarily unavailable. Please retry.' }, 502); }
 }
 export const config = { path: '/api/tree-gateway-quote' };

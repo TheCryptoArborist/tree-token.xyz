@@ -90,3 +90,11 @@ Before UI execution is enabled:
 - determine the best verified settlement coin for each unsupported Sui destination;
 - simulate the Sui-side fallback route;
 - add a transaction review screen showing Mayan fees, TREE Gateway referral fee, Sui-side swap costs, minimum received, and route status.
+
+## Final TREE estimate in the review preview
+
+Gateway now reads the existing public Smart Router quote service for SUI → TREE after obtaining the bridge quote. The exact bridge minimum (9-decimal SUI base units) is the onward input. The response is reduced to amounts, allowlisted venue, pool fee, price impact and the earliest stage expiry; transaction material is never forwarded. Unsupported USDC settlement and unavailable/stale/mismatched TREE responses retain an explicitly incomplete bridge-only estimate.
+
+This is an indicative sequence, not an executable or guaranteed end-to-end minimum. Quotes must be refreshed after each arrival. Sui gas must be funded separately; no SUI gas reserve or planned 0.25% Gateway fee is deducted. No signing, submission, production code changes or production deployment is enabled.
+
+Guidance consulted live: MystenLabs skills README; frontend-apps/SKILL.md; accessing-data/SKILL.md and use-cases.md; sui-sdks/SKILL.md; ptbs/SKILL.md. This change uses a fixed public HTTPS quote read, with no new Sui RPC client or PTB construction.

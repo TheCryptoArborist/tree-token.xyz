@@ -46,7 +46,7 @@ test('both Relay origins feed the exact minimum Base USDC into Mayan and strip t
         assert.equal(p.get('amountIn64'), '74000000');
         return Response.json({ quotes: [quote] });
       };
-      const response = await handler(new Request(`https://preview/api/tree-gateway-quote?chain=${chain}&asset=${asset}&amount=0.1`));
+      const response = await handler(new Request(`https://preview/api/tree-gateway-quote?chain=${chain}&asset=${asset}&amount=0.1&destination=${encodeURIComponent(SUI)}`));
       const body = await response.json();
       assert.equal(body.routeKind, 'via-base');
       assert.equal(body.indicativeOnly, true);
@@ -80,7 +80,7 @@ test('preview rejects writes and unsupported inputs without contacting Mayan', a
     for (const chain of ['bsc', '__proto__', 'constructor']) assert.equal((await handler(new Request(`https://preview/api/tree-gateway-quote?chain=${chain}&asset=USDC&amount=100`))).status, 400);
   } finally { globalThis.fetch = original; }
 });
-test('TREE preview quotes only settlement and never returns signatures or transaction material', async () => {
+test('TREE preview retains bridge results when the onward service fails and strips transaction material', async () => {
   const original = globalThis.fetch;
   globalThis.fetch = async url => {
     const params = new URL(String(url)).searchParams;

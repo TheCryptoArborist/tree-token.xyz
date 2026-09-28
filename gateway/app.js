@@ -19,7 +19,7 @@ function reset() {
 function destinationChanged() {
   const tree = $('destination').value === 'TREE';
   $('settlement-label').hidden = !tree;
-  $('destination-note').textContent = tree ? 'TREE needs an onward swap on Sui. This preview quotes bridging only.' : (viaBase() ? 'Relay to Base USDC, then Mayan into this asset on Sui.' : 'Request a direct Mayan estimate into this asset on Sui.');
+  $('destination-note').textContent = tree ? 'Choose SUI settlement to estimate the onward TREE swap. Each stage needs a fresh quote before any future transfer.' : (viaBase() ? 'Relay to Base USDC, then Mayan into this asset on Sui.' : 'Request a direct Mayan estimate into this asset on Sui.');
   reset();
 }
 $('chain').addEventListener('change', () => {
@@ -63,8 +63,21 @@ async function requestQuote(event) {
     $('eta').textContent = data.relay ? data.relay.eta + ' + ' + quote.eta : quote.eta;
     $('protocol').textContent = (data.relay ? 'Relay → ' : '') + `Mayan ${quote.protocol}`;
     $('tree-warning').hidden = !data.requiresTreeSwap;
+    if (data.requiresTreeSwap) {
+      const swap = data.treeSwap;
+      if (swap?.status === 'ok') {
+        $('output-label').textContent = 'Indicative final TREE output · Before Gateway fee and gas';
+        $('output').textContent = format(swap.expectedAmountOut) + ' TREE';
+        $('minimum-label').textContent = 'Final swap minimum estimate*';
+        $('minimum').textContent = format(swap.minAmountOut) + ' TREE';
+        $('protocol').textContent += ' → ' + swap.provider;
+        $('tree-warning').textContent = 'Bridge arrival: ' + format(quote.expectedAmountOut) + ' SUI. The TREE quote uses its minimum of ' + swap.inputAmount + ' SUI. Swap venue: ' + swap.provider + '; pool fee ' + swap.feePercent + '%; price impact ' + format(swap.priceImpactPercent) + '%. This is not a guaranteed end-to-end minimum. Quotes must be refreshed after each arrival. Sui gas must be funded separately; no gas reserve or 0.25% Gateway fee has been deducted.';
+      } else {
+        $('tree-warning').textContent = swap?.message || 'Final TREE quote unavailable. Only the bridge arrival is estimated.';
+      }
+    }
     $('quote-result').hidden = false;
-    $('quote-status').textContent = data.relay ? 'Two-stage indicative estimate received. No transfers initiated.' : 'Live estimate received. No transfer has been initiated.';
+    $('quote-status').textContent = data.treeSwap?.status === 'ok' ? 'Bridge and final TREE estimates received. No transfers initiated.' : data.relay ? 'Two-stage indicative estimate received. No transfers initiated.' : 'Live estimate received. No transfer has been initiated.';
     const tick = () => {
       const remaining = Math.max(0, Math.ceil((quote.expiresAt - Date.now()) / 1000));
       $('validity').textContent = `${remaining}s`;
