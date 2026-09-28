@@ -1,5 +1,6 @@
 import { SOURCES, SUI, USDC, TREE, amountToRaw } from './options.js';
 const $ = id => document.getElementById(id);
+const viaBase = () => ['bsc', 'robinhood'].includes($('chain').value);
 const destinations = { TREE, SUI, USDC };
 let version = 0;
 let controller;
@@ -12,17 +13,19 @@ function reset() {
   $('quote-button').textContent = 'Get live quote ↗';
   $('quote-result').hidden = true;
   $('quote-status').className = '';
-  $('quote-status').textContent = 'Choose your route, then request a live Mayan quote.';
+  $('quote-status').textContent = 'Choose your route, then request a live route quote.';
 }
 function destinationChanged() {
   const tree = $('destination').value === 'TREE';
   $('settlement-label').hidden = !tree;
-  $('destination-note').textContent = tree ? 'TREE needs a second swap on Sui. This preview quotes the bridge leg only.' : 'Request a direct Mayan estimate into this asset on Sui.';
+  $('destination-note').textContent = tree ? 'TREE needs an onward swap on Sui. This preview quotes bridging only.' : (viaBase() ? 'Relay to Base USDC, then Mayan into this asset on Sui.' : 'Request a direct Mayan estimate into this asset on Sui.');
   reset();
 }
 $('chain').addEventListener('change', () => {
   $('asset').replaceChildren(...Object.keys(SOURCES[$('chain').value]).map(name => new Option(name, name)));
-  reset();
+  $('via-base-note').hidden = !viaBase();
+  $('amount').value = $('chain').value === 'bsc' ? '0.1' : $('chain').value === 'robinhood' ? '0.01' : '100';
+  destinationChanged();
 });
 $('destination').addEventListener('change', destinationChanged);
 for (const id of ['asset', 'amount', 'settlement']) $(id).addEventListener('input', reset);
@@ -35,7 +38,7 @@ async function requestQuote(event) {
   catch (error) { $('quote-status').textContent = error.message; $('quote-status').className = 'error'; return; }
   controller = new AbortController();
   $('quote-button').disabled = true;
-  $('quote-button').textContent = 'Checking Mayan…';
+  $('quote-button').textContent = viaBase() ? 'Checking Relay + Mayan…' : 'Checking Mayan…';
   $('quote-status').textContent = 'Finding a live bridge estimate. This can take a few seconds.';
   const query = new URLSearchParams({ chain, asset, amount: $('amount').value.trim(), destination: destinations[$('destination').value], settlement: $('settlement').value });
   try {
@@ -47,14 +50,20 @@ async function requestQuote(event) {
     if (!quote) throw Error('No verified route found. Try a different amount, network, or settlement asset.');
     if (quote.expiresAt <= Date.now()) throw Error('This quote expired before arrival. Please request a fresh quote.');
     const format = value => Number(value).toLocaleString(undefined, { maximumFractionDigits: 6 });
+    $('route-stages').hidden = !data.relay;
+    $('minimum-label').textContent = data.relay ? 'Second-stage minimum estimate*' : 'Minimum bridge arrival';
+    if (data.relay) {
+      $('relay-stage').textContent = '1 · Relay → ' + format(Number(data.relay.expectedRaw) / 1e6) + ' USDC on Base. Minimum estimate: ' + format(Number(data.relay.minimumRaw) / 1e6) + ' USDC. Time: ' + data.relay.eta + '.';
+      $('mayan-stage').textContent = '2 · Mayan → ' + format(quote.expectedAmountOut) + ' ' + quote.symbol + ' on Sui, using the first-stage minimum. Time: ' + quote.eta + '.';
+    }
     $('output-label').textContent = data.requiresTreeSwap ? 'Estimated bridge arrival · Before TREE swap' : 'Estimated arrival on Sui';
     $('output').textContent = `${format(quote.expectedAmountOut)} ${quote.symbol}`;
     $('minimum').textContent = `${format(quote.minAmountOut)} ${quote.symbol}`;
-    $('eta').textContent = quote.eta;
-    $('protocol').textContent = `Mayan ${quote.protocol}`;
+    $('eta').textContent = data.relay ? data.relay.eta + ' + ' + quote.eta : quote.eta;
+    $('protocol').textContent = (data.relay ? 'Relay → ' : '') + `Mayan ${quote.protocol}`;
     $('tree-warning').hidden = !data.requiresTreeSwap;
     $('quote-result').hidden = false;
-    $('quote-status').textContent = 'Live estimate received. No transfer has been initiated.';
+    $('quote-status').textContent = data.relay ? 'Two-stage indicative estimate received. No transfers initiated.' : 'Live estimate received. No transfer has been initiated.';
     const tick = () => {
       const remaining = Math.max(0, Math.ceil((quote.expiresAt - Date.now()) / 1000));
       $('validity').textContent = `${remaining}s`;

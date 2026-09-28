@@ -1,3 +1,11 @@
+## Relay routes in the review preview
+
+The preview supports BNB Chain (56) and Robinhood Chain (4663) with live, non-executable Relay quotes (`indicativeQuote: true`). The server validates origin identity, exact input amount, Base chain ID 8453, native Base USDC address/decimals, and positive bounded integer output amounts. Only sanitized display fields reach the browser. Relay transaction steps, signing data and the documentation example quote identity are never exposed as deposit instructions.
+
+Mayan is quoted from the Relay minimum Base-USDC output, with 1% slippage requested independently for each stage. Combined results are indicative, expire within 30 seconds from request start, and are not an end-to-end guaranteed minimum. Provider costs are reflected in output estimates; source gas, Base ETH gas, Gateway fees and the onward TREE swap are not included in a complete total. A production flow still needs wallet connections, finality/status tracking, resumable stages, actual-wallet quote refresh, gas funding checks, and independent user approvals. No transaction execution is enabled.
+
+Validated with 14 focused tests and live quotes for both origins. Guidance: current MystenLabs frontend-apps/SKILL.md and non-react.md; Relay quote/v2 documentation.
+
 # TREE Gateway v1 — Mayan cross-chain ingress
 
 Status: non-production prototype.
@@ -34,7 +42,7 @@ TREE Gateway brings assets from supported source chains into Sui using Mayan, th
 - Ethereum
 - Solana
 
-BNB Smart Chain is intentionally excluded from v1 until an exact BSC → Sui route is proven with a live Mayan quote.
+BNB Chain (native BNB) and Robinhood Chain (native ETH) now have indicative two-stage quotes: Relay to native Base USDC, followed by Mayan to Sui. They are not direct Mayan source routes.
 
 ## Route policy
 
