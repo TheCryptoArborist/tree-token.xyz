@@ -1,4 +1,4 @@
-import { cp, mkdir, readFile, readdir } from 'node:fs/promises';
+import { cp, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 
 const root = resolve(import.meta.dirname, '..');
@@ -8,6 +8,7 @@ const manifest = JSON.parse(await readFile(resolve(root, 'production/manifest.js
 const outputPath = file => file.path.slice(1);
 const allowed = new Set(manifest.files.map(file => outputPath(file).toLowerCase()));
 const additions = ['dapp/sti-widget.js', 'dapp/sti-purchase-core.js', 'dapp/sti-stats-core.js', 'dapp/challenge-funding-core.js', 'assets/sti-icon.svg'];
+additions.push('gateway/index.html', 'gateway/style.css', 'gateway/app.js', 'gateway/options.js', 'gateway/entry.js');
 const overlays = ['dapp/index.html', 'dapp/styles.css', 'dapp/panel-router.css', 'dapp/interaction-bootstrap.js', 'scripts/wallet.js', 'scripts/tree-knowledge-trial.js'];
 for (const file of additions) allowed.add(file);
 
@@ -37,5 +38,11 @@ for (const file of [...overlays, ...additions]) {
   await mkdir(dirname(resolve(output, file)), { recursive: true });
   await cp(resolve(root, file), resolve(output, file));
 }
-console.log(`Built a ${allowed.size}-file feature preview from the verified production file set and explicit STI additions.`);
+// Discoverable only in preview output; never modify published snapshot sources.
+for (const file of ['index.html', 'dapp/index.html']) {
+  const path = resolve(output, file);
+  const html = await readFile(path, 'utf8');
+  await writeFile(path, html.replace('</body>', '<script type="module" src="/gateway/entry.js"></script></body>'));
+}
+console.log(`Built a ${allowed.size}-file feature preview including TREE Gateway.`);
 console.log('The production manifest and recovered function packages were not changed.');

@@ -1,0 +1,94 @@
+import { SOURCES, SUI, USDC, TREE, amountToRaw } from './options.js';
+const $ = id => document.getElementById(id);
+const destinations = { TREE, SUI, USDC };
+let version = 0;
+let controller;
+let expiryTimer;
+function reset() {
+  version++;
+  controller?.abort();
+  clearInterval(expiryTimer);
+  $('quote-button').disabled = false;
+  $('quote-button').textContent = 'Get live quote ↗';
+  $('quote-result').hidden = true;
+  $('quote-status').className = '';
+  $('quote-status').textContent = 'Choose your route, then request a live Mayan quote.';
+}
+function destinationChanged() {
+  const tree = $('destination').value === 'TREE';
+  $('settlement-label').hidden = !tree;
+  $('destination-note').textContent = tree ? 'TREE needs a second swap on Sui. This preview quotes the bridge leg only.' : 'Request a direct Mayan estimate into this asset on Sui.';
+  reset();
+}
+$('chain').addEventListener('change', () => {
+  $('asset').replaceChildren(...Object.keys(SOURCES[$('chain').value]).map(name => new Option(name, name)));
+  reset();
+});
+$('destination').addEventListener('change', destinationChanged);
+for (const id of ['asset', 'amount', 'settlement']) $(id).addEventListener('input', reset);
+async function requestQuote(event) {
+  event.preventDefault(); reset();
+  const current = version;
+  const chain = $('chain').value;
+  const asset = $('asset').value;
+  try { amountToRaw($('amount').value.trim(), SOURCES[chain][asset][1]); }
+  catch (error) { $('quote-status').textContent = error.message; $('quote-status').className = 'error'; return; }
+  controller = new AbortController();
+  $('quote-button').disabled = true;
+  $('quote-button').textContent = 'Checking Mayan…';
+  $('quote-status').textContent = 'Finding a live bridge estimate. This can take a few seconds.';
+  const query = new URLSearchParams({ chain, asset, amount: $('amount').value.trim(), destination: destinations[$('destination').value], settlement: $('settlement').value });
+  try {
+    const response = await fetch(`/api/tree-gateway-quote?${query}`, { signal: controller.signal });
+    const data = await response.json();
+    if (current !== version) return;
+    if (!response.ok) throw Error(data.error || 'Quotes are temporarily unavailable.');
+    const quote = data.quotes?.[0];
+    if (!quote) throw Error('No verified route found. Try a different amount, network, or settlement asset.');
+    if (quote.expiresAt <= Date.now()) throw Error('This quote expired before arrival. Please request a fresh quote.');
+    const format = value => Number(value).toLocaleString(undefined, { maximumFractionDigits: 6 });
+    $('output-label').textContent = data.requiresTreeSwap ? 'Estimated bridge arrival · Before TREE swap' : 'Estimated arrival on Sui';
+    $('output').textContent = `${format(quote.expectedAmountOut)} ${quote.symbol}`;
+    $('minimum').textContent = `${format(quote.minAmountOut)} ${quote.symbol}`;
+    $('eta').textContent = quote.eta;
+    $('protocol').textContent = `Mayan ${quote.protocol}`;
+    $('tree-warning').hidden = !data.requiresTreeSwap;
+    $('quote-result').hidden = false;
+    $('quote-status').textContent = 'Live estimate received. No transfer has been initiated.';
+    const tick = () => {
+      const remaining = Math.max(0, Math.ceil((quote.expiresAt - Date.now()) / 1000));
+      $('validity').textContent = `${remaining}s`;
+      if (!remaining) {
+        clearInterval(expiryTimer);
+        $('quote-result').hidden = true;
+        $('quote-status').textContent = 'Quote expired. Get a fresh quote to see current pricing.';
+      }
+    };
+    tick(); expiryTimer = setInterval(tick, 1000);
+  } catch (error) {
+    if (current !== version || error.name === 'AbortError') return;
+    $('quote-status').textContent = error.message;
+    $('quote-status').className = 'error';
+  } finally {
+    if (current === version) { $('quote-button').disabled = false; $('quote-button').textContent = 'Get live quote ↗'; }
+  }
+}
+$('gateway-form').addEventListener('submit', requestQuote);
+$('quote-button').addEventListener('click', requestQuote);
+async function catalog() {
+  $('catalog-refresh').disabled = true;
+  $('catalog-tokens').replaceChildren();
+  $('catalog-status').textContent = 'Checking Mayan’s token catalog…';
+  try {
+    const response = await fetch('/api/tree-gateway-tokens', { signal: AbortSignal.timeout(15_000) });
+    const data = await response.json();
+    if (!response.ok || data.status !== 'ok' || !data.tokens?.length) throw Error('Live catalog unavailable. Retry in a moment.');
+    $('catalog-status').textContent = `${data.tokens.length} assets listed · Checked ${new Date(data.fetchedAt).toLocaleTimeString()} · ${data.treeDirectListed ? 'TREE is listed; direct quoting needs verification.' : 'TREE requires an onward swap.'}`;
+    for (const token of data.tokens) {
+      const chip = document.createElement('span'); chip.textContent = token.symbol; chip.title = token.contract; $('catalog-tokens').append(chip);
+    }
+  } catch (error) { $('catalog-status').textContent = error.message; }
+  finally { $('catalog-refresh').disabled = false; }
+}
+$('catalog-refresh').addEventListener('click', catalog);
+catalog();

@@ -2,6 +2,28 @@
 
 Status: non-production prototype.
 
+## Visible quote preview
+
+Open `/gateway/` on the PR deploy preview. Preview-only links on the homepage
+and Command Center lead to this page. Published snapshot sources are unchanged.
+
+The interface supports Base/Ethereum USDC or ETH and Solana USDC or SOL,
+with TREE selected by default and direct SUI/native USDC destinations available.
+The read-only `/api/tree-gateway-quote` endpoint requests live Mayan estimates,
+checks token/chain identities and deadlines, and returns only display fields.
+No signing, transaction construction, or execution endpoint is included.
+
+TREE quotes show the bridge settlement leg only, with a visible warning that
+final TREE output and its onward swap are not verified. Mayan quotes request
+zero referral fees; the planned 25 bps Gateway fee is disclosed as excluded
+and is not collected. Source gas and the onward swap are also excluded.
+Quotes expire after at most 30 seconds and clear whenever inputs change.
+
+Mayan request format verified against `mayan-finance/swap-sdk/src/api.ts` and
+`src/utils.ts`; SDK version 15.2.2 is encoded as `15_2_2` on the quote API.
+Run `node --test tests/tree-gateway-*.test.* tests/sti-preview-build.test.mjs
+tests/sti-preview-proxy.test.ts` for the focused checks.
+
 ## Purpose
 
 TREE Gateway brings assets from supported source chains into Sui using Mayan, then delivers the user's selected Sui asset. TREE is the featured/default destination but is not mandatory.
