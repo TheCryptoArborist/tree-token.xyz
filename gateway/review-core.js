@@ -23,3 +23,13 @@ export function readOnlyEvm(provider) {
     return provider.request({ method, params });
   };
 }
+
+export function suiReviewAddress(state) {
+  return state?.connected === true && typeof state.address === 'string' && /^0x[0-9a-f]{64}$/i.test(state.address) && !/^0x0+$/i.test(state.address) ? state.address.toLowerCase() : '';
+}
+export function commandCenterHost(win) {
+  try {
+    const host = win.parent;
+    return host !== win && host.location.origin === win.location.origin && /^\/dapp\/?$/.test(host.location.pathname) && host.document.querySelector('#tree-gateway-dock iframe') === win.frameElement ? host : null;
+  } catch { return null; }
+}

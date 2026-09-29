@@ -1,4 +1,4 @@
-import { routeDraft, readDraft } from './review-core.js';
+import { routeDraft, readDraft, commandCenterHost } from './review-core.js';
 import { SOURCES, SUI, USDC, TREE, amountToRaw } from './options.js';
 const $ = id => document.getElementById(id);
 const viaBase = () => ['bsc', 'robinhood'].includes($('chain').value);
@@ -8,6 +8,7 @@ let controller;
 let expiryTimer;
 function reset() {
   version++;
+  window.dispatchEvent(new CustomEvent('gateway-quote-review', { detail: null }));
   controller?.abort();
   clearInterval(expiryTimer);
   $('quote-button').disabled = false;
@@ -77,6 +78,7 @@ async function requestQuote(event) {
       }
     }
     $('quote-result').hidden = false;
+    window.dispatchEvent(new CustomEvent('gateway-quote-review', { detail: data.treeSwap?.status === 'ok' ? { inputAmount: data.treeSwap.inputAmount, expiresAt: quote.expiresAt } : null }));
     $('quote-status').textContent = data.treeSwap?.status === 'ok' ? 'Bridge and final TREE estimates received. No transfers initiated.' : data.relay ? 'Two-stage indicative estimate received. No transfers initiated.' : 'Live estimate received. No transfer has been initiated.';
     const tick = () => {
       const remaining = Math.max(0, Math.ceil((quote.expiresAt - Date.now()) / 1000));
@@ -84,6 +86,7 @@ async function requestQuote(event) {
       if (!remaining) {
         clearInterval(expiryTimer);
         $('quote-result').hidden = true;
+        window.dispatchEvent(new CustomEvent('gateway-quote-review', { detail: null }));
         $('quote-status').textContent = 'Quote expired. Get a fresh quote to see current pricing.';
       }
     };
@@ -117,6 +120,15 @@ $('catalog-refresh').addEventListener('click', catalog);
 catalog();
 
 window.addEventListener('gateway-wallet-change', reset);
+const host = commandCenterHost(window);
+if (host) {
+  host.addEventListener('tree:wallet-changed', reset);
+  host.addEventListener('tree:wallet-manager-ready', reset);
+  window.addEventListener('pagehide', () => {
+    host.removeEventListener('tree:wallet-changed', reset);
+    host.removeEventListener('tree:wallet-manager-ready', reset);
+  }, { once: true });
+}
 let walletsLoading = false;
 $('wallet-review').addEventListener('toggle', async () => {
   if (!$('wallet-review').open || walletsLoading) return;

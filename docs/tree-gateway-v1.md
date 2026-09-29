@@ -98,3 +98,11 @@ Gateway now reads the existing public Smart Router quote service for SUI → TRE
 This is an indicative sequence, not an executable or guaranteed end-to-end minimum. Quotes must be refreshed after each arrival. Sui gas must be funded separately; no SUI gas reserve or planned 0.25% Gateway fee is deducted. No signing, submission, production code changes or production deployment is enabled.
 
 Guidance consulted live: MystenLabs skills README; frontend-apps/SKILL.md; accessing-data/SKILL.md and use-cases.md; sui-sdks/SKILL.md; ptbs/SKILL.md. This change uses a fixed public HTTPS quote read, with no new Sui RPC client or PTB construction.
+
+## Command Center wallet and simulation review
+
+The embedded Gateway reads the Command Center's verified getWalletConnectionState() session and follows its account/disconnect events. It does not treat stored addresses as connected, create a second Sui wallet session, or expose signing methods. Source EVM discovery uses the host browser's providers; its adapter still rejects all signing and send methods. Standalone Gateway retains its existing dApp Kit connection. Changes invalidate quotes and simulation results.
+
+The preview-only POST /api/tree-gateway-simulate accepts only a Sui address and positive SUI amount (maximum 1,000 SUI). It fetches a fresh allowlisted Turbos SUI/TREE quote, builds that exact direction with the same address as recipient, and runs Sui gRPC simulation with checksEnabled and doGasSelection both true. A pass requires successful effects, at least the quoted minimum TREE received by that address, and gas effects. Only a summary is returned; nothing is signed or submitted. Net gas includes storage rebates and can be negative. A passing final-swap simulation does not validate Relay/Mayan, the best-route venue shown elsewhere, future bridge proceeds, or the planned Gateway fee.
+
+Validation: 30 focused tests passed. An unsigned 1 SUI simulation passed using the public example address 0x0000000000000000000000000000000000000000000000000000000000000001; an unfunded example address was rejected. These do not verify a user wallet's extension behavior. Current MystenLabs frontend-apps/non-react.md, frontend-apps/transactions.md, ptbs/building.md, accessing-data/grpc.md and installed SDK executing documentation were consulted.

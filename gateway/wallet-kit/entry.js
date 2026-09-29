@@ -1,15 +1,20 @@
 import { createDAppKit } from '@mysten/dapp-kit-core';
 import { SuiGrpcClient } from '@mysten/sui/grpc';
 import '@mysten/dapp-kit-core/web';
-import { EVM_CHAINS, isEvmAddress, readOnlyEvm, formatNative } from '../review-core.js';
+import { EVM_CHAINS, isEvmAddress, readOnlyEvm, formatNative, suiReviewAddress, commandCenterHost } from '../review-core.js';
 
 const $ = id => document.getElementById(id);
-const kit = createDAppKit({ networks: ['mainnet'], defaultNetwork: 'mainnet', autoConnect: false, createClient: network => new SuiGrpcClient({ network, baseUrl: 'https://fullnode.mainnet.sui.io:443' }) });
-document.querySelector('mysten-dapp-kit-connect-button').instance = kit;
+const host = commandCenterHost(window);
+const kit = host ? null : createDAppKit({ networks: ['mainnet'], defaultNetwork: 'mainnet', autoConnect: false, createClient: network => new SuiGrpcClient({ network, baseUrl: 'https://fullnode.mainnet.sui.io:443' }) });
+const connectButton = document.querySelector('mysten-dapp-kit-connect-button');
+if (kit) connectButton.instance = kit;
+else { connectButton.hidden = true; $('host-wallet').hidden = false; $('sui-wallet-context').hidden = false; }
+let currentQuote = null, simulationVersion = 0;
 let sourceAddress = '', sourceChain = '', suiAddress = '', provider, request, generation = 0;
 let removeListeners = () => {};
 const providers = new Map();
 function invalidate() {
+  clearSimulation();
   generation++;
   $('gas-status').textContent = 'Gas balance has not been checked. Exact transaction gas is not yet estimated.';
   window.dispatchEvent(new Event('gateway-wallet-change'));
@@ -19,6 +24,7 @@ function render() {
   $('source-address').textContent = sourceAddress || 'Source wallet not connected.';
   $('sui-address').textContent = suiAddress || 'Sui receiving wallet not connected.';
   $('source-connect').disabled = !expected;
+  $('simulate-tree').disabled = !suiAddress || !currentQuote || currentQuote.expiresAt <= Date.now();
   $('source-network').textContent = !expected ? 'Solana wallet connection is not included in this wallet-review step. Solana quotes remain available.' : !sourceAddress ? 'Choose a browser wallet to connect.' : sourceChain === expected ? 'Wallet is on the selected source network.' : 'Wallet network differs from the selected source. Switch before reviewing balances.';
   $('source-switch').hidden = !sourceAddress || !expected || sourceChain === expected;
   $('gas-check').disabled = !sourceAddress || !expected || sourceChain !== expected;
@@ -35,9 +41,11 @@ function discover(event) {
   providers.set(item.info.uuid, item.provider);
   $('source-wallet').append(new Option(String(item.info.name || 'Browser wallet').slice(0, 80), item.info.uuid));
 }
-window.addEventListener('eip6963:announceProvider', discover);
-window.dispatchEvent(new Event('eip6963:requestProvider'));
-if (window.ethereum?.request) { providers.set('legacy', window.ethereum); $('source-wallet').append(new Option('Default browser wallet', 'legacy')); }
+const evmWindow = host || window;
+evmWindow.addEventListener('eip6963:announceProvider', discover);
+evmWindow.dispatchEvent(new evmWindow.Event('eip6963:requestProvider'));
+window.addEventListener('pagehide', () => evmWindow.removeEventListener('eip6963:announceProvider', discover), { once: true });
+if (evmWindow.ethereum?.request) { providers.set('legacy', evmWindow.ethereum); $('source-wallet').append(new Option('Default browser wallet', 'legacy')); }
 $('source-wallet').addEventListener('change', disconnectSource);
 $('source-connect').addEventListener('click', async () => {
   disconnectSource();
@@ -67,9 +75,9 @@ $('source-switch').addEventListener('click', async () => {
   try { await request('wallet_switchEthereumChain', [{ chainId: EVM_CHAINS[$('chain').value] }]); disconnectSource(); $('source-network').textContent = 'Reconnect to verify the selected wallet network.'; }
   catch { $('source-network').textContent = 'Network switch was declined or unavailable. Select the network in your wallet, then reconnect.'; }
 });
-kit.stores.$connection.subscribe(connection => {
+kit?.stores.$connection.subscribe(connection => {
   const account = connection.account;
-  suiAddress = account?.chains?.includes('sui:mainnet') ? account.address : '';
+  suiAddress = suiReviewAddress({ connected: connection.isConnected === true && account?.chains?.includes('sui:mainnet'), address: account?.address });
   invalidate(); render();
 });
 $('chain').addEventListener('change', () => { invalidate(); render(); });
@@ -93,3 +101,46 @@ $('gas-check').addEventListener('click', async () => {
   finally { if (current === generation) render(); }
 });
 render();
+
+function clearSimulation() {
+  simulationVersion++;
+  $('simulation-status').textContent = 'Get a fresh TREE quote after connecting your Sui wallet. Simulation checks only a fresh Turbos SUI → TREE swap using current SUI funds, not either bridge. Your address and amount are sent to the preview service and Sui network. No signing or transfers.';
+}
+window.addEventListener('gateway-quote-review', event => {
+  currentQuote = event.detail;
+  clearSimulation(); render();
+});
+if (host) {
+  const syncHost = () => {
+    try { suiAddress = suiReviewAddress(host.getWalletConnectionState?.()); } catch { suiAddress = ''; }
+    invalidate(); render();
+  };
+  host.addEventListener('tree:wallet-changed', syncHost);
+  host.addEventListener('tree:wallet-manager-ready', syncHost);
+  window.addEventListener('pagehide', () => {
+    host.removeEventListener('tree:wallet-changed', syncHost);
+    host.removeEventListener('tree:wallet-manager-ready', syncHost);
+  }, { once: true });
+  $('host-wallet').addEventListener('click', () => {
+    if (typeof host.openWalletManager === 'function') host.openWalletManager();
+    else $('sui-address').textContent = 'Command Center wallet manager is still loading. Try its Connect Wallet button.';
+  });
+  syncHost();
+}
+$('simulate-tree').addEventListener('click', async () => {
+  if (host) {
+    const actual = suiReviewAddress(host.getWalletConnectionState?.());
+    if (actual !== suiAddress) { suiAddress = actual; invalidate(); render(); return; }
+  }
+  if (!suiAddress || !currentQuote || currentQuote.expiresAt <= Date.now()) return;
+  const version = ++simulationVersion, address = suiAddress, quote = currentQuote;
+  $('simulate-tree').disabled = true;
+  $('simulation-status').textContent = 'Simulating a fresh Turbos SUI → TREE swap. No signature requested…';
+  try {
+    const response = await fetch('/api/tree-gateway-simulate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ address, amount: quote.inputAmount }), signal: AbortSignal.timeout(25000) });
+    const result = await response.json();
+    if (version !== simulationVersion || address !== suiAddress || quote.expiresAt <= Date.now()) return;
+    $('simulation-status').textContent = response.ok && result.status === 'passed' && result.address === address && result.amount === quote.inputAmount && result.signed === false && result.submitted === false ? 'Turbos SUI → TREE simulation passed for ' + result.amount + ' SUI. Estimated net gas after storage rebate: ' + result.netGasSui + ' SUI. This does not validate either bridge, the displayed best-route venue, or future balances. Nothing was signed or transferred.' : (result.message || 'Simulation unavailable. No execution readiness can be confirmed.');
+  } catch { if (version === simulationVersion) $('simulation-status').textContent = 'Simulation unavailable. No execution readiness can be confirmed. No funds moved.'; }
+  finally { if (version === simulationVersion) render(); }
+});
