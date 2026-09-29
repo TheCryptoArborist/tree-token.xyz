@@ -19,7 +19,7 @@
 <ol><li><strong>Review:</strong> confirm your Slush Sui receiving address, source network, amount and final order fee.</li><li><strong>Send once:</strong> approve a source-network payment in your wallet after deposit details are verified. Keep enough BNB or ETH for source gas. TREE does not pay gas.</li><li><strong>Track:</strong> deposit received → exchange completed → SUI sent. “Sent” is a provider report; arrival needs a confirmed Sui receipt.</li><li><strong>Continue:</strong> after arrival, optionally swap SUI for TREE in Swap. Leave SUI for gas.</li></ol>
 <p id="rocketx-refund-rule">Refund-address requirements will appear with a live quote.</p>
 <p>If a funded order stalls or fails, keep its order reference and source transaction hash. Do not send again. Refund requests go through <a href="https://app.rocketx.exchange/" target="_blank" rel="noopener noreferrer">RocketX’s Help menu ↗</a>; refunds are conditional and may have fees. A failed status does not mean funds have been refunded.</p>
-<p class="warning">Before transfers can open: verify that the final order fee matches the quote, confirm deposit expiry and refund handling, and test receipt tracking. Current API documentation gives a different default fee from the live quotes.</p>
+<p class="warning">Transfers stay disabled until deposit deadlines, recovery and receipt tracking are verified. The estimate timer is not a deposit deadline. Never top up a stalled transfer or reuse an old deposit address.</p>
 </details>
 <details id="wallet-review" class="wallet-review"><summary>Wallets &amp; saved route</summary>
 <p id="wallet-summary" role="status">Optional wallet review. Connecting never requests a signature or transfer.</p>

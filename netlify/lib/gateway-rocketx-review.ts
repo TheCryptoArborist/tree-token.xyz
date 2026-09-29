@@ -73,7 +73,35 @@ export function reviewRocketXOrderPair(order: any, status: any, b: Binding) {
   requireCheck(evm(status.depositAddress) && status.depositAddress.toLowerCase() === order?.swap?.depositAddress?.toLowerCase(), 'Status deposit address differs from the order.');
   if (order.destinationAddress !== undefined) requireCheck(order.destinationAddress?.toLowerCase() === b.destinationAddress.toLowerCase(), 'Creation recipient conflicts with the reviewed recipient.');
   return { ...reviewRocketXDeposit({ ...order, destinationAddress: status.destinationAddress }, b),
+    recovery: reviewRocketXRecovery(status, b),
     providerClassification: knownPoolResponse(order, b) ? 'rocketx-pool-response-alias' : 'CEX' };
+}
+
+// No documented response field currently proves the deposit deadline or refund
+// address acceptance. expiresAt belongs to rateId, not the deposit. Neither a
+// quote timer nor initiatedAt + the generic five-hour prose authorizes funding.
+// This review is server/offline-only; it accepts a persisted binding, not input
+// from the browser. It performs no lookup, refund request, or transaction.
+export function reviewRocketXRecovery(status: any, b: Binding) {
+  const progress = reviewRocketXStatus(status, b);
+  const awaiting = ['created', 'awaiting-deposit'].includes(progress.phase);
+  const needsHelp = progress.phase === 'needs-help';
+  const unknown = progress.phase === 'unknown';
+  return {
+    phase: progress.phase,
+    fundingReady: false, executionEnabled: false, refundVerified: false,
+    depositDeadline: null, depositDeadlineVerified: false,
+    refundAddressVerified: false, automaticRefundAvailable: false,
+    canResend: false, canCreateReplacement: false,
+    blockers: awaiting ? ['deposit-deadline-unverified', 'refund-handling-unverified'] : ['order-not-fundable'],
+    action: needsHelp ? 'review-with-provider' : unknown ? 'reconcile-existing-order' : awaiting ? 'hold-payment' : 'track-existing-order',
+    message: needsHelp
+      ? 'Do not send or top up this order. Keep its order reference and any source transaction hash. Review recovery through RocketX Help; a refund is not confirmed.'
+      : unknown ? 'Order status is uncertain. Reconcile the existing order before any new payment. Do not resend or create a replacement.'
+      : awaiting ? 'Hold payment: the deposit deadline and refund handling are not verified. Quote expiry does not establish a deposit deadline. Do not reuse this deposit address.'
+      : 'Track the existing transfer. Do not resend, top up or reuse the deposit address. Provider progress alone does not confirm delivery or a refund.',
+    helpUrl: 'https://app.rocketx.exchange/',
+  };
 }
 
 export function reviewRocketXDeposit(order: any, b: Binding) {

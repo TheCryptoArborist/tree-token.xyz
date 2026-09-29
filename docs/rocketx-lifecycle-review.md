@@ -64,3 +64,15 @@ Replaying the original private responses offline now passes these response check
 This resolves the classification mismatch for the tested BNB response shape. It does not establish deposit expiry, refund acceptance, delivery, source gas, or Robinhood execution support. Those remain required before payments can be enabled. The retired diagnostic endpoint remains absent.
 
 Sources: [RocketX API reference](https://documenter.getpostman.com/view/8177220/2sBXcHjKfY), configuration and quotation examples plus walletLess/exchange_type definitions, consulted live. MystenLabs [frontend-apps/SKILL.md](https://github.com/MystenLabs/skills/blob/main/frontend-apps/SKILL.md) and [limitations.md](https://github.com/MystenLabs/skills/blob/main/frontend-apps/limitations.md) were rechecked; no wallet signing or Sui transaction code was added.
+
+## Deposit expiry and recovery gate — 2026-09-29
+
+Current API documentation says deposit within five hours in its generic depositAddress description, but defines expiresAt as rateId expiry. The saved creation response has no deposit deadline; its status has initiatedAt only. Neither response confirms acceptance of the submitted refund address. We cannot establish an order-specific deposit cutoff or refund guarantee from these fields, and do not invent one by adding five hours to a local timestamp.
+
+The paired review now includes a separate recovery result with fundingReady=false, no verified deadline/refund address, and no resend/replacement permission. It distinguishes holding an unfunded order, reconciling an unknown status, tracking existing progress, and reviewing failed/invalid orders with the provider. It does not make network calls, request refunds or confirm delivery. API expiry-like fields without documented deposit semantics cannot clear this gate. Tests cover those misleading fields, invalid identities, changed amounts and failed/unknown/progress statuses.
+
+The compact preview recovery panel now explicitly distinguishes the quote timer from a deposit deadline and discourages topping up stalled transfers or reusing deposit addresses. No order/payment endpoint was added.
+
+RocketX terms section 18, rechecked live, makes recovery conditional, routes requests through official Help, and allows recovery/network fees. A failed status is not refund confirmation. No support message was sent. Underpayment, overpayment and late-deposit outcomes remain provider-specific and unverified; the app does not suggest compensating with a second transfer.
+
+Remaining external evidence required: an authoritative deposit cutoff for provider 20's BNB→SUI order and confirmation of refund-address handling. The current API responses and generic documentation do not supply this. Recovery safeguards are implemented; live recovery is not validated. MystenLabs README and frontend-apps/SKILL.md plus limitations.md were checked again; all provider credentials and order evidence remain server-side/private.
