@@ -11,7 +11,7 @@ if (kit) {
   connectButton.instance = kit;
   $('sui-connect-control').append(connectButton);
 } else { $('host-wallet').hidden = false; $('sui-wallet-context').hidden = false; }
-let currentQuote = null, simulationVersion = 0;
+let currentQuote = null, simulationVersion = 0, bridgeVersion = 0;
 let sourceAddress = '', sourceChain = '', suiAddress = '', provider, request, generation = 0;
 let removeListeners = () => {};
 const providers = new Map();
@@ -26,6 +26,7 @@ function render() {
   $('source-address').textContent = sourceAddress || 'Source wallet not connected.';
   $('sui-address').textContent = suiAddress || 'Sui receiving wallet not connected.';
   $('source-connect').disabled = !expected;
+  $('check-bridges').disabled = !sourceAddress || !['bsc', 'robinhood'].includes($('chain').value) || sourceChain !== EVM_CHAINS[$('chain').value];
   $('simulate-tree').disabled = !suiAddress || !currentQuote || currentQuote.expiresAt <= Date.now();
   $('source-network').textContent = !expected ? 'Solana wallet connection is not included in this wallet-review step. Solana quotes remain available.' : !sourceAddress ? 'Choose a browser wallet to connect.' : sourceChain === expected ? 'Wallet is on the selected source network.' : 'Wallet network differs from the selected source. Switch before reviewing balances.';
   $('source-switch').hidden = !sourceAddress || !expected || sourceChain === expected;
@@ -105,6 +106,8 @@ $('gas-check').addEventListener('click', async () => {
 render();
 
 function clearSimulation() {
+  bridgeVersion++;
+  $('bridge-check-status').textContent = 'Connect your source wallet on BNB or Robinhood Chain to check a fresh Relay deposit and current Base funds and allowance for Mayan. Your address and amount go to Relay and the network providers. No signing, approval or transfers.';
   simulationVersion++;
   $('simulation-status').textContent = 'Get a fresh TREE quote after connecting your Sui wallet. Simulation checks only a fresh Turbos SUI → TREE swap using current SUI funds, not either bridge. Your address and amount are sent to the preview service and Sui network. No signing or transfers.';
 }
@@ -145,4 +148,33 @@ $('simulate-tree').addEventListener('click', async () => {
     $('simulation-status').textContent = response.ok && result.status === 'passed' && result.address === address && result.amount === quote.inputAmount && result.signed === false && result.submitted === false ? 'Turbos SUI → TREE simulation passed for ' + result.amount + ' SUI. Estimated net gas after storage rebate: ' + result.netGasSui + ' SUI. This does not validate either bridge, the displayed best-route venue, or future balances. Nothing was signed or transferred.' : (result.message || 'Simulation unavailable. No execution readiness can be confirmed.');
   } catch { if (version === simulationVersion) $('simulation-status').textContent = 'Simulation unavailable. No execution readiness can be confirmed. No funds moved.'; }
   finally { if (version === simulationVersion) render(); }
+});
+
+$('check-bridges').addEventListener('click', async () => {
+  const chain = $('chain').value, amount = $('amount').value.trim(), address = sourceAddress, active = request;
+  if (!active || !address || !['bsc', 'robinhood'].includes(chain) || sourceChain !== EVM_CHAINS[chain]) return;
+  const version = ++bridgeVersion;
+  $('check-bridges').disabled = true;
+  $('bridge-check-status').textContent = 'Verifying the Relay order, simulating its source deposit and checking Base funds for Mayan…';
+  try {
+    const [accounts, network] = await Promise.all([active('eth_accounts'), active('eth_chainId')]);
+    if (accounts?.[0]?.toLowerCase() !== address.toLowerCase() || BigInt(network) !== BigInt(EVM_CHAINS[chain])) throw Error();
+    const response = await fetch('/api/tree-gateway-bridge-review', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chain, amount, address }), signal: AbortSignal.timeout(35000) });
+    const data = await response.json();
+    if (version !== bridgeVersion) return;
+    const [afterAccounts, afterNetwork] = await Promise.all([active('eth_accounts'), active('eth_chainId')]);
+    if (version !== bridgeVersion) return;
+    if (afterAccounts?.[0]?.toLowerCase() !== address.toLowerCase() || BigInt(afterNetwork) !== BigInt(EVM_CHAINS[chain])) throw Error();
+    if (!response.ok || data.address !== address.toLowerCase() || data.chain !== chain || data.amount !== amount || data.orderVerified !== true || data.signed !== false || data.submitted !== false || data.routeReady !== false || !Number.isFinite(data.expiresAt) || data.expiresAt <= Date.now()) throw Error();
+    let message = 'Relay order verified for this account and amount. ';
+    message += data.relay?.status === 'passed' ? 'Source deposit simulation passed. ' : 'Source deposit simulation did not pass or was unavailable; check the current source funds and gas. ';
+    if (data.mayan?.status === 'balances-only') {
+      message += 'Mayan on Base: ' + (data.mayan.baseEthPresent === true ? 'ETH is present, but sufficient gas is not confirmed. ' : 'No Base ETH for gas. ');
+      message += data.mayan.existingUsdcEnough === true ? 'Current Base USDC covers the quoted bridge minimum. ' : 'Current Base USDC is below the quoted bridge minimum. ';
+      message += data.mayan.existingAllowanceEnough === true ? 'Existing Mayan allowance covers that amount. ' : 'Existing Mayan allowance is below that amount; no approval was requested. ';
+    } else message += 'Base balance and allowance checks unavailable. ';
+    $('bridge-check-status').textContent = message + 'Mayan and destination delivery were not simulated. Future bridge proceeds are not counted. This is not a ready-to-transfer result. Nothing signed or sent.';
+    setTimeout(() => { if (version === bridgeVersion) { bridgeVersion++; $('bridge-check-status').textContent = 'Bridge check expired. Run it again for current conditions. Nothing was signed or transferred.'; render(); } }, Math.max(0, data.expiresAt - Date.now()));
+  } catch { if (version === bridgeVersion) $('bridge-check-status').textContent = 'Bridge check did not complete or wallet details changed. No simulation pass can be claimed. No funds moved.'; }
+  finally { if (version === bridgeVersion) render(); }
 });

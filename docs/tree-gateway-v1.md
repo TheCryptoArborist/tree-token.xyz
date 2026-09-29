@@ -106,3 +106,23 @@ The embedded Gateway reads the Command Center's verified getWalletConnectionStat
 The preview-only POST /api/tree-gateway-simulate accepts only a Sui address and positive SUI amount (maximum 1,000 SUI). It fetches a fresh allowlisted Turbos SUI/TREE quote, builds that exact direction with the same address as recipient, and runs Sui gRPC simulation with checksEnabled and doGasSelection both true. A pass requires successful effects, at least the quoted minimum TREE received by that address, and gas effects. Only a summary is returned; nothing is signed or submitted. Net gas includes storage rebates and can be negative. A passing final-swap simulation does not validate Relay/Mayan, the best-route venue shown elsewhere, future bridge proceeds, or the planned Gateway fee.
 
 Validation: 30 focused tests passed. An unsigned 1 SUI simulation passed using the public example address 0x0000000000000000000000000000000000000000000000000000000000000001; an unfunded example address was rejected. These do not verify a user wallet's extension behavior. Current MystenLabs frontend-apps/non-react.md, frontend-apps/transactions.md, ptbs/building.md, accessing-data/grpc.md and installed SDK executing documentation were consulted.
+
+
+### Relay deposit simulation and Base preflight (2026-09-28)
+
+The preview's optional wallet section now offers a BNB / Robinhood bridge check.
+It requests a fresh Relay protocol-v2 quote for the connected EVM account and selected native amount. It verifies chain metadata from the independent Relay chains endpoint; exact payer, refund recipient, Base USDC recipient, native amount, minimum output (within 1% of expected), expiry, no extra calls/fees, recomputed order ID and matching canonical deposit calldata. Unsupported formats fail closed. The endpoint accepts no user transaction payload, target, RPC, or signature.
+
+Only the source deposit is simulated through fixed public EVM RPCs using eth_estimateGas, without state overrides. Chain identity, deployed target code, current native funds, gas units and current gas price are checked. This does not simulate Relay's destination fill or guarantee actual gas cost/settlement. Transaction bytes and order data are never returned to the browser. Wallet adapters still cannot request signatures or send transactions.
+
+Base USDC balance, native ETH presence and allowance to Mayan's documented Forwarder are read separately. These are balances-only checks, not Mayan simulation or readiness. Future Relay proceeds are never injected or counted. Even when every check passes, routeReady remains false. Mayan payload construction/simulation, destination delivery and the actual connected-wallet integration remain further work. Base/Ethereum direct Mayan and Solana simulation are not implemented by this check.
+
+Results expire within 30 seconds of request start and clear on wallet/route changes. The browser rechecks EVM account and network before and after the request. Public addresses and amounts are sent only after the user clicks the check; the UI names Relay and network providers. No addresses or results are persisted.
+
+References consulted live:
+- https://docs.relay.link/references/api/api_core_concepts/input-validation
+- https://docs.mayan.finance/build/sdk/manual-transactions
+- https://docs.mayan.finance/integration/forwarder-contract
+- https://docs.robinhood.com/chain/add-network-to-wallet/
+- https://docs.bnbchain.org/bnb-smart-chain/developers/json_rpc/json-rpc-endpoint/
+- MystenLabs/skills: frontend-apps/SKILL.md and non-react.md; sui-sdks/SKILL.md; ptbs/SKILL.md; accessing-data/SKILL.md. No Sui transaction construction or transport changes in this step.
