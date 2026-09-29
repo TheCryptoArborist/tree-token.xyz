@@ -1,0 +1,81 @@
+{
+  "note": "Response shapes from one unfunded BNB order. Wallets, deposit and request identity replaced with synthetic values; no delivery evidence.",
+  "binding": {
+    "chain": "bsc",
+    "amount": "0.1",
+    "sourceAddress": "0x1111111111111111111111111111111111111111",
+    "destinationAddress": "0x2222222222222222222222222222222222222222222222222222222222222222",
+    "exchangeId": 20,
+    "fromTokenId": 179769,
+    "toTokenId": 179810,
+    "platformFeePercent": 0.4000000000000057,
+    "requestId": "11111111-1111-4111-8111-111111111111"
+  },
+  "order": {
+    "requestId": "11111111-1111-4111-8111-111111111111",
+    "exchangeInfo": {
+      "id": 20,
+      "keyword": "RocketX",
+      "exchange_type": "DEX",
+      "walletLess": true,
+      "fixedRate": false,
+      "isRefundAddressRequired": true
+    },
+    "fromTokenInfo": {
+      "id": 179769,
+      "chainId": "0x38",
+      "token_decimals": 18,
+      "token_symbol": "BNB",
+      "contract_address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    },
+    "toTokenInfo": {
+      "id": 179810,
+      "chainId": "sui-mainnet",
+      "token_decimals": 9,
+      "token_symbol": "SUI",
+      "contract_address": "0x0000000000000000000000000000000000000000000000000000000000000002"
+    },
+    "swap": {
+      "fromAmount": 0.1,
+      "partnerFee": 0.4,
+      "depositAddress": "0x3333333333333333333333333333333333333333",
+      "tx": {
+        "from": "0x1111111111111111111111111111111111111111",
+        "to": "0x3333333333333333333333333333333333333333",
+        "data": null,
+        "value": "0x16345785d8a0000",
+        "memo": null
+      }
+    }
+  },
+  "status": {
+    "requestId": "11111111-1111-4111-8111-111111111111",
+    "exchangeInfo": {
+      "id": 20,
+      "keyword": "RocketX",
+      "exchange_type": "DEX",
+      "walletLess": true,
+      "fixedRate": false,
+      "isRefundAddressRequired": true
+    },
+    "fromTokenInfo": {
+      "id": 179769,
+      "chainId": "0x38",
+      "token_decimals": 18,
+      "token_symbol": "BNB",
+      "contract_address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    },
+    "toTokenInfo": {
+      "id": 179810,
+      "chainId": "sui-mainnet",
+      "token_decimals": 9,
+      "token_symbol": "SUI",
+      "contract_address": "0x0000000000000000000000000000000000000000000000000000000000000002"
+    },
+    "destinationAddress": "0x2222222222222222222222222222222222222222222222222222222222222222",
+    "depositAddress": "0x3333333333333333333333333333333333333333",
+    "originTokenAmount": 0.1,
+    "status": "pending",
+    "subState": "transaction_pending"
+  }
+}

@@ -20,17 +20,27 @@ function validateRoute(b: Omit<Binding, 'requestId'>) {
   requireCheck(Number.isFinite(b.platformFeePercent) && b.platformFeePercent >= 0 && b.platformFeePercent <= 3, 'Invalid quoted fee.');
   amountToRaw(b.amount, 18);
 }
-function validateAssets(body: any, b: Omit<Binding, 'requestId'>) {
+// RocketX's documented ROCKETX_POOL quote is CEX, while its config and the
+// observed BNB creation/status responses say DEX. This is a response-only,
+// route-specific compatibility rule, never permission to execute a DEX call.
+function knownPoolResponse(body: any, b: Omit<Binding, 'requestId'>) {
+  const e = body?.exchangeInfo;
+  return b.chain === 'bsc' && b.exchangeId === 20 && b.fromTokenId === 179769 && b.toTokenId === 179810
+    && e?.id === 20 && e.keyword === 'RocketX' && e.exchange_type === 'DEX'
+    && e.walletLess === true && e.fixedRate === false && e.isRefundAddressRequired === true;
+}
+function validateAssets(body: any, b: Omit<Binding, 'requestId'>, response = true) {
   const input = body?.fromTokenInfo, output = body?.toTokenInfo;
   requireCheck(input?.chainId === (b.chain === 'bsc' ? '0x38' : '0x1237') && input?.id === b.fromTokenId && input?.token_decimals === 18 && input?.token_symbol === (b.chain === 'bsc' ? 'BNB' : 'ETH') && /^(0x0{40}|0xe{40})$/i.test(input?.contract_address || ''), 'Source asset changed.');
   requireCheck(output?.chainId === 'sui-mainnet' && output?.id === b.toTokenId && output?.token_decimals === 9 && output?.token_symbol === 'SUI' && /^0x0*2(?:::sui::SUI)?$/.test(output?.contract_address || ''), 'Destination asset changed.');
-  requireCheck(body?.exchangeInfo?.id === b.exchangeId && body.exchangeInfo.walletLess === true && body.exchangeInfo.exchange_type === 'CEX', 'Provider changed.');
+  requireCheck(body?.exchangeInfo?.id === b.exchangeId && body.exchangeInfo.walletLess === true
+    && (body.exchangeInfo.exchange_type === 'CEX' || (response && knownPoolResponse(body, b))), 'Provider changed.');
 }
 
 // This constructs data only. It does not send a request or create an order.
 // fetchedAt must be recorded by the trusted caller when it received the quote.
 export function prepareRocketXOrder(quote: any, b: Omit<Binding, 'requestId'> & { fetchedAt: number; refundAddress?: string }, now = Date.now()) {
-  validateRoute(b); validateAssets(quote, b);
+  validateRoute(b); validateAssets(quote, b, false);
   requireCheck(Number.isFinite(now) && Number.isFinite(b.fetchedAt) && now >= b.fetchedAt && now - b.fetchedAt < 30_000, 'Refresh the quote before preparing an order.');
   requireCheck(!quote.err && !quote.error && (quote.isTxnAllowed === true || quote.isTxnAllowed === 1), 'Provider does not allow this quote.');
   requireCheck(quote.exchangeInfo.fixedRate !== true && !quote.rateId, 'Fixed-rate orders require separate review.');
@@ -55,11 +65,15 @@ export function prepareRocketXOrder(quote: any, b: Omit<Binding, 'requestId'> & 
 // Some creation responses omit the recipient. A matching status response may
 // verify it; never accept an unrelated status or overwrite a conflicting echo.
 export function reviewRocketXOrderPair(order: any, status: any, b: Binding) {
+  if (knownPoolResponse(order, b) || knownPoolResponse(status, b)) {
+    requireCheck(knownPoolResponse(order, b) && knownPoolResponse(status, b), 'Provider response classifications disagree.');
+  }
   const progress = reviewRocketXStatus(status, b);
   requireCheck(['created', 'awaiting-deposit'].includes(progress.phase), 'Order is not awaiting its first payment.');
   requireCheck(evm(status.depositAddress) && status.depositAddress.toLowerCase() === order?.swap?.depositAddress?.toLowerCase(), 'Status deposit address differs from the order.');
   if (order.destinationAddress !== undefined) requireCheck(order.destinationAddress?.toLowerCase() === b.destinationAddress.toLowerCase(), 'Creation recipient conflicts with the reviewed recipient.');
-  return reviewRocketXDeposit({ ...order, destinationAddress: status.destinationAddress }, b);
+  return { ...reviewRocketXDeposit({ ...order, destinationAddress: status.destinationAddress }, b),
+    providerClassification: knownPoolResponse(order, b) ? 'rocketx-pool-response-alias' : 'CEX' };
 }
 
 export function reviewRocketXDeposit(order: any, b: Binding) {

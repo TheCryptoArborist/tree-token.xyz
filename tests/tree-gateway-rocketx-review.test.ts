@@ -78,3 +78,30 @@ test('a bound unfunded status can verify a missing creation recipient, never a c
   order.destinationAddress = '0x' + '4'.repeat(64);
   assert.throws(() => reviewRocketXOrderPair(order, status, binding));
 });
+import { readFileSync } from 'node:fs';
+test('observed pool response classification is accepted only for the reviewed BNB route and matching pair', () => {
+  const load = () => JSON.parse(readFileSync(new URL('./fixtures/rocketx-unfunded-response-shape.json', import.meta.url), 'utf8'));
+  const f = load();
+  const result = reviewRocketXOrderPair(f.order, f.status, f.binding);
+  assert.equal(result.checksPassed, true);
+  assert.equal(result.executionEnabled, false);
+  assert.equal(result.providerClassification, 'rocketx-pool-response-alias');
+  for (const mutate of [
+    x => x.order.exchangeInfo.id = 21,
+    x => x.order.exchangeInfo.keyword = 'Other',
+    x => x.status.exchangeInfo.walletLess = false,
+    x => x.status.exchangeInfo.fixedRate = true,
+    x => delete x.status.exchangeInfo.isRefundAddressRequired,
+    x => x.status.exchangeInfo.exchange_type = 'CEX',
+    x => x.binding.chain = 'robinhood',
+    x => x.binding.fromTokenId = 5,
+    x => x.order.swap.tx.data = '0x1234',
+    x => x.order.swap.tx.value = '0x1',
+    x => x.order.swap.partnerFee = 0.6,
+    x => x.status.destinationAddress = '0x' + '4'.repeat(64),
+    x => x.status.depositAddress = '0x' + '5'.repeat(40),
+    x => x.status.requestId = '22222222-2222-4222-8222-222222222222',
+  ]) { const x = load(); mutate(x); assert.throws(() => reviewRocketXOrderPair(x.order, x.status, x.binding)); }
+  const quote = { ...f.order, fromAmount: '0.1', toAmount: 60, isTxnAllowed: true, platformFeeInPercent: 0.4 };
+  assert.throws(() => prepareRocketXOrder(quote, { ...f.binding, fetchedAt: 1000, refundAddress: f.binding.sourceAddress }, 2000), /Provider changed/);
+});

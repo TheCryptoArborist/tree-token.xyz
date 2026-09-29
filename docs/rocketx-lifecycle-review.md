@@ -9,7 +9,7 @@ Scope: PR46, preview only, native BNB / Robinhood ETH to native SUI. One authori
 - The order preserved the quoted 0.4% platform fee. Creation omitted destinationAddress; the status response matched the user's supplied Sui address. These checks alone do not authorize payment or confirm delivery.
 - The exact intent, creation/status evidence and request reference are retained privately. Public documentation and fixtures contain no user wallet or deposit addresses.
 - The temporary signed endpoint was removed after this single attempt. Offline helpers and a synthetic regression for the provider-type inconsistency remain. The signing key is retired. No production deployment was changed.
-- Next: reconcile the provider's quote/order classification using documentation and read-only evidence, then complete expiry/recovery and deposit validation. Do not create another order merely to work around this failure. Robinhood order creation has not been tested.
+- Classification is reconciled by the narrow compatibility rule documented below. Next: complete expiry/recovery and deposit validation. Do not create another order merely to work around this failure. Robinhood order creation has not been tested.
 
 ## Verified documentation
 
@@ -40,7 +40,7 @@ Retired unfunded diagnostic: the user supplied public source and receiving addre
 
 ### Remaining order and payment work
 
-1. BNB fee parity was verified at 0.4% for the single unfunded order. Resolve the CEX→DEX response inconsistency before treating the order as validated. Do not generalize this BNB result to Robinhood or other providers.
+1. BNB fee parity was verified at 0.4% for the single unfunded order. The response compatibility rule below resolves the observed CEX→DEX mismatch; payment readiness remains unverified. Do not generalize this BNB result to Robinhood or other providers.
 2. Confirm walletless destination echo and refund address semantics for the selected provider. The documented creation sample omits destinationAddress; the offline checker deliberately refuses that incomplete response until a bound response verifies it.
 3. Confirm provider-specific deposit deadline, under/overpayment, delayed deposits, refunds and source-gas accounting.
 4. Add durable private order storage and idempotency/reconciliation before retryable creation calls. No public arbitrary-ID tracker; bind status to the user's order/session. Never create a replacement order after a timeout without reconciling the prior call.
@@ -52,3 +52,15 @@ Retired unfunded diagnostic: the user supplied public source and receiving addre
 For BNB and Robinhood native ETH → SUI walletless routes: is a sandbox or non-executable order validation API available? How should our quoted 0.4% fee be preserved in /swap? Which response verifies the bound Sui destination, precise deposit deadline and refund address? What are the idempotency and lookup semantics after a timed-out /swap request? What are the status/refund states and underpayment, overpayment, expired/late-deposit recovery rules for the selected providers?
 
 Guidance consulted live: MystenLabs skills README, frontend-apps/limitations.md, accessing-data/SKILL.md and accessing-data/use-cases.md; Netlify Functions guidance and serverless coding context. No new Sui transaction code was added.
+
+## Provider classification reconciliation — 2026-09-29
+
+The current official RocketX API reference identifies ROCKETX_POOL (ID 20) as CEX in its quotation example, while the configuration example lists ROCKETX_POOL as DEX. It defines walletLess separately from exchange_type. The private BNB order and status both retain ID 20 and walletLess=true, with keyword RocketX, fixedRate=false and isRefundAddressRequired=true. Treating this as a metadata alias for this observed route is an integration inference supported by those examples and responses, not a provider guarantee about every DEX route.
+
+The offline checker now accepts that exact response shape only for native BNB token ID 179769 → native SUI token ID 179810, provider 20, on BSC. Both creation and status must match the compatibility rule. DEX quotations, other providers/routes (including Robinhood), missing refund metadata, fixed rates and non-walletless responses remain rejected. Provider IDs, asset identities, bound order/recipient/deposit, exact native value, empty calldata/memo and fee checks remain enforced.
+
+Replaying the original private responses offline now passes these response checks, with executionEnabled=false. No new API order or status request was issued. A sanitized response-shape fixture replaces all wallet, deposit and request identities with synthetic values; mutation tests prove that mismatched identity, recipient, amount, fee and contract calls still fail.
+
+This resolves the classification mismatch for the tested BNB response shape. It does not establish deposit expiry, refund acceptance, delivery, source gas, or Robinhood execution support. Those remain required before payments can be enabled. The retired diagnostic endpoint remains absent.
+
+Sources: [RocketX API reference](https://documenter.getpostman.com/view/8177220/2sBXcHjKfY), configuration and quotation examples plus walletLess/exchange_type definitions, consulted live. MystenLabs [frontend-apps/SKILL.md](https://github.com/MystenLabs/skills/blob/main/frontend-apps/SKILL.md) and [limitations.md](https://github.com/MystenLabs/skills/blob/main/frontend-apps/limitations.md) were rechecked; no wallet signing or Sui transaction code was added.
