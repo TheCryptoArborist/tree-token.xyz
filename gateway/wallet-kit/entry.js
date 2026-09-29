@@ -6,9 +6,11 @@ import { EVM_CHAINS, isEvmAddress, readOnlyEvm, formatNative, suiReviewAddress, 
 const $ = id => document.getElementById(id);
 const host = commandCenterHost(window);
 const kit = host ? null : createDAppKit({ networks: ['mainnet'], defaultNetwork: 'mainnet', autoConnect: false, createClient: network => new SuiGrpcClient({ network, baseUrl: 'https://fullnode.mainnet.sui.io:443' }) });
-const connectButton = document.querySelector('mysten-dapp-kit-connect-button');
-if (kit) connectButton.instance = kit;
-else { connectButton.hidden = true; $('host-wallet').hidden = false; $('sui-wallet-context').hidden = false; }
+if (kit) {
+  const connectButton = document.createElement('mysten-dapp-kit-connect-button');
+  connectButton.instance = kit;
+  $('sui-connect-control').append(connectButton);
+} else { $('host-wallet').hidden = false; $('sui-wallet-context').hidden = false; }
 let currentQuote = null, simulationVersion = 0;
 let sourceAddress = '', sourceChain = '', suiAddress = '', provider, request, generation = 0;
 let removeListeners = () => {};
