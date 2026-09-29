@@ -30,7 +30,7 @@ export function suiReviewAddress(state) {
 export function commandCenterHost(win) {
   try {
     const host = win.parent;
-    return host !== win && host.location.origin === win.location.origin && /^\/dapp\/?$/.test(host.location.pathname) && host.document.querySelector('#tree-gateway-dock iframe') === win.frameElement ? host : null;
+    return host !== win && host.location.origin === win.location.origin && /^\/dapp\/?$/.test(host.location.pathname) && ['#tree-gateway-dock iframe', '#tree-gateway-bridge iframe'].some(selector => host.document.querySelector(selector) === win.frameElement && win.frameElement) ? host : null;
   } catch { return null; }
 }
 

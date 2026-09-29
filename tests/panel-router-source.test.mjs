@@ -1,12 +1,12 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
-const html = fs.readFileSync(new URL('../dapp/index.html', import.meta.url), 'utf8');
-const router = fs.readFileSync(new URL('../dapp/panel-router.js', import.meta.url), 'utf8');
-const css = fs.readFileSync(new URL('../dapp/panel-router.css', import.meta.url), 'utf8');
+const html = fs.readFileSync(new URL('../dist-preview/dapp/index.html', import.meta.url), 'utf8');
+const router = fs.readFileSync(new URL('../dist-preview/dapp/panel-router.js', import.meta.url), 'utf8');
+const css = fs.readFileSync(new URL('../dist-preview/dapp/panel-router.css', import.meta.url), 'utf8');
 
 const panelIds = [
-  'swap', 'limit', 'earn', 'v3', 'stats', 'removed',
+  'swap', 'bridge', 'limit', 'earn', 'v3', 'stats', 'removed',
   'canopy-draw', 'leaderboard', 'profile-studio', 'documents',
 ];
 
@@ -22,8 +22,8 @@ assert.match(router, /history\.pushState/);
 assert.match(router, /addEventListener\('popstate'/);
 assert.match(css, /\.app-panel\[hidden\]\{display:none!important\}/);
 assert.match(css, /width:min\(472px,calc\(100% - 30px\)\)/);
-assert.match(css, /width:648px;max-width:100%;grid-template-columns:repeat\(9,72px\)/, 'Desktop tabs must remain a compact centered ribbon.');
-assert.match(css, /\.app-tabbed \.app-nav\{width:100%;max-width:100%;min-width:0;grid-template-columns:repeat\(9,70px\)/, 'Mobile tabs must scroll inside a viewport-width ribbon.');
+assert.match(css, /width:770px;max-width:100%;grid-template-columns:repeat\(11,minmax\(0,1fr\)\)/, 'Desktop tabs must remain a compact centered ribbon.');
+assert.match(css, /\.app-tabbed \.app-nav\{[^}]*width:100%;max-width:100%;min-width:0;grid-template-columns:repeat\(11,70px\)/, 'Mobile tabs must scroll inside a viewport-width ribbon.');
 assert.match(css, /overflow-x:auto;overscroll-behavior-inline:contain;-webkit-overflow-scrolling:touch;touch-action:pan-x/, 'Mobile tabs must preserve native horizontal touch scrolling.');
 assert.match(css, /font-size:\.68rem;letter-spacing:\.055em/, 'Compact navigation labels must retain the approved SuiTrump-scale typography.');
 assert.match(css, /\.app-tabbed \.app-header-row\{grid-column:1;grid-row:2/, 'Desktop brand and wallet must share the navigation row.');

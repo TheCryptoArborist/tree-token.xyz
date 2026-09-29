@@ -17,6 +17,9 @@ test('embedded wallet access only uses the exact same-origin Command Center fram
   assert.equal(commandCenterHost(win), parent);
   assert.equal(commandCenterHost({ ...win, frameElement: {} }), null);
   assert.equal(commandCenterHost({ ...win, location: { origin: 'https://elsewhere' } }), null);
+  parent.document.querySelector = selector => selector === '#tree-gateway-bridge iframe' ? frame : null;
+  assert.equal(commandCenterHost(win), parent);
+  assert.equal(commandCenterHost({ ...win, frameElement: null }), null);
   parent.location.pathname = '/other';
   assert.equal(commandCenterHost(win), null);
   assert.equal(commandCenterHost({ get parent() { throw Error('Cross-origin'); } }), null);
