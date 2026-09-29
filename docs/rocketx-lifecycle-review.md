@@ -1,6 +1,15 @@
 # RocketX lifecycle review — 2026-09-29
 
-Scope: PR46, preview only, native BNB / Robinhood ETH to native SUI. No order, deposit address, signature, payment or refund request was created. The new deposit/status adapters are offline contract checks tested with synthetic fixtures; they are not a live tracker or a funding authorization.
+Scope: PR46, preview only, native BNB / Robinhood ETH to native SUI. One authorized, unfunded 0.1 BNB → SUI order was created for validation. No wallet signature, payment or refund request was made. Transfers remain disabled. The deposit/status adapters are not a live tracker or a funding authorization.
+
+## Unfunded BNB result
+
+- RocketX accepted one order; status was pending / transaction_pending. There was no second creation attempt.
+- The selected quote's provider ID 20 matched creation and status, and walletLess remained true. However, exchange_type changed from CEX in the validated quote to DEX in both responses. The strict provider check rejected this inconsistency; it has not been bypassed.
+- The order preserved the quoted 0.4% platform fee. Creation omitted destinationAddress; the status response matched the user's supplied Sui address. These checks alone do not authorize payment or confirm delivery.
+- The exact intent, creation/status evidence and request reference are retained privately. Public documentation and fixtures contain no user wallet or deposit addresses.
+- The temporary signed endpoint was removed after this single attempt. Offline helpers and a synthetic regression for the provider-type inconsistency remain. The signing key is retired. No production deployment was changed.
+- Next: reconcile the provider's quote/order classification using documentation and read-only evidence, then complete expiry/recovery and deposit validation. Do not create another order merely to work around this failure. Robinhood order creation has not been tested.
 
 ## Verified documentation
 
@@ -12,7 +21,7 @@ Scope: PR46, preview only, native BNB / Robinhood ETH to native SUI. No order, d
 
 ## Implemented preview work
 
-Temporary unfunded diagnostic: the user supplied public source and receiving addresses for an unfunded API order check. A separate operator-signed POST endpoint is a bounded exception to the public GET-only preview: it rejects production, pins its site/deploy and a one-hour deadline, accepts only 0.1 native BNB → SUI, and requires an Ed25519 operator signature. The signing key and addresses are not committed. An atomic create-only entry in a private deploy-scoped Blob prevents duplicate creation; timeouts never retry. Raw provider responses remain private; the result excludes deposit instructions and credentials. Remove the endpoint after the attempt. This does not enable public order creation or any payment. Conditional-write semantics were verified against the installed @netlify/blobs types and implementation.
+Retired unfunded diagnostic: the user supplied public source and receiving addresses for an unfunded API order check. A temporary operator-signed POST endpoint rejected production, pinned its site/deploy and deadline, accepted only 0.1 native BNB → SUI, and required an Ed25519 operator signature. The key and addresses were not committed. An atomic create-only entry in a private deploy-scoped Blob prevented duplicate creation; timeouts never retried. Raw provider responses remain private. The endpoint was removed after the attempt; public order creation and payment remain disabled. Conditional-write semantics were verified against the installed @netlify/blobs types and implementation.
 
 - Quotes request disableRoutesWithMemo=true, retain provider refund-address/memo flags as true/false/unknown, and keep secrets server-only.
 - A compact collapsed Transfer steps & recovery panel explains one source payment, subsequent tracking, recipient checks and recovery. No fake deposit address or active order UI.
@@ -25,13 +34,13 @@ Temporary unfunded diagnostic: the user supplied public source and receiving add
 
 ### Wallet review validation — 2026-09-29
 
-- The user confirmed that BNB Chain → SUI in PR46's preview shows both the Brave source address and Slush receiving address, plus the source BNB balance. This is user-reported extension validation; no signature or transfer was requested.
+- The user confirmed that BNB Chain → SUI in PR46's preview shows both the MetaMask source address (in Brave browser) and Slush receiving address, plus the source BNB balance. This is user-reported extension validation; no signature or transfer was requested.
 - Three controller integration tests execute the actual wallet controller with simulated DOM and providers. They cover BNB and Robinhood source-only balance reads, network mismatch blocking, account/Sui changes, and delayed responses after disconnect or route changes. No real accounts or provider calls are used by these tests.
 - The live Robinhood wallet connection has not been independently confirmed. Wallet connection and balance display do not validate order creation, fee parity, delivery or refunds.
 
 ### Remaining order and payment work
 
-1. Resolve quote/order fee parity: authenticated quotes were 0.4%; swap docs default to 0.6% and contain conflicting minimum-fee statements. Validate actual final order fee with provider confirmation or an approved sandbox/unfunded-order test.
+1. BNB fee parity was verified at 0.4% for the single unfunded order. Resolve the CEX→DEX response inconsistency before treating the order as validated. Do not generalize this BNB result to Robinhood or other providers.
 2. Confirm walletless destination echo and refund address semantics for the selected provider. The documented creation sample omits destinationAddress; the offline checker deliberately refuses that incomplete response until a bound response verifies it.
 3. Confirm provider-specific deposit deadline, under/overpayment, delayed deposits, refunds and source-gas accounting.
 4. Add durable private order storage and idempotency/reconciliation before retryable creation calls. No public arbitrary-ID tracker; bind status to the user's order/session. Never create a replacement order after a timeout without reconciling the prior call.
