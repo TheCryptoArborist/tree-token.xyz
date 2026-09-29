@@ -19,6 +19,14 @@ Scope: PR46, preview only, native BNB / Robinhood ETH to native SUI. No order, d
 
 ## Still required before order/payment enablement
 
+### Wallet review validation — 2026-09-29
+
+- The user confirmed that BNB Chain → SUI in PR46's preview shows both the Brave source address and Slush receiving address, plus the source BNB balance. This is user-reported extension validation; no signature or transfer was requested.
+- Three controller integration tests execute the actual wallet controller with simulated DOM and providers. They cover BNB and Robinhood source-only balance reads, network mismatch blocking, account/Sui changes, and delayed responses after disconnect or route changes. No real accounts or provider calls are used by these tests.
+- The live Robinhood wallet connection has not been independently confirmed. Wallet connection and balance display do not validate order creation, fee parity, delivery or refunds.
+
+### Remaining order and payment work
+
 1. Resolve quote/order fee parity: authenticated quotes were 0.4%; swap docs default to 0.6% and contain conflicting minimum-fee statements. Validate actual final order fee with provider confirmation or an approved sandbox/unfunded-order test.
 2. Confirm walletless destination echo and refund address semantics for the selected provider. The documented creation sample omits destinationAddress; the offline checker deliberately refuses that incomplete response until a bound response verifies it.
 3. Confirm provider-specific deposit deadline, under/overpayment, delayed deposits, refunds and source-gas accounting.
