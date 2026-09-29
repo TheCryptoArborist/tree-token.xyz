@@ -12,6 +12,8 @@ Scope: PR46, preview only, native BNB / Robinhood ETH to native SUI. No order, d
 
 ## Implemented preview work
 
+Temporary unfunded diagnostic: the user supplied public source and receiving addresses for an unfunded API order check. A separate operator-signed POST endpoint is a bounded exception to the public GET-only preview: it rejects production, pins its site/deploy and a one-hour deadline, accepts only 0.1 native BNB → SUI, and requires an Ed25519 operator signature. The signing key and addresses are not committed. An atomic create-only entry in a private deploy-scoped Blob prevents duplicate creation; timeouts never retry. Raw provider responses remain private; the result excludes deposit instructions and credentials. Remove the endpoint after the attempt. This does not enable public order creation or any payment. Conditional-write semantics were verified against the installed @netlify/blobs types and implementation.
+
 - Quotes request disableRoutesWithMemo=true, retain provider refund-address/memo flags as true/false/unknown, and keep secrets server-only.
 - A compact collapsed Transfer steps & recovery panel explains one source payment, subsequent tracking, recipient checks and recovery. No fake deposit address or active order UI.
 - Offline deposit checks bind request, provider, assets, source amount, recipient echo, plain native transfer and fee. Changed/missing recipient, contract calldata, memo, wrong amount or a 0.4%→0.6% fee change fails closed. No transaction payload is returned.
