@@ -16,6 +16,8 @@ Scope: PR46, preview only, native BNB / Robinhood ETH to native SUI. No order, d
 - A compact collapsed Transfer steps & recovery panel explains one source payment, subsequent tracking, recipient checks and recovery. No fake deposit address or active order UI.
 - Offline deposit checks bind request, provider, assets, source amount, recipient echo, plain native transfer and fee. Changed/missing recipient, contract calldata, memo, wrong amount or a 0.4%→0.6% fee change fails closed. No transaction payload is returned.
 - Offline status checks reject wrong request, recipient, asset, provider and amount. Unknown/malformed/failed/time-out states do not invite resending or claim refund. Even withdraw_success is receipt-pending, never confirmed delivery.
+- Offline order preparation now explicitly preserves the reviewed fee, provider/token IDs, amount and recipient. It rejects stale quotes, missing refund requirements and amounts that a JSON number cannot represent exactly. Where required, the refund address must be the separately reviewed source address. No request is sent by this helper.
+- If creation omits the recipient, an independently obtained status for the same order can supply it only when assets, amount, recipient and deposit address agree and the order is still unfunded. A conflicting creation recipient is never overwritten. Six synthetic order/status tests pass; this is not live order verification.
 
 ## Still required before order/payment enablement
 

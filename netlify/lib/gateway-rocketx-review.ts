@@ -2,7 +2,7 @@
 // A future backend must supply its persisted order binding, never a browser-asserted binding.
 import { amountToRaw } from '../../gateway/options.js';
 
-type Binding = {
+export type Binding = {
   requestId: string; chain: 'bsc' | 'robinhood'; amount: string;
   destinationAddress: string; sourceAddress: string; exchangeId: number;
   fromTokenId: number; toTokenId: number; platformFeePercent: number;
@@ -12,16 +12,54 @@ function evm(address: unknown) { return typeof address === 'string' && /^0x[0-9a
 function sui(address: unknown) { return typeof address === 'string' && /^0x[0-9a-fA-F]{64}$/.test(address) && !/^0x0+$/.test(address); }
 function validateBinding(b: Binding) {
   requireCheck(/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(b.requestId), 'Invalid order identity.');
+  validateRoute(b);
+}
+function validateRoute(b: Omit<Binding, 'requestId'>) {
   requireCheck(['bsc', 'robinhood'].includes(b.chain) && evm(b.sourceAddress) && sui(b.destinationAddress), 'Invalid route binding.');
   requireCheck([b.exchangeId, b.fromTokenId, b.toTokenId].every(n => Number.isSafeInteger(n) && n > 0), 'Missing provider identity.');
   requireCheck(Number.isFinite(b.platformFeePercent) && b.platformFeePercent >= 0 && b.platformFeePercent <= 3, 'Invalid quoted fee.');
   amountToRaw(b.amount, 18);
 }
-function validateAssets(body: any, b: Binding) {
+function validateAssets(body: any, b: Omit<Binding, 'requestId'>) {
   const input = body?.fromTokenInfo, output = body?.toTokenInfo;
   requireCheck(input?.chainId === (b.chain === 'bsc' ? '0x38' : '0x1237') && input?.id === b.fromTokenId && input?.token_decimals === 18 && input?.token_symbol === (b.chain === 'bsc' ? 'BNB' : 'ETH') && /^(0x0{40}|0xe{40})$/i.test(input?.contract_address || ''), 'Source asset changed.');
   requireCheck(output?.chainId === 'sui-mainnet' && output?.id === b.toTokenId && output?.token_decimals === 9 && output?.token_symbol === 'SUI' && /^0x0*2(?:::sui::SUI)?$/.test(output?.contract_address || ''), 'Destination asset changed.');
   requireCheck(body?.exchangeInfo?.id === b.exchangeId && body.exchangeInfo.walletLess === true && body.exchangeInfo.exchange_type === 'CEX', 'Provider changed.');
+}
+
+// This constructs data only. It does not send a request or create an order.
+// fetchedAt must be recorded by the trusted caller when it received the quote.
+export function prepareRocketXOrder(quote: any, b: Omit<Binding, 'requestId'> & { fetchedAt: number; refundAddress?: string }, now = Date.now()) {
+  validateRoute(b); validateAssets(quote, b);
+  requireCheck(Number.isFinite(now) && Number.isFinite(b.fetchedAt) && now >= b.fetchedAt && now - b.fetchedAt < 30_000, 'Refresh the quote before preparing an order.');
+  requireCheck(!quote.err && !quote.error && (quote.isTxnAllowed === true || quote.isTxnAllowed === 1), 'Provider does not allow this quote.');
+  requireCheck(quote.exchangeInfo.fixedRate !== true && !quote.rateId, 'Fixed-rate orders require separate review.');
+  requireCheck(quote.exchangeInfo.memoRequired !== true, 'Memo route requires separate review.');
+  requireCheck(amountToRaw(String(quote.fromAmount), 18) === amountToRaw(b.amount, 18), 'Quoted amount changed.');
+  requireCheck(Number.isFinite(Number(quote.toAmount)) && Number(quote.toAmount) > 0, 'Missing destination estimate.');
+  requireCheck(typeof quote.platformFeeInPercent === 'number' && Number.isFinite(quote.platformFeeInPercent) && Math.abs(quote.platformFeeInPercent - b.platformFeePercent) < 1e-10, 'Quoted fee changed.');
+  const refundRequired = quote.exchangeInfo.isRefundAddressRequired;
+  requireCheck(typeof refundRequired === 'boolean', 'Refund-address requirement is unknown.');
+  if (refundRequired) requireCheck(evm(b.refundAddress) && b.refundAddress?.toLowerCase() === b.sourceAddress.toLowerCase(), 'Review the source wallet as the refund address.');
+  // The API examples use a JSON number. Refuse any input it cannot represent exactly.
+  const amount = Number(b.amount);
+  requireCheck(amountToRaw(String(amount), 18) === amountToRaw(b.amount, 18), 'Amount cannot be represented exactly by the order API.');
+  return {
+    fromTokenId: b.fromTokenId, toTokenId: b.toTokenId, exchangeId: b.exchangeId,
+    userAddress: b.sourceAddress, destinationAddress: b.destinationAddress,
+    amount, fee: b.platformFeePercent,
+    ...(refundRequired ? { refundAddress: b.refundAddress, refundMemo: '' } : {}),
+  };
+}
+
+// Some creation responses omit the recipient. A matching status response may
+// verify it; never accept an unrelated status or overwrite a conflicting echo.
+export function reviewRocketXOrderPair(order: any, status: any, b: Binding) {
+  const progress = reviewRocketXStatus(status, b);
+  requireCheck(['created', 'awaiting-deposit'].includes(progress.phase), 'Order is not awaiting its first payment.');
+  requireCheck(evm(status.depositAddress) && status.depositAddress.toLowerCase() === order?.swap?.depositAddress?.toLowerCase(), 'Status deposit address differs from the order.');
+  if (order.destinationAddress !== undefined) requireCheck(order.destinationAddress?.toLowerCase() === b.destinationAddress.toLowerCase(), 'Creation recipient conflicts with the reviewed recipient.');
+  return reviewRocketXDeposit({ ...order, destinationAddress: status.destinationAddress }, b);
 }
 
 export function reviewRocketXDeposit(order: any, b: Binding) {
