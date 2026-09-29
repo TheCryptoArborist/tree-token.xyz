@@ -1,4 +1,4 @@
-const commandCenter = document.querySelector('.app-nav') && document.querySelector('main');
+const commandCenter = document.querySelector('.app-nav') && document.querySelector('main #swap');
 if (commandCenter) {
   const style = document.createElement('style');
   style.textContent = `#tree-gateway-dock{position:relative;z-index:2;margin:0 0 14px;border:1px solid rgba(53,200,255,.2);border-radius:12px;background:#081119;color:#f5fbff;overflow:hidden}#tree-gateway-dock>summary{padding:12px 14px;cursor:pointer;font:600 13px system-ui}#tree-gateway-dock>summary small{font:400 10px system-ui;color:#9aa9b8;margin-left:8px}#tree-gateway-dock iframe{display:block;width:100%;border:0;background:#081119}#tree-gateway-dock .gateway-full{display:block;padding:8px 14px 12px;font:12px system-ui;color:#35c8ff;text-align:right}#tree-gateway-dock :focus-visible{outline:2px solid #35c8ff;outline-offset:-3px}`;
