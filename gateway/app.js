@@ -130,12 +130,14 @@ if (host) {
   }, { once: true });
 }
 let walletsLoading = false;
-$('wallet-review').addEventListener('toggle', async () => {
+async function loadWallets() {
   if (!$('wallet-review').open || walletsLoading) return;
   walletsLoading = true;
   try { await import('./wallet-bundle.js'); }
   catch { walletsLoading = false; $('wallet-summary').textContent = 'Wallet controls could not load. Close and reopen this section to retry. Quotes and saved route choices remain available.'; }
-});
+}
+$('wallet-review').addEventListener('toggle', loadWallets);
+void loadWallets();
 const savedKey = 'tree-gateway-route-v1';
 $('save-route').addEventListener('click', () => {
   try {
