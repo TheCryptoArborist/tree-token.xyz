@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { getOrderId } from '@relay-protocol/settlement-sdk';
+import { getOrderId } from '@relay-protocol/settlement-sdk/dist/order/index.js';
 import { encodeFunctionData, parseAbi } from 'viem';
 import { bridgeInput, verifyRelay, sourceSimulation, mayanBaseChecks, rpc, NETWORKS } from '../netlify/lib/gateway-bridge-review.ts';
 import { createBridgeReviewHandler } from '../netlify/preview-functions/tree-gateway-bridge-review.ts';

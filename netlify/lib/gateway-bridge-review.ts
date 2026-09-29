@@ -1,4 +1,4 @@
-import { getOrderId } from '@relay-protocol/settlement-sdk';
+import { getOrderId } from '@relay-protocol/settlement-sdk/dist/order/index.js';
 import { decodeFunctionData, encodeFunctionData, parseAbi } from 'viem';
 import { amountToRaw, SOURCES } from '../../gateway/options.js';
 import { isEvmAddress } from '../../gateway/review-core.js';
