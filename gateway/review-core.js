@@ -15,6 +15,19 @@ export function formatNative(raw) {
   const n = BigInt(raw);
   return `${n / 10n ** 18n}.${(n % 10n ** 18n).toString().padStart(18, '0').slice(0, 8)}`;
 }
+export async function sourceBalance(request, address, chain) {
+  const expected = EVM_CHAINS[chain];
+  if (!expected || !isEvmAddress(address)) throw Error('Invalid source wallet.');
+  const verify = async () => {
+    const [accounts, network] = await Promise.all([request('eth_accounts'), request('eth_chainId')]);
+    if (accounts?.[0]?.toLowerCase() !== address.toLowerCase() || BigInt(network) !== BigInt(expected)) throw Error('Wallet changed.');
+  };
+  await verify();
+  const raw = await request('eth_getBalance', [address, 'latest']);
+  if (typeof raw !== 'string' || !/^0x[0-9a-f]+$/i.test(raw)) throw Error('Invalid balance.');
+  await verify();
+  return raw;
+}
 // A deliberately small connection adapter: it cannot request signatures or send transactions.
 export function readOnlyEvm(provider) {
   const allowed = new Set(['eth_requestAccounts', 'eth_accounts', 'eth_chainId', 'eth_getBalance', 'wallet_switchEthereumChain']);

@@ -5,7 +5,7 @@ const viaBase = () => ['bsc', 'robinhood'].includes($('chain').value);
 const rocketxRoute = () => viaBase() && $('destination').value === 'SUI';
 const caveat = document.querySelector('.quote-caveat');
 const originalCaveat = caveat.textContent;
-const legacySections = ['.fees', '.powered', '#route-guide', '.catalog', '#wallet-review'].map(selector => document.querySelector(selector));
+const legacySections = ['.fees', '.powered', '#route-guide', '.catalog'].map(selector => document.querySelector(selector));
 const slippageRow = $('protocol').parentElement.nextElementSibling;
 const destinations = { TREE, SUI, USDC };
 let version = 0;
@@ -34,6 +34,7 @@ function destinationChanged() {
   $('settlement-label').hidden = !tree;
   $('destination-note').textContent = rocketx ? 'RocketX estimate into native SUI. After arrival, optionally swap SUI for TREE in the Swap tab.' : tree ? 'SUI settlement includes a TREE estimate. Refresh quotes at each stage.' : (viaBase() ? 'Relay to Base USDC, then Mayan into this asset on Sui.' : 'Request a direct Mayan estimate into this asset on Sui.');
   reset();
+  window.dispatchEvent(new Event('gateway-route-change'));
 }
 $('chain').addEventListener('change', () => {
   $('asset').replaceChildren(...Object.keys(SOURCES[$('chain').value]).map(name => new Option(name, name)));

@@ -1,10 +1,11 @@
 import { createDAppKit } from '@mysten/dapp-kit-core';
 import { SuiGrpcClient } from '@mysten/sui/grpc';
 import '@mysten/dapp-kit-core/web';
-import { EVM_CHAINS, isEvmAddress, readOnlyEvm, formatNative, suiReviewAddress, commandCenterHost } from '../review-core.js';
+import { EVM_CHAINS, isEvmAddress, readOnlyEvm, formatNative, sourceBalance, suiReviewAddress, commandCenterHost } from '../review-core.js';
 
 const $ = id => document.getElementById(id);
 const host = commandCenterHost(window);
+const rocketxRoute = () => ['bsc', 'robinhood'].includes($('chain').value) && $('destination').value === 'SUI';
 const kit = host ? null : createDAppKit({ networks: ['mainnet'], defaultNetwork: 'mainnet', autoConnect: false, createClient: network => new SuiGrpcClient({ network, baseUrl: 'https://fullnode.mainnet.sui.io:443' }) });
 if (kit) {
   const connectButton = document.createElement('mysten-dapp-kit-connect-button');
@@ -23,6 +24,10 @@ function invalidate() {
 }
 function render() {
   const expected = EVM_CHAINS[$('chain').value];
+  const rocketx = rocketxRoute();
+  for (const id of ['check-bridges', 'bridge-check-status', 'simulate-mayan', 'mayan-simulation-status', 'simulate-tree', 'simulation-status']) $(id).hidden = rocketx;
+  $('gas-check').textContent = rocketx ? 'Check source balance' : 'Check gas balances';
+  $('wallet-balance-note').textContent = rocketx ? 'Use Brave or another EVM wallet for the source and Slush for your Sui receiving address. The balance check uses only your source wallet’s network provider. No Base balance check, order creation or signing. A balance does not confirm enough gas for a transfer.' : 'When you check balances, the connected public source address is sent to the network provider. Quotes still use a sample wallet and remain indicative.';
   $('source-address').textContent = sourceAddress || 'Source wallet not connected.';
   $('sui-address').textContent = suiAddress || 'Sui receiving wallet not connected.';
   $('source-connect').disabled = !expected;
@@ -84,17 +89,17 @@ kit?.stores.$connection.subscribe(connection => {
   suiAddress = suiReviewAddress({ connected: connection.isConnected === true && account?.chains?.includes('sui:mainnet'), address: account?.address });
   invalidate(); render();
 });
-$('chain').addEventListener('change', () => { invalidate(); render(); });
+window.addEventListener('gateway-route-change', () => { invalidate(); render(); });
 $('gas-check').addEventListener('click', async () => {
   if (!request || !sourceAddress || sourceChain !== EVM_CHAINS[$('chain').value]) return;
-  const current = ++generation, address = sourceAddress, activeRequest = request;
+  const current = ++generation, address = sourceAddress, activeRequest = request, chain = $('chain').value, rocketx = rocketxRoute();
   $('gas-check').disabled = true;
   $('gas-status').textContent = 'Reading native gas balances…';
   try {
-    const raw = await activeRequest('eth_getBalance', [address, 'latest']);
+    const raw = await sourceBalance(activeRequest, address, chain);
     if (!/^0x[0-9a-f]+$/i.test(raw)) throw Error();
-    let text = `Source native balance: ${formatNative(raw)} ${$('chain').value === 'bsc' ? 'BNB' : 'ETH'}. `;
-    if (['bsc', 'robinhood'].includes($('chain').value)) {
+    let text = `Source native balance: ${formatNative(raw)} ${chain === 'bsc' ? 'BNB' : 'ETH'}. `;
+    if (!rocketx && ['bsc', 'robinhood'].includes(chain)) {
       const response = await fetch(`/api/tree-gateway-gas?address=${encodeURIComponent(address)}`, { signal: AbortSignal.timeout(10_000) });
       const data = await response.json();
       if (!response.ok || data.address?.toLowerCase() !== address.toLowerCase() || !/^0x[0-9a-f]+$/i.test(data.balance)) throw Error();

@@ -2,6 +2,27 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { routeDraft, readDraft, readOnlyEvm, EVM_CHAINS, isEvmAddress, formatNative } from '../gateway/review-core.js';
 import gasHandler from '../netlify/preview-functions/tree-gateway-gas.ts';
+import { sourceBalance } from '../gateway/review-core.js';
+test('source balance rejects account or network changes during an asynchronous read', async () => {
+  const address = '0x' + '1'.repeat(40);
+  for (const chain of ['bsc', 'robinhood']) {
+    for (const change of ['none', 'account', 'network', 'malformed']) {
+      let read = false;
+      const calls = [];
+      const request = async method => {
+        calls.push(method);
+        if (method === 'eth_accounts') return [read && change === 'account' ? '0x' + '2'.repeat(40) : address];
+        if (method === 'eth_chainId') return read && change === 'network' ? EVM_CHAINS.base : EVM_CHAINS[chain];
+        if (method === 'eth_getBalance') { read = true; return change === 'malformed' ? 'bad' : '0x10'; }
+        throw Error('Unexpected method');
+      };
+      if (change === 'none') assert.equal(await sourceBalance(request, address, chain), '0x10');
+      else await assert.rejects(sourceBalance(request, address, chain));
+      assert.equal(calls.filter(method => method === 'eth_getBalance').length, 1);
+      assert.ok(calls.every(method => ['eth_accounts', 'eth_chainId', 'eth_getBalance'].includes(method)));
+    }
+  }
+});
 const draft = { chain: 'bsc', asset: 'BNB', amount: '0.1', destination: 'TREE', settlement: 'SUI' };
 
 test('saved setups retain only valid choices and never restore wallets, quotes or execution state', () => {
