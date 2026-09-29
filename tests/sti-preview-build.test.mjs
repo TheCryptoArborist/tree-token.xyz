@@ -20,10 +20,23 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
   for (const file of manifest.files) {
     assert.equal(digest(new URL(`dist${file.path}`, root)), file.sha1, `Production ${file.path}`);
     const previewFile = new URL(`dist-preview${file.path}`, root);
-    let previewDigest = digest(previewFile);
+    let previewText = readFileSync(previewFile, 'utf8');
+    // Strip the reviewed Bridge navigation overlay before comparing baseline bytes.
+    if (file.path === '/dapp/panel-router.js') {
+      assert.equal(previewText.split("  'bridge',").length, 2);
+      assert.equal(previewText.split("  bridge: 'Bridge',").length, 2);
+      previewText = previewText.replace("  'swap',\n  'bridge',", "  'swap',").replace("  swap: 'Swap',\n  bridge: 'Bridge',", "  swap: 'Swap',");
+    }
+    if (file.path === '/dapp/panel-router.css') {
+      previewText = previewText.replace('width:770px;max-width:100%;grid-template-columns:repeat(11,minmax(0,1fr))', 'width:700px;max-width:100%;grid-template-columns:repeat(10,minmax(0,1fr))').replace('repeat(11,70px)', 'repeat(10,70px)').replace('.app-tabbed #swap,.app-tabbed #bridge,.app-tabbed #limit', '.app-tabbed #swap,.app-tabbed #limit');
+    }
+    if (file.path === '/dapp/index.html') {
+      previewText = previewText.replace('<a href="#bridge"><span aria-hidden="true">↗</span><b>Bridge</b></a>\n      <a href="#limit">', '<a href="#limit">').replace('<main>\n<section class="section compact-section app-panel" id="bridge" aria-labelledby="bridge-title" hidden><h2 id="bridge-title">TREE Gateway <small>Preview</small></h2><div id="tree-gateway-bridge"></div></section>', '<main>');
+    }
+    let previewDigest = ['/dapp/panel-router.js', '/dapp/panel-router.css', '/dapp/index.html'].includes(file.path) ? createHash('sha1').update(previewText).digest('hex') : digest(previewFile);
     if (['/index.html', '/dapp/index.html'].includes(file.path)) {
       const marker = '<script type="module" src="/gateway/entry.js"></script>';
-      const html = readFileSync(previewFile, 'utf8');
+      const html = previewText;
       assert.equal(html.split(marker).length, 2, 'Exactly one preview Gateway link loader');
       previewDigest = createHash('sha1').update(html.replace(marker, '')).digest('hex');
     }
