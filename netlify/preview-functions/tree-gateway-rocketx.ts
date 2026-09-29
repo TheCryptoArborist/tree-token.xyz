@@ -18,6 +18,7 @@ export function summarizeRocketX(q: any, chain: string, amount: string) {
   if (q.isTxnAllowed !== true && q.isTxnAllowed !== 1) return null;
   const number = (value: unknown) => value !== null && value !== undefined && value !== '' && Number.isFinite(Number(value)) && Number(value) >= 0 ? Number(value) : null;
   const label = (value: unknown) => typeof value === 'string' ? value.slice(0, 100) : null;
+  const flag = (value: unknown) => typeof value === 'boolean' ? value : null;
   return {
     provider: label(q.exchangeInfo?.title), exchangeType: label(q.exchangeInfo?.exchange_type),
     walletless: q.exchangeInfo?.walletLess === true, fixedRate: q.exchangeInfo?.fixedRate === true,
@@ -25,6 +26,8 @@ export function summarizeRocketX(q: any, chain: string, amount: string) {
     platformFeeUsd: number(q.platformFeeUsd), platformFeePercent: number(q.platformFeeInPercent),
     gasFeeUsd: number(q.gasFeeUsd), estimatedSeconds: number(q.estTimeInSeconds?.avg),
     minAmountOut: null,
+    refundAddressRequired: flag(q.exchangeInfo?.isRefundAddressRequired),
+    memoRequired: flag(q.exchangeInfo?.memoRequired),
   };
 }
 
@@ -37,7 +40,7 @@ export default async function handler(request: Request) {
   try { amountToRaw(amount, 18); } catch { return reply({ error: 'Enter a valid positive native-token amount.' }, 400); }
   const key = Netlify.env.get('ROCKETX_API_KEY');
   if (!key) return reply({ error: 'RocketX is not configured for this preview.' }, 503);
-  const query = new URLSearchParams({ fromToken: 'null', fromNetwork: chain === 'bsc' ? 'binance' : 'robinhood', toToken: 'null', toNetwork: 'Sui Mainnet', amount, slippage: '1' });
+  const query = new URLSearchParams({ fromToken: 'null', fromNetwork: chain === 'bsc' ? 'binance' : 'robinhood', toToken: 'null', toNetwork: 'Sui Mainnet', amount, slippage: '1', disableRoutesWithMemo: 'true' });
   try {
     const response = await fetch('https://api.rocketx.exchange/v1/quotation?' + query, {
       headers: { 'x-api-key': key, Accept: 'application/json' }, redirect: 'error', signal: AbortSignal.timeout(20_000),

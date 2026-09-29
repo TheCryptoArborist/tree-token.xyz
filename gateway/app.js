@@ -21,10 +21,12 @@ function reset() {
   $('quote-result').hidden = true;
   $('quote-status').className = '';
   $('quote-status').textContent = 'Choose your route, then request a live route quote.';
+  $('rocketx-refund-rule').textContent = 'Refund-address requirements will appear with a live quote.';
 }
 function destinationChanged() {
   const tree = $('destination').value === 'TREE';
   const rocketx = rocketxRoute();
+  $('rocketx-flow').hidden = !rocketx;
   for (const section of legacySections) section.hidden = rocketx;
   slippageRow.hidden = rocketx;
   caveat.textContent = rocketx ? 'Market-rate estimate · Final output is not guaranteed.' : originalCaveat;
@@ -73,6 +75,7 @@ async function requestQuote(event) {
       $('protocol').textContent = 'RocketX · ' + (quote.provider || 'Partner exchange') + ' · CEX';
       caveat.textContent = 'Quoted platform fee: ' + (quote.platformFeePercent === null ? 'not supplied' : format(quote.platformFeePercent) + '%') + ' (' + money(quote.platformFeeUsd) + '). Provider-reported gas: ' + money(quote.gasFeeUsd) + '. Source wallet gas may be additional. No extra TREE Gateway fee is added by this preview.';
       $('tree-warning').hidden = false;
+      $('rocketx-refund-rule').textContent = quote.refundAddressRequired === true ? 'This provider requires a refund address when creating the order. It must be verified on the source network before any payment.' : quote.refundAddressRequired === false ? 'This quote does not require a separate refund-address field. That does not guarantee an automatic refund.' : 'The quote does not specify whether a refund address is required. This must be confirmed before creating an order.';
       $('tree-warning').textContent = 'Exchange-mediated, market-rate route. The quote does not require a manual Base funding step; execution and recovery are not yet verified. Provider checks, delays or refund conditions may apply. TREE does not pay gas. No deposit address or order has been created. After SUI arrives, use Swap to buy TREE separately and leave SUI for gas.';
       $('quote-result').hidden = false;
       $('quote-status').textContent = 'Live RocketX estimate received. Transfers remain disabled.';

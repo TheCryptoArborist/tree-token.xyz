@@ -14,6 +14,9 @@ test('quote validates native assets and discards executable fields', () => {
   const q = summarizeRocketX(fixture(), 'bsc', '0.1');
   assert.equal(q?.expectedAmountOut, '60'); assert.equal(q?.minAmountOut, null);
   assert.equal(q?.walletless, true); assert(!JSON.stringify(q).includes('must-not-return'));
+  assert.equal(q?.refundAddressRequired, null);
+  const withRefund = fixture(); withRefund.exchangeInfo.isRefundAddressRequired = true;
+  assert.equal(summarizeRocketX(withRefund, 'bsc', '0.1')?.refundAddressRequired, true);
   for (const mutate of [q => q.toTokenInfo.chainId = '0x38', q => q.toTokenInfo.contract_address = '0x3', q => q.fromAmount = '0.2', q => q.toAmount = '-1', q => q.isTxnAllowed = false, q => q.fromTokenInfo.is_native_token = 0]) {
     const q = fixture(); mutate(q); assert.equal(summarizeRocketX(q, 'bsc', '0.1'), null);
   }
@@ -29,6 +32,7 @@ test('endpoint is GET-only, validates inputs, strips secrets and distinguishes a
     globalThis.fetch = async (url, options) => {
       const u = new URL(url); assert.equal(u.origin, 'https://api.rocketx.exchange'); assert.equal(u.pathname, '/v1/quotation');
       assert.equal(u.searchParams.get('fromNetwork'), 'binance'); assert.equal(u.searchParams.get('toNetwork'), 'Sui Mainnet');
+      assert.equal(u.searchParams.get('disableRoutesWithMemo'), 'true');
       assert.equal(options.headers['x-api-key'], 'test-secret-never-return'); assert.equal(options.redirect, 'error');
       return Response.json({ quotes: [fixture()], secret: 'test-secret-never-return' });
     };
