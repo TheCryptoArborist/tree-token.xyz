@@ -162,3 +162,7 @@ $('clear-route').addEventListener('click', () => {
   try { localStorage.removeItem(savedKey); $('saved-status').textContent = 'Saved route setup cleared.'; }
   catch { $('saved-status').textContent = 'Browser storage is unavailable.'; }
 });
+
+// Reconcile choices made while the module was still loading.
+if (!Object.hasOwn(SOURCES[$('chain').value], $('asset').value)) $('chain').dispatchEvent(new Event('change'));
+else destinationChanged();

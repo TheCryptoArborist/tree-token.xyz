@@ -126,3 +126,5 @@ References consulted live:
 - https://docs.robinhood.com/chain/add-network-to-wallet/
 - https://docs.bnbchain.org/bnb-smart-chain/developers/json_rpc/json-rpc-endpoint/
 - MystenLabs/skills: frontend-apps/SKILL.md and non-react.md; sui-sdks/SKILL.md; ptbs/SKILL.md; accessing-data/SKILL.md. No Sui transaction construction or transport changes in this step.
+
+Relay settlement SDK's transitive @xrplf/isomorphic is constrained to 1.0.1 for the existing Netlify runtime: 1.0.2 requires an ESM-only noble module through CommonJS and fails during cold start. This override is scoped to the Relay dependency tree. No XRP functionality is used.
