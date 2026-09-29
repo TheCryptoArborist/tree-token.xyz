@@ -2,6 +2,11 @@ import { routeDraft, readDraft, commandCenterHost, mayanReviewAmount } from './r
 import { SOURCES, SUI, USDC, TREE, amountToRaw } from './options.js';
 const $ = id => document.getElementById(id);
 const viaBase = () => ['bsc', 'robinhood'].includes($('chain').value);
+const rocketxRoute = () => viaBase() && $('destination').value === 'SUI';
+const caveat = document.querySelector('.quote-caveat');
+const originalCaveat = caveat.textContent;
+const legacySections = ['.fees', '.powered', '#route-guide', '.catalog', '#wallet-review'].map(selector => document.querySelector(selector));
+const slippageRow = $('protocol').parentElement.nextElementSibling;
 const destinations = { TREE, SUI, USDC };
 let version = 0;
 let controller;
@@ -19,8 +24,13 @@ function reset() {
 }
 function destinationChanged() {
   const tree = $('destination').value === 'TREE';
+  const rocketx = rocketxRoute();
+  for (const section of legacySections) section.hidden = rocketx;
+  slippageRow.hidden = rocketx;
+  caveat.textContent = rocketx ? 'Market-rate estimate · Final output is not guaranteed.' : originalCaveat;
+  $('via-base-note').hidden = !viaBase() || rocketx;
   $('settlement-label').hidden = !tree;
-  $('destination-note').textContent = tree ? 'SUI settlement includes a TREE estimate. Refresh quotes at each stage.' : (viaBase() ? 'Relay to Base USDC, then Mayan into this asset on Sui.' : 'Request a direct Mayan estimate into this asset on Sui.');
+  $('destination-note').textContent = rocketx ? 'RocketX estimate into native SUI. After arrival, optionally swap SUI for TREE in the Swap tab.' : tree ? 'SUI settlement includes a TREE estimate. Refresh quotes at each stage.' : (viaBase() ? 'Relay to Base USDC, then Mayan into this asset on Sui.' : 'Request a direct Mayan estimate into this asset on Sui.');
   reset();
 }
 $('chain').addEventListener('change', () => {
@@ -40,14 +50,41 @@ async function requestQuote(event) {
   catch (error) { $('quote-status').textContent = error.message; $('quote-status').className = 'error'; return; }
   controller = new AbortController();
   $('quote-button').disabled = true;
-  $('quote-button').textContent = viaBase() ? 'Checking Relay + Mayan…' : 'Checking Mayan…';
+  const rocketx = rocketxRoute();
+  $('quote-button').textContent = rocketx ? 'Checking RocketX…' : viaBase() ? 'Checking Relay + Mayan…' : 'Checking Mayan…';
   $('quote-status').textContent = 'Finding a live bridge estimate. This can take a few seconds.';
   const query = new URLSearchParams({ chain, asset, amount: $('amount').value.trim(), destination: destinations[$('destination').value], settlement: $('settlement').value });
   try {
-    const response = await fetch(`/api/tree-gateway-quote?${query}`, { signal: controller.signal });
+    const response = await fetch(`/api/${rocketx ? 'tree-gateway-rocketx' : 'tree-gateway-quote'}?${query}`, { signal: controller.signal });
     const data = await response.json();
     if (current !== version) return;
     if (!response.ok) throw Error(data.error || 'Quotes are temporarily unavailable.');
+    if (rocketx) {
+      const quote = data.quotes?.filter(q => q.exchangeType === 'CEX' && q.walletless && !q.fixedRate).sort((a, b) => Number(b.expectedAmountOut) - Number(a.expectedAmountOut))[0];
+      if (!quote) throw Error('No verified RocketX exchange route is available for this amount. Try another amount.');
+      const format = value => Number(value).toLocaleString(undefined, { maximumFractionDigits: 6 });
+      const money = value => value === null ? 'not supplied' : '$' + Number(value).toFixed(4);
+      $('route-stages').hidden = true;
+      $('output-label').textContent = 'Estimated arrival · Native SUI';
+      $('output').textContent = format(quote.expectedAmountOut) + ' SUI';
+      $('minimum-label').textContent = 'Guaranteed minimum';
+      $('minimum').textContent = 'None · Market rate';
+      $('eta').textContent = quote.estimatedSeconds === null ? 'Not supplied' : 'About ' + Math.ceil(quote.estimatedSeconds / 60) + ' min';
+      $('protocol').textContent = 'RocketX · ' + (quote.provider || 'Partner exchange') + ' · CEX';
+      caveat.textContent = 'Quoted platform fee: ' + (quote.platformFeePercent === null ? 'not supplied' : format(quote.platformFeePercent) + '%') + ' (' + money(quote.platformFeeUsd) + '). Provider-reported gas: ' + money(quote.gasFeeUsd) + '. Source wallet gas may be additional. No extra TREE Gateway fee is added by this preview.';
+      $('tree-warning').hidden = false;
+      $('tree-warning').textContent = 'Exchange-mediated, market-rate route. The quote does not require a manual Base funding step; execution and recovery are not yet verified. Provider checks, delays or refund conditions may apply. TREE does not pay gas. No deposit address or order has been created. After SUI arrives, use Swap to buy TREE separately and leave SUI for gas.';
+      $('quote-result').hidden = false;
+      $('quote-status').textContent = 'Live RocketX estimate received. Transfers remain disabled.';
+      const expiresAt = Date.parse(data.fetchedAt) + 30_000;
+      const tick = () => {
+        const seconds = Math.max(0, Math.ceil((expiresAt - Date.now()) / 1000));
+        $('validity').textContent = 'Refresh in ' + seconds + 's';
+        if (!seconds) { clearInterval(expiryTimer); $('quote-result').hidden = true; $('quote-status').textContent = 'Estimate expired. Request a fresh quote.'; }
+      };
+      tick(); expiryTimer = setInterval(tick, 1000);
+      return;
+    }
     const quote = data.quotes?.[0];
     if (!quote) throw Error('No verified route found. Try a different amount, network, or settlement asset.');
     if (quote.expiresAt <= Date.now()) throw Error('This quote expired before arrival. Please request a fresh quote.');
