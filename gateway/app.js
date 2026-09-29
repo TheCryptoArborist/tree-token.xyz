@@ -1,4 +1,4 @@
-import { routeDraft, readDraft, commandCenterHost } from './review-core.js';
+import { routeDraft, readDraft, commandCenterHost, mayanReviewAmount } from './review-core.js';
 import { SOURCES, SUI, USDC, TREE, amountToRaw } from './options.js';
 const $ = id => document.getElementById(id);
 const viaBase = () => ['bsc', 'robinhood'].includes($('chain').value);
@@ -78,7 +78,7 @@ async function requestQuote(event) {
       }
     }
     $('quote-result').hidden = false;
-    window.dispatchEvent(new CustomEvent('gateway-quote-review', { detail: data.treeSwap?.status === 'ok' ? { inputAmount: data.treeSwap.inputAmount, expiresAt: quote.expiresAt } : null }));
+    window.dispatchEvent(new CustomEvent('gateway-quote-review', { detail: { inputAmount: data.treeSwap?.status === 'ok' ? data.treeSwap.inputAmount : null, mayanAmountRaw: mayanReviewAmount(chain, asset, query.get('amount'), data), expiresAt: quote.expiresAt } }));
     $('quote-status').textContent = data.treeSwap?.status === 'ok' ? 'Bridge and final TREE estimates received. No transfers initiated.' : data.relay ? 'Two-stage indicative estimate received. No transfers initiated.' : 'Live estimate received. No transfer has been initiated.';
     const tick = () => {
       const remaining = Math.max(0, Math.ceil((quote.expiresAt - Date.now()) / 1000));

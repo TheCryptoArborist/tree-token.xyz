@@ -11,7 +11,7 @@ if (kit) {
   connectButton.instance = kit;
   $('sui-connect-control').append(connectButton);
 } else { $('host-wallet').hidden = false; $('sui-wallet-context').hidden = false; }
-let currentQuote = null, simulationVersion = 0, bridgeVersion = 0;
+let currentQuote = null, simulationVersion = 0, bridgeVersion = 0, mayanVersion = 0;
 let sourceAddress = '', sourceChain = '', suiAddress = '', provider, request, generation = 0;
 let removeListeners = () => {};
 const providers = new Map();
@@ -27,7 +27,8 @@ function render() {
   $('sui-address').textContent = suiAddress || 'Sui receiving wallet not connected.';
   $('source-connect').disabled = !expected;
   $('check-bridges').disabled = !sourceAddress || !['bsc', 'robinhood'].includes($('chain').value) || sourceChain !== EVM_CHAINS[$('chain').value];
-  $('simulate-tree').disabled = !suiAddress || !currentQuote || currentQuote.expiresAt <= Date.now();
+  $('simulate-mayan').disabled = !suiAddress || !sourceAddress || sourceChain !== EVM_CHAINS[$('chain').value] || !currentQuote?.mayanAmountRaw || currentQuote.expiresAt <= Date.now();
+  $('simulate-tree').disabled = !suiAddress || !currentQuote?.inputAmount || currentQuote.expiresAt <= Date.now();
   $('source-network').textContent = !expected ? 'Solana wallet connection is not included in this wallet-review step. Solana quotes remain available.' : !sourceAddress ? 'Choose a browser wallet to connect.' : sourceChain === expected ? 'Wallet is on the selected source network.' : 'Wallet network differs from the selected source. Switch before reviewing balances.';
   $('source-switch').hidden = !sourceAddress || !expected || sourceChain === expected;
   $('gas-check').disabled = !sourceAddress || !expected || sourceChain !== expected;
@@ -106,6 +107,8 @@ $('gas-check').addEventListener('click', async () => {
 render();
 
 function clearSimulation() {
+  mayanVersion++;
+  $('mayan-simulation-status').textContent = 'Connect both wallets and get a fresh SUI-settlement quote from Base USDC, BNB or Robinhood Chain. Checks only the Base source transaction, using existing USDC, ETH and Mayan allowance. Addresses and amount go to Mayan and network providers. No approval, signing or transfer.';
   bridgeVersion++;
   $('bridge-check-status').textContent = 'Connect your source wallet on BNB or Robinhood Chain to check a fresh Relay deposit and current Base funds and allowance for Mayan. Your address and amount go to Relay and the network providers. No signing, approval or transfers.';
   simulationVersion++;
@@ -137,7 +140,7 @@ $('simulate-tree').addEventListener('click', async () => {
     const actual = suiReviewAddress(host.getWalletConnectionState?.());
     if (actual !== suiAddress) { suiAddress = actual; invalidate(); render(); return; }
   }
-  if (!suiAddress || !currentQuote || currentQuote.expiresAt <= Date.now()) return;
+  if (!suiAddress || !currentQuote?.inputAmount || currentQuote.expiresAt <= Date.now()) return;
   const version = ++simulationVersion, address = suiAddress, quote = currentQuote;
   $('simulate-tree').disabled = true;
   $('simulation-status').textContent = 'Simulating a fresh Turbos SUI → TREE swap. No signature requested…';
@@ -177,4 +180,41 @@ $('check-bridges').addEventListener('click', async () => {
     setTimeout(() => { if (version === bridgeVersion) { bridgeVersion++; $('bridge-check-status').textContent = 'Bridge check expired. Run it again for current conditions. Nothing was signed or transferred.'; render(); } }, Math.max(0, data.expiresAt - Date.now()));
   } catch { if (version === bridgeVersion) $('bridge-check-status').textContent = 'Bridge check did not complete or wallet details changed. No simulation pass can be claimed. No funds moved.'; }
   finally { if (version === bridgeVersion) render(); }
+});
+
+$('simulate-mayan').addEventListener('click', async () => {
+  const quote = currentQuote, address = sourceAddress, recipient = suiAddress, active = request, chain = $('chain').value;
+  if (!active || !address || !recipient || !quote?.mayanAmountRaw || quote.expiresAt <= Date.now() || sourceChain !== EVM_CHAINS[chain]) return;
+  const version = ++mayanVersion;
+  $('simulate-mayan').disabled = true;
+  $('mayan-simulation-status').textContent = 'Verifying a fresh Mayan CCTP transaction and checking existing Base funds and allowance…';
+  const verifyAccounts = async () => {
+    const [accounts, network] = await Promise.all([active('eth_accounts'), active('eth_chainId')]);
+    if (accounts?.[0]?.toLowerCase() !== address.toLowerCase() || BigInt(network) !== BigInt(EVM_CHAINS[chain])) throw Error();
+    let actual;
+    if (host) actual = suiReviewAddress(host.getWalletConnectionState?.());
+    else { const c = kit.stores.$connection.get(); actual = suiReviewAddress({ connected: c.isConnected === true && c.account?.chains?.includes('sui:mainnet'), address: c.account?.address }); }
+    if (actual !== recipient) throw Error();
+  };
+  try {
+    await verifyAccounts();
+    if (version !== mayanVersion) return;
+    const response = await fetch('/api/tree-gateway-mayan-simulate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ address, recipient, amountRaw: quote.mayanAmountRaw }), signal: AbortSignal.timeout(28000) });
+    const result = await response.json();
+    await verifyAccounts();
+    if (version !== mayanVersion || quote.expiresAt <= Date.now()) return;
+    if (!response.ok || result.address !== address.toLowerCase() || result.recipient !== recipient || result.amountRaw !== quote.mayanAmountRaw || result.payloadVerified !== true || result.signed !== false || result.submitted !== false || result.routeReady !== false || !Number.isFinite(result.expiresAt) || result.expiresAt <= Date.now()) throw Error();
+    let message;
+    if (result.status === 'passed' && result.simulated === true) message = 'Mayan Base USDC → SUI source transaction simulation passed for these addresses. ';
+    else if (result.status === 'blocked' && result.simulated === false) {
+      const missing = [];
+      if (result.funds?.baseEthPresent !== true) missing.push('Base ETH');
+      if (result.funds?.existingUsdcEnough !== true) missing.push('enough existing Base USDC');
+      if (result.funds?.existingAllowanceEnough !== true) missing.push('an existing Mayan allowance for this amount');
+      message = 'Transaction details verified; simulation not run. Missing: ' + missing.join(', ') + '. No approval requested. ';
+    } else throw Error();
+    $('mayan-simulation-status').textContent = message + 'Sui delivery, Relay and the TREE swap are not verified by this check. Future proceeds are not counted; total fees including Base L1 fees are not confirmed. Nothing signed or sent.';
+    setTimeout(() => { if (version === mayanVersion) { mayanVersion++; $('mayan-simulation-status').textContent = 'Mayan check expired. Refresh the quote and check again. No funds moved.'; render(); } }, Math.max(0, Math.min(result.expiresAt, quote.expiresAt)-Date.now()));
+  } catch { if (version === mayanVersion) $('mayan-simulation-status').textContent = 'Mayan simulation did not pass, was unavailable, or wallet details changed. No approval, signing or transfer occurred.'; }
+  finally { if (version === mayanVersion) render(); }
 });

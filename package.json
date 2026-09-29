@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.14.4",
+    "@mayanfinance/swap-sdk": "15.2.2",
     "@mysten/dapp-kit": "latest",
     "@mysten/sui": "latest",
     "@netlify/blobs": "^10.7.12",
@@ -32,6 +33,9 @@
     "@relay-protocol/settlement-sdk": {
       "@xrplf/isomorphic": "1.0.1",
       "ripple-address-codec": "5.0.0"
+    },
+    "rpc-websockets": {
+      "uuid": "11.1.0"
     }
   }
 }

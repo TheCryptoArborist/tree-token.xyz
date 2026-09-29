@@ -1,4 +1,4 @@
-import { SOURCES, amountToRaw } from './options.js';
+import { SOURCES, SUI, amountToRaw } from './options.js';
 export const EVM_CHAINS = { base: '0x2105', ethereum: '0x1', bsc: '0x38', robinhood: '0x1237' };
 export const isEvmAddress = value => typeof value === 'string' && /^0x[0-9a-fA-F]{40}$/.test(value) && !/^0x0{40}$/i.test(value);
 export function routeDraft(value) {
@@ -31,5 +31,16 @@ export function commandCenterHost(win) {
   try {
     const host = win.parent;
     return host !== win && host.location.origin === win.location.origin && /^\/dapp\/?$/.test(host.location.pathname) && host.document.querySelector('#tree-gateway-dock iframe') === win.frameElement ? host : null;
+  } catch { return null; }
+}
+
+export function mayanReviewAmount(chain, asset, amount, data) {
+  if (data?.settlement !== SUI) return null;
+  let raw;
+  try {
+    if (['bsc', 'robinhood'].includes(chain)) raw = data.relay?.minimumRaw;
+    else if (chain === 'base' && asset === 'USDC') raw = amountToRaw(amount, 6);
+    if (typeof raw !== 'string' || !/^[1-9]\d{0,12}$/.test(raw) || BigInt(raw) > 1000000000000n) return null;
+    return raw;
   } catch { return null; }
 }
