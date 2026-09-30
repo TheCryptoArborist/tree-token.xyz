@@ -1,0 +1,8 @@
+{
+  "name": "canopy-mainnet-readonly",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "dependencies": { "@mysten/sui": "2.31.0" }
+}

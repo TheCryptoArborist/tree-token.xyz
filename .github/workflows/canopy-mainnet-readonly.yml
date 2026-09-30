@@ -1,0 +1,27 @@
+name: Canopy read-only Sui mainnet verification
+on:
+  push:
+    branches: [feature/canopy-credits-mainnet-ledger]
+    paths: ['services/canopy-credits/**', '.github/workflows/canopy-mainnet-readonly.yml']
+permissions:
+  contents: read
+jobs:
+  mainnet-read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Install isolated locked SDK without lifecycle scripts
+        working-directory: services/canopy-credits/reader
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          git diff --exit-code -- package.json package-lock.json
+      - name: Offline reader and existing payment validation
+        run: node --test --test-reporter=spec services/canopy-credits/tests/*reader*.test.mjs services/canopy-credits/tests/payment.test.mjs services/canopy-credits/reader/transport.test.mjs
+      - name: Bounded read-only mainnet acceptance; no transaction submission
+        run: node services/canopy-credits/reader/smoke.mjs

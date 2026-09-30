@@ -1,0 +1,43 @@
+name: Private flight storage and PostgreSQL service integration
+on:
+  push:
+    branches: [feature/canopy-credits-mainnet-ledger]
+    paths: ['services/canopy-credits/**', '.github/workflows/flight-storage.yml']
+permissions:
+  contents: read
+jobs:
+  flight-storage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675
+        env:
+          POSTGRES_DB: tree_flight_ci
+          POSTGRES_USER: flight_ci
+          POSTGRES_PASSWORD: disposable-ci-only
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U flight_ci -d tree_flight_ci"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: 127.0.0.1
+      PGPORT: '5432'
+      PGDATABASE: tree_flight_ci
+      PGUSER: flight_ci
+      PGPASSWORD: disposable-ci-only
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Install test-only pg driver outside app dependencies
+        run: |
+          mkdir -p "$RUNNER_TEMP/flight-pg"
+          printf '{"private":true}' > "$RUNNER_TEMP/flight-pg/package.json"
+          npm install --prefix "$RUNNER_TEMP/flight-pg" --ignore-scripts --no-audit --no-fund --save-exact pg@8.16.3
+          echo "FLIGHT_PG_PACKAGE=$RUNNER_TEMP/flight-pg/package.json" >> "$GITHUB_ENV"
+      - name: Flight serialization, HTTP boundary and real persistent service tests
+        run: node --test --test-reporter=spec services/canopy-credits/tests/flight-storage.test.mjs services/canopy-credits/tests/flight-storage-postgres.test.mjs

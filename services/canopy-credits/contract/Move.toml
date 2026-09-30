@@ -1,0 +1,11 @@
+[package]
+name = "canopy_checkout"
+edition = "2024"
+
+[dependencies]
+Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "58386edc269ef88ff0f40ab0a9d50e87cba80ca8" }
+
+[addresses]
+canopy_checkout = "0x0"
+# Used ONLY by the test-only mock module, absent from a production build.
+tree_fixture = "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf"
