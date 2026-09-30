@@ -19,7 +19,8 @@ function fixture(){
 }
 test('central fixed order and original BCS quote authority agree with actual game wallet builder',async()=>{
  const f=fixture(),tx=await paymentTransaction(f.order,f.deployment,now);const data=tx.getData();
- assert.equal(data.sender,f.actor.wallet.address);assert.ok(JSON.stringify(data).includes('20000000000'));
+ assert.equal(data.sender,f.actor.wallet.address);
+ assert.ok(JSON.stringify(data,(_key,value)=>typeof value==='bigint'?value.toString():value).includes('20000000000'));
  assert.equal(data.commands.find(c=>c.$kind==='MoveCall').MoveCall.package,f.deployment.packageId);
  assert.equal(data.gasData.budget,null);
 });
