@@ -26,7 +26,7 @@ assert.match(arcade, /TREE FORCE '89[\s\S]*COMING SOON/);
 assert.match(arcade, /<h2>ARBORETUM<\/h2>/);
 assert.match(arcade, /<span class="status testing">IN TESTING<\/span>/);
 assert.equal(arcade.includes('/play/tree-force'), false);
-assert.equal(arcade.includes('treegrow.xyz'), false);
+assert.match(arcade, /href="https:\/\/treegrow\.xyz\/"[^>]*>OPEN ARBORETUM/);
 assert.equal(homepage.includes('treegrow.xyz'), false);
 assert.equal((arcade.match(/class="game-card /g) || []).length, 3);
 assert.equal((arcade.match(/href="https:\/\/nftree\.net\/battle\//g) || []).length, 1);
