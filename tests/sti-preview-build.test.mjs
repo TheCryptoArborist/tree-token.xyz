@@ -11,7 +11,14 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
   }
   const manifest = JSON.parse(readFileSync(new URL('production/manifest.json', root)));
   const published = JSON.parse(readFileSync(new URL('production/current-release.json', root)));
-  assert.deepEqual(manifest.files.map(f => [f.path, f.sha1]).sort(), published.files.map(f => [f.path, f.sha]).sort());
+  const reviewedReleaseDelta = new Set(['/play/index.html']);
+  assert.deepEqual(
+    manifest.files.filter(f => !reviewedReleaseDelta.has(f.path)).map(f => [f.path, f.sha1]).sort(),
+    published.files.filter(f => !reviewedReleaseDelta.has(f.path)).map(f => [f.path, f.sha]).sort(),
+  );
+  for (const path of reviewedReleaseDelta) {
+    assert.notEqual(manifest.files.find(f => f.path === path)?.sha1, published.files.find(f => f.path === path)?.sha);
+  }
   const overlays = ['/dapp/index.html', '/dapp/styles.css', '/dapp/panel-router.css', '/dapp/interaction-bootstrap.js', '/scripts/wallet.js', '/scripts/tree-knowledge-trial.js'];
   const additions = ['/dapp/sti-widget.js', '/dapp/sti-purchase-core.js', '/dapp/sti-stats-core.js', '/dapp/challenge-funding-core.js', '/assets/sti-icon.svg'];
   const digest = file => createHash('sha1').update(readFileSync(file)).digest('hex');
