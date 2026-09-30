@@ -16,7 +16,7 @@ const publishedSource=file=>archivedStiFiles.includes(file)
   :challengeBaselineFiles.includes(file)
     ?'production/challenge-funding-baseline/'+file
     :postStiReviewedFiles.includes(file)
-      ?'production/live-static/'+file
+      ?'production/sti-release-static/'+file
       :manifest.files.find(f=>f.path==='/'+file)?.source||file;
 const hash=(file,algorithm)=>crypto.createHash(algorithm).update(fs.readFileSync(new URL('../'+publishedSource(file),import.meta.url))).digest('hex');
 test('release inventory preserves every baseline file and changes only the approved eight frontend paths',()=>{
