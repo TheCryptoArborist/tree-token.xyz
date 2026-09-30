@@ -1,0 +1,52 @@
+name: Fixed TREE continue server and game integration
+on:
+  push:
+    branches: [feature/canopy-credits-mainnet-ledger]
+    paths: ['services/canopy-credits/**', '.github/workflows/direct-tree-continue-integration.yml']
+permissions:
+  contents: read
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    services:
+      postgres:
+        image: postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675
+        env:
+          POSTGRES_DB: canopy_ci
+          POSTGRES_USER: canopy_ci
+          POSTGRES_PASSWORD: disposable-ci-only
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U canopy_ci -d canopy_ci"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: 127.0.0.1
+      PGPORT: '5432'
+      PGDATABASE: canopy_ci
+      PGUSER: canopy_ci
+      PGPASSWORD: disposable-ci-only
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: TheCryptoArborist/treeforce89
+          ref: 03be08c5ade7a30d7868fff714f391233acc4b3c
+          path: game
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Locked SDK dependencies
+        run: |
+          npm ci --prefix services/canopy-credits/reader --ignore-scripts --no-audit --no-fund
+          npm ci --prefix game/app/game/tree-payments --ignore-scripts --no-audit --no-fund
+      - name: Fixed price, service and actual cross-repository quote integration
+        run: node --test --test-reporter=spec services/canopy-credits/tests/direct-continue.test.mjs services/canopy-credits/tests/direct-cross-repo.test.mjs services/canopy-credits/tests/payment.test.mjs
+      - name: Existing ledger and isolated direct-purchase SQL invariants
+        run: |
+          command -v psql || (sudo apt-get update && sudo apt-get install -y postgresql-client)
+          python3 services/canopy-credits/tests/postgres_test.py
+          python3 services/canopy-credits/tests/direct_postgres_test.py

@@ -1,6 +1,7 @@
 /** Backend-only foundation. No signer, wallet calls, transaction submission or HTTP route. */
 import { createHash, createHmac, randomUUID, timingSafeEqual } from 'node:crypto';
 import { CC_SALES_RECIPIENT } from './sales-recipient.mjs';
+import { validateFixedContinueTerms } from './continue-product.mjs';
 export { CC_SALES_RECIPIENT };
 export const TREE_TYPE = '0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE';
 export const NETWORK = 'sui:mainnet';
@@ -56,6 +57,7 @@ export function draftOrder({accountId,payer,baseCC,orderId=randomUUID()},config,
 }
 export function validateStoredTerms(t) {
   check(t&&typeof t==='object','missing-order');
+  if(t.kind==='direct-continue') return validateFixedContinueTerms(t);
   const {quoteHash,...committed}=t; check(/^[a-f0-9]{64}$/.test(quoteHash||'')&&hash(committed)===quoteHash,'order-commitment-mismatch');
   uuid(t.accountId);uuid(t.orderId);address(t.payer);address(t.recipient);address(t.checkoutPackage);
   check(t.recipient===CC_SALES_RECIPIENT,'unapproved-sales-recipient');
@@ -88,9 +90,7 @@ export async function verifyFromReader(terms,digest,eventIndex,reader) {
   check(e.fields&&Object.entries(expected).every(([k,v])=>e.fields[k]===v),'receipt-fields-mismatch');
   let stamp=tx.timestampMs, receiptContext={};
   if (Object.hasOwn(e.fields,'checkoutId') || Object.hasOwn(e.fields,'paidAtMs')) {
-    // The contract's Clock is authoritative for quote expiry. A containing checkpoint
-    // can be recorded later than execution; never reject an on-time paid receipt merely
-    // because checkpoint inclusion or the worker's observation came after expiry.
+    // Contract Clock determines expiry; the containing checkpoint can occur later.
     address(e.fields.checkoutId); check(uint(e.fields.keyEpoch)>0n,'invalid-receipt-key-epoch');
     check(e.fields.issuedAtMs===String(terms.issuedAtMs)&&e.fields.expiresAtMs===String(terms.expiresAtMs),'receipt-order-window-mismatch');
     stamp=Number(uint(e.fields.paidAtMs,BigInt(Number.MAX_SAFE_INTEGER)));
