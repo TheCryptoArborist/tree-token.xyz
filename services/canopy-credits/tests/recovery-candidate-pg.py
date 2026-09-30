@@ -16,7 +16,8 @@ class Tests(unittest.TestCase):
  def setUpClass(cls):
   sql('CREATE ROLE anon;CREATE ROLE authenticated;CREATE ROLE service_role;')
   sql((root/'direct-continue-schema.sql').read_text());sql((root/'migrations/flight-storage-v1.sql').read_text());sql((root/'migrations/recovery-candidate-rpc.sql').read_text())
- def setUp(self):self.a=str(uuid.uuid4());self.run=str(uuid.uuid4());self.p='0x'+'1'*64
+ def setUp(self):
+  self.a=str(uuid.uuid4());self.run=str(uuid.uuid4());self.p='0x'+hashlib.sha256(self.a.encode()).hexdigest()
  def save(self):
   s=json.dumps(dict(format='treeforce89.checkpoint.v1',ruleset='treeforce89.v1',runId=self.run,wave=3,score=15000,lives=0,continuesUsed=0,scene=dict(codec='formation-recovery.v1')),sort_keys=True,separators=(',',':'));h=hashlib.sha256(s.encode()).hexdigest()
   return call(self.a,self.p,'save',self.run,str(uuid.uuid4()),s,h),s,h
