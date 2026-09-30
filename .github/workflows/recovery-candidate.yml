@@ -1,0 +1,36 @@
+name: Recovery candidate gateway and database
+on:
+  push:
+    branches: [preview/flight-recovery]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    services:
+      postgres:
+        image: postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675
+        env:
+          POSTGRES_DB: recovery_ci
+          POSTGRES_USER: recovery_ci
+          POSTGRES_PASSWORD: disposable-ci-only
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U recovery_ci -d recovery_ci"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: 127.0.0.1
+      PGDATABASE: recovery_ci
+      PGUSER: recovery_ci
+      PGPASSWORD: disposable-ci-only
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - run: node --test --test-reporter=spec services/canopy-credits/tests/recovery-gateway.test.mjs
+      - name: Gateway RPC and grants in disposable PostgreSQL
+        run: python3 services/canopy-credits/tests/recovery-candidate-pg.py
