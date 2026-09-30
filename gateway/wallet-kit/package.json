@@ -1,0 +1,1 @@
+{"name":"tree-gateway-wallet-review","private":true,"type":"module","dependencies":{"@mysten/dapp-kit-core":"1.6.34","@mysten/sui":"2.33.1"}}
