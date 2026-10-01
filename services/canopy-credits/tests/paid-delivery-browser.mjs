@@ -71,9 +71,20 @@ async function saveRealFlight(actor,service,wave){
  const {page,context}=await pageFor(actor,service,{wave});await page.keyboard.press('Enter');
  await page.waitForFunction(()=>window.__treeRecoveryTestGame.scene.getScene('game').enemies?.countActive()>0,{},{timeout:12000});
  if(wave===10)await page.waitForFunction(()=>window.__treeRecoveryTestGame.scene.getScene('game').enemies.getChildren().some(e=>e.kind==='boss'&&e.settled),{},{timeout:12000});
- await page.evaluate(w=>{const s=window.__treeRecoveryTestGame.scene.getScene('game');s.run.score=17000+w;s.stage=0;s.grafted=false;s.invincible=false;s.cloakUntil=0;s.invulnUntil=0;s.lives=1;if(w===10)s.enemies.getChildren().find(e=>e.kind==='boss').hp=59;s.damagePlayer();},wave);
+ await page.evaluate(w=>{
+  const s=window.__treeRecoveryTestGame.scene.getScene('game');s.run.score=17000+w;
+  // A normal high-score flight already earned its milestone life. Run the real
+  // HUD/award logic BEFORE forcing the last-life test, so the saved fixture does
+  // not invent an unclaimed life on restore. Do not relax checkpoint assertions.
+  s.updateHud();
+  if(s.extraLivesAwarded!==1)throw Error('High-score fixture did not account for its earned life.');
+  s.stage=0;s.grafted=false;s.invincible=false;s.cloakUntil=0;s.invulnUntil=0;s.lives=1;
+  if(w===10)s.enemies.getChildren().find(e=>e.kind==='boss').hp=59;
+  s.damagePlayer();
+ },wave);
  await page.waitForFunction(()=>document.querySelector('.flight-recovery-box button')?.textContent==='SAVED — SAFE TO RELOAD FOR TEST',{},{timeout:12000});
  const {rows}=await pool.query('SELECT checkpoint_id,run_id,checkpoint_hash,snapshot_text FROM tree_continue_v1.checkpoints WHERE account_id=$1',[actor.accountId]);assert.equal(rows.length,1);
+ assert.equal(JSON.parse(rows[0].snapshot_text).scene.values.extraLivesAwarded,1);
  await context.close();return rows[0];
 }
 async function seedVerified(actor,setup,saved){
@@ -96,8 +107,8 @@ async function install(page,runId,orderId,hold=false){
 async function resume(page){return page.evaluate(()=>window.receiptDelivery.resume().then(ok=>({ok})).catch(e=>({error:e.code||e.message})));}
 async function checkGame(page,wave){
  await page.waitForFunction(()=>{const g=window.__treeRecoveryTestGame,s=g.scene.getScene('game');return g.scene.isActive('game')&&s.lives===3&&!s.paused&&!s.physics.world.isPaused&&s.input.enabled&&s.input.keyboard.enabled&&s.input.keyboard.keys[65];},{},{timeout:10000});
- const state=await page.evaluate(()=>{const s=window.__treeRecoveryTestGame.scene.getScene('game');return{wave:s.run.wave+1,score:s.run.score,lives:s.lives,bossHp:s.enemies.getChildren().find(e=>e.kind==='boss')?.hp,shots:s.run.shotsFired,continued:s.run.continued};});
- assert.equal(state.wave,wave);assert.equal(state.score,17000+wave);assert.equal(state.lives,3);assert.equal(state.continued,true);if(wave===10)assert.equal(state.bossHp,59);
+ const state=await page.evaluate(()=>{const s=window.__treeRecoveryTestGame.scene.getScene('game');return{wave:s.run.wave+1,score:s.run.score,lives:s.lives,bossHp:s.enemies.getChildren().find(e=>e.kind==='boss')?.hp,shots:s.run.shotsFired,continued:s.run.continued,extraLivesAwarded:s.extraLivesAwarded};});
+ assert.equal(state.wave,wave);assert.equal(state.score,17000+wave);assert.equal(state.lives,3);assert.equal(state.continued,true);assert.equal(state.extraLivesAwarded,1);if(wave===10)assert.equal(state.bossHp,59);
  await page.keyboard.down('a');try{await page.waitForFunction(()=>window.__treeRecoveryTestGame.scene.getScene('game').player.x<230,{},{timeout:5000});}finally{await page.keyboard.up('a');}
  await page.keyboard.down('z');try{await page.waitForFunction(before=>window.__treeRecoveryTestGame.scene.getScene('game').run.shotsFired>before,state.shots,{timeout:5000});}finally{await page.keyboard.up('z');}
 }
