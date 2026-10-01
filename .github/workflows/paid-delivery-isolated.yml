@@ -4,6 +4,9 @@ on:
     branches: [feature/paid-continue-delivery]
 permissions:
   contents: read
+concurrency:
+  group: paid-delivery-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   paid-delivery:
     runs-on: ubuntu-latest
@@ -31,7 +34,7 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           repository: TheCryptoArborist/treeforce89
-          ref: cfef872a7e5de0020e97ecd14975a75d6644c241
+          ref: 2eac8a1d0ad40614cc6d90c3ed10a808df03f289
           path: game
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
@@ -54,11 +57,24 @@ jobs:
         run: npm run build --prefix game
       - name: Real PostgreSQL service/controller, security and replay checks
         run: node --test --test-reporter=spec services/canopy-credits/tests/paid-delivery-pg.test.mjs
+      - name: Lost-digest recovery, chain validation, scoped lookup and default checkout
+        run: node --test --test-reporter=spec services/canopy-credits/tests/purchase-recovery-pg.test.mjs
       - name: Real Phaser, Chromium and PostgreSQL receipt-backed recovery
         run: node services/canopy-credits/tests/paid-delivery-browser.mjs
+      - name: Prepare isolated loopback HTTPS certificate
+        run: |
+          openssl req -x509 -newkey rsa:2048 -nodes -keyout "$RUNNER_TEMP/continue-ci.key" -out "$RUNNER_TEMP/continue-ci.crt" -subj /CN=localhost -addext 'subjectAltName=DNS:localhost,IP:127.0.0.1' -days 1
+          chmod 600 "$RUNNER_TEMP/continue-ci.key"
+          echo "TEST_TLS_KEY=$RUNNER_TEMP/continue-ci.key" >> "$GITHUB_ENV"
+          echo "TEST_TLS_CERT=$RUNNER_TEMP/continue-ci.crt" >> "$GITHUB_ENV"
+          echo "NODE_EXTRA_CA_CERTS=$RUNNER_TEMP/continue-ci.crt" >> "$GITHUB_ENV"
+      - name: Compiled default UI over real HTTPS gateway and PostgreSQL
+        run: node services/canopy-credits/tests/purchase-recovery-https-browser.mjs
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
-          name: paid-delivery-game-evidence
-          path: paid-evidence/
+          name: continue-integration-evidence
+          path: |
+            integration-evidence/
+            paid-evidence/
           retention-days: 7
