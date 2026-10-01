@@ -35,6 +35,12 @@ export function quoteFields(terms, deployment) {
   check(terms.checkoutPackage === d.packageId && terms.eventType === `${d.packageId}::checkout::Purchase`, 'checkout-package-mismatch');
   check(terms.chainIdentifier === '35834a8a' && terms.decimals === 6, 'mainnet-metadata-mismatch');
   check(terms.expiresAtMs - terms.issuedAtMs <= 45000, 'quote-window-too-long');
+  if (terms.kind === 'direct-continue') {
+    // The commitment includes these fields. Never silently encode a different
+    // instance or signing epoch: that could produce a paid but unmatchable order.
+    check(terms.checkoutId === d.checkoutId, 'direct-quote-instance-mismatch');
+    check(terms.keyEpoch === d.keyEpoch, 'direct-quote-key-epoch-mismatch');
+  }
   return {
     domain: [...new TextEncoder().encode(DOMAIN)], checkout_id: d.checkoutId, key_epoch: d.keyEpoch,
     order_id: [...idBytes(terms.orderId)], account_id: [...idBytes(terms.accountId)],
