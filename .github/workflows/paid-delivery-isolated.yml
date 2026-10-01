@@ -1,0 +1,48 @@
+name: Paid continue one-time delivery checks
+on:
+  push:
+    branches: [feature/paid-continue-delivery]
+permissions:
+  contents: read
+jobs:
+  paid-delivery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675
+        env:
+          POSTGRES_DB: paid_delivery_ci
+          POSTGRES_USER: paid_delivery_ci
+          POSTGRES_PASSWORD: disposable-ci-only
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U paid_delivery_ci -d paid_delivery_ci"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: 127.0.0.1
+      PGDATABASE: paid_delivery_ci
+      PGUSER: paid_delivery_ci
+      PGPASSWORD: disposable-ci-only
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: TheCryptoArborist/treeforce89
+          ref: 79dbd83582d25e4b2769eccf3424af200e84fa31
+          path: game
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Install test-only database client
+        run: |
+          mkdir -p "$RUNNER_TEMP/paid-tools"
+          printf '{"private":true}' > "$RUNNER_TEMP/paid-tools/package.json"
+          npm install --prefix "$RUNNER_TEMP/paid-tools" --ignore-scripts --no-audit --no-fund --save-exact pg@8.16.3
+          echo "PAID_TEST_PACKAGE=$RUNNER_TEMP/paid-tools/package.json" >> "$GITHUB_ENV"
+          echo "PAID_GAME_ROOT=$GITHUB_WORKSPACE/game" >> "$GITHUB_ENV"
+      - name: Real PostgreSQL, actual service/controller, security and replay checks
+        run: node --test --test-reporter=spec services/canopy-credits/tests/paid-delivery-pg.test.mjs
