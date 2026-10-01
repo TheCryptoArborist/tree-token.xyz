@@ -123,9 +123,10 @@ try{
  }
  const f=fixture(),free=await exhausted(f);f.config.paymentsEnabled=false;
  await free.page.getByRole('button',{name:'CONTINUE — 20,000 TREE',exact:true}).click();await free.page.getByText('TREE checkout is not live yet. No payment was requested. You can start a new game for free.',{exact:true}).waitFor();
- await free.page.getByRole('button',{name:'RECOVER TREE PURCHASE',exact:true}).click();
+ const exhaustedDialog=free.page.getByRole('dialog',{name:'OUT OF LIVES',exact:true});
+ await exhaustedDialog.getByRole('button',{name:'RECOVER TREE PURCHASE',exact:true}).click();
  const panel=free.page.getByRole('dialog',{name:'Recover TREE purchase',exact:true});await panel.getByText('No purchases were found for this signed-in account.',{exact:true}).waitFor();await panel.getByRole('button',{name:'CLOSE',exact:true}).click();
- await free.page.getByRole('button',{name:'START NEW GAME — FREE',exact:true}).click();await free.page.waitForFunction(()=>window.__treeRecoveryTestGame.scene.getScene('game').lives===3);await free.context.close();
+ await exhaustedDialog.getByRole('button',{name:'START NEW GAME — FREE',exact:true}).click();await free.page.waitForFunction(()=>window.__treeRecoveryTestGame.scene.getScene('game').lives===3);await free.context.close();
  assert.equal(browserPayments,0);assert.deepEqual(errors,[]);
  const result={passed:reports.length+1,compiledDist:true,realHttps:true,realPostgres:true,authentication:'fixture',chainEvidence:'fixture',checkpointReview:'fixture',installedWallet:false,browserPayments,sessionChecks,indexReads,activationCalls,pageErrors:0,reports};
  await writeFile('integration-evidence/results.json',JSON.stringify(result,null,2));console.log('DEFAULT_UI_HTTPS_RESULT',JSON.stringify(result));
