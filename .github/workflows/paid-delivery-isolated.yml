@@ -7,7 +7,7 @@ permissions:
 jobs:
   paid-delivery:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     services:
       postgres:
         image: postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675
@@ -31,18 +31,34 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           repository: TheCryptoArborist/treeforce89
-          ref: 79dbd83582d25e4b2769eccf3424af200e84fa31
+          ref: cfef872a7e5de0020e97ecd14975a75d6644c241
           path: game
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '22'
-      - name: Install test-only database client
+      - name: Install locked game and test-only tooling
         run: |
+          npm ci --prefix game --ignore-scripts --no-audit --no-fund
+          npm ci --prefix game/app/game/tree-payments --ignore-scripts --no-audit --no-fund
           mkdir -p "$RUNNER_TEMP/paid-tools"
           printf '{"private":true}' > "$RUNNER_TEMP/paid-tools/package.json"
-          npm install --prefix "$RUNNER_TEMP/paid-tools" --ignore-scripts --no-audit --no-fund --save-exact pg@8.16.3
+          npm install --prefix "$RUNNER_TEMP/paid-tools" --ignore-scripts --no-audit --no-fund --save-exact pg@8.16.3 playwright@1.55.0
+          node "$RUNNER_TEMP/paid-tools/node_modules/playwright/cli.js" install --with-deps chromium
           echo "PAID_TEST_PACKAGE=$RUNNER_TEMP/paid-tools/package.json" >> "$GITHUB_ENV"
           echo "PAID_GAME_ROOT=$GITHUB_WORKSPACE/game" >> "$GITHUB_ENV"
-      - name: Real PostgreSQL, actual service/controller, security and replay checks
+      - name: Existing game, wallet, recovery and prompt regressions
+        working-directory: game
+        run: node --test --test-reporter=spec tests/direct-tree*.test.mjs tests/continue*.test.mjs tests/tree-account*.test.mjs tests/account-ui.test.mjs tests/capture-animation.test.mjs tests/boss-background.test.mjs tests/tyrant-combat.test.mjs tests/recovery-signin*.test.mjs
+      - name: Actual game production compilation
+        run: npm run build --prefix game
+      - name: Real PostgreSQL service/controller, security and replay checks
         run: node --test --test-reporter=spec services/canopy-credits/tests/paid-delivery-pg.test.mjs
+      - name: Real Phaser, Chromium and PostgreSQL receipt-backed recovery
+        run: node services/canopy-credits/tests/paid-delivery-browser.mjs
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: paid-delivery-game-evidence
+          path: paid-evidence/
+          retention-days: 7
