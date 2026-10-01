@@ -34,7 +34,7 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           repository: TheCryptoArborist/treeforce89
-          ref: a20cfa7e78ddbe6228b1006003147681c2543cac
+          ref: 07d09b8dba85c91f6a9ce60ad515f09ad601059c
           path: game
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
@@ -50,6 +50,8 @@ jobs:
           node "$RUNNER_TEMP/paid-tools/node_modules/playwright/cli.js" install --with-deps chromium
           echo "PAID_TEST_PACKAGE=$RUNNER_TEMP/paid-tools/package.json" >> "$GITHUB_ENV"
           echo "PAID_GAME_ROOT=$GITHUB_WORKSPACE/game" >> "$GITHUB_ENV"
+      - name: Hosted read-only gateway and probe security
+        run: node --test --test-reporter=spec supabase/functions/tree-continue-preview/gateway.test.mjs
       - name: Existing game, wallet, recovery and prompt regressions
         working-directory: game
         run: node --test --test-reporter=spec tests/direct-tree*.test.mjs tests/continue*.test.mjs tests/tree-account*.test.mjs tests/account-ui.test.mjs tests/capture-animation.test.mjs tests/boss-background.test.mjs tests/tyrant-combat.test.mjs
@@ -59,6 +61,8 @@ jobs:
         run: node --test --test-reporter=spec services/canopy-credits/tests/paid-delivery-pg.test.mjs
       - name: Lost-digest recovery, chain validation, scoped lookup and default checkout
         run: node --test --test-reporter=spec services/canopy-credits/tests/purchase-recovery-pg.test.mjs
+      - name: Read-only hosted wrapper real PostgreSQL permissions and concurrency
+        run: node --test --test-reporter=spec services/canopy-credits/tests/hosted-lookup-pg.test.mjs
       - name: Real Phaser, Chromium and PostgreSQL receipt-backed recovery
         run: node services/canopy-credits/tests/paid-delivery-browser.mjs
       - name: Prepare isolated loopback HTTPS certificate
