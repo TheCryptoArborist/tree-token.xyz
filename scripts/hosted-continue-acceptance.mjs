@@ -51,15 +51,25 @@ try{
  assert.equal((await post('/api/tree-continue',{action:'list_purchases',payer:address})).status,400);
  assert.equal((await post('/api/tree-continue',{action:'list_purchases'},{Origin:'https://foreign.example'})).status,403);passed('identity-injection-and-foreign-origin-denied');
  stage='hosted-browser-ui';await page.goto(origin+'/',{waitUntil:'domcontentloaded',timeout:45000});
- await page.getByRole('button',{name:'RECOVER TREE PURCHASE',exact:true}).click({timeout:30000});
+ await page.getByRole('button',{name:'SIGN OUT',exact:true}).waitFor({timeout:30000});
+ const entry=page.locator('.game-frame > .tree-purchase-recovery');
  const dialog=page.getByRole('dialog',{name:'Recover TREE purchase',exact:true});
- await dialog.getByText('No purchases were found for this signed-in account.',{exact:true}).waitFor({timeout:30000});
- await page.screenshot({path:'hosted-evidence/purchase-lookup-mobile.png',fullPage:true});
- await dialog.getByRole('button',{name:'CLOSE',exact:true}).click();passed('real-hosted-compiled-purchase-panel');
+ for(const viewport of [{width:390,height:844},{width:320,height:640},{width:1200,height:1000}]){
+  await page.setViewportSize(viewport);await entry.scrollIntoViewIfNeeded();
+  const aboveCanvas=await entry.evaluate(e=>{const a=e.getBoundingClientRect(),b=e.parentElement.querySelector('.screen-bezel').getBoundingClientRect();return a.bottom<=b.top+1&&a.width<=innerWidth;});
+  assert.equal(aboveCanvas,true,'recovery entry above canvas without horizontal overflow');
+  await page.screenshot({path:`hosted-evidence/recovery-entry-${viewport.width}.png`,fullPage:true});
+  // Normal pointer interaction: never force a click or remove the preview toolbar.
+  await entry.click({timeout:30000});
+  await dialog.getByText('No purchases were found for this signed-in account.',{exact:true}).waitFor({timeout:30000});
+  await page.screenshot({path:`hosted-evidence/purchase-lookup-${viewport.width}.png`,fullPage:true});
+  await dialog.getByRole('button',{name:'CLOSE',exact:true}).click();
+ }
+ passed('real-hosted-compiled-purchase-panel-at-three-widths');
  stage='revocation';const logout=await post('/api/tree-account',{action:'logout'});assert.equal(logout.status,200);loggedIn=false;
  const stale=await post('/api/tree-continue',{action:'list_purchases'},{Cookie:savedSession.name+'='+savedSession.value});assert.equal(stale.status,401);passed('revoked-session-cannot-query');
  assert.equal(errors.length,0);passed('no-browser-page-errors');
- const result={checkedAt:new Date().toISOString(),passed:checks.length,checks,gameOrigin:origin,chain,realHostedServices:true,authentication:'real-personal-message-unfunded-ephemeral-key',installedWallet:false,transactionsSigned:0,purchasesCreated:0,paidReceiptsSeeded:0,paidContinuesActivated:0,gameplayRecoveryNotRetested:true};
+ const result={checkedAt:new Date().toISOString(),passed:checks.length,checks,gameOrigin:origin,chain,realHostedServices:true,authentication:'real-personal-message-unfunded-ephemeral-key',installedWallet:false,transactionsSigned:0,purchasesCreated:0,paidReceiptsSeeded:0,paidContinuesActivated:0,gameplayRecoveryNotRetested:true,viewportWidths:[390,320,1200]};
  await writeFile('hosted-evidence/results.json',JSON.stringify(result,null,2));console.log('HOSTED_READONLY_RESULT',JSON.stringify(result));
 }catch(e){await page.screenshot({path:'hosted-evidence/diagnostic.png',fullPage:true}).catch(()=>{});const buttons=await page.locator('button').allTextContents().catch(()=>[]);await writeFile('hosted-evidence/failure.json',JSON.stringify({stage,checks,chain,error:String(e.message).slice(0,400),errors,buttons}));console.error('HOSTED_ACCEPTANCE_FAILED_STAGE',stage);throw Error('Hosted read-only acceptance failed at '+stage);}
 finally{if(loggedIn)await post('/api/tree-account',{action:'logout'}).catch(()=>{});await browser.close();}

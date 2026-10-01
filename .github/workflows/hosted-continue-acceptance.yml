@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           repository: TheCryptoArborist/treeforce89
-          ref: 07d09b8dba85c91f6a9ce60ad515f09ad601059c
+          ref: 37d67e08516f9d8cac435f2bb6f67007e8eb302d
           path: game
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
