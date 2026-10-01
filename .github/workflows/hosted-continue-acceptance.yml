@@ -1,0 +1,42 @@
+name: Hosted continue read-only acceptance
+on:
+  push:
+    branches: [verify/hosted-continue-readonly]
+permissions:
+  contents: read
+jobs:
+  hosted-readonly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: TheCryptoArborist/treeforce89
+          ref: 37d67e08516f9d8cac435f2bb6f67007e8eb302d
+          path: game
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Install locked SDK and browser tooling only
+        run: |
+          npm ci --prefix game/app/game/tree-payments --ignore-scripts --no-audit --no-fund
+          mkdir -p "$RUNNER_TEMP/hosted-tools"
+          printf '{"private":true}' > "$RUNNER_TEMP/hosted-tools/package.json"
+          npm install --prefix "$RUNNER_TEMP/hosted-tools" --ignore-scripts --no-audit --no-fund --save-exact playwright@1.55.0
+          node "$RUNNER_TEMP/hosted-tools/node_modules/playwright/cli.js" install --with-deps chromium
+          echo "PAID_TEST_PACKAGE=$RUNNER_TEMP/hosted-tools/package.json" >> "$GITHUB_ENV"
+          echo "PAID_GAME_ROOT=$GITHUB_WORKSPACE/game" >> "$GITHUB_ENV"
+      - name: Real hosted sign-in, read-only database and mainnet probe
+        env:
+          HOSTED_CONTINUE_ACCEPTANCE: READ_ONLY_NO_PAYMENTS
+        run: node scripts/hosted-continue-acceptance.mjs
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: hosted-continue-readonly-evidence
+          path: hosted-evidence/
+          retention-days: 7
