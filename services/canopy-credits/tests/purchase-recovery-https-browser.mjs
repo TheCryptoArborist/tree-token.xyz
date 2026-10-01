@@ -41,7 +41,12 @@ const gameServer=createServer(tls,async(req,res)=>{try{
   const raw=await bytes(req),c=JSON.parse(raw.toString());if(['order','pay','deliver'].includes(c.action))browserPayments++;
   const response=await proxy(new Request(GAME+req.url,{method:req.method,headers:req.headers,body:raw}));
   if(c.action==='activate_delivery'){
-   activationCalls++;if(f?.loseActivation&&!f.lost&&response.ok){f.lost=true;res.destroy();return;}
+   activationCalls++;f?.activationRequests.push({requestId:c.requestId,leaseId:c.leaseId,checkpointHash:c.checkpointHash});
+   if(f?.loseActivation&&!f.lost&&response.ok){
+    // The server committed activation, but its acknowledgement is unavailable.
+    // An explicit gateway 503 avoids browser-dependent transparent socket retries.
+    f.lost=true;return send(res,Response.json({error:'delivery-unavailable',requiresPayment:false},{status:503}));
+   }
   }
   return send(res,response);
  }
@@ -61,7 +66,7 @@ function fixture(){
  const actor={authenticated:true,identityMappingReviewed:true,...settings,accountId:randomUUID(),wallet:{family:'sui',address:'0x'+key()}},token=key();
  const config={paymentsEnabled:true,deployment:{network:P.network,packageId:'0x'+'3'.repeat(64),checkoutId:'0x'+'4'.repeat(64),keyEpoch:'1'},metadata:{network:P.network,coinType:P.coinType,decimals:6}};
  const purchases=withPaidDelivery(createDirectContinueService({repository:postgresDirectRepository(pool),resolveFlight:(a,r)=>storage.resolveValidatedFlight(a,r),loadConfiguration:async()=>config,authorizeQuote:async()=>({quoteBase64:'UNSIGNED-CI-ONLY',signatureBase64:'NOT-A-PAYABLE-QUOTE'}),verifyPayment:verify}),delivery);
- const f={actor,token,config,service:withPurchaseRecovery(purchases,{db:lookup,discover:discovery,...settings})};accounts.set(actor.accountId,f);sessions.set(token,f);return f;
+ const f={actor,token,config,activationRequests:[],service:withPurchaseRecovery(purchases,{db:lookup,discover:discovery,...settings})};accounts.set(actor.accountId,f);sessions.set(token,f);return f;
 }
 async function pageFor(f,wave=0){
  const context=await browser.newContext({ignoreHTTPSErrors:true,viewport:{width:390,height:844}});
@@ -100,12 +105,16 @@ try{
    await p.page.getByRole('button',{name:'RECOVER TREE PURCHASE',exact:true}).click();
    await p.page.getByRole('button',{name:new RegExp('CHECK WAVE '+spec.wave+' ·')}).click();
    if(spec.lost){
-    await p.page.waitForFunction(()=>Array.from(document.querySelectorAll('[role="status"]')).some(e=>e.textContent.includes('could not be confirmed')),{},{timeout:10000});
-    assert.equal(await p.page.evaluate(()=>window.__treeRecoveryTestGame.scene.getScene('game').lives),0);
+    await p.page.waitForFunction(()=>Array.from(document.querySelectorAll('[role="status"]')).some(e=>e.textContent.includes('could not be confirmed')),{},{timeout:25000}).catch(async e=>{throw Error(e.message+' '+await p.page.locator('body').innerText());});
+    assert.equal(f.lost,true);assert.equal(await p.page.evaluate(()=>window.__treeRecoveryTestGame.scene.getScene('game').lives),0);
+    const committed=(await pool.query("SELECT count(*)::int n FROM tree_continue_v1.journal WHERE order_id=$1 AND state='delivered'",[order.orderId])).rows[0].n;assert.equal(committed,1);
+    await p.page.screenshot({path:'integration-evidence/lost-activation-before-retry.png',fullPage:true});
     await p.page.getByRole('button',{name:new RegExp('CHECK WAVE '+spec.wave+' ·')}).click();
    }
   }
-  await gameplay(p.page,spec.wave);await p.page.screenshot({path:'integration-evidence/'+spec.name+'.png',fullPage:true});await p.context.close();
+  await gameplay(p.page,spec.wave);
+  if(spec.lost){assert.equal(f.activationRequests.length,2);assert.deepEqual(f.activationRequests[0],f.activationRequests[1]);}
+  await p.page.screenshot({path:'integration-evidence/'+spec.name+'.png',fullPage:true});await p.context.close();
   const r=(await pool.query("SELECT (SELECT count(*)::int FROM tree_continue_v1.receipts WHERE order_id=$1) receipts,(SELECT count(*)::int FROM tree_continue_v1.journal WHERE order_id=$1 AND state='delivered') consumed",[order.orderId])).rows[0];assert.deepEqual(r,{receipts:1,consumed:1});
   const fresh=await pageFor(f);await fresh.page.getByRole('button',{name:'RECOVER TREE PURCHASE',exact:true}).click();await fresh.page.getByRole('button',{name:new RegExp('CHECK WAVE '+spec.wave+' ·')}).click();
   await fresh.page.getByText('This continue has an activation record and needs review. Do not pay again. Keep the order and flight details below.',{exact:true}).waitFor();assert.equal(await fresh.page.evaluate(()=>window.__treeRecoveryTestGame.scene.isActive('game')),false);
@@ -114,8 +123,13 @@ try{
  }
  const f=fixture(),free=await exhausted(f);f.config.paymentsEnabled=false;
  await free.page.getByRole('button',{name:'CONTINUE — 20,000 TREE',exact:true}).click();await free.page.getByText('TREE checkout is not live yet. No payment was requested. You can start a new game for free.',{exact:true}).waitFor();
+ await free.page.getByRole('button',{name:'RECOVER TREE PURCHASE',exact:true}).click();
+ const panel=free.page.getByRole('dialog',{name:'Recover TREE purchase',exact:true});await panel.getByText('No purchases were found for this signed-in account.',{exact:true}).waitFor();await panel.getByRole('button',{name:'CLOSE',exact:true}).click();
  await free.page.getByRole('button',{name:'START NEW GAME — FREE',exact:true}).click();await free.page.waitForFunction(()=>window.__treeRecoveryTestGame.scene.getScene('game').lives===3);await free.context.close();
  assert.equal(browserPayments,0);assert.deepEqual(errors,[]);
  const result={passed:reports.length+1,compiledDist:true,realHttps:true,realPostgres:true,authentication:'fixture',chainEvidence:'fixture',checkpointReview:'fixture',installedWallet:false,browserPayments,sessionChecks,indexReads,activationCalls,pageErrors:0,reports};
  await writeFile('integration-evidence/results.json',JSON.stringify(result,null,2));console.log('DEFAULT_UI_HTTPS_RESULT',JSON.stringify(result));
+}catch(e){
+ for(const [index,context] of browser.contexts().entries())for(const [n,page]of context.pages().entries())await page.screenshot({path:`integration-evidence/failure-${index}-${n}.png`,fullPage:true}).catch(()=>{});
+ throw e;
 }finally{await browser.close();for(const server of [gameServer,gatewayServer,authServer])await new Promise(r=>server.close(r));await pool.end();}
