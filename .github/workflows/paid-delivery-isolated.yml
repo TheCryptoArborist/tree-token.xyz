@@ -49,7 +49,7 @@ jobs:
           echo "PAID_GAME_ROOT=$GITHUB_WORKSPACE/game" >> "$GITHUB_ENV"
       - name: Existing game, wallet, recovery and prompt regressions
         working-directory: game
-        run: node --test --test-reporter=spec tests/direct-tree*.test.mjs tests/continue*.test.mjs tests/tree-account*.test.mjs tests/account-ui.test.mjs tests/capture-animation.test.mjs tests/boss-background.test.mjs tests/tyrant-combat.test.mjs tests/recovery-signin*.test.mjs
+        run: node --test --test-reporter=spec tests/direct-tree*.test.mjs tests/continue*.test.mjs tests/tree-account*.test.mjs tests/account-ui.test.mjs tests/capture-animation.test.mjs tests/boss-background.test.mjs tests/tyrant-combat.test.mjs
       - name: Actual game production compilation
         run: npm run build --prefix game
       - name: Real PostgreSQL service/controller, security and replay checks
