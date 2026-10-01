@@ -4,7 +4,7 @@
  */
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {randomUUID,randomBytes,createHash,webcrypto} from 'node:crypto';
+import {randomUUID,randomBytes,webcrypto} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
 import {createRequire} from 'node:module';
 import {pathToFileURL} from 'node:url';
@@ -45,10 +45,13 @@ async function fixture({verify=true,review=true}={}){
    evidence.evidenceHash=commitment(evidence);return evidence;
   }});
  const service=withPaidDelivery(purchases,delivery);
+ // Each separate fixture represents a different fictional transaction. Reusing
+ // one digest across accounts correctly trips the repository's global dedupe.
+ const digest=key().replace(/0/g,'G').slice(0,43);
  let order=null;
  if(review){order=(await service(actor,cmd('order',runId,{requestId:randomUUID()}))).order;
-  if(verify)await service(actor,cmd('reconcile',runId,{requestId:randomUUID(),orderId:order.orderId,digest:'A'.repeat(43)}));}
- return{actor,runId,snapshot,saved,order,service,config,api:c=>service(actor,c)};
+  if(verify)await service(actor,cmd('reconcile',runId,{requestId:randomUUID(),orderId:order.orderId,digest}));}
+ return{actor,runId,snapshot,saved,order,service,config,digest,api:c=>service(actor,c)};
 }
 function activation(runId,p,clientKey,requestId=randomUUID()){
  return cmd('activate_delivery',runId,{clientKey,leaseId:p.leaseId,requestId,checkpointHash:p.checkpointHash});
@@ -98,5 +101,6 @@ await test('paid delivery: actual PostgreSQL and client/server protocol',async t
   await t.test('account switch after prepare prevents activation',async()=>{const f=await fixture();let i=f.actor;const h=controller(f,{identity:()=>i,api:async c=>{const p=await f.api(c);i={...f.actor,accountId:randomUUID()};return p;}});await assert.rejects(h.c.resume(),/account-changed/);assert.equal(await journal(f.order.orderId),0);});
   await t.test('HTTP authenticates server-side and rejects identity injection',async()=>{const f=await fixture();let calls=0;const h=createPaidDeliveryHttp({origin,resolveActor:async()=>f.actor,service:async(a,c)=>{calls++;assert.equal(a.accountId,f.actor.accountId);return f.service(a,c);}});const req=(body,headers={})=>new Request(origin+'/api/delivery',{method:'POST',headers:{Origin:origin,'Content-Type':'application/json',...headers},body:JSON.stringify(body)});assert.equal((await h(req(cmd('delivery_status',f.runId)))).status,200);assert.equal((await h(req({...cmd('delivery_status',f.runId),accountId:randomUUID()}))).status,400);assert.equal((await h(req(cmd('delivery_status',f.runId),{Origin:'https://evil.example'}))).status,403);assert.equal(calls,1);});
   await t.test('HTTP rejects oversized input and redacts backend details',async()=>{const f=await fixture(),h=createPaidDeliveryHttp({origin,resolveActor:async()=>f.actor,service:async()=>{throw Error('secret-connection-details');}});const req=body=>new Request(origin+'/api/delivery',{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body});assert.equal((await h(req(JSON.stringify({x:'x'.repeat(5000)})))).status,413);const r=await h(req(JSON.stringify(cmd('delivery_status',f.runId))));assert.equal(r.status,503);assert.doesNotMatch(await r.text(),/secret/);});
+  await t.test('a receipt from another fixture still cannot fund this order',async()=>{const first=await fixture(),second=await fixture({verify:false});await assert.rejects(second.api(cmd('reconcile',second.runId,{requestId:randomUUID(),orderId:second.order.orderId,digest:first.digest})),/receipt-already-used/);assert.equal((await prepare(second)).p.status,'awaiting-verification');});
  }finally{await pool.end();}
 });
