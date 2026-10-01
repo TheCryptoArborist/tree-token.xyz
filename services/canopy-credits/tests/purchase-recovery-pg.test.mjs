@@ -31,9 +31,9 @@ async function fixture({ordered=true,review=true}={}){
  await storage.register(actor,runId);const saved=await storage.save(actor,runId,randomUUID(),snapshot);
  if(review)await pool.query("INSERT INTO tree_continue_v1.checkpoint_reviews(checkpoint_id,outcome,validator_version,evidence_hash) VALUES($1,'validated','recovery-ci-fixture',$2)",[saved.checkpointId,key()]);
  const config={paymentsEnabled:true,deployment:{network:P.network,packageId:'0x'+'3'.repeat(64),checkoutId:'0x'+'4'.repeat(64),keyEpoch:'1'},metadata:{network:P.network,coinType:P.coinType,decimals:6}};
- const f={actor,runId,snapshot,saved,config,candidates:[],scans:0};
+ const f={actor,runId,snapshot,saved,config,candidates:[],scans:0,now:Date.now};
  const discovery=createReceiptDiscovery({endpoint:'https://index-recovery-ci.example/graphql',verify,fetcher:async(url,options)=>{f.scans++;const body=JSON.parse(options.body);assert.equal(body.query,RECEIPT_DISCOVERY_QUERY);assert.equal(body.variables.payer,actor.wallet.address);return Response.json({data:{chainIdentifier:P.chainIdentifier,events:{nodes:f.candidates.map(d=>({transaction:{digest:d}})),pageInfo:{hasPreviousPage:false,startCursor:null}}}});}});
- const purchases=withPaidDelivery(createDirectContinueService({repository:postgresDirectRepository(pool),resolveFlight:(a,r)=>storage.resolveValidatedFlight(a,r),loadConfiguration:async()=>config,authorizeQuote:async()=>({quoteBase64:'UNSIGNED-TEST-FIXTURE',signatureBase64:'NOT-PAYABLE'}),verifyPayment:verify}),delivery);
+ const purchases=withPaidDelivery(createDirectContinueService({repository:postgresDirectRepository(pool),resolveFlight:(a,r)=>storage.resolveValidatedFlight(a,r),loadConfiguration:async()=>config,authorizeQuote:async()=>({quoteBase64:'UNSIGNED-TEST-FIXTURE',signatureBase64:'NOT-PAYABLE'}),verifyPayment:verify,now:()=>f.now()}),delivery);
  f.purchases=purchases;f.service=withPurchaseRecovery(purchases,{db:lookup,discover:discovery,...settings});f.api=c=>f.service(actor,c);
  if(ordered)f.order=(await f.api({action:'order',runId,requestId:randomUUID()})).order;
  return f;
@@ -46,7 +46,12 @@ await test('purchase recovery and default checkout integration',async t=>{
   await t.test('no stored order is distinct from an unresolved payment',async()=>{const f=await fixture({ordered:false});const r=await recover(f);assert.equal(r.status,'not-found');assert.equal(r.requiresPayment,false);assert.equal(f.scans,0);});
   await t.test('lost browser digest is discovered and independently verified into durable receipt',async()=>{const f=await fixture();f.candidates.push(payment(f.order.terms));f.config.paymentsEnabled=false;const r=await recover(f);assert.equal(r.status,'verified');assert.equal(r.authorization,null);assert.equal(r.order.payable,false);assert.equal((await counts(f)).receipts,1);assert.equal((await counts(f)).delivered,0);assert.equal((await recover(f)).status,'verified');assert.equal(f.scans,1);});
   await t.test('twenty concurrent recoveries share a durable scan limit and one receipt',async()=>{const f=await fixture();f.candidates.push(payment(f.order.terms));await Promise.all(Array.from({length:20},()=>recover(f)));assert.equal(f.scans,1);assert.equal((await counts(f)).receipts,1);});
-  await t.test('empty index remains pending even after quote expiry',async()=>{const f=await fixture();const r=await recover(f);assert.equal(r.status,'pending');assert.equal(r.requiresPayment,false);assert.equal(r.order.payable,false);assert.equal((await recover(f)).discovery,'throttled');assert.equal((await counts(f)).receipts,0);});
+  await t.test('empty index remains pending even after quote expiry',async()=>{
+   const f=await fixture();f.now=()=>f.order.terms.expiresAtMs+60000;
+   assert.ok(f.now()>f.order.terms.expiresAtMs);
+   await assert.rejects(f.api({action:'order',runId:f.runId,requestId:randomUUID()}),/quote-expired/);
+   const r=await recover(f);assert.equal(r.status,'pending');assert.equal(r.requiresPayment,false);assert.equal(r.order.payable,false);assert.equal((await recover(f)).discovery,'throttled');assert.equal((await counts(f)).receipts,0);
+  });
   await t.test('unrelated receipt and false transfer effects cannot qualify',async()=>{const f=await fixture();f.candidates.push(payment(f.order.terms,{sender:'0x'+key()}),payment(f.order.terms,{balanceChanges:[]}));assert.equal((await recover(f)).status,'pending');assert.equal((await counts(f)).receipts,0);});
   await t.test('cancelled order can recover a late indexed valid payment',async()=>{const f=await fixture();await f.api({action:'cancel',runId:f.runId,requestId:randomUUID(),orderId:f.order.orderId});f.candidates.push(payment(f.order.terms));assert.equal((await recover(f)).status,'verified');});
   await t.test('other account and wrong issuer cannot read purchase details',async()=>{const f=await fixture(),other=await fixture();assert.equal((await other.service(other.actor,{action:'recover_purchase',runId:f.runId})).status,'not-found');await assert.rejects(f.service({...f.actor,authOrigin:'https://evil.example'},{action:'list_purchases'}),/identity/);});
