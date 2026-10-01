@@ -14,10 +14,10 @@ const gameRequire=createRequire(resolve(process.env.PAID_GAME_ROOT,'app/game/tre
 const {Ed25519Keypair}=await import(pathToFileURL(gameRequire.resolve('@mysten/sui/keypairs/ed25519')));
 const origin='https://deploy-preview-3--treeforce89.netlify.app';
 const keypair=new Ed25519Keypair(),address=keypair.toSuiAddress();
-const browser=await chromium.launch({headless:true});
+const browser=await chromium.launch({headless:true,args:['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
 const context=await browser.newContext({viewport:{width:390,height:844}});
 const page=await context.newPage(),checks=[];let stage='preflight',loggedIn=false,chain=null;
-const errors=[];page.on('pageerror',()=>errors.push('page-error'));
+const errors=[];page.on('pageerror',e=>errors.push(String(e.message).slice(0,300)));
 await mkdir('hosted-evidence',{recursive:true});
 function passed(name){checks.push(name);console.log('HOSTED_CHECK',name);}
 async function post(path,data,extra={}){
@@ -50,7 +50,7 @@ try{
  }passed('order-and-delivery-mutations-disabled');
  assert.equal((await post('/api/tree-continue',{action:'list_purchases',payer:address})).status,400);
  assert.equal((await post('/api/tree-continue',{action:'list_purchases'},{Origin:'https://foreign.example'})).status,403);passed('identity-injection-and-foreign-origin-denied');
- stage='hosted-browser-ui';await page.goto(origin+'/',{waitUntil:'networkidle',timeout:45000});
+ stage='hosted-browser-ui';await page.goto(origin+'/',{waitUntil:'domcontentloaded',timeout:45000});
  await page.getByRole('button',{name:'RECOVER TREE PURCHASE',exact:true}).click({timeout:30000});
  const dialog=page.getByRole('dialog',{name:'Recover TREE purchase',exact:true});
  await dialog.getByText('No purchases were found for this signed-in account.',{exact:true}).waitFor({timeout:30000});
@@ -61,5 +61,5 @@ try{
  assert.equal(errors.length,0);passed('no-browser-page-errors');
  const result={checkedAt:new Date().toISOString(),passed:checks.length,checks,gameOrigin:origin,chain,realHostedServices:true,authentication:'real-personal-message-unfunded-ephemeral-key',installedWallet:false,transactionsSigned:0,purchasesCreated:0,paidReceiptsSeeded:0,paidContinuesActivated:0,gameplayRecoveryNotRetested:true};
  await writeFile('hosted-evidence/results.json',JSON.stringify(result,null,2));console.log('HOSTED_READONLY_RESULT',JSON.stringify(result));
-}catch(e){await writeFile('hosted-evidence/failure.json',JSON.stringify({stage,checks,chain}));console.error('HOSTED_ACCEPTANCE_FAILED_STAGE',stage);throw Error('Hosted read-only acceptance failed at '+stage);}
+}catch(e){await page.screenshot({path:'hosted-evidence/diagnostic.png',fullPage:true}).catch(()=>{});const buttons=await page.locator('button').allTextContents().catch(()=>[]);await writeFile('hosted-evidence/failure.json',JSON.stringify({stage,checks,chain,error:String(e.message).slice(0,400),errors,buttons}));console.error('HOSTED_ACCEPTANCE_FAILED_STAGE',stage);throw Error('Hosted read-only acceptance failed at '+stage);}
 finally{if(loggedIn)await post('/api/tree-account',{action:'logout'}).catch(()=>{});await browser.close();}
