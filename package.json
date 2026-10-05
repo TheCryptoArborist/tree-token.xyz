@@ -13,10 +13,12 @@
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.14.4",
+    "@mayanfinance/swap-sdk": "15.2.2",
     "@mysten/dapp-kit": "latest",
     "@mysten/sui": "latest",
     "@netlify/blobs": "^10.7.12",
     "@protobuf-ts/grpc-transport": "^2.11.1",
+    "@relay-protocol/settlement-sdk": "0.0.143",
     "@tanstack/react-query": "^5.59.16",
     "aftermath-ts-sdk": "^2.3.0",
     "react": "^18.3.1",
@@ -26,5 +28,14 @@
   },
   "devDependencies": {
     "vite": "^5.4.10"
+  },
+  "overrides": {
+    "@relay-protocol/settlement-sdk": {
+      "@xrplf/isomorphic": "1.0.1",
+      "ripple-address-codec": "5.0.0"
+    },
+    "rpc-websockets": {
+      "uuid": "11.1.0"
+    }
   }
 }

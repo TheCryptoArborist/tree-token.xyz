@@ -1,0 +1,140 @@
+## Wallet review and saved setup
+
+The preview includes optional EVM browser wallet discovery (EIP-6963 with a legacy injected-provider fallback), source network checks and explicit switching, and a Sui receiving-wallet control using @mysten/dapp-kit-core 1.6.34 and @mysten/sui 2.33.1. These dependencies are isolated under gateway/wallet-kit; the existing site SDK dependencies are unchanged. Wallet code is bundled locally into the preview and loaded only when the wallet-review section opens.
+
+There are no transaction or message-signing controls. The source adapter allowlists account access, chain reads, balance reads and an explicitly requested network switch only. Account/network changes clear the source selection and all quote/gas review state. Solana wallet connection and mobile WalletConnect are not implemented; Solana quotes remain available.
+
+The Base gas endpoint accepts only a valid EVM address and performs a fixed eth_getBalance read against mainnet.base.org. Unknown or failed reads never imply a funded account. Positive balances do not establish gas sufficiency; transaction-specific gas estimation remains pending. Public addresses are sent for balance checks only on user request.
+
+Save/restore stores a validated, versioned set of route choices in this browser only. It excludes wallet addresses, quote payloads, balances and transaction stages. Restoring requires a new quote and wallet verification. This is not resumable transaction tracking.
+
+Validation: 18 focused tests, including fixed-upstream gas requests, rejected signing methods, invalid saved choices and source identity/quote safety; exact production snapshot and preview builds. Current MystenLabs frontend-apps/SKILL.md, setup.md and non-react.md informed the wallet integration.
+
+## Relay routes in the review preview
+
+The preview supports BNB Chain (56) and Robinhood Chain (4663) with live, non-executable Relay quotes (`indicativeQuote: true`). The server validates origin identity, exact input amount, Base chain ID 8453, native Base USDC address/decimals, and positive bounded integer output amounts. Only sanitized display fields reach the browser. Relay transaction steps, signing data and the documentation example quote identity are never exposed as deposit instructions.
+
+Mayan is quoted from the Relay minimum Base-USDC output, with 1% slippage requested independently for each stage. Combined results are indicative, expire within 30 seconds from request start, and are not an end-to-end guaranteed minimum. Provider costs are reflected in output estimates; source gas, Base ETH gas, Gateway fees and the onward TREE swap are not included in a complete total. A production flow still needs wallet connections, finality/status tracking, resumable stages, actual-wallet quote refresh, gas funding checks, and independent user approvals. No transaction execution is enabled.
+
+Validated with 14 focused tests and live quotes for both origins. Guidance: current MystenLabs frontend-apps/SKILL.md and non-react.md; Relay quote/v2 documentation.
+
+# TREE Gateway v1 — Mayan cross-chain ingress
+
+Status: non-production prototype.
+
+## Visible quote preview
+
+Open `/gateway/` on the PR deploy preview. Preview-only links on the homepage
+and Command Center lead to this page. Published snapshot sources are unchanged.
+
+The interface supports Base/Ethereum USDC or ETH and Solana USDC or SOL,
+with TREE selected by default and direct SUI/native USDC destinations available.
+The read-only `/api/tree-gateway-quote` endpoint requests live Mayan estimates,
+checks token/chain identities and deadlines, and returns only display fields.
+No signing, transaction construction, or execution endpoint is included.
+
+TREE quotes show the bridge settlement leg only, with a visible warning that
+final TREE output and its onward swap are not verified. Mayan quotes request
+zero referral fees; the planned 25 bps Gateway fee is disclosed as excluded
+and is not collected. Source gas and the onward swap are also excluded.
+Quotes expire after at most 30 seconds and clear whenever inputs change.
+
+Mayan request format verified against `mayan-finance/swap-sdk/src/api.ts` and
+`src/utils.ts`; SDK version 15.2.2 is encoded as `15_2_2` on the quote API.
+Run `node --test tests/tree-gateway-*.test.* tests/sti-preview-build.test.mjs
+tests/sti-preview-proxy.test.ts` for the focused checks.
+
+## Purpose
+
+TREE Gateway brings assets from supported source chains into Sui using Mayan, then delivers the user's selected Sui asset. TREE is the featured/default destination but is not mandatory.
+
+## v1 source chains
+
+- Base
+- Ethereum
+- Solana
+
+BNB Chain (native BNB) and Robinhood Chain (native ETH) now have indicative two-stage quotes: Relay to native Base USDC, followed by Mayan to Sui. They are not direct Mayan source routes.
+
+## Route policy
+
+1. **Mayan direct** — if Mayan can quote the requested Sui coin directly, use the direct cross-chain route.
+2. **TREE fallback** — if TREE is not directly supported, settle through a verified Mayan-supported Sui asset and hand off to the existing TREE Smart Router.
+3. **Other Sui asset fallback** — settle through a verified Sui asset, then use a separately verified Sui-side route.
+
+No fallback may execute without a verified quote for every leg.
+
+## Safety
+
+- No custody by TREE Gateway.
+- No real-funds execution is enabled by this prototype.
+- Destination chain must be Sui.
+- Destination token identity must match the requested verified coin type.
+- Quotes with no positive output, mismatched source/destination metadata, or stale deadlines fail closed.
+- Final Sui transactions must use the current @mysten/sui v2 / gRPC stack and wallet-owned gas selection.
+- Post-write reads must wait for transaction finality before refreshing balances.
+
+## Referral fee
+
+Prototype configuration: 25 bps (0.25%), disclosed in the review UI before execution.
+
+The actual referral addresses are deliberately not hard-coded in this prototype. They must be configured and verified for each relevant chain before execution is enabled.
+
+## Next implementation gate
+
+Before UI execution is enabled:
+
+- fetch Mayan's live token list for Sui;
+- prove direct destination support for TREE or mark TREE as fallback-only;
+- prove Base/Ethereum/Solana routes with live quote fixtures;
+- determine the best verified settlement coin for each unsupported Sui destination;
+- simulate the Sui-side fallback route;
+- add a transaction review screen showing Mayan fees, TREE Gateway referral fee, Sui-side swap costs, minimum received, and route status.
+
+## Final TREE estimate in the review preview
+
+Gateway now reads the existing public Smart Router quote service for SUI → TREE after obtaining the bridge quote. The exact bridge minimum (9-decimal SUI base units) is the onward input. The response is reduced to amounts, allowlisted venue, pool fee, price impact and the earliest stage expiry; transaction material is never forwarded. Unsupported USDC settlement and unavailable/stale/mismatched TREE responses retain an explicitly incomplete bridge-only estimate.
+
+This is an indicative sequence, not an executable or guaranteed end-to-end minimum. Quotes must be refreshed after each arrival. Sui gas must be funded separately; no SUI gas reserve or planned 0.25% Gateway fee is deducted. No signing, submission, production code changes or production deployment is enabled.
+
+Guidance consulted live: MystenLabs skills README; frontend-apps/SKILL.md; accessing-data/SKILL.md and use-cases.md; sui-sdks/SKILL.md; ptbs/SKILL.md. This change uses a fixed public HTTPS quote read, with no new Sui RPC client or PTB construction.
+
+## Command Center wallet and simulation review
+
+The embedded Gateway reads the Command Center's verified getWalletConnectionState() session and follows its account/disconnect events. It does not treat stored addresses as connected, create a second Sui wallet session, or expose signing methods. Source EVM discovery uses the host browser's providers; its adapter still rejects all signing and send methods. Standalone Gateway retains its existing dApp Kit connection. Changes invalidate quotes and simulation results.
+
+The preview-only POST /api/tree-gateway-simulate accepts only a Sui address and positive SUI amount (maximum 1,000 SUI). It fetches a fresh allowlisted Turbos SUI/TREE quote, builds that exact direction with the same address as recipient, and runs Sui gRPC simulation with checksEnabled and doGasSelection both true. A pass requires successful effects, at least the quoted minimum TREE received by that address, and gas effects. Only a summary is returned; nothing is signed or submitted. Net gas includes storage rebates and can be negative. A passing final-swap simulation does not validate Relay/Mayan, the best-route venue shown elsewhere, future bridge proceeds, or the planned Gateway fee.
+
+Validation: 30 focused tests passed. An unsigned 1 SUI simulation passed using the public example address 0x0000000000000000000000000000000000000000000000000000000000000001; an unfunded example address was rejected. These do not verify a user wallet's extension behavior. Current MystenLabs frontend-apps/non-react.md, frontend-apps/transactions.md, ptbs/building.md, accessing-data/grpc.md and installed SDK executing documentation were consulted.
+
+
+### Relay deposit simulation and Base preflight (2026-09-28)
+
+The preview's optional wallet section now offers a BNB / Robinhood bridge check.
+It requests a fresh Relay protocol-v2 quote for the connected EVM account and selected native amount. It verifies chain metadata from the independent Relay chains endpoint; exact payer, refund recipient, Base USDC recipient, native amount, minimum output (within 1% of expected), expiry, no extra calls/fees, recomputed order ID and matching canonical deposit calldata. Unsupported formats fail closed. The endpoint accepts no user transaction payload, target, RPC, or signature.
+
+Only the source deposit is simulated through fixed public EVM RPCs using eth_estimateGas, without state overrides. Chain identity, deployed target code, current native funds, gas units and current gas price are checked. This does not simulate Relay's destination fill or guarantee actual gas cost/settlement. Transaction bytes and order data are never returned to the browser. Wallet adapters still cannot request signatures or send transactions.
+
+Base USDC balance, native ETH presence and allowance to Mayan's documented Forwarder are read separately. These are balances-only checks, not Mayan simulation or readiness. Future Relay proceeds are never injected or counted. Even when every check passes, routeReady remains false. Mayan payload construction/simulation, destination delivery and the actual connected-wallet integration remain further work. Base/Ethereum direct Mayan and Solana simulation are not implemented by this check.
+
+Results expire within 30 seconds of request start and clear on wallet/route changes. The browser rechecks EVM account and network before and after the request. Public addresses and amounts are sent only after the user clicks the check; the UI names Relay and network providers. No addresses or results are persisted.
+
+References consulted live:
+- https://docs.relay.link/references/api/api_core_concepts/input-validation
+- https://docs.mayan.finance/build/sdk/manual-transactions
+- https://docs.mayan.finance/integration/forwarder-contract
+- https://docs.robinhood.com/chain/add-network-to-wallet/
+- https://docs.bnbchain.org/bnb-smart-chain/developers/json_rpc/json-rpc-endpoint/
+- MystenLabs/skills: frontend-apps/SKILL.md and non-react.md; sui-sdks/SKILL.md; ptbs/SKILL.md; accessing-data/SKILL.md. No Sui transaction construction or transport changes in this step.
+
+Relay settlement SDK's transitive @xrplf/isomorphic is constrained to 1.0.1 for the existing Netlify runtime: 1.0.2 requires an ESM-only noble module through CommonJS and fails during cold start. Both this override and ripple-address-codec 5.0.0 are scoped to the Relay dependency tree; the newer codec also requires ESM-only scure code through CommonJS. The pinned SDK order submodule is imported directly to avoid loading unrelated Solana runtime code. No XRP functionality is used. The function module was bundled and successfully loaded under Node 20.18.0 as well as the local Node 24 runtime.
+
+### Unsigned Mayan source simulation (2026-09-28)
+
+The optional wallet section now checks Mayan's Base USDC to SUI MCTP source transaction, including the Base stage of BNB and Robinhood routes. Both connected wallets and a fresh eligible quote are required. It fetches a new fixed-route quote, matches SUI against the independent live token catalog, builds with Mayan SDK 15.2.2 and decodes/re-encodes the complete payload. Exact source amount, recipient, destination, minimum output, deadline, protocol, zero permit and zero referral settings must match. The documented Forwarder's onchain protocol whitelist and deployed code are verified.
+
+Only existing Base funds and allowance are used. Missing allowance returns blocked without requesting approval. With sufficient existing funds/allowance, the fixed Base RPC estimates the unsigned source transaction using current state without overrides. This does not simulate destination delivery, Relay settlement or TREE conversion. The gas estimate excludes Base L1 fees. Responses contain summaries only, remain valid at most 30 seconds and always report routeReady=false. All wallet/route/quote changes invalidate results.
+
+The SDK is loaded via dynamic ESM import so Netlify's CommonJS output does not select its incompatible CommonJS entry point. rpc-websockets' UUID is constrained to CommonJS-compatible 11.1.0; this addresses the SDK's transitive Solana dependency on the existing Node 20 runtime. A bundled function ran under Node 20.18.0 against live Mayan and Base: payload verification passed, but the public example account lacked allowance, so simulation correctly remained blocked. No approval, signature or submission occurred. Successful gas estimation is covered by injected RPC fixtures; a connected user wallet and destination fill are not verified.
+
+Guidance consulted live for this step: MystenLabs/skills README, frontend-apps/SKILL.md and frontend-apps/non-react.md; Mayan manual-transactions and chains-contracts documentation. No Sui transaction construction or transport changes.
