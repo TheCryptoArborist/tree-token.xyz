@@ -23,7 +23,7 @@ export type ScheduledTriggerDependencies = {
   clearTimeoutImpl?: typeof clearTimeout;
 };
 
-const BACKGROUND_FUNCTION_PATH = '/.netlify/functions/tree-leaderboard-refresh-background';
+const BACKGROUND_FUNCTION_PATH = '/api/tree-leaderboard';
 const REQUEST_TIMEOUT_MS = 20_000;
 
 export async function runLeaderboardScheduledTrigger(
