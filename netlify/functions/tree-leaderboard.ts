@@ -1,13 +1,23 @@
 import { createLeaderboardSnapshotResponse } from '../lib/leaderboard-snapshot-endpoint.ts';
+import { runLeaderboardBackgroundWorker } from '../lib/leaderboard-background-worker.ts';
 import type { NetlifyRuntimeContext } from '../lib/leaderboard-scheduled-trigger.ts';
 
 type SnapshotResponseFactory = typeof createLeaderboardSnapshotResponse;
+type BackgroundWorker = typeof runLeaderboardBackgroundWorker;
 
 export async function handleTreeLeaderboardRequest(
   request: Request,
   context: NetlifyRuntimeContext,
   createResponse: SnapshotResponseFactory = createLeaderboardSnapshotResponse,
+  runWorker: BackgroundWorker = runLeaderboardBackgroundWorker,
 ) {
+  if (request.method === 'POST') {
+    await runWorker(request, {
+      deployContext: context?.deploy?.context || 'dev',
+      deployId: context?.deploy?.id,
+    });
+    return new Response(null, { status: 202, headers: { 'Cache-Control': 'no-store' } });
+  }
   return createResponse(request, {
     context: context?.deploy?.context || 'dev',
   });

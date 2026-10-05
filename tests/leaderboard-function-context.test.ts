@@ -30,6 +30,22 @@ for (const [deployContext, expectedStore] of [
   );
   assert.equal(publicStore, expectedStore);
 
+  let stableWorkerStore: LeaderboardStore | undefined;
+  let stableWorkerDeployId: string | undefined;
+  const stableResponse = await handleTreeLeaderboardRequest(
+    new Request('https://tree-token.example/api/tree-leaderboard', { method: 'POST' }),
+    runtimeContext(deployContext),
+    async () => new Response(null, { status: 500 }),
+    async (_request, dependencies) => {
+      stableWorkerStore = selectLeaderboardStore(dependencies.deployContext, factories);
+      stableWorkerDeployId = dependencies.deployId;
+      return { accepted: true, started: false, outcome: 'already-active' };
+    },
+  );
+  assert.equal(stableResponse.status, 202);
+  assert.equal(stableWorkerStore, expectedStore);
+  assert.equal(stableWorkerDeployId, `${deployContext}-id`);
+
   let workerStore: LeaderboardStore | undefined;
   let capturedDeployId: string | undefined;
   await handleTreeLeaderboardBackgroundRequest(
