@@ -31,7 +31,7 @@ const accepted = await runLeaderboardScheduledTrigger(context(), {
 });
 assert.equal(calls, 1);
 assert.equal(capturedMethod, 'POST');
-assert.equal(capturedUrl, 'https://tree-token.example/.netlify/functions/tree-leaderboard-refresh-background');
+assert.equal(capturedUrl, 'https://tree-token.example/api/tree-leaderboard');
 assert.equal(capturedSecret, secret);
 assert.deepEqual(accepted, { attempted: true, accepted: true, reason: 'accepted' });
 assert.equal(JSON.stringify({ logs, accepted }).includes(secret), false);
