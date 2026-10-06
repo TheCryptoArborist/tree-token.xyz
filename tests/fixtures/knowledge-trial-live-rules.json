@@ -1,0 +1,80 @@
+{
+  "trial": {
+    "version": "tree-knowledge-trial-v1",
+    "questionSetVersion": "tree-ecosystem-rotating-v3",
+    "durationSeconds": 90,
+    "questionCount": 3,
+    "minimumQualifyingUsdCents": 500
+  },
+  "practice": {
+    "questionSetVersion": "tree-ecosystem-rotating-v3",
+    "questions": [
+      {
+        "id": "network",
+        "prompt": "Which network is the TREE ecosystem built on?",
+        "options": [
+          {
+            "id": "a",
+            "label": "Ethereum Mainnet"
+          },
+          {
+            "id": "b",
+            "label": "Sui Mainnet"
+          },
+          {
+            "id": "c",
+            "label": "Solana Mainnet"
+          },
+          {
+            "id": "d",
+            "label": "Base"
+          }
+        ]
+      },
+      {
+        "id": "nftree-access",
+        "prompt": "What is the primary role of an NFTree in the ecosystem?",
+        "options": [
+          {
+            "id": "a",
+            "label": "Access to holder rewards, games, identity, and future utilities"
+          },
+          {
+            "id": "b",
+            "label": "A replacement for the TREE token"
+          },
+          {
+            "id": "c",
+            "label": "A guaranteed investment return"
+          },
+          {
+            "id": "d",
+            "label": "A Sui validator license"
+          }
+        ]
+      },
+      {
+        "id": "treedrop",
+        "prompt": "What does TreeDrop provide?",
+        "options": [
+          {
+            "id": "a",
+            "label": "Automatic token trading"
+          },
+          {
+            "id": "b",
+            "label": "NFTree holder reward checks and protected distribution rounds"
+          },
+          {
+            "id": "c",
+            "label": "A centralized exchange account"
+          },
+          {
+            "id": "d",
+            "label": "A random NFT mint"
+          }
+        ]
+      }
+    ]
+  }
+}

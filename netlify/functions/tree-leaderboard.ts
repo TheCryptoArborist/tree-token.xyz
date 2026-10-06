@@ -12,10 +12,15 @@ export async function handleTreeLeaderboardRequest(
   runWorker: BackgroundWorker = runLeaderboardBackgroundWorker,
 ) {
   if (request.method === 'POST') {
-    await runWorker(request, {
+    const result = await runWorker(request, {
       deployContext: context?.deploy?.context || 'dev',
       deployId: context?.deploy?.id,
     });
+    if (!result.accepted) {
+      return Response.json({ status: 'error', error: 'refresh-not-authorized' }, {
+        status: 401, headers: { 'Cache-Control': 'no-store' },
+      });
+    }
     return new Response(null, { status: 202, headers: { 'Cache-Control': 'no-store' } });
   }
   return createResponse(request, {

@@ -15,6 +15,15 @@ const runtimeContext = (deployContext: string): NetlifyRuntimeContext => ({
   site: { url: 'https://tree-token.example' },
 });
 
+const unauthorized = await handleTreeLeaderboardRequest(
+  new Request('https://tree-token.example/api/tree-leaderboard', { method: 'POST' }),
+  runtimeContext('production'),
+  async () => { throw new Error('must not read snapshot'); },
+  async () => ({ accepted: false, started: false, outcome: 'authentication-failed' }),
+);
+assert.equal(unauthorized.status, 401);
+assert.deepEqual(await unauthorized.json(), { status: 'error', error: 'refresh-not-authorized' });
+
 for (const [deployContext, expectedStore] of [
   ['production', productionStore],
   ['deploy-preview', previewStore],

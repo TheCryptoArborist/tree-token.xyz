@@ -23,7 +23,7 @@ const TOKEN = /^[0-9a-f]{64}$/;
 
 type Environment = Record<string, string | undefined>;
 type TrialStore = Pick<SupabaseTreeKnowledgeTrialStore,
-  'publicSnapshot' | 'createChallenge' | 'readChallenge' | 'consumeChallenge'
+  'publicSnapshot' | 'readEligibility' | 'createChallenge' | 'readChallenge' | 'consumeChallenge'
   | 'issuePass' | 'startAttempt' | 'readAttempt' | 'questionSet' | 'submitAttempt'
   | 'createTiebreakChallenge' | 'readTiebreakChallenge' | 'consumeTiebreakChallenge'
   | 'startTiebreakAttempt' | 'readTiebreakAttempt' | 'tiebreakQuestion' | 'submitTiebreakAttempt'>;
@@ -168,6 +168,12 @@ function publicTiebreakQuestion(value: unknown): PublicTiebreakQuestion {
   return { id, prompt, options };
 }
 
+function validatedStoredQuestionSet(value: unknown) {
+  const count = Array.isArray(value) ? value.length : 0;
+  if (count !== 3 && count !== 5) throw new Error('invalid-private-question-set');
+  return validateTreeKnowledgeQuestionSet(value, count);
+}
+
 export function createTreeKnowledgeTrialHandler(dependencies: HandlerDependencies = {}) {
   return async (request: Request, context?: unknown) => {
     if (!allowedOrigin(request)) return json({ status: 'error', error: 'origin-not-allowed' }, 403);
@@ -181,12 +187,16 @@ export function createTreeKnowledgeTrialHandler(dependencies: HandlerDependencie
       let publicRound: unknown = null;
       let leaderboard: unknown[] = [];
       let submissionCount = 0;
+      let participation = { verifiedPasses: 0, attemptsStarted: 0, completedAttempts: 0, completionRatePercent: 0 };
+      let recentRounds: unknown[] = [];
       if (trial.activation.databaseReady) {
         try {
           const snapshot = await getStore().publicSnapshot();
           publicRound = snapshot.round;
           leaderboard = snapshot.leaderboard;
           submissionCount = snapshot.submissionCount;
+          participation = snapshot.participation;
+          recentRounds = snapshot.recentRounds;
         } catch (error) {
           console.error('TREE Knowledge Trial snapshot failed', error);
         }
@@ -204,6 +214,8 @@ export function createTreeKnowledgeTrialHandler(dependencies: HandlerDependencie
         publicRound,
         leaderboard,
         submissionCount,
+        participation,
+        recentRounds,
       });
     }
 
@@ -217,6 +229,20 @@ export function createTreeKnowledgeTrialHandler(dependencies: HandlerDependencie
         return json({ status: 'ok', practice: true, score });
       } catch {
         return json({ status: 'error', error: 'invalid-practice-submission' }, 400);
+      }
+    }
+
+    if (action === 'eligibility') {
+      try {
+        const body = await requestBody(request);
+        const wallet = normalizedWallet(body.wallet);
+        const selectedRoundId = roundId(body.roundId);
+        const eligibility = await getStore().readEligibility(selectedRoundId, wallet);
+        return json({ status: 'ok', eligibility });
+      } catch (error) {
+        console.error('TREE Knowledge Trial eligibility check failed', error);
+        const status = /invalid-/i.test(error instanceof Error ? error.message : '') ? 400 : 409;
+        return json({ status: 'error', error: 'knowledge-trial-eligibility-failed', message: safeMessage(error) }, status);
       }
     }
 
@@ -411,7 +437,7 @@ export function createTreeKnowledgeTrialHandler(dependencies: HandlerDependencie
         const attempt = await store.startAttempt(challenge.roundId, wallet, await sha256Hex(attemptToken));
         if (attempt.submitted) return json({ status: 'error', error: 'attempt-already-submitted' }, 409);
         if (new Date(attempt.expiresAt).getTime() <= now.getTime()) return json({ status: 'error', error: 'attempt-expired' }, 409);
-        const questions = validateTreeKnowledgeQuestionSet(await store.questionSet(attempt.questionSetVersion));
+        const questions = validatedStoredQuestionSet(await store.questionSet(attempt.questionSetVersion));
         return json({
           status: 'ok',
           attempt: {
@@ -430,7 +456,7 @@ export function createTreeKnowledgeTrialHandler(dependencies: HandlerDependencie
       const tokenSha256 = await sha256Hex(attemptToken);
       const attempt = await store.readAttempt(tokenSha256);
       if (attempt.submitted) return json({ status: 'error', error: 'attempt-already-submitted' }, 409);
-      const questions = validateTreeKnowledgeQuestionSet(await store.questionSet(attempt.questionSetVersion));
+      const questions = validatedStoredQuestionSet(await store.questionSet(attempt.questionSetVersion));
       const score = scoreTreeKnowledgeTrialAgainst(
         questions,
         body.answers as Array<{ questionId: string; optionId: string }>,

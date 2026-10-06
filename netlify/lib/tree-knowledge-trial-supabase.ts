@@ -43,6 +43,19 @@ export type TreeKnowledgeTrialTiebreakAttemptContext = {
   submitted: boolean;
 };
 
+export type TreeKnowledgeTrialEligibility = {
+  roundId: string;
+  wallet: string;
+  eligible: boolean;
+  status: 'not-eligible' | 'eligible' | 'pass-issued' | 'attempt-started' | 'completed';
+  minimumQualifyingUsdCents: number;
+  qualifyingUsdCents: number | null;
+  verifiedAt: string | null;
+  passIssued: boolean;
+  attemptStarted: boolean;
+  attemptCompleted: boolean;
+};
+
 type Environment = Record<string, string | undefined>;
 type JsonRecord = Record<string, unknown>;
 
@@ -57,8 +70,11 @@ function required(value: string | undefined, label: string) {
 }
 
 export function treeKnowledgeTrialSupabaseConfig(env: Environment): TreeKnowledgeTrialSupabaseConfig {
-  const rawUrl = env.TREE_KNOWLEDGE_TRIAL_SUPABASE_URL || env.TREE_RAFFLE_SUPABASE_URL;
-  const rawKey = env.TREE_KNOWLEDGE_TRIAL_SUPABASE_SECRET_KEY || env.TREE_RAFFLE_SUPABASE_SECRET_KEY;
+  // Knowledge Trial qualification and round data live beside the verified-buy
+  // ledger. Prefer that actively used credential so an obsolete dedicated
+  // override cannot silently disconnect the public challenge.
+  const rawUrl = env.TREE_RAFFLE_SUPABASE_URL || env.TREE_KNOWLEDGE_TRIAL_SUPABASE_URL;
+  const rawKey = env.TREE_RAFFLE_SUPABASE_SECRET_KEY || env.TREE_KNOWLEDGE_TRIAL_SUPABASE_SECRET_KEY;
   const url = required(rawUrl, 'TREE_KNOWLEDGE_TRIAL_SUPABASE_URL');
   const secretKey = required(rawKey, 'TREE_KNOWLEDGE_TRIAL_SUPABASE_SECRET_KEY');
   let parsed: URL;
@@ -85,6 +101,36 @@ function integer(value: unknown, label: string) {
   const parsed = Number(value);
   if (!Number.isInteger(parsed) || parsed < 1) throw new Error(`Supabase returned an invalid ${label}.`);
   return parsed;
+}
+
+function nonnegativeInteger(value: unknown, label: string) {
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed) || parsed < 0) throw new Error(`Supabase returned an invalid ${label}.`);
+  return parsed;
+}
+
+function parseEligibility(value: unknown): TreeKnowledgeTrialEligibility {
+  const row = record(value);
+  const status = String(row.status || '');
+  if (!['not-eligible', 'eligible', 'pass-issued', 'attempt-started', 'completed'].includes(status)) {
+    throw new Error('Supabase returned an invalid Knowledge Trial eligibility state.');
+  }
+  const qualifyingUsdCents = row.qualifyingUsdCents == null
+    ? null
+    : nonnegativeInteger(row.qualifyingUsdCents, 'qualifying purchase value');
+  const verifiedAt = row.verifiedAt == null ? null : text(row.verifiedAt, 'qualifying purchase verification time');
+  return {
+    roundId: text(row.roundId, 'eligibility round ID'),
+    wallet: text(row.wallet, 'eligibility wallet'),
+    eligible: boolean(row.eligible, 'eligibility result'),
+    status: status as TreeKnowledgeTrialEligibility['status'],
+    minimumQualifyingUsdCents: nonnegativeInteger(row.minimumQualifyingUsdCents, 'minimum qualifying value'),
+    qualifyingUsdCents,
+    verifiedAt,
+    passIssued: boolean(row.passIssued, 'pass issuance state'),
+    attemptStarted: boolean(row.attemptStarted, 'attempt start state'),
+    attemptCompleted: boolean(row.attemptCompleted, 'attempt completion state'),
+  };
 }
 
 function parseChallenge(value: unknown): TreeKnowledgeTrialChallenge {
@@ -148,7 +194,11 @@ export class SupabaseTreeKnowledgeTrialStore {
     this.fetchImpl = fetchImpl;
   }
 
-  private async rpc(name: string, body: JsonRecord, timeoutMs = 7_500): Promise<unknown> {
+  // The private Knowledge Trial snapshot joins rounds, passes, attempts, and
+  // recent history. Supabase can legitimately take longer than 7.5 seconds
+  // after an idle period, so keep the request inside Netlify's execution
+  // window instead of returning a false empty round during a cold start.
+  private async rpc(name: string, body: JsonRecord, timeoutMs = 20_000): Promise<unknown> {
     const response = await this.fetchImpl(`${this.config.url}/rest/v1/rpc/${name}`, {
       method: 'POST',
       headers: {
@@ -172,12 +222,38 @@ export class SupabaseTreeKnowledgeTrialStore {
   }
 
   async publicSnapshot() {
-    const value = record(await this.rpc('read_tree_knowledge_trial_public_snapshot_v1', {}));
+    let value: JsonRecord;
+    try {
+      value = record(await this.rpc('read_tree_knowledge_trial_public_snapshot_v2', {}));
+    } catch (error) {
+      if (!/could not find|does not exist|PGRST202|HTTP 404/i.test(error instanceof Error ? error.message : '')) throw error;
+      value = record(await this.rpc('read_tree_knowledge_trial_public_snapshot_v1', {}));
+    }
     if (value.round !== null && (!value.round || typeof value.round !== 'object')) {
       throw new Error('Supabase returned an invalid Knowledge Trial round snapshot.');
     }
     if (!Array.isArray(value.leaderboard)) throw new Error('Supabase returned an invalid Knowledge Trial leaderboard.');
-    return { round: value.round as JsonRecord | null, leaderboard: value.leaderboard, submissionCount: Number(value.submissionCount || 0) };
+    const participation = record(value.participation);
+    const submissionCount = nonnegativeInteger(value.submissionCount || 0, 'submission count');
+    return {
+      round: value.round as JsonRecord | null,
+      leaderboard: value.leaderboard,
+      submissionCount,
+      participation: {
+        verifiedPasses: nonnegativeInteger(participation.verifiedPasses || 0, 'verified pass count'),
+        attemptsStarted: nonnegativeInteger(participation.attemptsStarted || 0, 'attempt start count'),
+        completedAttempts: nonnegativeInteger(participation.completedAttempts ?? submissionCount, 'completed attempt count'),
+        completionRatePercent: nonnegativeInteger(participation.completionRatePercent || 0, 'completion rate'),
+      },
+      recentRounds: Array.isArray(value.recentRounds) ? value.recentRounds : [],
+    };
+  }
+
+  async readEligibility(roundId: string, wallet: string) {
+    return parseEligibility(await this.rpc('read_tree_knowledge_trial_wallet_eligibility_v1', {
+      p_round_id: roundId,
+      p_wallet: wallet,
+    }));
   }
 
   async createChallenge(input: {
@@ -326,7 +402,7 @@ export class SupabaseTreeKnowledgeTrialStore {
     prizeAmountRaw: string;
     requestSha256: string;
   }) {
-    return record(await this.rpc('prepare_tree_knowledge_trial_round_v1', {
+    return record(await this.rpc('prepare_tree_knowledge_trial_round_v2', {
       p_round_id: input.roundId,
       p_question_set_version: input.questionSetVersion,
       p_questions: input.questions,
@@ -342,14 +418,14 @@ export class SupabaseTreeKnowledgeTrialStore {
   }
 
   async readDraftSetup(roundId: string) {
-    const value = await this.rpc('read_tree_knowledge_trial_round_setup_v1', {
+    const value = await this.rpc('read_tree_knowledge_trial_round_setup_v2', {
       p_round_id: roundId,
     });
     return value === null ? null : record(value);
   }
 
   async scheduleRound(roundId: string) {
-    return record(await this.rpc('schedule_tree_knowledge_trial_round_v1', {
+    return record(await this.rpc('schedule_tree_knowledge_trial_round_v2', {
       p_round_id: roundId,
     }));
   }
@@ -358,6 +434,11 @@ export class SupabaseTreeKnowledgeTrialStore {
     return record(await this.rpc('resolve_tree_knowledge_trial_round_v2', {
       p_round_id: roundId,
     }));
+  }
+
+  async nextResolvableRound() {
+    const value = await this.rpc('read_next_resolvable_tree_knowledge_trial_round_v1', {});
+    return value === null ? null : record(value);
   }
 
   async readAward(roundId: string, wallet: string) {
