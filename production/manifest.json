@@ -491,7 +491,7 @@
     },
     {
       "path": "/dapp/v3-workspace.js",
-      "source": "dapp/v3-workspace.js",
+      "source": "production/live-static/dapp/v3-workspace-6ac572a8.js",
       "sha1": "5172b9afb65a609400272073edbcc876699393b2",
       "size": 91139
     },

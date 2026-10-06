@@ -719,11 +719,12 @@ function renderSuiDexMetrics() {
   const payload = state.overview;
   if (!payload?.pool) return;
   const incentives = payload.incentives;
+  const legacy = payload.analytics?.status === 'verified' ? payload.analytics : null;
   const rewards = incentives?.status === 'estimated' && Array.isArray(incentives.rewards)
-    ? incentives.rewards : [];
+    ? incentives.rewards : legacy?.rewards || [];
   const feeApr = annualizedFeeApr(state.suiDexVolumeUsd, state.suiDexTvlUsd, payload.pool.feePercent);
   const rewardApr = incentives?.status === 'estimated' ? verifiedVolume(incentives.rewardAprPercent)
-    : null;
+    : legacy ? verifiedVolume(legacy.rewardAprPercent) : null;
   const apr = document.getElementById('v3PoolApr');
   if (apr) apr.textContent = `${feeApr === null ? 'Unavailable' : feeApr.toFixed(2) + '%'} / ${rewardApr === null ? 'Unavailable' : rewardApr.toFixed(2) + '%'}`;
   const chip = document.getElementById('v3RewardChip');

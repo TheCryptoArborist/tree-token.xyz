@@ -11,6 +11,6 @@ test('rejected combined analytics do not hide TVL or VICTORY rewards',()=>{
  assert.equal(nodes.get('v3PoolApr').textContent,'Unavailable / 2.97%');
  assert.equal(nodes.get('v3RewardChip').textContent,'Rewards: VICTORY');
  state.suiDexVolumeUsd=0;ctx.renderSuiDexMetrics();assert.equal(nodes.get('v3PoolApr').textContent,'0.00% / 2.97%');
- state.overview.incentives=null;ctx.renderSuiDexMetrics();assert.equal(nodes.get('v3PoolApr').textContent,'0.00% / Unavailable');
+ state.overview.incentives=null;state.overview.analytics={status:'verified',rewardAprPercent:999,rewards:[{symbol:'VICTORY',aprPercent:999}]};ctx.renderSuiDexMetrics();assert.equal(nodes.get('v3PoolApr').textContent,'0.00% / Unavailable');assert.equal(nodes.get('v3RewardChip').textContent,'Reward data unavailable');
  assert.match(nodes.get('v3AnalyticsNotice').textContent,/different denominators and are not summed/);
 });
