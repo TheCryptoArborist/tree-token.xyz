@@ -1,3 +1,13 @@
+# Source parity verified — 2026-10-06
+
+`npm run verify:backend-source` rebuilds all 38 handlers with the pinned Netlify packager and compares their executable files and bundled dependencies against the published archives. It also checks public route inventory and all five schedules. The check passed for deployment `6ac55dae44d5c8fe2f469850`; 34 focused recovery tests and the existing 24 production CI tests passed.
+
+The source now restores the rotating three-question / 90-second Challenge, its test relays and rotation jobs, and the leaderboard refresh authorization response. The claim handler uses an isolated historical database adapter to preserve its production database preference and RPC behavior while the other Challenge handlers retain the newer adapter. Its compiled code matches after normalizing that adapter's source-label comment.
+
+The comparison excludes Netlify-generated bootstrap, telemetry, and package metadata. It does not claim byte-identical ZIPs or authorize changing production runtimes, credentials, or publication. Keep the archived ZIPs as the release and rollback baseline. No production deployment or database mutation was made for this source restoration. Python 3 is required by the payload comparison, including CI.
+
+---
+
 # Current production — complete backend recovery, 2026-10-06
 
 Deployment `6ac55dae44d5c8fe2f469850` is published in production context and locked. Source commit: `12d07ac0db1f50521043cd71bdb5032f93306336`. All 194 static files, 38 function packages, function configurations, and five schedules were verified against the approved release request.

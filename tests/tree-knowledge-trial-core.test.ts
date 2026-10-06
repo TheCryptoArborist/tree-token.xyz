@@ -13,7 +13,7 @@ import {
 
 test('public Knowledge Trial questions never expose answers or explanations', () => {
   const questions = publicTreeKnowledgeQuestions();
-  assert.equal(questions.length, 5);
+  assert.equal(questions.length, 3);
   assert.equal('correctOptionId' in questions[0], false);
   assert.equal('explanation' in questions[0], false);
   assert.equal(questions.every((question) => question.options.length === 4), true);
@@ -25,7 +25,7 @@ test('Knowledge Trial scoring is accuracy-first and records elapsed time', () =>
     optionId: question.correctOptionId,
   }));
   const score = scoreTreeKnowledgeTrial(answers, 82_345);
-  assert.equal(score.correctCount, 5);
+  assert.equal(score.correctCount, 3);
   assert.equal(score.percentage, 100);
   assert.equal(score.elapsedSeconds, 82.3);
   assert.equal(score.timedOut, false);
@@ -33,9 +33,9 @@ test('Knowledge Trial scoring is accuracy-first and records elapsed time', () =>
 
 test('partial submissions count unanswered questions as incorrect', () => {
   const first = TREE_KNOWLEDGE_TRIAL_QUESTIONS[0];
-  const score = scoreTreeKnowledgeTrial([{ questionId: first.id, optionId: first.correctOptionId }], 180_000);
+  const score = scoreTreeKnowledgeTrial([{ questionId: first.id, optionId: first.correctOptionId }], 90_000);
   assert.equal(score.correctCount, 1);
-  assert.equal(score.answers.filter((answer) => answer.optionId === null).length, 4);
+  assert.equal(score.answers.filter((answer) => answer.optionId === null).length, 2);
   assert.equal(score.timedOut, false);
   assert.equal(scoreTreeKnowledgeTrial([], (TREE_KNOWLEDGE_TRIAL_DURATION_SECONDS + 1) * 1_000).timedOut, true);
 });
