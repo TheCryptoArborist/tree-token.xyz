@@ -3,15 +3,15 @@ import test from 'node:test';
 import handler, { createTreeKnowledgeTrialHandler } from '../netlify/functions/tree-knowledge-trial.ts';
 import { TREE_KNOWLEDGE_TRIAL_QUESTIONS } from '../netlify/lib/tree-knowledge-trial-core.ts';
 
-test('Knowledge Trial status publishes an inactive three-minute practice configuration', async () => {
+test('Knowledge Trial status publishes an inactive ninety-second practice configuration', async () => {
   const response = await handler(new Request('https://tree-token.xyz/api/tree-knowledge-trial?action=status'));
   const payload = await response.json();
   assert.equal(response.status, 200);
   assert.equal(payload.trial.publicAttemptsEnabled, false);
   assert.equal(payload.trial.practiceEnabled, true);
-  assert.equal(payload.trial.durationSeconds, 180);
+  assert.equal(payload.trial.durationSeconds, 90);
   assert.equal(payload.trial.minimumQualifyingUsdCents, 500);
-  assert.equal(payload.practice.questions.length, 5);
+  assert.equal(payload.practice.questions.length, 3);
   assert.equal('correctOptionId' in payload.practice.questions[0], false);
 });
 
@@ -27,7 +27,7 @@ test('practice scoring stays server-side', async () => {
   }));
   const payload = await response.json();
   assert.equal(response.status, 200);
-  assert.equal(payload.score.correctCount, 5);
+  assert.equal(payload.score.correctCount, 3);
   assert.equal(payload.score.elapsedSeconds, 65);
 });
 
@@ -79,14 +79,14 @@ test('active pipeline requires wallet proof, starts one attempt, and uses server
       return {
         attemptId: 'attempt-1', roundId, wallet,
         questionSetVersion: 'private-daily-v1',
-        startedAt: now.toISOString(), expiresAt: new Date(now.getTime() + 180_000).toISOString(), submitted: false,
+        startedAt: now.toISOString(), expiresAt: new Date(now.getTime() + 90_000).toISOString(), submitted: false,
       };
     },
     async readAttempt() {
       return {
         attemptId: 'attempt-1', roundId, wallet,
         questionSetVersion: 'private-daily-v1',
-        startedAt: now.toISOString(), expiresAt: new Date(now.getTime() + 180_000).toISOString(), submitted: false,
+        startedAt: now.toISOString(), expiresAt: new Date(now.getTime() + 90_000).toISOString(), submitted: false,
       };
     },
     async questionSet() { return TREE_KNOWLEDGE_TRIAL_QUESTIONS; },
@@ -140,7 +140,7 @@ test('active pipeline requires wallet proof, starts one attempt, and uses server
   assert.equal(startResponse.status, 200);
   assert.equal(verifiedMessage, challenge.message);
   assert.equal(startPayload.attempt.attemptToken, 'cd'.repeat(32));
-  assert.equal(startPayload.attempt.questions.length, 5);
+  assert.equal(startPayload.attempt.questions.length, 3);
   assert.equal('correctOptionId' in startPayload.attempt.questions[0], false);
 
   const answers = TREE_KNOWLEDGE_TRIAL_QUESTIONS.map((question) => ({
@@ -154,9 +154,9 @@ test('active pipeline requires wallet proof, starts one attempt, and uses server
   }));
   const submitPayload = await submitResponse.json();
   assert.equal(submitResponse.status, 200);
-  assert.equal(submitPayload.result.correctCount, 5);
+  assert.equal(submitPayload.result.correctCount, 3);
   assert.equal(submitPayload.result.elapsedMs, 42_500);
-  assert.equal(submitted.correctCount, 5);
+  assert.equal(submitted.correctCount, 3);
 });
 
 test('eligible tied wallet signs and completes one private sudden-death question', async () => {

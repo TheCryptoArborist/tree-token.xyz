@@ -10,9 +10,9 @@ const activeEnv = {
   TREE_KNOWLEDGE_TRIAL_PRIZE_SETTLEMENT_READY: 'true',
 };
 
-test('resolver stays disabled until every activation gate is ready', async () => {
+test('resolver stays disabled until the database is ready', async () => {
   const response = await createTreeKnowledgeTrialResolver({ env: {} })();
-  assert.deepEqual(await response.json(), { status: 'skipped', reason: 'knowledge-trial-not-active' });
+  assert.deepEqual(await response.json(), { status: 'skipped', reason: 'knowledge-trial-database-not-ready' });
 });
 
 test('resolver only resolves a closed daily challenge window', async () => {
