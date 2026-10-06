@@ -1,3 +1,13 @@
+# Current production — V3 metrics and VICTORY rewards, 2026-10-06
+
+Deployment `6ac572a85dc967783eb08fb0` is published in production context and locked after explicit approval. Reviewed source commit `a9d7486b250f46b537939798b4f13b8c1c3335fa` (PR #53).
+
+Only `/dapp/v3-workspace.js` and the read-only `tree-v3-overview` handler changed. TVL and complete on-chain volume are independent of enriched APR validation. Trading fees and VICTORY emissions are shown separately, with their different denominators stated. Emission rates and reward end dates must match on-chain accounting; token prices and active TVL remain venue-provided estimates.
+
+All 194 static digests, 38 function configurations and five schedules were verified. The other 37 function packages remain exact. The published V3 handler is archived in `production/functions`; the previous handler remains in `production/previous-functions` for rollback. All three candidate GitHub workflows, focused fixtures, live API checks and browser review passed. CI has returned to the production source-parity gate.
+
+---
+
 # Source parity verified — 2026-10-06
 
 `npm run verify:backend-source` rebuilds all 38 handlers with the pinned Netlify packager and compares their executable files and bundled dependencies against the published archives. It also checks public route inventory and all five schedules. The check passed for deployment `6ac55dae44d5c8fe2f469850`; 34 focused recovery tests and the existing 24 production CI tests passed.
