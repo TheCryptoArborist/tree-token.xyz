@@ -1,0 +1,60 @@
+{
+  "id": "6ac572a85dc967783eb08fb0",
+  "url": "https://tree-token.xyz",
+  "baseline": "6ac55dae44d5c8fe2f469850",
+  "files": 194,
+  "changedStatic": [
+    "/dapp/v3-workspace.js"
+  ],
+  "functions": 38,
+  "changedFunctions": [
+    "tree-v3-overview"
+  ],
+  "schedules": 5,
+  "published": true,
+  "locked": true,
+  "publishedAt": "2026-10-06T22:15:22.078Z",
+  "verifiedAt": "2026-10-06T22:17:31.331424+00:00",
+  "sourceCommit": "a9d7486b250f46b537939798b4f13b8c1c3335fa",
+  "reviewDeploy": "6ac56dda478232dee97f53b9",
+  "allFileDigestsMatch": true,
+  "allFunctionConfigurationsChecked": true,
+  "all38SourcePayloadsMatchPublished": true,
+  "candidateCI": {
+    "production-snapshot": "success",
+    "V3-Phase-A": "success",
+    "STI-stats": "success"
+  },
+  "liveAPI": {
+    "status": "ok",
+    "poolTvlUsdEstimate": 11280.011304023545,
+    "incentives": {
+      "status": "estimated",
+      "source": "onchain-emissions-plus-suidex-prices",
+      "denominator": "suidex-active-tvl",
+      "activeTvlUsd": 8026.42,
+      "rewards": [
+        {
+          "coinType": "0xbfac5e1c6bf6ef29b12f7723857695fd2f4da9a11a7d88162c15e9124c243a4a::victory_token::victory_token",
+          "symbol": "VICTORY",
+          "decimals": 6,
+          "perDayRaw": "4034064422",
+          "perDay": 4034.064422,
+          "priceUsd": 0.000162,
+          "dailyUsd": 0.653518436364,
+          "aprPercent": 2.9718632874040978,
+          "endsAt": "2026-11-07T05:26:08.000Z"
+        }
+      ],
+      "rewardAprPercent": 2.9718632874040978
+    }
+  },
+  "browser": {
+    "url": "https://tree-token.xyz/dapp/#v3",
+    "combinedTvlDisplayed": "$20,550.0",
+    "combinedVolume24hDisplayed": "$5.12",
+    "feeAprDisplayed": "0.04%",
+    "rewardAprDisplayed": "2.97%",
+    "rewardToken": "VICTORY"
+  }
+}

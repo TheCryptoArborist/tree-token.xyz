@@ -11,7 +11,9 @@ const manifest=read('production/manifest.json');
 const archivedStiFiles=['dapp/index.html','dapp/sti-widget.js','scripts/wallet.js'];
 const challengeBaselineFiles=['dapp/panel-router.css','scripts/tree-knowledge-trial.js'];
 const postStiReviewedFiles=['play/index.html'];
-const publishedSource=file=>archivedStiFiles.includes(file)
+const publishedSource=file=>file==='dapp/v3-workspace.js'
+  ?'production/live-static/dapp/v3-workspace-6ac55dae.js'
+  :archivedStiFiles.includes(file)
   ?'production/sti-release-static/'+file
   :challengeBaselineFiles.includes(file)
     ?'production/challenge-funding-baseline/'+file

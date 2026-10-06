@@ -11,6 +11,7 @@ import {
   parseTreeV3Pool,
   parseTreeV3Position,
   parseSuiDexV3Analytics,
+  parseTreeV3Incentives,
   record,
   valueTreeV3Position,
   type JsonRecord,
@@ -217,6 +218,7 @@ export default async (request: Request) => {
     if (!pool) return response({ status: 'error', generatedAt, error: 'pool-verification-failed' }, 503, 'no-store');
     const analytics = parseSuiDexV3Analytics(analyticsPayload, pool);
     const accounting = parseTreeV3PoolAccounting(poolObject, pool);
+    const incentives = parseTreeV3Incentives(analyticsPayload, pool, accounting);
 
     if (!owner) {
       return response({
@@ -226,6 +228,7 @@ export default async (request: Request) => {
         provider: 'sui-grpc-plus-verified-config',
         market: { ...prices, source: prices.suiUsd || prices.treeUsd ? 'coingecko' : 'unavailable' },
         pool,
+        incentives,
         analytics: analytics ?? {
           volume24hUsd: null,
           fees24hUsd: null,
@@ -234,8 +237,8 @@ export default async (request: Request) => {
           status: 'not-published-without-verified-source', source: null,
         },
         warnings: [
-          ...(analytics ? ['SuiDex TVL is verified against current on-chain reserves and independent USD reference prices.'] : ['Pool TVL is unpublished because the SuiDex analytics and on-chain reserve cross-check did not both pass.']),
-          ...(!analytics ? ['SuiDex volume, fee, and incentive analytics could not be independently validated.'] : []),
+          'TVL estimates use on-chain reserves and CoinGecko reference prices.',
+          'Reward APR uses on-chain emissions with SuiDex token prices and active TVL; it is an estimate.',
         ],
       });
     }
