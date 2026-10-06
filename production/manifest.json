@@ -1,7 +1,7 @@
 {
   "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
-  "deployId": "6ac572a85dc967783eb08fb0",
-  "publishedAt": "2026-10-06T22:15:22.078Z",
+  "deployId": "6ac58a83cdbea77d7a4a7336",
+  "publishedAt": "2026-10-06T23:55:50.978Z",
   "files": [
     {
       "path": "/tree.jpg",
@@ -491,9 +491,9 @@
     },
     {
       "path": "/dapp/v3-workspace.js",
-      "source": "production/live-static/dapp/v3-workspace-6ac572a8.js",
-      "sha1": "5172b9afb65a609400272073edbcc876699393b2",
-      "size": 91139
+      "source": "dapp/v3-workspace.js",
+      "sha1": "2a10b24345bc03691b8d2c390ff75f8c4597d917",
+      "size": 90983
     },
     {
       "path": "/dapp/v3-workspace.css",

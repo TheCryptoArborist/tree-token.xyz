@@ -12,3 +12,5 @@ TVL uses verified on-chain reserves with reference prices. Volume comes from the
 Validation passed: production snapshot integrity, preview build integrity, existing V3 overview and volume tests, missing-volume handling, independent emissions/expiry/denominator tests, and the displayed separation of reward and fee APR. Browser and deployed API checks are recorded separately when the review deployment finishes.
 
 The preceding review description is historical. The production manifest and archived V3 handler now record the published release, and CI uses normal production source-parity verification again. `verify-v3-candidate.mjs` is retained as historical review tooling and requires the previous baseline; use `npm run verify:backend-source` for the current release.
+
+Final frontend follow-up `6ac58a83cdbea77d7a4a7336` removes legacy incentive fallback. All backend packages remain unchanged from the first approved V3 release.
