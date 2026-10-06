@@ -337,6 +337,53 @@ export function parseSuiDexV3Analytics(
   };
 }
 
+// Incentives are independent of the venue's fee APR and 24-hour volume.
+// Emissions/end dates must match chain state; USD prices and active TVL remain
+// explicitly venue-provided estimates, not independently verified valuations.
+export function parseTreeV3Incentives(payloadValue: unknown, pool: TreeV3PoolView,
+  accounting: TreeV3PoolAccounting | null, nowSeconds = Math.floor(Date.now() / 1000)) {
+  if (!accounting) return null;
+  const payload = record(payloadValue);
+  const source = (Array.isArray(payload.pools) ? payload.pools : []).map(record)
+    .find(item => normalizeSuiAddress(item.pool_id) === pool.poolId);
+  if (!source || source.approved !== true || normalizeCoinType(source.token_x_type) !== pool.tokenX
+    || normalizeCoinType(source.token_y_type) !== pool.tokenY || Number(source.fee_rate) !== 2500
+    || Number(source.tick_spacing) !== 60) return null;
+  const positive = (value: unknown) => value !== null && value !== undefined && value !== ''
+    && typeof value !== 'boolean' && Number.isFinite(Number(value)) && Number(value) > 0 ? Number(value) : null;
+  const tvl = positive(source.tvl_usd), activeTvlUsd = positive(source.active_tvl_usd);
+  if (!tvl || !activeTvlUsd || activeTvlUsd > tvl || pool.tvlUsdEstimate === null
+    || !approximatelyEqual(tvl, pool.tvlUsdEstimate, 1, 0.15)) return null;
+  const tokenPrices = record(payload.tokenPrices);
+  const registry = new Map(TREE_V3_REWARD_TOKENS.map(token => [normalizeCoinType(token.coinType), token]));
+  const rewards: TreeV3RewardAprView[] = [];
+  const seen = new Set<string>();
+  for (const value of Array.isArray(source.rewards) ? source.rewards : []) {
+    const reward = record(value), coinType = normalizeCoinType(reward.coin_type);
+    const token = registry.get(coinType), schedule = accounting.rewards.find(item => item.coinType === coinType);
+    if (!coinType || !token || !schedule || seen.has(coinType) || schedule.endsAtSeconds <= nowSeconds) continue;
+    const dailyRaw = BigInt(schedule.rewardPerSecondX64Raw) * 86400n / CLMM_Q64;
+    const priceUsd = positive(reward.price_usd);
+    const listedPrice = positive(tokenPrices[String(reward.coin_type)] ?? tokenPrices[coinType]);
+    if (Number(reward.decimals) !== token.decimals || parseUnsigned(reward.per_day) !== dailyRaw
+      || Number(reward.ended_at) !== schedule.endsAtSeconds || !priceUsd || !listedPrice
+      || !approximatelyEqual(priceUsd, listedPrice, 1e-12, 0.02) || dailyRaw <= 0n) continue;
+    const perDay = Number(formatRawAmount(dailyRaw, token.decimals)), dailyUsd = perDay * priceUsd;
+    const aprPercent = dailyUsd * 365 / activeTvlUsd * 100;
+    if (!Number.isFinite(aprPercent)) continue;
+    seen.add(coinType);
+    rewards.push({ coinType, symbol: token.symbol, decimals: token.decimals, perDayRaw: dailyRaw.toString(),
+      perDay, priceUsd, dailyUsd, aprPercent, endsAt: new Date(schedule.endsAtSeconds * 1000).toISOString() });
+  }
+  // Never turn missing/mismatched active reward data into a zero APR.
+  const active = accounting.rewards.filter(item => registry.has(item.coinType)
+    && item.endsAtSeconds > nowSeconds && BigInt(item.rewardPerSecondX64Raw) > 0n);
+  if (active.some(item => !seen.has(item.coinType))) return null;
+  return { status: 'estimated', source: 'onchain-emissions-plus-suidex-prices',
+    denominator: 'suidex-active-tvl', activeTvlUsd, rewards,
+    rewardAprPercent: rewards.reduce((sum, item) => sum + item.aprPercent, 0) };
+}
+
 export function parseTreeV3Position(nodeValue: unknown, owner: string, pool: TreeV3PoolView): TreeV3PositionState | null {
   const node = record(nodeValue);
   const objectId = normalizeSuiAddress(node.address);

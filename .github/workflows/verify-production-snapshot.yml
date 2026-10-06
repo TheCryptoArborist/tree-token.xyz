@@ -22,7 +22,8 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: node --test tests/tree-volume-overview.test.ts tests/tree-liquidity-overview.test.ts tests/metrics-endpoints-fail-closed.test.ts
       - run: node --test tests/v3-volume-fail-closed.test.mjs tests/v3-workspace-source.test.mjs tests/v3-workspace-html-load.test.mjs tests/tree-knowledge-trial-source.test.mjs
+      - run: node --test tests/v3-independent-incentives.test.ts tests/v3-independent-display.test.mjs tests/tree-v3-overview.test.ts
       - run: npm run verify:production
-      - run: npm run verify:backend-source
+      - run: node scripts/verify-v3-candidate.mjs
       - run: node --test tests/backend-recovery-parity.test.ts tests/tree-knowledge-trial-core.test.ts tests/tree-knowledge-trial-function.test.ts tests/tree-knowledge-trial-resolver.test.ts tests/tree-knowledge-trial-admin.test.ts tests/tree-knowledge-trial-claim.test.ts tests/tree-knowledge-trial-correction.test.ts tests/leaderboard-function-context.test.ts
       - run: npm run build

@@ -27,7 +27,7 @@ assert.ok(source.includes('Partial V3 position results are not displayed'));
 assert.ok(source.includes("analytics.status === 'verified'"));
 assert.ok(source.includes('analytics.feeAprPercent'));
 assert.ok(source.includes("document.getElementById('v3AprBreakdown')"));
-assert.ok(source.includes('SuiDex verified analytics'));
+assert.ok(source.includes('VICTORY reward APR is additional'));
 assert.ok(source.includes('Reinvest VICTORY into SUI / TREE V3'));
 assert.ok(source.includes('id="v3OpenVictoryReinvest"'));
 assert.ok(source.indexOf('v3OpenVictoryReinvest') > source.indexOf('data-v3-panel="swap"'));

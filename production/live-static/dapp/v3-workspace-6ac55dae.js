@@ -340,10 +340,10 @@ function updateRebalancePreview(panel) {
 }
 
 function annualizedFeeApr(volume24hUsd, tvlUsd, feePercent) {
-  const volume = verifiedVolume(volume24hUsd);
-  const tvl = verifiedPositive(tvlUsd);
-  const fee = verifiedPositive(feePercent);
-  if (volume === null || tvl === null || fee === null) return null;
+  const volume = Number(volume24hUsd);
+  const tvl = Number(tvlUsd);
+  const fee = Number(feePercent);
+  if (![volume, tvl, fee].every(Number.isFinite) || volume < 0 || tvl <= 0 || fee <= 0) return null;
   return volume * (fee / 100) * 365 / tvl * 100;
 }
 
@@ -486,7 +486,7 @@ function workspaceMarkup() {
           <div class="v3-metrics">
             <div class="v3-metric"><span>Combined TVL</span><strong id="v3PoolTvl">Loading…</strong></div>
             <div class="v3-metric"><span>24H Volume</span><strong id="v3PoolVolume">Not verified</strong></div>
-            <div class="v3-metric"><span>Fee / reward APR</span><strong id="v3PoolApr">Not verified</strong></div>
+            <div class="v3-metric"><span>APR</span><strong id="v3PoolApr">Not verified</strong></div>
             <div class="v3-metric"><span>Current Price</span><strong class="good" id="v3PoolPrice">Loading…</strong></div>
           </div>
           <div class="v3-apr-breakdown" id="v3AprBreakdown" aria-label="APR breakdown">Loading verified fee and incentive APR…</div>
@@ -671,16 +671,15 @@ function renderAprBreakdown(analytics, rewards, verified) {
   if (!breakdown) return;
   const parts = verified
     ? [
-      { label: 'Trading fees (24H / reserve TVL)', value: analytics.feeAprPercent, className: 'fees' },
-      ...rewards.map((reward) => ({ label: `${reward.symbol} rewards (active TVL estimate)`, value: reward.aprPercent, className: 'reward' })),
+      { label: 'Fees', value: analytics.feeAprPercent, className: 'fees' },
+      ...rewards.map((reward) => ({ label: reward.symbol, value: reward.aprPercent, className: 'reward' })),
     ]
     : [];
-  const validParts = parts.filter(part => verifiedVolume(part.value) !== null);
-  if (!validParts.length) {
+  if (!parts.length) {
     breakdown.textContent = 'APR breakdown not verified';
     return;
   }
-  breakdown.replaceChildren(...validParts.map((part) => {
+  breakdown.replaceChildren(...parts.map((part) => {
     const component = document.createElement('span');
     component.className = `v3-apr-component ${part.className}`;
     component.textContent = `${part.label}: ${Number(part.value || 0).toFixed(1)}%`;
@@ -694,10 +693,8 @@ function renderPool(payload) {
   const pool = payload.pool;
   const analytics = payload.analytics || {};
   const analyticsVerified = analytics.status === 'verified';
-  state.suiDexTvlUsd = pool.verified === true && pool.tvlSource === 'onchain-reserves-plus-coingecko'
-    ? verifiedPositive(pool.tvlUsdEstimate) : analyticsVerified ? verifiedPositive(analytics.tvlUsd) : null;
-  // Volume is loaded separately from complete on-chain event coverage.
-
+  state.suiDexTvlUsd = analyticsVerified ? verifiedPositive(analytics.tvlUsd) : null;
+  state.suiDexVolumeUsd = analyticsVerified ? verifiedVolume(analytics.volume24hUsd) : null;
   updateCombinedV3Tvl();
   updateCombinedV3Volume();
   document.getElementById('v3PoolPrice').textContent = `${pool.priceSuiPerTree} SUI / TREE`;
@@ -706,36 +703,25 @@ function renderPool(payload) {
   document.getElementById('v3CurrentTick').textContent = String(pool.currentTick);
   document.getElementById('v3LiquidityRaw').textContent = Number(pool.liquidityRaw).toLocaleString('en-US', { notation: 'compact', maximumFractionDigits: 2 });
   updateCombinedV3Volume();
+  document.getElementById('v3PoolApr').textContent = analytics.aprPercent !== null && analytics.aprPercent !== undefined && analytics.aprPercent !== '' && Number.isFinite(Number(analytics.aprPercent)) ? `${Number(analytics.aprPercent).toFixed(1)}%` : 'Not verified';
   const allPositions = document.getElementById('v3SummaryAllPositions');
   const allPositionCount = payload.allPositionCount === null || payload.allPositionCount === undefined ? null : Number(payload.allPositionCount);
   if (allPositions) allPositions.textContent = Number.isSafeInteger(allPositionCount) && allPositionCount >= 0 ? String(allPositionCount) : 'Not verified';
-  renderSuiDexMetrics();
+  const rewards = analyticsVerified && Array.isArray(analytics.rewards) ? analytics.rewards : [];
+  const rewardChip = document.getElementById('v3RewardChip');
+  const rewardSymbols = rewards.map((reward) => String(reward.symbol || '').trim()).filter(Boolean);
+  rewardChip.textContent = analyticsVerified
+    ? rewardSymbols.length ? `Rewards: ${rewardSymbols.join(' + ')}` : 'No active rewards'
+    : 'Incentives not verified';
+  rewardChip.title = rewardSymbols.length ? `Active rewards: ${rewardSymbols.join(', ')}` : 'No active verified incentive schedule';
+  renderAprBreakdown(analytics, rewards, analyticsVerified);
+  const poolWarning = payload.warnings?.[0];
+  document.getElementById('v3AnalyticsNotice').textContent = analyticsVerified
+    ? `SuiDex verified analytics: ${formatUsd(analytics.volume24hUsd)} volume and ${formatUsd(analytics.fees24hUsd)} fees in the last 24 hours. APR is annualized from current fees and active incentive emissions; it is not guaranteed.`
+    : `${poolWarning || 'Pool reserves are verified on chain.'} Volume, fees, and APR remain unpublished when the SuiDex analytics cross-check fails.`;
   document.getElementById('v3PoolStatus').textContent = `Verified from Sui Mainnet · Updated ${new Date(payload.generatedAt).toLocaleTimeString()}`;
   document.getElementById('v3PoolStatus').className = 'v3-status ok';
   updateRangeFields();
-}
-
-function renderSuiDexMetrics() {
-  const payload = state.overview;
-  if (!payload?.pool) return;
-  const incentives = payload.incentives;
-  const legacy = payload.analytics?.status === 'verified' ? payload.analytics : null;
-  const rewards = incentives?.status === 'estimated' && Array.isArray(incentives.rewards)
-    ? incentives.rewards : legacy?.rewards || [];
-  const feeApr = annualizedFeeApr(state.suiDexVolumeUsd, state.suiDexTvlUsd, payload.pool.feePercent);
-  const rewardApr = incentives?.status === 'estimated' ? verifiedVolume(incentives.rewardAprPercent)
-    : legacy ? verifiedVolume(legacy.rewardAprPercent) : null;
-  const apr = document.getElementById('v3PoolApr');
-  if (apr) apr.textContent = `${feeApr === null ? 'Unavailable' : feeApr.toFixed(2) + '%'} / ${rewardApr === null ? 'Unavailable' : rewardApr.toFixed(2) + '%'}`;
-  const chip = document.getElementById('v3RewardChip');
-  const rewardSymbols = rewards.map(reward => String(reward.symbol || '').trim()).filter(Boolean);
-  if (chip) {
-    chip.textContent = rewardSymbols.length ? `Rewards: ${rewardSymbols.join(' + ')}` : rewardApr === 0 ? 'No active rewards' : 'Reward data unavailable';
-    chip.title = 'VICTORY token emissions provide additional reward APR, separate from trading fees.';
-  }
-  renderAprBreakdown({ feeAprPercent: feeApr }, rewards, true);
-  const notice = document.getElementById('v3AnalyticsNotice');
-  if (notice) notice.textContent = 'TVL uses on-chain reserves and reference prices. Trading fee APR annualizes recorded 24-hour volume at the pool fee rate over reserve TVL. VICTORY reward APR is additional: on-chain emissions valued with SuiDex token prices over SuiDex active TVL. The two rates use different denominators and are not summed. Estimates change with price, liquidity and reward schedules.';
 }
 
 function updateCombinedV3Tvl() {
@@ -759,11 +745,9 @@ function updateCombinedV3Volume() {
 }
 
 async function loadExternalPoolMetrics() {
-  state.suiDexVolumeUsd = null;
   state.cetusVolumeUsd = null;
   state.turbosVolumeUsd = null;
   updateCombinedV3Volume();
-  renderSuiDexMetrics();
   const tvl = document.getElementById('v3CetusTvl');
   const volume = document.getElementById('v3CetusVolume');
   const cetusApr = document.getElementById('v3CetusApr');
@@ -781,9 +765,6 @@ async function loadExternalPoolMetrics() {
     ]);
     const [liquidityPayload, volumePayload] = await Promise.all([liquidityResponse.json(), volumeResponse.json()]);
     if (!liquidityResponse.ok || liquidityPayload.status !== 'ok' || !volumeResponse.ok || volumePayload.status !== 'ok') throw new Error('External V3 venue metrics could not be completely verified.');
-    state.suiDexVolumeUsd = volumePayload.coverage?.complete === true
-      ? verifiedVolume(volumePayload.pools?.[V3_POOL_ID]?.volume24hUsd) : null;
-    renderSuiDexMetrics();
     const cetusPool = liquidityPayload.liquidity?.cetusPool;
     const cetusVolume24h = verifiedVolume(volumePayload.pools?.[CETUS_POOL_ID]?.volume24hUsd);
     state.cetusTvlUsd = verifiedPositive(cetusPool?.tvlUsd);
@@ -814,8 +795,6 @@ async function loadExternalPoolMetrics() {
     updateCombinedV3Tvl();
     updateCombinedV3Volume();
   } catch {
-    state.suiDexVolumeUsd = null;
-    renderSuiDexMetrics();
     state.cetusTvlUsd = null;
     state.turbosTvlUsd = null;
     state.cetusVolumeUsd = null;
@@ -836,11 +815,8 @@ async function loadExternalPoolMetrics() {
 }
 
 async function loadPool() {
-  state.suiDexTvlUsd = null;
-  state.overview = null;
-  updateCombinedV3Tvl();
-  const apr = document.getElementById('v3PoolApr');
-  if (apr) apr.textContent = 'Loading…';
+  state.suiDexVolumeUsd = null;
+  updateCombinedV3Volume();
   const status = document.getElementById('v3PoolStatus');
   if (status) { status.textContent = 'Loading verified V3 pool…'; status.className = 'v3-status'; }
   try {
@@ -849,10 +825,8 @@ async function loadPool() {
     if (!response.ok || payload.status !== 'ok' || payload.pool?.poolId !== V3_POOL_ID) throw new Error(payload.message || payload.error || `V3 endpoint returned ${response.status}`);
     renderPool(payload);
   } catch (error) {
-    state.suiDexTvlUsd = null;
-    state.overview = null;
-    updateCombinedV3Tvl();
-    if (apr) apr.textContent = 'Unavailable';
+    state.suiDexVolumeUsd = null;
+    updateCombinedV3Volume();
     if (status) { status.textContent = `V3 pool unavailable: ${error instanceof Error ? error.message : error}`; status.className = 'v3-status error'; }
   }
 }

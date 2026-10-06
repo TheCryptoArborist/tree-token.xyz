@@ -15,7 +15,7 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
     manifest.files.map(f => [f.path, f.sha1]).sort(),
     published.files.map(f => [f.path, f.sha]).sort(),
   );
-  const overlays = ['/dapp/index.html', '/dapp/styles.css', '/dapp/panel-router.css', '/dapp/interaction-bootstrap.js', '/scripts/wallet.js', '/scripts/tree-knowledge-trial.js'];
+  const overlays = ['/dapp/v3-workspace.js', '/dapp/index.html', '/dapp/styles.css', '/dapp/panel-router.css', '/dapp/interaction-bootstrap.js', '/scripts/wallet.js', '/scripts/tree-knowledge-trial.js'];
   const additions = ['/dapp/sti-widget.js', '/dapp/sti-purchase-core.js', '/dapp/sti-stats-core.js', '/dapp/challenge-funding-core.js', '/assets/sti-icon.svg'];
   const digest = file => createHash('sha1').update(readFileSync(file)).digest('hex');
   for (const file of manifest.files) {
