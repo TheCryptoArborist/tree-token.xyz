@@ -1,6 +1,6 @@
 import { fetchFinalizedTreeRaffleClaim } from './tree-raffle-claim.ts';
 import { verifyTreeRaffleClaimTransaction } from './tree-raffle-sui-draw.ts';
-import { configuredSupabaseTreeKnowledgeTrialStore } from './tree-knowledge-trial-supabase.ts';
+import { configuredSupabaseTreeKnowledgeTrialStore } from './tree-knowledge-trial-claim-store.ts';
 
 const SUI_ADDRESS = /^0x[0-9a-f]{64}$/;
 const SUI_DIGEST = /^[1-9A-HJ-NP-Za-km-z]{40,64}$/;

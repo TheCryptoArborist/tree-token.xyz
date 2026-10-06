@@ -22,7 +22,7 @@ test('setup page never embeds an answer key or persists the admin secret', () =>
   assert.doesNotMatch(script, /localStorage|sessionStorage|indexedDB/i);
   assert.doesNotMatch(script, /correctOptionId:\s*['"][a-d]['"]/i);
   assert.match(script, /tiebreakRoot\.children\.length >= 10/);
-  assert.match(script, /for \(let index = 0; index < 5/);
+  assert.match(script, /for \(let index = 0; index < 3; index \+= 1\) addQuestion\(dailyRoot/);
   assert.match(script, /for \(let index = 0; index < 3/);
   assert.match(script, /reviewConfirmed: true/);
   assert.match(script, /Public attempts and prize movement remain separately gated/);

@@ -25,7 +25,7 @@ function questions(prefix: string, count: number) {
 
 const draftBody = {
   roundDate: '2030-01-02',
-  questions: questions('daily', 5),
+  questions: questions('daily', 3),
   tiebreakQuestions: questions('tie', 3),
 };
 
@@ -44,8 +44,8 @@ function request(method = 'POST', secret = SECRET, body: unknown = draftBody) {
 test('draft validation fixes the public rules and requires private tie-break backups', () => {
   const draft = validateTreeKnowledgeTrialDraft(draftBody, NOW);
   assert.equal(draft.roundId, 'knowledge:2030-01-02');
-  assert.equal(draft.questionSetVersion, 'knowledge-2030-01-02-v1');
-  assert.equal(draft.questions.length, 5);
+  assert.equal(draft.questionSetVersion, 'knowledge-2030-01-02-manual-v2');
+  assert.equal(draft.questions.length, 3);
   assert.equal(draft.tiebreakQuestions.length, 3);
   assert.equal(draft.purchaseWindowOpensAt, '2030-01-02T00:00:00.000Z');
   assert.equal(draft.purchaseWindowClosesAt, '2030-01-03T00:00:00.000Z');
@@ -76,9 +76,9 @@ test('authorized preparation writes one atomic draft and returns no answer key',
           roundId: input.roundId,
           state: 'draft',
           questionSetVersion: input.questionSetVersion,
-          dailyQuestionCount: 5,
+          dailyQuestionCount: 3,
           tiebreakQuestionCount: 3,
-          durationSeconds: 180,
+          durationSeconds: 90,
           minimumQualifyingUsdCents: 500,
           prizeAmountRaw: input.prizeAmountRaw,
           preparedAt: NOW.toISOString(),
@@ -92,7 +92,7 @@ test('authorized preparation writes one atomic draft and returns no answer key',
   const payload = await response.json();
   assert.equal(response.status, 200);
   assert.equal(payload.setup.state, 'draft');
-  assert.equal(payload.setup.dailyQuestionCount, 5);
+  assert.equal(payload.setup.dailyQuestionCount, 3);
   assert.equal('questions' in payload.setup, false);
   assert.equal('correctOptionId' in payload.setup, false);
   assert.equal((prepared as any).roundId, 'knowledge:2030-01-02');
@@ -130,10 +130,10 @@ test('authorized review confirmation schedules a complete draft without returnin
         return {
           roundId,
           state: 'open',
-          questionSetVersion: 'knowledge-2030-01-02-v1',
-          dailyQuestionCount: 5,
+          questionSetVersion: 'knowledge-2030-01-02-manual-v2',
+          dailyQuestionCount: 3,
           tiebreakQuestionCount: 3,
-          durationSeconds: 180,
+          durationSeconds: 90,
           minimumQualifyingUsdCents: 500,
           challengeOpensAt: '2030-01-02T00:00:00.000Z',
           challengeClosesAt: '2030-01-03T00:00:00.000Z',

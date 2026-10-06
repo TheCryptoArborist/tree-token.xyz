@@ -9,7 +9,8 @@
     "build:preview": "node scripts/build-feature-preview.mjs",
     "preview": "vite preview",
     "build:source": "vite build && node scripts/copy-static-build.mjs",
-    "verify:production": "node scripts/verify-production-snapshot.mjs"
+    "verify:production": "node scripts/verify-production-snapshot.mjs",
+    "verify:backend-source": "node scripts/verify-backend-source-parity.mjs"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.14.4",
@@ -25,6 +26,7 @@
     "viem": "2.56.3"
   },
   "devDependencies": {
+    "@netlify/zip-it-and-ship-it": "16.3.0",
     "vite": "^5.4.10"
   }
 }

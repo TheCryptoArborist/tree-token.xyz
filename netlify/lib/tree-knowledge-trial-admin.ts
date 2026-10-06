@@ -1,5 +1,6 @@
 import { createHash, timingSafeEqual } from 'node:crypto';
 import {
+  rotatingTreeKnowledgeTrialRound,
   validateTreeKnowledgeQuestionSet,
   type TreeKnowledgeQuestion,
 } from './tree-knowledge-trial-core.ts';
@@ -102,7 +103,7 @@ export function validateTreeKnowledgeTrialDraft(value: unknown, now = new Date()
   if (start.getTime() < today.getTime()) throw new Error('round-date-in-past');
   if (start.getTime() > today.getTime() + MAX_ADVANCE_DAYS * DAY_MS) throw new Error('round-date-too-far');
 
-  const questions = validateTreeKnowledgeQuestionSet(body.questions, 5);
+  const questions = validateTreeKnowledgeQuestionSet(body.questions, 3);
   if (!Array.isArray(body.tiebreakQuestions)
       || body.tiebreakQuestions.length < 3
       || body.tiebreakQuestions.length > 10) {
@@ -119,7 +120,7 @@ export function validateTreeKnowledgeTrialDraft(value: unknown, now = new Date()
   return {
     roundDate,
     roundId: `knowledge:${roundDate}`,
-    questionSetVersion: `knowledge-${roundDate}-v1`,
+    questionSetVersion: `knowledge-${roundDate}-manual-v2`,
     questions,
     tiebreakQuestions,
     purchaseWindowOpensAt: start.toISOString(),
@@ -150,7 +151,7 @@ function setupSummary(value: Record<string, unknown> | null) {
     challengeClosesAt: value.challengeClosesAt || null,
     prizeAmountRaw: String(value.prizeAmountRaw || ''),
     readyForReview: value.readyForReview === true
-      || (state === 'draft' && dailyQuestionCount === 5 && tiebreakQuestionCount >= 3),
+      || (state === 'draft' && dailyQuestionCount === 3 && tiebreakQuestionCount >= 3),
     lastPreparedAt: value.lastPreparedAt || value.preparedAt || null,
     scheduledAt: value.scheduledAt || null,
   };
@@ -158,7 +159,7 @@ function setupSummary(value: Record<string, unknown> | null) {
 
 function safeError(error: unknown) {
   const message = error instanceof Error ? error.message : '';
-  if (/Only a reviewed draft|Only a draft|five daily|sudden-death|question IDs|invalid|past|too far|does not exist|not ready|already closed|overlaps/i.test(message)) return message;
+  if (/Only a reviewed draft|Only a draft|three daily|sudden-death|question IDs|invalid|past|too far|does not exist|not ready|already closed|overlaps/i.test(message)) return message;
   return 'The Challenge draft could not be prepared.';
 }
 
@@ -192,6 +193,25 @@ export function createTreeKnowledgeTrialAdminHandler(dependencies: Dependencies 
         const { roundDate } = validDate(body.roundDate);
         const scheduled = await store.scheduleRound(`knowledge:${roundDate}`);
         return json({ status: 'ok', setup: setupSummary(scheduled) });
+      }
+      if (body.action === 'prepare-rotating') {
+        const keys = Object.keys(body).sort().join(',');
+        if (keys !== 'action,roundDate') throw new Error('invalid-request');
+        const { roundDate } = validDate(body.roundDate);
+        const rotating = rotatingTreeKnowledgeTrialRound(roundDate);
+        const draft = validateTreeKnowledgeTrialDraft({
+          roundDate,
+          questions: rotating.questions,
+          tiebreakQuestions: rotating.tiebreakQuestions,
+        }, dependencies.now?.() || new Date());
+        draft.questionSetVersion = rotating.questionSetVersion;
+        const requestSha256 = createHash('sha256').update(JSON.stringify(draft)).digest('hex');
+        const prepared = await store.prepareDraft({ ...draft, requestSha256 });
+        return json({
+          status: 'ok',
+          rotation: { bankVersion: rotating.bankVersion, automatic: true },
+          setup: setupSummary(prepared),
+        });
       }
       const draft = validateTreeKnowledgeTrialDraft(body, dependencies.now?.() || new Date());
       const requestSha256 = createHash('sha256').update(JSON.stringify(draft)).digest('hex');

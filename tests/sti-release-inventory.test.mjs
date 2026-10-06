@@ -35,9 +35,16 @@ test('release retains all production function packages, routes and schedules',()
   const currentByName=new Map(currentIdentities.map(identity=>[identity[0],identity]));
   assert.equal(candidate.baseline.functions.length,37);
   assert.equal(current.functionConfigurations.length,38);
+  // The October approved recovery replaced 34 payloads. Preserve the full
+  // current release identities and the historical public runtime contract.
+  assert.deepEqual(currentIdentities,identities(manifest.functionConfigurations));
+  for(const identity of currentIdentities){
+    assert.equal(identity[1],current.functionDigests[identity[0]],identity[0]);
+  }
   for(const identity of identities(candidate.baseline.functions)){
-    if(identity[0]==='tree-knowledge-trial-claim')continue;
-    assert.deepEqual(currentByName.get(identity[0]),identity,identity[0]);
+    const actual=currentByName.get(identity[0]);
+    assert(actual,'Missing legacy function '+identity[0]);
+    assert.deepEqual(actual.slice(4),identity.slice(4),identity[0]+' runtime contract');
   }
   const claim=currentByName.get('tree-knowledge-trial-claim');
   const recordedClaim=manifest.functionConfigurations.find(fn=>fn.n==='tree-knowledge-trial-claim');

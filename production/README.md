@@ -1,3 +1,23 @@
+# Source parity verified — 2026-10-06
+
+`npm run verify:backend-source` rebuilds all 38 handlers with the pinned Netlify packager and compares their executable files and bundled dependencies against the published archives. It also checks public route inventory and all five schedules. The check passed for deployment `6ac55dae44d5c8fe2f469850`; 34 focused recovery tests and the existing 24 production CI tests passed.
+
+The source now restores the rotating three-question / 90-second Challenge, its test relays and rotation jobs, and the leaderboard refresh authorization response. The claim handler uses an isolated historical database adapter to preserve its production database preference and RPC behavior while the other Challenge handlers retain the newer adapter. Its compiled code matches after normalizing that adapter's source-label comment.
+
+The comparison excludes Netlify-generated bootstrap, telemetry, and package metadata. It does not claim byte-identical ZIPs or authorize changing production runtimes, credentials, or publication. Keep the archived ZIPs as the release and rollback baseline. No production deployment or database mutation was made for this source restoration. Python 3 is required by the payload comparison, including CI.
+
+---
+
+# Current production — complete backend recovery, 2026-10-06
+
+Deployment `6ac55dae44d5c8fe2f469850` is published in production context and locked. Source commit: `12d07ac0db1f50521043cd71bdb5032f93306336`. All 194 static files, 38 function packages, function configurations, and five schedules were verified against the approved release request.
+
+Four original production packages are unchanged; the remaining 34 were reconstructed and validated on review deployment `6ac55ae1fefa47b10af44df6`. Direct leaderboard, full exposure, and behavioral badges completed successfully in review; all ten tabs opened, buy/sell quotes and wallet chooser worked, and Challenge retained three questions / 90 seconds. V3 metrics remain unverified and no wallet transaction was signed.
+
+All 38 exact published ZIPs are now archived in `production/functions/` with SHA256 identities in `manifest.json`. Preserve these packages in future releases. The current source checkout alone is not a complete reproducible backend: recovered Challenge behavior and four restored function bundles must not be omitted by a rebuild. Production refresh credentials remain private in Netlify and are excluded from artifacts.
+
+---
+
 # Current production — Challenge claim correction, 2026-09-26
 
 Deploy `6ab83984d79aa57ee13aadd3` is published and locked after PR #43,

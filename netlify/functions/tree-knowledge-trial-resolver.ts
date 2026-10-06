@@ -5,6 +5,7 @@ type Environment = Record<string, string | undefined>;
 type ResolverStore = {
   publicSnapshot(): Promise<{ round: Record<string, unknown> | null }>;
   resolveRound(roundId: string): Promise<Record<string, unknown>>;
+  nextResolvableRound?: () => Promise<Record<string, unknown> | null>;
 };
 
 const ENVIRONMENT_KEYS = [
@@ -37,11 +38,13 @@ export function createTreeKnowledgeTrialResolver(dependencies: {
   return async () => {
     const env = dependencies.env || runtimeEnvironment();
     const status = treeKnowledgeTrialStatus(env);
-    if (!status.publicAttemptsEnabled) {
-      return Response.json({ status: 'skipped', reason: 'knowledge-trial-not-active' });
+    if (!status.activation.databaseReady) {
+      return Response.json({ status: 'skipped', reason: 'knowledge-trial-database-not-ready' });
     }
     const store = dependencies.store || configuredSupabaseTreeKnowledgeTrialStore(env);
-    const snapshot = await store.publicSnapshot();
+    const snapshot = store.nextResolvableRound
+      ? { round: await store.nextResolvableRound() }
+      : await store.publicSnapshot();
     const round = snapshot.round;
     const roundId = typeof round?.roundId === 'string' ? round.roundId : '';
     const state = typeof round?.state === 'string' ? round.state : '';
