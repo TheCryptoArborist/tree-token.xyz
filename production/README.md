@@ -1,3 +1,13 @@
+# Current production — complete backend recovery, 2026-10-06
+
+Deployment `6ac55dae44d5c8fe2f469850` is published in production context and locked. Source commit: `12d07ac0db1f50521043cd71bdb5032f93306336`. All 194 static files, 38 function packages, function configurations, and five schedules were verified against the approved release request.
+
+Four original production packages are unchanged; the remaining 34 were reconstructed and validated on review deployment `6ac55ae1fefa47b10af44df6`. Direct leaderboard, full exposure, and behavioral badges completed successfully in review; all ten tabs opened, buy/sell quotes and wallet chooser worked, and Challenge retained three questions / 90 seconds. V3 metrics remain unverified and no wallet transaction was signed.
+
+All 38 exact published ZIPs are now archived in `production/functions/` with SHA256 identities in `manifest.json`. Preserve these packages in future releases. The current source checkout alone is not a complete reproducible backend: recovered Challenge behavior and four restored function bundles must not be omitted by a rebuild. Production refresh credentials remain private in Netlify and are excluded from artifacts.
+
+---
+
 # Current production — Challenge claim correction, 2026-09-26
 
 Deploy `6ab83984d79aa57ee13aadd3` is published and locked after PR #43,
