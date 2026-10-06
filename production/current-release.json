@@ -1,19 +1,17 @@
 {
-  "id": "6ac572a85dc967783eb08fb0",
-  "previous": "6ac55dae44d5c8fe2f469850",
-  "commit": "a9d7486b250f46b537939798b4f13b8c1c3335fa",
-  "sourceCommit": "a9d7486b250f46b537939798b4f13b8c1c3335fa",
-  "approvedSourceCommit": "a9d7486b250f46b537939798b4f13b8c1c3335fa",
+  "id": "6ac58a83cdbea77d7a4a7336",
+  "previous": "6ac572a85dc967783eb08fb0",
+  "commit": "359e39ec17b0b437606abe3275b42df2bbc01a79",
+  "sourceCommit": "359e39ec17b0b437606abe3275b42df2bbc01a79",
+  "approvedSourceCommit": "359e39ec17b0b437606abe3275b42df2bbc01a79",
   "locked": true,
   "fileCount": 194,
-  "functionsPreserved": 37,
-  "functionsUpdated": [
-    "tree-v3-overview"
-  ],
+  "functionsPreserved": 38,
+  "functionsUpdated": [],
   "schedulesPreserved": 5,
   "url": "https://tree-token.xyz",
   "previewUrl": "https://6ac56dda478232dee97f53b9--tree-token.netlify.app/dapp/#v3",
-  "publishedAt": "2026-10-06T22:15:22.078Z",
+  "publishedAt": "2026-10-06T23:55:50.978Z",
   "files": [
     {
       "path": "/tree.jpg",
@@ -341,7 +339,7 @@
     },
     {
       "path": "/dapp/v3-workspace.js",
-      "sha": "5172b9afb65a609400272073edbcc876699393b2"
+      "sha": "2a10b24345bc03691b8d2c390ff75f8c4597d917"
     },
     {
       "path": "/dapp/v3-workspace.css",
@@ -2011,7 +2009,7 @@
       "cron": "17 */6 * * *"
     }
   ],
-  "configurationNote": "Approved V3 display and read-only overview repair. All other 37 exact function packages, 194-file inventory and all five schedules preserved. Source matches all 38 archived executable payloads.",
+  "configurationNote": "Frontend-only follow-up removes fallback to legacy reward APR when validated on-chain incentives are unavailable. All 38 exact function packages and five schedules preserved. All 38 source-built payloads match published archives.",
   "changedFiles": [
     "/dapp/v3-workspace.js"
   ]

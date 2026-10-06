@@ -1,3 +1,11 @@
+# Current production — validated VICTORY reward display, 2026-10-06
+
+Deployment `6ac58a83cdbea77d7a4a7336` is published and locked. Source commit `359e39ec17b0b437606abe3275b42df2bbc01a79` (PR #53). This frontend-only follow-up removes fallback to legacy reward analytics: reward APR remains unavailable whenever the on-chain incentive validation fails. The regression fixture includes a legacy analytics object marked verified alongside unavailable incentives.
+
+Only `/dapp/v3-workspace.js` changed from `6ac572a85dc967783eb08fb0`. All 38 exact function packages, 194-file inventory, runtime configurations and five schedules are preserved.
+
+---
+
 # Current production — V3 metrics and VICTORY rewards, 2026-10-06
 
 Deployment `6ac572a85dc967783eb08fb0` is published in production context and locked after explicit approval. Reviewed source commit `a9d7486b250f46b537939798b4f13b8c1c3335fa` (PR #53).
