@@ -1,0 +1,730 @@
+{
+  "sourceRun": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/35413658039",
+  "generatedAt": "2026-09-19T01:46:36.963Z",
+  "count": 19,
+  "pools": [
+    {
+      "poolId": "0x5848c8a6f33700a988e00b0ec06e2c04b136f244d11a77cf03565edc7d68dd30",
+      "coinTypes": [
+        "0x4a2d3947831057dc859d272082900d7b06cf8b2b8ab4e456463f83e3a0e3d7d1::fartcoin::FARTCOIN",
+        "0x76cb819b01abed502bee8a702b4c2d547532c12f25001c9dea795a5e631c26f1::fud::FUD",
+        "0x32a976482bf4154961bf20bfa3567a80122fdf8e8f8b28d752b609d8640f7846::miu::MIU",
+        "0x5ed0595332bb9adc4cc7af3fb7eea888cf68377f9497b22a186d681a6e92f1f6::mysten::MYSTEN",
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE",
+        "0xc9523f683256502be15ec4979098d510f67b6d3f0df02eebf124515014433270::pans::PANS",
+        "0x2a1d1d7c492e41f92daea355bcec67e70dbc842152f551d05aaa5a32bdab1f86::blze::BLZE",
+        "0x2cd6f14a4b64c3a0fa9c644e8ed88d9c91d789a071886d67d24e6b435147063d::pugwif::PUGWIF"
+      ],
+      "coins": {
+        "0x4a2d3947831057dc859d272082900d7b06cf8b2b8ab4e456463f83e3a0e3d7d1::fartcoin::FARTCOIN": {
+          "balance": "3595625",
+          "weight": "118100000000000016",
+          "tradeFeeIn": "3000000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        },
+        "0x76cb819b01abed502bee8a702b4c2d547532c12f25001c9dea795a5e631c26f1::fud::FUD": {
+          "balance": "1462044114",
+          "weight": "119400000000000000",
+          "tradeFeeIn": "3000000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        },
+        "0x32a976482bf4154961bf20bfa3567a80122fdf8e8f8b28d752b609d8640f7846::miu::MIU": {
+          "balance": "122158798",
+          "weight": "117000000000000000",
+          "tradeFeeIn": "3000000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        },
+        "0x5ed0595332bb9adc4cc7af3fb7eea888cf68377f9497b22a186d681a6e92f1f6::mysten::MYSTEN": {
+          "balance": "191030119",
+          "weight": "121100000000000000",
+          "tradeFeeIn": "3000000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        },
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE": {
+          "balance": "3081060",
+          "weight": "116700000000000000",
+          "tradeFeeIn": "3000000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        },
+        "0xc9523f683256502be15ec4979098d510f67b6d3f0df02eebf124515014433270::pans::PANS": {
+          "balance": "3007876227",
+          "weight": "116200000000000000",
+          "tradeFeeIn": "3000000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        },
+        "0x2a1d1d7c492e41f92daea355bcec67e70dbc842152f551d05aaa5a32bdab1f86::blze::BLZE": {
+          "balance": "346527850",
+          "weight": "173199999999999984",
+          "tradeFeeIn": "3000000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        },
+        "0x2cd6f14a4b64c3a0fa9c644e8ed88d9c91d789a071886d67d24e6b435147063d::pugwif::PUGWIF": {
+          "balance": "1563109273",
+          "weight": "118300000000000000",
+          "tradeFeeIn": "3000000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        }
+      },
+      "stats": {
+        "volume": 0,
+        "tvl": 0.0020765092092583644,
+        "supplyPerLps": [
+          14.40650227615868,
+          0.03543010723868832,
+          29.638623961984692,
+          1.2037126544868457,
+          15.402365143244397,
+          3.414571565914716,
+          1.882348020716674,
+          0.030359752813164064
+        ],
+        "lpPrice": 0.00002046123941349494,
+        "fees": 0,
+        "apr": 0
+      }
+    },
+    {
+      "poolId": "0xbaba2878a6c4176868e6f0dab64f7cf7ce5103f7a94c8a9fa28235556561deac",
+      "coinTypes": [
+        "0x2a1d1d7c492e41f92daea355bcec67e70dbc842152f551d05aaa5a32bdab1f86::blze::BLZE",
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE"
+      ],
+      "coins": {
+        "0x2a1d1d7c492e41f92daea355bcec67e70dbc842152f551d05aaa5a32bdab1f86::blze::BLZE": {
+          "balance": "1958",
+          "weight": "519400000000000000",
+          "tradeFeeIn": "3000000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        },
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE": {
+          "balance": "487",
+          "weight": "480600000000000000",
+          "tradeFeeIn": "3000000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        }
+      },
+      "stats": {
+        "volume": 0,
+        "tvl": 1.1849286440101122e-8,
+        "supplyPerLps": [
+          0.487,
+          1.958
+        ],
+        "lpPrice": 0.000011849286440101121,
+        "fees": 0,
+        "apr": 0
+      }
+    },
+    {
+      "poolId": "0x2eb0b762b9625ddb82b296542662c74d297cfc508e04523f69f3ebf73c372334",
+      "coinTypes": [
+        "0x3766e534b5dc6cdb7defd998debf19f72565f4a7b8224e36b050f690b71a8819::boom::BOOM",
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE"
+      ],
+      "coins": {
+        "0x3766e534b5dc6cdb7defd998debf19f72565f4a7b8224e36b050f690b71a8819::boom::BOOM": {
+          "balance": "3763996721016",
+          "weight": "500000000000000000",
+          "tradeFeeIn": "100000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        },
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE": {
+          "balance": "13146050402026",
+          "weight": "500000000000000000",
+          "tradeFeeIn": "100000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        }
+      },
+      "daoFeePercentage": 0.02,
+      "stats": {
+        "volume": 56.76595271160612,
+        "tvl": 579.0745768290253,
+        "supplyPerLps": [
+          0.5356127137768084,
+          1.870668933360614
+        ],
+        "lpPrice": 0.0000824016938810805,
+        "fees": 0.005676595271160612,
+        "apr": 0.0035780491095283896
+      }
+    },
+    {
+      "poolId": "0xa3762fc09dc63fae26b40e5dd9d7302a727d5d008f39c621e1385c4e8e82ac6e",
+      "coinTypes": [
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE",
+        "0xdeeb7a4662eec9f2f3def03fb937a663dddaa2e215b8078a284d026b7946c270::deep::DEEP",
+        "0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL"
+      ],
+      "coins": {
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE": {
+          "balance": "111610",
+          "weight": "427400000000000000",
+          "tradeFeeIn": "100000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        },
+        "0xdeeb7a4662eec9f2f3def03fb937a663dddaa2e215b8078a284d026b7946c270::deep::DEEP": {
+          "balance": "56",
+          "weight": "280800000000000000",
+          "tradeFeeIn": "100000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        },
+        "0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL": {
+          "balance": "16270",
+          "weight": "291800000000000000",
+          "tradeFeeIn": "100000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        }
+      },
+      "daoFeePercentage": 0.02,
+      "stats": {
+        "volume": 0,
+        "tvl": 0.000003923308779633546,
+        "supplyPerLps": [
+          111.61,
+          0.056,
+          16.27
+        ],
+        "lpPrice": 0.003923308779633546,
+        "fees": 0,
+        "apr": 0
+      }
+    },
+    {
+      "poolId": "0xa84a40ebccd1122cd0d994f5353e1d39289825630d0e2591c2f51b7f6c65520a",
+      "coinTypes": [
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE",
+        "0xdeb831e796f16f8257681c0d5d4108fa94333060300b2459133a96631bf470b8::suitrump::SUITRUMP"
+      ],
+      "coins": {
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE": {
+          "balance": "1285",
+          "weight": "515400000000000000",
+          "tradeFeeIn": "100000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        },
+        "0xdeb831e796f16f8257681c0d5d4108fa94333060300b2459133a96631bf470b8::suitrump::SUITRUMP": {
+          "balance": "767",
+          "weight": "484600000000000000",
+          "tradeFeeIn": "100000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        }
+      },
+      "daoFeePercentage": 0.02,
+      "stats": {
+        "volume": 0,
+        "tvl": 3.7684956221562903e-8,
+        "supplyPerLps": [
+          1.285,
+          0.767
+        ],
+        "lpPrice": 0.0000376849562215629,
+        "fees": 0,
+        "apr": 0
+      }
+    },
+    {
+      "poolId": "0x1b53fee489a21fdf243b8160d4d73e945a3095860f6a9f5529f36c306c295682",
+      "coinTypes": [
+        "0xf00eb7ab086967a33c04a853ad960e5c6b0955ef5a47d50b376d83856dc1215e::axol::AXOL",
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE"
+      ],
+      "coins": {
+        "0xf00eb7ab086967a33c04a853ad960e5c6b0955ef5a47d50b376d83856dc1215e::axol::AXOL": {
+          "balance": "16337",
+          "weight": "499000000000000000",
+          "tradeFeeIn": "100000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        },
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE": {
+          "balance": "610",
+          "weight": "501000000000000000",
+          "tradeFeeIn": "100000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        }
+      },
+      "daoFeePercentage": 0.02,
+      "stats": {
+        "volume": 0,
+        "tvl": 1.9310336860338422e-8,
+        "supplyPerLps": [
+          16.337,
+          0.61
+        ],
+        "lpPrice": 0.00019310336860338422,
+        "fees": 0,
+        "apr": 0
+      }
+    },
+    {
+      "poolId": "0x510cb7e772b2c10535227c9454196cbbe93336d0d4f974bef01092b1322633f3",
+      "coinTypes": [
+        "0xf00eb7ab086967a33c04a853ad960e5c6b0955ef5a47d50b376d83856dc1215e::axol::AXOL",
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE"
+      ],
+      "coins": {
+        "0xf00eb7ab086967a33c04a853ad960e5c6b0955ef5a47d50b376d83856dc1215e::axol::AXOL": {
+          "balance": "19202",
+          "weight": "494000000000000000",
+          "tradeFeeIn": "3000000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        },
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE": {
+          "balance": "509",
+          "weight": "506000000000000000",
+          "tradeFeeIn": "3000000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        }
+      },
+      "daoFeePercentage": 0.0199,
+      "stats": {
+        "volume": 0,
+        "tvl": 1.803744683837154e-8,
+        "supplyPerLps": [
+          19.202,
+          0.509
+        ],
+        "lpPrice": 0.0001803744683837154,
+        "fees": 0,
+        "apr": 0
+      }
+    },
+    {
+      "poolId": "0x084f6e2cb42b8b4e28af305f1a5656dfefc446b04257734f05f479e2b7cdaff9",
+      "coinTypes": [
+        "0xf22da9a24ad027cccb5f2d496cbe91de953d363513db08a3a734d361c7c17503::LOFI::LOFI",
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE"
+      ],
+      "coins": {
+        "0xf22da9a24ad027cccb5f2d496cbe91de953d363513db08a3a734d361c7c17503::LOFI::LOFI": {
+          "balance": "2895",
+          "weight": "730800000000000000",
+          "tradeFeeIn": "3000000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        },
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE": {
+          "balance": "290",
+          "weight": "269200000000000000",
+          "tradeFeeIn": "3000000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        }
+      },
+      "daoFeePercentage": 0.02,
+      "stats": {
+        "volume": 0,
+        "tvl": 1.7364282046338873e-8,
+        "supplyPerLps": [
+          0.29,
+          2.895
+        ],
+        "lpPrice": 0.001736428204633887,
+        "fees": 0,
+        "apr": 0
+      }
+    },
+    {
+      "poolId": "0xd5fb9d9f47709c8034e65739a5c0c1a39aa5f72928786a92bb896b8475d6ec24",
+      "coinTypes": [
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE",
+        "0xf22da9a24ad027cccb5f2d496cbe91de953d363513db08a3a734d361c7c17503::LOFI::LOFI"
+      ],
+      "coins": {
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE": {
+          "balance": "1352",
+          "weight": "542100000000000000",
+          "tradeFeeIn": "3000000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        },
+        "0xf22da9a24ad027cccb5f2d496cbe91de953d363513db08a3a734d361c7c17503::LOFI::LOFI": {
+          "balance": "4591",
+          "weight": "457900000000000000",
+          "tradeFeeIn": "3000000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        }
+      },
+      "daoFeePercentage": 0.03,
+      "stats": {
+        "volume": 0,
+        "tvl": 4.7523053354809504e-8,
+        "supplyPerLps": [
+          1.352,
+          4.591
+        ],
+        "lpPrice": 0.000475230533548095,
+        "fees": 0,
+        "apr": 0
+      }
+    },
+    {
+      "poolId": "0x23ce7abd15a07331182e2fd1c932b0e1be1b54782cff5757e3ea64f0451471e6",
+      "coinTypes": [
+        "0xc466c28d87b3d5cd34f3d5c088751532d71a38d93a8aae4551dd56272cfb4355::manifest::MANIFEST",
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE"
+      ],
+      "coins": {
+        "0xc466c28d87b3d5cd34f3d5c088751532d71a38d93a8aae4551dd56272cfb4355::manifest::MANIFEST": {
+          "balance": "9726",
+          "weight": "962300000000000000",
+          "tradeFeeIn": "100000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        },
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE": {
+          "balance": "21",
+          "weight": "37700000000000000",
+          "tradeFeeIn": "100000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        }
+      },
+      "daoFeePercentage": 0.02,
+      "stats": {
+        "volume": 0,
+        "tvl": 1.0136252784392116e-8,
+        "supplyPerLps": [
+          0.021,
+          9.726
+        ],
+        "lpPrice": 0.0010136252784392116,
+        "fees": 0,
+        "apr": 0
+      }
+    },
+    {
+      "poolId": "0x82bfff1229ef8eae7e814350fb601a81a4fa17219b15a0dbe10703158c3af5cf",
+      "coinTypes": [
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE",
+        "0xc466c28d87b3d5cd34f3d5c088751532d71a38d93a8aae4551dd56272cfb4355::manifest::MANIFEST"
+      ],
+      "coins": {
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE": {
+          "balance": "638",
+          "weight": "500000000000000000",
+          "tradeFeeIn": "100000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        },
+        "0xc466c28d87b3d5cd34f3d5c088751532d71a38d93a8aae4551dd56272cfb4355::manifest::MANIFEST": {
+          "balance": "15684",
+          "weight": "500000000000000000",
+          "tradeFeeIn": "100000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        }
+      },
+      "daoFeePercentage": 0.02,
+      "stats": {
+        "volume": 0,
+        "tvl": 2.988018662081352e-8,
+        "supplyPerLps": [
+          0.638,
+          15.684
+        ],
+        "lpPrice": 0.0002988018662081352,
+        "fees": 0,
+        "apr": 0
+      }
+    },
+    {
+      "poolId": "0xc8568ee0248752842fff32f016591050de1a2b535eacb20bde39fbaa48178436",
+      "coinTypes": [
+        "0x120c741d353f94c08b4db986b8675e1efb7deb29851c8ae6badb1664d03e8ee0::fish::FISH",
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE"
+      ],
+      "coins": {
+        "0x120c741d353f94c08b4db986b8675e1efb7deb29851c8ae6badb1664d03e8ee0::fish::FISH": {
+          "balance": "2315445706",
+          "weight": "393900000000000000",
+          "tradeFeeIn": "3000000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        },
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE": {
+          "balance": "36",
+          "weight": "606100000000000000",
+          "tradeFeeIn": "3000000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        }
+      },
+      "daoFeePercentage": 0.025,
+      "stats": {
+        "volume": 0,
+        "tvl": 1.3306680969352383e-9,
+        "supplyPerLps": [
+          0.036,
+          2315445.706
+        ],
+        "lpPrice": 0.000013306680969352382,
+        "fees": 0,
+        "apr": 0
+      }
+    },
+    {
+      "poolId": "0x75b81909ea6c09f3dc8d1a9b0be8d99859deaacdc0aa749025fbc3ef68229577",
+      "coinTypes": [
+        "0x2e3c97ca6659629897905ddf89fd451a0c8421f4e45345a9b74481ae421e7dac::poors::POORS",
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE"
+      ],
+      "coins": {
+        "0x2e3c97ca6659629897905ddf89fd451a0c8421f4e45345a9b74481ae421e7dac::poors::POORS": {
+          "balance": "57515",
+          "weight": "500399999999999936",
+          "tradeFeeIn": "100000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        },
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE": {
+          "balance": "175",
+          "weight": "499600000000000064",
+          "tradeFeeIn": "100000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        }
+      },
+      "daoFeePercentage": 0.02,
+      "stats": {
+        "volume": 0,
+        "tvl": 3.969046460554953e-9,
+        "supplyPerLps": [
+          57.515,
+          0.175
+        ],
+        "lpPrice": 0.00003969046460554953,
+        "fees": 0,
+        "apr": 0
+      }
+    },
+    {
+      "poolId": "0x585539eb77142234176f056c121a063012df8fa7013681b1d88cdb44e919ab81",
+      "coinTypes": [
+        "0x4d68a38f0c7abcea02106da3bab76f5e6b0b242c100746eb1ef9692cd1129d25::mbp::MBP",
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE"
+      ],
+      "coins": {
+        "0x4d68a38f0c7abcea02106da3bab76f5e6b0b242c100746eb1ef9692cd1129d25::mbp::MBP": {
+          "balance": "179790",
+          "weight": "503400000000000000",
+          "tradeFeeIn": "20000000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        },
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE": {
+          "balance": "61",
+          "weight": "496600000000000000",
+          "tradeFeeIn": "20000000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        }
+      },
+      "stats": {
+        "volume": 0,
+        "tvl": 1.3673251121839107e-9,
+        "supplyPerLps": [
+          0.061,
+          179.79
+        ],
+        "lpPrice": 0.000013673251121839106,
+        "fees": 0,
+        "apr": 0
+      }
+    },
+    {
+      "poolId": "0x04d3d0e2127d0e69e64291b3472ac684e867a2b36bb2bd80cf08c84ae21e656a",
+      "coinTypes": [
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE",
+        "0x6bc7e16b7990b38e747593ece27c9e919a25eacffe14a87693985e1d83f3390f::manni::MANNI"
+      ],
+      "coins": {
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE": {
+          "balance": "844",
+          "weight": "500000000000000000",
+          "tradeFeeIn": "3000000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        },
+        "0x6bc7e16b7990b38e747593ece27c9e919a25eacffe14a87693985e1d83f3390f::manni::MANNI": {
+          "balance": "1195",
+          "weight": "500000000000000000",
+          "tradeFeeIn": "3000000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        }
+      },
+      "stats": {
+        "volume": 0,
+        "tvl": 1.966447913195585e-8,
+        "supplyPerLps": [
+          1.195,
+          0.844
+        ],
+        "lpPrice": 0.000019664479131955848,
+        "fees": 0,
+        "apr": 0
+      }
+    },
+    {
+      "poolId": "0x637c93e47274c1d5cf2f8f230dfebf22875e227c220c2156469578f8f4504c53",
+      "coinTypes": [
+        "0x2fbed1da424da88f0bd56fab2d1a29a67c06bc1dc72c86428b40a1e5ce312941::shock::SHOCK",
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE"
+      ],
+      "coins": {
+        "0x2fbed1da424da88f0bd56fab2d1a29a67c06bc1dc72c86428b40a1e5ce312941::shock::SHOCK": {
+          "balance": "87244489161068",
+          "weight": "498000000000000000",
+          "tradeFeeIn": "100000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        },
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE": {
+          "balance": "1684725209899",
+          "weight": "502000000000000000",
+          "tradeFeeIn": "100000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        }
+      },
+      "stats": {
+        "volume": 48.86462794808074,
+        "tvl": 72.61359885424861,
+        "supplyPerLps": [
+          7.268051957510659,
+          0.14034892607449695
+        ],
+        "lpPrice": 0.00000604920052108028,
+        "fees": 0.004886462794808074,
+        "apr": 0.024562326454648533
+      }
+    },
+    {
+      "poolId": "0x31b07921cbe2af17645b2710f5380767f22d77edcd1fcfcce23d620a2f8bc239",
+      "coinTypes": [
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE",
+        "0x4d68a38f0c7abcea02106da3bab76f5e6b0b242c100746eb1ef9692cd1129d25::mbp::MBP"
+      ],
+      "coins": {
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE": {
+          "balance": "301",
+          "weight": "500700000000000000",
+          "tradeFeeIn": "1000000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        },
+        "0x4d68a38f0c7abcea02106da3bab76f5e6b0b242c100746eb1ef9692cd1129d25::mbp::MBP": {
+          "balance": "33543",
+          "weight": "499300000000000000",
+          "tradeFeeIn": "1000000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        }
+      },
+      "daoFeePercentage": 0.002,
+      "stats": {
+        "volume": 0,
+        "tvl": 6.7435213695732674e-9,
+        "supplyPerLps": [
+          33.543,
+          0.301
+        ],
+        "lpPrice": 0.00006743521369573267,
+        "fees": 0,
+        "apr": 0
+      }
+    },
+    {
+      "poolId": "0x8ceb12246af4550ff8e160db3b8d980c5eb84f9dc784983334335eddfbcd0dd0",
+      "coinTypes": [
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE",
+        "0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL"
+      ],
+      "coins": {
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE": {
+          "balance": "6025",
+          "weight": "499900000000000000",
+          "tradeFeeIn": "3000000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        },
+        "0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL": {
+          "balance": "1663",
+          "weight": "500100000000000000",
+          "tradeFeeIn": "3000000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        }
+      },
+      "daoFeePercentage": 0.015,
+      "stats": {
+        "volume": 0,
+        "tvl": 1.8562647185148327e-7,
+        "supplyPerLps": [
+          6.025,
+          1.663
+        ],
+        "lpPrice": 0.0018562647185148325,
+        "fees": 0,
+        "apr": 0
+      }
+    },
+    {
+      "poolId": "0x6c47d23dfcbaaa3abb82b17d5ac5ec7acc9bb1724356de9dde36c3811ca2005a",
+      "coinTypes": [
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE",
+        "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
+      ],
+      "coins": {
+        "0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE": {
+          "balance": "379060967",
+          "weight": "579700000000000000",
+          "tradeFeeIn": "10000000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        },
+        "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI": {
+          "balance": "7057237",
+          "weight": "420300000000000000",
+          "tradeFeeIn": "10000000000000000",
+          "tradeFeeOut": "0",
+          "decimalsScalar": "1000000000000000000"
+        }
+      },
+      "daoFeePercentage": 0.01,
+      "stats": {
+        "volume": 0,
+        "tvl": 0.01428304511355745,
+        "supplyPerLps": [
+          0.19091426330264144,
+          10.254458687102598
+        ],
+        "lpPrice": 0.003863887574660187,
+        "fees": 0,
+        "apr": 0
+      }
+    }
+  ]
+}
