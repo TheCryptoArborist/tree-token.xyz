@@ -56,7 +56,7 @@ def set_login_sql(tag: str, enabled: bool) -> str:
     return """BEGIN; SET LOCAL lock_timeout='5s'; SET LOCAL statement_timeout='20s';
 SELECT pg_advisory_xact_lock(hashtextextended('tree-runtime-setup-v1',0));
 DO $guard$ DECLARE r record; BEGIN
-"""+policy_guard+"""
+"""+(policy_guard if enabled else "")+"""
 IF (SELECT count(*) FROM pg_roles WHERE rolname IN ("""+names+""") AND
  shobj_description(oid,'pg_authid')="""+sql_literal(tag)+""") <> 5
  THEN RAISE EXCEPTION 'tree_recovery_role_state'; END IF;
