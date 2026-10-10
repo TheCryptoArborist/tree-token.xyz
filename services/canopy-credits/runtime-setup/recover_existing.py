@@ -111,6 +111,12 @@ def run_recovery(api, confirm, progress, sleeper=time.sleep):
         passwords.clear();values.clear()
 
 def main():
+    # Fail closed: this tool is not approved for live use merely because it exists.
+    # No token prompt or network operation is reachable without explicit operator mode.
+    if '--execute' not in sys.argv:
+        print('TREE recovery is in HOLD mode. No connection or credential changes were attempted.')
+        print('Review RECOVERY-SECURITY-REVIEW.md and complete live-use approval before --execute.')
+        return
     print('TREE runtime recovery: ONE attempt only; payments stay OFF.')
     print('Never share token, connection strings, or database passwords.')
     api=None
