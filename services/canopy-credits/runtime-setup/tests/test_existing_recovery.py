@@ -9,6 +9,11 @@ import recover_existing as recovery
 from test_recovery_audit import MockApi, role_rows
 
 class RecoveryTests(unittest.TestCase):
+    def test_main_defaults_to_hold_without_token_prompt(self):
+        from unittest.mock import patch
+        with patch.object(sys,'argv',['recover_existing.py']), patch('builtins.print') as out, patch('getpass.getpass',side_effect=AssertionError('should not prompt')):
+            recovery.main()
+        self.assertTrue(any('HOLD mode' in str(call) for call in out.call_args_list))
     def test_decline_never_writes(self):
         api=MockApi()
         with self.assertRaises(setup.SetupError) as e:
