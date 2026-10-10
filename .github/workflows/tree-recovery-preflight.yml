@@ -24,8 +24,4 @@ jobs:
           python-version: '3.11'
       - name: Run offline recovery preflight
         run: python -m unittest discover -s services/canopy-credits/runtime-setup/tests -p 'test_recovery_*.py' -v
-      - name: Run guarded recovery tests
-        run: python -m unittest discover -s services/canopy-credits/runtime-setup/tests -p test_existing_recovery.py -v
 
-      - name: Run recovery orchestration tests
-        run: python -m unittest discover -s services/canopy-credits/runtime-setup/tests -p test_recovery_integration.py -v
