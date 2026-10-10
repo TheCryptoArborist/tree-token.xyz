@@ -72,6 +72,20 @@ class IntegrationTests(unittest.TestCase):
         with self.assertRaises(setup.SetupError) as e:self.run_once(api)
         self.assertEqual(str(e.exception),'partial-setup')
         self.assertEqual(api.writes[-1],'disable')
+    def test_rollback_reads_role_state_after_disable(self):
+        api=RecoveryApi(fail_at='secrets')
+        with self.assertRaises(setup.SetupError):self.run_once(api)
+        self.assertEqual(api.writes[-1],'disable')
+        self.assertTrue(any(call[0]=='query' and call[2]==recovery.ROLES_SQL for call in api.calls))
+    def test_uncertain_rollback_state_never_reports_success(self):
+        class UncertainApi(RecoveryApi):
+            def query(self,sql,read_only=True):
+                if read_only and sql==recovery.ROLES_SQL and 'disable' in self.writes:
+                    raise setup.SetupError('network-error')
+                return super().query(sql,read_only)
+        api=UncertainApi(fail_at='secrets')
+        with self.assertRaises(setup.SetupError) as ctx:self.run_once(api)
+        self.assertEqual(str(ctx.exception),'partial-setup')
     def test_confirmation_declined_never_writes(self):
         api=RecoveryApi()
         with self.assertRaises(setup.SetupError):
