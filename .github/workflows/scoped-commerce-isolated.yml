@@ -1,0 +1,45 @@
+name: Scoped TREE commerce database and receipt checks
+on:
+  push:
+    branches: [feature/paid-continue-delivery]
+    paths: ['services/canopy-credits/**', '.github/workflows/scoped-commerce-isolated.yml']
+permissions:
+  contents: read
+jobs:
+  scoped-commerce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675
+        env:
+          POSTGRES_DB: scoped_commerce_ci
+          POSTGRES_USER: scoped_commerce_ci
+          POSTGRES_PASSWORD: disposable-ci-only
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U scoped_commerce_ci -d scoped_commerce_ci"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: 127.0.0.1
+      PGDATABASE: scoped_commerce_ci
+      PGUSER: scoped_commerce_ci
+      PGPASSWORD: disposable-ci-only
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Install locked reader SDK and disposable database client
+        run: |
+          npm ci --prefix services/canopy-credits/reader --ignore-scripts --no-audit --no-fund
+          mkdir -p "$RUNNER_TEMP/scoped-tools"
+          printf '{"private":true}' > "$RUNNER_TEMP/scoped-tools/package.json"
+          npm install --prefix "$RUNNER_TEMP/scoped-tools" --ignore-scripts --no-audit --no-fund --save-exact pg@8.16.3
+          echo "DIRECT_TEST_PACKAGE=$RUNNER_TEMP/scoped-tools/package.json" >> "$GITHUB_ENV"
+      - name: Exact quote and receipt regression suite
+        run: node --test --test-reporter=spec services/canopy-credits/reader/checkout/tests/*.test.mjs services/canopy-credits/reader/transport.test.mjs
+      - name: Actual isolated login roles, caps, quote, receipt and delivery pipeline
+        run: node --test --test-reporter=spec services/canopy-credits/reader/checkout/tests/scoped-commerce-pg.mjs

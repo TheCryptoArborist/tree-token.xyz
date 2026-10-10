@@ -1,0 +1,49 @@
+name: TREE secure runtime setup checks
+on:
+  push:
+    branches: [feature/paid-continue-delivery]
+    paths: ['services/canopy-credits/runtime-setup/**', '.github/workflows/tree-runtime-setup.yml']
+permissions:
+  contents: read
+jobs:
+  runtime-setup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675
+        env:
+          POSTGRES_DB: tree_setup_ci
+          POSTGRES_USER: tree_setup_ci
+          POSTGRES_PASSWORD: disposable-ci-only
+          POSTGRES_HOST_AUTH_METHOD: scram-sha-256
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U tree_setup_ci -d tree_setup_ci"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: 127.0.0.1
+      PGDATABASE: tree_setup_ci
+      PGUSER: tree_setup_ci
+      PGPASSWORD: disposable-ci-only
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Setup utility tests with mocked Management API
+        run: python3 -m unittest discover -s services/canopy-credits/runtime-setup/tests -p 'test_*.py' -v
+      - name: Runtime request and permission tests
+        run: node --test services/canopy-credits/runtime-setup/tests/runtime-check.test.mjs
+      - name: Install disposable PostgreSQL client only
+        run: |
+          mkdir -p "$RUNNER_TEMP/tree-runtime-tools"
+          printf '{"private":true}' > "$RUNNER_TEMP/tree-runtime-tools/package.json"
+          npm install --prefix "$RUNNER_TEMP/tree-runtime-tools" --ignore-scripts --no-audit --no-fund --save-exact pg@8.16.3
+          echo "DIRECT_TEST_PACKAGE=$RUNNER_TEMP/tree-runtime-tools/package.json" >> "$GITHUB_ENV"
+      - name: Real SCRAM authentication and least-privilege database checks
+        run: node --test services/canopy-credits/runtime-setup/tests/runtime-pg.mjs
+      - name: Deployed endpoint without any credentials
+        run: node --test services/canopy-credits/runtime-setup/tests/hosted-negative.mjs

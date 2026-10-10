@@ -1,0 +1,51 @@
+name: Direct TREE receipt binding checks
+on:
+  push:
+    branches: [feature/paid-continue-delivery]
+    paths:
+      - 'services/canopy-credits/reader/**'
+      - 'services/canopy-credits/continue-product.mjs'
+      - 'services/canopy-credits/direct-continue-verifier.mjs'
+      - 'services/canopy-credits/mainnet-payment.mjs'
+      - 'services/canopy-credits/mainnet-reader.mjs'
+      - '.github/workflows/direct-checkout-binding.yml'
+permissions:
+  contents: read
+jobs:
+  binding:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    services:
+      postgres:
+        image: postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675
+        env:
+          POSTGRES_DB: direct_receipt_ci
+          POSTGRES_USER: direct_receipt_ci
+          POSTGRES_PASSWORD: disposable-ci-only
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U direct_receipt_ci -d direct_receipt_ci"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: 127.0.0.1
+      PGDATABASE: direct_receipt_ci
+      PGUSER: direct_receipt_ci
+      PGPASSWORD: disposable-ci-only
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Install locked reader SDK and isolated database client
+        run: |
+          npm ci --prefix services/canopy-credits/reader --ignore-scripts --no-audit --no-fund
+          mkdir -p "$RUNNER_TEMP/direct-receipt-tools"
+          printf '{"private":true}' > "$RUNNER_TEMP/direct-receipt-tools/package.json"
+          npm install --prefix "$RUNNER_TEMP/direct-receipt-tools" --ignore-scripts --no-audit --no-fund --save-exact pg@8.16.3
+          echo "DIRECT_TEST_PACKAGE=$RUNNER_TEMP/direct-receipt-tools/package.json" >> "$GITHUB_ENV"
+      - name: Exact direct receipt, quote and existing checkout tests
+        run: node --test --test-reporter=spec services/canopy-credits/reader/checkout/tests/*.test.mjs services/canopy-credits/reader/transport.test.mjs
+      - name: Signed direct order through BCS verifier and actual PostgreSQL delivery
+        run: node --test --test-reporter=spec services/canopy-credits/reader/checkout/tests/direct-service-pg.mjs

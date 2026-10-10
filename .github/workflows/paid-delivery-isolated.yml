@@ -1,0 +1,84 @@
+name: Paid continue one-time delivery checks
+on:
+  push:
+    branches: [feature/paid-continue-delivery]
+permissions:
+  contents: read
+concurrency:
+  group: paid-delivery-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  paid-delivery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675
+        env:
+          POSTGRES_DB: paid_delivery_ci
+          POSTGRES_USER: paid_delivery_ci
+          POSTGRES_PASSWORD: disposable-ci-only
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U paid_delivery_ci -d paid_delivery_ci"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: 127.0.0.1
+      PGDATABASE: paid_delivery_ci
+      PGUSER: paid_delivery_ci
+      PGPASSWORD: disposable-ci-only
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: TheCryptoArborist/treeforce89
+          ref: 37d67e08516f9d8cac435f2bb6f67007e8eb302d
+          path: game
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Install locked game and test-only tooling
+        run: |
+          npm ci --prefix game --ignore-scripts --no-audit --no-fund
+          npm ci --prefix game/app/game/tree-payments --ignore-scripts --no-audit --no-fund
+          mkdir -p "$RUNNER_TEMP/paid-tools"
+          printf '{"private":true}' > "$RUNNER_TEMP/paid-tools/package.json"
+          npm install --prefix "$RUNNER_TEMP/paid-tools" --ignore-scripts --no-audit --no-fund --save-exact pg@8.16.3 playwright@1.55.0
+          node "$RUNNER_TEMP/paid-tools/node_modules/playwright/cli.js" install --with-deps chromium
+          echo "PAID_TEST_PACKAGE=$RUNNER_TEMP/paid-tools/package.json" >> "$GITHUB_ENV"
+          echo "PAID_GAME_ROOT=$GITHUB_WORKSPACE/game" >> "$GITHUB_ENV"
+      - name: Hosted read-only gateway and probe security
+        run: node --test --test-reporter=spec supabase/functions/tree-continue-preview/gateway.test.mjs
+      - name: Existing game, wallet, recovery and prompt regressions
+        working-directory: game
+        run: node --test --test-reporter=spec tests/direct-tree*.test.mjs tests/continue*.test.mjs tests/tree-account*.test.mjs tests/account-ui.test.mjs tests/capture-animation.test.mjs tests/boss-background.test.mjs tests/tyrant-combat.test.mjs
+      - name: Actual game production compilation
+        run: npm run build --prefix game
+      - name: Real PostgreSQL service/controller, security and replay checks
+        run: node --test --test-reporter=spec services/canopy-credits/tests/paid-delivery-pg.test.mjs
+      - name: Lost-digest recovery, chain validation, scoped lookup and default checkout
+        run: node --test --test-reporter=spec services/canopy-credits/tests/purchase-recovery-pg.test.mjs
+      - name: Read-only hosted wrapper real PostgreSQL permissions and concurrency
+        run: node --test --test-reporter=spec services/canopy-credits/tests/hosted-lookup-pg.test.mjs
+      - name: Real Phaser, Chromium and PostgreSQL receipt-backed recovery
+        run: node services/canopy-credits/tests/paid-delivery-browser.mjs
+      - name: Prepare isolated loopback HTTPS certificate
+        run: |
+          openssl req -x509 -newkey rsa:2048 -nodes -keyout "$RUNNER_TEMP/continue-ci.key" -out "$RUNNER_TEMP/continue-ci.crt" -subj /CN=localhost -addext 'subjectAltName=DNS:localhost,IP:127.0.0.1' -days 1
+          chmod 600 "$RUNNER_TEMP/continue-ci.key"
+          echo "TEST_TLS_KEY=$RUNNER_TEMP/continue-ci.key" >> "$GITHUB_ENV"
+          echo "TEST_TLS_CERT=$RUNNER_TEMP/continue-ci.crt" >> "$GITHUB_ENV"
+          echo "NODE_EXTRA_CA_CERTS=$RUNNER_TEMP/continue-ci.crt" >> "$GITHUB_ENV"
+      - name: Compiled default UI over real HTTPS gateway and PostgreSQL
+        run: node services/canopy-credits/tests/purchase-recovery-https-browser.mjs
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: continue-integration-evidence
+          path: |
+            integration-evidence/
+            paid-evidence/
+          retention-days: 7
