@@ -29,3 +29,11 @@
 
 ## Guidance
 Current Mysten `frontend-apps/SKILL.md` and `frontend-apps/limitations.md`: database credentials remain server-side. See Issue #55.
+
+## Update — corrected CI and code re-review (2026-10-10)
+
+- GitHub Actions [run 38018563371](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/38018563371), job 114114256587: **53 tests, all passed**, including HOLD-mode default, SQL guards and mocked integration failures.
+- Reviewed `recover_existing.py` again: default entry point does not prompt for a token or write without `--execute`; rotation precedes secret update, which precedes role activation; on post-write exception it attempts NOLOGIN and reports partial setup; no automatic write retry.
+- **Live approval remains HOLD.** Database and secret writes are non-atomic; failed rollback can leave login state uncertain. Mocked tests cannot prove production pooler authentication, and the code does not implement an independent direct verifier/secret correspondence check.
+- Before any production invocation: independently review and approve credential rotation's partial-state recovery and verify a fresh role-state query can establish NOLOGIN after failures. Use only owner-held, short-lived, scoped Supabase PAT entered locally. Never expose token or connection strings in chat/CI.
+- No credentials rotated, no payment enablement, no production deployment performed during this review.
