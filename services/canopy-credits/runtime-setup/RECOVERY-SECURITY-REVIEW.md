@@ -37,3 +37,9 @@ Current Mysten `frontend-apps/SKILL.md` and `frontend-apps/limitations.md`: data
 - **Live approval remains HOLD.** Database and secret writes are non-atomic; failed rollback can leave login state uncertain. Mocked tests cannot prove production pooler authentication, and the code does not implement an independent direct verifier/secret correspondence check.
 - Before any production invocation: independently review and approve credential rotation's partial-state recovery and verify a fresh role-state query can establish NOLOGIN after failures. Use only owner-held, short-lived, scoped Supabase PAT entered locally. Never expose token or connection strings in chat/CI.
 - No credentials rotated, no payment enablement, no production deployment performed during this review.
+
+## Update — rollback readback tests (2026-10-10)
+
+[GitHub Actions run 38018754573](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/38018754573), job 114114843825: **55 offline tests passed**, including readback of all five roles after a failed recovery and fail-closed behavior when readback itself fails. Full job logs reviewed. This reduces but does not eliminate the non-atomic credential/secret-write risk. It does not establish live Supavisor authentication.
+
+**Live use remains gated** on owner-local short-lived scoped PAT, explicit confirmation, and independent acceptance of the partial-update risk. Run only the recovery utility, never the original installer. On any partial status, stop and independently inspect account state; do not rerun automatically. Payments remain disabled throughout.
