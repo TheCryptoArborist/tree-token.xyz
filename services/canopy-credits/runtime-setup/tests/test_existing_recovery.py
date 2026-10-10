@@ -38,6 +38,7 @@ class RecoveryTests(unittest.TestCase):
         tag='TREE_RUNTIME_SETUP_V1:aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee'
         self.assertIn('tree_recovery_policy_changed',recovery.rotation_sql(passwords,tag))
         self.assertIn('tree_recovery_policy_changed',recovery.set_login_sql(tag,True))
+        self.assertIn('AND NOT rolcanlogin',recovery.set_login_sql(tag,True))
         self.assertNotIn('tree_recovery_policy_changed',recovery.set_login_sql(tag,False))
     def test_preflight_rejects_enabled_role_before_any_write(self):
         rows=role_rows();rows[0]['rolcanlogin']=True
