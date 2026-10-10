@@ -26,12 +26,17 @@ def rotation_sql(passwords: dict[str,str], tag: str) -> str:
     if set(passwords)!=set(MODES) or not re.fullmatch(r'TREE_RUNTIME_SETUP_V1:[a-f0-9-]{36}',tag):
         raise SetupError('roles-not-ready')
     names=','.join(map(sql_literal,LOGINS.values()))
+    policy_guard = ("IF NOT EXISTS (SELECT 1 FROM tree_continue_v1.commerce_policy WHERE singleton "
+        "AND NOT new_orders_enabled AND NOT settlement_enabled AND deployment IS NULL "
+        "AND total_limit_raw=0 AND reserved_raw=0) "
+        "THEN RAISE EXCEPTION 'tree_recovery_policy_changed'; END IF;")
     statements=[
         "BEGIN;",
         "SET LOCAL lock_timeout='5s';",
         "SET LOCAL statement_timeout='20s';",
         "SELECT pg_advisory_xact_lock(hashtextextended('tree-runtime-setup-v1',0));",
         "DO $guard$ BEGIN",
+        policy_guard,
         "IF (SELECT count(*) FROM pg_roles WHERE rolname IN ("+names+") AND NOT rolcanlogin AND shobj_description(oid,'pg_authid')="+sql_literal(tag)+") <> 5 THEN RAISE EXCEPTION 'tree_recovery_role_state'; END IF;",
         "END $guard$;"
     ]
@@ -44,9 +49,14 @@ def set_login_sql(tag: str, enabled: bool) -> str:
     if not re.fullmatch(r'TREE_RUNTIME_SETUP_V1:[a-f0-9-]{36}',tag) or type(enabled) is not bool:
         raise SetupError('roles-not-ready')
     names=','.join(map(sql_literal,LOGINS.values()))
+    policy_guard = ("IF NOT EXISTS (SELECT 1 FROM tree_continue_v1.commerce_policy WHERE singleton "
+        "AND NOT new_orders_enabled AND NOT settlement_enabled AND deployment IS NULL "
+        "AND total_limit_raw=0 AND reserved_raw=0) "
+        "THEN RAISE EXCEPTION 'tree_recovery_policy_changed'; END IF;")
     return """BEGIN; SET LOCAL lock_timeout='5s'; SET LOCAL statement_timeout='20s';
 SELECT pg_advisory_xact_lock(hashtextextended('tree-runtime-setup-v1',0));
 DO $guard$ DECLARE r record; BEGIN
+"""+policy_guard+"""
 IF (SELECT count(*) FROM pg_roles WHERE rolname IN ("""+names+""") AND
  shobj_description(oid,'pg_authid')="""+sql_literal(tag)+""") <> 5
  THEN RAISE EXCEPTION 'tree_recovery_role_state'; END IF;
