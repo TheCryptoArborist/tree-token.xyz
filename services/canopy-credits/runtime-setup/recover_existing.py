@@ -104,8 +104,17 @@ def run_recovery(api, confirm, progress, sleeper=time.sleep):
         raise SetupError('verification-pending')
     except BaseException:
         if touched:
-            try:api.query(set_login_sql(tag,False),read_only=False)
-            except Exception:pass
+            # The database and secret writes are not atomic. Do not report a
+            # successful rollback based solely on the ALTER ROLE response.
+            try:
+                api.query(set_login_sql(tag,False),read_only=False)
+                state=api.query(ROLES_SQL)
+                if (len(state)!=5 or {row.get('rolname') for row in state}!=set(LOGINS.values())
+                    or any(row.get('rolcanlogin') is not False or row.get('setup_tag')!=tag for row in state)):
+                    raise SetupError('partial-setup')
+            except Exception:
+                # State remains uncertain. Never retry writes automatically.
+                pass
         raise SetupError('partial-setup') from None
     finally:
         passwords.clear();values.clear()
