@@ -58,7 +58,7 @@ SELECT pg_advisory_xact_lock(hashtextextended('tree-runtime-setup-v1',0));
 DO $guard$ DECLARE r record; BEGIN
 """+(policy_guard if enabled else "")+"""
 IF (SELECT count(*) FROM pg_roles WHERE rolname IN ("""+names+""") AND
- shobj_description(oid,'pg_authid')="""+sql_literal(tag)+""") <> 5
+ shobj_description(oid,'pg_authid')="""+sql_literal(tag)+ (""" AND NOT rolcanlogin""" if enabled else "") +""") <> 5
  THEN RAISE EXCEPTION 'tree_recovery_role_state'; END IF;
 FOR r IN SELECT rolname FROM pg_roles WHERE rolname IN ("""+names+""")
 LOOP EXECUTE format('ALTER ROLE %I """+('LOGIN' if enabled else 'NOLOGIN')+"""',r.rolname);
