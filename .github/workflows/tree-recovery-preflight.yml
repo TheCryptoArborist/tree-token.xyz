@@ -23,5 +23,5 @@ jobs:
         with:
           python-version: '3.11'
       - name: Run offline recovery preflight
-        run: python -m unittest discover -s services/canopy-credits/runtime-setup/tests -p 'test_recovery_*.py' -v
+        run: python -m unittest discover -s services/canopy-credits/runtime-setup/tests -p 'test_*.py' -v
 
