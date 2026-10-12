@@ -3,7 +3,7 @@ module canopy_checkout::checkout_tests;
 
 use canopy_checkout::{checkout, vectors};
 use sui::{clock, coin, object, tx_context};
-use tree_fixture::tree::TREE;
+use 0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE;
 const PAYER: address = @0x1111111111111111111111111111111111111111111111111111111111111111;
 const NOW: u64 = 1800000001000;
 
