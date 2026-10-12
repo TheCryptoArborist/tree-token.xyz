@@ -20,4 +20,5 @@ const artifact = {
 mkdirSync('staged-checkout', { recursive: true });
 writeFileSync('staged-checkout/checkout-package.json', JSON.stringify(artifact, null, 2) + '\n');
 console.log('CHECKOUT_PACKAGE=' + JSON.stringify(artifact));
+console.log('MOVE_LOCK_BASE64=' + readFileSync('services/canopy-credits/contract/Move.lock').toString('base64'));
 console.log('Only public package bytecode produced. No signer or transaction submission.');

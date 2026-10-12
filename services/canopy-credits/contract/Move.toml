@@ -1,6 +1,3 @@
 [package]
 name = "canopy_checkout"
 edition = "2024"
-
-[environments]
-mainnet = "35834a8a"
