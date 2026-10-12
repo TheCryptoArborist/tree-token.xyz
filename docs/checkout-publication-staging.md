@@ -1,0 +1,13 @@
+# Mainnet checkout staged for admin wallet publication
+
+The next user action is available at https://deploy-preview-3--treeforce89.netlify.app/checkout-setup. Connect approved admin account `0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4`, review the simulated SUI gas, and approve publication in the wallet. The transaction publishes one production module and transfers its UpgradeCap to that admin; init creates an empty paused shared Checkout and an AdminCap owned by the publisher.
+
+The production package built and all 26 Move VM checks passed on checksum-pinned official mainnet-v1.81.1. Tests use local VM fixtures and generate no wallet keys. The empty CLI keystore remained empty. Staging rebuilds production after tests and rejects test magic/header and helper names before producing publish bytes.
+
+Verified builds: https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/38280192971 (source `54701f7072feeb7aacb977f8003926eff8087ebd`) and https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/38280330995 (source `3e634865fd74537a26c7c3b5f38a13b83c42b7b7`). Both produced identical modules/dependencies and SHA-256 `037ba4b992d3ce185a7af27e1d456c774c08eb5d011d7ad9d2bd84ef6ba48810`. The game pins the first verified build. The generated Move.lock is committed unchanged.
+
+Current CLI behavior supersedes older examples: mainnet is a built-in environment and must not be redeclared in Move.toml; use `--build-env mainnet`. Sui and MoveStdlib resolve automatically. The TREE fixture uses its literal original token address only in test mode and is absent from the production package.
+
+The game publisher has 19 checks covering actual SDK output, altered bytecode/network/ownership/binding, failed receipts, caller mutation, wallet changes and repeated submission. It requires a mainnet gas simulation before wallet approval. Receipt verification reads the exact transaction and raw BCS Checkout/AdminCap/UpgradeCap objects independently, checking empty paused state and matching ownership. Its workflow uses public-address simulation and hosted browsers without signing or submitting a transaction.
+
+Publication has not occurred in this session. No on-chain package, Checkout ID, or quote public key has been invented. Hosted orders and settlement remain disabled, deployment remains null, and no TREE payment or lives grant has been made. The private quote authority and hosted deployment binding are configured only after the real verified publication IDs are available. The intended pilot remains 20,000 TREE for 3 lives, preserving the same flight and allowing one continue per flight.
