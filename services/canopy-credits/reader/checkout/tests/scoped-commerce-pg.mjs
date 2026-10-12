@@ -11,6 +11,7 @@ import {MAINNET,createMainnetReader} from '../../../mainnet-reader.mjs';
 import {DIRECT_CONTINUE as P,commitment} from '../../../continue-product.mjs';
 import {createScopedCommerce} from '../../../scoped-commerce.mjs';
 import {platformDatabase} from '../../../platform-database.mjs';
+import {createPlatformRuntime} from '../../../platform-runtime.mjs';
 import {createFlightStorage} from '../../../flight-storage.mjs';
 import {createPaidDelivery,withPaidDelivery} from '../../../paid-delivery.mjs';
 import {createDirectReceiptReader} from '../direct-receipt-reader.mjs';
@@ -197,6 +198,25 @@ await test('role-separated commerce using actual unprivileged login connections'
    await admin.query('UPDATE tree_continue_v1.commerce_policy SET new_orders_enabled=false');
    try{assert.equal((await service(actor,{action:'status'})).enabled,false);await assert.rejects(service(actor,f.command('order')),/disabled/);assert.deepEqual(await counts(),before);}
    finally{await admin.query('UPDATE tree_continue_v1.commerce_policy SET new_orders_enabled=true');}
+  });
+  await t.test('full standard runtime survives ten retries with two-connection pools and restores only once',async()=>{
+   // Same server credential, separate connection allowances; no new login roles.
+   const pool=new Pool({max:2,connectionTimeoutMillis:3000}),auxiliaryPool=new Pool({max:2,connectionTimeoutMillis:3000});
+   try{
+    const f=await fixture({order:false});
+    const service=createPlatformRuntime({pool,auxiliaryPool,settings,configuration:config,
+     authorizeQuote:f.options.authorizeQuote,verifyPayment:f.options.verifyPayment,discover:async()=>({status:'unavailable'})});
+    const orders=await Promise.all(Array.from({length:10},()=>service(actor,f.command('order'))));
+    assert.equal(new Set(orders.map(x=>x.order.orderId)).size,1);assert.equal(f.state.signatures,1);
+    const order=orders[0].order;
+    assert.equal((await service(actor,f.command('reconcile',{orderId:order.orderId,digest:f.state.digest}))).status,'verified');
+    const recovery=await service(actor,{action:'recover_purchase',runId:f.runId});assert.equal(recovery.order.orderId,order.orderId);assert.equal(recovery.status,'verified');
+    const clientKey=hex(),p=await service(actor,{action:'prepare_delivery',runId:f.runId,clientKey});
+    const c={action:'activate_delivery',runId:f.runId,clientKey,leaseId:p.leaseId,requestId:randomUUID(),checkpointHash:p.checkpointHash};
+    assert.equal((await service(actor,c)).lives,3);assert.equal((await service(actor,c)).replay,true);
+    const fresh=await service(actor,{action:'prepare_delivery',runId:f.runId,clientKey:hex()});assert.equal(fresh.status,'review-required');
+    assert.equal((await admin.query("SELECT count(*)::int n FROM tree_continue_v1.journal WHERE order_id=$1 AND state='delivered'",[order.orderId])).rows[0].n,1);
+   }finally{await pool.end();await auxiliaryPool.end();}
   });
  }finally{await Promise.all(Object.values(pools).map(p=>p.end()));await admin.end();}
 });

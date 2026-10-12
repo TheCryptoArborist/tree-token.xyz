@@ -10,16 +10,18 @@ export const PLATFORM_SETTINGS=Object.freeze({authOrigin:'https://deploy-preview
  * No custom logins, password rotation, setup bearer or owner installer is needed.
  * Actual checkout configuration remains unset; no signer or chain data is faked.
  */
-export function createPlatformRuntime({pool,settings=PLATFORM_SETTINGS,configuration=null,authorizeQuote,verifyPayment,discover}={}){
+export function createPlatformRuntime({pool,auxiliaryPool=pool,settings=PLATFORM_SETTINGS,configuration=null,authorizeQuote,verifyPayment,discover}={}){
  const unavailable=()=>{throw Object.assign(Error('checkout-not-enabled'),{code:'checkout-not-enabled'});};
  if(configuration && (!configuration.deployment||typeof authorizeQuote!=='function'||typeof verifyPayment!=='function'||typeof discover!=='function'))throw Error('platform-checkout-dependencies-required');
  const config=configuration?structuredClone(configuration):{paymentsEnabled:false,deployment:null,metadata:{network:DIRECT_CONTINUE.network,coinType:DIRECT_CONTINUE.coinType,decimals:6}};
- const storage=createFlightStorage(platformDatabase(pool,'storage'),settings);
+ // Storage reads made while an order holds its row lock must have an independent
+ // connection allowance, so concurrent order retries cannot exhaust their pool.
+ const storage=createFlightStorage(platformDatabase(auxiliaryPool,'storage'),settings);
  // Separate logical adapters, one existing platform-managed connection pool.
  const orderPool={connect:()=>pool.connect()},settlementPool={connect:()=>pool.connect()};
  const commerce=createScopedCommerce({orderPool,settlementPool,settings,platformRoleSwitch:true,
   resolveFlight:(actor,run)=>storage.resolveValidatedFlight(actor,run),loadConfiguration:async()=>structuredClone(config),
   authorizeQuote:authorizeQuote||unavailable,verifyPayment:verifyPayment||unavailable});
- const purchases=withPaidDelivery(commerce,createPaidDelivery(platformDatabase(pool,'delivery'),settings));
- return withPurchaseRecovery(purchases,{db:platformDatabase(pool,'recovery'),discover:discover||unavailable,...settings});
+ const purchases=withPaidDelivery(commerce,createPaidDelivery(platformDatabase(auxiliaryPool,'delivery'),settings));
+ return withPurchaseRecovery(purchases,{db:platformDatabase(auxiliaryPool,'recovery'),discover:discover||unavailable,...settings});
 }
