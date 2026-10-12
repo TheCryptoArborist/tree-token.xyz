@@ -10,6 +10,7 @@ import {createRequire} from 'node:module';
 import {MAINNET,createMainnetReader} from '../../../mainnet-reader.mjs';
 import {DIRECT_CONTINUE as P,commitment} from '../../../continue-product.mjs';
 import {createScopedCommerce} from '../../../scoped-commerce.mjs';
+import {platformDatabase} from '../../../platform-database.mjs';
 import {createFlightStorage} from '../../../flight-storage.mjs';
 import {createPaidDelivery,withPaidDelivery} from '../../../paid-delivery.mjs';
 import {createDirectReceiptReader} from '../direct-receipt-reader.mjs';
@@ -171,6 +172,31 @@ await test('role-separated commerce using actual unprivileged login connections'
   });
   await t.test('legacy deliver and unverified identity are refused',async()=>{
    const f=await fixture();await assert.rejects(f.commerce(actor,f.command('deliver')),/action_not_allowed/);await assert.rejects(f.commerce({...actor,identityMappingReviewed:false},{action:'status'}),/verified_identity/);
+  });
+  await t.test('standard server connection keeps signed quote, independent receipt and one-consumption delivery',async()=>{
+   const f=await fixture({order:false});
+   const commerce=createScopedCommerce({...f.options,platformRoleSwitch:true,
+    orderPool:{connect:()=>admin.connect()},settlementPool:{connect:()=>admin.connect()}});
+   const service=withPaidDelivery(commerce,createPaidDelivery(platformDatabase(admin,'delivery'),settings));
+   const orders=await Promise.all(Array.from({length:10},()=>service(actor,f.command('order'))));
+   assert.equal(new Set(orders.map(x=>x.order.orderId)).size,1);assert.equal(f.state.signatures,1);
+   const order=orders[0].order;
+   const settled=await service(actor,f.command('reconcile',{orderId:order.orderId,digest:f.state.digest}));
+   assert.equal(settled.status,'verified');assert.equal(settled.authorization,null);
+   const clientKey=hex(),prepared=await service(actor,{action:'prepare_delivery',runId:f.runId,clientKey});
+   const command={action:'activate_delivery',runId:f.runId,clientKey,leaseId:prepared.leaseId,requestId:randomUUID(),checkpointHash:prepared.checkpointHash};
+   const first=await service(actor,command),retry=await service(actor,command);
+   assert.equal(first.lives,3);assert.equal(first.restoreAuthorized,true);assert.equal(retry.replay,true);
+   assert.equal((await admin.query("SELECT count(*)::int n FROM tree_continue_v1.journal WHERE order_id=$1 AND state='delivered'",[order.orderId])).rows[0].n,1);
+   assert.equal((await admin.query('SELECT current_user u')).rows[0].u,process.env.PGUSER);
+  });
+  await t.test('standard server mode cannot bypass paused SQL sales policy',async()=>{
+   const f=await fixture({order:false}),before=await counts();
+   const service=createScopedCommerce({...f.options,platformRoleSwitch:true,
+    orderPool:{connect:()=>admin.connect()},settlementPool:{connect:()=>admin.connect()}});
+   await admin.query('UPDATE tree_continue_v1.commerce_policy SET new_orders_enabled=false');
+   try{assert.equal((await service(actor,{action:'status'})).enabled,false);await assert.rejects(service(actor,f.command('order')),/disabled/);assert.deepEqual(await counts(),before);}
+   finally{await admin.query('UPDATE tree_continue_v1.commerce_policy SET new_orders_enabled=true');}
   });
  }finally{await Promise.all(Object.values(pools).map(p=>p.end()));await admin.end();}
 });

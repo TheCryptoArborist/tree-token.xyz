@@ -24,7 +24,20 @@ function actorSnapshot(actor, settings) {
  return Object.freeze({ authenticated: true, identityMappingReviewed: true, ...settings,
   accountId: uuid(actor.accountId), wallet: Object.freeze({ family: 'sui', address: address(actor.wallet.address) }) });
 }
-async function ensureRole(db, mode) {
+async function ensureRole(db, mode, platformRoleSwitch = false) {
+ if (platformRoleSwitch) {
+  // Trusted server credential, reduced to one fixed NOLOGIN role per transaction.
+  await db.query("SET LOCAL ROLE " + roles[mode]);
+  const {rows}=await db.query(`SELECT current_user AS role,
+   (SELECT rolsuper OR rolcreaterole OR rolcreatedb OR rolbypassrls FROM pg_roles WHERE rolname=current_user) AS elevated,
+   pg_has_role(current_user,$1,'MEMBER') AS opposite,
+   has_table_privilege(current_user,'tree_continue_v1.orders','INSERT,UPDATE,DELETE') AS direct_orders,
+   has_table_privilege(current_user,'tree_continue_v1.receipts','INSERT,UPDATE,DELETE') AS direct_receipts`,
+   [roles[mode === "order" ? "settlement" : "order"]]);
+  check(rows.length===1&&rows[0].role===roles[mode]&&rows[0].elevated===false&&rows[0].opposite===false&&
+   rows[0].direct_orders===false&&rows[0].direct_receipts===false,'commerce_platform_role_required');
+  return rows[0].role;
+ }
  const other = mode === 'order' ? 'settlement' : 'order';
  const { rows } = await db.query(roleCheck, [roles[mode], roles[other]]), r = rows[0];
  check(rows.length === 1 && r && r.intended === true && r.elevated === false && r.opposite === false &&
@@ -37,7 +50,7 @@ async function policy(db) {
  const { rows } = await db.query('SELECT tree_continue_v1.commerce_policy_read() AS result');
  check(rows.length === 1 && rows[0].result, 'commerce_policy_missing'); return rows[0].result;
 }
-function repository(pool, mode, actor) {
+function repository(pool, mode, actor, platformRoleSwitch) {
  const context = new AsyncLocalStorage();
  const active = () => { const c = context.getStore(); check(c, 'commerce_transaction_required'); return c; };
  const identity = [actor.accountId, actor.wallet.address, actor.authOrigin, actor.environment];
@@ -46,8 +59,9 @@ function repository(pool, mode, actor) {
    check(accountId === actor.accountId, 'commerce_account_mismatch'); uuid(runId);
    const db = await pool.connect();
    try {
-    await ensureRole(db, mode);
-    await db.query('BEGIN'); await db.query("SET LOCAL statement_timeout='15s'");
+    if(platformRoleSwitch)await db.query('BEGIN');
+    await ensureRole(db, mode, platformRoleSwitch);
+    if(!platformRoleSwitch)await db.query('BEGIN'); await db.query("SET LOCAL statement_timeout='15s'");
     await db.query("SET LOCAL lock_timeout='10s'"); await db.query("SET LOCAL idle_in_transaction_session_timeout='15s'");
     const { rows } = await db.query('SELECT tree_continue_v1.commerce_read($1::uuid,$2,$3,$4,$5::uuid) AS result', [...identity,runId]);
     check(rows.length === 1, 'commerce_invalid_read');
@@ -90,7 +104,8 @@ function repository(pool, mode, actor) {
  * The signed envelope is verified again here before the order transaction commits.
  */
 export function createScopedCommerce({ orderPool, settlementPool, settings, resolveFlight, loadConfiguration,
- authorizeQuote, verifyPayment, now = Date.now }) {
+ authorizeQuote, verifyPayment, now = Date.now, platformRoleSwitch = false }) {
+ check(typeof platformRoleSwitch === 'boolean', 'commerce_invalid_access_mode');
  check(orderPool !== settlementPool && typeof orderPool?.connect === 'function' && typeof settlementPool?.connect === 'function',
   'commerce_separate_pools_required');
  check(settings && new URL(settings.authOrigin).origin === settings.authOrigin && settings.authOrigin.startsWith('https:') &&
@@ -102,7 +117,11 @@ export function createScopedCommerce({ orderPool, settlementPool, settings, reso
   check(['status','order','cancel','reconcile'].includes(command?.action),'commerce_action_not_allowed');
   const mode = command.action === 'reconcile' ? 'settlement' : 'order', pool = mode === 'order' ? orderPool : settlementPool;
   let p; const db = await pool.connect();
-  try { await ensureRole(db,mode); p = await policy(db); } finally { db.release(); }
+  try {
+   if(platformRoleSwitch)await db.query('BEGIN');
+   await ensureRole(db,mode,platformRoleSwitch); p = await policy(db);
+   if(platformRoleSwitch)await db.query('COMMIT');
+  } catch(e){if(platformRoleSwitch)await db.query('ROLLBACK').catch(()=>{});throw e;}finally { db.release(); }
   check(p.authOrigin === actor.authOrigin && p.environment === actor.environment,'commerce_policy_issuer_mismatch');
   if(command.action === 'status' && (!p.newOrdersEnabled || !p.deployment)) return { enabled:false,
    orderPolicyEnabled:p.newOrdersEnabled,settlementPolicyEnabled:p.settlementEnabled };
@@ -114,7 +133,7 @@ export function createScopedCommerce({ orderPool, settlementPool, settings, reso
    orderPolicyEnabled:p.newOrdersEnabled,settlementPolicyEnabled:p.settlementEnabled };
   // SQL rechecks policy/caps under locks, independently of the application gate.
   config.paymentsEnabled = command.action === 'order' && config.paymentsEnabled === true && p.newOrdersEnabled === true;
-  const purchases = createDirectContinueService({ repository:repository(pool,mode,actor),resolveFlight,
+  const purchases = createDirectContinueService({ repository:repository(pool,mode,actor,platformRoleSwitch),resolveFlight,
    loadConfiguration:async()=>config,
    authorizeQuote:async(terms,d)=>{
     check(mode === 'order','commerce_quote_role_required');
