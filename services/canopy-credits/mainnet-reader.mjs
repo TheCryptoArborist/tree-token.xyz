@@ -1,3 +1,4 @@
+import {Buffer} from 'node:buffer';
 /** Server-only read adapter. No ledger writes, signer or transaction submission.
  * Finality evidence is checked against a trusted RPC endpoint, NOT cryptographically
  * verified committee signatures. Keep the live checkout disabled pending review.

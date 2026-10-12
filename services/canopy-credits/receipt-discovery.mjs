@@ -1,3 +1,4 @@
+import {Buffer} from 'node:buffer';
 import {validateFixedContinueTerms} from './continue-product.mjs';
 const DIGEST=/^[1-9A-HJ-NP-Za-km-z]{43,44}$/;
 const check=(ok,code)=>{if(!ok)throw Object.assign(Error(code),{code});};
