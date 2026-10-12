@@ -12,18 +12,24 @@ const address = v => typeof v === 'string' && /^0x[a-f0-9]{64}$/.test(v) && !/^0
 export const stable = v => Array.isArray(v) ? '[' + v.map(stable).join(',') + ']' :
   v && typeof v === 'object' ? '{' + Object.keys(v).sort().map(k => JSON.stringify(k) + ':' + stable(v[k])).join(',') + '}' : JSON.stringify(v);
 export const commitment = value => createHash('sha256').update(stable(value)).digest('hex');
+export const TRANSFER_DEPLOYMENT = Object.freeze({network: DIRECT_CONTINUE.network, paymentMethod: 'tree-transfer-v1'});
+export const transferReference = t => 'TREE_FORCE_CONTINUE_V1:' + t.quoteHash;
 export function validateFixedContinueTerms(t) {
   fail(t?.kind === 'direct-continue', 'not-direct-continue');
   for (const [key, value] of Object.entries(DIRECT_CONTINUE)) fail(t[key] === value, 'wrong-fixed-continue-' + key);
   for (const key of ['orderId', 'accountId', 'runId']) fail(id(t[key]), 'invalid-' + key);
   fail(address(t.payer) && t.payer !== DIRECT_CONTINUE.recipient, 'invalid-payer');
-  fail(address(t.checkoutPackage) && address(t.checkoutId) && t.checkoutId !== t.checkoutPackage, 'invalid-deployment');
-  fail(t.eventType === `${t.checkoutPackage}::checkout::Purchase` && /^[1-9][0-9]*$/.test(t.keyEpoch || ''), 'invalid-checkout-context');
+  const transfer = t.paymentMethod === TRANSFER_DEPLOYMENT.paymentMethod;
+  if (!transfer) {
+    fail(address(t.checkoutPackage) && address(t.checkoutId) && t.checkoutId !== t.checkoutPackage, 'invalid-deployment');
+    fail(t.eventType === `${t.checkoutPackage}::checkout::Purchase` && /^[1-9][0-9]*$/.test(t.keyEpoch || ''), 'invalid-checkout-context');
+  }
   fail(/^[a-f0-9]{64}$/.test(t.flightHash || ''), 'invalid-flight-hash');
   fail(Number.isSafeInteger(t.issuedAtMs) && t.issuedAtMs > 0 && Number.isSafeInteger(t.expiresAtMs) &&
-    t.expiresAtMs - t.issuedAtMs === 45000, 'invalid-fixed-quote-window');
-  const allowed = ['kind', ...Object.keys(DIRECT_CONTINUE), 'orderId', 'accountId', 'runId', 'payer', 'checkoutPackage',
-    'checkoutId', 'eventType', 'keyEpoch', 'flightHash', 'issuedAtMs', 'expiresAtMs', 'quoteHash'];
+    t.expiresAtMs - t.issuedAtMs === (transfer ? 900000 : 45000), 'invalid-fixed-quote-window');
+  const allowed = ['kind', ...Object.keys(DIRECT_CONTINUE), 'orderId', 'accountId', 'runId', 'payer',
+    ...(transfer ? ['paymentMethod'] : ['checkoutPackage','checkoutId','eventType','keyEpoch']),
+    'flightHash', 'issuedAtMs', 'expiresAtMs', 'quoteHash'];
   fail(Object.keys(t).length === allowed.length && Object.keys(t).every(k => allowed.includes(k)), 'unexpected-direct-terms');
   const { quoteHash, ...rest } = t;
   fail(typeof quoteHash === 'string' && commitment(rest) === quoteHash, 'order-commitment-mismatch');
@@ -37,10 +43,12 @@ export function createFixedContinueTerms({ actor, flight, deployment, metadata, 
   fail(metadata?.network === DIRECT_CONTINUE.network && metadata.coinType === DIRECT_CONTINUE.coinType && metadata.decimals === 6,
     'verified-tree-metadata-required');
   fail(deployment?.network === DIRECT_CONTINUE.network, 'mainnet-deployment-required');
+  const transfer = deployment.paymentMethod === TRANSFER_DEPLOYMENT.paymentMethod;
   const terms = { kind: 'direct-continue', ...DIRECT_CONTINUE, orderId, accountId: actor.accountId, runId: flight.runId,
-    payer: actor.wallet.address, checkoutPackage: deployment.packageId, checkoutId: deployment.checkoutId,
-    eventType: `${deployment.packageId}::checkout::Purchase`, keyEpoch: deployment.keyEpoch,
-    flightHash: flight.checkpointHash, issuedAtMs: now, expiresAtMs: now + 45000 };
+    payer: actor.wallet.address,
+    ...(transfer ? {paymentMethod: TRANSFER_DEPLOYMENT.paymentMethod} : {checkoutPackage: deployment.packageId,
+      checkoutId: deployment.checkoutId,eventType: `${deployment.packageId}::checkout::Purchase`,keyEpoch: deployment.keyEpoch}),
+    flightHash: flight.checkpointHash, issuedAtMs: now, expiresAtMs: now + (transfer ? 900000 : 45000) };
   terms.quoteHash = commitment(terms);
   return Object.freeze(validateFixedContinueTerms(terms));
 }

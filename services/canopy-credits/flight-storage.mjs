@@ -92,6 +92,15 @@ export function createFlightStorage(db, {authOrigin,environment}) {
       return {accountId:actor.accountId,runId,ruleset:s.ruleset,lives:s.lives,continuesUsed:s.continuesUsed,
         checkpointHash:recovery.checkpointHash,finished:false};
     },
+    // Paid continues are casual play and cannot earn a competitive score. The
+    // authenticated, immutable saved flight needs no manual anti-cheat review.
+    async resolveSavedFlight(actor,runId) {
+      const recovery=await storage.recover(actor,runId);
+      check(recovery.snapshotText,'saved-flight-required');
+      const s=JSON.parse(recovery.snapshotText);
+      return {accountId:actor.accountId,runId,ruleset:s.ruleset,lives:s.lives,continuesUsed:s.continuesUsed,
+        checkpointHash:recovery.checkpointHash,finished:false};
+    },
   };
   return Object.freeze(storage);
 }

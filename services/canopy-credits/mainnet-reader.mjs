@@ -139,9 +139,27 @@ export function normalizeTransaction(tx, expectedDigest, cp, decodeReceipt = nul
     finalized: true, simulated: false, checkpoint: checkpoint.sequenceNumber,
     checkpointDigest: checkpoint.digest, effectsDigest, timestampMs: checkpoint.timestampMs,
     sender, events: Object.freeze(events), balanceChanges: Object.freeze(changes),
-    finalitySource: 'trusted-rpc-checkpoint-inclusion' });
+    finalitySource: 'trusted-rpc-checkpoint-inclusion',
+    ...(tx.transaction?.kind ? {paymentReferences: paymentReferences(tx.transaction.kind)} : {}) });
 }
-export const TX_MASK = Object.freeze(['digest', 'transaction.sender', 'effects.digest', 'effects.status',
+/** The reference is wallet-signed transaction data, using the existing Move
+ * standard library. Ordinary TREE transfers need no application contract. */
+export function paymentReferences(kind) {
+  const ptb=kind?.data?.oneofKind==='programmableTransaction'?kind.data.programmableTransaction:null;
+  requireThat(Array.isArray(ptb?.commands)&&ptb.commands.length<=1024&&Array.isArray(ptb.inputs),'missing-payment-transaction');
+  const references=[];
+  for(const command of ptb.commands){
+    const c=command.command?.oneofKind==='moveCall'?command.command.moveCall:null;
+    if(!c||canonicalAddress(c.package)!==canonicalAddress('0x1')||c.module!=='string'||c.function!=='utf8')continue;
+    if(c.typeArguments?.length||c.arguments?.length!==1||c.arguments[0].kind!==2||!Number.isInteger(c.arguments[0].input))continue;
+    const input=ptb.inputs[c.arguments[0].input],bytes=input?.pure;
+    if(input?.kind!==1||!(bytes instanceof Uint8Array)||bytes.length>128||bytes[0]>=128||bytes.length!==bytes[0]+1)continue;
+    const value=new TextDecoder('utf-8',{fatal:true}).decode(bytes.slice(1));
+    if(value.startsWith('TREE_FORCE_CONTINUE_V1:'))references.push(value);
+  }
+  return Object.freeze(references);
+}
+export const TX_MASK = Object.freeze(['digest', 'transaction', 'effects.digest', 'effects.status',
   'effects.transaction_digest', 'effects.events_digest', 'checkpoint', 'timestamp', 'events', 'balance_changes']);
 export const CHECKPOINT_MASK = Object.freeze(['sequence_number', 'digest', 'summary.timestamp', 'summary.content_digest', 'contents']);
 const TRANSIENT = new Set(['UNAVAILABLE', 'DEADLINE_EXCEEDED', 'RESOURCE_EXHAUSTED']);
