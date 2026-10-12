@@ -39,10 +39,10 @@ try{
  const signed=await signer.signPersonalMessage(new TextEncoder().encode(challenge.body.message));
  const login=await gamePost('/api/tree-account-inline',{action:'verify',signature:signed.signature});ok(login);
  assert.equal(login.body.identity?.wallet.address,address);assert.equal(login.body.identity?.authenticated,true);loggedIn=true;passed('real personal-message sign-in');
- const status=await call({action:'status'});ok(status);assert.equal(status.body.enabled,false);assert.equal(status.body.orderPolicyEnabled,false);assert.equal(status.body.settlementPolicyEnabled,false);passed('hosted database connection with checkout off');
+ const status=await call({action:'status'});ok(status);assert.equal(status.body.enabled,false);const pilotEnabled=process.env.CONTINUE_PILOT_ENABLED==='1';assert.equal(status.body.orderPolicyEnabled,pilotEnabled);assert.equal(status.body.settlementPolicyEnabled,pilotEnabled);passed(pilotEnabled?'hosted pilot policy denies non-pilot checkout':'hosted database connection with checkout off');
  const list=await call({action:'list_purchases'});ok(list);assert.equal(list.body.accountId,login.body.identity.accountId);assert.deepEqual(list.body.purchases,[]);passed('account-scoped purchase lookup');
  const recovery=await call({action:'recover_purchase',runId:randomUUID()});ok(recovery);assert.equal(recovery.body.status,'not-found');assert.equal(recovery.body.authorization,null);passed('missing purchase grants no lives');
- const order=await call({action:'order',runId:randomUUID(),requestId:randomUUID()});assert.ok(order.status>=400);assert.notEqual(order.body.restoreAuthorized,true);passed('new payments remain disabled');
+ const order=await call({action:'order',runId:randomUUID(),requestId:randomUUID()});assert.ok(order.status>=400);assert.notEqual(order.body.restoreAuthorized,true);passed(process.env.CONTINUE_PILOT_ENABLED==='1'?'non-pilot cannot create payment orders':'new payments remain disabled');
  assert.equal((await call({action:'list_purchases',payer:address})).status,400);passed('browser identity injection denied');
  const stale=cookies.get('__Host-tree-game-session');ok(await gamePost('/api/tree-account',{action:'logout'}));loggedIn=false;
  cookies.set('__Host-tree-game-session',stale);assert.equal((await call({action:'status'})).status,401);passed('revoked session denied');

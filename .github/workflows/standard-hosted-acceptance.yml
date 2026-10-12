@@ -1,4 +1,4 @@
-name: Standard hosted continue acceptance with payments off
+name: Standard hosted continue pilot acceptance
 on:
   push:
     branches: [work/simple-tree-continue]
@@ -9,6 +9,8 @@ jobs:
   hosted-standard:
     runs-on: ubuntu-latest
     timeout-minutes: 8
+    env:
+      CONTINUE_PILOT_ENABLED: '1'
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -16,7 +18,7 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           repository: TheCryptoArborist/treeforce89
-          ref: bb48b5695101430cfa376f9f107aa8b5c174b25a
+          ref: 6193e03b8376279666f882f0f8c4e529807af97b
           path: game
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
