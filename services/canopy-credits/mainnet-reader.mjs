@@ -147,6 +147,7 @@ export function normalizeTransaction(tx, expectedDigest, cp, decodeReceipt = nul
  * standard library. Ordinary TREE transfers need no application contract. */
 export function paymentReferences(kind) {
   const ptb=kind?.data?.oneofKind==='programmableTransaction'?kind.data.programmableTransaction:null;
+  if(!ptb)return Object.freeze([]); // System transactions cannot be payments.
   requireThat(Array.isArray(ptb?.commands)&&ptb.commands.length<=1024&&Array.isArray(ptb.inputs),'missing-payment-transaction');
   const references=[];
   for(const command of ptb.commands){
