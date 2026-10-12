@@ -36,7 +36,7 @@ test('lost wallet response discovers a transaction candidate and independently r
  const f=fixture();let calls=0;
  const discover=createReceiptDiscovery({endpoint:'https://graphql.mainnet.sui.io/graphql',verify:f.verify,fetcher:async(_url,r)=>{
   calls++;const body=JSON.parse(r.body);assert.equal(body.query,TRANSFER_DISCOVERY_QUERY);assert.equal(body.variables.payer,f.terms.payer);assert.equal(body.variables.type,undefined);
-  return Response.json({data:{chainIdentifier:P.chainIdentifier,transactions:{nodes:[{digest:f.tx.digest}],pageInfo:{hasPreviousPage:false,startCursor:null}}}});
+  return Response.json({data:{chainIdentifier:MAINNET.genesisDigest,transactions:{nodes:[{digest:f.tx.digest}],pageInfo:{hasPreviousPage:false,startCursor:null}}}});
  }});
  assert.deepEqual(await discover(f.terms),{status:'found',digest:f.tx.digest});assert.equal(calls,1);
  f.tx.paymentReferences=[];assert.deepEqual(await discover(f.terms),{status:'pending'});

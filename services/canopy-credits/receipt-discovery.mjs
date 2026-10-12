@@ -1,5 +1,6 @@
 import {Buffer} from 'node:buffer';
 import {validateFixedContinueTerms} from './continue-product.mjs';
+import {MAINNET} from './mainnet-reader.mjs';
 const DIGEST=/^[1-9A-HJ-NP-Za-km-z]{43,44}$/;
 const check=(ok,code)=>{if(!ok)throw Object.assign(Error(code),{code});};
 // Current Sui GraphQL EventFilter uses type, not legacy eventType.
@@ -23,7 +24,7 @@ export function createReceiptDiscovery({endpoint,verify,fetcher=fetch,maxPages=3
    const reader=response.body?.getReader();check(reader,'invalid-receipt-index-response');let bytes=0;const chunks=[];
    while(true){const {done,value}=await reader.read();if(done)break;bytes+=value.length;if(bytes>131072){await reader.cancel();throw Error('receipt-index-response-too-large');}chunks.push(value);}
    const data=JSON.parse(Buffer.concat(chunks).toString('utf8'));
-   check(!data.errors?.length&&data.data?.chainIdentifier===terms.chainIdentifier,'receipt-index-chain-or-query-error');
+   check(!data.errors?.length&&data.data?.chainIdentifier===(transfer?MAINNET.genesisDigest:terms.chainIdentifier),'receipt-index-chain-or-query-error');
    const connection=transfer?data.data.transactions:data.data.events;check(Array.isArray(connection?.nodes)&&connection.nodes.length<=pageSize&&typeof connection.pageInfo?.hasPreviousPage==='boolean','invalid-receipt-index-response');
    for(const node of connection.nodes){
     const digest=transfer?node?.digest:node?.transaction?.digest;check(typeof digest==='string'&&DIGEST.test(digest),'invalid-receipt-index-digest');
