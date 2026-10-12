@@ -1,3 +1,4 @@
+import {Buffer} from 'node:buffer';
 /** Server-only storage adapter. Identity must come from a verified session and
  * an explicitly reviewed issuer/environment mapping. No keys or connections are
  * loaded here, and saved browser state alone never authorizes payment/delivery.

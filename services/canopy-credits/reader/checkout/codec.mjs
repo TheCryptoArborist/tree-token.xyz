@@ -1,3 +1,4 @@
+import {Buffer} from 'node:buffer';
 /** Draft exact BCS interface. No deployed package is assumed or registered here. */
 import { bcs } from '@mysten/sui/bcs';
 import { check, uuid, uint, address, validateStoredTerms, TREE_TYPE, NETWORK, CC_SALES_RECIPIENT } from '../../mainnet-payment.mjs';

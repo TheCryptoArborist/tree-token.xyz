@@ -1,3 +1,4 @@
+import {Buffer} from 'node:buffer';
 const response=(body,status=200)=>Response.json(body,{status,headers:{'Cache-Control':'no-store, private','X-Content-Type-Options':'nosniff'}});
 /** Deployment-neutral boundary. resolveActor must verify the HttpOnly session;
  * it cannot trust request-body account identifiers. No route is activated here.
