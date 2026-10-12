@@ -47,7 +47,10 @@ jobs:
           node services/canopy-credits/reader/checkout/tests/generate-move-vectors.mjs
       - name: Compile production bytecode
         run: |
-          sui move build --path services/canopy-credits/contract --build-env mainnet --dump-bytecode-as-base64 > "$RUNNER_TEMP/checkout-build.json"
+          if ! sui move build --path services/canopy-credits/contract --build-env mainnet --dump-bytecode-as-base64 > "$RUNNER_TEMP/checkout-build.json"; then
+            cat "$RUNNER_TEMP/checkout-build.json"
+            exit 1
+          fi
           modules=services/canopy-credits/contract/build/canopy_checkout/bytecode_modules
           test -f "$modules/checkout.mv"
           test ! -f "$modules/tree.mv"
