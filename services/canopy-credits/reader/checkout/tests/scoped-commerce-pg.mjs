@@ -67,7 +67,7 @@ async function rawSettle(f,evidence,pool=pools.settlement){return pool.query('SE
 await test('role-separated commerce using actual unprivileged login connections',async t=>{
  try{
   await admin.query('CREATE ROLE anon NOLOGIN; CREATE ROLE authenticated NOLOGIN; CREATE ROLE service_role NOLOGIN;');
-  for(const file of ['direct-continue-schema.sql','migrations/flight-storage-v1.sql','migrations/paid-delivery-v1.sql','migrations/scoped-commerce-v1.sql'])await admin.query(await readFile(new URL('../../../'+file,import.meta.url),'utf8'));
+  for(const file of ['direct-continue-schema.sql','migrations/flight-storage-v1.sql','migrations/paid-delivery-v1.sql','migrations/purchase-recovery-v1.sql','migrations/scoped-commerce-v1.sql'])await admin.query(await readFile(new URL('../../../'+file,import.meta.url),'utf8'));
   for(const name of ['orders','settlement','delivery','storage']){
    const user='commerce_ci_'+name,password=hex();
    // Names are fixed here; the password is random disposable test data, not logged.
