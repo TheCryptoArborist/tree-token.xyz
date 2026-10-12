@@ -11,6 +11,7 @@ const require=createRequire(resolve(process.env.PAID_GAME_ROOT,'app/game/tree-pa
 const {Ed25519Keypair}=await import(pathToFileURL(require.resolve('@mysten/sui/keypairs/ed25519')));
 const game='https://deploy-preview-3--treeforce89.netlify.app';
 const service='https://lehswszuekjqottolmsf.supabase.co/functions/v1/tree-continue-standard';
+const preview=process.env.CONTINUE_CHANNEL==='preview';
 const signer=new Ed25519Keypair(),address=signer.toSuiAddress(),cookies=new Map(),checks=[];
 let loggedIn=false;
 async function gamePost(path,command){
@@ -21,16 +22,18 @@ async function gamePost(path,command){
 }
 async function call(command,headers={},authenticated=true){
  const token=cookies.get('__Host-tree-game-session');
- const response=await fetch(service,{method:'POST',redirect:'error',signal:AbortSignal.timeout(30000),
-  headers:{'Content-Type':'application/json',...(authenticated?{Authorization:'Bearer '+token}:{}),...headers},body:JSON.stringify(command)});
+ const response=await fetch(preview?game+'/api/tree-continue':service,{method:'POST',redirect:'error',signal:AbortSignal.timeout(30000),
+  headers:{'Content-Type':'application/json',...(preview?{Origin:game,...(authenticated?{Cookie:'__Host-tree-game-session='+token}:{})}:authenticated?{Authorization:'Bearer '+token}:{}),...headers},body:JSON.stringify(command)});
  return{status:response.status,body:await response.json()};
 }
 function passed(name){checks.push(name);console.log('HOSTED_STANDARD_CHECK',name);}
 function ok(response){assert.equal(response.status,200,'HTTP '+response.status+' '+response.body.error);}
 try{
- const get=await fetch(service,{redirect:'error',signal:AbortSignal.timeout(15000)});assert.equal(get.status,405);passed('GET denied');
+ const get=await fetch(preview?game+'/api/tree-continue':service,{redirect:'error',signal:AbortSignal.timeout(15000)});
+ if(preview){assert.equal(get.status,200);assert.equal((await get.json()).paymentsEnabled,false);passed('preview payment-disabled status');}
+ else{assert.equal(get.status,405);passed('GET denied');}
  assert.equal((await call({action:'status'},{},false)).status,401);passed('guest denied');
- assert.equal((await call({action:'status'},{Origin:game},false)).status,403);passed('browser origin denied');
+ assert.equal((await call({action:'status'},{Origin:preview?'https://foreign.example':game},false)).status,403);passed('untrusted origin denied');
  const challenge=await gamePost('/api/tree-account-inline',{action:'challenge',family:'sui',address,chainId:'sui:mainnet'});ok(challenge);
  assert.ok(challenge.body.message.includes(address));
  const signed=await signer.signPersonalMessage(new TextEncoder().encode(challenge.body.message));
@@ -43,5 +46,5 @@ try{
  assert.equal((await call({action:'list_purchases',payer:address})).status,400);passed('browser identity injection denied');
  const stale=cookies.get('__Host-tree-game-session');ok(await gamePost('/api/tree-account',{action:'logout'}));loggedIn=false;
  cookies.set('__Host-tree-game-session',stale);assert.equal((await call({action:'status'})).status,401);passed('revoked session denied');
- console.log('HOSTED_STANDARD_RESULT',JSON.stringify({passed:checks.length,checks,transactionsSigned:0,purchasesCreated:0,paidReceiptsSeeded:0,paidContinuesActivated:0,installedWallet:false}));
+ console.log('HOSTED_STANDARD_RESULT',JSON.stringify({channel:preview?'preview-bff':'direct-server',passed:checks.length,checks,transactionsSigned:0,purchasesCreated:0,paidReceiptsSeeded:0,paidContinuesActivated:0,installedWallet:false}));
 }finally{if(loggedIn)await gamePost('/api/tree-account',{action:'logout'}).catch(()=>{});cookies.clear();}
