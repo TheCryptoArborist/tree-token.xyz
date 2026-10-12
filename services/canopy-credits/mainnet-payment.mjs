@@ -1,3 +1,4 @@
+import {Buffer} from 'node:buffer';
 /** Backend-only foundation. No signer, wallet calls, transaction submission or HTTP route. */
 import { createHash, createHmac, randomUUID, timingSafeEqual } from 'node:crypto';
 import { CC_SALES_RECIPIENT } from './sales-recipient.mjs';

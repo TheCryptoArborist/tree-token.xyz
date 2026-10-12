@@ -28,8 +28,8 @@ export function createDirectContinueService({ repository, resolveFlight, loadCon
           await repository.save(record);
         }
         assert(record.state === 'ordered', 'purchase-already-started');
-        assert(now() <= record.terms.expiresAtMs, 'quote-expired');
-        if (!record.envelope) { record.envelope = await authorizeQuote(record.terms, config.deployment); await repository.save(record); }
+        assert(record.terms.paymentMethod === 'tree-transfer-v1' || now() <= record.terms.expiresAtMs, 'quote-expired');
+        if (!record.envelope && record.terms.paymentMethod !== 'tree-transfer-v1') { record.envelope = await authorizeQuote(record.terms, config.deployment); await repository.save(record); }
         return { status: 'ordered', order: publicContinueOrder(record.terms, record.envelope, true) };
       }
       assert(uuid(command.orderId) && record && record.terms.orderId === command.orderId, 'order-not-found');
@@ -47,8 +47,9 @@ export function createDirectContinueService({ repository, resolveFlight, loadCon
           assert(evidence.digest === command.digest && /^(0|[1-9][0-9]*)$/.test(evidence.eventIndex || ''), 'receipt-digest-mismatch');
           for (const [field, expected] of Object.entries({ orderId: record.terms.orderId, accountId: actor.accountId,
             payer: record.terms.payer, recipient: record.terms.recipient, coinType: record.terms.coinType,
-            amountRaw: record.terms.requiredRaw, quoteHash: record.terms.quoteHash, checkoutId: record.terms.checkoutId,
-            keyEpoch: record.terms.keyEpoch, network: record.terms.network })) assert(evidence[field] === expected, 'receipt-order-mismatch');
+            amountRaw: record.terms.requiredRaw, quoteHash: record.terms.quoteHash, network: record.terms.network,
+            ...(record.terms.paymentMethod === 'tree-transfer-v1' ? {paymentMethod:'tree-transfer-v1',eventIndex:'0'} :
+              {checkoutId:record.terms.checkoutId,keyEpoch:record.terms.keyEpoch}) })) assert(evidence[field] === expected, 'receipt-order-mismatch');
           const { evidenceHash, ...receipt } = evidence;
           assert(evidenceHash === commitment(receipt), 'receipt-evidence-mismatch');
           record.receiptId = `${evidence.network}:${evidence.digest}:${evidence.eventIndex}`;

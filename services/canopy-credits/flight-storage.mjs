@@ -1,3 +1,4 @@
+import {Buffer} from 'node:buffer';
 /** Server-only storage adapter. Identity must come from a verified session and
  * an explicitly reviewed issuer/environment mapping. No keys or connections are
  * loaded here, and saved browser state alone never authorizes payment/delivery.
@@ -87,6 +88,15 @@ export function createFlightStorage(db, {authOrigin,environment}) {
     async resolveValidatedFlight(actor,runId) {
       const recovery=await storage.recover(actor,runId);
       check(recovery.snapshotText && recovery.validation==='validated','server-flight-validation-required');
+      const s=JSON.parse(recovery.snapshotText);
+      return {accountId:actor.accountId,runId,ruleset:s.ruleset,lives:s.lives,continuesUsed:s.continuesUsed,
+        checkpointHash:recovery.checkpointHash,finished:false};
+    },
+    // Paid continues are casual play and cannot earn a competitive score. The
+    // authenticated, immutable saved flight needs no manual anti-cheat review.
+    async resolveSavedFlight(actor,runId) {
+      const recovery=await storage.recover(actor,runId);
+      check(recovery.snapshotText,'saved-flight-required');
       const s=JSON.parse(recovery.snapshotText);
       return {accountId:actor.accountId,runId,ruleset:s.ruleset,lives:s.lives,continuesUsed:s.continuesUsed,
         checkpointHash:recovery.checkpointHash,finished:false};

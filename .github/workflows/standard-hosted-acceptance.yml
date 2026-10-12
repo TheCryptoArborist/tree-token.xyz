@@ -1,0 +1,43 @@
+name: Standard hosted continue pilot acceptance
+on:
+  push:
+    branches: [work/simple-tree-continue]
+    paths: ['scripts/hosted-standard-*.mjs', '.github/workflows/standard-hosted-acceptance.yml']
+permissions:
+  contents: read
+jobs:
+  hosted-standard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      CONTINUE_PILOT_ENABLED: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: TheCryptoArborist/treeforce89
+          ref: 6193e03b8376279666f882f0f8c4e529807af97b
+          path: game
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Install locked SDK and browser tooling
+        run: |
+          npm ci --prefix game/app/game/tree-payments --ignore-scripts --no-audit --no-fund
+          mkdir -p "$RUNNER_TEMP/standard-hosted-tools"
+          printf '{"private":true}' > "$RUNNER_TEMP/standard-hosted-tools/package.json"
+          npm install --prefix "$RUNNER_TEMP/standard-hosted-tools" --ignore-scripts --no-audit --no-fund --save-exact playwright@1.55.0
+          node "$RUNNER_TEMP/standard-hosted-tools/node_modules/playwright/cli.js" install --with-deps chromium
+          echo "PLAYWRIGHT_TEST_PACKAGE=$RUNNER_TEMP/standard-hosted-tools/package.json" >> "$GITHUB_ENV"
+          echo "PAID_GAME_ROOT=$GITHUB_WORKSPACE/game" >> "$GITHUB_ENV"
+      - name: Real hosted server login and database checks
+        run: node scripts/hosted-standard-continue-smoke.mjs
+      - name: Real preview proxy login and database checks
+        env:
+          CONTINUE_CHANNEL: preview
+        run: node scripts/hosted-standard-continue-smoke.mjs
+      - name: Real compiled preview recovery panel at three widths
+        run: node scripts/hosted-standard-preview-browser.mjs

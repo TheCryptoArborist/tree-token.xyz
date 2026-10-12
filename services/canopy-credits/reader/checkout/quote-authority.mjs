@@ -1,3 +1,4 @@
+import {Buffer} from 'node:buffer';
 /** Server-side quote authorization only. Not a Sui wallet/treasury signer.
  * No key is generated, loaded from env, or persisted by this module.
  * Production service/allowlist/pricing wiring is deliberately absent.
