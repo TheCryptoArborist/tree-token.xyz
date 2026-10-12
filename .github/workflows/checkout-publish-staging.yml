@@ -47,8 +47,7 @@ jobs:
           node services/canopy-credits/reader/checkout/tests/generate-move-vectors.mjs
       - name: Compile production bytecode
         run: |
-          sui move build --help
-          sui move build --path services/canopy-credits/contract --environment mainnet --dump-bytecode-as-base64 > "$RUNNER_TEMP/checkout-build.json"
+          sui move build --path services/canopy-credits/contract --build-env mainnet --dump-bytecode-as-base64 > "$RUNNER_TEMP/checkout-build.json"
           modules=services/canopy-credits/contract/build/canopy_checkout/bytecode_modules
           test -f "$modules/checkout.mv"
           test ! -f "$modules/tree.mv"
@@ -57,7 +56,7 @@ jobs:
           test "$(cat "$HOME/.sui/sui_config/sui.keystore")" = '[]'
       - name: Run Move VM tests
         run: |
-          sui move test --path services/canopy-credits/contract --environment mainnet
+          sui move test --path services/canopy-credits/contract --build-env mainnet
           test "$(cat "$HOME/.sui/sui_config/sui.keystore")" = '[]'
       - name: Stage public bytecode with provenance
         env:
