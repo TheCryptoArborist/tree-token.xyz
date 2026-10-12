@@ -7,6 +7,8 @@ const build = JSON.parse(raw.slice(raw.indexOf('{')));
 assert.equal(build.modules.length, 1, 'Only checkout may be published');
 const bytecode = readFileSync('services/canopy-credits/contract/build/canopy_checkout/bytecode_modules/checkout.mv');
 assert.equal(Buffer.from(build.modules[0], 'base64').toString('hex'), bytecode.toString('hex'));
+assert.equal(bytecode.subarray(0, 4).toString('hex'), 'a11ceb0b', 'Test bytecode must never be published');
+for (const helper of ['new_for_testing', 'destroy_for_testing', 'unit_test_poison']) assert.ok(!bytecode.includes(Buffer.from(helper)));
 assert.ok(build.dependencies.length > 0 && build.dependencies.every(x => /^0x[a-f0-9]{1,64}$/.test(x)));
 assert.ok(/^[a-f0-9]{40}$/.test(process.env.GITHUB_SHA));
 const payload = { modules: build.modules, dependencies: build.dependencies };

@@ -61,10 +61,12 @@ jobs:
         run: |
           sui move test --path services/canopy-credits/contract --build-env mainnet
           test "$(cat "$HOME/.sui/sui_config/sui.keystore")" = '[]'
-      - name: Stage public bytecode with provenance
+      - name: Rebuild production after VM tests and stage public bytecode
         env:
           CHECKOUT_BUILD_FILE: ${{ runner.temp }}/checkout-build.json
-        run: node scripts/stage-checkout-package.mjs
+        run: |
+          sui move build --path services/canopy-credits/contract --build-env mainnet --dump-bytecode-as-base64 > "$CHECKOUT_BUILD_FILE"
+          node scripts/stage-checkout-package.mjs
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: paused-mainnet-checkout
