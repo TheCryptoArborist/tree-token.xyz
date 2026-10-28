@@ -1,4 +1,8 @@
 import { verifyPersonalMessageSignature } from '@mysten/sui/verify';
+import { fetchFinalizedTreeBuy } from '../lib/tree-raffle-buy-verifier.ts';
+import { fetchSuiUsdPriceScaled, qualifyingUsdCentsFromSuiRaw } from '../lib/tree-raffle-price.ts';
+import { configuredSupabaseTreeRaffleLedger } from '../lib/tree-raffle-supabase-ledger.ts';
+import { completeVerifiedBuy } from '../lib/tree-raffle-ingest.ts';
 import {
   publicTreeKnowledgeQuestions,
   scoreTreeKnowledgeTrial,
@@ -51,6 +55,8 @@ const ENVIRONMENT_KEYS = [
   'TREE_RAFFLE_SUPABASE_SECRET_KEY',
   'TREE_RAFFLE_PACKAGE_ID',
   'TREE_RAFFLE_PRIZE_POOL_ID',
+  'TREE_RAFFLE_SUPABASE_URL',
+  'TREE_RAFFLE_SUPABASE_SECRET_KEY',
 ] as const;
 
 function runtimeEnvironment(): Environment {
@@ -229,6 +235,29 @@ export function createTreeKnowledgeTrialHandler(dependencies: HandlerDependencie
         return json({ status: 'ok', practice: true, score });
       } catch {
         return json({ status: 'error', error: 'invalid-practice-submission' }, 400);
+      }
+    }
+
+    if (action === 'verify-purchase') {
+      if (!trial.publicAttemptsEnabled) return json({ status: 'disabled', error: 'knowledge-trial-not-active' }, 503);
+      try {
+        const body = await requestBody(request);
+        const wallet = normalizedWallet(body.wallet);
+        const selectedRoundId = roundId(body.roundId);
+        const digest = typeof body.digest === 'string' && SUI_DIGEST.test(body.digest) ? body.digest : null;
+        if (!digest) throw new Error('invalid-transaction-digest');
+        const buy = await fetchFinalizedTreeBuy(digest);
+        if (buy.buyer !== wallet) throw new Error('The verified purchase belongs to another wallet.');
+        const price = await fetchSuiUsdPriceScaled();
+        const cents = qualifyingUsdCentsFromSuiRaw(buy.suiSpentRaw, price);
+        if (cents < 500) throw new Error('The verified TREE purchase is below the $5 minimum.');
+        const ledger = configuredSupabaseTreeRaffleLedger(env);
+        await ledger.recordVerifiedBuy(completeVerifiedBuy(buy, cents));
+        const eligibility = await getStore().readEligibility(selectedRoundId, wallet);
+        return json({ status: 'ok', eligibility });
+      } catch (error) {
+        console.error('TREE Knowledge Trial purchase verification failed', error);
+        return json({ status: 'error', error: 'knowledge-trial-purchase-verification-failed', message: 'The purchase could not be verified for this daily challenge.' }, 422);
       }
     }
 
