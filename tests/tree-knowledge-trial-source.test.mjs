@@ -8,8 +8,10 @@ const [html, script, styles] = await Promise.all([
   readFile(new URL('../dapp/panel-router.css', import.meta.url), 'utf8'),
 ]);
 
-test('Challenge navigation and practice interface are present', () => {
-  assert.match(html, /<b>Challenge<\/b>/);
+test('Knowledge Trial is retained but hidden from public navigation', () => {
+  assert.doesNotMatch(html, /<a[^>]+href="#canopy-draw"[^>]*>\s*<span[^>]*>.*?<b>Challenge<\/b>/s);
+  assert.doesNotMatch(html, /class="swap-challenge-promo"/);
+  assert.match(html, /id="canopy-draw"/);
   assert.match(html, /TREE Knowledge Trial/);
   assert.match(html, /id="knowledgeTrialStartPractice"/);
   assert.match(html, /id="knowledgeTrialTimer">01:30/);

@@ -11,9 +11,18 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
   }
   const manifest = JSON.parse(readFileSync(new URL('production/manifest.json', root)));
   const published = JSON.parse(readFileSync(new URL('production/current-release.json', root)));
+  // The historical published release remains immutable. Only this explicitly
+  // reviewed navigation-only HTML change may differ from that baseline.
+  const approvedNavigationChange = {
+    path: '/dapp/index.html',
+    previousSha: '764e53ff209b4ae89cf4aefcbd2a8907d4ef75d9',
+    approvedSha: 'e4f0d9938dee42e3be82be0e150874c57a65ea4f',
+  };
+  assert.equal(published.files.find(f => f.path === approvedNavigationChange.path)?.sha, approvedNavigationChange.previousSha);
+  assert.equal(manifest.files.find(f => f.path === approvedNavigationChange.path)?.sha1, approvedNavigationChange.approvedSha);
   assert.deepEqual(
-    manifest.files.map(f => [f.path, f.sha1]).sort(),
-    published.files.map(f => [f.path, f.sha]).sort(),
+    manifest.files.filter(f => f.path !== approvedNavigationChange.path).map(f => [f.path, f.sha1]).sort(),
+    published.files.filter(f => f.path !== approvedNavigationChange.path).map(f => [f.path, f.sha]).sort(),
   );
   const overlays = ['/dapp/v3-workspace.js', '/dapp/index.html', '/dapp/styles.css', '/dapp/panel-router.css', '/dapp/interaction-bootstrap.js', '/scripts/wallet.js', '/scripts/tree-knowledge-trial.js'];
   const additions = ['/dapp/sti-widget.js', '/dapp/sti-purchase-core.js', '/dapp/sti-stats-core.js', '/dapp/challenge-funding-core.js', '/assets/sti-icon.svg'];
