@@ -23,6 +23,7 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: |
           node --test tests/victory-reinvest-receipt-source.test.mjs
+          node --test tests/victory-lock-expiry.test.mjs
           node tests/victory-v3-reinvest-core.test.mjs
           node tests/victory-address-funding.test.mjs
           node tests/victory-max-input.test.mjs

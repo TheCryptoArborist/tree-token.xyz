@@ -12,11 +12,11 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
   const manifest = JSON.parse(readFileSync(new URL('production/manifest.json', root)));
   const published = JSON.parse(readFileSync(new URL('production/current-release.json', root)));
   // The historical published release remains immutable. Only this explicitly
-  // reviewed navigation-only HTML change may differ from that baseline.
+  // reviewed HTML (navigation and contract-expiration display) may differ from that baseline.
   const approvedNavigationChange = {
     path: '/dapp/index.html',
     previousSha: '764e53ff209b4ae89cf4aefcbd2a8907d4ef75d9',
-    approvedSha: 'e4f0d9938dee42e3be82be0e150874c57a65ea4f',
+    approvedSha: 'dc47260152539224a55fdc6c0cfbafbcaf02ebc9',
   };
   assert.equal(published.files.find(f => f.path === approvedNavigationChange.path)?.sha, approvedNavigationChange.previousSha);
   assert.equal(manifest.files.find(f => f.path === approvedNavigationChange.path)?.sha1, approvedNavigationChange.approvedSha);
@@ -30,7 +30,7 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
   const approvedVictoryReceipt = {
     path: '/dapp/victory-center.js',
     previousSha: 'e4461fc5249448c5228c7310542bd2a42f6f6a10',
-    approvedSha: '0f38b965a6b42adcb7427f5138a0bfe3732073d2',
+    approvedSha: '5247f64b488bc7280cef6672e938720cdfbbd733',
   };
   assert.equal(published.files.find(f => f.path === approvedVictoryReceipt.path)?.sha, approvedVictoryReceipt.previousSha);
   assert.equal(manifest.files.find(f => f.path === approvedVictoryReceipt.path)?.sha1, approvedVictoryReceipt.approvedSha);
