@@ -31,4 +31,3 @@ let i=Math.round((s-this.lastFrameTime)/this.interval);if(0===i)return;
 // After
 let i=Math.max(0,Math.min(3,Math.round((s-this.lastFrameTime)/this.interval)));if(0===i)return;this.lastFrameTime=s-i*this.interval;
 ```
-

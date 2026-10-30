@@ -22,8 +22,8 @@
     },
     {
       "path": "vendor/jsnes-2.1.0/PATCHES.md",
-      "bytes": 1278,
-      "sha256": "ef2d3b6b1674d7ad4c40369e785202a5ea4ae55fb3c7ebb51c252542915dd35f"
+      "bytes": 1277,
+      "sha256": "8b503c564fc48dc54e9b6bbbffa0d348125620e0ba4942059f593bfd346c2b0f"
     },
     {
       "path": "vendor/jsnes-2.1.0/jsnes.min.js",
