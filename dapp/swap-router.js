@@ -647,7 +647,7 @@ async function executeSwap() {
       'Minimum received: ' + formatBaseUnits(route.minAmountOut, decimalsFor(stateTokenOut()), decimalsFor(stateTokenOut())) + ' ' + symbolFor(stateTokenOut()),
       'Trading venue: ' + routeLabel(route),
       'Slippage tolerance: ' + (state.slippageBps / 100).toFixed(2) + '%',
-    ].join('\\n');
+    ].join('\n');
     const approved = await confirmTransaction(review, {
       title: 'Review TREE Swap',
       verification: 'The exact transaction simulation passed on Sui Mainnet. Quoted output may change; the minimum received is enforced by the transaction. Your wallet is the final approval.',
