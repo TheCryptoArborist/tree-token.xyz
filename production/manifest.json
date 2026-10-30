@@ -486,8 +486,8 @@
     {
       "path": "/dapp/victory-center.css",
       "source": "dapp/victory-center.css",
-      "sha1": "ed5155ef72a64e5bc3bc5f8479832f4f47e9045e",
-      "size": 12427
+      "sha1": "a6506760d84867a074bbaa013d6679ee727cb46c",
+      "size": 22537
     },
     {
       "path": "/dapp/v3-workspace.js",
@@ -642,8 +642,8 @@
     {
       "path": "/dapp/index.html",
       "source": "dapp/index.html",
-      "sha1": "dc47260152539224a55fdc6c0cfbafbcaf02ebc9",
-      "size": 79325
+      "sha1": "453ecf04192cd4c3e5afe50e00acc7f43bb79dc3",
+      "size": 81126
     },
     {
       "path": "/dapp/earn-v3-zap.js",

@@ -15,3 +15,86 @@
 @media(max-width:540px){.victory-stat-grid,.victory-claim-summary,.victory-reinvest-summary{grid-template-columns:1fr}.victory-center-heading{align-items:stretch;flex-direction:column}.victory-heading-actions{display:grid;grid-template-columns:1fr auto}.victory-heading-actions .button:first-child{width:100%;text-align:center}.victory-source-strip{grid-template-columns:1fr 1fr}.victory-source-strip span{grid-column:1/-1}.victory-source-strip button{width:100%}.victory-center-title p{display:none}.victory-apr-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.victory-claim-actions,.victory-user-lock-grid,.victory-user-lock-actions{grid-template-columns:1fr}.victory-inner-tabs button{font-size:.64rem}.victory-reinvest-slippage{align-items:flex-start;flex-direction:column}}
 #victoryCenterCard{scroll-margin-top:76px}.victory-back-to-top{position:fixed;right:18px;bottom:18px;z-index:450;display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:42px;padding:9px 14px;border:1px solid rgba(45,238,157,.42);border-radius:999px;background:linear-gradient(135deg,rgba(7,28,31,.98),rgba(8,42,39,.98));box-shadow:0 12px 34px rgba(0,0,0,.5),0 0 22px rgba(45,238,157,.12);color:var(--green);font:.7rem var(--mono);font-weight:900;cursor:pointer}.victory-back-to-top:hover{border-color:rgba(255,216,53,.6);color:var(--gold);transform:translateY(-1px)}.victory-back-to-top:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}.victory-back-to-top[hidden]{display:none}.victory-back-to-top span{font-size:1rem;line-height:1}@media(max-width:540px){#victoryCenterCard{scroll-margin-top:64px}.victory-back-to-top{right:12px;bottom:12px;min-height:40px;padding:8px 12px;font-size:.66rem}}@media(prefers-reduced-motion:reduce){.victory-back-to-top{transition:none}}
 .victory-v3-controls{margin-top:5px;padding:12px;border:1px solid rgba(53,229,165,.22);border-radius:12px;background:rgba(3,20,25,.62)}.victory-v3-controls[hidden]{display:none!important}.victory-v3-route{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-top:12px;padding:11px 12px;border-radius:11px;background:rgba(8,35,43,.72);color:var(--muted);font-size:.66rem}.victory-v3-route strong{max-width:68%;color:var(--text);text-align:right;font:.68rem var(--mono);line-height:1.4}@media(max-width:520px){.victory-v3-route{display:block}.victory-v3-route strong{display:block;max-width:none;margin-top:5px;text-align:left}}
+
+/* VICTORY workspace: protocol summary above the existing lock and reward tools. */
+.app-tabbed body[data-active-panel="victory"] main,.app-tabbed main:has(#victory.active-panel){width:min(1180px,calc(100% - 48px))}
+#victory.section{padding:0;border:0;background:transparent;box-shadow:none}
+#victory .victory-center-card{gap:20px;padding:0;border:0;background:transparent}
+#victory .victory-center-heading{position:relative;isolation:isolate;overflow:hidden;align-items:center;min-height:140px;padding:26px 28px;border:1px solid rgba(255,216,53,.25);border-radius:18px;background:radial-gradient(ellipse at 80% 0,rgba(45,238,157,.11),transparent 58%),linear-gradient(115deg,#0a1923,#061017);box-shadow:0 16px 48px rgba(0,0,0,.22)}
+#victory .victory-center-title{gap:16px;min-width:0}
+#victory .victory-center-title>img{width:64px;height:64px;padding:8px;border:1px solid rgba(255,216,53,.26);border-radius:16px;background:rgba(255,216,53,.04)}
+#victory .victory-center-title h3{margin:4px 0 7px;font-size:1.85rem;line-height:1.15}
+#victory .victory-center-title p{font-size:.78rem;line-height:1.5}
+#victory .victory-overline{margin:0;color:var(--gold);font:700 .61rem var(--mono);letter-spacing:.15em}
+#victory .victory-heading-actions{gap:10px}
+#victory .victory-heading-actions .button{padding:11px 14px;font-size:.72rem;border-radius:10px}
+#victory .victory-stat-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+#victory .victory-stat-grid>div{align-content:center;gap:10px;min-height:94px;padding:17px 18px;border-color:rgba(53,200,255,.15);border-radius:14px;background:linear-gradient(145deg,rgba(11,29,39,.95),rgba(5,18,26,.98))}
+#victory .victory-stat-grid span{font-size:.6rem;line-height:1.5;letter-spacing:.06em}
+#victory .victory-stat-grid strong{font-size:1.03rem;line-height:1.3}
+#victory .victory-stat-grid>div:first-child{border-color:rgba(255,216,53,.25)}
+#victory .victory-stat-grid>div:first-child strong{color:var(--gold)}
+#victory .victory-inner-tabs{gap:5px;padding:5px;border-radius:13px}
+#victory .victory-inner-tabs button{min-height:45px;font-size:.8rem;border-radius:9px}
+#victory .victory-inner-tabs button.active{color:var(--gold);background:linear-gradient(100deg,rgba(255,216,53,.09),rgba(45,238,157,.045));box-shadow:inset 0 0 0 1px rgba(255,216,53,.32)}
+#victory .victory-workspace{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);align-items:start;gap:22px}
+#victory .victory-workspace-main,#victory .victory-workspace-side{display:grid;gap:18px;min-width:0}
+#victory .victory-workspace-card,#victory .victory-workspace-main>.victory-inner-view,#victory .victory-source-strip,#victory .victory-protocol-details{padding:22px;border:1px solid rgba(53,200,255,.16);border-radius:16px;background:linear-gradient(145deg,rgba(9,25,35,.98),rgba(4,15,23,.98))}
+#victory .victory-workspace-main>.victory-inner-view{gap:18px;border-color:rgba(255,216,53,.2)}
+#victory .victory-lock-box{gap:16px;padding:0;border:0;border-radius:0;background:transparent}
+#victory .victory-lock-box h4,#victory .victory-workspace-card h4,#victory .victory-workspace-heading h4{margin:0;font-size:1rem;line-height:1.4}
+#victory .victory-lock-box>p,#victory .victory-center-note{font-size:.76rem;line-height:1.65}
+#victory .victory-lock-label{font-size:.73rem;line-height:1.5}
+#victory .victory-lock-input{min-height:76px;padding:12px 14px;gap:10px;border-radius:12px}
+#victory .victory-lock-input input{font-size:1.65rem}
+#victory .victory-lock-input span{font-size:.83rem}
+#victory .victory-lock-input button{font-size:.64rem;padding:7px}
+#victory .victory-lock-box select{min-height:48px;padding:10px 12px;font-size:.78rem}
+#victory .victory-unlock-row{align-items:center;padding:14px 12px;font-size:.73rem;line-height:1.5}
+#victory .victory-lock-box>.button{margin:0;min-height:48px;font-size:.79rem;border-radius:10px}
+#victory .victory-reward-card{display:grid;gap:12px}
+#victory .victory-reward-heading{display:flex;align-items:center;justify-content:space-between;gap:14px}
+#victory .victory-reward-heading h4{display:flex;align-items:center;gap:8px;font-size:.81rem}
+#victory .victory-reward-symbol{display:grid;place-items:center;flex-shrink:0;width:25px;height:25px;border:1px solid rgba(255,216,53,.24);border-radius:8px;color:var(--gold);font:.7rem var(--mono)}
+#victory .victory-sui-reward .victory-reward-symbol{color:var(--cyan);border-color:rgba(53,200,255,.24)}
+#victory .victory-reward-heading .button{width:auto;min-height:34px;margin:0;padding:8px 11px;white-space:nowrap;font-size:.62rem;border-radius:8px}
+#victory .victory-reward-card>strong{color:var(--green);font:700 1.55rem var(--mono);line-height:1.3;overflow-wrap:anywhere}
+#victory .victory-sui-reward>strong{color:var(--cyan)}
+#victory .victory-reward-card>p{margin:0;color:var(--muted);font-size:.7rem;line-height:1.6}
+#victory .victory-apr-card,#victory .victory-reinvest-summary-card{display:grid;gap:17px}
+#victory .victory-apr-heading{align-items:start;flex-wrap:wrap;gap:8px}
+#victory .victory-apr-heading p{margin-top:4px;font-size:.68rem;line-height:1.5}
+#victory .victory-apr-heading>span{font-size:.65rem}
+#victory .victory-apr-grid{gap:8px}
+#victory .victory-apr-grid button{min-height:75px;align-content:center;gap:9px;font-size:.66rem}
+#victory .victory-apr-grid strong{font-size:.9rem}
+#victory .victory-apr-note{font-size:.68rem;line-height:1.65}
+#victory:has(#victoryLockerView[hidden]) .victory-apr-card,#victory:has(#victoryReinvestView[hidden]) .victory-reinvest-summary-card{display:none}
+#victory .victory-source-strip{grid-template-columns:1fr 1fr;gap:12px}
+#victory .victory-source-strip>span{grid-column:1/-1;gap:6px}
+#victory .victory-source-strip strong{font-size:.79rem}
+#victory .victory-source-strip small{font-size:.69rem;line-height:1.55}
+#victory .victory-source-strip button{min-height:38px;font-size:.68rem}
+#victory .victory-workspace-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+#victory .victory-workspace-heading h4{margin-top:5px}
+#victory .victory-position-count{padding:8px 11px;border-radius:8px;background:rgba(45,238,157,.07);color:var(--green);font:.73rem var(--mono);white-space:nowrap}
+#victory .victory-lock-list>.muted{font-size:.8rem;line-height:1.65}
+#victory .victory-reinvest-summary{gap:10px}
+#victory .victory-reinvest-summary>div{padding:12px;gap:7px}
+#victory .victory-reinvest-summary span{font-size:.6rem;line-height:1.5}
+#victory .victory-reinvest-summary strong{font-size:.74rem;line-height:1.5}
+#victory .victory-reinvest-modes button{min-height:42px;font-size:.72rem}
+#victory .victory-sustainable-controls{padding:14px;gap:12px}
+#victory .victory-protocol-details{padding:0}
+#victory .victory-protocol-details summary{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:19px 22px;list-style:none;cursor:pointer;color:var(--text);font-size:.8rem;font-weight:800}
+#victory .victory-protocol-details summary::-webkit-details-marker{display:none}
+#victory .victory-protocol-details summary>span{color:var(--gold);font-size:1.2rem;transition:transform .15s}
+#victory .victory-protocol-details[open] summary>span{transform:rotate(45deg)}
+#victory .victory-protocol-details>div{display:grid;gap:14px;padding:0 22px 22px}
+#victory .victory-protocol-details>div>p{margin:0;color:var(--muted);font-size:.76rem;line-height:1.7}
+#victory .victory-protocol-details .victory-center-note{padding:0;border:0;background:transparent}
+#victory #victoryStatus{font-size:.72rem}
+@media(max-width:1000px){#victory .victory-center-heading{padding:24px}#victory .victory-stat-grid{gap:9px}#victory .victory-stat-grid>div{padding:14px 12px}#victory .victory-stat-grid strong{font-size:.87rem}#victory .victory-workspace{gap:16px}#victory .victory-workspace-card,#victory .victory-workspace-main>.victory-inner-view,#victory .victory-source-strip{padding:18px}#victory .victory-reward-heading{flex-wrap:wrap}}
+@media(max-width:800px){.app-tabbed body[data-active-panel="victory"] main,.app-tabbed main:has(#victory.active-panel){width:min(640px,calc(100% - 32px))}#victory .victory-workspace{grid-template-columns:1fr}#victory .victory-center-heading{align-items:flex-start;flex-direction:column;gap:22px}#victory .victory-heading-actions{width:100%;justify-content:flex-start}#victory .victory-stat-grid{grid-template-columns:repeat(3,minmax(0,1fr))}#victory .victory-stat-grid>div:nth-child(n+4){grid-column:span 1}#victory .victory-reward-heading{flex-wrap:nowrap}#victory .victory-center-title p{display:block}}
+@media(max-width:540px){#victory .victory-center-card{gap:15px}#victory .victory-center-heading{padding:20px}#victory .victory-center-title{gap:12px}#victory .victory-center-title>img{width:47px;height:47px;padding:5px;border-radius:12px}#victory .victory-center-title h3{font-size:1.4rem}#victory .victory-center-title p{font-size:.67rem}#victory .victory-center-title .victory-overline{font-size:.5rem}#victory .victory-heading-actions{grid-template-columns:1fr auto}#victory .victory-heading-actions .button{font-size:.65rem;padding:10px 12px}#victory .victory-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#victory .victory-stat-grid>div:last-child{grid-column:1/-1}#victory .victory-stat-grid>div{min-height:84px;gap:7px}#victory .victory-stat-grid strong{font-size:.96rem}#victory .victory-inner-tabs button{font-size:.64rem;min-height:43px}#victory .victory-workspace-card,#victory .victory-workspace-main>.victory-inner-view,#victory .victory-source-strip{padding:17px}#victory .victory-lock-input{gap:7px;padding:10px}#victory .victory-lock-input input{font-size:1.35rem}#victory .victory-lock-input span{font-size:.71rem}#victory .victory-apr-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}#victory .victory-apr-grid button{font-size:.57rem}#victory .victory-apr-grid strong{font-size:.72rem}#victory .victory-reinvest-summary{grid-template-columns:1fr 1fr}#victory .victory-unlock-row{align-items:flex-start;flex-direction:column;gap:5px}}
+@media(prefers-reduced-motion:reduce){#victory .victory-protocol-details summary>span{transition:none}}
