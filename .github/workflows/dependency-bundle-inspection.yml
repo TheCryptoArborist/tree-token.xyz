@@ -1,0 +1,117 @@
+name: Inspect deployed dependency bundles (read-only)
+
+on:
+  push:
+    branches: [audit/dependency-triage-20261030]
+    paths: ['.github/workflows/dependency-bundle-inspection.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: f0f566f89d253be9048ebf4250313947e4670e91
+          persist-credentials: false
+      - name: Preserve exact archived packages and statically inspect public assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path, PurePosixPath
+          import concurrent.futures, datetime, hashlib, json, os, subprocess, urllib.request, urllib.parse, zipfile
+          root = Path.cwd().resolve()
+          base = 'f0f566f89d253be9048ebf4250313947e4670e91'
+          assert subprocess.check_output(['git','rev-parse','HEAD'], text=True).strip() == base
+          out = Path(os.environ['RUNNER_TEMP']) / 'dependency-bundle-inspection'
+          out.mkdir(parents=True, exist_ok=True)
+          manifest = json.loads((root / 'production/manifest.json').read_text())
+          tracked = set(subprocess.check_output(['git','ls-files','-z']).decode().split('\0'))
+          def checked_path(name):
+              p = PurePosixPath(name)
+              assert name in tracked and not p.is_absolute() and '..' not in p.parts
+              path = root / name
+              assert path.is_file() and not path.is_symlink() and path.resolve().is_relative_to(root)
+              return path
+          def digest(data, algorithm='sha256'):
+              return hashlib.new(algorithm, data).hexdigest()
+          selected = {'package.json','package-lock.json','netlify.toml','production/manifest.json','production/current-release.json'} & tracked
+          inventory, functions, browser = [], [], []
+          for item in manifest['files']:
+              path = checked_path(item['source'])
+              data = path.read_bytes()
+              assert digest(data, 'sha1') == item['sha1'], 'Static manifest mismatch: ' + item['path']
+              if PurePosixPath(item['path']).suffix.lower() in {'.js','.mjs','.cjs','.map','.html','.css'}:
+                  selected.add(item['source'])
+              if PurePosixPath(item['path']).suffix.lower() in {'.js','.mjs','.cjs','.html'}:
+                  browser.append(item)
+          for fn in manifest['functions']:
+              assert fn.get('artifact'), 'Missing archived function artifact'
+              path = checked_path(fn['artifact'])
+              data = path.read_bytes()
+              assert digest(data) == fn['sha256'], 'Function SHA256 mismatch: ' + fn['name']
+              selected.add(fn['artifact'])
+              with zipfile.ZipFile(path) as z:
+                  entries = [{'name':i.filename,'size':i.file_size,'compressed':i.compress_size} for i in z.infolist()]
+                  assert sum(i['size'] for i in entries) < 128 * 1024 * 1024
+              functions.append({'name':fn['name'],'artifact':fn['artifact'],'sha256':digest(data),'size':len(data),'entries':entries})
+          assert len(functions) == 38 and len(manifest['files']) == 194
+          for name in tracked:
+              p = PurePosixPath(name)
+              if (name.startswith(('netlify/functions/','src/','scripts/','dapp/')) and
+                  p.suffix.lower() in {'.js','.ts','.mts','.cts','.mjs','.cjs','.json','.map'} and
+                  not any(x.startswith('.env') or x in {'node_modules','.git'} for x in p.parts)):
+                  selected.add(name)
+          with zipfile.ZipFile(out/'pinned-inspection-inputs.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for name in sorted(selected):
+                  data = checked_path(name).read_bytes()
+                  z.writestr(name,data)
+                  inventory.append({'path':name,'sha256':digest(data),'size':len(data)})
+          (out/'input-inventory.json').write_text(json.dumps(inventory,indent=2)+'\n')
+          (out/'function-inventory.json').write_text(json.dumps(functions,indent=2)+'\n')
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self, req, fp, code, msg, headers, newurl):
+                  return None
+          def read_static(item):
+              path = item['path']
+              p = PurePosixPath(path)
+              assert path.startswith('/') and not path.startswith('//') and '..' not in p.parts
+              assert not any(c in path for c in ['?','#','\\','%'])
+              url = 'https://tree-token.xyz' + urllib.parse.quote(path,safe='/.-_')
+              record = {'path':path,'expectedSha1':item['sha1'],'source':item['source']}
+              request = urllib.request.Request(url, headers={'User-Agent':'TREE-read-only-dependency-inspection','Accept-Encoding':'identity','Cache-Control':'no-cache'})
+              try:
+                  with urllib.request.build_opener(NoRedirect).open(request, timeout=25) as r:
+                      data = r.read(16*1024*1024 + 1)
+                      assert len(data) <= 16*1024*1024
+                      record.update(status=r.status,sha1=digest(data,'sha1'),sha256=digest(data),size=len(data),matches=digest(data,'sha1')==item['sha1'])
+              except Exception as e:
+                  record.update(matches=False,errorType=type(e).__name__)
+              return record
+          with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
+              live = list(pool.map(read_static,browser))
+          (out/'live-static-checks.json').write_text(json.dumps(live,indent=2)+'\n')
+          clean = subprocess.check_output(['git','status','--porcelain'],text=True).strip()==''
+          summary = {'checkedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'sourceCommit':base,
+            'workflowCommit':os.environ['GITHUB_SHA'],'comparisonDeployId':'6ae500b93e504af646976147',
+            'archivedFunctionsVerified':len(functions),'manifestFilesVerified':len(manifest['files']),
+            'liveStaticChecked':len(live),'liveStaticMatched':sum(x['matches'] for x in live),
+            'liveStaticErrors':sum('errorType' in x for x in live),'workingTreeUnchanged':clean,
+            'installPerformed':False,'buildPerformed':False,'deploymentRequested':False,'walletOperations':0,
+            'limits':['Archived ZIPs require separate comparison to connected Netlify deployment digests.',
+              'Presence and source markers do not establish exploitability; no production payload testing.']}
+          assert clean
+          (out/'summary.json').write_text(json.dumps(summary,indent=2)+'\n')
+          print(json.dumps(summary,indent=2))
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: dependency-bundle-inspection
+          path: ${{ runner.temp }}/dependency-bundle-inspection/
+          if-no-files-found: error
+          retention-days: 7
