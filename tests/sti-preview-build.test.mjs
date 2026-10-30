@@ -27,9 +27,17 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
   };
   assert.equal(published.files.find(f => f.path === approvedSwapChange.path)?.sha, approvedSwapChange.previousSha);
   assert.equal(manifest.files.find(f => f.path === approvedSwapChange.path)?.sha1, approvedSwapChange.approvedSha);
+  const approvedVictoryReceipt = {
+    path: '/dapp/victory-center.js',
+    previousSha: 'e4461fc5249448c5228c7310542bd2a42f6f6a10',
+    approvedSha: '0f38b965a6b42adcb7427f5138a0bfe3732073d2',
+  };
+  assert.equal(published.files.find(f => f.path === approvedVictoryReceipt.path)?.sha, approvedVictoryReceipt.previousSha);
+  assert.equal(manifest.files.find(f => f.path === approvedVictoryReceipt.path)?.sha1, approvedVictoryReceipt.approvedSha);
+  const approvedPaths = [approvedNavigationChange.path, approvedSwapChange.path, approvedVictoryReceipt.path];
   assert.deepEqual(
-    manifest.files.filter(f => ![approvedNavigationChange.path, approvedSwapChange.path].includes(f.path)).map(f => [f.path, f.sha1]).sort(),
-    published.files.filter(f => ![approvedNavigationChange.path, approvedSwapChange.path].includes(f.path)).map(f => [f.path, f.sha]).sort(),
+    manifest.files.filter(f => !approvedPaths.includes(f.path)).map(f => [f.path, f.sha1]).sort(),
+    published.files.filter(f => !approvedPaths.includes(f.path)).map(f => [f.path, f.sha]).sort(),
   );
   const overlays = ['/dapp/v3-workspace.js', '/dapp/index.html', '/dapp/styles.css', '/dapp/panel-router.css', '/dapp/interaction-bootstrap.js', '/scripts/wallet.js', '/scripts/tree-knowledge-trial.js'];
   const additions = ['/dapp/sti-widget.js', '/dapp/sti-purchase-core.js', '/dapp/sti-stats-core.js', '/dapp/challenge-funding-core.js', '/assets/sti-icon.svg'];

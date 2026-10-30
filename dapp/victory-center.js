@@ -476,6 +476,41 @@ async function requestReinvestQuote() {
 }
 function scheduleReinvestQuote() { clearTimeout(state.reinvest.timer); state.reinvest.timer = setTimeout(requestReinvestQuote, 300); }
 
+function showVictoryV3ReinvestReceipt({ digest, sustainable, lock, reinvestRaw, added, positionId }) {
+  const root = el.reinvestSuccess;
+  root.replaceChildren();
+  const title = document.createElement('strong');
+  title.textContent = sustainable ? 'Sustainable V3 Reinvest Complete' : 'V3 Reinvest Complete';
+  root.append(title);
+  const details = document.createElement('dl');
+  details.className = 'tree-review-details';
+  const row = (label, value) => {
+    const dt = document.createElement('dt'); dt.textContent = label;
+    const dd = document.createElement('dd'); dd.textContent = value;
+    details.append(dt, dd);
+  };
+  if (lock) {
+    row('VICTORY locked', formatRaw(lock.amountRaw, VICTORY_DECIMALS, 6));
+    row('Lock ID', '#' + lock.lockId.toString());
+    row('Unlock date', new Date(Number(lock.lockEnd) * 1000).toLocaleString());
+  }
+  row('VICTORY reinvested', formatRaw(reinvestRaw, VICTORY_DECIMALS, 6));
+  row('TREE added to liquidity', formatRaw(added.treeRaw, 6, 6));
+  row('SUI added to liquidity', formatRaw(added.suiRaw, 9, 9));
+  row('Venue', 'SuiDex V3');
+  row('Position', positionId ? positionId.slice(0, 10) + '…' + positionId.slice(-8) : 'New position (see transaction)');
+  root.append(details);
+  const note = document.createElement('small');
+  note.textContent = 'Amounts above were verified from finalized on-chain events. Liquidity addition does not mean the position was staked in a farm.';
+  root.append(note);
+  const link = document.createElement('a');
+  link.href = 'https://suiscan.xyz/mainnet/tx/' + encodeURIComponent(digest);
+  link.target = '_blank'; link.rel = 'noopener noreferrer';
+  link.textContent = 'View finalized transaction on SuiScan ↗';
+  root.append(link);
+  root.hidden = false;
+}
+
 async function executeVictoryV3Reinvest(amounts) {
   state.reinvest.executing = true; el.reinvestSuccess.hidden = true; render();
   try {
@@ -505,7 +540,7 @@ async function executeVictoryV3Reinvest(amounts) {
     const { txDigest, finalized } = await submitAndFinalize(finalBuilt.transaction); const finalizedAdded = extractAddLiquidityEvent(finalized, quote.positionId || null);
     const finalizedLock = sustainable ? extractVictoryLockEvent(finalized, owner, { amountRaw: amounts.lockRaw, lockDays }) : null;
     if (!finalizedAdded || extractVictoryLocked(finalized, owner) !== amounts.totalRaw || (sustainable && !finalizedLock)) throw new Error('The finalized transaction did not reconcile with the verified VICTORY allocation and V3 liquidity output.');
-    el.reinvestSuccess.hidden = false; el.reinvestSuccess.innerHTML = `<strong>${sustainable ? `${lockReadable} VICTORY locked; ${reinvestReadable} VICTORY reinvested` : `${readable} VICTORY reinvested`} into SUI/TREE V3 successfully.</strong><a href="https://suiscan.xyz/mainnet/tx/${encodeURIComponent(txDigest)}" target="_blank" rel="noopener noreferrer">View ${txDigest.slice(0, 12)}… ↗</a><small>${quote.positionId ? 'Liquidity was added to the selected verified position.' : 'A new concentrated-liquidity position was created.'}</small>`;
+    showVictoryV3ReinvestReceipt({ digest: txDigest, sustainable, lock: finalizedLock, reinvestRaw: amounts.reinvestRaw, added: finalizedAdded, positionId: quote.positionId });
     state.reinvest.amount = ''; state.reinvest.quote = null; el.reinvestAmount.value = ''; setReinvestStatus(`${sustainable ? 'Sustainable' : 'Complete'} V3 reinvest confirmed on Sui Mainnet.`, 'success'); await load(); showVictoryView('reinvest');
   } catch (error) { const message = String(error?.message || error || 'VICTORY V3 reinvest failed.'); setReinvestStatus(/reject|cancel|denied/i.test(message) ? 'Wallet approval was cancelled. Any confirmed lock or liquidity remains safely recorded on-chain.' : message, 'error'); }
   finally { state.reinvest.executing = false; render(); }

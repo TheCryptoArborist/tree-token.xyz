@@ -32,6 +32,12 @@ test('release inventory preserves every baseline file and changes only the appro
       assert.equal(file.sha1,'882f547e3a66028da1815569cc6397be2c1b7346');
       assert.equal(manifest.files.find(f=>f.path===file.path)?.sha1,'7925857dd8003ea883fd1ca9f27ac9b11f005e38');
       assert.equal(hash(file.source,'sha1'),'7925857dd8003ea883fd1ca9f27ac9b11f005e38');
+    } else if (file.path==='/dapp/victory-center.js') {
+      // This later VICTORY receipt change is explicitly pinned; the archived
+      // STI candidate and its published baseline remain unchanged.
+      assert.equal(file.sha1,'e4461fc5249448c5228c7310542bd2a42f6f6a10');
+      assert.equal(manifest.files.find(f=>f.path===file.path)?.sha1,'0f38b965a6b42adcb7427f5138a0bfe3732073d2');
+      assert.equal(hash(file.source,'sha1'),'0f38b965a6b42adcb7427f5138a0bfe3732073d2');
     } else assert.equal(hash(file.source,'sha1'),file.sha1,file.path);
   }
   for(const pathname of base.keys())assert(next.has(pathname),'Missing production file '+pathname);
