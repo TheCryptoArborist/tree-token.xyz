@@ -10,6 +10,8 @@ test('production stays byte-exact and the feature preview changes only reviewed 
   for (const script of ['build-production-snapshot.mjs', 'build-feature-preview.mjs']) {
     execFileSync(process.execPath, [`scripts/${script}`], { cwd: root });
   }
+  // Rebuilding an existing preview must accept its own mixed-case license paths.
+  execFileSync(process.execPath, ['scripts/build-feature-preview.mjs'], { cwd: root });
   const manifest = JSON.parse(readFileSync(new URL('production/manifest.json', root)));
   const published = JSON.parse(readFileSync(new URL('production/current-release.json', root)));
   // The historical published release remains immutable. Only this explicitly

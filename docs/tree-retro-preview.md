@@ -4,13 +4,13 @@ Destination: `/play/retro/` on tree-token.xyz. This feature is preview-only unti
 
 ## First milestone
 
-- Self-hosted, fixed EmulatorJS 4.2.3 release, FCEUmm core 2.0.2.
+- Self-hosted, fixed JSNES 2.1.0 release, using Canvas 2D rendering. Original Apache-2.0 license retained.
 - One built-in game: Falling by Jesse Williams, MIT licensed, original ROM and license retained.
 - Local uncompressed `.nes` selection, capped at 16 MiB, with header/declared-length validation. Local files are passed to the player in memory and loaded through a blob URL.
 - The player document blocks external connections through its own CSP. No global hosting headers or backend settings change.
 - Manual progress saves in IndexedDB keyed by the full ROM SHA-256, independent of filename and source. Saves remain until explicitly replaced. No automatic resume or autosave overwrites a chosen restore point.
 - JSON save export/import with ROM identity, emulator identity, byte limits, and state checksum. Raw third-party save states are deliberately not imported through TREE's backup controls.
-- Pause, resume, native fullscreen with expanded-player fallback, and upstream touch/gamepad settings.
+- Pause, resume, native fullscreen with expanded-player fallback, and touch buttons and built-in keyboard/gamepad input.
 
 ## Preview integration
 

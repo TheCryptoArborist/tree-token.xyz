@@ -81,7 +81,7 @@ async function launch(bytes, title, expectedHash) {
     $('now-playing').textContent = active.title;
     $('player-section').hidden = false;
     $('player-shell').append(frame);
-    saveStatus('Press Start Game in the player. Use its Controls menu for keys, touch buttons, or a gamepad.');
+    saveStatus('Press Start Game in the player. Use the on-screen buttons, keyboard, or a gamepad.');
     notice('Your game is ready. Press Start Game in the player.');
     $('player-section').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
   } catch (error) { notice(errorMessage(error), true); }

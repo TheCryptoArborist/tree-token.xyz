@@ -10,7 +10,7 @@ const outputPath = file => file.path.slice(1);
 const allowed = new Set(manifest.files.map(file => outputPath(file).toLowerCase()));
 const additions = ['dapp/sti-widget.js', 'dapp/sti-purchase-core.js', 'dapp/sti-stats-core.js', 'dapp/challenge-funding-core.js', 'assets/sti-icon.svg', ...retroPreviewFiles];
 const overlays = ['dapp/v3-workspace.js', 'dapp/index.html', 'dapp/styles.css', 'dapp/panel-router.css', 'dapp/interaction-bootstrap.js', 'scripts/wallet.js', 'scripts/tree-knowledge-trial.js'];
-for (const file of additions) allowed.add(file);
+for (const file of additions) allowed.add(file.toLowerCase());
 
 async function rejectUntrackedOutput(directory, prefix = '') {
   let entries;

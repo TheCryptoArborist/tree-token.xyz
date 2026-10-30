@@ -1,4 +1,4 @@
-export const ENGINE = 'emulatorjs-4.2.3-fceumm';
+export const ENGINE = 'jsnes-2.1.0';
 export const MAX_ROM_BYTES = 16 * 1024 * 1024;
 export const MAX_STATE_BYTES = 8 * 1024 * 1024;
 

@@ -1,62 +1,104 @@
 import { ENGINE, MAX_STATE_BYTES, inspectRom, sha256 } from './core.js';
-let session, started = false;
+let session, rom, started = false, paused = false, browser;
+const $ = id => document.getElementById(id);
 const reply = (type, extra = {}) => parent.postMessage({ type, session, ...extra }, location.origin);
+const pressed = new Map();
+function releaseAll() {
+  if (!browser) return;
+  for (let i = 0; i < 8; i++) browser.nes.buttonUp(1, i);
+  pressed.clear();
+  document.querySelectorAll('.held').forEach(button => button.classList.remove('held'));
+}
+function pause(value) {
+  if (!started) return;
+  if (value !== paused) { value ? browser.stop() : browser.start(); paused = value; }
+  if (value) releaseAll();
+  reply('TREE_RETRO_PAUSED', { paused });
+  $('playback-status').textContent = paused ? 'Paused · choose Continue below to play' : 'Playing · click or tap the game for keyboard control';
+}
 function failed(message) {
-  document.getElementById('loading').hidden = false;
-  document.getElementById('loading').textContent = message;
+  browser?.stop();
+  $('loading').hidden = false;
+  $('loading-message').textContent = message;
+  $('start-game').hidden = true;
   reply('TREE_RETRO_ERROR', { error: message });
 }
+$('start-game').addEventListener('click', () => {
+  try {
+    browser = new window.jsnes.Browser({ container: $('screen'), onError: error => failed(error.message || 'This ROM could not run. Try another game.') });
+    browser.nes.opts.emulateSound = $('sound').checked;
+    browser.loadROM(rom);
+    started = true;
+    $('loading').hidden = true;
+    for (const button of document.querySelectorAll('[data-button], #restart')) button.disabled = false;
+    $('screen').focus();
+    reply('TREE_RETRO_STARTED', { engine: ENGINE });
+  } catch (error) { browser?.destroy(); browser = null; failed(error.message || 'This game could not start.'); }
+});
+$('restart').addEventListener('click', () => {
+  if (!started) return;
+  browser.nes.reloadROM();
+  pause(false);
+  $('screen').focus();
+});
+$('sound').addEventListener('change', event => {
+  if (browser) browser.nes.opts.emulateSound = event.target.checked;
+});
+for (const button of document.querySelectorAll('[data-button]')) {
+  const number = Number(button.dataset.button);
+  button.addEventListener('pointerdown', event => {
+    if (!started) return;
+    event.preventDefault();
+    button.setPointerCapture(event.pointerId);
+    if (!pressed.has(number)) pressed.set(number, new Set());
+    pressed.get(number).add(event.pointerId);
+    browser.nes.buttonDown(1, number);
+    button.classList.add('held');
+  });
+  const up = event => {
+    const pointers = pressed.get(number);
+    pointers?.delete(event.pointerId);
+    if (!pointers?.size) { pressed.delete(number); browser?.nes.buttonUp(1, number); button.classList.remove('held'); }
+  };
+  for (const name of ['pointerup','pointercancel','lostpointercapture']) button.addEventListener(name, up);
+  button.addEventListener('keydown', event => { if (['Enter',' '].includes(event.key) && started) { event.preventDefault(); browser.nes.buttonDown(1, number); } });
+  button.addEventListener('keyup', event => { if (['Enter',' '].includes(event.key) && started) { event.preventDefault(); browser.nes.buttonUp(1, number); } });
+}
+window.addEventListener('blur', releaseAll);
+window.addEventListener('resize', () => browser?.fitInParent());
 window.addEventListener('message', async event => {
   if (event.origin !== location.origin || event.source !== parent || parent === window) return;
   const data = event.data;
   if (data?.type === 'TREE_RETRO_INIT' && !session) {
     session = data.session;
     try {
-      const { bytes } = inspectRom(data.rom);
-      if (await sha256(bytes) !== data.hash) throw new Error('The ROM could not be verified. Please reopen it.');
-      const romUrl = URL.createObjectURL(new Blob([bytes], { type: 'application/octet-stream' }));
-      Object.assign(window, {
-        EJS_player: '#game', EJS_core: 'fceumm', EJS_gameUrl: romUrl,
-        EJS_gameName: `tree-${data.hash}`, EJS_gameID: parseInt(data.hash.slice(0, 12), 16),
-        EJS_pathtodata: './vendor/emulatorjs-4.2.3/data/',
-        EJS_color: '#83ad54', EJS_backgroundColor: '#07110c', EJS_startButtonName: 'START GAME',
-        EJS_threads: false, EJS_startOnLoaded: false, EJS_forceLegacyCores: false,
-        EJS_language: 'en-US', EJS_disableAutoLang: false,
-        EJS_Buttons: { saveState: false, loadState: false, netplay: false, screenRecord: false, saveSavFiles: false, loadSavFiles: false },
-        EJS_defaultOptions: { 'save-state-location': 'browser', webgl2Enabled: 'enabled' },
-        EJS_ready: () => { document.getElementById('loading').hidden = true; },
-        EJS_onGameStart: () => { started = true; document.getElementById('loading').hidden = true; reply('TREE_RETRO_STARTED', { engine: ENGINE }); }
-      });
-      const script = document.createElement('script');
-      script.src = './vendor/emulatorjs-4.2.3/data/loader.js';
-      script.onload = () => { document.getElementById('loading').hidden = true; };
-      script.onerror = () => failed('The emulator could not load. Please reopen the game.');
-      document.head.append(script);
-      // Loading failures can occur after the loader script itself has succeeded.
-      const watch = setInterval(() => {
-        if (window.EJS_emulator) window.EJS_emulator.debug = true;
-        if (window.EJS_emulator?.failedToStart) { clearInterval(watch); failed('This game could not start on this device. Try another ROM or browser.'); }
-        if (started) clearInterval(watch);
-      }, 1000);
-      setTimeout(() => clearInterval(watch), 120000);
+      rom = inspectRom(data.rom).bytes;
+      if (await sha256(rom) !== data.hash) throw new Error('The ROM could not be verified. Please reopen it.');
+      $('loading-message').textContent = 'Your NES game is ready.';
+      $('start-game').disabled = false;
     } catch (error) { failed(error.message); }
   } else if (data?.type === 'TREE_RETRO_COMMAND' && data.session === session) {
     try {
-      const emulator = window.EJS_emulator;
-      if (!started || !emulator?.gameManager) throw new Error('Press Start Game before using save controls.');
+      if (!started || !browser) throw new Error('Press Start Game before using save controls.');
       const result = { id: data.id };
       if (data.command === 'snapshot') {
-        result.bytes = emulator.gameManager.getState();
-        if (!result.bytes?.byteLength || result.bytes.byteLength > MAX_STATE_BYTES) throw new Error('The game could not be saved.');
+        result.bytes = new TextEncoder().encode(JSON.stringify(browser.nes.toJSON()));
+        if (!result.bytes.length || result.bytes.length > MAX_STATE_BYTES) throw new Error('The game could not be saved.');
       } else if (data.command === 'load') {
         const bytes = new Uint8Array(data.bytes);
         if (!bytes.length || bytes.length > MAX_STATE_BYTES) throw new Error('This save file is invalid.');
-        emulator.gameManager.loadState(bytes);
-      } else if (data.command === 'togglePause') emulator.paused ? emulator.play() : emulator.pause();
-      else if (data.command === 'pause') emulator.pause();
+        const state = JSON.parse(new TextDecoder().decode(bytes));
+        for (const key of ['cpu','ppu','papu','mmap']) if (!state[key] || typeof state[key] !== 'object') throw new Error('This save does not contain a valid NES state.');
+        const previous = browser.nes.toJSON();
+        const wasPaused = paused;
+        pause(true);
+        try { browser.nes.fromJSON(state); }
+        catch { browser.nes.fromJSON(previous); throw new Error('This save could not be restored. Your current game was kept.'); }
+        pause(wasPaused);
+      } else if (data.command === 'togglePause') pause(!paused);
+      else if (data.command === 'pause') pause(true);
       else throw new Error('Unknown player control.');
       reply('TREE_RETRO_REPLY', result);
-      reply('TREE_RETRO_PAUSED', { paused: !!emulator.paused });
     } catch (error) { reply('TREE_RETRO_REPLY', { id: data.id, error: error.message }); }
   }
 });
