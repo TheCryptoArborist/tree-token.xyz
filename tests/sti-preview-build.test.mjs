@@ -23,7 +23,7 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
   const approvedSwapChange = {
     path: '/dapp/swap-router.js',
     previousSha: '882f547e3a66028da1815569cc6397be2c1b7346',
-    approvedSha: '864f0c6ca61f311263eef1cf8c1a537e09255e14',
+    approvedSha: '7925857dd8003ea883fd1ca9f27ac9b11f005e38',
   };
   assert.equal(published.files.find(f => f.path === approvedSwapChange.path)?.sha, approvedSwapChange.previousSha);
   assert.equal(manifest.files.find(f => f.path === approvedSwapChange.path)?.sha1, approvedSwapChange.approvedSha);

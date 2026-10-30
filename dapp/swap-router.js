@@ -675,16 +675,6 @@ async function executeSwap() {
     if (state.direction === 'SUI_TO_TREE') {
       const inputSui = Number(formatBaseUnits(amountIn, SUI_DECIMALS, SUI_DECIMALS).replace(/,/g, ''));
       const estimatedUsd = state.pricesUsd.sui ? inputSui * state.pricesUsd.sui : null;
-      const eligibilityCopy = document.createElement('p');
-      eligibilityCopy.textContent = estimatedUsd != null && estimatedUsd >= 5
-        ? 'This purchase appears to meet the $5 Challenge requirement. Verification can take a short time.'
-        : 'Challenge eligibility is confirmed after the purchase reaches the verified ledger.';
-      const challengeLink = document.createElement('a');
-      challengeLink.className = 'button secondary swap-challenge-link';
-      challengeLink.href = '#canopy-draw';
-      challengeLink.dataset.openChallengePass = '';
-      challengeLink.textContent = 'Go to Challenge →';
-      elements.success.append(eligibilityCopy, challengeLink);
       window.dispatchEvent(new CustomEvent('tree:qualifying-purchase-submitted', {
         detail: { digest, wallet: window.playerAddress, estimatedUsd },
       }));
