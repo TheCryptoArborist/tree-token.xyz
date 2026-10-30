@@ -1,3 +1,4 @@
+import { confirmTransaction } from './transaction-review.js';
 import { Transaction } from 'https://esm.run/@mysten/sui@2.23.1/transactions';
 import { SuiGrpcClient } from 'https://esm.run/@mysten/sui@2.23.1/grpc';
 
@@ -640,6 +641,21 @@ async function executeSwap() {
     throw new Error(coreFailureMessage(simulation, 'Transaction simulation failed.'));
   }
     setStatus(`Simulation passed. Review ${formatBaseUnits(amountIn, decimalsFor(stateTokenIn()), decimalsFor(stateTokenIn()))} ${symbolFor(stateTokenIn())} → at least ${formatBaseUnits(route.minAmountOut, decimalsFor(stateTokenOut()), decimalsFor(stateTokenOut()))} ${symbolFor(stateTokenOut())} in your wallet.`, 'success');
+    const review = [
+      'You pay: ' + formatBaseUnits(amountIn, decimalsFor(stateTokenIn()), decimalsFor(stateTokenIn())) + ' ' + symbolFor(stateTokenIn()),
+      'You receive: ' + formatBaseUnits(route.amountOut, decimalsFor(stateTokenOut()), decimalsFor(stateTokenOut())) + ' ' + symbolFor(stateTokenOut()) + ' (estimated)',
+      'Minimum received: ' + formatBaseUnits(route.minAmountOut, decimalsFor(stateTokenOut()), decimalsFor(stateTokenOut())) + ' ' + symbolFor(stateTokenOut()),
+      'Trading venue: ' + routeLabel(route),
+      'Slippage tolerance: ' + (state.slippageBps / 100).toFixed(2) + '%',
+    ].join('\n');
+    const approved = await confirmTransaction(review, {
+      title: 'Review TREE Swap',
+      verification: 'The exact transaction simulation passed on Sui Mainnet. Quoted output may change; the minimum received is enforced by the transaction. Your wallet is the final approval.',
+    });
+    if (!approved) {
+      setStatus('Swap review cancelled. No transaction was submitted.');
+      return;
+    }
     const result = await window.signAndExecuteTransactionBlock(tx);
     const digest = extractDigest(result);
     if (!digest) throw new Error('The wallet returned no transaction digest.');

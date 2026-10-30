@@ -20,9 +20,16 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
   };
   assert.equal(published.files.find(f => f.path === approvedNavigationChange.path)?.sha, approvedNavigationChange.previousSha);
   assert.equal(manifest.files.find(f => f.path === approvedNavigationChange.path)?.sha1, approvedNavigationChange.approvedSha);
+  const approvedSwapChange = {
+    path: '/dapp/swap-router.js',
+    previousSha: '882f547e3a66028da1815569cc6397be2c1b7346',
+    approvedSha: '864f0c6ca61f311263eef1cf8c1a537e09255e14',
+  };
+  assert.equal(published.files.find(f => f.path === approvedSwapChange.path)?.sha, approvedSwapChange.previousSha);
+  assert.equal(manifest.files.find(f => f.path === approvedSwapChange.path)?.sha1, approvedSwapChange.approvedSha);
   assert.deepEqual(
-    manifest.files.filter(f => f.path !== approvedNavigationChange.path).map(f => [f.path, f.sha1]).sort(),
-    published.files.filter(f => f.path !== approvedNavigationChange.path).map(f => [f.path, f.sha]).sort(),
+    manifest.files.filter(f => ![approvedNavigationChange.path, approvedSwapChange.path].includes(f.path)).map(f => [f.path, f.sha1]).sort(),
+    published.files.filter(f => ![approvedNavigationChange.path, approvedSwapChange.path].includes(f.path)).map(f => [f.path, f.sha]).sort(),
   );
   const overlays = ['/dapp/v3-workspace.js', '/dapp/index.html', '/dapp/styles.css', '/dapp/panel-router.css', '/dapp/interaction-bootstrap.js', '/scripts/wallet.js', '/scripts/tree-knowledge-trial.js'];
   const additions = ['/dapp/sti-widget.js', '/dapp/sti-purchase-core.js', '/dapp/sti-stats-core.js', '/dapp/challenge-funding-core.js', '/assets/sti-icon.svg'];

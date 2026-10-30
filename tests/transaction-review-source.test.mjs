@@ -18,3 +18,12 @@ assert.match(component, /tree-command-logo-v2-512\.png/); assert.doesNotMatch(co
 assert.match(styles, /tree-review-overlay/); assert.match(styles, /linear-gradient/); assert.match(styles, /@media\(max-width:540px\)/);
 assert.match(markup, /transaction-review\.css/);
 console.log('TREE transaction review: PASS (branded, accessible, mobile, and native-confirm free)');
+
+const swap = await readFile(new URL('../dapp/swap-router.js', import.meta.url), 'utf8');
+assert.match(swap, /import \{ confirmTransaction \} from '\.\/transaction-review\.js'/);
+assert.match(swap, /const approved = await confirmTransaction\(review/);
+for (const label of ['You pay:', 'You receive:', 'Minimum received:', 'Trading venue:', 'Slippage tolerance:']) assert.ok(swap.includes(label));
+assert.ok(swap.indexOf('const approved = await confirmTransaction(review') > swap.indexOf('core.simulateTransaction('));
+assert.ok(swap.indexOf('const approved = await confirmTransaction(review') < swap.indexOf('await window.signAndExecuteTransactionBlock(tx)'));
+assert.match(swap, /if \(!approved\) \{[\s\S]*?return;[\s\S]*?\}\s*const result = await window\.signAndExecuteTransactionBlock\(tx\)/);
+console.log('TREE swap review: PASS (post-simulation, pre-signing, cancel-safe)');
