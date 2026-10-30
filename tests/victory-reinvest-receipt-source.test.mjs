@@ -24,6 +24,7 @@ function functionSource(name, nextName) {
 const receiptSource = functionSource('showVictoryV3ReinvestReceipt', 'executeVictoryV3Reinvest');
 const v3Source = functionSource('executeVictoryV3Reinvest', 'executeVictoryReinvest');
 const v2Source = functionSource('executeVictoryReinvest', 'init');
+const lockReviewSource = functionSource('lockReviewDetails', 'unlockDate');
 
 // No module initialization, imports, network or wallet access in these fixtures.
 // The formatter spy verifies exact raw-value/decimal arguments, not localization.
@@ -142,14 +143,14 @@ function v2Fixture({ sustainable, approvals }) {
   const quote = { generatedAt: Date.now(), victoryToSui: { minAmountOut: 1n, priceImpactBps: 1n }, suiToTree: { minAmountOut: 2n, priceImpactBps: 1n } };
   const state = { victoryBalance: 1000n, suiBalance: 1000000000n, reinvest: {
     executing: false, quote, destination: 'v2', mode: sustainable ? 'sustainable' : 'complete',
-    reinvestBps: 6000, lockDays: 30, slippageBps: 50, amount: '1000',
+    reinvestBps: 6000, lockDays: 1095, slippageBps: 50, amount: '1000',
   } };
   let balanceReads = 0, confirmationCalls = 0;
   const submissions = [], statuses = [], stakeAmounts = [];
   const context = createContext({
     state, el: { reinvestSuccess: root, reinvestAmount: { value: '1000' } },
     window: { playerAddress: 'fixture-owner' }, EXECUTION_ENABLED: true,
-    client: {}, Transaction: class {}, VICTORY_DECIMALS: 9, TERM_LABELS: { 30: '30 days' },
+    client: {}, Transaction: class {}, VICTORY_DECIMALS: 9, TERM_LABELS: { 1095: '3 years' },
     connectIfNeeded: async () => true, reinvestAmounts: () => amounts,
     requestReinvestQuote: () => assert.fail('Fixture quote should be fresh'),
     executeVictoryV3Reinvest: () => assert.fail('V2 must not execute the V3 route'),
@@ -158,10 +159,14 @@ function v2Fixture({ sustainable, approvals }) {
     buildV2StakeTransaction: async ({ amount }) => { stakeAmounts.push(amount); return { fixture: 'stake' }; },
     getV2LpBalance: async () => ++balanceReads === 1 ? 500n : 800n,
     simulateTwice: async () => ({}), extractPositiveV2Lp: () => 300n,
-    extractVictoryLocked: () => amounts.totalRaw, extractVictoryLockEvent: () => ({ amountRaw: amounts.lockRaw }),
+    extractVictoryLocked: () => amounts.totalRaw, extractVictoryLockEvent: () => ({ amountRaw: amounts.lockRaw, lockEnd: 1856098656n }),
     formatRaw: (raw) => raw.toString(), formatImpactBps: () => 'fixture-impact', unlockDateForDays: () => 'fixture-date',
-    confirmTransaction: async () => {
+    confirmTransaction: async (message) => {
       assert.ok(confirmationCalls < approvals.length, 'Unexpected extra confirmation');
+      if (sustainable && confirmationCalls === 0) {
+        assert.ok(message.includes(`Contract unlock: ${new Date(1856098656000).toLocaleString()}`));
+        assert.match(message, /do not restart a three-year term/);
+      }
       return approvals[confirmationCalls++];
     },
     submitAndFinalize: async (transaction) => {
@@ -170,6 +175,7 @@ function v2Fixture({ sustainable, approvals }) {
     },
     setReinvestStatus: (...args) => statuses.push(args), render: () => {}, load: async () => {}, showVictoryView: () => {},
   });
+  context.lockReviewDetails = new Script(`(${lockReviewSource})`).runInContext(context);
   const run = new Script(`(${v2Source})`).runInContext(context);
   return { run, root, state, submissions, statuses, stakeAmounts, confirmations: () => confirmationCalls };
 }

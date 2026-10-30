@@ -3,12 +3,12 @@ import { SuiGrpcClient } from 'https://esm.run/@mysten/sui@2.23.1/grpc';
 import { bcs } from 'https://esm.run/@mysten/sui@2.23.1/bcs';
 import { confirmTransaction } from './transaction-review.js';
 import {
-  SUI_TYPE, V2_POOL, VICTORY_DECIMALS, VICTORY_SUI_POOL, VICTORY_TYPE,
+  SUI_TYPE, V2_PACKAGE, V2_POOL, VICTORY_DECIMALS, VICTORY_SUI_POOL, VICTORY_TYPE,
   buildV2StakeTransaction, buildVictoryV2ReinvestTransaction, extractPositiveV2Lp, getV2LpBalance,
   parseAmount, quoteVictoryToSui, quoteVictoryV2Reinvest,
 } from './earn-transactions-core.js';
 import {
-  VICTORY_LOCKER, VICTORY_LOCKED_VAULT, VICTORY_REWARD_VAULT, VICTORY_SUI_REWARD_VAULT,
+  VICTORY_EMISSION_CONFIG, VICTORY_LOCKER, VICTORY_LOCKED_VAULT, VICTORY_REWARD_VAULT, VICTORY_SUI_REWARD_VAULT,
   buildSuiClaimPreviewTransaction, buildSuiRewardsClaimTransaction, buildVictoryEmissionPreviewTransaction,
   buildVictoryLockTransaction, buildVictoryRewardsClaimTransaction, buildVictoryUnlockTransaction, buildVictoryV2SustainableReinvestTransaction, calculateVictoryAprs, decodeSuiClaimPreview,
   decodeVictoryEmissionRate, extractSuiClaimedFromEvents, extractVictoryClaimEvents, extractVictoryClaimed,
@@ -29,7 +29,7 @@ const LOCAL_LOCKS_PREVIEW = ['localhost', '127.0.0.1'].includes(location.hostnam
   && new URLSearchParams(location.search).get('victory-locks-preview') === '1';
 const state = {
   amount: '', lockDays: 90, activeView: 'locker', victoryBalance: 0n, suiBalance: 0n,
-  snapshot: null, emissionRateRaw: null, aprs: null, locks: [], victoryByLock: new Map(), suiClaims: [],
+  snapshot: null, lockSchedule: null, emissionRateRaw: null, aprs: null, locks: [], victoryByLock: new Map(), suiClaims: [],
   claimableVictoryRaw: null, claimableSuiRaw: null, victoryPreviewError: '', suiPreviewError: '',
   loading: false, executing: false, claiming: '', unlockingLockId: '',
   reinvest: { amount: '', mode: 'complete', destination: 'v2', reinvestBps: 5_000, lockDays: 90, slippageBps: 100, quote: null, quoting: false, executing: false, timer: null, v3Target: 'new', v3Range: '20', v3Pool: null, v3Positions: [] },
@@ -55,7 +55,43 @@ function failure(result, fallback) { return result?.FailedTransaction?.status?.e
 function digest(result) { return result?.digest || result?.Transaction?.digest || result?.effects?.transactionDigest || result?.transactionBlockDigest || null; }
 function setStatus(message, kind = '') { el.status.textContent = message; el.status.className = `status${kind ? ` ${kind}` : ''}`; }
 function rawAmount() { try { return parseAmount(state.amount, VICTORY_DECIMALS, 'VICTORY'); } catch { return null; } }
-function unlockDateForDays(days) { return new Date(Date.now() + Number(days) * 86_400_000).toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' }); }
+function decodeLockSchedule(preview) {
+  const readU64 = (command, result) => {
+    const bytes = preview?.commandResults?.[command]?.returnValues?.[result]?.bcs;
+    if (!(bytes instanceof Uint8Array)) throw new Error('The contract expiration date is unavailable.');
+    return BigInt(bcs.u64().parse(bytes));
+  };
+  const startSeconds = readU64(1, 0), endWeek = readU64(2, 3);
+  if (endWeek <= 0n) throw new Error('The contract expiration schedule is invalid.');
+  return { endSeconds: startSeconds > 0n ? startSeconds + endWeek * 7n * 86_400n : null };
+}
+function lockExpiryForDays(days, nowSeconds = BigInt(Math.floor(Date.now() / 1000))) {
+  if (!state.lockSchedule || !Object.hasOwn(TERM_LABELS, days)) return null;
+  const requestedEnd = nowSeconds + BigInt(days) * 86_400n;
+  const programEnd = state.lockSchedule.endSeconds;
+  const fixed = programEnd !== null && requestedEnd >= programEnd;
+  return { endSeconds: fixed ? programEnd : requestedEnd, fixed };
+}
+function unlockDateForDays(days) {
+  const expiry = lockExpiryForDays(days);
+  return expiry ? formatDate(expiry.endSeconds) : 'Contract date unavailable';
+}
+function lockTermNote(days) {
+  const expiry = lockExpiryForDays(days);
+  if (!expiry) return 'The exact contract unlock date will be verified before wallet approval.';
+  if (expiry.fixed && Number(days) === 1095) return 'The 3-year option counts down to the program’s fixed expiration. New deposits do not restart a three-year term.';
+  return expiry.fixed ? 'This lock is capped at the program’s fixed expiration.' : 'The selected duration cannot extend beyond the program’s fixed expiration. The exact unlock date is verified before wallet approval.';
+}
+function lockReviewDetails(lock, days) {
+  if (!lock || BigInt(lock.lockEnd ?? 0) <= 0n) throw new Error('The simulation did not return the contract unlock date.');
+  const date = new Date(Number(lock.lockEnd) * 1000);
+  if (!Number.isFinite(date.getTime())) throw new Error('The contract unlock date is invalid.');
+  const fixed = Number(days) === 1095 || state.lockSchedule?.endSeconds === BigInt(lock.lockEnd);
+  const note = Number(days) === 1095
+    ? 'The 3-year option counts down to the program’s fixed expiration. New deposits do not restart a three-year term.'
+    : 'This lock is capped at the program’s fixed expiration.';
+  return `Contract unlock: ${date.toLocaleString()}${fixed ? `\n\n${note}` : ''}`;
+}
 function unlockDate() { return unlockDateForDays(state.lockDays); }
 function objectJson(result) { return result?.object?.json ?? result?.json ?? null; }
 function totalSuiEpochs() { return state.suiClaims.reduce((total, claim) => total + claim.epochs.length, 0); }
@@ -165,6 +201,8 @@ function renderReinvest() {
   el.reinvestAmountLabel.textContent = sustainable ? 'Wallet VICTORY to split' : 'Wallet VICTORY to reinvest';
   el.sustainableControls.hidden = !sustainable; el.reinvestPercent.textContent = `${state.reinvest.reinvestBps / 100}%`; el.lockPercent.textContent = `${100 - state.reinvest.reinvestBps / 100}%`;
   el.reinvestSplit.value = String(state.reinvest.reinvestBps / 100); el.sustainableLockTerm.value = String(state.reinvest.lockDays); el.sustainableUnlockDate.textContent = sustainable ? unlockDateForDays(state.reinvest.lockDays) : '—';
+  el.sustainableUnlockLabel.textContent = lockExpiryForDays(state.reinvest.lockDays)?.fixed ? 'Contract expiration date' : 'Estimated unlock date';
+  el.sustainableTermNote.textContent = lockTermNote(state.reinvest.lockDays);
   el.reinvestAllocation.textContent = amounts.reinvestRaw ? `${formatRaw(amounts.reinvestRaw, VICTORY_DECIMALS, 6)} VICTORY` : '—'; el.lockAllocation.textContent = amounts.lockRaw > 0n ? `${formatRaw(amounts.lockRaw, VICTORY_DECIMALS, 6)} VICTORY` : 'None';
   const isV3 = state.reinvest.destination === 'v3'; renderV3Controls();
   el.reinvestApprovals.textContent = isV3 ? '1 · Conversion + position' : sustainable ? '2 · Split + lock + liquidity, then stake' : '2 · Liquidity, then stake';
@@ -191,6 +229,8 @@ function render() {
   el.rewardVault.textContent = state.snapshot ? `${formatRaw(state.snapshot.victoryRewardsRaw, VICTORY_DECIMALS, 0)} VICTORY` : '—';
   el.suiVault.textContent = state.snapshot ? `${formatRaw(state.snapshot.suiRewardsRaw, 9, 2)} SUI` : '—';
   el.unlockDate.textContent = unlockDate(); el.balance.textContent = connected ? `Available ${formatRaw(state.victoryBalance, VICTORY_DECIMALS, 4)} VICTORY` : 'Available —';
+  el.unlockLabel.textContent = lockExpiryForDays(state.lockDays)?.fixed ? 'Contract expiration date' : 'Estimated unlock date';
+  el.lockTermNote.textContent = lockTermNote(state.lockDays);
   el.refresh.disabled = busy; renderAprs(); renderLocks();
   if (state.executing) { el.action.disabled = true; el.action.textContent = 'Locking…'; }
   else if (!connected) { el.action.disabled = false; el.action.textContent = 'Connect Wallet'; }
@@ -218,10 +258,13 @@ async function simulateNoGas(transaction, include) {
 
 async function load() {
   if (state.loading) return;
-  const requestedOwner = window.playerAddress || null; state.loading = true;
+  const requestedOwner = window.playerAddress || null; state.loading = true; state.lockSchedule = null;
   state.victoryPreviewError = ''; state.suiPreviewError = ''; render();
   try {
     const emissionTransaction = buildVictoryEmissionPreviewTransaction({ Transaction });
+    // Read-only getters share the existing APR simulation. Signed transactions are unchanged.
+    emissionTransaction.moveCall({ target: `${V2_PACKAGE}::global_emission_controller::get_config_info`, arguments: [emissionTransaction.object(VICTORY_EMISSION_CONFIG)] });
+    emissionTransaction.moveCall({ target: `${V2_PACKAGE}::global_emission_controller::get_emission_phase_parameters`, arguments: [] });
     const [locker, vault, victoryRewards, suiRewards, emission, victoryBalance, suiBalance] = await Promise.all([
       client.core.getObject({ objectId: VICTORY_LOCKER, include: { json: true } }),
       client.core.getObject({ objectId: VICTORY_LOCKED_VAULT, include: { json: true } }),
@@ -233,6 +276,7 @@ async function load() {
     ]);
     const lockerJson = objectJson(locker);
     state.snapshot = parseVictoryLockerSnapshot({ lockerJson, vaultJson: objectJson(vault), victoryRewardJson: objectJson(victoryRewards), suiRewardJson: objectJson(suiRewards) });
+    state.lockSchedule = decodeLockSchedule(emission);
     state.emissionRateRaw = decodeVictoryEmissionRate(emission, bcs); state.aprs = calculateVictoryAprs(state.snapshot, state.emissionRateRaw);
     state.victoryBalance = BigInt(victoryBalance); state.suiBalance = BigInt(suiBalance); state.locks = []; state.victoryByLock = new Map(); state.suiClaims = [];
     state.claimableVictoryRaw = requestedOwner ? 0n : null; state.claimableSuiRaw = requestedOwner ? 0n : null;
@@ -300,12 +344,13 @@ async function executeLock() {
     const owner = window.playerAddress; const built = await buildVictoryLockTransaction({ Transaction, client, owner, amount, lockDays: state.lockDays });
     setStatus('Simulating the exact VICTORY lock twice on Sui Mainnet…', 'warning'); const simulation = await simulateTwice(built.transaction);
     if (extractVictoryLocked(simulation, owner) !== amount) throw new Error('The simulation did not verify the exact VICTORY amount being locked.');
+    const simulatedLock = extractVictoryLockEvent(simulation, owner, { amountRaw: amount, lockDays: state.lockDays });
     const readable = formatRaw(amount, VICTORY_DECIMALS, VICTORY_DECIMALS); const apr = state.aprs?.[state.lockDays];
-    if (!(await confirmTransaction(`Lock ${readable} VICTORY for ${state.lockDays.toLocaleString()} days?\n\nCurrent VICTORY emissions APR: ${apr ? formatApr(apr.aprHundredths) : 'unavailable'}\nEstimated unlock: ${unlockDate()}\n\nLocked VICTORY cannot be withdrawn early. The exact transaction passed two Sui Mainnet simulations.`, { title: 'Create xVICTORY Lock', confirmLabel: 'Continue to Wallet' }))) { setStatus('VICTORY lock cancelled before wallet approval.'); return; }
+    if (!(await confirmTransaction(`Lock ${readable} VICTORY in the ${TERM_LABELS[state.lockDays]} option?\n\nCurrent VICTORY emissions APR: ${apr ? formatApr(apr.aprHundredths) : 'unavailable'}\n${lockReviewDetails(simulatedLock, state.lockDays)}\n\nLocked VICTORY cannot be withdrawn early. The exact transaction passed two Sui Mainnet simulations.`, { title: 'Create xVICTORY Lock', confirmLabel: 'Continue to Wallet' }))) { setStatus('VICTORY lock cancelled before wallet approval.'); return; }
     if (window.playerAddress !== owner) throw new Error('The connected wallet changed before approval.');
     setStatus(`Review the ${readable} VICTORY lock in your wallet…`, 'warning'); const { txDigest, finalized } = await submitAndFinalize(built.transaction);
     if (extractVictoryLocked(finalized, owner) !== amount) throw new Error('The transaction finalized without the exact verified VICTORY lock balance change.');
-    el.success.hidden = false; el.success.innerHTML = `<strong>${readable} VICTORY locked for ${state.lockDays.toLocaleString()} days.</strong><a href="https://suiscan.xyz/mainnet/tx/${encodeURIComponent(txDigest)}" target="_blank" rel="noopener noreferrer">View ${txDigest.slice(0, 12)}… ↗</a>`;
+    el.success.hidden = false; el.success.innerHTML = `<strong>${readable} VICTORY locked in the ${TERM_LABELS[state.lockDays]} option.</strong><a href="https://suiscan.xyz/mainnet/tx/${encodeURIComponent(txDigest)}" target="_blank" rel="noopener noreferrer">View ${txDigest.slice(0, 12)}… ↗</a>`;
     state.amount = ''; el.amount.value = ''; setStatus('Your VICTORY lock was confirmed on Sui Mainnet.', 'success'); await load(); showVictoryView('locks');
   } catch (error) { const message = String(error?.message || error || 'VICTORY lock failed.'); setStatus(/reject|cancel|denied/i.test(message) ? 'Wallet approval was cancelled.' : message, 'error'); }
   finally { state.executing = false; render(); }
@@ -532,7 +577,7 @@ async function executeVictoryV3Reinvest(amounts) {
     const simulatedLock = sustainable ? extractVictoryLockEvent(simulation, owner, { amountRaw: amounts.lockRaw, lockDays }) : null;
     if (!simulatedAdded || extractVictoryLocked(simulation, owner) !== amounts.totalRaw || (sustainable && !simulatedLock)) throw new Error('The final simulations did not verify the exact VICTORY allocation, lock, and V3 liquidity output.');
     const readable = formatRaw(amounts.totalRaw, VICTORY_DECIMALS, VICTORY_DECIMALS); const reinvestReadable = formatRaw(amounts.reinvestRaw, VICTORY_DECIMALS, VICTORY_DECIMALS); const lockReadable = formatRaw(amounts.lockRaw, VICTORY_DECIMALS, VICTORY_DECIMALS);
-    const splitCopy = sustainable ? `\nReinvest: ${reinvestReadable} VICTORY (${reinvestBps / 100}%)\nLock: ${lockReadable} VICTORY for ${TERM_LABELS[lockDays] || `${lockDays} days`}\nEstimated unlock: ${unlockDateForDays(lockDays)}\n` : '';
+    const splitCopy = sustainable ? `\nReinvest: ${reinvestReadable} VICTORY (${reinvestBps / 100}%)\nLock: ${lockReadable} VICTORY · ${TERM_LABELS[lockDays] || `${lockDays} days`} option\n${lockReviewDetails(simulatedLock, lockDays)}\n` : '';
     if (!(await confirmTransaction(`${sustainable ? `Process ${readable} VICTORY with Sustainable Reinvest?` : `Reinvest ${readable} VICTORY into SUI/TREE V3?`}\n${splitCopy}\nDestination: ${v3RangeText()}\nTicks: ${quote.tickLower} to ${quote.tickUpper}\nMinimum SUI from VICTORY: ${formatRaw(quote.victoryToSui.minAmountOut, 9, 9)} SUI\nMinimum TREE from V3 swap: ${formatRaw(quote.minSwapOutRaw, 6, 6)} TREE\nCombined quoted impact: ${formatImpactBps(BigInt(quote.victoryToSui.priceImpactBps) + BigInt(quote.v3PriceImpactBps))}\nWallet approvals: 1\n\nThe exact combined transaction passed two final Sui Mainnet simulations.`, { title: sustainable ? 'Sustainable V3 Reinvest' : 'Complete V3 Reinvest', confirmLabel: 'Continue to Wallet' }))) { setReinvestStatus('V3 reinvest cancelled before wallet approval.'); return; }
     if (window.playerAddress !== owner) throw new Error('The connected wallet changed before approval.');
     if (state.reinvest.destination !== 'v3' || state.reinvest.mode !== (sustainable ? 'sustainable' : 'complete') || state.reinvest.reinvestBps !== reinvestBps || state.reinvest.lockDays !== lockDays || state.reinvest.v3Target !== selectedTarget || state.reinvest.v3Range !== selectedRange) throw new Error('The V3 reinvest settings changed before approval. Review the updated route again.');
@@ -567,7 +612,7 @@ async function executeVictoryReinvest() {
     if (extractVictoryLocked(simulation, owner) !== amounts.totalRaw || simulatedLp <= 0n || (sustainable && !simulatedLock)) throw new Error('The simulation did not verify the exact VICTORY split, lock, and positive SUI/TREE LP output.');
     const readable = formatRaw(amounts.totalRaw, VICTORY_DECIMALS, VICTORY_DECIMALS); const reinvestReadable = formatRaw(amounts.reinvestRaw, VICTORY_DECIMALS, VICTORY_DECIMALS); const lockReadable = formatRaw(amounts.lockRaw, VICTORY_DECIMALS, VICTORY_DECIMALS);
     const headline = sustainable ? `Process ${readable} VICTORY with Sustainable Reinvest?` : `Reinvest ${readable} VICTORY into SUI/TREE V2 liquidity?`;
-    const splitCopy = sustainable ? `\nReinvest: ${reinvestReadable} VICTORY (${reinvestBps / 100}%)\nLock: ${lockReadable} VICTORY for ${TERM_LABELS[lockDays] || `${lockDays} days`}\nEstimated unlock: ${unlockDateForDays(lockDays)}\n` : '';
+    const splitCopy = sustainable ? `\nReinvest: ${reinvestReadable} VICTORY (${reinvestBps / 100}%)\nLock: ${lockReadable} VICTORY · ${TERM_LABELS[lockDays] || `${lockDays} days`} option\n${lockReviewDetails(simulatedLock, lockDays)}\n` : '';
     if (!(await confirmTransaction(`${headline}\n${splitCopy}\nMinimum SUI from VICTORY: ${formatRaw(quote.victoryToSui.minAmountOut, 9, 9)} SUI\nMinimum TREE for liquidity: ${formatRaw(quote.suiToTree.minAmountOut, 6, 6)} TREE\nCombined quoted impact: ${formatImpactBps(quote.victoryToSui.priceImpactBps + quote.suiToTree.priceImpactBps)}\n\nStep 1 ${sustainable ? 'atomically locks the selected portion and creates liquidity' : 'creates liquidity'}. Step 2 offers to stake only the new LP. The exact transaction passed two Mainnet simulations.`, { title: sustainable ? 'Sustainable Reinvest' : 'Complete Reinvest', confirmLabel: 'Continue to Wallet' }))) { setReinvestStatus(`${sustainable ? 'Sustainable' : 'Complete'} reinvest cancelled before wallet approval.`); return; }
     if (window.playerAddress !== owner) throw new Error('The connected wallet changed before approval.');
     if (state.reinvest.mode !== (sustainable ? 'sustainable' : 'complete') || state.reinvest.reinvestBps !== reinvestBps || state.reinvest.lockDays !== lockDays) throw new Error('The reinvest settings changed before approval. Review the updated route again.');
@@ -600,6 +645,8 @@ function init() {
     sustainableControls: document.getElementById('victorySustainableControls'), reinvestPercent: document.getElementById('victoryReinvestPercent'), lockPercent: document.getElementById('victoryLockPercent'), reinvestSplit: document.getElementById('victoryReinvestSplit'), sustainableLockTerm: document.getElementById('victorySustainableLockTerm'), sustainableUnlockDate: document.getElementById('victorySustainableUnlockDate'), reinvestAllocation: document.getElementById('victoryReinvestAllocation'), lockAllocation: document.getElementById('victoryLockAllocation'), reinvestApprovals: document.getElementById('victoryReinvestApprovals'),
     reinvestDestination: document.getElementById('victoryReinvestDestination'), reinvestHeading: document.getElementById('victoryReinvestHeading'), reinvestRouteCopy: document.getElementById('victoryReinvestRouteCopy'), v3Controls: document.getElementById('victoryV3Controls'), v3Target: document.getElementById('victoryV3Target'), v3RangeControls: document.getElementById('victoryV3RangeControls'), v3Range: document.getElementById('victoryV3Range'), v3RouteSummary: document.getElementById('victoryV3RouteSummary'),
   });
+  el.unlockLabel = document.getElementById('victoryUnlockLabel'); el.lockTermNote = document.getElementById('victoryLockTermNote');
+  el.sustainableUnlockLabel = document.getElementById('victorySustainableUnlockLabel'); el.sustainableTermNote = document.getElementById('victorySustainableTermNote');
   if (!el.action) return;
   el.amount.addEventListener('input', () => { state.amount = el.amount.value; render(); });
   el.max.addEventListener('click', () => { state.amount = formatRaw(state.victoryBalance, VICTORY_DECIMALS, VICTORY_DECIMALS, false); el.amount.value = state.amount; render(); });
