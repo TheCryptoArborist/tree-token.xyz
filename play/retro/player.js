@@ -20,19 +20,21 @@ window.addEventListener('message', async event => {
         EJS_gameName: `tree-${data.hash}`, EJS_gameID: parseInt(data.hash.slice(0, 12), 16),
         EJS_pathtodata: './vendor/emulatorjs-4.2.3/data/',
         EJS_color: '#83ad54', EJS_backgroundColor: '#07110c', EJS_startButtonName: 'START GAME',
-        EJS_threads: false, EJS_startOnLoaded: false, EJS_forceLegacyCores: true,
+        EJS_threads: false, EJS_startOnLoaded: false, EJS_forceLegacyCores: false,
         EJS_language: 'en-US', EJS_disableAutoLang: false,
         EJS_Buttons: { saveState: false, loadState: false, netplay: false, screenRecord: false, saveSavFiles: false, loadSavFiles: false },
-        EJS_defaultOptions: { 'save-state-location': 'browser' },
+        EJS_defaultOptions: { 'save-state-location': 'browser', webgl2Enabled: 'enabled' },
         EJS_ready: () => { document.getElementById('loading').hidden = true; },
         EJS_onGameStart: () => { started = true; document.getElementById('loading').hidden = true; reply('TREE_RETRO_STARTED', { engine: ENGINE }); }
       });
       const script = document.createElement('script');
       script.src = './vendor/emulatorjs-4.2.3/data/loader.js';
+      script.onload = () => { document.getElementById('loading').hidden = true; };
       script.onerror = () => failed('The emulator could not load. Please reopen the game.');
       document.head.append(script);
       // Loading failures can occur after the loader script itself has succeeded.
       const watch = setInterval(() => {
+        if (window.EJS_emulator) window.EJS_emulator.debug = true;
         if (window.EJS_emulator?.failedToStart) { clearInterval(watch); failed('This game could not start on this device. Try another ROM or browser.'); }
         if (started) clearInterval(watch);
       }, 1000);
