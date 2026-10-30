@@ -30,8 +30,8 @@ test('release inventory preserves every baseline file and changes only the appro
       // Historical STI candidate is immutable; the current swap review is an
       // explicitly approved later change, not part of that archived candidate.
       assert.equal(file.sha1,'882f547e3a66028da1815569cc6397be2c1b7346');
-      assert.equal(manifest.files.find(f=>f.path===file.path)?.sha1,'864f0c6ca61f311263eef1cf8c1a537e09255e14');
-      assert.equal(hash(file.source,'sha1'),'864f0c6ca61f311263eef1cf8c1a537e09255e14');
+      assert.equal(manifest.files.find(f=>f.path===file.path)?.sha1,'7925857dd8003ea883fd1ca9f27ac9b11f005e38');
+      assert.equal(hash(file.source,'sha1'),'7925857dd8003ea883fd1ca9f27ac9b11f005e38');
     } else assert.equal(hash(file.source,'sha1'),file.sha1,file.path);
   }
   for(const pathname of base.keys())assert(next.has(pathname),'Missing production file '+pathname);
