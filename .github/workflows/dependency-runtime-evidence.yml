@@ -1,0 +1,60 @@
+name: Inspect runtime dependency evidence (read-only)
+
+on:
+  push:
+    branches: [audit/dependency-triage-20261030]
+    paths: ['.github/workflows/dependency-runtime-evidence.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: f0f566f89d253be9048ebf4250313947e4670e91
+          persist-credentials: false
+      - name: Read HTML and preserve library sources without executing the application
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path, PurePosixPath
+          from concurrent.futures import ThreadPoolExecutor
+          import datetime, hashlib, json, os, subprocess, urllib.request, urllib.parse, zipfile
+          root=Path.cwd().resolve()
+          out=Path(os.environ['RUNNER_TEMP'])/'dependency-runtime-evidence'; out.mkdir()
+          man=json.loads((root/'production/manifest.json').read_text())
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self,*args,**kwargs): return None
+          def read_html(item):
+              path=item['path']; pp=PurePosixPath(path)
+              assert path.startswith('/') and not path.startswith('//') and '..' not in pp.parts
+              assert not any(c in path for c in ['?','#','%','\\'])
+              dest=out/'live-html'/path.lstrip('/'); dest.parent.mkdir(parents=True,exist_ok=True)
+              req=urllib.request.Request('https://tree-token.xyz'+urllib.parse.quote(path,safe='/.-_'),headers={'Accept-Encoding':'identity','Cache-Control':'no-cache','User-Agent':'TREE-read-only-dependency-inspection'})
+              with urllib.request.build_opener(NoRedirect).open(req,timeout=25) as r:
+                  data=r.read(2*1024*1024+1); assert len(data)<=2*1024*1024
+                  dest.write_bytes(data)
+                  return {'path':path,'status':r.status,'sha1':hashlib.sha1(data).hexdigest(),'expectedSha1':item['sha1'],'size':len(data)}
+          html=[f for f in man['files'] if f['path'].endswith('.html')]
+          with ThreadPoolExecutor(max_workers=3) as pool: rows=list(pool.map(read_html,html))
+          (out/'html-checks.json').write_text(json.dumps(rows,indent=2)+'\n')
+          tracked=subprocess.check_output(['git','ls-files','-z']).decode().split('\0')
+          with zipfile.ZipFile(out/'runtime-source.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for name in tracked:
+                  if name.startswith('netlify/lib/') and PurePosixPath(name).suffix in {'.ts','.js','.mjs','.json'}:
+                      p=root/name; assert p.is_file() and not p.is_symlink() and p.resolve().is_relative_to(root)
+                      z.writestr(name,p.read_bytes())
+          assert subprocess.check_output(['git','status','--porcelain'],text=True).strip()==''
+          summary={'checkedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'sourceCommit':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'htmlPagesRead':len(rows),'installs':0,'builds':0,'walletOperations':0,'deployments':0}
+          (out/'summary.json').write_text(json.dumps(summary,indent=2)+'\n'); print(json.dumps(summary))
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: dependency-runtime-evidence
+          path: ${{ runner.temp }}/dependency-runtime-evidence/
+          if-no-files-found: error
+          retention-days: 7
