@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#091411">
+  <title>TREE Retro Arcade | NES Preview</title>
+  <meta name="description" content="A new branch of TREE Arcade. Play NES homebrew games or load a ROM from your device, with local saves and controller support.">
+  <link rel="icon" href="/assets/tree-token-logo-official.webp">
+  <link rel="stylesheet" href="./retro.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to games</a>
+  <header class="site-header">
+    <a class="brand" href="/play/"><img src="/assets/tree-token-logo-official.webp" alt=""><span>TREE <b>ARCADE</b><small>A little nostalgia. A new branch.</small></span></a>
+    <nav aria-label="Main navigation"><a href="/play/">All games <span aria-hidden="true">↗</span></a><a href="/">TREE home</a></nav>
+  </header>
+  <main id="main">
+    <section class="hero">
+      <div><p class="eyebrow"><span class="status-dot"></span> TREE RETRO · NES PREVIEW</p><h1>Old school.<br><span>New roots.</span></h1><p class="intro">Your next high score starts here. Pick a game from the library or bring a cartridge file of your own.</p><div class="hero-tags"><span>Browser play</span><span>Controller ready</span><span>Save your progress</span></div></div>
+      <div class="hero-art" aria-hidden="true"><div class="art-orbit orbit-one"></div><div class="art-orbit orbit-two"></div><div class="cartridge"><div class="cartridge-ridges"></div><div class="cartridge-label"><img src="/assets/tree-token-logo-official.webp" alt=""><span>TREE<br><b>RETRO</b></span><small>8-BIT COLLECTION</small></div><div class="cartridge-base"></div></div><span class="art-caption">PRESS START. GROW SOMETHING.</span></div>
+    </section>
+    <div id="notice" class="notice" role="status" aria-live="polite">Choose a game to get started.</div>
+    <section id="player-section" class="player-section" aria-labelledby="now-playing" hidden>
+      <div class="section-heading"><div><p class="eyebrow">NOW PLAYING</p><h2 id="now-playing"></h2></div><button id="close-player" class="button subtle">Back to library</button></div>
+      <div id="player-shell" class="player-shell"></div>
+      <div class="player-toolbar" aria-label="Player controls"><button class="button" id="pause" disabled>Pause</button><button class="button" id="save" disabled>Save progress</button><button class="button" id="resume" disabled>Resume saved</button><button class="button" id="export" disabled>Export save</button><button class="button" id="import" disabled>Import save</button><button class="button" id="fullscreen">Fullscreen</button><input id="save-file" type="file" accept=".json,application/json" hidden></div>
+      <p id="save-status" class="save-status">Press Start Game in the player. Use its Controls menu to set up your keyboard or gamepad.</p>
+    </section>
+    <div class="library-layout" id="library">
+      <section aria-labelledby="library-title"><div class="section-heading"><div><p class="eyebrow">PICK UP & PLAY</p><h2 id="library-title">The game library</h2></div><span class="count">NES · 01 GAME</span></div><div id="game-list" class="game-list"><p class="muted">Loading the library…</p></div></section>
+      <section class="local-card" aria-labelledby="local-title"><div class="local-icon" aria-hidden="true">↥</div><p class="eyebrow">YOUR COLLECTION</p><h2 id="local-title">Bring your own game.</h2><p>Open an NES ROM from your device and play it right here.</p><button id="choose-rom" class="button primary">Choose a .nes file <span aria-hidden="true">↗</span></button><input id="rom-file" type="file" accept=".nes" hidden><p class="privacy-note">Your ROM stays on your device.<br>Uncompressed .nes files · up to 16 MB</p></section>
+    </div>
+    <section class="how-it-works" aria-labelledby="how-title"><div><p class="eyebrow">SETTLE IN</p><h2 id="how-title">Three steps to play.</h2></div><ol><li><span>01</span><strong>Pick your game</strong><p>Choose from the library or open a ROM you’re allowed to use.</p></li><li><span>02</span><strong>Make it yours</strong><p>Press Start Game. Use the player’s Controls menu for keys, touch buttons, or a gamepad.</p></li><li><span>03</span><strong>Keep your place</strong><p>Save progress on this device. Export a backup to take your save with you.</p></li></ol></section>
+    <details class="help"><summary>About saves, devices, and this preview</summary><p>Progress is saved separately for each exact ROM. Use Save progress before leaving, then Resume saved after starting the same game. Clearing website data or using private browsing can remove local saves. Export a save for backup; import it with the same ROM and emulator version.</p><p>The preview starts with NES support. Game compatibility, Bluetooth controllers, fullscreen, and performance depend on your device and browser. Some mobile browsers show an expanded player instead of native fullscreen.</p><p>The library contains independently made games with distribution permission. Emulator software does not include a license to other games. <a href="./credits.html">Game credits, licenses & emulator source</a></p></details>
+  </main>
+  <footer><a class="footer-brand" href="/play/">TREE ARCADE</a><p>Built for a few more rounds.</p><a href="./credits.html">Credits & source</a></footer>
+</body>
+</html>

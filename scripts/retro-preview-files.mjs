@@ -1,0 +1,25 @@
+// Explicit frontend additions for the NES review preview only.
+export const retroPreviewFiles = [
+  "play/retro/app.js",
+  "play/retro/catalog.json",
+  "play/retro/core.js",
+  "play/retro/credits.html",
+  "play/retro/games/falling.nes",
+  "play/retro/index.html",
+  "play/retro/licenses/emulatorjs-GPL-3.0.txt",
+  "play/retro/licenses/falling-MIT.txt",
+  "play/retro/licenses/fceumm-GPL-2.0.txt",
+  "play/retro/player.html",
+  "play/retro/player.js",
+  "play/retro/retro.css",
+  "play/retro/storage.js",
+  "play/retro/third-party.json",
+  "play/retro/vendor/emulatorjs-4.2.3/data/compression/extract7z.js",
+  "play/retro/vendor/emulatorjs-4.2.3/data/cores/fceumm-legacy-wasm.data",
+  "play/retro/vendor/emulatorjs-4.2.3/data/cores/fceumm-wasm.data",
+  "play/retro/vendor/emulatorjs-4.2.3/data/cores/reports/fceumm.json",
+  "play/retro/vendor/emulatorjs-4.2.3/data/emulator.min.css",
+  "play/retro/vendor/emulatorjs-4.2.3/data/emulator.min.js",
+  "play/retro/vendor/emulatorjs-4.2.3/data/loader.js",
+  "play/retro/vendor/emulatorjs-4.2.3/data/version.json"
+];

@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "games": [
+    {
+      "id": "falling",
+      "title": "Falling",
+      "system": "nes",
+      "players": 1,
+      "author": "Jesse Williams",
+      "description": "Dodge obstacles, catch coins, and see how long you can keep falling. An independent NES original by Jesse Williams.",
+      "rom": "./games/falling.nes",
+      "sha256": "e22b947542c2d7e595bf84725b333be7af8189c5965b9c53e356a249c7d79943",
+      "license": "MIT",
+      "source": "https://github.com/xram64/falling-nes/tree/52dcb8a951200562e696dfc2aba5d4d14edd0078"
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "engine": "EmulatorJS",
+  "version": "4.2.3",
+  "release": "https://github.com/EmulatorJS/EmulatorJS/releases/tag/v4.2.3",
+  "releaseArchiveSha256": "07d451bc06fa3ad04ab30d9b94eb63ac34ad0babee52d60357b002bde8f3850b",
+  "core": {
+    "name": "fceumm",
+    "version": "2.0.2",
+    "buildDate": "2025-06-14"
+  },
+  "files": [
+    {
+      "path": "games/falling.nes",
+      "bytes": 40976,
+      "sha256": "e22b947542c2d7e595bf84725b333be7af8189c5965b9c53e356a249c7d79943"
+    },
+    {
+      "path": "licenses/emulatorjs-GPL-3.0.txt",
+      "bytes": 35111,
+      "sha256": "a617fab6d251b3302b1cb2c1c94f52d1c584f6fcb2fc218ec1a475bc08053a61"
+    },
+    {
+      "path": "licenses/falling-MIT.txt",
+      "bytes": 1069,
+      "sha256": "030010f3b77794b439b35cb072e7097ebeee713cac44b2ec1c532cbed8b94acd"
+    },
+    {
+      "path": "licenses/fceumm-GPL-2.0.txt",
+      "bytes": 18010,
+      "sha256": "a6996dcf0c334281f734560926e079b2dbbd5b78e81c0ca00a413ec01e1cd2fb"
+    },
+    {
+      "path": "vendor/emulatorjs-4.2.3/data/compression/extract7z.js",
+      "bytes": 280155,
+      "sha256": "4ac9933b995a516cb6b3ca4027db860278372a20c21c405d93ceb1998498853a"
+    },
+    {
+      "path": "vendor/emulatorjs-4.2.3/data/cores/fceumm-legacy-wasm.data",
+      "bytes": 1053006,
+      "sha256": "f1054b094e7149fd6278485bc1b2e51ff75c5259048ddb1134171e53d651f239"
+    },
+    {
+      "path": "vendor/emulatorjs-4.2.3/data/cores/fceumm-wasm.data",
+      "bytes": 1054015,
+      "sha256": "8c449fd5c36646fb0769423ed6ffa9efbdfc21fbfdc9bac7952b559d34d5b493"
+    },
+    {
+      "path": "vendor/emulatorjs-4.2.3/data/cores/reports/fceumm.json",
+      "bytes": 120,
+      "sha256": "13dbbfba0ea1bea087c97c38f47dd49c3fb8f16c3f5ed5678dd75d352b737132"
+    },
+    {
+      "path": "vendor/emulatorjs-4.2.3/data/emulator.min.css",
+      "bytes": 25630,
+      "sha256": "16406c60b2dc3b04ae9b115e308613e6f567a0cc7068e21d9d0c1e5030fb395e"
+    },
+    {
+      "path": "vendor/emulatorjs-4.2.3/data/emulator.min.js",
+      "bytes": 426343,
+      "sha256": "6aec3fd7bb2721255801b0a6af02e47e78b05e28a1822b1f213aacbd348abaee"
+    },
+    {
+      "path": "vendor/emulatorjs-4.2.3/data/loader.js",
+      "bytes": 7594,
+      "sha256": "69e0903bf1e2f62ced78895e7e511fa26e11316f7eb734925c35e919ba1287b2"
+    },
+    {
+      "path": "vendor/emulatorjs-4.2.3/data/version.json",
+      "bytes": 126,
+      "sha256": "d8991427000a96fb97daefdb62178071e9bbff911760706148e584ae8d69f9e7"
+    }
+  ]
+}

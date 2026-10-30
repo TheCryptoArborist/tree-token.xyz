@@ -3,8 +3,9 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import test from 'node:test';
+import { retroPreviewFiles } from '../scripts/retro-preview-files.mjs';
 
-test('production build stays byte-exact and STI preview changes only reviewed files', () => {
+test('production stays byte-exact and the feature preview changes only reviewed files', () => {
   const root = new URL('../', import.meta.url);
   for (const script of ['build-production-snapshot.mjs', 'build-feature-preview.mjs']) {
     execFileSync(process.execPath, [`scripts/${script}`], { cwd: root });
@@ -40,7 +41,7 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
     published.files.filter(f => !approvedPaths.includes(f.path)).map(f => [f.path, f.sha]).sort(),
   );
   const overlays = ['/dapp/v3-workspace.js', '/dapp/index.html', '/dapp/styles.css', '/dapp/panel-router.css', '/dapp/interaction-bootstrap.js', '/scripts/wallet.js', '/scripts/tree-knowledge-trial.js'];
-  const additions = ['/dapp/sti-widget.js', '/dapp/sti-purchase-core.js', '/dapp/sti-stats-core.js', '/dapp/challenge-funding-core.js', '/assets/sti-icon.svg'];
+  const additions = ['/dapp/sti-widget.js', '/dapp/sti-purchase-core.js', '/dapp/sti-stats-core.js', '/dapp/challenge-funding-core.js', '/assets/sti-icon.svg', ...retroPreviewFiles.map(path => `/${path}`)];
   const digest = file => createHash('sha1').update(readFileSync(file)).digest('hex');
   for (const file of manifest.files) {
     assert.equal(digest(new URL(`dist${file.path}`, root)), file.sha1, `Production ${file.path}`);
