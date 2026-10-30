@@ -1,0 +1,88 @@
+name: Dependency advisory triage (read-only)
+
+on:
+  push:
+    branches: [audit/dependency-triage-20261030]
+    paths: ['.github/workflows/dependency-triage-readonly.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24
+      - name: Collect pinned lockfile advisories without install, fix, build or deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import os from 'node:os';
+          import crypto from 'node:crypto';
+          import {execFileSync, spawnSync} from 'node:child_process';
+          const base = 'f0f566f89d253be9048ebf4250313947e4670e91';
+          const git = (...args) => execFileSync('git', args, {encoding:'utf8'}).trim();
+          const delta = git('diff','--name-only',base,'HEAD').split('\n').filter(Boolean);
+          if (JSON.stringify(delta) !== JSON.stringify(['.github/workflows/dependency-triage-readonly.yml'])) throw new Error('Unexpected non-audit source changes');
+          const out = path.join(process.env.RUNNER_TEMP,'dependency-triage-results');
+          const work = fs.mkdtempSync(path.join(process.env.RUNNER_TEMP,'dependency-audit-'));
+          fs.mkdirSync(out,{recursive:true});
+          const sha256 = p => crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+          const hashes = {};
+          for (const name of ['package.json','package-lock.json']) {
+            hashes[name] = sha256(name);
+            fs.copyFileSync(name,path.join(work,name));
+            fs.copyFileSync(name,path.join(out,name));
+          }
+          const save = (name, data) => fs.writeFileSync(path.join(out,name),JSON.stringify(data,null,2)+'\n');
+          const summary = {checkedAt:new Date().toISOString(), sourceCommit:git('rev-parse','HEAD'), dependencyBaseline:base,
+            node:process.version, npm:execFileSync('npm',['--version'],{encoding:'utf8'}).trim(),
+            hashes, changedFiles:delta, dependencyChanges:false, installPerformed:false, deploymentRequested:false,
+            onchainOperations:0, reports:{}};
+          let incomplete = false;
+          for (const [label,extra] of [['full',[]],['nondev',['--omit=dev']]]) {
+            const args = ['audit','--package-lock-only','--ignore-scripts','--json','--registry=https://registry.npmjs.org',...extra];
+            const r = spawnSync('npm',args,{cwd:work,encoding:'utf8',timeout:120000,maxBuffer:16*1024*1024,
+              env:{PATH:process.env.PATH, HOME:work, CI:'true', npm_config_userconfig:path.join(work,'empty-npmrc'), npm_config_fetch_retries:'1'}});
+            fs.writeFileSync(path.join(out,`audit-${label}.json`),r.stdout||'');
+            fs.writeFileSync(path.join(out,`audit-${label}.stderr.txt`),r.stderr||'');
+            let report;
+            try { report=JSON.parse(r.stdout); } catch {}
+            const valid = Boolean(report && !report.error && report.vulnerabilities && report.metadata && [0,1].includes(r.status));
+            summary.reports[label]={command:['npm',...args],exitCode:r.status,signal:r.signal,valid,
+              vulnerabilities:valid?report.metadata.vulnerabilities:null};
+            if(!valid) incomplete=true;
+            console.log(label,JSON.stringify(summary.reports[label]));
+          }
+          for (const [name,hash] of Object.entries(hashes)) {
+            if(sha256(name)!==hash || sha256(path.join(work,name))!==hash) throw new Error('Audit changed a dependency file');
+          }
+          const tracked = git('ls-files').split('\n');
+          save('tracked-production-paths.json',tracked.filter(p=>p.startsWith('production/')));
+          const lock=JSON.parse(fs.readFileSync('package-lock.json','utf8'));
+          save('dependency-inventory.json',Object.entries(lock.packages||{}).map(([location,p])=>({location,version:p.version,
+            dev:Boolean(p.dev),optional:Boolean(p.optional),dependencies:p.dependencies||{},optionalDependencies:p.optionalDependencies||{}})));
+          summary.workingTreeUnchanged=git('status','--porcelain')==='';
+          summary.advisoryCollectionComplete=!incomplete;
+          save('summary.json',summary);
+          console.log('No install, audit fix, dependency change, build, wallet operation or deployment performed.');
+          if(!summary.workingTreeUnchanged || incomplete) process.exitCode=1;
+          JS
+      - name: Preserve inspectable audit evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: dependency-triage-readonly
+          path: ${{ runner.temp }}/dependency-triage-results/
+          if-no-files-found: error
+          retention-days: 14
