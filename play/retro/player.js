@@ -93,8 +93,8 @@ window.addEventListener('message', async event => {
         const wasPaused = paused;
         pause(true);
         try { browser.nes.fromJSON(state); }
-        catch { browser.nes.fromJSON(previous); throw new Error('This save could not be restored. Your current game was kept.'); }
-        pause(wasPaused);
+        catch { browser.nes.fromJSON(previous); pause(wasPaused); throw new Error('This save could not be restored. Your current game was kept.'); }
+        pause(false);
       } else if (data.command === 'togglePause') pause(!paused);
       else if (data.command === 'pause') pause(true);
       else throw new Error('Unknown player control.');
