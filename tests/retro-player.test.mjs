@@ -69,6 +69,30 @@ test('the shipped NES engine executes frames and restores an exported state dete
   assert.equal(await sha256(new TextEncoder().encode(JSON.stringify(restored.toJSON()))), expected);
 });
 
+test('a long file dialog cannot create an unbounded frame catch-up queue', () => {
+  const source = readFileSync(new URL('play/retro/vendor/jsnes-2.1.0/jsnes.min.js', root), 'utf8');
+  const anchor = source.indexOf('this.lastFrameTime=!1');
+  const start = source.lastIndexOf('class ', anchor);
+  const end = source.indexOf('const St=', anchor);
+  assert.ok(start >= 0 && end > start, 'the pinned runtime frame timer can be inspected');
+  const queued = [];
+  const context = { window: { requestAnimationFrame: () => 1, cancelAnimationFrame: () => {} }, setTimeout: fn => queued.push(fn), console };
+  runInNewContext(`const yt = false; this.Timer = ${source.slice(start, end)}`, context);
+  let frames = 0;
+  const timer = new context.Timer({ onGenerateFrame: () => frames++, onWriteFrame: () => {} });
+  timer.start();
+  timer.onAnimationFrame(100);
+  timer.onAnimationFrame(10 * 60 * 1000);
+  assert.equal(frames, 1);
+  assert.ok(queued.length <= 2, 'at most two additional frames follow a long pause');
+  for (const callback of queued) callback();
+  assert.equal(frames, 3);
+  timer.stop();
+  timer.generateFrame();
+  timer.onAnimationFrame(20 * 60 * 1000);
+  assert.equal(frames, 3, 'paused callbacks do not change the saved game');
+});
+
 test('preview inventory includes every shipped retro file and pinned third-party bytes', async () => {
   const dir = new URL('play/retro/', root);
   const files = readdirSync(dir, { recursive: true, withFileTypes: true }).filter(e => e.isFile()).map(e => relative(fileURLToPath(root), join(e.parentPath, e.name))).sort();

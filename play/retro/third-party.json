@@ -21,9 +21,15 @@
       "sha256": "530136cec696ac1fcdeb792a77472cb273f9f814ad0ed795dccdc95db7423e0a"
     },
     {
+      "path": "vendor/jsnes-2.1.0/PATCHES.md",
+      "bytes": 1278,
+      "sha256": "ef2d3b6b1674d7ad4c40369e785202a5ea4ae55fb3c7ebb51c252542915dd35f"
+    },
+    {
       "path": "vendor/jsnes-2.1.0/jsnes.min.js",
-      "bytes": 135545,
-      "sha256": "84946f0dae4bcf3b2dfebe84ad3bfeb1dbcb413bd9b1a69e1f45910a95fd7b41"
+      "bytes": 135646,
+      "sha256": "2d0ef508e0c34b7c099e4783edf81c4061029f25324e442bc68c7f40b3b6187a"
     }
-  ]
+  ],
+  "runtimePatch": "vendor/jsnes-2.1.0/PATCHES.md"
 }

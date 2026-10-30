@@ -116,7 +116,10 @@ window.addEventListener('message', async event => {
   }
 });
 
-$('choose-rom').addEventListener('click', () => $('rom-file').click());
+$('choose-rom').addEventListener('click', () => {
+  if (active?.started) send('pause', {}, 2000).catch(() => {});
+  $('rom-file').click();
+});
 $('rom-file').addEventListener('change', async event => {
   const file = event.target.files?.[0];
   event.target.value = '';
@@ -154,7 +157,10 @@ $('export').addEventListener('click', async () => {
     saveStatus('Save exported. Keep the backup with the matching ROM.');
   } catch (error) { notice(errorMessage(error), true); }
 });
-$('import').addEventListener('click', () => $('save-file').click());
+$('import').addEventListener('click', () => {
+  if (active?.started) send('pause', {}, 2000).catch(() => {});
+  $('save-file').click();
+});
 $('save-file').addEventListener('change', async event => {
   const file = event.target.files?.[0];
   event.target.value = '';

@@ -13,5 +13,6 @@ export const retroPreviewFiles = [
   "play/retro/retro.css",
   "play/retro/storage.js",
   "play/retro/third-party.json",
+  "play/retro/vendor/jsnes-2.1.0/PATCHES.md",
   "play/retro/vendor/jsnes-2.1.0/jsnes.min.js"
 ];
