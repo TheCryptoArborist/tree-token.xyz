@@ -1,0 +1,7 @@
+{
+  "name": "deadfall-run",
+  "private": true,
+  "version": "0.4.1",
+  "type": "commonjs",
+  "scripts": { "test": "node tests/run.cjs" }
+}
