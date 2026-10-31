@@ -31,3 +31,9 @@ Read-only verification before promotion confirmed the integration branch's exist
 Client tests exercise the real pinned SDK transaction object, exact amount/recipient checks, wallet cancellation/failure, duplicate clicks, account changes, delayed verification, reload recovery and malformed grants. Database integration tests cover valid and repeated continuations, same wave/score and three lives, concurrent receipt/offer reuse, incorrect sender/coin/recipient/amount, old/unfinished/failed transactions, logout races, fresh-login recovery and strict same-origin HTTP inputs. Missing unique indexes fail readiness. Fixtures in these tests never transfer funds; CI repeats them against PostgreSQL 16.
 
 A real NFTree holder must complete the final wallet lifecycle and first live 20,000 TREE continuation. The assistant has not signed or submitted any payment. Slush warning clearance is assessed separately and is not implied by a passing build or server test.
+
+## Published release
+
+Release `6ae56c08df52d066dfb245ed` is live and locked at https://tree-token.xyz/play/treeforce89/ since `2026-10-31T04:19:36.325Z`, from source `bc6545db57714d4ac18f50243fbcce72755cad5e`. The complete 210-file inventory and all 39 function records/five schedules are recorded in `treeforce89-paid-published.json` and `treeforce89-paid-runtime.json`. Netlify's migration record confirms the single additive migration applied to the integration branch; `treeforce89-paid-migrated-isolation.json` records its post-deploy read-only readiness.
+
+All four workflows passed for this source. PostgreSQL 16 evidence is in `treeforce89-paid-postgres-results.json`; live API and static/browser verification are in `treeforce89-paid-live-smoke.json` and `treeforce89-paid-static-checks.json`. Rerun the non-holder hosted smoke with `node scripts/verify-treeforce89-paid-hosted-smoke.mjs https://tree-token.xyz`; it signs only unfunded ephemeral personal messages and cannot pay or enter the game.

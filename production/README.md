@@ -1,3 +1,19 @@
+# Current production — TREE FORCE paid continuation, 2026-10-31
+
+Deployment `6ae56c08df52d066dfb245ed` was published at `2026-10-31T04:19:36.325Z` and is locked. Source is `bc6545db57714d4ac18f50243fbcce72755cad5e` on `feature/treeforce89-play-integration`; the implementation is `978e9bbe00401fc490a04eb52c8a65fb90b0dd9f`. Neither main branch was modified or merged.
+
+The native game at `/play/treeforce89/` offers an optional 20,000 TREE payment after all three lives are lost. A confirmed receipt restores three lives in the same run, replaying the current wave with the score preserved. Repeated continues require new payments; delayed confirmations and fresh-login recovery verify the saved receipt without requesting another payment. The owner confirmed the existing TREE treasury as recipient. SUI gas is separate.
+
+Relative to Gateway baseline `6ae5626d7f0e8b6dd74b6ce8`, three existing paths change: `/play/index.html`, `/play/treeforce89/index.html`, and `/play/treeforce89/gateway.css`. Two game JavaScript assets are added. The other 205 paths, all 38 original function package/provider/configuration records and all five schedules match exactly. Only the separate `treeforce89-dev` API package changes; its effective runtime, routes and rate limit remain intact. The published inventory contains 210 files and 39 functions.
+
+Netlify applied the additive committed migration to the fingerprint-verified isolated integration database through Deploy Preview `6ae56b6ab1461271b2ca971f`. Read-only inspection verified the new columns and unique indexes and the unchanged four-table base schema. The canonical release applies no production database migrations and retains the explicit server-only isolated database binding. Payments are enabled only for this namespaced game API.
+
+All four GitHub workflows passed, including PostgreSQL 16 payment/recovery concurrency checks, production source preservation, the integration preflight and STI regression checks. Canonical hosted authentication/negative payment checks, exact asset hashes, full published inventory and the Arcade link/Gateway browser checks pass. No payment was signed or submitted by the assistant. A real NFTree holder must still complete the final wallet lifecycle and first live continuation; Issue #69 remains relevant.
+
+Full file inventory: `docs/treeforce89-paid-published.json`. Exact published function/provider/runtime records and schedules: `docs/treeforce89-paid-runtime.json`. Payment trust boundaries, test evidence and recovery behavior: `docs/treeforce89-paid-continue.md` and the adjacent paid verification JSON files. Preserve this entire live inventory and backend for future releases; the historical default snapshot below is not the current production release package.
+
+---
+
 # Current production — NFTree Gateway arcade presentation, 2026-10-30
 
 Deployment `6ae5626d7f0e8b6dd74b6ce8` was published at `2026-10-31T03:39:24.957Z` and is locked. Design source is `214fc4203e8ffeb15ca6d21b3ed7945402cd1ac7` on `feature/treeforce89-play-integration`; no branch was merged and neither `main` was modified.
