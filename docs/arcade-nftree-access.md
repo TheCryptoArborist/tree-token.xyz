@@ -68,4 +68,8 @@ It adds only:
 
 The expected inventory is 235 public files with 230 baseline paths unchanged. All 39 backend function records, five schedules, runtime configuration, existing isolated database identity, enabled TREE FORCE paid continues, and publication lock are preserved. No backend rebuild or database migration is part of this change.
 
-Publication evidence belongs in `docs/arcade-nftree-access-published.json`, written only after the release is verified on the canonical domain.
+## Published result
+
+Published on October 31, 2026 at **2:40:16 p.m. CDT** (19:40:16 UTC) as deployment `6ae643e83bdb62cf4df26b2a`, using reviewed source commit `cd8b55b565dae46d65925b04a7f574eb7f608202`. The release is locked. `arcade-nftree-access-published.json` records the exact 235-file inventory, preserved 39 function records and five schedules, runtime/database identity, and source commit.
+
+The hosted candidate passed the inline-panel and live-inventory browser check before publication. The canonical `https://tree-token.xyz/play/` now displays the new hero and purchase options. Live review evidence is saved under `docs/review/arcade-nftree-access-live-6ae643e8-top.jpg` and `docs/review/arcade-nftree-access-live-6ae643e8-mint.jpg`.
