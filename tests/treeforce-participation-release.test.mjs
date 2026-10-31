@@ -5,7 +5,7 @@ import {createHash} from 'node:crypto';
 import {
  buildFiles,configurationFor,configurationWithReplacement,expectedBaselineId,existingPaths,
  readFunctionPackage,siteId,sourceIsPinned,validateStaticInventory,verifyFunctionRecords,
- verifyFunctionUploadDemand,verifyPinnedReplacementRecord,verifyPublishedBaseline,
+ verifyFunctionUploadDemand,verifyPinnedReplacementRecord,verifyFunctionRegionOverrides,verifyPublishedBaseline,
 } from '../scripts/release-treeforce-participation.mjs';
 
 // Use the complete immutable published inventory, with in-memory review inputs.
@@ -13,7 +13,8 @@ import {
 const published=JSON.parse(readFileSync(new URL('../docs/arcade-growth-published.json',import.meta.url)));
 const hash=(algorithm,bytes)=>createHash(algorithm).update(bytes).digest('hex');
 const baseline={siteId,deploy:{id:expectedBaselineId,site_id:siteId,state:'ready',locked:true,
- available_functions:published.functionRecords,function_schedules:published.functionSchedules},
+ available_functions:published.functionRecords,function_schedules:published.functionSchedules,functions_region:'cmh',
+ functions_region_overrides:published.functionRecords.filter(fn=>fn.n!=='arcade-growth').map(fn=>({name:fn.n,region:'cmh'}))},
  files:Object.entries(published.filesBySha1).map(([path,sha])=>({path,sha}))};
 const sourceCommit='a'.repeat(40),candidateId='b'.repeat(24);
 const clone=value=>structuredClone(value);
@@ -142,6 +143,63 @@ test('pins the complete verified replacement record including its provider accou
   assert.throws(()=>verifyPinnedReplacementRecord(changed,pinned),/previously verified replacement-function provider\/configuration record changed/);
 });
 
+test('allows only the replacement default-region entry and records both exact override arrays',()=>{
+ const replacementRecord={...clone(original),rgo:'us-east-2'};
+ const before=baseline.deploy.functions_region_overrides;
+ for(const after of [clone(before),[{name:'arcade-growth',region:'cmh'},...clone(before)],
+  [...clone(before),{name:'arcade-growth',region:'cmh'}]]){
+  const candidate={functions_region:'cmh',functions_region_overrides:after};
+  const evidence=verifyFunctionRegionOverrides(candidate,baseline.deploy,replacementRecord);
+  assert.equal(evidence.functionRegion,'cmh');
+  assert.deepEqual(evidence.baselineFunctionRegionOverrides,before);
+  assert.deepEqual(evidence.functionRegionOverrides,after);
+  assert.notEqual(evidence.functionRegionOverrides,after,'Evidence must not retain a mutable API array reference');
+ }
+});
+
+test('rejects duplicate, unrelated, reordered, or changed-region override entries',()=>{
+ const replacementRecord={...clone(original),rgo:'us-east-2'};
+ const accepted=[...clone(baseline.deploy.functions_region_overrides),{name:'arcade-growth',region:'cmh'}];
+ const mutations=[
+  rows=>rows.push({name:'arcade-growth',region:'cmh'}),
+  rows=>{rows[0]=clone(rows[1]);},
+  rows=>{rows[0]={name:'unreviewed-function',region:'cmh'};},
+  rows=>rows.splice(0,1),
+  rows=>{[rows[0],rows[1]]=[rows[1],rows[0]];},
+  rows=>{rows[0].region='iad';},
+  rows=>{rows.at(-1).region='iad';},
+  rows=>{rows.at(-1).unreviewedSetting=true;},
+ ];
+ for(const mutate of mutations){
+  const rows=clone(accepted);mutate(rows);
+  assert.throws(()=>verifyFunctionRegionOverrides({functions_region:'cmh',functions_region_overrides:rows},baseline.deploy,replacementRecord));
+ }
+});
+
+test('requires cmh on both deploys and consistent us-east-2 replacement metadata',()=>{
+ const candidate={functions_region:'cmh',functions_region_overrides:[...clone(baseline.deploy.functions_region_overrides),{name:'arcade-growth',region:'cmh'}]};
+ const record={...clone(original),rgo:'us-east-2'};
+ assert.throws(()=>verifyFunctionRegionOverrides({...candidate,functions_region:'iad'},baseline.deploy,record),/must remain cmh/);
+ assert.throws(()=>verifyFunctionRegionOverrides(candidate,{...baseline.deploy,functions_region:'iad'},record),/must remain cmh/);
+ for(const different of [{...record,rg:'us-east-1'},{...record,rgo:'us-west-2'},{...record,n:'treeforce89-dev'}])
+  assert.throws(()=>verifyFunctionRegionOverrides(candidate,baseline.deploy,different),/conflicts with the cmh default region/);
+ const alteredBaseline=clone(baseline.deploy);alteredBaseline.functions_region_overrides[0].region='iad';
+ assert.throws(()=>verifyFunctionRegionOverrides(candidate,alteredBaseline,record),/baseline function region override differs/);
+});
+
+test('pins the actual override array across later verification and publication',()=>{
+ const after=[...clone(baseline.deploy.functions_region_overrides),{name:'arcade-growth',region:'cmh'}];
+ const candidate={functions_region:'cmh',functions_region_overrides:after};
+ const record={...clone(original),rgo:'us-east-2'};
+ const pinned=verifyFunctionRegionOverrides(candidate,baseline.deploy,record).functionRegionOverrides;
+ assert.doesNotThrow(()=>verifyFunctionRegionOverrides(candidate,baseline.deploy,record,pinned));
+ // Both variants are semantically valid before pinning; neither may replace an
+ // already reviewed array, including its exact explicit-entry position.
+ for(const rows of [clone(baseline.deploy.functions_region_overrides),
+  [{name:'arcade-growth',region:'cmh'},...clone(baseline.deploy.functions_region_overrides)]])
+  assert.throws(()=>verifyFunctionRegionOverrides({functions_region:'cmh',functions_region_overrides:rows},baseline.deploy,record,pinned),/previously verified function region override array changed/);
+});
+
 test('rejects missing, duplicated, extra, or unchanged function packages',()=>{
  const {functionPackage}=fixture();
  const candidate=candidateRecords(functionPackage);
@@ -256,6 +314,8 @@ test('post-publication verification still rejects changes to any old schedule, f
  }
  const previous=clone(baseline.deploy);previous.available_functions[0].id+='-modified';
  assert.throws(()=>verifyPublishedBaseline(previous,baseline,published.filesBySha1,currentPublication(),candidateId),/full function records changed/);
+ const changedOverrides=clone(baseline.deploy);changedOverrides.functions_region_overrides[0].region='iad';
+ assert.throws(()=>verifyPublishedBaseline(changedOverrides,baseline,published.filesBySha1,currentPublication(),candidateId),/function region overrides changed/);
  const files={...published.filesBySha1,'/index.html':'a'.repeat(40)};
  assert.throws(()=>verifyPublishedBaseline(baseline.deploy,baseline,files,currentPublication(),candidateId),/static inventory changed/);
 });

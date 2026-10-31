@@ -286,6 +286,32 @@ export function verifyPinnedReplacementRecord(record,pinnedRecord){
  if(pinnedRecord)equal(record,pinnedRecord,'The previously verified replacement-function provider/configuration record changed.');
 }
 
+export function verifyFunctionRegionOverrides(candidate,baselineDeploy,replacementRecord,pinnedOverrides){
+ check(baselineDeploy.functions_region==='cmh'&&candidate.functions_region==='cmh',
+  'The baseline and candidate function regions must remain cmh.');
+ const before=baselineDeploy.functions_region_overrides;
+ const after=candidate.functions_region_overrides;
+ check(Array.isArray(before)&&before.length===39&&before.every(entry=>entry&&typeof entry.name==='string')&&
+  new Set(before.map(entry=>entry.name)).size===39,'The baseline must contain the 39 unique preserved region overrides.');
+ equal(before.map(entry=>entry.name).sort(),baselineDeploy.available_functions.filter(fn=>fn.n!==replacementFunctionName).map(fn=>fn.n).sort(),
+  'The baseline region overrides must belong to the 39 preserved functions.');
+ for(const entry of before)equal(entry,{name:entry.name,region:'cmh'},'A baseline function region override differs from cmh.');
+ check(Array.isArray(after)&&after.length>=39&&after.length<=40&&after.every(entry=>entry&&typeof entry.name==='string')&&
+  new Set(after.map(entry=>entry.name)).size===after.length,'Candidate region overrides are duplicated or outside the replacement scope.');
+ equal(after.filter(entry=>entry.name!==replacementFunctionName),before,
+  'An unrelated function region override, or its ordering, changed.');
+ const replacement=after.find(entry=>entry.name===replacementFunctionName);
+ if(replacement)equal(replacement,{name:replacementFunctionName,region:'cmh'},
+  'The replacement may add only its equivalent cmh default-region override.');
+ // Netlify's cmh and AWS us-east-2 both identify US East (Ohio). The explicit
+ // replacement override is allowed only when its verified record agrees.
+ check(replacementRecord?.n===replacementFunctionName&&replacementRecord.rg==='us-east-2'&&
+  (replacementRecord.rgo==null||replacementRecord.rgo==='us-east-2'),
+  'The replacement function record conflicts with the cmh default region.');
+ if(pinnedOverrides!==undefined)equal(after,pinnedOverrides,'The previously verified function region override array changed.');
+ return {functionRegion:'cmh',baselineFunctionRegionOverrides:structuredClone(before),functionRegionOverrides:structuredClone(after)};
+}
+
 export function verifyFunctionUploadDemand(requiredFunctions,functionPackage){
  check(Array.isArray(requiredFunctions)&&requiredFunctions.length<=1&&requiredFunctions.every(digest=>digest===functionPackage.sha256),
   'Refuse any unrelated function upload or replacement.');
@@ -296,6 +322,8 @@ export function verifyPublishedBaseline(previous,baseline,previousFiles,current,
  check(previous.id===expectedBaselineId&&previous.site_id===siteId&&previous.state==='ready','Previous deployment identity or ready state changed after publication.');
  equal(previous.available_functions,baseline.deploy.available_functions,'Previous deployment full function records changed after publication.');
  equal(previous.function_schedules,baseline.deploy.function_schedules,'Previous deployment schedules changed after publication.');
+ equal(previous.functions_region,baseline.deploy.functions_region,'Previous deployment function region changed after publication.');
+ equal(previous.functions_region_overrides,baseline.deploy.functions_region_overrides,'Previous deployment function region overrides changed after publication.');
  equal(previousFiles,originalInventory(baseline),'Previous deployment static inventory changed after publication.');
  check(previous.locked===true||previous.locked===false||previous.locked==null,'Unexpected previous-deployment lock metadata.');
  // A lock applies to the current publication. Never relock the previous deploy.
@@ -361,6 +389,8 @@ async function runRelease(api,fetch){
  check(originalDeploy.id===expectedBaselineId&&originalDeploy.site_id===siteId&&originalDeploy.state==='ready','The captured baseline deployment identity or ready state changed.');
  equal(originalDeploy.available_functions,baseline.deploy.available_functions,'Baseline backend records changed.');
  equal(originalDeploy.function_schedules,baseline.deploy.function_schedules,'Baseline schedules changed.');
+ equal(originalDeploy.functions_region,baseline.deploy.functions_region,'Baseline function region changed.');
+ equal(originalDeploy.functions_region_overrides,baseline.deploy.functions_region_overrides,'Baseline function region overrides changed.');
  equal(await inventory(expectedBaselineId),original,'Baseline static inventory changed.');
  const proof={baselineDigest:fingerprint(baseline),filesDigest:fingerprint(files),functionPackageDigest:functionPackage.packageDigest,
   frontendManifestDigest:frontendPackage.manifestDigest,sourceBranch};
@@ -444,6 +474,7 @@ async function runRelease(api,fetch){
  equal(state.overlay,overlay.map(({path,source,sha,size})=>({path,source,sha,size})),'Candidate overlay differs from the reviewed files.');
  sourceIsPinned(state,overlay,functionPackage,frontendPackage);
 
+ let regionEvidence;
  const verifyCandidate=async()=>{
   let candidate;
   for(let attempt=0;attempt<45;attempt++){
@@ -457,8 +488,7 @@ async function runRelease(api,fetch){
   const replacementFunctionRecord=verifyFunctionRecords(candidate.available_functions,baseline.deploy.available_functions,functionPackage);
   verifyPinnedReplacementRecord(replacementFunctionRecord,state.replacementFunctionRecord);
   equal(candidate.function_schedules,baseline.deploy.function_schedules,'Candidate scheduled jobs changed.');
-  equal(candidate.functions_region,baseline.deploy.functions_region,'Candidate function region changed.');
-  equal(candidate.functions_region_overrides,baseline.deploy.functions_region_overrides,'Candidate function region overrides changed.');
+  regionEvidence=verifyFunctionRegionOverrides(candidate,baseline.deploy,replacementFunctionRecord,state.functionRegionOverrides);
   check(Boolean(candidate.edge_functions_present)===Boolean(baseline.deploy.edge_functions_present),'Candidate edge-function presence changed.');
   check(migrationCount(candidate)===0,'Refuse a candidate with database migrations.');
   check(candidate.branch===baseline.deploy.branch,'Candidate runtime branch context changed.');
@@ -467,13 +497,14 @@ async function runRelease(api,fetch){
  };
  phase='candidate verification';
  let candidate=await verifyCandidate();
- if(!state.replacementFunctionRecord){
-  state.replacementFunctionRecord=candidate.available_functions.find(fn=>fn.n===replacementFunctionName);
+ if(!state.replacementFunctionRecord||state.functionRegionOverrides===undefined){
+  if(!state.replacementFunctionRecord)state.replacementFunctionRecord=candidate.available_functions.find(fn=>fn.n===replacementFunctionName);
+  if(state.functionRegionOverrides===undefined)state.functionRegionOverrides=regionEvidence.functionRegionOverrides;
   save(candidatePath,state);
  }
  const verification={id:state.id,siteId,baseline:expectedBaselineId,sourceCommit:state.sourceCommit,...proof,
   verifiedAt:new Date().toISOString(),files:Object.keys(files).length,functions:40,functionsPreserved:39,functionsReplaced:[replacementFunctionName],
-  replacementFunctionRecord:state.replacementFunctionRecord,schedulesPreserved:5,unpublished:!candidate.published_at};
+  replacementFunctionRecord:state.replacementFunctionRecord,...regionEvidence,schedulesPreserved:5,unpublished:!candidate.published_at};
  let previousDeployLocked;
  const verifyPreviousAfterPublication=async()=>{
   const previous=await api.getDeploy({deployId:expectedBaselineId});
@@ -484,7 +515,8 @@ async function runRelease(api,fetch){
  if(mode==='publish'){
   phase='verified forward-publication preflight';
   const priorVerification=read(verificationPath);
-  for(const key of ['id','siteId','baseline','sourceCommit','baselineDigest','filesDigest','functionPackageDigest','frontendManifestDigest','sourceBranch','replacementFunctionRecord'])
+  for(const key of ['id','siteId','baseline','sourceCommit','baselineDigest','filesDigest','functionPackageDigest','frontendManifestDigest','sourceBranch',
+   'replacementFunctionRecord','functionRegion','baselineFunctionRegionOverrides','functionRegionOverrides'])
    equal(priorVerification[key],verification[key],'The exact candidate and source require a successful prior verification.');
   check(priorVerification.unpublished===true&&!candidate.published_at,'Forward publication requires this new, never-published candidate.');
   await currentIs(expectedBaselineId);
@@ -520,7 +552,7 @@ async function runRelease(api,fetch){
   sourceBranch:state.sourceBranch,files:Object.keys(files).length,preservedStaticFiles:Object.keys(original).length-changedExistingPaths.length,
   changedExistingPaths,newPaths,frontendManifestDigest:frontendPackage.manifestDigest,
   functions:40,functionsPreserved:39,functionsReplaced:[replacementFunctionName],replacementFunctionSha256:functionPackage.sha256,
-  schedulesPreserved:5,unrelatedBackendUnchanged:true,noNetlifyMigrations:true,paymentsEnabled:true,
+  ...regionEvidence,schedulesPreserved:5,unrelatedBackendUnchanged:true,noNetlifyMigrations:true,paymentsEnabled:true,
   isolatedDatabaseIdentity:baseline.databaseEvidence.previewDatabaseIdentity,
   ...(mode==='publish'||mode==='published'?{previousDeployLocked,publicationLockScope:'current-published-deploy',
    previousDeployLockNote:'Netlify pins auto publishing to the current published deploy. Locking a previous deploy would publish it again; its observed lock value is recorded rather than restored.'}:{}),
