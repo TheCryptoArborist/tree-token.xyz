@@ -39,7 +39,7 @@ after publication.
   complete the daily quest, but is an optional alternative because it has paid
   entry and requires another player.
 - The monthly Passport records distinct supported games. Its required set is
-  frozen when the month first receives progress. Additional games join a future
+  frozen when monthly progress tracking is initialized. Additional games join a future
   month’s requirements.
 - Seedling, Sapling, Deep Roots, and Full Canopy badges are earned at 3, 7, 14,
   and 21 different check-in days. Completing all required games earns the
@@ -118,9 +118,9 @@ separately reviewed game engine and server completion protocol.
 Applied and validated first on the existing `knowledge-trial-v3-safe`
 development branch, then applied to the existing production Supabase project:
 
-1. `20261031210743_arcade_growth.sql`
+1. `20261031211739_arcade_growth.sql`
    — SHA-256 `d3fe2502612ea9328a3c93321165bc83e0924637ba856c64b37fbaf13847417a`
-2. `20261031211547_arcade_growth_challenge_rate_scope.sql`
+2. `20261031211743_arcade_growth_challenge_rate_scope.sql`
    — SHA-256 `900ec357935e73754a95e533ecda3aceac1a1ca01a0974ca0750fc373dac5060`
 
 The second migration corrects the challenge quota without modifying the already
@@ -129,16 +129,29 @@ altered. No new Supabase project, development branch, or Netlify database is
 created. Netlify deploy metadata correctly contains no Netlify DB migrations;
 these two additive Supabase migrations are recorded separately.
 
-New production function-scope environment variables:
-
-- `ARCADE_GROWTH_ENABLED=true`
-- `ARCADE_GROWTH_RATE_LIMIT_SECRET` — a new cryptographically random server-only
-  secret, never printed or saved in the repository.
+No new site-wide environment variable is retained. The reviewed function has an
+explicit enabled release default. If `ARCADE_GROWTH_ENABLED` is supplied, only
+the exact string `true` enables it; all other supplied values disable it.
+Missing storage or sign-in rate protection still fails closed.
 
 The service uses the existing complete production TREE_RAFFLE Supabase URL/key
-pair. Optional dedicated `ARCADE_GROWTH_SUPABASE_URL` and
-`ARCADE_GROWTH_SUPABASE_SECRET_KEY` must be configured together. Incomplete
-configuration fails closed. Existing environment values are unchanged.
+pair and the existing >=32-character `TREE_KNOWLEDGE_TRIAL_RATE_LIMIT_SECRET`
+with a Daily Growth-specific HMAC domain. A dedicated
+`ARCADE_GROWTH_RATE_LIMIT_SECRET` is also supported. Optional dedicated
+`ARCADE_GROWTH_SUPABASE_URL` and `ARCADE_GROWTH_SUPABASE_SECRET_KEY` must be
+configured together. Incomplete database URL/key configuration fails closed.
+Existing environment values are unchanged.
+
+The first review candidate, `6ae65c15c82ebb434083c695`, was stopped before any
+upload when Netlify requested all 39 existing function packages along with the
+new package. The two new site-wide settings added during preparation were
+removed, restoring the baseline configuration; the function instead uses the
+explicit release default and existing server secret. The stopped candidate was
+never published. The same strict preservation check remains required on retry.
+Netlify documents that each deploy captures its environment at creation and
+that deploy-specific environment data cannot subsequently be changed:
+[function environments](https://docs.netlify.com/build/functions/environment-variables/)
+and [deployment API](https://open-api.netlify.com/).
 
 ## Validation
 
@@ -152,7 +165,7 @@ configuration fails closed. Existing environment values are unchanged.
 - 18 game adapter tests: real record shapes, both PvP seats, win/loss, proof and
   date validation, source errors, bounded requests, partial positive results,
   duplicate/conflicting IDs, official Trials, and exclusion of practice.
-- 20 backend/core/store tests: origin/wallet binding, replay/concurrency,
+- 22 backend/core/store tests: origin/wallet binding, replay/concurrency,
   ownership checks, bearer sessions, client-claim rejection, UTC rollover,
   partial sources, consistent snapshots, and private error redaction.
 - Three packaged-runtime signature scenarios use the actual extracted ZIP and

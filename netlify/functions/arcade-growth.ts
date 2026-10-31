@@ -17,6 +17,10 @@ export type ArcadeGrowthDependencies = {
 };
 const ENV_KEYS = ['ARCADE_GROWTH_ENABLED', 'ARCADE_GROWTH_RATE_LIMIT_SECRET', 'TREE_KNOWLEDGE_TRIAL_RATE_LIMIT_SECRET',
   ...['ARCADE_GROWTH', 'TREE_RAFFLE', 'TREE_KNOWLEDGE_TRIAL'].flatMap((key) => [`${key}_SUPABASE_URL`, `${key}_SUPABASE_SECRET_KEY`])];
+// This reviewed release enables only the new function without changing the
+// site-wide environment/provider identity of the preserved 39 functions.
+// Any supplied override other than the exact string 'true' disables it.
+const RELEASE_ENABLED_BY_DEFAULT = true;
 const sha256 = (value: string) => createHash('sha256').update(value).digest('hex');
 
 function environment(): Environment {
@@ -96,7 +100,8 @@ export function createArcadeGrowthHandler(dependencies: ArcadeGrowthDependencies
       if (!['status', 'challenge', 'session', 'check-in', 'sync', 'logout'].includes(action)) {
         throw new ArcadeGrowthError('invalid-request', 'Unknown Daily Growth action.', 404);
       }
-      if (env.ARCADE_GROWTH_ENABLED !== 'true') throw new ArcadeGrowthError('service-unavailable', 'Daily Growth is not available yet.', 503);
+      const enabled = env.ARCADE_GROWTH_ENABLED === undefined ? RELEASE_ENABLED_BY_DEFAULT : env.ARCADE_GROWTH_ENABLED === 'true';
+      if (!enabled) throw new ArcadeGrowthError('service-unavailable', 'Daily Growth is not available yet.', 503);
       const store = dependencies.store || configuredArcadeGrowthStore(env);
       const origin = action === 'status' && !request.headers.has('authorization') ? null : productionOrigin(request);
       const envelope = (snapshot?: GrowthSnapshot) => {

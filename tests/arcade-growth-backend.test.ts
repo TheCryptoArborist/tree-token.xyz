@@ -105,10 +105,35 @@ test('anonymous status exposes frozen rules and rotating pick without private pr
   assert.equal(response.headers.get('cache-control'), 'no-store');
 });
 
-test('feature kill switch fails closed before any storage or ownership operation', async () => {
-  const f = fixture({ env: {} });
-  for (const action of ['status', 'challenge', 'session', 'check-in', 'sync']) assert.equal((await f.call(action)).response.status, 503);
-  assert.equal(f.ownerCalls(), 0); assert.equal(f.store.writes, 0);
+test('any explicit enable override except exact true disables the feature before storage or ownership', async () => {
+  for (const flag of ['false', '', 'TRUE', '1', '0', ' true ', 'invalid']) {
+    const f = fixture({ env: { ARCADE_GROWTH_ENABLED: flag, TREE_KNOWLEDGE_TRIAL_RATE_LIMIT_SECRET: 's'.repeat(32) } });
+    for (const action of ['status', 'challenge', 'session', 'check-in', 'sync']) assert.equal((await f.call(action)).response.status, 503);
+    assert.equal(f.ownerCalls(), 0); assert.equal(f.store.writes, 0); assert.equal(f.store.createdChallenge, undefined);
+  }
+});
+
+test('reviewed release defaults enabled with complete existing configuration and rate-secret fallback', async () => {
+  const env = { TREE_RAFFLE_SUPABASE_URL: 'https://project.supabase.co', TREE_RAFFLE_SUPABASE_SECRET_KEY: 'server-secret',
+    TREE_KNOWLEDGE_TRIAL_RATE_LIMIT_SECRET: 's'.repeat(32) };
+  assert.deepEqual(arcadeGrowthSupabaseConfig(env), { url: env.TREE_RAFFLE_SUPABASE_URL, secretKey: env.TREE_RAFFLE_SUPABASE_SECRET_KEY });
+  const f = fixture({ env });
+  assert.equal((await f.call('status', {}, { token: null })).response.status, 200);
+  assert.equal((await f.call('challenge', { wallet: WALLET }, { token: null })).response.status, 200);
+  assert.match(f.store.createdChallenge!.requestFingerprint, /^[0-9a-f]{64}$/);
+  assert.equal((await f.call('check-in')).response.status, 200);
+});
+
+test('enabled-by-default never bypasses missing storage or missing and invalid sign-in protection', async () => {
+  const unconfigured = createArcadeGrowthHandler({ env: {} });
+  const response = await unconfigured(new Request(`${ORIGIN}/api/arcade-growth?action=status`));
+  assert.equal(response.status, 503); assert.equal((await response.json()).error, 'service-unavailable');
+  for (const env of [{}, { TREE_KNOWLEDGE_TRIAL_RATE_LIMIT_SECRET: 's'.repeat(31) },
+    { ARCADE_GROWTH_RATE_LIMIT_SECRET: 'short', TREE_KNOWLEDGE_TRIAL_RATE_LIMIT_SECRET: 's'.repeat(32) }]) {
+    const f = fixture({ env });
+    assert.equal((await f.call('challenge', { wallet: WALLET }, { token: null })).response.status, 503);
+    assert.equal(f.store.createdChallenge, undefined); assert.equal(f.ownerCalls(), 0);
+  }
 });
 
 test('canonical origin, wallet, UTC date and nonce are bound into the exact signed message', async () => {

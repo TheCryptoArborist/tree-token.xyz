@@ -4,7 +4,7 @@
 31, 2026 Daily Growth release. It is not part of the historical 38-function
 recovery baseline and must not be mixed into that archived manifest.
 
-SHA-256: `36bd350a9918e79897803382417260b0f10c383dd9847191ec35fe4c1f36125b`
+SHA-256: `9cb883fd1f22de64d4c3c6b6fc82a34ae1929cd927afdbb63201317cae12dc0b`
 
 The package contains 245 entries and no symlinks. Node runtime: `nodejs22.x`;
 invocation mode: `stream`; route: GET/POST `/api/arcade-growth`.

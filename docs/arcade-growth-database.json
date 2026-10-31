@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-31",
+  "productionProject": "lehswszuekjqottolmsf",
+  "developmentProject": "charuqbsxmrirpxciljn",
+  "developmentBranch": "knowledge-trial-v3-safe",
+  "newPrivateTables": 7,
+  "newServiceRoleOnlyFunctions": 14,
+  "tablesMissingRls": 0,
+  "browserCallableFunctions": 0,
+  "transactionalDevelopmentSuite": "passed",
+  "syntheticDevelopmentRecordsRolledBack": true,
+  "challengeRateScope": "wallet-and-request-fingerprint",
+  "securityAdvisors": "INFO only; private RLS tables intentionally have no browser policies",
+  "migrations": [
+    {
+      "name": "arcade_growth",
+      "productionVersion": "20261031211739",
+      "developmentVersion": "20261031211421",
+      "file": "supabase/migrations/20261031211739_arcade_growth.sql",
+      "sha256": "d3fe2502612ea9328a3c93321165bc83e0924637ba856c64b37fbaf13847417a"
+    },
+    {
+      "name": "arcade_growth_challenge_rate_scope",
+      "productionVersion": "20261031211743",
+      "developmentVersion": "20261031211620",
+      "file": "supabase/migrations/20261031211743_arcade_growth_challenge_rate_scope.sql",
+      "sha256": "900ec357935e73754a95e533ecda3aceac1a1ca01a0974ca0750fc373dac5060"
+    }
+  ],
+  "migrationFileVersionNote": "Local filenames match the applied production migration versions. Identical SQL was tested earlier on the existing development branch.",
+  "existingDatabaseObjectsChanged": false,
+  "newProjectsOrBranches": false,
+  "newOnchainWrites": false,
+  "productionEnvironmentMetadata": {
+    "baselineVariableCount": 49,
+    "currentVariableCount": 49,
+    "existingKeysScopesContextsAndValueIdsMatchBaseline": true,
+    "newGrowthEnvironmentKeysRetained": []
+  }
+}

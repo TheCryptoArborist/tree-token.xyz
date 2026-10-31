@@ -2,18 +2,21 @@
 // Existing static files, 39 function records, and five schedules are preserved.
 // Only the reviewed arcade-growth function package may be uploaded. The official
 // Netlify CLI owns authentication. Credentials and database URLs are never saved.
-// Usage: node scripts/release-arcade-growth.mjs capture|candidate|verify|publish|published CLI_DIRECTORY [CANDIDATE_ID]
+// Usage: node scripts/release-arcade-growth.mjs capture|candidate|verify|publish|published|abandon CLI_DIRECTORY [CANDIDATE_ID]
 import {resolve} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
 import {isDeepStrictEqual} from 'node:util';
-import {existsSync,readFileSync,writeFileSync,mkdirSync,renameSync,createReadStream} from 'node:fs';
+import {existsSync,readFileSync,writeFileSync,mkdirSync,renameSync,unlinkSync,createReadStream} from 'node:fs';
 
 const root=resolve(import.meta.dirname,'..');
 const [mode,cliDirectory,requestedId]=process.argv.slice(2);
 const siteId='aa62f324-b880-47d6-85b8-4ba0700ff5bf';
 const expectedBaselineId='6ae643e83bdb62cf4df26b2a';
+// This recovery path is limited to the one stopped, never-uploaded candidate.
+// A later candidate requires its own review; this is not a generic cancel tool.
+const abandonableCandidateId='6ae65c15c82ebb434083c695';
 const expectedDatabaseBranch='feature/treeforce89-play-integration';
 const expectedDatabaseIdentity='df2f0abee059d9898495a125018fa0a291d50b9050c0d4557231f409bed53065';
 const sourceBranch='feature/arcade-daily-growth-20261031';
@@ -49,13 +52,19 @@ function migrationCount(deploy){
  check(Array.isArray(value.files),'Unrecognized database migration metadata; stop.');
  return value.files.length;
 }
+function isCanceled(deploy){
+ return deploy?.state==='canceled'||(deploy?.state==='error'&&deploy.error_message==='Deploy canceled');
+}
 function sanitizedDeploy(deploy){
  // Never persist the full deploy: it can contain skew-protection tokens or env.
- return Object.fromEntries([
+ const result=Object.fromEntries([
   'id','site_id','state','locked','branch','context','created_at','published_at',
   'available_functions','function_schedules','functions_region',
   'functions_region_overrides','edge_functions_present','database_migrations',
  ].filter(key=>deploy[key]!==undefined).map(key=>[key,deploy[key]]));
+ // Preserve only the exact observed cancellation marker, never generic errors.
+ if(deploy.state==='error'&&isCanceled(deploy))result.error_message='Deploy canceled';
+ return result;
 }
 function evidenceFrom(previous,evidence){
  check(evidence.siteId===siteId&&evidence.isolationVerified===true,'Database evidence does not match this site.');
@@ -226,6 +235,82 @@ async function runRelease(api,fetch){
  const baseline=read(baselinePath);
  check(baseline.siteId===siteId&&baseline.deploy.id===expectedBaselineId,'Unexpected captured baseline.');
  check(baseline.deploy.available_functions?.length===39&&baseline.deploy.function_schedules?.length===5,'Captured backend inventory is incomplete.');
+ if(mode==='abandon'){
+  phase='stopped-candidate abandonment preflight';
+  const state=read(candidatePath),stateDigest=fingerprint(state);
+  check(requestedId===abandonableCandidateId&&state.id===abandonableCandidateId,'Abandon only the exact recorded, reviewed stopped candidate ID.');
+  check(state.siteId===siteId&&state.baseline===expectedBaselineId&&state.sourceBranch===sourceBranch,'Stopped candidate belongs to a different site, baseline, or source branch.');
+  check(state.baselineDigest===fingerprint(baseline),'The stopped candidate baseline evidence changed.');
+  check(/^[a-f0-9]{40}$/.test(state.sourceCommit||'')&&/^[a-f0-9]{64}$/.test(state.filesDigest||'')&&
+   /^[a-f0-9]{64}$/.test(state.functionPackageDigest||''),'Stopped candidate source/package evidence is incomplete.');
+  check(Array.isArray(state.overlay)&&state.overlay.length===overlayPaths.length&&state.overlay.every(file=>
+   overlayPaths.includes(file.path)&&/^[a-f0-9]{40}$/.test(file.sha||'')&&Number.isSafeInteger(file.size)&&file.size>0),
+   'Stopped candidate overlay evidence is incomplete.');
+  equal(state.overlay.map(file=>file.path).sort(),overlayPaths,'Stopped candidate public paths differ from the reviewed scope.');
+  const archivePath=resolve(stateDirectory,'arcade-growth-abandoned-'+state.id+'.json');
+  let previousArchive;
+  if(existsSync(archivePath)){
+   previousArchive=read(archivePath);
+   check(previousArchive.id===state.id&&previousArchive.siteId===siteId&&previousArchive.baseline===expectedBaselineId&&
+    previousArchive.recordedStateDigest===stateDigest&&isCanceled(previousArchive.after)&&
+    previousArchive.unpublished===true&&previousArchive.baselineUnchanged===true&&previousArchive.baselineLocked===true,
+    'Do not overwrite different abandoned-candidate evidence.');
+  }
+  const original=Object.fromEntries(baseline.files.map(file=>[file.path,file.sha]));
+  const baselineIsUnchanged=async()=>{
+   await currentIs(expectedBaselineId);
+   const live=await api.getDeploy({deployId:expectedBaselineId});
+   check(live.id===expectedBaselineId&&live.site_id===siteId&&live.state==='ready'&&live.locked===true,
+    'The existing production baseline must remain ready and locked.');
+   equal(sanitizedDeploy(live),baseline.deploy,'The existing production runtime or publication metadata changed.');
+   equal(await inventory(expectedBaselineId),original,'The existing production static inventory changed.');
+   await currentIs(expectedBaselineId);
+  };
+  const candidateIsUnpublished=deploy=>{
+   check(deploy.id===state.id&&deploy.site_id===siteId&&!deploy.published_at&&deploy.locked!==true,
+    'Refuse to abandon a different, published, or locked deployment.');
+   check(deploy.state==='uploading'||isCanceled(deploy),'Only the recorded uploading or already canceled candidate may be abandoned.');
+  };
+  await baselineIsUnchanged();
+  const before=await api.getDeploy({deployId:state.id});
+  candidateIsUnpublished(before);
+  check(Array.isArray(before.required_functions||[])&&(before.required_functions||[]).every(value=>/^[a-f0-9]{64}$/.test(value)),
+   'Stopped candidate has unexpected required-function metadata.');
+  let canceled=before;
+  if(!isCanceled(before)){
+   check(typeof api.cancelSiteDeploy==='function','The pinned Netlify API does not support deploy cancellation.');
+   phase='cancel only the recorded unpublished candidate';
+   // The official pinned CLI uses deploy_id for this endpoint. A lost response
+   // is resolved through reads; never retry the mutation or delete the deploy.
+   try{await api.cancelSiteDeploy({deploy_id:state.id});}
+   catch{/* Keep local state unless subsequent reads prove cancellation. */}
+   for(let attempt=0;attempt<10;attempt++){
+    canceled=await api.getDeploy({deployId:state.id});
+    candidateIsUnpublished(canceled);
+    if(isCanceled(canceled))break;
+    if(attempt<9)await new Promise(done=>setTimeout(done,500));
+   }
+  }
+  check(isCanceled(canceled)&&!canceled.published_at,'Cancellation was not confirmed; keep the active candidate marker and inspect the deploy.');
+  phase='archive confirmed canceled candidate';
+  await baselineIsUnchanged();
+  check(fingerprint(read(candidatePath))===stateDigest,'The active candidate marker changed during cancellation.');
+  // Do not persist the full API response or unknown fields from local state.
+  const recordedState={id:state.id,siteId,baseline:expectedBaselineId,sourceCommit:state.sourceCommit,
+   sourceBranch,baselineDigest:state.baselineDigest,filesDigest:state.filesDigest,
+   functionPackageDigest:state.functionPackageDigest,overlay:state.overlay.map(({path,sha,size})=>({path,sha,size}))};
+  if(!previousArchive)save(archivePath,{id:state.id,siteId,baseline:expectedBaselineId,recordedStateDigest:stateDigest,
+   abandonedAt:new Date().toISOString(),
+   reason:'The provider requested all 39 preserved function packages. The preservation guard stopped the candidate before any uploads. It captured deployment environment changes that have since been reverted and cannot be corrected in place.',
+   state:recordedState,before:sanitizedDeploy(before),after:sanitizedDeploy(canceled),
+   requiredFunctions:before.required_functions||[],baselineUnchanged:true,baselineLocked:true,unpublished:true});
+  // Archive first. If this unlink fails, rerunning this exact mode only reads
+  // the already canceled candidate before completing the same local cleanup.
+  unlinkSync(candidatePath);
+  console.log(JSON.stringify({mode,id:state.id,baseline:expectedBaselineId,canceled:true,unpublished:true,
+   baselineUnchanged:true,baselineLocked:true,archive:archivePath,activeCandidateMarkerCleared:true}));
+  return;
+ }
  const {original,files,overlay}=buildFiles(baseline);
  const functionPackage=readFunctionPackage();
  const originalDeploy=await api.getDeploy({deployId:expectedBaselineId});
@@ -392,7 +477,7 @@ async function runRelease(api,fetch){
 
 let program;
 try{
- check(['capture','candidate','verify','publish','published'].includes(mode)&&Boolean(cliDirectory),'Usage: release-arcade-growth.mjs capture|candidate|verify|publish|published CLI_DIRECTORY [CANDIDATE_ID]');
+ check(['capture','candidate','verify','publish','published','abandon'].includes(mode)&&Boolean(cliDirectory),'Usage: release-arcade-growth.mjs capture|candidate|verify|publish|published|abandon CLI_DIRECTORY [CANDIDATE_ID]');
  check(!process.env.DEBUG,'Run this credential-bearing release with DEBUG unset.');
  const {createMainCommand}=await import(pathToFileURL(resolve(cliDirectory,'dist/commands/main.js')));
  const {runProgram}=await import(pathToFileURL(resolve(cliDirectory,'dist/utils/run-program.js')));

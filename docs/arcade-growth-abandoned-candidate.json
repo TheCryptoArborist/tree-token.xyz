@@ -1,0 +1,475 @@
+{
+  "id": "6ae65c15c82ebb434083c695",
+  "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
+  "baseline": "6ae643e83bdb62cf4df26b2a",
+  "recordedStateDigest": "cbfbd6a8da8c47ee8b27cec54d9a21d53386df316a7d9de180001b76f6b03bdc",
+  "abandonedAt": "2026-10-31T21:27:21.633Z",
+  "reason": "The provider requested all 39 preserved function packages. The preservation guard stopped the candidate before any uploads. It captured deployment environment changes that have since been reverted and cannot be corrected in place.",
+  "state": {
+    "id": "6ae65c15c82ebb434083c695",
+    "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
+    "baseline": "6ae643e83bdb62cf4df26b2a",
+    "sourceCommit": "e71857fd3981dbd15ae581e95179c3da0a81d501",
+    "sourceBranch": "feature/arcade-daily-growth-20261031",
+    "baselineDigest": "569f14f1680fe713f74cbbec91250b3be272b054841840c08aebddb35a9fe0a3",
+    "filesDigest": "8b56736fbf489119e70dddbc2c1b677d6a03dc6d295cd8cfe4639cfb7ac0f9ae",
+    "functionPackageDigest": "8cf436961264e73b488ec327bc0aed3c0a97c20cc256fa8dd31efa53d4371faf",
+    "overlay": [
+      {
+        "path": "/assets/arcade/arcade-growth-wallet.js",
+        "sha": "0c1260a071839829dc8e32ce822e228d28af10d3",
+        "size": 19008
+      },
+      {
+        "path": "/play/index.html",
+        "sha": "744a1c0ac20863abb6ff9811c8a144822f20231f",
+        "size": 29604
+      },
+      {
+        "path": "/scripts/arcade-daily-growth.js",
+        "sha": "7d534222383eed03066649d26d7ccd5d12f96d32",
+        "size": 37219
+      },
+      {
+        "path": "/styles/tree-arcade-suite.css",
+        "sha": "2131e10e5f5ade632111214a639ece53be4f7782",
+        "size": 49661
+      }
+    ]
+  },
+  "before": {
+    "id": "6ae65c15c82ebb434083c695",
+    "site_id": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
+    "state": "error",
+    "locked": null,
+    "branch": "main",
+    "context": "production",
+    "created_at": "2026-10-31T21:22:29.713Z",
+    "published_at": null,
+    "available_functions": [],
+    "function_schedules": [
+      {
+        "name": "tree-badges-refresh-scheduled",
+        "cron": "47 */6 * * *"
+      },
+      {
+        "name": "tree-exposure-refresh-scheduled",
+        "cron": "27 */6 * * *"
+      },
+      {
+        "name": "tree-knowledge-trial-resolver",
+        "cron": "5 * * * *"
+      },
+      {
+        "name": "tree-knowledge-trial-rotation-scheduled",
+        "cron": "15 * * * *"
+      },
+      {
+        "name": "tree-leaderboard-refresh-scheduled",
+        "cron": "17 */6 * * *"
+      }
+    ],
+    "functions_region": "cmh",
+    "functions_region_overrides": [
+      {
+        "name": "arcade-wallet-link",
+        "region": "cmh"
+      },
+      {
+        "name": "nftree-wallet",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-badges-on-deploy",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-badges-preview",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-badges-refresh-background",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-badges-refresh-scheduled",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-badges",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-burn-overview",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-chart",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-dashboard",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-exposure-on-deploy",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-exposure-preview",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-exposure-refresh-background",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-exposure-refresh-scheduled",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-exposure",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-knowledge-trial-admin",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-knowledge-trial-claim-test",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-knowledge-trial-claim",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-knowledge-trial-resolver",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-knowledge-trial-rotation-on-deploy",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-knowledge-trial-rotation-scheduled",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-knowledge-trial-test",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-knowledge-trial",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-leaderboard-preview",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-leaderboard-refresh-background",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-leaderboard-refresh-scheduled",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-leaderboard",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-limit-orders",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-liquidity",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-market",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-nftree",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-raffle-claim",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-raffle-ingest-buy",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-raffle-status",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-swap-quote",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-v3-overview",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-volume",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-knowledge-trial-correction",
+        "region": "cmh"
+      },
+      {
+        "name": "treeforce89-dev",
+        "region": "cmh"
+      }
+    ],
+    "edge_functions_present": null,
+    "database_migrations": null,
+    "error_message": "Deploy canceled"
+  },
+  "after": {
+    "id": "6ae65c15c82ebb434083c695",
+    "site_id": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
+    "state": "error",
+    "locked": null,
+    "branch": "main",
+    "context": "production",
+    "created_at": "2026-10-31T21:22:29.713Z",
+    "published_at": null,
+    "available_functions": [],
+    "function_schedules": [
+      {
+        "name": "tree-badges-refresh-scheduled",
+        "cron": "47 */6 * * *"
+      },
+      {
+        "name": "tree-exposure-refresh-scheduled",
+        "cron": "27 */6 * * *"
+      },
+      {
+        "name": "tree-knowledge-trial-resolver",
+        "cron": "5 * * * *"
+      },
+      {
+        "name": "tree-knowledge-trial-rotation-scheduled",
+        "cron": "15 * * * *"
+      },
+      {
+        "name": "tree-leaderboard-refresh-scheduled",
+        "cron": "17 */6 * * *"
+      }
+    ],
+    "functions_region": "cmh",
+    "functions_region_overrides": [
+      {
+        "name": "arcade-wallet-link",
+        "region": "cmh"
+      },
+      {
+        "name": "nftree-wallet",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-badges-on-deploy",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-badges-preview",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-badges-refresh-background",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-badges-refresh-scheduled",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-badges",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-burn-overview",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-chart",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-dashboard",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-exposure-on-deploy",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-exposure-preview",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-exposure-refresh-background",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-exposure-refresh-scheduled",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-exposure",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-knowledge-trial-admin",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-knowledge-trial-claim-test",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-knowledge-trial-claim",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-knowledge-trial-resolver",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-knowledge-trial-rotation-on-deploy",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-knowledge-trial-rotation-scheduled",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-knowledge-trial-test",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-knowledge-trial",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-leaderboard-preview",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-leaderboard-refresh-background",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-leaderboard-refresh-scheduled",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-leaderboard",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-limit-orders",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-liquidity",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-market",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-nftree",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-raffle-claim",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-raffle-ingest-buy",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-raffle-status",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-swap-quote",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-v3-overview",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-volume",
+        "region": "cmh"
+      },
+      {
+        "name": "tree-knowledge-trial-correction",
+        "region": "cmh"
+      },
+      {
+        "name": "treeforce89-dev",
+        "region": "cmh"
+      }
+    ],
+    "edge_functions_present": null,
+    "database_migrations": null,
+    "error_message": "Deploy canceled"
+  },
+  "requiredFunctions": [
+    "cf04ba346ffdb6b0f65e096016f7a12314a3822ab2ba4c3464a67111da85a8cf",
+    "7d833b105a7a23c1b19932030c3a5658a7b26a77fb62d188bceb003ed9808ca1",
+    "bbe5138646aeb0158bffb1b0a4423b9635c1910423bdce2b6ce719e4cb8c995c",
+    "272a0e60ad6b64371f4aec9f172ea48522dfbf473981e9e8739d91a10342b016",
+    "092dc834f95cd17244205828c581179e649c679bb263e5805e37c322e86e4469",
+    "8543b6349164e36c137e3f1cd1297b10a150004f0b6f556f2e5d6ec3fec9e459",
+    "23c2c5f14a44a4a7139c9f0de6e89baf2b94e9e5feb64e1bfebbfbcc286c025f",
+    "48cabca12664dc178ce1f3f6e2681a216944168e61c5988ce8b6dede5723a681",
+    "65ad24a2df39e42edd8cd5225dbe125152c38ac6d1078969c8b9da4103b976f7",
+    "e1f8b352db9d6dfca8500b6c4475f05e31d58bdf90661f22151867399094f810",
+    "63edb9dd7d4ca1ff1e9d4ee680f898dd03284c747f2d262bd77cd4219d7d3ce7",
+    "e0dfaaf32ada22bea619133f768a948e505803ea19d602ccb2b0316f346851a7",
+    "08e309d96b93089f447e93ab33e7bb972c5a2972b3f64d09130bf0d04d9b726e",
+    "be72ccf2d3bcb3a463a2c8aa09eefd0e12d3a1f9c47dde899ad54c1337066f92",
+    "0ea62d8290ce1e922e5e87914f1d00f9777843b7a25c03e61625b2a9eca622bf",
+    "f100a9bbd2b42ce0dec661810d1cecf6d87f7d0a073fad65531c2e05742811f1",
+    "00ecd5c0368615e267abcfe4b9cabc22fba7f457a3546a255169b612945329b2",
+    "6fd0f4534b29efcd00f2aa0f633ae88a1bbd260649ca1ba8aa169f456350efb3",
+    "cd754a9ff9e97f04d7fdc6f0030ada24a54f1aa5042a557c6976e1a9315735db",
+    "d97fd3ed830eb5c8a2a0bdc06203486f7808a4932298e780eca81f4c14bf5b4b",
+    "242abd2bffd71a4553758656c5e1b7434e97f3e2c3a9a465490be161897a5605",
+    "dac3d74ac9a156c2dd41db9132468080c8f5989eda4d67c40b9ae1464d87b799",
+    "ffc443359d3e2e4cdfc48e3fa1bb938910ac3a328270ffc5d5b25b3bf6434813",
+    "42e6d26997f1a2793b796c14fba92e3dc0951f086c2f617724ae8b800a2edbbc",
+    "3a17e4af2f83cf71d6b9e23fcb64af62383483ae48992f25fe6d6b60861a4ac9",
+    "49ee439cd6bd7d7899c6cc27081bdc7191d578b78a051f5ece03c73c0d14195f",
+    "6a96b47975107c1f94d221342397a4bc70cc7f2c78914d341db96355f51ee27f",
+    "c137e6443ddabcf4020ead936c7e05fc88efca549e87e5ce97a16d758c941a5d",
+    "0d63883ef7d84e050d9477c51e06e57b7218997b7376e449fbbdde767f505c87",
+    "a0646406b77c2128eedeb5c8691759c3c68c2bf02ac62c0eaa68ea2f36e1cb44",
+    "c7569656a25c94414e8a14971860030a30f8457c5746d0163a72e0e8f3c622d3",
+    "515604875d1b1864ad669dcf2ff845ce1db78ab243caf5d318ee23e28b60da88",
+    "a6ecaaf9878391b72c82cd8938009e3f316bf40b66f74f937c367ca9b723bba9",
+    "5e425ca24d184053a6efc3d63c577189cc619e0cc4368d7c3adac579bc40c168",
+    "23d98a34cf8248b06f069976d37d635a7b93217c660db35f24c4fbaba810ce30",
+    "3223f1ca23947a9c1a86a4cd59d4a26fba36297d79fba21b94c7b84be6e8db3f",
+    "57f085fecd6597c85b00ffed5a00cfd3127561b4c6a65542cec110e97f4b2601",
+    "bb9f177839931c33a3da6012b66090ae74edd324ba3e1f3ced1d37947e7044c8",
+    "725fe5a7e7ff30c2c83f7b6a1bf1af534a72ee2efa1cc6faf64151743cf84905",
+    "36bd350a9918e79897803382417260b0f10c383dd9847191ec35fe4c1f36125b"
+  ],
+  "baselineUnchanged": true,
+  "baselineLocked": true,
+  "unpublished": true
+}

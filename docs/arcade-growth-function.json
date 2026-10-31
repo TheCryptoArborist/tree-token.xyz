@@ -6,7 +6,7 @@
   },
   "name": "arcade-growth",
   "path": ".netlify/arcade-growth-functions/arcade-growth.zip",
-  "sha256": "36bd350a9918e79897803382417260b0f10c383dd9847191ec35fe4c1f36125b",
+  "sha256": "9cb883fd1f22de64d4c3c6b6fc82a34ae1929cd927afdbb63201317cae12dc0b",
   "runtimeVersion": "nodejs22.x",
   "invocationMode": "stream",
   "buildData": {
@@ -48,7 +48,7 @@
   "sourceFiles": [
     {
       "path": "netlify/functions/arcade-growth.ts",
-      "sha256": "ed603d7a0d92cf879c953abd5a8759e56005880f5200d5a886eb1bbda3b2589a"
+      "sha256": "c8b276360ed299667e7576e1acf977e35c83e7562e0fd41837ec5d67a1841d22"
     },
     {
       "path": "netlify/functions/nftree-wallet.ts",

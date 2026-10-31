@@ -5,7 +5,6 @@ import { resolve, relative, join, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { tmpdir } from 'node:os';
 import { createHash } from 'node:crypto';
-import { execFileSync } from 'node:child_process';
 import assert from 'node:assert/strict';
 const root = resolve(import.meta.dirname, '..');
 const dependencies = resolve(process.argv[2] || '/tmp/arcade-growth-backend-build/node_modules');
@@ -16,6 +15,28 @@ for (const name of ['@mysten/sui', '@netlify/zip-it-and-ship-it']) {
   assert.equal(installed.version, lock.packages['node_modules/' + name].version, `Pinned ${name} version changed`);
 }
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
+function validateZip(bytes) {
+  let end = -1;
+  for (let index = bytes.length - 22; index >= Math.max(0, bytes.length - 65557); index--) {
+    if (bytes.readUInt32LE(index) === 0x06054b50 && index + 22 + bytes.readUInt16LE(index + 20) === bytes.length) { end = index; break; }
+  }
+  assert(end >= 0, 'ZIP directory is missing');
+  const entries = bytes.readUInt16LE(end + 10);
+  let cursor = bytes.readUInt32LE(end + 16);
+  assert(entries > 0 && entries < 65535 && cursor + bytes.readUInt32LE(end + 12) === end, 'Unexpected ZIP directory');
+  const names = [];
+  for (let index = 0; index < entries; index++) {
+    assert(cursor + 46 <= end && bytes.readUInt32LE(cursor) === 0x02014b50, 'Invalid ZIP directory entry');
+    const nameLength = bytes.readUInt16LE(cursor + 28);
+    const next = cursor + 46 + nameLength + bytes.readUInt16LE(cursor + 30) + bytes.readUInt16LE(cursor + 32);
+    assert(next <= end, 'Invalid ZIP entry length');
+    const name = bytes.toString('utf8', cursor + 46, cursor + 46 + nameLength);
+    assert(!name.startsWith('/') && !name.includes('\\') && !name.includes('\0') && !name.split('/').includes('..'), 'Unsafe ZIP path');
+    assert(((bytes.readUInt32LE(cursor + 38) >>> 16) & 0xf000) !== 0xa000, 'External dependency symlink in ZIP');
+    names.push(name); cursor = next;
+  }
+  assert(cursor === end && names.some(name => name.includes('@mysten/sui/dist/verify/')), 'Packaged verifier is missing');
+}
 const stage = await mkdtemp(join(tmpdir(), 'tree-growth-function-'));
 try {
   await mkdir(join(stage, 'netlify/functions'), { recursive: true });
@@ -36,17 +57,7 @@ try {
   assert.equal(built.runtimeVersion, 'nodejs22.x');
   assert.equal(built.invocationMode, 'stream');
   assert.equal(built.schedule, undefined);
-  execFileSync('python3', ['-c', `import sys, stat
-from pathlib import PurePosixPath
-from zipfile import ZipFile
-with ZipFile(sys.argv[1]) as archive:
-    names = archive.namelist()
-    assert any('@mysten/sui/dist/verify/' in name for name in names), 'Packaged verifier is missing'
-    for entry in archive.infolist():
-        path = PurePosixPath(entry.filename)
-        assert not path.is_absolute() and '..' not in path.parts, 'Unsafe ZIP path'
-        assert not stat.S_ISLNK(entry.external_attr >> 16), 'External dependency symlink in ZIP'
-`, built.path], { stdio: 'pipe' });
+  validateZip(await readFile(built.path));
   const paths = new Set(['package.json', 'package-lock.json']);
   for (const input of built.inputs || []) {
     const path = relative(stage, input).split(sep).join('/');
