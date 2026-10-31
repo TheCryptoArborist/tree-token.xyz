@@ -1,3 +1,17 @@
+# Current production — TREE FORCE integrated home and wallets, 2026-10-31
+
+Deployment `6ae574cbd07fdb22146e6265` was published at `2026-10-31T04:57:27.936Z` and is locked. Source is `e43680791b98a6a83e308f5a797a068a8f7063ab` on `feature/treeforce89-play-integration`. Neither main branch was changed or merged.
+
+Wallet connection and NFTree verification now appear inside the actual game home/title screen. The public home draws the title and Arborwing without start handlers; a verified NFTree session mounts gameplay. A centered chooser lists all detected compatible Sui wallets as Connect actions, plus clearly labelled publisher links for missing Slush, Suiet, Nightly and Backpack wallets. Wallet labels have explicit high-contrast colors. Existing wallet configuration, pinned dependency lock, signature authentication, gameplay/paid-continue behavior, amount and treasury are preserved.
+
+Only `/play/treeforce89/index.html` and `/play/treeforce89/gateway.css` change from `6ae56ffd12cc39baec9bc7b2`; three native JavaScript assets are added. The other 211 static paths, all 39 complete backend package/provider/runtime/configuration records and all five schedules match exactly. No handler or database migration changes. The same server-only isolated database binding and enabled-payment flag are retained. The current release has 216 files and 39 functions. The preparer records only assets from its current native build; prior published assets remain preserved in the live inventory.
+
+All four implementation workflows passed, including 32 focused checks and PostgreSQL 16 payment/recovery checks. Preview/browser home-gating and chooser review, canonical home/chooser review, hosted authentication/payment-negative smoke checks, exact served HTML/asset hashes and full published static/backend preservation checks passed. Real-holder wallet and real-payment testing remain user-operated; no payment was signed or submitted by the assistant. Browser test limits are recorded with the checks.
+
+See `docs/treeforce89-home-wallet.md` and its adjacent `-published.json` (complete static/function/schedule inventory), `-checks.json`, `-live-smoke.json`, and `-live-assets.json`. Preserve this complete live inventory for future releases; the historical default snapshot below is not a current release package.
+
+---
+
 # Current production — TREE FORCE continuation buttons, 2026-10-31
 
 Deployment `6ae56ffd12cc39baec9bc7b2` was published at `2026-10-31T04:37:09.746Z` and is locked. Source is `16772666243446fa8cc6a28d3a5a654810396b74` on `feature/treeforce89-play-integration`. Neither main branch was changed or merged.
