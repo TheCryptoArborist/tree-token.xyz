@@ -10,8 +10,8 @@ import {inspectTreeForceSchema} from '../../scripts/lib/treeforce89-schema.mjs';
 
 let schemaReady;
 let suiClient;
-async function getServices(origin) {
-  const {pool}=getPreviewDatabase();
+export async function getGatewayServices(origin,database=getPreviewDatabase) {
+  const {pool}=database();
   schemaReady??=inspectTreeForceSchema(pool).then(result=>{
     if(!result.schemaReady)throw Error('Authentication schema unavailable');
   });
@@ -24,11 +24,11 @@ async function getServices(origin) {
   };
 }
 
-export function createIntegratedGatewayHandler({action,build,services=getServices}) {
+export function createIntegratedGatewayHandler({action,build,services=getGatewayServices,requestAllowed=previewRequestAllowed}) {
   if(!['challenge','enter','logout','restart'].includes(action))throw Error('Unknown Gateway action');
   return async(request,context)=>{
     const headers={'Cache-Control':'no-store','X-Robots-Tag':'noindex'};
-    if(!previewRequestAllowed(build,context,request))
+    if(!requestAllowed(build,context,request))
       return Response.json({enabled:false,authorized:false},{status:503,headers});
     const origin=new URL(request.url).origin;
     if(action==='challenge'||action==='enter')return createWalletGatewayHttpHandler({

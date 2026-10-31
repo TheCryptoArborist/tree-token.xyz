@@ -15,6 +15,9 @@ on:
       - 'netlify/preview-lib/treeforce89-**'
       - 'netlify/preview-lib/treeforce89-source/**'
       - 'tests/treeforce89-database.test.mjs'
+      - 'tests/treeforce89-canonical-development.test.mjs'
+      - 'netlify/canonical-development-functions/**'
+      - 'scripts/*treeforce89-canonical-development.mjs'
       - 'package-lock.json'
   pull_request:
     paths:
@@ -41,4 +44,4 @@ jobs:
           npm ci --ignore-scripts --no-audit --no-fund
           npm ci --prefix netlify/preview-lib/treeforce89-source --ignore-scripts --no-audit --no-fund
       - name: Verify TREE FORCE preview APIs and database isolation
-        run: node --test tests/treeforce89-preview-functions.test.mjs tests/treeforce89-preview-isolation.test.mjs tests/treeforce89-database.test.mjs
+        run: node --test tests/treeforce89-preview-functions.test.mjs tests/treeforce89-preview-isolation.test.mjs tests/treeforce89-database.test.mjs tests/treeforce89-canonical-development.test.mjs

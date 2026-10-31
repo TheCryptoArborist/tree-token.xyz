@@ -12,6 +12,7 @@ import assert from 'node:assert/strict';
 const {Ed25519Keypair}=await import(pathToFileURL(resolve(sourceRoot,'node_modules/@mysten/sui/dist/keypairs/ed25519/keypair.mjs')));
 import {inspectTreeForceSchema} from './lib/treeforce89-schema.mjs';
 import {createIntegratedGatewayHandler} from '../netlify/preview-lib/treeforce89-gateway.mjs';
+import {previewRequestAllowed,canonicalDevelopmentRequestAllowed} from '../netlify/preview-lib/treeforce89-database.mjs';
 const {createWalletGatewayService}=await import(pathToFileURL(resolve(sourceRoot,'app/game/wallet-gateway-service.mjs')));
 const {createAuthenticatedSessionResolver}=await import(pathToFileURL(resolve(sourceRoot,'app/game/authenticated-session.mjs')));
 const {createGameRunService}=await import(pathToFileURL(resolve(sourceRoot,'app/game/game-run-service.mjs')));
@@ -77,18 +78,23 @@ try {
   await assert.rejects(service.enter(invalid),{code:'SIGN_IN_REJECTED'});
   // Exercise the actual TREE Token HTTP adapters with real signatures and SQL.
   // Only NFT ownership is a fixture; this injection is never request-controlled.
-  const httpOrigin='https://deploy-preview-70--tree-token.netlify.app';
-  const build={branch:'feature/treeforce89-play-integration',context:'deploy-preview',prNumber:70};
+  for(const deployment of [
+    {origin:'https://deploy-preview-70--tree-token.netlify.app',context:'deploy-preview',prNumber:70,requestAllowed:previewRequestAllowed,path:'/.netlify/functions/tree-test'},
+    {origin:'https://tree-token.xyz',context:'production',mode:'canonical-development',requestAllowed:canonicalDevelopmentRequestAllowed,path:'/play/treeforce89/api/tree-test'},
+  ]) {
+  const httpOrigin=deployment.origin;
+  const build={branch:'feature/treeforce89-play-integration',...deployment};
   const context={site:{id:'aa62f324-b880-47d6-85b8-4ba0700ff5bf'},
-    deploy:{id:'a'.repeat(24),context:'deploy-preview'}};
+    deploy:{id:'a'.repeat(24),context:deployment.context}};
   const httpGateway=createWalletGatewayService({pool,client:client(true),origin:httpOrigin});
   const httpRuns=createGameRunService({pool,ownershipChecker:async()=>true});
   const http=async(action,body,token)=>{
-    const request=new Request(httpOrigin+'/.netlify/functions/tree-test',{
+    const request=new Request(httpOrigin+deployment.path,{
       method:'POST',headers:{origin:httpOrigin,...(body?{'Content-Type':'application/json'}:{}),
         ...(token?{Authorization:'Bearer '+token}:{})},
       ...(body?{body:JSON.stringify(body)}:{})});
-    return createIntegratedGatewayHandler({action,build,services:async()=>({gateway:httpGateway,runs:httpRuns})})(request,context);
+    return createIntegratedGatewayHandler({action,build,requestAllowed:deployment.requestAllowed,
+      services:async()=>({gateway:httpGateway,runs:httpRuns})})(request,context);
   };
   const httpKey=new Ed25519Keypair();
   const challengeResponse=await http('challenge',{wallet:httpKey.toSuiAddress()});
@@ -105,6 +111,7 @@ try {
   assert.equal((await http('restart',{runId:httpSession.runId},httpSession.sessionToken)).status,401);
   assert.equal((await http('logout',undefined,httpNext.sessionToken)).status,200);
   assert.equal((await http('restart',{runId:httpNext.runId},httpNext.sessionToken)).status,401);
+  }
   assert.equal(Number((await pool.query('SELECT count(*) AS n FROM tree_continue_redemptions')).rows[0].n),0);
   console.log(JSON.stringify({engine:'Netlify local PostgreSQL emulation (PGlite)',
     migrationAppliedLocally:true,tableCount:schema.tableCount,
@@ -115,5 +122,6 @@ try {
     realSignatures:true,challengeReplayRejected:true,holderFixtureAllowed:true,nonholderFixtureRejected:true,
     forgedSignatureRejected:true,runRotation:true,oldTokenRejected:true,logout:true,
     integratedHttpGateway:true,integratedHttpRunRotation:true,integratedHttpLogout:true,
+    canonicalHttpGateway:true,canonicalRunRotation:true,canonicalLogout:true,
     paymentRows:0,hostedDatabaseTested:false,liveNFTreeOwnershipTested:false}));
 } finally {if(pool)await pool.end();await db.stop();}

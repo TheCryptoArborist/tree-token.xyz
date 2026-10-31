@@ -1,9 +1,12 @@
 import assert from 'node:assert/strict';
 import {randomBytes} from 'node:crypto';
 import {Ed25519Keypair} from '../netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/keypairs/ed25519/keypair.mjs';
-const origin='https://deploy-preview-70--tree-token.netlify.app';
+const origin=process.argv[2]||'https://deploy-preview-70--tree-token.netlify.app';
+assert(/^https:\/\/(?:tree-token\.xyz|[a-f0-9]{24}--tree-token\.netlify\.app|deploy-preview-70--tree-token\.netlify\.app)$/.test(origin));
+const native=origin!=='https://deploy-preview-70--tree-token.netlify.app';
+const prefix=native?'/play/treeforce89/api/':'/.netlify/functions/';
 const post=async(path,body,{requestOrigin=origin,token}={})=>{
-  const response=await fetch(origin+'/.netlify/functions/'+path,{
+  const response=await fetch(origin+prefix+path,{
     method:'POST',headers:{Origin:requestOrigin,...(body?{'Content-Type':'application/json'}:{}),
       ...(token?{Authorization:'Bearer '+token}:{})},
     ...(body?{body:JSON.stringify(body)}:{}),signal:AbortSignal.timeout(45000),
@@ -36,7 +39,7 @@ assert.equal(logout.status,200);assert.equal(logout.body.loggedOut,true);
 assert.equal((await post('tree-run',{runId:'grove-'+randomBytes(16).toString('hex')},{token:absentToken})).status,401);
 const checkout=await post('tree-continue',{digest:'not-a-payment'});
 assert.equal(checkout.status,503);assert.equal(checkout.body.authorized,false);
-const status=await post('treeforce89-db-status');
+const status=await post(native?'status':'treeforce89-db-status');
 assert.equal(status.status,200);assert.equal(status.body.schemaReady,true);
 assert.equal(status.body.isolationVerified,true);assert.equal(status.body.paymentsEnabled,false);
 console.log(JSON.stringify({origin,challengeIssued:true,realSignatureVerified:true,

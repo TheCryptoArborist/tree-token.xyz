@@ -3,6 +3,7 @@ import {getDatabase,getConnectionString} from '@netlify/database';
 import evidence from './treeforce89-database-evidence.json' with {type:'json'};
 import {inspectTreeForceSchema} from '../../scripts/lib/treeforce89-schema.mjs';
 let cached;
+let canonicalCached;
 
 export function databaseIdentity(connectionString) {
   const url=new URL(connectionString);
@@ -25,6 +26,40 @@ export function previewRequestAllowed(build,context,request) {
   ].includes(url.host)&&request.method==='POST'&&
     request.headers.get('origin')===url.origin&&
     request.headers.get('sec-fetch-site')!=='cross-site';
+}
+
+// This narrow release is the development Gateway mounted on TREE Arcade.
+// It never selects the site's default (production) database.
+export function canonicalDevelopmentRequestAllowed(build,context,request) {
+  if(build?.branch!==evidence.branch||build?.mode!=='canonical-development'||
+    context?.deploy?.context!=='production'||context?.site?.id!==evidence.siteId||
+    !/^[a-f0-9]{24}$/.test(context?.deploy?.id||''))return false;
+  const url=new URL(request.url);
+  return url.protocol==='https:'&&[
+    'tree-token.xyz','www.tree-token.xyz',
+    // An immutable candidate can be verified with unfunded test keys before publication.
+    `${context.deploy.id}--tree-token.netlify.app`,
+  ].includes(url.host)&&url.pathname.startsWith('/play/treeforce89/api/')&&
+    request.method==='POST'&&request.headers.get('origin')===url.origin&&
+    request.headers.get('sec-fetch-site')!=='cross-site';
+}
+
+export function gatewayRequestAllowed(build,context,request) {
+  return build?.mode==='canonical-development'
+    ?canonicalDevelopmentRequestAllowed(build,context,request)
+    :previewRequestAllowed(build,context,request);
+}
+
+export function getCanonicalDevelopmentDatabase() {
+  const connectionString=process.env.TREEFORCE89_DEV_DATABASE_URL;
+  if(!connectionString)throw Error('Development database binding unavailable');
+  const identity=databaseIdentity(connectionString);
+  if(evidence.isolationVerified!==true||
+    evidence.productionDatabaseIdentities.includes(identity)||
+    identity!==evidence.previewDatabaseIdentity)throw Error('Database isolation unverified');
+  if(!canonicalCached||canonicalCached.identity!==identity)
+    canonicalCached={identity,pool:getDatabase({connectionString}).pool};
+  return canonicalCached;
 }
 
 export function getPreviewDatabase({requireVerified=true}={}) {
