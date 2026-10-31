@@ -1,5 +1,6 @@
 import { cp, mkdir, readFile, readdir } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
+import './prepare-treeforce89-preview.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 // Keep the candidate separate from the byte-exact published snapshot in dist/.
