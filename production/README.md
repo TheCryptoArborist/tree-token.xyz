@@ -1,3 +1,15 @@
+# Current production — Deadfall Run play-test integration, 2026-10-31
+
+Published and locked deploy `6ae679ad8d7a99d535827032` from source commit `b4be1709864645fae73321b55eac2db43fe2159b` (PR #71). The game is available at https://tree-token.xyz/play/deadfall-run/ through the first previously empty cabinet at https://tree-token.xyz/play/.
+
+Only `/play/index.html` and ten new files under `/play/deadfall-run/` changed relative to live deploy `6ae675c1c1f884339010a053`. The lobby delta is exactly one cabinet. All 40 exact function packages/provider/runtime configurations (including rate limits), all five schedules, and every unrelated static file were preserved. No wallet/payment logic or Daily Growth quest eligibility changed.
+
+`current-release.json` and `deadfall-release.json` describe the current 251-file live inventory. `production/manifest.json` and its archived files remain historical recovery material; the ordinary root snapshot build does **not** represent this current deployment. Do not publish that old snapshot or unlock automatic publishing. `scripts/release-deadfall-preserved.py` records the guarded overlay procedure and will refuse to run against a changed live baseline.
+
+All 27 CPU/DOM-stub checks passed. Hosted asset hashes, cabinet layout, canonical navigation and unsupported-WebGL fallback were verified. The cloud browser has WebGL disabled, so actual GPU rendering, driving feel and frame rate still require a desktop playtest. See `deadfall-verification.json` and the game test report.
+
+---
+
 # Current production — validated VICTORY reward display, 2026-10-06
 
 Deployment `6ac58a83cdbea77d7a4a7336` is published and locked. Source commit `359e39ec17b0b437606abe3275b42df2bbc01a79` (PR #53). This frontend-only follow-up removes fallback to legacy reward analytics: reward APR remains unavailable whenever the on-chain incentive validation fails. The regression fixture includes a legacy analytics object marked verified alongside unavailable incentives.
