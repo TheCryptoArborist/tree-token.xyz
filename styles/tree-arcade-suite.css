@@ -82,6 +82,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 24px; }
 .poster-topline { position: absolute; z-index: 4; top: 11px; left: 12px; right: 12px; display: flex; align-items: center; justify-content: space-between; gap: 7px; }
 .poster-number { color: #c9d2e8; font: 10px/1.5 var(--suite-mono); letter-spacing: .045em; text-shadow: 0 1px 4px #000; }
 .status-tag { flex-shrink: 0; padding: 4px 5px; color: #b8f7d3; border: 1px solid #80dda34d; border-radius: 3px; background: #13251eeb; font: 700 10px/1.3 var(--suite-mono); letter-spacing: .03em; text-transform: uppercase; }
+.poster--force .status-tag--live { color: #ff7676; background: #341216f2; border-color: #ef535080; }
 .status-tag--testing { color: #ffe4a6; background: #322a1cf2; border-color: #e1b76050; }
 .status-tag--preview { color: #e3cfff; background: #2b213cf2; border-color: #c5a3f25a; }
 .status-tag--soon { color: #cbd0e4; background: #232535f2; border-color: #8d94b64d; }
