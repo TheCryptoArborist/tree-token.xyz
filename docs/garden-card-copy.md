@@ -1,5 +1,11 @@
 # Garden Battles card descriptions
 
+## Published release
+
+Live at https://tree-token.xyz/play/ on deployment `6ae675c1c1f884339010a053`,
+published `2026-10-31T23:12:43.365Z` and locked. Source commit:
+`38202682d3242e7f5f8785a633e832dcca0d290b`.
+
 ## Requested change
 
 Replace the oversized “Four ways to play Garden Battles” introduction with a
@@ -33,5 +39,13 @@ and the isolated TREE FORCE database binding are pinned.
 Current MystenLabs guidance was checked at its README. This HTML-only edit
 requires no SDK, wallet, transaction, or contract changes.
 
-Final publication and hosted verification are recorded separately after the
-release in `garden-card-copy-published.json` and `garden-card-copy-verification.json`.
+Candidate and canonical hosted HTML matched the reviewed source. Targeted
+native browser checks passed at 1440px and 320px: all four game links,
+artwork, availability labels, and accessible descriptions remain intact; the
+first-screen layout is unchanged and there is no horizontal overflow. All 19
+canonical page requests returned HTTP 200, with no page or console errors.
+No wallet, signature, transaction, or write request was used.
+
+The complete publication inventory and verification are recorded in
+`garden-card-copy-published.json` and `garden-card-copy-verification.json`.
+Raw hosted evidence is under `review/garden-card-copy-*`.

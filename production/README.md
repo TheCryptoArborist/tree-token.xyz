@@ -1,3 +1,32 @@
+# Current production — Garden Battles card descriptions, 2026-10-31
+
+Deployment `6ae675c1c1f884339010a053` is live at `https://tree-token.xyz/play/`
+and locked. Published `2026-10-31T23:12:43.365Z`. Source commit
+`38202682d3242e7f5f8785a633e832dcca0d290b` on `feature/garden-card-copy-20261031`.
+Previous deployment: `6ae67337da46ecbf141c68f5`.
+
+The Garden Battles section now has a simple heading instead of the long
+four-ways introduction and practice screenshot. Garden Bot and PvP say
+“Turn-based card strategy”; Arborist Trials describes its daily strategy
+challenge with predetermined cards. Game links, artwork, status labels,
+access facts, and the Canopy Clash card remain intact.
+
+Only `/play/index.html` changed. All 241 public paths, the other 240 static
+file identities, all 40 complete function records, and all five schedules
+were preserved. JavaScript, CSS, wallets, dependencies, runtime settings,
+and the isolated TREE FORCE database binding are unchanged.
+
+Candidate and canonical hosted HTML matched the reviewed source. Targeted
+desktop/mobile checks passed at 1440px and 320px, with unchanged first-screen
+layout, no overflow or runtime errors, and all 19 canonical GET requests
+returning HTTP 200. No real wallet or write operation was used.
+
+Inventory: `docs/garden-card-copy-published.json`.
+Verification: `docs/garden-card-copy-verification.json`.
+Historical release records remain below.
+
+---
+
 # Current production — compact Daily Growth redesign, 2026-10-31
 
 Deployment `6ae67337da46ecbf141c68f5` is live at

@@ -1,0 +1,63 @@
+{
+  "result": "passed",
+  "deployId": "6ae675c1c1f884339010a053",
+  "publishedAt": "2026-10-31T23:12:43.365Z",
+  "locked": true,
+  "url": "https://tree-token.xyz/play/",
+  "sourceCommit": "38202682d3242e7f5f8785a633e832dcca0d290b",
+  "sourceTree": "4577aeb1f7458e189e2eb4d034be4fd4a89a86ab",
+  "previousDeployId": "6ae67337da46ecbf141c68f5",
+  "scope": {
+    "changedPublicFiles": [
+      "/play/index.html"
+    ],
+    "publicPaths": 241,
+    "otherStaticFilesUnchanged": 240,
+    "functionRecordsUnchanged": 40,
+    "scheduledJobsUnchanged": 5,
+    "backendUnchanged": true,
+    "walletAdaptersUnchanged": true,
+    "javaScriptAndCssUnchanged": true,
+    "htmlOutsideGardenBattlesUnchanged": true
+  },
+  "changes": {
+    "removed": [
+      "Four ways to play Garden Battles introduction",
+      "Generic overview paragraph",
+      "Right-side gameplay preview"
+    ],
+    "heading": "Garden Battles",
+    "cardSubtitles": {
+      "Garden Bot": "Turn-based card strategy \u00b7 Solo",
+      "PvP Battle": "Turn-based card strategy \u00b7 PvP",
+      "Arborist Trials": "Daily strategy \u00b7 Predetermined cards"
+    }
+  },
+  "verification": {
+    "exactHostedHtmlMatchesSource": true,
+    "publicStatusConfigurationPassed": true,
+    "viewportWidths": [
+      1440,
+      320
+    ],
+    "cardLinksArtworkStatusesPreserved": 4,
+    "topOfPageLayoutUnchanged": true,
+    "horizontalOverflow": false,
+    "canonicalRequests": 19,
+    "allResponses200": true,
+    "pageErrors": [],
+    "consoleErrors": [],
+    "blocked": [],
+    "noWalletOrSignatureOrTransaction": true
+  },
+  "evidence": {
+    "publishedInventory": "docs/garden-card-copy-published.json",
+    "canonicalHtml": "docs/review/garden-card-copy-canonical-files.json",
+    "canonicalBrowser": "docs/review/garden-card-copy-canonical-browser.json"
+  },
+  "notes": [
+    "Hosted checks use actual signed-out state and GET requests only. No real wallet approval, transaction, or progress write was used.",
+    "HTML comparison removes only the exact pre-existing hosting snippet calibrated against the previous deployment.",
+    "Browser report screenshot paths identify temporary inspection captures."
+  ]
+}
