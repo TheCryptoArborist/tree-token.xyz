@@ -121,3 +121,41 @@ body .nftree-gateway[aria-label="NFTree Gateway"] button:not(.nftree-secondary):
 .continuation-details p{padding-top:10px}
 .continuation-details code{display:block;padding-top:7px}
 .continuation-review .continuation-receipt{font-size:11px;color:#c7e4a8}
+
+/* Wallet and NFTree access now live inside the actual game home screen. */
+.nftree-home{position:relative;width:100%;height:100%;min-height:0}
+.nftree-home .phaser-mount{position:absolute;inset:0}
+.home-arcade-link{position:absolute;z-index:10;top:1.8%;left:7%;color:#b9cead;font:700 9px/1.3 Verdana,sans-serif;letter-spacing:.08em;text-decoration:none}
+.nftree-home-access{position:absolute;z-index:12;top:56.5%;left:8%;right:8%;max-height:36.5%;overflow-y:auto;padding:13px 15px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;border:1px solid #78964d;border-radius:12px;background:linear-gradient(150deg,#13271eee,#09160ff5);box-shadow:0 5px 25px #0007;scrollbar-width:thin;touch-action:pan-y}
+.nftree-home-access h2{margin:0;color:#e8f7cd;font:700 13px/1.4 Verdana,sans-serif}
+.nftree-home-access p{margin:0;color:#c8d5c0;font:11px/1.4 Verdana,sans-serif}
+.nftree-home-access .home-access-note{font-size:10px;color:#a8bba1}
+.nftree-home-access .home-wallet-hint{font-size:10px;color:#b8c9ad}
+.nftree-home-access .home-continue-note{font-size:10px;color:#d5d9a0}
+.nftree-home-access .home-access-warning{font:9px/1.4 Verdana,sans-serif;color:#a9baa0}
+.nftree-home-access .home-nftree-link{font:10px/1.4 Verdana,sans-serif;color:#d7edab;text-underline-offset:3px}
+.nftree-home-access .home-connect,.nftree-home-access .home-play{display:block;width:100%;min-height:44px;padding:10px;border:1px solid #def4a4;border-radius:7px;background:linear-gradient(115deg,#d8f997,#9cdb70);color:#12250c;font:800 13px/1.3 Verdana,sans-serif;cursor:pointer;touch-action:manipulation}
+.nftree-home-access button:disabled{opacity:.6;cursor:wait}
+.home-account-row{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%}
+.home-account-row .home-connected{font-size:10px;color:#c3df9c}
+.home-account-row .home-disconnect{min-height:26px;padding:3px 7px;border:1px solid #62794f;border-radius:5px;background:transparent;color:#becdb2;font:10px/1.4 Verdana,sans-serif;cursor:pointer;touch-action:manipulation}
+.nftree-home-access [role=alert]{color:#ffb4a9;overflow-wrap:anywhere}
+.home-wallet-picker{width:min(430px,calc(100vw - 24px));max-height:calc(100dvh - 32px);overflow-y:auto;padding:22px;border:1px solid #688051;border-radius:16px;background:#102018;color:#f2f6e9;box-shadow:0 25px 90px #000a;text-align:left;font-family:Verdana,Arial,sans-serif;touch-action:pan-y}
+.home-wallet-picker::backdrop{background:#020906c9;backdrop-filter:blur(3px)}
+.home-wallet-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.home-wallet-heading>div>span{font-size:9px;letter-spacing:.18em;color:#b6d88b}
+.home-wallet-heading h2{margin:6px 0 10px;color:#f2f6e9;font-size:23px;line-height:1.25}
+.home-wallet-picker .wallet-picker-close{width:32px;height:32px;min-height:32px;padding:0;border:1px solid #4c6441;border-radius:50%;background:#1b3021;color:#ecf4e4;font:25px/1 Arial,sans-serif;cursor:pointer;touch-action:manipulation}
+.home-wallet-picker>p{font-size:12px;line-height:1.6;color:#b7c9ae;margin:5px 0 15px;max-width:none}
+.home-wallet-picker h3{margin:20px 0 8px;color:#b7d895;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.home-wallet-options{display:flex;flex-direction:column;gap:8px}
+.home-wallet-picker .home-wallet-row{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;margin:0;padding:11px 12px;border:1px solid #42603b;border-radius:9px;background:#1c3223;color:#f4f7ed;font:700 14px/1.3 Verdana,sans-serif;text-align:left;text-decoration:none;cursor:pointer;touch-action:manipulation}
+.home-wallet-picker .home-wallet-row:hover{border-color:#a3d16a;background:#28412c}
+.home-wallet-picker .home-wallet-row img,.wallet-letter{display:grid;place-items:center;flex:0 0 32px;width:32px;height:32px;border-radius:8px;background:#102018;font-size:21px}
+.home-wallet-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#f4f7ed}
+.home-wallet-action{font-size:10px;white-space:nowrap;color:#c6e89e}
+.home-wallet-picker button:disabled{opacity:.65;cursor:wait}
+.home-wallet-picker [role=alert]{color:#ffb4a9}
+.home-wallet-picker .home-wallet-footnote{margin:17px 0 0;padding-top:12px;border-top:1px solid #354b30;font-size:10px;color:#a7b99d}
+.nftree-home button:focus-visible,.nftree-home a:focus-visible,.home-wallet-picker button:focus-visible,.home-wallet-picker a:focus-visible{outline:3px solid #d5b2ff;outline-offset:3px}
+@media(max-height:650px){.nftree-home-access{gap:6px;padding:9px 12px}.nftree-home-access h2{font-size:12px}.nftree-home-access .home-connect,.nftree-home-access .home-play{min-height:38px;font-size:12px}}

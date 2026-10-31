@@ -11,6 +11,7 @@ on:
       - 'tests/treeforce89-continue-dialog.test.mjs'
       - 'tests/treeforce89-receipt-discovery.test.mjs'
       - 'tests/treeforce89-checkout-interaction.test.mjs'
+      - 'tests/treeforce89-home-wallet.test.mjs'
       - 'tests/treeforce89-ui/**'
       - '.github/workflows/treeforce89-paid-continue.yml'
   workflow_dispatch:
@@ -47,5 +48,5 @@ jobs:
       - run: npm ci --ignore-scripts --no-audit --no-fund
       - run: npm ci --prefix netlify/preview-lib/treeforce89-source --ignore-scripts --no-audit --no-fund
       - run: npm ci --prefix tests/treeforce89-ui --ignore-scripts --no-audit --no-fund
-      - run: node --test tests/treeforce89-paid-client.test.mjs tests/treeforce89-continue-dialog.test.mjs tests/treeforce89-receipt-discovery.test.mjs tests/treeforce89-checkout-interaction.test.mjs
+      - run: node --test tests/treeforce89-paid-client.test.mjs tests/treeforce89-continue-dialog.test.mjs tests/treeforce89-receipt-discovery.test.mjs tests/treeforce89-checkout-interaction.test.mjs tests/treeforce89-home-wallet.test.mjs
       - run: node scripts/verify-treeforce89-paid-database.mjs

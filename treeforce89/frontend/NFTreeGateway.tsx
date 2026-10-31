@@ -1,7 +1,7 @@
 "use client";
 import {useEffect,useRef,useState} from 'react';
 import {useCurrentAccount,useDAppKit,useWalletConnection} from '@mysten/dapp-kit-react';
-import {ConnectButton} from '@mysten/dapp-kit-react/ui';
+import WalletPicker from './WalletPicker';
 import {authenticateGateway,revokeGatewaySession,isGatewaySessionCurrent,restartGatewayRun} from './game/gateway-client.mjs';
 import CanopyGame from './CanopyGame';
 import ContinuationReview from './ContinuationReview';
@@ -71,7 +71,7 @@ export default function NFTreeGateway() {
       if(version!==epoch.current || kit.stores.$connection.get().account?.address!==account.address){
         void revokeGatewaySession(verified).catch(()=>{});return;
       }
-      setResume(undefined);lastGrant.current='';setInitialScene('title');sessionRef.current=verified;setSession(verified);
+      setResume(undefined);lastGrant.current='';setInitialScene('game');sessionRef.current=verified;setSession(verified);
     } catch(e) {
       if(version===epoch.current){setSession(null);setError(e instanceof Error?e.message:'Wallet sign-in failed. Please retry.');}
     } finally {
@@ -124,20 +124,23 @@ export default function NFTreeGateway() {
       {checkoutOpen&&<ContinuationReview session={session} run={checkoutRun} onContinue={continuePaid} onClose={()=>setCheckoutOpen(false)} />}
     </div>;
   }
-  return <div className="nftree-gateway" aria-label="NFTree Gateway">
-    <h2>NFTree Gateway</h2>
-    <p>Your NFTree is your arcade pass. Connect your Sui wallet, then verify access to play TREE FORCE ’89.</p>
-    {!account ? <ConnectButton /> : <>
-      <p className="nftree-connected">Wallet connected · {account.address.slice(0,6)}…{account.address.slice(-4)}</p>
-      <button type="button" disabled={pending} onClick={verify}>{pending?stage:'Verify NFTree & Play'}</button>
-      <button className="nftree-secondary" type="button" onClick={disconnect}>Disconnect</button>
+  return <div className="nftree-home">
+    <CanopyGame homeOnly />
+    <a className="home-arcade-link" href="/play/">← TREE ARCADE</a>
+    <section className="nftree-home-access" aria-label="NFTree player access">
+    <h2>Your NFTree is your arcade pass</h2>
+    {!account ? <WalletPicker /> : <>
+      <div className="home-account-row"><p className="home-connected">Connected · {account.address.slice(0,6)}…{account.address.slice(-4)}</p>
+      <button className="home-disconnect" type="button" onClick={disconnect}>Disconnect</button></div>
+      <button type="button" className="home-play" disabled={pending} onClick={verify}>{pending?stage:'Verify NFTree & Play'}</button>
     </>}
     {!account && connection.status==='connecting' && <p role="status">Waiting for your wallet…</p>}
     {pending && <p role="status" aria-live="polite">{stage}</p>}
-    <p className="nftree-signin-note">Sign-in uses a message signature. It does not transfer tokens or charge a fee.</p>
-    <p className="nftree-signin-note">Use a wallet holding an NFTree directly. Kiosk and custody holdings are not supported in this preview.</p>
-    <a href="https://nftree.net/" target="_blank" rel="noreferrer">Explore NFTrees</a>
-    <small>If your wallet shows a security warning, stop. Do not bypass it.</small>
+    <p className="home-access-note">Free entry with a directly held NFTree. Sign-in only requests a message signature.</p>
+    <p className="home-continue-note">3 lives · Continue for 20,000 TREE</p>
+    <a className="home-nftree-link" href="https://nftree.net/" target="_blank" rel="noreferrer">Explore NFTrees ↗</a>
+    <small className="home-access-warning">Stop if your wallet shows a security warning.</small>
     {error&&<p role="alert">{error}</p>}
+    </section>
   </div>;
 }
