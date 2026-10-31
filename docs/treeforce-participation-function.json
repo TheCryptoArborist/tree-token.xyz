@@ -1,0 +1,102 @@
+{
+  "version": 1,
+  "packager": {
+    "name": "@netlify/zip-it-and-ship-it",
+    "version": "16.3.0"
+  },
+  "name": "arcade-growth",
+  "path": ".netlify/treeforce-participation-functions/arcade-growth.zip",
+  "sha256": "ac313c8da92e4c5cb2fde6014f1fc5dbd917ebe49c94fab05e5e70162f1bef57",
+  "runtimeVersion": "nodejs22.x",
+  "invocationMode": "stream",
+  "buildData": {
+    "bootstrapVersion": "2.24.0",
+    "runtimeAPIVersion": 2
+  },
+  "routes": [
+    {
+      "pattern": "/api/arcade-growth",
+      "literal": "/api/arcade-growth",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    }
+  ],
+  "trafficRules": {
+    "action": {
+      "type": "rate_limit",
+      "config": {
+        "rateLimitConfig": {
+          "windowLimit": 60,
+          "windowSize": 60,
+          "algorithm": "sliding_window"
+        },
+        "aggregate": {
+          "keys": [
+            {
+              "type": "domain"
+            },
+            {
+              "type": "ip"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "sourceFiles": [
+    {
+      "path": "netlify/functions/arcade-growth.ts",
+      "sha256": "0188744d6c17651de6c23b375ea79d99013631cf641a0e7b33371ec6f8c5f070"
+    },
+    {
+      "path": "netlify/functions/nftree-wallet.ts",
+      "sha256": "8022f7254ef2673740fb11186c9e8573918b9f351dc767dd9b32095424c4e09e"
+    },
+    {
+      "path": "netlify/lib/arcade-growth-core.ts",
+      "sha256": "a51604062fa82eb9214c863edd14200dca336005a7763f08e98cf86ce42344cf"
+    },
+    {
+      "path": "netlify/lib/arcade-growth-games.ts",
+      "sha256": "4733456507402268350fead99dca643728c10c5109ab1aff651753d3f4b7ec9c"
+    },
+    {
+      "path": "netlify/lib/arcade-growth-store.ts",
+      "sha256": "147c1b40d257f99ec4416d4ca2a00886bc519687ddf1c12569206794171a2cf3"
+    },
+    {
+      "path": "netlify/lib/arcade-pg.d.ts",
+      "sha256": "578c339f048174b35a43571eef5116d3987e007413cc1c961a65fd638ba50bb2"
+    },
+    {
+      "path": "netlify/lib/arcade-treeforce-session.ts",
+      "sha256": "dc5978bf67685610f3929ee3cf96ccbdd90a8ae45bd46c712f9cbf9f635b6eba"
+    },
+    {
+      "path": "netlify/lib/nftree-wallet-verification.ts",
+      "sha256": "d4c7f26fc5067d9e24e8c3dc8d56fe0e991d60a6c851861502e30ff93a08a860"
+    },
+    {
+      "path": "netlify/lib/tree-nftree-overview.ts",
+      "sha256": "505ad626c7fb43c53af847159324cb38a37f4ff04a09eed2585c778f06a0c241"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "f4c0726549471554450a38e62caa3d14f9b90404d1ad5164113f0a366b9b57eb"
+    },
+    {
+      "path": "package.json",
+      "sha256": "2ece6ffd478948d8a037103bb1f874e5643e761757362b091d692fc1b5a0dbca"
+    },
+    {
+      "path": "vendor/arcade-growth-backend/package-lock.json",
+      "sha256": "7211d6f5bd71cf00aa91f53eaef7e30f3e44c803881917463f1eb9d2994cea52"
+    },
+    {
+      "path": "vendor/arcade-growth-backend/package.json",
+      "sha256": "92dbbd52fa34452e1383f8b40af63d0e628b29e386032efc3fab5833f4b5b583"
+    }
+  ]
+}

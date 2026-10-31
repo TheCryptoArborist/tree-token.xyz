@@ -1,9 +1,14 @@
-// Daily Growth has its own message-only wallet session. Game launches never grant credit.
+// Daily Growth has its own message-only wallet session. Opening a game link never grants credit.
 const API_PATH = '/api/arcade-growth';
 const WALLET_MODULE = '/assets/arcade/arcade-growth-wallet.js';
 const SESSION_KEY = 'tree-arcade:daily-growth:session:v1';
 const AUTH_ERRORS = new Set(['authentication-required', 'invalid-session', 'expired-session']);
+const TREE_FORCE_ID = 'treeforce89';
 const GAME_COPY = {
+  [TREE_FORCE_ID]: {
+    objective: 'Start a run and reach the first wave. You do not need to win or finish.',
+    access: 'NFTree held directly in your wallet required · Kiosk-held NFTrees are not supported by this game',
+  },
   'garden-bot': {
     objective: 'Finish one official battle. Win or lose, it counts.',
     access: 'Official battle required · Network gas applies',
@@ -37,7 +42,9 @@ function gameDescriptor(game) {
   if (!game || !/^[a-z][a-z0-9-]{0,63}$/.test(game.id) || !text(game.label, 80) || !text(game.href, 2048)) throw invalidData();
   const url = new URL(game.href, 'https://tree-token.xyz');
   if (url.protocol !== 'https:' || url.username || url.password) throw invalidData();
-  return { id: game.id, label: game.label, href: url.href };
+  const creditRule = game.creditRule || (game.id === TREE_FORCE_ID ? 'start-run' : 'complete-result');
+  if (!['start-run', 'complete-result'].includes(creditRule)) throw invalidData();
+  return { id: game.id, label: game.label, href: url.href, creditRule };
 }
 
 function uniqueStrings(values) {
@@ -49,9 +56,13 @@ function normalizeConfiguration(value) {
   if (!value || !Array.isArray(value.enabledGames) || value.enabledGames.length > 30) throw invalidData();
   const enabledGames = value.enabledGames.map(gameDescriptor);
   if (new Set(enabledGames.map((game) => game.id)).size !== enabledGames.length) throw invalidData();
+  const eligible = value.eligibleGames ?? value.enabledGames;
+  if (!Array.isArray(eligible) || eligible.length > 30) throw invalidData();
+  const eligibleGames = eligible.map(gameDescriptor);
+  if (new Set(eligibleGames.map((game) => game.id)).size !== eligibleGames.length) throw invalidData();
   const todayPick = value.todayPick ? gameDescriptor(value.todayPick) : null;
-  if (todayPick && !enabledGames.some((game) => game.id === todayPick.id)) throw invalidData();
-  return { enabledGames, todayPick };
+  if (todayPick && !eligibleGames.some((game) => game.id === todayPick.id)) throw invalidData();
+  return { enabledGames, eligibleGames, todayPick };
 }
 
 function normalizeProgress(value, expectedWallet) {
@@ -73,13 +84,17 @@ function normalizeProgress(value, expectedWallet) {
   const enabledGames = value.passport.enabledGames.map(gameDescriptor);
   const completedGameIds = uniqueStrings(value.passport.completedGameIds);
   if (new Set(enabledGames.map((game) => game.id)).size !== enabledGames.length || completedGameIds.some((id) => !enabledGames.some((game) => game.id === id))) throw invalidData();
+  if (value.passport.optionalGames !== undefined && !Array.isArray(value.passport.optionalGames)) throw invalidData();
+  const optionalGames = (value.passport.optionalGames || []).map(gameDescriptor);
+  const optionalCompletedGameIds = uniqueStrings(value.passport.optionalCompletedGameIds ?? []);
+  if (new Set(optionalGames.map((game) => game.id)).size !== optionalGames.length || optionalGames.some((game) => enabledGames.some((required) => required.id === game.id)) || optionalCompletedGameIds.some((id) => !optionalGames.some((game) => game.id === id))) throw invalidData();
   if (!Array.isArray(value.milestones) || value.milestones.some((item) => !text(item.id, 100) || !text(item.label, 100) || !Number.isInteger(item.target) || item.target < 1 || item.target > 31 || typeof item.earned !== 'boolean')) throw invalidData();
   if (!Array.isArray(value.badges) || value.badges.some((badge) => !text(badge.id, 150) || !text(badge.label, 150) || !monthKeyPattern.test(badge.monthKey) || !Number.isFinite(timestamp(badge.earnedAt)))) throw invalidData();
   return {
     wallet: expectedWallet, monthKey: value.monthKey, dateKey: value.dateKey, calendar,
     checkedInDays: value.checkedInDays, questDays: value.questDays,
     today: { checkedIn: today.checkedIn, questCompleted: today.questCompleted, gameIds: uniqueStrings(value.today.gameIds) },
-    passport: { monthKey: value.monthKey, enabledGames, completedGameIds, complete: value.passport.complete },
+    passport: { monthKey: value.monthKey, enabledGames, completedGameIds, optionalGames, optionalCompletedGameIds, complete: value.passport.complete },
     milestones: value.milestones.map((item) => ({ ...item })), badges: value.badges.map((badge) => ({ ...badge })),
   };
 }
@@ -113,9 +128,9 @@ export function createDailyGrowth({
   const byId = (id) => root.querySelector(`#growth-${id}`);
   const ui = Object.fromEntries([
     'meta', 'wallet-state', 'auth-note', 'connect', 'sign-in', 'sign-out', 'wallet-picker', 'wallet-options', 'no-wallet',
-    'quest-state', 'pick-label', 'game-name', 'objective', 'game-access', 'play', 'refresh', 'alternative', 'game-select',
+    'quest-state', 'quest-rule', 'pick-label', 'game-name', 'objective', 'game-access', 'play', 'refresh', 'alternative', 'game-select',
     'quest-note', 'visit-count', 'visit-label', 'check-note', 'check-in', 'passport-count', 'passport-note', 'stamps',
-    'passport-reward', 'tracking-note', 'month-empty', 'month-content', 'month-visits', 'month-quests', 'next', 'calendar', 'milestones',
+    'passport-reward', 'passport-optional', 'optional-stamps', 'tracking-note', 'month-empty', 'month-content', 'month-visits', 'month-quests', 'next', 'calendar', 'milestones',
     'badges-empty', 'badges', 'status',
   ].map((id) => [id, byId(id)]));
   const state = {
@@ -246,7 +261,7 @@ export function createDailyGrowth({
     if (expectedWallet) state.progress = nextProgress;
     state.apiUnavailable = false;
     state.stale = false;
-    if (!nextConfiguration.enabledGames.some((game) => game.id === state.selectedGameId)) state.selectedGameId = nextConfiguration.todayPick?.id || nextConfiguration.enabledGames[0]?.id || null;
+    if (!nextConfiguration.eligibleGames.some((game) => game.id === state.selectedGameId)) state.selectedGameId = nextConfiguration.todayPick?.id || nextConfiguration.eligibleGames[0]?.id || null;
   }
 
   function reportError(error) {
@@ -316,11 +331,13 @@ export function createDailyGrowth({
       : progress ? 'Check in without playing. A verified quest also checks you in.'
         : unavailable ? 'Attendance is unavailable. It has not been reset to zero.' : 'Sign in to see your saved attendance. You can check in without playing a game.';
     ui.stamps.replaceChildren();
+    ui['optional-stamps'].replaceChildren();
+    ui['passport-optional'].hidden = !progress?.passport.optionalGames.length;
     ui.badges.replaceChildren();
     ui.milestones.replaceChildren();
-    ui['passport-count'].textContent = progress ? `${progress.passport.completedGameIds.length} / ${progress.passport.enabledGames.length} games` : unavailable ? 'Unavailable' : 'Sign in to view';
+    ui['passport-count'].textContent = progress ? `${progress.passport.completedGameIds.length} / ${progress.passport.enabledGames.length} required games` : unavailable ? 'Unavailable' : 'Sign in to view';
     ui['passport-note'].textContent = progress
-      ? `${monthLabel(progress.monthKey)} · Explore games with verified result tracking at your own pace. Paid PvP is optional for check-ins and daily quests.`
+      ? `${monthLabel(progress.monthKey)} · Complete the listed required games for this optional monthly goal. Paid PvP is not required for check-ins or daily quests.`
       : 'Explore eligible games at your own pace this month. The passport is an optional goal.';
     ui['passport-reward'].textContent = '';
     ui['badges-empty'].hidden = Boolean(progress?.badges.length);
@@ -341,9 +358,17 @@ export function createDailyGrowth({
       append(stamp, 'strong', '', game.label);
       append(stamp, 'span', '', complete ? '✓ Stamp earned' : game.id === 'pvp' ? '○ Not yet played · Paid entry' : '○ Not yet played');
     }
+    for (const game of progress.passport.optionalGames) {
+      const recorded = progress.passport.optionalCompletedGameIds.includes(game.id);
+      const stamp = append(ui['optional-stamps'], 'div', `growth-stamp${recorded ? ' is-done' : ''}`);
+      append(stamp, 'strong', '', game.label);
+      append(stamp, 'span', '', recorded
+        ? game.creditRule === 'start-run' ? '✓ First wave started · Optional stamp' : '✓ Optional stamp earned'
+        : game.creditRule === 'start-run' ? '○ Start one run · Optional stamp' : '○ Optional stamp not yet earned');
+    }
     ui['passport-reward'].textContent = progress.passport.complete
       ? 'Monthly Arcade Passport badge earned ✓'
-      : progress.passport.enabledGames.length ? 'All listed stamps earn the monthly Arcade Passport badge. New integrations join a future passport.' : 'Passport games will appear when verified tracking is available.';
+      : progress.passport.enabledGames.length ? 'All required stamps earn the monthly Arcade Passport badge. Optional stamps do not change the requirement.' : 'Passport games will appear when verified tracking is available.';
     for (const milestone of progress.milestones) {
       const item = append(ui.milestones, 'div', `growth-milestone${milestone.earned ? ' is-done' : ''}`);
       append(item, 'strong', '', `${milestone.label}${milestone.earned ? ' ✓' : ''}`);
@@ -383,8 +408,16 @@ export function createDailyGrowth({
     ui['sign-out'].disabled = busy;
     ui['wallet-picker'].hidden = !state.pickerOpen;
     renderWalletOptions();
-    const games = state.configuration?.enabledGames || [];
-    ui['tracking-note'].hidden = !(games.length === 3 && ['garden-bot', 'pvp', 'arborist-trials'].every((id) => games.some((game) => game.id === id)));
+    const games = state.configuration?.eligibleGames || [];
+    const treeForceEnabled = games.some((game) => game.id === TREE_FORCE_ID);
+    const gardenOnly = games.length === 3 && ['garden-bot', 'pvp', 'arborist-trials'].every((id) => games.some((game) => game.id === id));
+    ui['tracking-note'].hidden = !treeForceEnabled && !gardenOnly;
+    ui['tracking-note'].textContent = treeForceEnabled
+      ? 'TREE FORCE ’89 earns an optional participation stamp. This month’s required Passport games stay the same.'
+      : 'TREE FORCE ’89 is live; Daily Growth tracking is coming soon.';
+    ui['quest-rule'].textContent = treeForceEnabled
+      ? 'Start one run of TREE FORCE ’89, or finish an eligible Garden Battle.'
+      : 'Finish an eligible Garden Battle. Win or lose, it counts.';
     const selected = games.find((game) => game.id === state.selectedGameId);
     const done = state.progress?.today.questCompleted;
     ui['quest-state'].textContent = state.progress ? done ? '1 / 1 · Quest complete ✓' : '0 / 1 · Not completed' : state.apiUnavailable ? 'Progress unavailable' : state.configuration ? 'Sign in to save progress' : 'Checking availability…';
@@ -392,7 +425,7 @@ export function createDailyGrowth({
     ui['pick-label'].textContent = selected?.id === state.configuration?.todayPick?.id ? 'Today’s pick:' : 'Your choice:';
     ui['game-name'].textContent = selected?.label || (state.apiUnavailable ? 'Eligible games unavailable' : state.configuration ? 'No eligible games right now' : 'Checking eligible games…');
     const copy = selected ? GAME_COPY[selected.id] : null;
-    ui.objective.textContent = copy?.objective || 'Finish a verified game result, then refresh your progress here.';
+    ui.objective.textContent = copy?.objective || 'Follow the selected game’s participation rule, then refresh your progress here.';
     ui['game-access'].textContent = copy?.access || (selected ? 'Check this game’s access and result-saving requirements before playing.' : '');
     ui.play.hidden = !selected;
     if (selected) {
@@ -401,20 +434,24 @@ export function createDailyGrowth({
       ui.play.setAttribute('aria-label', `Play ${selected.label} (opens in a new tab)`);
     } else ui.play.removeAttribute('href');
     ui.refresh.disabled = busy || (!state.session && !state.apiUnavailable);
-    ui.refresh.textContent = state.busy === 'syncing' ? 'Checking verified results…' : !state.session && state.apiUnavailable ? 'Retry availability' : 'Refresh progress';
+    ui.refresh.textContent = state.busy === 'syncing' ? 'Checking game progress…' : !state.session && state.apiUnavailable ? 'Retry availability' : 'Refresh progress';
     ui.alternative.hidden = games.length < 2;
     const currentOptions = [...ui['game-select'].options].map((option) => option.value).join('|');
     if (currentOptions !== games.map((game) => game.id).join('|')) {
       ui['game-select'].replaceChildren();
       for (const game of games) {
-        const option = append(ui['game-select'], 'option', '', `${game.label}${game.id === 'pvp' ? ' · Paid entry' : ''}`);
+        const option = append(ui['game-select'], 'option', '', `${game.label}${game.id === 'pvp' ? ' · Paid entry' : game.creditRule === 'start-run' ? ' · Start a run' : ''}`);
         option.value = game.id;
       }
     }
     ui['game-select'].value = state.selectedGameId || '';
-    ui['quest-note'].textContent = done
-      ? 'Today’s quest is saved and you’re checked in. Refresh other completed games before 00:00 UTC to add passport stamps.'
-      : 'Complete the game and refresh before 00:00 UTC to earn that day’s quest and passport stamps. Opening a game alone does not count.';
+    ui['quest-note'].textContent = selected?.id === TREE_FORCE_ID
+      ? done
+        ? 'Today’s quest is saved and you’re checked in. TREE FORCE participation is optional for the monthly Passport.'
+        : 'Participation is saved when your first wave starts. Refresh here to see it. One quest per UTC day; opening the link alone does not count.'
+      : done
+        ? 'Today’s quest is saved and you’re checked in. Refresh other completed Garden Battles before 00:00 UTC to add required passport stamps.'
+        : 'Complete the game and refresh before 00:00 UTC to earn that day’s quest and passport stamps. Opening a game alone does not count.';
     ui.status.textContent = state.notice;
     ui.status.className = `growth-status${state.noticeKind ? ` is-${state.noticeKind}` : ''}`;
     renderProgress();
@@ -439,15 +476,19 @@ export function createDailyGrowth({
 
   function syncNotice(payload, previous) {
     const failed = payload.sync?.games?.filter((game) => ['partial', 'unavailable', 'unsupported'].includes(game.status)) || [];
-    const labels = failed.map((result) => state.configuration?.enabledGames.find((game) => game.id === result.gameId)?.label || 'A game');
+    const labels = failed.map((result) => state.configuration?.eligibleGames.find((game) => game.id === result.gameId)?.label || 'A game');
     if (failed.length) {
       state.stale = true;
       setNotice(`Saved progress shown; ${labels.join(', ')} verification is unavailable or incomplete. Refresh again later to check for new results.`, 'error');
       return;
     }
-    if (state.progress?.today.questCompleted && !previous?.today.questCompleted) setNotice('Daily quest complete. You’re checked in for today, and your verified passport progress is saved.', 'success');
+    if (state.progress?.today.questCompleted && !previous?.today.questCompleted) setNotice('Daily quest complete. You’re checked in for today, and your game participation is saved.', 'success');
     else if ((state.progress?.passport.completedGameIds.length || 0) > (previous?.passport.completedGameIds.length || 0)) setNotice('A new passport stamp is saved. Today’s quest is already counted.', 'success');
-    else setNotice('Progress refreshed. Only completed, verified game results add quest or passport stamps. Newly saved results may take a moment to appear.');
+    else if ((state.progress?.passport.optionalCompletedGameIds.length || 0) > (previous?.passport.optionalCompletedGameIds.length || 0)) setNotice('An optional participation stamp is saved. Today’s quest is already counted; required Passport progress is unchanged.', 'success');
+    else if (state.progress?.today.questCompleted) setNotice('Progress refreshed. Today’s quest is already saved. Each UTC day can earn one quest stamp.');
+    else setNotice(state.configuration?.eligibleGames.some((game) => game.id === TREE_FORCE_ID)
+      ? 'Progress refreshed. A recorded first wave of TREE FORCE or a completed, saved Garden Battles result can count. Opening a game link alone does not count.'
+      : 'Progress refreshed. Only completed, verified Garden Battles results count. Opening a game link alone does not count.');
   }
 
   async function refresh() {
@@ -458,7 +499,7 @@ export function createDailyGrowth({
     const session = state.session;
     const previous = state.progress;
     state.busy = 'syncing';
-    setNotice('Checking for completed, verified game results…');
+    setNotice('Checking recorded participation and completed game results…');
     render();
     try {
       const payload = await request('sync', { token: session.token, body: {} });
@@ -520,7 +561,7 @@ export function createDailyGrowth({
       persistSession(state.session);
       state.pickerOpen = false;
       armExpiry();
-      setNotice('Signed in. Checking for your latest verified game results…');
+      setNotice('Signed in. Checking your latest game progress…');
       signedIn = true;
     } catch (error) {
       if (ticket === epoch && !disposed) {
@@ -626,7 +667,9 @@ export function createDailyGrowth({
   on(ui['game-select'], 'change', () => { state.selectedGameId = ui['game-select'].value; render(); });
   on(ui.play, 'click', () => {
     state.launched = true;
-    setNotice('Finish and save your game, then return and refresh before 00:00 UTC. Opening the game has not awarded a stamp.');
+    setNotice(state.selectedGameId === TREE_FORCE_ID
+      ? 'Start a run and reach the first wave, then refresh here to see your recorded participation. Opening the game link has not awarded a stamp.'
+      : 'Finish and save your Garden Battle, then return and refresh before 00:00 UTC. Opening the game link has not awarded a stamp.');
     render();
   });
   const tabs = [...root.querySelectorAll('[role="tab"]')];
@@ -650,7 +693,12 @@ export function createDailyGrowth({
   });
   on(view, 'focus', () => {
     if (state.session && !sessionIsCurrent()) return;
-    if (state.session && state.launched && !state.busy) { setNotice('Back from a game? Refresh before 00:00 UTC to verify today’s result.'); render(); }
+    if (state.session && state.launched && !state.busy) {
+      setNotice(state.selectedGameId === TREE_FORCE_ID
+        ? 'Back from TREE FORCE? Refresh here to see your recorded first-wave participation.'
+        : 'Back from a Garden Battle? Refresh before 00:00 UTC to verify today’s result.');
+      render();
+    }
   });
 
   const ready = (async () => {

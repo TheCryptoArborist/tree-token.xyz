@@ -4,16 +4,21 @@ export const ARCADE_GROWTH_VERSION = 'arcade-growth-v1';
 export const ARCADE_GROWTH_CHALLENGE_MS = 5 * 60_000;
 export const ARCADE_GROWTH_SESSION_MS = 60 * 60_000;
 export const ARCADE_GROWTH_ORIGINS = ['https://tree-token.xyz', 'https://www.tree-token.xyz'] as const;
+// Participation eligibility is separate from the frozen monthly Passport set.
+// Garden adapters continue to accept only their three completed-result modes.
+export const GROWTH_ELIGIBLE_GAME_IDS = [...ARCADE_ENABLED_GAME_IDS, 'treeforce89'] as const;
+export type GrowthEligibleGameId = typeof GROWTH_ELIGIBLE_GAME_IDS[number];
 export const ARCADE_GROWTH_MILESTONES = [
   { id: 'seedling', label: 'Seedling', target: 3 },
   { id: 'sapling', label: 'Sapling', target: 7 },
   { id: 'deep-roots', label: 'Deep Roots', target: 14 },
   { id: 'full-canopy', label: 'Full Canopy', target: 21 },
 ] as const;
-const GAME_DETAILS: Record<ArcadeGrowthGameId, { id: ArcadeGrowthGameId; label: string; href: string }> = {
-  'garden-bot': { id: 'garden-bot', label: 'Garden Bot', href: 'https://nftree.net/battle/garden-bot' },
-  pvp: { id: 'pvp', label: 'PvP Battle', href: 'https://nftree.net/battle/pvp' },
-  'arborist-trials': { id: 'arborist-trials', label: 'Arborist Trials', href: 'https://nftree.net/battle/trials' },
+const GAME_DETAILS: Record<GrowthEligibleGameId, { id: GrowthEligibleGameId; label: string; href: string; creditRule: 'complete-result' | 'start-run' }> = {
+  'garden-bot': { id: 'garden-bot', label: 'Garden Bot', href: 'https://nftree.net/battle/garden-bot', creditRule: 'complete-result' },
+  pvp: { id: 'pvp', label: 'PvP Battle', href: 'https://nftree.net/battle/pvp', creditRule: 'complete-result' },
+  'arborist-trials': { id: 'arborist-trials', label: 'Arborist Trials', href: 'https://nftree.net/battle/trials', creditRule: 'complete-result' },
+  treeforce89: { id: 'treeforce89', label: 'TREE FORCE ’89', href: '/play/treeforce89/', creditRule: 'start-run' },
 };
 
 export class ArcadeGrowthError extends Error {
@@ -46,13 +51,22 @@ export function growthEnabledGames(value: unknown): ArcadeGrowthGameId[] {
   return [...value] as ArcadeGrowthGameId[];
 }
 
+export function growthEligibleGames(value: unknown): GrowthEligibleGameId[] {
+  if (!Array.isArray(value) || value.length !== GROWTH_ELIGIBLE_GAME_IDS.length ||
+      value.some((id) => !GROWTH_ELIGIBLE_GAME_IDS.includes(id)) || new Set(value).size !== value.length) {
+    throw new ArcadeGrowthError('service-unavailable', 'Eligible game rules could not be verified.', 503);
+  }
+  return [...value] as GrowthEligibleGameId[];
+}
+
 export function growthConfiguration(enabled: readonly ArcadeGrowthGameId[], now: Date) {
   const ids = growthEnabledGames(enabled);
   const ordinal = Math.floor(Date.parse(`${growthDateKey(now)}T00:00:00.000Z`) / 86_400_000);
-  const soloIds = ids.filter((id) => id === 'garden-bot' || id === 'arborist-trials');
-  if (!soloIds.length) throw new ArcadeGrowthError('service-unavailable', 'Today’s solo game selection is unavailable.', 503);
+  const soloIds: GrowthEligibleGameId[] = [...ids.filter((id) => id === 'garden-bot' || id === 'arborist-trials'), 'treeforce89'];
   return { ruleVersion: ARCADE_GROWTH_VERSION, enabledGames: ids.map((id) => GAME_DETAILS[id]),
-    todayPick: GAME_DETAILS[soloIds[ordinal % soloIds.length]], questRule: 'Complete any eligible official game result; a win is not required.',
+    eligibleGames: GROWTH_ELIGIBLE_GAME_IDS.map((id) => GAME_DETAILS[id]),
+    todayPick: GAME_DETAILS[soloIds[ordinal % soloIds.length]],
+    questRule: 'Complete a Garden Battles result or start the first wave of a TREE FORCE ’89 run. A win is not required.',
     resetAt: new Date(Date.parse(`${growthDateKey(now)}T00:00:00.000Z`) + 86_400_000).toISOString() };
 }
 
@@ -63,9 +77,10 @@ export type GrowthChallenge = {
 export type GrowthSession = { wallet: string; origin: string; expiresAt: string; revoked: boolean };
 export type GrowthSnapshot = {
   wallet: string; dateKey: string; monthKey: string; enabledGames: ArcadeGrowthGameId[];
+  eligibleGames: GrowthEligibleGameId[];
   checkins: string[];
-  quests: Array<{ dateKey: string; gameId: ArcadeGrowthGameId }>;
-  gamesByDay: Array<{ dateKey: string; gameIds: ArcadeGrowthGameId[] }>;
+  quests: Array<{ dateKey: string; gameId: GrowthEligibleGameId }>;
+  gamesByDay: Array<{ dateKey: string; gameIds: GrowthEligibleGameId[] }>;
   badges: Array<{ id: string; monthKey: string; earnedAt: string }>;
 };
 
@@ -75,7 +90,7 @@ export function growthChallengeMessage(input: { wallet: string; origin: string; 
   }
   return [
     'TREE Arcade Daily Growth',
-    'Action: Sign in to save check-ins and verified game participation',
+    'Action: Sign in to save check-ins and game participation',
     `Domain: ${new URL(input.origin).host}`,
     `URI: ${input.origin}/play/`,
     'Network: sui:mainnet',
@@ -120,16 +135,17 @@ export function buildGrowthProgress(snapshot: GrowthSnapshot) {
     throw new ArcadeGrowthError('service-unavailable', 'The saved progress date could not be verified.', 503);
   }
   const enabledGames = growthEnabledGames(snapshot.enabledGames);
+  const eligibleGames = growthEligibleGames(snapshot.eligibleGames);
   const validDay = (value: unknown): value is string => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) &&
     value.slice(0, 7) === snapshot.monthKey && value <= snapshot.dateKey &&
     Number.isFinite(Date.parse(`${value}T00:00:00.000Z`)) && new Date(`${value}T00:00:00.000Z`).toISOString().slice(0, 10) === value;
   if (!Array.isArray(snapshot.checkins) || snapshot.checkins.some((day) => !validDay(day)) ||
       new Set(snapshot.checkins).size !== snapshot.checkins.length || !Array.isArray(snapshot.quests) ||
-      snapshot.quests.some((item) => !item || !validDay(item.dateKey) || !enabledGames.includes(item.gameId)) ||
+      snapshot.quests.some((item) => !item || !validDay(item.dateKey) || !eligibleGames.includes(item.gameId)) ||
       new Set(snapshot.quests.map((item) => item.dateKey)).size !== snapshot.quests.length ||
       !Array.isArray(snapshot.gamesByDay) || snapshot.gamesByDay.some((item) => !item || !validDay(item.dateKey) ||
         !Array.isArray(item.gameIds) || item.gameIds.length === 0 || new Set(item.gameIds).size !== item.gameIds.length ||
-        item.gameIds.some((id) => !enabledGames.includes(id))) ||
+        item.gameIds.some((id) => !eligibleGames.includes(id))) ||
       new Set(snapshot.gamesByDay.map((item) => item.dateKey)).size !== snapshot.gamesByDay.length || !Array.isArray(snapshot.badges)) {
     throw new ArcadeGrowthError('service-unavailable', 'Saved progress could not be verified.', 503);
   }
@@ -147,6 +163,8 @@ export function buildGrowthProgress(snapshot: GrowthSnapshot) {
     return { dateKey, checkedIn: checked.has(dateKey), questCompleted: quests.has(dateKey), gameIds: games.get(dateKey) || [] };
   });
   const completedGameIds = enabledGames.filter((id) => [...games.values()].some((ids) => ids.includes(id)));
+  const optionalGames = eligibleGames.filter((id) => !(enabledGames as readonly string[]).includes(id));
+  const optionalCompletedGameIds = optionalGames.filter((id) => [...games.values()].some((ids) => ids.includes(id)));
   const badgeLabels = new Map<string, string>([...ARCADE_GROWTH_MILESTONES.map((item) => [item.id, item.label] as [string, string]), ['arcade-passport', 'Arcade Passport']]);
   const badges = snapshot.badges.map((badge) => {
     if (!badge || !badgeLabels.has(badge.id) || !/^\d{4}-(?:0[1-9]|1[0-2])$/.test(badge.monthKey) || badge.monthKey > snapshot.monthKey ||
@@ -158,6 +176,7 @@ export function buildGrowthProgress(snapshot: GrowthSnapshot) {
     checkedInDays: checked.size, questDays: quests.size,
     today: { checkedIn: today.checkedIn, questCompleted: today.questCompleted, gameIds: today.gameIds },
     passport: { monthKey: snapshot.monthKey, enabledGames: enabledGames.map((id) => GAME_DETAILS[id]),
-      completedGameIds, complete: enabledGames.every((id) => completedGameIds.includes(id)) },
+      completedGameIds, complete: enabledGames.every((id) => completedGameIds.includes(id)),
+      optionalGames: optionalGames.map((id) => GAME_DETAILS[id]), optionalCompletedGameIds },
     milestones: ARCADE_GROWTH_MILESTONES.map((item) => ({ ...item, earned: checked.size >= item.target })), badges };
 }

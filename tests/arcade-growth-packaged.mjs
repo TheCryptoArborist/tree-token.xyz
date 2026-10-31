@@ -86,6 +86,7 @@ try {
         assert.equal(passedOrigin, origin);
         const dateKey = new Date().toISOString().slice(0, 10);
         return { wallet, dateKey, monthKey: dateKey.slice(0, 7), enabledGames: [...enabledGames],
+          eligibleGames: [...enabledGames, 'treeforce89'],
           checkins: [], quests: [], gamesByDay: [], badges: [] };
       },
       readSession: unexpected,
@@ -143,9 +144,38 @@ try {
     }
     outcomes.push({ scenario, status: result.status });
   }
+  const driverPath = realpathSync(packagedRequire.resolve('pg'));
+  assert.ok(driverPath.startsWith(unpacked + sep), 'PostgreSQL driver resolved outside the deployment.');
+  const driverPackage = JSON.parse(readFileSync(resolve(unpacked, 'node_modules/pg/package.json'), 'utf8'));
+  assert.equal(driverPackage.version, '8.23.1');
+  const { default: pg } = await import(pathToFileURL(driverPath).href);
+  const pool = new pg.Pool({ max: 1, connectionTimeoutMillis: 100 });
+  assert.equal(typeof pool.query, 'function'); await pool.end();
+  const runId = 'grove-' + 'a'.repeat(32), gameToken = 'b'.repeat(64);
+  const dateKey = new Date().toISOString().slice(0, 10);
+  let participationWrites = 0;
+  const participationHandler = createArcadeGrowthHandler({ env: { ARCADE_GROWTH_ENABLED: 'true' },
+    treeforceSession: async ({ tokenSha256, runId: actualRun }) => {
+      assert.equal(tokenSha256, hash(gameToken)); assert.equal(actualRun, runId);
+      return { wallet, runId, sessionExpiresAt: new Date(Date.now() + 60000).toISOString(), verifiedAt: new Date().toISOString() };
+    },
+    ownership: async (address) => ({ address, network: 'sui-mainnet', nftreeCount: 1 }),
+    store: { async recordTreeforcePlay(input) {
+      assert.equal(input.wallet, wallet); assert.equal(input.runId, runId); participationWrites++;
+      return { snapshot: { wallet }, participation: { saved: true, runId, sourceId: `run:${runId}:${wallet}`,
+        dateKey, recordedAt: new Date().toISOString(), alreadyRecorded: false } };
+    } },
+  });
+  const played = await participationHandler(new Request(`${origin}/api/arcade-growth?action=treeforce-play`, {
+    method: 'POST', headers: { Origin: origin, 'Content-Type': 'application/json', Authorization: `Bearer ${gameToken}` },
+    body: JSON.stringify({ runId }),
+  }));
+  assert.equal(played.status, 200); assert.equal((await played.json()).participation.saved, true);
+  assert.equal(participationWrites, 1);
+  outcomes.push({ scenario: 'authenticated-first-wave-report', status: played.status });
   assert.equal(networkAttempts, 0, 'An unexpected external request was attempted.');
   console.log(JSON.stringify({ result: 'PASS', packagedRuntime: true, sdkVersion: signerVersion,
-    actualLazyVerifierAndGrpcImports: true, outcomes, networkAttempts, transactions: 0 }));
+    actualLazyVerifierAndGrpcImports: true, pgVersion: driverPackage.version, outcomes, networkAttempts, transactions: 0 }));
 } finally {
   globalThis.fetch = originalFetch;
 }

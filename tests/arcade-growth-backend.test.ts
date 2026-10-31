@@ -3,7 +3,7 @@ import test from 'node:test';
 import { createHash } from 'node:crypto';
 import { createArcadeGrowthHandler, type ArcadeGrowthDependencies } from '../netlify/functions/arcade-growth.ts';
 import { ARCADE_ENABLED_GAME_IDS, type ArcadeGrowthGameEvent, type ArcadeGrowthGameSyncResult } from '../netlify/lib/arcade-growth-games.ts';
-import { ArcadeGrowthError, buildGrowthProgress, growthChallengeMessage, growthConfiguration, validateGrowthEvents,
+import { ArcadeGrowthError, GROWTH_ELIGIBLE_GAME_IDS, buildGrowthProgress, growthChallengeMessage, growthConfiguration, validateGrowthEvents,
   type GrowthChallenge, type GrowthSession, type GrowthSnapshot } from '../netlify/lib/arcade-growth-core.ts';
 import { SupabaseArcadeGrowthStore, arcadeGrowthSupabaseConfig, type ArcadeGrowthStore, type GrowthChallengeInput } from '../netlify/lib/arcade-growth-store.ts';
 
@@ -17,7 +17,7 @@ const CHALLENGE_ID = '12345678-1234-4123-8123-123456789abc';
 const SIGNATURE = 'a'.repeat(128);
 const hash = (value: string) => createHash('sha256').update(value).digest('hex');
 const snapshot = (): GrowthSnapshot => ({ wallet: WALLET, dateKey: DATE, monthKey: '2026-10', enabledGames: [...ARCADE_ENABLED_GAME_IDS],
-  checkins: [], quests: [], gamesByDay: [], badges: [] });
+  eligibleGames: [...GROWTH_ELIGIBLE_GAME_IDS], checkins: [], quests: [], gamesByDay: [], badges: [] });
 const event = (gameId: ArcadeGrowthGameEvent['gameId'] = 'garden-bot'): ArcadeGrowthGameEvent => ({
   source: 'garden-battles', sourceId: `${gameId === 'arborist-trials' ? 'trial' : 'battle'}:fixture-${gameId}:${WALLET}`,
   wallet: WALLET, gameId, completedAt: `${DATE}T10:00:00.000Z`,
@@ -73,6 +73,7 @@ class MemoryStore implements ArcadeGrowthStore {
     }
     return structuredClone(this.current);
   }
+  async recordTreeforcePlay(): Promise<never> { throw new Error('TREE FORCE persistence is covered by its SQL and store fixtures.'); }
 }
 
 function fixture(overrides: ArcadeGrowthDependencies = {}) {
@@ -234,10 +235,12 @@ test('partial or unavailable game sources preserve saved credit and never fabric
   const syncGames = async () => ({ events: [], checkedAt: NOW.toISOString(),
     games: ARCADE_ENABLED_GAME_IDS.map((gameId) => ({ gameId, status: 'unavailable' as const, message: 'Source unavailable.' })) });
   const f = fixture({ syncGames }); const first = await f.call('sync');
-  assert.equal(first.data.progress.checkedInDays, 0); assert.ok(first.data.sync.games.every((g: any) => g.status === 'unavailable'));
+  assert.equal(first.data.progress.checkedInDays, 0);
+  assert.ok(first.data.sync.games.filter((g: any) => g.gameId !== 'treeforce89').every((g: any) => g.status === 'unavailable'));
+  assert.equal(first.data.sync.games.find((g: any) => g.gameId === 'treeforce89').status, 'no-result');
   await f.call('check-in'); const second = await f.call('sync');
   assert.equal(second.data.progress.checkedInDays, 1); assert.equal(second.data.progress.questDays, 0);
-  assert.equal(second.data.sync.games.length, 3);
+  assert.equal(second.data.sync.games.length, 4);
 });
 
 test('a validated positive result can grant credit while incomplete history remains explicitly partial', async () => {

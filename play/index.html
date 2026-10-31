@@ -120,7 +120,8 @@
         <div class="growth-today-grid">
           <section class="growth-quest" aria-labelledby="growth-quest-title">
             <div class="growth-quest-heading"><p class="growth-eyebrow">TODAY’S QUEST</p><span class="growth-quest-state" id="growth-quest-state">Checking availability…</span></div>
-            <h3 id="growth-quest-title">Play one round.</h3>
+            <h3 id="growth-quest-title">Play today.</h3>
+            <p class="growth-small growth-quest-rule" id="growth-quest-rule">Choose an eligible game to grow today’s progress.</p>
             <p class="growth-pick"><span id="growth-pick-label">Today’s pick:</span> <strong id="growth-game-name">Checking eligible games…</strong></p>
             <p class="growth-objective" id="growth-objective">Finish a verified game result, then refresh your progress here.</p>
             <p class="growth-small growth-game-access" id="growth-game-access"></p>
@@ -143,6 +144,10 @@
               <summary><span>Arcade Passport</span><span class="growth-passport-progress"><strong id="growth-passport-count">Sign in to view</strong><span class="growth-passport-toggle" aria-hidden="true">+</span></span></summary>
               <p class="growth-small" id="growth-passport-note">Explore eligible games at your own pace this month. The passport is an optional goal.</p>
               <div class="growth-stamps" id="growth-stamps" aria-label="Games played this month"></div>
+              <div class="growth-passport-optional" id="growth-passport-optional" hidden>
+                <p class="growth-small">Optional participation</p>
+                <div class="growth-stamps" id="growth-optional-stamps" aria-label="Optional participation stamps"></div>
+              </div>
               <p class="growth-small" id="growth-passport-reward"></p>
             </details>
             <p class="growth-small growth-tracking-note" id="growth-tracking-note" hidden>TREE FORCE ’89 is live; Daily Growth tracking is coming soon.</p>
@@ -165,7 +170,7 @@
         <div class="growth-badges" id="growth-badges"></div>
       </div>
       <p class="growth-status" id="growth-status" role="status" aria-live="polite" aria-atomic="true">Loading Daily Growth…</p>
-      <div class="growth-footer"><span>Daily reset: 00:00 UTC · Check-ins have no gas fee</span><span>Only verified results count. Preview games are excluded.</span></div>
+      <div class="growth-footer"><span>Daily reset: 00:00 UTC · Check-ins have no gas fee</span><span>Only recorded participation or verified results count. Preview games are excluded.</span></div>
       <noscript><p class="growth-empty">Turn on JavaScript to connect your wallet and load Daily Growth. The game links below still work.</p></noscript>
     </section>
 

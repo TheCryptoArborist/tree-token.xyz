@@ -1,0 +1,12 @@
+{
+  "baselineDeploy": "6ae65d956e30582ff6f5baa2",
+  "baselineSource": "11e0e368bf623f5a6d8898f9c9b4208197e1ebcf",
+  "archiveSha256": "9cb883fd1f22de64d4c3c6b6fc82a34ae1929cd927afdbb63201317cae12dc0b",
+  "entries": 245,
+  "exactEntries": 244,
+  "normalizedBuildPathOnly": [
+    "netlify/functions/arcade-growth.mjs"
+  ],
+  "functionalSourceParity": true,
+  "historical38FunctionGate": "Attempted; archived arcade-wallet-link dependency inventory mismatch remains. Those 39 existing non-Daily-Growth function packages will be preserved exactly."
+}

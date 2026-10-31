@@ -1,0 +1,224 @@
+{
+  "version": 1,
+  "baselineDeploy": "6ae65d956e30582ff6f5baa2",
+  "originalSource": {
+    "repository": "TheCryptoArborist/treeforce89",
+    "commit": "a38e08e37e1f71ea41b86add8e26a92b0789cf22"
+  },
+  "integrationSource": {
+    "repository": "TheCryptoArborist/tree-token.xyz",
+    "commit": "4cd2119a3fefc3b6078befd01ad4f63fb74a695a"
+  },
+  "baselineNativeFiles": [
+    {
+      "path": "/play/treeforce89/assets/arborwing/tree-hero-arborwing-stages-v2.png",
+      "sha1": "808fc199adf82ab5d6ed8e23edd49e46b3a52cf8",
+      "size": 55137
+    },
+    {
+      "path": "/play/treeforce89/assets/arcade-cw4df7w2.js",
+      "sha1": "0eb93075166b1d41ecd1a3b0586c5b52508d06c7",
+      "size": 1267670
+    },
+    {
+      "path": "/play/treeforce89/assets/backgrounds/first-canopy-backdrop.png",
+      "sha1": "cc299f07949f459c91cb4a341a9c3899aec3aa33",
+      "size": 594554
+    },
+    {
+      "path": "/play/treeforce89/assets/backgrounds/first-canopy-foreground.png",
+      "sha1": "4d351175c8595c3176360bc00bc23f3b80a91470",
+      "size": 142735
+    },
+    {
+      "path": "/play/treeforce89/assets/backgrounds/first-canopy-midground.png",
+      "sha1": "ad38f865fe3d7d058484f1a09724de948ba3c13a",
+      "size": 375040
+    },
+    {
+      "path": "/play/treeforce89/assets/graphql-hafrftxs.js",
+      "sha1": "594f4ac60c2bb738880581e1036eef89abb695e7",
+      "size": 54744
+    },
+    {
+      "path": "/play/treeforce89/assets/hero/tree-hero-canonical.jpg",
+      "sha1": "2a408d8abc82aefa7e9091d0d1f3296caa2e6a51",
+      "size": 2283
+    },
+    {
+      "path": "/play/treeforce89/assets/index-ccisclqf.js",
+      "sha1": "846faa5cc41509c4a79ce8263e4ad8c3a55f32fa",
+      "size": 639178
+    },
+    {
+      "path": "/play/treeforce89/assets/index-dnigke6a.css",
+      "sha1": "bf24e7bebcad8df3b19276155a1fba4cbdcb8f83",
+      "size": 27043
+    },
+    {
+      "path": "/play/treeforce89/assets/powerups/boom-token.png",
+      "sha1": "00c7b518424ec21c788063905f53d751ded4983b",
+      "size": 75277
+    },
+    {
+      "path": "/play/treeforce89/assets/powerups/dex-reward-token.jpeg",
+      "sha1": "f8084d3ac313dcce1bdf8c15332806705eef1704",
+      "size": 36626
+    },
+    {
+      "path": "/play/treeforce89/gateway.css",
+      "sha1": "57fa130cabffe6ba54ec58969f1d05559e6c01f6",
+      "size": 21159
+    },
+    {
+      "path": "/play/treeforce89/index.html",
+      "sha1": "5478ccd737ae2fe5728410d36b157f3730984aff",
+      "size": 1673
+    }
+  ],
+  "sourceFiles": [
+    {
+      "path": "scripts/build-treeforce-participation.mjs",
+      "sha256": "334373b7c321f9c4c81458227185e89a6313d2e8382a49797e48feb8391bc4b6"
+    },
+    {
+      "path": "treeforce89/frontend/CanopyGame.tsx",
+      "sha256": "c34777eb81879cdeec35cc87d15fef2b003ce7fb2aa64f053394a047fc1c3100"
+    },
+    {
+      "path": "treeforce89/frontend/NFTreeGateway.tsx",
+      "sha256": "d00f16b950f979049424ffa28a41ced49b160a8eef9847398cb37d4edb8571ce"
+    },
+    {
+      "path": "treeforce89/frontend/participation-client.mjs",
+      "sha256": "c6afdb89f092c27a83928dbf72dc425d07f802e694759282d5106190dae869a6"
+    },
+    {
+      "path": "treeforce89/frontend/participation.css",
+      "sha256": "6e2f2714d34be46f18f6a1412d9b98cce3bbc6140951e9793f4fc16222ae4415"
+    },
+    {
+      "path": "vendor/treeforce-participation/apply-participation.mjs",
+      "sha256": "27f594bc1afef8d1c613fde96860152386b008b78d82faedb58520d7745eef28"
+    },
+    {
+      "path": "vendor/treeforce-participation/baseline.json",
+      "sha256": "21e95bf1f458247662ada81daaf229ff07a7781aab6fec893ed2f0a997c6437c"
+    },
+    {
+      "path": "vendor/treeforce-participation/integration/play/treeforce89/gateway-intro.html",
+      "sha256": "4092f819acbc5d1f5f37d1342ee6e1c2409ef5a0ebfbbaf3a713966a80221782"
+    },
+    {
+      "path": "vendor/treeforce-participation/integration/play/treeforce89/gateway.css",
+      "sha256": "9818eecb3b9fb06933f07d9eee870d9e41dd6ac92ac0c336160ff48a80102675"
+    },
+    {
+      "path": "vendor/treeforce-participation/integration/provenance.json",
+      "sha256": "5fe769842434186c6c954eac0ae0d1a4a304ff96529f37f33302922d3af7c173"
+    },
+    {
+      "path": "vendor/treeforce-participation/integration/scripts/apply-treeforce89-paid-continue.mjs",
+      "sha256": "5a7eb08219d43924464fa141f297f566ad187b11af34fc8f19c7a94d52f62b2c"
+    },
+    {
+      "path": "vendor/treeforce-participation/integration/scripts/layout-treeforce89-hud.mjs",
+      "sha256": "98f0f424071c8b659970c185e8da7ceef3ca57f3c48a134d75d2d9281805e4e3"
+    },
+    {
+      "path": "vendor/treeforce-participation/integration/scripts/rebase-treeforce89-assets.mjs",
+      "sha256": "a311aa12bd98eb6468285497b3c2daebd0f0399e31ca02a9c378bc6ada9f1ab9"
+    },
+    {
+      "path": "vendor/treeforce-participation/integration/scripts/style-treeforce89-gateway.mjs",
+      "sha256": "0dbf9fbb101ae40a285f14b70531abab281acf1d183cf61335c3c86d5eb2b56f"
+    },
+    {
+      "path": "vendor/treeforce-participation/integration/treeforce89/frontend/CanopyGame.tsx",
+      "sha256": "6d6121f1a79a53d71fe95408b837660733f174ef5e4671ed00ddba02f75a838e"
+    },
+    {
+      "path": "vendor/treeforce-participation/integration/treeforce89/frontend/ContinuationDialog.tsx",
+      "sha256": "f4c5a3e106a8044b58ddad1ba497e2cbf36e50f6799af8a1f5fc5bf1d01f4dae"
+    },
+    {
+      "path": "vendor/treeforce-participation/integration/treeforce89/frontend/ContinuationReview.tsx",
+      "sha256": "15cd42e329a8c09490c6732b474a37d7d8b863d781e1703e813915256a395177"
+    },
+    {
+      "path": "vendor/treeforce-participation/integration/treeforce89/frontend/NFTreeGateway.tsx",
+      "sha256": "2e9adb7358fe5c7a6b17d0d0295fc65909d9931328cb9ef236d816379e064fd4"
+    },
+    {
+      "path": "vendor/treeforce-participation/integration/treeforce89/frontend/WalletPicker.tsx",
+      "sha256": "3a2ac2191f8a3931dd50db966931817b49af1fbe9c1f206b5a40b0ff2855bab6"
+    },
+    {
+      "path": "vendor/treeforce-participation/integration/treeforce89/frontend/main.tsx",
+      "sha256": "cb1618ce7f392b1ecdf232dcba05cd4558ea396bb34b8b6e28e51f487562f0c6"
+    },
+    {
+      "path": "vendor/treeforce-participation/integration/treeforce89/paid/authorized-continue-resume.mjs",
+      "sha256": "207b3a72ca32c498b81b0893406cc3ae63fb32d5a29a541a718b622fd08a7f26"
+    },
+    {
+      "path": "vendor/treeforce-participation/integration/treeforce89/paid/client.mjs",
+      "sha256": "a13ab82199d79de5e66d4e25f090a588c4b58440810cc8fce05514ec55e901f4"
+    },
+    {
+      "path": "vendor/treeforce-participation/integration/treeforce89/paid/contract.mjs",
+      "sha256": "598bb7c823910c61eeebc860efdda34fe340b121dec90fcb67ecd924aa81bcc8"
+    },
+    {
+      "path": "vendor/treeforce-participation/integration/treeforce89/paid/mainnet-transaction-reader.mjs",
+      "sha256": "4e2a01fc904601b410231e219ba2c4d40bef1d05bc9b4fe3935d66b2cfbd973f"
+    },
+    {
+      "path": "vendor/treeforce-participation/integration/treeforce89/paid/receipt-discovery.mjs",
+      "sha256": "390a166a3b720a4f7711759df9d0f0c4216e9d34ca327fefbf42cbe156b3f801"
+    },
+    {
+      "path": "vendor/treeforce-participation/integration/treeforce89/paid/wallet-options.mjs",
+      "sha256": "3846f662d9f312eaf402d546b551a009200fa589156f8e81f96392ff42d2e916"
+    }
+  ],
+  "publicFiles": [
+    {
+      "path": "/play/treeforce89/assets/arcade-deuxdoox.js",
+      "source": "play/treeforce89/assets/arcade-DEuXDoOx.js",
+      "sha1": "fbe89196276d0b7cb0d17eb4441a0e6efa188f08",
+      "size": 1268127
+    },
+    {
+      "path": "/play/treeforce89/assets/graphql-ctywyhxq.js",
+      "source": "play/treeforce89/assets/graphql-CTYwYhXQ.js",
+      "sha1": "c024fd2ec1c91212a4a41b4c238384d058f3e839",
+      "size": 54744
+    },
+    {
+      "path": "/play/treeforce89/assets/index-blt2uith.css",
+      "source": "play/treeforce89/assets/index-BLT2uiTh.css",
+      "sha1": "0288ab26fa2250d052b58e1a1e3a3a3faf3ce364",
+      "size": 27588
+    },
+    {
+      "path": "/play/treeforce89/assets/index-bzg9inqq.js",
+      "source": "play/treeforce89/assets/index-Bzg9INqq.js",
+      "sha1": "b082dd1d0284b4384f2610edae7bdb95ca41b432",
+      "size": 644247
+    },
+    {
+      "path": "/play/treeforce89/index.html",
+      "source": "play/treeforce89/index.html",
+      "sha1": "16cc66ea421ce48d1b7a2c8ab164b8aa39cb8ec8",
+      "size": 1673
+    }
+  ],
+  "build": {
+    "baselineExact": true,
+    "baselineFilesMatched": 13,
+    "packageLockSha256": "05a1ac875fecceddbe8d3b37d2d65e1054144f17142afad3c1d26b07cb7745e0",
+    "nodeVersion": "24.22.1",
+    "paymentModulesUnchanged": true
+  }
+}

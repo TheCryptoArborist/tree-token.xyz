@@ -20,6 +20,12 @@ const GAMES = [
   { id: 'pvp', label: 'PvP Battle', href: 'https://nftree.net/battle/pvp' },
   { id: 'arborist-trials', label: 'Arborist Trials', href: 'https://nftree.net/battle/trials' },
 ];
+const FORCE_GAME = { id: 'treeforce89', label: 'TREE FORCE ’89', href: '/play/treeforce89/', creditRule: 'start-run' };
+const FORCE_CONFIGURATION = {
+  enabledGames: GAMES.map((game) => ({ ...game, creditRule: 'complete-result' })),
+  eligibleGames: [...GAMES.map((game) => ({ ...game, creditRule: 'complete-result' })), FORCE_GAME],
+  todayPick: FORCE_GAME,
+};
 const MILESTONES = [
   { id: 'seedling', label: 'Seedling', target: 3 },
   { id: 'sapling', label: 'Sapling', target: 7 },
@@ -33,20 +39,20 @@ const deferred = () => {
   return { promise, resolve: resolvePromise, reject };
 };
 
-function progress({ wallet = ACCOUNT, dateKey = '2026-11-12', visits = [], quests = [], stamps = [], badges = [] } = {}) {
+function progress({ wallet = ACCOUNT, dateKey = '2026-11-12', visits = [], quests = [], stamps = [], badges = [], optionalGames = [], optionalStamps = [], gameIdsByDay = {} } = {}) {
   const monthKey = dateKey.slice(0, 7);
   const [year, month] = monthKey.split('-').map(Number);
   const days = new Date(Date.UTC(year, month, 0)).getUTCDate();
   const calendar = Array.from({ length: days }, (_, index) => ({
     dateKey: `${monthKey}-${String(index + 1).padStart(2, '0')}`,
     checkedIn: visits.includes(index + 1), questCompleted: quests.includes(index + 1),
-    gameIds: quests.includes(index + 1) ? ['garden-bot'] : [],
+    gameIds: quests.includes(index + 1) ? gameIdsByDay[index + 1] || ['garden-bot'] : [],
   }));
   const today = calendar.find((day) => day.dateKey === dateKey);
   return {
     wallet, monthKey, dateKey, calendar, checkedInDays: visits.length, questDays: quests.length,
     today: { checkedIn: today.checkedIn, questCompleted: today.questCompleted, gameIds: today.gameIds },
-    passport: { monthKey, enabledGames: GAMES, completedGameIds: stamps, complete: stamps.length === GAMES.length },
+    passport: { monthKey, enabledGames: GAMES, completedGameIds: stamps, optionalGames, optionalCompletedGameIds: optionalStamps, complete: stamps.length === GAMES.length },
     milestones: MILESTONES.map((item) => ({ ...item, earned: visits.length >= item.target })), badges,
   };
 }
@@ -94,7 +100,7 @@ async function harness(t, options = {}) {
   const envelope = (authenticated = true) => ({
     status: 'ok', serverTime: new Date(clock).toISOString(), dateKey: savedProgress.dateKey,
     monthKey: savedProgress.monthKey, authenticated,
-    configuration: { enabledGames: GAMES, todayPick: GAMES[2] },
+    configuration: options.configuration || { enabledGames: GAMES, todayPick: GAMES[2] },
     ...(authenticated ? { progress: savedProgress } : {}),
   });
   const fetchImpl = async (url, init) => {
@@ -114,7 +120,7 @@ async function harness(t, options = {}) {
       ...envelope(), session: { token: 'server-session-token', wallet: body.wallet, expiresAt: new Date(clock + 3600000).toISOString() },
     };
     else if (action === 'sync') payload = {
-      ...envelope(), sync: { games: GAMES.map((game) => ({ gameId: game.id, status: 'no-result' })), checkedAt: new Date(clock).toISOString() },
+      ...envelope(), sync: { games: (options.configuration?.eligibleGames || GAMES).map((game) => ({ gameId: game.id, status: 'no-result' })), checkedAt: new Date(clock).toISOString() },
     };
     else if (action === 'check-in') {
       const day = Number(savedProgress.dateKey.slice(-2));
@@ -123,6 +129,8 @@ async function harness(t, options = {}) {
         visits: [...new Set([...savedProgress.calendar.filter((entry) => entry.checkedIn).map((entry) => Number(entry.dateKey.slice(-2))), day])],
         quests: savedProgress.calendar.filter((entry) => entry.questCompleted).map((entry) => Number(entry.dateKey.slice(-2))),
         stamps: savedProgress.passport.completedGameIds,
+        optionalGames: savedProgress.passport.optionalGames, optionalStamps: savedProgress.passport.optionalCompletedGameIds,
+        gameIdsByDay: Object.fromEntries(savedProgress.calendar.map((entry) => [Number(entry.dateKey.slice(-2)), entry.gameIds])),
       });
       payload = envelope();
     } else if (action === 'logout') payload = { status: 'ok' };
@@ -193,7 +201,7 @@ test('standalone check-in saves attendance without a quest, passport credit, or 
   assert.equal(h.byId('visit-count').textContent, '1');
   assert.equal(h.byId('check-in').textContent, 'Checked in today ✓');
   assert.equal(h.byId('quest-state').textContent, '0 / 1 · Not completed');
-  assert.equal(h.byId('passport-count').textContent, '0 / 3 games');
+  assert.equal(h.byId('passport-count').textContent, '0 / 3 required games');
   assert.equal(h.byId('check-in').disabled, true);
   await h.controller.checkIn();
   assert.equal(h.count('check-in'), 1);
@@ -211,13 +219,13 @@ test('launching and choosing a game never credits progress; verified sync awards
   h.byId('play').click();
   assert.equal(h.calls.length, before);
   assert.equal(h.byId('visit-count').textContent, '0');
-  assert.equal(h.byId('passport-count').textContent, '0 / 3 games');
+  assert.equal(h.byId('passport-count').textContent, '0 / 3 required games');
   h.setProgress(progress({ visits: [12], quests: [12], stamps: ['garden-bot'] }));
   await h.controller.refresh();
   assert.equal(h.byId('visit-count').textContent, '1');
   assert.equal(h.byId('month-quests').textContent, '1');
   assert.equal(h.byId('quest-state').textContent, '1 / 1 · Quest complete ✓');
-  assert.equal(h.byId('passport-count').textContent, '1 / 3 games');
+  assert.equal(h.byId('passport-count').textContent, '1 / 3 required games');
   assert.match(h.byId('passport-reward').textContent, /monthly Arcade Passport badge/);
   assert.match(h.byId('status').textContent, /Daily quest complete/);
   await h.controller.refresh();
@@ -249,7 +257,7 @@ test('failed writes and incomplete source verification preserve saved progress w
   h.handlers.sync = ({ envelope }) => ({ ...envelope(), sync: { games: [{ gameId: 'pvp', status: 'unavailable' }], checkedAt: new Date(NOW).toISOString() } });
   await h.controller.refresh();
   assert.equal(h.byId('visit-count').textContent, '2');
-  assert.equal(h.byId('passport-count').textContent, '1 / 3 games');
+  assert.equal(h.byId('passport-count').textContent, '1 / 3 required games');
   assert.match(h.byId('status').textContent, /Saved progress shown; PvP Battle verification is unavailable/);
 });
 
@@ -443,4 +451,109 @@ test('actual wallet account invalidation discards an in-flight signature and lat
   assert.equal(h.root.dataset.growthState, 'signed-out');
   assert.equal(h.byId('calendar').children.length, 0);
   assert.equal(h.window.sessionStorage.getItem(SESSION_KEY), null);
+});
+
+test('TREE FORCE is an optional daily choice with first-wave and direct-holder wording; Garden completion rules remain', async (t) => {
+  const h = await harness(t, { configuration: FORCE_CONFIGURATION, progress: progress({ optionalGames: [FORCE_GAME] }) });
+  assert.equal(h.byId('game-name').textContent, 'TREE FORCE ’89');
+  assert.equal(h.byId('game-select').options.length, 4);
+  assert.equal(h.byId('play').href, 'https://tree-token.xyz/play/treeforce89/');
+  assert.match(h.byId('quest-rule').textContent, /Start one run of TREE FORCE ’89, or finish an eligible Garden Battle/);
+  assert.match(h.byId('objective').textContent, /first wave.*do not need to win or finish/);
+  assert.match(h.byId('game-access').textContent, /held directly.*Kiosk-held NFTrees are not supported/);
+  assert.match(h.byId('quest-note').textContent, /saved when your first wave starts/);
+  assert.equal(h.byId('quest-note').textContent.includes('refresh before 00:00'), false, 'Already recorded first-wave credit does not depend on a lobby refresh deadline');
+  assert.equal(h.root.textContent.includes('tracking is coming soon'), false);
+  assert.match(h.byId('tracking-note').textContent, /optional participation stamp/);
+  assert.equal(h.byId('visit-count').textContent, '—');
+  h.byId('game-select').value = 'garden-bot';
+  h.byId('game-select').dispatchEvent(new h.window.Event('change', { bubbles: true }));
+  assert.match(h.byId('objective').textContent, /Finish one official battle/);
+  assert.match(h.byId('quest-note').textContent, /Complete the game and refresh before 00:00 UTC/);
+  h.byId('game-select').value = 'arborist-trials';
+  h.byId('game-select').dispatchEvent(new h.window.Event('change', { bubbles: true }));
+  assert.match(h.byId('objective').textContent, /Finish an official Trial and save the result/);
+  assert.match(h.byId('game-access').textContent, /Unsaved practice does not count/);
+});
+
+test('opening TREE FORCE grants nothing; a server-recorded first wave counts one quest and optional stamp without a required stamp', async (t) => {
+  const h = await harness(t, { configuration: FORCE_CONFIGURATION, progress: progress({ optionalGames: [FORCE_GAME] }) });
+  await h.signIn();
+  const before = h.calls.length;
+  h.byId('play').addEventListener('click', (event) => event.preventDefault());
+  h.byId('play').click();
+  assert.equal(h.calls.length, before);
+  assert.equal(h.byId('visit-count').textContent, '0');
+  assert.equal(h.byId('quest-state').textContent, '0 / 1 · Not completed');
+  assert.equal(h.byId('passport-count').textContent, '0 / 3 required games');
+  assert.equal(h.byId('stamps').children.length, 3);
+  assert.equal(h.byId('optional-stamps').children.length, 1);
+  assert.equal(h.byId('optional-stamps').querySelector('.is-done'), null);
+  h.setProgress(progress({ visits: [12], quests: [12], optionalGames: [FORCE_GAME], optionalStamps: ['treeforce89'], gameIdsByDay: { 12: ['treeforce89'] } }));
+  h.handlers.sync = ({ envelope }) => ({ ...envelope(), sync: { games: [{ gameId: 'treeforce89', status: 'recorded', message: 'First wave participation is saved.' }], checkedAt: new Date(NOW).toISOString() } });
+  await h.controller.refresh();
+  assert.equal(h.byId('visit-count').textContent, '1');
+  assert.equal(h.byId('quest-state').textContent, '1 / 1 · Quest complete ✓');
+  assert.equal(h.byId('check-in').textContent, 'Checked in today ✓');
+  assert.equal(h.byId('passport-count').textContent, '0 / 3 required games');
+  assert.match(h.byId('optional-stamps').textContent, /First wave started · Optional stamp/);
+  assert.equal(h.byId('optional-stamps').querySelectorAll('.is-done').length, 1);
+  assert.equal(h.byId('stamps').querySelectorAll('.is-done').length, 0);
+  assert.equal(h.byId('badges').children.length, 0);
+  assert.equal(h.byId('status').classList.contains('is-error'), false, 'recorded participation is a successful source state');
+  assert.match(h.byId('status').textContent, /Daily quest complete/);
+  assert.equal(h.count('check-in'), 0, 'Attendance arrived from the server event, not a client check-in write');
+  assert.deepEqual(h.calls.filter((call) => call.action === 'sync').map((call) => call.body), [{}, {}]);
+  await h.controller.refresh();
+  assert.equal(h.byId('month-quests').textContent, '1');
+  assert.equal(h.byId('visit-count').textContent, '1');
+  assert.equal(h.byId('passport-count').textContent, '0 / 3 required games');
+});
+
+test('pre-recorded first-wave progress is visible after sign-in while the three-game Passport badge remains complete', async (t) => {
+  const h = await harness(t, { configuration: FORCE_CONFIGURATION, progress: progress({
+    visits: [1, 12], quests: [1, 12], stamps: GAMES.map((game) => game.id),
+    optionalGames: [FORCE_GAME], optionalStamps: ['treeforce89'],
+    gameIdsByDay: { 1: GAMES.map((game) => game.id), 12: ['treeforce89'] },
+    badges: [{ id: 'arcade-passport', label: 'Arcade Passport', monthKey: '2026-11', earnedAt: '2026-11-01T12:00:00Z' }],
+  }) });
+  assert.equal(h.byId('visit-count').textContent, '—');
+  await h.signIn();
+  assert.equal(h.byId('quest-state').textContent, '1 / 1 · Quest complete ✓');
+  assert.equal(h.byId('passport-count').textContent, '3 / 3 required games');
+  assert.match(h.byId('passport-reward').textContent, /Monthly Arcade Passport badge earned/);
+  assert.match(h.byId('optional-stamps').textContent, /First wave started/);
+  assert.equal(h.byId('badges').children.length, 1);
+  assert.equal(h.byId('calendar').querySelector('[aria-current="date"]').getAttribute('aria-label').includes('daily quest complete'), true);
+  assert.equal(h.count('check-in'), 0);
+});
+
+test('TREE FORCE participation remains saved when Garden source refresh is unavailable', async (t) => {
+  const h = await harness(t, { configuration: FORCE_CONFIGURATION, progress: progress({ visits: [12], quests: [12], stamps: ['garden-bot'], optionalGames: [FORCE_GAME] }) });
+  await h.signIn();
+  h.setProgress(progress({ visits: [12], quests: [12], stamps: ['garden-bot'], optionalGames: [FORCE_GAME], optionalStamps: ['treeforce89'], gameIdsByDay: { 12: ['garden-bot', 'treeforce89'] } }));
+  h.handlers.sync = ({ envelope }) => ({ ...envelope(), sync: { games: [
+    { gameId: 'treeforce89', status: 'recorded' }, { gameId: 'pvp', status: 'unavailable' },
+  ], checkedAt: new Date(NOW).toISOString() } });
+  await h.controller.refresh();
+  assert.equal(h.byId('visit-count').textContent, '1');
+  assert.equal(h.byId('month-quests').textContent, '1');
+  assert.equal(h.byId('passport-count').textContent, '1 / 3 required games');
+  assert.match(h.byId('optional-stamps').textContent, /First wave started/);
+  assert.match(h.byId('status').textContent, /PvP Battle verification is unavailable/);
+  assert.equal(h.byId('status').textContent.includes('TREE FORCE ’89 verification is unavailable'), false);
+});
+
+test('an optional TREE FORCE stamp cannot enter required progress through an inconsistent response', async (t) => {
+  const h = await harness(t, { configuration: FORCE_CONFIGURATION, progress: progress({ optionalGames: [FORCE_GAME] }) });
+  await h.signIn();
+  h.handlers.sync = ({ envelope }) => {
+    const payload = envelope();
+    return { ...payload, progress: { ...payload.progress, passport: { ...payload.progress.passport, completedGameIds: ['treeforce89'], complete: true } } };
+  };
+  await h.controller.refresh();
+  assert.equal(h.byId('passport-count').textContent, '0 / 3 required games');
+  assert.equal(h.byId('stamps').querySelectorAll('.is-done').length, 0);
+  assert.equal(h.byId('badges').children.length, 0);
+  assert.match(h.byId('status').textContent, /incomplete progress/);
 });

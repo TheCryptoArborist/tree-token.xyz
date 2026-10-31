@@ -1,0 +1,456 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-10-31T22:01:24.293847+00:00",
+  "status": "applied-and-verified",
+  "scope": "Add TREE FORCE authenticated first-wave participation to Daily Growth without changing game sessions or paid-continue state.",
+  "production": {
+    "projectRef": "lehswszuekjqottolmsf",
+    "migrationName": "arcade_growth_treeforce_participation",
+    "appliedVersion": "20261031220110",
+    "remoteStatementCount": 1,
+    "remoteStatementsSha256": "bb8aa3c0ebdd6514715b799ef68732dc43f3eb635f57dec54bea847adbd11445"
+  },
+  "migration": {
+    "path": "supabase/migrations/20261031220110_arcade_growth_treeforce_participation.sql",
+    "sha256": "bb8aa3c0ebdd6514715b799ef68732dc43f3eb635f57dec54bea847adbd11445",
+    "remoteSqlExactlyMatchesLocal": true,
+    "originalDevelopmentFilename": "supabase/migrations/20261031215156_arcade_growth_treeforce_participation.sql",
+    "localFilenameAlignedWithProductionVersion": true,
+    "previousTwoMigrationsUnmodified": true
+  },
+  "developmentValidation": {
+    "projectRef": "charuqbsxmrirpxciljn",
+    "branchName": "knowledge-trial-v3-safe",
+    "appliedVersion": "20261031215745",
+    "reportPath": "docs/treeforce-participation-database-dev.json",
+    "reportSha256": "0a6e569a7673eb527604493593523541646593ae068abf862e315856fd5b5bf0",
+    "remoteStatementsSha256": "bb8aa3c0ebdd6514715b799ef68732dc43f3eb635f57dec54bea847adbd11445",
+    "tests": [
+      {
+        "path": "tests/arcade-growth-treeforce-database.sql",
+        "sha256": "1e403ab132338a0256b415365a2f7f31c71ac94abc2b29f2c7e8b2a4afb9fa94",
+        "result": "passed; TREE FORCE participation fixtures rolled back",
+        "transaction": "BEGIN / ROLLBACK"
+      },
+      {
+        "path": "tests/arcade-growth-database.sql",
+        "sha256": "3c3daf025d2d98f16389c55974db27b111e0f361a454ae8e4e50f01e860beb2a",
+        "result": "passed; all synthetic records rolled back",
+        "transaction": "BEGIN / ROLLBACK"
+      }
+    ],
+    "allSyntheticFixturesRolledBack": true
+  },
+  "productionPreflight": {
+    "verifiedAt": "2026-10-31T22:00:57.01611+00:00",
+    "priorMigrations": [
+      {
+        "name": "arcade_growth",
+        "version": "20261031211739",
+        "statementsSha256": "d3fe2502612ea9328a3c93321165bc83e0924637ba856c64b37fbaf13847417a"
+      },
+      {
+        "name": "arcade_growth_challenge_rate_scope",
+        "version": "20261031211743",
+        "statementsSha256": "900ec357935e73754a95e533ecda3aceac1a1ca01a0974ca0750fc373dac5060"
+      }
+    ],
+    "constraintsMatchValidatedDevelopmentBaseline": true,
+    "newMigrationPreviouslyAbsent": true,
+    "evidenceColumnPreviouslyAbsent": true,
+    "monthRules": [
+      {
+        "monthKey": "2026-10-01",
+        "ruleVersion": "arcade-growth-v1",
+        "enabledGames": [
+          "garden-bot",
+          "pvp",
+          "arborist-trials"
+        ]
+      }
+    ]
+  },
+  "productionVerification": {
+    "priorMigrationHistoryUnchanged": true,
+    "sevenPrivateTablesRetainRls": true,
+    "noAnonymousOrAuthenticatedTableAccess": true,
+    "allGrowthRoutinesServiceRoleOnly": true,
+    "allGrowthRoutinesSecurityInvoker": true,
+    "allGrowthRoutinesEmptySearchPath": true,
+    "originalUtcDateConstraintPreserved": true,
+    "originalWalletSourceSuffixConstraintPreserved": true,
+    "originalRunUniqueIndex": "CREATE UNIQUE INDEX arcade_growth_treeforce_original_run_idx ON private.arcade_growth_game_events USING btree (split_part(source_id, ':'::text, 2)) WHERE (source = 'treeforce89'::text)",
+    "frozenMonthRulesUnchanged": true,
+    "monthRules": [
+      {
+        "monthKey": "2026-10-01",
+        "ruleVersion": "arcade-growth-v1",
+        "enabledGames": [
+          "garden-bot",
+          "pvp",
+          "arborist-trials"
+        ]
+      }
+    ],
+    "tables": [
+      {
+        "rls": true,
+        "name": "arcade_growth_checkins",
+        "anonAccess": false,
+        "serviceAccess": true,
+        "authenticatedAccess": false
+      },
+      {
+        "rls": true,
+        "name": "arcade_growth_daily_quests",
+        "anonAccess": false,
+        "serviceAccess": true,
+        "authenticatedAccess": false
+      },
+      {
+        "rls": true,
+        "name": "arcade_growth_game_events",
+        "anonAccess": false,
+        "serviceAccess": true,
+        "authenticatedAccess": false
+      },
+      {
+        "rls": true,
+        "name": "arcade_growth_month_rules",
+        "anonAccess": false,
+        "serviceAccess": true,
+        "authenticatedAccess": false
+      },
+      {
+        "rls": true,
+        "name": "arcade_growth_monthly_badges",
+        "anonAccess": false,
+        "serviceAccess": true,
+        "authenticatedAccess": false
+      },
+      {
+        "rls": true,
+        "name": "arcade_growth_sessions",
+        "anonAccess": false,
+        "serviceAccess": true,
+        "authenticatedAccess": false
+      },
+      {
+        "rls": true,
+        "name": "arcade_growth_wallet_challenges",
+        "anonAccess": false,
+        "serviceAccess": true,
+        "authenticatedAccess": false
+      }
+    ],
+    "routines": [
+      {
+        "name": "arcade_growth_award_badges_v1",
+        "config": [
+          "search_path=\"\""
+        ],
+        "schema": "private",
+        "anonExecute": false,
+        "serviceExecute": true,
+        "securityDefiner": false,
+        "identityArguments": "p_wallet text, p_month date, p_games text[]",
+        "authenticatedExecute": false
+      },
+      {
+        "name": "arcade_growth_month_games_v1",
+        "config": [
+          "search_path=\"\""
+        ],
+        "schema": "private",
+        "anonExecute": false,
+        "serviceExecute": true,
+        "securityDefiner": false,
+        "identityArguments": "p_month date, p_games text[], p_freeze boolean",
+        "authenticatedExecute": false
+      },
+      {
+        "name": "arcade_growth_require_session_v1",
+        "config": [
+          "search_path=\"\""
+        ],
+        "schema": "private",
+        "anonExecute": false,
+        "serviceExecute": true,
+        "securityDefiner": false,
+        "identityArguments": "p_token_sha256 text, p_origin text",
+        "authenticatedExecute": false
+      },
+      {
+        "name": "arcade_growth_valid_games_v1",
+        "config": [
+          "search_path=\"\""
+        ],
+        "schema": "private",
+        "anonExecute": false,
+        "serviceExecute": true,
+        "securityDefiner": false,
+        "identityArguments": "p_games text[]",
+        "authenticatedExecute": false
+      },
+      {
+        "name": "arcade_growth_wallet_snapshot_v1",
+        "config": [
+          "search_path=\"\""
+        ],
+        "schema": "private",
+        "anonExecute": false,
+        "serviceExecute": true,
+        "securityDefiner": false,
+        "identityArguments": "p_wallet text, p_day date, p_games text[]",
+        "authenticatedExecute": false
+      },
+      {
+        "name": "arcade_growth_check_in_v1",
+        "config": [
+          "search_path=\"\""
+        ],
+        "schema": "public",
+        "anonExecute": false,
+        "serviceExecute": true,
+        "securityDefiner": false,
+        "identityArguments": "p_token_sha256 text, p_origin text, p_enabled_games text[]",
+        "authenticatedExecute": false
+      },
+      {
+        "name": "arcade_growth_create_challenge_v1",
+        "config": [
+          "search_path=\"\""
+        ],
+        "schema": "public",
+        "anonExecute": false,
+        "serviceExecute": true,
+        "securityDefiner": false,
+        "identityArguments": "p_challenge_id uuid, p_wallet text, p_origin text, p_date_key date, p_nonce_sha256 text, p_message text, p_expires_at timestamp with time zone, p_request_fingerprint text",
+        "authenticatedExecute": false
+      },
+      {
+        "name": "arcade_growth_create_session_v1",
+        "config": [
+          "search_path=\"\""
+        ],
+        "schema": "public",
+        "anonExecute": false,
+        "serviceExecute": true,
+        "securityDefiner": false,
+        "identityArguments": "p_challenge_id uuid, p_wallet text, p_origin text, p_token_sha256 text, p_expires_at timestamp with time zone",
+        "authenticatedExecute": false
+      },
+      {
+        "name": "arcade_growth_public_rules_v1",
+        "config": [
+          "search_path=\"\""
+        ],
+        "schema": "public",
+        "anonExecute": false,
+        "serviceExecute": true,
+        "securityDefiner": false,
+        "identityArguments": "p_enabled_games text[]",
+        "authenticatedExecute": false
+      },
+      {
+        "name": "arcade_growth_read_challenge_v1",
+        "config": [
+          "search_path=\"\""
+        ],
+        "schema": "public",
+        "anonExecute": false,
+        "serviceExecute": true,
+        "securityDefiner": false,
+        "identityArguments": "p_challenge_id uuid",
+        "authenticatedExecute": false
+      },
+      {
+        "name": "arcade_growth_read_session_v1",
+        "config": [
+          "search_path=\"\""
+        ],
+        "schema": "public",
+        "anonExecute": false,
+        "serviceExecute": true,
+        "securityDefiner": false,
+        "identityArguments": "p_token_sha256 text, p_origin text",
+        "authenticatedExecute": false
+      },
+      {
+        "name": "arcade_growth_record_events_v1",
+        "config": [
+          "search_path=\"\""
+        ],
+        "schema": "public",
+        "anonExecute": false,
+        "serviceExecute": true,
+        "securityDefiner": false,
+        "identityArguments": "p_token_sha256 text, p_origin text, p_enabled_games text[], p_date_key date, p_events jsonb",
+        "authenticatedExecute": false
+      },
+      {
+        "name": "arcade_growth_record_treeforce_play_v1",
+        "config": [
+          "search_path=\"\""
+        ],
+        "schema": "public",
+        "anonExecute": false,
+        "serviceExecute": true,
+        "securityDefiner": false,
+        "identityArguments": "p_wallet text, p_run_id text, p_session_expires_at timestamp with time zone, p_verified_at timestamp with time zone",
+        "authenticatedExecute": false
+      },
+      {
+        "name": "arcade_growth_revoke_session_v1",
+        "config": [
+          "search_path=\"\""
+        ],
+        "schema": "public",
+        "anonExecute": false,
+        "serviceExecute": true,
+        "securityDefiner": false,
+        "identityArguments": "p_token_sha256 text, p_origin text",
+        "authenticatedExecute": false
+      },
+      {
+        "name": "arcade_growth_snapshot_v1",
+        "config": [
+          "search_path=\"\""
+        ],
+        "schema": "public",
+        "anonExecute": false,
+        "serviceExecute": true,
+        "securityDefiner": false,
+        "identityArguments": "p_token_sha256 text, p_origin text, p_enabled_games text[]",
+        "authenticatedExecute": false
+      }
+    ],
+    "constraints": [
+      {
+        "name": "arcade_growth_checkins_pkey",
+        "table": "arcade_growth_checkins",
+        "definition": "PRIMARY KEY (wallet, date_key)"
+      },
+      {
+        "name": "arcade_growth_checkins_source_check",
+        "table": "arcade_growth_checkins",
+        "definition": "CHECK (source = ANY (ARRAY['manual'::text, 'verified-game'::text, 'game-participation'::text]))"
+      },
+      {
+        "name": "arcade_growth_checkins_wallet_check",
+        "table": "arcade_growth_checkins",
+        "definition": "CHECK (wallet ~ '^0x[0-9a-f]{64}$'::text AND wallet <> ('0x'::text || repeat('0'::text, 64)))"
+      },
+      {
+        "name": "arcade_growth_daily_quests_game_id_check",
+        "table": "arcade_growth_daily_quests",
+        "definition": "CHECK (game_id = ANY (ARRAY['garden-bot'::text, 'pvp'::text, 'arborist-trials'::text, 'treeforce89'::text]))"
+      },
+      {
+        "name": "arcade_growth_daily_quests_pkey",
+        "table": "arcade_growth_daily_quests",
+        "definition": "PRIMARY KEY (wallet, date_key)"
+      },
+      {
+        "name": "arcade_growth_daily_quests_source_source_id_fkey",
+        "table": "arcade_growth_daily_quests",
+        "definition": "FOREIGN KEY (source, source_id) REFERENCES private.arcade_growth_game_events(source, source_id)"
+      },
+      {
+        "name": "arcade_growth_daily_quests_wallet_date_key_fkey",
+        "table": "arcade_growth_daily_quests",
+        "definition": "FOREIGN KEY (wallet, date_key) REFERENCES private.arcade_growth_checkins(wallet, date_key)"
+      },
+      {
+        "name": "arcade_growth_game_events_check",
+        "table": "arcade_growth_game_events",
+        "definition": "CHECK (date_key = (completed_at AT TIME ZONE 'UTC'::text)::date)"
+      },
+      {
+        "name": "arcade_growth_game_events_check1",
+        "table": "arcade_growth_game_events",
+        "definition": "CHECK (source = 'garden-battles'::text AND evidence_kind = 'completed-result'::text AND (game_id = 'arborist-trials'::text AND source_id ~~ 'trial:%'::text AND proof_digest IS NULL OR (game_id = ANY (ARRAY['garden-bot'::text, 'pvp'::text])) AND source_id ~~ 'battle:%'::text AND proof_digest IS NOT NULL) OR source = 'treeforce89'::text AND game_id = 'treeforce89'::text AND evidence_kind = 'authenticated-run-start'::text AND source_id ~ '^run:grove-[a-f0-9]{32}:0x[a-f0-9]{64}$'::text AND proof_digest IS NULL)"
+      },
+      {
+        "name": "arcade_growth_game_events_check2",
+        "table": "arcade_growth_game_events",
+        "definition": "CHECK (\"right\"(source_id, 67) = (':'::text || wallet))"
+      },
+      {
+        "name": "arcade_growth_game_events_evidence_kind_check",
+        "table": "arcade_growth_game_events",
+        "definition": "CHECK (evidence_kind = ANY (ARRAY['completed-result'::text, 'authenticated-run-start'::text]))"
+      },
+      {
+        "name": "arcade_growth_game_events_game_id_check",
+        "table": "arcade_growth_game_events",
+        "definition": "CHECK (game_id = ANY (ARRAY['garden-bot'::text, 'pvp'::text, 'arborist-trials'::text, 'treeforce89'::text]))"
+      },
+      {
+        "name": "arcade_growth_game_events_pkey",
+        "table": "arcade_growth_game_events",
+        "definition": "PRIMARY KEY (source, source_id)"
+      },
+      {
+        "name": "arcade_growth_game_events_proof_digest_check",
+        "table": "arcade_growth_game_events",
+        "definition": "CHECK (proof_digest ~ '^[1-9A-HJ-NP-Za-km-z]{32,44}$'::text)"
+      },
+      {
+        "name": "arcade_growth_game_events_source_check",
+        "table": "arcade_growth_game_events",
+        "definition": "CHECK (source = ANY (ARRAY['garden-battles'::text, 'treeforce89'::text]))"
+      },
+      {
+        "name": "arcade_growth_game_events_source_id_check",
+        "table": "arcade_growth_game_events",
+        "definition": "CHECK (length(source_id) >= 3 AND length(source_id) <= 200 AND source_id ~ '^[a-zA-Z0-9:_-]+$'::text)"
+      },
+      {
+        "name": "arcade_growth_game_events_wallet_check",
+        "table": "arcade_growth_game_events",
+        "definition": "CHECK (wallet ~ '^0x[0-9a-f]{64}$'::text AND wallet <> ('0x'::text || repeat('0'::text, 64)))"
+      },
+      {
+        "name": "arcade_growth_month_rules_enabled_games_check",
+        "table": "arcade_growth_month_rules",
+        "definition": "CHECK (cardinality(enabled_games) >= 1 AND cardinality(enabled_games) <= 3 AND enabled_games <@ ARRAY['garden-bot'::text, 'pvp'::text, 'arborist-trials'::text] AND array_position(enabled_games, NULL::text) IS NULL)"
+      },
+      {
+        "name": "arcade_growth_month_rules_month_key_check",
+        "table": "arcade_growth_month_rules",
+        "definition": "CHECK (EXTRACT(day FROM month_key) = 1::numeric)"
+      },
+      {
+        "name": "arcade_growth_month_rules_pkey",
+        "table": "arcade_growth_month_rules",
+        "definition": "PRIMARY KEY (month_key)"
+      },
+      {
+        "name": "arcade_growth_month_rules_rule_version_check",
+        "table": "arcade_growth_month_rules",
+        "definition": "CHECK (rule_version = 'arcade-growth-v1'::text)"
+      }
+    ]
+  },
+  "boundaries": {
+    "newRequiredPassportGames": false,
+    "requiredPassportGameIds": [
+      "garden-bot",
+      "pvp",
+      "arborist-trials"
+    ],
+    "newOptionalEligibleGameId": "treeforce89",
+    "utcCreditSource": "Supabase clock_timestamp at the first accepted report; an existing original run keeps its original date on retry.",
+    "syntheticProductionProgressCreated": false,
+    "isolatedTreeforceDatabaseWrites": false,
+    "existingGameAuthenticationOrPaymentObjectsModified": false,
+    "environmentChanges": false,
+    "deploymentsPerformedByThisOperation": false
+  },
+  "independentReview": {
+    "connectionStringOverrideFinding": "Resolved in source: only sslmode=require/verify-full and optional channel_binding=require are allowed; duplicate or unknown keys, alternate ports, and noncanonical database users are rejected before pinning the database identity.",
+    "handlerBoundary": "The handler derives wallet and run from the exact bearer, checks canonical NFTree ownership, rereads the session immediately before the service-only RPC, and accepts no client wallet/date/score/result.",
+    "knownLimitation": "This records authenticated client-reported first-wave participation. It does not prove completed gameplay. The separate game and progress databases cannot make logout/restart atomic across both stores; trusted lease expiry and fresh revalidation bound that interval."
+  }
+}

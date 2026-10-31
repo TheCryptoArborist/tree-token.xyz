@@ -220,6 +220,7 @@ a.suite-owner-link, .suite-owner-link a { display: inline-flex; align-items: cen
 .growth-quest-state { color: var(--growth-muted); font-size: 11px; }
 .growth-quest-state.is-done { color: var(--suite-green); }
 .growth-quest h3 { margin: 7px 0 10px; font-size: 22px; line-height: 1.25; letter-spacing: -.02em; }
+.growth-panel .growth-quest-rule { margin: 0 0 10px; color: #c3d4df; font-size: 13px; }
 .growth-pick { font-size: 13px; }
 .growth-pick > span { color: var(--growth-muted); }
 .growth-objective { margin-top: 5px !important; font-size: 13px; line-height: 1.6; }
@@ -252,6 +253,8 @@ a.suite-owner-link, .suite-owner-link a { display: inline-flex; align-items: cen
 .growth-stamp.is-done { color: var(--suite-green); border-color: #93edbd38; background: #19382e; }
 .growth-stamp.is-done strong { color: var(--suite-green); }
 .growth-passport #growth-passport-reward { color: #b6e3c6; font-size: 11px; }
+.growth-passport-optional { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--growth-line); }
+.growth-passport-optional .growth-stamps { grid-template-columns: minmax(0, 1fr); margin-top: 8px; }
 .growth-month-glance > .growth-tracking-note { grid-column: 1 / -1; color: #becfe0; font-size: 11px; }
 .growth-empty { padding: 15px 0; color: var(--growth-muted); font-size: 13px; }
 .growth-month-summary { display: flex; flex-wrap: wrap; gap: 10px 28px; color: var(--growth-muted); font-size: 13px; }

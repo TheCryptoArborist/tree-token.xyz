@@ -4,6 +4,7 @@ import { ARCADE_GROWTH_CHALLENGE_MS, ARCADE_GROWTH_SESSION_MS, ARCADE_GROWTH_ORI
   ArcadeGrowthError, buildGrowthProgress, growthChallengeMessage, growthConfiguration, growthDateKey,
   growthWallet, validateGrowthEvents, type GrowthSnapshot } from '../lib/arcade-growth-core.ts';
 import { configuredArcadeGrowthStore, type ArcadeGrowthStore } from '../lib/arcade-growth-store.ts';
+import { readTreeforceParticipationSession, treeforceRunId } from '../lib/arcade-treeforce-session.ts';
 
 type Environment = Record<string, string | undefined>;
 type Context = { ip?: string };
@@ -14,8 +15,10 @@ export type ArcadeGrowthDependencies = {
   verifySignature?: (message: Uint8Array, signature: string, wallet: string) => Promise<boolean>;
   ownership?: (wallet: string) => Promise<Ownership>;
   syncGames?: typeof syncGardenParticipation;
+  treeforceSession?: typeof readTreeforceParticipationSession;
 };
 const ENV_KEYS = ['ARCADE_GROWTH_ENABLED', 'ARCADE_GROWTH_RATE_LIMIT_SECRET', 'TREE_KNOWLEDGE_TRIAL_RATE_LIMIT_SECRET',
+  'TREEFORCE89_DEV_DATABASE_URL',
   ...['ARCADE_GROWTH', 'TREE_RAFFLE', 'TREE_KNOWLEDGE_TRIAL'].flatMap((key) => [`${key}_SUPABASE_URL`, `${key}_SUPABASE_SECRET_KEY`])];
 // This reviewed release enables only the new function without changing the
 // site-wide environment/provider identity of the preserved 39 functions.
@@ -97,7 +100,7 @@ export function createArcadeGrowthHandler(dependencies: ArcadeGrowthDependencies
       if ((action === 'status' && request.method !== 'GET') || (action !== 'status' && request.method !== 'POST')) {
         throw new ArcadeGrowthError('method-not-allowed', 'This action does not support that request method.', 405);
       }
-      if (!['status', 'challenge', 'session', 'check-in', 'sync', 'logout'].includes(action)) {
+      if (!['status', 'challenge', 'session', 'check-in', 'sync', 'logout', 'treeforce-play'].includes(action)) {
         throw new ArcadeGrowthError('invalid-request', 'Unknown Daily Growth action.', 404);
       }
       const enabled = env.ARCADE_GROWTH_ENABLED === undefined ? RELEASE_ENABLED_BY_DEFAULT : env.ARCADE_GROWTH_ENABLED === 'true';
@@ -126,6 +129,36 @@ export function createArcadeGrowthHandler(dependencies: ArcadeGrowthDependencies
         }
         return { hash, wallet: growthWallet(session.wallet) };
       };
+      if (action === 'treeforce-play') {
+        // This explicitly approved participation action uses the existing game
+        // credential. It does not accept a wallet, score, result, or client date,
+        // and it never changes the game session or any paid-continue state.
+        if (!request.headers.get('origin') || request.headers.get('sec-fetch-site') === 'cross-site') {
+          throw new ArcadeGrowthError('origin-not-allowed', 'Start your run from the official TREE Arcade website.', 403);
+        }
+        const data = await body(request, ['runId']);
+        const runId = treeforceRunId(data.runId);
+        const authorization = /^Bearer ([a-f0-9]{64})$/.exec(request.headers.get('authorization') || '');
+        if (!authorization) throw new ArcadeGrowthError('invalid-game-session', 'Verify your NFTree in TREE FORCE before starting a run.', 401);
+        const tokenSha256 = sha256(authorization[1]);
+        const readSession = dependencies.treeforceSession || readTreeforceParticipationSession;
+        const initial = await readSession({ tokenSha256, runId, env, now });
+        await requireOwnership(growthWallet(initial.wallet));
+        // Recheck after the ownership read, immediately before the write. The
+        // Supabase RPC also checks the trusted session expiry/freshness. The two
+        // databases do not provide a shared atomic logout/restart transaction.
+        const current = await readSession({ tokenSha256, runId, env, now });
+        if (current.wallet !== initial.wallet || current.runId !== runId) {
+          throw new ArcadeGrowthError('run-changed', 'This game run has changed. Start the current run to record participation.', 409);
+        }
+        const result = await store.recordTreeforcePlay(current);
+        if (result.snapshot.wallet !== current.wallet || result.participation.runId !== runId) {
+          throw new ArcadeGrowthError('participation-unavailable', 'The participation receipt could not be verified. Please retry.', 503);
+        }
+        // A retry can return an older, already-recorded UTC day. Never move
+        // that original run into today's quest or require a lobby sign-in here.
+        return json({ status: 'ok', participation: result.participation });
+      }
       if (action === 'status') {
         if (!request.headers.has('authorization')) {
           const enabled = await store.publicRules(ARCADE_ENABLED_GAME_IDS);
@@ -180,7 +213,7 @@ export function createArcadeGrowthHandler(dependencies: ArcadeGrowthDependencies
         if (snapshot.wallet !== wallet) throw new ArcadeGrowthError('service-unavailable', 'Saved progress identity could not be verified.', 503);
         return json({ ...envelope(snapshot), session: { token, wallet, expiresAt: session.expiresAt } });
       }
-      await body(request, []); // No client dates, results, wins, launch events or achievement flags are accepted.
+      await body(request, []); // Lobby actions accept no client dates, results or achievement flags.
       const { hash, wallet } = await authenticate();
       if (action === 'logout') { await store.revokeSession(hash, origin!); return json({ status: 'ok', authenticated: false }); }
       let snapshot: GrowthSnapshot; let sync: ArcadeGrowthGameSyncResult | undefined;
@@ -195,7 +228,11 @@ export function createArcadeGrowthHandler(dependencies: ArcadeGrowthDependencies
         snapshot = await store.recordEvents(hash, origin!, ARCADE_ENABLED_GAME_IDS, dateKey, events);
       }
       if (snapshot.wallet !== wallet) throw new ArcadeGrowthError('service-unavailable', 'Saved progress identity could not be verified.', 503);
-      return json({ ...envelope(snapshot), ...(sync ? { sync: { games: sync.games, checkedAt: sync.checkedAt } } : {}) });
+      const treeforceRecorded = snapshot.gamesByDay.some((entry) => entry.dateKey === snapshot.dateKey && entry.gameIds.includes('treeforce89'));
+      return json({ ...envelope(snapshot), ...(sync ? { sync: { games: [...sync.games,
+        { gameId: 'treeforce89', status: treeforceRecorded ? 'recorded' : 'no-result',
+          message: treeforceRecorded ? 'TREE FORCE first-wave participation is saved for this UTC day.' : 'Start a run of TREE FORCE and reach the first wave to record participation.' },
+      ], checkedAt: sync.checkedAt } } : {}) });
     } catch (error) {
       const known = error instanceof ArcadeGrowthError ? error : new ArcadeGrowthError('service-unavailable', 'Daily Growth is temporarily unavailable. Your saved progress has not been removed.', 503);
       return json({ status: 'error', error: known.code, message: known.message }, known.status);

@@ -5,6 +5,10 @@ type Environment = Record<string, string | undefined>;
 type JsonRecord = Record<string, unknown>;
 export type GrowthChallengeInput = { challengeId: string; wallet: string; origin: string; dateKey: string;
   nonceSha256: string; message: string; expiresAt: string; requestFingerprint: string };
+export type GrowthTreeforcePlayInput = { wallet: string; runId: string; sessionExpiresAt: string; verifiedAt: string };
+export type GrowthParticipationReceipt = { saved: true; runId: string; sourceId: string; dateKey: string;
+  recordedAt: string; alreadyRecorded: boolean };
+export type GrowthTreeforcePlayResult = { snapshot: GrowthSnapshot; participation: GrowthParticipationReceipt };
 export interface ArcadeGrowthStore {
   publicRules(enabledGames: readonly ArcadeGrowthGameId[]): Promise<ArcadeGrowthGameId[]>;
   createChallenge(input: GrowthChallengeInput): Promise<GrowthChallenge>;
@@ -15,6 +19,7 @@ export interface ArcadeGrowthStore {
   snapshot(tokenSha256: string, origin: string, enabledGames: readonly ArcadeGrowthGameId[]): Promise<GrowthSnapshot>;
   checkIn(tokenSha256: string, origin: string, enabledGames: readonly ArcadeGrowthGameId[]): Promise<GrowthSnapshot>;
   recordEvents(tokenSha256: string, origin: string, enabledGames: readonly ArcadeGrowthGameId[], dateKey: string, events: ArcadeGrowthGameEvent[]): Promise<GrowthSnapshot>;
+  recordTreeforcePlay(input: GrowthTreeforcePlayInput): Promise<GrowthTreeforcePlayResult>;
 }
 
 export function arcadeGrowthSupabaseConfig(env: Environment) {
@@ -59,6 +64,8 @@ const STORE_ERRORS: Record<string, [string, string, number]> = {
   'arcade-growth-invalid-session': ['invalid-session', 'Your Daily Growth session expired. Sign in again.', 401],
   'arcade-growth-day-changed': ['utc-day-changed', 'The UTC day changed. Refresh and try again.', 409],
   'arcade-growth-event-conflict': ['verification-unavailable', 'A saved game result could not be reconciled.', 503],
+  'arcade-growth-invalid-game-session': ['invalid-treeforce-session', 'Your TREE FORCE session expired. Verify your NFTree in the game again.', 401],
+  'arcade-growth-stale-game-verification': ['verification-unavailable', 'TREE FORCE session verification expired. Check participation again.', 503],
 };
 
 export class SupabaseArcadeGrowthStore implements ArcadeGrowthStore {
@@ -118,6 +125,23 @@ export class SupabaseArcadeGrowthStore implements ArcadeGrowthStore {
   async recordEvents(tokenSha256: string, origin: string, enabledGames: readonly ArcadeGrowthGameId[], dateKey: string, events: ArcadeGrowthGameEvent[]) {
     return record(await this.rpc('arcade_growth_record_events_v1', { p_token_sha256: tokenSha256, p_origin: origin,
       p_enabled_games: enabledGames, p_date_key: dateKey, p_events: events })) as unknown as GrowthSnapshot;
+  }
+  async recordTreeforcePlay(input: GrowthTreeforcePlayInput): Promise<GrowthTreeforcePlayResult> {
+    const wallet = growthWallet(input.wallet);
+    if (!/^grove-[a-f0-9]{32}$/.test(input.runId) || !Number.isFinite(Date.parse(input.sessionExpiresAt)) || !Number.isFinite(Date.parse(input.verifiedAt))) {
+      throw new ArcadeGrowthError('invalid-treeforce-session', 'The TREE FORCE run could not be verified.', 401);
+    }
+    const result = record(await this.rpc('arcade_growth_record_treeforce_play_v1', { p_wallet: wallet, p_run_id: input.runId,
+      p_session_expires_at: input.sessionExpiresAt, p_verified_at: input.verifiedAt }));
+    const saved = record(result.participation); const snapshot = record(result.snapshot);
+    const recordedAt = typeof saved.recordedAt === 'string' ? Date.parse(saved.recordedAt) : NaN;
+    if (saved.saved !== true || saved.runId !== input.runId || saved.sourceId !== `run:${input.runId}:${wallet}` ||
+        typeof saved.alreadyRecorded !== 'boolean' || typeof saved.dateKey !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(saved.dateKey) ||
+        !Number.isFinite(recordedAt) || new Date(recordedAt).toISOString().slice(0, 10) !== saved.dateKey || snapshot.wallet !== wallet) {
+      throw new ArcadeGrowthError('service-unavailable', 'Saved TREE FORCE participation could not be verified.', 503);
+    }
+    return { snapshot: snapshot as unknown as GrowthSnapshot, participation: { saved: true, runId: input.runId,
+      sourceId: saved.sourceId as string, dateKey: saved.dateKey, recordedAt: new Date(recordedAt).toISOString(), alreadyRecorded: saved.alreadyRecorded } };
   }
 }
 
