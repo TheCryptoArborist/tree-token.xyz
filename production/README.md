@@ -1,3 +1,42 @@
+# Current production — compact Daily Growth redesign, 2026-10-31
+
+Deployment `6ae67337da46ecbf141c68f5` is live at
+`https://tree-token.xyz/play/` and locked. Publication time:
+`2026-10-31T23:02:07.676Z`. It replaces `6ae66f6c82e32369a34b6d1d`.
+
+Published source: `f5664d1b73ccaa46ca6b4b28f48e3c7f0e3f2ff4` on
+`feature/daily-growth-compact-20261031`, with reviewed tree
+`773ed86e6b91a9f2a23e52ca5fb6b15d0f201923`.
+
+The redesign follows the user's `social.jpg` reference with gold, leaf green,
+dark forest backgrounds, and existing TREE ecosystem artwork. Daily Growth
+starts as a compact strip; quests, the calendar, Passport, and badges expand
+on request. The default panel measures 147px at 1440 × 900, 217px at
+390 × 844, and 213px at 320 × 844. The first cabinet begins at 526px, 584px, and 597px
+from the page top respectively, keeping the games in the initial viewport.
+
+All 241 public paths remain. Only `/play/index.html`,
+`/scripts/arcade-daily-growth.js`, and `/styles/tree-arcade-suite.css` changed;
+the other 238 file identities, all 40 complete function records, and all five
+schedules are unchanged. Wallet adapters, dependencies, runtime settings,
+the isolated TREE FORCE database binding, and paid continue behavior were
+preserved. Artwork uses existing published files.
+
+Candidate and canonical verification matched all three approved frontend
+files, accounting only for the exact existing hosting HTML snippet. Public
+status retains three required Garden games and four eligible games without
+anonymous personal progress. Both hosted browser runs passed 26 checks with
+20 successful same-origin GET requests and no page or console errors. No
+wallet was connected, no signature was requested, and no transaction or
+progress write was attempted.
+
+The current inventory is `docs/daily-growth-compact-published.json`.
+`docs/daily-growth-compact-verification.json` records verification and limits;
+hosted reports and canonical screenshots are under `docs/review/`.
+Historical publication records are preserved below.
+
+---
+
 # Current production — Daily Growth visual polish, 2026-10-31
 
 Deployment `6ae66f6c82e32369a34b6d1d` is published at

@@ -1,5 +1,15 @@
 # TREE Arcade — compact Daily Growth redesign
 
+## Published release
+
+Deployment `6ae67337da46ecbf141c68f5` is live and locked at
+`https://tree-token.xyz/play/`, published `2026-10-31T23:02:07.676Z`.
+It replaces deployment `6ae66f6c82e32369a34b6d1d`.
+
+The published source is `f5664d1b73ccaa46ca6b4b28f48e3c7f0e3f2ff4` on
+`feature/daily-growth-compact-20261031`. Its complete Git tree is the reviewed
+`773ed86e6b91a9f2a23e52ca5fb6b15d0f201923`.
+
 ## Requested direction
 
 The user asked for Daily Growth to occupy less of the lobby, keep the games
@@ -69,16 +79,16 @@ unavailable, and changing accounts clears the previous account's progress.
 ## Release scope and evidence
 
 The starting evidence commit is
-`dbafaefb60ad53e764b65db128c360111fbd9e0c`. The current published baseline is
+`dbafaefb60ad53e764b65db128c360111fbd9e0c`. The previous published baseline is
 `6ae66f6c82e32369a34b6d1d`, recorded in `daily-growth-polish-published.json`.
 
-Only these three existing public files may change:
+Only these three existing public files changed:
 
 1. `/play/index.html`
 2. `/scripts/arcade-daily-growth.js`
 3. `/styles/tree-arcade-suite.css`
 
-The separate `release-daily-growth-compact.mjs` helper preserves all 241 public
+The separate `release-daily-growth-compact.mjs` helper preserved all 241 public
 paths, the other 238 file identities, all 40 complete backend function records,
 and all five schedules. Root dependencies, compiled wallet adapters, wallet
 source files, runtime configuration, the isolated TREE FORCE database binding,
@@ -118,8 +128,21 @@ screenshots are under `review/daily-growth-compact-*`.
 
 These fixtures use synthetic account data. Real extension approval, real
 wallet signing, transactions, and production progress writes were not tested.
-Candidate and canonical hosted verification will be recorded separately after
-publication.
+
+Candidate and canonical hosted verification both passed. Each matched all
+three files against the approved source and confirmed public status still
+exposes three required Garden games and four eligible games, including TREE
+FORCE first-wave participation, without personal progress for anonymous
+visitors. Each actual hosted browser run passed 26 checks and made 20
+successful same-origin GET requests, with no page or console errors. The
+canonical run confirmed the new panel heights and first-cabinet positions
+shown above. No wallet was connected, and no signature, transaction, or
+progress write was attempted.
+
+The complete release inventory is `daily-growth-compact-published.json`.
+`daily-growth-compact-verification.json` records the source binding, validation,
+and its limits. Raw hosted reports and canonical screenshots are under
+`review/`.
 
 ## Current guidance
 
