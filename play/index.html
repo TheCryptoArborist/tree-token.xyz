@@ -97,6 +97,78 @@
       <p class="mint-fallback">Need another way to mint? <a href="https://nftree.net/mint#mint" target="_blank" rel="noopener noreferrer">Open the official NFTree mint page <span aria-hidden="true">↗</span></a>.</p>
     </section>
 
+    <section id="arcade-daily-growth" class="growth-panel" aria-labelledby="growth-title" data-growth-state="loading">
+      <div class="growth-heading">
+        <div><p class="suite-eyebrow">A LITTLE PLAY. A LITTLE GROWTH.</p><h2 id="growth-title">Daily Growth</h2><p class="growth-meta" id="growth-meta">Your NFTree holder progress, one day at a time.</p></div>
+        <a class="growth-games-link" href="#cabinets">Browse the games <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="growth-auth">
+        <div><p id="growth-wallet-state">Connect your NFTree wallet to save check-ins, daily quests, and monthly badges.</p><p class="growth-small" id="growth-auth-note">Sign-in uses a wallet message. It does not submit a transaction.</p></div>
+        <div class="growth-auth-actions"><button class="growth-primary" id="growth-connect" type="button" disabled>Connect wallet</button><button class="growth-secondary" id="growth-sign-in" type="button" hidden>Sign in to Daily Growth</button><button class="growth-text-button" id="growth-sign-out" type="button" hidden>Sign out</button></div>
+      </div>
+      <div class="growth-wallet-picker" id="growth-wallet-picker" hidden>
+        <p class="growth-small" id="growth-wallet-picker-label">Choose your Sui wallet</p>
+        <div class="growth-wallet-options" id="growth-wallet-options" aria-labelledby="growth-wallet-picker-label"></div>
+        <p class="growth-small" id="growth-no-wallet" hidden>No compatible Sui wallet was detected. Open this page in your wallet’s browser, or use a browser with a Sui wallet installed.</p>
+      </div>
+      <div class="growth-tabs" role="tablist" aria-label="Daily Growth progress">
+        <button id="growth-today-tab" type="button" role="tab" aria-controls="growth-today-panel" aria-selected="true" tabindex="0">Today’s quest</button>
+        <button id="growth-month-tab" type="button" role="tab" aria-controls="growth-month-panel" aria-selected="false" tabindex="-1">This month</button>
+        <button id="growth-badges-tab" type="button" role="tab" aria-controls="growth-badges-panel" aria-selected="false" tabindex="-1">Earned badges</button>
+      </div>
+      <div id="growth-today-panel" class="growth-tab-panel" role="tabpanel" aria-labelledby="growth-today-tab" tabindex="0">
+        <div class="growth-today-grid">
+          <section class="growth-quest" aria-labelledby="growth-quest-title">
+            <div class="growth-quest-heading"><p class="growth-eyebrow">TODAY’S QUEST</p><span class="growth-quest-state" id="growth-quest-state">Checking availability…</span></div>
+            <h3 id="growth-quest-title">Play one round.</h3>
+            <p class="growth-pick"><span id="growth-pick-label">Today’s pick:</span> <strong id="growth-game-name">Checking eligible games…</strong></p>
+            <p class="growth-objective" id="growth-objective">Finish a verified game result, then refresh your progress here.</p>
+            <p class="growth-small growth-game-access" id="growth-game-access"></p>
+            <div class="growth-actions"><a class="growth-primary" id="growth-play" target="_blank" rel="noopener noreferrer" hidden>Play today’s pick <span aria-hidden="true">↗</span></a><button class="growth-secondary" id="growth-refresh" type="button" disabled>Refresh progress</button></div>
+            <details class="growth-alternative" id="growth-alternative" hidden>
+              <summary>Choose another eligible game</summary>
+              <label for="growth-game-select">Any listed game can complete today’s quest.</label>
+              <select id="growth-game-select"></select>
+            </details>
+            <p class="growth-small growth-quest-note" id="growth-quest-note">Complete the game and refresh before 00:00 UTC to earn that day’s quest and passport stamps. Opening a game alone does not count.</p>
+          </section>
+          <div class="growth-month-glance">
+            <section class="growth-attendance" aria-labelledby="growth-attendance-title">
+              <p class="growth-eyebrow" id="growth-attendance-title">MONTHLY CHECK-IN</p>
+              <p class="growth-attendance-count"><strong id="growth-visit-count">—</strong> <span id="growth-visit-label">check-ins this month</span></p>
+              <p class="growth-small" id="growth-check-note">Sign in to see your saved attendance. You can check in without playing a game.</p>
+              <button class="growth-secondary" id="growth-check-in" type="button" disabled>Check in today</button>
+            </section>
+            <details class="growth-passport" id="growth-passport">
+              <summary><span>Arcade Passport</span><span class="growth-passport-progress"><strong id="growth-passport-count">Sign in to view</strong><span class="growth-passport-toggle" aria-hidden="true">+</span></span></summary>
+              <p class="growth-small" id="growth-passport-note">Explore eligible games at your own pace this month. The passport is an optional goal.</p>
+              <div class="growth-stamps" id="growth-stamps" aria-label="Games played this month"></div>
+              <p class="growth-small" id="growth-passport-reward"></p>
+            </details>
+            <p class="growth-small growth-tracking-note" id="growth-tracking-note" hidden>TREE FORCE ’89 is live; Daily Growth tracking is coming soon.</p>
+          </div>
+        </div>
+      </div>
+      <div id="growth-month-panel" class="growth-tab-panel" role="tabpanel" aria-labelledby="growth-month-tab" tabindex="0" hidden>
+        <p class="growth-empty" id="growth-month-empty">Sign in to see your real monthly calendar.</p>
+        <div id="growth-month-content" hidden>
+          <div class="growth-month-summary"><p><strong id="growth-month-visits">—</strong> check-ins</p><p><strong id="growth-month-quests">—</strong> daily quests completed</p></div>
+          <p class="growth-small growth-next" id="growth-next"></p>
+          <div class="growth-calendar" id="growth-calendar" role="list" aria-label="Monthly attendance and daily quests"></div>
+          <div class="growth-legend" aria-label="Calendar legend"><span>✓ Check-in</span><span>★ Quest complete</span><span>○ Today</span><span>– Missed</span></div>
+          <div class="growth-milestones" id="growth-milestones" aria-label="Monthly attendance milestones"></div>
+          <p class="growth-small growth-month-note">Missed days keep your earlier progress. Earned badges stay with your wallet.</p>
+        </div>
+      </div>
+      <div id="growth-badges-panel" class="growth-tab-panel" role="tabpanel" aria-labelledby="growth-badges-tab" tabindex="0" hidden>
+        <p class="growth-empty" id="growth-badges-empty">Sign in to see your earned monthly badges.</p>
+        <div class="growth-badges" id="growth-badges"></div>
+      </div>
+      <p class="growth-status" id="growth-status" role="status" aria-live="polite" aria-atomic="true">Loading Daily Growth…</p>
+      <div class="growth-footer"><span>Daily reset: 00:00 UTC · Check-ins have no gas fee</span><span>Only verified results count. Preview games are excluded.</span></div>
+      <noscript><p class="growth-empty">Turn on JavaScript to connect your wallet and load Daily Growth. The game links below still work.</p></noscript>
+    </section>
+
     <section id="cabinets" class="arcade-floor" aria-labelledby="floor-title" tabindex="-1">
       <div class="floor-heading">
         <div><p class="suite-eyebrow">THE GAME LINEUP</p><h2 id="floor-title">Pick your next game.</h2></div>
@@ -269,5 +341,6 @@
 
   <footer class="suite-footer"><strong>THICKQUIDITY · TREE ARCADE</strong><p>Rooted in the TREE ecosystem. Built for the next round.</p><a href="/">Back to TREE home <span aria-hidden="true">→</span></a></footer>
   <script type="module" src="/scripts/arcade-nftree-access.js"></script>
+  <script type="module" src="/scripts/arcade-daily-growth.js"></script>
 </body>
 </html>

@@ -1,0 +1,680 @@
+// Daily Growth has its own message-only wallet session. Game launches never grant credit.
+const API_PATH = '/api/arcade-growth';
+const WALLET_MODULE = '/assets/arcade/arcade-growth-wallet.js';
+const SESSION_KEY = 'tree-arcade:daily-growth:session:v1';
+const AUTH_ERRORS = new Set(['authentication-required', 'invalid-session', 'expired-session']);
+const GAME_COPY = {
+  'garden-bot': {
+    objective: 'Finish one official battle. Win or lose, it counts.',
+    access: 'Official battle required · Network gas applies',
+  },
+  pvp: {
+    objective: 'Finish one match against another player. Win or lose, it counts.',
+    access: 'Paid entry · Live opponent needed · Optional for daily attendance',
+  },
+  'arborist-trials': {
+    objective: 'Finish an official Trial and save the result. Win or lose, it counts.',
+    access: 'No paid entry · Save with a wallet message · Unsaved practice does not count',
+  },
+};
+
+const dateKeyPattern = /^\d{4}-\d{2}-\d{2}$/;
+const monthKeyPattern = /^\d{4}-\d{2}$/;
+const normalizedAddress = (value) => typeof value === 'string' && /^0x[0-9a-f]{64}$/i.test(value) ? value.toLowerCase() : null;
+const timestamp = (value) => typeof value === 'number' ? value : Date.parse(value);
+const shortAddress = (address) => `${address.slice(0, 8)}…${address.slice(-6)}`;
+const text = (value, max = 200) => typeof value === 'string' && value.length > 0 && value.length <= max;
+const monthLabel = (key) => new Intl.DateTimeFormat('en', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${key}-01T12:00:00Z`));
+const dateLabel = (key) => new Intl.DateTimeFormat('en', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${key}T12:00:00Z`));
+
+function invalidData() {
+  const error = new Error('Daily Growth returned incomplete progress. Your saved progress has not been changed. Try refreshing.');
+  error.code = 'invalid-response';
+  return error;
+}
+
+function gameDescriptor(game) {
+  if (!game || !/^[a-z][a-z0-9-]{0,63}$/.test(game.id) || !text(game.label, 80) || !text(game.href, 2048)) throw invalidData();
+  const url = new URL(game.href, 'https://tree-token.xyz');
+  if (url.protocol !== 'https:' || url.username || url.password) throw invalidData();
+  return { id: game.id, label: game.label, href: url.href };
+}
+
+function uniqueStrings(values) {
+  if (!Array.isArray(values) || values.length > 100 || values.some((value) => !text(value, 100)) || new Set(values).size !== values.length) throw invalidData();
+  return [...values];
+}
+
+function normalizeConfiguration(value) {
+  if (!value || !Array.isArray(value.enabledGames) || value.enabledGames.length > 30) throw invalidData();
+  const enabledGames = value.enabledGames.map(gameDescriptor);
+  if (new Set(enabledGames.map((game) => game.id)).size !== enabledGames.length) throw invalidData();
+  const todayPick = value.todayPick ? gameDescriptor(value.todayPick) : null;
+  if (todayPick && !enabledGames.some((game) => game.id === todayPick.id)) throw invalidData();
+  return { enabledGames, todayPick };
+}
+
+function normalizeProgress(value, expectedWallet) {
+  if (!value || normalizedAddress(value.wallet) !== expectedWallet || !monthKeyPattern.test(value.monthKey) || !dateKeyPattern.test(value.dateKey) || !value.dateKey.startsWith(`${value.monthKey}-`)) throw invalidData();
+  const [year, month] = value.monthKey.split('-').map(Number);
+  if (month < 1 || month > 12 || year < 2020 || year > 2100) throw invalidData();
+  const days = new Date(Date.UTC(year, month, 0)).getUTCDate();
+  if (!Array.isArray(value.calendar) || value.calendar.length !== days) throw invalidData();
+  const calendar = value.calendar.map((day) => {
+    if (!dateKeyPattern.test(day?.dateKey) || !day.dateKey.startsWith(`${value.monthKey}-`) || typeof day.checkedIn !== 'boolean' || typeof day.questCompleted !== 'boolean') throw invalidData();
+    if (Number(day.dateKey.slice(-2)) < 1 || Number(day.dateKey.slice(-2)) > days || (day.questCompleted && !day.checkedIn)) throw invalidData();
+    return { dateKey: day.dateKey, checkedIn: day.checkedIn, questCompleted: day.questCompleted, gameIds: uniqueStrings(day.gameIds) };
+  }).sort((a, b) => a.dateKey.localeCompare(b.dateKey));
+  if (new Set(calendar.map((day) => day.dateKey)).size !== days) throw invalidData();
+  const today = calendar.find((day) => day.dateKey === value.dateKey);
+  if (!today || !value.today || today.checkedIn !== value.today.checkedIn || today.questCompleted !== value.today.questCompleted) throw invalidData();
+  if (value.checkedInDays !== calendar.filter((day) => day.checkedIn).length || value.questDays !== calendar.filter((day) => day.questCompleted).length) throw invalidData();
+  if (!value.passport || value.passport.monthKey !== value.monthKey || !Array.isArray(value.passport.enabledGames) || typeof value.passport.complete !== 'boolean') throw invalidData();
+  const enabledGames = value.passport.enabledGames.map(gameDescriptor);
+  const completedGameIds = uniqueStrings(value.passport.completedGameIds);
+  if (new Set(enabledGames.map((game) => game.id)).size !== enabledGames.length || completedGameIds.some((id) => !enabledGames.some((game) => game.id === id))) throw invalidData();
+  if (!Array.isArray(value.milestones) || value.milestones.some((item) => !text(item.id, 100) || !text(item.label, 100) || !Number.isInteger(item.target) || item.target < 1 || item.target > 31 || typeof item.earned !== 'boolean')) throw invalidData();
+  if (!Array.isArray(value.badges) || value.badges.some((badge) => !text(badge.id, 150) || !text(badge.label, 150) || !monthKeyPattern.test(badge.monthKey) || !Number.isFinite(timestamp(badge.earnedAt)))) throw invalidData();
+  return {
+    wallet: expectedWallet, monthKey: value.monthKey, dateKey: value.dateKey, calendar,
+    checkedInDays: value.checkedInDays, questDays: value.questDays,
+    today: { checkedIn: today.checkedIn, questCompleted: today.questCompleted, gameIds: uniqueStrings(value.today.gameIds) },
+    passport: { monthKey: value.monthKey, enabledGames, completedGameIds, complete: value.passport.complete },
+    milestones: value.milestones.map((item) => ({ ...item })), badges: value.badges.map((badge) => ({ ...badge })),
+  };
+}
+
+function readSession(storage, now) {
+  try {
+    const raw = storage?.getItem(SESSION_KEY);
+    if (!raw || raw.length > 12000) return null;
+    const value = JSON.parse(raw);
+    if (value.version !== 1 || !text(value.token, 8192) || !normalizedAddress(value.wallet) || timestamp(value.expiresAt) <= now || !Number.isFinite(timestamp(value.expiresAt))) throw new Error('Expired session');
+    return { ...value, wallet: normalizedAddress(value.wallet) };
+  } catch {
+    try { storage?.removeItem(SESSION_KEY); } catch { /* A memory-only session is still supported. */ }
+    return null;
+  }
+}
+
+export function createDailyGrowth({
+  root,
+  fetchImpl = globalThis.fetch?.bind(globalThis),
+  loadWallet = () => import(WALLET_MODULE),
+  storage,
+  now = () => Date.now(),
+} = {}) {
+  if (!root) throw new Error('Daily Growth needs its panel element.');
+  const document = root.ownerDocument;
+  const view = document.defaultView;
+  if (storage === undefined) {
+    try { storage = view.sessionStorage; } catch { storage = null; }
+  }
+  const byId = (id) => root.querySelector(`#growth-${id}`);
+  const ui = Object.fromEntries([
+    'meta', 'wallet-state', 'auth-note', 'connect', 'sign-in', 'sign-out', 'wallet-picker', 'wallet-options', 'no-wallet',
+    'quest-state', 'pick-label', 'game-name', 'objective', 'game-access', 'play', 'refresh', 'alternative', 'game-select',
+    'quest-note', 'visit-count', 'visit-label', 'check-note', 'check-in', 'passport-count', 'passport-note', 'stamps',
+    'passport-reward', 'tracking-note', 'month-empty', 'month-content', 'month-visits', 'month-quests', 'next', 'calendar', 'milestones',
+    'badges-empty', 'badges', 'status',
+  ].map((id) => [id, byId(id)]));
+  const state = {
+    wallet: null, walletId: null, walletReady: false, walletError: false, session: null, progress: null,
+    configuration: null, dateKey: null, monthKey: null, busy: 'loading', stale: false,
+    selectedGameId: null, notice: 'Loading Daily Growth…', noticeKind: '', pickerOpen: false,
+    availableWallets: [], apiUnavailable: false, launched: false,
+  };
+  let bridge = null;
+  let epoch = 0;
+  let disposed = false;
+  let expiryTimer = null;
+  let savedSession = readSession(storage, now());
+  let unsubscribeWallet = () => {};
+  let unsubscribeWallets = () => {};
+  const requests = new Set();
+  const listeners = [];
+  const on = (element, event, listener) => {
+    element.addEventListener(event, listener);
+    listeners.push(() => element.removeEventListener(event, listener));
+  };
+  const append = (parent, tag, className, value) => {
+    const element = document.createElement(tag);
+    if (className) element.className = className;
+    if (value !== undefined) element.textContent = value;
+    parent.append(element);
+    return element;
+  };
+
+  function currentWallet() {
+    try {
+      const wallet = bridge?.getWalletState();
+      const address = normalizedAddress(wallet?.address);
+      return wallet?.connected && address ? { address, walletName: wallet.walletName || 'Sui wallet' } : null;
+    } catch { return null; }
+  }
+
+  function persistSession(session) {
+    savedSession = session;
+    try {
+      if (session) storage?.setItem(SESSION_KEY, JSON.stringify(session));
+      else storage?.removeItem(SESSION_KEY);
+    } catch { /* Storage is optional; no progress or completion is stored in the browser. */ }
+  }
+
+  function invalidateSession(message = '') {
+    epoch += 1;
+    for (const controller of requests) controller.abort();
+    requests.clear();
+    view.clearTimeout(expiryTimer);
+    state.session = null;
+    state.progress = null;
+    state.stale = false;
+    state.busy = null;
+    state.notice = message;
+    state.noticeKind = '';
+    persistSession(null);
+    render();
+  }
+
+  function armExpiry() {
+    view.clearTimeout(expiryTimer);
+    if (!state.session) return;
+    expiryTimer = view.setTimeout(() => {
+      invalidateSession('Your Daily Growth session has expired. Sign in again to see your saved progress.');
+      render();
+    }, Math.max(0, timestamp(state.session.expiresAt) - now()));
+  }
+
+  function sessionIsCurrent() {
+    if (!state.session) return false;
+    const actual = currentWallet();
+    if (timestamp(state.session.expiresAt) <= now() || actual?.address !== state.session.wallet) {
+      invalidateSession('Sign in with your current wallet to load its Daily Growth progress.');
+      state.wallet = actual;
+      render();
+      return false;
+    }
+    return true;
+  }
+
+  function setNotice(message, kind = '') {
+    state.notice = message;
+    state.noticeKind = kind;
+  }
+
+  async function request(action, { body, token, signal } = {}) {
+    const controller = new AbortController();
+    requests.add(controller);
+    const abort = () => controller.abort();
+    signal?.addEventListener('abort', abort, { once: true });
+    const timeout = view.setTimeout(abort, 65000);
+    try {
+      const headers = { Accept: 'application/json' };
+      if (token) headers.Authorization = `Bearer ${token}`;
+      if (body !== undefined) headers['Content-Type'] = 'application/json';
+      const response = await fetchImpl(`${API_PATH}?action=${encodeURIComponent(action)}`, {
+        method: body === undefined ? 'GET' : 'POST', headers, cache: 'no-store', credentials: 'omit',
+        ...(body === undefined ? {} : { body: JSON.stringify(body) }), signal: controller.signal,
+      });
+      let payload;
+      try { payload = await response.json(); } catch { throw invalidData(); }
+      if (!response.ok || payload?.status !== 'ok') {
+        const error = new Error(text(payload?.message, 500) ? payload.message : 'Daily Growth is temporarily unavailable. Try refreshing.');
+        error.code = text(payload?.error, 100) ? payload.error : 'service-unavailable';
+        error.httpStatus = response.status;
+        throw error;
+      }
+      return payload;
+    } finally {
+      view.clearTimeout(timeout);
+      signal?.removeEventListener('abort', abort);
+      requests.delete(controller);
+    }
+  }
+
+  function acceptEnvelope(payload, expectedWallet = null) {
+    const nextConfiguration = payload.configuration ? normalizeConfiguration(payload.configuration) : state.configuration;
+    const nextProgress = payload.progress ? normalizeProgress(payload.progress, expectedWallet) : null;
+    if (expectedWallet && (!nextProgress || payload.authenticated === false)) throw invalidData();
+    const dateKey = payload.dateKey || nextProgress?.dateKey;
+    const monthKey = payload.monthKey || nextProgress?.monthKey;
+    if (!dateKeyPattern.test(dateKey) || !monthKeyPattern.test(monthKey) || !dateKey.startsWith(`${monthKey}-`) || !nextConfiguration) throw invalidData();
+    if (nextProgress && (nextProgress.dateKey !== dateKey || nextProgress.monthKey !== monthKey)) throw invalidData();
+    state.configuration = nextConfiguration;
+    state.dateKey = dateKey;
+    state.monthKey = monthKey;
+    if (expectedWallet) state.progress = nextProgress;
+    state.apiUnavailable = false;
+    state.stale = false;
+    if (!nextConfiguration.enabledGames.some((game) => game.id === state.selectedGameId)) state.selectedGameId = nextConfiguration.todayPick?.id || nextConfiguration.enabledGames[0]?.id || null;
+  }
+
+  function reportError(error) {
+    if (AUTH_ERRORS.has(error?.code) || error?.httpStatus === 401) {
+      invalidateSession('Your Daily Growth session is no longer valid. Sign in again to load your saved progress.');
+      return;
+    }
+    state.stale = Boolean(state.progress);
+    if (error?.code === 'nftree-required') {
+      setNotice('An eligible NFTree is required to save Daily Growth. Use the wallet holding it, then try again. Your saved progress has not been reset.', 'error');
+    } else if (error?.code === 'ownership-unavailable') {
+      setNotice('NFTree ownership verification is unavailable. No new progress was saved. Try again shortly.', 'error');
+    } else if (error?.name === 'AbortError') {
+      state.apiUnavailable = true;
+      setNotice('Daily Growth did not respond in time. Saved progress has not been reset. Try refreshing.', 'error');
+    } else {
+      state.apiUnavailable = true;
+      const prefix = state.progress ? 'Last saved progress shown. ' : 'Progress is unavailable. ';
+      setNotice(prefix + (text(error?.message, 500) ? error.message : 'Try refreshing in a moment.'), 'error');
+    }
+  }
+
+  function renderWalletOptions() {
+    ui['wallet-options'].replaceChildren();
+    for (const wallet of state.availableWallets) {
+      const button = append(ui['wallet-options'], 'button', 'growth-secondary', wallet.name);
+      button.type = 'button';
+      button.disabled = Boolean(state.busy);
+      button.dataset.walletId = wallet.id;
+    }
+    ui['no-wallet'].hidden = state.availableWallets.length > 0;
+  }
+
+  function renderCalendar(progress) {
+    ui.calendar.replaceChildren();
+    ui.calendar.setAttribute('aria-label', `${monthLabel(progress.monthKey)} attendance and daily quests`);
+    for (const name of ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']) {
+      const label = append(ui.calendar, 'span', 'growth-weekday', name);
+      label.setAttribute('aria-hidden', 'true');
+    }
+    const firstWeekday = new Date(`${progress.monthKey}-01T12:00:00Z`).getUTCDay();
+    for (let index = 0; index < firstWeekday; index += 1) append(ui.calendar, 'span', 'growth-calendar-blank').setAttribute('aria-hidden', 'true');
+    for (const day of progress.calendar) {
+      const isToday = day.dateKey === progress.dateKey;
+      const cell = append(ui.calendar, 'div', `growth-day${day.checkedIn ? ' is-done' : ''}${isToday ? ' is-today' : ''}`);
+      cell.setAttribute('role', 'listitem');
+      const description = day.checkedIn ? `checked in${day.questCompleted ? ', daily quest complete' : ''}` : isToday ? 'today, not yet checked in' : day.dateKey < progress.dateKey ? 'missed, earlier progress retained' : 'upcoming';
+      cell.setAttribute('aria-label', `${dateLabel(day.dateKey)}: ${description}`);
+      if (isToday) cell.setAttribute('aria-current', 'date');
+      append(cell, 'strong', '', String(Number(day.dateKey.slice(-2)))).setAttribute('aria-hidden', 'true');
+      append(cell, 'span', '', day.questCompleted ? '✓ ★' : day.checkedIn ? '✓' : isToday ? '○' : day.dateKey < progress.dateKey ? '–' : '·').setAttribute('aria-hidden', 'true');
+    }
+  }
+
+  function renderProgress() {
+    const progress = state.progress;
+    const unavailable = state.apiUnavailable || state.stale;
+    ui['visit-count'].textContent = progress ? String(progress.checkedInDays) : '—';
+    ui['visit-label'].textContent = state.stale ? 'check-ins · last saved progress' : 'check-ins this month';
+    ui['month-content'].hidden = !progress;
+    ui['month-empty'].hidden = Boolean(progress);
+    ui['month-empty'].textContent = unavailable ? 'Your monthly calendar is unavailable. Refresh to try again.' : 'Sign in to see your real monthly calendar.';
+    ui['check-in'].disabled = Boolean(state.busy) || !state.session || !progress || progress.today.checkedIn;
+    ui['check-in'].textContent = state.busy === 'checking-in' ? 'Saving check-in…' : progress?.today.checkedIn ? 'Checked in today ✓' : 'Check in today';
+    ui['check-note'].textContent = progress?.today.checkedIn
+      ? 'Your attendance is saved. A quest is optional for check-in.'
+      : progress ? 'Check in without playing. A verified quest also checks you in.'
+        : unavailable ? 'Attendance is unavailable. It has not been reset to zero.' : 'Sign in to see your saved attendance. You can check in without playing a game.';
+    ui.stamps.replaceChildren();
+    ui.badges.replaceChildren();
+    ui.milestones.replaceChildren();
+    ui['passport-count'].textContent = progress ? `${progress.passport.completedGameIds.length} / ${progress.passport.enabledGames.length} games` : unavailable ? 'Unavailable' : 'Sign in to view';
+    ui['passport-note'].textContent = progress
+      ? `${monthLabel(progress.monthKey)} · Explore games with verified result tracking at your own pace. Paid PvP is optional for check-ins and daily quests.`
+      : 'Explore eligible games at your own pace this month. The passport is an optional goal.';
+    ui['passport-reward'].textContent = '';
+    ui['badges-empty'].hidden = Boolean(progress?.badges.length);
+    ui['badges-empty'].textContent = progress
+      ? 'No badges earned yet. Check in on different days or complete your monthly passport to grow your collection.'
+      : unavailable ? 'Earned badges are unavailable. Refresh to try again.' : 'Sign in to see your earned monthly badges.';
+    if (!progress) {
+      ui.calendar.replaceChildren();
+      return;
+    }
+    ui['month-visits'].textContent = String(progress.checkedInDays);
+    ui['month-quests'].textContent = String(progress.questDays);
+    const next = progress.milestones.find((milestone) => !milestone.earned && milestone.target > progress.checkedInDays);
+    ui.next.textContent = next ? `Next: ${next.label} · ${next.target - progress.checkedInDays} more check-in${next.target - progress.checkedInDays === 1 ? '' : 's'}` : 'All monthly attendance milestones earned.';
+    for (const game of progress.passport.enabledGames) {
+      const complete = progress.passport.completedGameIds.includes(game.id);
+      const stamp = append(ui.stamps, 'div', `growth-stamp${complete ? ' is-done' : ''}`);
+      append(stamp, 'strong', '', game.label);
+      append(stamp, 'span', '', complete ? '✓ Stamp earned' : game.id === 'pvp' ? '○ Not yet played · Paid entry' : '○ Not yet played');
+    }
+    ui['passport-reward'].textContent = progress.passport.complete
+      ? 'Monthly Arcade Passport badge earned ✓'
+      : progress.passport.enabledGames.length ? 'All listed stamps earn the monthly Arcade Passport badge. New integrations join a future passport.' : 'Passport games will appear when verified tracking is available.';
+    for (const milestone of progress.milestones) {
+      const item = append(ui.milestones, 'div', `growth-milestone${milestone.earned ? ' is-done' : ''}`);
+      append(item, 'strong', '', `${milestone.label}${milestone.earned ? ' ✓' : ''}`);
+      append(item, 'span', '', `${milestone.target} check-ins`);
+    }
+    for (const badge of [...progress.badges].sort((a, b) => timestamp(b.earnedAt) - timestamp(a.earnedAt))) {
+      const item = append(ui.badges, 'div', 'growth-badge');
+      append(item, 'strong', '', badge.label);
+      append(item, 'span', '', 'Earned ✓');
+      append(item, 'p', '', `${monthLabel(badge.monthKey)} · Saved to this wallet’s progress`);
+    }
+    renderCalendar(progress);
+  }
+
+  function render() {
+    if (disposed) return;
+    const busy = Boolean(state.busy);
+    root.dataset.growthState = state.busy || (state.apiUnavailable ? 'unavailable' : state.session ? 'authenticated' : state.wallet ? 'connected' : 'signed-out');
+    root.setAttribute('aria-busy', String(busy));
+    ui.meta.textContent = state.dateKey ? `${dateLabel(state.dateKey)} · UTC daily progress` : 'Your NFTree holder progress, one day at a time.';
+    ui['wallet-state'].textContent = state.session
+      ? `${state.wallet?.walletName || 'Sui wallet'} · ${shortAddress(state.session.wallet)} · Signed in`
+      : state.wallet ? `${state.wallet.walletName} · ${shortAddress(state.wallet.address)} · Connected`
+        : 'Connect your NFTree wallet to save check-ins, daily quests, and monthly badges.';
+    ui['wallet-state'].title = state.session?.wallet || state.wallet?.address || '';
+    ui['auth-note'].textContent = state.session
+      ? 'Your progress belongs to this wallet. Sessions expire after one hour.'
+      : state.walletError ? 'Wallet connection is unavailable. Refresh the page to try again.'
+        : 'Sign-in uses a wallet message. It does not submit a transaction.';
+    ui.connect.disabled = busy || !state.walletReady;
+    ui.connect.hidden = Boolean(state.session);
+    ui.connect.textContent = state.busy === 'connecting' ? 'Connecting…' : state.wallet ? 'Change wallet' : 'Connect wallet';
+    ui['sign-in'].hidden = !state.wallet || Boolean(state.session);
+    ui['sign-in'].disabled = busy;
+    ui['sign-in'].textContent = state.busy === 'signing-in' ? 'Approve message in wallet…' : 'Sign in to Daily Growth';
+    ui['sign-out'].hidden = !state.session;
+    ui['sign-out'].disabled = busy;
+    ui['wallet-picker'].hidden = !state.pickerOpen;
+    renderWalletOptions();
+    const games = state.configuration?.enabledGames || [];
+    ui['tracking-note'].hidden = !(games.length === 3 && ['garden-bot', 'pvp', 'arborist-trials'].every((id) => games.some((game) => game.id === id)));
+    const selected = games.find((game) => game.id === state.selectedGameId);
+    const done = state.progress?.today.questCompleted;
+    ui['quest-state'].textContent = state.progress ? done ? '1 / 1 · Quest complete ✓' : '0 / 1 · Not completed' : state.apiUnavailable ? 'Progress unavailable' : state.configuration ? 'Sign in to save progress' : 'Checking availability…';
+    ui['quest-state'].classList.toggle('is-done', Boolean(done));
+    ui['pick-label'].textContent = selected?.id === state.configuration?.todayPick?.id ? 'Today’s pick:' : 'Your choice:';
+    ui['game-name'].textContent = selected?.label || (state.apiUnavailable ? 'Eligible games unavailable' : state.configuration ? 'No eligible games right now' : 'Checking eligible games…');
+    const copy = selected ? GAME_COPY[selected.id] : null;
+    ui.objective.textContent = copy?.objective || 'Finish a verified game result, then refresh your progress here.';
+    ui['game-access'].textContent = copy?.access || (selected ? 'Check this game’s access and result-saving requirements before playing.' : '');
+    ui.play.hidden = !selected;
+    if (selected) {
+      ui.play.href = selected.href;
+      ui.play.textContent = `Play ${selected.label} ↗`;
+      ui.play.setAttribute('aria-label', `Play ${selected.label} (opens in a new tab)`);
+    } else ui.play.removeAttribute('href');
+    ui.refresh.disabled = busy || (!state.session && !state.apiUnavailable);
+    ui.refresh.textContent = state.busy === 'syncing' ? 'Checking verified results…' : !state.session && state.apiUnavailable ? 'Retry availability' : 'Refresh progress';
+    ui.alternative.hidden = games.length < 2;
+    const currentOptions = [...ui['game-select'].options].map((option) => option.value).join('|');
+    if (currentOptions !== games.map((game) => game.id).join('|')) {
+      ui['game-select'].replaceChildren();
+      for (const game of games) {
+        const option = append(ui['game-select'], 'option', '', `${game.label}${game.id === 'pvp' ? ' · Paid entry' : ''}`);
+        option.value = game.id;
+      }
+    }
+    ui['game-select'].value = state.selectedGameId || '';
+    ui['quest-note'].textContent = done
+      ? 'Today’s quest is saved and you’re checked in. Refresh other completed games before 00:00 UTC to add passport stamps.'
+      : 'Complete the game and refresh before 00:00 UTC to earn that day’s quest and passport stamps. Opening a game alone does not count.';
+    ui.status.textContent = state.notice;
+    ui.status.className = `growth-status${state.noticeKind ? ` is-${state.noticeKind}` : ''}`;
+    renderProgress();
+  }
+
+  async function loadStatus() {
+    const ticket = epoch;
+    state.busy = 'loading';
+    render();
+    try {
+      const expectedWallet = state.session?.wallet || null;
+      const payload = await request('status', { token: state.session?.token });
+      if (ticket !== epoch || disposed) return;
+      acceptEnvelope(payload, expectedWallet);
+      setNotice('');
+    } catch (error) {
+      if (ticket === epoch && !disposed) reportError(error);
+    } finally {
+      if (ticket === epoch && !disposed) { state.busy = null; render(); }
+    }
+  }
+
+  function syncNotice(payload, previous) {
+    const failed = payload.sync?.games?.filter((game) => ['partial', 'unavailable', 'unsupported'].includes(game.status)) || [];
+    const labels = failed.map((result) => state.configuration?.enabledGames.find((game) => game.id === result.gameId)?.label || 'A game');
+    if (failed.length) {
+      state.stale = true;
+      setNotice(`Saved progress shown; ${labels.join(', ')} verification is unavailable or incomplete. Refresh again later to check for new results.`, 'error');
+      return;
+    }
+    if (state.progress?.today.questCompleted && !previous?.today.questCompleted) setNotice('Daily quest complete. You’re checked in for today, and your verified passport progress is saved.', 'success');
+    else if ((state.progress?.passport.completedGameIds.length || 0) > (previous?.passport.completedGameIds.length || 0)) setNotice('A new passport stamp is saved. Today’s quest is already counted.', 'success');
+    else setNotice('Progress refreshed. Only completed, verified game results add quest or passport stamps. Newly saved results may take a moment to appear.');
+  }
+
+  async function refresh() {
+    if (state.busy) return;
+    if (!state.session) return loadStatus();
+    if (!sessionIsCurrent()) return;
+    const ticket = epoch;
+    const session = state.session;
+    const previous = state.progress;
+    state.busy = 'syncing';
+    setNotice('Checking for completed, verified game results…');
+    render();
+    try {
+      const payload = await request('sync', { token: session.token, body: {} });
+      if (ticket !== epoch || disposed) return;
+      if (!sessionIsCurrent()) return;
+      acceptEnvelope(payload, session.wallet);
+      syncNotice(payload, previous);
+      state.launched = false;
+    } catch (error) {
+      if (ticket === epoch && !disposed) reportError(error);
+    } finally {
+      if (ticket === epoch && !disposed) { state.busy = null; render(); }
+    }
+  }
+
+  async function checkIn() {
+    if (state.busy || !sessionIsCurrent() || state.progress?.today.checkedIn) return;
+    const ticket = epoch;
+    const session = state.session;
+    state.busy = 'checking-in';
+    setNotice('Saving today’s check-in…');
+    render();
+    try {
+      const payload = await request('check-in', { token: session.token, body: {} });
+      if (ticket !== epoch || disposed) return;
+      if (!sessionIsCurrent()) return;
+      acceptEnvelope(payload, session.wallet);
+      setNotice('Checked in for today. Your monthly attendance is saved; today’s quest remains optional.', 'success');
+    } catch (error) {
+      if (ticket === epoch && !disposed) reportError(error);
+    } finally {
+      if (ticket === epoch && !disposed) { state.busy = null; render(); }
+    }
+  }
+
+  async function signIn() {
+    if (state.busy || !bridge || !state.wallet) return;
+    const wallet = currentWallet();
+    if (!wallet) return;
+    const ticket = epoch;
+    const address = wallet.address;
+    state.busy = 'signing-in';
+    setNotice('Review the Daily Growth sign-in message in your wallet. This does not submit a transaction.');
+    render();
+    let signedIn = false;
+    try {
+      const { challenge } = await request('challenge', { body: { wallet: address } });
+      if (ticket !== epoch || disposed || currentWallet()?.address !== address) return;
+      if (!challenge || normalizedAddress(challenge.wallet) !== address || !text(challenge.challengeId, 300) || !text(challenge.message, 12000) || !Number.isFinite(timestamp(challenge.expiresAt)) || timestamp(challenge.expiresAt) <= now()) throw invalidData();
+      const signatureResult = await bridge.signPersonalMessage({ message: new TextEncoder().encode(challenge.message) });
+      if (ticket !== epoch || disposed || currentWallet()?.address !== address) return;
+      if (!text(signatureResult?.signature, 8192)) throw new Error('The wallet did not return a sign-in signature. Please try again.');
+      const payload = await request('session', { body: { wallet: address, challengeId: challenge.challengeId, signature: signatureResult.signature } });
+      if (ticket !== epoch || disposed || currentWallet()?.address !== address) return;
+      const session = payload.session;
+      if (!session || !text(session.token, 8192) || normalizedAddress(session.wallet) !== address || !Number.isFinite(timestamp(session.expiresAt)) || timestamp(session.expiresAt) <= now()) throw invalidData();
+      acceptEnvelope(payload, address);
+      state.session = { version: 1, token: session.token, wallet: address, expiresAt: session.expiresAt, walletId: state.walletId, walletName: wallet.walletName };
+      persistSession(state.session);
+      state.pickerOpen = false;
+      armExpiry();
+      setNotice('Signed in. Checking for your latest verified game results…');
+      signedIn = true;
+    } catch (error) {
+      if (ticket === epoch && !disposed) {
+        if (/reject|declin|cancel/i.test(error?.message || '')) setNotice('Sign-in was cancelled. No transaction was submitted and your saved progress is unchanged.');
+        else reportError(error);
+      }
+    } finally {
+      if (ticket === epoch && !disposed) { state.busy = null; render(); }
+    }
+    if (signedIn && ticket === epoch) await refresh();
+  }
+
+  async function connect(walletId) {
+    if (state.busy || !bridge) return;
+    state.busy = 'connecting';
+    state.walletId = walletId;
+    setNotice('Connect your NFTree wallet, then sign in with a message to load your progress.');
+    render();
+    try {
+      await bridge.connectWallet(walletId);
+      if (disposed) return;
+      state.wallet = currentWallet();
+      if (!state.wallet) throw new Error('The wallet did not share a Sui account. Try connecting again.');
+      state.pickerOpen = false;
+      if (savedSession && savedSession.wallet === state.wallet.address && timestamp(savedSession.expiresAt) > now()) {
+        state.session = savedSession;
+        armExpiry();
+      } else if (savedSession) persistSession(null);
+      setNotice(state.session ? 'Loading your saved Daily Growth progress…' : 'Wallet connected. Sign in to Daily Growth to load your progress.');
+    } catch (error) {
+      if (!disposed) setNotice(text(error?.message, 500) ? error.message : 'Wallet connection was not completed. Try again.', 'error');
+    } finally {
+      if (!disposed) { state.busy = null; render(); }
+    }
+    if (state.session && !disposed) { await loadStatus(); if (state.session) await refresh(); }
+  }
+
+  async function signOut() {
+    if (state.busy || !state.session) return;
+    const token = state.session.token;
+    invalidateSession('Signed out of Daily Growth. Your earned progress stays with your wallet.');
+    render();
+    try { await request('logout', { body: {}, token }); } catch { /* The local session is already removed and the token expires server-side. */ }
+  }
+
+  function walletChanged() {
+    if (disposed) return;
+    const previous = state.wallet?.address;
+    const actual = currentWallet();
+    const expected = state.session?.wallet || previous;
+    if (expected && actual?.address !== expected) invalidateSession('Wallet changed. Sign in again to load this wallet’s progress.');
+    state.wallet = actual;
+    render();
+  }
+
+  function updateWallets() {
+    if (disposed) return;
+    try {
+      state.availableWallets = bridge.getAvailableWallets().filter((wallet) => text(wallet.id, 200) && text(wallet.name, 100));
+    } catch { state.availableWallets = []; }
+    render();
+  }
+
+  async function initializeWallet() {
+    try {
+      bridge = await loadWallet();
+      if (disposed) return;
+      state.walletReady = true;
+      updateWallets();
+      unsubscribeWallet = bridge.subscribeWalletState(walletChanged);
+      unsubscribeWallets = bridge.subscribeWallets?.(updateWallets) || (() => {});
+      state.wallet = currentWallet();
+      if (savedSession && !state.wallet && bridge.restoreWallet && savedSession.walletId) {
+        try { await bridge.restoreWallet({ id: savedSession.walletId, address: savedSession.wallet }); } catch { /* Restore is silent; reconnect remains explicit. */ }
+        if (disposed) return;
+        state.wallet = currentWallet();
+      }
+      if (savedSession && state.wallet?.address === savedSession.wallet && timestamp(savedSession.expiresAt) > now()) {
+        state.session = savedSession;
+        armExpiry();
+      } else if (state.wallet && savedSession) persistSession(null);
+    } catch {
+      state.walletError = true;
+      state.walletReady = false;
+    }
+    render();
+  }
+
+  on(ui.connect, 'click', () => {
+    if (state.busy || !state.walletReady) return;
+    state.pickerOpen = !state.pickerOpen;
+    render();
+    if (state.pickerOpen) ui['wallet-options'].querySelector('button')?.focus();
+  });
+  on(ui['wallet-options'], 'click', (event) => {
+    const button = event.target.closest('button[data-wallet-id]');
+    if (button && ui['wallet-options'].contains(button)) void connect(button.dataset.walletId);
+  });
+  on(ui['sign-in'], 'click', () => { void signIn(); });
+  on(ui['sign-out'], 'click', () => { void signOut(); });
+  on(ui.refresh, 'click', () => { void refresh(); });
+  on(ui['check-in'], 'click', () => { void checkIn(); });
+  on(ui['game-select'], 'change', () => { state.selectedGameId = ui['game-select'].value; render(); });
+  on(ui.play, 'click', () => {
+    state.launched = true;
+    setNotice('Finish and save your game, then return and refresh before 00:00 UTC. Opening the game has not awarded a stamp.');
+    render();
+  });
+  const tabs = [...root.querySelectorAll('[role="tab"]')];
+  function selectTab(tab, focus = false) {
+    for (const item of tabs) {
+      const active = item === tab;
+      item.setAttribute('aria-selected', String(active));
+      item.tabIndex = active ? 0 : -1;
+      document.getElementById(item.getAttribute('aria-controls')).hidden = !active;
+    }
+    if (focus) tab.focus();
+  }
+  tabs.forEach((tab, index) => {
+    on(tab, 'click', () => selectTab(tab));
+    on(tab, 'keydown', (event) => {
+      if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+      event.preventDefault();
+      const next = event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : (index + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+      selectTab(tabs[next], true);
+    });
+  });
+  on(view, 'focus', () => {
+    if (state.session && !sessionIsCurrent()) return;
+    if (state.session && state.launched && !state.busy) { setNotice('Back from a game? Refresh before 00:00 UTC to verify today’s result.'); render(); }
+  });
+
+  const ready = (async () => {
+    render();
+    await initializeWallet();
+    if (disposed) return;
+    await loadStatus();
+    if (state.session && !disposed) await refresh();
+  })();
+  return {
+    ready, refresh, checkIn, signIn, signOut,
+    destroy() {
+      disposed = true;
+      epoch += 1;
+      view.clearTimeout(expiryTimer);
+      for (const controller of requests) controller.abort();
+      unsubscribeWallet();
+      unsubscribeWallets();
+      listeners.forEach((remove) => remove());
+    },
+  };
+}
+
+if (typeof document !== 'undefined') {
+  const root = document.getElementById('arcade-daily-growth');
+  if (root) createDailyGrowth({ root });
+}
