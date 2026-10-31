@@ -53,7 +53,7 @@ async function snapshot() {
   await storeState(result.bytes, game);
   return result.bytes;
 }
-async function launch(bytes, title, expectedHash) {
+async function launch(bytes, title, expectedHash, gameControls = 'Use the on-screen buttons, keyboard, or a gamepad.') {
   if (launching) return;
   const token = ++launchId;
   enableLaunch(false);
@@ -79,6 +79,7 @@ async function launch(bytes, title, expectedHash) {
       frame.contentWindow.postMessage({ type: 'TREE_RETRO_INIT', session, hash, title: cleanName(title), rom }, location.origin, [rom]);
     }, { once: true });
     $('now-playing').textContent = active.title;
+    $('game-controls').textContent = gameControls;
     $('player-section').hidden = false;
     $('player-shell').append(frame);
     saveStatus('Press Start Game in the player. Use the on-screen buttons, keyboard, or a gamepad.');
@@ -209,12 +210,20 @@ async function loadCatalog() {
     if (!response.ok) throw new Error('The game library could not load. You can still choose a ROM from your device.');
     const catalog = await response.json();
     $('game-list').replaceChildren();
+    $('game-count').textContent = `NES · ${String(catalog.games.length).padStart(2, '0')} ${catalog.games.length === 1 ? 'GAME' : 'GAMES'}`;
     for (const game of catalog.games) {
       const card = document.createElement('article'); card.className = 'game-card';
-      card.innerHTML = '<div class="game-art" aria-hidden="true"><span class="pixel">↓ · ↓</span><strong>FALLING</strong><small>A LITTLE LEAP OF FAITH.</small></div><div class="game-info"><div class="game-meta"><span>NES</span><span>HOME BREW</span></div><h3></h3><p></p><button class="button primary" data-launch>Play game <span aria-hidden="true">↗</span></button></div>';
+      card.innerHTML = '<div class="game-art"><img alt="" loading="lazy" decoding="async" width="256" height="240"></div><div class="game-info"><div class="game-meta"><span>NES</span><span class="genre"></span></div><h3></h3><p class="game-description"></p><p class="game-controls"></p><a class="game-credit">Creator & credits</a><button class="button primary" data-launch>Play game <span aria-hidden="true">↗</span></button></div>';
+      card.querySelector('img').src = game.artwork;
+      card.querySelector('.genre').textContent = game.genre;
       card.querySelector('h3').textContent = game.title;
-      card.querySelector('p').textContent = game.description;
+      card.querySelector('.game-description').textContent = game.description;
+      card.querySelector('.game-controls').textContent = game.controls;
+      const credit = card.querySelector('.game-credit');
+      credit.href = `./credits.html#${encodeURIComponent(game.id)}`;
+      credit.textContent = `By ${game.author} · Credits`;
       const button = card.querySelector('button');
+      button.setAttribute('aria-label', `Play ${game.title}`);
       button.addEventListener('click', async () => {
         if (launching) return;
         const source = ++sourceId;
@@ -227,7 +236,7 @@ async function loadCatalog() {
           const response = await fetch(url, { credentials: 'omit' });
           if (!response.ok) throw new Error('This game could not load. Please try again.');
           const bytes = new Uint8Array(await response.arrayBuffer());
-          if (source === sourceId) await launch(bytes, game.title, game.sha256);
+          if (source === sourceId) await launch(bytes, game.title, game.sha256, game.controls);
         } catch (error) { notice(errorMessage(error), true); }
         finally { button.disabled = false; }
       });

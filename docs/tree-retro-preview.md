@@ -5,7 +5,7 @@ Destination: `/play/retro/` on tree-token.xyz. This feature is preview-only unti
 ## First milestone
 
 - Self-hosted, fixed JSNES 2.1.0 release, using Canvas 2D rendering, with a documented frame-timing patch that caps catch-up after native file dialogs. Original Apache-2.0 license retained.
-- One built-in game: Falling by Jesse Williams, MIT licensed, original ROM and license retained.
+- Five built-in games: Falling, Lunar Limit, Ralph 4, ZorchenRunner, and robotfindskitten. Each has a pinned ROM digest, source reference, original license, in-game screenshot, and individual controls. Falling, Lunar Limit, and ZorchenRunner use original author ROMs; Ralph 4 and robotfindskitten are compiled from unchanged pinned source using the cc65 revision recorded in catalog.json. Pubby’s games retain MovieMovies1’s CC BY 4.0 music attribution.
 - Local uncompressed `.nes` selection, capped at 16 MiB, with header/declared-length validation. Local files are passed to the player in memory and loaded directly in memory.
 - The player document blocks external connections through its own CSP. No global hosting headers or backend settings change.
 - Manual progress saves in IndexedDB keyed by the full ROM SHA-256, independent of filename and source. Saves remain until explicitly replaced. No automatic resume or autosave overwrites a chosen restore point.
@@ -30,4 +30,4 @@ Use the repository Deploy Preview context with its existing public GET-only prox
 
 ## Follow-up scope
 
-After the first milestone is reviewed: add more games with documented distribution rights, preview the lobby card linking from `/play/`, and prepare a preserved-backend static release. Shared leaderboards, rewards, cloud saves, more systems, and wallet access are separate features.
+After the expanded library is reviewed: preview the lobby card linking from `/play/` and prepare a preserved-backend static release. Additional titles need documented distribution rights and compatibility checks. Shared leaderboards, rewards, cloud saves, more systems, and wallet access are separate features.

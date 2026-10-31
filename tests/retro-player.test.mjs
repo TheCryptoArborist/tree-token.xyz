@@ -11,10 +11,21 @@ const root = new URL('../', import.meta.url);
 const rom = new Uint8Array(readFileSync(new URL('play/retro/games/falling.nes', root)));
 const catalog = JSON.parse(readFileSync(new URL('play/retro/catalog.json', root)));
 
-test('the distributed test game matches its recorded identity and declared ROM size', async () => {
-  assert.equal(await sha256(rom), catalog.games[0].sha256);
-  assert.equal(inspectRom(rom).mapper, 0);
-  assert.equal(inspectRom(rom).nes2, false);
+test('every library ROM has a distinct identity, valid size, artwork, controls, and license', async () => {
+  assert.equal(new Set(catalog.games.map(game => game.id)).size, catalog.games.length);
+  assert.equal(new Set(catalog.games.map(game => game.sha256)).size, catalog.games.length, 'each game uses a separate save identity');
+  const credits = readFileSync(new URL('play/retro/credits.html', root), 'utf8');
+  for (const game of catalog.games) {
+    const bytes = new Uint8Array(readFileSync(new URL(`play/retro/${game.rom.slice(2)}`, root)));
+    assert.equal(await sha256(bytes), game.sha256, game.title);
+    assert.ok([0, 1].includes(inspectRom(bytes).mapper), game.title);
+    assert.match(game.controls, /Start/);
+    assert.ok(game.source.includes(game.sourceCommit));
+    assert.ok(readFileSync(new URL(`play/retro/${game.licenseFile.slice(2)}`, root)).length > 500);
+    const artwork = readFileSync(new URL(`play/retro/${game.artwork.slice(2)}`, root));
+    assert.equal(artwork.subarray(1, 4).toString(), 'PNG');
+    assert.ok(credits.includes(`id="${game.id}"`), `${game.title} has visible attribution`);
+  }
   assert.equal(await sha256(new Uint8Array(rom)), await sha256(rom), 'same bytes from either source keep one save identity');
 });
 
@@ -50,23 +61,33 @@ test('backups round-trip exact state bytes with identity and checksum protection
   await assert.rejects(readBackup('not JSON', hash), /TREE save/);
 });
 
-test('the shipped NES engine executes frames and restores an exported state deterministically', async () => {
+test('every library game runs, accepts input, and restores its exported state deterministically', async t => {
   const context = { module: { exports: {} }, exports: {}, console };
   runInNewContext(readFileSync(new URL('play/retro/vendor/jsnes-2.1.0/jsnes.min.js', root), 'utf8'), context);
   const { NES } = context.module.exports;
-  const nes = new NES({ emulateSound: false });
-  nes.loadROM(rom);
+  for (const game of catalog.games) await t.test(game.title, async () => {
+  const gameRom = new Uint8Array(readFileSync(new URL(`play/retro/${game.rom.slice(2)}`, root)));
+  let frame;
+  const nes = new NES({ emulateSound: false, onFrame: pixels => { frame = pixels; } });
+  nes.loadROM(gameRom);
+  for (let i = 0; i < 120; i++) nes.frame();
+  nes.buttonDown(1, 3); nes.frame(); nes.buttonUp(1, 3);
   for (let i = 0; i < 60; i++) nes.frame();
+  nes.buttonDown(1, 7); nes.buttonDown(1, 0);
+  for (let i = 0; i < 12; i++) nes.frame();
+  nes.buttonUp(1, 7); nes.buttonUp(1, 0);
+  assert.ok(new Set(frame).size > 3, 'game renders a populated frame');
   const state = new TextEncoder().encode(JSON.stringify(nes.toJSON()));
-  const hash = await sha256(rom);
-  const backup = await makeBackup(state, hash, 'Falling');
+  const hash = await sha256(gameRom);
+  const backup = await makeBackup(state, hash, game.title);
   for (let i = 0; i < 12; i++) nes.frame();
   const expected = await sha256(new TextEncoder().encode(JSON.stringify(nes.toJSON())));
   const restored = new NES({ emulateSound: false });
-  restored.loadROM(rom);
+  restored.loadROM(gameRom);
   restored.fromJSON(JSON.parse(new TextDecoder().decode(await readBackup(JSON.stringify(backup), hash))));
   for (let i = 0; i < 12; i++) restored.frame();
   assert.equal(await sha256(new TextEncoder().encode(JSON.stringify(restored.toJSON()))), expected);
+  });
 });
 
 test('a long file dialog cannot create an unbounded frame catch-up queue', () => {

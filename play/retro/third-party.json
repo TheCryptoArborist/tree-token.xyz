@@ -29,7 +29,99 @@
       "path": "vendor/jsnes-2.1.0/jsnes.min.js",
       "bytes": 135646,
       "sha256": "2d0ef508e0c34b7c099e4783edf81c4061029f25324e442bc68c7f40b3b6187a"
+    },
+    {
+      "path": "artwork/falling.png",
+      "bytes": 2377,
+      "sha256": "ba2b2f207c22b51a169f22d14a932b8f4cab9f1b3e48896ed51c26a8aa1c4f1d",
+      "source": "https://github.com/xram64/falling-nes/tree/52dcb8a951200562e696dfc2aba5d4d14edd0078",
+      "kind": "emulated screenshot from shipped ROM"
+    },
+    {
+      "path": "games/lunar-limit.nes",
+      "bytes": 40976,
+      "sha256": "675f494d04d0adbe7d926eab70464ad9c12558465f7f6e0849aee80204ce38d3",
+      "source": "https://github.com/pubby/lunarlimit/tree/71a3412e02a3909bd2cd39d00a861a37e02fe8fa",
+      "kind": "rom"
+    },
+    {
+      "path": "licenses/lunar-limit.txt",
+      "bytes": 1643,
+      "sha256": "1cde30ce3b27cd6ae5d2558a4abd63c75eacb88b1865c7d7bdd68eb0d2dd5850",
+      "source": "https://github.com/pubby/lunarlimit/tree/71a3412e02a3909bd2cd39d00a861a37e02fe8fa",
+      "kind": "licenseFile"
+    },
+    {
+      "path": "artwork/lunar-limit.png",
+      "bytes": 639,
+      "sha256": "e6172c9d5d9ef4c193db2ded18c422d53a4215a6b3c437cdb9bee52e25eb0110",
+      "source": "https://github.com/pubby/lunarlimit/tree/71a3412e02a3909bd2cd39d00a861a37e02fe8fa",
+      "kind": "emulated screenshot from shipped ROM"
+    },
+    {
+      "path": "games/ralph-4.nes",
+      "bytes": 24592,
+      "sha256": "4e4d1dea5991d3f9d6ba5e6f0b0862e20eb3baf1224a169c34685ea138623639",
+      "source": "https://github.com/pubby/Ralph-4/tree/4ac663b80311ee62734a725b7c7b41822991dff8",
+      "kind": "rom"
+    },
+    {
+      "path": "licenses/ralph-4.txt",
+      "bytes": 1643,
+      "sha256": "1cde30ce3b27cd6ae5d2558a4abd63c75eacb88b1865c7d7bdd68eb0d2dd5850",
+      "source": "https://github.com/pubby/Ralph-4/tree/4ac663b80311ee62734a725b7c7b41822991dff8",
+      "kind": "licenseFile"
+    },
+    {
+      "path": "artwork/ralph-4.png",
+      "bytes": 1535,
+      "sha256": "9fa260ca7d2ed82e7ab9f50c119f6e1f4086e62259d9bdd1686262ec1c7f7002",
+      "source": "https://github.com/pubby/Ralph-4/tree/4ac663b80311ee62734a725b7c7b41822991dff8",
+      "kind": "emulated screenshot from shipped ROM"
+    },
+    {
+      "path": "games/zorchenrunner.nes",
+      "bytes": 81936,
+      "sha256": "1a67bfabdde2d96eacb04eb7f9d17e8da6c082d4976c318315fe31e2d19b4384",
+      "source": "https://github.com/zorchenhimer/nes-runner/tree/e6b5fe2e40ae46385ceccbc5bc1606cbd8bc02f2",
+      "kind": "rom"
+    },
+    {
+      "path": "licenses/zorchenrunner.txt",
+      "bytes": 1052,
+      "sha256": "ab7d66e877b8dfe0694a33271e2b81f964e78587583df0f9d60e87b175327597",
+      "source": "https://github.com/zorchenhimer/nes-runner/tree/e6b5fe2e40ae46385ceccbc5bc1606cbd8bc02f2",
+      "kind": "licenseFile"
+    },
+    {
+      "path": "artwork/zorchenrunner.png",
+      "bytes": 2816,
+      "sha256": "dd77d4fb27ac7496f75aab5c27da9dacbb793442c631b068a5e9263e6f5f0b13",
+      "source": "https://github.com/zorchenhimer/nes-runner/tree/e6b5fe2e40ae46385ceccbc5bc1606cbd8bc02f2",
+      "kind": "emulated screenshot from shipped ROM"
+    },
+    {
+      "path": "games/robotfindskitten.nes",
+      "bytes": 32784,
+      "sha256": "0778e86400a536407fd94d10619208c06dd120d0f5f28ad79778690048dd0091",
+      "source": "https://github.com/pinobatch/rfk-nes/tree/b9764cefd54aca09018e0a8f120f6c538668d76b",
+      "kind": "rom"
+    },
+    {
+      "path": "licenses/robotfindskitten.txt",
+      "bytes": 897,
+      "sha256": "c0f10c38673ee2fa93203c8df7870210722c828016ded2447070b235e1f653f9",
+      "source": "https://github.com/pinobatch/rfk-nes/tree/b9764cefd54aca09018e0a8f120f6c538668d76b",
+      "kind": "licenseFile"
+    },
+    {
+      "path": "artwork/robotfindskitten.png",
+      "bytes": 1680,
+      "sha256": "84e3e1344cfcf1ba7d5611d404c4168321697c800b30bcf33fd914e0341dc028",
+      "source": "https://github.com/pinobatch/rfk-nes/tree/b9764cefd54aca09018e0a8f120f6c538668d76b",
+      "kind": "emulated screenshot from shipped ROM"
     }
   ],
-  "runtimePatch": "vendor/jsnes-2.1.0/PATCHES.md"
+  "runtimePatch": "vendor/jsnes-2.1.0/PATCHES.md",
+  "artworkNotes": "Screenshots captured from each exact bundled ROM with JSNES 2.1.0: 120 boot frames, Start for one frame, then 90 frames. No third-party cover artwork is used."
 }
