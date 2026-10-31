@@ -1,0 +1,28 @@
+{
+  "validation": "Existing public purchase; no wallet or new transaction",
+  "retrieval": "Pinned @mysten/sui 2.26.2 GraphQL; historical receipt not retained by public gRPC fullnode",
+  "expected": {
+    "digest": "Da64RXmgZQDzdUqyi7PD2nJhKTeB3KgHJj9VxZn8q8y4",
+    "accountAddress": "0x0242a5228d8b5cb036ef60555a0b5ddc337bec6bf233381a2daba0d11a4004c5",
+    "poolId": "0x8cb91464eec7ada1af801a439207647d78de66bc0d4f124d6437091745a0163a",
+    "mintPriceMist": "25000000000"
+  },
+  "verified": {
+    "status": "confirmed",
+    "reason": "",
+    "digest": "Da64RXmgZQDzdUqyi7PD2nJhKTeB3KgHJj9VxZn8q8y4",
+    "accountAddress": "0x0242a5228d8b5cb036ef60555a0b5ddc337bec6bf233381a2daba0d11a4004c5",
+    "poolId": "0x8cb91464eec7ada1af801a439207647d78de66bc0d4f124d6437091745a0163a",
+    "nftObjectId": "0xfcad728487be0716e979e624fb68af8b2941e613322a813ecc845aea32253d72",
+    "nftType": "0xf6c6d439ea0da2f3e9ba79e4992a7a4c113215fbf54c442ac9020c315f953705::collection::NFT"
+  },
+  "currentObject": {
+    "objectId": "0xfcad728487be0716e979e624fb68af8b2941e613322a813ecc845aea32253d72",
+    "type": "0xf6c6d439ea0da2f3e9ba79e4992a7a4c113215fbf54c442ac9020c315f953705::collection::NFT",
+    "owner": {
+      "AddressOwner": "0x0242a5228d8b5cb036ef60555a0b5ddc337bec6bf233381a2daba0d11a4004c5",
+      "$kind": "AddressOwner"
+    }
+  },
+  "checkedAt": "2026-10-31T18:40:57.894Z"
+}

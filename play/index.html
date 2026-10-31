@@ -4,12 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>TREE Arcade | Choose Your Game</title>
-  <meta name="description" content="Battle. Grow. Defend the canopy. Explore Garden Battles, Arboretum, and TREE FORCE '89 in the TREE Arcade game collection, with more adventures coming soon.">
+  <meta name="description" content="Your NFTree is your arcade pass. Mint from the NFTree sales pool or buy on TradePort, then explore TREE FORCE '89, Garden Battles, and upcoming TREE Arcade games.">
   <meta name="theme-color" content="#080813">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="TREE Arcade">
   <meta property="og:title" content="TREE Arcade | Battle. Grow. Defend the canopy.">
-  <meta property="og:description" content="Choose your next adventure in the TREE ecosystem. Explore live games, previews, and upcoming releases.">
+  <meta property="og:description" content="Your NFTree is your arcade pass. Mint an NFTree here or choose one on TradePort, then explore live games, previews, and upcoming releases.">
   <meta property="og:url" content="https://tree-token.xyz/play/">
   <meta property="og:image" content="https://tree-token.xyz/assets/arcade/tree-arcade-social.jpg">
   <meta property="og:image:type" content="image/jpeg">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@thickquidity">
   <meta name="twitter:title" content="TREE Arcade | Choose Your Game">
-  <meta name="twitter:description" content="Battle. Grow. Defend the canopy. Choose your next adventure in the TREE ecosystem.">
+  <meta name="twitter:description" content="Your NFTree is your arcade pass. Mint from the sales pool or choose your NFTree on TradePort, then find your next game.">
   <meta name="twitter:image" content="https://tree-token.xyz/assets/arcade/tree-arcade-social.jpg">
   <meta name="twitter:image:alt" content="TREE Arcade artwork with Garden Bot, a forest emblem, and the TREE FORCE hero. Battle. Grow. Defend the canopy.">
   <link rel="canonical" href="https://tree-token.xyz/play/">
@@ -38,21 +38,63 @@
         <a href="/">Home</a>
         <a href="/dapp/">App</a>
         <a href="/play/" aria-current="page">Arcade</a>
-        <a href="/dapp/#swap">Get TREE <span aria-hidden="true">→</span></a>
+        <a href="https://nftree.net/mint#mint" data-nftree-mint aria-controls="nftree-mint-panel" aria-expanded="false">Get an NFTree <span aria-hidden="true">→</span></a>
       </nav>
     </div>
   </header>
 
   <main class="suite-main">
     <section class="suite-hero" aria-labelledby="arcade-title">
-      <p class="suite-eyebrow">NFTREE POWERED · BUILT ON SUI</p>
+      <p class="suite-eyebrow">NFTREE ACCESS · BUILT ON SUI</p>
       <h1 id="arcade-title"><span>TREE</span> ARCADE</h1>
-      <p class="suite-tagline">Battle. Grow. Defend the canopy.</p>
-      <p class="suite-intro">Choose your next adventure in the TREE ecosystem.</p>
+      <h2 class="suite-access-hook">Your NFTree is your arcade pass.</h2>
+      <p class="suite-intro">Get an NFTree NFT to unlock holder access to TREE Arcade games. Mint from the sales pool or choose your NFTree on TradePort, then connect the wallet holding it when you enter a game.</p>
       <div class="suite-hero-actions">
-        <a class="suite-primary" href="#cabinets">Choose a game <span aria-hidden="true">↓</span></a>
-        <a class="suite-secondary" href="https://nftree.net/">Explore NFTrees <span aria-hidden="true">↗</span></a>
+        <a class="suite-primary" href="https://nftree.net/mint#mint" data-nftree-mint aria-controls="nftree-mint-panel" aria-expanded="false">Mint an NFTree <span aria-hidden="true">→</span></a>
+        <a class="suite-secondary" href="https://www.tradeport.xyz/sui/collection/0xf6c6d439ea0da2f3e9ba79e4992a7a4c113215fbf54c442ac9020c315f953705::collection::NFT?tab=items" target="_blank" rel="noopener noreferrer">Buy on TradePort <span aria-hidden="true">↗</span></a>
       </div>
+      <p class="suite-owner-link">Already own an NFTree? <a href="#cabinets">Choose a game <span aria-hidden="true">↓</span></a></p>
+      <p class="suite-access-note">Game availability and entry requirements vary. Some modes have separate entry fees.</p>
+    </section>
+
+    <section id="nftree-mint-panel" class="mint-panel" aria-labelledby="nftree-mint-title" tabindex="-1" hidden>
+      <div class="mint-panel-heading">
+        <div><p class="suite-eyebrow">DIRECT FROM THE NFTREE SALES POOL</p><h2 id="nftree-mint-title">Mint an NFTree</h2></div>
+        <button class="mint-close" id="nftree-mint-close" type="button" aria-label="Close NFTree mint panel">Close <span aria-hidden="true">×</span></button>
+      </div>
+      <p class="mint-intro">Receive the next available NFTree from the sales pool. Your artwork and rarity are revealed after purchase. To choose a specific NFTree, <a href="https://www.tradeport.xyz/sui/collection/0xf6c6d439ea0da2f3e9ba79e4992a7a4c113215fbf54c442ac9020c315f953705::collection::NFT?tab=items" target="_blank" rel="noopener noreferrer">browse TradePort <span aria-hidden="true">↗</span></a>.</p>
+      <div class="mint-stats" aria-label="NFTree mint details">
+        <div class="mint-stat"><span>NFT price</span><strong id="nftree-mint-price">Checking…</strong><small>Current sales-pool price</small></div>
+        <div class="mint-stat"><span>Available</span><strong id="nftree-mint-inventory">Checking…</strong><small id="nftree-inventory-note">Live sales-pool inventory</small></div>
+        <div class="mint-stat"><span>Network fees</span><strong id="nftree-mint-fees">Reviewed before approval</strong><small>Paid in SUI in addition to the NFT price</small></div>
+      </div>
+      <p class="mint-wallet-state" id="nftree-wallet-state">Connect your Sui wallet to review a purchase.</p>
+      <div class="mint-wallet-options" id="nftree-wallet-options" aria-label="Choose a Sui wallet"></div>
+      <p class="mint-fallback" id="nftree-no-wallet" hidden>No compatible Sui wallet was detected. Open this page in a browser with your Sui wallet, or <a href="https://nftree.net/mint#mint" target="_blank" rel="noopener noreferrer">open the NFTree mint page <span aria-hidden="true">↗</span></a>.</p>
+      <p class="mint-balance" id="nftree-wallet-balance" hidden></p>
+      <div class="mint-review" id="nftree-purchase-review" hidden>
+        <div class="mint-review-copy" id="nftree-review-copy"></div>
+        <label class="mint-ack"><input id="nftree-purchase-ack" type="checkbox"><span>I’ve reviewed the price and understand that the NFTree’s artwork and rarity are revealed after purchase.</span></label>
+      </div>
+      <div class="mint-actions">
+        <button class="mint-action-primary" id="nftree-review-button" type="button" disabled>Review purchase</button>
+        <button class="mint-action-primary" id="nftree-purchase-button" type="button" hidden disabled>Confirm purchase in wallet</button>
+        <button class="mint-action-secondary" id="nftree-check-button" type="button" hidden>Check transaction status</button>
+        <button class="mint-action-secondary" id="nftree-refresh-button" type="button">Refresh inventory</button>
+        <button class="mint-action-secondary" id="nftree-disconnect-button" type="button" hidden>Disconnect</button>
+      </div>
+      <div class="mint-digest-entry" id="nftree-digest-entry" hidden>
+        <label for="nftree-transaction-digest">Transaction digest from your wallet</label>
+        <input id="nftree-transaction-digest" type="text" autocomplete="off" spellcheck="false" placeholder="Paste the transaction digest to check its status">
+        <p>Check your wallet history before making another purchase. You can correct a digest entered here. Checking a transaction does not submit a new purchase.</p>
+      </div>
+      <p class="mint-status" id="nftree-mint-status" role="status" aria-live="polite" aria-atomic="true">Loading live inventory…</p>
+      <div class="mint-result" id="nftree-mint-result" hidden></div>
+      <details class="mint-access-details">
+        <summary>NFTree access and game availability</summary>
+        <p>Use the wallet holding your NFTree when you enter a game. TREE FORCE ’89 currently checks NFTrees held directly in the wallet; NFTrees held in a Sui Kiosk are not recognized by that game. Garden Battles practice is available without an NFTree. Some modes have separate entry costs, and preview games are still in development.</p>
+      </details>
+      <p class="mint-fallback">Need another way to mint? <a href="https://nftree.net/mint#mint" target="_blank" rel="noopener noreferrer">Open the official NFTree mint page <span aria-hidden="true">↗</span></a>.</p>
     </section>
 
     <section id="cabinets" class="arcade-floor" aria-labelledby="floor-title" tabindex="-1">
@@ -220,11 +262,12 @@
           <li><span class="welcome-step-number" aria-hidden="true">02</span><div><h3>Check your access</h3><p>Open a game to see its access and entry requirements.</p></div></li>
           <li><span class="welcome-step-number" aria-hidden="true">03</span><div><h3>Join the adventure</h3><p>Connect your Sui wallet when the game prompts you, then follow its play instructions.</p></div></li>
         </ol>
-        <div class="access-actions"><a href="https://nftree.net/">EXPLORE NFTREES <span aria-hidden="true">↗</span></a><a href="/dapp/#swap">GET TREE <span aria-hidden="true">→</span></a></div>
+        <div class="access-actions"><a href="https://nftree.net/mint#mint" data-nftree-mint aria-controls="nftree-mint-panel" aria-expanded="false">MINT AN NFTREE <span aria-hidden="true">→</span></a><a href="https://www.tradeport.xyz/sui/collection/0xf6c6d439ea0da2f3e9ba79e4992a7a4c113215fbf54c442ac9020c315f953705::collection::NFT?tab=items" target="_blank" rel="noopener noreferrer">BUY ON TRADEPORT <span aria-hidden="true">↗</span></a></div>
       </section>
     </section>
   </main>
 
   <footer class="suite-footer"><strong>THICKQUIDITY · TREE ARCADE</strong><p>Rooted in the TREE ecosystem. Built for the next round.</p><a href="/">Back to TREE home <span aria-hidden="true">→</span></a></footer>
+  <script type="module" src="/scripts/arcade-nftree-access.js"></script>
 </body>
 </html>
