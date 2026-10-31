@@ -1,0 +1,74 @@
+{
+  "originalBytes": 1535842,
+  "deliveryBytes": 416356,
+  "reductionPercent": 72.9,
+  "encoding": "WebP quality 90, method 6; original proportions retained",
+  "artwork": [
+    {
+      "source": "assets/arcade/garden-bot-crest.png",
+      "sourceSha256": "2a63b811091b0c57e229bc0c6abafd1eb885943381fedbf2fd624e4fdebc3361",
+      "sourceBytes": 194232,
+      "output": "assets/arcade/garden-bot-poster.webp",
+      "outputSha256": "e97e173fbe87ceeec3d46689a954f9d35ffbee481e5b99b0a6533c60133663fc",
+      "outputBytes": 43422,
+      "width": 512,
+      "height": 512,
+      "alphaPreserved": true
+    },
+    {
+      "source": "assets/arcade/pvp-battle-crest.png",
+      "sourceSha256": "ab88ccfb9119e05d286cb9a8eff1070b263652e8ad9b767bbd447d26d6ab6e74",
+      "sourceBytes": 268910,
+      "output": "assets/arcade/pvp-battle-poster.webp",
+      "outputSha256": "14fc163e97a7be25dc2b0fed16ad386ee6f20c5f4c04e25a02dbedc7a3d199f6",
+      "outputBytes": 62658,
+      "width": 512,
+      "height": 512,
+      "alphaPreserved": true
+    },
+    {
+      "source": "assets/arcade/arborist-trials-logo.webp",
+      "sourceSha256": "0d8bef43bc993d5f21d0e47d0e06cbbe937099383eb00cbc2478cd47e1ec03d9",
+      "sourceBytes": 321892,
+      "output": "assets/arcade/arborist-trials-poster.webp",
+      "outputSha256": "2c4f830ba3db12e568efd0316839cc4be6e8da1223f5ec0e956fb485225f728f",
+      "outputBytes": 99784,
+      "width": 800,
+      "height": 267,
+      "alphaPreserved": true
+    },
+    {
+      "source": "assets/arcade/canopy-clash-crest.png",
+      "sourceSha256": "2e2f66b81eebe7e29813820f7346d337f0f0b1c2f6e661d422240f8aea759553",
+      "sourceBytes": 402904,
+      "output": "assets/arcade/canopy-clash-poster.webp",
+      "outputSha256": "a0f3f42eb40474bc531836adfea85906ca9569aff4b35eb872b40991946ccc79",
+      "outputBytes": 67206,
+      "width": 512,
+      "height": 512,
+      "alphaPreserved": true
+    },
+    {
+      "source": "assets/arboretum-logo-black.webp",
+      "sourceSha256": "f839e12e56157a74c4ea02c4413cfbf70553b90620893ee1f94a3497b15a6338",
+      "sourceBytes": 117678,
+      "output": "assets/arcade/arboretum-poster.webp",
+      "outputSha256": "d494d02df22614bcf6a6108bca3d14ed2e8b9b6188248a50ae2a15a3af242f6e",
+      "outputBytes": 51662,
+      "width": 512,
+      "height": 512,
+      "alphaPreserved": false
+    },
+    {
+      "source": "assets/tree-force-89-logo-black.webp",
+      "sourceSha256": "e041b38a8ec251958f33b6eccd89a452b34ffc0e10ae1115e2200cc3c2ce7a52",
+      "sourceBytes": 230226,
+      "output": "assets/arcade/tree-force-89-poster.webp",
+      "outputSha256": "a5dcc39766a1fbc5aade56530f1e99e364519f91373d5fd7672fdbd4bb2c5d1c",
+      "outputBytes": 91624,
+      "width": 512,
+      "height": 512,
+      "alphaPreserved": false
+    }
+  ]
+}
