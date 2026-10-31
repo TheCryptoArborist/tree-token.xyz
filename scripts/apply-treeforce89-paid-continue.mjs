@@ -7,10 +7,10 @@ const root=resolve(import.meta.dirname,'..');
 export function applyPaidContinue(source) {
  const pin='a38e08e37e1f71ea41b86add8e26a92b0789cf22';
  const original=path=>execFileSync('git',['show',pin+':'+path],{cwd:source,encoding:'utf8'});
- for(const name of ['NFTreeGateway.tsx','CanopyGame.tsx','ContinuationReview.tsx'])
+ for(const name of ['NFTreeGateway.tsx','CanopyGame.tsx','ContinuationReview.tsx','ContinuationDialog.tsx'])
   copyFileSync(resolve(root,'treeforce89/frontend',name),resolve(source,'app',name));
  mkdirSync(resolve(source,'paid'),{recursive:true});
- for(const name of ['contract.mjs','client.mjs'])copyFileSync(resolve(root,'treeforce89/paid',name),resolve(source,'paid',name));
+ for(const name of ['contract.mjs','client.mjs','receipt-discovery.mjs'])copyFileSync(resolve(root,'treeforce89/paid',name),resolve(source,'paid',name));
  let arcade=original('app/game/arcade.ts');
  const replace=(before,after)=>{assert.equal(arcade.split(before).length,2,'Unexpected game source boundary');arcade=arcade.replace(before,after);};
  replace('interface RunState{','export interface RunState{');

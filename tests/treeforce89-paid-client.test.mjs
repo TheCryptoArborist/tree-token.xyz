@@ -82,3 +82,30 @@ test('unverifiable grants and unknown wallet errors preserve a recoverable check
  await assert.rejects(unknown.client.pay(offer));assert.equal(loadPendingContinuation(wallet,unknown.storage).offerId,offerId);
  await assert.rejects(unknown.client.pay(offer),/Recover/);
 });
+
+test('a lost wallet response is recovered automatically without a second signature or manual digest',async()=>{
+ const storage=memory(),initial=setup({storage,sign:()=>{throw Error('Wallet response lost');}});
+ await assert.rejects(initial.client.pay(offer));
+ let signed=0,lookups=0;
+ const recovered=createPaidContinueClient({session,Transaction,storage,getCurrentWallet:()=>wallet,
+  signAndExecute:()=>{signed++;throw Error('Must not sign again');},
+  findReceipts:async input=>{lookups++;assert.equal(input.wallet,wallet);assert(Number.isSafeInteger(input.startedAt));return [digest];},
+  fetchImpl:async()=>Response.json(grant)});
+ assert.deepEqual(await recovered.retry(),grant);assert.equal(signed,0);assert.equal(lookups,1);
+ assert.equal(recovered.pending().digest,digest);
+});
+test('automatic recovery never authorizes a mismatched candidate or discards a pending offer',async()=>{
+ const storage=memory(),initial=setup({storage,sign:()=>{throw Error('lost');}});await assert.rejects(initial.client.pay(offer));
+ const recovered=createPaidContinueClient({session,Transaction,storage,getCurrentWallet:()=>wallet,
+  signAndExecute:()=>{throw Error('Must not sign');},findReceipts:async()=>['D'.repeat(44),digest],
+  fetchImpl:async(path,r)=>JSON.parse(r.body).digest===digest?Response.json(grant):Response.json({code:'PAYMENT_MISMATCH',error:'Not this offer'},{status:402})});
+ assert.deepEqual(await recovered.retry(),grant);assert.equal(recovered.pending().digest,digest);
+});
+test('an unindexed payment stays recoverable and cannot start another payment',async()=>{
+ const storage=memory(),initial=setup({storage,sign:()=>{throw Error('lost');}});await assert.rejects(initial.client.pay(offer));
+ const recovered=createPaidContinueClient({session,Transaction,storage,getCurrentWallet:()=>wallet,
+  signAndExecute:()=>{throw Error('Must not sign');},findReceipts:async()=>[],fetchImpl:()=>{throw Error('No receipt to verify');}});
+ await assert.rejects(recovered.retry(),/No confirmed payment found/);
+ assert.equal(recovered.pending().offerId,offerId);assert(!recovered.pending().digest);
+ await assert.rejects(recovered.pay(offer),/Recover/);
+});

@@ -107,3 +107,17 @@ body .nftree-gateway[aria-label="NFTree Gateway"] button:not(.nftree-secondary):
   body .nftree-gateway[aria-label="NFTree Gateway"] button,
   .nftree-gateway[aria-label="NFTree Gateway"] mysten-dapp-kit-connect-button::part(trigger) { transition: none; }
 }
+
+/* A distinct action for each checkout stage; recovery fields stay secondary. */
+.continuation-review .continuation-eyebrow{color:#d7ef9c;font-size:10px;font-weight:700;letter-spacing:2px}
+.continuation-review .continuation-lives{color:#bcf674;font-size:36px;letter-spacing:10px;padding:6px 0}
+.continuation-review button.continuation-primary{min-height:56px;background:#c2f57c;border:2px solid #defeae;color:#14210e;font-size:15px;box-shadow:0 0 24px #b9f66d30}
+.continuation-review button.continuation-primary:hover:not(:disabled){background:#dbffa8}
+.continuation-review button.continuation-primary:disabled{background:#22341e;border-color:#536e43;color:#b3c5a5;box-shadow:none}
+.continuation-review button.continuation-secondary{background:transparent;border-color:#527047;color:#c1cdbb;font-size:12px;min-height:36px}
+.continuation-details{width:100%;text-align:left;color:#b2c3a9;font-size:11px}
+.continuation-details summary{cursor:pointer;padding:6px;text-align:center;text-decoration:underline;text-underline-offset:3px}
+.continuation-details label{display:grid;gap:7px;padding-block:10px}
+.continuation-details p{padding-top:10px}
+.continuation-details code{display:block;padding-top:7px}
+.continuation-review .continuation-receipt{font-size:11px;color:#c7e4a8}

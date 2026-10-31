@@ -9,7 +9,7 @@ export function loadPendingContinuation(wallet,storage=browserStorage()) {
  }catch{return null;}
 }
 export function createPaidContinueClient({session,Transaction,signAndExecute,waitForTransaction,
- getCurrentWallet,fetchImpl=fetch,storage=browserStorage(),onStage=()=>{}}) {
+ getCurrentWallet,findReceipts,fetchImpl=fetch,storage=browserStorage(),onStage=()=>{}}) {
  let busy=false;
  const current=()=>{if(getCurrentWallet()!==session.wallet)throw Error('Reconnect the wallet used for this game.');};
  const save=value=>{if(!storage)throw Error('Browser session storage is required for payment recovery.');
@@ -43,7 +43,8 @@ export function createPaidContinueClient({session,Transaction,signAndExecute,wai
    if(offer.expiresAt<=Date.now())throw Error('Checkout expired. No payment was requested.');
    busy=true;
    try{
-    save({offerId:offer.offerId});onStage('Approve 20,000 TREE in your wallet. SUI gas is separate.');
+    const startedAt=Date.now();
+    save({offerId:offer.offerId,startedAt});onStage('Approve 20,000 TREE in your wallet. SUI gas is separate.');
     let result;
     try{result=await signAndExecute(buildContinueTransaction(Transaction,offer));}
     catch(e){if(e?.code===4001||e?.code==='USER_REJECTED_REQUEST'||/user (?:rejected|denied)|cancelled|canceled/i.test(e?.message||'')){
@@ -52,7 +53,7 @@ export function createPaidContinueClient({session,Transaction,signAndExecute,wai
      storage.removeItem(key(session.wallet));throw Error('The transaction failed. No TREE continuation payment was confirmed.');}
     const digest=result?.Transaction?.digest;
     if(result?.$kind!=='Transaction'||!digestPattern.test(digest||''))throw Error('Check your wallet for a submitted transaction before retrying.');
-    const pending={offerId:offer.offerId,digest};save(pending);current();
+    const pending={offerId:offer.offerId,startedAt,digest};save(pending);current();
     onStage('Payment submitted. Waiting for confirmation…');
     if(waitForTransaction)await waitForTransaction(digest);
     return await verify(pending);
@@ -63,6 +64,15 @@ export function createPaidContinueClient({session,Transaction,signAndExecute,wai
    try{const pending=loadPendingContinuation(session.wallet,storage);
     if(!pending)throw Error('No pending checkout is saved for this wallet.');
     if(digest){if(!digestPattern.test(digest))throw Error('Enter a valid Sui transaction digest.');save({...pending,digest});pending.digest=digest;}
+    if(!pending.digest&&findReceipts){
+     current();onStage('Finding your TREE payment…');
+     const candidates=await findReceipts({wallet:session.wallet,startedAt:pending.startedAt});current();
+     for(const candidate of [...new Set(candidates)].filter(d=>digestPattern.test(d)).slice(0,5)){
+      try{const grant=await verify({...pending,digest:candidate});save({...pending,digest:candidate});return grant;}
+      catch(e){if(!['PAYMENT_MISMATCH','PAYMENT_USED'].includes(e?.code))throw e;}
+     }
+     throw Error('No confirmed payment found yet. If you approved the payment, wait a moment and check again.');
+    }
     return await verify(pending);
    }finally{busy=false;}
   },
