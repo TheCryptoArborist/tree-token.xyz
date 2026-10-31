@@ -1,0 +1,30 @@
+name: TREE FORCE native play integration preflight
+
+on:
+  push:
+    branches:
+      - feature/treeforce89-play-integration
+    paths:
+      - 'docs/treeforce89-play-integration.md'
+      - 'scripts/verify-treeforce89-play-boundary.mjs'
+      - '.github/workflows/treeforce89-play-preflight.yml'
+  pull_request:
+    paths:
+      - 'docs/treeforce89-play-integration.md'
+      - 'scripts/verify-treeforce89-play-boundary.mjs'
+      - '.github/workflows/treeforce89-play-preflight.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  production-preservation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify protected TREE Token production snapshot
+        run: node scripts/verify-treeforce89-play-boundary.mjs
