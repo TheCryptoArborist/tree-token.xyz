@@ -1,5 +1,10 @@
 # TREE Arcade — Daily Growth
 
+Published at **2026-10-31 21:30:27 UTC** on
+[TREE Arcade](https://tree-token.xyz/play/#arcade-daily-growth).
+Deployment: `6ae65d956e30582ff6f5baa2`. Published source:
+`ea323cebb0f33de1f5d123be867c7574781a43f5`. The current deployment is locked.
+
 ## Release scope
 
 Daily Growth adds wallet-based attendance, one verified daily quest, a monthly
@@ -22,8 +27,7 @@ byte-identical. The new `arcade-growth` function exposes GET/POST
 `/api/arcade-growth`. All 39 existing complete function/provider records and all
 five schedules are preserved by the bounded release script. The existing
 TREE FORCE isolated database binding and paid-continue setting remain exact.
-The candidate and published identities are recorded in `arcade-growth-published.json`
-after publication.
+The complete published identities are recorded in `arcade-growth-published.json`.
 
 ## Player rules
 
@@ -184,6 +188,16 @@ and [deployment API](https://open-api.netlify.com/).
 - Desktop and 320px browser review exercised the real HTML/CSS/controller with
   clearly marked synthetic fixtures. No horizontal overflow was observed in
   quest, month, or badge views. Fixtures remain outside the release inventory.
+- Nine hosted API checks passed on the candidate and again on the canonical
+  domain: rules load successfully; unauthenticated writes, client-supplied game
+  claims, foreign origins, invalid wallets, unsupported methods, and unknown
+  sessions are rejected; the server issues a real challenge; a correctly signed
+  ephemeral wallet without an NFTree is denied access. No progress is credited
+  by these checks. Reports are `arcade-growth-candidate-api.json` and
+  `arcade-growth-live-api.json`.
+- The published page loads the eligible games, message-only wallet controls,
+  signed-out empty states, and TREE FORCE tracking notice. The screenshot
+  `arcade-growth-live.jpg` is from the canonical live page, not a fixture.
 
 ### Validation boundaries
 
@@ -221,6 +235,13 @@ symlinks. Its manifest pins the source inputs and ZIP digest.
 `scripts/release-arcade-growth.mjs` captures the locked baseline, creates a new
 unpublished candidate, verifies the complete static/function/schedule records,
 and only then permits forward publication of that exact never-published
-candidate. It preserves both the old and new publication locks. The exact new
+candidate. It requires the old production lock before publication and verifies
+the new current-publication lock afterward. Netlify released the old deploy’s
+lock when the new one became the current published pin. The final read-only
+audit records that observed state while verifying both deployment inventories.
+The old deploy was not re-locked: the documented `lockDeploy` operation would
+publish a noncurrent target first, undoing the forward release. See the
+[official lock operation](https://open-api.netlify.com/#tag/deploy/operation/lockDeploy).
+The exact new
 ZIP is archived under `production/arcade-growth/`; do not replace the other
 function packages with ordinary build output.

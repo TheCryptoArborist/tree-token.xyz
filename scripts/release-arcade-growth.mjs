@@ -197,9 +197,10 @@ async function runRelease(api,fetch){
   check(new Set(rows.map(file=>file.path)).size===rows.length,'Duplicate deployed static paths.');
   return Object.fromEntries(rows.map(file=>[file.path,file.sha]));
  };
- const currentIs=async id=>{
+ const currentIs=async(id,{requireLocked=false}={})=>{
   const site=await api.getSite({siteId});
   check(site.id===siteId&&site.published_deploy?.id===id,'Production changed concurrently; stop.');
+  if(requireLocked)check(site.published_deploy.locked===true,'The current published deployment is not locked in site metadata.');
  };
  if(mode==='capture'){
   phase='read-only baseline capture';
@@ -314,6 +315,7 @@ async function runRelease(api,fetch){
  const {original,files,overlay}=buildFiles(baseline);
  const functionPackage=readFunctionPackage();
  const originalDeploy=await api.getDeploy({deployId:expectedBaselineId});
+ check(originalDeploy.id===expectedBaselineId&&originalDeploy.site_id===siteId&&originalDeploy.state==='ready','The captured baseline deployment identity or ready state changed.');
  equal(originalDeploy.available_functions,baseline.deploy.available_functions,'Baseline backend records changed.');
  equal(originalDeploy.function_schedules,baseline.deploy.function_schedules,'Baseline schedules changed.');
  equal(await inventory(expectedBaselineId),original,'Baseline static inventory changed.');
@@ -425,6 +427,19 @@ async function runRelease(api,fetch){
  const verification={id:state.id,siteId,baseline:expectedBaselineId,sourceCommit:state.sourceCommit,...proof,
   verifiedAt:new Date().toISOString(),files:237,functions:40,functionsPreserved:39,functionsAdded:[newFunctionName],
   newFunctionRecord:state.newFunctionRecord,schedulesPreserved:5,unpublished:!candidate.published_at};
+ let previousDeployLocked;
+ const verifyPreviousAfterPublication=async()=>{
+  const previous=await api.getDeploy({deployId:expectedBaselineId});
+  check(previous.id===expectedBaselineId&&previous.site_id===siteId&&previous.state==='ready','Previous deployment identity or ready state changed after publication.');
+  equal(previous.available_functions,baseline.deploy.available_functions,'Previous deployment full function records changed after publication.');
+  equal(previous.function_schedules,baseline.deploy.function_schedules,'Previous deployment schedules changed after publication.');
+  equal(await inventory(expectedBaselineId),original,'Previous deployment static inventory changed after publication.');
+  // Netlify's lock pins the current published deploy. Locking the previous
+  // deploy would publish it again; its former lock must not be restored.
+  check(previous.locked===true||previous.locked===false||previous.locked==null,'Unexpected previous-deployment lock metadata.');
+  previousDeployLocked=previous.locked??null;
+  await currentIs(state.id,{requireLocked:true});
+ };
  if(mode==='publish'){
   phase='verified forward-publication preflight';
   const priorVerification=read(verificationPath);
@@ -444,15 +459,15 @@ async function runRelease(api,fetch){
    check(current.published_deploy?.id===state.id,'Forward publication failed or its result is uncertain; inspect the recorded candidate.');
   }
   await api.lockDeploy({deployId:state.id});
-  await currentIs(state.id);
+  await currentIs(state.id,{requireLocked:true});
   candidate=await verifyCandidate();
   check(candidate.locked===true,'Published candidate is not locked.');
-  check((await api.getDeploy({deployId:expectedBaselineId})).locked===true,'The previous production publication lock changed.');
+  await verifyPreviousAfterPublication();
  }else if(mode==='published'){
   phase='published release verification';
-  await currentIs(state.id);
+  await currentIs(state.id,{requireLocked:true});
   check(candidate.locked===true,'Published candidate must be locked before recording success.');
-  check((await api.getDeploy({deployId:expectedBaselineId})).locked===true,'The previous production publication lock changed.');
+  await verifyPreviousAfterPublication();
  }else{
   await currentIs(expectedBaselineId);
   check((await api.getDeploy({deployId:expectedBaselineId})).locked===true,'Existing production lock changed during verification.');
@@ -465,11 +480,13 @@ async function runRelease(api,fetch){
   functions:40,functionsPreserved:39,functionsAdded:[newFunctionName],newFunctionSha256:functionPackage.sha256,
   schedulesPreserved:5,existingBackendUnchanged:true,noNetlifyMigrations:true,paymentsEnabled:true,
   isolatedDatabaseIdentity:baseline.databaseEvidence.previewDatabaseIdentity,
+  ...(mode==='publish'||mode==='published'?{previousDeployLocked,publicationLockScope:'current-published-deploy',
+   previousDeployLockNote:'Netlify pins auto publishing to the current published deploy. Locking a previous deploy would publish it again; its observed lock value is recorded rather than restored.'}:{}),
   publishedAt:candidate.published_at||null,url:'https://tree-token.xyz/play/',
   candidateUrl:'https://'+state.id+'--tree-token.netlify.app/play/',locked:mode==='publish'||mode==='published'?candidate.locked:false};
  if(mode==='publish'||mode==='published'){
   check(Boolean(candidate.published_at),'Publication timestamp is missing; do not record production success.');
-  await currentIs(state.id);
+  await currentIs(state.id,{requireLocked:true});
   save(publishedPath,{...summary,filesBySha1:files,functionRecords:candidate.available_functions,functionSchedules:candidate.function_schedules});
  }
  console.log(JSON.stringify(summary,null,2));
