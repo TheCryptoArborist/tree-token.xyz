@@ -28,3 +28,11 @@ Only two existing public files change: `/play/index.html` and `/styles/tree-arca
 `scripts/release-arcade-polish.mjs` pins the committed source, checks the exact static allowlist, verifies the complete function records and schedules before and after publication, and immediately locks the newly published deployment. Publication evidence is saved separately in `arcade-polish-published.json`.
 
 The current MystenLabs/skills README was checked for this request and remains blob `8be2c5d51d94c953a007e286f63df38372faa8d0`. This is an HTML/CSS and image delivery change with no Sui SDK or wallet integration changes.
+
+## Published result
+
+Source commit `17365026343f9e019f7dcc49b5429ec3f9b17494` was published as deployment `6ae5879d07576659dfd6fd1a` on 2026-10-31 at 06:17:12 UTC. Production remains locked. `arcade-polish-published.json` records every static digest, full backend function record, and scheduled job.
+
+The canonical live page showed all nine posters, all six unchanged game destinations, four desktop columns, and the welcome guide aligned beside the ninth poster. No horizontal overflow was present. The social JPEG returned HTTP 200 with the correct `image/jpeg` content type on the hosted candidate and canonical domain.
+
+Live screenshots: `review/arcade-polish-live-6ae5879d-top.jpg` and `review/arcade-polish-live-6ae5879d-welcome.jpg`. The first documents the shorter introduction and more readable first row; the second documents the blended game artwork, quieter future posters, and completed welcome row.
