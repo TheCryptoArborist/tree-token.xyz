@@ -2,6 +2,7 @@ import {execFileSync} from 'node:child_process';
 import {resolve} from 'node:path';
 import {mkdirSync,rmSync,cpSync} from 'node:fs';
 import {rebaseTreeForceAssets} from './rebase-treeforce89-assets.mjs';
+import {styleTreeForceGateway} from './style-treeforce89-gateway.mjs';
 
 const root=resolve(import.meta.dirname,'..');
 const pinned='a38e08e37e1f71ea41b86add8e26a92b0789cf22';
@@ -23,4 +24,5 @@ run('npm',['run','build','--','--base','/play/treeforce89/'],source);
 run('node',[resolve(root,'scripts/verify-treeforce89-staged-assets.mjs'),resolve(source,'dist')],root);
 rmSync(destination,{recursive:true,force:true});mkdirSync(destination,{recursive:true});
 cpSync(resolve(source,'dist'),destination,{recursive:true});
+styleTreeForceGateway(destination);
 console.log('Staged pinned native TREE FORCE preview under /play/treeforce89/; payments disabled.');

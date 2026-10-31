@@ -1,0 +1,96 @@
+/* Presentation only. Authentication, wallet UI and gameplay use the pinned bundles. */
+.gateway-intro { display: none; }
+body:has(.nftree-gateway[aria-label="NFTree Gateway"]) {
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: minmax(0, 580px) minmax(340px, 420px);
+  align-items: center;
+  justify-content: center;
+  gap: clamp(28px, 5vw, 88px);
+  padding: 30px clamp(24px, 5vw, 80px);
+  background: linear-gradient(90deg, #050d0bd9, #060c16c9 55%, #080b13e8),
+    url('/play/treeforce89/assets/backgrounds/first-canopy-backdrop.png') center / cover fixed;
+  color: #f5f6e8;
+}
+body:has(.nftree-gateway[aria-label="NFTree Gateway"]) .gateway-intro { display: block; min-width: 0; }
+.gateway-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.gateway-nav a { color: #c7d4c6; font-size: 11px; font-weight: 700; letter-spacing: .12em; text-decoration: none; }
+.gateway-nav a:hover { color: #d2fb8a; }
+.gateway-nav a:focus-visible { outline: 2px solid #d2fb8a; outline-offset: 6px; }
+.gateway-live { display: inline-flex; align-items: center; gap: 7px; color: #c2e48b; font-size: 9px; letter-spacing: .1em; }
+.gateway-live > span { width: 6px; height: 6px; border-radius: 50%; background: #a6ec70; box-shadow: 0 0 12px #a6ec70; }
+.gateway-showcase { text-align: center; }
+.gateway-logo { display: block; width: min(100%, 355px); height: auto; margin: 15px auto 4px; mix-blend-mode: screen; filter: drop-shadow(0 10px 26px #0007); }
+.gateway-eyebrow { margin: 0 0 9px; color: #c2d38c; font-size: 10px; font-weight: 700; letter-spacing: .25em; }
+.gateway-showcase h1 { margin: 0; font-family: Impact, 'Arial Black', sans-serif; font-size: clamp(44px, 5.2vw, 72px); font-weight: 900; line-height: 1; letter-spacing: -.025em; text-transform: uppercase; }
+.gateway-showcase h1 em { font-style: normal; color: #d3f98b; text-shadow: 0 0 35px #8dbd562a; }
+.gateway-invitation { margin: 17px 0 24px; color: #bbc8c1; font-size: 14px; line-height: 1.8; }
+.gateway-steps { display: flex; justify-content: center; gap: clamp(16px, 3vw, 38px); list-style: none; padding: 19px 0 0; margin: 0; border-top: 1px solid #9bbd792a; }
+.gateway-steps li { display: flex; gap: 8px; align-items: center; color: #e3e8d2; font-size: 10px; font-weight: 700; letter-spacing: .1em; }
+.gateway-steps li span { color: #a6b96e; font-size: 10px; }
+body:has(.nftree-gateway[aria-label="NFTree Gateway"]) #root { min-width: 0; }
+.site-shell:has(.nftree-gateway[aria-label="NFTree Gateway"]) { min-height: 0; padding: 0; background: transparent; }
+.game-frame:has(.nftree-gateway[aria-label="NFTree Gateway"]) {
+  width: 100%; min-height: 0; border: 1px solid #9bbd7945; border-radius: 18px;
+  background: linear-gradient(145deg, #18271fd9, #0b1311f5 65%);
+  box-shadow: 0 25px 70px #0007, inset 0 1px 0 #edffc51a, 0 0 70px #88ac5010;
+}
+.game-frame:has(.nftree-gateway[aria-label="NFTree Gateway"]) .game-header,
+.game-frame:has(.nftree-gateway[aria-label="NFTree Gateway"]) .game-controls,
+.site-shell:has(.nftree-gateway[aria-label="NFTree Gateway"]) .build-label { display: none; }
+.screen-bezel:has(.nftree-gateway[aria-label="NFTree Gateway"]) { background: transparent; box-shadow: none; }
+.game-viewport:has(.nftree-gateway[aria-label="NFTree Gateway"]) {
+  width: 100%; height: auto; aspect-ratio: auto; max-height: none; overflow: visible;
+  background: transparent; image-rendering: auto;
+}
+.nftree-gateway[aria-label="NFTree Gateway"] {
+  height: auto; min-height: 0; padding: 38px 30px 27px; gap: 17px;
+  background: transparent; overflow: visible; border-radius: 18px;
+}
+.nftree-gateway[aria-label="NFTree Gateway"]::before {
+  content: 'PLAYER ACCESS'; color: #c2d38c; font-size: 10px; font-weight: 700; letter-spacing: .22em;
+  padding: 7px 12px; border: 1px solid #9bbd7940; border-radius: 30px; background: #a2c56b0b;
+}
+.nftree-gateway[aria-label="NFTree Gateway"] h2 { margin: 0; color: #f5f6e8; font-size: 29px; font-weight: 800; letter-spacing: -.04em; }
+.nftree-gateway[aria-label="NFTree Gateway"] p { color: #c7d3ca; font-size: 13px; line-height: 1.75; max-width: 330px; }
+body .nftree-gateway[aria-label="NFTree Gateway"] button:not(.nftree-secondary) {
+  width: 100%; min-height: 55px; border: 1px solid #def4a4; border-radius: 9px;
+  background: linear-gradient(115deg, #d8f997, #9cdb70); color: #12250c;
+  font-size: 15px; font-weight: 800; box-shadow: 0 6px 24px #a8d96b24, inset 0 1px 0 #fff7;
+  transition: box-shadow .18s ease, filter .18s ease;
+  touch-action: manipulation;
+}
+body .nftree-gateway[aria-label="NFTree Gateway"] button:not(.nftree-secondary):hover:not(:disabled) { filter: brightness(1.08); box-shadow: 0 7px 30px #a8d96b45; }
+.nftree-gateway[aria-label="NFTree Gateway"] button:focus-visible { outline: 3px solid #c7a4ff; outline-offset: 5px; }
+.nftree-gateway[aria-label="NFTree Gateway"] .nftree-signin-note { color: #aabcb0; font-size: 11px; line-height: 1.65; }
+.nftree-gateway[aria-label="NFTree Gateway"] .nftree-signin-note:first-of-type { padding-top: 3px; }
+.nftree-gateway[aria-label="NFTree Gateway"] a { color: #d7ef9c; font-size: 12px; text-underline-offset: 4px; }
+.nftree-gateway[aria-label="NFTree Gateway"] a:hover { color: #f4ffd7; }
+.nftree-gateway[aria-label="NFTree Gateway"] small { padding-top: 15px; border-top: 1px solid #9bbd7926; color: #aab6af; font-size: 10px; line-height: 1.6; }
+.nftree-gateway[aria-label="NFTree Gateway"] [role="alert"] { color: #ff9c93; overflow-wrap: anywhere; }
+.nftree-gateway[aria-label="NFTree Gateway"] .nftree-connected { color: #d7ef9c; overflow-wrap: anywhere; }
+.nftree-gateway[aria-label="NFTree Gateway"] .nftree-secondary { min-height: 38px; touch-action: manipulation; }
+@media (max-width: 760px) {
+  body:has(.nftree-gateway[aria-label="NFTree Gateway"]) { display: block; padding: 22px 20px 32px; background-attachment: scroll; }
+  .gateway-intro { max-width: 440px; margin: 0 auto; }
+  .gateway-logo { width: 215px; margin-top: 18px; }
+  .gateway-eyebrow { margin-top: 7px; font-size: 9px; }
+  .gateway-showcase h1 { font-size: 43px; }
+  .gateway-invitation { margin: 12px 0 18px; font-size: 12px; }
+  .gateway-steps { gap: 26px; padding-top: 15px; }
+  body:has(.nftree-gateway[aria-label="NFTree Gateway"]) #root { max-width: 440px; margin: 25px auto 0; }
+  .nftree-gateway[aria-label="NFTree Gateway"] { padding: 28px 23px 24px; gap: 15px; }
+  .nftree-gateway[aria-label="NFTree Gateway"] h2 { font-size: 27px; }
+}
+@media (max-width: 360px) {
+  body:has(.nftree-gateway[aria-label="NFTree Gateway"]) { padding-inline: 13px; }
+  .gateway-nav a { font-size: 10px; }
+  .gateway-live { font-size: 8px; }
+  .gateway-showcase h1 { font-size: 38px; }
+  .gateway-steps { gap: 17px; }
+  .gateway-steps li { font-size: 9px; }
+  .nftree-gateway[aria-label="NFTree Gateway"] { padding-inline: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body .nftree-gateway[aria-label="NFTree Gateway"] button { transition: none; }
+}

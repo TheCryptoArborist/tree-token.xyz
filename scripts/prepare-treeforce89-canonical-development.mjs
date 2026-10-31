@@ -4,6 +4,7 @@ import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
 import {zipFunctions} from '@netlify/zip-it-and-ship-it';
+import {styleTreeForceGateway} from './style-treeforce89-gateway.mjs';
 
 const root=resolve(import.meta.dirname,'..');
 const source=resolve(root,'.netlify/treeforce89-pinned');
@@ -25,6 +26,7 @@ rmSync(resolve(source,'dist'),{recursive:true,force:true});
 run('npm',['run','build','--','--base','/play/treeforce89/'],source);
 run('node',['scripts/verify-treeforce89-staged-assets.mjs',resolve(source,'dist')]);
 cpSync(resolve(source,'dist'),resolve(stage,'play/treeforce89'),{recursive:true});
+styleTreeForceGateway(resolve(stage,'play/treeforce89'));
 const baseline=JSON.parse(readFileSync(resolve(root,'.netlify/live-release-baseline.json')));
 const originalPlay=readFileSync(resolve(root,'play/index.html'),'utf8');
 assert.equal(createHash('sha1').update(originalPlay).digest('hex'),
