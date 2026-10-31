@@ -10,6 +10,8 @@ on:
       - '.github/workflows/treeforce89-play-preflight.yml'
       - 'netlify/preview-functions/tree-*.ts'
       - 'tests/treeforce89-preview-functions.test.mjs'
+      - 'tests/treeforce89-preview-isolation.test.mjs'
+      - 'netlify/preview-lib/treeforce89-isolation.mjs'
   pull_request:
     paths:
       - 'docs/treeforce89-play-integration.md'
@@ -30,5 +32,5 @@ jobs:
           node-version: '22'
       - name: Verify protected TREE Token production snapshot
         run: node scripts/verify-treeforce89-play-boundary.mjs
-      - name: Verify TREE FORCE preview APIs remain fail-closed
-        run: node --test tests/treeforce89-preview-functions.test.mjs
+      - name: Verify TREE FORCE preview APIs and database isolation
+        run: node --test tests/treeforce89-preview-functions.test.mjs tests/treeforce89-preview-isolation.test.mjs
