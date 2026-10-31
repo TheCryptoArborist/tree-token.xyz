@@ -1,0 +1,137 @@
+{
+  "id": "6ae55a0c1aa8c546b7109a41",
+  "baseline": "6ae534bcd660ba4ea4235172",
+  "mode": "published",
+  "context": "production",
+  "branchLabel": "main",
+  "sourceBranch": "feature/treeforce89-play-integration",
+  "files": 207,
+  "originalStaticFilesPreserved": 195,
+  "changedExistingPaths": [
+    "/play/index.html"
+  ],
+  "newPaths": [
+    "/play/treeforce89/assets/arborwing/tree-hero-arborwing-stages-v2.png",
+    "/play/treeforce89/assets/arcade-65ykhbdp.js",
+    "/play/treeforce89/assets/backgrounds/first-canopy-backdrop.png",
+    "/play/treeforce89/assets/backgrounds/first-canopy-foreground.png",
+    "/play/treeforce89/assets/backgrounds/first-canopy-midground.png",
+    "/play/treeforce89/assets/hero/tree-hero-canonical.jpg",
+    "/play/treeforce89/assets/index-btccazse.js",
+    "/play/treeforce89/assets/index-dnigke6a.css",
+    "/play/treeforce89/assets/powerups/boom-token.png",
+    "/play/treeforce89/assets/powerups/dex-reward-token.jpeg",
+    "/play/treeforce89/index.html"
+  ],
+  "existingFunctionsPreserved": 38,
+  "schedulesPreserved": 5,
+  "newFunctions": [
+    "treeforce89-dev"
+  ],
+  "databaseIdentity": "df2f0abee059d9898495a125018fa0a291d50b9050c0d4557231f409bed53065",
+  "serverOnlySecret": true,
+  "paymentsEnabled": false,
+  "implementationCommit": "03372a1c04a546666c9a1d67e38875d2b4376aa1",
+  "reviewedEvidenceCommit": "d862d5da79c73d2e0c21b48d2e57f01ad85626ce",
+  "publishedAt": "2026-10-31T03:16:30.675Z",
+  "locked": true,
+  "migrationsApplied": false,
+  "exactInventorySource": "docs/treeforce89-canonical-candidate.json",
+  "newFunction": {
+    "n": "treeforce89-dev",
+    "d": "43d8b8e2e2ae0f14593775e723b0099f309e4b24a17ae373c1784d3da0df6431",
+    "dn": null,
+    "g": null,
+    "bd": {
+      "bootstrapVersion": "2.24.0",
+      "runtimeAPIVersion": 2
+    },
+    "ro": [
+      {
+        "p": "/play/treeforce89/api/*",
+        "l": null,
+        "e": "^\\/play\\/treeforce89\\/api(?:\\/(.*))\\/?$",
+        "m": [],
+        "ps": false
+      }
+    ],
+    "p": 10,
+    "tr": {
+      "action": {
+        "type": "rate_limit",
+        "config": {
+          "aggregate": {
+            "keys": [
+              {
+                "type": "ip"
+              }
+            ]
+          },
+          "rate_limit_config": {
+            "algorithm": "sliding_window",
+            "window_size": 60,
+            "window_limit": 60
+          }
+        }
+      }
+    },
+    "id": "e48cd997f63637672e7a8f30482e6e8d12686c5d3eaf61c35234d6b2a1bcd652",
+    "a": "522341637617",
+    "c": "2026-10-31T03:01:40.395Z",
+    "im": "stream",
+    "m": 1024,
+    "obl": "netlify-observability-extension",
+    "oblv": 34,
+    "oid": "ef85c6c1bc5c6062429c3c70dd9dfc1c26fe5c0991270d3294cc80f9a52250a9",
+    "r": "nodejs22.x",
+    "rg": "us-east-2",
+    "s": 1438078
+  },
+  "schedules": [
+    {
+      "name": "tree-badges-refresh-scheduled",
+      "cron": "47 */6 * * *"
+    },
+    {
+      "name": "tree-exposure-refresh-scheduled",
+      "cron": "27 */6 * * *"
+    },
+    {
+      "name": "tree-knowledge-trial-resolver",
+      "cron": "5 * * * *"
+    },
+    {
+      "name": "tree-knowledge-trial-rotation-scheduled",
+      "cron": "15 * * * *"
+    },
+    {
+      "name": "tree-leaderboard-refresh-scheduled",
+      "cron": "17 */6 * * *"
+    }
+  ],
+  "canonicalSmoke": {
+    "origin": "https://tree-token.xyz",
+    "challengeIssued": true,
+    "realSignatureVerified": true,
+    "liveMainnetNonholderDenied": true,
+    "replayRejected": true,
+    "forgedSignatureRejected": true,
+    "forgedEligibilityRejected": true,
+    "crossOriginRejected": true,
+    "logoutRequiresToken": true,
+    "absentTokenLogoutIdempotent": true,
+    "unauthenticatedRunRejected": true,
+    "schemaReady": true,
+    "isolatedDatabase": true,
+    "paymentsEnabled": false,
+    "realHolderSessionTested": false,
+    "slushWalletTested": false
+  },
+  "browser": {
+    "entry": "https://tree-token.xyz/play/",
+    "linkLabel": "TEST TREE FORCE ’89",
+    "destination": "https://tree-token.xyz/play/treeforce89/",
+    "gatewayRendered": true
+  },
+  "realHolderSlushTestPending": true
+}

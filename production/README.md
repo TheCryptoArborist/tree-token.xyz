@@ -1,4 +1,14 @@
-# Current production — validated VICTORY reward display, 2026-10-06
+# Current production — native TREE FORCE development Gateway, 2026-10-30
+
+Deployment `6ae55a0c1aa8c546b7109a41` was published at `2026-10-31T03:16:30.675Z` and remains locked. Implementation source is `03372a1c04a546666c9a1d67e38875d2b4376aa1` on `feature/treeforce89-play-integration`; reviewed release evidence is `d862d5da79c73d2e0c21b48d2e57f01ad85626ce`. Neither `main` branch was modified or merged.
+
+Relative to live baseline `6ae534bcd660ba4ea4235172`, only the TREE FORCE card at `/play/index.html` changes and eleven files are added under `/play/treeforce89/`. All 195 unrelated static files, all 38 existing function/provider/configuration records and all five schedules match exactly. One separate function, `treeforce89-dev`, adds the namespaced game API using only the fingerprint-verified isolated development database. Paid continues remain disabled; publication applied no database migrations.
+
+The published inventory and runtime verification are recorded in `docs/treeforce89-canonical-published.json`; complete original backend evidence is in `docs/treeforce89-canonical-candidate.json`. The historical default production snapshot below is not the current 207-file release package. Preserve the actual published inventory and backend records for future releases. Canonical-domain hosted smoke and browser link/Gateway checks pass. A real-holder Slush lifecycle test remains pending; see `docs/treeforce89-canonical-development.md` and Issue #69.
+
+---
+
+# Historical production — validated VICTORY reward display, 2026-10-06
 
 Deployment `6ac58a83cdbea77d7a4a7336` is published and locked. Source commit `359e39ec17b0b437606abe3275b42df2bbc01a79` (PR #53). This frontend-only follow-up removes fallback to legacy reward analytics: reward APR remains unavailable whenever the on-chain incentive validation fails. The regression fixture includes a legacy analytics object marked verified alongside unavailable incentives.
 
