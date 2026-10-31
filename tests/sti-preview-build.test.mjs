@@ -16,7 +16,7 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
   const approvedNavigationChange = {
     path: '/dapp/index.html',
     previousSha: '764e53ff209b4ae89cf4aefcbd2a8907d4ef75d9',
-    approvedSha: 'dc47260152539224a55fdc6c0cfbafbcaf02ebc9',
+    approvedSha: '0304ea4ddca0a3112c607650292eba99310ea768',
   };
   assert.equal(published.files.find(f => f.path === approvedNavigationChange.path)?.sha, approvedNavigationChange.previousSha);
   assert.equal(manifest.files.find(f => f.path === approvedNavigationChange.path)?.sha1, approvedNavigationChange.approvedSha);
@@ -48,7 +48,14 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
     assert.equal(published.files.some(f => f.path === file.path), false);
     assert.equal(manifest.files.find(f => f.path === file.path)?.sha1, file.sha1);
   }
-  const approvedPaths = [approvedNavigationChange.path, approvedSwapChange.path, approvedVictoryReceipt.path, ...approvedReviewAdditions.map(f => f.path)];
+  const approvedVictoryLayout = {
+    path: '/dapp/victory-center.css',
+    previousSha: 'ed5155ef72a64e5bc3bc5f8479832f4f47e9045e',
+    approvedSha: '24a991520a6006ce398e3249646209e127517267',
+  };
+  assert.equal(published.files.find(f => f.path === approvedVictoryLayout.path)?.sha, approvedVictoryLayout.previousSha);
+  assert.equal(manifest.files.find(f => f.path === approvedVictoryLayout.path)?.sha1, approvedVictoryLayout.approvedSha);
+  const approvedPaths = [approvedNavigationChange.path, approvedSwapChange.path, approvedVictoryReceipt.path, approvedVictoryLayout.path, ...approvedReviewAdditions.map(f => f.path)];
   assert.deepEqual(
     manifest.files.filter(f => !approvedPaths.includes(f.path)).map(f => [f.path, f.sha1]).sort(),
     published.files.filter(f => !approvedPaths.includes(f.path)).map(f => [f.path, f.sha]).sort(),
