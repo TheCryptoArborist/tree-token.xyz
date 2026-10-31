@@ -63,7 +63,8 @@ program.command('paid-release').action(async(options,command)=>{
    if(record.ro)config.routes=record.ro.map(route);if(record.er)config.excluded_routes=record.er.map(route);
    functions_config[record.n]=config;
   }
-  assert.deepEqual(functions_config[fn.name].routes,fn.routes);assert.deepEqual(oldGame.bd,fn.buildData);
+  assert.deepEqual(functions_config[fn.name].routes,fn.routes.map(r=>({...r,prefer_static:r.prefer_static??false})));
+  assert.deepEqual(oldGame.bd,fn.buildData);
   const deploy=await api.createSiteDeploy({siteId,title:'TREE FORCE: 20,000 TREE paid continue; verified isolated DB; original backend preserved',body:{
    files,functions,functions_config,function_schedules:original.function_schedules,draft:false,async:false,branch:original.branch,
    commit_ref:git('rev-parse','HEAD'),environment:[

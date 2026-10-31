@@ -2,7 +2,7 @@
 import {createRequire} from 'node:module';
 import {pathToFileURL} from 'node:url';
 import {resolve} from 'node:path';
-import {readFile,writeFile} from 'node:fs/promises';
+import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {randomBytes,createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
 import {createPaidContinueService,paidContinueSchemaReady,createPaidContinueHttpHandler} from '../netlify/preview-lib/treeforce89-paid-continue.mjs';
@@ -108,5 +108,6 @@ try{
   staleReceiptRejected:true,unfinishedReceiptRejected:true,concurrentDifferentPaymentsOneWinner:true,
   logoutRaceRejected:true,freshLoginPaymentRecovery:true,oldTokenRejected:true,exactHttpInputs:true,
   crossOriginRejected:true,disabledModeRejected:true,realFundsTransferred:false,fixtureChainReceipts:true};
+ await mkdir('.netlify',{recursive:true});
  await writeFile('.netlify/treeforce89-paid-database-results.json',JSON.stringify(result,null,2));console.log(JSON.stringify(result));
 }finally{await pool.end();if(emulator)await emulator.stop();}
