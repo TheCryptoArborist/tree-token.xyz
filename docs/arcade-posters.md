@@ -19,3 +19,9 @@ The current MystenLabs/skills README was checked again for this request; its blo
 The desktop browser rendered all nine posters at approximately 305 × 386 pixels in the requested 4–4–1 arrangement. All six artwork images loaded, all game titles and descriptions fit, and there was no horizontal page overflow. Phone reviews at 390px and 320px iframe widths confirmed one column with no page or text overflow. A whole-poster click on Canopy Clash reached its existing tournament preview.
 
 An independent content review confirmed the six destinations, availability labels, nine entries, and noninteractive Coming Soon placeholders. Link descriptions explicitly include the availability status for screen-reader users. This is presentation and navigation verification; no wallet signing or gameplay transaction was performed.
+
+## Published release
+
+The reviewed source commit `8015390bb064b827fa09d02da3b3645eb6136348` was published as Netlify deployment `6ae5843ef25937c4e39bc684` on 2026-10-31 at 06:02:00 UTC. The canonical page is https://tree-token.xyz/play/ and automatic publication remains locked.
+
+The final release record in `arcade-posters-published.json` confirms 224 static paths, with only the two approved files changed. All 39 complete function records and five schedules match the previous published deployment. The live page displayed nine posters in the requested four-column order with no horizontal overflow. The screenshot in `review/arcade-posters-live-6ae5843e.jpg` shows the first two rows, including Arboretum and TREE FORCE ’89 at the start of row two.
