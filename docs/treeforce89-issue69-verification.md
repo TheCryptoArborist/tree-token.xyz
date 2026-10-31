@@ -1,164 +1,140 @@
-# TREE FORCE '89 — Issue #69 verification
+# TREE FORCE ’89 — isolated Gateway verification
 
-Date: October 30, 2026 (America/Chicago). **NO-GO for hosted Gateway testing.**
+October 30, 2026 (America/Chicago). **Backend ready for real NFTree-holder preview testing. Issue #69 remains open pending that test.**
 
-## Hosted findings
+## Working preview
 
-| Project | Site ID | Observed database branches |
-| --- | --- | --- |
-| tree-token | aa62f324-b880-47d6-85b8-4ba0700ff5bf | Initially no Netlify Database; newly created default `production` branch only |
-| treeforce89 | 35f5591a-5c7d-4bc6-ae9a-3e61e816b641 | Existing `production` and `feature/tree-paid-continue` |
+- URL: https://deploy-preview-70--tree-token.netlify.app/play/treeforce89/
+- Draft PR: https://github.com/TheCryptoArborist/tree-token.xyz/pull/70
+- Branch: `feature/treeforce89-play-integration`.
+- Authenticated native-game preview deployed as `6ae553cf9f662938de87be99`, source `904047e87d9411b0aed03ac23c2011f7a2f74ef5`.
+- The browser rendered the NFTree Gateway and its Connect Wallet button. No iframe, redirect to the old game origin, real payment, or wallet-warning bypass is used.
 
-There is **no verified database branch for `feature/treeforce89-play-integration`**.
-Neither site's environment-variable listing supplied a dedicated integration
-database URL. Absence from that listing alone does not prove absence of a
-managed database; the signed-in Database panels were also inspected.
+## Database provisioning and isolation
 
-### Unintended provisioning
+Netlify now has a dedicated branch named `feature/treeforce89-play-integration` on the TREE Token project (`aa62f324-b880-47d6-85b8-4ba0700ff5bf`), associated with Deploy Preview #70. Its dashboard explicitly identifies it as an isolated branch whose changes do not affect production.
 
-During inspection, the agent selected **“Or create a database manually instead”**
-on the TREE Token Database page, expecting configuration options. That button
-immediately provisioned a database. This was an agent error: cost approval should
-have preceded the action. It created a default branch called `production`, **not**
-the required development branch. Do not treat it as isolation evidence or as a
-completed development setup.
+The read-only bootstrap deploy was `6ae551d85e378ea57f261a7f`. Before any migration or authentication write:
 
-The panel showed one branch, 0 bytes storage, 0 bytes bandwidth and rounded
-0.0 GB-hours compute. These metrics do not establish that no credits were used.
-Default compute is 1–16 units, sleeping after five minutes of inactivity.
-No connection string was requested, no hosted migration was applied, and no
-application connection was configured. Production write access for personal
-access tokens remained disabled. The agent stopped further provisioning and
-must obtain approval before retaining/using billable infrastructure or deleting
-the new database.
+1. Read-only connection targets were independently obtained from the signed-in Netlify dashboards for TREE Token production, original TREE FORCE production, and the new integration branch. Credentials were never printed, committed, or sent to the frontend.
+2. Compute `SHA256(normalized database hostname + "|" + database path)`. Normalize only Netlify's `-pooler` hostname alias; credentials are excluded.
+3. A hosted read-only function independently derived the same identity from Netlify's automatically scoped runtime connection.
+4. Confirmed the integration schema had zero tables before promoting the migration.
 
-Supported continuation: retain the newly provisioned empty database only with
-approval; create a separate Netlify Deploy Preview database branch for the
-integration branch; compare independently obtained provider/branch identities
-with the TREE Token default branch, the original TREE FORCE database, and any
-production PostgreSQL connection used by existing handlers. Reject any alias,
-reused endpoint/branch, or unverified identity. A name or an environment boolean
-does not prove isolation. Do not connect the game to the default production
-branch or the original TREE FORCE database.
+| Environment | Non-secret database identity |
+| --- | --- |
+| TREE Token default production branch | `5a940f1b6bdcce4a96dff3ffcfeb6a2b5de01b09fcfe2f8f1e351a9a0ef47712` |
+| Original TREE FORCE production branch | `5db7840e95d93a2a62119d00e7f2774591f307ea086ac00026f9a91777247141` |
+| Integration branch — dashboard and runtime agree | `df2f0abee059d9898495a125018fa0a291d50b9050c0d4557231f409bed53065` |
 
-Netlify's current [database billing documentation](https://docs.netlify.com/build/data-and-storage/netlify-database/billing-and-usage/)
-lists 10 credits per compute unit-hour and 20 credits per GB of database egress.
-No plan change, credit purchase, or payment was made. Actual incremental dollar
-charges were not established. No new preview or PR was opened because preview
-creation may provision an additional billable branch.
+Existing TREE Token production functions also use Supabase project `lehswszuekjqottolmsf`; the new Gateway uses only the verified Netlify PostgreSQL branch. No Supabase connection or existing application database is reused.
 
-## Migration and source compatibility
+Runtime guards reject a production endpoint, a changed/unverified database identity, a different site/branch/deploy context, canonical production hosts, other PR hosts, missing/forged Origin, and cross-site fetch metadata. The approved identity is server-owned evidence, never a caller-supplied boolean. Schema readiness is checked before authentication writes.
 
-Reviewed source: `TheCryptoArborist/treeforce89` at
-`a38e08e37e1f71ea41b86add8e26a92b0789cf22`.
+### Cost control and provisioning history
 
-The exact migration is copied to
-`db/staged-migrations/20261016030500_tree_authentication.sql` in this repository.
-It is deliberately **outside** `netlify/database/migrations` and cannot be
-automatically applied by this change.
+The owner approved retaining the database and up to **100 credits** for testing. Maximum database compute was reduced from 16 to **1 unit**; idle sleep remains **5 minutes**. The observed account credit balance moved from 2,649.9 to 2,648 during this work (1.9 credits); this is an account-wide observation, not finalized per-project billing. Usage reporting can lag. No plan upgrade, credit purchase, or payment was made.
+
+The default database had initially been created by an agent mistake before cost approval: the manual-create button immediately provisioned it instead of opening a setup screen. That incident was disclosed in the previous report and Issue #69. Subsequent provisioning and usage proceeded after the owner's explicit approval. The default production branch was never used for game development or migrated.
+
+## Migration and table verification
+
+Exact migration source: `TheCryptoArborist/treeforce89` at `a38e08e37e1f71ea41b86add8e26a92b0789cf22`:
+
+`db/staged-migrations/20261016030500_tree_authentication.sql`
 
 - Git blob: `e9d0af1a777bee3b77c2e57e7da659dcd2dfa2d8`.
 - SHA-256: `c98e97212e3b9bc2a8731324f2b11a682cc03fbd6c262fb1ab93ac1aa3076c36`.
-- Four tables: `tree_wallet_challenges`, `tree_wallet_logins`,
-  `tree_game_sessions`, `tree_continue_redemptions`.
-- No extension or external-table dependency; redemption references the session
-  table created in the same migration. `IF NOT EXISTS` does not repair an
-  incompatible existing table, so catalog checks remain necessary.
+- Promoted unchanged to `netlify/database/migrations/20261016030500_tree_authentication.sql` only after hosted isolation and empty-schema verification.
+- Netlify deployment **`6ae55249e051bde70d2093cf`** reports migration `20261016030500_tree_authentication` as **applied**, specifically to database branch `feature/treeforce89-play-integration`.
+- Subsequent deploys report no pending migration; no hosted DDL was executed through a manual connection or SQL console.
 
-`scripts/lib/treeforce89-schema.mjs` inspects catalog metadata in one read-only
-transaction and returns booleans only: 27 required columns, eight key/reference
-constraints, two nonnegative checks, two wallet indexes and ten defaults. It
-does not construct a connection, inspect user rows, prove hosted isolation,
-enable endpoints or apply SQL migrations. Schema readiness and hosted isolation
-are explicitly separate results.
+| Required table | Hosted result |
+| --- | --- |
+| `tree_wallet_challenges` | Present, required columns and primary key verified |
+| `tree_wallet_logins` | Present, required columns, primary key and wallet index verified |
+| `tree_game_sessions` | Present, required columns, session/run uniqueness, nonnegative checks, wallet index and expiry/state defaults verified |
+| `tree_continue_redemptions` | Present, digest uniqueness, session/continuation uniqueness and session foreign key verified |
 
-## Verification evidence
+The catalog inspector passed **27 column checks, eight key/reference checks, two nonnegative constraints, two wallet indexes and ten defaults**. It runs in a read-only transaction and returns only readiness booleans and a non-secret database fingerprint.
 
-| Check | Result | Scope |
-| --- | --- | --- |
-| TREE Token protected snapshot | Passed: 196 files and 38 archived function packages | Repository baseline only; not a fresh live package download |
-| Preview handler/isolation tests | 14/14 passed | TREE Token branch; all six public APIs still return 503 |
-| TREE FORCE unit tests | 201/201 passed | Pinned source checkout |
-| Migration + schema inspector | Passed; all four tables and required schema checks | New disposable in-memory Netlify Database emulator (PGlite), not hosted PostgreSQL |
-| Negative schema tests | Missing schema, missing session-token uniqueness, wrong wave type and missing expiry default rejected | Local emulator |
-| Signed wallet gateway | Real ephemeral Ed25519 signatures, single-use challenge/replay rejection, hashed sessions, invalid signatures denied | Local emulator; NFT holdings are fixtures |
-| NFT gate | Holder fixture accepted, non-holder fixture rejected | No live mainnet ownership or user wallet proof |
-| Session lifecycle | Creation, restart with fresh token/run, original expiry retained, previous token denied, logout invalidation | Local emulator |
-| Payments | No redemptions created; public checkout remains disabled | No chain transaction or real payment |
-| Existing PostgreSQL 16 CI | Successful source run; all four tables/eight keys, signed-wallet Gateway, concurrency/rollback/logout-race tests | Existing source-repository CI, not TREE Token hosted preview |
-| Hosted connectivity / Gateway / wallet smoke tests | **Not run** | Await isolated branch, cost approval, server configuration and adapted guards |
+## Authentication implementation and evidence
 
-Existing real PostgreSQL evidence:
-[TREE database migration validation run 41156891841](https://github.com/TheCryptoArborist/treeforce89/actions/runs/41156891841),
-job `124405549399`, at the pinned source commit. Job steps and logs were read;
-the successful CI result is not proof of deployment-database isolation.
+Six same-origin API paths remain on the TREE Token preview:
 
-### Reproduce local verification
+| Endpoint | Behavior |
+| --- | --- |
+| `tree-challenge` | Single-use, five-minute, origin/network/wallet-bound personal-message challenge |
+| `tree-session` | Real Sui signature verification, direct mainnet NFTree ownership check, hashed game-session credential |
+| `tree-logout` | Server-side revocation; authenticated bearer required; idempotent for absent/expired credentials |
+| `tree-run` | Authenticated atomic run/token rotation, ownership recheck, original expiry retained |
+| `tree-continue-offer` | Disabled, HTTP 503 |
+| `tree-continue` | Disabled, HTTP 503; no real 20,000 TREE execution |
 
-Use a sibling checkout of `treeforce89` at the pinned SHA, install its locked
-dependencies with `npm ci --ignore-scripts --no-audit --no-fund`, and install
-`@netlify/database-dev@1.0.1` in a separate temporary harness directory. From this
-integration checkout run:
+Seventeen gateway modules were copied from the pinned source; sixteen remain byte-identical. Only `preview-access.mjs` was adapted to TREE Token's site, PR, context and same-origin gate. Provenance hashes are recorded in `netlify/preview-lib/treeforce89-source/provenance.json`. The Gateway has its own pinned `@mysten/sui@2.37.0` dependency directory. Existing DApp SDK `2.26.1` and all previously locked dependency versions are unchanged.
 
-```sh
-node scripts/verify-treeforce89-play-boundary.mjs
-node --test tests/treeforce89-preview-functions.test.mjs tests/treeforce89-preview-isolation.test.mjs
-node scripts/verify-treeforce89-local-database.mjs ../treeforce89 ../local-db-harness
-```
+The pinned game is built for `/play/treeforce89/`. Seven Phaser asset URLs were rebased for that path; wallet and transaction source is unchanged. Eleven native assets passed verification. The browser loads the game directly under the preview origin.
 
-The last command uses only an in-memory local database and unfunded ephemeral
-test keys. It rejects a source checkout with the wrong commit and a modified
-migration checksum. Its synthetic preview hostname is a fixture, not a live URL.
-It does not read hosted credentials or test real PostgreSQL multi-client locking.
+### Passed tests
+
+- **Hosted PostgreSQL connectivity and catalog checks:** ready; four tables; correct isolated identity; all schema checks pass.
+- **Hosted real-signature/non-holder smoke:** issued a real challenge to an unfunded ephemeral signer, verified its Sui personal-message signature, performed a live mainnet NFTree ownership lookup, and correctly returned `NFTREE_REQUIRED`.
+- **Hosted rejection checks:** reused nonce, forged signature, browser-supplied eligibility, cross-origin request, missing logout token and unauthenticated run all rejected.
+- **Hosted logout readiness:** absent valid-format token handled idempotently; no false claim of an existing holder-session revocation.
+- **Hosted checkout:** payment endpoint remains unauthorized and disabled.
+- **Local integrated HTTP + SQL test:** real ephemeral signatures with fixture NFT holdings; session creation, hashed credentials, run/token rotation, original expiry, old-token rejection and logout invalidation pass.
+- **Local schema negative tests:** absent schema, missing session-token uniqueness, wrong wave type and missing expiry default all rejected.
+- **Preview security suites:** 17/17 pass.
+- **Original source unit suite:** 201/201 pass.
+- **Function packaging:** all eight preview functions bundled successfully. Existing required CI also rebuilt handler sources in disposable validation for parity; none of those generated packages was published to production.
+- **GitHub checks:** all five runs on `904047e` succeeded, covering production snapshot, STI integration, preview/isolation preflight (push and PR) and native asset staging.
+
+Machine-readable hosted results: `docs/treeforce89-hosted-smoke-results.json`.
+Existing real PostgreSQL 16 concurrency/rollback/logout-race evidence for the source pin remains available in [source CI run 41156891841](https://github.com/TheCryptoArborist/treeforce89/actions/runs/41156891841). Local PGlite testing is not described as a real multi-client PostgreSQL concurrency test.
+
+### Remaining real-holder test
+
+A real NFTree holder must open the preview, connect Slush, and choose **Verify NFTree & Play**. Confirm a game session opens, restarting rotates the run, and disconnect/logout invalidates access. Account-switch and reconnect behavior should also be checked. This requires a real holder-controlled wallet signature; no private key, test NFT, synthetic hosted ownership result, or security-warning bypass was introduced.
+
+Real-holder session issuance and actual Slush approval/security behavior have **not** been verified. Stop on any Slush warning. Issue #69 remains open until this test succeeds.
 
 ## Production preservation
 
-No production deployment, merge, function rebuild, schedule change, wallet-flow
-change or contract transaction was performed. The unintended database creation
-above **did change the site's database provisioning**, so this report does not
-claim that every Netlify configuration remained unchanged.
-
-Published deployment IDs before and after inspection:
+Published deployment IDs remained:
 
 - TREE Token: `6ae534bcd660ba4ea4235172`.
-- TREE FORCE: `6a9d79efef404400084bec93`.
+- Original TREE FORCE: `6a9d79efef404400084bec93`.
 
-Both `main` heads remained unchanged:
+TREE Token's published deployment still has **38 production functions** and exactly these **five schedules**:
 
-- TREE Token: `9f76044a5b27ab20e1ee5e4868c93ac1f3e38081`.
-- TREE FORCE: `f04261491ae78dc21cb87842bc3a0b1da81cefc6`.
+| Scheduled function | UTC cron |
+| --- | --- |
+| `tree-badges-refresh-scheduled` | `47 */6 * * *` |
+| `tree-exposure-refresh-scheduled` | `27 */6 * * *` |
+| `tree-knowledge-trial-resolver` | `5 * * * *` |
+| `tree-knowledge-trial-rotation-scheduled` | `15 * * * *` |
+| `tree-leaderboard-refresh-scheduled` | `17 */6 * * *` |
 
-This commit changes only staged migration material, local verification helpers
-and this report. Existing production/preview handlers, runtime configuration,
-38 archived production function packages, five schedules, package manifests and
-dependency locks are untouched. No Slush warning was bypassed.
+Repository preservation checks pass for 196 protected baseline files and 38 archived function packages. Both `main` branches remain unchanged; the PR stays draft and unmerged. No production deployment, production package replacement, production migration, production credential change, smart-contract action or wallet-transaction rewrite occurred. Database provisioning and its approved compute setting are the only changes to hosting configuration outside Deploy Preview #70.
 
-## Remaining acceptance gates and next action
+No game publication at `tree-token.xyz` or `www.tree-token.xyz` is authorized. The exact next step is the holder test above; any eventual canonical-domain publication requires separate authorization and security review.
 
-1. Obtain the user's decision on retaining/using the newly created database
-   and consuming credits for isolated preview testing, or removing it.
-2. With cost approval, establish a deploy-preview branch and independently
-   verify non-secret database identities against **both** production environments.
-3. Promote the exact staged SQL only after compatible schema/isolation checks;
-   let Netlify's preview deploy apply it. Configure connection access server-side
-   for this development context only; do not copy production URLs or secrets.
-4. Adapt the source's site/branch guards to the TREE Token deploy-preview
-   metadata without weakening same-origin requirements. The source still
-   rejects the TREE Token site by design; public placeholders remain disabled.
-5. Verify the catalog and live challenge/signature/NFTree/session/logout/run
-   flow on that exact preview, plus forged/replayed/non-holder/cross-origin
-   cases and disabled checkout. Any Slush warning stops wallet testing.
-6. Record hosted evidence and close Issue #69 only after all gates pass.
+## Reproduce
 
-No canonical-domain publication or real 20,000 TREE payments are authorized.
+Install the root locked dependencies and the nested Gateway dependencies with `npm ci --ignore-scripts`. Use a sibling original-game checkout at the pinned source SHA and a temporary harness with `@netlify/database-dev@1.0.1`.
 
-## Guidance consulted
+```sh
+npm ci --prefix netlify/preview-lib/treeforce89-source --ignore-scripts --no-audit --no-fund
+node scripts/verify-treeforce89-play-boundary.mjs
+node --test tests/treeforce89-preview-functions.test.mjs tests/treeforce89-preview-isolation.test.mjs tests/treeforce89-database.test.mjs
+node scripts/verify-treeforce89-local-database.mjs ../treeforce89 ../local-db-harness
+node scripts/verify-treeforce89-hosted-smoke.mjs
+```
 
-The current MystenLabs README and these files were retrieved live:
-`sui-ts-sdk-backend/SKILL.md`, `sui-ts-sdk-backend/bootstrap.md`,
-`accessing-data/SKILL.md`, `accessing-data/grpc.md`.
-The latter's generic NFT filter example conflicts with the installed
-`@mysten/sui@2.37.0` source: `core.listOwnedObjects` in that pinned version accepts
-`owner` and `type`. The existing implementation was preserved after checking
-`node_modules/@mysten/sui/src/grpc/core.ts`; no SDK upgrade or wallet rewrite was
-made. Netlify Database guidance, CLI and migration references were also read.
+The hosted script targets only PR #70, uses unfunded ephemeral keys, never submits a blockchain transaction, and prints no signatures, nonces, tokens, connection strings or private keys.
+
+## Guidance checked
+
+The current MystenLabs README and relevant guidance were retrieved live for this work: `sui-ts-sdk-backend/SKILL.md`, `sui-ts-sdk-backend/bootstrap.md`, `accessing-data/SKILL.md`, and `accessing-data/grpc.md`. SDK advice was checked against the pinned installed version; its `core.listOwnedObjects` accepts `owner` and `type`, so the existing working implementation was preserved. No skill installation or SDK migration occurred.
+
+Netlify Database, CLI/migration references, Functions and Deploy guidance were consulted. Supabase guidance was checked only to identify existing production storage; no Supabase change was made.
