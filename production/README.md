@@ -1,3 +1,17 @@
+# Current production — TREE FORCE continuation buttons, 2026-10-31
+
+Deployment `6ae56ffd12cc39baec9bc7b2` was published at `2026-10-31T04:37:09.746Z` and is locked. Source is `16772666243446fa8cc6a28d3a5a654810396b74` on `feature/treeforce89-play-integration`. Neither main branch was changed or merged.
+
+The checkout separates payment approval, verification and the explicit **Resume gameplay · 3 lives** action. A pending wallet approval no longer renders transaction-ID entry. Interrupted payments can be found with **Check payment & continue**, using a bounded mainnet read and the existing authenticated verification endpoint. Optional manual recovery starts collapsed. The 20,000 TREE price, treasury and same-wave/same-score three-life continuation remain intact.
+
+Only `/play/treeforce89/index.html` and `/play/treeforce89/gateway.css` change from `6ae56c08df52d066dfb245ed`; three new native JavaScript assets are added. The other 208 paths, all 39 complete backend package/provider/runtime/configuration records and all five schedules match exactly. No handler or database migration changes. The same server-only isolated database binding and enabled-payment flag are retained. The live inventory contains 213 files and 39 functions.
+
+All four implementation workflows passed, including 24 focused checks with actual React click interactions and PostgreSQL 16 payment/recovery checks. Candidate and canonical hosted smoke checks, exact JavaScript/CSS and HTML verification, and the complete published inventory/runtime comparison passed. The assistant did not sign or submit a real payment. Browser wallet/real-holder payment testing remains user-operated.
+
+See `docs/treeforce89-continue-buttons.md`, `docs/treeforce89-continue-buttons-published.json` (full inventory, all function records and schedules), and the adjacent tests/live-smoke/live-assets evidence. Preserve this complete current release rather than the historical default snapshot below.
+
+---
+
 # Current production — TREE FORCE paid continuation, 2026-10-31
 
 Deployment `6ae56c08df52d066dfb245ed` was published at `2026-10-31T04:19:36.325Z` and is locked. Source is `bc6545db57714d4ac18f50243fbcce72755cad5e` on `feature/treeforce89-play-integration`; the implementation is `978e9bbe00401fc490a04eb52c8a65fb90b0dd9f`. Neither main branch was modified or merged.
