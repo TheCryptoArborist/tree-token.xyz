@@ -53,15 +53,24 @@ body:has(.nftree-gateway[aria-label="NFTree Gateway"]) #root { min-width: 0; }
 }
 .nftree-gateway[aria-label="NFTree Gateway"] h2 { margin: 0; color: #f5f6e8; font-size: 29px; font-weight: 800; letter-spacing: -.04em; }
 .nftree-gateway[aria-label="NFTree Gateway"] p { color: #c7d3ca; font-size: 13px; line-height: 1.75; max-width: 330px; }
-body .nftree-gateway[aria-label="NFTree Gateway"] button:not(.nftree-secondary) {
+.nftree-gateway[aria-label="NFTree Gateway"] mysten-dapp-kit-connect-button {
+  display: block; width: 100%;
+  --primary: #c9ef8a; --primary-foreground: #12250c; --ring: #c7a4ff;
+  --background: #101d17; --foreground: #f5f6e8; --popover: #101d17;
+  --popover-foreground: #f5f6e8; --border: #425440; --cursor-button: pointer;
+}
+body .nftree-gateway[aria-label="NFTree Gateway"] button:not(.nftree-secondary),
+.nftree-gateway[aria-label="NFTree Gateway"] mysten-dapp-kit-connect-button::part(trigger) {
   width: 100%; min-height: 55px; border: 1px solid #def4a4; border-radius: 9px;
   background: linear-gradient(115deg, #d8f997, #9cdb70); color: #12250c;
   font-size: 15px; font-weight: 800; box-shadow: 0 6px 24px #a8d96b24, inset 0 1px 0 #fff7;
   transition: box-shadow .18s ease, filter .18s ease;
   touch-action: manipulation;
 }
-body .nftree-gateway[aria-label="NFTree Gateway"] button:not(.nftree-secondary):hover:not(:disabled) { filter: brightness(1.08); box-shadow: 0 7px 30px #a8d96b45; }
-.nftree-gateway[aria-label="NFTree Gateway"] button:focus-visible { outline: 3px solid #c7a4ff; outline-offset: 5px; }
+body .nftree-gateway[aria-label="NFTree Gateway"] button:not(.nftree-secondary):hover:not(:disabled),
+.nftree-gateway[aria-label="NFTree Gateway"] mysten-dapp-kit-connect-button::part(trigger):hover:not(:disabled) { filter: brightness(1.08); box-shadow: 0 7px 30px #a8d96b45; }
+.nftree-gateway[aria-label="NFTree Gateway"] button:focus-visible,
+.nftree-gateway[aria-label="NFTree Gateway"] mysten-dapp-kit-connect-button::part(trigger):focus-visible { outline: 3px solid #c7a4ff; outline-offset: 5px; }
 .nftree-gateway[aria-label="NFTree Gateway"] .nftree-signin-note { color: #aabcb0; font-size: 11px; line-height: 1.65; }
 .nftree-gateway[aria-label="NFTree Gateway"] .nftree-signin-note:first-of-type { padding-top: 3px; }
 .nftree-gateway[aria-label="NFTree Gateway"] a { color: #d7ef9c; font-size: 12px; text-underline-offset: 4px; }
@@ -92,5 +101,6 @@ body .nftree-gateway[aria-label="NFTree Gateway"] button:not(.nftree-secondary):
   .nftree-gateway[aria-label="NFTree Gateway"] { padding-inline: 20px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  body .nftree-gateway[aria-label="NFTree Gateway"] button { transition: none; }
+  body .nftree-gateway[aria-label="NFTree Gateway"] button,
+  .nftree-gateway[aria-label="NFTree Gateway"] mysten-dapp-kit-connect-button::part(trigger) { transition: none; }
 }
