@@ -1,3 +1,39 @@
+# Current production — Daily Growth visual polish, 2026-10-31
+
+Deployment `6ae66f6c82e32369a34b6d1d` is published at
+`https://tree-token.xyz/play/` and locked. Publication time:
+`2026-10-31T22:46:50.310Z`. Previous deployment:
+`6ae666a66f1d3899025a76af`.
+
+Published source: `5e2ecbf482dbe0dde9cc8eebf02fd479b6e62bb8` on
+`feature/daily-growth-arcade-polish-20261031`. GitHub connector publication
+assigned this commit ID while preserving the exact approved tree
+`83b99d86aa2835c78ccf542171144ace03cda09f` from approved commit
+`c218cb9824ffe189ef9f01849fa6113e2e0ccbee`.
+
+Daily Growth now shows colorful monthly badge goals, attendance and quest
+meters, Passport progress, and a dedicated modal wallet picker. The published
+inventory retains all 241 public paths; only `/play/index.html`,
+`/scripts/arcade-daily-growth.js`, and `/styles/tree-arcade-suite.css` changed.
+The other 238 file identities, all 40 complete backend function records, and
+all five schedules were preserved. Existing wallet adapters, game/payment
+assets, runtime settings, and the isolated TREE FORCE database binding remain
+unchanged.
+
+Candidate and canonical hosted checks matched the approved file bytes,
+accounting only for the exact existing hosting snippet in HTML. Public GET
+status still exposes three required Garden games and four eligible games,
+including TREE FORCE first-wave participation, without personal progress.
+Canonical browser smoke checks passed at 1440px, 390px, and 320px using only
+GET requests. No wallet signature or transaction was attempted.
+
+The complete current inventory is `docs/daily-growth-polish-published.json`;
+validation and limits are recorded in `docs/daily-growth-polish-verification.json`,
+with hosted reports and canonical screenshots under `docs/review/`.
+The historical deployment records below remain recovery evidence.
+
+---
+
 # Current production — TREE FORCE Daily Growth participation, 2026-10-31
 
 Deployment `6ae666a66f1d3899025a76af` is published on `tree-token.xyz` and locked.

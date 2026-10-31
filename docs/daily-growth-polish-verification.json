@@ -1,0 +1,89 @@
+{
+  "result": "passed",
+  "publishedAt": "2026-10-31T22:46:50.310Z",
+  "url": "https://tree-token.xyz/play/",
+  "deployId": "6ae66f6c82e32369a34b6d1d",
+  "previousDeployId": "6ae666a66f1d3899025a76af",
+  "locked": true,
+  "sourceCommit": "5e2ecbf482dbe0dde9cc8eebf02fd479b6e62bb8",
+  "sourceBranch": "feature/daily-growth-arcade-polish-20261031",
+  "approvalEquivalence": {
+    "approvedSourceCommit": "c218cb9824ffe189ef9f01849fa6113e2e0ccbee",
+    "approvedSourceTree": "83b99d86aa2835c78ccf542171144ace03cda09f",
+    "candidateSourceCommit": "5e2ecbf482dbe0dde9cc8eebf02fd479b6e62bb8",
+    "candidateSourceTree": "83b99d86aa2835c78ccf542171144ace03cda09f",
+    "exactGitTreeMatch": true,
+    "overlayBytesEqualApproved": true,
+    "note": "GitHub connector publication may assign a different commit ID; the entire Git tree and each frontend overlay remain byte-exact to the approved commit."
+  },
+  "publicationScope": {
+    "publicPaths": 241,
+    "changedExistingPaths": [
+      "/play/index.html",
+      "/scripts/arcade-daily-growth.js",
+      "/styles/tree-arcade-suite.css"
+    ],
+    "otherStaticFilesUnchanged": 238,
+    "functionRecordsUnchanged": 40,
+    "scheduledJobsUnchanged": 5,
+    "backendUnchanged": true,
+    "rootDependenciesUnchanged": true,
+    "walletAdapterAssetsUnchanged": true,
+    "isolatedTreeForceDatabasePreserved": true,
+    "paidContinueConfigurationPreserved": true,
+    "netlifyMigrations": 0
+  },
+  "validation": {
+    "uiControllerCases": {
+      "passed": 27,
+      "test": "tests/arcade-daily-growth-ui.test.mjs"
+    },
+    "releaseGuardCases": {
+      "passed": 12,
+      "test": "tests/daily-growth-polish-release.test.mjs"
+    },
+    "syntheticBrowser": {
+      "checks": 24,
+      "report": "docs/daily-growth-polish-browser.json",
+      "synthetic": true
+    },
+    "hostedCandidate": {
+      "exactApprovedFiles": 3,
+      "publicStatusConfigurationPassed": true,
+      "browserChecks": 17,
+      "filesReport": "docs/review/daily-growth-polish-candidate-files.json",
+      "browserReport": "docs/review/daily-growth-polish-candidate-browser.json"
+    },
+    "canonicalProduction": {
+      "exactApprovedFiles": 3,
+      "publicStatusConfigurationPassed": true,
+      "browserChecks": 17,
+      "actualHostedCode": true,
+      "viewportWidths": [
+        1440,
+        390,
+        320
+      ],
+      "horizontalOverflow": false,
+      "getResponses": 16,
+      "allGetResponses200": true,
+      "pageErrors": [],
+      "consoleErrors": [],
+      "noWalletDialogFocusAndEscapePassed": true,
+      "filesReport": "docs/review/daily-growth-polish-canonical-files.json",
+      "browserReport": "docs/review/daily-growth-polish-canonical-browser.json"
+    }
+  },
+  "limitations": [
+    "Hosted checks used signed-out state and the no-installed-wallet dialog; no real wallet account, signature, transaction, or personal progress write was used.",
+    "Connected-wallet choices, error retries, saved progress and stale states were covered by synthetic fixtures and controller tests, not by a real extension approval.",
+    "No conclusion about wallet-provider security warnings is established by these layout and read-only checks.",
+    "Hosted HTML comparison removes only the exact pre-existing hosting snippet independently calibrated against the previous deployment; JavaScript and CSS are byte-exact without normalization.",
+    "Raw browser reports retain their original temporary screenshot paths. Representative canonical screenshots are committed at the artifact paths below."
+  ],
+  "artifacts": {
+    "publicationManifest": "docs/daily-growth-polish-published.json",
+    "canonicalDesktop": "docs/review/daily-growth-polish-canonical-desktop.png",
+    "canonicalMobileWallet": "docs/review/daily-growth-polish-canonical-mobile-wallet.png"
+  }
+}

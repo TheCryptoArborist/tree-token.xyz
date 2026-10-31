@@ -4,6 +4,18 @@ The Daily Growth panel previously showed attendance as plain text and presented
 wallet choices inline in the dashboard. This update makes monthly goals and
 saved progress visible and gives wallet selection a dedicated dialog.
 
+## Published release
+
+Deployment `6ae66f6c82e32369a34b6d1d` is live and locked at
+`https://tree-token.xyz/play/`, published `2026-10-31T22:46:50.310Z`.
+It replaces deployment `6ae666a66f1d3899025a76af`.
+
+The published source is `5e2ecbf482dbe0dde9cc8eebf02fd479b6e62bb8` on
+`feature/daily-growth-arcade-polish-20261031`. This GitHub connector commit
+has the exact full tree `83b99d86aa2835c78ccf542171144ace03cda09f` approved
+as commit `c218cb9824ffe189ef9f01849fa6113e2e0ccbee`; all source and evidence
+bytes in that tree are identical.
+
 ## Player experience
 
 - Violet, mint, and gold styling with a season label and illustrated growth
@@ -49,15 +61,16 @@ Starting source: `625dac2962041b7f36a5881d31a9e62b532f3cf4`.
 
 Starting published deployment: `6ae666a66f1d3899025a76af`.
 
-Only three existing public files change:
+Only three existing public files changed:
 
 1. `/play/index.html`
 2. `/scripts/arcade-daily-growth.js`
 3. `/styles/tree-arcade-suite.css`
 
-The bounded release helper retains all 241 public paths, the other 238 static
+The published inventory confirms all 241 public paths, the other 238 static
 file identities, all 40 complete backend function records, and all five
-scheduled jobs. It refuses any function upload, unrelated static change,
+scheduled jobs were retained. The bounded release helper refuses any function
+upload, unrelated static change,
 dependency change, changed runtime identity, or changed current publication.
 It preserves the current per-deploy isolated TREE FORCE database binding and
 paid-continue setting. The compiled wallet adapters and game/payment assets
@@ -70,8 +83,17 @@ are retained byte-for-byte.
 - 12 release guard cases pass against the complete recorded live inventory.
 - Native browser screenshots and layout/focus checks use explicitly synthetic
   local fixtures; they do not award real progress or use an owner's wallet.
-- Hosted file comparisons and the published release inventory are recorded
-  separately after deployment.
+- Candidate and canonical hosted GET checks matched all three files against the
+  approved source. HTML comparison removed only the exact existing hosting
+  snippet independently calibrated against the previous publication.
+- Public GET status retained three required Garden games and four eligible
+  games, including TREE FORCE first-wave participation, with no personal progress.
+- Canonical browser smoke checks passed at 1440px, 390px, and 320px using only
+  GET requests. No wallet signature or transaction was attempted.
+
+Release evidence: `daily-growth-polish-published.json` contains the complete
+published inventory; `daily-growth-polish-verification.json` records validation
+and its limits. Hosted reports and canonical screenshots are under `review/`.
 
 ## Guidance consulted
 
