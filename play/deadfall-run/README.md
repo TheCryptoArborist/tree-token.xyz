@@ -16,7 +16,7 @@ The previous build already used Three.js. This release upgrades that real-time 3
 
 1. Extract the COMPLETE ZIP into a NEW folder. Do not open index.html from inside the ZIP or mix these files with an older version.
 2. Open `index.html` in a desktop browser with WebGL and hardware acceleration enabled. On Windows, `START_GAME.bat` opens that same file; Python is not required.
-3. Wait for “3D ready · Works offline · Build 0.4”, choose a handling preset, and click BEGIN DESCENT.
+3. Wait for “3D ready · Stormbreak Pass · Build 0.4.1”, choose a handling preset, and click BEGIN DESCENT.
 
 All scripts, models and textures are local. There are no CDN requests, accounts, wallet prompts, telemetry, payments or installations. The classic Three.js script is deliberately bundled to retain double-click launching; its deprecation warning is not a startup failure. A local HTTP server is optional, not required by the package.
 
@@ -64,7 +64,7 @@ Easy, Standard and Heavy are handling presets, not different content unlocks. St
 
 ## Validation and limits
 
-`node tests/run.cjs` runs the included dependency-free regression suite. It constructs the actual Three.js geometry and checks transformations and simulation behavior. The renderer and DOM are stubs in these tests; this does NOT verify GPU shader compilation, browser input behavior, rendered appearance, touch layouts or real-device frame rate. Local-file browser preview was blocked in the build environment. Please treat 0.4 as a test build, not visually certified release software.
+`node tests/run.cjs` runs the included dependency-free regression suite. It constructs the actual Three.js geometry and checks transformations and simulation behavior. The renderer and DOM are stubs in these tests; this does NOT verify GPU shader compilation, browser input behavior, rendered appearance, touch layouts or real-device frame rate. The hosted 0.4.1 build was inspected in a browser, but that browser has WebGL disabled (GL_VENDOR and GL_RENDERER both report Disabled). The startup fallback and Back to Arcade navigation were verified. Actual GPU rendering, input feel and frame rate still need a desktop playtest.
 
 Vehicle movement remains a kinematic approximation with simulated roll, sway and brake heat. It is not full wheel/suspension rigid-body physics. Collision footprints are approximate; roadside trees, guardrails and buildings are scenery, not solid barriers. Lost logs disappear rather than falling as independent physics bodies. Restraints are visual and do not simulate breakage. There are no physical rollovers, crash deformation, audio, saved progress, persistent scores, TREE economy, wallet or marketplace in this build.
 
@@ -76,6 +76,6 @@ Vehicle movement remains a kinematic approximation with simulated roll, sway and
 - `vehicle.js`: procedural truck/trailer geometry and visual animation.
 - `play.js`: initialization, controls, cameras, HUD and run lifecycle.
 - `tests/run.cjs`: CPU/DOM-stub regression tests.
-- `vendor/three.min.js`: bundled Three.js r160; see THIRD_PARTY_NOTICES.txt.
+- `vendor/three.min.js`: bundled Three.js r160; see third-party-notices.txt.
 
 No package manager or build step is needed to play.

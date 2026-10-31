@@ -1,3 +1,13 @@
+# TREE Arcade integration — build 0.4.1
+
+October 31, 2026. `node tests/run.cjs`: all 27 CPU/DOM-stub checks passed after integration.
+
+The hosted arcade cabinet, canonical game link, local assets, game menu, explicit unsupported-WebGL error, and Back to Arcade navigation were inspected in the cloud Chrome browser. This browser reports `GL_VENDOR = Disabled` and `GL_RENDERER = Disabled`, so GPU rendering and actual driving controls could not be playtested. A full desktop playtest remains required. No FPS claim is made.
+
+Only one cabinet changes relative to the pinned live arcade HTML. All other existing static files, 40 exact backend package/provider/configuration records (including rate limits), and five schedules must match before publication. The release script enforces those comparisons. The older report below describes the recovered game engine tests.
+
+---
+
 # Build 0.4 test report
 
 September 22, 2026. Command: `node tests/run.cjs`.

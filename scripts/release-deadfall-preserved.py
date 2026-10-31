@@ -96,7 +96,7 @@ def local_changes():
         if not source.is_file():
             continue
         rel = source.relative_to(game)
-        if len(rel.parts) == 1 and source.suffix in ('.html', '.js', '.css', '.svg') or str(rel) == 'vendor/three.min.js' or str(rel) == 'THIRD_PARTY_NOTICES.txt':
+        if len(rel.parts) == 1 and source.suffix in ('.html', '.js', '.css', '.svg') or str(rel) == 'vendor/three.min.js' or str(rel) == 'third-party-notices.txt':
             files['/play/deadfall-run/' + rel.as_posix()] = source
     assert len(files) >= 10
     before = (ROOT / 'production/deadfall-baseline/play-index.html').read_text()
