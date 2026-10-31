@@ -1,0 +1,26 @@
+{
+  "repository": "TheCryptoArborist/treeforce89",
+  "commit": "a38e08e37e1f71ea41b86add8e26a92b0789cf22",
+  "adaptedFiles": [
+    "preview-access.mjs"
+  ],
+  "files": {
+    "authenticated-session.mjs": "54e952a9cb5cc5c22cdf314eb90330dca89629777cf20521b1af21993e6a86d8",
+    "credential-revocation.mjs": "97865c065d614612ca22917dba8bcbee191bda27a1afea3c4a23e56e2fac6731",
+    "game-logout-http.mjs": "eacdc4e7945de90d4edb1c79ebd8bfd0007b8b5c4ef72a5aa93c0844558b0ab4",
+    "game-run-http.mjs": "1662c2be2873b2fa37aabc9b4fec7ea55380bde786d7d78715b5fad5f1cd2e74",
+    "game-run-service.mjs": "5442912df513baa2c724d4554ee67ec7999fd8bacffb91e7678f7bcdccef9108",
+    "game-session-issuer.mjs": "2757b61eea6d1590793735ececbfd2d5cf02fb4ca7f57d7b579d5c081305d042",
+    "nftree-access.mjs": "e7f0c1da9fc0c2129e83419d1be592a795c408bd8650dc74fd85ef4245db766c",
+    "nftree-session-service.mjs": "989ff3bc8ba1e08801a001421db6a7241698614745fa799a22cdbc17d8845e92",
+    "postgres-wallet-challenges.mjs": "39da00a2a2ab7cf5be741e30cc56bed4f9c697e00eb558a68510321cfb058b28",
+    "postgres-wallet-logins.mjs": "a35368b278c095bc466b3fed081463e988adfa43bc3d3c1afae1751a1bf224e3",
+    "preview-access.mjs": "f9bcb5394c99a44a624b9708814aac59b013f448fe71c77c380d6bd59262a4bd",
+    "sui-personal-message-verifier.mjs": "9c18bf3cff2f4f4af805319e36116a23f6869baa9411dac92209b18bda49f7ed",
+    "tree-payment.mjs": "b51117e071ad9c4a5f239b40bf262d3ded560de2ebed0453acae6c166c8d3275",
+    "wallet-challenge.mjs": "a049a75c91cb0f71c985b5c8f9595f33577e5169c4db5acc7a7d92b7be5a9828",
+    "wallet-gateway-http.mjs": "56c4b28e678001a56040b54693c24cd6c9ff432a8083a832d456214e154d5f6b",
+    "wallet-gateway-service.mjs": "eb838c2785abf327e6a430f060d38d845c59046a91aac85213d0c0034e79556c",
+    "wallet-login-issuer.mjs": "5039aee79be76f271955068f99b71abc5aa8e4d8406dcae0bbdc2bfc5085fb0b"
+  }
+}

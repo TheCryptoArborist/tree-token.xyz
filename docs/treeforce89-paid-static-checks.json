@@ -1,0 +1,29 @@
+{
+  "origin": "https://tree-token.xyz",
+  "assets": [
+    {
+      "path": "/play/treeforce89/assets/arcade-DjpIr_ll.js",
+      "status": 200,
+      "sha1": "3c870bab1294a3013dbeb166781e23ac34d396aa"
+    },
+    {
+      "path": "/play/treeforce89/assets/index-DnIGkE6a.css",
+      "status": 200,
+      "sha1": "bf24e7bebcad8df3b19276155a1fba4cbdcb8f83"
+    },
+    {
+      "path": "/play/treeforce89/assets/index-tu4dUpG4.js",
+      "status": 200,
+      "sha1": "2179a985c5d9f0f2241981fb481136b3a620cd4f"
+    },
+    {
+      "path": "/play/treeforce89/gateway.css",
+      "status": 200,
+      "sha1": "5524a91d492b204f49c15bdab73df44c869ce56d"
+    }
+  ],
+  "gameHtmlExactExceptExistingNetlifySnippet": true,
+  "existingNetlifySnippetUnchanged": true,
+  "browserGatewayAndArcadeLinkVerified": true,
+  "realHolderPaymentTested": false
+}

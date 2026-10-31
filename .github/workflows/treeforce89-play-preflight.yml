@@ -1,0 +1,47 @@
+name: TREE FORCE native play integration preflight
+
+on:
+  push:
+    branches:
+      - feature/treeforce89-play-integration
+    paths:
+      - 'docs/treeforce89-play-integration.md'
+      - 'scripts/verify-treeforce89-play-boundary.mjs'
+      - '.github/workflows/treeforce89-play-preflight.yml'
+      - 'netlify/preview-functions/tree-*.ts'
+      - 'tests/treeforce89-preview-functions.test.mjs'
+      - 'tests/treeforce89-preview-isolation.test.mjs'
+      - 'netlify/preview-lib/treeforce89-isolation.mjs'
+      - 'netlify/preview-lib/treeforce89-**'
+      - 'netlify/preview-lib/treeforce89-source/**'
+      - 'tests/treeforce89-database.test.mjs'
+      - 'tests/treeforce89-canonical-development.test.mjs'
+      - 'netlify/canonical-development-functions/**'
+      - 'scripts/*treeforce89-canonical-development.mjs'
+      - 'package-lock.json'
+  pull_request:
+    paths:
+      - 'docs/treeforce89-play-integration.md'
+      - 'scripts/verify-treeforce89-play-boundary.mjs'
+      - '.github/workflows/treeforce89-play-preflight.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  production-preservation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify protected TREE Token production snapshot
+        run: node scripts/verify-treeforce89-play-boundary.mjs
+      - name: Install locked preview dependencies
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm ci --prefix netlify/preview-lib/treeforce89-source --ignore-scripts --no-audit --no-fund
+      - name: Verify TREE FORCE preview APIs and database isolation
+        run: node --test tests/treeforce89-preview-functions.test.mjs tests/treeforce89-preview-isolation.test.mjs tests/treeforce89-database.test.mjs tests/treeforce89-canonical-development.test.mjs

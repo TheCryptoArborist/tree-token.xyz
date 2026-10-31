@@ -1,0 +1,18 @@
+{
+  "sourceCommit": "e43680791b98a6a83e308f5a797a068a8f7063ab",
+  "focusedTests": 32,
+  "allPassed": true,
+  "workflow": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/41170459775",
+  "allFourImplementationWorkflowsPassed": true,
+  "previewPublicHomeClickSpaceEnterCannotStartGame": true,
+  "previewWalletPickerCentered": true,
+  "previewFourWalletNamesReadable": true,
+  "canonicalHomeRendered": true,
+  "canonicalWalletChooserOpenedAndClosed": true,
+  "canonicalFourWalletChoicesVerified": true,
+  "controlledMultipleInstalledWalletTestPassed": true,
+  "controlledNonHolderDenialTestPassed": true,
+  "realHolderWalletConnectionTested": false,
+  "realPaymentSubmitted": false,
+  "browserNotes": "Preview input gating was verified with click, Space and Enter. Canonical home and chooser were verified; a separate canonical keyboard automation attempt timed out and is not counted as a completed input test."
+}

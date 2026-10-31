@@ -1,0 +1,77 @@
+{
+  "sourceCommit": "41b26cc95bb45da98c9e3b82f27fc9c02835d405",
+  "deployId": "6ae5792ec3afc583dd99b5ea",
+  "cssParse": {
+    "parser": "esbuild",
+    "target": "chrome110",
+    "warnings": 0,
+    "bytes": 19273
+  },
+  "preservation": {
+    "changedExistingPaths": [
+      "/play/treeforce89/gateway.css"
+    ],
+    "allOther215StaticFilesExact": true,
+    "all39FunctionRecordsExact": true,
+    "all5SchedulesExact": true,
+    "htmlAndJavaScriptUnchanged": true,
+    "noMigrations": true
+  },
+  "browser": {
+    "previewGameHome": "passed",
+    "panel": {
+      "clientHeight": 237,
+      "scrollHeight": 237,
+      "clientWidth": 442,
+      "scrollWidth": 442,
+      "buttonHeight": 50
+    },
+    "chooserOpenClose": "passed",
+    "canonicalGameHome": "passed",
+    "bothStateStyles": "reviewed as labelled nonfunctional visual samples",
+    "connectedStateRealWalletTested": false,
+    "reducedMotion": "CSS disables new animation and transitions",
+    "slushSecurityWarningRetested": false
+  },
+  "candidateHostedSmoke": {
+    "challengeIssued": true,
+    "signatureVerified": true,
+    "mainnetNonholderDenied": true,
+    "replayRejected": true,
+    "forgedSignatureRejected": true,
+    "forgedEligibilityRejected": true,
+    "crossOriginRejected": true,
+    "unauthenticatedRunAndPaymentsRejected": true,
+    "schemaReady": true,
+    "isolatedDatabase": true,
+    "paymentsEnabled": true,
+    "realHolderSessionTested": false,
+    "realPaymentSignedOrSubmitted": false
+  },
+  "workflows": [
+    {
+      "id": 41171728446,
+      "name": "Verify production snapshot",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 41171728569,
+      "name": "TREE FORCE native play integration preflight",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 41171728413,
+      "name": "TREE FORCE paid continuation",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 41171728516,
+      "name": "Verify STI Stats integration",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ]
+}

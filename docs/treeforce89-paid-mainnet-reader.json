@@ -1,0 +1,10 @@
+{
+  "digest": "HwsCHe7RDZNzkv8WXbAw5uuTsDKvmbuVuYCPHVtDGwRv",
+  "transport": "GraphQL",
+  "sdk": "2.37.0",
+  "checkpoint": "329979867",
+  "timestampMs": 1791073038693,
+  "treeBalanceChanges": 5,
+  "treeCoinTypeMatched": true,
+  "noFundsMoved": true
+}

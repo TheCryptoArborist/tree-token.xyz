@@ -1,0 +1,11 @@
+# TREE FORCE navigation and gameplay HUD
+
+A persistent navigation row offers **Back to Arcade** (`/play/`, same tab) and **Buy TREE** (`/dapp/#swap`, new tab with `noopener noreferrer`) on the title screen, during gameplay and during continuation review. Buy TREE opens the existing SUI-to-TREE swap page; it does not connect a wallet, construct a swap or request payment. Existing blur handling pauses active gameplay when focus leaves the game.
+
+The verified-wallet status and Disconnect action occupy a separate row above the game viewport. They no longer cover Score, High Score or Wave. The viewport retains its native 480×720 ratio. Available-height sizing includes the navigation and connected-status rows; compact widths and short windows hide the decorative title/footer chrome while retaining navigation.
+
+The pinned game receives a presentation-only HUD overlay: separate growth/weapon/progress rows, gaps between Auto Fire/Shield/Fire buttons, wider sound toggle, slightly smaller score text, a wrapped tutorial band, and separate locations for tutorial, wave notice, boss health and turbo status. No physics, input callbacks, scoring, lives, wave rules, pickup behavior or payment values change. The original wallet configuration and dependency lock are asserted byte-for-byte during the native frontend build. Session proof/signing/transaction handlers are unchanged; React changes only their surrounding layout.
+
+Release baseline is `6ae5792ec3afc583dd99b5ea`: 216 static files, 39 complete function package/provider/runtime/configuration records and five schedules. Only native game HTML/CSS and newly compiled native JavaScript assets change. Every unrelated published path, existing backend record, schedule, server-only isolated database binding and enabled-payment flag must be preserved. No function rebuild or database migration is included.
+
+Verification covers the existing 32 wallet/continuation interaction tests, native build and asset preflight, labelled gameplay layout samples and geometric text/control bounds, actual title screen and chooser, both navigation destinations, exact canonical assets and complete live static/backend preservation. Layout samples are draft-only, have no backend/database binding and cannot verify NFTree ownership or payment. Real-holder permission/signing and real-payment testing remain user-operated.

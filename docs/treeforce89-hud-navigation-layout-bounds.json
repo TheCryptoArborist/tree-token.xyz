@@ -1,0 +1,158 @@
+{
+  "stress": true,
+  "texts": [
+    {
+      "name": "scoreText",
+      "text": "SCORE\n000000",
+      "x": 12,
+      "y": 7,
+      "width": 45,
+      "height": 34
+    },
+    {
+      "name": "waveText",
+      "text": "WAVE\n01",
+      "x": 431,
+      "y": 7,
+      "width": 37,
+      "height": 34
+    },
+    {
+      "name": "badgeText",
+      "text": "◆",
+      "x": 234.5,
+      "y": 46,
+      "width": 11,
+      "height": 14
+    },
+    {
+      "name": "stageText",
+      "text": "GROWTH 3/5 // YOUNG TREE  ×1.25",
+      "x": 12,
+      "y": 638,
+      "width": 190,
+      "height": 14
+    },
+    {
+      "name": "powerText",
+      "text": "WEAPON 2/5 // ACCELERATED SAP",
+      "x": 12,
+      "y": 658,
+      "width": 191,
+      "height": 14
+    },
+    {
+      "name": "chainText",
+      "text": "CHAIN 123456  ×2.50",
+      "x": 357,
+      "y": 638,
+      "width": 111,
+      "height": 14
+    },
+    {
+      "name": "livesText",
+      "text": "♠ ♠ ♠",
+      "x": 442,
+      "y": 658,
+      "width": 26,
+      "height": 14
+    },
+    {
+      "name": "growthText",
+      "text": "GROW 0 / 35",
+      "x": 20.5,
+      "y": 681,
+      "width": 69,
+      "height": 14
+    },
+    {
+      "name": "autoText",
+      "text": "AUTO FIRE\nTAP TO ON",
+      "x": 143,
+      "y": 687,
+      "width": 62,
+      "height": 28
+    },
+    {
+      "name": "pruneText",
+      "text": "READY -1 GROW",
+      "x": 233,
+      "y": 694,
+      "width": 92,
+      "height": 14
+    },
+    {
+      "name": "fireText",
+      "text": "FIRE\n0 / 2",
+      "x": 390,
+      "y": 687,
+      "width": 28,
+      "height": 28
+    },
+    {
+      "name": "sfxText",
+      "text": "SND ON",
+      "x": 39.5,
+      "y": 47,
+      "width": 45,
+      "height": 14
+    },
+    {
+      "name": "lessonText",
+      "text": "2/4 FIRE: LEFT CLICK, Z/X, OR CONTROLLER A/B",
+      "x": 96,
+      "y": 102,
+      "width": 288,
+      "height": 28
+    },
+    {
+      "name": "turboText",
+      "text": "VICTORY TURBO 7s",
+      "x": 352,
+      "y": 46,
+      "width": 116,
+      "height": 16
+    },
+    {
+      "name": "notice",
+      "text": "ROOT CAPTOR DESCENDING",
+      "x": 128.5,
+      "y": 160.5,
+      "width": 223,
+      "height": 31
+    },
+    {
+      "name": "bossHpText",
+      "text": "CANOPY TYRANT 24 / 24",
+      "x": 173,
+      "y": 71,
+      "width": 134,
+      "height": 14
+    }
+  ],
+  "overlaps": [],
+  "controls": [
+    {
+      "name": "autoButtonBg",
+      "x": 130,
+      "y": 684,
+      "width": 88,
+      "height": 34
+    },
+    {
+      "name": "pruneButtonBg",
+      "x": 224,
+      "y": 684,
+      "width": 110,
+      "height": 34
+    },
+    {
+      "name": "fireButtonBg",
+      "x": 340,
+      "y": 684,
+      "width": 128,
+      "height": 34
+    }
+  ],
+  "controlOverlaps": []
+}

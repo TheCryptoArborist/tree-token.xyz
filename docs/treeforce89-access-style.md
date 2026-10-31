@@ -1,0 +1,9 @@
+# TREE FORCE arcade access panels
+
+The existing Connect Sui wallet and Verify NFTree & Play states now share an arcade-console treatment. The disconnected state has a green Pilot Link badge, wallet icon and illuminated arrow button. The connected state has a purple NFTree Check badge, shield icon, launch arrow and gentle button glow. The connection dot styles only the existing connected-account row. Pending verification has a distinct label and disabled treatment; nothing claims ownership or verification before the existing application authorizes it.
+
+The panel adds inset highlights, a colored lower rail, stronger depth and restrained green/purple light. Readable dark button text and the existing focus ring remain. Reduced-motion preferences disable the new animation and transitions. Short-window spacing remains compact. Wallet lists, button labels, action handlers, signing, gameplay, price and recipient are unchanged.
+
+This release changes only `/play/treeforce89/gateway.css`. It preserves the exact other 215 published paths, including every HTML and JavaScript file, all 39 backend package/provider/runtime/configuration records and all five schedules from baseline `6ae574cbd07fdb22146e6265`. No backend, build, SDK, wallet configuration or database migration changes. The existing server-only isolated database binding and enabled-payment flag are retained.
+
+Validation uses CSS parsing, read-only visual samples for both states, browser review of the real disconnected home/chooser, exact live CSS hashing, and complete static/backend preservation checks. Visual samples are a labelled, nonfunctional draft with no functions, database credentials or publication; they are never a production release package. Existing behavior tests are unchanged; this cosmetic change does not claim a new real-holder wallet or payment test.

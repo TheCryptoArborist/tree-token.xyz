@@ -1,5 +1,7 @@
 import { cp, mkdir, readFile, readdir } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
+import './prepare-treeforce89-preview.mjs';
+import {execFileSync} from 'node:child_process';
 
 const root = resolve(import.meta.dirname, '..');
 // Keep the candidate separate from the byte-exact published snapshot in dist/.
@@ -7,6 +9,8 @@ const output = resolve(root, 'dist-preview');
 const manifest = JSON.parse(await readFile(resolve(root, 'production/manifest.json'), 'utf8'));
 const outputPath = file => file.path.slice(1);
 const allowed = new Set(manifest.files.map(file => outputPath(file).toLowerCase()));
+const nativePreview=(process.env.HEAD||process.env.BRANCH)==='feature/treeforce89-play-integration'&&
+  process.env.CONTEXT==='deploy-preview';
 const additions = ['dapp/sti-widget.js', 'dapp/sti-purchase-core.js', 'dapp/sti-stats-core.js', 'dapp/challenge-funding-core.js', 'assets/sti-icon.svg'];
 const overlays = ['dapp/v3-workspace.js', 'dapp/index.html', 'dapp/styles.css', 'dapp/panel-router.css', 'dapp/interaction-bootstrap.js', 'scripts/wallet.js', 'scripts/tree-knowledge-trial.js'];
 for (const file of additions) allowed.add(file);
@@ -22,7 +26,8 @@ async function rejectUntrackedOutput(directory, prefix = '') {
   for (const entry of entries) {
     const relative = prefix + entry.name;
     if (entry.isDirectory()) await rejectUntrackedOutput(resolve(directory, entry.name), `${relative}/`);
-    else if (!allowed.has(relative.toLowerCase())) throw new Error(`Preserve or remove the old preview build before continuing: dist-preview/${relative}`);
+    else if (!allowed.has(relative.toLowerCase())&&!(nativePreview&&relative.startsWith('play/treeforce89/')))
+      throw new Error(`Preserve or remove the old preview build before continuing: dist-preview/${relative}`);
   }
 }
 
@@ -39,3 +44,7 @@ for (const file of [...overlays, ...additions]) {
 }
 console.log(`Built a ${allowed.size}-file feature preview from the verified production file set and explicit STI additions.`);
 console.log('The production manifest and recovered function packages were not changed.');
+if(nativePreview){
+  execFileSync('npm',['ci','--prefix','netlify/preview-lib/treeforce89-source','--ignore-scripts','--no-audit','--no-fund'],{cwd:root,stdio:'inherit'});
+  await import('./build-treeforce89-native-preview.mjs');
+}

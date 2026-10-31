@@ -1,0 +1,28 @@
+{
+  "origin": "https://tree-token.xyz",
+  "assetHashesVerified": true,
+  "assets": [
+    {
+      "path": "/play/treeforce89/assets/arcade-BmfsVFz2.js",
+      "sha1": "8173a8386fed81a892bb2c68aebb2ef198877a2c"
+    },
+    {
+      "path": "/play/treeforce89/assets/graphql-DUGRj2zR.js",
+      "sha1": "67fa459e53ef62e9fe9ea06330a2ccdfaa651e02"
+    },
+    {
+      "path": "/play/treeforce89/assets/index-C6yLCRsG.js",
+      "sha1": "283a12d225dadb35f1401b1aa9e69a04bcfaa506"
+    },
+    {
+      "path": "/play/treeforce89/assets/index-DnIGkE6a.css",
+      "sha1": "bf24e7bebcad8df3b19276155a1fba4cbdcb8f83"
+    },
+    {
+      "path": "/play/treeforce89/gateway.css",
+      "sha1": "cad81092e9a3cd7a4821b83921db814d441d6662"
+    }
+  ],
+  "gameHtmlVerified": true,
+  "existingNetlifySnippetUnchanged": true
+}

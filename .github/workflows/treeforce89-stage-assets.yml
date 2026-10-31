@@ -1,0 +1,79 @@
+name: Stage TREE FORCE native arcade assets
+
+on:
+  push:
+    branches:
+      - feature/treeforce89-play-integration
+    paths:
+      - '.github/workflows/treeforce89-stage-assets.yml'
+      - 'scripts/verify-treeforce89-staged-assets.mjs'
+      - 'scripts/verify-treeforce89-api-contract.mjs'
+      - 'scripts/verify-treeforce89-backend-source.mjs'
+      - 'scripts/rebase-treeforce89-assets.mjs'
+      - 'netlify/preview-functions/tree-*.ts'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  stage-native-assets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout TREE Token integration branch
+        uses: actions/checkout@v4
+        with:
+          path: tree-token
+          persist-credentials: false
+      - name: Checkout pinned TREE FORCE development source
+        uses: actions/checkout@v4
+        with:
+          repository: TheCryptoArborist/treeforce89
+          ref: a38e08e37e1f71ea41b86add8e26a92b0789cf22
+          path: treeforce89
+          persist-credentials: false
+      - name: Configure Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: treeforce89/package-lock.json
+      - name: Verify protected production snapshot
+        working-directory: tree-token
+        run: node scripts/verify-treeforce89-play-boundary.mjs
+      - name: Install pinned game dependencies
+        working-directory: treeforce89
+        run: npm ci --ignore-scripts
+      - name: Build native game assets (not deployed)
+        working-directory: treeforce89
+        run: |
+          node ../tree-token/scripts/rebase-treeforce89-assets.mjs .
+          npm run build -- --base /play/treeforce89/
+      - name: Stage native route artifact
+        run: |
+          mkdir -p stage/play/treeforce89
+          cp -a treeforce89/dist/. stage/play/treeforce89/
+      - name: Verify path and isolation
+        run: node tree-token/scripts/verify-treeforce89-staged-assets.mjs stage/play/treeforce89
+      - name: Validate same-origin wallet and checkout API contract
+        run: node tree-token/scripts/verify-treeforce89-api-contract.mjs treeforce89 tree-token
+      - name: Stage pinned TREE FORCE backend source (not deployed)
+        run: |
+          mkdir -p stage/backend/treeforce89
+          cp -a treeforce89/app stage/backend/treeforce89/
+          cp -a treeforce89/netlify stage/backend/treeforce89/
+      - name: Audit pinned backend source and original deployment guards
+        run: node tree-token/scripts/verify-treeforce89-backend-source.mjs stage/backend/treeforce89
+      - name: Upload backend source for inspection only
+        uses: actions/upload-artifact@v4
+        with:
+          name: treeforce89-backend-source-audit
+          path: stage/backend/treeforce89/
+          retention-days: 7
+      - name: Upload build for inspection only
+        uses: actions/upload-artifact@v4
+        with:
+          name: treeforce89-native-route-preview
+          path: stage/play/treeforce89/
+          retention-days: 7

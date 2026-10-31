@@ -1,0 +1,94 @@
+{
+  "sourceCommit": "1dce0e0d9b6ef112f3bbc92124022d5e16e5e836",
+  "deployId": "6ae57caa6fee52d4fb3bfd18",
+  "localFocusedTests": {
+    "passed": 32,
+    "failed": 0
+  },
+  "nativeBuild": {
+    "passed": true,
+    "originalWalletConfigurationAndLockExact": true,
+    "backendBuilt": false,
+    "cssParseWarnings": 0,
+    "existingPinnedCssWarnings": [
+      "@theme",
+      "@tailwind"
+    ]
+  },
+  "browser": {
+    "actualCandidateHome": "passed",
+    "chooserOpenClose": "passed",
+    "backToArcadeNavigation": "passed",
+    "canonicalBuyDestination": "https://tree-token.xyz/dapp/#swap",
+    "canonicalBuyDestinationUI": "SUI input, TREE output, Swap tab selected",
+    "canonicalGameHome": "passed",
+    "canonicalLinkTargets": {
+      "arcade": "/play/",
+      "buyTree": "/dapp/#swap",
+      "buyTreeTarget": "_blank"
+    },
+    "gameplayLayout": "labelled isolated local-game sample, no wallet/session/backend/payment",
+    "normalHudTextOverlaps": 0,
+    "stressHudTextOverlaps": 0,
+    "controlOverlaps": 0,
+    "compactSamples": [
+      {
+        "viewport": [
+          320,
+          640
+        ],
+        "documentSize": [
+          320,
+          640
+        ],
+        "statusBottom": 122,
+        "canvasTop": 122,
+        "ratio": 0.6666666666666666,
+        "textOverlaps": 0
+      },
+      {
+        "viewport": [
+          640,
+          400
+        ],
+        "documentSize": [
+          640,
+          400
+        ],
+        "statusBottom": 84,
+        "canvasTop": 84,
+        "ratio": 0.6666666666666666,
+        "textOverlaps": 0
+      }
+    ],
+    "realHolderSessionTested": false,
+    "realPaymentSignedOrSubmitted": false,
+    "slushSecurityWarningRetested": false
+  },
+  "workflows": [
+    {
+      "id": 41172726280,
+      "name": "Verify production snapshot",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 41172726308,
+      "name": "TREE FORCE paid continuation",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 41172726309,
+      "name": "TREE FORCE native play integration preflight",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 41172726314,
+      "name": "Verify STI Stats integration",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "name": "treeforce89-preview-gateway",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@mysten/sui": "2.37.0"
+  }
+}

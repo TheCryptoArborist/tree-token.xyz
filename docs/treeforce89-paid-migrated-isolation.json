@@ -1,0 +1,10 @@
+{
+  "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
+  "branch": "feature/treeforce89-play-integration",
+  "branchId": "feature/treeforce89-play-integration",
+  "databaseIdentity": "df2f0abee059d9898495a125018fa0a291d50b9050c0d4557231f409bed53065",
+  "distinctFromBothProductionDatabases": true,
+  "readOnlyRole": true,
+  "baseSchemaReady": true,
+  "paymentSchemaReady": true
+}

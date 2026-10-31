@@ -8,6 +8,7 @@ node_modules/
 dist/
 dist-preview/
 .netlify/
+netlify/generated/
 .sync-backups/
 raffle-contract/build/
 supabase/.temp/

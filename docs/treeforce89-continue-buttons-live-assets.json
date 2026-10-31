@@ -1,0 +1,36 @@
+{
+  "origin": "https://tree-token.xyz",
+  "assetHashesVerified": true,
+  "assets": [
+    {
+      "path": "/play/treeforce89/assets/arcade-DjpIr_ll.js",
+      "sha1": "3c870bab1294a3013dbeb166781e23ac34d396aa"
+    },
+    {
+      "path": "/play/treeforce89/assets/arcade-bJ0xyNbv.js",
+      "sha1": "660cd2c5954524a4089da078ff604a3e66948359"
+    },
+    {
+      "path": "/play/treeforce89/assets/graphql-26OZk2RJ.js",
+      "sha1": "2525624750062163dc30bcc4441134352d53b790"
+    },
+    {
+      "path": "/play/treeforce89/assets/index-CR6rByWB.js",
+      "sha1": "80db2ace93503a37ba2461bb678930a7fbe4d737"
+    },
+    {
+      "path": "/play/treeforce89/assets/index-DnIGkE6a.css",
+      "sha1": "bf24e7bebcad8df3b19276155a1fba4cbdcb8f83"
+    },
+    {
+      "path": "/play/treeforce89/assets/index-tu4dUpG4.js",
+      "sha1": "2179a985c5d9f0f2241981fb481136b3a620cd4f"
+    },
+    {
+      "path": "/play/treeforce89/gateway.css",
+      "sha1": "b1c5a6cae9c482322977735a9247c19032ceeddb"
+    }
+  ],
+  "gameHtmlExactExceptExistingNetlifySnippet": true,
+  "existingNetlifySnippetUnchanged": true
+}

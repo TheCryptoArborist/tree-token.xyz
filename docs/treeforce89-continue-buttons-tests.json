@@ -1,0 +1,15 @@
+{
+  "focusedTests": 24,
+  "allPassed": true,
+  "simulatedWalletAndServer": true,
+  "normalFlow": [
+    "Pay 20,000 TREE & restore lives",
+    "Wallet approval and verification",
+    "Resume gameplay · 3 lives"
+  ],
+  "automaticReceiptRecoveryWithoutManualInput": true,
+  "manualRecoveryCollapsedByDefault": true,
+  "noRealPaymentSubmitted": true,
+  "workflow": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/41169115451",
+  "sourceCommit": "16772666243446fa8cc6a28d3a5a654810396b74"
+}
