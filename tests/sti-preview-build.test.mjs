@@ -34,7 +34,21 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
   };
   assert.equal(published.files.find(f => f.path === approvedVictoryReceipt.path)?.sha, approvedVictoryReceipt.previousSha);
   assert.equal(manifest.files.find(f => f.path === approvedVictoryReceipt.path)?.sha1, approvedVictoryReceipt.approvedSha);
-  const approvedPaths = [approvedNavigationChange.path, approvedSwapChange.path, approvedVictoryReceipt.path];
+  const approvedReviewAdditions = [
+  {
+    "path": "/dapp/victory-layout-review.css",
+    "sha1": "24a991520a6006ce398e3249646209e127517267"
+  },
+  {
+    "path": "/dapp/victory-layout-review.html",
+    "sha1": "55fa74e34094dc48bcca3f5099a6c81749544f11"
+  }
+];
+  for (const file of approvedReviewAdditions) {
+    assert.equal(published.files.some(f => f.path === file.path), false);
+    assert.equal(manifest.files.find(f => f.path === file.path)?.sha1, file.sha1);
+  }
+  const approvedPaths = [approvedNavigationChange.path, approvedSwapChange.path, approvedVictoryReceipt.path, ...approvedReviewAdditions.map(f => f.path)];
   assert.deepEqual(
     manifest.files.filter(f => !approvedPaths.includes(f.path)).map(f => [f.path, f.sha1]).sort(),
     published.files.filter(f => !approvedPaths.includes(f.path)).map(f => [f.path, f.sha]).sort(),
