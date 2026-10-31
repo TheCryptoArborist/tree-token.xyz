@@ -11,6 +11,7 @@ import {readFile} from 'node:fs/promises';
 import assert from 'node:assert/strict';
 const {Ed25519Keypair}=await import(pathToFileURL(resolve(sourceRoot,'node_modules/@mysten/sui/dist/keypairs/ed25519/keypair.mjs')));
 import {inspectTreeForceSchema} from './lib/treeforce89-schema.mjs';
+import {createIntegratedGatewayHandler} from '../netlify/preview-lib/treeforce89-gateway.mjs';
 const {createWalletGatewayService}=await import(pathToFileURL(resolve(sourceRoot,'app/game/wallet-gateway-service.mjs')));
 const {createAuthenticatedSessionResolver}=await import(pathToFileURL(resolve(sourceRoot,'app/game/authenticated-session.mjs')));
 const {createGameRunService}=await import(pathToFileURL(resolve(sourceRoot,'app/game/game-run-service.mjs')));
@@ -74,6 +75,36 @@ try {
   const invalid=await sign(service,new Ed25519Keypair());
   invalid.signature=(await new Ed25519Keypair().signPersonalMessage(new TextEncoder().encode('wrong message'))).signature;
   await assert.rejects(service.enter(invalid),{code:'SIGN_IN_REJECTED'});
+  // Exercise the actual TREE Token HTTP adapters with real signatures and SQL.
+  // Only NFT ownership is a fixture; this injection is never request-controlled.
+  const httpOrigin='https://deploy-preview-70--tree-token.netlify.app';
+  const build={branch:'feature/treeforce89-play-integration',context:'deploy-preview',prNumber:70};
+  const context={site:{id:'aa62f324-b880-47d6-85b8-4ba0700ff5bf'},
+    deploy:{id:'a'.repeat(24),context:'deploy-preview'}};
+  const httpGateway=createWalletGatewayService({pool,client:client(true),origin:httpOrigin});
+  const httpRuns=createGameRunService({pool,ownershipChecker:async()=>true});
+  const http=async(action,body,token)=>{
+    const request=new Request(httpOrigin+'/.netlify/functions/tree-test',{
+      method:'POST',headers:{origin:httpOrigin,...(body?{'Content-Type':'application/json'}:{}),
+        ...(token?{Authorization:'Bearer '+token}:{})},
+      ...(body?{body:JSON.stringify(body)}:{})});
+    return createIntegratedGatewayHandler({action,build,services:async()=>({gateway:httpGateway,runs:httpRuns})})(request,context);
+  };
+  const httpKey=new Ed25519Keypair();
+  const challengeResponse=await http('challenge',{wallet:httpKey.toSuiAddress()});
+  assert.equal(challengeResponse.status,201);
+  const challengeBody=await challengeResponse.json();
+  const httpSignature=await httpKey.signPersonalMessage(new TextEncoder().encode(challengeBody.message));
+  const httpProof={wallet:httpKey.toSuiAddress(),nonce:challengeBody.nonce,signature:httpSignature.signature};
+  const sessionResponse=await http('enter',httpProof);assert.equal(sessionResponse.status,201);
+  const httpSession=await sessionResponse.json();
+  assert.equal((await http('enter',httpProof)).status,401);
+  const restartResponse=await http('restart',{runId:httpSession.runId},httpSession.sessionToken);
+  assert.equal(restartResponse.status,201);const httpNext=await restartResponse.json();
+  assert.notEqual(httpNext.sessionToken,httpSession.sessionToken);
+  assert.equal((await http('restart',{runId:httpSession.runId},httpSession.sessionToken)).status,401);
+  assert.equal((await http('logout',undefined,httpNext.sessionToken)).status,200);
+  assert.equal((await http('restart',{runId:httpNext.runId},httpNext.sessionToken)).status,401);
   assert.equal(Number((await pool.query('SELECT count(*) AS n FROM tree_continue_redemptions')).rows[0].n),0);
   console.log(JSON.stringify({engine:'Netlify local PostgreSQL emulation (PGlite)',
     migrationAppliedLocally:true,tableCount:schema.tableCount,
@@ -83,5 +114,6 @@ try {
     missingSchemaRejected:true,missingUniqueRejected:true,wrongTypeRejected:true,missingExpiryRejected:true,
     realSignatures:true,challengeReplayRejected:true,holderFixtureAllowed:true,nonholderFixtureRejected:true,
     forgedSignatureRejected:true,runRotation:true,oldTokenRejected:true,logout:true,
+    integratedHttpGateway:true,integratedHttpRunRotation:true,integratedHttpLogout:true,
     paymentRows:0,hostedDatabaseTested:false,liveNFTreeOwnershipTested:false}));
 } finally {if(pool)await pool.end();await db.stop();}

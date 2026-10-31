@@ -21,6 +21,8 @@ if(/<iframe\b/i.test(html))throw Error('Native build unexpectedly embeds an ifra
 for(const file of files){
  if(!/\.(html|js|css|json|map)$/.test(file.path))continue;
  const text=file.content.toString('utf8');
+ if(/["']\/assets\/(?:hero|backgrounds|powerups|arborwing)\//.test(text))
+  throw Error('Phaser asset URL escapes the native game route: '+file.path);
  if(/https?:\/\/(?:feature-tree-paid-continue--)?treeforce89\.netlify\.app/i.test(text))
   throw Error('Old Netlify game origin embedded in '+file.path);
 }

@@ -24,8 +24,11 @@ for(const [name,source] of routes){
  const fn=join(host,'netlify/preview-functions/'+name+'.ts');
  if(!existsSync(fn))throw Error('Missing same-origin preview handler: '+name);
  const code=readFileSync(fn,'utf8');
- if(!code.includes('status:503') || !code.includes('authorized:false') || !code.includes('enabled:false'))
-  throw Error('Preview API not safely disabled: '+name);
+ if(['tree-continue','tree-continue-offer'].includes(name)){
+  if(!code.includes('status:503')||!code.includes('authorized:false')||!code.includes('enabled:false'))
+   throw Error('Checkout API not safely disabled: '+name);
+ } else if(!code.includes('createIntegratedGatewayHandler'))
+  throw Error('Authentication API is not using the isolated deployment gate: '+name);
  if(/\bfetch\s*\(/.test(code))throw Error('Preview API forwards requests: '+name);
 }
 const gateway=read('app/NFTreeGateway.tsx');
@@ -38,4 +41,4 @@ if(!review.includes('disabled>Payments disabled'))
 const html=read('index.html');
 if(/<iframe\b/i.test(html))throw Error('Game must not be embedded in an iframe');
 console.log('Verified '+routes.size+' same-origin route contracts, wallet sign-in and disabled checkout.');
-console.log('These are placeholders only: real backend and database integration are NOT enabled.');
+console.log('Authentication uses isolated preview guards. Both checkout endpoints remain disabled.');

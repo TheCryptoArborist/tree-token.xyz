@@ -9,6 +9,7 @@ on:
       - 'scripts/verify-treeforce89-staged-assets.mjs'
       - 'scripts/verify-treeforce89-api-contract.mjs'
       - 'scripts/verify-treeforce89-backend-source.mjs'
+      - 'scripts/rebase-treeforce89-assets.mjs'
       - 'netlify/preview-functions/tree-*.ts'
   workflow_dispatch:
 
@@ -46,7 +47,9 @@ jobs:
         run: npm ci --ignore-scripts
       - name: Build native game assets (not deployed)
         working-directory: treeforce89
-        run: npm run build -- --base /play/treeforce89/
+        run: |
+          node ../tree-token/scripts/rebase-treeforce89-assets.mjs .
+          npm run build -- --base /play/treeforce89/
       - name: Stage native route artifact
         run: |
           mkdir -p stage/play/treeforce89
