@@ -73,10 +73,10 @@ All eight posters remain in the requested order, with two future placeholders an
 
 The reviewed desktop preview is saved in `review/arcade-game-explanations-preview.jpg`.
 
-## Publication status
+## Published release
 
-**Pending.** The user approved the explanation and layout work. Netlify CLI authentication was separately blocked by automatic approval review because its requested authorization covers all Netlify teams. Publishing remains pending specific approval of that authentication scope; general approval to proceed with the recommended copy does not resolve it.
+After the owner explicitly approved the requested Netlify CLI access, the reviewed source `8a8861c7f35650503b3795c6633a7f69f6485d9b` was published as locked deployment `6ae6175066e3bb789eca5a69` on October 31, 2026 at 11:29:36 a.m. CDT (16:29:36 UTC).
 
-This document is not deployment evidence. The combined release must verify its current baseline and record a concrete deployment ID only after successful, authorized publication.
+The bounded release changed only the existing arcade HTML/CSS and added the gameplay image. All 232 public paths were verified, including the other 229 static files unchanged from baseline `6ae5895193ef2a292283c697`. All 39 complete function records, five schedules, runtime context, isolated database binding, enabled paid continues, and publication lock were preserved.
 
-The connected Netlify read confirmed that deployment `6ae5895193ef2a292283c697` remains current. The bounded release permits only the existing arcade HTML/CSS and the new gameplay image: 232 public paths, with the other 229 static files, all 39 complete function records, five schedules, runtime context, isolated database binding, enabled paid continues, and publication lock preserved.
+The canonical `https://tree-token.xyz/play/` page was checked after publication. It shows the new subtitles, action labels, introduction, loaded gameplay image, eight posters in the requested order, two future slots, full-width welcome guide, and red TREE FORCE LIVE badge. No horizontal overflow was present. Live visual evidence is saved in `review/arcade-game-explanations-live-6ae61750.jpg`; complete file and backend verification is recorded in `arcade-game-explanations-published.json`.

@@ -14,4 +14,4 @@ The current MystenLabs/skills README was checked and remains blob `8be2c5d51d94c
 
 Only `/play/index.html` and `/styles/tree-arcade-suite.css` change from deployment `6ae5895193ef2a292283c697`. The bounded release script requires all 231 existing public paths, the other 229 static files byte-for-byte, all 39 complete backend function records, five schedules, the original runtime context and database binding, enabled paid continues, and the publication lock. No dependencies, game logic, wallet code, or migrations change.
 
-Publication is pending. The release script records the committed source and verified published deployment in `arcade-eight-posters-published.json` only after successful publication.
+This layout was published together with the newcomer game explanations as locked deployment `6ae6175066e3bb789eca5a69`, from source `8a8861c7f35650503b3795c6633a7f69f6485d9b`, on October 31, 2026 at 11:29 a.m. CDT. The combined release adds one authentic gameplay screenshot, for 232 public paths. Its full release evidence is in `arcade-game-explanations-published.json`; there was no separate eight-poster deployment.
