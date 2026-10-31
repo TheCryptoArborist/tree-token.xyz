@@ -1,5 +1,7 @@
 # TREE Arcade cabinet suite
 
+Published and verified at `https://tree-token.xyz/play/` as deployment `6ae580fad3f05a19757996a5`, from source commit `84f907715cd33319b4b4986a7a802c44dfd63476`. Production is ready and locked. Final evidence is in `arcade-suite-published.json`; the live full-page screenshot is in `review/arcade-suite-live-6ae580fa.jpg`.
+
 The `/play/` landing page now gives each destination its own retro arcade cabinet. The desktop floor contains nine cabinets in three rows, with two columns on tablets and one column on narrow screens.
 
 | Cabinet | Destination | Availability shown |
