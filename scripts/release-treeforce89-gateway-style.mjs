@@ -29,6 +29,15 @@ const oldHtml=readFileSync(resolve(root,'.netlify/treeforce89-canonical-developm
 assert.equal(digest('sha1',oldHtml),originalFiles['/play/treeforce89/index.html']);
 const newHtml=readFileSync(resolve(stage,'index.html'),'utf8');
 const scripts=html=>[...html.matchAll(/<script\b[^>]*>[\s\S]*?<\/script>/g)].map(m=>m[0]);
+// Netlify materializes the game's already effective memory/region aliases when
+// reusing its package. Require those aliases to equal the explicit settings;
+// retain exact comparison of every other field and all 38 original functions.
+const comparableFunctions=functions=>functions.map(fn=>{
+ if(fn.n!=='treeforce89-dev')return fn;
+ assert.equal(fn.mo??fn.m,fn.m,'Game memory alias differs from its effective setting');
+ assert.equal(fn.rgo??fn.rg,fn.rg,'Game region alias differs from its effective setting');
+ return {...fn,mo:fn.m,rgo:fn.rg};
+});
 assert.deepEqual(scripts(newHtml),scripts(oldHtml));
 assert(newHtml.includes('class="gateway-intro"')&&newHtml.includes('/play/treeforce89/gateway.css'));
 const git=(...args)=>execFileSync('git',args,{cwd:root,encoding:'utf8'}).trim();
@@ -94,9 +103,9 @@ program.command('gateway-style-release').action(async(options,command)=>{
  }
  assert.equal(candidate.state,'ready');
  assert.deepEqual(await inventory(id),files);
- assert.deepEqual(candidate.available_functions,original.available_functions,'Backend identity/configuration changed');
+ assert.deepEqual(comparableFunctions(candidate.available_functions),comparableFunctions(original.available_functions),'Backend identity/configuration changed');
  assert.deepEqual(candidate.function_schedules,original.function_schedules);
- assert.equal(candidate.database_migrations?.length||0,0);
+ assert.equal(candidate.database_migrations?.files?.length??candidate.database_migrations?.length??0,0);
  assert.equal((await api.getSite({siteId})).published_deploy.id,mode==='published'?id:original.id);
  if(mode==='published'){
   await api.lockDeploy({deployId:id});
@@ -105,6 +114,7 @@ program.command('gateway-style-release').action(async(options,command)=>{
  const report={id,baseline:original.id,mode,sourceCommit:git('rev-parse','HEAD'),files:Object.keys(files).length,
   preservedStaticFiles:206,changedExistingPaths:[changes[0]],newPaths:[changes[1]],functionsPreserved:39,schedulesPreserved:5,
   gameAndWalletJavaScriptUnchanged:true,isolatedDatabaseIdentity:evidence.previewDatabaseIdentity,paymentsEnabled:false,
+  metadataAliasNormalization:{function:'treeforce89-dev',memory:1024,region:'us-east-2',allOtherFieldsComparedExactly:true},
   publishedAt:candidate.published_at||null,filesBySha1:files};
  writeFileSync(resolve(root,'.netlify/treeforce89-gateway-style-verification.json'),JSON.stringify(report,null,2));
  console.log(JSON.stringify({...report,filesBySha1:undefined},null,2));

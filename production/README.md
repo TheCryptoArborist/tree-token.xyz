@@ -1,4 +1,14 @@
-# Current production — native TREE FORCE development Gateway, 2026-10-30
+# Current production — NFTree Gateway arcade presentation, 2026-10-30
+
+Deployment `6ae5626d7f0e8b6dd74b6ce8` was published at `2026-10-31T03:39:24.957Z` and is locked. Design source is `214fc4203e8ffeb15ca6d21b3ed7945402cd1ac7` on `feature/treeforce89-play-integration`; no branch was merged and neither `main` was modified.
+
+Only `/play/treeforce89/index.html` changes from native integration baseline `6ae55a0c1aa8c546b7109a41`; `/play/treeforce89/gateway.css` is added. All other 206 static paths, all game/wallet JavaScript, all 39 existing backend packages/provider identities/effective configurations (38 original plus the isolated game API), and all five schedules are preserved. The same explicit server-only isolated development database binding is retained; payments stay disabled and there are no migration files.
+
+The published 208-file inventory, metadata alias comparison and canonical readiness evidence are recorded in `docs/treeforce89-gateway-style-published.json` and `docs/treeforce89-gateway-style.md`. The original native integration evidence below remains the backend baseline. The historical default snapshot is not a current release package; preserve this entire published inventory and backend for future releases.
+
+---
+
+# Initial native TREE FORCE development Gateway, 2026-10-30
 
 Deployment `6ae55a0c1aa8c546b7109a41` was published at `2026-10-31T03:16:30.675Z` and remains locked. Implementation source is `03372a1c04a546666c9a1d67e38875d2b4376aa1` on `feature/treeforce89-play-integration`; reviewed release evidence is `d862d5da79c73d2e0c21b48d2e57f01ad85626ce`. Neither `main` branch was modified or merged.
 

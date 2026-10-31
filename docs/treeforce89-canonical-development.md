@@ -1,5 +1,7 @@
 # TREE FORCE development Gateway on TREE Arcade
 
+Presentation follow-up: live Gateway design deployment `6ae5626d7f0e8b6dd74b6ce8` supersedes the initial native release below while preserving its entire backend. See `treeforce89-gateway-style.md` and `treeforce89-gateway-style-published.json` for the current release. The real-holder Slush acceptance test remains pending.
+
 The user identified `https://tree-token.xyz/play/` as the working entry point after Slush warned about the Deploy Preview hostname. The published addition places a native TREE FORCE testing link on that page and serves the game at `/play/treeforce89/`. It does not change unrelated site content, merge a branch, enable live continuation payments, or reuse a production database. Existing `www` to apex routing remains unchanged. No claim is made that Slush has cleared the native origin.
 
 **Status: deployment `6ae55a0c1aa8c546b7109a41` is published and locked.** After the owner instructed the agent to proceed with the next step, the saved candidate was reverified against the unchanged live baseline and published through the Netlify dashboard. Netlify records publication at `2026-10-31T03:16:30.675Z` (October 30, 10:16 PM America/Chicago). The prior publication blocker is resolved. Canonical-domain automated checks pass; real-holder Slush testing remains pending.
