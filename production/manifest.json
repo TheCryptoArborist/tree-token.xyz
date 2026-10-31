@@ -1166,6 +1166,18 @@
       "source": "dapp/challenge-funding-core.js",
       "sha1": "ec5abe343e8330a19d08404e7ca0bafa924809c5",
       "size": 4037
+    },
+    {
+      "path": "/dapp/victory-layout-review.css",
+      "source": "dapp/victory-layout-review.css",
+      "sha1": "24a991520a6006ce398e3249646209e127517267",
+      "size": 21495
+    },
+    {
+      "path": "/dapp/victory-layout-review.html",
+      "source": "dapp/victory-layout-review.html",
+      "sha1": "55fa74e34094dc48bcca3f5099a6c81749544f11",
+      "size": 81142
     }
   ],
   "functions": [
