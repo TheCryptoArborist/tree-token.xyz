@@ -51,6 +51,12 @@ html { scroll-behavior: smooth; scroll-padding-top: 24px; }
 .floor-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: 20px; padding-top: 21px; border-top: 1px solid #ad9bcd2a; }
 .floor-heading h2 { margin: 5px 0 0; font-size: clamp(23px, 2.5vw, 30px); font-weight: 850; line-height: 1.2; letter-spacing: -.03em; }
 .floor-note { max-width: 340px; margin: 0 0 2px; color: var(--suite-muted); font-size: 11px; line-height: 1.65; text-align: right; }
+.arcade-group { min-width: 0; }
+.arcade-group + .arcade-group { margin-top: 34px; padding-top: 27px; border-top: 1px solid #9baac925; }
+.arcade-group-heading { margin: 0 0 17px; }
+.arcade-group-heading :is(h2, h3), .arcade-group > :is(h2, h3) { margin: 0 0 6px; color: #eaf0fb; font-size: 21px; font-weight: 800; line-height: 1.25; letter-spacing: -.02em; }
+.arcade-group-heading p, .arcade-group > p { margin: 0; color: #aebcd2; font-size: 13px; line-height: 1.6; }
+.arcade-group > p { margin-bottom: 17px; }
 .battle-intro {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -66,13 +72,15 @@ html { scroll-behavior: smooth; scroll-padding-top: 24px; }
 .battle-intro:has(.battle-intro-preview) { grid-template-columns: minmax(0, 1fr) minmax(230px, 300px); }
 .battle-intro-copy { min-width: 0; }
 .battle-intro-copy .suite-eyebrow { color: #abd9bc; font-size: 10px; letter-spacing: .1em; }
-.battle-intro-copy h3 { margin: 5px 0 7px; color: #edf4f2; font-size: 21px; line-height: 1.25; font-weight: 800; letter-spacing: -.02em; }
+.battle-intro-copy :is(h2, h3) { margin: 5px 0 7px; color: #edf4f2; font-size: 21px; line-height: 1.25; font-weight: 800; letter-spacing: -.02em; }
 .battle-intro-copy > p:not(.suite-eyebrow) { max-width: 890px; margin: 0; color: #becbd7; font-size: 14px; line-height: 1.6; }
 .battle-intro-preview { min-width: 0; width: 100%; max-width: 360px; margin: 0; justify-self: end; }
 .battle-preview-link { display: block; overflow: hidden; border: 1px solid #7ea9913c; border-radius: 4px; background: #07110e; }
 .battle-intro-preview img { display: block; width: calc(100% + 4px); max-width: none; height: 126px; max-height: none; object-fit: cover; object-position: 50% 65%; }
 .battle-intro-preview figcaption { margin-top: 6px; color: #a8b8c7; font-size: 11px; line-height: 1.4; }
 .poster-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px; align-items: stretch; }
+.poster-grid > .game-poster { display: flex; flex-direction: column; }
+.poster-grid > .game-poster > .poster-link { flex: 1; }
 .game-poster {
   --poster-accent: #9aefb9; --poster-rgb: 154, 239, 185; --poster-tint: #17372c;
   min-width: 0; position: relative; border: 1px solid rgba(var(--poster-rgb), .25); border-radius: 7px; background: #111624; box-shadow: 0 9px 24px #0003;
@@ -110,7 +118,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 24px; }
 .poster-art.art--wide { width: calc(100% - 18px); height: 171px; }
 .poster-genre { position: absolute; z-index: 3; right: 12px; bottom: 10px; left: 12px; margin: 0; color: var(--poster-accent); font: 700 10px/1.5 var(--suite-mono); letter-spacing: .12em; text-align: center; text-transform: uppercase; }
 .poster-details { display: flex; flex-direction: column; flex: 1; min-width: 0; padding: 16px 17px 17px; background: linear-gradient(155deg, #ffffff02, transparent 55%); }
-.poster-details h3 { margin: 0; color: #f4f5ff; font-size: 19px; font-weight: 900; line-height: 1.15; letter-spacing: -.025em; text-transform: uppercase; overflow-wrap: break-word; }
+.poster-title { margin: 0; color: #f4f5ff; font-size: 19px; font-weight: 900; line-height: 1.15; letter-spacing: -.025em; text-transform: uppercase; overflow-wrap: break-word; }
 .poster-description { min-height: 62px; margin: 9px 0 14px; color: #c0c8dc; font-size: 13px; line-height: 1.6; }
 .poster-cta { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 44px; margin-top: auto; padding: 10px 12px; border: 1px solid rgba(var(--poster-rgb), .6); border-radius: 3px; color: #0a1520; background: var(--poster-accent); font-size: 11px; font-weight: 950; line-height: 1.4; letter-spacing: .055em; text-transform: uppercase; transition: background .18s ease; }
 .poster-cta > span:last-child { font-size: 16px; font-weight: 700; line-height: 1; }
@@ -119,7 +127,7 @@ a.poster-link:hover .poster-cta, a.poster-link:focus-visible .poster-cta { backg
 .poster-coming-art > span { color: var(--poster-accent); font: 700 85px/1 var(--suite-mono); text-shadow: 5px 4px 0 rgba(var(--poster-rgb), .1); }
 .poster-coming-art > small { color: #b2bcd4; font: 10px/1.5 var(--suite-mono); letter-spacing: .16em; }
 .poster--future { border-color: #9ca8ca24; }
-.poster--future .poster-details h3 { color: #d3d7e7; }
+.poster--future .poster-title { color: #d3d7e7; }
 .poster-link--soon .poster-cta { color: #bfc6dc; background: #252d40; border-color: #7d88a52b; }
 .poster-link--soon .poster-cta > span:last-child { font-size: inherit; line-height: inherit; }
 .poster-soon-note { display: flex; align-items: center; min-height: 44px; margin: auto 0 0; padding-top: 10px; border-top: 1px solid #8998b32b; color: #aeb8ce; font-size: 12px; line-height: 1.5; }
@@ -169,16 +177,17 @@ a.poster-link:hover .poster-cta, a.poster-link:focus-visible .poster-cta { backg
 .suite-footer p { margin: 0; }
 .suite-footer a { display: inline-flex; align-items: center; gap: 5px; min-height: 44px; text-underline-offset: 4px; }
 
-/* The welcome guide spans the full width below the eight game posters. */
+/* The welcome guide follows both game groups at the full available width. */
 .suite-access.suite-welcome {
   grid-column: 1 / -1;
+  width: 100%;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-content: center;
   align-items: start;
   gap: 24px;
   min-width: 0;
-  margin: 0;
+  margin: 30px 0 0;
   padding: clamp(25px, 3vw, 40px);
   border-color: #9ccca82e;
   background: radial-gradient(ellipse at 100% 0, #6d936414, transparent 60%), linear-gradient(135deg, #141e25, #101522 65%);
@@ -204,7 +213,7 @@ a.poster-link:hover .poster-cta, a.poster-link:focus-visible .poster-cta { backg
   .suite-main, .suite-header-inner { width: calc(100% - 44px); }
   .poster-grid { gap: 17px; }
   .poster-details { padding: 14px; }
-  .poster-details h3 { font-size: 17px; }
+  .poster-title { font-size: 17px; }
   .poster-description { font-size: 13px; }
   .poster-topline { right: 9px; left: 9px; gap: 5px; }
   .poster-number { font-size: 10px; letter-spacing: 0; }
@@ -222,7 +231,7 @@ a.poster-link:hover .poster-cta, a.poster-link:focus-visible .poster-cta { backg
   .poster-number, .status-tag { font-size: 10px; }
   .status-tag { padding: 4px 6px; }
   .poster-details { padding: 18px; }
-  .poster-details h3 { font-size: 21px; }
+  .poster-title { font-size: 21px; }
   .poster-description { min-height: 42px; font-size: 14px; }
   .poster-cta { min-height: 44px; font-size: 12px; }
   .poster--battle .poster-description { min-height: 68px; font-size: 14px; }
@@ -244,7 +253,7 @@ a.poster-link:hover .poster-cta, a.poster-link:focus-visible .poster-cta { backg
   .suite-hero { padding-top: 18px; }
   .suite-intro { max-width: 550px; font-size: 12px; }
   .battle-intro, .battle-intro:has(.battle-intro-preview) { grid-template-columns: minmax(0, 1fr); gap: 15px; padding: 17px 19px; }
-  .battle-intro-copy h3 { font-size: 20px; }
+  .battle-intro-copy :is(h2, h3) { font-size: 20px; }
   .battle-intro-preview { max-width: 420px; justify-self: start; }
   .battle-intro-preview img { height: 126px; }
   .poster-grid { gap: 18px; }
@@ -252,7 +261,7 @@ a.poster-link:hover .poster-cta, a.poster-link:focus-visible .poster-cta { backg
   .poster-art { height: 156px; }
   .poster-art.art--wide { height: 160px; width: calc(100% - 20px); }
   .poster-details { padding: 15px; }
-  .poster-details h3 { font-size: 19px; }
+  .poster-title { font-size: 19px; }
   .poster-topline { right: 10px; left: 10px; }
   .poster-number, .status-tag { font-size: 10px; }
   .poster-description { min-height: 59px; }
@@ -278,6 +287,9 @@ a.poster-link:hover .poster-cta, a.poster-link:focus-visible .poster-cta { backg
   .floor-heading { flex-direction: column; align-items: flex-start; gap: 9px; padding-top: 20px; margin-bottom: 18px; }
   .floor-heading h2 { font-size: 25px; }
   .floor-note { max-width: none; font-size: 11px; text-align: left; }
+  .arcade-group + .arcade-group { margin-top: 28px; padding-top: 23px; }
+  .arcade-group-heading { margin-bottom: 16px; }
+  .arcade-group-heading :is(h2, h3), .arcade-group > :is(h2, h3) { font-size: 20px; }
   .battle-intro { margin-bottom: 20px; padding: 17px; }
   .battle-intro-copy > p:not(.suite-eyebrow) { font-size: 13px; }
   .battle-intro-preview figcaption { font-size: 11px; }
@@ -291,7 +303,7 @@ a.poster-link:hover .poster-cta, a.poster-link:focus-visible .poster-cta { backg
   .poster-number, .status-tag { font-size: 10px; }
   .poster-genre { bottom: 11px; font-size: 11px; }
   .poster-details { padding: 18px; }
-  .poster-details h3 { font-size: 22px; }
+  .poster-title { font-size: 22px; }
   .poster-description { min-height: 0; font-size: 13px; margin-top: 8px; margin-bottom: 15px; }
   .poster--battle .poster-artwork { height: 210px; }
   .poster--battle .poster-art { height: 166px; }
@@ -307,7 +319,7 @@ a.poster-link:hover .poster-cta, a.poster-link:focus-visible .poster-cta { backg
   .access-actions { grid-column: 1 / -1; }
   .access-actions a { flex: 1; padding-right: 9px; padding-left: 9px; min-height: 44px; }
   .suite-footer { flex-direction: column; gap: 7px; padding: 22px 18px; }
-  .suite-access.suite-welcome { grid-column: 1 / -1; padding: 24px 21px; gap: 22px; }
+  .suite-access.suite-welcome { grid-column: 1 / -1; margin-top: 26px; padding: 24px 21px; gap: 22px; }
   .suite-welcome .welcome-intro { grid-row: auto; }
   .suite-tagline { font-size: 14px; }
 }
@@ -322,7 +334,7 @@ a.poster-link:hover .poster-cta, a.poster-link:focus-visible .poster-cta { backg
   .poster--battle .poster-art { height: 154px; }
   .poster-number, .status-tag { font-size: 10px; }
   .poster-details { padding: 16px; }
-  .poster-details h3 { font-size: 21px; }
+  .poster-title { font-size: 21px; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
