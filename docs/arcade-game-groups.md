@@ -23,4 +23,10 @@ The current MystenLabs/skills README remains blob `8be2c5d51d94c953a007e286f63df
 
 The baseline is locked production deployment `6ae6175066e3bb789eca5a69`. Only `/play/index.html` and `/styles/tree-arcade-suite.css` change. The release requires all 232 public paths, the other 230 static files unchanged, all 39 complete function records, all five schedules, the original runtime context and isolated database binding, enabled paid continues, and the publication lock. No new public paths, backend builds, game logic changes, wallet changes, or migrations are included.
 
-Source branch: `feature/arcade-game-groups-20261031`. The new candidate will be reviewed before publication; final deployment identity, inventory and visual evidence will be recorded after the authorized release.
+## Published release
+
+Reviewed source `82f485ed8cf90bd8b28213587c26610605f83cc3` on `feature/arcade-game-groups-20261031` was published as locked deployment `6ae621b628540d6446e7ad84` on October 31, 2026 at 17:14:08 UTC. The bounded release verified all 232 paths, the other 230 static files unchanged, all 39 complete function records, all five schedules, the runtime context and database binding, enabled paid continues, no migrations, and the publication lock.
+
+The canonical `https://tree-token.xyz/play/` page was checked after publication. Both groups contain four posters in the requested order. All six game links are correct, two future slots are present, the practice image loads, and TREE FORCE LIVE remains red. No horizontal overflow was present.
+
+The full deployment inventory and backend preservation record is in `arcade-game-groups-published.json`. Live visual evidence is saved in `review/arcade-game-groups-live-top-6ae621b6.jpg` and `review/arcade-game-groups-live-battles-6ae621b6.jpg`.
