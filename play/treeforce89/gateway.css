@@ -1,5 +1,8 @@
 /* Presentation only. Authentication, wallet UI and gameplay use the pinned bundles. */
 .gateway-intro { display: none; }
+.continuation-review input { width: 100%; padding: 10px; margin-top: 7px; border: 1px solid #718265; border-radius: 6px; background: #09170f; color: #fff7df; font: inherit; }
+.continuation-review a { color: #d7ef9c; font-size: 12px; }
+.continuation-review > button:not(:last-child):not(:disabled) { background: #c9ef8a; color: #12250c; }
 body:has(.nftree-gateway[aria-label="NFTree Gateway"]) {
   min-height: 100svh;
   display: grid;

@@ -5,6 +5,7 @@ import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
 import {zipFunctions} from '@netlify/zip-it-and-ship-it';
 import {styleTreeForceGateway} from './style-treeforce89-gateway.mjs';
+import {applyPaidContinue} from './apply-treeforce89-paid-continue.mjs';
 
 const root=resolve(import.meta.dirname,'..');
 const source=resolve(root,'.netlify/treeforce89-pinned');
@@ -23,6 +24,7 @@ for(const name of ['gateway-client.mjs','continuation-review-client.mjs']) {
   writeFileSync(path,original.replaceAll('/.netlify/functions/tree-','/play/treeforce89/api/tree-'));
 }
 rmSync(resolve(source,'dist'),{recursive:true,force:true});
+applyPaidContinue(source);
 run('npm',['run','build','--','--base','/play/treeforce89/'],source);
 run('node',['scripts/verify-treeforce89-staged-assets.mjs',resolve(source,'dist')]);
 cpSync(resolve(source,'dist'),resolve(stage,'play/treeforce89'),{recursive:true});

@@ -1,4 +1,5 @@
-import {createIntegratedGatewayHandler,getGatewayServices} from '../preview-lib/treeforce89-gateway.mjs';
+import {createIntegratedGatewayHandler,getGatewayServices,getPaidContinueService,paidContinuesEnabled} from '../preview-lib/treeforce89-gateway.mjs';
+import {createPaidContinueHttpHandler,paidContinueSchemaReady} from '../preview-lib/treeforce89-paid-continue.mjs';
 import {canonicalDevelopmentRequestAllowed,getCanonicalDevelopmentDatabase} from '../preview-lib/treeforce89-database.mjs';
 import {inspectTreeForceSchema} from '../../scripts/lib/treeforce89-schema.mjs';
 
@@ -13,14 +14,16 @@ export default async function handler(request,context) {
   if(!canonicalDevelopmentRequestAllowed(build,context,request))
     return Response.json({enabled:false,authorized:false},{status:503,headers});
   const path=new URL(request.url).pathname.slice('/play/treeforce89/api/'.length);
-  if(path==='tree-continue'||path==='tree-continue-offer')
-    return Response.json({enabled:false,authorized:false,paymentsEnabled:false},{status:503,headers});
+  if(['tree-continue','tree-continue-offer','tree-continue-recover'].includes(path))
+    return createPaidContinueHttpHandler({action:path==='tree-continue-offer'?'offer':'redeem',
+      getService:()=>getPaidContinueService(new URL(request.url).origin,getCanonicalDevelopmentDatabase)})(request);
   if(path==='status') {
     try {
       const {pool}=getCanonicalDevelopmentDatabase();
       const schema=await inspectTreeForceSchema(pool);
+      const paymentSchemaReady=await paidContinueSchemaReady(pool);
       return Response.json({schemaReady:schema.schemaReady,tableCount:schema.tableCount,
-        isolationVerified:true,paymentsEnabled:false},{status:schema.schemaReady?200:503,headers});
+        isolationVerified:true,paymentSchemaReady,paymentsEnabled:paymentSchemaReady&&paidContinuesEnabled()},{status:schema.schemaReady?200:503,headers});
     } catch {
       return Response.json({schemaReady:false,paymentsEnabled:false},{status:503,headers});
     }

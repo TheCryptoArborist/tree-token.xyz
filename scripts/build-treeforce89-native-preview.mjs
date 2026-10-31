@@ -3,6 +3,7 @@ import {resolve} from 'node:path';
 import {mkdirSync,rmSync,cpSync} from 'node:fs';
 import {rebaseTreeForceAssets} from './rebase-treeforce89-assets.mjs';
 import {styleTreeForceGateway} from './style-treeforce89-gateway.mjs';
+import {applyPaidContinue} from './apply-treeforce89-paid-continue.mjs';
 
 const root=resolve(import.meta.dirname,'..');
 const pinned='a38e08e37e1f71ea41b86add8e26a92b0789cf22';
@@ -16,10 +17,11 @@ run('git',['checkout','--quiet','--detach','FETCH_HEAD'],source);
 if(execFileSync('git',['rev-parse','HEAD'],{cwd:source,encoding:'utf8'}).trim()!==pinned)
   throw Error('Pinned TREE FORCE source mismatch');
 
-// Only rebase the seven Phaser static asset URLs. Wallet and transaction
-// source is preserved byte-for-byte from the pinned game repository.
+// Preserve the pinned wallet setup and dependency lock. The explicit paid
+// continuation overlay below adds checkout and resume behavior separately.
 rebaseTreeForceAssets(source);
 run('npm',['ci','--ignore-scripts','--no-audit','--no-fund'],source);
+applyPaidContinue(source);
 run('npm',['run','build','--','--base','/play/treeforce89/'],source);
 run('node',[resolve(root,'scripts/verify-treeforce89-staged-assets.mjs'),resolve(source,'dist')],root);
 rmSync(destination,{recursive:true,force:true});mkdirSync(destination,{recursive:true});
