@@ -39,7 +39,8 @@ program.command('treeforce-release').action(async(options,command)=>{
  for(const file of input.files){
    assert(file.path==='/play/index.html'||file.path.startsWith('/play/treeforce89/'));
    if(file.path!=='/play/index.html')assert(!Object.hasOwn(files,file.path),'Refuse an existing path overwrite');
-   assert.equal(digest('sha1',readFileSync(file.source)),file.sha);files[file.path]=file.sha;
+   // Netlify normalizes uploaded asset paths to lowercase in its inventory.
+   assert.equal(digest('sha1',readFileSync(file.source)),file.sha);files[file.path.toLowerCase()]=file.sha;
  }
  const current=await api.getSite({siteId});
  const original=await api.getDeploy({deployId:baseline.deploy.id});
@@ -120,7 +121,7 @@ program.command('treeforce-release').action(async(options,command)=>{
  const report={id,baseline:original.id,mode,context:candidate.context,branchLabel:candidate.branch,
    sourceBranch:evidence.branch,sourceCommit:git('rev-parse','HEAD'),files:Object.keys(files).length,
    originalStaticFilesPreserved:baseline.files.length-1,changedExistingPaths:['/play/index.html'],
-   newPaths:input.files.filter(f=>!Object.hasOwn(originalFiles,f.path)).map(f=>f.path),
+   newPaths:input.files.filter(f=>!Object.hasOwn(originalFiles,f.path)).map(f=>f.path.toLowerCase()),
    existingFunctionsPreserved:38,schedulesPreserved:5,newFunctions:['treeforce89-dev'],
    databaseIdentity:evidence.previewDatabaseIdentity,serverOnlySecret:true,paymentsEnabled:false};
  writeFileSync(resolve(root,'.netlify/treeforce89-canonical-verification.json'),JSON.stringify(report,null,2));
