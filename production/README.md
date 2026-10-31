@@ -1,3 +1,39 @@
+# Current production — TREE FORCE Daily Growth participation, 2026-10-31
+
+Deployment `6ae666a66f1d3899025a76af` is published on `tree-token.xyz` and locked.
+Application source: `f2e98d68aa32f65a9fa4f5e09411669821fdcfd0`.
+Final release-verification source: `4f3b47a9319695758a4efd36815be116492d08c5`.
+
+A fresh authenticated TREE FORCE ’89 run reports participation when its first
+wave starts. One daily quest is saved per wallet and UTC day; the same original
+run and paid continues cannot earn another day's credit. This is authenticated
+participation reporting, not verified completion. The three required Garden
+Passport games remain unchanged; TREE FORCE adds an optional stamp.
+
+The complete current inventory is `docs/treeforce-participation-published.json`:
+241 public paths, all 237 prior paths retained, 233 prior file hashes unchanged,
+40 functions with only `arcade-growth` replaced, and all five schedules retained.
+The existing TREE FORCE server, isolated game database, root dependency lock,
+and wallet/payment modules are unchanged. The new Growth migration and its
+production verification are recorded in `docs/treeforce-participation-database.json`.
+
+The exact new function ZIP is archived under `production/treeforce-participation`.
+Use the bounded release workflow; the older `production/manifest.json` remains the
+historical recovery/parity baseline and is not this release's full live inventory.
+The revised function retains its Ohio runtime; Netlify assigned a new provider
+account and recorded that same region explicitly. The complete replacement
+record and exact region arrays are pinned in release evidence.
+
+Validation passed: 105 focused checks, four actual-packaged-runtime scenarios,
+the development database rollback suites, eight canonical API checks, native
+first-wave browser scenarios, and desktop/320px/390px visual checks. All eight
+changed/added public files match their reviewed bytes, accounting only for the
+exact existing hosting HTML snippet on the two HTML pages. No owner wallet was
+used, no synthetic production progress was granted, and no transaction was sent.
+See `docs/treeforce-participation-verification.json` for evidence and limits.
+
+---
+
 # Current production — validated VICTORY reward display, 2026-10-06
 
 Deployment `6ac58a83cdbea77d7a4a7336` is published and locked. Source commit `359e39ec17b0b437606abe3275b42df2bbc01a79` (PR #53). This frontend-only follow-up removes fallback to legacy reward analytics: reward APR remains unavailable whenever the on-chain incentive validation fails. The regression fixture includes a legacy analytics object marked verified alongside unavailable incentives.
