@@ -64,7 +64,6 @@ html { scroll-behavior: smooth; scroll-padding-top: 24px; }
 .poster--force { --poster-accent: #98e9ef; --poster-rgb: 152, 233, 239; --poster-tint: #193641; }
 .poster--future { --poster-accent: #bab3d7; --poster-rgb: 186, 179, 215; --poster-tint: #24243b; }
 .future--two { --poster-accent: #b0c7d8; --poster-rgb: 176, 199, 216; --poster-tint: #20313d; }
-.future--three { --poster-accent: #d2bdab; --poster-rgb: 210, 189, 171; --poster-tint: #342a29; }
 .game-poster:has(a.poster-link):hover { transform: translateY(-4px); border-color: rgba(var(--poster-rgb), .8); box-shadow: 0 14px 32px #0006, 0 0 19px rgba(var(--poster-rgb), .08); }
 .game-poster:focus-within { border-color: #fff1ac; box-shadow: 0 0 0 1px #fff1ac; }
 .poster-link { display: flex; flex-direction: column; height: 100%; min-height: 384px; border-radius: inherit; color: inherit; text-decoration: none; }
@@ -140,9 +139,9 @@ a.poster-link:hover .poster-cta, a.poster-link:focus-visible .poster-cta { backg
 .suite-footer p { margin: 0; }
 .suite-footer a { display: inline-flex; align-items: center; gap: 5px; min-height: 44px; text-underline-offset: 4px; }
 
-/* The welcome guide fills the remainder of the last row without adding a slot. */
+/* The welcome guide spans the full width below the eight game posters. */
 .suite-access.suite-welcome {
-  grid-column: span 3;
+  grid-column: 1 / -1;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-content: center;
@@ -196,7 +195,7 @@ a.poster-link:hover .poster-cta, a.poster-link:focus-visible .poster-cta { backg
   .poster-details h3 { font-size: 21px; }
   .poster-description { min-height: 42px; font-size: 14px; }
   .poster-cta { min-height: 44px; font-size: 12px; }
-  .suite-access.suite-welcome { grid-column: span 1; grid-template-columns: minmax(0, 1fr); gap: 18px; padding: 24px; }
+  .suite-access.suite-welcome { grid-template-columns: minmax(0, 1fr); gap: 18px; padding: 24px; }
   .suite-welcome .welcome-mark { display: none; }
   .suite-welcome .welcome-intro { grid-column: 1; }
   .suite-welcome h2 { font-size: 24px; }
