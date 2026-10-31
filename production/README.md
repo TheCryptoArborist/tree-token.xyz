@@ -1,4 +1,18 @@
-# Current production — TREE FORCE integrated home and wallets, 2026-10-31
+# Current production — TREE FORCE arcade access panels, 2026-10-31
+
+Deployment `6ae5792ec3afc583dd99b5ea` was published at `2026-10-31T05:16:21.403Z` and is locked. Source is `41b26cc95bb45da98c9e3b82f27fc9c02835d405` on `feature/treeforce89-play-integration`. Neither main branch was changed or merged.
+
+The game home now uses an illuminated green Connect Sui wallet panel and a purple Verify NFTree & Play panel, with step badges, wallet/shield icons, launch arrows and restrained glow. Pending verification has its own label. Reduced-motion preferences disable the new animation and transitions.
+
+Only `/play/treeforce89/gateway.css` changes from `6ae574cbd07fdb22146e6265`. All other 215 static files, including every HTML and JavaScript file, all 39 complete backend package/provider/runtime/configuration records and all five schedules match exactly. No migrations or dependency changes. The same server-only isolated database binding and enabled-payment flag are retained. The live inventory contains 216 files and 39 functions.
+
+All four implementation workflows passed. CSS parsing, labelled read-only visual samples of both states, the actual preview home and chooser, canonical home review, candidate hosted authentication/payment-negative smoke checks, exact canonical CSS bytes and the complete published preservation checks passed. The style samples do not test a real connected wallet. No real holder session or payment was signed or submitted by the assistant.
+
+See `docs/treeforce89-access-style.md`, its adjacent `-checks.json`, `-live-css.json`, and `-published.json` (complete static/function/schedule inventory). Preserve this complete live inventory on subsequent releases.
+
+---
+
+# Previous production — TREE FORCE integrated home and wallets, 2026-10-31
 
 Deployment `6ae574cbd07fdb22146e6265` was published at `2026-10-31T04:57:27.936Z` and is locked. Source is `e43680791b98a6a83e308f5a797a068a8f7063ab` on `feature/treeforce89-play-integration`. Neither main branch was changed or merged.
 
