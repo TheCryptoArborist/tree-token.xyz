@@ -7,6 +7,7 @@ export const retroPreviewFiles = [
   "play/retro/artwork/robotfindskitten.png",
   "play/retro/artwork/zorchenrunner.png",
   "play/retro/catalog.json",
+  "play/retro/controller.js",
   "play/retro/core.js",
   "play/retro/credits.html",
   "play/retro/games/falling.nes",

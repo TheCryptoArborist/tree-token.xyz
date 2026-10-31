@@ -1,12 +1,12 @@
 import { ENGINE, MAX_STATE_BYTES, inspectRom, sha256 } from './core.js';
-let session, rom, started = false, paused = false, browser;
+import { createButtonLatch } from './controller.js';
+let session, rom, started = false, paused = false, browser, controller;
 const $ = id => document.getElementById(id);
 const reply = (type, extra = {}) => parent.postMessage({ type, session, ...extra }, location.origin);
-const pressed = new Map();
 function releaseAll() {
   if (!browser) return;
+  controller?.releaseAll();
   for (let i = 0; i < 8; i++) browser.nes.buttonUp(1, i);
-  pressed.clear();
   document.querySelectorAll('.held').forEach(button => button.classList.remove('held'));
 }
 function pause(value) {
@@ -26,17 +26,22 @@ function failed(message) {
 $('start-game').addEventListener('click', () => {
   try {
     browser = new window.jsnes.Browser({ container: $('screen'), onError: error => failed(error.message || 'This ROM could not run. Try another game.') });
+    controller = createButtonLatch(browser.nes);
+    const runFrame = browser.nes.frame.bind(browser.nes);
+    browser.nes.frame = () => { runFrame(); controller.afterFrame(); };
     browser.nes.opts.emulateSound = $('sound').checked;
     browser.loadROM(rom);
     started = true;
     $('loading').hidden = true;
     for (const button of document.querySelectorAll('[data-button], #restart')) button.disabled = false;
     $('screen').focus();
+    $('playback-status').textContent = 'Playing · click START below or press Enter to begin';
     reply('TREE_RETRO_STARTED', { engine: ENGINE });
   } catch (error) { browser?.destroy(); browser = null; failed(error.message || 'This game could not start.'); }
 });
 $('restart').addEventListener('click', () => {
   if (!started) return;
+  releaseAll();
   browser.nes.reloadROM();
   pause(false);
   $('screen').focus();
@@ -47,22 +52,33 @@ $('sound').addEventListener('change', event => {
 for (const button of document.querySelectorAll('[data-button]')) {
   const number = Number(button.dataset.button);
   button.addEventListener('pointerdown', event => {
-    if (!started) return;
+    if (!started || paused || event.button !== 0) return;
     event.preventDefault();
     button.setPointerCapture(event.pointerId);
-    if (!pressed.has(number)) pressed.set(number, new Set());
-    pressed.get(number).add(event.pointerId);
-    browser.nes.buttonDown(1, number);
+    controller.press(number, `pointer:${event.pointerId}`);
     button.classList.add('held');
   });
   const up = event => {
-    const pointers = pressed.get(number);
-    pointers?.delete(event.pointerId);
-    if (!pointers?.size) { pressed.delete(number); browser?.nes.buttonUp(1, number); button.classList.remove('held'); }
+    controller?.release(number, `pointer:${event.pointerId}`, event.type === 'pointercancel');
+    button.classList.remove('held');
   };
   for (const name of ['pointerup','pointercancel','lostpointercapture']) button.addEventListener(name, up);
-  button.addEventListener('keydown', event => { if (['Enter',' '].includes(event.key) && started) { event.preventDefault(); browser.nes.buttonDown(1, number); } });
-  button.addEventListener('keyup', event => { if (['Enter',' '].includes(event.key) && started) { event.preventDefault(); browser.nes.buttonUp(1, number); } });
+  button.addEventListener('keydown', event => {
+    if (!['Enter',' '].includes(event.key)) return;
+    event.preventDefault(); event.stopPropagation();
+    if (started && !paused) controller.press(number, `key:${event.key}`);
+  });
+  button.addEventListener('keyup', event => {
+    if (!['Enter',' '].includes(event.key)) return;
+    event.preventDefault(); event.stopPropagation();
+    controller?.release(number, `key:${event.key}`);
+  });
+  // Assistive technology can activate a button without pointer/key events.
+  button.addEventListener('click', event => {
+    if (event.detail !== 0 || !started || paused) return;
+    controller.press(number, 'activate');
+    controller.release(number, 'activate');
+  });
 }
 window.addEventListener('blur', releaseAll);
 window.addEventListener('resize', () => browser?.fitInParent());

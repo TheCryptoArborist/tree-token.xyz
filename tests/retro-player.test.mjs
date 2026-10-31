@@ -6,6 +6,7 @@ import { relative, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { ENGINE, MAX_ROM_BYTES, inspectRom, sha256, makeBackup, readBackup } from '../play/retro/core.js';
 import { retroPreviewFiles } from '../scripts/retro-preview-files.mjs';
+import { createButtonLatch } from '../play/retro/controller.js';
 
 const root = new URL('../', import.meta.url);
 const rom = new Uint8Array(readFileSync(new URL('play/retro/games/falling.nes', root)));
@@ -112,6 +113,54 @@ test('a long file dialog cannot create an unbounded frame catch-up queue', () =>
   timer.generateFrame();
   timer.onAnimationFrame(20 * 60 * 1000);
   assert.equal(frames, 3, 'paused callbacks do not change the saved game');
+});
+
+test('a mouse click completed between frames stays pressed for three emulated frames', () => {
+  const events = [];
+  const latch = createButtonLatch({ buttonDown: (...args) => events.push(['down', ...args]), buttonUp: (...args) => events.push(['up', ...args]) });
+  latch.press(3, 'pointer:1');
+  latch.release(3, 'pointer:1');
+  latch.release(3, 'pointer:1'); // Automatic lost capture must not erase the pending tap.
+  assert.deepEqual(events, [['down', 1, 3]]);
+  latch.afterFrame(); latch.afterFrame();
+  assert.equal(events.length, 1);
+  latch.afterFrame();
+  assert.deepEqual(events, [['down', 1, 3], ['up', 1, 3]]);
+});
+
+test('held buttons, overlapping inputs, cancellation, and pause cleanup do not leave stuck keys', () => {
+  const held = new Set();
+  const latch = createButtonLatch({ buttonDown: (_, number) => held.add(number), buttonUp: (_, number) => held.delete(number) });
+  latch.press(0, 'pointer:1'); latch.press(0, 'pointer:2');
+  for (let i = 0; i < 8; i++) latch.afterFrame();
+  latch.release(0, 'pointer:1');
+  assert.ok(held.has(0));
+  latch.release(0, 'pointer:2');
+  assert.equal(held.size, 0);
+  latch.press(3, 'pointer:1'); latch.release(3, 'pointer:1', true);
+  assert.equal(held.size, 0, 'cancelled gestures release immediately');
+  latch.press(7, 'key:Enter'); latch.release(7, 'key:Enter');
+  latch.press(0, 'pointer:2'); latch.releaseAll();
+  for (let i = 0; i < 5; i++) latch.afterFrame();
+  assert.equal(held.size, 0, 'pause/blur clears both held and queued input');
+});
+
+test('a zero-duration START click begins Ralph 4 through the same latch used by the player', () => {
+  const context = { module: { exports: {} }, exports: {}, console };
+  runInNewContext(readFileSync(new URL('play/retro/vendor/jsnes-2.1.0/jsnes.min.js', root), 'utf8'), context);
+  const gameRom = new Uint8Array(readFileSync(new URL('play/retro/games/ralph-4.nes', root)));
+  const run = latched => {
+    let pixels;
+    const nes = new context.module.exports.NES({ emulateSound: false, onFrame: frame => { pixels = Array.from(frame); } });
+    nes.loadROM(gameRom);
+    const latch = createButtonLatch(nes);
+    for (let i = 0; i < 120; i++) nes.frame();
+    if (latched) { latch.press(3, 'mouse'); latch.release(3, 'mouse'); }
+    else { nes.buttonDown(1, 3); nes.buttonUp(1, 3); }
+    for (let i = 0; i < 90; i++) { nes.frame(); latch.afterFrame(); }
+    return pixels;
+  };
+  assert.notDeepEqual(run(true), run(false), 'fast START now leaves the title screen');
 });
 
 test('preview inventory includes every shipped retro file and pinned third-party bytes', async () => {
