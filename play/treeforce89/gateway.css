@@ -142,6 +142,7 @@ body .nftree-gateway[aria-label="NFTree Gateway"] button:not(.nftree-secondary):
 .nftree-home-access [role=alert]{color:#ffb4a9;overflow-wrap:anywhere}
 .home-wallet-picker{width:min(430px,calc(100vw - 24px));max-height:calc(100dvh - 32px);overflow-y:auto;padding:22px;border:1px solid #688051;border-radius:16px;background:#102018;color:#f2f6e9;box-shadow:0 25px 90px #000a;text-align:left;font-family:Verdana,Arial,sans-serif;touch-action:pan-y}
 .home-wallet-picker::backdrop{background:#020906c9;backdrop-filter:blur(3px)}
+.home-wallet-picker{margin:auto}
 .home-wallet-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .home-wallet-heading>div>span{font-size:9px;letter-spacing:.18em;color:#b6d88b}
 .home-wallet-heading h2{margin:6px 0 10px;color:#f2f6e9;font-size:23px;line-height:1.25}

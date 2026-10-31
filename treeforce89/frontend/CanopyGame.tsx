@@ -27,5 +27,5 @@ export default function CanopyGame({homeOnly=false,serverRunId,initialScene='tit
     });
     return()=>{cancelled=true;game?.destroy(true);};
   },[homeOnly,serverRunId,initialScene,resumeRun]);
-  return <div ref={mount} className="phaser-mount" aria-label="Playable TREE FORCE '89 game"/>;
+  return <div ref={mount} className="phaser-mount" aria-label={homeOnly?"TREE FORCE '89 home screen":"Playable TREE FORCE '89 game"}/>;
 }

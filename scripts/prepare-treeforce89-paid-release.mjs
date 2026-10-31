@@ -16,6 +16,12 @@ writeFileSync(gatewayPath,execFileSync('git',['show',pin+':app/game/gateway-clie
  .replaceAll('/.netlify/functions/tree-','/play/treeforce89/api/tree-'));
 rmSync(resolve(source,'dist'),{recursive:true,force:true});
 execFileSync('npm',['run','build','--','--base','/play/treeforce89/'],{cwd:source,stdio:'inherit'});
+const compiledPaths=new Set();
+function compiled(dir,rel=''){for(const name of readdirSync(dir)){
+ const path=join(dir,name),relative=join(rel,name);
+ if(statSync(path).isDirectory())compiled(path,relative);else compiledPaths.add(relative);
+}}
+compiled(resolve(source,'dist'));
 rmSync(stage,{recursive:true,force:true});mkdirSync(stage,{recursive:true});
 cpSync(resolve(source,'dist'),resolve(stage,'play/treeforce89'),{recursive:true});
 styleTreeForceGateway(resolve(stage,'play/treeforce89'));
@@ -29,7 +35,9 @@ const built=await zipFunctions(resolve(root,'netlify/canonical-development-funct
 assert.equal(built.length,1);const fn=built[0];assert.equal(fn.name,'treeforce89-dev');
 const files=[];function walk(dir,rel=''){for(const name of readdirSync(dir)){
  const path=join(dir,name),relative=join(rel,name);if(statSync(path).isDirectory())walk(path,relative);
- else files.push({path:'/play/'+relative,source:path,sha:createHash('sha1').update(readFileSync(path)).digest('hex')});
+ else if(relative==='index.html'||relative==='treeforce89/gateway.css'||
+  (relative.startsWith('treeforce89/')&&compiledPaths.has(relative.slice('treeforce89/'.length))))
+  files.push({path:'/play/'+relative,source:path,sha:createHash('sha1').update(readFileSync(path)).digest('hex')});
 }}walk(resolve(stage,'play'));
 const report={files,function:{name:fn.name,path:fn.path,sha256:createHash('sha256').update(readFileSync(fn.path)).digest('hex'),
  runtime:fn.runtimeVersion,invocationMode:fn.invocationMode,buildData:fn.buildData||{bootstrapVersion:fn.bootstrapVersion,runtimeAPIVersion:fn.runtimeAPIVersion},routes:fn.routes,trafficRules:fn.trafficRules}};
