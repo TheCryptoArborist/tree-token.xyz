@@ -233,6 +233,7 @@ function baselineFunction(functions){
  check(Array.isArray(functions)&&functions.length===40&&new Set(functions.map(fn=>fn.n)).size===40,'The function baseline must contain 40 unique full records.');
  const fn=functions.find(value=>value.n===replacementFunctionName);
  check(Boolean(fn),'The existing Daily Growth function is missing from the baseline.');
+ check(typeof fn.a==='string'&&/^\d{12}$/.test(fn.a),'The original function provider account must be a 12-digit AWS account string.');
  return fn;
 }
 export function configurationWithReplacement(functions,functionPackage){
@@ -258,22 +259,31 @@ export function verifyFunctionRecords(candidateFunctions,baselineFunctions,funct
   'An unrelated full function package/provider/runtime/configuration record changed.');
  const fn=candidateFunctions.find(value=>value.n===replacementFunctionName);
  check(fn?.d===functionPackage.sha256&&fn.r==='nodejs22.x'&&fn.im==='stream','The replacement-function digest, runtime, or invocation mode differs from its reviewed package.');
+ check(typeof fn.a==='string'&&/^\d{12}$/.test(fn.a),'The replacement function provider account must be a 12-digit AWS account string.');
  equal(fn.bd,functionPackage.buildData,'The replacement-function bootstrap/runtime API metadata changed.');
  const routes=(fn.ro||[]).map(route=>({pattern:route.p,literal:route.l,methods:route.m||[],
   ...(route.e!=null?{expression:route.e}:{}),...(route.ps?{prefer_static:true}:{})}));
  equal(routes,functionPackage.routes,'The replacement-function public route or methods changed.');
  equal(fn.tr,functionPackage.trafficRulesForApi,'The replacement-function rate limiting changed.');
- check((fn.m??fn.mo)===1024&&(fn.rg??fn.rgo)==='us-east-2','The replacement function unexpectedly changes the default memory or region.');
+ check((fn.m??fn.mo)===1024&&(fn.rg??fn.rgo)==='us-east-2'&&
+  (fn.mo==null||fn.mo===1024)&&(fn.rgo==null||fn.rgo==='us-east-2'),
+  'The replacement function unexpectedly changes the default memory, region, or their overrides.');
  check(!fn.g&&!fn.dn&&!(fn.er?.length)&&!(fn.es?.length),'The replacement function unexpectedly adds generator, excluded routes, or event subscriptions.');
  const stableRecord=record=>{
   const stable={...record,m:record.m??record.mo,rg:record.rg??record.rgo};
-  // Repackaging gives this function a new provider identity, timestamp, size,
-  // and possibly observability revision. Its complete runtime/config stays fixed.
-  for(const key of ['d','id','c','s','bd','oid','oblv','mo','rgo'])delete stable[key];
+  // CLI 27.16.1 uses fn.a as the function-log account_id. Netlify selects this
+  // provider placement; the upload API does not accept an account selection.
+  // Only this replaced function may receive new provider identity/placement.
+  // Its complete record (including a) is pinned after the first verification.
+  for(const key of ['d','id','a','c','s','bd','oid','oblv','mo','rgo'])delete stable[key];
   return stable;
  };
  equal(stableRecord(fn),stableRecord(original),'The replaced function changed an unapproved provider, runtime, route, or configuration field.');
  return fn;
+}
+
+export function verifyPinnedReplacementRecord(record,pinnedRecord){
+ if(pinnedRecord)equal(record,pinnedRecord,'The previously verified replacement-function provider/configuration record changed.');
 }
 
 export function verifyFunctionUploadDemand(requiredFunctions,functionPackage){
@@ -445,7 +455,7 @@ async function runRelease(api,fetch){
   check(candidate.id===state.id&&candidate.state==='ready'&&candidate.site_id===siteId,'Candidate is not ready on the expected site.');
   equal(await inventory(state.id),files,'Candidate static inventory differs from the exact arcade overlay.');
   const replacementFunctionRecord=verifyFunctionRecords(candidate.available_functions,baseline.deploy.available_functions,functionPackage);
-  if(state.replacementFunctionRecord)equal(replacementFunctionRecord,state.replacementFunctionRecord,'The previously verified replacement-function provider/configuration record changed.');
+  verifyPinnedReplacementRecord(replacementFunctionRecord,state.replacementFunctionRecord);
   equal(candidate.function_schedules,baseline.deploy.function_schedules,'Candidate scheduled jobs changed.');
   equal(candidate.functions_region,baseline.deploy.functions_region,'Candidate function region changed.');
   equal(candidate.functions_region_overrides,baseline.deploy.functions_region_overrides,'Candidate function region overrides changed.');

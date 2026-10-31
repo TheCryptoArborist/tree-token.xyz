@@ -5,7 +5,7 @@ import {createHash} from 'node:crypto';
 import {
  buildFiles,configurationFor,configurationWithReplacement,expectedBaselineId,existingPaths,
  readFunctionPackage,siteId,sourceIsPinned,validateStaticInventory,verifyFunctionRecords,
- verifyFunctionUploadDemand,verifyPublishedBaseline,
+ verifyFunctionUploadDemand,verifyPinnedReplacementRecord,verifyPublishedBaseline,
 } from '../scripts/release-treeforce-participation.mjs';
 
 // Use the complete immutable published inventory, with in-memory review inputs.
@@ -91,14 +91,55 @@ test('rejects an altered full provider record for each of the other 39 functions
  }
 });
 
-test('rejects replacement runtime, routes, limits, memory, priority, and provider-account changes',()=>{
+test('rejects replacement runtime, routes, limits, memory, priority, and unexpected fields',()=>{
  const {functionPackage}=fixture();
  for(const mutate of [fn=>{fn.r='nodejs24.x';},fn=>{fn.im='buffer';},fn=>{fn.ro[0].p='/api/*';},
   fn=>{fn.tr.action.config.rate_limit_config.window_limit=600;},fn=>{fn.m=2048;},
-  fn=>{fn.p=99;},fn=>{fn.a='another-provider-account';},fn=>{fn.unreviewedSetting=true;}]){
+  fn=>{fn.mo=2048;},fn=>{fn.rgo='us-west-2';},fn=>{fn.p=99;},fn=>{fn.unreviewedSetting=true;}]){
   const candidate=candidateRecords(functionPackage);mutate(candidate.find(fn=>fn.n==='arcade-growth'));
   assert.throws(()=>verifyFunctionRecords(candidate,published.functionRecords,functionPackage));
  }
+});
+
+test('accepts new provider account placement only for the reviewed replacement',()=>{
+ const {functionPackage}=fixture();
+ const candidate=candidateRecords(functionPackage);
+ const replacement=candidate.find(fn=>fn.n==='arcade-growth');
+ replacement.a='564250524218';
+ replacement.mo=1024;replacement.rgo='us-east-2';
+ assert.equal(verifyFunctionRecords(candidate,published.functionRecords,functionPackage),replacement);
+ assert.equal(published.functionRecords.find(fn=>fn.n==='arcade-growth').a,'837451400009');
+});
+
+test('rejects invalid provider account metadata on the original and replacement function',()=>{
+ const {functionPackage}=fixture();
+ for(const invalid of [undefined,null,564250524218,'56425052421','5642505242180','56425052421x',' 564250524218']){
+  const candidate=candidateRecords(functionPackage);candidate.find(fn=>fn.n==='arcade-growth').a=invalid;
+  assert.throws(()=>verifyFunctionRecords(candidate,published.functionRecords,functionPackage),/replacement function provider account/);
+  const badBaseline=clone(published.functionRecords);badBaseline.find(fn=>fn.n==='arcade-growth').a=invalid;
+  assert.throws(()=>verifyFunctionRecords(candidateRecords(functionPackage),badBaseline,functionPackage),/original function provider account/);
+ }
+});
+
+test('rejects valid provider-account changes to every unrelated full function record',()=>{
+ const {functionPackage}=fixture();
+ for(const fn of published.functionRecords.filter(fn=>fn.n!=='arcade-growth')){
+  const candidate=candidateRecords(functionPackage);
+  candidate.find(value=>value.n===fn.n).a=fn.a==='564250524218'?'837451400009':'564250524218';
+  assert.throws(()=>verifyFunctionRecords(candidate,published.functionRecords,functionPackage),/unrelated full function/,fn.n);
+ }
+});
+
+test('pins the complete verified replacement record including its provider account',()=>{
+ const {functionPackage}=fixture();
+ const candidate=candidateRecords(functionPackage);candidate.find(fn=>fn.n==='arcade-growth').a='564250524218';
+ const verified=verifyFunctionRecords(candidate,published.functionRecords,functionPackage);
+ const pinned=clone(verified);
+ assert.doesNotThrow(()=>verifyPinnedReplacementRecord(verified,pinned));
+ assert.doesNotThrow(()=>verifyPinnedReplacementRecord(verified,undefined),'First verification establishes the pin');
+ for(const changed of [{...verified,a:'837451400009'},{...verified,id:'another-provider-revision'},
+  {...verified,c:'2026-11-01T00:00:00Z'},{...verified,oid:'another-observability-id'}])
+  assert.throws(()=>verifyPinnedReplacementRecord(changed,pinned),/previously verified replacement-function provider\/configuration record changed/);
 });
 
 test('rejects missing, duplicated, extra, or unchanged function packages',()=>{
