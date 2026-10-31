@@ -38,6 +38,11 @@ test('release inventory preserves every baseline file and changes only the appro
       assert.equal(file.sha1,'e4461fc5249448c5228c7310542bd2a42f6f6a10');
       assert.equal(manifest.files.find(f=>f.path===file.path)?.sha1,'5247f64b488bc7280cef6672e938720cdfbbd733');
       assert.equal(hash(file.source,'sha1'),'5247f64b488bc7280cef6672e938720cdfbbd733');
+    } else if (file.path==='/dapp/victory-center.css') {
+      // Promote the owner-tested canonical-domain layout; preserve historical inventory.
+      assert.equal(file.sha1,'ed5155ef72a64e5bc3bc5f8479832f4f47e9045e');
+      assert.equal(manifest.files.find(f=>f.path===file.path)?.sha1,'24a991520a6006ce398e3249646209e127517267');
+      assert.equal(hash(file.source,'sha1'),'24a991520a6006ce398e3249646209e127517267');
     } else assert.equal(hash(file.source,'sha1'),file.sha1,file.path);
   }
   for(const pathname of base.keys())assert(next.has(pathname),'Missing production file '+pathname);
