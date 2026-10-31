@@ -1,0 +1,75 @@
+name: Inspect Aftermath TREE pools
+on:
+  push:
+    branches:
+      - feature/tree-liquidity-graph
+    paths:
+      - '.github/workflows/inspect-aftermath-tree-pools.yml'
+      - 'scripts/inspect-aftermath-tree-pools.mjs'
+      - 'scripts/inspect-aftermath-tree-pool-health.mjs'
+      - 'netlify/lib/aftermath-tree-discovery.ts'
+      - 'netlify/lib/tree-venue-discovery.ts'
+      - 'netlify/lib/tree-swap-route.ts'
+      - 'netlify/lib/*simulation.ts'
+      - 'netlify/lib/tree-bridge-quotes.ts'
+      - 'scripts/simulate-tree-liquidity-routes.mjs'
+      - 'tests/tree-route-simulation.test.ts'
+      - 'tests/tree-bridge-quotes.test.ts'
+      - 'tests/tree-simulation-replay.test.ts'
+      - 'netlify/lib/tree-composition-validation.ts'
+      - 'scripts/inspect-tree-bridge-chain.mjs'
+      - 'scripts/simulate-tree-composed-paths.mjs'
+      - 'scripts/lib/tree-composed-transaction.mjs'
+      - 'tests/tree-composition-validation.test.ts'
+      - 'scripts/study-tree-splits.mjs'
+      - 'scripts/lib/tree-split-*.mjs'
+      - 'tests/tree-split-study.test.ts'
+      - 'scripts/compare-tree-routes.mjs'
+      - 'scripts/lib/tree-comparison-session.mjs'
+      - 'tests/tree-comparison-session.test.ts'
+  workflow_dispatch:
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: node --experimental-strip-types --test tests/tree-route-simulation.test.ts tests/tree-bridge-quotes.test.ts tests/tree-simulation-replay.test.ts tests/tree-liquidity-discovery.test.ts tests/tree-liquidity-graph.test.ts tests/tree-venue-discovery.test.ts tests/aftermath-tree-discovery.test.ts tests/tree-swap-route.test.ts
+      - run: node --experimental-strip-types scripts/inspect-aftermath-tree-pools.mjs
+      - run: node --experimental-strip-types scripts/inspect-aftermath-tree-pool-health.mjs
+      - run: node --experimental-strip-types scripts/simulate-tree-liquidity-routes.mjs
+        env:
+          TREE_SIMULATION_OUTPUT_DIR: artifacts/tree-liquidity
+      - run: node --experimental-strip-types --test tests/tree-composition-validation.test.ts
+      - run: node --experimental-strip-types scripts/inspect-tree-bridge-chain.mjs
+        env:
+          TREE_COMPOSITION_OUTPUT_DIR: artifacts/tree-composition
+      - run: node --experimental-strip-types scripts/simulate-tree-composed-paths.mjs
+        env:
+          TREE_COMPOSITION_OUTPUT_DIR: artifacts/tree-composition
+      - run: node --experimental-strip-types --test tests/tree-split-study.test.ts tests/tree-comparison-session.test.ts
+      - run: node --experimental-strip-types scripts/study-tree-splits.mjs
+        env:
+          TREE_SPLIT_OUTPUT_DIR: artifacts/tree-splits
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tree-split-read-only-study
+          path: artifacts/tree-splits/
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tree-composition-read-only-simulation
+          path: artifacts/tree-composition/
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tree-liquidity-read-only-simulation
+          path: artifacts/tree-liquidity/
