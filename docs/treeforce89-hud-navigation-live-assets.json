@@ -1,0 +1,40 @@
+{
+  "checkedAt": "2026-10-31T05:31:52.175Z",
+  "checks": [
+    {
+      "path": "/play/treeforce89/assets/arcade-Cw4Df7W2.js",
+      "status": 200,
+      "sha1": "0eb93075166b1d41ecd1a3b0586c5b52508d06c7",
+      "bytes": 1267670,
+      "verified": "Exact source bytes"
+    },
+    {
+      "path": "/play/treeforce89/assets/graphql-hAFrFTxs.js",
+      "status": 200,
+      "sha1": "594f4ac60c2bb738880581e1036eef89abb695e7",
+      "bytes": 54744,
+      "verified": "Exact source bytes"
+    },
+    {
+      "path": "/play/treeforce89/assets/index-CCisCLQF.js",
+      "status": 200,
+      "sha1": "846faa5cc41509c4a79ce8263e4ad8c3a55f32fa",
+      "bytes": 639178,
+      "verified": "Exact source bytes"
+    },
+    {
+      "path": "/play/treeforce89/gateway.css",
+      "status": 200,
+      "sha1": "57fa130cabffe6ba54ec58969f1d05559e6c01f6",
+      "bytes": 21159,
+      "verified": "Exact source bytes"
+    },
+    {
+      "path": "/play/treeforce89/index.html",
+      "status": 200,
+      "sha1": "1dcba1d6e131b5ed57c304fdc64b88605c7e539b",
+      "bytes": 2245,
+      "verified": "Exact script and stylesheet tags; Netlify HTML postprocessing retained"
+    }
+  ]
+}

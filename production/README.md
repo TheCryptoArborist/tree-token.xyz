@@ -1,4 +1,18 @@
-# Current production — TREE FORCE arcade access panels, 2026-10-31
+# Current production — TREE FORCE navigation and gameplay HUD, 2026-10-31
+
+Deployment `6ae57caa6fee52d4fb3bfd18` was published at `2026-10-31T05:31:06.481Z` and is locked. Source is `1dce0e0d9b6ef112f3bbc92124022d5e16e5e836` on `feature/treeforce89-play-integration`. Neither main branch was changed or merged.
+
+Back to Arcade and Buy TREE are persistent links above the home/game/checkout. Buy TREE opens the existing `/dapp/#swap` page in a new tab. The wallet status now has its own row above the score display. Native 2:3 gameplay sizing, separated bottom HUD rows/buttons, wrapped tutorial text and separate tutorial/notice/boss/turbo locations remove the observed overlaps. Wallet/signature/payment logic, gameplay rules and pinned dependencies are unchanged.
+
+Only `/play/treeforce89/index.html` and `/play/treeforce89/gateway.css` change from `6ae5792ec3afc583dd99b5ea`; three compiled native JavaScript assets are added. The other 214 static paths, all 39 complete backend package/provider/runtime/configuration records and all five schedules match exactly. No functions were rebuilt and no migrations are included. The same server-only isolated database binding and enabled-payment flag are retained. The live inventory contains 219 files and 39 functions.
+
+All four workflows and the 32 focused wallet/continuation tests passed. Labelled gameplay samples measured zero text/control collisions in normal and stress states, including compact 320×640 and 640×400 viewports without overflow. Actual candidate home/chooser/Arcade navigation, canonical home/Buy TREE swap destination, hosted authentication/payment-negative smoke checks, exact live asset bytes/script tags and complete publication preservation passed. Layout samples do not test a real connected holder or payment; no real payment was signed or submitted by the assistant.
+
+See `docs/treeforce89-hud-navigation.md` and adjacent `-published.json` (complete inventory/function/schedule records), `-checks.json`, `-layout-bounds.json`, `-candidate-smoke.json`, and `-live-assets.json`. Preserve this complete live inventory on future releases.
+
+---
+
+# Previous production — TREE FORCE arcade access panels, 2026-10-31
 
 Deployment `6ae5792ec3afc583dd99b5ea` was published at `2026-10-31T05:16:21.403Z` and is locked. Source is `41b26cc95bb45da98c9e3b82f27fc9c02835d405` on `feature/treeforce89-play-integration`. Neither main branch was changed or merged.
 
