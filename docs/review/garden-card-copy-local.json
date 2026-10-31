@@ -1,0 +1,285 @@
+{
+  "passed": true,
+  "target": "https://garden-battles-qa.invalid/play/",
+  "label": "local",
+  "synthetic": true,
+  "sourceSha256": {
+    "play/index.html": "ff4f7be72543de769156d39164355833e160c7b4b4949de3f76ae92b1a97105c",
+    "scripts/arcade-daily-growth.js": "e7921ba7d841a1f4a6cd5f2ba9cf0d2d80e9e1bab705c7490ef97246cf2327b1",
+    "styles/tree-arcade-suite.css": "a16610383942e0cb45c6e15d3644a8a41c20980455d85b1c9a0e638076087350"
+  },
+  "scope": "Garden Battles HTML heading and three card-copy updates; two viewport checks only",
+  "checks": [
+    {
+      "name": "Compact heading, three copy updates and all four card identities retained",
+      "title": "Garden Battles",
+      "sectionLabel": "garden-battles-group-title",
+      "oldIntro": 0,
+      "oldCopy": false,
+      "cards": [
+        {
+          "title": "GARDEN BOT",
+          "href": "https://nftree.net/battle/garden-bot",
+          "image": "/assets/arcade/garden-bot-poster.webp",
+          "status": "LIVE",
+          "subtitle": "Turn-based card strategy · Solo",
+          "description": "Play your cards against Garden Bot. Grow your tree, block attacks, and slow the bot’s progress to reach the Growth target first.",
+          "descriptionsResolve": true
+        },
+        {
+          "title": "PVP BATTLE",
+          "href": "https://nftree.net/battle/pvp",
+          "image": "/assets/arcade/pvp-battle-poster.webp",
+          "status": "LIVE",
+          "subtitle": "Turn-based card strategy · PvP",
+          "description": "Challenge another player in a tactical card duel. Choose when to grow, attack, or defend, and reach the Growth target before your rival.",
+          "descriptionsResolve": true
+        },
+        {
+          "title": "ARBORIST TRIALS",
+          "href": "https://nftree.net/battle/trials",
+          "image": "/assets/arcade/arborist-trials-poster.webp",
+          "status": "LIVE",
+          "subtitle": "Daily strategy · Predetermined cards",
+          "description": "Take on the day’s challenge with predetermined cards. Plan the best sequence of moves and compete on the daily leaderboard.",
+          "descriptionsResolve": true
+        },
+        {
+          "title": "CANOPY CLASH",
+          "href": "https://nftree.net/battle/canopy-clash",
+          "image": "/assets/arcade/canopy-clash-poster.webp",
+          "status": "PREVIEW",
+          "subtitle": "Garden Battles tournaments",
+          "description": "A tournament mode is coming to Garden Battles, with scheduled matches, brackets, and championship prizes. Preview the next way to compete.",
+          "descriptionsResolve": true
+        }
+      ]
+    },
+    {
+      "name": "1440 first-fold layout unchanged and no overflow",
+      "width": 1440,
+      "hero": {
+        "top": 65,
+        "height": 199
+      },
+      "panel": {
+        "top": 267,
+        "height": 147
+      },
+      "firstCabinet": {
+        "top": 525.578125,
+        "height": 407.84375
+      },
+      "scrollWidth": 1440
+    },
+    {
+      "name": "320 first-fold layout unchanged and no overflow",
+      "width": 320,
+      "hero": {
+        "top": 98,
+        "height": 178.90625
+      },
+      "panel": {
+        "top": 278.90625,
+        "height": 213.1875
+      },
+      "firstCabinet": {
+        "top": 597.484375,
+        "height": 375.734375
+      },
+      "scrollWidth": 320
+    }
+  ],
+  "measurements": [
+    {
+      "width": 1440,
+      "scrollWidth": 1440,
+      "groupHeight": 575.46875,
+      "headingHeight": 26.25,
+      "images": [
+        {
+          "src": "/assets/arcade/garden-bot-poster.webp",
+          "loaded": true
+        },
+        {
+          "src": "/assets/arcade/pvp-battle-poster.webp",
+          "loaded": true
+        },
+        {
+          "src": "/assets/arcade/arborist-trials-poster.webp",
+          "loaded": true
+        },
+        {
+          "src": "/assets/arcade/canopy-clash-poster.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "width": 320,
+      "scrollWidth": 320,
+      "groupHeight": 2107.734375,
+      "headingHeight": 25,
+      "images": [
+        {
+          "src": "/assets/arcade/garden-bot-poster.webp",
+          "loaded": true
+        },
+        {
+          "src": "/assets/arcade/pvp-battle-poster.webp",
+          "loaded": true
+        },
+        {
+          "src": "/assets/arcade/arborist-trials-poster.webp",
+          "loaded": true
+        },
+        {
+          "src": "/assets/arcade/canopy-clash-poster.webp",
+          "loaded": true
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    "/tmp/garden-battles-compact-qa/local-garden-battles-1440.png",
+    "/tmp/garden-battles-compact-qa/local-garden-battles-320.png"
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "url": "https://garden-battles-qa.invalid/play/?mode=signedout"
+    },
+    {
+      "method": "GET",
+      "url": "https://garden-battles-qa.invalid/styles/tree-arcade-suite.css"
+    },
+    {
+      "method": "GET",
+      "url": "https://garden-battles-qa.invalid/assets/tree-token-logo-official.webp"
+    },
+    {
+      "method": "GET",
+      "url": "https://garden-battles-qa.invalid/assets/arcade/tree-arcade-social.jpg"
+    },
+    {
+      "method": "GET",
+      "url": "https://garden-battles-qa.invalid/assets/tree-hero-poster.webp"
+    },
+    {
+      "method": "GET",
+      "url": "https://garden-battles-qa.invalid/assets/arcade/tree-force-89-poster.webp"
+    },
+    {
+      "method": "GET",
+      "url": "https://garden-battles-qa.invalid/assets/arcade/arboretum-poster.webp"
+    },
+    {
+      "method": "GET",
+      "url": "https://garden-battles-qa.invalid/fixture.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "https://garden-battles-qa.invalid/assets/tree-command-logo-v2-512.png"
+    },
+    {
+      "method": "GET",
+      "url": "https://garden-battles-qa.invalid/assets/tree-arcade-world-bg-v2.webp"
+    },
+    {
+      "method": "GET",
+      "url": "https://garden-battles-qa.invalid/assets/arcade/garden-bot-poster.webp"
+    },
+    {
+      "method": "GET",
+      "url": "https://garden-battles-qa.invalid/assets/arcade/pvp-battle-poster.webp"
+    },
+    {
+      "method": "GET",
+      "url": "https://garden-battles-qa.invalid/assets/arcade/arborist-trials-poster.webp"
+    },
+    {
+      "method": "GET",
+      "url": "https://garden-battles-qa.invalid/assets/arcade/canopy-clash-poster.webp"
+    },
+    {
+      "method": "GET",
+      "url": "https://garden-battles-qa.invalid/scripts/arcade-daily-growth.js"
+    },
+    {
+      "method": "GET",
+      "url": "https://garden-battles-qa.invalid/assets/profile-nftree-art.jpg"
+    }
+  ],
+  "responses": [
+    {
+      "url": "https://garden-battles-qa.invalid/play/?mode=signedout",
+      "status": 200
+    },
+    {
+      "url": "https://garden-battles-qa.invalid/styles/tree-arcade-suite.css",
+      "status": 200
+    },
+    {
+      "url": "https://garden-battles-qa.invalid/assets/tree-token-logo-official.webp",
+      "status": 200
+    },
+    {
+      "url": "https://garden-battles-qa.invalid/assets/arcade/tree-arcade-social.jpg",
+      "status": 200
+    },
+    {
+      "url": "https://garden-battles-qa.invalid/assets/arcade/arboretum-poster.webp",
+      "status": 200
+    },
+    {
+      "url": "https://garden-battles-qa.invalid/assets/tree-hero-poster.webp",
+      "status": 200
+    },
+    {
+      "url": "https://garden-battles-qa.invalid/assets/arcade/tree-force-89-poster.webp",
+      "status": 200
+    },
+    {
+      "url": "https://garden-battles-qa.invalid/assets/tree-command-logo-v2-512.png",
+      "status": 200
+    },
+    {
+      "url": "https://garden-battles-qa.invalid/fixture.mjs",
+      "status": 200
+    },
+    {
+      "url": "https://garden-battles-qa.invalid/assets/tree-arcade-world-bg-v2.webp",
+      "status": 200
+    },
+    {
+      "url": "https://garden-battles-qa.invalid/assets/arcade/garden-bot-poster.webp",
+      "status": 200
+    },
+    {
+      "url": "https://garden-battles-qa.invalid/assets/arcade/pvp-battle-poster.webp",
+      "status": 200
+    },
+    {
+      "url": "https://garden-battles-qa.invalid/assets/arcade/arborist-trials-poster.webp",
+      "status": 200
+    },
+    {
+      "url": "https://garden-battles-qa.invalid/assets/arcade/canopy-clash-poster.webp",
+      "status": 200
+    },
+    {
+      "url": "https://garden-battles-qa.invalid/scripts/arcade-daily-growth.js",
+      "status": 200
+    },
+    {
+      "url": "https://garden-battles-qa.invalid/assets/profile-nftree-art.jpg",
+      "status": 200
+    }
+  ],
+  "blocked": [],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "noWalletConnected": true,
+  "noSignatures": true,
+  "noPosts": true
+}
