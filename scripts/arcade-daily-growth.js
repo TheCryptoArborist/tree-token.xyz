@@ -11,16 +11,17 @@ const MILESTONE_GOALS = [
   { id: 'deep-roots', label: 'Deep Roots', target: 14 },
   { id: 'full-canopy', label: 'Full Canopy', target: 21 },
 ];
-const EMBLEM_PATHS = {
-  seedling: 'M16 28V14M16 20C7 20 4 15 5 8c8 0 11 4 11 12ZM16 15C16 7 21 4 27 4c0 8-4 12-11 11ZM8 28h16',
-  sapling: 'M16 29V13M16 18l-7-5M16 12l6-5M16 24l8-6M7 19c-5-2-5-10 1-12 0-7 11-8 14-2 8-1 12 11 5 15M8 29h16',
-  'deep-roots': 'M16 17V4M16 11l-6-6M16 8l6-4M5 17h22M16 17l-7 6-5 1M9 23l-1 6M16 17l7 6 5 1M23 23l2 6M16 18v11M16 24l-4 4M16 24l4 4',
-  'full-canopy': 'M16 30V19M10 30h12M16 23l-6-5M16 20l7-5M7 21C0 20 0 12 6 10 4 3 13 0 17 5c6-5 13 0 11 6 6 5 1 13-6 11',
-  'arcade-passport': 'M8 3h17v26H8a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3ZM8 3v26M12 10h9M12 14h6m-6 7 3 3 6-7',
-  'garden-bot': 'M7 8h18v18H7ZM16 8V3M12 3h8M11 15h1M20 15h1M11 21h10M3 13v9M29 13v9',
-  pvp: 'm5 4 18 18 4 6-6-4L3 6l2-2ZM27 4 9 22l-4 6 6-4L29 6l-2-2M3 20l9 9M20 3l9 9',
-  'arborist-trials': 'M8 5h17v24H7V5h5M12 3h8v5h-8ZM11 15l2 2 3-4M19 15h3M11 23l2 2 3-4M19 23h3',
-  treeforce89: 'm16 3 5 12 8 7-11-2-2 6-2-6-11 2 8-7 5-12ZM12 26l-1 3M20 26l1 3',
+// Existing TREE ecosystem artwork, already published with the arcade.
+const GROWTH_ART = {
+  seedling: '/assets/arcade/garden-bot-poster.webp',
+  sapling: '/assets/arcade/arboretum-poster.webp',
+  'deep-roots': '/assets/profile-nftree-art.jpg',
+  'full-canopy': '/assets/tree-command-logo-v2-512.png',
+  'arcade-passport': '/assets/tree-command-logo-v2-512.png',
+  'garden-bot': '/assets/arcade/garden-bot-poster.webp',
+  pvp: '/assets/arcade/pvp-battle-poster.webp',
+  'arborist-trials': '/assets/arcade/arborist-trials-poster.webp',
+  treeforce89: '/assets/arcade/tree-force-89-poster.webp',
 };
 const GAME_COPY = {
   [TREE_FORCE_ID]: {
@@ -150,6 +151,7 @@ export function createDailyGrowth({
     'quest-note', 'visit-count', 'visit-label', 'check-note', 'check-in', 'passport-count', 'passport-note', 'stamps',
     'passport-reward', 'passport-optional', 'optional-stamps', 'tracking-note', 'month-empty', 'month-content', 'month-visits', 'month-quests', 'next', 'calendar', 'milestones',
     'badges-empty', 'badges', 'status', 'journey-note', 'journey-stops', 'quest-meter', 'attendance-ring', 'visit-total', 'attendance-next', 'attendance-meter', 'passport-meter',
+    'summary-count', 'summary-label', 'summary-note', 'summary-meter', 'quest-art',
   ].map((id) => [id, byId(id)]));
   const state = {
     wallet: null, walletId: null, walletReady: false, walletError: false, session: null, progress: null,
@@ -182,12 +184,12 @@ export function createDailyGrowth({
   function emblem(parent, name, className) {
     const holder = append(parent, 'span', className);
     holder.setAttribute('aria-hidden', 'true');
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    for (const [key, value] of Object.entries({ viewBox: '0 0 32 32', fill: 'none', stroke: 'currentColor', 'stroke-width': '1.7', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', class: 'growth-icon' })) svg.setAttribute(key, value);
-    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    path.setAttribute('d', EMBLEM_PATHS[name] || EMBLEM_PATHS.seedling);
-    svg.append(path);
-    holder.append(svg);
+    const image = append(holder, 'img', 'growth-art-icon');
+    image.src = GROWTH_ART[name] || GROWTH_ART['full-canopy'];
+    image.alt = '';
+    image.width = 64;
+    image.height = 64;
+    image.loading = 'lazy';
     return holder;
   }
 
@@ -239,7 +241,7 @@ export function createDailyGrowth({
       : state.apiUnavailable ? 'Progress unavailable · Your saved badges are safe.' : 'Your goals for the month. Sign in to reveal your progress.';
     for (const milestone of milestones) {
       const item = append(ui['journey-stops'], 'div', `growth-stop${!progress ? ' is-preview' : milestone.earned ? ' is-done' : milestone === next ? ' is-next' : ''}`);
-      item.dataset.rank = Object.hasOwn(EMBLEM_PATHS, milestone.id) ? milestone.id : 'seedling';
+      item.dataset.rank = Object.hasOwn(GROWTH_ART, milestone.id) ? milestone.id : 'seedling';
       emblem(item, milestone.id, 'growth-stop-icon');
       const copy = append(item, 'div', 'growth-stop-copy');
       append(copy, 'strong', '', milestone.label);
@@ -428,6 +430,18 @@ export function createDailyGrowth({
     const finalMilestone = progress?.milestones.at(-1);
     const attendanceTarget = next || finalMilestone;
     const unknown = unavailable ? 'Progress unavailable' : 'Sign in to view progress';
+    ui['summary-count'].textContent = progress ? `${progress.checkedInDays} / ${progress.calendar.length}` : unavailable ? 'Progress unavailable' : 'Make every visit count.';
+    ui['summary-label'].textContent = progress
+      ? state.stale ? 'check-ins · last saved progress' : 'check-ins this month'
+      : unavailable ? 'Your saved growth is safe.' : 'Check-ins · Quests · Monthly badges';
+    ui['summary-note'].textContent = progress
+      ? state.stale ? 'Last saved progress. Open your quests to refresh.'
+        : progress.today.questCompleted ? 'Today’s quest complete. Keep the adventure going.'
+          : progress.today.checkedIn ? next ? `Checked in · ${next.target - progress.checkedInDays} more to ${next.label}.` : 'Checked in · All monthly attendance badges earned.'
+            : 'Check in today. Keep your canopy growing.'
+      : state.wallet ? 'Wallet connected. Sign in to save your progress.' : 'Check in. Play. Collect badges.';
+    ui['summary-meter'].hidden = !progress;
+    meter(ui['summary-meter'], progress?.checkedInDays, progress?.calendar.length, progress ? `${progress.checkedInDays} of ${progress.calendar.length} days checked in this month` : unknown);
     renderJourney(progress);
     ui['visit-count'].textContent = progress ? String(progress.checkedInDays) : '—';
     ui['visit-total'].textContent = progress ? `/ ${progress.calendar.length} days` : 'days checked in';
@@ -443,6 +457,7 @@ export function createDailyGrowth({
     ui['month-content'].hidden = !progress;
     ui['month-empty'].hidden = Boolean(progress);
     ui['month-empty'].textContent = unavailable ? 'Your monthly calendar is unavailable. Refresh to try again.' : 'Sign in to see your real monthly calendar.';
+    ui['check-in'].hidden = !state.session;
     ui['check-in'].disabled = Boolean(state.busy) || !state.session || !progress || progress.today.checkedIn;
     ui['check-in'].textContent = state.busy === 'checking-in' ? 'Saving check-in…' : progress?.today.checkedIn ? 'Checked in today ✓' : 'Check in today';
     ui['check-note'].textContent = progress?.today.checkedIn
@@ -491,7 +506,7 @@ export function createDailyGrowth({
       : progress.passport.enabledGames.length ? 'All required stamps earn the monthly Arcade Passport badge. Optional stamps do not change the requirement.' : 'Passport games will appear when verified tracking is available.';
     for (const milestone of progress.milestones) {
       const item = append(ui.milestones, 'div', `growth-milestone${milestone.earned ? ' is-done' : ''}`);
-      item.dataset.rank = Object.hasOwn(EMBLEM_PATHS, milestone.id) ? milestone.id : 'seedling';
+      item.dataset.rank = Object.hasOwn(GROWTH_ART, milestone.id) ? milestone.id : 'seedling';
       emblem(item, milestone.id, 'growth-badge-emblem');
       append(item, 'strong', '', `${milestone.label}${milestone.earned ? ' ✓' : ''}`);
       append(item, 'span', '', `${milestone.target} check-ins`);
@@ -533,7 +548,7 @@ export function createDailyGrowth({
     ui.connect.textContent = state.busy === 'connecting' ? 'Connecting…' : state.wallet ? 'Change wallet' : 'Connect wallet';
     ui['sign-in'].hidden = !state.wallet || Boolean(state.session);
     ui['sign-in'].disabled = busy;
-    ui['sign-in'].textContent = state.busy === 'signing-in' ? 'Approve message in wallet…' : 'Sign in to Daily Growth';
+    ui['sign-in'].textContent = state.busy === 'signing-in' ? 'Approve message in wallet…' : 'Sign in';
     ui['sign-out'].hidden = !state.session;
     ui['sign-out'].disabled = busy;
     renderPicker();
@@ -553,6 +568,7 @@ export function createDailyGrowth({
     ui['quest-state'].classList.toggle('is-done', Boolean(done));
     ui['pick-label'].textContent = selected?.id === state.configuration?.todayPick?.id ? 'Today’s pick:' : 'Your choice:';
     ui['game-name'].textContent = selected?.label || (state.apiUnavailable ? 'Eligible games unavailable' : state.configuration ? 'No eligible games right now' : 'Checking eligible games…');
+    ui['quest-art'].src = GROWTH_ART[selected?.id] || GROWTH_ART['full-canopy'];
     const copy = selected ? GAME_COPY[selected.id] : null;
     ui.objective.textContent = copy?.objective || 'Follow the selected game’s participation rule, then refresh your progress here.';
     ui['game-access'].textContent = copy?.access || (selected ? 'Check this game’s access and result-saving requirements before playing.' : '');
@@ -614,10 +630,10 @@ export function createDailyGrowth({
     if (state.progress?.today.questCompleted && !previous?.today.questCompleted) setNotice('Daily quest complete. You’re checked in for today, and your game participation is saved.', 'success');
     else if ((state.progress?.passport.completedGameIds.length || 0) > (previous?.passport.completedGameIds.length || 0)) setNotice('A new passport stamp is saved. Today’s quest is already counted.', 'success');
     else if ((state.progress?.passport.optionalCompletedGameIds.length || 0) > (previous?.passport.optionalCompletedGameIds.length || 0)) setNotice('An optional participation stamp is saved. Today’s quest is already counted; required Passport progress is unchanged.', 'success');
-    else if (state.progress?.today.questCompleted) setNotice('Progress refreshed. Today’s quest is already saved. Each UTC day can earn one quest stamp.');
+    else if (state.progress?.today.questCompleted) setNotice('Progress refreshed. Today’s quest is already saved. Each UTC day can earn one quest stamp.', 'info');
     else setNotice(state.configuration?.eligibleGames.some((game) => game.id === TREE_FORCE_ID)
       ? 'Progress refreshed. A recorded first wave of TREE FORCE or a completed, saved Garden Battles result can count. Opening a game link alone does not count.'
-      : 'Progress refreshed. Only completed, verified Garden Battles results count. Opening a game link alone does not count.');
+      : 'Progress refreshed. Only completed, verified Garden Battles results count. Opening a game link alone does not count.', 'info');
   }
 
   async function refresh() {

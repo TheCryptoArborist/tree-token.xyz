@@ -44,17 +44,17 @@
   </header>
 
   <main class="suite-main">
-    <section class="suite-hero" aria-labelledby="arcade-title">
-      <p class="suite-eyebrow">NFTREE ACCESS · BUILT ON SUI</p>
-      <h1 id="arcade-title"><span>TREE</span> ARCADE</h1>
-      <h2 class="suite-access-hook">Your NFTree is your arcade pass.</h2>
-      <p class="suite-intro">Get an NFTree NFT to unlock holder access to TREE Arcade games. Mint from the sales pool or choose your NFTree on TradePort, then connect the wallet holding it when you enter a game.</p>
-      <div class="suite-hero-actions">
-        <a class="suite-primary" href="https://nftree.net/mint#mint" data-nftree-mint aria-controls="nftree-mint-panel" aria-expanded="false">Mint an NFTree <span aria-hidden="true">→</span></a>
-        <a class="suite-secondary" href="https://www.tradeport.xyz/sui/collection/0xf6c6d439ea0da2f3e9ba79e4992a7a4c113215fbf54c442ac9020c315f953705::collection::NFT?tab=items" target="_blank" rel="noopener noreferrer">Buy on TradePort <span aria-hidden="true">↗</span></a>
+    <section class="suite-hero suite-hero--compact" aria-labelledby="arcade-title">
+      <img class="suite-hero-art" src="/assets/arcade/tree-arcade-social.jpg" alt="Garden Bot and the TREE hero welcome you to TREE Arcade" width="1200" height="630" fetchpriority="high" decoding="async">
+      <div class="suite-hero-copy">
+        <p class="suite-eyebrow">BATTLE. GROW. DEFEND THE CANOPY.</p>
+        <h1 id="arcade-title"><span>TREE</span> ARCADE</h1>
+        <p class="suite-intro">Pick a game. Bring your NFTree. Let the adventure begin.</p>
+        <div class="suite-hero-actions">
+          <a class="suite-primary" href="#cabinets">Choose a game <span aria-hidden="true">↓</span></a>
+          <a class="suite-secondary" href="https://nftree.net/mint#mint" data-nftree-mint aria-controls="nftree-mint-panel" aria-expanded="false">Get an NFTree <span aria-hidden="true">→</span></a>
+        </div>
       </div>
-      <p class="suite-owner-link">Already own an NFTree? <a href="#cabinets">Choose a game <span aria-hidden="true">↓</span></a></p>
-      <p class="suite-access-note">Game availability and entry requirements vary. Some modes have separate entry fees.</p>
     </section>
 
     <section id="nftree-mint-panel" class="mint-panel" aria-labelledby="nftree-mint-title" tabindex="-1" hidden>
@@ -97,23 +97,32 @@
       <p class="mint-fallback">Need another way to mint? <a href="https://nftree.net/mint#mint" target="_blank" rel="noopener noreferrer">Open the official NFTree mint page <span aria-hidden="true">↗</span></a>.</p>
     </section>
 
-    <section id="arcade-daily-growth" class="growth-panel" aria-labelledby="growth-title" data-growth-state="loading">
-      <div class="growth-heading">
-        <div class="growth-heading-identity"><span class="growth-emblem" aria-hidden="true"><svg class="growth-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 27V13M16 20C6 20 4 14 5 7c8 0 11 5 11 13ZM16 15C16 7 21 4 28 4c0 8-4 12-12 11ZM8 28h16"/></svg></span><div><p class="suite-eyebrow">CHECK IN. PLAY. GROW YOUR LEGACY.</p><h2 id="growth-title">Daily Growth</h2><p class="growth-meta" id="growth-meta">Your NFTree holder progress, one day at a time.</p></div></div>
-        <div class="growth-heading-side"><span class="growth-season-tag" id="growth-season-tag">A new season every month</span><a class="growth-games-link" href="#cabinets">Browse the games <span aria-hidden="true">↓</span></a></div>
+    <section id="arcade-daily-growth" class="growth-panel growth-panel--compact" aria-labelledby="growth-title" data-growth-state="loading">
+      <div class="growth-strip">
+        <img class="growth-strip-art" src="/assets/tree-hero-poster.webp" alt="" width="112" height="128" decoding="async">
+        <div class="growth-strip-copy">
+          <p class="suite-eyebrow">YOUR DAILY SIDE QUEST</p>
+          <h2 id="growth-title">Daily Growth</h2>
+          <p id="growth-summary-note">Check in. Play. Collect badges.</p>
+        </div>
+        <div class="growth-strip-progress">
+          <div class="growth-strip-tally"><strong id="growth-summary-count">Make every visit count.</strong><span id="growth-summary-label">Check-ins · Quests · Monthly badges</span></div>
+          <div class="growth-meter is-unknown" id="growth-summary-meter" aria-label="Sign in to see monthly check-in progress" hidden><span></span></div>
+        </div>
+        <div class="growth-strip-actions">
+          <button class="growth-primary" id="growth-connect" type="button" aria-haspopup="dialog" aria-controls="growth-wallet-picker" disabled>Connect wallet</button>
+          <button class="growth-primary" id="growth-sign-in" type="button" hidden>Sign in</button>
+          <button class="growth-primary" id="growth-check-in" type="button" hidden disabled>Check in today</button>
+          <button class="growth-text-button" id="growth-sign-out" type="button" hidden>Sign out</button>
+        </div>
       </div>
-      <div class="growth-auth">
-        <div class="growth-auth-copy"><span class="growth-auth-symbol" aria-hidden="true"><svg class="growth-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="24" height="19" rx="4"/><path d="m6 8 16-4v4M28 14h-8v7h8"/><circle cx="23" cy="17.5" r="1"/></svg></span><div><p id="growth-wallet-state">Connect your NFTree wallet to save check-ins, daily quests, and monthly badges.</p><p class="growth-small" id="growth-auth-note">Sign-in uses a wallet message. It does not submit a transaction.</p></div></div>
-        <div class="growth-auth-actions"><button class="growth-primary" id="growth-connect" type="button" aria-haspopup="dialog" aria-controls="growth-wallet-picker" disabled>Connect wallet</button><button class="growth-secondary" id="growth-sign-in" type="button" hidden>Sign in to Daily Growth</button><button class="growth-text-button" id="growth-sign-out" type="button" hidden>Sign out</button></div>
-      </div>
-      <dialog class="growth-wallet-picker" id="growth-wallet-picker" aria-labelledby="growth-wallet-picker-label" aria-describedby="growth-wallet-intro">
-        <div class="growth-wallet-heading"><div><p class="growth-eyebrow">YOUR PLAYER IDENTITY</p><h3 id="growth-wallet-picker-label">Choose your Sui wallet</h3></div><button class="growth-wallet-close" id="growth-wallet-close" type="button" aria-label="Close wallet picker">✕</button></div>
-        <p class="growth-wallet-intro" id="growth-wallet-intro">Bring your NFTree. Keep your progress.</p>
-        <div class="growth-wallet-options" id="growth-wallet-options" aria-labelledby="growth-wallet-picker-label"></div>
-        <p class="growth-small" id="growth-no-wallet" hidden>No compatible Sui wallet was detected. Open this page in your wallet’s browser, or use a browser with a Sui wallet installed.</p>
-        <p class="growth-wallet-status" id="growth-wallet-status" role="status" aria-live="polite" aria-atomic="true"></p>
-        <p class="growth-wallet-help">Choose a detected wallet, then approve a separate sign-in message. Connecting is free and does not send a transaction.</p>
-      </dialog>
+      <details id="growth-details" class="growth-details">
+        <summary class="growth-details-toggle"><span class="growth-details-label--closed">View quests &amp; badges</span><span class="growth-details-label--open">Close progress</span><span class="growth-details-hint">Daily quests · Calendar · Passport</span></summary>
+        <div class="growth-details-body">
+          <div class="growth-heading"><p class="growth-meta" id="growth-meta">Your NFTree holder progress, one day at a time.</p><span class="growth-season-tag" id="growth-season-tag">A new season every month</span></div>
+          <div class="growth-auth">
+            <div class="growth-auth-copy"><span class="growth-auth-symbol" aria-hidden="true"><img class="growth-art-icon" src="/assets/tree-command-logo-v2-512.png" alt="" width="44" height="44" loading="lazy"></span><div><p id="growth-wallet-state">Connect your NFTree wallet to save check-ins, daily quests, and monthly badges.</p><p class="growth-small" id="growth-auth-note">Sign-in uses a wallet message. It does not submit a transaction.</p></div></div>
+          </div>
       <div class="growth-journey" aria-labelledby="growth-journey-title">
         <div class="growth-journey-heading"><strong id="growth-journey-title">Your monthly growth path</strong><p class="growth-small" id="growth-journey-note">Check in on different days to unlock each badge.</p></div>
         <div class="growth-journey-track" id="growth-journey-stops" aria-label="Monthly check-in badge goals"></div>
@@ -127,7 +136,7 @@
         <div class="growth-today-grid">
           <section class="growth-quest" aria-labelledby="growth-quest-title">
             <div class="growth-quest-heading"><p class="growth-eyebrow">TODAY’S QUEST</p><span class="growth-quest-state" id="growth-quest-state">Checking availability…</span></div>
-            <div class="growth-quest-title-row"><span class="growth-quest-icon" aria-hidden="true"><svg class="growth-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m18 3-12 16h9l-1 10 12-17h-9l1-9Z"/></svg></span><h3 id="growth-quest-title">Play today. Power up.</h3></div>
+            <div class="growth-quest-title-row"><img class="growth-quest-art" id="growth-quest-art" src="/assets/arcade/garden-bot-poster.webp" alt="" width="72" height="72" loading="lazy"><h3 id="growth-quest-title">Your next adventure</h3></div>
             <div class="growth-meter growth-meter--quest is-unknown" id="growth-quest-meter" aria-label="Sign in to see today’s quest progress"><span></span></div>
             <p class="growth-small growth-quest-rule" id="growth-quest-rule">Choose an eligible game to grow today’s progress.</p>
             <p class="growth-pick"><span id="growth-pick-label">Today’s pick:</span> <strong id="growth-game-name">Checking eligible games…</strong></p>
@@ -146,7 +155,6 @@
               <div class="growth-attendance-top"><div class="growth-progress-ring is-unknown" id="growth-attendance-ring"><strong id="growth-visit-count">—</strong><span id="growth-visit-total">days checked in</span></div><div class="growth-attendance-copy"><p class="growth-eyebrow" id="growth-attendance-title">MONTHLY CHECK-IN</p><p id="growth-visit-label">check-ins this month</p><strong id="growth-attendance-next">Your next badge awaits</strong></div></div>
               <div class="growth-meter growth-meter--attendance is-unknown" id="growth-attendance-meter" aria-label="Sign in to see monthly check-in progress"><span></span></div>
               <p class="growth-small" id="growth-check-note">Sign in to see your saved attendance. You can check in without playing a game.</p>
-              <button class="growth-secondary" id="growth-check-in" type="button" disabled>Check in today</button>
             </section>
             <details class="growth-passport" id="growth-passport" open>
               <summary><span>Arcade Passport</span><span class="growth-passport-progress"><strong id="growth-passport-count">Sign in to view</strong><span class="growth-passport-toggle" aria-hidden="true">+</span></span></summary>
@@ -178,20 +186,28 @@
         <p class="growth-empty" id="growth-badges-empty">Sign in to see your earned monthly badges.</p>
         <div class="growth-badges" id="growth-badges"></div>
       </div>
+          <div class="growth-footer"><span>Daily reset: 00:00 UTC · Check-ins have no gas fee</span><span>Only recorded participation or verified results count. Preview games are excluded.</span></div>
+        </div>
+      </details>
+      <dialog class="growth-wallet-picker" id="growth-wallet-picker" aria-labelledby="growth-wallet-picker-label" aria-describedby="growth-wallet-intro">
+        <div class="growth-wallet-heading"><img class="growth-wallet-brand" src="/assets/tree-command-logo-v2-512.png" alt="" width="56" height="56"><div><p class="growth-eyebrow">YOUR PLAYER IDENTITY</p><h3 id="growth-wallet-picker-label">Choose your Sui wallet</h3></div><button class="growth-wallet-close" id="growth-wallet-close" type="button" aria-label="Close wallet picker">✕</button></div>
+        <p class="growth-wallet-intro" id="growth-wallet-intro">Bring your NFTree. Keep your progress.</p>
+        <div class="growth-wallet-options" id="growth-wallet-options" aria-labelledby="growth-wallet-picker-label"></div>
+        <p class="growth-small" id="growth-no-wallet" hidden>No compatible Sui wallet was detected. Open this page in your wallet’s browser, or use a browser with a Sui wallet installed.</p>
+        <p class="growth-wallet-status" id="growth-wallet-status" role="status" aria-live="polite" aria-atomic="true"></p>
+        <p class="growth-wallet-help">Choose a detected wallet, then approve a separate sign-in message. Connecting is free and does not send a transaction.</p>
+      </dialog>
       <p class="growth-status" id="growth-status" role="status" aria-live="polite" aria-atomic="true">Loading Daily Growth…</p>
-      <div class="growth-footer"><span>Daily reset: 00:00 UTC · Check-ins have no gas fee</span><span>Only recorded participation or verified results count. Preview games are excluded.</span></div>
       <noscript><p class="growth-empty">Turn on JavaScript to connect your wallet and load Daily Growth. The game links below still work.</p></noscript>
     </section>
 
     <section id="cabinets" class="arcade-floor" aria-labelledby="floor-title" tabindex="-1">
       <div class="floor-heading">
-        <div><p class="suite-eyebrow">THE GAME LINEUP</p><h2 id="floor-title">Pick your next game.</h2></div>
-        <p class="floor-note">Live games, previews, and a look at what’s next.</p>
+        <div><p class="suite-eyebrow">THE GAME LINEUP</p><h2 id="floor-title">Choose your game.</h2></div>
       </div>
       <section class="arcade-group arcade-group--standalone" aria-labelledby="standalone-title">
         <div class="arcade-group-heading">
           <h3 id="standalone-title">Standalone games</h3>
-          <p>Explore individual worlds, with two more games on the way.</p>
         </div>
         <div class="poster-grid">
           <article class="game-poster poster--force" aria-labelledby="force-title">

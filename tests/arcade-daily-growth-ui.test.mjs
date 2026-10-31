@@ -32,7 +32,7 @@ const MILESTONES = [
   { id: 'deep-roots', label: 'Deep Roots', target: 14 },
   { id: 'full-canopy', label: 'Full Canopy', target: 21 },
 ];
-const PROGRESS_METERS = ['attendance-ring', 'attendance-meter', 'quest-meter', 'passport-meter'];
+const PROGRESS_METERS = ['attendance-ring', 'attendance-meter', 'quest-meter', 'passport-meter', 'summary-meter'];
 const deferred = () => {
   let resolvePromise;
   let reject;
@@ -199,6 +199,45 @@ async function harness(t, options = {}) {
   };
 }
 
+test('compact Daily Growth starts closed and its native progress disclosure never starts wallet or write requests', async (t) => {
+  const h = await harness(t);
+  const details = h.byId('details');
+  const toggle = details.querySelector('summary');
+  assert.equal(details.tagName, 'DETAILS');
+  assert.equal(details.open, false, 'Game discovery is not displaced by the full dashboard on entry');
+  for (const id of ['connect', 'sign-in', 'sign-out', 'check-in', 'wallet-picker', 'status']) {
+    assert.equal(details.contains(h.byId(id)), false, `${id} remains usable when progress is collapsed`);
+  }
+  assert.equal(h.byId('summary-count').textContent, 'Make every visit count.');
+  assert.equal(h.byId('summary-meter').hidden, true, 'Unknown private progress has no visible numeric meter');
+  assert.equal(h.byId('check-in').hidden, true);
+  const before = h.calls.length;
+  toggle.click();
+  assert.equal(details.open, true);
+  toggle.click();
+  assert.equal(details.open, false);
+  assert.equal(h.calls.length, before, 'Opening progress is a local display action');
+  assert.equal(h.calls.some((call) => ['connect', 'signature'].includes(call.type)), false);
+});
+
+test('compact check-in remains available with details closed and saves attendance only once', async (t) => {
+  const h = await harness(t, { progress: progress({ visits: [1, 3], quests: [3], stamps: ['garden-bot'] }) });
+  await h.signIn();
+  assert.equal(h.byId('details').open, false);
+  assert.equal(h.byId('check-in').hidden, false);
+  assert.equal(h.byId('check-in').disabled, false);
+  assert.equal(h.byId('summary-count').textContent, '2 / 30');
+  h.byId('check-in').click();
+  await settleUntil(() => h.byId('summary-count').textContent === '3 / 30', 'compact attendance updated after the saved response');
+  assert.equal(h.byId('details').open, false);
+  assert.equal(h.byId('check-in').disabled, true);
+  assert.match(h.byId('summary-note').textContent, /checked in|check-in saved/i);
+  h.byId('check-in').click();
+  assert.equal(h.count('check-in'), 1);
+  assert.equal(h.byId('quest-state').textContent, '0 / 1 · Not completed');
+  assert.equal(h.byId('passport-count').textContent, '1 / 3 required games');
+});
+
 test('wallet picker opens as a named dialog and every dismissal returns focus without wallet actions', async (t) => {
   const h = await harness(t);
   const picker = h.byId('wallet-picker');
@@ -303,6 +342,9 @@ test('meters reflect saved attendance, the next milestone and required stamps, r
   assertMeter(h, 'attendance-meter', 8, 14);
   assertMeter(h, 'quest-meter', 0, 1);
   assertMeter(h, 'passport-meter', 2, 3);
+  assert.equal(h.byId('summary-count').textContent, '8 / 30');
+  assert.equal(h.byId('summary-meter').hidden, false);
+  assertMeter(h, 'summary-meter', 8, 30);
   assert.equal(h.byId('journey-stops').querySelectorAll('.is-done').length, 2);
   h.setProgress(progress({ visits: [...visits, 12], quests: [8, 12], stamps: ['garden-bot', 'arborist-trials'], optionalGames: [FORCE_GAME], optionalStamps: ['treeforce89'] }));
   await h.controller.refresh();
@@ -310,6 +352,8 @@ test('meters reflect saved attendance, the next milestone and required stamps, r
   assertMeter(h, 'attendance-meter', 9, 14);
   assertMeter(h, 'quest-meter', 1, 1);
   assertMeter(h, 'passport-meter', 2, 3);
+  assert.equal(h.byId('summary-count').textContent, '9 / 30');
+  assertMeter(h, 'summary-meter', 9, 30);
   h.handlers.sync = () => ({ status: 'error', error: 'service-unavailable', message: 'Try again later.' });
   await h.controller.refresh();
   assertMeter(h, 'attendance-ring', 9, 30);
@@ -317,8 +361,13 @@ test('meters reflect saved attendance, the next milestone and required stamps, r
   assertMeter(h, 'quest-meter', 1, 1);
   assertMeter(h, 'passport-meter', 2, 3);
   for (const id of PROGRESS_METERS) assert.match(h.byId(id).getAttribute('aria-valuetext'), /last saved progress/i);
+  assert.match(h.byId('summary-note').textContent, /last saved/i);
   h.changeWallet(OTHER_ACCOUNT);
   assertUnknownMeters(h);
+  assert.match(h.byId('summary-count').textContent, /^(Make every visit count\.|Progress unavailable)$/);
+  assert.equal(h.byId('summary-meter').hidden, true);
+  assert.equal(h.byId('check-in').hidden, true);
+  assert.equal(h.byId('summary-note').textContent.includes('9 / 30'), false);
   assert.equal(h.byId('journey-stops').querySelectorAll('.is-done').length, 0);
 });
 
@@ -331,6 +380,8 @@ test('the final milestone stays full while the monthly ring keeps the actual cou
   assertMeter(h, 'attendance-meter', 21, 21);
   assert.equal(h.byId('attendance-meter').classList.contains('is-complete'), true);
   assert.equal(h.byId('visit-count').textContent, '22');
+  assert.equal(h.byId('summary-count').textContent, '22 / 31');
+  assertMeter(h, 'summary-meter', 22, 31);
   assert.equal(h.byId('journey-stops').querySelectorAll('.is-done').length, 4);
 });
 
