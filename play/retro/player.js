@@ -1,0 +1,120 @@
+import { ENGINE, MAX_STATE_BYTES, inspectRom, sha256 } from './core.js';
+import { createButtonLatch } from './controller.js';
+let session, rom, started = false, paused = false, browser, controller;
+const $ = id => document.getElementById(id);
+const reply = (type, extra = {}) => parent.postMessage({ type, session, ...extra }, location.origin);
+function releaseAll() {
+  if (!browser) return;
+  controller?.releaseAll();
+  for (let i = 0; i < 8; i++) browser.nes.buttonUp(1, i);
+  document.querySelectorAll('.held').forEach(button => button.classList.remove('held'));
+}
+function pause(value) {
+  if (!started) return;
+  if (value !== paused) { value ? browser.stop() : browser.start(); paused = value; }
+  if (value) releaseAll();
+  reply('TREE_RETRO_PAUSED', { paused });
+  $('playback-status').textContent = paused ? 'Paused · choose Continue below to play' : 'Playing · click or tap the game for keyboard control';
+}
+function failed(message) {
+  browser?.stop();
+  $('loading').hidden = false;
+  $('loading-message').textContent = message;
+  $('start-game').hidden = true;
+  reply('TREE_RETRO_ERROR', { error: message });
+}
+$('start-game').addEventListener('click', () => {
+  try {
+    browser = new window.jsnes.Browser({ container: $('screen'), onError: error => failed(error.message || 'This ROM could not run. Try another game.') });
+    controller = createButtonLatch(browser.nes);
+    const runFrame = browser.nes.frame.bind(browser.nes);
+    browser.nes.frame = () => { runFrame(); controller.afterFrame(); };
+    browser.nes.opts.emulateSound = $('sound').checked;
+    browser.loadROM(rom);
+    started = true;
+    $('loading').hidden = true;
+    for (const button of document.querySelectorAll('[data-button], #restart')) button.disabled = false;
+    $('screen').focus();
+    $('playback-status').textContent = 'Playing · click START below or press Enter to begin';
+    reply('TREE_RETRO_STARTED', { engine: ENGINE });
+  } catch (error) { browser?.destroy(); browser = null; failed(error.message || 'This game could not start.'); }
+});
+$('restart').addEventListener('click', () => {
+  if (!started) return;
+  releaseAll();
+  browser.nes.reloadROM();
+  pause(false);
+  $('screen').focus();
+});
+$('sound').addEventListener('change', event => {
+  if (browser) browser.nes.opts.emulateSound = event.target.checked;
+});
+for (const button of document.querySelectorAll('[data-button]')) {
+  const number = Number(button.dataset.button);
+  button.addEventListener('pointerdown', event => {
+    if (!started || paused || event.button !== 0) return;
+    event.preventDefault();
+    button.setPointerCapture(event.pointerId);
+    controller.press(number, `pointer:${event.pointerId}`);
+    button.classList.add('held');
+  });
+  const up = event => {
+    controller?.release(number, `pointer:${event.pointerId}`, event.type === 'pointercancel');
+    button.classList.remove('held');
+  };
+  for (const name of ['pointerup','pointercancel','lostpointercapture']) button.addEventListener(name, up);
+  button.addEventListener('keydown', event => {
+    if (!['Enter',' '].includes(event.key)) return;
+    event.preventDefault(); event.stopPropagation();
+    if (started && !paused) controller.press(number, `key:${event.key}`);
+  });
+  button.addEventListener('keyup', event => {
+    if (!['Enter',' '].includes(event.key)) return;
+    event.preventDefault(); event.stopPropagation();
+    controller?.release(number, `key:${event.key}`);
+  });
+  // Assistive technology can activate a button without pointer/key events.
+  button.addEventListener('click', event => {
+    if (event.detail !== 0 || !started || paused) return;
+    controller.press(number, 'activate');
+    controller.release(number, 'activate');
+  });
+}
+window.addEventListener('blur', releaseAll);
+window.addEventListener('resize', () => browser?.fitInParent());
+window.addEventListener('message', async event => {
+  if (event.origin !== location.origin || event.source !== parent || parent === window) return;
+  const data = event.data;
+  if (data?.type === 'TREE_RETRO_INIT' && !session) {
+    session = data.session;
+    try {
+      rom = inspectRom(data.rom).bytes;
+      if (await sha256(rom) !== data.hash) throw new Error('The ROM could not be verified. Please reopen it.');
+      $('loading-message').textContent = 'Your NES game is ready.';
+      $('start-game').disabled = false;
+    } catch (error) { failed(error.message); }
+  } else if (data?.type === 'TREE_RETRO_COMMAND' && data.session === session) {
+    try {
+      if (!started || !browser) throw new Error('Press Start Game before using save controls.');
+      const result = { id: data.id };
+      if (data.command === 'snapshot') {
+        result.bytes = new TextEncoder().encode(JSON.stringify(browser.nes.toJSON()));
+        if (!result.bytes.length || result.bytes.length > MAX_STATE_BYTES) throw new Error('The game could not be saved.');
+      } else if (data.command === 'load') {
+        const bytes = new Uint8Array(data.bytes);
+        if (!bytes.length || bytes.length > MAX_STATE_BYTES) throw new Error('This save file is invalid.');
+        const state = JSON.parse(new TextDecoder().decode(bytes));
+        for (const key of ['cpu','ppu','papu','mmap']) if (!state[key] || typeof state[key] !== 'object') throw new Error('This save does not contain a valid NES state.');
+        const previous = browser.nes.toJSON();
+        const wasPaused = paused;
+        pause(true);
+        try { browser.nes.fromJSON(state); }
+        catch { browser.nes.fromJSON(previous); pause(wasPaused); throw new Error('This save could not be restored. Your current game was kept.'); }
+        pause(false);
+      } else if (data.command === 'togglePause') pause(!paused);
+      else if (data.command === 'pause') pause(true);
+      else throw new Error('Unknown player control.');
+      reply('TREE_RETRO_REPLY', result);
+    } catch (error) { reply('TREE_RETRO_REPLY', { id: data.id, error: error.message }); }
+  }
+});
