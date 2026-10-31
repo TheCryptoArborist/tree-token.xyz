@@ -1,0 +1,77 @@
+{
+  "checkedAt": "2026-10-31T23:30:29.430326+00:00",
+  "deployId": "6ae679ad8d7a99d535827032",
+  "sourceCommit": "b4be1709864645fae73321b55eac2db43fe2159b",
+  "canonicalAssets": [
+    {
+      "path": "/play/deadfall-run/index.html",
+      "status": 200,
+      "sha1": "313b993993f11c4ee36b07a446cdf387472312cd"
+    },
+    {
+      "path": "/play/deadfall-run/physics.js",
+      "status": 200,
+      "sha1": "24016d0a99452a4ea10d5d230329b3149d8bc041"
+    },
+    {
+      "path": "/play/deadfall-run/play.js",
+      "status": 200,
+      "sha1": "47f4943d3365387eefe272508b7bedc3db249a27"
+    },
+    {
+      "path": "/play/deadfall-run/poster.svg",
+      "status": 200,
+      "sha1": "162b4ce9fd1aa89757deaf07b372118c14c80387"
+    },
+    {
+      "path": "/play/deadfall-run/route.js",
+      "status": 200,
+      "sha1": "98db712bca8a0cedfb83cbbf70066f8d52b6bb3c"
+    },
+    {
+      "path": "/play/deadfall-run/styles.css",
+      "status": 200,
+      "sha1": "438a2a0d0c8362a92f81b2e9c5ef8f1c956002e7"
+    },
+    {
+      "path": "/play/deadfall-run/third-party-notices.txt",
+      "status": 200,
+      "sha1": "e7ef14e3dd576bd562898d4c0f38585d30c17048"
+    },
+    {
+      "path": "/play/deadfall-run/vehicle.js",
+      "status": 200,
+      "sha1": "6278eb456c369e35f76a63add9f7474140a41b9a"
+    },
+    {
+      "path": "/play/deadfall-run/vendor/three.min.js",
+      "status": 200,
+      "sha1": "ccabb6c3b0fe669a2a571546e109bbb43ec31fa6"
+    },
+    {
+      "path": "/play/deadfall-run/world.js",
+      "status": 200,
+      "sha1": "36333829c3f0a4e80a82c26bf0d921e8d1132f49"
+    },
+    {
+      "path": "/play/index.html",
+      "status": 200,
+      "sha1": "ab395d49d65d550eb08abe6b3a14f72d2e1eff05"
+    }
+  ],
+  "automatedTests": {
+    "passed": 27,
+    "type": "CPU/DOM-stub; bundled Three.js geometry and physics"
+  },
+  "browser": {
+    "cabinet": "verified on canonical domain",
+    "returnLink": "verified",
+    "gpuPlaytest": "blocked by cloud browser WebGL disabled (GL_VENDOR=Disabled, GL_RENDERER=Disabled)",
+    "manualTestRequired": true
+  },
+  "backend": {
+    "exactFunctionPackagesAndConfigurations": 40,
+    "schedulesPreserved": 5,
+    "otherExistingStaticFilesPreserved": 240
+  }
+}

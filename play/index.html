@@ -3,104 +3,364 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TREE Arcade | TREE Ecosystem Games</title>
-  <meta name="description" content="TREE Arcade is the home of Garden Battles, TREE FORCE '89: Canopy Command, Arboretum, and future TREE ecosystem games.">
-  <meta name="theme-color" content="#02070b">
-  <link rel="canonical" href="https://tree-token.xyz/play">
-  <link rel="icon" href="../assets/tree-token-logo-official.webp">
-  <link rel="stylesheet" href="../styles/tree-arcade.css">
-  <link rel="stylesheet" href="../styles/tree-arcade-branding.css">
+  <title>TREE Arcade | Choose Your Game</title>
+  <meta name="description" content="Your NFTree is your arcade pass. Mint from the NFTree sales pool or buy on TradePort, then explore TREE FORCE '89, Garden Battles, and upcoming TREE Arcade games.">
+  <meta name="theme-color" content="#080813">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="TREE Arcade">
+  <meta property="og:title" content="TREE Arcade | Battle. Grow. Defend the canopy.">
+  <meta property="og:description" content="Your NFTree is your arcade pass. Mint an NFTree here or choose one on TradePort, then explore live games, previews, and upcoming releases.">
+  <meta property="og:url" content="https://tree-token.xyz/play/">
+  <meta property="og:image" content="https://tree-token.xyz/assets/arcade/tree-arcade-social.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="TREE Arcade artwork with Garden Bot, a forest emblem, and the TREE FORCE hero. Battle. Grow. Defend the canopy.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@thickquidity">
+  <meta name="twitter:title" content="TREE Arcade | Choose Your Game">
+  <meta name="twitter:description" content="Your NFTree is your arcade pass. Mint from the sales pool or choose your NFTree on TradePort, then find your next game.">
+  <meta name="twitter:image" content="https://tree-token.xyz/assets/arcade/tree-arcade-social.jpg">
+  <meta name="twitter:image:alt" content="TREE Arcade artwork with Garden Bot, a forest emblem, and the TREE FORCE hero. Battle. Grow. Defend the canopy.">
+  <link rel="canonical" href="https://tree-token.xyz/play/">
+  <link rel="icon" href="/assets/tree-token-logo-official.webp">
+  <link rel="stylesheet" href="/styles/tree-arcade-suite.css">
 </head>
-<body>
-  <header class="arcade-header">
-    <div class="arcade-header-inner">
-      <a class="arcade-brand" href="/" aria-label="TREE home">
-        <img src="../assets/tree-token-logo-official.webp" alt="TREE emblem">
+<body class="arcade-suite">
+  <a class="skip-link" href="#cabinets">Skip to the games</a>
+  <header class="suite-header">
+    <div class="suite-header-inner">
+      <a class="suite-brand" href="/" aria-label="THICKQUIDITY — TREE home">
+        <img src="/assets/tree-token-logo-official.webp" alt="" width="44" height="44">
         <span><strong>THICKQUIDITY</strong><small>TREE on Sui</small></span>
       </a>
       <nav aria-label="TREE Arcade navigation">
-        <a href="/">HOME</a>
-        <a href="/dapp/">APP</a>
-        <a class="active" href="/play" aria-current="page">PLAY</a>
-        <a href="https://nftree.net/" target="_blank" rel="noopener noreferrer">NFTREE</a>
+        <a href="/">Home</a>
+        <a href="/dapp/">App</a>
+        <a href="/play/" aria-current="page">Arcade</a>
+        <a href="https://nftree.net/mint#mint" data-nftree-mint aria-controls="nftree-mint-panel" aria-expanded="false">Get an NFTree <span aria-hidden="true">→</span></a>
       </nav>
     </div>
   </header>
 
-  <main>
-    <section class="arcade-hero" aria-labelledby="arcade-title">
-      <div class="arcade-cabinet-lights" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-      <p class="arcade-eyebrow">INSERT NFTREE · ENTER THE ECOSYSTEM</p>
-      <h1 id="arcade-title">TREE ARCADE</h1>
-      <p>One portal for Garden Battles, Arboretum, TREE FORCE '89: Canopy Command, and future games growing across the TREE ecosystem.</p>
-      <div class="nftree-access-card">
-        <img src="../assets/tree-command-logo-v2-512.png" alt="TREE ecosystem emblem">
-        <div><span>PLAYER ACCESS KEY</span><strong>YOUR NFTREE UNLOCKS THE ARCADE</strong><p>An NFTree is your key to accessing TREE ecosystem games and the utilities released around them.</p></div>
-        <a href="https://nftree.net/" target="_blank" rel="noopener noreferrer">EXPLORE NFTREE <span aria-hidden="true">→</span></a>
+  <main class="suite-main">
+    <section class="suite-hero suite-hero--compact" aria-labelledby="arcade-title">
+      <img class="suite-hero-art" src="/assets/arcade/tree-arcade-social.jpg" alt="Garden Bot and the TREE hero welcome you to TREE Arcade" width="1200" height="630" fetchpriority="high" decoding="async">
+      <div class="suite-hero-copy">
+        <p class="suite-eyebrow">BATTLE. GROW. DEFEND THE CANOPY.</p>
+        <h1 id="arcade-title"><span>TREE</span> ARCADE</h1>
+        <p class="suite-intro">Pick a game. Bring your NFTree. Let the adventure begin.</p>
+        <div class="suite-hero-actions">
+          <a class="suite-primary" href="#cabinets">Choose a game <span aria-hidden="true">↓</span></a>
+          <a class="suite-secondary" href="https://nftree.net/mint#mint" data-nftree-mint aria-controls="nftree-mint-panel" aria-expanded="false">Get an NFTree <span aria-hidden="true">→</span></a>
+        </div>
       </div>
-      <div class="arcade-marquee"><span>NOW PLAYING</span><strong>GARDEN BATTLES</strong><i aria-hidden="true">◆</i><span>UP NEXT</span><strong>ARBORETUM · TREE FORCE '89</strong></div>
-      <div class="arcade-status"><span aria-hidden="true"></span> 1 LIVE GAME · MORE GROWING</div>
     </section>
 
-    <section class="game-grid" aria-label="TREE ecosystem games">
-      <article class="game-card live-card">
-        <div class="game-card-top"><img class="game-brand-logo garden-logo" src="../assets/garden-battles-logo.png" alt="The Garden Battles logo"><span class="status live">LIVE</span></div>
-        <div>
-          <p class="game-label">NFTREE BATTLE ARENA</p>
-          <h2>GARDEN BATTLES</h2>
-          <p>Bring your NFTree into four distinct battle modes and build your record across the forest.</p>
-          <div class="garden-mode-panel" aria-label="Four Garden Battles modes">
-            <p class="garden-mode-heading">4 BATTLE MODES</p>
-            <ul class="garden-mode-grid">
-              <li><strong>Garden Bot</strong><span>Solo ranked</span></li>
-              <li><strong>PvP Battle</strong><span>Live arena</span></li>
-              <li><strong>Arborist Trials</strong><span>Daily challenge</span></li>
-              <li><strong>Canopy Clash</strong><span>Tournaments</span></li>
-            </ul>
+    <section id="nftree-mint-panel" class="mint-panel" aria-labelledby="nftree-mint-title" tabindex="-1" hidden>
+      <div class="mint-panel-heading">
+        <div><p class="suite-eyebrow">DIRECT FROM THE NFTREE SALES POOL</p><h2 id="nftree-mint-title">Mint an NFTree</h2></div>
+        <button class="mint-close" id="nftree-mint-close" type="button" aria-label="Close NFTree mint panel">Close <span aria-hidden="true">×</span></button>
+      </div>
+      <p class="mint-intro">Receive the next available NFTree from the sales pool. Your artwork and rarity are revealed after purchase. To choose a specific NFTree, <a href="https://www.tradeport.xyz/sui/collection/0xf6c6d439ea0da2f3e9ba79e4992a7a4c113215fbf54c442ac9020c315f953705::collection::NFT?tab=items" target="_blank" rel="noopener noreferrer">browse TradePort <span aria-hidden="true">↗</span></a>.</p>
+      <div class="mint-stats" aria-label="NFTree mint details">
+        <div class="mint-stat"><span>NFT price</span><strong id="nftree-mint-price">Checking…</strong><small>Current sales-pool price</small></div>
+        <div class="mint-stat"><span>Available</span><strong id="nftree-mint-inventory">Checking…</strong><small id="nftree-inventory-note">Live sales-pool inventory</small></div>
+        <div class="mint-stat"><span>Network fees</span><strong id="nftree-mint-fees">Reviewed before approval</strong><small>Paid in SUI in addition to the NFT price</small></div>
+      </div>
+      <p class="mint-wallet-state" id="nftree-wallet-state">Connect your Sui wallet to review a purchase.</p>
+      <div class="mint-wallet-options" id="nftree-wallet-options" aria-label="Choose a Sui wallet"></div>
+      <p class="mint-fallback" id="nftree-no-wallet" hidden>No compatible Sui wallet was detected. Open this page in a browser with your Sui wallet, or <a href="https://nftree.net/mint#mint" target="_blank" rel="noopener noreferrer">open the NFTree mint page <span aria-hidden="true">↗</span></a>.</p>
+      <p class="mint-balance" id="nftree-wallet-balance" hidden></p>
+      <div class="mint-review" id="nftree-purchase-review" hidden>
+        <div class="mint-review-copy" id="nftree-review-copy"></div>
+        <label class="mint-ack"><input id="nftree-purchase-ack" type="checkbox"><span>I’ve reviewed the price and understand that the NFTree’s artwork and rarity are revealed after purchase.</span></label>
+      </div>
+      <div class="mint-actions">
+        <button class="mint-action-primary" id="nftree-review-button" type="button" disabled>Review purchase</button>
+        <button class="mint-action-primary" id="nftree-purchase-button" type="button" hidden disabled>Confirm purchase in wallet</button>
+        <button class="mint-action-secondary" id="nftree-check-button" type="button" hidden>Check transaction status</button>
+        <button class="mint-action-secondary" id="nftree-refresh-button" type="button">Refresh inventory</button>
+        <button class="mint-action-secondary" id="nftree-disconnect-button" type="button" hidden>Disconnect</button>
+      </div>
+      <div class="mint-digest-entry" id="nftree-digest-entry" hidden>
+        <label for="nftree-transaction-digest">Transaction digest from your wallet</label>
+        <input id="nftree-transaction-digest" type="text" autocomplete="off" spellcheck="false" placeholder="Paste the transaction digest to check its status">
+        <p>Check your wallet history before making another purchase. You can correct a digest entered here. Checking a transaction does not submit a new purchase.</p>
+      </div>
+      <p class="mint-status" id="nftree-mint-status" role="status" aria-live="polite" aria-atomic="true">Loading live inventory…</p>
+      <div class="mint-result" id="nftree-mint-result" hidden></div>
+      <details class="mint-access-details">
+        <summary>NFTree access and game availability</summary>
+        <p>Use the wallet holding your NFTree when you enter a game. TREE FORCE ’89 currently checks NFTrees held directly in the wallet; NFTrees held in a Sui Kiosk are not recognized by that game. Garden Battles practice is available without an NFTree. Some modes have separate entry costs, and preview games are still in development.</p>
+      </details>
+      <p class="mint-fallback">Need another way to mint? <a href="https://nftree.net/mint#mint" target="_blank" rel="noopener noreferrer">Open the official NFTree mint page <span aria-hidden="true">↗</span></a>.</p>
+    </section>
+
+    <section id="arcade-daily-growth" class="growth-panel growth-panel--compact" aria-labelledby="growth-title" data-growth-state="loading">
+      <div class="growth-strip">
+        <img class="growth-strip-art" src="/assets/tree-hero-poster.webp" alt="" width="112" height="128" decoding="async">
+        <div class="growth-strip-copy">
+          <p class="suite-eyebrow">YOUR DAILY SIDE QUEST</p>
+          <h2 id="growth-title">Daily Growth</h2>
+          <p id="growth-summary-note">Check in. Play. Collect badges.</p>
+        </div>
+        <div class="growth-strip-progress">
+          <div class="growth-strip-tally"><strong id="growth-summary-count">Make every visit count.</strong><span id="growth-summary-label">Check-ins · Quests · Monthly badges</span></div>
+          <div class="growth-meter is-unknown" id="growth-summary-meter" aria-label="Sign in to see monthly check-in progress" hidden><span></span></div>
+        </div>
+        <div class="growth-strip-actions">
+          <button class="growth-primary" id="growth-connect" type="button" aria-haspopup="dialog" aria-controls="growth-wallet-picker" disabled>Connect wallet</button>
+          <button class="growth-primary" id="growth-sign-in" type="button" hidden>Sign in</button>
+          <button class="growth-primary" id="growth-check-in" type="button" hidden disabled>Check in today</button>
+          <button class="growth-text-button" id="growth-sign-out" type="button" hidden>Sign out</button>
+        </div>
+      </div>
+      <details id="growth-details" class="growth-details">
+        <summary class="growth-details-toggle"><span class="growth-details-label--closed">View quests &amp; badges</span><span class="growth-details-label--open">Close progress</span><span class="growth-details-hint">Daily quests · Calendar · Passport</span></summary>
+        <div class="growth-details-body">
+          <div class="growth-heading"><p class="growth-meta" id="growth-meta">Your NFTree holder progress, one day at a time.</p><span class="growth-season-tag" id="growth-season-tag">A new season every month</span></div>
+          <div class="growth-auth">
+            <div class="growth-auth-copy"><span class="growth-auth-symbol" aria-hidden="true"><img class="growth-art-icon" src="/assets/tree-command-logo-v2-512.png" alt="" width="44" height="44" loading="lazy"></span><div><p id="growth-wallet-state">Connect your NFTree wallet to save check-ins, daily quests, and monthly badges.</p><p class="growth-small" id="growth-auth-note">Sign-in uses a wallet message. It does not submit a transaction.</p></div></div>
+          </div>
+      <div class="growth-journey" aria-labelledby="growth-journey-title">
+        <div class="growth-journey-heading"><strong id="growth-journey-title">Your monthly growth path</strong><p class="growth-small" id="growth-journey-note">Check in on different days to unlock each badge.</p></div>
+        <div class="growth-journey-track" id="growth-journey-stops" aria-label="Monthly check-in badge goals"></div>
+      </div>
+      <div class="growth-tabs" role="tablist" aria-label="Daily Growth progress">
+        <button id="growth-today-tab" type="button" role="tab" aria-controls="growth-today-panel" aria-selected="true" tabindex="0">Today’s quest</button>
+        <button id="growth-month-tab" type="button" role="tab" aria-controls="growth-month-panel" aria-selected="false" tabindex="-1">This month</button>
+        <button id="growth-badges-tab" type="button" role="tab" aria-controls="growth-badges-panel" aria-selected="false" tabindex="-1">Earned badges</button>
+      </div>
+      <div id="growth-today-panel" class="growth-tab-panel" role="tabpanel" aria-labelledby="growth-today-tab" tabindex="0">
+        <div class="growth-today-grid">
+          <section class="growth-quest" aria-labelledby="growth-quest-title">
+            <div class="growth-quest-heading"><p class="growth-eyebrow">TODAY’S QUEST</p><span class="growth-quest-state" id="growth-quest-state">Checking availability…</span></div>
+            <div class="growth-quest-title-row"><img class="growth-quest-art" id="growth-quest-art" src="/assets/arcade/garden-bot-poster.webp" alt="" width="72" height="72" loading="lazy"><h3 id="growth-quest-title">Your next adventure</h3></div>
+            <div class="growth-meter growth-meter--quest is-unknown" id="growth-quest-meter" aria-label="Sign in to see today’s quest progress"><span></span></div>
+            <p class="growth-small growth-quest-rule" id="growth-quest-rule">Choose an eligible game to grow today’s progress.</p>
+            <p class="growth-pick"><span id="growth-pick-label">Today’s pick:</span> <strong id="growth-game-name">Checking eligible games…</strong></p>
+            <p class="growth-objective" id="growth-objective">Finish a verified game result, then refresh your progress here.</p>
+            <p class="growth-small growth-game-access" id="growth-game-access"></p>
+            <div class="growth-actions"><a class="growth-primary" id="growth-play" target="_blank" rel="noopener noreferrer" hidden>Play today’s pick <span aria-hidden="true">↗</span></a><button class="growth-secondary" id="growth-refresh" type="button" disabled>Refresh progress</button></div>
+            <details class="growth-alternative" id="growth-alternative" hidden>
+              <summary>Choose another eligible game</summary>
+              <label for="growth-game-select">Any listed game can complete today’s quest.</label>
+              <select id="growth-game-select"></select>
+            </details>
+            <p class="growth-small growth-quest-note" id="growth-quest-note">Complete the game and refresh before 00:00 UTC to earn that day’s quest and passport stamps. Opening a game alone does not count.</p>
+          </section>
+          <div class="growth-month-glance">
+            <section class="growth-attendance" aria-labelledby="growth-attendance-title">
+              <div class="growth-attendance-top"><div class="growth-progress-ring is-unknown" id="growth-attendance-ring"><strong id="growth-visit-count">—</strong><span id="growth-visit-total">days checked in</span></div><div class="growth-attendance-copy"><p class="growth-eyebrow" id="growth-attendance-title">MONTHLY CHECK-IN</p><p id="growth-visit-label">check-ins this month</p><strong id="growth-attendance-next">Your next badge awaits</strong></div></div>
+              <div class="growth-meter growth-meter--attendance is-unknown" id="growth-attendance-meter" aria-label="Sign in to see monthly check-in progress"><span></span></div>
+              <p class="growth-small" id="growth-check-note">Sign in to see your saved attendance. You can check in without playing a game.</p>
+            </section>
+            <details class="growth-passport" id="growth-passport" open>
+              <summary><span>Arcade Passport</span><span class="growth-passport-progress"><strong id="growth-passport-count">Sign in to view</strong><span class="growth-passport-toggle" aria-hidden="true">+</span></span></summary>
+              <div class="growth-meter growth-meter--passport is-unknown" id="growth-passport-meter" aria-label="Sign in to see required Passport stamps"><span></span></div>
+              <p class="growth-small" id="growth-passport-note">Explore eligible games at your own pace this month. The passport is an optional goal.</p>
+              <div class="growth-stamps" id="growth-stamps" aria-label="Games played this month"></div>
+              <div class="growth-passport-optional" id="growth-passport-optional" hidden>
+                <p class="growth-small">Optional participation</p>
+                <div class="growth-stamps" id="growth-optional-stamps" aria-label="Optional participation stamps"></div>
+              </div>
+              <p class="growth-small" id="growth-passport-reward"></p>
+            </details>
+            <p class="growth-small growth-tracking-note" id="growth-tracking-note" hidden>TREE FORCE ’89 is live; Daily Growth tracking is coming soon.</p>
           </div>
         </div>
-        <a class="game-action play-action" href="https://nftree.net/battle/" target="_blank" rel="noopener noreferrer">PLAY <span aria-hidden="true">→</span></a>
-      </article>
+      </div>
+      <div id="growth-month-panel" class="growth-tab-panel" role="tabpanel" aria-labelledby="growth-month-tab" tabindex="0" hidden>
+        <p class="growth-empty" id="growth-month-empty">Sign in to see your real monthly calendar.</p>
+        <div id="growth-month-content" hidden>
+          <div class="growth-month-summary"><p><strong id="growth-month-visits">—</strong> check-ins</p><p><strong id="growth-month-quests">—</strong> daily quests completed</p></div>
+          <p class="growth-small growth-next" id="growth-next"></p>
+          <div class="growth-calendar" id="growth-calendar" role="list" aria-label="Monthly attendance and daily quests"></div>
+          <div class="growth-legend" aria-label="Calendar legend"><span>✓ Check-in</span><span>★ Quest complete</span><span>○ Today</span><span>– Missed</span></div>
+          <div class="growth-milestones" id="growth-milestones" aria-label="Monthly attendance milestones"></div>
+          <p class="growth-small growth-month-note">Missed days keep your earlier progress. Earned badges stay with your wallet.</p>
+        </div>
+      </div>
+      <div id="growth-badges-panel" class="growth-tab-panel" role="tabpanel" aria-labelledby="growth-badges-tab" tabindex="0" hidden>
+        <p class="growth-empty" id="growth-badges-empty">Sign in to see your earned monthly badges.</p>
+        <div class="growth-badges" id="growth-badges"></div>
+      </div>
+          <div class="growth-footer"><span>Daily reset: 00:00 UTC · Check-ins have no gas fee</span><span>Only recorded participation or verified results count. Preview games are excluded.</span></div>
+        </div>
+      </details>
+      <dialog class="growth-wallet-picker" id="growth-wallet-picker" aria-labelledby="growth-wallet-picker-label" aria-describedby="growth-wallet-intro">
+        <div class="growth-wallet-heading"><img class="growth-wallet-brand" src="/assets/tree-command-logo-v2-512.png" alt="" width="56" height="56"><div><p class="growth-eyebrow">YOUR PLAYER IDENTITY</p><h3 id="growth-wallet-picker-label">Choose your Sui wallet</h3></div><button class="growth-wallet-close" id="growth-wallet-close" type="button" aria-label="Close wallet picker">✕</button></div>
+        <p class="growth-wallet-intro" id="growth-wallet-intro">Bring your NFTree. Keep your progress.</p>
+        <div class="growth-wallet-options" id="growth-wallet-options" aria-labelledby="growth-wallet-picker-label"></div>
+        <p class="growth-small" id="growth-no-wallet" hidden>No compatible Sui wallet was detected. Open this page in your wallet’s browser, or use a browser with a Sui wallet installed.</p>
+        <p class="growth-wallet-status" id="growth-wallet-status" role="status" aria-live="polite" aria-atomic="true"></p>
+        <p class="growth-wallet-help">Choose a detected wallet, then approve a separate sign-in message. Connecting is free and does not send a transaction.</p>
+      </dialog>
+      <p class="growth-status" id="growth-status" role="status" aria-live="polite" aria-atomic="true">Loading Daily Growth…</p>
+      <noscript><p class="growth-empty">Turn on JavaScript to connect your wallet and load Daily Growth. The game links below still work.</p></noscript>
+    </section>
 
-      <article class="game-card arboretum-card">
-        <div class="game-card-top"><img class="game-brand-logo" src="../assets/arboretum-logo-black.png" alt="Arboretum logo"><span class="status testing">IN TESTING</span></div>
-        <div>
-          <p class="game-label">GROWTH STRATEGY</p>
-          <h2>ARBORETUM</h2>
-          <p>Plant NFTree-backed Seeds, water daily, and use items to build Growth Points. Your share of the cycle's Growth Points determines your reward from the monthly SUI Growth Pool.</p>
-          <div class="arboretum-earn-panel" aria-label="Ways to earn SUI in Arboretum">
-            <p class="arboretum-earn-heading">COMPETE FOR A SHARE OF THE MONTHLY SUI GROWTH POOL</p>
-            <div class="arboretum-earn-grid">
-              <div><strong>Your Growth Points determine your share</strong><span>Climb the monthly leaderboard to earn more SUI</span></div>
-              <div><strong>Earn a 10% referral reward</strong><span>When someone plants through your invite link</span></div>
-              <div><strong>Earn a 1% referral reward</strong><span>When someone buys a crate through your invite link</span></div>
+    <section id="cabinets" class="arcade-floor" aria-labelledby="floor-title" tabindex="-1">
+      <div class="floor-heading">
+        <div><p class="suite-eyebrow">THE GAME LINEUP</p><h2 id="floor-title">Choose your game.</h2></div>
+      </div>
+      <section class="arcade-group arcade-group--standalone" aria-labelledby="standalone-title">
+        <div class="arcade-group-heading">
+          <h3 id="standalone-title">Standalone games</h3>
+        </div>
+        <div class="poster-grid">
+          <article class="game-poster poster--force" aria-labelledby="force-title">
+            <a class="poster-link" href="/play/treeforce89/" aria-labelledby="force-title" aria-describedby="force-status force-description">
+              <div class="poster-artwork">
+                <div class="poster-topline"><span class="poster-number">ARCADE SHOOTER</span><span class="status-tag status-tag--live" id="force-status">LIVE</span></div>
+                <img class="poster-art" src="/assets/arcade/tree-force-89-poster.webp" alt="TREE FORCE '89: Canopy Command logo" width="512" height="512" decoding="async" fetchpriority="high">
+                <p class="poster-genre">CANOPY COMMAND</p>
+              </div>
+              <div class="poster-details">
+                <h4 class="poster-title" id="force-title">TREE FORCE ’89</h4>
+                <p class="poster-description" id="force-description">Pilot the Arborwing. Blast through enemy waves and defend the canopy.</p>
+                <span class="poster-cta"><span>PLAY TREE FORCE ’89</span><span aria-hidden="true">→</span></span>
+              </div>
+            </a>
+          </article>
+
+          <article class="game-poster poster--arboretum" aria-labelledby="arboretum-title">
+            <a class="poster-link" href="https://treegrow.xyz/" aria-labelledby="arboretum-title" aria-describedby="arboretum-status arboretum-description">
+              <div class="poster-artwork">
+                <div class="poster-topline"><span class="poster-number">GROWTH STRATEGY</span><span class="status-tag status-tag--preview" id="arboretum-status">PREVIEW</span></div>
+                <img class="poster-art" src="/assets/arcade/arboretum-poster.webp" alt="Arboretum logo" width="512" height="512" decoding="async">
+                <p class="poster-genre">PLANT. WATER. GROW.</p>
+              </div>
+              <div class="poster-details">
+                <h4 class="poster-title" id="arboretum-title">ARBORETUM</h4>
+                <p class="poster-description" id="arboretum-description">Plant your Seeds, water daily, and grow your place in the forest.</p>
+                <span class="poster-cta"><span>VIEW PREVIEW</span><span aria-hidden="true">↗</span></span>
+              </div>
+            </a>
+          </article>
+
+          <article class="game-poster poster--deadfall" aria-labelledby="deadfall-title" style="--poster-accent:#b9e775;--poster-rgb:185,231,117;--poster-tint:#283a2b">
+            <a class="poster-link" href="https://tree-token.xyz/play/deadfall-run/" aria-labelledby="deadfall-title" aria-describedby="deadfall-status deadfall-description">
+              <div class="poster-artwork">
+                <div class="poster-topline"><span class="poster-number">3D DRIVING</span><span class="status-tag status-tag--testing" id="deadfall-status">TEST BUILD</span></div>
+                <img class="poster-art art--wide" src="/play/deadfall-run/poster.svg" alt="Deadfall Run — Stormbreak Pass" width="560" height="340" loading="lazy" decoding="async">
+                <p class="poster-genre">HEAVY RIG. STEEP DESCENT.</p>
+              </div>
+              <div class="poster-details">
+                <h4 class="poster-title" id="deadfall-title">DEADFALL RUN</h4>
+                <p class="poster-description" id="deadfall-description">Haul five logs down Stormbreak Pass. Control your speed and keep the trailer in line. Free test build.</p>
+                <span class="poster-cta"><span>PLAY TEST BUILD</span><span aria-hidden="true">→</span></span>
+              </div>
+            </a>
+          </article>
+
+          <article class="game-poster poster--future future--two" aria-labelledby="future-two-title">
+            <div class="poster-link poster-link--soon">
+              <div class="poster-artwork">
+                <div class="poster-topline"><span class="poster-number">UPCOMING GAME</span></div>
+                <div class="poster-coming-art" aria-hidden="true"><span>?</span><small>NEXT GAME</small></div>
+                <p class="poster-genre">MORE WAYS TO PLAY</p>
+              </div>
+              <div class="poster-details">
+                <h4 class="poster-title" id="future-two-title">COMING SOON</h4>
+                <p class="poster-description" id="future-two-description">Another standalone adventure is on the way.</p>
+                <p class="poster-soon-note">Details to be revealed</p>
+              </div>
             </div>
-          </div>
+          </article>
         </div>
-        <a class="game-action play-action" href="https://treegrow.xyz/" target="_blank" rel="noopener noreferrer">OPEN ARBORETUM <span aria-hidden="true">→</span></a>
-      </article>
+      </section>
 
-      <article class="game-card force-card">
-        <div class="game-card-top"><img class="game-brand-logo" src="../assets/tree-force-89-logo-black.png" alt="TREE FORCE '89: Canopy Command logo"><span class="status soon">COMING SOON</span></div>
-        <div>
-          <p class="game-label">RETRO FORMATION SHOOTER</p>
-          <h2>TREE FORCE '89</h2>
-          <h3>CANOPY COMMAND</h3>
-          <p>A retro arcade formation shooter being designed for the TREE ecosystem. The canopy is assembling.</p>
+      <section class="arcade-group arcade-group--battles" aria-labelledby="garden-battles-group-title">
+        <div class="arcade-group-heading">
+          <h3 id="garden-battles-group-title">Garden Battles</h3>
         </div>
-        <span class="game-action disabled" aria-disabled="true">COMING SOON</span>
-      </article>
-    </section>
+        <div class="poster-grid">
+          <article class="game-poster poster--battle poster--bot" aria-labelledby="garden-bot-title">
+            <a class="poster-link" href="https://nftree.net/battle/garden-bot" aria-labelledby="garden-bot-title" aria-describedby="garden-bot-status garden-bot-subtitle garden-bot-description garden-bot-facts">
+              <div class="poster-artwork">
+                <div class="poster-topline"><span class="poster-number">GARDEN BATTLES</span><span class="status-tag status-tag--live" id="garden-bot-status">LIVE</span></div>
+                <img class="poster-art" src="/assets/arcade/garden-bot-poster.webp" alt="Garden Bot battle crest" width="512" height="512" loading="lazy" decoding="async">
+                <span class="poster-start">START HERE</span>
+              </div>
+              <div class="poster-details">
+                <h4 class="poster-title" id="garden-bot-title">GARDEN BOT</h4>
+                <p class="poster-subtitle" id="garden-bot-subtitle">Turn-based card strategy · Solo</p>
+                <p class="poster-description" id="garden-bot-description">Play your cards against Garden Bot. Grow your tree, block attacks, and slow the bot’s progress to reach the Growth target first.</p>
+                <p class="poster-facts" id="garden-bot-facts">Computer opponent · Repeatable battles</p>
+                <span class="poster-cta"><span>PLAY GARDEN BOT</span><span aria-hidden="true">↗</span></span>
+              </div>
+            </a>
+          </article>
 
-    <section class="arcade-footer-cta">
-      <div><p class="arcade-eyebrow">MORE THAN GAMES</p><h2>Explore the full TREE ecosystem.</h2></div>
-      <div class="arcade-footer-actions"><a href="/dapp/">OPEN APP</a><a href="https://nftree.net/" target="_blank" rel="noopener noreferrer">EXPLORE NFTREE</a></div>
+          <article class="game-poster poster--battle poster--pvp" aria-labelledby="pvp-title">
+            <a class="poster-link" href="https://nftree.net/battle/pvp" aria-labelledby="pvp-title" aria-describedby="pvp-status pvp-subtitle pvp-description pvp-facts">
+              <div class="poster-artwork">
+                <div class="poster-topline"><span class="poster-number">GARDEN BATTLES</span><span class="status-tag status-tag--live" id="pvp-status">LIVE</span></div>
+                <img class="poster-art" src="/assets/arcade/pvp-battle-poster.webp" alt="PvP Battle crossed-swords crest" width="512" height="512" loading="lazy" decoding="async">
+              </div>
+              <div class="poster-details">
+                <h4 class="poster-title" id="pvp-title">PVP BATTLE</h4>
+                <p class="poster-subtitle" id="pvp-subtitle">Turn-based card strategy · PvP</p>
+                <p class="poster-description" id="pvp-description">Challenge another player in a tactical card duel. Choose when to grow, attack, or defend, and reach the Growth target before your rival.</p>
+                <p class="poster-facts" id="pvp-facts">Live opponent · Paid entry</p>
+                <span class="poster-cta"><span>BATTLE A PLAYER</span><span aria-hidden="true">↗</span></span>
+              </div>
+            </a>
+          </article>
+
+          <article class="game-poster poster--battle poster--trials" aria-labelledby="trials-title">
+            <a class="poster-link" href="https://nftree.net/battle/trials" aria-labelledby="trials-title" aria-describedby="trials-status trials-subtitle trials-description trials-facts">
+              <div class="poster-artwork">
+                <div class="poster-topline"><span class="poster-number">GARDEN BATTLES</span><span class="status-tag status-tag--live" id="trials-status">LIVE</span></div>
+                <img class="poster-art art--wide" src="/assets/arcade/arborist-trials-poster.webp" alt="Arborist Trials emblem" width="800" height="267" loading="lazy" decoding="async">
+              </div>
+              <div class="poster-details">
+                <h4 class="poster-title" id="trials-title">ARBORIST TRIALS</h4>
+                <p class="poster-subtitle" id="trials-subtitle">Daily strategy · Predetermined cards</p>
+                <p class="poster-description" id="trials-description">Take on the day’s challenge with predetermined cards. Plan the best sequence of moves and compete on the daily leaderboard.</p>
+                <p class="poster-facts" id="trials-facts">One ranked run daily · Practice available</p>
+                <span class="poster-cta"><span>PLAY TODAY’S TRIAL</span><span aria-hidden="true">↗</span></span>
+              </div>
+            </a>
+          </article>
+
+          <article class="game-poster poster--battle poster--clash" aria-labelledby="clash-title">
+            <a class="poster-link" href="https://nftree.net/battle/canopy-clash" aria-labelledby="clash-title" aria-describedby="clash-status clash-subtitle clash-description clash-facts">
+              <div class="poster-artwork">
+                <div class="poster-topline"><span class="poster-number">GARDEN BATTLES</span><span class="status-tag status-tag--preview" id="clash-status">PREVIEW</span></div>
+                <img class="poster-art" src="/assets/arcade/canopy-clash-poster.webp" alt="Canopy Clash tournament crest" width="512" height="512" loading="lazy" decoding="async">
+              </div>
+              <div class="poster-details">
+                <h4 class="poster-title" id="clash-title">CANOPY CLASH</h4>
+                <p class="poster-subtitle" id="clash-subtitle">Garden Battles tournaments</p>
+                <p class="poster-description" id="clash-description">A tournament mode is coming to Garden Battles, with scheduled matches, brackets, and championship prizes. Preview the next way to compete.</p>
+                <p class="poster-facts" id="clash-facts">Coming soon · Tournament preview</p>
+                <span class="poster-cta"><span>PREVIEW CANOPY CLASH</span><span aria-hidden="true">↗</span></span>
+              </div>
+            </a>
+          </article>
+        </div>
+      </section>
+
+      <section class="suite-access suite-welcome" aria-labelledby="access-title">
+        <div class="welcome-intro">
+          <img class="welcome-mark" src="/assets/tree-command-logo-v2-512.png" alt="" width="88" height="88" loading="lazy" decoding="async">
+          <div><p class="suite-eyebrow">YOUR NEXT ADVENTURE STARTS HERE</p><h2 id="access-title">New to TREE Arcade?</h2><p>Find your next game, learn about NFTree access, and explore the TREE ecosystem.</p></div>
+        </div>
+        <ol class="welcome-steps">
+          <li><span class="welcome-step-number" aria-hidden="true">01</span><div><h3>Choose your game</h3><p>Go solo, face an opponent, grow a forest, or defend the canopy.</p></div></li>
+          <li><span class="welcome-step-number" aria-hidden="true">02</span><div><h3>Check your access</h3><p>Open a game to see its access and entry requirements.</p></div></li>
+          <li><span class="welcome-step-number" aria-hidden="true">03</span><div><h3>Join the adventure</h3><p>Connect your Sui wallet when the game prompts you, then follow its play instructions.</p></div></li>
+        </ol>
+        <div class="access-actions"><a href="https://nftree.net/mint#mint" data-nftree-mint aria-controls="nftree-mint-panel" aria-expanded="false">MINT AN NFTREE <span aria-hidden="true">→</span></a><a href="https://www.tradeport.xyz/sui/collection/0xf6c6d439ea0da2f3e9ba79e4992a7a4c113215fbf54c442ac9020c315f953705::collection::NFT?tab=items" target="_blank" rel="noopener noreferrer">BUY ON TRADEPORT <span aria-hidden="true">↗</span></a></div>
+      </section>
     </section>
   </main>
 
-  <footer>
-    <strong>THICKQUIDITY · TREE ARCADE</strong>
-    <p>Part of the TREE ecosystem on Sui.</p>
-  </footer>
+  <footer class="suite-footer"><strong>THICKQUIDITY · TREE ARCADE</strong><p>Rooted in the TREE ecosystem. Built for the next round.</p><a href="/">Back to TREE home <span aria-hidden="true">→</span></a></footer>
+  <script type="module" src="/scripts/arcade-nftree-access.js"></script>
+  <script type="module" src="/scripts/arcade-daily-growth.js"></script>
 </body>
 </html>
