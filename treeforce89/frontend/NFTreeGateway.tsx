@@ -120,13 +120,15 @@ export default function NFTreeGateway() {
   if(session && isGatewaySessionCurrent(session,account?.address)) {
     return <div className="nftree-game-shell">
       <div className="nftree-wallet-bar"><span>NFTree verified · {session.wallet.slice(0,6)}…{session.wallet.slice(-4)}</span><button type="button" onClick={disconnect}>Disconnect</button></div>
+      <div className="game-viewport">
       <CanopyGame key={session.runId+':'+(resume?.digest||'start')} serverRunId={session.runId} initialScene={initialScene} resumeRun={resume?.run} onNewRunRequested={restart} onContinueRequested={run=>{setCheckoutRun(run);setCheckoutOpen(true);}} />
       {checkoutOpen&&<ContinuationReview session={session} run={checkoutRun} onContinue={continuePaid} onClose={()=>setCheckoutOpen(false)} />}
+      <div className="crt-lines" aria-hidden="true" />
+      </div>
     </div>;
   }
-  return <div className="nftree-home">
+  return <div className="game-viewport"><div className="nftree-home">
     <CanopyGame homeOnly />
-    <a className="home-arcade-link" href="/play/">← TREE ARCADE</a>
     <section className="nftree-home-access" aria-label="NFTree player access">
     <h2>Your NFTree is your arcade pass</h2>
     {!account ? <WalletPicker /> : <>
@@ -142,5 +144,6 @@ export default function NFTreeGateway() {
     <small className="home-access-warning">Stop if your wallet shows a security warning.</small>
     {error&&<p role="alert">{error}</p>}
     </section>
-  </div>;
+    <div className="crt-lines" aria-hidden="true" />
+  </div></div>;
 }

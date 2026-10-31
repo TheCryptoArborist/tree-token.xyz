@@ -189,3 +189,18 @@ body .nftree-gateway[aria-label="NFTree Gateway"] button:not(.nftree-secondary):
 @keyframes home-launch-glow{0%,100%{box-shadow:0 3px 0 #62418f,0 0 18px #b693ff30,inset 0 1px 0 #ffffffd9}50%{box-shadow:0 3px 0 #62418f,0 0 29px #b693ff55,inset 0 1px 0 #ffffffd9}}
 @media(max-height:650px){.nftree-home-access{padding:10px 12px;gap:5px}.nftree-home-access .home-connect,.nftree-home-access .home-play{min-height:43px;font-size:12px}.nftree-home-access::before{font-size:7px;padding:3px 6px}}
 @media(prefers-reduced-motion:reduce){.nftree-home-access .home-play{animation:none}.nftree-home-access .home-connect,.nftree-home-access .home-play{transition:none}}
+
+/* Navigation and wallet status occupy their own rows above the 2:3 game. */
+.game-frame{--player-status-height:0px;width:min(100%,530px,calc((100svh - 162px - var(--player-status-height))*2/3))}
+.game-frame:has(.nftree-wallet-bar){--player-status-height:38px}
+.game-navigation{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:46px;padding:6px 12px;border-bottom:1px solid #315a3a;background:#0c1d14}
+.game-navigation a{display:inline-flex;align-items:center;justify-content:center;min-height:32px;padding:6px 10px;border:1px solid #698653;border-radius:5px;color:#dcebc5;font:700 11px/1.3 Verdana,sans-serif;text-decoration:none;touch-action:manipulation}
+.game-navigation .game-buy-tree{border-color:#c7a744;background:linear-gradient(120deg,#f2db7a,#dcb94e);color:#241d08;box-shadow:0 0 14px #e0bd4d1f}
+.game-navigation a:hover{filter:brightness(1.12)}
+.game-navigation a:focus-visible,.nftree-wallet-bar button:focus-visible{outline:3px solid #d5b2ff;outline-offset:2px}
+.nftree-game-shell{height:auto}
+.nftree-wallet-bar{position:static;min-height:38px;padding:4px 10px;gap:8px;border:0;border-bottom:1px solid #315a3a;background:#0a1b12;font:10px/1.4 Verdana,sans-serif}
+.nftree-wallet-bar span{min-width:0;overflow-wrap:anywhere}
+.nftree-wallet-bar button{flex-shrink:0;border:1px solid #667e4f;border-radius:4px;min-height:28px;padding:4px 8px;touch-action:manipulation}
+.game-viewport{max-height:none;aspect-ratio:2/3}
+@media(max-width:620px),(max-height:650px){.game-frame{width:min(100%,calc((100svh - 46px - var(--player-status-height))*2/3));min-height:0;margin:auto;border:0;box-shadow:none}.game-viewport{width:100%;height:auto;max-height:none}.site-shell{align-items:start;padding:0}.game-header,.game-controls,.build-label{display:none}.game-navigation{padding-inline:8px;gap:8px}.game-navigation a{font-size:10px;padding-inline:6px}}

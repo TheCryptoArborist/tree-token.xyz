@@ -3,12 +3,14 @@ import {resolve} from 'node:path';
 import {execFileSync} from 'node:child_process';
 import assert from 'node:assert/strict';
 import {rebaseTreeForceAssets} from './rebase-treeforce89-assets.mjs';
+import {layoutTreeForceHud} from './layout-treeforce89-hud.mjs';
 const root=resolve(import.meta.dirname,'..');
 export function applyPaidContinue(source) {
  const pin='a38e08e37e1f71ea41b86add8e26a92b0789cf22';
  const original=path=>execFileSync('git',['show',pin+':'+path],{cwd:source,encoding:'utf8'});
  for(const name of ['NFTreeGateway.tsx','CanopyGame.tsx','ContinuationReview.tsx','ContinuationDialog.tsx','WalletPicker.tsx'])
   copyFileSync(resolve(root,'treeforce89/frontend',name),resolve(source,'app',name));
+ copyFileSync(resolve(root,'treeforce89/frontend/main.tsx'),resolve(source,'src/main.tsx'));
  mkdirSync(resolve(source,'paid'),{recursive:true});
  for(const name of ['contract.mjs','client.mjs','receipt-discovery.mjs','wallet-options.mjs'])copyFileSync(resolve(root,'treeforce89/paid',name),resolve(source,'paid',name));
  let arcade=original('app/game/arcade.ts');
@@ -45,7 +47,7 @@ export function applyPaidContinue(source) {
  replace('requestCheckout?:()=>void','requestCheckout?:(run:RunState)=>void;resumeRun?:RunState;homeOnly?:boolean');
  replace('if(options?.serverRunId)game.registry.set("serverRunId",options.serverRunId);',
   'if(options?.serverRunId)game.registry.set("serverRunId",options.serverRunId);\n  if(options?.resumeRun)game.registry.set("paidContinueResume",options.resumeRun);\n  if(options?.homeOnly)game.registry.set("homeOnly",true);');
- writeFileSync(resolve(source,'app/game/arcade.ts'),arcade);
+ writeFileSync(resolve(source,'app/game/arcade.ts'),layoutTreeForceHud(arcade));
  rebaseTreeForceAssets(source);
  // The existing wallet connection, dependencies and contract remain pinned.
  assert.equal(readFileSync(resolve(source,'app/dapp-kit.ts'),'utf8'),original('app/dapp-kit.ts'));
