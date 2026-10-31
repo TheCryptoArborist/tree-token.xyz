@@ -32,6 +32,7 @@ const MILESTONES = [
   { id: 'deep-roots', label: 'Deep Roots', target: 14 },
   { id: 'full-canopy', label: 'Full Canopy', target: 21 },
 ];
+const PROGRESS_METERS = ['attendance-ring', 'attendance-meter', 'quest-meter', 'passport-meter'];
 const deferred = () => {
   let resolvePromise;
   let reject;
@@ -65,18 +66,55 @@ async function settleUntil(predicate, label) {
   assert.fail(`Daily Growth did not reach: ${label}`);
 }
 
+function assertUnknownMeters(h) {
+  for (const id of PROGRESS_METERS) {
+    const meter = h.byId(id);
+    assert(meter, `${id} exists`);
+    assert.equal(meter.hasAttribute('aria-valuenow'), false, `${id} does not invent a current value`);
+    assert.equal(meter.hasAttribute('aria-valuemax'), false, `${id} does not expose a private progress scale`);
+    assert.equal(meter.classList.contains('is-unknown'), true, `${id} marks progress as unknown`);
+    assert.equal(meter.classList.contains('is-complete'), false, `${id} is not an earned completion`);
+  }
+}
+
+function assertMeter(h, id, value, maximum) {
+  const meter = h.byId(id);
+  assert.equal(meter.getAttribute('role'), 'progressbar', `${id} has accessible progress semantics`);
+  assert.equal(meter.getAttribute('aria-valuemin'), '0', id);
+  assert.equal(meter.getAttribute('aria-valuemax'), String(maximum), id);
+  assert.equal(meter.getAttribute('aria-valuenow'), String(value), id);
+  assert.equal(meter.classList.contains('is-unknown'), false, id);
+  assert(meter.getAttribute('aria-valuetext'), `${id} explains the saved progress`);
+  assert(Math.abs(Number(meter.style.getPropertyValue('--growth-progress')) - value / maximum * 100) < 0.001,
+    `${id} visible fill matches its accessible value`);
+}
+
 async function harness(t, options = {}) {
   const errors = [];
   const virtualConsole = new VirtualConsole();
   virtualConsole.on('jsdomError', (error) => errors.push(error));
   const dom = new JSDOM(html, { url: 'https://tree-token.xyz/play/', runScripts: 'outside-only', virtualConsole });
   const { window } = dom;
+  // JSDOM does not implement the browser's dialog top layer. Supply only its
+  // open/close lifecycle here; focus trapping and actual backdrop layout are
+  // covered by the browser review rather than simulated as UI implementation.
+  Object.defineProperties(window.HTMLDialogElement.prototype, {
+    showModal: { configurable: true, value() { this.setAttribute('open', ''); } },
+    close: { configurable: true, value() {
+      if (!this.open) return;
+      this.removeAttribute('open');
+      this.dispatchEvent(new window.Event('close'));
+    } },
+  });
   const root = window.document.getElementById('arcade-daily-growth');
   const byId = (id) => window.document.getElementById(`growth-${id}`);
   const calls = [];
   let clock = options.now || NOW;
   let walletState = options.connected ? { connected: true, address: ACCOUNT, walletName: 'Test wallet' } : { connected: false, address: null, walletName: null };
   const walletListeners = new Set();
+  const walletListListeners = new Set();
+  let availableWallets = options.availableWallets || [{ id: 'Test wallet', name: 'Test wallet' }];
+  let connectImpl = options.connect;
   let sign = options.sign || (async () => ({ signature: 'test-personal-message-signature' }));
   const changeWallet = (address) => {
     walletState = address ? { connected: true, address, walletName: 'Test wallet' } : { connected: false, address: null, walletName: null };
@@ -84,8 +122,13 @@ async function harness(t, options = {}) {
   };
   const wallet = {
     getWalletState: () => walletState,
-    getAvailableWallets: () => [{ id: 'Test wallet', name: 'Test wallet' }],
-    async connectWallet(id) { calls.push({ type: 'connect', id }); changeWallet(ACCOUNT); return walletState; },
+    getAvailableWallets: () => availableWallets,
+    async connectWallet(id) {
+      calls.push({ type: 'connect', id });
+      if (connectImpl) await connectImpl(id);
+      changeWallet(ACCOUNT);
+      return walletState;
+    },
     async restoreWallet({ id, address }) { calls.push({ type: 'restore', id, address }); if (options.allowRestore) changeWallet(address); return walletState; },
     async disconnectWallet() { calls.push({ type: 'disconnect' }); changeWallet(null); },
     async signPersonalMessage({ message }) {
@@ -93,7 +136,7 @@ async function harness(t, options = {}) {
       return sign();
     },
     subscribeWalletState(listener) { walletListeners.add(listener); queueMicrotask(() => listener(walletState)); return () => walletListeners.delete(listener); },
-    subscribeWallets() { return () => {}; },
+    subscribeWallets(listener) { walletListListeners.add(listener); return () => walletListListeners.delete(listener); },
   };
   let savedProgress = options.progress || progress();
   const handlers = { ...options.handlers };
@@ -151,8 +194,145 @@ async function harness(t, options = {}) {
   return {
     root, window, byId, calls, count, handlers, controller, envelope, changeWallet, connect, signIn,
     setProgress(value) { savedProgress = value; }, setSign(value) { sign = value; }, setClock(value) { clock = value; },
+    setConnect(value) { connectImpl = value; },
+    changeWallets(value) { availableWallets = value; for (const listener of walletListListeners) listener(value); },
   };
 }
+
+test('wallet picker opens as a named dialog and every dismissal returns focus without wallet actions', async (t) => {
+  const h = await harness(t);
+  const picker = h.byId('wallet-picker');
+  assert.equal(picker.tagName, 'DIALOG');
+  assert(h.window.document.getElementById(picker.getAttribute('aria-labelledby')), 'The dialog has a visible title');
+  assert.equal(picker.open, false);
+  for (const dismissal of ['close button', 'Escape', 'backdrop']) {
+    h.byId('connect').focus();
+    h.byId('connect').click();
+    assert.equal(picker.open, true, dismissal);
+    assert.equal(h.byId('connect').getAttribute('aria-expanded'), 'true', dismissal);
+    assert.equal(h.window.document.activeElement, h.byId('wallet-options').querySelector('button'), dismissal);
+    if (dismissal === 'close button') h.byId('wallet-close').click();
+    else if (dismissal === 'Escape') {
+      // Browsers translate Escape on an open modal into a cancel event.
+      const cancel = new h.window.Event('cancel', { cancelable: true });
+      picker.dispatchEvent(cancel);
+      if (!cancel.defaultPrevented) picker.close();
+    } else picker.dispatchEvent(new h.window.MouseEvent('click', { bubbles: true, clientX: -10, clientY: -10 }));
+    assert.equal(picker.open, false, dismissal);
+    assert.equal(h.byId('connect').getAttribute('aria-expanded'), 'false', dismissal);
+    assert.equal(h.window.document.activeElement, h.byId('connect'), `${dismissal} restores the trigger`);
+  }
+  assert.deepEqual(h.calls.filter((call) => ['connect', 'signature'].includes(call.type)), []);
+  assert.equal(h.count('challenge'), 0);
+  assert.equal(h.count('session'), 0);
+});
+
+test('a rejected wallet connection stays in the picker with an announced error and a working retry', async (t) => {
+  const h = await harness(t, { connect: async () => { throw new Error('Connection cancelled by user'); } });
+  h.byId('connect').click();
+  h.byId('wallet-options').querySelector('button').click();
+  await settleUntil(() => h.root.dataset.growthState === 'signed-out', 'failed wallet connection');
+  assert.equal(h.byId('wallet-picker').open, true);
+  assert.equal(h.byId('wallet-status').getAttribute('role'), 'status');
+  assert.match(h.byId('wallet-status').textContent, /cancel|reject|try again/i);
+  assert.equal(h.byId('wallet-options').querySelector('button').disabled, false);
+  assert.equal(h.count('challenge'), 0);
+  h.setConnect(async () => {});
+  h.byId('wallet-options').querySelector('button').click();
+  await settleUntil(() => h.root.dataset.growthState === 'connected', 'retried wallet connection');
+  assert.equal(h.byId('wallet-picker').open, false);
+  assert.equal(h.window.document.activeElement, h.byId('sign-in'));
+  assert.equal(h.calls.filter((call) => call.type === 'connect').length, 2);
+  assert.equal(h.calls.filter((call) => call.type === 'signature').length, 0);
+});
+
+test('wallet rows use safe data icons and keep the same wallet focused when discovery refreshes', async (t) => {
+  const icon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB';
+  const wallets = [
+    { id: 'safe-wallet', name: 'Safe wallet', icon },
+    { id: 'remote-wallet', name: '<img src=x onerror=alert(1)>', icon: 'https://example.invalid/tracker.png' },
+    { id: 'script-wallet', name: 'Script wallet', icon: 'javascript:alert(1)' },
+  ];
+  const h = await harness(t, { availableWallets: wallets });
+  h.byId('connect').click();
+  const row = (id) => [...h.byId('wallet-options').querySelectorAll('button')].find((button) => button.dataset.walletId === id);
+  assert.equal(row('safe-wallet').querySelector('img').getAttribute('src'), icon);
+  assert.equal(row('remote-wallet').querySelector('img'), null);
+  assert.equal(row('script-wallet').querySelector('img'), null);
+  assert(row('remote-wallet').textContent.includes(wallets[1].name), 'Wallet names remain plain text');
+  assert.equal(h.byId('wallet-options').querySelector('[onerror]'), null);
+  row('remote-wallet').focus();
+  h.changeWallets([wallets[2], wallets[1], wallets[0]]);
+  assert.equal(h.window.document.activeElement, row('remote-wallet'));
+  assert.equal(h.byId('wallet-picker').open, true);
+  assert.equal(h.calls.filter((call) => call.type === 'connect').length, 0);
+});
+
+test('an empty wallet picker focuses its close control and explains how to connect', async (t) => {
+  const h = await harness(t, { availableWallets: [] });
+  h.byId('connect').focus();
+  h.byId('connect').click();
+  assert.equal(h.byId('wallet-picker').open, true);
+  assert.equal(h.byId('wallet-options').children.length, 0);
+  assert.equal(h.byId('no-wallet').hidden, false);
+  assert.match(h.byId('no-wallet').textContent, /wallet.*browser|wallet installed/i);
+  assert.equal(h.window.document.activeElement, h.byId('wallet-close'));
+  h.byId('wallet-close').click();
+  assert.equal(h.window.document.activeElement, h.byId('connect'));
+  assert.equal(h.calls.filter((call) => call.type === 'connect').length, 0);
+});
+
+test('signed-out meters stay unknown while monthly badge goals are clearly previews', async (t) => {
+  const h = await harness(t);
+  assertUnknownMeters(h);
+  assert.equal(h.byId('visit-count').textContent, '—');
+  assert.equal(h.byId('journey-stops').children.length, 4);
+  assert.equal(h.byId('journey-stops').querySelectorAll('.is-preview').length, 4);
+  assert.equal(h.byId('journey-stops').querySelectorAll('.is-done').length, 0);
+  assert.match(h.byId('journey-note').textContent, /goals|sign in/i);
+  assert.equal(h.byId('badges').children.length, 0);
+});
+
+test('meters reflect saved attendance, the next milestone and required stamps, retaining labeled stale values and clearing on account change', async (t) => {
+  const visits = [1, 2, 3, 4, 5, 6, 7, 8];
+  const h = await harness(t, { configuration: FORCE_CONFIGURATION, progress: progress({
+    visits, quests: [8], stamps: ['garden-bot', 'arborist-trials'], optionalGames: [FORCE_GAME], optionalStamps: ['treeforce89'],
+  }) });
+  await h.signIn();
+  assertMeter(h, 'attendance-ring', 8, 30);
+  assertMeter(h, 'attendance-meter', 8, 14);
+  assertMeter(h, 'quest-meter', 0, 1);
+  assertMeter(h, 'passport-meter', 2, 3);
+  assert.equal(h.byId('journey-stops').querySelectorAll('.is-done').length, 2);
+  h.setProgress(progress({ visits: [...visits, 12], quests: [8, 12], stamps: ['garden-bot', 'arborist-trials'], optionalGames: [FORCE_GAME], optionalStamps: ['treeforce89'] }));
+  await h.controller.refresh();
+  assertMeter(h, 'attendance-ring', 9, 30);
+  assertMeter(h, 'attendance-meter', 9, 14);
+  assertMeter(h, 'quest-meter', 1, 1);
+  assertMeter(h, 'passport-meter', 2, 3);
+  h.handlers.sync = () => ({ status: 'error', error: 'service-unavailable', message: 'Try again later.' });
+  await h.controller.refresh();
+  assertMeter(h, 'attendance-ring', 9, 30);
+  assertMeter(h, 'attendance-meter', 9, 14);
+  assertMeter(h, 'quest-meter', 1, 1);
+  assertMeter(h, 'passport-meter', 2, 3);
+  for (const id of PROGRESS_METERS) assert.match(h.byId(id).getAttribute('aria-valuetext'), /last saved progress/i);
+  h.changeWallet(OTHER_ACCOUNT);
+  assertUnknownMeters(h);
+  assert.equal(h.byId('journey-stops').querySelectorAll('.is-done').length, 0);
+});
+
+test('the final milestone stays full while the monthly ring keeps the actual count and month length', async (t) => {
+  const h = await harness(t, { progress: progress({
+    dateKey: '2026-10-31', visits: [...Array.from({ length: 21 }, (_, index) => index + 1), 31],
+  }) });
+  await h.signIn();
+  assertMeter(h, 'attendance-ring', 22, 31);
+  assertMeter(h, 'attendance-meter', 21, 21);
+  assert.equal(h.byId('attendance-meter').classList.contains('is-complete'), true);
+  assert.equal(h.byId('visit-count').textContent, '22');
+  assert.equal(h.byId('journey-stops').querySelectorAll('.is-done').length, 4);
+});
 
 test('signed-out state shows the server pick without invented progress or automatic wallet prompts', async (t) => {
   const h = await harness(t);
@@ -234,6 +414,7 @@ test('launching and choosing a game never credits progress; verified sync awards
 
 test('API failure is unavailable rather than zero, and a retry can recover', async (t) => {
   const h = await harness(t, { handlers: { status: () => ({ status: 'error', error: 'service-unavailable', message: 'Progress storage is unavailable.' }) } });
+  assertUnknownMeters(h);
   assert.equal(h.byId('visit-count').textContent, '—');
   assert.equal(h.byId('calendar').children.length, 0);
   assert.equal(h.byId('refresh').textContent, 'Retry availability');
@@ -358,6 +539,8 @@ test('explicit sign-out drops the token and private data even when the logout en
   await h.signIn();
   h.handlers.logout = () => ({ status: 'error', error: 'service-unavailable', message: 'Unavailable' });
   await h.controller.signOut();
+  assertUnknownMeters(h);
+  assert.equal(h.byId('journey-stops').querySelectorAll('.is-done').length, 0);
   assert.equal(h.byId('visit-count').textContent, '—');
   assert.equal(h.byId('calendar').children.length, 0);
   assert.equal(h.window.sessionStorage.getItem(SESSION_KEY), null);

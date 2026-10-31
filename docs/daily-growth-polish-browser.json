@@ -1,0 +1,188 @@
+{
+  "synthetic": true,
+  "screenshots": [
+    "docs/review/daily-growth-polish-desktop-signedout.png",
+    "docs/review/daily-growth-polish-desktop-wallet-dialog.png",
+    "docs/review/daily-growth-polish-desktop-wallet-error.png",
+    "docs/review/daily-growth-polish-desktop-saved-today.png",
+    "docs/review/daily-growth-polish-desktop-saved-month.png",
+    "docs/review/daily-growth-polish-desktop-saved-badges.png",
+    "docs/review/daily-growth-polish-mobile-390-saved-today.png",
+    "docs/review/daily-growth-polish-mobile-390-wallet-dialog.png",
+    "docs/review/daily-growth-polish-mobile-320-saved-today.png",
+    "docs/review/daily-growth-polish-mobile-320-month.png",
+    "docs/review/daily-growth-polish-mobile-320-wallet-dialog.png"
+  ],
+  "checks": [
+    {
+      "name": "Desktop signed-out",
+      "viewport": 1440,
+      "doc": 1440,
+      "scroll": 1440,
+      "growth": 1120
+    },
+    {
+      "name": "Unknown state has no fabricated progress",
+      "value": "\u2014",
+      "knownMeter": null
+    },
+    {
+      "name": "3 detected wallet choices",
+      "count": 3
+    },
+    {
+      "name": "Dialog Tab focus stays inside",
+      "inside": true
+    },
+    {
+      "name": "Native dialog Escape and focus restoration",
+      "passed": true
+    },
+    {
+      "name": "Synthetic connection failure visible inside modal",
+      "text": "Real wallet actions are disabled in this local QA fixture."
+    },
+    {
+      "name": "Desktop saved today",
+      "viewport": 1440,
+      "doc": 1440,
+      "scroll": 1440,
+      "growth": 1120
+    },
+    {
+      "name": "Final meter fills",
+      "values": [
+        {
+          "id": "growth-quest-meter",
+          "percent": "100",
+          "width": 100.07115209471766
+        },
+        {
+          "id": "growth-attendance-meter",
+          "percent": "57.14285714285714",
+          "width": 57.08932853717026
+        },
+        {
+          "id": "growth-passport-meter",
+          "percent": "66.66666666666666",
+          "width": 66.60202863961814
+        }
+      ]
+    },
+    {
+      "name": "8/31 saved progress",
+      "attendance": "8",
+      "total": "/ 31 days",
+      "meter": "8",
+      "passport": "2 / 3 required games",
+      "badges": 2
+    },
+    {
+      "name": "Desktop saved month",
+      "viewport": 1440,
+      "doc": 1440,
+      "scroll": 1440,
+      "growth": 1120
+    },
+    {
+      "name": "Mobile 390 today",
+      "viewport": 390,
+      "doc": 390,
+      "scroll": 390,
+      "growth": 362
+    },
+    {
+      "name": "Mobile 390 play button height",
+      "pixels": 44
+    },
+    {
+      "name": "Mobile 390 month",
+      "viewport": 390,
+      "doc": 390,
+      "scroll": 390,
+      "growth": 362
+    },
+    {
+      "name": "Mobile 390 badges",
+      "viewport": 390,
+      "doc": 390,
+      "scroll": 390,
+      "growth": 362
+    },
+    {
+      "name": "Mobile 390 wallet sheet",
+      "height": 759.59375,
+      "bottom": 844,
+      "viewport": 844,
+      "scroll": 942,
+      "client": 758,
+      "overflow": "auto"
+    },
+    {
+      "name": "Mobile 390 dialog",
+      "viewport": 390,
+      "doc": 390,
+      "scroll": 390,
+      "growth": 362
+    },
+    {
+      "name": "Mobile 320 today",
+      "viewport": 320,
+      "doc": 320,
+      "scroll": 320,
+      "growth": 300
+    },
+    {
+      "name": "Mobile 320 play button height",
+      "pixels": 44
+    },
+    {
+      "name": "Mobile 320 month",
+      "viewport": 320,
+      "doc": 320,
+      "scroll": 320,
+      "growth": 300
+    },
+    {
+      "name": "Mobile 320 badges",
+      "viewport": 320,
+      "doc": 320,
+      "scroll": 320,
+      "growth": 300
+    },
+    {
+      "name": "Mobile 320 wallet sheet",
+      "height": 759.59375,
+      "bottom": 844,
+      "viewport": 844,
+      "scroll": 967,
+      "client": 758,
+      "overflow": "auto"
+    },
+    {
+      "name": "Mobile 320 dialog",
+      "viewport": 320,
+      "doc": 320,
+      "scroll": 320,
+      "growth": 300
+    },
+    {
+      "name": "Reduced motion",
+      "motion": true,
+      "animation": "none",
+      "transition": "0s"
+    },
+    {
+      "name": "All network requests local fixtures",
+      "externalRequests": 0
+    }
+  ],
+  "browserErrors": [],
+  "externalRequests": [],
+  "sourceSha256": {
+    "play/index.html": "331fea5fe9d003f8a6a9c8709014a79d47b63d369e06a80f95afc2f33a22cc71",
+    "scripts/arcade-daily-growth.js": "905a8c18912c29e7052fc709fc1c9d1f333378b2fc9a5e0aafc3fc976502c38f",
+    "styles/tree-arcade-suite.css": "1a04f50048b2d760e4b758e968440ec5c343587d07043cadaeb237e9802f9e40"
+  },
+  "fixtureType": "Synthetic local progress and detected-wallet fixtures; no owner wallet or production progress writes."
+}

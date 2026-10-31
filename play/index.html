@@ -99,17 +99,24 @@
 
     <section id="arcade-daily-growth" class="growth-panel" aria-labelledby="growth-title" data-growth-state="loading">
       <div class="growth-heading">
-        <div><p class="suite-eyebrow">A LITTLE PLAY. A LITTLE GROWTH.</p><h2 id="growth-title">Daily Growth</h2><p class="growth-meta" id="growth-meta">Your NFTree holder progress, one day at a time.</p></div>
-        <a class="growth-games-link" href="#cabinets">Browse the games <span aria-hidden="true">↓</span></a>
+        <div class="growth-heading-identity"><span class="growth-emblem" aria-hidden="true"><svg class="growth-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 27V13M16 20C6 20 4 14 5 7c8 0 11 5 11 13ZM16 15C16 7 21 4 28 4c0 8-4 12-12 11ZM8 28h16"/></svg></span><div><p class="suite-eyebrow">CHECK IN. PLAY. GROW YOUR LEGACY.</p><h2 id="growth-title">Daily Growth</h2><p class="growth-meta" id="growth-meta">Your NFTree holder progress, one day at a time.</p></div></div>
+        <div class="growth-heading-side"><span class="growth-season-tag" id="growth-season-tag">A new season every month</span><a class="growth-games-link" href="#cabinets">Browse the games <span aria-hidden="true">↓</span></a></div>
       </div>
       <div class="growth-auth">
-        <div><p id="growth-wallet-state">Connect your NFTree wallet to save check-ins, daily quests, and monthly badges.</p><p class="growth-small" id="growth-auth-note">Sign-in uses a wallet message. It does not submit a transaction.</p></div>
-        <div class="growth-auth-actions"><button class="growth-primary" id="growth-connect" type="button" disabled>Connect wallet</button><button class="growth-secondary" id="growth-sign-in" type="button" hidden>Sign in to Daily Growth</button><button class="growth-text-button" id="growth-sign-out" type="button" hidden>Sign out</button></div>
+        <div class="growth-auth-copy"><span class="growth-auth-symbol" aria-hidden="true"><svg class="growth-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="24" height="19" rx="4"/><path d="m6 8 16-4v4M28 14h-8v7h8"/><circle cx="23" cy="17.5" r="1"/></svg></span><div><p id="growth-wallet-state">Connect your NFTree wallet to save check-ins, daily quests, and monthly badges.</p><p class="growth-small" id="growth-auth-note">Sign-in uses a wallet message. It does not submit a transaction.</p></div></div>
+        <div class="growth-auth-actions"><button class="growth-primary" id="growth-connect" type="button" aria-haspopup="dialog" aria-controls="growth-wallet-picker" disabled>Connect wallet</button><button class="growth-secondary" id="growth-sign-in" type="button" hidden>Sign in to Daily Growth</button><button class="growth-text-button" id="growth-sign-out" type="button" hidden>Sign out</button></div>
       </div>
-      <div class="growth-wallet-picker" id="growth-wallet-picker" hidden>
-        <p class="growth-small" id="growth-wallet-picker-label">Choose your Sui wallet</p>
+      <dialog class="growth-wallet-picker" id="growth-wallet-picker" aria-labelledby="growth-wallet-picker-label" aria-describedby="growth-wallet-intro">
+        <div class="growth-wallet-heading"><div><p class="growth-eyebrow">YOUR PLAYER IDENTITY</p><h3 id="growth-wallet-picker-label">Choose your Sui wallet</h3></div><button class="growth-wallet-close" id="growth-wallet-close" type="button" aria-label="Close wallet picker">✕</button></div>
+        <p class="growth-wallet-intro" id="growth-wallet-intro">Bring your NFTree. Keep your progress.</p>
         <div class="growth-wallet-options" id="growth-wallet-options" aria-labelledby="growth-wallet-picker-label"></div>
         <p class="growth-small" id="growth-no-wallet" hidden>No compatible Sui wallet was detected. Open this page in your wallet’s browser, or use a browser with a Sui wallet installed.</p>
+        <p class="growth-wallet-status" id="growth-wallet-status" role="status" aria-live="polite" aria-atomic="true"></p>
+        <p class="growth-wallet-help">Choose a detected wallet, then approve a separate sign-in message. Connecting is free and does not send a transaction.</p>
+      </dialog>
+      <div class="growth-journey" aria-labelledby="growth-journey-title">
+        <div class="growth-journey-heading"><strong id="growth-journey-title">Your monthly growth path</strong><p class="growth-small" id="growth-journey-note">Check in on different days to unlock each badge.</p></div>
+        <div class="growth-journey-track" id="growth-journey-stops" aria-label="Monthly check-in badge goals"></div>
       </div>
       <div class="growth-tabs" role="tablist" aria-label="Daily Growth progress">
         <button id="growth-today-tab" type="button" role="tab" aria-controls="growth-today-panel" aria-selected="true" tabindex="0">Today’s quest</button>
@@ -120,7 +127,8 @@
         <div class="growth-today-grid">
           <section class="growth-quest" aria-labelledby="growth-quest-title">
             <div class="growth-quest-heading"><p class="growth-eyebrow">TODAY’S QUEST</p><span class="growth-quest-state" id="growth-quest-state">Checking availability…</span></div>
-            <h3 id="growth-quest-title">Play today.</h3>
+            <div class="growth-quest-title-row"><span class="growth-quest-icon" aria-hidden="true"><svg class="growth-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m18 3-12 16h9l-1 10 12-17h-9l1-9Z"/></svg></span><h3 id="growth-quest-title">Play today. Power up.</h3></div>
+            <div class="growth-meter growth-meter--quest is-unknown" id="growth-quest-meter" aria-label="Sign in to see today’s quest progress"><span></span></div>
             <p class="growth-small growth-quest-rule" id="growth-quest-rule">Choose an eligible game to grow today’s progress.</p>
             <p class="growth-pick"><span id="growth-pick-label">Today’s pick:</span> <strong id="growth-game-name">Checking eligible games…</strong></p>
             <p class="growth-objective" id="growth-objective">Finish a verified game result, then refresh your progress here.</p>
@@ -135,13 +143,14 @@
           </section>
           <div class="growth-month-glance">
             <section class="growth-attendance" aria-labelledby="growth-attendance-title">
-              <p class="growth-eyebrow" id="growth-attendance-title">MONTHLY CHECK-IN</p>
-              <p class="growth-attendance-count"><strong id="growth-visit-count">—</strong> <span id="growth-visit-label">check-ins this month</span></p>
+              <div class="growth-attendance-top"><div class="growth-progress-ring is-unknown" id="growth-attendance-ring"><strong id="growth-visit-count">—</strong><span id="growth-visit-total">days checked in</span></div><div class="growth-attendance-copy"><p class="growth-eyebrow" id="growth-attendance-title">MONTHLY CHECK-IN</p><p id="growth-visit-label">check-ins this month</p><strong id="growth-attendance-next">Your next badge awaits</strong></div></div>
+              <div class="growth-meter growth-meter--attendance is-unknown" id="growth-attendance-meter" aria-label="Sign in to see monthly check-in progress"><span></span></div>
               <p class="growth-small" id="growth-check-note">Sign in to see your saved attendance. You can check in without playing a game.</p>
               <button class="growth-secondary" id="growth-check-in" type="button" disabled>Check in today</button>
             </section>
-            <details class="growth-passport" id="growth-passport">
+            <details class="growth-passport" id="growth-passport" open>
               <summary><span>Arcade Passport</span><span class="growth-passport-progress"><strong id="growth-passport-count">Sign in to view</strong><span class="growth-passport-toggle" aria-hidden="true">+</span></span></summary>
+              <div class="growth-meter growth-meter--passport is-unknown" id="growth-passport-meter" aria-label="Sign in to see required Passport stamps"><span></span></div>
               <p class="growth-small" id="growth-passport-note">Explore eligible games at your own pace this month. The passport is an optional goal.</p>
               <div class="growth-stamps" id="growth-stamps" aria-label="Games played this month"></div>
               <div class="growth-passport-optional" id="growth-passport-optional" hidden>

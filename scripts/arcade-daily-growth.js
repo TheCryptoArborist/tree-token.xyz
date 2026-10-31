@@ -4,6 +4,24 @@ const WALLET_MODULE = '/assets/arcade/arcade-growth-wallet.js';
 const SESSION_KEY = 'tree-arcade:daily-growth:session:v1';
 const AUTH_ERRORS = new Set(['authentication-required', 'invalid-session', 'expired-session']);
 const TREE_FORCE_ID = 'treeforce89';
+// These preview labels describe existing goals, never a player's earned progress.
+const MILESTONE_GOALS = [
+  { id: 'seedling', label: 'Seedling', target: 3 },
+  { id: 'sapling', label: 'Sapling', target: 7 },
+  { id: 'deep-roots', label: 'Deep Roots', target: 14 },
+  { id: 'full-canopy', label: 'Full Canopy', target: 21 },
+];
+const EMBLEM_PATHS = {
+  seedling: 'M16 28V14M16 20C7 20 4 15 5 8c8 0 11 4 11 12ZM16 15C16 7 21 4 27 4c0 8-4 12-11 11ZM8 28h16',
+  sapling: 'M16 29V13M16 18l-7-5M16 12l6-5M16 24l8-6M7 19c-5-2-5-10 1-12 0-7 11-8 14-2 8-1 12 11 5 15M8 29h16',
+  'deep-roots': 'M16 17V4M16 11l-6-6M16 8l6-4M5 17h22M16 17l-7 6-5 1M9 23l-1 6M16 17l7 6 5 1M23 23l2 6M16 18v11M16 24l-4 4M16 24l4 4',
+  'full-canopy': 'M16 30V19M10 30h12M16 23l-6-5M16 20l7-5M7 21C0 20 0 12 6 10 4 3 13 0 17 5c6-5 13 0 11 6 6 5 1 13-6 11',
+  'arcade-passport': 'M8 3h17v26H8a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3ZM8 3v26M12 10h9M12 14h6m-6 7 3 3 6-7',
+  'garden-bot': 'M7 8h18v18H7ZM16 8V3M12 3h8M11 15h1M20 15h1M11 21h10M3 13v9M29 13v9',
+  pvp: 'm5 4 18 18 4 6-6-4L3 6l2-2ZM27 4 9 22l-4 6 6-4L29 6l-2-2M3 20l9 9M20 3l9 9',
+  'arborist-trials': 'M8 5h17v24H7V5h5M12 3h8v5h-8ZM11 15l2 2 3-4M19 15h3M11 23l2 2 3-4M19 23h3',
+  treeforce89: 'm16 3 5 12 8 7-11-2-2 6-2-6-11 2 8-7 5-12ZM12 26l-1 3M20 26l1 3',
+};
 const GAME_COPY = {
   [TREE_FORCE_ID]: {
     objective: 'Start a run and reach the first wave. You do not need to win or finish.',
@@ -127,11 +145,11 @@ export function createDailyGrowth({
   }
   const byId = (id) => root.querySelector(`#growth-${id}`);
   const ui = Object.fromEntries([
-    'meta', 'wallet-state', 'auth-note', 'connect', 'sign-in', 'sign-out', 'wallet-picker', 'wallet-options', 'no-wallet',
+    'meta', 'season-tag', 'wallet-state', 'auth-note', 'connect', 'sign-in', 'sign-out', 'wallet-picker', 'wallet-options', 'wallet-close', 'wallet-status', 'no-wallet',
     'quest-state', 'quest-rule', 'pick-label', 'game-name', 'objective', 'game-access', 'play', 'refresh', 'alternative', 'game-select',
     'quest-note', 'visit-count', 'visit-label', 'check-note', 'check-in', 'passport-count', 'passport-note', 'stamps',
     'passport-reward', 'passport-optional', 'optional-stamps', 'tracking-note', 'month-empty', 'month-content', 'month-visits', 'month-quests', 'next', 'calendar', 'milestones',
-    'badges-empty', 'badges', 'status',
+    'badges-empty', 'badges', 'status', 'journey-note', 'journey-stops', 'quest-meter', 'attendance-ring', 'visit-total', 'attendance-next', 'attendance-meter', 'passport-meter',
   ].map((id) => [id, byId(id)]));
   const state = {
     wallet: null, walletId: null, walletReady: false, walletError: false, session: null, progress: null,
@@ -146,6 +164,7 @@ export function createDailyGrowth({
   let savedSession = readSession(storage, now());
   let unsubscribeWallet = () => {};
   let unsubscribeWallets = () => {};
+  let pickerTrigger = null;
   const requests = new Set();
   const listeners = [];
   const on = (element, event, listener) => {
@@ -159,6 +178,74 @@ export function createDailyGrowth({
     parent.append(element);
     return element;
   };
+
+  function emblem(parent, name, className) {
+    const holder = append(parent, 'span', className);
+    holder.setAttribute('aria-hidden', 'true');
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    for (const [key, value] of Object.entries({ viewBox: '0 0 32 32', fill: 'none', stroke: 'currentColor', 'stroke-width': '1.7', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', class: 'growth-icon' })) svg.setAttribute(key, value);
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', EMBLEM_PATHS[name] || EMBLEM_PATHS.seedling);
+    svg.append(path);
+    holder.append(svg);
+    return holder;
+  }
+
+  function meter(element, value, maximum, label) {
+    const known = Number.isFinite(value) && Number.isFinite(maximum) && maximum > 0;
+    element.classList.toggle('is-unknown', !known);
+    element.classList.toggle('is-complete', known && value >= maximum);
+    element.style.setProperty('--growth-progress', known ? String(Math.min(100, Math.max(0, value / maximum * 100))) : '0');
+    element.setAttribute('aria-label', label);
+    if (known) {
+      element.setAttribute('role', 'progressbar');
+      element.setAttribute('aria-valuemin', '0');
+      element.setAttribute('aria-valuemax', String(maximum));
+      element.setAttribute('aria-valuenow', String(Math.min(maximum, Math.max(0, value))));
+      element.setAttribute('aria-valuetext', `${label}${state.stale ? ' · Last saved progress' : ''}`);
+    } else {
+      for (const attribute of ['role', 'aria-valuemin', 'aria-valuemax', 'aria-valuenow', 'aria-valuetext']) element.removeAttribute(attribute);
+    }
+  }
+
+  function closePicker() {
+    state.pickerOpen = false;
+    if (ui['wallet-picker'].open) ui['wallet-picker'].close();
+    ui.connect.setAttribute('aria-expanded', 'false');
+    const target = state.session ? ui['sign-out'] : state.wallet ? ui['sign-in'] : pickerTrigger || ui.connect;
+    if (!target.hidden && !target.disabled) target.focus({ preventScroll: true });
+  }
+
+  function renderPicker() {
+    const dialog = ui['wallet-picker'];
+    ui.connect.setAttribute('aria-expanded', String(state.pickerOpen));
+    renderWalletOptions();
+    ui['wallet-status'].textContent = state.pickerOpen && (state.busy === 'connecting' || state.noticeKind === 'error') ? state.notice : '';
+    ui['wallet-status'].classList.toggle('is-error', state.noticeKind === 'error');
+    if (state.pickerOpen && !dialog.open) {
+      dialog.showModal();
+      (ui['wallet-options'].querySelector('button:not(:disabled)') || ui['wallet-close']).focus({ preventScroll: true });
+    } else if (!state.pickerOpen && dialog.open) closePicker();
+  }
+
+  function renderJourney(progress) {
+    const milestones = progress?.milestones || MILESTONE_GOALS;
+    const next = progress?.milestones.find((item) => !item.earned && item.target > progress.checkedInDays);
+    ui['journey-stops'].replaceChildren();
+    ui['journey-note'].textContent = progress
+      ? state.stale ? 'Last saved progress · Refresh to check for updates.'
+        : next ? `${next.target - progress.checkedInDays} more check-in${next.target - progress.checkedInDays === 1 ? '' : 's'} to ${next.label}. Keep growing.`
+          : 'All attendance badges earned this month. Keep your canopy growing.'
+      : state.apiUnavailable ? 'Progress unavailable · Your saved badges are safe.' : 'Your goals for the month. Sign in to reveal your progress.';
+    for (const milestone of milestones) {
+      const item = append(ui['journey-stops'], 'div', `growth-stop${!progress ? ' is-preview' : milestone.earned ? ' is-done' : milestone === next ? ' is-next' : ''}`);
+      item.dataset.rank = Object.hasOwn(EMBLEM_PATHS, milestone.id) ? milestone.id : 'seedling';
+      emblem(item, milestone.id, 'growth-stop-icon');
+      const copy = append(item, 'div', 'growth-stop-copy');
+      append(copy, 'strong', '', milestone.label);
+      append(copy, 'span', '', `${milestone.target} check-ins${progress && milestone.earned ? ' · Earned ✓' : progress && milestone === next ? ' · Up next' : ''}`);
+    }
+  }
 
   function currentWallet() {
     try {
@@ -285,14 +372,32 @@ export function createDailyGrowth({
   }
 
   function renderWalletOptions() {
+    const focusedId = ui['wallet-options'].contains(document.activeElement) ? document.activeElement?.closest('button[data-wallet-id]')?.dataset.walletId : null;
     ui['wallet-options'].replaceChildren();
     for (const wallet of state.availableWallets) {
-      const button = append(ui['wallet-options'], 'button', 'growth-secondary', wallet.name);
+      const connecting = state.busy === 'connecting' && state.walletId === wallet.id;
+      const button = append(ui['wallet-options'], 'button', `growth-wallet-option${connecting ? ' is-connecting' : ''}`);
       button.type = 'button';
       button.disabled = Boolean(state.busy);
       button.dataset.walletId = wallet.id;
+      const icon = append(button, 'span', 'growth-wallet-icon');
+      if (typeof wallet.icon === 'string' && wallet.icon.length <= 524288 && /^data:image\/(png|jpeg|webp|svg\+xml);/i.test(wallet.icon)) {
+        const image = append(icon, 'img', '');
+        image.src = wallet.icon;
+        image.alt = '';
+        image.width = 36;
+        image.height = 36;
+      } else append(icon, 'span', '', wallet.name.split(/\s+/).map((part) => part[0]).slice(0, 2).join('').toUpperCase()).setAttribute('aria-hidden', 'true');
+      const copy = append(button, 'span', 'growth-wallet-copy');
+      append(copy, 'strong', '', wallet.name);
+      append(copy, 'small', '', connecting ? 'Approve connection in your wallet' : 'Detected · Ready to connect');
+      append(button, 'span', 'growth-wallet-indicator', connecting ? '…' : '↗').setAttribute('aria-hidden', 'true');
     }
     ui['no-wallet'].hidden = state.availableWallets.length > 0;
+    if (focusedId && state.pickerOpen) {
+      const next = [...ui['wallet-options'].querySelectorAll('button')].find((button) => button.dataset.walletId === focusedId && !button.disabled);
+      (next || ui['wallet-close']).focus({ preventScroll: true });
+    }
   }
 
   function renderCalendar(progress) {
@@ -306,7 +411,7 @@ export function createDailyGrowth({
     for (let index = 0; index < firstWeekday; index += 1) append(ui.calendar, 'span', 'growth-calendar-blank').setAttribute('aria-hidden', 'true');
     for (const day of progress.calendar) {
       const isToday = day.dateKey === progress.dateKey;
-      const cell = append(ui.calendar, 'div', `growth-day${day.checkedIn ? ' is-done' : ''}${isToday ? ' is-today' : ''}`);
+      const cell = append(ui.calendar, 'div', `growth-day${day.checkedIn ? ' is-done' : ''}${day.questCompleted ? ' has-quest' : ''}${isToday ? ' is-today' : ''}${day.dateKey < progress.dateKey && !day.checkedIn ? ' is-missed' : ''}`);
       cell.setAttribute('role', 'listitem');
       const description = day.checkedIn ? `checked in${day.questCompleted ? ', daily quest complete' : ''}` : isToday ? 'today, not yet checked in' : day.dateKey < progress.dateKey ? 'missed, earlier progress retained' : 'upcoming';
       cell.setAttribute('aria-label', `${dateLabel(day.dateKey)}: ${description}`);
@@ -319,8 +424,22 @@ export function createDailyGrowth({
   function renderProgress() {
     const progress = state.progress;
     const unavailable = state.apiUnavailable || state.stale;
+    const next = progress?.milestones.find((milestone) => !milestone.earned && milestone.target > progress.checkedInDays);
+    const finalMilestone = progress?.milestones.at(-1);
+    const attendanceTarget = next || finalMilestone;
+    const unknown = unavailable ? 'Progress unavailable' : 'Sign in to view progress';
+    renderJourney(progress);
     ui['visit-count'].textContent = progress ? String(progress.checkedInDays) : '—';
+    ui['visit-total'].textContent = progress ? `/ ${progress.calendar.length} days` : 'days checked in';
     ui['visit-label'].textContent = state.stale ? 'check-ins · last saved progress' : 'check-ins this month';
+    ui['attendance-next'].textContent = progress
+      ? next ? `${next.target - progress.checkedInDays} more to ${next.label}` : finalMilestone ? 'Full canopy unlocked ✓' : 'Check in and keep growing'
+      : unavailable ? 'Your saved progress is safe' : 'Your next badge awaits';
+    meter(ui['attendance-ring'], progress?.checkedInDays, progress?.calendar.length, progress ? `${progress.checkedInDays} of ${progress.calendar.length} days checked in this month` : unknown);
+    meter(ui['attendance-meter'], progress?.checkedInDays, attendanceTarget?.target, progress && attendanceTarget ? `${Math.min(progress.checkedInDays, attendanceTarget.target)} of ${attendanceTarget.target} check-ins toward ${attendanceTarget.label}` : unknown);
+    meter(ui['quest-meter'], progress ? Number(progress.today.questCompleted) : null, 1, progress ? `${Number(progress.today.questCompleted)} of 1 daily quests complete` : unknown);
+    meter(ui['passport-meter'], progress?.passport.completedGameIds.length, progress?.passport.enabledGames.length, progress ? `${progress.passport.completedGameIds.length} of ${progress.passport.enabledGames.length} required Passport games` : unknown);
+    root.querySelector('.growth-quest').classList.toggle('is-complete', Boolean(progress?.today.questCompleted));
     ui['month-content'].hidden = !progress;
     ui['month-empty'].hidden = Boolean(progress);
     ui['month-empty'].textContent = unavailable ? 'Your monthly calendar is unavailable. Refresh to try again.' : 'Sign in to see your real monthly calendar.';
@@ -350,17 +469,18 @@ export function createDailyGrowth({
     }
     ui['month-visits'].textContent = String(progress.checkedInDays);
     ui['month-quests'].textContent = String(progress.questDays);
-    const next = progress.milestones.find((milestone) => !milestone.earned && milestone.target > progress.checkedInDays);
     ui.next.textContent = next ? `Next: ${next.label} · ${next.target - progress.checkedInDays} more check-in${next.target - progress.checkedInDays === 1 ? '' : 's'}` : 'All monthly attendance milestones earned.';
     for (const game of progress.passport.enabledGames) {
       const complete = progress.passport.completedGameIds.includes(game.id);
       const stamp = append(ui.stamps, 'div', `growth-stamp${complete ? ' is-done' : ''}`);
+      emblem(stamp, game.id, 'growth-stamp-icon');
       append(stamp, 'strong', '', game.label);
       append(stamp, 'span', '', complete ? '✓ Stamp earned' : game.id === 'pvp' ? '○ Not yet played · Paid entry' : '○ Not yet played');
     }
     for (const game of progress.passport.optionalGames) {
       const recorded = progress.passport.optionalCompletedGameIds.includes(game.id);
       const stamp = append(ui['optional-stamps'], 'div', `growth-stamp${recorded ? ' is-done' : ''}`);
+      emblem(stamp, game.id, 'growth-stamp-icon');
       append(stamp, 'strong', '', game.label);
       append(stamp, 'span', '', recorded
         ? game.creditRule === 'start-run' ? '✓ First wave started · Optional stamp' : '✓ Optional stamp earned'
@@ -371,14 +491,23 @@ export function createDailyGrowth({
       : progress.passport.enabledGames.length ? 'All required stamps earn the monthly Arcade Passport badge. Optional stamps do not change the requirement.' : 'Passport games will appear when verified tracking is available.';
     for (const milestone of progress.milestones) {
       const item = append(ui.milestones, 'div', `growth-milestone${milestone.earned ? ' is-done' : ''}`);
+      item.dataset.rank = Object.hasOwn(EMBLEM_PATHS, milestone.id) ? milestone.id : 'seedling';
+      emblem(item, milestone.id, 'growth-badge-emblem');
       append(item, 'strong', '', `${milestone.label}${milestone.earned ? ' ✓' : ''}`);
       append(item, 'span', '', `${milestone.target} check-ins`);
+      const bar = append(item, 'div', 'growth-meter');
+      append(bar, 'span');
+      meter(bar, progress.checkedInDays, milestone.target, `${Math.min(progress.checkedInDays, milestone.target)} of ${milestone.target} check-ins toward ${milestone.label}`);
     }
     for (const badge of [...progress.badges].sort((a, b) => timestamp(b.earnedAt) - timestamp(a.earnedAt))) {
       const item = append(ui.badges, 'div', 'growth-badge');
-      append(item, 'strong', '', badge.label);
-      append(item, 'span', '', 'Earned ✓');
-      append(item, 'p', '', `${monthLabel(badge.monthKey)} · Saved to this wallet’s progress`);
+      const rank = [...MILESTONE_GOALS.map((goal) => goal.id), 'arcade-passport'].find((id) => badge.id === id || badge.id.endsWith(`-${id}`)) || 'seedling';
+      item.dataset.rank = rank;
+      emblem(item, rank, 'growth-badge-emblem');
+      const copy = append(item, 'div', 'growth-badge-copy');
+      append(copy, 'strong', '', badge.label);
+      append(copy, 'span', '', 'Earned ✓');
+      append(copy, 'p', '', `${monthLabel(badge.monthKey)} · Saved to this wallet’s progress`);
     }
     renderCalendar(progress);
   }
@@ -389,6 +518,7 @@ export function createDailyGrowth({
     root.dataset.growthState = state.busy || (state.apiUnavailable ? 'unavailable' : state.session ? 'authenticated' : state.wallet ? 'connected' : 'signed-out');
     root.setAttribute('aria-busy', String(busy));
     ui.meta.textContent = state.dateKey ? `${dateLabel(state.dateKey)} · UTC daily progress` : 'Your NFTree holder progress, one day at a time.';
+    ui['season-tag'].textContent = state.monthKey ? `${monthLabel(state.monthKey)} season` : 'A new season every month';
     ui['wallet-state'].textContent = state.session
       ? `${state.wallet?.walletName || 'Sui wallet'} · ${shortAddress(state.session.wallet)} · Signed in`
       : state.wallet ? `${state.wallet.walletName} · ${shortAddress(state.wallet.address)} · Connected`
@@ -406,8 +536,7 @@ export function createDailyGrowth({
     ui['sign-in'].textContent = state.busy === 'signing-in' ? 'Approve message in wallet…' : 'Sign in to Daily Growth';
     ui['sign-out'].hidden = !state.session;
     ui['sign-out'].disabled = busy;
-    ui['wallet-picker'].hidden = !state.pickerOpen;
-    renderWalletOptions();
+    renderPicker();
     const games = state.configuration?.eligibleGames || [];
     const treeForceEnabled = games.some((game) => game.id === TREE_FORCE_ID);
     const gardenOnly = games.length === 3 && ['garden-bot', 'pvp', 'arborist-trials'].every((id) => games.some((game) => game.id === id));
@@ -652,9 +781,25 @@ export function createDailyGrowth({
 
   on(ui.connect, 'click', () => {
     if (state.busy || !state.walletReady) return;
-    state.pickerOpen = !state.pickerOpen;
+    pickerTrigger = ui.connect;
+    state.pickerOpen = true;
     render();
-    if (state.pickerOpen) ui['wallet-options'].querySelector('button')?.focus();
+  });
+  on(ui['wallet-close'], 'click', closePicker);
+  on(ui['wallet-picker'], 'cancel', (event) => { event.preventDefault(); closePicker(); });
+  on(ui['wallet-picker'], 'close', () => { if (!ui['wallet-picker'].open && state.pickerOpen) closePicker(); });
+  on(ui['wallet-picker'], 'click', (event) => {
+    if (event.target !== ui['wallet-picker']) return;
+    const bounds = ui['wallet-picker'].getBoundingClientRect();
+    if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) closePicker();
+  });
+  on(ui['wallet-picker'], 'keydown', (event) => {
+    if (event.key === 'Escape') { event.preventDefault(); closePicker(); return; }
+    if (event.key !== 'Tab') return;
+    const choices = [...ui['wallet-picker'].querySelectorAll('button:not(:disabled), a[href]')].filter((element) => !element.hidden);
+    const first = choices[0], last = choices.at(-1);
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
   });
   on(ui['wallet-options'], 'click', (event) => {
     const button = event.target.closest('button[data-wallet-id]');
@@ -712,6 +857,7 @@ export function createDailyGrowth({
     ready, refresh, checkIn, signIn, signOut,
     destroy() {
       disposed = true;
+      if (ui['wallet-picker'].open) ui['wallet-picker'].close();
       epoch += 1;
       view.clearTimeout(expiryTimer);
       for (const controller of requests) controller.abort();
