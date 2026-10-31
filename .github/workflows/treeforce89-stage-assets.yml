@@ -8,6 +8,7 @@ on:
       - '.github/workflows/treeforce89-stage-assets.yml'
       - 'scripts/verify-treeforce89-staged-assets.mjs'
       - 'scripts/verify-treeforce89-api-contract.mjs'
+      - 'scripts/verify-treeforce89-backend-source.mjs'
       - 'netlify/preview-functions/tree-*.ts'
   workflow_dispatch:
 
@@ -54,6 +55,19 @@ jobs:
         run: node tree-token/scripts/verify-treeforce89-staged-assets.mjs stage/play/treeforce89
       - name: Validate same-origin wallet and checkout API contract
         run: node tree-token/scripts/verify-treeforce89-api-contract.mjs treeforce89 tree-token
+      - name: Stage pinned TREE FORCE backend source (not deployed)
+        run: |
+          mkdir -p stage/backend/treeforce89
+          cp -a treeforce89/app stage/backend/treeforce89/
+          cp -a treeforce89/netlify stage/backend/treeforce89/
+      - name: Audit pinned backend source and original deployment guards
+        run: node tree-token/scripts/verify-treeforce89-backend-source.mjs stage/backend/treeforce89
+      - name: Upload backend source for inspection only
+        uses: actions/upload-artifact@v4
+        with:
+          name: treeforce89-backend-source-audit
+          path: stage/backend/treeforce89/
+          retention-days: 7
       - name: Upload build for inspection only
         uses: actions/upload-artifact@v4
         with:
