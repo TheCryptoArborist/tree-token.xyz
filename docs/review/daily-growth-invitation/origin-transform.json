@@ -1,0 +1,13 @@
+{
+  "capturedAt": "2026-11-01T15:10:03.560682+00:00",
+  "deployId": "6ae69fa9b3d4702fcc61177c",
+  "rawSource": "Netlify site-file API with Content-Type application/vnd.bitballoon.v1.raw",
+  "rawSha1": "b9687025fcb337b10385648c84d2f57592c7b5aa",
+  "rawBytes": 33108,
+  "servedOrigin": "https://6ae69fa9b3d4702fcc61177c--tree-token.netlify.app",
+  "servedSha1": "dc5546df3463be02254f958cc59256a7b77d9c86",
+  "servedBytes": 33680,
+  "exactAddedSnippetId": "tree-arcade-arboretum-link",
+  "exactAddedSnippetSha256": "bf05453dc91bcf9c53db98e08829c8321193495b0839021e68d458d56e5be98d",
+  "onlyDifference": "Exact pre-existing hosting snippet; removing that one literal yields original uploaded HTML byte-for-byte."
+}

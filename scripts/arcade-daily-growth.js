@@ -151,7 +151,8 @@ export function createDailyGrowth({
     'quest-note', 'visit-count', 'visit-label', 'check-note', 'check-in', 'passport-count', 'passport-note', 'stamps',
     'passport-reward', 'passport-optional', 'optional-stamps', 'tracking-note', 'month-empty', 'month-content', 'month-visits', 'month-quests', 'next', 'calendar', 'milestones',
     'badges-empty', 'badges', 'status', 'journey-note', 'journey-stops', 'quest-meter', 'attendance-ring', 'visit-total', 'attendance-next', 'attendance-meter', 'passport-meter',
-    'summary-count', 'summary-label', 'summary-note', 'summary-meter', 'quest-art',
+    'summary-count', 'summary-label', 'summary-note', 'summary-meter', 'summary-art', 'summary-art-label', 'quest-art',
+    'badge-preview', 'invitation-open', 'invitation-title', 'invitation-hint', 'details', 'details-label', 'details-hint',
   ].map((id) => [id, byId(id)]));
   const state = {
     wallet: null, walletId: null, walletReady: false, walletError: false, session: null, progress: null,
@@ -423,6 +424,65 @@ export function createDailyGrowth({
     }
   }
 
+  function invitationComplete() {
+    return Boolean(state.progress?.today.checkedIn && state.progress.today.questCompleted
+      && !state.stale && !state.apiUnavailable && !['loading', 'syncing'].includes(state.busy));
+  }
+
+  function syncInvitationExpanded() {
+    for (const id of ['badge-preview', 'invitation-open']) ui[id].setAttribute('aria-expanded', String(ui.details.open));
+  }
+
+  function renderInvitation(progress) {
+    const refreshing = ['loading', 'syncing'].includes(state.busy);
+    const lastSaved = Boolean(progress && (state.stale || state.apiUnavailable || refreshing));
+    const next = progress?.milestones.find((milestone) => !milestone.earned && milestone.target > progress.checkedInDays);
+    const badge = progress ? next || progress.milestones.at(-1) : MILESTONE_GOALS[0];
+    const allEarned = Boolean(progress?.milestones.length && progress.milestones.every((milestone) => milestone.earned));
+    const remaining = next ? next.target - progress.checkedInDays : null;
+    const complete = invitationComplete();
+    const unknown = state.apiUnavailable ? 'Progress unavailable' : 'Sign in to view badge progress';
+    ui['summary-art'].src = GROWTH_ART[badge?.id] || GROWTH_ART.seedling;
+    ui['summary-art-label'].textContent = badge?.label || 'Monthly badges';
+    ui['badge-preview'].classList.toggle('is-preview', !progress);
+    ui['badge-preview'].classList.toggle('is-complete', Boolean(progress && badge?.earned));
+    ui['summary-count'].textContent = progress
+      ? next ? `${remaining === 1 ? 'One more check-in' : `${remaining} more check-ins`} to ${next.label}`
+        : allEarned ? 'All attendance badges earned.' : 'Keep your growth going.'
+      : state.apiUnavailable ? 'Your badges will be here.' : 'Your first badge starts here.';
+    ui['summary-label'].textContent = progress
+      ? `${badge ? `${Math.min(progress.checkedInDays, badge.target)} / ${badge.target} check-ins` : `${progress.checkedInDays} check-ins this month`}${lastSaved ? ' · Last saved' : ''}`
+      : state.apiUnavailable ? 'Progress temporarily unavailable' : `${badge.label} · ${badge.target} check-ins to earn`;
+    ui['summary-meter'].hidden = !progress || !badge;
+    meter(ui['summary-meter'], progress?.checkedInDays, progress ? badge?.target : null, progress && badge
+      ? `${Math.min(progress.checkedInDays, badge.target)} of ${badge.target} check-ins toward ${badge.label}${lastSaved && !state.stale ? ' · Last saved progress' : ''}`
+      : unknown);
+    ui['badge-preview'].setAttribute('aria-label', `${ui['summary-count'].textContent} ${ui['summary-label'].textContent}. ${complete ? 'View badge progress' : 'Reveal today’s quest'}.`);
+    ui['invitation-title'].textContent = lastSaved ? 'Let’s catch up on your growth.'
+      : !progress ? 'What will you grow today?'
+        : complete ? 'Today’s growth is complete.'
+          : progress.today.checkedIn ? 'You’re checked in. Quest time?' : 'Make today count.';
+    ui['summary-note'].textContent = lastSaved
+      ? refreshing ? 'Checking your latest growth. Last saved progress is shown.' : 'Last saved progress is shown. Open your quests to refresh.'
+      : state.apiUnavailable ? 'We couldn’t load Daily Growth. Please try again shortly.'
+        : !progress ? 'Check in, discover today’s quest, and collect badges.'
+          : complete ? 'Your check-in and quest are saved. Explore your badges.'
+            : progress.today.checkedIn ? 'Your check-in is saved. Discover today’s quest and keep growing.'
+              : 'Check in now, then discover today’s quest.';
+    ui['invitation-hint'].textContent = lastSaved ? 'Last saved progress · Refresh to check today.'
+      : refreshing ? 'Loading your growth…'
+      : state.apiUnavailable ? 'Your saved progress has not changed.'
+        : state.busy === 'checking-in' ? 'Saving your check-in. Your quest stays optional.'
+          : !state.session ? state.wallet ? 'Sign in with a message · No gas fee' : 'Free check-in · No gas fee'
+            : !progress ? 'Loading your saved progress…'
+              : complete ? 'Check-in and quest saved · Come back tomorrow.'
+                : progress.today.checkedIn ? 'Check-in saved · Today’s quest is optional.' : 'Free check-in · No game required';
+    ui['details-label'].textContent = complete ? 'View badge progress' : 'Reveal today’s quest';
+    ui['details-hint'].textContent = lastSaved ? 'Last saved progress · Refresh inside'
+      : complete ? `${next ? 'Your next badge' : 'Earned badges'} · Monthly calendar · Arcade Passport` : 'Quests · Badges · Arcade Passport';
+    syncInvitationExpanded();
+  }
+
   function renderProgress() {
     const progress = state.progress;
     const unavailable = state.apiUnavailable || state.stale;
@@ -430,18 +490,7 @@ export function createDailyGrowth({
     const finalMilestone = progress?.milestones.at(-1);
     const attendanceTarget = next || finalMilestone;
     const unknown = unavailable ? 'Progress unavailable' : 'Sign in to view progress';
-    ui['summary-count'].textContent = progress ? `${progress.checkedInDays} / ${progress.calendar.length}` : unavailable ? 'Progress unavailable' : 'Make every visit count.';
-    ui['summary-label'].textContent = progress
-      ? state.stale ? 'check-ins · last saved progress' : 'check-ins this month'
-      : unavailable ? 'Your saved growth is safe.' : 'Check-ins · Quests · Monthly badges';
-    ui['summary-note'].textContent = progress
-      ? state.stale ? 'Last saved progress. Open your quests to refresh.'
-        : progress.today.questCompleted ? 'Today’s quest complete. Keep the adventure going.'
-          : progress.today.checkedIn ? next ? `Checked in · ${next.target - progress.checkedInDays} more to ${next.label}.` : 'Checked in · All monthly attendance badges earned.'
-            : 'Check in today. Keep your canopy growing.'
-      : state.wallet ? 'Wallet connected. Sign in to save your progress.' : 'Check in. Play. Collect badges.';
-    ui['summary-meter'].hidden = !progress;
-    meter(ui['summary-meter'], progress?.checkedInDays, progress?.calendar.length, progress ? `${progress.checkedInDays} of ${progress.calendar.length} days checked in this month` : unknown);
+    renderInvitation(progress);
     renderJourney(progress);
     ui['visit-count'].textContent = progress ? String(progress.checkedInDays) : '—';
     ui['visit-total'].textContent = progress ? `/ ${progress.calendar.length} days` : 'days checked in';
@@ -545,10 +594,12 @@ export function createDailyGrowth({
         : 'Sign-in uses a wallet message. It does not submit a transaction.';
     ui.connect.disabled = busy || !state.walletReady;
     ui.connect.hidden = Boolean(state.session);
-    ui.connect.textContent = state.busy === 'connecting' ? 'Connecting…' : state.wallet ? 'Change wallet' : 'Connect wallet';
+    ui.connect.classList.toggle('growth-primary', !state.wallet);
+    ui.connect.classList.toggle('growth-secondary', Boolean(state.wallet));
+    ui.connect.textContent = state.busy === 'connecting' ? 'Connecting…' : state.wallet ? 'Change wallet' : 'Connect to check in';
     ui['sign-in'].hidden = !state.wallet || Boolean(state.session);
     ui['sign-in'].disabled = busy;
-    ui['sign-in'].textContent = state.busy === 'signing-in' ? 'Approve message in wallet…' : 'Sign in';
+    ui['sign-in'].textContent = state.busy === 'signing-in' ? 'Approve message in wallet…' : 'Sign in to check in';
     ui['sign-out'].hidden = !state.session;
     ui['sign-out'].disabled = busy;
     renderPicker();
@@ -852,6 +903,22 @@ export function createDailyGrowth({
       selectTab(tabs[next], true);
     });
   });
+  function invitationTab() {
+    return tabs.find((tab) => tab.id === `growth-${invitationComplete() ? 'badges' : 'today'}-tab`);
+  }
+  function openInvitation() {
+    if (!ui.details.open) {
+      ui.details.open = true;
+      selectTab(invitationTab(), true);
+    }
+    syncInvitationExpanded();
+  }
+  on(ui['badge-preview'], 'click', openInvitation);
+  on(ui['invitation-open'], 'click', openInvitation);
+  on(ui.details.querySelector('summary'), 'click', () => {
+    if (!ui.details.open) selectTab(invitationTab());
+  });
+  on(ui.details, 'toggle', syncInvitationExpanded);
   on(view, 'focus', () => {
     if (state.session && !sessionIsCurrent()) return;
     if (state.session && state.launched && !state.busy) {

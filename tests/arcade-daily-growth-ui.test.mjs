@@ -208,14 +208,28 @@ test('compact Daily Growth starts closed and its native progress disclosure neve
   for (const id of ['connect', 'sign-in', 'sign-out', 'check-in', 'wallet-picker', 'status']) {
     assert.equal(details.contains(h.byId(id)), false, `${id} remains usable when progress is collapsed`);
   }
-  assert.equal(h.byId('summary-count').textContent, 'Make every visit count.');
+  assert.equal(h.byId('invitation-title').textContent, 'What will you grow today?');
+  assert.equal(h.byId('summary-note').textContent, 'Check in, discover today’s quest, and collect badges.');
+  assert.equal(h.byId('summary-count').textContent, 'Your first badge starts here.');
+  assert.equal(h.byId('summary-label').textContent, 'Seedling · 3 check-ins to earn');
+  assert.equal(h.byId('summary-art-label').textContent, 'Seedling');
+  assert.equal(h.byId('summary-art').getAttribute('src'), '/assets/arcade/garden-bot-poster.webp');
+  assert.equal(h.byId('connect').textContent, 'Connect to check in');
+  assert.equal(h.byId('connect').classList.contains('growth-primary'), true);
+  assert.equal(h.byId('connect').classList.contains('growth-secondary'), false);
+  assert.equal(h.byId('invitation-hint').textContent, 'Free check-in · No gas fee');
+  assert.equal(h.byId('details-label').textContent, 'Reveal today’s quest');
   assert.equal(h.byId('summary-meter').hidden, true, 'Unknown private progress has no visible numeric meter');
   assert.equal(h.byId('check-in').hidden, true);
   const before = h.calls.length;
   toggle.click();
   assert.equal(details.open, true);
+  await settleUntil(() => h.byId('invitation-open').getAttribute('aria-expanded') === 'true', 'native disclosure expands invitation controls');
+  assert.equal(h.byId('badge-preview').getAttribute('aria-expanded'), 'true');
   toggle.click();
   assert.equal(details.open, false);
+  await settleUntil(() => h.byId('invitation-open').getAttribute('aria-expanded') === 'false', 'native disclosure collapses invitation controls');
+  assert.equal(h.byId('badge-preview').getAttribute('aria-expanded'), 'false');
   assert.equal(h.calls.length, before, 'Opening progress is a local display action');
   assert.equal(h.calls.some((call) => ['connect', 'signature'].includes(call.type)), false);
 });
@@ -226,16 +240,71 @@ test('compact check-in remains available with details closed and saves attendanc
   assert.equal(h.byId('details').open, false);
   assert.equal(h.byId('check-in').hidden, false);
   assert.equal(h.byId('check-in').disabled, false);
-  assert.equal(h.byId('summary-count').textContent, '2 / 30');
+  assert.equal(h.byId('invitation-title').textContent, 'Make today count.');
+  assert.equal(h.byId('invitation-hint').textContent, 'Free check-in · No game required');
+  assert.equal(h.byId('summary-count').textContent, 'One more check-in to Seedling');
+  assert.equal(h.byId('summary-label').textContent, '2 / 3 check-ins');
+  assertMeter(h, 'summary-meter', 2, 3);
+  assert.equal(h.count('check-in'), 0, 'Sign-in does not automatically save attendance');
+  const pending = deferred();
+  h.handlers['check-in'] = () => pending.promise;
   h.byId('check-in').click();
-  await settleUntil(() => h.byId('summary-count').textContent === '3 / 30', 'compact attendance updated after the saved response');
+  assert.equal(h.byId('check-in').disabled, true);
+  assert.equal(h.byId('invitation-title').textContent, 'Make today count.', 'Attendance is not claimed before the server saves it');
+  assert.equal(h.byId('summary-label').textContent, '2 / 3 check-ins');
+  h.byId('check-in').click();
+  h.setProgress(progress({ visits: [1, 3, 12], quests: [3], stamps: ['garden-bot'] }));
+  pending.resolve(h.envelope());
+  await settleUntil(() => h.byId('summary-label').textContent === '3 / 7 check-ins', 'compact badge preview updated after the saved response');
   assert.equal(h.byId('details').open, false);
   assert.equal(h.byId('check-in').disabled, true);
-  assert.match(h.byId('summary-note').textContent, /checked in|check-in saved/i);
+  assert.equal(h.byId('invitation-title').textContent, 'You’re checked in. Quest time?');
+  assert.equal(h.byId('summary-count').textContent, '4 more check-ins to Sapling');
+  assert.equal(h.byId('summary-art').getAttribute('src'), '/assets/arcade/arboretum-poster.webp');
+  assert.equal(h.byId('summary-art-label').textContent, 'Sapling');
+  assertMeter(h, 'summary-meter', 3, 7);
+  assert.match(h.byId('summary-note').textContent, /check-in is saved/i);
   h.byId('check-in').click();
   assert.equal(h.count('check-in'), 1);
   assert.equal(h.byId('quest-state').textContent, '0 / 1 · Not completed');
   assert.equal(h.byId('passport-count').textContent, '1 / 3 required games');
+});
+
+test('invitation buttons reveal today until both tasks are saved, without changing an already-open tab or starting requests', async (t) => {
+  const h = await harness(t);
+  const details = h.byId('details');
+  const toggle = details.querySelector('summary');
+  const before = h.calls.length;
+  for (const id of ['badge-preview', 'invitation-open']) {
+    h.byId(id).click();
+    assert.equal(details.open, true);
+    assert.equal(h.byId('today-tab').getAttribute('aria-selected'), 'true', `${id} offers a quest rather than an empty earned-badge pane`);
+    assert.equal(h.window.document.activeElement, h.byId('today-tab'));
+    assert.equal(h.byId('badge-preview').getAttribute('aria-expanded'), 'true');
+    assert.equal(h.byId('invitation-open').getAttribute('aria-expanded'), 'true');
+    toggle.click();
+  }
+  assert.equal(h.calls.length, before, 'Invitation clicks never connect, sign, sync, or check in');
+  h.byId('invitation-open').click();
+  h.byId('month-tab').click();
+  h.byId('badge-preview').click();
+  h.byId('invitation-open').click();
+  assert.equal(h.byId('month-tab').getAttribute('aria-selected'), 'true', 'An open manually selected tab is preserved');
+  await h.signIn();
+  h.setProgress(progress({ visits: [12], quests: [12], stamps: ['garden-bot'] }));
+  await h.controller.refresh();
+  assert.equal(h.byId('invitation-title').textContent, 'Today’s growth is complete.');
+  assert.equal(h.byId('details-label').textContent, 'View badge progress');
+  assert.equal(h.byId('month-tab').getAttribute('aria-selected'), 'true', 'A progress refresh does not disrupt the chosen tab');
+  assert.equal(h.count('check-in'), 0, 'Only the server-verified quest supplied attendance');
+  const afterRefresh = h.calls.length;
+  toggle.click();
+  h.byId('badge-preview').click();
+  assert.equal(h.byId('badges-tab').getAttribute('aria-selected'), 'true');
+  toggle.click();
+  toggle.click();
+  assert.equal(h.byId('badges-tab').getAttribute('aria-selected'), 'true', 'Native reopening follows the completed invitation');
+  assert.equal(h.calls.length, afterRefresh);
 });
 
 test('wallet picker opens as a named dialog and every dismissal returns focus without wallet actions', async (t) => {
@@ -342,9 +411,12 @@ test('meters reflect saved attendance, the next milestone and required stamps, r
   assertMeter(h, 'attendance-meter', 8, 14);
   assertMeter(h, 'quest-meter', 0, 1);
   assertMeter(h, 'passport-meter', 2, 3);
-  assert.equal(h.byId('summary-count').textContent, '8 / 30');
+  assert.equal(h.byId('summary-count').textContent, '6 more check-ins to Deep Roots');
+  assert.equal(h.byId('summary-label').textContent, '8 / 14 check-ins');
+  assert.equal(h.byId('summary-art-label').textContent, 'Deep Roots');
+  assert.equal(h.byId('summary-art').getAttribute('src'), '/assets/profile-nftree-art.jpg');
   assert.equal(h.byId('summary-meter').hidden, false);
-  assertMeter(h, 'summary-meter', 8, 30);
+  assertMeter(h, 'summary-meter', 8, 14);
   assert.equal(h.byId('journey-stops').querySelectorAll('.is-done').length, 2);
   h.setProgress(progress({ visits: [...visits, 12], quests: [8, 12], stamps: ['garden-bot', 'arborist-trials'], optionalGames: [FORCE_GAME], optionalStamps: ['treeforce89'] }));
   await h.controller.refresh();
@@ -352,8 +424,8 @@ test('meters reflect saved attendance, the next milestone and required stamps, r
   assertMeter(h, 'attendance-meter', 9, 14);
   assertMeter(h, 'quest-meter', 1, 1);
   assertMeter(h, 'passport-meter', 2, 3);
-  assert.equal(h.byId('summary-count').textContent, '9 / 30');
-  assertMeter(h, 'summary-meter', 9, 30);
+  assert.equal(h.byId('summary-count').textContent, '5 more check-ins to Deep Roots');
+  assertMeter(h, 'summary-meter', 9, 14);
   h.handlers.sync = () => ({ status: 'error', error: 'service-unavailable', message: 'Try again later.' });
   await h.controller.refresh();
   assertMeter(h, 'attendance-ring', 9, 30);
@@ -362,12 +434,18 @@ test('meters reflect saved attendance, the next milestone and required stamps, r
   assertMeter(h, 'passport-meter', 2, 3);
   for (const id of PROGRESS_METERS) assert.match(h.byId(id).getAttribute('aria-valuetext'), /last saved progress/i);
   assert.match(h.byId('summary-note').textContent, /last saved/i);
+  assert.equal(h.byId('invitation-title').textContent, 'Let’s catch up on your growth.');
+  assert.equal(h.byId('details-label').textContent, 'Reveal today’s quest', 'An unavailable refresh does not claim current daily completion');
+  assert.equal(h.byId('summary-label').textContent, '9 / 14 check-ins · Last saved');
   h.changeWallet(OTHER_ACCOUNT);
   assertUnknownMeters(h);
-  assert.match(h.byId('summary-count').textContent, /^(Make every visit count\.|Progress unavailable)$/);
+  assert.match(h.byId('summary-count').textContent, /^(Your first badge starts here\.|Your badges will be here\.)$/);
+  assert.equal(h.byId('summary-art-label').textContent, 'Seedling');
+  assert.equal(h.byId('summary-art').getAttribute('src'), '/assets/arcade/garden-bot-poster.webp');
+  assert.equal(h.byId('invitation-title').textContent, 'What will you grow today?');
   assert.equal(h.byId('summary-meter').hidden, true);
   assert.equal(h.byId('check-in').hidden, true);
-  assert.equal(h.byId('summary-note').textContent.includes('9 / 30'), false);
+  assert.equal(h.byId('summary-label').textContent.includes('9 / 14'), false);
   assert.equal(h.byId('journey-stops').querySelectorAll('.is-done').length, 0);
 });
 
@@ -380,8 +458,11 @@ test('the final milestone stays full while the monthly ring keeps the actual cou
   assertMeter(h, 'attendance-meter', 21, 21);
   assert.equal(h.byId('attendance-meter').classList.contains('is-complete'), true);
   assert.equal(h.byId('visit-count').textContent, '22');
-  assert.equal(h.byId('summary-count').textContent, '22 / 31');
-  assertMeter(h, 'summary-meter', 22, 31);
+  assert.equal(h.byId('summary-count').textContent, 'All attendance badges earned.');
+  assert.equal(h.byId('summary-label').textContent, '21 / 21 check-ins');
+  assert.equal(h.byId('summary-art-label').textContent, 'Full Canopy');
+  assert.equal(h.byId('summary-art').getAttribute('src'), '/assets/tree-command-logo-v2-512.png');
+  assertMeter(h, 'summary-meter', 21, 21);
   assert.equal(h.byId('journey-stops').querySelectorAll('.is-done').length, 4);
 });
 
@@ -408,8 +489,15 @@ test('connecting requires a separate message sign-in and uses only a wallet-boun
   await h.connect();
   assert.equal(h.calls.filter((call) => call.type === 'signature').length, 0);
   assert.equal(h.byId('sign-in').hidden, false);
+  assert.equal(h.byId('sign-in').textContent, 'Sign in to check in');
+  assert.equal(h.byId('invitation-hint').textContent, 'Sign in with a message · No gas fee');
+  assert.equal(h.byId('connect').textContent, 'Change wallet');
+  assert.equal(h.byId('connect').classList.contains('growth-primary'), false);
+  assert.equal(h.byId('connect').classList.contains('growth-secondary'), true);
+  assertUnknownMeters(h);
   await h.controller.signIn();
   assert.equal(h.root.dataset.growthState, 'authenticated');
+  assert.equal(h.count('check-in'), 0, 'Signing a session message is not a check-in');
   assert.equal(h.byId('visit-count').textContent, '0', 'Zero appears only after an authenticated server response');
   assert.equal(h.count('sync'), 1, 'Initial sign-in discovers verified results');
   const signature = h.calls.find((call) => call.type === 'signature');
@@ -469,6 +557,9 @@ test('API failure is unavailable rather than zero, and a retry can recover', asy
   assert.equal(h.byId('visit-count').textContent, '—');
   assert.equal(h.byId('calendar').children.length, 0);
   assert.equal(h.byId('refresh').textContent, 'Retry availability');
+  assert.equal(h.byId('summary-label').textContent, 'Progress temporarily unavailable');
+  assert.equal(h.byId('summary-note').textContent, 'We couldn’t load Daily Growth. Please try again shortly.');
+  assert.equal(h.byId('invitation-hint').textContent, 'Your saved progress has not changed.');
   assert.match(h.byId('status').textContent, /Progress is unavailable/);
   delete h.handlers.status;
   await h.controller.refresh();
@@ -500,6 +591,9 @@ test('changing accounts during a refresh immediately hides private progress and 
   h.handlers.sync = () => pending.promise;
   const refresh = h.controller.refresh();
   await settleUntil(() => h.root.dataset.growthState === 'syncing', 'sync in flight');
+  assert.match(h.byId('summary-label').textContent, /Last saved/);
+  assert.match(h.byId('summary-meter').getAttribute('aria-valuetext'), /Last saved progress/);
+  assert.equal(h.byId('invitation-title').textContent, 'Let’s catch up on your growth.');
   h.changeWallet(OTHER_ACCOUNT);
   assert.equal(h.byId('visit-count').textContent, '—');
   assert.equal(h.byId('stamps').children.length, 0);
@@ -508,6 +602,10 @@ test('changing accounts during a refresh immediately hides private progress and 
   await refresh;
   assert.equal(h.root.dataset.growthState, 'connected');
   assert.equal(h.byId('visit-count').textContent, '—');
+  assert.equal(h.byId('summary-meter').hidden, true);
+  assertUnknownMeters(h);
+  assert.equal(h.byId('summary-art-label').textContent, 'Seedling');
+  assert.equal(h.byId('invitation-title').textContent, 'What will you grow today?');
   assert.match(h.byId('wallet-state').title, new RegExp(OTHER_ACCOUNT));
 });
 
@@ -582,6 +680,11 @@ test('an existing authorized session restores silently and expires without expos
   h.setClock(NOW + 3600001);
   h.window.dispatchEvent(new h.window.Event('focus'));
   assert.equal(h.byId('visit-count').textContent, '—');
+  assert.equal(h.byId('summary-art-label').textContent, 'Seedling');
+  assert.equal(h.byId('summary-meter').hidden, true);
+  assertUnknownMeters(h);
+  assert.equal(h.byId('invitation-title').textContent, 'What will you grow today?');
+  assert.equal(h.byId('details-label').textContent, 'Reveal today’s quest');
   assert.equal(h.window.sessionStorage.getItem(SESSION_KEY), null);
 });
 

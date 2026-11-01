@@ -1,0 +1,202 @@
+{
+  "passed": true,
+  "synthetic": true,
+  "sourceSha256": {
+    "play/index.html": "104b8638349b2792602a07400df0f5f9ecad9420f7d3936418ceb6bd9979b3d7",
+    "scripts/arcade-daily-growth.js": "6d63d1f4c526ec7f8284212a019083e7bba24625bbd1c0860a653df20420f88c",
+    "styles/tree-arcade-suite.css": "ef3cb3e1e3e1ef10634bfb225f26759ef06949d2d92f531730dc9ecf262290f3"
+  },
+  "testedAt": "2026-11-01T15:33:09.457Z",
+  "fixtureScope": "Only controller auto-start is injected; wallet and all API actions are in-memory synthetic fixtures. No actual account, signature, write request or transaction.",
+  "baselineArtworkFallback": "/play/canopy-defense/assets/brand/oak-guardian-preview.png",
+  "checks": [
+    {
+      "name": "signedout invitation is compact and readable at 1440",
+      "passed": true
+    },
+    {
+      "name": "nearbadge invitation is compact and readable at 1440",
+      "passed": true
+    },
+    {
+      "name": "signedout invitation is compact and readable at 390",
+      "passed": true
+    },
+    {
+      "name": "nearbadge invitation is compact and readable at 390",
+      "passed": true
+    },
+    {
+      "name": "signedout invitation is compact and readable at 320",
+      "passed": true
+    },
+    {
+      "name": "nearbadge invitation is compact and readable at 320",
+      "passed": true
+    },
+    {
+      "name": "Keyboard summary, artwork and headline reveal Today without requests or wallet prompts",
+      "passed": true
+    },
+    {
+      "name": "Connect and separate sign-in never automatically check in",
+      "passed": true
+    },
+    {
+      "name": "Direct check-in waits for the saved response, writes once, keeps details closed and advances the badge preview",
+      "passed": true
+    },
+    {
+      "name": "Both saved daily actions change the invitation and route all entry points to Badges",
+      "passed": true
+    },
+    {
+      "name": "Stale completion is explicitly labeled and account changes immediately clear private badge progress",
+      "passed": true
+    },
+    {
+      "name": "Failed check-in preserves the saved count and exposes the error while details remain closed",
+      "passed": true
+    },
+    {
+      "name": "Unavailable anonymous progress clearly explains the error without fabricated counts or completion",
+      "passed": true
+    }
+  ],
+  "dimensions": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "panel": {
+        "top": 267,
+        "height": 162,
+        "width": 1376
+      },
+      "firstPoster": {
+        "top": 540.578125,
+        "height": 429.03125,
+        "width": 327.5
+      },
+      "scrollWidth": 1440,
+      "open": false,
+      "overflowingElements": [],
+      "mode": "signedout"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "panel": {
+        "top": 267,
+        "height": 162,
+        "width": 1376
+      },
+      "firstPoster": {
+        "top": 540.578125,
+        "height": 429.03125,
+        "width": 327.5
+      },
+      "scrollWidth": 1440,
+      "open": false,
+      "overflowingElements": [],
+      "mode": "nearbadge"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "panel": {
+        "top": 261.6875,
+        "height": 269.390625,
+        "width": 362
+      },
+      "firstPoster": {
+        "top": 636.46875,
+        "height": 399.890625,
+        "width": 362
+      },
+      "scrollWidth": 390,
+      "open": false,
+      "overflowingElements": [],
+      "mode": "signedout"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "panel": {
+        "top": 261.6875,
+        "height": 241.390625,
+        "width": 362
+      },
+      "firstPoster": {
+        "top": 608.46875,
+        "height": 399.890625,
+        "width": 362
+      },
+      "scrollWidth": 390,
+      "open": false,
+      "overflowingElements": [],
+      "mode": "nearbadge"
+    },
+    {
+      "viewport": {
+        "width": 320,
+        "height": 740
+      },
+      "panel": {
+        "top": 278.90625,
+        "height": 262.078125,
+        "width": 300
+      },
+      "firstPoster": {
+        "top": 646.375,
+        "height": 375.734375,
+        "width": 300
+      },
+      "scrollWidth": 320,
+      "open": false,
+      "overflowingElements": [],
+      "mode": "signedout"
+    },
+    {
+      "viewport": {
+        "width": 320,
+        "height": 740
+      },
+      "panel": {
+        "top": 278.90625,
+        "height": 249.234375,
+        "width": 300
+      },
+      "firstPoster": {
+        "top": 633.53125,
+        "height": 375.734375,
+        "width": 300
+      },
+      "scrollWidth": 320,
+      "open": false,
+      "overflowingElements": [],
+      "mode": "nearbadge"
+    }
+  ],
+  "screenshots": [
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/daily-growth-invitation/signedout-1440.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/daily-growth-invitation/nearbadge-1440.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/daily-growth-invitation/signedout-390.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/daily-growth-invitation/nearbadge-390.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/daily-growth-invitation/signedout-320.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/daily-growth-invitation/nearbadge-320.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/daily-growth-invitation/stale-desktop.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/daily-growth-invitation/failed-check-in-mobile.jpg"
+  ],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "blockedRequests": [],
+  "remoteWrites": []
+}
