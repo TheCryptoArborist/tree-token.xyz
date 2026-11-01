@@ -1,0 +1,831 @@
+{
+  "passed": true,
+  "synthetic": true,
+  "checkedAt": "2026-11-01T16:19:55.886Z",
+  "baselineCommit": "80ad3fdeec760731c4f35ac3823f85e6d306978e",
+  "sourceSha256": {
+    "play/index.html": "339ffb8b797c823d5be51e367a18216f1bb2a4f1e55ebc77f37a664ec6ef7d4f",
+    "scripts/arcade-daily-growth.js": "10b6e15190672dd9b54cedf129bd866b07929d1e96a8cd2de952ef5e1fbea2da",
+    "styles/tree-arcade-suite.css": "f97771458749f4e2a367eb1749fc0563734a99468652e69a4ae6d5a93e4988fb"
+  },
+  "checks": [
+    {
+      "name": "1440px disconnected: correct collapsed identity, accessible full address, compact layout, no overflow",
+      "passed": true
+    },
+    {
+      "name": "1440px connected: correct collapsed identity, accessible full address, compact layout, no overflow",
+      "passed": true
+    },
+    {
+      "name": "1440px signed-in: correct collapsed identity, accessible full address, compact layout, no overflow",
+      "passed": true
+    },
+    {
+      "name": "390px disconnected: correct collapsed identity, accessible full address, compact layout, no overflow",
+      "passed": true
+    },
+    {
+      "name": "390px connected: correct collapsed identity, accessible full address, compact layout, no overflow",
+      "passed": true
+    },
+    {
+      "name": "390px signed-in: correct collapsed identity, accessible full address, compact layout, no overflow",
+      "passed": true
+    },
+    {
+      "name": "320px disconnected: correct collapsed identity, accessible full address, compact layout, no overflow",
+      "passed": true
+    },
+    {
+      "name": "320px connected: correct collapsed identity, accessible full address, compact layout, no overflow",
+      "passed": true
+    },
+    {
+      "name": "320px signed-in: correct collapsed identity, accessible full address, compact layout, no overflow",
+      "passed": true
+    },
+    {
+      "name": "Long provider name is ellipsized at 320px while its full identity remains accessible",
+      "passed": true
+    },
+    {
+      "name": "Account change immediately replaces the address and clears the previous signed-in session",
+      "passed": true
+    },
+    {
+      "name": "Disconnect clears visible and accessible wallet identity",
+      "passed": true
+    },
+    {
+      "name": "Sign out retains the current connected wallet and removes signed-in status",
+      "passed": true
+    },
+    {
+      "name": "Expired session becomes connected-only while preserving the current wallet address",
+      "passed": true
+    }
+  ],
+  "dimensions": [
+    {
+      "mode": "disconnected",
+      "baseline": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "panel": {
+          "top": 267,
+          "height": 162,
+          "width": 1376
+        },
+        "firstPoster": {
+          "top": 540.578125,
+          "height": 429.03125,
+          "width": 327.5
+        },
+        "scrollWidth": 1440,
+        "detailsOpen": false,
+        "overflowingElements": []
+      },
+      "current": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "panel": {
+          "top": 267,
+          "height": 162,
+          "width": 1376
+        },
+        "firstPoster": {
+          "top": 540.578125,
+          "height": 429.03125,
+          "width": 327.5
+        },
+        "scrollWidth": 1440,
+        "detailsOpen": false,
+        "overflowingElements": []
+      },
+      "heightDelta": 0
+    },
+    {
+      "mode": "connected",
+      "baseline": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "panel": {
+          "top": 267,
+          "height": 181.5,
+          "width": 1376
+        },
+        "firstPoster": {
+          "top": 560.078125,
+          "height": 429.03125,
+          "width": 327.5
+        },
+        "scrollWidth": 1440,
+        "detailsOpen": false,
+        "overflowingElements": []
+      },
+      "current": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "panel": {
+          "top": 267,
+          "height": 181.5,
+          "width": 1376
+        },
+        "firstPoster": {
+          "top": 560.078125,
+          "height": 429.03125,
+          "width": 327.5
+        },
+        "scrollWidth": 1440,
+        "detailsOpen": false,
+        "overflowingElements": []
+      },
+      "heightDelta": 0
+    },
+    {
+      "mode": "signed-in",
+      "baseline": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "panel": {
+          "top": 267,
+          "height": 162,
+          "width": 1376
+        },
+        "firstPoster": {
+          "top": 540.578125,
+          "height": 429.03125,
+          "width": 327.5
+        },
+        "scrollWidth": 1440,
+        "detailsOpen": false,
+        "overflowingElements": []
+      },
+      "current": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "panel": {
+          "top": 267,
+          "height": 162,
+          "width": 1376
+        },
+        "firstPoster": {
+          "top": 540.578125,
+          "height": 429.03125,
+          "width": 327.5
+        },
+        "scrollWidth": 1440,
+        "detailsOpen": false,
+        "overflowingElements": []
+      },
+      "heightDelta": 0
+    },
+    {
+      "mode": "disconnected",
+      "baseline": {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "panel": {
+          "top": 261.6875,
+          "height": 269.390625,
+          "width": 362
+        },
+        "firstPoster": {
+          "top": 636.46875,
+          "height": 399.890625,
+          "width": 362
+        },
+        "scrollWidth": 390,
+        "detailsOpen": false,
+        "overflowingElements": []
+      },
+      "current": {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "panel": {
+          "top": 261.6875,
+          "height": 269.390625,
+          "width": 362
+        },
+        "firstPoster": {
+          "top": 636.46875,
+          "height": 399.890625,
+          "width": 362
+        },
+        "scrollWidth": 390,
+        "detailsOpen": false,
+        "overflowingElements": []
+      },
+      "heightDelta": 0
+    },
+    {
+      "mode": "connected",
+      "baseline": {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "panel": {
+          "top": 261.6875,
+          "height": 269.390625,
+          "width": 362
+        },
+        "firstPoster": {
+          "top": 636.46875,
+          "height": 399.890625,
+          "width": 362
+        },
+        "scrollWidth": 390,
+        "detailsOpen": false,
+        "overflowingElements": []
+      },
+      "current": {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "panel": {
+          "top": 261.6875,
+          "height": 289.984375,
+          "width": 362
+        },
+        "firstPoster": {
+          "top": 657.0625,
+          "height": 399.890625,
+          "width": 362
+        },
+        "scrollWidth": 390,
+        "detailsOpen": false,
+        "overflowingElements": []
+      },
+      "heightDelta": 20.59375
+    },
+    {
+      "mode": "signed-in",
+      "baseline": {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "panel": {
+          "top": 261.6875,
+          "height": 241.390625,
+          "width": 362
+        },
+        "firstPoster": {
+          "top": 608.46875,
+          "height": 399.890625,
+          "width": 362
+        },
+        "scrollWidth": 390,
+        "detailsOpen": false,
+        "overflowingElements": []
+      },
+      "current": {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "panel": {
+          "top": 261.6875,
+          "height": 261.984375,
+          "width": 362
+        },
+        "firstPoster": {
+          "top": 629.0625,
+          "height": 399.890625,
+          "width": 362
+        },
+        "scrollWidth": 390,
+        "detailsOpen": false,
+        "overflowingElements": []
+      },
+      "heightDelta": 20.59375
+    },
+    {
+      "mode": "disconnected",
+      "baseline": {
+        "viewport": {
+          "width": 320,
+          "height": 740
+        },
+        "panel": {
+          "top": 278.90625,
+          "height": 262.078125,
+          "width": 300
+        },
+        "firstPoster": {
+          "top": 646.375,
+          "height": 375.734375,
+          "width": 300
+        },
+        "scrollWidth": 320,
+        "detailsOpen": false,
+        "overflowingElements": []
+      },
+      "current": {
+        "viewport": {
+          "width": 320,
+          "height": 740
+        },
+        "panel": {
+          "top": 278.90625,
+          "height": 262.078125,
+          "width": 300
+        },
+        "firstPoster": {
+          "top": 646.375,
+          "height": 375.734375,
+          "width": 300
+        },
+        "scrollWidth": 320,
+        "detailsOpen": false,
+        "overflowingElements": []
+      },
+      "heightDelta": 0
+    },
+    {
+      "mode": "connected",
+      "baseline": {
+        "viewport": {
+          "width": 320,
+          "height": 740
+        },
+        "panel": {
+          "top": 278.90625,
+          "height": 311.078125,
+          "width": 300
+        },
+        "firstPoster": {
+          "top": 695.375,
+          "height": 375.734375,
+          "width": 300
+        },
+        "scrollWidth": 320,
+        "detailsOpen": false,
+        "overflowingElements": []
+      },
+      "current": {
+        "viewport": {
+          "width": 320,
+          "height": 740
+        },
+        "panel": {
+          "top": 278.90625,
+          "height": 331.671875,
+          "width": 300
+        },
+        "firstPoster": {
+          "top": 715.96875,
+          "height": 375.734375,
+          "width": 300
+        },
+        "scrollWidth": 320,
+        "detailsOpen": false,
+        "overflowingElements": []
+      },
+      "heightDelta": 20.59375
+    },
+    {
+      "mode": "signed-in",
+      "baseline": {
+        "viewport": {
+          "width": 320,
+          "height": 740
+        },
+        "panel": {
+          "top": 278.90625,
+          "height": 249.234375,
+          "width": 300
+        },
+        "firstPoster": {
+          "top": 633.53125,
+          "height": 375.734375,
+          "width": 300
+        },
+        "scrollWidth": 320,
+        "detailsOpen": false,
+        "overflowingElements": []
+      },
+      "current": {
+        "viewport": {
+          "width": 320,
+          "height": 740
+        },
+        "panel": {
+          "top": 278.90625,
+          "height": 269.828125,
+          "width": 300
+        },
+        "firstPoster": {
+          "top": 654.125,
+          "height": 375.734375,
+          "width": 300
+        },
+        "scrollWidth": 320,
+        "detailsOpen": false,
+        "overflowingElements": []
+      },
+      "heightDelta": 20.59375
+    }
+  ],
+  "longProvider": {
+    "name": "Synthetic provider with a very long wallet name",
+    "textOverflow": "ellipsis",
+    "clientWidth": 95,
+    "scrollWidth": 240,
+    "layout": {
+      "viewport": {
+        "width": 320,
+        "height": 740
+      },
+      "panel": {
+        "top": 278.90625,
+        "height": 286.828125,
+        "width": 300
+      },
+      "firstPoster": {
+        "top": 671.125,
+        "height": 375.734375,
+        "width": 300
+      },
+      "scrollWidth": 320,
+      "detailsOpen": false,
+      "overflowingElements": []
+    }
+  },
+  "screenshots": [
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/daily-growth-wallet-summary/signed-in-1440.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/daily-growth-wallet-summary/signed-in-390.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/daily-growth-wallet-summary/connected-320.jpg"
+  ],
+  "fixtureCalls": [
+    {
+      "phase": "baseline",
+      "mode": "disconnected",
+      "width": 1440,
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "disconnected",
+      "width": 1440,
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        }
+      ]
+    },
+    {
+      "phase": "baseline",
+      "mode": "connected",
+      "width": 1440,
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "connected",
+      "width": 1440,
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        }
+      ]
+    },
+    {
+      "phase": "baseline",
+      "mode": "signed-in",
+      "width": 1440,
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "signed-in",
+      "width": 1440,
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        }
+      ]
+    },
+    {
+      "phase": "baseline",
+      "mode": "disconnected",
+      "width": 390,
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "disconnected",
+      "width": 390,
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        }
+      ]
+    },
+    {
+      "phase": "baseline",
+      "mode": "connected",
+      "width": 390,
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "connected",
+      "width": 390,
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        }
+      ]
+    },
+    {
+      "phase": "baseline",
+      "mode": "signed-in",
+      "width": 390,
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "signed-in",
+      "width": 390,
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        }
+      ]
+    },
+    {
+      "phase": "baseline",
+      "mode": "disconnected",
+      "width": 320,
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "disconnected",
+      "width": 320,
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        }
+      ]
+    },
+    {
+      "phase": "baseline",
+      "mode": "connected",
+      "width": 320,
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "connected",
+      "width": 320,
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        }
+      ]
+    },
+    {
+      "phase": "baseline",
+      "mode": "signed-in",
+      "width": 320,
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "signed-in",
+      "width": 320,
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "signed-in",
+      "width": 320,
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        },
+        {
+          "type": "api",
+          "action": "logout",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "signed-in",
+      "width": 320,
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        }
+      ]
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "blockedRequests": [],
+  "networkWrites": [],
+  "noRealWalletActions": true,
+  "noSignatures": true,
+  "noRemoteWrites": true
+}

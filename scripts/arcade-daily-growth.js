@@ -147,7 +147,7 @@ export function createDailyGrowth({
   }
   const byId = (id) => root.querySelector(`#growth-${id}`);
   const ui = Object.fromEntries([
-    'meta', 'season-tag', 'wallet-state', 'auth-note', 'connect', 'sign-in', 'sign-out', 'wallet-picker', 'wallet-options', 'wallet-close', 'wallet-status', 'no-wallet',
+    'meta', 'season-tag', 'wallet-state', 'wallet-identity', 'wallet-identity-status', 'wallet-identity-name', 'wallet-identity-address', 'auth-note', 'connect', 'sign-in', 'sign-out', 'wallet-picker', 'wallet-options', 'wallet-close', 'wallet-status', 'no-wallet',
     'quest-state', 'quest-rule', 'pick-label', 'game-name', 'objective', 'game-access', 'play', 'refresh', 'alternative', 'game-select',
     'quest-note', 'visit-count', 'visit-label', 'check-note', 'check-in', 'passport-count', 'passport-note', 'stamps',
     'passport-reward', 'passport-optional', 'optional-stamps', 'tracking-note', 'month-empty', 'month-content', 'month-visits', 'month-quests', 'next', 'calendar', 'milestones',
@@ -593,6 +593,23 @@ export function createDailyGrowth({
       : state.wallet ? `${state.wallet.walletName} · ${shortAddress(state.wallet.address)} · Connected`
         : 'Connect your NFTree wallet to save check-ins, daily quests, and monthly badges.';
     ui['wallet-state'].title = state.session?.wallet || state.wallet?.address || '';
+    const wallet = state.wallet;
+    const signedIn = Boolean(wallet && state.session?.wallet === wallet.address && timestamp(state.session.expiresAt) > now());
+    const identityLabel = wallet ? `${wallet.walletName} · ${wallet.address} · ${signedIn ? 'Signed in to Daily Growth' : 'Connected, not signed in to Daily Growth'}` : null;
+    if (ui['wallet-identity'].getAttribute('aria-label') !== identityLabel || ui['wallet-identity'].hidden !== !wallet) {
+      ui['wallet-identity'].hidden = !wallet;
+      ui['wallet-identity'].classList.toggle('is-signed-in', signedIn);
+      ui['wallet-identity-status'].textContent = wallet ? signedIn ? 'Signed in' : 'Connected' : '';
+      ui['wallet-identity-name'].textContent = wallet?.walletName || '';
+      ui['wallet-identity-address'].textContent = wallet ? shortAddress(wallet.address) : '';
+      if (wallet) {
+        ui['wallet-identity'].title = wallet.address;
+        ui['wallet-identity'].setAttribute('aria-label', identityLabel);
+      } else {
+        ui['wallet-identity'].removeAttribute('title');
+        ui['wallet-identity'].removeAttribute('aria-label');
+      }
+    }
     ui['auth-note'].textContent = state.session
       ? 'Your progress belongs to this wallet. Sessions expire after one hour.'
       : state.walletError ? 'Wallet connection is unavailable. Refresh the page to try again.'

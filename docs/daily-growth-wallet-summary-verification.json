@@ -1,0 +1,49 @@
+{
+  "verifiedAt": "2026-11-01T16:20:40.726749+00:00",
+  "stage": "pre-publication",
+  "controller": {
+    "passed": 32,
+    "failed": 0,
+    "existingSuiteExtended": true,
+    "coverage": [
+      "connected versus signed in",
+      "wallet change",
+      "restored session",
+      "expiry",
+      "revocation",
+      "sign out",
+      "disconnect and address clearing",
+      "unchanged live-region announcements"
+    ]
+  },
+  "nativeBrowser": {
+    "passed": 14,
+    "report": "docs/review/daily-growth-wallet-summary/browser-report.json",
+    "widths": [
+      1440,
+      390,
+      320
+    ],
+    "syntheticWalletsAndSessions": true,
+    "desktopHeightDelta": 0,
+    "standardMobileHeightDelta": 20.59375,
+    "noOverflow": true,
+    "noBrowserErrors": true
+  },
+  "releasePreservation": {
+    "staticPaths": 283,
+    "changedPaths": [
+      "/play/index.html",
+      "/scripts/arcade-daily-growth.js",
+      "/styles/tree-arcade-suite.css"
+    ],
+    "preservedStaticPaths": 280,
+    "completeFunctionRecordsPreserved": 41,
+    "schedulesPreserved": 5,
+    "backendRebuilt": false,
+    "databaseChanges": false,
+    "walletAdapterOrDependencyChanges": false
+  },
+  "realWalletSignatures": 0,
+  "transactions": 0
+}

@@ -95,6 +95,25 @@ function assertMeter(h, id, value, maximum) {
     `${id} visible fill matches its accessible value`);
 }
 
+function assertWalletIdentity(h, address = null, status = null) {
+  const identity = h.byId('wallet-identity');
+  assert.equal(h.byId('details').contains(identity), false, 'Wallet identity stays outside collapsed progress');
+  assert.equal(identity.hidden, !address);
+  if (!address) {
+    assert.equal(identity.textContent, '');
+    assert.equal(identity.hasAttribute('title'), false);
+    assert.equal(identity.hasAttribute('aria-label'), false);
+    assert.equal(identity.classList.contains('is-signed-in'), false);
+    return;
+  }
+  assert.equal(h.byId('wallet-identity-name').textContent, 'Test wallet');
+  assert.equal(h.byId('wallet-identity-status').textContent, status);
+  assert.equal(h.byId('wallet-identity-address').textContent, address === ACCOUNT ? '0xaaaaaa…aaaaaa' : '0xbbbbbb…bbbbbb');
+  assert.equal(identity.title, address, 'Hover exposes the full current address');
+  assert.equal(identity.getAttribute('aria-label'), `Test wallet · ${address} · ${status === 'Signed in' ? 'Signed in to Daily Growth' : 'Connected, not signed in to Daily Growth'}`);
+  assert.equal(identity.classList.contains('is-signed-in'), status === 'Signed in');
+}
+
 async function harness(t, options = {}) {
   const errors = [];
   const virtualConsole = new VirtualConsole();
@@ -208,6 +227,7 @@ async function harness(t, options = {}) {
 
 test('compact Daily Growth starts closed and its native progress disclosure never starts wallet or write requests', async (t) => {
   const h = await harness(t);
+  assertWalletIdentity(h);
   const details = h.byId('details');
   const toggle = details.querySelector('summary');
   assert.equal(details.tagName, 'DETAILS');
@@ -494,6 +514,7 @@ test('signed-out state shows the server pick without invented progress or automa
 test('connecting requires a separate message sign-in and uses only a wallet-bound server session', async (t) => {
   const h = await harness(t);
   await h.connect();
+  assertWalletIdentity(h, ACCOUNT, 'Connected');
   assert.equal(h.calls.filter((call) => call.type === 'signature').length, 0);
   assert.equal(h.byId('sign-in').hidden, false);
   assert.equal(h.byId('sign-in').textContent, 'Sign in to check in');
@@ -504,6 +525,7 @@ test('connecting requires a separate message sign-in and uses only a wallet-boun
   assertUnknownMeters(h);
   await h.controller.signIn();
   assert.equal(h.root.dataset.growthState, 'authenticated');
+  assertWalletIdentity(h, ACCOUNT, 'Signed in');
   assert.equal(h.count('check-in'), 0, 'Signing a session message is not a check-in');
   assert.equal(h.byId('visit-count').textContent, '0', 'Zero appears only after an authenticated server response');
   assert.equal(h.count('sync'), 1, 'Initial sign-in discovers verified results');
@@ -579,8 +601,14 @@ test('API failure is unavailable rather than zero, and a retry can recover', asy
 test('failed writes and incomplete source verification preserve saved progress with an explicit warning', async (t) => {
   const h = await harness(t, { progress: progress({ visits: [1, 3], quests: [3], stamps: ['garden-bot'] }) });
   await h.signIn();
+  const identityMutations = [];
+  const observer = new h.window.MutationObserver(records => identityMutations.push(...records));
+  observer.observe(h.byId('wallet-identity'), { subtree: true, childList: true, attributes: true, characterData: true });
   h.handlers['check-in'] = () => ({ status: 'error', error: 'service-unavailable', message: 'Try again later.' });
   await h.controller.checkIn();
+  observer.disconnect();
+  assert.equal(identityMutations.length, 0, 'Progress-only renders do not repeat the live wallet identity announcement');
+  assertWalletIdentity(h, ACCOUNT, 'Signed in');
   assert.equal(h.byId('visit-count').textContent, '2');
   assert.equal(h.byId('check-in').textContent, 'Check in today');
   assert.match(h.byId('status').textContent, /Last saved progress shown/);
@@ -602,6 +630,7 @@ test('changing accounts during a refresh immediately hides private progress and 
   assert.match(h.byId('summary-meter').getAttribute('aria-valuetext'), /Last saved progress/);
   assert.equal(h.byId('invitation-title').textContent, 'Let’s catch up on your growth.');
   h.changeWallet(OTHER_ACCOUNT);
+  assertWalletIdentity(h, OTHER_ACCOUNT, 'Connected');
   assert.equal(h.byId('visit-count').textContent, '—');
   assert.equal(h.byId('stamps').children.length, 0);
   assert.equal(h.window.sessionStorage.getItem(SESSION_KEY), null);
@@ -640,6 +669,7 @@ test('revoked sessions clear private state immediately; inconsistent server data
   assert.equal(h.byId('calendar').children.length, 0);
   assert.equal(h.root.dataset.growthState, 'connected');
   assert.match(h.byId('status').textContent, /Sign in again/);
+  assertWalletIdentity(h, ACCOUNT, 'Connected');
   delete h.handlers.sync;
   h.handlers.session = ({ body, envelope }) => ({
     ...envelope(), progress: { ...progress(), wallet: OTHER_ACCOUNT, checkedInDays: 99 },
@@ -681,11 +711,13 @@ test('an existing authorized session restores silently and expires without expos
     version: 1, wallet: ACCOUNT, token: 'saved-session-token', walletId: 'Test wallet', walletName: 'Test wallet', expiresAt: new Date(NOW + 3600000).toISOString(),
   } });
   assert.equal(h.root.dataset.growthState, 'authenticated');
+  assertWalletIdentity(h, ACCOUNT, 'Signed in');
   assert.equal(h.calls.filter((call) => call.type === 'restore').length, 1);
   assert.equal(h.calls.filter((call) => call.type === 'connect' || call.type === 'signature').length, 0);
   assert.equal(h.calls.find((call) => call.action === 'status').headers.Authorization, 'Bearer saved-session-token');
   h.setClock(NOW + 3600001);
   h.window.dispatchEvent(new h.window.Event('focus'));
+  assertWalletIdentity(h, ACCOUNT, 'Connected');
   assert.equal(h.byId('visit-count').textContent, '—');
   assert.equal(h.byId('summary-art-label').textContent, 'Seedling');
   assert.equal(h.byId('summary-meter').hidden, true);
@@ -700,6 +732,7 @@ test('explicit sign-out drops the token and private data even when the logout en
   await h.signIn();
   h.handlers.logout = () => ({ status: 'error', error: 'service-unavailable', message: 'Unavailable' });
   await h.controller.signOut();
+  assertWalletIdentity(h, ACCOUNT, 'Connected');
   assertUnknownMeters(h);
   assert.equal(h.byId('journey-stops').querySelectorAll('.is-done').length, 0);
   assert.equal(h.byId('visit-count').textContent, '—');
@@ -707,6 +740,8 @@ test('explicit sign-out drops the token and private data even when the logout en
   assert.equal(h.window.sessionStorage.getItem(SESSION_KEY), null);
   assert.equal(h.count('logout'), 1);
   assert.match(h.byId('status').textContent, /Signed out/);
+  h.changeWallet(null);
+  assertWalletIdentity(h);
 });
 
 function realWalletFixture() {

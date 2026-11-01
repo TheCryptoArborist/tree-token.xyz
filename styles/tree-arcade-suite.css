@@ -238,6 +238,11 @@ a.suite-owner-link, .suite-owner-link a { display: inline-flex; align-items: cen
 .growth-panel .growth-invitation-open:not(:disabled):hover { color: #fff0ae; background: transparent; }
 .growth-strip-copy .suite-eyebrow { margin-bottom: 4px; }
 .growth-strip-copy > p:not(.suite-eyebrow) { max-width: 340px; margin-top: 5px; color: #c7d1b9; font-size: 11px; line-height: 1.5; }
+.growth-strip-copy > p.growth-wallet-identity { display: flex; align-items: center; flex-wrap: wrap; gap: 3px 7px; max-width: 100%; margin-top: 6px; color: #d4dbba; font-size: 10px; line-height: 1.4; }
+.growth-wallet-identity-status { padding: 1px 5px; border: 1px solid #b49a5659; border-radius: 3px; color: #e0c993; background: #9a7b1912; font-size: 9px; font-weight: 750; white-space: nowrap; }
+.growth-wallet-identity.is-signed-in .growth-wallet-identity-status { color: #d9eba5; border-color: #bdd26e66; background: #8fab2821; }
+.growth-wallet-identity-name { max-width: 15ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.growth-wallet-identity-address { color: #d5d9bf; font-family: var(--suite-mono); font-size: 10px; white-space: nowrap; }
 .growth-strip-progress { width: 100%; max-width: 240px; padding-left: 15px; border-left: 1px solid #c1ab6340; }
 .growth-strip-tally { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; color: #b4c59c; font-size: 10px; line-height: 1.5; }
 .growth-strip-tally strong { color: #e3edb8; font-size: 13px; line-height: 1.4; font-variant-numeric: tabular-nums; }
