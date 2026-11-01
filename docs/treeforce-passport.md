@@ -1,6 +1,8 @@
 # TREE FORCE joins the Arcade Passport
 
-## Intended behavior
+**Live:** https://tree-token.xyz/play/ — published and locked deployment `6ae7648ca7cf1ea1c10b47b5`, source `51652a2a982fd5aa1e31d499f722eaebfbb003dd`. Publication completed at `2026-11-01T16:11:43.643Z`; production migration `20261101161214` then activated the four-game rules.
+
+## Published behavior
 
 From the November 2026 UTC season onward, Arcade Passport requires four game stamps:
 
@@ -48,4 +50,12 @@ The guarded release overlays only `/play/index.html`, `/scripts/arcade-daily-gro
 
 The ordinary root snapshot build is historical recovery material and must not be deployed for this update. The existing Canopy Defense authentication store is deployment-scoped, so its active short-lived sessions may need to sign in again after publication.
 
-Evidence: `treeforce-passport-database-dev.json`, `treeforce-passport-function.json`, `treeforce-passport-packaged.json`, `treeforce-passport-archived-parity.json`, and `review/treeforce-passport/`. The final production receipt and database verification are recorded after publication and rule activation.
+Evidence: `treeforce-passport-database-dev.json`, `treeforce-passport-function.json`, `treeforce-passport-packaged.json`, `treeforce-passport-archived-parity.json`, and `review/treeforce-passport/`. `../production/treeforce-passport-release.json` and `treeforce-passport-database.json` record the completed publication and rule activation.
+
+## Live verification
+
+The real canonical public API returns Garden Bot, PvP Battle, Arborist Trials, and TREE FORCE ’89 as required and eligible games. Seven candidate checks before activation and seven canonical checks after activation passed, each with 20 successful read-only requests. Canonical controller, stylesheet, wallet bundle, artwork hashes, and all eight cabinet destinations matched the reviewed source. Desktop and mobile layouts remain compact without overflow or browser errors.
+
+Production before/after verification retained every existing event, attendance, quest, and badge row exactly, preserved October’s entire rule row and all monthly creation timestamps, and changed only the two reviewed rule routines. Existing November TREE FORCE participation remains visible in snapshots that now require all four games. December’s legacy fallback returns four games without creating a frozen row during a read.
+
+The migration filename was aligned to its applied production version after publication. Its SQL is byte-identical to the development-tested migration and the SQL reviewed in the source commit. See `review/treeforce-passport/canonical-browser-report.json` and `treeforce-passport-database.json`.

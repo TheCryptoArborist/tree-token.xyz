@@ -2,10 +2,13 @@
   "developmentProject": "charuqbsxmrirpxciljn",
   "developmentBranch": "knowledge-trial-v3-safe",
   "migration": {
-    "localPath": "supabase/migrations/20261101160314_arcade_growth_treeforce_required_passport.sql",
+    "localPath": "supabase/migrations/20261101161214_arcade_growth_treeforce_required_passport.sql",
     "appliedVersion": "20261101160407",
     "name": "arcade_growth_treeforce_required_passport",
-    "remoteSqlExactlyMatchesLocal": true
+    "remoteSqlExactlyMatchesLocal": true,
+    "originalDevelopmentFilename": "supabase/migrations/20261101160314_arcade_growth_treeforce_required_passport.sql",
+    "localFilenameAlignedWithProductionVersion": true,
+    "sha256": "62e78ef10ff2026352fa3bdc2b5a678f165544ff3e7fbc824d7246dfa49c550d"
   },
   "rules": [
     {

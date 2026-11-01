@@ -1,4 +1,4 @@
--- Run after 20261101160314_arcade_growth_treeforce_required_passport.sql on the
+-- Run after 20261101161214_arcade_growth_treeforce_required_passport.sql on the
 -- isolated development DB. December 2026 must not already have a frozen row:
 -- this fixture explicitly exercises its first caller. All inserts roll back.
 -- The migration's preservation of preexisting production rows is separately

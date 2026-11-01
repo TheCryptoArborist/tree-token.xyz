@@ -1,0 +1,111 @@
+{
+  "productionProject": "lehswszuekjqottolmsf",
+  "verifiedAt": "2026-11-01T16:12:30.077069+00:00",
+  "compatibilityDeployId": "6ae7648ca7cf1ea1c10b47b5",
+  "compatibilitySourceCommit": "51652a2a982fd5aa1e31d499f722eaebfbb003dd",
+  "migration": {
+    "originalLocalPath": "supabase/migrations/20261101160314_arcade_growth_treeforce_required_passport.sql",
+    "appliedVersion": "20261101161214",
+    "name": "arcade_growth_treeforce_required_passport",
+    "remoteSqlExactlyMatchesLocal": true,
+    "remoteSqlExactlyMatchesDevelopment": true,
+    "localPath": "supabase/migrations/20261101161214_arcade_growth_treeforce_required_passport.sql",
+    "originalDevelopmentFilename": "supabase/migrations/20261101160314_arcade_growth_treeforce_required_passport.sql",
+    "localFilenameAlignedWithProductionVersion": true,
+    "sha256": "62e78ef10ff2026352fa3bdc2b5a678f165544ff3e7fbc824d7246dfa49c550d"
+  },
+  "rulesBefore": [
+    {
+      "month_key": "2026-10-01",
+      "created_at": "2026-10-31T21:56:34.488766+00:00",
+      "rule_version": "arcade-growth-v1",
+      "enabled_games": [
+        "garden-bot",
+        "pvp",
+        "arborist-trials"
+      ]
+    },
+    {
+      "month_key": "2026-11-01",
+      "created_at": "2026-11-01T09:41:45.108993+00:00",
+      "rule_version": "arcade-growth-v1",
+      "enabled_games": [
+        "garden-bot",
+        "pvp",
+        "arborist-trials"
+      ]
+    }
+  ],
+  "rulesAfter": [
+    {
+      "month_key": "2026-10-01",
+      "created_at": "2026-10-31T21:56:34.488766+00:00",
+      "rule_version": "arcade-growth-v1",
+      "enabled_games": [
+        "garden-bot",
+        "pvp",
+        "arborist-trials"
+      ]
+    },
+    {
+      "month_key": "2026-11-01",
+      "created_at": "2026-11-01T09:41:45.108993+00:00",
+      "rule_version": "arcade-growth-v1",
+      "enabled_games": [
+        "garden-bot",
+        "pvp",
+        "arborist-trials",
+        "treeforce89"
+      ]
+    }
+  ],
+  "retainedRows": {
+    "badges": {
+      "before": 0,
+      "after": 0,
+      "allPriorRowsExactlyRetained": true
+    },
+    "events": {
+      "before": 9,
+      "after": 9,
+      "allPriorRowsExactlyRetained": true
+    },
+    "quests": {
+      "before": 2,
+      "after": 2,
+      "allPriorRowsExactlyRetained": true
+    },
+    "checkins": {
+      "before": 5,
+      "after": 5,
+      "allPriorRowsExactlyRetained": true
+    }
+  },
+  "changedRoutines": [
+    "arcade_growth_month_games_v1",
+    "arcade_growth_valid_games_v1"
+  ],
+  "unchangedOtherRoutines": 13,
+  "tableRlsAndAclUnchanged": true,
+  "routineSecurityAndAclUnchanged": true,
+  "advisors": [
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "count": 38
+    }
+  ],
+  "advisorInterpretation": "Only existing INFO-level RLS-without-browser-policy notices on private service-role-only tables; no new warning or error.",
+  "productionSyntheticRecords": 0,
+  "existingCreditAndFutureRulesVerification": {
+    "decemberStillUnfrozen": true,
+    "decemberLegacyFallback": [
+      "garden-bot",
+      "pvp",
+      "arborist-trials",
+      "treeforce89"
+    ],
+    "allSnapshotsRequireTreeforce": true,
+    "allSavedNovemberRunsRemainVisible": true
+  }
+}

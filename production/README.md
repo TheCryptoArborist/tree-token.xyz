@@ -1,3 +1,21 @@
+# Current production — TREE FORCE in Arcade Passport, 2026-11-01
+
+Published and locked deploy `6ae7648ca7cf1ea1c10b47b5` from source commit `51652a2a982fd5aa1e31d499f722eaebfbb003dd` on `feature/treeforce-passport-20261101`. Published at `2026-11-01T16:11:43.643Z`. Live at https://tree-token.xyz/play/.
+
+TREE FORCE ’89 is the fourth required Arcade Passport game from November 2026 onward. A recorded authenticated first wave earns its stamp; opening a game link does not count. October retains its original three required Garden games. The interface puts all four games in the same two-column grid, with server-based counters and existing ecosystem artwork. The collapsed Daily Growth invitation remains compact.
+
+The compatible handler was published before production migration `20261101161214_arcade_growth_treeforce_required_passport.sql` was applied. The exact SQL passed three rollback suites on the existing development branch first. All existing game-event, attendance, quest, and badge rows were retained; only November-and-later monthly requirements and the two private rule helpers changed. Access controls are unchanged.
+
+Only `/play/index.html`, `/scripts/arcade-daily-growth.js`, and the `arcade-growth` function package changed in the Netlify release. All 283 static paths remain present; the other 281 static files, 40 complete function records, five schedules, runtime/provider configuration, generated Netlify configuration, site/account environment, and publication lock are preserved. Canopy Defense and Deadfall Run remain intact. The root dependencies and wallet/game bundles were not rebuilt.
+
+`current-release.json` and `treeforce-passport-release.json` record the exact published inventory and function package. `treeforce-passport-baseline.json` captures previous deployment `6ae75c44b387f8129ba60518`. The older `manifest.json` is archived recovery material; do not publish the ordinary root snapshot or unlock automatic publishing.
+
+Validation: 69 backend/reporting cases, 32 controller cases, three rolled-back database suites, five extracted-package scenarios, and 16 synthetic browser checks passed. Seven candidate and seven canonical hosted checks passed at 1440/390/320 widths; the real canonical API returns four required games. No horizontal overflow or browser errors occurred. Live checks were read-only and signed-out; no production participation was fabricated. See `../docs/treeforce-passport.md`, the database evidence, and `../docs/review/treeforce-passport/`.
+
+The existing Canopy Defense function uses a deployment-scoped authentication store; active short-lived sessions may require sign-in again after publication. Its bytes and runtime settings are preserved.
+
+---
+
 # Current production — Daily Growth invitation, 2026-11-01
 
 Published and locked deploy `6ae75c44b387f8129ba60518` from source commit `90ce9a5a308855c07b08597fa0341367842591b8` on `feature/daily-growth-invitation-20261101`. Published at `2026-11-01T15:36:38.093Z`. The update is live at https://tree-token.xyz/play/.

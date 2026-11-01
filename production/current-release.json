@@ -1,31 +1,191 @@
 {
-  "id": "6ae75c44b387f8129ba60518",
+  "id": "6ae7648ca7cf1ea1c10b47b5",
   "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
-  "baseline": "6ae69fa9b3d4702fcc61177c",
-  "baselineSha256": "f769b133efafb5ebccf5baa81969345f0aea5bd3c02f791a301b6413f3596e65",
-  "sourceCommit": "90ce9a5a308855c07b08597fa0341367842591b8",
-  "sourceTree": "349d301f126560b5246e4fcc63445308e414e051",
-  "sourceBranch": "feature/daily-growth-invitation-20261101",
-  "filesSha256": "0c9b9e1f4f2c1596f51851c032aa912e8f272e216d8ceba201c1f461bd79e232",
+  "baseline": "6ae75c44b387f8129ba60518",
+  "baselineSha256": "e00aa58733a17a1bb8377380a2a5e865661b80a1c2d060cb2c6dd852e153567e",
+  "sourceCommit": "51652a2a982fd5aa1e31d499f722eaebfbb003dd",
+  "sourceTree": "756bd798b9f9cf11a237b3d54efe1a666ce241c7",
+  "sourceBranch": "feature/treeforce-passport-20261101",
+  "filesSha256": "dd87391c1d9b22bc5e420b632c940df39592d241963420e55685b372c483b228",
   "overlay": [
     {
       "path": "/play/index.html",
-      "sha": "47d0fc9595072df851d539c27a92b43a6e15be4c",
-      "size": 33802
+      "sha": "b844053a09c7e04e7acbf9d59d779adfed91c481",
+      "size": 33809
     },
     {
       "path": "/scripts/arcade-daily-growth.js",
-      "sha": "73210bf2efe770252a9127c5f1564d664fcd4cbd",
-      "size": 57362
-    },
-    {
-      "path": "/styles/tree-arcade-suite.css",
-      "sha": "26fe3a465ec3e38a0b12fee30c1475dd6d96cc2c",
-      "size": 74318
+      "sha": "22b94ae9e658c570726f2416dc73a43ce0a9382d",
+      "size": 58461
     }
   ],
-  "publishedAt": "2026-11-01T15:36:38.093Z",
-  "verifiedAt": "2026-11-01T15:38:02.529429+00:00",
+  "functionPackage": {
+    "manifest": {
+      "version": 1,
+      "packager": {
+        "name": "@netlify/zip-it-and-ship-it",
+        "version": "16.3.0"
+      },
+      "name": "arcade-growth",
+      "path": ".netlify/treeforce-passport-functions/arcade-growth.zip",
+      "sha256": "2bc510db550e019f388c8a7f5eb8cda7360205000eff6c73745d05c978b2573c",
+      "runtimeVersion": "nodejs22.x",
+      "invocationMode": "stream",
+      "buildData": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "routes": [
+        {
+          "pattern": "/api/arcade-growth",
+          "literal": "/api/arcade-growth",
+          "methods": [
+            "GET",
+            "POST"
+          ]
+        }
+      ],
+      "trafficRules": {
+        "action": {
+          "type": "rate_limit",
+          "config": {
+            "rateLimitConfig": {
+              "windowLimit": 60,
+              "windowSize": 60,
+              "algorithm": "sliding_window"
+            },
+            "aggregate": {
+              "keys": [
+                {
+                  "type": "domain"
+                },
+                {
+                  "type": "ip"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "sourceFiles": [
+        {
+          "path": "netlify/functions/arcade-growth.ts",
+          "sha256": "0188744d6c17651de6c23b375ea79d99013631cf641a0e7b33371ec6f8c5f070"
+        },
+        {
+          "path": "netlify/functions/nftree-wallet.ts",
+          "sha256": "8022f7254ef2673740fb11186c9e8573918b9f351dc767dd9b32095424c4e09e"
+        },
+        {
+          "path": "netlify/lib/arcade-growth-core.ts",
+          "sha256": "b2e71b4b18c77fd43b2728bee97622e458dd151e8545cd1a3d32ac88bd869571"
+        },
+        {
+          "path": "netlify/lib/arcade-growth-games.ts",
+          "sha256": "4733456507402268350fead99dca643728c10c5109ab1aff651753d3f4b7ec9c"
+        },
+        {
+          "path": "netlify/lib/arcade-growth-store.ts",
+          "sha256": "55fdc792eb205da6411cfb5fd31087948bbf0901d9c031e43a0179b51f733d9a"
+        },
+        {
+          "path": "netlify/lib/arcade-pg.d.ts",
+          "sha256": "578c339f048174b35a43571eef5116d3987e007413cc1c961a65fd638ba50bb2"
+        },
+        {
+          "path": "netlify/lib/arcade-treeforce-session.ts",
+          "sha256": "dc5978bf67685610f3929ee3cf96ccbdd90a8ae45bd46c712f9cbf9f635b6eba"
+        },
+        {
+          "path": "netlify/lib/nftree-wallet-verification.ts",
+          "sha256": "d4c7f26fc5067d9e24e8c3dc8d56fe0e991d60a6c851861502e30ff93a08a860"
+        },
+        {
+          "path": "netlify/lib/tree-nftree-overview.ts",
+          "sha256": "505ad626c7fb43c53af847159324cb38a37f4ff04a09eed2585c778f06a0c241"
+        },
+        {
+          "path": "package-lock.json",
+          "sha256": "f4c0726549471554450a38e62caa3d14f9b90404d1ad5164113f0a366b9b57eb"
+        },
+        {
+          "path": "package.json",
+          "sha256": "2ece6ffd478948d8a037103bb1f874e5643e761757362b091d692fc1b5a0dbca"
+        },
+        {
+          "path": "vendor/arcade-growth-backend/package-lock.json",
+          "sha256": "7211d6f5bd71cf00aa91f53eaef7e30f3e44c803881917463f1eb9d2994cea52"
+        },
+        {
+          "path": "vendor/arcade-growth-backend/package.json",
+          "sha256": "92dbbd52fa34452e1383f8b40af63d0e628b29e386032efc3fab5833f4b5b583"
+        }
+      ]
+    },
+    "manifestPath": ".netlify/treeforce-passport-functions/manifest.json",
+    "manifestSha256": "f52c61fc1720c5a4838ff4f7b4765be87b665d62595c19640fe5b0cabcdcf84f",
+    "sha256": "2bc510db550e019f388c8a7f5eb8cda7360205000eff6c73745d05c978b2573c",
+    "size": 1353890
+  },
+  "replacementRecord": {
+    "n": "arcade-growth",
+    "d": "2bc510db550e019f388c8a7f5eb8cda7360205000eff6c73745d05c978b2573c",
+    "dn": null,
+    "g": null,
+    "bd": {
+      "bootstrapVersion": "2.24.0",
+      "runtimeAPIVersion": 2
+    },
+    "rgo": "us-east-2",
+    "mo": 1024,
+    "ro": [
+      {
+        "p": "/api/arcade-growth",
+        "l": "/api/arcade-growth",
+        "e": null,
+        "m": [
+          "GET",
+          "POST"
+        ],
+        "ps": false
+      }
+    ],
+    "tr": {
+      "action": {
+        "type": "rate_limit",
+        "config": {
+          "aggregate": {
+            "keys": [
+              {
+                "type": "domain"
+              },
+              {
+                "type": "ip"
+              }
+            ]
+          },
+          "rate_limit_config": {
+            "algorithm": "sliding_window",
+            "window_size": 60,
+            "window_limit": 60
+          }
+        }
+      }
+    },
+    "id": "d8e376d001c783a8c7c4da35dbf7542f2094a48c9daf8cfb3113702228a0d09b",
+    "a": "617891814415",
+    "c": "2026-11-01T16:10:57.675Z",
+    "im": "stream",
+    "m": 1024,
+    "obl": "netlify-observability-extension",
+    "oblv": 34,
+    "oid": "06e60e1165aad8b6f77916ab0d3ac5cd7d16e4d478aeabcc9f177894c32324da",
+    "r": "nodejs22.x",
+    "rg": "us-east-2",
+    "s": 1353890
+  },
+  "publishedAt": "2026-11-01T16:11:43.643Z",
+  "verifiedAt": "2026-11-01T16:13:12.992121+00:00",
   "locked": true,
   "files": 283,
   "filesBySha1": {
@@ -88,7 +248,7 @@
     "/scripts/arcade-sui-wallet.js": "25cdec64fb85cfcbe6b7f706841f105e351c3b36",
     "/roadmap/index.html": "6597c20c44a9aac623f685679962fb2fc100c5db",
     "/raffle-rules/index.html": "442ca8e3abf867d7dab3dc1857f1e21182e9addc",
-    "/play/index.html": "47d0fc9595072df851d539c27a92b43a6e15be4c",
+    "/play/index.html": "b844053a09c7e04e7acbf9d59d779adfed91c481",
     "/mascot.png": "9f5e5db66e2f6c3eee41d70b1800094fe014a473",
     "/index.html": "1dba30e928a617b53d698561fb77dcffa6205ccd",
     "/hero.png": "15fa5856c63652fa6089010f683169d8b0c0dca5",
@@ -265,7 +425,7 @@
     "/scripts/arcade-nftree-access-core.mjs": "13956f06548845efb3b7c52150994bf33a0add64",
     "/scripts/arcade-nftree-access.js": "113fbd12943990895beac27f157c587be750754b",
     "/assets/arcade/arcade-growth-wallet.js": "0c1260a071839829dc8e32ce822e228d28af10d3",
-    "/scripts/arcade-daily-growth.js": "73210bf2efe770252a9127c5f1564d664fcd4cbd",
+    "/scripts/arcade-daily-growth.js": "22b94ae9e658c570726f2416dc73a43ce0a9382d",
     "/play/treeforce89/assets/arcade-deuxdoox.js": "fbe89196276d0b7cb0d17eb4441a0e6efa188f08",
     "/play/treeforce89/assets/graphql-ctywyhxq.js": "c024fd2ec1c91212a4a41b4c238384d058f3e839",
     "/play/treeforce89/assets/index-blt2uith.css": "0288ab26fa2250d052b58e1a1e3a3a3faf3ce364",
@@ -315,12 +475,15 @@
   },
   "changedExistingPaths": [
     "/play/index.html",
-    "/scripts/arcade-daily-growth.js",
-    "/styles/tree-arcade-suite.css"
+    "/scripts/arcade-daily-growth.js"
   ],
-  "preservedStaticFiles": 280,
+  "preservedStaticFiles": 281,
   "newPaths": [],
-  "functionsPreserved": 41,
+  "functionsPreserved": 40,
+  "functionsReplaced": [
+    "arcade-growth"
+  ],
+  "replacementPackageSha256": "2bc510db550e019f388c8a7f5eb8cda7360205000eff6c73745d05c978b2573c",
   "functionRecords": [
     {
       "n": "arcade-wallet-link",
@@ -1531,7 +1694,7 @@
     },
     {
       "n": "arcade-growth",
-      "d": "ac313c8da92e4c5cb2fde6014f1fc5dbd917ebe49c94fab05e5e70162f1bef57",
+      "d": "2bc510db550e019f388c8a7f5eb8cda7360205000eff6c73745d05c978b2573c",
       "dn": null,
       "g": null,
       "bd": {
@@ -1574,17 +1737,17 @@
           }
         }
       },
-      "id": "6f6581e0078a36bdba3955cea7cacb9f4759d40732f62cdace24d31b1505619c",
-      "rg": "us-east-2",
-      "m": 1024,
-      "s": 1353895,
-      "r": "nodejs22.x",
-      "c": "2026-10-31T22:07:39.023Z",
-      "a": "564250524218",
-      "oid": "55836b4f54b474b65a7ec8092c3e68c32f191476f38078c73f9cce70c5651223",
+      "id": "d8e376d001c783a8c7c4da35dbf7542f2094a48c9daf8cfb3113702228a0d09b",
+      "a": "617891814415",
+      "c": "2026-11-01T16:10:57.675Z",
       "im": "stream",
+      "m": 1024,
       "obl": "netlify-observability-extension",
-      "oblv": 34
+      "oblv": 34,
+      "oid": "06e60e1165aad8b6f77916ab0d3ac5cd7d16e4d478aeabcc9f177894c32324da",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 1353890
     },
     {
       "n": "canopy-access",
@@ -1635,16 +1798,16 @@
         }
       },
       "id": "8ca4e1411090c3534074c110bb966c3274855c96bd89261e6d38c7977cf59490",
-      "a": "480875380381",
-      "c": "2026-11-01T02:08:40.238Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "a078979f9369776e3516c85f033b275949862351f94e5c8a39d87cfe04141ec1",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 1253348
+      "m": 1024,
+      "s": 1253348,
+      "r": "nodejs22.x",
+      "c": "2026-11-01T02:08:40.238Z",
+      "a": "480875380381",
+      "oid": "a078979f9369776e3516c85f033b275949862351f94e5c8a39d87cfe04141ec1",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     }
   ],
   "functionSchedules": [
@@ -1844,19 +2007,19 @@
     "snapshots": [
       {
         "source": "on-publish",
-        "created_at": "2026-11-01T15:36:37.934Z"
+        "created_at": "2026-11-01T16:11:43.497Z"
       }
     ]
   },
   "generatedNetlifyConfigSha1": "ac47414c8205343f1a87a5b7b48131aaa7b92856",
   "environmentEvidence": {
-    "sourceRepository": "TheCryptoArborist/treetowerdefense",
-    "releaseSourceCommit": "0eb80c048bba49b7acbb03a24a6a4e547178c72d",
-    "releaseHelperGitBlob": "2940fed5b55880e018aa53fa53fdd11f36f50fae",
-    "releaseHelperUrl": "https://raw.githubusercontent.com/TheCryptoArborist/treetowerdefense/0eb80c048bba49b7acbb03a24a6a4e547178c72d/tools/release-nftree-gate.mjs",
-    "receiptUrl": "https://github.com/TheCryptoArborist/treetowerdefense/blob/34b0e0498ed89699f74e8721c61fcb6404330e12/integration/tree-arcade/nftree-access-release-receipt.json",
+    "sourceRepository": "TheCryptoArborist/tree-token.xyz",
+    "releaseSourceCommit": "90ce9a5a308855c07b08597fa0341367842591b8",
+    "releaseHelperGitBlob": "109721e6ef6dc71d220c7beabefd236192bc5806",
+    "releaseHelperUrl": "https://github.com/TheCryptoArborist/tree-token.xyz/blob/90ce9a5a308855c07b08597fa0341367842591b8/scripts/release-daily-growth-invitation.py",
+    "receiptUrl": "https://github.com/TheCryptoArborist/tree-token.xyz/blob/084032c5cc531b7b8c4e16acb5679e40e6b58dbe/production/daily-growth-invitation-release.json",
     "deployEnvironmentOverrides": [],
-    "environmentEvidence": "The exact recorded release helper omits environment from createSiteDeploy. The new candidate must use the same main/production site and account environment without adding historical overrides.",
+    "environmentEvidence": "The exact published invitation helper omitted deploy-specific environment overrides. Preserve its main/production site and shared-account environment; do not introduce historical overrides.",
     "siteBuildEnvironmentSha256": "46bc4bf6e56b046d14b6a6fa19804d1ddd7bdcff405ec09a116c24013ea34809",
     "accountId": "69800888d1a3d0483003ae9e",
     "canopyAccessPackageSha256": "8bca11eb41ca6657102b82ff28ff927e5fc529687af4a6f002152ff3384b3e4a",
@@ -1865,10 +2028,27 @@
     "siteFunctionsEnvironmentEntries": 49,
     "sharedAccountFunctionsEnvironmentSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
     "sharedAccountFunctionsEnvironmentEntries": 0,
-    "sharedEnvironmentCapturedAt": "2026-11-01T15:16:03.537317+00:00"
+    "sharedEnvironmentCapturedAt": "2026-11-01T15:16:03.537317+00:00",
+    "predecessorReleaseSource": {
+      "repository": "TheCryptoArborist/treetowerdefense",
+      "commit": "0eb80c048bba49b7acbb03a24a6a4e547178c72d",
+      "helperGitBlob": "2940fed5b55880e018aa53fa53fdd11f36f50fae",
+      "receiptUrl": "https://github.com/TheCryptoArborist/treetowerdefense/blob/34b0e0498ed89699f74e8721c61fcb6404330e12/integration/tree-arcade/nftree-access-release-receipt.json"
+    },
+    "releaseSourceTree": "349d301f126560b5246e4fcc63445308e414e051"
   },
   "previousDeployLocked": false,
   "publicationLockScope": "current publication only; do not relock an earlier deployment",
+  "databaseActivation": "Separate reviewed SQL step after compatible backend/UI publication; this helper never applies SQL.",
+  "rolloutOrder": [
+    "publish compatibility backend and UI while existing required-game data remains valid",
+    "apply the reviewed atomic SQL activation separately",
+    "verify canonical status reports four required Passport games"
+  ],
   "url": "https://tree-token.xyz/play/",
-  "candidateUrl": "https://6ae75c44b387f8129ba60518--tree-token.netlify.app/play/"
+  "candidateUrl": "https://6ae7648ca7cf1ea1c10b47b5--tree-token.netlify.app/play/",
+  "databaseActivationEvidence": "docs/treeforce-passport-database.json",
+  "databaseMigrationVersion": "20261101161214",
+  "databaseRulesActivated": true,
+  "canonicalBrowserEvidence": "docs/review/treeforce-passport/canonical-browser-report.json"
 }

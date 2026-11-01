@@ -1,6 +1,6 @@
 {
   "verifiedAt": "2026-11-01T16:07:50.765524+00:00",
-  "stage": "pre-publication",
+  "stage": "published-and-activated",
   "backendSourceAndReporting": {
     "passed": 69,
     "failed": 0
@@ -92,5 +92,22 @@
     "walletAndDependencyChanges": false
   },
   "transactions": 0,
-  "productionSyntheticRecords": 0
+  "productionSyntheticRecords": 0,
+  "publishedDeploy": "6ae7648ca7cf1ea1c10b47b5",
+  "sourceCommit": "51652a2a982fd5aa1e31d499f722eaebfbb003dd",
+  "productionMigrationVersion": "20261101161214",
+  "hosted": {
+    "candidateChecksPassed": 7,
+    "canonicalChecksPassed": 7,
+    "requestsPerEnvironment": 20,
+    "allHttp200": true,
+    "canonicalRequiredGames": [
+      "garden-bot",
+      "pvp",
+      "arborist-trials",
+      "treeforce89"
+    ],
+    "readOnlySignedOut": true
+  },
+  "productionDataPreserved": true
 }
