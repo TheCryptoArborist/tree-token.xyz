@@ -1,0 +1,31 @@
+{
+  "result": "PASS",
+  "packagedRuntime": true,
+  "sdkVersion": "2.26.1",
+  "actualLazyVerifierAndGrpcImports": true,
+  "pgVersion": "8.23.1",
+  "outcomes": [
+    {
+      "scenario": "valid",
+      "status": 200
+    },
+    {
+      "scenario": "valid-four-game-passport",
+      "status": 200
+    },
+    {
+      "scenario": "wrong-account",
+      "status": 401
+    },
+    {
+      "scenario": "wrong-message",
+      "status": 401
+    },
+    {
+      "scenario": "authenticated-first-wave-report",
+      "status": 200
+    }
+  ],
+  "networkAttempts": 0,
+  "transactions": 0
+}

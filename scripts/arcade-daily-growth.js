@@ -103,6 +103,7 @@ function normalizeProgress(value, expectedWallet) {
   const enabledGames = value.passport.enabledGames.map(gameDescriptor);
   const completedGameIds = uniqueStrings(value.passport.completedGameIds);
   if (new Set(enabledGames.map((game) => game.id)).size !== enabledGames.length || completedGameIds.some((id) => !enabledGames.some((game) => game.id === id))) throw invalidData();
+  if (value.passport.complete && completedGameIds.length !== enabledGames.length) throw invalidData();
   if (value.passport.optionalGames !== undefined && !Array.isArray(value.passport.optionalGames)) throw invalidData();
   const optionalGames = (value.passport.optionalGames || []).map(gameDescriptor);
   const optionalCompletedGameIds = uniqueStrings(value.passport.optionalCompletedGameIds ?? []);
@@ -520,8 +521,8 @@ export function createDailyGrowth({
     ui.milestones.replaceChildren();
     ui['passport-count'].textContent = progress ? `${progress.passport.completedGameIds.length} / ${progress.passport.enabledGames.length} required games` : unavailable ? 'Unavailable' : 'Sign in to view';
     ui['passport-note'].textContent = progress
-      ? `${monthLabel(progress.monthKey)} · Complete the listed required games for this optional monthly goal. Paid PvP is not required for check-ins or daily quests.`
-      : 'Explore eligible games at your own pace this month. The passport is an optional goal.';
+      ? `${monthLabel(progress.monthKey)} · Collect all ${progress.passport.enabledGames.length} game stamps for this monthly badge. Paid PvP is not required for check-ins or daily quests.`
+      : 'Collect this month’s game stamps at your own pace to earn the Arcade Passport badge.';
     ui['passport-reward'].textContent = '';
     ui['badges-empty'].hidden = Boolean(progress?.badges.length);
     ui['badges-empty'].textContent = progress
@@ -539,7 +540,9 @@ export function createDailyGrowth({
       const stamp = append(ui.stamps, 'div', `growth-stamp${complete ? ' is-done' : ''}`);
       emblem(stamp, game.id, 'growth-stamp-icon');
       append(stamp, 'strong', '', game.label);
-      append(stamp, 'span', '', complete ? '✓ Stamp earned' : game.id === 'pvp' ? '○ Not yet played · Paid entry' : '○ Not yet played');
+      append(stamp, 'span', '', complete
+        ? game.creditRule === 'start-run' ? '✓ First wave started · Stamp earned' : '✓ Stamp earned'
+        : game.creditRule === 'start-run' ? '○ Start a run · Reach the first wave' : game.id === 'pvp' ? '○ Not yet played · Paid entry' : '○ Not yet played');
     }
     for (const game of progress.passport.optionalGames) {
       const recorded = progress.passport.optionalCompletedGameIds.includes(game.id);
@@ -552,7 +555,9 @@ export function createDailyGrowth({
     }
     ui['passport-reward'].textContent = progress.passport.complete
       ? 'Monthly Arcade Passport badge earned ✓'
-      : progress.passport.enabledGames.length ? 'All required stamps earn the monthly Arcade Passport badge. Optional stamps do not change the requirement.' : 'Passport games will appear when verified tracking is available.';
+      : progress.passport.enabledGames.length
+        ? `All required stamps earn the monthly Arcade Passport badge.${progress.passport.optionalGames.length ? ' Optional stamps do not change the requirement.' : ''}`
+        : 'Passport games will appear when verified tracking is available.';
     for (const milestone of progress.milestones) {
       const item = append(ui.milestones, 'div', `growth-milestone${milestone.earned ? ' is-done' : ''}`);
       item.dataset.rank = Object.hasOwn(GROWTH_ART, milestone.id) ? milestone.id : 'seedling';
@@ -605,11 +610,15 @@ export function createDailyGrowth({
     renderPicker();
     const games = state.configuration?.eligibleGames || [];
     const treeForceEnabled = games.some((game) => game.id === TREE_FORCE_ID);
+    const requiredGames = state.progress?.passport.enabledGames || state.configuration?.enabledGames || [];
+    const treeForceRequired = requiredGames.some((game) => game.id === TREE_FORCE_ID);
     const gardenOnly = games.length === 3 && ['garden-bot', 'pvp', 'arborist-trials'].every((id) => games.some((game) => game.id === id));
     ui['tracking-note'].hidden = !treeForceEnabled && !gardenOnly;
     ui['tracking-note'].textContent = treeForceEnabled
-      ? 'TREE FORCE ’89 earns an optional participation stamp. This month’s required Passport games stay the same.'
-      : 'TREE FORCE ’89 is live; Daily Growth tracking is coming soon.';
+      ? treeForceRequired
+        ? 'TREE FORCE ’89 is part of this month’s Arcade Passport. Reach the first wave to earn its stamp.'
+        : 'TREE FORCE ’89 is an optional participation stamp for this month’s Passport.'
+      : 'This month’s Passport uses the listed Garden Battles. TREE FORCE ’89 is not enabled for Daily Growth here.';
     ui['quest-rule'].textContent = treeForceEnabled
       ? 'Start one run of TREE FORCE ’89, or finish an eligible Garden Battle.'
       : 'Finish an eligible Garden Battle. Win or lose, it counts.';
@@ -643,10 +652,14 @@ export function createDailyGrowth({
     ui['game-select'].value = state.selectedGameId || '';
     ui['quest-note'].textContent = selected?.id === TREE_FORCE_ID
       ? done
-        ? 'Today’s quest is saved and you’re checked in. TREE FORCE participation is optional for the monthly Passport.'
+        ? treeForceRequired
+          ? 'Today’s quest is saved and you’re checked in. TREE FORCE ’89 counts toward this month’s Arcade Passport.'
+          : 'Today’s quest is saved and you’re checked in. TREE FORCE participation is optional for this month’s Passport.'
         : 'Participation is saved when your first wave starts. Refresh here to see it. One quest per UTC day; opening the link alone does not count.'
       : done
-        ? 'Today’s quest is saved and you’re checked in. Refresh other completed Garden Battles before 00:00 UTC to add required passport stamps.'
+        ? treeForceRequired
+          ? 'Today’s quest is saved and you’re checked in. Refresh completed Garden Battles before 00:00 UTC for Passport stamps; TREE FORCE records its stamp when the first wave starts.'
+          : 'Today’s quest is saved and you’re checked in. Refresh other completed Garden Battles before 00:00 UTC to add required passport stamps.'
         : 'Complete the game and refresh before 00:00 UTC to earn that day’s quest and passport stamps. Opening a game alone does not count.';
     ui.status.textContent = state.notice;
     ui.status.className = `growth-status${state.noticeKind ? ` is-${state.noticeKind}` : ''}`;

@@ -1,5 +1,5 @@
-import { ArcadeGrowthError, growthEnabledGames, growthWallet, type GrowthChallenge, type GrowthSession, type GrowthSnapshot } from './arcade-growth-core.ts';
-import type { ArcadeGrowthGameEvent, ArcadeGrowthGameId } from './arcade-growth-games.ts';
+import { ArcadeGrowthError, growthEnabledGames, growthWallet, type GrowthChallenge, type GrowthEligibleGameId, type GrowthSession, type GrowthSnapshot } from './arcade-growth-core.ts';
+import type { ArcadeGrowthGameEvent } from './arcade-growth-games.ts';
 
 type Environment = Record<string, string | undefined>;
 type JsonRecord = Record<string, unknown>;
@@ -10,15 +10,15 @@ export type GrowthParticipationReceipt = { saved: true; runId: string; sourceId:
   recordedAt: string; alreadyRecorded: boolean };
 export type GrowthTreeforcePlayResult = { snapshot: GrowthSnapshot; participation: GrowthParticipationReceipt };
 export interface ArcadeGrowthStore {
-  publicRules(enabledGames: readonly ArcadeGrowthGameId[]): Promise<ArcadeGrowthGameId[]>;
+  publicRules(enabledGames: readonly GrowthEligibleGameId[]): Promise<GrowthEligibleGameId[]>;
   createChallenge(input: GrowthChallengeInput): Promise<GrowthChallenge>;
   readChallenge(challengeId: string): Promise<GrowthChallenge>;
   createSession(input: { challengeId: string; wallet: string; origin: string; tokenSha256: string; expiresAt: string }): Promise<GrowthSession>;
   readSession(tokenSha256: string, origin: string): Promise<GrowthSession>;
   revokeSession(tokenSha256: string, origin: string): Promise<void>;
-  snapshot(tokenSha256: string, origin: string, enabledGames: readonly ArcadeGrowthGameId[]): Promise<GrowthSnapshot>;
-  checkIn(tokenSha256: string, origin: string, enabledGames: readonly ArcadeGrowthGameId[]): Promise<GrowthSnapshot>;
-  recordEvents(tokenSha256: string, origin: string, enabledGames: readonly ArcadeGrowthGameId[], dateKey: string, events: ArcadeGrowthGameEvent[]): Promise<GrowthSnapshot>;
+  snapshot(tokenSha256: string, origin: string, enabledGames: readonly GrowthEligibleGameId[]): Promise<GrowthSnapshot>;
+  checkIn(tokenSha256: string, origin: string, enabledGames: readonly GrowthEligibleGameId[]): Promise<GrowthSnapshot>;
+  recordEvents(tokenSha256: string, origin: string, enabledGames: readonly GrowthEligibleGameId[], dateKey: string, events: ArcadeGrowthGameEvent[]): Promise<GrowthSnapshot>;
   recordTreeforcePlay(input: GrowthTreeforcePlayInput): Promise<GrowthTreeforcePlayResult>;
 }
 
@@ -94,7 +94,7 @@ export class SupabaseArcadeGrowthStore implements ArcadeGrowthStore {
       throw new ArcadeGrowthError('service-unavailable', 'Daily Growth storage is temporarily unavailable.', 503);
     }
   }
-  async publicRules(enabledGames: readonly ArcadeGrowthGameId[]) {
+  async publicRules(enabledGames: readonly GrowthEligibleGameId[]) {
     return growthEnabledGames(await this.rpc('arcade_growth_public_rules_v1', { p_enabled_games: enabledGames }));
   }
   async createChallenge(input: GrowthChallengeInput) {
@@ -116,13 +116,13 @@ export class SupabaseArcadeGrowthStore implements ArcadeGrowthStore {
   async revokeSession(tokenSha256: string, origin: string) {
     await this.rpc('arcade_growth_revoke_session_v1', { p_token_sha256: tokenSha256, p_origin: origin });
   }
-  async snapshot(tokenSha256: string, origin: string, enabledGames: readonly ArcadeGrowthGameId[]) {
+  async snapshot(tokenSha256: string, origin: string, enabledGames: readonly GrowthEligibleGameId[]) {
     return record(await this.rpc('arcade_growth_snapshot_v1', { p_token_sha256: tokenSha256, p_origin: origin, p_enabled_games: enabledGames })) as unknown as GrowthSnapshot;
   }
-  async checkIn(tokenSha256: string, origin: string, enabledGames: readonly ArcadeGrowthGameId[]) {
+  async checkIn(tokenSha256: string, origin: string, enabledGames: readonly GrowthEligibleGameId[]) {
     return record(await this.rpc('arcade_growth_check_in_v1', { p_token_sha256: tokenSha256, p_origin: origin, p_enabled_games: enabledGames })) as unknown as GrowthSnapshot;
   }
-  async recordEvents(tokenSha256: string, origin: string, enabledGames: readonly ArcadeGrowthGameId[], dateKey: string, events: ArcadeGrowthGameEvent[]) {
+  async recordEvents(tokenSha256: string, origin: string, enabledGames: readonly GrowthEligibleGameId[], dateKey: string, events: ArcadeGrowthGameEvent[]) {
     return record(await this.rpc('arcade_growth_record_events_v1', { p_token_sha256: tokenSha256, p_origin: origin,
       p_enabled_games: enabledGames, p_date_key: dateKey, p_events: events })) as unknown as GrowthSnapshot;
   }

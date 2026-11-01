@@ -1,10 +1,11 @@
-import { ARCADE_ENABLED_GAME_IDS, type ArcadeGrowthGameEvent, type ArcadeGrowthGameId } from './arcade-growth-games.ts';
+import { ARCADE_ENABLED_GAME_IDS, type ArcadeGrowthGameEvent } from './arcade-growth-games.ts';
 
 export const ARCADE_GROWTH_VERSION = 'arcade-growth-v1';
 export const ARCADE_GROWTH_CHALLENGE_MS = 5 * 60_000;
 export const ARCADE_GROWTH_SESSION_MS = 60 * 60_000;
 export const ARCADE_GROWTH_ORIGINS = ['https://tree-token.xyz', 'https://www.tree-token.xyz'] as const;
-// Participation eligibility is separate from the frozen monthly Passport set.
+// The database freezes each month's Passport requirements from these eligible
+// games. Earlier months can retain three requirements while later months use four.
 // Garden adapters continue to accept only their three completed-result modes.
 export const GROWTH_ELIGIBLE_GAME_IDS = [...ARCADE_ENABLED_GAME_IDS, 'treeforce89'] as const;
 export type GrowthEligibleGameId = typeof GROWTH_ELIGIBLE_GAME_IDS[number];
@@ -43,12 +44,12 @@ export function growthDateKey(now: Date): string {
 
 export function growthMonthKey(now: Date): string { return growthDateKey(now).slice(0, 7); }
 
-export function growthEnabledGames(value: unknown): ArcadeGrowthGameId[] {
-  if (!Array.isArray(value) || value.length < 1 || value.length > ARCADE_ENABLED_GAME_IDS.length ||
-      value.some((id) => !ARCADE_ENABLED_GAME_IDS.includes(id)) || new Set(value).size !== value.length) {
+export function growthEnabledGames(value: unknown): GrowthEligibleGameId[] {
+  if (!Array.isArray(value) || value.length < 1 || value.length > GROWTH_ELIGIBLE_GAME_IDS.length ||
+      value.some((id) => !GROWTH_ELIGIBLE_GAME_IDS.includes(id)) || new Set(value).size !== value.length) {
     throw new ArcadeGrowthError('service-unavailable', 'The saved monthly game rules could not be verified.', 503);
   }
-  return [...value] as ArcadeGrowthGameId[];
+  return [...value] as GrowthEligibleGameId[];
 }
 
 export function growthEligibleGames(value: unknown): GrowthEligibleGameId[] {
@@ -59,7 +60,7 @@ export function growthEligibleGames(value: unknown): GrowthEligibleGameId[] {
   return [...value] as GrowthEligibleGameId[];
 }
 
-export function growthConfiguration(enabled: readonly ArcadeGrowthGameId[], now: Date) {
+export function growthConfiguration(enabled: readonly GrowthEligibleGameId[], now: Date) {
   const ids = growthEnabledGames(enabled);
   const ordinal = Math.floor(Date.parse(`${growthDateKey(now)}T00:00:00.000Z`) / 86_400_000);
   const soloIds: GrowthEligibleGameId[] = [...ids.filter((id) => id === 'garden-bot' || id === 'arborist-trials'), 'treeforce89'];
@@ -76,7 +77,7 @@ export type GrowthChallenge = {
 };
 export type GrowthSession = { wallet: string; origin: string; expiresAt: string; revoked: boolean };
 export type GrowthSnapshot = {
-  wallet: string; dateKey: string; monthKey: string; enabledGames: ArcadeGrowthGameId[];
+  wallet: string; dateKey: string; monthKey: string; enabledGames: GrowthEligibleGameId[];
   eligibleGames: GrowthEligibleGameId[];
   checkins: string[];
   quests: Array<{ dateKey: string; gameId: GrowthEligibleGameId }>;

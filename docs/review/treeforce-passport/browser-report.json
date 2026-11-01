@@ -1,0 +1,997 @@
+{
+  "passed": true,
+  "synthetic": true,
+  "testedAt": "2026-11-01T16:04:15.484Z",
+  "fixtureScope": "Synthetic browser-only progress, never a real player record. November has four required games; October preserves three required games plus the optional first-wave stamp.",
+  "sourceSha256": {
+    "play/index.html": "8a713481ae715de33210cc85571c9b54f0f013a9cd0a1d35ec656402bdbbf9f3",
+    "scripts/arcade-daily-growth.js": "9b9bf0b99c4492b10a45e897b31eac21bfe4c51c72f5aff915513881cdd38839",
+    "styles/tree-arcade-suite.css": "ef3cb3e1e3e1ef10634bfb225f26759ef06949d2d92f531730dc9ecf262290f3"
+  },
+  "checks": [
+    {
+      "name": "1440px signedout: collapsed invitation unchanged, first game visible, no overflow",
+      "passed": true
+    },
+    {
+      "name": "1440px before: collapsed invitation unchanged, first game visible, no overflow",
+      "passed": true
+    },
+    {
+      "name": "1440px before-treeforce: 3/4 stamps, four main stamps in a 2×2 grid without optional TREE FORCE, no overflow",
+      "passed": true
+    },
+    {
+      "name": "1440px after-treeforce: 4/4 stamps, four main stamps in a 2×2 grid without optional TREE FORCE, no overflow",
+      "passed": true
+    },
+    {
+      "name": "1440px historic-october: 3/3 stamps, historic optional credit preserved, no overflow",
+      "passed": true
+    },
+    {
+      "name": "390px signedout: collapsed invitation unchanged, first game visible, no overflow",
+      "passed": true
+    },
+    {
+      "name": "390px before: collapsed invitation unchanged, first game visible, no overflow",
+      "passed": true
+    },
+    {
+      "name": "390px before-treeforce: 3/4 stamps, four main stamps in a 2×2 grid without optional TREE FORCE, no overflow",
+      "passed": true
+    },
+    {
+      "name": "390px after-treeforce: 4/4 stamps, four main stamps in a 2×2 grid without optional TREE FORCE, no overflow",
+      "passed": true
+    },
+    {
+      "name": "390px historic-october: 3/3 stamps, historic optional credit preserved, no overflow",
+      "passed": true
+    },
+    {
+      "name": "320px signedout: collapsed invitation unchanged, first game visible, no overflow",
+      "passed": true
+    },
+    {
+      "name": "320px before: collapsed invitation unchanged, first game visible, no overflow",
+      "passed": true
+    },
+    {
+      "name": "320px before-treeforce: 3/4 stamps, four main stamps in a 2×2 grid without optional TREE FORCE, no overflow",
+      "passed": true
+    },
+    {
+      "name": "320px after-treeforce: 4/4 stamps, four main stamps in a 2×2 grid without optional TREE FORCE, no overflow",
+      "passed": true
+    },
+    {
+      "name": "320px historic-october: 3/3 stamps, historic optional credit preserved, no overflow",
+      "passed": true
+    },
+    {
+      "name": "All nine contexts stayed isolated: no real wallet, signature, remote API, network write, or browser errors",
+      "passed": true
+    }
+  ],
+  "dimensions": [
+    {
+      "mode": "signedout",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "layout": "collapsed",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "open": false,
+      "panel": {
+        "top": 267,
+        "height": 162,
+        "width": 1376
+      },
+      "firstPoster": {
+        "top": 540.578125,
+        "height": 429.03125,
+        "width": 327.5
+      },
+      "baselinePanelHeight": 162
+    },
+    {
+      "mode": "before",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "layout": "collapsed",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "open": false,
+      "panel": {
+        "top": 267,
+        "height": 162,
+        "width": 1376
+      },
+      "firstPoster": {
+        "top": 540.578125,
+        "height": 429.03125,
+        "width": 327.5
+      },
+      "baselinePanelHeight": 162
+    },
+    {
+      "mode": "before-treeforce",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "layout": "passport",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "count": "3 / 4 required games",
+      "current": "3",
+      "maximum": "4",
+      "stamps": [
+        {
+          "text": "Garden Bot✓ Stamp earned",
+          "done": true,
+          "rect": {
+            "left": 831.5625,
+            "top": 752.875,
+            "right": 1098.78125,
+            "width": 267.21875,
+            "height": 51
+          },
+          "artLoaded": true
+        },
+        {
+          "text": "PvP Battle✓ Stamp earned",
+          "done": true,
+          "rect": {
+            "left": 1105.78125,
+            "top": 752.875,
+            "right": 1373,
+            "width": 267.21875,
+            "height": 51
+          },
+          "artLoaded": true
+        },
+        {
+          "text": "Arborist Trials✓ Stamp earned",
+          "done": true,
+          "rect": {
+            "left": 831.5625,
+            "top": 810.875,
+            "right": 1098.78125,
+            "width": 267.21875,
+            "height": 51
+          },
+          "artLoaded": true
+        },
+        {
+          "text": "TREE FORCE ’89○ Start a run · Reach the first wave",
+          "done": false,
+          "rect": {
+            "left": 1105.78125,
+            "top": 810.875,
+            "right": 1373,
+            "width": 267.21875,
+            "height": 51
+          },
+          "artLoaded": true
+        }
+      ],
+      "columns": "267.219px 267.219px",
+      "optionalHidden": true,
+      "optional": "",
+      "reward": "All required stamps earn the monthly Arcade Passport badge.",
+      "tracking": "TREE FORCE ’89 is part of this month’s Arcade Passport. Reach the first wave to earn its stamp."
+    },
+    {
+      "mode": "after-treeforce",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "layout": "passport",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "count": "4 / 4 required games",
+      "current": "4",
+      "maximum": "4",
+      "stamps": [
+        {
+          "text": "Garden Bot✓ Stamp earned",
+          "done": true,
+          "rect": {
+            "left": 831.5625,
+            "top": 772.375,
+            "right": 1098.78125,
+            "width": 267.21875,
+            "height": 51
+          },
+          "artLoaded": true
+        },
+        {
+          "text": "PvP Battle✓ Stamp earned",
+          "done": true,
+          "rect": {
+            "left": 1105.78125,
+            "top": 772.375,
+            "right": 1373,
+            "width": 267.21875,
+            "height": 51
+          },
+          "artLoaded": true
+        },
+        {
+          "text": "Arborist Trials✓ Stamp earned",
+          "done": true,
+          "rect": {
+            "left": 831.5625,
+            "top": 830.375,
+            "right": 1098.78125,
+            "width": 267.21875,
+            "height": 51
+          },
+          "artLoaded": true
+        },
+        {
+          "text": "TREE FORCE ’89✓ First wave started · Stamp earned",
+          "done": true,
+          "rect": {
+            "left": 1105.78125,
+            "top": 830.375,
+            "right": 1373,
+            "width": 267.21875,
+            "height": 51
+          },
+          "artLoaded": true
+        }
+      ],
+      "columns": "267.219px 267.219px",
+      "optionalHidden": true,
+      "optional": "",
+      "reward": "Monthly Arcade Passport badge earned ✓",
+      "tracking": "TREE FORCE ’89 is part of this month’s Arcade Passport. Reach the first wave to earn its stamp."
+    },
+    {
+      "mode": "historic-october",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "layout": "passport",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "count": "3 / 3 required games",
+      "current": "3",
+      "maximum": "3",
+      "stamps": [
+        {
+          "text": "Garden Bot✓ Stamp earned",
+          "done": true,
+          "rect": {
+            "left": 831.5625,
+            "top": 659.375,
+            "right": 1098.78125,
+            "width": 267.21875,
+            "height": 51
+          },
+          "artLoaded": true
+        },
+        {
+          "text": "PvP Battle✓ Stamp earned",
+          "done": true,
+          "rect": {
+            "left": 1105.78125,
+            "top": 659.375,
+            "right": 1373,
+            "width": 267.21875,
+            "height": 51
+          },
+          "artLoaded": true
+        },
+        {
+          "text": "Arborist Trials✓ Stamp earned",
+          "done": true,
+          "rect": {
+            "left": 831.5625,
+            "top": 717.375,
+            "right": 1098.78125,
+            "width": 267.21875,
+            "height": 51
+          },
+          "artLoaded": true
+        }
+      ],
+      "columns": "267.219px 267.219px",
+      "optionalHidden": false,
+      "optional": "TREE FORCE ’89✓ First wave started · Optional stamp",
+      "reward": "Monthly Arcade Passport badge earned ✓",
+      "tracking": "TREE FORCE ’89 is an optional participation stamp for this month’s Passport."
+    },
+    {
+      "mode": "signedout",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "layout": "collapsed",
+      "width": 390,
+      "scrollWidth": 390,
+      "open": false,
+      "panel": {
+        "top": 261.6875,
+        "height": 269.390625,
+        "width": 362
+      },
+      "firstPoster": {
+        "top": 636.46875,
+        "height": 399.890625,
+        "width": 362
+      },
+      "baselinePanelHeight": 269.390625
+    },
+    {
+      "mode": "before",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "layout": "collapsed",
+      "width": 390,
+      "scrollWidth": 390,
+      "open": false,
+      "panel": {
+        "top": 261.6875,
+        "height": 241.390625,
+        "width": 362
+      },
+      "firstPoster": {
+        "top": 608.46875,
+        "height": 399.890625,
+        "width": 362
+      },
+      "baselinePanelHeight": 241.390625
+    },
+    {
+      "mode": "before-treeforce",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "layout": "passport",
+      "width": 390,
+      "scrollWidth": 390,
+      "count": "3 / 4 required games",
+      "current": "3",
+      "maximum": "4",
+      "stamps": [
+        {
+          "text": "Garden Bot✓ Stamp earned",
+          "done": true,
+          "rect": {
+            "left": 39,
+            "top": 423.109375,
+            "right": 191.5,
+            "width": 152.5,
+            "height": 51
+          },
+          "artLoaded": true
+        },
+        {
+          "text": "PvP Battle✓ Stamp earned",
+          "done": true,
+          "rect": {
+            "left": 198.5,
+            "top": 423.109375,
+            "right": 351,
+            "width": 152.5,
+            "height": 51
+          },
+          "artLoaded": true
+        },
+        {
+          "text": "Arborist Trials✓ Stamp earned",
+          "done": true,
+          "rect": {
+            "left": 39,
+            "top": 481.109375,
+            "right": 191.5,
+            "width": 152.5,
+            "height": 60.1875
+          },
+          "artLoaded": true
+        },
+        {
+          "text": "TREE FORCE ’89○ Start a run · Reach the first wave",
+          "done": false,
+          "rect": {
+            "left": 198.5,
+            "top": 481.109375,
+            "right": 351,
+            "width": 152.5,
+            "height": 60.1875
+          },
+          "artLoaded": true
+        }
+      ],
+      "columns": "152.5px 152.5px",
+      "optionalHidden": true,
+      "optional": "",
+      "reward": "All required stamps earn the monthly Arcade Passport badge.",
+      "tracking": "TREE FORCE ’89 is part of this month’s Arcade Passport. Reach the first wave to earn its stamp."
+    },
+    {
+      "mode": "after-treeforce",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "layout": "passport",
+      "width": 390,
+      "scrollWidth": 390,
+      "count": "4 / 4 required games",
+      "current": "4",
+      "maximum": "4",
+      "stamps": [
+        {
+          "text": "Garden Bot✓ Stamp earned",
+          "done": true,
+          "rect": {
+            "left": 39,
+            "top": 407.109375,
+            "right": 191.5,
+            "width": 152.5,
+            "height": 51
+          },
+          "artLoaded": true
+        },
+        {
+          "text": "PvP Battle✓ Stamp earned",
+          "done": true,
+          "rect": {
+            "left": 198.5,
+            "top": 407.109375,
+            "right": 351,
+            "width": 152.5,
+            "height": 51
+          },
+          "artLoaded": true
+        },
+        {
+          "text": "Arborist Trials✓ Stamp earned",
+          "done": true,
+          "rect": {
+            "left": 39,
+            "top": 465.109375,
+            "right": 191.5,
+            "width": 152.5,
+            "height": 60.1875
+          },
+          "artLoaded": true
+        },
+        {
+          "text": "TREE FORCE ’89✓ First wave started · Stamp earned",
+          "done": true,
+          "rect": {
+            "left": 198.5,
+            "top": 465.109375,
+            "right": 351,
+            "width": 152.5,
+            "height": 60.1875
+          },
+          "artLoaded": true
+        }
+      ],
+      "columns": "152.5px 152.5px",
+      "optionalHidden": true,
+      "optional": "",
+      "reward": "Monthly Arcade Passport badge earned ✓",
+      "tracking": "TREE FORCE ’89 is part of this month’s Arcade Passport. Reach the first wave to earn its stamp."
+    },
+    {
+      "mode": "historic-october",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "layout": "passport",
+      "width": 390,
+      "scrollWidth": 390,
+      "count": "3 / 3 required games",
+      "current": "3",
+      "maximum": "3",
+      "stamps": [
+        {
+          "text": "Garden Bot✓ Stamp earned",
+          "done": true,
+          "rect": {
+            "left": 39,
+            "top": 380.109375,
+            "right": 191.5,
+            "width": 152.5,
+            "height": 51
+          },
+          "artLoaded": true
+        },
+        {
+          "text": "PvP Battle✓ Stamp earned",
+          "done": true,
+          "rect": {
+            "left": 198.5,
+            "top": 380.109375,
+            "right": 351,
+            "width": 152.5,
+            "height": 51
+          },
+          "artLoaded": true
+        },
+        {
+          "text": "Arborist Trials✓ Stamp earned",
+          "done": true,
+          "rect": {
+            "left": 39,
+            "top": 438.109375,
+            "right": 191.5,
+            "width": 152.5,
+            "height": 51
+          },
+          "artLoaded": true
+        }
+      ],
+      "columns": "152.5px 152.5px",
+      "optionalHidden": false,
+      "optional": "TREE FORCE ’89✓ First wave started · Optional stamp",
+      "reward": "Monthly Arcade Passport badge earned ✓",
+      "tracking": "TREE FORCE ’89 is an optional participation stamp for this month’s Passport."
+    },
+    {
+      "mode": "signedout",
+      "viewport": {
+        "width": 320,
+        "height": 740
+      },
+      "layout": "collapsed",
+      "width": 320,
+      "scrollWidth": 320,
+      "open": false,
+      "panel": {
+        "top": 278.90625,
+        "height": 262.078125,
+        "width": 300
+      },
+      "firstPoster": {
+        "top": 646.375,
+        "height": 375.734375,
+        "width": 300
+      },
+      "baselinePanelHeight": 262.078125
+    },
+    {
+      "mode": "before",
+      "viewport": {
+        "width": 320,
+        "height": 740
+      },
+      "layout": "collapsed",
+      "width": 320,
+      "scrollWidth": 320,
+      "open": false,
+      "panel": {
+        "top": 278.90625,
+        "height": 249.234375,
+        "width": 300
+      },
+      "firstPoster": {
+        "top": 633.53125,
+        "height": 375.734375,
+        "width": 300
+      },
+      "baselinePanelHeight": 249.234375
+    },
+    {
+      "mode": "before-treeforce",
+      "viewport": {
+        "width": 320,
+        "height": 740
+      },
+      "layout": "passport",
+      "width": 320,
+      "scrollWidth": 320,
+      "count": "3 / 4 required games",
+      "current": "3",
+      "maximum": "4",
+      "stamps": [
+        {
+          "text": "Garden Bot✓ Stamp earned",
+          "done": true,
+          "rect": {
+            "left": 33,
+            "top": 357.609375,
+            "right": 156.5,
+            "width": 123.5,
+            "height": 45.59375
+          },
+          "artLoaded": true
+        },
+        {
+          "text": "PvP Battle✓ Stamp earned",
+          "done": true,
+          "rect": {
+            "left": 163.5,
+            "top": 357.609375,
+            "right": 287,
+            "width": 123.5,
+            "height": 45.59375
+          },
+          "artLoaded": true
+        },
+        {
+          "text": "Arborist Trials✓ Stamp earned",
+          "done": true,
+          "rect": {
+            "left": 33,
+            "top": 410.203125,
+            "right": 156.5,
+            "width": 123.5,
+            "height": 84.78125
+          },
+          "artLoaded": true
+        },
+        {
+          "text": "TREE FORCE ’89○ Start a run · Reach the first wave",
+          "done": false,
+          "rect": {
+            "left": 163.5,
+            "top": 410.203125,
+            "right": 287,
+            "width": 123.5,
+            "height": 84.78125
+          },
+          "artLoaded": true
+        }
+      ],
+      "columns": "123.5px 123.5px",
+      "optionalHidden": true,
+      "optional": "",
+      "reward": "All required stamps earn the monthly Arcade Passport badge.",
+      "tracking": "TREE FORCE ’89 is part of this month’s Arcade Passport. Reach the first wave to earn its stamp."
+    },
+    {
+      "mode": "after-treeforce",
+      "viewport": {
+        "width": 320,
+        "height": 740
+      },
+      "layout": "passport",
+      "width": 320,
+      "scrollWidth": 320,
+      "count": "4 / 4 required games",
+      "current": "4",
+      "maximum": "4",
+      "stamps": [
+        {
+          "text": "Garden Bot✓ Stamp earned",
+          "done": true,
+          "rect": {
+            "left": 33,
+            "top": 357.453125,
+            "right": 156.5,
+            "width": 123.5,
+            "height": 45.59375
+          },
+          "artLoaded": true
+        },
+        {
+          "text": "PvP Battle✓ Stamp earned",
+          "done": true,
+          "rect": {
+            "left": 163.5,
+            "top": 357.453125,
+            "right": 287,
+            "width": 123.5,
+            "height": 45.59375
+          },
+          "artLoaded": true
+        },
+        {
+          "text": "Arborist Trials✓ Stamp earned",
+          "done": true,
+          "rect": {
+            "left": 33,
+            "top": 410.046875,
+            "right": 156.5,
+            "width": 123.5,
+            "height": 84.78125
+          },
+          "artLoaded": true
+        },
+        {
+          "text": "TREE FORCE ’89✓ First wave started · Stamp earned",
+          "done": true,
+          "rect": {
+            "left": 163.5,
+            "top": 410.046875,
+            "right": 287,
+            "width": 123.5,
+            "height": 84.78125
+          },
+          "artLoaded": true
+        }
+      ],
+      "columns": "123.5px 123.5px",
+      "optionalHidden": true,
+      "optional": "",
+      "reward": "Monthly Arcade Passport badge earned ✓",
+      "tracking": "TREE FORCE ’89 is part of this month’s Arcade Passport. Reach the first wave to earn its stamp."
+    },
+    {
+      "mode": "historic-october",
+      "viewport": {
+        "width": 320,
+        "height": 740
+      },
+      "layout": "passport",
+      "width": 320,
+      "scrollWidth": 320,
+      "count": "3 / 3 required games",
+      "current": "3",
+      "maximum": "3",
+      "stamps": [
+        {
+          "text": "Garden Bot✓ Stamp earned",
+          "done": true,
+          "rect": {
+            "left": 33,
+            "top": 333.453125,
+            "right": 156.5,
+            "width": 123.5,
+            "height": 45.59375
+          },
+          "artLoaded": true
+        },
+        {
+          "text": "PvP Battle✓ Stamp earned",
+          "done": true,
+          "rect": {
+            "left": 163.5,
+            "top": 333.453125,
+            "right": 287,
+            "width": 123.5,
+            "height": 45.59375
+          },
+          "artLoaded": true
+        },
+        {
+          "text": "Arborist Trials✓ Stamp earned",
+          "done": true,
+          "rect": {
+            "left": 33,
+            "top": 386.046875,
+            "right": 156.5,
+            "width": 123.5,
+            "height": 59.59375
+          },
+          "artLoaded": true
+        }
+      ],
+      "columns": "123.5px 123.5px",
+      "optionalHidden": false,
+      "optional": "TREE FORCE ’89✓ First wave started · Optional stamp",
+      "reward": "Monthly Arcade Passport badge earned ✓",
+      "tracking": "TREE FORCE ’89 is an optional participation stamp for this month’s Passport."
+    }
+  ],
+  "screenshots": [
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/treeforce-passport/signedout-1440.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/treeforce-passport/collapsed-three-of-four-1440.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/treeforce-passport/three-of-four-1440.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/treeforce-passport/four-of-four-1440.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/treeforce-passport/historic-october-1440.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/treeforce-passport/signedout-390.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/treeforce-passport/collapsed-three-of-four-390.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/treeforce-passport/three-of-four-390.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/treeforce-passport/four-of-four-390.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/treeforce-passport/historic-october-390.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/treeforce-passport/signedout-320.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/treeforce-passport/collapsed-three-of-four-320.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/treeforce-passport/three-of-four-320.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/treeforce-passport/four-of-four-320.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/treeforce-passport/historic-october-320.jpg"
+  ],
+  "fixtureCalls": [
+    {
+      "mode": "signedout",
+      "width": 1440,
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        }
+      ]
+    },
+    {
+      "mode": "before-to-after",
+      "width": 1440,
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        }
+      ]
+    },
+    {
+      "mode": "historic",
+      "width": 1440,
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        }
+      ]
+    },
+    {
+      "mode": "signedout",
+      "width": 390,
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        }
+      ]
+    },
+    {
+      "mode": "before-to-after",
+      "width": 390,
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        }
+      ]
+    },
+    {
+      "mode": "historic",
+      "width": 390,
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        }
+      ]
+    },
+    {
+      "mode": "signedout",
+      "width": 320,
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        }
+      ]
+    },
+    {
+      "mode": "before-to-after",
+      "width": 320,
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        }
+      ]
+    },
+    {
+      "mode": "historic",
+      "width": 320,
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory response; no network"
+        }
+      ]
+    }
+  ],
+  "artworkFallbacks": [
+    {
+      "path": "/play/canopy-defense/assets/brand/oak-guardian-preview.png",
+      "source": "Previously captured production artwork",
+      "sha256": "b3a96a1bf811e2ff69307baeb31ab7ff427427e69ec87d8ef9cf07d3e34b240e"
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "blockedRequests": [],
+  "networkWrites": []
+}

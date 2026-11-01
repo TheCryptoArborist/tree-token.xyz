@@ -1,4 +1,5 @@
--- Run after the additive migration on an isolated Supabase development branch.
+-- Run after all Daily Growth migrations, including the November Passport rules,
+-- on an isolated Supabase development branch.
 -- All test records are synthetic and rolled back; only arcade_growth_* is used.
 begin;
 set local role service_role;
@@ -13,7 +14,12 @@ declare
   v_id uuid := gen_random_uuid();
   v_token text := repeat('c',64);
   v_games text[] := array['garden-bot','pvp','arborist-trials'];
+  v_required text[] := case when v_month >= date '2026-11-01'
+    then array_append(v_games,'treeforce89') else v_games end;
+  v_run text := 'grove-' || repeat('8',32);
   v_snapshot jsonb;
+  v_treeforce jsonb;
+  v_passport_earned_at timestamptz;
   v_event jsonb;
   v_events jsonb;
   v_at timestamptz := clock_timestamp() - interval '1 second';
@@ -69,7 +75,8 @@ begin
   assert jsonb_array_length(v_snapshot->'checkins')=1, 'duplicate manual check-in';
   assert jsonb_array_length(v_snapshot->'quests')=0, 'check-in granted a quest';
   assert jsonb_array_length(v_snapshot->'gamesByDay')=0, 'check-in granted a passport stamp';
-  assert (public.arcade_growth_public_rules_v1(array['garden-bot','arborist-trials']))=to_jsonb(v_games), 'monthly rules changed';
+  assert v_snapshot->'enabledGames'=to_jsonb(v_required), 'wrong seasonal Passport requirements';
+  assert (public.arcade_growth_public_rules_v1(array['garden-bot','arborist-trials']))=to_jsonb(v_required), 'frozen monthly rules changed';
 
   v_event := jsonb_build_object('source','garden-battles','sourceId','battle:fixture-bot:'||v_wallet,
     'wallet',v_wallet,'gameId','garden-bot','completedAt',v_at,'proofDigest',repeat('1',32));
@@ -109,7 +116,23 @@ begin
   assert jsonb_array_length(v_snapshot->'gamesByDay'->0->'gameIds')=3, 'missing distinct game stamps';
   select count(*) into v_count from private.arcade_growth_monthly_badges
     where wallet=v_wallet and month_key=v_month and badge_id='arcade-passport';
+  if v_month >= date '2026-11-01' then
+    assert v_count=0, 'three Garden results incorrectly completed the four-game Passport';
+    v_treeforce := public.arcade_growth_record_treeforce_play_v1(v_wallet,v_run,clock_timestamp()+interval '1 hour',clock_timestamp());
+    v_snapshot := v_treeforce->'snapshot';
+    assert jsonb_array_length(v_snapshot->'quests')=1, 'TREE FORCE duplicated the Garden daily quest';
+    assert jsonb_array_length(v_snapshot->'gamesByDay'->0->'gameIds')=4, 'four required game stamps were not retained';
+    select count(*) into v_count from private.arcade_growth_monthly_badges
+      where wallet=v_wallet and month_key=v_month and badge_id='arcade-passport';
+  end if;
   assert v_count=1, 'passport completion did not save its badge';
+  select earned_at into v_passport_earned_at from private.arcade_growth_monthly_badges
+    where wallet=v_wallet and month_key=v_month and badge_id='arcade-passport';
+  perform public.arcade_growth_record_events_v1(v_token,v_origin,v_games,v_day,v_events);
+  assert (select count(*) from private.arcade_growth_monthly_badges
+    where wallet=v_wallet and month_key=v_month and badge_id='arcade-passport')=1, 'repeat completion duplicated the Passport badge';
+  assert (select earned_at from private.arcade_growth_monthly_badges
+    where wallet=v_wallet and month_key=v_month and badge_id='arcade-passport')=v_passport_earned_at, 'repeat completion changed the award time';
 
   perform private.arcade_growth_month_games_v1(v_previous,v_games,true);
   for i in 0..20 loop

@@ -21,9 +21,15 @@ const GAMES = [
   { id: 'arborist-trials', label: 'Arborist Trials', href: 'https://nftree.net/battle/trials' },
 ];
 const FORCE_GAME = { id: 'treeforce89', label: 'TREE FORCE ’89', href: '/play/treeforce89/', creditRule: 'start-run' };
+const FORCE_GAMES = [...GAMES.map((game) => ({ ...game, creditRule: 'complete-result' })), FORCE_GAME];
 const FORCE_CONFIGURATION = {
+  enabledGames: FORCE_GAMES,
+  eligibleGames: FORCE_GAMES,
+  todayPick: FORCE_GAME,
+};
+const HISTORIC_FORCE_CONFIGURATION = {
   enabledGames: GAMES.map((game) => ({ ...game, creditRule: 'complete-result' })),
-  eligibleGames: [...GAMES.map((game) => ({ ...game, creditRule: 'complete-result' })), FORCE_GAME],
+  eligibleGames: FORCE_GAMES,
   todayPick: FORCE_GAME,
 };
 const MILESTONES = [
@@ -40,7 +46,7 @@ const deferred = () => {
   return { promise, resolve: resolvePromise, reject };
 };
 
-function progress({ wallet = ACCOUNT, dateKey = '2026-11-12', visits = [], quests = [], stamps = [], badges = [], optionalGames = [], optionalStamps = [], gameIdsByDay = {} } = {}) {
+function progress({ wallet = ACCOUNT, dateKey = '2026-11-12', visits = [], quests = [], stamps = [], badges = [], enabledGames = GAMES, optionalGames = [], optionalStamps = [], gameIdsByDay = {} } = {}) {
   const monthKey = dateKey.slice(0, 7);
   const [year, month] = monthKey.split('-').map(Number);
   const days = new Date(Date.UTC(year, month, 0)).getUTCDate();
@@ -53,7 +59,7 @@ function progress({ wallet = ACCOUNT, dateKey = '2026-11-12', visits = [], quest
   return {
     wallet, monthKey, dateKey, calendar, checkedInDays: visits.length, questDays: quests.length,
     today: { checkedIn: today.checkedIn, questCompleted: today.questCompleted, gameIds: today.gameIds },
-    passport: { monthKey, enabledGames: GAMES, completedGameIds: stamps, optionalGames, optionalCompletedGameIds: optionalStamps, complete: stamps.length === GAMES.length },
+    passport: { monthKey, enabledGames, completedGameIds: stamps, optionalGames, optionalCompletedGameIds: optionalStamps, complete: stamps.length === enabledGames.length },
     milestones: MILESTONES.map((item) => ({ ...item, earned: visits.length >= item.target })), badges,
   };
 }
@@ -172,6 +178,7 @@ async function harness(t, options = {}) {
         visits: [...new Set([...savedProgress.calendar.filter((entry) => entry.checkedIn).map((entry) => Number(entry.dateKey.slice(-2))), day])],
         quests: savedProgress.calendar.filter((entry) => entry.questCompleted).map((entry) => Number(entry.dateKey.slice(-2))),
         stamps: savedProgress.passport.completedGameIds,
+        enabledGames: savedProgress.passport.enabledGames,
         optionalGames: savedProgress.passport.optionalGames, optionalStamps: savedProgress.passport.optionalCompletedGameIds,
         gameIdsByDay: Object.fromEntries(savedProgress.calendar.map((entry) => [Number(entry.dateKey.slice(-2)), entry.gameIds])),
       });
@@ -404,13 +411,13 @@ test('signed-out meters stay unknown while monthly badge goals are clearly previ
 test('meters reflect saved attendance, the next milestone and required stamps, retaining labeled stale values and clearing on account change', async (t) => {
   const visits = [1, 2, 3, 4, 5, 6, 7, 8];
   const h = await harness(t, { configuration: FORCE_CONFIGURATION, progress: progress({
-    visits, quests: [8], stamps: ['garden-bot', 'arborist-trials'], optionalGames: [FORCE_GAME], optionalStamps: ['treeforce89'],
+    visits, quests: [8], enabledGames: FORCE_GAMES, stamps: ['garden-bot', 'arborist-trials', 'treeforce89'],
   }) });
   await h.signIn();
   assertMeter(h, 'attendance-ring', 8, 30);
   assertMeter(h, 'attendance-meter', 8, 14);
   assertMeter(h, 'quest-meter', 0, 1);
-  assertMeter(h, 'passport-meter', 2, 3);
+  assertMeter(h, 'passport-meter', 3, 4);
   assert.equal(h.byId('summary-count').textContent, '6 more check-ins to Deep Roots');
   assert.equal(h.byId('summary-label').textContent, '8 / 14 check-ins');
   assert.equal(h.byId('summary-art-label').textContent, 'Deep Roots');
@@ -418,12 +425,12 @@ test('meters reflect saved attendance, the next milestone and required stamps, r
   assert.equal(h.byId('summary-meter').hidden, false);
   assertMeter(h, 'summary-meter', 8, 14);
   assert.equal(h.byId('journey-stops').querySelectorAll('.is-done').length, 2);
-  h.setProgress(progress({ visits: [...visits, 12], quests: [8, 12], stamps: ['garden-bot', 'arborist-trials'], optionalGames: [FORCE_GAME], optionalStamps: ['treeforce89'] }));
+  h.setProgress(progress({ visits: [...visits, 12], quests: [8, 12], enabledGames: FORCE_GAMES, stamps: ['garden-bot', 'arborist-trials', 'treeforce89'] }));
   await h.controller.refresh();
   assertMeter(h, 'attendance-ring', 9, 30);
   assertMeter(h, 'attendance-meter', 9, 14);
   assertMeter(h, 'quest-meter', 1, 1);
-  assertMeter(h, 'passport-meter', 2, 3);
+  assertMeter(h, 'passport-meter', 3, 4);
   assert.equal(h.byId('summary-count').textContent, '5 more check-ins to Deep Roots');
   assertMeter(h, 'summary-meter', 9, 14);
   h.handlers.sync = () => ({ status: 'error', error: 'service-unavailable', message: 'Try again later.' });
@@ -431,7 +438,7 @@ test('meters reflect saved attendance, the next milestone and required stamps, r
   assertMeter(h, 'attendance-ring', 9, 30);
   assertMeter(h, 'attendance-meter', 9, 14);
   assertMeter(h, 'quest-meter', 1, 1);
-  assertMeter(h, 'passport-meter', 2, 3);
+  assertMeter(h, 'passport-meter', 3, 4);
   for (const id of PROGRESS_METERS) assert.match(h.byId(id).getAttribute('aria-valuetext'), /last saved progress/i);
   assert.match(h.byId('summary-note').textContent, /last saved/i);
   assert.equal(h.byId('invitation-title').textContent, 'Let’s catch up on your growth.');
@@ -480,7 +487,7 @@ test('signed-out state shows the server pick without invented progress or automa
   assert.deepEqual([...h.byId('game-select').options].map((option) => option.value), GAMES.map((game) => game.id));
   assert.equal(h.byId('game-select').textContent.includes('TREE FORCE'), false, 'Unsupported game is not a requirement');
   assert.equal(h.byId('tracking-note').hidden, false);
-  assert.match(h.byId('tracking-note').textContent, /TREE FORCE ’89 is live; Daily Growth tracking is coming soon/);
+  assert.match(h.byId('tracking-note').textContent, /TREE FORCE ’89 is not enabled for Daily Growth here/);
   assert.match(h.byId('quest-note').textContent, /refresh before 00:00 UTC.*quest and passport stamps/);
 });
 
@@ -790,8 +797,8 @@ test('actual wallet account invalidation discards an in-flight signature and lat
   assert.equal(h.window.sessionStorage.getItem(SESSION_KEY), null);
 });
 
-test('TREE FORCE is an optional daily choice with first-wave and direct-holder wording; Garden completion rules remain', async (t) => {
-  const h = await harness(t, { configuration: FORCE_CONFIGURATION, progress: progress({ optionalGames: [FORCE_GAME] }) });
+test('TREE FORCE is a required Passport game with first-wave and direct-holder wording; Garden completion rules remain', async (t) => {
+  const h = await harness(t, { configuration: FORCE_CONFIGURATION, progress: progress({ enabledGames: FORCE_GAMES }) });
   assert.equal(h.byId('game-name').textContent, 'TREE FORCE ’89');
   assert.equal(h.byId('game-select').options.length, 4);
   assert.equal(h.byId('play').href, 'https://tree-token.xyz/play/treeforce89/');
@@ -801,7 +808,8 @@ test('TREE FORCE is an optional daily choice with first-wave and direct-holder w
   assert.match(h.byId('quest-note').textContent, /saved when your first wave starts/);
   assert.equal(h.byId('quest-note').textContent.includes('refresh before 00:00'), false, 'Already recorded first-wave credit does not depend on a lobby refresh deadline');
   assert.equal(h.root.textContent.includes('tracking is coming soon'), false);
-  assert.match(h.byId('tracking-note').textContent, /optional participation stamp/);
+  assert.match(h.byId('tracking-note').textContent, /part of this month’s Arcade Passport.*first wave/);
+  assert.equal(h.byId('tracking-note').textContent.includes('optional'), false);
   assert.equal(h.byId('visit-count').textContent, '—');
   h.byId('game-select').value = 'garden-bot';
   h.byId('game-select').dispatchEvent(new h.window.Event('change', { bubbles: true }));
@@ -813,8 +821,8 @@ test('TREE FORCE is an optional daily choice with first-wave and direct-holder w
   assert.match(h.byId('game-access').textContent, /Unsaved practice does not count/);
 });
 
-test('opening TREE FORCE grants nothing; a server-recorded first wave counts one quest and optional stamp without a required stamp', async (t) => {
-  const h = await harness(t, { configuration: FORCE_CONFIGURATION, progress: progress({ optionalGames: [FORCE_GAME] }) });
+test('opening TREE FORCE grants nothing; a server-recorded first wave counts one quest and a main Passport stamp', async (t) => {
+  const h = await harness(t, { configuration: FORCE_CONFIGURATION, progress: progress({ enabledGames: FORCE_GAMES }) });
   await h.signIn();
   const before = h.calls.length;
   h.byId('play').addEventListener('click', (event) => event.preventDefault());
@@ -822,20 +830,24 @@ test('opening TREE FORCE grants nothing; a server-recorded first wave counts one
   assert.equal(h.calls.length, before);
   assert.equal(h.byId('visit-count').textContent, '0');
   assert.equal(h.byId('quest-state').textContent, '0 / 1 · Not completed');
-  assert.equal(h.byId('passport-count').textContent, '0 / 3 required games');
-  assert.equal(h.byId('stamps').children.length, 3);
-  assert.equal(h.byId('optional-stamps').children.length, 1);
-  assert.equal(h.byId('optional-stamps').querySelector('.is-done'), null);
-  h.setProgress(progress({ visits: [12], quests: [12], optionalGames: [FORCE_GAME], optionalStamps: ['treeforce89'], gameIdsByDay: { 12: ['treeforce89'] } }));
+  assert.equal(h.byId('passport-count').textContent, '0 / 4 required games');
+  assert.equal(h.byId('stamps').children.length, 4);
+  assert.match(h.byId('stamps').textContent, /TREE FORCE ’89.*Start a run · Reach the first wave/);
+  assert.equal(h.byId('passport-optional').hidden, true);
+  assert.equal(h.byId('optional-stamps').children.length, 0);
+  h.setProgress(progress({ visits: [12], quests: [12], enabledGames: FORCE_GAMES, stamps: ['treeforce89'], gameIdsByDay: { 12: ['treeforce89'] } }));
   h.handlers.sync = ({ envelope }) => ({ ...envelope(), sync: { games: [{ gameId: 'treeforce89', status: 'recorded', message: 'First wave participation is saved.' }], checkedAt: new Date(NOW).toISOString() } });
   await h.controller.refresh();
   assert.equal(h.byId('visit-count').textContent, '1');
   assert.equal(h.byId('quest-state').textContent, '1 / 1 · Quest complete ✓');
   assert.equal(h.byId('check-in').textContent, 'Checked in today ✓');
-  assert.equal(h.byId('passport-count').textContent, '0 / 3 required games');
-  assert.match(h.byId('optional-stamps').textContent, /First wave started · Optional stamp/);
-  assert.equal(h.byId('optional-stamps').querySelectorAll('.is-done').length, 1);
-  assert.equal(h.byId('stamps').querySelectorAll('.is-done').length, 0);
+  assert.equal(h.byId('passport-count').textContent, '1 / 4 required games');
+  assertMeter(h, 'passport-meter', 1, 4);
+  assert.match(h.byId('stamps').textContent, /TREE FORCE ’89.*First wave started · Stamp earned/);
+  assert.equal(h.byId('stamps').querySelectorAll('.is-done').length, 1);
+  assert.equal(h.byId('passport-optional').hidden, true);
+  assert.match(h.byId('quest-note').textContent, /TREE FORCE ’89 counts toward this month’s Arcade Passport/);
+  assert.equal(h.byId('passport-reward').textContent.includes('Optional stamps'), false);
   assert.equal(h.byId('badges').children.length, 0);
   assert.equal(h.byId('status').classList.contains('is-error'), false, 'recorded participation is a successful source state');
   assert.match(h.byId('status').textContent, /Daily quest complete/);
@@ -844,45 +856,94 @@ test('opening TREE FORCE grants nothing; a server-recorded first wave counts one
   await h.controller.refresh();
   assert.equal(h.byId('month-quests').textContent, '1');
   assert.equal(h.byId('visit-count').textContent, '1');
-  assert.equal(h.byId('passport-count').textContent, '0 / 3 required games');
+  assert.equal(h.byId('passport-count').textContent, '1 / 4 required games');
 });
 
-test('pre-recorded first-wave progress is visible after sign-in while the three-game Passport badge remains complete', async (t) => {
+test('TREE FORCE joins the three Garden stamps to complete the four-game Passport', async (t) => {
   const h = await harness(t, { configuration: FORCE_CONFIGURATION, progress: progress({
-    visits: [1, 12], quests: [1, 12], stamps: GAMES.map((game) => game.id),
-    optionalGames: [FORCE_GAME], optionalStamps: ['treeforce89'],
-    gameIdsByDay: { 1: GAMES.map((game) => game.id), 12: ['treeforce89'] },
-    badges: [{ id: 'arcade-passport', label: 'Arcade Passport', monthKey: '2026-11', earnedAt: '2026-11-01T12:00:00Z' }],
+    visits: [1, 12], quests: [1, 12], enabledGames: FORCE_GAMES, stamps: GAMES.map((game) => game.id),
+    gameIdsByDay: { 1: GAMES.map((game) => game.id), 12: ['garden-bot'] },
   }) });
   assert.equal(h.byId('visit-count').textContent, '—');
   await h.signIn();
   assert.equal(h.byId('quest-state').textContent, '1 / 1 · Quest complete ✓');
-  assert.equal(h.byId('passport-count').textContent, '3 / 3 required games');
+  assert.equal(h.byId('passport-count').textContent, '3 / 4 required games');
+  assertMeter(h, 'passport-meter', 3, 4);
+  assert.equal(h.byId('passport-reward').textContent.includes('badge earned'), false);
+  assert.equal(h.byId('badges').children.length, 0);
+  h.setProgress(progress({
+    visits: [1, 12], quests: [1, 12], enabledGames: FORCE_GAMES, stamps: FORCE_GAMES.map((game) => game.id),
+    gameIdsByDay: { 1: GAMES.map((game) => game.id), 12: ['treeforce89'] },
+    badges: [{ id: 'arcade-passport', label: 'Arcade Passport', monthKey: '2026-11', earnedAt: new Date(NOW).toISOString() }],
+  }));
+  await h.controller.refresh();
+  assert.equal(h.byId('passport-count').textContent, '4 / 4 required games');
+  assertMeter(h, 'passport-meter', 4, 4);
+  assert.equal(h.byId('stamps').querySelectorAll('.is-done').length, 4);
   assert.match(h.byId('passport-reward').textContent, /Monthly Arcade Passport badge earned/);
-  assert.match(h.byId('optional-stamps').textContent, /First wave started/);
+  assert.match(h.byId('stamps').textContent, /First wave started · Stamp earned/);
+  assert.equal(h.byId('passport-optional').hidden, true);
   assert.equal(h.byId('badges').children.length, 1);
   assert.equal(h.byId('calendar').querySelector('[aria-current="date"]').getAttribute('aria-label').includes('daily quest complete'), true);
   assert.equal(h.count('check-in'), 0);
 });
 
 test('TREE FORCE participation remains saved when Garden source refresh is unavailable', async (t) => {
-  const h = await harness(t, { configuration: FORCE_CONFIGURATION, progress: progress({ visits: [12], quests: [12], stamps: ['garden-bot'], optionalGames: [FORCE_GAME] }) });
+  const h = await harness(t, { configuration: FORCE_CONFIGURATION, progress: progress({ visits: [12], quests: [12], enabledGames: FORCE_GAMES, stamps: ['garden-bot'] }) });
   await h.signIn();
-  h.setProgress(progress({ visits: [12], quests: [12], stamps: ['garden-bot'], optionalGames: [FORCE_GAME], optionalStamps: ['treeforce89'], gameIdsByDay: { 12: ['garden-bot', 'treeforce89'] } }));
+  h.setProgress(progress({ visits: [12], quests: [12], enabledGames: FORCE_GAMES, stamps: ['garden-bot', 'treeforce89'], gameIdsByDay: { 12: ['garden-bot', 'treeforce89'] } }));
   h.handlers.sync = ({ envelope }) => ({ ...envelope(), sync: { games: [
     { gameId: 'treeforce89', status: 'recorded' }, { gameId: 'pvp', status: 'unavailable' },
   ], checkedAt: new Date(NOW).toISOString() } });
   await h.controller.refresh();
   assert.equal(h.byId('visit-count').textContent, '1');
   assert.equal(h.byId('month-quests').textContent, '1');
-  assert.equal(h.byId('passport-count').textContent, '1 / 3 required games');
-  assert.match(h.byId('optional-stamps').textContent, /First wave started/);
+  assert.equal(h.byId('passport-count').textContent, '2 / 4 required games');
+  assert.match(h.byId('stamps').textContent, /First wave started · Stamp earned/);
+  assert.equal(h.byId('passport-optional').hidden, true);
   assert.match(h.byId('status').textContent, /PvP Battle verification is unavailable/);
   assert.equal(h.byId('status').textContent.includes('TREE FORCE ’89 verification is unavailable'), false);
 });
 
-test('an optional TREE FORCE stamp cannot enter required progress through an inconsistent response', async (t) => {
-  const h = await harness(t, { configuration: FORCE_CONFIGURATION, progress: progress({ optionalGames: [FORCE_GAME] }) });
+test('historic October keeps its three-game Passport and optional TREE FORCE stamp without imposing November requirements', async (t) => {
+  const h = await harness(t, { configuration: FORCE_CONFIGURATION, progress: progress({
+    dateKey: '2026-10-31', visits: [1, 31], quests: [1, 31], stamps: GAMES.map((game) => game.id),
+    optionalGames: [FORCE_GAME], optionalStamps: ['treeforce89'],
+    gameIdsByDay: { 1: GAMES.map((game) => game.id), 31: ['treeforce89'] },
+    badges: [{ id: 'arcade-passport', label: 'Arcade Passport', monthKey: '2026-10', earnedAt: '2026-10-01T12:00:00Z' }],
+  }) });
+  assert.match(h.byId('tracking-note').textContent, /part of this month’s Arcade Passport/, 'Before sign-in, the public current configuration supplies the rule');
+  await h.signIn();
+  assert.equal(h.byId('passport-count').textContent, '3 / 3 required games');
+  assertMeter(h, 'passport-meter', 3, 3);
+  assert.equal(h.byId('stamps').children.length, 3);
+  assert.equal(h.byId('stamps').textContent.includes('TREE FORCE'), false);
+  assert.equal(h.byId('passport-optional').hidden, false);
+  assert.match(h.byId('optional-stamps').textContent, /TREE FORCE ’89.*First wave started · Optional stamp/);
+  assert.match(h.byId('tracking-note').textContent, /optional participation stamp/);
+  assert.match(h.byId('quest-note').textContent, /optional for this month’s Passport/);
+  assert.match(h.byId('passport-note').textContent, /October 2026.*Collect all 3 game stamps/);
+  assert.match(h.byId('passport-reward').textContent, /Monthly Arcade Passport badge earned/);
+  assert.equal(h.byId('badges').children.length, 1);
+  assert.equal(h.count('check-in'), 0);
+});
+
+test('an incomplete four-game Passport cannot claim earned completion from an inconsistent response', async (t) => {
+  const h = await harness(t, { configuration: FORCE_CONFIGURATION, progress: progress({ enabledGames: FORCE_GAMES, stamps: GAMES.map((game) => game.id) }) });
+  await h.signIn();
+  h.handlers.sync = ({ envelope }) => {
+    const payload = envelope();
+    return { ...payload, progress: { ...payload.progress, passport: { ...payload.progress.passport, complete: true } } };
+  };
+  await h.controller.refresh();
+  assert.equal(h.byId('passport-count').textContent, '3 / 4 required games');
+  assert.equal(h.byId('passport-reward').textContent.includes('badge earned'), false);
+  assert.equal(h.byId('badges').children.length, 0);
+  assert.match(h.byId('status').textContent, /incomplete progress/);
+});
+
+test('a historic optional TREE FORCE stamp cannot enter required progress through an inconsistent response', async (t) => {
+  const h = await harness(t, { configuration: HISTORIC_FORCE_CONFIGURATION, progress: progress({ dateKey: '2026-10-31', optionalGames: [FORCE_GAME] }) });
   await h.signIn();
   h.handlers.sync = ({ envelope }) => {
     const payload = envelope();

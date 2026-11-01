@@ -1,0 +1,96 @@
+{
+  "verifiedAt": "2026-11-01T16:07:50.765524+00:00",
+  "stage": "pre-publication",
+  "backendSourceAndReporting": {
+    "passed": 69,
+    "failed": 0
+  },
+  "controller": {
+    "passed": 32,
+    "failed": 0
+  },
+  "database": {
+    "developmentProject": "charuqbsxmrirpxciljn",
+    "rollbackSuitesPassed": 3,
+    "seasonalAssertions": 45,
+    "migrationSqlExactMatch": true
+  },
+  "packagedRuntime": {
+    "result": "PASS",
+    "packagedRuntime": true,
+    "sdkVersion": "2.26.1",
+    "actualLazyVerifierAndGrpcImports": true,
+    "pgVersion": "8.23.1",
+    "outcomes": [
+      {
+        "scenario": "valid",
+        "status": 200
+      },
+      {
+        "scenario": "valid-four-game-passport",
+        "status": 200
+      },
+      {
+        "scenario": "wrong-account",
+        "status": 401
+      },
+      {
+        "scenario": "wrong-message",
+        "status": 401
+      },
+      {
+        "scenario": "authenticated-first-wave-report",
+        "status": 200
+      }
+    ],
+    "networkAttempts": 0,
+    "transactions": 0
+  },
+  "nativeBrowser": {
+    "passed": 16,
+    "contexts": 9,
+    "widths": [
+      1440,
+      390,
+      320
+    ],
+    "report": "docs/review/treeforce-passport/browser-report.json",
+    "syntheticProgress": true,
+    "collapsedPanelSizeUnchanged": true
+  },
+  "archivedParity": {
+    "functions": 38,
+    "executablePayloadsMatch": true,
+    "report": "docs/treeforce-passport-archived-parity.json"
+  },
+  "releaseReview": {
+    "independentReviewsPassed": 2,
+    "guardProbesRejected": [
+      "unrelated function package",
+      "memory",
+      "region",
+      "route",
+      "rate limit",
+      "schedule",
+      "context",
+      "pinned replacement record drift"
+    ],
+    "productionPreflightReadOnly": true
+  },
+  "scope": {
+    "staticPaths": 283,
+    "changedStaticPaths": [
+      "/play/index.html",
+      "/scripts/arcade-daily-growth.js"
+    ],
+    "preservedStaticPaths": 281,
+    "replacedFunctions": [
+      "arcade-growth"
+    ],
+    "preservedCompleteFunctionRecords": 40,
+    "preservedSchedules": 5,
+    "walletAndDependencyChanges": false
+  },
+  "transactions": 0,
+  "productionSyntheticRecords": 0
+}

@@ -51,7 +51,7 @@ try {
   const origin = 'https://tree-token.xyz';
   const hash = (value) => createHash('sha256').update(value).digest('hex');
 
-  function fixture() {
+  function fixture(fourGamePassport = false) {
     let challenge;
     let session;
     let tokenHash;
@@ -85,8 +85,9 @@ try {
         assert.equal(passedHash, tokenHash);
         assert.equal(passedOrigin, origin);
         const dateKey = new Date().toISOString().slice(0, 10);
-        return { wallet, dateKey, monthKey: dateKey.slice(0, 7), enabledGames: [...enabledGames],
-          eligibleGames: [...enabledGames, 'treeforce89'],
+        const eligibleGames = [...enabledGames, 'treeforce89'];
+        return { wallet, dateKey, monthKey: dateKey.slice(0, 7), enabledGames: fourGamePassport ? eligibleGames : [...enabledGames],
+          eligibleGames,
           checkins: [], quests: [], gamesByDay: [], badges: [] };
       },
       readSession: unexpected,
@@ -112,8 +113,9 @@ try {
   }
 
   const outcomes = [];
-  for (const scenario of ['valid', 'wrong-account', 'wrong-message']) {
-    const f = fixture();
+  for (const scenario of ['valid', 'valid-four-game-passport', 'wrong-account', 'wrong-message']) {
+    const fourGamePassport = scenario === 'valid-four-game-passport';
+    const f = fixture(fourGamePassport);
     const issued = await f.call('challenge', { wallet });
     assert.equal(issued.status, 200, `${scenario}: the actual handler did not issue a challenge.`);
     const challenge = issued.data.challenge;
@@ -127,7 +129,7 @@ try {
     // Keep the claimed account and issued challenge correct in both negative
     // cases, so rejection must reach the real cryptographic verification path.
     const result = await f.call('session', { wallet, challengeId: challenge.challengeId, signature });
-    if (scenario === 'valid') {
+    if (scenario === 'valid' || fourGamePassport) {
       assert.equal(result.status, 200, `Valid personal signature failed: ${result.data.error || 'unknown error'}`);
       assert.equal(result.data.authenticated, true);
       assert.equal(result.data.session.wallet, wallet);
@@ -136,6 +138,8 @@ try {
       assert.equal(f.sessionWrites(), 1);
       assert.equal(result.data.progress.checkedInDays, 0);
       assert.equal(result.data.progress.questDays, 0);
+      assert.equal(result.data.progress.passport.enabledGames.length, fourGamePassport ? 4 : 3);
+      assert.deepEqual(result.data.progress.passport.optionalGames.map(game => game.id), fourGamePassport ? [] : ['treeforce89']);
     } else {
       assert.equal(result.status, 401, `${scenario}: the cryptographic mismatch was not rejected.`);
       assert.equal(result.data.error, 'invalid-signature');

@@ -1,4 +1,5 @@
--- Run after all three Daily Growth migrations on the existing development DB.
+-- Run after all Daily Growth migrations, including the November Passport rules,
+-- on the existing development DB.
 -- These synthetic participation records are always rolled back. No TREE FORCE
 -- database, payment object, wallet credential or real gameplay is touched.
 begin;
@@ -53,7 +54,8 @@ begin
   end;
 
   v_required_before := private.arcade_growth_month_games_v1(v_month,v_games,true);
-  assert v_required_before=v_games, 'fixture expects the existing three-game monthly requirement';
+  assert v_required_before=(case when v_month >= date '2026-11-01'
+    then array_append(v_games,'treeforce89') else v_games end), 'wrong seasonal Passport requirements';
   v_result := public.arcade_growth_record_treeforce_play_v1(v_wallet,v_run,clock_timestamp()+interval '1 hour',clock_timestamp());
   assert v_result->'participation'->>'saved'='true';
   assert v_result->'participation'->>'alreadyRecorded'='false';
@@ -62,12 +64,12 @@ begin
   v_source_id := 'run:'||v_run||':'||v_wallet;
   assert v_result->'participation'->>'sourceId'=v_source_id;
   v_snapshot := v_result->'snapshot';
-  assert v_snapshot->'enabledGames'=to_jsonb(v_required_before), 'TF expanded frozen Passport requirements';
+  assert v_snapshot->'enabledGames'=to_jsonb(v_required_before), 'TF changed frozen Passport requirements';
   assert v_snapshot->'eligibleGames'=to_jsonb(array['garden-bot','pvp','arborist-trials','treeforce89']::text[]);
   assert jsonb_array_length(v_snapshot->'checkins')=1, 'first wave did not save attendance';
   assert jsonb_array_length(v_snapshot->'quests')=1, 'first wave did not save a daily quest';
   assert v_snapshot->'quests'->0->>'gameId'='treeforce89';
-  assert v_snapshot->'gamesByDay'->0->'gameIds'='["treeforce89"]'::jsonb, 'optional participation was not exposed';
+  assert v_snapshot->'gamesByDay'->0->'gameIds'='["treeforce89"]'::jsonb, 'TREE FORCE participation was not exposed';
   assert not exists(select 1 from private.arcade_growth_monthly_badges where wallet=v_wallet and badge_id='arcade-passport'),
     'TF alone completed the required Passport';
   assert (select evidence_kind from private.arcade_growth_game_events where source='treeforce89' and source_id=v_source_id)='authenticated-run-start';
@@ -161,12 +163,12 @@ begin
     jsonb_build_object('source','garden-battles','sourceId','trial:tf-test-trials:'||v_wallet,'wallet',v_wallet,'gameId','arborist-trials','completedAt',clock_timestamp()));
   v_snapshot := public.arcade_growth_record_events_v1(v_token,'https://tree-token.xyz',v_games,v_day,v_events);
   assert jsonb_array_length(v_snapshot->'quests')=1, 'Garden results duplicated a TF daily quest';
-  assert jsonb_array_length(v_snapshot->'gamesByDay'->0->'gameIds')=4, 'optional and required game activity were not preserved together';
+  assert jsonb_array_length(v_snapshot->'gamesByDay'->0->'gameIds')=4, 'Garden and TREE FORCE activity were not preserved together';
   assert v_snapshot->'enabledGames'=to_jsonb(v_required_before), 'required monthly games changed';
   select count(*) into v_count from private.arcade_growth_monthly_badges where wallet=v_wallet and month_key=v_month and badge_id='arcade-passport';
-  assert v_count=1, 'the original three required games no longer award their Passport badge';
+  assert v_count=1, 'all four eligible games did not award exactly one Passport badge';
   v_snapshot := private.arcade_growth_wallet_snapshot_v1(v_wallet,(v_month+interval '1 month')::date,v_games);
-  assert v_snapshot->'gamesByDay'='[]'::jsonb, 'optional participation did not reset next month';
+  assert v_snapshot->'gamesByDay'='[]'::jsonb, 'monthly participation did not reset next month';
   assert v_snapshot->'checkins'='[]'::jsonb and v_snapshot->'quests'='[]'::jsonb;
   assert jsonb_array_length(v_snapshot->'badges')=1, 'previously earned required Passport badge was lost';
 end $$;

@@ -1,0 +1,66 @@
+{
+  "developmentProject": "charuqbsxmrirpxciljn",
+  "developmentBranch": "knowledge-trial-v3-safe",
+  "migration": {
+    "localPath": "supabase/migrations/20261101160314_arcade_growth_treeforce_required_passport.sql",
+    "appliedVersion": "20261101160407",
+    "name": "arcade_growth_treeforce_required_passport",
+    "remoteSqlExactlyMatchesLocal": true
+  },
+  "rules": [
+    {
+      "october": [
+        "garden-bot",
+        "pvp",
+        "arborist-trials"
+      ],
+      "november": [
+        "garden-bot",
+        "pvp",
+        "arborist-trials",
+        "treeforce89"
+      ],
+      "december": [
+        "garden-bot",
+        "pvp",
+        "arborist-trials",
+        "treeforce89"
+      ]
+    }
+  ],
+  "fixtures": [
+    {
+      "path": "tests/arcade-growth-database.sql",
+      "result": [
+        {
+          "arcade_growth_database_checks": "passed; all synthetic records rolled back"
+        }
+      ],
+      "allSyntheticRecordsRolledBack": true
+    },
+    {
+      "path": "tests/arcade-growth-treeforce-database.sql",
+      "result": [
+        {
+          "arcade_growth_treeforce_checks": "passed; TREE FORCE participation fixtures rolled back"
+        }
+      ],
+      "allSyntheticRecordsRolledBack": true
+    },
+    {
+      "path": "tests/treeforce-passport-database.sql",
+      "result": [
+        {
+          "treeforce_passport_database_checks": "passed; October3, November4, December first freeze, award retention, and access controls; all fixtures rolled back"
+        }
+      ],
+      "allSyntheticRecordsRolledBack": true
+    }
+  ],
+  "security": {
+    "securityDefinerIntroduced": false,
+    "existingServiceOnlyAccessVerifiedBySqlFixtures": true,
+    "advisorFindings": "INFO only: RLS enabled without browser policies on private service-role-only tables; no new warning or error.",
+    "noNewPublicGrants": true
+  }
+}

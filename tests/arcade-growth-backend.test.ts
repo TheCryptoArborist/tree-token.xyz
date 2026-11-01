@@ -106,6 +106,27 @@ test('anonymous status exposes frozen rules and rotating pick without private pr
   assert.equal(response.headers.get('cache-control'), 'no-store');
 });
 
+test('November status exposes database four-game requirements for public and signed-in requests without new writes', async () => {
+  const store = new MemoryStore();
+  const day = '2026-11-01';
+  store.current = { ...snapshot(), dateKey: day, monthKey: '2026-11', enabledGames: [...GROWTH_ELIGIBLE_GAME_IDS],
+    checkins: [day], quests: [{ dateKey: day, gameId: 'treeforce89' }], gamesByDay: [{ dateKey: day, gameIds: ['treeforce89'] }],
+    badges: [{ id: 'arcade-passport', monthKey: '2026-10', earnedAt: NOW.toISOString() }] };
+  store.active.expiresAt = `${day}T13:00:00.000Z`;
+  const f = fixture({ store, now: () => new Date(`${day}T12:00:00.000Z`) });
+  const publicStatus = await f.call('status', {}, { token: null });
+  assert.equal(publicStatus.response.status, 200); assert.equal(publicStatus.data.authenticated, false);
+  assert.deepEqual(publicStatus.data.configuration.enabledGames.map((game: any) => game.id), [...GROWTH_ELIGIBLE_GAME_IDS]);
+  assert.equal('progress' in publicStatus.data, false);
+  const signedStatus = await f.call();
+  assert.equal(signedStatus.response.status, 200); assert.equal(signedStatus.data.authenticated, true);
+  assert.deepEqual(signedStatus.data.configuration.enabledGames, publicStatus.data.configuration.enabledGames);
+  assert.deepEqual(signedStatus.data.progress.passport.completedGameIds, ['treeforce89']);
+  assert.deepEqual(signedStatus.data.progress.passport.optionalGames, []);
+  assert.equal(signedStatus.data.progress.badges[0].monthKey, '2026-10');
+  assert.equal(store.writes, 0); assert.equal(store.eventCalls, 0); assert.equal(f.ownerCalls(), 0);
+});
+
 test('any explicit enable override except exact true disables the feature before storage or ownership', async () => {
   for (const flag of ['false', '', 'TRUE', '1', '0', ' true ', 'invalid']) {
     const f = fixture({ env: { ARCADE_GROWTH_ENABLED: flag, TREE_KNOWLEDGE_TRIAL_RATE_LIMIT_SECRET: 's'.repeat(32) } });

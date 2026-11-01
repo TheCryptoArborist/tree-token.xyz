@@ -1,0 +1,896 @@
+{
+  "synthetic": true,
+  "description": "Synthetic browser-only progress, never a real player record. November has four required games; October preserves three required games plus the optional first-wave stamp.",
+  "now": 1794484800000,
+  "account": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "configuration": {
+    "enabledGames": [
+      {
+        "id": "garden-bot",
+        "label": "Garden Bot",
+        "href": "https://nftree.net/battle/garden-bot",
+        "creditRule": "complete-result"
+      },
+      {
+        "id": "pvp",
+        "label": "PvP Battle",
+        "href": "https://nftree.net/battle/pvp",
+        "creditRule": "complete-result"
+      },
+      {
+        "id": "arborist-trials",
+        "label": "Arborist Trials",
+        "href": "https://nftree.net/battle/trials",
+        "creditRule": "complete-result"
+      },
+      {
+        "id": "treeforce89",
+        "label": "TREE FORCE ’89",
+        "href": "https://tree-token.xyz/play/treeforce89/",
+        "creditRule": "start-run"
+      }
+    ],
+    "eligibleGames": [
+      {
+        "id": "garden-bot",
+        "label": "Garden Bot",
+        "href": "https://nftree.net/battle/garden-bot",
+        "creditRule": "complete-result"
+      },
+      {
+        "id": "pvp",
+        "label": "PvP Battle",
+        "href": "https://nftree.net/battle/pvp",
+        "creditRule": "complete-result"
+      },
+      {
+        "id": "arborist-trials",
+        "label": "Arborist Trials",
+        "href": "https://nftree.net/battle/trials",
+        "creditRule": "complete-result"
+      },
+      {
+        "id": "treeforce89",
+        "label": "TREE FORCE ’89",
+        "href": "https://tree-token.xyz/play/treeforce89/",
+        "creditRule": "start-run"
+      }
+    ],
+    "todayPick": {
+      "id": "treeforce89",
+      "label": "TREE FORCE ’89",
+      "href": "https://tree-token.xyz/play/treeforce89/",
+      "creditRule": "start-run"
+    }
+  },
+  "beforeTreeForce": {
+    "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "monthKey": "2026-11",
+    "dateKey": "2026-11-12",
+    "calendar": [
+      {
+        "dateKey": "2026-11-01",
+        "checkedIn": true,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-02",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-03",
+        "checkedIn": true,
+        "questCompleted": true,
+        "gameIds": [
+          "garden-bot",
+          "pvp",
+          "arborist-trials"
+        ]
+      },
+      {
+        "dateKey": "2026-11-04",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-05",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-06",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-07",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-08",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-09",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-10",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-11",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-12",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-13",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-14",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-15",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-16",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-17",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-18",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-19",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-20",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-21",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-22",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-23",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-24",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-25",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-26",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-27",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-28",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-29",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-30",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      }
+    ],
+    "checkedInDays": 2,
+    "questDays": 1,
+    "today": {
+      "checkedIn": false,
+      "questCompleted": false,
+      "gameIds": []
+    },
+    "passport": {
+      "monthKey": "2026-11",
+      "enabledGames": [
+        {
+          "id": "garden-bot",
+          "label": "Garden Bot",
+          "href": "https://nftree.net/battle/garden-bot",
+          "creditRule": "complete-result"
+        },
+        {
+          "id": "pvp",
+          "label": "PvP Battle",
+          "href": "https://nftree.net/battle/pvp",
+          "creditRule": "complete-result"
+        },
+        {
+          "id": "arborist-trials",
+          "label": "Arborist Trials",
+          "href": "https://nftree.net/battle/trials",
+          "creditRule": "complete-result"
+        },
+        {
+          "id": "treeforce89",
+          "label": "TREE FORCE ’89",
+          "href": "https://tree-token.xyz/play/treeforce89/",
+          "creditRule": "start-run"
+        }
+      ],
+      "completedGameIds": [
+        "garden-bot",
+        "pvp",
+        "arborist-trials"
+      ],
+      "complete": false,
+      "optionalGames": [],
+      "optionalCompletedGameIds": []
+    },
+    "milestones": [
+      {
+        "id": "seedling",
+        "label": "Seedling",
+        "target": 3,
+        "earned": false
+      },
+      {
+        "id": "sapling",
+        "label": "Sapling",
+        "target": 7,
+        "earned": false
+      },
+      {
+        "id": "deep-roots",
+        "label": "Deep Roots",
+        "target": 14,
+        "earned": false
+      },
+      {
+        "id": "full-canopy",
+        "label": "Full Canopy",
+        "target": 21,
+        "earned": false
+      }
+    ],
+    "badges": []
+  },
+  "afterTreeForce": {
+    "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "monthKey": "2026-11",
+    "dateKey": "2026-11-12",
+    "calendar": [
+      {
+        "dateKey": "2026-11-01",
+        "checkedIn": true,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-02",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-03",
+        "checkedIn": true,
+        "questCompleted": true,
+        "gameIds": [
+          "garden-bot",
+          "pvp",
+          "arborist-trials"
+        ]
+      },
+      {
+        "dateKey": "2026-11-04",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-05",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-06",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-07",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-08",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-09",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-10",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-11",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-12",
+        "checkedIn": true,
+        "questCompleted": true,
+        "gameIds": [
+          "treeforce89"
+        ]
+      },
+      {
+        "dateKey": "2026-11-13",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-14",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-15",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-16",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-17",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-18",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-19",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-20",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-21",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-22",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-23",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-24",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-25",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-26",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-27",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-28",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-29",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-11-30",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      }
+    ],
+    "checkedInDays": 3,
+    "questDays": 2,
+    "today": {
+      "checkedIn": true,
+      "questCompleted": true,
+      "gameIds": [
+        "treeforce89"
+      ]
+    },
+    "passport": {
+      "monthKey": "2026-11",
+      "enabledGames": [
+        {
+          "id": "garden-bot",
+          "label": "Garden Bot",
+          "href": "https://nftree.net/battle/garden-bot",
+          "creditRule": "complete-result"
+        },
+        {
+          "id": "pvp",
+          "label": "PvP Battle",
+          "href": "https://nftree.net/battle/pvp",
+          "creditRule": "complete-result"
+        },
+        {
+          "id": "arborist-trials",
+          "label": "Arborist Trials",
+          "href": "https://nftree.net/battle/trials",
+          "creditRule": "complete-result"
+        },
+        {
+          "id": "treeforce89",
+          "label": "TREE FORCE ’89",
+          "href": "https://tree-token.xyz/play/treeforce89/",
+          "creditRule": "start-run"
+        }
+      ],
+      "completedGameIds": [
+        "garden-bot",
+        "pvp",
+        "arborist-trials",
+        "treeforce89"
+      ],
+      "complete": true,
+      "optionalGames": [],
+      "optionalCompletedGameIds": []
+    },
+    "milestones": [
+      {
+        "id": "seedling",
+        "label": "Seedling",
+        "target": 3,
+        "earned": true
+      },
+      {
+        "id": "sapling",
+        "label": "Sapling",
+        "target": 7,
+        "earned": false
+      },
+      {
+        "id": "deep-roots",
+        "label": "Deep Roots",
+        "target": 14,
+        "earned": false
+      },
+      {
+        "id": "full-canopy",
+        "label": "Full Canopy",
+        "target": 21,
+        "earned": false
+      }
+    ],
+    "badges": [
+      {
+        "id": "2026-11-seedling",
+        "label": "Seedling",
+        "monthKey": "2026-11",
+        "earnedAt": "2026-11-12T12:00:00Z"
+      },
+      {
+        "id": "2026-11-arcade-passport",
+        "label": "Arcade Passport",
+        "monthKey": "2026-11",
+        "earnedAt": "2026-11-12T12:00:00Z"
+      }
+    ]
+  },
+  "historicOctober": {
+    "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "monthKey": "2026-10",
+    "dateKey": "2026-10-31",
+    "calendar": [
+      {
+        "dateKey": "2026-10-01",
+        "checkedIn": true,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-10-02",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-10-03",
+        "checkedIn": true,
+        "questCompleted": true,
+        "gameIds": [
+          "garden-bot",
+          "pvp",
+          "arborist-trials"
+        ]
+      },
+      {
+        "dateKey": "2026-10-04",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-10-05",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-10-06",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-10-07",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-10-08",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-10-09",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-10-10",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-10-11",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-10-12",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-10-13",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-10-14",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-10-15",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-10-16",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-10-17",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-10-18",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-10-19",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-10-20",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-10-21",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-10-22",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-10-23",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-10-24",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-10-25",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-10-26",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-10-27",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-10-28",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-10-29",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-10-30",
+        "checkedIn": false,
+        "questCompleted": false,
+        "gameIds": []
+      },
+      {
+        "dateKey": "2026-10-31",
+        "checkedIn": true,
+        "questCompleted": true,
+        "gameIds": [
+          "treeforce89"
+        ]
+      }
+    ],
+    "checkedInDays": 3,
+    "questDays": 2,
+    "today": {
+      "checkedIn": true,
+      "questCompleted": true,
+      "gameIds": [
+        "treeforce89"
+      ]
+    },
+    "passport": {
+      "monthKey": "2026-10",
+      "enabledGames": [
+        {
+          "id": "garden-bot",
+          "label": "Garden Bot",
+          "href": "https://nftree.net/battle/garden-bot",
+          "creditRule": "complete-result"
+        },
+        {
+          "id": "pvp",
+          "label": "PvP Battle",
+          "href": "https://nftree.net/battle/pvp",
+          "creditRule": "complete-result"
+        },
+        {
+          "id": "arborist-trials",
+          "label": "Arborist Trials",
+          "href": "https://nftree.net/battle/trials",
+          "creditRule": "complete-result"
+        }
+      ],
+      "completedGameIds": [
+        "garden-bot",
+        "pvp",
+        "arborist-trials"
+      ],
+      "complete": true,
+      "optionalGames": [
+        {
+          "id": "treeforce89",
+          "label": "TREE FORCE ’89",
+          "href": "https://tree-token.xyz/play/treeforce89/",
+          "creditRule": "start-run"
+        }
+      ],
+      "optionalCompletedGameIds": [
+        "treeforce89"
+      ]
+    },
+    "milestones": [
+      {
+        "id": "seedling",
+        "label": "Seedling",
+        "target": 3,
+        "earned": true
+      },
+      {
+        "id": "sapling",
+        "label": "Sapling",
+        "target": 7,
+        "earned": false
+      },
+      {
+        "id": "deep-roots",
+        "label": "Deep Roots",
+        "target": 14,
+        "earned": false
+      },
+      {
+        "id": "full-canopy",
+        "label": "Full Canopy",
+        "target": 21,
+        "earned": false
+      }
+    ],
+    "badges": [
+      {
+        "id": "2026-10-seedling",
+        "label": "Seedling",
+        "monthKey": "2026-10",
+        "earnedAt": "2026-10-31T12:00:00Z"
+      },
+      {
+        "id": "2026-10-arcade-passport",
+        "label": "Arcade Passport",
+        "monthKey": "2026-10",
+        "earnedAt": "2026-10-31T12:00:00Z"
+      }
+    ]
+  }
+}
