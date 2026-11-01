@@ -1,3 +1,19 @@
+# Current production — Daily Growth invitation, 2026-11-01
+
+Published and locked deploy `6ae75c44b387f8129ba60518` from source commit `90ce9a5a308855c07b08597fa0341367842591b8` on `feature/daily-growth-invitation-20261101`. Published at `2026-11-01T15:36:38.093Z`. The update is live at https://tree-token.xyz/play/.
+
+The collapsed panel now provides an explicit check-in action, a labeled quest invitation, existing ecosystem badge artwork, and verified milestone progress. It remains collapsed by default. Only `/play/index.html`, `/scripts/arcade-daily-growth.js`, and `/styles/tree-arcade-suite.css` changed.
+
+All 283 published paths are retained, with 280 static files unchanged. All 41 complete function records, five schedules, generated Netlify configuration, site/account environment settings, and the publication lock are preserved. The current Canopy Defense and Deadfall Run additions are retained. No backend or wallet adapter was rebuilt.
+
+`current-release.json` and `daily-growth-invitation-release.json` record the exact current inventory. `daily-growth-invitation-baseline.json` captures prior deploy `6ae69fa9b3d4702fcc61177c`, including Canopy source provenance. The older `manifest.json` remains archived recovery material; do not publish the ordinary root snapshot or unlock automatic publishing.
+
+Validation: 30 controller tests, 13 native-browser fixture checks, exact candidate/publication inventory checks, and real hosted desktop/mobile checks on both candidate and canonical origin passed. No overflow or browser errors were observed. Live checks were read-only and signed-out; wallet and saved-progress behavior were exercised with synthetic fixtures. See `../docs/daily-growth-invitation.md` and `../docs/review/daily-growth-invitation/`.
+
+The existing Canopy Defense function uses a deployment-scoped authentication store; active short-lived sessions may require sign-in again after publication. Function bytes and runtime settings remain identical.
+
+---
+
 # Current production — Deadfall Run play-test integration, 2026-10-31
 
 Published and locked deploy `6ae679ad8d7a99d535827032` from source commit `b4be1709864645fae73321b55eac2db43fe2159b` (PR #71). The game is available at https://tree-token.xyz/play/deadfall-run/ through the first previously empty cabinet at https://tree-token.xyz/play/.

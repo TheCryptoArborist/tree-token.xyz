@@ -1,5 +1,9 @@
 # Daily Growth invitation — November 1, 2026
 
+## Published release
+
+Live at https://tree-token.xyz/play/ as locked deploy `6ae75c44b387f8129ba60518`, published `2026-11-01T15:36:38.093Z` from source `90ce9a5a308855c07b08597fa0341367842591b8`. The exact deployment inventory and backend preservation evidence are recorded in `production/daily-growth-invitation-release.json`. Both candidate and canonical hosted checks passed using real served code, public GET status, and the existing wallet bundle, without connecting or signing.
+
 ## Purpose
 
 The collapsed Daily Growth panel did not clearly explain how to check in or why a player should open it. This update gives the compact panel a visible invitation, a direct check-in action, and a preview of the next attendance badge.
