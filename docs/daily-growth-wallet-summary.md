@@ -1,5 +1,7 @@
 # Wallet identity in collapsed Daily Growth
 
+**Live:** https://tree-token.xyz/play/ — published and locked deployment `6ae7673cbbf1e1e579d6fb19` from source `15cd19d5e4eb6e62407d10dee60d1c39e777006f` at `2026-11-01T16:23:23.184Z`.
+
 The compact Daily Growth panel now shows the current wallet beneath the invitation copy, outside the expandable quest and badge section. The line contains the wallet name, shortened Sui address, and an explicit **Signed in** or **Connected** label. Its title and accessible label expose the full address. The wallet name can truncate on narrow screens while the address remains readable.
 
 ## State behavior
@@ -30,4 +32,10 @@ The guarded release changes only `/play/index.html`, `/scripts/arcade-daily-grow
 
 The November four-game Passport, including TREE FORCE ’89, remains in place. No database migration is included. The existing Canopy Defense authentication store is deployment-scoped, so active short-lived Canopy sessions may need to sign in again after publication.
 
-Evidence: `daily-growth-wallet-summary-verification.json`, `review/daily-growth-wallet-summary/browser-report.json`, and the three selected screenshots in that review directory. Publication and canonical hosted verification are recorded in the final release receipt.
+Evidence: `daily-growth-wallet-summary-verification.json`, `review/daily-growth-wallet-summary/browser-report.json`, and the three selected screenshots in that review directory. `../production/daily-growth-wallet-summary-release.json` records the completed publication.
+
+## Live verification
+
+Eight candidate and eight canonical hosted checks passed at widths 1440, 390, and 320. Each environment made 20 successful unauthenticated GET/HEAD requests. The controller, CSS, wallet bundle, and artwork matched the reviewed hashes. The new identity markup is present outside the details panel and fully cleared when disconnected. All eight game links and the four required Passport games remain intact. No horizontal overflow, browser errors, wallet actions, signatures, or writes occurred in the live checks.
+
+These live checks were signed out; connected and signed-in state transitions were verified with synthetic browser/controller fixtures. No real user session or wallet signature was used for testing.

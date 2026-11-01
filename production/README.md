@@ -1,3 +1,19 @@
+# Current production — wallet identity in collapsed Daily Growth, 2026-11-01
+
+Published and locked deploy `6ae7673cbbf1e1e579d6fb19` from source commit `15cd19d5e4eb6e62407d10dee60d1c39e777006f` on `feature/daily-growth-wallet-summary-20261101`. Published at `2026-11-01T16:23:23.184Z`. Live at https://tree-token.xyz/play/.
+
+The collapsed Daily Growth panel now shows wallet name, shortened address, and a truthful Signed in / Connected label. The full address is available in the title and accessible name. Account changes, sign-out, expiry, revocation, and disconnect update or clear the identity without opening the panel. Unchanged progress renders do not repeat the live-region announcement.
+
+Only `/play/index.html`, `/scripts/arcade-daily-growth.js`, and `/styles/tree-arcade-suite.css` changed. All 283 static paths are retained, with 280 unrelated files unchanged. All 41 complete function records, five schedules, generated configuration, runtime/environment settings, and the publication lock are preserved. No backend, wallet adapter, game runtime, dependency, or database change occurred. November’s four-game Passport, including TREE FORCE ’89, remains active.
+
+`current-release.json` and `daily-growth-wallet-summary-release.json` describe this exact published inventory. `daily-growth-wallet-summary-baseline.json` captures previous deploy `6ae7648ca7cf1ea1c10b47b5`. The historical `manifest.json` remains archived recovery material; do not publish the ordinary root snapshot or unlock automatic publishing.
+
+Validation: all 32 controller cases and 14 native browser checks passed. The standard identity adds no desktop height and 20.59 px on phones; disconnected layouts are unchanged. Eight candidate and eight canonical hosted checks passed with 20 successful read-only requests each, no overflow or browser errors, all eight cabinet destinations intact, and the live four-game configuration preserved. Authenticated states use explicitly synthetic fixtures; no real wallet signature or transaction was performed. See `../docs/daily-growth-wallet-summary.md` and its review evidence.
+
+The existing Canopy Defense authentication store is deployment-scoped, so active short-lived sessions may require sign-in again after publication; its function bytes and runtime settings remain identical.
+
+---
+
 # Current production — TREE FORCE in Arcade Passport, 2026-11-01
 
 Published and locked deploy `6ae7648ca7cf1ea1c10b47b5` from source commit `51652a2a982fd5aa1e31d499f722eaebfbb003dd` on `feature/treeforce-passport-20261101`. Published at `2026-11-01T16:11:43.643Z`. Live at https://tree-token.xyz/play/.
