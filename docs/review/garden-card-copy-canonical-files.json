@@ -1,0 +1,104 @@
+{
+  "checkedAt": "2026-10-31T23:12:55.452Z",
+  "passed": true,
+  "origin": "https://tree-token.xyz",
+  "deployId": "6ae675c1c1f884339010a053",
+  "sourceCommit": "38202682d3242e7f5f8785a633e832dcca0d290b",
+  "sourceTree": "4577aeb1f7458e189e2eb4d034be4fd4a89a86ab",
+  "approvalEquivalence": {
+    "approvedSourceCommit": "38202682d3242e7f5f8785a633e832dcca0d290b",
+    "approvedSourceTree": "4577aeb1f7458e189e2eb4d034be4fd4a89a86ab",
+    "candidateSourceCommit": "38202682d3242e7f5f8785a633e832dcca0d290b",
+    "candidateSourceTree": "4577aeb1f7458e189e2eb4d034be4fd4a89a86ab",
+    "exactGitTreeMatch": true,
+    "overlayBytesEqualApproved": true,
+    "note": "GitHub connector publication may assign a different commit ID; the entire Git tree and the HTML overlay remain byte-exact to the approved commit."
+  },
+  "sourceBinding": "Exact candidate Git tree equals the full approved tree; the committed HTML overlay equals the approved source and recorded candidate inventory",
+  "verificationScope": "Hosted file bytes and public read-only configuration; does not prove real wallet connection or personal progress",
+  "calibration": {
+    "checkedAt": "2026-10-31T23:12:55.233Z",
+    "deployId": "6ae67337da46ecbf141c68f5",
+    "sourceCommit": "f5664d1b73ccaa46ca6b4b28f48e3c7f0e3f2ff4",
+    "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/play/index.html",
+    "snippetId": "tree-arcade-arboretum-link",
+    "snippetSha256": "bf05453dc91bcf9c53db98e08829c8321193495b0839021e68d458d56e5be98d",
+    "exactMatchOnPinnedBaseline": true,
+    "file": {
+      "path": "/play/index.html",
+      "rawSha1": "02c2ef2abebb252ee07d27daa18bb29fc5684159",
+      "reviewedSha1": "3a4eaf59cf3e8e51af670134bd6e931cdf67430c",
+      "rawSha256": "e66d1bafe5944c0fecf0edcc665245863adb4d675d8b062aaef5ac3d6836e3b1",
+      "reviewedSha256": "d1ee2a36d5498d8abde93bae40ee70d9409528ee8194855d6504178b07b6cb25",
+      "rawBytes": 33676,
+      "reviewedBytes": 33104,
+      "existingHostingSnippetRemovedForComparison": true,
+      "exactMatch": true
+    }
+  },
+  "files": [
+    {
+      "path": "/play/index.html",
+      "rawSha1": "411e6d70974190ce38c1d242b20fa4371b8dd066",
+      "reviewedSha1": "f5793068b0451473da5e96deb83360fc0466f0d5",
+      "rawSha256": "b16f328e6a9bd9fe5e2756e22b99b643c1e5f1495cf8a06d8be9c76d6a67cf4e",
+      "reviewedSha256": "ff4f7be72543de769156d39164355833e160c7b4b4949de3f76ae92b1a97105c",
+      "rawBytes": 32736,
+      "reviewedBytes": 32164,
+      "existingHostingSnippetRemovedForComparison": true,
+      "exactMatch": true,
+      "status": 200,
+      "url": "https://tree-token.xyz/play/index.html"
+    }
+  ],
+  "publicStatus": {
+    "url": "https://tree-token.xyz/api/arcade-growth?action=status",
+    "status": 200,
+    "serverTime": "2026-10-31T23:12:55.424Z",
+    "dateKey": "2026-10-31",
+    "authenticated": false,
+    "personalProgressPresent": false,
+    "inventedPublicCounts": false,
+    "requiredGameIds": [
+      "garden-bot",
+      "pvp",
+      "arborist-trials"
+    ],
+    "eligibleGameIds": [
+      "garden-bot",
+      "pvp",
+      "arborist-trials",
+      "treeforce89"
+    ],
+    "todayPick": "garden-bot",
+    "treeforceCreditRule": "start-run",
+    "cacheControl": "no-store"
+  },
+  "failures": [],
+  "publicRequests": [
+    {
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/play/index.html",
+      "method": "GET",
+      "status": 200,
+      "milliseconds": 202
+    },
+    {
+      "url": "https://tree-token.xyz/play/index.html",
+      "method": "GET",
+      "status": 200,
+      "milliseconds": 170
+    },
+    {
+      "url": "https://tree-token.xyz/api/arcade-growth?action=status",
+      "method": "GET",
+      "status": 200,
+      "milliseconds": 201
+    }
+  ],
+  "remoteMethods": [
+    "GET"
+  ],
+  "walletsUsed": 0,
+  "transactions": 0,
+  "progressWrites": 0
+}

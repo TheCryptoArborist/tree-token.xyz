@@ -1,0 +1,60 @@
+{
+  "upstreamRepository": "TheCryptoArborist/nftree_landing",
+  "upstreamCommit": "f8f014c2869dbaed04735c43f94d01a1a818abaa",
+  "upstreamSourcePath": "src/wallet-mint.js",
+  "upstreamSourceBlob": "a7f7db0fe042714962661ed0273d4626354d1336",
+  "dependencies": {
+    "@mysten/sui": "2.26.2",
+    "@mysten/wallet-standard": "0.21.18",
+    "vite": "8.2.2"
+  },
+  "buildCommand": "npm ci --ignore-scripts --no-audit --no-fund; node build.mjs (isolated vendor directory)",
+  "publicVendorOutput": "/assets/arcade/nftree-wallet-mint.js",
+  "files": {
+    "vendor/nftree-mint/upstream-wallet-mint.js": {
+      "bytes": 21883,
+      "sha256": "6971bb92d0c67a3dce5873d13598616f022a3c386ea375a70f43cfd206b60692",
+      "gitBlobSha1": "a7f7db0fe042714962661ed0273d4626354d1336"
+    },
+    "vendor/nftree-mint/package.json": {
+      "bytes": 932,
+      "sha256": "77867dcc50a5c45820c5a5e75fbdc0efe362c6b8dd9e5f5e95cb2ce905cfd121",
+      "gitBlobSha1": "30a3867bdd6e957c6f716131741803c4bfd54854"
+    },
+    "vendor/nftree-mint/package-lock.json": {
+      "bytes": 60341,
+      "sha256": "a124e7d4507c17e4983d6ba470bf1211cfef166f121013e36931beabd1c0df4a",
+      "gitBlobSha1": "4b1075557a4ceeac6c160a1830923bf5d7d6f17a"
+    },
+    "vendor/nftree-mint/wallet-mint.js": {
+      "bytes": 23522,
+      "sha256": "af053cf1567ab874f5623a221b6f172ff4e1101e7af80400916f12f70af59f9f",
+      "gitBlobSha1": "a76c26492f4c7293e2255dbffd06a81beba9bbf2"
+    },
+    "vendor/nftree-mint/receipt.mjs": {
+      "bytes": 6330,
+      "sha256": "3f9bdd6bd1888ae77917d60c39f01c98a7a0c5d1d7a5f643cb9d4677128931df",
+      "gitBlobSha1": "abaac9d9b431fc6f0a86a99036b99f802ac3e160"
+    },
+    "vendor/nftree-mint/vite.arcade.config.mjs": {
+      "bytes": 558,
+      "sha256": "b2df81149d3b9be9b7ffec853d8f7e4947f70fe1f0e835a2643855ce93147a12",
+      "gitBlobSha1": "92ee20c1c25196406eb0b5ade1366d091b3868fe"
+    },
+    "vendor/nftree-mint/build.mjs": {
+      "bytes": 829,
+      "sha256": "5b77fb76bae7fd03a6964ca0c07c66ad835c99c5e8f533689372f1c7f4b04a72",
+      "gitBlobSha1": "fa0c6e96c9c983a174a8b2a8f7d49274936683e1"
+    },
+    "scripts/arcade-nftree-access-core.mjs": {
+      "bytes": 20292,
+      "sha256": "cd4d0df8dc6da842a093d5cabd6aad0b577c86d3040f3ccf60e15c6a55dd2608",
+      "gitBlobSha1": "a81061b0726bc3a95759b7081c1fa0a99b9e2c70"
+    },
+    "assets/arcade/nftree-wallet-mint.js": {
+      "bytes": 361620,
+      "sha256": "36bdfb40c3702bbbe0ea5eeccde7949d5d42e0f0572afa09623b7a0a68685f74",
+      "gitBlobSha1": "227209ffe0eca685348f0150be57662ed177a757"
+    }
+  }
+}

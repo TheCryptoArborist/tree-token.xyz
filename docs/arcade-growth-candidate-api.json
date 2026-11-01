@@ -1,0 +1,61 @@
+{
+  "checkedAt": "2026-10-31T21:29:50.449Z",
+  "origin": "https://6ae65d956e30582ff6f5baa2--tree-token.netlify.app",
+  "dateKey": "2026-10-31",
+  "todayPick": "arborist-trials",
+  "enabledGames": [
+    "garden-bot",
+    "pvp",
+    "arborist-trials"
+  ],
+  "checks": [
+    {
+      "name": "public rules",
+      "status": 200,
+      "result": "ok"
+    },
+    {
+      "name": "unauthenticated write blocked",
+      "status": 401,
+      "result": "authentication-required"
+    },
+    {
+      "name": "client results blocked",
+      "status": 400,
+      "result": "invalid-request"
+    },
+    {
+      "name": "foreign origin blocked",
+      "status": 403,
+      "result": "origin-not-allowed"
+    },
+    {
+      "name": "invalid wallet blocked",
+      "status": 400,
+      "result": "invalid-wallet"
+    },
+    {
+      "name": "wrong method blocked",
+      "status": 405,
+      "result": "method-not-allowed"
+    },
+    {
+      "name": "unknown bearer blocked",
+      "status": 401,
+      "result": "invalid-session"
+    },
+    {
+      "name": "server challenge issued",
+      "status": 200,
+      "result": "ok"
+    },
+    {
+      "name": "valid ephemeral signature requires NFTree",
+      "status": 403,
+      "result": "nftree-required"
+    }
+  ],
+  "playerWalletUsed": false,
+  "transactions": 0,
+  "progressCreditCreated": false
+}

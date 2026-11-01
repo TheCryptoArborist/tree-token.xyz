@@ -1,0 +1,26 @@
+.nftree-participation {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  padding: .5rem .75rem;
+  color: #c4ddce;
+  background: #071a13;
+  border-bottom: 1px solid #294b38;
+  font-size: .75rem;
+  line-height: 1.5;
+}
+.nftree-participation p { flex: 1 1 14rem; margin: 0; }
+.nftree-participation button {
+  min-height: 44px;
+  min-width: 44px;
+  padding: .5rem .75rem;
+  color: #fff0b8;
+  background: #142c20;
+  border: 1px solid #d6b966;
+  border-radius: 6px;
+  font: inherit;
+  cursor: pointer;
+}
+.nftree-participation button:focus-visible { outline: 3px solid #9ef0bf; outline-offset: 3px; }

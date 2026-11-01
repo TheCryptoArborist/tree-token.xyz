@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-10-31T21:58:30Z",
+  "scope": "Development-only TREE FORCE first-wave participation database validation",
+  "development": {
+    "projectRef": "charuqbsxmrirpxciljn",
+    "name": "knowledge-trial-v3-safe",
+    "parentProjectRef": "lehswszuekjqottolmsf",
+    "isDefault": false,
+    "status": "ACTIVE_HEALTHY"
+  },
+  "preflight": {
+    "priorMigrations": [
+      {
+        "version": "20261031211421",
+        "name": "arcade_growth"
+      },
+      {
+        "version": "20261031211620",
+        "name": "arcade_growth_challenge_rate_scope"
+      }
+    ],
+    "existingConstraintCatalogVerified": true,
+    "correctedBeforeApplication": "Replaced legacy game/proof constraint arcade_growth_game_events_check1 while preserving arcade_growth_game_events_check, the original completed_at UTC date invariant."
+  },
+  "migration": {
+    "localPath": "supabase/migrations/20261031215156_arcade_growth_treeforce_participation.sql",
+    "localSha256": "bb8aa3c0ebdd6514715b799ef68732dc43f3eb635f57dec54bea847adbd11445",
+    "appliedVersion": "20261031215745",
+    "name": "arcade_growth_treeforce_participation",
+    "remoteStatementCount": 1,
+    "remoteStatementsSha256": "bb8aa3c0ebdd6514715b799ef68732dc43f3eb635f57dec54bea847adbd11445",
+    "remoteSqlExactlyMatchesLocal": true
+  },
+  "tests": [
+    {
+      "path": "tests/arcade-growth-treeforce-database.sql",
+      "sha256": "1e403ab132338a0256b415365a2f7f31c71ac94abc2b29f2c7e8b2a4afb9fa94",
+      "result": "passed; TREE FORCE participation fixtures rolled back",
+      "transaction": "BEGIN / ROLLBACK",
+      "checks": [
+        "Service-role-only functions and table grants; SECURITY INVOKER and empty search_path",
+        "Seven existing private tables retain RLS",
+        "Original UTC date constraint remains enforced",
+        "First accepted run saves attendance, one daily quest and optional TREE FORCE participation",
+        "Same original run and paid-continuation retry preserve original date/time and do not duplicate credit",
+        "Original run cannot be assigned to another wallet; unique index independently enforces this",
+        "Multiple runs remain distinct while check-in and daily quest stay unique per wallet and day",
+        "Expired/nonfinite leases and stale/future verification timestamps fail closed",
+        "Prior-day saved run retry returns its original receipt without awarding the current day",
+        "Garden ingestion rejects client-supplied TREE FORCE events",
+        "All three original Garden games still award exactly one original Passport badge; TREE FORCE remains optional",
+        "Monthly optional progress resets while previously earned badges remain"
+      ]
+    },
+    {
+      "path": "tests/arcade-growth-database.sql",
+      "sha256": "3c3daf025d2d98f16389c55974db27b111e0f361a454ae8e4e50f01e860beb2a",
+      "result": "passed; all synthetic records rolled back",
+      "transaction": "BEGIN / ROLLBACK",
+      "checks": [
+        "Original challenge/session replay protections",
+        "Original check-in and official Garden result idempotence",
+        "Original monthly requirements and permanent badges",
+        "Challenge quota scoped to wallet plus request fingerprint"
+      ]
+    }
+  ],
+  "postflight": {
+    "rlsTables": 7,
+    "eventRows": 0,
+    "syntheticEventRowsRemaining": 0,
+    "gameEventConstraints": [
+      {
+        "name": "arcade_growth_game_events_check",
+        "definition": "CHECK (date_key = (completed_at AT TIME ZONE 'UTC'::text)::date)"
+      },
+      {
+        "name": "arcade_growth_game_events_check1",
+        "definition": "CHECK (source = 'garden-battles'::text AND evidence_kind = 'completed-result'::text AND (game_id = 'arborist-trials'::text AND source_id ~~ 'trial:%'::text AND proof_digest IS NULL OR (game_id = ANY (ARRAY['garden-bot'::text, 'pvp'::text])) AND source_id ~~ 'battle:%'::text AND proof_digest IS NOT NULL) OR source = 'treeforce89'::text AND game_id = 'treeforce89'::text AND evidence_kind = 'authenticated-run-start'::text AND source_id ~ '^run:grove-[a-f0-9]{32}:0x[a-f0-9]{64}$'::text AND proof_digest IS NULL)"
+      },
+      {
+        "name": "arcade_growth_game_events_check2",
+        "definition": "CHECK (\"right\"(source_id, 67) = (':'::text || wallet))"
+      },
+      {
+        "name": "arcade_growth_game_events_evidence_kind_check",
+        "definition": "CHECK (evidence_kind = ANY (ARRAY['completed-result'::text, 'authenticated-run-start'::text]))"
+      },
+      {
+        "name": "arcade_growth_game_events_game_id_check",
+        "definition": "CHECK (game_id = ANY (ARRAY['garden-bot'::text, 'pvp'::text, 'arborist-trials'::text, 'treeforce89'::text]))"
+      },
+      {
+        "name": "arcade_growth_game_events_pkey",
+        "definition": "PRIMARY KEY (source, source_id)"
+      },
+      {
+        "name": "arcade_growth_game_events_proof_digest_check",
+        "definition": "CHECK (proof_digest ~ '^[1-9A-HJ-NP-Za-km-z]{32,44}$'::text)"
+      },
+      {
+        "name": "arcade_growth_game_events_source_check",
+        "definition": "CHECK (source = ANY (ARRAY['garden-battles'::text, 'treeforce89'::text]))"
+      },
+      {
+        "name": "arcade_growth_game_events_source_id_check",
+        "definition": "CHECK (length(source_id) >= 3 AND length(source_id) <= 200 AND source_id ~ '^[a-zA-Z0-9:_-]+$'::text)"
+      },
+      {
+        "name": "arcade_growth_game_events_wallet_check",
+        "definition": "CHECK (wallet ~ '^0x[0-9a-f]{64}$'::text AND wallet <> ('0x'::text || repeat('0'::text, 64)))"
+      }
+    ],
+    "originalRunIndex": "CREATE UNIQUE INDEX arcade_growth_treeforce_original_run_idx ON private.arcade_growth_game_events USING btree (split_part(source_id, ':'::text, 2)) WHERE (source = 'treeforce89'::text)",
+    "securityAdvisories": [
+      {
+        "name": "rls_enabled_no_policy",
+        "level": "INFO",
+        "count": 25,
+        "dailyGrowthFindings": [
+          "arcade_growth_checkins",
+          "arcade_growth_daily_quests",
+          "arcade_growth_game_events",
+          "arcade_growth_month_rules",
+          "arcade_growth_monthly_badges",
+          "arcade_growth_sessions",
+          "arcade_growth_wallet_challenges"
+        ]
+      }
+    ],
+    "securityInterpretation": "INFO-only RLS-without-policy findings are expected for deliberately private tables used only through the service role; no new public grant or security warning."
+  },
+  "boundaries": {
+    "productionProjectRef": "lehswszuekjqottolmsf",
+    "productionAccess": "Read-only catalog confirmation: all seven existing Daily Growth tables retain RLS.",
+    "productionMutations": false,
+    "isolatedTreeforceDatabaseMutations": false,
+    "environmentMutations": false,
+    "existingGamePaymentTablesModified": false,
+    "deploymentsPerformed": false,
+    "frozenRequiredGames": [
+      "garden-bot",
+      "pvp",
+      "arborist-trials"
+    ],
+    "newOptionalEligibleGame": "treeforce89"
+  },
+  "review": {
+    "status": "One connection-string identity hardening recommendation sent to handler owner; no other auth or read-only boundary defect found.",
+    "finding": "Pinned pg-connection-string 2.14.1 permits host/port/user/password query parameters to override URL authority. Reject non-allowlisted transport parameters before relying on the pinned URL identity.",
+    "knownBoundary": "The game database and Supabase do not share an atomic transaction. The handler rereads the exact bearer/run after ownership verification immediately before the RPC; the RPC independently checks trusted expiry and a 15-second verification freshness window. This is authenticated participation, not authoritative proof of completed gameplay."
+  }
+}

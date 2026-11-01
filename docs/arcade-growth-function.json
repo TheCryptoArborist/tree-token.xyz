@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "packager": {
+    "name": "@netlify/zip-it-and-ship-it",
+    "version": "16.3.0"
+  },
+  "name": "arcade-growth",
+  "path": ".netlify/arcade-growth-functions/arcade-growth.zip",
+  "sha256": "9cb883fd1f22de64d4c3c6b6fc82a34ae1929cd927afdbb63201317cae12dc0b",
+  "runtimeVersion": "nodejs22.x",
+  "invocationMode": "stream",
+  "buildData": {
+    "bootstrapVersion": "2.24.0",
+    "runtimeAPIVersion": 2
+  },
+  "routes": [
+    {
+      "pattern": "/api/arcade-growth",
+      "literal": "/api/arcade-growth",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    }
+  ],
+  "trafficRules": {
+    "action": {
+      "type": "rate_limit",
+      "config": {
+        "rateLimitConfig": {
+          "windowLimit": 60,
+          "windowSize": 60,
+          "algorithm": "sliding_window"
+        },
+        "aggregate": {
+          "keys": [
+            {
+              "type": "domain"
+            },
+            {
+              "type": "ip"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "sourceFiles": [
+    {
+      "path": "netlify/functions/arcade-growth.ts",
+      "sha256": "c8b276360ed299667e7576e1acf977e35c83e7562e0fd41837ec5d67a1841d22"
+    },
+    {
+      "path": "netlify/functions/nftree-wallet.ts",
+      "sha256": "8022f7254ef2673740fb11186c9e8573918b9f351dc767dd9b32095424c4e09e"
+    },
+    {
+      "path": "netlify/lib/arcade-growth-core.ts",
+      "sha256": "0a0e79fa7a9f2f18c8b9c5f4c2abbc57d4c9897dead5213d17552b3e55e2272c"
+    },
+    {
+      "path": "netlify/lib/arcade-growth-games.ts",
+      "sha256": "4733456507402268350fead99dca643728c10c5109ab1aff651753d3f4b7ec9c"
+    },
+    {
+      "path": "netlify/lib/arcade-growth-store.ts",
+      "sha256": "f21600262f7f7f3211ee5358bf42ebddc5e5144156c811f4a3c18de9f22548b5"
+    },
+    {
+      "path": "netlify/lib/nftree-wallet-verification.ts",
+      "sha256": "d4c7f26fc5067d9e24e8c3dc8d56fe0e991d60a6c851861502e30ff93a08a860"
+    },
+    {
+      "path": "netlify/lib/tree-nftree-overview.ts",
+      "sha256": "505ad626c7fb43c53af847159324cb38a37f4ff04a09eed2585c778f06a0c241"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "f4c0726549471554450a38e62caa3d14f9b90404d1ad5164113f0a366b9b57eb"
+    },
+    {
+      "path": "package.json",
+      "sha256": "2ece6ffd478948d8a037103bb1f874e5643e761757362b091d692fc1b5a0dbca"
+    }
+  ]
+}

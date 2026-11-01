@@ -1,0 +1,132 @@
+{
+  "commit": "dbafaefb60ad53e764b65db128c360111fbd9e0c",
+  "synthetic": true,
+  "measurements": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "panel": {
+        "top": 418.609375,
+        "bottom": 1392.390625,
+        "width": 1120,
+        "height": 973.78125
+      },
+      "hero": {
+        "top": 73,
+        "bottom": 403.609375,
+        "width": 1376,
+        "height": 330.609375
+      },
+      "cabinetSection": {
+        "top": 1424.390625,
+        "bottom": 3173.546875,
+        "width": 1376,
+        "height": 1749.15625
+      },
+      "firstCabinet": {
+        "top": 1592.4375,
+        "bottom": 2000.28125,
+        "width": 327.5,
+        "height": 407.84375
+      },
+      "scrollWidth": 1440
+    },
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "panel": {
+        "top": 418.609375,
+        "bottom": 1392.390625,
+        "width": 1120,
+        "height": 973.78125
+      },
+      "hero": {
+        "top": 73,
+        "bottom": 403.609375,
+        "width": 1216,
+        "height": 330.609375
+      },
+      "cabinetSection": {
+        "top": 1424.390625,
+        "bottom": 3189.640625,
+        "width": 1216,
+        "height": 1765.25
+      },
+      "firstCabinet": {
+        "top": 1592.4375,
+        "bottom": 2000.28125,
+        "width": 287.5,
+        "height": 407.84375
+      },
+      "scrollWidth": 1280
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "panel": {
+        "top": 574.5,
+        "bottom": 2401,
+        "width": 362,
+        "height": 1826.5
+      },
+      "hero": {
+        "top": 117,
+        "bottom": 562.5,
+        "width": 362,
+        "height": 445.5
+      },
+      "cabinetSection": {
+        "top": 2433,
+        "bottom": 7314.359375,
+        "width": 362,
+        "height": 4881.359375
+      },
+      "firstCabinet": {
+        "top": 2639.734375,
+        "bottom": 3039.625,
+        "width": 362,
+        "height": 399.890625
+      },
+      "scrollWidth": 390
+    },
+    {
+      "viewport": {
+        "width": 320,
+        "height": 844
+      },
+      "panel": {
+        "top": 639.71875,
+        "bottom": 2538.109375,
+        "width": 300,
+        "height": 1898.390625
+      },
+      "hero": {
+        "top": 164,
+        "bottom": 627.71875,
+        "width": 300,
+        "height": 463.71875
+      },
+      "cabinetSection": {
+        "top": 2570.109375,
+        "bottom": 7413.578125,
+        "width": 300,
+        "height": 4843.46875
+      },
+      "firstCabinet": {
+        "top": 2776.84375,
+        "bottom": 3152.578125,
+        "width": 300,
+        "height": 375.734375
+      },
+      "scrollWidth": 320
+    }
+  ],
+  "external": [],
+  "errors": []
+}

@@ -1,0 +1,165 @@
+{
+  "result": "passed",
+  "url": "https://tree-token.xyz/play/",
+  "deployId": "6ae67337da46ecbf141c68f5",
+  "publishedAt": "2026-10-31T23:02:07.676Z",
+  "locked": true,
+  "sourceCommit": "f5664d1b73ccaa46ca6b4b28f48e3c7f0e3f2ff4",
+  "sourceBranch": "feature/daily-growth-compact-20261031",
+  "sourceTree": "773ed86e6b91a9f2a23e52ca5fb6b15d0f201923",
+  "previousDeployId": "6ae66f6c82e32369a34b6d1d",
+  "designReference": "Existing /assets/arcade/tree-arcade-social.jpg matching the user supplied TREE Arcade artwork",
+  "changes": [
+    "Compact Daily Growth strip with check-in/auth actions always accessible",
+    "Detailed quests, calendar, Passport and badges collapsed by default",
+    "Existing TREE hero, Garden Bot, NFTree, crests and game artwork replace generic illustrations",
+    "Gold and leaf-green accents with the existing forest artwork",
+    "Shorter hero and game headings keep the first cabinet inside all four tested viewports"
+  ],
+  "publicationScope": {
+    "publicPaths": 241,
+    "changedExistingPaths": [
+      "/play/index.html",
+      "/scripts/arcade-daily-growth.js",
+      "/styles/tree-arcade-suite.css"
+    ],
+    "otherStaticFilesUnchanged": 238,
+    "functionRecordsUnchanged": 40,
+    "schedulesUnchanged": 5,
+    "backendUnchanged": true,
+    "rootDependenciesUnchanged": true,
+    "walletAdaptersUnchanged": true,
+    "existingArtworkBytesUnchanged": true,
+    "netlifyMigrations": 0
+  },
+  "validation": {
+    "controllerCases": 29,
+    "releaseGuardCases": 13,
+    "localBrowserChecks": 40,
+    "candidateBrowserChecks": 26,
+    "canonicalBrowserChecks": 26,
+    "canonicalExactApprovedFiles": 3,
+    "canonicalGetResponses": 20,
+    "allCanonicalResponses200": true,
+    "canonicalPageErrors": [],
+    "canonicalConsoleErrors": [],
+    "canonicalBlockedRequests": []
+  },
+  "canonicalMeasurements": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "panel": {
+        "top": 267,
+        "bottom": 414,
+        "height": 147,
+        "width": 1376
+      },
+      "hero": {
+        "top": 65,
+        "bottom": 264,
+        "height": 199,
+        "width": 1120
+      },
+      "firstCabinet": {
+        "top": 525.578125,
+        "bottom": 933.421875,
+        "height": 407.84375,
+        "width": 327.5
+      },
+      "detailsOpen": false
+    },
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "panel": {
+        "top": 267,
+        "bottom": 414,
+        "height": 147,
+        "width": 1216
+      },
+      "hero": {
+        "top": 65,
+        "bottom": 264,
+        "height": 199,
+        "width": 1120
+      },
+      "firstCabinet": {
+        "top": 525.578125,
+        "bottom": 933.421875,
+        "height": 407.84375,
+        "width": 287.5
+      },
+      "detailsOpen": false
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "panel": {
+        "top": 261.6875,
+        "bottom": 478.875,
+        "height": 217.1875,
+        "width": 362
+      },
+      "hero": {
+        "top": 98,
+        "bottom": 259.6875,
+        "height": 161.6875,
+        "width": 362
+      },
+      "firstCabinet": {
+        "top": 584.265625,
+        "bottom": 984.15625,
+        "height": 399.890625,
+        "width": 362
+      },
+      "detailsOpen": false
+    },
+    {
+      "viewport": {
+        "width": 320,
+        "height": 844
+      },
+      "panel": {
+        "top": 278.90625,
+        "bottom": 492.09375,
+        "height": 213.1875,
+        "width": 300
+      },
+      "hero": {
+        "top": 98,
+        "bottom": 276.90625,
+        "height": 178.90625,
+        "width": 300
+      },
+      "firstCabinet": {
+        "top": 597.484375,
+        "bottom": 973.21875,
+        "height": 375.734375,
+        "width": 300
+      },
+      "detailsOpen": false
+    }
+  ],
+  "limitations": [
+    "Hosted browser checks use actual signed-out state and the no-installed-wallet dialog. Saved progress and detected-wallet choices were verified in synthetic fixtures and controller tests.",
+    "No real wallet account, signature, transaction, or production progress write was used. Layout verification does not establish wallet-provider warning status.",
+    "Hosted HTML comparison removes only the exact pre-existing hosting snippet calibrated against the prior deployment; CSS and JavaScript require byte-exact matches.",
+    "Raw browser reports retain original temporary screenshot paths; representative canonical images are committed in docs/review."
+  ],
+  "artifacts": {
+    "publicationManifest": "docs/daily-growth-compact-published.json",
+    "localBrowser": "docs/daily-growth-compact-browser.json",
+    "baselineLayout": "docs/review/daily-growth-compact-baseline.json",
+    "canonicalFiles": "docs/review/daily-growth-compact-canonical-files.json",
+    "canonicalBrowser": "docs/review/daily-growth-compact-canonical-browser.json",
+    "canonicalDesktop": "docs/review/daily-growth-compact-canonical-desktop.png",
+    "canonicalMobile": "docs/review/daily-growth-compact-canonical-mobile.png"
+  }
+}

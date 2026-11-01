@@ -1,0 +1,577 @@
+{
+  "passed": true,
+  "checkedAt": "2026-10-31T23:01:29.120Z",
+  "target": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/play/",
+  "label": "candidate",
+  "actualHostedCode": true,
+  "synthetic": false,
+  "noWalletConnected": true,
+  "noSignatures": true,
+  "noPostsAllowed": true,
+  "measurements": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "panel": {
+        "top": 267,
+        "bottom": 414,
+        "height": 147,
+        "width": 1376
+      },
+      "hero": {
+        "top": 65,
+        "bottom": 264,
+        "height": 199,
+        "width": 1120
+      },
+      "firstCabinet": {
+        "top": 525.578125,
+        "bottom": 933.421875,
+        "height": 407.84375,
+        "width": 327.5
+      },
+      "detailsOpen": false
+    },
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "panel": {
+        "top": 267,
+        "bottom": 414,
+        "height": 147,
+        "width": 1216
+      },
+      "hero": {
+        "top": 65,
+        "bottom": 264,
+        "height": 199,
+        "width": 1120
+      },
+      "firstCabinet": {
+        "top": 525.578125,
+        "bottom": 933.421875,
+        "height": 407.84375,
+        "width": 287.5
+      },
+      "detailsOpen": false
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "panel": {
+        "top": 261.6875,
+        "bottom": 478.875,
+        "height": 217.1875,
+        "width": 362
+      },
+      "hero": {
+        "top": 98,
+        "bottom": 259.6875,
+        "height": 161.6875,
+        "width": 362
+      },
+      "firstCabinet": {
+        "top": 584.265625,
+        "bottom": 984.15625,
+        "height": 399.890625,
+        "width": 362
+      },
+      "detailsOpen": false
+    },
+    {
+      "viewport": {
+        "width": 320,
+        "height": 844
+      },
+      "panel": {
+        "top": 278.90625,
+        "bottom": 492.09375,
+        "height": 213.1875,
+        "width": 300
+      },
+      "hero": {
+        "top": 98,
+        "bottom": 276.90625,
+        "height": 178.90625,
+        "width": 300
+      },
+      "firstCabinet": {
+        "top": 597.484375,
+        "bottom": 973.21875,
+        "height": 375.734375,
+        "width": 300
+      },
+      "detailsOpen": false
+    }
+  ],
+  "checks": [
+    {
+      "name": "TLS independently verified with configured environment CA",
+      "authorized": true,
+      "status": 200
+    },
+    {
+      "name": "Actual signed-out state has no invented progress",
+      "state": "signed-out",
+      "summary": "Make every visit count.",
+      "summaryMeterHidden": true,
+      "summaryValue": null,
+      "visit": "—",
+      "quest": "Garden Bot"
+    },
+    {
+      "name": "1440 collapsed",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "name": "1440 expanded today",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "name": "1440 expanded month",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "name": "1440 expanded badges",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "name": "1440 actual ecosystem artwork",
+      "art": [
+        {
+          "src": "/assets/tree-hero-poster.webp",
+          "loaded": true
+        },
+        {
+          "src": "/assets/tree-command-logo-v2-512.png",
+          "loaded": true
+        },
+        {
+          "src": "/assets/arcade/garden-bot-poster.webp",
+          "loaded": true
+        },
+        {
+          "src": "/assets/arcade/arboretum-poster.webp",
+          "loaded": true
+        },
+        {
+          "src": "/assets/profile-nftree-art.jpg",
+          "loaded": true
+        },
+        {
+          "src": "/assets/tree-command-logo-v2-512.png",
+          "loaded": true
+        },
+        {
+          "src": "/assets/arcade/garden-bot-poster.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "name": "1440 actual no-wallet picker",
+      "open": true,
+      "noWalletVisible": true,
+      "choices": 0,
+      "focusInside": true,
+      "top": 303.8125,
+      "bottom": 596.1875,
+      "viewport": 900
+    },
+    {
+      "name": "1280 collapsed",
+      "width": 1280,
+      "scroll": 1280
+    },
+    {
+      "name": "1280 expanded today",
+      "width": 1280,
+      "scroll": 1280
+    },
+    {
+      "name": "1280 expanded month",
+      "width": 1280,
+      "scroll": 1280
+    },
+    {
+      "name": "1280 expanded badges",
+      "width": 1280,
+      "scroll": 1280
+    },
+    {
+      "name": "1280 actual ecosystem artwork",
+      "art": [
+        {
+          "src": "/assets/tree-hero-poster.webp",
+          "loaded": true
+        },
+        {
+          "src": "/assets/tree-command-logo-v2-512.png",
+          "loaded": true
+        },
+        {
+          "src": "/assets/arcade/garden-bot-poster.webp",
+          "loaded": true
+        },
+        {
+          "src": "/assets/arcade/arboretum-poster.webp",
+          "loaded": true
+        },
+        {
+          "src": "/assets/profile-nftree-art.jpg",
+          "loaded": true
+        },
+        {
+          "src": "/assets/tree-command-logo-v2-512.png",
+          "loaded": true
+        },
+        {
+          "src": "/assets/arcade/garden-bot-poster.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "name": "1280 actual no-wallet picker",
+      "open": true,
+      "noWalletVisible": true,
+      "choices": 0,
+      "focusInside": true,
+      "top": 253.8125,
+      "bottom": 546.1875,
+      "viewport": 800
+    },
+    {
+      "name": "390 collapsed",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "name": "390 expanded today",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "name": "390 expanded month",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "name": "390 expanded badges",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "name": "390 actual ecosystem artwork",
+      "art": [
+        {
+          "src": "/assets/tree-hero-poster.webp",
+          "loaded": true
+        },
+        {
+          "src": "/assets/tree-command-logo-v2-512.png",
+          "loaded": true
+        },
+        {
+          "src": "/assets/arcade/garden-bot-poster.webp",
+          "loaded": true
+        },
+        {
+          "src": "/assets/arcade/arboretum-poster.webp",
+          "loaded": true
+        },
+        {
+          "src": "/assets/profile-nftree-art.jpg",
+          "loaded": true
+        },
+        {
+          "src": "/assets/tree-command-logo-v2-512.png",
+          "loaded": true
+        },
+        {
+          "src": "/assets/arcade/garden-bot-poster.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "name": "390 actual no-wallet picker",
+      "open": true,
+      "noWalletVisible": true,
+      "choices": 0,
+      "focusInside": true,
+      "top": 531.53125,
+      "bottom": 844,
+      "viewport": 844
+    },
+    {
+      "name": "320 collapsed",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "name": "320 expanded today",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "name": "320 expanded month",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "name": "320 expanded badges",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "name": "320 actual ecosystem artwork",
+      "art": [
+        {
+          "src": "/assets/tree-hero-poster.webp",
+          "loaded": true
+        },
+        {
+          "src": "/assets/tree-command-logo-v2-512.png",
+          "loaded": true
+        },
+        {
+          "src": "/assets/arcade/garden-bot-poster.webp",
+          "loaded": true
+        },
+        {
+          "src": "/assets/arcade/arboretum-poster.webp",
+          "loaded": true
+        },
+        {
+          "src": "/assets/profile-nftree-art.jpg",
+          "loaded": true
+        },
+        {
+          "src": "/assets/tree-command-logo-v2-512.png",
+          "loaded": true
+        },
+        {
+          "src": "/assets/arcade/garden-bot-poster.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "name": "320 actual no-wallet picker",
+      "open": true,
+      "noWalletVisible": true,
+      "choices": 0,
+      "focusInside": true,
+      "top": 516.9375,
+      "bottom": 844,
+      "viewport": 844
+    }
+  ],
+  "screenshots": [
+    "/tmp/daily-growth-compact-hosted/candidate-signedout-1440.png",
+    "/tmp/daily-growth-compact-hosted/candidate-expanded-desktop.png",
+    "/tmp/daily-growth-compact-hosted/candidate-no-wallet-1440.png",
+    "/tmp/daily-growth-compact-hosted/candidate-signedout-1280.png",
+    "/tmp/daily-growth-compact-hosted/candidate-signedout-390.png",
+    "/tmp/daily-growth-compact-hosted/candidate-signedout-320.png",
+    "/tmp/daily-growth-compact-hosted/candidate-no-wallet-320.png"
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/play/",
+      "resource": "document"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/styles/tree-arcade-suite.css",
+      "resource": "stylesheet"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/assets/tree-token-logo-official.webp",
+      "resource": "image"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/assets/arcade/tree-arcade-social.jpg",
+      "resource": "image"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/assets/tree-hero-poster.webp",
+      "resource": "image"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+      "resource": "image"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/assets/arcade/tree-force-89-poster.webp",
+      "resource": "image"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/assets/arcade/arboretum-poster.webp",
+      "resource": "image"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/assets/arcade/garden-battles-gameplay.jpg",
+      "resource": "image"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/scripts/arcade-nftree-access.js",
+      "resource": "script"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/scripts/arcade-daily-growth.js",
+      "resource": "script"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/assets/tree-arcade-world-bg-v2.webp",
+      "resource": "image"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/assets/arcade/garden-bot-poster.webp",
+      "resource": "image"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/assets/arcade/pvp-battle-poster.webp",
+      "resource": "image"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/assets/arcade/arborist-trials-poster.webp",
+      "resource": "image"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/assets/arcade/canopy-clash-poster.webp",
+      "resource": "image"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/scripts/arcade-nftree-access-core.mjs",
+      "resource": "script"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/assets/arcade/arcade-growth-wallet.js",
+      "resource": "script"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/assets/profile-nftree-art.jpg",
+      "resource": "image"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/api/arcade-growth?action=status",
+      "resource": "fetch"
+    }
+  ],
+  "responses": [
+    {
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/play/",
+      "status": 200
+    },
+    {
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/assets/tree-token-logo-official.webp",
+      "status": 200
+    },
+    {
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/styles/tree-arcade-suite.css",
+      "status": 200
+    },
+    {
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/assets/tree-hero-poster.webp",
+      "status": 200
+    },
+    {
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/scripts/arcade-daily-growth.js",
+      "status": 200
+    },
+    {
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/assets/arcade/tree-force-89-poster.webp",
+      "status": 200
+    },
+    {
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/assets/arcade/arboretum-poster.webp",
+      "status": 200
+    },
+    {
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/scripts/arcade-nftree-access.js",
+      "status": 200
+    },
+    {
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/assets/arcade/garden-battles-gameplay.jpg",
+      "status": 200
+    },
+    {
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+      "status": 200
+    },
+    {
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/assets/arcade/tree-arcade-social.jpg",
+      "status": 200
+    },
+    {
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/assets/tree-arcade-world-bg-v2.webp",
+      "status": 200
+    },
+    {
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/assets/arcade/garden-bot-poster.webp",
+      "status": 200
+    },
+    {
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/assets/arcade/canopy-clash-poster.webp",
+      "status": 200
+    },
+    {
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/assets/arcade/pvp-battle-poster.webp",
+      "status": 200
+    },
+    {
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/assets/arcade/arborist-trials-poster.webp",
+      "status": 200
+    },
+    {
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/scripts/arcade-nftree-access-core.mjs",
+      "status": 200
+    },
+    {
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/assets/arcade/arcade-growth-wallet.js",
+      "status": 200
+    },
+    {
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/assets/profile-nftree-art.jpg",
+      "status": 200
+    },
+    {
+      "url": "https://6ae67337da46ecbf141c68f5--tree-token.netlify.app/api/arcade-growth?action=status",
+      "status": 200
+    }
+  ],
+  "blocked": [],
+  "pageErrors": [],
+  "consoleErrors": []
+}

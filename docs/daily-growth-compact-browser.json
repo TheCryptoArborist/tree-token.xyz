@@ -1,0 +1,656 @@
+{
+  "passed": true,
+  "synthetic": true,
+  "fixtureScope": "In-memory progress and discovered-wallet stand-ins; no real account, signature, POST or external requests",
+  "measurements": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "panel": {
+        "top": 267,
+        "bottom": 414,
+        "width": 1376,
+        "height": 147
+      },
+      "hero": {
+        "top": 65,
+        "bottom": 264,
+        "width": 1120,
+        "height": 199
+      },
+      "cabinetSection": {
+        "top": 434,
+        "bottom": 2106.6875,
+        "width": 1376,
+        "height": 1672.6875
+      },
+      "firstCabinet": {
+        "top": 525.578125,
+        "bottom": 933.421875,
+        "width": 327.5,
+        "height": 407.84375
+      },
+      "scrollWidth": 1440,
+      "detailsOpen": false,
+      "mode": "signedout"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "panel": {
+        "top": 267,
+        "bottom": 414,
+        "width": 1376,
+        "height": 147
+      },
+      "hero": {
+        "top": 65,
+        "bottom": 264,
+        "width": 1120,
+        "height": 199
+      },
+      "cabinetSection": {
+        "top": 434,
+        "bottom": 2106.6875,
+        "width": 1376,
+        "height": 1672.6875
+      },
+      "firstCabinet": {
+        "top": 525.578125,
+        "bottom": 933.421875,
+        "width": 327.5,
+        "height": 407.84375
+      },
+      "scrollWidth": 1440,
+      "detailsOpen": false,
+      "mode": "saved"
+    },
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "panel": {
+        "top": 267,
+        "bottom": 414,
+        "width": 1216,
+        "height": 147
+      },
+      "hero": {
+        "top": 65,
+        "bottom": 264,
+        "width": 1120,
+        "height": 199
+      },
+      "cabinetSection": {
+        "top": 434,
+        "bottom": 2122.78125,
+        "width": 1216,
+        "height": 1688.78125
+      },
+      "firstCabinet": {
+        "top": 525.578125,
+        "bottom": 933.421875,
+        "width": 287.5,
+        "height": 407.84375
+      },
+      "scrollWidth": 1280,
+      "detailsOpen": false,
+      "mode": "signedout"
+    },
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "panel": {
+        "top": 267,
+        "bottom": 414,
+        "width": 1216,
+        "height": 147
+      },
+      "hero": {
+        "top": 65,
+        "bottom": 264,
+        "width": 1120,
+        "height": 199
+      },
+      "cabinetSection": {
+        "top": 434,
+        "bottom": 2122.78125,
+        "width": 1216,
+        "height": 1688.78125
+      },
+      "firstCabinet": {
+        "top": 525.578125,
+        "bottom": 933.421875,
+        "width": 287.5,
+        "height": 407.84375
+      },
+      "scrollWidth": 1280,
+      "detailsOpen": false,
+      "mode": "saved"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "panel": {
+        "top": 261.6875,
+        "bottom": 478.875,
+        "width": 362,
+        "height": 217.1875
+      },
+      "hero": {
+        "top": 98,
+        "bottom": 259.6875,
+        "width": 362,
+        "height": 161.6875
+      },
+      "cabinetSection": {
+        "top": 493.875,
+        "bottom": 5258.890625,
+        "width": 362,
+        "height": 4765.015625
+      },
+      "firstCabinet": {
+        "top": 584.265625,
+        "bottom": 984.15625,
+        "width": 362,
+        "height": 399.890625
+      },
+      "scrollWidth": 390,
+      "detailsOpen": false,
+      "mode": "signedout"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "panel": {
+        "top": 261.6875,
+        "bottom": 471.6875,
+        "width": 362,
+        "height": 210
+      },
+      "hero": {
+        "top": 98,
+        "bottom": 259.6875,
+        "width": 362,
+        "height": 161.6875
+      },
+      "cabinetSection": {
+        "top": 486.6875,
+        "bottom": 5251.703125,
+        "width": 362,
+        "height": 4765.015625
+      },
+      "firstCabinet": {
+        "top": 577.078125,
+        "bottom": 976.96875,
+        "width": 362,
+        "height": 399.890625
+      },
+      "scrollWidth": 390,
+      "detailsOpen": false,
+      "mode": "saved"
+    },
+    {
+      "viewport": {
+        "width": 320,
+        "height": 844
+      },
+      "panel": {
+        "top": 278.90625,
+        "bottom": 492.09375,
+        "width": 300,
+        "height": 213.1875
+      },
+      "hero": {
+        "top": 98,
+        "bottom": 276.90625,
+        "width": 300,
+        "height": 178.90625
+      },
+      "cabinetSection": {
+        "top": 507.09375,
+        "bottom": 5234.21875,
+        "width": 300,
+        "height": 4727.125
+      },
+      "firstCabinet": {
+        "top": 597.484375,
+        "bottom": 973.21875,
+        "width": 300,
+        "height": 375.734375
+      },
+      "scrollWidth": 320,
+      "detailsOpen": false,
+      "mode": "signedout"
+    },
+    {
+      "viewport": {
+        "width": 320,
+        "height": 844
+      },
+      "panel": {
+        "top": 278.90625,
+        "bottom": 496.90625,
+        "width": 300,
+        "height": 218
+      },
+      "hero": {
+        "top": 98,
+        "bottom": 276.90625,
+        "width": 300,
+        "height": 178.90625
+      },
+      "cabinetSection": {
+        "top": 511.90625,
+        "bottom": 5239.03125,
+        "width": 300,
+        "height": 4727.125
+      },
+      "firstCabinet": {
+        "top": 602.296875,
+        "bottom": 978.03125,
+        "width": 300,
+        "height": 375.734375
+      },
+      "scrollWidth": 320,
+      "detailsOpen": false,
+      "mode": "saved"
+    }
+  ],
+  "checks": [
+    {
+      "name": "1440 signed-out",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "name": "1440 unknown summary contains no invented progress",
+      "hidden": true,
+      "now": null
+    },
+    {
+      "name": "1440 open progress",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "name": "1440 dialog",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "name": "1440 native wallet dialog",
+      "top": 227.40625,
+      "bottom": 672.59375,
+      "height": 445.1875,
+      "viewport": 900
+    },
+    {
+      "name": "1440 saved",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "name": "1440 saved today",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "name": "1440 saved month",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "name": "1440 saved badges",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "name": "1440 ecosystem artwork",
+      "visibleArt": [
+        {
+          "src": "/assets/tree-hero-poster.webp",
+          "complete": true
+        },
+        {
+          "src": "/assets/tree-command-logo-v2-512.png",
+          "complete": true
+        },
+        {
+          "src": "/assets/arcade/garden-bot-poster.webp",
+          "complete": true
+        },
+        {
+          "src": "/assets/arcade/arboretum-poster.webp",
+          "complete": true
+        },
+        {
+          "src": "/assets/profile-nftree-art.jpg",
+          "complete": true
+        },
+        {
+          "src": "/assets/tree-command-logo-v2-512.png",
+          "complete": true
+        },
+        {
+          "src": "/assets/arcade/arboretum-poster.webp",
+          "complete": true
+        },
+        {
+          "src": "/assets/arcade/garden-bot-poster.webp",
+          "complete": true
+        },
+        {
+          "src": "/assets/tree-command-logo-v2-512.png",
+          "complete": true
+        }
+      ]
+    },
+    {
+      "name": "1280 signed-out",
+      "width": 1280,
+      "scroll": 1280
+    },
+    {
+      "name": "1280 unknown summary contains no invented progress",
+      "hidden": true,
+      "now": null
+    },
+    {
+      "name": "1280 open progress",
+      "width": 1280,
+      "scroll": 1280
+    },
+    {
+      "name": "1280 dialog",
+      "width": 1280,
+      "scroll": 1280
+    },
+    {
+      "name": "1280 native wallet dialog",
+      "top": 177.40625,
+      "bottom": 622.59375,
+      "height": 445.1875,
+      "viewport": 800
+    },
+    {
+      "name": "1280 saved",
+      "width": 1280,
+      "scroll": 1280
+    },
+    {
+      "name": "1280 saved today",
+      "width": 1280,
+      "scroll": 1280
+    },
+    {
+      "name": "1280 saved month",
+      "width": 1280,
+      "scroll": 1280
+    },
+    {
+      "name": "1280 saved badges",
+      "width": 1280,
+      "scroll": 1280
+    },
+    {
+      "name": "1280 ecosystem artwork",
+      "visibleArt": [
+        {
+          "src": "/assets/tree-hero-poster.webp",
+          "complete": true
+        },
+        {
+          "src": "/assets/tree-command-logo-v2-512.png",
+          "complete": true
+        },
+        {
+          "src": "/assets/arcade/garden-bot-poster.webp",
+          "complete": true
+        },
+        {
+          "src": "/assets/arcade/arboretum-poster.webp",
+          "complete": true
+        },
+        {
+          "src": "/assets/profile-nftree-art.jpg",
+          "complete": true
+        },
+        {
+          "src": "/assets/tree-command-logo-v2-512.png",
+          "complete": true
+        },
+        {
+          "src": "/assets/arcade/arboretum-poster.webp",
+          "complete": true
+        },
+        {
+          "src": "/assets/arcade/garden-bot-poster.webp",
+          "complete": true
+        },
+        {
+          "src": "/assets/tree-command-logo-v2-512.png",
+          "complete": true
+        }
+      ]
+    },
+    {
+      "name": "390 signed-out",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "name": "390 unknown summary contains no invented progress",
+      "hidden": true,
+      "now": null
+    },
+    {
+      "name": "390 open progress",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "name": "390 dialog",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "name": "390 native wallet dialog",
+      "top": 396.3125,
+      "bottom": 844,
+      "height": 447.6875,
+      "viewport": 844
+    },
+    {
+      "name": "390 saved",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "name": "390 saved today",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "name": "390 saved month",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "name": "390 saved badges",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "name": "390 ecosystem artwork",
+      "visibleArt": [
+        {
+          "src": "/assets/tree-hero-poster.webp",
+          "complete": true
+        },
+        {
+          "src": "/assets/tree-command-logo-v2-512.png",
+          "complete": true
+        },
+        {
+          "src": "/assets/arcade/garden-bot-poster.webp",
+          "complete": true
+        },
+        {
+          "src": "/assets/arcade/arboretum-poster.webp",
+          "complete": true
+        },
+        {
+          "src": "/assets/profile-nftree-art.jpg",
+          "complete": true
+        },
+        {
+          "src": "/assets/tree-command-logo-v2-512.png",
+          "complete": true
+        },
+        {
+          "src": "/assets/arcade/arboretum-poster.webp",
+          "complete": true
+        },
+        {
+          "src": "/assets/arcade/garden-bot-poster.webp",
+          "complete": true
+        },
+        {
+          "src": "/assets/tree-command-logo-v2-512.png",
+          "complete": true
+        }
+      ]
+    },
+    {
+      "name": "320 signed-out",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "name": "320 unknown summary contains no invented progress",
+      "hidden": true,
+      "now": null
+    },
+    {
+      "name": "320 open progress",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "name": "320 dialog",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "name": "320 native wallet dialog",
+      "top": 369.34375,
+      "bottom": 844,
+      "height": 474.65625,
+      "viewport": 844
+    },
+    {
+      "name": "320 saved",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "name": "320 saved today",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "name": "320 saved month",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "name": "320 saved badges",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "name": "320 ecosystem artwork",
+      "visibleArt": [
+        {
+          "src": "/assets/tree-hero-poster.webp",
+          "complete": true
+        },
+        {
+          "src": "/assets/tree-command-logo-v2-512.png",
+          "complete": true
+        },
+        {
+          "src": "/assets/arcade/garden-bot-poster.webp",
+          "complete": true
+        },
+        {
+          "src": "/assets/arcade/arboretum-poster.webp",
+          "complete": true
+        },
+        {
+          "src": "/assets/profile-nftree-art.jpg",
+          "complete": true
+        },
+        {
+          "src": "/assets/tree-command-logo-v2-512.png",
+          "complete": true
+        },
+        {
+          "src": "/assets/arcade/arboretum-poster.webp",
+          "complete": true
+        },
+        {
+          "src": "/assets/arcade/garden-bot-poster.webp",
+          "complete": true
+        },
+        {
+          "src": "/assets/tree-command-logo-v2-512.png",
+          "complete": true
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    "/tmp/daily-growth-compact-qa/signedout-1440.png",
+    "/tmp/daily-growth-compact-qa/expanded-1440.png",
+    "/tmp/daily-growth-compact-qa/wallet-1440.png",
+    "/tmp/daily-growth-compact-qa/saved-1440.png",
+    "/tmp/daily-growth-compact-qa/month-1440.png",
+    "/tmp/daily-growth-compact-qa/badges-1440.png",
+    "/tmp/daily-growth-compact-qa/signedout-1280.png",
+    "/tmp/daily-growth-compact-qa/saved-1280.png",
+    "/tmp/daily-growth-compact-qa/signedout-390.png",
+    "/tmp/daily-growth-compact-qa/saved-390.png",
+    "/tmp/daily-growth-compact-qa/signedout-320.png",
+    "/tmp/daily-growth-compact-qa/expanded-320.png",
+    "/tmp/daily-growth-compact-qa/wallet-320.png",
+    "/tmp/daily-growth-compact-qa/saved-320.png",
+    "/tmp/daily-growth-compact-qa/month-320.png",
+    "/tmp/daily-growth-compact-qa/badges-320.png"
+  ],
+  "browserErrors": [],
+  "consoleErrors": [],
+  "externalRequests": [],
+  "sourceSha256": {
+    "play/index.html": "d1ee2a36d5498d8abde93bae40ee70d9409528ee8194855d6504178b07b6cb25",
+    "scripts/arcade-daily-growth.js": "e7921ba7d841a1f4a6cd5f2ba9cf0d2d80e9e1bab705c7490ef97246cf2327b1",
+    "styles/tree-arcade-suite.css": "a16610383942e0cb45c6e15d3644a8a41c20980455d85b1c9a0e638076087350"
+  },
+  "controllerTests": {
+    "passed": 29,
+    "failed": 0,
+    "test": "tests/arcade-daily-growth-ui.test.mjs"
+  }
+}

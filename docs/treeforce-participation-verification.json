@@ -1,0 +1,353 @@
+{
+  "checkedAt": "2026-10-31T22:16:00.401628+00:00",
+  "deployId": "6ae666a66f1d3899025a76af",
+  "sourceCommit": "f2e98d68aa32f65a9fa4f5e09411669821fdcfd0",
+  "releaseVerificationCommit": "4f3b47a9319695758a4efd36815be116492d08c5",
+  "focusedTests": {
+    "ui": 20,
+    "participationClient": 17,
+    "existingBackend": 22,
+    "participationModelAndStore": 9,
+    "participationAuthentication": 15,
+    "releasePreservation": 22,
+    "total": 105,
+    "allPassed": true
+  },
+  "packagedRuntime": {
+    "scenarios": 4,
+    "sdkVersion": "2.26.1",
+    "pgVersion": "8.23.1",
+    "actualPackagedImports": true,
+    "passed": true
+  },
+  "strictTypescriptPassed": true,
+  "databaseSuites": {
+    "originalGrowthRegression": "passed on development branch under rollback",
+    "treeforceParticipationRegression": "passed on development branch under rollback",
+    "productionEvidence": "docs/treeforce-participation-database.json"
+  },
+  "candidateApi": {
+    "checkedAt": "2026-10-31T22:08:39.608Z",
+    "base": "https://6ae666a66f1d3899025a76af--tree-token.netlify.app",
+    "passed": true,
+    "productionProgressWrites": 0,
+    "transactions": 0,
+    "outcomes": [
+      {
+        "name": "public configuration",
+        "status": 200,
+        "error": null,
+        "milliseconds": 1182
+      },
+      {
+        "name": "wrong method",
+        "status": 405,
+        "error": "method-not-allowed",
+        "milliseconds": 76
+      },
+      {
+        "name": "missing origin",
+        "status": 403,
+        "error": "origin-not-allowed",
+        "milliseconds": 174
+      },
+      {
+        "name": "foreign origin",
+        "status": 403,
+        "error": "origin-not-allowed",
+        "milliseconds": 60
+      },
+      {
+        "name": "cross-site metadata",
+        "status": 403,
+        "error": "origin-not-allowed",
+        "milliseconds": 60
+      },
+      {
+        "name": "missing game credential",
+        "status": 401,
+        "error": "invalid-game-session",
+        "milliseconds": 58
+      },
+      {
+        "name": "client identity rejected",
+        "status": 400,
+        "error": "invalid-request",
+        "milliseconds": 66
+      },
+      {
+        "name": "unknown game credential reaches isolated database",
+        "status": 401,
+        "error": "invalid-game-session",
+        "milliseconds": 1084
+      }
+    ]
+  },
+  "canonicalApi": {
+    "checkedAt": "2026-10-31T22:14:15.740Z",
+    "base": "https://tree-token.xyz",
+    "passed": true,
+    "productionProgressWrites": 0,
+    "transactions": 0,
+    "outcomes": [
+      {
+        "name": "public configuration",
+        "status": 200,
+        "error": null,
+        "milliseconds": 518
+      },
+      {
+        "name": "wrong method",
+        "status": 405,
+        "error": "method-not-allowed",
+        "milliseconds": 71
+      },
+      {
+        "name": "missing origin",
+        "status": 403,
+        "error": "origin-not-allowed",
+        "milliseconds": 62
+      },
+      {
+        "name": "foreign origin",
+        "status": 403,
+        "error": "origin-not-allowed",
+        "milliseconds": 56
+      },
+      {
+        "name": "cross-site metadata",
+        "status": 403,
+        "error": "origin-not-allowed",
+        "milliseconds": 54
+      },
+      {
+        "name": "missing game credential",
+        "status": 401,
+        "error": "invalid-game-session",
+        "milliseconds": 55
+      },
+      {
+        "name": "client identity rejected",
+        "status": 400,
+        "error": "invalid-request",
+        "milliseconds": 54
+      },
+      {
+        "name": "unknown game credential reaches isolated database",
+        "status": 401,
+        "error": "invalid-game-session",
+        "milliseconds": 819
+      }
+    ]
+  },
+  "canonicalFiles": {
+    "checkedAt": "2026-10-31T22:15:44.457Z",
+    "deployId": "6ae666a66f1d3899025a76af",
+    "sourceCommit": "f2e98d68aa32f65a9fa4f5e09411669821fdcfd0",
+    "allCanonicalOverlaysMatch": true,
+    "hostingHtmlInjection": {
+      "id": "tree-arcade-arboretum-link",
+      "exactMatchOnPriorPublication": true,
+      "sha256": "bf05453dc91bcf9c53db98e08829c8321193495b0839021e68d458d56e5be98d",
+      "note": "The existing hosting snippet is removed only for the HTML comparison. No site configuration or served content was changed."
+    },
+    "files": [
+      {
+        "path": "/play/index.html",
+        "rawSha1": "2345e2c04cd91bc3ef33393d405b52d2937f6c6c",
+        "reviewedSha1": "1fb1fbd7cb497578b941ffeacbca376fe607385f",
+        "reviewedBytes": 30058,
+        "status": 200,
+        "existingHostingSnippetRemovedForComparison": true
+      },
+      {
+        "path": "/play/treeforce89/assets/arcade-deuxdoox.js",
+        "rawSha1": "fbe89196276d0b7cb0d17eb4441a0e6efa188f08",
+        "reviewedSha1": "fbe89196276d0b7cb0d17eb4441a0e6efa188f08",
+        "reviewedBytes": 1268127,
+        "status": 200,
+        "existingHostingSnippetRemovedForComparison": false
+      },
+      {
+        "path": "/play/treeforce89/assets/graphql-ctywyhxq.js",
+        "rawSha1": "c024fd2ec1c91212a4a41b4c238384d058f3e839",
+        "reviewedSha1": "c024fd2ec1c91212a4a41b4c238384d058f3e839",
+        "reviewedBytes": 54744,
+        "status": 200,
+        "existingHostingSnippetRemovedForComparison": false
+      },
+      {
+        "path": "/play/treeforce89/assets/index-blt2uith.css",
+        "rawSha1": "0288ab26fa2250d052b58e1a1e3a3a3faf3ce364",
+        "reviewedSha1": "0288ab26fa2250d052b58e1a1e3a3a3faf3ce364",
+        "reviewedBytes": 27588,
+        "status": 200,
+        "existingHostingSnippetRemovedForComparison": false
+      },
+      {
+        "path": "/play/treeforce89/assets/index-bzg9inqq.js",
+        "rawSha1": "b082dd1d0284b4384f2610edae7bdb95ca41b432",
+        "reviewedSha1": "b082dd1d0284b4384f2610edae7bdb95ca41b432",
+        "reviewedBytes": 644247,
+        "status": 200,
+        "existingHostingSnippetRemovedForComparison": false
+      },
+      {
+        "path": "/play/treeforce89/index.html",
+        "rawSha1": "8965f54893dade54cbc6713a51c8bbd676a5246b",
+        "reviewedSha1": "16cc66ea421ce48d1b7a2c8ab164b8aa39cb8ec8",
+        "reviewedBytes": 1673,
+        "status": 200,
+        "existingHostingSnippetRemovedForComparison": true
+      },
+      {
+        "path": "/scripts/arcade-daily-growth.js",
+        "rawSha1": "e74b6daccc33f9b41471111b75cd5bdeeb222fed",
+        "reviewedSha1": "e74b6daccc33f9b41471111b75cd5bdeeb222fed",
+        "reviewedBytes": 41452,
+        "status": 200,
+        "existingHostingSnippetRemovedForComparison": false
+      },
+      {
+        "path": "/styles/tree-arcade-suite.css",
+        "rawSha1": "666f4cb831ac56e0b3254821da692591f934adf8",
+        "reviewedSha1": "666f4cb831ac56e0b3254821da692591f934adf8",
+        "reviewedBytes": 49960,
+        "status": 200,
+        "existingHostingSnippetRemovedForComparison": false
+      }
+    ]
+  },
+  "browser": {
+    "sourceCommit": "f2e98d68aa32f65a9fa4f5e09411669821fdcfd0",
+    "candidateId": "6ae666a66f1d3899025a76af",
+    "actualEngineFixture": {
+      "synthetic": true,
+      "apiReporterInstantiated": false,
+      "progressWrites": 0,
+      "outcomes": [
+        {
+          "case": "normal first wave",
+          "scene": "game",
+          "wave": 1,
+          "callbackCount": 1
+        },
+        {
+          "case": "public home after Space input",
+          "scene": "title",
+          "callbackCount": 0
+        },
+        {
+          "case": "URL-selected test wave",
+          "scene": "game",
+          "wave": 2,
+          "callbackCount": 0
+        },
+        {
+          "case": "paid-resume shape",
+          "scene": "game",
+          "wave": 1,
+          "callbackCount": 0
+        },
+        {
+          "case": "title before start",
+          "scene": "title",
+          "callbackCount": 0
+        },
+        {
+          "case": "title after Space start",
+          "scene": "game",
+          "wave": 1,
+          "callbackCount": 1,
+          "unchangedAfterSeconds": 178
+        }
+      ]
+    },
+    "hostedCandidate": {
+      "nativeHomeRendered": true,
+      "gameAssetErrors": 0,
+      "unrelatedExtensionErrorExcluded": true,
+      "lobbyEligibleChoices": 4,
+      "treeforceChoiceText": "Start a run and reach the first wave. You do not need to win or finish.",
+      "directOwnershipAccessTextPresent": true,
+      "optionalPassportNoticePresent": true
+    },
+    "actualOwnerWalletRunExercised": false,
+    "walletSignatures": 0,
+    "transactions": 0
+  },
+  "mobileFixture": {
+    "purpose": "Nonrelease local browser QA with clearly synthetic progress",
+    "url": "http://terminal.local:4173/growth-qa/",
+    "widths": [
+      {
+        "viewport": 320,
+        "documentClientWidth": 305,
+        "scrollWidth": 305
+      },
+      {
+        "viewport": 390,
+        "documentClientWidth": 375,
+        "scrollWidth": 375
+      }
+    ],
+    "authenticatedSyntheticSnapshot": true,
+    "eligibleGames": [
+      "garden-bot",
+      "pvp",
+      "arborist-trials",
+      "treeforce89"
+    ],
+    "savedAttendance": 8,
+    "savedQuests": 4,
+    "requiredPassport": "2 / 3 required games",
+    "treeforceOptionalStamp": "First wave started · Optional stamp",
+    "calendarDaysAtEachWidth": 31,
+    "badgeCountAtEachWidth": 3,
+    "refreshRetainedSavedState": true,
+    "networkConnections": "Disabled by connect-src none; injected fetch is memory-only",
+    "walletActions": "No wallet bridge imported; connect/sign methods reject",
+    "releaseFilesChanged": false,
+    "screenshot": "docs/review/treeforce-participation-mobile-fixture.jpg"
+  },
+  "canonicalBrowser": {
+    "url": "https://tree-token.xyz/play/#arcade-daily-growth",
+    "selectedGame": "TREE FORCE ’89",
+    "ruleVisible": "Start a run and reach the first wave. You do not need to win or finish.",
+    "optionalPassportNoteVisible": true,
+    "screenshot": "docs/review/treeforce-participation-live.jpg"
+  },
+  "providerMetadata": {
+    "originalGrowthAccount": "837451400009",
+    "replacementGrowthAccount": "564250524218",
+    "placementManagedByNetlify": true,
+    "functionRegion": "cmh",
+    "runtimeRegion": "us-east-2",
+    "sameEffectiveRegion": true,
+    "replacementFullRecordPinned": true
+  },
+  "preservation": {
+    "allPreviousPublicPathsRetained": 237,
+    "totalPublicPaths": 241,
+    "unchangedPublicFileDigests": 233,
+    "unrelatedFullFunctionRecords": 39,
+    "schedules": 5,
+    "treeforceServerUnchanged": true,
+    "rootDependencyLockUnchanged": true,
+    "walletPaymentModulesUnchanged": true
+  },
+  "limits": {
+    "classification": "Authenticated browser-reported first-wave participation, not server-verified gameplay completion",
+    "actualOwnerWalletRunExercised": false,
+    "userWalletSignatures": 0,
+    "onChainTransactions": 0,
+    "syntheticProductionProgressWrites": 0,
+    "pendingReceiptNeedsSameGameSession": true,
+    "crossDatabaseSessionRecheckNotSharedTransaction": true
+  },
+  "publication": {
+    "publishedAt": "2026-10-31T22:13:57.663Z",
+    "currentLocked": true,
+    "priorDeployRemainsArchived": true
+  }
+}

@@ -1,0 +1,1496 @@
+{
+  "id": "6ae5879d07576659dfd6fd1a",
+  "baseline": "6ae5843ef25937c4e39bc684",
+  "mode": "publish",
+  "sourceCommit": "17365026343f9e019f7dcc49b5429ec3f9b17494",
+  "sourceBranch": "feature/arcade-polish-20261031",
+  "files": 231,
+  "preservedStaticFiles": 222,
+  "changedExistingPaths": [
+    "/play/index.html",
+    "/styles/tree-arcade-suite.css"
+  ],
+  "newPaths": [
+    "/assets/arcade/arboretum-poster.webp",
+    "/assets/arcade/arborist-trials-poster.webp",
+    "/assets/arcade/canopy-clash-poster.webp",
+    "/assets/arcade/garden-bot-poster.webp",
+    "/assets/arcade/pvp-battle-poster.webp",
+    "/assets/arcade/tree-arcade-social.jpg",
+    "/assets/arcade/tree-force-89-poster.webp"
+  ],
+  "functionsPreserved": 39,
+  "schedulesPreserved": 5,
+  "backendUnchanged": true,
+  "noMigrations": true,
+  "paymentsEnabled": true,
+  "isolatedDatabaseIdentity": "df2f0abee059d9898495a125018fa0a291d50b9050c0d4557231f409bed53065",
+  "publishedAt": "2026-10-31T06:17:12.035Z",
+  "url": "https://tree-token.xyz/play/",
+  "candidateUrl": "https://6ae5879d07576659dfd6fd1a--tree-token.netlify.app/play/",
+  "locked": true,
+  "filesBySha1": {
+    "/tree.jpg": "5ca16c779edf1d559e5be5a02a6edd2e626d9c2f",
+    "/tokenomics/index.html": "7e838cb7bdf00d911b22023003b399f11589e05a",
+    "/thick.png": "ad280e7b551f15631f84ffe01bc5373746590da6",
+    "/sui-guide/wallet-logos.css": "1fa76f676461dca6e9b466fa25848df242d99e70",
+    "/sui-guide/tree-branding.css": "b4f785aed892b877316fbacc6f8ed2ec973420ca",
+    "/sui-guide/styles.css": "baae0dcd55d5ae4556a9f607ee33bcd1103149a8",
+    "/sui-guide/index.html": "7e2f2461df9016898d78544db15c48c63a2e64dd",
+    "/sui-guide/getting-started.css": "35f3f6ad4a2aacc9c5f17942d3c256e751584e70",
+    "/sui-guide/assets/slush-symbol.svg": "79f709188d8c49c734ab0cd63d717b538feb68bd",
+    "/sui-guide/assets/phantom-symbol.svg": "0403683177ebdf7acd30732aad8c173737312f48",
+    "/sui-guide/assets/nightly-symbol.svg": "99fb96151d90ee0124de4dcaf3a35bb596c21b6c",
+    "/sui-guide/assets/sources.md": "46b4d0e5660cf632ce66faaecab9ed79dbc6c42c",
+    "/styles/tree-arcade.css": "ad41f00891a42b0d619b26fecfeb0df868212d3b",
+    "/styles/tree-arcade-branding.css": "7cff715edd4e2c0db4c1a59179cc94e3cd1e17f5",
+    "/styles/raffle-rules.css": "74f96cc9a11470ae974aa5d86c9ef1f62fb2263c",
+    "/styles/info-page.css": "1406981fe9ce8191ae717ab403d48f9f2c26e547",
+    "/styles/home-v2.css": "ceafd02797e3794d1523321ff0537545103a4204",
+    "/scripts/wallet.js": "6f06e9bf3905ab8d8b9751b72ffab67843f69f28",
+    "/scripts/wallet-manager-core.js": "df927c430923973da4359e83267a61f4c3aea215",
+    "/scripts/verify-turbos-locked-claim.mjs": "85c3f3f5db804d1a6846d23408e71e3224fde432",
+    "/scripts/verify-turbos-claim-all.mjs": "47d8d7b0ba17920fbe746a875de14d08c01077f8",
+    "/scripts/verify-production-snapshot.mjs": "8d9e0b86951bd37611281fd5d2b5621fa90aa30b",
+    "/scripts/verify-cetus-v3-lifecycle.mjs": "aef5b4755d0c05ab12f5a58c0003d88ed3e91b4f",
+    "/scripts/verify-cetus-v3-batch-actions.mjs": "0b860b28cfaf4580b82dba8a12446ef47a43f788",
+    "/scripts/tree-knowledge-trial.js": "d5aade2ae34b0ca7cae4118ed717b14ddf2dc51d",
+    "/scripts/swap.js": "211ee06831cf5d19841eb1eb89ae2fb6d0286025",
+    "/scripts/simulate-victory-v3-reinvest.mjs": "21e1f969d48ce8f0da57c43310985a37ed6d7fd5",
+    "/scripts/simulate-victory-sustainable-reinvest.mjs": "668c0e43a87cb69d861663061c58120a7aa6f47d",
+    "/scripts/simulate-tree-v3-zap.mjs": "bd93530a55b8a6b3c4e49926c13d5fd1ed9e7c45",
+    "/scripts/simulate-tree-v3-remove-position.mjs": "cd6a82c6cc6f3f9c72bbf7ae114976429009f605",
+    "/scripts/simulate-tree-v3-increase-position.mjs": "18f53019be0bcd7949d78285c9eb6d065600ac6e",
+    "/scripts/simulate-tree-v3-create-position.mjs": "a84b340b75fad7ed1c95b5f47e4c035b924e186e",
+    "/scripts/simulate-tree-v2-stake.mjs": "c81c6ba9de8cf40addb446a276c16c87f47c5518",
+    "/scripts/simulate-tree-turbos-swap.mjs": "89c9fbf5621c0d5aae08be97769b1dbe666b3973",
+    "/scripts/robinhood-wallet.js": "fd6b03edb4e3df0f70e4234deaf8e17fcb8d6127",
+    "/scripts/robinhood-wallet-core.js": "2feff5a79c2d4f85b895cf2ed7430de7a5307c39",
+    "/scripts/profile-studio.js": "25d36d17d5893e9a1d66c2a9941f33411ed89c13",
+    "/scripts/probe-tree-v3-full-actions.mjs": "9d1f5ee6627739030dd90fe1ccb94126b28daf66",
+    "/scripts/probe-tree-v3-collect-rewards.mjs": "593e8f030cf31118baad3b4244fce23363ed7fc8",
+    "/scripts/probe-tree-v3-collect-fees.mjs": "a6c8c2eae66dcf9d47917ccad17a3ea01d7c9f9e",
+    "/scripts/probe-tree-sui-graphql.mjs": "5bcfced441d466aacd8bd5b3683da5667a204d18",
+    "/scripts/probe-tree-limit-order.mjs": "00d805cb54e0a450a7272c3ca7d374fbda3d5fba",
+    "/scripts/probe-nftree-stats.mjs": "374f97a6e82316a09d097d08c8bca995b3bf3b50",
+    "/scripts/probe-knowledge-prize-claim.mjs": "9d0564921c53e2829eaf33c8ca150a93fb5d95d0",
+    "/scripts/prepare-test-dapp-build.mjs": "cc1274e8ba1b52b99b2b2e648f98c57cb5c72499",
+    "/scripts/phantom-sui-provider.js": "ebd2a52ce1af236267e0a9fa701e5b6b96d58b1c",
+    "/scripts/nightly-sui-provider.js": "10c05e869197a63c6aba363e0cfdbf82750695da",
+    "/scripts/info-page.js": "3c606f8336662f19d2a2f9b3b89a96fefe53a956",
+    "/scripts/home-v2.js": "420028bbe52f9e895e111f7d19c6627579979a66",
+    "/scripts/home-market-core.js": "dfb259b070e83446d93c63302d8a670386f7f88e",
+    "/scripts/copy-static-build.mjs": "a451fcc47c6ad4bd8ca91351f135207f1aca875c",
+    "/scripts/check-tree-swap-aggregator.mjs": "f10070ef991bbd94ddc6c8b39c28dd08a04e3911",
+    "/scripts/canopy-draw.js": "a23f798c56e07e7391f9228767e3711ca6844b6c",
+    "/scripts/build-production-snapshot.mjs": "e398b9f1456c91bfd4f0eb98911ea24c275591e2",
+    "/scripts/build-feature-preview.mjs": "fe542fa1ba65354e3ddd2185d796d27d31769866",
+    "/scripts/arcade-wallet-link.js": "f0cbb56a4c5b8f561d48fe278b53af013e27d660",
+    "/scripts/arcade-sui-wallet.js": "25cdec64fb85cfcbe6b7f706841f105e351c3b36",
+    "/roadmap/index.html": "6597c20c44a9aac623f685679962fb2fc100c5db",
+    "/raffle-rules/index.html": "442ca8e3abf867d7dab3dc1857f1e21182e9addc",
+    "/play/index.html": "281d40f6d771eb527c97bde853f41fa64a7f8216",
+    "/mascot.png": "9f5e5db66e2f6c3eee41d70b1800094fe014a473",
+    "/index.html": "1dba30e928a617b53d698561fb77dcffa6205ccd",
+    "/hero.png": "15fa5856c63652fa6089010f683169d8b0c0dca5",
+    "/faq/index.html": "ce2ac9460306624a3ce06d46c9dcd91ccc443006",
+    "/documents/index.html": "c88d0014edf7975c7d72f5fb5158a05601078246",
+    "/docs/victory-integration-backlog.md": "9345eeabcd9d51320fc8a1098eecc20624e3081b",
+    "/docs/tree-v3-phase-a.md": "689483b0bd262df87e23b66f329c407ac68908d5",
+    "/docs/tree-leaderboard-refresh.md": "aa118540dcb3fa8004a878c8d2a6c8cf2aa06df6",
+    "/docs/tree-leaderboard-badges.md": "ad27e0e2bf5d042ea145a90837051a87e64aacec",
+    "/docs/production-recovery-20260902.md": "ef15e255df9ce6e26d971350ccc2399e7ad6525e",
+    "/docs/knowledge-trial-lucky-leaf-plan.md": "f962fb297b1809c93b9e66a02d3638adb0bbbdba",
+    "/docs/incident-reports/2026-08-26-cetus-challenge-eligibility.md": "7e3b8c8f13c4ca7698eecebeabdbe10f3945b5b9",
+    "/data/tree-project-snapshot.json": "ead484ee1c766a540a2fa7136eed7ec240a82127",
+    "/data/tree-market-last-verified.json": "c88342a391693fe123443479bb8caa96a5443c9f",
+    "/data/tree-leaderboard-exclusions.json": "46c01941d62caf34c74ec795a677b4436a942223",
+    "/data/canopy-draw-preview.json": "a779d958745f298c162853ae33bbf01e6538baae",
+    "/dapp/wallet-manager.css": "845434c7bb69305cd4911290f50573dfe1185602",
+    "/dapp/victory-v3-reinvest-core.js": "113a53348c5dd16892c400ac4e8b168c22afb765",
+    "/dapp/victory-transaction-core.js": "af81164c4cd3e260160b3cab8bf45f1ba8e73e0b",
+    "/dapp/victory-center.js": "5247f64b488bc7280cef6672e938720cdfbbd733",
+    "/dapp/victory-center.css": "24a991520a6006ce398e3249646209e127517267",
+    "/dapp/v3-workspace.js": "2a10b24345bc03691b8d2c390ff75f8c4597d917",
+    "/dapp/v3-workspace.css": "5a5c2e1769e3b2da9ba99d6a3a4393c133acafd0",
+    "/dapp/v3-transactions.js": "8bf07dd1e2f22bfeb4012399c6174eb0e63d69c1",
+    "/dapp/v3-transactions.css": "3a3e46ea11fc7aad24f78062c9328229ffb85a7a",
+    "/dapp/v3-transaction-core.js": "3894865f8eee0ea8e8c742b43739e0dfe20051a4",
+    "/dapp/v3-rebalance-test.js": "cf0d1973908c7015a6e3ceb730d938262b4431cb",
+    "/dapp/v3-existing-zap.js": "e9d1498759f2878fd05f1cbf8df5ac7f25c41841",
+    "/dapp/turbos-v3-manager.js": "aef64091c07a2a53a85640e0598f3a95fb8187e9",
+    "/dapp/turbos-position-core.js": "3f3c1c7a97391716b2fc317af229712d1a53af8d",
+    "/dapp/turbos-locked-claim-core.js": "23114d2f1e5dd319b05f60d6b05ad818bb6bd026",
+    "/dapp/transaction-review.js": "fb459be26191fd9e1cb01027e1685e2eb6012c8a",
+    "/dapp/transaction-review.css": "ab03d485e6931bbefd68c0a1f64bc19b6b57d72d",
+    "/dapp/test-dapp.js": "a96f3adba6c693d0b8df24eaccb942a4d80168da",
+    "/dapp/test-dapp.css": "3441bc97897b762c641f5b2cca51ecc3d07dd63b",
+    "/dapp/swap-router.js": "7925857dd8003ea883fd1ca9f27ac9b11f005e38",
+    "/dapp/swap-router.css": "6e33d3b9841098cf692de50bd92108b66e19499c",
+    "/dapp/sui-onboarding-guide.css": "e95475797f075eb0fca34e29f088b40e38d09f16",
+    "/dapp/styles.css": "549d0bf0e2976c707f5382ad518237fda706e556",
+    "/dapp/raffle-transaction-core.js": "e22b53444d6007d6a56432d7e97a999881982b9a",
+    "/dapp/panel-router.js": "3064000549d9eac55c1d28e78174e543a7f96eed",
+    "/dapp/panel-router.css": "3b89f6ab610d25bc78808eca2e2c7ee81ec2b02b",
+    "/dapp/limit-orders.js": "8b2c6be8c57c12bd319a1fc85aa6832cb5f160ab",
+    "/dapp/limit-orders.css": "fea27e0964e8a8b5120295de57cc5d0a1d17c566",
+    "/dapp/limit-orders-core.js": "b8be25ebe611096ee87bb1f892e5fa3a35271ef2",
+    "/dapp/interaction-bootstrap.js": "cad4a5eb555aa6ab1025cf074ca426ea719bf5b2",
+    "/dapp/index.html": "0304ea4ddca0a3112c607650292eba99310ea768",
+    "/dapp/earn-v3-zap.js": "00485a5f168cc22affdfb8b48523280467711705",
+    "/dapp/earn-v3-zap.css": "be19ca679ccc0b57a20a8a634a11226bc09a6062",
+    "/dapp/earn-v2-rewards.css": "88cddc7aa14000ddb368073226cbd47ac12d50af",
+    "/dapp/earn-transactions.js": "d13f1091f5c9f806e67a65774e9272e2b27033ad",
+    "/dapp/earn-transactions.css": "f63c761eb143c8c6abc4c6416f0a7d5633128401",
+    "/dapp/earn-transactions-core.js": "10476fe1c83f8c6e3d1f134baf659a80e0df20f9",
+    "/dapp/coinbase-mark.svg": "ca9314f151392a0f9e79b3f8db9d66bfeadefa3d",
+    "/dapp/cetus-v3-manager.js": "819e5f075092e0090aab39da537f26ad9223a5cc",
+    "/dapp/cetus-v3-core.js": "ccb69d86ac76c14df476deadb817b1bb64835f07",
+    "/dapp/app.js": "177fed9f6ebb4aa7f52d9be71cfaa747070c376b",
+    "/challenge-admin/index.html": "c3ed77bcd380de970f7fa0842433785f6f275744",
+    "/challenge-admin/admin.js": "69117a5a572e41982438a99877420120bcfea74d",
+    "/challenge-admin/admin.css": "5c434d091becc009222552f8b945c7d9ac220840",
+    "/backgroundtest/background6.jpg": "cda1c03bd0acb85b0933b145611fdf84e61b3d36",
+    "/backgroundtest/background4.jpg": "6e890b2e800b9075960b034581926633b729e034",
+    "/backgroundtest/background3.jpg": "6ca2d5f92c01347d2c68e7adaa563d787e8b5ae9",
+    "/backgroundtest/background1.jpg": "575a71f1c4916cca172ac1505873e28f3dda0cab",
+    "/background5.jpg": "486828dd8df5119470901c5833ea0be6edf6f8ae",
+    "/assets/wbtc-token.png": "84aab7ab3f401839993ed54f7bc55481b508e0d6",
+    "/assets/wallet-manager-bcxijryq.css": "845434c7bb69305cd4911290f50573dfe1185602",
+    "/assets/wallet-manager-bcxijryq-bcxijryq.css": "845434c7bb69305cd4911290f50573dfe1185602",
+    "/assets/victory-token.png": "2aec218a813e63e57e1a38fe2bfd85ec8cf08436",
+    "/assets/tree-token.png": "a24a9e63fe5b6188ab37c39e95b52f6edd83627b",
+    "/assets/tree-token-logo-official.webp": "fb6600ba506a3a97e3e813402b6f60e73610cfb1",
+    "/assets/tree-hero-walking.mp4": "fb11861b43a8595fee0bed6ce8b1ce509a34d772",
+    "/assets/tree-hero-poster.webp": "ee5366c153bff3549604d6bddb7f4ef30bcf96de",
+    "/assets/tree-fund-first-donation.png": "77df0e225c0dff1f460f9da50671042524cb758d",
+    "/assets/tree-fund-first-donation-d0qlq4o7.png": "77df0e225c0dff1f460f9da50671042524cb758d",
+    "/assets/tree-fund-first-donation-d0qlq4o7-d0qlq4o7.png": "77df0e225c0dff1f460f9da50671042524cb758d",
+    "/assets/tree-force-89-logo.jpg": "db50f049582605b85fee897c9dac093a175f7925",
+    "/assets/tree-force-89-logo-black.webp": "322dc5787379679a458dbad694de2fdc56a07594",
+    "/assets/tree-force-89-logo-black.png": "f32911279e177ea6abf17ff3f28c23f0c452e4cf",
+    "/assets/tree-command-watermark.png": "667399709bd81ac5cb04ff9a67cfe1ea6ff35e45",
+    "/assets/tree-command-logo-v2-512.png": "4390f9723c27bd4809bf960119dc3ef4916be739",
+    "/assets/tree-arcade-world-bg.png": "7f9359ba56dd150926c7e1b6b40e5b8f7d5881d1",
+    "/assets/tree-arcade-world-bg-v2.webp": "d2e4bd23aad38f34ae19e4eff6bb0f8a54b13474",
+    "/assets/tree-arcade-world-bg-v2.png": "5092e32121299a0f58251e723afca794e56f492c",
+    "/assets/tree-arcade-world-bg-v2-bgjvvdzs.png": "5092e32121299a0f58251e723afca794e56f492c",
+    "/assets/tree-arcade-world-bg-v2-bgjvvdzs-bgjvvdzs.png": "5092e32121299a0f58251e723afca794e56f492c",
+    "/assets/tree-bbolhjse.jpg": "5ca16c779edf1d559e5be5a02a6edd2e626d9c2f",
+    "/assets/tree-bbolhjse-bbolhjse.jpg": "5ca16c779edf1d559e5be5a02a6edd2e626d9c2f",
+    "/assets/thick-dwqrmagk.png": "ad280e7b551f15631f84ffe01bc5373746590da6",
+    "/assets/thick-dwqrmagk-dwqrmagk.png": "ad280e7b551f15631f84ffe01bc5373746590da6",
+    "/assets/sui-token.svg": "6dc36bc04b869215cb2ff084a6fe9c2c50acb96e",
+    "/assets/saluting-branches-logo.svg": "919d596ac9c7185428996c157ce797d65ab9a2d9",
+    "/assets/profile-thickquidity-logo.png": "5dc43095dd3ec93f624cf36188ad0f85f6ced3e1",
+    "/assets/profile-thickquidity-art.png": "04400222f29cdf9ee0672718084a124051571c5f",
+    "/assets/profile-nftree-art.jpg": "5ca16c779edf1d559e5be5a02a6edd2e626d9c2f",
+    "/assets/profile-leafy-sui-frame.png": "93d63121f1d12644e89c05dbfa8f06df59402286",
+    "/assets/profile-crypto-arborist-badge.png": "bbd67dea6ca24e9e59b4d996261ec1abb75530d5",
+    "/assets/index-w-qgkwyr.js": "496ecaaf129325c0d750bbc4fd73e03ce5188fe5",
+    "/assets/index-ciludop1.js": "cb9e8b67a2a7fc90c1783cc506b44642008e704b",
+    "/assets/index-csxroco2.css": "2b2c770ac8ebf3308b0fdf645f37c55072d07eb1",
+    "/assets/index-bjzd7icz.css": "b9b124d27bb2c52219b79a7d505497f49565eae6",
+    "/assets/garden-battles-logo.webp": "c541ed208b0051b741d198ce4d3715d4acbc81b2",
+    "/assets/garden-battles-logo.png": "f18c4f1ff42a1f3be19f8632c579de3faebbcdeb",
+    "/assets/background5-dfotcuir.jpg": "486828dd8df5119470901c5833ea0be6edf6f8ae",
+    "/assets/background5-dfotcuir-dfotcuir.jpg": "486828dd8df5119470901c5833ea0be6edf6f8ae",
+    "/assets/arboretum-promo.png": "c7814650098073bc2ffc26891024dfd0200210d1",
+    "/assets/arboretum-promo-dubcl4il.png": "c7814650098073bc2ffc26891024dfd0200210d1",
+    "/assets/arboretum-promo-dubcl4il-dubcl4il.png": "c7814650098073bc2ffc26891024dfd0200210d1",
+    "/assets/arboretum-logo.jpg": "4fc1372dcee81ec6b5009f8f1ab870cf877ed6a3",
+    "/assets/arboretum-logo-black.webp": "63cd379971069e3b2bc1883f87a8d7f6bedb695c",
+    "/assets/arboretum-logo-black.png": "1bc5ad51b81113a07f34cb75334604b87e31548c",
+    "/assets/cg.png": "5ff0c825f8c7bef9abb10d0d839689263b160580",
+    "/assets/cg-5g0mbrjk.png": "5ff0c825f8c7bef9abb10d0d839689263b160580",
+    "/assets/cg-5g0mbrjk-5g0mbrjk.png": "5ff0c825f8c7bef9abb10d0d839689263b160580",
+    "/assets/9.png": "bc6041f6b0bc4a7ef218e3a9be86fb9d4ccb6408",
+    "/assets/8.png": "815af2b0fb37f3108519aadac24c81823ce835cc",
+    "/assets/7.png": "b190fa50292f143664631b78dd08a699f0e18600",
+    "/assets/6.png": "008a50e83f454b579c0a7ddc5dea42c379a2715c",
+    "/assets/5.png": "b3de0b71addc4725f9a1139b6bb0935db2aad959",
+    "/assets/4.png": "e8af2de696ce12de0398db9be80eeab9cb76eeb0",
+    "/assets/3.png": "2ebf6347cc6fbe98b8bbc76488ef8b2eba7102d7",
+    "/assets/2.png": "8fccb7adb785bd2227a74c23d1c5f4b1f0758bae",
+    "/assets/12.png": "0c6ea86c3a909e1bafd33f712f7c9aba4c41a35f",
+    "/assets/11.png": "9ee8b5e4d84753897e30505f9df66a1478ac0adf",
+    "/assets/10.png": "cebf851c07be58d9f8cde8c06af6d8baad8c6ff1",
+    "/assets/1.png": "edf227e098fd7426ca48ca8bc02c04a93a2ceb31",
+    "/about/index.html": "aede2f8c419acc6a738f79c4d8cc8378ebdd20c4",
+    "/litepaper.pdf": "0ea54513eb38c0377bbccedfa4d41781d42b6c27",
+    "/netlify.toml": "ac47414c8205343f1a87a5b7b48131aaa7b92856",
+    "/dapp/sti-widget.js": "471b2133f3d329dc089100e62e6779ada68f9a21",
+    "/dapp/sti-purchase-core.js": "1d6f5669d809a7a8bbabaaeccef6f7387e7e3bbd",
+    "/dapp/sti-stats-core.js": "42d765fa40df491f7b64fcf6c4209b7e39bb5e24",
+    "/assets/sti-icon.svg": "388b5e3728ef821050f6a9a2312926bdfc7a65dc",
+    "/dapp/challenge-funding-core.js": "ec5abe343e8330a19d08404e7ca0bafa924809c5",
+    "/dapp/victory-layout-review.css": "24a991520a6006ce398e3249646209e127517267",
+    "/dapp/victory-layout-review.html": "55fa74e34094dc48bcca3f5099a6c81749544f11",
+    "/play/treeforce89/assets/arborwing/tree-hero-arborwing-stages-v2.png": "808fc199adf82ab5d6ed8e23edd49e46b3a52cf8",
+    "/play/treeforce89/assets/arcade-65ykhbdp.js": "141d55392213af57333b9d7ff00941a4068c24eb",
+    "/play/treeforce89/assets/backgrounds/first-canopy-backdrop.png": "cc299f07949f459c91cb4a341a9c3899aec3aa33",
+    "/play/treeforce89/assets/backgrounds/first-canopy-foreground.png": "4d351175c8595c3176360bc00bc23f3b80a91470",
+    "/play/treeforce89/assets/backgrounds/first-canopy-midground.png": "ad38f865fe3d7d058484f1a09724de948ba3c13a",
+    "/play/treeforce89/assets/hero/tree-hero-canonical.jpg": "2a408d8abc82aefa7e9091d0d1f3296caa2e6a51",
+    "/play/treeforce89/assets/index-btccazse.js": "faf5df11cecdcfd7d37827657e9f67a9b7c0be56",
+    "/play/treeforce89/assets/index-dnigke6a.css": "bf24e7bebcad8df3b19276155a1fba4cbdcb8f83",
+    "/play/treeforce89/assets/powerups/boom-token.png": "00c7b518424ec21c788063905f53d751ded4983b",
+    "/play/treeforce89/assets/powerups/dex-reward-token.jpeg": "f8084d3ac313dcce1bdf8c15332806705eef1704",
+    "/play/treeforce89/index.html": "5478ccd737ae2fe5728410d36b157f3730984aff",
+    "/play/treeforce89/gateway.css": "57fa130cabffe6ba54ec58969f1d05559e6c01f6",
+    "/play/treeforce89/assets/arcade-djpir_ll.js": "3c870bab1294a3013dbeb166781e23ac34d396aa",
+    "/play/treeforce89/assets/index-tu4dupg4.js": "2179a985c5d9f0f2241981fb481136b3a620cd4f",
+    "/play/treeforce89/assets/arcade-bj0xynbv.js": "660cd2c5954524a4089da078ff604a3e66948359",
+    "/play/treeforce89/assets/graphql-26ozk2rj.js": "2525624750062163dc30bcc4441134352d53b790",
+    "/play/treeforce89/assets/index-cr6rbywb.js": "80db2ace93503a37ba2461bb678930a7fbe4d737",
+    "/play/treeforce89/assets/arcade-bmfsvfz2.js": "8173a8386fed81a892bb2c68aebb2ef198877a2c",
+    "/play/treeforce89/assets/graphql-dugrj2zr.js": "67fa459e53ef62e9fe9ea06330a2ccdfaa651e02",
+    "/play/treeforce89/assets/index-c6ylcrsg.js": "283a12d225dadb35f1401b1aa9e69a04bcfaa506",
+    "/play/treeforce89/assets/arcade-cw4df7w2.js": "0eb93075166b1d41ecd1a3b0586c5b52508d06c7",
+    "/play/treeforce89/assets/graphql-hafrftxs.js": "594f4ac60c2bb738880581e1036eef89abb695e7",
+    "/play/treeforce89/assets/index-ccisclqf.js": "846faa5cc41509c4a79ce8263e4ad8c3a55f32fa",
+    "/styles/tree-arcade-suite.css": "1fcd32e320d2e0ad00b3cbe007e0720b041f9cb8",
+    "/assets/arcade/garden-bot-crest.png": "2c376aefd26da4f6c6404e676bff108b7b0e1a78",
+    "/assets/arcade/pvp-battle-crest.png": "1027d41aa13f52f24d498bf3428feb1927fc017f",
+    "/assets/arcade/arborist-trials-logo.webp": "9c8e9a3270b742bffafa8cc14695e8f8fc7d9511",
+    "/assets/arcade/canopy-clash-crest.png": "86b18189251484f894fdcbccc0e8f41168817550",
+    "/assets/arcade/arboretum-poster.webp": "d0a36a78f2cf5973f9588431b1eb176fddda0c79",
+    "/assets/arcade/arborist-trials-poster.webp": "08d275193774569211b3518b7d915612641889a6",
+    "/assets/arcade/canopy-clash-poster.webp": "1cf499037954c00ebf052605e1f452f54c1ee60d",
+    "/assets/arcade/garden-bot-poster.webp": "87d3289c4041d2ea1cc76b51c0992057817aba84",
+    "/assets/arcade/pvp-battle-poster.webp": "3ec878ed71336daed62144c144eeceec7a70b43f",
+    "/assets/arcade/tree-arcade-social.jpg": "73d1d40155cc6b5971c38c89cbb3cda6a8034c35",
+    "/assets/arcade/tree-force-89-poster.webp": "07e1ef2e4ba452ed9d12f4eb71379f1212720b5a"
+  },
+  "functionRecords": [
+    {
+      "n": "arcade-wallet-link",
+      "d": "cf04ba346ffdb6b0f65e096016f7a12314a3822ab2ba4c3464a67111da85a8cf",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/arcade-wallet-link",
+          "l": "/api/arcade-wallet-link",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "98c429ab9967db65ebf7b5f450fa4f3251823acdf21234a9902ee6cefb87d587",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 2197967,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:44:41.019Z",
+      "a": "430503858661",
+      "oid": "a3607e98e022c48e53c78c75efe4070e65a57f5c1db03ed105f791dfd966cc0d",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "nftree-wallet",
+      "d": "7d833b105a7a23c1b19932030c3a5658a7b26a77fb62d188bceb003ed9808ca1",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/nftree-wallet",
+          "l": "/api/nftree-wallet",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "d45de447e89b284a7f163cc91bd2b393ac71add6c02cd4c26eb45db9bb84b9f6",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 340679,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:44:40.877Z",
+      "a": "045365653326",
+      "oid": "6b1ce269156160206a0df9422e0416042ee71a6503c81280e6bb938527ac8c0b",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-badges-on-deploy",
+      "d": "bbe5138646aeb0158bffb1b0a4423b9635c1910423bdce2b6ce719e4cb8c995c",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "p": 10,
+      "id": "58c0389952b3ebe0a1f0abfec16bf87b69e0e6468ed9ecba3865e11eeae4e50e",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 365345,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:44:40.660Z",
+      "a": "514272109237",
+      "oid": "2c5b9458247b1331b534c703187e360cc1314e02810dd988751d91c0fba42502",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-badges-preview",
+      "d": "272a0e60ad6b64371f4aec9f172ea48522dfbf473981e9e8739d91a10342b016",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-badges-preview",
+          "l": "/api/tree-badges-preview",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "63e5b2d036020e36887af0fb478f6f1d47a6acf7003e96935951bae6072203ce",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 338961,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:44:40.771Z",
+      "a": "776892189363",
+      "oid": "83699b0cdae0c6bd7cd4a2ef42875ad51140cde4e2ffad80375edeab67017147",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-badges-refresh-background",
+      "d": "092dc834f95cd17244205828c581179e649c679bb263e5805e37c322e86e4469",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "p": 10,
+      "id": "a2ff06137ce8f6e295448d62985b04ab18d2545373441380ac9c8f34600dc293",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 1066577,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:44:40.905Z",
+      "a": "689786375862",
+      "oid": "6c6b8dce1a31c97f5f8657c09521dfadb1bce5a10dde846e8358e34eda754057",
+      "im": "background",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-badges-refresh-scheduled",
+      "d": "8543b6349164e36c137e3f1cd1297b10a150004f0b6f556f2e5d6ec3fec9e459",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "p": 10,
+      "id": "3936e1b2a765ca1ccbbfbba7184be2c02d13a1a5484fc89e375377c73adb4c6f",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 339394,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:44:40.821Z",
+      "a": "940186631256",
+      "oid": "ddcc6a9cadd1654f7a21441501ac20d5564787bdd41406710d2c379eeb9efb70",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-badges",
+      "d": "23c2c5f14a44a4a7139c9f0de6e89baf2b94e9e5feb64e1bfebbfbcc286c025f",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-badges",
+          "l": "/api/tree-badges",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "ad251a139cfb60fcacea3934d2113c78a0e72580a06fb472937cf27051d7f55d",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 366488,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:44:50.981Z",
+      "a": "999581846204",
+      "oid": "29268b15b5476c021c29b15d279c2082d3a42958b840c158aba62f0d2bb3e759",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-burn-overview",
+      "d": "48cabca12664dc178ce1f3f6e2681a216944168e61c5988ce8b6dede5723a681",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-burn-overview",
+          "l": "/api/tree-burn-overview",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "3f34acdc1f19a2f5a6615f3045d1941fa7576b8bb4fa580dce79b56c293990b0",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 1025084,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:44:51.258Z",
+      "a": "016005051599",
+      "oid": "b1cc8786be2330b1047a5e76a9ff314274931d5f6a02f8eb064eefd18137148f",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-chart",
+      "d": "65ad24a2df39e42edd8cd5225dbe125152c38ac6d1078969c8b9da4103b976f7",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-chart",
+          "l": "/api/tree-chart",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "74c5f25251ecd8ae60b186274a9dbaf9f3654df2c2463b2c1e80889bdc325f12",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 340304,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:44:51.180Z",
+      "a": "837451400009",
+      "oid": "e0c0b17f6909c291c45d723d9b35261a52cc4852d43898108fa1318052a04aef",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-dashboard",
+      "d": "e1f8b352db9d6dfca8500b6c4475f05e31d58bdf90661f22151867399094f810",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-dashboard",
+          "l": "/api/tree-dashboard",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "a3e6c3a8279dc886c9d7fa9e22f5227e843ca1895bf19e7483be83591eb98f37",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 366261,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:44:51.167Z",
+      "a": "770208316574",
+      "oid": "08e20448698b3083a2e8f2ea6ef6a84d439e6deba424a9e380915bc385af3707",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-exposure-on-deploy",
+      "d": "63edb9dd7d4ca1ff1e9d4ee680f898dd03284c747f2d262bd77cd4219d7d3ce7",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "p": 10,
+      "id": "ea36e07796504ebd7fccb4a5a195d65a4ed899460e7606a032b6021ff328b2c0",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 1076798,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:44:51.298Z",
+      "a": "560477221814",
+      "oid": "a11178f2f91910ed7be54fda04f137b387e6c0cc7fc2549381c1c9619095df99",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-exposure-preview",
+      "d": "e0dfaaf32ada22bea619133f768a948e505803ea19d602ccb2b0316f346851a7",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-exposure-preview",
+          "l": "/api/tree-exposure-preview",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "4b4d387d0836103cd5ec4f7b1c90c14f80d87eae6b8374290dac1d6424f73cc7",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 342497,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:44:51.157Z",
+      "a": "194385697179",
+      "oid": "339ace742093ee79af88da81f5efb2e36f4a443106d48c992edb9251cd530e72",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-exposure-refresh-background",
+      "d": "08e309d96b93089f447e93ab33e7bb972c5a2972b3f64d09130bf0d04d9b726e",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "p": 10,
+      "id": "2cfc5364005eef881b379bcb59577fd2150d67f07ed9f78e5fd270466f657503",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 1075996,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:45:00.944Z",
+      "a": "191106063332",
+      "oid": "196260600911d4ca3db492c15299981375fa1ddc81696bc3ccac8c768555a4dd",
+      "im": "background",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-exposure-refresh-scheduled",
+      "d": "be72ccf2d3bcb3a463a2c8aa09eefd0e12d3a1f9c47dde899ad54c1337066f92",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "p": 10,
+      "id": "267b373a90821e92b5aea9d45264eacb95c24a3cc608f053f20744ec15f0c197",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 339397,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:45:01.052Z",
+      "a": "622714853058",
+      "oid": "6f8a898571bdf1cb6a6e375ff5a05be94b895a235889326141a659b5737aae37",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-exposure",
+      "d": "0ea62d8290ce1e922e5e87914f1d00f9777843b7a25c03e61625b2a9eca622bf",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-exposure",
+          "l": "/api/tree-exposure",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "40208021bf14f70009e1b6b90722510c2a82b223bc55bbecf4105fa97b5fc3fa",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 370033,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:45:00.947Z",
+      "a": "372283770107",
+      "oid": "8134310796ba921b0469833971f29fe161ec0231fa2d1f19530e2d98e592e9d4",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-knowledge-trial-admin",
+      "d": "f100a9bbd2b42ce0dec661810d1cecf6d87f7d0a073fad65531c2e05742811f1",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-knowledge-trial-admin",
+          "l": "/api/tree-knowledge-trial-admin",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "a3ff0586c42408b195bc35c177a1100166a9cd25f91d0e2c36cc8806e7ccd258",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 354115,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:45:00.693Z",
+      "a": "012004486566",
+      "oid": "16dcacf09b22ac9c335e0162056b5b9256c9fb9873a5df47d0d4faca3ef7841a",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-knowledge-trial-claim-test",
+      "d": "00ecd5c0368615e267abcfe4b9cabc22fba7f457a3546a255169b612945329b2",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-knowledge-trial-claim-test",
+          "l": "/api/tree-knowledge-trial-claim-test",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "3a82c2f1b7890afa705fcd7dea204ce0a26ece7aa3b498de0ff0d026fe960fb7",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 339485,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:45:00.987Z",
+      "a": "459146367395",
+      "oid": "936067f4fb4c8df1772e8dfe4be5cfb74a08a851b7e89ee672d1694ed55c3291",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-knowledge-trial-claim",
+      "d": "6fd0f4534b29efcd00f2aa0f633ae88a1bbd260649ca1ba8aa169f456350efb3",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-knowledge-trial-claim",
+          "l": "/api/tree-knowledge-trial-claim",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "50bc43f5ed897941d98810a7f1b6b637b738e9ddcc503ec40e6c155e9bfb0652",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 344793,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:45:00.978Z",
+      "a": "653012714635",
+      "oid": "378ceef02ca41cbe88f85c95f50477fddb9969c84c13da194ebdf16fd49d719f",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-knowledge-trial-resolver",
+      "d": "cd754a9ff9e97f04d7fdc6f0030ada24a54f1aa5042a557c6976e1a9315735db",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "p": 10,
+      "id": "9882f430815c461f86c718432ee7dfb4838b3e1241e077b6b334d230ef17d0ee",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 350122,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:45:09.931Z",
+      "a": "480875380381",
+      "oid": "5084c0d7f1e2bcab444ad7bed6ff5ebe13000c71f41f8676c9e0afd505efcffc",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-knowledge-trial-rotation-on-deploy",
+      "d": "d97fd3ed830eb5c8a2a0bdc06203486f7808a4932298e780eca81f4c14bf5b4b",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "p": 10,
+      "id": "70a58659de5e41e8364255bcd3a5e725ec26c2465774d6ce8ec5cc7e422bd9a7",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 352009,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:45:10.067Z",
+      "a": "270454320665",
+      "oid": "ba3348f40224f68e6e12c4de293fd897b3f38fdfcd0586052b9b0a6ee2c193a7",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-knowledge-trial-rotation-scheduled",
+      "d": "242abd2bffd71a4553758656c5e1b7434e97f3e2c3a9a465490be161897a5605",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "p": 10,
+      "id": "7fdfb1728aff090a101dcf00e5ebdd746eaddb5db471e9b05d0dab676a720009",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 351849,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:45:09.943Z",
+      "a": "967142903211",
+      "oid": "0a5c9ca4458a6526967188ce17f1d84c16759783b1e179a3fdad6c120d128054",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-knowledge-trial-test",
+      "d": "dac3d74ac9a156c2dd41db9132468080c8f5989eda4d67c40b9ae1464d87b799",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-knowledge-trial-test",
+          "l": "/api/tree-knowledge-trial-test",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "821664525a0ff132b327027f6c0528e3b850d33ca4dcb5fdbfd93bf32a8b7fe5",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 339464,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:45:09.970Z",
+      "a": "755834921685",
+      "oid": "54369ef99f362eae6462b447182c13f6cd6ce363047a5bfdc279a4f4f719542c",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-knowledge-trial",
+      "d": "ffc443359d3e2e4cdfc48e3fa1bb938910ac3a328270ffc5d5b25b3bf6434813",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-knowledge-trial",
+          "l": "/api/tree-knowledge-trial",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "54ff4a9f7443d06560151abefc590a82ff19bed326ab8b8e900e91421d6b89fe",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 1042033,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:45:10.212Z",
+      "a": "042287751506",
+      "oid": "6daac8c810640176872d11fd68d11d23ef9896a073ea32646e5f26f9d497510a",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-leaderboard-preview",
+      "d": "42e6d26997f1a2793b796c14fba92e3dc0951f086c2f617724ae8b800a2edbbc",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-leaderboard-preview",
+          "l": "/api/tree-leaderboard-preview",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "bb131ea17364ab062253ed7e4b2c34a6aa29b824dd7184e5034cd58d9a6d043a",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 342193,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:45:10.020Z",
+      "a": "012533533302",
+      "oid": "0ff571335b055a82ef7aa1d4561954fa28d8d2c0d356816a624fffe58f894c4d",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-leaderboard-refresh-background",
+      "d": "3a17e4af2f83cf71d6b9e23fcb64af62383483ae48992f25fe6d6b60861a4ac9",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "p": 10,
+      "id": "3eaa16237d63cbff2ec72488b8b2858e6ca8399a27f0abf57fc041c4a96e8216",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 374421,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:45:19.710Z",
+      "a": "622137718745",
+      "oid": "d6792cea397482de9e3080917cc6bc30b170d013c7a2ea0f323f41fa9de9087b",
+      "im": "background",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-leaderboard-refresh-scheduled",
+      "d": "49ee439cd6bd7d7899c6cc27081bdc7191d578b78a051f5ece03c73c0d14195f",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "p": 10,
+      "id": "0a4a63e27f625ffa6483ab0a2b7a5579c97105faa10e0bdf2ea225926941857e",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 339179,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:45:19.731Z",
+      "a": "689786375862",
+      "oid": "cc9f7940f34f771739ae53cc2585627b03daeff063ef17078b3633b2df4b7d65",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-leaderboard",
+      "d": "6a96b47975107c1f94d221342397a4bc70cc7f2c78914d341db96355f51ee27f",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-leaderboard",
+          "l": "/api/tree-leaderboard",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "023ca266824ced427ee36fea69b0f5d39014ff71eb7119bd32b15d32ef9d681f",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 376282,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:45:22.343Z",
+      "a": "414361165742",
+      "oid": "ee724ef7a5f0bf7d35772df57aca33a693f4ee5fea7cc9374a08f6c9ac4c9f03",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-limit-orders",
+      "d": "c137e6443ddabcf4020ead936c7e05fc88efca549e87e5ce97a16d758c941a5d",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-limit-orders",
+          "l": "/api/tree-limit-orders",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "e2668defac43ba7ec9204300728bef28a288c854feed8681bd1abea5e5d3deac",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 2067158,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:45:19.821Z",
+      "a": "280498193797",
+      "oid": "43e5317f1157712b8e94064af83cf3d9894dc0f1fa9a692299789679a33eebb9",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-liquidity",
+      "d": "0d63883ef7d84e050d9477c51e06e57b7218997b7376e449fbbdde767f505c87",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-liquidity",
+          "l": "/api/tree-liquidity",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "6b87f0e0192871d7790d5718b0152e2ee6065bcb2b7218c9a6ef451a53c84bf3",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 1029624,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:45:19.736Z",
+      "a": "089772552642",
+      "oid": "40935bd73ea697d61733a3e5fa5e4b6f30626154e824fcba3afbd82f6eea4182",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-market",
+      "d": "a0646406b77c2128eedeb5c8691759c3c68c2bf02ac62c0eaa68ea2f36e1cb44",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-market",
+          "l": "/api/tree-market",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "737ed9666d2ea0ebc58bd1563e046daa01a434f70a90e9141c92cafc664aaf18",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 338809,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:45:19.647Z",
+      "a": "290952543132",
+      "oid": "c482aaa4500388c8aece0299be7d513c3180ed7a8773e90a34d325578ac0390f",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-nftree",
+      "d": "c7569656a25c94414e8a14971860030a30f8457c5746d0163a72e0e8f3c622d3",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-nftree",
+          "l": "/api/tree-nftree",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "ce5b813f7afa95d23676f8a62d37ef29472d26023c3057807c3aeaa7445c75e0",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 341600,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:45:31.394Z",
+      "a": "681352277317",
+      "oid": "af9f0cb424a64959d58b1b6aa61338d855ac24b5f358b91fae3314d53de0f864",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-raffle-claim",
+      "d": "515604875d1b1864ad669dcf2ff845ce1db78ab243caf5d318ee23e28b60da88",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-raffle-claim",
+          "l": "/api/tree-raffle-claim",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "a017d51059ea14a08423041c14121e79077829938e3008f268705a02623c60ec",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 345668,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:45:31.081Z",
+      "a": "131853488294",
+      "oid": "cc12e8fa9cf083ae68d084ddb6199e17701c79556092afea5ebb2c801b332ad2",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-raffle-ingest-buy",
+      "d": "a6ecaaf9878391b72c82cd8938009e3f316bf40b66f74f937c367ca9b723bba9",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-raffle-ingest-buy",
+          "l": "/api/tree-raffle-ingest-buy",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "aacaa6f793f018a9f948e3179079e1f0ea6af5fe9dbe9ee9d8d0db0273f9883f",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 347185,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:45:31.131Z",
+      "a": "169879185114",
+      "oid": "269cfac3d2200666ca2b3327128e60c79cbc473e1dff5b8b9dfce41229de8618",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-raffle-status",
+      "d": "5e425ca24d184053a6efc3d63c577189cc619e0cc4368d7c3adac579bc40c168",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-raffle-status",
+          "l": "/api/tree-raffle-status",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "2d34e588a70d709d4d4197f8e90e48e174a8ab7e62a85cd116ba52f4546d37c2",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 342188,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:45:31.257Z",
+      "a": "512882844602",
+      "oid": "f2962ee08a07cf488b4475cd8d82a91317b8ed41e8af67f2806b97bdd23ebd63",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-swap-quote",
+      "d": "23d98a34cf8248b06f069976d37d635a7b93217c660db35f24c4fbaba810ce30",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-swap-quote",
+          "l": "/api/tree-swap-quote",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "1ef3ea4e04dbe198fce893bf7139345fae008296c98d7ddb9aca0a7ec5cdfa98",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 1539459,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:45:31.231Z",
+      "a": "270454320665",
+      "oid": "1227ef601f040e70a08f2da6c6cb02b00e1ab56d3193b85cf1f4f65765df8588",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-v3-overview",
+      "d": "3223f1ca23947a9c1a86a4cd59d4a26fba36297d79fba21b94c7b84be6e8db3f",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-v3-overview",
+          "l": "/api/tree-v3-overview",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "0692ef18d78e0f0dda347491979de32ca5cf4759b4f9b44f81446a3558b0ff8a",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 1034525,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T22:14:10.314Z",
+      "a": "643318452420",
+      "oid": "fd49cd47450af76c0366dea5ad5306848177290f2aaa1d11094e8b0cbc3796a2",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-volume",
+      "d": "57f085fecd6597c85b00ffed5a00cfd3127561b4c6a65542cec110e97f4b2601",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-volume",
+          "l": "/api/tree-volume",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "3a82b824a3e2306c1d8eff2e58640fa7378cf2c84f6a8058f453b70cb8075854",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 1028768,
+      "r": "nodejs22.x",
+      "c": "2026-10-06T20:45:40.730Z",
+      "a": "924105187622",
+      "oid": "3b31ada757eec2d1ec6833dfe495128ad306cee37aee66048bb99198afe03899",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "tree-knowledge-trial-correction",
+      "d": "bb9f177839931c33a3da6012b66090ae74edd324ba3e1f3ced1d37947e7044c8",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-knowledge-trial-correction",
+          "l": "/api/tree-knowledge-trial-correction",
+          "e": null,
+          "m": [],
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "8e6b6fde0e07f608f3fbb705274d2d175c88099d5331b2cdb31913b28d7ca8f7",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 343304,
+      "r": "nodejs24.x",
+      "c": "2026-10-06T20:45:40.582Z",
+      "a": "617891814415",
+      "oid": "96369670d90acb609c524bc6c5816804d0cd7fed257a1fcc6ece33cc41e994c2",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "treeforce89-dev",
+      "d": "725fe5a7e7ff30c2c83f7b6a1bf1af534a72ee2efa1cc6faf64151743cf84905",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/play/treeforce89/api/*",
+          "l": null,
+          "e": "^\\/play\\/treeforce89\\/api(?:\\/(.*))\\/?$",
+          "m": [],
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "tr": {
+        "action": {
+          "type": "rate_limit",
+          "config": {
+            "aggregate": {
+              "keys": [
+                {
+                  "type": "ip"
+                }
+              ]
+            },
+            "rate_limit_config": {
+              "algorithm": "sliding_window",
+              "window_size": 60,
+              "window_limit": 60
+            }
+          }
+        }
+      },
+      "id": "2bd4f4c488f4ffd7289a5506a3cd5d60199ac7a04a4800a43486afa704d520c4",
+      "a": "123818897194",
+      "c": "2026-10-31T04:18:24.309Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "5dfb65d55ed80cdf7861f9d803935b864aacdea54672741565c4785388526d50",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 1753127
+    }
+  ],
+  "functionSchedules": [
+    {
+      "name": "tree-badges-refresh-scheduled",
+      "cron": "47 */6 * * *"
+    },
+    {
+      "name": "tree-exposure-refresh-scheduled",
+      "cron": "27 */6 * * *"
+    },
+    {
+      "name": "tree-knowledge-trial-resolver",
+      "cron": "5 * * * *"
+    },
+    {
+      "name": "tree-knowledge-trial-rotation-scheduled",
+      "cron": "15 * * * *"
+    },
+    {
+      "name": "tree-leaderboard-refresh-scheduled",
+      "cron": "17 */6 * * *"
+    }
+  ]
+}

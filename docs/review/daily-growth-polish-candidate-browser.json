@@ -1,0 +1,298 @@
+{
+  "target": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/play/",
+  "label": "candidate",
+  "actualHostedCode": true,
+  "synthetic": false,
+  "noWalletConnected": true,
+  "noSignatures": true,
+  "noPostsAllowed": true,
+  "checks": [
+    {
+      "name": "TLS independently verified with configured environment CA",
+      "authorized": true,
+      "status": 200,
+      "issuer": "openai.com"
+    },
+    {
+      "name": "Actual hosted signed-out state",
+      "state": "signed-out",
+      "status": "",
+      "visit": "—",
+      "goals": [
+        "Seedling3 check-ins",
+        "Sapling7 check-ins",
+        "Deep Roots14 check-ins",
+        "Full Canopy21 check-ins"
+      ],
+      "meters": [
+        {
+          "id": "growth-quest-meter",
+          "role": null,
+          "now": null,
+          "unknown": true
+        },
+        {
+          "id": "growth-attendance-meter",
+          "role": null,
+          "now": null,
+          "unknown": true
+        },
+        {
+          "id": "growth-passport-meter",
+          "role": null,
+          "now": null,
+          "unknown": true
+        }
+      ],
+      "quest": "Garden Bot"
+    },
+    {
+      "name": "Desktop1440 overflow",
+      "viewport": 1440,
+      "document": 1440,
+      "scroll": 1440
+    },
+    {
+      "name": "Actual no-wallet dialog",
+      "open": true,
+      "noWalletVisible": true,
+      "choices": 0,
+      "focusInside": true,
+      "status": ""
+    },
+    {
+      "name": "Dialog focus, Escape and restoration",
+      "passed": true
+    },
+    {
+      "name": "Mobile390 signedout overflow",
+      "viewport": 390,
+      "document": 390,
+      "scroll": 390
+    },
+    {
+      "name": "Mobile390 dialog overflow",
+      "viewport": 390,
+      "document": 390,
+      "scroll": 390
+    },
+    {
+      "name": "Mobile390 bottomsheet",
+      "bottom": 844,
+      "top": 466.75,
+      "height": 377.25,
+      "viewport": 844
+    },
+    {
+      "name": "Mobile390 month overflow",
+      "viewport": 390,
+      "document": 390,
+      "scroll": 390
+    },
+    {
+      "name": "Mobile390 badges overflow",
+      "viewport": 390,
+      "document": 390,
+      "scroll": 390
+    },
+    {
+      "name": "Mobile320 signedout overflow",
+      "viewport": 320,
+      "document": 320,
+      "scroll": 320
+    },
+    {
+      "name": "Mobile320 dialog overflow",
+      "viewport": 320,
+      "document": 320,
+      "scroll": 320
+    },
+    {
+      "name": "Mobile320 bottomsheet",
+      "bottom": 844,
+      "top": 447.5625,
+      "height": 396.4375,
+      "viewport": 844
+    },
+    {
+      "name": "Mobile320 month overflow",
+      "viewport": 320,
+      "document": 320,
+      "scroll": 320
+    },
+    {
+      "name": "Mobile320 badges overflow",
+      "viewport": 320,
+      "document": 320,
+      "scroll": 320
+    },
+    {
+      "name": "Daily Growth controller runtime errors",
+      "count": 0
+    },
+    {
+      "name": "No remote write requests allowed",
+      "nonGet": 0,
+      "blocked": 0
+    }
+  ],
+  "screenshots": [
+    "/tmp/daily-growth-polish-hosted/candidate-desktop-signedout.png",
+    "/tmp/daily-growth-polish-hosted/candidate-desktop-no-wallet.png",
+    "/tmp/daily-growth-polish-hosted/candidate-mobile-390-signedout.png",
+    "/tmp/daily-growth-polish-hosted/candidate-mobile-390-no-wallet.png",
+    "/tmp/daily-growth-polish-hosted/candidate-mobile-320-signedout.png",
+    "/tmp/daily-growth-polish-hosted/candidate-mobile-320-no-wallet.png"
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/play/",
+      "resource": "document"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/styles/tree-arcade-suite.css",
+      "resource": "stylesheet"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/assets/tree-token-logo-official.webp",
+      "resource": "image"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/assets/arcade/tree-force-89-poster.webp",
+      "resource": "image"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/assets/arcade/arboretum-poster.webp",
+      "resource": "image"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/assets/arcade/garden-battles-gameplay.jpg",
+      "resource": "image"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/scripts/arcade-nftree-access.js",
+      "resource": "script"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/scripts/arcade-daily-growth.js",
+      "resource": "script"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/assets/arcade/garden-bot-poster.webp",
+      "resource": "image"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/assets/arcade/pvp-battle-poster.webp",
+      "resource": "image"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/assets/arcade/arborist-trials-poster.webp",
+      "resource": "image"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/assets/arcade/canopy-clash-poster.webp",
+      "resource": "image"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+      "resource": "image"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/scripts/arcade-nftree-access-core.mjs",
+      "resource": "script"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/assets/arcade/arcade-growth-wallet.js",
+      "resource": "script"
+    },
+    {
+      "method": "GET",
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/api/arcade-growth?action=status",
+      "resource": "fetch"
+    }
+  ],
+  "responses": [
+    {
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/play/",
+      "status": 200
+    },
+    {
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/assets/tree-token-logo-official.webp",
+      "status": 200
+    },
+    {
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/styles/tree-arcade-suite.css",
+      "status": 200
+    },
+    {
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/assets/arcade/tree-force-89-poster.webp",
+      "status": 200
+    },
+    {
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/scripts/arcade-daily-growth.js",
+      "status": 200
+    },
+    {
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/assets/arcade/garden-battles-gameplay.jpg",
+      "status": 200
+    },
+    {
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/assets/arcade/arboretum-poster.webp",
+      "status": 200
+    },
+    {
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/assets/arcade/canopy-clash-poster.webp",
+      "status": 200
+    },
+    {
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/assets/arcade/pvp-battle-poster.webp",
+      "status": 200
+    },
+    {
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/assets/arcade/garden-bot-poster.webp",
+      "status": 200
+    },
+    {
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+      "status": 200
+    },
+    {
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/scripts/arcade-nftree-access.js",
+      "status": 200
+    },
+    {
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/assets/arcade/arborist-trials-poster.webp",
+      "status": 200
+    },
+    {
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/scripts/arcade-nftree-access-core.mjs",
+      "status": 200
+    },
+    {
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/assets/arcade/arcade-growth-wallet.js",
+      "status": 200
+    },
+    {
+      "url": "https://6ae66f6c82e32369a34b6d1d--tree-token.netlify.app/api/arcade-growth?action=status",
+      "status": 200
+    }
+  ],
+  "blocked": [],
+  "pageErrors": [],
+  "consoleErrors": []
+}
