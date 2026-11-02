@@ -1,0 +1,74 @@
+{
+  "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
+  "baseline": "6ae7f8a9183c770b8f0eb50c",
+  "baselineSha256": "67e7f1d86a7aefd1d871415c8b6811428a6523797a4e6c44dd0cedf662a2b2d8",
+  "sourceCommit": "81b463838a2ed3c5c388be14c1935a80c221c73d",
+  "sourceTree": "e028fb2cd59f31e1f13c235d61f9e03bfe8caa4e",
+  "sourceBranch": "fix/arcade-session-return-20261102",
+  "database": {
+    "branchId": "feature/treeforce89-play-integration",
+    "identitySha256": "df2f0abee059d9898495a125018fa0a291d50b9050c0d4557231f409bed53065",
+    "productionIdentitySha256": "5a940f1b6bdcce4a96dff3ffcfeb6a2b5de01b09fcfe2f8f1e351a9a0ef47712",
+    "bindingSha256": "bd43f510880e7ae9c423792345ccab6d6eacb63e30b1da9c4a238f479d3b33e3"
+  },
+  "before": {
+    "siteFunctionsEnvironmentEntries": 49,
+    "siteFunctionsEnvironmentSha256": "92587d897f64ece98caf1d474677b40041cc2d01f1f3374faac8c00744ef0355",
+    "preservedFunctionEnvironmentEntries": 49,
+    "preservedFunctionEnvironmentSha256": "92587d897f64ece98caf1d474677b40041cc2d01f1f3374faac8c00744ef0355",
+    "allOtherSiteEnvironmentEntries": 49,
+    "allOtherSiteEnvironmentSha256": "92587d897f64ece98caf1d474677b40041cc2d01f1f3374faac8c00744ef0355",
+    "sharedFunctionEnvironmentEntries": 0,
+    "sharedFunctionEnvironmentSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "allSharedEnvironmentEntries": 0,
+    "allSharedEnvironmentSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "legacyBuildEnvironmentSha256": "46bc4bf6e56b046d14b6a6fa19804d1ddd7bdcff405ec09a116c24013ea34809",
+    "binding": null
+  },
+  "beforeProbe": {
+    "url": "https://tree-token.xyz/api/arcade-growth?action=treeforce-play",
+    "checkedAt": "2026-11-02T03:07:34.359257+00:00",
+    "method": "POST",
+    "status": 503,
+    "code": "participation-unavailable",
+    "milliseconds": 907.41,
+    "credential": "cryptographically random nonexistent token; no user credential",
+    "run": "synthetic nonexistent run; no game session created",
+    "participationWritten": false,
+    "interpretation": "Missing-binding reader failed before its session SELECT"
+  },
+  "recordedAt": "2026-11-02T03:07:35.618365+00:00",
+  "operation": "Create exactly one missing production/functions secret; no other writes",
+  "configured": true,
+  "configuredAt": "2026-11-02T03:07:37.169243+00:00",
+  "environment": {
+    "siteFunctionsEnvironmentEntries": 50,
+    "siteFunctionsEnvironmentSha256": "ee432a34ade907b85ae58478272be8356728aad5a5a3731a8a722e90204df7d4",
+    "preservedFunctionEnvironmentEntries": 49,
+    "preservedFunctionEnvironmentSha256": "92587d897f64ece98caf1d474677b40041cc2d01f1f3374faac8c00744ef0355",
+    "allOtherSiteEnvironmentEntries": 49,
+    "allOtherSiteEnvironmentSha256": "92587d897f64ece98caf1d474677b40041cc2d01f1f3374faac8c00744ef0355",
+    "sharedFunctionEnvironmentEntries": 0,
+    "sharedFunctionEnvironmentSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "allSharedEnvironmentEntries": 0,
+    "allSharedEnvironmentSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "legacyBuildEnvironmentSha256": "46bc4bf6e56b046d14b6a6fa19804d1ddd7bdcff405ec09a116c24013ea34809",
+    "binding": {
+      "metadata": {
+        "key": "TREEFORCE89_DEV_DATABASE_URL",
+        "isSecret": true,
+        "scopes": [
+          "functions"
+        ],
+        "values": [
+          {
+            "id": "e74b3d13-01c7-443a-a6f1-8f3b4940f415",
+            "context": "production",
+            "contextParameter": null
+          }
+        ]
+      },
+      "recordSha256": "731e02e4279ede868687f2b2e67dc7c58a6712b59482de2dfb4ff20244a7fcf4"
+    }
+  }
+}

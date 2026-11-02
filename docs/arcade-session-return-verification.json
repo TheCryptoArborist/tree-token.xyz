@@ -1,6 +1,6 @@
 {
-  "verifiedAt": "2026-11-02T03:01:44.967779+00:00",
-  "stage": "pre-release",
+  "verifiedAt": "2026-11-02T03:45:56.811Z",
+  "stage": "published-and-verified",
   "baselineDeploy": "6ae7f8a9183c770b8f0eb50c",
   "sourceAncestor": "caed1e3f96a3496537515fc46d9cb1bd7fd9e9eb",
   "sourceBranch": "fix/arcade-session-return-20261102",
@@ -38,31 +38,113 @@
       "No real user run was credited by these tests."
     ]
   },
-  "plannedRuntimeRepair": {
-    "key": "TREEFORCE89_DEV_DATABASE_URL",
-    "scope": "functions",
-    "context": "production",
-    "secret": true,
-    "databaseIdentity": "df2f0abee059d9898495a125018fa0a291d50b9050c0d4557231f409bed53065",
-    "preservedExistingSiteFunctionsEntries": 49,
-    "functionRebuild": false,
-    "databaseWrites": false
-  },
   "releaseGuardReport": "docs/arcade-session-return-release-guards.json",
   "runtimeDiagnosis": "docs/arcade-session-return-runtime-diagnosis.json",
   "hostedVerification": {
-    "candidate": "pending",
-    "canonical": "pending",
-    "safeParticipationProbe": "pending"
+    "candidate": {
+      "passed": 5,
+      "failed": 0,
+      "checkedAt": "2026-11-02T03:43:25.584Z",
+      "report": "docs/review/arcade-session-return/hosted-candidate-browser-report.json",
+      "reportSha256": "e945c013fd36c97b286e1e9abcd9c42b805e467548af9343502a688e07673c61",
+      "synthetic": false,
+      "actualHostedCode": true,
+      "requests": 20,
+      "successfulHttp200Responses": 20,
+      "sourceFilesExact": 4,
+      "viewports": [
+        {
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "width": 390,
+          "height": 844
+        },
+        {
+          "width": 320,
+          "height": 740
+        }
+      ],
+      "noRuntimeErrors": true,
+      "noOverflow": true,
+      "noWalletConnected": true,
+      "noSignatures": true,
+      "noRemoteWrites": true
+    },
+    "canonical": {
+      "passed": 5,
+      "failed": 0,
+      "checkedAt": "2026-11-02T03:45:56.811Z",
+      "report": "docs/review/arcade-session-return/hosted-canonical-browser-report.json",
+      "reportSha256": "70f421e03ecc5e024b150fb3614f398c5143c373fea2ba852723d3d7b5fcd5e0",
+      "synthetic": false,
+      "actualHostedCode": true,
+      "requests": 20,
+      "successfulHttp200Responses": 20,
+      "sourceFilesExact": 4,
+      "viewports": [
+        {
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "width": 390,
+          "height": 844
+        },
+        {
+          "width": 320,
+          "height": 740
+        }
+      ],
+      "noRuntimeErrors": true,
+      "noOverflow": true,
+      "noWalletConnected": true,
+      "noSignatures": true,
+      "noRemoteWrites": true
+    },
+    "candidateNegativeAuthenticationProbe": {
+      "url": "https://6ae806bda0c2f59d35109a6e--tree-token.netlify.app/api/arcade-growth?action=treeforce-play",
+      "checkedAt": "2026-11-02T03:45:23.793366+00:00",
+      "method": "POST",
+      "status": 401,
+      "code": "invalid-game-session",
+      "milliseconds": 1831.98,
+      "credential": "cryptographically random nonexistent token; no user credential",
+      "run": "synthetic nonexistent run; no game session created",
+      "participationWritten": false,
+      "interpretation": "Pinned database connection and real session SELECT rejected the nonexistent session before ownership/RPC"
+    },
+    "canonicalNegativeAuthenticationProbe": {
+      "url": "https://tree-token.xyz/api/arcade-growth?action=treeforce-play",
+      "checkedAt": "2026-11-02T03:45:44.780150+00:00",
+      "method": "POST",
+      "status": 401,
+      "code": "invalid-game-session",
+      "milliseconds": 342.19,
+      "credential": "cryptographically random nonexistent token; no user credential",
+      "run": "synthetic nonexistent run; no game session created",
+      "participationWritten": false,
+      "interpretation": "Pinned database connection and real session SELECT rejected the nonexistent session before ownership/RPC"
+    },
+    "positiveRealWalletEndToEndPerformed": false,
+    "probeQualification": "Valid-form nonexistent synthetic credentials exercise the pinned database connection and session SELECT, then fail before ownership/participation writes. They do not prove a successful real-wallet game run."
   },
   "preservation": {
     "staticPaths": 284,
     "unchangedStaticPaths": 283,
     "completeFunctions": 41,
     "schedules": 5,
-    "redirectSha1": "4450ad95c97a2045c2575bd2cc75c49a8a2ba6c7"
+    "redirectSha1": "4450ad95c97a2045c2575bd2cc75c49a8a2ba6c7",
+    "exactFunctionPackages": 41,
+    "completeFunctionRecordsIdentical": false,
+    "reviewedProviderFieldDifferences": 162,
+    "protectedRuntimeConfigurationExact": true,
+    "siteFunctionsEnvironmentEntries": 50,
+    "preservedExistingSiteFunctionsEntries": 49,
+    "previousDeployLocked": false
   },
-  "userRunRecovery": "No individual user wallet or run has been identified or credited. Stored aggregate records are consistent; failed requests are not proof of earned participation.",
+  "userRunRecovery": "The reporting user wallet and prior run were not identified, recovered, or manually credited. A failed request is not evidence of saved participation.",
   "releaseGuards": {
     "passed": 66,
     "failed": 0,
@@ -70,5 +152,116 @@
     "baselineSha256": "67e7f1d86a7aefd1d871415c8b6811428a6523797a4e6c44dd0cedf662a2b2d8",
     "remoteRequests": 0,
     "report": "docs/arcade-session-return-release-guards.json"
-  }
+  },
+  "published": true,
+  "deployId": "6ae806bda0c2f59d35109a6e",
+  "publishedAt": "2026-11-02T03:45:42.146Z",
+  "locked": true,
+  "sourceCommit": "81b463838a2ed3c5c388be14c1935a80c221c73d",
+  "sourceTree": "e028fb2cd59f31e1f13c235d61f9e03bfe8caa4e",
+  "recoveryCommit": "00e9d0e0f7968751559c6f9458d5bdd1b3384afa",
+  "recoveryTree": "3edeab27f14dc687b38a97f237a2027cc7c61e2b",
+  "retryProcedureCommit": "ef2fe8edd269600379c4160750553262ada8f5c3",
+  "retryProcedureTree": "c94ac71110cee9de398afbc5dfc8d7e7ebf09f11",
+  "finalProcedureCommit": "27b42110ecbe95e8b3e20444b5a283f8077a96af",
+  "finalProcedureTree": "7cde7e5ca6e94f51a025b98f893f87cc4a56b319",
+  "releaseReceipt": "production/arcade-session-return-release.json",
+  "runtimeConfiguration": "production/arcade-session-return-runtime-configuration.json",
+  "runtimeRepair": {
+    "completed": true,
+    "key": "TREEFORCE89_DEV_DATABASE_URL",
+    "siteSecret": true,
+    "scope": "functions",
+    "context": "production",
+    "databaseIdentity": "df2f0abee059d9898495a125018fa0a291d50b9050c0d4557231f409bed53065",
+    "siteFunctionsEnvironmentEntries": 50,
+    "preservedExistingSiteFunctionsEntries": 49,
+    "configurationSha256": "233fe64419a86b8d70a4416a53916506f08932ee5c370682f6a196b54c01f3e3",
+    "newEnvironmentRecordCount": 1,
+    "databaseSchemaChanged": false,
+    "productionGameParticipationWritten": false,
+    "qualification": "Prior package and site/shared fingerprint checks omitted the original deployment-specific TREE FORCE binding. The persistent site Functions/Production secret and real database-backed negative authentication probes close that verification gap."
+  },
+  "archiveRecovery": {
+    "exactDeployedPackages": 41,
+    "exactTotalBytes": 27976379,
+    "existingArchivesReused": 38,
+    "additionalArchivesRecovered": 3,
+    "recoveredExistingArcadeGrowthArchive": true,
+    "originalSourceAndLockPackageReconstructions": [
+      "treeforce89-dev",
+      "canopy-access"
+    ],
+    "mechanicallyReconstructedArchiveCount": 2,
+    "all41DigestsAndByteCountsExact": true,
+    "backendImplementationChanged": false,
+    "newDependencyVersionsIntroduced": false,
+    "evidence": "docs/arcade-session-return-package-recovery.json",
+    "manifest": "production/arcade-session-return-function-packages.json"
+  },
+  "providerMetadataReview": {
+    "completeFunctionRecordsIdentical": false,
+    "exactReviewedDifferenceCount": 162,
+    "changedFieldCounts": {
+      "a": 39,
+      "c": 41,
+      "id": 41,
+      "oid": 41
+    },
+    "allOtherFieldsAndPresenceExact": true,
+    "recordOrderUnchanged": true,
+    "protectedPackageAndRuntimeFieldsExact": true,
+    "review": "docs/arcade-session-return-provider-review.json",
+    "scope": "Only the exact committed before/after values are approved; no general identity-field waiver."
+  },
+  "candidateRetry": {
+    "supersededCandidate": "6ae7fe815070789ddb725fa3",
+    "supersededCandidatePublished": false,
+    "supersededCandidatePublicationForbidden": true,
+    "publishedReplacement": "6ae806bda0c2f59d35109a6e",
+    "manifestChange": {
+      "async": {
+        "before": false,
+        "after": true
+      }
+    },
+    "payloadSha256": "11dd087d6272edba2e2f8d675459cbf59a2320bb17e4c397d55c98734d44fa95",
+    "reason": "The first candidate remained uploading with no required files or functions and no available function records after the normal 20-minute post-upload wait. A fresh asynchronous manifest followed current official CLI policy for 284 paths; this does not prove the cause of the original stall.",
+    "originalSourceFilesConfigurationAndPackageDigestsUnchanged": true,
+    "review": "docs/arcade-session-return-retry-review.json"
+  },
+  "releaseGuardSuites": [
+    {
+      "name": "release",
+      "passed": 66,
+      "failed": 0,
+      "remoteRequests": 0,
+      "helperSha256": "c1fef669f8b0775b8970e0f31b16e5e4db406e4a32e7114abb291cc18a642f0f",
+      "report": "docs/arcade-session-return-release-guards.json"
+    },
+    {
+      "name": "attachment",
+      "passed": 92,
+      "failed": 0,
+      "remoteRequests": 0,
+      "helperSha256": "1ef530a8e707000228380c45483f943a999ffe4207f766003a5e69685b5eae56",
+      "report": "docs/arcade-session-return-attachment-guards.json"
+    },
+    {
+      "name": "retry",
+      "passed": 31,
+      "failed": 0,
+      "remoteRequests": 0,
+      "helperSha256": "0e6e1dda078c836f5d260022bd2773d00e0fd7c383ac01937b84c13a9cf3a405",
+      "report": "docs/arcade-session-return-retry-guards.json"
+    },
+    {
+      "name": "finalization",
+      "passed": 55,
+      "failed": 0,
+      "remoteRequests": 0,
+      "helperSha256": "1cd0aa8e79c1ccd859b7469d2af8121c92f1f6664ed980de02176f47145d9971",
+      "report": "docs/arcade-session-return-finalization-guards.json"
+    }
+  ]
 }
