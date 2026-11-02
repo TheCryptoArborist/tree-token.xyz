@@ -240,12 +240,15 @@ test('compact Daily Growth starts closed and its native progress disclosure neve
   assert.equal(h.byId('summary-note').textContent, 'Check in. Play. Grow your collection.');
   assert.equal(h.byId('summary-count').textContent, 'Your first badge starts here.');
   assert.equal(h.byId('summary-label').textContent, '3 cumulative check-ins to earn');
-  assert.equal(h.byId('summary-art-label').textContent, 'Seedling');
-  assert.equal(h.byId('teaser-kind').textContent, 'Next badge');
-  assert.equal(h.byId('teaser-badge').textContent, 'Seedling');
+  assert.equal(h.byId('summary-art-label').textContent, 'TREE Spark');
+  assert.equal(h.byId('summary-rank').textContent, 'RANK 01 / 04');
+  assert.equal(h.byId('summary-flavor').textContent, 'The first spark of your TREE story.');
+  assert.equal(h.byId('reward-kind').textContent, 'YOUR NEXT UNLOCK');
+  assert.equal(h.byId('teaser-kind').textContent, 'Next legend');
+  assert.equal(h.byId('teaser-badge').textContent, 'TREE Spark');
   assert.equal(h.byId('details-hint').textContent, '3 check-ins to earn');
   assert.equal(h.byId('reward-earned').hidden, true);
-  assert.equal(h.byId('summary-art').getAttribute('src'), '/assets/arcade/garden-bot-poster.webp');
+  assert.equal(h.byId('summary-art').getAttribute('src'), '/assets/arcade-growth/tree-spark.webp');
   assert.equal(h.byId('connect').textContent, 'Connect to check in');
   assert.equal(h.byId('connect').classList.contains('growth-primary'), true);
   assert.equal(h.byId('connect').classList.contains('growth-secondary'), false);
@@ -277,7 +280,7 @@ test('compact check-in remains available with details closed and saves attendanc
   assert.equal(h.byId('check-in-row').disabled, false);
   assert.equal(h.byId('summary-note').textContent, 'Make today count. Check in and keep growing.');
   assert.equal(h.byId('invitation-hint').textContent, 'Free check-in · No game required');
-  assert.equal(h.byId('summary-count').textContent, 'One more check-in to Seedling');
+  assert.equal(h.byId('summary-count').textContent, 'One more check-in to TREE Spark');
   assert.equal(h.byId('summary-label').textContent, '2 / 3 check-ins');
   assertMeter(h, 'summary-meter', 2, 3);
   assert.equal(h.count('check-in'), 0, 'Sign-in does not automatically save attendance');
@@ -301,9 +304,9 @@ test('compact check-in remains available with details closed and saves attendanc
   assert.equal(h.byId('check-in-row').disabled, true);
   assert.equal(h.byId('check-in-row').textContent, 'Checked in ✓');
   assert.equal(h.byId('check-in-task').classList.contains('is-complete'), true);
-  assert.equal(h.byId('summary-count').textContent, '4 more check-ins to Sapling');
-  assert.equal(h.byId('summary-art').getAttribute('src'), '/assets/arcade/arboretum-poster.webp');
-  assert.equal(h.byId('summary-art-label').textContent, 'Sapling');
+  assert.equal(h.byId('summary-count').textContent, '4 more check-ins to NFTree Scout');
+  assert.equal(h.byId('summary-art').getAttribute('src'), '/assets/arcade-growth/nftree-scout.webp');
+  assert.equal(h.byId('summary-art-label').textContent, 'NFTree Scout');
   assertMeter(h, 'summary-meter', 3, 7);
   assert.match(h.byId('check-in-state').textContent, /attendance is saved/i);
   h.byId('check-in').click();
@@ -473,6 +476,12 @@ test('signed-out meters stay unknown while monthly badge goals are clearly previ
   assert.equal(h.byId('journey-stops').children.length, 4);
   assert.equal(h.byId('journey-stops').querySelectorAll('.is-preview').length, 4);
   assert.equal(h.byId('journey-stops').querySelectorAll('.is-done').length, 0);
+  assert.deepEqual([...h.byId('journey-stops').children].map(item => item.dataset.rank), ['seedling', 'sapling', 'deep-roots', 'full-canopy']);
+  assert.deepEqual([...h.byId('journey-stops').querySelectorAll('.growth-stop-copy strong')].map(item => item.textContent),
+    ['TREE Spark', 'NFTree Scout', 'TREE FORCE Vanguard', 'Thickquidity Legend']);
+  assert.deepEqual([...h.byId('journey-stops').querySelectorAll('.growth-stop-ordinal')].map(item => item.textContent), ['01', '02', '03', '04']);
+  assert.deepEqual([...h.byId('journey-stops').querySelectorAll('.growth-stop-state')].map(item => item.textContent), ['3 check-ins', '7 check-ins', '14 check-ins', '21 check-ins']);
+  assert.equal(h.byId('journey-stops').querySelectorAll('.growth-stop-progress, .growth-stop-count').length, 0, 'Preview goals do not invent earned attendance or numeric progress');
   assert.match(h.byId('journey-note').textContent, /goals|sign in/i);
   assert.equal(h.byId('badges').children.length, 0);
   assert.equal(h.byId('days').children.length, 30, 'The public server month can supply dates without revealing attendance');
@@ -554,20 +563,25 @@ test('meters reflect saved attendance, the next milestone and required stamps, r
   assert.equal(h.byId('visit-total').textContent, '/ 30 days');
   assertMeter(h, 'quest-meter', 0, 1);
   assertMeter(h, 'passport-meter', 3, 4);
-  assert.equal(h.byId('summary-count').textContent, '6 more check-ins to Deep Roots');
+  assert.equal(h.byId('summary-count').textContent, '6 more check-ins to TREE FORCE Vanguard');
   assert.equal(h.byId('summary-label').textContent, '8 / 14 check-ins');
-  assert.equal(h.byId('summary-art-label').textContent, 'Deep Roots');
-  assert.equal(h.byId('summary-art').getAttribute('src'), '/assets/profile-nftree-art.jpg');
+  assert.equal(h.byId('summary-art-label').textContent, 'TREE FORCE Vanguard');
+  assert.equal(h.byId('summary-art').getAttribute('src'), '/assets/arcade-growth/tree-force-vanguard.webp');
+  assert.equal(h.byId('summary-rank').textContent, 'RANK 03 / 04');
+  assert.equal(h.byId('summary-flavor').textContent, 'Stand watch over the canopy.');
   assert.equal(h.byId('summary-meter').hidden, false);
   assertMeter(h, 'summary-meter', 8, 14);
   assert.equal(h.byId('journey-stops').querySelectorAll('.is-done').length, 2);
+  assert.deepEqual([...h.byId('journey-stops').querySelectorAll('.growth-stop-state')].map(item => item.textContent), ['Earned', 'Earned', 'Up next', '21 check-ins']);
+  assert.deepEqual([...h.byId('journey-stops').querySelectorAll('.growth-stop-progress')].map(item => [item.getAttribute('aria-valuenow'), item.getAttribute('aria-valuemax')]),
+    [['3', '3'], ['7', '7'], ['8', '14'], ['8', '21']], 'Collection meters retain the server attendance and original thresholds');
   h.setProgress(progress({ visits: [...visits, 12], quests: [8, 12], enabledGames: FORCE_GAMES, stamps: ['garden-bot', 'arborist-trials', 'treeforce89'] }));
   await h.controller.refresh();
   assert.equal(h.byId('days').querySelectorAll('.is-done').length, 9);
   assert.equal(h.byId('visit-count').textContent, '9');
   assertMeter(h, 'quest-meter', 1, 1);
   assertMeter(h, 'passport-meter', 3, 4);
-  assert.equal(h.byId('summary-count').textContent, '5 more check-ins to Deep Roots');
+  assert.equal(h.byId('summary-count').textContent, '5 more check-ins to TREE FORCE Vanguard');
   assertMeter(h, 'summary-meter', 9, 14);
   h.handlers.sync = () => ({ status: 'error', error: 'service-unavailable', message: 'Try again later.' });
   await h.controller.refresh();
@@ -576,6 +590,7 @@ test('meters reflect saved attendance, the next milestone and required stamps, r
   assertMeter(h, 'quest-meter', 1, 1);
   assertMeter(h, 'passport-meter', 3, 4);
   for (const id of PROGRESS_METERS) assert.match(h.byId(id).getAttribute('aria-valuetext'), /last saved progress/i);
+  for (const item of h.byId('journey-stops').querySelectorAll('.growth-stop-progress')) assert.match(item.getAttribute('aria-valuetext'), /last saved progress/i);
   assert.equal(h.byId('month-rail').classList.contains('is-stale'), true);
   assert.match(h.byId('rail-count').getAttribute('aria-label'), /9 of 30.*last saved/i);
   assert.match(h.byId('days').querySelector('[data-date="2026-11-12"]').getAttribute('aria-label'), /checked in.*last saved/i);
@@ -586,8 +601,8 @@ test('meters reflect saved attendance, the next milestone and required stamps, r
   h.changeWallet(OTHER_ACCOUNT);
   assertUnknownMeters(h);
   assert.match(h.byId('summary-count').textContent, /^(Your first badge starts here\.|Your badges will be here\.)$/);
-  assert.equal(h.byId('summary-art-label').textContent, 'Seedling');
-  assert.equal(h.byId('summary-art').getAttribute('src'), '/assets/arcade/garden-bot-poster.webp');
+  assert.equal(h.byId('summary-art-label').textContent, 'TREE Spark');
+  assert.equal(h.byId('summary-art').getAttribute('src'), '/assets/arcade-growth/tree-spark.webp');
   assert.equal(h.byId('invitation-title').textContent, 'Daily Growth');
   assert.equal(h.byId('summary-meter').hidden, true);
   assert.equal(h.byId('check-in').hidden, true);
@@ -608,17 +623,54 @@ test('all attendance milestones are earned while the month rail keeps the actual
   assert.equal(h.byId('days').children.length, 31);
   assert.equal(h.byId('days').querySelectorAll('.is-done').length, 22);
   assert.equal(h.byId('visit-total').textContent, '/ 31 days');
-  assert.equal(h.byId('teaser-kind').textContent, 'Attendance complete');
-  assert.equal(h.byId('reward-kind').textContent, 'MONTHLY ATTENDANCE COMPLETE');
+  assert.equal(h.byId('teaser-kind').textContent, 'Collection complete');
+  assert.equal(h.byId('reward-kind').textContent, 'COLLECTION COMPLETE');
+  assert.equal(h.byId('summary-rank').textContent, 'RANK 04 / 04');
+  assert.equal(h.byId('summary-flavor').textContent, 'A month of showing up for TREE.');
   assert.equal(h.byId('details-hint').textContent, 'Earned automatically ✓');
   assert.equal(h.byId('reward-earned').querySelectorAll('.growth-earned-chip').length, 4);
   assert.equal(h.byId('visit-count').textContent, '22');
-  assert.equal(h.byId('summary-count').textContent, 'All attendance badges earned.');
+  assert.equal(h.byId('summary-count').textContent, 'Your Legends of TREE collection is complete.');
   assert.equal(h.byId('summary-label').textContent, '21 / 21 check-ins');
-  assert.equal(h.byId('summary-art-label').textContent, 'Full Canopy');
-  assert.equal(h.byId('summary-art').getAttribute('src'), '/assets/tree-command-logo-v2-512.png');
+  assert.equal(h.byId('summary-art-label').textContent, 'Thickquidity Legend');
+  assert.equal(h.byId('summary-art').getAttribute('src'), '/assets/arcade-growth/thickquidity-legend.webp');
   assertMeter(h, 'summary-meter', 21, 21);
   assert.equal(h.byId('journey-stops').querySelectorAll('.is-done').length, 4);
+  assert.equal(h.byId('journey-note').textContent, 'Your Legends of TREE collection is complete.');
+});
+
+test('Legends of TREE aliases retain historical award identity while unknown badges keep their own label and neutral art', async (t) => {
+  const badges = [
+    { id: '2026-10-seedling', label: 'Seedling', monthKey: '2026-10', earnedAt: '2026-10-03T12:00:00Z' },
+    { id: 'sapling', label: 'Sapling', monthKey: '2026-10', earnedAt: '2026-10-07T12:00:00Z' },
+    { id: '2026-10-deep-roots', label: 'Deep Roots', monthKey: '2026-10', earnedAt: '2026-10-14T12:00:00Z' },
+    { id: 'full-canopy', label: 'Full Canopy', monthKey: '2026-10', earnedAt: '2026-10-21T12:00:00Z' },
+    { id: '2026-10-arcade-passport', label: 'Arcade Passport', monthKey: '2026-10', earnedAt: '2026-10-22T12:00:00Z' },
+    { id: 'community-seedling', label: 'Community Builder', monthKey: '2026-10', earnedAt: '2026-10-23T12:00:00Z' },
+  ];
+  const serverProgress = progress({ visits: [1, 3, 7], badges });
+  const original = structuredClone(serverProgress);
+  const h = await harness(t, { progress: serverProgress });
+  await h.signIn();
+  const expected = [
+    ['TREE Spark', 'seedling', '/assets/arcade-growth/tree-spark.webp'],
+    ['NFTree Scout', 'sapling', '/assets/arcade-growth/nftree-scout.webp'],
+    ['TREE FORCE Vanguard', 'deep-roots', '/assets/arcade-growth/tree-force-vanguard.webp'],
+    ['Thickquidity Legend', 'full-canopy', '/assets/arcade-growth/thickquidity-legend.webp'],
+    ['Arcade Passport', 'arcade-passport', '/assets/tree-command-logo-v2-512.png'],
+    ['Community Builder', 'unknown', '/assets/tree-command-logo-v2-512.png'],
+  ];
+  assert.equal(h.byId('badges').children.length, badges.length);
+  for (const [label, rank, art] of expected) {
+    const item = [...h.byId('badges').children].find(card => card.querySelector('strong').textContent === label);
+    assert(item, `${label} is displayed`);
+    assert.equal(item.dataset.rank, rank);
+    assert.equal(item.querySelector('img').getAttribute('src'), art);
+    assert.match(item.textContent, /October 2026/);
+    assert.match(item.textContent, /Earned/);
+  }
+  assert.deepEqual(serverProgress, original, 'Presentation aliases never rewrite server award IDs, labels, targets, dates, or earned state');
+  assert.equal(h.count('check-in'), 0, 'Showing an existing collection never grants attendance');
 });
 
 test('signed-out state shows the server pick without invented progress or automatic wallet prompts', async (t) => {
@@ -856,7 +908,7 @@ test('changing accounts during a refresh immediately hides private progress and 
   assert.equal(h.byId('visit-count').textContent, '—');
   assert.equal(h.byId('summary-meter').hidden, true);
   assertUnknownMeters(h);
-  assert.equal(h.byId('summary-art-label').textContent, 'Seedling');
+  assert.equal(h.byId('summary-art-label').textContent, 'TREE Spark');
   assert.equal(h.byId('invitation-title').textContent, 'Daily Growth');
   assert.match(h.byId('wallet-state').title, new RegExp(OTHER_ACCOUNT));
 });
@@ -935,7 +987,7 @@ test('an existing authorized session restores silently and expires without expos
   h.window.dispatchEvent(new h.window.Event('focus'));
   assertWalletIdentity(h, ACCOUNT, 'Connected');
   assert.equal(h.byId('visit-count').textContent, '—');
-  assert.equal(h.byId('summary-art-label').textContent, 'Seedling');
+  assert.equal(h.byId('summary-art-label').textContent, 'TREE Spark');
   assert.equal(h.byId('summary-meter').hidden, true);
   assertUnknownMeters(h);
   assert.equal(h.byId('invitation-title').textContent, 'Daily Growth');

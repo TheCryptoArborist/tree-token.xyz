@@ -99,7 +99,7 @@
 
     <section id="arcade-daily-growth" class="growth-panel growth-panel--compact" aria-labelledby="growth-title" data-growth-state="loading">
       <div class="growth-strip">
-        <button class="growth-badge-preview" id="growth-badge-preview" type="button" aria-label="Explore Daily Growth tasks and badges" aria-controls="growth-details" aria-expanded="false"><img class="growth-strip-art" src="/assets/arcade/garden-bot-poster.webp" alt="" width="56" height="60" decoding="async"></button>
+        <button class="growth-badge-preview" id="growth-badge-preview" type="button" aria-label="Explore Daily Growth tasks and badges" aria-controls="growth-details" aria-expanded="false"><img class="growth-strip-art" src="/assets/arcade-growth/tree-spark.webp" alt="" width="56" height="60" decoding="async"></button>
         <div class="growth-strip-copy">
           <p class="suite-eyebrow">TREE ARCADE · <span id="growth-season-tag">DAILY GROWTH</span></p>
           <h2 id="growth-title"><button class="growth-invitation-open" id="growth-invitation-open" type="button" aria-controls="growth-details" aria-expanded="false"><span id="growth-invitation-title">Daily Growth</span></button></h2>
@@ -120,12 +120,12 @@
         <p class="growth-rail-note" id="growth-rail-note">Loading the current month…</p>
       </div>
       <details id="growth-details" class="growth-details">
-        <summary class="growth-details-toggle"><span class="growth-next-teaser"><span id="growth-teaser-kind">Next badge</span> <strong id="growth-teaser-badge">Seedling</strong> <span id="growth-details-hint">3 check-ins to earn</span></span><span class="growth-details-label--closed" id="growth-details-label">View daily tasks</span><span class="growth-details-label--open">Hide quests</span></summary>
+        <summary class="growth-details-toggle"><span class="growth-next-teaser"><span id="growth-teaser-kind">Next unlock</span> <strong id="growth-teaser-badge">TREE Spark</strong> <span id="growth-details-hint">3 check-ins to earn</span></span><span class="growth-details-label--closed" id="growth-details-label">View daily tasks</span><span class="growth-details-label--open">Hide quests</span></summary>
         <div class="growth-details-body">
           <div class="growth-tabs" role="tablist" aria-label="Daily Growth progress">
             <button id="growth-today-tab" type="button" role="tab" aria-controls="growth-today-panel" aria-selected="true" tabindex="0">Daily tasks</button>
             <button id="growth-month-tab" type="button" role="tab" aria-controls="growth-month-panel" aria-selected="false" tabindex="-1">This month</button>
-            <button id="growth-badges-tab" type="button" role="tab" aria-controls="growth-badges-panel" aria-selected="false" tabindex="-1">Earned badges</button>
+            <button id="growth-badges-tab" type="button" role="tab" aria-controls="growth-badges-panel" aria-selected="false" tabindex="-1">Badge collection</button>
           </div>
           <div class="growth-detail-grid">
             <div class="growth-main">
@@ -180,14 +180,22 @@
                 </div>
               </div>
               <div id="growth-badges-panel" class="growth-tab-panel" role="tabpanel" aria-labelledby="growth-badges-tab" tabindex="0" hidden>
-                <div class="growth-journey" aria-labelledby="growth-journey-title"><div class="growth-journey-heading"><strong id="growth-journey-title">Your monthly growth path</strong><p class="growth-small" id="growth-journey-note">Check in on different days to unlock each badge.</p></div><div class="growth-journey-track" id="growth-journey-stops" aria-label="Monthly check-in badge goals"></div></div>
+                <div class="growth-journey" aria-labelledby="growth-journey-title">
+                  <div class="growth-journey-heading">
+                    <div class="growth-collection-title"><p class="growth-eyebrow">YOUR MONTHLY COLLECTION</p><h3 id="growth-journey-title">Legends of <span>TREE</span></h3><p class="growth-collection-intro">Four badges. One month. Make your mark.</p></div>
+                    <p class="growth-small" id="growth-journey-note">Check in on different days to unlock each badge.</p>
+                  </div>
+                  <div class="growth-journey-track" id="growth-journey-stops" role="list" aria-label="Monthly check-in badge goals"></div>
+                  <p class="growth-collection-rule"><span aria-hidden="true">✦</span> Earn your Legends with monthly check-ins. Consecutive days aren’t required.</p>
+                </div>
+                <div class="growth-earned-heading"><h3>Your earned badges</h3><span>Yours to keep, month after month.</span></div>
                 <p class="growth-empty" id="growth-badges-empty">Sign in to see your earned monthly badges.</p><div class="growth-badges" id="growth-badges"></div>
-                <p class="growth-small growth-month-note">Badges count total monthly check-ins. Consecutive days are not required.</p>
               </div>
             </div>
             <aside class="growth-reward" aria-labelledby="growth-summary-art-label">
-              <div class="growth-reward-art"><img id="growth-summary-art" src="/assets/arcade/garden-bot-poster.webp" alt="" width="260" height="170" loading="lazy"><span id="growth-reward-kind">NEXT MONTHLY BADGE</span></div>
-              <div class="growth-reward-content"><h3 id="growth-summary-art-label">Seedling</h3><p id="growth-summary-count">Your first badge starts here.</p><p class="growth-reward-count" id="growth-summary-label">3 check-ins to earn</p><div class="growth-meter is-unknown" id="growth-summary-meter" aria-label="Sign in to see badge progress" hidden><span></span></div><p class="growth-reward-automatic">Added to your badges automatically when earned.</p><div class="growth-reward-earned" id="growth-reward-earned"></div></div>
+              <div class="growth-reward-topline"><span>LEGENDS OF TREE</span><span id="growth-summary-rank">RANK 01 / 04</span></div>
+              <div class="growth-reward-art"><img id="growth-summary-art" src="/assets/arcade-growth/tree-spark.webp" alt="" width="260" height="260" loading="lazy"><span id="growth-reward-kind">YOUR NEXT UNLOCK</span></div>
+              <div class="growth-reward-content"><h3 id="growth-summary-art-label">TREE Spark</h3><p class="growth-reward-flavor" id="growth-summary-flavor">The first spark of your TREE story.</p><p id="growth-summary-count">Your first badge starts here.</p><p class="growth-reward-count" id="growth-summary-label">3 check-ins to earn</p><div class="growth-meter is-unknown" id="growth-summary-meter" aria-label="Sign in to see badge progress" hidden><span></span></div><p class="growth-reward-automatic">Earn it with check-ins. Added to your collection automatically.</p><div class="growth-reward-earned" id="growth-reward-earned"></div></div>
             </aside>
           </div>
           <div class="growth-footer"><span>Daily reset: 00:00 UTC · Check-ins have no gas fee</span><button class="growth-text-button" id="growth-collapse" type="button">Collapse Daily Growth ↑</button></div>

@@ -4,6 +4,13 @@ const WALLET_MODULE = '/assets/arcade/arcade-growth-wallet.js';
 const SESSION_KEY = 'tree-arcade:daily-growth:session:v1';
 const AUTH_ERRORS = new Set(['authentication-required', 'invalid-session', 'expired-session']);
 const TREE_FORCE_ID = 'treeforce89';
+// Presentation aliases only. Server badge IDs, attendance goals, and saved awards stay unchanged.
+const MONTHLY_RANK_PRESENTATION = {
+  seedling: { label: 'TREE Spark', ordinal: '01', flavor: 'The first spark of your TREE story.', art: '/assets/arcade-growth/tree-spark.webp' },
+  sapling: { label: 'NFTree Scout', ordinal: '02', flavor: 'Explore the grove. Make your mark.', art: '/assets/arcade-growth/nftree-scout.webp' },
+  'deep-roots': { label: 'TREE FORCE Vanguard', ordinal: '03', flavor: 'Stand watch over the canopy.', art: '/assets/arcade-growth/tree-force-vanguard.webp' },
+  'full-canopy': { label: 'Thickquidity Legend', ordinal: '04', flavor: 'A month of showing up for TREE.', art: '/assets/arcade-growth/thickquidity-legend.webp' },
+};
 // These preview labels describe existing goals, never a player's earned progress.
 const MILESTONE_GOALS = [
   { id: 'seedling', label: 'Seedling', target: 3 },
@@ -11,12 +18,13 @@ const MILESTONE_GOALS = [
   { id: 'deep-roots', label: 'Deep Roots', target: 14 },
   { id: 'full-canopy', label: 'Full Canopy', target: 21 },
 ];
-// Existing TREE ecosystem artwork, already published with the arcade.
+// Monthly collection artwork and existing game posters have separate presentation roles.
 const GROWTH_ART = {
-  seedling: '/assets/arcade/garden-bot-poster.webp',
-  sapling: '/assets/arcade/arboretum-poster.webp',
-  'deep-roots': '/assets/profile-nftree-art.jpg',
-  'full-canopy': '/assets/tree-command-logo-v2-512.png',
+  seedling: MONTHLY_RANK_PRESENTATION.seedling.art,
+  sapling: MONTHLY_RANK_PRESENTATION.sapling.art,
+  'deep-roots': MONTHLY_RANK_PRESENTATION['deep-roots'].art,
+  'full-canopy': MONTHLY_RANK_PRESENTATION['full-canopy'].art,
+  unknown: '/assets/tree-command-logo-v2-512.png',
   'arcade-passport': '/assets/tree-command-logo-v2-512.png',
   'garden-bot': '/assets/arcade/garden-bot-poster.webp',
   pvp: '/assets/arcade/pvp-battle-poster.webp',
@@ -50,6 +58,14 @@ const shortAddress = (address) => `${address.slice(0, 8)}…${address.slice(-6)}
 const text = (value, max = 200) => typeof value === 'string' && value.length > 0 && value.length <= max;
 const monthLabel = (key) => new Intl.DateTimeFormat('en', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${key}-01T12:00:00Z`));
 const dateLabel = (key) => new Intl.DateTimeFormat('en', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${key}T12:00:00Z`));
+
+function badgePresentation(badge) {
+  const id = typeof badge?.id === 'string' ? badge.id.replace(/^\d{4}-(?:0[1-9]|1[0-2])-/, '') : '';
+  if (Object.hasOwn(MONTHLY_RANK_PRESENTATION, id)) return { id, ...MONTHLY_RANK_PRESENTATION[id] };
+  // Preserve labels for other awards; an unfamiliar badge is never presented as an earned TREE rank.
+  return { id: id === 'arcade-passport' ? id : 'unknown', label: badge?.label || 'Monthly badges',
+    ordinal: '', flavor: '', art: GROWTH_ART.unknown };
+}
 
 function invalidData() {
   const error = new Error('Daily Growth returned incomplete progress. Your saved progress has not been changed. Try refreshing.');
@@ -152,7 +168,7 @@ export function createDailyGrowth({
     'quest-note', 'visit-count', 'check-note', 'check-in', 'check-in-row', 'check-in-task', 'check-in-state', 'task-auth', 'passport-count', 'passport-note', 'stamps',
     'passport-reward', 'passport-optional', 'optional-stamps', 'tracking-note', 'month-empty', 'month-content', 'month-visits', 'month-quests', 'next', 'calendar', 'milestones',
     'badges-empty', 'badges', 'status', 'journey-note', 'journey-stops', 'quest-meter', 'visit-total', 'passport-meter',
-    'summary-count', 'summary-label', 'summary-note', 'summary-meter', 'summary-art', 'summary-art-label', 'quest-art',
+    'summary-count', 'summary-label', 'summary-note', 'summary-meter', 'summary-art', 'summary-art-label', 'summary-flavor', 'summary-rank', 'quest-art',
     'badge-preview', 'invitation-open', 'invitation-title', 'invitation-hint', 'details', 'details-label', 'details-hint',
     'month-rail', 'rail-month', 'rail-count', 'rail-note', 'days', 'teaser-badge', 'teaser-kind', 'quest-details', 'calendar-title', 'reward-kind', 'reward-earned', 'collapse',
   ].map((id) => [id, byId(id)]));
@@ -192,7 +208,7 @@ export function createDailyGrowth({
     const holder = append(parent, 'span', className);
     holder.setAttribute('aria-hidden', 'true');
     const image = append(holder, 'img', 'growth-art-icon');
-    image.src = GROWTH_ART[name] || GROWTH_ART['full-canopy'];
+    image.src = GROWTH_ART[name] || GROWTH_ART.unknown;
     image.alt = '';
     image.width = 64;
     image.height = 64;
@@ -240,19 +256,30 @@ export function createDailyGrowth({
   function renderJourney(progress) {
     const milestones = progress?.milestones || MILESTONE_GOALS;
     const next = progress?.milestones.find((item) => !item.earned && item.target > progress.checkedInDays);
+    const allEarned = Boolean(progress?.milestones.length && progress.milestones.every((item) => item.earned));
     ui['journey-stops'].replaceChildren();
     ui['journey-note'].textContent = progress
       ? state.stale ? 'Last saved progress · Refresh to check for updates.'
-        : next ? `${next.target - progress.checkedInDays} more check-in${next.target - progress.checkedInDays === 1 ? '' : 's'} to ${next.label}. Keep growing.`
-          : 'All attendance badges earned this month. Keep your canopy growing.'
-      : state.apiUnavailable ? 'Progress unavailable · Your saved badges are safe.' : 'Your goals for the month. Sign in to reveal your progress.';
+        : next ? `${next.target - progress.checkedInDays} more check-in${next.target - progress.checkedInDays === 1 ? '' : 's'} to ${badgePresentation(next).label}. Keep growing.`
+          : allEarned ? 'Your Legends of TREE collection is complete.' : 'Keep growing your Legends of TREE collection.'
+      : state.apiUnavailable ? 'Progress unavailable · Your saved badges are safe.' : 'Your Legends of TREE collection. Sign in to reveal your progress.';
     for (const milestone of milestones) {
+      const presentation = badgePresentation(milestone);
       const item = append(ui['journey-stops'], 'div', `growth-stop${!progress ? ' is-preview' : milestone.earned ? ' is-done' : milestone === next ? ' is-next' : ''}`);
-      item.dataset.rank = Object.hasOwn(GROWTH_ART, milestone.id) ? milestone.id : 'seedling';
-      emblem(item, milestone.id, 'growth-stop-icon');
+      item.dataset.rank = presentation.id;
+      item.setAttribute('role', 'listitem');
+      if (presentation.ordinal) append(item, 'span', 'growth-stop-ordinal', presentation.ordinal);
+      append(item, 'span', 'growth-stop-state', progress && milestone.earned ? 'Earned' : progress && milestone === next ? 'Up next' : `${milestone.target} check-ins`);
+      emblem(item, presentation.id, 'growth-stop-icon');
       const copy = append(item, 'div', 'growth-stop-copy');
-      append(copy, 'strong', '', milestone.label);
-      append(copy, 'span', '', `${milestone.target} check-ins${progress && milestone.earned ? ' · Earned ✓' : progress && milestone === next ? ' · Up next' : ''}`);
+      append(copy, 'strong', '', presentation.label);
+      if (presentation.flavor) append(copy, 'p', 'growth-stop-flavor', presentation.flavor);
+      if (progress) {
+        append(copy, 'span', 'growth-stop-count', `${Math.min(progress.checkedInDays, milestone.target)} / ${milestone.target} check-ins`);
+        const bar = append(item, 'div', 'growth-meter growth-stop-progress');
+        append(bar, 'span');
+        meter(bar, progress.checkedInDays, milestone.target, `${Math.min(progress.checkedInDays, milestone.target)} of ${milestone.target} check-ins toward ${presentation.label}`);
+      }
     }
   }
 
@@ -496,28 +523,31 @@ export function createDailyGrowth({
     const lastSaved = Boolean(progress && (state.stale || state.apiUnavailable || refreshing));
     const next = progress?.milestones.find((milestone) => !milestone.earned && milestone.target > progress.checkedInDays);
     const badge = progress ? next || progress.milestones.at(-1) : MILESTONE_GOALS[0];
+    const presentation = badgePresentation(badge);
     const allEarned = Boolean(progress?.milestones.length && progress.milestones.every((milestone) => milestone.earned));
     const remaining = next ? next.target - progress.checkedInDays : null;
     const complete = invitationComplete();
     const unknown = state.apiUnavailable ? 'Progress unavailable' : 'Sign in to view badge progress';
-    ui['summary-art'].src = GROWTH_ART[badge?.id] || GROWTH_ART.seedling;
-    ui['summary-art'].closest('.growth-reward').dataset.rank = badge?.id || 'seedling';
-    ui['summary-art-label'].textContent = badge?.label || 'Monthly badges';
-    ui['teaser-badge'].textContent = badge?.label || 'Monthly badges';
-    ui['teaser-kind'].textContent = allEarned ? 'Attendance complete' : 'Next badge';
-    ui['reward-kind'].textContent = allEarned ? 'MONTHLY ATTENDANCE COMPLETE' : 'NEXT MONTHLY BADGE';
+    ui['summary-art'].src = presentation.art;
+    ui['summary-art'].closest('.growth-reward').dataset.rank = presentation.id;
+    ui['summary-art-label'].textContent = presentation.label;
+    ui['summary-flavor'].textContent = presentation.flavor;
+    ui['summary-rank'].textContent = presentation.ordinal ? `RANK ${presentation.ordinal} / 04` : '';
+    ui['teaser-badge'].textContent = presentation.label;
+    ui['teaser-kind'].textContent = allEarned ? 'Collection complete' : 'Next legend';
+    ui['reward-kind'].textContent = allEarned ? 'COLLECTION COMPLETE' : 'YOUR NEXT UNLOCK';
     ui['badge-preview'].classList.toggle('is-preview', !progress);
     ui['badge-preview'].classList.toggle('is-complete', Boolean(progress && badge?.earned));
     ui['summary-count'].textContent = progress
-      ? next ? `${remaining === 1 ? 'One more check-in' : `${remaining} more check-ins`} to ${next.label}`
-        : allEarned ? 'All attendance badges earned.' : 'Keep your growth going.'
+      ? next ? `${remaining === 1 ? 'One more check-in' : `${remaining} more check-ins`} to ${presentation.label}`
+        : allEarned ? 'Your Legends of TREE collection is complete.' : 'Keep your growth going.'
       : state.apiUnavailable ? 'Your badges will be here.' : 'Your first badge starts here.';
     ui['summary-label'].textContent = progress
       ? `${badge ? `${Math.min(progress.checkedInDays, badge.target)} / ${badge.target} check-ins` : `${progress.checkedInDays} check-ins this month`}${lastSaved ? ' · Last saved' : ''}`
       : state.apiUnavailable ? 'Progress temporarily unavailable' : `${badge.target} cumulative check-ins to earn`;
     ui['summary-meter'].hidden = !progress || !badge;
     meter(ui['summary-meter'], progress?.checkedInDays, progress ? badge?.target : null, progress && badge
-      ? `${Math.min(progress.checkedInDays, badge.target)} of ${badge.target} check-ins toward ${badge.label}${lastSaved && !state.stale ? ' · Last saved progress' : ''}`
+      ? `${Math.min(progress.checkedInDays, badge.target)} of ${badge.target} check-ins toward ${presentation.label}${lastSaved && !state.stale ? ' · Last saved progress' : ''}`
       : unknown);
     ui['badge-preview'].setAttribute('aria-label', `Daily Growth. ${complete ? 'View badge progress' : 'View daily tasks'}.`);
     ui['invitation-title'].textContent = 'Daily Growth';
@@ -545,7 +575,7 @@ export function createDailyGrowth({
     ui['reward-earned'].hidden = !earned.length;
     if (earned.length) {
       append(ui['reward-earned'], 'span', 'growth-reward-earned-label', `Earned this month${lastSaved ? ' · Last saved' : ''}`);
-      for (const milestone of earned) append(ui['reward-earned'], 'span', 'growth-earned-chip', `${milestone.label} ✓`);
+      for (const milestone of earned) append(ui['reward-earned'], 'span', 'growth-earned-chip', `${badgePresentation(milestone).label} ✓`);
     }
     syncInvitationExpanded();
   }
@@ -604,7 +634,8 @@ export function createDailyGrowth({
     }
     ui['month-visits'].textContent = String(progress.checkedInDays);
     ui['month-quests'].textContent = String(progress.questDays);
-    ui.next.textContent = next ? `Next: ${next.label} · ${next.target - progress.checkedInDays} more check-in${next.target - progress.checkedInDays === 1 ? '' : 's'}` : 'All monthly attendance milestones earned.';
+    ui.next.textContent = next ? `Next: ${badgePresentation(next).label} · ${next.target - progress.checkedInDays} more check-in${next.target - progress.checkedInDays === 1 ? '' : 's'}`
+      : progress.milestones.length && progress.milestones.every((milestone) => milestone.earned) ? 'Your Legends of TREE collection is complete.' : 'Keep growing your Legends of TREE collection.';
     for (const game of progress.passport.enabledGames) {
       const complete = progress.passport.completedGameIds.includes(game.id);
       const stamp = append(ui.stamps, 'div', `growth-stamp${complete ? ' is-done' : ''}`);
@@ -629,22 +660,23 @@ export function createDailyGrowth({
         ? `All required stamps earn the monthly Arcade Passport badge.${progress.passport.optionalGames.length ? ' Optional stamps do not change the requirement.' : ''}`
         : 'Passport games will appear when verified tracking is available.';
     for (const milestone of progress.milestones) {
+      const presentation = badgePresentation(milestone);
       const item = append(ui.milestones, 'div', `growth-milestone${milestone.earned ? ' is-done' : ''}`);
-      item.dataset.rank = Object.hasOwn(GROWTH_ART, milestone.id) ? milestone.id : 'seedling';
-      emblem(item, milestone.id, 'growth-badge-emblem');
-      append(item, 'strong', '', `${milestone.label}${milestone.earned ? ' ✓' : ''}`);
+      item.dataset.rank = presentation.id;
+      emblem(item, presentation.id, 'growth-badge-emblem');
+      append(item, 'strong', '', `${presentation.label}${milestone.earned ? ' ✓' : ''}`);
       append(item, 'span', '', `${milestone.target} check-ins`);
       const bar = append(item, 'div', 'growth-meter');
       append(bar, 'span');
-      meter(bar, progress.checkedInDays, milestone.target, `${Math.min(progress.checkedInDays, milestone.target)} of ${milestone.target} check-ins toward ${milestone.label}`);
+      meter(bar, progress.checkedInDays, milestone.target, `${Math.min(progress.checkedInDays, milestone.target)} of ${milestone.target} check-ins toward ${presentation.label}`);
     }
     for (const badge of [...progress.badges].sort((a, b) => timestamp(b.earnedAt) - timestamp(a.earnedAt))) {
+      const presentation = badgePresentation(badge);
       const item = append(ui.badges, 'div', 'growth-badge');
-      const rank = [...MILESTONE_GOALS.map((goal) => goal.id), 'arcade-passport'].find((id) => badge.id === id || badge.id.endsWith(`-${id}`)) || 'seedling';
-      item.dataset.rank = rank;
-      emblem(item, rank, 'growth-badge-emblem');
+      item.dataset.rank = presentation.id;
+      emblem(item, presentation.id, 'growth-badge-emblem');
       const copy = append(item, 'div', 'growth-badge-copy');
-      append(copy, 'strong', '', badge.label);
+      append(copy, 'strong', '', presentation.label);
       append(copy, 'span', '', 'Earned ✓');
       append(copy, 'p', '', `${monthLabel(badge.monthKey)} · Saved to this wallet’s progress`);
     }
@@ -715,7 +747,7 @@ export function createDailyGrowth({
     ui['quest-state'].classList.toggle('is-done', Boolean(done));
     ui['pick-label'].textContent = selected?.id === state.configuration?.todayPick?.id ? 'Today’s pick:' : 'Your choice:';
     ui['game-name'].textContent = selected?.label || (state.apiUnavailable ? 'Eligible games unavailable' : state.configuration ? 'No eligible games right now' : 'Checking eligible games…');
-    ui['quest-art'].src = GROWTH_ART[selected?.id] || GROWTH_ART['full-canopy'];
+    ui['quest-art'].src = GROWTH_ART[selected?.id] || GROWTH_ART.unknown;
     const copy = selected ? GAME_COPY[selected.id] : null;
     ui.objective.textContent = copy?.objective || 'Follow the selected game’s participation rule, then refresh your progress here.';
     ui['game-access'].textContent = copy?.access || (selected ? 'Check this game’s access and result-saving requirements before playing.' : '');

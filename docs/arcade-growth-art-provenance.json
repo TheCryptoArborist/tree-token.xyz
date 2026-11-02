@@ -1,0 +1,101 @@
+{
+  "generator": "built-in image_gen",
+  "mode": "new project-bound assets generated from supplied ecosystem references",
+  "assets": [
+    {
+      "key": "tree-spark",
+      "prompt": "Use case: stylized-concept.\nAsset type: production website collectible monthly attendance badge, part of the four-badge \u201cLegends of TREE\u201d set.\nCreate exactly ONE isolated emblem, square 1:1, actual transparent background. A premium three-dimensional illustrated enamel collectible crest. Keep the same badge silhouette used across this set: a symmetrical rounded shield, broad horizontal top with two small scalloped shoulders, gently curved sides tapering into one rounded lower point; thick polished antique-gold beveled outer rim, fine inner gold inset, dark almost-black forest-green enamel field. Two compact embossed gold leaf sprigs hug the lower left and right rim. Badge occupies roughly 88% of square, upright front view with subtle depth but no tilt. Central character is raised relief projecting slightly beyond the inner field, readable at 100 pixels. Sophisticated game collectible art, clean bold shapes, beautiful soft upper-left key light, warm gold edge reflections. Keep little tiny detail and strong contrast. No scene, no floor, no background, no opaque square, no drop shadow beyond the emblem. No lettering, no words, no numerals, no banner, no ribbon, no logos with letters, no watermark. Subject should remain inside the outer crest overall with generous transparent margin. Preserve real alpha transparency.\nBadge identity: TREE Spark (do not write this title). Reference image 1 is the character identity: reproduce the friendly small orange robot with a dark glass face, TWO glowing cyan eyes, tiny horizontal mouth, circular ears, and exactly two green sprout leaves on its head. Waist-up heroic-but-friendly bust, both small hands visible at sides, orange copper armor and green chest leaf emblem without text. Add a discreet cyan spark glint behind its head. The frame is warm copper-gold, inner accent enamel turquoise/cyan. Make it feel welcoming and wonderfully collectible, not infantile.",
+      "referenced_image_paths": [
+        "assets/arcade/garden-bot-poster.webp"
+      ],
+      "transparent_background": true,
+      "destination": "assets/arcade-growth/tree-spark.webp",
+      "originalGeneratedPath": "/workspace/scratch/51cc6da6c9b8/generated_images/exec-cd01de9a-d9ac-416f-b647-76e679ebd8a1.png",
+      "originalGeneratedFilename": "tree-spark.png"
+    },
+    {
+      "key": "nftree-scout",
+      "prompt": "Use case: stylized-concept.\nAsset type: production website collectible monthly attendance badge, part of the four-badge \u201cLegends of TREE\u201d set.\nCreate exactly ONE isolated emblem, square 1:1, actual transparent background. A premium three-dimensional illustrated enamel collectible crest. Keep the same badge silhouette used across this set: a symmetrical rounded shield, broad horizontal top with two small scalloped shoulders, gently curved sides tapering into one rounded lower point; thick polished antique-gold beveled outer rim, fine inner gold inset, dark almost-black forest-green enamel field. Two compact embossed gold leaf sprigs hug the lower left and right rim. Badge occupies roughly 88% of square, upright front view with subtle depth but no tilt. Central character is raised relief projecting slightly beyond the inner field, readable at 100 pixels. Sophisticated game collectible art, clean bold shapes, beautiful soft upper-left key light, warm gold edge reflections. Keep little tiny detail and strong contrast. No scene, no floor, no background, no opaque square, no drop shadow beyond the emblem. No lettering, no words, no numerals, no banner, no ribbon, no logos with letters, no watermark. Subject should remain inside the outer crest overall with generous transparent margin. Preserve real alpha transparency.\nBadge identity: NFTree Scout (do not write this title). Reference image 1 supplies the established NFTree masked purple-and-green forest guardian identity: preserve the dark purple mask, subtle glowing amber eyes, green barklike vine chest armor and dark forest cloak. Render as a warm approachable but mysterious waist-up character portrait, slightly turned with head facing viewer, one hand holding a small luminous leaf-shaped compass charm (not a coin and no currency signs). Jade-green glow behind the upper body, deep violet accents. Use a small compass-star embossed into the shield field as a simple subtle motif. Match the same polished gold shield and 3D enamel collectible style described above.",
+      "referenced_image_paths": [
+        "assets/profile-nftree-art.jpg"
+      ],
+      "transparent_background": true,
+      "destination": "assets/arcade-growth/nftree-scout.webp",
+      "originalGeneratedPath": "/workspace/scratch/51cc6da6c9b8/generated_images/exec-ba9d4c3b-0164-4b68-a73f-f32ed013848c.png",
+      "originalGeneratedFilename": "nftree-scout.png"
+    },
+    {
+      "key": "tree-force-vanguard",
+      "prompt": "Use case: stylized-concept.\nAsset type: production website collectible monthly attendance badge, part of the four-badge \u201cLegends of TREE\u201d set.\nCreate exactly ONE isolated emblem, square 1:1, actual transparent background. A premium three-dimensional illustrated enamel collectible crest. Keep the same badge silhouette used across this set: a symmetrical rounded shield, broad horizontal top with two small scalloped shoulders, gently curved sides tapering into one rounded lower point; thick polished antique-gold beveled outer rim, fine inner gold inset, dark almost-black forest-green enamel field. Two compact embossed gold leaf sprigs hug the lower left and right rim. Badge occupies roughly 88% of square, upright front view with subtle depth but no tilt. Central character is raised relief projecting slightly beyond the inner field, readable at 100 pixels. Sophisticated game collectible art, clean bold shapes, beautiful soft upper-left key light, warm gold edge reflections. Keep little tiny detail and strong contrast. No scene, no floor, no background, no opaque square, no drop shadow beyond the emblem. No lettering, no words, no numerals, no banner, no ribbon, no logos with letters, no watermark. Subject should remain inside the outer crest overall with generous transparent margin. Preserve real alpha transparency.\nBadge identity: TREE FORCE Vanguard (do not write this title). Reference image 1 is style and ecosystem identity, particularly the vibrant leaf chest insignia and violet-green futuristic forest defender; DO NOT reproduce any of its lettering. Central subject is a bold symmetrical stylized canopy-command spacecraft seen from slightly above, nose pointing upward, swept leaf-shaped wings in jade green, violet metallic hull and bright cyan twin engines, a small gold tree/leaf insignia at center with no letters. Two short angular cyan-violet energy arcs frame the spacecraft inside the shield, no full scene. The ship represents the TREE FORCE arcade identity. Make its silhouette distinct, compact and clear. Match the same antique-gold shield rim and lower leaf sprigs used by the set.",
+      "referenced_image_paths": [
+        "assets/arcade/tree-force-89-poster.webp"
+      ],
+      "transparent_background": true,
+      "destination": "assets/arcade-growth/tree-force-vanguard.webp",
+      "originalGeneratedPath": "/workspace/scratch/51cc6da6c9b8/generated_images/exec-e8e27cf3-e216-474e-8dfd-97d217acfc4e.png",
+      "originalGeneratedFilename": "tree-force-vanguard.png"
+    },
+    {
+      "key": "thickquidity-legend",
+      "prompt": "Use case: stylized-concept.\nAsset type: production website collectible monthly attendance badge, part of the four-badge \u201cLegends of TREE\u201d set.\nCreate exactly ONE isolated emblem, square 1:1, actual transparent background. A premium three-dimensional illustrated enamel collectible crest. Keep the same badge silhouette used across this set: a symmetrical rounded shield, broad horizontal top with two small scalloped shoulders, gently curved sides tapering into one rounded lower point; thick polished antique-gold beveled outer rim, fine inner gold inset, dark almost-black forest-green enamel field. Two compact embossed gold leaf sprigs hug the lower left and right rim. Badge occupies roughly 88% of square, upright front view with subtle depth but no tilt. Central character is raised relief projecting slightly beyond the inner field, readable at 100 pixels. Sophisticated game collectible art, clean bold shapes, beautiful soft upper-left key light, warm gold edge reflections. Keep little tiny detail and strong contrast. No scene, no floor, no background, no opaque square, no drop shadow beyond the emblem. No lettering, no words, no numerals, no banner, no ribbon, no logos with letters, no watermark. Subject should remain inside the outer crest overall with generous transparent margin. Preserve real alpha transparency.\nBadge identity: Thickquidity Legend (do not write this title). References 1 and 2 establish the original ecosystem purple-and-green superhero: masked purple head, leaf-green mouth guard and green chest tree insignia, muscular purple shoulders, vine-green armor and cape. Reference 3 supplies the Thickquidity idea of a strong green fist holding a growing tree stem; do not reproduce any lettering. Central waist-up proud superhero with a strong raised green fist grasping one short living branch, face visible and confident. Radiant gold branching rays behind him form a restrained crown-like halo entirely inside the crest. Rich royal violet, luminous spring green, and premium warm gold. This is the highest collectible in the set: slightly brighter gold inlay and richer central contrast, while retaining EXACTLY the same overall shield silhouette and lower leaf-sprig border. No crown on the head, no labels, no text.",
+      "referenced_image_paths": [
+        "assets/profile-nftree-art.jpg",
+        "assets/arcade/tree-force-89-poster.webp",
+        "assets/profile-thickquidity-art.png"
+      ],
+      "transparent_background": true,
+      "destination": "assets/arcade-growth/thickquidity-legend.webp",
+      "originalGeneratedPath": "/workspace/scratch/51cc6da6c9b8/generated_images/exec-72fd4b8d-6410-4e07-8f9f-88384340217b.png",
+      "originalGeneratedFilename": "thickquidity-legend.png"
+    }
+  ],
+  "webDelivery": [
+    {
+      "name": "tree-spark",
+      "sourcePngBytes": 1963171,
+      "publicPath": "/assets/arcade-growth/tree-spark.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 84986,
+      "hasAlpha": true,
+      "sha256": "9658941a59f8aeb3643ee4ccbcaa255a562a8bad428d26e64aaf52614dc3dd0c",
+      "processing": "Web delivery derivative:512px,WebPquality92,alphaQuality100; no composition or color edit"
+    },
+    {
+      "name": "nftree-scout",
+      "sourcePngBytes": 2443471,
+      "publicPath": "/assets/arcade-growth/nftree-scout.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 103982,
+      "hasAlpha": true,
+      "sha256": "95b3882713f3c845aa6807b527e201b41ca70e52a6d70d7b807f867a48abbebe",
+      "processing": "Web delivery derivative:512px,WebPquality92,alphaQuality100; no composition or color edit"
+    },
+    {
+      "name": "tree-force-vanguard",
+      "sourcePngBytes": 2966717,
+      "publicPath": "/assets/arcade-growth/tree-force-vanguard.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 129056,
+      "hasAlpha": true,
+      "sha256": "b2cb5da90de4fdd2668ce5a80b1d42129f6b742f9ae7e60882e64d3cce25435f",
+      "processing": "Web delivery derivative:512px,WebPquality92,alphaQuality100; no composition or color edit"
+    },
+    {
+      "name": "thickquidity-legend",
+      "sourcePngBytes": 2769730,
+      "publicPath": "/assets/arcade-growth/thickquidity-legend.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 129638,
+      "hasAlpha": true,
+      "sha256": "97aa27542c4eb2f883d92808db109faa707478703bee6f66068cf95aef47da3c",
+      "processing": "Web delivery derivative:512px,WebPquality92,alphaQuality100; no composition or color edit"
+    }
+  ],
+  "webDeliveryTotalBytes": 447662,
+  "creativeEditingByCode": false,
+  "webEncoding": "Built-in generated art was resized and encoded as transparent WebP for website delivery. The full original prompts and generation provenance are retained below."
+}
