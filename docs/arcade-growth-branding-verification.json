@@ -1,0 +1,149 @@
+{
+  "sourceCommit": "9c00bf6ae42d2ab6c2a78802cdfb4df1c42f795e",
+  "sourceTree": "d855ed063b7ed2bb2383f299a6c1c6b5440f10ec",
+  "baseline": "6ae80cef3e9589ac84d0857a",
+  "candidate": "6ae8112dce29c5db8b725ff0",
+  "controllerTests": {
+    "command": "node tests/arcade-daily-growth-ui.test.mjs",
+    "passed": 49,
+    "failed": 0,
+    "skipped": 0,
+    "fixtureLabelsRetainServerNames": true
+  },
+  "independentReview": {
+    "authSessionRequestAndGameReturnCodeUnchanged": true,
+    "existingHtmlIdsRetained": true,
+    "serverIdsThresholdsAndSavedAwardDataUnchanged": true,
+    "unknownBadgeNamesRetained": true
+  },
+  "artwork": [
+    {
+      "path": "/assets/arcade-growth/nftree-scout.webp",
+      "bytes": 103982,
+      "sha256": "95b3882713f3c845aa6807b527e201b41ca70e52a6d70d7b807f867a48abbebe"
+    },
+    {
+      "path": "/assets/arcade-growth/thickquidity-legend.webp",
+      "bytes": 129638,
+      "sha256": "97aa27542c4eb2f883d92808db109faa707478703bee6f66068cf95aef47da3c"
+    },
+    {
+      "path": "/assets/arcade-growth/tree-force-vanguard.webp",
+      "bytes": 129056,
+      "sha256": "b2cb5da90de4fdd2668ce5a80b1d42129f6b742f9ae7e60882e64d3cce25435f"
+    },
+    {
+      "path": "/assets/arcade-growth/tree-spark.webp",
+      "bytes": 84986,
+      "sha256": "9658941a59f8aeb3643ee4ccbcaa255a562a8bad428d26e64aaf52614dc3dd0c"
+    }
+  ],
+  "totalArtworkBytes": 447662,
+  "candidateBrowser": {
+    "url": "https://6ae8112dce29c5db8b725ff0--tree-token.netlify.app/play/",
+    "state": "signed-out",
+    "viewportWidth": 1363,
+    "documentWidth": 1348,
+    "overflowElements": [],
+    "allFourBadgeImagesLoaded": true,
+    "journeyCardWidths": [
+      232.25,
+      232.25,
+      232.25,
+      232.25
+    ],
+    "journeyCardHeight": 280,
+    "collectionTabOpens": true,
+    "allEightCabinetsRetained": true,
+    "noProgressFabricated": true
+  },
+  "layoutFixtureCoverage": {
+    "twoSavedCheckins": true,
+    "completeCollectionWithHistory": true,
+    "signedOut": true,
+    "generatedWithActualController": true,
+    "browserVisualInspection": false,
+    "reason": "Cloud browser URL policy does not permit local file-protocol previews. Actual hosted candidate was visually inspected instead."
+  },
+  "limitations": [
+    "No real-user wallet signature, transaction, check-in, or authenticated game was performed.",
+    "Phone-width frozen fixtures were generated but not visually opened because this cloud browser blocks file-protocol previews."
+  ],
+  "publication": "published and locked",
+  "deployment": "6ae8112dce29c5db8b725ff0",
+  "publishedAt": "2026-11-02T04:29:52.370Z",
+  "url": "https://tree-token.xyz/play/",
+  "locked": true,
+  "canonicalBrowser": {
+    "url": "https://tree-token.xyz/play/",
+    "state": "signed-out",
+    "viewportWidth": 1363,
+    "documentWidth": 1348,
+    "overflowElements": [],
+    "badgeNames": [
+      "TREE Spark",
+      "NFTree Scout",
+      "TREE FORCE Vanguard",
+      "Thickquidity Legend"
+    ],
+    "allFour512pxImagesLoaded": true,
+    "allBadgesArePreviewsWithoutFabricatedProgress": true,
+    "collectionTabOpens": true,
+    "allEightCabinetsRetained": true
+  },
+  "participationProbes": {
+    "candidate": {
+      "candidate": "6ae8112dce29c5db8b725ff0",
+      "sourceCommit": "9c00bf6ae42d2ab6c2a78802cdfb4df1c42f795e",
+      "checkedAt": "2026-11-02T04:29:28.107113+00:00",
+      "url": "https://6ae8112dce29c5db8b725ff0--tree-token.netlify.app/api/arcade-growth?action=treeforce-play",
+      "method": "POST",
+      "status": 401,
+      "code": "invalid-game-session",
+      "milliseconds": 1065.74,
+      "credential": "cryptographically random nonexistent credential; no user credential",
+      "requestBodyFields": [
+        "runId"
+      ],
+      "participationWritten": false,
+      "writeEvidence": "Valid-format random token rejected by the database session SELECT before ownership or participation writes."
+    },
+    "canonical": {
+      "candidate": "6ae8112dce29c5db8b725ff0",
+      "sourceCommit": "9c00bf6ae42d2ab6c2a78802cdfb4df1c42f795e",
+      "checkedAt": "2026-11-02T04:30:07.483568+00:00",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=treeforce-play",
+      "method": "POST",
+      "status": 401,
+      "code": "invalid-game-session",
+      "milliseconds": 257.88,
+      "credential": "cryptographically random nonexistent credential; no user credential",
+      "requestBodyFields": [
+        "runId"
+      ],
+      "participationWritten": false,
+      "writeEvidence": "Valid-format random token rejected by the database session SELECT before ownership or participation writes."
+    }
+  },
+  "preservation": {
+    "publicPaths": 288,
+    "unchangedExistingFiles": 281,
+    "changedExistingPaths": [
+      "/play/index.html",
+      "/scripts/arcade-daily-growth.js",
+      "/styles/tree-arcade-suite.css"
+    ],
+    "newPaths": [
+      "/assets/arcade-growth/tree-spark.webp",
+      "/assets/arcade-growth/nftree-scout.webp",
+      "/assets/arcade-growth/tree-force-vanguard.webp",
+      "/assets/arcade-growth/thickquidity-legend.webp"
+    ],
+    "completeFunctionRecords": 41,
+    "schedules": 5,
+    "siteFunctionsEnvironmentEntries": 50,
+    "persistentDatabaseBindingPreserved": true,
+    "runtimeConfigurationExact": true,
+    "allSiteAndSharedEnvironmentFingerprintsExact": true
+  }
+}

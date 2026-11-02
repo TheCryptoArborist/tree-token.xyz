@@ -1,4 +1,18 @@
-# Current production — Arcade Passport invitation, 2026-11-02 UTC
+# Current production — Legends of TREE badge collection, 2026-11-02 UTC
+
+Published and locked deploy `6ae8112dce29c5db8b725ff0` at `2026-11-02T04:29:52.370Z`, from source commit `9c00bf6ae42d2ab6c2a78802cdfb4df1c42f795e`, tree `d855ed063b7ed2bb2383f299a6c1c6b5440f10ec`, on `feature/arcade-growth-collection-20261102`. Live at https://tree-token.xyz/play/.
+
+Daily Growth now presents **Legends of TREE**: TREE Spark at 3 monthly check-ins, NFTree Scout at 7, TREE FORCE Vanguard at 14, and Thickquidity Legend at 21. Four matching illustrated crests, distinct card colors, rank numbers, saved-progress meters and a next-unlock spotlight make the collection visible. Display aliases apply consistently to current and historical awards while preserving stored IDs, dates and attendance rules; unknown awards keep their own server labels. Arcade Passport remains a separate game-stamp award.
+
+Only `/play/index.html`, `/scripts/arcade-daily-growth.js` and `/styles/tree-arcade-suite.css` changed among the existing 284 paths. Four new transparent 512-pixel WebP crests under `/assets/arcade-growth/` bring the inventory to **288** paths, with 281 existing files exact. The images total 447,662 bytes. All 41 complete function/provider records, five schedules, runtime configuration, generated configuration, redirects and site/shared environment fingerprints remain exact. The **50** site Functions environment entries include the persistent Production/Functions `TREEFORCE89_DEV_DATABASE_URL` binding; preserve that current binding and verify its database-backed authentication path on future releases.
+
+All 49 controller cases passed, including old server labels, historical awards, unknown badges, saved progress, wallet/session and game participation behavior. Independent source review confirmed auth, signing, network, session and game-return logic were untouched. Hosted candidate and canonical checks confirmed the visible art, collection interaction, eight cabinets and no desktop overflow. Both negative participation probes returned HTTP 401 `invalid-game-session` before any write. Signed-in state coverage is synthetic; no real wallet signatures, transactions, check-ins or game participation were performed. Local phone-width fixtures were generated, but this cloud browser blocked local file previews; no phone visual check is claimed.
+
+`current-release.json` and `arcade-growth-branding-release.json` record this exact publication. See `../docs/arcade-growth-branding.md`, `../docs/arcade-growth-branding-verification.json`, and `../docs/arcade-growth-art-provenance.json`. The sanitized baseline retains only explicitly selected safe deployment metadata and fingerprints. Keep only this current publication locked, preserve the complete current inventory, and do not publish an archived root snapshot.
+
+---
+
+# Previous production — Arcade Passport invitation, 2026-11-02 UTC
 
 Published and locked deploy `6ae80cef3e9589ac84d0857a` at `2026-11-02T04:10:29.743Z`, from source commit `048da5d94c01351fd4f59b217973270fd07645f3`, tree `785e7476e4bd0f048c99eb1af1ae1d84074ba87f`, on `copy/arcade-passport-challenge-20261102`. Live at https://tree-token.xyz/play/.
 

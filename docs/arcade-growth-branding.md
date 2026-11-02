@@ -35,6 +35,9 @@ The guarded release starts from actual publication `6ae80cef3e9589ac84d0857a`, p
 - Source syntax and whitespace validation passed.
 - Artwork is generated, inspected and optimized. Read-only preflight verified the actual current publication and full environment preservation.
 - Local frozen fixtures for 2-check-in, fully earned and signed-out states were generated from the actual controller, with no real-user progress or attendance writes. The cloud browser rejects file-protocol previews; those fixtures are not claimed as visual checks.
-- Hosted visual checks, negative authentication probes and publication are pending.
+- Candidate and canonical browser checks passed: all four badge images loaded at their intended 512-pixel source size, the Badge collection tab opened correctly, all eight game cabinets remained, and no horizontal overflow appeared at the inspected 1363-pixel desktop viewport.
+- Candidate and canonical database-backed negative authentication probes returned HTTP 401 `invalid-game-session` for random nonexistent sessions, before any participation write.
+- Published and locked deployment `6ae8112dce29c5db8b725ff0` at `2026-11-02T04:29:52.370Z` from source commit `9c00bf6ae42d2ab6c2a78802cdfb4df1c42f795e`, tree `d855ed063b7ed2bb2383f299a6c1c6b5440f10ec`. Live at https://tree-token.xyz/play/.
+- Receipts: `production/current-release.json`, `production/arcade-growth-branding-release.json`, and `docs/arcade-growth-branding-verification.json`.
 
 No real-user wallet signature, transaction, game participation or attendance write is needed for this presentation update.

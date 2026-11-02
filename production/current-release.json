@@ -1,23 +1,53 @@
 {
-  "id": "6ae80cef3e9589ac84d0857a",
+  "id": "6ae8112dce29c5db8b725ff0",
   "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
-  "baseline": "6ae806bda0c2f59d35109a6e",
-  "baselineSha256": "e2a59e93b1da001fccb5d354d4da6724fb140527c030a2dffc61662246e12e90",
-  "sourceCommit": "048da5d94c01351fd4f59b217973270fd07645f3",
-  "sourceTree": "785e7476e4bd0f048c99eb1af1ae1d84074ba87f",
-  "sourceBranch": "copy/arcade-passport-challenge-20261102",
-  "filesSha256": "fa058bed2be8e4e8b1ad48a1317eb41d61d9680b98be686e5b2d75132f80df7a",
+  "baseline": "6ae80cef3e9589ac84d0857a",
+  "baselineSha256": "7a6f9dee006737f9aee58d2ebf399ef7c778543839d45b9c622c5e4e93112783",
+  "sourceCommit": "9c00bf6ae42d2ab6c2a78802cdfb4df1c42f795e",
+  "sourceTree": "d855ed063b7ed2bb2383f299a6c1c6b5440f10ec",
+  "sourceBranch": "feature/arcade-growth-collection-20261102",
+  "filesSha256": "2d89f55ac2fef0664cdc2f8734b563282aa1abc95a66e197663f5331b8d8649b",
   "overlay": [
     {
       "path": "/play/index.html",
-      "sha": "6109a97982c50d6ab0b8329e0b4d50adda73506f",
-      "size": 35635
+      "sha": "5b4d7842a7c5aa5db004b88b9ee1db7836d040e7",
+      "size": 36353
+    },
+    {
+      "path": "/scripts/arcade-daily-growth.js",
+      "sha": "8d1c7887e1ecaec8c8a8d3a87e3d4b377c4ddf3d",
+      "size": 71709
+    },
+    {
+      "path": "/styles/tree-arcade-suite.css",
+      "sha": "6d2910b9441d1e1f7bce5ef74ad4ac42a0cb8b5b",
+      "size": 82081
+    },
+    {
+      "path": "/assets/arcade-growth/tree-spark.webp",
+      "sha": "4876ca05f3e6efbdc003fe8647f0ae50b9237946",
+      "size": 84986
+    },
+    {
+      "path": "/assets/arcade-growth/nftree-scout.webp",
+      "sha": "85c5eb6f1490eb595d9decd527b481a8ccd1e9ae",
+      "size": 103982
+    },
+    {
+      "path": "/assets/arcade-growth/tree-force-vanguard.webp",
+      "sha": "d61c0f338277ed1b5ca7b007ac40fcb460c6ddc0",
+      "size": 129056
+    },
+    {
+      "path": "/assets/arcade-growth/thickquidity-legend.webp",
+      "sha": "0f528b795ba89a9860273cb485784efd331aff3f",
+      "size": 129638
     }
   ],
-  "publishedAt": "2026-11-02T04:10:29.743Z",
-  "verifiedAt": "2026-11-02T04:10:31.945516+00:00",
+  "publishedAt": "2026-11-02T04:29:52.370Z",
+  "verifiedAt": "2026-11-02T04:29:54.535404+00:00",
   "locked": true,
-  "files": 284,
+  "files": 288,
   "filesBySha1": {
     "/tree.jpg": "5ca16c779edf1d559e5be5a02a6edd2e626d9c2f",
     "/tokenomics/index.html": "7e838cb7bdf00d911b22023003b399f11589e05a",
@@ -78,7 +108,7 @@
     "/scripts/arcade-sui-wallet.js": "25cdec64fb85cfcbe6b7f706841f105e351c3b36",
     "/roadmap/index.html": "6597c20c44a9aac623f685679962fb2fc100c5db",
     "/raffle-rules/index.html": "442ca8e3abf867d7dab3dc1857f1e21182e9addc",
-    "/play/index.html": "6109a97982c50d6ab0b8329e0b4d50adda73506f",
+    "/play/index.html": "5b4d7842a7c5aa5db004b88b9ee1db7836d040e7",
     "/mascot.png": "9f5e5db66e2f6c3eee41d70b1800094fe014a473",
     "/index.html": "1dba30e928a617b53d698561fb77dcffa6205ccd",
     "/hero.png": "15fa5856c63652fa6089010f683169d8b0c0dca5",
@@ -238,7 +268,7 @@
     "/play/treeforce89/assets/arcade-cw4df7w2.js": "0eb93075166b1d41ecd1a3b0586c5b52508d06c7",
     "/play/treeforce89/assets/graphql-hafrftxs.js": "594f4ac60c2bb738880581e1036eef89abb695e7",
     "/play/treeforce89/assets/index-ccisclqf.js": "846faa5cc41509c4a79ce8263e4ad8c3a55f32fa",
-    "/styles/tree-arcade-suite.css": "c96c36ada49eee3549deaf6ada3c2b0f2a1c16af",
+    "/styles/tree-arcade-suite.css": "6d2910b9441d1e1f7bce5ef74ad4ac42a0cb8b5b",
     "/assets/arcade/garden-bot-crest.png": "2c376aefd26da4f6c6404e676bff108b7b0e1a78",
     "/assets/arcade/pvp-battle-crest.png": "1027d41aa13f52f24d498bf3428feb1927fc017f",
     "/assets/arcade/arborist-trials-logo.webp": "9c8e9a3270b742bffafa8cc14695e8f8fc7d9511",
@@ -255,7 +285,7 @@
     "/scripts/arcade-nftree-access-core.mjs": "13956f06548845efb3b7c52150994bf33a0add64",
     "/scripts/arcade-nftree-access.js": "113fbd12943990895beac27f157c587be750754b",
     "/assets/arcade/arcade-growth-wallet.js": "0c1260a071839829dc8e32ce822e228d28af10d3",
-    "/scripts/arcade-daily-growth.js": "cb3fcb2b3408c4d07cbe10dbf02e907109a22c00",
+    "/scripts/arcade-daily-growth.js": "8d1c7887e1ecaec8c8a8d3a87e3d4b377c4ddf3d",
     "/play/treeforce89/assets/arcade-deuxdoox.js": "fbe89196276d0b7cb0d17eb4441a0e6efa188f08",
     "/play/treeforce89/assets/graphql-ctywyhxq.js": "c024fd2ec1c91212a4a41b4c238384d058f3e839",
     "/play/treeforce89/assets/index-blt2uith.css": "0288ab26fa2250d052b58e1a1e3a3a3faf3ce364",
@@ -302,13 +332,24 @@
     "/play/canopy-defense/preview/gameplay.mp4": "5ca180b5fc18ecffbb5d95be77de56b89e655af7",
     "/play/canopy-defense/preview/gameplay-poster.jpg": "5f7293aca9c03f56aefd5f1af13b481e54c6d5a4",
     "/play/canopy-defense/gateway.js": "b9a486cdead61eb2d0fa891c2a2accb35392fe53",
-    "/_redirects": "4450ad95c97a2045c2575bd2cc75c49a8a2ba6c7"
+    "/_redirects": "4450ad95c97a2045c2575bd2cc75c49a8a2ba6c7",
+    "/assets/arcade-growth/tree-spark.webp": "4876ca05f3e6efbdc003fe8647f0ae50b9237946",
+    "/assets/arcade-growth/nftree-scout.webp": "85c5eb6f1490eb595d9decd527b481a8ccd1e9ae",
+    "/assets/arcade-growth/tree-force-vanguard.webp": "d61c0f338277ed1b5ca7b007ac40fcb460c6ddc0",
+    "/assets/arcade-growth/thickquidity-legend.webp": "0f528b795ba89a9860273cb485784efd331aff3f"
   },
   "changedExistingPaths": [
-    "/play/index.html"
+    "/play/index.html",
+    "/scripts/arcade-daily-growth.js",
+    "/styles/tree-arcade-suite.css"
   ],
-  "preservedStaticFiles": 283,
-  "newPaths": [],
+  "preservedStaticFiles": 281,
+  "newPaths": [
+    "/assets/arcade-growth/tree-spark.webp",
+    "/assets/arcade-growth/nftree-scout.webp",
+    "/assets/arcade-growth/tree-force-vanguard.webp",
+    "/assets/arcade-growth/thickquidity-legend.webp"
+  ],
   "functionsPreserved": 41,
   "functionRecords": [
     {
@@ -1833,7 +1874,7 @@
     "snapshots": [
       {
         "source": "on-publish",
-        "created_at": "2026-11-02T04:10:29.602Z"
+        "created_at": "2026-11-02T04:29:52.213Z"
       }
     ]
   },
@@ -1876,37 +1917,56 @@
       "upstreamDeployId": "6ae7ee72f3a12d5acb787a55",
       "canonicalPath": "https://tree-token.xyz/play/canopy-defense/checkout-test/"
     },
-    "environmentCapturedAt": "2026-11-02T04:04:49.745247+00:00"
+    "environmentCapturedAt": "2026-11-02T04:17:32.559601+00:00",
+    "preservedPublication": {
+      "deployId": "6ae80cef3e9589ac84d0857a",
+      "sourceCommit": "048da5d94c01351fd4f59b217973270fd07645f3",
+      "sourceTree": "785e7476e4bd0f048c99eb1af1ae1d84074ba87f",
+      "evidenceCommit": "a1172a3af444b48a2fb8513ed7210f335e1f0f81",
+      "releaseReceipt": "production/arcade-passport-copy-release.json"
+    }
   },
   "previousDeployLocked": false,
   "publicationLockScope": "current publication only; do not relock an earlier deployment",
   "url": "https://tree-token.xyz/play/",
-  "candidateUrl": "https://6ae80cef3e9589ac84d0857a--tree-token.netlify.app/play/",
-  "functionPreservationBasis": "All 41 complete function records, including package digests, provider metadata, runtime fields and ordering, are identical to the previous publication.",
+  "candidateUrl": "https://6ae8112dce29c5db8b725ff0--tree-token.netlify.app/play/",
   "completeFunctionRecordsIdenticalToPrevious": true,
+  "functionPreservationBasis": "All 41 complete function/provider records and ordering are identical to the immediately previous publication. No provider identity exception.",
   "preservedRedirectSha1": "4450ad95c97a2045c2575bd2cc75c49a8a2ba6c7",
   "participationProbes": {
     "candidate": {
-      "candidate": "6ae80cef3e9589ac84d0857a",
-      "checkedAt": "2026-11-02T04:10:01.468596+00:00",
-      "url": "https://6ae80cef3e9589ac84d0857a--tree-token.netlify.app/api/arcade-growth?action=treeforce-play",
+      "candidate": "6ae8112dce29c5db8b725ff0",
+      "sourceCommit": "9c00bf6ae42d2ab6c2a78802cdfb4df1c42f795e",
+      "checkedAt": "2026-11-02T04:29:28.107113+00:00",
+      "url": "https://6ae8112dce29c5db8b725ff0--tree-token.netlify.app/api/arcade-growth?action=treeforce-play",
+      "method": "POST",
       "status": 401,
       "code": "invalid-game-session",
-      "milliseconds": 938.11,
+      "milliseconds": 1065.74,
       "credential": "cryptographically random nonexistent credential; no user credential",
-      "participationWritten": false
+      "requestBodyFields": [
+        "runId"
+      ],
+      "participationWritten": false,
+      "writeEvidence": "Valid-format random token rejected by the database session SELECT before ownership or participation writes."
     },
     "canonical": {
-      "deployment": "6ae80cef3e9589ac84d0857a",
-      "checkedAt": "2026-11-02T04:10:54.355340+00:00",
+      "candidate": "6ae8112dce29c5db8b725ff0",
+      "sourceCommit": "9c00bf6ae42d2ab6c2a78802cdfb4df1c42f795e",
+      "checkedAt": "2026-11-02T04:30:07.483568+00:00",
       "url": "https://tree-token.xyz/api/arcade-growth?action=treeforce-play",
+      "method": "POST",
       "status": 401,
       "code": "invalid-game-session",
-      "milliseconds": 68.12,
+      "milliseconds": 257.88,
       "credential": "cryptographically random nonexistent credential; no user credential",
-      "participationWritten": false
+      "requestBodyFields": [
+        "runId"
+      ],
+      "participationWritten": false,
+      "writeEvidence": "Valid-format random token rejected by the database session SELECT before ownership or participation writes."
     }
   },
-  "releaseReceipt": "production/arcade-passport-copy-release.json",
-  "verification": "docs/arcade-passport-copy-verification.json"
+  "releaseReceipt": "production/arcade-growth-branding-release.json",
+  "verification": "docs/arcade-growth-branding-verification.json"
 }
