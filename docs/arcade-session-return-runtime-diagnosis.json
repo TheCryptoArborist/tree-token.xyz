@@ -150,5 +150,33 @@
     "netlifyOpenApi": "https://open-api.netlify.com/",
     "schema": "Create environment variables POST accounts/{account_id}/env; is_secret true, functions scope, production context",
     "databaseDocs": "https://docs.netlify.com/build/data-and-storage/netlify-db/"
+  },
+  "preparedHelperReadOnlyChecks": {
+    "checkedAt": "2026-11-02T03:06:21.229903+00:00",
+    "helperSha256": "c1fef669f8b0775b8970e0f31b16e5e4db406e4a32e7114abb291cc18a642f0f",
+    "commands": [
+      "python scripts/release-arcade-session-return.py guards",
+      "python scripts/release-arcade-session-return.py check",
+      "GET-only in-memory branch retrieval passed helper verify_database_binding"
+    ],
+    "pureGuardCases": 66,
+    "pureGuardsPassed": true,
+    "liveGetPreflightPassed": true,
+    "lockedBaselineMatches": true,
+    "staticPaths": 284,
+    "fullFunctionRecords": 41,
+    "schedules": 5,
+    "allSiteEnvironmentEntries": 49,
+    "allSiteEnvironmentSha256": "92587d897f64ece98caf1d474677b40041cc2d01f1f3374faac8c00744ef0355",
+    "sharedEnvironmentEntriesAllScopes": 0,
+    "targetKeyAbsentInAllSiteAndSharedScopes": true,
+    "actualOwnerAndDefaultReadonlyUrlGuardsPassed": true,
+    "actualBindingSha256": "bd43f510880e7ae9c423792345ccab6d6eacb63e30b1da9c4a238f479d3b33e3",
+    "remoteMethodsExecuted": [
+      "GET"
+    ],
+    "hostedProbePerformed": false,
+    "sqlExecuted": false,
+    "remoteMutations": 0
   }
 }
