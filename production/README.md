@@ -4,6 +4,8 @@ Authenticated read-only capture and verification protect published, locked deplo
 
 `node scripts/release-preserved-production.mjs verify` fails if the publication, any complete backend record, schedule, runtime setting, static path/digest, or protected API-visible environment fingerprint changes. Capture requires an explicit expected deployment ID and refuses to overwrite a baseline. The script no longer permits the historical metric-package replacements or any publish/restore mode. No production changes were made by this maintenance work. Earlier sections below are historical records.
 
+The version 2 local baseline is `.netlify/preservation-baseline-v2.json`. It excludes only the build-settings audit field `updated_at` from configuration equality, preserving that timestamp separately as an observation. All other settings retain aggregate and per-field hashes. Version 1 evidence is retained locally; its aggregate-only settings hash cannot reconstruct historical field-level differences. See the validation guide for the explicit version migration review.
+
 ---
 
 # Historical production — validated VICTORY reward display, 2026-10-06

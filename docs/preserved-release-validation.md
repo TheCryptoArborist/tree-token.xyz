@@ -4,7 +4,7 @@ This change repairs `scripts/release-preserved-production.mjs` as a **read-only*
 
 ## Current baseline
 
-The local, ignored `.netlify/preservation-baseline.json` captures authenticated Netlify GET responses for production deployment `6ae8112dce29c5db8b725ff0` on site `aa62f324-b880-47d6-85b8-4ba0700ff5bf`. Its canonical SHA256 is pinned in the adjacent `.sha256` file. The capture was explicitly pinned to that deployment; it did not automatically accept whichever release happened to be current. Production records and environment fingerprints remain local and are not included in this code change.
+The local, ignored `.netlify/preservation-baseline-v2.json` captures authenticated Netlify GET responses for production deployment `6ae8112dce29c5db8b725ff0` on site `aa62f324-b880-47d6-85b8-4ba0700ff5bf`. Its canonical SHA256 is pinned in the adjacent `.sha256` file. The capture was explicitly pinned to that deployment; it did not automatically accept whichever release happened to be current. Production records and environment fingerprints remain local and are not included in this code change.
 
 The capture contains:
 
@@ -12,7 +12,7 @@ The capture contains:
 - All **five exact schedules**, with their complete records and array order.
 - All **288 published static path/SHA1 pairs**, including generated Netlify configuration, headers, redirects, Arcade assets, Canopy paths, and VICTORY files. Historical `production/manifest.json` is not used to replace this inventory.
 - Deployment runtime settings, region overrides, production database branch, and the current publication lock. Active database migrations and edge/server bundles stop this workflow.
-- Fingerprints of every API-returned site and shared environment record across all scopes, an additional functions-scope consistency check, and the site's build settings. The current Functions inventory has **50 site records**. The persistent production/functions secret `TREEFORCE89_DEV_DATABASE_URL` must retain its value ID, context, scopes, and secret classification.
+- Fingerprints of every API-returned site and shared environment record across all scopes, an additional functions-scope consistency check, and the site's build settings. Only the build-settings audit timestamp `updated_at` is excluded from configuration equality: Netlify advanced it immediately after the PR #72 merge without publishing the site. It is retained separately as an observation. Every other setting, value, field presence, and array order remains protected; per-field setting fingerprints make future differences inspectable. The current Functions inventory has **50 site records**. The persistent production/functions secret `TREEFORCE89_DEV_DATABASE_URL` must retain its value ID, context, scopes, and secret classification.
 
 No environment values or credentials are saved in the baseline or report. Function metadata and static hashes are retained directly. Function ZIPs are not downloaded or rebuilt; their API-reported SHA256 identities are protected.
 
@@ -43,7 +43,7 @@ node scripts/release-preserved-production.mjs capture \
   --baseline .netlify/preservation-baseline-REVIEWED_DEPLOYMENT_ID.json
 ```
 
-Review the full diff, update consumers deliberately, and retain prior evidence. This script intentionally expects 41 functions and five schedules; changing either count requires a code review. Do not simply replace a failed baseline to make verification pass.
+Review the full diff, update consumers deliberately, and retain prior evidence. This script intentionally expects 41 functions and five schedules; changing either count requires a code review. Do not simply replace a failed baseline to make verification pass. Version 1 baselines are not accepted by version 2: retain the old capture, compare every previously protected function, schedule, runtime, static file, and environment-variable fingerprint, and explicitly capture the reviewed version 2 state. Version 1 did not record per-field build-setting hashes, so it cannot prove which other build fields did or did not change historically; preserve that limitation in the local migration review.
 
 ## Verification limits
 
