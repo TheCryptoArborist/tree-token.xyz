@@ -29,9 +29,26 @@ verified. Only that new candidate can be published and locked.
 
 ## Status
 
-Source prepared. Publication and hosted verification are pending.
+Published and locked as `6ae80cef3e9589ac84d0857a` at
+`2026-11-02T04:10:29.743Z`, from source commit
+`048da5d94c01351fd4f59b217973270fd07645f3` on
+`copy/arcade-passport-challenge-20261102`. Live at
+https://tree-token.xyz/play/.
 
-The eventual release receipt is `production/arcade-passport-copy-release.json`.
-No user wallet signatures or fabricated game participation are needed to check
-this text change. The existing negative authentication probe verifies the
-database-backed participation path without awarding progress.
+The candidate and canonical site display `MONTHLY ARCADE CHALLENGE`, and the
+Passport disclosure still opens to its stamp and badge explanation. The
+candidate had no horizontal overflow at the inspected desktop viewport.
+All 284 static paths remain; the other 283 files, all 41 complete function
+records, five schedules, runtime configuration, 50 site Functions environment
+entries, and persistent TREE FORCE database binding were preserved exactly.
+
+Candidate and canonical participation probes returned HTTP 401
+`invalid-game-session` for a cryptographically random nonexistent game session.
+This exercised the real database-backed authentication gate without awarding
+progress. No real-user wallet signature, transaction, or authenticated game
+run was performed for this copy change.
+
+The publication receipt is `production/arcade-passport-copy-release.json`;
+`production/current-release.json` records the same current inventory.
+Hosted checks and scope are recorded in
+`docs/arcade-passport-copy-verification.json`.

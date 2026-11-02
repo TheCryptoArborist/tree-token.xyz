@@ -1,0 +1,77 @@
+{
+  "deployment": "6ae80cef3e9589ac84d0857a",
+  "baseline": "6ae806bda0c2f59d35109a6e",
+  "sourceCommit": "048da5d94c01351fd4f59b217973270fd07645f3",
+  "sourceTree": "785e7476e4bd0f048c99eb1af1ae1d84074ba87f",
+  "url": "https://tree-token.xyz/play/",
+  "publishedAt": "2026-11-02T04:10:29.743Z",
+  "locked": true,
+  "publicChange": {
+    "path": "/play/index.html",
+    "operation": "one literal text replacement",
+    "before": "OPTIONAL MONTHLY GOAL",
+    "after": "MONTHLY ARCADE CHALLENGE",
+    "beforeSha1": "7037aaf93898bfdb18dd272bc1c586263ea8052a",
+    "afterSha1": "6109a97982c50d6ab0b8329e0b4d50adda73506f",
+    "byteExactReplacementVerified": true
+  },
+  "preservation": {
+    "staticPaths": 284,
+    "unchangedStaticFiles": 283,
+    "completeFunctionRecords": 41,
+    "completeFunctionRecordsIdentical": true,
+    "schedules": 5,
+    "runtimeConfigurationIdentical": true,
+    "allEnvironmentFingerprintsIdentical": true,
+    "siteFunctionsEnvironmentEntries": 50,
+    "persistentTreeForceDatabaseBindingPreserved": true,
+    "generatedNetlifyConfigSha1": "ac47414c8205343f1a87a5b7b48131aaa7b92856",
+    "redirectsSha1": "4450ad95c97a2045c2575bd2cc75c49a8a2ba6c7"
+  },
+  "browser": {
+    "candidate": {
+      "newHeadingVisible": true,
+      "passportDisclosureVerified": true,
+      "stampAndBadgeExplanationRetained": true,
+      "cabinetCount": 8,
+      "viewportWidth": 1363,
+      "documentWidth": 1348,
+      "horizontalOverflow": false
+    },
+    "canonical": {
+      "newHeadingVisible": true,
+      "passportDisclosureVerified": true,
+      "stampAndBadgeExplanationRetained": true,
+      "cabinetCount": 8
+    },
+    "state": "signed out; no wallet interaction"
+  },
+  "participationProbes": {
+    "candidate": {
+      "candidate": "6ae80cef3e9589ac84d0857a",
+      "checkedAt": "2026-11-02T04:10:01.468596+00:00",
+      "url": "https://6ae80cef3e9589ac84d0857a--tree-token.netlify.app/api/arcade-growth?action=treeforce-play",
+      "status": 401,
+      "code": "invalid-game-session",
+      "milliseconds": 938.11,
+      "credential": "cryptographically random nonexistent credential; no user credential",
+      "participationWritten": false
+    },
+    "canonical": {
+      "deployment": "6ae80cef3e9589ac84d0857a",
+      "checkedAt": "2026-11-02T04:10:54.355340+00:00",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=treeforce-play",
+      "status": 401,
+      "code": "invalid-game-session",
+      "milliseconds": 68.12,
+      "credential": "cryptographically random nonexistent credential; no user credential",
+      "participationWritten": false
+    }
+  },
+  "scope": "A copy-only release. No JavaScript, CSS, wallet, game, backend, database, dependency, stamp-rule or reward change.",
+  "limitations": [
+    "No real-user wallet signature or transaction was performed.",
+    "No authenticated user game run was performed.",
+    "Desktop visual inspection was sufficient for this single text replacement; no broader mobile or controller regression suite was rerun."
+  ]
+}

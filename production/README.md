@@ -1,4 +1,18 @@
-# Current production — Arcade session return and TREE FORCE participation, 2026-11-02 UTC
+# Current production — Arcade Passport invitation, 2026-11-02 UTC
+
+Published and locked deploy `6ae80cef3e9589ac84d0857a` at `2026-11-02T04:10:29.743Z`, from source commit `048da5d94c01351fd4f59b217973270fd07645f3`, tree `785e7476e4bd0f048c99eb1af1ae1d84074ba87f`, on `copy/arcade-passport-challenge-20261102`. Live at https://tree-token.xyz/play/.
+
+The Arcade Passport heading now says **MONTHLY ARCADE CHALLENGE**. The complete public change is one text replacement in `/play/index.html`; its existing badge explanation, stamp requirements, paid-entry information, and behavior remain intact.
+
+The baseline is the actual previous publication `6ae806bda0c2f59d35109a6e`. All 284 paths remain, with 283 unchanged. All 41 complete function/provider records, five schedules, generated configuration, routing, runtime configuration, and site/shared environment records are identical to that baseline. The current **50** site Functions environment entries include the persistent Production/Functions `TREEFORCE89_DEV_DATABASE_URL` secret. The previous session-repair provider-metadata exception does not apply to this release.
+
+Candidate and canonical browser checks confirmed the heading and Passport disclosure. Both real database-backed negative authentication probes returned HTTP 401 `invalid-game-session`, before any participation write. No real wallet signature, transaction, or authenticated game run was performed for this copy change. See `../docs/arcade-passport-copy.md` and `../docs/arcade-passport-copy-verification.json`.
+
+`current-release.json` and `arcade-passport-copy-release.json` record this publication. `arcade-passport-copy-baseline.json` is a sanitized preservation capture with safe binding metadata and fingerprints, never connection values or deployment credentials. Continue to preserve this current inventory and its database binding; the historical root manifest and earlier 49-entry environment notes are recovery material. Keep only the current publication locked, and do not run the ordinary root snapshot build as a current production release.
+
+---
+
+# Previous production — Arcade session return and TREE FORCE participation, 2026-11-02 UTC
 
 Published and locked deploy `6ae806bda0c2f59d35109a6e` at **2026-11-02T03:45:42.146Z**. Live at https://tree-token.xyz/play/. Application source: `81b463838a2ed3c5c388be14c1935a80c221c73d`; archive recovery: `00e9d0e0f7968751559c6f9458d5bdd1b3384afa`; asynchronous retry: `ef2fe8edd269600379c4160750553262ada8f5c3`; final reviewed publication procedure: `27b42110ecbe95e8b3e20444b5a283f8077a96af`. The source branch is `fix/arcade-session-return-20261102`.
 

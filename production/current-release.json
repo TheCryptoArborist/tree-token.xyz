@@ -1,25 +1,21 @@
 {
-  "id": "6ae806bda0c2f59d35109a6e",
+  "id": "6ae80cef3e9589ac84d0857a",
   "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
-  "baseline": "6ae7f8a9183c770b8f0eb50c",
-  "baselineSha256": "67e7f1d86a7aefd1d871415c8b6811428a6523797a4e6c44dd0cedf662a2b2d8",
-  "sourceCommit": "81b463838a2ed3c5c388be14c1935a80c221c73d",
-  "sourceTree": "e028fb2cd59f31e1f13c235d61f9e03bfe8caa4e",
-  "sourceBranch": "fix/arcade-session-return-20261102",
-  "finalProcedureCommit": "27b42110ecbe95e8b3e20444b5a283f8077a96af",
-  "finalProcedureTree": "7cde7e5ca6e94f51a025b98f893f87cc4a56b319",
-  "retryProcedureCommit": "ef2fe8edd269600379c4160750553262ada8f5c3",
-  "retryProcedureTree": "c94ac71110cee9de398afbc5dfc8d7e7ebf09f11",
-  "filesSha256": "90c717535d32581d43334a955520c6121c8dbab3521ddaee98348e9d6dd2f03e",
+  "baseline": "6ae806bda0c2f59d35109a6e",
+  "baselineSha256": "e2a59e93b1da001fccb5d354d4da6724fb140527c030a2dffc61662246e12e90",
+  "sourceCommit": "048da5d94c01351fd4f59b217973270fd07645f3",
+  "sourceTree": "785e7476e4bd0f048c99eb1af1ae1d84074ba87f",
+  "sourceBranch": "copy/arcade-passport-challenge-20261102",
+  "filesSha256": "fa058bed2be8e4e8b1ad48a1317eb41d61d9680b98be686e5b2d75132f80df7a",
   "overlay": [
     {
-      "path": "/scripts/arcade-daily-growth.js",
-      "sha": "cb3fcb2b3408c4d07cbe10dbf02e907109a22c00",
-      "size": 69172
+      "path": "/play/index.html",
+      "sha": "6109a97982c50d6ab0b8329e0b4d50adda73506f",
+      "size": 35635
     }
   ],
-  "publishedAt": "2026-11-02T03:45:42.146Z",
-  "verifiedAt": "2026-11-02T03:45:56.811Z",
+  "publishedAt": "2026-11-02T04:10:29.743Z",
+  "verifiedAt": "2026-11-02T04:10:31.945516+00:00",
   "locked": true,
   "files": 284,
   "filesBySha1": {
@@ -82,7 +78,7 @@
     "/scripts/arcade-sui-wallet.js": "25cdec64fb85cfcbe6b7f706841f105e351c3b36",
     "/roadmap/index.html": "6597c20c44a9aac623f685679962fb2fc100c5db",
     "/raffle-rules/index.html": "442ca8e3abf867d7dab3dc1857f1e21182e9addc",
-    "/play/index.html": "7037aaf93898bfdb18dd272bc1c586263ea8052a",
+    "/play/index.html": "6109a97982c50d6ab0b8329e0b4d50adda73506f",
     "/mascot.png": "9f5e5db66e2f6c3eee41d70b1800094fe014a473",
     "/index.html": "1dba30e928a617b53d698561fb77dcffa6205ccd",
     "/hero.png": "15fa5856c63652fa6089010f683169d8b0c0dca5",
@@ -309,13 +305,11 @@
     "/_redirects": "4450ad95c97a2045c2575bd2cc75c49a8a2ba6c7"
   },
   "changedExistingPaths": [
-    "/scripts/arcade-daily-growth.js"
+    "/play/index.html"
   ],
   "preservedStaticFiles": 283,
   "newPaths": [],
   "functionsPreserved": 41,
-  "functionPreservationBasis": "All original package bytes, runtime/configuration fields and function order are exact; provider identity metadata changed only as explicitly reviewed.",
-  "completeFunctionRecordsIdenticalToPrevious": false,
   "functionRecords": [
     {
       "n": "arcade-wallet-link",
@@ -1642,14 +1636,6 @@
       "s": 1253348
     }
   ],
-  "providerRecordReview": "docs/arcade-session-return-provider-review.json",
-  "reviewedProviderFields": [
-    "a",
-    "c",
-    "id",
-    "oid"
-  ],
-  "reviewedProviderDifferenceCount": 162,
   "functionSchedules": [
     {
       "name": "tree-badges-refresh-scheduled",
@@ -1843,80 +1829,84 @@
     "blobs_region": "us-east-2",
     "framework": null
   },
+  "databaseSnapshotEvents": {
+    "snapshots": [
+      {
+        "source": "on-publish",
+        "created_at": "2026-11-02T04:10:29.602Z"
+      }
+    ]
+  },
   "generatedNetlifyConfigSha1": "ac47414c8205343f1a87a5b7b48131aaa7b92856",
-  "preservedRedirectSha1": "4450ad95c97a2045c2575bd2cc75c49a8a2ba6c7",
   "environmentEvidence": {
     "sourceRepository": "TheCryptoArborist/tree-token.xyz",
-    "accountId": "69800888d1a3d0483003ae9e",
     "releaseSourceCommit": "81b463838a2ed3c5c388be14c1935a80c221c73d",
-    "releaseSourceTree": "e028fb2cd59f31e1f13c235d61f9e03bfe8caa4e",
-    "releaseHelperSha256": "1cd0aa8e79c1ccd859b7469d2af8121c92f1f6664ed980de02176f47145d9971",
     "finalProcedureCommit": "27b42110ecbe95e8b3e20444b5a283f8077a96af",
     "deployEnvironmentOverrides": [],
+    "accountId": "69800888d1a3d0483003ae9e",
     "siteFunctionsEnvironmentEntries": 50,
     "siteFunctionsEnvironmentSha256": "ee432a34ade907b85ae58478272be8356728aad5a5a3731a8a722e90204df7d4",
-    "preservedFunctionEnvironmentEntries": 49,
-    "preservedFunctionEnvironmentSha256": "92587d897f64ece98caf1d474677b40041cc2d01f1f3374faac8c00744ef0355",
     "sharedAccountFunctionsEnvironmentEntries": 0,
     "sharedAccountFunctionsEnvironmentSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
     "siteBuildEnvironmentSha256": "46bc4bf6e56b046d14b6a6fa19804d1ddd7bdcff405ec09a116c24013ea34809",
-    "environmentCapturedAt": "2026-11-02T03:45:44.993216+00:00",
-    "runtimeConfigurationProof": "production/arcade-session-return-runtime-configuration.json",
-    "configurationSha256": "233fe64419a86b8d70a4416a53916506f08932ee5c370682f6a196b54c01f3e3",
-    "requiredPersistentBinding": {
-      "key": "TREEFORCE89_DEV_DATABASE_URL",
-      "isSecret": true,
-      "scopes": [
-        "functions"
-      ],
-      "values": [
-        {
-          "id": "e74b3d13-01c7-443a-a6f1-8f3b4940f415",
-          "context": "production",
-          "contextParameter": null
-        }
-      ]
+    "allSiteEnvironmentEntries": 50,
+    "allSiteEnvironmentSha256": "ee432a34ade907b85ae58478272be8356728aad5a5a3731a8a722e90204df7d4",
+    "allSharedEnvironmentEntries": 0,
+    "allSharedEnvironmentSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "binding": {
+      "metadata": {
+        "key": "TREEFORCE89_DEV_DATABASE_URL",
+        "isSecret": true,
+        "scopes": [
+          "functions"
+        ],
+        "values": [
+          {
+            "id": "e74b3d13-01c7-443a-a6f1-8f3b4940f415",
+            "context": "production",
+            "contextParameter": null
+          }
+        ]
+      },
+      "recordSha256": "731e02e4279ede868687f2b2e67dc7c58a6712b59482de2dfb4ff20244a7fcf4"
     },
-    "databaseIdentitySha256": "df2f0abee059d9898495a125018fa0a291d50b9050c0d4557231f409bed53065",
-    "previousPreservationGap": "Prior function-byte and anonymous status checks omitted the old per-deploy TREEFORCE89_DEV_DATABASE_URL override. The binding is now a persistent production/functions site secret and real session-lookup probes are required.",
     "preservedCanopyRouting": {
       "path": "/_redirects",
       "sha1": "4450ad95c97a2045c2575bd2cc75c49a8a2ba6c7",
       "upstreamDeployId": "6ae7ee72f3a12d5acb787a55",
       "canonicalPath": "https://tree-token.xyz/play/canopy-defense/checkout-test/"
     },
-    "canopySessionNote": "The unchanged Canopy function uses a deployment-scoped authentication store; existing short-lived sessions may require sign-in again after publication."
-  },
-  "participationProbes": {
-    "candidate": {
-      "url": "https://6ae806bda0c2f59d35109a6e--tree-token.netlify.app/api/arcade-growth?action=treeforce-play",
-      "checkedAt": "2026-11-02T03:45:23.793366+00:00",
-      "method": "POST",
-      "status": 401,
-      "code": "invalid-game-session",
-      "milliseconds": 1831.98,
-      "credential": "cryptographically random nonexistent token; no user credential",
-      "run": "synthetic nonexistent run; no game session created",
-      "participationWritten": false,
-      "interpretation": "Pinned database connection and real session SELECT rejected the nonexistent session before ownership/RPC"
-    },
-    "canonical": {
-      "url": "https://tree-token.xyz/api/arcade-growth?action=treeforce-play",
-      "checkedAt": "2026-11-02T03:45:44.780150+00:00",
-      "method": "POST",
-      "status": 401,
-      "code": "invalid-game-session",
-      "milliseconds": 342.19,
-      "credential": "cryptographically random nonexistent token; no user credential",
-      "run": "synthetic nonexistent run; no game session created",
-      "participationWritten": false,
-      "interpretation": "Pinned database connection and real session SELECT rejected the nonexistent session before ownership/RPC"
-    }
+    "environmentCapturedAt": "2026-11-02T04:04:49.745247+00:00"
   },
   "previousDeployLocked": false,
-  "publicationLockScope": "current publication only; never relock an earlier deployment",
-  "releaseReceipt": "production/arcade-session-return-release.json",
-  "verification": "docs/arcade-session-return-verification.json",
+  "publicationLockScope": "current publication only; do not relock an earlier deployment",
   "url": "https://tree-token.xyz/play/",
-  "candidateUrl": "https://6ae806bda0c2f59d35109a6e--tree-token.netlify.app/play/"
+  "candidateUrl": "https://6ae80cef3e9589ac84d0857a--tree-token.netlify.app/play/",
+  "functionPreservationBasis": "All 41 complete function records, including package digests, provider metadata, runtime fields and ordering, are identical to the previous publication.",
+  "completeFunctionRecordsIdenticalToPrevious": true,
+  "preservedRedirectSha1": "4450ad95c97a2045c2575bd2cc75c49a8a2ba6c7",
+  "participationProbes": {
+    "candidate": {
+      "candidate": "6ae80cef3e9589ac84d0857a",
+      "checkedAt": "2026-11-02T04:10:01.468596+00:00",
+      "url": "https://6ae80cef3e9589ac84d0857a--tree-token.netlify.app/api/arcade-growth?action=treeforce-play",
+      "status": 401,
+      "code": "invalid-game-session",
+      "milliseconds": 938.11,
+      "credential": "cryptographically random nonexistent credential; no user credential",
+      "participationWritten": false
+    },
+    "canonical": {
+      "deployment": "6ae80cef3e9589ac84d0857a",
+      "checkedAt": "2026-11-02T04:10:54.355340+00:00",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=treeforce-play",
+      "status": 401,
+      "code": "invalid-game-session",
+      "milliseconds": 68.12,
+      "credential": "cryptographically random nonexistent credential; no user credential",
+      "participationWritten": false
+    }
+  },
+  "releaseReceipt": "production/arcade-passport-copy-release.json",
+  "verification": "docs/arcade-passport-copy-verification.json"
 }
