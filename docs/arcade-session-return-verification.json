@@ -1,0 +1,74 @@
+{
+  "verifiedAt": "2026-11-02T03:01:44.967779+00:00",
+  "stage": "pre-release",
+  "baselineDeploy": "6ae7f8a9183c770b8f0eb50c",
+  "sourceAncestor": "caed1e3f96a3496537515fc46d9cb1bd7fd9e9eb",
+  "sourceBranch": "fix/arcade-session-return-20261102",
+  "sourceSha256": {
+    "play/index.html": "8a30d1fe1abf8e01c2a6f21b00bbfa2761378e6c114b6c778ef809c755927483",
+    "scripts/arcade-daily-growth.js": "48f9881a7827742a1a88a46cb6ea05fc95e57379aaa7314a628243fdb6bb7b98",
+    "styles/tree-arcade-suite.css": "4f790d4a3a059dbe37632e8ac751c04d71f233f98b1b4a7132609d264c09bc5c",
+    "assets/arcade/arcade-growth-wallet.js": "1e26f995d31f0c0506e2180cc5940a6a4be561c11153e5a100cc0beb4b633421"
+  },
+  "publicOverlay": [
+    "/scripts/arcade-daily-growth.js"
+  ],
+  "controller": {
+    "passed": 48,
+    "topLevelCases": 42,
+    "nestedCases": 6,
+    "failed": 0,
+    "report": "docs/review/arcade-session-return/controller-tests.tap"
+  },
+  "nativeBrowser": {
+    "passed": 5,
+    "baselineReproduced": true,
+    "fixedPassed": true,
+    "baselineReport": "docs/review/arcade-session-return/baseline-browser-report.json",
+    "fixedReport": "docs/review/arcade-session-return/fixed-browser-report.json",
+    "actualWalletBundle": true,
+    "browserNativeSessionStorage": true,
+    "noBearerInLocalStorage": true,
+    "allRequestsLocallyFulfilled": true,
+    "noRuntimeErrors": true,
+    "noRemoteWrites": true,
+    "limitations": [
+      "Wallet and progress fixtures are synthetic.",
+      "Actual browser Back loaded a fresh document; persisted pageshow was simulated.",
+      "No real user run was credited by these tests."
+    ]
+  },
+  "plannedRuntimeRepair": {
+    "key": "TREEFORCE89_DEV_DATABASE_URL",
+    "scope": "functions",
+    "context": "production",
+    "secret": true,
+    "databaseIdentity": "df2f0abee059d9898495a125018fa0a291d50b9050c0d4557231f409bed53065",
+    "preservedExistingSiteFunctionsEntries": 49,
+    "functionRebuild": false,
+    "databaseWrites": false
+  },
+  "releaseGuardReport": "docs/arcade-session-return-release-guards.json",
+  "runtimeDiagnosis": "docs/arcade-session-return-runtime-diagnosis.json",
+  "hostedVerification": {
+    "candidate": "pending",
+    "canonical": "pending",
+    "safeParticipationProbe": "pending"
+  },
+  "preservation": {
+    "staticPaths": 284,
+    "unchangedStaticPaths": 283,
+    "completeFunctions": 41,
+    "schedules": 5,
+    "redirectSha1": "4450ad95c97a2045c2575bd2cc75c49a8a2ba6c7"
+  },
+  "userRunRecovery": "No individual user wallet or run has been identified or credited. Stored aggregate records are consistent; failed requests are not proof of earned participation.",
+  "releaseGuards": {
+    "passed": 66,
+    "failed": 0,
+    "helperSha256": "c1fef669f8b0775b8970e0f31b16e5e4db406e4a32e7114abb291cc18a642f0f",
+    "baselineSha256": "67e7f1d86a7aefd1d871415c8b6811428a6523797a4e6c44dd0cedf662a2b2d8",
+    "remoteRequests": 0,
+    "report": "docs/arcade-session-return-release-guards.json"
+  }
+}

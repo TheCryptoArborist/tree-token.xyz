@@ -1,0 +1,300 @@
+TAP version 13
+# Subtest: compact Daily Growth starts closed and its native progress disclosure never starts wallet or write requests
+ok 1 - compact Daily Growth starts closed and its native progress disclosure never starts wallet or write requests
+  ---
+  duration_ms: 335.736764
+  type: 'test'
+  ...
+# Subtest: compact check-in remains available with details closed and saves attendance only once
+ok 2 - compact check-in remains available with details closed and saves attendance only once
+  ---
+  duration_ms: 306.773978
+  type: 'test'
+  ...
+# Subtest: task-row authentication stays explicit and checking in from the row uses the same saved action
+ok 3 - task-row authentication stays explicit and checking in from the row uses the same saved action
+  ---
+  duration_ms: 244.423135
+  type: 'test'
+  ...
+# Subtest: invitation buttons reveal today until both tasks are saved, without changing an already-open tab or starting requests
+ok 4 - invitation buttons reveal today until both tasks are saved, without changing an already-open tab or starting requests
+  ---
+  duration_ms: 228.653288
+  type: 'test'
+  ...
+# Subtest: wallet picker opens as a named dialog and every dismissal returns focus without wallet actions
+ok 5 - wallet picker opens as a named dialog and every dismissal returns focus without wallet actions
+  ---
+  duration_ms: 160.64139
+  type: 'test'
+  ...
+# Subtest: a rejected wallet connection stays in the picker with an announced error and a working retry
+ok 6 - a rejected wallet connection stays in the picker with an announced error and a working retry
+  ---
+  duration_ms: 155.00172
+  type: 'test'
+  ...
+# Subtest: wallet rows use safe data icons and keep the same wallet focused when discovery refreshes
+ok 7 - wallet rows use safe data icons and keep the same wallet focused when discovery refreshes
+  ---
+  duration_ms: 123.166388
+  type: 'test'
+  ...
+# Subtest: an empty wallet picker focuses its close control and explains how to connect
+ok 8 - an empty wallet picker focuses its close control and explains how to connect
+  ---
+  duration_ms: 86.658848
+  type: 'test'
+  ...
+# Subtest: signed-out meters stay unknown while monthly badge goals are clearly previews
+ok 9 - signed-out meters stay unknown while monthly badge goals are clearly previews
+  ---
+  duration_ms: 100.335113
+  type: 'test'
+  ...
+# Subtest: the persistent rail uses the exact UTC server month for 28, 29, 30 and 31 dates
+    # Subtest: 2027-02: 28 dates
+    ok 1 - 2027-02: 28 dates
+      ---
+      duration_ms: 176.084585
+      type: 'test'
+      ...
+    # Subtest: 2028-02: 29 dates
+    ok 2 - 2028-02: 29 dates
+      ---
+      duration_ms: 174.484505
+      type: 'test'
+      ...
+    # Subtest: 2026-11: 30 dates
+    ok 3 - 2026-11: 30 dates
+      ---
+      duration_ms: 169.334861
+      type: 'test'
+      ...
+    # Subtest: 2026-12: 31 dates
+    ok 4 - 2026-12: 31 dates
+      ---
+      duration_ms: 180.575544
+      type: 'test'
+      ...
+    1..4
+ok 10 - the persistent rail uses the exact UTC server month for 28, 29, 30 and 31 dates
+  ---
+  duration_ms: 701.938235
+  type: 'test'
+  ...
+# Subtest: loading, unavailable and invalid public dates never manufacture an attendance rail
+ok 11 - loading, unavailable and invalid public dates never manufacture an attendance rail
+  ---
+  duration_ms: 90.396837
+  type: 'test'
+  ...
+# Subtest: meters reflect saved attendance, the next milestone and required stamps, retaining labeled stale values and clearing on account change
+ok 12 - meters reflect saved attendance, the next milestone and required stamps, retaining labeled stale values and clearing on account change
+  ---
+  duration_ms: 253.852562
+  type: 'test'
+  ...
+# Subtest: all attendance milestones are earned while the month rail keeps the actual count and month length
+ok 13 - all attendance milestones are earned while the month rail keeps the actual count and month length
+  ---
+  duration_ms: 162.874773
+  type: 'test'
+  ...
+# Subtest: signed-out state shows the server pick without invented progress or automatic wallet prompts
+ok 14 - signed-out state shows the server pick without invented progress or automatic wallet prompts
+  ---
+  duration_ms: 71.403239
+  type: 'test'
+  ...
+# Subtest: connecting requires a separate message sign-in and uses only a wallet-bound server session
+ok 15 - connecting requires a separate message sign-in and uses only a wallet-bound server session
+  ---
+  duration_ms: 174.167852
+  type: 'test'
+  ...
+# Subtest: standalone check-in saves attendance without a quest, passport credit, or duplicate write
+ok 16 - standalone check-in saves attendance without a quest, passport credit, or duplicate write
+  ---
+  duration_ms: 243.339501
+  type: 'test'
+  ...
+# Subtest: launching and choosing a game never credits progress; verified sync awards only server results
+ok 17 - launching and choosing a game never credits progress; verified sync awards only server results
+  ---
+  duration_ms: 375.021263
+  type: 'test'
+  ...
+# Subtest: TREE FORCE uses the same tab while external Garden links retain their new-tab protections
+ok 18 - TREE FORCE uses the same tab while external Garden links retain their new-tab protections
+  ---
+  duration_ms: 126.760401
+  type: 'test'
+  ...
+# Subtest: return events refresh a launched quest once and only display server-verified participation
+ok 19 - return events refresh a launched quest once and only display server-verified participation
+  ---
+  duration_ms: 395.196899
+  type: 'test'
+  ...
+# Subtest: eligible cabinet launches refresh on a persisted page return; unrelated cabinets and expired sessions do not
+ok 20 - eligible cabinet launches refresh on a persisted page return; unrelated cabinets and expired sessions do not
+  ---
+  duration_ms: 251.390969
+  type: 'test'
+  ...
+# Subtest: API failure is unavailable rather than zero, and a retry can recover
+ok 21 - API failure is unavailable rather than zero, and a retry can recover
+  ---
+  duration_ms: 147.023364
+  type: 'test'
+  ...
+# Subtest: failed writes and incomplete source verification preserve saved progress with an explicit warning
+ok 22 - failed writes and incomplete source verification preserve saved progress with an explicit warning
+  ---
+  duration_ms: 237.728737
+  type: 'test'
+  ...
+# Subtest: changing accounts during a refresh immediately hides private progress and ignores the late response
+ok 23 - changing accounts during a refresh immediately hides private progress and ignores the late response
+  ---
+  duration_ms: 198.622388
+  type: 'test'
+  ...
+# Subtest: an account switch while a sign-in prompt is open cannot authorize the previous account
+ok 24 - an account switch while a sign-in prompt is open cannot authorize the previous account
+  ---
+  duration_ms: 142.261954
+  type: 'test'
+  ...
+# Subtest: revoked sessions clear private state immediately; inconsistent server data does not become progress
+ok 25 - revoked sessions clear private state immediately; inconsistent server data does not become progress
+  ---
+  duration_ms: 259.123844
+  type: 'test'
+  ...
+# Subtest: server month controls the full UTC calendar, earned badges, and roving keyboard tabs
+ok 26 - server month controls the full UTC calendar, earned badges, and roving keyboard tabs
+  ---
+  duration_ms: 155.89694
+  type: 'test'
+  ...
+# Subtest: an existing authorized session restores silently and expires without exposing old progress
+ok 27 - an existing authorized session restores silently and expires without exposing old progress
+  ---
+  duration_ms: 148.181214
+  type: 'test'
+  ...
+# Subtest: explicit sign-out drops the token and private data even when the logout endpoint fails
+ok 28 - explicit sign-out drops the token and private data even when the logout endpoint fails
+  ---
+  duration_ms: 194.246414
+  type: 'test'
+  ...
+# Subtest: actual wallet adapter initial subscriptions and silent restore preserve the exact saved session
+ok 29 - actual wallet adapter initial subscriptions and silent restore preserve the exact saved session
+  ---
+  duration_ms: 148.612579
+  type: 'test'
+  ...
+# Subtest: late provider discovery silently restores the exact saved session once, without signatures or attendance writes
+ok 30 - late provider discovery silently restores the exact saved session once, without signatures or attendance writes
+  ---
+  duration_ms: 219.341098
+  type: 'test'
+  ...
+# Subtest: provider registration during a pending public status waits, then restores without a duplicate request
+ok 31 - provider registration during a pending public status waits, then restores without a duplicate request
+  ---
+  duration_ms: 116.800764
+  type: 'test'
+  ...
+# Subtest: renewing a restored session retains its actual provider ID and remains restorable on the next page
+ok 32 - renewing a restored session retains its actual provider ID and remains restorable on the next page
+  ---
+  duration_ms: 357.771783
+  type: 'test'
+  ...
+# Subtest: silent restoration cannot revive expired sessions or a session invalidated by an account change during restore
+    # Subtest: expiry
+    ok 1 - expiry
+      ---
+      duration_ms: 121.085751
+      type: 'test'
+      ...
+    # Subtest: account change
+    ok 2 - account change
+      ---
+      duration_ms: 129.838594
+      type: 'test'
+      ...
+    1..2
+ok 33 - silent restoration cannot revive expired sessions or a session invalidated by an account change during restore
+  ---
+  duration_ms: 251.908955
+  type: 'test'
+  ...
+# Subtest: actual wallet connection and signature rejection leave no Daily Growth authorization
+ok 34 - actual wallet connection and signature rejection leave no Daily Growth authorization
+  ---
+  duration_ms: 132.401589
+  type: 'test'
+  ...
+# Subtest: actual wallet account invalidation discards an in-flight signature and later API progress
+ok 35 - actual wallet account invalidation discards an in-flight signature and later API progress
+  ---
+  duration_ms: 263.214227
+  type: 'test'
+  ...
+# Subtest: TREE FORCE is a required Passport game with first-wave and direct-holder wording; Garden completion rules remain
+ok 36 - TREE FORCE is a required Passport game with first-wave and direct-holder wording; Garden completion rules remain
+  ---
+  duration_ms: 57.949806
+  type: 'test'
+  ...
+# Subtest: opening TREE FORCE grants nothing; a server-recorded first wave counts one quest and a main Passport stamp
+ok 37 - opening TREE FORCE grants nothing; a server-recorded first wave counts one quest and a main Passport stamp
+  ---
+  duration_ms: 225.011742
+  type: 'test'
+  ...
+# Subtest: TREE FORCE joins the three Garden stamps to complete the four-game Passport
+ok 38 - TREE FORCE joins the three Garden stamps to complete the four-game Passport
+  ---
+  duration_ms: 176.661176
+  type: 'test'
+  ...
+# Subtest: TREE FORCE participation remains saved when Garden source refresh is unavailable
+ok 39 - TREE FORCE participation remains saved when Garden source refresh is unavailable
+  ---
+  duration_ms: 208.573635
+  type: 'test'
+  ...
+# Subtest: historic October keeps its three-game Passport and optional TREE FORCE stamp without imposing November requirements
+ok 40 - historic October keeps its three-game Passport and optional TREE FORCE stamp without imposing November requirements
+  ---
+  duration_ms: 144.094313
+  type: 'test'
+  ...
+# Subtest: an incomplete four-game Passport cannot claim earned completion from an inconsistent response
+ok 41 - an incomplete four-game Passport cannot claim earned completion from an inconsistent response
+  ---
+  duration_ms: 203.841035
+  type: 'test'
+  ...
+# Subtest: a historic optional TREE FORCE stamp cannot enter required progress through an inconsistent response
+ok 42 - a historic optional TREE FORCE stamp cannot enter required progress through an inconsistent response
+  ---
+  duration_ms: 202.143406
+  type: 'test'
+  ...
+1..42
+# tests 48
+# suites 0
+# pass 48
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 8790.846654

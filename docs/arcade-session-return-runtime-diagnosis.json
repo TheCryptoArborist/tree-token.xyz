@@ -1,0 +1,154 @@
+{
+  "title": "TREE Arcade session return: runtime participation diagnosis",
+  "capturedAt": "2026-11-02T03:05:03.652873+00:00",
+  "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
+  "baselineDeploy": "6ae7f8a9183c770b8f0eb50c",
+  "baselineCanonicalSha256": "67e7f1d86a7aefd1d871415c8b6811428a6523797a4e6c44dd0cedf662a2b2d8",
+  "findings": [
+    {
+      "finding": "The Daily Growth browser sign-in and TREE FORCE game session are separate credentials.",
+      "evidence": [
+        "scripts/arcade-daily-growth.js: createDailyGrowth/sessionStorage default and restore/focus handlers",
+        "play/index.html: growth-play target=_blank with noopener noreferrer",
+        "treeforce89/frontend/NFTreeGateway.tsx: own sessionRef and first-wave participation reporter",
+        "treeforce89/frontend/participation-client.mjs: POST treeforce-play with game bearer and runId only"
+      ],
+      "implication": "A successful first-wave report records progress without a Daily Growth lobby token. New-tab wallet restoration and stale lobby data independently explain the apparent sign-out/status problem."
+    },
+    {
+      "finding": "The published participation reader lacks its required runtime database binding.",
+      "evidence": [
+        "netlify/lib/arcade-treeforce-session.ts: configuredQuery requires TREEFORCE89_DEV_DATABASE_URL before any SQL",
+        "netlify/functions/arcade-growth.ts: treeforce-play validates the game bearer through that reader before ownership or participation RPC",
+        "scripts/release-treeforce-participation.mjs: original helper injected the binding per deploy",
+        "scripts/release-daily-growth-quest-layout.py: later helper omitted per-deploy environment overrides",
+        "production/arcade-session-return-baseline.json: 49 persistent function records, zero shared functions, no target binding"
+      ],
+      "implication": "An absent binding directly produces HTTP503 participation-unavailable before the session SELECT. Preserving the existing49 persistent entries did not preserve the originally per-deployment binding."
+    },
+    {
+      "finding": "A recorded first-wave event writes its check-in and quest together.",
+      "evidence": [
+        "netlify/lib/arcade-growth-store.ts: recordTreeforcePlay invokes arcade_growth_record_treeforce_play_v1",
+        "supabase/migrations/20261031220110_arcade_growth_treeforce_participation.sql: event/check-in/quest/badges and idempotent original UTC date"
+      ],
+      "implication": "Existing successful records remain durable. A503 report has no event to display; signing back into the lobby cannot fabricate missing gameplay evidence. A pending report can retry only with its matching unexpired game session/run."
+    }
+  ],
+  "observedFailedRequests": {
+    "provenance": "Root agent sanitized live Netlify request-log inspection; no request headers, signatures, wallet addresses, or tokens retained",
+    "method": "POST",
+    "path": "/api/arcade-growth?action=treeforce-play",
+    "status": 503,
+    "requests": [
+      {
+        "timestamp": "2026-11-02T02:46:26.508116666Z",
+        "requestId": "01M6D2D9ECJPMAWK8QQP70JCMM",
+        "milliseconds": 138.814075
+      },
+      {
+        "timestamp": "2026-11-02T02:46:27.626155613Z",
+        "requestId": "01M6D2DAHA62M76JEGFGAKTYFP",
+        "milliseconds": 35.01581
+      },
+      {
+        "timestamp": "2026-11-02T02:46:31.718615217Z",
+        "requestId": "01M6D2DEH6D7N5X6ZXZ03W3JJT",
+        "milliseconds": 35.816173
+      }
+    ],
+    "qualification": "Logs establish503 responses, not a particular user or wallet. The inspected missing binding explains the same failure path; do not claim attribution of these requests to the reporting user."
+  },
+  "recordedParticipationAggregate": {
+    "provenance": "Root agent read-only Supabase aggregate; agent did not query or alter individual user rows",
+    "checkedAt": "2026-11-02T02:53:50.743613Z",
+    "totalTreeforceEvents": 9,
+    "eventsInRecent6Hours": 0,
+    "latestEventAt": "2026-11-01T09:48:41.3443Z",
+    "eventsMissingCheckIn": 0,
+    "eventsMissingQuest": 0,
+    "qualification": "Successful historical event reconciliation is intact; the aggregate does not identify which run the reporting user played."
+  },
+  "bindingProvenance": {
+    "provenance": "Read-only authenticated Netlify API GETs using the existing narrowly selected account credential; metadata and hashes only",
+    "branchId": "feature/treeforce89-play-integration",
+    "branchState": "ready",
+    "branchComputeAtRead": "idle",
+    "identityAlgorithm": "sha256(hostname with -pooler removed immediately before dot + | + pathname)",
+    "identitySha256": "df2f0abee059d9898495a125018fa0a291d50b9050c0d4557231f409bed53065",
+    "productionIdentitySha256": "5a940f1b6bdcce4a96dff3ffcfeb6a2b5de01b09fcfe2f8f1e351a9a0ef47712",
+    "observedOwnerBindingSha256": "bd43f510880e7ae9c423792345ccab6d6eacb63e30b1da9c4a238f479d3b33e3",
+    "identityDistinctFromProduction": true,
+    "readEndpoints": [
+      "GET /api/v1/sites/{siteId}/database/branches",
+      "GET /api/v1/sites/{siteId}/database/branch/feature%2Ftreeforce89-play-integration?role=netlifydb_owner",
+      "GET /api/v1/sites/{siteId}/database?role=netlifydb_readonly",
+      "GET /api/v1/accounts/{accountId}/env?site_id={siteId}&scope=functions",
+      "GET /api/v1/accounts/{accountId}/env?scope=functions"
+    ],
+    "requiredHeader": "Accept: application/json",
+    "directDatabaseRead": {
+      "attemptedRole": "netlifydb_readonly",
+      "outcome": "EAI_AGAIN before connection and before SQL",
+      "sqlExecuted": false,
+      "databaseWrites": false,
+      "schemaVerifiedDirectly": false,
+      "qualification": "No claim of successful direct schema lookup. The candidate hosted negative authentication probe must verify the actual pinned runtime reader and its session SELECT."
+    }
+  },
+  "plannedRepair": {
+    "status": "Prepared only; root must review and commit before executing any configure/candidate/publish phase",
+    "newKey": "TREEFORCE89_DEV_DATABASE_URL",
+    "scopes": [
+      "functions"
+    ],
+    "isSecret": true,
+    "valuesContexts": [
+      "production"
+    ],
+    "createMethod": "POST",
+    "createEndpoint": "/api/v1/accounts/69800888d1a3d0483003ae9e/env?site_id=aa62f324-b880-47d6-85b8-4ba0700ff5bf",
+    "keyMustBeAbsentInAllSiteAndSharedScopes": true,
+    "preservedExistingFunctionRecords": 49,
+    "expectedAfterFunctionRecords": 50,
+    "noPaidContinuesFlag": true,
+    "noDeployEnvironmentOverrides": true,
+    "noDatabaseWrites": true,
+    "noBackendRebuild": true,
+    "overlayOnly": [
+      "/scripts/arcade-daily-growth.js"
+    ],
+    "staticPaths": 284,
+    "unchangedPaths": 283,
+    "fullFunctionRecords": 41,
+    "schedules": 5,
+    "preservedRedirectSha1": "4450ad95c97a2045c2575bd2cc75c49a8a2ba6c7",
+    "secretReadback": "Netlify non-development secret values are unreadable. Validate metadata,49 unchanged full-record fingerprints, unfiltered site/shared preservation and actual hosted DB authentication behavior.",
+    "credentialStorage": "No connection strings, real bearer tokens or signatures in code, artifacts, logs, receipts, or ignored release state"
+  },
+  "plannedHostedNegativeValidation": {
+    "performedAtPreparation": false,
+    "executor": "Root only after committed source and review",
+    "method": "POST",
+    "path": "/api/arcade-growth?action=treeforce-play",
+    "authorizationShape": "Bearer followed by a cryptographically random64-character lowercase hexadecimal token",
+    "bodyShape": "Only runId: grove- followed by32 random lowercase hexadecimal characters",
+    "origin": "https://tree-token.xyz",
+    "secFetchSite": "same-origin",
+    "beforeExpected": {
+      "status": 503,
+      "error": "participation-unavailable"
+    },
+    "candidateAndCanonicalExpected": {
+      "status": 401,
+      "error": "invalid-game-session"
+    },
+    "successMeaning": "Because token/run syntax is valid, the existing handler must enter the pinned database reader. No matching session returns401 immediately after the actual SELECT, before ownership and recordTreeforcePlay.",
+    "notProven": "No real wallet session or live first-wave credit is created. This proves runtime DB read connectivity and missing-session rejection, while actual gameplay still requires the normal user flow."
+  },
+  "references": {
+    "netlifyOpenApi": "https://open-api.netlify.com/",
+    "schema": "Create environment variables POST accounts/{account_id}/env; is_secret true, functions scope, production context",
+    "databaseDocs": "https://docs.netlify.com/build/data-and-storage/netlify-db/"
+  }
+}

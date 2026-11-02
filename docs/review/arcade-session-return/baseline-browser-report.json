@@ -1,0 +1,2191 @@
+{
+  "passed": true,
+  "baselineDefectsExpected": true,
+  "sourceCommit": "caed1e3f96a3496537515fc46d9cb1bd7fd9e9eb",
+  "sourceSha256": {
+    "play/index.html": "8a30d1fe1abf8e01c2a6f21b00bbfa2761378e6c114b6c778ef809c755927483",
+    "scripts/arcade-daily-growth.js": "582d0bff44cb76ef07a07ee84607aae644d20f25d26a2c3c26d7985c128fca2f",
+    "styles/tree-arcade-suite.css": "4f790d4a3a059dbe37632e8ac751c04d71f233f98b1b4a7132609d264c09bc5c",
+    "assets/arcade/arcade-growth-wallet.js": "1e26f995d31f0c0506e2180cc5940a6a4be561c11153e5a100cc0beb4b633421"
+  },
+  "checkedAt": "2026-11-02T02:57:41.866Z",
+  "synthetic": true,
+  "actualWalletBundle": true,
+  "browserNativeSessionStorage": true,
+  "noBearerInLocalStorage": true,
+  "allRequestsLocallyFulfilled": true,
+  "noRealWalletActions": true,
+  "noRealRemoteWrites": true,
+  "gameFixtureUsesExactExistingReturnLink": "<a href=\"/play/\"><span aria-hidden=\"true\">←</span> TREE ARCADE</a>",
+  "checks": [
+    {
+      "name": "Reproduced: ordinary quest popup returns to a tokenless lobby while original tab remains signed in",
+      "passed": true
+    },
+    {
+      "name": "Same-tab cabinet return and browser history retain sessionStorage and recover saved participation",
+      "passed": true
+    },
+    {
+      "name": "Reproduced: late provider discovery leaves a valid stored token unused",
+      "passed": true
+    },
+    {
+      "name": "Reproduced: restored-session renewal loses provider ID and cannot restore on next reload",
+      "passed": true
+    },
+    {
+      "name": "Reproduced: return events stay stale until manual sync; cross-tab account change still invalidates authorization",
+      "passed": true
+    }
+  ],
+  "snapshots": [
+    {
+      "scenario": "ordinary quest launch and game return",
+      "name": "signed in before launch",
+      "url": "https://tree-token.xyz/play/",
+      "openerIsNull": true,
+      "state": "authenticated",
+      "identity": "Signed inSlush0xaaaaaa…aaaaaa",
+      "quest": "0",
+      "questText": "0 / 1 · Not completed",
+      "session": {
+        "version": 1,
+        "token": "synthetic-growth-1",
+        "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "expiresAt": "2026-11-02T13:00:00.000Z",
+        "walletId": "Slush",
+        "walletName": "Slush"
+      },
+      "bearerInLocalStorage": false,
+      "providerEvents": [
+        {
+          "kind": "provider-registered"
+        },
+        {
+          "kind": "provider-connect",
+          "silent": false
+        },
+        {
+          "kind": "synthetic-signature"
+        }
+      ],
+      "pageshows": [
+        {
+          "persisted": false
+        }
+      ]
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "name": "lobby reached by game return link",
+      "url": "https://tree-token.xyz/play/",
+      "openerIsNull": true,
+      "state": "signed-out",
+      "identity": "",
+      "quest": null,
+      "questText": "Sign in to save progress",
+      "session": null,
+      "bearerInLocalStorage": false,
+      "providerEvents": [
+        {
+          "kind": "provider-registered"
+        }
+      ],
+      "pageshows": [
+        {
+          "persisted": false
+        }
+      ]
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "name": "original tab still owns its session",
+      "url": "https://tree-token.xyz/play/",
+      "openerIsNull": true,
+      "state": "authenticated",
+      "identity": "Signed inSlush0xaaaaaa…aaaaaa",
+      "quest": "0",
+      "questText": "0 / 1 · Not completed",
+      "session": {
+        "version": 1,
+        "token": "synthetic-growth-1",
+        "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "expiresAt": "2026-11-02T13:00:00.000Z",
+        "walletId": "Slush",
+        "walletName": "Slush"
+      },
+      "bearerInLocalStorage": false,
+      "providerEvents": [
+        {
+          "kind": "provider-registered"
+        },
+        {
+          "kind": "provider-connect",
+          "silent": false
+        },
+        {
+          "kind": "synthetic-signature"
+        }
+      ],
+      "pageshows": [
+        {
+          "persisted": false
+        }
+      ]
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "name": "same-tab cabinet link return",
+      "url": "https://tree-token.xyz/play/",
+      "openerIsNull": true,
+      "state": "authenticated",
+      "identity": "Signed inSlush0xaaaaaa…aaaaaa",
+      "quest": "1",
+      "questText": "1 / 1 · Quest complete ✓",
+      "session": {
+        "version": 1,
+        "token": "synthetic-growth-1",
+        "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "expiresAt": "2026-11-02T13:00:00.000Z",
+        "walletId": "Slush",
+        "walletName": "Slush"
+      },
+      "bearerInLocalStorage": false,
+      "providerEvents": [
+        {
+          "kind": "provider-registered"
+        },
+        {
+          "kind": "provider-connect",
+          "silent": true
+        }
+      ],
+      "pageshows": [
+        {
+          "persisted": false
+        }
+      ]
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "name": "actual browser history return",
+      "url": "https://tree-token.xyz/play/",
+      "openerIsNull": true,
+      "state": "authenticated",
+      "identity": "Signed inSlush0xaaaaaa…aaaaaa",
+      "quest": "1",
+      "questText": "1 / 1 · Quest complete ✓",
+      "session": {
+        "version": 1,
+        "token": "synthetic-growth-1",
+        "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "expiresAt": "2026-11-02T13:00:00.000Z",
+        "walletId": "Slush",
+        "walletName": "Slush"
+      },
+      "bearerInLocalStorage": false,
+      "providerEvents": [
+        {
+          "kind": "provider-registered"
+        },
+        {
+          "kind": "provider-connect",
+          "silent": true
+        }
+      ],
+      "pageshows": [
+        {
+          "persisted": false
+        }
+      ]
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "name": "token retained before extension discovery",
+      "url": "https://tree-token.xyz/play/",
+      "openerIsNull": true,
+      "state": "signed-out",
+      "identity": "",
+      "quest": null,
+      "questText": "Sign in to save progress",
+      "session": {
+        "version": 1,
+        "token": "synthetic-growth-1",
+        "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "expiresAt": "2026-11-02T13:00:00.000Z",
+        "walletId": "Slush",
+        "walletName": "Slush"
+      },
+      "bearerInLocalStorage": false,
+      "providerEvents": [],
+      "pageshows": [
+        {
+          "persisted": false
+        }
+      ]
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "name": "extension registered but no restoration retry",
+      "url": "https://tree-token.xyz/play/",
+      "openerIsNull": true,
+      "state": "signed-out",
+      "identity": "",
+      "quest": null,
+      "questText": "Sign in to save progress",
+      "session": {
+        "version": 1,
+        "token": "synthetic-growth-1",
+        "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "expiresAt": "2026-11-02T13:00:00.000Z",
+        "walletId": "Slush",
+        "walletName": "Slush"
+      },
+      "bearerInLocalStorage": false,
+      "providerEvents": [
+        {
+          "kind": "provider-registered"
+        }
+      ],
+      "pageshows": [
+        {
+          "persisted": false
+        }
+      ]
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "name": "explicit renewed session provider identity",
+      "url": "https://tree-token.xyz/play/",
+      "openerIsNull": true,
+      "state": "authenticated",
+      "identity": "Signed inSlush0xaaaaaa…aaaaaa",
+      "quest": "0",
+      "questText": "0 / 1 · Not completed",
+      "session": {
+        "version": 1,
+        "token": "synthetic-growth-2",
+        "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "expiresAt": "2026-11-02T14:00:00.001Z",
+        "walletId": null,
+        "walletName": "Slush"
+      },
+      "bearerInLocalStorage": false,
+      "providerEvents": [
+        {
+          "kind": "provider-registered"
+        },
+        {
+          "kind": "provider-connect",
+          "silent": true
+        },
+        {
+          "kind": "synthetic-signature"
+        }
+      ],
+      "pageshows": [
+        {
+          "persisted": false
+        }
+      ]
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "name": "renewal token cannot restore without provider ID",
+      "url": "https://tree-token.xyz/play/",
+      "openerIsNull": true,
+      "state": "signed-out",
+      "identity": "",
+      "quest": null,
+      "questText": "Sign in to save progress",
+      "session": {
+        "version": 1,
+        "token": "synthetic-growth-2",
+        "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "expiresAt": "2026-11-02T14:00:00.001Z",
+        "walletId": null,
+        "walletName": "Slush"
+      },
+      "bearerInLocalStorage": false,
+      "providerEvents": [
+        {
+          "kind": "provider-registered"
+        }
+      ],
+      "pageshows": [
+        {
+          "persisted": false
+        }
+      ]
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "name": "return events keep old progress",
+      "url": "https://tree-token.xyz/play/",
+      "openerIsNull": true,
+      "state": "authenticated",
+      "identity": "Signed inSlush0xaaaaaa…aaaaaa",
+      "quest": "0",
+      "questText": "0 / 1 · Not completed",
+      "session": {
+        "version": 1,
+        "token": "synthetic-growth-1",
+        "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "expiresAt": "2026-11-02T13:00:00.000Z",
+        "walletId": "Slush",
+        "walletName": "Slush"
+      },
+      "bearerInLocalStorage": false,
+      "providerEvents": [
+        {
+          "kind": "provider-registered"
+        },
+        {
+          "kind": "provider-connect",
+          "silent": false
+        },
+        {
+          "kind": "synthetic-signature"
+        }
+      ],
+      "pageshows": [
+        {
+          "persisted": false
+        },
+        {
+          "persisted": true
+        }
+      ]
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "name": "manual refresh recovers the recorded first wave",
+      "url": "https://tree-token.xyz/play/",
+      "openerIsNull": true,
+      "state": "authenticated",
+      "identity": "Signed inSlush0xaaaaaa…aaaaaa",
+      "quest": "1",
+      "questText": "1 / 1 · Quest complete ✓",
+      "session": {
+        "version": 1,
+        "token": "synthetic-growth-1",
+        "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "expiresAt": "2026-11-02T13:00:00.000Z",
+        "walletId": "Slush",
+        "walletName": "Slush"
+      },
+      "bearerInLocalStorage": false,
+      "providerEvents": [
+        {
+          "kind": "provider-registered"
+        },
+        {
+          "kind": "provider-connect",
+          "silent": false
+        },
+        {
+          "kind": "synthetic-signature"
+        }
+      ],
+      "pageshows": [
+        {
+          "persisted": false
+        },
+        {
+          "persisted": true
+        }
+      ]
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "name": "cross-tab provider account change invalidates old identity",
+      "url": "https://tree-token.xyz/play/",
+      "openerIsNull": true,
+      "state": "signed-out",
+      "identity": "",
+      "quest": null,
+      "questText": "Sign in to save progress",
+      "session": null,
+      "bearerInLocalStorage": false,
+      "providerEvents": [
+        {
+          "kind": "provider-registered"
+        },
+        {
+          "kind": "provider-connect",
+          "silent": false
+        },
+        {
+          "kind": "synthetic-signature"
+        },
+        {
+          "kind": "provider-accounts",
+          "address": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      ],
+      "pageshows": [
+        {
+          "persisted": false
+        },
+        {
+          "persisted": true
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/arcade-session-return/baseline-game-return.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/arcade-session-return/baseline-late-provider.jpg"
+  ],
+  "requests": [
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/play/",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/styles/tree-arcade-suite.css",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/assets/tree-token-logo-official.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/assets/arcade/tree-arcade-social.jpg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/assets/arcade/tree-force-89-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/assets/arcade/arboretum-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/scripts/arcade-nftree-access.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/scripts/arcade-daily-growth.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/assets/arcade/garden-bot-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/assets/tree-command-logo-v2-512.png",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/assets/tree-arcade-world-bg-v2.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/play/deadfall-run/poster.svg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/play/canopy-defense/assets/brand/oak-guardian-preview.png",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/assets/arcade/pvp-battle-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/assets/arcade/arborist-trials-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/scripts/arcade-nftree-access-core.mjs",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/assets/arcade/arcade-growth-wallet.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/assets/profile-nftree-art.jpg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=status",
+      "method": "GET",
+      "locallyFulfilled": true,
+      "action": "status",
+      "authenticated": false,
+      "syntheticBearer": false
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=challenge",
+      "method": "POST",
+      "locallyFulfilled": true,
+      "action": "challenge",
+      "authenticated": false,
+      "syntheticBearer": false
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=session",
+      "method": "POST",
+      "locallyFulfilled": true,
+      "action": "session",
+      "authenticated": false,
+      "syntheticBearer": false
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=sync",
+      "method": "POST",
+      "locallyFulfilled": true,
+      "action": "sync",
+      "authenticated": true,
+      "syntheticBearer": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/play/treeforce89/",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=treeforce-play",
+      "method": "POST",
+      "locallyFulfilled": true,
+      "action": "treeforce-play",
+      "authenticated": false,
+      "syntheticBearer": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/play/",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/styles/tree-arcade-suite.css",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/assets/tree-token-logo-official.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/assets/arcade/tree-arcade-social.jpg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/assets/arcade/tree-force-89-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/assets/arcade/arboretum-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/scripts/arcade-nftree-access.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/scripts/arcade-daily-growth.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/assets/arcade/garden-bot-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/assets/tree-command-logo-v2-512.png",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/assets/tree-arcade-world-bg-v2.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/play/deadfall-run/poster.svg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/play/canopy-defense/assets/brand/oak-guardian-preview.png",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/assets/arcade/pvp-battle-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/assets/arcade/arborist-trials-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/scripts/arcade-nftree-access-core.mjs",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/assets/arcade/arcade-growth-wallet.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/assets/profile-nftree-art.jpg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=status",
+      "method": "GET",
+      "locallyFulfilled": true,
+      "action": "status",
+      "authenticated": false,
+      "syntheticBearer": false
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/play/",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/styles/tree-arcade-suite.css",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/tree-token-logo-official.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/arcade/tree-arcade-social.jpg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/arcade/tree-force-89-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/arcade/arboretum-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/scripts/arcade-nftree-access.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/scripts/arcade-daily-growth.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/arcade/garden-bot-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/tree-command-logo-v2-512.png",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/tree-arcade-world-bg-v2.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/play/deadfall-run/poster.svg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/play/canopy-defense/assets/brand/oak-guardian-preview.png",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/arcade/pvp-battle-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/arcade/arborist-trials-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/scripts/arcade-nftree-access-core.mjs",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/arcade/arcade-growth-wallet.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/profile-nftree-art.jpg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=status",
+      "method": "GET",
+      "locallyFulfilled": true,
+      "action": "status",
+      "authenticated": false,
+      "syntheticBearer": false
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=challenge",
+      "method": "POST",
+      "locallyFulfilled": true,
+      "action": "challenge",
+      "authenticated": false,
+      "syntheticBearer": false
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=session",
+      "method": "POST",
+      "locallyFulfilled": true,
+      "action": "session",
+      "authenticated": false,
+      "syntheticBearer": false
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=sync",
+      "method": "POST",
+      "locallyFulfilled": true,
+      "action": "sync",
+      "authenticated": true,
+      "syntheticBearer": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/play/treeforce89/",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=treeforce-play",
+      "method": "POST",
+      "locallyFulfilled": true,
+      "action": "treeforce-play",
+      "authenticated": false,
+      "syntheticBearer": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/play/",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/styles/tree-arcade-suite.css",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/tree-token-logo-official.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/arcade/tree-arcade-social.jpg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/arcade/tree-force-89-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/arcade/arboretum-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/scripts/arcade-nftree-access.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/scripts/arcade-daily-growth.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/arcade/garden-bot-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/tree-command-logo-v2-512.png",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/tree-arcade-world-bg-v2.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/play/deadfall-run/poster.svg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/play/canopy-defense/assets/brand/oak-guardian-preview.png",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/arcade/pvp-battle-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/arcade/arborist-trials-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/scripts/arcade-nftree-access-core.mjs",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/arcade/arcade-growth-wallet.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/profile-nftree-art.jpg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=status",
+      "method": "GET",
+      "locallyFulfilled": true,
+      "action": "status",
+      "authenticated": true,
+      "syntheticBearer": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=sync",
+      "method": "POST",
+      "locallyFulfilled": true,
+      "action": "sync",
+      "authenticated": true,
+      "syntheticBearer": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/play/treeforce89/",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/play/",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/styles/tree-arcade-suite.css",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/tree-token-logo-official.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/arcade/tree-arcade-social.jpg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/arcade/tree-force-89-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/arcade/arboretum-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/scripts/arcade-nftree-access.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/scripts/arcade-daily-growth.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/arcade/garden-bot-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/tree-command-logo-v2-512.png",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/tree-arcade-world-bg-v2.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/play/deadfall-run/poster.svg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/play/canopy-defense/assets/brand/oak-guardian-preview.png",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/arcade/pvp-battle-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/arcade/arborist-trials-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/arcade/canopy-clash-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/scripts/arcade-nftree-access-core.mjs",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/arcade/arcade-growth-wallet.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=status",
+      "method": "GET",
+      "locallyFulfilled": true,
+      "action": "status",
+      "authenticated": true,
+      "syntheticBearer": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/assets/profile-nftree-art.jpg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=sync",
+      "method": "POST",
+      "locallyFulfilled": true,
+      "action": "sync",
+      "authenticated": true,
+      "syntheticBearer": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/play/",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/styles/tree-arcade-suite.css",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/assets/tree-token-logo-official.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/assets/arcade/tree-arcade-social.jpg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/assets/arcade/tree-force-89-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/assets/arcade/arboretum-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/scripts/arcade-nftree-access.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/scripts/arcade-daily-growth.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/assets/arcade/garden-bot-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/assets/tree-command-logo-v2-512.png",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/assets/tree-arcade-world-bg-v2.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/play/deadfall-run/poster.svg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/play/canopy-defense/assets/brand/oak-guardian-preview.png",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/assets/arcade/pvp-battle-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/assets/arcade/arborist-trials-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/scripts/arcade-nftree-access-core.mjs",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/assets/arcade/arcade-growth-wallet.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=status",
+      "method": "GET",
+      "locallyFulfilled": true,
+      "action": "status",
+      "authenticated": false,
+      "syntheticBearer": false
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/assets/profile-nftree-art.jpg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=challenge",
+      "method": "POST",
+      "locallyFulfilled": true,
+      "action": "challenge",
+      "authenticated": false,
+      "syntheticBearer": false
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=session",
+      "method": "POST",
+      "locallyFulfilled": true,
+      "action": "session",
+      "authenticated": false,
+      "syntheticBearer": false
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=sync",
+      "method": "POST",
+      "locallyFulfilled": true,
+      "action": "sync",
+      "authenticated": true,
+      "syntheticBearer": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/play/treeforce89/",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=treeforce-play",
+      "method": "POST",
+      "locallyFulfilled": true,
+      "action": "treeforce-play",
+      "authenticated": false,
+      "syntheticBearer": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/play/",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/styles/tree-arcade-suite.css",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/assets/tree-token-logo-official.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/assets/arcade/tree-arcade-social.jpg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/assets/arcade/tree-force-89-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/assets/arcade/arboretum-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/scripts/arcade-nftree-access.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/scripts/arcade-daily-growth.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/assets/arcade/garden-bot-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/assets/tree-command-logo-v2-512.png",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/assets/tree-arcade-world-bg-v2.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/play/deadfall-run/poster.svg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/play/canopy-defense/assets/brand/oak-guardian-preview.png",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/assets/arcade/pvp-battle-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/assets/arcade/arborist-trials-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/scripts/arcade-nftree-access-core.mjs",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/assets/arcade/arcade-growth-wallet.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/assets/profile-nftree-art.jpg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=status",
+      "method": "GET",
+      "locallyFulfilled": true,
+      "action": "status",
+      "authenticated": false,
+      "syntheticBearer": false
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/play/",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/styles/tree-arcade-suite.css",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/tree-token-logo-official.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/arcade/tree-arcade-social.jpg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/arcade/tree-force-89-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/arcade/arboretum-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/scripts/arcade-nftree-access.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/scripts/arcade-daily-growth.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/arcade/garden-bot-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/tree-command-logo-v2-512.png",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/tree-arcade-world-bg-v2.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/play/deadfall-run/poster.svg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/play/canopy-defense/assets/brand/oak-guardian-preview.png",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/arcade/pvp-battle-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/arcade/arborist-trials-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/scripts/arcade-nftree-access-core.mjs",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/arcade/arcade-growth-wallet.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/profile-nftree-art.jpg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=status",
+      "method": "GET",
+      "locallyFulfilled": true,
+      "action": "status",
+      "authenticated": false,
+      "syntheticBearer": false
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=challenge",
+      "method": "POST",
+      "locallyFulfilled": true,
+      "action": "challenge",
+      "authenticated": false,
+      "syntheticBearer": false
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=session",
+      "method": "POST",
+      "locallyFulfilled": true,
+      "action": "session",
+      "authenticated": false,
+      "syntheticBearer": false
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=sync",
+      "method": "POST",
+      "locallyFulfilled": true,
+      "action": "sync",
+      "authenticated": true,
+      "syntheticBearer": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/play/",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/styles/tree-arcade-suite.css",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/tree-token-logo-official.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/arcade/tree-arcade-social.jpg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/arcade/tree-force-89-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/arcade/arboretum-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/scripts/arcade-nftree-access.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/scripts/arcade-daily-growth.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/arcade/garden-bot-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/tree-command-logo-v2-512.png",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/tree-arcade-world-bg-v2.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/play/deadfall-run/poster.svg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/play/canopy-defense/assets/brand/oak-guardian-preview.png",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/arcade/pvp-battle-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/arcade/arborist-trials-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/scripts/arcade-nftree-access-core.mjs",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/arcade/arcade-growth-wallet.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/profile-nftree-art.jpg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=status",
+      "method": "GET",
+      "locallyFulfilled": true,
+      "action": "status",
+      "authenticated": true,
+      "syntheticBearer": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=sync",
+      "method": "POST",
+      "locallyFulfilled": true,
+      "action": "sync",
+      "authenticated": true,
+      "syntheticBearer": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=challenge",
+      "method": "POST",
+      "locallyFulfilled": true,
+      "action": "challenge",
+      "authenticated": false,
+      "syntheticBearer": false
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=session",
+      "method": "POST",
+      "locallyFulfilled": true,
+      "action": "session",
+      "authenticated": false,
+      "syntheticBearer": false
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=sync",
+      "method": "POST",
+      "locallyFulfilled": true,
+      "action": "sync",
+      "authenticated": true,
+      "syntheticBearer": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/play/",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/styles/tree-arcade-suite.css",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/tree-token-logo-official.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/arcade/tree-arcade-social.jpg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/arcade/tree-force-89-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/arcade/arboretum-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/scripts/arcade-nftree-access.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/scripts/arcade-daily-growth.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/arcade/garden-bot-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/tree-command-logo-v2-512.png",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/tree-arcade-world-bg-v2.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/play/deadfall-run/poster.svg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/play/canopy-defense/assets/brand/oak-guardian-preview.png",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/arcade/pvp-battle-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/arcade/arborist-trials-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/scripts/arcade-nftree-access-core.mjs",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/arcade/arcade-growth-wallet.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=status",
+      "method": "GET",
+      "locallyFulfilled": true,
+      "action": "status",
+      "authenticated": false,
+      "syntheticBearer": false
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/assets/profile-nftree-art.jpg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/play/",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/styles/tree-arcade-suite.css",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/assets/tree-token-logo-official.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/assets/arcade/tree-arcade-social.jpg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/assets/arcade/tree-force-89-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/assets/arcade/arboretum-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/scripts/arcade-nftree-access.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/scripts/arcade-daily-growth.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/assets/arcade/garden-bot-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/assets/tree-command-logo-v2-512.png",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/assets/tree-arcade-world-bg-v2.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/play/deadfall-run/poster.svg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/play/canopy-defense/assets/brand/oak-guardian-preview.png",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/assets/arcade/pvp-battle-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/assets/arcade/arborist-trials-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/scripts/arcade-nftree-access-core.mjs",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/assets/arcade/arcade-growth-wallet.js",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/assets/profile-nftree-art.jpg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=status",
+      "method": "GET",
+      "locallyFulfilled": true,
+      "action": "status",
+      "authenticated": false,
+      "syntheticBearer": false
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=challenge",
+      "method": "POST",
+      "locallyFulfilled": true,
+      "action": "challenge",
+      "authenticated": false,
+      "syntheticBearer": false
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=session",
+      "method": "POST",
+      "locallyFulfilled": true,
+      "action": "session",
+      "authenticated": false,
+      "syntheticBearer": false
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=sync",
+      "method": "POST",
+      "locallyFulfilled": true,
+      "action": "sync",
+      "authenticated": true,
+      "syntheticBearer": true
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/play/treeforce89/",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=treeforce-play",
+      "method": "POST",
+      "locallyFulfilled": true,
+      "action": "treeforce-play",
+      "authenticated": false,
+      "syntheticBearer": true
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/assets/arcade/tree-force-89-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/assets/arcade/garden-bot-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/assets/arcade/arboretum-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/assets/profile-nftree-art.jpg",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/assets/tree-command-logo-v2-512.png",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/assets/arcade/pvp-battle-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/assets/arcade/arborist-trials-poster.webp",
+      "method": "GET",
+      "locallyFulfilled": true
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/api/arcade-growth?action=sync",
+      "method": "POST",
+      "locallyFulfilled": true,
+      "action": "sync",
+      "authenticated": true,
+      "syntheticBearer": true
+    }
+  ],
+  "providerEvents": [
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/play/",
+      "kind": "provider-registered"
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/play/",
+      "kind": "provider-connect",
+      "silent": false
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/play/",
+      "kind": "synthetic-signature"
+    },
+    {
+      "scenario": "ordinary quest launch and game return",
+      "url": "https://tree-token.xyz/play/",
+      "kind": "provider-registered"
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/play/",
+      "kind": "provider-registered"
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/play/",
+      "kind": "provider-connect",
+      "silent": false
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/play/",
+      "kind": "synthetic-signature"
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/play/",
+      "kind": "provider-registered"
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/play/",
+      "kind": "provider-connect",
+      "silent": true
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/play/",
+      "kind": "provider-registered"
+    },
+    {
+      "scenario": "same-tab cabinet and browser history",
+      "url": "https://tree-token.xyz/play/",
+      "kind": "provider-connect",
+      "silent": true
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/play/",
+      "kind": "provider-registered"
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/play/",
+      "kind": "provider-connect",
+      "silent": false
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/play/",
+      "kind": "synthetic-signature"
+    },
+    {
+      "scenario": "late wallet registration after game return",
+      "url": "https://tree-token.xyz/play/",
+      "kind": "provider-registered"
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/play/",
+      "kind": "provider-registered"
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/play/",
+      "kind": "provider-connect",
+      "silent": false
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/play/",
+      "kind": "synthetic-signature"
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/play/",
+      "kind": "provider-registered"
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/play/",
+      "kind": "provider-connect",
+      "silent": true
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/play/",
+      "kind": "synthetic-signature"
+    },
+    {
+      "scenario": "restored session expiry and renewal",
+      "url": "https://tree-token.xyz/play/",
+      "kind": "provider-registered"
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/play/",
+      "kind": "provider-registered"
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/play/",
+      "kind": "provider-connect",
+      "silent": false
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/play/",
+      "kind": "synthetic-signature"
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/play/treeforce89/",
+      "kind": "provider-accounts",
+      "address": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    {
+      "scenario": "original-tab lifecycle return and account events",
+      "url": "https://tree-token.xyz/play/",
+      "kind": "provider-accounts",
+      "address": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    }
+  ],
+  "errors": [],
+  "forbiddenRequests": []
+}

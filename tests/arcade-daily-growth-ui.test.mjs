@@ -708,6 +708,94 @@ test('launching and choosing a game never credits progress; verified sync awards
   assert.equal(h.byId('month-quests').textContent, '1', 'Repeat sync does not invent a second daily quest');
 });
 
+test('TREE FORCE uses the same tab while external Garden links retain their new-tab protections', async (t) => {
+  const h = await harness(t, { configuration: FORCE_CONFIGURATION });
+  assert.equal(h.byId('play').href, 'https://tree-token.xyz/play/treeforce89/');
+  assert.equal(h.byId('play').target, '_self');
+  assert.equal(h.byId('play').textContent, 'Play TREE FORCE ’89 →');
+  assert.match(h.byId('play').getAttribute('aria-label'), /opens in this tab/);
+  for (const game of GAMES) {
+    h.byId('game-select').value = game.id;
+    h.byId('game-select').dispatchEvent(new h.window.Event('change', { bubbles: true }));
+    assert.equal(h.byId('play').href, game.href);
+    assert.equal(h.byId('play').target, '_blank');
+    assert.equal(h.byId('play').rel, 'noopener noreferrer');
+    assert.match(h.byId('play').getAttribute('aria-label'), /opens in a new tab/);
+  }
+  assert.equal(h.count('check-in'), 0);
+  assert.equal(h.count('challenge'), 0);
+});
+
+test('return events refresh a launched quest once and only display server-verified participation', async (t) => {
+  const h = await harness(t, { configuration: FORCE_CONFIGURATION, progress: progress({ enabledGames: FORCE_GAMES }) });
+  await h.signIn();
+  const baselineSyncs = h.count('sync');
+  const baselineSignatures = h.calls.filter(call => call.type === 'signature').length;
+  Object.defineProperty(h.window.document, 'visibilityState', { configurable: true, value: 'visible' });
+  const returnBurst = () => {
+    h.window.dispatchEvent(new h.window.Event('focus'));
+    h.window.document.dispatchEvent(new h.window.Event('visibilitychange'));
+    h.window.dispatchEvent(new h.window.PageTransitionEvent('pageshow', { persisted: true }));
+  };
+  returnBurst();
+  assert.equal(h.count('sync'), baselineSyncs, 'Ordinary focus without a game launch does not start verification');
+  h.byId('play').addEventListener('click', event => event.preventDefault());
+  h.byId('play').click();
+  assert.equal(h.count('sync'), baselineSyncs, 'Launching alone is not participation and does not verify early');
+  assert.equal(h.byId('visit-count').textContent, '0');
+  const pending = deferred();
+  h.handlers.sync = () => pending.promise;
+  returnBurst();
+  assert.equal(h.count('sync'), baselineSyncs + 1, 'One return burst produces one sync');
+  assert.equal(h.byId('visit-count').textContent, '0', 'No optimistic credit while the sync is pending');
+  h.setProgress(progress({ enabledGames: FORCE_GAMES, visits: [12], quests: [12], stamps: ['treeforce89'], gameIdsByDay: { 12: ['treeforce89'] } }));
+  pending.resolve({ ...h.envelope(), sync: { games: [], checkedAt: new Date(NOW).toISOString() } });
+  await settleUntil(() => h.root.dataset.growthState === 'authenticated', 'verified return progress');
+  assert.equal(h.byId('visit-count').textContent, '1');
+  assert.equal(h.byId('quest-state').textContent, '1 / 1 · Quest complete ✓');
+  assert.equal(h.byId('passport-count').textContent, '1 / 4 required games');
+  returnBurst();
+  assert.equal(h.count('sync'), baselineSyncs + 1, 'Later focus/visibility events do not duplicate the consumed launch');
+  assert.equal(h.count('check-in'), 0);
+  assert.equal(h.calls.filter(call => call.type === 'signature').length, baselineSignatures);
+  h.handlers.sync = () => ({ status: 'error', error: 'service-unavailable', message: 'Verification temporarily unavailable.' });
+  h.byId('play').click();
+  h.window.document.dispatchEvent(new h.window.Event('visibilitychange'));
+  await settleUntil(() => h.root.dataset.growthState === 'unavailable', 'failed return verification');
+  assert.equal(h.count('sync'), baselineSyncs + 2);
+  returnBurst();
+  assert.equal(h.count('sync'), baselineSyncs + 2, 'A failed return sync does not turn focus events into a retry loop');
+  assert.equal(h.byId('visit-count').textContent, '1');
+  assert.match(h.byId('status').textContent, /Last saved progress/);
+});
+
+test('eligible cabinet launches refresh on a persisted page return; unrelated cabinets and expired sessions do not', async (t) => {
+  const h = await harness(t, { configuration: FORCE_CONFIGURATION, progress: progress({ enabledGames: FORCE_GAMES }) });
+  await h.signIn();
+  const baselineSyncs = h.count('sync');
+  // Registered after the controller's passive observer: prevent JSDOM navigation
+  // without hiding the genuine cabinet-click event from the controller.
+  h.window.document.addEventListener('click', event => event.preventDefault());
+  const persistedReturn = () => h.window.dispatchEvent(new h.window.PageTransitionEvent('pageshow', { persisted: true }));
+  h.window.document.querySelector('.poster--arboretum .poster-link').click();
+  persistedReturn();
+  assert.equal(h.count('sync'), baselineSyncs, 'A game outside Daily Growth eligibility does not request quest verification');
+  h.window.document.querySelector('.poster--force .poster-link').click();
+  h.window.dispatchEvent(new h.window.PageTransitionEvent('pageshow', { persisted: false }));
+  assert.equal(h.count('sync'), baselineSyncs, 'Initial document pageshow is handled by normal startup loading');
+  h.setProgress(progress({ enabledGames: FORCE_GAMES, visits: [12], quests: [12], stamps: ['treeforce89'], gameIdsByDay: { 12: ['treeforce89'] } }));
+  persistedReturn();
+  await settleUntil(() => h.root.dataset.growthState === 'authenticated' && h.byId('visit-count').textContent === '1', 'cabinet return verification');
+  assert.equal(h.count('sync'), baselineSyncs + 1);
+  h.window.document.querySelector('.poster--force .poster-link').click();
+  h.setClock(NOW + 3600001);
+  persistedReturn();
+  assert.equal(h.count('sync'), baselineSyncs + 1, 'A return never sends an expired bearer session');
+  assert.equal(h.window.sessionStorage.getItem(SESSION_KEY), null);
+  assertWalletIdentity(h, ACCOUNT, 'Connected');
+  assert.equal(h.byId('visit-count').textContent, '—');
+});
+
 test('API failure is unavailable rather than zero, and a retry can recover', async (t) => {
   const h = await harness(t, { handlers: { status: () => ({ status: 'error', error: 'service-unavailable', message: 'Progress storage is unavailable.' }) } });
   assertUnknownMeters(h);
@@ -872,7 +960,7 @@ test('explicit sign-out drops the token and private data even when the logout en
   assertWalletIdentity(h);
 });
 
-function realWalletFixture() {
+function realWalletFixture({ registered = true } = {}) {
   const account = { address: ACCOUNT, chains: ['sui:mainnet'], features: ['sui:signPersonalMessage'] };
   const calls = [];
   let onChange;
@@ -886,9 +974,13 @@ function realWalletFixture() {
       'sui:signAndExecuteTransaction': { signAndExecuteTransaction() { assert.fail('Daily Growth must never submit a transaction'); } },
     },
   };
-  const client = createGrowthWalletClient({ get: () => [standardWallet], on() { return () => {}; } });
+  const registryListeners = new Map();
+  let available = registered ? [standardWallet] : [];
+  const client = createGrowthWalletClient({ get: () => available, on(event, callback) { registryListeners.set(event, callback); return () => registryListeners.delete(event); } });
   return {
     client, calls,
+    register() { available = [standardWallet]; registryListeners.get('register')?.(); },
+    unregister() { available = []; registryListeners.get('unregister')?.(); },
     setConnect(impl) { connectImpl = impl; }, setSign(impl) { signImpl = impl; },
     changeAccount(address) {
       standardWallet.accounts = address ? [{ ...account, address }] : [];
@@ -909,6 +1001,114 @@ test('actual wallet adapter initial subscriptions and silent restore preserve th
   assert.equal(h.count('session'), 0);
   assert.equal(h.count('sync'), 1);
   assert.equal(JSON.parse(h.window.sessionStorage.getItem(SESSION_KEY)).wallet, ACCOUNT);
+});
+
+test('late provider discovery silently restores the exact saved session once, without signatures or attendance writes', async (t) => {
+  const wallet = realWalletFixture({ registered: false });
+  const h = await harness(t, { wallet: wallet.client, savedSession: {
+    version: 1, wallet: ACCOUNT, token: 'saved-session-token', walletId: 'Test wallet', walletName: 'Test wallet', expiresAt: new Date(NOW + 3600000).toISOString(),
+  } });
+  assert.equal(h.root.dataset.growthState, 'signed-out');
+  assert.equal(h.count('status'), 1);
+  assert.equal(wallet.calls.length, 0);
+  wallet.register();
+  wallet.register();
+  await settleUntil(() => h.root.dataset.growthState === 'authenticated' && h.count('sync') === 1, 'late exact-provider restoration');
+  assert.deepEqual(wallet.calls, [{ type: 'connect', options: { silent: true } }]);
+  assert.equal(h.count('status'), 2, 'The late restore loads authenticated progress after the public status');
+  assert.equal(h.count('challenge'), 0);
+  assert.equal(h.count('session'), 0);
+  assert.equal(h.count('check-in'), 0);
+  assertWalletIdentity(h, ACCOUNT, 'Signed in');
+  assert.equal(JSON.parse(h.window.sessionStorage.getItem(SESSION_KEY)).walletId, 'Test wallet');
+  await h.controller.signOut();
+  wallet.unregister();
+  wallet.register();
+  await new Promise(done => setImmediate(done));
+  assert.equal(h.window.sessionStorage.getItem(SESSION_KEY), null);
+  assert.equal(h.byId('visit-count').textContent, '—');
+  assert.equal(wallet.calls.length, 1, 'Later registry events cannot resurrect an explicitly signed-out session');
+});
+
+test('provider registration during a pending public status waits, then restores without a duplicate request', async (t) => {
+  const wallet = realWalletFixture({ registered: false });
+  const pending = deferred();
+  let publicEnvelope;
+  const starting = harness(t, { wallet: wallet.client, savedSession: {
+    version: 1, wallet: ACCOUNT, token: 'saved-session-token', walletId: 'Test wallet', walletName: 'Test wallet', expiresAt: new Date(NOW + 3600000).toISOString(),
+  }, handlers: { status: ({ init, envelope }) => {
+    if (init.headers.Authorization) return envelope();
+    publicEnvelope = envelope(false);
+    return pending.promise;
+  } } });
+  await settleUntil(() => Boolean(publicEnvelope), 'pending public status');
+  wallet.register();
+  assert.equal(wallet.calls.length, 0, 'Discovery does not interrupt the in-flight availability request');
+  pending.resolve(publicEnvelope);
+  const h = await starting;
+  await settleUntil(() => h.root.dataset.growthState === 'authenticated' && h.count('sync') === 1, 'deferred late restoration');
+  assert.deepEqual(wallet.calls, [{ type: 'connect', options: { silent: true } }]);
+  assert.equal(h.count('status'), 2);
+  assert.equal(h.count('challenge'), 0);
+});
+
+test('renewing a restored session retains its actual provider ID and remains restorable on the next page', async (t) => {
+  const wallet = realWalletFixture();
+  const h = await harness(t, { wallet: wallet.client, savedSession: {
+    version: 1, wallet: ACCOUNT, token: 'saved-session-token', walletId: 'Test wallet', walletName: 'Test wallet', expiresAt: new Date(NOW + 3600000).toISOString(),
+  } });
+  h.setClock(NOW + 3600001);
+  h.window.dispatchEvent(new h.window.Event('focus'));
+  assertWalletIdentity(h, ACCOUNT, 'Connected');
+  await h.controller.signIn();
+  const renewed = JSON.parse(h.window.sessionStorage.getItem(SESSION_KEY));
+  assert.equal(renewed.walletId, 'Test wallet');
+  assert.equal(wallet.calls.filter(call => call.type === 'signature').length, 1, 'Renewal still requires the explicit sign-in action');
+  const nextWallet = realWalletFixture();
+  const nextPage = await harness(t, { wallet: nextWallet.client, now: NOW + 3600001, savedSession: renewed });
+  assertWalletIdentity(nextPage, ACCOUNT, 'Signed in');
+  assert.deepEqual(nextWallet.calls, [{ type: 'connect', options: { silent: true } }]);
+  assert.equal(nextPage.count('challenge'), 0);
+  const legacyWallet = realWalletFixture();
+  const legacyPage = await harness(t, { wallet: legacyWallet.client, now: NOW + 3600001, savedSession: { ...renewed, walletId: null } });
+  assertWalletIdentity(legacyPage, ACCOUNT, 'Signed in');
+  assert.equal(JSON.parse(legacyPage.window.sessionStorage.getItem(SESSION_KEY)).walletId, 'Test wallet', 'An exact uniquely detected legacy provider name repairs the missing ID');
+});
+
+test('silent restoration cannot revive expired sessions or a session invalidated by an account change during restore', async (t) => {
+  for (const cause of ['expiry', 'account change']) {
+    await t.test(cause, async (subtest) => {
+      const wallet = realWalletFixture({ registered: false });
+      const pending = deferred();
+      wallet.setConnect(() => pending.promise);
+      const h = await harness(subtest, { wallet: wallet.client, savedSession: {
+        version: 1, wallet: ACCOUNT, token: 'saved-session-token', walletId: 'Test wallet', walletName: 'Test wallet', expiresAt: new Date(NOW + 3600000).toISOString(),
+      } });
+      let switched = false;
+      const unsubscribe = wallet.client.subscribeWalletState(state => {
+        if (cause === 'account change' && state.connected && !switched) {
+          switched = true;
+          wallet.changeAccount(OTHER_ACCOUNT);
+        }
+      });
+      subtest.after(unsubscribe);
+      wallet.register();
+      await settleUntil(() => h.root.dataset.growthState === 'restoring', 'silent restore in flight');
+      if (cause === 'expiry') h.setClock(NOW + 3600001);
+      pending.resolve({ accounts: [{ address: ACCOUNT, chains: ['sui:mainnet'] }] });
+      await settleUntil(() => h.root.dataset.growthState !== 'restoring', 'invalid restore discarded');
+      assert.equal(h.window.sessionStorage.getItem(SESSION_KEY), null);
+      assert.equal(h.byId('visit-count').textContent, '—');
+      assert.equal(h.count('status'), 1, 'No authenticated status is sent for the invalidated session');
+      assert.equal(h.count('sync'), 0);
+      assert.equal(h.count('challenge'), 0);
+      assert.equal(h.byId('wallet-identity-status').textContent === 'Signed in', false);
+      wallet.unregister();
+      wallet.register();
+      await new Promise(done => setImmediate(done));
+      assert.equal(wallet.calls.length, 1, 'Subsequent discovery does not resurrect the removed session');
+    });
+  }
 });
 
 test('actual wallet connection and signature rejection leave no Daily Growth authorization', async (t) => {

@@ -170,6 +170,10 @@ export function createDailyGrowth({
   let unsubscribeWallet = () => {};
   let unsubscribeWallets = () => {};
   let pickerTrigger = null;
+  let walletInitialized = false;
+  let restoreInFlight = null;
+  let restorePending = false;
+  let restoreQueued = false;
   const requests = new Set();
   const listeners = [];
   const on = (element, event, listener) => {
@@ -256,7 +260,7 @@ export function createDailyGrowth({
     try {
       const wallet = bridge?.getWalletState();
       const address = normalizedAddress(wallet?.address);
-      return wallet?.connected && address ? { address, walletName: wallet.walletName || 'Sui wallet' } : null;
+      return wallet?.connected && address ? { address, walletName: wallet.walletName || 'Sui wallet', walletId: text(wallet.walletId, 200) ? wallet.walletId : null } : null;
     } catch { return null; }
   }
 
@@ -270,12 +274,14 @@ export function createDailyGrowth({
 
   function invalidateSession(message = '') {
     epoch += 1;
+    restorePending = false;
     for (const controller of requests) controller.abort();
     requests.clear();
     view.clearTimeout(expiryTimer);
     state.session = null;
     state.progress = null;
     state.stale = false;
+    state.launched = false;
     state.busy = null;
     state.notice = message;
     state.noticeKind = '';
@@ -715,9 +721,13 @@ export function createDailyGrowth({
     ui['game-access'].textContent = copy?.access || (selected ? 'Check this game’s access and result-saving requirements before playing.' : '');
     ui.play.hidden = !selected;
     if (selected) {
+      const sameTab = selected.id === TREE_FORCE_ID;
       ui.play.href = selected.href;
-      ui.play.textContent = `Play ${selected.label} ↗`;
-      ui.play.setAttribute('aria-label', `Play ${selected.label} (opens in a new tab)`);
+      ui.play.target = sameTab ? '_self' : '_blank';
+      if (sameTab) ui.play.removeAttribute('rel');
+      else ui.play.rel = 'noopener noreferrer';
+      ui.play.textContent = `Play ${selected.label} ${sameTab ? '→' : '↗'}`;
+      ui.play.setAttribute('aria-label', `Play ${selected.label} (opens in ${sameTab ? 'this' : 'a new'} tab)`);
     } else ui.play.removeAttribute('href');
     ui.refresh.disabled = busy || (!state.session && !state.apiUnavailable);
     ui.refresh.textContent = state.busy === 'syncing' ? 'Checking game progress…' : !state.session && state.apiUnavailable ? 'Retry availability' : 'Refresh progress';
@@ -745,6 +755,7 @@ export function createDailyGrowth({
     ui.status.textContent = state.notice;
     ui.status.className = `growth-status${state.noticeKind ? ` is-${state.noticeKind}` : ''}`;
     renderProgress();
+    queueSavedSessionRestore();
   }
 
   async function loadStatus() {
@@ -847,6 +858,7 @@ export function createDailyGrowth({
       const session = payload.session;
       if (!session || !text(session.token, 8192) || normalizedAddress(session.wallet) !== address || !Number.isFinite(timestamp(session.expiresAt)) || timestamp(session.expiresAt) <= now()) throw invalidData();
       acceptEnvelope(payload, address);
+      state.walletId = wallet.walletId || state.walletId;
       state.session = { version: 1, token: session.token, wallet: address, expiresAt: session.expiresAt, walletId: state.walletId, walletName: wallet.walletName };
       persistSession(state.session);
       state.pickerOpen = false;
@@ -875,9 +887,11 @@ export function createDailyGrowth({
       if (disposed) return;
       state.wallet = currentWallet();
       if (!state.wallet) throw new Error('The wallet did not share a Sui account. Try connecting again.');
+      state.walletId = state.wallet.walletId || walletId;
       state.pickerOpen = false;
       if (savedSession && savedSession.wallet === state.wallet.address && timestamp(savedSession.expiresAt) > now()) {
-        state.session = savedSession;
+        state.session = { ...savedSession, walletId: state.walletId, walletName: state.wallet.walletName };
+        persistSession(state.session);
         armExpiry();
       } else if (savedSession) persistSession(null);
       setNotice(state.session ? 'Loading your saved Daily Growth progress…' : 'Wallet connected. Sign in to Daily Growth to load your progress.');
@@ -904,14 +918,81 @@ export function createDailyGrowth({
     const expected = state.session?.wallet || previous;
     if (expected && actual?.address !== expected) invalidateSession('Wallet changed. Sign in again to load this wallet’s progress.');
     state.wallet = actual;
+    if (actual?.walletId) state.walletId = actual.walletId;
     render();
+  }
+
+  function savedProviderId(session) {
+    if (text(session?.walletId, 200)) return session.walletId;
+    // Sessions issued before provider IDs were retained still have a wallet name.
+    const matching = state.availableWallets.filter((wallet) => wallet.name === session?.walletName);
+    return matching.length === 1 ? matching[0].id : null;
+  }
+
+  function restoreSavedSession() {
+    if (restoreInFlight) return restoreInFlight;
+    const candidate = savedSession;
+    if (!candidate || state.session || !bridge || disposed) return Promise.resolve(false);
+    if (timestamp(candidate.expiresAt) <= now()) { persistSession(null); return Promise.resolve(false); }
+    const providerId = savedProviderId(candidate);
+    const actual = currentWallet();
+    if (actual && actual.address !== candidate.wallet) { persistSession(null); return Promise.resolve(false); }
+    if (!actual && (!providerId || !bridge.restoreWallet || !state.availableWallets.some((wallet) => wallet.id === providerId))) return Promise.resolve(false);
+    const ticket = epoch;
+    restorePending = false;
+    restoreInFlight = Promise.resolve().then(async () => {
+      if (ticket !== epoch || candidate !== savedSession || disposed) return false;
+      if (!actual) {
+        try { await bridge.restoreWallet({ id: providerId, address: candidate.wallet }); }
+        catch { return false; }
+      }
+      if (ticket !== epoch || candidate !== savedSession || disposed) return false;
+      const restored = currentWallet();
+      state.wallet = restored;
+      if (timestamp(candidate.expiresAt) <= now()) { persistSession(null); return false; }
+      if (!restored || restored.address !== candidate.wallet) return false;
+      state.walletId = restored.walletId || providerId;
+      state.session = { ...candidate, walletId: state.walletId, walletName: restored.walletName };
+      persistSession(state.session);
+      armExpiry();
+      return true;
+    }).finally(() => { restoreInFlight = null; });
+    return restoreInFlight;
+  }
+
+  function queueSavedSessionRestore() {
+    if (!walletInitialized || !restorePending || restoreQueued || restoreInFlight || state.busy || state.session || state.wallet || !savedSession || disposed) return;
+    restoreQueued = true;
+    const ticket = epoch;
+    queueMicrotask(async () => {
+      try {
+        if (ticket !== epoch || !savedSession || state.busy || state.session || state.wallet || disposed) return;
+        restorePending = false;
+        state.busy = 'restoring';
+        setNotice('Restoring your saved Daily Growth session…');
+        render();
+        const restored = await restoreSavedSession();
+        if (ticket !== epoch || disposed) return;
+        state.busy = null;
+        if (restored) {
+          await loadStatus();
+          if (state.session && !disposed) await refresh();
+        } else {
+          setNotice(state.wallet ? 'Sign in to continue Daily Growth.' : 'Reconnect your saved wallet to continue Daily Growth.');
+          render();
+        }
+      } finally { restoreQueued = false; }
+    });
   }
 
   function updateWallets() {
     if (disposed) return;
+    const previousIds = new Set(state.availableWallets.map((wallet) => wallet.id));
     try {
       state.availableWallets = bridge.getAvailableWallets().filter((wallet) => text(wallet.id, 200) && text(wallet.name, 100));
     } catch { state.availableWallets = []; }
+    const providerId = savedProviderId(savedSession);
+    if (providerId && !previousIds.has(providerId) && state.availableWallets.some((wallet) => wallet.id === providerId)) restorePending = true;
     render();
   }
 
@@ -924,19 +1005,13 @@ export function createDailyGrowth({
       unsubscribeWallet = bridge.subscribeWalletState(walletChanged);
       unsubscribeWallets = bridge.subscribeWallets?.(updateWallets) || (() => {});
       state.wallet = currentWallet();
-      if (savedSession && !state.wallet && bridge.restoreWallet && savedSession.walletId) {
-        try { await bridge.restoreWallet({ id: savedSession.walletId, address: savedSession.wallet }); } catch { /* Restore is silent; reconnect remains explicit. */ }
-        if (disposed) return;
-        state.wallet = currentWallet();
-      }
-      if (savedSession && state.wallet?.address === savedSession.wallet && timestamp(savedSession.expiresAt) > now()) {
-        state.session = savedSession;
-        armExpiry();
-      } else if (state.wallet && savedSession) persistSession(null);
+      if (state.wallet?.walletId) state.walletId = state.wallet.walletId;
+      await restoreSavedSession();
     } catch {
       state.walletError = true;
       state.walletReady = false;
     }
+    walletInitialized = true;
     render();
   }
 
@@ -984,6 +1059,13 @@ export function createDailyGrowth({
       : 'Finish and save your Garden Battle, then return and refresh before 00:00 UTC. Opening the game link has not awarded a stamp.');
     render();
   });
+  on(document, 'click', (event) => {
+    const link = event.target.closest?.('a[href]');
+    if (!link || root.contains(link) || event.defaultPrevented) return;
+    const game = state.configuration?.eligibleGames.find((game) => game.href === link.href
+      || (game.id === TREE_FORCE_ID && link.origin === view.location.origin && link.pathname === '/play/treeforce89/'));
+    if (game) state.launched = true;
+  });
   const tabs = [...root.querySelectorAll('[role="tab"]')];
   function selectTab(tab, focus = false) {
     for (const item of tabs) {
@@ -1024,15 +1106,19 @@ export function createDailyGrowth({
     syncInvitationExpanded();
     ui.details.querySelector('summary').focus({ preventScroll: true });
   });
-  on(view, 'focus', () => {
+  function refreshAfterGameReturn() {
+    if (disposed) return;
     if (state.session && !sessionIsCurrent()) return;
     if (state.session && state.launched && !state.busy) {
-      setNotice(state.selectedGameId === TREE_FORCE_ID
-        ? 'Back from TREE FORCE? Refresh here to see your recorded first-wave participation.'
-        : 'Back from a Garden Battle? Refresh before 00:00 UTC to verify today’s result.');
-      render();
+      // Consume this launch before the async request: browsers may emit all three
+      // return events together, and a failed sync must not become a retry loop.
+      state.launched = false;
+      void refresh();
     }
-  });
+  }
+  on(view, 'focus', refreshAfterGameReturn);
+  on(view, 'pageshow', (event) => { if (event.persisted) refreshAfterGameReturn(); });
+  on(document, 'visibilitychange', () => { if (document.visibilityState === 'visible') refreshAfterGameReturn(); });
 
   const ready = (async () => {
     render();
