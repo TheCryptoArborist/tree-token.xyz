@@ -164,6 +164,50 @@ test('static inventories reject duplicates, empty results, and malformed digests
   assert.throws(() => filesFromRows([{ ...row, sha: 'bad' }]), /SHA1/);
 });
 
+test('build-settings audit timestamps do not look like configuration drift', async () => {
+  const baseline = await captureCurrent(fakeApi((endpoint, value) => {
+    if (endpoint === 'sites/' + SITE_ID) value.build_settings.updated_at = 'before-merge';
+  }), ID);
+  const after = await captureCurrent(fakeApi((endpoint, value) => {
+    if (endpoint === 'sites/' + SITE_ID) value.build_settings.updated_at = 'after-merge';
+  }), ID);
+  assertPreserved(after, baseline);
+  assert.notEqual(after.observations.buildSettingsUpdatedAt, baseline.observations.buildSettingsUpdatedAt);
+  assert(!Object.hasOwn(after.environment.buildSettingsFieldsSha256, 'updated_at'));
+});
+
+test('every real build setting and its field presence remain protected', async () => {
+  const baseline = await captureCurrent(fakeApi((endpoint, value) => {
+    if (endpoint === 'sites/' + SITE_ID) value.build_settings = {
+      updated_at: 'before', created_at: 'created', cmd: 'npm run build', dir: 'dist',
+      repo_branch: 'main', stop_builds: false, env: { SECRET: 'original' },
+    };
+  }), ID);
+  for (const field of ['created_at', 'cmd', 'dir', 'repo_branch', 'stop_builds', 'env', 'new_setting']) {
+    for (const remove of [false, true]) {
+      if (field === 'new_setting' && remove) continue;
+      const changed = await captureCurrent(fakeApi((endpoint, value) => {
+        if (endpoint !== 'sites/' + SITE_ID) return;
+        value.build_settings = {
+          updated_at: 'after', created_at: 'created', cmd: 'npm run build', dir: 'dist',
+          repo_branch: 'main', stop_builds: false, env: { SECRET: 'original' },
+        };
+        if (remove) delete value.build_settings[field];
+        else value.build_settings[field] = field === 'env' ? { SECRET: 'changed' } : 'changed';
+      }), ID);
+      assert.throws(() => assertPreserved(changed, baseline), /environment changed/);
+    }
+  }
+});
+
+test('audit timestamp changes during one inventory read are accepted', async () => {
+  let read = 0;
+  const captured = await captureCurrent(fakeApi((endpoint, value) => {
+    if (endpoint === 'sites/' + SITE_ID) value.build_settings.updated_at = String(++read);
+  }), ID);
+  assert.equal(captured.schemaVersion, 2);
+});
+
 test('network operations are GETs and credential-bearing errors are redacted', async () => {
   const calls = [];
   const api = readOnlyApi('private-token', async (url, options) => {

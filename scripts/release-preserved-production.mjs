@@ -9,7 +9,7 @@ import { parseArgs } from 'node:util';
 export const SITE_ID = 'aa62f324-b880-47d6-85b8-4ba0700ff5bf';
 export const ACCOUNT_ID = '69800888d1a3d0483003ae9e';
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
-const DEFAULT_BASELINE = path.join(ROOT, '.netlify/preservation-baseline.json');
+const DEFAULT_BASELINE = path.join(ROOT, '.netlify/preservation-baseline-v2.json');
 const RUNTIME_FIELDS = ['functions_region', 'functions_region_overrides', 'branch', 'context',
   'database_branch_id', 'blobs_region', 'framework', 'edge_functions_present', 'server', 'database_migrations'];
 const BINDING = 'TREEFORCE89_DEV_DATABASE_URL';
@@ -97,7 +97,12 @@ export function environmentFor({ site, siteFunctions, shared, sharedFunctions, b
   return {
     site: summarize(site), siteFunctions: summarize(siteFunctions),
     shared: summarize(shared), sharedFunctions: summarize(sharedFunctions),
-    buildSettingsSha256: fingerprint(buildSettings),
+    // Netlify advances this audit timestamp on repository events even when no
+    // build/deployment occurs. Preserve every setting and its field presence.
+    buildSettingsSha256: fingerprint(Object.fromEntries(Object.entries(buildSettings)
+      .filter(([key]) => key !== 'updated_at'))),
+    buildSettingsFieldsSha256: Object.fromEntries(Object.entries(buildSettings)
+      .filter(([key]) => key !== 'updated_at').map(([key, value]) => [key, fingerprint(value)])),
     requiredBinding: {
       key: BINDING, isSecret: true, scopes: ['functions'],
       context: 'production', valueId: binding.values[0].id,
@@ -109,7 +114,7 @@ export function environmentFor({ site, siteFunctions, shared, sharedFunctions, b
 }
 
 export function validateSnapshot(snapshot) {
-  check(snapshot.schemaVersion === 1 && snapshot.siteId === SITE_ID && snapshot.accountId === ACCOUNT_ID,
+  check(snapshot.schemaVersion === 2 && snapshot.siteId === SITE_ID && snapshot.accountId === ACCOUNT_ID,
     'Wrong baseline schema, site, or account.');
   check(/^[a-f0-9]{24}$/.test(snapshot.deployId), 'Invalid baseline deployment ID.');
   validateFunctions(snapshot.functions);
@@ -197,9 +202,10 @@ export async function captureCurrent(api, expectedDeployId) {
   check(deploy.id === expectedDeployId, 'Wrong deployment returned.');
   const [files, protectedEnvironment] = await Promise.all([inventory(api, expectedDeployId), environment(api, site)]);
   const snapshot = {
-    schemaVersion: 1, capturedAt: new Date().toISOString(), siteId: SITE_ID, accountId: ACCOUNT_ID,
+    schemaVersion: 2, capturedAt: new Date().toISOString(), siteId: SITE_ID, accountId: ACCOUNT_ID,
     deployId: expectedDeployId, functions: deploy.available_functions, schedules: deploy.function_schedules,
     runtime, files, environment: protectedEnvironment,
+    observations: { buildSettingsUpdatedAt: site.build_settings.updated_at ?? null },
   };
   validateSnapshot(snapshot);
   // Recheck both publication and mutable configuration at the end of the read.
