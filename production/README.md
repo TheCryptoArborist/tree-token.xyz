@@ -1,4 +1,12 @@
-# Current production — validated VICTORY reward display, 2026-10-06
+# Current preservation baseline — validation only, 2026-11-02 UTC
+
+Authenticated read-only capture and verification protect published, locked deployment `6ae8112dce29c5db8b725ff0`: **288 static paths, 41 complete function records, five schedules, and 50 site Functions environment entries**. The captured records, canonical SHA256 sidecar, and validation report remain in the local ignored `.netlify/` directory. See `../docs/preserved-release-validation.md` for usage and API visibility limits. This records the current live state; it does not publish or synchronize the historical source/build manifest with all later feature releases.
+
+`node scripts/release-preserved-production.mjs verify` fails if the publication, any complete backend record, schedule, runtime setting, static path/digest, or protected API-visible environment fingerprint changes. Capture requires an explicit expected deployment ID and refuses to overwrite a baseline. The script no longer permits the historical metric-package replacements or any publish/restore mode. No production changes were made by this maintenance work. Earlier sections below are historical records.
+
+---
+
+# Historical production — validated VICTORY reward display, 2026-10-06
 
 Deployment `6ac58a83cdbea77d7a4a7336` is published and locked. Source commit `359e39ec17b0b437606abe3275b42df2bbc01a79` (PR #53). This frontend-only follow-up removes fallback to legacy reward analytics: reward APR remains unavailable whenever the on-chain incentive validation fails. The regression fixture includes a legacy analytics object marked verified alongside unavailable incentives.
 
