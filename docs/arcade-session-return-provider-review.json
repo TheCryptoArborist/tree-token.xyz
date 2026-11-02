@@ -1,0 +1,2834 @@
+{
+  "approved": true,
+  "reviewer": "root",
+  "reviewedAt": "2026-11-02T03:44:28.913137+00:00",
+  "summary": "Approved only the exact 162 enumerated provider metadata differences on the ready replacement candidate: a changed in 39 records; c, id and oid changed in all 41. All other record fields, field presence and record order are identical. All 41 ZIP digests and sizes remain exact, as do all 284 static paths, five schedules and protected deployment runtime settings. Each new c timestamp falls within that package's previously journaled successful upload window. The official CLI maps a to the function-log account_id and oid to function_id; id remains an opaque provider identity, with no invented derivation claim. This approval pins the complete actual records and every exact before/after delta and does not permit future identity drift.",
+  "candidate": "6ae806bda0c2f59d35109a6e",
+  "candidateCreatedAt": "2026-11-02T03:42:53.290Z",
+  "supersededCandidate": "6ae7fe815070789ddb725fa3",
+  "baseline": "6ae7f8a9183c770b8f0eb50c",
+  "originalSourceCommit": "81b463838a2ed3c5c388be14c1935a80c221c73d",
+  "originalSourceTree": "e028fb2cd59f31e1f13c235d61f9e03bfe8caa4e",
+  "recoveryCommit": "00e9d0e0f7968751559c6f9458d5bdd1b3384afa",
+  "recoveryTree": "3edeab27f14dc687b38a97f237a2027cc7c61e2b",
+  "retryProcedureCommit": "ef2fe8edd269600379c4160750553262ada8f5c3",
+  "retryProcedureTree": "c94ac71110cee9de398afbc5dfc8d7e7ebf09f11",
+  "retryHelperSha256": "0e6e1dda078c836f5d260022bd2773d00e0fd7c383ac01937b84c13a9cf3a405",
+  "configurationSha256": "233fe64419a86b8d70a4416a53916506f08932ee5c370682f6a196b54c01f3e3",
+  "attachmentHelperSha256": "1ef530a8e707000228380c45483f943a999ffe4207f766003a5e69685b5eae56",
+  "payloadSha256": "11dd087d6272edba2e2f8d675459cbf59a2320bb17e4c397d55c98734d44fa95",
+  "manifestSha256": "b39dcbda43207af13928806bf01125479817a333721b51843c0fb456e69fddfc",
+  "retryCaptureSha256": "61461e808ae00c20963002a5bbbd3792f932de9541f610c618a3db2bc8078f77",
+  "retryCandidateReceiptSha256": "dfa79e3a3da592e892d4cba9fcdca74cc6643a200504ce07d0f69dbe6baeb6e0",
+  "retryReviewSha256": "53ef3b022a58c01acf1f99b258079057edb655e97839876d229e95829701b825",
+  "candidateFunctionRecords": [
+    {
+      "n": "arcade-wallet-link",
+      "d": "cf04ba346ffdb6b0f65e096016f7a12314a3822ab2ba4c3464a67111da85a8cf",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/arcade-wallet-link",
+          "l": "/api/arcade-wallet-link",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "69b4144a95749e86827b47b3aa5a67c5fff1869bb5715abb75db5c641ea72f35",
+      "a": "892891066531",
+      "c": "2026-11-02T03:19:38.166Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "480857b1bfc2422f3117422c71b68d3e276e90b5fc8e37033a6d9540d849db8c",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 2197967
+    },
+    {
+      "n": "nftree-wallet",
+      "d": "7d833b105a7a23c1b19932030c3a5658a7b26a77fb62d188bceb003ed9808ca1",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/nftree-wallet",
+          "l": "/api/nftree-wallet",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "454c1ddd0f3b969d8eca8c0f756e8ea31c32f83576813e9ef71986e7579763ac",
+      "a": "393143003500",
+      "c": "2026-11-02T03:19:42.312Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "9f9a4ebe60653688921728a326804ca3c22a194d7029f87a6746136f3fadac14",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 340679
+    },
+    {
+      "n": "tree-badges-on-deploy",
+      "d": "bbe5138646aeb0158bffb1b0a4423b9635c1910423bdce2b6ce719e4cb8c995c",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "p": 10,
+      "id": "cdf87d0c8d3059bb1142b9955bab6229dc2151edfa72743ab63d430ecc0b0921",
+      "a": "256666722258",
+      "c": "2026-11-02T03:19:46.620Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "0f0f8a8e18dc3b49a88f7efad43fc516eabf2f4eddc28985919ab306921655e5",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 365345
+    },
+    {
+      "n": "tree-badges-preview",
+      "d": "272a0e60ad6b64371f4aec9f172ea48522dfbf473981e9e8739d91a10342b016",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-badges-preview",
+          "l": "/api/tree-badges-preview",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "d04dad0b1d4b2ba5e3b5c5f060792f8dffa849f4f3e81d477980580573d22e88",
+      "a": "505538967386",
+      "c": "2026-11-02T03:19:50.859Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "bc69db5aec5b6748dbf9921269c0b6b54a0d551e5aad4bab9df23bf6ad5c4601",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 338961
+    },
+    {
+      "n": "tree-badges-refresh-background",
+      "d": "092dc834f95cd17244205828c581179e649c679bb263e5805e37c322e86e4469",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "p": 10,
+      "id": "c170f7aa01fa37b7fe4606c19d0c57214916c6ec98835e3accbadf7dbd80cdd5",
+      "a": "998805804580",
+      "c": "2026-11-02T03:19:55.265Z",
+      "im": "background",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "7a5fb6cf18b175e6adea302707d5163a1e34be0a3bb8c58758b207c752fcfdad",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 1066577
+    },
+    {
+      "n": "tree-badges-refresh-scheduled",
+      "d": "8543b6349164e36c137e3f1cd1297b10a150004f0b6f556f2e5d6ec3fec9e459",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "p": 10,
+      "id": "cba9c47cb90e2217dee1f398ac560a63321528a4e6dd909edd2613c5e880ddfb",
+      "a": "576197671174",
+      "c": "2026-11-02T03:19:59.707Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "1302e7a4b591fa7f17a4d333a47daf5707966256ad40a280505f313e4cebef0a",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 339394
+    },
+    {
+      "n": "tree-badges",
+      "d": "23c2c5f14a44a4a7139c9f0de6e89baf2b94e9e5feb64e1bfebbfbcc286c025f",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-badges",
+          "l": "/api/tree-badges",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "3b02a68845c97cb84b7c4f7c7c5bbecadbb2be17b9aeb171183438912cb21517",
+      "a": "177933589360",
+      "c": "2026-11-02T03:20:04.012Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "06b276958962a0147bb52d3ec60248d2faf4fa608ebc10655823508df4ba5acb",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 366488
+    },
+    {
+      "n": "tree-burn-overview",
+      "d": "48cabca12664dc178ce1f3f6e2681a216944168e61c5988ce8b6dede5723a681",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-burn-overview",
+          "l": "/api/tree-burn-overview",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "28d0f6845812b262470257ccd243f249e67c908e3256ad2e4fc806334191cd40",
+      "a": "554605863837",
+      "c": "2026-11-02T03:20:08.286Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "91e16adf53fc358f987a902b216ba67667ef1b4d0e4cb6209ad9a3a016ac6a64",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 1025084
+    },
+    {
+      "n": "tree-chart",
+      "d": "65ad24a2df39e42edd8cd5225dbe125152c38ac6d1078969c8b9da4103b976f7",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-chart",
+          "l": "/api/tree-chart",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "43ef2e7e723f87ecbb2a21090995a41e9742c549490c2ee6dce8ae3388cca61c",
+      "a": "385216822393",
+      "c": "2026-11-02T03:20:12.572Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "e61b4299524ad2959d31c37bca0b45f8dd536a2272f9d82644ebb52b41761d3b",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 340304
+    },
+    {
+      "n": "tree-dashboard",
+      "d": "e1f8b352db9d6dfca8500b6c4475f05e31d58bdf90661f22151867399094f810",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-dashboard",
+          "l": "/api/tree-dashboard",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "416f4ffdacae5050bc68847964206ed64a894fa8f42232d7fc3aadfbb53ff33e",
+      "a": "719837505512",
+      "c": "2026-11-02T03:20:16.823Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "27fd1492f5fba7b66ff8885c60613345250906f1215f0fc27f3a677d4e344a3b",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 366261
+    },
+    {
+      "n": "tree-exposure-on-deploy",
+      "d": "63edb9dd7d4ca1ff1e9d4ee680f898dd03284c747f2d262bd77cd4219d7d3ce7",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "p": 10,
+      "id": "7134c19457064040a7f6a8c8d9bf4c72e3c153450ece1a59819f47a778ba284b",
+      "a": "449440118093",
+      "c": "2026-11-02T03:20:21.088Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "eb56c116393b4c598a565cdbfc3d03000556476b2e9fb68f08416ce45c8bb1b5",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 1076798
+    },
+    {
+      "n": "tree-exposure-preview",
+      "d": "e0dfaaf32ada22bea619133f768a948e505803ea19d602ccb2b0316f346851a7",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-exposure-preview",
+          "l": "/api/tree-exposure-preview",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "f73631f7fae03c076f0c669bf3a76fe4285197cc578c27f2d83526f0efd0fa26",
+      "a": "650953327525",
+      "c": "2026-11-02T03:20:25.271Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "a45f384c6e6f7bc13e0bdbd93ee89cd07618b709ee0d5c2a7a602a35354046a5",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 342497
+    },
+    {
+      "n": "tree-exposure-refresh-background",
+      "d": "08e309d96b93089f447e93ab33e7bb972c5a2972b3f64d09130bf0d04d9b726e",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "p": 10,
+      "id": "3d7d21953d1f6fde366bba9c5a1052825c97f0802f5463d7b2f76881dd6f8b3e",
+      "a": "554605863837",
+      "c": "2026-11-02T03:20:29.590Z",
+      "im": "background",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "85d066216c335c4c9d152689af870b8228dcc0d152587b9d5d0dea875cf5f12a",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 1075996
+    },
+    {
+      "n": "tree-exposure-refresh-scheduled",
+      "d": "be72ccf2d3bcb3a463a2c8aa09eefd0e12d3a1f9c47dde899ad54c1337066f92",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "p": 10,
+      "id": "3cef97edd210f445abde7505b190051b3a192ee513005211109f4e66b6233224",
+      "a": "560477221814",
+      "c": "2026-11-02T03:20:33.755Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "28b762f8a438f558fd7b2bd8ef35002f2ecefa498e7c96afecdfb061857ff0e3",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 339397
+    },
+    {
+      "n": "tree-exposure",
+      "d": "0ea62d8290ce1e922e5e87914f1d00f9777843b7a25c03e61625b2a9eca622bf",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-exposure",
+          "l": "/api/tree-exposure",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "e899962b5de959385bc8c6ff44e0a1ba993395f92b6809ec621d0980c28713ba",
+      "a": "924105187622",
+      "c": "2026-11-02T03:20:37.980Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "a45c77789eae69fbcf48741cdd48a364e4674c9bcfd5f60eef39d98e92f81d0b",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 370033
+    },
+    {
+      "n": "tree-knowledge-trial-admin",
+      "d": "f100a9bbd2b42ce0dec661810d1cecf6d87f7d0a073fad65531c2e05742811f1",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-knowledge-trial-admin",
+          "l": "/api/tree-knowledge-trial-admin",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "4a3bafd13352f7c0a49861255d26901c0085b533ef37633f932d5ffa6215e10f",
+      "a": "673769985865",
+      "c": "2026-11-02T03:20:42.246Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "a66f4282680a6a45c852c90460b5bd248249d94f3ab738ccdfb0458524853b0c",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 354115
+    },
+    {
+      "n": "tree-knowledge-trial-claim-test",
+      "d": "00ecd5c0368615e267abcfe4b9cabc22fba7f457a3546a255169b612945329b2",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-knowledge-trial-claim-test",
+          "l": "/api/tree-knowledge-trial-claim-test",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "7265a1eb1e344e362b3e7dd8623d2a2f3d4c27c4e463158d9419d532958e612c",
+      "a": "022731369924",
+      "c": "2026-11-02T03:20:46.556Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "2d69e48c9271733ab9f3ae370c93d8ff56a7bbc73d56587fa6ef17800c09b04b",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 339485
+    },
+    {
+      "n": "tree-knowledge-trial-claim",
+      "d": "6fd0f4534b29efcd00f2aa0f633ae88a1bbd260649ca1ba8aa169f456350efb3",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-knowledge-trial-claim",
+          "l": "/api/tree-knowledge-trial-claim",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "94093c6f92bb401c3a80decac466f338c38a15b66fdf6fc5c6deb5bfc8e372d8",
+      "a": "822334503436",
+      "c": "2026-11-02T03:20:50.893Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "481774c24aaee2837fc65ccf2874848d1deb9ae0c6b78a1bfe844c549fc65fea",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 344793
+    },
+    {
+      "n": "tree-knowledge-trial-resolver",
+      "d": "cd754a9ff9e97f04d7fdc6f0030ada24a54f1aa5042a557c6976e1a9315735db",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "p": 10,
+      "id": "14b33a86c6d74111b973c1d5757408e08cf7ac7b3bff87ac373aeaaea28492ea",
+      "a": "512984491761",
+      "c": "2026-11-02T03:20:55.208Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "f53a014581ab2776e03549419c302629b00493e9c397915a78caf344bf90493a",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 350122
+    },
+    {
+      "n": "tree-knowledge-trial-rotation-on-deploy",
+      "d": "d97fd3ed830eb5c8a2a0bdc06203486f7808a4932298e780eca81f4c14bf5b4b",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "p": 10,
+      "id": "27f8167738ecffd31d4e770047f0d099a04b3c67eb269a74751d063f2f7fafa6",
+      "a": "786465436847",
+      "c": "2026-11-02T03:20:59.375Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "b57e631cef78a3c3b0997ffd4a550d74ee49e07e9c70d3f1314bc6dfaf210777",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 352009
+    },
+    {
+      "n": "tree-knowledge-trial-rotation-scheduled",
+      "d": "242abd2bffd71a4553758656c5e1b7434e97f3e2c3a9a465490be161897a5605",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "p": 10,
+      "id": "03fbcfcc0594f442083029b5e1b180ebe1ee3f39f5726faa0b2ea2d7fbb9aa01",
+      "a": "940186631256",
+      "c": "2026-11-02T03:21:03.665Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "42e7ec74cc87fa235b8a0350c39b5e746bc354552ce30beb26db9cf9c5711caf",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 351849
+    },
+    {
+      "n": "tree-knowledge-trial-test",
+      "d": "dac3d74ac9a156c2dd41db9132468080c8f5989eda4d67c40b9ae1464d87b799",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-knowledge-trial-test",
+          "l": "/api/tree-knowledge-trial-test",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "78ab4cb2b8719dd87f769c6026e0745c76d6da3ee8d7f2bc0b6638939f8d1f62",
+      "a": "043306366455",
+      "c": "2026-11-02T03:21:07.991Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "3173b809c6b39c658999a694e0624ac8296da8cac188ccd9d470e963accbdabc",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 339464
+    },
+    {
+      "n": "tree-knowledge-trial",
+      "d": "ffc443359d3e2e4cdfc48e3fa1bb938910ac3a328270ffc5d5b25b3bf6434813",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-knowledge-trial",
+          "l": "/api/tree-knowledge-trial",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "60d66139fb5844b28d9d74e44c80e2c68de2a59ce18aa06f3da435e2140b172f",
+      "a": "042287751506",
+      "c": "2026-11-02T03:21:12.296Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "ffb57655c7389ba8da7f9b427ce99d512e9b0900cd3195dead5165feffd3e1f8",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 1042033
+    },
+    {
+      "n": "tree-leaderboard-preview",
+      "d": "42e6d26997f1a2793b796c14fba92e3dc0951f086c2f617724ae8b800a2edbbc",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-leaderboard-preview",
+          "l": "/api/tree-leaderboard-preview",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "9ac87b1bebc7cb0282a20d78dd493fcbc0672d0a922a506d1dcd3c8ca1a1ce5c",
+      "a": "012533533302",
+      "c": "2026-11-02T03:21:16.498Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "7698c286616e6fded82096060fdbf7bf0174b70f4cdd08994aa73bfd6cd4ebf6",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 342193
+    },
+    {
+      "n": "tree-leaderboard-refresh-background",
+      "d": "3a17e4af2f83cf71d6b9e23fcb64af62383483ae48992f25fe6d6b60861a4ac9",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "p": 10,
+      "id": "cd5ce051bde7211b5bfe7b0b63904b7cf991a918d4baaf593bef5a7a71f07371",
+      "a": "008034030326",
+      "c": "2026-11-02T03:21:20.750Z",
+      "im": "background",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "29294bcaf4adfafe90da2b95260e01879dfe167925acc9eea3ec406095b55883",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 374421
+    },
+    {
+      "n": "tree-leaderboard-refresh-scheduled",
+      "d": "49ee439cd6bd7d7899c6cc27081bdc7191d578b78a051f5ece03c73c0d14195f",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "p": 10,
+      "id": "235d40555b2c26c9812f3f66f77fe843d96849bcc89a0411934672ceb67228dc",
+      "a": "008034030326",
+      "c": "2026-11-02T03:21:24.949Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "511b0de4c26a8f0412e850aa0d7d7b49d24157c35de60eeaabae56cce7fb1935",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 339179
+    },
+    {
+      "n": "tree-leaderboard",
+      "d": "6a96b47975107c1f94d221342397a4bc70cc7f2c78914d341db96355f51ee27f",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-leaderboard",
+          "l": "/api/tree-leaderboard",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "d7e3b169bc92b22253c9f12ef3062f9da66db6c7bcc6517162289df16aa2b555",
+      "a": "333468350809",
+      "c": "2026-11-02T03:21:29.149Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "8c77ad335b2c39826163f7e7cf48236b5db25858097fe89f877664a7115f6c69",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 376282
+    },
+    {
+      "n": "tree-limit-orders",
+      "d": "c137e6443ddabcf4020ead936c7e05fc88efca549e87e5ce97a16d758c941a5d",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-limit-orders",
+          "l": "/api/tree-limit-orders",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "28169529164514929ea3f67c1877609903a037dd8591e4426ae88b06314f5702",
+      "a": "016005051599",
+      "c": "2026-11-02T03:21:33.530Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "f0a3046b4dc86525de7bee88c0d988ecd4d951fb1db0d92b18c94adf926324dc",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 2067158
+    },
+    {
+      "n": "tree-liquidity",
+      "d": "0d63883ef7d84e050d9477c51e06e57b7218997b7376e449fbbdde767f505c87",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-liquidity",
+          "l": "/api/tree-liquidity",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "6819d278e4eedd1ebaf8b38ce31a2427b62a00ae61556dd7e7f586b70cca8f5f",
+      "a": "831147333159",
+      "c": "2026-11-02T03:21:37.821Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "64fc5287052443e03f12180bb8b75337abf17b77ddbe1bb4e667a419b9200498",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 1029624
+    },
+    {
+      "n": "tree-market",
+      "d": "a0646406b77c2128eedeb5c8691759c3c68c2bf02ac62c0eaa68ea2f36e1cb44",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-market",
+          "l": "/api/tree-market",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "01ca43391185f902fc016b4735a9a73df17d2d2466b268416feb8c0b7af7b810",
+      "a": "554605863837",
+      "c": "2026-11-02T03:21:42.118Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "0b653067c280173aad461a3ba8d9cf811e7fb525bcb501c7319badca303398d5",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 338809
+    },
+    {
+      "n": "tree-nftree",
+      "d": "c7569656a25c94414e8a14971860030a30f8457c5746d0163a72e0e8f3c622d3",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-nftree",
+          "l": "/api/tree-nftree",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "9e9c92caa6434d7fc510b8aada071eb5dcd9a8f979d2383a68ba3657becb7511",
+      "a": "008585217041",
+      "c": "2026-11-02T03:21:46.321Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "b7a2421c78755ea6bd74c34cc970c7ecc148313b2b6e36d6eeb420618012f155",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 341600
+    },
+    {
+      "n": "tree-raffle-claim",
+      "d": "515604875d1b1864ad669dcf2ff845ce1db78ab243caf5d318ee23e28b60da88",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-raffle-claim",
+          "l": "/api/tree-raffle-claim",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "ae1d68ad969865f3b33d049fdfef7941f37bf2b0000edecde6eb6865587ea960",
+      "a": "517001624662",
+      "c": "2026-11-02T03:21:50.553Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "32318155a31f64e92c03bd9dc9efa9efa982434d066dbb23fd9eb30fb59751a8",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 345668
+    },
+    {
+      "n": "tree-raffle-ingest-buy",
+      "d": "a6ecaaf9878391b72c82cd8938009e3f316bf40b66f74f937c367ca9b723bba9",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-raffle-ingest-buy",
+          "l": "/api/tree-raffle-ingest-buy",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "100e6eae875fc5049d48e48c8502cc177451b76bc123985a7889e2f3e1ea1feb",
+      "a": "333468350809",
+      "c": "2026-11-02T03:21:54.801Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "0fe305b8e0bad7c22f9ae3da6987a4c630ec593364c465d0357dc9d8d889a932",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 347185
+    },
+    {
+      "n": "tree-raffle-status",
+      "d": "5e425ca24d184053a6efc3d63c577189cc619e0cc4368d7c3adac579bc40c168",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-raffle-status",
+          "l": "/api/tree-raffle-status",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "7414b61b57fac00be297cc0dee7072673ab23ee31fcb7174f4367152df83f7f9",
+      "a": "012004486566",
+      "c": "2026-11-02T03:21:59.189Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "0966b2f9c8355a30525daa5e5a1d9ee140f79f85098c7372a832bf4821e02236",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 342188
+    },
+    {
+      "n": "tree-swap-quote",
+      "d": "23d98a34cf8248b06f069976d37d635a7b93217c660db35f24c4fbaba810ce30",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-swap-quote",
+          "l": "/api/tree-swap-quote",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "8be16d6265d974f790872f6d9377a673e1ec3f4639cd63ba0c43a5684634cdba",
+      "a": "131853488294",
+      "c": "2026-11-02T03:22:03.621Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "ec71478e622bdd472c9bb9d944304a21fe5d2d33cf7d64c4339505267034e03b",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 1539459
+    },
+    {
+      "n": "tree-v3-overview",
+      "d": "3223f1ca23947a9c1a86a4cd59d4a26fba36297d79fba21b94c7b84be6e8db3f",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-v3-overview",
+          "l": "/api/tree-v3-overview",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "6e3bbb97d050250d1651e877a0a0cb70bcd810424257b092c2a46ad8b5414a5d",
+      "a": "551936673993",
+      "c": "2026-11-02T03:22:07.932Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "335836d742e549712003625cbdfc1ff1bbb9ee86e8610be53642489c082be547",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 1034525
+    },
+    {
+      "n": "tree-volume",
+      "d": "57f085fecd6597c85b00ffed5a00cfd3127561b4c6a65542cec110e97f4b2601",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-volume",
+          "l": "/api/tree-volume",
+          "e": null,
+          "m": null,
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "ea84cd1fb762f39800d7dbb2c6e0034a162034af14058f4ce7f7ace6ed3cdb05",
+      "a": "385216822393",
+      "c": "2026-11-02T03:22:12.433Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "82e63dd2c7e7f8284d8b5ca80475e32adc249cdb6387bfb555143059cb3df41a",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 1028768
+    },
+    {
+      "n": "tree-knowledge-trial-correction",
+      "d": "bb9f177839931c33a3da6012b66090ae74edd324ba3e1f3ced1d37947e7044c8",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.18.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/tree-knowledge-trial-correction",
+          "l": "/api/tree-knowledge-trial-correction",
+          "e": null,
+          "m": [],
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "id": "7e9f937c3ec9847e33d3517f62d38962d11f91c359550baa78423462748ff689",
+      "a": "089772552642",
+      "c": "2026-11-02T03:22:16.641Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "0bf5bf8a4d6b35a8b9129935843abbb14ed97bbfd722f8add58fd457c318e390",
+      "r": "nodejs24.x",
+      "rg": "us-east-2",
+      "s": 343304
+    },
+    {
+      "n": "treeforce89-dev",
+      "d": "725fe5a7e7ff30c2c83f7b6a1bf1af534a72ee2efa1cc6faf64151743cf84905",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/play/treeforce89/api/*",
+          "l": null,
+          "e": "^\\/play\\/treeforce89\\/api(?:\\/(.*))\\/?$",
+          "m": [],
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "tr": {
+        "action": {
+          "type": "rate_limit",
+          "config": {
+            "aggregate": {
+              "keys": [
+                {
+                  "type": "ip"
+                }
+              ]
+            },
+            "rate_limit_config": {
+              "algorithm": "sliding_window",
+              "window_size": 60,
+              "window_limit": 60
+            }
+          }
+        }
+      },
+      "id": "98afba7ad05cae22b90687b7dcdb3eb952174a27608c7360a7cb0968b16d9eea",
+      "a": "677604543295",
+      "c": "2026-11-02T03:22:20.927Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "fb400639c3a337ff47f50da12cb054699dece06f11faa065a3069f81f54a0781",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 1753127
+    },
+    {
+      "n": "arcade-growth",
+      "d": "2bc510db550e019f388c8a7f5eb8cda7360205000eff6c73745d05c978b2573c",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "rgo": "us-east-2",
+      "mo": 1024,
+      "ro": [
+        {
+          "p": "/api/arcade-growth",
+          "l": "/api/arcade-growth",
+          "e": null,
+          "m": [
+            "GET",
+            "POST"
+          ],
+          "ps": false
+        }
+      ],
+      "tr": {
+        "action": {
+          "type": "rate_limit",
+          "config": {
+            "aggregate": {
+              "keys": [
+                {
+                  "type": "domain"
+                },
+                {
+                  "type": "ip"
+                }
+              ]
+            },
+            "rate_limit_config": {
+              "algorithm": "sliding_window",
+              "window_size": 60,
+              "window_limit": 60
+            }
+          }
+        }
+      },
+      "id": "4b70b37ba607e7d11f5bcffacb48339d7d39bfbb05d9c092bdf1f6bc4974aa05",
+      "a": "940186631256",
+      "c": "2026-11-02T03:22:25.566Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "a2af31d014810ced2cf3a6a9442717356365b0b2e04ed3134183bc55b0efd8a6",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 1353890
+    },
+    {
+      "n": "canopy-access",
+      "d": "8bca11eb41ca6657102b82ff28ff927e5fc529687af4a6f002152ff3384b3e4a",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "ro": [
+        {
+          "p": "/play/canopy-defense/api/access",
+          "l": "/play/canopy-defense/api/access",
+          "e": null,
+          "m": [],
+          "ps": false
+        },
+        {
+          "p": "/play/canopy-defense/src/*",
+          "l": null,
+          "e": "^\\/play\\/canopy-defense\\/src(?:\\/(.*))\\/?$",
+          "m": [],
+          "ps": false
+        }
+      ],
+      "p": 10,
+      "tr": {
+        "action": {
+          "type": "rate_limit",
+          "config": {
+            "aggregate": {
+              "keys": [
+                {
+                  "type": "domain"
+                },
+                {
+                  "type": "ip"
+                }
+              ]
+            },
+            "rate_limit_config": {
+              "window_limit": 90,
+              "window_size": 60,
+              "algorithm": "sliding_window"
+            }
+          }
+        }
+      },
+      "id": "37261ae8253e3e7a9281fa1eeb49c1d46be2b7e73088a4245ebc89cedc7b0c50",
+      "a": "432846551745",
+      "c": "2026-11-02T03:22:29.812Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "3752b9fd5aacdb43b28acdf052989106fcf576b2e87c7c4ccbfe49b50c8d690d",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 1253348
+    }
+  ],
+  "reviewedFunctionDifferences": [
+    {
+      "path": [
+        "available_functions",
+        "arcade-growth",
+        "a"
+      ],
+      "before": "617891814415",
+      "after": "940186631256"
+    },
+    {
+      "path": [
+        "available_functions",
+        "arcade-growth",
+        "c"
+      ],
+      "before": "2026-11-01T16:10:57.675Z",
+      "after": "2026-11-02T03:22:25.566Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "arcade-growth",
+        "id"
+      ],
+      "before": "d8e376d001c783a8c7c4da35dbf7542f2094a48c9daf8cfb3113702228a0d09b",
+      "after": "4b70b37ba607e7d11f5bcffacb48339d7d39bfbb05d9c092bdf1f6bc4974aa05"
+    },
+    {
+      "path": [
+        "available_functions",
+        "arcade-growth",
+        "oid"
+      ],
+      "before": "06e60e1165aad8b6f77916ab0d3ac5cd7d16e4d478aeabcc9f177894c32324da",
+      "after": "a2af31d014810ced2cf3a6a9442717356365b0b2e04ed3134183bc55b0efd8a6"
+    },
+    {
+      "path": [
+        "available_functions",
+        "arcade-wallet-link",
+        "a"
+      ],
+      "before": "430503858661",
+      "after": "892891066531"
+    },
+    {
+      "path": [
+        "available_functions",
+        "arcade-wallet-link",
+        "c"
+      ],
+      "before": "2026-10-06T20:44:41.019Z",
+      "after": "2026-11-02T03:19:38.166Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "arcade-wallet-link",
+        "id"
+      ],
+      "before": "98c429ab9967db65ebf7b5f450fa4f3251823acdf21234a9902ee6cefb87d587",
+      "after": "69b4144a95749e86827b47b3aa5a67c5fff1869bb5715abb75db5c641ea72f35"
+    },
+    {
+      "path": [
+        "available_functions",
+        "arcade-wallet-link",
+        "oid"
+      ],
+      "before": "a3607e98e022c48e53c78c75efe4070e65a57f5c1db03ed105f791dfd966cc0d",
+      "after": "480857b1bfc2422f3117422c71b68d3e276e90b5fc8e37033a6d9540d849db8c"
+    },
+    {
+      "path": [
+        "available_functions",
+        "canopy-access",
+        "a"
+      ],
+      "before": "480875380381",
+      "after": "432846551745"
+    },
+    {
+      "path": [
+        "available_functions",
+        "canopy-access",
+        "c"
+      ],
+      "before": "2026-11-01T02:08:40.238Z",
+      "after": "2026-11-02T03:22:29.812Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "canopy-access",
+        "id"
+      ],
+      "before": "8ca4e1411090c3534074c110bb966c3274855c96bd89261e6d38c7977cf59490",
+      "after": "37261ae8253e3e7a9281fa1eeb49c1d46be2b7e73088a4245ebc89cedc7b0c50"
+    },
+    {
+      "path": [
+        "available_functions",
+        "canopy-access",
+        "oid"
+      ],
+      "before": "a078979f9369776e3516c85f033b275949862351f94e5c8a39d87cfe04141ec1",
+      "after": "3752b9fd5aacdb43b28acdf052989106fcf576b2e87c7c4ccbfe49b50c8d690d"
+    },
+    {
+      "path": [
+        "available_functions",
+        "nftree-wallet",
+        "a"
+      ],
+      "before": "045365653326",
+      "after": "393143003500"
+    },
+    {
+      "path": [
+        "available_functions",
+        "nftree-wallet",
+        "c"
+      ],
+      "before": "2026-10-06T20:44:40.877Z",
+      "after": "2026-11-02T03:19:42.312Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "nftree-wallet",
+        "id"
+      ],
+      "before": "d45de447e89b284a7f163cc91bd2b393ac71add6c02cd4c26eb45db9bb84b9f6",
+      "after": "454c1ddd0f3b969d8eca8c0f756e8ea31c32f83576813e9ef71986e7579763ac"
+    },
+    {
+      "path": [
+        "available_functions",
+        "nftree-wallet",
+        "oid"
+      ],
+      "before": "6b1ce269156160206a0df9422e0416042ee71a6503c81280e6bb938527ac8c0b",
+      "after": "9f9a4ebe60653688921728a326804ca3c22a194d7029f87a6746136f3fadac14"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-badges",
+        "a"
+      ],
+      "before": "999581846204",
+      "after": "177933589360"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-badges",
+        "c"
+      ],
+      "before": "2026-10-06T20:44:50.981Z",
+      "after": "2026-11-02T03:20:04.012Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-badges",
+        "id"
+      ],
+      "before": "ad251a139cfb60fcacea3934d2113c78a0e72580a06fb472937cf27051d7f55d",
+      "after": "3b02a68845c97cb84b7c4f7c7c5bbecadbb2be17b9aeb171183438912cb21517"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-badges",
+        "oid"
+      ],
+      "before": "29268b15b5476c021c29b15d279c2082d3a42958b840c158aba62f0d2bb3e759",
+      "after": "06b276958962a0147bb52d3ec60248d2faf4fa608ebc10655823508df4ba5acb"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-badges-on-deploy",
+        "a"
+      ],
+      "before": "514272109237",
+      "after": "256666722258"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-badges-on-deploy",
+        "c"
+      ],
+      "before": "2026-10-06T20:44:40.660Z",
+      "after": "2026-11-02T03:19:46.620Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-badges-on-deploy",
+        "id"
+      ],
+      "before": "58c0389952b3ebe0a1f0abfec16bf87b69e0e6468ed9ecba3865e11eeae4e50e",
+      "after": "cdf87d0c8d3059bb1142b9955bab6229dc2151edfa72743ab63d430ecc0b0921"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-badges-on-deploy",
+        "oid"
+      ],
+      "before": "2c5b9458247b1331b534c703187e360cc1314e02810dd988751d91c0fba42502",
+      "after": "0f0f8a8e18dc3b49a88f7efad43fc516eabf2f4eddc28985919ab306921655e5"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-badges-preview",
+        "a"
+      ],
+      "before": "776892189363",
+      "after": "505538967386"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-badges-preview",
+        "c"
+      ],
+      "before": "2026-10-06T20:44:40.771Z",
+      "after": "2026-11-02T03:19:50.859Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-badges-preview",
+        "id"
+      ],
+      "before": "63e5b2d036020e36887af0fb478f6f1d47a6acf7003e96935951bae6072203ce",
+      "after": "d04dad0b1d4b2ba5e3b5c5f060792f8dffa849f4f3e81d477980580573d22e88"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-badges-preview",
+        "oid"
+      ],
+      "before": "83699b0cdae0c6bd7cd4a2ef42875ad51140cde4e2ffad80375edeab67017147",
+      "after": "bc69db5aec5b6748dbf9921269c0b6b54a0d551e5aad4bab9df23bf6ad5c4601"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-badges-refresh-background",
+        "a"
+      ],
+      "before": "689786375862",
+      "after": "998805804580"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-badges-refresh-background",
+        "c"
+      ],
+      "before": "2026-10-06T20:44:40.905Z",
+      "after": "2026-11-02T03:19:55.265Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-badges-refresh-background",
+        "id"
+      ],
+      "before": "a2ff06137ce8f6e295448d62985b04ab18d2545373441380ac9c8f34600dc293",
+      "after": "c170f7aa01fa37b7fe4606c19d0c57214916c6ec98835e3accbadf7dbd80cdd5"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-badges-refresh-background",
+        "oid"
+      ],
+      "before": "6c6b8dce1a31c97f5f8657c09521dfadb1bce5a10dde846e8358e34eda754057",
+      "after": "7a5fb6cf18b175e6adea302707d5163a1e34be0a3bb8c58758b207c752fcfdad"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-badges-refresh-scheduled",
+        "a"
+      ],
+      "before": "940186631256",
+      "after": "576197671174"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-badges-refresh-scheduled",
+        "c"
+      ],
+      "before": "2026-10-06T20:44:40.821Z",
+      "after": "2026-11-02T03:19:59.707Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-badges-refresh-scheduled",
+        "id"
+      ],
+      "before": "3936e1b2a765ca1ccbbfbba7184be2c02d13a1a5484fc89e375377c73adb4c6f",
+      "after": "cba9c47cb90e2217dee1f398ac560a63321528a4e6dd909edd2613c5e880ddfb"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-badges-refresh-scheduled",
+        "oid"
+      ],
+      "before": "ddcc6a9cadd1654f7a21441501ac20d5564787bdd41406710d2c379eeb9efb70",
+      "after": "1302e7a4b591fa7f17a4d333a47daf5707966256ad40a280505f313e4cebef0a"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-burn-overview",
+        "a"
+      ],
+      "before": "016005051599",
+      "after": "554605863837"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-burn-overview",
+        "c"
+      ],
+      "before": "2026-10-06T20:44:51.258Z",
+      "after": "2026-11-02T03:20:08.286Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-burn-overview",
+        "id"
+      ],
+      "before": "3f34acdc1f19a2f5a6615f3045d1941fa7576b8bb4fa580dce79b56c293990b0",
+      "after": "28d0f6845812b262470257ccd243f249e67c908e3256ad2e4fc806334191cd40"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-burn-overview",
+        "oid"
+      ],
+      "before": "b1cc8786be2330b1047a5e76a9ff314274931d5f6a02f8eb064eefd18137148f",
+      "after": "91e16adf53fc358f987a902b216ba67667ef1b4d0e4cb6209ad9a3a016ac6a64"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-chart",
+        "a"
+      ],
+      "before": "837451400009",
+      "after": "385216822393"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-chart",
+        "c"
+      ],
+      "before": "2026-10-06T20:44:51.180Z",
+      "after": "2026-11-02T03:20:12.572Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-chart",
+        "id"
+      ],
+      "before": "74c5f25251ecd8ae60b186274a9dbaf9f3654df2c2463b2c1e80889bdc325f12",
+      "after": "43ef2e7e723f87ecbb2a21090995a41e9742c549490c2ee6dce8ae3388cca61c"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-chart",
+        "oid"
+      ],
+      "before": "e0c0b17f6909c291c45d723d9b35261a52cc4852d43898108fa1318052a04aef",
+      "after": "e61b4299524ad2959d31c37bca0b45f8dd536a2272f9d82644ebb52b41761d3b"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-dashboard",
+        "a"
+      ],
+      "before": "770208316574",
+      "after": "719837505512"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-dashboard",
+        "c"
+      ],
+      "before": "2026-10-06T20:44:51.167Z",
+      "after": "2026-11-02T03:20:16.823Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-dashboard",
+        "id"
+      ],
+      "before": "a3e6c3a8279dc886c9d7fa9e22f5227e843ca1895bf19e7483be83591eb98f37",
+      "after": "416f4ffdacae5050bc68847964206ed64a894fa8f42232d7fc3aadfbb53ff33e"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-dashboard",
+        "oid"
+      ],
+      "before": "08e20448698b3083a2e8f2ea6ef6a84d439e6deba424a9e380915bc385af3707",
+      "after": "27fd1492f5fba7b66ff8885c60613345250906f1215f0fc27f3a677d4e344a3b"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-exposure",
+        "a"
+      ],
+      "before": "372283770107",
+      "after": "924105187622"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-exposure",
+        "c"
+      ],
+      "before": "2026-10-06T20:45:00.947Z",
+      "after": "2026-11-02T03:20:37.980Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-exposure",
+        "id"
+      ],
+      "before": "40208021bf14f70009e1b6b90722510c2a82b223bc55bbecf4105fa97b5fc3fa",
+      "after": "e899962b5de959385bc8c6ff44e0a1ba993395f92b6809ec621d0980c28713ba"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-exposure",
+        "oid"
+      ],
+      "before": "8134310796ba921b0469833971f29fe161ec0231fa2d1f19530e2d98e592e9d4",
+      "after": "a45c77789eae69fbcf48741cdd48a364e4674c9bcfd5f60eef39d98e92f81d0b"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-exposure-on-deploy",
+        "a"
+      ],
+      "before": "560477221814",
+      "after": "449440118093"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-exposure-on-deploy",
+        "c"
+      ],
+      "before": "2026-10-06T20:44:51.298Z",
+      "after": "2026-11-02T03:20:21.088Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-exposure-on-deploy",
+        "id"
+      ],
+      "before": "ea36e07796504ebd7fccb4a5a195d65a4ed899460e7606a032b6021ff328b2c0",
+      "after": "7134c19457064040a7f6a8c8d9bf4c72e3c153450ece1a59819f47a778ba284b"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-exposure-on-deploy",
+        "oid"
+      ],
+      "before": "a11178f2f91910ed7be54fda04f137b387e6c0cc7fc2549381c1c9619095df99",
+      "after": "eb56c116393b4c598a565cdbfc3d03000556476b2e9fb68f08416ce45c8bb1b5"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-exposure-preview",
+        "a"
+      ],
+      "before": "194385697179",
+      "after": "650953327525"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-exposure-preview",
+        "c"
+      ],
+      "before": "2026-10-06T20:44:51.157Z",
+      "after": "2026-11-02T03:20:25.271Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-exposure-preview",
+        "id"
+      ],
+      "before": "4b4d387d0836103cd5ec4f7b1c90c14f80d87eae6b8374290dac1d6424f73cc7",
+      "after": "f73631f7fae03c076f0c669bf3a76fe4285197cc578c27f2d83526f0efd0fa26"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-exposure-preview",
+        "oid"
+      ],
+      "before": "339ace742093ee79af88da81f5efb2e36f4a443106d48c992edb9251cd530e72",
+      "after": "a45f384c6e6f7bc13e0bdbd93ee89cd07618b709ee0d5c2a7a602a35354046a5"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-exposure-refresh-background",
+        "a"
+      ],
+      "before": "191106063332",
+      "after": "554605863837"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-exposure-refresh-background",
+        "c"
+      ],
+      "before": "2026-10-06T20:45:00.944Z",
+      "after": "2026-11-02T03:20:29.590Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-exposure-refresh-background",
+        "id"
+      ],
+      "before": "2cfc5364005eef881b379bcb59577fd2150d67f07ed9f78e5fd270466f657503",
+      "after": "3d7d21953d1f6fde366bba9c5a1052825c97f0802f5463d7b2f76881dd6f8b3e"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-exposure-refresh-background",
+        "oid"
+      ],
+      "before": "196260600911d4ca3db492c15299981375fa1ddc81696bc3ccac8c768555a4dd",
+      "after": "85d066216c335c4c9d152689af870b8228dcc0d152587b9d5d0dea875cf5f12a"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-exposure-refresh-scheduled",
+        "a"
+      ],
+      "before": "622714853058",
+      "after": "560477221814"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-exposure-refresh-scheduled",
+        "c"
+      ],
+      "before": "2026-10-06T20:45:01.052Z",
+      "after": "2026-11-02T03:20:33.755Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-exposure-refresh-scheduled",
+        "id"
+      ],
+      "before": "267b373a90821e92b5aea9d45264eacb95c24a3cc608f053f20744ec15f0c197",
+      "after": "3cef97edd210f445abde7505b190051b3a192ee513005211109f4e66b6233224"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-exposure-refresh-scheduled",
+        "oid"
+      ],
+      "before": "6f8a898571bdf1cb6a6e375ff5a05be94b895a235889326141a659b5737aae37",
+      "after": "28b762f8a438f558fd7b2bd8ef35002f2ecefa498e7c96afecdfb061857ff0e3"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial",
+        "c"
+      ],
+      "before": "2026-10-06T20:45:10.212Z",
+      "after": "2026-11-02T03:21:12.296Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial",
+        "id"
+      ],
+      "before": "54ff4a9f7443d06560151abefc590a82ff19bed326ab8b8e900e91421d6b89fe",
+      "after": "60d66139fb5844b28d9d74e44c80e2c68de2a59ce18aa06f3da435e2140b172f"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial",
+        "oid"
+      ],
+      "before": "6daac8c810640176872d11fd68d11d23ef9896a073ea32646e5f26f9d497510a",
+      "after": "ffb57655c7389ba8da7f9b427ce99d512e9b0900cd3195dead5165feffd3e1f8"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-admin",
+        "a"
+      ],
+      "before": "012004486566",
+      "after": "673769985865"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-admin",
+        "c"
+      ],
+      "before": "2026-10-06T20:45:00.693Z",
+      "after": "2026-11-02T03:20:42.246Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-admin",
+        "id"
+      ],
+      "before": "a3ff0586c42408b195bc35c177a1100166a9cd25f91d0e2c36cc8806e7ccd258",
+      "after": "4a3bafd13352f7c0a49861255d26901c0085b533ef37633f932d5ffa6215e10f"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-admin",
+        "oid"
+      ],
+      "before": "16dcacf09b22ac9c335e0162056b5b9256c9fb9873a5df47d0d4faca3ef7841a",
+      "after": "a66f4282680a6a45c852c90460b5bd248249d94f3ab738ccdfb0458524853b0c"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-claim",
+        "a"
+      ],
+      "before": "653012714635",
+      "after": "822334503436"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-claim",
+        "c"
+      ],
+      "before": "2026-10-06T20:45:00.978Z",
+      "after": "2026-11-02T03:20:50.893Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-claim",
+        "id"
+      ],
+      "before": "50bc43f5ed897941d98810a7f1b6b637b738e9ddcc503ec40e6c155e9bfb0652",
+      "after": "94093c6f92bb401c3a80decac466f338c38a15b66fdf6fc5c6deb5bfc8e372d8"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-claim",
+        "oid"
+      ],
+      "before": "378ceef02ca41cbe88f85c95f50477fddb9969c84c13da194ebdf16fd49d719f",
+      "after": "481774c24aaee2837fc65ccf2874848d1deb9ae0c6b78a1bfe844c549fc65fea"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-claim-test",
+        "a"
+      ],
+      "before": "459146367395",
+      "after": "022731369924"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-claim-test",
+        "c"
+      ],
+      "before": "2026-10-06T20:45:00.987Z",
+      "after": "2026-11-02T03:20:46.556Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-claim-test",
+        "id"
+      ],
+      "before": "3a82c2f1b7890afa705fcd7dea204ce0a26ece7aa3b498de0ff0d026fe960fb7",
+      "after": "7265a1eb1e344e362b3e7dd8623d2a2f3d4c27c4e463158d9419d532958e612c"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-claim-test",
+        "oid"
+      ],
+      "before": "936067f4fb4c8df1772e8dfe4be5cfb74a08a851b7e89ee672d1694ed55c3291",
+      "after": "2d69e48c9271733ab9f3ae370c93d8ff56a7bbc73d56587fa6ef17800c09b04b"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-correction",
+        "a"
+      ],
+      "before": "617891814415",
+      "after": "089772552642"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-correction",
+        "c"
+      ],
+      "before": "2026-10-06T20:45:40.582Z",
+      "after": "2026-11-02T03:22:16.641Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-correction",
+        "id"
+      ],
+      "before": "8e6b6fde0e07f608f3fbb705274d2d175c88099d5331b2cdb31913b28d7ca8f7",
+      "after": "7e9f937c3ec9847e33d3517f62d38962d11f91c359550baa78423462748ff689"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-correction",
+        "oid"
+      ],
+      "before": "96369670d90acb609c524bc6c5816804d0cd7fed257a1fcc6ece33cc41e994c2",
+      "after": "0bf5bf8a4d6b35a8b9129935843abbb14ed97bbfd722f8add58fd457c318e390"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-resolver",
+        "a"
+      ],
+      "before": "480875380381",
+      "after": "512984491761"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-resolver",
+        "c"
+      ],
+      "before": "2026-10-06T20:45:09.931Z",
+      "after": "2026-11-02T03:20:55.208Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-resolver",
+        "id"
+      ],
+      "before": "9882f430815c461f86c718432ee7dfb4838b3e1241e077b6b334d230ef17d0ee",
+      "after": "14b33a86c6d74111b973c1d5757408e08cf7ac7b3bff87ac373aeaaea28492ea"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-resolver",
+        "oid"
+      ],
+      "before": "5084c0d7f1e2bcab444ad7bed6ff5ebe13000c71f41f8676c9e0afd505efcffc",
+      "after": "f53a014581ab2776e03549419c302629b00493e9c397915a78caf344bf90493a"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-rotation-on-deploy",
+        "a"
+      ],
+      "before": "270454320665",
+      "after": "786465436847"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-rotation-on-deploy",
+        "c"
+      ],
+      "before": "2026-10-06T20:45:10.067Z",
+      "after": "2026-11-02T03:20:59.375Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-rotation-on-deploy",
+        "id"
+      ],
+      "before": "70a58659de5e41e8364255bcd3a5e725ec26c2465774d6ce8ec5cc7e422bd9a7",
+      "after": "27f8167738ecffd31d4e770047f0d099a04b3c67eb269a74751d063f2f7fafa6"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-rotation-on-deploy",
+        "oid"
+      ],
+      "before": "ba3348f40224f68e6e12c4de293fd897b3f38fdfcd0586052b9b0a6ee2c193a7",
+      "after": "b57e631cef78a3c3b0997ffd4a550d74ee49e07e9c70d3f1314bc6dfaf210777"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-rotation-scheduled",
+        "a"
+      ],
+      "before": "967142903211",
+      "after": "940186631256"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-rotation-scheduled",
+        "c"
+      ],
+      "before": "2026-10-06T20:45:09.943Z",
+      "after": "2026-11-02T03:21:03.665Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-rotation-scheduled",
+        "id"
+      ],
+      "before": "7fdfb1728aff090a101dcf00e5ebdd746eaddb5db471e9b05d0dab676a720009",
+      "after": "03fbcfcc0594f442083029b5e1b180ebe1ee3f39f5726faa0b2ea2d7fbb9aa01"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-rotation-scheduled",
+        "oid"
+      ],
+      "before": "0a5c9ca4458a6526967188ce17f1d84c16759783b1e179a3fdad6c120d128054",
+      "after": "42e7ec74cc87fa235b8a0350c39b5e746bc354552ce30beb26db9cf9c5711caf"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-test",
+        "a"
+      ],
+      "before": "755834921685",
+      "after": "043306366455"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-test",
+        "c"
+      ],
+      "before": "2026-10-06T20:45:09.970Z",
+      "after": "2026-11-02T03:21:07.991Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-test",
+        "id"
+      ],
+      "before": "821664525a0ff132b327027f6c0528e3b850d33ca4dcb5fdbfd93bf32a8b7fe5",
+      "after": "78ab4cb2b8719dd87f769c6026e0745c76d6da3ee8d7f2bc0b6638939f8d1f62"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-knowledge-trial-test",
+        "oid"
+      ],
+      "before": "54369ef99f362eae6462b447182c13f6cd6ce363047a5bfdc279a4f4f719542c",
+      "after": "3173b809c6b39c658999a694e0624ac8296da8cac188ccd9d470e963accbdabc"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-leaderboard",
+        "a"
+      ],
+      "before": "414361165742",
+      "after": "333468350809"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-leaderboard",
+        "c"
+      ],
+      "before": "2026-10-06T20:45:22.343Z",
+      "after": "2026-11-02T03:21:29.149Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-leaderboard",
+        "id"
+      ],
+      "before": "023ca266824ced427ee36fea69b0f5d39014ff71eb7119bd32b15d32ef9d681f",
+      "after": "d7e3b169bc92b22253c9f12ef3062f9da66db6c7bcc6517162289df16aa2b555"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-leaderboard",
+        "oid"
+      ],
+      "before": "ee724ef7a5f0bf7d35772df57aca33a693f4ee5fea7cc9374a08f6c9ac4c9f03",
+      "after": "8c77ad335b2c39826163f7e7cf48236b5db25858097fe89f877664a7115f6c69"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-leaderboard-preview",
+        "c"
+      ],
+      "before": "2026-10-06T20:45:10.020Z",
+      "after": "2026-11-02T03:21:16.498Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-leaderboard-preview",
+        "id"
+      ],
+      "before": "bb131ea17364ab062253ed7e4b2c34a6aa29b824dd7184e5034cd58d9a6d043a",
+      "after": "9ac87b1bebc7cb0282a20d78dd493fcbc0672d0a922a506d1dcd3c8ca1a1ce5c"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-leaderboard-preview",
+        "oid"
+      ],
+      "before": "0ff571335b055a82ef7aa1d4561954fa28d8d2c0d356816a624fffe58f894c4d",
+      "after": "7698c286616e6fded82096060fdbf7bf0174b70f4cdd08994aa73bfd6cd4ebf6"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-leaderboard-refresh-background",
+        "a"
+      ],
+      "before": "622137718745",
+      "after": "008034030326"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-leaderboard-refresh-background",
+        "c"
+      ],
+      "before": "2026-10-06T20:45:19.710Z",
+      "after": "2026-11-02T03:21:20.750Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-leaderboard-refresh-background",
+        "id"
+      ],
+      "before": "3eaa16237d63cbff2ec72488b8b2858e6ca8399a27f0abf57fc041c4a96e8216",
+      "after": "cd5ce051bde7211b5bfe7b0b63904b7cf991a918d4baaf593bef5a7a71f07371"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-leaderboard-refresh-background",
+        "oid"
+      ],
+      "before": "d6792cea397482de9e3080917cc6bc30b170d013c7a2ea0f323f41fa9de9087b",
+      "after": "29294bcaf4adfafe90da2b95260e01879dfe167925acc9eea3ec406095b55883"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-leaderboard-refresh-scheduled",
+        "a"
+      ],
+      "before": "689786375862",
+      "after": "008034030326"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-leaderboard-refresh-scheduled",
+        "c"
+      ],
+      "before": "2026-10-06T20:45:19.731Z",
+      "after": "2026-11-02T03:21:24.949Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-leaderboard-refresh-scheduled",
+        "id"
+      ],
+      "before": "0a4a63e27f625ffa6483ab0a2b7a5579c97105faa10e0bdf2ea225926941857e",
+      "after": "235d40555b2c26c9812f3f66f77fe843d96849bcc89a0411934672ceb67228dc"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-leaderboard-refresh-scheduled",
+        "oid"
+      ],
+      "before": "cc9f7940f34f771739ae53cc2585627b03daeff063ef17078b3633b2df4b7d65",
+      "after": "511b0de4c26a8f0412e850aa0d7d7b49d24157c35de60eeaabae56cce7fb1935"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-limit-orders",
+        "a"
+      ],
+      "before": "280498193797",
+      "after": "016005051599"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-limit-orders",
+        "c"
+      ],
+      "before": "2026-10-06T20:45:19.821Z",
+      "after": "2026-11-02T03:21:33.530Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-limit-orders",
+        "id"
+      ],
+      "before": "e2668defac43ba7ec9204300728bef28a288c854feed8681bd1abea5e5d3deac",
+      "after": "28169529164514929ea3f67c1877609903a037dd8591e4426ae88b06314f5702"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-limit-orders",
+        "oid"
+      ],
+      "before": "43e5317f1157712b8e94064af83cf3d9894dc0f1fa9a692299789679a33eebb9",
+      "after": "f0a3046b4dc86525de7bee88c0d988ecd4d951fb1db0d92b18c94adf926324dc"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-liquidity",
+        "a"
+      ],
+      "before": "089772552642",
+      "after": "831147333159"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-liquidity",
+        "c"
+      ],
+      "before": "2026-10-06T20:45:19.736Z",
+      "after": "2026-11-02T03:21:37.821Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-liquidity",
+        "id"
+      ],
+      "before": "6b87f0e0192871d7790d5718b0152e2ee6065bcb2b7218c9a6ef451a53c84bf3",
+      "after": "6819d278e4eedd1ebaf8b38ce31a2427b62a00ae61556dd7e7f586b70cca8f5f"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-liquidity",
+        "oid"
+      ],
+      "before": "40935bd73ea697d61733a3e5fa5e4b6f30626154e824fcba3afbd82f6eea4182",
+      "after": "64fc5287052443e03f12180bb8b75337abf17b77ddbe1bb4e667a419b9200498"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-market",
+        "a"
+      ],
+      "before": "290952543132",
+      "after": "554605863837"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-market",
+        "c"
+      ],
+      "before": "2026-10-06T20:45:19.647Z",
+      "after": "2026-11-02T03:21:42.118Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-market",
+        "id"
+      ],
+      "before": "737ed9666d2ea0ebc58bd1563e046daa01a434f70a90e9141c92cafc664aaf18",
+      "after": "01ca43391185f902fc016b4735a9a73df17d2d2466b268416feb8c0b7af7b810"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-market",
+        "oid"
+      ],
+      "before": "c482aaa4500388c8aece0299be7d513c3180ed7a8773e90a34d325578ac0390f",
+      "after": "0b653067c280173aad461a3ba8d9cf811e7fb525bcb501c7319badca303398d5"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-nftree",
+        "a"
+      ],
+      "before": "681352277317",
+      "after": "008585217041"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-nftree",
+        "c"
+      ],
+      "before": "2026-10-06T20:45:31.394Z",
+      "after": "2026-11-02T03:21:46.321Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-nftree",
+        "id"
+      ],
+      "before": "ce5b813f7afa95d23676f8a62d37ef29472d26023c3057807c3aeaa7445c75e0",
+      "after": "9e9c92caa6434d7fc510b8aada071eb5dcd9a8f979d2383a68ba3657becb7511"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-nftree",
+        "oid"
+      ],
+      "before": "af9f0cb424a64959d58b1b6aa61338d855ac24b5f358b91fae3314d53de0f864",
+      "after": "b7a2421c78755ea6bd74c34cc970c7ecc148313b2b6e36d6eeb420618012f155"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-raffle-claim",
+        "a"
+      ],
+      "before": "131853488294",
+      "after": "517001624662"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-raffle-claim",
+        "c"
+      ],
+      "before": "2026-10-06T20:45:31.081Z",
+      "after": "2026-11-02T03:21:50.553Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-raffle-claim",
+        "id"
+      ],
+      "before": "a017d51059ea14a08423041c14121e79077829938e3008f268705a02623c60ec",
+      "after": "ae1d68ad969865f3b33d049fdfef7941f37bf2b0000edecde6eb6865587ea960"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-raffle-claim",
+        "oid"
+      ],
+      "before": "cc12e8fa9cf083ae68d084ddb6199e17701c79556092afea5ebb2c801b332ad2",
+      "after": "32318155a31f64e92c03bd9dc9efa9efa982434d066dbb23fd9eb30fb59751a8"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-raffle-ingest-buy",
+        "a"
+      ],
+      "before": "169879185114",
+      "after": "333468350809"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-raffle-ingest-buy",
+        "c"
+      ],
+      "before": "2026-10-06T20:45:31.131Z",
+      "after": "2026-11-02T03:21:54.801Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-raffle-ingest-buy",
+        "id"
+      ],
+      "before": "aacaa6f793f018a9f948e3179079e1f0ea6af5fe9dbe9ee9d8d0db0273f9883f",
+      "after": "100e6eae875fc5049d48e48c8502cc177451b76bc123985a7889e2f3e1ea1feb"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-raffle-ingest-buy",
+        "oid"
+      ],
+      "before": "269cfac3d2200666ca2b3327128e60c79cbc473e1dff5b8b9dfce41229de8618",
+      "after": "0fe305b8e0bad7c22f9ae3da6987a4c630ec593364c465d0357dc9d8d889a932"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-raffle-status",
+        "a"
+      ],
+      "before": "512882844602",
+      "after": "012004486566"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-raffle-status",
+        "c"
+      ],
+      "before": "2026-10-06T20:45:31.257Z",
+      "after": "2026-11-02T03:21:59.189Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-raffle-status",
+        "id"
+      ],
+      "before": "2d34e588a70d709d4d4197f8e90e48e174a8ab7e62a85cd116ba52f4546d37c2",
+      "after": "7414b61b57fac00be297cc0dee7072673ab23ee31fcb7174f4367152df83f7f9"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-raffle-status",
+        "oid"
+      ],
+      "before": "f2962ee08a07cf488b4475cd8d82a91317b8ed41e8af67f2806b97bdd23ebd63",
+      "after": "0966b2f9c8355a30525daa5e5a1d9ee140f79f85098c7372a832bf4821e02236"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-swap-quote",
+        "a"
+      ],
+      "before": "270454320665",
+      "after": "131853488294"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-swap-quote",
+        "c"
+      ],
+      "before": "2026-10-06T20:45:31.231Z",
+      "after": "2026-11-02T03:22:03.621Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-swap-quote",
+        "id"
+      ],
+      "before": "1ef3ea4e04dbe198fce893bf7139345fae008296c98d7ddb9aca0a7ec5cdfa98",
+      "after": "8be16d6265d974f790872f6d9377a673e1ec3f4639cd63ba0c43a5684634cdba"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-swap-quote",
+        "oid"
+      ],
+      "before": "1227ef601f040e70a08f2da6c6cb02b00e1ab56d3193b85cf1f4f65765df8588",
+      "after": "ec71478e622bdd472c9bb9d944304a21fe5d2d33cf7d64c4339505267034e03b"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-v3-overview",
+        "a"
+      ],
+      "before": "643318452420",
+      "after": "551936673993"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-v3-overview",
+        "c"
+      ],
+      "before": "2026-10-06T22:14:10.314Z",
+      "after": "2026-11-02T03:22:07.932Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-v3-overview",
+        "id"
+      ],
+      "before": "0692ef18d78e0f0dda347491979de32ca5cf4759b4f9b44f81446a3558b0ff8a",
+      "after": "6e3bbb97d050250d1651e877a0a0cb70bcd810424257b092c2a46ad8b5414a5d"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-v3-overview",
+        "oid"
+      ],
+      "before": "fd49cd47450af76c0366dea5ad5306848177290f2aaa1d11094e8b0cbc3796a2",
+      "after": "335836d742e549712003625cbdfc1ff1bbb9ee86e8610be53642489c082be547"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-volume",
+        "a"
+      ],
+      "before": "924105187622",
+      "after": "385216822393"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-volume",
+        "c"
+      ],
+      "before": "2026-10-06T20:45:40.730Z",
+      "after": "2026-11-02T03:22:12.433Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-volume",
+        "id"
+      ],
+      "before": "3a82b824a3e2306c1d8eff2e58640fa7378cf2c84f6a8058f453b70cb8075854",
+      "after": "ea84cd1fb762f39800d7dbb2c6e0034a162034af14058f4ce7f7ace6ed3cdb05"
+    },
+    {
+      "path": [
+        "available_functions",
+        "tree-volume",
+        "oid"
+      ],
+      "before": "3b31ada757eec2d1ec6833dfe495128ad306cee37aee66048bb99198afe03899",
+      "after": "82e63dd2c7e7f8284d8b5ca80475e32adc249cdb6387bfb555143059cb3df41a"
+    },
+    {
+      "path": [
+        "available_functions",
+        "treeforce89-dev",
+        "a"
+      ],
+      "before": "123818897194",
+      "after": "677604543295"
+    },
+    {
+      "path": [
+        "available_functions",
+        "treeforce89-dev",
+        "c"
+      ],
+      "before": "2026-10-31T04:18:24.309Z",
+      "after": "2026-11-02T03:22:20.927Z"
+    },
+    {
+      "path": [
+        "available_functions",
+        "treeforce89-dev",
+        "id"
+      ],
+      "before": "2bd4f4c488f4ffd7289a5506a3cd5d60199ac7a04a4800a43486afa704d520c4",
+      "after": "98afba7ad05cae22b90687b7dcdb3eb952174a27608c7360a7cb0968b16d9eea"
+    },
+    {
+      "path": [
+        "available_functions",
+        "treeforce89-dev",
+        "oid"
+      ],
+      "before": "5dfb65d55ed80cdf7861f9d803935b864aacdea54672741565c4785388526d50",
+      "after": "fb400639c3a337ff47f50da12cb054699dece06f11faa065a3069f81f54a0781"
+    }
+  ],
+  "reviewedProviderFields": [
+    "a",
+    "c",
+    "id",
+    "oid"
+  ],
+  "functionOrderChanged": false,
+  "evidence": {
+    "changedFieldCounts": {
+      "a": 39,
+      "c": 41,
+      "id": 41,
+      "oid": 41
+    },
+    "exactArchiveCount": 41,
+    "exactArchiveBytes": 27976379,
+    "allOtherRecordFieldsAndPresenceExact": true,
+    "allCreationTimesWithinOriginalRecordedUploadWindows": true,
+    "runtimeDifferences": 0,
+    "staticInventoryExact": true,
+    "functionOrderChanged": false,
+    "primaryIdentityReference": "https://github.com/netlify/cli/blob/6002ec948bccecdba4e963d50663d14db8dd9b49/src/commands/logs/sources/functions.ts",
+    "independentReview": "treeforce_session_trace independently recomputed the complete diff, all archive identities, all protected fields, record ordering and provider timestamp correspondence."
+  }
+}
