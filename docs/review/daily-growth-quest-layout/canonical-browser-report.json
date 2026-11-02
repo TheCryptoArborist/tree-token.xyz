@@ -1,0 +1,474 @@
+{
+  "passed": true,
+  "synthetic": false,
+  "actualHostedCode": true,
+  "target": "https://tree-token.xyz/play/",
+  "label": "canonical",
+  "checkedAt": "2026-11-02T02:45:22.910Z",
+  "tls": {
+    "authorized": true,
+    "status": 200
+  },
+  "configuration": {
+    "ruleVersion": "arcade-growth-v1",
+    "enabledGames": [
+      {
+        "id": "garden-bot",
+        "label": "Garden Bot",
+        "href": "https://nftree.net/battle/garden-bot",
+        "creditRule": "complete-result"
+      },
+      {
+        "id": "pvp",
+        "label": "PvP Battle",
+        "href": "https://nftree.net/battle/pvp",
+        "creditRule": "complete-result"
+      },
+      {
+        "id": "arborist-trials",
+        "label": "Arborist Trials",
+        "href": "https://nftree.net/battle/trials",
+        "creditRule": "complete-result"
+      },
+      {
+        "id": "treeforce89",
+        "label": "TREE FORCE ’89",
+        "href": "/play/treeforce89/",
+        "creditRule": "start-run"
+      }
+    ],
+    "eligibleGames": [
+      {
+        "id": "garden-bot",
+        "label": "Garden Bot",
+        "href": "https://nftree.net/battle/garden-bot",
+        "creditRule": "complete-result"
+      },
+      {
+        "id": "pvp",
+        "label": "PvP Battle",
+        "href": "https://nftree.net/battle/pvp",
+        "creditRule": "complete-result"
+      },
+      {
+        "id": "arborist-trials",
+        "label": "Arborist Trials",
+        "href": "https://nftree.net/battle/trials",
+        "creditRule": "complete-result"
+      },
+      {
+        "id": "treeforce89",
+        "label": "TREE FORCE ’89",
+        "href": "/play/treeforce89/",
+        "creditRule": "start-run"
+      }
+    ],
+    "todayPick": {
+      "id": "treeforce89",
+      "label": "TREE FORCE ’89",
+      "href": "/play/treeforce89/",
+      "creditRule": "start-run"
+    },
+    "questRule": "Complete a Garden Battles result or start the first wave of a TREE FORCE ’89 run. A win is not required.",
+    "resetAt": "2026-11-03T00:00:00.000Z"
+  },
+  "dateKey": "2026-11-02",
+  "monthKey": "2026-11",
+  "sourceSha256": {
+    "play/index.html": "8a30d1fe1abf8e01c2a6f21b00bbfa2761378e6c114b6c778ef809c755927483",
+    "scripts/arcade-daily-growth.js": "582d0bff44cb76ef07a07ee84607aae644d20f25d26a2c3c26d7985c128fca2f",
+    "styles/tree-arcade-suite.css": "4f790d4a3a059dbe37632e8ac751c04d71f233f98b1b4a7132609d264c09bc5c",
+    "assets/arcade/arcade-growth-wallet.js": "1e26f995d31f0c0506e2180cc5940a6a4be561c11153e5a100cc0beb4b633421"
+  },
+  "fetchedFiles": [
+    {
+      "file": "play/index.html",
+      "status": 200,
+      "sha256": "8a30d1fe1abf8e01c2a6f21b00bbfa2761378e6c114b6c778ef809c755927483",
+      "servedSha256": "39cc46062b714fa0e1ee6e282634148f6572112776bf8e74823735b2fe24faa7",
+      "hostingSnippet": {
+        "id": "tree-arcade-arboretum-link",
+        "bytes": 572,
+        "sha256": "bf05453dc91bcf9c53db98e08829c8321193495b0839021e68d458d56e5be98d"
+      }
+    },
+    {
+      "file": "scripts/arcade-daily-growth.js",
+      "status": 200,
+      "sha256": "582d0bff44cb76ef07a07ee84607aae644d20f25d26a2c3c26d7985c128fca2f"
+    },
+    {
+      "file": "styles/tree-arcade-suite.css",
+      "status": 200,
+      "sha256": "4f790d4a3a059dbe37632e8ac751c04d71f233f98b1b4a7132609d264c09bc5c"
+    },
+    {
+      "file": "assets/arcade/arcade-growth-wallet.js",
+      "status": 200,
+      "sha256": "1e26f995d31f0c0506e2180cc5940a6a4be561c11153e5a100cc0beb4b633421"
+    }
+  ],
+  "cabinetLinks": {
+    "force-title": "/play/treeforce89/",
+    "arboretum-title": "https://treegrow.xyz/",
+    "deadfall-title": "https://tree-token.xyz/play/deadfall-run/",
+    "canopy-title": "https://tree-token.xyz/play/canopy-defense/preview/",
+    "garden-bot-title": "https://nftree.net/battle/garden-bot",
+    "pvp-title": "https://nftree.net/battle/pvp",
+    "trials-title": "https://nftree.net/battle/trials",
+    "clash-title": "https://nftree.net/battle/canopy-clash"
+  },
+  "checks": [
+    {
+      "name": "Actual hosted HTML/controller/CSS/wallet bytes match review; real anonymous status has four required games and no private progress",
+      "passed": true
+    },
+    {
+      "name": "Disconnected identity contains no address; all eight cabinet destinations are preserved and unopened",
+      "passed": true
+    },
+    {
+      "name": "1440px: all server-month dates are neutral, native disclosure and views work, no overflow or extra API actions, first cabinet visible",
+      "passed": true
+    },
+    {
+      "name": "390px: all server-month dates are neutral, native disclosure and views work, no overflow or extra API actions, first cabinet visible",
+      "passed": true
+    },
+    {
+      "name": "320px: all server-month dates are neutral, native disclosure and views work, no overflow or extra API actions, first cabinet visible",
+      "passed": true
+    }
+  ],
+  "dimensions": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "collapsed": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "panel": {
+          "top": 267,
+          "height": 220.984375,
+          "width": 1376
+        },
+        "firstPoster": {
+          "top": 599.5625,
+          "height": 429.03125,
+          "width": 327.5
+        },
+        "scrollWidth": 1440,
+        "detailsOpen": false,
+        "overflow": []
+      },
+      "expanded": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "panel": {
+          "top": 267,
+          "height": 698.109375,
+          "width": 1376
+        },
+        "firstPoster": {
+          "top": 1076.6875,
+          "height": 429.03125,
+          "width": 327.5
+        },
+        "scrollWidth": 1440,
+        "detailsOpen": true,
+        "overflow": []
+      },
+      "dateCount": 30
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "collapsed": {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "panel": {
+          "top": 261.6875,
+          "height": 293.734375,
+          "width": 362
+        },
+        "firstPoster": {
+          "top": 660.8125,
+          "height": 399.890625,
+          "width": 362
+        },
+        "scrollWidth": 390,
+        "detailsOpen": false,
+        "overflow": []
+      },
+      "expanded": {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "panel": {
+          "top": 261.6875,
+          "height": 1038.78125,
+          "width": 362
+        },
+        "firstPoster": {
+          "top": 1405.859375,
+          "height": 399.890625,
+          "width": 362
+        },
+        "scrollWidth": 390,
+        "detailsOpen": true,
+        "overflow": []
+      },
+      "dateCount": 30
+    },
+    {
+      "viewport": {
+        "width": 320,
+        "height": 740
+      },
+      "collapsed": {
+        "viewport": {
+          "width": 320,
+          "height": 740
+        },
+        "panel": {
+          "top": 278.90625,
+          "height": 289.734375,
+          "width": 300
+        },
+        "firstPoster": {
+          "top": 674.03125,
+          "height": 375.734375,
+          "width": 300
+        },
+        "scrollWidth": 320,
+        "detailsOpen": false,
+        "overflow": []
+      },
+      "expanded": {
+        "viewport": {
+          "width": 320,
+          "height": 740
+        },
+        "panel": {
+          "top": 278.90625,
+          "height": 1072.1875,
+          "width": 300
+        },
+        "firstPoster": {
+          "top": 1456.484375,
+          "height": 375.734375,
+          "width": 300
+        },
+        "scrollWidth": 320,
+        "detailsOpen": true,
+        "overflow": []
+      },
+      "dateCount": 30
+    }
+  ],
+  "screenshots": [
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/daily-growth-quest-layout/canonical-signed-out-1440.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/daily-growth-quest-layout/canonical-signed-out-320.jpg"
+  ],
+  "requests": [
+    {
+      "url": "https://tree-token.xyz/play/",
+      "method": "GET",
+      "hasAuthorization": false
+    },
+    {
+      "url": "https://tree-token.xyz/styles/tree-arcade-suite.css",
+      "method": "GET",
+      "hasAuthorization": false
+    },
+    {
+      "url": "https://tree-token.xyz/assets/tree-token-logo-official.webp",
+      "method": "GET",
+      "hasAuthorization": false
+    },
+    {
+      "url": "https://tree-token.xyz/assets/arcade/tree-arcade-social.jpg",
+      "method": "GET",
+      "hasAuthorization": false
+    },
+    {
+      "url": "https://tree-token.xyz/assets/arcade/garden-bot-poster.webp",
+      "method": "GET",
+      "hasAuthorization": false
+    },
+    {
+      "url": "https://tree-token.xyz/assets/tree-command-logo-v2-512.png",
+      "method": "GET",
+      "hasAuthorization": false
+    },
+    {
+      "url": "https://tree-token.xyz/assets/arcade/tree-force-89-poster.webp",
+      "method": "GET",
+      "hasAuthorization": false
+    },
+    {
+      "url": "https://tree-token.xyz/assets/arcade/arboretum-poster.webp",
+      "method": "GET",
+      "hasAuthorization": false
+    },
+    {
+      "url": "https://tree-token.xyz/scripts/arcade-nftree-access.js",
+      "method": "GET",
+      "hasAuthorization": false
+    },
+    {
+      "url": "https://tree-token.xyz/scripts/arcade-daily-growth.js",
+      "method": "GET",
+      "hasAuthorization": false
+    },
+    {
+      "url": "https://tree-token.xyz/scripts/arcade-nftree-access-core.mjs",
+      "method": "GET",
+      "hasAuthorization": false
+    },
+    {
+      "url": "https://tree-token.xyz/assets/tree-arcade-world-bg-v2.webp",
+      "method": "GET",
+      "hasAuthorization": false
+    },
+    {
+      "url": "https://tree-token.xyz/play/deadfall-run/poster.svg",
+      "method": "GET",
+      "hasAuthorization": false
+    },
+    {
+      "url": "https://tree-token.xyz/play/canopy-defense/assets/brand/oak-guardian-preview.png",
+      "method": "GET",
+      "hasAuthorization": false
+    },
+    {
+      "url": "https://tree-token.xyz/assets/arcade/pvp-battle-poster.webp",
+      "method": "GET",
+      "hasAuthorization": false
+    },
+    {
+      "url": "https://tree-token.xyz/assets/arcade/arborist-trials-poster.webp",
+      "method": "GET",
+      "hasAuthorization": false
+    },
+    {
+      "url": "https://tree-token.xyz/assets/arcade/canopy-clash-poster.webp",
+      "method": "GET",
+      "hasAuthorization": false
+    },
+    {
+      "url": "https://tree-token.xyz/assets/arcade/arcade-growth-wallet.js",
+      "method": "GET",
+      "hasAuthorization": false
+    },
+    {
+      "url": "https://tree-token.xyz/assets/profile-nftree-art.jpg",
+      "method": "GET",
+      "hasAuthorization": false
+    },
+    {
+      "url": "https://tree-token.xyz/api/arcade-growth?action=status",
+      "method": "GET",
+      "hasAuthorization": false
+    }
+  ],
+  "responses": [
+    {
+      "url": "https://tree-token.xyz/play/",
+      "status": 200
+    },
+    {
+      "url": "https://tree-token.xyz/styles/tree-arcade-suite.css",
+      "status": 200
+    },
+    {
+      "url": "https://tree-token.xyz/assets/tree-token-logo-official.webp",
+      "status": 200
+    },
+    {
+      "url": "https://tree-token.xyz/assets/arcade/tree-arcade-social.jpg",
+      "status": 200
+    },
+    {
+      "url": "https://tree-token.xyz/assets/arcade/arboretum-poster.webp",
+      "status": 200
+    },
+    {
+      "url": "https://tree-token.xyz/assets/arcade/garden-bot-poster.webp",
+      "status": 200
+    },
+    {
+      "url": "https://tree-token.xyz/scripts/arcade-nftree-access.js",
+      "status": 200
+    },
+    {
+      "url": "https://tree-token.xyz/assets/arcade/tree-force-89-poster.webp",
+      "status": 200
+    },
+    {
+      "url": "https://tree-token.xyz/assets/tree-command-logo-v2-512.png",
+      "status": 200
+    },
+    {
+      "url": "https://tree-token.xyz/scripts/arcade-daily-growth.js",
+      "status": 200
+    },
+    {
+      "url": "https://tree-token.xyz/scripts/arcade-nftree-access-core.mjs",
+      "status": 200
+    },
+    {
+      "url": "https://tree-token.xyz/play/deadfall-run/poster.svg",
+      "status": 200
+    },
+    {
+      "url": "https://tree-token.xyz/play/canopy-defense/assets/brand/oak-guardian-preview.png",
+      "status": 200
+    },
+    {
+      "url": "https://tree-token.xyz/assets/arcade/canopy-clash-poster.webp",
+      "status": 200
+    },
+    {
+      "url": "https://tree-token.xyz/assets/arcade/pvp-battle-poster.webp",
+      "status": 200
+    },
+    {
+      "url": "https://tree-token.xyz/assets/arcade/arborist-trials-poster.webp",
+      "status": 200
+    },
+    {
+      "url": "https://tree-token.xyz/assets/tree-arcade-world-bg-v2.webp",
+      "status": 200
+    },
+    {
+      "url": "https://tree-token.xyz/assets/arcade/arcade-growth-wallet.js",
+      "status": 200
+    },
+    {
+      "url": "https://tree-token.xyz/assets/profile-nftree-art.jpg",
+      "status": 200
+    },
+    {
+      "url": "https://tree-token.xyz/api/arcade-growth?action=status",
+      "status": 200
+    }
+  ],
+  "blockedRequests": [],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "noWalletConnected": true,
+  "noSignatures": true,
+  "noRemoteWrites": true
+}

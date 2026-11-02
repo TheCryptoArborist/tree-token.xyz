@@ -116,8 +116,16 @@ try {
   for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 }, { width: 320, height: 740 }]) {
     await page.setViewportSize(viewport); await page.evaluate(async () => { await document.fonts.ready; document.activeElement?.blur?.(); scrollTo(0, 0); });
     await page.waitForLoadState('networkidle');
-    await page.waitForFunction(() => [...document.querySelectorAll('#arcade-daily-growth img,.suite-hero-art,.game-poster .poster-art')]
-      .filter(image => image.getBoundingClientRect().width > 0).every(image => image.complete && image.naturalWidth > 0), null, { timeout: 15000 });
+    await page.waitForFunction(() => {
+      const loaded = image => image && image.complete && image.naturalWidth > 0;
+      const required = ['#growth-badge-preview img', '.suite-hero-art', '.game-poster .poster-art'].map(selector => document.querySelector(selector));
+      const visible = [...document.querySelectorAll('#arcade-daily-growth img,.suite-hero-art,.game-poster .poster-art')].filter(image => {
+        const rect = image.getBoundingClientRect();
+        return !image.closest('details:not([open])') && image.checkVisibility() && rect.width > 0 && rect.height > 0
+          && rect.bottom > 0 && rect.top < innerHeight && rect.right > 0 && rect.left < innerWidth;
+      });
+      return required.every(loaded) && visible.every(loaded);
+    }, null, { timeout: 15000 });
     const before = await layout(); assert.equal(before.detailsOpen, false); assert(before.scrollWidth <= viewport.width + 1); assert.deepEqual(before.overflow, []);
     assert(before.firstPoster.top < viewport.height, 'The first cabinet stays in the initial viewport'); const dateCount = await neutralRail();
     assert(await page.getByRole('button', { name: 'Connect to check in', exact: true }).isVisible());

@@ -1,3 +1,19 @@
+# Current production — Daily Growth month strip and task layout, 2026-11-02 UTC
+
+Published and locked deploy `6ae7f8a9183c770b8f0eb50c` from source commit `f1a29b30aa8a726a38233d5f42a0582a9f347a38`, tree `936f1fa6ec410d6e3ee0cde06046b80524af8860`, on `feature/daily-growth-quest-layout-20261101`. Published at `2026-11-02T02:45:08.885Z`. Live at https://tree-token.xyz/play/.
+
+Daily Growth starts collapsed with the current wallet, an explicit check-in action, and every date in the server's UTC month. Recorded days are marked; unknown attendance stays neutral and stale records are labeled Last saved. Expanded details show daily task rows beside existing ecosystem artwork for the next badge, with the full calendar and earned badges in separate views. The optional monthly Passport retains all four games, including TREE FORCE ’89. Header and task check-in controls share the existing guarded action, and attendance badges still count cumulative monthly check-ins automatically.
+
+Only `/play/index.html`, `/scripts/arcade-daily-growth.js`, and `/styles/tree-arcade-suite.css` changed. All 284 static paths remain, with 281 unrelated files unchanged, including the later Canopy checkout-test `/_redirects`. All 41 complete function records, five schedules, generated configuration, runtime and environment settings, and the publication lock are preserved. No backend rebuild, wallet adapter, dependency, game runtime, or database change occurred.
+
+The preserved baseline is `6ae7eee018d3f212df6696d0`, which added the Canopy checkout route after the previous wallet-summary release. `daily-growth-quest-layout-baseline.json` includes its cross-repository provenance. `current-release.json` and `daily-growth-quest-layout-release.json` describe this exact published inventory. The historical `manifest.json` remains archived recovery material; do not publish the ordinary root snapshot or unlock automatic publishing.
+
+Validation passed 39 controller cases, 16 native browser groups, 18 release-guard checks, and five hosted groups each on the candidate and canonical site. All 20 observed anonymous requests in each hosted environment returned HTTP 200. Every real month length and desktop/390/320 px layouts passed; no overflow or browser errors occurred, and the first cabinet begins within each tested initial viewport. Authenticated behavior uses synthetic fixtures; no real wallet signatures, transactions, or production attendance writes were performed. See `../docs/daily-growth-quest-layout.md`, its verification summary, and review evidence. The hosted image-wait correction handles lazy artwork in closed details and does not alter the published source.
+
+The existing Canopy Defense authentication store is deployment-scoped, so active short-lived sessions may require sign-in again after publication; its function bytes and settings remain identical.
+
+---
+
 # Current production — wallet identity in collapsed Daily Growth, 2026-11-01
 
 Published and locked deploy `6ae7673cbbf1e1e579d6fb19` from source commit `15cd19d5e4eb6e62407d10dee60d1c39e777006f` on `feature/daily-growth-wallet-summary-20261101`. Published at `2026-11-01T16:23:23.184Z`. Live at https://tree-token.xyz/play/.

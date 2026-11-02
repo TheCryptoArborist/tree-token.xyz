@@ -1,6 +1,6 @@
 {
-  "verifiedAt": "2026-11-02T02:40:13.009458+00:00",
-  "stage": "source-verified",
+  "verifiedAt": "2026-11-02T02:45:22.910Z",
+  "stage": "published",
   "sourceSha256": {
     "play/index.html": "8a30d1fe1abf8e01c2a6f21b00bbfa2761378e6c114b6c778ef809c755927483",
     "scripts/arcade-daily-growth.js": "582d0bff44cb76ef07a07ee84607aae644d20f25d26a2c3c26d7985c128fca2f",
@@ -391,15 +391,43 @@
       "/styles/tree-arcade-suite.css"
     ],
     "preservedStaticPaths": 281,
-    "completeFunctionRecordsToPreserve": 41,
-    "schedulesToPreserve": 5,
     "canopyCheckoutRedirectSha1": "4450ad95c97a2045c2575bd2cc75c49a8a2ba6c7",
     "backendRebuilt": false,
     "databaseChanges": false,
-    "walletAdapterOrDependencyChanges": false
+    "walletAdapterOrDependencyChanges": false,
+    "completeFunctionRecordsPreserved": 41,
+    "schedulesPreserved": 5,
+    "verified": true,
+    "publicationLocked": true,
+    "environmentFingerprintsUnchanged": true,
+    "receipt": "production/daily-growth-quest-layout-release.json"
   },
   "realWalletSignatures": 0,
   "transactions": 0,
   "productionAttendanceWrites": 0,
-  "hostedVerification": "pending candidate creation"
+  "sourceCommit": "f1a29b30aa8a726a38233d5f42a0582a9f347a38",
+  "sourceTree": "936f1fa6ec410d6e3ee0cde06046b80524af8860",
+  "publishedDeploy": "6ae7f8a9183c770b8f0eb50c",
+  "publishedAt": "2026-11-02T02:45:08.885Z",
+  "hosted": {
+    "candidateChecksPassed": 5,
+    "candidateRequests": 20,
+    "canonicalChecksPassed": 5,
+    "actualCodeAndApi": true,
+    "readOnlySignedOut": true,
+    "fourRequiredPassportGamesPreserved": true,
+    "eightCabinetLinksPreserved": true,
+    "imageCheckAdjustment": {
+      "reason": "A lazy image inside closed details can have layout dimensions before decoding completes; wait only for visible artwork and require header, hero, and first-cabinet art explicitly.",
+      "diagnostic": "docs/review/daily-growth-quest-layout/candidate-image-diagnostic.json",
+      "publicSourceChanged": false
+    },
+    "canonicalRequests": 20,
+    "allHttp200": true,
+    "noOverflow": true,
+    "noBrowserErrors": true,
+    "candidateReport": "docs/review/daily-growth-quest-layout/candidate-browser-report.json",
+    "canonicalReport": "docs/review/daily-growth-quest-layout/canonical-browser-report.json",
+    "canonicalUrl": "https://tree-token.xyz/play/"
+  }
 }

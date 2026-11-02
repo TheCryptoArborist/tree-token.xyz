@@ -1,33 +1,33 @@
 {
-  "id": "6ae7673cbbf1e1e579d6fb19",
+  "id": "6ae7f8a9183c770b8f0eb50c",
   "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
-  "baseline": "6ae7648ca7cf1ea1c10b47b5",
-  "baselineSha256": "261004d37f8572c0a2e212c8be78c45dcb9f6cc745dafde0d70a8706d4197e4c",
-  "sourceCommit": "15cd19d5e4eb6e62407d10dee60d1c39e777006f",
-  "sourceTree": "ee584b85a5b64cdfc1991d01e429db4aee708576",
-  "sourceBranch": "feature/daily-growth-wallet-summary-20261101",
-  "filesSha256": "530370054995396a0b1a0d90e570a1aef2d0607eaff126836ed6526065afd467",
+  "baseline": "6ae7eee018d3f212df6696d0",
+  "baselineSha256": "6f267ef7a4ab250bd5dd1b4adc1bcbdb7c3cc64106a4d07bfc6e9199cde64add",
+  "sourceCommit": "f1a29b30aa8a726a38233d5f42a0582a9f347a38",
+  "sourceTree": "936f1fa6ec410d6e3ee0cde06046b80524af8860",
+  "sourceBranch": "feature/daily-growth-quest-layout-20261101",
+  "filesSha256": "81b5c0c4d43558d8d13c0963ffcc3bad77efebaf67bea16b5a1d34ee1df79dcb",
   "overlay": [
     {
       "path": "/play/index.html",
-      "sha": "1634f3a3899769ad3e1bafa29fd4b7b91a6ca995",
-      "size": 34201
+      "sha": "7037aaf93898bfdb18dd272bc1c586263ea8052a",
+      "size": 35632
     },
     {
       "path": "/scripts/arcade-daily-growth.js",
-      "sha": "4b52faa04d881f44b716b0308a08c6e74e371dce",
-      "size": 59696
+      "sha": "d92e701b4f25b8e1073ed54d64e7e4d880252461",
+      "size": 64815
     },
     {
       "path": "/styles/tree-arcade-suite.css",
-      "sha": "c9910b3c101a903b7b195893469c0c741fb7c545",
-      "size": 75088
+      "sha": "c96c36ada49eee3549deaf6ada3c2b0f2a1c16af",
+      "size": 76773
     }
   ],
-  "publishedAt": "2026-11-01T16:23:23.184Z",
-  "verifiedAt": "2026-11-01T16:23:49.277076+00:00",
+  "publishedAt": "2026-11-02T02:45:08.885Z",
+  "verifiedAt": "2026-11-02T02:45:10.834811+00:00",
   "locked": true,
-  "files": 283,
+  "files": 284,
   "filesBySha1": {
     "/tree.jpg": "5ca16c779edf1d559e5be5a02a6edd2e626d9c2f",
     "/tokenomics/index.html": "7e838cb7bdf00d911b22023003b399f11589e05a",
@@ -88,7 +88,7 @@
     "/scripts/arcade-sui-wallet.js": "25cdec64fb85cfcbe6b7f706841f105e351c3b36",
     "/roadmap/index.html": "6597c20c44a9aac623f685679962fb2fc100c5db",
     "/raffle-rules/index.html": "442ca8e3abf867d7dab3dc1857f1e21182e9addc",
-    "/play/index.html": "1634f3a3899769ad3e1bafa29fd4b7b91a6ca995",
+    "/play/index.html": "7037aaf93898bfdb18dd272bc1c586263ea8052a",
     "/mascot.png": "9f5e5db66e2f6c3eee41d70b1800094fe014a473",
     "/index.html": "1dba30e928a617b53d698561fb77dcffa6205ccd",
     "/hero.png": "15fa5856c63652fa6089010f683169d8b0c0dca5",
@@ -248,7 +248,7 @@
     "/play/treeforce89/assets/arcade-cw4df7w2.js": "0eb93075166b1d41ecd1a3b0586c5b52508d06c7",
     "/play/treeforce89/assets/graphql-hafrftxs.js": "594f4ac60c2bb738880581e1036eef89abb695e7",
     "/play/treeforce89/assets/index-ccisclqf.js": "846faa5cc41509c4a79ce8263e4ad8c3a55f32fa",
-    "/styles/tree-arcade-suite.css": "c9910b3c101a903b7b195893469c0c741fb7c545",
+    "/styles/tree-arcade-suite.css": "c96c36ada49eee3549deaf6ada3c2b0f2a1c16af",
     "/assets/arcade/garden-bot-crest.png": "2c376aefd26da4f6c6404e676bff108b7b0e1a78",
     "/assets/arcade/pvp-battle-crest.png": "1027d41aa13f52f24d498bf3428feb1927fc017f",
     "/assets/arcade/arborist-trials-logo.webp": "9c8e9a3270b742bffafa8cc14695e8f8fc7d9511",
@@ -265,7 +265,7 @@
     "/scripts/arcade-nftree-access-core.mjs": "13956f06548845efb3b7c52150994bf33a0add64",
     "/scripts/arcade-nftree-access.js": "113fbd12943990895beac27f157c587be750754b",
     "/assets/arcade/arcade-growth-wallet.js": "0c1260a071839829dc8e32ce822e228d28af10d3",
-    "/scripts/arcade-daily-growth.js": "4b52faa04d881f44b716b0308a08c6e74e371dce",
+    "/scripts/arcade-daily-growth.js": "d92e701b4f25b8e1073ed54d64e7e4d880252461",
     "/play/treeforce89/assets/arcade-deuxdoox.js": "fbe89196276d0b7cb0d17eb4441a0e6efa188f08",
     "/play/treeforce89/assets/graphql-ctywyhxq.js": "c024fd2ec1c91212a4a41b4c238384d058f3e839",
     "/play/treeforce89/assets/index-blt2uith.css": "0288ab26fa2250d052b58e1a1e3a3a3faf3ce364",
@@ -311,14 +311,15 @@
     "/play/canopy-defense/preview/index.html": "f9ccfeebf6e405524519961f5a6739d96e219c55",
     "/play/canopy-defense/preview/gameplay.mp4": "5ca180b5fc18ecffbb5d95be77de56b89e655af7",
     "/play/canopy-defense/preview/gameplay-poster.jpg": "5f7293aca9c03f56aefd5f1af13b481e54c6d5a4",
-    "/play/canopy-defense/gateway.js": "b9a486cdead61eb2d0fa891c2a2accb35392fe53"
+    "/play/canopy-defense/gateway.js": "b9a486cdead61eb2d0fa891c2a2accb35392fe53",
+    "/_redirects": "4450ad95c97a2045c2575bd2cc75c49a8a2ba6c7"
   },
   "changedExistingPaths": [
     "/play/index.html",
     "/scripts/arcade-daily-growth.js",
     "/styles/tree-arcade-suite.css"
   ],
-  "preservedStaticFiles": 280,
+  "preservedStaticFiles": 281,
   "newPaths": [],
   "functionsPreserved": 41,
   "functionRecords": [
@@ -1844,41 +1845,55 @@
     "snapshots": [
       {
         "source": "on-publish",
-        "created_at": "2026-11-01T16:23:23.029Z"
+        "created_at": "2026-11-02T02:45:08.730Z"
       }
     ]
   },
   "generatedNetlifyConfigSha1": "ac47414c8205343f1a87a5b7b48131aaa7b92856",
   "environmentEvidence": {
-    "sourceRepository": "TheCryptoArborist/tree-token.xyz",
-    "releaseSourceCommit": "51652a2a982fd5aa1e31d499f722eaebfbb003dd",
-    "releaseHelperGitBlob": "0c633ddfe69dd0cf5447dbc7be20d7d43ff5f577",
-    "releaseHelperUrl": "https://github.com/TheCryptoArborist/tree-token.xyz/blob/51652a2a982fd5aa1e31d499f722eaebfbb003dd/scripts/release-treeforce-passport.py",
-    "receiptUrl": "https://github.com/TheCryptoArborist/tree-token.xyz/blob/80ad3fdeec760731c4f35ac3823f85e6d306978e/production/treeforce-passport-release.json",
+    "sourceRepository": "TheCryptoArborist/treetowerdefense",
+    "releaseSourceCommit": "7e4589ded17156918ccc6588448706b2ad728e45",
+    "releaseSourceTree": "7d9d2f3044fc9f88eeb1afbfd5f66c3636496986",
+    "releaseHelperGitBlob": "0cb7a68e2312d4e11dc5d3d69df4e7563241787b",
+    "releaseHelperUrl": "https://github.com/TheCryptoArborist/treetowerdefense/blob/7e4589ded17156918ccc6588448706b2ad728e45/tools/release-canonical-checkout.mjs",
+    "receiptUrl": "https://github.com/TheCryptoArborist/treetowerdefense/blob/a7405ca797aa4d76f10cdf55c7cc17d7f71a1106/integration/tree-arcade/checkout-preview-receipt.json",
     "deployEnvironmentOverrides": [],
-    "environmentEvidence": "The exact published Passport helper omitted deploy-specific environment overrides. Preserve its main/production site and shared-account settings, without introducing historical overrides.",
-    "siteBuildEnvironmentSha256": "46bc4bf6e56b046d14b6a6fa19804d1ddd7bdcff405ec09a116c24013ea34809",
+    "environmentEvidence": "The exact current canonical-routing helper submits the preserved functions/configuration and main branch without deploy-specific environment overrides. All site/shared function-environment and legacy build-environment fingerprints also match the prior wallet-summary publication.",
     "accountId": "69800888d1a3d0483003ae9e",
+    "siteFunctionsEnvironmentEntries": 49,
+    "siteFunctionsEnvironmentSha256": "92587d897f64ece98caf1d474677b40041cc2d01f1f3374faac8c00744ef0355",
+    "sharedAccountFunctionsEnvironmentEntries": 0,
+    "sharedAccountFunctionsEnvironmentSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "siteBuildEnvironmentSha256": "46bc4bf6e56b046d14b6a6fa19804d1ddd7bdcff405ec09a116c24013ea34809",
+    "environmentCapturedAt": "2026-11-02T02:28:45.474270+00:00",
     "canopyAccessPackageSha256": "8bca11eb41ca6657102b82ff28ff927e5fc529687af4a6f002152ff3384b3e4a",
     "canopySessionNote": "canopy-access uses a deploy-scoped store; existing short-lived sessions may require sign-in after publication even though code/configuration are unchanged.",
-    "siteFunctionsEnvironmentSha256": "92587d897f64ece98caf1d474677b40041cc2d01f1f3374faac8c00744ef0355",
-    "siteFunctionsEnvironmentEntries": 49,
-    "sharedAccountFunctionsEnvironmentSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-    "sharedAccountFunctionsEnvironmentEntries": 0,
-    "sharedEnvironmentCapturedAt": "2026-11-01T15:16:03.537317+00:00",
-    "predecessorReleaseSource": {
-      "repository": "TheCryptoArborist/tree-token.xyz",
-      "commit": "90ce9a5a308855c07b08597fa0341367842591b8",
-      "helperGitBlob": "109721e6ef6dc71d220c7beabefd236192bc5806",
-      "receiptUrl": "https://github.com/TheCryptoArborist/tree-token.xyz/blob/084032c5cc531b7b8c4e16acb5679e40e6b58dbe/production/daily-growth-invitation-release.json"
+    "preservedCanopyRouting": {
+      "path": "/_redirects",
+      "sha1": "4450ad95c97a2045c2575bd2cc75c49a8a2ba6c7",
+      "upstreamDeployId": "6ae7ee72f3a12d5acb787a55",
+      "canonicalPath": "https://tree-token.xyz/play/canopy-defense/checkout-test/"
     },
-    "releaseSourceTree": "756bd798b9f9cf11a237b3d54efe1a666ce241c7"
+    "retainedArcadeSource": {
+      "repository": "TheCryptoArborist/tree-token.xyz",
+      "commit": "15cd19d5e4eb6e62407d10dee60d1c39e777006f",
+      "evidenceCommit": "f35d1f6326986eca27807e13f4ec9227456b7f4a",
+      "sourceTree": "ee584b85a5b64cdfc1991d01e429db4aee708576",
+      "priorDeployment": "6ae7673cbbf1e1e579d6fb19"
+    },
+    "originTargetVerification": {
+      "localCommit": "f35d1f6326986eca27807e13f4ec9227456b7f4a",
+      "readMethod": "Authenticated GET with application/vnd.bitballoon.v1.raw; exact original bytes before public HTML snippet injection",
+      "matches": {
+        "/play/index.html": "1634f3a3899769ad3e1bafa29fd4b7b91a6ca995",
+        "/scripts/arcade-daily-growth.js": "4b52faa04d881f44b716b0308a08c6e74e371dce",
+        "/styles/tree-arcade-suite.css": "c9910b3c101a903b7b195893469c0c741fb7c545"
+      },
+      "allThreeExact": true
+    }
   },
   "previousDeployLocked": false,
   "publicationLockScope": "current publication only; do not relock an earlier deployment",
   "url": "https://tree-token.xyz/play/",
-  "candidateUrl": "https://6ae7673cbbf1e1e579d6fb19--tree-token.netlify.app/play/",
-  "databaseChanges": false,
-  "preservedPassportRuleEvidence": "docs/treeforce-passport-database.json",
-  "canonicalBrowserEvidence": "docs/review/daily-growth-wallet-summary/canonical-browser-report.json"
+  "candidateUrl": "https://6ae7f8a9183c770b8f0eb50c--tree-token.netlify.app/play/"
 }

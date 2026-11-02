@@ -2,6 +2,8 @@
 
 This release implements the approved task-and-reward layout in TREE Arcade at https://tree-token.xyz/play/.
 
+Published and locked deployment: `6ae7f8a9183c770b8f0eb50c`, at `2026-11-02T02:45:08.885Z`. Reviewed source: `f1a29b30aa8a726a38233d5f42a0582a9f347a38`; source tree: `936f1fa6ec410d6e3ee0cde06046b80524af8860`; branch: `feature/daily-growth-quest-layout-20261101`.
+
 ## Interface
 
 The panel starts collapsed. The header retains the current wallet identity and explicit connect, sign-in, and check-in actions. A numbered attendance strip remains visible beneath it whether the details are open or closed. The strip follows the server's UTC month and contains every real calendar date, including February and leap years. Desktop shows one row; narrow screens use two rows.
@@ -36,4 +38,8 @@ The signed-in collapsed panel measures 242.58 px on desktop, 298.47 px at 390 px
 
 The controller evidence is `review/daily-growth-quest-layout/controller-tests.tap`, produced with `ARCADE_DOM_TEST_DEPS=/tmp/tree-arcade-ui-testdeps node --test-reporter=tap tests/arcade-daily-growth-ui.test.mjs`. The native report and seven screenshots are in `review/daily-growth-quest-layout/`. The release helper passed 18 preservation-guard checks, recorded in `daily-growth-quest-layout-release-guards.json`.
 
-Synthetic authenticated fixtures exercise interface states without real wallet signatures, transactions, or production attendance writes. Hosted verification uses actual resources and unauthenticated GET/HEAD requests only. Publication and hosted results will be recorded in this document and `daily-growth-quest-layout-verification.json` after the reviewed candidate passes those checks.
+Both the candidate and canonical site passed five grouped hosted checks, with 20 anonymous GET responses returning HTTP 200 in each environment. The actual served controller, stylesheet, and wallet bundle match the reviewed bytes. Served HTML matches after removing only the exact existing hosting injection, pinned by ID, 572-byte length, SHA-256, and insertion position. The public API returns November's four required games and no private progress. Dates, native disclosure and tabs, cabinet destinations, first-cabinet visibility, and overflow checks pass on the canonical domain.
+
+The hosted artwork wait was corrected after diagnosing a lazy image inside closed details: it can have layout dimensions before decoding completes. The final check requires the header, hero, and first-cabinet artwork to load and waits for other artwork only when actually visible. The public source and candidate did not change. The diagnostic and corrected runner are retained with the release evidence.
+
+Synthetic authenticated fixtures exercise interface states without real wallet signatures, transactions, or production attendance writes. Hosted verification uses actual resources and unauthenticated GET/HEAD requests only. `daily-growth-quest-layout-verification.json` summarizes the results, and `../production/daily-growth-quest-layout-release.json` records the exact published inventory and preservation proof. `../production/current-release.json` now identifies this deployment. No live authenticated participation was fabricated for verification.
