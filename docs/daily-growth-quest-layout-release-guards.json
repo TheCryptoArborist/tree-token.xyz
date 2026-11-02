@@ -1,0 +1,27 @@
+{
+  "passed": true,
+  "checks": [
+    "Pinned 284-file baseline loads and verifies its 41 full function records and 5 schedules",
+    "All 41 function digests and only explicit memory/region overrides preserved",
+    "Synthetic 3-file overlay preserves 281 unrelated paths including Canopy redirect and generated config",
+    "No-change candidate is rejected",
+    "Runtime drift rejected: available_functions",
+    "Runtime drift rejected: function_schedules",
+    "Runtime drift rejected: functions_region",
+    "Runtime drift rejected: functions_region_overrides",
+    "Runtime drift rejected: branch",
+    "Runtime drift rejected: context",
+    "Runtime drift rejected: database_branch_id",
+    "Runtime drift rejected: blobs_region",
+    "Runtime drift rejected: framework",
+    "Out-of-scope deployment artifact rejected: edge_functions_present",
+    "Out-of-scope deployment artifact rejected: server",
+    "Out-of-scope deployment artifact rejected: database_migrations",
+    "Previous baseline cannot be selected as a candidate",
+    "Tampered baseline is rejected"
+  ],
+  "count": 18,
+  "helperSha256": "4530740f19ba4c918a43a9b1704001c2fa5679a7ba7631febd1c647bc66e0f46",
+  "baselineSha256": "6f267ef7a4ab250bd5dd1b4adc1bcbdb7c3cc64106a4d07bfc6e9199cde64add",
+  "remoteMutations": false
+}

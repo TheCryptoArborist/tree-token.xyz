@@ -38,7 +38,7 @@ const MILESTONES = [
   { id: 'deep-roots', label: 'Deep Roots', target: 14 },
   { id: 'full-canopy', label: 'Full Canopy', target: 21 },
 ];
-const PROGRESS_METERS = ['attendance-ring', 'attendance-meter', 'quest-meter', 'passport-meter', 'summary-meter'];
+const PROGRESS_METERS = ['quest-meter', 'passport-meter', 'summary-meter'];
 const deferred = () => {
   let resolvePromise;
   let reject;
@@ -209,6 +209,7 @@ async function harness(t, options = {}) {
   if (options.savedSession) window.sessionStorage.setItem(SESSION_KEY, JSON.stringify(options.savedSession));
   const controller = createDailyGrowth({ root, fetchImpl, loadWallet: async () => options.wallet || wallet, storage: window.sessionStorage, now: () => clock });
   t.after(() => { controller.destroy(); window.close(); assert.deepEqual(errors.map((error) => error.message), []); });
+  options.inspectInitial?.({ root, byId, calls });
   await controller.ready;
   const count = (action) => calls.filter((call) => call.type === 'api' && call.action === action).length;
   async function connect() {
@@ -235,19 +236,24 @@ test('compact Daily Growth starts closed and its native progress disclosure neve
   for (const id of ['connect', 'sign-in', 'sign-out', 'check-in', 'wallet-picker', 'status']) {
     assert.equal(details.contains(h.byId(id)), false, `${id} remains usable when progress is collapsed`);
   }
-  assert.equal(h.byId('invitation-title').textContent, 'What will you grow today?');
-  assert.equal(h.byId('summary-note').textContent, 'Check in, discover today’s quest, and collect badges.');
+  assert.equal(h.byId('invitation-title').textContent, 'Daily Growth');
+  assert.equal(h.byId('summary-note').textContent, 'Check in. Play. Grow your collection.');
   assert.equal(h.byId('summary-count').textContent, 'Your first badge starts here.');
-  assert.equal(h.byId('summary-label').textContent, 'Seedling · 3 check-ins to earn');
+  assert.equal(h.byId('summary-label').textContent, '3 cumulative check-ins to earn');
   assert.equal(h.byId('summary-art-label').textContent, 'Seedling');
+  assert.equal(h.byId('teaser-kind').textContent, 'Next badge');
+  assert.equal(h.byId('teaser-badge').textContent, 'Seedling');
+  assert.equal(h.byId('details-hint').textContent, '3 check-ins to earn');
+  assert.equal(h.byId('reward-earned').hidden, true);
   assert.equal(h.byId('summary-art').getAttribute('src'), '/assets/arcade/garden-bot-poster.webp');
   assert.equal(h.byId('connect').textContent, 'Connect to check in');
   assert.equal(h.byId('connect').classList.contains('growth-primary'), true);
   assert.equal(h.byId('connect').classList.contains('growth-secondary'), false);
   assert.equal(h.byId('invitation-hint').textContent, 'Free check-in · No gas fee');
-  assert.equal(h.byId('details-label').textContent, 'Reveal today’s quest');
+  assert.equal(h.byId('details-label').textContent, 'View daily tasks');
   assert.equal(h.byId('summary-meter').hidden, true, 'Unknown private progress has no visible numeric meter');
   assert.equal(h.byId('check-in').hidden, true);
+  assert.equal(details.contains(h.byId('month-rail')), false, 'Calendar dates remain visible while tasks are closed');
   const before = h.calls.length;
   toggle.click();
   assert.equal(details.open, true);
@@ -267,7 +273,9 @@ test('compact check-in remains available with details closed and saves attendanc
   assert.equal(h.byId('details').open, false);
   assert.equal(h.byId('check-in').hidden, false);
   assert.equal(h.byId('check-in').disabled, false);
-  assert.equal(h.byId('invitation-title').textContent, 'Make today count.');
+  assert.equal(h.byId('check-in-row').hidden, false);
+  assert.equal(h.byId('check-in-row').disabled, false);
+  assert.equal(h.byId('summary-note').textContent, 'Make today count. Check in and keep growing.');
   assert.equal(h.byId('invitation-hint').textContent, 'Free check-in · No game required');
   assert.equal(h.byId('summary-count').textContent, 'One more check-in to Seedling');
   assert.equal(h.byId('summary-label').textContent, '2 / 3 check-ins');
@@ -277,24 +285,65 @@ test('compact check-in remains available with details closed and saves attendanc
   h.handlers['check-in'] = () => pending.promise;
   h.byId('check-in').click();
   assert.equal(h.byId('check-in').disabled, true);
-  assert.equal(h.byId('invitation-title').textContent, 'Make today count.', 'Attendance is not claimed before the server saves it');
+  assert.equal(h.byId('check-in-row').disabled, true);
+  assert.equal(h.byId('check-in-row').textContent, 'Saving check-in…');
+  assert.equal(h.byId('check-in-task').classList.contains('is-complete'), false, 'Attendance is not claimed before the server saves it');
   assert.equal(h.byId('summary-label').textContent, '2 / 3 check-ins');
   h.byId('check-in').click();
+  h.byId('check-in-row').click();
+  assert.equal(h.count('check-in'), 1, 'The two button locations share one in-flight request guard');
+  assert.equal(h.byId('days').querySelector('[data-date="2026-11-12"]').classList.contains('is-done'), false, 'No optimistic date credit before the saved response');
   h.setProgress(progress({ visits: [1, 3, 12], quests: [3], stamps: ['garden-bot'] }));
   pending.resolve(h.envelope());
   await settleUntil(() => h.byId('summary-label').textContent === '3 / 7 check-ins', 'compact badge preview updated after the saved response');
   assert.equal(h.byId('details').open, false);
   assert.equal(h.byId('check-in').disabled, true);
-  assert.equal(h.byId('invitation-title').textContent, 'You’re checked in. Quest time?');
+  assert.equal(h.byId('check-in-row').disabled, true);
+  assert.equal(h.byId('check-in-row').textContent, 'Checked in ✓');
+  assert.equal(h.byId('check-in-task').classList.contains('is-complete'), true);
   assert.equal(h.byId('summary-count').textContent, '4 more check-ins to Sapling');
   assert.equal(h.byId('summary-art').getAttribute('src'), '/assets/arcade/arboretum-poster.webp');
   assert.equal(h.byId('summary-art-label').textContent, 'Sapling');
   assertMeter(h, 'summary-meter', 3, 7);
-  assert.match(h.byId('summary-note').textContent, /check-in is saved/i);
+  assert.match(h.byId('check-in-state').textContent, /attendance is saved/i);
   h.byId('check-in').click();
   assert.equal(h.count('check-in'), 1);
   assert.equal(h.byId('quest-state').textContent, '0 / 1 · Not completed');
   assert.equal(h.byId('passport-count').textContent, '1 / 3 required games');
+  assert.equal(h.byId('days').querySelector('[data-date="2026-11-12"]').classList.contains('is-done'), true);
+});
+
+test('task-row authentication stays explicit and checking in from the row uses the same saved action', async (t) => {
+  const h = await harness(t);
+  h.byId('invitation-open').click();
+  h.byId('task-auth').focus();
+  h.byId('task-auth').click();
+  assert.equal(h.byId('wallet-picker').open, true);
+  assert.equal(h.count('challenge'), 0);
+  h.byId('wallet-close').click();
+  assert.equal(h.window.document.activeElement, h.byId('task-auth'), 'Picker dismissal returns to the task-row opener');
+  h.byId('task-auth').click();
+  h.byId('wallet-options').querySelector('button').click();
+  await settleUntil(() => h.root.dataset.growthState === 'connected', 'task-row wallet connection');
+  assert.equal(h.byId('task-auth').textContent, 'Sign in');
+  assert.equal(h.count('challenge'), 0, 'Connection never starts a message signature automatically');
+  assert.equal(h.count('check-in'), 0);
+  h.byId('task-auth').click();
+  await settleUntil(() => h.root.dataset.growthState === 'authenticated' && h.count('sync') === 1, 'explicit task-row sign-in');
+  assert.equal(h.byId('task-auth').hidden, true);
+  assert.equal(h.byId('check-in-row').hidden, false);
+  assert.equal(h.count('check-in'), 0, 'The explicit sign-in still does not check in');
+  h.byId('check-in-row').click();
+  await settleUntil(() => h.byId('check-in-row').textContent === 'Checked in ✓', 'task-row saved check-in');
+  assert.equal(h.count('check-in'), 1);
+  assert.equal(h.byId('check-in').disabled, true);
+  assert.equal(h.byId('visit-count').textContent, '1');
+  const beforeCollapse = h.calls.length;
+  h.byId('collapse').click();
+  assert.equal(h.byId('details').open, false);
+  assert.equal(h.byId('invitation-open').getAttribute('aria-expanded'), 'false');
+  assert.equal(h.window.document.activeElement, h.byId('details').querySelector('summary'));
+  assert.equal(h.calls.length, beforeCollapse);
 });
 
 test('invitation buttons reveal today until both tasks are saved, without changing an already-open tab or starting requests', async (t) => {
@@ -320,7 +369,7 @@ test('invitation buttons reveal today until both tasks are saved, without changi
   await h.signIn();
   h.setProgress(progress({ visits: [12], quests: [12], stamps: ['garden-bot'] }));
   await h.controller.refresh();
-  assert.equal(h.byId('invitation-title').textContent, 'Today’s growth is complete.');
+  assert.equal(h.byId('summary-note').textContent, 'Today’s check-in and quest are saved.');
   assert.equal(h.byId('details-label').textContent, 'View badge progress');
   assert.equal(h.byId('month-tab').getAttribute('aria-selected'), 'true', 'A progress refresh does not disrupt the chosen tab');
   assert.equal(h.count('check-in'), 0, 'Only the server-verified quest supplied attendance');
@@ -426,6 +475,72 @@ test('signed-out meters stay unknown while monthly badge goals are clearly previ
   assert.equal(h.byId('journey-stops').querySelectorAll('.is-done').length, 0);
   assert.match(h.byId('journey-note').textContent, /goals|sign in/i);
   assert.equal(h.byId('badges').children.length, 0);
+  assert.equal(h.byId('days').children.length, 30, 'The public server month can supply dates without revealing attendance');
+  assert.equal(h.byId('days').querySelectorAll('.is-unknown').length, 30);
+  assert.equal(h.byId('days').querySelectorAll('.is-done, .is-missed').length, 0);
+  assert.equal(h.byId('days').querySelector('[aria-current="date"]').dataset.date, '2026-11-12');
+  assert.equal(h.byId('days').querySelector('button, a, [tabindex]'), null, 'Dates are informational, including previous dates');
+});
+
+test('the persistent rail uses the exact UTC server month for 28, 29, 30 and 31 dates', async (t) => {
+  for (const [monthKey, days] of [['2027-02', 28], ['2028-02', 29], ['2026-11', 30], ['2026-12', 31]]) {
+    await t.test(`${monthKey}: ${days} dates`, async (subtest) => {
+      const dateKey = `${monthKey}-18`;
+      const h = await harness(subtest, { progress: progress({ dateKey, visits: [1, 3, 17], quests: [3] }) });
+      await h.signIn();
+      const rail = h.byId('days');
+      assert.equal(rail.children.length, days);
+      assert.equal(rail.firstElementChild.dataset.date, `${monthKey}-01`);
+      assert.equal(rail.lastElementChild.dataset.date, `${monthKey}-${days}`);
+      assert.equal(rail.style.getPropertyValue('--growth-days'), String(days));
+      assert.equal(rail.style.getPropertyValue('--growth-mobile-days'), String(Math.ceil(days / 2)));
+      assert.deepEqual([...rail.querySelectorAll('.is-done')].map(cell => Number(cell.dataset.date.slice(-2))), [1, 3, 17]);
+      assert.equal(rail.querySelectorAll('.is-missed').length, 14, 'Only known earlier unchecked days get a missed mark');
+      assert.equal(rail.querySelectorAll('.is-future').length, days - 18);
+      const today = rail.querySelector('[aria-current="date"]');
+      assert.equal(today.dataset.date, dateKey, 'The server date wins over the test browser clock');
+      assert.equal(today.classList.contains('is-today'), true);
+      assert.equal(today.matches('.is-done, .is-missed, .is-future'), false);
+      assert.match(today.getAttribute('aria-label'), /today.*not yet checked in/i);
+      assert.equal(rail.querySelectorAll('.is-unknown').length, 0);
+      assert.equal(h.byId('visit-count').textContent, '3');
+      assert.equal(h.byId('visit-total').textContent, `/ ${days} days`);
+      assert.equal(h.byId('calendar').querySelectorAll('[role="listitem"]').length, days);
+      assert.equal(h.byId('calendar').querySelector('[aria-current="date"]').querySelector('strong').textContent, '18');
+      assert.equal(h.count('check-in'), 0);
+    });
+  }
+});
+
+test('loading, unavailable and invalid public dates never manufacture an attendance rail', async (t) => {
+  let inspected = false;
+  const h = await harness(t, {
+    inspectInitial({ root, byId }) {
+      inspected = true;
+      assert.equal(root.dataset.growthState, 'loading');
+      assert.equal(byId('days').children.length, 0);
+      assert.equal(byId('visit-count').textContent, '—');
+      assert.equal(byId('summary-meter').hasAttribute('aria-valuenow'), false);
+    },
+    handlers: { status: () => ({ status: 'error', error: 'service-unavailable', message: 'Temporarily unavailable.' }) },
+  });
+  assert.equal(inspected, true);
+  assert.equal(h.byId('days').children.length, 0, 'No local clock is substituted for an unavailable server month');
+  h.handlers.status = ({ envelope }) => ({ ...envelope(false), monthKey: '2026-02', dateKey: '2026-02-31' });
+  await h.controller.refresh();
+  assert.equal(h.byId('days').children.length, 0);
+  assert.match(h.byId('status').textContent, /incomplete progress/);
+  delete h.handlers.status;
+  await h.controller.refresh();
+  assert.equal(h.byId('days').querySelectorAll('.is-unknown').length, 30);
+  h.handlers.status = () => ({ status: 'error', error: 'service-unavailable', message: 'Temporarily unavailable.' });
+  await h.controller.refresh();
+  assert.equal(h.byId('days').querySelectorAll('.is-unknown').length, 30, 'A known public month can retain neutral dates');
+  assert.equal(h.byId('days').querySelectorAll('.is-done, .is-missed').length, 0);
+  assert.match(h.byId('days').firstElementChild.getAttribute('aria-label'), /attendance unavailable/i);
+  assert.match(h.byId('days').firstElementChild.title, /attendance unavailable/i);
+  assert.equal(h.byId('visit-count').textContent, '—');
+  assert.equal(h.byId('reward-earned').children.length, 0);
 });
 
 test('meters reflect saved attendance, the next milestone and required stamps, retaining labeled stale values and clearing on account change', async (t) => {
@@ -434,8 +549,9 @@ test('meters reflect saved attendance, the next milestone and required stamps, r
     visits, quests: [8], enabledGames: FORCE_GAMES, stamps: ['garden-bot', 'arborist-trials', 'treeforce89'],
   }) });
   await h.signIn();
-  assertMeter(h, 'attendance-ring', 8, 30);
-  assertMeter(h, 'attendance-meter', 8, 14);
+  assert.equal(h.byId('days').children.length, 30);
+  assert.equal(h.byId('days').querySelectorAll('.is-done').length, 8);
+  assert.equal(h.byId('visit-total').textContent, '/ 30 days');
   assertMeter(h, 'quest-meter', 0, 1);
   assertMeter(h, 'passport-meter', 3, 4);
   assert.equal(h.byId('summary-count').textContent, '6 more check-ins to Deep Roots');
@@ -447,43 +563,55 @@ test('meters reflect saved attendance, the next milestone and required stamps, r
   assert.equal(h.byId('journey-stops').querySelectorAll('.is-done').length, 2);
   h.setProgress(progress({ visits: [...visits, 12], quests: [8, 12], enabledGames: FORCE_GAMES, stamps: ['garden-bot', 'arborist-trials', 'treeforce89'] }));
   await h.controller.refresh();
-  assertMeter(h, 'attendance-ring', 9, 30);
-  assertMeter(h, 'attendance-meter', 9, 14);
+  assert.equal(h.byId('days').querySelectorAll('.is-done').length, 9);
+  assert.equal(h.byId('visit-count').textContent, '9');
   assertMeter(h, 'quest-meter', 1, 1);
   assertMeter(h, 'passport-meter', 3, 4);
   assert.equal(h.byId('summary-count').textContent, '5 more check-ins to Deep Roots');
   assertMeter(h, 'summary-meter', 9, 14);
   h.handlers.sync = () => ({ status: 'error', error: 'service-unavailable', message: 'Try again later.' });
   await h.controller.refresh();
-  assertMeter(h, 'attendance-ring', 9, 30);
-  assertMeter(h, 'attendance-meter', 9, 14);
+  assert.equal(h.byId('days').querySelectorAll('.is-done').length, 9);
+  assert.equal(h.byId('visit-count').textContent, '9');
   assertMeter(h, 'quest-meter', 1, 1);
   assertMeter(h, 'passport-meter', 3, 4);
   for (const id of PROGRESS_METERS) assert.match(h.byId(id).getAttribute('aria-valuetext'), /last saved progress/i);
+  assert.equal(h.byId('month-rail').classList.contains('is-stale'), true);
+  assert.match(h.byId('rail-count').getAttribute('aria-label'), /9 of 30.*last saved/i);
+  assert.match(h.byId('days').querySelector('[data-date="2026-11-12"]').getAttribute('aria-label'), /checked in.*last saved/i);
   assert.match(h.byId('summary-note').textContent, /last saved/i);
-  assert.equal(h.byId('invitation-title').textContent, 'Let’s catch up on your growth.');
-  assert.equal(h.byId('details-label').textContent, 'Reveal today’s quest', 'An unavailable refresh does not claim current daily completion');
+  assert.match(h.byId('rail-note').textContent, /last saved/i);
+  assert.equal(h.byId('details-label').textContent, 'View daily tasks', 'An unavailable refresh does not claim current daily completion');
   assert.equal(h.byId('summary-label').textContent, '9 / 14 check-ins · Last saved');
   h.changeWallet(OTHER_ACCOUNT);
   assertUnknownMeters(h);
   assert.match(h.byId('summary-count').textContent, /^(Your first badge starts here\.|Your badges will be here\.)$/);
   assert.equal(h.byId('summary-art-label').textContent, 'Seedling');
   assert.equal(h.byId('summary-art').getAttribute('src'), '/assets/arcade/garden-bot-poster.webp');
-  assert.equal(h.byId('invitation-title').textContent, 'What will you grow today?');
+  assert.equal(h.byId('invitation-title').textContent, 'Daily Growth');
   assert.equal(h.byId('summary-meter').hidden, true);
   assert.equal(h.byId('check-in').hidden, true);
   assert.equal(h.byId('summary-label').textContent.includes('9 / 14'), false);
   assert.equal(h.byId('journey-stops').querySelectorAll('.is-done').length, 0);
+  assert.equal(h.byId('days').querySelectorAll('.is-done, .is-missed').length, 0, 'Account changes clear all private date marks immediately');
+  assert.equal(h.byId('days').querySelectorAll('.is-unknown').length, 30);
+  assert.equal(h.byId('month-rail').classList.contains('is-stale'), false);
+  assert.equal(h.byId('visit-count').textContent, '—');
+  assert.equal(h.byId('reward-earned').children.length, 0);
 });
 
-test('the final milestone stays full while the monthly ring keeps the actual count and month length', async (t) => {
+test('all attendance milestones are earned while the month rail keeps the actual count and month length', async (t) => {
   const h = await harness(t, { progress: progress({
     dateKey: '2026-10-31', visits: [...Array.from({ length: 21 }, (_, index) => index + 1), 31],
   }) });
   await h.signIn();
-  assertMeter(h, 'attendance-ring', 22, 31);
-  assertMeter(h, 'attendance-meter', 21, 21);
-  assert.equal(h.byId('attendance-meter').classList.contains('is-complete'), true);
+  assert.equal(h.byId('days').children.length, 31);
+  assert.equal(h.byId('days').querySelectorAll('.is-done').length, 22);
+  assert.equal(h.byId('visit-total').textContent, '/ 31 days');
+  assert.equal(h.byId('teaser-kind').textContent, 'Attendance complete');
+  assert.equal(h.byId('reward-kind').textContent, 'MONTHLY ATTENDANCE COMPLETE');
+  assert.equal(h.byId('details-hint').textContent, 'Earned automatically ✓');
+  assert.equal(h.byId('reward-earned').querySelectorAll('.growth-earned-chip').length, 4);
   assert.equal(h.byId('visit-count').textContent, '22');
   assert.equal(h.byId('summary-count').textContent, 'All attendance badges earned.');
   assert.equal(h.byId('summary-label').textContent, '21 / 21 check-ins');
@@ -547,7 +675,7 @@ test('standalone check-in saves attendance without a quest, passport credit, or 
   await h.signIn();
   await h.controller.checkIn();
   assert.equal(h.byId('visit-count').textContent, '1');
-  assert.equal(h.byId('check-in').textContent, 'Checked in today ✓');
+  assert.equal(h.byId('check-in').textContent, 'Checked in ✓');
   assert.equal(h.byId('quest-state').textContent, '0 / 1 · Not completed');
   assert.equal(h.byId('passport-count').textContent, '0 / 3 required games');
   assert.equal(h.byId('check-in').disabled, true);
@@ -628,7 +756,7 @@ test('changing accounts during a refresh immediately hides private progress and 
   await settleUntil(() => h.root.dataset.growthState === 'syncing', 'sync in flight');
   assert.match(h.byId('summary-label').textContent, /Last saved/);
   assert.match(h.byId('summary-meter').getAttribute('aria-valuetext'), /Last saved progress/);
-  assert.equal(h.byId('invitation-title').textContent, 'Let’s catch up on your growth.');
+  assert.match(h.byId('rail-note').textContent, /last saved/i);
   h.changeWallet(OTHER_ACCOUNT);
   assertWalletIdentity(h, OTHER_ACCOUNT, 'Connected');
   assert.equal(h.byId('visit-count').textContent, '—');
@@ -641,7 +769,7 @@ test('changing accounts during a refresh immediately hides private progress and 
   assert.equal(h.byId('summary-meter').hidden, true);
   assertUnknownMeters(h);
   assert.equal(h.byId('summary-art-label').textContent, 'Seedling');
-  assert.equal(h.byId('invitation-title').textContent, 'What will you grow today?');
+  assert.equal(h.byId('invitation-title').textContent, 'Daily Growth');
   assert.match(h.byId('wallet-state').title, new RegExp(OTHER_ACCOUNT));
 });
 
@@ -722,8 +850,8 @@ test('an existing authorized session restores silently and expires without expos
   assert.equal(h.byId('summary-art-label').textContent, 'Seedling');
   assert.equal(h.byId('summary-meter').hidden, true);
   assertUnknownMeters(h);
-  assert.equal(h.byId('invitation-title').textContent, 'What will you grow today?');
-  assert.equal(h.byId('details-label').textContent, 'Reveal today’s quest');
+  assert.equal(h.byId('invitation-title').textContent, 'Daily Growth');
+  assert.equal(h.byId('details-label').textContent, 'View daily tasks');
   assert.equal(h.window.sessionStorage.getItem(SESSION_KEY), null);
 });
 
@@ -875,7 +1003,7 @@ test('opening TREE FORCE grants nothing; a server-recorded first wave counts one
   await h.controller.refresh();
   assert.equal(h.byId('visit-count').textContent, '1');
   assert.equal(h.byId('quest-state').textContent, '1 / 1 · Quest complete ✓');
-  assert.equal(h.byId('check-in').textContent, 'Checked in today ✓');
+  assert.equal(h.byId('check-in').textContent, 'Checked in ✓');
   assert.equal(h.byId('passport-count').textContent, '1 / 4 required games');
   assertMeter(h, 'passport-meter', 1, 4);
   assert.match(h.byId('stamps').textContent, /TREE FORCE ’89.*First wave started · Stamp earned/);

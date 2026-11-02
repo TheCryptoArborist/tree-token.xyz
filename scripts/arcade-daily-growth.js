@@ -149,11 +149,12 @@ export function createDailyGrowth({
   const ui = Object.fromEntries([
     'meta', 'season-tag', 'wallet-state', 'wallet-identity', 'wallet-identity-status', 'wallet-identity-name', 'wallet-identity-address', 'auth-note', 'connect', 'sign-in', 'sign-out', 'wallet-picker', 'wallet-options', 'wallet-close', 'wallet-status', 'no-wallet',
     'quest-state', 'quest-rule', 'pick-label', 'game-name', 'objective', 'game-access', 'play', 'refresh', 'alternative', 'game-select',
-    'quest-note', 'visit-count', 'visit-label', 'check-note', 'check-in', 'passport-count', 'passport-note', 'stamps',
+    'quest-note', 'visit-count', 'check-note', 'check-in', 'check-in-row', 'check-in-task', 'check-in-state', 'task-auth', 'passport-count', 'passport-note', 'stamps',
     'passport-reward', 'passport-optional', 'optional-stamps', 'tracking-note', 'month-empty', 'month-content', 'month-visits', 'month-quests', 'next', 'calendar', 'milestones',
-    'badges-empty', 'badges', 'status', 'journey-note', 'journey-stops', 'quest-meter', 'attendance-ring', 'visit-total', 'attendance-next', 'attendance-meter', 'passport-meter',
+    'badges-empty', 'badges', 'status', 'journey-note', 'journey-stops', 'quest-meter', 'visit-total', 'passport-meter',
     'summary-count', 'summary-label', 'summary-note', 'summary-meter', 'summary-art', 'summary-art-label', 'quest-art',
     'badge-preview', 'invitation-open', 'invitation-title', 'invitation-hint', 'details', 'details-label', 'details-hint',
+    'month-rail', 'rail-month', 'rail-count', 'rail-note', 'days', 'teaser-badge', 'teaser-kind', 'quest-details', 'calendar-title', 'reward-kind', 'reward-earned', 'collapse',
   ].map((id) => [id, byId(id)]));
   const state = {
     wallet: null, walletId: null, walletReady: false, walletError: false, session: null, progress: null,
@@ -345,6 +346,9 @@ export function createDailyGrowth({
     const dateKey = payload.dateKey || nextProgress?.dateKey;
     const monthKey = payload.monthKey || nextProgress?.monthKey;
     if (!dateKeyPattern.test(dateKey) || !monthKeyPattern.test(monthKey) || !dateKey.startsWith(`${monthKey}-`) || !nextConfiguration) throw invalidData();
+    const [year, month] = monthKey.split('-').map(Number);
+    const days = new Date(Date.UTC(year, month, 0)).getUTCDate();
+    if (year < 2020 || year > 2100 || month < 1 || month > 12 || Number(dateKey.slice(-2)) < 1 || Number(dateKey.slice(-2)) > days) throw invalidData();
     if (nextProgress && (nextProgress.dateKey !== dateKey || nextProgress.monthKey !== monthKey)) throw invalidData();
     state.configuration = nextConfiguration;
     state.dateKey = dateKey;
@@ -406,7 +410,8 @@ export function createDailyGrowth({
 
   function renderCalendar(progress) {
     ui.calendar.replaceChildren();
-    ui.calendar.setAttribute('aria-label', `${monthLabel(progress.monthKey)} attendance and daily quests`);
+    ui['calendar-title'].textContent = monthLabel(progress.monthKey);
+    ui.calendar.setAttribute('aria-label', `${monthLabel(progress.monthKey)} attendance and daily quests${state.stale ? ' · Last saved progress' : ''}`);
     for (const name of ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']) {
       const label = append(ui.calendar, 'span', 'growth-weekday', name);
       label.setAttribute('aria-hidden', 'true');
@@ -418,10 +423,56 @@ export function createDailyGrowth({
       const cell = append(ui.calendar, 'div', `growth-day${day.checkedIn ? ' is-done' : ''}${day.questCompleted ? ' has-quest' : ''}${isToday ? ' is-today' : ''}${day.dateKey < progress.dateKey && !day.checkedIn ? ' is-missed' : ''}`);
       cell.setAttribute('role', 'listitem');
       const description = day.checkedIn ? `checked in${day.questCompleted ? ', daily quest complete' : ''}` : isToday ? 'today, not yet checked in' : day.dateKey < progress.dateKey ? 'missed, earlier progress retained' : 'upcoming';
-      cell.setAttribute('aria-label', `${dateLabel(day.dateKey)}: ${description}`);
+      cell.setAttribute('aria-label', `${dateLabel(day.dateKey)}: ${description}${state.stale ? ' · Last saved progress' : ''}`);
       if (isToday) cell.setAttribute('aria-current', 'date');
       append(cell, 'strong', '', String(Number(day.dateKey.slice(-2)))).setAttribute('aria-hidden', 'true');
       append(cell, 'span', '', day.questCompleted ? '✓ ★' : day.checkedIn ? '✓' : isToday ? '○' : day.dateKey < progress.dateKey ? '–' : '·').setAttribute('aria-hidden', 'true');
+    }
+  }
+
+  function renderDayRail(progress) {
+    const monthKey = progress?.monthKey || state.monthKey;
+    const dateKey = progress?.dateKey || state.dateKey;
+    const loading = ['loading', 'syncing'].includes(state.busy);
+    const lastSaved = Boolean(progress && (state.stale || state.apiUnavailable || loading));
+    const calendar = progress?.calendar || (monthKey ? Array.from({
+      length: new Date(Date.UTC(...monthKey.split('-').map(Number), 0)).getUTCDate(),
+    }, (_, index) => ({ dateKey: `${monthKey}-${String(index + 1).padStart(2, '0')}` })) : []);
+    ui['month-rail'].classList.toggle('is-unknown', !progress);
+    ui['month-rail'].classList.toggle('is-stale', lastSaved);
+    ui['rail-month'].textContent = monthKey ? `${monthLabel(monthKey)} · CHECK-INS` : 'YOUR MONTHLY CHECK-INS';
+    ui['visit-count'].textContent = progress ? String(progress.checkedInDays) : '—';
+    ui['visit-total'].textContent = progress
+      ? `/ ${calendar.length} days${lastSaved ? ' · Last saved' : ''}`
+      : state.apiUnavailable ? 'Unavailable' : loading ? 'Loading…' : 'Sign in to view';
+    ui['rail-count'].setAttribute('aria-label', progress
+      ? `${progress.checkedInDays} of ${calendar.length} days checked in${lastSaved ? ' · Last saved progress' : ''}`
+      : state.apiUnavailable ? 'Attendance unavailable; your saved progress has not changed' : 'Attendance unknown; sign in to view your saved days');
+    ui['rail-note'].textContent = lastSaved
+      ? loading ? 'Checking for updates · Last saved days shown.' : 'Last saved days shown. Refresh inside to check for updates.'
+      : progress ? 'Calendar dates · UTC. Past dates cannot be checked in.'
+        : state.apiUnavailable ? 'Your saved days are unavailable. No progress has changed.'
+          : loading ? 'Loading the current month…' : 'Sign in to reveal your saved days.';
+    ui.days.style.setProperty('--growth-days', String(calendar.length || 31));
+    ui.days.style.setProperty('--growth-mobile-days', String(Math.ceil(calendar.length / 2) || 16));
+    ui.days.setAttribute('aria-label', `${monthKey ? monthLabel(monthKey) : 'Monthly'} check-in dates${lastSaved ? ' · Last saved progress' : !progress ? ' · Attendance unknown' : ''}`);
+    ui.days.replaceChildren();
+    for (const day of calendar) {
+      const isToday = day.dateKey === dateKey;
+      const checked = Boolean(progress && day.checkedIn);
+      const missed = Boolean(progress && day.dateKey < dateKey && !day.checkedIn);
+      const future = Boolean(progress && day.dateKey > dateKey);
+      const cell = append(ui.days, 'div', `growth-rail-day${checked ? ' is-done' : ''}${missed ? ' is-missed' : ''}${future ? ' is-future' : ''}${isToday ? ' is-today' : ''}${!progress ? ' is-unknown' : ''}`);
+      cell.dataset.date = day.dateKey;
+      cell.setAttribute('role', 'listitem');
+      const status = !progress ? `${isToday ? 'today · ' : ''}${state.apiUnavailable ? 'attendance unavailable' : 'sign in to view saved attendance'}`
+        : checked ? 'checked in' : isToday ? 'today · not yet checked in' : missed ? 'not checked in · earlier progress retained' : 'upcoming';
+      const label = `${dateLabel(day.dateKey)}: ${status}${lastSaved ? ' · Last saved progress' : ''}`;
+      cell.setAttribute('aria-label', label);
+      cell.title = label;
+      if (isToday) cell.setAttribute('aria-current', 'date');
+      append(cell, 'span', 'growth-rail-number', String(Number(day.dateKey.slice(-2)))).setAttribute('aria-hidden', 'true');
+      append(cell, 'span', 'growth-rail-mark', checked ? '✓' : isToday ? '○' : missed ? '–' : '·').setAttribute('aria-hidden', 'true');
     }
   }
 
@@ -444,7 +495,11 @@ export function createDailyGrowth({
     const complete = invitationComplete();
     const unknown = state.apiUnavailable ? 'Progress unavailable' : 'Sign in to view badge progress';
     ui['summary-art'].src = GROWTH_ART[badge?.id] || GROWTH_ART.seedling;
+    ui['summary-art'].closest('.growth-reward').dataset.rank = badge?.id || 'seedling';
     ui['summary-art-label'].textContent = badge?.label || 'Monthly badges';
+    ui['teaser-badge'].textContent = badge?.label || 'Monthly badges';
+    ui['teaser-kind'].textContent = allEarned ? 'Attendance complete' : 'Next badge';
+    ui['reward-kind'].textContent = allEarned ? 'MONTHLY ATTENDANCE COMPLETE' : 'NEXT MONTHLY BADGE';
     ui['badge-preview'].classList.toggle('is-preview', !progress);
     ui['badge-preview'].classList.toggle('is-complete', Boolean(progress && badge?.earned));
     ui['summary-count'].textContent = progress
@@ -453,23 +508,20 @@ export function createDailyGrowth({
       : state.apiUnavailable ? 'Your badges will be here.' : 'Your first badge starts here.';
     ui['summary-label'].textContent = progress
       ? `${badge ? `${Math.min(progress.checkedInDays, badge.target)} / ${badge.target} check-ins` : `${progress.checkedInDays} check-ins this month`}${lastSaved ? ' · Last saved' : ''}`
-      : state.apiUnavailable ? 'Progress temporarily unavailable' : `${badge.label} · ${badge.target} check-ins to earn`;
+      : state.apiUnavailable ? 'Progress temporarily unavailable' : `${badge.target} cumulative check-ins to earn`;
     ui['summary-meter'].hidden = !progress || !badge;
     meter(ui['summary-meter'], progress?.checkedInDays, progress ? badge?.target : null, progress && badge
       ? `${Math.min(progress.checkedInDays, badge.target)} of ${badge.target} check-ins toward ${badge.label}${lastSaved && !state.stale ? ' · Last saved progress' : ''}`
       : unknown);
-    ui['badge-preview'].setAttribute('aria-label', `${ui['summary-count'].textContent} ${ui['summary-label'].textContent}. ${complete ? 'View badge progress' : 'Reveal today’s quest'}.`);
-    ui['invitation-title'].textContent = lastSaved ? 'Let’s catch up on your growth.'
-      : !progress ? 'What will you grow today?'
-        : complete ? 'Today’s growth is complete.'
-          : progress.today.checkedIn ? 'You’re checked in. Quest time?' : 'Make today count.';
+    ui['badge-preview'].setAttribute('aria-label', `Daily Growth. ${complete ? 'View badge progress' : 'View daily tasks'}.`);
+    ui['invitation-title'].textContent = 'Daily Growth';
     ui['summary-note'].textContent = lastSaved
-      ? refreshing ? 'Checking your latest growth. Last saved progress is shown.' : 'Last saved progress is shown. Open your quests to refresh.'
+      ? refreshing ? 'Checking for updates. Last saved progress is shown.' : 'Last saved progress. Open your tasks to refresh.'
       : state.apiUnavailable ? 'We couldn’t load Daily Growth. Please try again shortly.'
-        : !progress ? 'Check in, discover today’s quest, and collect badges.'
-          : complete ? 'Your check-in and quest are saved. Explore your badges.'
-            : progress.today.checkedIn ? 'Your check-in is saved. Discover today’s quest and keep growing.'
-              : 'Check in now, then discover today’s quest.';
+        : !progress ? 'Check in. Play. Grow your collection.'
+          : complete ? 'Today’s check-in and quest are saved.'
+            : progress.today.checkedIn ? 'Checked in. Ready for today’s quest?'
+              : 'Make today count. Check in and keep growing.';
     ui['invitation-hint'].textContent = lastSaved ? 'Last saved progress · Refresh to check today.'
       : refreshing ? 'Loading your growth…'
       : state.apiUnavailable ? 'Your saved progress has not changed.'
@@ -478,9 +530,17 @@ export function createDailyGrowth({
             : !progress ? 'Loading your saved progress…'
               : complete ? 'Check-in and quest saved · Come back tomorrow.'
                 : progress.today.checkedIn ? 'Check-in saved · Today’s quest is optional.' : 'Free check-in · No game required';
-    ui['details-label'].textContent = complete ? 'View badge progress' : 'Reveal today’s quest';
-    ui['details-hint'].textContent = lastSaved ? 'Last saved progress · Refresh inside'
-      : complete ? `${next ? 'Your next badge' : 'Earned badges'} · Monthly calendar · Arcade Passport` : 'Quests · Badges · Arcade Passport';
+    ui['details-label'].textContent = complete ? 'View badge progress' : 'View daily tasks';
+    ui['details-hint'].textContent = progress
+      ? `${next ? `${remaining} more check-in${remaining === 1 ? '' : 's'}` : allEarned ? 'Earned automatically ✓' : 'Keep growing'}${lastSaved ? ' · Last saved' : ''}`
+      : state.apiUnavailable ? 'Progress unavailable' : `${badge.target} check-ins to earn`;
+    ui['reward-earned'].replaceChildren();
+    const earned = progress?.milestones.filter((milestone) => milestone.earned) || [];
+    ui['reward-earned'].hidden = !earned.length;
+    if (earned.length) {
+      append(ui['reward-earned'], 'span', 'growth-reward-earned-label', `Earned this month${lastSaved ? ' · Last saved' : ''}`);
+      for (const milestone of earned) append(ui['reward-earned'], 'span', 'growth-earned-chip', `${milestone.label} ✓`);
+    }
     syncInvitationExpanded();
   }
 
@@ -488,28 +548,28 @@ export function createDailyGrowth({
     const progress = state.progress;
     const unavailable = state.apiUnavailable || state.stale;
     const next = progress?.milestones.find((milestone) => !milestone.earned && milestone.target > progress.checkedInDays);
-    const finalMilestone = progress?.milestones.at(-1);
-    const attendanceTarget = next || finalMilestone;
     const unknown = unavailable ? 'Progress unavailable' : 'Sign in to view progress';
     renderInvitation(progress);
     renderJourney(progress);
-    ui['visit-count'].textContent = progress ? String(progress.checkedInDays) : '—';
-    ui['visit-total'].textContent = progress ? `/ ${progress.calendar.length} days` : 'days checked in';
-    ui['visit-label'].textContent = state.stale ? 'check-ins · last saved progress' : 'check-ins this month';
-    ui['attendance-next'].textContent = progress
-      ? next ? `${next.target - progress.checkedInDays} more to ${next.label}` : finalMilestone ? 'Full canopy unlocked ✓' : 'Check in and keep growing'
-      : unavailable ? 'Your saved progress is safe' : 'Your next badge awaits';
-    meter(ui['attendance-ring'], progress?.checkedInDays, progress?.calendar.length, progress ? `${progress.checkedInDays} of ${progress.calendar.length} days checked in this month` : unknown);
-    meter(ui['attendance-meter'], progress?.checkedInDays, attendanceTarget?.target, progress && attendanceTarget ? `${Math.min(progress.checkedInDays, attendanceTarget.target)} of ${attendanceTarget.target} check-ins toward ${attendanceTarget.label}` : unknown);
+    renderDayRail(progress);
     meter(ui['quest-meter'], progress ? Number(progress.today.questCompleted) : null, 1, progress ? `${Number(progress.today.questCompleted)} of 1 daily quests complete` : unknown);
     meter(ui['passport-meter'], progress?.passport.completedGameIds.length, progress?.passport.enabledGames.length, progress ? `${progress.passport.completedGameIds.length} of ${progress.passport.enabledGames.length} required Passport games` : unknown);
     root.querySelector('.growth-quest').classList.toggle('is-complete', Boolean(progress?.today.questCompleted));
     ui['month-content'].hidden = !progress;
     ui['month-empty'].hidden = Boolean(progress);
     ui['month-empty'].textContent = unavailable ? 'Your monthly calendar is unavailable. Refresh to try again.' : 'Sign in to see your real monthly calendar.';
-    ui['check-in'].hidden = !state.session;
-    ui['check-in'].disabled = Boolean(state.busy) || !state.session || !progress || progress.today.checkedIn;
-    ui['check-in'].textContent = state.busy === 'checking-in' ? 'Saving check-in…' : progress?.today.checkedIn ? 'Checked in today ✓' : 'Check in today';
+    for (const id of ['check-in', 'check-in-row']) {
+      ui[id].hidden = !state.session;
+      ui[id].disabled = Boolean(state.busy) || !state.session || !progress || progress.today.checkedIn;
+      ui[id].textContent = state.busy === 'checking-in' ? 'Saving check-in…' : progress?.today.checkedIn ? 'Checked in ✓' : id === 'check-in' ? 'Check in today' : 'Check in';
+    }
+    ui['check-in-task'].classList.toggle('is-complete', Boolean(progress?.today.checkedIn));
+    ui['check-in-state'].textContent = progress
+      ? `${progress.today.checkedIn ? 'Today’s attendance is saved.' : 'Check in today to grow your monthly progress.'}${state.stale ? ' Last saved progress.' : ''}`
+      : unavailable ? 'Attendance is temporarily unavailable.' : state.wallet ? 'Sign in to save today’s attendance.' : 'Connect your wallet, then sign in to save attendance.';
+    ui['task-auth'].hidden = Boolean(state.session);
+    ui['task-auth'].disabled = Boolean(state.busy) || !state.walletReady;
+    ui['task-auth'].textContent = state.busy === 'signing-in' ? 'Approve message…' : state.busy === 'connecting' ? 'Connecting…' : state.wallet ? 'Sign in' : 'Connect wallet';
     ui['check-note'].textContent = progress?.today.checkedIn
       ? 'Your attendance is saved. A quest is optional for check-in.'
       : progress ? 'Check in without playing. A verified quest also checks you in.'
@@ -530,6 +590,10 @@ export function createDailyGrowth({
       : unavailable ? 'Earned badges are unavailable. Refresh to try again.' : 'Sign in to see your earned monthly badges.';
     if (!progress) {
       ui.calendar.replaceChildren();
+      ui['month-visits'].textContent = '—';
+      ui['month-quests'].textContent = '—';
+      ui.next.textContent = '';
+      ui['calendar-title'].textContent = 'Your month';
       return;
     }
     ui['month-visits'].textContent = String(progress.checkedInDays);
@@ -906,6 +970,12 @@ export function createDailyGrowth({
   on(ui['sign-out'], 'click', () => { void signOut(); });
   on(ui.refresh, 'click', () => { void refresh(); });
   on(ui['check-in'], 'click', () => { void checkIn(); });
+  on(ui['check-in-row'], 'click', () => { void checkIn(); });
+  on(ui['task-auth'], 'click', () => {
+    if (state.busy || state.session) return;
+    if (state.wallet) ui['sign-in'].click();
+    else { ui.connect.click(); pickerTrigger = ui['task-auth']; }
+  });
   on(ui['game-select'], 'change', () => { state.selectedGameId = ui['game-select'].value; render(); });
   on(ui.play, 'click', () => {
     state.launched = true;
@@ -949,6 +1019,11 @@ export function createDailyGrowth({
     if (!ui.details.open) selectTab(invitationTab());
   });
   on(ui.details, 'toggle', syncInvitationExpanded);
+  on(ui.collapse, 'click', () => {
+    ui.details.open = false;
+    syncInvitationExpanded();
+    ui.details.querySelector('summary').focus({ preventScroll: true });
+  });
   on(view, 'focus', () => {
     if (state.session && !sessionIsCurrent()) return;
     if (state.session && state.launched && !state.busy) {

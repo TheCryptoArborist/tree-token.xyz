@@ -1,0 +1,405 @@
+{
+  "verifiedAt": "2026-11-02T02:40:13.009458+00:00",
+  "stage": "source-verified",
+  "sourceSha256": {
+    "play/index.html": "8a30d1fe1abf8e01c2a6f21b00bbfa2761378e6c114b6c778ef809c755927483",
+    "scripts/arcade-daily-growth.js": "582d0bff44cb76ef07a07ee84607aae644d20f25d26a2c3c26d7985c128fca2f",
+    "styles/tree-arcade-suite.css": "4f790d4a3a059dbe37632e8ac751c04d71f233f98b1b4a7132609d264c09bc5c"
+  },
+  "controller": {
+    "passed": 39,
+    "topLevelCases": 35,
+    "monthLengthSubcases": 4,
+    "failed": 0,
+    "report": "docs/review/daily-growth-quest-layout/controller-tests.tap"
+  },
+  "nativeBrowser": {
+    "passed": 16,
+    "report": "docs/review/daily-growth-quest-layout/browser-report.json",
+    "widths": [
+      1440,
+      390,
+      320
+    ],
+    "monthLengths": [
+      28,
+      29,
+      30,
+      31
+    ],
+    "syntheticWalletsAndSessions": true,
+    "noOverflow": true,
+    "noBrowserErrors": true,
+    "allFirstCabinetsInInitialViewport": true,
+    "dimensions": [
+      {
+        "mode": "signed-out",
+        "baseline": {
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "panel": {
+            "top": 267,
+            "height": 162,
+            "width": 1376
+          },
+          "firstPoster": {
+            "top": 540.578125,
+            "height": 429.03125,
+            "width": 327.5
+          },
+          "scrollWidth": 1440,
+          "open": false,
+          "overflow": []
+        },
+        "current": {
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "panel": {
+            "top": 267,
+            "height": 220.984375,
+            "width": 1376
+          },
+          "firstPoster": {
+            "top": 599.5625,
+            "height": 429.03125,
+            "width": 327.5
+          },
+          "scrollWidth": 1440,
+          "open": false,
+          "overflow": []
+        },
+        "heightDelta": 58.984375,
+        "posterDelta": 58.984375
+      },
+      {
+        "mode": "authenticated",
+        "baseline": {
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "panel": {
+            "top": 267,
+            "height": 162,
+            "width": 1376
+          },
+          "firstPoster": {
+            "top": 540.578125,
+            "height": 429.03125,
+            "width": 327.5
+          },
+          "scrollWidth": 1440,
+          "open": false,
+          "overflow": []
+        },
+        "current": {
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "panel": {
+            "top": 267,
+            "height": 242.578125,
+            "width": 1376
+          },
+          "firstPoster": {
+            "top": 621.15625,
+            "height": 429.03125,
+            "width": 327.5
+          },
+          "scrollWidth": 1440,
+          "open": false,
+          "overflow": []
+        },
+        "heightDelta": 80.578125,
+        "posterDelta": 80.578125
+      },
+      {
+        "mode": "signed-out",
+        "baseline": {
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "panel": {
+            "top": 261.6875,
+            "height": 269.390625,
+            "width": 362
+          },
+          "firstPoster": {
+            "top": 636.46875,
+            "height": 399.890625,
+            "width": 362
+          },
+          "scrollWidth": 390,
+          "open": false,
+          "overflow": []
+        },
+        "current": {
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "panel": {
+            "top": 261.6875,
+            "height": 293.734375,
+            "width": 362
+          },
+          "firstPoster": {
+            "top": 660.8125,
+            "height": 399.890625,
+            "width": 362
+          },
+          "scrollWidth": 390,
+          "open": false,
+          "overflow": []
+        },
+        "heightDelta": 24.34375,
+        "posterDelta": 24.34375
+      },
+      {
+        "mode": "connected",
+        "baseline": {
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "panel": {
+            "top": 261.6875,
+            "height": 289.984375,
+            "width": 362
+          },
+          "firstPoster": {
+            "top": 657.0625,
+            "height": 399.890625,
+            "width": 362
+          },
+          "scrollWidth": 390,
+          "open": false,
+          "overflow": []
+        },
+        "current": {
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "panel": {
+            "top": 261.6875,
+            "height": 298.46875,
+            "width": 362
+          },
+          "firstPoster": {
+            "top": 665.546875,
+            "height": 399.890625,
+            "width": 362
+          },
+          "scrollWidth": 390,
+          "open": false,
+          "overflow": []
+        },
+        "heightDelta": 8.484375,
+        "posterDelta": 8.484375
+      },
+      {
+        "mode": "authenticated",
+        "baseline": {
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "panel": {
+            "top": 261.6875,
+            "height": 261.984375,
+            "width": 362
+          },
+          "firstPoster": {
+            "top": 629.0625,
+            "height": 399.890625,
+            "width": 362
+          },
+          "scrollWidth": 390,
+          "open": false,
+          "overflow": []
+        },
+        "current": {
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "panel": {
+            "top": 261.6875,
+            "height": 298.46875,
+            "width": 362
+          },
+          "firstPoster": {
+            "top": 665.546875,
+            "height": 399.890625,
+            "width": 362
+          },
+          "scrollWidth": 390,
+          "open": false,
+          "overflow": []
+        },
+        "heightDelta": 36.484375,
+        "posterDelta": 36.484375
+      },
+      {
+        "mode": "signed-out",
+        "baseline": {
+          "viewport": {
+            "width": 320,
+            "height": 740
+          },
+          "panel": {
+            "top": 278.90625,
+            "height": 262.078125,
+            "width": 300
+          },
+          "firstPoster": {
+            "top": 646.375,
+            "height": 375.734375,
+            "width": 300
+          },
+          "scrollWidth": 320,
+          "open": false,
+          "overflow": []
+        },
+        "current": {
+          "viewport": {
+            "width": 320,
+            "height": 740
+          },
+          "panel": {
+            "top": 278.90625,
+            "height": 289.734375,
+            "width": 300
+          },
+          "firstPoster": {
+            "top": 674.03125,
+            "height": 375.734375,
+            "width": 300
+          },
+          "scrollWidth": 320,
+          "open": false,
+          "overflow": []
+        },
+        "heightDelta": 27.65625,
+        "posterDelta": 27.65625
+      },
+      {
+        "mode": "connected",
+        "baseline": {
+          "viewport": {
+            "width": 320,
+            "height": 740
+          },
+          "panel": {
+            "top": 278.90625,
+            "height": 331.671875,
+            "width": 300
+          },
+          "firstPoster": {
+            "top": 715.96875,
+            "height": 375.734375,
+            "width": 300
+          },
+          "scrollWidth": 320,
+          "open": false,
+          "overflow": []
+        },
+        "current": {
+          "viewport": {
+            "width": 320,
+            "height": 740
+          },
+          "panel": {
+            "top": 278.90625,
+            "height": 293.328125,
+            "width": 300
+          },
+          "firstPoster": {
+            "top": 677.625,
+            "height": 375.734375,
+            "width": 300
+          },
+          "scrollWidth": 320,
+          "open": false,
+          "overflow": []
+        },
+        "heightDelta": -38.34375,
+        "posterDelta": -38.34375
+      },
+      {
+        "mode": "authenticated",
+        "baseline": {
+          "viewport": {
+            "width": 320,
+            "height": 740
+          },
+          "panel": {
+            "top": 278.90625,
+            "height": 269.828125,
+            "width": 300
+          },
+          "firstPoster": {
+            "top": 654.125,
+            "height": 375.734375,
+            "width": 300
+          },
+          "scrollWidth": 320,
+          "open": false,
+          "overflow": []
+        },
+        "current": {
+          "viewport": {
+            "width": 320,
+            "height": 740
+          },
+          "panel": {
+            "top": 278.90625,
+            "height": 293.328125,
+            "width": 300
+          },
+          "firstPoster": {
+            "top": 677.625,
+            "height": 375.734375,
+            "width": 300
+          },
+          "scrollWidth": 320,
+          "open": false,
+          "overflow": []
+        },
+        "heightDelta": 23.5,
+        "posterDelta": 23.5
+      }
+    ]
+  },
+  "releaseGuards": {
+    "passed": 18,
+    "report": "docs/daily-growth-quest-layout-release-guards.json"
+  },
+  "releasePreservation": {
+    "baselineDeploy": "6ae7eee018d3f212df6696d0",
+    "staticPaths": 284,
+    "changedPaths": [
+      "/play/index.html",
+      "/scripts/arcade-daily-growth.js",
+      "/styles/tree-arcade-suite.css"
+    ],
+    "preservedStaticPaths": 281,
+    "completeFunctionRecordsToPreserve": 41,
+    "schedulesToPreserve": 5,
+    "canopyCheckoutRedirectSha1": "4450ad95c97a2045c2575bd2cc75c49a8a2ba6c7",
+    "backendRebuilt": false,
+    "databaseChanges": false,
+    "walletAdapterOrDependencyChanges": false
+  },
+  "realWalletSignatures": 0,
+  "transactions": 0,
+  "productionAttendanceWrites": 0,
+  "hostedVerification": "pending candidate creation"
+}

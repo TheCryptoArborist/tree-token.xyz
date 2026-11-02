@@ -1,0 +1,1087 @@
+{
+  "passed": true,
+  "synthetic": true,
+  "checkedAt": "2026-11-02T02:39:44.044Z",
+  "sourceSha256": {
+    "play/index.html": "8a30d1fe1abf8e01c2a6f21b00bbfa2761378e6c114b6c778ef809c755927483",
+    "scripts/arcade-daily-growth.js": "582d0bff44cb76ef07a07ee84607aae644d20f25d26a2c3c26d7985c128fca2f",
+    "styles/tree-arcade-suite.css": "4f790d4a3a059dbe37632e8ac751c04d71f233f98b1b4a7132609d264c09bc5c"
+  },
+  "baseline": {
+    "commit": "f35d1f6326986eca27807e13f4ec9227456b7f4a",
+    "deploy": "6ae7eee018d3f212df6696d0",
+    "sourceSha256": {
+      "play/index.html": "339ffb8b797c823d5be51e367a18216f1bb2a4f1e55ebc77f37a664ec6ef7d4f",
+      "scripts/arcade-daily-growth.js": "10b6e15190672dd9b54cedf129bd866b07929d1e96a8cd2de952ef5e1fbea2da",
+      "styles/tree-arcade-suite.css": "f97771458749f4e2a367eb1749fc0563734a99468652e69a4ae6d5a93e4988fb"
+    }
+  },
+  "checks": [
+    {
+      "name": "1440px signed-out: honest rail, collapsed wallet/layout, cabinet preservation",
+      "passed": true
+    },
+    {
+      "name": "1440px authenticated: honest rail, collapsed wallet/layout, cabinet preservation, one explicit synchronized check-in, tasks/calendar/badges and four Passport games",
+      "passed": true
+    },
+    {
+      "name": "390px signed-out: honest rail, collapsed wallet/layout, cabinet preservation",
+      "passed": true
+    },
+    {
+      "name": "390px connected: honest rail, collapsed wallet/layout, cabinet preservation",
+      "passed": true
+    },
+    {
+      "name": "390px authenticated: honest rail, collapsed wallet/layout, cabinet preservation, one explicit synchronized check-in, tasks/calendar/badges and four Passport games",
+      "passed": true
+    },
+    {
+      "name": "320px signed-out: honest rail, collapsed wallet/layout, cabinet preservation",
+      "passed": true
+    },
+    {
+      "name": "320px connected: honest rail, collapsed wallet/layout, cabinet preservation",
+      "passed": true
+    },
+    {
+      "name": "320px authenticated: honest rail, collapsed wallet/layout, cabinet preservation, one explicit synchronized check-in, tasks/calendar/badges and four Passport games",
+      "passed": true
+    },
+    {
+      "name": "28-day month renders every date correctly at all three widths",
+      "passed": true
+    },
+    {
+      "name": "29-day month renders every date correctly at all three widths",
+      "passed": true
+    },
+    {
+      "name": "31-day month renders every date correctly at all three widths",
+      "passed": true
+    },
+    {
+      "name": "Initial loading has no fabricated attendance; successful public month yields neutral dates",
+      "passed": true
+    },
+    {
+      "name": "No-progress error retains neutral dates without zero counts or invented missed days",
+      "passed": true
+    },
+    {
+      "name": "Stale response preserves exactly the recorded dates with last-saved labeling and no new credit",
+      "passed": true
+    },
+    {
+      "name": "Fourteen nonconsecutive check-ins automatically show Deep Roots earned and Full Canopy next",
+      "passed": true
+    },
+    {
+      "name": "Account change immediately replaces wallet identity and clears previous attendance",
+      "passed": true
+    }
+  ],
+  "dimensions": [
+    {
+      "mode": "signed-out",
+      "baseline": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "panel": {
+          "top": 267,
+          "height": 162,
+          "width": 1376
+        },
+        "firstPoster": {
+          "top": 540.578125,
+          "height": 429.03125,
+          "width": 327.5
+        },
+        "scrollWidth": 1440,
+        "open": false,
+        "overflow": []
+      },
+      "current": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "panel": {
+          "top": 267,
+          "height": 220.984375,
+          "width": 1376
+        },
+        "firstPoster": {
+          "top": 599.5625,
+          "height": 429.03125,
+          "width": 327.5
+        },
+        "scrollWidth": 1440,
+        "open": false,
+        "overflow": []
+      },
+      "heightDelta": 58.984375,
+      "posterDelta": 58.984375
+    },
+    {
+      "mode": "authenticated",
+      "baseline": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "panel": {
+          "top": 267,
+          "height": 162,
+          "width": 1376
+        },
+        "firstPoster": {
+          "top": 540.578125,
+          "height": 429.03125,
+          "width": 327.5
+        },
+        "scrollWidth": 1440,
+        "open": false,
+        "overflow": []
+      },
+      "current": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "panel": {
+          "top": 267,
+          "height": 242.578125,
+          "width": 1376
+        },
+        "firstPoster": {
+          "top": 621.15625,
+          "height": 429.03125,
+          "width": 327.5
+        },
+        "scrollWidth": 1440,
+        "open": false,
+        "overflow": []
+      },
+      "heightDelta": 80.578125,
+      "posterDelta": 80.578125
+    },
+    {
+      "mode": "signed-out",
+      "baseline": {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "panel": {
+          "top": 261.6875,
+          "height": 269.390625,
+          "width": 362
+        },
+        "firstPoster": {
+          "top": 636.46875,
+          "height": 399.890625,
+          "width": 362
+        },
+        "scrollWidth": 390,
+        "open": false,
+        "overflow": []
+      },
+      "current": {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "panel": {
+          "top": 261.6875,
+          "height": 293.734375,
+          "width": 362
+        },
+        "firstPoster": {
+          "top": 660.8125,
+          "height": 399.890625,
+          "width": 362
+        },
+        "scrollWidth": 390,
+        "open": false,
+        "overflow": []
+      },
+      "heightDelta": 24.34375,
+      "posterDelta": 24.34375
+    },
+    {
+      "mode": "connected",
+      "baseline": {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "panel": {
+          "top": 261.6875,
+          "height": 289.984375,
+          "width": 362
+        },
+        "firstPoster": {
+          "top": 657.0625,
+          "height": 399.890625,
+          "width": 362
+        },
+        "scrollWidth": 390,
+        "open": false,
+        "overflow": []
+      },
+      "current": {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "panel": {
+          "top": 261.6875,
+          "height": 298.46875,
+          "width": 362
+        },
+        "firstPoster": {
+          "top": 665.546875,
+          "height": 399.890625,
+          "width": 362
+        },
+        "scrollWidth": 390,
+        "open": false,
+        "overflow": []
+      },
+      "heightDelta": 8.484375,
+      "posterDelta": 8.484375
+    },
+    {
+      "mode": "authenticated",
+      "baseline": {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "panel": {
+          "top": 261.6875,
+          "height": 261.984375,
+          "width": 362
+        },
+        "firstPoster": {
+          "top": 629.0625,
+          "height": 399.890625,
+          "width": 362
+        },
+        "scrollWidth": 390,
+        "open": false,
+        "overflow": []
+      },
+      "current": {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "panel": {
+          "top": 261.6875,
+          "height": 298.46875,
+          "width": 362
+        },
+        "firstPoster": {
+          "top": 665.546875,
+          "height": 399.890625,
+          "width": 362
+        },
+        "scrollWidth": 390,
+        "open": false,
+        "overflow": []
+      },
+      "heightDelta": 36.484375,
+      "posterDelta": 36.484375
+    },
+    {
+      "mode": "signed-out",
+      "baseline": {
+        "viewport": {
+          "width": 320,
+          "height": 740
+        },
+        "panel": {
+          "top": 278.90625,
+          "height": 262.078125,
+          "width": 300
+        },
+        "firstPoster": {
+          "top": 646.375,
+          "height": 375.734375,
+          "width": 300
+        },
+        "scrollWidth": 320,
+        "open": false,
+        "overflow": []
+      },
+      "current": {
+        "viewport": {
+          "width": 320,
+          "height": 740
+        },
+        "panel": {
+          "top": 278.90625,
+          "height": 289.734375,
+          "width": 300
+        },
+        "firstPoster": {
+          "top": 674.03125,
+          "height": 375.734375,
+          "width": 300
+        },
+        "scrollWidth": 320,
+        "open": false,
+        "overflow": []
+      },
+      "heightDelta": 27.65625,
+      "posterDelta": 27.65625
+    },
+    {
+      "mode": "connected",
+      "baseline": {
+        "viewport": {
+          "width": 320,
+          "height": 740
+        },
+        "panel": {
+          "top": 278.90625,
+          "height": 331.671875,
+          "width": 300
+        },
+        "firstPoster": {
+          "top": 715.96875,
+          "height": 375.734375,
+          "width": 300
+        },
+        "scrollWidth": 320,
+        "open": false,
+        "overflow": []
+      },
+      "current": {
+        "viewport": {
+          "width": 320,
+          "height": 740
+        },
+        "panel": {
+          "top": 278.90625,
+          "height": 293.328125,
+          "width": 300
+        },
+        "firstPoster": {
+          "top": 677.625,
+          "height": 375.734375,
+          "width": 300
+        },
+        "scrollWidth": 320,
+        "open": false,
+        "overflow": []
+      },
+      "heightDelta": -38.34375,
+      "posterDelta": -38.34375
+    },
+    {
+      "mode": "authenticated",
+      "baseline": {
+        "viewport": {
+          "width": 320,
+          "height": 740
+        },
+        "panel": {
+          "top": 278.90625,
+          "height": 269.828125,
+          "width": 300
+        },
+        "firstPoster": {
+          "top": 654.125,
+          "height": 375.734375,
+          "width": 300
+        },
+        "scrollWidth": 320,
+        "open": false,
+        "overflow": []
+      },
+      "current": {
+        "viewport": {
+          "width": 320,
+          "height": 740
+        },
+        "panel": {
+          "top": 278.90625,
+          "height": 293.328125,
+          "width": 300
+        },
+        "firstPoster": {
+          "top": 677.625,
+          "height": 375.734375,
+          "width": 300
+        },
+        "scrollWidth": 320,
+        "open": false,
+        "overflow": []
+      },
+      "heightDelta": 23.5,
+      "posterDelta": 23.5
+    }
+  ],
+  "calendarCases": [
+    {
+      "month": "2027-02",
+      "days": 28,
+      "width": 1440
+    },
+    {
+      "month": "2027-02",
+      "days": 28,
+      "width": 390
+    },
+    {
+      "month": "2027-02",
+      "days": 28,
+      "width": 320
+    },
+    {
+      "month": "2028-02",
+      "days": 29,
+      "width": 1440
+    },
+    {
+      "month": "2028-02",
+      "days": 29,
+      "width": 390
+    },
+    {
+      "month": "2028-02",
+      "days": 29,
+      "width": 320
+    },
+    {
+      "month": "2026-12",
+      "days": 31,
+      "width": 1440
+    },
+    {
+      "month": "2026-12",
+      "days": 31,
+      "width": 390
+    },
+    {
+      "month": "2026-12",
+      "days": 31,
+      "width": 320
+    }
+  ],
+  "cabinetLinks": {
+    "force-title": "/play/treeforce89/",
+    "arboretum-title": "https://treegrow.xyz/",
+    "deadfall-title": "https://tree-token.xyz/play/deadfall-run/",
+    "canopy-title": "https://tree-token.xyz/play/canopy-defense/preview/",
+    "garden-bot-title": "https://nftree.net/battle/garden-bot",
+    "pvp-title": "https://nftree.net/battle/pvp",
+    "trials-title": "https://nftree.net/battle/trials",
+    "clash-title": "https://nftree.net/battle/canopy-clash"
+  },
+  "screenshots": [
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/daily-growth-quest-layout/signed-out-desktop.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/daily-growth-quest-layout/signed-in-collapsed-1440.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/daily-growth-quest-layout/signed-in-expanded-desktop.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/daily-growth-quest-layout/signed-in-collapsed-390.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/daily-growth-quest-layout/connected-collapsed-320.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/daily-growth-quest-layout/signed-in-collapsed-320.jpg",
+    "/workspace/scratch/68c975ebd06c/arcade-growth-invitation/docs/review/daily-growth-quest-layout/leap-month-320.jpg"
+  ],
+  "calls": [
+    {
+      "phase": "baseline",
+      "mode": "signed-out",
+      "width": 1440,
+      "month": "2026-11",
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "signed-out",
+      "width": 1440,
+      "month": "2026-11",
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        }
+      ]
+    },
+    {
+      "phase": "baseline",
+      "mode": "authenticated",
+      "width": 1440,
+      "month": "2026-11",
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "authenticated",
+      "width": 1440,
+      "month": "2026-11",
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        },
+        {
+          "type": "api",
+          "action": "check-in",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        }
+      ]
+    },
+    {
+      "phase": "baseline",
+      "mode": "signed-out",
+      "width": 390,
+      "month": "2026-11",
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "signed-out",
+      "width": 390,
+      "month": "2026-11",
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        }
+      ]
+    },
+    {
+      "phase": "baseline",
+      "mode": "connected",
+      "width": 390,
+      "month": "2026-11",
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "connected",
+      "width": 390,
+      "month": "2026-11",
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        }
+      ]
+    },
+    {
+      "phase": "baseline",
+      "mode": "authenticated",
+      "width": 390,
+      "month": "2026-11",
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "authenticated",
+      "width": 390,
+      "month": "2026-11",
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        },
+        {
+          "type": "api",
+          "action": "check-in",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        }
+      ]
+    },
+    {
+      "phase": "baseline",
+      "mode": "signed-out",
+      "width": 320,
+      "month": "2026-11",
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "signed-out",
+      "width": 320,
+      "month": "2026-11",
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        }
+      ]
+    },
+    {
+      "phase": "baseline",
+      "mode": "connected",
+      "width": 320,
+      "month": "2026-11",
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "connected",
+      "width": 320,
+      "month": "2026-11",
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        }
+      ]
+    },
+    {
+      "phase": "baseline",
+      "mode": "authenticated",
+      "width": 320,
+      "month": "2026-11",
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "authenticated",
+      "width": 320,
+      "month": "2026-11",
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        },
+        {
+          "type": "api",
+          "action": "check-in",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "authenticated",
+      "width": 1440,
+      "month": "2027-02",
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "authenticated",
+      "width": 390,
+      "month": "2027-02",
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "authenticated",
+      "width": 320,
+      "month": "2027-02",
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "authenticated",
+      "width": 1440,
+      "month": "2028-02",
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "authenticated",
+      "width": 390,
+      "month": "2028-02",
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "authenticated",
+      "width": 320,
+      "month": "2028-02",
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "authenticated",
+      "width": 1440,
+      "month": "2026-12",
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "authenticated",
+      "width": 390,
+      "month": "2026-12",
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "authenticated",
+      "width": 320,
+      "month": "2026-12",
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "loading",
+      "width": 320,
+      "month": "2026-11",
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        },
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "authenticated",
+      "width": 320,
+      "month": "2026-11",
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        }
+      ]
+    },
+    {
+      "phase": "current",
+      "mode": "milestone",
+      "width": 390,
+      "month": "2026-11",
+      "calls": [
+        {
+          "type": "api",
+          "action": "status",
+          "method": "GET",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        },
+        {
+          "type": "api",
+          "action": "sync",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        },
+        {
+          "type": "api",
+          "action": "check-in",
+          "method": "POST",
+          "synthetic": true,
+          "transport": "in-memory fixture; no network"
+        }
+      ]
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "blockedRequests": [],
+  "networkWrites": [],
+  "noRealWalletActions": true,
+  "noSignatures": true,
+  "noRemoteWrites": true
+}

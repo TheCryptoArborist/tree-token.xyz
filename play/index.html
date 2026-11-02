@@ -99,19 +99,12 @@
 
     <section id="arcade-daily-growth" class="growth-panel growth-panel--compact" aria-labelledby="growth-title" data-growth-state="loading">
       <div class="growth-strip">
-        <button class="growth-badge-preview" id="growth-badge-preview" type="button" aria-label="Explore your next badge and today’s quest" aria-controls="growth-details" aria-expanded="false">
-          <img class="growth-strip-art" id="growth-summary-art" src="/assets/arcade/garden-bot-poster.webp" alt="" width="80" height="80" decoding="async">
-          <span id="growth-summary-art-label">Seedling</span>
-        </button>
+        <button class="growth-badge-preview" id="growth-badge-preview" type="button" aria-label="Explore Daily Growth tasks and badges" aria-controls="growth-details" aria-expanded="false"><img class="growth-strip-art" src="/assets/arcade/garden-bot-poster.webp" alt="" width="56" height="60" decoding="async"></button>
         <div class="growth-strip-copy">
-          <p class="suite-eyebrow">DAILY GROWTH</p>
-          <h2 id="growth-title"><button class="growth-invitation-open" id="growth-invitation-open" type="button" aria-controls="growth-details" aria-expanded="false"><span id="growth-invitation-title">What will you grow today?</span></button></h2>
-          <p id="growth-summary-note">Check in, discover today’s quest, and collect badges.</p>
+          <p class="suite-eyebrow">TREE ARCADE · <span id="growth-season-tag">DAILY GROWTH</span></p>
+          <h2 id="growth-title"><button class="growth-invitation-open" id="growth-invitation-open" type="button" aria-controls="growth-details" aria-expanded="false"><span id="growth-invitation-title">Daily Growth</span></button></h2>
+          <p id="growth-summary-note">Check in. Play. Grow your collection.</p>
           <p class="growth-wallet-identity" id="growth-wallet-identity" role="status" aria-live="polite" aria-atomic="true" hidden><span class="growth-wallet-identity-status" id="growth-wallet-identity-status"></span><span class="growth-wallet-identity-name" id="growth-wallet-identity-name"></span><span class="growth-wallet-identity-address" id="growth-wallet-identity-address"></span></p>
-        </div>
-        <div class="growth-strip-progress">
-          <div class="growth-strip-tally"><strong id="growth-summary-count">Your first badge starts here.</strong><span id="growth-summary-label">Seedling · 3 check-ins to earn</span></div>
-          <div class="growth-meter is-unknown" id="growth-summary-meter" aria-label="Sign in to see monthly check-in progress" hidden><span></span></div>
         </div>
         <div class="growth-strip-actions">
           <button class="growth-primary" id="growth-connect" type="button" aria-haspopup="dialog" aria-controls="growth-wallet-picker" disabled>Connect to check in</button>
@@ -121,77 +114,83 @@
           <p class="growth-invitation-hint" id="growth-invitation-hint">Free check-in · No gas fee</p>
         </div>
       </div>
+      <div class="growth-month-rail" id="growth-month-rail">
+        <div class="growth-rail-heading"><strong id="growth-rail-month">YOUR MONTHLY CHECK-INS</strong><span id="growth-rail-count"><b id="growth-visit-count">—</b> <span id="growth-visit-total">Loading…</span></span></div>
+        <div class="growth-days" id="growth-days" role="list" aria-label="Monthly check-in dates"></div>
+        <p class="growth-rail-note" id="growth-rail-note">Loading the current month…</p>
+      </div>
       <details id="growth-details" class="growth-details">
-        <summary class="growth-details-toggle"><span class="growth-details-label--closed" id="growth-details-label">Reveal today’s quest</span><span class="growth-details-label--open">Close Daily Growth</span><span class="growth-details-hint" id="growth-details-hint">Quests · Badges · Arcade Passport</span></summary>
+        <summary class="growth-details-toggle"><span class="growth-next-teaser"><span id="growth-teaser-kind">Next badge</span> <strong id="growth-teaser-badge">Seedling</strong> <span id="growth-details-hint">3 check-ins to earn</span></span><span class="growth-details-label--closed" id="growth-details-label">View daily tasks</span><span class="growth-details-label--open">Hide quests</span></summary>
         <div class="growth-details-body">
-          <div class="growth-heading"><p class="growth-meta" id="growth-meta">Your NFTree holder progress, one day at a time.</p><span class="growth-season-tag" id="growth-season-tag">A new season every month</span></div>
-          <div class="growth-auth">
-            <div class="growth-auth-copy"><span class="growth-auth-symbol" aria-hidden="true"><img class="growth-art-icon" src="/assets/tree-command-logo-v2-512.png" alt="" width="44" height="44" loading="lazy"></span><div><p id="growth-wallet-state">Connect your NFTree wallet to save check-ins, daily quests, and monthly badges.</p><p class="growth-small" id="growth-auth-note">Sign-in uses a wallet message. It does not submit a transaction.</p></div></div>
+          <div class="growth-tabs" role="tablist" aria-label="Daily Growth progress">
+            <button id="growth-today-tab" type="button" role="tab" aria-controls="growth-today-panel" aria-selected="true" tabindex="0">Daily tasks</button>
+            <button id="growth-month-tab" type="button" role="tab" aria-controls="growth-month-panel" aria-selected="false" tabindex="-1">This month</button>
+            <button id="growth-badges-tab" type="button" role="tab" aria-controls="growth-badges-panel" aria-selected="false" tabindex="-1">Earned badges</button>
           </div>
-      <div class="growth-journey" aria-labelledby="growth-journey-title">
-        <div class="growth-journey-heading"><strong id="growth-journey-title">Your monthly growth path</strong><p class="growth-small" id="growth-journey-note">Check in on different days to unlock each badge.</p></div>
-        <div class="growth-journey-track" id="growth-journey-stops" aria-label="Monthly check-in badge goals"></div>
-      </div>
-      <div class="growth-tabs" role="tablist" aria-label="Daily Growth progress">
-        <button id="growth-today-tab" type="button" role="tab" aria-controls="growth-today-panel" aria-selected="true" tabindex="0">Today’s quest</button>
-        <button id="growth-month-tab" type="button" role="tab" aria-controls="growth-month-panel" aria-selected="false" tabindex="-1">This month</button>
-        <button id="growth-badges-tab" type="button" role="tab" aria-controls="growth-badges-panel" aria-selected="false" tabindex="-1">Earned badges</button>
-      </div>
-      <div id="growth-today-panel" class="growth-tab-panel" role="tabpanel" aria-labelledby="growth-today-tab" tabindex="0">
-        <div class="growth-today-grid">
-          <section class="growth-quest" aria-labelledby="growth-quest-title">
-            <div class="growth-quest-heading"><p class="growth-eyebrow">TODAY’S QUEST</p><span class="growth-quest-state" id="growth-quest-state">Checking availability…</span></div>
-            <div class="growth-quest-title-row"><img class="growth-quest-art" id="growth-quest-art" src="/assets/arcade/garden-bot-poster.webp" alt="" width="72" height="72" loading="lazy"><h3 id="growth-quest-title">Your next adventure</h3></div>
-            <div class="growth-meter growth-meter--quest is-unknown" id="growth-quest-meter" aria-label="Sign in to see today’s quest progress"><span></span></div>
-            <p class="growth-small growth-quest-rule" id="growth-quest-rule">Choose an eligible game to grow today’s progress.</p>
-            <p class="growth-pick"><span id="growth-pick-label">Today’s pick:</span> <strong id="growth-game-name">Checking eligible games…</strong></p>
-            <p class="growth-objective" id="growth-objective">Finish a verified game result, then refresh your progress here.</p>
-            <p class="growth-small growth-game-access" id="growth-game-access"></p>
-            <div class="growth-actions"><a class="growth-primary" id="growth-play" target="_blank" rel="noopener noreferrer" hidden>Play today’s pick <span aria-hidden="true">↗</span></a><button class="growth-secondary" id="growth-refresh" type="button" disabled>Refresh progress</button></div>
-            <details class="growth-alternative" id="growth-alternative" hidden>
-              <summary>Choose another eligible game</summary>
-              <label for="growth-game-select">Any listed game can complete today’s quest.</label>
-              <select id="growth-game-select"></select>
-            </details>
-            <p class="growth-small growth-quest-note" id="growth-quest-note">Complete the game and refresh before 00:00 UTC to earn that day’s quest and passport stamps. Opening a game alone does not count.</p>
-          </section>
-          <div class="growth-month-glance">
-            <section class="growth-attendance" aria-labelledby="growth-attendance-title">
-              <div class="growth-attendance-top"><div class="growth-progress-ring is-unknown" id="growth-attendance-ring"><strong id="growth-visit-count">—</strong><span id="growth-visit-total">days checked in</span></div><div class="growth-attendance-copy"><p class="growth-eyebrow" id="growth-attendance-title">MONTHLY CHECK-IN</p><p id="growth-visit-label">check-ins this month</p><strong id="growth-attendance-next">Your next badge awaits</strong></div></div>
-              <div class="growth-meter growth-meter--attendance is-unknown" id="growth-attendance-meter" aria-label="Sign in to see monthly check-in progress"><span></span></div>
-              <p class="growth-small" id="growth-check-note">Sign in to see your saved attendance. You can check in without playing a game.</p>
-            </section>
-            <details class="growth-passport" id="growth-passport" open>
-              <summary><span>Arcade Passport</span><span class="growth-passport-progress"><strong id="growth-passport-count">Sign in to view</strong><span class="growth-passport-toggle" aria-hidden="true">+</span></span></summary>
-              <div class="growth-meter growth-meter--passport is-unknown" id="growth-passport-meter" aria-label="Sign in to see required Passport stamps"><span></span></div>
-              <p class="growth-small" id="growth-passport-note">Collect this month’s game stamps at your own pace to earn the Arcade Passport badge.</p>
-              <div class="growth-stamps" id="growth-stamps" aria-label="Required Arcade Passport game stamps"></div>
-              <div class="growth-passport-optional" id="growth-passport-optional" hidden>
-                <p class="growth-small">Optional participation</p>
-                <div class="growth-stamps" id="growth-optional-stamps" aria-label="Optional participation stamps"></div>
+          <div class="growth-detail-grid">
+            <div class="growth-main">
+              <div id="growth-today-panel" class="growth-tab-panel" role="tabpanel" aria-labelledby="growth-today-tab" tabindex="0">
+                <div class="growth-section-title"><h3>Today’s tasks</h3><span id="growth-meta">Daily reset: 00:00 UTC</span></div>
+                <section class="growth-task" id="growth-check-in-task" aria-labelledby="growth-check-in-title">
+                  <img class="growth-task-art" src="/assets/arcade/garden-bot-poster.webp" alt="" width="40" height="44" loading="lazy">
+                  <div class="growth-task-copy"><h3 id="growth-check-in-title">Daily check-in</h3><p id="growth-check-in-state">Sign in to save today’s attendance.</p><span class="growth-task-benefit">One monthly check-in · No game required</span></div>
+                  <button class="growth-secondary growth-row-action" id="growth-check-in-row" type="button" hidden disabled>Check in</button>
+                  <button class="growth-secondary growth-row-action" id="growth-task-auth" type="button" disabled>Connect wallet</button>
+                </section>
+                <p class="growth-small growth-task-note" id="growth-check-note">Sign in to see your saved attendance. You can check in without playing a game.</p>
+                <details class="growth-quest" id="growth-quest-details">
+                  <summary class="growth-task">
+                    <img class="growth-task-art" id="growth-quest-art" src="/assets/arcade/garden-bot-poster.webp" alt="" width="40" height="44" loading="lazy">
+                    <div class="growth-task-copy"><h3 id="growth-quest-title">Play today’s quest</h3><p><span id="growth-pick-label">Today’s pick:</span> <strong id="growth-game-name">Checking eligible games…</strong></p><span class="growth-quest-state" id="growth-quest-state">Checking availability…</span></div>
+                    <span class="growth-task-disclosure">View quest <span aria-hidden="true">+</span></span>
+                  </summary>
+                  <div class="growth-quest-content">
+                    <div class="growth-meter growth-meter--quest is-unknown" id="growth-quest-meter" aria-label="Sign in to see today’s quest progress"><span></span></div>
+                    <p class="growth-small growth-quest-rule" id="growth-quest-rule">Choose an eligible game to grow today’s progress.</p>
+                    <p class="growth-objective" id="growth-objective">Finish a verified game result, then refresh your progress here.</p>
+                    <p class="growth-small growth-game-access" id="growth-game-access"></p>
+                    <div class="growth-actions"><a class="growth-primary" id="growth-play" target="_blank" rel="noopener noreferrer" hidden>Play today’s pick ↗</a><button class="growth-secondary" id="growth-refresh" type="button" disabled>Refresh progress</button></div>
+                    <details class="growth-alternative" id="growth-alternative" hidden><summary>Choose another eligible game</summary><label for="growth-game-select">Any listed game can complete today’s quest.</label><select id="growth-game-select"></select></details>
+                    <p class="growth-small growth-quest-note" id="growth-quest-note">Complete the game and refresh before 00:00 UTC to earn that day’s quest and Passport stamps. Opening a game alone does not count.</p>
+                  </div>
+                </details>
+                <details class="growth-passport" id="growth-passport">
+                  <summary><span><span class="growth-eyebrow">OPTIONAL MONTHLY GOAL</span><strong>Arcade Passport</strong></span><span class="growth-passport-progress"><strong id="growth-passport-count">Sign in to view</strong><span class="growth-passport-toggle" aria-hidden="true">+</span></span></summary>
+                  <div class="growth-passport-content">
+                    <div class="growth-meter growth-meter--passport is-unknown" id="growth-passport-meter" aria-label="Sign in to see required Passport stamps"><span></span></div>
+                    <p class="growth-small" id="growth-passport-note">Collect this month’s game stamps at your own pace to earn the Arcade Passport badge.</p>
+                    <div class="growth-stamps" id="growth-stamps" aria-label="Required Arcade Passport game stamps"></div>
+                    <div class="growth-passport-optional" id="growth-passport-optional" hidden><p class="growth-small">Optional participation</p><div class="growth-stamps" id="growth-optional-stamps" aria-label="Optional participation stamps"></div></div>
+                    <p class="growth-small" id="growth-passport-reward"></p>
+                    <p class="growth-small growth-tracking-note" id="growth-tracking-note" hidden>Passport stamps follow each game’s participation rule.</p>
+                  </div>
+                </details>
+                <details class="growth-auth"><summary>Wallet &amp; sign-in details</summary><p id="growth-wallet-state">Connect your NFTree wallet to save check-ins, daily quests, and monthly badges.</p><p class="growth-small" id="growth-auth-note">Sign-in uses a wallet message. It does not submit a transaction.</p></details>
               </div>
-              <p class="growth-small" id="growth-passport-reward"></p>
-            </details>
-            <p class="growth-small growth-tracking-note" id="growth-tracking-note" hidden>Passport stamps follow each game’s participation rule.</p>
+              <div id="growth-month-panel" class="growth-tab-panel" role="tabpanel" aria-labelledby="growth-month-tab" tabindex="0" hidden>
+                <p class="growth-empty" id="growth-month-empty">Sign in to see your real monthly calendar.</p>
+                <div id="growth-month-content" hidden>
+                  <div class="growth-section-title"><h3 id="growth-calendar-title">Your month</h3><span>Calendar dates · UTC</span></div>
+                  <div class="growth-month-summary"><p><strong id="growth-month-visits">—</strong> check-ins</p><p><strong id="growth-month-quests">—</strong> daily quests completed</p></div>
+                  <div class="growth-calendar" id="growth-calendar" role="list" aria-label="Monthly attendance and daily quests"></div>
+                  <div class="growth-legend" aria-label="Calendar legend"><span>✓ Check-in</span><span>★ Quest complete</span><span>○ Today</span><span>– Not checked in</span></div>
+                  <p class="growth-small growth-next" id="growth-next"></p>
+                  <div class="growth-milestones" id="growth-milestones" aria-label="Monthly attendance milestones"></div>
+                  <p class="growth-small growth-month-note">Missed days keep your earlier progress. Earned badges stay with your wallet.</p>
+                </div>
+              </div>
+              <div id="growth-badges-panel" class="growth-tab-panel" role="tabpanel" aria-labelledby="growth-badges-tab" tabindex="0" hidden>
+                <div class="growth-journey" aria-labelledby="growth-journey-title"><div class="growth-journey-heading"><strong id="growth-journey-title">Your monthly growth path</strong><p class="growth-small" id="growth-journey-note">Check in on different days to unlock each badge.</p></div><div class="growth-journey-track" id="growth-journey-stops" aria-label="Monthly check-in badge goals"></div></div>
+                <p class="growth-empty" id="growth-badges-empty">Sign in to see your earned monthly badges.</p><div class="growth-badges" id="growth-badges"></div>
+                <p class="growth-small growth-month-note">Badges count total monthly check-ins. Consecutive days are not required.</p>
+              </div>
+            </div>
+            <aside class="growth-reward" aria-labelledby="growth-summary-art-label">
+              <div class="growth-reward-art"><img id="growth-summary-art" src="/assets/arcade/garden-bot-poster.webp" alt="" width="260" height="170" loading="lazy"><span id="growth-reward-kind">NEXT MONTHLY BADGE</span></div>
+              <div class="growth-reward-content"><h3 id="growth-summary-art-label">Seedling</h3><p id="growth-summary-count">Your first badge starts here.</p><p class="growth-reward-count" id="growth-summary-label">3 check-ins to earn</p><div class="growth-meter is-unknown" id="growth-summary-meter" aria-label="Sign in to see badge progress" hidden><span></span></div><p class="growth-reward-automatic">Added to your badges automatically when earned.</p><div class="growth-reward-earned" id="growth-reward-earned"></div></div>
+            </aside>
           </div>
-        </div>
-      </div>
-      <div id="growth-month-panel" class="growth-tab-panel" role="tabpanel" aria-labelledby="growth-month-tab" tabindex="0" hidden>
-        <p class="growth-empty" id="growth-month-empty">Sign in to see your real monthly calendar.</p>
-        <div id="growth-month-content" hidden>
-          <div class="growth-month-summary"><p><strong id="growth-month-visits">—</strong> check-ins</p><p><strong id="growth-month-quests">—</strong> daily quests completed</p></div>
-          <p class="growth-small growth-next" id="growth-next"></p>
-          <div class="growth-calendar" id="growth-calendar" role="list" aria-label="Monthly attendance and daily quests"></div>
-          <div class="growth-legend" aria-label="Calendar legend"><span>✓ Check-in</span><span>★ Quest complete</span><span>○ Today</span><span>– Missed</span></div>
-          <div class="growth-milestones" id="growth-milestones" aria-label="Monthly attendance milestones"></div>
-          <p class="growth-small growth-month-note">Missed days keep your earlier progress. Earned badges stay with your wallet.</p>
-        </div>
-      </div>
-      <div id="growth-badges-panel" class="growth-tab-panel" role="tabpanel" aria-labelledby="growth-badges-tab" tabindex="0" hidden>
-        <p class="growth-empty" id="growth-badges-empty">Sign in to see your earned monthly badges.</p>
-        <div class="growth-badges" id="growth-badges"></div>
-      </div>
-          <div class="growth-footer"><span>Daily reset: 00:00 UTC · Check-ins have no gas fee</span><span>Only recorded participation or verified results count. Preview games are excluded.</span></div>
+          <div class="growth-footer"><span>Daily reset: 00:00 UTC · Check-ins have no gas fee</span><button class="growth-text-button" id="growth-collapse" type="button">Collapse Daily Growth ↑</button></div>
         </div>
       </details>
       <dialog class="growth-wallet-picker" id="growth-wallet-picker" aria-labelledby="growth-wallet-picker-label" aria-describedby="growth-wallet-intro">
