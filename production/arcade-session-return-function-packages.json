@@ -1,0 +1,296 @@
+{
+  "baseline": "6ae7f8a9183c770b8f0eb50c",
+  "candidate": "6ae7fe815070789ddb725fa3",
+  "originalSourceCommit": "81b463838a2ed3c5c388be14c1935a80c221c73d",
+  "originalSourceTree": "e028fb2cd59f31e1f13c235d61f9e03bfe8caa4e",
+  "configurationSha256": "233fe64419a86b8d70a4416a53916506f08932ee5c370682f6a196b54c01f3e3",
+  "packages": [
+    {
+      "name": "arcade-wallet-link",
+      "path": "production/functions/arcade-wallet-link.zip",
+      "sha256": "cf04ba346ffdb6b0f65e096016f7a12314a3822ab2ba4c3464a67111da85a8cf",
+      "size": 2197967,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "nftree-wallet",
+      "path": "production/functions/nftree-wallet.zip",
+      "sha256": "7d833b105a7a23c1b19932030c3a5658a7b26a77fb62d188bceb003ed9808ca1",
+      "size": 340679,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-badges-on-deploy",
+      "path": "production/functions/tree-badges-on-deploy.zip",
+      "sha256": "bbe5138646aeb0158bffb1b0a4423b9635c1910423bdce2b6ce719e4cb8c995c",
+      "size": 365345,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-badges-preview",
+      "path": "production/functions/tree-badges-preview.zip",
+      "sha256": "272a0e60ad6b64371f4aec9f172ea48522dfbf473981e9e8739d91a10342b016",
+      "size": 338961,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-badges-refresh-background",
+      "path": "production/functions/tree-badges-refresh-background.zip",
+      "sha256": "092dc834f95cd17244205828c581179e649c679bb263e5805e37c322e86e4469",
+      "size": 1066577,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-badges-refresh-scheduled",
+      "path": "production/functions/tree-badges-refresh-scheduled.zip",
+      "sha256": "8543b6349164e36c137e3f1cd1297b10a150004f0b6f556f2e5d6ec3fec9e459",
+      "size": 339394,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-badges",
+      "path": "production/functions/tree-badges.zip",
+      "sha256": "23c2c5f14a44a4a7139c9f0de6e89baf2b94e9e5feb64e1bfebbfbcc286c025f",
+      "size": 366488,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-burn-overview",
+      "path": "production/functions/tree-burn-overview.zip",
+      "sha256": "48cabca12664dc178ce1f3f6e2681a216944168e61c5988ce8b6dede5723a681",
+      "size": 1025084,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-chart",
+      "path": "production/functions/tree-chart.zip",
+      "sha256": "65ad24a2df39e42edd8cd5225dbe125152c38ac6d1078969c8b9da4103b976f7",
+      "size": 340304,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-dashboard",
+      "path": "production/functions/tree-dashboard.zip",
+      "sha256": "e1f8b352db9d6dfca8500b6c4475f05e31d58bdf90661f22151867399094f810",
+      "size": 366261,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-exposure-on-deploy",
+      "path": "production/functions/tree-exposure-on-deploy.zip",
+      "sha256": "63edb9dd7d4ca1ff1e9d4ee680f898dd03284c747f2d262bd77cd4219d7d3ce7",
+      "size": 1076798,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-exposure-preview",
+      "path": "production/functions/tree-exposure-preview.zip",
+      "sha256": "e0dfaaf32ada22bea619133f768a948e505803ea19d602ccb2b0316f346851a7",
+      "size": 342497,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-exposure-refresh-background",
+      "path": "production/functions/tree-exposure-refresh-background.zip",
+      "sha256": "08e309d96b93089f447e93ab33e7bb972c5a2972b3f64d09130bf0d04d9b726e",
+      "size": 1075996,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-exposure-refresh-scheduled",
+      "path": "production/functions/tree-exposure-refresh-scheduled.zip",
+      "sha256": "be72ccf2d3bcb3a463a2c8aa09eefd0e12d3a1f9c47dde899ad54c1337066f92",
+      "size": 339397,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-exposure",
+      "path": "production/functions/tree-exposure.zip",
+      "sha256": "0ea62d8290ce1e922e5e87914f1d00f9777843b7a25c03e61625b2a9eca622bf",
+      "size": 370033,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-knowledge-trial-admin",
+      "path": "production/functions/tree-knowledge-trial-admin.zip",
+      "sha256": "f100a9bbd2b42ce0dec661810d1cecf6d87f7d0a073fad65531c2e05742811f1",
+      "size": 354115,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-knowledge-trial-claim-test",
+      "path": "production/functions/tree-knowledge-trial-claim-test.zip",
+      "sha256": "00ecd5c0368615e267abcfe4b9cabc22fba7f457a3546a255169b612945329b2",
+      "size": 339485,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-knowledge-trial-claim",
+      "path": "production/functions/tree-knowledge-trial-claim.zip",
+      "sha256": "6fd0f4534b29efcd00f2aa0f633ae88a1bbd260649ca1ba8aa169f456350efb3",
+      "size": 344793,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-knowledge-trial-resolver",
+      "path": "production/functions/tree-knowledge-trial-resolver.zip",
+      "sha256": "cd754a9ff9e97f04d7fdc6f0030ada24a54f1aa5042a557c6976e1a9315735db",
+      "size": 350122,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-knowledge-trial-rotation-on-deploy",
+      "path": "production/functions/tree-knowledge-trial-rotation-on-deploy.zip",
+      "sha256": "d97fd3ed830eb5c8a2a0bdc06203486f7808a4932298e780eca81f4c14bf5b4b",
+      "size": 352009,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-knowledge-trial-rotation-scheduled",
+      "path": "production/functions/tree-knowledge-trial-rotation-scheduled.zip",
+      "sha256": "242abd2bffd71a4553758656c5e1b7434e97f3e2c3a9a465490be161897a5605",
+      "size": 351849,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-knowledge-trial-test",
+      "path": "production/functions/tree-knowledge-trial-test.zip",
+      "sha256": "dac3d74ac9a156c2dd41db9132468080c8f5989eda4d67c40b9ae1464d87b799",
+      "size": 339464,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-knowledge-trial",
+      "path": "production/functions/tree-knowledge-trial.zip",
+      "sha256": "ffc443359d3e2e4cdfc48e3fa1bb938910ac3a328270ffc5d5b25b3bf6434813",
+      "size": 1042033,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-leaderboard-preview",
+      "path": "production/functions/tree-leaderboard-preview.zip",
+      "sha256": "42e6d26997f1a2793b796c14fba92e3dc0951f086c2f617724ae8b800a2edbbc",
+      "size": 342193,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-leaderboard-refresh-background",
+      "path": "production/functions/tree-leaderboard-refresh-background.zip",
+      "sha256": "3a17e4af2f83cf71d6b9e23fcb64af62383483ae48992f25fe6d6b60861a4ac9",
+      "size": 374421,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-leaderboard-refresh-scheduled",
+      "path": "production/functions/tree-leaderboard-refresh-scheduled.zip",
+      "sha256": "49ee439cd6bd7d7899c6cc27081bdc7191d578b78a051f5ece03c73c0d14195f",
+      "size": 339179,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-leaderboard",
+      "path": "production/functions/tree-leaderboard.zip",
+      "sha256": "6a96b47975107c1f94d221342397a4bc70cc7f2c78914d341db96355f51ee27f",
+      "size": 376282,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-limit-orders",
+      "path": "production/functions/tree-limit-orders.zip",
+      "sha256": "c137e6443ddabcf4020ead936c7e05fc88efca549e87e5ce97a16d758c941a5d",
+      "size": 2067158,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-liquidity",
+      "path": "production/functions/tree-liquidity.zip",
+      "sha256": "0d63883ef7d84e050d9477c51e06e57b7218997b7376e449fbbdde767f505c87",
+      "size": 1029624,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-market",
+      "path": "production/functions/tree-market.zip",
+      "sha256": "a0646406b77c2128eedeb5c8691759c3c68c2bf02ac62c0eaa68ea2f36e1cb44",
+      "size": 338809,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-nftree",
+      "path": "production/functions/tree-nftree.zip",
+      "sha256": "c7569656a25c94414e8a14971860030a30f8457c5746d0163a72e0e8f3c622d3",
+      "size": 341600,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-raffle-claim",
+      "path": "production/functions/tree-raffle-claim.zip",
+      "sha256": "515604875d1b1864ad669dcf2ff845ce1db78ab243caf5d318ee23e28b60da88",
+      "size": 345668,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-raffle-ingest-buy",
+      "path": "production/functions/tree-raffle-ingest-buy.zip",
+      "sha256": "a6ecaaf9878391b72c82cd8938009e3f316bf40b66f74f937c367ca9b723bba9",
+      "size": 347185,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-raffle-status",
+      "path": "production/functions/tree-raffle-status.zip",
+      "sha256": "5e425ca24d184053a6efc3d63c577189cc619e0cc4368d7c3adac579bc40c168",
+      "size": 342188,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-swap-quote",
+      "path": "production/functions/tree-swap-quote.zip",
+      "sha256": "23d98a34cf8248b06f069976d37d635a7b93217c660db35f24c4fbaba810ce30",
+      "size": 1539459,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-v3-overview",
+      "path": "production/functions/tree-v3-overview.zip",
+      "sha256": "3223f1ca23947a9c1a86a4cd59d4a26fba36297d79fba21b94c7b84be6e8db3f",
+      "size": 1034525,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-volume",
+      "path": "production/functions/tree-volume.zip",
+      "sha256": "57f085fecd6597c85b00ffed5a00cfd3127561b4c6a65542cec110e97f4b2601",
+      "size": 1028768,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "tree-knowledge-trial-correction",
+      "path": "production/functions/tree-knowledge-trial-correction.zip",
+      "sha256": "bb9f177839931c33a3da6012b66090ae74edd324ba3e1f3ced1d37947e7044c8",
+      "size": 343304,
+      "provenance": "Existing exact committed production archive"
+    },
+    {
+      "name": "treeforce89-dev",
+      "path": "production/arcade-session-return-functions/treeforce89-dev.zip",
+      "sha256": "725fe5a7e7ff30c2c83f7b6a1bf1af534a72ee2efa1cc6faf64151743cf84905",
+      "size": 1753127,
+      "provenance": "Exact original-source archive recovered in isolation from bc6545db57714d4ac18f50243fbcce72755cad5e; full ZIP digest and size match published baseline"
+    },
+    {
+      "name": "arcade-growth",
+      "path": "production/arcade-session-return-functions/arcade-growth.zip",
+      "sha256": "2bc510db550e019f388c8a7f5eb8cda7360205000eff6c73745d05c978b2573c",
+      "size": 1353890,
+      "provenance": "Existing exact .netlify/treeforce-passport-functions/arcade-growth.zip"
+    },
+    {
+      "name": "canopy-access",
+      "path": "production/arcade-session-return-functions/canopy-access.zip",
+      "sha256": "8bca11eb41ca6657102b82ff28ff927e5fc529687af4a6f002152ff3384b3e4a",
+      "size": 1253348,
+      "provenance": "Exact original-source archive recovered in isolation from 0eb80c048bba49b7acbb03a24a6a4e547178c72d; full ZIP digest and size match published baseline"
+    }
+  ]
+}

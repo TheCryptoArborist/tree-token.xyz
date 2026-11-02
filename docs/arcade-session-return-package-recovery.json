@@ -1,0 +1,686 @@
+{
+  "preparedAt": "2026-11-02T03:15:16.089410+00:00",
+  "baseline": "6ae7f8a9183c770b8f0eb50c",
+  "candidate": "6ae7fe815070789ddb725fa3",
+  "originalSourceCommit": "81b463838a2ed3c5c388be14c1935a80c221c73d",
+  "originalSourceTree": "e028fb2cd59f31e1f13c235d61f9e03bfe8caa4e",
+  "configurationSha256": "233fe64419a86b8d70a4416a53916506f08932ee5c370682f6a196b54c01f3e3",
+  "reason": "After the missing persistent Functions environment binding was created, Netlify requested all 41 unchanged function-package digests for the new candidate. The original guard stopped before any function or static upload.",
+  "existingArchives": {
+    "count": 38,
+    "directory": "production/functions",
+    "allArchiveHashesAndSizesMatchBaseline": true
+  },
+  "arcadeGrowth": {
+    "source": ".netlify/treeforce-passport-functions/arcade-growth.zip",
+    "archivedPath": "production/arcade-session-return-functions/arcade-growth.zip",
+    "sha256": "2bc510db550e019f388c8a7f5eb8cda7360205000eff6c73745d05c978b2573c",
+    "bytes": 1353890,
+    "exactMatch": true
+  },
+  "canopy": {
+    "result": "Exact originally published Canopy package recovered from unchanged released source and lock",
+    "verifiedAt": "2026-11-02T03:13:33.478395+00:00",
+    "repository": "TheCryptoArborist/treetowerdefense",
+    "sourceCommit": "0eb80c048bba49b7acbb03a24a6a4e547178c72d",
+    "sourceTree": "27cef2a74051d042a646ad0402f8de7bad9887ab",
+    "originalPublishedDeploy": "6ae69fa9b3d4702fcc61177c",
+    "originalReceipt": "/workspace/scratch/4100640bb9e0/treetowerdefense/integration/tree-arcade/nftree-access-release-receipt.json",
+    "reconstructionDirectory": "/tmp/canopy-exact-original-0eb80c",
+    "archive": "/tmp/canopy-exact-original-0eb80c/.netlify/canopy-functions/canopy-access.zip",
+    "sha256": "8bca11eb41ca6657102b82ff28ff927e5fc529687af4a6f002152ff3384b3e4a",
+    "bytes": 1253348,
+    "exactMatch": true,
+    "commands": [
+      "git clone --quiet --no-hardlinks --no-checkout /workspace/scratch/4100640bb9e0/treetowerdefense /tmp/canopy-exact-original-0eb80c",
+      "git checkout --quiet --detach 0eb80c048bba49b7acbb03a24a6a4e547178c72d",
+      "npm ci --ignore-scripts --no-audit --no-fund --cache /tmp/canopy-exact-npm-cache",
+      "npm run build:gate"
+    ],
+    "packageJsonSha256": "94eec55dfd7df9a626cf47c139040a28c320485270d8ec608120741189652c6e",
+    "packageLockSha256": "27709f71578bb9e1c5bb56cf116298eeae9711600d9a81beee3c36ba3073cda0",
+    "buildScript": "tools/build-nftree-gate.mjs",
+    "buildScriptSha256": "9b9af0cb883f895c9393f6eaf81e59e225808a2d37c469e8090d92fa767bdf75",
+    "tools": {
+      "node_modules/@netlify/zip-it-and-ship-it": {
+        "version": "16.6.0",
+        "integrity": "sha512-dr/7dI4lKXtz44wDEgzVZPUhly9aaUYmJHIY1B6PIrDzi0LIbS+nEbaiB7D1xce0/qLGqgscPrvZtdmA1pL7yA=="
+      },
+      "node_modules/@netlify/serverless-functions-api": {
+        "version": "2.24.0",
+        "integrity": "sha512-wDmDnoHVvgDSZTMURUOtqOnsr6SJdWc2DGXtZFRlDau3vC8pgOFxjelS8WBI4TRo8T2eCyjvC0P1E20uL7VU8w=="
+      },
+      "node_modules/esbuild": {
+        "version": "0.28.2",
+        "integrity": "sha512-HKVLS8dvII+xoKW9kmqxbRKrnWEXfJJr/FZhhJmiqIB0e053QNYFqOBouTMO/k5sID4MvCiUCvv8b9M4h32wIA=="
+      },
+      "node_modules/@netlify/zip-it-and-ship-it/node_modules/esbuild": {
+        "version": "0.28.1",
+        "integrity": "sha512-HrJrvZv5ayxBzPfwphOoNzkzOIIlifzk0KJrGK2c8R4+LKpMtpYLQeUdjnwjWv/LZlkH2laZk+4w78pi99D4Vw=="
+      },
+      "node_modules/archiver": {
+        "version": "8.0.0",
+        "integrity": "sha512-fV1orZfsnPn9BaSByR/qE67rJCLJEy2Ox5bq7nJh+jquWaNh6Sfec75kJ2T6PtdGUbPQlrVoSVCEOa5SdiTQ1g=="
+      },
+      "node_modules/zip-stream": {
+        "version": "7.0.5",
+        "integrity": "sha512-dSvYKdvLsAHCDqPOhIwk/q5CvuWtTB3Dgpoe0uVEFjTzIOAmsQpprX25InCvrvJsirEbu1OHyy67n/kAj1Sw/w=="
+      },
+      "node_modules/compress-commons": {
+        "version": "7.0.1",
+        "integrity": "sha512-g0S8KAD8qf4+V//pr3BfB1aBnARLXNz2Gx+jmHU0LEriUuoQUOPOulVquHKTJ8+EAIIO7fhseNDr9wK5Q9FKBQ=="
+      }
+    },
+    "nodeVersions": {
+      "node": "24.22.1",
+      "acorn": "8.18.0",
+      "ada": "4.0.0",
+      "amaro": "1.1.11",
+      "ares": "1.34.9",
+      "brotli": "1.2.0",
+      "cldr": "48.0",
+      "icu": "78.3",
+      "llhttp": "9.4.3",
+      "merve": "1.2.2",
+      "modules": "137",
+      "napi": "10",
+      "nbytes": "0.1.4",
+      "ncrypto": "0.0.1",
+      "nghttp2": "1.70.0",
+      "nghttp3": "",
+      "ngtcp2": "",
+      "openssl": "3.5.9",
+      "simdjson": "4.6.11",
+      "simdutf": "6.4.0",
+      "sqlite": "3.53.4",
+      "tz": "2026e",
+      "undici": "7.30.1",
+      "unicode": "17.0",
+      "uv": "1.52.1",
+      "uvwasi": "0.0.23",
+      "v8": "13.6.233.17-node.58",
+      "zlib": "1.3.2.1-motley-285e94b",
+      "zstd": "1.5.7"
+    },
+    "npmVersion": "11.9.0",
+    "runtime": "nodejs22.x",
+    "invocationMode": "stream",
+    "bundlerOptions": {
+      "nodeBundler": "esbuild",
+      "nodeVersion": "22.x"
+    },
+    "zipEntries": 499,
+    "allTimestamps1980": true,
+    "membersCanonicalSha256": "585b756a2f439e90c07ddb79985f90535d2cb81758fbd38351efd36214f9358e",
+    "trackedSourceDiffEmpty": true,
+    "activeCanopyWorktreeModified": false,
+    "activeCanopyGitMetadataModified": false,
+    "liveSettingsModified": false,
+    "remoteMutations": false,
+    "uploaded": false,
+    "applicableInstructions": {
+      "releasedAGENTSRead": true,
+      "releasedREADMERead": true,
+      "MystenREADMEFetch": "Attempted; web service DisabledError. No Sui implementation or SDK changes."
+    },
+    "qualification": "Packaging was reconstructed in isolation only. Archive digest and byte count exactly equal the pinned published artifact; no different-byte package is authorized for upload."
+  },
+  "treeforce": {
+    "sourceCommit": "bc6545db57714d4ac18f50243fbcce72755cad5e",
+    "repository": "TheCryptoArborist/tree-token.xyz",
+    "sourceArchiveUrl": "https://codeload.github.com/TheCryptoArborist/tree-token.xyz/tar.gz/bc6545db57714d4ac18f50243fbcce72755cad5e",
+    "sourceArchiveSha256": "6c2074a1b268a5c2b0e6f484350c753bef6f9902f133fc384c4f155549630a72",
+    "lockSha256": "7211d6f5bd71cf00aa91f53eaef7e30f3e44c803881917463f1eb9d2994cea52",
+    "packageSha256": "92dbbd52fa34452e1383f8b40af63d0e628b29e386032efc3fab5833f4b5b583",
+    "packager": "16.3.0",
+    "node": "v24.22.1",
+    "zlib": "1.3.2.1-motley-285e94b",
+    "package": {
+      "path": "/tmp/treeforce-exact-archive-recovery/source/.netlify/treeforce89-paid-release/private-functions/treeforce89-dev.zip",
+      "name": "treeforce89-dev",
+      "bytes": 1753127,
+      "sha256": "725fe5a7e7ff30c2c83f7b6a1bf1af534a72ee2efa1cc6faf64151743cf84905",
+      "expectedBytes": 1753127,
+      "expectedSha256": "725fe5a7e7ff30c2c83f7b6a1bf1af534a72ee2efa1cc6faf64151743cf84905",
+      "exactMatch": true,
+      "runtimeVersion": "nodejs22.x",
+      "invocationMode": "stream",
+      "buildData": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "routes": [
+        {
+          "pattern": "/play/treeforce89/api/*",
+          "expression": "^\\/play\\/treeforce89\\/api(?:\\/(.*))\\/?$",
+          "methods": []
+        }
+      ],
+      "trafficRules": {
+        "action": {
+          "type": "rate_limit",
+          "config": {
+            "rateLimitConfig": {
+              "windowLimit": 60,
+              "windowSize": 60,
+              "algorithm": "sliding_window"
+            },
+            "aggregate": {
+              "keys": [
+                {
+                  "type": "ip"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "sourceInputs": [
+      {
+        "path": "netlify/canonical-development-functions/treeforce89-dev.mts",
+        "sha256": "379dc46d92c1deb44990b5200408f1fb0455bdb01848d66511a71a549b757639"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/client/protocol-version.mjs",
+        "sha256": "f8bd8d471abb9ec8cde67e4b5c5b69991a391f43e0b47accad381e80658add71"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/transport.mjs",
+        "sha256": "ae977ca082e22bdde1d042c864cdafdc4d7c2b0f9a1af8405900c881b39a672f"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/utils/suins.mjs",
+        "sha256": "56ede5a5adc4a5c67a83069f19c87a7f10bbdb7fe2474d2c735208dc499906f0"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/utils/named-packages.mjs",
+        "sha256": "cc17d51dd2c20eade4ea7ba31edbeafe37e7d855c996c55ec836b804fb1cd9a6"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/utils/sui-types.mjs",
+        "sha256": "95711a03f613cc00b937489d95357541848dc928b6c4aa3b2bdaaa19fe8bfb1f"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/bcs/type-tag-serializer.mjs",
+        "sha256": "866fa25766ff7ad0908f9481e1e43bbfb083fabf69b208ac48fa878eeed3821c"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/bcs/bcs.mjs",
+        "sha256": "55fb22d7ec0e1c2f2e6e61fe02878ce4213c16488fb59f207ed8a46e3b01fa7f"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/bcs/transactions.mjs",
+        "sha256": "dbc1450fe380aa66fb1c35ff41f76d8f4f0752cf5e5996b09daad4a661a06675"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/bcs/effects.mjs",
+        "sha256": "b61d08af68efcc9d0570cf17fe8ba92a62a74d03ba8b3c6b8fa2fae0ab4448a6"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/bcs/pure.mjs",
+        "sha256": "37f54d6b4d2b155096668b43cc95f85dbfe626c0c7e135fa46b8d9d34b199bc1"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/bcs/index.mjs",
+        "sha256": "233301cc64d1fd8855b8ddcfb2ec620e8de3fd7622eb96fa6163d70a49c48443"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/utils/move-registry.mjs",
+        "sha256": "cf11d839cb7669884236176bda8fc0b408dba5987ba34ae7f3bf2d6e147859a4"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/version.mjs",
+        "sha256": "66029e7ca94d65364702c616263013d112ec37590cb5ba6ebdf25ff26f1f2415"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/client/mvr.mjs",
+        "sha256": "03d7f9d8a4a6d53315f1b07a0538466470d75cd992cc91ae10363cef9328a7e1"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/client/cache.mjs",
+        "sha256": "a834500782ac9c9db1af003735a2aad3050ff5daad92e671150ad85a0877661e"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/client/client.mjs",
+        "sha256": "59a0818054f1fa51e3b1b8bc24f2550e2c665ffc6864acea4c72cbbb899d2ee7"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/utils/dynamic-fields.mjs",
+        "sha256": "5ca0aabe8c10f93823acb120b63cc39a9e52bf51f12c15716a74d5f3650f3100"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/client/core.mjs",
+        "sha256": "2142ecb7c385f122d25a6311bef58991e6726d9d0dac208fd0940bb848f62b2d"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/utils/constants.mjs",
+        "sha256": "b060be206d3c01a6cc911fde0d93daa86b400c88f9eb32113a355884cc1878cb"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/transactions/data/internal.mjs",
+        "sha256": "e6867e61c892cc7401b4603709fffb0a2451974ce4b3e2a1535822d359a39c61"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/transactions/data/v1.mjs",
+        "sha256": "4f12f7744e8163ffdb2201d4fc18dc5b92fe58aa9a042b3cadc4a2335fcc05f3"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/transactions/hash.mjs",
+        "sha256": "6cde7a7d8fa99d672acda916592b12a1c6e666d9d7a572250f426d20129fe5e5"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/transactions/utils.mjs",
+        "sha256": "1cd6ac9abfe783d9379861654d1ff9b732fc46d904ff3f463a21d5c6f4203abe"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/transactions/TransactionData.mjs",
+        "sha256": "efab20958cab5d8779a3ea5961adf8d17205fa17f40698f694805c1df59c1071"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/client/utils.mjs",
+        "sha256": "6909782cf581b7410944e3828933bc90a8d3094eab3f7f58920a0d056c382956"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/client/errors.mjs",
+        "sha256": "a0714dec04d0cba889dd65fa1c5acc31c53558daeb8ccf8239f9b8464544c884"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/google/protobuf/struct.mjs",
+        "sha256": "7f7dde8eb7985c928790104d5e7328b2c62bfd0891b27ad7cd467f205622b487"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/move_package.mjs",
+        "sha256": "9e9453f5959d8ef6af02e5d330282b4e898db0bf057889009505f52ba20ee263"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/owner.mjs",
+        "sha256": "efc56b18208a8d771edb69ac94f5d7e6fe909ba688772950ba778a843fbc5012"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/argument.mjs",
+        "sha256": "d038e1ea8dc970203ae8cebc2f4ed318a7b21f04aa8058a36bf3a35a7e30dea0"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/input.mjs",
+        "sha256": "92e2d66f7e2c738769793b3748e2f25f4402fc45c54c0ac181e8d0744fd917b3"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/google/protobuf/duration.mjs",
+        "sha256": "a524bd401e70129921dc8555fa4e0ffd8539d005545c0bd850c450d418f52773"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/jwk.mjs",
+        "sha256": "2b711952241ec99e37e0979b87fd91f19212055fb2f087b2d3526398672af291"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/bcs.mjs",
+        "sha256": "ab1b7277d2d561ce4db307e823f2527460049a7e52a35a6e7ae6aa5a00d8e140"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/object.mjs",
+        "sha256": "1848eed25cb4f52d93641259d614f05f631252e65cfe5a708579be217ae6a08d"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/google/protobuf/timestamp.mjs",
+        "sha256": "4fe4a9753ffab13b0e68bb3db399c59d91f5d37e793dee06698bf1e49ed0a998"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/object_reference.mjs",
+        "sha256": "3c66d6f6b43bab1382d16b321e2a4a3c41da884edac7946ed08b0bc9f54ea7f0"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/transaction.mjs",
+        "sha256": "697cadc3248e295ee4c9b0ebe50f52640e6f8e61821596b6654cce5c5e4a7f53"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/client/transaction-resolver.mjs",
+        "sha256": "d5556051861a8c6422af5abcbfddc788b940b9fb9aa458fce2f31267cd8eb4a7"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/client/address-balance-transaction-expiration.mjs",
+        "sha256": "9ddf01bb10a2ed00e29d5c6612ee67cdea7892f9abfeeadf5804022187a8454a"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/execution_status.mjs",
+        "sha256": "be6c45a454cb341d5881d47414f00d31604e31a23aa29e066cf276edbc287c52"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/gas_cost_summary.mjs",
+        "sha256": "8d7a1247f75cf0ad77d60dd86d4e642b099e19e93f9141fd23f8ffb3c9a82db1"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/effects.mjs",
+        "sha256": "447bf185bfde4f8854794b5a06182558506c6bce6837c6657cadb81bf1a8c5bc"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/client/query-filters.mjs",
+        "sha256": "f898b607bc8439fc9f9c5e3f8d5de5826f83a5b7dba88413f842101317998a08"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/balance_change.mjs",
+        "sha256": "d9fb1d6e2acb4996b0ea450cf81e921e68e58c7d2dab88b1fee13badb4a1a7b4"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/event.mjs",
+        "sha256": "1b1f9a279c33a7b00125009e43550f539b82fc572b68904458c3e9d25429ff74"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/signature_scheme.mjs",
+        "sha256": "be5147478d035bb0bc4e79bcb2d544c53ce7e09d468e8ac03798124629dd249b"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/signature.mjs",
+        "sha256": "60903cea8a4fd929ebc182c481d2e2319a2b0f0bbcb787ca541d4b7311dc78c3"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/executed_transaction.mjs",
+        "sha256": "19f35c8803d7c5f10444e1e98b2979405fcec5d39e1f9525b310032ca332ad3c"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/google/protobuf/field_mask.mjs",
+        "sha256": "c70648cd941a0a15e5ac29e434414f957bb25612cf35594ee721e032a980a38c"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/transaction_execution_service.mjs",
+        "sha256": "a797ac95fe3b9af005c21264b45517eb2ae163f755df687230fb3b734c552688"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/query_options.mjs",
+        "sha256": "fb253546b0afb5440540fe20a378d7d99f01d587c980c7629d61116f1a681e6b"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/filters.mjs",
+        "sha256": "fc5829bfc40b08654481e30fa4a4a8e354ace3d36a123138d6ad60a0a9c238c5"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/core.mjs",
+        "sha256": "a660511d7068a6f85761c762a7b7b68b73da468d51b288752a6df3bd582151c8"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/transaction_execution_service.client.mjs",
+        "sha256": "16bc4b264139f40d97728b9c6ecbf724eca51b984111423256be4237adf2e6e1"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/filter.mjs",
+        "sha256": "86d93ddedb93c62d995ac7c335c432c20c8a7f1506fcc28db59434d5a855b11a"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/protocol_config.mjs",
+        "sha256": "9a47b66b4798579d90a8f667ea5fb5431e97430e4f26faa520f83f6e93d60d4e"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/system_state.mjs",
+        "sha256": "b6090fd98597400aacbbb0b701c7c3cef644e4deb9a05a120d591dd3d576ef06"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/epoch.mjs",
+        "sha256": "bd8ab60aee5b43a028809b0f671d165161b558e576012d4be45ece25b8b65f7d"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/checkpoint_contents.mjs",
+        "sha256": "43d5bd08ba60c532d2c14c597beea09be455bfd2dc0102573de21ac8df29029d"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/checkpoint_summary.mjs",
+        "sha256": "502a8cdf2e637b82f97f461864aab14d1ae39e549d5ced5c44fb8993b953b6d9"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/checkpoint.mjs",
+        "sha256": "a3a501de8030c21ef7296bab671cc3353904003edde2f8db09f17b563c6d4c15"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/google/protobuf/any.mjs",
+        "sha256": "1e853276834940b888d1a83be556e2d0d98b712bb2ccd03cfe323ec293c244fa"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/google/rpc/status.mjs",
+        "sha256": "f699b7e7ede7a5c80156f16d0e53a108412ce519755258c128be240dcaadba8c"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/ledger_service.mjs",
+        "sha256": "08b5005787fe693ba0e9ce83b4a29f9456854cb74bf31f70db401d470a98b873"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/ledger_service.client.mjs",
+        "sha256": "20e99cccec391c69f7b2e5ffe14179dc3278e165e01bdf1cb4d3d2623724a3ac"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/move_package_service.mjs",
+        "sha256": "975106019650d3f1abcc707a39d0899b8a739114a00f7f893c7668d8d1ae514a"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/move_package_service.client.mjs",
+        "sha256": "32b4815b9089190a34e2e3f72a7f58cc1b35f0576993365d3a70af73c369d17c"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/signature_verification_service.mjs",
+        "sha256": "73b20d16dd6af3097aff64d1c1b9fc2fde4b118c5c4a0887e2fac83254bd169f"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/signature_verification_service.client.mjs",
+        "sha256": "9f2b09a8e9f1f5e3a166a3a3dd8430988facb58915c43abdeebf988c11d6d418"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/state_service.mjs",
+        "sha256": "b20aebc3c004d4b4259ad41b29a6ff83a7f0e5c229764d36adfb7e511e7be759"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/state_service.client.mjs",
+        "sha256": "d2a9bdca2f7243c78cc895dadc552ce26399fa70f18c63297e97c415376bac21"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/subscription_service.mjs",
+        "sha256": "e7b89221f2e87979c59c13fa966098b3c082c9d565992b08c97a5e530ae7fa62"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/subscription_service.client.mjs",
+        "sha256": "6296b5b34b131913ae15e4109b9321adb0a8bef91acab2ab0687b6be8f60ba6e"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/name_service.mjs",
+        "sha256": "5870833ecb2b4e88542f5405dca97c8603a0e1b0b0a513750a8acdefa0803090"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/name_service.client.mjs",
+        "sha256": "e8b3d47aa4d0871a0815738e7d116f103aee7e1239fbc881b56a40c960f0bb6a"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/forking/v1alpha/forking_service.mjs",
+        "sha256": "f17d7494ca2f77b26642fa9bcfd07961f617672df1d4f0336b65e794ddafa265"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/forking/v1alpha/forking_service.client.mjs",
+        "sha256": "965878942c7dc52618b902666dac435317341ace3af361b65d3f56d47aed23bb"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/client.mjs",
+        "sha256": "71e607b9418f08b7e67805f3d154b50c6c34ac908f89702e27e052ba38ebd81b"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/_virtual/rolldown_runtime.mjs",
+        "sha256": "3bb0b448b365f1396ff4f50d5b95de890d381fd3a0a7abd2ad5195f715301e55"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/sui/rpc/v2/error_reason.mjs",
+        "sha256": "68c2223f68c868153f0b5fd59e1eecfe32992a68fd7beacf067a09842613dcc2"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/proto/types.mjs",
+        "sha256": "e89a85b97d1c5c39b47d5416939aa4c3235bc1a6469f44a5b033590c5c96b2f1"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/grpc/index.mjs",
+        "sha256": "800916af4b71a1f919b024042ab1bbcfde13253f73ce8c4c6e7c8e4aaa0ca15d"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/graphql/generated/queries.mjs",
+        "sha256": "9c65f81073beac929eaf2450a2b6122ad88af92144af0b77c1aa0543c2d199d7"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/graphql/core.mjs",
+        "sha256": "fe059edbdec09bd6f112c04edcb3489a5731852b177eb7047eb0f2c98c31d7e8"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/graphql/client.mjs",
+        "sha256": "1544860bc1536704e492498ff4ed4a0b0a06a0b98a7c0a578c17283c31165934"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/graphql/index.mjs",
+        "sha256": "20191f15b0c5081e7d4b30151542b8e11b63d8150d3a8477ef1706261d577f91"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/game/tree-payment.mjs",
+        "sha256": "b51117e071ad9c4a5f239b40bf262d3ded560de2ebed0453acae6c166c8d3275"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/game/wallet-challenge.mjs",
+        "sha256": "a049a75c91cb0f71c985b5c8f9595f33577e5169c4db5acc7a7d92b7be5a9828"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/game/postgres-wallet-challenges.mjs",
+        "sha256": "39da00a2a2ab7cf5be741e30cc56bed4f9c697e00eb558a68510321cfb058b28"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/game/postgres-wallet-logins.mjs",
+        "sha256": "a35368b278c095bc466b3fed081463e988adfa43bc3d3c1afae1751a1bf224e3"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/game/wallet-login-issuer.mjs",
+        "sha256": "5039aee79be76f271955068f99b71abc5aa8e4d8406dcae0bbdc2bfc5085fb0b"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/game/sui-personal-message-verifier.mjs",
+        "sha256": "9c18bf3cff2f4f4af805319e36116a23f6869baa9411dac92209b18bda49f7ed"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/game/game-session-issuer.mjs",
+        "sha256": "2757b61eea6d1590793735ececbfd2d5cf02fb4ca7f57d7b579d5c081305d042"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/game/nftree-access.mjs",
+        "sha256": "e7f0c1da9fc0c2129e83419d1be592a795c408bd8650dc74fd85ef4245db766c"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/game/nftree-session-service.mjs",
+        "sha256": "989ff3bc8ba1e08801a001421db6a7241698614745fa799a22cdbc17d8845e92"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/game/credential-revocation.mjs",
+        "sha256": "97865c065d614612ca22917dba8bcbee191bda27a1afea3c4a23e56e2fac6731"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/game/wallet-gateway-service.mjs",
+        "sha256": "eb838c2785abf327e6a430f060d38d845c59046a91aac85213d0c0034e79556c"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/game/authenticated-session.mjs",
+        "sha256": "54e952a9cb5cc5c22cdf314eb90330dca89629777cf20521b1af21993e6a86d8"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/game/game-run-service.mjs",
+        "sha256": "5442912df513baa2c724d4554ee67ec7999fd8bacffb91e7678f7bcdccef9108"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-database-evidence.json",
+        "sha256": "6478e52c779ca7ffb9333a6101e378040bfa88152dfc019e5fe32e1e4f87afbc"
+      },
+      {
+        "path": "scripts/lib/treeforce89-schema.mjs",
+        "sha256": "5e5e2ea692b20f2ba4a81c05b592a08aa706449fb0b6a4b8b6ff070f7b391d15"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-database.mjs",
+        "sha256": "68cfc3cd0ad4ff8eb8fc2a424e6ef3032521deea65e60125abba02746499ab62"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/game/preview-access.mjs",
+        "sha256": "9fa5943c6ab0630c2d134dd124649212dba02f786816ddc6fbc496e2de7260e7"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/game/wallet-gateway-http.mjs",
+        "sha256": "56c4b28e678001a56040b54693c24cd6c9ff432a8083a832d456214e154d5f6b"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/game/game-run-http.mjs",
+        "sha256": "1662c2be2873b2fa37aabc9b4fec7ea55380bde786d7d78715b5fad5f1cd2e74"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/game/game-logout-http.mjs",
+        "sha256": "eacdc4e7945de90d4edb1c79ebd8bfd0007b8b5c4ef72a5aa93c0844558b0ab4"
+      },
+      {
+        "path": "treeforce89/paid/contract.mjs",
+        "sha256": "598bb7c823910c61eeebc860efdda34fe340b121dec90fcb67ecd924aa81bcc8"
+      },
+      {
+        "path": "treeforce89/paid/mainnet-transaction-reader.mjs",
+        "sha256": "4e2a01fc904601b410231e219ba2c4d40bef1d05bc9b4fe3935d66b2cfbd973f"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-paid-continue.mjs",
+        "sha256": "b8b161d0bb04aae973be84230aa8f118f4601fd2097b636dcf68be14ccba2b52"
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-gateway.mjs",
+        "sha256": "fa8380b05f0f1173d7cfacb71736ea7874e9828ec86da8ab9b59b49ffef264af"
+      }
+    ],
+    "noSourceOrLockChanges": true,
+    "noRemoteMutation": true,
+    "noDeployment": true,
+    "noActiveCheckoutChanges": true,
+    "dependencyInputs": [
+      {
+        "path": "package.json",
+        "sha256": "92dbbd52fa34452e1383f8b40af63d0e628b29e386032efc3fab5833f4b5b583",
+        "exactSourceCommitBytes": true
+      },
+      {
+        "path": "package-lock.json",
+        "sha256": "7211d6f5bd71cf00aa91f53eaef7e30f3e44c803881917463f1eb9d2994cea52",
+        "exactSourceCommitBytes": true
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/package.json",
+        "sha256": "8262b4aefd8e903ab35ae53e6677d3b57c60af48fc8125a55af0a1ae32cf2bd4",
+        "exactSourceCommitBytes": true
+      },
+      {
+        "path": "netlify/preview-lib/treeforce89-source/package-lock.json",
+        "sha256": "00e3c587b171fdbb282d49f1704dbbc249712bdaa55b92b52c4aa1fe027a632c",
+        "exactSourceCommitBytes": true
+      }
+    ],
+    "workingDirectory": "/tmp/treeforce-exact-archive-recovery/source",
+    "dependencyInstallCommands": [
+      "npm ci --ignore-scripts --no-audit --no-fund --loglevel=error",
+      "npm ci --prefix netlify/preview-lib/treeforce89-source --ignore-scripts --no-audit --no-fund --loglevel=error"
+    ],
+    "nestedSuiVersion": "2.37.0",
+    "packagerEsbuildVersion": "0.28.1",
+    "initialMismatchDiagnosis": {
+      "initialCwd": "/tmp/treeforce-exact-archive-recovery",
+      "initialZipSha256": "36080cb94e29554a0bd7775dd3d8e2636dfa09092d3de37a35626f617f024a19",
+      "initialZipBytes": 1753137,
+      "changedEntries": [
+        {
+          "path": "netlify/canonical-development-functions/treeforce89-dev.mjs",
+          "initialBytes": 497034,
+          "exactBytes": 496264,
+          "onlyParentDirectoryPrefixRemoved": false
+        }
+      ],
+      "allOtherEntriesByteIdentical": true
+    },
+    "reproductionProcedure": "# Exact TREE FORCE function archive recovery\n\nRecovered the original `treeforce89-dev` archive without editing an active checkout, changing dependencies there, or making a deployment/database request.\n\n- Repository: `TheCryptoArborist/tree-token.xyz`\n- Immutable source: `bc6545db57714d4ac18f50243fbcce72755cad5e`\n- Original deploy: `6ae56c08df52d066dfb245ed`\n- Required and recovered bytes: **1,753,127**\n- Required and recovered SHA256: **725fe5a7e7ff30c2c83f7b6a1bf1af534a72ee2efa1cc6faf64151743cf84905**\n- Archive: `source/.netlify/treeforce89-paid-release/private-functions/treeforce89-dev.zip`\n- Verification: `recovery-report.json`\n\n## Reproducible procedure\n\n1. Export the exact commit from `https://codeload.github.com/TheCryptoArborist/tree-token.xyz/tar.gz/bc6545db57714d4ac18f50243fbcce72755cad5e` into an isolated `source/` directory. No Git metadata is needed.\n2. Read that commit's `AGENTS.md` and `production/README.md`. This recovery uses only the historical TREE FORCE package step; it does not invoke a general build, frontend build, release script, runtime configuration change, or upload.\n3. From `source/`, install the two original dependency locks:\n\n   ```sh\n   npm ci --ignore-scripts --no-audit --no-fund --loglevel=error\n   npm ci --prefix netlify/preview-lib/treeforce89-source --ignore-scripts --no-audit --no-fund --loglevel=error\n   ```\n\n4. **Remain in the repository root**, then run `node ../recover.mjs`. The helper invokes the exact `zipFunctions` call from `scripts/prepare-treeforce89-paid-release.mjs` at the source commit:\n\n   ```js\n   await zipFunctions(root + '/netlify/canonical-development-functions', output, {\n     archiveFormat: 'zip',\n     config: { '*': { nodeBundler: 'esbuild', nodeVersion: '22.x' } },\n     basePath: root,\n   });\n   ```\n\n5. Require the complete ZIP size and SHA256 above before the archive is used.\n\nThe pinned packager is `@netlify/zip-it-and-ship-it` 16.3.0. The nested TREE FORCE Sui SDK is 2.37.0. Both package manifests and both lockfiles were compared with the immutable source archive after installation and remained byte-identical. Runtime is `nodejs22.x`, invocation mode `stream`, bootstrap 2.24.0; metadata is recorded in the report.\n\n## Deterministic working-directory detail\n\nThe first invocation ran from the parent of `source/`, producing a ZIP ten bytes larger. Its single changed payload entry contained esbuild labels prefixed with `source/`. Running from the repository root produced the exact original ZIP digest. The failed attempt is retained as `attempt-1.zip` and `attempt-1-report.json`; it must not be used for a release. `recover.mjs` now rejects an incorrect working directory.\n"
+  },
+  "limits": [
+    "Archive reconstruction changes no original source, dependency lock, game behavior or deployed package bytes.",
+    "No function attachment or publication has happened at this preparation stage.",
+    "Any provider-generated record differences must be captured and reviewed before publication; no blanket identity normalization is authorized."
+  ],
+  "all41ArchiveHashesAndSizesVerified": true,
+  "totalArchiveBytes": 27976379,
+  "verifiedAt": "2026-11-02T03:16:55.837675+00:00"
+}
