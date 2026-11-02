@@ -1,0 +1,46 @@
+{
+  "approved": true,
+  "supersededCandidate": "6ae7fe815070789ddb725fa3",
+  "baseline": "6ae7f8a9183c770b8f0eb50c",
+  "originalSourceCommit": "81b463838a2ed3c5c388be14c1935a80c221c73d",
+  "originalSourceTree": "e028fb2cd59f31e1f13c235d61f9e03bfe8caa4e",
+  "recoveryCommit": "00e9d0e0f7968751559c6f9458d5bdd1b3384afa",
+  "recoveryTree": "3edeab27f14dc687b38a97f237a2027cc7c61e2b",
+  "configurationSha256": "233fe64419a86b8d70a4416a53916506f08932ee5c370682f6a196b54c01f3e3",
+  "manifestSha256": "b39dcbda43207af13928806bf01125479817a333721b51843c0fb456e69fddfc",
+  "payloadSha256": "11dd087d6272edba2e2f8d675459cbf59a2320bb17e4c397d55c98734d44fa95",
+  "lastAcceptedUploadAt": "2026-11-02T03:22:29.827233+00:00",
+  "minimumWaitSeconds": 1200,
+  "maximumNewCandidates": 1,
+  "supersededCandidatePublicationForbidden": true,
+  "reason": "One fresh candidate is authorized only after the first candidate has remained in its exact observed empty uploading state for at least 20 minutes following all 41 accepted uploads. The new full manifest differs only by async:true, following current official Netlify CLI policy for 284 static paths. This is a supported fresh attempt; the async difference is not proven to have caused the previous stall. The old candidate and its evidence stay intact and may not be published by this procedure.",
+  "reviewer": "root",
+  "reviewedAt": "2026-11-02T03:42:05.672216+00:00",
+  "primaryReferences": [
+    {
+      "url": "https://github.com/netlify/cli/blob/6002ec948bccecdba4e963d50663d14db8dd9b49/src/utils/deploy/constants.ts",
+      "finding": "DEFAULT_SYNC_LIMIT is 100 and DEFAULT_DEPLOY_TIMEOUT is 1200000 ms."
+    },
+    {
+      "url": "https://github.com/netlify/cli/blob/6002ec948bccecdba4e963d50663d14db8dd9b49/src/utils/deploy/deploy-site.ts",
+      "finding": "The full manifest uses async when the static path count exceeds the synchronous limit, waits for the digest diff, uploads requested exact bytes, and waits for ready."
+    },
+    {
+      "url": "https://github.com/netlify/cli/blob/6002ec948bccecdba4e963d50663d14db8dd9b49/src/utils/deploy/util.ts",
+      "finding": "Digest completion states include prepared, uploading, uploaded and ready; only ready completes the release."
+    }
+  ],
+  "scope": {
+    "staticPaths": 284,
+    "changedPublicPaths": [
+      "/scripts/arcade-daily-growth.js"
+    ],
+    "exactFunctionPackages": 41,
+    "preservedSchedules": 5,
+    "environmentWrites": 0,
+    "publishOperations": 0,
+    "oldCandidateMutations": 0,
+    "oldEvidenceOverwrites": 0,
+    "databaseWrites": 0
+  }
+}
