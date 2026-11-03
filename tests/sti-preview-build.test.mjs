@@ -16,7 +16,7 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
   const approvedNavigationChange = {
     path: '/dapp/index.html',
     previousSha: '764e53ff209b4ae89cf4aefcbd2a8907d4ef75d9',
-    approvedSha: '0304ea4ddca0a3112c607650292eba99310ea768',
+    approvedSha: '74779a62a39daebc0fa7f65bee6c98c55b4c5f56',
   };
   assert.equal(published.files.find(f => f.path === approvedNavigationChange.path)?.sha, approvedNavigationChange.previousSha);
   assert.equal(manifest.files.find(f => f.path === approvedNavigationChange.path)?.sha1, approvedNavigationChange.approvedSha);

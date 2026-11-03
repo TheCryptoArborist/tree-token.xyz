@@ -53,3 +53,9 @@ test('Knowledge Trial layout includes question, timer, progress, and result styl
     assert.match(styles, new RegExp(`\\.${selector}`));
   }
 });
+
+test('paused Knowledge Trial is absent from public page metadata', () => {
+  const description = html.match(/<meta name="description" content="([^"]+)"/)?.[1] || '';
+  assert.doesNotMatch(description, /Knowledge Trial|Challenge/i);
+  assert.match(description, /VICTORY/);
+});

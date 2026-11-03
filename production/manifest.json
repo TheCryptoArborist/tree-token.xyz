@@ -642,8 +642,8 @@
     {
       "path": "/dapp/index.html",
       "source": "dapp/index.html",
-      "sha1": "0304ea4ddca0a3112c607650292eba99310ea768",
-      "size": 81067
+      "sha1": "74779a62a39daebc0fa7f65bee6c98c55b4c5f56",
+      "size": 81063
     },
     {
       "path": "/dapp/earn-v3-zap.js",
