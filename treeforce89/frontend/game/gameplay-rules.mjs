@@ -14,6 +14,10 @@ export function collectCore(level,charge){
  return {level:upgraded?level+1:level,charge:upgraded?0:next,upgraded,score:0};
 }
 export function corePity(level){return level===0?6:8;}
+export function repeatShotMs(level,{automatic=false,turbo=false}={}){
+ if(!Number.isInteger(level)||!WEAPONS[level])throw Error('Invalid weapon level');
+ return (automatic?460:420)*(WEAPONS[level].fireMs/WEAPONS[0].fireMs)*(turbo?.8:1);
+}
 export function selectAttack({wave,kind,serial=0,transformed=false}){
  if(wave<1)return 'swoop';
  if(kind==='borer')return 'charge';

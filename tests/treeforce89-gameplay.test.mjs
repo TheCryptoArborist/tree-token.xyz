@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {WEAPONS,collectCore,corePity,divePlan,selectAttack,BONUS,hasBonusAfter,bonusRow,bonusAward} from '../treeforce89/frontend/game/gameplay-rules.mjs';
+import {WEAPONS,collectCore,corePity,repeatShotMs,divePlan,selectAttack,BONUS,hasBonusAfter,bonusRow,bonusAward} from '../treeforce89/frontend/game/gameplay-rules.mjs';
 test('collected cores advance all five weapon profiles without skipping tiers',()=>{
  let state={level:0,charge:0};const levels=[];
  for(let i=0;i<7;i++){state=collectCore(state.level,state.charge);levels.push(state.level);}
@@ -7,6 +7,10 @@ test('collected cores advance all five weapon profiles without skipping tiers',(
  assert.deepEqual(collectCore(4,0),{level:4,charge:0,upgraded:false,score:500});
  assert.throws(()=>collectCore(1,2));assert.equal(corePity(0),6);
  assert(WEAPONS[1].fireMs<WEAPONS[0].fireMs);assert.equal(WEAPONS[4].shots,3);
+ assert(repeatShotMs(1,{automatic:true})<repeatShotMs(0,{automatic:true})*.75);
+ assert(repeatShotMs(1)<repeatShotMs(0)*.75);
+ assert.equal(repeatShotMs(0,{automatic:true}),460);
+ assert.equal(repeatShotMs(0,{turbo:true}),336);
  for(const w of WEAPONS)assert(w.activeCap>=w.shots&&w.activeCap<=6);
 });
 test('tutorial stays predictable; later attacks include distinct curves and a dodge warning',()=>{
