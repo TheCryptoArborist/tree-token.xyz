@@ -4,15 +4,12 @@ import {existsSync,mkdirSync,cpSync,copyFileSync} from 'node:fs';
 import {resolve} from 'node:path';
 import assert from 'node:assert/strict';
 import {build} from 'esbuild';
-const root=resolve(import.meta.dirname,'..'),source=resolve(root,'.netlify/treeforce89-pinned');
+import {stagePinnedFrontend} from './lib/treeforce89-pinned-frontend.mjs';
+const root=resolve(import.meta.dirname,'..'),source=resolve(root,'.netlify/treeforce89-flight-source');
 assert.equal(process.env.CONTEXT,'deploy-preview');
 assert.equal(process.env.HEAD||process.env.BRANCH,'feature/treeforce89-galaga-gameplay');
 const run=(cmd,args,cwd=root)=>execFileSync(cmd,args,{cwd,stdio:'inherit'});
-if(!existsSync(resolve(source,'.git'))){
- mkdirSync(source,{recursive:true});run('git',['init','--quiet'],source);
- run('git',['fetch','--quiet','--depth','1','https://github.com/TheCryptoArborist/treeforce89.git','a38e08e37e1f71ea41b86add8e26a92b0789cf22'],source);
- run('git',['checkout','--quiet','--detach','FETCH_HEAD'],source);
-}
+await stagePinnedFrontend(source);
 run('npm',['ci','--ignore-scripts','--no-audit','--no-fund'],source);
 await import('./prepare-treeforce89-flight-lab.mjs');
 const stage=resolve(root,'.netlify/treeforce89-flight-lab/play/treeforce89');

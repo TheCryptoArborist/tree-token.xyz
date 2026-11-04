@@ -1,0 +1,33 @@
+{
+  "repository": "TheCryptoArborist/treeforce89",
+  "commit": "a38e08e37e1f71ea41b86add8e26a92b0789cf22",
+  "files": {
+    "package.json": "2f89f83cfcb2e1fb7ef93c8f467e8220e5af322943bb02856103e8a4221100c7",
+    "package-lock.json": "05a1ac875fecceddbe8d3b37d2d65e1054144f17142afad3c1d26b07cb7745e0",
+    "vite.config.ts": "62a6c900c16d3acae17f034b0e6948b60b0f7aa69c0fdb85b347fe69b012a69e",
+    "index.html": "e8a3d16dfbbf90819c9db9e5c9ea07015eb0f8b37554ad9b8aa05efa987a9624",
+    "src/main.tsx": "577e0c7cd01095ec1646b18b3b0c51424230a8d487f23ba405e9d362d85d233b",
+    "app/globals.css": "3d86bc44754f4c31a8bd7c377e1cc5b50c9554643b4fae683c59d031e4c1a00f",
+    "app/dapp-kit.ts": "bb6181c206934b79b4fe61e9dab1ee831ac691cf07aaa00aba1ed10d002ac65d",
+    "app/PassiveWalletDiagnostics.tsx": "39698ea24cbe2669e850f12aae64bec4f3eaf7f4b9d891110e7f662123e9d95f",
+    "app/ConnectionOnlyDiagnostics.tsx": "77edd391abcdcd78208d8ef0e63ba1f0e2852acb41a1116ba1677bcaf5539ebf",
+    "app/game/arcade.ts": "7a022816dfefd96600b59f752d924dbc2b6ce7ee1d7c885bff0f432274cec642",
+    "app/game/gateway-client.mjs": "0418b40da371d6921deed7db3f0595e5d0e7b958e6dc41946545a65117bcc80c",
+    "app/game/run-restart.mjs": "7a4aa66e18b5c908142394a0e443cd17285b1c5c05ff3d56474c045437cfb023",
+    "app/game/events.ts": "916f7c957307adee0c6d3826a8889db105118de0130c8786f3fc2726b08f3e3d",
+    "app/game/rng.ts": "5456aaf0e0d84c148fbce2ec873657137cfdb0b6988d8f03b0eb7abfd428162b",
+    "app/game/tree-payment.mjs": "b51117e071ad9c4a5f239b40bf262d3ded560de2ebed0453acae6c166c8d3275",
+    "app/game/authorized-continue-resume.mjs": "207b3a72ca32c498b81b0893406cc3ae63fb32d5a29a541a718b622fd08a7f26",
+    "app/game/mainnet-transaction-reader.mjs": "2a05ad14edf1ab6804a6aa6e67b317359059a90e30c9e86e9e428f03400b96fe",
+    "scripts/write-tree-deploy-context.mjs": "35616011c3e961d592a0787e3533636e366c99e9e2472882e9098000dead8bca"
+  },
+  "assets": {
+    "assets/powerups/dex-reward-token.jpeg": "ac5ace425daae04e86d9b9596fb1a3bf77f4c55665ad61c7ec0ca0a615ff28a5",
+    "assets/powerups/boom-token.png": "7edcb74821052b4bdc2e3409f6f9d10b66342edc723ba071334f6aa809989d98",
+    "assets/arborwing/tree-hero-arborwing-stages-v2.png": "8b83fae07ba54ff7a2b1d535e7116ff54232e5aa75cad90b5c820898b9a52f89",
+    "assets/backgrounds/first-canopy-backdrop.png": "e6b2806036604c57bb98ed4721e135744bba4ecf6f0522f84b0ebf83f431362c",
+    "assets/backgrounds/first-canopy-midground.png": "d190a000775330893693c1cd933f718d11be9c9eba169135ba7d34f8fa803b2a",
+    "assets/backgrounds/first-canopy-foreground.png": "230f349e93bc493568dc4a939341d3080dafc998db07fd911de975c729ed9999",
+    "assets/hero/tree-hero-canonical.jpg": "ce6f88004b784e024e5c4d78b67cae4da3e44d741965d9ca4a49cb2e71265a98"
+  }
+}

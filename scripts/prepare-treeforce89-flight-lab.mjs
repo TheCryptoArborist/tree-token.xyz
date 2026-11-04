@@ -6,12 +6,13 @@ import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
 import {applyPaidContinue} from './apply-treeforce89-paid-continue.mjs';
 import {styleTreeForceGateway} from './style-treeforce89-gateway.mjs';
-const root=resolve(import.meta.dirname,'..'),source=resolve(root,'.netlify/treeforce89-pinned');
+import {originalFrontendFile,provenance} from './lib/treeforce89-pinned-frontend.mjs';
+const root=resolve(import.meta.dirname,'..'),source=resolve(root,'.netlify/treeforce89-flight-source');
 const stage=resolve(root,'.netlify/treeforce89-flight-lab');
 const pin='a38e08e37e1f71ea41b86add8e26a92b0789cf22';
-assert.equal(execFileSync('git',['rev-parse','HEAD'],{cwd:source,encoding:'utf8'}).trim(),pin);
+assert.equal(provenance.commit,pin);
 applyPaidContinue(source);
-writeFileSync(resolve(source,'app/game/gateway-client.mjs'),execFileSync('git',['show',pin+':app/game/gateway-client.mjs'],{cwd:source,encoding:'utf8'})
+writeFileSync(resolve(source,'app/game/gateway-client.mjs'),originalFrontendFile('app/game/gateway-client.mjs')
  .replaceAll('/.netlify/functions/tree-','/play/treeforce89/api/tree-'));
 rmSync(resolve(source,'dist'),{recursive:true,force:true});
 execFileSync('npm',['run','build','--','--base','/play/treeforce89/flight-lab/'],{cwd:source,stdio:'inherit'});

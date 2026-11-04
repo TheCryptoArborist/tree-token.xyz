@@ -4,10 +4,11 @@ import {execFileSync} from 'node:child_process';
 import assert from 'node:assert/strict';
 import {rebaseTreeForceAssets} from './rebase-treeforce89-assets.mjs';
 import {layoutTreeForceHud} from './layout-treeforce89-hud.mjs';
+import {originalFrontendFile} from './lib/treeforce89-pinned-frontend.mjs';
 const root=resolve(import.meta.dirname,'..');
 export function applyPaidContinue(source) {
  const pin='a38e08e37e1f71ea41b86add8e26a92b0789cf22';
- const original=path=>execFileSync('git',['show',pin+':'+path],{cwd:source,encoding:'utf8'});
+ const original=path=>existsSync(resolve(source,'.git'))?execFileSync('git',['show',pin+':'+path],{cwd:source,encoding:'utf8'}):originalFrontendFile(path);
  for(const name of ['NFTreeGateway.tsx','CanopyGame.tsx','ContinuationReview.tsx','ContinuationDialog.tsx','WalletPicker.tsx'])
   copyFileSync(resolve(root,'treeforce89/frontend',name),resolve(source,'app',name));
  copyFileSync(resolve(root,'treeforce89/frontend/main.tsx'),resolve(source,'src/main.tsx'));
