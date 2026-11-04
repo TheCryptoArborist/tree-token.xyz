@@ -4,13 +4,13 @@
 <script type="module">
 import {createCanopyGame} from './review-engine.js';
 let game;const scene=()=>{const s=game?.scene.getScene('game');return s?.sys.isActive()&&s.player?s:null;};
-function start(wave=0){game?.destroy(true);document.querySelector('#game').replaceChildren();game=createCanopyGame(document.getElementById('game'),{initialScene:'game',resumeRun:{runId:'grove-'+'0'.repeat(32),seed:37,score:0,wave,kills:0,perfect:0,maxStage:0,shotsFired:0,shotsHit:0,start:Date.now(),mode:'ARCADE'}});}
+function start(wave=0){document.getElementById('checks').textContent='Ready';game?.destroy(true);document.querySelector('#game').replaceChildren();game=createCanopyGame(document.getElementById('game'),{initialScene:'game',resumeRun:{runId:'grove-'+'0'.repeat(32),seed:37,score:0,wave,kills:0,perfect:0,maxStage:0,shotsFired:0,shotsHit:0,start:Date.now(),mode:'ARCADE'}});}
 const click=(id,fn)=>document.getElementById(id).addEventListener('click',()=>{const s=scene();if(s)fn(s);});
 document.getElementById('wave1').onclick=()=>start(0);document.getElementById('wave6').onclick=()=>start(5);
 click('core',s=>s.collectWeaponCore(s.pickups.create(s.player.x,s.player.y,'weaponCore')));
 click('auto',s=>s.toggleAutoFire());click('pause',s=>s.togglePause());
 click('bonus',s=>{if(s.paused)s.togglePause();s.enemies.clear(true,true);s.pickups.clear(true,true);s.time.removeAllEvents();s.startWindfall(4);});
-click('verify',s=>{const results=[];const check=(ok,name)=>{if(!ok)throw Error(name);results.push(name);};try{
+click('verify',s=>{if(s.windfall){document.getElementById('checks').textContent='Start a combat wave before running checks.';return;}const results=[];const check=(ok,name)=>{if(!ok)throw Error(name);results.push(name);};try{
  if(s.paused)s.togglePause();s.enemies.clear(true,true);s.pickups.clear(true,true);s.shots.clear(true,true);s.time.removeAllEvents();s.weaponLevel=0;s.weaponCharge=0;
  for(let i=0;i<7;i++)s.collectWeaponCore(s.pickups.create(s.player.x,s.player.y,'weaponCore'));
  check(s.weaponLevel===4&&s.weaponCharge===0,'seven cores reach cannon');
@@ -23,8 +23,9 @@ click('verify',s=>{const results=[];const check=(ok,name)=>{if(!ok)throw Error(n
  s.touchWindfall(s.bonusObjects.create(s.player.x,s.player.y,'windfallLimb').setData('bonusKind','limb'));check(s.lives===lives&&s.windfall.bumps===1,'bonus contact preserves lives');
  s.finishWindfall();const awarded=s.run.score;s.finishWindfall();check(s.run.score===awarded,'bonus completion is idempotent');
  document.getElementById('checks').textContent='PASS: '+results.join(' · ');
- setTimeout(()=>{document.getElementById('checks').textContent+=(scene()?.run.wave===4?' · PASS: returned to wave 5':' · FAIL: bonus transition');},2700);
+ // Follow the same scene clock as the transition, including pause or a slow renderer.
+ s.time.delayedCall(2700,()=>{document.getElementById('checks').textContent+=(scene()?.run.wave===4?' · PASS: returned to wave 5':' · FAIL: bonus transition');});
  }catch(e){document.getElementById('checks').textContent='FAIL: '+e.message;}});
-setInterval(()=>{const s=scene();if(s)document.getElementById('metrics').textContent=JSON.stringify({phase:s.windfall?'windfall':'combat',wave:s.run.wave+1,lives:s.lives,score:s.run.score,weapon:s.weaponLevel+1,coreCharge:s.weaponCharge,shots:s.shots.countActive(),enemies:s.enemies.countActive(),diving:s.enemies.getChildren().filter(e=>e.diving).length,bonus:s.windfall?{seconds:Math.round(s.windfall.elapsed/1000),collected:s.windfall.collected,bumps:s.windfall.bumps,finishing:s.windfall.finishing}:null,paused:s.paused},null,2);},150);
+setInterval(()=>{const s=scene();if(s)document.getElementById('metrics').textContent=JSON.stringify({fps:Math.round(game.loop.actualFps),sceneMs:Math.round(s.time.now),phase:s.windfall?'windfall':'combat',wave:s.run.wave+1,lives:s.lives,score:s.run.score,weapon:s.weaponLevel+1,coreCharge:s.weaponCharge,shots:s.shots.countActive(),enemies:s.enemies.countActive(),diving:s.enemies.getChildren().filter(e=>e.diving).length,bonus:s.windfall?{seconds:Math.round(s.windfall.elapsed/1000),collected:s.windfall.collected,bumps:s.windfall.bumps,finishing:s.windfall.finishing}:null,paused:s.paused},null,2);},150);
 start(0);
 </script></body></html>
