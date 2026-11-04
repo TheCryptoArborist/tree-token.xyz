@@ -20,3 +20,15 @@ The original 32 wallet/continuation tests and four new deterministic gameplay te
 Current MystenLabs `README.md`, `frontend-apps/SKILL.md` and `frontend-apps/react.md` were read live through the GitHub connector. Their wallet gating guidance is consistent with retaining the existing account/session boundary; no SDK migration or signing changes are part of this work.
 
 The isolated build now includes 18 original pinned frontend text files and their SHA256 provenance, including the unchanged wallet configuration and dependency lock. Seven original TREE FORCE art assets are fetched from their existing public canonical paths and verified against pinned SHA256 hashes. The build no longer requires access to a second Git repository. Repeater speed changes apply to both held and automatic fire.
+
+
+## Browser verification — 4 November 2026
+
+- Ready Deploy Preview `6aea853212bc583f3d5b3539`, source `b9c0699e470ba6e4dd145d7f7619b1c78ed0e431`, draft PR #76. Preview: https://deploy-preview-76--tree-token.netlify.app/play/treeforce89/flight-lab/review.html
+- The hosted build failure was the existing preview gateway's separately pinned SDK not being installed before function bundling. The feature-only builder now runs that package's unchanged lockfile install. All nine preview functions bundle successfully. Production functions are not rebuilt by this change.
+- All 36 focused local tests pass on the final gameplay code. Production snapshot boundary checks pass. Earlier CI runs passed on `4b61518`; PR #76 still depends on the unmerged integration PR #70 and conflicts with current main, so the newest head has not received a fresh GitHub Actions run.
+- Actual browser engine assertions pass: seven cores reach the cannon; active shots stop at two triple volleys; pause/resume freezes/restores scene timers and physics; dive packs respect the remaining budget; warnings are at least 450ms; bonus firing is disabled; seeds score once; limb contact preserves lives; completion awards once; and combat resumes at wave five.
+- A full natural 18-second Windfall course ran at approximately 61fps in the foreground browser. Its clock held at 13 seconds while paused and continued after resume. It ended with 900 score and all three lives, then returned to wave five. The timer, lesson messages and bottom weapon/status HUD were visually checked for overlap.
+- The first wall-clock-based fixture assertion falsely timed out while Chrome kept the game in a background tab at 1fps. The assertion now follows the same Phaser scene clock as the transition, and the foreground test passed. No gameplay timing was altered to accommodate the test browser.
+- Wave-six combat produced attacking divers and automatic fire. It can be selected for playtesting in the lab. Original Amiga disk emulation, frame-exact Galaga comparisons, full ten-wave balance testing, a real holder signature and real payment remain outside the completed verification.
+- The deployed test fixture has no wallet, NFTree session, payment or server score submission. It is not the canonical game release. No production deploy was published and no PR was merged.
