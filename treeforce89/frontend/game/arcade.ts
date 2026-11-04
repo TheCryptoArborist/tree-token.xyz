@@ -120,7 +120,7 @@ class GameScene extends Phaser.Scene{
  toggleSfx(){sfxMuted=!sfxMuted;this.sfxText.setText(sfxMuted?"SND OFF":"SND ON").setColor(sfxMuted?pc.muted:pc.gold);this.sfxButtonBg.setStrokeStyle(1,sfxMuted?ph.muted:ph.gold);if(sfxMuted)stopMusic();else{startMusic();tone(this,760,.07,.05)}}
  addGrowth(n:number){if(this.stage===4)return;this.growth+=n;if(this.growth>=stages[this.stage].need)this.grow();this.updateHud()}
  maybeDropGrowthSeed(x:number,y:number,kind:Kind){
-  this.killsSinceSeed++;const chance={bat:.24,borer:.72,spore:.58,small:.12}[kind],guaranteed=this.killsSinceSeed>=4;if(!guaranteed&&this.rng.next()>chance)return;this.killsSinceSeed=0;const value={bat:5,borer:10,spore:8,small:3}[kind];const seed=this.pickups.create(x,y,"growthSeed") as Phaser.Physics.Arcade.Sprite;seed.setDepth(5).setData("pickupType","growth").setData("growthValue",value).setData("spin",this.rng.range(-.12,.12)).setVelocity(this.rng.range(-24,24),78);seed.body!.setSize(15,19,true);if(!this.seedTaught){this.seedTaught=true;this.setLesson("GROWTH SEED // EXPANDS ARBORWING",2800)}
+  this.killsSinceSeed++;const chance={bat:.24,borer:.72,spore:.58,small:.12}[kind],guaranteed=this.killsSinceSeed>=4;if(!guaranteed&&this.rng.next()>chance)return;this.killsSinceSeed=0;const value={bat:5,borer:10,spore:8,small:3}[kind];const seed=this.pickups.create(x,y,"growthSeed") as Phaser.Physics.Arcade.Sprite;seed.setDepth(5).setData("pickupType","growth").setData("growthValue",value).setData("spin",this.rng.range(-.12,.12)).setVelocity(this.rng.range(-24,24),78);seed.body!.setSize(15,19,true);this.decoratePickup(seed,21);if(!this.seedTaught){this.seedTaught=true;this.setLesson("GROWTH SEED // EXPANDS ARBORWING",2800)}
  }
  maybeDropWeaponCore(x:number,y:number,kind:Kind){
  if(this.weaponLevel===weaponLevels.length-1)return;this.killsSinceCore++;
@@ -128,20 +128,20 @@ class GameScene extends Phaser.Scene{
  const chance={bat:.1,borer:.4,spore:.3,small:.02,boss:1}[kind];
  if(this.killsSinceCore<corePity(this.weaponLevel)&&this.rng.next()>chance)return;
  this.killsSinceCore=0;const core=this.pickups.create(x,y,"weaponCore") as Phaser.Physics.Arcade.Sprite;
- core.setDepth(6).setData("pickupType","weapon").setData("spin",this.rng.range(-.18,.18)).setVelocity(this.rng.range(-18,18),68);core.body!.setSize(19,19,true);
+ core.setDepth(6).setData("pickupType","weapon").setData("spin",this.rng.range(-.18,.18)).setVelocity(this.rng.range(-18,18),68);core.body!.setSize(19,19,true);this.decoratePickup(core,23);
  if(!this.coreTaught){this.coreTaught=true;this.setLesson("VIOLET CORE // BUILD YOUR NEXT WEAPON",3000);}
  }
- pickupFrame(x:number,y:number,size:number,color=0xa8ffcf){
- const box=this.add.rectangle(0,0,size,size,ph.bg,0).setStrokeStyle(2,color),tag=this.add.rectangle(size/2-2,-size/2+2,14,14,ph.bg,1).setStrokeStyle(1,color),plus=this.add.text(size/2-2,-size/2+2,"+",font(14,"#ffffff")).setOrigin(.5);
- return this.add.container(x,y,[box,tag,plus]).setDepth(7);
+ pickupGlow(x:number,y:number,radius:number){
+ const layers=[1,.72,.43].map((scale,i)=>this.add.circle(0,0,radius*scale,0x64ff9b,[.035,.065,.11][i]).setBlendMode(Phaser.BlendModes.ADD));
+ return this.add.container(x,y,layers);
  }
- decoratePowerup(token:Phaser.Physics.Arcade.Sprite,size:number){
- const frame=this.pickupFrame(token.x,token.y,size);token.setData("halo",frame);
- this.tweens.add({targets:frame,alpha:.6,duration:650,yoyo:true,repeat:-1});
- frame.once(Phaser.GameObjects.Events.DESTROY,()=>this.tweens.killTweensOf(frame));token.once(Phaser.GameObjects.Events.DESTROY,()=>frame.destroy(true));
+ decoratePickup(token:Phaser.Physics.Arcade.Sprite,radius:number){
+ const glow=this.pickupGlow(token.x,token.y,radius).setDepth(token.depth-.5);token.setData("halo",glow);
+ this.tweens.add({targets:glow,alpha:.6,scale:1.08,duration:900,yoyo:true,repeat:-1});
+ glow.once(Phaser.GameObjects.Events.DESTROY,()=>this.tweens.killTweensOf(glow));token.once(Phaser.GameObjects.Events.DESTROY,()=>glow.destroy(true));
  }
- maybeDropVictoryTurbo(x:number,y:number,kind:Kind){this.killsSinceTurbo++;const chance={bat:.018,borer:.09,spore:.07,small:.006}[kind],guaranteed=this.killsSinceTurbo>=tuning.turboPity;if(!guaranteed&&this.rng.next()>chance)return;this.killsSinceTurbo=0;const token=this.pickups.create(x,y,"victoryTurbo") as Phaser.Physics.Arcade.Sprite;token.setScale(.115).setDepth(6).setData("pickupType","turbo").setData("spin",this.rng.range(-.15,.15)).setVelocity(this.rng.range(-14,14),58);token.body?.setCircle(160);this.decoratePowerup(token,56);if(!this.turboTaught){this.turboTaught=true;this.setLesson("VICTORY TURBO // FASTER FLIGHT + FIRE, SHOT CAP UNCHANGED",3200)}}
- maybeDropBoom(x:number,y:number,kind:Kind){this.killsSinceBoom++;const chance={bat:.03,borer:.12,spore:.09,small:.008}[kind],guaranteed=this.killsSinceBoom>=15;if(!guaranteed&&this.rng.next()>chance)return;this.killsSinceBoom=0;const token=this.pickups.create(x,y,"boomLogo") as Phaser.Physics.Arcade.Sprite;token.setScale(.23).setDepth(6).setData("pickupType","boom").setData("spin",this.rng.range(-.22,.22)).setVelocity(this.rng.range(-16,16),62);token.body?.setCircle(104);this.decoratePowerup(token,54);if(!this.boomTaught){this.boomTaught=true;this.setLesson("$BOOM BLAST // CLEAR FIRE + STRIKE DIVERS",3000)}}
+ maybeDropVictoryTurbo(x:number,y:number,kind:Kind){this.killsSinceTurbo++;const chance={bat:.018,borer:.09,spore:.07,small:.006}[kind],guaranteed=this.killsSinceTurbo>=tuning.turboPity;if(!guaranteed&&this.rng.next()>chance)return;this.killsSinceTurbo=0;const token=this.pickups.create(x,y,"victoryTurbo") as Phaser.Physics.Arcade.Sprite;token.setScale(.115).setDepth(6).setData("pickupType","turbo").setData("spin",this.rng.range(-.15,.15)).setVelocity(this.rng.range(-14,14),58);token.body?.setCircle(160);this.decoratePickup(token,34);if(!this.turboTaught){this.turboTaught=true;this.setLesson("VICTORY TURBO // FASTER FLIGHT + FIRE, SHOT CAP UNCHANGED",3200)}}
+ maybeDropBoom(x:number,y:number,kind:Kind){this.killsSinceBoom++;const chance={bat:.03,borer:.12,spore:.09,small:.008}[kind],guaranteed=this.killsSinceBoom>=15;if(!guaranteed&&this.rng.next()>chance)return;this.killsSinceBoom=0;const token=this.pickups.create(x,y,"boomLogo") as Phaser.Physics.Arcade.Sprite;token.setScale(.23).setDepth(6).setData("pickupType","boom").setData("spin",this.rng.range(-.22,.22)).setVelocity(this.rng.range(-16,16),62);token.body?.setCircle(104);this.decoratePickup(token,33);if(!this.boomTaught){this.boomTaught=true;this.setLesson("$BOOM BLAST // CLEAR FIRE + STRIKE DIVERS",3000)}}
  updatePickups(delta:number){this.pickups.getChildren().forEach(o=>{const p=o as Phaser.Physics.Arcade.Sprite;if(!p.active)return;const halo=p.getData("halo");if(halo?.active)halo.setPosition(p.x,p.y).setAngle(-p.angle);p.setAngle(0);if(p.y>635){halo?.destroy();p.destroy()}});this.enemies.getChildren().forEach(o=>{const e=o as Enemy;if(e.active&&e.kind==="small"&&(e.y>635||e.x<-40||e.x>520))e.destroy()})}
  collectPickup(pickup:Phaser.Physics.Arcade.Sprite){if(!pickup.active)return;pickup.getData("halo")?.destroy();const type=pickup.getData("pickupType");if(type==="weapon")this.collectWeaponCore(pickup);else if(type==="turbo")this.collectVictoryTurbo(pickup);else if(type==="boom")this.collectBoom(pickup);else this.collectGrowthSeed(pickup)}
  collectGrowthSeed(seed:Phaser.Physics.Arcade.Sprite){if(!seed.active)return;const value=seed.getData("growthValue")||5,x=seed.x,y=seed.y;seed.destroy();if(this.stage===4){this.run.score+=250;this.pickupBanner("GROWTH SEED\nSCORE +250",pc.green);this.setLesson("ANCIENT CANOPY // SEED BONUS +250",1200)}else{this.addGrowth(value);this.pickupBanner(`GROWTH SEED\n+${value} GROWTH`,pc.green);this.setLesson(`GROWTH SEED +${value}`,1050)}leafBurst(this,x,y,12);tone(this,470,.12,.07);this.updateHud()}
@@ -232,9 +232,9 @@ class GameScene extends Phaser.Scene{
   const b=this.windfall;if(!b||b.finishing)return;b.elapsed+=delta;
   while(b.row<BONUS.rows&&b.elapsed>=BONUS.firstRow+b.row*BONUS.rowInterval){
    const row=bonusRow(b.row++,this.run.seed);for(const x of row.hazards){const limb=this.bonusObjects.create(x,80,"windfallLimb") as Phaser.Physics.Arcade.Sprite;limb.setDepth(3).setVelocityY(BONUS.fallSpeed).setData("bonusKind","limb");limb.body!.setSize(40,12,true);}
-   const seed=this.bonusObjects.create(row.seedX,80,"bonusSeed") as Phaser.Physics.Arcade.Sprite;seed.setDepth(4).setScale(1.25).setVelocityY(BONUS.fallSpeed).setData("bonusKind","seed");seed.body!.setSize(13,17,true);
+   const seed=this.bonusObjects.create(row.seedX,80,"bonusSeed") as Phaser.Physics.Arcade.Sprite;seed.setDepth(4).setScale(1.25).setVelocityY(BONUS.fallSpeed).setData("bonusKind","seed");seed.body!.setSize(13,17,true);this.decoratePickup(seed,23);
   }
-  this.bonusObjects.getChildren().forEach(o=>{const p=o as Phaser.Physics.Arcade.Sprite;if(p.y>635)p.destroy();});
+  this.bonusObjects.getChildren().forEach(o=>{const p=o as Phaser.Physics.Arcade.Sprite;p.getData("halo")?.setPosition(p.x,p.y);if(p.y>635)p.destroy();});
   this.bonusText.setText(`WINDFALL ${Math.max(0,Math.ceil((BONUS.duration-b.elapsed)/1000))}s · SEEDS ${b.collected}/${BONUS.rows} · BUMPS ${b.bumps}`);
   if(b.elapsed>=BONUS.duration)this.finishWindfall();
  }
@@ -258,11 +258,11 @@ class GameScene extends Phaser.Scene{
  showPruneGuide(first=false){
  if(this.debugPanel.visible)return;this.paused=true;this.physics.world.isPaused=true;this.time.paused=true;this.tweens.pauseAll();
  const pieces:Phaser.GameObjects.GameObject[]=[],shade=this.add.rectangle(240,360,480,720,ph.bg,.9).setInteractive(),panel=this.add.rectangle(240,352,438,500,ph.panel,.99).setStrokeStyle(3,ph.cyan),title=this.add.text(240,118,first?"TREE SHIELD READY":"TREE FORCE FIELD GUIDE",font(17,pc.green)).setOrigin(.5);
- pieces.push(shade,panel,title,this.add.text(240,146,"COLLECT THE + BOXES",font(11,pc.green)).setOrigin(.5));
- ["growthSeed","weaponCore","victoryTurbo","boomLogo"].forEach((key,i)=>{const x=126+i*76,image=this.add.image(x,175,key);if(i>=2){image.setDisplaySize(27,27);pieces.push(this.pickupFrame(x,175,34));}pieces.push(image,this.add.text(x,199,["GROWTH","WEAPON","TURBO","BOOM"][i],font(9,pc.text)).setOrigin(.5));});
+ pieces.push(shade,panel,title,this.add.text(240,146,"COLLECT GLOWING PICKUPS",font(11,pc.green)).setOrigin(.5));
+ ["growthSeed","weaponCore","victoryTurbo","boomLogo"].forEach((key,i)=>{const x=126+i*76,image=this.add.image(x,175,key);if(i>=2)image.setDisplaySize(27,27);pieces.push(this.pickupGlow(x,175,23),image,this.add.text(x,199,["GROWTH","WEAPON","TURBO","BOOM"][i],font(9,pc.text)).setOrigin(.5));});
  pieces.push(this.add.text(240,225,"AVOID POINTED RED SHOTS",font(11,pc.danger)).setOrigin(.5));
  ["blightDart","barkDrill","sporeSeed"].forEach((key,i)=>pieces.push(this.add.image(180+i*60,252,key)));
- const body=this.add.text(240,280,"FIRE // Z/X, LEFT CLICK OR THE FIRE BUTTON.\nHOLD TO REPEAT · AUTO FOR CAPPED FIRE.\n\nVIOLET CORES BUILD THE NEXT WEAPON TIER.\nVICTORY = TURBO · BOOM = CLEAR ENEMY FIRE.\nMORE GROWTH = MORE SCORE + LARGER TARGET.\n\nTREE SHIELD // SPACE · COSTS 1 GROWTH.\nCLEAR SHOTS; STUN UP TO 3 ENEMIES.\nWEAPON LEVEL IS PRESERVED.\n\nDIVING ENEMIES SCORE DOUBLE.\nBREAK CONVOYS; RESCUE A WING FOR DUAL FIRE.\n\nWINDFALL AFTER WAVES 4 + 8.\nDODGE LIMBS · COLLECT GOLD + BOXES.",font(11,pc.text)).setOrigin(.5,0).setAlign("center").setLineSpacing(1),button=this.add.rectangle(240,584,246,38,ph.bgSoft).setStrokeStyle(2,ph.gold).setInteractive(),bt=this.add.text(240,584,"BACK TO THE CANOPY",font(12,pc.gold)).setOrigin(.5);
+ const body=this.add.text(240,280,"FIRE // Z/X, LEFT CLICK OR THE FIRE BUTTON.\nHOLD TO REPEAT · AUTO FOR CAPPED FIRE.\n\nVIOLET CORES BUILD THE NEXT WEAPON TIER.\nVICTORY = TURBO · BOOM = CLEAR ENEMY FIRE.\nMORE GROWTH = MORE SCORE + LARGER TARGET.\n\nTREE SHIELD // SPACE · COSTS 1 GROWTH.\nCLEAR SHOTS; STUN UP TO 3 ENEMIES.\nWEAPON LEVEL IS PRESERVED.\n\nDIVING ENEMIES SCORE DOUBLE.\nBREAK CONVOYS; RESCUE A WING FOR DUAL FIRE.\n\nWINDFALL AFTER WAVES 4 + 8.\nDODGE LIMBS · COLLECT GOLD SEEDS.",font(11,pc.text)).setOrigin(.5,0).setAlign("center").setLineSpacing(1),button=this.add.rectangle(240,584,246,38,ph.bgSoft).setStrokeStyle(2,ph.gold).setInteractive(),bt=this.add.text(240,584,"BACK TO THE CANOPY",font(12,pc.gold)).setOrigin(.5);
  const close=()=>{guide.destroy(true);this.paused=false;this.physics.world.isPaused=false;this.time.paused=false;this.tweens.resumeAll()};button.on("pointerdown",close);shade.on("pointerdown",()=>{});pieces.push(body,button,bt);const guide=this.add.container(0,0,pieces).setDepth(40);
  }
  drawMeters(){const need=stages[this.stage].need,growthP=this.stage===4?1:this.growth/need;this.children.getByName("growthFill")?.destroy();this.add.rectangle(12,709,86*growthP,5,ph.green).setOrigin(0,.5).setDepth(12).setName("growthFill")}
@@ -331,11 +331,10 @@ function makeTextures(s:Phaser.Scene){
  tex("blightDart",16,26,()=>{g.fillStyle(0x390915).fillTriangle(8,25,0,7,16,7);g.lineStyle(2,0xff6178).strokeTriangle(8,24,1,7,15,7);g.fillStyle(0xff4569).fillTriangle(8,23,4,9,12,9);g.fillStyle(0xfff0f2).fillTriangle(8,17,5,9,11,9);g.fillStyle(0xff4569,.35).fillRect(6,0,4,7)});
  tex("barkDrill",20,30,()=>{g.fillStyle(0x390915).fillTriangle(10,29,1,8,19,8);g.lineStyle(2,0xff7889).strokeTriangle(10,28,2,8,18,8);g.fillStyle(0xe3314f).fillTriangle(10,25,5,10,15,10);g.lineStyle(2,0xfff0f2).beginPath().moveTo(5,12).lineTo(10,16).lineTo(15,12).moveTo(7,19).lineTo(10,22).lineTo(13,19).strokePath();g.fillStyle(0xff4569,.4).fillRect(7,0,6,8)});
  tex("sporeSeed",24,28,()=>{g.fillStyle(0x390915).fillTriangle(12,27,1,5,23,5);g.lineStyle(2,0xff6178).strokeTriangle(12,26,2,5,22,5);g.fillStyle(0xc42f58).fillTriangle(12,22,6,8,18,8);g.lineStyle(2,0xfff0f2).beginPath().moveTo(9,9).lineTo(15,15).moveTo(15,9).lineTo(9,15).strokePath();g.fillStyle(0xff6178).fillTriangle(0,10,5,12,3,17).fillTriangle(24,10,19,12,21,17);g.fillStyle(0xff4569,.3).fillRect(9,0,6,5)});
- // Collectibles stay upright in a bright square with a white + corner marker.
- const pickupBox=(color:number)=>{g.fillStyle(0x061810).fillRoundedRect(1,1,26,26,5);g.lineStyle(2,color).strokeRoundedRect(1,1,26,26,5);g.fillStyle(0x061810).fillRect(17,1,10,11);g.fillStyle(0xffffff).fillRect(21,2,2,9).fillRect(18,5,8,2)};
- tex("growthSeed",28,28,()=>{pickupBox(0xa8ffcf);g.fillStyle(ph.green).fillEllipse(11,16,10,15);g.lineStyle(1,0xf2ffe7).lineBetween(8,22,15,11)});
- tex("weaponCore",28,28,()=>{pickupBox(0xa8ffcf);g.fillStyle(0xa778ff).fillTriangle(12,9,5,17,19,17).fillTriangle(12,24,5,17,19,17);g.fillStyle(0xffffff).fillRect(11,13,2,9).fillRect(8,16,8,2)});
- tex("bonusSeed",28,28,()=>{pickupBox(0xa8ffcf);g.fillStyle(ph.gold).fillEllipse(11,16,10,15);g.lineStyle(1,0xffffff).lineBetween(8,22,15,11)});
+ // Collectible artwork remains unobstructed; the shared green aura is separate.
+ tex("growthSeed",28,28,()=>{g.fillStyle(ph.green).fillEllipse(14,14,13,21);g.lineStyle(1,0xe2ffdf).lineBetween(9,24,19,4).lineBetween(12,17,18,15).lineBetween(14,13,10,9)});
+ tex("weaponCore",28,28,()=>{g.fillStyle(0x59318a).fillTriangle(14,2,3,14,25,14).fillTriangle(14,26,3,14,25,14);g.lineStyle(2,0xc19aff).strokeTriangle(14,2,3,14,25,14).strokeTriangle(14,26,3,14,25,14);g.fillStyle(0xffffff).fillPoints([{x:15,y:6},{x:9,y:15},{x:14,y:14},{x:11,y:23},{x:20,y:12},{x:15,y:13}],true)});
+ tex("bonusSeed",28,28,()=>{g.fillStyle(ph.gold).fillEllipse(14,14,13,21);g.lineStyle(1,0xffffff).lineBetween(9,24,19,4).lineBetween(12,17,18,15)});
  tex("boomToken",26,26,()=>{g.fillStyle(0x4b1204).fillCircle(13,13,13);g.lineStyle(2,0xffe06b).strokeCircle(13,13,12);g.fillStyle(0xff6a00).fillCircle(13,13,9);g.fillStyle(0xffd83d).fillTriangle(13,2,16,11,24,13).fillTriangle(24,13,16,16,13,24).fillTriangle(13,24,10,16,2,13).fillTriangle(2,13,10,10,13,2);g.fillStyle(0xffffff).fillCircle(13,13,3)});
  tex("windfallLimb",52,26,()=>{g.fillStyle(0x342014).fillRoundedRect(1,6,50,14,5);g.lineStyle(2,0xb28c4d).strokeRoundedRect(1,6,50,14,5);g.fillStyle(0x735136).fillRect(8,9,34,3);g.lineStyle(3,0x8d663b).lineBetween(30,12,40,1);g.fillStyle(ph.green).fillTriangle(39,0,48,3,42,8);});
  tex("branch",8,30,()=>{g.fillStyle(0x9a5725).fillRect(3,0,3,27);g.fillStyle(ph.green).fillTriangle(3,7,0,3,1,11).fillTriangle(6,15,8,11,7,20)});

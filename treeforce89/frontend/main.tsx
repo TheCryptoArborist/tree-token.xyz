@@ -22,7 +22,7 @@ function App() {
         <div className="screen-bezel">
           {new URLSearchParams(window.location.search).get("walletDiagnostics")==="passive" ? <div className="game-viewport"><PassiveWalletDiagnostics /></div> : new URLSearchParams(window.location.search).get("walletDiagnostics")==="connect" ? <div className="game-viewport"><ConnectionOnlyDiagnostics /></div> : <NFTreeGateway />}
         </div>
-        <div className="game-item-legend" aria-label="Collectible and hazard key"><span className="item-collect"><b aria-hidden="true">+</b> COLLECT BOXES</span><span className="item-avoid"><b aria-hidden="true">▼</b> AVOID RED SHOTS</span></div>
+        <div className="game-item-legend" aria-label="Collectible and hazard key"><span className="item-collect"><b aria-hidden="true"></b> COLLECT GLOWING ITEMS</span><span className="item-avoid"><b aria-hidden="true">▼</b> AVOID RED SHOTS</span></div>
         <footer className="game-controls">
           <span>MOVE A/D · ←/→</span>
           <span>FIRE Z/X · HOLD OR AUTO</span>
