@@ -20,8 +20,9 @@ Existing damage and reward rules, projectile velocities and collision sizes are 
 
 ## Validation
 
-The complete isolated Deploy Preview build and all 36 focused local tests pass. Ready hosted preview `6aea8a95c513a5126ba85790` was built from source `b40426c9642cccccb4cf879870b632b0e8dbf88d`. Twelve browser item assertions pass: growth/core collision dimensions and contact rewards; VICTORY/BOOM collision radii, effects and frame cleanup; all three hostile hitboxes; and enemy dart contact removing a life. Existing engine integration assertions also pass, including the bonus return to wave five. The new item guide, close/resume action, sample drops, upright frames, directed red projectiles and separate legend row were visually reviewed at about 60fps. Production has not been changed. The current MystenLabs README was checked live; this visual/gameplay task requires no Sui SDK or Move implementation changes.
+The complete isolated build and all 36 focused local tests pass. Final hosted preview `6aea915ff4c923218595ce67` uses source `96b239af03df3112087ecdb1f944628374b7b52e`. All twelve browser item checks pass for contact rewards, collision dimensions/radii, VICTORY/BOOM effects, aura cleanup and enemy damage. Existing engine integration checks also pass, including the return from the bonus into wave five. Normal sample drops, the revised field guide, unobstructed logos, pulsing auras and Windfall seed spawning were checked in the foreground browser at about 60fps. The VICTORY/BOOM sprites use additive blending to remove rectangular black logo backgrounds without changing the assets or collision bodies. No enclosing box or corner + remains. Production was not changed.
 
+The current MystenLabs README was checked live. This visual task changes no Sui SDK, Move, signing or payment behavior.
 
 ## Glow refinement
 
