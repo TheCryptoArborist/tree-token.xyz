@@ -1,0 +1,56 @@
+name: TREE FORCE preserved release preflight
+
+on:
+  push:
+    branches: [feature/treeforce89-galaga-gameplay]
+    paths: [.github/workflows/treeforce89-preserved-release-preflight.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tree-token-preserved-production-release
+  cancel-in-progress: false
+
+jobs:
+  inventory:
+    name: Read-only production inventory
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 3e02cc3c25b46327bc375ee7338f8992a9c44c8c
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Verify credential availability without exposing it
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: |
+          node --input-type=module -e 'if (!process.env.NETLIFY_AUTH_TOKEN) { console.error("Missing repository Actions secret NETLIFY_AUTH_TOKEN. No Netlify request or production change was made."); process.exit(1); }'
+      - name: Capture complete locked production inventory (GET only)
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: >-
+          node scripts/release-preserved-production.mjs capture
+          --expected-deploy 6ae971bd73f65c3f86a9e887
+          --baseline .netlify/treeforce89-ci-baseline.json
+          --report .netlify/treeforce89-ci-report.json
+      - name: Verify production remained identical throughout the check
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: >-
+          node scripts/release-preserved-production.mjs verify
+          --expected-deploy 6ae971bd73f65c3f86a9e887
+          --baseline .netlify/treeforce89-ci-baseline.json
+          --report .netlify/treeforce89-ci-report.json
+      - name: Save sanitized verification report
+        uses: actions/upload-artifact@v4
+        with:
+          name: treeforce89-production-preflight
+          path: .netlify/treeforce89-ci-report.json
+          if-no-files-found: error
+          retention-days: 1
