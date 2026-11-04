@@ -6,6 +6,9 @@
   command = "npm run build:preview"
   publish = "dist-preview"
 
+[context.deploy-preview.environment]
+  NODE_VERSION = "22"
+
 # Review builds must never rebuild the unrecovered production functions.
 [context.deploy-preview.functions]
   directory = "netlify/preview-functions"

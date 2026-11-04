@@ -216,7 +216,7 @@ class GameScene extends Phaser.Scene{
  startWindfall(nextWave:number){
   if(this.windfall)return;this.clearTouchState();this.shots.clear(true,true);this.bullets.clear(true,true);this.bonusObjects.clear(true,true);
   this.windfall={elapsed:0,row:0,collected:0,bumps:0,nextWave,finishing:false};this.player.setVelocity(0,0).setPosition(240,570).setAlpha(1);
-  this.bonusText=this.add.text(240,160,"",font(13,pc.gold)).setOrigin(.5).setAlign("center").setDepth(22).setBackgroundColor("#020906").setPadding(10,7,10,7);
+  this.bonusText=this.add.text(240,84,"",font(11,pc.gold)).setOrigin(.5).setAlign("center").setDepth(22).setBackgroundColor("#020906").setPadding(8,4,8,4);
   this.waveText.setText("BONUS\nDODGE");this.banner("WINDFALL GAUNTLET\nDODGE LIMBS · COLLECT SEEDS",pc.gold);this.setLesson("18 SECONDS // NO LIFE LOSS · CLEAN RUN EARNS A CORE",3200);this.updateHud();
  }
  updateWindfall(delta:number){
@@ -226,7 +226,7 @@ class GameScene extends Phaser.Scene{
    const seed=this.bonusObjects.create(row.seedX,80,"growthSeed") as Phaser.Physics.Arcade.Sprite;seed.setDepth(4).setTint(0xffe378).setScale(1.25).setVelocityY(BONUS.fallSpeed).setData("bonusKind","seed");seed.body!.setSize(13,17,true);
   }
   this.bonusObjects.getChildren().forEach(o=>{const p=o as Phaser.Physics.Arcade.Sprite;if(p.y>635)p.destroy();});
-  this.bonusText.setText(`WINDFALL ${Math.max(0,Math.ceil((BONUS.duration-b.elapsed)/1000))}s\nSEEDS ${b.collected}/${BONUS.rows} · BUMPS ${b.bumps}`);
+  this.bonusText.setText(`WINDFALL ${Math.max(0,Math.ceil((BONUS.duration-b.elapsed)/1000))}s · SEEDS ${b.collected}/${BONUS.rows} · BUMPS ${b.bumps}`);
   if(b.elapsed>=BONUS.duration)this.finishWindfall();
  }
  touchWindfall(object:Phaser.Physics.Arcade.Sprite){
