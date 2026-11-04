@@ -9,6 +9,9 @@ const root=resolve(import.meta.dirname,'..'),source=resolve(root,'.netlify/treef
 assert.equal(process.env.CONTEXT,'deploy-preview');
 assert.equal(process.env.HEAD||process.env.BRANCH,'feature/treeforce89-galaga-gameplay');
 const run=(cmd,args,cwd=root)=>execFileSync(cmd,args,{cwd,stdio:'inherit'});
+// Netlify bundles the existing preview gateway after this command. Its pinned
+// SDK lives in a separate package and is not installed by the root npm ci.
+run('npm',['ci','--ignore-scripts','--no-audit','--no-fund'],resolve(root,'netlify/preview-lib/treeforce89-source'));
 await stagePinnedFrontend(source);
 run('npm',['ci','--ignore-scripts','--no-audit','--no-fund'],source);
 await import('./prepare-treeforce89-flight-lab.mjs');
