@@ -1,13 +1,14 @@
-import {readFileSync,writeFileSync,copyFileSync,mkdirSync} from 'node:fs';
+import {readFileSync,writeFileSync,copyFileSync,mkdirSync,existsSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {execFileSync} from 'node:child_process';
 import assert from 'node:assert/strict';
 import {rebaseTreeForceAssets} from './rebase-treeforce89-assets.mjs';
 import {layoutTreeForceHud} from './layout-treeforce89-hud.mjs';
+import {originalFrontendFile} from './lib/treeforce89-pinned-frontend.mjs';
 const root=resolve(import.meta.dirname,'..');
 export function applyPaidContinue(source) {
  const pin='a38e08e37e1f71ea41b86add8e26a92b0789cf22';
- const original=path=>execFileSync('git',['show',pin+':'+path],{cwd:source,encoding:'utf8'});
+ const original=path=>existsSync(resolve(source,'.git'))?execFileSync('git',['show',pin+':'+path],{cwd:source,encoding:'utf8'}):originalFrontendFile(path);
  for(const name of ['NFTreeGateway.tsx','CanopyGame.tsx','ContinuationReview.tsx','ContinuationDialog.tsx','WalletPicker.tsx'])
   copyFileSync(resolve(root,'treeforce89/frontend',name),resolve(source,'app',name));
  copyFileSync(resolve(root,'treeforce89/frontend/main.tsx'),resolve(source,'src/main.tsx'));
@@ -47,7 +48,12 @@ export function applyPaidContinue(source) {
  replace('requestCheckout?:()=>void','requestCheckout?:(run:RunState)=>void;resumeRun?:RunState;homeOnly?:boolean');
  replace('if(options?.serverRunId)game.registry.set("serverRunId",options.serverRunId);',
   'if(options?.serverRunId)game.registry.set("serverRunId",options.serverRunId);\n  if(options?.resumeRun)game.registry.set("paidContinueResume",options.resumeRun);\n  if(options?.homeOnly)game.registry.set("homeOnly",true);');
- writeFileSync(resolve(source,'app/game/arcade.ts'),layoutTreeForceHud(arcade));
+ const gameplay=resolve(root,'treeforce89/frontend/game');
+ writeFileSync(resolve(source,'app/game/arcade.ts'),existsSync(resolve(gameplay,'arcade.ts'))?readFileSync(resolve(gameplay,'arcade.ts')):layoutTreeForceHud(arcade));
+ if(existsSync(resolve(gameplay,'config.ts'))){
+  copyFileSync(resolve(gameplay,'config.ts'),resolve(source,'app/game/config.ts'));
+  copyFileSync(resolve(gameplay,'gameplay-rules.mjs'),resolve(source,'app/game/gameplay-rules.mjs'));
+ }
  rebaseTreeForceAssets(source);
  // The existing wallet connection, dependencies and contract remain pinned.
  assert.equal(readFileSync(resolve(source,'app/dapp-kit.ts'),'utf8'),original('app/dapp-kit.ts'));

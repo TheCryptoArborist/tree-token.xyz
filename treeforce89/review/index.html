@@ -1,0 +1,30 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TREE FORCE gameplay test lab</title><link rel="stylesheet" href="/play/treeforce89/flight-lab/assets/index-DnIGkE6a.css"><link rel="stylesheet" href="/play/treeforce89/flight-lab/gateway.css"><style>body{display:flex;gap:24px;align-items:start;justify-content:center;padding:18px}.site-shell{padding:0;min-height:0}aside{width:260px;font:12px/1.6 Verdana;color:#d7eac3}aside h1{font-size:20px;color:#f1d56d}aside button{display:block;width:100%;padding:9px;margin:8px 0;background:#193523;border:1px solid #82b35f;color:#e6f4d8;border-radius:5px;cursor:pointer}#metrics{white-space:pre-wrap;font:11px/1.5 monospace}#checks{color:#e8d57b}@media(max-width:760px){body{display:block;padding:0}aside{width:100%;padding:12px}.game-frame{width:min(100%,440px)}}</style></head><body>
+<main class="site-shell"><section class="game-frame"><header class="game-header"><span class="game-title">TREE FORCE ’89</span><span class="game-subtitle">GAMEPLAY LAB</span></header><nav class="game-navigation"><span style="font:10px Verdana;color:#e0c56c">ISOLATED TEST · NO WALLET OR PAYMENT</span></nav><div class="screen-bezel"><div class="game-viewport"><div id="game" class="phaser-mount"></div><div class="crt-lines"></div></div></div><footer class="game-controls"><span>MOVE A/D · ←/→</span><span>FIRE Z/X · HOLD OR AUTO</span><span>PAUSE ESC</span></footer></section></main>
+<aside><h1>Flight test controls</h1><p>Development fixture using the actual new game engine. No NFTree session, wallet, payment or server score submission.</p><button id="wave1">Start wave 1</button><button id="wave6">Start wave 6</button><button id="core">Collect weapon core</button><button id="auto">Toggle auto fire</button><button id="bonus">Start Windfall Gauntlet</button><button id="pause">Pause / Resume</button><button id="verify">Run integration checks</button><p id="checks">Ready</p><pre id="metrics">Loading engine…</pre></aside>
+<script type="module">
+import {createCanopyGame} from './review-engine.js';
+let game;const scene=()=>{const s=game?.scene.getScene('game');return s?.sys.isActive()&&s.player?s:null;};
+function start(wave=0){game?.destroy(true);document.querySelector('#game').replaceChildren();game=createCanopyGame(document.getElementById('game'),{initialScene:'game',resumeRun:{runId:'grove-'+'0'.repeat(32),seed:37,score:0,wave,kills:0,perfect:0,maxStage:0,shotsFired:0,shotsHit:0,start:Date.now(),mode:'ARCADE'}});}
+const click=(id,fn)=>document.getElementById(id).addEventListener('click',()=>{const s=scene();if(s)fn(s);});
+document.getElementById('wave1').onclick=()=>start(0);document.getElementById('wave6').onclick=()=>start(5);
+click('core',s=>s.collectWeaponCore(s.pickups.create(s.player.x,s.player.y,'weaponCore')));
+click('auto',s=>s.toggleAutoFire());click('pause',s=>s.togglePause());
+click('bonus',s=>{if(s.paused)s.togglePause();s.enemies.clear(true,true);s.pickups.clear(true,true);s.time.removeAllEvents();s.startWindfall(4);});
+click('verify',s=>{const results=[];const check=(ok,name)=>{if(!ok)throw Error(name);results.push(name);};try{
+ if(s.paused)s.togglePause();s.enemies.clear(true,true);s.pickups.clear(true,true);s.shots.clear(true,true);s.time.removeAllEvents();s.weaponLevel=0;s.weaponCharge=0;
+ for(let i=0;i<7;i++)s.collectWeaponCore(s.pickups.create(s.player.x,s.player.y,'weaponCore'));
+ check(s.weaponLevel===4&&s.weaponCharge===0,'seven cores reach cannon');
+ for(let i=0;i<4;i++){s.lastShot=-99999;s.fire(true);}check(s.shots.countActive()===6,'cannon caps at two triple volleys');
+ s.togglePause();check(s.time.paused&&s.physics.world.isPaused,'pause freezes timers and physics');s.togglePause();check(!s.time.paused&&!s.physics.world.isPaused,'resume restores timers and physics');
+ const wave=s.run.wave;s.run.wave=5;for(let i=0;i<8;i++){s.spawn('bat');const e=s.enemies.getChildren().at(-1);s.tweens.killTweensOf(e);e.settled=true;e.setPosition(e.homeX,e.homeY);}
+ s.beginFormationDive(s.time.now);s.beginFormationDive(s.time.now);const divers=s.enemies.getChildren().filter(e=>e.diving);check(divers.length<=3,'escort packs obey simultaneous dive limit');check(divers.every(e=>e.getData('divePlan').warningMs>=450),'dives carry locked target warning');s.enemies.clear(true,true);s.run.wave=wave;s.time.removeAllEvents();
+ const lives=s.lives,shots=s.run.shotsFired;s.startWindfall(4);s.lastShot=-99999;s.fire(true);check(s.run.shotsFired===shots,'bonus disables firing');
+ const seed=s.bonusObjects.create(s.player.x,s.player.y,'growthSeed').setData('bonusKind','seed');const before=s.run.score;s.touchWindfall(seed);s.touchWindfall(seed);check(s.run.score===before+100,'seed scores exactly once');
+ s.touchWindfall(s.bonusObjects.create(s.player.x,s.player.y,'windfallLimb').setData('bonusKind','limb'));check(s.lives===lives&&s.windfall.bumps===1,'bonus contact preserves lives');
+ s.finishWindfall();const awarded=s.run.score;s.finishWindfall();check(s.run.score===awarded,'bonus completion is idempotent');
+ document.getElementById('checks').textContent='PASS: '+results.join(' · ');
+ setTimeout(()=>{document.getElementById('checks').textContent+=(scene()?.run.wave===4?' · PASS: returned to wave 5':' · FAIL: bonus transition');},2700);
+ }catch(e){document.getElementById('checks').textContent='FAIL: '+e.message;}});
+setInterval(()=>{const s=scene();if(s)document.getElementById('metrics').textContent=JSON.stringify({phase:s.windfall?'windfall':'combat',wave:s.run.wave+1,lives:s.lives,score:s.run.score,weapon:s.weaponLevel+1,coreCharge:s.weaponCharge,shots:s.shots.countActive(),enemies:s.enemies.countActive(),diving:s.enemies.getChildren().filter(e=>e.diving).length,bonus:s.windfall?{seconds:Math.round(s.windfall.elapsed/1000),collected:s.windfall.collected,bumps:s.windfall.bumps,finishing:s.windfall.finishing}:null,paused:s.paused},null,2);},150);
+start(0);
+</script></body></html>
