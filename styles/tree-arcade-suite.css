@@ -969,3 +969,17 @@ a.poster-link:hover .poster-cta, a.poster-link:focus-visible .poster-cta { backg
   .mint-panel :where(button, input, a, summary):focus-visible { outline-color: Highlight; }
   .mint-status { border-left-color: CanvasText; }
 }
+
+/* Arcade Missions shares the existing task panel and collection artwork. */
+.growth-tabs { flex-wrap: wrap; }
+.mission-featured,.mission-card { padding: 18px; margin: 16px 0; border: 1px solid #7bdcba44; border-radius: 14px; background: linear-gradient(125deg,#103329cc,#17132bcc); }
+.mission-featured h3,.mission-card h3 { margin: 8px 0; color: #e5fff0; }
+.mission-featured p,.mission-card p { line-height: 1.6; }
+.mission-card { display: grid; gap: 10px; min-width: 0; }
+.mission-card label { font-size: .85rem; font-weight: 700; }
+.mission-card input,.mission-card select { width: 100%; min-width: 0; box-sizing: border-box; padding: 12px; background: #061813; color: #edfff5; border: 1px solid #81b5a5; border-radius: 8px; font: inherit; }
+.mission-card :is(button,a) { justify-self: start; max-width: 100%; white-space: normal; }
+.mission-card button:disabled { opacity: .55; cursor: default; }
+.mission-state { color: #c5e7d7; font-size: .85rem; overflow-wrap: anywhere; }
+#missions-progress { overflow-wrap: anywhere; }
+@media(max-width: 480px) { .growth-tabs [role=tab] { flex: 1 1 auto; } .mission-card { padding: 14px; } }

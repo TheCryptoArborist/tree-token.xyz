@@ -102,7 +102,7 @@
         <button class="growth-badge-preview" id="growth-badge-preview" type="button" aria-label="Explore Daily Growth tasks and badges" aria-controls="growth-details" aria-expanded="false"><img class="growth-strip-art" src="/assets/arcade-growth/tree-spark.webp" alt="" width="56" height="60" decoding="async"></button>
         <div class="growth-strip-copy">
           <p class="suite-eyebrow">TREE ARCADE · <span id="growth-season-tag">DAILY GROWTH</span></p>
-          <h2 id="growth-title"><button class="growth-invitation-open" id="growth-invitation-open" type="button" aria-controls="growth-details" aria-expanded="false"><span id="growth-invitation-title">Daily Growth</span></button></h2>
+          <h2 id="growth-title"><button class="growth-invitation-open" id="growth-invitation-open" type="button" aria-controls="growth-details" aria-expanded="false"><span id="growth-invitation-title">Arcade Missions</span></button></h2>
           <p id="growth-summary-note">Check in. Play. Grow your collection.</p>
           <p class="growth-wallet-identity" id="growth-wallet-identity" role="status" aria-live="polite" aria-atomic="true" hidden><span class="growth-wallet-identity-status" id="growth-wallet-identity-status"></span><span class="growth-wallet-identity-name" id="growth-wallet-identity-name"></span><span class="growth-wallet-identity-address" id="growth-wallet-identity-address"></span></p>
         </div>
@@ -120,10 +120,12 @@
         <p class="growth-rail-note" id="growth-rail-note">Loading the current month…</p>
       </div>
       <details id="growth-details" class="growth-details">
-        <summary class="growth-details-toggle"><span class="growth-next-teaser"><span id="growth-teaser-kind">Next unlock</span> <strong id="growth-teaser-badge">TREE Spark</strong> <span id="growth-details-hint">3 check-ins to earn</span></span><span class="growth-details-label--closed" id="growth-details-label">View daily tasks</span><span class="growth-details-label--open">Hide quests</span></summary>
+        <summary class="growth-details-toggle"><span class="growth-next-teaser"><span id="growth-teaser-kind">Next unlock</span> <strong id="growth-teaser-badge">TREE Spark</strong> <span id="growth-details-hint">3 check-ins to earn</span></span><span class="growth-details-label--closed" id="growth-details-label">View missions</span><span class="growth-details-label--open">Hide missions</span></summary>
         <div class="growth-details-body">
-          <div class="growth-tabs" role="tablist" aria-label="Daily Growth progress">
-            <button id="growth-today-tab" type="button" role="tab" aria-controls="growth-today-panel" aria-selected="true" tabindex="0">Daily tasks</button>
+          <div class="growth-tabs" role="tablist" aria-label="Arcade Missions">
+            <button id="growth-today-tab" type="button" role="tab" aria-controls="growth-today-panel" aria-selected="true" tabindex="0">Daily</button>
+            <button id="growth-community-tab" type="button" role="tab" aria-controls="growth-community-panel" aria-selected="false" tabindex="-1">Community</button>
+            <button id="growth-events-tab" type="button" role="tab" aria-controls="growth-events-panel" aria-selected="false" tabindex="-1">Events</button>
             <button id="growth-month-tab" type="button" role="tab" aria-controls="growth-month-panel" aria-selected="false" tabindex="-1">This month</button>
             <button id="growth-badges-tab" type="button" role="tab" aria-controls="growth-badges-panel" aria-selected="false" tabindex="-1">Badge collection</button>
           </div>
@@ -165,8 +167,23 @@
                     <p class="growth-small growth-tracking-note" id="growth-tracking-note" hidden>Passport stamps follow each game’s participation rule.</p>
                   </div>
                 </details>
+                <section class="mission-featured"><p class="growth-eyebrow">BRANCH OUT · WEEKLY MISSION</p><h3>Show the community what you’re playing.</h3><p>Share a score, challenge a friend, or vote for the next featured game.</p><button class="growth-secondary" id="missions-view-community" type="button">View all community missions →</button></section>
                 <details class="growth-auth"><summary>Wallet &amp; sign-in details</summary><p id="growth-wallet-state">Connect your NFTree wallet to save check-ins, daily quests, and monthly badges.</p><p class="growth-small" id="growth-auth-note">Sign-in uses a wallet message. It does not submit a transaction.</p></details>
               </div>
+              <div id="growth-community-panel" class="growth-tab-panel" role="tabpanel" aria-labelledby="growth-community-tab" tabindex="0" hidden>
+                <div class="growth-section-title"><h3>Branch Out</h3><span>Weekly · Resets Monday 00:00 UTC</span></div>
+                <p>Play together. Share your best moments. Help choose what comes next.</p>
+                <p class="growth-small">Earn community stamps alongside your Arcade Passport. Daily attendance and game badge requirements stay the same. No token rewards or purchases.</p>
+                <p id="missions-status" class="growth-small" role="status" aria-live="polite">Sign in above to load your saved community missions.</p>
+                <button class="growth-secondary" id="missions-refresh" type="button" disabled>Refresh missions</button>
+                <p id="missions-progress" class="growth-small"></p>
+                <div class="mission-list">
+                  <form class="mission-card" data-mission="share-score"><span class="growth-eyebrow">WEEKLY · 1 COMMUNITY STAMP AFTER REVIEW</span><h3>Share Your Score</h3><p>Post an original gameplay screenshot, your game name and score, and https://tree-token.xyz/play/ on X. Include your signed-in wallet address so we can verify your submission.</p><a class="growth-secondary" href="https://x.com/intent/post?text=My%20latest%20TREE%20Arcade%20run!%20https%3A%2F%2Ftree-token.xyz%2Fplay%2F" target="_blank" rel="noopener noreferrer">Create a post ↗</a><label for="mission-score-proof">Public X post link</label><input id="mission-score-proof" name="proof" type="url" maxlength="1000" required placeholder="https://x.com/yourname/status/…"><button class="growth-primary" type="submit" disabled>Submit for review</button><p class="mission-state" role="status">Sign in to submit.</p></form>
+                  <form class="mission-card" data-mission="friend-challenge"><span class="growth-eyebrow">WEEKLY · 1 COMMUNITY STAMP AFTER REVIEW</span><h3>Challenge a Friend</h3><p>Post your game, score to beat, and https://tree-token.xyz/play/. Ask a friend to play and reply with their result. Include your signed-in wallet address. Submit your challenge post after they reply.</p><p class="growth-small">A reviewer checks both runs and the reply. Sharing an invitation alone earns no stamp.</p><label for="mission-friend-proof">Public X challenge post link</label><input id="mission-friend-proof" name="proof" type="url" maxlength="1000" required placeholder="https://x.com/yourname/status/…"><button class="growth-primary" type="submit" disabled>Submit for review</button><p class="mission-state" role="status">Sign in to submit.</p></form>
+                  <form class="mission-card" data-mission="community-vote"><span class="growth-eyebrow">WEEKLY · 1 COMMUNITY STAMP</span><h3>Community Vote</h3><p>Which game should get the next community spotlight? One saved vote per wallet each week.</p><label for="mission-vote">Your pick</label><select id="mission-vote" name="proof" required><option value="">Choose a game</option><option value="treeforce89">TREE FORCE ’89</option><option value="garden-bot">Garden Bot</option><option value="arborist-trials">Arborist Trials</option></select><button class="growth-primary" type="submit" disabled>Save my vote</button><p class="mission-state" role="status">Sign in to vote.</p></form>
+                </div>
+              </div>
+              <div id="growth-events-panel" class="growth-tab-panel" role="tabpanel" aria-labelledby="growth-events-tab" tabindex="0" hidden><p class="growth-eyebrow">THE TREE SESSIONS</p><h3>Your next community game night starts here.</h3><p>No event is scheduled yet. Future game nights, weekend challenges, and creative contests will appear here with their dates, rules, and rewards.</p><a class="growth-secondary" href="#cabinets">Explore the games ↓</a></div>
               <div id="growth-month-panel" class="growth-tab-panel" role="tabpanel" aria-labelledby="growth-month-tab" tabindex="0" hidden>
                 <p class="growth-empty" id="growth-month-empty">Sign in to see your real monthly calendar.</p>
                 <div id="growth-month-content" hidden>

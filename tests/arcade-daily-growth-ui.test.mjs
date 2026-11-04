@@ -236,7 +236,7 @@ test('compact Daily Growth starts closed and its native progress disclosure neve
   for (const id of ['connect', 'sign-in', 'sign-out', 'check-in', 'wallet-picker', 'status']) {
     assert.equal(details.contains(h.byId(id)), false, `${id} remains usable when progress is collapsed`);
   }
-  assert.equal(h.byId('invitation-title').textContent, 'Daily Growth');
+  assert.equal(h.byId('invitation-title').textContent, 'Arcade Missions');
   assert.equal(h.byId('summary-note').textContent, 'Check in. Play. Grow your collection.');
   assert.equal(h.byId('summary-count').textContent, 'Your first badge starts here.');
   assert.equal(h.byId('summary-label').textContent, '3 cumulative check-ins to earn');
@@ -253,7 +253,7 @@ test('compact Daily Growth starts closed and its native progress disclosure neve
   assert.equal(h.byId('connect').classList.contains('growth-primary'), true);
   assert.equal(h.byId('connect').classList.contains('growth-secondary'), false);
   assert.equal(h.byId('invitation-hint').textContent, 'Free check-in · No gas fee');
-  assert.equal(h.byId('details-label').textContent, 'View daily tasks');
+  assert.equal(h.byId('details-label').textContent, 'View missions');
   assert.equal(h.byId('summary-meter').hidden, true, 'Unknown private progress has no visible numeric meter');
   assert.equal(h.byId('check-in').hidden, true);
   assert.equal(details.contains(h.byId('month-rail')), false, 'Calendar dates remain visible while tasks are closed');
@@ -596,14 +596,14 @@ test('meters reflect saved attendance, the next milestone and required stamps, r
   assert.match(h.byId('days').querySelector('[data-date="2026-11-12"]').getAttribute('aria-label'), /checked in.*last saved/i);
   assert.match(h.byId('summary-note').textContent, /last saved/i);
   assert.match(h.byId('rail-note').textContent, /last saved/i);
-  assert.equal(h.byId('details-label').textContent, 'View daily tasks', 'An unavailable refresh does not claim current daily completion');
+  assert.equal(h.byId('details-label').textContent, 'View missions', 'An unavailable refresh does not claim current daily completion');
   assert.equal(h.byId('summary-label').textContent, '9 / 14 check-ins · Last saved');
   h.changeWallet(OTHER_ACCOUNT);
   assertUnknownMeters(h);
   assert.match(h.byId('summary-count').textContent, /^(Your first badge starts here\.|Your badges will be here\.)$/);
   assert.equal(h.byId('summary-art-label').textContent, 'TREE Spark');
   assert.equal(h.byId('summary-art').getAttribute('src'), '/assets/arcade-growth/tree-spark.webp');
-  assert.equal(h.byId('invitation-title').textContent, 'Daily Growth');
+  assert.equal(h.byId('invitation-title').textContent, 'Arcade Missions');
   assert.equal(h.byId('summary-meter').hidden, true);
   assert.equal(h.byId('check-in').hidden, true);
   assert.equal(h.byId('summary-label').textContent.includes('9 / 14'), false);
@@ -909,7 +909,7 @@ test('changing accounts during a refresh immediately hides private progress and 
   assert.equal(h.byId('summary-meter').hidden, true);
   assertUnknownMeters(h);
   assert.equal(h.byId('summary-art-label').textContent, 'TREE Spark');
-  assert.equal(h.byId('invitation-title').textContent, 'Daily Growth');
+  assert.equal(h.byId('invitation-title').textContent, 'Arcade Missions');
   assert.match(h.byId('wallet-state').title, new RegExp(OTHER_ACCOUNT));
 });
 
@@ -990,8 +990,8 @@ test('an existing authorized session restores silently and expires without expos
   assert.equal(h.byId('summary-art-label').textContent, 'TREE Spark');
   assert.equal(h.byId('summary-meter').hidden, true);
   assertUnknownMeters(h);
-  assert.equal(h.byId('invitation-title').textContent, 'Daily Growth');
-  assert.equal(h.byId('details-label').textContent, 'View daily tasks');
+  assert.equal(h.byId('invitation-title').textContent, 'Arcade Missions');
+  assert.equal(h.byId('details-label').textContent, 'View missions');
   assert.equal(h.window.sessionStorage.getItem(SESSION_KEY), null);
 });
 
