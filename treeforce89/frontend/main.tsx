@@ -13,7 +13,7 @@ function App() {
       <section className="game-frame" aria-label="TREE FORCE '89: Canopy Command">
         <header className="game-header">
           <span className="game-title">TREE FORCE ’89</span>
-          <span className="game-subtitle">CANOPY COMMAND</span>
+          <span className="game-subtitle">FLIGHT TEST · 0.6</span>
         </header>
         <nav className="game-navigation" aria-label="Game navigation">
           <a className="game-arcade-link" href="/play/">← Back to Arcade</a>
@@ -28,7 +28,7 @@ function App() {
           <span>SHIELD SPACE · PAUSE ESC</span>
         </footer>
       </section>
-      <p className="build-label">v0.5.8</p>
+      <p className="build-label">v0.6.0 · gameplay preview</p>
     </main>
   );
 }

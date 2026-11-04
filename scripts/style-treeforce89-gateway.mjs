@@ -4,13 +4,13 @@ import {pathToFileURL} from 'node:url';
 import assert from 'node:assert/strict';
 
 const root=resolve(import.meta.dirname,'..');
-export function styleTreeForceGateway(directory) {
+export function styleTreeForceGateway(directory,{base='/play/treeforce89/'}={}) {
   const index=resolve(directory,'index.html');
   const original=readFileSync(index,'utf8');
   assert(original.includes('<div id="root"></div>'),'Expected pinned React mount');
   assert(!original.includes('class="gateway-intro"'),'Gateway presentation already applied');
   const intro=readFileSync(resolve(root,'play/treeforce89/gateway-intro.html'),'utf8');
-  const styled=original.replace('</head>','  <link rel="stylesheet" href="/play/treeforce89/gateway.css">\n  </head>')
+  const styled=original.replace('</head>','  <link rel="stylesheet" href="'+base+'gateway.css">\n  </head>')
     .replace('    <div id="root"></div>',intro+'\n    <div id="root"></div>');
   assert.deepEqual([...styled.matchAll(/<script\b[^>]*>[\s\S]*?<\/script>/g)].map(m=>m[0]),
     [...original.matchAll(/<script\b[^>]*>[\s\S]*?<\/script>/g)].map(m=>m[0]),'Preserve every script tag');

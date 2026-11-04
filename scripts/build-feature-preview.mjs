@@ -9,6 +9,7 @@ const output = resolve(root, 'dist-preview');
 const manifest = JSON.parse(await readFile(resolve(root, 'production/manifest.json'), 'utf8'));
 const outputPath = file => file.path.slice(1);
 const allowed = new Set(manifest.files.map(file => outputPath(file).toLowerCase()));
+const flightPreview=(process.env.HEAD||process.env.BRANCH)==='feature/treeforce89-galaga-gameplay'&&process.env.CONTEXT==='deploy-preview';
 const nativePreview=(process.env.HEAD||process.env.BRANCH)==='feature/treeforce89-play-integration'&&
   process.env.CONTEXT==='deploy-preview';
 const additions = ['dapp/sti-widget.js', 'dapp/sti-purchase-core.js', 'dapp/sti-stats-core.js', 'dapp/challenge-funding-core.js', 'assets/sti-icon.svg'];
@@ -26,7 +27,7 @@ async function rejectUntrackedOutput(directory, prefix = '') {
   for (const entry of entries) {
     const relative = prefix + entry.name;
     if (entry.isDirectory()) await rejectUntrackedOutput(resolve(directory, entry.name), `${relative}/`);
-    else if (!allowed.has(relative.toLowerCase())&&!(nativePreview&&relative.startsWith('play/treeforce89/')))
+    else if (!allowed.has(relative.toLowerCase())&&!((nativePreview||flightPreview)&&relative.startsWith('play/treeforce89/')))
       throw new Error(`Preserve or remove the old preview build before continuing: dist-preview/${relative}`);
   }
 }
@@ -48,3 +49,5 @@ if(nativePreview){
   execFileSync('npm',['ci','--prefix','netlify/preview-lib/treeforce89-source','--ignore-scripts','--no-audit','--no-fund'],{cwd:root,stdio:'inherit'});
   await import('./build-treeforce89-native-preview.mjs');
 }
+
+if(flightPreview)await import('./build-treeforce89-flight-preview.mjs');

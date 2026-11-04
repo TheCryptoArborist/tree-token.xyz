@@ -13,7 +13,7 @@ function walk(path,relative=''){
 walk(directory);
 if(!files.some(f=>/^assets[\\/].*\.js$/.test(f.path)))
  throw Error('Native build has no JavaScript bundle');
-if(!html.includes('/play/treeforce89/assets/'))
+if(!html.includes((process.argv[3]||'/play/treeforce89/')+'assets/'))
  throw Error('HTML asset base is not the native TREE Arcade path');
 if(/(?:src|href)=["']\/assets\//i.test(html))
  throw Error('Root-relative asset link would escape the game path');
