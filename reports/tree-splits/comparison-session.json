@@ -1,0 +1,64 @@
+{
+  "complete": true,
+  "rounds": 3,
+  "startedAt": "2026-09-19T03:24:39.521Z",
+  "completedAt": "2026-09-19T03:25:14.639Z",
+  "status": "no-repeated-improvement",
+  "cases": [
+    {
+      "sui": 10,
+      "testedAllocations": 23,
+      "repeatedImprovements": [],
+      "closest": {
+        "boom": "10000000",
+        "shock": "0",
+        "gainsRaw": [
+          "-110148073",
+          "-110148073",
+          "-110148073"
+        ],
+        "minimumGainRaw": "-110148073",
+        "repeatedImprovement": false
+      }
+    },
+    {
+      "sui": 50,
+      "testedAllocations": 25,
+      "repeatedImprovements": [],
+      "closest": {
+        "boom": "10000000",
+        "shock": "0",
+        "gainsRaw": [
+          "-109697999",
+          "-109697999",
+          "-109697999"
+        ],
+        "minimumGainRaw": "-109697999",
+        "repeatedImprovement": false
+      }
+    },
+    {
+      "sui": 100,
+      "testedAllocations": 25,
+      "repeatedImprovements": [],
+      "closest": {
+        "boom": "10000000",
+        "shock": "0",
+        "gainsRaw": [
+          "-109136311",
+          "-109136311",
+          "-109136311"
+        ],
+        "minimumGainRaw": "-109136311",
+        "repeatedImprovement": false
+      }
+    }
+  ],
+  "productionChanged": false,
+  "submitted": false,
+  "limitations": [
+    "Three fresh observations of a finite grid; not a guarantee of future execution or a global optimum.",
+    "Only direct V3 and the verified BOOM/SHOCK paths; gas is mocked and pool state is checked, not pinned.",
+    "A positive result is a research flag, not authorization to execute or change Best Swap."
+  ]
+}
