@@ -1,0 +1,41 @@
+name: TREE FORCE verify published release
+on:
+  push:
+    branches: [feature/treeforce89-galaga-gameplay]
+    paths: [.github/workflows/treeforce89-verify-published.yml]
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: tree-token-preserved-production-release
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 465174e962e655c81ad71032f8f4cd8a3d543f3e
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: actions/download-artifact@v4
+        with:
+          name: treeforce89-release-candidate
+          run-id: 41968460364
+          github-token: ${{ github.token }}
+          path: .netlify
+      - name: Reproduce the approved frontend
+        run: node scripts/prepare-treeforce89-gameplay-release.mjs
+      - name: Verify exact published static, backend, runtime and environment preservation
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: node scripts/release-treeforce89-gameplay.mjs published
+      - uses: actions/upload-artifact@v4
+        with:
+          name: treeforce89-published-verification
+          path: .netlify/treeforce89-gameplay-candidate.json
+          if-no-files-found: error
+          retention-days: 1
