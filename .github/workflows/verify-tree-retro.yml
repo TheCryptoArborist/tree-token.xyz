@@ -1,0 +1,22 @@
+name: Verify TREE Retro preview
+on:
+  pull_request:
+    paths:
+      - 'play/retro/**'
+      - 'scripts/retro-preview-files.mjs'
+      - 'scripts/build-feature-preview.mjs'
+      - 'tests/retro-player.test.mjs'
+      - 'tests/sti-preview-build.test.mjs'
+      - '.github/workflows/verify-tree-retro.yml'
+permissions:
+  contents: read
+jobs:
+  retro-preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node --test tests/retro-player.test.mjs tests/sti-preview-build.test.mjs
+      - run: git diff --check
