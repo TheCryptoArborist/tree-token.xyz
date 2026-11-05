@@ -24,10 +24,12 @@ export function planFiles(baseline,input,approved){
   assert(f.path.startsWith('/play/treeforce89/')&&!f.path.includes('..'));
   const bytes=readFileSync(f.source);assert.equal(hash('sha1',bytes),f.sha);
   assert.equal(hash('sha256',bytes),f.sha256);assert.equal(bytes.length,f.bytes);
-  files[f.path]=f.sha;
+  const publicPath=f.path.toLowerCase();
+  assert(!input.files.some(other=>other!==f&&other.path.toLowerCase()===publicPath),'Case-colliding upload paths');
+  files[publicPath]=f.sha;
  }
  const changed=Object.keys(baseline.files).filter(p=>files[p]!==baseline.files[p]).sort();
- assert(changed.length>0);assert(changed.every(p=>input.files.some(f=>f.path===p)));
+ assert(changed.length>0);assert(changed.every(p=>input.files.some(f=>f.path.toLowerCase()===p)));
  assert.equal(files['/netlify.toml'],baseline.files['/netlify.toml']);
  return {files,changed,added:Object.keys(files).filter(p=>!Object.hasOwn(baseline.files,p)).sort()};
 }
@@ -76,7 +78,9 @@ export async function main(mode=process.argv[2]){
   same(d.available_functions,baseline.functions,'Backend identity/runtime changed; stop');
   same(d.function_schedules,baseline.schedules,'Schedule changed; stop');
   for(const [key,value]of Object.entries(baseline.runtime))same(d[key],value,'Runtime '+key+' changed; stop');
-  same(await inventory(id),plan.files,'Complete static inventory mismatch');return d;
+  const actualFiles=await inventory(id);
+  if(canonical(actualFiles)!==canonical(plan.files))console.log(JSON.stringify({staticDifferences:[...new Set([...Object.keys(actualFiles),...Object.keys(plan.files)])].filter(p=>actualFiles[p]!==plan.files[p])}));
+  same(actualFiles,plan.files,'Complete static inventory mismatch');return d;
  };
  const reportPath=resolve(root,'.netlify/treeforce89-gameplay-candidate.json');
  let report;
@@ -96,9 +100,12 @@ export async function main(mode=process.argv[2]){
     body:raw?body:JSON.stringify(body),signal:AbortSignal.timeout(60000)});}catch{throw Error('Candidate request failed; details withheld');}
    assert(response.ok,'Candidate request HTTP '+response.status);return response.json();
   };
-  const created=await request(`sites/${SITE_ID}/deploys?title=TREE%20FORCE%200.6%20preserved%20frontend`,'POST',body);
+  const reuseId=process.argv[3];
+  if(reuseId)assert.equal(reuseId,'6aec00c92d9060d410e986e0','Only the reviewed unpublished candidate can be reused');
+  const created=reuseId?await get('deploys/'+reuseId):await request(`sites/${SITE_ID}/deploys?title=TREE%20FORCE%200.6%20preserved%20frontend`,'POST',body);
+  if(reuseId){assert.equal(created.published_at,null);assert(created.commit_ref===null||created.commit_ref==='ad24f5878e361350bddc34c623076d62fbee1979');}
   assert(/^[a-f0-9]{24}$/.test(created.id));
-  report={id:created.id,baseline:BASELINE,sourceCommit:body.commit_ref,mode:'candidate',productionChanged:false};
+  report={id:created.id,baseline:BASELINE,sourceCommit:reuseId?'ad24f5878e361350bddc34c623076d62fbee1979':body.commit_ref,mode:'candidate',productionChanged:false};
   mkdirSync(resolve(root,'.netlify'),{recursive:true});writeFileSync(reportPath,JSON.stringify(report,null,2));console.log(JSON.stringify(report));
   assert.equal(created.required_functions?.length||0,0,'Refuse any function upload');
   assert.equal(created.required_edge_functions?.length||0,0,'Refuse any edge function upload');
@@ -131,3 +138,4 @@ export async function main(mode=process.argv[2]){
  console.log(JSON.stringify({...report,files:undefined,environment:undefined}));
 }
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(e=>{console.error(e.message);process.exitCode=1;});
+

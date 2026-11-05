@@ -12,12 +12,12 @@ test('frontend overlay preserves unrelated and protected static paths and reject
  try{
   const files=Array.from({length:13},(_,i)=>{
    const source=join(dir,String(i)),bytes=Buffer.from('reviewed '+i);writeFileSync(source,bytes);
-   return {path:'/play/treeforce89/'+i+'.js',source,sha:createHash('sha1').update(bytes).digest('hex'),sha256:createHash('sha256').update(bytes).digest('hex'),bytes:bytes.length};
+   return {path:'/play/treeforce89/'+i+'-ASSET.js',source,sha:createHash('sha1').update(bytes).digest('hex'),sha256:createHash('sha256').update(bytes).digest('hex'),bytes:bytes.length};
   });
-  const baseline={deployId:BASELINE,files:{'/play/treeforce89/0.js':'old','/netlify.toml':'protected','/play/index.html':'arcade','/dapp/index.html':'wallet'}};
+  const baseline={deployId:BASELINE,files:{'/play/treeforce89/0-asset.js':'old','/netlify.toml':'protected','/play/index.html':'arcade','/dapp/index.html':'wallet'}};
   const input={expectedProduction:BASELINE,siteId:'aa62f324-b880-47d6-85b8-4ba0700ff5bf',requiredFunctions:43,requiredSchedules:5,backendBuilt:false,environmentChanges:false,migrationsIncluded:false,files};
   const approved={files:files.map(({source,...f})=>f)};
-  const plan=planFiles(baseline,input,approved);assert.equal(plan.files['/netlify.toml'],'protected');assert.equal(plan.files['/dapp/index.html'],'wallet');assert.equal(plan.files['/play/index.html'],'arcade');assert.deepEqual(plan.changed,['/play/treeforce89/0.js']);
+  const plan=planFiles(baseline,input,approved);assert.equal(plan.files['/netlify.toml'],'protected');assert.equal(plan.files['/dapp/index.html'],'wallet');assert.equal(plan.files['/play/index.html'],'arcade');assert.deepEqual(plan.changed,['/play/treeforce89/0-asset.js']);
   assert.throws(()=>planFiles(baseline,{...input,requiredFunctions:41},approved));
   assert.throws(()=>planFiles(baseline,{...input,environmentChanges:true},approved));
   assert.throws(()=>planFiles(baseline,{...input,expectedProduction:'stale'},approved));
