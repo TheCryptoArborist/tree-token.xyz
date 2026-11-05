@@ -1,4 +1,10 @@
-# Current production — TREE FORCE chapter and bonus update, 2026-11-05
+# Current production — TREE FORCE bonus announcements, 2026-11-05
+
+Locked deploy `6aecb43d6786a0c36f53fc60`, source `79c00a0658b7b462e02d5ec4ae2dd77d069d9ffe`, publishes TREE FORCE v0.7.1. Both bonus rounds now have a centered three-second title and instructions, followed by READY/GO and original cues before the active bonus clock begins. Pause freezes the introduction. All combat rules, rewards, wallet access and 20,000 TREE continues are retained. All 43 complete function records, five schedules, runtime, current environment and unrelated paths match baseline `6aecae87f3f468d6ec93bdfc`. One HTML changes and three assets are added, for 299 files. No function uploads, migrations, environment mutations or wallet dependency changes are included. The complete current inventory is `production/treeforce89-bonus-intro-manifest.json`; see `docs/treeforce89-bonus-intro.md` for 52-test, actual-engine browser, visual and published checks. Preserve this inventory rather than historical snapshots below.
+
+---
+
+# Previous production — TREE FORCE chapter and bonus update, 2026-11-05
 
 Locked deploy `6aecae87f3f468d6ec93bdfc`, source `de09c8c593c791672142ff9d8f2dbf57999b1071`, publishes TREE FORCE v0.7.0 with shooting challenges after waves 2/6, Windfall after 4/8, original event audio, a three-second A+B shield and sector/Guardian additions. All 43 full backend function records, five schedules, runtime and current environment are preserved from `6aecab809924c531a486d91e`, including its newer Canopy redirect and branch-only feature flags. One existing game HTML changes, three assets are added, and all unrelated paths remain byte-exact. The complete 296-file live inventory is `production/treeforce89-chapters-manifest.json`; see `docs/treeforce89-chapters.md` for 50-test, browser, hosted and publication evidence. Paid continues remain enabled; the owner's prior 20,000 TREE / three-life acceptance remains valid. No functions, migrations, environment mutations or wallet dependency changes are included. Preserve this current inventory rather than the historical snapshots below.
 

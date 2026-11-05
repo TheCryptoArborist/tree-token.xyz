@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "pageErrors": [],
+  "checks": [
+    "both three-second titles, READY and GO render before spawns",
+    "bonus clocks do not advance during intros",
+    "pause freezes introduction",
+    "missed shooting challenge returns to wave 3",
+    "perfect challenge returns to wave 7, idempotent reward",
+    "three-second shield and expiry",
+    "field guide/audio layout inspected",
+    "Windfall returns to wave 5 with lives preserved",
+    "guardian renders in wave 6"
+  ],
+  "hardwareControllerTested": false,
+  "realPaymentSubmitted": false
+}
