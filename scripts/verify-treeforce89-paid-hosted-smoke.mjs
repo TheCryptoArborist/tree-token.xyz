@@ -8,12 +8,14 @@ assert(/^https:\/\/(?:tree-token\.xyz|[a-f0-9]{24}--tree-token\.netlify\.app|dep
 const native=origin!=='https://deploy-preview-70--tree-token.netlify.app';
 const prefix=native?'/play/treeforce89/api/':'/.netlify/functions/';
 const post=async(path,body,{requestOrigin=origin,token}={})=>{
+  console.log(JSON.stringify({request:path,crossOrigin:requestOrigin!==origin}));
   const response=await fetch(origin+prefix+path,{
     method:'POST',headers:{Origin:requestOrigin,...(body?{'Content-Type':'application/json'}:{}),
       ...(token?{Authorization:'Bearer '+token}:{})},
     ...(body?{body:JSON.stringify(body)}:{}),signal:AbortSignal.timeout(45000),
   });
   let result;try{result=await response.json();}catch{throw Error(path+' returned non-JSON HTTP '+response.status);}
+  console.log(JSON.stringify({request:path,status:response.status,code:result.code}));
   return {status:response.status,body:result};
 };
 // Unfunded ephemeral keys only; personal-message signatures never authorize a payment.

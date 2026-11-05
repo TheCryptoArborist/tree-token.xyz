@@ -1,5 +1,5 @@
 name: TREE FORCE payment activation readiness
-# Disabled checkout rejects bearer requests before session lookup.
+# Bound and trace hosted checks; retry once after a mainnet ownership-read timeout.
 on:
   push:
     branches: [feature/treeforce89-galaga-gameplay]
