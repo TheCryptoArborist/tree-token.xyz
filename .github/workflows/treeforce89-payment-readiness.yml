@@ -1,4 +1,5 @@
 name: TREE FORCE payment activation readiness
+# Disabled checkout rejects bearer requests before session lookup.
 on:
   push:
     branches: [feature/treeforce89-galaga-gameplay]

@@ -46,7 +46,8 @@ for(const path of ['tree-continue-offer','tree-continue','tree-continue-recover'
  const wrong=await post(path,{},{requestOrigin:'https://attacker.example'});assert.equal(wrong.status,503);
 }
 const unknown=await post('tree-continue',{offerId:'a'.repeat(48),digest:'1'.repeat(44)},{token:absentToken});
-assert.equal(unknown.status,401);assert.equal(unknown.body.code,'SESSION_REQUIRED');
+assert.equal(unknown.status,expectedPayments==='enabled'?401:503);
+assert.equal(unknown.body.code,expectedPayments==='enabled'?'SESSION_REQUIRED':'PAYMENTS_DISABLED');
 const status=await post(native?'status':'treeforce89-db-status');
 assert.equal(status.status,200);assert.equal(status.body.schemaReady,true);
 assert.equal(status.body.isolationVerified,true);assert.equal(status.body.paymentsEnabled,expectedPayments==='enabled');assert.equal(status.body.paymentSchemaReady,true);
