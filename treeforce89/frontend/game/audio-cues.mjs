@@ -1,6 +1,7 @@
 // Original synthesized TREE FORCE motifs. No Galaga samples or music are used.
 const motif=(notes,type='triangle',step=.075,priority=2)=>Object.freeze({notes:Object.freeze(notes),type,step,priority});
 export const CUES=Object.freeze({
+ windfallIntro:motif([294,440,587,880],"triangle",.14,4),ready:motif([440],"sine",.12,4),go:motif([880,1175],"sine",.08,4),
  seed:motif([660,990]),core:motif([440,660,880],'sine'),upgrade:motif([392,494,587,784],'square',.09,3),
  growth:motif([330,440,554,660]),turbo:motif([740,988,1480],'sawtooth',.065),boom:motif([120,70,45],'sawtooth',.1,3),
  shieldReady:motif([523,659,1047],'sine',.1,3),shieldOn:motif([196,392,784],'sine',.09,3),shieldOff:motif([392,262],'sine',.08,3),

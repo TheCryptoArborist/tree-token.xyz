@@ -8,12 +8,12 @@ on('challenge',s=>{clean(s);s.startChallenge(2);el.textContent='Shooting bonus: 
 on('windfall',s=>{clean(s);s.startWindfall(4)});
 on('shield',s=>{clean(s);s.stage=2;s.pruneCharge=100;s.invulnUntil=0;s.applyStage(false);s.prune();el.textContent='Shield protection: '+(s.invulnUntil-s.time.now)+' milliseconds';});
 on('guide',s=>s.showPruneGuide());on('guardian',s=>{clean(s);s.invincible=true;s.startWave(5)});
-on('checks',s=>{clean(s);s.startChallenge(6);s.updateChallenge(18000);const lives=s.lives;
+on('checks',s=>{clean(s);s.startChallenge(6);s.updateBonusIntro(4100);s.updateChallenge(18000);const lives=s.lives;
  for(const e of [...s.enemies.getChildren()])s.hitEnemy(e,1,false);s.rushShotsFired=52;s.rushShotsHit=40;
  s.updateChallenge(0);const score=s.run.score;s.finishChallenge();
  if(!s.challenge?.finishing||s.rushDestroyed!==40||s.lives!==lives||score!==s.run.score)throw Error('Challenge failed');
  el.textContent='PASS: 40 targets hit · perfect bonus · no lost lives · repeated finish grants no extra score';
  s.time.delayedCall(3400,()=>el.textContent+=' · '+(s.run.wave===6?'PASS: returned to wave 7':'FAIL: return wave'));
 });
-setInterval(()=>{const s=scene();if(s?.player)document.querySelector('#metrics').textContent=JSON.stringify({wave:s.run.wave+1,lives:s.lives,score:s.run.score,phase:s.challenge?'shooting bonus':s.windfall?'windfall':'combat',targets:s.rushDestroyed,guardians:s.enemies.getChildren().filter(e=>e.active&&e.getData('guardian')).length,escaped:s.challenge?.escaped,paused:s.paused,shieldRemainingMs:Math.max(0,s.shieldUntil-s.time.now)},null,2)},150);
+setInterval(()=>{const s=scene();if(s?.player)document.querySelector('#metrics').textContent=JSON.stringify({wave:s.run.wave+1,lives:s.lives,score:s.run.score,phase:s.challenge?'shooting bonus':s.windfall?'windfall':'combat',introPhase:s.bonusIntro?.phase??null,introText:s.bonusIntro?.card.list.filter(x=>typeof x.text==='string').map(x=>x.text).join(' | ')??'',activeTargets:s.enemies.countActive(),bonusObjects:s.bonusObjects.countActive(),introElapsedMs:Math.round(s.bonusIntro?.elapsed??0),challengeElapsedMs:s.challenge?.elapsed??0,challengeSpawned:s.challenge?.spawned??0,windfallElapsedMs:s.windfall?.elapsed??0,windfallRows:s.windfall?.row??0,targets:s.rushDestroyed,guardians:s.enemies.getChildren().filter(e=>e.active&&e.getData('guardian')).length,escaped:s.challenge?.escaped,paused:s.paused,shieldRemainingMs:Math.max(0,s.shieldUntil-s.time.now)},null,2)},150);
 </script></html>

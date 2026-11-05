@@ -1,5 +1,7 @@
 // Local arcade rules only: no lives, token grants or payment entitlements.
 export const SHIELD_MS=3000;
+export const BONUS_INTRO=Object.freeze({titleMs:3000,readyMs:650,goMs:450});
+export function bonusIntroPhase(elapsed){return elapsed<BONUS_INTRO.titleMs?'title':elapsed<BONUS_INTRO.titleMs+BONUS_INTRO.readyMs?'ready':elapsed<BONUS_INTRO.titleMs+BONUS_INTRO.readyMs+BONUS_INTRO.goMs?'go':'complete';}
 export const CHALLENGE=Object.freeze({targets:40,firstSpawn:1700,interval:360,flightMs:5600,perfectBonus:10000,targetScore:100});
 export function bonusKindAfter(wave){return wave===1||wave===5?'challenge':wave===3||wave===7?'windfall':null;}
 export function challengeRoute(index,round=0){

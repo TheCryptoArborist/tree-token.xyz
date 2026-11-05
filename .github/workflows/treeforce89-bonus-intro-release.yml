@@ -1,0 +1,113 @@
+name: TREE FORCE bonus announcements
+# Actual-engine challenge, shield and Guardian assertions; preserve the live backend.
+
+on:
+  push:
+    branches: [feature/treeforce89-bonus-intro]
+    paths: [.github/workflows/treeforce89-bonus-intro-release.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tree-token-preserved-production-release
+  cancel-in-progress: false
+
+jobs:
+  browser:
+    name: Gameplay and browser checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Restore pinned test dependencies
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm ci --prefix netlify/preview-lib/treeforce89-source --ignore-scripts --no-audit --no-fund
+          npm ci --prefix tests/treeforce89-ui --ignore-scripts --no-audit --no-fund
+      - name: Verify release guards and gameplay rules
+        run: node --test tests/treeforce89-bonus-intro-release.test.mjs tests/treeforce89-controller.test.mjs tests/treeforce89-chapters.test.mjs tests/treeforce89-gameplay.test.mjs tests/treeforce89-paid-client.test.mjs tests/treeforce89-continue-dialog.test.mjs tests/treeforce89-receipt-discovery.test.mjs tests/treeforce89-checkout-interaction.test.mjs tests/treeforce89-home-wallet.test.mjs
+      - name: Build the approved canonical frontend only
+        run: node scripts/prepare-treeforce89-bonus-intro-release.mjs
+      - name: Install isolated browser test runner
+        run: npm install --prefix .netlify/browser-tools --ignore-scripts --no-audit --no-fund playwright@1.56.1
+      - name: Install test browser
+        run: .netlify/browser-tools/node_modules/.bin/playwright install --with-deps chromium
+      - name: Exercise actual game, bonus transitions and shield in browser
+        run: |
+          node scripts/build-treeforce89-bonus-intro-lab.mjs
+          node scripts/check-treeforce89-bonus-intro-browser.mjs
+      - name: Save browser evidence
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: treeforce89-bonus-intro-browser
+          path: .netlify/treeforce89-bonus-intro-checks
+          if-no-files-found: warn
+  inventory:
+    needs: browser
+    name: Read-only production inventory
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Verify credential availability without exposing it
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: |
+          node --input-type=module -e 'if (!process.env.NETLIFY_AUTH_TOKEN) { console.error("Missing repository Actions secret NETLIFY_AUTH_TOKEN. No Netlify request or production change was made."); process.exit(1); }'
+      - name: Capture complete locked production inventory (GET only)
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: >-
+          node scripts/lib/treeforce89-production-inventory.mjs capture
+          --expected-deploy 6aecae87f3f468d6ec93bdfc
+          --baseline .netlify/treeforce89-bonus-intro-baseline.json
+          --report .netlify/treeforce89-bonus-intro-inventory-report.json
+      - name: Verify production remained identical throughout the check
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: >-
+          node scripts/lib/treeforce89-production-inventory.mjs verify
+          --expected-deploy 6aecae87f3f468d6ec93bdfc
+          --baseline .netlify/treeforce89-bonus-intro-baseline.json
+          --report .netlify/treeforce89-bonus-intro-inventory-report.json
+      - name: Compare newer production against the prior verified TREE FORCE release
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: node scripts/verify-treeforce89-bonus-intro-baseline.mjs
+      - name: Build the exact approved frontend
+        run: node scripts/prepare-treeforce89-bonus-intro-release.mjs
+      - name: Create and verify unpublished candidate preserving all 43 functions
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: node scripts/release-treeforce89-bonus-intro.mjs candidate
+      - name: Save candidate preservation evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: treeforce89-bonus-intro-candidate
+          path: |
+            .netlify/treeforce89-bonus-intro-baseline.json
+            .netlify/treeforce89-bonus-intro-baseline.json.sha256
+            .netlify/treeforce89-bonus-intro-baseline-comparison.json
+            .netlify/treeforce89-bonus-intro-candidate.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Save sanitized verification report
+        uses: actions/upload-artifact@v4
+        with:
+          name: treeforce89-bonus-intro-preflight
+          path: .netlify/treeforce89-bonus-intro-inventory-report.json
+          if-no-files-found: error
+          retention-days: 7

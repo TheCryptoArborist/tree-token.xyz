@@ -1,5 +1,6 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';import {transformSync} from 'esbuild';
 import * as rules from '../treeforce89/frontend/game/chapter-rules.mjs';
+import {BONUS,bonusRow,bonusAward} from '../treeforce89/frontend/game/gameplay-rules.mjs';
 import {WEAPONS} from '../treeforce89/frontend/game/gameplay-rules.mjs';
 import {CueMixer,CUES} from '../treeforce89/frontend/game/audio-cues.mjs';
 const source=readFileSync(new URL('../treeforce89/frontend/game/arcade.ts',import.meta.url),'utf8');
@@ -7,14 +8,14 @@ const config=readFileSync(new URL('../treeforce89/frontend/game/config.ts',impor
 const {waves,tuning}=new Function('WEAPONS','SHIELD_MS',transformSync(config,{loader:'ts'}).code+';return {waves,tuning}')(WEAPONS,rules.SHIELD_MS);
 const cueLog=[];
 // Fluent Phaser objects with captured text/data, without copying gameplay implementation.
-function object(){const data={},n={active:true,x:0,y:0,destroy(){this.active=false},getData:k=>data[k],setData(k,v){data[k]=v;return proxy},setPosition(x,y){this.x=x;this.y=y;return proxy},setText(t){this.text=t;return proxy}};const proxy=new Proxy(n,{get:(o,k)=>k in o?o[k]:(()=>proxy)});return proxy;}
+function object(){const data={},n={active:true,x:0,y:0,body:{setSize(){return this}},destroy(){this.active=false},getData:k=>data[k],setData(k,v){data[k]=v;return proxy},setPosition(x,y){this.x=x;this.y=y;return proxy},setText(t){this.text=t;return proxy}};const proxy=new Proxy(n,{get:(o,k)=>k in o?o[k]:(()=>proxy)});return proxy;}
 function group(){let rows=[];return {clear(){rows.forEach(x=>x.destroy());rows=[]},create(x,y){const n=object();n.setPosition(x,y);rows.push(n);return n},getChildren:()=>rows,countActive:()=>rows.filter(x=>x.active).length};}
 const Phaser={Scene:class{},Math:{Vector2:class{constructor(x,y){this.x=x;this.y=y}},Distance:{Between:(x,y,a,b)=>Math.hypot(x-a,y-b)}},Curves:{CubicBezier:class{getPoint(){return {x:240,y:220}}}}};
-const names=['Phaser',...Object.keys(rules),'waves','tuning','cue','font','pc','ph','leafBurst','E'];
-const values=[Phaser,...Object.values(rules),waves,tuning,n=>cueLog.push(n),()=>({}),{gold:'gold',green:'green',text:'white'},{panel:1,gold:2,green:3,cyan:4},()=>{},{PLAYER_PRUNED:"shield"}];
+const names=['Phaser',...Object.keys(rules),'waves','tuning','cue','font','pc','ph','leafBurst','E','BONUS','bonusRow','bonusAward'];
+const values=[Phaser,...Object.values(rules),waves,tuning,n=>cueLog.push(n),()=>({}),{gold:'gold',green:'green',text:'white'},{panel:1,gold:2,green:3,cyan:4},()=>{},{PLAYER_PRUNED:"shield"},BONUS,bonusRow,bonusAward];
 const gameClass=source.slice(source.indexOf('class GameScene'),source.indexOf('class GameOverScene'));
 const GameScene=new Function(...names,transformSync(gameClass,{loader:'ts'}).code+';return GameScene')(...values);
-function scene(){const g=Object.create(GameScene.prototype),calls=[],timers=[];Object.assign(g,{run:{score:0,wave:1,kills:0,seed:3},rushDestroyed:0,rushShotsFired:0,rushShotsHit:0,rushTargets:0,stage:1,lives:3,pruneCharge:100,pruneKills:0,invulnUntil:0,player:object(),enemies:group(),shots:group(),bullets:group(),pickups:group(),waveText:object(),turboText:object(),pruneText:object(),time:{now:100,delayedCall(ms,fn){timers.push({ms,fn})}},add:{rectangle:object,text:object,circle:object,container:object},tweens:{add(){},addCounter(){}},events:{emit(){}},cameras:{main:{shake(){},flash(){}}},banner(){},setLesson(){},clearTouchState(){},updateHud(){},updateFireHud(){},applyStage(){},sys:{isActive:()=>true},calls,timers});return g;}
+function scene(){const g=Object.create(GameScene.prototype),calls=[],timers=[];Object.assign(g,{run:{score:0,wave:1,kills:0,seed:3},rushDestroyed:0,rushShotsFired:0,rushShotsHit:0,rushTargets:0,stage:1,lives:3,pruneCharge:100,pruneKills:0,invulnUntil:0,player:object(),notice:object(),lessonText:object(),bonusObjects:group(),enemies:group(),shots:group(),bullets:group(),pickups:group(),waveText:object(),turboText:object(),pruneText:object(),time:{now:100,delayedCall(ms,fn){timers.push({ms,fn})}},add:{rectangle:object,text:(x,y,t)=>object().setText(t),circle:object,container:object},tweens:{add(){},addCounter(){},killTweensOf(){}},events:{emit(){}},cameras:{main:{shake(){},flash(){}}},banner(){},showBonusIntro(){},setLesson(){},clearTouchState(){},updateHud(){},updateFireHud(){},applyStage(){},sys:{isActive:()=>true},calls,timers});return g;}
 test('the actual campaign routes both bonus types and retains ten combat waves',()=>{
  assert.equal(waves.length,10);assert.deepEqual(Array.from({length:10},(_,i)=>rules.bonusKindAfter(i)),[null,'challenge',null,'windfall',null,'challenge',null,'windfall',null,null]);
  for(let i=0;i<10;i++){const g=scene();g.run.wave=i;for(const key of ['startChallenge','startWindfall','startWave','endRun'])g[key]=n=>g.calls.push([key,n]);g.roundSequence();g.timers.at(-1).fn();assert.equal(g.calls[0][0],i===9?'endRun':rules.bonusKindAfter(i)==='challenge'?'startChallenge':rules.bonusKindAfter(i)==='windfall'?'startWindfall':'startWave');}
@@ -45,4 +46,24 @@ test('original event motifs differ; priority audio preempts shots and independen
  assert.equal(new Set(Object.values(CUES).map(c=>JSON.stringify([c.notes,c.type,c.step]))).size,Object.keys(CUES).length);
  const m=new CueMixer(),c=audio();assert(m.shot(c,600));assert(!m.shot(c,600));assert(m.play(c,'perfect'));assert(c.oscillators[0].stopped);assert(!m.shot(c,600));assert(m.duckUntil>c.currentTime);
  m.stop();assert.equal(m.voices.length,0);m.sfxVolume=0;c.currentTime=5;assert(!m.play(c,'seed'));assert(m.musicVolume>0);
+});
+
+test('both bonus intros hold the title for three seconds, then READY and GO; gameplay clocks stay at zero',()=>{
+ for(const kind of ['challenge','windfall']){
+  const g=scene();g.showBonusIntro=GameScene.prototype.showBonusIntro;
+  if(kind==='challenge')g.startChallenge(2);else g.startWindfall(4);
+  const state=kind==='challenge'?g.challenge:g.windfall;
+  g.updateChallenge(999999);g.updateWindfall(999999);assert.equal(state.elapsed,0);assert.equal(g.enemies.countActive(),0);assert.equal(g.bonusObjects.countActive(),0);
+  g.fire(true);g.prune();assert.equal(g.pruneCharge,100);assert.equal(g.stage,1);assert.equal(g.shots.countActive(),0);
+  g.updateBonusIntro(2999);assert.equal(g.bonusIntro.phase,'title');assert.equal(g.bonusIntro.prompt.text,'GET READY');
+  g.paused=true;g.updateBonusIntro(10000);assert.equal(g.bonusIntro.elapsed,2999);g.paused=false;
+  g.updateBonusIntro(1);assert.equal(g.bonusIntro.phase,'ready');assert.equal(g.bonusIntro.prompt.text,'READY…');
+  g.updateBonusIntro(650);assert.equal(g.bonusIntro.phase,'go');assert.equal(g.bonusIntro.prompt.text,'GO!');assert.equal(state.elapsed,0);
+  g.updateBonusIntro(450);assert.equal(g.bonusIntro,undefined);assert.equal(state.elapsed,0);
+  if(kind==='challenge'){g.updateChallenge(rules.CHALLENGE.firstSpawn);assert.equal(g.challenge.spawned,1);}
+  else{g.decoratePickup=()=>{};g.updateWindfall(900);assert.equal(g.windfall.row,1);assert.equal(g.windfall.elapsed,900);}
+ }
+});
+test('intro phase boundaries are deterministic, including a slow frame crossing the full sequence',()=>{
+ assert.deepEqual([0,2999,3000,3649,3650,4099,4100,8000].map(rules.bonusIntroPhase),['title','title','ready','ready','go','go','complete','complete']);
 });
