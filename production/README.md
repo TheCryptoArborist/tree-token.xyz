@@ -1,4 +1,10 @@
-# Current production — TREE FORCE scoped payment API, 2026-11-05
+# Current production — TREE FORCE chapter and bonus update, 2026-11-05
+
+Locked deploy `6aecae87f3f468d6ec93bdfc`, source `de09c8c593c791672142ff9d8f2dbf57999b1071`, publishes TREE FORCE v0.7.0 with shooting challenges after waves 2/6, Windfall after 4/8, original event audio, a three-second A+B shield and sector/Guardian additions. All 43 full backend function records, five schedules, runtime and current environment are preserved from `6aecab809924c531a486d91e`, including its newer Canopy redirect and branch-only feature flags. One existing game HTML changes, three assets are added, and all unrelated paths remain byte-exact. The complete 296-file live inventory is `production/treeforce89-chapters-manifest.json`; see `docs/treeforce89-chapters.md` for 50-test, browser, hosted and publication evidence. Paid continues remain enabled; the owner's prior 20,000 TREE / three-life acceptance remains valid. No functions, migrations, environment mutations or wallet dependency changes are included. Preserve this current inventory rather than the historical snapshots below.
+
+---
+
+# Previous production — TREE FORCE scoped payment API, 2026-11-05
 
 Locked deploy `6aec99bf240f589972b4b367`, source `bf4537220bb9a9b096cfaab9598fa2cd13556db9`, enables 20,000 TREE continues through only the namespaced `treeforce89-dev` handler. All other 42 function records, 293 static files, five schedules, runtime and environment records were preserved; no migrations were applied. The complete current release inventory is `production/treeforce89-scoped-api-manifest.json`. See `docs/treeforce89-scoped-api.md` for the 52-test, PostgreSQL and hosted verification results. The owner confirmed on November 5 that the live 20,000 TREE paid continue restored three lives; no receipt digest was supplied for independent inspection. The snapshot builder and older manifests below are historical; do not use them as a replacement for the current live inventory.
 

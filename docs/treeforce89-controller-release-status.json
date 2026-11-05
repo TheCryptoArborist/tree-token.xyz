@@ -17,5 +17,11 @@
   "remoteUploads": false,
   "functionsUploaded": false,
   "nextRequiredAction": "Compare and capture the newer complete production inventory, preserve the Canopy checkout addition, then rebuild and verify the frontend candidate before publishing.",
-  "hardwareValidation": "Physical USB NES controller mapping not tested."
+  "hardwareValidation": "Physical USB NES controller mapping not tested.",
+  "supersededBy": {
+    "controllerPublished": true,
+    "deployId": "6aecae87f3f468d6ec93bdfc",
+    "sourceCommit": "de09c8c593c791672142ff9d8f2dbf57999b1071",
+    "evidence": "docs/treeforce89-chapters.md"
+  }
 }
