@@ -25,9 +25,10 @@ test('frontend overlay preserves unrelated and protected static paths and reject
  }finally{rmSync(dir,{recursive:true,force:true});}
 });
 test('all 43 packages are reused with routes, memory, region and traffic rules intact',()=>{
- const f=Array.from({length:43},(_,i)=>({n:'fn-'+i,d:'a'.repeat(64),id:'id',oid:'oid',a:'provider',c:'created',r:'nodejs22.x',rg:'us-east-2',m:1024,im:'stream',s:42,bd:{bootstrapVersion:'2.24.0'},tr:{action:{type:'rate_limit'}},ro:[{p:'/api/'+i,l:'/api/'+i,m:['POST'],ps:false}]}));
+ const f=Array.from({length:43},(_,i)=>({n:'fn-'+i,d:'a'.repeat(64),id:'id',oid:'oid',a:'provider',c:'created',r:'nodejs22.x',rg:'us-east-2',m:1024,mo:1024,rgo:'us-east-2',im:'stream',s:42,bd:{bootstrapVersion:'2.24.0'},tr:{action:{type:'rate_limit'}},ro:[{p:'/api/'+i,l:'/api/'+i,m:['POST'],ps:false}]}));
  validateFunctions(f);assert.throws(()=>validateFunctions(f.slice(0,41)));
  const r=reuseFunctions(f);assert.equal(Object.keys(r.functions).length,43);assert.equal(r.functions['fn-42'],f[42].d);
  assert.deepEqual(r.functions_config['fn-42'],{build_data:f[42].bd,memory:1024,region:'us-east-2',traffic_rules:f[42].tr,routes:[{pattern:'/api/42',literal:'/api/42',methods:['POST'],prefer_static:false}]});
+ delete f[42].mo;delete f[42].rgo;const inherited=reuseFunctions(f).functions_config['fn-42'];assert(!Object.hasOwn(inherited,'memory'));assert(!Object.hasOwn(inherited,'region'));
  assert.throws(()=>reuseFunctions(f.slice(0,41)));
 });

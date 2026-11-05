@@ -1,4 +1,5 @@
 name: TREE FORCE preserved release preflight
+# Preserve both explicit overrides and inherited function defaults.
 
 on:
   push:

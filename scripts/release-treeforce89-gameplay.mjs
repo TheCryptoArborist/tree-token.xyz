@@ -11,7 +11,7 @@ import {SITE_ID,canonical,fingerprint,readOnlyApi,readToken,captureCurrent,
 export const BASELINE='6aebf70ad3b2d01755518023';
 const root=fileURLToPath(new URL('../',import.meta.url));
 const hash=(a,b)=>createHash(a).update(b).digest('hex');
-const same=(a,b,label)=>assert.equal(canonical(a),canonical(b),label);
+const same=(a,b,label)=>assert(canonical(a)===canonical(b),label);
 export function planFiles(baseline,input,approved){
  assert.equal(baseline.deployId,BASELINE);assert.equal(input.expectedProduction,BASELINE);
  assert.equal(input.siteId,SITE_ID);assert.equal(input.requiredFunctions,43);
@@ -36,7 +36,9 @@ export function reuseFunctions(functions){
  const route=r=>Object.fromEntries(Object.entries({pattern:r.p,literal:r.l,expression:r.e,methods:r.m,prefer_static:r.ps}).filter(([,v])=>v!=null));
  for(const f of functions){
   digests[f.n]=f.d;const c={};
-  for(const [short,long]of Object.entries({dn:'display_name',g:'generator',bd:'build_data',m:'memory',p:'priority',rg:'region',tr:'traffic_rules',vcpu:'vcpu',es:'event_subscriptions'}))if(f[short]!=null)c[long]=f[short];
+  for(const [short,long]of Object.entries({dn:'display_name',g:'generator',bd:'build_data',p:'priority',tr:'traffic_rules',vcpu:'vcpu',es:'event_subscriptions'}))if(f[short]!=null)c[long]=f[short];
+  if(Object.hasOwn(f,'mo'))c.memory=f.m;
+  if(Object.hasOwn(f,'rgo'))c.region=f.rg;
   if(f.ro)c.routes=f.ro.map(route);if(f.er)c.excluded_routes=f.er.map(route);config[f.n]=c;
  }
  return {functions:digests,functions_config:config};
@@ -97,7 +99,7 @@ export async function main(mode=process.argv[2]){
   const created=await request(`sites/${SITE_ID}/deploys?title=TREE%20FORCE%200.6%20preserved%20frontend`,'POST',body);
   assert(/^[a-f0-9]{24}$/.test(created.id));
   report={id:created.id,baseline:BASELINE,sourceCommit:body.commit_ref,mode:'candidate',productionChanged:false};
-  mkdirSync(resolve(root,'.netlify'),{recursive:true});writeFileSync(reportPath,JSON.stringify(report,null,2));
+  mkdirSync(resolve(root,'.netlify'),{recursive:true});writeFileSync(reportPath,JSON.stringify(report,null,2));console.log(JSON.stringify(report));
   assert.equal(created.required_functions?.length||0,0,'Refuse any function upload');
   assert.equal(created.required_edge_functions?.length||0,0,'Refuse any edge function upload');
   assert.equal(created.required_server?.length||0,0,'Refuse any server upload');
