@@ -1531,5 +1531,14 @@
   "focusedTests": 52,
   "realHolderSessionTested": false,
   "realPaymentTested": false,
-  "publishedAt": "2026-11-05T15:02:05.250Z"
+  "publishedAt": "2026-11-05T15:02:05.250Z",
+  "userAcceptance": {
+    "reportedDate": "2026-11-05",
+    "source": "Owner confirmation in chat",
+    "paidContinueWorked": true,
+    "paymentAmountTREE": 20000,
+    "restoredLives": 3,
+    "receiptIndependentlyVerified": false,
+    "scoreAndWaveSeparatelyConfirmed": false
+  }
 }

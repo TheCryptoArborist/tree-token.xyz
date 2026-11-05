@@ -22,7 +22,7 @@ Candidate workflow [42050197557](https://github.com/TheCryptoArborist/tree-token
 
 Both candidate authentication checks and the canonical check used unfunded ephemeral personal-message keys. They verified real signatures, mainnet non-holder denial, single-use nonce replay rejection, forged proof rejection, same-origin restrictions, missing-session refusals, isolated schema readiness and enabled paid-continue status. They did not sign or submit a token transaction.
 
-The canonical home was inspected after publication. **A real NFTree-holder wallet session and first live payment remain user-operated and untested by the assistant.** To finish: lose three lives, approve the displayed 20,000 TREE payment in the wallet, wait for confirmation, click **Resume gameplay · 3 lives**, and verify the wave/score and three restored lives. For a delayed confirmation, use payment verification/recovery rather than paying again.
+The canonical home was inspected after publication. **Owner acceptance passed on November 5, 2026:** the owner confirmed that the live 20,000 TREE paid continue worked and restored all three lives. This was a user-operated wallet test; the assistant did not sign or submit a payment. No transaction digest was supplied for independent receipt inspection. Score/wave preservation remains covered by automated checks and was not separately described in the owner report. For a delayed confirmation, use payment verification/recovery rather than paying again.
 
 Complete release inventory: `production/treeforce89-scoped-api-manifest.json`. Published function/environment evidence: `treeforce89-scoped-api-published.json`. PostgreSQL results: `treeforce89-scoped-api-postgres.json`.
 

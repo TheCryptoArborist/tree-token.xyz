@@ -1,6 +1,6 @@
 # Current production — TREE FORCE scoped payment API, 2026-11-05
 
-Locked deploy `6aec99bf240f589972b4b367`, source `bf4537220bb9a9b096cfaab9598fa2cd13556db9`, enables 20,000 TREE continues through only the namespaced `treeforce89-dev` handler. All other 42 function records, 293 static files, five schedules, runtime and environment records were preserved; no migrations were applied. The complete current release inventory is `production/treeforce89-scoped-api-manifest.json`. See `docs/treeforce89-scoped-api.md` for the 52-test, PostgreSQL and hosted verification results and real-holder/payment test limitation. The snapshot builder and older manifests below are historical; do not use them as a replacement for the current live inventory.
+Locked deploy `6aec99bf240f589972b4b367`, source `bf4537220bb9a9b096cfaab9598fa2cd13556db9`, enables 20,000 TREE continues through only the namespaced `treeforce89-dev` handler. All other 42 function records, 293 static files, five schedules, runtime and environment records were preserved; no migrations were applied. The complete current release inventory is `production/treeforce89-scoped-api-manifest.json`. See `docs/treeforce89-scoped-api.md` for the 52-test, PostgreSQL and hosted verification results. The owner confirmed on November 5 that the live 20,000 TREE paid continue restored three lives; no receipt digest was supplied for independent inspection. The snapshot builder and older manifests below are historical; do not use them as a replacement for the current live inventory.
 
 ---
 

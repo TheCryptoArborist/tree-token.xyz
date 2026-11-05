@@ -1,6 +1,6 @@
 # Current activation status — November 5, 2026
 
-Paid continues are enabled on locked deploy `6aec99bf240f589972b4b367`. See `treeforce89-scoped-api.md` for the current release, preservation evidence and remaining real-wallet test. The release history below is historical.
+Paid continues are enabled on locked deploy `6aec99bf240f589972b4b367`. See `treeforce89-scoped-api.md` for the current release, preservation evidence and successful owner-operated 20,000 TREE / three-life acceptance test. The release history below is historical.
 
 # TREE FORCE 20,000 TREE continuation
 
