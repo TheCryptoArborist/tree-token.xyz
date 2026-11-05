@@ -1,0 +1,43 @@
+name: TREE FORCE verify scoped API publication
+on:
+  push:
+    branches: [feature/treeforce89-galaga-gameplay]
+    paths: [.github/workflows/treeforce89-scoped-api-published.yml]
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: tree-token-preserved-production-release
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: bf4537220bb9a9b096cfaab9598fa2cd13556db9
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        with:
+          name: treeforce89-scoped-api-candidate
+          run-id: 42050197557
+          github-token: ${{ github.token }}
+          path: .netlify
+      - name: Verify published static, function, runtime and environment scope
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: node scripts/release-treeforce89-scoped-api.mjs published
+      - run: npm ci --prefix netlify/preview-lib/treeforce89-source --ignore-scripts --no-audit --no-fund
+      - name: Verify canonical authentication and paid-continue boundaries
+        run: node scripts/verify-treeforce89-paid-hosted-smoke.mjs https://tree-token.xyz enabled
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: treeforce89-scoped-api-published
+          path: .netlify/treeforce89-scoped-api/candidate.json
+          if-no-files-found: error
+          retention-days: 7
