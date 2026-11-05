@@ -1,0 +1,318 @@
+{
+  "reviewedDate": "2026-11-05",
+  "uploadedFile": "Deluxe_Galaga_v2.6-AGA-(1).exe",
+  "uploadedSha256": "ac2f5f5ce1639d9b576da2bf5a61e19915ac3dbca41a1e058d09e2e9807b16ce",
+  "archiveEntries": [
+    {
+      "name": "Deluxe_Galaga_v2.6-AGA-/!ReadMe!.txt",
+      "bytes": 194
+    },
+    {
+      "name": "Deluxe_Galaga_v2.6-AGA-/gamefiles/default.uae",
+      "bytes": 3274
+    },
+    {
+      "name": "Deluxe_Galaga_v2.6-AGA-/gamefiles/Deluxe_Galaga_v2.6-AGA-.adf",
+      "bytes": 901120
+    },
+    {
+      "name": "Deluxe_Galaga_v2.6-AGA-/gamefiles/ks31.rom",
+      "bytes": 524288
+    },
+    {
+      "name": "Deluxe_Galaga_v2.6-AGA-/gamefiles/winuae.exe",
+      "bytes": 9848320
+    },
+    {
+      "name": "Deluxe_Galaga_v2.6-AGA-/START THE GAME.bat",
+      "bytes": 49
+    },
+    {
+      "name": "Deluxe_Galaga_v2.6-AGA-/gamefiles",
+      "bytes": 0
+    },
+    {
+      "name": "Deluxe_Galaga_v2.6-AGA-",
+      "bytes": 0
+    }
+  ],
+  "disk": {
+    "filesystem": "Amiga OFS",
+    "diskSha256": "0228ede23cff2daece3ed21905db6dd69f52a114f4c51888d4b267303dad4606",
+    "fileCount": 26,
+    "files": [
+      {
+        "path": "Deluxe_Galaga_v2.6/Pack",
+        "bytes": 2768,
+        "headerBlock": 164,
+        "sha256": "91c0bcf72d1c69f02e6de2e45046f0f3d4ad11c6c37c2c747b09845edcc58fab",
+        "dataBlocks": 6,
+        "allChecksumsValid": true,
+        "first16Hex": "000003f3000000000000000200000000"
+      },
+      {
+        "path": "Deluxe_Galaga_v2.6/READ_ME_FIRST",
+        "bytes": 3490,
+        "headerBlock": 171,
+        "sha256": "39dcb5f3b7537a06bce9d71e5cdd511ee6b4478b75615274594955754657e4db",
+        "dataBlocks": 8,
+        "allChecksumsValid": true,
+        "first16Hex": "0a0a202020202020202046494c455320"
+      },
+      {
+        "path": "Deluxe_Galaga_v2.6/READ_ME_FIRST.info",
+        "bytes": 1709,
+        "headerBlock": 180,
+        "sha256": "63bec6cee215ce9381c6f66e4faa0d7afb6d3f3c556bdf4bce50b95f394d4938",
+        "dataBlocks": 4,
+        "allChecksumsValid": true,
+        "first16Hex": "e310000100000000000f004700390021"
+      },
+      {
+        "path": "Deluxe_Galaga_v2.6/SMore",
+        "bytes": 2868,
+        "headerBlock": 185,
+        "sha256": "c986d50edf2c08063716a20b18a09df3224f747f9a5142d18b8c7709c80d46b6",
+        "dataBlocks": 6,
+        "allChecksumsValid": true,
+        "first16Hex": "000003f3000000000000000200000000"
+      },
+      {
+        "path": "Deluxe_Galaga_v2.6/SMore.info",
+        "bytes": 314,
+        "headerBlock": 192,
+        "sha256": "1384bd9d0ad11e064ebe671a318fcd5a7e6280f0655c3a032792df0d08a8fc6a",
+        "dataBlocks": 1,
+        "allChecksumsValid": true,
+        "first16Hex": "e310000100000000006b0047002e0013"
+      },
+      {
+        "path": "Deluxe_Galaga_v2.6/devs/system-configuration",
+        "bytes": 232,
+        "headerBlock": 195,
+        "sha256": "40a294b4bfb22773553f15074b9d490283758076920a42816e517a3eb5392a8e",
+        "dataBlocks": 1,
+        "allChecksumsValid": true,
+        "first16Hex": "08000005000000000000c35000000000"
+      },
+      {
+        "path": "Deluxe_Galaga_v2.6/s/Startup-Sequence",
+        "bytes": 949,
+        "headerBlock": 197,
+        "sha256": "c771c59583fde726cfb478c89432bf3052c2f7491d676c707a334ab5c244026b",
+        "dataBlocks": 2,
+        "allChecksumsValid": true,
+        "first16Hex": "636c730a6563686f2022220a6563686f"
+      },
+      {
+        "path": "Deluxe_Galaga_v2.6/GALAGA.PREFERENCES",
+        "bytes": 35,
+        "headerBlock": 227,
+        "sha256": "b5f6019cdcb3b6421e025a6a2fe998c3c67007c8c3a86724f520ffffc28380a9",
+        "dataBlocks": 1,
+        "allChecksumsValid": true,
+        "first16Hex": "007a0000000000000001000000000000"
+      },
+      {
+        "path": "Deluxe_Galaga_v2.6/libs/lowlevel.library",
+        "bytes": 6920,
+        "headerBlock": 230,
+        "sha256": "3d6c20eb4ecff545ef167d1d9b3d5dbac9a5bf9ae000235a26926735e81c6073",
+        "dataBlocks": 15,
+        "allChecksumsValid": true,
+        "first16Hex": "000003f3000000000000000100000000"
+      },
+      {
+        "path": "Deluxe_Galaga_v2.6/libs/xpkmaster.library",
+        "bytes": 13456,
+        "headerBlock": 239,
+        "sha256": "010379b17404ff843be0429d677c87b32ec9938eea42992b6ed99e428eeedc09",
+        "dataBlocks": 28,
+        "allChecksumsValid": true,
+        "first16Hex": "000003f3000000000000000200000000"
+      },
+      {
+        "path": "Deluxe_Galaga_v2.6/libs/compressors/xpkMASH.library",
+        "bytes": 2044,
+        "headerBlock": 252,
+        "sha256": "cb37175eceddf6ad72ed1cbfe15033407816ef54326cc0abaad49068280677de",
+        "dataBlocks": 5,
+        "allChecksumsValid": true,
+        "first16Hex": "000003f3000000000000000100000000"
+      },
+      {
+        "path": "Deluxe_Galaga_v2.6/libs/nonvolatile.library",
+        "bytes": 3588,
+        "headerBlock": 282,
+        "sha256": "407f9ee7a75966e9bc8be3efe56609084eb713f0c937d632181a2c35e4910984",
+        "dataBlocks": 8,
+        "allChecksumsValid": true,
+        "first16Hex": "000003f3000000000000000100000000"
+      },
+      {
+        "path": "Deluxe_Galaga_v2.6/libs/xpkNUKE.library",
+        "bytes": 3268,
+        "headerBlock": 291,
+        "sha256": "522bf81294b45aadfa1c42bab60871ba2e89648aeafcbea8563c559fbbfc0d9f",
+        "dataBlocks": 7,
+        "allChecksumsValid": true,
+        "first16Hex": "000003f3000000000000000200000000"
+      },
+      {
+        "path": "Deluxe_Galaga_v2.6/c/CLS",
+        "bytes": 204,
+        "headerBlock": 300,
+        "sha256": "8350b3cd57ad983d03f084fc9cfb8585e61d3078103bf6076dd16320040f34f9",
+        "dataBlocks": 1,
+        "allChecksumsValid": true,
+        "first16Hex": "000003f3000000000000000300000000"
+      },
+      {
+        "path": "Deluxe_Galaga_v2.6/c/setpatch",
+        "bytes": 13200,
+        "headerBlock": 302,
+        "sha256": "a9a0de37bea508621203732fa0cf05eae06a233decbe9a08bb0ba1bb604b131b",
+        "dataBlocks": 28,
+        "allChecksumsValid": true,
+        "first16Hex": "000003f3000000000000000200000000"
+      },
+      {
+        "path": "Deluxe_Galaga_v2.6/libs/compressors/xpkSQSH.library",
+        "bytes": 2936,
+        "headerBlock": 494,
+        "sha256": "6f399a668b7d136a29f834b425b1c226732a87f28bd35bf0f3a7c6edcefa64da",
+        "dataBlocks": 7,
+        "allChecksumsValid": true,
+        "first16Hex": "000003f3000000000000000100000000"
+      },
+      {
+        "path": "Deluxe_Galaga_v2.6/ALIENS.GFX",
+        "bytes": 91170,
+        "headerBlock": 882,
+        "sha256": "bf65e1cdbe430aec5e0575de7f578d3c00e6dad945fafe73774c8ebbe25f74ce",
+        "dataBlocks": 187,
+        "allChecksumsValid": true,
+        "first16Hex": "002a000000aa00000788000012120000"
+      },
+      {
+        "path": "Deluxe_Galaga_v2.6/GALAGA.GFX",
+        "bytes": 56960,
+        "headerBlock": 883,
+        "sha256": "c1c324e5d19ddbf8cc3516bce91df2265b83e41b5314a4c03080ff60ca9679d3",
+        "dataBlocks": 117,
+        "allChecksumsValid": true,
+        "first16Hex": "018001800180c000c030c00000000000"
+      },
+      {
+        "path": "Deluxe_Galaga_v2.6/GALAGA",
+        "bytes": 124864,
+        "headerBlock": 1023,
+        "sha256": "35007e11286442b80b7f572c358e09baa178f7a94577e2e0c37c92b4eb9cf92b",
+        "dataBlocks": 256,
+        "allChecksumsValid": true,
+        "first16Hex": "000003f3000000000000000200000000"
+      },
+      {
+        "path": "Deluxe_Galaga_v2.6/GALAGA.GUIDE",
+        "bytes": 50698,
+        "headerBlock": 1321,
+        "sha256": "655f73ad65a01f3ec686c2a3fcb9ca493d684844e43fad446eeb1d984c4ada0d",
+        "dataBlocks": 104,
+        "allChecksumsValid": true,
+        "first16Hex": "4064617461626173652047616c616761"
+      },
+      {
+        "path": "Deluxe_Galaga_v2.6/GALAGA.GUIDE.info",
+        "bytes": 1673,
+        "headerBlock": 1427,
+        "sha256": "3dbe8f0b35925ced5cef695fd1c4f9b109fa9cfac8cf3ac5885c1bdb0f97a676",
+        "dataBlocks": 4,
+        "allChecksumsValid": true,
+        "first16Hex": "e3100001000000000065001200390021"
+      },
+      {
+        "path": "Deluxe_Galaga_v2.6/GALAGA.info",
+        "bytes": 4270,
+        "headerBlock": 1432,
+        "sha256": "37d05dd553cdf87913882a9040a0aa5ec83c71c49da5446afefa0c9eaf4afea8",
+        "dataBlocks": 9,
+        "allChecksumsValid": true,
+        "first16Hex": "e310000100000000000f001200390021"
+      },
+      {
+        "path": "Deluxe_Galaga_v2.6/GALAGA.JINGLE1",
+        "bytes": 43664,
+        "headerBlock": 1442,
+        "sha256": "13888bd0a951c86287510d9417f5598a7d7f8b7080e89e8ef0a33e94de20c166",
+        "dataBlocks": 90,
+        "allChecksumsValid": true,
+        "first16Hex": "58504b460000aa88535153480000f4be"
+      },
+      {
+        "path": "Deluxe_Galaga_v2.6/GALAGA.JINGLE2",
+        "bytes": 22228,
+        "headerBlock": 1534,
+        "sha256": "1725bfe0b6041f430f17594663780f307f7b7574977e47c9070718120655ba6c",
+        "dataBlocks": 46,
+        "allChecksumsValid": true,
+        "first16Hex": "58504b46000056cc5351534800007a5e"
+      },
+      {
+        "path": "Deluxe_Galaga_v2.6/GALAGA.MODULES_res",
+        "bytes": 337,
+        "headerBlock": 1581,
+        "sha256": "aaea544de846591fd9e60eab96641af8a926540a6eeb1b0eb784a43fed993072",
+        "dataBlocks": 1,
+        "allChecksumsValid": true,
+        "first16Hex": "50524f4752414d3a4d7573696b6b2f4d"
+      },
+      {
+        "path": "Deluxe_Galaga_v2.6/GALAGA.MUSIC",
+        "bytes": 162540,
+        "headerBlock": 1583,
+        "sha256": "dd85544584de5c4de8c0621d255c1a4d4224fc6ac79004865a28c940d8b21e1e",
+        "dataBlocks": 334,
+        "allChecksumsValid": true,
+        "first16Hex": "58504b4600027ae45351534800043a18"
+      }
+    ]
+  },
+  "executableHunks": [
+    {
+      "type": 1001,
+      "offset": 36,
+      "bytes": 548,
+      "first32": "487a017848e7fffe49fafff22054d1c8d1c858482648504b2c7800042f08d1fc"
+    },
+    {
+      "type": 1010
+    },
+    {
+      "type": 1002,
+      "offset": 596,
+      "bytes": 124264,
+      "first32": "881678de1cbd007803e00c19a04001014e9c69712011fbe42001019260ee86f2"
+    },
+    {
+      "type": 1010
+    }
+  ],
+  "softwareExecuted": false,
+  "editableGameSourceIncluded": false,
+  "originalMachineCodeFullyDecompiled": false,
+  "exactOriginalRuntimeMovementTimingCompared": false,
+  "findings": {
+    "documentedSfxCount": 114,
+    "documentedJingleCount": 4,
+    "externalJingleFilesPresent": 2,
+    "externalMusicFilesPresent": 1,
+    "separateSfxFilesPresent": 0,
+    "treeforceWindfallAfterWaves": [
+      4,
+      8
+    ],
+    "treeforceShieldInvulnerabilityMs": 600,
+    "treeforceShootingChallengePredicate": "wave.name === CANOPY RUSH",
+    "matchingConfiguredChallengeWaves": 0
+  }
+}

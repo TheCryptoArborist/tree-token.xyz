@@ -1,0 +1,79 @@
+name: TREE FORCE NES controller release
+# A+B shields; poll Start while paused; preserve the confirmed payment backend.
+
+on:
+  push:
+    branches: [feature/treeforce89-galaga-gameplay]
+    paths: [.github/workflows/treeforce89-controller-release.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tree-token-preserved-production-release
+  cancel-in-progress: false
+
+jobs:
+  inventory:
+    name: Read-only production inventory
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Verify credential availability without exposing it
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: |
+          node --input-type=module -e 'if (!process.env.NETLIFY_AUTH_TOKEN) { console.error("Missing repository Actions secret NETLIFY_AUTH_TOKEN. No Netlify request or production change was made."); process.exit(1); }'
+      - name: Capture complete locked production inventory (GET only)
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: >-
+          node scripts/lib/treeforce89-production-inventory.mjs capture
+          --expected-deploy 6aec99bf240f589972b4b367
+          --baseline .netlify/treeforce89-controller-baseline.json
+          --report .netlify/treeforce89-controller-inventory-report.json
+      - name: Verify production remained identical throughout the check
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: >-
+          node scripts/lib/treeforce89-production-inventory.mjs verify
+          --expected-deploy 6aec99bf240f589972b4b367
+          --baseline .netlify/treeforce89-controller-baseline.json
+          --report .netlify/treeforce89-controller-inventory-report.json
+      - name: Restore pinned test dependencies
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm ci --prefix netlify/preview-lib/treeforce89-source --ignore-scripts --no-audit --no-fund
+          npm ci --prefix tests/treeforce89-ui --ignore-scripts --no-audit --no-fund
+      - name: Verify release guards and gameplay rules
+        run: node --test tests/treeforce89-controller-release.test.mjs tests/treeforce89-controller.test.mjs tests/treeforce89-gameplay.test.mjs tests/treeforce89-paid-client.test.mjs tests/treeforce89-continue-dialog.test.mjs tests/treeforce89-receipt-discovery.test.mjs tests/treeforce89-checkout-interaction.test.mjs tests/treeforce89-home-wallet.test.mjs
+      - name: Build the approved canonical frontend only
+        run: node scripts/prepare-treeforce89-controller-release.mjs
+      - name: Create and verify unpublished candidate preserving all 43 functions
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: node scripts/release-treeforce89-controller.mjs candidate
+      - name: Save candidate preservation evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: treeforce89-controller-candidate
+          path: |
+            .netlify/treeforce89-controller-baseline.json
+            .netlify/treeforce89-controller-baseline.json.sha256
+            .netlify/treeforce89-controller-candidate.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Save sanitized verification report
+        uses: actions/upload-artifact@v4
+        with:
+          name: treeforce89-controller-preflight
+          path: .netlify/treeforce89-controller-inventory-report.json
+          if-no-files-found: error
+          retention-days: 7

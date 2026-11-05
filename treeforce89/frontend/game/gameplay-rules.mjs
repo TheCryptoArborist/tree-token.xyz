@@ -45,3 +45,19 @@ export function bonusAward({bumps,collected}){
  if(!Number.isInteger(bumps)||bumps<0||!Number.isInteger(collected)||collected<0||collected>BONUS.rows)throw Error('Invalid bonus result');
  return {score:bumps===0?3000:500,core:bumps===0?1:0,collectedScore:collected*100};
 }
+// Fixed NES-style browser mapping: A/B fire; A+B is a shield chord.
+export function readControllerFrame(pad,previous={}) {
+ const down=index=>!!pad?.buttons?.[index]?.pressed;
+ const shield=down(0)&&down(1),fire=(down(0)||down(1))&&!shield,start=down(9);
+ const left=down(14)||(pad?.axes?.[0]??0)<-.45,right=down(15)||(pad?.axes?.[0]??0)>.45;
+ return {fire,shield,start,direction:Number(right)-Number(left),
+  firePressed:fire&&!previous.fire,shieldPressed:shield&&!previous.shield,pausePressed:start&&!previous.start};
+}
+export function applyControllerInput(game,pad) {
+ const frame=readControllerFrame(pad,game.controllerState);
+ game.controllerState=frame;game.controllerFireHeld=frame.fire;
+ // Poll before the scene's paused guard so Start can resume, too.
+ if(frame.pausePressed){game.togglePause();return frame;}
+ if(!game.paused){if(frame.shieldPressed)game.prune();if(frame.firePressed)game.fire(true);}
+ return frame;
+}
