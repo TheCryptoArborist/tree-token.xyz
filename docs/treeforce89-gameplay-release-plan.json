@@ -96,8 +96,8 @@
   ],
   "packageManifestSha256": "ae15e3c75b13a4f77565c3434c2cb462c735fb927229f4027d44c010c04839dc",
   "localChecks": {
-    "focusedTests": 36,
-    "passed": 36,
+    "focusedTests": 39,
+    "passed": 39,
     "nativeAssetPaths": true,
     "artHashesPreserved": true,
     "noPreviewHarnessIncluded": true
@@ -108,9 +108,12 @@
     "isolationVerified": true,
     "paymentSchemaReady": true,
     "paymentsEnabled": false,
-    "metadataFunctions": 41,
+    "metadataFunctions": 43,
     "metadataSchedules": 5
   },
-  "protectedInventoryVerified": false,
-  "publicationPerformed": false
+  "protectedInventoryVerified": true,
+  "publicationPerformed": true,
+  "publishedDeploy": "6aec00c92d9060d410e986e0",
+  "publishedVerificationRun": 41968993436,
+  "publicationEvidence": "treeforce89-gameplay-published.json"
 }

@@ -1,0 +1,53 @@
+{
+  "id": "6aec00c92d9060d410e986e0",
+  "baseline": "6aebf70ad3b2d01755518023",
+  "sourceCommit": "ad24f5878e361350bddc34c623076d62fbee1979",
+  "mode": "published",
+  "productionChanged": true,
+  "checks": {
+    "publicAssetsByteExact": true,
+    "htmlMatchesWithExistingHostingSnippet": true,
+    "schemaReady": true,
+    "isolationVerified": true,
+    "paymentSchemaReady": true,
+    "paymentsEnabled": false,
+    "unauthenticatedRunDenied": true
+  },
+  "changed": [
+    "/play/treeforce89/gateway.css",
+    "/play/treeforce89/index.html"
+  ],
+  "added": [
+    "/play/treeforce89/assets/arcade-bchgt_7m.js",
+    "/play/treeforce89/assets/graphql-dywj29sj.js",
+    "/play/treeforce89/assets/index-cdkfy998.js"
+  ],
+  "functions": 43,
+  "schedules": 5,
+  "functionRecordsSha256": "20122de0a1a7d8d9e473e35aef2652ba7c5cd966ae4bc61a5a4e1540b964d7f7",
+  "schedulesSha256": "55820196e06ecdd0d19571e521938232705cee0964a96c9023fbb3ddf7b8ea45",
+  "runtimeSha256": "80a9035dbf8c509a6f108b09eec18f7482c1b736a769d54e1b7b81a8533e4451",
+  "candidateUrl": "https://6aec00c92d9060d410e986e0--tree-token.netlify.app",
+  "verified": true,
+  "noFunctionUploads": true,
+  "noEnvironmentChanges": true,
+  "noMigrations": true,
+  "publishedChecks": {
+    "publicAssetsByteExact": true,
+    "htmlMatchesWithExistingHostingSnippet": true,
+    "schemaReady": true,
+    "isolationVerified": true,
+    "paymentSchemaReady": true,
+    "paymentsEnabled": false,
+    "unauthenticatedRunDenied": true
+  },
+  "locked": true,
+  "canonicalUrl": "https://tree-token.xyz/play/treeforce89/",
+  "publishedAt": "2026-11-05T04:34:36.185Z",
+  "verifiedAt": "2026-11-05T04:38:19.122Z",
+  "preflightRun": 41968460364,
+  "publishedVerificationRun": 41968993436,
+  "focusedTests": 39,
+  "realWalletTested": false,
+  "realPaymentTested": false
+}
