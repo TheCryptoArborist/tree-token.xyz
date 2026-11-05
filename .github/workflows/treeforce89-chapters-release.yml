@@ -1,5 +1,5 @@
 name: TREE FORCE chapter and bonus release
-# Shooting challenges, original audio and 3-second A+B shield; preserve live backend.
+# Actual-engine challenge, shield and Guardian assertions; preserve the live backend.
 
 on:
   push:
