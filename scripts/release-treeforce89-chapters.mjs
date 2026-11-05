@@ -8,7 +8,7 @@ import {fileURLToPath} from 'node:url';
 import {SITE_ID,canonical,fingerprint,readOnlyApi,readToken,captureCurrent,
  assertPreserved,loadBaseline,filesFromRows} from './lib/treeforce89-production-inventory.mjs';
 
-export const BASELINE='6aeca3a49e359f82ebf586db';
+export const BASELINE='6aecab809924c531a486d91e';
 const root=fileURLToPath(new URL('../',import.meta.url));
 const hash=(a,b)=>createHash(a).update(b).digest('hex');
 const same=(a,b,label)=>assert(canonical(a)===canonical(b),label);
