@@ -46,3 +46,12 @@ ARCADE_DOM_TEST_DEPS=/tmp/arcade-campaign-tools node tests/arcade-campaign-datab
 The prior synthetic campaign preview was checked through the browser at desktop and narrow phone frame widths. This saved-backend increment has DOM and backend/SQL coverage; a real signed-in hosted end-to-end campaign is still required after deploying its functions. No production wallet signature or transaction was requested or performed.
 
 MystenLabs/skills README was checked live. No Sui SDK/API or wallet-signing decision changed. Supabase's current changelog, database-function documentation, and the Netlify functions guidance were consulted for the new server routes. Existing pinned dependencies were retained.
+
+
+## Prepared function packages
+
+`node scripts/package-arcade-quests.mjs /tmp/arcade-quest-build/node_modules` packages only the two new quest handlers with the pinned lockfile dependencies. The ZIPs are checked for integrity, traversal and symlinks, and smoke-tested through their extracted handler modules. Both return 503/no-store while disabled, without making any API call. `docs/arcade-quest-release-preparation.json` records the exact source inputs, overlay digests and new package hashes. Existing production packages will be reused from the actual live deployment, not replaced by source-built versions.
+
+The archival `verify:backend-source` command was also attempted after installing its pinned tools in an isolated dependency directory. It rejects the additive function inventory against its older manifest, so it is not a passing current-production preservation check. Its temporary output was discarded. The actual release must instead compare all existing 41 published records/packages and five jobs to the live baseline before and after creating a candidate.
+
+Netlify CLI is installed in the temporary tooling directory. An official browser-authorization ticket has been requested to establish the missing deployment access. No access token was requested in chat or embedded in the source, no site was linked, no feature flag changed, and no candidate or production release was created during this preparation.

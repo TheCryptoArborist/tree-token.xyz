@@ -1,0 +1,123 @@
+{
+  "sourceCommit": "7d93ed8269d9f5ef4c19463404de31f223ecf810",
+  "expectedBaselineDeploy": "6ae971bd73f65c3f86a9e887",
+  "preserveExistingFunctions": 41,
+  "preserveScheduledJobs": 5,
+  "staticOverlays": [
+    {
+      "path": "/play/index.html",
+      "sha1": "254a113a5944e8164e5cea25432fdb4f543ff82f",
+      "size": 48543
+    },
+    {
+      "path": "/styles/tree-arcade-suite.css",
+      "sha1": "687398e56e9dedd356f395ef241cebae34ef1436",
+      "size": 86635
+    },
+    {
+      "path": "/scripts/arcade-daily-growth.js",
+      "sha1": "7eb4c8be3fa831e5b943d8e33b9d937539226eae",
+      "size": 72527
+    },
+    {
+      "path": "/scripts/arcade-social-missions.js",
+      "sha1": "f6a0ab4643ff4136921dc115509102f857fea83a",
+      "size": 4270
+    },
+    {
+      "path": "/scripts/arcade-quest-campaigns.js",
+      "sha1": "310a8dda1cdda18f6eaddb9d12e0c8e0b4f092df",
+      "size": 8034
+    }
+  ],
+  "newFunctions": [
+    {
+      "name": "arcade-social",
+      "sha256": "f1e25dec9d8f76cf4df6e3c5fcde96e5822688ecb400b77b571fe172a82dd4b5",
+      "size": 340839,
+      "runtimeVersion": "nodejs22.x",
+      "invocationMode": "stream",
+      "routes": [
+        {
+          "pattern": "/api/arcade-social",
+          "literal": "/api/arcade-social",
+          "methods": [
+            "GET",
+            "POST"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        {
+          "path": "netlify/functions/arcade-social.ts",
+          "sha256": "3fddd84118e5a0c008e2458a862cb9d638f073d0880fd7f71b66e95d90216aed"
+        },
+        {
+          "path": "package.json",
+          "sha256": "2ece6ffd478948d8a037103bb1f874e5643e761757362b091d692fc1b5a0dbca"
+        },
+        {
+          "path": "netlify/lib/nftree-wallet-verification.ts",
+          "sha256": "d4c7f26fc5067d9e24e8c3dc8d56fe0e991d60a6c851861502e30ff93a08a860"
+        },
+        {
+          "path": "netlify/lib/arcade-growth-games.ts",
+          "sha256": "4733456507402268350fead99dca643728c10c5109ab1aff651753d3f4b7ec9c"
+        },
+        {
+          "path": "netlify/lib/arcade-growth-core.ts",
+          "sha256": "b2e71b4b18c77fd43b2728bee97622e458dd151e8545cd1a3d32ac88bd869571"
+        },
+        {
+          "path": "netlify/lib/arcade-growth-store.ts",
+          "sha256": "55fdc792eb205da6411cfb5fd31087948bbf0901d9c031e43a0179b51f733d9a"
+        }
+      ]
+    },
+    {
+      "name": "arcade-campaign",
+      "sha256": "4a9b7ea40f5b30bb05e24e8879c0d421e2e6e7c0837794ee498cb108f8380974",
+      "size": 340897,
+      "runtimeVersion": "nodejs22.x",
+      "invocationMode": "stream",
+      "routes": [
+        {
+          "pattern": "/api/arcade-campaign",
+          "literal": "/api/arcade-campaign",
+          "methods": [
+            "GET",
+            "POST"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        {
+          "path": "netlify/functions/arcade-campaign.ts",
+          "sha256": "d5f166dd6348cf0ff0f8d2055d1c83f1ec7392e16361b7e5eed71813ae704c70"
+        },
+        {
+          "path": "package.json",
+          "sha256": "2ece6ffd478948d8a037103bb1f874e5643e761757362b091d692fc1b5a0dbca"
+        },
+        {
+          "path": "netlify/lib/nftree-wallet-verification.ts",
+          "sha256": "d4c7f26fc5067d9e24e8c3dc8d56fe0e991d60a6c851861502e30ff93a08a860"
+        },
+        {
+          "path": "netlify/lib/arcade-growth-games.ts",
+          "sha256": "4733456507402268350fead99dca643728c10c5109ab1aff651753d3f4b7ec9c"
+        },
+        {
+          "path": "netlify/lib/arcade-growth-core.ts",
+          "sha256": "b2e71b4b18c77fd43b2728bee97622e458dd151e8545cd1a3d32ac88bd869571"
+        },
+        {
+          "path": "netlify/lib/arcade-growth-store.ts",
+          "sha256": "55fdc792eb205da6411cfb5fd31087948bbf0901d9c031e43a0179b51f733d9a"
+        }
+      ]
+    }
+  ],
+  "packageSmokeChecks": "both disabled-default handlers return 503/no-store without network",
+  "published": false
+}
