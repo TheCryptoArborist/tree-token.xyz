@@ -1,0 +1,21 @@
+{
+  "sourceCommit": "c21d0b52aa4cb249f872a3d31d02afc97d7b3427",
+  "tests": {
+    "total": 44,
+    "passed": 44,
+    "failed": 0
+  },
+  "workflowRun": 42060594891,
+  "workflowUrl": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/42060594891",
+  "releaseStatus": "stopped-before-candidate",
+  "reason": "Read-only inventory found a newer published deployment than the reviewed baseline.",
+  "reviewedBaseline": "6aec99bf240f589972b4b367",
+  "observedPublishedDeploy": "6aeca3a49e359f82ebf586db",
+  "observedTitle": "Canopy checkout preview under TREE Arcade",
+  "controllerPublished": false,
+  "candidateCreated": false,
+  "remoteUploads": false,
+  "functionsUploaded": false,
+  "nextRequiredAction": "Compare and capture the newer complete production inventory, preserve the Canopy checkout addition, then rebuild and verify the frontend candidate before publishing.",
+  "hardwareValidation": "Physical USB NES controller mapping not tested."
+}
