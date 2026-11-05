@@ -1,53 +1,11 @@
 {
-  "id": "6ae8112dce29c5db8b725ff0",
+  "id": "6aebec00ada2550dc6f59eee",
   "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
-  "baseline": "6ae80cef3e9589ac84d0857a",
-  "baselineSha256": "7a6f9dee006737f9aee58d2ebf399ef7c778543839d45b9c622c5e4e93112783",
-  "sourceCommit": "9c00bf6ae42d2ab6c2a78802cdfb4df1c42f795e",
-  "sourceTree": "d855ed063b7ed2bb2383f299a6c1c6b5440f10ec",
-  "sourceBranch": "feature/arcade-growth-collection-20261102",
-  "filesSha256": "2d89f55ac2fef0664cdc2f8734b563282aa1abc95a66e197663f5331b8d8649b",
-  "overlay": [
-    {
-      "path": "/play/index.html",
-      "sha": "5b4d7842a7c5aa5db004b88b9ee1db7836d040e7",
-      "size": 36353
-    },
-    {
-      "path": "/scripts/arcade-daily-growth.js",
-      "sha": "8d1c7887e1ecaec8c8a8d3a87e3d4b377c4ddf3d",
-      "size": 71709
-    },
-    {
-      "path": "/styles/tree-arcade-suite.css",
-      "sha": "6d2910b9441d1e1f7bce5ef74ad4ac42a0cb8b5b",
-      "size": 82081
-    },
-    {
-      "path": "/assets/arcade-growth/tree-spark.webp",
-      "sha": "4876ca05f3e6efbdc003fe8647f0ae50b9237946",
-      "size": 84986
-    },
-    {
-      "path": "/assets/arcade-growth/nftree-scout.webp",
-      "sha": "85c5eb6f1490eb595d9decd527b481a8ccd1e9ae",
-      "size": 103982
-    },
-    {
-      "path": "/assets/arcade-growth/tree-force-vanguard.webp",
-      "sha": "d61c0f338277ed1b5ca7b007ac40fcb460c6ddc0",
-      "size": 129056
-    },
-    {
-      "path": "/assets/arcade-growth/thickquidity-legend.webp",
-      "sha": "0f528b795ba89a9860273cb485784efd331aff3f",
-      "size": 129638
-    }
-  ],
-  "publishedAt": "2026-11-02T04:29:52.370Z",
-  "verifiedAt": "2026-11-02T04:29:54.535404+00:00",
+  "baseline": "6aebe7578c57bc8e8c7e1b53",
+  "sourceCommit": "4effd89502ee8f6215cbbf942a71436f54539ec7",
+  "publishedAt": "2026-11-05T02:39:51.291Z",
   "locked": true,
-  "files": 288,
+  "files": 290,
   "filesBySha1": {
     "/tree.jpg": "5ca16c779edf1d559e5be5a02a6edd2e626d9c2f",
     "/tokenomics/index.html": "7e838cb7bdf00d911b22023003b399f11589e05a",
@@ -108,7 +66,7 @@
     "/scripts/arcade-sui-wallet.js": "25cdec64fb85cfcbe6b7f706841f105e351c3b36",
     "/roadmap/index.html": "6597c20c44a9aac623f685679962fb2fc100c5db",
     "/raffle-rules/index.html": "442ca8e3abf867d7dab3dc1857f1e21182e9addc",
-    "/play/index.html": "5b4d7842a7c5aa5db004b88b9ee1db7836d040e7",
+    "/play/index.html": "778d4c867af5b1041822e6040195b7308837eee5",
     "/mascot.png": "9f5e5db66e2f6c3eee41d70b1800094fe014a473",
     "/index.html": "1dba30e928a617b53d698561fb77dcffa6205ccd",
     "/hero.png": "15fa5856c63652fa6089010f683169d8b0c0dca5",
@@ -155,7 +113,7 @@
     "/dapp/limit-orders.css": "fea27e0964e8a8b5120295de57cc5d0a1d17c566",
     "/dapp/limit-orders-core.js": "b8be25ebe611096ee87bb1f892e5fa3a35271ef2",
     "/dapp/interaction-bootstrap.js": "cad4a5eb555aa6ab1025cf074ca426ea719bf5b2",
-    "/dapp/index.html": "0304ea4ddca0a3112c607650292eba99310ea768",
+    "/dapp/index.html": "74779a62a39daebc0fa7f65bee6c98c55b4c5f56",
     "/dapp/earn-v3-zap.js": "00485a5f168cc22affdfb8b48523280467711705",
     "/dapp/earn-v3-zap.css": "be19ca679ccc0b57a20a8a634a11226bc09a6062",
     "/dapp/earn-v2-rewards.css": "88cddc7aa14000ddb368073226cbd47ac12d50af",
@@ -268,7 +226,7 @@
     "/play/treeforce89/assets/arcade-cw4df7w2.js": "0eb93075166b1d41ecd1a3b0586c5b52508d06c7",
     "/play/treeforce89/assets/graphql-hafrftxs.js": "594f4ac60c2bb738880581e1036eef89abb695e7",
     "/play/treeforce89/assets/index-ccisclqf.js": "846faa5cc41509c4a79ce8263e4ad8c3a55f32fa",
-    "/styles/tree-arcade-suite.css": "6d2910b9441d1e1f7bce5ef74ad4ac42a0cb8b5b",
+    "/styles/tree-arcade-suite.css": "0051cd0d7836c16345312d3d40d73e71df3749fc",
     "/assets/arcade/garden-bot-crest.png": "2c376aefd26da4f6c6404e676bff108b7b0e1a78",
     "/assets/arcade/pvp-battle-crest.png": "1027d41aa13f52f24d498bf3428feb1927fc017f",
     "/assets/arcade/arborist-trials-logo.webp": "9c8e9a3270b742bffafa8cc14695e8f8fc7d9511",
@@ -284,8 +242,8 @@
     "/assets/arcade/nftree-wallet-mint.js": "8c5099377ea0c79aa5fd9b4f1e98032a9b270088",
     "/scripts/arcade-nftree-access-core.mjs": "13956f06548845efb3b7c52150994bf33a0add64",
     "/scripts/arcade-nftree-access.js": "113fbd12943990895beac27f157c587be750754b",
-    "/assets/arcade/arcade-growth-wallet.js": "0c1260a071839829dc8e32ce822e228d28af10d3",
-    "/scripts/arcade-daily-growth.js": "8d1c7887e1ecaec8c8a8d3a87e3d4b377c4ddf3d",
+    "/assets/arcade/arcade-growth-wallet.js": "e987f3f338c6470575d17eb6daa4e31fe86d5a70",
+    "/scripts/arcade-daily-growth.js": "7eb4c8be3fa831e5b943d8e33b9d937539226eae",
     "/play/treeforce89/assets/arcade-deuxdoox.js": "fbe89196276d0b7cb0d17eb4441a0e6efa188f08",
     "/play/treeforce89/assets/graphql-ctywyhxq.js": "c024fd2ec1c91212a4a41b4c238384d058f3e839",
     "/play/treeforce89/assets/index-blt2uith.css": "0288ab26fa2250d052b58e1a1e3a3a3faf3ce364",
@@ -336,21 +294,18 @@
     "/assets/arcade-growth/tree-spark.webp": "4876ca05f3e6efbdc003fe8647f0ae50b9237946",
     "/assets/arcade-growth/nftree-scout.webp": "85c5eb6f1490eb595d9decd527b481a8ccd1e9ae",
     "/assets/arcade-growth/tree-force-vanguard.webp": "d61c0f338277ed1b5ca7b007ac40fcb460c6ddc0",
-    "/assets/arcade-growth/thickquidity-legend.webp": "0f528b795ba89a9860273cb485784efd331aff3f"
+    "/assets/arcade-growth/thickquidity-legend.webp": "0f528b795ba89a9860273cb485784efd331aff3f",
+    "/scripts/arcade-social-missions.js": "f6a0ab4643ff4136921dc115509102f857fea83a",
+    "/scripts/arcade-quest-campaigns.js": "310a8dda1cdda18f6eaddb9d12e0c8e0b4f092df"
   },
-  "changedExistingPaths": [
-    "/play/index.html",
-    "/scripts/arcade-daily-growth.js",
-    "/styles/tree-arcade-suite.css"
+  "overlay": [
+    {
+      "path": "/assets/arcade/arcade-growth-wallet.js",
+      "sha": "e987f3f338c6470575d17eb6daa4e31fe86d5a70",
+      "size": 18993
+    }
   ],
-  "preservedStaticFiles": 281,
-  "newPaths": [
-    "/assets/arcade-growth/tree-spark.webp",
-    "/assets/arcade-growth/nftree-scout.webp",
-    "/assets/arcade-growth/tree-force-vanguard.webp",
-    "/assets/arcade-growth/thickquidity-legend.webp"
-  ],
-  "functionsPreserved": 41,
+  "functionsPreserved": 43,
   "functionRecords": [
     {
       "n": "arcade-wallet-link",
@@ -374,16 +329,16 @@
       ],
       "p": 10,
       "id": "69b4144a95749e86827b47b3aa5a67c5fff1869bb5715abb75db5c641ea72f35",
-      "a": "892891066531",
-      "c": "2026-11-02T03:19:38.166Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "480857b1bfc2422f3117422c71b68d3e276e90b5fc8e37033a6d9540d849db8c",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 2197967
+      "m": 1024,
+      "s": 2197967,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:19:38.166Z",
+      "a": "892891066531",
+      "oid": "480857b1bfc2422f3117422c71b68d3e276e90b5fc8e37033a6d9540d849db8c",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "nftree-wallet",
@@ -407,16 +362,16 @@
       ],
       "p": 10,
       "id": "454c1ddd0f3b969d8eca8c0f756e8ea31c32f83576813e9ef71986e7579763ac",
-      "a": "393143003500",
-      "c": "2026-11-02T03:19:42.312Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "9f9a4ebe60653688921728a326804ca3c22a194d7029f87a6746136f3fadac14",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 340679
+      "m": 1024,
+      "s": 340679,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:19:42.312Z",
+      "a": "393143003500",
+      "oid": "9f9a4ebe60653688921728a326804ca3c22a194d7029f87a6746136f3fadac14",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-badges-on-deploy",
@@ -431,16 +386,16 @@
       "mo": 1024,
       "p": 10,
       "id": "cdf87d0c8d3059bb1142b9955bab6229dc2151edfa72743ab63d430ecc0b0921",
-      "a": "256666722258",
-      "c": "2026-11-02T03:19:46.620Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "0f0f8a8e18dc3b49a88f7efad43fc516eabf2f4eddc28985919ab306921655e5",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 365345
+      "m": 1024,
+      "s": 365345,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:19:46.620Z",
+      "a": "256666722258",
+      "oid": "0f0f8a8e18dc3b49a88f7efad43fc516eabf2f4eddc28985919ab306921655e5",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-badges-preview",
@@ -464,16 +419,16 @@
       ],
       "p": 10,
       "id": "d04dad0b1d4b2ba5e3b5c5f060792f8dffa849f4f3e81d477980580573d22e88",
-      "a": "505538967386",
-      "c": "2026-11-02T03:19:50.859Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "bc69db5aec5b6748dbf9921269c0b6b54a0d551e5aad4bab9df23bf6ad5c4601",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 338961
+      "m": 1024,
+      "s": 338961,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:19:50.859Z",
+      "a": "505538967386",
+      "oid": "bc69db5aec5b6748dbf9921269c0b6b54a0d551e5aad4bab9df23bf6ad5c4601",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-badges-refresh-background",
@@ -488,16 +443,16 @@
       "mo": 1024,
       "p": 10,
       "id": "c170f7aa01fa37b7fe4606c19d0c57214916c6ec98835e3accbadf7dbd80cdd5",
-      "a": "998805804580",
-      "c": "2026-11-02T03:19:55.265Z",
-      "im": "background",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "7a5fb6cf18b175e6adea302707d5163a1e34be0a3bb8c58758b207c752fcfdad",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 1066577
+      "m": 1024,
+      "s": 1066577,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:19:55.265Z",
+      "a": "998805804580",
+      "oid": "7a5fb6cf18b175e6adea302707d5163a1e34be0a3bb8c58758b207c752fcfdad",
+      "im": "background",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-badges-refresh-scheduled",
@@ -512,16 +467,16 @@
       "mo": 1024,
       "p": 10,
       "id": "cba9c47cb90e2217dee1f398ac560a63321528a4e6dd909edd2613c5e880ddfb",
-      "a": "576197671174",
-      "c": "2026-11-02T03:19:59.707Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "1302e7a4b591fa7f17a4d333a47daf5707966256ad40a280505f313e4cebef0a",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 339394
+      "m": 1024,
+      "s": 339394,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:19:59.707Z",
+      "a": "576197671174",
+      "oid": "1302e7a4b591fa7f17a4d333a47daf5707966256ad40a280505f313e4cebef0a",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-badges",
@@ -545,16 +500,16 @@
       ],
       "p": 10,
       "id": "3b02a68845c97cb84b7c4f7c7c5bbecadbb2be17b9aeb171183438912cb21517",
-      "a": "177933589360",
-      "c": "2026-11-02T03:20:04.012Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "06b276958962a0147bb52d3ec60248d2faf4fa608ebc10655823508df4ba5acb",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 366488
+      "m": 1024,
+      "s": 366488,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:20:04.012Z",
+      "a": "177933589360",
+      "oid": "06b276958962a0147bb52d3ec60248d2faf4fa608ebc10655823508df4ba5acb",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-burn-overview",
@@ -578,16 +533,16 @@
       ],
       "p": 10,
       "id": "28d0f6845812b262470257ccd243f249e67c908e3256ad2e4fc806334191cd40",
-      "a": "554605863837",
-      "c": "2026-11-02T03:20:08.286Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "91e16adf53fc358f987a902b216ba67667ef1b4d0e4cb6209ad9a3a016ac6a64",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 1025084
+      "m": 1024,
+      "s": 1025084,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:20:08.286Z",
+      "a": "554605863837",
+      "oid": "91e16adf53fc358f987a902b216ba67667ef1b4d0e4cb6209ad9a3a016ac6a64",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-chart",
@@ -611,16 +566,16 @@
       ],
       "p": 10,
       "id": "43ef2e7e723f87ecbb2a21090995a41e9742c549490c2ee6dce8ae3388cca61c",
-      "a": "385216822393",
-      "c": "2026-11-02T03:20:12.572Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "e61b4299524ad2959d31c37bca0b45f8dd536a2272f9d82644ebb52b41761d3b",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 340304
+      "m": 1024,
+      "s": 340304,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:20:12.572Z",
+      "a": "385216822393",
+      "oid": "e61b4299524ad2959d31c37bca0b45f8dd536a2272f9d82644ebb52b41761d3b",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-dashboard",
@@ -644,16 +599,16 @@
       ],
       "p": 10,
       "id": "416f4ffdacae5050bc68847964206ed64a894fa8f42232d7fc3aadfbb53ff33e",
-      "a": "719837505512",
-      "c": "2026-11-02T03:20:16.823Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "27fd1492f5fba7b66ff8885c60613345250906f1215f0fc27f3a677d4e344a3b",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 366261
+      "m": 1024,
+      "s": 366261,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:20:16.823Z",
+      "a": "719837505512",
+      "oid": "27fd1492f5fba7b66ff8885c60613345250906f1215f0fc27f3a677d4e344a3b",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-exposure-on-deploy",
@@ -668,16 +623,16 @@
       "mo": 1024,
       "p": 10,
       "id": "7134c19457064040a7f6a8c8d9bf4c72e3c153450ece1a59819f47a778ba284b",
-      "a": "449440118093",
-      "c": "2026-11-02T03:20:21.088Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "eb56c116393b4c598a565cdbfc3d03000556476b2e9fb68f08416ce45c8bb1b5",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 1076798
+      "m": 1024,
+      "s": 1076798,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:20:21.088Z",
+      "a": "449440118093",
+      "oid": "eb56c116393b4c598a565cdbfc3d03000556476b2e9fb68f08416ce45c8bb1b5",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-exposure-preview",
@@ -701,16 +656,16 @@
       ],
       "p": 10,
       "id": "f73631f7fae03c076f0c669bf3a76fe4285197cc578c27f2d83526f0efd0fa26",
-      "a": "650953327525",
-      "c": "2026-11-02T03:20:25.271Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "a45f384c6e6f7bc13e0bdbd93ee89cd07618b709ee0d5c2a7a602a35354046a5",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 342497
+      "m": 1024,
+      "s": 342497,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:20:25.271Z",
+      "a": "650953327525",
+      "oid": "a45f384c6e6f7bc13e0bdbd93ee89cd07618b709ee0d5c2a7a602a35354046a5",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-exposure-refresh-background",
@@ -725,16 +680,16 @@
       "mo": 1024,
       "p": 10,
       "id": "3d7d21953d1f6fde366bba9c5a1052825c97f0802f5463d7b2f76881dd6f8b3e",
-      "a": "554605863837",
-      "c": "2026-11-02T03:20:29.590Z",
-      "im": "background",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "85d066216c335c4c9d152689af870b8228dcc0d152587b9d5d0dea875cf5f12a",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 1075996
+      "m": 1024,
+      "s": 1075996,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:20:29.590Z",
+      "a": "554605863837",
+      "oid": "85d066216c335c4c9d152689af870b8228dcc0d152587b9d5d0dea875cf5f12a",
+      "im": "background",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-exposure-refresh-scheduled",
@@ -749,16 +704,16 @@
       "mo": 1024,
       "p": 10,
       "id": "3cef97edd210f445abde7505b190051b3a192ee513005211109f4e66b6233224",
-      "a": "560477221814",
-      "c": "2026-11-02T03:20:33.755Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "28b762f8a438f558fd7b2bd8ef35002f2ecefa498e7c96afecdfb061857ff0e3",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 339397
+      "m": 1024,
+      "s": 339397,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:20:33.755Z",
+      "a": "560477221814",
+      "oid": "28b762f8a438f558fd7b2bd8ef35002f2ecefa498e7c96afecdfb061857ff0e3",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-exposure",
@@ -782,16 +737,16 @@
       ],
       "p": 10,
       "id": "e899962b5de959385bc8c6ff44e0a1ba993395f92b6809ec621d0980c28713ba",
-      "a": "924105187622",
-      "c": "2026-11-02T03:20:37.980Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "a45c77789eae69fbcf48741cdd48a364e4674c9bcfd5f60eef39d98e92f81d0b",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 370033
+      "m": 1024,
+      "s": 370033,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:20:37.980Z",
+      "a": "924105187622",
+      "oid": "a45c77789eae69fbcf48741cdd48a364e4674c9bcfd5f60eef39d98e92f81d0b",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-knowledge-trial-admin",
@@ -815,16 +770,16 @@
       ],
       "p": 10,
       "id": "4a3bafd13352f7c0a49861255d26901c0085b533ef37633f932d5ffa6215e10f",
-      "a": "673769985865",
-      "c": "2026-11-02T03:20:42.246Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "a66f4282680a6a45c852c90460b5bd248249d94f3ab738ccdfb0458524853b0c",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 354115
+      "m": 1024,
+      "s": 354115,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:20:42.246Z",
+      "a": "673769985865",
+      "oid": "a66f4282680a6a45c852c90460b5bd248249d94f3ab738ccdfb0458524853b0c",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-knowledge-trial-claim-test",
@@ -848,16 +803,16 @@
       ],
       "p": 10,
       "id": "7265a1eb1e344e362b3e7dd8623d2a2f3d4c27c4e463158d9419d532958e612c",
-      "a": "022731369924",
-      "c": "2026-11-02T03:20:46.556Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "2d69e48c9271733ab9f3ae370c93d8ff56a7bbc73d56587fa6ef17800c09b04b",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 339485
+      "m": 1024,
+      "s": 339485,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:20:46.556Z",
+      "a": "022731369924",
+      "oid": "2d69e48c9271733ab9f3ae370c93d8ff56a7bbc73d56587fa6ef17800c09b04b",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-knowledge-trial-claim",
@@ -881,16 +836,16 @@
       ],
       "p": 10,
       "id": "94093c6f92bb401c3a80decac466f338c38a15b66fdf6fc5c6deb5bfc8e372d8",
-      "a": "822334503436",
-      "c": "2026-11-02T03:20:50.893Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "481774c24aaee2837fc65ccf2874848d1deb9ae0c6b78a1bfe844c549fc65fea",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 344793
+      "m": 1024,
+      "s": 344793,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:20:50.893Z",
+      "a": "822334503436",
+      "oid": "481774c24aaee2837fc65ccf2874848d1deb9ae0c6b78a1bfe844c549fc65fea",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-knowledge-trial-resolver",
@@ -905,16 +860,16 @@
       "mo": 1024,
       "p": 10,
       "id": "14b33a86c6d74111b973c1d5757408e08cf7ac7b3bff87ac373aeaaea28492ea",
-      "a": "512984491761",
-      "c": "2026-11-02T03:20:55.208Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "f53a014581ab2776e03549419c302629b00493e9c397915a78caf344bf90493a",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 350122
+      "m": 1024,
+      "s": 350122,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:20:55.208Z",
+      "a": "512984491761",
+      "oid": "f53a014581ab2776e03549419c302629b00493e9c397915a78caf344bf90493a",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-knowledge-trial-rotation-on-deploy",
@@ -929,16 +884,16 @@
       "mo": 1024,
       "p": 10,
       "id": "27f8167738ecffd31d4e770047f0d099a04b3c67eb269a74751d063f2f7fafa6",
-      "a": "786465436847",
-      "c": "2026-11-02T03:20:59.375Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "b57e631cef78a3c3b0997ffd4a550d74ee49e07e9c70d3f1314bc6dfaf210777",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 352009
+      "m": 1024,
+      "s": 352009,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:20:59.375Z",
+      "a": "786465436847",
+      "oid": "b57e631cef78a3c3b0997ffd4a550d74ee49e07e9c70d3f1314bc6dfaf210777",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-knowledge-trial-rotation-scheduled",
@@ -953,16 +908,16 @@
       "mo": 1024,
       "p": 10,
       "id": "03fbcfcc0594f442083029b5e1b180ebe1ee3f39f5726faa0b2ea2d7fbb9aa01",
-      "a": "940186631256",
-      "c": "2026-11-02T03:21:03.665Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "42e7ec74cc87fa235b8a0350c39b5e746bc354552ce30beb26db9cf9c5711caf",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 351849
+      "m": 1024,
+      "s": 351849,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:21:03.665Z",
+      "a": "940186631256",
+      "oid": "42e7ec74cc87fa235b8a0350c39b5e746bc354552ce30beb26db9cf9c5711caf",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-knowledge-trial-test",
@@ -986,16 +941,16 @@
       ],
       "p": 10,
       "id": "78ab4cb2b8719dd87f769c6026e0745c76d6da3ee8d7f2bc0b6638939f8d1f62",
-      "a": "043306366455",
-      "c": "2026-11-02T03:21:07.991Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "3173b809c6b39c658999a694e0624ac8296da8cac188ccd9d470e963accbdabc",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 339464
+      "m": 1024,
+      "s": 339464,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:21:07.991Z",
+      "a": "043306366455",
+      "oid": "3173b809c6b39c658999a694e0624ac8296da8cac188ccd9d470e963accbdabc",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-knowledge-trial",
@@ -1019,16 +974,16 @@
       ],
       "p": 10,
       "id": "60d66139fb5844b28d9d74e44c80e2c68de2a59ce18aa06f3da435e2140b172f",
-      "a": "042287751506",
-      "c": "2026-11-02T03:21:12.296Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "ffb57655c7389ba8da7f9b427ce99d512e9b0900cd3195dead5165feffd3e1f8",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 1042033
+      "m": 1024,
+      "s": 1042033,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:21:12.296Z",
+      "a": "042287751506",
+      "oid": "ffb57655c7389ba8da7f9b427ce99d512e9b0900cd3195dead5165feffd3e1f8",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-leaderboard-preview",
@@ -1052,16 +1007,16 @@
       ],
       "p": 10,
       "id": "9ac87b1bebc7cb0282a20d78dd493fcbc0672d0a922a506d1dcd3c8ca1a1ce5c",
-      "a": "012533533302",
-      "c": "2026-11-02T03:21:16.498Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "7698c286616e6fded82096060fdbf7bf0174b70f4cdd08994aa73bfd6cd4ebf6",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 342193
+      "m": 1024,
+      "s": 342193,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:21:16.498Z",
+      "a": "012533533302",
+      "oid": "7698c286616e6fded82096060fdbf7bf0174b70f4cdd08994aa73bfd6cd4ebf6",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-leaderboard-refresh-background",
@@ -1076,16 +1031,16 @@
       "mo": 1024,
       "p": 10,
       "id": "cd5ce051bde7211b5bfe7b0b63904b7cf991a918d4baaf593bef5a7a71f07371",
-      "a": "008034030326",
-      "c": "2026-11-02T03:21:20.750Z",
-      "im": "background",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "29294bcaf4adfafe90da2b95260e01879dfe167925acc9eea3ec406095b55883",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 374421
+      "m": 1024,
+      "s": 374421,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:21:20.750Z",
+      "a": "008034030326",
+      "oid": "29294bcaf4adfafe90da2b95260e01879dfe167925acc9eea3ec406095b55883",
+      "im": "background",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-leaderboard-refresh-scheduled",
@@ -1100,16 +1055,16 @@
       "mo": 1024,
       "p": 10,
       "id": "235d40555b2c26c9812f3f66f77fe843d96849bcc89a0411934672ceb67228dc",
-      "a": "008034030326",
-      "c": "2026-11-02T03:21:24.949Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "511b0de4c26a8f0412e850aa0d7d7b49d24157c35de60eeaabae56cce7fb1935",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 339179
+      "m": 1024,
+      "s": 339179,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:21:24.949Z",
+      "a": "008034030326",
+      "oid": "511b0de4c26a8f0412e850aa0d7d7b49d24157c35de60eeaabae56cce7fb1935",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-leaderboard",
@@ -1133,16 +1088,16 @@
       ],
       "p": 10,
       "id": "d7e3b169bc92b22253c9f12ef3062f9da66db6c7bcc6517162289df16aa2b555",
-      "a": "333468350809",
-      "c": "2026-11-02T03:21:29.149Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "8c77ad335b2c39826163f7e7cf48236b5db25858097fe89f877664a7115f6c69",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 376282
+      "m": 1024,
+      "s": 376282,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:21:29.149Z",
+      "a": "333468350809",
+      "oid": "8c77ad335b2c39826163f7e7cf48236b5db25858097fe89f877664a7115f6c69",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-limit-orders",
@@ -1166,16 +1121,16 @@
       ],
       "p": 10,
       "id": "28169529164514929ea3f67c1877609903a037dd8591e4426ae88b06314f5702",
-      "a": "016005051599",
-      "c": "2026-11-02T03:21:33.530Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "f0a3046b4dc86525de7bee88c0d988ecd4d951fb1db0d92b18c94adf926324dc",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 2067158
+      "m": 1024,
+      "s": 2067158,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:21:33.530Z",
+      "a": "016005051599",
+      "oid": "f0a3046b4dc86525de7bee88c0d988ecd4d951fb1db0d92b18c94adf926324dc",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-liquidity",
@@ -1199,16 +1154,16 @@
       ],
       "p": 10,
       "id": "6819d278e4eedd1ebaf8b38ce31a2427b62a00ae61556dd7e7f586b70cca8f5f",
-      "a": "831147333159",
-      "c": "2026-11-02T03:21:37.821Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "64fc5287052443e03f12180bb8b75337abf17b77ddbe1bb4e667a419b9200498",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 1029624
+      "m": 1024,
+      "s": 1029624,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:21:37.821Z",
+      "a": "831147333159",
+      "oid": "64fc5287052443e03f12180bb8b75337abf17b77ddbe1bb4e667a419b9200498",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-market",
@@ -1232,16 +1187,16 @@
       ],
       "p": 10,
       "id": "01ca43391185f902fc016b4735a9a73df17d2d2466b268416feb8c0b7af7b810",
-      "a": "554605863837",
-      "c": "2026-11-02T03:21:42.118Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "0b653067c280173aad461a3ba8d9cf811e7fb525bcb501c7319badca303398d5",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 338809
+      "m": 1024,
+      "s": 338809,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:21:42.118Z",
+      "a": "554605863837",
+      "oid": "0b653067c280173aad461a3ba8d9cf811e7fb525bcb501c7319badca303398d5",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-nftree",
@@ -1265,16 +1220,16 @@
       ],
       "p": 10,
       "id": "9e9c92caa6434d7fc510b8aada071eb5dcd9a8f979d2383a68ba3657becb7511",
-      "a": "008585217041",
-      "c": "2026-11-02T03:21:46.321Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "b7a2421c78755ea6bd74c34cc970c7ecc148313b2b6e36d6eeb420618012f155",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 341600
+      "m": 1024,
+      "s": 341600,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:21:46.321Z",
+      "a": "008585217041",
+      "oid": "b7a2421c78755ea6bd74c34cc970c7ecc148313b2b6e36d6eeb420618012f155",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-raffle-claim",
@@ -1298,16 +1253,16 @@
       ],
       "p": 10,
       "id": "ae1d68ad969865f3b33d049fdfef7941f37bf2b0000edecde6eb6865587ea960",
-      "a": "517001624662",
-      "c": "2026-11-02T03:21:50.553Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "32318155a31f64e92c03bd9dc9efa9efa982434d066dbb23fd9eb30fb59751a8",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 345668
+      "m": 1024,
+      "s": 345668,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:21:50.553Z",
+      "a": "517001624662",
+      "oid": "32318155a31f64e92c03bd9dc9efa9efa982434d066dbb23fd9eb30fb59751a8",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-raffle-ingest-buy",
@@ -1331,16 +1286,16 @@
       ],
       "p": 10,
       "id": "100e6eae875fc5049d48e48c8502cc177451b76bc123985a7889e2f3e1ea1feb",
-      "a": "333468350809",
-      "c": "2026-11-02T03:21:54.801Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "0fe305b8e0bad7c22f9ae3da6987a4c630ec593364c465d0357dc9d8d889a932",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 347185
+      "m": 1024,
+      "s": 347185,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:21:54.801Z",
+      "a": "333468350809",
+      "oid": "0fe305b8e0bad7c22f9ae3da6987a4c630ec593364c465d0357dc9d8d889a932",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-raffle-status",
@@ -1364,16 +1319,16 @@
       ],
       "p": 10,
       "id": "7414b61b57fac00be297cc0dee7072673ab23ee31fcb7174f4367152df83f7f9",
-      "a": "012004486566",
-      "c": "2026-11-02T03:21:59.189Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "0966b2f9c8355a30525daa5e5a1d9ee140f79f85098c7372a832bf4821e02236",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 342188
+      "m": 1024,
+      "s": 342188,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:21:59.189Z",
+      "a": "012004486566",
+      "oid": "0966b2f9c8355a30525daa5e5a1d9ee140f79f85098c7372a832bf4821e02236",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-swap-quote",
@@ -1397,16 +1352,16 @@
       ],
       "p": 10,
       "id": "8be16d6265d974f790872f6d9377a673e1ec3f4639cd63ba0c43a5684634cdba",
-      "a": "131853488294",
-      "c": "2026-11-02T03:22:03.621Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "ec71478e622bdd472c9bb9d944304a21fe5d2d33cf7d64c4339505267034e03b",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 1539459
+      "m": 1024,
+      "s": 1539459,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:22:03.621Z",
+      "a": "131853488294",
+      "oid": "ec71478e622bdd472c9bb9d944304a21fe5d2d33cf7d64c4339505267034e03b",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-v3-overview",
@@ -1430,16 +1385,16 @@
       ],
       "p": 10,
       "id": "6e3bbb97d050250d1651e877a0a0cb70bcd810424257b092c2a46ad8b5414a5d",
-      "a": "551936673993",
-      "c": "2026-11-02T03:22:07.932Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "335836d742e549712003625cbdfc1ff1bbb9ee86e8610be53642489c082be547",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 1034525
+      "m": 1024,
+      "s": 1034525,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:22:07.932Z",
+      "a": "551936673993",
+      "oid": "335836d742e549712003625cbdfc1ff1bbb9ee86e8610be53642489c082be547",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-volume",
@@ -1463,16 +1418,16 @@
       ],
       "p": 10,
       "id": "ea84cd1fb762f39800d7dbb2c6e0034a162034af14058f4ce7f7ace6ed3cdb05",
-      "a": "385216822393",
-      "c": "2026-11-02T03:22:12.433Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "82e63dd2c7e7f8284d8b5ca80475e32adc249cdb6387bfb555143059cb3df41a",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 1028768
+      "m": 1024,
+      "s": 1028768,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:22:12.433Z",
+      "a": "385216822393",
+      "oid": "82e63dd2c7e7f8284d8b5ca80475e32adc249cdb6387bfb555143059cb3df41a",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "tree-knowledge-trial-correction",
@@ -1496,16 +1451,16 @@
       ],
       "p": 10,
       "id": "7e9f937c3ec9847e33d3517f62d38962d11f91c359550baa78423462748ff689",
-      "a": "089772552642",
-      "c": "2026-11-02T03:22:16.641Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "0bf5bf8a4d6b35a8b9129935843abbb14ed97bbfd722f8add58fd457c318e390",
-      "r": "nodejs24.x",
       "rg": "us-east-2",
-      "s": 343304
+      "m": 1024,
+      "s": 343304,
+      "r": "nodejs24.x",
+      "c": "2026-11-02T03:22:16.641Z",
+      "a": "089772552642",
+      "oid": "0bf5bf8a4d6b35a8b9129935843abbb14ed97bbfd722f8add58fd457c318e390",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "treeforce89-dev",
@@ -1548,16 +1503,16 @@
         }
       },
       "id": "98afba7ad05cae22b90687b7dcdb3eb952174a27608c7360a7cb0968b16d9eea",
-      "a": "677604543295",
-      "c": "2026-11-02T03:22:20.927Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "fb400639c3a337ff47f50da12cb054699dece06f11faa065a3069f81f54a0781",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 1753127
+      "m": 1024,
+      "s": 1753127,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:22:20.927Z",
+      "a": "677604543295",
+      "oid": "fb400639c3a337ff47f50da12cb054699dece06f11faa065a3069f81f54a0781",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "arcade-growth",
@@ -1605,16 +1560,16 @@
         }
       },
       "id": "4b70b37ba607e7d11f5bcffacb48339d7d39bfbb05d9c092bdf1f6bc4974aa05",
-      "a": "940186631256",
-      "c": "2026-11-02T03:22:25.566Z",
-      "im": "stream",
-      "m": 1024,
-      "obl": "netlify-observability-extension",
-      "oblv": 34,
-      "oid": "a2af31d014810ced2cf3a6a9442717356365b0b2e04ed3134183bc55b0efd8a6",
-      "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 1353890
+      "m": 1024,
+      "s": 1353890,
+      "r": "nodejs22.x",
+      "c": "2026-11-02T03:22:25.566Z",
+      "a": "940186631256",
+      "oid": "a2af31d014810ced2cf3a6a9442717356365b0b2e04ed3134183bc55b0efd8a6",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
     },
     {
       "n": "canopy-access",
@@ -1665,16 +1620,126 @@
         }
       },
       "id": "37261ae8253e3e7a9281fa1eeb49c1d46be2b7e73088a4245ebc89cedc7b0c50",
-      "a": "432846551745",
+      "rg": "us-east-2",
+      "m": 1024,
+      "s": 1253348,
+      "r": "nodejs22.x",
       "c": "2026-11-02T03:22:29.812Z",
+      "a": "432846551745",
+      "oid": "3752b9fd5aacdb43b28acdf052989106fcf576b2e87c7c4ccbfe49b50c8d690d",
+      "im": "stream",
+      "obl": "netlify-observability-extension",
+      "oblv": 34
+    },
+    {
+      "n": "arcade-social",
+      "d": "f94a10175609fb4e6e54dd7ade78d94bece40edb90bc336fd0a6b6a4d6a0853e",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "ro": [
+        {
+          "p": "/api/arcade-social",
+          "l": "/api/arcade-social",
+          "e": null,
+          "m": [
+            "GET",
+            "POST"
+          ],
+          "ps": false
+        }
+      ],
+      "tr": {
+        "action": {
+          "type": "rate_limit",
+          "config": {
+            "rate_limit_config": {
+              "window_limit": 30,
+              "window_size": 60,
+              "algorithm": "sliding_window"
+            },
+            "aggregate": {
+              "keys": [
+                {
+                  "type": "domain"
+                },
+                {
+                  "type": "ip"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "id": "256af99c9167ac4d0b2313d9a7bba02eaea85c7552e38e38926eebe9883bf19b",
+      "a": "205114915445",
+      "c": "2026-11-05T01:53:53.531Z",
       "im": "stream",
       "m": 1024,
       "obl": "netlify-observability-extension",
       "oblv": 34,
-      "oid": "3752b9fd5aacdb43b28acdf052989106fcf576b2e87c7c4ccbfe49b50c8d690d",
+      "oid": "60e8402a32332b63750ad619d5b3675f84abd925d15ba967d2e9a03e4e0f73af",
       "r": "nodejs22.x",
       "rg": "us-east-2",
-      "s": 1253348
+      "s": 340846
+    },
+    {
+      "n": "arcade-campaign",
+      "d": "60c0c8039aaef863f5380b731176e13d4d93084dcd13da5b873c0b2b89dc5822",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "ro": [
+        {
+          "p": "/api/arcade-campaign",
+          "l": "/api/arcade-campaign",
+          "e": null,
+          "m": [
+            "GET",
+            "POST"
+          ],
+          "ps": false
+        }
+      ],
+      "tr": {
+        "action": {
+          "type": "rate_limit",
+          "config": {
+            "rate_limit_config": {
+              "window_limit": 30,
+              "window_size": 60,
+              "algorithm": "sliding_window"
+            },
+            "aggregate": {
+              "keys": [
+                {
+                  "type": "domain"
+                },
+                {
+                  "type": "ip"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "id": "792ef5f99096732c7400f941aea693025083ce38a2b4478522201c6ec7d3badf",
+      "a": "622137718745",
+      "c": "2026-11-05T01:53:53.805Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "c94a2830623ed1baf2b86fedf6dc15743214c94657c440d48c2e76587c64a499",
+      "r": "nodejs22.x",
+      "rg": "us-east-2",
+      "s": 340903
     }
   ],
   "functionSchedules": [
@@ -1701,6 +1766,28 @@
   ],
   "schedulesPreserved": 5,
   "runtime": {
+    "function_schedules": [
+      {
+        "name": "tree-badges-refresh-scheduled",
+        "cron": "47 */6 * * *"
+      },
+      {
+        "name": "tree-exposure-refresh-scheduled",
+        "cron": "27 */6 * * *"
+      },
+      {
+        "name": "tree-knowledge-trial-resolver",
+        "cron": "5 * * * *"
+      },
+      {
+        "name": "tree-knowledge-trial-rotation-scheduled",
+        "cron": "15 * * * *"
+      },
+      {
+        "name": "tree-leaderboard-refresh-scheduled",
+        "cron": "17 */6 * * *"
+      }
+    ],
     "functions_region": "cmh",
     "functions_region_overrides": [
       {
@@ -1868,105 +1955,36 @@
     "context": "production",
     "database_branch_id": "production",
     "blobs_region": "us-east-2",
-    "framework": null
+    "framework": null,
+    "edge_functions_present": null,
+    "server": null,
+    "database_migrations": {
+      "files": []
+    }
   },
-  "databaseSnapshotEvents": {
-    "snapshots": [
-      {
-        "source": "on-publish",
-        "created_at": "2026-11-02T04:29:52.213Z"
-      }
-    ]
-  },
-  "generatedNetlifyConfigSha1": "ac47414c8205343f1a87a5b7b48131aaa7b92856",
   "environmentEvidence": {
-    "sourceRepository": "TheCryptoArborist/tree-token.xyz",
-    "releaseSourceCommit": "81b463838a2ed3c5c388be14c1935a80c221c73d",
-    "finalProcedureCommit": "27b42110ecbe95e8b3e20444b5a283f8077a96af",
-    "deployEnvironmentOverrides": [],
-    "accountId": "69800888d1a3d0483003ae9e",
-    "siteFunctionsEnvironmentEntries": 50,
-    "siteFunctionsEnvironmentSha256": "ee432a34ade907b85ae58478272be8356728aad5a5a3731a8a722e90204df7d4",
-    "sharedAccountFunctionsEnvironmentEntries": 0,
-    "sharedAccountFunctionsEnvironmentSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-    "siteBuildEnvironmentSha256": "46bc4bf6e56b046d14b6a6fa19804d1ddd7bdcff405ec09a116c24013ea34809",
-    "allSiteEnvironmentEntries": 50,
-    "allSiteEnvironmentSha256": "ee432a34ade907b85ae58478272be8356728aad5a5a3731a8a722e90204df7d4",
-    "allSharedEnvironmentEntries": 0,
-    "allSharedEnvironmentSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-    "binding": {
-      "metadata": {
-        "key": "TREEFORCE89_DEV_DATABASE_URL",
-        "isSecret": true,
-        "scopes": [
-          "functions"
-        ],
-        "values": [
-          {
-            "id": "e74b3d13-01c7-443a-a6f1-8f3b4940f415",
-            "context": "production",
-            "contextParameter": null
-          }
-        ]
-      },
-      "recordSha256": "731e02e4279ede868687f2b2e67dc7c58a6712b59482de2dfb4ff20244a7fcf4"
-    },
-    "preservedCanopyRouting": {
-      "path": "/_redirects",
-      "sha1": "4450ad95c97a2045c2575bd2cc75c49a8a2ba6c7",
-      "upstreamDeployId": "6ae7ee72f3a12d5acb787a55",
-      "canonicalPath": "https://tree-token.xyz/play/canopy-defense/checkout-test/"
-    },
-    "environmentCapturedAt": "2026-11-02T04:17:32.559601+00:00",
-    "preservedPublication": {
-      "deployId": "6ae80cef3e9589ac84d0857a",
-      "sourceCommit": "048da5d94c01351fd4f59b217973270fd07645f3",
-      "sourceTree": "785e7476e4bd0f048c99eb1af1ae1d84074ba87f",
-      "evidenceCommit": "a1172a3af444b48a2fb8513ed7210f335e1f0f81",
-      "releaseReceipt": "production/arcade-passport-copy-release.json"
-    }
+    "unchanged": true,
+    "siteRecordCount": 50,
+    "sharedRecordCount": 0
   },
-  "previousDeployLocked": false,
-  "publicationLockScope": "current publication only; do not relock an earlier deployment",
   "url": "https://tree-token.xyz/play/",
-  "candidateUrl": "https://6ae8112dce29c5db8b725ff0--tree-token.netlify.app/play/",
+  "verifiedAt": "2026-11-05T02:41:01.073446+00:00",
+  "sourceTree": "dc08a61e113413e5d688f39962c107d3233b4f7d",
+  "sourceBranch": "feature/arcade-social-missions-20261104",
+  "changedExistingPaths": [
+    "/assets/arcade/arcade-growth-wallet.js"
+  ],
+  "preservedStaticFiles": 289,
+  "newPaths": [],
   "completeFunctionRecordsIdenticalToPrevious": true,
-  "functionPreservationBasis": "All 41 complete function/provider records and ordering are identical to the immediately previous publication. No provider identity exception.",
-  "preservedRedirectSha1": "4450ad95c97a2045c2575bd2cc75c49a8a2ba6c7",
-  "participationProbes": {
-    "candidate": {
-      "candidate": "6ae8112dce29c5db8b725ff0",
-      "sourceCommit": "9c00bf6ae42d2ab6c2a78802cdfb4df1c42f795e",
-      "checkedAt": "2026-11-02T04:29:28.107113+00:00",
-      "url": "https://6ae8112dce29c5db8b725ff0--tree-token.netlify.app/api/arcade-growth?action=treeforce-play",
-      "method": "POST",
-      "status": 401,
-      "code": "invalid-game-session",
-      "milliseconds": 1065.74,
-      "credential": "cryptographically random nonexistent credential; no user credential",
-      "requestBodyFields": [
-        "runId"
-      ],
-      "participationWritten": false,
-      "writeEvidence": "Valid-format random token rejected by the database session SELECT before ownership or participation writes."
-    },
-    "canonical": {
-      "candidate": "6ae8112dce29c5db8b725ff0",
-      "sourceCommit": "9c00bf6ae42d2ab6c2a78802cdfb4df1c42f795e",
-      "checkedAt": "2026-11-02T04:30:07.483568+00:00",
-      "url": "https://tree-token.xyz/api/arcade-growth?action=treeforce-play",
-      "method": "POST",
-      "status": 401,
-      "code": "invalid-game-session",
-      "milliseconds": 257.88,
-      "credential": "cryptographically random nonexistent credential; no user credential",
-      "requestBodyFields": [
-        "runId"
-      ],
-      "participationWritten": false,
-      "writeEvidence": "Valid-format random token rejected by the database session SELECT before ownership or participation writes."
-    }
-  },
-  "releaseReceipt": "production/arcade-growth-branding-release.json",
-  "verification": "docs/arcade-growth-branding-verification.json"
+  "candidateUrl": "https://6aebec00ada2550dc6f59eee--tree-token.netlify.app/play/",
+  "verification": {
+    "walletBehaviorChecksPassed": 11,
+    "uiChecksPassed": 57,
+    "canonicalBundleSha256": "1fc7b183480a6e3c558001df23298354024b5fc4341a3a4f4fb465a434045708",
+    "canonicalBundleMatchesTestedSource": true,
+    "sameAccountRefreshSignatureCount": 1,
+    "realWalletEndToEndPerformed": false,
+    "reportedUserPromptSequenceObserved": false
+  }
 }

@@ -49,7 +49,10 @@ export function createGrowthWalletClient(registry) {
         if (!active || active.wallet !== wallet || !Object.hasOwn(properties || {}, 'accounts')) return;
         const exact = Array.from(properties.accounts || []).find(candidate => address(candidate?.address) === active.address && accountSupported(candidate, wallet));
         if (!exact) clear();
-        else { generation += 1; active.account = exact; notify(); }
+        // A refreshed object for the same authorized address is not a wallet
+        // switch. Some wallets emit this while the signature prompt closes.
+        // clear() still invalidates pending signatures on removal or a real switch.
+        else { active.account = exact; notify(); }
       });
     }
     notify();

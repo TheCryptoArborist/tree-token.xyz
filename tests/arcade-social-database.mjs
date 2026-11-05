@@ -1,0 +1,37 @@
+import {createRequire} from 'node:module';
+import {resolve} from 'node:path';
+const require=createRequire(resolve(process.env.ARCADE_DOM_TEST_DEPS || '/tmp/arcade-mission-tools','package.json'));
+const {PGlite}=require('@electric-sql/pglite');
+import {readFileSync} from 'node:fs';
+import assert from 'node:assert/strict';
+const db=new PGlite();
+await db.exec('create role anon; create role authenticated; create role service_role bypassrls;');
+await db.exec(readFileSync('supabase/migrations/20261031211739_arcade_growth.sql','utf8'));
+await db.exec(readFileSync('supabase/migrations/20261104133625_arcade_social_missions.sql','utf8'));
+const wallet='0x'+'a'.repeat(64),other='0x'+'b'.repeat(64),origin='https://tree-token.xyz',hash='c'.repeat(64);
+await db.query(`insert into private.arcade_growth_wallet_challenges(challenge_id,wallet,origin,date_key,nonce_sha256,message,request_fingerprint,expires_at) values ('00000000-0000-4000-8000-000000000001',$1,$2,current_date,$3,repeat('x',100),$3,clock_timestamp()+interval '4 minutes')`,[wallet,origin,hash]);
+await db.query(`insert into private.arcade_growth_sessions(token_sha256,wallet,origin,auth_challenge_id,expires_at) values($1,$2,$3,'00000000-0000-4000-8000-000000000001',clock_timestamp()+interval '50 minutes')`,[hash,wallet,origin]);
+const rpc=async(mission=null,proof=null)=> (await db.query('select public.arcade_social_v1($1,$2,$3,$4) result',[hash,origin,mission,proof])).rows[0].result;
+await db.exec('set role service_role');
+assert.equal((await rpc()).entries.length,0);
+assert.equal((await rpc('community-vote','treeforce89')).monthlyStamps,1);
+assert.equal((await rpc('community-vote','garden-bot')).entries[0].proof,'treeforce89');
+assert.equal((await rpc('share-score','https://x.com/player/status/123')).monthlyStamps,1);
+assert.equal((await rpc()).entries.find(x=>x.mission==='share-score').status,'pending');
+await assert.rejects(()=>rpc('share-score','javascript:alert(1)'));
+await assert.rejects(()=>db.query('select public.arcade_social_v1($1,$2)',[hash,'https://evil.example']));
+await db.exec('reset role');
+await db.query("update private.arcade_social_entries set status='completed',reviewed_at=clock_timestamp(),review_note='Verified original result' where wallet=$1 and mission='share-score'",[wallet]);
+assert.equal((await rpc()).monthlyStamps,2);
+assert.equal((await db.query('select count(*) n from private.arcade_growth_checkins')).rows[0].n,0);
+assert.equal((await db.query('select count(*) n from private.arcade_growth_monthly_badges')).rows[0].n,0);
+for(const role of ['anon','authenticated']) {
+ await db.exec(`set role ${role}`);
+ await assert.rejects(()=>db.query('select public.arcade_social_v1($1,$2)',[hash,origin]));
+ await assert.rejects(()=>db.query('select * from private.arcade_social_entries'));
+ await db.exec('reset role');
+}
+await db.query('update private.arcade_growth_sessions set revoked_at=clock_timestamp() where token_sha256=$1',[hash]);
+await assert.rejects(()=>rpc());
+console.log('PASS: migration, session/origin checks, weekly idempotency, pending stamps, reviewed stamps, private permissions, attendance isolation, revoked session');
+await db.close();

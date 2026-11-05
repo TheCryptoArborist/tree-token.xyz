@@ -1,4 +1,44 @@
-# Current production — Legends of TREE badge collection, 2026-11-02 UTC
+# Current production — Arcade sign-in account refresh fix
+
+Published and locked deploy `6aebec00ada2550dc6f59eee`, application source `4effd89502ee8f6215cbbf942a71436f54539ec7`. Live at https://tree-token.xyz/play/.
+
+A wallet re-announcing the same authorized address during personal-message approval no longer invalidates the pending sign-in signature. Actual account switches, removal, disconnects and stale results still invalidate authorization. The existing connection-plus-message flow is retained; no transaction is built or submitted for sign-in. This fixes a reproduced retry case; the user’s actual three-prompt sequence has not been observed.
+
+Only assets/arcade/arcade-growth-wallet.js changed publicly. The exact pinned dependencies were reused. After normalizing generated build-path comments, the only executable bundle change removes the generation increment for an unchanged account. All 290 static paths remain, with 289 exact. All 43 complete function/provider records, packages, five schedules, runtime fields and 50 site environment entries remain exact against baseline 6aebe7578c57bc8e8c7e1b53. No backend or dashboard build was used.
+
+11 wallet behavior checks and 57 controller/social/campaign UI checks passed. The new regression fails before the fix and passes after it; integration confirms one connection, one signature and one server session through repeated same-address events. Refresh and check-in add no signatures. Candidate and canonical bundle hashes match. No real user wallet approval or transaction was performed; user retesting remains necessary. See ../docs/arcade-signin-refresh.md, ../docs/arcade-signin-verification.json and arcade-signin-refresh-release.json.
+
+---
+
+# Previous production — Compact Arcade quests and partner follows
+
+Published and locked deploy `6aebe7578c57bc8e8c7e1b53`, from application source `afc8661e89728b64004325e0c8a0213a6adbd892`. Live at https://tree-token.xyz/play/ → Arcade Missions → Campaigns / Community.
+
+Quest instructions and forms now expand from compact illustrated cards. The two quest tabs use the full content width, while attendance badge artwork stays on the Daily and collection views. Join Team TREE includes the exact X links for @thickquidity, @suidexHQ and @kelpiedotsui; follow/membership verification remains unavailable until configured. No follow or reward completion is simulated.
+
+Only play/index.html and styles/tree-arcade-suite.css changed publicly. All 290 static paths remain, with 288 exact. All **43** complete original function/provider records and ZIP hashes, all **five** schedules, runtime fields and **50** site environment entries are exact against baseline `6aebe195dff096f7428fe1b0`. Every existing JavaScript module, wallet adapter and backend package is unchanged. No ordinary dashboard build was used. Future releases must preserve all 43 packages, including the two archives in arcade-quest-functions/.
+
+57 UI checks passed. Candidate and canonical desktop checks confirmed card expansion, signed-out gates, quiz navigation, exact partner links, retained Daily badge sidebar and no horizontal overflow. Before opening cards, Community height fell from 1,209 to 343 px; Campaigns fell from 1,851 to 318 px at the same browser size. Real wallet and canonical phone visual testing are not claimed.
+
+See current-release.json, arcade-quest-cards-release.json, the sanitized arcade-quest-cards-baseline.json, ../docs/arcade-quest-cards.md and ../docs/review/arcade-quest-cards/. Current production remains locked.
+
+---
+
+# Previous production — Arcade social quests and campaigns, 2026-11-05 UTC
+
+Published and locked deploy `6aebe195dff096f7428fe1b0` at `2026-11-05T01:56:59.773Z`, application source `b7c1849aeac0cdb4c75b9325ab0bf5fa6cd23e7e`. Live at https://tree-token.xyz/play/; open Arcade Missions, then Campaigns or Community.
+
+First Round saves enrollment and verifies four tasks: check-in, TREE quiz, completed eligible game, and approved gameplay share. Its reward is a once-per-wallet profile campaign badge. Community supports reviewed score sharing, friend challenges and saved weekly votes. X/Telegram membership quests remain unavailable until real verification is configured. No token payout or NFT mint is included.
+
+The actual baseline was `6ae971bd73f65c3f86a9e887`. All 41 original complete function/provider records and original package hashes, five schedules, protected runtime settings and all 50 environment entries remain exact. Two independent packages were added: current total **43 functions**. All original 288 static paths remain; three were changed and two new modules added, giving **290 paths**, with 285 original paths exact. No standard dashboard build was used.
+
+`current-release.json` and `arcade-quest-release.json` record the full new inventory/runtime. The two exact new ZIPs are in `arcade-quest-functions/`; retain these alongside the 41 existing original archives for future releases. `arcade-quest-baseline.json` contains sanitized metadata and environment fingerprints only. Never expose secret values. Current production records supersede historical archive manifests.
+
+90 Node checks and isolated PostgreSQL checks passed. Hosted database permission checks, candidate and canonical invalid-session gates, exact static module hashes and canonical Campaigns UI passed. No real wallet sign-in, authenticated campaign completion or user write was performed; a real wallet end-to-end test and canonical phone visual check remain. The private Sites preview is a separate synthetic review surface. See `../docs/arcade-quest-campaigns.md` and `../docs/review/arcade-quests/tree-arcade-quests-live.png`.
+
+---
+
+# Previous production — Legends of TREE badge collection, 2026-11-02 UTC
 
 Published and locked deploy `6ae8112dce29c5db8b725ff0` at `2026-11-02T04:29:52.370Z`, from source commit `9c00bf6ae42d2ab6c2a78802cdfb4df1c42f795e`, tree `d855ed063b7ed2bb2383f299a6c1c6b5440f10ec`, on `feature/arcade-growth-collection-20261102`. Live at https://tree-token.xyz/play/.
 

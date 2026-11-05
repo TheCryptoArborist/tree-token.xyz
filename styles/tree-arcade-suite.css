@@ -969,3 +969,121 @@ a.poster-link:hover .poster-cta, a.poster-link:focus-visible .poster-cta { backg
   .mint-panel :where(button, input, a, summary):focus-visible { outline-color: Highlight; }
   .mint-status { border-left-color: CanvasText; }
 }
+
+/* Arcade Missions shares the existing task panel and collection artwork. */
+.growth-tabs { flex-wrap: wrap; }
+.mission-featured,.mission-card { padding: 18px; margin: 16px 0; border: 1px solid #7bdcba44; border-radius: 14px; background: linear-gradient(125deg,#103329cc,#17132bcc); }
+.mission-featured h3,.mission-card h3 { margin: 8px 0; color: #e5fff0; }
+.mission-featured p,.mission-card p { line-height: 1.6; }
+.mission-card { display: grid; gap: 10px; min-width: 0; }
+.mission-card label { font-size: .85rem; font-weight: 700; }
+.mission-card input,.mission-card select { width: 100%; min-width: 0; box-sizing: border-box; padding: 12px; background: #061813; color: #edfff5; border: 1px solid #81b5a5; border-radius: 8px; font: inherit; }
+.mission-card :is(button,a) { justify-self: start; max-width: 100%; white-space: normal; }
+.mission-card button:disabled { opacity: .55; cursor: default; }
+.mission-state { color: #c5e7d7; font-size: .85rem; overflow-wrap: anywhere; }
+#missions-progress { overflow-wrap: anywhere; }
+@media(max-width: 480px) { .growth-tabs [role=tab] { flex: 1 1 auto; } .mission-card { padding: 14px; } }
+
+.campaign-intro { display:flex;justify-content:space-between;align-items:start;gap:20px;margin:4px 0 20px; }
+.campaign-intro h3 {font-size:26px;margin:4px 0 8px;color:#f5f4d5;letter-spacing:-.03em}
+.campaign-intro p {font-size:13px;line-height:1.6;color:#b8cbb8;max-width:570px}
+.campaign-season {border:1px solid #c5e64c55;border-radius:20px;padding:7px 12px;color:#dcec8b;font:10px var(--suite-mono);white-space:nowrap}
+.campaign-card {background:linear-gradient(125deg,#112b21ee,#151c2bea);border:1px solid #7ab58655;border-radius:14px;margin:16px 0;padding:20px;overflow:hidden}
+.campaign-card h4 {font-size:21px;line-height:1.2;letter-spacing:-.02em;margin:7px 0 9px;color:#f1efc4}
+.campaign-card p {font-size:12px;line-height:1.6;color:#c1d0bf}
+.campaign-top {display:flex;align-items:center;justify-content:space-between;gap:16px}
+.campaign-badge {width:78px;height:78px;object-fit:contain;filter:drop-shadow(0 0 18px #a8da3b2d)}
+.campaign-meta {font:9px/1.6 var(--suite-mono);letter-spacing:.08em;color:#c6d78b}
+.campaign-progress {height:7px;background:#020e09;border-radius:8px;overflow:hidden;margin:14px 0 8px}
+.campaign-progress span {display:block;height:100%;width:0;background:linear-gradient(90deg,#89be71,#d4e66b);transition:width .2s}
+.campaign-progress-label {font:11px var(--suite-mono);color:#d5e7bb}
+.campaign-step {border-top:1px solid #b3d39b22;display:grid;grid-template-columns:28px 1fr;gap:12px;padding:16px 0}
+.campaign-step-number {display:grid;place-items:center;width:26px;height:26px;border-radius:50%;border:1px solid #b2c68166;color:#cddd98;font:11px var(--suite-mono)}
+.campaign-step h5 {font-size:14px;color:#e7f2db;margin:2px 0 5px}
+.campaign-step p {margin:4px 0 10px}
+.campaign-step-status {display:block;color:#b6c69d;font:10px/1.6 var(--suite-mono);margin:6px 0}
+.campaign-actions {display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.campaign-card .growth-secondary,.campaign-card .growth-primary {font-size:11px;min-height:38px;white-space:normal;line-height:1.4}
+.campaign-demo {background:#13271d;color:#c0d0b9;border:1px dashed #81945d88;border-radius:6px;padding:9px 12px;font:10px var(--suite-mono);cursor:pointer}
+.campaign-card button:disabled {opacity:.45;cursor:default}
+.campaign-reward {display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 0 0;border-top:1px solid #cadc8b33}
+.campaign-reward strong {font-size:12px;color:#ece2a5}
+.campaign-form label {display:block;font-size:12px;font-weight:700;line-height:1.6;color:#e1e9ce;margin:12px 0 6px}
+.campaign-form select,.campaign-form input {width:100%;max-width:100%;padding:11px;background:#071b12;border:1px solid #93b78c88;color:#edf5df;border-radius:7px;font:12px var(--suite-sans)}
+.campaign-note {padding:10px 12px;border-left:2px solid #d4cc77;background:#cfcb7e0a;font-size:11px!important}
+.campaign-notice {color:#e4edac!important;font-weight:650;min-height:20px}
+.campaign-quiz summary {font-size:12px;color:#ddeb9c;cursor:pointer;padding:12px 0}
+.campaign-grid {display:grid;grid-template-columns:1fr;gap:0}
+@media (max-width:600px){.campaign-intro{display:block}.campaign-season{display:inline-block;margin-top:4px}.campaign-card{padding:15px}.campaign-reward{align-items:start;flex-direction:column}.campaign-top{gap:8px}.campaign-badge{width:64px;height:64px}.campaign-intro h3{font-size:23px}.campaign-step{gap:8px;grid-template-columns:24px 1fr}}
+
+/* Quest shelves: show the invitation first, reveal the task when selected. */
+.growth-detail-grid:has(.quest-board:not([hidden])) { grid-template-columns:minmax(0,1fr); gap:0; }
+.growth-detail-grid:has(.quest-board:not([hidden])) > .growth-reward { display:none; }
+.quest-board-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.quest-board-heading h3 { margin:3px 0 0; color:#f3edc4; font-size:22px; letter-spacing:-.03em; }
+.quest-board-heading .growth-eyebrow { margin:0; font-size:9px; letter-spacing:.13em; }
+.quest-toolbar { display:flex; align-items:center; justify-content:space-between; gap:12px; margin:10px 0 14px; }
+.quest-toolbar p { margin:0; min-height:0; font-size:11px; font-weight:400; }
+.quest-toolbar button { flex:none; min-height:36px; font-size:11px; }
+.quest-card-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; align-items:start; }
+.quest-tile { --quest-accent:#e1c470; --quest-glow:#745b1e; min-width:0; border:1px solid #e1c47055; border-radius:12px; background:linear-gradient(125deg,#182a23,#111c1d); overflow:hidden; }
+.quest-tile--lime { --quest-accent:#c9ed83; --quest-glow:#3d6d33; border-color:#a2d96b55; }
+.quest-tile--violet { --quest-accent:#d0b2ff; --quest-glow:#5c3a84; border-color:#bc93ef55; }
+.quest-tile > summary,.quest-tile .campaign-quiz > summary { list-style:none; }
+.quest-tile summary::-webkit-details-marker { display:none; }
+.quest-tile .quest-cover { position:relative; display:flex; flex-direction:column; min-height:206px; padding:18px 16px 0; color:#e8ecd5; cursor:pointer; isolation:isolate; background:radial-gradient(ellipse at 100% 10%,color-mix(in srgb,var(--quest-glow) 70%,transparent),transparent 65%); }
+.quest-cover::before { content:""; position:absolute; inset:0; z-index:-1; background:repeating-linear-gradient(0deg,transparent 0 3px,#ffffff03 3px 4px); pointer-events:none; }
+.quest-cover-art { position:absolute; top:22px; right:6px; width:84px; height:92px; z-index:-1; opacity:.95; filter:drop-shadow(0 3px 15px #0008); }
+.quest-cover-art img { width:100%; height:100%; object-fit:contain; }
+.quest-cover .campaign-meta { display:block; padding-right:54px; color:var(--quest-accent); font-size:9px; letter-spacing:.06em; line-height:1.5; }
+.quest-cover :is(h3,h4) { margin:12px 64px 7px 0; color:#fff4d1; font-size:21px; line-height:1.1; letter-spacing:-.03em; }
+.quest-cover-description { display:block; max-width:calc(100% - 68px); color:#c2d0bd; font-size:11px; line-height:1.5; margin-bottom:12px; }
+.quest-reward-tag { display:inline-flex; align-items:center; align-self:flex-start; width:fit-content; max-width:100%; border:1px solid #d4de8c33; border-radius:4px; padding:5px 7px; color:var(--quest-accent,#d8df9b); background:#07140e77; font:9px/1.4 var(--suite-mono); letter-spacing:.02em; }
+.quest-cover-footer { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px 10px; margin-top:auto; padding:13px 0 12px; color:#b2c2ab; font:9px/1.5 var(--suite-mono); }
+.quest-open-label { color:var(--quest-accent); font-weight:700; white-space:nowrap; }
+.quest-open-label b { display:inline-block; font-size:16px; line-height:1; vertical-align:middle; transition:transform .15s; }
+.quest-tile[open] > summary .quest-open-label b,.campaign-quiz[open] > summary .quest-open-label b { transform:rotate(45deg); }
+.quest-cover .campaign-progress { display:block; margin:0 -16px; height:3px; border-radius:0; }
+.quest-cover .campaign-progress[hidden] { display:none; }
+.quest-cover .campaign-progress span { background:var(--quest-accent); }
+.quest-tile:has(> summary:hover),.quest-tile:has(.campaign-quiz > summary:hover) { border-color:var(--quest-accent); }
+.quest-tile:has(> summary:focus-visible),.quest-tile:has(.campaign-quiz > summary:focus-visible) { outline:2px solid var(--quest-accent); outline-offset:3px; }
+.quest-tile summary:focus-visible { outline:2px solid var(--quest-accent); outline-offset:-3px; }
+.quest-tile[open],.quest-tile:has(.campaign-quiz[open]) { grid-column:1 / -1; }
+.quest-tile[open] > .quest-cover,.quest-tile:has(.campaign-quiz[open]) .quest-cover { min-height:160px; }
+.quest-tile .quest-body { margin:0; padding:16px; border:0; border-top:1px solid #bed89533; border-radius:0; background:#07150fc9; }
+.quest-tile .quest-body p { margin:0 0 8px; font-size:12px; line-height:1.5; }
+.quest-steps-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0 22px; margin-top:14px; }
+.quest-tile .campaign-step { padding:12px 0; gap:9px; min-width:0; }
+.quest-tile .campaign-step h5 { font-size:13px; margin:0; }
+.quest-tile .campaign-step-status { margin:4px 0 8px; }
+.quest-tile .campaign-reward { padding-top:12px; }
+.quest-tile .campaign-notice:empty { display:none; }
+.quest-tile .campaign-form { max-width:680px; }
+.quest-tile .campaign-form label { margin-top:8px; font-size:11px; }
+.quest-tile .campaign-form :is(input,select) { min-width:0; box-sizing:border-box; }
+.quest-tile .mission-card { gap:8px; }
+.quest-tile .mission-card :is(input,select) { font-size:12px; }
+.quest-tile .mission-state { margin:0; font-size:11px; }
+.quest-fine-print { margin:10px 0 0; color:#a2b39e; font-size:10px; line-height:1.5; }
+#missions-progress:empty { display:none; }
+#missions-progress:not(:empty) { margin:0 0 10px; }
+@media (max-width:900px) and (min-width:601px) { .quest-card-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media (max-width:600px) {
+  .quest-card-grid { grid-template-columns:minmax(0,1fr); gap:9px; }
+  .quest-board-heading { align-items:start; }
+  .quest-board-heading h3 { font-size:19px; }
+  .quest-board-heading > .quest-reward-tag { display:none; }
+  .quest-toolbar { gap:8px; margin:8px 0 10px; }
+  .quest-toolbar p { font-size:10px; }
+  .quest-tile .quest-cover { min-height:156px; padding:14px 14px 0; }
+  .quest-cover :is(h3,h4) { margin-top:7px; font-size:20px; }
+  .quest-cover-description { margin-bottom:8px; }
+  .quest-cover-art { top:15px; right:12px; width:80px; height:86px; }
+  .quest-cover-footer { padding:10px 0; }
+  .quest-cover .campaign-progress { margin-right:-14px; margin-left:-14px; }
+  .quest-tile .quest-body { padding:13px; }
+  .quest-steps-grid { grid-template-columns:minmax(0,1fr); }
+}
+@media (prefers-reduced-motion:reduce) { .quest-open-label b { transition:none; } }
+@media (forced-colors:active) { .quest-tile,.quest-reward-tag { border-color:CanvasText; } .quest-cover-art { opacity:1; } .quest-cover::before { display:none; } }
