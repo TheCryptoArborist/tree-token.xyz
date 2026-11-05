@@ -1,0 +1,78 @@
+name: TREE FORCE scoped payment API
+on:
+  push:
+    branches: [feature/treeforce89-galaga-gameplay]
+    paths: [.github/workflows/treeforce89-scoped-api.yml]
+permissions:
+  contents: read
+concurrency:
+  group: tree-token-preserved-production-release
+  cancel-in-progress: false
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: disposable_test_only
+          POSTGRES_DB: treeforce89_paid_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s
+          --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: 127.0.0.1
+      PGPORT: 5432
+      PGUSER: postgres
+      PGPASSWORD: disposable_test_only
+      PGDATABASE: treeforce89_paid_test
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Restore pinned dependencies
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm ci --prefix netlify/preview-lib/treeforce89-source --ignore-scripts --no-audit --no-fund
+          npm ci --prefix tests/treeforce89-ui --ignore-scripts --no-audit --no-fund
+      - run: npm run verify:backend-source
+      - name: Check runtime limits, release scope, wallet and gameplay recovery
+        run: >-
+          node --test tests/treeforce89-runtime-policy.test.mjs
+          tests/treeforce89-scoped-api-release.test.mjs
+          tests/treeforce89-canonical-development.test.mjs
+          tests/treeforce89-preview-functions.test.mjs
+          tests/treeforce89-paid-client.test.mjs
+          tests/treeforce89-continue-dialog.test.mjs
+          tests/treeforce89-receipt-discovery.test.mjs
+          tests/treeforce89-checkout-interaction.test.mjs
+          tests/treeforce89-home-wallet.test.mjs
+          tests/treeforce89-gameplay.test.mjs
+      - name: Check PostgreSQL timeout recovery and payment concurrency
+        run: node scripts/verify-treeforce89-paid-database.mjs
+      - name: Build only the namespaced API
+        run: node scripts/prepare-treeforce89-scoped-api.mjs
+      - name: Create scoped candidate preserving every other backend and file
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: node scripts/release-treeforce89-scoped-api.mjs candidate
+      - name: Verify hosted authentication, ownership and paid-continue boundaries twice
+        run: |
+          candidate=$(node --input-type=module -e "import fs from 'node:fs'; console.log(JSON.parse(fs.readFileSync('.netlify/treeforce89-scoped-api/candidate.json')).candidateUrl)")
+          node scripts/verify-treeforce89-paid-hosted-smoke.mjs "$candidate" enabled
+          node scripts/verify-treeforce89-paid-hosted-smoke.mjs "$candidate" enabled
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: treeforce89-scoped-api-candidate
+          path: |
+            .netlify/treeforce89-scoped-api/
+            .netlify/treeforce89-paid-database-results.json
+          if-no-files-found: error
+          retention-days: 7

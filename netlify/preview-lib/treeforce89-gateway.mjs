@@ -17,21 +17,22 @@ export function paidContinuesEnabled() {
  const value=typeof Netlify!=='undefined'?Netlify.env.get('TREEFORCE89_PAID_CONTINUES_ENABLED'):process.env.TREEFORCE89_PAID_CONTINUES_ENABLED;
  return value==='true';
 }
-export async function getPaidContinueService(origin,database=getPreviewDatabase) {
+export async function getPaidContinueService(origin,database=getPreviewDatabase,{enabled=paidContinuesEnabled()}={}) {
+ if(typeof enabled!=='boolean')throw Error('Explicit payment policy required');
  await getGatewayServices(origin,database);
  const {pool}=database();
  if(!await paidContinueSchemaReady(pool))throw Error('Paid continuation schema unavailable');
  archivalClient??=new SuiGraphQLClient({network:'mainnet',url:'https://graphql.mainnet.sui.io/graphql'});
- return createPaidContinueService({pool,client:suiClient,archivalClient,enabled:paidContinuesEnabled(),
+ return createPaidContinueService({pool,client:suiClient,archivalClient,enabled,
   ownershipChecker:({wallet})=>checkDirectNFTreeOwnership({client:suiClient,wallet,network:'mainnet'})});
 }
 export async function getGatewayServices(origin,database=getPreviewDatabase) {
   const {pool}=database();
   schemaReady??=inspectTreeForceSchema(pool).then(result=>{
     if(!result.schemaReady)throw Error('Authentication schema unavailable');
-  });
+  }).catch(error=>{schemaReady=undefined;throw error;});
   await schemaReady;
-  suiClient??=new SuiGrpcClient({network:'mainnet',baseUrl:'https://fullnode.mainnet.sui.io:443'});
+  suiClient??=new SuiGrpcClient({network:'mainnet',baseUrl:'https://fullnode.mainnet.sui.io:443',timeout:8000});
   return {
     gateway:createWalletGatewayService({pool,client:suiClient,origin}),
     runs:createGameRunService({pool,ownershipChecker:({wallet})=>

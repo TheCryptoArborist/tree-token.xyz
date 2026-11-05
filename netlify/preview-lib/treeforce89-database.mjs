@@ -2,6 +2,7 @@ import {createHash} from 'node:crypto';
 import {getDatabase,getConnectionString} from '@netlify/database';
 import evidence from './treeforce89-database-evidence.json' with {type:'json'};
 import {inspectTreeForceSchema} from '../../scripts/lib/treeforce89-schema.mjs';
+import {configureGameDatabasePool} from './treeforce89-runtime-policy.mjs';
 let cached;
 let canonicalCached;
 
@@ -58,7 +59,7 @@ export function getCanonicalDevelopmentDatabase() {
     evidence.productionDatabaseIdentities.includes(identity)||
     identity!==evidence.previewDatabaseIdentity)throw Error('Database isolation unverified');
   if(!canonicalCached||canonicalCached.identity!==identity)
-    canonicalCached={identity,pool:getDatabase({connectionString}).pool};
+    canonicalCached={identity,pool:configureGameDatabasePool(getDatabase({connectionString}).pool)};
   return canonicalCached;
 }
 

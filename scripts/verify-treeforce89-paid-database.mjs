@@ -9,11 +9,13 @@ import {createPaidContinueService,paidContinueSchemaReady,createPaidContinueHttp
 import {createAuthenticatedSessionResolver} from '../netlify/preview-lib/treeforce89-source/game/authenticated-session.mjs';
 import {TREE_COIN_TYPE,TREE_RECIPIENT} from '../treeforce89/paid/contract.mjs';
 import {prepareAuthorizedContinue} from '../treeforce89/paid/authorized-continue-resume.mjs';
+import {configureGameDatabasePool} from '../netlify/preview-lib/treeforce89-runtime-policy.mjs';
 import {toBase58} from '../netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/utils/index.mjs';
 const require=createRequire(import.meta.url),pg=require('pg');
 let emulator,pool;
 if(process.env.PGHOST){
  assert.equal(process.env.PGHOST,'127.0.0.1');assert.equal(process.env.PGDATABASE,'treeforce89_paid_test');pool=new pg.Pool({max:5});
+ configureGameDatabasePool(pool);
 }else{
  const {NetlifyDB}=await import(pathToFileURL(resolve('../local-db-harness/node_modules/@netlify/database-dev/dist/main.js')));
  emulator=new NetlifyDB({logger:()=>{}});pool=new pg.Pool({connectionString:await emulator.start(),max:1});
@@ -39,6 +41,15 @@ const claim=(s,o,d)=>({sessionToken:s.sessionToken,offerId:o.offerId,digest:d});
 const count=async id=>Number((await pool.query('SELECT count(*) AS n FROM tree_continue_redemptions WHERE session_id=$1',[id])).rows[0].n);
 const resolver=createAuthenticatedSessionResolver(pool);
 try{
+ if(process.env.PGHOST){
+  const db=await pool.connect();
+  try{
+   assert.equal((await db.query('SHOW statement_timeout')).rows[0].statement_timeout,'7s');
+   await db.query('BEGIN');await db.query('SET LOCAL statement_timeout=100');
+   await assert.rejects(db.query('SELECT pg_sleep(1)'),error=>error.code==='57014');
+   await db.query('ROLLBACK');assert.equal((await db.query('SELECT 1 AS ready')).rows[0].ready,1);
+  }finally{db.release();}
+ }
  await pool.query(await readFile(new URL('../db/staged-migrations/20261016030500_tree_authentication.sql',import.meta.url),'utf8'));
  assert.equal(await paidContinueSchemaReady(pool),false);
  await pool.query(await readFile(new URL('../db/staged-migrations/20261031045000_tree_paid_continue.sql',import.meta.url),'utf8'));

@@ -18,17 +18,19 @@ export const NFTREE_TYPE =
  * NFTrees held by a Kiosk or another custody object. It is a read-only
  * eligibility check for directly owned NFTrees.
  */
-export async function checkDirectNFTreeOwnership({ client, wallet, network = "mainnet" }) {
+export async function checkDirectNFTreeOwnership({ client, wallet, network = "mainnet", signal=AbortSignal.timeout(10000) }) {
   if (network !== "mainnet") throw new Error("NFTree gateway requires Sui mainnet");
   if (!client?.core?.listOwnedObjects) throw new Error("Sui Core API client required");
   const owner = normalizeSuiAddress(wallet);
   let cursor;
   const seen = new Set();
   for (let page = 0; page < 200; page++) {
+    signal.throwIfAborted();
     const result = await client.core.listOwnedObjects({
       owner,
       type: NFTREE_TYPE,
       limit: 50,
+      signal,
       ...(cursor ? { cursor } : {}),
     });
     if (!result || !Array.isArray(result.objects)) throw new Error("Invalid NFTree ownership response");
