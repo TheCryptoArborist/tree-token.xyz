@@ -16,7 +16,7 @@ The composer only opens a draft. No messages are sent automatically. Links never
 
 ## Storage and release
 
-`arcade-social` is a new independent Netlify function, reusing the established Daily Growth session via a service-role-only RPC. The 41 existing function source files, wallet adapters, dependency lock, scheduled jobs and production manifest are unmodified. No new chain transaction is involved. SQL uses SECURITY INVOKER, private tables with RLS, explicit service-role grants and the existing session verifier. No browser role may call the RPC or read/write entries directly. Feature activation requires exact `ARCADE_SOCIAL_ENABLED=true`; it defaults off.
+`arcade-social` is a new independent Netlify function, reusing the established Daily Growth session via a service-role-only RPC. The 41 existing function source files, wallet adapters, dependency lock, scheduled jobs and production manifest are unmodified. No new chain transaction is involved. SQL uses SECURITY INVOKER, private tables with RLS, explicit service-role grants and the existing session verifier. No browser role may call the RPC or read/write entries directly. The approved release enables this new handler without adding site environment settings. An explicit `ARCADE_SOCIAL_ENABLED` override other than true disables it.
 
 Before publication:
 

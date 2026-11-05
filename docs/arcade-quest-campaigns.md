@@ -21,7 +21,7 @@ Hosted checks confirmed RLS enabled on all four new private tables, no SELECT/IN
 
 Security advisors report only the expected informational “RLS enabled, no policy” notices for these private service-only tables. The design intentionally has no browser policies: privileges are revoked and the trusted service role alone accesses them. See https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy. No campaign-related warning or error finding was returned.
 
-`arcade-social` and `arcade-campaign` remain independent new function packages and default OFF. Activation requires `ARCADE_SOCIAL_ENABLED=true` and `ARCADE_CAMPAIGNS_ENABLED=true` in the appropriate Function deployment context. Existing 41 backend sources, schedules, wallet adapter, lockfile and production manifest are unmodified.
+`arcade-social` and `arcade-campaign` are independent new function packages. The approved release enables these two handlers by default; an explicit flag override other than true disables the relevant handler. No activation flags are added to the site environment, so all 50 existing environment records remain exact. Existing 41 backend sources, schedules, wallet adapter, lockfile and production manifest are unmodified.
 
 ## Current release and deployment limit
 
@@ -29,7 +29,7 @@ The live published deploy was re-read as `6ae971bd73f65c3f86a9e887`, locked and 
 
 A release must capture the actual current static inventory, exact 41 function packages/provider/runtime records, all five schedules and current environment bindings. Overlay only reviewed Arcade HTML/CSS/controllers and add the two new, separately packaged functions. Preserve all unrelated game files and public-discovery cleanup. Package/upload with authenticated Netlify API/CLI access; do not trigger an ordinary dashboard build.
 
-This execution environment has no NETLIFY_AUTH_TOKEN or signed-in Netlify CLI config. The connected Netlify plugin exposes inspection and environment management but no preserved-release deploy/upload operation. Therefore no function, flag, frontend or Netlify production deployment was changed. The live Arcade remains on the existing release. The existing private Sites preview remains a separate synthetic review surface, not the production backend.
+The original execution environment lacked authenticated Netlify CLI access. The user subsequently approved the official CLI authorization flow, resolving that access blocker. Publication now uses the authenticated preservation helper. The live Arcade remains on the existing release. The existing private Sites preview remains a separate synthetic review surface, not the production backend.
 
 ## Validation
 
@@ -50,8 +50,11 @@ MystenLabs/skills README was checked live. No Sui SDK/API or wallet-signing deci
 
 ## Prepared function packages
 
-`node scripts/package-arcade-quests.mjs /tmp/arcade-quest-build/node_modules` packages only the two new quest handlers with the pinned lockfile dependencies. The ZIPs are checked for integrity, traversal and symlinks, and smoke-tested through their extracted handler modules. Both return 503/no-store while disabled, without making any API call. `docs/arcade-quest-release-preparation.json` records the exact source inputs, overlay digests and new package hashes. Existing production packages will be reused from the actual live deployment, not replaced by source-built versions.
+`node scripts/package-arcade-quests.mjs /tmp/arcade-quest-build/node_modules` packages only the two new quest handlers with the pinned lockfile dependencies. The ZIPs are checked for integrity, traversal and symlinks, and smoke-tested through their extracted handler modules. An explicit disabling override returns 503/no-store, and an unauthenticated request to an enabled handler returns 401 before any API call. `docs/arcade-quest-release-preparation.json` records the exact source inputs, overlay digests and new package hashes. Existing production packages will be reused from the actual live deployment, not replaced by source-built versions.
 
 The archival `verify:backend-source` command was also attempted after installing its pinned tools in an isolated dependency directory. It rejects the additive function inventory against its older manifest, so it is not a passing current-production preservation check. Its temporary output was discarded. The actual release must instead compare all existing 41 published records/packages and five jobs to the live baseline before and after creating a candidate.
 
 Netlify CLI is installed in the temporary tooling directory. An official browser-authorization ticket has been requested to establish the missing deployment access. No access token was requested in chat or embedded in the source, no site was linked, no feature flag changed, and no candidate or production release was created during this preparation.
+
+
+The first prepared candidate `6aebe0959784934882b1fa78` requested all original function packages and was stopped before upload/publication. Every original archive has since been located with its exact production SHA256. Two temporary site activation flags were removed before preparing the replacement so the original environment fingerprint can remain exact. The replacement packages enable only their own new handlers. No original function is rebuilt for the release.

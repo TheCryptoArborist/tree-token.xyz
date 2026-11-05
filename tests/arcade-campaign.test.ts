@@ -6,7 +6,7 @@ const req=(body?:unknown,headers:Record<string,string>={})=>new Request(origin+'
 const payload=()=>({progress:{wallet,campaignId:'first-round-v1',canClaim:false,learningStamps:0,tasks:{checkIn:false,quiz:false,game:false,share:false}}});
 test('disabled/missing auth/foreign origin/client award flags cannot reach RPC',async()=>{
  let calls=0;const fetchImpl=async()=>{calls++;throw Error('forbidden');};
- assert.equal((await createCampaignHandler({env:{},fetchImpl})(req())).status,503);
+ assert.equal((await createCampaignHandler({env:{ARCADE_CAMPAIGNS_ENABLED:'false'},fetchImpl})(req())).status,503);
  const handle=createCampaignHandler({env,fetchImpl});
  assert.equal((await handle(req(undefined,{Authorization:''}))).status,401);
  assert.equal((await handle(req(undefined,{Origin:'https://evil.example'}))).status,403);
@@ -27,4 +27,11 @@ test('oversized and malformed bodies fail before storage',async()=>{
  let calls=0;const handle=createCampaignHandler({env,fetchImpl:async()=>{calls++;return Response.json(payload());}});
  assert.equal((await handle(req({action:'quiz',answers:['x'.repeat(2100),'attendance','review']}))).status,400);
  assert.equal((await handle(req({action:'start',answers:[]}))).status,400);assert.equal(calls,0);
+});
+
+test('release default enables only the new handler; explicit false disables it before storage',async()=>{
+ let calls=0;const fetchImpl=async()=>{calls++;throw Error('storage must not be called')};
+ assert.equal((await createCampaignHandler({env:{},fetchImpl})(req(undefined,{Authorization:''}))).status,401);
+ assert.equal((await createCampaignHandler({env:{ARCADE_CAMPAIGNS_ENABLED:'false'},fetchImpl})(req())).status,503);
+ assert.equal(calls,0);
 });

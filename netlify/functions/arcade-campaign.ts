@@ -1,3 +1,4 @@
+// This approved release enables only this new handler; an explicit override can disable it.
 import { createHash } from 'node:crypto';
 import { ARCADE_GROWTH_ORIGINS } from '../lib/arcade-growth-core.ts';
 import { arcadeGrowthSupabaseConfig } from '../lib/arcade-growth-store.ts';
@@ -17,7 +18,7 @@ export function createCampaignHandler({env,fetchImpl=fetch}:{env?:Env;fetchImpl?
  return async(request:Request)=>{
   const reply=(value:unknown,status=200)=>Response.json(value,{status,headers:{'Cache-Control':'no-store','Netlify-CDN-Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
   const settings=env||environment();
-  if(settings.ARCADE_CAMPAIGNS_ENABLED!=='true') return reply({error:'campaigns-unavailable',message:'Campaigns are being prepared. Your daily tasks remain available.'},503);
+  if((settings.ARCADE_CAMPAIGNS_ENABLED??'true')!=='true') return reply({error:'campaigns-unavailable',message:'Campaigns are being prepared. Your daily tasks remain available.'},503);
   if(!['GET','POST'].includes(request.method)) return reply({error:'method-not-allowed'},405);
   const origin=request.headers.get('origin')||new URL(request.url).origin;
   if(!(ARCADE_GROWTH_ORIGINS as readonly string[]).includes(origin)) return reply({error:'origin-not-allowed'},403);

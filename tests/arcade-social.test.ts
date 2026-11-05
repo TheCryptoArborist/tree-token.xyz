@@ -11,7 +11,7 @@ test('post links normalize safely and invalid missions/URLs fail',()=>{
 });
 test('disabled, unauthenticated, foreign origin, and forged completion cannot reach storage',async()=>{
  let calls=0;const fetchImpl=async()=>{calls++;throw Error('must not fetch')};
- assert.equal((await createSocialHandler({env:{},fetchImpl})(request())).status,503);
+ assert.equal((await createSocialHandler({env:{ARCADE_SOCIAL_ENABLED:'false'},fetchImpl})(request())).status,503);
  const handler=createSocialHandler({env,fetchImpl});
  assert.equal((await handler(request(undefined,{Authorization:''}))).status,401);
  assert.equal((await handler(request(undefined,{Origin:'https://evil.example'}))).status,403);
@@ -33,4 +33,11 @@ test('expired sessions, reused proof, unavailable storage map to bounded public 
  const handler=createSocialHandler({env,fetchImpl:async()=>Response.json(payload,{status:400})});
  const response=await handler(request());assert.equal(response.status,status);assert.doesNotMatch(await response.text(),/private database detail/);
  }
+});
+
+test('release default enables only the new handler; explicit false disables it before storage',async()=>{
+ let calls=0;const fetchImpl=async()=>{calls++;throw Error('storage must not be called')};
+ assert.equal((await createSocialHandler({env:{},fetchImpl})(request(undefined,{Authorization:''}))).status,401);
+ assert.equal((await createSocialHandler({env:{ARCADE_SOCIAL_ENABLED:'false'},fetchImpl})(request())).status,503);
+ assert.equal(calls,0);
 });
