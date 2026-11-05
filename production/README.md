@@ -1,3 +1,9 @@
+# Current production — TREE FORCE scoped payment API, 2026-11-05
+
+Locked deploy `6aec99bf240f589972b4b367`, source `bf4537220bb9a9b096cfaab9598fa2cd13556db9`, enables 20,000 TREE continues through only the namespaced `treeforce89-dev` handler. All other 42 function records, 293 static files, five schedules, runtime and environment records were preserved; no migrations were applied. The complete current release inventory is `production/treeforce89-scoped-api-manifest.json`. See `docs/treeforce89-scoped-api.md` for the 52-test, PostgreSQL and hosted verification results and real-holder/payment test limitation. The snapshot builder and older manifests below are historical; do not use them as a replacement for the current live inventory.
+
+---
+
 # Current production — TREE FORCE navigation and gameplay HUD, 2026-10-31
 
 Deployment `6ae57caa6fee52d4fb3bfd18` was published at `2026-10-31T05:31:06.481Z` and is locked. Source is `1dce0e0d9b6ef112f3bbc92124022d5e16e5e836` on `feature/treeforce89-play-integration`. Neither main branch was changed or merged.

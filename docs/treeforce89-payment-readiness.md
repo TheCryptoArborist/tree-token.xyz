@@ -1,3 +1,5 @@
+> Historical readiness record. Resolved by scoped deployment `6aec99bf240f589972b4b367`; paid continues are now enabled. See `treeforce89-scoped-api.md`.
+
 # TREE FORCE paid-continue activation readiness — November 5, 2026
 
 The canonical game remains on locked deploy `6aec00c92d9060d410e986e0`. **Paid continues remain disabled.** No real payment was signed, submitted or charged.
