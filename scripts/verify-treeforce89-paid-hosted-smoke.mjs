@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import {randomBytes} from 'node:crypto';
 import {Ed25519Keypair} from '../netlify/preview-lib/treeforce89-source/node_modules/@mysten/sui/dist/keypairs/ed25519/keypair.mjs';
 const origin=process.argv[2]||'https://tree-token.xyz';
+const expectedPayments=process.argv[3]||'enabled';
+assert(['enabled','disabled'].includes(expectedPayments));
 assert(/^https:\/\/(?:tree-token\.xyz|[a-f0-9]{24}--tree-token\.netlify\.app|deploy-preview-70--tree-token\.netlify\.app)$/.test(origin));
 const native=origin!=='https://deploy-preview-70--tree-token.netlify.app';
 const prefix=native?'/play/treeforce89/api/':'/.netlify/functions/';
@@ -47,10 +49,10 @@ const unknown=await post('tree-continue',{offerId:'a'.repeat(48),digest:'1'.repe
 assert.equal(unknown.status,401);assert.equal(unknown.body.code,'SESSION_REQUIRED');
 const status=await post(native?'status':'treeforce89-db-status');
 assert.equal(status.status,200);assert.equal(status.body.schemaReady,true);
-assert.equal(status.body.isolationVerified,true);assert.equal(status.body.paymentsEnabled,true);assert.equal(status.body.paymentSchemaReady,true);
+assert.equal(status.body.isolationVerified,true);assert.equal(status.body.paymentsEnabled,expectedPayments==='enabled');assert.equal(status.body.paymentSchemaReady,true);
 console.log(JSON.stringify({origin,challengeIssued:true,realSignatureVerified:true,
   liveMainnetNonholderDenied:true,replayRejected:true,forgedSignatureRejected:true,
   forgedEligibilityRejected:true,crossOriginRejected:true,logoutRequiresToken:true,
   absentTokenLogoutIdempotent:true,unauthenticatedRunRejected:true,
-  schemaReady:true,isolatedDatabase:true,paymentsEnabled:true,paymentSchemaReady:true,unauthenticatedPaymentsRejected:true,
+  schemaReady:true,isolatedDatabase:true,paymentsEnabled:status.body.paymentsEnabled,paymentSchemaReady:true,unauthenticatedPaymentsRejected:true,
   realHolderSessionTested:false,slushWalletTested:false}));

@@ -1,0 +1,61 @@
+name: TREE FORCE payment activation readiness
+on:
+  push:
+    branches: [feature/treeforce89-galaga-gameplay]
+    paths: [.github/workflows/treeforce89-payment-readiness.yml]
+permissions:
+  contents: read
+jobs:
+  payment-safety:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: disposable_test_only
+          POSTGRES_DB: treeforce89_paid_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      PGHOST: 127.0.0.1
+      PGPORT: 5432
+      PGUSER: postgres
+      PGPASSWORD: disposable_test_only
+      PGDATABASE: treeforce89_paid_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: npm ci --prefix netlify/preview-lib/treeforce89-source --ignore-scripts --no-audit --no-fund
+      - run: npm ci --prefix tests/treeforce89-ui --ignore-scripts --no-audit --no-fund
+      - run: node --test tests/treeforce89-paid-client.test.mjs tests/treeforce89-continue-dialog.test.mjs tests/treeforce89-receipt-discovery.test.mjs tests/treeforce89-checkout-interaction.test.mjs tests/treeforce89-home-wallet.test.mjs tests/treeforce89-gameplay.test.mjs
+      - run: node scripts/verify-treeforce89-paid-database.mjs
+      - name: Verify hosted wallet and disabled-payment boundaries
+        run: node scripts/verify-treeforce89-paid-hosted-smoke.mjs https://tree-token.xyz disabled
+      - name: Capture current protected production baseline
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: >-
+          node scripts/lib/treeforce89-production-inventory.mjs capture
+          --expected-deploy 6aec00c92d9060d410e986e0
+          --baseline .netlify/treeforce89-payment-baseline.json
+          --report .netlify/treeforce89-payment-readiness.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: treeforce89-payment-readiness
+          path: |
+            .netlify/treeforce89-payment-baseline.json
+            .netlify/treeforce89-payment-baseline.json.sha256
+            .netlify/treeforce89-payment-readiness.json
+            .netlify/treeforce89-paid-database-results.json
+          if-no-files-found: error
+          retention-days: 1
