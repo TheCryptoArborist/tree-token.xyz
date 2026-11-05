@@ -1,5 +1,5 @@
 name: TREE FORCE preserved release preflight
-# Bounded, hash-checked artwork downloads; preserve explicit and inherited settings.
+# Verify each immutable candidate with its own matching request origin.
 
 on:
   push:

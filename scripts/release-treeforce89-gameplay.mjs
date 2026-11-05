@@ -65,11 +65,11 @@ async function publicChecks(origin,input){
    verifyServedHTML(readFileSync(f.source,'utf8'),served.toString('utf8'),await current.text());
   }else assert.equal(hash('sha1',served),f.sha,'Served bytes changed: '+f.path);
  }
- const status=await fetch(origin+'/play/treeforce89/api/status',{method:'POST',headers:{Origin:'https://tree-token.xyz'},signal:AbortSignal.timeout(45000)});
+ const status=await fetch(origin+'/play/treeforce89/api/status',{method:'POST',headers:{Origin:origin},signal:AbortSignal.timeout(45000)});
  assert.equal(status.status,200);const body=await status.json();
  assert.equal(body.schemaReady,true);assert.equal(body.isolationVerified,true);
  assert.equal(body.paymentSchemaReady,true);assert.equal(body.paymentsEnabled,false);
- const denied=await fetch(origin+'/play/treeforce89/api/tree-run',{method:'POST',headers:{Origin:'https://tree-token.xyz','Content-Type':'application/json'},body:'{}',signal:AbortSignal.timeout(45000)});
+ const denied=await fetch(origin+'/play/treeforce89/api/tree-run',{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body:'{}',signal:AbortSignal.timeout(45000)});
  assert.equal(denied.status,401,'Unauthenticated game access must remain denied');
  return {publicAssetsByteExact:true,htmlMatchesWithExistingHostingSnippet:true,schemaReady:true,isolationVerified:true,paymentSchemaReady:true,paymentsEnabled:false,unauthenticatedRunDenied:true};
 }
