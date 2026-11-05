@@ -1,4 +1,4 @@
-# Deadfall Run — Handling Lab 0.5.0
+# Deadfall Run — Handling Lab 0.5.1
 
 A downloadable development build for TREE Arcade. This handling lab has not been published to the live arcade.
 
@@ -6,10 +6,16 @@ A downloadable development build for TREE Arcade. This handling lab has not been
 
 1. Extract the complete ZIP into a new folder.
 2. Open **handling.html** in desktop Chrome, Edge, or Firefox with WebGL available. On Windows, **START_HANDLING_TEST.bat** opens the same file.
-3. Choose a test and click **START HANDLING TEST**. Start with **20 mph stop**.
+3. Choose a test and click **START HANDLING TEST**. For this trailer fix, start with **Control the grade** and make brief left/right corrections.
 4. Use **RETRY** or **R** for the identical starting setup, or **TEST MENU** to choose another exercise.
 
 The original Stormbreak Pass descent is also included: open **index.html** or **START_GAME.bat**. Its menu links to the handling lab. No installation, web server, account, wallet, or network connection is required to drive. The Back to Arcade link opens https://tree-token.xyz/play/.
+
+## Check the trailer fix
+
+Choose **Control the grade**, use SPACE to keep roughly 15–18 mph, and make a brief left correction followed by a right correction. Press **C** three times for the overhead view. The trailer should turn more gradually than the cab; its rear wheels should roll along their heading instead of sweeping sideways. Stop with S and keep holding it: the trailer should stay put. Then use **Keep it in line** to check inside tracking through the S bends.
+
+The rear overhang can make a small outward sweep, and the trailer eventually follows the turn. It should not move sideways in lockstep with the cab.
 
 ## Four repeatable exercises
 
@@ -43,7 +49,7 @@ The reverse test starts with the overhead camera. Make small corrections and pul
 
 The lab has a separate loaded-rig tune: a 20°/second steering-rate limit, greater low-speed steering travel, gentler acceleration, slower reverse, lower braking acceleration, and gradual fade as service brakes heat. Service braking suppresses throttle thrust in the lab. The original Easy/Standard/Heavy descent presets retain their prior tuning.
 
-The fifth wheel and kingpin use the same exact transformed-position constraint as build 0.4.1. Simulation uses a fixed 120 Hz step. The road, proving ground, signs, truck, logs, and textures are original procedural assets; Three.js is bundled with its MIT license.
+Build 0.5.1 fixes trailer steering caused by body lean. The rear tandem now follows its heading, and the trailer follows signed hitch travel while its rear wheels track forward through a turn. Both directions and reversing retain the exact fifth-wheel/kingpin connection. Simulation uses a fixed 120 Hz step. The road, proving ground, signs, truck, logs, and textures are original procedural assets; Three.js is bundled with its MIT license.
 
 ## What this build does and does not establish
 
@@ -53,9 +59,9 @@ The uploaded Hard Truck game was used as a reference for configurable steering a
 
 ## Verification
 
-Run **npm test** in this directory (or run the three scripts in tests/ individually). No dependencies need installing. The 44 checks use real Three.js geometry and simulation with stubbed browser/renderer interfaces. They do not establish GPU rendering, native input feel, or frame rate.
+Run **npm test** in this directory (or run the four scripts in tests/ individually). No dependencies need installing. The 50 checks use real Three.js geometry and simulation with stubbed browser/renderer interfaces. They do not establish GPU rendering, native input feel, or frame rate.
 
-The cloud-browser menu and unsupported-graphics fallback were inspected. That browser reports GL_VENDOR and GL_RENDERER as Disabled and cannot create a WebGL context. Actual driving and visual appearance still require a desktop playtest. If you see an error, include the message, browser/device, chosen test, and a screenshot or short recording.
+The previous build’s cloud-browser menu and unsupported-graphics fallback were inspected; this patch has been checked with automated trajectories and scene transforms. That browser reports GL_VENDOR and GL_RENDERER as Disabled and cannot create a WebGL context. Actual driving and visual appearance still require a desktop playtest. If you see an error, include the message, browser/device, chosen test, and a screenshot or short recording.
 
 ## Files
 

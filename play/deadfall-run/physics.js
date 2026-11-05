@@ -6,6 +6,7 @@
     const KINGPIN = new THREE.Vector3(0, 1.42, -4.85);
     const AXLE = new THREE.Vector3(0, 0, 2.9);
     const HITCH_TO_AXLE = AXLE.z - KINGPIN.z;
+    const TRACTOR_REAR_AXLE = new THREE.Vector3(0, 0, (.88 + 2.22) / 2);
     const presets = {
       easy: { steerLow: 30, steerHigh: 14, response: 6.5, throttle: 5.2, brake: 10.8, engine: 4.2, camera: 4.2 },
       standard: { steerLow: 26, steerHigh: 11, response: 5.4, throttle: 4.6, brake: 9.7, engine: 3.6, camera: 3.8 },
@@ -20,7 +21,8 @@
       const f = R.frame(d);
       const state = { pos: f.p.clone(), yaw: f.yaw, pitch: Math.atan2(f.f.y, Math.hypot(f.f.x, f.f.z)),
         roll: 0, speed: 0, steer: 0, throttle: 0, brakeHeat: 0, damage: 0, logs: 5, progress: d,
-        trailerYaw: f.yaw, trailerPitch: 0, trailerAxle: new THREE.Vector3(), hitch: new THREE.Vector3(),
+        trailerYaw: f.yaw, trailerPitch: 0, trailerReach: HITCH_TO_AXLE, trailerSide: 0,
+        trailerAxle: new THREE.Vector3(), hitch: new THREE.Vector3(),
         sway: 0, stressTime: 0, elapsed: 0, offroad: false, collisions: new Set(), reverse: false,
         articulation: 0, wheelRotation: 0 };
       state.pos.y = R.surfaceHeight(state.pos.x, state.pos.z);
@@ -35,17 +37,34 @@
     function couple(state, tractor, trailer, initialize = false) {
       poseTractor(state, tractor);
       const hitch = tractor.localToWorld(HITCH.clone());
-      if (initialize) state.trailerYaw = state.yaw;
-      else {
-        const dx = hitch.x - state.trailerAxle.x, dz = hitch.z - state.trailerAxle.z;
-        if (Math.hypot(dx, dz) > .01) state.trailerYaw = Math.atan2(dx, -dz);
+      const roll = state.roll * .35 + state.sway * .018;
+      // Horizontal kingpin-to-axle offset in the trailer's heading frame.
+      // Lean offsets the pin sideways above the tyres. That is an offset, NOT
+      // fresh steering on every update (the old axle-to-pin atan2 accumulated it).
+      const side = -KINGPIN.y * Math.sin(roll), height = KINGPIN.y * Math.cos(roll);
+      const previousYaw = initialize ? state.yaw : state.trailerYaw;
+      const dx = hitch.x - state.hitch.x, dz = hitch.z - state.hitch.z;
+      const lateral = dx * Math.cos(previousYaw) + dz * Math.sin(previousYaw);
+      const longitudinal = dx * Math.sin(previousYaw) - dz * Math.cos(previousYaw);
+      let yaw = previousYaw, pitch = state.trailerPitch, reach = HITCH_TO_AXLE;
+      // Solve pitch/heading together. The axle displacement has zero sideways
+      // component at the midpoint heading, in forward AND reverse. Using signed
+      // hitch travel also makes repeated pose updates without travel idempotent.
+      for (let i = 0; i < 8; i++) {
+        reach = HITCH_TO_AXLE * Math.cos(pitch) - height * Math.sin(pitch);
+        yaw = initialize ? previousYaw : angle(previousYaw + 2 * Math.atan2(
+          lateral + state.trailerSide - side, longitudinal + state.trailerReach + reach));
+        const x = hitch.x - reach * Math.sin(yaw) - side * Math.cos(yaw);
+        const z = hitch.z + reach * Math.cos(yaw) - side * Math.sin(yaw);
+        const rise = hitch.y - R.surfaceHeight(x, z);
+        pitch = Math.asin(R.clamp(rise / Math.hypot(HITCH_TO_AXLE, height), -.99, .99))
+          - Math.atan2(height, HITCH_TO_AXLE);
       }
-      const f = new THREE.Vector3(Math.sin(state.trailerYaw), 0, -Math.cos(state.trailerYaw));
-      const axle = hitch.clone().addScaledVector(f, -HITCH_TO_AXLE);
-      const axleGround = R.surfaceHeight(axle.x, axle.z);
-      state.trailerPitch = Math.atan2(hitch.y - (axleGround + KINGPIN.y), HITCH_TO_AXLE);
+      reach = HITCH_TO_AXLE * Math.cos(pitch) - height * Math.sin(pitch);
+      state.trailerYaw = yaw; state.trailerPitch = pitch;
+      state.trailerReach = reach; state.trailerSide = side;
       trailer.rotation.order = "YXZ";
-      trailer.rotation.set(state.trailerPitch, -state.trailerYaw, state.roll * .35 + state.sway * .018);
+      trailer.rotation.set(pitch, -yaw, roll);
       // The *transformed* kingpin and fifth wheel coincide, including pitch and roll.
       trailer.position.copy(hitch).sub(KINGPIN.clone().applyQuaternion(trailer.quaternion));
       trailer.updateMatrixWorld(true);
@@ -81,15 +100,23 @@
       next = Math.sign(next) * Math.max(0, Math.abs(next) - resist);
       if (input.brake && Math.abs(state.speed) < .08 && brakeForce > Math.abs(gravity + thrust)) next = 0;
       state.speed = R.clamp(next, -(tune.reverseMax || 3.2), 27);
+      // Keep the established steering tune, but move about the non-steering
+      // rear tandem, not the cab's model origin. Its wheels must not crab sideways.
       const yawRate = state.speed / 5.25 * Math.tan(state.steer) * .64;
-      state.yaw = angle(state.yaw + yawRate * dt);
+      const yawTravel = yawRate * dt, midYaw = state.yaw + yawTravel / 2;
+      const rearOffset = TRACTOR_REAR_AXLE.z * Math.cos(state.pitch);
+      state.pos.addScaledVector(f, -rearOffset);
+      const sinc = Math.abs(yawTravel) < 1e-8 ? 1 : Math.sin(yawTravel / 2) / (yawTravel / 2);
+      state.pos.x += Math.sin(midYaw) * state.speed * dt * sinc;
+      state.pos.z -= Math.cos(midYaw) * state.speed * dt * sinc;
+      state.yaw = angle(state.yaw + yawTravel);
+      state.pitch = THREE.MathUtils.damp(state.pitch, Math.atan(grade), 8, dt);
       f.set(Math.sin(state.yaw), 0, -Math.cos(state.yaw));
-      state.pos.addScaledVector(f, state.speed * dt);
+      state.pos.addScaledVector(f, TRACTOR_REAR_AXLE.z * Math.cos(state.pitch));
       const nearest = R.nearest(state.pos);
       state.progress = R.clamp(nearest.d, 0, R.LENGTH);
       state.offroad = nearest.dist > R.WIDTH * .53;
       state.pos.y = R.surfaceHeight(state.pos.x, state.pos.z);
-      state.pitch = THREE.MathUtils.damp(state.pitch, Math.atan(grade), 8, dt);
       state.roll = THREE.MathUtils.damp(state.roll, R.clamp(yawRate * state.speed * .013, -.11, .11), 5, dt);
       const targetSway = R.clamp(yawRate * state.speed * .14 + (input.brake ? Math.abs(state.speed) * .013 : 0), -1.5, 1.5);
       state.sway = THREE.MathUtils.damp(state.sway, targetSway, 2.3, dt);
@@ -106,7 +133,7 @@
       }
       return { lost, nearest };
     }
-    return { HITCH, KINGPIN, AXLE, HITCH_TO_AXLE, presets, angle, createState, poseTractor, couple, step, createModel };
+    return { HITCH, KINGPIN, AXLE, HITCH_TO_AXLE, TRACTOR_REAR_AXLE, presets, angle, createState, poseTractor, couple, step, createModel };
   }
   const api = createModel(typeof module !== "undefined" && module.exports ? require("./route.js") : root.DeadfallRoute);
   if (typeof module !== "undefined" && module.exports) module.exports = api;

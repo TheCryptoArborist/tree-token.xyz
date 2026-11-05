@@ -79,14 +79,17 @@ test("both bodies can clear the S-turn cone gates without losing the load", () =
 test("reverse docking is achievable from the offset angled start", () => {
   const r = drive("reverse", ({ state: s, trailer }) => {
     const at = R.nearest(trailer.position);
-    const desiredTrailerYaw = R.clamp(at.lane * .025, -.15, .15);
-    const desiredYaw = s.trailerYaw + R.clamp(.4 * P.angle(s.trailerYaw - desiredTrailerYaw), -.15, .15);
-    const yawRate = P.angle(desiredYaw - s.yaw) * .7;
+    // Correct the offset early, then unwind before entering the bay. The old
+    // low-gain fixture inadvertently relied on roll-induced trailer steering.
+    const desiredTrailerYaw = R.clamp(at.lane * .06, -.15, .15);
+    const desiredYaw = s.trailerYaw + R.clamp(.8 * P.angle(s.trailerYaw - desiredTrailerYaw), -.15, .15);
+    const yawRate = P.angle(desiredYaw - s.yaw) * 1.2;
     return { reverse: at.d > 125.8, brake: at.d <= 125.8,
       touchSteer: steering(s, Math.atan(yawRate * 5.25 / Math.min(-.6, s.speed) / .64)) };
   });
   assert(r.session.success, JSON.stringify({ reason: r.session.reason, d: r.session.bayDistance, x: r.session.bayOffset, angle: r.session.bayAngle, articulation: r.state.articulation, cones: r.session.coneHits.size }));
   assert(r.session.stopHold >= 2); assert(r.session.maxGap < 1e-9); assert.equal(r.state.logs, 5);
+  console.log(`  Reverse dock: ${r.session.time.toFixed(2)} s; offset ${r.session.bayOffset.toFixed(3)} m; heading ${r.session.bayAngle.toFixed(2)}°.`);
 });
 test("parking sideways, moving, or without brakes cannot pass docking", () => {
   for (const invalid of ["angle", "moving", "brake"]) {

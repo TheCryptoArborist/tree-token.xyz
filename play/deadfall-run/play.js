@@ -1,4 +1,4 @@
-/* Deadfall Run: 3D field-test build 0.5.0. No remote requests or transactions. */
+/* Deadfall Run: 3D field-test build 0.5.1. No remote requests or transactions. */
 (function () {
   "use strict";
   try {
@@ -274,7 +274,7 @@
     });
     setQuality(1); reset(); updateCamera(1 / 60, true); world.update(state.pos, state.progress); renderer.render(scene, camera);
     ui.drive.disabled = false; ui.drive.textContent = L ? "START HANDLING TEST" : "BEGIN DESCENT";
-    $("bootStatus").textContent = `3D ready · ${L ? "Handling Lab" : "Stormbreak Pass"} · Build 0.5.0`;
+    $("bootStatus").textContent = `3D ready · ${L ? "Handling Lab" : "Stormbreak Pass"} · Build 0.5.1`;
     requestAnimationFrame(frame);
   } catch (error) {
     console.error(error); window.showBootError(error.message || "3D graphics could not start. Try a browser with hardware acceleration enabled.");
