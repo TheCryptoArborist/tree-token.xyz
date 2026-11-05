@@ -12,7 +12,7 @@ const root=resolve(import.meta.dirname,'..');
 const source=resolve(root,'.netlify/treeforce89-chapters-release-source');
 const stage=resolve(root,'.netlify/treeforce89-chapters-release');
 const base='/play/treeforce89/';
-const expectedProduction='6aeca3a49e359f82ebf586db';
+const expectedProduction='6aecab809924c531a486d91e';
 const approvedGameplayCommit=execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();
 const run=(command,args,cwd=root)=>execFileSync(command,args,{cwd,stdio:'inherit'});
 const sha=(algorithm,bytes)=>createHash(algorithm).update(bytes).digest('hex');
