@@ -208,7 +208,7 @@ Apache License
    limitations under the License.
 
 */
-//#region ../../../../tmp/arcade-nftree-vendor-build/node_modules/@wallet-standard/app/lib/esm/wallets.js
+//#region ../../../../tmp/arcade-signin-build/node_modules/@wallet-standard/app/lib/esm/wallets.js
 var e = function(e, t, n, r) {
 	if (n === "a" && !r) throw TypeError("Private accessor was defined without a getter");
 	if (typeof t == "function" ? e !== t || !r : !t.has(e)) throw TypeError("Cannot read private member from an object whose class did not declare it");
@@ -292,7 +292,7 @@ var m = class extends Event {
 };
 n = /* @__PURE__ */ new WeakMap();
 //#endregion
-//#region ../../../../tmp/tree-growth-wallet-FTPgGG/wallet-core.mjs
+//#region ../../../../tmp/tree-growth-wallet-9UpzsW/wallet-core.mjs
 function h(e) {
 	let t = "standard:connect", n = "sui:signPersonalMessage", r = /* @__PURE__ */ new Set(), i = /* @__PURE__ */ new Set(), a = null, o = null, s = 0, c = (e) => typeof e == "string" && /^0x[0-9a-f]{1,64}$/i.test(e) ? "0x" + e.slice(2).toLowerCase().padStart(64, "0") : "", l = (e) => Array.isArray(e) && e.some((e) => e === "sui:mainnet" || e === "sui"), u = (e, t) => !!c(e?.address) && (l(e?.chains) || !e?.chains?.length && l(t?.chains)), d = (e) => typeof e?.name == "string" && e.name.length > 0 && e.name.length <= 80 && typeof e.features?.[t]?.connect == "function" && typeof e.features?.[n]?.signPersonalMessage == "function" && (l(e.chains) || Array.from(e.accounts || []).some((t) => u(t, e)));
 	function f() {
@@ -340,7 +340,7 @@ function h(e) {
 		return typeof n == "function" && (o = n("change", (t) => {
 			if (!a || a.wallet !== e || !Object.hasOwn(t || {}, "accounts")) return;
 			let n = Array.from(t.accounts || []).find((t) => c(t?.address) === a.address && u(t, e));
-			n ? (s += 1, a.account = n, h()) : g();
+			n ? (a.account = n, h()) : g();
 		})), h(), m();
 	}
 	async function y(e) {

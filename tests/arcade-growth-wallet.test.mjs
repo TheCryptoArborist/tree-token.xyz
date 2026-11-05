@@ -46,6 +46,20 @@ await check('account changes during a signature discard the result', async () =>
   const pending = client.signPersonalMessage({ message: new Uint8Array([1]) });
   changeAccounts([]); resolveSignature({ signature: 'stale' }); await assert.rejects(pending, /changed/);
 });
+await check('same-account refreshes during signing keep one valid signature', async () => {
+  const { client, account, state, changeAccounts } = setup();
+  await client.connectWallet('Test Sui Wallet');
+  let resolveSignature;
+  state.signed = new Promise(resolve => { resolveSignature = resolve; });
+  const pending = client.signPersonalMessage({ message: new Uint8Array([1]) });
+  // Wallets may re-announce authorized accounts as the approval UI opens/closes.
+  changeAccounts([{ ...account }]);
+  changeAccounts([{ ...account }]);
+  resolveSignature({ signature: 'valid-same-account-signature' });
+  assert.equal((await pending).signature, 'valid-same-account-signature');
+  assert.equal(state.signCalls.length, 1);
+  assert.equal(state.connectCalls.length, 1);
+});
 await check('silent restoration uses exact saved account and never signs', async () => {
   const { client, state } = setup(); const result = await client.restoreWallet({ id: 'Test Sui Wallet', address: address('1') });
   assert.equal(result.connected, true); assert.deepEqual(state.connectCalls, [{ silent: true }]); assert.equal(state.signCalls.length, 0);

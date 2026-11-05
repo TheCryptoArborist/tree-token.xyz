@@ -1183,6 +1183,27 @@ test('actual wallet connection and signature rejection leave no Daily Growth aut
   assert.equal(h.byId('sign-in').disabled, false);
 });
 
+test('same-account wallet refreshes complete sign-in with one signature and no transaction', async (t) => {
+  const wallet = realWalletFixture();
+  const h = await harness(t, { wallet: wallet.client });
+  wallet.setSign(async () => {
+    wallet.changeAccount(ACCOUNT);
+    wallet.changeAccount(ACCOUNT);
+    return { signature: 'same-account-approved-signature' };
+  });
+  await h.connect();
+  await h.controller.signIn();
+  assert.equal(h.root.dataset.growthState, 'authenticated');
+  assert.equal(wallet.calls.filter(call => call.type === 'signature').length, 1);
+  assert.equal(wallet.calls.filter(call => call.type === 'connect').length, 1);
+  assert.equal(h.count('challenge'), 1);
+  assert.equal(h.count('session'), 1);
+  assert.equal(h.count('check-in'), 0);
+  await h.controller.refresh();
+  await h.controller.checkIn();
+  assert.equal(wallet.calls.filter(call => call.type === 'signature').length, 1);
+});
+
 test('actual wallet account invalidation discards an in-flight signature and later API progress', async (t) => {
   const wallet = realWalletFixture();
   const signature = deferred();
