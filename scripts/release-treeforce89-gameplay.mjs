@@ -45,12 +45,25 @@ export function reuseFunctions(functions){
  }
  return {functions:digests,functions_config:config};
 }
+export function verifyServedHTML(expected,served,baseline){
+ const pattern=/<script id="tree-arcade-arboretum-link">[\s\S]*?<\/script>/g;
+ const live=baseline.match(pattern)||[],actual=served.match(pattern)||[];
+ assert.equal(live.length,1,'Expected one existing hosting snippet');
+ same(actual,live,'Hosting-injected script changed');
+ assert.equal((expected.match(pattern)||[]).length,0);
+ const normalized=s=>s.replace(/>\s+</g,'><').trim();
+ assert.equal(normalized(served.replace(actual[0],'')),normalized(expected),'Served HTML differs beyond the existing hosting snippet');
+}
 async function publicChecks(origin,input){
  assert(/^https:\/\/(?:tree-token\.xyz|[a-f0-9]{24}--tree-token\.netlify\.app)$/.test(origin));
  for(const f of input.files){
   const r=await fetch(origin+f.path,{signal:AbortSignal.timeout(45000)});
   assert.equal(r.status,200,'Public asset unavailable: '+f.path);
-  assert.equal(hash('sha1',Buffer.from(await r.arrayBuffer())),f.sha,'Served bytes changed: '+f.path);
+  const served=Buffer.from(await r.arrayBuffer());
+  if(f.path.endsWith('/index.html')){
+   const current=await fetch('https://tree-token.xyz'+f.path,{signal:AbortSignal.timeout(45000)});assert.equal(current.status,200);
+   verifyServedHTML(readFileSync(f.source,'utf8'),served.toString('utf8'),await current.text());
+  }else assert.equal(hash('sha1',served),f.sha,'Served bytes changed: '+f.path);
  }
  const status=await fetch(origin+'/play/treeforce89/api/status',{method:'POST',headers:{Origin:'https://tree-token.xyz'},signal:AbortSignal.timeout(45000)});
  assert.equal(status.status,200);const body=await status.json();
@@ -58,7 +71,7 @@ async function publicChecks(origin,input){
  assert.equal(body.paymentSchemaReady,true);assert.equal(body.paymentsEnabled,false);
  const denied=await fetch(origin+'/play/treeforce89/api/tree-run',{method:'POST',headers:{Origin:'https://tree-token.xyz','Content-Type':'application/json'},body:'{}',signal:AbortSignal.timeout(45000)});
  assert.equal(denied.status,401,'Unauthenticated game access must remain denied');
- return {all13PublicFilesMatch:true,schemaReady:true,isolationVerified:true,paymentSchemaReady:true,paymentsEnabled:false,unauthenticatedRunDenied:true};
+ return {publicAssetsByteExact:true,htmlMatchesWithExistingHostingSnippet:true,schemaReady:true,isolationVerified:true,paymentSchemaReady:true,paymentsEnabled:false,unauthenticatedRunDenied:true};
 }
 export async function main(mode=process.argv[2]){
  assert(['candidate','published'].includes(mode));
@@ -138,4 +151,3 @@ export async function main(mode=process.argv[2]){
  console.log(JSON.stringify({...report,files:undefined,environment:undefined}));
 }
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(e=>{console.error(e.message);process.exitCode=1;});
-

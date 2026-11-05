@@ -4,8 +4,17 @@ import {mkdtempSync,writeFileSync,rmSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {createHash} from 'node:crypto';
-import {BASELINE,planFiles,reuseFunctions} from '../scripts/release-treeforce89-gameplay.mjs';
+import {BASELINE,planFiles,reuseFunctions,verifyServedHTML} from '../scripts/release-treeforce89-gameplay.mjs';
 import {validateFunctions} from '../scripts/lib/treeforce89-production-inventory.mjs';
+
+test('HTML permits only the exact hosting snippet already on production',()=>{
+ const expected='<html><body><div id="root"></div></body></html>';
+ const snippet='<script id="tree-arcade-arboretum-link">known();</script>';
+ const actual=expected.replace('</body>',snippet+'</body>');
+ verifyServedHTML(expected,actual,actual);
+ assert.throws(()=>verifyServedHTML(expected,actual.replace('known();','unknown();'),actual));
+ assert.throws(()=>verifyServedHTML(expected,actual.replace('</body>','<script>other();</script></body>'),actual));
+});
 
 test('frontend overlay preserves unrelated and protected static paths and rejects changed reviewed bytes',()=>{
  const dir=mkdtempSync(join(tmpdir(),'treeforce-release-'));
