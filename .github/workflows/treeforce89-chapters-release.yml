@@ -48,6 +48,8 @@ jobs:
           --baseline .netlify/treeforce89-chapters-baseline.json
           --report .netlify/treeforce89-chapters-inventory-report.json
       - name: Compare newer production against the prior verified TREE FORCE release
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
         run: node scripts/verify-treeforce89-chapters-baseline.mjs
       - name: Restore pinned test dependencies
         run: |
