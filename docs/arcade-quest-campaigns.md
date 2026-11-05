@@ -10,7 +10,7 @@ The three-question educational quiz is graded server-side. Wrong answers do not 
 
 A profile badge is a saved campaign receipt, separate from the existing Legends of TREE attendance awards and game Passport rules. Historical claims remain recorded even if later evidence changes. Team TREE is visibly unavailable until X account verification and official Telegram bot/group configuration exist. There are no simulation controls or invented membership checks in the development branch.
 
-## Database installed, feature inactive
+## Database installed, handlers live
 
 The connected Daily Growth database was identified by its existing private tables, session verifier and verified-game evidence column in Supabase project `lehswszuekjqottolmsf`. On 2026-11-05 UTC, both additive migrations were installed successfully:
 
@@ -23,17 +23,17 @@ Security advisors report only the expected informational “RLS enabled, no poli
 
 `arcade-social` and `arcade-campaign` are independent new function packages. The approved release enables these two handlers by default; an explicit flag override other than true disables the relevant handler. No activation flags are added to the site environment, so all 50 existing environment records remain exact. Existing 41 backend sources, schedules, wallet adapter, lockfile and production manifest are unmodified.
 
-## Current release and deployment limit
+## Published release
 
-The live published deploy was re-read as `6ae971bd73f65c3f86a9e887`, locked and ready, titled “Knowledge Trial metadata 3e02cc3 preserved backend”. It has 41 function records and five scheduled jobs. The older Legends publication in this branch's production notes is historical; do not publish its archived root build or replace current production with this branch snapshot.
+Published and locked deploy `6aebe195dff096f7428fe1b0` at `2026-11-05T01:56:59.773Z`, application source `b7c1849aeac0cdb4c75b9325ab0bf5fa6cd23e7e`. Canonical URL: https://tree-token.xyz/play/. Open Arcade Missions, then Campaigns or Community.
 
-A release must capture the actual current static inventory, exact 41 function packages/provider/runtime records, all five schedules and current environment bindings. Overlay only reviewed Arcade HTML/CSS/controllers and add the two new, separately packaged functions. Preserve all unrelated game files and public-discovery cleanup. Package/upload with authenticated Netlify API/CLI access; do not trigger an ordinary dashboard build.
+The actual baseline was `6ae971bd73f65c3f86a9e887`. All 41 original complete provider/function records and ZIP hashes, five schedules, protected runtime fields and 50 environment records remained exact. Two independent functions were added. All 288 previous paths remain: only three changed and two modules were added, giving 290 paths. No ordinary dashboard build was used. The private Sites preview is a separate synthetic review surface.
 
-The original execution environment lacked authenticated Netlify CLI access. The user subsequently approved the official CLI authorization flow, resolving that access blocker. Publication now uses the authenticated preservation helper. The live Arcade remains on the existing release. The existing private Sites preview remains a separate synthetic review surface, not the production backend.
+Exact new ZIPs are archived under `production/arcade-quest-functions/`; current-release.json contains the complete published function records and static inventory. Preserve the current 43 functions on future releases, including these two new handlers. The archival root function manifest is historical.
 
 ## Validation
 
-88 Node checks passed across existing Daily Growth, wallet, growth backend and social missions plus the new campaign handler/controller. The SQL migration passed isolated PostgreSQL checks for session/origin enforcement, role isolation, immutable enrollment, quiz pass idempotency, attempt limits, completed-result filtering, pending/approved proof, one-time badge claims, cross-wallet isolation and unchanged attendance awards.
+90 Node checks passed across existing Daily Growth, wallet, growth backend and social missions plus the new campaign handler/controller. The SQL migration passed isolated PostgreSQL checks for session/origin enforcement, role isolation, immutable enrollment, quiz pass idempotency, attempt limits, completed-result filtering, pending/approved proof, one-time badge claims, cross-wallet isolation and unchanged attendance awards.
 
 Commands:
 
@@ -43,18 +43,17 @@ ARCADE_DOM_TEST_DEPS=/tmp/arcade-campaign-tools node --test tests/arcade-campaig
 ARCADE_DOM_TEST_DEPS=/tmp/arcade-campaign-tools node tests/arcade-campaign-database.mjs
 ```
 
-The prior synthetic campaign preview was checked through the browser at desktop and narrow phone frame widths. This saved-backend increment has DOM and backend/SQL coverage; a real signed-in hosted end-to-end campaign is still required after deploying its functions. No production wallet signature or transaction was requested or performed.
+The prior synthetic campaign preview was checked through the browser at desktop and narrow phone frame widths. The canonical Campaigns UI and negative authentication gates passed after publication. A real signed-in hosted end-to-end campaign still requires a wallet test; it was not performed by the agent. No production wallet signature or transaction was requested or performed.
 
 MystenLabs/skills README was checked live. No Sui SDK/API or wallet-signing decision changed. Supabase's current changelog, database-function documentation, and the Netlify functions guidance were consulted for the new server routes. Existing pinned dependencies were retained.
 
 
 ## Prepared function packages
 
-`node scripts/package-arcade-quests.mjs /tmp/arcade-quest-build/node_modules` packages only the two new quest handlers with the pinned lockfile dependencies. The ZIPs are checked for integrity, traversal and symlinks, and smoke-tested through their extracted handler modules. An explicit disabling override returns 503/no-store, and an unauthenticated request to an enabled handler returns 401 before any API call. `docs/arcade-quest-release-preparation.json` records the exact source inputs, overlay digests and new package hashes. Existing production packages will be reused from the actual live deployment, not replaced by source-built versions.
+`node scripts/package-arcade-quests.mjs /tmp/arcade-quest-build/node_modules` packages only the two new quest handlers with the pinned lockfile dependencies. The ZIPs are checked for integrity, traversal and symlinks, and smoke-tested through their extracted handler modules. An explicit disabling override returns 503/no-store, and an unauthenticated request to an enabled handler returns 401 before any API call. `docs/arcade-quest-release-preparation.json` records the exact source inputs, overlay digests and new package hashes. All 41 existing production packages were reused byte for byte from the actual live deployment.
 
-The archival `verify:backend-source` command was also attempted after installing its pinned tools in an isolated dependency directory. It rejects the additive function inventory against its older manifest, so it is not a passing current-production preservation check. Its temporary output was discarded. The actual release must instead compare all existing 41 published records/packages and five jobs to the live baseline before and after creating a candidate.
+The archival `verify:backend-source` command was also attempted after installing its pinned tools in an isolated dependency directory. It rejects the additive function inventory against its older manifest, so it is not a passing current-production preservation check. Its temporary output was discarded. The release helper compared all 41 existing published records/packages and five jobs to the live baseline both before and after publication.
 
-Netlify CLI is installed in the temporary tooling directory. An official browser-authorization ticket has been requested to establish the missing deployment access. No access token was requested in chat or embedded in the source, no site was linked, no feature flag changed, and no candidate or production release was created during this preparation.
-
+Official Netlify CLI authorization succeeded. Publication used the authenticated preservation helper, with no access token embedded in source or printed in chat. No new environment flags remain.
 
 The first prepared candidate `6aebe0959784934882b1fa78` requested all original function packages and was stopped before upload/publication. Every original archive has since been located with its exact production SHA256. Two temporary site activation flags were removed before preparing the replacement so the original environment fingerprint can remain exact. The replacement packages enable only their own new handlers. No original function is rebuilt for the release.

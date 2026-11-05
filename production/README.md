@@ -1,4 +1,18 @@
-# Current production — Legends of TREE badge collection, 2026-11-02 UTC
+# Current production — Arcade social quests and campaigns, 2026-11-05 UTC
+
+Published and locked deploy `6aebe195dff096f7428fe1b0` at `2026-11-05T01:56:59.773Z`, application source `b7c1849aeac0cdb4c75b9325ab0bf5fa6cd23e7e`. Live at https://tree-token.xyz/play/; open Arcade Missions, then Campaigns or Community.
+
+First Round saves enrollment and verifies four tasks: check-in, TREE quiz, completed eligible game, and approved gameplay share. Its reward is a once-per-wallet profile campaign badge. Community supports reviewed score sharing, friend challenges and saved weekly votes. X/Telegram membership quests remain unavailable until real verification is configured. No token payout or NFT mint is included.
+
+The actual baseline was `6ae971bd73f65c3f86a9e887`. All 41 original complete function/provider records and original package hashes, five schedules, protected runtime settings and all 50 environment entries remain exact. Two independent packages were added: current total **43 functions**. All original 288 static paths remain; three were changed and two new modules added, giving **290 paths**, with 285 original paths exact. No standard dashboard build was used.
+
+`current-release.json` and `arcade-quest-release.json` record the full new inventory/runtime. The two exact new ZIPs are in `arcade-quest-functions/`; retain these alongside the 41 existing original archives for future releases. `arcade-quest-baseline.json` contains sanitized metadata and environment fingerprints only. Never expose secret values. Current production records supersede historical archive manifests.
+
+90 Node checks and isolated PostgreSQL checks passed. Hosted database permission checks, candidate and canonical invalid-session gates, exact static module hashes and canonical Campaigns UI passed. No real wallet sign-in, authenticated campaign completion or user write was performed; a real wallet end-to-end test and canonical phone visual check remain. The private Sites preview is a separate synthetic review surface. See `../docs/arcade-quest-campaigns.md` and `../docs/review/arcade-quests/tree-arcade-quests-live.png`.
+
+---
+
+# Previous production — Legends of TREE badge collection, 2026-11-02 UTC
 
 Published and locked deploy `6ae8112dce29c5db8b725ff0` at `2026-11-02T04:29:52.370Z`, from source commit `9c00bf6ae42d2ab6c2a78802cdfb4df1c42f795e`, tree `d855ed063b7ed2bb2383f299a6c1c6b5440f10ec`, on `feature/arcade-growth-collection-20261102`. Live at https://tree-token.xyz/play/.
 
