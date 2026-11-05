@@ -1,9 +1,9 @@
 {
-  "id": "6aebe7578c57bc8e8c7e1b53",
+  "id": "6aebec00ada2550dc6f59eee",
   "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
-  "baseline": "6aebe195dff096f7428fe1b0",
-  "sourceCommit": "afc8661e89728b64004325e0c8a0213a6adbd892",
-  "publishedAt": "2026-11-05T02:20:24.435Z",
+  "baseline": "6aebe7578c57bc8e8c7e1b53",
+  "sourceCommit": "4effd89502ee8f6215cbbf942a71436f54539ec7",
+  "publishedAt": "2026-11-05T02:39:51.291Z",
   "locked": true,
   "files": 290,
   "filesBySha1": {
@@ -242,7 +242,7 @@
     "/assets/arcade/nftree-wallet-mint.js": "8c5099377ea0c79aa5fd9b4f1e98032a9b270088",
     "/scripts/arcade-nftree-access-core.mjs": "13956f06548845efb3b7c52150994bf33a0add64",
     "/scripts/arcade-nftree-access.js": "113fbd12943990895beac27f157c587be750754b",
-    "/assets/arcade/arcade-growth-wallet.js": "0c1260a071839829dc8e32ce822e228d28af10d3",
+    "/assets/arcade/arcade-growth-wallet.js": "e987f3f338c6470575d17eb6daa4e31fe86d5a70",
     "/scripts/arcade-daily-growth.js": "7eb4c8be3fa831e5b943d8e33b9d937539226eae",
     "/play/treeforce89/assets/arcade-deuxdoox.js": "fbe89196276d0b7cb0d17eb4441a0e6efa188f08",
     "/play/treeforce89/assets/graphql-ctywyhxq.js": "c024fd2ec1c91212a4a41b4c238384d058f3e839",
@@ -300,14 +300,9 @@
   },
   "overlay": [
     {
-      "path": "/play/index.html",
-      "sha": "778d4c867af5b1041822e6040195b7308837eee5",
-      "size": 51309
-    },
-    {
-      "path": "/styles/tree-arcade-suite.css",
-      "sha": "0051cd0d7836c16345312d3d40d73e71df3749fc",
-      "size": 93152
+      "path": "/assets/arcade/arcade-growth-wallet.js",
+      "sha": "e987f3f338c6470575d17eb6daa4e31fe86d5a70",
+      "size": 18993
     }
   ],
   "functionsPreserved": 43,
@@ -1973,40 +1968,23 @@
     "sharedRecordCount": 0
   },
   "url": "https://tree-token.xyz/play/",
-  "verifiedAt": "2026-11-05T02:21:54.187190+00:00",
-  "sourceTree": "0e110947e138e5cef25e5dfb6be53c70044f101e",
+  "verifiedAt": "2026-11-05T02:41:01.073446+00:00",
+  "sourceTree": "dc08a61e113413e5d688f39962c107d3233b4f7d",
   "sourceBranch": "feature/arcade-social-missions-20261104",
   "changedExistingPaths": [
-    "/play/index.html",
-    "/styles/tree-arcade-suite.css"
+    "/assets/arcade/arcade-growth-wallet.js"
   ],
-  "preservedStaticFiles": 288,
+  "preservedStaticFiles": 289,
   "newPaths": [],
   "completeFunctionRecordsIdenticalToPrevious": true,
-  "functionPreservationBasis": "All 43 complete published function/provider records and package digests are identical to baseline; original archives reused without rebuilding.",
-  "candidateUrl": "https://6aebe7578c57bc8e8c7e1b53--tree-token.netlify.app/play/",
+  "candidateUrl": "https://6aebec00ada2550dc6f59eee--tree-token.netlify.app/play/",
   "verification": {
-    "uiTestsPassed": 57,
-    "uniqueHtmlIds": true,
-    "allArtworkInPublishedInventory": true,
-    "canonicalPartnerLinks": [
-      "https://x.com/suidexHQ",
-      "https://x.com/kelpiedotsui"
-    ],
-    "canonicalNoHorizontalOverflow": true,
-    "signedOutCommunityHeight": {
-      "before": 1209,
-      "after": 343
-    },
-    "signedOutCampaignHeight": {
-      "before": 1851,
-      "after": 318
-    },
-    "cardExpansion": "passed",
-    "campaignQuizNavigation": "passed",
-    "dailyBadgeSidebarRetained": true,
+    "walletBehaviorChecksPassed": 11,
+    "uiChecksPassed": 57,
+    "canonicalBundleSha256": "1fc7b183480a6e3c558001df23298354024b5fc4341a3a4f4fb465a434045708",
+    "canonicalBundleMatchesTestedSource": true,
+    "sameAccountRefreshSignatureCount": 1,
     "realWalletEndToEndPerformed": false,
-    "canonicalPhoneVisualPerformed": false,
-    "followVerificationConfigured": false
+    "reportedUserPromptSequenceObserved": false
   }
 }

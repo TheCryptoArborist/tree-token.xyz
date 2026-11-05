@@ -1,0 +1,33 @@
+{
+  "sourceCommit": "4effd89502ee8f6215cbbf942a71436f54539ec7",
+  "baseline": "6aebe7578c57bc8e8c7e1b53",
+  "candidate": "6aebec00ada2550dc6f59eee",
+  "reproducedBeforeFix": {
+    "event": "Two accounts-change notifications carrying the unchanged authorized address during pending personal-message signing",
+    "result": "The wallet changed during verification. Please connect again."
+  },
+  "walletChecksPassed": 11,
+  "uiChecksPassed": 57,
+  "realAdapterIntegration": {
+    "connectionCalls": 1,
+    "personalMessageSignatures": 1,
+    "serverChallenges": 1,
+    "serverSessions": 1,
+    "sameAccountEventsDuringSigning": 2,
+    "extraSignaturesAfterRefreshAndCheckIn": 0
+  },
+  "actualAccountSwitchDiscarded": true,
+  "disconnectAndWalletRemovalStillInvalidate": true,
+  "transactionSubmissionMethod": "not called; test stub fails on invocation",
+  "bundleExecutableDelta": "Remove generation increment only for same-authorized-address refresh",
+  "candidateBundleSha256": "1fc7b183480a6e3c558001df23298354024b5fc4341a3a4f4fb465a434045708",
+  "pinnedDependencyVersionsUnchanged": true,
+  "realUserWalletPromptsObserved": false,
+  "reportedSymptomCauseConfirmedForUser": false,
+  "publishedDeploy": "6aebec00ada2550dc6f59eee",
+  "publishedAt": "2026-11-05T02:39:51.291Z",
+  "canonicalBundleMatchesTestedSource": true,
+  "functionsPreserved": 43,
+  "schedulesPreserved": 5,
+  "existingEnvironmentEntriesPreserved": 50
+}
