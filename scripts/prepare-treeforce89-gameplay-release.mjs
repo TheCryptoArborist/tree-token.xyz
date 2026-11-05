@@ -12,7 +12,7 @@ const root=resolve(import.meta.dirname,'..');
 const source=resolve(root,'.netlify/treeforce89-gameplay-release-source');
 const stage=resolve(root,'.netlify/treeforce89-gameplay-release');
 const base='/play/treeforce89/';
-const expectedProduction='6ae971bd73f65c3f86a9e887';
+const expectedProduction='6aebf70ad3b2d01755518023';
 const approvedGameplayCommit='96b239af03df3112087ecdb1f944628374b7b52e';
 const run=(command,args,cwd=root)=>execFileSync(command,args,{cwd,stdio:'inherit'});
 const sha=(algorithm,bytes)=>createHash(algorithm).update(bytes).digest('hex');
@@ -52,7 +52,7 @@ walk(output);files.sort((a,b)=>a.path.localeCompare(b.path));
 for(const [path,hash] of Object.entries(provenance.assets))assert.equal(files.find(f=>f.path===base+path)?.sha256,hash,'Original art changed');
 const manifest={kind:'frontend-overlay',notDeployableStandalone:true,requiresCurrentLiveInventory:true,
  siteId:'aa62f324-b880-47d6-85b8-4ba0700ff5bf',expectedProduction,approvedGameplayCommit,
- approvedPreview:'6aea915ff4c923218595ce67',base,requiredFunctions:41,requiredSchedules:5,
+ approvedPreview:'6aea915ff4c923218595ce67',base,requiredFunctions:43,requiredSchedules:5,
  backendBuilt:false,environmentChanges:false,migrationsIncluded:false,
  walletConfigurationUnchanged:true,dependencyLockUnchanged:true,files};
 writeFileSync(resolve(stage,'release-input.json'),JSON.stringify(manifest,null,2)+'\n');

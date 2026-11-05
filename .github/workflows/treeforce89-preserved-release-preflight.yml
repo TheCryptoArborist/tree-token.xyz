@@ -21,7 +21,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 3e02cc3c25b46327bc375ee7338f8992a9c44c8c
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
@@ -35,18 +34,41 @@ jobs:
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
         run: >-
-          node scripts/release-preserved-production.mjs capture
-          --expected-deploy 6ae971bd73f65c3f86a9e887
+          node scripts/lib/treeforce89-production-inventory.mjs capture
+          --expected-deploy 6aebf70ad3b2d01755518023
           --baseline .netlify/treeforce89-ci-baseline.json
           --report .netlify/treeforce89-ci-report.json
       - name: Verify production remained identical throughout the check
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
         run: >-
-          node scripts/release-preserved-production.mjs verify
-          --expected-deploy 6ae971bd73f65c3f86a9e887
+          node scripts/lib/treeforce89-production-inventory.mjs verify
+          --expected-deploy 6aebf70ad3b2d01755518023
           --baseline .netlify/treeforce89-ci-baseline.json
           --report .netlify/treeforce89-ci-report.json
+      - name: Restore pinned test dependencies
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm ci --prefix netlify/preview-lib/treeforce89-source --ignore-scripts --no-audit --no-fund
+          npm ci --prefix tests/treeforce89-ui --ignore-scripts --no-audit --no-fund
+      - name: Verify release guards and gameplay rules
+        run: node --test tests/treeforce89-gameplay-release.test.mjs tests/treeforce89-gameplay.test.mjs tests/treeforce89-paid-client.test.mjs tests/treeforce89-continue-dialog.test.mjs tests/treeforce89-receipt-discovery.test.mjs tests/treeforce89-checkout-interaction.test.mjs tests/treeforce89-home-wallet.test.mjs
+      - name: Build the approved canonical frontend only
+        run: node scripts/prepare-treeforce89-gameplay-release.mjs
+      - name: Create and verify unpublished candidate preserving all 43 functions
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: node scripts/release-treeforce89-gameplay.mjs candidate
+      - name: Save candidate preservation evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: treeforce89-release-candidate
+          path: |
+            .netlify/treeforce89-ci-baseline.json
+            .netlify/treeforce89-ci-baseline.json.sha256
+            .netlify/treeforce89-gameplay-candidate.json
+          if-no-files-found: error
+          retention-days: 1
       - name: Save sanitized verification report
         uses: actions/upload-artifact@v4
         with:
