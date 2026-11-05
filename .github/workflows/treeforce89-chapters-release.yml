@@ -3,7 +3,7 @@ name: TREE FORCE chapter and bonus release
 
 on:
   push:
-    branches: [feature/treeforce89-galaga-gameplay]
+    branches: [feature/treeforce89-chapters]
     paths: [.github/workflows/treeforce89-chapters-release.yml]
   workflow_dispatch:
 
