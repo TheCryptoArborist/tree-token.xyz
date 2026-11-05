@@ -1,4 +1,4 @@
-# Deadfall Run — Handling Lab 0.5.2
+# Deadfall Run — Handling Lab 0.5.3
 
 A downloadable development build for TREE Arcade. This handling lab has not been published to the live arcade.
 
@@ -6,10 +6,23 @@ A downloadable development build for TREE Arcade. This handling lab has not been
 
 1. Extract the complete ZIP into a new folder.
 2. Open **handling.html** in desktop Chrome, Edge, or Firefox with WebGL available. On Windows, **START_HANDLING_TEST.bat** opens the same file.
-3. Choose a test and click **START HANDLING TEST**. For this trailer fix, start with **Control the grade** and make brief left/right corrections.
+3. Choose a test and click **START HANDLING TEST**. Start with **Control the grade** and make brief left/right corrections to compare the familiar handling.
 4. Use **RETRY** or **R** for the identical starting setup, or **TEST MENU** to choose another exercise.
 
 The original Stormbreak Pass descent is also included: open **index.html** or **START_GAME.bat**. Its menu links to the handling lab. No installation, web server, account, wallet, or network connection is required to drive. The Back to Arcade link opens https://tree-token.xyz/play/.
+
+## Materials, lighting and sound — 0.5.3
+
+This build keeps the 0.5.2 physics, route, handling exercises and controller module byte-for-byte. It changes presentation in both the lab and the full descent:
+
+- Clear-coated cab paint, reflective glass and brushed metal, with one generated sky used for both the backdrop and material reflections.
+- Distinct asphalt, gravel, rubber and ground textures; occasional road repairs; warmer sunlight and tighter truck shadows.
+- Slightly irregular, varied logs; trailer reflective tape, fasteners, suspension detail and light road dust on the cab.
+- Original synthesized diesel, road noise, engine-brake chatter and an air release after service braking. Sound follows speed and throttle. The simulated audio RPM does not add a gearbox or change acceleration.
+
+Clicking Start permits sound in browsers that allow it. If you start with a controller and hear nothing, open **SOUND → ENABLE SOUND** with your mouse or touch screen. The same menu has **MUTE SOUND** and a volume slider. Settings are remembered when browser storage is available. Pausing, opening controller setup, losing focus, ending a run or returning to the menu silences the truck. Sound failure does not prevent driving.
+
+For this build's playtest, open **index.html** and complete the 1.8 km descent. Compare Chase, Hood and Inspect views. Check that the road is readable, the cab and logs feel more grounded, and the three sound cues are distinct: throttle, engine brake, then service-brake release. Pause and resume once and confirm the audio follows. Check **DETAIL → LOW** if the new materials reduce performance on your computer. These are procedural materials and sounds, not photographed assets or recorded truck samples.
 
 ## NES-style controller support — 0.5.2
 
@@ -82,9 +95,11 @@ The uploaded Hard Truck game was used as a reference for configurable steering a
 
 ## Verification
 
-Run **npm test** in this directory (or run the five scripts in tests/ individually). No dependencies need installing. The 65 checks use real Three.js geometry and simulation with stubbed browser/renderer interfaces. They do not establish GPU rendering, native input feel, or frame rate.
+Run **npm test** in this directory (or run the six .cjs scripts in tests/ individually). No dependencies need installing. The 72 checks use real Three.js geometry and simulation with stubbed browser/renderer interfaces. They do not establish GPU rendering, native input feel, speaker sound quality, or frame rate.
 
-A previous build’s cloud-browser menu and unsupported-graphics fallback were inspected; this patch has been checked with automated controller inputs, trajectories, and scene transforms. That browser reports GL_VENDOR and GL_RENDERER as Disabled and cannot create a WebGL context. Actual driving and visual appearance still require a desktop playtest. If you see an error, include the message, browser/device, chosen test, and a screenshot or short recording.
+The 0.5.3 menu and unsupported-graphics fallback were inspected. This browser reports GL_VENDOR and GL_RENDERER as Disabled and cannot create a WebGL context. The actual generated canvas textures were inspected separately. The actual audio module passed an eight-second browser OfflineAudioContext render: finite output with no clipping, audible sections with nonzero output, and exactly silent pause/mute sections. This is not a listening test or rendered gameplay test. To repeat the audio check, open **tests/browser-audio.html**, click **RENDER SOUND CHECK**, then optionally listen to its locally generated clip.
+
+Actual driving, visual appearance and audio character still require a desktop playtest. If you see an error, include the message, browser/device, chosen test, and a screenshot or short recording.
 
 ## Files
 
@@ -93,6 +108,8 @@ A previous build’s cloud-browser menu and unsupported-graphics fallback were i
 - physics.js: shared vehicle model and hitch constraint, with an injectable route for tests.
 - vehicle.js / world.js: original procedural models, materials, and environment helpers.
 - gamepad.js: device detection, calibration, saved mappings, and controller input.
+- audio.js: locally synthesized engine/road/brake audio, mute, volume and lifecycle.
+- tests/browser-audio.html: optional actual-browser PCM render and listening check.
 - play.js / styles.css: controls, controller setup, cameras, HUD, and lifecycle for both modes.
 - TEST_REPORT.md: checks and verification limits.
 - vendor/three.min.js / third-party-notices.txt: bundled Three.js and license.

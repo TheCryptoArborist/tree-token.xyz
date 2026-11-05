@@ -115,7 +115,7 @@ const context = vm.createContext({ THREE: { ...THREE, WebGLRenderer: Renderer },
   document, console, innerWidth: 1440, innerHeight: 900, devicePixelRatio: 1, performance: { now: () => clock },
   requestAnimationFrame: fn => raf.push(fn), addEventListener: (name, fn) => (listeners[name] ||= []).push(fn),
   showBootError: message => failures.push(message), window: null }); context.window = context;
-for (const file of ["world.js", "vehicle.js", "gamepad.js"]) vm.runInContext(fs.readFileSync(path.join(base, file), "utf8"), context, { filename: file });
+for (const file of ["world.js", "vehicle.js", "gamepad.js", "audio.js"]) vm.runInContext(fs.readFileSync(path.join(base, file), "utf8"), context, { filename: file });
 test("detailed vehicle builds; resetting restores all five visible logs", () => {
   const truck = context.DeadfallVehicle.make(), state = P.createState();
   state.logs = 2; context.DeadfallVehicle.update(truck, state, {});
@@ -148,7 +148,18 @@ test("road and terrain are continuous indexed meshes with upward normals", () =>
     for (let i = 0; i < normal.count; i++) assert(normal.getY(i) > .98);
   }
 });
-test("sky shader includes exist and are on valid preprocessor lines", () => {
+test("reflection sky and material data maps use the correct texture pipeline", () => {
+  const environment = capturedScene.environment;
+  assert.equal(environment.mapping, THREE.EquirectangularReflectionMapping);
+  assert.equal(environment.image.width, environment.image.height * 2);
+  assert.equal(environment.colorSpace, THREE.SRGBColorSpace);
+  assert(capturedScene.getObjectByName("Clouded reflection sky"));
+  for (const material of Object.values(context.DeadfallWorld.materials)) {
+    for (const name of ["roughnessMap", "bumpMap"]) if (material[name]) {
+      assert.equal(material[name].colorSpace, THREE.NoColorSpace);
+      assert(material[name].image.width > 0 && material[name].image.height > 0);
+    }
+  }
   capturedScene.traverse(obj => {
     if (!obj.material?.isShaderMaterial) return;
     const shader = obj.material.fragmentShader;

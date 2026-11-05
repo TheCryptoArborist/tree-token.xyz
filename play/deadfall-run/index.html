@@ -34,6 +34,15 @@
     <nav aria-label="Game options">
       <a class="arcade-back" href="https://tree-token.xyz/play/">← BACK TO ARCADE</a>
       <button id="controllerOptions">CONTROLLER</button>
+      <details id="soundOptions" class="sound-options">
+        <summary id="soundSummary">SOUND · ENABLE</summary>
+        <div class="sound-card">
+          <button id="soundToggle" aria-pressed="false">ENABLE SOUND</button>
+          <label for="soundVolume">VOLUME <output id="soundLevel" for="soundVolume">60%</output></label>
+          <input id="soundVolume" type="range" min="0" max="100" step="5" value="60" />
+          <p id="soundStatus" role="status">Click Enable sound to hear the truck.</p>
+        </div>
+      </details>
       <button id="quality">DETAIL · BALANCED</button>
       <button id="camera" class="in-run">CAMERA · CHASE</button>
       <button id="pause" class="in-run" disabled>PAUSE</button>
@@ -53,7 +62,7 @@
 
   <section id="start" class="overlay active">
     <div class="panel">
-      <p>TREE ARCADE · PLAY TEST BUILD 0.5.2</p>
+      <p>TREE ARCADE · PLAY TEST BUILD 0.5.3</p>
       <h1>The long<br />way down.</h1>
       <p class="copy">A heavy rig. Five storm-recovery logs. An unforgiving mountain descent. Keep your speed in check and your trailer in line.</p>
       <div class="route-spec"><span><b>1.8</b> KM DESCENT</span><span><b>5</b> LOGS TO DELIVER</span><span><b>3</b> CAMERA VIEWS</span></div>
@@ -120,6 +129,7 @@
   <script src="world.js"></script>
   <script src="vehicle.js"></script>
   <script src="gamepad.js"></script>
+  <script src="audio.js"></script>
   <script src="play.js"></script>
 </body>
 </html>

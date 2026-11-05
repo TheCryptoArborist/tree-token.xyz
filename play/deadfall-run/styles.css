@@ -214,3 +214,21 @@ a:focus-visible { outline:2px solid #e5d8ad; outline-offset:3px; }
 .controller-status { display:block; color:#b5c5b7; font-size:.65rem; line-height:1.5; margin:9px 0; }
 .panel>button.controller-launch { padding:10px; font-size:.65rem; }
 @media (max-width:520px) { .controller-overlay { padding:12px; } .controller-card { padding:19px; } .controller-legend { grid-template-columns:1fr 1.3fr; font-size:.72rem; } }
+
+/* Sound can be enabled even when a gamepad started the run without a click. */
+.sound-options { position:relative; pointer-events:auto; font-size:.68rem; }
+.sound-options summary { cursor:pointer; list-style:none; padding:10px 13px; border:1px solid #ffffff35; border-radius:5px; background:#080b0be8; font-weight:900; letter-spacing:.08em; }
+.sound-options summary::-webkit-details-marker { display:none; }
+.sound-options summary::after { content:" ▾"; color:#b9cf9c; }
+.sound-options summary:focus-visible { outline:2px solid #e5d8ad; outline-offset:3px; }
+.topbar .sound-card { position:absolute; right:0; top:calc(100% + 9px); width:260px; max-width:calc(100vw - 28px); padding:17px; background:#101c18fa; border:1px solid #748968; border-radius:5px; box-shadow:0 12px 35px #0008; text-shadow:none; }
+.sound-card button { width:100%; }
+.sound-card label { display:flex; justify-content:space-between; margin:18px 0 10px; font-size:.62rem; letter-spacing:.1em; color:#c4d0b8; }
+.sound-card input { width:100%; accent-color:#b9e775; }
+.sound-card p { margin:12px 0 0; font-size:.7rem; line-height:1.5; color:#b6c6b9; }
+@media (max-width:760px) {
+  .sound-options summary { font-size:.53rem; padding:8px; }
+  .topbar .sound-card { position:fixed; right:14px; top:108px; }
+  .handling #labHud { top:140px; }
+  .handling #start { padding-top:135px; }
+}

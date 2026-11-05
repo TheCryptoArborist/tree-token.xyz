@@ -26,7 +26,7 @@ const document = new Element(); document.body = new Element(); document.hidden =
 document.body.classList.add("handling");
 document.getElementById = id => elements[id] || null; document.createElement = () => new Element();
 document.querySelectorAll = s => s === "[data-test]" ? testButtons : s === "[data-control]" ? touchButtons : [];
-const listeners = {}, raf = [], failures = []; let time = 0, scene, pads = [];
+const listeners = {}, raf = [], failures = []; let time = 0, scene, pads = [], audioDriving = false, audioStops = 0;
 class Renderer {
   constructor() { this.domElement = new Element(); this.shadowMap = {}; this.info = { render: { calls: 0 } }; }
   setSize() {} setPixelRatio() {}
@@ -40,6 +40,15 @@ const context = vm.createContext({ THREE: { ...THREE, WebGLRenderer: Renderer },
 for (const [, file] of html.matchAll(/<script src="([^"]+)"/g)) {
   if (file.startsWith("vendor/")) continue;
   vm.runInContext(fs.readFileSync(path.join(base, file), "utf8"), context, { filename: file });
+  if (file === "audio.js") {
+    const create = context.DeadfallAudio.create;
+    context.DeadfallAudio.create = () => {
+      const sound = create(), update = sound.update, stop = sound.stop;
+      sound.update = (...args) => { audioDriving = args[2]; return update(...args); };
+      sound.stop = () => { audioStops++; return stop(); };
+      return sound;
+    };
+  }
 }
 function key(type, code) { for (const f of listeners[type] || []) f({ target: { tagName: "BODY" }, code, preventDefault() {} }); }
 function frames(n) { for (let i = 0; i < n; i++) { time += 1000 / 60; const f = raf.shift(); assert(f); f(time); } }
@@ -47,6 +56,7 @@ let count = 0;
 function test(name, run) { run(); assert.deepEqual(failures, []); count++; console.log(`PASS ${name}`); }
 test("handling page initializes actual geometry and enables Start", () => {
   assert.equal(elements.drive.disabled, false); assert.equal(elements.drive.textContent, "START HANDLING TEST");
+  assert.equal(elements.soundToggle.disabled, true); assert.equal(elements.soundSummary.textContent, "SOUND · N/A");
   assert(scene.getObjectByName("Handling road"));
   scene.traverse(o => { if (o.isMesh) for (const attr of Object.values(o.geometry.attributes)) for (const n of attr.array) assert(Number.isFinite(n)); });
 });
@@ -59,9 +69,11 @@ test("all four test selectors load the correct starting scenario", () => {
 });
 test("Start, throttle, Pause, Resume, and Retry control the lab lifecycle", () => {
   testButtons[0].dispatch("click"); elements.drive.dispatch("click"); key("keydown", "KeyW"); frames(240);
-  assert(Number(elements.speed.textContent) > 8); elements.pause.dispatch("click"); frames(1);
+  assert(Number(elements.speed.textContent) > 8); assert.equal(audioDriving, true);
+  const stops = audioStops; elements.pause.dispatch("click"); assert(audioStops > stops); frames(1); assert.equal(audioDriving, false);
   const time = elements.labTime.textContent; frames(120); assert.equal(elements.labTime.textContent, time);
   elements.resume.dispatch("click"); elements.retry.dispatch("click"); frames(6);
+  assert.equal(audioDriving, true);
   assert.equal(elements.cargo.textContent, "5/5"); assert.equal(elements.damageText.textContent, "0%");
   assert(Number(elements.speed.textContent) < 1); assert(parseFloat(elements.labTime.textContent) < .2);
 });

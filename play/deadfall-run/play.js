@@ -1,4 +1,4 @@
-/* Deadfall Run: 3D field-test build 0.5.2. No remote requests or transactions. */
+/* Deadfall Run: 3D field-test build 0.5.3. No remote requests or transactions. */
 (function () {
   "use strict";
   try {
@@ -29,6 +29,7 @@
     const keyMap = { KeyA: "left", ArrowLeft: "left", KeyD: "right", ArrowRight: "right", KeyW: "throttle", ArrowUp: "throttle",
       KeyS: "brake", ArrowDown: "brake", Space: "engine", KeyV: "reverse" };
     const pad = DeadfallGamepad.create(), controllerPanel = $("controllerPanel");
+    const sound = DeadfallAudio.create();
     let padHeld = DeadfallGamepad.empty(), focused = true, returnFocus = null, controllerText = "";
     controllerPanel.hidden = true;
     const cameraNames = L ? ["CHASE", "HOOD", "INSPECT", "OVERHEAD"] : ["CHASE", "HOOD", "INSPECT"], qualityNames = ["LOW", "BALANCED", "HIGH"];
@@ -47,6 +48,7 @@
       else if (input.reverse) input.throttle = false;
     }
     function clearInput() {
+      sound.stop();
       keys.clear(); Object.keys(touch).forEach(k => touch[k] = false);
       padHeld = DeadfallGamepad.empty(); pad.suspend();
       input.touchSteer = 0; $("steer").value = "0"; readInput();
@@ -71,12 +73,13 @@
     }
     function reset(d = 0) {
       if (L) d = L.tests[selectedTest].start;
-      state = P.createState(d); clearInput(); accumulator = 0; paused = false;
+      state = P.createState(d); clearInput(); sound.reset(); accumulator = 0; paused = false;
       if (L) { L.prepare(selectedTest, state); session = L.begin(selectedTest, state); world.selectTest(selectedTest); }
       ui.pause.textContent = "PAUSE"; ui.paused.hidden = true;
       P.couple(state, tractor, trailer, true); V.update(truck, state, input); updateUI();
     }
     function start() {
+      sound.unlock();
       reset(); running = true; document.body.classList.add("driving");
       ui.start.classList.remove("active"); ui.result.classList.remove("active");
       ui.pause.disabled = false; setCamera(L && selectedTest === "reverse" ? 3 : 0, true); last = performance.now();
@@ -87,6 +90,19 @@
       if (!running) return;
       paused = value; clearInput(); accumulator = 0; last = performance.now();
       ui.pause.textContent = paused ? "RESUME" : "PAUSE"; ui.paused.hidden = !paused;
+      if (!paused) sound.unlock();
+    }
+    function soundUI() {
+      const s = sound.status();
+      const on = s.supported && s.enabled && s.ready;
+      $("soundSummary").textContent = `SOUND · ${!s.supported ? "N/A" : !s.enabled || !s.volume ? "OFF" : s.ready ? "ON" : "ENABLE"}`;
+      $("soundToggle").textContent = on ? "MUTE SOUND" : "ENABLE SOUND";
+      $("soundToggle").setAttribute("aria-pressed", String(on));
+      $("soundToggle").disabled = $("soundVolume").disabled = !s.supported;
+      $("soundStatus").textContent = !s.supported ? "Sound is unavailable in this browser. You can still drive." :
+        !s.enabled ? "Sound muted." : !s.ready ? "Click Enable sound to allow audio. This may be needed after starting with a controller." :
+        !s.volume ? "Volume is at zero. Raise it to hear the truck." : "Engine, road and brake sound. Audio is silent while paused or in menus.";
+      $("soundLevel").textContent = `${Math.round(s.volume * 100)}%`;
     }
     function controllerUI() {
       const s = pad.status(), text = JSON.stringify(s);
@@ -196,6 +212,7 @@
       else if (camera.view && camera.view.enabled) camera.clearViewOffset();
     }
     function updateUI() {
+      soundUI();
       const load = Math.min(100, Math.abs(state.sway) * 60 + Math.abs(state.articulation) * 30);
       ui.speed.textContent = Math.round(Math.abs(state.speed) * 2.237); ui.gear.textContent = state.speed < -.1 ? "R" : "D";
       ui.brake.style.width = `${state.brakeHeat}%`; ui.brake.style.background = state.brakeHeat > 80 ? "#ef876a" : "#c9b778";
@@ -267,6 +284,7 @@
         if (messageTimer <= 0) ui.dispatch.classList.remove("show");
       }
       updateCamera(elapsed); world.update(state.pos, state.progress);
+      sound.update(state, input, running && !paused && focused && !document.hidden, elapsed, cameraMode);
       hudTimer += elapsed; if (hudTimer > .08) { updateUI(); hudTimer = 0; }
       renderer.render(scene, camera); requestAnimationFrame(frame);
     }
@@ -281,7 +299,7 @@
         return;
       }
       if (event.target.tagName === "INPUT" || event.target.tagName === "SELECT") return;
-      if (keyMap[event.code] && running && !paused) { keys.add(event.code); event.preventDefault(); }
+      if (keyMap[event.code] && running && !paused) { sound.unlock(); keys.add(event.code); event.preventDefault(); }
       if (event.repeat) return;
       if (event.code === "KeyC" && running) setCamera((cameraMode + 1) % cameraNames.length);
       if (event.code === "KeyR") recover();
@@ -292,10 +310,12 @@
     addEventListener("blur", () => { focused = false; clearInput(); if (running) setPaused(true); });
     addEventListener("focus", () => { focused = true; pad.suspend(); });
     document.addEventListener("visibilitychange", () => { if (document.hidden && running) setPaused(true); });
+    addEventListener("pagehide", () => { if (running) setPaused(true); sound.dispose(); });
     document.querySelectorAll("[data-control]").forEach(button => {
       const action = button.dataset.control;
       button.addEventListener("pointerdown", e => {
         e.preventDefault(); if (!running || paused) return;
+        sound.unlock();
         button.setPointerCapture(e.pointerId); touch[action] = true; button.classList.add("active");
       });
       const release = () => { touch[action] = false; button.classList.remove("active"); };
@@ -320,6 +340,14 @@
       event.preventDefault(); orbitDistance = R.clamp(orbitDistance + event.deltaY * .018, 13, 40);
     }, { passive: false });
     ui.drive.addEventListener("click", start);
+    $("soundVolume").value = String(Math.round(sound.status().volume * 100));
+    $("soundToggle").addEventListener("click", () => {
+      const s = sound.status(); sound.setEnabled(!(s.enabled && s.ready));
+      sound.unlock(); soundUI();
+    });
+    $("soundVolume").addEventListener("input", () => {
+      sound.setVolume(Number($("soundVolume").value) / 100); soundUI();
+    });
     $("controllerSetup").addEventListener("click", openController);
     $("controllerOptions").addEventListener("click", openController);
     $("controllerClose").addEventListener("click", closeController);
@@ -352,7 +380,7 @@
     setQuality(1); reset(); updateCamera(1 / 60, true); world.update(state.pos, state.progress); renderer.render(scene, camera);
     pad.poll(); controllerUI();
     ui.drive.disabled = false; ui.drive.textContent = L ? "START HANDLING TEST" : "BEGIN DESCENT";
-    $("bootStatus").textContent = `3D ready · ${L ? "Handling Lab" : "Stormbreak Pass"} · Build 0.5.2`;
+    $("bootStatus").textContent = `3D ready · ${L ? "Handling Lab" : "Stormbreak Pass"} · Build 0.5.3`;
     requestAnimationFrame(frame);
   } catch (error) {
     console.error(error); window.showBootError(error.message || "3D graphics could not start. Try a browser with hardware acceleration enabled.");

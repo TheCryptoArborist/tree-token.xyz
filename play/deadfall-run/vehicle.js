@@ -59,6 +59,16 @@
     const group = new THREE.Group(), tractor = new THREE.Group(), trailer = new THREE.Group();
     tractor.name = "Logging tractor"; trailer.name = "Articulated log semitrailer"; group.add(tractor, trailer);
     const td = tractor.userData = { wheels: [], front: [] }, rd = trailer.userData = { wheels: [], logs: [], logX: [] };
+    const dust = W.texture(256, 128, (c, w, h) => {
+      const random = root.DeadfallRoute.random(728);
+      c.clearRect(0, 0, w, h);
+      for (let i = 0; i < 5000; i++) {
+        const y = random() * h;
+        c.fillStyle = `rgba(155,139,111,${.08 + y / h * .18})`;
+        c.fillRect(random() * w, y, 1 + random() * 3, 1 + random() * 2);
+      }
+    });
+    const dustMaterial = new THREE.MeshStandardMaterial({ map: dust, transparent: true, depthWrite: false, roughness: 1 });
     // Ladder chassis and visible driveline.
     for (const x of [-.71, .71]) at(tractor, box(.19, .29, 7.1, M.darkMetal), x, .92, -.05);
     for (const z of [-3.2, -.8, .65, 2.4, 3.05]) at(tractor, box(1.63, .16, .17, M.darkMetal), 0, .96, z);
@@ -73,6 +83,8 @@
       at(tractor, box(.075, .05, 1.31, M.chrome), side * 1.162, 2.44, -1.16);
       at(tractor, box(.10, .07, .28, M.chrome), side * 1.2, 2.24, -.51);
       at(tractor, box(.07, .15, 2.02, M.green), side * 1.18, 1.71, -1.22);
+      const doorDust = new THREE.Mesh(new THREE.PlaneGeometry(1.47, .44), dustMaterial);
+      doorDust.rotation.y = side * Math.PI / 2; at(tractor, doorDust, side * 1.179, 1.45, -1.2);
       at(tractor, box(.40, .13, 1.28, M.chrome), side * 1.15, .72, -1.12);
       at(tractor, box(.25, .12, 1.24, M.darkMetal), side * 1.16, 1.03, -1.12);
       const fender = new THREE.Mesh(new THREE.TorusGeometry(.64, .10, 5, 20, Math.PI), M.purple);
@@ -133,7 +145,18 @@
     for (const z of [-3.95, -.2, 3.86]) at(trailer, box(2.79, .18, .34, M.darkMetal), 0, 1.47, z);
     const positions = [[-.81, 1.99], [0, 1.99], [.81, 1.99], [-.405, 2.69], [.405, 2.69]];
     positions.forEach(([x, y], i) => {
-      const log = cylinder(.402, 8.50 + (i % 3) * .13, [M.bark, M.endgrain, M.endgrain], 28, .378);
+      const wood = M.bark.clone(); wood.map = M.bark.map.clone(); wood.map.offset.x = i * .19;
+      wood.bumpMap = M.bark.bumpMap.clone(); wood.bumpMap.offset.x = i * .19;
+      wood.color.multiplyScalar(.91 + i * .035);
+      const geometry = new THREE.CylinderGeometry(.378, .402, 8.50 + (i % 3) * .13, 28, 16);
+      const p = geometry.attributes.position;
+      for (let n = 0; n < p.count; n++) {
+        const angle = Math.atan2(p.getZ(n), p.getX(n));
+        const rough = 1 + .018 * Math.sin(angle * 7 + i) + .012 * Math.sin(p.getY(n) * 2.8 + angle * 3 + i);
+        p.setX(n, p.getX(n) * rough); p.setZ(n, p.getZ(n) * rough);
+      }
+      geometry.computeVertexNormals();
+      const log = new THREE.Mesh(geometry, [wood, M.endgrain, M.endgrain]); log.castShadow = log.receiveShadow = true;
       log.rotation.x = Math.PI / 2; at(trailer, log, x, y, .08 * (i % 2)); rd.logs.push(log); rd.logX.push(x);
     });
     for (const z of [-2.75, 2.8]) {
@@ -141,6 +164,27 @@
       at(trailer, box(.16, .22, .12, M.chrome), -1.36, 1.80, z);
     }
     at(trailer, box(2.55, .25, .18, M.darkMetal), 0, .91, 4.86);
+    // Reflective tape, crossmember fasteners and suspension detail remain visual:
+    // no new body origins, wheel pivots or contact points.
+    const whiteTape = [], redTape = [], fasteners = [];
+    for (const side of [-1, 1]) {
+      for (let n = 0; n < 18; n++) {
+        const strip = new THREE.BoxGeometry(.018, .07, .24);
+        strip.translate(side * .858, 1.24, -4.35 + n * .50); (n % 2 ? whiteTape : redTape).push(strip);
+      }
+      for (const z of [-3.95, -.2, 3.86]) for (const y of [1.61, 1.78]) {
+        const bolt = new THREE.BoxGeometry(.025, .043, .043); bolt.translate(side * 1.408, y, z); fasteners.push(bolt);
+      }
+      for (const body of [tractor, trailer]) {
+        const z = body === tractor ? 1.55 : 2.91;
+        for (let leaf = 0; leaf < 3; leaf++) at(body, box(.12, .025, 1.32 - leaf * .18, M.black), side * .74, .72 + leaf * .028, z);
+      }
+    }
+    for (let n = 0; n < 8; n++) {
+      const strip = new THREE.BoxGeometry(.28, .07, .018); strip.translate(-1.07 + n * .305, .88, 4.96);
+      (n % 2 ? whiteTape : redTape).push(strip);
+    }
+    trailer.add(new THREE.Mesh(W.merge(whiteTape), M.edge), new THREE.Mesh(W.merge(redTape), new THREE.MeshStandardMaterial({ color: 0xa94232, roughness: .5 })), new THREE.Mesh(W.merge(fasteners), M.chrome));
     const brakeMaterial = M.brake.clone(); td.brakeMaterial = rd.brakeMaterial = brakeMaterial;
     for (const body of [tractor, trailer]) for (const side of [-1, 1]) {
       const z = body === trailer ? 4.966 : 3.47;

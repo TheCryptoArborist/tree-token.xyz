@@ -74,22 +74,51 @@
       c.lineTo(128 + Math.cos(a + .03) * 69, 128 + Math.sin(a + .03) * 69); c.stroke();
     }
   });
+  // Data maps are deliberately linear; treating roughness/bump as sRGB changes
+  // their response. Keep them separate from the displayed colour textures.
+  function dataMap(map) { const data = map.clone(); data.colorSpace = THREE.NoColorSpace; return data; }
+  const detailRandom = R.random(531026);
+  function grain(base, count, low, high, elongated = false) {
+    return texture(512, 512, (c, w, h) => {
+      c.fillStyle = base; c.fillRect(0, 0, w, h);
+      for (let i = 0; i < count; i++) {
+        const v = Math.floor(low + detailRandom() * (high - low));
+        c.fillStyle = `rgba(${v},${v},${v},.28)`;
+        c.fillRect(detailRandom() * w, detailRandom() * h, elongated ? 15 + detailRandom() * 80 : 1 + detailRandom() * 4, elongated ? .5 : 1 + detailRandom() * 3);
+      }
+    }, true);
+  }
+  const gravel = texture(512, 512, (c, w, h) => {
+    c.fillStyle = "#777469"; c.fillRect(0, 0, w, h);
+    for (let i = 0; i < 14000; i++) {
+      const v = 62 + Math.floor(detailRandom() * 100), size = 1 + detailRandom() * 5;
+      c.fillStyle = `rgb(${v + 9},${v + 6},${v})`;
+      c.beginPath(); c.ellipse(detailRandom() * w, detailRandom() * h, size, size * .64, detailRandom() * 6.28, 0, Math.PI * 2); c.fill();
+    }
+  }, true);
+  const groundMap = grain("#a6ac94", 26000, 55, 205);
+  const rubberMap = grain("#a2a4a0", 24000, 60, 165);
+  const steelMap = grain("#b7b9b6", 5000, 85, 215, true);
+  const brushedRoughness = dataMap(grain("#797979", 4500, 65, 155, true));
+  const roadRoughness = dataMap(grain("#ececec", 14000, 170, 255));
+  const asphaltBump = dataMap(asphalt), barkBump = dataMap(bark);
   const M = {
-    road: new THREE.MeshStandardMaterial({ color: 0x696c6c, map: asphalt, bumpMap: asphalt, bumpScale: .035, roughness: .95 }),
-    shoulder: new THREE.MeshStandardMaterial({ color: 0x8a8170, map: asphalt, roughness: 1 }),
+    road: new THREE.MeshStandardMaterial({ color: 0xc0c5c4, map: asphalt, bumpMap: asphaltBump, bumpScale: .018, roughnessMap: roadRoughness, roughness: 1 }),
+    patch: new THREE.MeshStandardMaterial({ color: 0x969f9c, map: asphalt, bumpMap: asphaltBump, bumpScale: .015, roughness: .95, polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1 }),
+    shoulder: new THREE.MeshStandardMaterial({ color: 0xd3cbb6, map: gravel, bumpMap: dataMap(gravel), bumpScale: .08, roughness: 1 }),
     line: new THREE.MeshStandardMaterial({ color: 0xdfc57b, roughness: 1 }),
     edge: new THREE.MeshStandardMaterial({ color: 0xc5c5b5, roughness: 1 }),
-    terrain: new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 1 }),
-    purple: new THREE.MeshStandardMaterial({ color: 0x4e315e, metalness: .42, roughness: .31 }),
-    green: new THREE.MeshStandardMaterial({ color: 0x4a8661, metalness: .3, roughness: .4 }),
+    terrain: new THREE.MeshStandardMaterial({ vertexColors: true, map: groundMap, bumpMap: dataMap(groundMap), bumpScale: .07, roughness: 1 }),
+    purple: new THREE.MeshPhysicalMaterial({ color: 0x594464, metalness: .48, roughness: .30, clearcoat: .8, clearcoatRoughness: .19, envMapIntensity: .85 }),
+    green: new THREE.MeshPhysicalMaterial({ color: 0x3e7054, metalness: .35, roughness: .32, clearcoat: .65, clearcoatRoughness: .2 }),
     black: new THREE.MeshStandardMaterial({ color: 0x202725, roughness: .78 }),
-    tire: new THREE.MeshStandardMaterial({ color: 0x1c211f, roughness: .93 }),
-    chrome: new THREE.MeshStandardMaterial({ color: 0xc1c9c7, metalness: .62, roughness: .32 }),
-    darkMetal: new THREE.MeshStandardMaterial({ color: 0x4b5351, metalness: .55, roughness: .58 }),
-    glass: new THREE.MeshPhysicalMaterial({ color: 0x376072, metalness: .34, roughness: .16, clearcoat: 1 }),
-    bark: new THREE.MeshStandardMaterial({ color: 0xbba798, map: bark, bumpMap: bark, bumpScale: .075, roughness: 1 }),
+    tire: new THREE.MeshStandardMaterial({ color: 0x282b28, map: rubberMap, bumpMap: dataMap(rubberMap), bumpScale: .012, roughness: .96 }),
+    chrome: new THREE.MeshStandardMaterial({ color: 0xd7dcd8, metalness: .94, roughnessMap: brushedRoughness, roughness: .58, envMapIntensity: 1.05 }),
+    darkMetal: new THREE.MeshStandardMaterial({ color: 0x53605a, map: steelMap, metalness: .7, roughness: .68 }),
+    glass: new THREE.MeshPhysicalMaterial({ color: 0x203b43, metalness: .12, roughness: .12, clearcoat: 1, clearcoatRoughness: .06, envMapIntensity: 1.2 }),
+    bark: new THREE.MeshStandardMaterial({ color: 0xd3c1a7, map: bark, bumpMap: barkBump, bumpScale: .065, roughness: 1 }),
     endgrain: new THREE.MeshStandardMaterial({ map: endgrain, roughness: .97 }),
-    rock: new THREE.MeshStandardMaterial({ color: 0x777974, roughness: .95 }),
+    rock: new THREE.MeshStandardMaterial({ color: 0xabaea8, map: gravel, bumpMap: dataMap(gravel), bumpScale: .12, roughness: .98 }),
     foliage: new THREE.MeshStandardMaterial({ color: 0x455b49, roughness: 1 }),
     timber: new THREE.MeshStandardMaterial({ color: 0x655346, roughness: 1 }),
     amber: new THREE.MeshStandardMaterial({ color: 0xffbf56, emissive: 0xff9200, emissiveIntensity: .5 }),
@@ -97,6 +126,44 @@
     brake: new THREE.MeshStandardMaterial({ color: 0x9e2722, emissive: 0xe52212, emissiveIntensity: .25 }),
     strap: new THREE.MeshStandardMaterial({ color: 0x6f785c, roughness: .9 })
   };
+  // One offline sky texture supplies both the backdrop and PBR reflections.
+  // Three r160 filters this environment once, not on every frame.
+  const skyMap = texture(1024, 512, (c, w, h) => {
+    const top = [94, 128, 151], horizon = [199, 206, 195], ground = [62, 69, 55];
+    for (let y = 0; y < h; y++) {
+      const upper = y < h / 2, t = upper ? Math.pow(y / (h / 2), .65) : Math.min(1, (y - h / 2) / 90);
+      const a = upper ? top : horizon, b = upper ? horizon : ground;
+      c.fillStyle = `rgb(${a.map((v, i) => Math.round(v + (b[i] - v) * t)).join(",")})`; c.fillRect(0, y, w, 1);
+    }
+    const random = R.random(68021);
+    // Soft, stretched cloud banks rather than a single uniform grey sky.
+    for (let i = 0; i < 90; i++) {
+      const x = random() * w, y = 55 + random() * 145, width = 30 + random() * 65;
+      for (let feather = 6; feather > 0; feather--) {
+        c.fillStyle = "rgba(238,237,220,.015)";
+        for (const wrap of [-w, 0, w]) {
+          c.beginPath(); c.ellipse(x + wrap, y, width + feather * 4, 3 + feather * 2, -.08, 0, Math.PI * 2); c.fill();
+        }
+      }
+    }
+  });
+  function atmosphere(scene) {
+    const environment = skyMap.clone(); environment.mapping = THREE.EquirectangularReflectionMapping;
+    scene.environment = environment;
+    const sky = new THREE.Mesh(new THREE.SphereGeometry(3400, 32, 20), new THREE.MeshBasicMaterial({
+      map: skyMap, side: THREE.BackSide, depthWrite: false, fog: false
+    })); sky.name = "Clouded reflection sky"; sky.frustumCulled = false; scene.add(sky);
+    scene.add(new THREE.HemisphereLight(0xe0e9e5, 0x5b624b, .75));
+    return sky;
+  }
+  function roadRepairs(scene, from, to, halfWidth) {
+    const random = R.random(2405), parts = [];
+    for (let d = from + 64; d < to - 25; d += 90 + random() * 100) {
+      const center = (random() > .5 ? 1 : -1) * halfWidth * .45, width = 1.5 + random() * 1.1;
+      parts.push(ribbon(d, d + 4 + random() * 9, center - width / 2, center + width / 2, .05, M.patch, 1).geometry);
+    }
+    if (parts.length) { const repairs = new THREE.Mesh(merge(parts), M.patch); repairs.name = "Asphalt repairs"; repairs.receiveShadow = true; scene.add(repairs); }
+  }
   function ribbon(from, to, left, right, elevation, material, step = 2) {
     const p = [], uv = [], ix = [];
     const count = Math.ceil((to - from) / step);
@@ -118,12 +185,12 @@
     for (let x = -600; x < -40; x += 12) lanes.push(x);
     lanes.push(-40, -32, -26, -20, -16, -12, -10, -8.4, -6, -3, 0, 3, 6, 8.4, 10, 12, 16, 20, 26, 32, 40);
     for (let x = 48; x <= 600; x += 12) lanes.push(x);
-    const nx = lanes.length - 1, nz = 600, p = [], colors = [], ix = [], c = new THREE.Color();
+    const nx = lanes.length - 1, nz = 600, p = [], colors = [], uv = [], ix = [], c = new THREE.Color();
     for (let j = 0; j <= nz; j++) {
       const z = 240 - j / nz * 2400;
       for (let i = 0; i <= nx; i++) {
         const x = R.point(120 - z).x + lanes[i], y = R.terrainHeight(x, z);
-        p.push(x, y, z);
+        p.push(x, y, z); uv.push(x / 14, z / 14);
         const grain = .5 + .25 * Math.sin(x * .031 + z * .047) + .25 * Math.sin(x * .089 - z * .03);
         c.setHSL(.235 + grain * .038, .16 + grain * .12, .205 + grain * .07);
         const slope = Math.abs(R.terrainHeight(x + 3, z) - y) / 3;
@@ -133,7 +200,8 @@
       }
     }
     const g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.Float32BufferAttribute(p, 3));
-    g.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3)); g.setIndex(ix); g.computeVertexNormals();
+    g.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
+    g.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2)); g.setIndex(ix); g.computeVertexNormals();
     const mesh = new THREE.Mesh(g, M.terrain); mesh.receiveShadow = true; mesh.name = "Continuous mountain terrain"; return mesh;
   }
   function foliageGeometry() {
@@ -238,18 +306,12 @@
     scene.add(ribbon(1784, 1784.5, -6, 6, .07, M.edge, .5));
   }
   function create(scene) {
-    scene.background = new THREE.Color(0xbbccce); scene.fog = new THREE.FogExp2(0xafc1c1, .00225);
-    const sky = new THREE.Mesh(new THREE.SphereGeometry(3400, 24, 16), new THREE.ShaderMaterial({
-      side: THREE.BackSide, depthWrite: false,
-      uniforms: { top: { value: new THREE.Color(0x547c97) }, horizon: { value: new THREE.Color(0xd4d9cc) } },
-      vertexShader: "varying vec3 vP; void main(){vP=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}",
-      fragmentShader: "uniform vec3 top;uniform vec3 horizon;varying vec3 vP;void main(){float h=clamp(normalize(vP).y,0.0,1.0);gl_FragColor=vec4(mix(horizon,top,pow(h,.55)),1.0);\n#include <tonemapping_fragment>\n#include <colorspace_fragment>\n}"
-    })); sky.frustumCulled = false; scene.add(sky);
-    scene.add(new THREE.HemisphereLight(0xd7e6ed, 0x66664a, 2.05));
-    const sun = new THREE.DirectionalLight(0xffe6be, 3.1); sun.castShadow = true;
+    scene.background = new THREE.Color(0xc7cec3); scene.fog = new THREE.FogExp2(0xc7cec3, .0019);
+    const sky = atmosphere(scene);
+    const sun = new THREE.DirectionalLight(0xffe7c2, 2.4); sun.castShadow = true;
     sun.shadow.mapSize.set(2048, 2048); sun.shadow.camera.near = 1; sun.shadow.camera.far = 240;
-    Object.assign(sun.shadow.camera, { left: -52, right: 52, top: 52, bottom: -52 });
-    sun.shadow.bias = -.00025; sun.shadow.normalBias = .035; scene.add(sun, sun.target);
+    Object.assign(sun.shadow.camera, { left: -42, right: 42, top: 42, bottom: -42 });
+    sun.shadow.bias = -.0002; sun.shadow.normalBias = .022; sun.shadow.radius = 2; scene.add(sun, sun.target);
     scene.add(terrain()); addMountains(scene);
     const road = new THREE.Group(); road.name = "Continuous road surface";
     road.add(ribbon(-45, 1840, -8.2, 8.2, -.018, M.shoulder), ribbon(-45, 1840, -6, 6, .045, M.road));
@@ -258,6 +320,7 @@
     for (let d = -40; d < 1840; d += 17) markings.push(ribbon(d, d + 6, -.075, .075, .059, M.line).geometry);
     road.add(new THREE.Mesh(merge(markings), M.line));
     scene.add(road);
+    roadRepairs(scene, -45, 1840, 6);
     const forest = addForest(scene);
     for (const [from, to] of [[160, 420], [660, 880], [1080, 1360]]) rail(scene, from, to, -7.3);
     const markerParts = [], reflectorParts = [];
@@ -303,5 +366,5 @@
       }
     } };
   }
-  root.DeadfallWorld = { create, materials: M, texture, box, cylinder, at, merge, ribbon, sign, foliageGeometry };
+  root.DeadfallWorld = { create, materials: M, texture, box, cylinder, at, merge, ribbon, sign, foliageGeometry, atmosphere, roadRepairs };
 })(typeof window !== "undefined" ? window : globalThis);

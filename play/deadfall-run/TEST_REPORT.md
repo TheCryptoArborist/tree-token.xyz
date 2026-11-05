@@ -1,6 +1,14 @@
-# Deadfall Run 0.5.2 verification
+# Deadfall Run 0.5.3 verification
 
-Date: November 5, 2026 (UTC)
+Date: November 4, 2026 (America/Chicago)
+
+## Presentation update
+
+Changed original procedural materials and texture data handling, added a shared sky/reflection environment, adjusted sun/ambient lighting and shadows, added asphalt repairs, and refined visible rig details. All meshes, normals, UVs and instances remain finite in the actual Three.js scene construction checks. Geometry count is 430 meshes and 202,647 stored vertices before instancing; this count is not a performance benchmark. The truck still has 10 tractor wheels and 8 trailer wheels, with the same pivots, body origins and hitch points.
+
+Added audio.js with lazy AudioContext initialization, a reusable oscillator/noise graph, speed/throttle-driven diesel sound, road noise, engine-brake chatter and a rate-limited service-brake air release. Both entry points have enable/mute and volume controls. The sound graph cannot write physics state. It silences on pause, focus loss, menu/result, controller setup, mute and zero volume. Missing/denied audio fails independently of driving. The sound settings tolerate unavailable local storage.
+
+The physics, controller module, both routes and handling exercise logic are unchanged from 0.5.2. No handling tuning was performed in this update.
 
 ## NES controller support
 
@@ -21,7 +29,9 @@ Gentle turns caused the trailer tail to move sideways with the cab. The previous
 
 - 10 controller-module checks: standard actions and deadzone, raw mapping and saved-profile restore, single-axis diagonals, dual button/axis D-pads, release/duplicate handling, cancelling remaps, disconnect/device replacement, focus/pause gating, unavailable/denied APIs, and corrupt profiles/blocked storage.
 
-Total: **65 passing CPU/DOM-stub checks**. These are not browser playtests.
+- 7 audio checks: unavailable/denied API handling, lazy creation and retryable resume, graph reuse over repeated starts, pitch/load and engine-brake layers, air-release timing, immediate silence/disposal, saved settings and blocked storage, and finite bounded parameter values.
+
+Total: **72 passing CPU/DOM/audio-stub checks**. These are not browser playtests.
 
 ## Model measurements
 
@@ -34,11 +44,26 @@ Total: **65 passing CPU/DOM-stub checks**. These are not browser playtests.
 
 These are measurements of this simplified game model, not measured behavior of Hard Truck or a real truck. Controllers are test fixtures, not player assistance.
 
-## Rendering and playtesting limits
+## Browser verification and remaining playtest
 
-This patch adds controller input and setup; the 0.5.1 physics is unchanged. No physical NES controller or adapter was attached, and no GPU playtest was completed. Controller checks inject synthetic Gamepad API snapshots and verify the actual game loop with a stub renderer. In the preceding build, cloud Chrome reported GL_VENDOR=Disabled and GL_RENDERER=Disabled and could not create a WebGL context. The preceding menu/fallback inspection does not establish rendered gameplay quality for this patch.
+The 0.5.3 entry menu was opened in cloud Chrome. WebGL initialization failed with the explicit diagnostic GL_VENDOR=Disabled and GL_RENDERER=Disabled; the visible startup error correctly disables Start. No GPU gameplay or frame-rate claim is made. A separate canvas gallery displayed the actual generated asphalt, gravel, terrain, rubber, metal, bark, endgrain and sky maps. This establishes canvas texture generation, not lighting/shader appearance on a GPU.
 
-Actual USB/Bluetooth compatibility, printed A/B labels, controller input feel, graphics, and device frame rate still require desktop testing. Run Controller setup with your device, then check steering, throttle, both brakes, reversing, pause/resume, camera switching, and unplugging while moving. Open handling.html, choose Control the grade, make small corrections in both directions around 15–18 mph, and compare Chase with Overhead (C three times). Then test the S bends and reverse docking. A small tail-overhang sweep is normal; continuous sideways sliding or yaw while stopped is not.
+The actual audio.js module was rendered by Chrome's OfflineAudioContext for eight seconds through tests/browser-audio.html. It passed with these normalized PCM measurements:
+
+| Measurement | Result |
+| --- | --- |
+| Peak absolute sample | 0.1199264 (below clipping at 1.0) |
+| Idle RMS | 0.0171452 |
+| Acceleration RMS | 0.0310268 |
+| Engine-brake RMS | 0.0275495 |
+| Air-release section RMS | 0.0252476 |
+| Paused peak | 0 |
+| Reverse RMS | 0.0252792 |
+| Muted peak | 0 |
+
+This uses the real Web Audio renderer with a scheduled clock and the unchanged sound module. It is a signal/lifecycle check, not listening to speakers or proving real-time device latency. Runtime AudioContext availability and resume rejection are also covered with stubs.
+
+No physical NES controller or adapter was attached here. The user reported that the preceding test run was much better; the implementation it exercised is retained. Actual graphics, audio character, controller device compatibility and frame rate still require desktop testing. Open index.html, complete the full descent, and compare Chase, Hood and Inspect. Try throttle, engine braking, service-brake release, pause/resume, mute and volume. Use handling.html for the repeatable braking, grade, S-bend and reverse checks.
 
 ## Delivery scope
 

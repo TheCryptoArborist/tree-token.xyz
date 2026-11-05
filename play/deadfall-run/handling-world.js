@@ -2,15 +2,15 @@
   "use strict";
   const R = root.DeadfallRoute, W = root.DeadfallWorld, M = W.materials;
   function create(scene) {
-    scene.background = new THREE.Color(0xb8ccd0);
-    scene.fog = new THREE.Fog(0xb8ccd0, 180, 680);
-    scene.add(new THREE.HemisphereLight(0xe5eff3, 0x777058, 2.2));
-    const sun = new THREE.DirectionalLight(0xffe9c7, 3);
+    scene.background = new THREE.Color(0xc7cec3);
+    scene.fog = new THREE.Fog(0xc7cec3, 240, 850);
+    const sky = W.atmosphere(scene);
+    const sun = new THREE.DirectionalLight(0xffe7c2, 2.4);
     sun.castShadow = true; sun.shadow.mapSize.set(1024, 1024);
-    Object.assign(sun.shadow.camera, { left: -60, right: 60, top: 60, bottom: -60, near: 1, far: 260 });
-    sun.shadow.bias = -.00025; sun.shadow.normalBias = .035;
+    Object.assign(sun.shadow.camera, { left: -42, right: 42, top: 42, bottom: -42, near: 1, far: 260 });
+    sun.shadow.bias = -.0002; sun.shadow.normalBias = .022; sun.shadow.radius = 2;
     scene.add(sun, sun.target);
-    const terrain = new THREE.MeshStandardMaterial({ color: 0x64715a, roughness: 1 });
+    const terrain = M.terrain.clone(); terrain.vertexColors = false; terrain.color.set(0x64715a);
     const ground = W.ribbon(-100, 1000, -180, 180, -.16, terrain);
     ground.name = "Handling terrain"; scene.add(ground);
     const road = new THREE.Group(); road.name = "Handling road";
@@ -19,6 +19,7 @@
     for (const side of [-1, 1]) road.add(W.ribbon(205, 940, side * 6.7 - .065, side * 6.7 + .065, .065, M.edge));
     for (let d = 210; d < 930; d += 16) road.add(W.ribbon(d, d + 5, -.06, .06, .065, M.line));
     scene.add(road);
+    W.roadRepairs(scene, 205, 940, 7);
     W.sign(scene, 12, 28, "TREE PROVING GROUND", "STORM RECOVERY  /  HANDLING LAB", 6);
     W.sign(scene, 270, 9.5, "7% DESCENT", "CONTROL SPEED  /  ENGINE BRAKE", 4);
     W.sign(scene, 545, 9.5, "TRAILER TRACKING", "18 MPH MAX  /  WATCH THE INSIDE", 4);
@@ -75,6 +76,7 @@
     return { sun, obstacles: [], get cones() { return cones[selected]; }, selectTest(id) {
       selected = id; for (const key of Object.keys(groups)) groups[key].visible = key === id;
     }, update(pos) {
+      sky.position.copy(pos);
       sun.position.copy(pos).add(new THREE.Vector3(-55, 95, 35)); sun.target.position.copy(pos);
     } };
   }
