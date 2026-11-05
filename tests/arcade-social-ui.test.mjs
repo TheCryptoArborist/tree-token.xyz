@@ -14,20 +14,20 @@ const session=(address=wallet)=>({wallet:address,token:address.slice(2),expiresA
 const snapshot=()=>({wallet,entries:[{mission:'share-score',status:'pending',proof:'https://x.com/player/status/123'}],monthlyStamps:0,resetsAt:'2026-11-09T00:00:00Z'});
 test('opening composer grants no stamp; pending proof locks repeat submissions',async()=>{
  let calls=0;const f=fixture(async()=>{calls++;return Response.json(snapshot())});
- assert.equal(f.root.querySelector('[type=submit]').disabled,true);
+ assert.equal(f.root.querySelector('[data-mission="share-score"] [type=submit]').disabled,true);
  f.set(session());assert.equal(calls,0);await f.controller.refresh();
  assert.match(f.root.querySelector('.mission-state').textContent,/Pending review/);
- assert.equal(f.root.querySelector('[type=submit]').disabled,true);
+ assert.equal(f.root.querySelector('[data-mission="share-score"] [type=submit]').disabled,true);
  assert.match(f.root.querySelector('#missions-progress').textContent,/0 community stamps/);f.close();
 });
 test('account switch clears proof and ignores in-flight results for the old wallet',async()=>{
  let resolveResponse;const f=fixture(()=>new Promise(resolve=>{resolveResponse=resolve}));f.set(session());const pending=f.controller.refresh();
  f.set(session(other));resolveResponse(Response.json(snapshot()));await pending;
- assert.equal(f.root.querySelector('#missions-progress').textContent,'');assert.equal(f.root.querySelector('[name=proof]').value,'');
+ assert.equal(f.root.querySelector('#missions-progress').textContent,'');assert.equal(f.root.querySelector('[data-mission="share-score"] [name=proof]').value,'');
  assert.doesNotMatch(f.root.querySelector('.mission-state').textContent,/Pending/);f.close();
 });
 test('unavailable service and wrong-wallet receipts cannot show completed progress',async()=>{
  for(const response of [()=>Response.json({message:'Missions unavailable'},{status:503}),()=>Response.json({...snapshot(),wallet:other})]){
- const f=fixture(async()=>response());f.set(session());await f.controller.refresh();assert.equal(f.root.querySelector('#missions-progress').textContent,'');assert.equal(f.root.querySelector('[type=submit]').disabled,false);f.close();
+ const f=fixture(async()=>response());f.set(session());await f.controller.refresh();assert.equal(f.root.querySelector('#missions-progress').textContent,'');assert.equal(f.root.querySelector('[data-mission="share-score"] [type=submit]').disabled,false);f.close();
  }
 });

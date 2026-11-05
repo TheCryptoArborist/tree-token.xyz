@@ -21,7 +21,7 @@ The composer only opens a draft. No messages are sent automatically. Links never
 Before publication:
 
 1. Reconcile against the actual current production inventory (the archived root build is not a production package).
-2. Apply `supabase/migrations/20261104133625_arcade_social_missions.sql` to the confirmed Daily Growth database. It is additive and has been exercised in an isolated PostgreSQL engine, not applied to a hosted database.
+2. Apply `supabase/migrations/20261104133625_arcade_social_missions.sql` to the confirmed Daily Growth database. It was tested in an isolated PostgreSQL engine and installed alongside campaign progress on 2026-11-05 UTC; see docs/arcade-quest-campaigns.md.
 3. Package the new function with the existing Daily Growth Supabase binding and the new flag; preserve every existing function package, runtime/provider binding and all five schedules. No ordinary dashboard build.
 4. Include `/scripts/arcade-social-missions.js` and the three changed frontend files in the preserved release. Only activate after the database and function pass hosted authentication/authorization checks.
 5. Check canonical desktop and phone rendering and a real wallet's message-only sign-in, then confirm a pending submission and saved vote. Preview hosts cannot reuse canonical-origin sessions.

@@ -1,3 +1,4 @@
+import { createQuestCampaigns } from './arcade-quest-campaigns.js';
 import { createArcadeMissions } from './arcade-social-missions.js';
 // Daily Growth has its own message-only wallet session. Opening a game link never grants credit.
 const API_PATH = '/api/arcade-growth';
@@ -180,6 +181,7 @@ export function createDailyGrowth({
     availableWallets: [], apiUnavailable: false, launched: false,
   };
   const missions = createArcadeMissions({ root, fetchImpl, getSession: () => state.session, now });
+  const campaigns = createQuestCampaigns({ root, fetchImpl, getSession: () => state.session, syncGames: () => refresh(), checkIn: () => checkIn(), now });
   let bridge = null;
   let epoch = 0;
   let disposed = false;
@@ -688,6 +690,7 @@ export function createDailyGrowth({
   function render() {
     if (disposed) return;
     missions.sessionChanged();
+    campaigns.sessionChanged();
     const busy = Boolean(state.busy);
     root.dataset.growthState = state.busy || (state.apiUnavailable ? 'unavailable' : state.session ? 'authenticated' : state.wallet ? 'connected' : 'signed-out');
     root.setAttribute('aria-busy', String(busy));
@@ -1122,6 +1125,7 @@ export function createDailyGrowth({
   });
   on(root.querySelector('#missions-view-community'), 'click', () => selectTab(root.querySelector('#growth-community-tab'), true));
   on(root.querySelector('#growth-community-tab'), 'click', () => void missions.refresh());
+  on(root.querySelector('#growth-campaigns-tab'), 'click', () => void campaigns.refresh());
   function invitationTab() {
     return tabs.find((tab) => tab.id === `growth-${invitationComplete() ? 'badges' : 'today'}-tab`);
   }
@@ -1169,6 +1173,7 @@ export function createDailyGrowth({
     destroy() {
       disposed = true;
       missions.destroy();
+      campaigns.destroy();
       if (ui['wallet-picker'].open) ui['wallet-picker'].close();
       epoch += 1;
       view.clearTimeout(expiryTimer);
