@@ -1,0 +1,17 @@
+import fs from 'node:fs';
+import {build} from 'esbuild';
+import {zipFunctions} from '@netlify/zip-it-and-ship-it';
+import {layout} from '../src/engine.js';
+fs.rmSync('dist',{recursive:true,force:true});fs.mkdirSync('dist',{recursive:true});
+for(const name of ['index.html','style.css'])fs.copyFileSync('public/'+name,'dist/'+name);
+fs.copyFileSync('public/tree-token.png','dist/tree-token.png');
+const tree=(x,y,k)=>`<path d="M${x-18*k} 900 Q${x+24*k} 620 ${x} ${y} L${x+15*k} ${y-20} Q${x+33*k} 550 ${x+48*k} 900Z" fill="#092323"/><path d="M${x+6*k} ${y+220} Q${x-70*k} ${y+100} ${x-135*k} ${y+105} M${x+10*k} ${y+330} Q${x+70*k} ${y+220} ${x+140*k} ${y+230}" stroke="#092323" stroke-width="${10*k}" fill="none"/>`;
+const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 900"><defs><radialGradient id="sky"><stop stop-color="#2b5943"/><stop offset="1" stop-color="#071c23"/></radialGradient></defs><path fill="url(#sky)" d="M0 0H800V900H0z"/>${Array.from({length:10},(_,i)=>tree(i*100-40,30+i%3*50,1)).join('')}${layout(1).map(b=>`<rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" rx="5" fill="#36513c" stroke="#8fc473" stroke-opacity=".5"/><path d="M${b.x+40} ${b.y+15}q-3-11 12-10q4 12-12 10" fill="#95c785"/>`).join('')}<path d="M0 865 Q200 825 400 860T800 865V900H0z" fill="#142e20"/><path d="M0 74V865M800 74V865" stroke="#34573c" stroke-width="30"/><rect x="336" y="820" width="128" height="21" rx="8" fill="#756443" stroke="#a3de9c"/><circle cx="400" cy="804" r="8" fill="#ecffc3"/></svg>`;
+fs.writeFileSync('dist/forest.svg',svg);
+const css=fs.readFileSync('dist/style.css','utf8');fs.writeFileSync('dist/style.css',css+'\ncanvas{background: url("./forest.svg") center/100% 100% no-repeat;}\n');
+fs.writeFileSync('server/runtime-source.json',JSON.stringify(Object.fromEntries(fs.readdirSync('src').filter(n=>n.endsWith('.js')).map(n=>[n,fs.readFileSync('src/'+n,'utf8')]))));
+await build({entryPoints:['client/gateway.mjs'],bundle:true,external:['./src/*'],format:'esm',platform:'browser',target:'es2022',outfile:'dist/gateway.js',minify:true,legalComments:'eof'});
+fs.mkdirSync('.netlify/breaker-functions',{recursive:true});
+const result=await zipFunctions('netlify/functions','.netlify/breaker-functions',{config:{'*':{nodeBundler:'esbuild',nodeVersion:'22.x'}},manifest:'.netlify/breaker-functions/manifest.json'});
+if(result.length!==1||result[0].name!=='breaker-access')throw Error('Only the isolated breaker function may be packaged');
+console.log(JSON.stringify({static:fs.readdirSync('dist'),function:result[0].name,runtime:result[0].runtimeVersion}));
