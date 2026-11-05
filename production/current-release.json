@@ -1,22 +1,11 @@
 {
-  "id": "6aebe195dff096f7428fe1b0",
+  "id": "6aebe7578c57bc8e8c7e1b53",
   "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
-  "baseline": "6ae971bd73f65c3f86a9e887",
-  "sourceCommit": "b7c1849aeac0cdb4c75b9325ab0bf5fa6cd23e7e",
-  "publishedAt": "2026-11-05T01:56:59.773Z",
-  "url": "https://tree-token.xyz/play/",
-  "files": 290,
-  "functionsPreserved": 41,
-  "functionsAdded": 2,
-  "schedulesPreserved": 5,
-  "oldEnvironmentEntriesPreserved": 50,
-  "newEnvironmentEntries": 0,
+  "baseline": "6aebe195dff096f7428fe1b0",
+  "sourceCommit": "afc8661e89728b64004325e0c8a0213a6adbd892",
+  "publishedAt": "2026-11-05T02:20:24.435Z",
   "locked": true,
-  "sourceTree": "2ae078a5da80ef6b1e1f7ab97010a6ecf7eb01b7",
-  "sourceBranch": "feature/arcade-social-missions-20261104",
-  "verifiedAt": "2026-11-05T02:02:41.876532+00:00",
-  "baselineSha256": "52a55cb9c3d7c9095b4c42d495886622f24a7cfa3ba30fb60cab4c96746ceea2",
-  "filesSha256": "c66309ffebb4e4a50b3bb62d48875fcda1d3a2c33ffc97f43beb1e60e3833f9c",
+  "files": 290,
   "filesBySha1": {
     "/tree.jpg": "5ca16c779edf1d559e5be5a02a6edd2e626d9c2f",
     "/tokenomics/index.html": "7e838cb7bdf00d911b22023003b399f11589e05a",
@@ -77,7 +66,7 @@
     "/scripts/arcade-sui-wallet.js": "25cdec64fb85cfcbe6b7f706841f105e351c3b36",
     "/roadmap/index.html": "6597c20c44a9aac623f685679962fb2fc100c5db",
     "/raffle-rules/index.html": "442ca8e3abf867d7dab3dc1857f1e21182e9addc",
-    "/play/index.html": "254a113a5944e8164e5cea25432fdb4f543ff82f",
+    "/play/index.html": "778d4c867af5b1041822e6040195b7308837eee5",
     "/mascot.png": "9f5e5db66e2f6c3eee41d70b1800094fe014a473",
     "/index.html": "1dba30e928a617b53d698561fb77dcffa6205ccd",
     "/hero.png": "15fa5856c63652fa6089010f683169d8b0c0dca5",
@@ -237,7 +226,7 @@
     "/play/treeforce89/assets/arcade-cw4df7w2.js": "0eb93075166b1d41ecd1a3b0586c5b52508d06c7",
     "/play/treeforce89/assets/graphql-hafrftxs.js": "594f4ac60c2bb738880581e1036eef89abb695e7",
     "/play/treeforce89/assets/index-ccisclqf.js": "846faa5cc41509c4a79ce8263e4ad8c3a55f32fa",
-    "/styles/tree-arcade-suite.css": "687398e56e9dedd356f395ef241cebae34ef1436",
+    "/styles/tree-arcade-suite.css": "0051cd0d7836c16345312d3d40d73e71df3749fc",
     "/assets/arcade/garden-bot-crest.png": "2c376aefd26da4f6c6404e676bff108b7b0e1a78",
     "/assets/arcade/pvp-battle-crest.png": "1027d41aa13f52f24d498bf3428feb1927fc017f",
     "/assets/arcade/arborist-trials-logo.webp": "9c8e9a3270b742bffafa8cc14695e8f8fc7d9511",
@@ -312,40 +301,16 @@
   "overlay": [
     {
       "path": "/play/index.html",
-      "sha": "254a113a5944e8164e5cea25432fdb4f543ff82f",
-      "size": 48543
+      "sha": "778d4c867af5b1041822e6040195b7308837eee5",
+      "size": 51309
     },
     {
       "path": "/styles/tree-arcade-suite.css",
-      "sha": "687398e56e9dedd356f395ef241cebae34ef1436",
-      "size": 86635
-    },
-    {
-      "path": "/scripts/arcade-daily-growth.js",
-      "sha": "7eb4c8be3fa831e5b943d8e33b9d937539226eae",
-      "size": 72527
-    },
-    {
-      "path": "/scripts/arcade-social-missions.js",
-      "sha": "f6a0ab4643ff4136921dc115509102f857fea83a",
-      "size": 4270
-    },
-    {
-      "path": "/scripts/arcade-quest-campaigns.js",
-      "sha": "310a8dda1cdda18f6eaddb9d12e0c8e0b4f092df",
-      "size": 8034
+      "sha": "0051cd0d7836c16345312d3d40d73e71df3749fc",
+      "size": 93152
     }
   ],
-  "changedExistingPaths": [
-    "/play/index.html",
-    "/styles/tree-arcade-suite.css",
-    "/scripts/arcade-daily-growth.js"
-  ],
-  "preservedStaticFiles": 285,
-  "newPaths": [
-    "/scripts/arcade-social-missions.js",
-    "/scripts/arcade-quest-campaigns.js"
-  ],
+  "functionsPreserved": 43,
   "functionRecords": [
     {
       "n": "arcade-wallet-link",
@@ -1804,7 +1769,30 @@
       "cron": "17 */6 * * *"
     }
   ],
+  "schedulesPreserved": 5,
   "runtime": {
+    "function_schedules": [
+      {
+        "name": "tree-badges-refresh-scheduled",
+        "cron": "47 */6 * * *"
+      },
+      {
+        "name": "tree-exposure-refresh-scheduled",
+        "cron": "27 */6 * * *"
+      },
+      {
+        "name": "tree-knowledge-trial-resolver",
+        "cron": "5 * * * *"
+      },
+      {
+        "name": "tree-knowledge-trial-rotation-scheduled",
+        "cron": "15 * * * *"
+      },
+      {
+        "name": "tree-leaderboard-refresh-scheduled",
+        "cron": "17 */6 * * *"
+      }
+    ],
     "functions_region": "cmh",
     "functions_region_overrides": [
       {
@@ -1982,78 +1970,43 @@
   "environmentEvidence": {
     "unchanged": true,
     "siteRecordCount": 50,
-    "sharedRecordCount": 0,
-    "originalRecordsComparedExactly": true,
-    "newEnvironmentEntries": 0
+    "sharedRecordCount": 0
   },
-  "completeOriginalFunctionRecordsIdenticalToPrevious": true,
-  "functionPreservationBasis": "All 41 original complete provider records equal baseline; matching original ZIPs uploaded without rebuild. Two additive ZIPs archived separately.",
-  "candidateUrl": "https://6aebe195dff096f7428fe1b0--tree-token.netlify.app",
-  "participationProbes": [
-    {
-      "path": "/api/arcade-campaign",
-      "method": "GET",
-      "status": 401,
-      "response": {
-        "error": "arcade-growth-invalid-session",
-        "message": "Sign in again to load your campaign progress."
-      }
-    },
-    {
-      "path": "/api/arcade-campaign",
-      "method": "POST",
-      "status": 401,
-      "response": {
-        "error": "arcade-growth-invalid-session",
-        "message": "Sign in again to load your campaign progress."
-      }
-    },
-    {
-      "path": "/api/arcade-social",
-      "method": "GET",
-      "status": 401,
-      "response": {
-        "error": "invalid-session",
-        "message": "Sign in again to load community missions."
-      }
-    },
-    {
-      "path": "/api/arcade-growth?action=treeforce-play",
-      "method": "POST",
-      "status": 401,
-      "response": {
-        "status": "error",
-        "error": "invalid-game-session",
-        "message": "Your game sign-in expired. Verify your NFTree again before starting a new run."
-      }
-    },
-    {
-      "staticModules": "Both canonical module SHA1 hashes equal the published inventory"
-    }
+  "url": "https://tree-token.xyz/play/",
+  "verifiedAt": "2026-11-05T02:21:54.187190+00:00",
+  "sourceTree": "0e110947e138e5cef25e5dfb6be53c70044f101e",
+  "sourceBranch": "feature/arcade-social-missions-20261104",
+  "changedExistingPaths": [
+    "/play/index.html",
+    "/styles/tree-arcade-suite.css"
   ],
+  "preservedStaticFiles": 288,
+  "newPaths": [],
+  "completeFunctionRecordsIdenticalToPrevious": true,
+  "functionPreservationBasis": "All 43 complete published function/provider records and package digests are identical to baseline; original archives reused without rebuilding.",
+  "candidateUrl": "https://6aebe7578c57bc8e8c7e1b53--tree-token.netlify.app/play/",
   "verification": {
-    "nodeTestsPassed": 90,
-    "isolatedDatabaseTests": "passed",
-    "hostedPrivateTablesRlsAndPrivileges": "passed",
-    "canonicalBrowserCampaigns": "passed",
+    "uiTestsPassed": 57,
+    "uniqueHtmlIds": true,
+    "allArtworkInPublishedInventory": true,
+    "canonicalPartnerLinks": [
+      "https://x.com/suidexHQ",
+      "https://x.com/kelpiedotsui"
+    ],
+    "canonicalNoHorizontalOverflow": true,
+    "signedOutCommunityHeight": {
+      "before": 1209,
+      "after": 343
+    },
+    "signedOutCampaignHeight": {
+      "before": 1851,
+      "after": 318
+    },
+    "cardExpansion": "passed",
+    "campaignQuizNavigation": "passed",
+    "dailyBadgeSidebarRetained": true,
     "realWalletEndToEndPerformed": false,
     "canonicalPhoneVisualPerformed": false,
-    "teamTreeAutomatedVerificationConfigured": false,
-    "noRealUserWrites": true
-  },
-  "releaseReceipt": {
-    "id": "6aebe195dff096f7428fe1b0",
-    "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
-    "baseline": "6ae971bd73f65c3f86a9e887",
-    "sourceCommit": "b7c1849aeac0cdb4c75b9325ab0bf5fa6cd23e7e",
-    "publishedAt": "2026-11-05T01:56:59.773Z",
-    "url": "https://tree-token.xyz/play/",
-    "files": 290,
-    "functionsPreserved": 41,
-    "functionsAdded": 2,
-    "schedulesPreserved": 5,
-    "oldEnvironmentEntriesPreserved": 50,
-    "newEnvironmentEntries": 0,
-    "locked": true
+    "followVerificationConfigured": false
   }
 }
