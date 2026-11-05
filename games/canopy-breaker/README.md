@@ -20,8 +20,13 @@ playtest as real NFT verification or real token payment.
   Gale Force, Root Snare and Wild Wind hazards. The original seed controls lives,
   including while bonus seeds survive.
 - Mouse, touch drag, A/D, arrows, Space to launch/fire, P to pause. Detected
-  gamepads use stick/D-pad, A/B and Start. Physical NES-controller mappings and
-  iPhone wallet app round trips still require real-device testing.
+  NES USB controllers support D-pad, A/B launch/fire and Start pause/resume.
+  Standard and common four/eight-button USB layouts have defaults; Set controller
+  buttons learns left/right, A, B and Start for other adapters and saves that
+  mapping per controller in this browser. Select has no gameplay action.
+  Disconnect pauses the run; reconnect requires released controls and an explicit
+  resume. Physical NES hardware and iPhone wallet app round trips still require
+  real-device testing.
 - Original canvas art, event sounds, reduced-motion support and fullscreen.
 
 ## Access and restart rules

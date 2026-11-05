@@ -1,9 +1,13 @@
 import {step,PICKUPS,BIOMES} from './engine.js';
 import {draw} from './art.js';
 import {sound,wakeAudio,setSound} from './audio.js';
+import {createControllerTracker,createControllerCalibration} from './controller.js';
 const $=id=>document.getElementById(id),api=window.breakerSession,canvas=$('game'),ctx=canvas.getContext('2d');
 let run=null,queue=[],sending=null,paused=false,connected=!!api.account,clock=0,last=performance.now(),target=400,launch=false,fire=false,events=0,syncError='',muted=false,opening=null,quote=null,buying=false,gameRevision=0;
 const keys=new Set(),motion=!matchMedia('(prefers-reduced-motion: reduce)').matches;
+let controlStorage=null;try{controlStorage=localStorage;}catch{}
+const controller=createControllerTracker({storage:controlStorage}),controlDialog=$('controller-dialog');let calibration=null;
+const canPause=()=>run&&['ready','playing','cleared'].includes(run.state.status);
 function toast(text){$('toast').textContent=text;$('toast').classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>$('toast').classList.remove('show'),2500);}
 function replace(data){gameRevision++;run=data;queue=[];target=run.state.paddle;events=run.state.eventId;syncError='';paused=false;paint();}
 async function open(){if(opening)return opening;const address=api.account?.address,stamp=gameRevision;opening=(async()=>{try{const data=await api.request('open');if(api.account?.address!==address||stamp!==gameRevision)return;replace(data);}catch(e){syncError=e.message;paint();}finally{opening=null;}})();return opening;}
@@ -34,7 +38,7 @@ $('history-toggle').onclick=async()=>{const box=$('history');box.hidden=!box.hid
 $('primary').onclick=primary;
 $('launch').onpointerdown=e=>{e.currentTarget.setPointerCapture(e.pointerId);wakeAudio();fire=true;if(run&&['ready','cleared'].includes(run.state.status))launch=true;};
 for(const name of ['pointerup','pointercancel','lostpointercapture'])$('launch').addEventListener(name,()=>fire=false);
-function togglePause(){if(!run||!connected||syncError)return;paused=!paused;if(paused)flush();paint();}
+function togglePause(){if(!canPause()||!connected||syncError)return;paused=!paused;if(paused)flush();paint();}
 $('pause').onclick=togglePause;$('sound').onclick=async()=>{muted=!muted;setSound(!muted);$('sound').textContent=muted?'Sound off':'Sound on';$('sound').setAttribute('aria-pressed',String(!muted));if(!muted)await wakeAudio();};
 $('fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.querySelector('.cabinet').requestFullscreen();}catch{toast('Use your browser fullscreen option.');}};
 canvas.addEventListener('pointermove',e=>{const r=canvas.getBoundingClientRect();target=Math.max(0,Math.min(800,(e.clientX-r.left)/r.width*800));});
@@ -42,14 +46,32 @@ canvas.addEventListener('pointerdown',e=>{wakeAudio();canvas.setPointerCapture(e
 canvas.addEventListener('pointerup',()=>fire=false);canvas.addEventListener('pointercancel',()=>fire=false);
 window.addEventListener('keydown',e=>{if(['INPUT','TEXTAREA','BUTTON','SUMMARY'].includes(e.target.tagName)||$('checkout').open)return;if(['ArrowLeft','ArrowRight',' ','a','d','A','D','p','P'].includes(e.key)){e.preventDefault();keys.add(e.key.toLowerCase());wakeAudio();if(e.key===' '&&!e.repeat)launch=true;if(e.key.toLowerCase()==='p'&&!e.repeat)togglePause();}});window.addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));
 window.addEventListener('blur',()=>{keys.clear();fire=false;if(run?.state.status==='playing'){paused=true;flush();paint();}});
-document.addEventListener('visibilitychange',()=>{if(document.hidden){paused=true;keys.clear();fire=false;flush();paint();}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){if(canPause())paused=true;keys.clear();fire=false;flush();paint();}});
 api.subscribe(a=>{const next=!!a;if(!next){gameRevision++;queue=[];run=null;paused=true;connected=false;}else if(!connected){connected=true;open();}paint();});
-let previousStart=false;
+function textIfChanged(id,text){if($(id).textContent!==text)$(id).textContent=text;}
+$('controller-setup').onclick=()=>{calibration=null;if(canPause())paused=true;flush();paint();$('controller-prompt').textContent='Release all controller buttons and the D-pad, then choose Begin setup.';if(!controlDialog.open)controlDialog.showModal();};
+$('controller-begin').onclick=()=>{if(!controller.pad)return;wakeAudio();calibration=createControllerCalibration(controller.pad);};
+$('controller-reset').onclick=()=>{if(!controller.pad)return;controller.clearProfile(controller.pad.id);calibration=null;$('controller-prompt').textContent='Default controls restored. You can set the buttons again or close this window.';};
+controlDialog.addEventListener('close',()=>{calibration=null;});
+function pollController(){
+ const input=controller.poll(),pad=controller.pad;
+ textIfChanged('controller-status',input.error?'Controller access is unavailable here. Keyboard and mouse still work.':pad?`${input.profile} connected · ${pad.id}`:'Connect your USB NES controller and press any button.');
+ $('controller-begin').disabled=!pad||!!calibration;$('controller-reset').disabled=!pad;
+ if(input.disconnected&&canPause()){paused=true;flush();toast('Controller disconnected. Your game is paused.');}
+ if(controlDialog.open&&calibration){
+  const state=calibration.poll(pad),names={left:'D-pad LEFT',right:'D-pad RIGHT',a:'A',b:'B',start:'START'};
+  if(state.disconnected){calibration=null;$('controller-prompt').textContent='Controller disconnected. Reconnect it and begin setup again.';}
+  else if(state.complete){controller.setProfile(pad.id,state.profile);calibration=null;$('controller-prompt').textContent='NES controls saved. Close this window, then press Start to resume. Select is not used for gameplay.';toast('NES controller controls saved.');}
+  else textIfChanged('controller-prompt',state.error||state.release?`${state.error?state.error+' ':''}Release all controls, then ${state.action==='left'||state.action==='right'?'hold':'press'} ${names[state.action]}.`:`${state.action==='left'||state.action==='right'?'Hold':'Press'} ${names[state.action]}.`);
+ }
+ return input;
+}
 function frame(time){
  const dt=Math.min(.06,(time-last)/1000);last=time;
- const gamepad=navigator.getGamepads?.()?.find(g=>g?.connected);let axis=0,padFire=false;
- if(gamepad){axis=(gamepad.axes[0]||0)+(gamepad.buttons[14]?.pressed?-1:0)+(gamepad.buttons[15]?.pressed?1:0);if(Math.abs(axis)<.2)axis=0;padFire=!!(gamepad.buttons[0]?.pressed||gamepad.buttons[1]?.pressed);const start=!!gamepad.buttons[9]?.pressed;if(start&&!previousStart)togglePause();previousStart=start;if(padFire&&run?.state.status==='ready')launch=true;}
- if(run&&connected&&!paused&&!syncError&&!document.hidden&&!$('checkout').open&&(['ready','playing'].includes(run.state.status)||(run.state.status==='cleared'&&launch))){
+ const input=pollController(),canUsePad=connected&&!syncError&&!document.hidden&&!$('checkout').open&&!controlDialog.open;
+ const axis=canUsePad?input.axis:0,padFire=canUsePad&&input.fire;
+ if(canUsePad){if(input.startPressed){wakeAudio();togglePause();}if(input.firePressed&&!paused&&run&&['ready','cleared'].includes(run.state.status)){wakeAudio();launch=true;}}
+ if(run&&connected&&!paused&&!syncError&&!document.hidden&&!$('checkout').open&&!controlDialog.open&&(['ready','playing'].includes(run.state.status)||(run.state.status==='cleared'&&launch))){
   const direction=(keys.has('a')||keys.has('arrowleft')?-1:0)+(keys.has('d')||keys.has('arrowright')?1:0)+axis;
   target=Math.max(0,Math.min(800,target+direction*900*dt));clock+=dt;
   while(clock>=1/60&&queue.length<120){const input={x:target,launch:launch||keys.has(' '),fire:fire||keys.has(' ')||padFire};step(run.state,input);queue.push(input);launch=false;clock-=1/60;if(['gameover','cleared','won'].includes(run.state.status)){flush();clock=0;break;}}
