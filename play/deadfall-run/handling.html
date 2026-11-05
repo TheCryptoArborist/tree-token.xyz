@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0b1210" />
-  <title>Deadfall Run | Handling Lab — Build 0.5.1</title>
+  <title>Deadfall Run | Handling Lab — Build 0.5.2</title>
   <meta name="description" content="Four controlled log-truck handling tests: braking, downhill control, trailer tracking, and reverse docking." />
   <link rel="canonical" href="https://tree-token.xyz/play/deadfall-run/handling.html" />
   <link rel="stylesheet" href="styles.css" />
@@ -33,6 +33,7 @@
     <div><small>TREE ARCADE</small><strong>DEADFALL <em>RUN</em></strong></div>
     <nav aria-label="Game options">
       <a class="arcade-back" href="https://tree-token.xyz/play/">← BACK TO ARCADE</a>
+      <button id="controllerOptions">CONTROLLER</button>
       <button id="quality">DETAIL · BALANCED</button>
       <button id="camera" class="in-run">CAMERA · CHASE</button>
       <button id="menu" class="in-run">TEST MENU</button><button id="retry" class="in-run">RETRY</button>
@@ -53,7 +54,7 @@
 
   <section id="start" class="overlay active">
     <div class="panel">
-      <p>TREE ARCADE · HANDLING LAB 0.5.1</p>
+      <p>TREE ARCADE · HANDLING LAB 0.5.2</p>
       <h1>Know<br />your rig.</h1>
       <p class="copy">Five logs. One articulated rig. Four repeatable tests to get the handling right before the next mountain run.</p>
       <div class="test-select" aria-label="Choose a handling test">
@@ -72,8 +73,29 @@
       <p id="startupError" role="alert" hidden></p>
       <button id="drive" disabled>PREPARING 3D…</button>
       <p class="fine-print test-access">Local practice · Five logs reset on every attempt</p>
+      <button id="controllerSetup" class="secondary controller-launch">CONTROLLER SETUP</button>
+      <small id="controllerStatus" class="controller-status" role="status">Connect a controller and press a button to wake it.</small>
       <small id="bootStatus" role="status">Preparing the truck and test course…</small>
       <noscript>This game needs JavaScript enabled in your browser.</noscript>
+    </div>
+  </section>
+
+  <section id="controllerPanel" class="controller-overlay" role="dialog" aria-modal="true" aria-labelledby="controllerTitle" aria-describedby="controllerHelp" hidden>
+    <div class="panel controller-card">
+      <p>PLUG IN. HAUL OUT.</p><h2 id="controllerTitle">NES controller</h2>
+      <p id="controllerHelp" class="copy">Connect by USB or pair with your computer over Bluetooth. Press and release a button to wake the controller.</p>
+      <small id="controllerDevice">No controller detected</small>
+      <dl class="controller-legend">
+        <dt>D-pad ← / →</dt><dd>Steer</dd><dt>A / B</dt><dd>Throttle / service brake</dd>
+        <dt>D-pad ↑</dt><dd>Engine brake</dd><dt>D-pad ↓, held</dt><dd>Reverse from a stop</dd>
+        <dt>START</dt><dd>Start / pause / resume / retry</dd><dt>SELECT</dt><dd>Change camera</dd>
+      </dl>
+      <p class="controller-note">In the menu, use the D-pad to choose a test or preset, then START. On the results screen, B returns to the menu.</p>
+      <p class="controller-note">For setup, center the D-pad and release every button before clicking Begin setup. Follow the eight prompts. The game stays paused while you map the buttons.</p>
+      <p id="controllerPrompt" class="controller-prompt" role="status">Connect a controller to begin.</p>
+      <button id="controllerBegin" disabled>BEGIN SETUP</button>
+      <button id="controllerCancel" class="secondary" hidden>CANCEL SETUP</button>
+      <button id="controllerClose" class="secondary">CLOSE · ESC</button>
     </div>
   </section>
 
@@ -89,7 +111,7 @@
     <p id="labHint"></p><strong id="labPhase"></strong>
     <div class="lab-metrics"><span>STEERING<b id="labSteer">0°</b></span><span>TRAILER ANGLE<b id="labAngle">0°</b></span><span>MAX HITCH GAP<b id="labHitch">0 mm</b></span><span>TEST TIME<b id="labTime">0 s</b></span></div>
   </aside>
-  <aside id="paused" hidden><span>TEST PAUSED</span><small>Controls released. Inspect the rig with C.</small><button id="resume">RESUME</button></aside>
+  <aside id="paused" hidden><span>TEST PAUSED</span><small>START / Escape to resume. SELECT / C changes camera.</small><button id="resume">RESUME</button></aside>
   <div id="cameraHint" class="camera-hint">C · CAMERA &nbsp; R · RETRY &nbsp; SPACE · ENGINE BRAKE</div>
   <output id="diagnostics" hidden></output>
 
@@ -109,6 +131,7 @@
   <script src="handling-world.js"></script>
   <script src="handling.js"></script>
   <script src="vehicle.js"></script>
+  <script src="gamepad.js"></script>
   <script src="play.js"></script>
 </body>
 </html>

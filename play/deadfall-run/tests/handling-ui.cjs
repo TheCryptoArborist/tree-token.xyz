@@ -10,6 +10,8 @@ class Element {
       toggle: (x, force) => { if (force) tokens.add(x); else tokens.delete(x); } };
   }
   appendChild() {} setPointerCapture() {} blur() {}
+  focus() { document.activeElement = this; }
+  click() { this.dispatch("click"); }
   setAttribute(n, v) { this[n] = v; }
   addEventListener(n, f) { (this.listeners[n] ||= []).push(f); }
   dispatch(n, props = {}) { for (const f of this.listeners[n] || []) f({ target: this, preventDefault() {}, ...props }); }
@@ -24,13 +26,14 @@ const document = new Element(); document.body = new Element(); document.hidden =
 document.body.classList.add("handling");
 document.getElementById = id => elements[id] || null; document.createElement = () => new Element();
 document.querySelectorAll = s => s === "[data-test]" ? testButtons : s === "[data-control]" ? touchButtons : [];
-const listeners = {}, raf = [], failures = []; let time = 0, scene;
+const listeners = {}, raf = [], failures = []; let time = 0, scene, pads = [];
 class Renderer {
   constructor() { this.domElement = new Element(); this.shadowMap = {}; this.info = { render: { calls: 0 } }; }
   setSize() {} setPixelRatio() {}
   render(s, c) { scene = s; s.updateMatrixWorld(true); c.updateMatrixWorld(true); }
 }
 const context = vm.createContext({ THREE: { ...THREE, WebGLRenderer: Renderer }, document, console,
+  navigator: { getGamepads: () => pads }, localStorage: { getItem: () => null, setItem() {} },
   innerWidth: 1440, innerHeight: 900, devicePixelRatio: 1, performance: { now: () => time },
   requestAnimationFrame: f => raf.push(f), addEventListener: (n, f) => (listeners[n] ||= []).push(f),
   showBootError: x => failures.push(x) }); context.window = context;
@@ -85,4 +88,57 @@ test("reverse test starts in overhead view and holds a connected hitch while bac
   elements.camera.dispatch("click"); assert(elements.camera.textContent.includes("CHASE"));
   elements.menu.dispatch("click"); assert(elements.start.classList.contains("active"));
 });
-console.log(`\n${count} handling lifecycle checks passed with DOM/renderer stubs.`);
+const pad = { id: "Synthetic NES-style pad", mapping: "standard", index: 0, connected: true, axes: [0, 0],
+  buttons: Array.from({ length: 16 }, () => ({ pressed: false, value: 0 })) };
+function hold(index, pressed) { pad.buttons[index] = { pressed, value: Number(pressed) }; }
+function tap(index) { hold(index, true); frames(1); hold(index, false); frames(2); }
+function releasePad() { pad.buttons.forEach((_, i) => hold(i, false)); pad.axes = [0, 0]; frames(2); }
+test("controller navigates the lab menu, starts, drives, steers and brakes", () => {
+  pads = [pad]; frames(2); assert(elements.controllerStatus.textContent.includes("ready"));
+  tap(12); tap(12); tap(12); // reverse -> turns -> grade -> braking
+  assert.equal(testButtons[0]["aria-pressed"], "true");
+  elements.drive.disabled = true; tap(9); assert(!document.body.classList.contains("driving"));
+  elements.drive.disabled = false; tap(9);
+  assert.equal(elements.labTitle.textContent, "20 mph stop");
+  hold(0, true); frames(240); assert(Number(elements.speed.textContent) > 8);
+  const t = scene.getObjectByName("Logging tractor"), yaw = t.rotation.y;
+  hold(14, true); frames(60); hold(14, false); assert(t.rotation.y > yaw);
+  hold(1, true); frames(180); assert.equal(Number(elements.speed.textContent), 0); // Brake wins over held A.
+  releasePad();
+});
+test("controller pause and camera actions fire once while held", () => {
+  hold(9, true); frames(60); assert.equal(elements.paused.hidden, false);
+  const stopped = elements.labTime.textContent; frames(120); assert.equal(elements.labTime.textContent, stopped);
+  releasePad(); tap(8); assert(elements.camera.textContent.includes("HOOD"));
+  hold(8, true); frames(60); assert(elements.camera.textContent.includes("INSPECT"));
+  releasePad(); tap(9); assert.equal(elements.paused.hidden, true);
+});
+test("unplugging pauses immediately and reconnecting cannot retain throttle", () => {
+  elements.retry.dispatch("click"); releasePad(); hold(0, true); frames(60);
+  pads = []; frames(2); assert.equal(elements.paused.hidden, false);
+  const stopped = elements.labTime.textContent; frames(90); assert.equal(elements.labTime.textContent, stopped);
+  pads = [pad]; frames(2); elements.retry.dispatch("click"); frames(60);
+  assert.equal(Number(elements.speed.textContent), 0);
+  releasePad(); hold(0, true); frames(90); assert(Number(elements.speed.textContent) > 0); releasePad();
+});
+test("controller setup pauses, traps keyboard focus, cancels and preserves controls", () => {
+  elements.controllerOptions.dispatch("click"); assert(!elements.controllerPanel.hidden); assert(!elements.paused.hidden);
+  elements.controllerBegin.dispatch("click"); frames(2); assert(elements.controllerPrompt.textContent.includes("LEFT"));
+  key("keydown", "Tab"); assert.equal(document.activeElement, elements.controllerCancel);
+  key("keydown", "Escape"); assert(elements.controllerPanel.hidden); assert(!elements.paused.hidden);
+  assert(elements.controllerStatus.textContent.includes("cancelled"));
+  releasePad(); tap(9); assert(elements.paused.hidden);
+  elements.menu.dispatch("click");
+});
+test("D-pad down reverses from rest and D-pad up applies the engine brake", () => {
+  releasePad(); tap(13); tap(13); tap(13); tap(9); // braking -> reverse
+  assert.equal(elements.labTitle.textContent, "Reverse docking");
+  hold(13, true); frames(180); assert.equal(elements.gear.textContent, "R");
+  hold(1, true); frames(180); assert.equal(Number(elements.speed.textContent), 0);
+  releasePad(); elements.menu.dispatch("click"); releasePad(); tap(12); tap(12); tap(9); // reverse -> grade
+  assert.equal(elements.labTitle.textContent, "Downhill control");
+  hold(12, true); frames(180); assert(Number(elements.speed.textContent) < 16);
+  assert.equal(elements.brakeText.textContent, "COOL");
+  releasePad(); elements.menu.dispatch("click");
+});
+console.log(`\n${count} handling lifecycle checks passed with DOM/renderer stubs and synthetic gamepads.`);

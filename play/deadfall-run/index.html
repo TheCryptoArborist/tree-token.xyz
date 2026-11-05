@@ -33,6 +33,7 @@
     <div><small>TREE ARCADE</small><strong>DEADFALL <em>RUN</em></strong></div>
     <nav aria-label="Game options">
       <a class="arcade-back" href="https://tree-token.xyz/play/">← BACK TO ARCADE</a>
+      <button id="controllerOptions">CONTROLLER</button>
       <button id="quality">DETAIL · BALANCED</button>
       <button id="camera" class="in-run">CAMERA · CHASE</button>
       <button id="pause" class="in-run" disabled>PAUSE</button>
@@ -52,7 +53,7 @@
 
   <section id="start" class="overlay active">
     <div class="panel">
-      <p>TREE ARCADE · PLAY TEST BUILD 0.5.1</p>
+      <p>TREE ARCADE · PLAY TEST BUILD 0.5.2</p>
       <h1>The long<br />way down.</h1>
       <p class="copy">A heavy rig. Five storm-recovery logs. An unforgiving mountain descent. Keep your speed in check and your trailer in line.</p>
       <div class="route-spec"><span><b>1.8</b> KM DESCENT</span><span><b>5</b> LOGS TO DELIVER</span><span><b>3</b> CAMERA VIEWS</span></div>
@@ -71,8 +72,29 @@
       <a class="lab-link" href="handling.html">OPEN HANDLING LAB <span>4 controlled driving tests →</span></a>
       <button id="drive" disabled>PREPARING 3D…</button>
       <p class="fine-print test-access">Free test build · No wallet required</p>
+      <button id="controllerSetup" class="secondary controller-launch">CONTROLLER SETUP</button>
+      <small id="controllerStatus" class="controller-status" role="status">Connect a controller and press a button to wake it.</small>
       <small id="bootStatus" role="status">Building the truck and mountain pass…</small>
       <noscript>This game needs JavaScript enabled in your browser.</noscript>
+    </div>
+  </section>
+
+  <section id="controllerPanel" class="controller-overlay" role="dialog" aria-modal="true" aria-labelledby="controllerTitle" aria-describedby="controllerHelp" hidden>
+    <div class="panel controller-card">
+      <p>PLUG IN. HAUL OUT.</p><h2 id="controllerTitle">NES controller</h2>
+      <p id="controllerHelp" class="copy">Connect by USB or pair with your computer over Bluetooth. Press and release a button to wake the controller.</p>
+      <small id="controllerDevice">No controller detected</small>
+      <dl class="controller-legend">
+        <dt>D-pad ← / →</dt><dd>Steer</dd><dt>A / B</dt><dd>Throttle / service brake</dd>
+        <dt>D-pad ↑</dt><dd>Engine brake</dd><dt>D-pad ↓, held</dt><dd>Reverse from a stop</dd>
+        <dt>START</dt><dd>Start / pause / resume / retry</dd><dt>SELECT</dt><dd>Change camera</dd>
+      </dl>
+      <p class="controller-note">In the menu, use the D-pad to choose a test or preset, then START. On the results screen, B returns to the menu.</p>
+      <p class="controller-note">For setup, center the D-pad and release every button before clicking Begin setup. Follow the eight prompts. The game stays paused while you map the buttons.</p>
+      <p id="controllerPrompt" class="controller-prompt" role="status">Connect a controller to begin.</p>
+      <button id="controllerBegin" disabled>BEGIN SETUP</button>
+      <button id="controllerCancel" class="secondary" hidden>CANCEL SETUP</button>
+      <button id="controllerClose" class="secondary">CLOSE · ESC</button>
     </div>
   </section>
 
@@ -80,7 +102,7 @@
     <div class="panel"><p id="resultKicker">DELIVERY COMPLETE</p><h1 id="resultTitle">5/5 logs delivered</h1><div id="resultStats"></div><p class="fine-print">Local test score only. No TREE payments or trading are connected.</p><button id="again">DRIVE AGAIN</button></div>
   </section>
 
-  <aside id="paused" hidden><span>DESCENT PAUSED</span><small>Controls released. Inspect the rig with C.</small><button id="resume">RESUME</button></aside>
+  <aside id="paused" hidden><span>DESCENT PAUSED</span><small>START / Escape to resume. SELECT / C changes camera.</small><button id="resume">RESUME</button></aside>
   <div id="cameraHint" class="camera-hint">C · CAMERA &nbsp; R · RECOVER &nbsp; SPACE · ENGINE BRAKE</div>
   <output id="diagnostics" hidden></output>
 
@@ -97,6 +119,7 @@
   <script src="physics.js"></script>
   <script src="world.js"></script>
   <script src="vehicle.js"></script>
+  <script src="gamepad.js"></script>
   <script src="play.js"></script>
 </body>
 </html>

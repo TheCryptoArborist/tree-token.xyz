@@ -200,3 +200,17 @@ a:focus-visible { outline:2px solid #e5d8ad; outline-offset:3px; }
   #labHud { top:73px; left:auto; width:230px; }
   #labHud p,.lab-metrics { display:none; }
 }
+
+/* Controller setup shares one accessible dialog in both driving modes. */
+.controller-overlay { position:fixed; inset:0; z-index:30; display:grid; place-items:center; padding:20px; overflow-y:auto; align-items:safe center; background:#050b09e8; overscroll-behavior:contain; }
+.controller-card { width:min(540px,100%); padding:26px; }
+.controller-card h2 { margin:10px 0; font-size:1.9rem; letter-spacing:-.04em; }
+#controllerDevice { display:block; color:#b7c8b1; font-size:.68rem; overflow-wrap:anywhere; }
+.controller-legend { display:grid; grid-template-columns:1fr 1.6fr; gap:9px 12px; margin:20px 0; font-size:.77rem; }
+.controller-legend dt { font-weight:850; color:#d7e7b5; }
+.controller-legend dd { margin:0; color:#c4cdc6; }
+.controller-note { color:#acbcb3; font-size:.73rem; line-height:1.5; }
+.controller-prompt { min-height:54px; display:flex; align-items:center; padding:12px; margin:18px 0; border-left:3px solid #b9dc82; background:#233a2a; color:#e6f1d9; font-size:.88rem; font-weight:700; }
+.controller-status { display:block; color:#b5c5b7; font-size:.65rem; line-height:1.5; margin:9px 0; }
+.panel>button.controller-launch { padding:10px; font-size:.65rem; }
+@media (max-width:520px) { .controller-overlay { padding:12px; } .controller-card { padding:19px; } .controller-legend { grid-template-columns:1fr 1.3fr; font-size:.72rem; } }

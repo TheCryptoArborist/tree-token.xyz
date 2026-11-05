@@ -1,4 +1,4 @@
-/* Deadfall Run: 3D field-test build 0.5.1. No remote requests or transactions. */
+/* Deadfall Run: 3D field-test build 0.5.2. No remote requests or transactions. */
 (function () {
   "use strict";
   try {
@@ -28,6 +28,9 @@
     const input = { left: false, right: false, throttle: false, brake: false, engine: false, reverse: false, touchSteer: 0 };
     const keyMap = { KeyA: "left", ArrowLeft: "left", KeyD: "right", ArrowRight: "right", KeyW: "throttle", ArrowUp: "throttle",
       KeyS: "brake", ArrowDown: "brake", Space: "engine", KeyV: "reverse" };
+    const pad = DeadfallGamepad.create(), controllerPanel = $("controllerPanel");
+    let padHeld = DeadfallGamepad.empty(), focused = true, returnFocus = null, controllerText = "";
+    controllerPanel.hidden = true;
     const cameraNames = L ? ["CHASE", "HOOD", "INSPECT", "OVERHEAD"] : ["CHASE", "HOOD", "INSPECT"], qualityNames = ["LOW", "BALANCED", "HIGH"];
     let state, running = false, paused = false, selectedPreset = L ? "loaded" : "standard", cameraMode = 0, quality = 1;
     let selectedTest = "braking", session = null;
@@ -37,9 +40,15 @@
     function readInput() {
       for (const action of ["left", "right", "throttle", "brake", "engine", "reverse"]) input[action] = Boolean(touch[action]);
       for (const key of keys) if (keyMap[key]) input[keyMap[key]] = true;
+      input.left ||= padHeld.left; input.right ||= padHeld.right;
+      input.throttle ||= padHeld.a; input.brake ||= padHeld.b;
+      input.engine ||= padHeld.up && !padHeld.down; input.reverse ||= padHeld.down && !padHeld.up;
+      if (input.brake) { input.throttle = false; input.reverse = false; }
+      else if (input.reverse) input.throttle = false;
     }
     function clearInput() {
       keys.clear(); Object.keys(touch).forEach(k => touch[k] = false);
+      padHeld = DeadfallGamepad.empty(); pad.suspend();
       input.touchSteer = 0; $("steer").value = "0"; readInput();
       document.querySelectorAll("[data-control]").forEach(b => b.classList.remove("active"));
     }
@@ -78,6 +87,58 @@
       if (!running) return;
       paused = value; clearInput(); accumulator = 0; last = performance.now();
       ui.pause.textContent = paused ? "RESUME" : "PAUSE"; ui.paused.hidden = !paused;
+    }
+    function controllerUI() {
+      const s = pad.status(), text = JSON.stringify(s);
+      if (text === controllerText) return;
+      controllerText = text;
+      $("controllerStatus").textContent = s.message;
+      $("controllerDevice").textContent = s.name;
+      $("controllerPrompt").textContent = s.message;
+      $("controllerBegin").disabled = !s.connected || s.calibrating;
+      $("controllerBegin").textContent = s.ready ? "REMAP BUTTONS" : "BEGIN SETUP";
+      $("controllerCancel").hidden = !s.calibrating;
+      $("controllerOptions").textContent = s.ready ? "CONTROLLER · READY" : "CONTROLLER";
+    }
+    function openController() {
+      returnFocus = document.activeElement;
+      if (running) setPaused(true); else clearInput();
+      controllerPanel.hidden = false; controllerUI(); $("controllerClose").focus();
+    }
+    function closeController() {
+      if (pad.status().calibrating) pad.cancelSetup();
+      controllerPanel.hidden = true; clearInput(); controllerUI();
+      if (returnFocus?.focus) returnFocus.focus();
+    }
+    function controllerFrame() {
+      const result = pad.poll(focused && !document.hidden);
+      padHeld = result.held;
+      if (result.lost) {
+        clearInput(); if (running) setPaused(true);
+        showMessage("Controller disconnected. Reconnect or use the keyboard, then resume.", 6);
+      }
+      controllerUI();
+      if (!controllerPanel.hidden) {
+        padHeld = DeadfallGamepad.empty();
+        if (!pad.status().calibrating && result.pressed.start) closeController();
+        return;
+      }
+      if (result.pressed.start) {
+        if (!ui.drive.disabled) { if (running) setPaused(!paused); else start(); }
+        return;
+      }
+      if (result.pressed.select && running) setCamera((cameraMode + 1) % cameraNames.length);
+      if (!running) {
+        if (ui.result.classList.contains("active")) { if (result.pressed.b) menu(); }
+        else {
+          const buttons = Array.from(document.querySelectorAll(L ? "[data-test]" : "[data-preset]"));
+          const direction = (result.pressed.right || result.pressed.down ? 1 : 0) - (result.pressed.left || result.pressed.up ? 1 : 0);
+          if (direction && buttons.length) {
+            const index = buttons.findIndex(b => (L ? b.dataset.test === selectedTest : b.dataset.preset === selectedPreset));
+            buttons[(index + direction + buttons.length) % buttons.length].click();
+          }
+        }
+      }
     }
     function recover() {
       if (!running || paused) return;
@@ -188,6 +249,7 @@
     function frame(now) {
       const elapsed = Math.min(.1, Math.max(0, (now - last) / 1000)); last = now;
       if (elapsed > 0) fps = fps * .97 + 1 / elapsed * .03;
+      controllerFrame();
       readInput();
       if (running && !paused) {
         accumulator += elapsed;
@@ -209,6 +271,15 @@
       renderer.render(scene, camera); requestAnimationFrame(frame);
     }
     addEventListener("keydown", event => {
+      if (!controllerPanel.hidden) {
+        if (event.code === "Escape") { event.preventDefault(); closeController(); }
+        if (event.code === "Tab") {
+          const buttons = [$("controllerBegin"), $("controllerCancel"), $("controllerClose")].filter(b => !b.disabled && !b.hidden);
+          const index = buttons.indexOf(document.activeElement);
+          buttons[(index + (event.shiftKey ? -1 : 1) + buttons.length) % buttons.length].focus(); event.preventDefault();
+        }
+        return;
+      }
       if (event.target.tagName === "INPUT" || event.target.tagName === "SELECT") return;
       if (keyMap[event.code] && running && !paused) { keys.add(event.code); event.preventDefault(); }
       if (event.repeat) return;
@@ -218,7 +289,8 @@
       if (event.code === "F3") { diagnostics = !diagnostics; ui.diagnostics.hidden = !diagnostics; event.preventDefault(); }
     });
     addEventListener("keyup", event => { keys.delete(event.code); if (keyMap[event.code] && running) event.preventDefault(); });
-    addEventListener("blur", () => { clearInput(); if (running) setPaused(true); });
+    addEventListener("blur", () => { focused = false; clearInput(); if (running) setPaused(true); });
+    addEventListener("focus", () => { focused = true; pad.suspend(); });
     document.addEventListener("visibilitychange", () => { if (document.hidden && running) setPaused(true); });
     document.querySelectorAll("[data-control]").forEach(button => {
       const action = button.dataset.control;
@@ -248,6 +320,11 @@
       event.preventDefault(); orbitDistance = R.clamp(orbitDistance + event.deltaY * .018, 13, 40);
     }, { passive: false });
     ui.drive.addEventListener("click", start);
+    $("controllerSetup").addEventListener("click", openController);
+    $("controllerOptions").addEventListener("click", openController);
+    $("controllerClose").addEventListener("click", closeController);
+    $("controllerBegin").addEventListener("click", () => { pad.beginSetup(); controllerUI(); });
+    $("controllerCancel").addEventListener("click", () => { pad.cancelSetup(); controllerUI(); });
     $("again").addEventListener("click", menu);
     ui.pause.addEventListener("click", () => setPaused(!paused)); $("resume").addEventListener("click", () => setPaused(false));
     ui.camera.addEventListener("click", () => { if (running) setCamera((cameraMode + 1) % cameraNames.length); });
@@ -273,8 +350,9 @@
       window.showBootError("The graphics connection was lost. Reload the game and choose LOW detail.");
     });
     setQuality(1); reset(); updateCamera(1 / 60, true); world.update(state.pos, state.progress); renderer.render(scene, camera);
+    pad.poll(); controllerUI();
     ui.drive.disabled = false; ui.drive.textContent = L ? "START HANDLING TEST" : "BEGIN DESCENT";
-    $("bootStatus").textContent = `3D ready · ${L ? "Handling Lab" : "Stormbreak Pass"} · Build 0.5.1`;
+    $("bootStatus").textContent = `3D ready · ${L ? "Handling Lab" : "Stormbreak Pass"} · Build 0.5.2`;
     requestAnimationFrame(frame);
   } catch (error) {
     console.error(error); window.showBootError(error.message || "3D graphics could not start. Try a browser with hardware acceleration enabled.");

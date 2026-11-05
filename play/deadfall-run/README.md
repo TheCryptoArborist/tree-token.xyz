@@ -1,4 +1,4 @@
-# Deadfall Run — Handling Lab 0.5.1
+# Deadfall Run — Handling Lab 0.5.2
 
 A downloadable development build for TREE Arcade. This handling lab has not been published to the live arcade.
 
@@ -10,6 +10,29 @@ A downloadable development build for TREE Arcade. This handling lab has not been
 4. Use **RETRY** or **R** for the identical starting setup, or **TEST MENU** to choose another exercise.
 
 The original Stormbreak Pass descent is also included: open **index.html** or **START_GAME.bat**. Its menu links to the handling lab. No installation, web server, account, wallet, or network connection is required to drive. The Back to Arcade link opens https://tree-token.xyz/play/.
+
+## NES-style controller support — 0.5.2
+
+1. Connect a USB controller, or pair a Bluetooth controller with your computer.
+2. Open the game, press and release a controller button, then choose **CONTROLLER SETUP**.
+3. Center the D-pad and release all buttons. Click **BEGIN SETUP** (or **REMAP BUTTONS**) and follow the eight prompts. Use the labels printed on your controller; this also fixes swapped A/B layouts.
+4. Close the panel and press **START** to drive. The selected test or preset can be changed with the D-pad before starting.
+
+| NES control | Driving action |
+| --- | --- |
+| D-pad Left / Right | Steer |
+| A | Throttle |
+| B | Service brake |
+| D-pad Up | Engine brake |
+| D-pad Down, held | Reverse, engaging only from a stop |
+| Start | Start, pause, resume; retry from the results screen |
+| Select | Change camera |
+
+On the results screen, B returns to the menu. Standard-mapped controllers receive a default layout; use setup if the printed button labels differ. Raw adapters must be mapped first. D-pads exposed as buttons, two axes, or a single eight-way directional axis are supported. The left stick of a standard pad can also act as a digital D-pad.
+
+The game pauses when the active controller disconnects or the window loses focus. Release the controls before resuming. Braking takes priority over throttle and reverse. Keyboard and touch controls remain available. Opening setup pauses the run; closing it leaves the game paused until you resume.
+
+Completed mappings are saved for that controller in this browser when local storage is available. If saving is blocked, the mapping works for the current session. Different browsers, controller modes, or extracted file locations may require setup again. The controller must appear in the browser's Gamepad API; connect/pair it with the operating system first. No physical-controller compatibility has been claimed from automated tests alone.
 
 ## Check the trailer fix
 
@@ -59,9 +82,9 @@ The uploaded Hard Truck game was used as a reference for configurable steering a
 
 ## Verification
 
-Run **npm test** in this directory (or run the four scripts in tests/ individually). No dependencies need installing. The 50 checks use real Three.js geometry and simulation with stubbed browser/renderer interfaces. They do not establish GPU rendering, native input feel, or frame rate.
+Run **npm test** in this directory (or run the five scripts in tests/ individually). No dependencies need installing. The 65 checks use real Three.js geometry and simulation with stubbed browser/renderer interfaces. They do not establish GPU rendering, native input feel, or frame rate.
 
-The previous build’s cloud-browser menu and unsupported-graphics fallback were inspected; this patch has been checked with automated trajectories and scene transforms. That browser reports GL_VENDOR and GL_RENDERER as Disabled and cannot create a WebGL context. Actual driving and visual appearance still require a desktop playtest. If you see an error, include the message, browser/device, chosen test, and a screenshot or short recording.
+A previous build’s cloud-browser menu and unsupported-graphics fallback were inspected; this patch has been checked with automated controller inputs, trajectories, and scene transforms. That browser reports GL_VENDOR and GL_RENDERER as Disabled and cannot create a WebGL context. Actual driving and visual appearance still require a desktop playtest. If you see an error, include the message, browser/device, chosen test, and a screenshot or short recording.
 
 ## Files
 
@@ -69,7 +92,8 @@ The previous build’s cloud-browser menu and unsupported-graphics fallback were
 - index.html / route.js: original 1.8 km descent.
 - physics.js: shared vehicle model and hitch constraint, with an injectable route for tests.
 - vehicle.js / world.js: original procedural models, materials, and environment helpers.
-- play.js / styles.css: controls, cameras, HUD, and lifecycle for both modes.
+- gamepad.js: device detection, calibration, saved mappings, and controller input.
+- play.js / styles.css: controls, controller setup, cameras, HUD, and lifecycle for both modes.
 - TEST_REPORT.md: checks and verification limits.
 - vendor/three.min.js / third-party-notices.txt: bundled Three.js and license.
 

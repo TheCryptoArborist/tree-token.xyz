@@ -93,6 +93,8 @@ class Element {
   dispatch(name, props = {}) { for (const fn of this.listeners[name] || []) fn({ target: this, preventDefault() {}, ...props }); }
   querySelector() { return this.child ||= new Element(); }
   blur() {}
+  focus() {}
+  click() { this.dispatch("click"); }
   setPointerCapture() {}
   getContext() { return new Proxy({}, { get: (o, k) => k in o ? o[k] : () => {}, set: (o, k, v) => (o[k] = v, true) }); }
 }
@@ -113,7 +115,7 @@ const context = vm.createContext({ THREE: { ...THREE, WebGLRenderer: Renderer },
   document, console, innerWidth: 1440, innerHeight: 900, devicePixelRatio: 1, performance: { now: () => clock },
   requestAnimationFrame: fn => raf.push(fn), addEventListener: (name, fn) => (listeners[name] ||= []).push(fn),
   showBootError: message => failures.push(message), window: null }); context.window = context;
-for (const file of ["world.js", "vehicle.js"]) vm.runInContext(fs.readFileSync(path.join(base, file), "utf8"), context, { filename: file });
+for (const file of ["world.js", "vehicle.js", "gamepad.js"]) vm.runInContext(fs.readFileSync(path.join(base, file), "utf8"), context, { filename: file });
 test("detailed vehicle builds; resetting restores all five visible logs", () => {
   const truck = context.DeadfallVehicle.make(), state = P.createState();
   state.logs = 2; context.DeadfallVehicle.update(truck, state, {});

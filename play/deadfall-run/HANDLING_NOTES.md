@@ -38,3 +38,11 @@ The six new regression checks inspect actual rendered axle transforms, including
 ## Next decision after desktop playtesting
 
 Evaluate whether steering corrections, trailer response, and camera framing feel right. If full suspension, rollovers, and force-based collisions are required, compare a separate rigid-body implementation against these same tests before replacing the working vehicle model. No physics-engine migration is included in 0.5.1.
+
+## Controller implementation — 0.5.2
+
+Controller polling uses the current navigator.getGamepads() snapshot once per animation frame before reading driving input. Null device slots are ignored. The active device is matched by index plus identity and layout; replacing a device at the same index cannot inherit held buttons. Start, Select, and menu movement use rising edges. Driving actions are held states merged with keyboard/touch input, with service-brake priority. A neutral gate follows start/pause/focus/setup/reconnect transitions.
+
+The standard layout uses W3C button positions 0/1 for the default throttle/brake pair, 8/9 for Select/Start, and 12–15 for the D-pad. Printed Nintendo-style A/B labels can differ, so the calibration wizard assigns the actual buttons the player presses. Nonstandard controllers receive no guessed bindings. Setup samples a centered baseline, captures eight distinct controls, requires release between prompts, and handles button, X/Y-axis, and evenly spaced POV-axis layouts. Profiles are validated against device button/axis counts and saved under a Deadfall-specific local-storage key. Missing or blocked APIs and storage do not prevent keyboard play.
+
+API references checked: the W3C Gamepad specification (sections 12, 14, and 15) and MDN's Using the Gamepad API guide. No Sui SDK, wallet, backend, or payment code is involved. The current MystenLabs/skills README was checked; none of its Sui skills applies to this controller change.
