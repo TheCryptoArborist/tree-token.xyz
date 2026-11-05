@@ -1,0 +1,19 @@
+{
+  "previous": "6aec99bf240f589972b4b367",
+  "current": "6aecab809924c531a486d91e",
+  "all43FunctionsIdentical": true,
+  "fiveSchedulesIdentical": true,
+  "runtimeIdentical": true,
+  "olderEnvironmentRecordsIdentical": true,
+  "preservedNewBranchOnlyFlags": [
+    "CANOPY_INDIVIDUAL_DEFENDERS",
+    "CANOPY_CHECKOUT_ENABLED",
+    "CANOPY_CANONICAL_CHECKOUT_PREVIEW"
+  ],
+  "treeForceFrontendIdentical": true,
+  "newerChangedPaths": [
+    "/_redirects"
+  ],
+  "newerAddedPaths": [],
+  "preserveAllNewerFiles": true
+}

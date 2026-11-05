@@ -1,0 +1,42 @@
+name: TREE FORCE verify bonus announcements
+on:
+  push:
+    branches: [feature/treeforce89-chapters]
+    paths: [.github/workflows/treeforce89-bonus-intro-published.yml]
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: tree-token-preserved-production-release
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 79c00a0658b7b462e02d5ec4ae2dd77d069d9ffe
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: actions/download-artifact@v4
+        with:
+          name: treeforce89-bonus-intro-candidate
+          run-id: 42068351112
+          github-token: ${{ github.token }}
+          path: .netlify
+      - name: Rebuild and verify the reviewed frontend bytes
+        run: node scripts/prepare-treeforce89-bonus-intro-release.mjs
+      - name: Verify published files, all 43 functions, schedules, runtime and environment
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: node scripts/release-treeforce89-bonus-intro.mjs published
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: treeforce89-bonus-intro-published
+          path: .netlify/treeforce89-bonus-intro-candidate.json
+          if-no-files-found: error
+          retention-days: 7

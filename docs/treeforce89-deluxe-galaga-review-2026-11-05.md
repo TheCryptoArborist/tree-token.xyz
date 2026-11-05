@@ -78,3 +78,7 @@ No original executable, graphics, music, ROM or emulator bytes are incorporated 
 - [Official preservation/restoration description](https://deluxegalaga.com/about.html)
 - [Bandai Namco Arcade Game Series GALAGA help](https://dlassets-ssl.xboxlive.com/public/content/8ae7a101-f001-416a-9aa2-170a1bf54bc2/GameManual/70077373-2459-4ed9-8b2c-4f94ccfe43fc/en-US/index.html)
 - [Nintendo-hosted NES Galaga instruction scan](https://www.nintendo.co.jp/clv/manuals/en/pdf/CLV-P-NABNE.pdf)
+
+## Subsequent implementation
+
+The review above records the inspected pre-update game. TREE FORCE v0.7.0 subsequently implemented shooting bonuses after waves 2/6, original event audio, three-second protection, A+B shield input, sector introductions and a wave-6 Guardian. Windfall remains after 4/8. The release is published as `6aecae87f3f468d6ec93bdfc`; see `treeforce89-chapters.md` for evidence, preserved backend records and remaining hardware/playtesting limits. The historical dormant-mode and 600ms findings above are therefore resolved by that release.

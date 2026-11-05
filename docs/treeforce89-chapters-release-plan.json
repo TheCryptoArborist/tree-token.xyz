@@ -1,0 +1,97 @@
+{
+  "kind": "frontend-overlay",
+  "notDeployableStandalone": true,
+  "requiresCurrentLiveInventory": true,
+  "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
+  "expectedProduction": "6aecab809924c531a486d91e",
+  "approvedPreview": null,
+  "base": "/play/treeforce89/",
+  "requiredFunctions": 43,
+  "requiredSchedules": 5,
+  "backendBuilt": false,
+  "environmentChanges": false,
+  "migrationsIncluded": false,
+  "walletConfigurationUnchanged": true,
+  "dependencyLockUnchanged": true,
+  "files": [
+    {
+      "path": "/play/treeforce89/assets/arborwing/tree-hero-arborwing-stages-v2.png",
+      "sha": "808fc199adf82ab5d6ed8e23edd49e46b3a52cf8",
+      "sha256": "8b83fae07ba54ff7a2b1d535e7116ff54232e5aa75cad90b5c820898b9a52f89",
+      "bytes": 55137
+    },
+    {
+      "path": "/play/treeforce89/assets/arcade-Ca5Km4dX.js",
+      "sha": "9e22ba2303d63935b256007c56c84bd01f438521",
+      "sha256": "fc685852b9473f72df36913767be23e6ee173b7146496d2f16c276de89e13d5b",
+      "bytes": 1283275
+    },
+    {
+      "path": "/play/treeforce89/assets/backgrounds/first-canopy-backdrop.png",
+      "sha": "cc299f07949f459c91cb4a341a9c3899aec3aa33",
+      "sha256": "e6b2806036604c57bb98ed4721e135744bba4ecf6f0522f84b0ebf83f431362c",
+      "bytes": 594554
+    },
+    {
+      "path": "/play/treeforce89/assets/backgrounds/first-canopy-foreground.png",
+      "sha": "4d351175c8595c3176360bc00bc23f3b80a91470",
+      "sha256": "230f349e93bc493568dc4a939341d3080dafc998db07fd911de975c729ed9999",
+      "bytes": 142735
+    },
+    {
+      "path": "/play/treeforce89/assets/backgrounds/first-canopy-midground.png",
+      "sha": "ad38f865fe3d7d058484f1a09724de948ba3c13a",
+      "sha256": "d190a000775330893693c1cd933f718d11be9c9eba169135ba7d34f8fa803b2a",
+      "bytes": 375040
+    },
+    {
+      "path": "/play/treeforce89/assets/graphql-CVR4bc_9.js",
+      "sha": "9405eb3bead773a1cbd8427a0737c7954ee443a2",
+      "sha256": "e491afbcb9177affbffa18b881eacb5434a7f831248b6bae68df03ea87cc00b6",
+      "bytes": 54744
+    },
+    {
+      "path": "/play/treeforce89/assets/hero/tree-hero-canonical.jpg",
+      "sha": "2a408d8abc82aefa7e9091d0d1f3296caa2e6a51",
+      "sha256": "ce6f88004b784e024e5c4d78b67cae4da3e44d741965d9ca4a49cb2e71265a98",
+      "bytes": 2283
+    },
+    {
+      "path": "/play/treeforce89/assets/index-DnIGkE6a.css",
+      "sha": "bf24e7bebcad8df3b19276155a1fba4cbdcb8f83",
+      "sha256": "f422687b1f408dd662fae847cba6998d8dee03d725d242b1ed91edcc1d9d697c",
+      "bytes": 27043
+    },
+    {
+      "path": "/play/treeforce89/assets/index-Drjv78SR.js",
+      "sha": "7b54038a605cbcdbb8f2f28259a18e4f82e871df",
+      "sha256": "7bb488a06b3390841a92545f3ec00ab4167c0173c044fea8e0b64915c3275dba",
+      "bytes": 639527
+    },
+    {
+      "path": "/play/treeforce89/assets/powerups/boom-token.png",
+      "sha": "00c7b518424ec21c788063905f53d751ded4983b",
+      "sha256": "7edcb74821052b4bdc2e3409f6f9d10b66342edc723ba071334f6aa809989d98",
+      "bytes": 75277
+    },
+    {
+      "path": "/play/treeforce89/assets/powerups/dex-reward-token.jpeg",
+      "sha": "f8084d3ac313dcce1bdf8c15332806705eef1704",
+      "sha256": "ac5ace425daae04e86d9b9596fb1a3bf77f4c55665ad61c7ec0ca0a615ff28a5",
+      "bytes": 36626
+    },
+    {
+      "path": "/play/treeforce89/gateway.css",
+      "sha": "251259aced83023922db365ef9e28c91d5e4ca56",
+      "sha256": "bdeccb6359f731513ec1ff9b74dbb3b8635a5a9b509496662c120245ebd8906b",
+      "bytes": 21873
+    },
+    {
+      "path": "/play/treeforce89/index.html",
+      "sha": "19421c83c52a3942c73e0f8ef58308d5ef56a640",
+      "sha256": "43dda7a24acd482657c4b799ff175ec02b88b9c2870e25c2243e081e2ee6aacb",
+      "bytes": 1673
+    }
+  ],
+  "purpose": "Shooting challenges after waves 2/6; original audio; 3-second A+B shield; sector identities and guardian. Frontend only."
+}

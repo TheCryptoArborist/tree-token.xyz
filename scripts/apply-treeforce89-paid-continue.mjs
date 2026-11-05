@@ -52,7 +52,7 @@ export function applyPaidContinue(source) {
  writeFileSync(resolve(source,'app/game/arcade.ts'),existsSync(resolve(gameplay,'arcade.ts'))?readFileSync(resolve(gameplay,'arcade.ts')):layoutTreeForceHud(arcade));
  if(existsSync(resolve(gameplay,'config.ts'))){
   copyFileSync(resolve(gameplay,'config.ts'),resolve(source,'app/game/config.ts'));
-  copyFileSync(resolve(gameplay,'gameplay-rules.mjs'),resolve(source,'app/game/gameplay-rules.mjs'));
+  for(const name of ['gameplay-rules.mjs','chapter-rules.mjs','audio-cues.mjs'])copyFileSync(resolve(gameplay,name),resolve(source,'app/game',name));
  }
  rebaseTreeForceAssets(source);
  // The existing wallet connection, dependencies and contract remain pinned.
