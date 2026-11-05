@@ -1,0 +1,48 @@
+name: TREE FORCE activate paid continues
+on:
+  push:
+    branches: [feature/treeforce89-galaga-gameplay]
+    paths: [.github/workflows/treeforce89-activate-payments.yml]
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: tree-token-preserved-production-release
+  cancel-in-progress: false
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: actions/download-artifact@v4
+        with:
+          name: treeforce89-payment-readiness
+          run-id: 42046980647
+          github-token: ${{ github.token }}
+          path: .netlify
+      - run: node --test tests/treeforce89-payment-activation.test.mjs
+      - name: Create and verify candidate with identical files and backend
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: node scripts/activate-treeforce89-payments.mjs candidate
+      - run: npm ci --prefix netlify/preview-lib/treeforce89-source --ignore-scripts --no-audit --no-fund
+      - name: Verify hosted candidate authentication and payment boundaries
+        run: |
+          candidate=$(node --input-type=module -e "import fs from 'node:fs'; console.log(JSON.parse(fs.readFileSync('.netlify/treeforce89-payment-candidate.json')).candidateUrl)")
+          node scripts/verify-treeforce89-paid-hosted-smoke.mjs "$candidate" enabled
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: treeforce89-payment-candidate
+          path: |
+            .netlify/treeforce89-payment-baseline.json
+            .netlify/treeforce89-payment-baseline.json.sha256
+            .netlify/treeforce89-payment-candidate.json
+          if-no-files-found: error
+          retention-days: 1
