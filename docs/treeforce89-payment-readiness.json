@@ -1,0 +1,57 @@
+{
+  "checkedDate": "2026-11-05",
+  "productionDeploy": "6aec00c92d9060d410e986e0",
+  "readinessRun": 42046980647,
+  "focusedTests": 36,
+  "focusedTestsPassed": 36,
+  "activationGuardTests": 1,
+  "activationGuardTestsPassed": 1,
+  "postgresTestsPassed": true,
+  "hostedReadinessPassed": true,
+  "realWalletPaymentTested": false,
+  "paymentsEnabled": false,
+  "candidate": {
+    "id": "6aec95af5a7ac5a4b35df7d3",
+    "run": 42047462595,
+    "published": false,
+    "requiredFunctionUploads": 43,
+    "requiredStaticUploads": 0,
+    "functionUploadsPerformed": 0,
+    "staticUploadsPerformed": 0,
+    "reasonStopped": "A site-level production function variable invalidated reuse for all 43 functions; exact identity preservation could not be established."
+  },
+  "restoration": {
+    "temporaryFlagRemoved": true,
+    "verificationRun": 42048029387,
+    "inventoryReport": {
+      "mode": "verify",
+      "result": "passed",
+      "checkedAt": "2026-11-05T14:45:26.253Z",
+      "deployId": "6aec00c92d9060d410e986e0",
+      "baselineSha256": "0a2aa7df594c6d850a1dbdbcff7f7256def74b87e5d9de09e8e4eb16f9ee6334",
+      "functions": 43,
+      "schedules": 5,
+      "staticFiles": 293,
+      "completeFunctionRecordsMatch": true,
+      "runtimeMatch": true,
+      "environmentRecordsMatch": true,
+      "siteFunctionEnvironmentEntries": 50,
+      "locked": true,
+      "remoteMethods": [
+        "GET"
+      ],
+      "productionChanged": false,
+      "limitations": [
+        "API-visible records and value IDs only; masked secret bytes are not readable",
+        "Deploy-specific overrides are not exposed by these GET endpoints"
+      ]
+    },
+    "hostedSmokePassed": false,
+    "hostedFailure": "45-second timeout on replayed tree-session request; initial challenge and genuine non-holder denial succeeded."
+  },
+  "nextRequiredWork": [
+    "Prepare a scoped payment-API activation that preserves the other 42 function records and every static file/schedule.",
+    "Diagnose intermittent hosted authentication timeouts before enabling real payments.",
+    "Complete a user-operated NFTree wallet and first 20,000 TREE payment test."
+  ]
+}

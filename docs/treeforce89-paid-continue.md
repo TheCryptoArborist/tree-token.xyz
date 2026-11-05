@@ -1,3 +1,7 @@
+# Current activation status — November 5, 2026
+
+Paid continues remain disabled. See `treeforce89-payment-readiness.md` for current checks and activation blockers. The release history below is historical.
+
 # TREE FORCE 20,000 TREE continuation
 
 The native game at `/play/treeforce89/` now includes an explicit paid-continuation checkout. After the third life is lost, the player may pay 20,000 TREE to replay the current wave with three lives, preserving the run ID, score and accumulated run statistics. The same option is available after later losses. NFTree ownership still grants entry; there is no entry payment. Payment is optional and requires a separate wallet approval.
