@@ -1,0 +1,19 @@
+{
+  "name": "tree-telegram-bot",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "preview": "node scripts/preview.mjs",
+    "check": "node --env-file-if-exists=.env scripts/check.mjs",
+    "once": "node --env-file-if-exists=.env scripts/run-once.mjs"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.8",
+    "@netlify/functions": "6.0.0"
+  }
+}
