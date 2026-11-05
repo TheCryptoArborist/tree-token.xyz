@@ -127,7 +127,7 @@ import{getWallets as Xe,signAndExecuteTransaction as Je}from"https://esm.run/@my
             <p class="simple-impact-kicker">UTILITY YOU CAN USE TODAY</p>
             <h2 id="simple-utility-title">What You Can Do With TREE</h2>
           </div>
-          <p>Trade, earn, compete, and access a growing ecosystem from one connected wallet.</p>
+          <p>Trade, earn, play, and access a growing ecosystem from one connected wallet.</p>
         </div>
         <div class="simple-utility-grid">
           <a class="simple-utility-card utility-trade" href="/dapp/#swap">
@@ -135,9 +135,9 @@ import{getWallets as Xe,signAndExecuteTransaction as Je}from"https://esm.run/@my
             <span><strong>Trade &amp; Earn</strong><small>Swap TREE, provide V2/V3 liquidity, manage positions, and put Victory rewards to work.</small></span>
             <b aria-hidden="true">→</b>
           </a>
-          <a class="simple-utility-card utility-compete" href="/dapp/#canopy-draw">
+          <a class="simple-utility-card utility-compete" href="/play/">
             <span class="simple-utility-icon" aria-hidden="true">◆</span>
-            <span><strong>Compete &amp; Build Rank</strong><small>Enter the TREE Knowledge Trial and climb the verified Canopy Top 50.</small></span>
+            <span><strong>Play &amp; Power Up</strong><small>TREE powers the Arcade economy. Use it for supported in-game purchases, upgrades, and continues.</small></span>
             <b aria-hidden="true">→</b>
           </a>
           <a class="simple-utility-card utility-access" href="/play">
@@ -148,7 +148,7 @@ import{getWallets as Xe,signAndExecuteTransaction as Je}from"https://esm.run/@my
         </div>
         <div class="simple-live-now" aria-label="TREE features available now">
           <strong><span aria-hidden="true"></span> Live Now</strong>
-          <p>Swap <i>·</i> Limit Orders <i>·</i> V2/V3 Liquidity <i>·</i> Victory Center <i>·</i> Knowledge Trial <i>·</i> Canopy</p>
+          <p>Swap <i>·</i> Limit Orders <i>·</i> V2/V3 Liquidity <i>·</i> Victory Center <i>·</i> TREE Arcade <i>·</i> Canopy</p>
         </div>
         <div class="simple-onboarding-row">
           <a class="simple-beginner-path" href="/sui-guide/">

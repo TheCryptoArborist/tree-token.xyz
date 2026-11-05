@@ -294,8 +294,8 @@
     {
       "path": "/scripts/home-v2.js",
       "source": "scripts/home-v2.js",
-      "sha1": "420028bbe52f9e895e111f7d19c6627579979a66",
-      "size": 22250
+      "sha1": "0ebfe56deda8833e0c8de10afccf4e31e1ae053e",
+      "size": 22254
     },
     {
       "path": "/scripts/home-market-core.js",
@@ -948,8 +948,8 @@
     {
       "path": "/assets/index-w-qgkwyr.js",
       "source": "production/live-static/assets/index-w-qgkwyr.js",
-      "sha1": "496ecaaf129325c0d750bbc4fd73e03ce5188fe5",
-      "size": 49443
+      "sha1": "1eff67f20bfaf43c86967b6bdf96c7e947d15342",
+      "size": 49447
     },
     {
       "path": "/assets/index-ciludop1.js",

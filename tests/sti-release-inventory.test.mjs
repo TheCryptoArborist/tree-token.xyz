@@ -26,7 +26,17 @@ test('release inventory preserves every baseline file and changes only the appro
   const next=new Map(candidate.files.map(f=>[f.path,f.sha1]));
   assert.equal(candidate.files.length,193);assert.equal(next.size,193);assert.equal(base.size,189);
   for(const file of candidate.files) {
-    if(file.path==='/dapp/swap-router.js') {
+    if (file.path === '/scripts/home-v2.js' || file.path === '/assets/index-w-qgkwyr.js') {
+      // Preserve the historical STI candidate while pinning this later copy-only change.
+      const homepageDigests = {
+        '/scripts/home-v2.js': ['420028bbe52f9e895e111f7d19c6627579979a66', '0ebfe56deda8833e0c8de10afccf4e31e1ae053e'],
+        '/assets/index-w-qgkwyr.js': ['496ecaaf129325c0d750bbc4fd73e03ce5188fe5', '1eff67f20bfaf43c86967b6bdf96c7e947d15342'],
+      };
+      const [previousSha, approvedSha] = homepageDigests[file.path];
+      assert.equal(file.sha1, previousSha);
+      assert.equal(manifest.files.find(f => f.path === file.path)?.sha1, approvedSha);
+      assert.equal(hash(file.source, 'sha1'), approvedSha);
+    } else if(file.path==='/dapp/swap-router.js') {
       // Historical STI candidate is immutable; the current swap review is an
       // explicitly approved later change, not part of that archived candidate.
       assert.equal(file.sha1,'882f547e3a66028da1815569cc6397be2c1b7346');

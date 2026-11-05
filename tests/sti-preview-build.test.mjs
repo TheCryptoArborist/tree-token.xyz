@@ -55,7 +55,15 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
   };
   assert.equal(published.files.find(f => f.path === approvedVictoryLayout.path)?.sha, approvedVictoryLayout.previousSha);
   assert.equal(manifest.files.find(f => f.path === approvedVictoryLayout.path)?.sha1, approvedVictoryLayout.approvedSha);
-  const approvedPaths = [approvedNavigationChange.path, approvedSwapChange.path, approvedVictoryReceipt.path, approvedVictoryLayout.path, ...approvedReviewAdditions.map(f => f.path)];
+  const approvedHomepageChanges = [
+    { path: '/scripts/home-v2.js', previousSha: '420028bbe52f9e895e111f7d19c6627579979a66', approvedSha: '0ebfe56deda8833e0c8de10afccf4e31e1ae053e' },
+    { path: '/assets/index-w-qgkwyr.js', previousSha: '496ecaaf129325c0d750bbc4fd73e03ce5188fe5', approvedSha: '1eff67f20bfaf43c86967b6bdf96c7e947d15342' },
+  ];
+  for (const file of approvedHomepageChanges) {
+    assert.equal(published.files.find(f => f.path === file.path)?.sha, file.previousSha);
+    assert.equal(manifest.files.find(f => f.path === file.path)?.sha1, file.approvedSha);
+  }
+  const approvedPaths = [approvedNavigationChange.path, approvedSwapChange.path, approvedVictoryReceipt.path, approvedVictoryLayout.path, ...approvedReviewAdditions.map(f => f.path), ...approvedHomepageChanges.map(f => f.path)];
   assert.deepEqual(
     manifest.files.filter(f => !approvedPaths.includes(f.path)).map(f => [f.path, f.sha1]).sort(),
     published.files.filter(f => !approvedPaths.includes(f.path)).map(f => [f.path, f.sha]).sort(),
