@@ -1,0 +1,45 @@
+name: TREE FORCE verify preserved live payment state
+on:
+  push:
+    branches: [feature/treeforce89-galaga-gameplay]
+    paths: [.github/workflows/treeforce89-verify-payments.yml]
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: tree-token-preserved-production-release
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: actions/download-artifact@v4
+        with:
+          name: treeforce89-payment-readiness
+          run-id: 42046980647
+          github-token: ${{ github.token }}
+          path: .netlify
+      - name: Verify original live deployment and complete protected environment
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: >-
+          node scripts/lib/treeforce89-production-inventory.mjs verify
+          --expected-deploy 6aec00c92d9060d410e986e0
+          --baseline .netlify/treeforce89-payment-baseline.json
+          --report .netlify/treeforce89-payment-restored.json
+      - run: npm ci --prefix netlify/preview-lib/treeforce89-source --ignore-scripts --no-audit --no-fund
+      - name: Verify canonical wallet boundaries and payments disabled
+        run: node scripts/verify-treeforce89-paid-hosted-smoke.mjs https://tree-token.xyz disabled
+      - uses: actions/upload-artifact@v4
+        with:
+          name: treeforce89-payment-preserved
+          path: .netlify/treeforce89-payment-restored.json
+          if-no-files-found: error
+          retention-days: 7
