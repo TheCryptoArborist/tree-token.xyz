@@ -9,14 +9,15 @@ export function originalFrontendFile(path){
  assert.equal(createHash('sha256').update(bytes).digest('hex'),provenance.files[path],'Pinned frontend bytes changed: '+path);
  return bytes.toString('utf8');
 }
-export async function stagePinnedFrontend(source){
+export async function stagePinnedFrontend(source,{assetOrigin='https://tree-token.xyz'}={}){
+ assert(['https://tree-token.xyz','https://6aec00c92d9060d410e986e0--tree-token.netlify.app'].includes(assetOrigin),'Unreviewed art origin');
  for(const path of Object.keys(provenance.files)){
   const text=originalFrontendFile(path),target=resolve(source,path);mkdirSync(dirname(target),{recursive:true});writeFileSync(target,text);
  }
  for(const [path,hash] of Object.entries(provenance.assets)){
   const target=resolve(source,'public',path);let bytes;
   try{bytes=readFileSync(target);if(createHash('sha256').update(bytes).digest('hex')!==hash)bytes=undefined;}catch{}
-  if(!bytes){const response=await fetch('https://tree-token.xyz/play/treeforce89/'+path);assert.equal(response.status,200,'Public game art unavailable: '+path);bytes=Buffer.from(await response.arrayBuffer());}
+  if(!bytes){const response=await fetch(assetOrigin+'/play/treeforce89/'+path,{signal:AbortSignal.timeout(45000)});assert.equal(response.status,200,'Public game art unavailable: '+path);bytes=Buffer.from(await response.arrayBuffer());}
   assert.equal(createHash('sha256').update(bytes).digest('hex'),hash,'Published game art differs from pinned source: '+path);
   mkdirSync(dirname(target),{recursive:true});writeFileSync(target,bytes);
  }

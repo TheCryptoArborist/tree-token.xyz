@@ -1,5 +1,5 @@
 name: TREE FORCE preserved release preflight
-# Preserve explicit overrides, inherited defaults and the existing hosting snippet.
+# Bounded, hash-checked artwork downloads; preserve explicit and inherited settings.
 
 on:
   push:

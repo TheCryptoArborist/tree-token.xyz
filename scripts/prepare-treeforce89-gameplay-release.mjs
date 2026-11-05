@@ -17,7 +17,7 @@ const approvedGameplayCommit='96b239af03df3112087ecdb1f944628374b7b52e';
 const run=(command,args,cwd=root)=>execFileSync(command,args,{cwd,stdio:'inherit'});
 const sha=(algorithm,bytes)=>createHash(algorithm).update(bytes).digest('hex');
 assert.equal(provenance.commit,'a38e08e37e1f71ea41b86add8e26a92b0789cf22');
-await stagePinnedFrontend(source);
+await stagePinnedFrontend(source,{assetOrigin:'https://6aec00c92d9060d410e986e0--tree-token.netlify.app'});
 run('npm',['ci','--ignore-scripts','--no-audit','--no-fund'],source);
 applyPaidContinue(source);
 // Release labels only; preserve the approved wallet/session/payment components.
