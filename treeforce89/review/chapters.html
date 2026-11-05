@@ -7,7 +7,7 @@ function on(id,fn){document.getElementById(id).onclick=()=>{const s=scene();if(s
 on('challenge',s=>{clean(s);s.startChallenge(2);el.textContent='Shooting bonus: wait for all fly-through targets. No lives can be lost.'});
 on('windfall',s=>{clean(s);s.startWindfall(4)});
 on('shield',s=>{clean(s);s.stage=2;s.pruneCharge=100;s.invulnUntil=0;s.applyStage(false);s.prune();el.textContent='Shield protection: '+(s.invulnUntil-s.time.now)+' milliseconds';});
-on('guide',s=>s.showPruneGuide());on('guardian',s=>{clean(s);s.startWave(5)});
+on('guide',s=>s.showPruneGuide());on('guardian',s=>{clean(s);s.invincible=true;s.startWave(5)});
 on('checks',s=>{clean(s);s.startChallenge(6);s.updateChallenge(18000);const lives=s.lives;
  for(const e of [...s.enemies.getChildren()])s.hitEnemy(e,1,false);s.rushShotsFired=52;s.rushShotsHit=40;
  s.updateChallenge(0);const score=s.run.score;s.finishChallenge();
@@ -15,5 +15,5 @@ on('checks',s=>{clean(s);s.startChallenge(6);s.updateChallenge(18000);const live
  el.textContent='PASS: 40 targets hit · perfect bonus · no lost lives · repeated finish grants no extra score';
  s.time.delayedCall(3400,()=>el.textContent+=' · '+(s.run.wave===6?'PASS: returned to wave 7':'FAIL: return wave'));
 });
-setInterval(()=>{const s=scene();if(s?.player)document.querySelector('#metrics').textContent=JSON.stringify({wave:s.run.wave+1,lives:s.lives,score:s.run.score,phase:s.challenge?'shooting bonus':s.windfall?'windfall':'combat',targets:s.rushDestroyed,escaped:s.challenge?.escaped,paused:s.paused,shieldRemainingMs:Math.max(0,s.shieldUntil-s.time.now)},null,2)},150);
+setInterval(()=>{const s=scene();if(s?.player)document.querySelector('#metrics').textContent=JSON.stringify({wave:s.run.wave+1,lives:s.lives,score:s.run.score,phase:s.challenge?'shooting bonus':s.windfall?'windfall':'combat',targets:s.rushDestroyed,guardians:s.enemies.getChildren().filter(e=>e.active&&e.getData('guardian')).length,escaped:s.challenge?.escaped,paused:s.paused,shieldRemainingMs:Math.max(0,s.shieldUntil-s.time.now)},null,2)},150);
 </script></html>
