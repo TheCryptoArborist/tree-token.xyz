@@ -1,0 +1,19 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TREE FORCE chapter checks</title><style>body{margin:0;padding:16px;background:#06110d;color:#fff7df;display:flex;gap:24px;font:14px Verdana}#game{width:480px;height:720px}aside{max-width:360px}button{display:block;margin:10px 0;padding:12px;background:#193523;border:1px solid #65dc79;color:#fff7df;cursor:pointer}pre{white-space:pre-wrap;font:12px monospace} @media(max-width:700px){body{display:block}#game{width:100%;height:auto;aspect-ratio:2/3}}</style><div id="game"></div><aside><h1>TREE FORCE ’89 — chapter lab</h1><p>Actual game engine · development fixture · no wallet, payment or score submission.</p><button id="challenge">Start shooting challenge</button><button id="windfall">Start Windfall</button><button id="shield">Deploy three-second shield</button><button id="guide">Open field guide / audio controls</button><button id="guardian">Start guardian sector</button><button id="checks">Check perfect result and return</button><pre id="result">Ready</pre><pre id="metrics"></pre></aside><script type="module">
+import {createCanopyGame} from './review-engine.js';
+const game=createCanopyGame(document.querySelector('#game'),{initialScene:'game'}),el=document.querySelector('#result');
+const scene=()=>game.scene.getScene('game');
+function clean(s){if(s.paused)s.togglePause();s.time.removeAllEvents();s.enemies.clear(true,true);s.pickups.clear(true,true);s.bullets.clear(true,true);s.shots.clear(true,true);s.challenge=undefined;s.windfall=undefined;s.waveClearing=true;}
+function on(id,fn){document.getElementById(id).onclick=()=>{const s=scene();if(s?.player)fn(s)}}
+on('challenge',s=>{clean(s);s.startChallenge(2);el.textContent='Shooting bonus: wait for all fly-through targets. No lives can be lost.'});
+on('windfall',s=>{clean(s);s.startWindfall(4)});
+on('shield',s=>{clean(s);s.stage=2;s.pruneCharge=100;s.invulnUntil=0;s.applyStage(false);s.prune();el.textContent='Shield protection: '+(s.invulnUntil-s.time.now)+' milliseconds';});
+on('guide',s=>s.showPruneGuide());on('guardian',s=>{clean(s);s.startWave(5)});
+on('checks',s=>{clean(s);s.startChallenge(6);s.updateChallenge(18000);const lives=s.lives;
+ for(const e of [...s.enemies.getChildren()])s.hitEnemy(e,1,false);s.rushShotsFired=52;s.rushShotsHit=40;
+ s.updateChallenge(0);const score=s.run.score;s.finishChallenge();
+ if(!s.challenge?.finishing||s.rushDestroyed!==40||s.lives!==lives||score!==s.run.score)throw Error('Challenge failed');
+ el.textContent='PASS: 40 targets hit · perfect bonus · no lost lives · repeated finish grants no extra score';
+ s.time.delayedCall(3400,()=>el.textContent+=' · '+(s.run.wave===6?'PASS: returned to wave 7':'FAIL: return wave'));
+});
+setInterval(()=>{const s=scene();if(s?.player)document.querySelector('#metrics').textContent=JSON.stringify({wave:s.run.wave+1,lives:s.lives,score:s.run.score,phase:s.challenge?'shooting bonus':s.windfall?'windfall':'combat',targets:s.rushDestroyed,escaped:s.challenge?.escaped,paused:s.paused,shieldRemainingMs:Math.max(0,s.shieldUntil-s.time.now)},null,2)},150);
+</script></html>
