@@ -2,7 +2,16 @@
 import {ORIGINAL_LAYOUTS} from './original-layouts.js';
 export const W=800,H=900,FPS=60,PRICE=20000;
 export const BIOMES=[{name:'Emerald Crossing',color:'#7ef3a0',dark:'#12382c'},{name:'Amberwood Rise',color:'#ffcd70',dark:'#3e2d21'},{name:'Moonlit Marsh',color:'#96acff',dark:'#1e294a'},{name:'Frostroot Reach',color:'#9be8ed',dark:'#163b48'},{name:'The Blighted Crown',color:'#df8aee',dark:'#36233f'}];
-export const PICKUPS=[{id:'wide',letter:'E',name:'Branch Reach',good:true},{id:'tether',letter:'F',name:'Root Tether',good:true},{id:'hot',letter:'H',name:'Wildfire Seed',good:true},{id:'laser',letter:'L',name:'Thorn Volley',good:true},{id:'multi',letter:'M',name:'Seedburst',good:true},{id:'fast',letter:'F',name:'Gale Force',good:false},{id:'slow',letter:'S',name:'Root Snare',good:false},{id:'wild',letter:'W',name:'Wild Wind',good:false}];
+export const PICKUPS=[
+ {id:'wide',name:'Branch Reach',good:true,description:'A wider branch makes seeds easier to catch.'},
+ {id:'tether',name:'Root Tether',good:true,description:'Your main seed follows the branch.'},
+ {id:'hot',name:'Wildfire Seed',good:true,description:'Your seed burns straight through bricks.'},
+ {id:'laser',name:'Thorn Volley',good:true,description:'Hold fire to send twin thorns upward.'},
+ {id:'multi',name:'Seedburst',good:true,description:'Three extra seeds. Keep protecting the main seed.'},
+ {id:'fast',name:'Gale Force',good:false,description:'The seed speeds up. Stay ready.'},
+ {id:'slow',name:'Root Snare',good:false,description:'Roots slow the branch’s movement.'},
+ {id:'wild',name:'Wild Wind',good:false,description:'Wind bends the seeds into unpredictable paths.'}
+];
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
 function rand(s){s.rng=(Math.imul(s.rng,1664525)+1013904223)>>>0;return s.rng/4294967296;}
 function emit(s,type,x=400,y=450,text=''){s.eventId++;s.events.push({id:s.eventId,type,x,y,text,tick:s.tick});if(s.events.length>16)s.events.shift();}

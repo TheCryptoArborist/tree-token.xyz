@@ -1,4 +1,5 @@
 import {W,H,BIOMES,PICKUPS,paddleWidth} from './engine.js';
+import {drawPickup} from './pickup-art.js';
 const TAU=Math.PI*2;
 function round(c,x,y,w,h,r=8){c.beginPath();c.roundRect(x,y,w,h,r);}
 function leaf(c,x,y,scale,color,angle=0){c.save();c.translate(x,y);c.rotate(angle);c.scale(scale,scale);c.beginPath();c.moveTo(0,-12);c.bezierCurveTo(20,-10,16,10,0,15);c.bezierCurveTo(-16,8,-12,-4,0,-12);c.fillStyle=color;c.fill();c.strokeStyle='#cbf6b857';c.lineWidth=1;c.beginPath();c.moveTo(0,12);c.lineTo(1,-6);c.stroke();c.restore();}
@@ -43,7 +44,7 @@ export function draw(c,s,{time=0,motion=true}={}){
  c.fillStyle='#bfe2c7';c.font='600 14px "DM Sans",sans-serif';c.textAlign='center';c.letterSpacing='3px';c.fillText(BIOMES[biome].name.toUpperCase(),400,59);c.letterSpacing='0px';c.fillStyle='#6f9a86';c.font='11px "DM Sans",sans-serif';c.fillText(s.level%6===0?'BLIGHT SPORES · WATCH YOUR ROOTS':'RESTORE THE FOREST',400,81);
  for(const b of s.bricks)brick(c,b,color);
  if(s.boss){const b=s.boss;c.save();c.translate(b.x,b.y);c.fillStyle='#36233d';c.strokeStyle='#bd79bc';c.lineWidth=3;c.beginPath();c.moveTo(-60,35);c.lineTo(-75,-25);c.lineTo(-40,-11);c.lineTo(-25,-60);c.lineTo(0,-27);c.lineTo(35,-65);c.lineTo(42,-12);c.lineTo(78,-28);c.lineTo(62,36);c.closePath();c.fill();c.stroke();c.shadowColor='#edaa43';c.shadowBlur=20;c.fillStyle='#ffcd70';c.fillRect(-32,-3,18,8);c.fillRect(14,-3,18,8);c.shadowBlur=0;c.strokeStyle='#17111e';c.lineWidth=6;c.beginPath();c.moveTo(-24,20);c.lineTo(0,28);c.lineTo(25,17);c.stroke();c.restore();round(c,250,109,300,8,4);c.fillStyle='#392432';c.fill();round(c,250,109,300*b.hp/b.maxHp,8,4);c.fillStyle='#dc84ce';c.fill();}
- for(const p of s.pickups){const meta=PICKUPS.find(m=>m.id===p.type),col=meta.good?'#7ef3a0':'#ffaf68';c.save();c.translate(p.x,p.y);c.rotate(motion?Math.sin(time*3)*.12:0);round(c,-15,-15,30,30,7);c.fillStyle='#112c27';c.fill();c.strokeStyle=col;c.lineWidth=2;c.stroke();c.fillStyle=col;c.font='bold 18px sans-serif';c.textAlign='center';c.fillText(meta.letter,0,6);c.restore();}
+ for(const p of s.pickups)drawPickup(c,p.type,p.x,p.y,{time,motion});
  for(const h of s.hazards){c.fillStyle='#773a65';c.strokeStyle='#db86bd';c.lineWidth=2;c.beginPath();for(let i=0;i<10;i++){let a=i/10*TAU,r=i%2?7:14;c.lineTo(h.x+Math.cos(a)*r,h.y+Math.sin(a)*r);}c.closePath();c.fill();c.stroke();}
  for(const b of s.balls){c.save();c.shadowColor=s.effects.hot?'#ffb851':b.primary?color:'#8fc8ff';c.shadowBlur=22;c.fillStyle=s.effects.hot?'#ffd26e':b.primary?'#edffb8':'#b1e2ff';c.beginPath();c.arc(b.x,b.y,b.primary?8:6,0,TAU);c.fill();c.shadowBlur=0;c.strokeStyle='#406843';c.lineWidth=1.5;c.beginPath();c.moveTo(b.x-3,b.y+5);c.quadraticCurveTo(b.x-5,b.y-3,b.x+3,b.y-6);c.stroke();c.restore();}
  for(const shot of s.shots){c.fillStyle='#a6ffd2';c.beginPath();c.moveTo(shot.x,shot.y-18);c.lineTo(shot.x-3,shot.y+4);c.lineTo(shot.x+3,shot.y+4);c.fill();}

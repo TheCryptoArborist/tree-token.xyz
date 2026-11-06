@@ -2,13 +2,14 @@ import {step,PICKUPS,BIOMES} from './engine.js';
 import {draw} from './art.js';
 import {sound,wakeAudio,setSound} from './audio.js';
 import {createControllerTracker,createControllerCalibration} from './controller.js';
+import {pickupIcon} from './pickup-art.js';
 const $=id=>document.getElementById(id),api=window.breakerSession,canvas=$('game'),ctx=canvas.getContext('2d');
 let run=null,queue=[],sending=null,paused=false,connected=!!api.account,clock=0,last=performance.now(),target=400,launch=false,fire=false,events=0,syncError='',muted=false,opening=null,quote=null,buying=false,gameRevision=0;
 const keys=new Set(),motion=!matchMedia('(prefers-reduced-motion: reduce)').matches;
 let controlStorage=null;try{controlStorage=localStorage;}catch{}
 const controller=createControllerTracker({storage:controlStorage}),controlDialog=$('controller-dialog');let calibration=null;
 const canPause=()=>run&&['ready','playing','cleared'].includes(run.state.status);
-function toast(text){$('toast').textContent=text;$('toast').classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>$('toast').classList.remove('show'),2500);}
+function toast(text,{pickup=null}={}){const box=$('toast');box.replaceChildren();box.classList.toggle('pickup-toast',!!pickup);if(pickup){const copy=document.createElement('div'),title=document.createElement('strong'),detail=document.createElement('span');title.textContent=(pickup.good?'':'Hazard · ')+pickup.name;detail.textContent=pickup.description;copy.append(title,detail);box.append(pickupIcon(pickup.id,{size:42}),copy);}else box.textContent=text;box.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>box.classList.remove('show'),pickup?3500:2500);}
 function replace(data){gameRevision++;run=data;queue=[];target=run.state.paddle;events=run.state.eventId;syncError='';paused=false;paint();}
 async function open(){if(opening)return opening;const address=api.account?.address,stamp=gameRevision;opening=(async()=>{try{const data=await api.request('open');if(api.account?.address!==address||stamp!==gameRevision)return;replace(data);}catch(e){syncError=e.message;paint();}finally{opening=null;}})();return opening;}
 async function flush(){
@@ -77,8 +78,8 @@ function frame(time){
   while(clock>=1/60&&queue.length<120){const input={x:target,launch:launch||keys.has(' '),fire:fire||keys.has(' ')||padFire};step(run.state,input);queue.push(input);launch=false;clock-=1/60;if(['gameover','cleared','won'].includes(run.state.status)){flush();clock=0;break;}}
   if(queue.length>=60)flush();if(queue.length>=120){paused=true;toast('Holding your run while the forest reconnects.');}
  }else clock=0;
- if(run){draw(ctx,run.state,{time:time/1000,motion});for(const e of run.state.events){if(e.id>events){sound(e.type);if(e.text&&['power','curse','boss','clear'].includes(e.type))toast(e.text);}}events=Math.max(events,run.state.eventId);}
+ if(run){draw(ctx,run.state,{time:time/1000,motion});for(const e of run.state.events){if(e.id>events){sound(e.type);if(e.text&&['power','curse','boss','clear'].includes(e.type))toast(e.text,{pickup:['power','curse'].includes(e.type)?PICKUPS.find(p=>p.name===e.text):null});}}events=Math.max(events,run.state.eventId);}
  paint();requestAnimationFrame(frame);
 }
-const guide=$('pickups');for(const p of PICKUPS){const row=document.createElement('div'),b=document.createElement('b'),span=document.createElement('span');b.textContent=p.letter;b.className=p.good?'':'bad';span.textContent=p.name+(p.good?' · power-up':' · hazard');row.append(b,span);guide.append(row);}
+const guide=$('pickups');for(const p of PICKUPS){const row=document.createElement('div'),copy=document.createElement('div'),name=document.createElement('strong'),detail=document.createElement('span');name.textContent=p.name+(p.good?'':' · hazard');detail.textContent=p.description;copy.append(name,detail);row.append(pickupIcon(p.id,{size:44}),copy);guide.append(row);}
 await open();requestAnimationFrame(frame);
