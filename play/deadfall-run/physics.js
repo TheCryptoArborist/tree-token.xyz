@@ -24,7 +24,7 @@
         trailerYaw: f.yaw, trailerPitch: 0, trailerReach: HITCH_TO_AXLE, trailerSide: 0,
         trailerAxle: new THREE.Vector3(), hitch: new THREE.Vector3(),
         sway: 0, stressTime: 0, elapsed: 0, offroad: false, collisions: new Set(), reverse: false,
-        articulation: 0, wheelRotation: 0 };
+        articulation: 0, wheelRotation: 0, coupled: false, surface: "asphalt", scraping: 0 };
       state.pos.y = R.surfaceHeight(state.pos.x, state.pos.z);
       return state;
     }
@@ -71,10 +71,16 @@
       state.trailerAxle.copy(trailer.localToWorld(AXLE.clone()));
       state.hitch.copy(hitch);
       state.articulation = angle(state.yaw - state.trailerYaw);
+      state.coupled = true;
     }
     function step(state, input, dt, preset = "standard") {
       const tune = presets[preset] || presets.standard;
       state.elapsed += dt;
+      const roadPosition = R.nearest(state.pos);
+      const rearDistance = state.coupled ? R.nearest(state.trailerAxle).dist : roadPosition.dist;
+      const edgeDistance = Math.max(roadPosition.dist, rearDistance) + 1.45;
+      state.surface = edgeDistance <= R.WIDTH / 2 ? "asphalt" : edgeDistance <= R.WIDTH / 2 + 2.1 ? "gravel" : "grass";
+      const grip = state.surface === "asphalt" ? 1 : state.surface === "gravel" ? .84 : .64;
       const steering = input.touchSteer || ((input.right ? 1 : 0) - (input.left ? 1 : 0));
       const steerLimit = THREE.MathUtils.degToRad(tune.steerLow - Math.min(Math.abs(state.speed), 25) / 25 * (tune.steerLow - tune.steerHigh));
       const desiredSteer = THREE.MathUtils.damp(state.steer, steering * steerLimit, tune.response, dt);
@@ -92,7 +98,7 @@
       state.grade = grade;
       const thrust = state.reverse ? -(tune.reverseThrust || 2.8) : state.throttle * tune.throttle * (1 - Math.min(Math.abs(state.speed) / 26, .85));
       const fade = tune.fadeStart ? 1 - .58 * R.clamp((state.brakeHeat - tune.fadeStart) / (100 - tune.fadeStart), 0, 1) : (state.brakeHeat > 88 ? .42 : 1);
-      const brakeForce = input.brake ? tune.brake * fade : 0;
+      const brakeForce = input.brake ? tune.brake * fade * grip : 0;
       const engineForce = input.engine ? tune.engine : 0;
       let next = state.speed + (gravity + (input.brake && preset === "loaded" ? 0 : thrust) - state.speed * .045) * dt;
       const resist = (brakeForce + engineForce + .12) * dt;
@@ -102,7 +108,7 @@
       state.speed = R.clamp(next, -(tune.reverseMax || 3.2), 27);
       // Keep the established steering tune, but move about the non-steering
       // rear tandem, not the cab's model origin. Its wheels must not crab sideways.
-      const yawRate = state.speed / 5.25 * Math.tan(state.steer) * .64;
+      const yawRate = state.speed / 5.25 * Math.tan(state.steer) * .64 * Math.sqrt(grip);
       const yawTravel = yawRate * dt, midYaw = state.yaw + yawTravel / 2;
       const rearOffset = TRACTOR_REAR_AXLE.z * Math.cos(state.pitch);
       state.pos.addScaledVector(f, -rearOffset);
@@ -115,13 +121,19 @@
       state.pos.addScaledVector(f, TRACTOR_REAR_AXLE.z * Math.cos(state.pitch));
       const nearest = R.nearest(state.pos);
       state.progress = R.clamp(nearest.d, 0, R.LENGTH);
-      state.offroad = nearest.dist > R.WIDTH * .53;
+      state.offroad = state.surface !== "asphalt";
       state.pos.y = R.surfaceHeight(state.pos.x, state.pos.z);
-      state.roll = THREE.MathUtils.damp(state.roll, R.clamp(yawRate * state.speed * .013, -.11, .11), 5, dt);
+      const side = new THREE.Vector3(Math.cos(state.yaw), 0, Math.sin(state.yaw));
+      const rightGround = state.pos.clone().addScaledVector(side, 1.3), leftGround = state.pos.clone().addScaledVector(side, -1.3);
+      const bank = state.offroad ? Math.atan2(R.surfaceHeight(rightGround.x, rightGround.z) - R.surfaceHeight(leftGround.x, leftGround.z), 2.6) : 0;
+      const rollLimit = state.offroad ? .28 : .11;
+      state.roll = THREE.MathUtils.damp(state.roll, R.clamp(yawRate * state.speed * .013 + bank, -rollLimit, rollLimit), 5, dt);
       const targetSway = R.clamp(yawRate * state.speed * .14 + (input.brake ? Math.abs(state.speed) * .013 : 0), -1.5, 1.5);
       state.sway = THREE.MathUtils.damp(state.sway, targetSway, 2.3, dt);
       if (state.offroad) {
-        state.speed *= Math.exp(-1.65 * dt);
+        const drag = state.surface === "gravel" ? .10 : .28;
+        state.speed *= Math.exp(-drag * dt);
+        state.speed = Math.sign(state.speed) * Math.max(0, Math.abs(state.speed) - (state.surface === "gravel" ? .16 : .55) * dt);
         state.damage = R.clamp(state.damage + Math.max(0, Math.abs(state.speed) * 2.237 - 22) * .011 * dt, 0, 100);
       }
       state.wheelRotation -= state.speed * dt / .52;

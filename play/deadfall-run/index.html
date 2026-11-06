@@ -50,7 +50,7 @@
   </header>
 
   <section class="hud" aria-label="Vehicle instruments">
-    <div class="dial"><span>SPEED <b id="gear">D</b></span><strong id="speed">0</strong><small>MPH</small></div>
+    <div class="dial"><span>SPEED <b id="gear">D</b></span><strong id="speed">0</strong><small>MPH</small><small id="surface" class="surface-readout">ASPHALT</small></div>
     <div class="instrument"><span>BRAKES</span><div class="meter"><i id="brakeMeter"></i></div><small id="brakeText">COOL</small></div>
     <div class="instrument"><span>DAMAGE</span><div class="meter"><i id="damageMeter"></i></div><small id="damageText">0%</small></div>
     <div class="instrument wide"><span>LOAD STABILITY</span><div class="meter"><i id="loadMeter"></i></div><small id="loadText">SECURE</small></div>
@@ -62,7 +62,7 @@
 
   <section id="start" class="overlay active">
     <div class="panel">
-      <p>TREE ARCADE · PLAY TEST BUILD 0.5.3</p>
+      <p>TREE ARCADE · PLAY TEST BUILD 0.5.4</p>
       <h1>The long<br />way down.</h1>
       <p class="copy">A heavy rig. Five storm-recovery logs. An unforgiving mountain descent. Keep your speed in check and your trailer in line.</p>
       <div class="route-spec"><span><b>1.8</b> KM DESCENT</span><span><b>5</b> LOGS TO DELIVER</span><span><b>3</b> CAMERA VIEWS</span></div>
@@ -126,9 +126,12 @@
 
   <script src="route.js"></script>
   <script src="physics.js"></script>
+  <script src="collision.js"></script>
   <script src="world.js"></script>
   <script src="vehicle.js"></script>
   <script src="gamepad.js"></script>
+  <script src="effects.js"></script>
+  <script src="engine-sample.js"></script>
   <script src="audio.js"></script>
   <script src="play.js"></script>
 </body>

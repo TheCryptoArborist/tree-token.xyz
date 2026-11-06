@@ -9,6 +9,7 @@ body{max-width:780px;margin:48px auto;padding:0 24px;background:#101a16;color:#e
 <p>Sequence: idle → acceleration → engine brake → service brake and air release → pause → reverse → mute.</p>
 <button id="run">RENDER SOUND CHECK</button><pre id="result" role="status">Ready.</pre><audio id="clip" controls hidden></audio>
 <small>These measurements detect silence, clipping, invalid samples and audio lifecycle errors. They do not establish how realistic the truck sounds.</small>
+<script src="../engine-sample.js"></script>
 <script src="../audio.js"></script>
 <script>
 document.getElementById('run').onclick=async function(){

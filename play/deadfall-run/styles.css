@@ -22,6 +22,7 @@ button, input { font:inherit; }
 .meter i { display:block; width:0; height:100%; background:var(--green); border-radius:inherit; transition:width .08s linear,background .2s; }
 .cargo { min-width:98px; border-radius:3px 13px 13px 3px; }
 .cargo strong { display:block; font-size:1.7rem; margin-top:7px; }
+.dial .surface-readout { display:block; margin-top:3px; color:#cfc8a1; font-size:.48rem; letter-spacing:.08em; }
 .dispatch { position:fixed; right:18px; top:75px; width:min(330px,calc(100% - 36px)); padding:11px 15px; background:#080b0bd9; border-left:3px solid var(--green); border-radius:4px 10px 10px 4px; z-index:3; opacity:0; transform:translateX(15px); transition:.25s; }
 .dispatch.show { opacity:1; transform:none; }
 .dispatch b,.dispatch span { display:block; }

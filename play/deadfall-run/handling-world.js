@@ -2,6 +2,7 @@
   "use strict";
   const R = root.DeadfallRoute, W = root.DeadfallWorld, M = W.materials;
   function create(scene) {
+    const solids = [], response = W.reactions();
     scene.background = new THREE.Color(0xc7cec3);
     scene.fog = new THREE.Fog(0xc7cec3, 240, 850);
     const sky = W.atmosphere(scene);
@@ -36,7 +37,10 @@
       const d = -35 + random() * 1000, lane = (i % 2 ? 1 : -1) * (48 + random() * 65);
       dummy.position.copy(R.frame(d, lane).p); dummy.position.y = R.terrainHeight(dummy.position.x, dummy.position.z);
       dummy.scale.setScalar(1 + random()); dummy.rotation.y = random() * 6.28; dummy.updateMatrix(); crowns.setMatrixAt(i, dummy.matrix);
+      const base = dummy.position.clone(), scale = dummy.scale.y, turn = dummy.rotation.y;
       dummy.position.y += 2.4 * dummy.scale.y; dummy.updateMatrix(); trunks.setMatrixAt(i, dummy.matrix);
+      const solid = { id: `lab-tree-${i}`, kind: "tree", a: base, radius: .23 * scale, minY: base.y, maxY: base.y + 6.7 * scale };
+      solids.push(solid); response.tree(crowns, trunks, i, base, scale, turn, solid);
     }
     crowns.castShadow = true; trunks.castShadow = true; scene.add(crowns, trunks);
     const groups = {}, cones = {};
@@ -73,9 +77,10 @@
     W.sign(groups.reverse, 111, 7.5, "REVERSE BAY", "TRAILER CENTER  /  HOLD BRAKE", 4);
     groups.grade.add(W.ribbon(475, 475.4, -6, 6, .07, green));
     let selected = "braking";
-    return { sun, obstacles: [], get cones() { return cones[selected]; }, selectTest(id) {
+    return { sun, obstacles: [], solids, impact: response.impact, reset: response.reset, get cones() { return cones[selected]; }, selectTest(id) {
       selected = id; for (const key of Object.keys(groups)) groups[key].visible = key === id;
-    }, update(pos) {
+    }, update(pos, progress, dt = 0) {
+      response.update(dt);
       sky.position.copy(pos);
       sun.position.copy(pos).add(new THREE.Vector3(-55, 95, 35)); sun.target.position.copy(pos);
     } };

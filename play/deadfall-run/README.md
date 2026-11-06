@@ -1,4 +1,4 @@
-# Deadfall Run — Handling Lab 0.5.3
+# Deadfall Run — Handling Lab 0.5.4
 
 A downloadable development build for TREE Arcade. This handling lab has not been published to the live arcade.
 
@@ -11,18 +11,32 @@ A downloadable development build for TREE Arcade. This handling lab has not been
 
 The original Stormbreak Pass descent is also included: open **index.html** or **START_GAME.bat**. Its menu links to the handling lab. No installation, web server, account, wallet, or network connection is required to drive. The Back to Arcade link opens https://tree-token.xyz/play/.
 
-## Materials, lighting and sound — 0.5.3
+## Collision, exhaust and engine update — 0.5.4
 
-This build keeps the 0.5.2 physics, route, handling exercises and controller module byte-for-byte. It changes presentation in both the lab and the full descent:
+This build addresses the test feedback about scenery having no physical response and the synthetic engine sound:
 
-- Clear-coated cab paint, reflective glass and brushed metal, with one generated sky used for both the backdrop and material reflections.
-- Distinct asphalt, gravel, rubber and ground textures; occasional road repairs; warmer sunlight and tighter truck shadows.
-- Slightly irregular, varied logs; trailer reflective tape, fasteners, suspension detail and light road dust on the cab.
-- Original synthesized diesel, road noise, engine-brake chatter and an air release after service braking. Sound follows speed and throttle. The simulated audio RPM does not add a gearbox or change acceleration.
+- Both the tractor and trailer now collide with guardrails, standing tree trunks, road hazards and rock outcrops. Swept contact checks prevent crossing thin obstacles between physics steps. Head-on hits stop the rig; shallow rail scrapes can slide along it. Impact damage depends on closing speed, with a cooldown so resting contact does not drain health every frame.
+- Large trees remain solid and shake on impact. Smaller trees can fall after a sufficiently hard hit; fallen road timber can be pushed aside. Wood/leaf particles, rock dust and rail sparks give visible feedback. A fresh run restores damaged scenery.
+- Both exhaust stacks emit faint smoke at idle and darker smoke under throttle. Smoke is left in world space as the truck moves. Off-road driving adds dust.
+- Pavement, gravel and grass use different grip/resistance. The rear trailer axle also counts when determining the surface. Off-road body lean follows the cross-slope of the ground. The speed display identifies the current surface.
+- A locally bundled, edited truck-engine recording replaces the main synthesized buzz. Throttle and simulated RPM change its sound; the engine brake has an irregular exhaust-pulse layer. Air release, impacts and scraping have separate sounds. See third-party-notices.txt for the recording's CC0 credit.
+
+The fifth-wheel solver, steering presets, NES mappings, courses and four handling exercise criteria are retained. Contact response is a swept kinematic approximation; it does not model chassis deformation, wheel suspension or a physical rollover. Small fallen trees and displaced limbs cease blocking the rig; they are animated scenery after the hit, not freely simulated rigid bodies. Reflector markers, signs and the mill are still scenery. Lab cones remain scoring markers.
 
 Clicking Start permits sound in browsers that allow it. If you start with a controller and hear nothing, open **SOUND → ENABLE SOUND** with your mouse or touch screen. The same menu has **MUTE SOUND** and a volume slider. Settings are remembered when browser storage is available. Pausing, opening controller setup, losing focus, ending a run or returning to the menu silences the truck. Sound failure does not prevent driving.
 
-For this build's playtest, open **index.html** and complete the 1.8 km descent. Compare Chase, Hood and Inspect views. Check that the road is readable, the cab and logs feel more grounded, and the three sound cues are distinct: throttle, engine brake, then service-brake release. Pause and resume once and confirm the audio follows. Check **DETAIL → LOW** if the new materials reduce performance on your computer. These are procedural materials and sounds, not photographed assets or recorded truck samples.
+## Test this update
+
+Use **index.html** for the full descent. Choose **HEAVY** for deliberate driving, and use a fresh run for each destructive test.
+
+1. Idle, accelerate, then hold SPACE while moving. Compare the diesel engine and engine-brake sound; release S after braking to hear the air release. Pause/resume and check mute once.
+2. Change to Inspect with C and orbit to see the two exhaust tips. Compare smoke at idle and while accelerating.
+3. Approach the first left-side guardrail, about 160 m into the course, slowly. Try a shallow scrape, then a more direct hit in a fresh run. Neither body should cross it. Brake to a stop, then hold V to back clear; use R if wedged.
+4. Leave the road where there is no guardrail. Check the surface label, drag, body lean and dust. Try a slow trunk impact, then compare a small tree and a larger tree at higher speed in separate runs.
+5. Back the trailer into a trunk or rock to check trailer-only contact. The fifth wheel must stay attached. R should recover to a clear road position; restarting should restore scenery.
+6. Open **handling.html** and repeat the grade, S-bend and reverse tests with your NES controller to check the previously improved handling.
+
+Please report the object, approximate speed, cab or trailer contact, and camera view if anything still passes through or reacts oddly. A short recording is especially useful. Audio character and rendered effects still need desktop feedback.
 
 ## NES-style controller support — 0.5.2
 
@@ -95,9 +109,9 @@ The uploaded Hard Truck game was used as a reference for configurable steering a
 
 ## Verification
 
-Run **npm test** in this directory (or run the six .cjs scripts in tests/ individually). No dependencies need installing. The 72 checks use real Three.js geometry and simulation with stubbed browser/renderer interfaces. They do not establish GPU rendering, native input feel, speaker sound quality, or frame rate.
+Run **npm test** in this directory (or run the seven .cjs scripts in tests/ individually). No dependencies need installing. The 83 checks use real Three.js geometry and simulation with stubbed browser/renderer interfaces. They do not establish GPU rendering, native input feel, speaker sound quality, or frame rate.
 
-The 0.5.3 menu and unsupported-graphics fallback were inspected. This browser reports GL_VENDOR and GL_RENDERER as Disabled and cannot create a WebGL context. The actual generated canvas textures were inspected separately. The actual audio module passed an eight-second browser OfflineAudioContext render: finite output with no clipping, audible sections with nonzero output, and exactly silent pause/mute sections. This is not a listening test or rendered gameplay test. To repeat the audio check, open **tests/browser-audio.html**, click **RENDER SOUND CHECK**, then optionally listen to its locally generated clip.
+The 0.5.4 menu and unsupported-graphics fallback were inspected. This browser reports GL_VENDOR and GL_RENDERER as Disabled and cannot create a WebGL context. The actual audio module passed an eight-second browser OfflineAudioContext render: finite output with no clipping, audible sections with nonzero output, and exactly silent pause/mute sections. This is not a listening test or rendered gameplay test. To repeat the audio check, open **tests/browser-audio.html**, click **RENDER SOUND CHECK**, then optionally listen to its locally generated clip.
 
 Actual driving, visual appearance and audio character still require a desktop playtest. If you see an error, include the message, browser/device, chosen test, and a screenshot or short recording.
 
@@ -108,7 +122,9 @@ Actual driving, visual appearance and audio character still require a desktop pl
 - physics.js: shared vehicle model and hitch constraint, with an injectable route for tests.
 - vehicle.js / world.js: original procedural models, materials, and environment helpers.
 - gamepad.js: device detection, calibration, saved mappings, and controller input.
-- audio.js: locally synthesized engine/road/brake audio, mute, volume and lifecycle.
+- engine-sample.js / audio.js: bundled engine recording, brake/road/impact layers, mute, volume and lifecycle.
+- collision.js: swept contacts for both articulated bodies.
+- effects.js: exhaust, dust and impact particles.
 - tests/browser-audio.html: optional actual-browser PCM render and listening check.
 - play.js / styles.css: controls, controller setup, cameras, HUD, and lifecycle for both modes.
 - TEST_REPORT.md: checks and verification limits.

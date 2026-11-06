@@ -1,4 +1,4 @@
-/* Original procedural diesel, road and air-brake sound. No files or network.
+/* Recorded diesel loop plus original road, impact and brake sound. No network.
    Audio RPM is an expressive approximation; it never changes vehicle physics. */
 (function (root) {
   "use strict";
@@ -15,7 +15,7 @@
       if (saved && Number.isFinite(saved.volume)) volume = clamp(saved.volume, 0, 1);
     } catch (_) {}
     let ctx = null, nodes = null, sources = [], pending = null, failed = false;
-    let active = false, previousBrake = false, heldBrake = 0, lastRelease = -10, rpm = 650;
+    let active = false, previousBrake = false, heldBrake = 0, lastRelease = -10, rpm = 650, recorded = false;
     function save() { try { storage?.setItem(key, JSON.stringify({ enabled, volume })); } catch (_) {} }
     function target(param, value, seconds = .08) {
       param.cancelScheduledValues(ctx.currentTime);
@@ -29,6 +29,24 @@
     function oscillator(type, destination) {
       const n = ctx.createOscillator(); n.type = type; n.connect(destination); n.start(); sources.push(n); return n;
     }
+    function voice(buffer, destination) {
+      const n = ctx.createBufferSource(); n.buffer = buffer; n.loop = true;
+      n.connect(destination); n.start(); sources.push(n); return n;
+    }
+    function recording() {
+      const sample = root.DeadfallEngineSample;
+      if (!sample) return null;
+      const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+      const bytes = new Uint8Array(Math.floor(sample.data.length * 3 / 4)); let length = 0, bits = 0, available = 0;
+      for (const char of sample.data) {
+        const value = alphabet.indexOf(char); if (value < 0) continue;
+        bits = (bits << 6) | value; available += 6;
+        if (available >= 8) { available -= 8; bytes[length++] = (bits >> available) & 255; }
+      }
+      const buffer = ctx.createBuffer(1, Math.floor(length / 2), sample.rate), data = buffer.getChannelData(0);
+      for (let i = 0; i < data.length; i++) { let n = bytes[i * 2] | (bytes[i * 2 + 1] << 8); if (n > 32767) n -= 65536; data[i] = n / 32768; }
+      return buffer;
+    }
     function build() {
       const master = gain(), compressor = ctx.createDynamicsCompressor();
       compressor.threshold.value = -12; compressor.knee.value = 18; compressor.ratio.value = 8;
@@ -36,30 +54,37 @@
       master.connect(compressor); compressor.connect(ctx.destination);
       const engineGain = gain(), engineFilter = filter("lowpass", 650), subGain = gain();
       engineFilter.connect(engineGain); engineGain.connect(master); subGain.connect(master);
-      const engine = oscillator("sawtooth", engineFilter), sub = oscillator("sine", subGain);
-      const real = new Float32Array(25), imag = new Float32Array(25);
-      for (let n = 1; n < imag.length; n++) imag[n] = (n % 3 === 0 ? .45 : 1) / Math.pow(n, .85);
-      engine.setPeriodicWave(ctx.createPeriodicWave(real, imag));
+      const sample = recording(); recorded = Boolean(sample);
+      const engine = sample ? voice(sample, engineFilter) : oscillator("triangle", engineFilter), sub = oscillator("sine", subGain);
       // A repeatable, three-second noise loop shared by independent filtered buses.
       const buffer = ctx.createBuffer(1, Math.ceil(ctx.sampleRate * 3), ctx.sampleRate), data = buffer.getChannelData(0);
       let seed = 72891;
       for (let i = 0; i < data.length; i++) { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; data[i] = seed / 2147483648 - 1; }
       const noise = ctx.createBufferSource(); noise.buffer = buffer; noise.loop = true;
-      const road = gain(), air = gain(), mechanical = gain(), jake = gain();
+      const road = gain(), air = gain(), mechanical = gain(), jake = gain(), crash = gain(), scrape = gain();
       const roadFilter = filter("lowpass", 500), airFilter = filter("highpass", 1500), mechanicalFilter = filter("bandpass", 380, .7);
       const jakeFilter = filter("lowpass", 1000);
       noise.connect(roadFilter); roadFilter.connect(road); road.connect(master);
       noise.connect(airFilter); airFilter.connect(air); air.connect(master);
       noise.connect(mechanicalFilter); mechanicalFilter.connect(mechanical); mechanical.connect(master);
-      // Exhaust-brake chatter has a sharper harmonic pulse than the running engine.
-      const jakeOsc = oscillator("sawtooth", jakeFilter); jakeFilter.connect(jake); jake.connect(master);
+      // Individual irregular exhaust pulses replace the old continuous sawtooth buzz.
+      const brakeBuffer = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate), pulses = brakeBuffer.getChannelData(0);
+      for (let i = 0; i < pulses.length; i++) {
+        const phase = (i / ctx.sampleRate * 32.5) % 1;
+        seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+        pulses[i] = Math.exp(-phase * 12) * (.48 * Math.sin(phase * 22) + .52 * (seed / 2147483648 - 1));
+      }
+      const jakeVoice = voice(brakeBuffer, jakeFilter); jakeFilter.connect(jake); jake.connect(master);
+      const crashFilter = filter("bandpass", 450, .5), scrapeFilter = filter("bandpass", 1200, .7);
+      noise.connect(crashFilter); crashFilter.connect(crash); crash.connect(master);
+      noise.connect(scrapeFilter); scrapeFilter.connect(scrape); scrape.connect(master);
       noise.start(); sources.push(noise);
       nodes = { master, compressor, engineGain, engineFilter, subGain, engine, sub, road, roadFilter,
-        air, mechanical, mechanicalFilter, jake, jakeOsc };
+        air, mechanical, mechanicalFilter, jake, jakeVoice, crash, crashFilter, scrape };
     }
     function stop() {
       active = false; previousBrake = false; heldBrake = 0;
-      if (nodes) { zero(nodes.master.gain); zero(nodes.air.gain); }
+      if (nodes) { zero(nodes.master.gain); zero(nodes.air.gain); zero(nodes.crash.gain); zero(nodes.scrape.gain); }
     }
     function dispose() {
       if (nodes) stop();
@@ -85,6 +110,14 @@
     function setEnabled(value) { enabled = Boolean(value); if (!enabled) stop(); save(); }
     function setVolume(value) { volume = clamp(Number(value), 0, 1); if (!volume) stop(); save(); }
     function status() { return { supported: Boolean(Context) && !failed, enabled, volume, ready: ctx?.state === "running" }; }
+    function impact(event) {
+      if (!nodes || !enabled || !volume || ctx.state !== "running") return;
+      try {
+        target(nodes.crashFilter.frequency, event.object.kind === "barrier" ? 900 : 240, .005);
+        zero(nodes.crash.gain); nodes.crash.gain.setValueAtTime(clamp(event.speed * .06, .08, .85), ctx.currentTime);
+        nodes.crash.gain.setTargetAtTime(0, ctx.currentTime + .015, .09);
+      } catch (_) { dispose(); failed = true; }
+    }
     function update(state, input, driving, dt, cameraMode = 0) {
       if (!nodes) return;
       if (!driving || !enabled || volume === 0 || ctx.state !== "running") { stop(); return; }
@@ -97,14 +130,17 @@
         const wanted = clamp(650 + speed / top * 1080 + throttle * 240, 650, 2050);
         rpm += (wanted - rpm) * (1 - Math.exp(-dt * 5));
         const firing = rpm / 20; // six-cylinder, four-stroke firing frequency
-        target(nodes.engine.frequency, firing); target(nodes.sub.frequency, firing / 2);
-        target(nodes.jakeOsc.frequency, firing);
-        target(nodes.engineFilter.frequency, 450 + rpm * .28 + throttle * 450);
-        target(nodes.engineGain.gain, engineBrake ? .07 : .08 + throttle * .075);
-        target(nodes.subGain.gain, .045 + throttle * .025);
-        target(nodes.mechanical.gain, .025 + throttle * .025);
+        if (recorded) target(nodes.engine.playbackRate, .82 + (rpm - 650) / 1400 * .60, .13);
+        else target(nodes.engine.frequency, firing);
+        target(nodes.sub.frequency, firing / 2);
+        target(nodes.jakeVoice.playbackRate, firing / 32.5);
+        target(nodes.engineFilter.frequency, recorded ? 1300 + throttle * 1900 : 500);
+        target(nodes.engineGain.gain, recorded ? (engineBrake ? .55 : .85 + throttle * .6) : .07);
+        target(nodes.subGain.gain, .012 + throttle * .012);
+        target(nodes.mechanical.gain, .012 + throttle * .018);
         target(nodes.mechanicalFilter.frequency, 240 + rpm * .22);
-        target(nodes.jake.gain, engineBrake ? .10 : 0, .05);
+        target(nodes.jake.gain, engineBrake ? .42 : 0, .05);
+        target(nodes.scrape.gain, clamp(state.scraping || 0, 0, 1) * .22, .03);
         target(nodes.roadFilter.frequency, 320 + speed * 38);
         target(nodes.road.gain, Math.min(.15, speed * .005));
         // One brief air release after a deliberate service-brake application.
@@ -117,7 +153,7 @@
         target(nodes.master.gain, volume * (cameraMode === 1 ? .36 : .46), .04);
       } catch (_) { dispose(); failed = true; }
     }
-    return { unlock, stop, reset, dispose, setEnabled, setVolume, status, update };
+    return { unlock, stop, reset, dispose, setEnabled, setVolume, status, update, impact };
   }
   root.DeadfallAudio = { create };
   if (typeof module !== "undefined" && module.exports) module.exports = root.DeadfallAudio;

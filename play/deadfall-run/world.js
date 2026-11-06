@@ -223,7 +223,47 @@
     }
     return merge(parts);
   }
-  function addForest(scene) {
+  function reactions() {
+    const active = new Set(), changed = new Set();
+    function tree(crowns, trunks, index, base, scale, turn, solid) {
+      const originalCrown = new THREE.Matrix4(), originalTrunk = new THREE.Matrix4();
+      crowns.getMatrixAt(index, originalCrown); trunks.getMatrixAt(index, originalTrunk);
+      const dummy = new THREE.Object3D(), yaw = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), turn);
+      const motion = { time: 0, broken: false, strength: 0, axis: new THREE.Vector3(), target: Math.PI / 2,
+        reset() { crowns.setMatrixAt(index, originalCrown); trunks.setMatrixAt(index, originalTrunk); crowns.instanceMatrix.needsUpdate = trunks.instanceMatrix.needsUpdate = true; },
+        update(dt) {
+          this.time += dt;
+          const angle = this.broken ? this.target * (1 - Math.exp(-3.2 * this.time * this.time)) : Math.sin(this.time * 10) * Math.exp(-2.2 * this.time) * this.strength;
+          dummy.quaternion.setFromAxisAngle(this.axis, angle).multiply(yaw);
+          dummy.position.copy(base); dummy.scale.setScalar(scale); dummy.updateMatrix(); crowns.setMatrixAt(index, dummy.matrix);
+          dummy.position.add(new THREE.Vector3(0, 2.4 * scale, 0).applyQuaternion(dummy.quaternion)); dummy.updateMatrix(); trunks.setMatrixAt(index, dummy.matrix);
+          crowns.instanceMatrix.needsUpdate = trunks.instanceMatrix.needsUpdate = true;
+          if (this.time > 4) { if (!this.broken) this.reset(); return false; } return true;
+        } };
+      solid.react = hit => {
+        if (motion.broken) return;
+        motion.time = 0; motion.broken = hit.broken; motion.strength = R.clamp(hit.speed * .012, .035, .14);
+        const direction = hit.normal.clone().negate(); motion.axis.set(direction.z, 0, -direction.x).normalize();
+        const length = 6.7 * scale, end = base.clone().addScaledVector(direction, length);
+        motion.target = Math.acos(R.clamp((R.terrainHeight(end.x, end.z) + .14 - base.y) / length, -.4, .4));
+        active.add(motion); changed.add(motion);
+      };
+    }
+    function limb(mesh, solid) {
+      const position = mesh.position.clone(), rotation = mesh.rotation.clone();
+      const motion = { time: 0, direction: new THREE.Vector3(), reset() { mesh.position.copy(position); mesh.rotation.copy(rotation); },
+        update(dt) {
+          this.time += dt; const distance = 2.8 * (1 - Math.exp(-this.time * 3));
+          mesh.position.copy(position).addScaledVector(this.direction, distance);
+          mesh.position.y = R.surfaceHeight(mesh.position.x, mesh.position.z) + .07;
+          mesh.rotation.x = rotation.x + distance * .5; return this.time < 2;
+        } };
+      solid.react = hit => { if (!hit.broken) return; motion.direction.copy(hit.normal).negate(); motion.time = 0; active.add(motion); changed.add(motion); };
+    }
+    return { tree, limb, impact(hit) { hit.object.react?.(hit); }, update(dt) { if (dt > 0) for (const motion of active) if (!motion.update(dt)) active.delete(motion); },
+      reset() { for (const motion of changed) { motion.reset(); motion.broken = false; } changed.clear(); active.clear(); } };
+  }
+  function addForest(scene, solids, response) {
     const foliage = foliageGeometry(), trunk = new THREE.CylinderGeometry(.08, .23, 5.1, 7);
     const dummy = new THREE.Object3D(), tint = new THREE.Color(), chunks = [];
     for (let start = -25; start < R.LENGTH + 90; start += 150) {
@@ -243,9 +283,13 @@
         crowns.setMatrixAt(i, dummy.matrix);
         tint.setHSL(.28 + rand() * .06, .15 + rand() * .14, .51 + rand() * .17); crowns.setColorAt(i, tint);
         dummy.position.y += 2.4 * tree.scale; dummy.updateMatrix(); trunks.setMatrixAt(i, dummy.matrix);
+        const base = tree.p.clone(); base.y = R.terrainHeight(base.x, base.z);
+        const solid = { id: `tree-${start}-${i}`, kind: "tree", a: base, radius: .23 * tree.scale, minY: base.y, maxY: base.y + 6.7 * tree.scale };
+        solids.push(solid); response.tree(crowns, trunks, i, base, tree.scale, tree.turn, solid);
       });
       crowns.castShadow = true; crowns.receiveShadow = true; trunks.castShadow = true;
       crowns.computeBoundingSphere(); trunks.computeBoundingSphere();
+      crowns.boundingSphere.radius += 12; trunks.boundingSphere.radius += 12;
       group.add(crowns, trunks); scene.add(group); chunks.push({ group, d: start + 75, crowns, trunks });
     }
     return chunks;
@@ -279,7 +323,7 @@
     group.position.copy(f.p); group.position.y = R.terrainHeight(f.p.x, f.p.z); group.rotation.y = -f.yaw;
     scene.add(group); return board;
   }
-  function rail(scene, from, to, lane) {
+  function rail(scene, from, to, lane, solids) {
     const group = new THREE.Group(), parts = [];
     for (let d = from; d < to; d += 3) {
       const a = R.frame(d, lane).p, b = R.frame(Math.min(to, d + 3.02), lane).p;
@@ -287,6 +331,7 @@
       segment.position.copy(a).add(b).multiplyScalar(.5); segment.position.y += .85; segment.lookAt(b.clone().add(new THREE.Vector3(0, .85, 0)));
       segment.updateMatrix(); parts.push(segment.geometry.clone().applyMatrix4(segment.matrix)); segment.geometry.dispose();
       const post = new THREE.BoxGeometry(.11, .93, .13); post.translate(a.x, a.y + .47, a.z); parts.push(post);
+      solids.push({ id: `rail-${from}-${d}`, kind: "barrier", a: a.clone(), b: b.clone(), radius: .09, minY: Math.min(a.y, b.y), maxY: Math.max(a.y, b.y) + 1.2 });
     }
     const mesh = new THREE.Mesh(merge(parts), M.darkMetal); mesh.castShadow = true; mesh.receiveShadow = true; group.add(mesh); scene.add(group);
   }
@@ -306,6 +351,7 @@
     scene.add(ribbon(1784, 1784.5, -6, 6, .07, M.edge, .5));
   }
   function create(scene) {
+    const solids = [], response = reactions();
     scene.background = new THREE.Color(0xc7cec3); scene.fog = new THREE.FogExp2(0xc7cec3, .0019);
     const sky = atmosphere(scene);
     const sun = new THREE.DirectionalLight(0xffe7c2, 2.4); sun.castShadow = true;
@@ -321,8 +367,8 @@
     road.add(new THREE.Mesh(merge(markings), M.line));
     scene.add(road);
     roadRepairs(scene, -45, 1840, 6);
-    const forest = addForest(scene);
-    for (const [from, to] of [[160, 420], [660, 880], [1080, 1360]]) rail(scene, from, to, -7.3);
+    const forest = addForest(scene, solids, response);
+    for (const [from, to] of [[160, 420], [660, 880], [1080, 1360]]) rail(scene, from, to, -7.3, solids);
     const markerParts = [], reflectorParts = [];
     for (let d = 15; d < R.LENGTH; d += 32) for (const side of [-1, 1]) {
       const f = R.frame(d, side * 6.8);
@@ -348,6 +394,14 @@
         group.rotation.y = -f.yaw + .35;
       }
       group.position.copy(f.p); group.position.y += .07; scene.add(group); o.mesh = group;
+      group.updateMatrixWorld(true);
+      const solid = { id: `road-${o.d}`, kind: o.type, a: group.position.clone(), radius: o.type === "rock" ? 1 : .25,
+        minY: f.p.y, maxY: f.p.y + 1.8 };
+      if (o.type === "limb") {
+        solid.a = group.localToWorld(new THREE.Vector3(-2.75, 0, 0)); solid.b = group.localToWorld(new THREE.Vector3(2.75, 0, 0));
+        response.limb(group, solid);
+      }
+      solids.push(solid);
     }
     // Rock outcrops break up the shoulder without adding hundreds of draw calls.
     const rocks = new THREE.InstancedMesh(new THREE.DodecahedronGeometry(1, 1), M.rock, 160), dummy = new THREE.Object3D();
@@ -356,9 +410,11 @@
       dummy.position.copy(f.p); dummy.position.y = R.terrainHeight(f.p.x, f.p.z);
       const s = .6 + rand() * 2.8; dummy.scale.set(s * 1.4, s * .66, s);
       dummy.rotation.set(rand(), rand() * 6.28, rand()); dummy.updateMatrix(); rocks.setMatrixAt(i, dummy.matrix);
+      solids.push({ id: `outcrop-${i}`, kind: "rock", a: dummy.position.clone(), radius: s * 1.25, minY: dummy.position.y, maxY: dummy.position.y + s * 1.8 });
     }
     rocks.castShadow = true; rocks.receiveShadow = true; rocks.computeBoundingSphere(); scene.add(rocks);
-    return { sun, obstacles, sky, forest, update(pos, progress) {
+    return { sun, obstacles, solids, sky, forest, impact: response.impact, reset: response.reset, update(pos, progress, dt = 0) {
+      response.update(dt);
       sky.position.copy(pos); sun.position.copy(pos).add(new THREE.Vector3(-65, 88, -30)); sun.target.position.copy(pos);
       for (const chunk of forest) {
         chunk.group.visible = Math.abs(chunk.d - progress) < 800;
@@ -366,5 +422,5 @@
       }
     } };
   }
-  root.DeadfallWorld = { create, materials: M, texture, box, cylinder, at, merge, ribbon, sign, foliageGeometry, atmosphere, roadRepairs };
+  root.DeadfallWorld = { create, materials: M, texture, box, cylinder, at, merge, ribbon, sign, foliageGeometry, atmosphere, roadRepairs, reactions };
 })(typeof window !== "undefined" ? window : globalThis);

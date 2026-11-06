@@ -21,3 +21,23 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+
+
+Truck Engine #2 — engine-sample.js
+Recording by Joseph SARDIN / BigSoundBank, sound 1443.
+Source: https://bigsoundbank.com/truck-engine-2-s1443.html
+License: CC0 1.0 Universal (public-domain dedication), as stated on the source page.
+License text: https://creativecommons.org/publicdomain/zero/1.0/legalcode
+Source and license checked November 5, 2026 (America/Chicago).
+
+Adaptation: extracted 4.25 seconds starting at 4 seconds, resampled to mono
+22050 Hz, high-pass filtered at 38 Hz, low-pass filtered at 4300 Hz,
+removed DC, crossfaded 0.25 seconds at the loop join, and normalized the
+peak to 0.72. The resulting four-second PCM16 loop is encoded as base64
+inside engine-sample.js for offline file:// playback. Source recording
+identifies a truck engine, not a specific truck make or engine model.
+
+Original MP3 SHA256:
+90eadeb86c4f63eda1302b756d2c9f4a9cdd39248bd68683c0b3c597fecf7d5b
+Edited PCM16 SHA256:
+2608c93d5e8c12bce63b82d12304f546c6821f0118c2100fece08950226cbe63

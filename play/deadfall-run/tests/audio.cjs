@@ -1,6 +1,7 @@
 /* Audio graph/lifecycle checks. These do not replace listening on a real device. */
 "use strict";
 const assert = require("node:assert/strict"), { create } = require("../audio.js");
+require("../engine-sample.js");
 class Param {
   constructor(value = 0) { this.value = value; this.events = []; }
   setValueAtTime(v, t) { assert(Number.isFinite(v) && Number.isFinite(t)); this.value = v; this.events.push(["set", v, t]); }
@@ -10,7 +11,7 @@ class Param {
 class Node {
   constructor(context, kind) {
     this.kind = kind; this.outputs = []; context.nodes.push(this);
-    for (const name of ["gain", "frequency", "Q", "threshold", "knee", "ratio", "attack", "release"]) this[name] = new Param();
+    for (const name of ["gain", "frequency", "playbackRate", "Q", "threshold", "knee", "ratio", "attack", "release"]) this[name] = new Param();
   }
   connect(node) { this.outputs.push(node); return node; }
   disconnect() { this.outputs = []; }
@@ -27,7 +28,7 @@ class Context {
   createBufferSource() { return new Node(this, "bufferSource"); }
   createDynamicsCompressor() { return new Node(this, "compressor"); }
   createPeriodicWave(real, imag) { return { real, imag }; }
-  createBuffer(channels, length) { const data = new Float32Array(length); return { getChannelData: () => data }; }
+  createBuffer(channels, length, sampleRate) { const data = new Float32Array(length); return { length, sampleRate, getChannelData: () => data }; }
   resume() { this.state = "running"; return Promise.resolve(); }
   close() { this.state = "closed"; return Promise.resolve(); }
 }
@@ -53,10 +54,11 @@ async function test(name, run) { await run(); count++; console.log(`PASS ${name}
   });
   await test("engine pitch follows acceleration; engine braking has a separate audible layer", async () => {
     const sound = create({ Context }); await sound.unlock(); const ctx = last();
-    const engine = ctx.nodes.find(n => n.wave), jake = ctx.nodes.find(n => n.kind === "oscillator" && !n.wave && n.type === "sawtooth");
-    sound.update(state, {}, true, .1); const idle = engine.frequency.value;
+    const engine = ctx.nodes.find(n => n.buffer?.sampleRate === 22050), jake = ctx.nodes.find(n => n.buffer?.length === ctx.sampleRate * 2);
+    assert(engine && engine.buffer.length > 80000); assert(engine.buffer.getChannelData(0).some(n => Math.abs(n) > .1));
+    sound.update(state, {}, true, .1); const idle = engine.playbackRate.value;
     for (let i = 0; i < 30; i++) { ctx.currentTime += .1; sound.update({ speed: 12, throttle: 1 }, { throttle: true }, true, .1); }
-    assert(engine.frequency.value > idle * 1.4); assert.equal(jake.outputs[0].outputs[0].gain.value, 0);
+    assert(engine.playbackRate.value > idle * 1.2); assert.equal(jake.outputs[0].outputs[0].gain.value, 0);
     sound.update({ speed: 12, throttle: 0 }, { engine: true }, true, .1); assert(jake.outputs[0].outputs[0].gain.value > 0);
     sound.update(state, { engine: true }, true, .1); assert.equal(jake.outputs[0].outputs[0].gain.value, 0); sound.dispose();
   });
@@ -78,6 +80,17 @@ async function test(name, run) { await run(); count++; console.log(`PASS ${name}
       action(); assert.equal(output.value, 0); assert.equal(air(ctx).value, 0);
     }
     sound.dispose(); assert.equal(ctx.state, "closed"); assert(ctx.nodes.filter(n => n.started).every(n => n.stopped));
+  });
+  await test("impacts and scrapes add bounded sound and are silenced by pause", async () => {
+    const sound = create({ Context }); await sound.unlock(); const ctx = last();
+    sound.update({ speed: 8, throttle: 0, scraping: .8 }, {}, true, .1);
+    const scrape = ctx.nodes.find(n => n.type === "bandpass" && n.frequency.value === 1200).outputs[0];
+    assert(scrape.gain.value > 0 && scrape.gain.value <= .22);
+    sound.impact({ object: { kind: "barrier" }, speed: 20 });
+    const crash = ctx.nodes.find(n => n.type === "bandpass" && n.frequency.value === 900).outputs[0];
+    assert(crash.gain.events.some(e => e[0] === "set" && e[1] > 0 && e[1] <= .85));
+    sound.stop(); assert.equal(crash.gain.value, 0); assert.equal(scrape.gain.value, 0); assert.equal(master(ctx).value, 0);
+    sound.dispose();
   });
   await test("settings survive reload and corrupt/blocked storage degrades to defaults", async () => {
     let data = null; const storage = { getItem: () => data, setItem: (_, value) => data = value };

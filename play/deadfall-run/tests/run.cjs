@@ -115,7 +115,50 @@ const context = vm.createContext({ THREE: { ...THREE, WebGLRenderer: Renderer },
   document, console, innerWidth: 1440, innerHeight: 900, devicePixelRatio: 1, performance: { now: () => clock },
   requestAnimationFrame: fn => raf.push(fn), addEventListener: (name, fn) => (listeners[name] ||= []).push(fn),
   showBootError: message => failures.push(message), window: null }); context.window = context;
-for (const file of ["world.js", "vehicle.js", "gamepad.js", "audio.js"]) vm.runInContext(fs.readFileSync(path.join(base, file), "utf8"), context, { filename: file });
+for (const file of ["world.js", "vehicle.js", "gamepad.js", "collision.js", "effects.js", "engine-sample.js", "audio.js"]) vm.runInContext(fs.readFileSync(path.join(base, file), "utf8"), context, { filename: file });
+let contactWorld;
+test("visible forest trunks, rail segments and road hazards have solid contacts", () => {
+  const scene = new THREE.Scene(), world = context.DeadfallWorld.create(scene);
+  contactWorld = world;
+  const treeCount = world.forest.reduce((n, chunk) => n + chunk.trunks.count, 0);
+  assert.equal(world.solids.filter(o => o.kind === "tree").length, treeCount);
+  assert.equal(world.solids.filter(o => o.kind === "barrier").length, 255);
+  assert.equal(world.solids.filter(o => o.id.startsWith("road-")).length, 6);
+  assert.equal(world.solids.filter(o => o.id.startsWith("outcrop-")).length, 160);
+  for (const o of world.solids) { assert(o.radius > 0); assert(Number.isFinite(o.a.x + o.a.y + o.a.z)); }
+  const first = world.forest[0], tree = world.solids.find(o => o.kind === "tree"), before = new THREE.Matrix4();
+  first.trunks.getMatrixAt(0, before);
+  world.impact({ object: tree, normal: new THREE.Vector3(0, 0, 1), speed: 8, broken: false });
+  world.update(new THREE.Vector3(), 0, .1);
+  const after = new THREE.Matrix4(); first.trunks.getMatrixAt(0, after); assert(!before.equals(after));
+  world.reset(); first.trunks.getMatrixAt(0, after); assert(before.equals(after));
+  world.impact({ object: tree, normal: new THREE.Vector3(0, 0, 1), speed: 8, broken: true });
+  for (let i = 0; i < 240; i++) world.update(new THREE.Vector3(), 0, 1 / 60);
+  first.trunks.getMatrixAt(0, after); assert(!before.equals(after));
+  const axis = new THREE.Vector3(0, 1, 0).transformDirection(after); assert(axis.y < .65, "tree stayed upright");
+  world.reset(); first.trunks.getMatrixAt(0, after); assert(before.equals(after));
+});
+test("exhaust starts at both stacks; particles stay finite, freeze on pause and clear on reset", () => {
+  const scene = new THREE.Scene(), fx = context.DeadfallEffects.create(scene), tractor = new THREE.Group();
+  tractor.position.set(40, 2, -90); tractor.rotation.y = .5; tractor.updateMatrixWorld(true);
+  fx.update(.1, { throttle: 1, speed: 0 }, tractor, true, 900);
+  const g = fx.cloud.geometry, p = g.attributes.position, alpha = g.attributes.aAlpha;
+  assert.equal(Array.from(alpha.array).filter(x => x > 0).length, 2);
+  for (const [index, side] of [[0, -1], [1, 1]]) {
+    const stack = tractor.localToWorld(new THREE.Vector3(side * 1.02, 3.69, .28));
+    assert(new THREE.Vector3().fromBufferAttribute(p, index).distanceTo(stack) < .25);
+  }
+  const frozen = Array.from(p.array); fx.update(.1, { throttle: 1 }, tractor, false); assert.deepEqual(Array.from(p.array), frozen);
+  for (let i = 0; i < 1200; i++) {
+    if (i % 30 === 0) fx.impact({ object: { kind: "barrier" }, point: new THREE.Vector3(), normal: new THREE.Vector3(1, 0, 0), speed: 27 });
+    fx.update(1 / 60, { throttle: 1, speed: 20, offroad: true }, tractor, true);
+  }
+  assert.equal(p.count, 240);
+  for (const attr of Object.values(g.attributes)) for (const v of attr.array) assert(Number.isFinite(v));
+  for (const shader of [fx.cloud.material.vertexShader, fx.cloud.material.fragmentShader])
+    for (const [, name] of shader.matchAll(/#include <([^>]+)>/g)) assert(THREE.ShaderChunk[name], name);
+  fx.reset(); assert(Array.from(alpha.array).every(x => x === 0));
+});
 test("detailed vehicle builds; resetting restores all five visible logs", () => {
   const truck = context.DeadfallVehicle.make(), state = P.createState();
   state.logs = 2; context.DeadfallVehicle.update(truck, state, {});
@@ -264,6 +307,30 @@ test("failure screen and Drive Again return a fresh five-log run", () => {
   element("again").dispatch("click"); assert(element("start").classList.contains("active"));
   element("drive").dispatch("click"); assert.equal(element("cargo").textContent, "5/5"); assert.equal(element("damageText").textContent, "0%");
   assert.equal(element("distance").textContent, "1,800 m");
+});
+test("the full descent is completable while avoiding solid hazards with both bodies", () => {
+  const r = rig(), C = context.DeadfallCollision.create(R, P, contactWorld.solids); C.reset();
+  let steps = 0, impacts = 0;
+  while (r.state.progress < R.LENGTH - 12 && steps++ < 50000) {
+    const s = r.state, targetD = s.progress + 13;
+    let lane = 0;
+    for (const obstacle of contactWorld.obstacles) {
+      const delta = targetD - obstacle.d;
+      // Deliberately choose an early, wide path around each visible obstruction.
+      const influence = delta < -25 ? R.clamp((delta + 110) / 85, 0, 1) : delta > 35 ? R.clamp((110 - delta) / 75, 0, 1) : 1;
+      lane += (obstacle.lane > 0 ? -3.7 : 2.8) * influence;
+    }
+    const target = R.frame(targetD, lane).p, heading = Math.atan2(target.x - s.pos.x, -(target.z - s.pos.z));
+    const desired = Math.atan(P.angle(heading - s.yaw) * 1.5 * 5.25 / Math.max(.5, s.speed) / .64);
+    const tune = P.presets.loaded, limit = THREE.MathUtils.degToRad(tune.steerLow - Math.min(Math.abs(s.speed), 25) / 25 * (tune.steerLow - tune.steerHigh));
+    const before = context.DeadfallCollision.capture(s);
+    P.step(s, { throttle: s.speed < 9, engine: s.speed > 10, touchSteer: R.clamp(desired / limit, -1, 1) }, 1 / 120, "loaded");
+    P.couple(s, r.tractor, r.trailer);
+    if (C.resolve(s, before, r.tractor, r.trailer, 1 / 120)) impacts++;
+    assert(gap(r) < 1e-9);
+  }
+  assert(r.state.progress >= R.LENGTH - 12, `blocked at ${r.state.progress.toFixed(1)} m`);
+  assert.equal(impacts, 0); assert.equal(r.state.logs, 5); assert.equal(r.state.damage, 0);
 });
 assert.deepEqual(failures, []);
 console.log(`\n${passed} checks passed. These are CPU/DOM-stub tests, not a GPU or browser playtest.`);
