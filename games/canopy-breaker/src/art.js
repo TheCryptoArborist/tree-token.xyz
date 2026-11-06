@@ -1,5 +1,6 @@
 import {W,H,BIOMES,PICKUPS,paddleWidth} from './engine.js';
 import {drawPickup} from './pickup-art.js';
+import {drawBlock} from './block-art.js';
 const TAU=Math.PI*2;
 function round(c,x,y,w,h,r=8){c.beginPath();c.roundRect(x,y,w,h,r);}
 function leaf(c,x,y,scale,color,angle=0){c.save();c.translate(x,y);c.rotate(angle);c.scale(scale,scale);c.beginPath();c.moveTo(0,-12);c.bezierCurveTo(20,-10,16,10,0,15);c.bezierCurveTo(-16,8,-12,-4,0,-12);c.fillStyle=color;c.fill();c.strokeStyle='#cbf6b857';c.lineWidth=1;c.beginPath();c.moveTo(0,12);c.lineTo(1,-6);c.stroke();c.restore();}
@@ -22,13 +23,7 @@ function forest(c,biome,t){
  c.strokeStyle='#346143';c.lineWidth=3;for(let i=0;i<32;i++){let x=i*27;c.beginPath();c.moveTo(x,900);c.quadraticCurveTo(x+44,872,x+2,862);c.stroke();}
  for(let i=0;i<24;i++){const x=(i*197)%W,y=475+(i*83)%330;const a=.3+Math.sin(t*.7+i*1.8)*.25;c.globalAlpha=a;c.fillStyle=b.color;c.beginPath();c.arc(x+Math.sin(t*.2+i)*8,y+Math.cos(t*.4+i)*9,1.5,0,TAU);c.fill();}c.globalAlpha=1;
 }
-function brick(c,b,color){
- const grad=c.createLinearGradient(b.x,b.y,b.x,b.y+b.h);grad.addColorStop(0,b.kind===0?'#56674a':b.kind===1?'#475547':'#665c44');grad.addColorStop(1,b.kind===0?'#2b3d2b':b.kind===1?'#26382f':'#3c3226');round(c,b.x,b.y,b.w,b.h,5);c.fillStyle='#0005';c.fill();c.save();c.translate(0,-2);round(c,b.x,b.y,b.w,b.h,5);c.fillStyle=grad;c.fill();c.strokeStyle=b.maxHp>1?color+'b0':'#9ebd6965';c.lineWidth=b.maxHp>1?1.5:1;c.stroke();
- c.strokeStyle='#c4d4b82c';c.beginPath();c.moveTo(b.x+7,b.y+5);c.lineTo(b.x+b.w-8,b.y+5);c.stroke();
- c.strokeStyle='#101d1888';c.beginPath();c.moveTo(b.x+18,b.y+2);c.lineTo(b.x+22,b.y+12);c.lineTo(b.x+16,b.y+24);c.stroke();
- if(b.hp<b.maxHp){c.strokeStyle='#c6e7a0a0';c.beginPath();c.moveTo(b.x+40,b.y);c.lineTo(b.x+32,b.y+14);c.lineTo(b.x+45,b.y+27);c.stroke();}
- leaf(c,b.x+48,b.y+12,.4,color,-.8);if(b.hp>1){c.fillStyle=color;for(let i=0;i<b.hp;i++)c.fillRect(b.x+7+i*6,b.y+19,3,3);}c.restore();
-}
+
 function paddle(c,s){
  const w=paddleWidth(s),x=s.paddle,y=828;c.save();c.translate(x,y);
  c.shadowColor='#7ef3a0';c.shadowBlur=14;round(c,-w/2,-6,w,9,5);c.fillStyle='#86f2a9';c.fill();c.shadowBlur=0;
@@ -42,7 +37,7 @@ function paddle(c,s){
 export function draw(c,s,{time=0,motion=true}={}){
  c.clearRect(0,0,W,H);const biome=Math.floor((s.level-1)/6),color=BIOMES[biome].color;forest(c,biome,motion?time:0);
  c.fillStyle='#bfe2c7';c.font='600 14px "DM Sans",sans-serif';c.textAlign='center';c.letterSpacing='3px';c.fillText(BIOMES[biome].name.toUpperCase(),400,59);c.letterSpacing='0px';c.fillStyle='#6f9a86';c.font='11px "DM Sans",sans-serif';c.fillText(s.level%6===0?'BLIGHT SPORES · WATCH YOUR ROOTS':'RESTORE THE FOREST',400,81);
- for(const b of s.bricks)brick(c,b,color);
+ for(const b of s.bricks)drawBlock(c,b);
  if(s.boss){const b=s.boss;c.save();c.translate(b.x,b.y);c.fillStyle='#36233d';c.strokeStyle='#bd79bc';c.lineWidth=3;c.beginPath();c.moveTo(-60,35);c.lineTo(-75,-25);c.lineTo(-40,-11);c.lineTo(-25,-60);c.lineTo(0,-27);c.lineTo(35,-65);c.lineTo(42,-12);c.lineTo(78,-28);c.lineTo(62,36);c.closePath();c.fill();c.stroke();c.shadowColor='#edaa43';c.shadowBlur=20;c.fillStyle='#ffcd70';c.fillRect(-32,-3,18,8);c.fillRect(14,-3,18,8);c.shadowBlur=0;c.strokeStyle='#17111e';c.lineWidth=6;c.beginPath();c.moveTo(-24,20);c.lineTo(0,28);c.lineTo(25,17);c.stroke();c.restore();round(c,250,109,300,8,4);c.fillStyle='#392432';c.fill();round(c,250,109,300*b.hp/b.maxHp,8,4);c.fillStyle='#dc84ce';c.fill();}
  for(const p of s.pickups)drawPickup(c,p.type,p.x,p.y,{time,motion});
  for(const h of s.hazards){c.fillStyle='#773a65';c.strokeStyle='#db86bd';c.lineWidth=2;c.beginPath();for(let i=0;i<10;i++){let a=i/10*TAU,r=i%2?7:14;c.lineTo(h.x+Math.cos(a)*r,h.y+Math.sin(a)*r);}c.closePath();c.fill();c.stroke();}

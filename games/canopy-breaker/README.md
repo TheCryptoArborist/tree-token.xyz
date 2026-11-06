@@ -28,9 +28,11 @@ playtest as real NFT verification or real token payment.
   resume. Physical NES hardware and iPhone wallet app round trips still require
   real-device testing.
 - Original canvas art, event sounds, reduced-motion support and fullscreen.
-- Illustrated pickups replace letter tiles: growing branch, root-held seed,
+- Carved wooden relics replace letter tiles: growing branch, root-held acorn,
   flame seed, twin thorns, seedburst, speed chevrons, binding roots and a wind
-  spiral. Beneficial pickups use rounded frames; hazards use amber diamonds.
+  spiral. Beneficial relics have leafy wood frames and gold fittings; hazards have
+  weathered amber diamonds. Bricks use the live TREE homepage’s emerald, cyan
+  and gold palette, with beveled faces, wood grain and leaf engravings.
   The field guide and pickup notices share the same icons and explain the effect.
 
 ## Access and restart rules
