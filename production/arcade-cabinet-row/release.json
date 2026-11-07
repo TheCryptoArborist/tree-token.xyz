@@ -1,0 +1,25 @@
+{
+  "baseline": "6aee6e292c39ae987fa35641",
+  "review_deploy": "6aee7192706fb813309a2622",
+  "static_paths": 302,
+  "unchanged_static_paths": 298,
+  "changed_paths": [
+    "/assets/arcade/canopy-breaker-game.webp",
+    "/play/canopy-breaker/preview/index.html",
+    "/play/index.html",
+    "/styles/tree-arcade-new-cabinets.css"
+  ],
+  "complete_function_records_preserved": 43,
+  "schedules_preserved": 5,
+  "review_url": "https://6aee7192706fb813309a2622--tree-token.netlify.app/play/#cabinets",
+  "public_gameplay_added": false,
+  "published_deploy": "6aee7192706fb813309a2622",
+  "production_url": "https://tree-token.xyz/play/",
+  "publication_locked": true,
+  "source_commit": "7857c2971db33ab6d3562f583bd2d91a3955dc88",
+  "responsive_review": {
+    "desktop_width": 1348,
+    "narrow_width": 340,
+    "narrow_horizontal_overflow": false
+  }
+}
