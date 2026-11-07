@@ -1,0 +1,11 @@
+<script>
+(() => {
+  if (!['treedrop.xyz', 'www.treedrop.xyz'].includes(window.location.hostname)) return;
+  if (!['/', '/index.html'].includes(window.location.pathname)) return;
+  const destination = new URL('https://tree-token.xyz/rewards/');
+  destination.search = window.location.search;
+  destination.hash = window.location.hash;
+  window.location.replace(destination.href);
+})();
+</script>
+<noscript><meta http-equiv="refresh" content="0;url=https://tree-token.xyz/rewards/"></noscript>
