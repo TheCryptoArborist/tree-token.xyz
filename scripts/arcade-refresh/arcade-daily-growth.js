@@ -161,7 +161,15 @@ export function createDailyGrowth({
   const document = root.ownerDocument;
   const view = document.defaultView;
   if (storage === undefined) {
-    try { storage = view.sessionStorage; } catch { storage = null; }
+    try {
+      storage = view.localStorage;
+      // Migrate a still-valid tab session without asking for another signature.
+      if (!storage.getItem(SESSION_KEY)) {
+        const previous = readSession(view.sessionStorage, now());
+        if (previous) storage.setItem(SESSION_KEY, JSON.stringify(previous));
+      }
+      view.sessionStorage.removeItem(SESSION_KEY);
+    } catch { try { storage = view.sessionStorage; } catch { storage = null; } }
   }
   const byId = (id) => root.querySelector(`#growth-${id}`);
   const ui = Object.fromEntries([
@@ -938,14 +946,17 @@ export function createDailyGrowth({
     } finally {
       if (ticket === epoch && !disposed) { state.busy = null; render(); }
     }
-    if (signedIn && ticket === epoch) await refresh();
+    if (signedIn && ticket === epoch) {
+      await refresh();
+      if (ticket === epoch && state.session) await checkIn();
+    }
   }
 
   async function connect(walletId) {
     if (state.busy || !bridge) return;
     state.busy = 'connecting';
     state.walletId = walletId;
-    setNotice('Connect your NFTree wallet, then sign in with a message to load your progress.');
+    setNotice('Connect your wallet and approve one sign-in message. Today’s free check-in will be saved automatically.');
     render();
     try {
       await bridge.connectWallet(walletId);
@@ -965,7 +976,8 @@ export function createDailyGrowth({
     } finally {
       if (!disposed) { state.busy = null; render(); }
     }
-    if (state.session && !disposed) { await loadStatus(); if (state.session) await refresh(); }
+    if (state.session && !disposed) { await loadStatus(); if (state.session) { await refresh(); await checkIn(); } }
+    else if (state.wallet && !disposed) await signIn();
   }
 
   async function signOut() {
@@ -978,6 +990,9 @@ export function createDailyGrowth({
 
   function walletChanged() {
     if (disposed) return;
+    // Silent restore resets bridge state before selecting the saved account.
+    // That intermediate disconnect must not invalidate its own restore ticket.
+    if (restoreInFlight && !currentWallet()) return;
     const previous = state.wallet?.address;
     const actual = currentWallet();
     const expected = state.session?.wallet || previous;
@@ -1192,6 +1207,16 @@ export function createDailyGrowth({
     }
   }
   on(root, 'arcade-attendance-recovered', () => { if (!state.busy && state.session) void refresh(); });
+  on(view, 'storage', (event) => {
+    if (event.key !== SESSION_KEY || event.storageArea !== storage) return;
+    if (!event.newValue) {
+      invalidateSession('Signed out of Daily Growth in another tab.');
+    } else if (!state.session) {
+      savedSession = readSession(storage, now());
+      restorePending = Boolean(savedSession);
+      queueSavedSessionRestore();
+    }
+  });
   on(view, 'focus', refreshAfterGameReturn);
   on(view, 'pageshow', refreshAfterGameReturn);
   on(document, 'visibilitychange', () => { if (document.visibilityState === 'visible') refreshAfterGameReturn(); });
