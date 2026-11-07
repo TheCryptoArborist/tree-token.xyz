@@ -1,3 +1,9 @@
+# Current production — supplied rewards artwork, 2026-11-07
+
+Locked deployment `6aef79ac2b3345f579dd4e3e` replaces the rewards card image with Peter's supplied `5115.jpg`, stored byte-for-byte as `/rewards/nftree-rewards-hero.jpg`. Source `755a77bb3dc8b4642f89b7c31fbf57ea34f9fb29` is merged in PR #91. TypeScript/build passes and preview framing was visually checked. All 330 prior paths remain, with only `/rewards/index.html` replaced and eight assets added (338 total). All 43 backend records, five schedules and protected environment fingerprints match. See `nftree-rewards-release-20261107.json` for the complete current inventory. Capture this deployment before future releases.
+
+---
+
 # Current production — rewards character framing, 2026-11-07
 
 Locked deployment `6aef77ffb97eb2200655b411` anchors the rewards illustration to its top edge, keeping the character's head and raised hand visible. Source `664f152938428d811aea699d5cf85cb46ac12b5a` is merged in PR #89. Build passes and the preview was visually checked. All 322 previous paths remain, with only `/rewards/index.html` replaced and eight new hashed assets (330 total). All 43 backend records, five schedules and protected environment fingerprints match. The complete current inventory is in `nftree-rewards-release-20261107.json`; capture this deployment before future releases.
