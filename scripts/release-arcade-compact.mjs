@@ -322,6 +322,10 @@ export async function main(args = process.argv.slice(2)) {
       // Official Netlify OpenAPI: locking a new unpublished deploy publishes it
       // first and locks it. This is only permitted for the newly-created candidate
       // above; it is never used as a rollback/restore mechanism.
+      // A queued legacy Git build can win the publication switch. Finish every
+      // build before locking this reviewed candidate; never race Git CD.
+      const pendingBuilds = await api(`sites/${SITE_ID}/deploys?per_page=30`);
+      assert(pendingBuilds.every(d => d.id === state.id || ['ready','error','rejected','canceled'].includes(d.state)), 'Wait for queued Git builds before manual publication.');
       await api(`deploys/${state.id}/lock`, 'POST');
       for (let attempt = 0; attempt < 60; attempt++) {
         const site = await api('sites/' + SITE_ID);

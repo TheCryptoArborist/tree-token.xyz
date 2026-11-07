@@ -1,6 +1,8 @@
 # Current published Arcade baseline
 
-Current live deploy is 6aef9c0b5403fd6a26a1225d: **359 static paths, 45 backend functions and five schedules**. Read docs/arcade-monthly-release-20261107.json first. It supersedes the historical production inventory below. Capture the full current live inventory before every release and preserve all existing backend package/provider/runtime records and configuration.
+Manual releases must wait for ALL queued Git builds to reach a terminal state before publication. A queued historical snapshot build can win the lock-switch window. Use [skip netlify] on source/documentation commits intended for manual preservation releases, or wait for their builds to finish. Never race Git CD, never restore an older deployment, and always verify the published ID/lock and complete inventory after the switch.
+
+Current live deploy is 6aefa42ab573235ac16ff8db: **359 static paths, 45 backend functions and five schedules**. Read docs/arcade-compact-release-20261107.json first; docs/arcade-monthly-release-20261107.json records the reward rules. It supersedes the historical production inventory below. Capture the full current live inventory before every release and preserve all existing backend package/provider/runtime records and configuration.
 
 Monthly qualification requires 20 distinct UTC days of completed-result evidence; first-wave participation and paid attendance recovery do not count. Recovery costs 20,000 TREE to the existing game-fee recipient, uses a checkout-specific on-chain memo, and restores attendance only. Previously paid valid intents remain reconcilable across month rollover. Reward details remain to be announced.
 
