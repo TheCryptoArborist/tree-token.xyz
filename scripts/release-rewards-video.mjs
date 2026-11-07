@@ -12,7 +12,7 @@ import { canonical, fingerprint, readToken, environmentFor } from './release-pre
 // unlocks a deploy, or accepts an arbitrary older deployment for publication.
 export const SITE_ID = 'aa62f324-b880-47d6-85b8-4ba0700ff5bf';
 export const ACCOUNT_ID = '69800888d1a3d0483003ae9e';
-export const BASELINE_ID = '6aef77ffb97eb2200655b411';
+export const BASELINE_ID = '6aef79ac2b3345f579dd4e3e';
 export const ORIGINAL_CHANGES = ['/rewards/index.html'];
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const RUNTIME_FIELDS = ['branch', 'context', 'functions_region', 'functions_region_overrides',
@@ -99,7 +99,7 @@ export function validateBaseline(baseline) {
   assert.equal(baseline.deploy.state, 'ready'); assert.equal(baseline.deploy.locked, true);
   validateBackend(baseline.deploy);
   const files = fileInventory(baseline.files);
-  assert.equal(Object.keys(files).length, 330, 'Expected the complete current 330-file baseline.');
+  assert.equal(Object.keys(files).length, 338, 'Expected the complete current 338-file baseline.');
   return files;
 }
 
@@ -274,7 +274,7 @@ export async function main(args = process.argv.slice(2)) {
     const overlay = assembleFiles(baselineFiles, overlayFiles());
     plan = { schemaVersion: 1, siteId: SITE_ID, baselineId: BASELINE_ID, baselineSha256: fingerprint(baseline),
       baselineCreatedAt: baseline.deploy.created_at, createdAt: new Date().toISOString(), sourceCommit, sourceBranch,
-      title: `NFTree rewards supplied artwork ${sourceCommit.slice(0, 12)}; preserve 43 backend packages`,
+      title: `NFTree rewards BOOM registration ${sourceCommit.slice(0, 12)}; preserve 43 backend packages`,
       ...overlay, backend: { functions: baseline.deploy.available_functions, schedules: baseline.deploy.function_schedules, runtime: runtime(baseline.deploy) },
       environment: await protectedEnvironment(api, site) };
     await assertLiveBaseline(api, baseline, plan);

@@ -74,6 +74,16 @@ export const REGISTERED_REWARD_TOKENS: RegisteredRewardToken[] = [
     notes: "TREE is the host ecosystem for TreeDrop and NFTrees. Its community reward pool is configured.",
   },
   {
+    tokenId: "boom",
+    symbol: "BOOM",
+    name: "Boom Bots AI",
+    coinType: "0x3766e534b5dc6cdb7defd998debf19f72565f4a7b8224e36b050f690b71a8819::boom::BOOM",
+    decimals: 6,
+    ...REGISTERED_COMMUNITY_TOKEN_DEFAULTS,
+    logoUrl: "https://ipfs.io/ipfs/bafybeidcrjtdybxdkgxbi55ghmwpkcxkj2gwvzgchqx6ht2xxrqmatnfsi",
+    projectName: "Boom Bots AI",
+  },
+  {
     tokenId: "suitrump",
     symbol: "SUITRUMP",
     name: "SUI TRUMP",
