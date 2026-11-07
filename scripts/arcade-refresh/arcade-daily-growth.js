@@ -311,7 +311,7 @@ export function createDailyGrowth({
     } catch { /* Storage is optional; no progress or completion is stored in the browser. */ }
   }
 
-  function invalidateSession(message = '') {
+  function invalidateSession(message = '', { preserveSavedSession = false } = {}) {
     epoch += 1;
     restorePending = false;
     for (const controller of requests) controller.abort();
@@ -324,7 +324,7 @@ export function createDailyGrowth({
     state.busy = null;
     state.notice = message;
     state.noticeKind = '';
-    persistSession(null);
+    if (!preserveSavedSession) persistSession(null);
     render();
   }
 
@@ -342,8 +342,9 @@ export function createDailyGrowth({
     // focus. Hide authenticated UI, but retain the unexpired, signed token.
     // No API write is allowed until the same provider/account is restored.
     const candidate = state.session || savedSession;
-    invalidateSession('Reconnecting your arcade wallet…');
-    if (candidate && timestamp(candidate.expiresAt) > now()) {
+    const valid = Boolean(candidate && timestamp(candidate.expiresAt) > now());
+    invalidateSession('Reconnecting your arcade wallet…', { preserveSavedSession: valid });
+    if (valid) {
       persistSession(candidate);
       restorePending = true;
     }

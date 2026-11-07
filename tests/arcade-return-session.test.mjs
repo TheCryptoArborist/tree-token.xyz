@@ -39,3 +39,5 @@ test('one connect action signs one message and saves today without a transaction
  }});
  try{await app.ready;w.document.querySelector('[data-wallet-id="Test Wallet"]').click();await tick();await tick();assert.equal(connections,1);assert.equal(signatures,1);assert.equal(calls.filter(a=>a==='check-in').length,1);assert.ok(checked);assert.match(w.document.querySelector('#growth-wallet-state').textContent,/Signed in/);assert.ok(w.localStorage.getItem(KEY));await app.checkIn();assert.equal(calls.filter(a=>a==='check-in').length,1);}finally{app.destroy();w.close()}
 });
+
+test('transient suspension never deletes a shared saved session',async()=>{const x=await setup({persistent:true});try{let removed=0;const original=x.w.Storage.prototype.removeItem;x.w.Storage.prototype.removeItem=function(key){if(this===x.w.localStorage&&key===KEY)removed++;return original.call(this,key)};x.disconnect();await tick();assert.equal(removed,0);assert.ok(x.w.localStorage.getItem(KEY));}finally{x.close()}});
