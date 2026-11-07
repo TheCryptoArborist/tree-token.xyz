@@ -5,6 +5,9 @@ on:
       - 'rewards-app/**'
       - 'scripts/nftree-rewards-entry.js'
       - 'scripts/release-nftree-rewards.mjs'
+      - 'scripts/release-rewards-theme.mjs'
+      - 'tests/rewards-theme-release.test.mjs'
+      - 'production/rewards-theme-static/**'
       - 'scripts/redirect-treedrop.mjs'
       - 'scripts/treedrop-native-entry.html'
       - 'tests/nftree-rewards-release.test.mjs'
@@ -31,7 +34,7 @@ jobs:
         working-directory: rewards-app
       - run: node --test tests/*.test.mjs
         working-directory: rewards-app
-      - run: node --test tests/nftree-rewards-release.test.mjs
+      - run: node --test tests/nftree-rewards-release.test.mjs tests/rewards-theme-release.test.mjs
       - run: node --test tests/treedrop-redirect-release.test.mjs
       - run: node --test tests/treedrop-native-entry.test.mjs
       - run: git diff --check
