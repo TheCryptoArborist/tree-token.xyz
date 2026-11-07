@@ -11,11 +11,13 @@ The root release retains 302 static paths, all 43 existing function records,
 five schedules, runtime configuration and site environment records. Only the
 cabinet HTML and routing configuration changed; publication is locked.
 
-All 76 automated tests and hosted database/access checks passed. Real
-NFTree-holder gameplay, a genuine 20,000 TREE restart and same-payment recovery,
-a mobile wallet round trip and physical NES controller acceptance remain
-unverified. See `production-release-2026-11-07.json` for source and deploy
-identities, hashes and verification limits.
+The score carryover and in-game navigation update is published as host deploy
+`6aef60679ee349bfd9c6847a`; the arcade deployment is unchanged. All 86 automated
+tests and hosted access/health checks pass. Peter reported successful live
+gameplay and payment. Score recovery in the user's wallet, same-payment
+recovery, a mobile wallet round trip and physical NES controller acceptance
+remain awaiting confirmation. See `production-score-navigation-2026-11-07.json`
+for this update and `production-release-2026-11-07.json` for the initial launch.
 
 ## Original pre-launch plan (historical)
 

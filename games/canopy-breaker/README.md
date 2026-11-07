@@ -11,11 +11,13 @@ host has its production saved-game migration applied and gameplay enabled.
 The arcade release preserves all 43 existing function records, five schedules,
 other static files, runtime configuration and site environment records.
 
-All 76 automated tests, the build and hosted database/access checks pass.
-Real NFTree-holder gameplay, a genuine 20,000 TREE restart and recovery, mobile
-wallet round trips and physical NES controller acceptance remain unverified.
-Automated checks do not establish those real-wallet or real-device outcomes.
-See `docs/production-release-2026-11-07.json` for the exact release identities.
+All 86 automated tests, the build and hosted database/access checks pass.
+Peter reported successful live gameplay and a 20,000 TREE restart. The score
+carryover and navigation update also repairs earlier paid score resets on load.
+Score recovery in the user’s wallet, mobile wallet round trips and physical NES
+controller acceptance still await confirmation. See
+`docs/production-score-navigation-2026-11-07.json` for the current host release
+and `docs/production-release-2026-11-07.json` for the preserved arcade integration.
 
 ## Play
 
