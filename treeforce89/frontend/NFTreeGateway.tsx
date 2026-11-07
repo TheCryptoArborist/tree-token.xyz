@@ -4,6 +4,9 @@ import {useCurrentAccount,useDAppKit,useWalletConnection} from '@mysten/dapp-kit
 import WalletPicker from './WalletPicker';
 import {authenticateGateway,revokeGatewaySession,isGatewaySessionCurrent,restartGatewayRun} from './game/gateway-client.mjs';
 import CanopyGame from './CanopyGame';
+import PilotBoard from './PilotBoard';
+import './pilot-board.css';
+import {checkoutSnapshot,restoreProgress} from '../achievements/progress.mjs';
 import ContinuationReview from './ContinuationReview';
 import {loadPendingContinuation} from '../paid/client.mjs';
 import {prepareAuthorizedContinue} from './game/authorized-continue-resume.mjs';
@@ -113,7 +116,7 @@ export default function NFTreeGateway() {
     if(!previous||!account||kit.stores.$connection.get().account?.address!==previous.wallet||
       grant.session?.wallet!==previous.wallet||grant.session?.sessionToken!==previous.sessionToken||
       lastGrant.current===grant.digest)return false;
-    const run=prepareAuthorizedContinue(grant.snapshot,grant,{maxWaves:10}) as RunState;
+    const run=restoreProgress(prepareAuthorizedContinue(grant.snapshot,grant,{maxWaves:10})) as RunState;
     lastGrant.current=grant.digest;setResume({digest:grant.digest,run});setInitialScene('game');
     sessionRef.current=grant.session;setSession(grant.session);setCheckoutOpen(false);return true;
   };
@@ -121,13 +124,14 @@ export default function NFTreeGateway() {
     return <div className="nftree-game-shell">
       <div className="nftree-wallet-bar"><span>NFTree verified · {session.wallet.slice(0,6)}…{session.wallet.slice(-4)}</span><button type="button" onClick={disconnect}>Disconnect</button></div>
       <div className="game-viewport">
-      <CanopyGame key={session.runId+':'+(resume?.digest||'start')} serverRunId={session.runId} initialScene={initialScene} resumeRun={resume?.run} onNewRunRequested={restart} onContinueRequested={run=>{setCheckoutRun(run);setCheckoutOpen(true);}} />
+      <CanopyGame key={session.runId+':'+(resume?.digest||'start')} serverRunId={session.runId} initialScene={initialScene} resumeRun={resume?.run} onNewRunRequested={restart} onContinueRequested={run=>{setCheckoutRun(checkoutSnapshot(run));setCheckoutOpen(true);}} />
       {checkoutOpen&&<ContinuationReview session={session} run={checkoutRun} onContinue={continuePaid} onClose={()=>setCheckoutOpen(false)} />}
       <div className="crt-lines" aria-hidden="true" />
       </div>
+      <PilotBoard session={session} />
     </div>;
   }
-  return <div className="game-viewport"><div className="nftree-home">
+  return <><div className="game-viewport"><div className="nftree-home">
     <CanopyGame homeOnly />
     <section className="nftree-home-access" aria-label="NFTree player access">
     <h2>Your NFTree is your arcade pass</h2>
@@ -145,5 +149,5 @@ export default function NFTreeGateway() {
     {error&&<p role="alert">{error}</p>}
     </section>
     <div className="crt-lines" aria-hidden="true" />
-  </div></div>;
+  </div></div><PilotBoard /></>;
 }

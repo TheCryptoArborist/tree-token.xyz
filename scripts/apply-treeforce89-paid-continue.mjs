@@ -9,7 +9,7 @@ const root=resolve(import.meta.dirname,'..');
 export function applyPaidContinue(source) {
  const pin='a38e08e37e1f71ea41b86add8e26a92b0789cf22';
  const original=path=>existsSync(resolve(source,'.git'))?execFileSync('git',['show',pin+':'+path],{cwd:source,encoding:'utf8'}):originalFrontendFile(path);
- for(const name of ['NFTreeGateway.tsx','CanopyGame.tsx','ContinuationReview.tsx','ContinuationDialog.tsx','WalletPicker.tsx'])
+ for(const name of ['NFTreeGateway.tsx','CanopyGame.tsx','ContinuationReview.tsx','ContinuationDialog.tsx','WalletPicker.tsx','PilotBoard.tsx','pilot-board.css'])
   copyFileSync(resolve(root,'treeforce89/frontend',name),resolve(source,'app',name));
  copyFileSync(resolve(root,'treeforce89/frontend/main.tsx'),resolve(source,'src/main.tsx'));
  mkdirSync(resolve(source,'paid'),{recursive:true});
@@ -48,6 +48,7 @@ export function applyPaidContinue(source) {
  replace('requestCheckout?:()=>void','requestCheckout?:(run:RunState)=>void;resumeRun?:RunState;homeOnly?:boolean');
  replace('if(options?.serverRunId)game.registry.set("serverRunId",options.serverRunId);',
   'if(options?.serverRunId)game.registry.set("serverRunId",options.serverRunId);\n  if(options?.resumeRun)game.registry.set("paidContinueResume",options.resumeRun);\n  if(options?.homeOnly)game.registry.set("homeOnly",true);');
+ mkdirSync(resolve(source,'achievements'),{recursive:true});for(const name of ['rules.mjs','progress.mjs'])copyFileSync(resolve(root,'treeforce89/achievements',name),resolve(source,'achievements',name));
  const gameplay=resolve(root,'treeforce89/frontend/game');
  writeFileSync(resolve(source,'app/game/arcade.ts'),existsSync(resolve(gameplay,'arcade.ts'))?readFileSync(resolve(gameplay,'arcade.ts')):layoutTreeForceHud(arcade));
  if(existsSync(resolve(gameplay,'config.ts'))){
