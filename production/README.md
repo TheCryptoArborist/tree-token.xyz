@@ -1,3 +1,9 @@
+# Current production — TREE rewards branding and BOOM, 2026-11-07
+
+Locked deployment `6aef7c5589af8c6d5a21ce78` publishes the main TREE visual identity on holder rewards and manager: gold headings, emerald/teal actions, dark panels and actual Thickquidity logos replacing generic leaves. Preserves the supplied hero artwork and video. BOOM (`0x3766e534b5dc6cdb7defd998debf19f72565f4a7b8224e36b050f690b71a8819::boom::BOOM`) is registered as Boom Bots AI with six decimals confirmed via Sui Mainnet metadata. BOOM is available for manager direct distributions; a public claim/funding pool was not fabricated or created. Source `cecb6c3d31b71bf6b9185dd197fc2695eb0698fb` is merged in PR #94 (BOOM in #93). All 41 reward tests and TypeScript/build pass; holder/manager visual checks and the sponsor BOOM selector were verified. All prior 338 paths remain; nine assets bring the total to 347. All 43 complete backend records, five schedules and environment fingerprints match the prior production baseline. Full inventory is in `nftree-rewards-release-20261107.json`. Capture this deployment before future releases. The BOOM-only candidate was never published; this combined deployment is current.
+
+---
+
 # Current production — supplied rewards artwork, 2026-11-07
 
 Locked deployment `6aef79ac2b3345f579dd4e3e` replaces the rewards card image with Peter's supplied `5115.jpg`, stored byte-for-byte as `/rewards/nftree-rewards-hero.jpg`. Source `755a77bb3dc8b4642f89b7c31fbf57ea34f9fb29` is merged in PR #91. TypeScript/build passes and preview framing was visually checked. All 330 prior paths remain, with only `/rewards/index.html` replaced and eight assets added (338 total). All 43 backend records, five schedules and protected environment fingerprints match. See `nftree-rewards-release-20261107.json` for the complete current inventory. Capture this deployment before future releases.
