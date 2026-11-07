@@ -1,3 +1,9 @@
+# Current production — rewards character framing, 2026-11-07
+
+Locked deployment `6aef77ffb97eb2200655b411` anchors the rewards illustration to its top edge, keeping the character's head and raised hand visible. Source `664f152938428d811aea699d5cf85cb46ac12b5a` is merged in PR #89. Build passes and the preview was visually checked. All 322 previous paths remain, with only `/rewards/index.html` replaced and eight new hashed assets (330 total). All 43 backend records, five schedules and protected environment fingerprints match. The complete current inventory is in `nftree-rewards-release-20261107.json`; capture this deployment before future releases.
+
+---
+
 # Current production — rewards background video, 2026-11-07
 
 Locked deployment `6aef763bf1c54c76ba751d1c` restores the original TreeDrop video at `/rewards/`, with pause/resume, reduced-motion support and a dark overlay. Source `9e487c34a49798a9910b3996eb74b0959696490f` is merged in PR #87. All 314 prior static paths, 43 complete backend records, five schedules and protected environment fingerprints were verified unchanged, except the rewards HTML entry. Eight hashed assets bring the total to 322 paths. TypeScript/build and all 40 application checks pass; preview playback and pause/resume were checked in a browser. The current inventory is in `nftree-rewards-release-20261107.json`. Capture this current deployment before future releases.
