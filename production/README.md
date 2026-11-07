@@ -1,3 +1,9 @@
+# Current production — rewards background video, 2026-11-07
+
+Locked deployment `6aef763bf1c54c76ba751d1c` restores the original TreeDrop video at `/rewards/`, with pause/resume, reduced-motion support and a dark overlay. Source `9e487c34a49798a9910b3996eb74b0959696490f` is merged in PR #87. All 314 prior static paths, 43 complete backend records, five schedules and protected environment fingerprints were verified unchanged, except the rewards HTML entry. Eight hashed assets bring the total to 322 paths. TypeScript/build and all 40 application checks pass; preview playback and pause/resume were checked in a browser. The current inventory is in `nftree-rewards-release-20261107.json`. Capture this current deployment before future releases.
+
+---
+
 # Current production — native NFTree Rewards, 2026-11-07
 
 Locked deployment `6aef6c32cb53f14a782ffc71` serves the native NFTree Rewards
