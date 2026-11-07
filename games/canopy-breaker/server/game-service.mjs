@@ -1,6 +1,6 @@
 import {randomUUID,randomBytes} from 'node:crypto';
 import {isValidTransactionDigest} from '@mysten/sui/utils';
-import {createGame,step,PRICE} from '../src/engine.js';
+import {createGame,restartGame,step,PRICE} from '../src/engine.js';
 import {TREE_PAYMENT_RECIPIENT} from './payments/config.mjs';
 import {TREE_TYPE,treeAmount} from './payments/tree.mjs';
 const uuid=v=>typeof v==='string'&&/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/.test(v);
@@ -10,8 +10,21 @@ export const invoice=r=>({id:r.id,network:'mainnet',product:'continue',wallet:r.
 export function createGameService({database:db,authorize,reader,inspectSigned,executeSigned,now=Date.now,seed=()=>randomBytes(4).readUInt32LE()}){
  const holder=async context=>{const a=await authorize(context);if(!a?.address||a.expiresAt<=now())throw fail('Verify your NFTree wallet again',401);return a;};
  async function lock(tx,a){if(a.expiresAt<=now())throw fail('NFTree session expired',401);await tx.query('INSERT INTO breaker.accounts(wallet) VALUES($1) ON CONFLICT DO NOTHING',[a.address]);const {rows}=await tx.query('SELECT * FROM breaker.accounts WHERE wallet=$1 FOR UPDATE',[a.address]);return rows[0];}
- async function current(tx,a){const acct=await lock(tx,a);if(!acct.current_run)return null;const {rows}=await tx.query('SELECT * FROM breaker.runs WHERE id=$1 AND wallet=$2 FOR UPDATE',[acct.current_run,a.address]);return rows[0]??null;}
- async function fresh(tx,a){const id=randomUUID(),state=createGame(seed());const {rows}=await tx.query('INSERT INTO breaker.runs(id,wallet,state,updated_at) VALUES($1,$2,$3,$4) RETURNING *',[id,a.address,JSON.stringify(state),now()]);await tx.query('UPDATE breaker.accounts SET current_run=$1 WHERE wallet=$2',[id,a.address]);return pack(rows[0]);}
+ async function restoreCarriedScore(tx,a,run){
+  if(run.state.scoreCarryVersion===1)return run;
+  const validScore=value=>{if(!Number.isSafeInteger(value)||value<0)throw Error('Saved score is invalid');return value;};
+  let cursor=run,carriedScore=0;const visited=new Set([run.id]);
+  while(cursor.state.scoreCarryVersion!==1){
+   const {rows}=await tx.query("SELECT prior.id,prior.state FROM breaker.restarts restart JOIN breaker.invoices invoice ON invoice.id=restart.invoice_id AND invoice.status='paid' JOIN breaker.receipts receipt ON receipt.invoice_id=invoice.id JOIN breaker.runs prior ON prior.id=invoice.run_id AND prior.wallet=invoice.wallet WHERE restart.new_run=$1 AND invoice.wallet=$2",[cursor.id,a.address]);
+   const prior=rows[0];if(!prior)break;
+   if(visited.has(prior.id)||prior.state.status!=='gameover'||prior.state.lives!==0)throw Error('Saved restart history is invalid');
+   visited.add(prior.id);carriedScore=validScore(carriedScore+validScore(prior.state.score));cursor=prior;
+  }
+  const state={...run.state,score:validScore(validScore(run.state.score)+carriedScore),scoreCarryVersion:1,carriedScore};
+  const {rows}=await tx.query('UPDATE breaker.runs SET state=$1,revision=revision+1 WHERE id=$2 AND wallet=$3 RETURNING *',[JSON.stringify(state),run.id,a.address]);return rows[0];
+ }
+ async function current(tx,a){const acct=await lock(tx,a);if(!acct.current_run)return null;const {rows}=await tx.query('SELECT * FROM breaker.runs WHERE id=$1 AND wallet=$2 FOR UPDATE',[acct.current_run,a.address]);return rows[0]?restoreCarriedScore(tx,a,rows[0]):null;}
+ async function fresh(tx,a,previous=null){const id=randomUUID(),state=previous?restartGame(previous,seed()):createGame(seed());const {rows}=await tx.query('INSERT INTO breaker.runs(id,wallet,state,updated_at) VALUES($1,$2,$3,$4) RETURNING *',[id,a.address,JSON.stringify(state),now()]);await tx.query('UPDATE breaker.accounts SET current_run=$1 WHERE wallet=$2',[id,a.address]);return pack(rows[0]);}
  async function owned(tx,a,id){if(!uuid(id))throw fail('Invalid invoice');const {rows}=await tx.query('SELECT * FROM breaker.invoices WHERE id=$1 AND wallet=$2 FOR UPDATE',[id,a.address]);if(!rows[0])throw fail('Invoice not found',404);return rows[0];}
  return Object.freeze({
   async open(ctx){const a=await holder(ctx);return db.transaction(async tx=>{const r=await current(tx,a);return r?pack(r):fresh(tx,a);});},
@@ -40,11 +53,11 @@ export function createGameService({database:db,authorize,reader,inspectSigned,ex
    const proof=first.status==='bound'?await reader.receipt(invoice(first),()=>now(),{allowLateRecovery:true}):null;await holder(ctx);
    return db.transaction(async tx=>{
     await lock(tx,a);const r=await owned(tx,a,id);
-    if(r.status==='paid'){const result=await tx.query('SELECT r.* FROM breaker.restarts p JOIN breaker.runs r ON r.id=p.new_run WHERE p.invoice_id=$1',[id]);if(!result.rows[0])throw Error('Paid restart missing');return {...pack(result.rows[0]),applied:false};}
+    if(r.status==='paid'){const result=await tx.query('SELECT r.* FROM breaker.restarts p JOIN breaker.runs r ON r.id=p.new_run WHERE p.invoice_id=$1 AND r.wallet=$2',[id,a.address]);if(!result.rows[0])throw Error('Paid restart missing');return {...pack(await restoreCarriedScore(tx,a,result.rows[0])),applied:false};}
     if(r.status!=='bound'||!proof||proof.digest!==r.expected_digest||proof.wallet!==a.address||proof.recipient!==TREE_PAYMENT_RECIPIENT||proof.coinType!==TREE_TYPE||proof.amount!==String(r.amount)||!/^\d+$/.test(proof.checkpoint)||!Number.isSafeInteger(proof.timestampMs)||proof.timestampMs<Number(r.created_at)||proof.timestampMs>now()||(proof.timestampMs>=Number(r.expires_at)&&!(Number(r.bound_at)>=Number(r.created_at)&&Number(r.bound_at)<Number(r.expires_at))))throw fail('Receipt does not match this restart');
     const run=await current(tx,a);if(!run||run.id!==r.run_id||run.state.status!=='gameover')throw fail('This defeat is no longer current',409);
     await tx.query('INSERT INTO breaker.receipts(digest,invoice_id,checkpoint,timestamp_ms) VALUES($1,$2,$3,$4)',[proof.digest,id,proof.checkpoint,proof.timestampMs]);
-    const next=await fresh(tx,a);await tx.query('INSERT INTO breaker.restarts(invoice_id,new_run) VALUES($1,$2)',[id,next.id]);await tx.query("UPDATE breaker.invoices SET status='paid',paid_at=$1 WHERE id=$2",[now(),id]);if(a.expiresAt<=now())throw fail('Session expired; reconnect to recover your payment',401);return {...next,applied:true};
+    const next=await fresh(tx,a,run.state);await tx.query('INSERT INTO breaker.restarts(invoice_id,new_run) VALUES($1,$2)',[id,next.id]);await tx.query("UPDATE breaker.invoices SET status='paid',paid_at=$1 WHERE id=$2",[now(),id]);if(a.expiresAt<=now())throw fail('Session expired; reconnect to recover your payment',401);return {...next,applied:true};
    });
   },
   async cancel(ctx,{id}){const a=await holder(ctx);return db.transaction(async tx=>{await lock(tx,a);const r=await owned(tx,a,id);if(r.status!=='quoted')throw fail('A signed payment must be recovered');await tx.query("UPDATE breaker.invoices SET status='cancelled' WHERE id=$1",[id]);return {cancelled:true};});},

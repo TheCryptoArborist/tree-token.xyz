@@ -23,8 +23,8 @@ export function layout(level){
 
 function seedBall(s){s.balls=[{x:s.paddle,y:806,vx:0,vy:0,primary:true,attached:true}];}
 function setLevel(s,level){s.level=level;s.bricks=layout(level);s.pickups=[];s.shots=[];s.hazards=[];s.effects={};s.boss=null;s.combo=0;s.status='ready';s.levelTicks=0;seedBall(s);emit(s,'level',400,450,BIOMES[Math.floor((level-1)/6)].name);}
-export function createGame(seed=1){const s={version:1,rng:seed>>>0,tick:0,level:1,score:0,lives:3,paddle:400,balls:[],bricks:[],pickups:[],shots:[],hazards:[],effects:{},combo:0,eventId:0,events:[],fireAt:0,levelTicks:0,status:'ready',boss:null};setLevel(s,1);return s;}
-export function restartGame(s,seed=1){if(s.status!=='gameover')throw Error('A restart requires all lives to be lost');return createGame(seed);}
+export function createGame(seed=1){const s={version:1,rng:seed>>>0,tick:0,level:1,score:0,scoreCarryVersion:1,carriedScore:0,lives:3,paddle:400,balls:[],bricks:[],pickups:[],shots:[],hazards:[],effects:{},combo:0,eventId:0,events:[],fireAt:0,levelTicks:0,status:'ready',boss:null};setLevel(s,1);return s;}
+export function restartGame(s,seed=1){if(s.status!=='gameover'||s.lives!==0)throw Error('A restart requires all lives to be lost');if(!Number.isSafeInteger(s.score)||s.score<0)throw Error('Saved score is invalid');const next=createGame(seed);next.score=s.score;next.carriedScore=s.score;return next;}
 export const paddleWidth=s=>s.effects.wide>0?210:128;
 const baseSpeed=s=>Math.min(515,315+(s.level-1)*6)*(s.effects.fast>0?1.4:1);
 function launch(s,b,angle=-Math.PI/2+.25){const speed=baseSpeed(s);b.attached=false;b.vx=Math.cos(angle)*speed;b.vy=Math.sin(angle)*speed;s.status='playing';emit(s,'launch',b.x,b.y);}

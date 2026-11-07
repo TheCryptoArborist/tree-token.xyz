@@ -60,7 +60,10 @@ unacknowledged batch ahead of the durable checkpoint; a reload discards that
 unsaved interval. Network failures pause local prediction.
 
 At zero lives, a new run requires **exactly 20,000 TREE**, plus normal SUI gas.
-Restart resets to screen 1, score zero and three lives. A completed 30-screen run
+Restart returns to screen 1 with three lives and retains the server-saved score.
+Previously paid restarts that cleared the score recover it once from the verified
+restart history on the next load, including points earned since restarting.
+A completed 30-screen run
 can begin a new challenge without a defeat fee.
 
 Checkout uses the existing configured ecosystem recipient
