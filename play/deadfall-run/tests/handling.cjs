@@ -103,6 +103,40 @@ test("parking sideways, moving, or without brakes cannot pass docking", () => {
     assert(!r.session.success, invalid);
   }
 });
+test("reverse power returns after releasing and reapplying while still backing", () => {
+  const r = rig("reverse");
+  for (let i = 0; i < 120; i++) tick(r, { reverse: true });
+  for (let i = 0; i < 12; i++) tick(r);
+  const coasting = r.state.speed;
+  assert(coasting < -.25); assert.equal(r.state.reverse, false);
+  for (let i = 0; i < 60; i++) tick(r, { reverse: true });
+  assert.equal(r.state.reverse, true);
+  assert(r.state.speed < coasting - .2, `Reverse failed to accelerate: ${coasting} -> ${r.state.speed}`);
+  assert(r.session.maxGap < 1e-9);
+});
+test("the loaded rig can back uphill from grass on the actual 7% lab grade", () => {
+  const r = rig("grade");
+  r.state.pos.copy(R.frame(300, 10).p); r.state.speed = 0;
+  P.couple(r.state, r.tractor, r.trailer, true);
+  const start = r.state.pos.clone();
+  for (let i = 0; i < 600; i++) {
+    tick(r, { reverse: true });
+    assert(r.state.speed <= 0, "Reverse rolled downhill");
+    assert.equal(r.state.surface, "grass");
+  }
+  assert(r.state.speed < -.7, `Reverse stalled at ${r.state.speed} m/s`);
+  assert(r.state.pos.z > start.z + 1.5);
+  assert(r.state.speed >= -2); assert(r.session.maxGap < 1e-9);
+});
+test("forward motion blocks reverse until braking, and service brake wins over reverse", () => {
+  const r = rig("reverse"); r.state.speed = 1;
+  for (let i = 0; i < 120; i++) tick(r, { reverse: true });
+  assert(r.state.speed > .25); assert.equal(r.state.reverse, false);
+  for (let i = 0; i < 120; i++) tick(r, { brake: true, reverse: true });
+  assert.equal(r.state.speed, 0); assert.equal(r.state.reverse, false);
+  for (let i = 0; i < 120; i++) tick(r, { reverse: true });
+  assert(r.state.speed < -1); assert.equal(r.state.reverse, true);
+});
 test("trailer contact counts even when the tractor misses a cone", () => {
   const r = rig("turns"), marker = new THREE.Group();
   marker.position.copy(r.trailer.localToWorld(new THREE.Vector3(1.3, 0, 3)));

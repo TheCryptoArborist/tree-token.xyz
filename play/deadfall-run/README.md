@@ -1,4 +1,4 @@
-# Deadfall Run — Handling Lab 0.5.6
+# Deadfall Run — Handling Lab 0.5.7
 
 A downloadable development build for TREE Arcade. This handling lab has not been published to the live arcade.
 
@@ -6,10 +6,21 @@ A downloadable development build for TREE Arcade. This handling lab has not been
 
 1. Extract the complete ZIP into a new folder.
 2. Open **handling.html** in desktop Chrome, Edge, or Firefox with WebGL available. On Windows, **START_HANDLING_TEST.bat** opens the same file.
-3. Choose a test and click **START HANDLING TEST**. Start with **Control the grade** and make brief left/right corrections to compare the familiar handling.
+3. Choose a test and click **START HANDLING TEST**. Choose **Back into the bay** to check the reverse fix first.
 4. Use **RETRY** or **R** for the identical starting setup, or **TEST MENU** to choose another exercise.
 
 The original Stormbreak Pass descent is also included: open **index.html** or **START_GAME.bat**. Its menu links to the handling lab. No installation, web server, account, wallet, or network connection is required to drive. The Back to Arcade link opens https://tree-token.xyz/play/.
+
+## Reverse engagement fix — 0.5.7
+
+Releasing reverse to coast previously cleared reverse drive. Pressing it again while still backing was then blocked by a speed check that incorrectly treated backward motion like forward motion. Reverse power now returns immediately when the control is held again while backing. The loaded preset also has enough reverse thrust to start uphill on the lab's 7% grassy shoulder; its top reverse speed remains 2 m/s (about 4.5 mph).
+
+1. Open **handling.html**, choose **Back into the bay**, then start.
+2. **Keyboard:** stop with **S / Down Arrow**, release the service and engine brakes, then **hold V**. **NES:** stop with **B**, release it, then **hold D-pad Down**. A separate throttle press is unnecessary.
+3. Back up, release reverse briefly to coast, then hold it again. Reverse power should return without waiting for a complete stop.
+4. Pull forward, brake to a stop, and back up again. When reverse is blocked by forward motion or a held brake, the control hint now explains what to release or press. Check this with keyboard and your controller.
+
+Reversing while travelling forward still requires slowing to a near stop. Service braking takes priority. The trailer connection, turning solver, collision response and crash aftermath are retained.
 
 ## Tree impact and crash aftermath fix — 0.5.6
 
@@ -84,7 +95,7 @@ Please report the object, approximate speed, cab or trailer contact, and camera 
 | A | Throttle |
 | B | Service brake |
 | D-pad Up | Engine brake |
-| D-pad Down, held | Reverse, engaging only from a stop |
+| D-pad Down, held | Hold to reverse after stopping and releasing brakes; can reapply while backing |
 | Start | Start, pause, resume; retry from the results screen |
 | Select | Change camera |
 
@@ -119,7 +130,7 @@ Cones are contact/scoring markers, not solid collision objects. Test results inc
 | S / Down | Service brake; hold to stop and remain stationary |
 | A / D or Left / Right | Steering; return toward center when released |
 | Space | Engine brake |
-| V, held | Reverse, engaging only from a stop |
+| V, held | Hold to reverse after stopping and releasing brakes; can reapply while backing |
 | C | Chase → hood → inspect → overhead (lab only) |
 | Mouse drag / wheel in Inspect | Orbit / zoom |
 | R | Restart this handling test; recover with damage penalty in the original descent |
@@ -142,9 +153,9 @@ The uploaded Hard Truck game was used as a reference for configurable steering a
 
 ## Verification
 
-Run **npm test** in this directory (or run the nine .cjs scripts in tests/ individually). No dependencies need installing. The 98 checks use real Three.js geometry and simulation with stubbed browser/renderer interfaces. This includes nine suspension/load checks, five new crash lifecycle checks and an audio regression ensuring engine shutdown does not cancel the impact. They do not establish GPU rendering, native input feel, speaker sound quality, or frame rate.
+Run **npm test** in this directory (or run the nine .cjs scripts in tests/ individually). No dependencies need installing. The 105 checks use real Three.js geometry and simulation with stubbed browser/renderer interfaces. This includes seven reverse regressions covering reapplication, the 7% grassy slope, brake priority, and keyboard/controller/touch input and prompts, plus the retained suspension, collision, crash and audio checks. They do not establish GPU rendering, native input feel, speaker sound quality, or frame rate.
 
-The 0.5.6 menu and unsupported-graphics fallback were inspected. This browser could not create a WebGL context, so rendered crash movement and the results layout could not be reviewed here. The audio module previously passed an eight-second browser OfflineAudioContext render in 0.5.4: finite output with no clipping, audible sections with nonzero output, and exactly silent pause/mute sections. That audio render was not repeated for 0.5.6; its new engine-shutdown branch has an automated graph/lifecycle check. To repeat the browser render, open **tests/browser-audio.html**, click **RENDER SOUND CHECK**, then optionally listen to its locally generated clip.
+For 0.5.7, input and physics checks use DOM/renderer stubs; GPU driving and a physical controller have not been tested here. The earlier 0.5.6 menu and unsupported-graphics fallback were inspected. This browser could not create a WebGL context, so rendered crash movement and the results layout could not be reviewed here. The audio module previously passed an eight-second browser OfflineAudioContext render in 0.5.4: finite output with no clipping, audible sections with nonzero output, and exactly silent pause/mute sections. That audio render was not repeated for 0.5.6; its new engine-shutdown branch has an automated graph/lifecycle check. To repeat the browser render, open **tests/browser-audio.html**, click **RENDER SOUND CHECK**, then optionally listen to its locally generated clip.
 
 Actual driving, visual appearance and audio character still require a desktop playtest. If you see an error, include the message, browser/device, chosen test, and a screenshot or short recording.
 

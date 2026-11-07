@@ -13,7 +13,7 @@
       heavy: { steerLow: 22, steerHigh: 8, response: 4.2, throttle: 3.9, brake: 8.7, engine: 3.1, camera: 3.2 },
       // Original benchmark tuning, not a reproduction of the Prism3D physics engine.
       loaded: { steerLow: 38, steerHigh: 9, steerRate: 20, response: 4, throttle: 1.65,
-        brake: 4.3, engine: 1.05, camera: 3.8, reverseThrust: 1.1, reverseMax: 2,
+        brake: 4.3, engine: 1.05, camera: 3.8, reverseThrust: 1.8, reverseMax: 2,
         heatGain: 4, cooling: 2.5, fadeStart: 70 }
     };
     const angle = a => Math.atan2(Math.sin(a), Math.cos(a));
@@ -89,8 +89,11 @@
       state.throttle = THREE.MathUtils.damp(state.throttle, input.throttle ? 1 : 0, 4, dt);
       const moving = Math.abs(state.speed) > .15;
       state.brakeHeat = R.clamp(state.brakeHeat + ((input.brake && moving) ? (tune.heatGain || 15) + Math.abs(state.speed) * .25 : -(tune.cooling || 8.5)) * dt, 0, 100);
-      if (input.reverse && Math.abs(state.speed) < .25) state.reverse = true;
-      if (!input.reverse) state.reverse = false;
+      // Only forward travel blocks reverse engagement. Releasing the control
+      // to coast must not lock out power when it is pressed again while backing.
+      // The service brake still takes priority, including for model callers.
+      if (input.reverse && !input.brake && state.speed < .25) state.reverse = true;
+      if (!input.reverse || input.brake) state.reverse = false;
       const f = new THREE.Vector3(Math.sin(state.yaw), 0, -Math.cos(state.yaw));
       const front = state.pos.clone().addScaledVector(f, 2.6), back = state.pos.clone().addScaledVector(f, -2.6);
       const grade = (R.surfaceHeight(front.x, front.z) - R.surfaceHeight(back.x, back.z)) / 5.2;

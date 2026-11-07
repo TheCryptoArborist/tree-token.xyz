@@ -1,6 +1,14 @@
-# Deadfall Run 0.5.6 verification
+# Deadfall Run 0.5.7 verification
 
 Date: November 7, 2026 (America/Chicago)
+
+## Reverse correction
+
+Reproduced two failures in the 0.5.6 loaded model: releasing/reapplying reverse during backward motion left reverse drive disabled, and the truck could not start in reverse uphill on the actual 7% grassy lab slope. Reversing from rest on the flat yard already worked; the older checks covered that case but missed these two transitions/surfaces.
+
+The engagement gate now considers signed speed, permits reapplication while backing, and retains the forward-motion interlock and service-brake priority. Loaded reverse thrust rises from 1.1 to 1.8 m/s²; the 2 m/s reverse limit is unchanged. On-screen instructions and the gear indicator now explain the requested action, including held brakes. No steering/coupling, collision, crash, course, audio or gamepad-module changes are included.
+
+Seven added regression checks cover reverse reapplication, uphill grass starting, forward interlock/brake priority, real play-loop keyboard/controller/touch reapplication, and the stop/release-brake hints. The UI checks use the actual page scripts with a stub renderer and synthetic input devices.
 
 ## Crash lifecycle correction
 
@@ -43,8 +51,8 @@ Gentle turns caused the trailer tail to move sideways with the cab. The previous
 ## Passed automated checks
 
 - 30 descent/scene checks: transformed hitch, forward/reverse behavior, stop/hold, brake heat, frame-rate independence, complete route following, scene geometry, camera projection, controls and restart lifecycle. DOM and renderer are stubs. Added complete scenery collider coverage, reacting/resetting tree transforms, stack emission/particle bounds/pause/reset, and a full descent with solid hazards enabled and deliberate avoidance.
-- 12 handling checks: steering-rate cap, valid/invalid braking, heat-dependent stopping distance, downhill speed control, both bodies clearing the S-turn cones, reverse docking, invalid docking rejection, trailer-only cone contact, no stationary-start false passes, course geometry, and local dependencies.
-- 10 handling UI/lifecycle checks: actual scene initialization with a stub renderer, scenario selectors, start/throttle/pause/resume/retry, keyboard-driven braking results, reverse camera and hitch behavior; plus controller menu/start/driving/braking, edge-triggered pause/camera, disconnect/reconnect, setup/focus/cancel, and controller reverse/engine braking.
+- 15 handling checks: steering-rate cap, valid/invalid braking, heat-dependent stopping distance, downhill speed control, both bodies clearing the S-turn cones, reverse docking, invalid docking rejection, trailer-only cone contact, no stationary-start false passes, course geometry, local dependencies, reverse reapplication, uphill grass starting, and forward-motion/brake priority.
+- 14 handling UI/lifecycle checks: actual scene initialization with a stub renderer, scenario selectors, start/throttle/pause/resume/retry, keyboard-driven braking results, reverse camera and hitch behavior; plus controller menu/start/driving/braking, edge-triggered pause/camera, disconnect/reconnect, setup/focus/cancel, controller reverse/engine braking, keyboard/controller/touch reapplication, and reverse control hints.
 - 6 coupling regressions: stationary banked trailer; repeated coupling calls during motion; gentle left/right downhill turns; tractor rear-wheel tracking; actual trailer axle tracking forward/reverse on flat, uphill, and downhill planes; and steady-circle offtracking checked against independent circle geometry.
 
 - 10 controller-module checks: standard actions and deadzone, raw mapping and saved-profile restore, single-axis diagonals, dual button/axis D-pads, release/duplicate handling, cancelling remaps, disconnect/device replacement, focus/pause gating, unavailable/denied APIs, and corrupt profiles/blocked storage.
@@ -57,7 +65,7 @@ Gentle turns caused the trailer tail to move sideways with the cab. The previous
 
 - 5 crash lifecycle checks: fatal tree impact with ongoing reactions and locked driving; pause freezing the entire aftermath; results inspection and complete restart; low-speed reverse escape; and small-tree falling/debris completion after engine shutdown.
 
-Total: **98 passing CPU/DOM/audio-stub checks**. These are not browser playtests.
+Total: **105 passing CPU/DOM/audio-stub checks**. These are not browser playtests.
 
 ## Model measurements
 
@@ -65,7 +73,7 @@ Total: **98 passing CPU/DOM/audio-stub checks**. These are not browser playtests
 - The forward/reverse plane tests constrain sideways axle displacement per step and ground-height error below 1e-9 metres. This measures numerical model consistency, not real tire behavior.
 - Independent circle test: a 30 m tractor rear-axle radius, 0.70 m rearward hitch offset, and 7.75 m trailer reach give an expected trailer axle radius of about 28.99 m. Both turn directions agree within 2 mm after settling.
 - Controlled braking exercise: approximately 20.02 mph entry speed and an 8.52 m stop distance from the front-bumper line crossing. Exact-20-mph stops remain 8.49 m with cool brakes versus 18.21 m with fully heated brakes.
-- A controller completes reverse docking in about 24.59 seconds with approximately 0.066 m lateral offset, 0.73 degrees of trailer heading error, no cone contact, and all five logs. The test controller was retuned to correct the approach earlier; scenario pass criteria were not relaxed.
+- A controller completes reverse docking in about 24.14 seconds with approximately 0.069 m lateral offset, 0.76 degrees of trailer heading error, no cone contact, and all five logs. The test controller was retuned to correct the approach earlier; scenario pass criteria were not relaxed.
 - Fifth-wheel/kingpin gap remains below 1e-9 metres in the trajectory checks and all four controller-driven exercises.
 - The new visible sprung-frame coupling gap also remains below 1e-9 metres through 1,200 simulated driving steps. Wheel center height error is below 3.5 cm on the sampled descent path; this is a bounded visual approximation, not an exact tire-contact constraint on arbitrary terrain.
 - At 8 m/s over the test's 6 cm bump, the front axle peaks at 2.10 seconds and the first trailer axle at 3.63 seconds. The cab pitch response stays within its 0.018-radian limit and settles after the bump.
@@ -73,6 +81,8 @@ Total: **98 passing CPU/DOM/audio-stub checks**. These are not browser playtests
 These are measurements of this simplified game model, not measured behavior of Hard Truck or a real truck. Controllers are test fixtures, not player assistance.
 
 ## Browser verification and remaining playtest
+
+Version 0.5.7 was checked with CPU model tests, the actual application loop with synthetic keyboard/gamepad/touch input, and stubbed browser rendering. No new GPU playtest or physical controller test was performed. The browser and audio results below describe earlier versions.
 
 The 0.5.6 entry menu was opened in cloud Chrome and displayed the correct build label. WebGL initialization failed with “Error creating WebGL context”; the visible startup error correctly disables Start and explains the need for a WebGL-capable browser. Rendered crash movement, results layout and GPU frame rate could not be checked in this environment.
 

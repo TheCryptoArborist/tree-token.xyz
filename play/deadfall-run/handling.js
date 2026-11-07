@@ -10,7 +10,7 @@
       turns: { title: "Trailer tracking", start: 530, end: 790, limit: 180,
         hint: "Drive through all three cone gates below 18 mph. Leave room for the trailer to cut inside each bend." },
       reverse: { title: "Reverse docking", start: 175, end: 125, limit: 180,
-        hint: "Hold V to reverse into the gold bay. Center the trailer, straighten the rig, and hold S for 2 seconds." }
+        hint: "Stop, release the brakes, then hold V / D-pad DOWN to back into the gold bay. Straighten and hold S / B for 2 seconds." }
     };
     function prepare(id, state) {
       if (id === "grade") state.speed = 16 / 2.237;

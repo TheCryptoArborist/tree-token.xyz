@@ -46,3 +46,11 @@ Controller polling uses the current navigator.getGamepads() snapshot once per an
 The standard layout uses W3C button positions 0/1 for the default throttle/brake pair, 8/9 for Select/Start, and 12–15 for the D-pad. Printed Nintendo-style A/B labels can differ, so the calibration wizard assigns the actual buttons the player presses. Nonstandard controllers receive no guessed bindings. Setup samples a centered baseline, captures eight distinct controls, requires release between prompts, and handles button, X/Y-axis, and evenly spaced POV-axis layouts. Profiles are validated against device button/axis counts and saved under a Deadfall-specific local-storage key. Missing or blocked APIs and storage do not prevent keyboard play.
 
 API references checked: the W3C Gamepad specification (sections 12, 14, and 15) and MDN's Using the Gamepad API guide. No Sui SDK, wallet, backend, or payment code is involved. The current MystenLabs/skills README was checked; none of its Sui skills applies to this controller change.
+
+## Reverse control correction — 0.5.7
+
+The engagement check used absolute speed. After reverse was released for 0.1 seconds at -1.87 m/s, a renewed request left reverse=false and the rig slowed to -1.66 m/s over the next second instead of accelerating. The gate now rejects forward travel at or above 0.25 m/s, allowing power to resume during backward motion; service braking clears reverse drive.
+
+The loaded preset's 1.1 m/s² reverse thrust was also below the combined 7% downhill gravity (0.6867 m/s²), base rolling resistance (0.12) and grass resistance (0.55). It could remain at zero speed while reverse was active. Reverse thrust is now 1.8 m/s², with the same 2 m/s speed cap. This is game tuning, not a measured truck powertrain.
+
+The control hint reads the requested reverse control before brake priority suppresses it, so a held service brake, engine brake or forward motion has an explanation. Keyboard V, NES D-pad Down and touch reverse retain their held-control semantics. The R key still retries/recovers. No coupling, road, scoring, collision or controller-mapping changes are included.

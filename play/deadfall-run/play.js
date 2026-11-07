@@ -1,4 +1,4 @@
-/* Deadfall Run: 3D field-test build 0.5.6. No remote requests or transactions. */
+/* Deadfall Run: 3D field-test build 0.5.7. No remote requests or transactions. */
 (function () {
   "use strict";
   try {
@@ -73,8 +73,22 @@
     }
     function setCamera(next, snap = false) {
       cameraMode = next; drag = null; ui.camera.textContent = `CAMERA · ${cameraNames[next]}`;
-      ui.cameraHint.textContent = next === 2 ? "DRAG TO ORBIT  ·  SCROLL TO ZOOM  ·  C TO CHANGE" : `C · CAMERA     R · ${L ? "RETRY" : "RECOVER"}     SPACE · ENGINE BRAKE`;
+      updateControlHint();
       renderer.domElement.style.cursor = next === 2 ? "grab" : "default"; updateCamera(1 / 60, snap);
+    }
+    function updateControlHint() {
+      // Read the request before brake priority suppresses the driving input so
+      // a held brake can explain why reverse is not moving the truck.
+      const requested = keys.has("KeyV") || touch.reverse || (padHeld.down && !padHeld.up);
+      if (requested && running && !paused && !aftermath) {
+        ui.cameraHint.textContent = input.brake ? "REVERSE · RELEASE THE SERVICE BRAKE TO BACK UP" :
+          input.engine ? "REVERSE · RELEASE THE ENGINE BRAKE TO BACK UP" :
+          !state.reverse && state.speed >= .25 ? "REVERSE · STOP WITH S / ↓ OR CONTROLLER B FIRST" :
+          "REVERSING · HOLD V / D-PAD DOWN · RELEASE TO COAST";
+      } else {
+        ui.cameraHint.textContent = cameraMode === 2 ? "DRAG TO ORBIT  ·  SCROLL TO ZOOM  ·  C TO CHANGE" :
+          `V · REVERSE     C · CAMERA     R · ${L ? "RETRY" : "RECOVER"}     SPACE · ENGINE BRAKE`;
+      }
     }
     function showMessage(text, seconds = 4) {
       ui.dispatch.querySelector("span").textContent = text; ui.dispatch.classList.add("show"); messageTimer = seconds;
@@ -218,9 +232,10 @@
     }
     function updateUI() {
       soundUI();
+      updateControlHint();
       const load = Math.min(100, Math.abs(state.sway) * 60 + Math.abs(state.articulation) * 30);
       $("surface").textContent = (state.surface || "asphalt").toUpperCase();
-      ui.speed.textContent = Math.round(Math.abs(state.speed) * 2.237); ui.gear.textContent = state.speed < -.1 ? "R" : "D";
+      ui.speed.textContent = Math.round(Math.abs(state.speed) * 2.237); ui.gear.textContent = state.reverse || state.speed < -.1 ? "R" : "D";
       ui.brake.style.width = `${state.brakeHeat}%`; ui.brake.style.background = state.brakeHeat > 80 ? "#ef876a" : "#c9b778";
       ui.brakeText.textContent = state.brakeHeat > 88 ? "FADE" : state.brakeHeat > 62 ? "HOT" : "COOL";
       ui.damage.style.width = `${state.damage}%`; ui.damage.style.background = state.damage > 65 ? "#ef876a" : "#9ccba4";
@@ -422,7 +437,7 @@
     setQuality(1); reset(); updateCamera(1 / 60, true); world.update(state.pos, state.progress); renderer.render(scene, camera);
     pad.poll(); controllerUI();
     ui.drive.disabled = false; ui.drive.textContent = L ? "START HANDLING TEST" : "BEGIN DESCENT";
-    $("bootStatus").textContent = `3D ready · ${L ? "Handling Lab" : "Stormbreak Pass"} · Build 0.5.6`;
+    $("bootStatus").textContent = `3D ready · ${L ? "Handling Lab" : "Stormbreak Pass"} · Build 0.5.7`;
     requestAnimationFrame(frame);
   } catch (error) {
     console.error(error); window.showBootError(error.message || "3D graphics could not start. Try a browser with hardware acceleration enabled.");

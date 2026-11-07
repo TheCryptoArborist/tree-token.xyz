@@ -62,7 +62,7 @@
 
   <section id="start" class="overlay active">
     <div class="panel">
-      <p>TREE ARCADE · PLAY TEST BUILD 0.5.6</p>
+      <p>TREE ARCADE · PLAY TEST BUILD 0.5.7</p>
       <h1>The long<br />way down.</h1>
       <p class="copy">A heavy rig. Five storm-recovery logs. An unforgiving mountain descent. Keep your speed in check and your trailer in line.</p>
       <div class="route-spec"><span><b>1.8</b> KM DESCENT</span><span><b>5</b> LOGS TO DELIVER</span><span><b>3</b> CAMERA VIEWS</span></div>
@@ -74,7 +74,7 @@
       <div class="control-grid">
         <span><b>W / ↑</b> Throttle</span><span><b>S / ↓</b> Service brake</span>
         <span><b>A D / ← →</b> Steering</span><span><b>SPACE</b> Engine brake</span>
-        <span><b>V (hold)</b> Reverse from stop</span><span><b>C</b> Chase / hood / inspect</span>
+        <span><b>V (hold)</b> Reverse · release brakes first</span><span><b>C</b> Chase / hood / inspect</span>
         <span><b>R</b> Recover truck</span><span><b>ESC</b> Pause</span>
       </div>
       <p id="startupError" role="alert" hidden></p>
@@ -95,7 +95,7 @@
       <small id="controllerDevice">No controller detected</small>
       <dl class="controller-legend">
         <dt>D-pad ← / →</dt><dd>Steer</dd><dt>A / B</dt><dd>Throttle / service brake</dd>
-        <dt>D-pad ↑</dt><dd>Engine brake</dd><dt>D-pad ↓, held</dt><dd>Reverse from a stop</dd>
+        <dt>D-pad ↑</dt><dd>Engine brake</dd><dt>D-pad ↓, held</dt><dd>Reverse · stop and release B first</dd>
         <dt>START</dt><dd>Start / pause / resume / retry</dd><dt>SELECT</dt><dd>Change camera</dd>
       </dl>
       <p class="controller-note">In the menu, use the D-pad to choose a test or preset, then START. On the results screen, B returns to the menu.</p>
@@ -112,7 +112,7 @@
   </section>
 
   <aside id="paused" hidden><span>DESCENT PAUSED</span><small>START / Escape to resume. SELECT / C changes camera.</small><button id="resume">RESUME</button></aside>
-  <div id="cameraHint" class="camera-hint">C · CAMERA &nbsp; R · RECOVER &nbsp; SPACE · ENGINE BRAKE</div>
+  <div id="cameraHint" class="camera-hint">V · REVERSE &nbsp; C · CAMERA &nbsp; R · RECOVER &nbsp; SPACE · ENGINE BRAKE</div>
   <output id="diagnostics" hidden></output>
 
   <section class="touch" aria-label="Touch vehicle controls">

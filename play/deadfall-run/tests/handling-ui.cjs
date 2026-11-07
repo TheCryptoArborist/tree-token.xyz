@@ -26,7 +26,7 @@ const document = new Element(); document.body = new Element(); document.hidden =
 document.body.classList.add("handling");
 document.getElementById = id => elements[id] || null; document.createElement = () => new Element();
 document.querySelectorAll = s => s === "[data-test]" ? testButtons : s === "[data-control]" ? touchButtons : [];
-const listeners = {}, raf = [], failures = []; let time = 0, scene, pads = [], audioDriving = false, audioStops = 0;
+const listeners = {}, raf = [], failures = []; let time = 0, scene, pads = [], audioDriving = false, audioStops = 0, lastState;
 class Renderer {
   constructor() { this.domElement = new Element(); this.shadowMap = {}; this.info = { render: { calls: 0 } }; }
   setSize() {} setPixelRatio() {}
@@ -40,6 +40,10 @@ const context = vm.createContext({ THREE: { ...THREE, WebGLRenderer: Renderer },
 for (const [, file] of html.matchAll(/<script src="([^"]+)"/g)) {
   if (file.startsWith("vendor/")) continue;
   vm.runInContext(fs.readFileSync(path.join(base, file), "utf8"), context, { filename: file });
+  if (file === "physics.js") {
+    const step = context.DeadfallPhysics.step;
+    context.DeadfallPhysics.step = (...args) => { lastState = args[0]; return step(...args); };
+  }
   if (file === "audio.js") {
     const create = context.DeadfallAudio.create;
     context.DeadfallAudio.create = () => {
@@ -152,5 +156,40 @@ test("D-pad down reverses from rest and D-pad up applies the engine brake", () =
   hold(12, true); frames(180); assert(Number(elements.speed.textContent) < 16);
   assert.equal(elements.brakeText.textContent, "COOL");
   releasePad(); elements.menu.dispatch("click");
+});
+for (const control of ["keyboard", "controller", "touch"]) {
+  test(`${control} reverse can coast and reapply power without stopping`, () => {
+    releasePad(); testButtons[3].dispatch("click"); elements.drive.dispatch("click"); frames(2);
+    const reverse = on => {
+      if (control === "keyboard") key(on ? "keydown" : "keyup", "KeyV");
+      else if (control === "controller") hold(13, on);
+      else touchButtons[2].dispatch(on ? "pointerdown" : "pointerup", { pointerId: 1 });
+    };
+    reverse(true); frames(60); reverse(false); frames(6);
+    const speed = lastState.speed;
+    assert(speed < -.25); assert.equal(lastState.reverse, false);
+    reverse(true); frames(30);
+    assert(lastState.speed < speed - .2, `${control}: no reverse power after coasting`);
+    assert.equal(elements.gear.textContent, "R");
+    assert(elements.cameraHint.textContent.includes("REVERSING"));
+    reverse(false); elements.menu.dispatch("click");
+  });
+}
+test("reverse hints explain a forward-motion lock and held brakes, then clear when released", () => {
+  releasePad(); testButtons[3].dispatch("click"); elements.drive.dispatch("click");
+  key("keydown", "KeyW"); frames(120); key("keyup", "KeyW");
+  key("keydown", "KeyV"); frames(12);
+  assert(lastState.speed > .25); assert.equal(lastState.reverse, false);
+  assert(elements.cameraHint.textContent.includes("STOP WITH"));
+  key("keydown", "KeyS"); frames(120);
+  assert.equal(lastState.speed, 0); assert.equal(lastState.reverse, false);
+  assert(elements.cameraHint.textContent.includes("RELEASE THE SERVICE BRAKE"));
+  key("keyup", "KeyS"); key("keydown", "Space"); frames(6);
+  assert(elements.cameraHint.textContent.includes("RELEASE THE ENGINE BRAKE"));
+  key("keyup", "Space"); frames(60);
+  assert(lastState.speed < -1); assert.equal(elements.gear.textContent, "R");
+  key("keyup", "KeyV"); frames(6);
+  assert(elements.cameraHint.textContent.includes("V · REVERSE"));
+  elements.menu.dispatch("click");
 });
 console.log(`\n${count} handling lifecycle checks passed with DOM/renderer stubs and synthetic gamepads.`);
