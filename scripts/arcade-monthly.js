@@ -2,7 +2,7 @@ const API='/api/arcade-monthly',SESSION='tree-arcade:daily-growth:session:v1',PE
 export function createMonthlyPanel({root,fetchImpl=fetch,loadBridge=()=>import('/assets/arcade/arcade-growth-wallet.js'),loadPayment=()=>import('/assets/arcade/arcade-recovery-wallet.js')}={}){
  if(!root)return;const doc=root.ownerDocument,view=doc.defaultView,panel=doc.getElementById('arcade-monthly-panel');if(!panel)return;
  const el=id=>panel.querySelector('#monthly-'+id);let busy=false,latest=null,identity=null,pending=null,controller=null,lastSession=null,disposed=false,checking=false,successUntil=0;
- const session=()=>{try{const s=JSON.parse(view.sessionStorage.getItem(SESSION)||'null');return s&&/^[a-f0-9]{64}$/.test(s.token)&&/^0x[a-f0-9]{64}$/.test(s.wallet)&&Date.parse(s.expiresAt)>Date.now()?s:null;}catch{return null;}};
+ const session=()=>{for(const name of ['localStorage','sessionStorage']){try{const s=JSON.parse(view[name].getItem(SESSION)||'null');if(s&&/^[a-f0-9]{64}$/.test(s.token)&&/^0x[a-f0-9]{64}$/.test(s.wallet)&&Date.parse(s.expiresAt)>Date.now())return s;}catch{}}return null;};
  function notice(text){el('status').textContent=text;}
  function savePending(p){pending=p;try{if(p){view.sessionStorage.setItem(PENDING,JSON.stringify(p));if(!view.sessionStorage.getItem(PENDING))throw Error('storage');}else view.sessionStorage.removeItem(PENDING);}catch{if(p)throw Error('Your browser could not save this checkout. No new payment was requested. Allow session storage before trying again.');}}
  try{pending=JSON.parse(view.sessionStorage.getItem(PENDING)||'null');}catch{}

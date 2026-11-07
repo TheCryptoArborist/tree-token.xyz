@@ -13,11 +13,11 @@ import { canonical, fingerprint, readToken, environmentFor } from './release-pre
 export const SITE_ID = 'aa62f324-b880-47d6-85b8-4ba0700ff5bf';
 export const ACCOUNT_ID = '69800888d1a3d0483003ae9e';
 export const BASELINE_ID = '6aefa674d411d9726d8a4283';
-export const ORIGINAL_CHANGES = ['/scripts/arcade-daily-growth.js'];
+export const ORIGINAL_CHANGES = ['/scripts/arcade-daily-growth.js','/scripts/arcade-monthly.js'];
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const RUNTIME_FIELDS = ['branch', 'context', 'functions_region', 'functions_region_overrides',
   'database_branch_id', 'blobs_region', 'framework', 'edge_functions_present', 'server', 'database_migrations'];
-const SOURCE_PATHS = ['scripts/arcade-refresh/arcade-daily-growth.js','scripts/release-arcade-session.mjs'];
+const SOURCE_PATHS = ['scripts/arcade-refresh/arcade-daily-growth.js','scripts/arcade-monthly.js','scripts/release-arcade-session.mjs'];
 const sha1 = bytes => crypto.createHash('sha1').update(bytes).digest('hex');
 const eq = (a, b, label) => assert.equal(canonical(a), canonical(b), `${label} changed; stop.`);
 const sortBy = (rows, field) => [...rows].sort((a, b) => a[field].localeCompare(b[field]));
@@ -141,7 +141,7 @@ export function assembleFiles(baselineFiles, overlays) {
 }
 
 function overlayFiles() {
-  return [['/scripts/arcade-daily-growth.js','scripts/arcade-refresh/arcade-daily-growth.js']].map(([publicPath, local]) => {
+  return [['/scripts/arcade-daily-growth.js','scripts/arcade-refresh/arcade-daily-growth.js'],['/scripts/arcade-monthly.js','scripts/arcade-monthly.js']].map(([publicPath, local]) => {
       const filename = path.join(ROOT, local);
       assert(!fs.lstatSync(filename).isSymbolicLink(), 'Symlink refused.');
       const bytes = fs.readFileSync(filename);
