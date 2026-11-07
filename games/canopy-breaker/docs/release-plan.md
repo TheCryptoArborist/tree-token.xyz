@@ -11,16 +11,17 @@ The root release retains 302 static paths, all 43 existing function records,
 five schedules, runtime configuration and site environment records. Only the
 cabinet HTML and routing configuration changed; publication is locked.
 
-The public username leaderboard is published as host deploy
-`6aef64eb6cafc47f69d4fcdb`; the arcade deployment is unchanged. Its additive
-`20261107180000_canopy_breaker_leaderboard` migration is applied to production.
-All 108 automated tests and hosted leaderboard/access/health checks pass.
-Peter reported successful gameplay and payment before this update. Real-holder
-username enrollment, score-recovery confirmation, mobile wallet round trip and
-physical NES controller acceptance still require user confirmation. See
-`production-leaderboard-2026-11-07.json` for the current host release,
-`production-score-navigation-2026-11-07.json` for the earlier score fix and
-`production-release-2026-11-07.json` for the initial arcade integration.
+The free new-game choice is published as host deploy
+`6aefb1eeede846812c016c9a`. After defeat, a holder can start a new game at zero
+for free or pay 20,000 TREE to continue with the saved score. Both begin at
+screen 1 with three lives. Leaderboard bests, completed runs, payment recovery,
+and the SuiNS completion feed are preserved. This update makes no schema change.
+All 125 tests, syntax, isolated build and hosted endpoint checks pass. Browser
+inspection confirms the new choice instructions; real-holder game-over button
+acceptance still awaits confirmation. See `production-new-game-2026-11-07.json`
+for current release identities and runtime preservation evidence. Earlier
+records retain the leaderboard, score, completion-feed and initial integration
+release history.
 
 ## Original pre-launch plan (historical)
 

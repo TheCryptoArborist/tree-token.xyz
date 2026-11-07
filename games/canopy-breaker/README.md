@@ -16,7 +16,7 @@ Peter reported successful live gameplay and a 20,000 TREE restart. The score
 carryover and navigation update also repairs earlier paid score resets on load.
 Score recovery in the user’s wallet, mobile wallet round trips and physical NES
 controller acceptance still await confirmation. See
-`docs/production-leaderboard-2026-11-07.json` for the current host release
+`docs/production-new-game-2026-11-07.json` for the current host release
 and `docs/production-release-2026-11-07.json` for the preserved arcade integration.
 
 ## Play
