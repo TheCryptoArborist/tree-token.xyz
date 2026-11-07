@@ -1,6 +1,6 @@
 import {getDatabase} from '@netlify/database';
 // BEGIN/COMMIT always use one leased connection. Never use pool.query inside a transaction.
-export function transactionDatabase(pool=getDatabase().pool){
+function wrapPool(pool){
  return {
   query:(sql,params)=>pool.query(sql,params),
   async transaction(action){
@@ -11,3 +11,15 @@ export function transactionDatabase(pool=getDatabase().pool){
   }
  };
 }
+
+// Keep the pool for warm function requests; transactions still lease their own
+// connections. An explicit pool remains independent of the shared default.
+export function createDatabaseProvider(poolFactory=()=>getDatabase().pool){
+ let sharedPool;
+ return function database(pool){
+  if(pool===undefined)pool=sharedPool??=(poolFactory());
+  return wrapPool(pool);
+ };
+}
+
+export const transactionDatabase=createDatabaseProvider();

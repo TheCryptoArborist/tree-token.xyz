@@ -17,7 +17,72 @@ async function purchased(s,score){const {r,q}=await bound(s,score);return {prior
 test('a wallet gets one durable first run; refresh and a new service cannot reset a defeat',async()=>{const s=setup(),a=await s.service.open(),b=await s.service.open();assert.equal(a.id,b.id);await defeated(s);const r=await createGameService(s.deps).open();assert.equal(r.id,a.id);assert.equal(r.state.lives,0);assert.equal(r.state.status,'gameover');await assert.rejects(s.service.next());});
 test('only inputs are accepted; the server replays lives, score and progression',async()=>{const s=setup(),r=await s.service.open();const result=await s.service.frames(null,{id:r.id,revision:0,inputs:[{x:400,launch:true,fire:false}]});assert.equal(result.revision,1);assert.equal(result.state.status,'playing');await assert.rejects(s.service.frames(null,{id:r.id,revision:1,inputs:[{x:400,launch:true,fire:false,lives:99}]}));assert.equal((await s.service.open()).state.lives,3);});
 test('duplicate and competing input batches cannot advance the simulation twice',async()=>{const s=setup(),r=await s.service.open(),input={id:r.id,revision:0,inputs:[{x:400,launch:true,fire:false}]};const a=await s.service.frames(null,input),b=await s.service.frames(null,input);assert.equal(a.state.tick,b.state.tick);assert.equal(b.resync,true);});
-test('the server bounds input batch size and simulation speed',async()=>{const s=setup(),r=await s.service.open(),frame={x:400,launch:false,fire:false};await s.service.frames(null,{id:r.id,revision:0,inputs:Array(120).fill(frame)});await assert.rejects(s.service.frames(null,{id:r.id,revision:1,inputs:[frame]}),e=>e.status===429);await assert.rejects(s.service.frames(null,{id:r.id,revision:1,inputs:Array(121).fill(frame)}));});
+test('a new run keeps 120 frames of initial credit and cannot immediately run ahead of the clock',async()=>{
+ const s=setup(),r=await s.service.open(),frame={x:400,launch:false,fire:false};
+ assert.equal((await storedRun(r.id)).credit,120);
+ const saved=await s.service.frames(null,{id:r.id,revision:0,inputs:Array(120).fill(frame)});
+ assert.equal(saved.revision,1);assert.equal(saved.state.tick,120);
+ const before=await storedRun(r.id);assert.equal(before.credit,0);
+ await assert.rejects(s.service.frames(null,{id:r.id,revision:1,inputs:[frame]}),error=>error.status===429);
+ assert.deepEqual(await storedRun(r.id),before);
+});
+test('a delayed 600-frame backlog replays after enough elapsed time without granting faster gameplay',async()=>{
+ const s=setup(),r=await s.service.open(),frame={x:400,launch:false,fire:false};
+ await s.service.frames(null,{id:r.id,revision:0,inputs:Array(120).fill(frame)});
+ s.setTime(110000);
+ const saved=await s.service.frames(null,{id:r.id,revision:1,inputs:Array(600).fill(frame)});
+ assert.equal(saved.revision,2);assert.equal(saved.state.tick,720);
+ assert.equal(saved.state.status,'ready');assert.equal(saved.state.lives,3);assert.equal(saved.state.score,0);
+ const stored=await storedRun(r.id);assert.equal(stored.credit,0);assert.equal(Number(stored.updated_at),110000);
+ await assert.rejects(s.service.frames(null,{id:r.id,revision:2,inputs:[frame]}),error=>error.status===429);
+ assert.deepEqual(await storedRun(r.id),stored);
+});
+test('sustained 60 Hz gameplay refills exactly as quickly as it consumes clock credit',async()=>{
+ const s=setup(),r=await s.service.open(),frame={x:400,launch:false,fire:false};
+ let saved=await s.service.frames(null,{id:r.id,revision:0,inputs:Array(120).fill(frame)});
+ for(let second=1;second<=20;second++){
+  s.setTime(100000+second*1000);
+  saved=await s.service.frames(null,{id:r.id,revision:saved.revision,inputs:Array(60).fill(frame)});
+  assert.equal(saved.state.tick,120+second*60);
+  assert.equal((await storedRun(r.id)).credit,0);
+ }
+ assert.equal(saved.revision,21);
+ await assert.rejects(s.service.frames(null,{id:r.id,revision:saved.revision,inputs:[frame]}),error=>error.status===429);
+});
+test('long idle time caps stored replay allowance at 900 frames across bounded batches',async()=>{
+ const s=setup(),r=await s.service.open(),frame={x:400,launch:false,fire:false};
+ s.setTime(160000);
+ const first=await s.service.frames(null,{id:r.id,revision:0,inputs:Array(600).fill(frame)});
+ assert.equal(first.state.tick,600);assert.equal((await storedRun(r.id)).credit,300);
+ const before=await storedRun(r.id);
+ await assert.rejects(s.service.frames(null,{id:r.id,revision:first.revision,inputs:Array(301).fill(frame)}),error=>error.status===429);
+ assert.deepEqual(await storedRun(r.id),before);
+ const second=await s.service.frames(null,{id:r.id,revision:first.revision,inputs:Array(300).fill(frame)});
+ assert.equal(second.state.tick,900);assert.equal((await storedRun(r.id)).credit,0);
+ await assert.rejects(s.service.frames(null,{id:r.id,revision:second.revision,inputs:[frame]}),error=>error.status===429);
+});
+test('an oversized 601-frame batch is rejected without advancing the run or changing its credit',async()=>{
+ const s=setup(),r=await s.service.open(),frame={x:400,launch:false,fire:false},before=await storedRun(r.id);
+ s.setTime(160000);
+ await assert.rejects(s.service.frames(null,{id:r.id,revision:0,inputs:Array(601).fill(frame)}),error=>error.status===400&&/Invalid game inputs/.test(error.message));
+ assert.deepEqual(await storedRun(r.id),before);
+ const valid=await s.service.frames(null,{id:r.id,revision:0,inputs:Array(600).fill(frame)});
+ assert.equal(valid.revision,1);assert.equal(valid.state.tick,600);assert.equal((await storedRun(r.id)).credit,300);
+});
+test('competing and retried 600-frame batches resync after exactly one simulation advance',async()=>{
+ const s=setup(),r=await s.service.open(),frame={x:400,launch:false,fire:false};
+ s.setTime(108000);
+ const batch={id:r.id,revision:0,inputs:Array(600).fill(frame)};
+ const results=await Promise.all([s.service.frames(null,batch),createGameService(s.deps).frames(null,batch)]);
+ assert.equal(results.filter(result=>result.resync===true).length,1);
+ assert.equal(results[0].revision,1);assert.equal(results[1].revision,1);
+ assert.equal(results[0].state.tick,600);assert.deepEqual(results[0].state,results[1].state);
+ const before=await storedRun(r.id);assert.equal(before.credit,0);assert.equal(Number(before.updated_at),108000);
+ s.setTime(118000);
+ const retry=await createGameService(s.deps).frames(null,batch);
+ assert.equal(retry.resync,true);assert.equal(retry.revision,1);assert.deepEqual(retry.state,results[0].state);
+ assert.deepEqual(await storedRun(r.id),before);
+});
 test('a restart requires zero lives and quotes exactly 20,000 TREE using chain decimals',async()=>{const s=setup();await s.service.open();await assert.rejects(s.service.quote());await defeated(s);const [a,b]=await Promise.all([s.service.quote(),s.service.quote()]);assert.equal(a.id,b.id);assert.equal(a.amount,'20000000000');assert.equal(a.product,'continue');});
 test('unverified receipts, foreign-wallet invoices and unsigned claims cannot restart',async()=>{const s=setup(),other=setup(),{q}=await bound(s);await other.service.open();await assert.rejects(other.service.redeem(null,{id:q.id}));s.failReceipt();await assert.rejects(s.service.redeem(null,{id:q.id}));assert.equal((await s.service.open()).state.status,'gameover');});
 test('paid restart retains the score and repeated payment recovery returns the same run once',async()=>{const s=setup(),{q,signed}=await bound(s,4321);await s.service.submit(null,{id:q.id});await s.service.submit(null,{id:q.id});assert.deepEqual(s.submits[0],s.submits[1]);assert.equal(s.submits[0].signed.bytes,signed.bytes);const a=await s.service.redeem(null,{id:q.id}),b=await s.service.redeem(null,{id:q.id});assert.equal(a.id,b.id);assert.equal(a.state.lives,3);assert.equal(a.state.level,1);assert.equal(a.state.score,4321);assert.equal(a.state.carriedScore,4321);assert.equal(a.applied,true);assert.equal(b.applied,false);assert.equal(b.state.score,4321);const reopened=await createGameService(s.deps).open();assert.equal(reopened.id,a.id);assert.equal(reopened.state.score,4321);assert.equal((await db.query('SELECT * FROM breaker.receipts WHERE invoice_id=$1',[q.id])).rows.length,1);});

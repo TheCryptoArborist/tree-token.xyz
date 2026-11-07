@@ -1,4 +1,5 @@
 import {step,PICKUPS,BIOMES} from './engine.js';
+import {SAVE_EVERY_FRAMES,MAX_BATCH_FRAMES,MAX_PENDING_FRAMES} from './replay-limits.js';
 import {draw} from './art.js';
 import {sound,wakeAudio,setSound} from './audio.js';
 import {createControllerTracker,createControllerCalibration} from './controller.js';
@@ -6,7 +7,7 @@ import {pickupIcon,loadPickupArt} from './pickup-art.js';
 import {loadBlockArt} from './block-art.js';
 import {loadBackgroundArt} from './background-art.js';
 const $=id=>document.getElementById(id),api=window.breakerSession,canvas=$('game'),ctx=canvas.getContext('2d');
-let run=null,queue=[],sending=null,paused=false,connected=!!api.account,clock=0,last=performance.now(),target=400,launch=false,fire=false,events=0,syncError='',muted=false,opening=null,quote=null,buying=false,gameActionBusy=false,newGameRequest=null,gameRevision=0;
+let run=null,queue=[],sending=null,inFlightInputs=0,paused=false,connected=!!api.account,clock=0,last=performance.now(),target=400,launch=false,fire=false,events=0,syncError='',muted=false,opening=null,quote=null,buying=false,gameActionBusy=false,newGameRequest=null,gameRevision=0;
 let pauseReason='manual',pauseView=null,pauseSaving=false,resumeAt=0,resumeTask=false,pauseEpoch=0;
 const keys=new Set(),motion=!matchMedia('(prefers-reduced-motion: reduce)').matches;
 let controlStorage=null;try{controlStorage=localStorage;}catch{}
@@ -24,8 +25,8 @@ async function open(){
 }
 async function flush(){
  if(sending)return sending;if(!queue.length||!run||!connected)return;
- const inputs=queue.splice(0,120),id=run.id,revision=run.revision,stamp=gameRevision;
- sending=(async()=>{try{const data=await api.request('frames',{id,revision,inputs});if(stamp!==gameRevision)return;if(data.resync){run=data;queue=[];events=run.state.eventId;toast('Saved run restored.');}else{run={...data,state:structuredClone(data.state)};for(const input of queue)step(run.state,input);}syncError='';if(['gameover','won'].includes(data.state.status)){resetPause();window.dispatchEvent(new Event('breaker-score-saved'));}}catch(e){if(stamp===gameRevision){queue.unshift(...inputs);syncError=e.message;pauseEpoch++;resumeAt=0;resumeTask=false;paused=true;pauseView=structuredClone(run.state);clearControls();}}finally{sending=null;paint();}})();return sending;
+ const inputs=queue.splice(0,MAX_BATCH_FRAMES),id=run.id,revision=run.revision,stamp=gameRevision;inFlightInputs=inputs.length;
+ sending=(async()=>{try{const data=await api.request('frames',{id,revision,inputs});if(stamp!==gameRevision)return;if(data.resync){run=data;queue=[];events=run.state.eventId;toast('Saved run restored.');}else{run={...data,state:structuredClone(data.state)};for(const input of queue)step(run.state,input);}syncError='';if(['gameover','won'].includes(data.state.status)){resetPause();window.dispatchEvent(new Event('breaker-score-saved'));}}catch(e){if(stamp===gameRevision){queue.unshift(...inputs);syncError=e.message;pauseEpoch++;resumeAt=0;resumeTask=false;paused=true;pauseView=structuredClone(run.state);clearControls();}}finally{sending=null;inFlightInputs=0;paint();}})();return sending;
 }
 async function checkpoint(){while(sending||queue.length){if(sending)await sending;else await flush();if(syncError)throw Error(syncError);}}
 // Keep rendering a stable pause snapshot while authoritative checkpoints settle.
@@ -137,8 +138,8 @@ function frame(time){
  if(resumeAt&&time>=resumeAt&&connected&&!syncError&&!document.hidden&&!$('checkout').open&&!controlDialog.open){resetPause();last=time;justResumed=true;}
  if(run&&connected&&!paused&&!justResumed&&!syncError&&!document.hidden&&!$('checkout').open&&!controlDialog.open&&(['ready','playing'].includes(run.state.status)||(run.state.status==='cleared'&&launch))){
   target=Math.max(0,Math.min(800,target+direction*900*dt));clock+=dt;
-  while(clock>=1/60&&queue.length<120){const input={x:target,launch:launch||keys.has(' '),fire:fire||keys.has(' ')||padFire};step(run.state,input);queue.push(input);launch=false;clock-=1/60;if(['gameover','cleared','won'].includes(run.state.status)){flush();clock=0;break;}}
-  if(queue.length>=60)flush();if(queue.length>=120)pauseGame('saving');
+  while(clock>=1/60&&queue.length+inFlightInputs<MAX_PENDING_FRAMES){const input={x:target,launch:launch||keys.has(' '),fire:fire||keys.has(' ')||padFire};step(run.state,input);queue.push(input);launch=false;clock-=1/60;if(['gameover','cleared','won'].includes(run.state.status)){flush();clock=0;break;}}
+  if(queue.length>=SAVE_EVERY_FRAMES)flush();if(queue.length+inFlightInputs>=MAX_PENDING_FRAMES)pauseGame('saving');
  }else clock=0;
  if(run){draw(ctx,paused&&pauseView?pauseView:run.state,{time:time/1000,motion});if(paused&&resumeAt){ctx.save();ctx.strokeStyle='#ffe05e';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(target-14,865);ctx.lineTo(target,852);ctx.lineTo(target+14,865);ctx.stroke();ctx.restore();}for(const e of run.state.events){if(e.id>events){sound(e.type);if(e.text&&['power','curse','boss','clear'].includes(e.type))toast(e.text,{pickup:['power','curse'].includes(e.type)?PICKUPS.find(p=>p.name===e.text):null});}}events=Math.max(events,run.state.eventId);}
  paint();requestAnimationFrame(frame);

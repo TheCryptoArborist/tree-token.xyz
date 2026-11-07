@@ -11,12 +11,12 @@ host has its production saved-game migration applied and gameplay enabled.
 The arcade release preserves all 43 existing function records, five schedules,
 other static files, runtime configuration and site environment records.
 
-All 151 automated tests, the build and hosted database/access checks pass.
+All 163 automated tests, the build and hosted database/access checks pass.
 Peter reported successful live gameplay and a 20,000 TREE restart. The score
 carryover and navigation update also repairs earlier paid score resets on load.
 Score recovery in the user’s wallet, mobile wallet round trips and physical NES
 controller acceptance still await confirmation. See
-`docs/production-pause-auth-2026-11-07.json` for the current host release
+`docs/production-save-throughput-2026-11-07.json` for the current host release
 and `docs/production-release-2026-11-07.json` for the preserved arcade integration.
 
 ## Play
@@ -66,9 +66,14 @@ code cannot be recalled; this is access control, not copy protection.
 Your NFTree includes fresh games. The server keeps one durable active run per wallet;
 reloading or signing in again resumes that run. It replays only bounded input
 batches, owns lives and score, and rejects browser state and fabricated run IDs.
-No rewards or token payouts are granted. Browser prediction may be up to one
-unacknowledged batch ahead of the durable checkpoint; a reload discards that
-unsaved interval. Network failures pause local prediction.
+No rewards or token payouts are granted. Saves begin after 60 inputs and use
+one request at a time. Catch-up batches accept up to 600 inputs, bounded by
+server elapsed-time credit; total queued plus in-flight prediction is capped at
+900 inputs (15 seconds at 60 Hz). A reload discards the unsaved interval. Prolonged
+save stalls and network failures pause local prediction. Warm backend
+requests reuse one lazy database connection pool; each transaction still leases
+and releases its own connection. Initial run credit remains 120 frames, and the
+server continues to reject oversized, duplicate and clock-ahead batches.
 
 At zero lives, **Start New Game · Free** begins at screen 1 with three lives and
 score zero. Your public username, best leaderboard score and finished result

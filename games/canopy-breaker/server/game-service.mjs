@@ -1,6 +1,7 @@
 import {randomUUID,randomBytes} from 'node:crypto';
 import {isValidTransactionDigest} from '@mysten/sui/utils';
 import {createGame,restartGame,step,PRICE} from '../src/engine.js';
+import {MAX_BATCH_FRAMES,MAX_CLOCK_CREDIT} from '../src/replay-limits.js';
 import {TREE_PAYMENT_RECIPIENT} from './payments/config.mjs';
 import {TREE_TYPE,treeAmount} from './payments/tree.mjs';
 import {recordBestScore} from './leaderboard.mjs';
@@ -31,11 +32,11 @@ export function createGameService({database:db,authorize,reader,inspectSigned,ex
  return Object.freeze({
   async open(ctx){const a=await holder(ctx);return db.transaction(async tx=>{const r=await current(tx,a);return r?ranked(tx,a,r):fresh(tx,a);});},
   async frames(ctx,{id,revision,inputs}){
-   if(!uuid(id)||!Number.isSafeInteger(revision)||revision<0||!Array.isArray(inputs)||!inputs.length||inputs.length>120||inputs.some(i=>!i||Object.keys(i).some(k=>!['x','launch','fire'].includes(k))||!Number.isFinite(i.x)||i.x<0||i.x>800||typeof i.launch!=='boolean'||typeof i.fire!=='boolean'))throw fail('Invalid game inputs');
+   if(!uuid(id)||!Number.isSafeInteger(revision)||revision<0||!Array.isArray(inputs)||!inputs.length||inputs.length>MAX_BATCH_FRAMES||inputs.some(i=>!i||Object.keys(i).some(k=>!['x','launch','fire'].includes(k))||!Number.isFinite(i.x)||i.x<0||i.x>800||typeof i.launch!=='boolean'||typeof i.fire!=='boolean'))throw fail('Invalid game inputs');
    const a=await holder(ctx);return db.transaction(async tx=>{
     const r=await current(tx,a);if(!r||r.id!==id)throw fail('This run is no longer active',409);
     if(r.revision!==revision)return {...await ranked(tx,a,r),resync:true};
-    const budget=Math.min(180,r.credit+Math.floor(Math.max(0,now()-Number(r.updated_at))*60/1000));if(inputs.length>budget)throw fail('Game clock is ahead. Pause and reconnect.',429);
+    const budget=Math.min(MAX_CLOCK_CREDIT,r.credit+Math.floor(Math.max(0,now()-Number(r.updated_at))*60/1000));if(inputs.length>budget)throw fail('Game clock is ahead. Pause and reconnect.',429);
     for(const input of inputs)step(r.state,input);
     const {rows}=await tx.query('UPDATE breaker.runs SET state=$1,revision=revision+1,updated_at=$2,credit=$3 WHERE id=$4 RETURNING *',[JSON.stringify(r.state),now(),budget-inputs.length,id]);return ranked(tx,a,rows[0]);
    });
