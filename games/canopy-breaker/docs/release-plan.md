@@ -24,7 +24,7 @@ records retain the leaderboard, score, completion-feed and initial integration
 release history.
 
 The pause and entry-action update is published as host deploy
-`6aefb5fa09b01fb891f90cb0`, the latest isolated host release. Automatic
+`6aefb5fa09b01fb891f90cb0`. Automatic
 pauses now identify their trigger. The paused picture stays frozen while pending
 checkpoints reconcile, and Resume waits for all inputs to save before a three-second
 countdown. Tab, controller, dialog and wallet changes cancel a pending resume.
@@ -32,6 +32,17 @@ The entry button now opens Connect Wallet, then invokes Verify NFTree using the
 existing personal-message sign-in. No payment or server logic changes are included.
 All 151 automated checks pass. See `production-pause-auth-2026-11-07.json` for
 publication identities, live checks, and investigation limits.
+
+The save-throughput follow-up is published as host deploy
+`6aefb8a4f379759c891f2b7f`, the latest isolated host release. Warm requests
+now share a lazy database pool, while transactions keep independent leased
+connections. Replay batches can catch up with 600 inputs, with 900 total queued
+plus in-flight inputs maximum and server elapsed-time credit enforced. Initial
+credit stays 120. Repeated3-second saves and a 7-second spike run without a pause
+in the actual-app regression; prolonged stalls retain the safe pause/countdown.
+All 163 automated checks pass. No authentication, payment, dependency or schema
+changes are included. See `production-save-throughput-2026-11-07.json` for the
+current publication and validation record.
 
 ## Original pre-launch plan (historical)
 
