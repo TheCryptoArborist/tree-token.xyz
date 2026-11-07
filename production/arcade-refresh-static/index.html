@@ -27,6 +27,13 @@
   <link rel="stylesheet" href="/styles/tree-arcade-suite.css">
   <link rel="stylesheet" href="/styles/tree-arcade-new-cabinets.css">
   <link rel="stylesheet" href="/styles/arcade-checkin-refresh.css">
+  <style id="arcade-balanced-welcome">
+    .arcade-suite .suite-hero.suite-hero--compact { grid-template-columns:minmax(0,320px) minmax(0,400px); justify-content:center; align-items:center; gap:28px; max-width:900px; margin:0 auto; padding:16px 0; text-align:left; }
+    .arcade-suite .suite-hero--compact .suite-hero-art { width:100%; height:auto; object-fit:contain; }
+    .arcade-suite .suite-hero--compact .suite-hero-copy { display:block; min-width:0; }
+    @media (max-width:900px) { .arcade-suite .suite-hero.suite-hero--compact {grid-template-columns:minmax(0,280px) minmax(0,380px); gap:22px;} }
+    @media (max-width:600px) { .arcade-suite .suite-hero.suite-hero--compact {grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:12px; padding:14px 0;} .arcade-suite .suite-hero--compact .suite-hero-art {grid-column:auto; grid-row:auto;} .arcade-suite .suite-hero--compact .suite-hero-copy {display:block;} }
+  </style>
 </head>
 <body class="arcade-suite">
   <a class="skip-link" href="#cabinets">Skip to the games</a>
@@ -52,10 +59,7 @@
         <p class="suite-eyebrow">BATTLE. GROW. DEFEND THE CANOPY.</p>
         <h1 id="arcade-title"><span>TREE</span> ARCADE</h1>
         <p class="suite-intro">Pick a game. Bring your NFTree. Let the adventure begin.</p>
-        <div class="suite-hero-actions">
-          <a class="suite-primary" href="#cabinets">Choose a game <span aria-hidden="true">↓</span></a>
-          <a class="suite-secondary" href="https://nftree.net/mint#mint" data-nftree-mint aria-controls="nftree-mint-panel" aria-expanded="false">Get an NFTree <span aria-hidden="true">→</span></a>
-        </div>
+
       </div>
     </section>
 
