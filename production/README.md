@@ -1,3 +1,30 @@
+# Current production — homepage ecosystem refresh, 2026-11-07
+
+Deployment `6aef8152b93ffa0224e1f0cd` refreshes the homepage with live TREE Force ’89,
+Canopy Defense and Canopy Breaker previews, full App/Arcade/NFTree/Rewards
+entry cards, clearer access and purchase wording, and grouped Resources navigation.
+The hero video, contribution dialog and five existing market nodes and requests
+are preserved. All five figures loaded in browser checks; desktop and narrow
+454/340 CSS-pixel layouts were checked without horizontal overflow.
+
+Source `223004ee3ac7f8300df6a0e418c3113240dbc6e2` uses the newly captured current
+347-path baseline `6aef7c5589af8c6d5a21ce78`. Only `/index.html` is replaced;
+`/scripts/homepage-refresh.js` and `/styles/homepage-refresh.css` are added,
+bringing the complete inventory to **349 static paths**. All 43 complete backend
+records, five schedules, runtime settings and protected environment fingerprints
+match. See `homepage-refresh-release-20261107.json` for the complete inventory.
+Capture this release before future publication. The root historical snapshot
+and manifest remain intact; the active homepage source overlay is in
+`homepage-refresh-static/index.html`. Never replace production with the old root
+snapshot build. No transaction or wallet module was changed.
+
+The market resilience and preservation checks pass, as do both required GitHub
+workflows. The optional legacy `homepage-simple-source` test still asserts old
+Vite asset-import syntax in unchanged `scripts/home-v2.js`; this pre-existing
+source assertion is recorded separately from current browser behavior.
+
+---
+
 # Current production — supplied rewards artwork, 2026-11-07
 
 Locked deployment `6aef79ac2b3345f579dd4e3e` replaces the rewards card image with Peter's supplied `5115.jpg`, stored byte-for-byte as `/rewards/nftree-rewards-hero.jpg`. Source `755a77bb3dc8b4642f89b7c31fbf57ea34f9fb29` is merged in PR #91. TypeScript/build passes and preview framing was visually checked. All 330 prior paths remain, with only `/rewards/index.html` replaced and eight assets added (338 total). All 43 backend records, five schedules and protected environment fingerprints match. See `nftree-rewards-release-20261107.json` for the complete current inventory. Capture this deployment before future releases.

@@ -1,0 +1,49 @@
+/* Homepage presentation refresh; existing market and transaction code is retained. */
+.home-refreshed .simple-hero h1{max-width:13ch;font-size:clamp(2.6rem,4.8vw,4.4rem)}
+.home-refreshed .simple-hero-actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.home-refreshed .simple-hero-actions .simple-button{min-height:78px;padding:13px;gap:10px}
+.home-refreshed .simple-destination-copy strong{font-size:.85rem;white-space:normal}
+.home-refreshed .simple-destination-copy small{font-size:.66rem;white-space:normal;overflow:visible;text-overflow:clip}
+.home-refreshed .simple-destination-icon{flex-shrink:0}
+.home-refreshed .home-rewards-destination{border-color:rgba(255,224,94,.34);background:linear-gradient(130deg,rgba(117,85,20,.2),rgba(27,70,53,.2))}
+.home-reward-icon{color:#ffe05e;background:rgba(255,224,94,.08);font-size:1.4rem}
+.home-resources{position:relative;color:#b7c4ce;font-size:.79rem;font-weight:800}
+.home-resources summary{padding:9px 10px;cursor:pointer;white-space:nowrap;border-radius:9px}
+.home-resources summary:hover,.home-resources summary:focus-visible{color:#35e895;background:rgba(49,231,143,.07)}
+.home-resources>div{position:absolute;right:0;top:100%;min-width:190px;display:grid;padding:9px;border:1px solid rgba(49,231,143,.25);border-radius:12px;background:#061116;box-shadow:0 15px 35px #0008;z-index:5}
+.home-featured .simple-utility-heading{align-items:center}
+.home-section-link{color:#6ee7ff;text-decoration:none;font-size:.88rem;font-weight:800;white-space:nowrap;padding:10px 0}
+.home-section-link:hover{text-decoration:underline}
+.home-game-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.home-game{display:flex;flex-direction:column;min-width:0;overflow:hidden;border:1px solid rgba(49,231,143,.23);border-radius:18px;background:#040d13;color:#f5fbff;text-decoration:none;transition:transform .18s,border-color .18s}
+.home-game:hover{transform:translateY(-4px);border-color:#35e895}
+.home-game:focus-visible,.home-section-link:focus-visible{outline:2px solid #6ee7ff;outline-offset:4px}
+.home-game-art{position:relative;aspect-ratio:1.3;overflow:hidden;background:radial-gradient(ellipse at center,#173e35,#02080d)}
+.home-game-art img{display:block;width:100%;height:100%;object-fit:contain}
+.home-game-art.defense img{object-fit:cover;object-position:center 40%}
+.home-game-status{position:absolute;right:12px;top:12px;padding:6px 10px;border-radius:30px;border:1px solid #35e89577;background:#03140eee;color:#54f4a6;font-size:.65rem;font-weight:900;letter-spacing:.1em}
+.home-game-copy{padding:20px;display:flex;flex-direction:column;flex:1}
+.home-game-copy small{color:#7bd8c4;font-size:.65rem;font-weight:850;letter-spacing:.13em}
+.home-game-copy h3{margin:9px 0;color:#ffe05e;font-size:1.4rem;letter-spacing:-.025em}
+.home-game-copy p{margin:0 0 20px;color:#a9bac5;font-size:.88rem;line-height:1.6;flex:1}
+.home-game-copy strong{display:flex;justify-content:space-between;gap:10px;color:#e8f7ef;font-size:.8rem}
+.home-game-copy strong span{color:#35e895}
+.home-game-note{color:#95aab5;font-size:.78rem;line-height:1.6;margin:17px 0 0}
+@media(max-width:1180px){.home-resources{text-align:center}.home-resources summary{padding:11px}.home-resources>div{position:static;box-shadow:none;margin:4px 0}.home-refreshed .simple-destination-copy small{display:block}}
+@media(max-width:780px){
+ .home-refreshed .simple-hero h1{font-size:clamp(2.6rem,10vw,3.6rem);max-width:13ch}
+ .home-refreshed .simple-hero-actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .home-refreshed .simple-hero-actions .simple-button{min-height:82px;padding:11px;gap:7px}
+ .home-refreshed .simple-destination-copy strong,.home-refreshed .simple-launch-app .simple-destination-copy strong{font-size:.76rem}
+ .home-refreshed .simple-destination-copy small{font-size:.61rem;line-height:1.4;display:block;margin-top:5px}
+ .home-refreshed .simple-stat-strip{grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible}
+ .home-refreshed .simple-stat-strip article{padding:14px;border-bottom:1px solid #ffffff12}
+ .home-refreshed .simple-stat-strip article:nth-child(even){border-right:0}
+ .home-refreshed .simple-stat-strip article:last-child{grid-column:1/-1;border:0}
+ .home-refreshed .simple-stat-strip strong{font-size:1.05rem}
+ .home-game-grid{grid-template-columns:1fr;gap:15px}.home-game-art{aspect-ratio:1.5}
+ .home-game-copy{padding:18px}.home-game-copy h3{font-size:1.5rem}
+ .home-featured .simple-utility-heading{display:block}.home-section-link{display:inline-flex;margin-top:8px;gap:10px}
+}
+@media(prefers-reduced-motion:reduce){.home-game{transition:none}.home-game:hover{transform:none}}
+.home-refreshed .simple-hero-actions .simple-destination-copy small{color:#a9bac5;text-shadow:none}
