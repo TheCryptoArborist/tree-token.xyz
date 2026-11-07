@@ -1,11 +1,12 @@
 import {test} from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';
 const {PGlite}=await import(process.env.ARCADE_TEST_PGLITE||new URL('../vendor/arcade-monthly/node_modules/@electric-sql/pglite/dist/index.js',import.meta.url).href);
 test('monthly qualification, streak recovery, replay protection and browser-role isolation',async()=>{
- const db=new PGlite({initialMemory:128*1024*1024});try{
+ const pg=new PGlite({initialMemory:128*1024*1024});await pg.exec("create function public.arcade_test_now() returns timestamptz language sql stable as $$ select timestamptz '2026-11-25 12:00:00+00' $$");const db={exec:sql=>pg.exec(sql.replaceAll('clock_timestamp()','public.arcade_test_now()')),query:(sql,args)=>pg.query(sql.replaceAll('clock_timestamp()','public.arcade_test_now()'),args),close:()=>pg.close()};try{
  await db.exec('create role anon;create role authenticated;create role service_role bypassrls;');
  for(const file of ['growth.sql','participation.sql','passport.sql'])await db.exec(fs.readFileSync(new URL('./fixtures/arcade-monthly/'+file,import.meta.url),'utf8'));
- const sql=fs.readFileSync(new URL('../supabase/migrations/20261107211943_arcade_monthly_rewards.sql',import.meta.url),'utf8').replaceAll("(clock_timestamp() at time zone 'UTC')::date","date '2026-11-25'");
+ const sql=fs.readFileSync(new URL('../supabase/migrations/20261107211943_arcade_monthly_rewards.sql',import.meta.url),'utf8');
  await db.exec(sql);
+ const reconciliation=fs.readdirSync(new URL('../supabase/migrations/',import.meta.url)).find(p=>p.endsWith('_arcade_recovery_reconciliation.sql'));await db.exec(fs.readFileSync(new URL('../supabase/migrations/'+reconciliation,import.meta.url),'utf8'));
  const wallet='0x'+'a'.repeat(64),token='a'.repeat(64),origin='https://tree-token.xyz',id='11111111-1111-4111-8111-111111111111';
  await db.query(`insert into private.arcade_growth_wallet_challenges(challenge_id,wallet,origin,date_key,nonce_sha256,message,request_fingerprint,expires_at) values($1,$2,$3,current_date,$4,repeat('x',100),$4,clock_timestamp()+interval '4 minutes')`,[id,wallet,origin,'f'.repeat(64)]);
  await db.query(`insert into private.arcade_growth_sessions(token_sha256,wallet,origin,auth_challenge_id,expires_at) values($1,$2,$3,$4,clock_timestamp()+interval '55 minutes')`,[token,wallet,origin,id]);
@@ -29,6 +30,13 @@ test('monthly qualification, streak recovery, replay protection and browser-role
  assert.equal((await db.query("select has_function_privilege('anon','public.arcade_monthly_status_v1(text,text)','execute') as ok")).rows[0].ok,false);
  assert.equal((await db.query("select has_function_privilege('authenticated','public.arcade_recovery_confirm_v1(text,text,uuid,text,timestamp with time zone)','execute') as ok")).rows[0].ok,false);
  await db.exec('set role service_role');assert.equal((await status()).monthlyReward.verifiedQuestDays,20);await db.exec('reset role');
+ await pg.exec("create or replace function public.arcade_test_now() returns timestamptz language sql stable as $$ select timestamptz '2026-12-01 00:00:10+00' $$");
+ await db.query("update private.arcade_growth_sessions set issued_at=clock_timestamp()-interval '5 minutes',expires_at=clock_timestamp()+interval '50 minutes' where token_sha256=$1",[token]);
+ const late=(await db.query("insert into private.arcade_checkin_recovery_intents(wallet,date_key,created_at,expires_at) values($1,'2026-11-29','2026-11-30 23:55:00+00','2026-12-01 00:10:00+00') returning id",[wallet])).rows[0].id;
+ const rolled=(await db.query("select public.arcade_recovery_confirm_v1($1,$2,$3,$4,'2026-11-30 23:59:00+00') as s",[token,origin,late,'3'.repeat(44)])).rows[0].s;
+ assert.equal(rolled.monthKey,'2026-12');assert.equal(rolled.monthlyReward.verifiedQuestDays,0);
+ assert.equal((await db.query("select source from private.arcade_growth_checkins where wallet=$1 and date_key='2026-11-29'",[wallet])).rows[0].source,'paid-recovery');
+ await assert.rejects(db.query("select public.arcade_recovery_intent_v1($1,$2,'2026-11-30',null)",[token,origin]),/invalid-date/);
  await db.query('update private.arcade_growth_sessions set revoked_at=clock_timestamp() where token_sha256=$1',[token]);await assert.rejects(status(),/invalid-session/);
  }finally{await db.close();}
 });
