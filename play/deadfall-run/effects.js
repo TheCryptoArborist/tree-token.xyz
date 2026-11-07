@@ -55,8 +55,9 @@ if(opacity<.003)discard;gl_FragColor=vec4(vColor,opacity);
         smokeTime += dt * (3 + load * 13);
         while (smokeTime >= 1) {
           smokeTime--;
-          for (const side of [-1, 1]) {
-            const point = tractor.localToWorld(new THREE.Vector3(side * 1.02, 3.69, .28));
+          for (const [index, side] of [[0, -1], [1, 1]]) {
+            const emitter = tractor.userData.exhaustPoints?.[index];
+            const point = emitter ? emitter.getWorldPosition(new THREE.Vector3()) : tractor.localToWorld(new THREE.Vector3(side * 1.02, 3.69, .28));
             emit(point, new THREE.Vector3(.35 + random() * .18, .8 + load * .6, .12 + random() * .2),
               1.1 + random() * .8, .18 + load * .09, .10 + load * .17, load > .65 ? 0x77786f : 0xb9bdb5);
           }

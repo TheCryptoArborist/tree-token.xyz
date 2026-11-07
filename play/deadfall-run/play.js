@@ -1,4 +1,4 @@
-/* Deadfall Run: 3D field-test build 0.5.4. No remote requests or transactions. */
+/* Deadfall Run: 3D field-test build 0.5.5. No remote requests or transactions. */
 (function () {
   "use strict";
   try {
@@ -29,7 +29,7 @@
     const keyMap = { KeyA: "left", ArrowLeft: "left", KeyD: "right", ArrowRight: "right", KeyW: "throttle", ArrowUp: "throttle",
       KeyS: "brake", ArrowDown: "brake", Space: "engine", KeyV: "reverse" };
     const pad = DeadfallGamepad.create(), controllerPanel = $("controllerPanel");
-    const sound = DeadfallAudio.create(), effects = DeadfallEffects.create(scene);
+    const sound = DeadfallAudio.create(), effects = DeadfallEffects.create(scene), ride = DeadfallRide.create(R);
     const contacts = DeadfallCollision.create(R, P, world.solids, hit => {
       world.impact(hit); effects.impact(hit); sound.impact(hit);
       const part = hit.body === "trailer" ? "Trailer" : "Truck";
@@ -82,7 +82,7 @@
       state = P.createState(d); clearInput(); sound.reset(); effects.reset(); contacts.reset(); world.reset(); accumulator = 0; paused = false;
       if (L) { L.prepare(selectedTest, state); session = L.begin(selectedTest, state); world.selectTest(selectedTest); }
       ui.pause.textContent = "PAUSE"; ui.paused.hidden = true;
-      P.couple(state, tractor, trailer, true); V.update(truck, state, input); updateUI();
+      P.couple(state, tractor, trailer, true); ride.reset(state, tractor, trailer); V.update(truck, state, input, ride); updateUI();
     }
     function start() {
       sound.unlock();
@@ -179,7 +179,7 @@
       }
       state = recovered || P.createState(0); effects.reset(); sound.reset(); state.logs = old.logs; state.damage = R.clamp(old.damage + 5, 0, 100);
       state.brakeHeat = old.brakeHeat; state.elapsed = old.elapsed; state.collisions = old.collisions;
-      clearInput(); P.couple(state, tractor, trailer, true); V.update(truck, state, input); updateCamera(1 / 60, true); updateUI();
+      clearInput(); P.couple(state, tractor, trailer, true); ride.reset(state, tractor, trailer); V.update(truck, state, input, ride); updateCamera(1 / 60, true); updateUI();
       showMessage("Back on the road. Recovery adds 5% damage; missing logs stay missing.");
       if (state.damage >= 100) finish(false);
     }
@@ -191,7 +191,7 @@
       if (!running) {
         desired = center.clone().addScaledVector(f, 14).addScaledVector(right, 19).add(new THREE.Vector3(0, 8.1, 0)); look = center;
       } else if (cameraMode === 1) {
-        desired = tractor.localToWorld(new THREE.Vector3(0, 3.09, -2.62));
+        desired = tractor.userData.visual.localToWorld(new THREE.Vector3(0, 3.09, -2.62));
         look = desired.clone().addScaledVector(f, 34); look.y += Math.sin(state.pitch) * 34 - .45;
       } else if (cameraMode === 3) {
         look = selectedTest === "reverse" ? center.clone().lerp(R.frame(125).p, .42) : center;
@@ -274,6 +274,7 @@
           const previous = DeadfallCollision.capture(state);
           const event = P.step(state, input, fixed, selectedPreset); P.couple(state, tractor, trailer);
           const hit = contacts.resolve(state, previous, tractor, trailer, fixed);
+          ride.step(state, tractor, trailer, fixed);
           state.scraping = hit?.object.kind === "barrier" && Math.abs(state.speed) > .5 ? Math.min(1, Math.abs(state.speed) / 10) : 0;
           accumulator -= fixed;
           if (event.lost) showMessage("Cargo lost. Slow down before making another correction.");
@@ -283,7 +284,7 @@
           } else if (state.damage >= 100 || state.logs === 0) finish(false);
           else if (state.progress >= R.LENGTH - 12) finish(true);
         }
-        V.update(truck, state, input); messageTimer -= elapsed;
+        V.update(truck, state, input, ride); messageTimer -= elapsed;
         if (messageTimer <= 0) ui.dispatch.classList.remove("show");
       }
       updateCamera(elapsed); world.update(state.pos, state.progress, running && !paused ? elapsed : 0);
@@ -384,7 +385,7 @@
     setQuality(1); reset(); updateCamera(1 / 60, true); world.update(state.pos, state.progress); renderer.render(scene, camera);
     pad.poll(); controllerUI();
     ui.drive.disabled = false; ui.drive.textContent = L ? "START HANDLING TEST" : "BEGIN DESCENT";
-    $("bootStatus").textContent = `3D ready · ${L ? "Handling Lab" : "Stormbreak Pass"} · Build 0.5.4`;
+    $("bootStatus").textContent = `3D ready · ${L ? "Handling Lab" : "Stormbreak Pass"} · Build 0.5.5`;
     requestAnimationFrame(frame);
   } catch (error) {
     console.error(error); window.showBootError(error.message || "3D graphics could not start. Try a browser with hardware acceleration enabled.");

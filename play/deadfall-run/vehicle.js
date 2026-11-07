@@ -15,6 +15,22 @@
     const mesh = new THREE.Mesh(new THREE.TubeGeometry(curve, points.length * 3, radius, 6, false), material);
     mesh.castShadow = true; return mesh;
   }
+  function reshapePipe(mesh) {
+    const g = mesh.geometry, { path, tubularSegments: n, radialSegments: sides, radius } = g.parameters;
+    path.updateArcLengths();
+    const frames = path.computeFrenetFrames(n, false), center = new THREE.Vector3(), normal = new THREE.Vector3();
+    for (let i = 0; i <= n; i++) {
+      path.getPointAt(i / n, center);
+      for (let j = 0; j <= sides; j++) {
+        const a = j / sides * Math.PI * 2, index = i * (sides + 1) + j;
+        normal.copy(frames.normals[i]).multiplyScalar(-Math.cos(a)).addScaledVector(frames.binormals[i], Math.sin(a));
+        g.attributes.position.setXYZ(index, center.x + radius * normal.x, center.y + radius * normal.y, center.z + radius * normal.z);
+        g.attributes.normal.setXYZ(index, normal.x, normal.y, normal.z);
+      }
+    }
+    g.attributes.position.needsUpdate = g.attributes.normal.needsUpdate = true;
+    g.computeBoundingSphere();
+  }
   function wheel() {
     const pivot = new THREE.Group(), spin = new THREE.Group(); pivot.add(spin);
     const tire = cylinder(.52, .29, M.tire, 28); tire.rotation.z = Math.PI / 2; spin.add(tire);
@@ -42,6 +58,7 @@
   }
   function addAxle(group, z, dual, data, steering = false) {
     const axle = cylinder(.08, 2.36, M.darkMetal, 10); axle.rotation.z = Math.PI / 2; at(group, axle, 0, .52, z);
+    data.axles.push(axle);
     for (const sign of [-1, 1]) for (const x of (dual ? [1.01, 1.32] : [1.18])) {
       const w = at(group, wheel(), sign * x, .52, z); data.wheels.push(w);
       if (steering) data.front.push(w);
@@ -58,7 +75,7 @@
   function make() {
     const group = new THREE.Group(), tractor = new THREE.Group(), trailer = new THREE.Group();
     tractor.name = "Logging tractor"; trailer.name = "Articulated log semitrailer"; group.add(tractor, trailer);
-    const td = tractor.userData = { wheels: [], front: [] }, rd = trailer.userData = { wheels: [], logs: [], logX: [] };
+    const td = tractor.userData = { wheels: [], front: [], axles: [] }, rd = trailer.userData = { wheels: [], logs: [], logX: [], axles: [], straps: [] };
     const dust = W.texture(256, 128, (c, w, h) => {
       const random = root.DeadfallRoute.random(728);
       c.clearRect(0, 0, w, h);
@@ -160,12 +177,13 @@
       log.rotation.x = Math.PI / 2; at(trailer, log, x, y, .08 * (i % 2)); rd.logs.push(log); rd.logX.push(x);
     });
     for (const z of [-2.75, 2.8]) {
-      trailer.add(pipe([[-1.32, 1.51, z], [-1.27, 2.30, z], [-.55, 3.105, z], [.55, 3.105, z], [1.27, 2.30, z], [1.32, 1.51, z]], .038, M.strap));
+      const strap = pipe([[-1.32, 1.51, z], [-1.27, 2.30, z], [-.55, 3.105, z], [.55, 3.105, z], [1.27, 2.30, z], [1.32, 1.51, z]], .038, M.strap);
+      strap.userData.rest = strap.geometry.parameters.path.points.map(p => p.clone());
+      rd.straps.push(strap); trailer.add(strap);
       at(trailer, box(.16, .22, .12, M.chrome), -1.36, 1.80, z);
     }
     at(trailer, box(2.55, .25, .18, M.darkMetal), 0, .91, 4.86);
-    // Reflective tape, crossmember fasteners and suspension detail remain visual:
-    // no new body origins, wheel pivots or contact points.
+    // Reflective tape, crossmember fasteners and leaf-spring detail.
     const whiteTape = [], redTape = [], fasteners = [];
     for (const side of [-1, 1]) {
       for (let n = 0; n < 18; n++) {
@@ -191,18 +209,73 @@
       at(body, box(.34, .13, .03, brakeMaterial), side * 1.00, .96, z);
       at(body, box(.13, .10, .031, M.amber), side * 1.26, .96, z);
     }
+    // Move the secured bundle together so logs cannot intersect one another.
+    rd.cargoPivot = at(trailer, new THREE.Group(), 0, 2.35, 0); rd.cargoPivot.name = "Secured log bundle";
+    const cargo = at(rd.cargoPivot, new THREE.Group(), 0, -2.35, 0);
+    for (const log of rd.logs) cargo.add(log);
+    // Physical roots and wheel steering pivots are unchanged. Sprung visual
+    // frames rotate about the exact existing fifth-wheel/kingpin anchors.
+    for (const body of [tractor, trailer]) {
+      const data = body.userData, pinZ = body === tractor ? 2.25 : -4.85;
+      const children = body.children.slice(), unsprung = new Set([...data.wheels, ...data.axles]);
+      data.ridePivot = at(body, new THREE.Group(), 0, 1.42, pinZ);
+      data.ridePivot.name = body === tractor ? "Tractor suspension frame" : "Trailer suspension frame";
+      data.visual = at(data.ridePivot, new THREE.Group(), 0, -1.42, -pinZ);
+      for (const child of children) if (!unsprung.has(child)) data.visual.add(child);
+      data.shocks = [];
+      for (const axle of data.axles) for (const side of [-1, 1]) {
+        const shock = cylinder(.045, 1, M.chrome, 8); body.add(shock);
+        shock.userData.anchor = new THREE.Vector3(side * .74, 1.04, axle.position.z);
+        shock.userData.axle = axle; data.shocks.push(shock);
+      }
+    }
+    td.exhaustPoints = [-1, 1].map(side => at(td.visual, new THREE.Object3D(), side * 1.02, 3.69, .28));
+    rd.lastStrapPose = "";
     group.userData = { tractor, trailer }; return group;
   }
-  function update(truck, state, input) {
+  function update(truck, state, input, ride) {
     const { tractor, trailer } = truck.userData;
+    const motion = ride?.value || {};
     tractor.userData.front.forEach(w => w.rotation.y = -state.steer);
-    for (const body of [tractor, trailer]) body.userData.wheels.forEach(w => w.userData.spin.rotation.x = state.wheelRotation);
-    trailer.userData.logs.forEach((log, i) => {
-      log.visible = i < state.logs;
-      log.position.x = trailer.userData.logX[i] - state.sway * .045;
-      // Small restrained movement, not the old visibly floating load.
-      log.rotation.z = -state.sway * .012;
-    });
+    for (const [name, body] of [["tractor", tractor], ["trailer", trailer]]) {
+      const data = body.userData, pivot = data.ridePivot;
+      pivot.rotation.set(motion[name + "Pitch"] || 0, 0, motion[name + "Roll"] || 0);
+      for (const axle of data.axles) {
+        const sample = motion.axles?.[name]?.find(a => a.z === axle.position.z);
+        const left = sample?.left ?? .52, right = sample?.right ?? .52;
+        axle.position.y = (left + right) / 2; axle.rotation.z = Math.PI / 2 + Math.atan2(right - left, 2.36);
+        for (const w of data.wheels) if (w.position.z === axle.position.z) {
+          w.position.y = (left + right) / 2 + w.position.x / 2.36 * (right - left);
+          w.userData.spin.rotation.x = state.wheelRotation;
+        }
+      }
+      for (const shock of data.shocks) {
+        const top = shock.userData.anchor.clone().sub(pivot.position).applyQuaternion(pivot.quaternion).add(pivot.position);
+        const axle = shock.userData.axle, bottom = new THREE.Vector3(shock.userData.anchor.x,
+          axle.position.y + Math.tan(axle.rotation.z - Math.PI / 2) * shock.userData.anchor.x, axle.position.z);
+        const direction = top.clone().sub(bottom);
+        shock.position.copy(top).add(bottom).multiplyScalar(.5); shock.scale.y = Math.max(.02, direction.length());
+        shock.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction.normalize());
+      }
+    }
+    const rd = trailer.userData, cargo = rd.cargoPivot;
+    rd.logs.forEach((log, i) => { log.visible = i < state.logs; });
+    cargo.position.set(motion.cargoX || 0, 2.35, motion.cargoZ || 0);
+    cargo.rotation.set(motion.cargoPitch || 0, 0, motion.cargoRoll || 0); cargo.updateMatrix();
+    const pose = [cargo.position.x, cargo.position.z, cargo.rotation.x, cargo.rotation.z].map(n => n.toFixed(5)).join(",");
+    if (pose !== rd.lastStrapPose) {
+      for (const strap of rd.straps) {
+        const points = strap.geometry.parameters.path.points;
+        points.forEach((p, i) => {
+          p.copy(strap.userData.rest[i]);
+          // End anchors stay on the frame; the middle follows the restrained load.
+          if (i > 0 && i < points.length - 1) p.sub(new THREE.Vector3(0, 2.35, 0)).applyMatrix4(cargo.matrix);
+        });
+        reshapePipe(strap);
+      }
+      rd.lastStrapPose = pose;
+    }
+    tractor.updateMatrixWorld(true); trailer.updateMatrixWorld(true);
     tractor.userData.brakeMaterial.emissiveIntensity = input.brake ? 2.5 : .25;
   }
   root.DeadfallVehicle = { make, update };

@@ -1,4 +1,4 @@
 {
-  "name": "deadfall-run", "private": true, "version": "0.5.4", "type": "commonjs",
-  "scripts": { "test": "node tests/run.cjs && node tests/handling.cjs && node tests/handling-ui.cjs && node tests/coupling.cjs && node tests/collision.cjs && node tests/gamepad.cjs && node tests/audio.cjs" }
+  "name": "deadfall-run", "private": true, "version": "0.5.5", "type": "commonjs",
+  "scripts": { "test": "node tests/run.cjs && node tests/handling.cjs && node tests/handling-ui.cjs && node tests/coupling.cjs && node tests/collision.cjs && node tests/gamepad.cjs && node tests/audio.cjs && node tests/suspension.cjs" }
 }

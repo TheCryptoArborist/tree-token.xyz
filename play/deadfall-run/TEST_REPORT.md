@@ -1,6 +1,14 @@
-# Deadfall Run 0.5.4 verification
+# Deadfall Run 0.5.5 verification
 
-Date: November 5, 2026 (America/Chicago)
+Date: November 6, 2026 (America/Chicago)
+
+## Suspension and restrained-load update
+
+Added a secondary motion model that reads the approved driving state without writing to it. Damped springs respond to acceleration, turning and road height at the ten left/right axle contact positions. Spatial roughness increases off road; it is not driven by elapsed time. The cab and trailer have separate spring rates and rotate about their existing coupling anchors. Wheels remain terrain-referenced and ten visible dampers connect them to the sprung frames.
+
+The log bundle moves together within 2.6 cm laterally and 3.5 cm longitudinally. Its small pitch/roll is also bounded. Strap middle points follow the bundle while the two deck anchors stay fixed. Existing tube buffers are deformed instead of allocating new meshes. Smoke starts at the actual stack tips after the sprung-frame transform. Reset/recovery initializes the springs from the current pose and speed; pause does not advance them.
+
+The driving physics, collision solver, controller module, routes, handling exercise criteria and audio are byte-identical to 0.5.4. The vehicle scene now contains 440 mesh objects / 203,167 stored vertices, an increase of ten dampers and 520 vertices. This is a geometry count, not a frame-rate benchmark. Suspension travel is visual and does not add tire forces, wheel lift or rigid-body rollover behavior.
 
 ## Collision and sound update
 
@@ -10,7 +18,7 @@ Head-on contacts stop at a safe pose. Shallow rail scrapes project remaining mot
 
 Added a bounded 240-particle world-space pool for smoke from both exhaust stacks, off-road dust and impact debris. Tree instances animate about their bases and restore their original matrices on reset. Recorded truck-engine audio replaces the primary oscillator; separate pulse/noise layers cover engine braking, air release, impacts and scraping. The four-second engine recording is bundled and credited under CC0. No runtime audio fetch is required.
 
-The controller module, both routes, handling exercise logic, vehicle model and texture materials are retained from 0.5.3. The existing 430 mesh objects / 202,647 stored vertices are unchanged; particles add a Points object. This is not a performance benchmark.
+The collision, terrain, scenery reaction and recorded-audio behavior from 0.5.4 is retained. Its 240-particle pool remains bounded; the suspension update only changes where new exhaust particles originate.
 
 ## NES controller support
 
@@ -35,7 +43,9 @@ Gentle turns caused the trailer tail to move sideways with the cab. The previous
 
 - 7 collision/terrain checks: cab head-on blocking and reverse escape; a 50 m proposed step across a thin wall; trailer-only reverse contact; shallow rail sliding; mature versus small trees and reset; unchanged contact-free steering; and surface/terrain-bank behavior.
 
-Total: **83 passing CPU/DOM/audio-stub checks**. These are not browser playtests.
+- 9 suspension/load checks: stationary settling on flat/uphill/downhill surfaces; braking nose dip and release; mirrored outward cargo movement and slower trailer lean; sequential axle response to a 6 cm bump; 2,400 steps of identical driving state with secondary motion enabled/disabled; pause and moving-start reset; actual coupling, wheel and strap transforms; bounded cargo under extreme inputs and complete reset; and stack-attached emission with world-space smoke.
+
+Total: **92 passing CPU/DOM/audio-stub checks**. These are not browser playtests.
 
 ## Model measurements
 
@@ -45,14 +55,16 @@ Total: **83 passing CPU/DOM/audio-stub checks**. These are not browser playtests
 - Controlled braking exercise: approximately 20.02 mph entry speed and an 8.52 m stop distance from the front-bumper line crossing. Exact-20-mph stops remain 8.49 m with cool brakes versus 18.21 m with fully heated brakes.
 - A controller completes reverse docking in about 24.59 seconds with approximately 0.066 m lateral offset, 0.73 degrees of trailer heading error, no cone contact, and all five logs. The test controller was retuned to correct the approach earlier; scenario pass criteria were not relaxed.
 - Fifth-wheel/kingpin gap remains below 1e-9 metres in the trajectory checks and all four controller-driven exercises.
+- The new visible sprung-frame coupling gap also remains below 1e-9 metres through 1,200 simulated driving steps. Wheel center height error is below 3.5 cm on the sampled descent path; this is a bounded visual approximation, not an exact tire-contact constraint on arbitrary terrain.
+- At 8 m/s over the test's 6 cm bump, the front axle peaks at 2.10 seconds and the first trailer axle at 3.63 seconds. The cab pitch response stays within its 0.018-radian limit and settles after the bump.
 
 These are measurements of this simplified game model, not measured behavior of Hard Truck or a real truck. Controllers are test fixtures, not player assistance.
 
 ## Browser verification and remaining playtest
 
-The 0.5.4 entry menu was opened in cloud Chrome. WebGL initialization failed with the explicit diagnostic GL_VENDOR=Disabled and GL_RENDERER=Disabled; the visible startup error correctly disables Start. No GPU gameplay or frame-rate claim is made.
+The 0.5.5 entry menu was opened in cloud Chrome and displayed the correct build label. WebGL initialization failed with “Error creating WebGL context”; the visible startup error correctly disables Start and explains the need for a WebGL-capable browser. Rendered suspension movement and GPU frame rate could not be checked in this environment.
 
-The actual audio.js module was rendered by Chrome's OfflineAudioContext for eight seconds through tests/browser-audio.html. It passed with these normalized PCM measurements:
+The unchanged audio.js module was previously rendered by Chrome's OfflineAudioContext for eight seconds through tests/browser-audio.html in 0.5.4. That check was not repeated in 0.5.5. It passed with these normalized PCM measurements:
 
 | Measurement | Result |
 | --- | --- |
@@ -67,7 +79,7 @@ The actual audio.js module was rendered by Chrome's OfflineAudioContext for eigh
 
 This uses the real Web Audio renderer with a scheduled clock and the actual sound module. It is a signal/lifecycle check, not listening to speakers or proving real-time device latency. Runtime AudioContext availability and resume rejection are also covered with stubs.
 
-No physical NES controller or adapter was attached here. The user reported that the preceding test run was much better; the implementation it exercised is retained. Actual graphics, audio character, controller device compatibility and frame rate still require desktop testing. Open index.html, complete the full descent, and compare Chase, Hood and Inspect. Try throttle, engine braking, service-brake release, pause/resume, mute and volume. Check both stacks, head-on and grazing rail contact, trailer-only contact, mature tree shaking, smaller tree falling, and off-road dust/drag. Repeat after recovery and a fresh run. Use handling.html for the repeatable braking, grade, S-bend and reverse checks.
+No physical NES controller or adapter was attached here. The user approved the preceding handling; its implementation is retained. Actual graphics, audio character, controller device compatibility and frame rate still require desktop testing. Use handling.html for braking nose dip, settling, restrained cargo motion in the S bends, and pause/retry. Use index.html for pavement/gravel/grass response, moving exhaust tips and recovery. Compare Chase, Hood and Inspect. The README includes a short test sequence and the retained collision/audio checks.
 
 ## Remaining simulation limits
 

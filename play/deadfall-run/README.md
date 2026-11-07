@@ -1,4 +1,4 @@
-# Deadfall Run — Handling Lab 0.5.4
+# Deadfall Run — Handling Lab 0.5.5
 
 A downloadable development build for TREE Arcade. This handling lab has not been published to the live arcade.
 
@@ -11,6 +11,23 @@ A downloadable development build for TREE Arcade. This handling lab has not been
 
 The original Stormbreak Pass descent is also included: open **index.html** or **START_GAME.bat**. Its menu links to the handling lab. No installation, web server, account, wallet, or network connection is required to drive. The Back to Arcade link opens https://tree-token.xyz/play/.
 
+## Suspension and secured cargo update — 0.5.5
+
+The cab and trailer now have separate damped pitch and lean responses. Braking produces a small nose dip; road height is sampled at each axle so uneven ground reaches the front wheels before the trailer. Roughness increases on gravel and grass and depends on distance travelled, so the parked truck does not keep bouncing. Wheels follow the sampled terrain, and visible dampers connect the axles to the moving frames.
+
+The five logs move as one restrained bundle, with at most 2.6 cm of sideways travel and 3.5 cm fore/aft. Straps follow the bundle while their end anchors stay on the trailer. Exhaust particles originate at the moving stack tips. Pause freezes the response, and retry/recovery resets it without a false acceleration jolt.
+
+This is a secondary visual suspension model. The established steering, braking, collision and fifth-wheel calculations are unchanged. Both sprung frames pivot at their coupling anchors, preserving the visible connection. It does not add wheel forces, a physical rollover or independently falling logs.
+
+### Test the new motion
+
+1. Open **handling.html**, choose **20 mph stop**, start, and press C twice for Inspect. Accelerate and brake; look for a small nose dip and a prompt, damped return at rest. The body should not bounce continuously.
+2. Repeat **Control the grade** and **Keep it in line**. Use brief left/right corrections and watch for slight outward load movement and a slower trailer response. The rear wheels should retain the handling you already tested.
+3. Open **index.html** and leave the road slowly where there is no guardrail. Compare the movement on pavement, gravel and grass. Keep speed low enough to see each axle react, then check that both exhaust plumes still start at their stack tips.
+4. Pause, resume, recover with R, and retry. Look for sudden jumps, floating tires, a separated hitch, loose-looking straps or motion continuing while paused. Compare left and right turns and try your NES controller.
+
+Please include the course, camera, approximate speed and surface if the movement looks excessive or unnatural. A short recording is useful for tuning the amount of suspension travel.
+
 ## Collision, exhaust and engine update — 0.5.4
 
 This build addresses the test feedback about scenery having no physical response and the synthetic engine sound:
@@ -21,11 +38,11 @@ This build addresses the test feedback about scenery having no physical response
 - Pavement, gravel and grass use different grip/resistance. The rear trailer axle also counts when determining the surface. Off-road body lean follows the cross-slope of the ground. The speed display identifies the current surface.
 - A locally bundled, edited truck-engine recording replaces the main synthesized buzz. Throttle and simulated RPM change its sound; the engine brake has an irregular exhaust-pulse layer. Air release, impacts and scraping have separate sounds. See third-party-notices.txt for the recording's CC0 credit.
 
-The fifth-wheel solver, steering presets, NES mappings, courses and four handling exercise criteria are retained. Contact response is a swept kinematic approximation; it does not model chassis deformation, wheel suspension or a physical rollover. Small fallen trees and displaced limbs cease blocking the rig; they are animated scenery after the hit, not freely simulated rigid bodies. Reflector markers, signs and the mill are still scenery. Lab cones remain scoring markers.
+The fifth-wheel solver, steering presets, NES mappings, courses and four handling exercise criteria are retained. Contact response is a swept kinematic approximation; it does not model chassis deformation, dynamic tire/suspension forces or a physical rollover. Small fallen trees and displaced limbs cease blocking the rig; they are animated scenery after the hit, not freely simulated rigid bodies. Reflector markers, signs and the mill are still scenery. Lab cones remain scoring markers.
 
 Clicking Start permits sound in browsers that allow it. If you start with a controller and hear nothing, open **SOUND → ENABLE SOUND** with your mouse or touch screen. The same menu has **MUTE SOUND** and a volume slider. Settings are remembered when browser storage is available. Pausing, opening controller setup, losing focus, ending a run or returning to the menu silences the truck. Sound failure does not prevent driving.
 
-## Test this update
+## Retest collisions and sound
 
 Use **index.html** for the full descent. Choose **HEAVY** for deliberate driving, and use a fresh run for each destructive test.
 
@@ -103,15 +120,15 @@ Build 0.5.1 fixes trailer steering caused by body lean. The rear tandem now foll
 
 ## What this build does and does not establish
 
-This is a 3D handling prototype using simplified kinematic vehicle motion, simulated roll/sway, and brake heat. It is not a full wheel/suspension rigid-body simulation. There is no tire deformation, physical rollover, breakable restraints, independent falling logs, crash deformation, or gear-shifting simulation. The results measure this model; they are not real-world truck safety or stopping-distance data.
+This is a 3D handling prototype using simplified kinematic vehicle motion, a secondary damped suspension/load response, and brake heat. It is not a full wheel/suspension rigid-body simulation. Suspension travel is bounded and does not feed forces back into steering or grip. There is no tire deformation, physical rollover, breakable restraints, independent falling logs, crash deformation, or gear-shifting simulation. The results measure this model; they are not real-world truck safety or stopping-distance data.
 
 The uploaded Hard Truck game was used as a reference for configurable steering and vehicle behavior. Its executable, DLLs, models, textures, sounds, and scripts are not included. Its compiled engine was not ported, and its driving behavior has not been measured here. See HANDLING_NOTES.md.
 
 ## Verification
 
-Run **npm test** in this directory (or run the seven .cjs scripts in tests/ individually). No dependencies need installing. The 83 checks use real Three.js geometry and simulation with stubbed browser/renderer interfaces. They do not establish GPU rendering, native input feel, speaker sound quality, or frame rate.
+Run **npm test** in this directory (or run the eight .cjs scripts in tests/ individually). No dependencies need installing. The 92 checks use real Three.js geometry and simulation with stubbed browser/renderer interfaces. Nine new checks cover spring settling, braking/turn response, axle sequencing, unchanged handling, pause/reset, visible coupling, tire/strap transforms, constrained cargo and moving exhaust emitters. They do not establish GPU rendering, native input feel, speaker sound quality, or frame rate.
 
-The 0.5.4 menu and unsupported-graphics fallback were inspected. This browser reports GL_VENDOR and GL_RENDERER as Disabled and cannot create a WebGL context. The actual audio module passed an eight-second browser OfflineAudioContext render: finite output with no clipping, audible sections with nonzero output, and exactly silent pause/mute sections. This is not a listening test or rendered gameplay test. To repeat the audio check, open **tests/browser-audio.html**, click **RENDER SOUND CHECK**, then optionally listen to its locally generated clip.
+The 0.5.5 menu and unsupported-graphics fallback were inspected. This browser could not create a WebGL context, so rendered suspension motion could not be reviewed here. The unchanged audio module previously passed an eight-second browser OfflineAudioContext render in 0.5.4: finite output with no clipping, audible sections with nonzero output, and exactly silent pause/mute sections. That audio render was not repeated for 0.5.5 and is not a listening test. To repeat it, open **tests/browser-audio.html**, click **RENDER SOUND CHECK**, then optionally listen to its locally generated clip.
 
 Actual driving, visual appearance and audio character still require a desktop playtest. If you see an error, include the message, browser/device, chosen test, and a screenshot or short recording.
 
@@ -120,6 +137,7 @@ Actual driving, visual appearance and audio character still require a desktop pl
 - handling.html / handling-route.js / handling-world.js / handling.js: test menu, course, scenery, and measurable criteria.
 - index.html / route.js: original 1.8 km descent.
 - physics.js: shared vehicle model and hitch constraint, with an injectable route for tests.
+- ride.js: separate damped suspension and restrained-load response, reading but never changing driving state.
 - vehicle.js / world.js: original procedural models, materials, and environment helpers.
 - gamepad.js: device detection, calibration, saved mappings, and controller input.
 - engine-sample.js / audio.js: bundled engine recording, brake/road/impact layers, mute, volume and lifecycle.

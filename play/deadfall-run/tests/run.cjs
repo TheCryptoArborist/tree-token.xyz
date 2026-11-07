@@ -115,7 +115,7 @@ const context = vm.createContext({ THREE: { ...THREE, WebGLRenderer: Renderer },
   document, console, innerWidth: 1440, innerHeight: 900, devicePixelRatio: 1, performance: { now: () => clock },
   requestAnimationFrame: fn => raf.push(fn), addEventListener: (name, fn) => (listeners[name] ||= []).push(fn),
   showBootError: message => failures.push(message), window: null }); context.window = context;
-for (const file of ["world.js", "vehicle.js", "gamepad.js", "collision.js", "effects.js", "engine-sample.js", "audio.js"]) vm.runInContext(fs.readFileSync(path.join(base, file), "utf8"), context, { filename: file });
+for (const file of ["world.js", "ride.js", "vehicle.js", "gamepad.js", "collision.js", "effects.js", "engine-sample.js", "audio.js"]) vm.runInContext(fs.readFileSync(path.join(base, file), "utf8"), context, { filename: file });
 let contactWorld;
 test("visible forest trunks, rail segments and road hazards have solid contacts", () => {
   const scene = new THREE.Scene(), world = context.DeadfallWorld.create(scene);
