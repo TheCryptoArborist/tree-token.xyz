@@ -2,7 +2,7 @@ name: Verify Arcade monthly rewards
 on:
   pull_request:
     paths:
-      - 'netlify/functions/arcade-monthly.ts'
+      - 'netlify/monthly-functions/arcade-monthly.ts'
       - 'netlify/lib/arcade-monthly-core.ts'
       - 'scripts/arcade-monthly.js'
       - 'scripts/arcade-refresh/**'

@@ -1,6 +1,6 @@
 import {test} from 'node:test';import assert from 'node:assert/strict';import {bcs} from '@mysten/sui/bcs';
 import {AMOUNT,TREE_TYPE,RECIPIENT,memoFor,verifyRecoveryPayment} from '../netlify/lib/arcade-monthly-core.ts';
-import {createMonthlyHandler} from '../netlify/functions/arcade-monthly.ts';
+import {createMonthlyHandler} from '../netlify/monthly-functions/arcade-monthly.ts';
 const wallet='0x'+'a'.repeat(64),digest='1'.repeat(44),now=Date.now();
 const intent={id:'11111111-1111-4111-8111-111111111111',wallet,dateKey:'2026-11-01',createdAt:new Date(now-10000).toISOString(),expiresAt:new Date(now+600000).toISOString()};
 function transaction(){return {$kind:'Transaction',Transaction:{digest,status:{success:true},timestampMs:now,checkpoint:'123',transaction:{sender:wallet,inputs:[{Pure:{bytes:bcs.vector(bcs.u8()).serialize([...new TextEncoder().encode(memoFor(intent))]).toBase64()}}],commands:[{MoveCall:{package:'0x1',module:'string',function:'utf8',typeArguments:[],arguments:[{Input:0}]}}]},balanceChanges:[{coinType:TREE_TYPE,address:wallet,amount:(-AMOUNT).toString()},{coinType:TREE_TYPE,address:RECIPIENT,amount:AMOUNT.toString()}]}};}

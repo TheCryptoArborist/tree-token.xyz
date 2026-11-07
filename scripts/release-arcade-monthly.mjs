@@ -31,7 +31,7 @@ function candidateBackend(actual,expected){
 }
 const RUNTIME_FIELDS = ['branch', 'context', 'functions_region', 'functions_region_overrides',
   'database_branch_id', 'blobs_region', 'framework', 'edge_functions_present', 'server', 'database_migrations'];
-const SOURCE_PATHS = ['production/arcade-refresh-static/index.html','scripts/arcade-refresh/arcade-daily-growth.js','styles/arcade-checkin-refresh.css','scripts/arcade-monthly.js','assets/arcade/arcade-recovery-wallet.js','netlify/functions/arcade-monthly.ts','netlify/lib/arcade-monthly-core.ts','vendor/arcade-monthly/package.json','vendor/arcade-monthly/package-lock.json','scripts/release-arcade-monthly.mjs'];
+const SOURCE_PATHS = ['production/arcade-refresh-static/index.html','scripts/arcade-refresh/arcade-daily-growth.js','styles/arcade-checkin-refresh.css','scripts/arcade-monthly.js','assets/arcade/arcade-recovery-wallet.js','netlify/monthly-functions/arcade-monthly.ts','netlify/lib/arcade-monthly-core.ts','vendor/arcade-monthly/package.json','vendor/arcade-monthly/package-lock.json','scripts/release-arcade-monthly.mjs'];
 const sha1 = bytes => crypto.createHash('sha1').update(bytes).digest('hex');
 const eq = (a, b, label) => assert.equal(canonical(a), canonical(b), `${label} changed; stop.`);
 const sortBy = (rows, field) => [...rows].sort((a, b) => a[field].localeCompare(b[field]));
