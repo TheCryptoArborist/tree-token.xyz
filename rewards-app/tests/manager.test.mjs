@@ -104,3 +104,12 @@ test('concurrent tabs cannot enter the same payment lock and the lock releases a
   release(); await first;
   assert.equal(await withDistributionLock('concurrent-test', async () => 'ready'), 'ready');
 });
+
+test('BOOM registry uses the verified contract and six-decimal budget precision', () => {
+  const boom = registry.REGISTERED_REWARD_TOKENS.find(token => token.tokenId === 'boom');
+  assert.equal(boom.coinType, '0x3766e534b5dc6cdb7defd998debf19f72565f4a7b8224e36b050f690b71a8819::boom::BOOM');
+  assert.equal(boom.decimals, 6);
+  assert.equal(boom.isActive, true);
+  assert.equal(parseRewardBudget('1.000001', boom.decimals), 1000001n);
+  assert.throws(() => parseRewardBudget('1.0000001', boom.decimals));
+});
