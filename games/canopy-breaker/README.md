@@ -11,12 +11,12 @@ host has its production saved-game migration applied and gameplay enabled.
 The arcade release preserves all 43 existing function records, five schedules,
 other static files, runtime configuration and site environment records.
 
-All 125 automated tests, the build and hosted database/access checks pass.
+All 151 automated tests, the build and hosted database/access checks pass.
 Peter reported successful live gameplay and a 20,000 TREE restart. The score
 carryover and navigation update also repairs earlier paid score resets on load.
 Score recovery in the user’s wallet, mobile wallet round trips and physical NES
 controller acceptance still await confirmation. See
-`docs/production-new-game-2026-11-07.json` for the current host release
+`docs/production-pause-auth-2026-11-07.json` for the current host release
 and `docs/production-release-2026-11-07.json` for the preserved arcade integration.
 
 ## Play
@@ -35,6 +35,11 @@ and `docs/production-release-2026-11-07.json` for the preserved arcade integrati
   Disconnect pauses the run; reconnect requires released controls and an explicit
   resume. Physical NES hardware and iPhone wallet app round trips still require
   real-device testing.
+- Pauses explain their trigger: manual, focus/tab change, save backlog, controller
+  change/setup, leaderboard or checkout. Resume waits for all queued inputs to save,
+  then holds the seed for a three-second countdown; a gold aim marker shows the
+  chosen target without moving the frozen branch. Hiding the tab or opening a
+  dialog cancels that countdown and requires a fresh resume.
 - Original canvas art, event sounds, reduced-motion support and fullscreen.
 - Carved wooden relics replace letter tiles: growing branch, root-held acorn,
   flame seed, twin thorns, seedburst, speed chevrons, binding roots and a wind
@@ -44,6 +49,10 @@ and `docs/production-release-2026-11-07.json` for the preserved arcade integrati
   The field guide and pickup notices share the same icons and explain the effect.
 
 ## Access and restart rules
+
+The entry button opens the existing wallet picker as **Connect Wallet**, then
+becomes **Verify NFTree** to invoke the same free personal-message sign-in as the
+access panel. Fullscreen exits when needed to show those controls.
 
 Sui Mainnet personal-message signature plus NFTree ownership (direct and
 controlled standard/personal Kiosks) grants access. Sign-in is not a payment.

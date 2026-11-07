@@ -15,3 +15,10 @@
 
 /* Keep both game-over choices visible in a short fullscreen playfield. */
 @media(max-width:600px),(max-height:760px){.overlay.gameover-choices{padding:14px;align-items:flex-start;overflow-y:auto}.gameover-choices .overlay-inner{margin-block:auto}.gameover-choices .seal{display:none}.gameover-choices .eyebrow{margin-bottom:7px}.gameover-choices h2{font-size:34px;margin:8px 0 12px}.gameover-choices p:not(.eyebrow){font-size:11px;line-height:1.45}.gameover-choices button{min-width:0;width:min(100%,280px);margin-top:11px;padding:11px}.gameover-choices #overlay-note{margin-top:12px;line-height:1.45}}
+
+/* Keep the seed and branch visible while a paused run saves or counts down. */
+.overlay.pause-state{align-items:flex-start;padding:18px;background:linear-gradient(#031513a6,transparent 65%)}
+.pause-state .overlay-inner{max-width:360px;padding:16px 20px;background:#061d18ed;border:1px solid #426b54;border-radius:12px}
+.pause-state .seal{display:none}.pause-state .eyebrow{margin-bottom:8px}.pause-state h2{font-size:34px;margin:8px 0 12px}
+.pause-state p:not(.eyebrow){font-size:12px;line-height:1.5}.pause-state button{margin-top:12px;padding:11px;min-width:200px}.pause-state #overlay-note{margin-top:12px;line-height:1.4}
+@media(max-width:460px),(max-height:650px){.overlay.pause-state{padding:10px}.pause-state .overlay-inner{padding:12px 15px}.pause-state h2{font-size:28px}.pause-state p:not(.eyebrow){font-size:10px}.pause-state #overlay-note{font-size:9px;margin-top:8px}.pause-state button{padding:9px;margin-top:8px}.pause-state .eyebrow{font-size:8px}}
