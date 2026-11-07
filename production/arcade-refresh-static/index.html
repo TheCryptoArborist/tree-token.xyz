@@ -27,6 +27,15 @@
   <link rel="stylesheet" href="/styles/tree-arcade-suite.css">
   <link rel="stylesheet" href="/styles/tree-arcade-new-cabinets.css">
   <link rel="stylesheet" href="/styles/arcade-checkin-refresh.css">
+  <style id="arcade-centered-welcome">
+    .arcade-suite .suite-hero.suite-hero--compact { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; text-align:center; padding:16px 20px 20px; min-height:0; }
+    .arcade-suite .suite-hero--compact .suite-hero-art { position:static; width:min(100%,280px); height:auto; max-height:none; aspect-ratio:1200 / 630; object-fit:contain; margin:0 auto; }
+    .arcade-suite .suite-hero--compact .suite-hero-copy { width:100%; max-width:700px; margin:0 auto; padding:0; text-align:center; }
+    .arcade-suite .suite-hero--compact .suite-eyebrow { margin:0 0 4px; font-size:10px; }
+    .arcade-suite .suite-hero--compact h1 { margin:0; font-size:clamp(30px,4vw,44px); line-height:1.08; }
+    .arcade-suite .suite-hero--compact .suite-intro { margin:6px auto 0; max-width:100%; font-size:15px; line-height:1.4; }
+    @media(max-width:600px) { .arcade-suite .suite-hero.suite-hero--compact {padding:14px 12px 18px; gap:9px;} .arcade-suite .suite-hero--compact .suite-hero-art {width:min(100%,250px);} }
+  </style>
 </head>
 <body class="arcade-suite">
   <a class="skip-link" href="#cabinets">Skip to the games</a>
@@ -51,11 +60,8 @@
       <div class="suite-hero-copy">
         <p class="suite-eyebrow">BATTLE. GROW. DEFEND THE CANOPY.</p>
         <h1 id="arcade-title"><span>TREE</span> ARCADE</h1>
-        <p class="suite-intro">Pick a game. Bring your NFTree. Let the adventure begin.</p>
-        <div class="suite-hero-actions">
-          <a class="suite-primary" href="#cabinets">Choose a game <span aria-hidden="true">↓</span></a>
-          <a class="suite-secondary" href="https://nftree.net/mint#mint" data-nftree-mint aria-controls="nftree-mint-panel" aria-expanded="false">Get an NFTree <span aria-hidden="true">→</span></a>
-        </div>
+        <p class="suite-intro">Your NFTree. A whole arcade of adventure.</p>
+
       </div>
     </section>
 
