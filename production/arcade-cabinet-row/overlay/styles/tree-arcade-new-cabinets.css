@@ -1,0 +1,20 @@
+/* Second row: Canopy Breaker followed by three reserved cabinets. */
+.poster-grid--new { margin-top:22px; }
+.poster--breaker { --poster-accent:#7ef3a0; --poster-rgb:126,243,160; --poster-tint:#153429; }
+.breaker-artwork { overflow:hidden; background:radial-gradient(ellipse at 50% 55%,#16524488,transparent 70%),#060d19; }
+.breaker-artwork::before { content:""; position:absolute; inset:37px 27px 32px; border-left:2px solid #67dec666; border-right:2px solid #67dec666; transform:perspective(300px) rotateX(9deg); }
+.breaker-game-art { position:absolute; left:50%; top:36px; width:auto; height:calc(100% - 66px); max-width:calc(100% - 54px); transform:translateX(-50%); border:2px solid #64d2b78c; border-radius:5px; box-shadow:0 0 18px #3fe4b72a; object-fit:contain; }
+.poster-grid--new .poster-details { flex:1; }
+.poster-grid--new .poster-facts { font-size:11px; line-height:1.6; color:#bde7cb; }
+.poster--reserved { --poster-accent:#c2bd91; --poster-rgb:194,189,145; --poster-tint:#27332d; }
+.poster--reserved:hover { transform:none; border-color:rgba(var(--poster-rgb),.25); box-shadow:0 9px 24px #0003; }
+.poster-reserved { cursor:default; }
+.reserved-artwork { overflow:hidden; background:radial-gradient(ellipse at 50% 45%,#35483766,transparent 67%),#0d1720; }
+.reserved-mark { position:absolute; width:132px; height:132px; object-fit:contain; left:50%; top:50%; transform:translate(-50%,-51%); opacity:.13; filter:grayscale(.4); }
+.reserved-screen { position:absolute; inset:52px 24px 42px; display:flex; align-items:center; justify-content:center; border:1px solid #c2bd9138; border-radius:8px; text-align:center; color:#d6d5bc; font:800 20px/1.35 var(--suite-sans,system-ui); letter-spacing:.09em; text-shadow:0 0 15px #c6e29033; }
+.status-tag--soon { color:#dbd7b6; border-color:#c2bd9147; background:#272a21; }
+.poster--reserved .poster-title { color:#d8decf; }
+.poster--reserved .poster-description { color:#a7b6b3; }
+.poster--reserved .reserved-cta { color:#c2c7b4; border-color:#c2bd912b; justify-content:center; }
+@media(max-width:1100px) { .poster-grid--new { margin-top:23px; } }
+@media(max-width:700px) { .poster-grid--new { margin-top:18px; } }
