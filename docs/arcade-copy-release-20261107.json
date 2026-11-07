@@ -1,0 +1,32 @@
+{
+  "mode": "publish",
+  "result": "passed",
+  "checkedAt": "2026-11-07T22:32:03.705Z",
+  "baselineId": "6aefa42ab573235ac16ff8db",
+  "candidateId": "6aefa674d411d9726d8a4283",
+  "sourceCommit": "1584e7923d4697eb8be46e554835ee4ab4370101",
+  "sourceBranch": "feature/arcade-copy-release",
+  "staticFiles": 359,
+  "changedOriginals": [
+    "/play/index.html",
+    "/scripts/arcade-monthly.js"
+  ],
+  "addedPaths": [],
+  "functionsPreserved": 45,
+  "schedulesPreserved": 5,
+  "planSha256": "01d9c501197625b9bfc69bfa6be5cc26df7496c5bcc7c8f73f2b1c6446f27ce0",
+  "productionChanged": true,
+  "url": "https://6aefa674d411d9726d8a4283--tree-token.netlify.app/",
+  "releaseState": {
+    "schemaVersion": 1,
+    "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
+    "id": "6aefa674d411d9726d8a4283",
+    "baselineId": "6aefa42ab573235ac16ff8db",
+    "sourceCommit": "1584e7923d4697eb8be46e554835ee4ab4370101",
+    "planSha256": "01d9c501197625b9bfc69bfa6be5cc26df7496c5bcc7c8f73f2b1c6446f27ce0",
+    "requestStartedAt": "2026-11-07T22:30:12.293Z",
+    "candidateCreatedAt": "2026-11-07T22:30:12.443Z",
+    "verifiedAt": "2026-11-07T22:32:03.705Z",
+    "publishedAt": "2026-11-07T22:32:03.704Z"
+  }
+}
