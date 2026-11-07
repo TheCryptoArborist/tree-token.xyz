@@ -1,0 +1,23 @@
+{
+  "source": "Canopy-Breaker-First-Playable.html",
+  "source_version": 7,
+  "source_sha256": "06f055aa995c4588f4c7f886cd88cd1e003e8d96b4ade5fa225c802a73ac5b1f",
+  "assets": {
+    "blocks.png": {
+      "sha256": "9080fda7f37b77e0bd26f585b30caf86bf7bf0e26e083a4c3ce76e0e48c506a7",
+      "size": 698502
+    },
+    "gateway.png": {
+      "sha256": "10bdff390f90d95ed000f29b3f60ca0e37dc33c782d030063c76c4f1841434c1",
+      "size": 2009327
+    },
+    "pickups.png": {
+      "sha256": "969349b4d4e605485eefbc520709d75f51073cd81dbc9614ef51bd16fc505908",
+      "size": 874777
+    },
+    "worlds.png": {
+      "sha256": "b54fe157b4f150945bc90f07eadb622aeb67b0c1a3c16e0bf39326303610871b",
+      "size": 2686925
+    }
+  }
+}

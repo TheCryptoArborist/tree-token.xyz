@@ -9,10 +9,17 @@ import {createSignedInspector} from '../../server/payments/signed.mjs';
 import {transactionDatabase} from '../../server/payments/database.mjs';
 import {createGameService} from '../../server/game-service.mjs';
 import {createGameHTTP} from '../../server/http.mjs';
+import {canonicalProductionRequest} from '../../server/canonical-production.mjs';
+import {databaseHealth} from '../../server/health.mjs';
 import sources from '../../server/runtime-source.json' with {type:'json'};
 const prefix='/play/canopy-breaker/',cookie='__Secure-breaker-session';
 const client=new SuiGrpcClient({network:'mainnet',baseUrl:'https://fullnode.mainnet.sui.io:443'});
 export default async request=>{
+ request=canonicalProductionRequest(request);if(!request)return new Response('Not found',{status:404,headers:{'Cache-Control':'no-store'}});
+ if(new URL(request.url).pathname===prefix+'api/health'){
+  if(request.method!=='GET')return new Response('Method not allowed',{status:405});
+  try{return await databaseHealth(transactionDatabase());}catch{return Response.json({ready:false},{status:503,headers:{'Cache-Control':'private, no-store'}});}
+ }
  const store=getDeployStore({name:'breaker-access-v1',consistency:'strong'});
  if(new URL(request.url).pathname!==prefix+'api/game')return createAccessHandler({store,sources,prefix,cookieName:cookie})(request);
  let checked=null;
@@ -25,4 +32,4 @@ export default async request=>{
  let instance;const service=new Proxy({}, {get:(_,method)=>async(...args)=>{if(!instance)instance=createGameService({database:transactionDatabase(),authorize,reader:createTreeReader(client),inspectSigned:createSignedInspector(client),executeSigned:async(signed,digest)=>{const result=await client.executeTransaction({transaction:fromBase64(signed.bytes),signatures:[signed.signature]});if(result.$kind==='FailedTransaction'||result.Transaction.digest!==digest)throw Error('Payment submission could not be confirmed');await client.waitForTransaction({digest,signal:AbortSignal.timeout(20000)});}});return instance[method](...args);}});
  return createGameHTTP({service,authorize,enabled:process.env.BREAKER_ENABLED==='true'})(request);
 };
-export const config={path:['/play/canopy-breaker/api/access','/play/canopy-breaker/api/game','/play/canopy-breaker/src/*'],rateLimit:{action:'rate_limit',aggregateBy:['domain','ip'],windowSize:60,windowLimit:180}};
+export const config={path:['/play/canopy-breaker/api/access','/play/canopy-breaker/api/game','/play/canopy-breaker/api/health','/play/canopy-breaker/src/*'],rateLimit:{action:'rate_limit',aggregateBy:['domain','ip'],windowSize:60,windowLimit:180}};

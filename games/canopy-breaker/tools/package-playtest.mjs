@@ -2,7 +2,8 @@ import fs from 'node:fs';import path from 'node:path';import {execFileSync} from
 import {build} from 'esbuild';
 const output=path.resolve(process.argv[2]||'../../../Canopy-Breaker-First-Playable.html');
 const read=p=>fs.readFileSync(p,'utf8');
-const result=await build({entryPoints:['tools/local-test.mjs'],bundle:true,write:false,platform:'browser',format:'esm',target:'es2022'});
+const inlineArt={name:'offline-art',setup(b){b.onLoad({filter:/\.js$/},args=>({contents:read(args.path).replace(/\/play\/canopy-breaker\/assets\/([a-z]+\.png)/g,(_,name)=>`data:image/png;base64,${fs.readFileSync('public/assets/'+name).toString('base64')}`),loader:'js'}));}};
+const result=await build({entryPoints:['tools/local-test.mjs'],bundle:true,write:false,platform:'browser',format:'esm',target:'es2022',plugins:[inlineArt]});
 const code=result.outputFiles[0].text;
 const temp=fs.mkdtempSync(path.join(os.tmpdir(),'breaker-parse-')),check=path.join(temp,'playtest.mjs');fs.writeFileSync(check,code);execFileSync(process.execPath,['--check',check]);fs.rmSync(temp,{recursive:true});
 let html=read('public/index.html');const css=read('dist/style.css').replace(/^@import[^\n]*\n/,'').replace('url("./forest.svg")',`url("data:image/svg+xml;base64,${fs.readFileSync('dist/forest.svg').toString('base64')}")`);

@@ -1,30 +1,91 @@
-import {BLOCK_STYLES,TREE_PALETTE} from './theme.js';
-const outline=(w,h,i=0)=>`M${6+i} ${i}H${w-6-i}L${w-i} ${5+i}V${h-5-i}L${w-6-i} ${h-i}H${6+i}L${i} ${h-5-i}V${5+i}Z`;
-const cache=new Map();
-function shape(d){if(!cache.has(d))cache.set(d,new Path2D(d));return cache.get(d);}
-const emblem='M0 6V-3M0 0C-9-2-9-9-1-6C0-5 0-3 0 0M0-3C1-10 10-10 8-4C7-1 3 0 0 0';
-export function drawBlock(c,b){
- const p=BLOCK_STYLES[b.kind%BLOCK_STYLES.length],w=b.w,h=b.h,face=shape(outline(w,h));
- c.save();c.translate(b.x,b.y);
- c.save();c.translate(0,4);c.fillStyle='#0008';c.fill(face);c.restore();
- c.save();c.translate(0,2);c.fillStyle=p.deep;c.fill(face);c.restore();
- const fill=c.createLinearGradient(0,0,0,h);fill.addColorStop(0,p.top);fill.addColorStop(.13,p.light);fill.addColorStop(.5,p.face);fill.addColorStop(1,p.base);
- c.fillStyle=fill;c.fill(face);c.strokeStyle=p.edge;c.lineWidth=1.3;c.stroke(face);
- c.save();c.clip(face);
- c.strokeStyle='#001b2580';c.lineWidth=1;
- for(let i=0;i<3;i++){const y=6+i*7;c.beginPath();c.moveTo(5,y);c.bezierCurveTo(w*.19,y-4,w*.29,y+5,w*.38,y);c.moveTo(w*.64,y+1);c.bezierCurveTo(w*.77,y-3,w*.83,y+4,w-4,y-1);c.stroke();}
- c.strokeStyle='#effff5a0';c.lineWidth=1.2;c.beginPath();c.moveTo(8,3);c.lineTo(w-8,3);c.stroke();
- c.strokeStyle='#05241f99';c.beginPath();c.moveTo(6,h-3);c.lineTo(w-6,h-3);c.stroke();
- c.save();c.translate(w/2,h/2);c.fillStyle='#062027c9';c.strokeStyle=p.edge;c.lineWidth=.8;c.beginPath();c.moveTo(0,-9);c.lineTo(12,0);c.lineTo(0,9);c.lineTo(-12,0);c.closePath();c.fill();c.stroke();c.strokeStyle=p.etch;c.lineWidth=1.6;c.lineCap='round';c.stroke(shape(emblem));c.restore();
- if(b.maxHp>1){
-  c.strokeStyle=TREE_PALETTE.gold;c.lineWidth=2.2;c.beginPath();c.moveTo(9,1);c.lineTo(4,5);c.lineTo(4,h-5);c.moveTo(w-9,1);c.lineTo(w-4,5);c.lineTo(w-4,h-5);c.stroke();
-  for(let i=0;i<b.maxHp;i++){c.fillStyle=i<b.hp?'#fff3be':'#25332c';c.fillRect(w-22+i*5,h-7,3,3);}
- }
- if(b.hp<b.maxHp){c.strokeStyle='#061720';c.lineWidth=1.8;c.beginPath();c.moveTo(w*.29,0);c.lineTo(w*.24,h*.45);c.lineTo(w*.31,h*.6);c.lineTo(w*.27,h);c.stroke();c.strokeStyle='#e2ffcd8c';c.lineWidth=.6;c.stroke();}
- c.restore();c.restore();
+import {TREE_PALETTE,BLOCK_STYLES} from './theme.js';
+const BLOCK_ATLAS='/play/canopy-breaker/assets/blocks.png';
+// src/block-art.js
+function shape(d) {
+  if (!cache.has(d)) cache.set(d, new Path2D(d));
+  return cache.get(d);
 }
-// The public, non-playable background uses the same palette and silhouettes.
-export function blockSVG(b){
- const p=BLOCK_STYLES[b.kind%BLOCK_STYLES.length],id='brick-'+b.id,d=outline(b.w,b.h);
- return `<defs><linearGradient id="${id}" x2="0" y2="1"><stop stop-color="${p.top}"/><stop offset=".13" stop-color="${p.light}"/><stop offset=".5" stop-color="${p.face}"/><stop offset="1" stop-color="${p.base}"/></linearGradient></defs><g transform="translate(${b.x} ${b.y})"><path d="${d}" transform="translate(0 3)" fill="${p.deep}"/><path d="${d}" fill="url(#${id})" stroke="${p.edge}" stroke-width="1.3"/><path d="M8 3H${b.w-8}" stroke="#effff5" stroke-opacity=".6"/><g transform="translate(${b.w/2} ${b.h/2})"><path d="M0-9L12 0 0 9-12 0Z" fill="#062027" fill-opacity=".8" stroke="${p.edge}" stroke-width=".8"/><path d="${emblem}" fill="none" stroke="${p.etch}" stroke-width="1.6" stroke-linecap="round"/></g></g>`;
+function loadBlockArt() {
+  if (loading2) return loading2;
+  loading2 = new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      atlas2 = img;
+      resolve();
+    };
+    img.onerror = () => reject(new Error("The illustrated blocks could not load. Reload to retry."));
+    img.src = BLOCK_ATLAS;
+  });
+  return loading2;
 }
+function emblemBox(b) {
+  const rect = emblems[b.kind % BLOCK_STYLES.length], size = b.h - 1, scale = size / Math.max(rect[2], rect[3]);
+  const w = rect[2] * scale, h = rect[3] * scale;
+  return { rect, x: (b.w - w) / 2, y: (b.h - h) / 2, w, h };
+}
+function armor(b) {
+  if (b.maxHp <= 1) return [];
+  return [
+    { d: `M8 3H12V${b.h - 3}H8Q4 ${b.h - 3} 4 ${b.h - 7}V7Q4 3 8 3Z`, fill: TREE_PALETTE.gold, stroke: "#493314", width: 1.3 },
+    { d: `M${b.w - 12} 3H${b.w - 8}Q${b.w - 4} 3 ${b.w - 4} 7V${b.h - 7}Q${b.w - 4} ${b.h - 3} ${b.w - 8} ${b.h - 3}H${b.w - 12}Z`, fill: TREE_PALETTE.gold, stroke: "#493314", width: 1.3 }
+  ];
+}
+function drawBlock(c, b) {
+  const p = BLOCK_STYLES[b.kind % BLOCK_STYLES.length], w = b.w, h = b.h, face = shape(outline(w, h));
+  c.save();
+  c.translate(b.x, b.y);
+  c.save();
+  c.translate(0, 2);
+  c.fillStyle = p.deep;
+  c.fill(face);
+  c.restore();
+  const fill = c.createLinearGradient(0, 0, 0, h);
+  fill.addColorStop(0, p.light);
+  fill.addColorStop(0.45, p.face);
+  fill.addColorStop(1, p.base);
+  c.fillStyle = fill;
+  c.fill(face);
+  c.strokeStyle = "#031b23";
+  c.lineWidth = 2;
+  c.stroke(face);
+  c.strokeStyle = p.top;
+  c.lineWidth = 2;
+  c.lineCap = "round";
+  c.beginPath();
+  c.moveTo(9, 4);
+  c.lineTo(w - 9, 4);
+  c.stroke();
+  const icon = emblemBox(b);
+  if (atlas2) {
+    c.imageSmoothingEnabled = true;
+    c.imageSmoothingQuality = "high";
+    c.drawImage(atlas2, ...icon.rect, icon.x, icon.y, icon.w, icon.h);
+  }
+  for (const part of armor(b)) {
+    c.fillStyle = part.fill;
+    c.strokeStyle = part.stroke;
+    c.lineWidth = part.width;
+    c.fill(shape(part.d));
+    c.stroke(shape(part.d));
+  }
+  if (b.maxHp > 1) for (let i = 0; i < b.maxHp; i++) {
+    c.beginPath();
+    c.arc(w - 22 + i * 5, h - 6, 1.5, 0, Math.PI * 2);
+    c.fillStyle = i < b.hp ? "#fff3be" : "#24332c";
+    c.fill();
+  }
+  if (b.hp < b.maxHp) {
+    c.strokeStyle = "#032027";
+    c.lineWidth = 2;
+    c.stroke(shape(crack(b)));
+  }
+  c.restore();
+}
+var emblems, outline, cache, atlas2, loading2, crack;
+emblems = [[119, 112, 505, 566], [863, 63, 446, 619], [1551, 45, 518, 649]];
+outline = (w, h) => `M7 1H${w - 7}Q${w - 1} 1 ${w - 1} 7V${h - 7}Q${w - 1} ${h - 1} ${w - 7} ${h - 1}H7Q1 ${h - 1} 1 ${h - 7}V7Q1 1 7 1Z`;
+cache = /* @__PURE__ */ new Map();
+atlas2 = null;
+loading2 = null;
+crack = (b) => `M${b.w * 0.28} 1L${b.w * 0.23} ${b.h * 0.42}L${b.w * 0.31} ${b.h * 0.59}L${b.w * 0.26} ${b.h - 1}`;
+export {loadBlockArt, drawBlock};

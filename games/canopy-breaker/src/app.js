@@ -2,7 +2,9 @@ import {step,PICKUPS,BIOMES} from './engine.js';
 import {draw} from './art.js';
 import {sound,wakeAudio,setSound} from './audio.js';
 import {createControllerTracker,createControllerCalibration} from './controller.js';
-import {pickupIcon} from './pickup-art.js';
+import {pickupIcon,loadPickupArt} from './pickup-art.js';
+import {loadBlockArt} from './block-art.js';
+import {loadBackgroundArt} from './background-art.js';
 const $=id=>document.getElementById(id),api=window.breakerSession,canvas=$('game'),ctx=canvas.getContext('2d');
 let run=null,queue=[],sending=null,paused=false,connected=!!api.account,clock=0,last=performance.now(),target=400,launch=false,fire=false,events=0,syncError='',muted=false,opening=null,quote=null,buying=false,gameRevision=0;
 const keys=new Set(),motion=!matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -82,4 +84,5 @@ function frame(time){
  paint();requestAnimationFrame(frame);
 }
 const guide=$('pickups');for(const p of PICKUPS){const row=document.createElement('div'),copy=document.createElement('div'),name=document.createElement('strong'),detail=document.createElement('span');name.textContent=p.name+(p.good?'':' · hazard');detail.textContent=p.description;copy.append(name,detail);row.append(pickupIcon(p.id,{size:52}),copy);guide.append(row);}
+await Promise.all([loadPickupArt(),loadBlockArt(),loadBackgroundArt()]);
 await open();requestAnimationFrame(frame);
