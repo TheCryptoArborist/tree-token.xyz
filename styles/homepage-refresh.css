@@ -46,3 +46,4 @@
  .home-featured .simple-utility-heading{display:block}.home-section-link{display:inline-flex;margin-top:8px;gap:10px}
 }
 @media(prefers-reduced-motion:reduce){.home-game{transition:none}.home-game:hover{transform:none}}
+.home-refreshed .simple-hero-actions .simple-destination-copy small{color:#a9bac5;text-shadow:none}
