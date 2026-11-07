@@ -1,5 +1,10 @@
 const headers={'Cache-Control':'private, no-store','Vary':'Cookie','X-Content-Type-Options':'nosniff'};
-const fields={open:[],frames:['id','revision','inputs'],next:[],quote:[],bind:['id','signed'],submit:['id'],redeem:['id'],cancel:['id'],reconcile:['id']};
+const fields={open:[],frames:['id','revision','inputs'],next:[],quote:[],bind:['id','signed'],submit:['id'],redeem:['id'],cancel:['id'],reconcile:['id'],profile:[],setUsername:['username']};
+export function createLeaderboardHTTP({service,report=console.error}){return async req=>{
+ if(req.method!=='GET')return Response.json({error:'Method not allowed'},{status:405,headers:{...headers,Allow:'GET'}});
+ try{return Response.json(await service.leaderboard(),{headers});}
+ catch{report({event:'breaker-leaderboard-error'});return Response.json({error:'The leaderboard is temporarily unavailable. Please retry.'},{status:503,headers});}
+};}
 export function createGameHTTP({service,authorize,enabled=false,report=console.error}){return async req=>{
  const reply=(data,status=200)=>Response.json(data,{status,headers});
  try{

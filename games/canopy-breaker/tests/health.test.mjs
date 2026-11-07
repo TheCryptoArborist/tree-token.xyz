@@ -1,11 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {databaseHealth} from '../server/health.mjs';
-test('hosted readiness requires all five saved-run and payment tables', async () => {
-  for (const total of [0, 4, 5]) {
+test('hosted readiness requires saved-run, payment and both leaderboard tables', async () => {
+  for (const total of [0, 5, 6, 7]) {
     const response = await databaseHealth({query: async () => ({rows: [{total}]})});
-    assert.equal(response.status, total === 5 ? 200 : 503);
-    assert.deepEqual(await response.json(), {ready: total === 5});
+    assert.equal(response.status, total === 7 ? 200 : 503);
+    assert.deepEqual(await response.json(), {ready: total === 7});
   }
 });
 test('database readiness never exposes connection errors or credentials', async () => {

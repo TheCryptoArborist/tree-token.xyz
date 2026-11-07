@@ -1,4 +1,4 @@
-const tables = ['accounts', 'runs', 'invoices', 'receipts', 'restarts'];
+const tables = ['accounts', 'runs', 'invoices', 'receipts', 'restarts', 'player_profiles', 'leaderboard_scores'];
 export async function databaseHealth(database) {
   try {
     const result = await database.query("SELECT count(*)::integer AS total FROM information_schema.tables WHERE table_schema = 'breaker' AND table_name = ANY($1::text[])", [tables]);

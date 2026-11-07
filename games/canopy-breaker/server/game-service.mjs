@@ -3,6 +3,7 @@ import {isValidTransactionDigest} from '@mysten/sui/utils';
 import {createGame,restartGame,step,PRICE} from '../src/engine.js';
 import {TREE_PAYMENT_RECIPIENT} from './payments/config.mjs';
 import {TREE_TYPE,treeAmount} from './payments/tree.mjs';
+import {recordBestScore} from './leaderboard.mjs';
 const uuid=v=>typeof v==='string'&&/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/.test(v);
 const fail=(text,status=400)=>Object.assign(Error(text),{status});
 const pack=r=>({id:r.id,revision:r.revision,state:r.state});
@@ -24,21 +25,22 @@ export function createGameService({database:db,authorize,reader,inspectSigned,ex
   const {rows}=await tx.query('UPDATE breaker.runs SET state=$1,revision=revision+1 WHERE id=$2 AND wallet=$3 RETURNING *',[JSON.stringify(state),run.id,a.address]);return rows[0];
  }
  async function current(tx,a){const acct=await lock(tx,a);if(!acct.current_run)return null;const {rows}=await tx.query('SELECT * FROM breaker.runs WHERE id=$1 AND wallet=$2 FOR UPDATE',[acct.current_run,a.address]);return rows[0]?restoreCarriedScore(tx,a,rows[0]):null;}
- async function fresh(tx,a,previous=null){const id=randomUUID(),state=previous?restartGame(previous,seed()):createGame(seed());const {rows}=await tx.query('INSERT INTO breaker.runs(id,wallet,state,updated_at) VALUES($1,$2,$3,$4) RETURNING *',[id,a.address,JSON.stringify(state),now()]);await tx.query('UPDATE breaker.accounts SET current_run=$1 WHERE wallet=$2',[id,a.address]);return pack(rows[0]);}
+ async function ranked(tx,a,run){await recordBestScore(tx,a.address,run,Number(run.updated_at));return pack(run);}
+ async function fresh(tx,a,previous=null){const id=randomUUID(),state=previous?restartGame(previous,seed()):createGame(seed());const {rows}=await tx.query('INSERT INTO breaker.runs(id,wallet,state,updated_at) VALUES($1,$2,$3,$4) RETURNING *',[id,a.address,JSON.stringify(state),now()]);await tx.query('UPDATE breaker.accounts SET current_run=$1 WHERE wallet=$2',[id,a.address]);return ranked(tx,a,rows[0]);}
  async function owned(tx,a,id){if(!uuid(id))throw fail('Invalid invoice');const {rows}=await tx.query('SELECT * FROM breaker.invoices WHERE id=$1 AND wallet=$2 FOR UPDATE',[id,a.address]);if(!rows[0])throw fail('Invoice not found',404);return rows[0];}
  return Object.freeze({
-  async open(ctx){const a=await holder(ctx);return db.transaction(async tx=>{const r=await current(tx,a);return r?pack(r):fresh(tx,a);});},
+  async open(ctx){const a=await holder(ctx);return db.transaction(async tx=>{const r=await current(tx,a);return r?ranked(tx,a,r):fresh(tx,a);});},
   async frames(ctx,{id,revision,inputs}){
    if(!uuid(id)||!Number.isSafeInteger(revision)||revision<0||!Array.isArray(inputs)||!inputs.length||inputs.length>120||inputs.some(i=>!i||Object.keys(i).some(k=>!['x','launch','fire'].includes(k))||!Number.isFinite(i.x)||i.x<0||i.x>800||typeof i.launch!=='boolean'||typeof i.fire!=='boolean'))throw fail('Invalid game inputs');
    const a=await holder(ctx);return db.transaction(async tx=>{
     const r=await current(tx,a);if(!r||r.id!==id)throw fail('This run is no longer active',409);
-    if(r.revision!==revision)return {...pack(r),resync:true};
+    if(r.revision!==revision)return {...await ranked(tx,a,r),resync:true};
     const budget=Math.min(180,r.credit+Math.floor(Math.max(0,now()-Number(r.updated_at))*60/1000));if(inputs.length>budget)throw fail('Game clock is ahead. Pause and reconnect.',429);
     for(const input of inputs)step(r.state,input);
-    const {rows}=await tx.query('UPDATE breaker.runs SET state=$1,revision=revision+1,updated_at=$2,credit=$3 WHERE id=$4 RETURNING *',[JSON.stringify(r.state),now(),budget-inputs.length,id]);return pack(rows[0]);
+    const {rows}=await tx.query('UPDATE breaker.runs SET state=$1,revision=revision+1,updated_at=$2,credit=$3 WHERE id=$4 RETURNING *',[JSON.stringify(r.state),now(),budget-inputs.length,id]);return ranked(tx,a,rows[0]);
    });
   },
-  async next(ctx){const a=await holder(ctx);return db.transaction(async tx=>{const r=await current(tx,a);if(r?.state.status!=='won')throw fail('Finish this run first');return fresh(tx,a);});},
+  async next(ctx){const a=await holder(ctx);return db.transaction(async tx=>{const r=await current(tx,a);if(r?.state.status!=='won')throw fail('Finish this run first');await recordBestScore(tx,a.address,r,Number(r.updated_at));return fresh(tx,a);});},
   async history(ctx){const a=await holder(ctx);const {rows}=await db.query('SELECT * FROM breaker.invoices WHERE wallet=$1 ORDER BY created_at DESC LIMIT 30',[a.address]);return rows.map(invoice);},
   async quote(ctx){const a=await holder(ctx);if(a.address===TREE_PAYMENT_RECIPIENT)throw fail('Self-payment is not a purchase');const decimals=await reader.decimals();return db.transaction(async tx=>{
    const r=await current(tx,a);if(!r||r.state.status!=='gameover'||r.state.lives!==0)throw fail('Restarts are available after all three lives are lost');
@@ -53,10 +55,11 @@ export function createGameService({database:db,authorize,reader,inspectSigned,ex
    const proof=first.status==='bound'?await reader.receipt(invoice(first),()=>now(),{allowLateRecovery:true}):null;await holder(ctx);
    return db.transaction(async tx=>{
     await lock(tx,a);const r=await owned(tx,a,id);
-    if(r.status==='paid'){const result=await tx.query('SELECT r.* FROM breaker.restarts p JOIN breaker.runs r ON r.id=p.new_run WHERE p.invoice_id=$1 AND r.wallet=$2',[id,a.address]);if(!result.rows[0])throw Error('Paid restart missing');return {...pack(await restoreCarriedScore(tx,a,result.rows[0])),applied:false};}
+    if(r.status==='paid'){const result=await tx.query('SELECT r.* FROM breaker.restarts p JOIN breaker.runs r ON r.id=p.new_run WHERE p.invoice_id=$1 AND r.wallet=$2',[id,a.address]);if(!result.rows[0])throw Error('Paid restart missing');return {...await ranked(tx,a,await restoreCarriedScore(tx,a,result.rows[0])),applied:false};}
     if(r.status!=='bound'||!proof||proof.digest!==r.expected_digest||proof.wallet!==a.address||proof.recipient!==TREE_PAYMENT_RECIPIENT||proof.coinType!==TREE_TYPE||proof.amount!==String(r.amount)||!/^\d+$/.test(proof.checkpoint)||!Number.isSafeInteger(proof.timestampMs)||proof.timestampMs<Number(r.created_at)||proof.timestampMs>now()||(proof.timestampMs>=Number(r.expires_at)&&!(Number(r.bound_at)>=Number(r.created_at)&&Number(r.bound_at)<Number(r.expires_at))))throw fail('Receipt does not match this restart');
     const run=await current(tx,a);if(!run||run.id!==r.run_id||run.state.status!=='gameover')throw fail('This defeat is no longer current',409);
     await tx.query('INSERT INTO breaker.receipts(digest,invoice_id,checkpoint,timestamp_ms) VALUES($1,$2,$3,$4)',[proof.digest,id,proof.checkpoint,proof.timestampMs]);
+    await recordBestScore(tx,a.address,run,Number(run.updated_at));
     const next=await fresh(tx,a,run.state);await tx.query('INSERT INTO breaker.restarts(invoice_id,new_run) VALUES($1,$2)',[id,next.id]);await tx.query("UPDATE breaker.invoices SET status='paid',paid_at=$1 WHERE id=$2",[now(),id]);if(a.expiresAt<=now())throw fail('Session expired; reconnect to recover your payment',401);return {...next,applied:true};
    });
   },

@@ -32,6 +32,7 @@ window.breakerSession=Object.freeze({
  pay:invoice=>flow.pay(invoice),recover:id=>flow.recover(id),resume:id=>flow.resume(id),
  async cancel(id){const r=await request('cancel',{id});flow.clearUnsigned(id);return r;},async reconcile(id){const r=await request('reconcile',{id});flow.clearUnsigned(id);return r;}
 });
+window.dispatchEvent(new Event('breaker-ready'));
 $('primary').onclick=()=>window.breakerSession.openAuth();
 $('disconnect').onclick=async()=>{revision++;lock('Wallet disconnected. Connect an NFTree holder wallet.');await post({action:'logout'}).catch(()=>{});await kit.disconnectWallet();};
 kit.stores.$connection.subscribe(c=>{const next=c.isConnected&&c.account?.chains?.includes('sui:mainnet')?c.account.address:null;if(next===address)return;address=next;revision++;$('verify').textContent='Verify NFTree';$('disconnect').hidden=!address;lock(address?'Wallet connected. Verify your NFTree to enter.':'Connect a Sui Mainnet wallet to begin.');if(address)refresh();else post({action:'logout'}).catch(()=>{});});

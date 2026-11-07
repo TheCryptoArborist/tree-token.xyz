@@ -11,7 +11,7 @@ host has its production saved-game migration applied and gameplay enabled.
 The arcade release preserves all 43 existing function records, five schedules,
 other static files, runtime configuration and site environment records.
 
-All 86 automated tests, the build and hosted database/access checks pass.
+All 108 automated tests, the build and hosted database/access checks pass.
 Peter reported successful live gameplay and a 20,000 TREE restart. The score
 carryover and navigation update also repairs earlier paid score resets on load.
 Score recovery in the user’s wallet, mobile wallet round trips and physical NES
@@ -118,3 +118,19 @@ Activation uses `BREAKER_ENABLED=true` only after the migration and isolated
 candidate pass validation. Disabled or missing backend configuration fails closed.
 Follow `docs/release-plan.md`. Do not run an ordinary root dashboard build or
 replace any existing production function to release this game.
+
+
+## Public leaderboard and usernames
+
+The public all-time board shows the top 20 named players, with one best saved
+score per wallet. Players opt in by saving a public username after NFTree
+verification; usernames are 3–20 ASCII letters, numbers, spaces, underscores or
+hyphens, beginning with a letter or number, and are unique without regard to
+case. Wallet addresses and payment/run identifiers are omitted from the board.
+
+Only replayed server checkpoints update scores. Choosing a username also
+includes the wallet's best earlier saved run, including verified historical
+paid-restart score carryover. Ties use grove, then the earliest saved achievement.
+Paid restarts and new challenges never erase the best score. The board refreshes
+automatically, on request, and after a saved defeat or campaign completion.
+Opening the leaderboard or editing a username pauses active gameplay.

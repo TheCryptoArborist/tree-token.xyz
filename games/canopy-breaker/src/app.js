@@ -17,7 +17,7 @@ async function open(){if(opening)return opening;const address=api.account?.addre
 async function flush(){
  if(sending)return sending;if(!queue.length||!run||!connected)return;
  const inputs=queue.splice(0,120),id=run.id,revision=run.revision,stamp=gameRevision;
- sending=(async()=>{try{const data=await api.request('frames',{id,revision,inputs});if(stamp!==gameRevision)return;if(data.resync){run=data;queue=[];events=run.state.eventId;toast('Saved run restored.');}else{run={...data,state:structuredClone(data.state)};for(const input of queue)step(run.state,input);}syncError='';}catch(e){if(stamp===gameRevision){queue.unshift(...inputs);syncError=e.message;paused=true;}}finally{sending=null;paint();}})();return sending;
+ sending=(async()=>{try{const data=await api.request('frames',{id,revision,inputs});if(stamp!==gameRevision)return;if(data.resync){run=data;queue=[];events=run.state.eventId;toast('Saved run restored.');}else{run={...data,state:structuredClone(data.state)};for(const input of queue)step(run.state,input);}syncError='';if(['gameover','won'].includes(data.state.status))window.dispatchEvent(new Event('breaker-score-saved'));}catch(e){if(stamp===gameRevision){queue.unshift(...inputs);syncError=e.message;paused=true;}}finally{sending=null;paint();}})();return sending;
 }
 async function checkpoint(){while(sending||queue.length){if(sending)await sending;else await flush();if(syncError)throw Error(syncError);}}
 function overlay(kicker,title,text,label,note=''){const o=$('overlay');o.hidden=false;$('overlay-kicker').textContent=kicker;$('overlay-title').textContent=title;$('overlay-text').textContent=text;$('primary').textContent=label;$('primary').disabled=false;$('overlay-note').textContent=note;}
@@ -42,6 +42,7 @@ $('primary').onclick=primary;
 $('launch').onpointerdown=e=>{e.currentTarget.setPointerCapture(e.pointerId);wakeAudio();fire=true;if(run&&['ready','cleared'].includes(run.state.status))launch=true;};
 for(const name of ['pointerup','pointercancel','lostpointercapture'])$('launch').addEventListener(name,()=>fire=false);
 function togglePause(){if(!canPause()||!connected||syncError)return;paused=!paused;if(paused)flush();paint();}
+window.addEventListener('breaker-view-leaderboard',()=>{if(!canPause()||!connected)return;paused=true;keys.clear();fire=false;flush();paint();});
 for(const link of document.querySelectorAll('.game-navigation a,.top a')){
  if(!['https://tree-token.xyz/','https://tree-token.xyz/play/'].includes(link.href)||link.target==='_blank')continue;
  link.addEventListener('click',async event=>{
