@@ -274,7 +274,7 @@ export async function main(args = process.argv.slice(2)) {
     const overlay = assembleFiles(baselineFiles, overlayFiles());
     plan = { schemaVersion: 1, siteId: SITE_ID, baselineId: BASELINE_ID, baselineSha256: fingerprint(baseline),
       baselineCreatedAt: baseline.deploy.created_at, createdAt: new Date().toISOString(), sourceCommit, sourceBranch,
-      title: `NFTree rewards BOOM registration ${sourceCommit.slice(0, 12)}; preserve 43 backend packages`,
+      title: `NFTree rewards TREE branding and BOOM ${sourceCommit.slice(0, 12)}; preserve 43 backend packages`,
       ...overlay, backend: { functions: baseline.deploy.available_functions, schedules: baseline.deploy.function_schedules, runtime: runtime(baseline.deploy) },
       environment: await protectedEnvironment(api, site) };
     await assertLiveBaseline(api, baseline, plan);
