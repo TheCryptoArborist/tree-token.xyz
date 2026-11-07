@@ -1,3 +1,13 @@
+# Current published Arcade baseline
+
+Current live deploy is 6aef9c0b5403fd6a26a1225d: **359 static paths, 45 backend functions and five schedules**. Read docs/arcade-monthly-release-20261107.json first. It supersedes the historical production inventory below. Capture the full current live inventory before every release and preserve all existing backend package/provider/runtime records and configuration.
+
+Monthly qualification requires 20 distinct UTC days of completed-result evidence; first-wave participation and paid attendance recovery do not count. Recovery costs 20,000 TREE to the existing game-fee recipient, uses a checkout-specific on-chain memo, and restores attendance only. Previously paid valid intents remain reconcilable across month rollover. Reward details remain to be announced.
+
+The isolated monthly handler is netlify/monthly-functions/arcade-monthly.ts. Dependencies and lock are vendor/arcade-monthly; package it with scripts/package-arcade-monthly.mjs and release with a newly captured baseline. Never move this handler into the historical netlify/functions inventory or rebuild the other 44 running packages as part of this feature. Frontend overlays are production/arcade-refresh-static/index.html, scripts/arcade-refresh/arcade-daily-growth.js, scripts/arcade-monthly.js, styles/arcade-checkin-refresh.css and assets/arcade/arcade-recovery-wallet.js.
+
+---
+
 # Latest published preservation baseline
 
 Read the newest section of `production/README.md` and
