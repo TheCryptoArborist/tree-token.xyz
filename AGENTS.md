@@ -1,5 +1,7 @@
 # Latest published preservation baseline
 
+Current live Arcade release is `6aef900f8a7e9faa60134a40`: **357 static paths, 44 backend functions and five schedules**. Read the newest `production/README.md` section and `production/arcade-refresh-release-20261107.json` first. Arcade overlay sources are `production/arcade-refresh-static/index.html`, `scripts/arcade-refresh/arcade-daily-growth.js` and `styles/arcade-checkin-refresh.css`. Preserve all current live files, complete backend records and configuration. Capture a new live baseline before future releases. The homepage baseline below is historical.
+
 Read the newest section of `production/README.md` and
 `production/homepage-refresh-release-20261107.json` first. Locked production deploy
 `6aef8152b93ffa0224e1f0cd` has **349 static paths, 43 backend functions and five
