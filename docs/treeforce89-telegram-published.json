@@ -1,0 +1,26 @@
+{
+  "status": "published",
+  "deployId": "6aefae6c038a955ed0dd4b70",
+  "baselineDeployId": "6aefac86952e772007c60297",
+  "sourceCommit": "091d60f692b86b0e9d2a43ea447499f7f22a0aa0",
+  "function": "treeforce89-scores",
+  "functionHash": "c516a33c22bc07989e9ed60a5165ab5eef6be1c9ee6e829969c693dde16ef736",
+  "staticFilesPreserved": 359,
+  "otherFunctionsPreserved": 44,
+  "schedulesPreserved": 5,
+  "frontendChanged": false,
+  "migrations": false,
+  "environmentChanged": false,
+  "feed": "https://tree-token.xyz/api/treeforce89-leaderboard?completions=1",
+  "scoreSavingTrigger": "Save score after a standard finished run",
+  "suinsPreferred": true,
+  "tests": {
+    "completionAndAchievement": 9,
+    "listener": 2,
+    "archivedSourceParity": 38,
+    "candidateGET": 200,
+    "unsignedPOST": 401,
+    "backendBundle": "passed",
+    "fullLocalViteBuild": "process exited 137; no frontend source changes"
+  }
+}

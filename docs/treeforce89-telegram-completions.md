@@ -25,4 +25,4 @@ records, every static digest and all five schedules, verifies the candidate, the
 checks for concurrent publication before publishing. No migrations, environment
 changes, wallet actions or frontend edits are included.
 
-Deployment status: blocked by Netlify HTTP 403, "Account credit usage exceeded - new deploys are blocked until credits are added". No candidate was created or published. The Railway listener is saved on a feature branch and has not been activated. Existing production remains unchanged.
+Deployment status: the saved-score feed is published in locked deploy `6aefae6c038a955ed0dd4b70`. The current 359 static paths, 44 other complete function records and five schedules are preserved. The canonical feed returns HTTP 200 with SuiNS names; unsigned score writes return HTTP 401. The Railway listener release follows feed publication.
