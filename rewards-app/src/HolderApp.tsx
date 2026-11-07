@@ -383,7 +383,7 @@ export function HolderApp() {
     <main className="hr-main" id="main">
       <section className="hr-intro" aria-labelledby="hr-title">
         <div className="hr-intro-copy"><p className="hr-eyebrow"><span /> THE NFTREE HOLDER BENEFIT</p><h1 id="hr-title">NFTree Rewards<span className="hr-title-dot">.</span></h1><p>Good things grow here. Collect rewards for the NFTrees you hold, all in one place.</p><div className="hr-intro-meta"><span className="hr-network"><span /> Sui Mainnet</span><span>Powered by TreeDrop</span></div></div>
-        <div className="hr-art" aria-hidden="true"><img src="/assets/profile-nftree-art.jpg" alt="" /><span className="hr-art-shade" /><span className="hr-art-caption">GROW TOGETHER.<br /><strong>SHARE THE REWARDS.</strong></span></div>
+        <div className="hr-art" aria-hidden="true"><img src="/rewards/nftree-rewards-hero.jpg" alt="" /><span className="hr-art-shade" /><span className="hr-art-caption">GROW TOGETHER.<br /><strong>SHARE THE REWARDS.</strong></span></div>
       </section>
 
       <section className="hr-reward-card" aria-labelledby="hr-reward-title" aria-busy={checking || busy}>
