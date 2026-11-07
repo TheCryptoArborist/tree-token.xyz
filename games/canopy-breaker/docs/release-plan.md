@@ -1,15 +1,27 @@
-# Pending live activation
+# Production activation and remaining acceptance
 
 Target site: `aa62f324-b880-47d6-85b8-4ba0700ff5bf`, tree-token.xyz.
 Game prefix: `/play/canopy-breaker/`.
 
-Read-only discovery observed ready production deploy
-`6aed035fb385f2f7869ac7f8` on November 5, 2026. This observation is not a verified
-complete preservation baseline. Refresh the current publication and capture
-its complete static inventory, backend records, runtime/provider configuration,
-site environment fingerprint and all five schedules before preparing a release.
-Prior work reported a baseline mismatch; do not use stale package counts or
-the historical root build manifest as the current release.
+Published November 7, 2026. Arcade deployment `6aef5d756e05b131e841a269`
+activates the cabinet and proxies the game path to isolated production host
+deployment `6aef5b8a4cf0018145d4fae5`. The saved-game migration is applied to
+the host's production database and `BREAKER_ENABLED=true` enables gameplay.
+The root release retains 302 static paths, all 43 existing function records,
+five schedules, runtime configuration and site environment records. Only the
+cabinet HTML and routing configuration changed; publication is locked.
+
+All 76 automated tests and hosted database/access checks passed. Real
+NFTree-holder gameplay, a genuine 20,000 TREE restart and same-payment recovery,
+a mobile wallet round trip and physical NES controller acceptance remain
+unverified. See `production-release-2026-11-07.json` for source and deploy
+identities, hashes and verification limits.
+
+## Original pre-launch plan (historical)
+
+The following first-release plan records the state before this activation.
+Its infrastructure and deployment steps are superseded by the release record
+above; the real-wallet and physical-device acceptance work remains outstanding.
 
 1. Establish authenticated deployment access. The connected Netlify tools can
    inspect the site but expose no deployment upload operation in this session;

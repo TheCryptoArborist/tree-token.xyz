@@ -4,12 +4,18 @@ NFTree holder brick breaker for TREE Arcade. Canonical target: `/play/canopy-bre
 
 ## Current status
 
-First playable, isolated on a feature branch. **Not published to production.**
-The current production site, existing backend functions and five scheduled jobs
-have not been changed. NFT access and real TREE restart verification are
-implemented and tested; activation, hosted database migration, deployment and a
-real NFTree-holder acceptance test remain outstanding. Never describe the local
-playtest as real NFT verification or real token payment.
+**Active in production since November 7, 2026:**
+[Play Canopy Breaker](https://tree-token.xyz/play/canopy-breaker/).
+The live Tree Arcade cabinet opens the NFTree access screen. The isolated game
+host has its production saved-game migration applied and gameplay enabled.
+The arcade release preserves all 43 existing function records, five schedules,
+other static files, runtime configuration and site environment records.
+
+All 76 automated tests, the build and hosted database/access checks pass.
+Real NFTree-holder gameplay, a genuine 20,000 TREE restart and recovery, mobile
+wallet round trips and physical NES controller acceptance remain unverified.
+Automated checks do not establish those real-wallet or real-device outcomes.
+See `docs/production-release-2026-11-07.json` for the exact release identities.
 
 ## Play
 
