@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1210" />
+  <title>Deadfall Run | TREE Arcade — Play Test Build</title>
+  <meta name="description" content="Drive an articulated log truck down Stormbreak Pass. Play the Deadfall Run 3D test build in TREE Arcade." />
+  <link rel="canonical" href="https://tree-token.xyz/play/deadfall-run/" />
+  <link rel="stylesheet" href="styles.css" />
+  <script>
+    window.showBootError = function (message) {
+      const report = function () {
+        const error = document.getElementById("startupError");
+        error.hidden = false; error.textContent = message;
+        document.getElementById("start").classList.add("active");
+        document.getElementById("drive").disabled = true;
+        document.getElementById("drive").textContent = "UNABLE TO START 3D";
+        document.getElementById("bootStatus").textContent = "Reload the page in a WebGL-capable browser with hardware acceleration enabled.";
+      };
+      if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", report, { once: true }); else report();
+    };
+    addEventListener("error", function (e) {
+      window.showBootError(e.message || "A required game file did not load. Please reload the page.");
+    }, true);
+  </script>
+  <script src="vendor/three.min.js"></script>
+</head>
+<body>
+  <div id="game"></div>
+
+  <header class="topbar">
+    <div><small>TREE ARCADE</small><strong>DEADFALL <em>RUN</em></strong></div>
+    <nav aria-label="Game options">
+      <a class="arcade-back" href="https://tree-token.xyz/play/">← BACK TO ARCADE</a>
+      <button id="controllerOptions">CONTROLLER</button>
+      <details id="soundOptions" class="sound-options">
+        <summary id="soundSummary">SOUND · ENABLE</summary>
+        <div class="sound-card">
+          <button id="soundToggle" aria-pressed="false">ENABLE SOUND</button>
+          <label for="soundVolume">VOLUME <output id="soundLevel" for="soundVolume">60%</output></label>
+          <input id="soundVolume" type="range" min="0" max="100" step="5" value="60" />
+          <p id="soundStatus" role="status">Click Enable sound to hear the truck.</p>
+        </div>
+      </details>
+      <button id="quality">DETAIL · BALANCED</button>
+      <button id="camera" class="in-run">CAMERA · CHASE</button>
+      <button id="pause" class="in-run" disabled>PAUSE</button>
+    </nav>
+  </header>
+
+  <section class="hud" aria-label="Vehicle instruments">
+    <div class="dial"><span>SPEED <b id="gear">D</b></span><strong id="speed">0</strong><small>MPH</small><small id="surface" class="surface-readout">ASPHALT</small></div>
+    <div class="instrument"><span>BRAKES</span><div class="meter"><i id="brakeMeter"></i></div><small id="brakeText">COOL</small></div>
+    <div class="instrument"><span>DAMAGE</span><div class="meter"><i id="damageMeter"></i></div><small id="damageText">0%</small></div>
+    <div class="instrument wide"><span>LOAD STABILITY</span><div class="meter"><i id="loadMeter"></i></div><small id="loadText">SECURE</small></div>
+    <div class="cargo"><span>CARGO</span><strong id="cargo">5/5</strong></div>
+  </section>
+
+  <div id="dispatch" class="dispatch"><b>TREE DISPATCH</b><span>Use the engine brake on the grade.</span></div>
+  <div class="route"><span id="distance">1,800 m</span><i><b id="routeProgress"></b></i><span>RECOVERY MILL</span></div>
+
+  <section id="start" class="overlay active">
+    <div class="panel">
+      <p>TREE ARCADE · PLAY TEST BUILD 0.5.5</p>
+      <h1>The long<br />way down.</h1>
+      <p class="copy">A heavy rig. Five storm-recovery logs. An unforgiving mountain descent. Keep your speed in check and your trailer in line.</p>
+      <div class="route-spec"><span><b>1.8</b> KM DESCENT</span><span><b>5</b> LOGS TO DELIVER</span><span><b>3</b> CAMERA VIEWS</span></div>
+      <div class="handling-select" aria-label="Handling preset">
+        <button data-preset="easy" aria-pressed="false"><b>EASY</b><small>More forgiving</small></button>
+        <button data-preset="standard" class="active" aria-pressed="true"><b>STANDARD</b><small>Grounded arcade</small></button>
+        <button data-preset="heavy" aria-pressed="false"><b>HEAVY</b><small>Slow and deliberate</small></button>
+      </div>
+      <div class="control-grid">
+        <span><b>W / ↑</b> Throttle</span><span><b>S / ↓</b> Service brake</span>
+        <span><b>A D / ← →</b> Steering</span><span><b>SPACE</b> Engine brake</span>
+        <span><b>V (hold)</b> Reverse from stop</span><span><b>C</b> Chase / hood / inspect</span>
+        <span><b>R</b> Recover truck</span><span><b>ESC</b> Pause</span>
+      </div>
+      <p id="startupError" role="alert" hidden></p>
+      <a class="lab-link" href="handling.html">OPEN HANDLING LAB <span>4 controlled driving tests →</span></a>
+      <button id="drive" disabled>PREPARING 3D…</button>
+      <p class="fine-print test-access">Free test build · No wallet required</p>
+      <button id="controllerSetup" class="secondary controller-launch">CONTROLLER SETUP</button>
+      <small id="controllerStatus" class="controller-status" role="status">Connect a controller and press a button to wake it.</small>
+      <small id="bootStatus" role="status">Building the truck and mountain pass…</small>
+      <noscript>This game needs JavaScript enabled in your browser.</noscript>
+    </div>
+  </section>
+
+  <section id="controllerPanel" class="controller-overlay" role="dialog" aria-modal="true" aria-labelledby="controllerTitle" aria-describedby="controllerHelp" hidden>
+    <div class="panel controller-card">
+      <p>PLUG IN. HAUL OUT.</p><h2 id="controllerTitle">NES controller</h2>
+      <p id="controllerHelp" class="copy">Connect by USB or pair with your computer over Bluetooth. Press and release a button to wake the controller.</p>
+      <small id="controllerDevice">No controller detected</small>
+      <dl class="controller-legend">
+        <dt>D-pad ← / →</dt><dd>Steer</dd><dt>A / B</dt><dd>Throttle / service brake</dd>
+        <dt>D-pad ↑</dt><dd>Engine brake</dd><dt>D-pad ↓, held</dt><dd>Reverse from a stop</dd>
+        <dt>START</dt><dd>Start / pause / resume / retry</dd><dt>SELECT</dt><dd>Change camera</dd>
+      </dl>
+      <p class="controller-note">In the menu, use the D-pad to choose a test or preset, then START. On the results screen, B returns to the menu.</p>
+      <p class="controller-note">For setup, center the D-pad and release every button before clicking Begin setup. Follow the eight prompts. The game stays paused while you map the buttons.</p>
+      <p id="controllerPrompt" class="controller-prompt" role="status">Connect a controller to begin.</p>
+      <button id="controllerBegin" disabled>BEGIN SETUP</button>
+      <button id="controllerCancel" class="secondary" hidden>CANCEL SETUP</button>
+      <button id="controllerClose" class="secondary">CLOSE · ESC</button>
+    </div>
+  </section>
+
+  <section id="result" class="overlay">
+    <div class="panel"><p id="resultKicker">DELIVERY COMPLETE</p><h1 id="resultTitle">5/5 logs delivered</h1><div id="resultStats"></div><p class="fine-print">Local test score only. No TREE payments or trading are connected.</p><button id="again">DRIVE AGAIN</button></div>
+  </section>
+
+  <aside id="paused" hidden><span>DESCENT PAUSED</span><small>START / Escape to resume. SELECT / C changes camera.</small><button id="resume">RESUME</button></aside>
+  <div id="cameraHint" class="camera-hint">C · CAMERA &nbsp; R · RECOVER &nbsp; SPACE · ENGINE BRAKE</div>
+  <output id="diagnostics" hidden></output>
+
+  <section class="touch" aria-label="Touch vehicle controls">
+    <div class="steering"><label for="steer">STEERING</label><input id="steer" type="range" min="-100" max="100" value="0" /></div>
+    <button id="recover" aria-label="Recover truck">RECOVER</button>
+    <button data-control="reverse">REVERSE</button>
+    <button data-control="engine">ENGINE<br />BRAKE</button>
+    <button data-control="brake">BRAKE</button>
+    <button data-control="throttle" class="throttle">THROTTLE</button>
+  </section>
+
+  <script src="route.js"></script>
+  <script src="physics.js"></script>
+  <script src="collision.js"></script>
+  <script src="world.js"></script>
+  <script src="ride.js"></script>
+  <script src="vehicle.js"></script>
+  <script src="gamepad.js"></script>
+  <script src="effects.js"></script>
+  <script src="engine-sample.js"></script>
+  <script src="audio.js"></script>
+  <script src="play.js"></script>
+</body>
+</html>
