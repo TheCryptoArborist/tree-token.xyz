@@ -2,7 +2,7 @@
 
 Read the newest section of `production/README.md` and
 `production/nftree-rewards-release-20261107.json` first. Locked production deploy
-`6aef79ac2b3345f579dd4e3e` has **338 static paths, 43 backend functions and five
+`6aef7c5589af8c6d5a21ce78` has **347 static paths, 43 backend functions and five
 schedules**. Preserve the complete current live inventory. The older 196-file /
 38-package source manifest below is historical recovery material and must not
 replace the current site. NFTree Rewards source is in `rewards-app/` and publishes
