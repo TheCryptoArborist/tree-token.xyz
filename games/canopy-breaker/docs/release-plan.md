@@ -19,9 +19,19 @@ and the SuiNS completion feed are preserved. This update makes no schema change.
 All 125 tests, syntax, isolated build and hosted endpoint checks pass. Browser
 inspection confirms the new choice instructions; real-holder game-over button
 acceptance still awaits confirmation. See `production-new-game-2026-11-07.json`
-for current release identities and runtime preservation evidence. Earlier
+for that release’s identities and runtime preservation evidence. Earlier
 records retain the leaderboard, score, completion-feed and initial integration
 release history.
+
+The pause and entry-action update is published as host deploy
+`6aefb5fa09b01fb891f90cb0`, the latest isolated host release. Automatic
+pauses now identify their trigger. The paused picture stays frozen while pending
+checkpoints reconcile, and Resume waits for all inputs to save before a three-second
+countdown. Tab, controller, dialog and wallet changes cancel a pending resume.
+The entry button now opens Connect Wallet, then invokes Verify NFTree using the
+existing personal-message sign-in. No payment or server logic changes are included.
+All 151 automated checks pass. See `production-pause-auth-2026-11-07.json` for
+publication identities, live checks, and investigation limits.
 
 ## Original pre-launch plan (historical)
 
