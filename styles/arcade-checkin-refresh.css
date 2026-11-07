@@ -1,0 +1,31 @@
+/* TREE home palette: midnight, forest green, bright mint and warm gold. */
+.arcade-suite{--arcade-green:#35e895;--arcade-gold:#ffe05e;--arcade-ink:#061014}
+.growth-panel{border-color:#35e89555;border-radius:18px;box-shadow:0 18px 55px #0008,0 0 30px #35e8950b;background:#071318ed}
+.growth-strip{background:radial-gradient(ellipse at 5% 0,#35e89522,transparent 65%),linear-gradient(110deg,#0b2425eb,#0a151ee8);border-bottom:1px solid #35e89528}
+.growth-strip h2,.growth-invitation-open{color:#ffe05e}
+.growth-primary{background:linear-gradient(135deg,#54f3ad,#29d68b);border-color:#77f5bc;color:#05251a;box-shadow:0 4px 18px #35e89522}
+.growth-primary:disabled{box-shadow:none}
+.growth-month-rail{padding:20px 22px;background:radial-gradient(ellipse at 100% 0,#ffe05e0c,transparent 60%),#08151ce8}
+.growth-season-head{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:16px}
+.growth-season-head h3{font-size:clamp(1.25rem,2.5vw,1.8rem);line-height:1.15;letter-spacing:-.035em;margin:5px 0 7px;color:#f0fff7}
+.growth-season-head p{margin:0;color:#abc2c6;font-size:.82rem}.growth-season-head .growth-eyebrow{color:#35e895;font-size:.65rem;letter-spacing:.16em}
+.growth-season-free{font-size:.57rem;letter-spacing:.1em;text-align:right;color:#acc4bd}.growth-season-free b{display:block;color:#35e895;font-size:.83rem;letter-spacing:.04em;margin-top:5px}
+.growth-rank-track{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 20px}
+.growth-rank-stop{display:flex;align-items:center;gap:10px;min-width:0;padding:12px;border:1px solid #ffe05e30;border-radius:11px;background:linear-gradient(125deg,#19332c77,#0d1726);position:relative}
+.growth-rank-stop img{width:58px;height:64px;object-fit:contain;filter:drop-shadow(0 0 8px #ffe05e23)}
+.growth-rank-stop strong,.growth-rank-stop small,.growth-rank-state{display:block}.growth-rank-stop strong{color:#ffe59a;font-size:.82rem;line-height:1.25;margin:5px 0}.growth-rank-stop small{color:#b7ccc7;font-size:.68rem}.growth-rank-state{color:#8faeb0;letter-spacing:.1em;font-size:.5rem;font-weight:800}
+.growth-rank-stop.is-earned{border-color:#35e895;background:linear-gradient(125deg,#124e35,#0b2225)}.is-earned .growth-rank-state{color:#57f8b0}
+.growth-rail-heading{margin-bottom:10px;color:#b4d7c9}.growth-rail-heading strong{font-size:.64rem;letter-spacing:.09em}
+#growth-visit-count{color:#35e895;font-size:1.2rem}
+.growth-days{grid-template-columns:repeat(15,minmax(0,1fr));gap:6px}
+.growth-rail-day{min-height:44px;border:1px solid #47736a45;border-radius:7px;gap:3px;background:linear-gradient(150deg,#17302d,#0c1c25);color:#c6d9d0;font-size:.75rem}
+.growth-rail-day.is-unknown{background:#11252a;color:#90a9ae}.growth-rail-mark{font-size:.7rem;line-height:1}
+.growth-rail-day.is-today,.growth-rail-day.is-unknown.is-today{border-color:#ffe05e;color:#fff4c8;background:linear-gradient(145deg,#695522,#342c1b);box-shadow:0 0 15px #ffe05e24,inset 0 0 0 1px #ffe05e33;position:relative}
+.growth-rail-day.is-today:after{content:'TODAY';position:absolute;bottom:-5px;background:#ffe05e;color:#2c2404;border-radius:3px;font-size:6px;font-weight:900;letter-spacing:.04em;padding:1px 3px}
+.growth-rail-day.is-done,.growth-rail-day.is-today.is-done{border-color:#35e895;background:linear-gradient(145deg,#1f724c,#0b382e);color:#c9ffe0;box-shadow:0 0 10px #35e89518}
+.growth-rail-day.is-missed{opacity:.55}.growth-rail-day.is-future{background:#102128;color:#93abb1}
+.growth-rail-note{margin-top:12px;color:#a5bfc3}.growth-details-toggle{background:linear-gradient(90deg,#173629aa,#111e29);border-top:1px solid #35e89525}
+.quest-tile{border-color:#35e89530}.quest-tile--violet{border-color:#d6b95955}
+@media(max-width:780px){.growth-month-rail{padding:16px 14px}.growth-rank-track{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:16px}.growth-rank-stop{gap:6px;padding:9px}.growth-rank-stop img{width:44px;height:50px}.growth-rank-stop strong{font-size:.7rem}.growth-season-free{display:none}.growth-days{grid-template-columns:repeat(10,minmax(0,1fr));gap:4px}.growth-rail-day{min-height:39px;font-size:.68rem}}
+@media(max-width:380px){.growth-days{grid-template-columns:repeat(7,minmax(0,1fr))}.growth-rank-stop img{width:35px;height:43px}.growth-rank-stop strong{font-size:.65rem}.growth-rank-state{font-size:.43rem}}
+@media(forced-colors:active){.growth-rank-stop,.growth-rail-day{border:1px solid CanvasText}.growth-rail-day.is-today{outline:2px solid Highlight}}
