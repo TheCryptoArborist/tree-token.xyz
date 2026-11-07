@@ -1,0 +1,31 @@
+name: Verify Arcade monthly rewards
+on:
+  pull_request:
+    paths:
+      - 'netlify/functions/arcade-monthly.ts'
+      - 'netlify/lib/arcade-monthly-core.ts'
+      - 'scripts/arcade-monthly.js'
+      - 'scripts/arcade-refresh/**'
+      - 'vendor/arcade-monthly/**'
+      - 'tests/arcade-monthly*'
+      - 'tests/fixtures/arcade-monthly/**'
+      - 'supabase/migrations/*arcade_monthly*'
+      - '.github/workflows/verify-arcade-monthly.yml'
+permissions:
+  contents: read
+jobs:
+  arcade-monthly:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci --prefix vendor/arcade-monthly --ignore-scripts
+      - run: ln -s vendor/arcade-monthly/node_modules node_modules
+      - run: node --test tests/arcade-monthly-*.test.* tests/arcade-return-session.test.mjs
+      - run: node --check scripts/arcade-monthly.js
+      - run: node --check scripts/arcade-refresh/arcade-daily-growth.js
+      - run: node_modules/.bin/esbuild vendor/arcade-monthly/src/recovery-wallet.js --bundle --format=esm --platform=browser --target=es2022 --minify --outfile=/tmp/arcade-recovery-wallet.js
+      - run: cmp /tmp/arcade-recovery-wallet.js assets/arcade/arcade-recovery-wallet.js
+      - run: git diff --check

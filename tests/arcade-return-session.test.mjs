@@ -2,7 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 // Run with jsdom installed, or set ARCADE_TEST_JSDOM to its module path.
-const {JSDOM} = await import(process.env.ARCADE_TEST_JSDOM || 'jsdom');
+const {JSDOM} = await import(process.env.ARCADE_TEST_JSDOM || new URL('../vendor/arcade-monthly/node_modules/jsdom/lib/api.js',import.meta.url).href);
 import {createDailyGrowth} from '../scripts/arcade-refresh/arcade-daily-growth.js';
 const KEY='tree-arcade:daily-growth:session:v1';
 const address='0x'+'a'.repeat(64);

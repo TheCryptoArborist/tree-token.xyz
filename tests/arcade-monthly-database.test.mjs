@@ -1,0 +1,34 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';
+const {PGlite}=await import(process.env.ARCADE_TEST_PGLITE||new URL('../vendor/arcade-monthly/node_modules/@electric-sql/pglite/dist/index.js',import.meta.url).href);
+test('monthly qualification, streak recovery, replay protection and browser-role isolation',async()=>{
+ const db=new PGlite({initialMemory:128*1024*1024});try{
+ await db.exec('create role anon;create role authenticated;create role service_role bypassrls;');
+ for(const file of ['growth.sql','participation.sql','passport.sql'])await db.exec(fs.readFileSync(new URL('./fixtures/arcade-monthly/'+file,import.meta.url),'utf8'));
+ const sql=fs.readFileSync(new URL('../supabase/migrations/20261107211943_arcade_monthly_rewards.sql',import.meta.url),'utf8').replaceAll("(clock_timestamp() at time zone 'UTC')::date","date '2026-11-25'");
+ await db.exec(sql);
+ const wallet='0x'+'a'.repeat(64),token='a'.repeat(64),origin='https://tree-token.xyz',id='11111111-1111-4111-8111-111111111111';
+ await db.query(`insert into private.arcade_growth_wallet_challenges(challenge_id,wallet,origin,date_key,nonce_sha256,message,request_fingerprint,expires_at) values($1,$2,$3,current_date,$4,repeat('x',100),$4,clock_timestamp()+interval '4 minutes')`,[id,wallet,origin,'f'.repeat(64)]);
+ await db.query(`insert into private.arcade_growth_sessions(token_sha256,wallet,origin,auth_challenge_id,expires_at) values($1,$2,$3,$4,clock_timestamp()+interval '55 minutes')`,[token,wallet,origin,id]);
+ const status=async()=> (await db.query('select public.arcade_monthly_status_v1($1,$2) as s',[token,origin])).rows[0].s;
+ await db.query(`insert into private.arcade_growth_checkins(wallet,date_key,source) select $1,date '2026-11-01'+n,'manual' from generate_series(0,19) n`,[wallet]);
+ for(let n=1;n<=19;n++)await db.query(`insert into private.arcade_growth_game_events(source,source_id,wallet,game_id,completed_at,date_key,evidence_kind) values('garden-battles',$1,$2,'arborist-trials',$3::timestamptz,$3::date,'completed-result')`,['trial:'+n+':'+wallet,wallet,'2026-11-'+String(n).padStart(2,'0')]);
+ await db.query(`insert into private.arcade_growth_game_events(source,source_id,wallet,game_id,completed_at,date_key,evidence_kind) values('garden-battles',$1,$2,'arborist-trials','2026-11-01','2026-11-01','completed-result'),('treeforce89',$3,$2,'treeforce89','2026-11-22','2026-11-22','authenticated-run-start')`,['trial:duplicate-day:'+wallet,wallet,'run:grove-'+'a'.repeat(32)+':'+wallet]);
+ let s=await status();assert.equal(s.monthlyReward.verifiedQuestDays,19);assert.equal(s.monthlyReward.qualified,false);assert.equal(s.attendance.checkedInDays,20);
+ await db.query(`insert into private.arcade_growth_game_events(source,source_id,wallet,game_id,completed_at,date_key,evidence_kind) values('garden-battles',$1,$2,'arborist-trials','2026-11-20','2026-11-20','completed-result')`,['trial:twentieth:'+wallet,wallet]);
+ s=await status();assert.equal(s.monthlyReward.verifiedQuestDays,20);assert.equal(s.monthlyReward.qualified,true);assert.equal((await db.query('select count(*)::int as n from private.arcade_monthly_reward_qualifications')).rows[0].n,1);
+ await db.query(`insert into private.arcade_growth_checkins(wallet,date_key,source) values($1,'2026-11-22','game-participation'),($1,'2026-11-23','manual'),($1,'2026-11-24','manual')`,[wallet]);
+ assert.equal((await status()).attendance.streak,3);
+ const intent=(await db.query("select public.arcade_recovery_intent_v1($1,$2,'2026-11-21',null) as i",[token,origin])).rows[0].i;
+ const confirm=()=>db.query('select public.arcade_recovery_confirm_v1($1,$2,$3,$4,clock_timestamp()) as s',[token,origin,intent.id,'1'.repeat(44)]);
+ const recovered=(await confirm()).rows[0].s;assert.equal(recovered.attendance.streak,24);assert.equal(recovered.monthlyReward.verifiedQuestDays,20);assert.deepEqual(recovered.attendance.recoveredDates,['2026-11-21']);await confirm();
+ assert.equal((await db.query('select count(*)::int as n from private.arcade_checkin_recovery_intents where digest is not null')).rows[0].n,1);
+ await assert.rejects(db.query("select public.arcade_recovery_intent_v1($1,$2,'2026-11-25',null)",[token,origin]),/invalid-date/);
+ await assert.rejects(db.query("select public.arcade_recovery_intent_v1($1,$2,'2026-10-31',null)",[token,origin]),/invalid-date/);
+ await assert.rejects(db.query("select public.arcade_recovery_intent_v1($1,$2,'2026-11-21',null)",[token,origin]),/already-checked-in/);
+ await assert.rejects(db.query("select public.arcade_recovery_confirm_v1($1,$2,$3,$4,clock_timestamp())",[token,origin,intent.id,'2'.repeat(44)]),/payment-used/);
+ assert.equal((await db.query("select has_function_privilege('anon','public.arcade_monthly_status_v1(text,text)','execute') as ok")).rows[0].ok,false);
+ assert.equal((await db.query("select has_function_privilege('authenticated','public.arcade_recovery_confirm_v1(text,text,uuid,text,timestamp with time zone)','execute') as ok")).rows[0].ok,false);
+ await db.exec('set role service_role');assert.equal((await status()).monthlyReward.verifiedQuestDays,20);await db.exec('reset role');
+ await db.query('update private.arcade_growth_sessions set revoked_at=clock_timestamp() where token_sha256=$1',[token]);await assert.rejects(status(),/invalid-session/);
+ }finally{await db.close();}
+});

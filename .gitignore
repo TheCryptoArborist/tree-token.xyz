@@ -18,3 +18,5 @@ supabase/.temp/
 Thumbs.db
 .vscode/
 .idea/
+
+/node_modules

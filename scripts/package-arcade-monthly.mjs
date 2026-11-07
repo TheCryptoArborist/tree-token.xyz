@@ -1,0 +1,13 @@
+import fs from 'node:fs/promises';import path from 'node:path';import os from 'node:os';import crypto from 'node:crypto';import assert from 'node:assert/strict';import {pathToFileURL} from 'node:url';
+const root=path.resolve(import.meta.dirname,'..'),vendor=path.join(root,'vendor/arcade-monthly'),stage=await fs.mkdtemp(path.join(os.tmpdir(),'arcade-monthly-'));const destination=path.join(root,'.netlify/arcade-monthly-functions');
+try{
+ for(const f of ['netlify/functions/arcade-monthly.ts','netlify/lib/arcade-monthly-core.ts']){await fs.mkdir(path.dirname(path.join(stage,f)),{recursive:true});await fs.copyFile(path.join(root,f),path.join(stage,f));}
+ await fs.copyFile(path.join(vendor,'package.json'),path.join(stage,'package.json'));await fs.copyFile(path.join(vendor,'package-lock.json'),path.join(stage,'package-lock.json'));await fs.cp(path.join(vendor,'node_modules'),path.join(stage,'node_modules'),{recursive:true,dereference:true});
+ const sui=JSON.parse(await fs.readFile(path.join(vendor,'node_modules/@mysten/sui/package.json'),'utf8'));assert.equal(sui.version,'2.26.1');
+ const {zipFunction}=await import(pathToFileURL(path.join(vendor,'node_modules/@netlify/zip-it-and-ship-it/dist/main.js')));await fs.mkdir(destination,{recursive:true});
+ const built=await zipFunction(path.join(stage,'netlify/functions/arcade-monthly.ts'),destination,{basePath:stage,repositoryRoot:stage,config:{'*':{nodeBundler:'esbuild',nodeVersion:'22.x'}}});
+ assert.equal(built.name,'arcade-monthly');assert.equal(built.runtimeVersion,'nodejs22.x');assert.equal(built.invocationMode,'stream');assert.equal(built.schedule,undefined);
+ const bytes=await fs.readFile(built.path),sha256=crypto.createHash('sha256').update(bytes).digest('hex');
+ const sourceFiles=[];for(const file of ['netlify/functions/arcade-monthly.ts','netlify/lib/arcade-monthly-core.ts','vendor/arcade-monthly/package.json','vendor/arcade-monthly/package-lock.json'])sourceFiles.push({path:file,sha256:crypto.createHash('sha256').update(await fs.readFile(path.join(root,file))).digest('hex')});
+ const manifest={sourceFiles,name:built.name,path:'.netlify/arcade-monthly-functions/arcade-monthly.zip',sha256,runtimeVersion:built.runtimeVersion,invocationMode:built.invocationMode,buildData:built.buildData,routes:built.routes,trafficRules:built.trafficRules};await fs.writeFile(path.join(destination,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');console.log(JSON.stringify(manifest));
+}finally{await fs.rm(stage,{recursive:true,force:true});}

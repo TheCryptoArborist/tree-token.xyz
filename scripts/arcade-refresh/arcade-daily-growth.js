@@ -514,7 +514,7 @@ export function createDailyGrowth({
       : state.apiUnavailable ? 'Attendance unavailable; your saved progress has not changed' : 'Attendance unknown; sign in to view your saved days');
     ui['rail-note'].textContent = lastSaved
       ? loading ? 'Checking for updates · Last saved days shown.' : 'Last saved days shown. Refresh inside to check for updates.'
-      : progress ? 'Calendar dates · UTC. Past dates cannot be checked in.'
+      : progress ? 'Calendar dates · UTC. Free check-ins are today only; recover missed dates below.'
         : state.apiUnavailable ? 'Your saved days are unavailable. No progress has changed.'
           : loading ? 'Loading the current month…' : 'Sign in to reveal your saved days.';
     ui.days.style.setProperty('--growth-days', String(calendar.length || 31));
@@ -1191,6 +1191,7 @@ export function createDailyGrowth({
       void refresh();
     }
   }
+  on(root, 'arcade-attendance-recovered', () => { if (!state.busy && state.session) void refresh(); });
   on(view, 'focus', refreshAfterGameReturn);
   on(view, 'pageshow', refreshAfterGameReturn);
   on(document, 'visibilitychange', () => { if (document.visibilityState === 'visible') refreshAfterGameReturn(); });
