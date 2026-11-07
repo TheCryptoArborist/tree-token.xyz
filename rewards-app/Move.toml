@@ -1,0 +1,6 @@
+[package]
+name = "nftree_rewards"
+edition = "2024"
+
+[dependencies]
+
