@@ -11,13 +11,16 @@ The root release retains 302 static paths, all 43 existing function records,
 five schedules, runtime configuration and site environment records. Only the
 cabinet HTML and routing configuration changed; publication is locked.
 
-The score carryover and in-game navigation update is published as host deploy
-`6aef60679ee349bfd9c6847a`; the arcade deployment is unchanged. All 86 automated
-tests and hosted access/health checks pass. Peter reported successful live
-gameplay and payment. Score recovery in the user's wallet, same-payment
-recovery, a mobile wallet round trip and physical NES controller acceptance
-remain awaiting confirmation. See `production-score-navigation-2026-11-07.json`
-for this update and `production-release-2026-11-07.json` for the initial launch.
+The public username leaderboard is published as host deploy
+`6aef64eb6cafc47f69d4fcdb`; the arcade deployment is unchanged. Its additive
+`20261107180000_canopy_breaker_leaderboard` migration is applied to production.
+All 108 automated tests and hosted leaderboard/access/health checks pass.
+Peter reported successful gameplay and payment before this update. Real-holder
+username enrollment, score-recovery confirmation, mobile wallet round trip and
+physical NES controller acceptance still require user confirmation. See
+`production-leaderboard-2026-11-07.json` for the current host release,
+`production-score-navigation-2026-11-07.json` for the earlier score fix and
+`production-release-2026-11-07.json` for the initial arcade integration.
 
 ## Original pre-launch plan (historical)
 
