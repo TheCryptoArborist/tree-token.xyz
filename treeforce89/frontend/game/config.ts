@@ -1,6 +1,6 @@
 import {SHIELD_MS} from "./chapter-rules.mjs";
 import {WEAPONS} from "./gameplay-rules.mjs";
-export const GAME_VERSION="0.7.2";
+export const GAME_VERSION="0.7.3";
 export const W=480,H=720;
 export const palette={
  css:{bg:"#06110d",bgSoft:"#0c2017",panel:"#09170f",cyan:"#9a68ff",gold:"#f2c94c",green:"#65dc79",text:"#fff7df",muted:"#b9c9b6",danger:"#ff6b62"},
