@@ -36,3 +36,49 @@
 .monthly-meter{height:7px;background:#284039;border-radius:10px;overflow:hidden;margin-top:12px}.monthly-meter span{display:block;height:100%;width:0;background:linear-gradient(90deg,#35e895,#ffe05e)}
 .monthly-rules,.monthly-reward-note,.monthly-recovery p,.monthly-status{color:#aec6c7;font-size:.73rem;line-height:1.6}.monthly-reward-note strong{color:#f1d688}.monthly-recovery{margin-top:13px;border:1px solid #ffe05e33;border-radius:10px;padding:12px 15px;background:#191e1c77}.monthly-recovery summary{cursor:pointer;color:#e9f7e9;font-size:.8rem;font-weight:750}.monthly-recovery summary span{float:right;color:#ffe05e;font-size:.7rem;padding-left:8px}.monthly-recovery label{display:block;font-size:.7rem;color:#cfdfd9;margin:12px 0 7px}.monthly-pay-row{display:flex;gap:8px;align-items:center}.monthly-recovery select,.monthly-recovery input{min-width:0;padding:11px;border-radius:7px;border:1px solid #83ac9e55;background:#081b21;color:#f0fff7;font:inherit;font-size:.8rem}.monthly-pay-row select{flex:1}.monthly-recovery input{width:100%;box-sizing:border-box;margin-bottom:10px}.monthly-status{margin:13px 0 0}.monthly-reward-panel[data-state="signed-out"] .monthly-meter{opacity:.45}
 @media(max-width:600px){.monthly-reward-panel{padding:16px 14px}.monthly-heading{align-items:flex-start}.monthly-heading h3{font-size:1rem}.monthly-heading button{font-size:.62rem}.monthly-metrics{grid-template-columns:1fr;gap:8px}.monthly-metrics article{padding:13px}.monthly-metrics strong{font-size:1.4rem}.monthly-pay-row{flex-direction:column;align-items:stretch}.monthly-recovery summary span{float:none;display:block;margin:6px 0 0;padding:0}}
+
+/* Compact default view; instructions and checkout expand only when needed. */
+.growth-panel .growth-strip{padding:12px 16px;gap:12px}
+.growth-panel #growth-summary-note,.growth-panel .growth-season-head{display:none}
+.growth-panel .growth-strip-art{width:40px;height:44px}
+.growth-panel .growth-month-rail{padding:10px 16px}
+.growth-panel .growth-rank-track{gap:7px;margin:0 0 9px}
+.growth-panel .growth-rank-stop{padding:6px 9px;gap:7px;border-radius:8px}
+.growth-panel .growth-rank-stop img{width:32px;height:36px}
+.growth-panel .growth-rank-stop strong{font-size:.68rem;margin:2px 0;line-height:1.15}
+.growth-panel .growth-rank-stop small{font-size:.58rem}.growth-panel .growth-rank-state{font-size:.43rem;line-height:1.1}
+.growth-panel .growth-rail-heading{margin-bottom:6px}
+.growth-panel .growth-days{grid-template-columns:repeat(var(--growth-days,31),minmax(0,1fr));gap:3px}
+.growth-panel .growth-rail-day{min-height:28px;font-size:.65rem;gap:1px;border-radius:5px}
+.growth-panel .growth-rail-mark{font-size:.55rem}.growth-panel .growth-rail-note{margin:7px 0 0;font-size:.62rem}
+.growth-panel .monthly-reward-panel{padding:9px 16px}
+.growth-panel .monthly-heading h3{margin:0 0 6px;font-size:.82rem}
+.growth-panel .monthly-metrics{grid-template-columns:1fr 2.1fr;gap:8px}
+.growth-panel .monthly-metrics article{padding:7px 10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-radius:8px}
+.growth-panel .monthly-label{font-size:.52rem;letter-spacing:.07em}
+.growth-panel .monthly-metrics strong{font-size:1rem;margin:0}
+.growth-panel #monthly-qualification{font-size:.61rem;margin-left:auto}
+.growth-panel .monthly-meter{width:100%;height:4px;margin:0}
+.monthly-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:7px}
+.growth-panel .monthly-actions>details{flex:1;min-width:0;margin:0;padding:7px 10px;border:1px solid #ffe05e30;border-radius:7px;background:#191e1c77}
+.growth-panel .monthly-actions>details[open]{flex-basis:100%}
+.growth-panel .monthly-actions summary{cursor:pointer;color:#dcebe3;font-size:.68rem;font-weight:750}
+.growth-panel .monthly-info summary span{float:right;color:#ffe05e}
+.growth-panel .monthly-recovery summary span{font-size:.64rem;display:inline;float:right;margin:0;padding-left:8px}
+.monthly-info p{font-size:.73rem;color:#aec6c7;line-height:1.6}
+.growth-panel .monthly-status{margin:5px 0 0;font-size:.64rem;line-height:1.4}
+.monthly-reward-panel[data-state="signed-out"] .monthly-status{display:none}
+@media(max-width:780px){
+ .growth-panel .growth-strip{padding:10px 12px}.growth-panel .growth-month-rail{padding:9px 12px}
+ .growth-panel .growth-rank-track{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
+ .growth-panel .growth-rank-stop{padding:5px 7px}.growth-panel .growth-rank-stop img{width:28px;height:32px}
+ .growth-panel .growth-rank-stop strong{font-size:.62rem}
+ .growth-panel .growth-days{grid-template-columns:repeat(15,minmax(0,1fr));gap:3px}
+ .growth-panel .monthly-reward-panel{padding:9px 12px}
+ .growth-panel .monthly-metrics{grid-template-columns:1fr 1.65fr;gap:6px}
+ .growth-panel .monthly-metrics article{padding:7px;gap:5px}
+ .growth-panel #monthly-qualification{width:100%;margin:0;font-size:.58rem}
+ .growth-panel .monthly-label{font-size:.47rem}
+ .growth-panel .monthly-actions summary{font-size:.63rem}
+}
+@media(max-width:380px){.growth-panel .growth-days{grid-template-columns:repeat(10,minmax(0,1fr))}.growth-panel .monthly-actions>details{flex-basis:100%}}
