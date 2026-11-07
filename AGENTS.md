@@ -1,3 +1,15 @@
+# Latest published preservation baseline
+
+Read the newest section of `production/README.md` and
+`production/nftree-rewards-release-20261107.json` first. Locked production deploy
+`6aef6c32cb53f14a782ffc71` has **314 static paths, 43 backend functions and five
+schedules**. Preserve the complete current live inventory. The older 196-file /
+38-package source manifest below is historical recovery material and must not
+replace the current site. NFTree Rewards source is in `rewards-app/` and publishes
+at `/rewards/`; its build must be overlaid onto a newly captured full current
+preservation baseline. Existing wallet/liquidity modules and backend packages
+remain protected.
+
 # TREE production synchronization
 
 Read `production/README.md` before deployment work. `production/manifest.json` is the verified deployment baseline. Preserve its byte-exact files when only synchronizing the repository.

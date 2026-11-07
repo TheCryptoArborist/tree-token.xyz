@@ -1,3 +1,49 @@
+# Current production — native NFTree Rewards, 2026-11-07
+
+Locked deployment `6aef6c32cb53f14a782ffc71` serves the native NFTree Rewards
+page at `https://tree-token.xyz/rewards/`. Reviewed source is
+`4e28e7bafd32ba08aeeacded2f1784fdf86dc28a`, merged in PR #84 as
+`7468d9557d34b63e9da5436cf0987df6f61997cf`.
+
+The release preserves **all 43 complete backend package/provider/runtime/route
+records, five scheduled jobs, protected environment fingerprints, and every
+previous static path**. There are 314 static files: only the two existing
+homepage and Arcade HTML files changed, with native reward bundles and a small
+homepage entry script added. No existing backend was rebuilt and no reward
+transaction was signed or executed. See `nftree-rewards-release-20261107.json`
+for the complete current inventory and validation. Earlier manifests and build
+snapshots below remain historical recovery material; they do not contain the
+complete current 314-file/43-function deployment.
+
+`rewards-app/` contains the pinned source for holder claims, verified ownership
+snapshots and the direct-distribution manager. Build its own package with
+`npm ci --ignore-scripts` and `npm run build`, then use a newly captured current
+preservation baseline for any future publication. Never deploy an old root build
+as a replacement for the current site or rebuild unrelated functions.
+
+TreeDrop's root now forwards visitors to the native page through a fixed,
+serve-time head snippet (`Native NFTree Rewards entry`, ID `0`). Its original
+published deployment `6a89d2b2ceda1c578f9baa02`, seven static files and two backend
+packages remain intact and locked. An attempted server-redirect candidate was
+stopped when Netlify requested unavailable older function archives; it was never
+published. The forwarding source is `scripts/treedrop-native-entry.html` and four
+focused checks cover its fixed destination, query/hash preservation, API exclusion
+and JavaScript-disabled fallback. The private TreeDrop repository also retains
+root/index server redirect rules for future builds. Current forwarding is not an
+HTTP 301 response; the browser follows the fixed native destination immediately.
+
+Validation passed: 40 application checks, 15 preservation/redirect checks, four
+entry forwarding checks, TypeScript, production app build, desktop and narrow
+340-CSS-pixel browser layout, homepage/Arcade links, wallet picker, sponsor form,
+manager gate and canonical redirects. Read-only Mainnet tests validated existing
+receipts, every registered token's decimals, a complete 1,420-NFT snapshot with
+zero unresolved owners, original-package SUI claims and a four-token community
+claim batch. SUI/community package families require separate wallet approvals.
+Operator payout records are browser-local with export/import; gas sponsorship is
+not enabled.
+
+---
+
 # Current preservation baseline — validation only, 2026-11-02 UTC
 
 Authenticated read-only capture and verification protect published, locked deployment `6ae8112dce29c5db8b725ff0`: **288 static paths, 41 complete function records, five schedules, and 50 site Functions environment entries**. The captured records, canonical SHA256 sidecar, and validation report remain in the local ignored `.netlify/` directory. See `../docs/preserved-release-validation.md` for usage and API visibility limits. This records the current live state; it does not publish or synchronize the historical source/build manifest with all later feature releases.

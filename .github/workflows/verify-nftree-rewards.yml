@@ -6,8 +6,10 @@ on:
       - 'scripts/nftree-rewards-entry.js'
       - 'scripts/release-nftree-rewards.mjs'
       - 'scripts/redirect-treedrop.mjs'
+      - 'scripts/treedrop-native-entry.html'
       - 'tests/nftree-rewards-release.test.mjs'
       - 'tests/treedrop-redirect-release.test.mjs'
+      - 'tests/treedrop-native-entry.test.mjs'
       - 'production/rewards-integration-static/**'
       - '.github/workflows/verify-nftree-rewards.yml'
   workflow_dispatch:
@@ -31,4 +33,5 @@ jobs:
         working-directory: rewards-app
       - run: node --test tests/nftree-rewards-release.test.mjs
       - run: node --test tests/treedrop-redirect-release.test.mjs
+      - run: node --test tests/treedrop-native-entry.test.mjs
       - run: git diff --check
