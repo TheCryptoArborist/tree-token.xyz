@@ -92,6 +92,19 @@ async function test(name, run) { await run(); count++; console.log(`PASS ${name}
     sound.stop(); assert.equal(crash.gain.value, 0); assert.equal(scrape.gain.value, 0); assert.equal(master(ctx).value, 0);
     sound.dispose();
   });
+  await test("disabling the engine preserves the impact decay while pause still silences it", async () => {
+    const sound = create({ Context }); await sound.unlock(); const ctx = last();
+    sound.update({ speed: 12, throttle: 1 }, { throttle: true }, true, .1);
+    sound.impact({ object: { kind: "tree" }, speed: 12 });
+    const crash = ctx.nodes.find(n => n.type === "bandpass" && n.frequency.value === 240).outputs[0];
+    const events = JSON.stringify(crash.gain.events);
+    sound.update({ speed: 0, throttle: 0, disabled: true }, {}, true, .1);
+    assert.equal(JSON.stringify(crash.gain.events), events, "engine shutdown cancelled the impact envelope");
+    const engine = ctx.nodes.find(n => n.buffer?.sampleRate === 22050);
+    assert.equal(engine.outputs[0].outputs[0].gain.value, 0); assert(master(ctx).value > 0);
+    sound.update({ disabled: true }, {}, false, .1); assert.equal(master(ctx).value, 0); assert.equal(crash.gain.value, 0);
+    sound.dispose();
+  });
   await test("settings survive reload and corrupt/blocked storage degrades to defaults", async () => {
     let data = null; const storage = { getItem: () => data, setItem: (_, value) => data = value };
     const sound = create({ Context, storage }); sound.setVolume(.35); sound.setEnabled(false);

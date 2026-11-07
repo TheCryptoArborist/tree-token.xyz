@@ -122,6 +122,13 @@
       if (!nodes) return;
       if (!driving || !enabled || volume === 0 || ctx.state !== "running") { stop(); return; }
       try {
+        // Let the one-shot impact decay when the engine is disabled. Calling
+        // stop() here would cut off the collision on the very frame it occurs.
+        if (state.disabled) {
+          for (const key of ["engineGain", "subGain", "mechanical", "jake", "scrape", "road", "air"]) target(nodes[key].gain, 0, .035);
+          target(nodes.master.gain, volume * .46, .01);
+          active = previousBrake = false; heldBrake = 0; return;
+        }
         const speed = clamp(Math.abs(state.speed), 0, 45), throttle = clamp(state.throttle, 0, 1);
         const brake = Boolean(input.brake), engineBrake = Boolean(input.engine) && speed > .7 && !input.throttle;
         dt = clamp(dt, 0, .1);

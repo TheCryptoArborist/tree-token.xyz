@@ -47,6 +47,15 @@ button, input { font:inherit; }
 .panel button { width:100%; padding:14px; color:white; border:0; border-radius:8px; background:linear-gradient(90deg,#5b2c8b,#7138a5 55%,#238a3a); font-weight:1000; letter-spacing:.1em; cursor:pointer; }
 #resultStats { display:grid; gap:7px; margin:18px 0 24px; }
 #resultStats div { display:flex; justify-content:space-between; border-bottom:1px solid #ffffff17; padding:5px 0; }
+/* Keep the impact scene available for inspection after a disabled rig settles. */
+#result.crash-result { background:none; pointer-events:none; place-items:end; padding:88px 26px 120px; }
+#result.crash-result .panel { pointer-events:auto; width:min(350px,100%); padding:22px; border-color:#b98765; border-radius:5px; box-shadow:0 12px 40px #0006; }
+#result.crash-result h1 { font-size:2rem; margin:12px 0; }
+#result.crash-result #resultStats { font-size:.8rem; margin:12px 0; }
+#result.crash-result .copy { font-size:.8rem; line-height:1.5; }
+#result.crash-result .fine-print { line-height:1.5; }
+.crashed .touch { display:none; }
+@media (max-width:760px) { #result.crash-result { padding:78px 12px 110px; } #result.crash-result .panel { padding:15px; width:min(310px,100%); } }
 .touch { position:fixed; inset:auto 8px 104px; display:none; grid-template-columns:minmax(145px,1fr) repeat(3,72px); gap:7px; z-index:4; align-items:end; }
 .touch button,.steering { border:1px solid #ffffff25; background:#090d0dd9; color:white; border-radius:10px; min-height:58px; font-size:.62rem; font-weight:900; }
 .touch button.active { background:#7138a5e8; transform:translateY(1px); }

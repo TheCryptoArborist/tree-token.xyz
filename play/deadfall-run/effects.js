@@ -50,7 +50,7 @@ if(opacity<.003)discard;gl_FragColor=vec4(vColor,opacity);
     function update(dt, state, tractor, running, viewport = 900) {
       dt = Math.max(0, Math.min(.1, dt)); material.uniforms.viewport.value = Math.max(1, viewport);
       if (!running) dt = 0;
-      if (running) {
+      if (running && !state.disabled) {
         const load = Math.max(0, Math.min(1, state.throttle || 0));
         smokeTime += dt * (3 + load * 13);
         while (smokeTime >= 1) {

@@ -1,4 +1,4 @@
-# Deadfall Run — Handling Lab 0.5.5
+# Deadfall Run — Handling Lab 0.5.6
 
 A downloadable development build for TREE Arcade. This handling lab has not been published to the live arcade.
 
@@ -10,6 +10,22 @@ A downloadable development build for TREE Arcade. This handling lab has not been
 4. Use **RETRY** or **R** for the identical starting setup, or **TEST MENU** to choose another exercise.
 
 The original Stormbreak Pass descent is also included: open **index.html** or **START_GAME.bat**. Its menu links to the handling lab. No installation, web server, account, wallet, or network connection is required to drive. The Back to Arcade link opens https://tree-token.xyz/play/.
+
+## Tree impact and crash aftermath fix — 0.5.6
+
+The old failure screen immediately stopped the tree animation, particles and suspension and silenced the impact when damage reached 100%. That could make a tree strike look like only a “Truck disabled” message.
+
+Impacts now give the sprung cab/trailer and secured load a short directional jolt. If accumulated damage reaches 100%, the engine stops and driving input is locked while the scene settles for 2.6 seconds. The impact sound finishes, debris clears, and tree reactions continue. The camera eases to Inspect after the initial impact. A smaller results panel leaves the scene visible, identifies the object, contact body and impact speed, and offers **RESTART DESCENT**. Drag to look around, or use C / SELECT to change camera. START also restarts after results appear.
+
+Smaller impacts still allow you to brake and reverse clear with V, or use R to recover with the existing damage penalty. A large tree stays solid; a small tree can fall when struck hard enough. Collision blocking, damage thresholds, steering and trailer tracking are unchanged. This fix adds crash feedback and a working aftermath, not crushed body panels, free-flying logs or a rigid-body rollover simulation.
+
+### Test this fix first
+
+1. Extract the new ZIP into a separate folder and open **index.html**. Leave the road where there is no guardrail. Approach a tree slowly, release throttle, and check the jolt and tree reaction. Brake, then hold V to back away.
+2. In a fresh run, try a harder impact. Watch the damage meter: reaching 100% should stop the engine but leave the impact visible before the result panel appears. A hard first hit may leave the truck drivable if accumulated damage stays below 100%.
+3. During the aftermath, pause and resume. After results appear, drag to inspect, then choose **RESTART DESCENT**. Check that damage is zero, all five logs are present and scenery has reset.
+
+Please report approximate impact speed, damage before the hit, tree size and camera view if the response still looks wrong. A recording of the impact would help distinguish contact behavior from animation.
 
 ## Suspension and secured cargo update — 0.5.5
 
@@ -126,9 +142,9 @@ The uploaded Hard Truck game was used as a reference for configurable steering a
 
 ## Verification
 
-Run **npm test** in this directory (or run the eight .cjs scripts in tests/ individually). No dependencies need installing. The 92 checks use real Three.js geometry and simulation with stubbed browser/renderer interfaces. Nine new checks cover spring settling, braking/turn response, axle sequencing, unchanged handling, pause/reset, visible coupling, tire/strap transforms, constrained cargo and moving exhaust emitters. They do not establish GPU rendering, native input feel, speaker sound quality, or frame rate.
+Run **npm test** in this directory (or run the nine .cjs scripts in tests/ individually). No dependencies need installing. The 98 checks use real Three.js geometry and simulation with stubbed browser/renderer interfaces. This includes nine suspension/load checks, five new crash lifecycle checks and an audio regression ensuring engine shutdown does not cancel the impact. They do not establish GPU rendering, native input feel, speaker sound quality, or frame rate.
 
-The 0.5.5 menu and unsupported-graphics fallback were inspected. This browser could not create a WebGL context, so rendered suspension motion could not be reviewed here. The unchanged audio module previously passed an eight-second browser OfflineAudioContext render in 0.5.4: finite output with no clipping, audible sections with nonzero output, and exactly silent pause/mute sections. That audio render was not repeated for 0.5.5 and is not a listening test. To repeat it, open **tests/browser-audio.html**, click **RENDER SOUND CHECK**, then optionally listen to its locally generated clip.
+The 0.5.6 menu and unsupported-graphics fallback were inspected. This browser could not create a WebGL context, so rendered crash movement and the results layout could not be reviewed here. The audio module previously passed an eight-second browser OfflineAudioContext render in 0.5.4: finite output with no clipping, audible sections with nonzero output, and exactly silent pause/mute sections. That audio render was not repeated for 0.5.6; its new engine-shutdown branch has an automated graph/lifecycle check. To repeat the browser render, open **tests/browser-audio.html**, click **RENDER SOUND CHECK**, then optionally listen to its locally generated clip.
 
 Actual driving, visual appearance and audio character still require a desktop playtest. If you see an error, include the message, browser/device, chosen test, and a screenshot or short recording.
 

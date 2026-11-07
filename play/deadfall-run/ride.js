@@ -25,6 +25,8 @@
       cargoX: spring(2.2, .80, .026), cargoZ: spring(2.0, .82, .035),
       cargoPitch: spring(2.2, .80, .0025), cargoRoll: spring(2.2, .80, .0035)
     };
+    const jolts = { tractorPitch: spring(2.1, .58, .05), tractorRoll: spring(2.2, .62, .04),
+      trailerPitch: spring(1.65, .64, .028), trailerRoll: spring(1.8, .68, .025) };
     const value = { tractorPitch: 0, tractorRoll: 0, trailerPitch: 0, trailerRoll: 0,
       cargoX: 0, cargoZ: 0, cargoPitch: 0, cargoRoll: 0, acceleration: 0, lateral: 0,
       axles: { tractor: [], trailer: [] } };
@@ -66,8 +68,22 @@
     function reset(state, tractor, trailer) {
       const target = targets(state, tractor, trailer, 0, 0, 0);
       for (const [key, s] of Object.entries(springs)) { s.x = clamp(target[key], -s.limit, s.limit); s.v = 0; value[key] = s.x; }
+      for (const s of Object.values(jolts)) s.x = s.v = 0;
       value.acceleration = value.lateral = 0; remember(state);
       return value;
+    }
+    function impact(hit, tractor, trailer) {
+      const strength = clamp(hit.speed, 0, 27);
+      for (const [name, body] of [["tractor", tractor], ["trailer", trailer]]) {
+        const normal = hit.normal.clone().applyQuaternion(body.quaternion.clone().invert());
+        const share = hit.body === name ? 1 : .35;
+        jolts[name + "Pitch"].v = clamp(jolts[name + "Pitch"].v - normal.z * strength * .028 * share, -.75, .75);
+        jolts[name + "Roll"].v = clamp(jolts[name + "Roll"].v + normal.x * strength * .024 * share, -.65, .65);
+        if (name === "trailer") {
+          springs.cargoX.v = clamp(springs.cargoX.v - normal.x * strength * .035, -.55, .55);
+          springs.cargoZ.v = clamp(springs.cargoZ.v - normal.z * strength * .04, -.6, .6);
+        }
+      }
     }
     function step(state, tractor, trailer, dt) {
       if (!previous || state.pos.distanceTo(previous.pos) > 4) return reset(state, tractor, trailer);
@@ -81,9 +97,10 @@
       value.lateral += (trailerLateral - value.lateral) * filter;
       const target = targets(state, tractor, trailer, value.acceleration, lateral, value.lateral);
       for (const [key, s] of Object.entries(springs)) value[key] = advance(s, target[key], dt);
+      for (const [key, s] of Object.entries(jolts)) value[key] += advance(s, 0, dt);
       remember(state); return value;
     }
-    return { value, reset, step };
+    return { value, reset, step, impact };
   }
   const api = { create, AXLES };
   if (typeof module !== "undefined" && module.exports) module.exports = api;

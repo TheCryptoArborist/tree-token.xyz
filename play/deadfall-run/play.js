@@ -1,4 +1,4 @@
-/* Deadfall Run: 3D field-test build 0.5.5. No remote requests or transactions. */
+/* Deadfall Run: 3D field-test build 0.5.6. No remote requests or transactions. */
 (function () {
   "use strict";
   try {
@@ -31,7 +31,8 @@
     const pad = DeadfallGamepad.create(), controllerPanel = $("controllerPanel");
     const sound = DeadfallAudio.create(), effects = DeadfallEffects.create(scene), ride = DeadfallRide.create(R);
     const contacts = DeadfallCollision.create(R, P, world.solids, hit => {
-      world.impact(hit); effects.impact(hit); sound.impact(hit);
+      world.impact(hit); effects.impact(hit); sound.impact(hit); ride.impact(hit, tractor, trailer);
+      lastImpact = { kind: hit.object.kind, body: hit.body, speed: hit.speed, at: state.elapsed, broken: hit.broken };
       const part = hit.body === "trailer" ? "Trailer" : "Truck";
       showMessage(hit.broken ? `${part} impact. ${hit.object.kind === "tree" ? "Small tree knocked down" : "Timber pushed aside"}; check your load.` :
         `${part} hit ${hit.object.kind === "barrier" ? "the guardrail" : hit.object.kind === "tree" ? "a tree" : "a rock"}. Brake, then reverse clear or press R to recover.`, 5);
@@ -41,6 +42,7 @@
     const cameraNames = L ? ["CHASE", "HOOD", "INSPECT", "OVERHEAD"] : ["CHASE", "HOOD", "INSPECT"], qualityNames = ["LOW", "BALANCED", "HIGH"];
     let state, running = false, paused = false, selectedPreset = L ? "loaded" : "standard", cameraMode = 0, quality = 1;
     let selectedTest = "braking", session = null;
+    let aftermath = null, lastImpact = null, crashView = false;
     let last = performance.now(), accumulator = 0, messageTimer = 0, diagnostics = false, hudTimer = 0, fps = 60;
     let orbitAngle = 1.05, orbitHeight = .38, orbitDistance = 24, drag = null;
     const fixed = 1 / 120, camPos = new THREE.Vector3(), camLook = new THREE.Vector3();
@@ -53,8 +55,8 @@
       if (input.brake) { input.throttle = false; input.reverse = false; }
       else if (input.reverse) input.throttle = false;
     }
-    function clearInput() {
-      sound.stop();
+    function clearInput(silence = true) {
+      if (silence) sound.stop();
       keys.clear(); Object.keys(touch).forEach(k => touch[k] = false);
       padHeld = DeadfallGamepad.empty(); pad.suspend();
       input.touchSteer = 0; $("steer").value = "0"; readInput();
@@ -79,6 +81,8 @@
     }
     function reset(d = 0) {
       if (L) d = L.tests[selectedTest].start;
+      aftermath = lastImpact = null; crashView = false; ui.result.classList.remove("crash-result");
+      document.body.classList.remove("crashed");
       state = P.createState(d); clearInput(); sound.reset(); effects.reset(); contacts.reset(); world.reset(); accumulator = 0; paused = false;
       if (L) { L.prepare(selectedTest, state); session = L.begin(selectedTest, state); world.selectTest(selectedTest); }
       ui.pause.textContent = "PAUSE"; ui.paused.hidden = true;
@@ -149,7 +153,7 @@
         if (!ui.drive.disabled) { if (running) setPaused(!paused); else start(); }
         return;
       }
-      if (result.pressed.select && running) setCamera((cameraMode + 1) % cameraNames.length);
+      if (result.pressed.select && (running || crashView)) setCamera((cameraMode + 1) % cameraNames.length);
       if (!running) {
         if (ui.result.classList.contains("active")) { if (result.pressed.b) menu(); }
         else {
@@ -164,6 +168,7 @@
     }
     function recover() {
       if (!running || paused) return;
+      if (aftermath) { showMessage("The truck needs repairs. Watch the impact settle, then choose RESTART DESCENT."); return; }
       if (L) { start(); return; }
       const old = state, d = R.clamp(state.progress, 0, R.LENGTH - 30);
       // Choose a clear complete-rig pose; recovery must not spawn inside a rock.
@@ -179,6 +184,7 @@
       }
       state = recovered || P.createState(0); effects.reset(); sound.reset(); state.logs = old.logs; state.damage = R.clamp(old.damage + 5, 0, 100);
       state.brakeHeat = old.brakeHeat; state.elapsed = old.elapsed; state.collisions = old.collisions;
+      lastImpact = null;
       clearInput(); P.couple(state, tractor, trailer, true); ride.reset(state, tractor, trailer); V.update(truck, state, input, ride); updateCamera(1 / 60, true); updateUI();
       showMessage("Back on the road. Recovery adds 5% damage; missing logs stay missing.");
       if (state.damage >= 100) finish(false);
@@ -188,7 +194,7 @@
       const right = new THREE.Vector3(Math.cos(state.yaw), 0, Math.sin(state.yaw));
       const center = tractor.position.clone().lerp(trailer.position, .54).add(new THREE.Vector3(0, 1.85, 0));
       let desired, look;
-      if (!running) {
+      if (!running && !crashView) {
         desired = center.clone().addScaledVector(f, 14).addScaledVector(right, 19).add(new THREE.Vector3(0, 8.1, 0)); look = center;
       } else if (cameraMode === 1) {
         desired = tractor.userData.visual.localToWorld(new THREE.Vector3(0, 3.09, -2.62));
@@ -207,7 +213,7 @@
       const t = snap ? 1 : 1 - Math.exp(-dt * P.presets[selectedPreset].camera);
       camPos.lerp(desired, t); camLook.lerp(look, snap ? 1 : 1 - Math.exp(-dt * 5.2));
       camera.position.copy(camPos); camera.lookAt(camLook);
-      if (!running && innerWidth > 760) camera.setViewOffset(innerWidth, innerHeight, -innerWidth * .15, 0, innerWidth, innerHeight);
+      if (!running && !crashView && innerWidth > 760) camera.setViewOffset(innerWidth, innerHeight, -innerWidth * .15, 0, innerWidth, innerHeight);
       else if (camera.view && camera.view.enabled) camera.clearViewOffset();
     }
     function updateUI() {
@@ -239,15 +245,38 @@
         ui.diagnostics.textContent = `WEBGL 3D  /  ${Math.round(fps)} FPS  /  ${renderer.info.render.calls} DRAWS  /  HITCH ${(gap * 1000).toFixed(3)} mm  /  ARTICULATION ${(state.articulation * 180 / Math.PI).toFixed(1)}°`;
       }
     }
-    function finish(success) {
+    function beginAftermath() {
+      aftermath = { time: 0 }; crashView = true;
+      state.speed = state.throttle = state.scraping = 0; state.disabled = true;
+      clearInput(false); accumulator = 0; document.body.classList.add("crashed");
+      // Keep the driver's camera through the initial impact, then ease to an
+      // inspection view. No driving integration occurs while the rig settles.
+      showMessage("Severe damage — engine stopped. The truck and load are settling.", 3);
+    }
+    function finish(success, settled = false) {
       if (!running) return;
+      if (!success && state.damage >= 100 && !settled) { if (!aftermath) beginAftermath(); return; }
       running = false; paused = false; clearInput(); ui.paused.hidden = true; ui.pause.disabled = true;
+      aftermath = null;
       const entries = [["Route finish", success ? 10000 : 0], ["Delivered cargo", success ? state.logs * 2000 : 0],
         ["Full load bonus", success && state.logs === 5 ? 5000 : 0], ["Truck condition", success ? Math.round((100 - state.damage) * 30) : 0],
         ["Time bonus", success ? Math.max(0, 3000 - Math.round(Math.max(0, state.elapsed - 95) * 35)) : 0]];
       entries.push(["TOTAL SCORE", entries.reduce((sum, [, value]) => sum + value, 0)]);
+      if (crashView) {
+        ui.result.classList.add("crash-result");
+        const hit = lastImpact && state.elapsed - lastImpact.at < .2 ? lastImpact : null;
+        const object = hit?.kind === "tree" ? "Tree" : hit?.kind === "barrier" ? "Guardrail" : hit?.kind === "limb" ? "Timber" : "Rock";
+        ui.resultKicker.textContent = "RECOVERY REQUIRED"; ui.resultTitle.textContent = "Rig out of service.";
+        $("resultReason").textContent = hit ? `${object} impact at ${Math.round(hit.speed * 2.237)} mph. ${hit.body === "trailer" ? "Trailer" : "Tractor"} contact brought accumulated damage to 100%.` : "Accumulated damage reached 100%. The engine has shut down.";
+        ui.resultStats.innerHTML = `<div><span>Load remaining</span><b>${state.logs}/5 logs</b></div><div><span>Distance covered</span><b>${Math.round(state.progress)} m</b></div>`;
+        $("again").textContent = "RESTART DESCENT";
+        $("resultNote").textContent = "Drag to inspect the crash. C / SELECT changes camera. Restart or press START for a fresh truck and load.";
+        ui.result.classList.add("active"); ui.dispatch.classList.remove("show"); return;
+      }
       ui.resultKicker.textContent = success ? "DELIVERY COMPLETE" : "RUN ENDED";
-      ui.resultTitle.textContent = success ? `${state.logs}/5 logs delivered.` : state.damage >= 100 ? "Truck disabled." : "Cargo lost.";
+      ui.resultTitle.textContent = success ? `${state.logs}/5 logs delivered.` : "Cargo lost.";
+      $("resultReason").textContent = ""; $("again").textContent = "DRIVE AGAIN";
+      $("resultNote").textContent = "Local test score only. No TREE payments or trading are connected.";
       ui.resultStats.innerHTML = entries.map(([label, value]) => `<div><span>${label}</span><b>${value.toLocaleString()}</b></div>`).join(""); ui.result.classList.add("active");
     }
     function finishTest() {
@@ -268,9 +297,16 @@
       if (elapsed > 0) fps = fps * .97 + 1 / elapsed * .03;
       controllerFrame();
       readInput();
-      if (running && !paused) {
+      if (running && !paused && focused && !document.hidden && aftermath) {
+        const before = aftermath.time; aftermath.time += elapsed;
+        clearInput(false); accumulator += elapsed;
+        while (accumulator >= fixed) { ride.step(state, tractor, trailer, fixed); accumulator -= fixed; }
+        V.update(truck, state, input, ride);
+        if (before < .55 && aftermath.time >= .55) { orbitAngle = 1.05; orbitHeight = .38; orbitDistance = 22; setCamera(2); }
+        if (aftermath.time >= 2.6) finish(false, true);
+      } else if (running && !paused) {
         accumulator += elapsed;
-        while (accumulator >= fixed && running) {
+        while (accumulator >= fixed && running && !aftermath) {
           const previous = DeadfallCollision.capture(state);
           const event = P.step(state, input, fixed, selectedPreset); P.couple(state, tractor, trailer);
           const hit = contacts.resolve(state, previous, tractor, trailer, fixed);
@@ -287,8 +323,9 @@
         V.update(truck, state, input, ride); messageTimer -= elapsed;
         if (messageTimer <= 0) ui.dispatch.classList.remove("show");
       }
-      updateCamera(elapsed); world.update(state.pos, state.progress, running && !paused ? elapsed : 0);
-      effects.update(elapsed, state, tractor, running && !paused && focused && !document.hidden, renderer.domElement.height || innerHeight);
+      const animate = (running || crashView) && !paused && focused && !document.hidden && controllerPanel.hidden;
+      updateCamera(elapsed); world.update(state.pos, state.progress, animate ? elapsed : 0);
+      effects.update(elapsed, state, tractor, animate, renderer.domElement.height || innerHeight);
       sound.update(state, input, running && !paused && focused && !document.hidden, elapsed, cameraMode);
       hudTimer += elapsed; if (hudTimer > .08) { updateUI(); hudTimer = 0; }
       renderer.render(scene, camera); requestAnimationFrame(frame);
@@ -304,9 +341,9 @@
         return;
       }
       if (event.target.tagName === "INPUT" || event.target.tagName === "SELECT") return;
-      if (keyMap[event.code] && running && !paused) { sound.unlock(); keys.add(event.code); event.preventDefault(); }
+      if (keyMap[event.code] && running && !paused && !aftermath) { sound.unlock(); keys.add(event.code); event.preventDefault(); }
       if (event.repeat) return;
-      if (event.code === "KeyC" && running) setCamera((cameraMode + 1) % cameraNames.length);
+      if (event.code === "KeyC" && (running || crashView)) setCamera((cameraMode + 1) % cameraNames.length);
       if (event.code === "KeyR") recover();
       if (event.code === "Escape") setPaused(!paused);
       if (event.code === "F3") { diagnostics = !diagnostics; ui.diagnostics.hidden = !diagnostics; event.preventDefault(); }
@@ -319,7 +356,7 @@
     document.querySelectorAll("[data-control]").forEach(button => {
       const action = button.dataset.control;
       button.addEventListener("pointerdown", e => {
-        e.preventDefault(); if (!running || paused) return;
+        e.preventDefault(); if (!running || paused || aftermath) return;
         sound.unlock();
         button.setPointerCapture(e.pointerId); touch[action] = true; button.classList.add("active");
       });
@@ -331,7 +368,7 @@
     const centerSteering = () => { steer.value = "0"; input.touchSteer = 0; };
     steer.addEventListener("pointerup", () => { centerSteering(); steer.blur(); }); steer.addEventListener("pointercancel", centerSteering); steer.addEventListener("blur", centerSteering);
     renderer.domElement.addEventListener("pointerdown", event => {
-      if (cameraMode !== 2 || !running) return;
+      if (cameraMode !== 2 || (!running && !crashView)) return;
       drag = { x: event.clientX, y: event.clientY, id: event.pointerId }; renderer.domElement.setPointerCapture(event.pointerId);
     });
     renderer.domElement.addEventListener("pointermove", event => {
@@ -341,7 +378,7 @@
     });
     for (const name of ["pointerup", "pointercancel", "lostpointercapture"]) renderer.domElement.addEventListener(name, () => drag = null);
     renderer.domElement.addEventListener("wheel", event => {
-      if (cameraMode !== 2 || !running) return;
+      if (cameraMode !== 2 || (!running && !crashView)) return;
       event.preventDefault(); orbitDistance = R.clamp(orbitDistance + event.deltaY * .018, 13, 40);
     }, { passive: false });
     ui.drive.addEventListener("click", start);
@@ -358,9 +395,9 @@
     $("controllerClose").addEventListener("click", closeController);
     $("controllerBegin").addEventListener("click", () => { pad.beginSetup(); controllerUI(); });
     $("controllerCancel").addEventListener("click", () => { pad.cancelSetup(); controllerUI(); });
-    $("again").addEventListener("click", menu);
+    $("again").addEventListener("click", () => { if (crashView) start(); else menu(); });
     ui.pause.addEventListener("click", () => setPaused(!paused)); $("resume").addEventListener("click", () => setPaused(false));
-    ui.camera.addEventListener("click", () => { if (running) setCamera((cameraMode + 1) % cameraNames.length); });
+    ui.camera.addEventListener("click", () => { if (running || crashView) setCamera((cameraMode + 1) % cameraNames.length); });
     ui.quality.addEventListener("click", () => setQuality((quality + 1) % 3)); $("recover").addEventListener("click", recover);
     document.querySelectorAll("[data-preset]").forEach(button => button.addEventListener("click", () => {
       selectedPreset = button.dataset.preset;
@@ -385,7 +422,7 @@
     setQuality(1); reset(); updateCamera(1 / 60, true); world.update(state.pos, state.progress); renderer.render(scene, camera);
     pad.poll(); controllerUI();
     ui.drive.disabled = false; ui.drive.textContent = L ? "START HANDLING TEST" : "BEGIN DESCENT";
-    $("bootStatus").textContent = `3D ready · ${L ? "Handling Lab" : "Stormbreak Pass"} · Build 0.5.5`;
+    $("bootStatus").textContent = `3D ready · ${L ? "Handling Lab" : "Stormbreak Pass"} · Build 0.5.6`;
     requestAnimationFrame(frame);
   } catch (error) {
     console.error(error); window.showBootError(error.message || "3D graphics could not start. Try a browser with hardware acceleration enabled.");

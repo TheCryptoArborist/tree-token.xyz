@@ -1,6 +1,16 @@
-# Deadfall Run 0.5.5 verification
+# Deadfall Run 0.5.6 verification
 
-Date: November 6, 2026 (America/Chicago)
+Date: November 7, 2026 (America/Chicago)
+
+## Crash lifecycle correction
+
+The reported “Truck disabled” behavior had an identifiable lifecycle defect. finish(false) set running=false and immediately called clearInput(), which muted the impact bus. World reactions and particles then received zero animation time. The result overlay covered a tree animation that had only just started. The contact solver itself already stopped mature-tree penetration.
+
+The new disabled-rig phase holds the collision-resolved physical pose and blocks driving, while advancing secondary suspension, tree reactions and particles for 2.6 seconds. A directional impulse acts on the existing sprung frames and secured cargo; it does not move the physical coupling or feed back into steering. After 0.55 seconds the camera eases to Inspect. Results use a compact, non-blocking overlay with object/body/speed information and a direct restart. Tree reactions and already-emitted debris can complete after results; engine exhaust stops. Pause/focus/controller-setup behavior remains gated.
+
+Engine shutdown now silences continuous engine/road/brake layers while leaving the scheduled impact envelope intact. Pause and menus still silence all audio. Damage thresholds, collision resolution, vehicle geometry, routes, steering/trailer solver and NES mappings are unchanged. There is no new chassis deformation, physical rollover or free cargo simulation.
+
+Five new tests exercise the actual play.js with real Three.js vehicle geometry, collision solver, tree reactions, suspension and particles on a controlled off-road tree fixture. A damaged rig hits a mature tree and is disabled; the tree and truck continue moving visually while the physical pose and game clock stay fixed. Further checks cover pause/resume, orbiting the results scene, fresh restart, backing away from a low-speed hit, and a small tree completing its fall after a fatal hit. A separate audio regression checks that disabling the engine preserves the impact envelope and that pause still silences it. Browser/renderer and audio-device interfaces are stubs.
 
 ## Suspension and restrained-load update
 
@@ -8,7 +18,7 @@ Added a secondary motion model that reads the approved driving state without wri
 
 The log bundle moves together within 2.6 cm laterally and 3.5 cm longitudinally. Its small pitch/roll is also bounded. Strap middle points follow the bundle while the two deck anchors stay fixed. Existing tube buffers are deformed instead of allocating new meshes. Smoke starts at the actual stack tips after the sprung-frame transform. Reset/recovery initializes the springs from the current pose and speed; pause does not advance them.
 
-The driving physics, collision solver, controller module, routes, handling exercise criteria and audio are byte-identical to 0.5.4. The vehicle scene now contains 440 mesh objects / 203,167 stored vertices, an increase of ten dampers and 520 vertices. This is a geometry count, not a frame-rate benchmark. Suspension travel is visual and does not add tire forces, wheel lift or rigid-body rollover behavior.
+In 0.5.5 the driving physics, collision solver, controller module, routes, handling exercise criteria and audio were byte-identical to 0.5.4. The vehicle scene contains 440 mesh objects / 203,167 stored vertices, an increase of ten dampers and 520 vertices over 0.5.4. This is a geometry count, not a frame-rate benchmark. Suspension travel is visual and does not add tire forces, wheel lift or rigid-body rollover behavior. Version 0.5.6 retains that geometry and adds bounded transient impact impulses.
 
 ## Collision and sound update
 
@@ -39,13 +49,15 @@ Gentle turns caused the trailer tail to move sideways with the cab. The previous
 
 - 10 controller-module checks: standard actions and deadzone, raw mapping and saved-profile restore, single-axis diagonals, dual button/axis D-pads, release/duplicate handling, cancelling remaps, disconnect/device replacement, focus/pause gating, unavailable/denied APIs, and corrupt profiles/blocked storage.
 
-- 8 audio checks: unavailable/denied API handling, lazy creation and retryable resume, graph reuse over repeated starts, pitch/load and engine-brake layers, air-release timing, immediate silence/disposal, saved settings and blocked storage, finite bounded parameter values, and impact/scrape buses that silence on pause.
+- 9 audio checks: unavailable/denied API handling, lazy creation and retryable resume, graph reuse over repeated starts, pitch/load and engine-brake layers, air-release timing, immediate silence/disposal, saved settings and blocked storage, finite bounded parameter values, impact/scrape buses that silence on pause, and engine shutdown preserving the one-shot impact envelope.
 
 - 7 collision/terrain checks: cab head-on blocking and reverse escape; a 50 m proposed step across a thin wall; trailer-only reverse contact; shallow rail sliding; mature versus small trees and reset; unchanged contact-free steering; and surface/terrain-bank behavior.
 
 - 9 suspension/load checks: stationary settling on flat/uphill/downhill surfaces; braking nose dip and release; mirrored outward cargo movement and slower trailer lean; sequential axle response to a 6 cm bump; 2,400 steps of identical driving state with secondary motion enabled/disabled; pause and moving-start reset; actual coupling, wheel and strap transforms; bounded cargo under extreme inputs and complete reset; and stack-attached emission with world-space smoke.
 
-Total: **92 passing CPU/DOM/audio-stub checks**. These are not browser playtests.
+- 5 crash lifecycle checks: fatal tree impact with ongoing reactions and locked driving; pause freezing the entire aftermath; results inspection and complete restart; low-speed reverse escape; and small-tree falling/debris completion after engine shutdown.
+
+Total: **98 passing CPU/DOM/audio-stub checks**. These are not browser playtests.
 
 ## Model measurements
 
@@ -62,9 +74,9 @@ These are measurements of this simplified game model, not measured behavior of H
 
 ## Browser verification and remaining playtest
 
-The 0.5.5 entry menu was opened in cloud Chrome and displayed the correct build label. WebGL initialization failed with “Error creating WebGL context”; the visible startup error correctly disables Start and explains the need for a WebGL-capable browser. Rendered suspension movement and GPU frame rate could not be checked in this environment.
+The 0.5.6 entry menu was opened in cloud Chrome and displayed the correct build label. WebGL initialization failed with “Error creating WebGL context”; the visible startup error correctly disables Start and explains the need for a WebGL-capable browser. Rendered crash movement, results layout and GPU frame rate could not be checked in this environment.
 
-The unchanged audio.js module was previously rendered by Chrome's OfflineAudioContext for eight seconds through tests/browser-audio.html in 0.5.4. That check was not repeated in 0.5.5. It passed with these normalized PCM measurements:
+The audio.js module was previously rendered by Chrome's OfflineAudioContext for eight seconds through tests/browser-audio.html in 0.5.4. That check was not repeated in 0.5.6; the new engine-shutdown branch was checked with the audio test double. The earlier render passed with these normalized PCM measurements:
 
 | Measurement | Result |
 | --- | --- |

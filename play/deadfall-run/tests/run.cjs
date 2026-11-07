@@ -301,11 +301,13 @@ test("chase view frames the complete rig at a wide desktop aspect ratio", () => 
   }
 });
 test("failure screen and Drive Again return a fresh five-log run", () => {
+  event("focus");
   element("resume").dispatch("click");
   for (let i = 0; i < 20; i++) event("keydown", { code: "KeyR", repeat: false });
-  assert(element("result").classList.contains("active")); assert.equal(element("resultTitle").textContent, "Truck disabled.");
-  element("again").dispatch("click"); assert(element("start").classList.contains("active"));
-  element("drive").dispatch("click"); assert.equal(element("cargo").textContent, "5/5"); assert.equal(element("damageText").textContent, "0%");
+  assert(!element("result").classList.contains("active")); frames(180);
+  assert(element("result").classList.contains("active")); assert.equal(element("resultTitle").textContent, "Rig out of service.");
+  element("again").dispatch("click"); assert(!element("start").classList.contains("active"));
+  assert.equal(element("cargo").textContent, "5/5"); assert.equal(element("damageText").textContent, "0%");
   assert.equal(element("distance").textContent, "1,800 m");
 });
 test("the full descent is completable while avoiding solid hazards with both bodies", () => {
