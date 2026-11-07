@@ -7,6 +7,11 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
+# Retain the verified production function's existing compute settings.
+[functions."breaker-access"]
+  memory = 1024
+  region = "us-east-2"
+
 [[redirects]]
   from = "/"
   to = "/play/canopy-breaker/"

@@ -11,7 +11,7 @@ host has its production saved-game migration applied and gameplay enabled.
 The arcade release preserves all 43 existing function records, five schedules,
 other static files, runtime configuration and site environment records.
 
-All 108 automated tests, the build and hosted database/access checks pass.
+All 125 automated tests, the build and hosted database/access checks pass.
 Peter reported successful live gameplay and a 20,000 TREE restart. The score
 carryover and navigation update also repairs earlier paid score resets on load.
 Score recovery in the user’s wallet, mobile wallet round trips and physical NES
@@ -54,15 +54,17 @@ Protected JS modules are bundled privately in the isolated `breaker-access`
 function, never shipped in the public static directory. Previously downloaded
 code cannot be recalled; this is access control, not copy protection.
 
-The first run is included. The server creates one durable active run per wallet;
+Your NFTree includes fresh games. The server keeps one durable active run per wallet;
 reloading or signing in again resumes that run. It replays only bounded input
 batches, owns lives and score, and rejects browser state and fabricated run IDs.
 No rewards or token payouts are granted. Browser prediction may be up to one
 unacknowledged batch ahead of the durable checkpoint; a reload discards that
 unsaved interval. Network failures pause local prediction.
 
-At zero lives, a new run requires **exactly 20,000 TREE**, plus normal SUI gas.
-Restart returns to screen 1 with three lives and retains the server-saved score.
+At zero lives, **Start New Game · Free** begins at screen 1 with three lives and
+score zero. Your public username, best leaderboard score and finished result
+remain saved. **Continue · 20,000 TREE** restores three lives at screen 1 while
+retaining your server-saved score; normal SUI gas applies to that paid option.
 Previously paid restarts that cleared the score recover it once from the verified
 restart history on the next load, including points earned since restarting.
 A completed 30-screen run
@@ -134,3 +136,9 @@ paid-restart score carryover. Ties use grove, then the earliest saved achievemen
 Paid restarts and new challenges never erase the best score. The board refreshes
 automatically, on request, and after a saved defeat or campaign completion.
 Opening the leaderboard or editing a username pauses active gameplay.
+
+Free new-game requests are tied to the defeated run and are idempotent. Unsigned
+continue quotes are cancelled atomically when a free game starts. A recorded
+signed payment must be recovered before the free reset so its purchased
+continuation cannot be orphaned. The original finished run remains available to
+completion alerts. No new-game request signs or submits a wallet transaction.

@@ -34,3 +34,99 @@ test('restart transaction rollback preserves the defeat and unpaid recoverable i
 test('logout and expired unsigned invoices cannot authorize a restart',async()=>{const s=setup();await defeated(s);const q=await s.service.quote();s.setTime(q.expiresAt);await assert.rejects(s.service.bind(null,{id:q.id,signed:{valid:true,digest:toBase58(randomBytes(32)),bytes:'b',signature:'s'}}));s.logout();await assert.rejects(s.service.open());});
 test('signed invoice survives its quote window so a completed transfer remains recoverable',async()=>{const s=setup(),{q}=await bound(s);s.setTime(q.expiresAt+5000);const restored=await s.service.redeem(null,{id:q.id});assert.equal(restored.state.lives,3);});
 test('saved gameplay updates one best leaderboard score and paid restarts or new challenges cannot lower it',async()=>{const s=setup(),run=await s.service.open();assert.equal((await db.query('SELECT * FROM breaker.leaderboard_scores WHERE wallet=$1',[s.address])).rows.length,0);const state={...run.state,score:2000,level:8};await db.query('UPDATE breaker.runs SET state=$1 WHERE id=$2',[JSON.stringify(state),run.id]);await s.service.frames(null,{id:run.id,revision:run.revision,inputs:[{x:400,launch:true,fire:false}]});let best=(await db.query('SELECT * FROM breaker.leaderboard_scores WHERE wallet=$1',[s.address])).rows;assert.equal(best.length,1);assert.equal(Number(best[0].score),2000);assert.equal(best[0].level,8);const paid=await purchased(s,2000);best=(await db.query('SELECT * FROM breaker.leaderboard_scores WHERE wallet=$1',[s.address])).rows;assert.equal(best.length,1);assert.equal(Number(best[0].score),2000);assert.equal(best[0].level,8);await db.query('UPDATE breaker.runs SET state=$1 WHERE id=$2',[JSON.stringify({...paid.run.state,status:'won',score:10000,level:30}),paid.run.id]);const next=await s.service.next();assert.equal(next.state.score,0);best=(await db.query('SELECT * FROM breaker.leaderboard_scores WHERE wallet=$1',[s.address])).rows;assert.equal(best.length,1);assert.equal(Number(best[0].score),10000);assert.equal(best[0].level,30);});
+
+test('a free new game resets score and lives while preserving the finished run, username and best score',async()=>{
+ const s=setup(),old=await defeated(s,18500);
+ await db.query('INSERT INTO breaker.player_profiles(wallet,username,updated_at) VALUES($1,$2,$3)',[s.address,'Fresh '+s.address.slice(-8),100000]);
+ const before=await storedRun(old.id),next=await s.service.newGame(null,{id:old.id});
+ assert.notEqual(next.id,old.id);assert.equal(next.state.score,0);assert.equal(next.state.carriedScore,0);
+ assert.equal(next.state.level,1);assert.equal(next.state.lives,3);assert.equal(next.state.status,'ready');
+ assert.equal(next.state.newGameFrom,old.id);assert.deepEqual(await storedRun(old.id),before);
+ assert.equal((await s.service.open()).id,next.id);
+ const best=(await db.query('SELECT * FROM breaker.leaderboard_scores WHERE wallet=$1',[s.address])).rows;
+ assert.equal(best.length,1);assert.equal(Number(best[0].score),18500);
+ assert.equal((await db.query('SELECT username FROM breaker.player_profiles WHERE wallet=$1',[s.address])).rows[0].username,'Fresh '+s.address.slice(-8));
+ assert.deepEqual(await s.service.history(),[]);assert.equal(s.submits.length,0);
+});
+
+test('concurrent free-new-game clicks and lost-response retries return the same run without erasing its progress',async()=>{
+ const s=setup(),old=await defeated(s,700);
+ const [a,b]=await Promise.all([s.service.newGame(null,{id:old.id}),createGameService(s.deps).newGame(null,{id:old.id})]);
+ assert.equal(a.id,b.id);assert.equal((await db.query('SELECT id FROM breaker.runs WHERE wallet=$1',[s.address])).rows.length,2);
+ const playing=await s.service.frames(null,{id:a.id,revision:a.revision,inputs:[{x:400,launch:true,fire:false}]});
+ const retry=await createGameService(s.deps).newGame(null,{id:old.id});
+ assert.equal(retry.id,playing.id);assert.equal(retry.revision,playing.revision);assert.deepEqual(retry.state,playing.state);
+ assert.equal(retry.state.status,'playing');assert(retry.state.tick>0);assert.equal(s.submits.length,0);
+});
+
+test('free new games reject invalid, active, completed, foreign and stale run requests',async()=>{
+ const s=setup(),initial=await s.service.open();
+ await assert.rejects(s.service.newGame(null,{id:'not-a-run'}),error=>error.status===400);
+ await assert.rejects(s.service.newGame(null,{id:initial.id}),error=>error.status===409);
+ await db.query('UPDATE breaker.runs SET state=$1 WHERE id=$2',[JSON.stringify({...initial.state,status:'won',level:30}),initial.id]);
+ await assert.rejects(s.service.newGame(null,{id:initial.id}),error=>error.status===409);
+ const own=await defeated(s,100),other=setup(),foreign=await defeated(other,9999);
+ await assert.rejects(s.service.newGame(null,{id:foreign.id}),error=>error.status===409);
+ const first=await s.service.newGame(null,{id:own.id}),secondDefeat=await defeated(s,20);
+ const second=await s.service.newGame(null,{id:secondDefeat.id});
+ assert.notEqual(first.id,second.id);
+ await assert.rejects(s.service.newGame(null,{id:own.id}),error=>error.status===409);
+ assert.equal((await s.service.open()).id,second.id);
+});
+
+test('a free new game cancels an unsigned quote and prevents its later signature from binding',async()=>{
+ const s=setup(),old=await defeated(s,500),quote=await s.service.quote();
+ const next=await s.service.newGame(null,{id:old.id});
+ assert.equal(next.state.score,0);assert.equal((await s.service.history())[0].status,'cancelled');
+ await assert.rejects(s.service.bind(null,{id:quote.id,signed:{valid:true,digest:toBase58(randomBytes(32)),bytes:'late-bytes',signature:'late-signature'}}));
+ assert.equal((await s.service.open()).id,next.id);assert.equal(s.submits.length,0);
+ assert.equal((await db.query('SELECT * FROM breaker.receipts WHERE invoice_id=$1',[quote.id])).rows.length,0);
+});
+
+test('a recorded signed payment blocks a free reset and remains recoverable through the paid continue',async()=>{
+ const s=setup(),{r,q}=await bound(s,4321),before=await storedRun(r.id);
+ await assert.rejects(s.service.newGame(null,{id:r.id}),error=>error.status===409&&/recover|payment/i.test(error.message));
+ assert.deepEqual(await storedRun(r.id),before);assert.equal((await s.service.open()).id,r.id);
+ assert.equal((await s.service.history())[0].status,'bound');
+ assert.equal((await db.query('SELECT * FROM breaker.receipts WHERE invoice_id=$1',[q.id])).rows.length,0);
+ await s.service.submit(null,{id:q.id});const paid=await s.service.redeem(null,{id:q.id});
+ assert.equal(paid.state.score,4321);assert.equal(paid.state.lives,3);assert.equal(s.submits.length,1);
+ assert.equal((await s.service.history())[0].status,'paid');
+});
+
+test('an unsigned bind racing a free reset cannot record a payment after its quote is cancelled',async()=>{
+ const s=setup(),old=await defeated(s,500),q=await s.service.quote();let inspected,release;
+ const inspecting=new Promise(resolve=>inspected=resolve),resume=new Promise(resolve=>release=resolve);
+ const racing=createGameService({...s.deps,inspectSigned:async(...args)=>{inspected();await resume;return s.deps.inspectSigned(...args);}});
+ const binding=racing.bind(null,{id:q.id,signed:{valid:true,digest:toBase58(randomBytes(32)),bytes:'racing-bytes',signature:'racing-signature'}});
+ await inspecting;const next=await s.service.newGame(null,{id:old.id});release();
+ await assert.rejects(binding);assert.equal((await s.service.history())[0].status,'cancelled');
+ assert.equal((await s.service.open()).id,next.id);assert.equal(s.submits.length,0);
+});
+
+test('a concurrent paid redemption and free reset cannot strand a verified transfer',async()=>{
+ const s=setup(),{r,q}=await bound(s,2500);
+ const [free,paid]=await Promise.allSettled([s.service.newGame(null,{id:r.id}),s.service.redeem(null,{id:q.id})]);
+ assert.equal(free.status,'rejected');assert.equal(free.reason.status,409);assert.equal(paid.status,'fulfilled');
+ assert.equal(paid.value.state.score,2500);assert.equal((await s.service.open()).id,paid.value.id);
+ assert.equal((await s.service.history())[0].status,'paid');
+ assert.equal((await db.query('SELECT * FROM breaker.receipts WHERE invoice_id=$1',[q.id])).rows.length,1);
+});
+
+test('failed free-game creation rolls back quote cancellation and preserves the finished run',async()=>{
+ const s=setup(),old=await defeated(s,500),q=await s.service.quote();
+ const broken=createGameService({...s.deps,database:{query:(...args)=>db.query(...args),transaction:fn=>db.transaction(tx=>fn({query:(sql,args)=>{if(sql.startsWith('INSERT INTO breaker.runs'))throw Error('Injected new-game write failure');return tx.query(sql,args);}}))}});
+ await assert.rejects(broken.newGame(null,{id:old.id}),/Injected new-game/);
+ assert.equal((await s.service.open()).id,old.id);assert.equal((await s.service.history())[0].id,q.id);
+ assert.equal((await s.service.history())[0].status,'quoted');assert.equal(s.submits.length,0);
+});
+
+test('free resets require an active holder session and roll back if it expires before commit',async()=>{
+ const loggedOut=setup(),old=await defeated(loggedOut,500);loggedOut.logout();
+ await assert.rejects(loggedOut.service.newGame(null,{id:old.id}),error=>error.status===401);
+ const expired=setup(),defeat=await defeated(expired,500);
+ const service=createGameService({...expired.deps,database:{query:(...args)=>db.query(...args),transaction:fn=>db.transaction(tx=>fn({query:async(sql,args)=>{const result=await tx.query(sql,args);if(sql.startsWith('INSERT INTO breaker.runs'))expired.setTime(9000000);return result;}}))}});
+ await assert.rejects(service.newGame(null,{id:defeat.id}),error=>error.status===401);
+ assert.equal((await db.query('SELECT current_run FROM breaker.accounts WHERE wallet=$1',[expired.address])).rows[0].current_run,defeat.id);
+ assert.equal((await db.query('SELECT id FROM breaker.runs WHERE wallet=$1',[expired.address])).rows.length,1);
+});

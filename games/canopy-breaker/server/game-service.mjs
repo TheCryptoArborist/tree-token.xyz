@@ -26,7 +26,7 @@ export function createGameService({database:db,authorize,reader,inspectSigned,ex
  }
  async function current(tx,a){const acct=await lock(tx,a);if(!acct.current_run)return null;const {rows}=await tx.query('SELECT * FROM breaker.runs WHERE id=$1 AND wallet=$2 FOR UPDATE',[acct.current_run,a.address]);return rows[0]?restoreCarriedScore(tx,a,rows[0]):null;}
  async function ranked(tx,a,run){await recordBestScore(tx,a.address,run,Number(run.updated_at));return pack(run);}
- async function fresh(tx,a,previous=null){const id=randomUUID(),state=previous?restartGame(previous,seed()):createGame(seed());const {rows}=await tx.query('INSERT INTO breaker.runs(id,wallet,state,updated_at) VALUES($1,$2,$3,$4) RETURNING *',[id,a.address,JSON.stringify(state),now()]);await tx.query('UPDATE breaker.accounts SET current_run=$1 WHERE wallet=$2',[id,a.address]);return ranked(tx,a,rows[0]);}
+ async function fresh(tx,a,previous=null,newGameFrom=null){const id=randomUUID(),state=previous?restartGame(previous,seed()):createGame(seed());if(newGameFrom)state.newGameFrom=newGameFrom;const {rows}=await tx.query('INSERT INTO breaker.runs(id,wallet,state,updated_at) VALUES($1,$2,$3,$4) RETURNING *',[id,a.address,JSON.stringify(state),now()]);await tx.query('UPDATE breaker.accounts SET current_run=$1 WHERE wallet=$2',[id,a.address]);return ranked(tx,a,rows[0]);}
  async function owned(tx,a,id){if(!uuid(id))throw fail('Invalid invoice');const {rows}=await tx.query('SELECT * FROM breaker.invoices WHERE id=$1 AND wallet=$2 FOR UPDATE',[id,a.address]);if(!rows[0])throw fail('Invoice not found',404);return rows[0];}
  return Object.freeze({
   async open(ctx){const a=await holder(ctx);return db.transaction(async tx=>{const r=await current(tx,a);return r?ranked(tx,a,r):fresh(tx,a);});},
@@ -41,6 +41,25 @@ export function createGameService({database:db,authorize,reader,inspectSigned,ex
    });
   },
   async next(ctx){const a=await holder(ctx);return db.transaction(async tx=>{const r=await current(tx,a);if(r?.state.status!=='won')throw fail('Finish this run first');await recordBestScore(tx,a.address,r,Number(r.updated_at));return fresh(tx,a);});},
+  async newGame(ctx,{id}={}){
+   if(!uuid(id))throw fail('Invalid game request');
+   const a=await holder(ctx);return db.transaction(async tx=>{
+    const run=await current(tx,a);let result;
+    // A retry returns the same new run, including any progress made since it
+    // started. The client can never use an old defeat to reset another run.
+    if(run?.state.newGameFrom===id)result=await ranked(tx,a,run);
+    else{
+     if(!run||run.id!==id||run.state.status!=='gameover'||run.state.lives!==0)throw fail('Start a new game after all three lives are lost.',409);
+     const pending=await tx.query("SELECT id,status FROM breaker.invoices WHERE wallet=$1 AND run_id=$2 AND status IN ('quoted','bound') FOR UPDATE",[a.address,run.id]);
+     if(pending.rows.some(row=>row.status==='bound'))throw fail('Recover your recorded TREE payment in payment history before starting a new game.',409);
+     await recordBestScore(tx,a.address,run,Number(run.updated_at));
+     await tx.query("UPDATE breaker.invoices SET status='cancelled' WHERE wallet=$1 AND run_id=$2 AND status='quoted'",[a.address,run.id]);
+     result=await fresh(tx,a,null,run.id);
+    }
+    if(a.expiresAt<=now())throw fail('Session expired; verify your NFTree wallet again.',401);
+    return result;
+   });
+  },
   async history(ctx){const a=await holder(ctx);const {rows}=await db.query('SELECT * FROM breaker.invoices WHERE wallet=$1 ORDER BY created_at DESC LIMIT 30',[a.address]);return rows.map(invoice);},
   async quote(ctx){const a=await holder(ctx);if(a.address===TREE_PAYMENT_RECIPIENT)throw fail('Self-payment is not a purchase');const decimals=await reader.decimals();return db.transaction(async tx=>{
    const r=await current(tx,a);if(!r||r.state.status!=='gameover'||r.state.lives!==0)throw fail('Restarts are available after all three lives are lost');
