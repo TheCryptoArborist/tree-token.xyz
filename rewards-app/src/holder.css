@@ -12,3 +12,27 @@
 .hr-background::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#08141180,#081411d9)}
 .hr-video-control{position:fixed;right:14px;bottom:14px;z-index:5;border:1px solid #486044!important;border-radius:20px!important;background:#0b2018ed;color:#d7eacb;padding:8px 12px;font-size:11px!important;min-height:36px}
 .hr-footer{padding-bottom:65px}
+
+/* Shared TREE ecosystem identity: gold headings, emerald/teal actions, dark glass. */
+.hr-page{--hr-bg:#02070b;--hr-panel:#071218;--hr-border:#35e89530;--hr-muted:#acbdc7;--hr-text:#f5fbff;--hr-accent:#35e895;--hr-teal:#2acfc2}
+.hr-background::after{background:linear-gradient(180deg,#02070b80,#02070bd9)}
+.hr-header{max-width:none;padding:16px max(4%,calc((100vw - 1200px)/2));min-height:80px;gap:30px;background:#02070bed;border-bottom:1px solid #31e78f26;box-shadow:0 12px 40px #0005;backdrop-filter:blur(18px) saturate(125%)}
+.hr-brand{font-size:15px!important;font-weight:900;letter-spacing:1.2px;color:#ffe05e!important;gap:11px}
+.hr-brand-icon{width:48px;height:48px;padding:0;background:transparent;border:0;border-radius:13px;box-shadow:0 0 20px #31e78f26;overflow:hidden}
+.hr-tree-mark{display:block;width:100%;height:100%;object-fit:contain;border-radius:inherit}
+.hr-brand-sub{font-size:10px;letter-spacing:1px;color:#8fa0ae;margin-top:6px;font-weight:500}
+.hr-nav{font-weight:800;font-size:13px;gap:23px}.hr-nav a{color:#b7c4ce}.hr-nav a:hover{color:#35e895}.hr-nav a.hr-nav-active{color:#ffe05e;border-bottom-color:#ffe05e}
+.hr-wallet-button{border:1px solid #35e89570;background:#0a211d;color:#eafff4;font-weight:800!important;box-shadow:inset 0 1px #ffffff08}
+.hr-main{padding-top:42px}.hr-intro h1{color:#ffe05e;font-weight:900;letter-spacing:-1.8px}.hr-title-dot{color:#ffe05e}.hr-eyebrow{color:#35e895;font-weight:900;letter-spacing:2px}.hr-intro-copy>p:not(.hr-eyebrow){color:#c1cdd5;font-size:15px}
+.hr-art{border-color:#35e89550;box-shadow:0 0 30px #31e78f15,0 20px 45px #0005}.hr-art-caption strong{color:#ffe05e}
+.hr-reward-card{background:radial-gradient(ellipse at 100% 0,#16b88c12,transparent 55%),linear-gradient(135deg,#07151bf2,#02080df5);border:1px solid #31e78f59;border-radius:22px;box-shadow:inset 0 1px #ffffff08,0 0 35px #31e78f15,0 25px 70px #0005}
+.hr-card-top{background:linear-gradient(100deg,#0b292680,#07131b80);border-bottom:1px solid #31e78f30}.hr-card-top .hr-eyebrow{color:#35e895;font-weight:900;letter-spacing:2px}.hr-card-top h2{font-size:19px;font-weight:850;color:#ffe05e;letter-spacing:-.3px}
+.hr-state-symbol{width:86px;height:86px;border-radius:20px;padding:0;background:transparent;border:1px solid #ffe05e66;box-shadow:0 0 30px #31e78f26;overflow:hidden;margin-bottom:20px}
+.hr-state-copy h3{font-size:29px;font-weight:900;color:#ffe05e;letter-spacing:-.7px}.hr-state-copy p{font-size:14px;color:#b7c4ce}
+.hr-primary{background:linear-gradient(135deg,#35ef91,#2acfc2);border-color:#35ef9170;color:#03150d!important;font-size:14px!important;font-weight:900!important;border-radius:10px!important;box-shadow:0 9px 26px #31e78f2b;min-height:52px}.hr-primary:hover:not(:disabled){background:linear-gradient(135deg,#57f6a5,#3fe0d3)}
+.hr-status-pill{background:#35e89512;color:#a5f5cb;border-color:#35e89540}.hr-status-pill>span{background:#35e895}.hr-mini-steps b{background:#35e89517;color:#35e895;border:1px solid #35e89540}.hr-mini-steps{color:#acbdc7}.hr-action-note{color:#8fa5af}
+.hr-details{background:linear-gradient(135deg,#07151bf2,#02080df2);border-color:#35e89535;border-radius:14px}.hr-details>summary{color:#ffe05e;font-weight:850;font-size:13px}.hr-details-body{color:#b7c4ce;font-size:12px}.hr-community-line{color:#a5b7c1}.hr-community-line>.hr-tree-mark{width:24px;height:24px;border-radius:6px}.hr-community-line a{color:#35e895}.hr-footer{border-top-color:#35e89530}.hr-footer>span{color:#ffe05e}
+.hr-wallet-dialog{background:#07131b;border-color:#35e89566;color:#f5fbff}.hr-wallet-dialog h2{color:#ffe05e}.hr-wallet-list>button{background:#0b211f;border-color:#35e89540}.hr-wallet-list img{flex-shrink:0}
+@media(max-width:1000px){.hr-header{padding:16px 28px;gap:22px}.hr-nav{gap:18px}}
+@media(max-width:760px){.hr-header{padding:15px 22px 0;gap:15px}.hr-brand{font-size:13px!important;letter-spacing:.8px}.hr-brand-icon{width:40px;height:40px}.hr-brand-sub{font-size:8px}.hr-nav{font-size:11px;gap:12px}.hr-main{padding-top:28px}.hr-intro-copy>p:not(.hr-eyebrow){font-size:12px}.hr-card-top h2{font-size:16px}.hr-state-copy h3{font-size:23px}.hr-state-copy p{font-size:12px}.hr-state-symbol{width:72px;height:72px;border-radius:17px}.hr-primary{font-size:13px!important}.hr-footer{padding-bottom:65px}}
+@media(max-width:400px){.hr-header{padding-left:17px;padding-right:17px}.hr-brand{font-size:11px!important}.hr-brand-icon{width:36px;height:36px}.hr-wallet-button{padding:8px 9px}.hr-intro-copy>p:not(.hr-eyebrow){font-size:11px}.hr-card-top h2{font-size:14px}.hr-state-copy h3{font-size:21px}}
