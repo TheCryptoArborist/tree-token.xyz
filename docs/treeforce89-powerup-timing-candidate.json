@@ -1,0 +1,14 @@
+{
+  "status": "verified-unpublished",
+  "candidateId": "6aef85c5cebbdcc5d61af448",
+  "sourceCommit": "e528812385ac7a3365cfd8c1b9355c6a63113476",
+  "preview": "https://6aef85c5cebbdcc5d61af448--tree-token.netlify.app/play/treeforce89/",
+  "version": "0.7.3",
+  "change": "One additional second at full opacity for pickup banners; explanation text and BOOM label extended by one second.",
+  "buildPassed": true,
+  "existingTestsPassed": 12,
+  "functionsPreserved": 44,
+  "schedulesPreserved": 5,
+  "staticPaths": 356,
+  "publication": "Automatic approval review requires separate user approval for this timing update."
+}
