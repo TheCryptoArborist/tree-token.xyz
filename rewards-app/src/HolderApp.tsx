@@ -72,6 +72,30 @@ function message(error: unknown) {
   return text.length > 250 ? "The request could not finish. Refresh your rewards and try again." : text;
 }
 
+function RewardsBackground() {
+  const video = useRef<HTMLVideoElement>(null);
+  const [reduced, setReduced] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  const [paused, setPaused] = useState(false);
+  const [failed, setFailed] = useState(false);
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduced(media.matches);
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
+  useEffect(() => {
+    if (!video.current) return;
+    if (reduced || paused) video.current.pause();
+    else void video.current.play().catch(() => setPaused(true));
+  }, [reduced, paused]);
+  return <>
+    <div className="hr-background" aria-hidden="true">
+      {!reduced && !failed && <video ref={video} src={CONFIG.backgroundVideoUrl} muted loop playsInline autoPlay preload="metadata" onError={() => setFailed(true)} />}
+    </div>
+    {!reduced && !failed && <button className="hr-video-control" onClick={() => setPaused(value => !value)} aria-label={paused ? "Play background video" : "Pause background video"}>{paused ? "Play background" : "Pause background"}</button>}
+  </>;
+}
+
 function Leaf({ large = false }: { large?: boolean }) {
   return <svg className={large ? "hr-leaf hr-leaf-large" : "hr-leaf"} viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M31 8C16 7 8 14 10 23c2 9 15 12 19 1 2-5 0-10 2-16Z" fill="currentColor" opacity=".22"/><path d="M31 8C16 7 8 14 10 23c2 9 15 12 19 1 2-5 0-10 2-16ZM9 33l16-17M16 26l-1-7m6 2 7-1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>;
 }
@@ -349,6 +373,7 @@ export function HolderApp() {
   const stateDescription = isAdmin ? "This is the project wallet. Create and manage distributions from your reward manager." : !address ? "Connect the wallet that holds your NFTrees. We’ll find your eligible rewards automatically." : !mainnet ? "Rewards are available on Sui Mainnet. Check your wallet network and reconnect." : checking ? "Finding your NFTrees and checking the current reward drops." : checkError ? checkError : !checkedView ? "Your rewards will appear here after a successful check." : !checkedView.nftrees.length ? "Use the wallet that holds your NFTree, or get one to join the TREE ecosystem." : operations.length ? `Rewards from ${eligibleCount} eligible NFTree${eligibleCount === 1 ? "" : "s"}, combined into one simple claim.` : "No rewards are available for these NFTrees right now. Check back when a new drop opens.";
 
   return <div className="hr-page">
+    <RewardsBackground />
     <header className="hr-header">
       <a className="hr-brand" href="/" aria-label="TREE home"><span className="hr-brand-icon"><Leaf /></span><span>TREE<span className="hr-brand-sub">ROOTED IN COMMUNITY</span></span></a>
       <nav className="hr-nav" aria-label="TREE navigation"><a href="/">Home</a><a href="/dapp/">App</a><a href="/play/">Arcade</a><a className="hr-nav-active" href="/rewards/" aria-current="page">NFTree Rewards</a></nav>
