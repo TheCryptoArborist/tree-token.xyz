@@ -1,3 +1,4 @@
+import {treeForceCompletions} from '../preview-lib/treeforce89-completions.mjs';
 import {getCanonicalDevelopmentDatabase} from '../preview-lib/treeforce89-database.mjs';
 import {createAuthenticatedSessionResolver} from '../preview-lib/treeforce89-source/game/authenticated-session.mjs';
 import {earnedBadges,validateRun,validateUsername} from '../../treeforce89/achievements/rules.mjs';
@@ -14,6 +15,10 @@ return async function handler(request,context){
  try{
  const {pool}=database();
  if(request.method==='GET'){
+  if(new URL(request.url).searchParams.get('completions')==='1'){
+   try{return reply(await treeForceCompletions(pool,new URL(request.url)));}
+   catch(e){return reply({error:e.status===400?'Invalid completion cursor':'Completed missions temporarily unavailable'},e.status===400?400:503);}
+  }
   try{
    const token=/^Bearer ([a-f0-9]{64})$/.exec(request.headers.get('authorization')||'')?.[1];
    if(token){const session=await resolve(pool)({sessionToken:token});const profile=await pool.query('SELECT username FROM treeforce89_pilot_profiles WHERE wallet=$1',[session.wallet]);const own=await pool.query("SELECT coalesce(jsonb_agg(DISTINCT badge),'[]'::jsonb) AS badges FROM treeforce89_pilot_runs r CROSS JOIN LATERAL jsonb_array_elements_text(r.badges) badge WHERE wallet=$1",[session.wallet]);return reply({username:profile.rows[0]?.username||'',badges:own.rows[0].badges});}

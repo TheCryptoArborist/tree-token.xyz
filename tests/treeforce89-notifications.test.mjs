@@ -1,0 +1,9 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {treeForceCompletions} from '../netlify/preview-lib/treeforce89-completions.mjs';
+const url=s=>new URL('https://tree-token.xyz/api/treeforce89-leaderboard?completions=1'+s);
+const row={id:'a'.repeat(32),wallet:'private-wallet',run_id:'private-run',username:'Pilot',score:12345,stats:{wave:3,cleared:false},badges:['a'],completed_at:'100'};
+test('saved completions resolve SuiNS without exposing private fields',async()=>{const result=await treeForceCompletions({query:async()=>({rows:[row]})},url(''),{resolveName:async a=>{assert.equal(a,'private-wallet');return 'pilot.sui';}});assert.equal(result.entries[0].suinsName,'pilot.sui');assert.equal(result.entries[0].wave,4);assert.doesNotMatch(JSON.stringify(result),/private-wallet|private-run/);});
+test('baseline skips history without querying',async()=>{assert.equal((await treeForceCompletions({query:async()=>assert.fail()},url('&baseline=1'),{now:()=>200})).cursor.at,200);});
+test('invalid cursors cannot query the database',async()=>{await assert.rejects(treeForceCompletions({query:async()=>assert.fail()},url('&after=-1')),/Invalid/);});
+test('bounded pages have stable timestamp and fingerprint cursor',async()=>{const rows=Array.from({length:101},(_,i)=>({...row,id:i.toString(16).padStart(32,'0')}));const r=await treeForceCompletions({query:async sql=>{assert.match(sql,/LIMIT 101/);return {rows};}},url(''),{resolveName:async()=>null});assert.equal(r.entries.length,100);assert.equal(r.hasMore,true);assert.equal(r.cursor.key,rows[99].id);});
+
+test('no saved-score tables yet yields an empty read-only feed',async()=>{const r=await treeForceCompletions({query:async()=>{throw Object.assign(Error('not initialized'),{code:'42P01'});}},url(''));assert.deepEqual(r.entries,[]);});
