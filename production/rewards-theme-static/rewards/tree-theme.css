@@ -1,0 +1,291 @@
+/* Shared with the TREE homepage. Kept outside reward bundles for a visual-only release. */
+:root{color-scheme:dark;--tree-gold:#ffe05e;--tree-green:#35e895;--tree-cyan:#35c8ff;--tree-muted:#9babb7;--tree-border:rgba(49,231,143,.24)}
+html,body{margin:0;min-height:100%;background:#03080d;color:#f5fbff;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+body{isolation:isolate}
+body #root{position:relative;min-height:100vh;background:transparent}
+body #root>p{background:transparent!important;color:#f5fbff}
+.tree-rewards-backdrop{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;background:radial-gradient(ellipse at 16% 14%,rgba(44,215,133,.14),transparent 50%),radial-gradient(ellipse at 85% 35%,rgba(37,187,227,.08),transparent 55%),linear-gradient(180deg,#03080d,#020608 68%,#03070a)}
+.tree-rewards-backdrop video{display:block;width:100%;height:100%;object-fit:cover;object-position:center;opacity:.62;filter:saturate(.9);transition:opacity .25s}
+.tree-rewards-backdrop:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(2,6,10,.68),rgba(3,8,13,.25) 55%,rgba(3,8,13,.52)),linear-gradient(180deg,rgba(3,8,13,.25),rgba(3,8,13,.5) 70%,rgba(2,6,8,.88))}
+.tree-background-control{position:fixed;right:16px;bottom:14px;z-index:30;display:flex;align-items:center;gap:7px;min-height:34px;padding:7px 11px;border:1px solid rgba(53,200,255,.24);border-radius:9px;background:rgba(3,8,13,.88);color:#b5c6d0;font:600 10px/1.3 Inter,system-ui,sans-serif;cursor:pointer;backdrop-filter:blur(12px)}
+.tree-background-control:hover{border-color:#35c8ff;color:#f5fbff}.tree-background-control:focus-visible{outline:3px solid #35c8ff;outline-offset:4px}.tree-background-control[hidden]{display:none}
+body .hr-page{--hr-bg:transparent;--hr-panel:rgba(7,17,22,.94);--hr-border:rgba(49,231,143,.19);--hr-muted:#a9bbc5;--hr-text:#f5fbff;--hr-accent:#35e895;--hr-teal:#35c8ff;background:transparent;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+body .hr-header{max-width:1280px;padding-top:20px;padding-bottom:20px;min-height:92px;border-color:rgba(49,231,143,.19);background:linear-gradient(90deg,rgba(3,8,13,.9),rgba(3,8,13,.7));border-radius:0 0 18px 18px;backdrop-filter:blur(14px)}
+body .hr-brand{color:var(--tree-gold)}
+body .hr-brand-icon{width:48px;height:48px;border:1px solid rgba(49,231,143,.28);border-radius:13px;background:#03080d url('/assets/tree-token-logo-official.webp') center/cover no-repeat;filter:drop-shadow(0 0 14px rgba(49,231,143,.24))}
+body .hr-brand-icon>svg{display:none}
+body .hr-brand-sub{color:#9babb7;letter-spacing:1.1px}
+body .hr-nav{color:#a9bbc5}body .hr-nav a:hover{color:#ffe05e}
+body .hr-nav .hr-nav-active{color:#ffe05e}body .hr-nav-active:after{background:linear-gradient(90deg,#35e895,#35c8ff)}
+body .hr-wallet-button{background:rgba(17,39,46,.9);border-color:rgba(53,200,255,.3);color:#f5fbff;border-radius:10px!important}
+body .hr-wallet-button:hover{background:#102a32;border-color:#35c8ff}
+body .hr-main{padding-top:42px}
+body .hr-intro{padding:26px 28px;border:1px solid rgba(49,231,143,.22);border-radius:24px;background:linear-gradient(120deg,rgba(3,8,13,.9),rgba(7,17,22,.66));box-shadow:0 24px 70px #0005;backdrop-filter:blur(8px)}
+body .hr-intro h1{color:#ffe05e;font-weight:800;letter-spacing:-1.7px;font-size:clamp(32px,3.7vw,44px)}
+body .hr-title-dot{color:#35e895}body .hr-eyebrow{color:#35e895}
+body .hr-intro-copy>p:not(.hr-eyebrow){color:#b4c5ce}body .hr-intro-meta{color:#8fa0ae}body .hr-network{color:#d5e8ef}
+body .hr-art{height:214px;transform:none;border:1px solid rgba(53,200,255,.3);border-radius:17px;background:#071116;box-shadow:0 18px 46px #0005}
+body .hr-art>img{filter:none;opacity:1}body .hr-art-shade{background:linear-gradient(0deg,#03080d 0%,#03080d0d 78%)}
+body .hr-art-caption{color:#35e895}body .hr-art-caption strong{color:#ffe05e}
+body .hr-reward-card{border-color:rgba(49,231,143,.32);border-radius:24px;background:radial-gradient(ellipse at 4% 5%,rgba(49,231,143,.08),transparent 50%),radial-gradient(ellipse at 100% 100%,rgba(112,65,195,.1),transparent 45%),linear-gradient(145deg,rgba(7,17,22,.96),rgba(3,8,13,.95));box-shadow:0 24px 70px #0006;backdrop-filter:blur(10px)}
+body .hr-card-top{background:rgba(3,8,13,.28);border-color:rgba(49,231,143,.2)}
+body .hr-card-top h2{color:#f5fbff}body .hr-card-top .hr-eyebrow{color:#35e895}
+body .hr-status-pill{background:rgba(49,231,143,.08);border-color:rgba(49,231,143,.25);color:#a5efca}body .hr-status-pill>span{background:#35e895;box-shadow:0 0 9px #35e89566}
+body .hr-status-pill.hr-status-warning{color:#f3d18b;border-color:#8b6a37;background:#302718}body .hr-status-warning>span{background:#ffc857;box-shadow:none}
+body .hr-state-symbol{background:linear-gradient(135deg,rgba(53,232,149,.14),rgba(53,200,255,.08));border-color:rgba(49,231,143,.3);color:#35e895;box-shadow:0 0 35px rgba(49,231,143,.06)}
+body .hr-state-copy h3{color:#ffe05e}body .hr-mini-steps{color:#b4c7d0}body .hr-mini-steps b{background:#0c2526;border-color:#225149;color:#35e895}body .hr-mini-steps i{color:#6b8290}
+body .hr-primary{background:linear-gradient(135deg,#35ef91,#2acfc2);border-color:rgba(49,231,143,.6);color:#03140d!important;border-radius:10px!important;box-shadow:0 8px 26px rgba(49,231,143,.12);transition:filter .18s,box-shadow .18s}
+body .hr-primary:hover:not(:disabled){background:linear-gradient(135deg,#35ef91,#2acfc2);filter:brightness(1.08);box-shadow:0 8px 30px rgba(49,231,143,.22)}
+body .hr-muted-action{background:#142735!important;border-color:#315669;color:#c8dbe4!important}
+body .hr-action-note,body .hr-checked{color:#92a7b4}body .hr-checked{border-color:rgba(49,231,143,.17)}body .hr-checked>span{color:#496978}
+body .hr-text-button,body .hr-inline-link,body .hr-community-line a{color:#35c8ff}
+body .hr-amounts{background:#030b11;border-color:rgba(53,200,255,.22)}body .hr-token-row{border-color:rgba(53,200,255,.12)}body .hr-token-icon{background:#0d3028;border-color:#28624b;color:#6ef0b5}body .hr-token-amount{color:#ffe05e}
+body .hr-notice{border-color:#245d50;background:#0e2927}body .hr-notice>p{color:#b4cbd1}body .hr-notice-error{background:#302418;border-color:#795a36}body .hr-notice-error>strong{color:#f3d18b}body .hr-notice-success{border-color:#2d845f}
+body .hr-details{border-color:rgba(49,231,143,.2);border-radius:14px;background:rgba(3,11,17,.93);box-shadow:0 14px 36px #0003}body .hr-details>summary{color:#e7f3f8}body .hr-summary-icon,body .hr-plus{color:#35c8ff}body .hr-details-body{color:#a9bdc9}body .hr-explainer strong{color:#e6f1f5}
+body .hr-history-row,body .hr-receipts,body .hr-receipts a{border-color:rgba(53,200,255,.17)}body .hr-history-row small{color:#92a9b8}body .hr-history-row>strong{color:#ffe05e}body .hr-receipts h4{color:#bdd3df}body .hr-receipts a{color:#d5e7ed}
+body .hr-community-line{color:#b0c0ca}body .hr-community-line>.hr-leaf{color:#35e895}body .hr-community-line a{color:#35c8ff}
+body .hr-footer{padding:23px 18px 64px;border-color:rgba(49,231,143,.18);color:#9babb7;background:rgba(3,8,13,.76);border-radius:16px 16px 0 0}body .hr-footer>span{color:#ffe05e}body .hr-footer>a{color:#35c8ff}
+body .hr-wallet-dialog{background:linear-gradient(145deg,#071116,#03080d);border-color:rgba(49,231,143,.4);border-radius:22px}body .hr-wallet-dialog::backdrop{background:#020609c9;backdrop-filter:blur(10px)}body .hr-dialog-top h2{color:#ffe05e}body .hr-dialog-close{background:#0d2530;border-color:#2b5365;color:#d9eaf3}body .hr-wallet-list>button{background:#0c1d27;border-color:#284652;color:#f5fbff}body .hr-wallet-list>button:hover{background:#102d35;border-color:#35c8ff}body .hr-wallet-list>button>span:last-child{color:#35c8ff}body .hr-disconnect{color:#a9c6d5;border-color:#254451}
+@media(min-width:1500px){body .hr-main{padding-top:48px}}
+@media(max-width:1000px){body .hr-intro{padding:23px;gap:20px}body .hr-intro h1{white-space:normal}}
+@media(max-width:760px){body .hr-header{padding:16px 22px 0;min-height:auto;border-radius:0}body .hr-brand-icon{width:42px;height:42px}body .hr-main{padding-top:24px}body .hr-intro{padding:20px;grid-template-columns:1fr 130px;border-radius:20px;gap:16px}body .hr-intro h1{font-size:32px}body .hr-art{height:175px;border-radius:13px}body .hr-reward-card{border-radius:20px}body .hr-footer{margin:0 22px;padding-bottom:65px}.tree-background-control{right:12px;bottom:10px}}
+@media(max-width:480px){body .hr-intro{grid-template-columns:1fr;padding:22px 20px;gap:20px}body .hr-intro h1{max-width:none;font-size:34px}body .hr-art{height:155px;max-width:none;justify-self:stretch}body .hr-art-caption{font-size:7px;letter-spacing:1.6px}body .hr-art-caption strong{font-size:10px}body .hr-intro-copy>.hr-eyebrow{font-size:8px}body .hr-intro-copy>p:not(.hr-eyebrow){max-width:none}body .hr-intro-meta{margin-top:14px}body .hr-footer{margin:0 16px}}
+@media(prefers-reduced-motion:reduce){.tree-rewards-backdrop video{display:none}.tree-rewards-backdrop[data-motion="playing"] video{display:block}body .hr-is-checking{animation:none}body .hr-primary,.tree-rewards-backdrop video{transition:none}}
+/* Shared TREE styling for the reward manager and legacy reward tools. */
+body .reward-manager,
+body .app-shell {
+  --ink: #f5fbff;
+  --muted: #9babb7;
+  --panel: rgba(7, 17, 22, .87);
+  --panel-2: rgba(4, 12, 18, .88);
+  --line: rgba(49, 231, 143, .24);
+  --deep: #03080d;
+  --accent: #35c8ff;
+  --accent-2: #35e895;
+  --success: #35e895;
+  --warning: #ffe05e;
+  background: transparent;
+  color: #f5fbff;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body .video-backdrop { display: none; }
+
+body .reward-manager .rm-header,
+body .app-shell .topbar {
+  background: rgba(2, 7, 11, .88);
+  border-bottom-color: rgba(49, 231, 143, .16);
+  backdrop-filter: blur(18px) saturate(125%);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, .22);
+}
+
+body .reward-manager .rm-brand {
+  position: relative;
+  min-height: 48px;
+  padding-left: 60px;
+  justify-content: center;
+  color: #ffe05e !important;
+}
+
+body .reward-manager .rm-brand::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 13px;
+  background: url('/assets/tree-token-logo-official.webp') center / contain no-repeat;
+  filter: drop-shadow(0 0 14px rgba(49, 231, 143, .24));
+}
+
+body .reward-manager .rm-brand span,
+body .app-shell .brand small { color: #8fa0ae; }
+
+body .app-shell .brand-mark {
+  border-color: transparent;
+  border-radius: 13px;
+  background: rgba(255, 255, 255, .025);
+  filter: drop-shadow(0 0 14px rgba(49, 231, 143, .24));
+}
+
+body .app-shell .brand-mark img { border-radius: 13px; object-fit: contain; }
+
+body .app-shell .brand strong {
+  color: #ffe05e;
+  letter-spacing: .08em;
+}
+
+body .reward-manager .rm-header nav,
+body .app-shell .topbar nav { color: #b7c4ce; }
+
+body .reward-manager .rm-header nav a:hover,
+body .reward-manager .rm-header nav a:focus-visible,
+body .app-shell .topbar nav a:hover,
+body .app-shell .topbar nav a:focus-visible { color: #35e895; }
+
+body .reward-manager :is(h1, h2),
+body .app-shell :is(h1, h2, h3) { color: #ffe05e; }
+
+body .reward-manager .rm-eyebrow,
+body .app-shell .dashboard-heading > span { color: #35e895; }
+
+body .reward-manager .rm-intro h1,
+body .app-shell .hero-copy h1 { letter-spacing: -.045em; }
+
+body .reward-manager :is(.rm-intro > p, .rm-card-heading p, .rm-history p, .rm-muted, .rm-form small, .rm-connect p, .rm-detail p),
+body .app-shell :is(.hero-copy p, .panel-helper, .panel-note) { color: #9babb7; }
+
+body .reward-manager :is(.rm-back, .rm-connect > a, .rm-text-button),
+body .reward-manager :is(.rm-batches a, .rm-recipient-list a) { color: #71eaff !important; }
+
+body .reward-manager .rm-card,
+body .app-shell :is(.panel, .pool-card, .guide-card, .steps-grid article, .community-grid article, .featured-project-card, .community-pool-card, .token-registry-card, .id-panel, .tx-status, .ecosystem-links, .wizard-step-card, .wizard-next-action, .campaign-card) {
+  border-color: rgba(49, 231, 143, .26);
+  border-radius: 19px;
+  background: radial-gradient(circle at 100% 0, rgba(112, 65, 195, .1), transparent 42%), linear-gradient(145deg, rgba(7, 17, 22, .9), rgba(3, 8, 13, .87));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .025), 0 20px 55px rgba(0, 0, 0, .28);
+  backdrop-filter: blur(16px);
+}
+
+body .reward-manager :is(.rm-primary),
+body .app-shell :is(.primary-action, .primary-link, .claim-all-cta) {
+  border-color: transparent;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #35ef91, #2acfc2);
+  color: #03140d;
+  box-shadow: 0 12px 34px rgba(49, 231, 143, .2);
+}
+
+body .reward-manager .rm-primary:hover:not(:disabled),
+body .app-shell :is(.primary-action, .primary-link, .claim-all-cta):hover:not(:disabled) {
+  background: linear-gradient(135deg, #55f3a5, #43ddd0);
+  filter: brightness(1.04);
+}
+
+body .reward-manager :is(.rm-secondary, .rm-wallet > button),
+body .app-shell :is(.secondary-action, .quiet-link, .hero-actions button, .wallet-picker-trigger) {
+  border-color: rgba(49, 231, 143, .3);
+  border-radius: 10px;
+  background: linear-gradient(145deg, rgba(19, 43, 40, .94), rgba(6, 17, 22, .94));
+  color: #f5fbff;
+}
+
+body .reward-manager :is(.rm-secondary, .rm-wallet > button):hover:not(:disabled),
+body .app-shell :is(.secondary-action, .quiet-link, .hero-actions button, .wallet-picker-trigger):hover:not(:disabled) {
+  border-color: rgba(49, 231, 143, .58);
+  background: linear-gradient(145deg, rgba(21, 56, 48, .95), rgba(7, 27, 32, .95));
+}
+
+body .reward-manager .rm-wallet-menu,
+body .app-shell .wallet-menu {
+  border-color: rgba(49, 231, 143, .3);
+  border-radius: 14px;
+  background: rgba(3, 11, 17, .98);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .5);
+}
+
+body .reward-manager .rm-wallet-menu button { color: #f5fbff; }
+body .reward-manager .rm-wallet-menu button:hover,
+body .app-shell .wallet-row:hover,
+body .app-shell .wallet-row:focus-visible { background: rgba(49, 231, 143, .09); }
+
+body .reward-manager :is(.rm-form input, .rm-form select),
+body .app-shell :is(.field input, .field select, .field textarea) {
+  border-color: rgba(53, 200, 255, .24);
+  border-radius: 10px;
+  background: rgba(3, 11, 17, .88);
+  color: #f5fbff;
+}
+
+body .reward-manager .rm-form label { color: #c6d6de; }
+body .reward-manager .rm-form :is(input, select):disabled { color: #9babb7; }
+body .reward-manager .rm-form :is(input, select):focus,
+body .app-shell .field :is(input, select, textarea):focus {
+  border-color: #35c8ff;
+  box-shadow: 0 0 0 3px rgba(53, 200, 255, .13);
+}
+
+body .reward-manager :is(button, a, input, select, summary):focus-visible,
+body .app-shell :is(button, a, input, select, textarea, summary):focus-visible {
+  outline: 3px solid #71eaff;
+  outline-offset: 4px;
+}
+
+body .reward-manager :is(.rm-snapshot > div, .rm-batches > div, .rm-checkbox, .rm-saved-list > button),
+body .app-shell :is(.claim-status-card, .stat, .featured-meta-grid span, .support-list span, .token-status-row span, .wallet-row, .selected-token-state-card, .workflow-state-grid span, .contribution-token-card, .selected-contribution-card, .drop-asset-card, .future-assets) {
+  border-color: rgba(53, 200, 255, .18);
+  background: rgba(3, 11, 17, .8);
+  color: #dcecf2;
+}
+
+body .reward-manager .rm-highlight {
+  border-color: rgba(49, 231, 143, .35);
+  background: radial-gradient(circle at 100% 0, rgba(49, 231, 143, .13), transparent 65%), rgba(4, 16, 22, .84);
+}
+
+body .reward-manager :is(.rm-highlight strong, .rm-snapshot strong) { color: #ffe05e; }
+body .reward-manager :is(.rm-highlight > span, .rm-highlight strong small, .rm-snapshot span, .rm-totals dt, .rm-recipient-list span, .rm-saved-list small) { color: #8fa7b5; }
+body .reward-manager .rm-totals dd { color: #edf7f8; }
+body .reward-manager :is(.rm-totals > div, .rm-recipient-list > div, .rm-detail, .rm-footer) { border-color: rgba(49, 231, 143, .15); }
+body .reward-manager .rm-divider { background: rgba(49, 231, 143, .15); }
+body .reward-manager .rm-detail summary { color: #71eaff; }
+body .reward-manager .rm-checkbox { color: #b7cbd5; }
+body .reward-manager .rm-checkbox input { accent-color: #35e895; }
+body .reward-manager .rm-empty { color: #8fa0ae; }
+body .reward-manager .rm-empty > span { color: #35e895; }
+
+body .reward-manager .rm-steps li { color: #8296a3; }
+body .reward-manager .rm-steps li > span { border-color: rgba(53, 200, 255, .26); }
+body .reward-manager .rm-steps .is-current { color: #f5fbff; }
+body .reward-manager .rm-steps .is-current > span {
+  border-color: transparent;
+  background: linear-gradient(135deg, #35ef91, #2acfc2);
+  color: #03140d;
+}
+body .reward-manager .rm-steps .is-done,
+body .reward-manager .rm-batch-confirmed { color: #35e895; }
+body .reward-manager .rm-batch-ready { color: #8fa0ae; }
+body .reward-manager .rm-batch-signed { color: #ffe05e; }
+body .reward-manager .rm-batch-failed { color: #ff9ba6; }
+
+body .reward-manager :is(.rm-number, .rm-leaf),
+body .app-shell :is(.network-pill, .chip) {
+  border-color: rgba(49, 231, 143, .25);
+  background: rgba(49, 231, 143, .07);
+  color: #35e895;
+}
+
+body .reward-manager .rm-notice {
+  border-color: rgba(49, 231, 143, .35);
+  background: rgba(11, 45, 34, .9);
+  color: #c7f5df;
+}
+body .reward-manager .rm-warning {
+  border-color: rgba(255, 224, 94, .35);
+  background: rgba(43, 35, 13, .92);
+  color: #f7e8af;
+}
+body .reward-manager .rm-error {
+  border-color: rgba(255, 126, 137, .42);
+  background: rgba(48, 22, 29, .92);
+  color: #ffbac3;
+}
+body .reward-manager .rm-footer { color: #81929f; }
+body .reward-manager .rm-footer a:hover { color: #35e895; }
+
+body .app-shell .distribution-type-toggle button.is-selected {
+  border-color: #35e895;
+  background: rgba(49, 231, 143, .12);
+  color: #f5fbff;
+}
+
+body .app-shell :is(.wizard-next-action.is-next, .wizard-step-card.is-next, .workflow-step.is-next) { border-color: rgba(53, 200, 255, .5); }
+body .app-shell :is(.wizard-next-action.is-done, .wizard-step-card.is-done, .workflow-step.is-done, .claim-status-card.success, .tx-status.success) { border-color: rgba(49, 231, 143, .45); }
+body .app-shell :is(.wizard-next-action.is-warning, .wizard-step-card.is-warning, .workflow-step.is-warning, .claim-status-card.pending, .tx-status.pending) { border-color: rgba(255, 224, 94, .4); }
+body .app-shell :is(.claim-status-card.error, .tx-status.error) { border-color: rgba(255, 126, 137, .45); }
+
+@media (max-width: 760px) {
+  body .reward-manager .rm-brand { min-height: 42px; padding-left: 53px; }
+  body .reward-manager .rm-brand::before { width: 42px; height: 42px; }
+}
