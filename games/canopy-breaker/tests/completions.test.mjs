@@ -5,7 +5,7 @@ const row={id:'a'.repeat(32),updated_at:'100',outcome:'gameover',score:'12345',l
 test('completion output contains only public fields',async()=>{
  const handler=createCompletionsHTTP({database:{query:async(sql,params)=>{assert.match(sql,/IN \('won','gameover'\)/);assert.deepEqual(params,[0,'']);return {rows:[row]};}}});
  const r=await handler(new Request(url));assert.equal(r.status,200);assert.equal(r.headers.get('cache-control'),'no-store');const body=await r.json();
- assert.deepEqual(body.entries,[{id:row.id,completedAt:100,outcome:'gameover',score:12345,level:7,username:'Tree Player'}]);assert.doesNotMatch(JSON.stringify(body),/private|wallet|run_id|signed/);
+ assert.deepEqual(body.entries,[{id:row.id,completedAt:100,outcome:'gameover',score:12345,level:7,username:'Tree Player',suinsName:null}]);assert.doesNotMatch(JSON.stringify(body),/private|wallet|run_id|signed/);
 });
 test('baseline does not read or disclose history',async()=>{
  const handler=createCompletionsHTTP({database:{query:async()=>assert.fail()},now:()=>999});const r=await handler(new Request(url+'?baseline=1'));assert.deepEqual(await r.json(),{cursor:{at:999,key:''},entries:[],hasMore:false});
@@ -25,4 +25,10 @@ test('anonymous players do not expose a wallet',async()=>{
 });
 test('database failures return 503 without leaking details',async()=>{
  const handler=createCompletionsHTTP({database:{query:async()=>{throw Error('secret connection');}}});const r=await handler(new Request(url));assert.equal(r.status,503);assert.doesNotMatch(await r.text(),/secret/);
+});
+
+test('SuiNS is resolved server-side without exposing the wallet',async()=>{
+ const wallet='0x'+'1'.repeat(64);let lookedUp;
+ const handler=createCompletionsHTTP({database:{query:async()=>({rows:[{...row,wallet}]})},resolveName:async a=>{lookedUp=a;return 'tree.sui';}});
+ const body=await (await handler(new Request(url))).json();assert.equal(lookedUp,wallet);assert.equal(body.entries[0].suinsName,'tree.sui');assert.doesNotMatch(JSON.stringify(body),new RegExp(wallet));
 });
