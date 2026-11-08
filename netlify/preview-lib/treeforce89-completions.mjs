@@ -1,3 +1,5 @@
+import {createHash} from 'node:crypto';
+const playerId=wallet=>createHash('sha256').update('tree-arcade-weekly:'+String(wallet).toLowerCase()).digest('hex');
 import {resolveSuiName} from './suins-names.mjs';
 export async function treeForceCompletions(pool,url,{now=Date.now,resolveName=resolveSuiName}={}){
  if(url.searchParams.get('baseline')==='1')return {cursor:{at:now(),key:''},entries:[],hasMore:false};
@@ -8,7 +10,7 @@ export async function treeForceCompletions(pool,url,{now=Date.now,resolveName=re
  FROM treeforce89_pilot_runs r LEFT JOIN treeforce89_pilot_profiles p ON p.wallet=r.wallet
  WHERE (floor(extract(epoch FROM r.updated_at)*1000)::bigint,md5(r.wallet||':'||r.run_id||':'||r.score::text))>($1::bigint,$2::text)
  ORDER BY floor(extract(epoch FROM r.updated_at)*1000)::bigint ASC,id ASC LIMIT 101`,[at,key]).catch(error=>{if(error.code==='42P01')return {rows:[]};throw error;});
- const entries=await Promise.all(rows.slice(0,100).map(async r=>({id:r.id,completedAt:Number(r.completed_at),score:Number(r.score),wave:Number(r.stats.wave)+1,cleared:r.stats.cleared===true,badges:Array.isArray(r.badges)?r.badges.length:0,username:r.username||null,suinsName:await resolveName(r.wallet)})));
+ const entries=await Promise.all(rows.slice(0,100).map(async r=>({id:r.id,playerId:playerId(r.wallet),completedAt:Number(r.completed_at),score:Number(r.score),wave:Number(r.stats.wave)+1,cleared:r.stats.cleared===true,badges:Array.isArray(r.badges)?r.badges.length:0,username:r.username||null,suinsName:await resolveName(r.wallet)})));
  if(entries.some(e=>!Number.isSafeInteger(e.completedAt)||!Number.isSafeInteger(e.score)||e.score<0||!Number.isInteger(e.wave)||e.wave<1||e.wave>10))throw Error('Invalid saved completion');
  const last=entries.at(-1);return {entries,cursor:last?{at:last.completedAt,key:last.id}:{at,key},hasMore:rows.length>100,scoreType:'Community scores · recorded by the game client'};
 }

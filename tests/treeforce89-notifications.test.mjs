@@ -7,3 +7,5 @@ test('invalid cursors cannot query the database',async()=>{await assert.rejects(
 test('bounded pages have stable timestamp and fingerprint cursor',async()=>{const rows=Array.from({length:101},(_,i)=>({...row,id:i.toString(16).padStart(32,'0')}));const r=await treeForceCompletions({query:async sql=>{assert.match(sql,/LIMIT 101/);return {rows};}},url(''),{resolveName:async()=>null});assert.equal(r.entries.length,100);assert.equal(r.hasMore,true);assert.equal(r.cursor.key,rows[99].id);});
 
 test('no saved-score tables yet yields an empty read-only feed',async()=>{const r=await treeForceCompletions({query:async()=>{throw Object.assign(Error('not initialized'),{code:'42P01'});}},url(''));assert.deepEqual(r.entries,[]);});
+
+test('opaque identity is stable across runs and names',async()=>{const r=await treeForceCompletions({query:async()=>({rows:[row,{...row,id:'b'.repeat(32),username:'Renamed'},{...row,wallet:'different'}]})},url(''),{resolveName:async()=>null});assert.match(r.entries[0].playerId,/^[a-f0-9]{64}$/);assert.equal(r.entries[0].playerId,r.entries[1].playerId);assert.notEqual(r.entries[0].playerId,r.entries[2].playerId);});
