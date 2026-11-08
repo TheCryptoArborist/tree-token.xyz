@@ -1,0 +1,54 @@
+{
+  "publishedAt": "2026-11-08T00:17:13.671Z",
+  "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
+  "deploymentId": "6aefbf28c93d3a48290bac20",
+  "baselineId": "6aefae6c038a955ed0dd4b70",
+  "sourceCommit": "09655de31e2523937ccf03d2bba37f0b60f734f0",
+  "functionHash": "8a1442286cc0d6c006dc99124fc14cb6e7b8a31241fa61a54c4bb331ff915dde",
+  "staticFilesPreserved": 359,
+  "protectedFunctionRecordsPreserved": 44,
+  "functionSchedulesPreserved": [
+    {
+      "name": "tree-badges-refresh-scheduled",
+      "cron": "47 */6 * * *"
+    },
+    {
+      "name": "tree-exposure-refresh-scheduled",
+      "cron": "27 */6 * * *"
+    },
+    {
+      "name": "tree-knowledge-trial-resolver",
+      "cron": "5 * * * *"
+    },
+    {
+      "name": "tree-knowledge-trial-rotation-scheduled",
+      "cron": "15 * * * *"
+    },
+    {
+      "name": "tree-leaderboard-refresh-scheduled",
+      "cron": "17 */6 * * *"
+    }
+  ],
+  "staticInventorySHA256": "11091f4b2ed588f8413c081af7a2bb63de6ddd1574e30408495caec0c55ef72c",
+  "checks": {
+    "feedGET": 200,
+    "stablePlayerIds": true,
+    "archivedBackendSourceParity": 38,
+    "tests": 6
+  },
+  "weeklyWorker": {
+    "repository": "TheCryptoArborist/gardenbattles",
+    "commit": "4bce284ce2b9e81757a4403c93a20d508e3e40f8",
+    "railwayProjectId": "4e648059-ab89-42eb-984c-42b348dbd35d",
+    "serviceId": "1283544b-bbbe-4427-8ca7-11e0b36017f8",
+    "deploymentId": "1807a226-0b64-4ed8-8409-fe678afc2d4f",
+    "status": "SUCCESS",
+    "activationDeliveredAt": "2026-11-08T00:18:48.765463521Z",
+    "schedule": "Sunday 19:00 America/Chicago",
+    "firstRoundup": "2026-11-08T19:00:00-06:00",
+    "forwardCoverage": true,
+    "notifierTestsPassed": 44,
+    "verifiedGardenChainEventParsed": true,
+    "canopyFeedDeployment": "6aefbf2be0fabbcedf85d923"
+  }
+}
