@@ -1,10 +1,12 @@
 # Current published Arcade baseline
 
+The approved header keeps artwork on the left and original text on the right, centered as one horizontal group. Both hero action buttons are removed; the navigation Get an NFTree link remains. Do not replace it with the older stacked preview.
+
 Lobby sign-in is persisted in localStorage (with legacy sessionStorage migration/fallback), remains bound to the same wallet, and retains the existing one-hour server expiry. Both Daily Growth and monthly progress must read it. Transient silent restoration must never delete the shared session or invalidate its own ticket. Connect-to-check-in proceeds through one sign-in message and a free server check-in; payments still require separate explicit wallet approval.
 
 Manual releases must wait for ALL queued Git builds to reach a terminal state before publication. A queued historical snapshot build can win the lock-switch window. Use [skip netlify] on source/documentation commits intended for manual preservation releases, or wait for their builds to finish. Never race Git CD, never restore an older deployment, and always verify the published ID/lock and complete inventory after the switch.
 
-Current live deploy is 6aefaa0584f661728e89a03e: **359 static paths, 45 backend functions and five schedules**. Read docs/arcade-session-release-20261107.json first; docs/arcade-monthly-release-20261107.json records the reward rules. It supersedes the historical production inventory below. Capture the full current live inventory before every release and preserve all existing backend package/provider/runtime records and configuration.
+Current live deploy is 6aefac86952e772007c60297: **359 static paths, 45 backend functions and five schedules**. Read docs/arcade-welcome-release-20261107.json first; docs/arcade-monthly-release-20261107.json records the reward rules. It supersedes the historical production inventory below. Capture the full current live inventory before every release and preserve all existing backend package/provider/runtime records and configuration.
 
 Monthly qualification requires 20 distinct UTC days of completed-result evidence; first-wave participation and paid attendance recovery do not count. Recovery costs 20,000 TREE to the existing game-fee recipient, uses a checkout-specific on-chain memo, and restores attendance only. Previously paid valid intents remain reconcilable across month rollover. The public panel tracks progress only and makes no monthly reward promise.
 
