@@ -1,3 +1,5 @@
+import {createHash} from 'node:crypto';
+const playerId=wallet=>createHash('sha256').update('tree-arcade-weekly:'+String(wallet).toLowerCase()).digest('hex');
 import {resolveSuiName} from './suins-names.mjs';
 const headers={'Cache-Control':'no-store'};
 const keyPattern=/^[a-f0-9]{32}$/;
@@ -17,7 +19,7 @@ export function createCompletionsHTTP({database,now=Date.now,resolveName=resolve
      AND (r.updated_at,md5(r.id::text))>($1::bigint,$2::text)
     ORDER BY r.updated_at ASC,md5(r.id::text) ASC LIMIT 101`,[at,key]);
    const entries=await Promise.all(rows.slice(0,100).map(async row=>({
-    id:row.id,completedAt:Number(row.updated_at),outcome:row.outcome,
+    id:row.id,playerId:playerId(row.wallet),completedAt:Number(row.updated_at),outcome:row.outcome,
     score:Number(row.score),level:Number(row.level),
     suinsName:await resolveName(row.wallet),
     username:typeof row.username==='string'&&/^[A-Za-z0-9][A-Za-z0-9 _-]{2,19}$/.test(row.username)?row.username:null,

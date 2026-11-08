@@ -5,7 +5,7 @@ const row={id:'a'.repeat(32),updated_at:'100',outcome:'gameover',score:'12345',l
 test('completion output contains only public fields',async()=>{
  const handler=createCompletionsHTTP({database:{query:async(sql,params)=>{assert.match(sql,/IN \('won','gameover'\)/);assert.deepEqual(params,[0,'']);return {rows:[row]};}}});
  const r=await handler(new Request(url));assert.equal(r.status,200);assert.equal(r.headers.get('cache-control'),'no-store');const body=await r.json();
- assert.deepEqual(body.entries,[{id:row.id,completedAt:100,outcome:'gameover',score:12345,level:7,username:'Tree Player',suinsName:null}]);assert.doesNotMatch(JSON.stringify(body),/private|wallet|run_id|signed/);
+ assert.deepEqual(body.entries,[{id:row.id,playerId:body.entries[0].playerId,completedAt:100,outcome:'gameover',score:12345,level:7,username:'Tree Player',suinsName:null}]);assert.doesNotMatch(JSON.stringify(body),/private|wallet|run_id|signed/);
 });
 test('baseline does not read or disclose history',async()=>{
  const handler=createCompletionsHTTP({database:{query:async()=>assert.fail()},now:()=>999});const r=await handler(new Request(url+'?baseline=1'));assert.deepEqual(await r.json(),{cursor:{at:999,key:''},entries:[],hasMore:false});
@@ -32,3 +32,5 @@ test('SuiNS is resolved server-side without exposing the wallet',async()=>{
  const handler=createCompletionsHTTP({database:{query:async()=>({rows:[{...row,wallet}]})},resolveName:async a=>{lookedUp=a;return 'tree.sui';}});
  const body=await (await handler(new Request(url))).json();assert.equal(lookedUp,wallet);assert.equal(body.entries[0].suinsName,'tree.sui');assert.doesNotMatch(JSON.stringify(body),new RegExp(wallet));
 });
+
+test('stable opaque identity distinguishes anonymous wallets',async()=>{const h=createCompletionsHTTP({database:{query:async()=>({rows:[{...row,wallet:'0x1'},{...row,wallet:'0x2'}]})},resolveName:async()=>null});const b=await(await h(new Request(url))).json();assert.match(b.entries[0].playerId,/^[a-f0-9]{64}$/);assert.notEqual(b.entries[0].playerId,b.entries[1].playerId);});
