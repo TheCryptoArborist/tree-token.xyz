@@ -13,8 +13,9 @@ cabinet HTML and routing configuration changed; publication is locked.
 
 The free new-game choice is published as host deploy
 `6aefb1eeede846812c016c9a`. After defeat, a holder can start a new game at zero
-for free or pay 20,000 TREE to continue with the saved score. Both begin at
-screen 1 with three lives. Leaderboard bests, completed runs, payment recovery,
+for free or pay 20,000 TREE to continue with the saved score. At that release,
+both began at screen 1 with three lives; current-grove continuation supersedes
+that earlier paid behavior below. Leaderboard bests, completed runs, payment recovery,
 and the SuiNS completion feed are preserved. This update makes no schema change.
 All 125 tests, syntax, isolated build and hosted endpoint checks pass. Browser
 inspection confirms the new choice instructions; real-holder game-over button
@@ -34,15 +35,27 @@ All 151 automated checks pass. See `production-pause-auth-2026-11-07.json` for
 publication identities, live checks, and investigation limits.
 
 The save-throughput follow-up is published as host deploy
-`6aefb8a4f379759c891f2b7f`, the latest isolated host release. Warm requests
+`6aefb8a4f379759c891f2b7f`. Warm requests
 now share a lazy database pool, while transactions keep independent leased
 connections. Replay batches can catch up with 600 inputs, with 900 total queued
 plus in-flight inputs maximum and server elapsed-time credit enforced. Initial
-credit stays 120. Repeated3-second saves and a 7-second spike run without a pause
+credit stays 120. Repeated 3-second saves and a 7-second spike run without a pause
 in the actual-app regression; prolonged stalls retain the safe pause/countdown.
 All 163 automated checks pass. No authentication, payment, dependency or schema
 changes are included. See `production-save-throughput-2026-11-07.json` for the
-current publication and validation record.
+that publication and validation record.
+
+The current-grove continue correction is published as host deploy
+`6aefbc5ed111c4f2d323b2da`, the latest isolated host release.
+A 20,000 TREE continue now keeps the saved score, grove, remaining bricks and
+their damage, boss progress and grove timing. It restores three lives and an
+attached seed waiting for explicit launch, while transient effects and projectiles
+reset. A free new game still starts at grove 1 with score zero and a fresh board.
+The payment verification/recovery flow, save-throughput improvements and
+leaderboard/completion records are preserved. No historical paid reset is
+retroactively changed. All 167 automated checks pass, including later-grove,
+final-boss, idempotent recovery and free-reset cases. See
+`production-grove-continue-2026-11-07.json` for current release identities.
 
 ## Original pre-launch plan (historical)
 

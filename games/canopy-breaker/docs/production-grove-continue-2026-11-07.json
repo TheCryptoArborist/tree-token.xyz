@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "sourceCommit": "9b03d9a05f253fd33fe65bde6bdb09d8f271cd12",
+  "previousHostDeployId": "6aefb8a4f379759c891f2b7f",
+  "siteId": "f054a440-1ff7-4fac-85da-3b8b9afcf8b0",
+  "gameURL": "https://tree-token.xyz/play/canopy-breaker/",
+  "scope": "Isolated Canopy Breaker host only; parent TREE site not deployed",
+  "schemaChanges": false,
+  "dependencyChanges": false,
+  "authorizationLogicChanges": false,
+  "paymentVerificationChanges": false,
+  "problem": "Paid continues retained score but incorrectly restarted at grove 1. The intended continue keeps both score and current grove.",
+  "paidContinue": {
+    "costTREE": 20000,
+    "scoreRetained": true,
+    "currentGroveRetained": true,
+    "remainingBricksAndDamageRetained": true,
+    "bossProgressRetained": true,
+    "groveTimingRetained": true,
+    "lives": 3,
+    "status": "ready",
+    "requiresExplicitLaunch": true,
+    "transientEffectsComboProjectilesAndHazardsReset": true,
+    "freeResetMarkersNotInherited": true,
+    "historicalPaidResetsRetrofitted": false
+  },
+  "freeNewGame": {
+    "costTREE": 0,
+    "grove": 1,
+    "score": 0,
+    "lives": 3,
+    "freshBoard": true,
+    "usernameAndLeaderboardBestRetained": true
+  },
+  "ui": {
+    "gameOverDescribesBothChoices": true,
+    "checkoutNamesCurrentGroveWhenInvoiceMatches": true,
+    "publicRulesAndSuccessMessageUpdated": true
+  },
+  "preserved": [
+    "NFTree gate and private source",
+    "Exact 20,000 TREE payment and SUI gas",
+    "Signature and receipt verification",
+    "Atomic single receipt and restart",
+    "Idempotent payment recovery",
+    "Historical score repair",
+    "Original terminal rows and completion/SuiNS feed",
+    "Leaderboard best and usernames",
+    "Warm database pool reuse",
+    "Bounded save batching and safe pause/countdown",
+    "In-cabinet navigation"
+  ],
+  "validation": {
+    "automatedTestsPassed": 167,
+    "engineTestsPassed": 12,
+    "gameServiceTestsPassed": 35,
+    "pauseUITestsPassed": 18,
+    "testCommand": "for test_file in tests/*.test.mjs; do node --wasm-num-compilation-tasks=1 --max-old-space-size=192 --no-wasm-tier-up \"$test_file\" || exit; done",
+    "paidLaterGrove": "Grove 17 with a partially cleared and damaged board survives redeem, repeated recovery and a fresh service open with its exact score; original terminal row and single payment receipt/link preserved.",
+    "paidFinalBoss": "Grove 30 with a damaged spawned boss survives recovery and open; boss HP, fire timer and movement phase survive next launch.",
+    "freeAdvancedGrove": "Free reset from damaged grove 17 still produces full grove 1, zero score and three lives; username, old terminal row and best score retained.",
+    "uiRegression": "Actual app game-over actions, current-grove checkout review and free reset are exercised with no payment submission.",
+    "syntaxPassed": true,
+    "isolatedBuildPassed": true,
+    "assistantSignedWalletMessageOrTransaction": false,
+    "realHolderAcceptanceStillAwaitingConfirmation": true,
+    "canonicalContinueAndFreeResetRulesObserved": true,
+    "canonicalHTMLCSSAndGatewayMatchBuild": true,
+    "hostedChecks": [
+      {
+        "path": "entry",
+        "method": "GET",
+        "status": 200,
+        "bytes": 9632
+      },
+      {
+        "path": "style.css",
+        "method": "GET",
+        "status": 200,
+        "bytes": 17285
+      },
+      {
+        "path": "gateway.js",
+        "method": "GET",
+        "status": 200,
+        "bytes": 491306
+      },
+      {
+        "path": "api/health",
+        "method": "GET",
+        "status": 200,
+        "bytes": 14
+      },
+      {
+        "path": "api/leaderboard",
+        "method": "GET",
+        "status": 200,
+        "bytes": 114
+      },
+      {
+        "path": "api/completions",
+        "method": "GET",
+        "status": 200,
+        "bytes": 634
+      },
+      {
+        "path": "src/app.js",
+        "method": "GET",
+        "status": 401,
+        "bytes": 35
+      },
+      {
+        "path": "src/engine.js",
+        "method": "GET",
+        "status": 401,
+        "bytes": 35
+      },
+      {
+        "path": "src/replay-limits.js",
+        "method": "GET",
+        "status": 401,
+        "bytes": 35
+      },
+      {
+        "path": "api/game",
+        "method": "POST",
+        "status": 401,
+        "bytes": 43
+      },
+      {
+        "path": "api/completions",
+        "method": "POST",
+        "status": 405,
+        "bytes": 18
+      }
+    ]
+  },
+  "hostDeployId": "6aefbc5ed111c4f2d323b2da",
+  "publishedAt": "2026-11-08T00:04:17.221Z",
+  "functionSha256": "e41575a224b65f65cc8da8420d77ac2628fb0d9ffc1b02de89bbf309a9414dc3",
+  "parentDeployBefore": "6aefae6c038a955ed0dd4b70",
+  "parentDeployAfter": "6aefae6c038a955ed0dd4b70",
+  "runtimePreserved": {
+    "node": "nodejs24.x",
+    "invocationMode": "stream",
+    "buildData": {
+      "bootstrapVersion": "2.24.0",
+      "runtimeAPIVersion": 2
+    },
+    "memoryMB": 1024,
+    "region": "us-east-2",
+    "routeCount": 6,
+    "functionCount": 1,
+    "scheduleCount": 0,
+    "rateLimitPreserved": true,
+    "productionDatabaseBranchAndMigrationsPreserved": true,
+    "routeMethodsNote": "Unrestricted methods normalized from null/empty array before equality comparison."
+  }
+}
