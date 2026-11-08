@@ -1,0 +1,31 @@
+{
+  "name": "canopy-breaker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "NFTree-gated forest brick breaker for TREE Arcade",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "check": "node tools/check.mjs",
+    "build": "node tools/build.mjs",
+    "build:hosted": "node tools/build-hosted.mjs",
+    "preview": "node tools/preview.mjs",
+    "dev": "node tools/preview.mjs"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "dependencies": {
+    "@mysten/dapp-kit-core": "1.6.41",
+    "@mysten/sui": "2.38.0",
+    "@netlify/blobs": "11.1.7",
+    "@netlify/database": "2.0.1",
+    "pg": "8.23.1"
+  },
+  "devDependencies": {
+    "@netlify/database-dev": "1.0.1",
+    "@netlify/zip-it-and-ship-it": "16.6.0",
+    "crc-32": "1.2.2",
+    "esbuild": "0.28.2"
+  }
+}

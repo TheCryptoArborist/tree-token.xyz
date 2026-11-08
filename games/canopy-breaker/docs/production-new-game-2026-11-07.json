@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "publishedAt": "2026-11-07T23:19:36.241Z",
+  "sourceCommit": "0154bb6409d75c738d5e85901e71994ba2c68b30",
+  "hostDeployId": "6aefb1eeede846812c016c9a",
+  "previousHostDeployId": "6aef9804520d04b7d818397f",
+  "siteId": "f054a440-1ff7-4fac-85da-3b8b9afcf8b0",
+  "gameURL": "https://tree-token.xyz/play/canopy-breaker/",
+  "scope": "Isolated Canopy Breaker host only; parent TREE site not deployed",
+  "parentDeployBefore": "6aefae6c038a955ed0dd4b70",
+  "parentDeployAfter": "6aefae6c038a955ed0dd4b70",
+  "functionSha256": "fd0f4b38a25f3add4271188619655acdedcb4b438cdb7ddc3a67bb5788a5ea7c",
+  "runtimePreserved": {
+    "node": "nodejs24.x",
+    "invocationMode": "stream",
+    "buildData": {
+      "bootstrapVersion": "2.24.0",
+      "runtimeAPIVersion": 2
+    },
+    "memoryMB": 1024,
+    "region": "us-east-2",
+    "routeCount": 6,
+    "routeMethodsNote": "CLI serializes unrestricted methods as null instead of an empty array. All route patterns, expressions, static precedence and effective methods match.",
+    "rateLimitPreserved": true,
+    "functionCount": 1,
+    "scheduleCount": 0
+  },
+  "schemaChanges": false,
+  "choices": {
+    "freeNewGame": {
+      "costTREE": 0,
+      "screen": 1,
+      "lives": 3,
+      "score": 0,
+      "leaderboardBestPreserved": true,
+      "terminalRunPreserved": true,
+      "idempotentRetry": true
+    },
+    "paidContinue": {
+      "costTREE": 20000,
+      "screen": 1,
+      "lives": 3,
+      "scoreRetained": true,
+      "networkGas": "SUI"
+    }
+  },
+  "paymentSafety": {
+    "unsignedQuotesCancelledAtomically": true,
+    "boundSignedPaymentBlocksFreeReset": true,
+    "existingPaymentRecoveryPreserved": true,
+    "assistantSubmittedTransaction": false
+  },
+  "validation": {
+    "automatedTestsPassed": 125,
+    "testCommand": "node --wasm-num-compilation-tasks=1 --test --test-concurrency=1 tests/*.test.mjs",
+    "note": "Single WebAssembly compilation worker avoids local PGlite startup memory pressure; tests run against the actual local database.",
+    "syntaxPassed": true,
+    "isolatedBuildPassed": true,
+    "uiSmoke": "Free reset, paid choice, idempotent retry, double click guard and stale wallet response tests pass.",
+    "canonicalChoiceCopyObserved": true,
+    "canonicalCSSMatchesBuild": true,
+    "healthGET": 200,
+    "leaderboardGET": 200,
+    "completionFeedGET": 200,
+    "unsignedNewGamePOST": 401,
+    "privateSourceGET": 401,
+    "completionFeedPOST": 405,
+    "realHolderGameOverButtonAcceptanceStillAwaitingConfirmation": true
+  }
+}

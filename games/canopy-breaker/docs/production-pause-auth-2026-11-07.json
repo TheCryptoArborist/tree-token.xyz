@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "sourceCommit": "1dacc2196ce8f912af5b8ba4a8ee8b0040d76ee9",
+  "previousHostDeployId": "6aefb1eeede846812c016c9a",
+  "siteId": "f054a440-1ff7-4fac-85da-3b8b9afcf8b0",
+  "gameURL": "https://tree-token.xyz/play/canopy-breaker/",
+  "scope": "Isolated Canopy Breaker host only; parent TREE site not deployed",
+  "schemaChanges": false,
+  "serverLogicChanges": false,
+  "dependencyChanges": false,
+  "investigation": {
+    "confirmedAutomaticTriggers": [
+      "120 queued inputs while a frame save remains in flight",
+      "window blur",
+      "hidden tab",
+      "controller change or disconnect",
+      "controller setup",
+      "leaderboard"
+    ],
+    "historicalUserTrigger": "Not identifiable from the old generic pause message; no per-session pause reason was recorded.",
+    "slowSaveReproduction": "At 60FPS a delayed first 60-input request creates a 120-input backlog and generic pause at about 3 seconds.",
+    "normalAcknowledgement": "Deterministic replay retains predicted position; ordinary acknowledgement does not move the seed during pause.",
+    "resyncReproduction": "A saved revision resync could replace the visible paused seed position.",
+    "serverTime": "Only accepted inputs advance simulation; wall-clock pause duration does not advance it."
+  },
+  "changes": {
+    "pauseReasonVisible": true,
+    "pausedSnapshotHeldDuringReconciliation": true,
+    "completeCheckpointBeforeResume": true,
+    "resumeCountdownSeconds": 3,
+    "noPhysicsDuringCountdown": true,
+    "aimMarkerWithoutPaddleTeleport": true,
+    "countdownCancelledByHiddenTabControllerDialogWalletOrRunChange": true,
+    "entryCTA": [
+      "Connect Wallet",
+      "Verify NFTree",
+      "Opening game\u2026"
+    ],
+    "entryUsesExistingPinnedWalletPickerAndPersonalMessage": true,
+    "fullscreenAuthPanelMadeVisible": true,
+    "oldWalletOpenResponseRaceFixed": true
+  },
+  "preserved": [
+    "NFTree gate and protected source",
+    "Three lives and 30 screens",
+    "Free new game resets score",
+    "20,000 TREE continue retains score",
+    "Signed payment recovery",
+    "Public usernames and top20 leaderboard",
+    "Finished-run completion/SuiNS feed",
+    "In-cabinet navigation"
+  ],
+  "validation": {
+    "automatedTestsPassed": 151,
+    "newAuthTestsPassed": 12,
+    "newPauseUITestsPassed": 14,
+    "testCommand": "for test_file in tests/*.test.mjs; do node --wasm-num-compilation-tasks=1 --max-old-space-size=192 --no-wasm-tier-up \"$test_file\" || exit; done",
+    "testNote": "All tests run with actual local database. Sequential direct files avoid local test-subprocess PGlite SIGKILL memory pressure; installed dependencies unchanged.",
+    "syntaxPassed": true,
+    "isolatedBuildPassed": true,
+    "realHolderGameplayAndPhysicalControllerAcceptanceStillAwaitingConfirmation": true,
+    "assistantSignedWalletMessageOrTransaction": false,
+    "liveWalletPickerOpenedFromPrimaryCTA": true,
+    "canonicalGatewayAndCSSMatchBuild": true,
+    "hostedChecks": [
+      {
+        "path": "entry",
+        "method": "GET",
+        "status": 200,
+        "bytes": 9548
+      },
+      {
+        "path": "style.css",
+        "method": "GET",
+        "status": 200,
+        "bytes": 17285
+      },
+      {
+        "path": "gateway.js",
+        "method": "GET",
+        "status": 200,
+        "bytes": 491306
+      },
+      {
+        "path": "api/health",
+        "method": "GET",
+        "status": 200,
+        "bytes": 14
+      },
+      {
+        "path": "api/leaderboard",
+        "method": "GET",
+        "status": 200,
+        "bytes": 51
+      },
+      {
+        "path": "api/completions",
+        "method": "GET",
+        "status": 200,
+        "bytes": 430
+      },
+      {
+        "path": "src/app.js",
+        "method": "GET",
+        "status": 401,
+        "bytes": 35
+      },
+      {
+        "path": "api/game",
+        "method": "POST",
+        "status": 401,
+        "bytes": 43
+      },
+      {
+        "path": "api/completions",
+        "method": "POST",
+        "status": 405,
+        "bytes": 18
+      }
+    ]
+  },
+  "hostDeployId": "6aefb5fa09b01fb891f90cb0",
+  "publishedAt": "2026-11-07T23:36:55.838Z",
+  "functionSha256": "04ed3e35f62af0cfc2ea31d86c8022379711c9fa214dbe9fbd9bb580c117786e",
+  "parentDeployBefore": "6aefae6c038a955ed0dd4b70",
+  "parentDeployAfter": "6aefae6c038a955ed0dd4b70",
+  "runtimePreserved": {
+    "node": "nodejs24.x",
+    "invocationMode": "stream",
+    "buildData": {
+      "bootstrapVersion": "2.24.0",
+      "runtimeAPIVersion": 2
+    },
+    "memoryMB": 1024,
+    "region": "us-east-2",
+    "routeCount": 6,
+    "functionCount": 1,
+    "scheduleCount": 0,
+    "rateLimitPreserved": true,
+    "productionDatabaseBranchAndMigrationsPreserved": true,
+    "routeMethodsNote": "Unrestricted methods normalized from null/empty array before equality comparison."
+  }
+}

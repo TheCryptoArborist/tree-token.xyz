@@ -1,0 +1,30 @@
+# Isolated Canopy Breaker host only; never use this configuration on tree-token.
+[build]
+  command = "npm run build:hosted"
+  publish = "hosted-public"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+# Retain the verified production function's existing compute settings.
+[functions."breaker-access"]
+  memory = 1024
+  region = "us-east-2"
+
+[[redirects]]
+  from = "/"
+  to = "/play/canopy-breaker/"
+  status = 302
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+    X-Content-Type-Options = "nosniff"
+
+[[headers]]
+  for = "/play/canopy-breaker/api/*"
+  [headers.values]
+    Cache-Control = "private, no-store"
+

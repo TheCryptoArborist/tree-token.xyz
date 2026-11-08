@@ -1,0 +1,31 @@
+{
+  "status": "published",
+  "sourceCommit": "0f7c657d6918a44535b9a74c743aebac9078044f",
+  "hostDeployId": "6aef949762090cc6a98cf472",
+  "priorWorkingHostDeployId": "6aef64eb6cafc47f69d4fcdb",
+  "siteId": "f054a440-1ff7-4fac-85da-3b8b9afcf8b0",
+  "scope": "Isolated Canopy Breaker host; parent TREE site not deployed",
+  "gameURL": "https://tree-token.xyz/play/canopy-breaker/",
+  "feedURL": "https://tree-token.xyz/play/canopy-breaker/api/completions",
+  "function": "breaker-access",
+  "functionRuntime": "nodejs24.x",
+  "invocationMode": "stream",
+  "modernBootstrapVersion": "2.24.0",
+  "modernRuntimeAPI": 2,
+  "functionCount": 1,
+  "scheduleCount": 0,
+  "schemaChanges": false,
+  "frontendFilesUnchanged": true,
+  "validation": {
+    "completionGET": 200,
+    "completionPOST": 405,
+    "databaseHealth": 200,
+    "unsignedGameAPI": 401,
+    "privateFieldsExcluded": true,
+    "observedHistoricalCompletion": {"outcome": "gameover", "score": 18500, "level": 2},
+    "newCompletionTests": 6,
+    "newBotListenerTests": 4,
+    "syntaxAndIsolatedBuild": "passed",
+    "existingDatabaseTests": "Local NetlifyDB startup exits 137; hosted database health and read query pass"
+  }
+}

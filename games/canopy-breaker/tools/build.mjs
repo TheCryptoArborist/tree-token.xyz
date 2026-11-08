@@ -1,0 +1,17 @@
+import fs from 'node:fs';
+import {build} from 'esbuild';
+import {zipFunctions} from '@netlify/zip-it-and-ship-it';
+fs.rmSync('dist',{recursive:true,force:true});fs.mkdirSync('dist',{recursive:true});
+for(const name of ['index.html','style.css'])fs.copyFileSync('public/'+name,'dist/'+name);
+fs.copyFileSync('public/tree-token.png','dist/tree-token.png');
+fs.cpSync('public/assets','dist/assets',{recursive:true});
+const gateway=fs.readFileSync('public/assets/gateway.png').toString('base64');
+fs.writeFileSync('dist/forest.svg',`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 900"><image href="data:image/png;base64,${gateway}" width="800" height="900" preserveAspectRatio="xMidYMid slice"/></svg>`);
+const css=fs.readFileSync('dist/style.css','utf8');fs.writeFileSync('dist/style.css',css+'\ncanvas{background: url("./forest.svg") center/100% 100% no-repeat;}\n');
+fs.writeFileSync('server/runtime-source.json',JSON.stringify(Object.fromEntries(fs.readdirSync('src').filter(n=>n.endsWith('.js')).map(n=>[n,fs.readFileSync('src/'+n,'utf8')]))));
+await build({entryPoints:['client/gateway.mjs'],bundle:true,external:['./src/*'],format:'esm',platform:'browser',target:'es2022',outfile:'dist/gateway.js',minify:true,legalComments:'eof'});
+await build({entryPoints:['client/leaderboard.mjs'],bundle:true,format:'esm',platform:'browser',target:'es2022',outfile:'dist/leaderboard.js',minify:true,legalComments:'eof'});
+fs.mkdirSync('.netlify/breaker-functions',{recursive:true});
+const result=await zipFunctions('netlify/functions','.netlify/breaker-functions',{config:{'*':{nodeBundler:'esbuild',nodeVersion:'22.x'}},manifest:'.netlify/breaker-functions/manifest.json'});
+if(result.length!==1||result[0].name!=='breaker-access')throw Error('Only the isolated breaker function may be packaged');
+console.log(JSON.stringify({static:fs.readdirSync('dist'),function:result[0].name,runtime:result[0].runtimeVersion}));
