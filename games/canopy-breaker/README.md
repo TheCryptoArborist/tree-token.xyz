@@ -11,12 +11,12 @@ host has its production saved-game migration applied and gameplay enabled.
 The arcade release preserves all 43 existing function records, five schedules,
 other static files, runtime configuration and site environment records.
 
-All 163 automated tests, the build and hosted database/access checks pass.
+All 167 automated tests, the build and hosted database/access checks pass.
 Peter reported successful live gameplay and a 20,000 TREE restart. The score
 carryover and navigation update also repairs earlier paid score resets on load.
 Score recovery in the user’s wallet, mobile wallet round trips and physical NES
 controller acceptance still await confirmation. See
-`docs/production-save-throughput-2026-11-07.json` for the current host release
+`docs/production-grove-continue-2026-11-07.json` for the current host release
 and `docs/production-release-2026-11-07.json` for the preserved arcade integration.
 
 ## Play
@@ -77,8 +77,11 @@ server continues to reject oversized, duplicate and clock-ahead batches.
 
 At zero lives, **Start New Game · Free** begins at screen 1 with three lives and
 score zero. Your public username, best leaderboard score and finished result
-remain saved. **Continue · 20,000 TREE** restores three lives at screen 1 while
-retaining your server-saved score; normal SUI gas applies to that paid option.
+remain saved. **Continue · 20,000 TREE** restores three lives at the saved grove
+while retaining your server-saved score, remaining bricks and their damage,
+and any final-boss damage. The seed waits on a fresh branch until you launch.
+Temporary pickups, hazards, shots, effects and combo reset; grove timing stays
+saved. Normal SUI gas applies to that paid option.
 Previously paid restarts that cleared the score recover it once from the verified
 restart history on the next load, including points earned since restarting.
 A completed 30-screen run

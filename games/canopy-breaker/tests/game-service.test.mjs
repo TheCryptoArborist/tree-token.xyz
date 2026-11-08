@@ -1,14 +1,16 @@
 import test,{before,after} from 'node:test';import assert from 'node:assert/strict';import {randomBytes} from 'node:crypto';
 import {NetlifyDB} from '@netlify/database-dev';import {toBase58} from '@mysten/sui/utils';
 import {createGameService} from '../server/game-service.mjs';import {TREE_TYPE} from '../server/payments/tree.mjs';
+import {createGame,layout,step} from '../src/engine.js';
 const db=new NetlifyDB({logger:()=>{}});before(async()=>{await db.start();await db.applyMigrations('netlify/database/migrations');});after(async()=>db.stop());
 function setup(){let time=100000,active=true,failReceipt=false;const address='0x'+randomBytes(32).toString('hex'),submits=[];
  const deps={database:db,authorize:async()=>{if(!active)throw Object.assign(Error('No session'),{status:401});return {address,expiresAt:9000000};},now:()=>time,seed:()=>42,
  reader:{decimals:async()=>6,failed:async()=>false,receipt:async i=>{if(failReceipt)throw Error('No chain');return {digest:i.expectedDigest,wallet:i.wallet,recipient:i.recipient,coinType:TREE_TYPE,amount:i.amount,checkpoint:'123',timestampMs:i.createdAt+1};}},
  inspectSigned:async signed=>{if(!signed.valid)throw Error('Bad signature');return signed.digest;},executeSigned:async(signed,digest)=>submits.push({signed,digest})};
  return {service:createGameService(deps),deps,address,submits,setTime:t=>time=t,logout:()=>active=false,failReceipt:()=>failReceipt=true};}
-async function defeated(s,score){const r=await s.service.open();r.state.status='gameover';r.state.lives=0;r.state.balls=[];if(score!==undefined)r.state.score=score;await db.query('UPDATE breaker.runs SET state=$1 WHERE id=$2',[JSON.stringify(r.state),r.id]);return r;}
-async function bound(s,score){const r=await defeated(s,score),q=await s.service.quote(),signed={valid:true,digest:toBase58(randomBytes(32)),bytes:'recorded-bytes',signature:'verified-signature'};await s.service.bind(null,{id:q.id,signed});s.setTime(q.createdAt+10);return {r,q,signed};}
+async function defeated(s,score,progress={}){const r=await s.service.open();Object.assign(r.state,progress);r.state.status='gameover';r.state.lives=0;r.state.balls=[];if(score!==undefined)r.state.score=score;await db.query('UPDATE breaker.runs SET state=$1 WHERE id=$2',[JSON.stringify(r.state),r.id]);return r;}
+async function bound(s,score,progress){const r=await defeated(s,score,progress),q=await s.service.quote(),signed={valid:true,digest:toBase58(randomBytes(32)),bytes:'recorded-bytes',signature:'verified-signature'};await s.service.bind(null,{id:q.id,signed});s.setTime(q.createdAt+10);return {r,q,signed};}
+function damagedBoard(level){const bricks=layout(level).slice(5),armored=bricks.find(brick=>brick.hp>1);if(armored)armored.hp--;return bricks;}
 async function storedRun(id){return (await db.query('SELECT * FROM breaker.runs WHERE id=$1',[id])).rows[0];}
 // Reproduce the previously deployed state shape: each paid restart began a
 // new score segment and had no carry marker. Payment/receipt links stay real.
@@ -85,7 +87,38 @@ test('competing and retried 600-frame batches resync after exactly one simulatio
 });
 test('a restart requires zero lives and quotes exactly 20,000 TREE using chain decimals',async()=>{const s=setup();await s.service.open();await assert.rejects(s.service.quote());await defeated(s);const [a,b]=await Promise.all([s.service.quote(),s.service.quote()]);assert.equal(a.id,b.id);assert.equal(a.amount,'20000000000');assert.equal(a.product,'continue');});
 test('unverified receipts, foreign-wallet invoices and unsigned claims cannot restart',async()=>{const s=setup(),other=setup(),{q}=await bound(s);await other.service.open();await assert.rejects(other.service.redeem(null,{id:q.id}));s.failReceipt();await assert.rejects(s.service.redeem(null,{id:q.id}));assert.equal((await s.service.open()).state.status,'gameover');});
-test('paid restart retains the score and repeated payment recovery returns the same run once',async()=>{const s=setup(),{q,signed}=await bound(s,4321);await s.service.submit(null,{id:q.id});await s.service.submit(null,{id:q.id});assert.deepEqual(s.submits[0],s.submits[1]);assert.equal(s.submits[0].signed.bytes,signed.bytes);const a=await s.service.redeem(null,{id:q.id}),b=await s.service.redeem(null,{id:q.id});assert.equal(a.id,b.id);assert.equal(a.state.lives,3);assert.equal(a.state.level,1);assert.equal(a.state.score,4321);assert.equal(a.state.carriedScore,4321);assert.equal(a.applied,true);assert.equal(b.applied,false);assert.equal(b.state.score,4321);const reopened=await createGameService(s.deps).open();assert.equal(reopened.id,a.id);assert.equal(reopened.state.score,4321);assert.equal((await db.query('SELECT * FROM breaker.receipts WHERE invoice_id=$1',[q.id])).rows.length,1);});
+test('paid continue retains score, grove and damaged bricks through repeated recovery and reopening',async()=>{
+ const s=setup(),bricks=damagedBoard(17),{r,q,signed}=await bound(s,4321,{level:17,bricks,tick:12345,levelTicks:777});
+ assert(bricks.length<layout(17).length);assert(bricks.some(brick=>brick.hp<brick.maxHp));
+ const defeatedRow=await storedRun(r.id);
+ await s.service.submit(null,{id:q.id});await s.service.submit(null,{id:q.id});
+ assert.deepEqual(s.submits[0],s.submits[1]);assert.equal(s.submits[0].signed.bytes,signed.bytes);
+ const a=await s.service.redeem(null,{id:q.id}),b=await s.service.redeem(null,{id:q.id});
+ assert.notEqual(a.id,r.id);assert.equal(a.id,b.id);assert.equal(a.state.lives,3);assert.equal(a.state.status,'ready');
+ assert.equal(a.state.level,17);assert.equal(a.state.score,4321);assert.equal(a.state.carriedScore,4321);
+ assert.deepEqual(a.state.bricks,bricks);assert.equal(a.applied,true);assert.equal(b.applied,false);assert.deepEqual(b.state,a.state);
+ const reopened=await createGameService(s.deps).open();
+ assert.equal(reopened.id,a.id);assert.deepEqual(reopened.state,a.state);
+ assert.deepEqual(await storedRun(r.id),defeatedRow);
+ const best=(await db.query('SELECT score,level FROM breaker.leaderboard_scores WHERE wallet=$1',[s.address])).rows;
+ assert.equal(best.length,1);assert.equal(Number(best[0].score),4321);assert.equal(best[0].level,17);
+ assert.equal((await db.query('SELECT * FROM breaker.receipts WHERE invoice_id=$1',[q.id])).rows.length,1);
+ assert.equal((await db.query('SELECT * FROM breaker.restarts WHERE invoice_id=$1',[q.id])).rows.length,1);
+ assert.equal((await s.service.history())[0].status,'paid');
+});
+test('paid continue restores three lives at the final boss with its remaining health preserved',async()=>{
+ const progress=createGame(42);Object.assign(progress,{level:30,bricks:[],status:'playing'});step(progress,{x:400});
+ assert.equal(progress.boss.hp,45);progress.boss.hp=7;
+ const s=setup(),{r,q}=await bound(s,29800,progress),before=await storedRun(r.id);
+ const continued=await s.service.redeem(null,{id:q.id});
+ assert.equal(continued.state.level,30);assert.equal(continued.state.score,29800);assert.equal(continued.state.carriedScore,29800);
+ assert.equal(continued.state.lives,3);assert.equal(continued.state.status,'ready');assert.deepEqual(continued.state.bricks,[]);
+ assert.equal(continued.state.boss.hp,7);assert.equal(continued.state.boss.maxHp,45);
+ const recovered=await createGameService(s.deps).redeem(null,{id:q.id}),reopened=await s.service.open();
+ assert.equal(recovered.id,continued.id);assert.equal(recovered.applied,false);assert.deepEqual(recovered.state,continued.state);
+ assert.equal(reopened.id,continued.id);assert.deepEqual(reopened.state,continued.state);assert.deepEqual(await storedRun(r.id),before);
+ assert.equal((await db.query('SELECT * FROM breaker.receipts WHERE invoice_id=$1',[q.id])).rows.length,1);
+});
 test('two legacy paid resets restore all earlier score segments and retain points earned since the latest restart',async()=>{const s=setup(),first=await purchased(s,1000),second=await purchased(s,1600);await legacyRun(first.prior.id,{score:1000});await legacyRun(first.run.id,{score:600});const before=await legacyRun(second.run.id,{score:75,tick:42});const [a,b]=await Promise.all([s.service.open(),createGameService(s.deps).open()]);assert.equal(a.state.score,1675);assert.equal(b.state.score,1675);assert.equal(a.state.carriedScore,1600);assert.equal(a.state.tick,42);assert.equal(a.state.lives,3);assert.equal(a.state.level,1);assert.equal(a.revision,b.revision);assert.equal(a.revision,before.revision+1);const reopened=await s.service.open();assert.equal(reopened.revision,a.revision);assert.equal(reopened.state.score,1675);assert.equal((await s.service.history()).length,2);assert.equal(s.submits.length,0);});
 test('a previously repaired ancestor contributes its total once without recounting older paid runs',async()=>{const s=setup(),first=await purchased(s,1000),second=await purchased(s,1600);await legacyRun(second.run.id,{score:75});const repaired=await s.service.open();assert.equal(repaired.state.score,1675);assert.equal(repaired.state.carriedScore,1600);assert.equal((await storedRun(first.run.id)).state.score,1600);assert.equal((await storedRun(first.prior.id)).state.score,1000);});
 test('historical receipt recovery and current-run repair cannot add inherited score twice',async()=>{const s=setup(),first=await purchased(s,1000),second=await purchased(s,1600);await legacyRun(first.prior.id,{score:1000});await legacyRun(first.run.id,{score:600});await legacyRun(second.run.id,{score:75});const old=await s.service.redeem(null,{id:first.invoice.id});assert.equal(old.applied,false);assert.equal(old.state.score,1600);const current=await s.service.open();assert.equal(current.id,second.run.id);assert.equal(current.state.score,1675);const repeated=await s.service.redeem(null,{id:first.invoice.id});assert.equal(repeated.state.score,1600);assert.equal((await s.service.open()).state.score,1675);});
@@ -100,16 +133,16 @@ test('logout and expired unsigned invoices cannot authorize a restart',async()=>
 test('signed invoice survives its quote window so a completed transfer remains recoverable',async()=>{const s=setup(),{q}=await bound(s);s.setTime(q.expiresAt+5000);const restored=await s.service.redeem(null,{id:q.id});assert.equal(restored.state.lives,3);});
 test('saved gameplay updates one best leaderboard score and paid restarts or new challenges cannot lower it',async()=>{const s=setup(),run=await s.service.open();assert.equal((await db.query('SELECT * FROM breaker.leaderboard_scores WHERE wallet=$1',[s.address])).rows.length,0);const state={...run.state,score:2000,level:8};await db.query('UPDATE breaker.runs SET state=$1 WHERE id=$2',[JSON.stringify(state),run.id]);await s.service.frames(null,{id:run.id,revision:run.revision,inputs:[{x:400,launch:true,fire:false}]});let best=(await db.query('SELECT * FROM breaker.leaderboard_scores WHERE wallet=$1',[s.address])).rows;assert.equal(best.length,1);assert.equal(Number(best[0].score),2000);assert.equal(best[0].level,8);const paid=await purchased(s,2000);best=(await db.query('SELECT * FROM breaker.leaderboard_scores WHERE wallet=$1',[s.address])).rows;assert.equal(best.length,1);assert.equal(Number(best[0].score),2000);assert.equal(best[0].level,8);await db.query('UPDATE breaker.runs SET state=$1 WHERE id=$2',[JSON.stringify({...paid.run.state,status:'won',score:10000,level:30}),paid.run.id]);const next=await s.service.next();assert.equal(next.state.score,0);best=(await db.query('SELECT * FROM breaker.leaderboard_scores WHERE wallet=$1',[s.address])).rows;assert.equal(best.length,1);assert.equal(Number(best[0].score),10000);assert.equal(best[0].level,30);});
 
-test('a free new game resets score and lives while preserving the finished run, username and best score',async()=>{
- const s=setup(),old=await defeated(s,18500);
+test('a free new game from an advanced grove resets to grove one while preserving the defeat, username and best score',async()=>{
+ const s=setup(),old=await defeated(s,18500,{level:17,bricks:damagedBoard(17)});
  await db.query('INSERT INTO breaker.player_profiles(wallet,username,updated_at) VALUES($1,$2,$3)',[s.address,'Fresh '+s.address.slice(-8),100000]);
  const before=await storedRun(old.id),next=await s.service.newGame(null,{id:old.id});
  assert.notEqual(next.id,old.id);assert.equal(next.state.score,0);assert.equal(next.state.carriedScore,0);
- assert.equal(next.state.level,1);assert.equal(next.state.lives,3);assert.equal(next.state.status,'ready');
+ assert.equal(next.state.level,1);assert.equal(next.state.lives,3);assert.equal(next.state.status,'ready');assert.deepEqual(next.state.bricks,layout(1));
  assert.equal(next.state.newGameFrom,old.id);assert.deepEqual(await storedRun(old.id),before);
  assert.equal((await s.service.open()).id,next.id);
  const best=(await db.query('SELECT * FROM breaker.leaderboard_scores WHERE wallet=$1',[s.address])).rows;
- assert.equal(best.length,1);assert.equal(Number(best[0].score),18500);
+ assert.equal(best.length,1);assert.equal(Number(best[0].score),18500);assert.equal(best[0].level,17);
  assert.equal((await db.query('SELECT username FROM breaker.player_profiles WHERE wallet=$1',[s.address])).rows[0].username,'Fresh '+s.address.slice(-8));
  assert.deepEqual(await s.service.history(),[]);assert.equal(s.submits.length,0);
 });

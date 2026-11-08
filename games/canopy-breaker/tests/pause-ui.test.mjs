@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {createGame,step,PICKUPS,BIOMES} from '../src/engine.js';
+import {createGame,step,layout,PICKUPS,BIOMES} from '../src/engine.js';
 import {SAVE_EVERY_FRAMES,MAX_BATCH_FRAMES,MAX_PENDING_FRAMES,MAX_CLOCK_CREDIT} from '../src/replay-limits.js';
 
 // Run the shipped app event handlers and RAF loop with a controllable browser,
@@ -180,6 +180,14 @@ test('terminal saved state releases pause and preserves game-over actions and sc
  const h=harness();h.app.replace(playing());h.frameAt(20);h.app.togglePause();assert.equal(h.calls.length,1);
  const terminal=playing();terminal.resync=true;terminal.revision=3;terminal.state.status='gameover';terminal.state.lives=0;terminal.state.balls=[];terminal.state.score=18500;h.calls[0].resolve(terminal);await settle();
  assert.equal(h.app.snapshot().paused,false);assert.equal(h.app.snapshot().resumeAt,0);assert.equal(h.element('primary').textContent,'Continue · 20,000 TREE');assert.equal(h.element('secondary').hidden,false);assert.equal(h.element('secondary').textContent,'Start New Game · Free');assert.equal(h.app.snapshot().run.state.score,18500);assert.deepEqual(h.dispatched,['breaker-score-saved']);
+});
+
+test('paid continue review keeps the current grove and progress while the free choice starts grove one',async()=>{
+ const h=harness(),defeated=waiting();Object.assign(defeated.state,{status:'gameover',lives:0,balls:[],score:9876,level:17,levelTicks:500,bricks:layout(17).slice(2)});h.app.replace(structuredClone(defeated));
+ const copy=h.element('overlay-text').textContent+' '+h.element('overlay-note').textContent;assert.match(copy,/grove 17/);assert.match(copy,/continue here with your score and grove progress/i);assert.match(copy,/continue restores three lives in this grove/i);assert.match(copy,/free new game resets to grove 1 with score 0/i);assert.equal(h.element('primary').textContent,'Continue · 20,000 TREE');assert.equal(h.element('secondary').textContent,'Start New Game · Free');
+ const review=h.app.primary();await settle();assert.equal(h.calls.length,1);assert.equal(h.calls[0].action,'quote');h.calls[0].resolve({id:'continue-invoice',runId:defeated.id,status:'quoted',recipient:'configured-recipient',amount:'20000000000'});await review;
+ assert.equal(h.element('checkout').open,true);assert.match(h.element('continue-details').textContent,/continue at grove 17 with 3 lives/i);assert.match(h.element('continue-details').textContent,/keep your score and grove progress/i);assert.equal(h.element('pay').textContent,'Approve 20,000 TREE in wallet');assert.deepEqual(h.app.snapshot().run,defeated);assert.equal(h.calls.length,1,'reviewing a quote must not submit a payment');
+ h.element('checkout').close();const free=h.element('secondary').onclick();await settle();assert.equal(h.calls[1].action,'newGame');assert.deepEqual(h.calls[1].input,{id:defeated.id});const fresh=waiting('free-new-run');h.calls[1].resolve(fresh);await free;assert.equal(h.app.snapshot().run.state.level,1);assert.equal(h.app.snapshot().run.state.score,0);assert.equal(h.app.snapshot().run.state.lives,3);
 });
 
 test('a predicted game over notifies completion listeners only after its terminal inputs are saved',async()=>{
