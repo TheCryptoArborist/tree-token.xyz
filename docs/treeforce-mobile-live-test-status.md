@@ -1,3 +1,39 @@
+# Current revision: Mobile Test 3 — visual guide and uncluttered HUD
+
+Published at https://tree-token.xyz/play/treeforce89/test/ in deployment
+`6af21232514520bf83ab83e9`, November 9, 2026 at 18:36:06 UTC
+(12:36 PM America/Chicago), replacing Mobile Test 2.
+
+The bottom HUD now reserves separate rows for growth/weapon information and
+three equally sized Auto Fire / Shield / Fire targets. The help icon moves
+to the upper HUD; the chain readout is hidden from the compact bottom HUD.
+Explicit canvas aspect sizing prevents clipping, and the live leaderboard
+starts collapsed behind View live leaderboard. The short collectible key is
+hidden while signed-in gameplay occupies the cabinet.
+
+The tutorial uses actual loaded game textures: bat and borer targets, pointed
+red shots and a falling limb, and green growth seeds, violet cores, VICTORY
+and BOOM pickups. Shoot / dodge / collect explanations are presented in
+separate colored rows. It can be reopened from Pause or the question mark.
+Existing testers receive the illustrated guide once because its test-only
+storage key was updated. Help replay resumes the current mission rather than
+starting a new run.
+
+Validation: actual emitted pause/HUD methods checked for paused clocks,
+single overlay, tutorial sprites, touch reset, separated stat rows, action
+bounds and non-overlapping hit targets. Responsive visual checks covered
+390 × 760, 355 × 650, and 390 × 650 browser frames. In a compact frame the
+canvas ended at document Y=548, with the collapsed leaderboard beginning at
+Y=556 and ending at Y=602, inside a 650-pixel viewport. These are browser-frame
+checks, not physical Safari measurements. Final public page shows Mobile
+Test 3 and the collapsed live leaderboard opens and closes correctly.
+
+Payments and test score submissions remain disabled. Only four test-path
+files changed; original production static assets and backend configuration
+were preserved. See the V3 release report for post-publication checks.
+
+## Earlier revisions
+
 # Current mobile test revision: Mobile Test 2
 
 Published deployment `6af20f9078d58b0a05fe6d65` on November 9, 2026 at
