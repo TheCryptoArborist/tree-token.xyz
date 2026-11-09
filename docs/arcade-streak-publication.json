@@ -1,0 +1,53 @@
+{
+  "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
+  "deploymentId": "6af1bca4f80981614fa2f1fd",
+  "baselineId": "6af1b35582ca1a00bf5fa4b7",
+  "sourceCommit": "bd96e87d27c97483dafc5699a9f9a8e91ad95719",
+  "functionHash": "ba5a29c65653611e59864f4ad3e8995aa28bd1292be37465c18df47919fb8d79",
+  "staticFilesPreserved": 368,
+  "protectedFunctionRecordsPreserved": 45,
+  "schedulesPreserved": [
+    {
+      "name": "tree-badges-refresh-scheduled",
+      "cron": "47 */6 * * *"
+    },
+    {
+      "name": "tree-exposure-refresh-scheduled",
+      "cron": "27 */6 * * *"
+    },
+    {
+      "name": "tree-knowledge-trial-resolver",
+      "cron": "5 * * * *"
+    },
+    {
+      "name": "tree-knowledge-trial-rotation-scheduled",
+      "cron": "15 * * * *"
+    },
+    {
+      "name": "tree-leaderboard-refresh-scheduled",
+      "cron": "17 */6 * * *"
+    }
+  ],
+  "migrationVersion": "20261109123020",
+  "migrationSQLSHA256": "cbe2610b6187273c62e592efc3e682a88ed8f55d79888c6ac8565cbedbc66ba3",
+  "migrationFilenameNote": "CLI-generated migration file aligned to the actual server-recorded apply_migration version so future migration pushes do not reapply it.",
+  "feedChecks": {
+    "GET": 200,
+    "POST": 405,
+    "anonRPC": false,
+    "userRPC": false,
+    "serviceRPC": true,
+    "RLS": true
+  },
+  "botCommit": "97f524575362bb4296290145df7ef26deb9a8ce5",
+  "testsPassed": 66,
+  "railway": {
+    "deploymentId": "7a297c59-e696-4ed0-9f1f-061ed07b61fb",
+    "status": "SUCCESS",
+    "activationDeliveredAt": "2026-11-09T12:32:51.400820745Z"
+  },
+  "advisors": {
+    "newWarnings": 0,
+    "expectedInfo": "Private server-only queue has RLS enabled with no client policies; service_role-only access verified."
+  }
+}
