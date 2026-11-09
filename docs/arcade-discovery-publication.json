@@ -1,0 +1,52 @@
+{
+  "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
+  "deploymentId": "6af1c0e464d4cdc85c4e9c34",
+  "baselineId": "6af1bca4f80981614fa2f1fd",
+  "sourceCommit": "19333d3d9e9950548bdb883424c1d8d9d56d6164",
+  "functionHash": "33e865b72e811394969508a307bb3065d60a09e228e868ae13d5466cd569d18f",
+  "staticFilesPreserved": 368,
+  "protectedFunctionRecordsPreserved": 45,
+  "functionSchedulesPreserved": [
+    {
+      "name": "tree-badges-refresh-scheduled",
+      "cron": "47 */6 * * *"
+    },
+    {
+      "name": "tree-exposure-refresh-scheduled",
+      "cron": "27 */6 * * *"
+    },
+    {
+      "name": "tree-knowledge-trial-resolver",
+      "cron": "5 * * * *"
+    },
+    {
+      "name": "tree-knowledge-trial-rotation-scheduled",
+      "cron": "15 * * * *"
+    },
+    {
+      "name": "tree-leaderboard-refresh-scheduled",
+      "cron": "17 */6 * * *"
+    }
+  ],
+  "migrationVersion": "20261109124834",
+  "migrationSQLSHA256": "a0b11347910af2fe51c4495d5a4cf65adb9de56789191bcdc60daa73856fe45a",
+  "migrationFilenameAlignedToServer": true,
+  "botCommit": "a616dd6714f3fb74a45a9cac5bfe8c97313fa1eb",
+  "botDeploymentId": "5bf57c27-89aa-4d7d-9d24-af9baf89c0cf",
+  "schedule": "Monday/Wednesday/Friday 12:00 America/Chicago",
+  "firstScheduledSpotlight": "2026-11-09T12:00:00-06:00",
+  "feedChecks": {
+    "streakGET": 200,
+    "badgeGET": 200,
+    "anonRPC": false,
+    "authenticatedRPC": false,
+    "serviceRPC": true,
+    "RLS": true
+  },
+  "testsPassed": 76,
+  "archivedSourceParityFunctions": 38,
+  "dependencyPolicy": "Pinned root lock restored; PGlite 0.3.14 is isolated in vendor/arcade-discovery-tests.",
+  "railwayStatus": "SUCCESS",
+  "activationDeliveredAt": "2026-11-09T12:52:20.900199941Z",
+  "noSyntheticProductionAwards": true
+}
