@@ -8,6 +8,7 @@ import {loadBlockArt} from './block-art.js';
 import {loadBackgroundArt} from './background-art.js';
 const $=id=>document.getElementById(id),api=window.breakerSession,canvas=$('game'),ctx=canvas.getContext('2d');
 let run=null,queue=[],sending=null,inFlightInputs=0,paused=false,connected=!!api.account,clock=0,last=performance.now(),target=400,launch=false,fire=false,events=0,syncError='',muted=false,opening=null,quote=null,buying=false,gameActionBusy=false,newGameRequest=null,gameRevision=0;
+let homeView=true;
 let pauseReason='manual',pauseView=null,pauseSaving=false,resumeAt=0,resumeTask=false,pauseEpoch=0;
 const keys=new Set(),motion=!matchMedia('(prefers-reduced-motion: reduce)').matches;
 let controlStorage=null;try{controlStorage=localStorage;}catch{}
@@ -48,12 +49,17 @@ async function requestResume(){
  }catch{}finally{if(epoch===pauseEpoch&&stamp===gameRevision){resumeTask=false;paint();}}
 }
 const pauseCopy={manual:'You paused the game.',focus:'The game window lost focus.',hidden:'The game tab was hidden.',controller:'Your active controller changed or disconnected.',setup:'Controller setup opened.',checkout:'Payment history opened a checkout.',leaderboard:'The leaderboard opened.',saving:'Saving fell behind, so the game paused to protect your run.',navigation:'Your run is saving before leaving the game.'};
-function overlay(kicker,title,text,label,note=''){const o=$('overlay');o.hidden=false;o.classList.remove('gameover-choices','pause-state','resume-countdown');$('overlay-kicker').textContent=kicker;$('overlay-title').textContent=title;$('overlay-text').textContent=text;$('primary').textContent=label;$('primary').disabled=gameActionBusy||buying;$('secondary').hidden=true;$('secondary').disabled=gameActionBusy||buying;$('overlay-note').textContent=note;}
+function overlay(kicker,title,text,label,note=''){const o=$('overlay');o.hidden=false;o.classList.remove('gameover-choices','pause-state','resume-countdown');$('overlay-kicker').textContent=kicker;$('overlay-title').textContent=title;$('overlay-text').textContent=text;$('primary').textContent=label;$('primary').disabled=gameActionBusy||buying;$('secondary').hidden=true;$('secondary').disabled=gameActionBusy||buying;$('overlay-note').textContent=note;$('return-home').hidden=homeView;}
 function paint(){
  const s=run?.state;if(s){$('level').textContent=String(s.level).padStart(2,'0')+' / 30';$('score').textContent=String(s.score).padStart(6,'0');$('lives').textContent=Array.from({length:3},(_,i)=>i<s.lives?'●':'○').join(' ');}
  if(!connected){overlay('NFTREE ACCESS REQUIRED','The canopy awaits.','Connect your Sui wallet and verify NFTree ownership.',api.authLabel||'Connect Wallet','Sign-in is a message. No TREE payment is needed to verify.');$('primary').disabled=!!api.authBusy;return;}
  if(syncError){overlay('FOREST CONNECTION','Your run is held.',syncError,'Reconnect','Your recorded payment and saved run remain recoverable.');return;}
  if(!s){overlay('OPENING THE FOREST','Gathering the roots…','Loading your saved run.','Opening…');$('primary').disabled=true;return;}
+ if(homeView){
+  const ended=s.status==='gameover';
+  overlay('CANOPY BREAKER','Guard the canopy.',ended?`Your last run ended at grove ${s.level} with ${s.score.toLocaleString()} points. Start fresh for free, or choose a paid continue.`:'Your forest is ready. Move the living branch and launch your seed.',ended?'Start New Game · Free':s.status==='won'?'Play another run':'Enter forest',ended?'A free new game starts at grove 1 with three lives and score 0. Your leaderboard best stays saved.':'NFTree access verified. No TREE payment is needed to enter.');
+  if(ended){$('secondary').textContent='Continue saved run · 20,000 TREE';$('secondary').hidden=false;}return;
+ }
  if(paused){
   const saving=pauseSaving||resumeTask,seconds=Math.max(1,Math.ceil((resumeAt-performance.now())/1000));
   overlay(resumeAt?'GET READY':pauseReason==='saving'?'SAVING YOUR RUN':'GAME PAUSED',resumeAt?`Resuming in ${seconds}…`:'The forest can wait.',resumeAt?'Aim your branch. The seed stays frozen until the countdown ends.':pauseCopy[pauseReason]||pauseCopy.manual,resumeAt?`Resume in ${seconds}`:saving?'Saving paused position…':'Resume','Your seed is held. Resume includes a three-second countdown.');
@@ -66,7 +72,7 @@ function paint(){
  if(s.status==='ready'){overlay('SCREEN '+String(s.level).padStart(2,'0'),s.lives===3&&s.level===1?'Let the canopy rise.':'Keep the roots alive.','Move the living branch to aim. Launch your seed when ready.','Launch seed','Catch green power-ups. Beware amber forest hazards.');return;}
  $('overlay').hidden=true;
 }
-async function primary(){if(gameActionBusy||buying)return;await wakeAudio();if(gameActionBusy||buying)return;if(!connected){await api.openAuth();return;}if(syncError){const address=api.account?.address,stamp=gameRevision;syncError='';try{await checkpoint();if(api.account?.address!==address||stamp!==gameRevision)return;if(!run)await open();else if(canPause())pauseGame('saving');}catch{}paint();return;}if(!run)return;if(paused){await requestResume();return;}if(run.state.status==='gameover'){const address=api.account?.address,stamp=gameRevision;gameActionBusy=true;paint();try{await checkpoint();if(api.account?.address!==address||stamp!==gameRevision)return;const nextQuote=await api.request('quote');if(api.account?.address!==address||stamp!==gameRevision)return;quote=nextQuote;showQuote();}catch(e){if(api.account?.address===address&&stamp===gameRevision)toast(e.message);}finally{gameActionBusy=false;paint();}return;}if(run.state.status==='won'){try{await checkpoint();replace(await api.request('next'));}catch(e){toast(e.message);}return;}launch=true;canvas.focus();}
+async function primary(){if(gameActionBusy||buying)return;await wakeAudio();if(gameActionBusy||buying)return;if(!connected){await api.openAuth();return;}if(syncError){const address=api.account?.address,stamp=gameRevision;syncError='';try{await checkpoint();if(api.account?.address!==address||stamp!==gameRevision)return;if(!run)await open();else if(canPause())pauseGame('saving');}catch{}paint();return;}if(!run)return;if(homeView){if(run.state.status==='gameover'){await startNewGame();return;}homeView=false;clearControls();paint();if(run.state.status!=='won')return;}if(paused){await requestResume();return;}if(run.state.status==='gameover'){const address=api.account?.address,stamp=gameRevision;gameActionBusy=true;paint();try{await checkpoint();if(api.account?.address!==address||stamp!==gameRevision)return;const nextQuote=await api.request('quote');if(api.account?.address!==address||stamp!==gameRevision)return;quote=nextQuote;showQuote();}catch(e){if(api.account?.address===address&&stamp===gameRevision)toast(e.message);}finally{gameActionBusy=false;paint();}return;}if(run.state.status==='won'){try{await checkpoint();replace(await api.request('next'));}catch(e){toast(e.message);}return;}launch=true;canvas.focus();}
 async function startNewGame(){
  if(gameActionBusy||buying||!connected||!run||run.state.status!=='gameover')return;
  const address=api.account?.address,stamp=gameRevision,id=newGameRequest?.address===address&&newGameRequest.id===run.id?newGameRequest.id:run.id;
@@ -75,7 +81,7 @@ async function startNewGame(){
   await checkpoint();if(api.account?.address!==address||stamp!==gameRevision)return;
   const data=await api.request('newGame',{id});
   if(api.account?.address!==address||stamp!==gameRevision)return;
-  replace(data);quote=null;if($('checkout').open)$('checkout').close();api.history().catch(()=>{});
+  homeView=false;replace(data);quote=null;if($('checkout').open)$('checkout').close();api.history().catch(()=>{});
   toast('New game ready. Score reset. Your leaderboard best is saved.');
  }catch(e){if(api.account?.address===address&&stamp===gameRevision)toast(e.message);}
  finally{gameActionBusy=false;paint();}
@@ -85,8 +91,9 @@ $('pay').onclick=async()=>{if(!quote||buying)return;buying=true;$('pay').disable
 $('cancel-payment').onclick=async()=>{if(!quote||buying)return;try{await api.cancel(quote.id);quote=null;$('checkout').close();}catch(e){$('checkout-status').textContent=e.message;}};
 $('history-toggle').onclick=async()=>{const box=$('history');box.hidden=!box.hidden;if(box.hidden)return;box.textContent='Loading recorded payments…';try{const rows=await api.history();box.replaceChildren();if(!rows.length){box.textContent='No continue payments yet.';return;}for(const row of rows){const p=document.createElement('p');p.textContent=`${row.status.toUpperCase()} · 20,000 TREE · ${row.id}`;box.append(p);if(['quoted','bound','paid'].includes(row.status)){const b=document.createElement('button');b.textContent=row.status==='quoted'?'Review invoice':row.status==='bound'?'Resume recorded payment':'Recover verified continue';b.onclick=()=>{quote=row;showQuote();};box.append(b);}if(row.status==='bound'){const b=document.createElement('button');b.textContent='Check finalized failure';b.onclick=async()=>{try{await api.reconcile(row.id);toast('Failed transfer released. A new invoice can now be created.');}catch(e){toast(e.message);}};box.append(b);}}}catch(e){box.textContent=e.message;}};
 $('primary').onclick=primary;
-$('secondary').onclick=startNewGame;
-$('launch').onpointerdown=e=>{e.currentTarget.setPointerCapture(e.pointerId);wakeAudio();if(!paused){fire=true;if(run&&['ready','cleared'].includes(run.state.status))launch=true;}};
+$('secondary').onclick=()=>{if(homeView){homeView=false;void primary();}else void startNewGame();};
+$('return-home').onclick=()=>{if(gameActionBusy||buying)return;pauseGame('manual');homeView=true;clearControls();paint();};
+$('launch').onpointerdown=e=>{e.currentTarget.setPointerCapture(e.pointerId);wakeAudio();if(!paused&&!homeView){fire=true;if(run&&['ready','cleared'].includes(run.state.status))launch=true;}};
 for(const name of ['pointerup','pointercancel','lostpointercapture'])$('launch').addEventListener(name,()=>fire=false);
 function togglePause(){if(!canPause()||!connected||syncError)return;if(paused&&!resumeAt)void requestResume();else pauseGame('manual');}
 window.addEventListener('breaker-view-leaderboard',()=>{pauseGame('leaderboard');});
@@ -101,7 +108,7 @@ for(const link of document.querySelectorAll('.game-navigation a,.top a')){
 $('pause').onclick=togglePause;$('sound').onclick=async()=>{muted=!muted;setSound(!muted);$('sound').textContent=muted?'Sound off':'Sound on';$('sound').setAttribute('aria-pressed',String(!muted));if(!muted)await wakeAudio();};
 $('fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.querySelector('.cabinet').requestFullscreen();}catch{toast('Use your browser fullscreen option.');}};
 document.querySelector('.field').addEventListener('pointermove',e=>{const r=canvas.getBoundingClientRect();target=Math.max(0,Math.min(800,(e.clientX-r.left)/r.width*800));});
-canvas.addEventListener('pointerdown',e=>{wakeAudio();canvas.setPointerCapture(e.pointerId);const r=canvas.getBoundingClientRect();target=Math.max(0,Math.min(800,(e.clientX-r.left)/r.width*800));if(!paused){fire=true;if(run?.state.status==='ready')launch=true;}});
+canvas.addEventListener('pointerdown',e=>{wakeAudio();canvas.setPointerCapture(e.pointerId);const r=canvas.getBoundingClientRect();target=Math.max(0,Math.min(800,(e.clientX-r.left)/r.width*800));if(!paused&&!homeView){fire=true;if(run?.state.status==='ready')launch=true;}});
 canvas.addEventListener('pointerup',()=>fire=false);canvas.addEventListener('pointercancel',()=>fire=false);
 window.addEventListener('keydown',e=>{if(['INPUT','TEXTAREA','BUTTON','SUMMARY'].includes(e.target.tagName)||$('checkout').open)return;if(['ArrowLeft','ArrowRight',' ','a','d','A','D','p','P'].includes(e.key)){e.preventDefault();keys.add(e.key.toLowerCase());wakeAudio();if(e.key===' '&&!e.repeat&&!paused)launch=true;if(e.key.toLowerCase()==='p'&&!e.repeat)togglePause();}});window.addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));
 window.addEventListener('blur',()=>{clearControls();if(run?.state.status==='playing'||resumeAt)pauseGame('focus');});
@@ -129,14 +136,14 @@ function pollController(){
 function frame(time){
  const dt=Math.min(.06,(time-last)/1000);last=time;
  if(resumeAt&&($('checkout').open||controlDialog.open))pauseGame(controlDialog.open?'setup':'checkout');
- const input=pollController(),canUsePad=connected&&!syncError&&!document.hidden&&!$('checkout').open&&!controlDialog.open;
+ const input=pollController(),canUsePad=connected&&!homeView&&!syncError&&!document.hidden&&!$('checkout').open&&!controlDialog.open;
  const axis=canUsePad?input.axis:0,padFire=canUsePad&&input.fire;
  if(canUsePad){if(input.startPressed){wakeAudio();togglePause();}if(input.firePressed&&!paused&&run&&['ready','cleared'].includes(run.state.status)){wakeAudio();launch=true;}}
  const direction=(keys.has('a')||keys.has('arrowleft')?-1:0)+(keys.has('d')||keys.has('arrowright')?1:0)+axis;
  if(paused&&resumeAt)target=Math.max(0,Math.min(800,target+direction*900*dt));
  let justResumed=false;
  if(resumeAt&&time>=resumeAt&&connected&&!syncError&&!document.hidden&&!$('checkout').open&&!controlDialog.open){resetPause();last=time;justResumed=true;}
- if(run&&connected&&!paused&&!justResumed&&!syncError&&!document.hidden&&!$('checkout').open&&!controlDialog.open&&(['ready','playing'].includes(run.state.status)||(run.state.status==='cleared'&&launch))){
+ if(run&&connected&&!homeView&&!paused&&!justResumed&&!syncError&&!document.hidden&&!$('checkout').open&&!controlDialog.open&&(['ready','playing'].includes(run.state.status)||(run.state.status==='cleared'&&launch))){
   target=Math.max(0,Math.min(800,target+direction*900*dt));clock+=dt;
   while(clock>=1/60&&queue.length+inFlightInputs<MAX_PENDING_FRAMES){const input={x:target,launch:launch||keys.has(' '),fire:fire||keys.has(' ')||padFire};step(run.state,input);queue.push(input);launch=false;clock-=1/60;if(['gameover','cleared','won'].includes(run.state.status)){flush();clock=0;break;}}
   if(queue.length>=SAVE_EVERY_FRAMES)flush();if(queue.length+inFlightInputs>=MAX_PENDING_FRAMES)pauseGame('saving');

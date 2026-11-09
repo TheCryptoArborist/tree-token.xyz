@@ -19,7 +19,7 @@ function waiting(id='run-a'){return {id,revision:0,state:createGame(123)};}
 function acknowledged(base,call){
  const result=structuredClone(base);for(const input of call.input.inputs)step(result.state,input);result.revision=call.input.revision+1;return result;
 }
-function harness({captureDraw=true}={}){
+function harness({captureDraw=true,home=false}={}){
  let now=0,subscriber=null,pad={axis:0,fire:false,startPressed:false,firePressed:false},drawn=null;
  const elements=new Map(),events=new Map(),docEvents=new Map(),calls=[],dispatched=[];
  const add=(map,name,fn)=>map.set(name,[...(map.get(name)||[]),fn]);
@@ -42,6 +42,7 @@ function harness({captureDraw=true}={}){
  const document={getElementById:element,querySelectorAll:()=>[],querySelector:selector=>element(selector==='.field'?'field':'cabinet'),addEventListener(name,fn){add(docEvents,name,fn);},hidden:false,createElement:()=>element('created')};
  const prelude=`const sound=()=>{},wakeAudio=async()=>{},setSound=()=>{},createControllerTracker=()=>({poll:readPad,pad:null}),createControllerCalibration=()=>({}),pickupIcon=()=>({});`;
  const boot=new Function('window','document','matchMedia','localStorage','requestAnimationFrame','setTimeout','clearTimeout','performance','step','PICKUPS','BIOMES','draw','readPad','SAVE_EVERY_FRAMES','MAX_BATCH_FRAMES','MAX_PENDING_FRAMES','MAX_CLOCK_CREDIT',prelude+source+`
+ homeView=${home};
  return {replace,frame,primary,togglePause,flush,open,pauseGame,requestResume,
   transport:()=>({pending:queue.length+inFlightInputs,queueLength:queue.length,inFlightInputs,paused,tick:run?.state.tick,sending:!!sending}),
   snapshot:()=>({run:structuredClone(run),queue:structuredClone(queue),inFlightInputs,paused,clock,resumeAt,target,syncError,sending:!!sending})};`);
@@ -195,4 +196,26 @@ test('a predicted game over notifies completion listeners only after its termina
  while(h.app.snapshot().run.state.status!=='gameover'&&time<2000)h.frameAt(time+=20);
  assert.equal(h.app.snapshot().run.state.status,'gameover');assert.equal(h.calls.length,1);const first=acknowledged(base,h.calls[0]);assert.equal(first.state.status,'playing');h.calls[0].resolve(first);await settle();assert.deepEqual(h.dispatched,[]);
  const saving=h.app.flush();assert.equal(h.calls.length,2);const terminal=acknowledged(first,h.calls[1]);assert.equal(terminal.state.status,'gameover');h.calls[1].resolve(terminal);await saving;assert.deepEqual(h.dispatched,['breaker-score-saved']);
+});
+
+
+test('entry with a saved defeat opens home with a free new game and no quote',async()=>{
+ const h=harness({home:true}),base=waiting();base.state.status='gameover';base.state.lives=0;base.state.score=36200;base.state.level=2;
+ h.app.replace(base);
+ assert.equal(h.element('primary').textContent,'Start New Game · Free');
+ assert.equal(h.element('secondary').hidden,false);
+ h.frameAt(1000);assert.equal(h.calls.length,0);
+ await h.element('return-home').onclick();assert.equal(h.calls.length,0);
+ const click=h.app.primary();await settle();
+ assert.equal(h.calls[0].action,'newGame');assert.equal(h.calls.some(c=>c.action==='quote'),false);
+ h.calls[0].resolve(waiting('fresh-run'));await click;
+ assert.equal(h.app.snapshot().run.state.score,0);assert.equal(h.app.snapshot().run.state.lives,3);
+});
+
+test('game-over home button returns without payment and keeps the saved result',()=>{
+ const h=harness(),base=waiting();base.state.status='gameover';base.state.lives=0;base.state.score=36200;
+ h.app.replace(base);assert.equal(h.element('return-home').hidden,false);
+ h.element('return-home').onclick();
+ assert.equal(h.element('primary').textContent,'Start New Game · Free');
+ assert.equal(h.app.snapshot().run.state.score,36200);assert.equal(h.calls.length,0);
 });
