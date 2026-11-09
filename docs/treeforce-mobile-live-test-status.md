@@ -1,63 +1,48 @@
-# Tree Force ’89 mobile test: preserve the live integration
+# Tree Force ’89 mobile test — published
 
-Prepared November 9, 2026. Not published on the production domain.
+Test URL: https://tree-token.xyz/play/treeforce89/test/
+Published November 9, 2026 at 18:01:08 UTC (12:01 PM America/Chicago).
+Deployment: `6af209ff9c76670c2a66714a`; previous production snapshot:
+`6af1c0e464d4cdc85c4e9c34`. Automatic publishing remains locked.
 
-The live entry module is `index-C7sLq93z.js`; gameplay is `arcade-CdwOWItr.js`.
-Unlike the earlier feature branch, this live version already uses
-`/play/treeforce89/api/tree-challenge`, `tree-session`, `tree-run` and `tree-logout`.
-Retain these existing routes and all original backend packages.
+The test adds 13 static files beneath the test path. All 368 preexisting
+static paths/digests, 46 exact backend records/configurations, five schedules,
+runtime fields, and API-visible environment settings were verified before
+and after publication. Netlify lowercases manifest paths and injects the
+existing Arboretum navigation snippet into served HTML; those transformations
+were inspected. Environment entries are sorted before fingerprinting because
+the API returns the same records in varying orders. All 53 settings last
+changed before staging (latest update November 5).
 
-`scripts/prepare-treeforce-mobile-live-test.mjs` retrieves the pinned public
-assets if needed, checks source SHA256 fingerprints, and produces a derived
-static test copy. It refuses unexpected entry or gameplay source drift.
-The output preserves authentication endpoint strings and requires zero new
-functions. Only files beneath `/play/treeforce89/test/` belong in a release.
-Do not deploy the development harness or `preparation.json`.
+The copy derives from the live game modules `index-C7sLq93z.js` and
+`arcade-CdwOWItr.js`, retaining existing `/play/treeforce89/api/` wallet/session
+routes. No new backend endpoints were deployed. The separate feature branch's
+new test-authentication endpoints were not used for this release.
 
-Changes: mobile viewport sizing from PR #112; touch Pause/Resume overlay;
-first-play tutorial; Auto Fire enabled on touch; taller action buttons;
-prevent dragging while paused; disabled test checkout and score submission;
-separate pending-payment and pilot-name browser-storage keys.
+Changes: viewport sizing based on PR #112, touch Pause/Resume overlay, first
+mobile tutorial, Auto Fire on touch, taller action buttons, no dragging while
+paused, and a continuously identifiable Shield label. Test checkout throws
+before signing or requesting an offer. Test score submission is disabled.
+Pending-checkout and pilot-name storage keys are separate from production.
 
-## Observed checks
+The reproducible preparation script checks pinned source fingerprints and
+preserves the production authentication URL strings. Do not replace the live
+snapshot with a standard historical repository build.
 
-An unpublished offline gameplay harness at a 390-pixel canvas width confirmed:
-- tutorial opens and Start Mission resumes;
-- automatic shooting and Auto Fire toggling;
-- manual Fire increments shots;
-- a charged Shield activates and consumes its charge;
-- touch Pause/Resume works;
-- a fresh run starts after a simulated loss;
-- loss and victory scenes render after forced state transitions.
+## Verification
 
-The harness used the live-derived game, with touch capability forced only in
-its own QA copy. It did not authenticate an NFTree holder, perform payments,
-submit scores, or complete a natural ten-wave run. A subsequent 390 × 760 browser-frame check used the live signed-in cabinet
-structure with a simulated wallet-status row. Navigation, wallet row, full
-480 × 720 game canvas scaled to 375 × 562.5, and item legend fit within that
-viewport. The corrected tutorial had no heading overlap. Dragging while
-paused left player position at 240, shots at zero and wave at zero. Resume
-started automatic shooting. The real wallet picker opened in the mobile home
-frame, showing the expected available-wallet installation options.
+- 390 × 760 responsive browser frames: navigation, simulated wallet-status row,
+  full game canvas, all action buttons, and item legend fit.
+- Tutorial starts correctly; Auto Fire, manual Fire, charged Shield, touch
+  Pause/Resume, and offline restart after loss were checked.
+- Paused dragging keeps player position unchanged. Loss and victory scenes
+  were inspected using forced QA transitions, not a natural full playthrough.
+- A fresh disposable wallet received a production-domain sign-in challenge
+  (201), its valid signature was denied NFTree access (403/NFTREE_REQUIRED),
+  and challenge replay was denied (401). No transaction was signed or paid.
+- The final public page, wallet picker, live leaderboard read, original game
+  entry bytes, and lazy wallet module were checked on tree-token.xyz. The www
+  URL redirects to the canonical apex domain.
 
-This verifies responsive browser layout and offline controls. It is not a
-physical iPhone/Safari or signed-in NFTree holder test. Real wallet sign-in,
-production-domain API access and a natural ten-wave playthrough remain pending.
-The Shield button label was subsequently clarified so its identity remains
-visible before charge; this text-only adjustment has not received another
-visual check.
-
-## Publication gate
-
-Production was last confirmed locked to `6af1c0e464d4cdc85c4e9c34` with 46
-functions and five scheduled jobs. Automatic approval review rejected creating
-a non-draft production-context candidate, including the static-only attempt,
-because it might affect the live service before post-creation verification.
-No production publication was performed.
-
-Before any publication, obtain a fresh baseline, preserve every existing
-static SHA and all 46 function records/configurations and five schedules,
-and reject backend upload requests or concurrent baseline drift. Complete
-real mobile and NFTree sign-in checks on the requested production-domain test
-path before distributing its URL. Do not use a standard repository build as a
-substitute for the protected live snapshot.
+Real iPhone/Safari playthrough and successful sign-in by an NFTree holder
+remain player acceptance checks. Browser-frame testing does not replace them.
