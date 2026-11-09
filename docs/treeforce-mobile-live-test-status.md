@@ -1,4 +1,31 @@
-# Current revision: Mobile Test 4 — native mobile action bar
+# Current revision: Mobile Test 5 — full hero and Arborwing clearance
+
+The Test 4 iPhone screenshot exposed another overlap: the hero still spawned
+at world Y=570, while the compact status panel starts at Y=608. The hero frame
+is 128 × 160 with maximum scale 1.75, so its lower body and Arborwing extended
+behind the panel. Test 5 moves the flight lane to Y=460, retaining the hero's
+size. Its entire largest frame now ends at Y=600, eight world pixels above
+the panel. Initial spawn, reserve respawn, challenge-round reset and windfall
+reset all use the same position. A rescued wing follows the player's Y as
+before. Physics bodies, shot origins and shield effects follow the player.
+
+Regression checks extract the emitted sprite frame height, all five growth
+scales, spawn/reset positions and actual HUD panel bounds, then require the
+complete frame to clear the panel. Existing pause and native action-bar tests
+also pass. A 390 × 650 browser frame showed the complete seedling body and
+fully expanded Ancient Arborwing above the status panel, with native buttons
+fully visible below. All growth stages were selected in the offline QA harness;
+this is not a physical Safari check or a natural game playthrough.
+
+Published test: https://tree-token.xyz/play/treeforce89/test/.
+Only game JS and the test revision label changed. Production files, 46 backend
+functions, five scheduled jobs, runtime and environment settings are preserved.
+Payments and score writes remain disabled. See the V5 release report for the
+publication identity and post-publication preservation results.
+
+## Earlier revision records
+
+# Mobile Test 4 — native mobile action bar
 
 Published at https://tree-token.xyz/play/treeforce89/test/ in deployment
 `6af21d8911a27d24c02264bc`, November 9, 2026 at 19:23:25 UTC.

@@ -28,6 +28,16 @@ game=replace(game,'if(this.dragging&&e.id===this.dragPointerId&&e.isDown)','if(!
 game=replace(game,'this.makeHud(),this.bindInput()','this.autoFire=this.sys.game.device.input.touch,this.makeHud(),this.bindInput()');
 game=replace(game,'this.badgeText=this.add.text(240,53,','this.badgeText=this.add.text(330,53,');
 game=replace(game,'this.makeDebug(),this.updateHud(),this.updateAutoHud()}bindInput(){',`this.pauseButtonBg=this.add.rectangle(240,29,112,58,L.panel,.98).setStrokeStyle(2,L.gold).setInteractive().setDepth(25),this.pauseButtonText=this.add.text(240,29,\`Ⅱ PAUSE\`,R(14,I.gold)).setOrigin(.5).setDepth(26),this.pauseButtonBg.on(\`pointerdown\`,()=>this.togglePause()),this.makeDebug(),this.updateHud(),this.updateAutoHud()}bindInput(){`);
+// Keep the complete 160px hero frame above the status panel at Y=608.
+// The largest scale is 1.75: center 460 + half-height 140 = 600 (8px clearance).
+// Cover initial spawn, reserve respawn, challenge round and windfall resets.
+assert.equal(game.split('sprite(240,570,`playerSheet`').length-1,1);
+assert.equal(game.split('this.player.setPosition(240,570)').length-1,1);
+assert.equal(game.split('this.player.setVelocity(0,0).setPosition(240,570)').length-1,2);
+game=replace(game,'sprite(240,570,`playerSheet`','sprite(240,460,`playerSheet`');
+game=replace(game,'this.player.setPosition(240,570)','this.player.setPosition(240,460)');
+game=game.replaceAll('this.player.setVelocity(0,0).setPosition(240,570)','this.player.setVelocity(0,0).setPosition(240,460)');
+
 // Reserve separate statistic rows and a full-width, evenly spaced action row.
 for(const [a,b]of [
  ['(240,678,480,84','(240,664,480,112'],
@@ -52,7 +62,7 @@ const factoryStart=game.lastIndexOf('function ae(e,t){');const factoryEnd=game.i
 let factory=game.slice(factoryStart,factoryEnd);assert(factory.endsWith('})}'));factory=replace(factory,'return new n.Game(','const game=new n.Game(');factory=factory.slice(0,-3)+'});installMobileTouchbar(game,e);return game}';game=game.slice(0,factoryStart)+touchbar+factory+game.slice(factoryEnd);
 
 html=html.replaceAll('/play/treeforce89/assets/','/play/treeforce89/test/assets/').replace('/play/treeforce89/gateway.css','/play/treeforce89/test/gateway.css').replace('<title>', '<meta name="robots" content="noindex,nofollow"><title>Mobile test · ');
-html=html.replace('<div id="root">','<div class="mobile-test-notice">MOBILE TEST 4 · PAYMENTS DISABLED</div><div id="root">');
+html=html.replace('<div id="root">','<div class="mobile-test-notice">MOBILE TEST 5 · PAYMENTS DISABLED</div><div id="root">');
 let css=fs.readFileSync(path.join(source,'gateway.css'),'utf8');
 css+=`\n.mobile-test-notice{position:fixed;bottom:0;left:0;right:0;height:20px;text-align:center;background:#071810;color:#e4d887;font:700 10px/20px Verdana;z-index:100;pointer-events:none}\n@media(max-width:620px){.game-frame{width:min(100%,calc((100svh - 138px - var(--player-status-height) - env(safe-area-inset-bottom,0px))*2/3));min-height:0;margin-inline:auto}.game-navigation{min-height:38px;padding:4px 8px;gap:8px}.game-navigation a{min-height:30px;padding:5px 8px}.nftree-wallet-bar{min-height:32px;padding:3px 8px}.game-viewport{width:100%;height:auto;aspect-ratio:2/3;overflow:hidden}.game-item-legend{min-height:28px;padding:4px 6px}.site-shell{padding-bottom:24px}.nftree-game-shell canvas,.nftree-game-shell .phaser-mount{touch-action:none}.nftree-game-shell>.game-viewport{overscroll-behavior:contain}.nftree-game-shell .phaser-mount{width:100%;height:auto;aspect-ratio:2/3}.nftree-game-shell canvas{display:block;width:100%!important;height:auto!important;aspect-ratio:2/3}.game-frame:has(.nftree-game-shell) .game-item-legend{display:none}.mobile-test-board{margin:8px 0 24px;padding:0 12px}.mobile-test-board>summary{min-height:44px;display:list-item;align-content:center;font-size:12px;cursor:pointer}}\n`;
 css+=fs.readFileSync(new URL('./treeforce-mobile-touchbar.css',import.meta.url),'utf8');

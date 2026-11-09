@@ -21,3 +21,14 @@ const controls=[scene.autoButtonBg,scene.pruneButtonBg,scene.fireButtonBg];
 for(let i=0;i<controls.length;i++){const[x,y,w,h]=controls[i].args;assert(w>=120&&h>=60,'Action target too small');assert(y+h/2<=720,'Control outside canvas');assert(scene.powerText.args[1]+14<y-h/2,'Weapon readout overlaps controls');assert(scene.stageText.args[1]+14<y-h/2,'Growth readout overlaps controls');if(i){const[px,,pw]=controls[i-1].args;assert(px+pw/2<x-w/2,'Adjacent action targets overlap')}}
 assert(scene.nodes.some(n=>n.kind==='circle'&&n.args[0]===126&&n.args[1]===54),'Help control must stay out of action row');
 console.log('Passed: separated stat rows, non-overlapping action targets, in-canvas controls and relocated help.');
+
+// The complete loaded hero frame, not only its collision body, must clear the HUD.
+const frameHeight=Number(code.match(/spritesheet\(`playerSheet`,[^;]+?frameHeight:(\d+)/)?.[1]);assert.equal(frameHeight,160);
+const stages=code.slice(code.indexOf('A=[{name:`SEEDLING`'),code.indexOf('],j=h,M='));
+const scales=[...stages.matchAll(/scale:([\d.]+)/g)].map(m=>Number(m[1]));assert.equal(scales.length,5);
+const spawn=Number(code.match(/this\.player=this\.physics\.add\.sprite\(240,(\d+),`playerSheet`/)?.[1]);
+const resets=[...code.matchAll(/this\.player\.(?:setVelocity\(0,0\)\.)?setPosition\(240,(\d+)\)/g)].map(m=>Number(m[1]));assert.equal(resets.length,3,'All reserve/bonus resets must be checked');
+const panel=scene.nodes.find(n=>n.kind==='rectangle'&&n.args[0]===240&&n.args[2]===480&&n.args[3]===112);assert(panel);
+const panelTop=panel.args[1]-panel.args[3]/2;
+for(const y of [spawn,...resets])for(const scale of scales)assert(y+frameHeight*scale/2<=panelTop-8,'Hero/Arborwing sprite is covered by status panel');
+console.log('Passed: complete hero frame at all five growth scales clears status panel on spawn, reserve respawn, challenge and windfall.');
