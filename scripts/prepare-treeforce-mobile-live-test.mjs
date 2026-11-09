@@ -18,6 +18,7 @@ assert.equal(crypto.createHash('sha256').update(game).digest('hex'),'54a2dc3bd59
 entry=replace(entry,'3 lives · Continue for 20,000 TREE','3 lives · Test payments disabled');
 game=replace(game,'CONTINUE  //  20,000 TREE','TEST PAYMENTS DISABLED');
 game=replace(game,'RESTORE 3 LIVES // SAME WAVE & SCORE','START NEW RUN OR RETURN TO TITLE');
+game=replace(game,'this.stage===0?`GROW FIRST`:n?`READY -1 GROW`','this.stage===0?`SHIELD\\nGROW FIRST`:n?`SHIELD\\nREADY -1 GROW`');
 game=replace(game,'if(this.dragging&&e.id===this.dragPointerId&&e.isDown)','if(!this.paused&&this.dragging&&e.id===this.dragPointerId&&e.isDown)');
 game=replace(game,'this.makeHud(),this.bindInput()','this.autoFire=this.sys.game.device.input.touch,this.makeHud(),this.bindInput()');
 game=replace(game,'this.badgeText=this.add.text(240,53,','this.badgeText=this.add.text(330,53,');

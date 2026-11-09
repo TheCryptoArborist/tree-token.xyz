@@ -32,11 +32,20 @@ An unpublished offline gameplay harness at a 390-pixel canvas width confirmed:
 
 The harness used the live-derived game, with touch capability forced only in
 its own QA copy. It did not authenticate an NFTree holder, perform payments,
-submit scores, or complete a natural ten-wave run. It did not establish full
-390px mobile-browser viewport compatibility. Browser DevTools emulation was
-unavailable. Tutorial text overlap and paused dragging found during inspection
-were subsequently corrected in the prepared patch; those final adjustments
-still need a visual retest.
+submit scores, or complete a natural ten-wave run. A subsequent 390 × 760 browser-frame check used the live signed-in cabinet
+structure with a simulated wallet-status row. Navigation, wallet row, full
+480 × 720 game canvas scaled to 375 × 562.5, and item legend fit within that
+viewport. The corrected tutorial had no heading overlap. Dragging while
+paused left player position at 240, shots at zero and wave at zero. Resume
+started automatic shooting. The real wallet picker opened in the mobile home
+frame, showing the expected available-wallet installation options.
+
+This verifies responsive browser layout and offline controls. It is not a
+physical iPhone/Safari or signed-in NFTree holder test. Real wallet sign-in,
+production-domain API access and a natural ten-wave playthrough remain pending.
+The Shield button label was subsequently clarified so its identity remains
+visible before charge; this text-only adjustment has not received another
+visual check.
 
 ## Publication gate
 
