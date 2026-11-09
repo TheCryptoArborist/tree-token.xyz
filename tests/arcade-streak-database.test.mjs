@@ -1,4 +1,4 @@
-import {test} from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import {PGlite} from '@electric-sql/pglite';
+import {test} from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import {createRequire} from 'node:module';const {PGlite}=createRequire(new URL('../vendor/arcade-discovery-tests/package.json',import.meta.url))('@electric-sql/pglite');
 const migration=fs.readFileSync(new URL('../supabase/migrations/20261109123020_arcade_streak_notifications.sql',import.meta.url),'utf8');
 test('transactional milestones, gap/month rules, recovery exclusion, rollback, duplicate and role protection',async()=>{
  const db=new PGlite();await db.exec(`create role anon;create role authenticated;create role service_role bypassrls;create schema private;create table private.arcade_growth_checkins(wallet text,date_key date,source text,created_at timestamptz default now(),primary key(wallet,date_key));create table private.arcade_growth_monthly_badges(wallet text,month_key date,badge_id text,earned_at timestamptz default now());`);await db.exec(migration);
