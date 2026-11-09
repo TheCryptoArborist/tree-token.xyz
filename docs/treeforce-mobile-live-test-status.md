@@ -1,3 +1,29 @@
+# Current mobile test revision: Mobile Test 2
+
+Published deployment `6af20f9078d58b0a05fe6d65` on November 9, 2026 at
+18:23:55 UTC (12:23 PM America/Chicago), replacing the first mobile test
+snapshot `6af209ff9c76670c2a66714a`. The player URL remains
+https://tree-token.xyz/play/treeforce89/test/.
+
+Only four existing test-path files changed. The 368 production files, 46
+backend functions/configurations, five schedules, runtime and environment
+settings remain protected. Payments and test score submission stay disabled.
+
+This revision adds replayable How to Play in Pause, opens the short tutorial
+from the question-mark control, enlarges the Pause target, prevents native
+page gestures over the signed-in game canvas, and explicitly identifies live
+rankings as read-only. The tutorial explains Shield growth/charge requirements.
+The test's Save control is disabled.
+
+Validation: generated module syntax checks; source-based pause regression
+covering tutorial start, help replay without resuming clocks, one overlay,
+resume and cleared touch inputs; responsive 390 × 760 visual check of pause
+and help replay; final public page/test label and live leaderboard read.
+Asset responses use max-age=0,must-revalidate. Real iPhone/Safari acceptance
+and successful NFTree-holder sign-in remain player checks.
+
+## Initial release record
+
 # Tree Force ’89 mobile test — published
 
 Test URL: https://tree-token.xyz/play/treeforce89/test/

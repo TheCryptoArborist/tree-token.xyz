@@ -2,9 +2,9 @@
 
 Published test: https://tree-token.xyz/play/treeforce89/test/
 
-The guarded release is deployment `6af209ff9c76670c2a66714a`. It preserves all
+The current guarded release is Mobile Test 2, deployment `6af20f9078d58b0a05fe6d65`. It preserves all
 368 original static files, 46 backend functions/configurations and five
-scheduled jobs. Only 13 test-path files were added. Auto publishing is locked.
+scheduled jobs. The initial release added 13 test-path files; Mobile Test 2 updates four of those files. Auto publishing is locked.
 
 See `treeforce-mobile-live-test-status.md` for implementation, validation and
 remaining physical-device acceptance checks, and
