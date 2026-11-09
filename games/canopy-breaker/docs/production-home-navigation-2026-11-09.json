@@ -1,0 +1,32 @@
+{
+  "deploymentId": "6af148b52ec855974bf6fffd",
+  "siteId": "f054a440-1ff7-4fac-85da-3b8b9afcf8b0",
+  "sourceCommit": "8fe5ce7acb43287f5ed214e17c5f67a8e518e392",
+  "baseline": "6aefbf2be0fabbcedf85d923",
+  "changes": [
+    "Open game home on entry, including saved terminal runs",
+    "Return to game home from ending screen without payment",
+    "Free new game separate from 20,000 TREE continue"
+  ],
+  "validation": {
+    "testsPassed": 170,
+    "publicPage": 200,
+    "homeButtonPresent": true,
+    "health": 200,
+    "leaderboard": 200,
+    "unsignedPrivateSource": 401,
+    "holderAcceptance": "Requires user verification"
+  },
+  "preservation": {
+    "staticPaths": 13,
+    "changedStaticPaths": [
+      "/play/canopy-breaker/index.html"
+    ],
+    "functionCount": 1,
+    "runtime": "nodejs24.x",
+    "invocationMode": "stream",
+    "schedules": 0,
+    "runtimeConfigurationPreserved": true,
+    "parentSiteNotDeployed": true
+  }
+}
