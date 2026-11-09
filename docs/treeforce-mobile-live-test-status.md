@@ -1,4 +1,48 @@
-# Current revision: Mobile Test 5 — full hero and Arborwing clearance
+# Current revision: Mobile Test 6 — wallet-separated device saves
+
+Test URL: https://tree-token.xyz/play/treeforce89/test/.
+Deployment: `6af222b0834c8837008aa4a7`.
+
+A verified player now receives a native pilot-name and Save result form below
+the mission report. The form opens and scrolls into view when the matching
+session's run-ended event arrives. It remembers the pilot username, preserves
+the best score and furthest wave, merges earned achievements and retains the
+latest 50 saved runs. Repeated saves replace the same run rather than adding
+duplicates. Pending results are written separately from completed saves and
+can be recovered after a refresh. Saving a username alone does not implicitly
+save a pending result. Practice results do not earn saved scores/badges.
+
+These are test-only localStorage records, keyed by normalized wallet address.
+They are stored only in the current browser/device. They do not sync across
+devices, are not authenticated server records and are removed if browser data
+is cleared. This deliberate test limitation is stated in the UI and to the
+user. The original production leaderboard remains read-only. No production
+profile POST, wallet-specific score fetch, database table, backend function,
+authentication or payment change is included. Payments remain disabled.
+
+Validation: emitted store tests cover pending refresh recovery, wallet
+separation/address normalization, username validation, high-score retention,
+furthest wave, achievement union, duplicate runs, practice gating, corrupt
+storage and quota/write failures. Source checks ensure no score POST or
+Authorization fetch in the test-profile component. Existing hero clearance,
+Pause/tutorial and native control regressions pass. Generated modules parse.
+
+In the final 390 × 650 offline browser harness, forced completion opened the
+save form. Refreshing before saving recovered the pending result. Saving
+CanopyTester showed Score and achievements saved, one saved run, wave 10 and
+one earned badge. A second refresh restored those values. This was a forced
+QA completion, not a natural playthrough or a positive NFTree-holder sign-in.
+The actual public page shows MOBILE TEST 6 and keeps its original NFTree gate.
+Real iPhone/Safari acceptance of the new save flow remains the player's check.
+
+Only four existing test-path files changed. The V6 release report records
+post-publication preservation of all 368 production static files, 46 exact
+backend records/configurations, five schedules, runtime and environment.
+Automatic publishing remains locked.
+
+## Earlier revision records
+
+# Mobile Test 5 — full hero and Arborwing clearance
 
 The Test 4 iPhone screenshot exposed another overlap: the hero still spawned
 at world Y=570, while the compact status panel starts at Y=608. The hero frame
