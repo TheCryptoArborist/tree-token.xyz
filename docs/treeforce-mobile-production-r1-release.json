@@ -1,0 +1,33 @@
+{
+  "candidate": "6af2269339c88800be3ea322",
+  "baseline": "6af222b0834c8837008aa4a7",
+  "ready": true,
+  "published": true,
+  "productionLocked": true,
+  "existingStaticFilesPreserved": 380,
+  "changedProductionFiles": [
+    "/play/treeforce89/index.html"
+  ],
+  "addedGameFiles": [
+    "/play/treeforce89/assets/arcade-mobile-r1.js",
+    "/play/treeforce89/assets/graphql-mobile-r1.js",
+    "/play/treeforce89/assets/index-mobile-r1.js",
+    "/play/treeforce89/mobile-r1.css"
+  ],
+  "backendFunctionsPreserved": 46,
+  "schedulesPreserved": 5,
+  "runtimePreserved": true,
+  "environmentPreserved": true,
+  "deployId": "6af2269339c88800be3ea322",
+  "locked": true,
+  "publishedAt": "2026-11-09T20:03:13.335Z",
+  "mainUrl": "https://tree-token.xyz/play/treeforce89/",
+  "buildLabel": "v0.7.3 \u00b7 MOBILE R1",
+  "walletPaymentAndSessionCodeUnchanged": true,
+  "productionScoreEndpoint": "/api/treeforce89-leaderboard",
+  "productionPaymentsPreserved": true,
+  "testPathPreserved": true,
+  "testPaymentsDisabled": true,
+  "liveUnauthenticatedScorePostsRejected": true,
+  "positiveHolderSaveRequiresPlayerAcceptance": true
+}

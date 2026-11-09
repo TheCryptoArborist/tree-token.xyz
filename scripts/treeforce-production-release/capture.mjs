@@ -1,0 +1,4 @@
+import fs from 'node:fs';import assert from 'node:assert/strict';import{readToken}from'../release-preserved-production.mjs';
+const expected=process.argv[2];assert(expected&&/^[a-f0-9]{24}$/.test(expected),'Pass the reviewed current deployment ID');
+const headers={Authorization:'Bearer '+readToken()},base='https://api.netlify.com/api/v1/';const api=async path=>{const response=await fetch(base+path,{headers});assert(response.ok);return response.json()};
+const site=await api('sites/aa62f324-b880-47d6-85b8-4ba0700ff5bf');assert.equal(site.published_deploy.id,expected);const deploy=await api('deploys/'+expected);assert(deploy.locked);assert.equal(deploy.available_functions.length,46);assert.equal(deploy.function_schedules.length,5);fs.mkdirSync('release',{recursive:true});fs.writeFileSync('release/main-baseline.json',JSON.stringify(deploy));console.log({baseline:expected,locked:true,functions:46,schedules:5});

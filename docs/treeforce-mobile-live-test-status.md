@@ -1,3 +1,13 @@
+# Main-game promotion accepted and published
+
+The owner confirmed Mobile Test 6 worked through the end of a run and allowed
+username entry on iPhone, then authorized main-game integration. The approved
+layout is now live at https://tree-token.xyz/play/treeforce89/ with MOBILE R1.
+Main-game saving uses the existing authenticated production endpoint; test
+localStorage records remain separate and are never imported. The test URL and
+its disabled payments are preserved. See treeforce-mobile-production-r1.md
+and treeforce-mobile-production-r1-release.json for the main release record.
+
 # Current revision: Mobile Test 6 — wallet-separated device saves
 
 Test URL: https://tree-token.xyz/play/treeforce89/test/.
