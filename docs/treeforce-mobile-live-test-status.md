@@ -1,4 +1,45 @@
-# Current revision: Mobile Test 3 — visual guide and uncluttered HUD
+# Current revision: Mobile Test 4 — native mobile action bar
+
+Published at https://tree-token.xyz/play/treeforce89/test/ in deployment
+`6af21d8911a27d24c02264bc`, November 9, 2026 at 19:23:25 UTC.
+
+The user's iPhone screenshot showed that Test 3 still clipped the bottom of
+all three canvas buttons. That physical-device evidence supersedes the earlier
+browser-frame fit assessment below. Test 4 replaces mobile canvas controls
+with three native HTML buttons outside the canvas: Auto Fire, Shield and Fire.
+The existing game methods still handle firing, shield costs and cooldowns.
+Desktop controls remain unchanged. Test checkout and score writes stay disabled.
+
+The active viewport displays the playfield and stat rows through world Y=650;
+the old canvas action targets below Y=651 are clipped intentionally. The DOM
+bar then follows in normal flow, with 56px minimum button heights and padding
+below their borders. Canvas position/margins are explicitly anchored because
+Phaser's centering produced a negative top margin in the compact test frame.
+The game world itself retains its existing 480 × 720 dimensions. Bar sizing
+tracks visualViewport resize and safe-area padding. It disappears for title,
+loss and completion screens and disables its buttons during Pause/tutorial.
+
+Validation: source-based native-bar tests cover Auto Fire, Fire hold/release/
+cancel/lost capture, keyboard, Shield charge/pause gates, blur/visibility,
+viewport changes, desktop/scene hiding and cleanup. Existing tutorial/pause
+regressions also pass. Browser checks covered 355 × 650 and 390 × 650 frames:
+all three buttons measured 56px tall with 10px clearance beneath the bottom
+border. Auto Fire toggled; a native manual Fire tap increased shots; charged
+Shield consumed its charge; Pause disabled the bar; Resume re-enabled it;
+forced completion displayed CANOPY SECURED and removed the bar. Forced loss
+also removed the bar. Completion is a QA transition, not a natural playthrough.
+
+The final public domain visibly shows MOBILE TEST 4. Positive NFTree-holder
+sign-in and physical iPhone/Safari acceptance remain user checks; the existing
+authentication endpoints and gate have not been replaced.
+
+Only three test-path files changed from Test 3. The release report records
+preservation of 368 production files, all 46 functions, all five schedules,
+runtime settings and environment settings. Automatic publishing remains locked.
+
+## Earlier revision records
+
+# Mobile Test 3 — visual guide and uncluttered HUD
 
 Published at https://tree-token.xyz/play/treeforce89/test/ in deployment
 `6af21232514520bf83ab83e9`, November 9, 2026 at 18:36:06 UTC
