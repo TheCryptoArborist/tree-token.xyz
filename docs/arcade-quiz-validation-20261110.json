@@ -1,0 +1,33 @@
+{
+  "date": "2026-11-10",
+  "preview": "https://tree-token.xyz/play/quiz-preview/#campaigns",
+  "cause": "Campaign presentation disabled selects while signed out, progress unavailable, or weekly quiz already completed without explaining why beside the questions.",
+  "fix": "Allow answer browsing except during an active request. Keep verified submit and weekly-credit guards unchanged. Explain availability immediately above the form and associate the explanation with all selects.",
+  "browser": {
+    "allThreeSelectsEnabledSignedOut": true,
+    "allThreeSelectionsChangedSuccessfully": true,
+    "selectedValues": [
+      "arcade",
+      "attendance",
+      "review"
+    ],
+    "signedOutSubmitRemainsDisabled": true,
+    "visibleSignInExplanation": true
+  },
+  "focusedTests": {
+    "passed": 3,
+    "coverage": [
+      "signed-out browsing without network requests",
+      "authenticated loaded progress enables submission",
+      "weekly complete still browsable without duplicate submission"
+    ]
+  },
+  "liveSourceDiff": "Compared current published campaign module with candidate. Changes limited to select availability and accessible explanatory text; session, API, scoring and reward logic untouched.",
+  "limits": "No real-wallet sign-in or credited quiz submission exercised; authenticated states verified with mock responses.",
+  "live": {
+    "url": "https://tree-token.xyz/play/#campaigns",
+    "deploy": "6af370678cf2aa50165d807a",
+    "allThreeSelectionsChangedSuccessfully": true,
+    "screenshot": "tree-quiz-dropdowns-fixed.png"
+  }
+}
