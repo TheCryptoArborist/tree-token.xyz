@@ -1,4 +1,4 @@
-# Tree Army: Defend the Grove — prototype 0.1
+# Tree Army: Defend the Grove — prototype 0.2
 
 Original self-contained HTML/CSS/JavaScript implementation. No code, artwork, audio, or assets copied from the uploaded Army of Darkness remake. Procedural canvas art is placeholder art for review.
 
@@ -18,3 +18,9 @@ Run `node tests/tree-army-logic.cjs`. Assertions cover purchase costs and cooldo
 ## Canonical-domain release
 
 Capture the full CURRENT published inventory first, following root AGENTS.md and production/README.md. Preserve all current static paths, backend packages, runtime/provider records, functions, schedules, and configuration. Overlay only `/play/tree-army/test/index.html` onto that current baseline, not the historical root snapshot. No existing lobby card or routing/configuration is changed by this prototype. Check for applicable existing redirects before release. Keep the test marked noindex and free play. Record candidate and published inventory and source commit, then verify the canonical route. Do not promote the historical root build or rebuild unrelated functions. Source commits use [skip netlify] to avoid queued historical builds.
+
+## First-play improvements — 0.2
+
+Added a three-step skippable field guide covering the objective, hero movement/automatic attacks, and army/ability controls. Battle hints respond to movement, first summon, and low grove health. Troop buttons show cooldowns and the army cap. The first wave spawns closer to the opening view, reducing empty travel time. Controls have 48px minimum height and briefing cards allow scrolling on short screens. Unit checks also exercise the full briefing sequence, keyboard movement, contextual hints, and first-wave entrance position. The canvas battlefield has been rendered with an actual canvas implementation for an internal art check; this does not substitute for browser layout or touch review.
+
+Deployment access check: the Netlify dashboard is accessible and shows automatic publication locked. Current publication observed on November 10 is 6af34e39760c3d568bd12519 (Tree Force approved retro ending/session return), newer than the root historical baseline. No deployment or publication settings were changed. Available Netlify connector operations do not expose the full inventory capture and preserved-package release operations needed here. The new test route remains unpublished.
