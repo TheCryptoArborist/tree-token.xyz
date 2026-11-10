@@ -2,6 +2,8 @@
 export function createQuestCampaigns({root,fetchImpl,getSession,syncGames,checkIn,now=()=>Date.now()}) {
  const byId=id=>root.querySelector(`#${id}`), notice=byId('campaign-service-status');
  if(!notice)return {sessionChanged(){},refresh(){},destroy(){}};
+ const quizAvailability=root.ownerDocument.createElement('p');quizAvailability.id='campaign-quiz-availability';quizAvailability.className='campaign-notice';quizAvailability.setAttribute('role','status');byId('campaign-quiz-form').before(quizAvailability);
+ for(const select of byId('campaign-quiz-form').querySelectorAll('select'))select.setAttribute('aria-describedby',quizAvailability.id);
  let identity=null,data=null,busy=false,epoch=0,disposed=false,authRejected=false;
  const listeners=[];const on=(node,event,handler)=>{node.addEventListener(event,handler);listeners.push(()=>node.removeEventListener(event,handler));};
  const session=()=>{const s=getSession();return s&&Date.parse(s.expiresAt)>now()&&!authRejected?s:null;};
@@ -27,7 +29,9 @@ export function createQuestCampaigns({root,fetchImpl,getSession,syncGames,checkI
   byId('campaign-claim').textContent=p?.claimedAt?'Badge collected ✓':p?.canClaim?'Claim First Round badge':'Complete all 4 tasks';
   byId('campaign-claim-status').textContent=p?.claimedAt?'First Round badge is saved with your wallet. No token payment or NFT mint was required.':'';
   byId('campaign-quiz-submit').disabled=busy||!signed||!p||Boolean(p?.quizCompleteThisWeek);
-  for(const input of byId('campaign-quiz-form').querySelectorAll('select'))input.disabled=busy||!signed||!p||Boolean(p?.quizCompleteThisWeek);
+  // Answers can always be explored. Only a verified signed-in submission can save credit.
+  for(const input of byId('campaign-quiz-form').querySelectorAll('select'))input.disabled=busy;
+  quizAvailability.textContent=busy?'Loading campaign progress. Your answers will be available shortly.':!signed?'Choose your answers now. Sign in above to check them and save your learning stamp.':!p?'Choose your answers now. Refresh campaign progress above to enable checking and saving.':p.quizCompleteThisWeek?'This week’s learning stamp is already saved. You can still browse the questions.':'Choose all three answers, then select Check my answers to save your result.';
   if(p?.quizCompleteThisWeek)byId('campaign-quiz-feedback').textContent=`This week’s learning stamp is saved ✓ · ${p.learningStamps} earned in total`;
  }
  function sessionChanged(){
