@@ -1,0 +1,66 @@
+.studio-site-header{position:fixed;inset:0 0 auto;z-index:1200;height:78px;padding:0 4%;display:flex;align-items:center;background:rgba(2,7,11,.92);border-bottom:1px solid rgba(49,231,143,.13);backdrop-filter:blur(18px) saturate(125%);box-shadow:0 12px 40px rgba(0,0,0,.28)}
+.simple-header-inner{width:min(1400px,100%);margin:auto;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:18px}
+.simple-brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:inherit;min-width:max-content}
+.simple-brand img{width:48px;height:48px;border-radius:13px;object-fit:contain;background:rgba(255,255,255,.025);filter:drop-shadow(0 0 14px rgba(49,231,143,.24))}
+.simple-brand span{display:grid;line-height:1}
+.simple-brand strong{color:#ffe05e;font-size:.95rem;letter-spacing:.08em}
+.simple-brand small{margin-top:6px;color:#8fa0ae;font-size:.67rem;letter-spacing:.09em;text-transform:uppercase}
+.simple-site-nav{display:flex;align-items:center;justify-content:center;gap:3px;min-width:0}
+.simple-site-nav a{padding:9px 10px;border-radius:9px;color:#b7c4ce;text-decoration:none;font-size:.79rem;font-weight:800;white-space:nowrap;transition:.16s ease}
+.simple-site-nav a:hover,.simple-site-nav a:focus-visible{color:#35e895;background:rgba(49,231,143,.07)}
+.simple-site-nav a.active{color:#ffe05e}
+.simple-header-cta{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;font-weight:900;border-radius:10px;transition:.16s ease}
+.simple-header-cta{min-height:42px;padding:9px 15px;color:#03150d;background:linear-gradient(135deg,#35ef91,#2acfc2);box-shadow:0 9px 26px rgba(49,231,143,.2);white-space:nowrap}
+.simple-header-actions{display:flex;align-items:center;justify-content:flex-end;gap:9px;min-width:max-content}
+.simple-header-socials{display:flex;align-items:center;gap:4px}
+.simple-header-socials a{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;padding:7px;border:1px solid rgba(53,200,255,.14);border-radius:9px;color:#dff8ff;background:rgba(53,200,255,.045);text-decoration:none;transition:.16s ease}
+.simple-header-socials svg,.simple-header-socials img{display:block;width:20px;height:20px;object-fit:contain}
+.simple-header-socials svg{fill:currentColor}
+.simple-header-socials .social-telegram{color:#35aee2}
+.simple-header-socials .social-youtube{color:#ff3030}
+.simple-header-socials .youtube-play{fill:#fff}
+.simple-header-socials .social-coingecko img{border-radius:50%}
+.simple-header-socials a:hover,.simple-header-socials a:focus-visible{color:#eaffff;border-color:rgba(53,200,255,.38);background:rgba(53,200,255,.1)}
+.simple-header-cta:hover{transform:translateY(-2px);filter:brightness(1.06)}
+.simple-menu-button{display:none;width:42px;height:42px;padding:10px;border:1px solid rgba(255,255,255,.1);border-radius:10px;background:rgba(255,255,255,.035);cursor:pointer}
+.simple-menu-button span{display:block;height:2px;margin:4px 0;border-radius:2px;background:#e9f5f7}
+@media (max-width:1180px){.simple-header-inner{grid-template-columns:auto 1fr auto auto;gap:12px}
+.simple-menu-button{display:block;order:3}
+.simple-header-actions{order:4}
+.simple-site-nav{position:absolute;top:68px;left:4%;right:4%;display:none;flex-direction:column;align-items:stretch;padding:10px;border:1px solid rgba(49,231,143,.16);border-radius:15px;background:rgba(2,8,12,.98);box-shadow:0 24px 70px rgba(0,0,0,.55)}
+.simple-site-nav.open{display:flex}
+.simple-site-nav a{text-align:center;padding:11px}
+}
+@media (max-width:780px){.studio-site-header{height:auto;min-height:70px;padding-top:8px;padding-bottom:8px}
+.simple-header-inner{grid-template-columns:auto 1fr auto;row-gap:7px}
+.simple-brand img{width:42px;height:42px}
+.simple-brand strong{font-size:.85rem}
+.simple-menu-button{width:38px;height:38px}
+.simple-site-nav{top:62px}
+.simple-header-actions{grid-column:1/-1;width:100%;min-width:0;gap:7px}
+.simple-header-socials{min-width:0;flex:1;overflow-x:auto;padding-bottom:1px}
+.simple-header-socials a{flex:1 0 auto}
+.simple-header-cta{min-height:36px;padding:7px 11px;font-size:.74rem}
+}
+@media (max-width:480px){.simple-brand small{display:none}
+.simple-brand img{width:38px;height:38px}
+.simple-brand strong{font-size:.76rem}
+.simple-header-inner{gap:8px}
+.simple-menu-button{justify-self:end}
+.simple-header-socials a{width:34px;height:34px;padding:7px}
+.simple-header-cta{font-size:.7rem}
+}
+@media (prefers-reduced-motion:reduce){.simple-header-cta{transition:none}
+.simple-header-cta:hover{transform:none}
+}
+.home-resources{position:relative;color:#b7c4ce;font-size:.79rem;font-weight:800}
+.home-resources summary{padding:9px 10px;cursor:pointer;white-space:nowrap;border-radius:9px}
+.home-resources summary:hover,.home-resources summary:focus-visible{color:#35e895;background:rgba(49,231,143,.07)}
+.home-resources>div{position:absolute;right:0;top:100%;min-width:190px;display:grid;padding:9px;border:1px solid rgba(49,231,143,.25);border-radius:12px;background:#061116;box-shadow:0 15px 35px #0008;z-index:5}
+@media (max-width:1180px){.home-resources{text-align:center}
+.home-resources summary{padding:11px}
+.home-resources>div{position:static;box-shadow:none;margin:4px 0}
+}
+.studio-site-header{margin:0;color:#f4fbff;font-family:system-ui,-apple-system,sans-serif}.studio-with-site-header main{padding-top:110px}.studio-site-header .simple-menu-button{background:transparent}.profile-studio-entrypoint{display:flex;align-items:center;justify-content:space-between;gap:24px;border:1px solid #d9b96b;border-radius:20px;background:linear-gradient(110deg,#163d2d,#152532);color:#f8edca;padding:24px;margin:24px auto;max-width:1400px}.profile-studio-entrypoint img{width:110px;height:110px;object-fit:contain}.profile-studio-entrypoint h2{margin:0 0 8px;color:#f1d37f;font-size:1.6rem}.profile-studio-entrypoint p{margin:0;line-height:1.6}.profile-studio-entrypoint a{display:inline-flex;flex-shrink:0;padding:14px 20px;border-radius:10px;background:#e7c56d;color:#142b21;text-decoration:none;font-weight:800}.arcade-navigation-page .arcade-subnav .studio-arcade-link{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;min-height:44px;padding:10px 15px;border:1px solid #e0c270;border-radius:8px;white-space:nowrap;color:#f0d987;font:750 .82rem system-ui;background:#233527;text-decoration:none}.studio-command-link{border-color:#ddc16d!important;color:#ffe08b!important}@media(max-width:720px){.profile-studio-entrypoint{flex-wrap:wrap;padding:18px;gap:14px}.profile-studio-entrypoint img{width:75px;height:75px}.profile-studio-entrypoint a{width:100%;justify-content:center}.profile-studio-entrypoint h2{font-size:1.3rem}.studio-with-site-header main{padding-top:150px}}
+
+.studio-with-site-header .preview{top:96px}

@@ -1,0 +1,14 @@
+{
+  "tests": 10,
+  "allPassed": true,
+  "sourceCommit": "9667681f8f22ac54032be304fb40aa836a4ae97e",
+  "liveDeploy": "6af3818fdc888d00cdad3d5f",
+  "desktop": "Header, round ecosystem and partner artwork, Sovereign City selection and preview, 14 locked restricted choices, homepage feature/menu, Arcade link after Badge Collection and Command link verified in browser.",
+  "narrow": "340 CSS-pixel browser zoom layout: mobile header menu opens and closes, document width337 <= viewport340.",
+  "export": "Actual 1024px PNG downloaded and inspected: medallion bounding-square corner alpha0, artwork center opaque.",
+  "authentication": "Controlled signed-in tests for awards, exact canonical NFTree rarity direct/Kiosk holdings, account changes, expiry, transfer revocation, outages and in-flight races. Public live GraphQL schema/type/rarity queries passed. No actual wallet signing or payments.",
+  "originalScripts": "Homepage, Command Center and Arcade script tags/bodies byte-exact.",
+  "screenshots": [
+    "/workspace/shared/profile-studio-live.png"
+  ]
+}

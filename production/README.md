@@ -1,3 +1,44 @@
+# Current production — Profile Studio access and navigation, 2026-11-10
+
+Locked deploy `6af3818fdc888d00cdad3d5f`, source
+`9667681f8f22ac54032be304fb40aa836a4ae97e`, PR #124.
+441 static paths, all 47 complete backend function records and five schedules.
+Fresh baseline `6af38002595dc15f8d7529aa`; 434 static paths preserved byte-exact.
+Only four main HTML pages and three new Studio asset versions changed on promotion.
+Full runtime/provider/config/build and protected environment fingerprints preserved.
+
+Active Studio source: `production/profile-medallions-static/index.html`,
+`scripts/tree-profile-studio-v3.js`, `styles/tree-profile-studio-v3.css`,
+`scripts/profile-medallion.js`, `scripts/profile-studio-access.js`.
+Navigation sources: `scripts/profile-site-nav.js`,
+`scripts/profile-studio-entrypoints.js`, `styles/profile-site-navigation.css`,
+`production/profile-entrypoints-static/{home,command,arcade}.html`.
+Existing guided Arcade scripts from PR #123 remain active and unchanged.
+
+Square ecosystem/partner art becomes circular gold-rimmed medallions in picker
+and exported PNG. Sovereign City is now included from the user-supplied original;
+the earlier pending-artwork note below is superseded. Monthly designs are locked
+previews until earned for the authenticated wallet. A separate six-rarity holder
+collection requires exact current canonical NFTree ownership (direct and supported
+Kiosks), and revokes on transfer/expiry/account changes. Restricted exports refresh
+verification. Existing one-hour Arcade session and payment approvals remain intact.
+
+Studio now has the homepage header; homepage has a prominent feature and menu link;
+Arcade has a Studio destination immediately after Badge Collection; Command Center
+has a Studio navigation link. All original scripts on these three pages are exact.
+
+Ten focused tests passed, actual transparent round-artwork PNG inspected, desktop
+published navigation/artwork verified, and 340 CSS-pixel mobile menu tested.
+Authenticated access/transfer/race cases use controlled mocks, plus real read-only
+GraphQL schema/type/rarity checks. No live-wallet signing or payments performed.
+Records: `docs/profile-studio-medallions-live-release-20261110.json`,
+`docs/profile-studio-medallions-validation-20261110.json`,
+`docs/profile-studio-access-design-20261110.md`.
+Use a fresh complete published baseline for future releases; never replace it with
+the historical root snapshot. Release utility: `scripts/profile-medallions/release.mjs`.
+
+---
+
 # Current production — guided Arcade and Profile Studio, 2026-11-10
 
 Locked deployment `6af37ace6ec0f06da74b724f` publishes the coordinated guided
