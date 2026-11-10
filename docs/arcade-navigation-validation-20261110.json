@@ -1,0 +1,205 @@
+{
+  "desktop": [
+    {
+      "calendarVisible": false,
+      "collapseVisible": false,
+      "hash": "#daily",
+      "monthlyVisible": false,
+      "navVisible": true,
+      "overflow": false,
+      "selected": "Daily",
+      "view": "daily",
+      "visible": [
+        "Daily"
+      ]
+    },
+    {
+      "calendarVisible": false,
+      "collapseVisible": false,
+      "hash": "#campaigns",
+      "monthlyVisible": false,
+      "navVisible": true,
+      "overflow": false,
+      "selected": "Campaigns",
+      "view": "campaigns",
+      "visible": [
+        "Campaigns"
+      ]
+    },
+    {
+      "calendarVisible": false,
+      "collapseVisible": false,
+      "hash": "#community",
+      "monthlyVisible": false,
+      "navVisible": true,
+      "overflow": false,
+      "selected": "Community",
+      "view": "community",
+      "visible": [
+        "Community"
+      ]
+    },
+    {
+      "calendarVisible": false,
+      "collapseVisible": false,
+      "hash": "#events",
+      "monthlyVisible": false,
+      "navVisible": true,
+      "overflow": false,
+      "selected": "Events 25 SUI",
+      "view": "events",
+      "visible": [
+        "Events 25 SUI"
+      ]
+    },
+    {
+      "calendarVisible": true,
+      "collapseVisible": false,
+      "hash": "#month",
+      "monthlyVisible": true,
+      "navVisible": true,
+      "overflow": false,
+      "selected": "This Month",
+      "view": "month",
+      "visible": [
+        "This Month"
+      ]
+    },
+    {
+      "calendarVisible": false,
+      "collapseVisible": false,
+      "hash": "#badges",
+      "monthlyVisible": false,
+      "navVisible": true,
+      "overflow": false,
+      "selected": "Badge Collection",
+      "view": "badges",
+      "visible": [
+        "Badge Collection"
+      ]
+    },
+    {
+      "calendarVisible": false,
+      "collapseVisible": false,
+      "hash": "#games",
+      "monthlyVisible": false,
+      "navVisible": true,
+      "overflow": false,
+      "selected": "Games",
+      "view": "games",
+      "visible": [
+        "Games"
+      ]
+    }
+  ],
+  "narrow": [
+    {
+      "activeInView": true,
+      "collapseVisible": false,
+      "pageWidth": 337,
+      "view": "daily",
+      "viewport": 340
+    },
+    {
+      "activeInView": true,
+      "collapseVisible": false,
+      "pageWidth": 337,
+      "view": "campaigns",
+      "viewport": 340
+    },
+    {
+      "activeInView": true,
+      "collapseVisible": false,
+      "pageWidth": 337,
+      "view": "community",
+      "viewport": 340
+    },
+    {
+      "activeInView": true,
+      "collapseVisible": false,
+      "pageWidth": 337,
+      "view": "events",
+      "viewport": 340
+    },
+    {
+      "activeInView": true,
+      "collapseVisible": false,
+      "pageWidth": 337,
+      "view": "month",
+      "viewport": 340
+    },
+    {
+      "activeInView": true,
+      "collapseVisible": false,
+      "pageWidth": 337,
+      "view": "badges",
+      "viewport": 340
+    },
+    {
+      "activeInView": true,
+      "collapseVisible": false,
+      "pageWidth": 337,
+      "view": "games",
+      "viewport": 340
+    }
+  ],
+  "historyCheck": {
+    "focused": "growth-events-tab",
+    "hash": "#events",
+    "view": "events",
+    "viewport": 1363
+  },
+  "homeCheck": {
+    "focused": "growth-games-tab",
+    "hash": "#games"
+  },
+  "endCheck": {
+    "focused": "growth-badges-tab",
+    "hash": "#badges"
+  },
+  "narrowMethod": "Chrome page zoom 400%, 340 CSS pixels; not handset emulation",
+  "live": {
+    "liveEvent": {
+      "eventVisible": true,
+      "hash": "#events",
+      "selected": "growth-events-tab"
+    },
+    "liveDaily": {
+      "hash": "#daily",
+      "view": "daily"
+    },
+    "defaultGames": true,
+    "screenshot": "/workspace/shared/arcade-visible-navigation-live.png"
+  },
+  "publishedSourceCommit": "0fd80495eff1a93d5c2dfff1e73f32e780da761d",
+  "publishedDeploy": "6af3618b197365bd03c62936",
+  "headerExpandedRemoved": true,
+  "challengeCTAColor": "rgb(5, 37, 26)",
+  "browserZoomRestored": true,
+  "hashlessHistoryRegression": [
+    {
+      "gamesHidden": false,
+      "hash": "",
+      "step": "fresh hashless",
+      "view": "games"
+    },
+    {
+      "gamesHidden": true,
+      "hash": "#daily",
+      "step": "Daily",
+      "view": "daily"
+    },
+    {
+      "gamesHidden": false,
+      "hash": "",
+      "step": "Back",
+      "view": "games"
+    },
+    {
+      "gamesHidden": true,
+      "hash": "#daily",
+      "step": "Forward",
+      "view": "daily"
+    }
+  ]
+}

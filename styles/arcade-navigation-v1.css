@@ -1,0 +1,28 @@
+/* Visible section navigation; all wallet, check-in and mission handlers stay intact. */
+.arcade-navigation-page .arcade-subnav{display:flex;flex-wrap:nowrap;gap:7px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin;padding:14px 16px;margin:0;border-bottom:1px solid #35e89533;background:#07181df5}
+.arcade-navigation-page .arcade-subnav button{flex:0 0 auto;min-height:44px;padding:10px 15px;border:1px solid #35e89530;border-radius:8px;white-space:nowrap;color:#c8dad3;font:inherit;font-size:.82rem;font-weight:750;background:#0c2025;cursor:pointer}
+.arcade-navigation-page .arcade-subnav button[aria-selected="true"]{color:#102117;border-color:#ffe05e;background:#ffe05e;box-shadow:0 0 18px #ffe05e18}
+.arcade-navigation-page .arcade-subnav button:focus-visible,.arcade-navigation-page .arcade-event-cta:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.arcade-event-tag{display:inline-block;font-size:.6rem;line-height:1.3;padding:3px 5px;border-radius:4px;background:#ffe05e;color:#102117;margin-left:4px}
+[aria-selected="true"] .arcade-event-tag{background:#102117;color:#ffe05e}
+.arcade-navigation-page #growth-details>summary,.arcade-navigation-page #growth-collapse{display:none!important}
+.arcade-navigation-page #growth-details>.growth-details-body{padding-top:0}
+.arcade-navigation-page .growth-detail-grid{grid-template-columns:minmax(0,1fr)}
+.arcade-navigation-page .growth-reward{display:none}
+.arcade-navigation-page [data-arcade-view="badges"] .growth-reward{display:block}
+.arcade-navigation-page [data-arcade-view="badges"] .growth-detail-grid{grid-template-columns:minmax(0,1fr) minmax(220px,280px)}
+.arcade-navigation-page #arcade-daily-growth:not([data-arcade-view="month"]) #growth-month-rail,.arcade-navigation-page #arcade-daily-growth:not([data-arcade-view="month"]) #arcade-monthly-panel{display:none!important}
+.arcade-navigation-page [data-arcade-view="games"] #growth-details{display:none!important}
+.arcade-navigation-page .growth-strip{border-top:0}
+.arcade-navigation-page .growth-invitation-open{cursor:pointer}
+.arcade-navigation-page #cabinets[hidden],.arcade-featured-event[hidden]{display:none!important}
+.arcade-featured-event{display:grid;grid-template-columns:130px minmax(0,1fr) auto;align-items:center;gap:24px;margin:22px 0 30px;padding:22px;border:1px solid #ffe05e80;border-radius:16px;background:radial-gradient(ellipse at 10% 0,#35e89518,transparent 60%),#07181deb;box-shadow:0 0 24px #ffe05e0b}
+.arcade-featured-event img{width:130px;height:130px;object-fit:contain;border-radius:10px}.arcade-featured-event h2{font-size:clamp(1.15rem,2.4vw,1.6rem);line-height:1.2;margin:5px 0 8px;color:#f1f8e9}.arcade-featured-event p{margin:6px 0;line-height:1.5}.arcade-featured-event .suite-eyebrow{font-size:.62rem;color:#ffe05e}
+.arcade-featured-prize{font-size:1.9rem;font-weight:900;color:#ffe05e}.arcade-featured-prize span{font-size:.8rem;font-weight:650;color:#d2ddce}.arcade-featured-note{font-size:.75rem;color:#afc5be}.arcade-event-cta{display:inline-flex;justify-content:center;align-items:center;gap:12px;min-height:46px;padding:12px 18px;white-space:nowrap;text-decoration:none;border-radius:8px;font-weight:800;font-size:.82rem}
+.force-event{display:grid;grid-template-columns:minmax(130px,210px) minmax(0,1fr);gap:24px;align-items:start}.force-event-art{display:block;width:100%;height:auto;border-radius:14px}.force-event-copy{min-width:0}.force-event-prize{color:#f6d574;font-size:clamp(1.8rem,5vw,2.8rem);font-weight:900;line-height:1.15;margin:14px 0}.force-event-prize span{display:block;font-size:.85rem;line-height:1.5}.force-event-rules{margin:18px 0}.force-event-rules summary{cursor:pointer;font-weight:700;padding:8px 0}.force-event-rules ul{padding-left:20px;line-height:1.6}.force-event-rules li+li{margin-top:7px}
+@media(max-width:900px){.arcade-featured-event{grid-template-columns:110px minmax(0,1fr);gap:18px}.arcade-featured-event img{width:110px;height:110px}.arcade-event-cta{grid-column:1/-1}.arcade-navigation-page [data-arcade-view="badges"] .growth-detail-grid{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:640px){.arcade-navigation-page .arcade-subnav{padding:10px;gap:6px}.arcade-navigation-page .arcade-subnav button{padding:10px 12px;font-size:.76rem}.arcade-featured-event{padding:16px;gap:14px;grid-template-columns:82px minmax(0,1fr)}.arcade-featured-event img{width:82px;height:82px}.arcade-featured-prize{font-size:1.65rem}.arcade-featured-prize span{display:block}.arcade-featured-event h2{font-size:1.08rem}.arcade-featured-event .suite-eyebrow{font-size:.54rem}.force-event{grid-template-columns:1fr;gap:16px}.force-event-art{max-width:240px;margin-inline:auto}}
+@media(prefers-reduced-motion:reduce){.arcade-subnav{scroll-behavior:auto}}
+.arcade-nav-preview-note{padding:12px 16px;border:1px solid #ffe05e66;border-radius:10px;color:#ffe05e;background:#091b20;margin:16px 0}
+
+.arcade-featured-event .arcade-event-cta{color:#05251a}
