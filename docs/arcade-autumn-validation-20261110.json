@@ -1,0 +1,25 @@
+{
+ "date":"2026-11-10",
+ "preview":"https://tree-token.xyz/play/autumn-preview/",
+ "profileStudio":"https://tree-token.xyz/play/profile-studio/",
+ "browser":"Chrome cloud browser",
+ "checks":{
+  "campaignsAllThreeSectionsVisibleWithoutDisclosure":true,
+  "communityAllThreeFormsVisibleWithoutDisclosure":true,
+  "signedOutSubmissionControlsRemainDisabled":true,
+  "fourNovemberGoals3_7_14_21":true,
+  "fourDecemberDesignsMarkedUpcoming":true,
+  "checkinShortcutSelectsDailyAndShowsExistingAttendanceAction":true,
+  "allTwelveStudioArtworkImagesLoaded":true,
+  "localPhotoChooserLoadedTestHeroImage":true,
+  "autumnProfilePNGDownloadedAndInspected":"1024x1024 RGBA, transparent corners, opaque photo center",
+  "christmasFramePNGDownloadedAndInspected":"1024x1024 RGBA, transparent corners and center",
+  "narrowStudio":"340 CSS pixels via 400% desktop zoom; one column, 275px canvas, three gallery columns, document width337px",
+  "narrowCommunity":"340 CSS pixels via 400% desktop zoom; document width337px, all3 cards295px wide",
+  "zoomRestored":true,
+  "assetAlphaVerified":9,
+  "focusedNodeTestsPassed":3,
+  "originalPageScriptsByteExact":true
+ },
+ "limits":"Narrow layout check uses desktop zoom, not physical mobile/touch emulation. Signed-in check-in, payments and awarding not exercised; their implementation remains unchanged. Existing Tree Force tournament remains coming soon."
+}
