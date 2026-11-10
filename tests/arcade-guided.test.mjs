@@ -2,7 +2,7 @@ import test from 'node:test';import assert from 'node:assert/strict';import fs f
 const {JSDOM}=await import(process.env.ARCADE_TEST_JSDOM||new URL('../vendor/arcade-monthly/node_modules/jsdom/lib/api.js',import.meta.url).href);
 import {createDailyGrowth} from '../scripts/arcade-daily-growth-guided.js';
 import {createArcadeMissions} from '../scripts/arcade-social-missions-guided.js';
-import {shareMessages,shareGames} from '../scripts/arcade-share-builder.js';
+import {shareMessages,shareGames,savedGameStatus} from '../scripts/arcade-share-builder.js';
 const page=fs.readFileSync('production/arcade-guided-static/index.html','utf8'),wallet='0x'+'a'.repeat(64),key='tree-arcade:daily-growth:session:v1';
 const tick=()=>new Promise(r=>setTimeout(r,30));
 test('signed-in session survives repeated navigation across every tab without signatures or check-ins',async()=>{
@@ -15,3 +15,5 @@ test('signed-in session survives repeated navigation across every tab without si
 test('community voting choices are usable signed out, but saving requires sign-in',()=>{const dom=new JSDOM(page),root=dom.window.document.getElementById('arcade-daily-growth'),app=createArcadeMissions({root,getSession:()=>null,fetchImpl:async()=>{throw Error('Unexpected request')}});try{assert.equal(root.querySelector('#mission-vote').disabled,false);assert.equal(root.querySelector('[data-mission="community-vote"] button').disabled,true);}finally{app.destroy();dom.window.close();}});
 test('share drafts use actual game names and canonical Arcade URL without fabricated scores',()=>{for(const game of shareGames)for(const challenge of [false,true]){const messages=shareMessages(game,challenge);assert.equal(messages.length,3);assert.equal(new Set(messages).size,3);for(const text of messages){assert.ok(text.includes(game.name));assert.ok(text.includes('https://tree-token.xyz/play/'));assert.ok(text.length<=280);assert.doesNotMatch(text.replace(game.name,''),/scored|verified|won|\d{2,}/i);}}});
 test('monthly label is clear, badges retain their markup, and frames and emblem are separate',()=>{assert.match(page,/Monthly Progress/);assert.ok(fs.existsSync('assets/profile-studio/leafy-canopy.webp'));assert.ok(fs.existsSync('assets/profile-studio/sui-emblem.webp'));const old=new JSDOM(fs.readFileSync('production/arcade-guided-static/baseline.html','utf8')),current=new JSDOM(page);assert.equal(current.window.document.getElementById('growth-badges-panel').innerHTML,old.window.document.getElementById('growth-badges-panel').innerHTML);old.window.close();current.window.close();});
+
+test('saved game status distinguishes completed Garden results from Tree Force participation',()=>{const progress={today:{gameIds:['garden-bot','treeforce89']},passport:{completedGameIds:[]}};assert.match(savedGameStatus(progress,shareGames[0]),/^Completed/);assert.match(savedGameStatus(progress,shareGames[3]),/^Participation saved/);assert.doesNotMatch(savedGameStatus(null,shareGames[0]),/Completed/);});

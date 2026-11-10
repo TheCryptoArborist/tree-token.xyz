@@ -39,3 +39,5 @@ export function mountShareBuilder(host,{challenge=false,initialGame='garden-bot'
  select.addEventListener('change',()=>{game=shareGames.find(g=>g.id===select.value);void load();});
  host.addEventListener('arcade-share-game',e=>{const g=shareGames.find(g=>g.id===e.detail?.gameId);if(g){game=g;select.value=g.id;void load();}});void load();
 }
+
+export function savedGameStatus(progress,game,launched=false){const today=Boolean(progress?.today?.gameIds?.includes(game.id));const monthly=Boolean(progress?.passport?.completedGameIds?.includes(game.id)||progress?.passport?.optionalCompletedGameIds?.includes(game.id));return today?game.id==='treeforce89'?'Participation saved ✓ · Run completion is not reported here':`Completed ✓ · Today’s saved ${game.name} result`:monthly?'Monthly game stamp saved ✓ · Play again any time':launched?'Started · Return after saving your result, then check progress':'Not started · Pick a game and select Play';}

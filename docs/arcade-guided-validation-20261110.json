@@ -1,0 +1,15 @@
+{
+ "date":"2026-11-10",
+ "preview":"https://tree-token.xyz/play/guided-preview/#campaigns",
+ "studio":"https://tree-token.xyz/play/profile-studio/guided-preview/",
+ "browserChecks":{"campaignGameSelectionUpdatesShareGame":true,"threeSelectableMessageCardStyles":true,"sharePNGDownloaded":"1200x675 PNG, original Tree Force artwork, inspected",
+ "voteBrowseableSignedOut":true,"voteSaveDisabledSignedOut":true,"voteCardHeightDesktop":295,
+ "autumnFrameExport":"1024x1024 RGBA, transparent center and corners","christmasFrameExport":"1024x1024 RGBA, transparent center and corners",
+ "leafBorderAndSuiEmblemIndependent":true,"partnerArtworkOriginalVictoryAndBoom":true,
+ "narrowCampaigns":"340 CSS pixels via desktop400percent zoom; document337px; step grid1column; sharecanvas261px",
+ "narrowProfileStudio":"340 CSS pixels via desktop400percent zoom; document337px; grid1column",
+ "zoomRestored":true},
+ "focusedTestsPassed":5,
+ "sessionTest":"Valid stored wallet session navigates all seven tabs three times with zero signing or check-in calls; same saved attendance and token preserved.",
+ "limits":["Signed-in UI state tested with mocked API; no real-wallet sign-in/payment performed.","No automatic social posting. Native share not supported by all browsers; PNG plus prefilled X composer is available.","Existing API does not expose consistent score receipts; share cards do not invent scores.","Sovereign City exact artwork missing from current published Tree Force assets; not replaced by guessed artwork.","Narrow layout uses desktop zoom, not physical mobile/touch emulation."]
+}
