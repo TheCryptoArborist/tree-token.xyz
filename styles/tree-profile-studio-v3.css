@@ -5,3 +5,5 @@
 .art-choice img[hidden]{display:none}
 
 .art-choice--medallion img{width:95px;height:95px;max-width:100%;margin:0 auto 7px;object-fit:cover;border:3px solid #e4bf65;border-radius:50%;background:#102b20;box-shadow:0 0 0 2px #294e33}@media(max-width:760px){.art-choice--medallion img{width:76px;height:76px}}
+
+.art-choice.is-locked{opacity:.48;border-style:dashed;cursor:not-allowed}.studio-access{padding:16px;border:1px solid #61794f;border-radius:12px;margin-top:22px}.studio-access p{font-size:.85rem;line-height:1.5}.studio-access a{display:block;margin:10px 0}.studio-access button{width:100%}

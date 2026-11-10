@@ -28,9 +28,12 @@ let state;
 if(mode==='candidate'){
  await noBuilds();const site=await api('sites/'+siteId),baseline=await api('deploys/'+site.published_deploy.id);assert(baseline.locked);assert.equal(baseline.function_schedules.length,5);
  const files=await inventory(baseline.id),originalFiles={...files},changes={};
+ const strip=x=>x.replace(/<script id="tree-arcade-arboretum-link">[\s\S]*?<\/script>/g,'');
+ for(const [name,url]of [['home','/'],['command','/dapp/'],['arcade','/play/']]){const r=await fetch('https://tree-token.xyz'+url);assert(r.ok);assert.equal(strip(await r.text()),strip(fs.readFileSync(root+'/production/profile-entrypoints-static/'+name+'-baseline.html','utf8')),'Concurrent '+name+' page changed');}
  const page=target==='preview'?'/play/profile-studio/medallion-preview/index.html':'/play/profile-studio/index.html';
  changes[page]=fs.readFileSync(root+'/production/profile-medallions-static/index.html');
- for(const p of ['/scripts/tree-profile-studio-v3.js','/scripts/profile-medallion.js','/styles/tree-profile-studio-v3.css'])changes[p]=fs.readFileSync(root+p);
+ for(const p of ['/scripts/tree-profile-studio-v3.js','/scripts/profile-medallion.js','/scripts/profile-studio-access.js','/scripts/profile-site-nav.js','/scripts/profile-studio-entrypoints.js','/assets/profile-studio/sovereign-city.webp','/styles/tree-profile-studio-v3.css','/styles/profile-site-navigation.css'])changes[p]=fs.readFileSync(root+p);
+ for(const [name,live,preview]of [['home','/index.html','/play/profile-studio/home-preview/index.html'],['command','/dapp/index.html','/play/profile-studio/command-preview/index.html'],['arcade','/play/index.html','/play/profile-studio/arcade-preview/index.html']]){let html=fs.readFileSync(root+'/production/profile-entrypoints-static/'+name+'.html','utf8');if(target==='preview'){html=html.replace('</head>','<meta name="robots" content="noindex,nofollow"></head>');if(name==='command')html=html.replace('<head>','<head><base href="/dapp/">');html=html.replaceAll('href="/play/profile-studio/"','href="/play/profile-studio/medallion-preview/"');}changes[target==='preview'?preview:live]=Buffer.from(html);}
  for(const [p,bytes]of Object.entries(changes))files[p]=sha(bytes);
  assert.deepEqual(Object.keys(originalFiles).filter(p=>files[p]!==originalFiles[p]&&!Object.hasOwn(changes,p)),[],'Unapproved existing static path changed');
  assert(/^[a-f0-9]{40}$/.test(process.env.SOURCE_COMMIT||''),'A recorded source commit is required');

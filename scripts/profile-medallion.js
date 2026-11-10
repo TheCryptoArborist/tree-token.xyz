@@ -9,3 +9,5 @@ export function drawMedallion(ctx,image,x,y,size){
  ctx.strokeStyle=gold;ctx.lineWidth=9;ctx.beginPath();ctx.arc(cx,cy,r-7,0,Math.PI*2);ctx.stroke();
  ctx.strokeStyle='#183d29';ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,cy,r-13,0,Math.PI*2);ctx.stroke();ctx.restore();
 }
+
+export function drawRarityMedallion(ctx,image,x,y,size,label,color){drawMedallion(ctx,image,x,y,size);ctx.save();ctx.strokeStyle=color;ctx.lineWidth=6;ctx.beginPath();ctx.arc(x+size/2,y+size/2,size/2-18,0,Math.PI*2);ctx.stroke();ctx.fillStyle='#102b20';ctx.fillRect(x+size*.13,y+size*.68,size*.74,size*.19);ctx.fillStyle=color;ctx.textAlign='center';ctx.font=`bold ${Math.round(size*.08)}px system-ui`;ctx.fillText(label.toUpperCase(),x+size/2,y+size*.81);ctx.restore();}

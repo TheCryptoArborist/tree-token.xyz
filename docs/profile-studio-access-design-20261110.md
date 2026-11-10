@@ -1,0 +1,13 @@
+# Profile Studio unlocks, medallions and navigation
+
+Square TREE/Thickquidity/NFTree/Tree Force/VICTORY images render as circular gold-rimmed medallions in the picker and actual PNG output. Existing transparent badge shapes remain intact. Sovereign City uses the exact user-supplied image, optimized as assets/profile-studio/sovereign-city.webp and framed consistently.
+
+November/December choices are visible locked previews. Selection and export require authoritative saved awards returned by the existing signed Arcade session for the connected wallet. Client storage contains no earned-badge flags. Wallet/session changes revoke selections; restricted exports refresh verification and recheck entitlement before starting download. Future/unknown badges and mismatched wallets never unlock. Public artwork files are not DRM; the restriction applies to selection/composition/export in this tool.
+
+Separate NFTree Holder collection: Common/Rare/Epic/Legendary/Mythic/1-of-1, colored holder medallions using the official TREE mark. Eligibility is exact current rarity, not every lower tier. Transfers/sales lock a holder emblem again when the last qualifying NFT leaves. Earned monthly badges remain distinct from holdings.
+
+Rarity verification requires an authenticated Arcade identity, then a complete canonical-type ownership scan against the public Sui GraphQL provider. Canonical NFT JSON includes an explicit rarity field, verified on real sample objects. Direct ownership plus owned KioskOwnerCaps, Kiosk Item entries and matching object-owner metadata are supported. Duplicate IDs, incomplete pages, unsupported metadata, provider errors or wallet changes lock holder choices. Export rechecks current holdings. No RPC credentials or new backend configuration. Real sample query confirmed CORS * and canonical type/rarity field; signed-in/transfer/race behavior uses controlled mocks.
+
+Studio gets the homepage brand/header, navigation, Resources dropdown, social links, Buy TREE CTA and mobile menu, extracted from existing source styles and compared to the live homepage. Homepage gets a prominent Studio callout and menu link, Arcade gets a Studio destination immediately after Badge Collection, and Command Center gets a navigation link. Existing homepage market and Command Center wallet/payment scripts remain byte-exact.
+
+Preservation release uses fresh complete baseline and compares all three source page baselines before staging. Preview routes under /play/profile-studio/ for Studio, homepage, Arcade and Command Center (Command preview has base href /dapp/). Preserve all current functions/packages/provider/runtime records, schedules, env/build fingerprints, and all unmodified static paths. No auth TTL change or actual social posting.
