@@ -23,7 +23,7 @@ export function isAuditedInactiveDeploy(deploy) {
   if (!expected || deploy.site_id !== SITE_ID || deploy.build_id != null ||
       deploy.published_at != null || deploy.locked === true) return false;
   return [deploy.state, deploy.created_at, deploy.updated_at, deploy.context,
-    deploy.commit_ref ?? null].every((value, i) => value === expected[i + 1]);
+    deploy.commit_ref ?? null].every((value, i) => value === expected[i]);
 }
 
 export const ROOTCASTER_PATHS = ['/rootcaster/index.html', '/rootcaster/rootcaster.css', '/rootcaster/whisperleaf-watch.webp'];
