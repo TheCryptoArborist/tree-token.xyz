@@ -31,7 +31,7 @@ if(mode==='candidate'){
  const page=target==='preview'?'/play/profile-studio/ecosystem-preview/index.html':'/play/profile-studio/index.html';
  changes[page]=fs.readFileSync(root+'/production/profile-ecosystem-static/index.html');
  if(target==='preview')changes['/play/profile-studio/ecosystem-mobile-review/index.html']=fs.readFileSync(root+'/production/profile-ecosystem-static/mobile.html');
- for(const p of ['/scripts/tree-profile-studio-v11.js','/scripts/profile-studio-access-v4.js','/scripts/profile-canopy-art.js','/assets/profile-studio/canopy-oak-warriors.png','/scripts/profile-partner-medallion.js','/assets/profile-studio/suidex-official.png','/assets/profile-studio/kelpie-official.png','/styles/tree-profile-studio-v9.css'])changes[p]=fs.readFileSync(root+p);
+ for(const p of ['/scripts/tree-profile-studio-v11.js','/assets/profile-studio/canopy-breaker-badge.svg','/assets/profile-studio/root-rage-badge.svg','/scripts/profile-studio-access-v4.js','/scripts/profile-canopy-art.js','/assets/profile-studio/canopy-oak-warriors.png','/scripts/profile-partner-medallion.js','/assets/profile-studio/suidex-official.png','/assets/profile-studio/kelpie-official.png','/styles/tree-profile-studio-v9.css'])changes[p]=fs.readFileSync(root+p);
  for(const [p,bytes]of Object.entries(changes))files[p]=sha(bytes);
  assert.deepEqual(Object.keys(originalFiles).filter(p=>files[p]!==originalFiles[p]&&!Object.hasOwn(changes,p)),[],'Unapproved existing static path changed');
  assert(/^[a-f0-9]{40}$/.test(process.env.SOURCE_COMMIT||''),'A recorded source commit is required');
