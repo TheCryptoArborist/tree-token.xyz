@@ -1,3 +1,13 @@
+# Current production — clear game badges and mobile photo upload, 2026-11-10
+
+Locked deploy `6af3ab2cd3c66da0f6847165`, source `6258bbaeeef5295294ed8bf34714bf6d268900be`, PR #132. Active page: `production/profile-ecosystem-static/index.html`; script `scripts/tree-profile-studio-v11.js`; stylesheet `styles/tree-profile-studio-v9.css`.
+
+Photo picker is full-width gold, 60px tall on mobile. At 390px viewport the document is 375px wide with no horizontal overflow. Native file chooser opens. Canopy Breaker and Root Rage use distinct named SVG medallions readable in the compact picker; frame export reports success. TREE Token renamed; generic NFTree, duplicate Thickquidity and Sui emblem choices removed. Owned NFTrees remain above Partners. Ancient Oak retains its 48px lift.
+
+Fresh inventory preserved: 473 static paths, 472 unchanged at production promotion; all 47 complete backend records, five schedules and runtime/provider/build/protected environment fingerprints unchanged. Release record: `docs/profile-ecosystem-upload-release-20261110.json`. Future releases capture a fresh published baseline using `scripts/profile-ecosystem/release.mjs`.
+
+---
+
 # Current production — NFTrees before Partners, 2026-11-10
 
 Locked deploy `6af39467220a8ff936b957ea`, source
