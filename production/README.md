@@ -1,3 +1,32 @@
+# Current production — official partner badges, 2026-11-10
+
+Locked deploy `6af39210476c85cf56dbd130`, source
+`d866f59aa3cc8f85d1db4272cbe04c9fa7756633`, PR #129.
+Active Studio source: `production/profile-partners-static/index.html`,
+`scripts/tree-profile-studio-v8.js`, `scripts/profile-partner-medallion.js`,
+`styles/tree-profile-studio-v8.css`. Existing access-v4 and all wallet/payment
+code are unchanged. The compact wallet controls and bottom NFTs panel remain.
+
+Partners adds one official SuiDex handshake (1080px transparent Media Pack PNG)
+and one official Kelpie on-dark emblem. Original assets are stored unchanged;
+extra renderer/thumbnail padding preserves the full marks inside round gold rims.
+Both select as bottom medallions, retaining the uploaded profile photo. Other
+medallion rendering uses the original default and all other artwork stays intact.
+
+Seventeen existing regressions passed. Desktop and340-CSSpx preview verified;
+actual1024x1024 RGBA exports for both have transparent centers/corners and opaque
+badge regions. No actual wallet signing/payment or user photo upload. Asset source
+and validation details: `docs/profile-partner-logos-design-20261110.md`,
+`docs/profile-partner-logos-release-20261110.json`,
+`docs/profile-partner-logos-validation-20261110.json`.
+
+Fresh baseline `6af391a15fc90f558550dfe6`;461 static paths,460 unchanged at promotion.
+All47 complete backend records and five schedules plus runtime/provider/build and
+protected environment fingerprints preserved. Use fresh published inventories;
+release utility `scripts/profile-partners/release.mjs`.
+
+---
+
 # Current production — NFT artwork as bottom badges, 2026-11-10
 
 Locked deploy `6af38cfd5ab474aae2a0cddf`, source
