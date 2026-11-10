@@ -28,7 +28,11 @@ let state;
 if(mode==='candidate'){
  await noBuilds();const site=await api('sites/'+siteId),baseline=await api('deploys/'+site.published_deploy.id);assert(baseline.locked);assert.equal(baseline.function_schedules.length,5);
  const files=await inventory(baseline.id),originalFiles={...files},changes={};
- changes['/scripts/arcade-quest-campaigns.js']=fs.readFileSync(root+'/scripts/arcade-refresh/arcade-quest-campaigns.js');
+ if(target==='preview'){
+  changes['/scripts/arcade-quest-campaigns-quiz-preview.js']=fs.readFileSync(root+'/scripts/arcade-refresh/arcade-quest-campaigns.js');
+  const core=await fetch('https://tree-token.xyz/scripts/arcade-daily-growth.js');assert(core.ok);const code=await core.text();assert(code.includes("from './arcade-quest-campaigns.js'"));changes['/scripts/arcade-daily-growth-quiz-preview.js']=Buffer.from(code.replace("from './arcade-quest-campaigns.js'","from './arcade-quest-campaigns-quiz-preview.js'"));
+  const page=await fetch('https://tree-token.xyz/play/');assert(page.ok);const html=await page.text();assert(html.includes('/scripts/arcade-daily-growth.js'));changes['/play/quiz-preview/index.html']=Buffer.from(html.replace('/scripts/arcade-daily-growth.js','/scripts/arcade-daily-growth-quiz-preview.js').replace('</head>','<meta name="robots" content="noindex,nofollow"></head>'));
+ }else changes['/scripts/arcade-quest-campaigns.js']=fs.readFileSync(root+'/scripts/arcade-refresh/arcade-quest-campaigns.js');
  for(const [p,bytes]of Object.entries(changes))files[p]=sha(bytes);
  assert.deepEqual(Object.keys(originalFiles).filter(p=>files[p]!==originalFiles[p]&&!Object.hasOwn(changes,p)),[],'Unapproved existing static path changed');
  assert(/^[a-f0-9]{40}$/.test(process.env.SOURCE_COMMIT||''),'A recorded source commit is required');
