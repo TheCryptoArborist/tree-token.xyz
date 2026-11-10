@@ -33,3 +33,7 @@ The main page was opened in the browser and confirmed to default to Games. Its f
 The same-domain navigation preview remains available. Its polish deployment modified only the two new navigation assets before promotion. Neither preview release altered the main Arcade page.
 
 Tournament scoring and event dates remain separate unfinished work. This presentation change does not open entries or award the 25 SUI prize.
+
+## Repository verification
+
+The repository requires its production-snapshot workflow before merge. Run that required check on this recorded release; no source, workflow, backend or deployment guard is changed to satisfy it. The published page remains locked during repository verification.
