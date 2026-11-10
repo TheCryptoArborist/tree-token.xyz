@@ -1,0 +1,76 @@
+name: One-time preserved TreeRootCaster publication
+on:
+  push:
+    branches:
+      - release/rootcaster-publish-20261110
+    paths:
+      - .github/workflows/publish-rootcaster-once.yml
+permissions:
+  contents: read
+concurrency:
+  group: tree-production-preservation-release
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout only exact reviewed main source (never build site)
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Assert approved main commit and release guards
+        run: |
+          test "$(git rev-parse HEAD)" = "95ad66a24103a4e4c6b2484222174c85564d83d2"
+          test "$(git ls-remote --heads origin refs/heads/main | cut -f1)" = "95ad66a24103a4e4c6b2484222174c85564d83d2"
+          node --test tests/rootcaster-release.test.mjs tests/preserved-release.test.mjs
+      - name: Capture locked production and create and verify a fresh candidate
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          ROOTCASTER_EXPECTED_DEPLOY: 6af2269339c88800be3ea322
+          REVIEWED_SHA: 95ad66a24103a4e4c6b2484222174c85564d83d2
+        run: |
+          test -n "$NETLIFY_AUTH_TOKEN"
+          node scripts/release-rootcaster.mjs capture
+          node scripts/release-rootcaster.mjs plan --source-commit "$REVIEWED_SHA"
+          node scripts/release-rootcaster.mjs preview --source-commit "$REVIEWED_SHA"
+          node scripts/release-rootcaster.mjs verify --source-commit "$REVIEWED_SHA"
+      - name: Install browser for isolated candidate checks
+        run: |
+          npm install --prefix "$RUNNER_TEMP/rootcaster-browser" --ignore-scripts --no-audit --no-fund playwright@1.56.1
+          "$RUNNER_TEMP/rootcaster-browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Check candidate at desktop and mobile widths
+        env:
+          ROOTCASTER_BROWSER_MODULE: ${{ runner.temp }}/rootcaster-browser/node_modules/playwright/index.mjs
+        run: node scripts/check-rootcaster-page.mjs
+      - name: Publish only fresh, verified candidate and lock production
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          ROOTCASTER_EXPECTED_DEPLOY: 6af2269339c88800be3ea322
+          REVIEWED_SHA: 95ad66a24103a4e4c6b2484222174c85564d83d2
+        run: |
+          test "$(git ls-remote --heads origin refs/heads/main | cut -f1)" = "$REVIEWED_SHA"
+          candidate=$(node -p "JSON.parse(require('fs').readFileSync('.netlify/rootcaster-candidate.json')).id")
+          node scripts/release-rootcaster.mjs publish --source-commit "$REVIEWED_SHA" --expected-candidate "$candidate"
+      - name: Write public release summary
+        if: always()
+        run: |
+          if test -f .netlify/rootcaster-release-report.json; then
+            node --input-type=module -e "const r=JSON.parse(require('fs').readFileSync('.netlify/rootcaster-release-report.json')); console.log(JSON.stringify({mode:r.mode,baselineId:r.baselineId,candidateId:r.candidateId,staticFiles:r.staticFiles,addedPaths:r.addedPaths,functionsPreserved:r.functionsPreserved,schedulesPreserved:r.schedulesPreserved,productionChanged:r.productionChanged,url:r.url},null,2))"
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rootcaster-public-publish-checks-${{ github.run_id }}
+          path: |
+            .netlify/rootcaster-release-report.json
+            .netlify/rootcaster-desktop.png
+            .netlify/rootcaster-mobile.png
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 7
