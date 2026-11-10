@@ -1,3 +1,59 @@
+# Current production — guided Arcade and Profile Studio, 2026-11-10
+
+Locked deployment `6af37ace6ec0f06da74b724f` publishes the coordinated guided
+Arcade and Profile Studio update from source commit
+`0f773ec5356164f46a69e4aca8ccfaf6d0dcd3d9`, PR #123.
+
+Active sources:
+- Arcade: `production/arcade-guided-static/index.html`
+- Core integration: `scripts/arcade-daily-growth-guided.js`, campaign/social
+  `*-guided.js` siblings, `scripts/arcade-guided-v2.js`, `scripts/arcade-share-builder.js`
+- Studio: `production/profile-studio-v2-static/index.html`,
+  `scripts/tree-profile-studio-v2.js`, `styles/tree-profile-studio-v2.css`
+- New transparent overlay assets: `assets/profile-studio/`
+
+One compact daily/monthly summary stays above the navigation. Monthly Progress
+replaces This Month. The main starter guide separates free attendance,
+optional follow, game choice and coordinated three-style sharing from the
+optional existing First Round bonus badge and quiz. Legacy badge requirements
+and previously earned progress remain unchanged. Telegram is a working
+community link rather than a pending verification task. Voting choices are
+browseable while signed out; submission remains authenticated and limited.
+
+Share graphics use original game artwork, with PNG/native-share and prefilled
+X composer options. No automatic publishing or invented score/result. Current
+saved Garden result stamps and Tree Force participation have distinct labels.
+The API does not expose consistent score receipts, so cards do not assert scores.
+
+Profile Studio adds TREE logo/Thickquidity/NFTree artwork, original VICTORY and
+BOOM power-up art, and a separate Sui emblem. Autumn Glow and Christmas Lights
+use real illustrated overlays. Leafy Canopy and Sui emblem are independent.
+Classic Gold, Canopy Mint and the badge collection design are unchanged.
+Sovereign City artwork was not present in current Tree Force assets/bundles
+or accessible source searches; that item remains pending the original asset.
+
+Session regression repeatedly navigated all seven tabs without signing or
+check-in calls, preserving the same valid stored session. Transient restore
+hides actionable sign-in UI; one-hour expiry remains and explicitly states
+saved attendance stays saved. The user's original real-wallet prompt was not
+reproduced in a live signed-in browser; no expiry/security weakening is claimed.
+
+Validation: five focused tests, desktop and 340-CSS-pixel zoom-based layout
+checks, actual three-style game share PNG export, local-image profile loading,
+1024px transparent frame and composed-photo downloads inspected. No real-wallet
+sign-in/payment or social publishing performed. Details and full inventory:
+`docs/arcade-guided-validation-20261110.json`, preview and live release records.
+
+Fresh promotion baseline `6af37a24db5b4154a0999951` had 429 static paths.
+Promotion changes only `/play/index.html` and `/play/profile-studio/index.html`;
+427 other static paths, all 47 complete function records, five schedules,
+provider/runtime/build settings and protected environment fingerprints remain
+exact. Initial review added14 paths to the prior415 without altering those paths.
+Capture a fresh complete live baseline before future work; never publish the
+historical root snapshot over current production.
+
+---
+
 # Current production — Know Your TREE dropdown fix, 2026-11-10
 
 Locked deploy `6af370678cf2aa50165d807a` fixes quiz answer browsing on `/play/`.
