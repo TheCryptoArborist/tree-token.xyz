@@ -1,3 +1,39 @@
+# Current production — NFT artwork as bottom badges, 2026-11-10
+
+Locked deploy `6af38cfd5ab474aae2a0cddf`, source
+`24edebbae97333e854fa8536e28337b11d3021b9`, PR #128.
+Active Studio: `production/profile-nft-badge-static/index.html`,
+`scripts/tree-profile-studio-v7.js`, `scripts/profile-studio-access-v4.js`,
+`styles/tree-profile-studio-v7.css`.
+
+NFTs is back below the other badge collections. Actual owned NFTree thumbnails
+are selectable round bottom medallions; uploading the profile photo remains a
+separate control and selecting an NFT never replaces that photo. The oversized
+wallet instructions/navigation buttons are replaced by compact connection and
+local sign-in controls. Existing Arborist Trials lift and other artwork remain.
+
+Reproduced and fixed the screenshot wallet's Kiosk ownership error: NFTs are
+reached through owned Kiosk Item dynamic-object-field values, with canonical type
+and matching Item/object/metadata IDs, rather than expecting direct Kiosk ownership.
+Bounded workers progressively show verified items; failed Kiosks cannot hide
+separately verified artwork, and exports still await/recheck current holdings.
+Existing session/expiry/sign-in guards remain. Read-only live lookup found three
+canonical NFTrees (two direct, one Kiosk), no partial errors; sample image200/CORS*.
+
+Seventeen focused tests passed, including uploaded-photo preservation and bottom
+medallion placement. Desktop preview showed the compact wallet and bottom NFTs
+panel;340 CSSpx mobile document337px, wallet section174px. No real-wallet signing,
+payment or user-photo upload. Details: `docs/profile-nft-bottom-badge-design-20261110.md`,
+`docs/profile-nft-bottom-badge-release-20261110.json`,
+`docs/profile-nft-bottom-badge-validation-20261110.json`.
+
+Fresh baseline `6af38c4ae461c7fd2c8e5ebd`;455 paths,454 unchanged at promotion.
+All47 complete backend records, five schedules and runtime/provider/build and
+protected environment hashes preserved. Always capture fresh baselines; release
+utility `scripts/profile-nft-badge/release.mjs`.
+
+---
+
 # Current production — in-place Profile Studio sign-in, 2026-11-10
 
 Locked deploy `6af388bc2cee7668d2bdf882`, source
