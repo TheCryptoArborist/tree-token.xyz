@@ -13,7 +13,9 @@ export function mountArcadeNavigation(doc = document, view = window) {
 
   function render(tab) {
     const key = keyFor.get(tab) || 'games';
+    const changed = root.dataset.arcadeView !== key;
     root.dataset.arcadeView = key;
+    if (changed) tab.scrollIntoView({ block: 'nearest', inline: 'nearest' });
     if (featured) featured.hidden = key !== 'games';
     // Legacy handlers select panels by ID, including Games outside the missions root.
     for (const item of tabs) doc.getElementById(item.getAttribute('aria-controls')).hidden = item !== tab;
@@ -48,9 +50,20 @@ export function mountArcadeNavigation(doc = document, view = window) {
     tabs[next].focus();
     tabs[next].scrollIntoView({ block: 'nearest', inline: 'nearest' });
   }, true);
-  for (const button of root.querySelectorAll('#growth-badge-preview, #growth-invitation-open')) {
-    button.addEventListener('click', () => tabFor.get('daily').click());
+  const headerActions = [...root.querySelectorAll('#growth-badge-preview, #growth-invitation-open')];
+  function labelHeaderActions() {
+    for (const button of headerActions) {
+      if (button.hasAttribute('aria-expanded')) button.removeAttribute('aria-expanded');
+      if (button.getAttribute('aria-controls') !== 'growth-today-panel') button.setAttribute('aria-controls', 'growth-today-panel');
+      if (button.getAttribute('aria-label') !== 'Open Daily') button.setAttribute('aria-label', 'Open Daily');
+    }
   }
+  const headerObserver = new view.MutationObserver(labelHeaderActions);
+  for (const button of headerActions) {
+    button.addEventListener('click', () => tabFor.get('daily').click());
+    headerObserver.observe(button, { attributes: true, attributeFilter: ['aria-expanded', 'aria-controls', 'aria-label'] });
+  }
+  labelHeaderActions();
   // Also reflect programmatic selections made by existing Community/quest actions.
   new view.MutationObserver(() => {
     const active = tabs.find(tab => tab.getAttribute('aria-selected') === 'true');
@@ -65,6 +78,11 @@ export function mountArcadeNavigation(doc = document, view = window) {
     if (!tab) return;
     if (tab.getAttribute('aria-selected') !== 'true') tab.click();
     else render(tab);
+    if (key === 'cabinets') {
+      const games = doc.getElementById('cabinets');
+      games.focus({ preventScroll: true });
+      games.scrollIntoView({ block: 'start' });
+    } else tab.focus({ preventScroll: true });
   }
   view.addEventListener('hashchange', fromHash);
   view.addEventListener('popstate', fromHash);
