@@ -1,0 +1,11 @@
+{
+  "deploy": "6af388bc2cee7668d2bdf882",
+  "sourceCommit": "a7633354886828a8474915fb26705c450e6bcd2d",
+  "focusedTests": 14,
+  "allPassed": true,
+  "desktopLive": "Sign in here button present; return-to-Arcade sign-in link absent; NFT picker and existing controls retained.",
+  "mobilePreview": "340 CSSpx viewport/337px document; local sign-in button reachable and no horizontal overflow.",
+  "limits": "Wallet signing/authentication uses controlled tests. No real-wallet connection, signature or payment performed.",
+  "review": "Duplicate-signature finding fixed by rechecking signing guard after awaiting refresh/bridge; rapid-click and pending-refresh tests pass. Exact staged source verified. Initial publication rejected due unresolved finding; evidence committed, thread resolved and fresh candidate staged before successful publication.",
+  "screenshot": "/workspace/shared/profile-studio-local-signin-live.png"
+}

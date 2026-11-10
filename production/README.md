@@ -1,3 +1,33 @@
+# Current production — in-place Profile Studio sign-in, 2026-11-10
+
+Locked deploy `6af388bc2cee7668d2bdf882`, source
+`a7633354886828a8474915fb26705c450e6bcd2d`, PR #127.
+Active Studio: `production/profile-signin-static/index.html`,
+`scripts/tree-profile-studio-v6.js`, `scripts/profile-studio-access-v3.js`,
+existing `styles/tree-profile-studio-v5.css`.
+
+Sign in here replaces the redirect to Arcade. Existing valid shared Arcade sessions
+restore silently without another signature. Local sign-in uses the same wallet
+adapter and challenge/session/status endpoints, persists the exact server expiry
+under the same shared storage key, and is reusable by Arcade. Expired sessions or
+a remembered Studio wallet can restore wallet identity only; earned badges still
+require current authentication. No check-in, payment, wallet SDK or TTL change.
+
+Fourteen focused tests passed for shared-session reuse, local sign-in, expired
+identity restore, rejection, account changes, duplicate clicks including pending
+refresh, ownership/Kiosks/transfer/outage and non-destructive focus. Desktop and
+340-CSSpx signed-out UI checked. Real-wallet signing was not performed. Detailed
+design: `docs/profile-studio-signin-design-20261110.md`.
+
+Fresh baseline `6af3876a3c2cbc34e58e5f83`;451 paths,449 unchanged at promotion,
+all47 complete backend records and five schedules plus runtime/provider/build
+and protected environment fingerprints preserved. Records:
+`docs/profile-studio-signin-release-20261110.json` and
+`docs/profile-studio-signin-validation-20261110.json`.
+Use fresh complete baselines; utility `scripts/profile-signin/release.mjs`.
+
+---
+
 # Current production — visible NFTree picker and Trials artwork, 2026-11-10
 
 Locked release `6af385eb6da682188cf300e3`, source
