@@ -1,3 +1,30 @@
+# Current production — Know Your TREE dropdown fix, 2026-11-10
+
+Locked deploy `6af370678cf2aa50165d807a` fixes quiz answer browsing on `/play/`.
+Source commit `6479a1236531e6a8286be32357a01662f4ca344a`, PR #122.
+Only `/scripts/arcade-quest-campaigns.js` changes, from repository source
+`scripts/arcade-refresh/arcade-quest-campaigns.js`. Answer selects remain
+usable while signed out, before saved progress loads, and after this week's
+stamp. Submission still requires the existing verified session/progress and
+weekly eligibility. Accessible text beside the form explains each state.
+
+Three focused tests passed. All three selections were changed successfully
+in both isolated `/play/quiz-preview/` and live `/play/#campaigns`; signed-out
+submission remains disabled. No real-wallet scoring/credit submission was
+performed. Session, API, payment, scoring and reward logic are unchanged.
+
+Fresh main baseline `6af3701ad1b172340c881dcc` had 415 static paths;
+414 remain exact, all 47 full function records and five schedules are
+preserved, with runtime/build/environment fingerprints intact. Preview added
+three isolated review paths without changing the prior 412 paths. Records:
+`docs/arcade-quiz-release-20261110.json`, preview release and validation JSON.
+
+The active Arcade page and Profile Studio remain the seasonal sources below.
+Capture a fresh complete inventory before every deployment; never publish
+the historical root snapshot over current production.
+
+---
+
 # Current production — seasonal Arcade and Profile Studio, 2026-11-10
 
 Locked deploy `6af36decd5317e3867e86e8f` publishes the seasonal Arcade UI on
