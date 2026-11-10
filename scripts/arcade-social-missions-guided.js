@@ -20,7 +20,7 @@ export function createArcadeMissions({root, fetchImpl, getSession, now = () => D
         ? entry.status === 'completed' ? 'Completed ✓ · Community stamp saved' : entry.status === 'pending' ? 'Pending review · No stamp awarded yet' : 'Not accepted · Try again with a new entry next week.'
         : signedIn ? 'Ready to start' : 'Sign in above to participate.';
       if (entry) form.elements.proof.value = entry.proof;
-      if(form.dataset.mission==='community-vote')form.querySelector('.mission-state').textContent=entry?'Your vote is saved ✓ · '+entry.proof:busy?'Loading your saved vote…':signedIn?'Choose a game, then Save my vote.':'Browse the choices now. Sign in above to save your vote.';
+      if(form.dataset.mission==='community-vote')form.querySelector('.mission-state').textContent=entry?entry.status==='completed'?'Your vote is saved ✓ · '+entry.proof:'Vote status: '+entry.status:busy?'Loading your saved vote…':signedIn?'Choose a game, then Save my vote.':'Browse the choices now. Sign in above to save your vote.';
     }
   }
   function sessionChanged() {
