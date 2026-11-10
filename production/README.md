@@ -1,3 +1,26 @@
+# Current production — NFTrees before Partners, 2026-11-10
+
+Locked deploy `6af39467220a8ff936b957ea`, source
+`4e002623565a0bcf197e272e3785ee7ee94b6e84`, PR #130.
+Active Studio: `production/profile-nftree-order-static/index.html`,
+`scripts/tree-profile-studio-v9.js`; existing styles-v8, partner-medallion and
+access-v4 are unchanged.
+
+The existing owned-NFTree bottom-badge panel now sits immediately after TREE
+Ecosystem and before Partners. Order is None, TREE Ecosystem, NFTs, Partners,
+November, December. Desktop preview and340-CSSpx layout verified this exact DOM
+order;337px document width. No badge selection, photo, ownership, session, wallet,
+payment, border or artwork behavior changes. Syntax and required production
+snapshot checks pass. No new tests added for this small presentation reorder.
+
+Fresh baseline `6af3942619ebbfb53d7765fd`;463 static paths,462 unchanged at promotion.
+All47 complete backend records, five schedules and runtime/provider/build and
+protected environment hashes preserved. Release/validation record:
+`docs/profile-nftree-order-release-20261110.json`. Future releases must capture
+fresh published inventory; utility `scripts/profile-nftree-order/release.mjs`.
+
+---
+
 # Current production — official partner badges, 2026-11-10
 
 Locked deploy `6af39210476c85cf56dbd130`, source
