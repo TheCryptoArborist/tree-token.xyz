@@ -14,6 +14,18 @@ export const SITE_ID = 'aa62f324-b880-47d6-85b8-4ba0700ff5bf';
 export const ACCOUNT_ID = '69800888d1a3d0483003ae9e';
 export const BASELINE_ID = process.env.ROOTCASTER_EXPECTED_DEPLOY || '6af2269339c88800be3ea322';
 export const ORIGINAL_CHANGES = [];
+// Historical orphaned API deploys individually audited on 2026-11-10.
+// These are not builds: all have null build_id/published_at and unchanged,
+// months-old states. Any new, changed, or genuinely queued deploy still blocks.
+export const AUDITED_STALE_DEPLOYS = new Map([["6ac52820279f7eb4a8d2457f",["prepared","2026-10-06T16:56:00.762Z","2026-10-06T16:56:01.973Z","branch-deploy",null]],["6ac527e17cf112fbffd1d846",["prepared","2026-10-06T16:54:57.216Z","2026-10-06T16:54:57.618Z","branch-deploy",null]],["6ac5279f64ded4fdb3ab3beb",["uploading","2026-10-06T16:53:51.055Z","2026-10-06T16:53:51.539Z","deploy-preview",null]],["6ac52772cdbea704934a7104",["uploading","2026-10-06T16:53:06.576Z","2026-10-06T16:53:07.286Z","branch-deploy","12d07ac0db1f50521043cd71bdb5032f93306336"]],["6ac51f782d2f32b1d81cc2ee",["uploading","2026-10-06T16:19:04.294Z","2026-10-06T16:19:05.810Z","branch-deploy",null]],["6ac51ee343f065a97870c8c1",["uploading","2026-10-06T16:16:35.120Z","2026-10-06T16:16:35.721Z","deploy-preview",null]],["6aaef0c3bef6988a2854e692",["uploading","2026-09-19T20:29:55.569Z","2026-09-19T20:30:44.597Z","branch-deploy",null]],["6aaa1e51ab04ece07223c51a",["uploading","2026-09-16T04:42:57.276Z","2026-09-16T04:42:57.695Z","deploy-preview",null]],["6a88c1e0f4f19fa43716b98e",["new","2026-08-21T21:23:44.980Z","2026-08-21T21:23:44.980Z","deploy-preview",null]],["6a862cb81463fc03bfff46fa",["new","2026-08-19T22:22:48.312Z","2026-08-19T22:22:48.312Z","deploy-preview",null]]]);
+export function isAuditedInactiveDeploy(deploy) {
+  const expected = AUDITED_STALE_DEPLOYS.get(deploy?.id);
+  if (!expected || deploy.site_id !== SITE_ID || deploy.build_id != null ||
+      deploy.published_at != null || deploy.locked === true) return false;
+  return [deploy.state, deploy.created_at, deploy.updated_at, deploy.context,
+    deploy.commit_ref ?? null].every((value, i) => value === expected[i]);
+}
+
 export const ROOTCASTER_PATHS = ['/rootcaster/index.html', '/rootcaster/rootcaster.css', '/rootcaster/whisperleaf-watch.webp'];
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const RUNTIME_FIELDS = ['branch', 'context', 'functions_region', 'functions_region_overrides',
@@ -348,7 +360,14 @@ export async function main(args = process.argv.slice(2)) {
         assert(page<=100, 'Deploy history exceeds bounded concurrency check.');
         const pending=await api(`sites/${SITE_ID}/deploys?per_page=100&page=${page}`);
         assert(Array.isArray(pending), 'Invalid deploy history.');
-        assert(pending.every(d => d.id === state.id || ['ready','error','rejected','canceled'].includes(d.state)), 'Queued Git build detected; wait before publication.');
+        for (const summary of pending) {
+          if (summary.id === state.id || ['ready','error','rejected','canceled'].includes(summary.state)) continue;
+          // Query each audited orphan's full current record; a changed state,
+          // resumed build or any unknown nonterminal deployment is a hard stop.
+          const full = await api('deploys/' + summary.id);
+          assert(isAuditedInactiveDeploy(full),
+            `Unreviewed nonterminal deploy ${summary.id} (state: ${summary.state}); stop before publication.`);
+        }
         if(pending.length<100) break;
       }
       await assertLiveBaseline(api, baseline, plan);
