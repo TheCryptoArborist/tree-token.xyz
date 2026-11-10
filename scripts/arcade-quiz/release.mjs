@@ -28,6 +28,7 @@ let state;
 if(mode==='candidate'){
  await noBuilds();const site=await api('sites/'+siteId),baseline=await api('deploys/'+site.published_deploy.id);assert(baseline.locked);assert.equal(baseline.function_schedules.length,5);
  const files=await inventory(baseline.id),originalFiles={...files},changes={};
+ assert.equal(files['/scripts/arcade-quest-campaigns.js'],'310a8dda1cdda18f6eaddb9d12e0c8e0b4f092df','Published campaign module changed; inspect drift before updating');
  if(target==='preview'){
   changes['/scripts/arcade-quest-campaigns-quiz-preview.js']=fs.readFileSync(root+'/scripts/arcade-refresh/arcade-quest-campaigns.js');
   const core=await fetch('https://tree-token.xyz/scripts/arcade-daily-growth.js');assert(core.ok);const code=await core.text();assert(code.includes("from './arcade-quest-campaigns.js'"));changes['/scripts/arcade-daily-growth-quiz-preview.js']=Buffer.from(code.replace("from './arcade-quest-campaigns.js'","from './arcade-quest-campaigns-quiz-preview.js'"));
