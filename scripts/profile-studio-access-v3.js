@@ -40,7 +40,7 @@ export function createStudioAccess({view=window,fetchImpl=fetch,loadBridge=()=>i
  }catch{if(ticket===serial)invalidate('Wallet connection is unavailable. Refresh and connect your wallet here.');}})().finally(()=>{inflight=null;});return inflight;}
 
  async function signIn(){
-  if(signing)return;await inflight;await getBridge();const w=current(),wallet=addr(w?.address);if(!w?.connected||!wallet)throw Error('Connect your wallet here first.');
+  if(signing)return;await inflight;await getBridge();if(signing)return;const w=current(),wallet=addr(w?.address);if(!w?.connected||!wallet)throw Error('Connect your wallet here first.');
   const existing=session();if(existing?.wallet===wallet&&state.signedIn&&state.expiresAt>now())return;
   signing=true;const ticket=serial;onChange({...state,busy:'signing-in',message:'Approve the sign-in message in your wallet. No gas fee or transaction.'});
   const unchanged=()=>{if(ticket!==serial||!current()?.connected||addr(current()?.address)!==wallet)throw Error('Wallet changed during sign-in. Please try again.');};
