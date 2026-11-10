@@ -1,3 +1,31 @@
+# Current production — visible Arcade sections, 2026-11-10
+
+Locked deployment `6af35ef0c1679f00c601ca0e` publishes the visible section menu
+and upcoming 25 SUI Tree Force challenge on `/play/`. Source commit is
+`75147f406d96d0623514e6b091f9047765d44267`, PR #120. The active page source is
+`production/arcade-navigation-static/index.html`, with presentation assets
+`scripts/arcade-navigation-v1.js` and `styles/arcade-navigation-v1.css`.
+
+Fresh promotion baseline `6af35dfcb412ba20353c478c` contains 396 static paths,
+47 backend functions and five schedules. Only `/play/index.html` changes;
+all 395 other paths and exact function/package/runtime/provider records,
+schedules, build settings and protected environment fingerprints are preserved.
+See `docs/arcade-navigation-release-20261110.json` for the full current inventory.
+The earlier review added `/play/navigation-preview/` and the two new assets
+without changing any existing paths.
+
+Games is the default. Daily, Campaigns, Community, Events, This Month and
+Badge Collection are available without opening an outer disclosure. Full
+calendar/monthly progress is under This Month. Original wallet, payment,
+quest and game JavaScript stays unchanged. Event entries remain closed and
+dates unset. Functional, keyboard/history and 340-CSS-pixel narrow-layout
+checks are recorded in `docs/arcade-navigation-validation-20261110.json`.
+
+Before every future release capture a fresh complete live inventory. The
+historical root snapshot build must not replace current production.
+
+---
+
 # Current production — homepage ecosystem refresh, 2026-11-07
 
 Deployment `6aef8152b93ffa0224e1f0cd` refreshes the homepage with live TREE Force ’89,
