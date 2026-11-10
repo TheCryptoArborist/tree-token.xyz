@@ -1,3 +1,32 @@
+# Current production — visible NFTree picker and Trials artwork, 2026-11-10
+
+Locked release `6af385eb6da682188cf300e3`, source
+`0b6bdb854dce8e993945660223f78934de799781`, PR #126.
+Active Studio source: `production/profile-discovery-static/index.html`,
+`scripts/tree-profile-studio-v5.js`, `styles/tree-profile-studio-v5.css`.
+The existing `scripts/profile-studio-access-v2.js` is unchanged.
+
+Your NFTrees is now a static, highlighted selector before all other artwork,
+initialized before wallet discovery finishes, with connect/refresh controls and
+a prominent shortcut beside wallet status. This supersedes the earlier selector
+that appeared below every seasonal badge. Arborist Trials alone moves up 72px
+within the 1024px composition to clear the border. All other artwork placements
+and actual NFTree ownership/monthly badge requirements remain unchanged.
+
+Desktop preview verified shortcut navigation, signed-out picker, and clear Trials
+logo separation. Mobile 340 CSSpx: document337px and picker267px, no overflow.
+Existing ten focused checks passed; required production-snapshot passed. No live
+wallet connection, signature or payment. Full preservation records and final live
+visual validation: `docs/profile-studio-discovery-release-20261110.json` and
+`docs/profile-studio-discovery-validation-20261110.json`.
+
+Fresh promotion baseline `6af3858856d2b81eba715c06` had448 static paths; only main
+Studio HTML changes,447 paths preserved. All47 complete backend records and five
+schedules, provider/runtime/build configuration and environment hashes remain
+exact. Continue using fresh baselines; utility `scripts/profile-discovery/release.mjs`.
+
+---
+
 # Current production — owned NFTrees in Profile Studio, 2026-11-10
 
 Locked deploy `6af3843998541eb5599dee67`, source

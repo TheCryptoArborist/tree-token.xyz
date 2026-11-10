@@ -1,0 +1,11 @@
+{
+  "deploy": "6af385eb6da682188cf300e3",
+  "sourceCommit": "0b6bdb854dce8e993945660223f78934de799781",
+  "desktopLive": "Verified shortcut scrolls to highlighted NFTree selector before ecosystem/partner/seasonal art; local connect/refresh controls present; selected Arborist Trials logo clearly above gold border.",
+  "narrowPreview": "340px viewport,337px document,267px picker; shortcut lands below fixed header.",
+  "regressionTests": 10,
+  "allPassed": true,
+  "ownershipAndSessionSourceUnchanged": true,
+  "realWalletTested": false,
+  "screenshot": "/workspace/shared/profile-studio-picker-trials-live.png"
+}
