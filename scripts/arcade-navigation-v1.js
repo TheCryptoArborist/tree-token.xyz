@@ -22,6 +22,7 @@ export function mountArcadeNavigation(doc = document, view = window) {
     if (!details.open) details.open = true;
     return key;
   }
+  let routingFromHash = false;
   function route(tab, historyMode) {
     for (const item of tabs) {
       const active = item === tab;
@@ -36,7 +37,7 @@ export function mountArcadeNavigation(doc = document, view = window) {
   // Capture presentation changes; let existing tab click handlers run normally.
   nav.addEventListener('click', event => {
     const tab = event.target.closest('[role="tab"]');
-    if (keyFor.has(tab)) route(tab, 'push');
+    if (keyFor.has(tab)) route(tab, routingFromHash ? null : 'push');
   }, true);
   nav.addEventListener('keydown', event => {
     if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
@@ -68,21 +69,27 @@ export function mountArcadeNavigation(doc = document, view = window) {
   new view.MutationObserver(() => {
     const active = tabs.find(tab => tab.getAttribute('aria-selected') === 'true');
     if (active) {
+      const changed = root.dataset.arcadeView !== keyFor.get(active);
       const key = render(active);
-      if (view.location.hash !== '#' + key) view.history.replaceState(null, '', '#' + key);
+      if (changed && view.location.hash !== '#' + key) view.history.replaceState(null, '', '#' + key);
     }
   }).observe(nav, { subtree: true, attributes: true, attributeFilter: ['aria-selected'] });
   function fromHash() {
     const key = view.location.hash.slice(1).toLowerCase();
-    const tab = tabFor.get(key === 'cabinets' ? 'games' : key);
+    const tab = tabFor.get(!key || key === 'cabinets' ? 'games' : key);
     if (!tab) return;
-    if (tab.getAttribute('aria-selected') !== 'true') tab.click();
-    else render(tab);
+    const changed = tab.getAttribute('aria-selected') !== 'true';
+    // History restoration must not push or rewrite the entry being restored.
+    routingFromHash = true;
+    try {
+      if (changed) tab.click();
+      else render(tab);
+    } finally { routingFromHash = false; }
     if (key === 'cabinets') {
       const games = doc.getElementById('cabinets');
       games.focus({ preventScroll: true });
       games.scrollIntoView({ block: 'start' });
-    } else tab.focus({ preventScroll: true });
+    } else if (changed) tab.focus({ preventScroll: true });
   }
   view.addEventListener('hashchange', fromHash);
   view.addEventListener('popstate', fromHash);

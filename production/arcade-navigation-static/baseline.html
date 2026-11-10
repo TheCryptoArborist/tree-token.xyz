@@ -34,8 +34,9 @@
     @media (max-width:900px) { .arcade-suite .suite-hero.suite-hero--compact {grid-template-columns:minmax(0,280px) minmax(0,380px); gap:22px;} }
     @media (max-width:600px) { .arcade-suite .suite-hero.suite-hero--compact {grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:12px; padding:14px 0;} .arcade-suite .suite-hero--compact .suite-hero-art {grid-column:auto; grid-row:auto;} .arcade-suite .suite-hero--compact .suite-hero-copy {display:block;} }
   </style>
+  <link rel="stylesheet" href="/styles/arcade-navigation-v1.css">
 </head>
-<body class="arcade-suite">
+<body class="arcade-suite arcade-navigation-page">
   <a class="skip-link" href="#cabinets">Skip to the games</a>
   <header class="suite-header">
     <div class="suite-header-inner">
@@ -103,7 +104,17 @@
       <p class="mint-fallback">Need another way to mint? <a href="https://nftree.net/mint#mint" target="_blank" rel="noopener noreferrer">Open the official NFTree mint page <span aria-hidden="true">↗</span></a>.</p>
     </section>
 
-    <section id="arcade-daily-growth" class="growth-panel growth-panel--compact" aria-labelledby="growth-title" data-growth-state="loading">
+    <section id="arcade-daily-growth" class="growth-panel growth-panel--compact" aria-labelledby="growth-title" data-growth-state="loading" data-arcade-view="games">
+          <div class="growth-tabs arcade-subnav" id="arcade-subnav" role="tablist" aria-label="Tree Arcade sections">
+            <button id="growth-games-tab" type="button" role="tab" aria-controls="cabinets" aria-selected="true" tabindex="0">Games</button>
+            <button id="growth-today-tab" type="button" role="tab" aria-controls="growth-today-panel" aria-selected="false" tabindex="-1">Daily</button>
+            <button id="growth-campaigns-tab" type="button" role="tab" aria-controls="growth-campaigns-panel" aria-selected="false" tabindex="-1">Campaigns</button>
+            <button id="growth-community-tab" type="button" role="tab" aria-controls="growth-community-panel" aria-selected="false" tabindex="-1">Community</button>
+            <button id="growth-events-tab" type="button" role="tab" aria-controls="growth-events-panel" aria-selected="false" tabindex="-1">Events <span class="arcade-event-tag">25 SUI</span></button>
+            <button id="growth-month-tab" type="button" role="tab" aria-controls="growth-month-panel" aria-selected="false" tabindex="-1">This Month</button>
+            <button id="growth-badges-tab" type="button" role="tab" aria-controls="growth-badges-panel" aria-selected="false" tabindex="-1">Badge Collection</button>
+          </div>
+
       <div class="growth-strip">
         <button class="growth-badge-preview" id="growth-badge-preview" type="button" aria-label="Explore Daily Growth tasks and badges" aria-controls="growth-details" aria-expanded="false"><img class="growth-strip-art" src="/assets/arcade-growth/tree-spark.webp" alt="" width="56" height="60" decoding="async"></button>
         <div class="growth-strip-copy">
@@ -139,20 +150,12 @@
         </div>
         <p class="monthly-status" id="monthly-status" role="status" aria-live="polite">Sign in above to see attendance and verified quest-day progress.</p>
       </section>
-      <details id="growth-details" class="growth-details">
+      <details id="growth-details" class="growth-details" open>
         <summary class="growth-details-toggle"><span class="growth-next-teaser"><span id="growth-teaser-kind">Next unlock</span> <strong id="growth-teaser-badge">TREE Spark</strong> <span id="growth-details-hint">3 check-ins to earn</span></span><span class="growth-details-label--closed" id="growth-details-label">View missions</span><span class="growth-details-label--open">Hide missions</span></summary>
         <div class="growth-details-body">
-          <div class="growth-tabs" role="tablist" aria-label="Arcade Missions">
-            <button id="growth-today-tab" type="button" role="tab" aria-controls="growth-today-panel" aria-selected="true" tabindex="0">Daily</button>
-            <button id="growth-campaigns-tab" type="button" role="tab" aria-controls="growth-campaigns-panel" aria-selected="false" tabindex="-1">Campaigns</button>
-            <button id="growth-community-tab" type="button" role="tab" aria-controls="growth-community-panel" aria-selected="false" tabindex="-1">Community</button>
-            <button id="growth-events-tab" type="button" role="tab" aria-controls="growth-events-panel" aria-selected="false" tabindex="-1">Events</button>
-            <button id="growth-month-tab" type="button" role="tab" aria-controls="growth-month-panel" aria-selected="false" tabindex="-1">This month</button>
-            <button id="growth-badges-tab" type="button" role="tab" aria-controls="growth-badges-panel" aria-selected="false" tabindex="-1">Badge collection</button>
-          </div>
           <div class="growth-detail-grid">
             <div class="growth-main">
-              <div id="growth-today-panel" class="growth-tab-panel" role="tabpanel" aria-labelledby="growth-today-tab" tabindex="0">
+              <div id="growth-today-panel" class="growth-tab-panel" role="tabpanel" aria-labelledby="growth-today-tab" tabindex="0" hidden>
                 <div class="growth-section-title"><h3>Today’s tasks</h3><span id="growth-meta">Daily reset: 00:00 UTC</span></div>
                 <section class="growth-task" id="growth-check-in-task" aria-labelledby="growth-check-in-title">
                   <img class="growth-task-art" src="/assets/arcade/garden-bot-poster.webp" alt="" width="40" height="44" loading="lazy">
@@ -239,7 +242,31 @@
                 </div>
                 <p class="quest-fine-print">Community stamps are profile achievements. No token payout or purchase. Your attendance and Passport rules stay the same.</p>
               </div>
-              <div id="growth-events-panel" class="growth-tab-panel" role="tabpanel" aria-labelledby="growth-events-tab" tabindex="0" hidden><p class="growth-eyebrow">THE TREE SESSIONS</p><h3>Your next community game night starts here.</h3><p>No event is scheduled yet. Future game nights, weekend challenges, and creative contests will appear here with their dates, rules, and rewards.</p><a class="growth-secondary" href="#cabinets">Explore the games ↓</a></div>
+              <div id="growth-events-panel" class="growth-tab-panel" role="tabpanel" aria-labelledby="growth-events-tab" tabindex="0" hidden>
+                <article class="force-event" aria-labelledby="force-event-title">
+                  <img class="force-event-art" src="/assets/arcade/tree-force-89-poster.webp" alt="TREE Force ’89: Canopy Command" width="512" height="512" loading="lazy">
+                  <div class="force-event-copy">
+                    <p class="growth-eyebrow">WEEKEND SCORE ATTACK · COMING SOON</p>
+                    <h3 id="force-event-title">TREE Force ’89: Defend the Canopy</h3>
+                    <p class="force-event-prize">25 SUI <span>to one verified winner</span></p>
+                    <p><strong>Three lives. One champion. 25 SUI.</strong></p>
+                    <p>Set your best score, defend the canopy, and compete for the top spot.</p>
+                    <p class="growth-small">Tournament entry is not open. Dates and entry instructions will appear here before the challenge begins. Practice scores do not count.</p>
+                    <details class="force-event-rules"><summary>Challenge rules</summary>
+                      <ul>
+                        <li>Three lives per attempt. Runs using a paid continue do not qualify.</li>
+                        <li>Unlimited attempts; each wallet’s highest eligible score counts.</li>
+                        <li>Existing game access requirements apply. No additional tournament entry fee.</li>
+                        <li>Only event runs started and completed within the published event window qualify.</li>
+                        <li>Tied scores are ranked by the earliest verified achievement of that score.</li>
+                        <li>The highest eligible score wins 25 SUI after review. Modified clients, fabricated scores, and exploits are disqualified.</li>
+                        <li>The winner receives the prize at the wallet used for their qualifying run.</li>
+                      </ul>
+                    </details>
+                    <a class="growth-secondary" href="/play/treeforce89/">Practice Tree Force ’89 →</a>
+                  </div>
+                </article>
+              </div>
               <div id="growth-month-panel" class="growth-tab-panel" role="tabpanel" aria-labelledby="growth-month-tab" tabindex="0" hidden>
                 <p class="growth-empty" id="growth-month-empty">Sign in to see your real monthly calendar.</p>
                 <div id="growth-month-content" hidden>
@@ -286,7 +313,13 @@
       <noscript><p class="growth-empty">Turn on JavaScript to connect your wallet and load Daily Growth. The game links below still work.</p></noscript>
     </section>
 
-    <section id="cabinets" class="arcade-floor" aria-labelledby="floor-title" tabindex="-1">
+    <article id="arcade-featured-event" class="arcade-featured-event" aria-labelledby="arcade-featured-title">
+      <img src="/assets/arcade/tree-force-89-poster.webp" alt="TREE Force ’89: Canopy Command" width="512" height="512" loading="eager">
+      <div><p class="suite-eyebrow">UPCOMING EVENT · COMING SOON</p><h2 id="arcade-featured-title">Tree Force ’89: Defend the Canopy</h2><p class="arcade-featured-prize">25 SUI <span>winner’s prize</span></p><p>Three lives. One champion. Set your best score.</p><p class="arcade-featured-note">Dates to be announced · Tournament entries are not open.</p></div>
+      <a class="growth-primary arcade-event-cta" href="#events">View Challenge <span aria-hidden="true">→</span></a>
+    </article>
+
+    <section id="cabinets" class="arcade-floor" role="tabpanel" aria-labelledby="growth-games-tab" tabindex="0">
       <div class="floor-heading">
         <div><p class="suite-eyebrow">THE GAME LINEUP</p><h2 id="floor-title">Choose your game.</h2></div>
       </div>
@@ -499,5 +532,5 @@
   <footer class="suite-footer"><strong>THICKQUIDITY · TREE ARCADE</strong><p>Rooted in the TREE ecosystem. Built for the next round.</p><a href="/">Back to TREE home <span aria-hidden="true">→</span></a></footer>
   <script type="module" src="/scripts/arcade-nftree-access.js"></script>
   <script type="module" src="/scripts/arcade-daily-growth.js"></script>
-<script id="tree-arcade-arboretum-link">(()=>{if(!/^\/play(?:\/|\/index\.html)?$/.test(location.pathname))return;const old=document.querySelector(".arboretum-card .game-action");if(!old||old.tagName==="A")return;const link=document.createElement("a");link.className="game-action play-action";link.href="https://treegrow.xyz/";link.target="_blank";link.rel="noopener noreferrer";link.append("OPEN ARBORETUM ");const arrow=document.createElement("span");arrow.setAttribute("aria-hidden","true");arrow.textContent="→";link.append(arrow);old.replaceWith(link);})();</script><script type="module" src="/scripts/arcade-monthly.js"></script><script id="tree-arcade-arboretum-link">(()=>{if(!/^\/play(?:\/|\/index\.html)?$/.test(location.pathname))return;const old=document.querySelector(".arboretum-card .game-action");if(!old||old.tagName==="A")return;const link=document.createElement("a");link.className="game-action play-action";link.href="https://treegrow.xyz/";link.target="_blank";link.rel="noopener noreferrer";link.append("OPEN ARBORETUM ");const arrow=document.createElement("span");arrow.setAttribute("aria-hidden","true");arrow.textContent="→";link.append(arrow);old.replaceWith(link);})();</script><script id="tree-arcade-arboretum-link">(()=>{if(!/^\/play(?:\/|\/index\.html)?$/.test(location.pathname))return;const old=document.querySelector(".arboretum-card .game-action");if(!old||old.tagName==="A")return;const link=document.createElement("a");link.className="game-action play-action";link.href="https://treegrow.xyz/";link.target="_blank";link.rel="noopener noreferrer";link.append("OPEN ARBORETUM ");const arrow=document.createElement("span");arrow.setAttribute("aria-hidden","true");arrow.textContent="→";link.append(arrow);old.replaceWith(link);})();</script><script id="tree-arcade-arboretum-link">(()=>{if(!/^\/play(?:\/|\/index\.html)?$/.test(location.pathname))return;const old=document.querySelector(".arboretum-card .game-action");if(!old||old.tagName==="A")return;const link=document.createElement("a");link.className="game-action play-action";link.href="https://treegrow.xyz/";link.target="_blank";link.rel="noopener noreferrer";link.append("OPEN ARBORETUM ");const arrow=document.createElement("span");arrow.setAttribute("aria-hidden","true");arrow.textContent="→";link.append(arrow);old.replaceWith(link);})();</script><script id="tree-arcade-arboretum-link">(()=>{if(!/^\/play(?:\/|\/index\.html)?$/.test(location.pathname))return;const old=document.querySelector(".arboretum-card .game-action");if(!old||old.tagName==="A")return;const link=document.createElement("a");link.className="game-action play-action";link.href="https://treegrow.xyz/";link.target="_blank";link.rel="noopener noreferrer";link.append("OPEN ARBORETUM ");const arrow=document.createElement("span");arrow.setAttribute("aria-hidden","true");arrow.textContent="→";link.append(arrow);old.replaceWith(link);})();</script><script id="tree-arcade-arboretum-link">(()=>{if(!/^\/play(?:\/|\/index\.html)?$/.test(location.pathname))return;const old=document.querySelector(".arboretum-card .game-action");if(!old||old.tagName==="A")return;const link=document.createElement("a");link.className="game-action play-action";link.href="https://treegrow.xyz/";link.target="_blank";link.rel="noopener noreferrer";link.append("OPEN ARBORETUM ");const arrow=document.createElement("span");arrow.setAttribute("aria-hidden","true");arrow.textContent="→";link.append(arrow);old.replaceWith(link);})();</script></body>
+<script id="tree-arcade-arboretum-link">(()=>{if(!/^\/play(?:\/|\/index\.html)?$/.test(location.pathname))return;const old=document.querySelector(".arboretum-card .game-action");if(!old||old.tagName==="A")return;const link=document.createElement("a");link.className="game-action play-action";link.href="https://treegrow.xyz/";link.target="_blank";link.rel="noopener noreferrer";link.append("OPEN ARBORETUM ");const arrow=document.createElement("span");arrow.setAttribute("aria-hidden","true");arrow.textContent="→";link.append(arrow);old.replaceWith(link);})();</script><script type="module" src="/scripts/arcade-monthly.js"></script><script id="tree-arcade-arboretum-link">(()=>{if(!/^\/play(?:\/|\/index\.html)?$/.test(location.pathname))return;const old=document.querySelector(".arboretum-card .game-action");if(!old||old.tagName==="A")return;const link=document.createElement("a");link.className="game-action play-action";link.href="https://treegrow.xyz/";link.target="_blank";link.rel="noopener noreferrer";link.append("OPEN ARBORETUM ");const arrow=document.createElement("span");arrow.setAttribute("aria-hidden","true");arrow.textContent="→";link.append(arrow);old.replaceWith(link);})();</script><script id="tree-arcade-arboretum-link">(()=>{if(!/^\/play(?:\/|\/index\.html)?$/.test(location.pathname))return;const old=document.querySelector(".arboretum-card .game-action");if(!old||old.tagName==="A")return;const link=document.createElement("a");link.className="game-action play-action";link.href="https://treegrow.xyz/";link.target="_blank";link.rel="noopener noreferrer";link.append("OPEN ARBORETUM ");const arrow=document.createElement("span");arrow.setAttribute("aria-hidden","true");arrow.textContent="→";link.append(arrow);old.replaceWith(link);})();</script><script id="tree-arcade-arboretum-link">(()=>{if(!/^\/play(?:\/|\/index\.html)?$/.test(location.pathname))return;const old=document.querySelector(".arboretum-card .game-action");if(!old||old.tagName==="A")return;const link=document.createElement("a");link.className="game-action play-action";link.href="https://treegrow.xyz/";link.target="_blank";link.rel="noopener noreferrer";link.append("OPEN ARBORETUM ");const arrow=document.createElement("span");arrow.setAttribute("aria-hidden","true");arrow.textContent="→";link.append(arrow);old.replaceWith(link);})();</script><script id="tree-arcade-arboretum-link">(()=>{if(!/^\/play(?:\/|\/index\.html)?$/.test(location.pathname))return;const old=document.querySelector(".arboretum-card .game-action");if(!old||old.tagName==="A")return;const link=document.createElement("a");link.className="game-action play-action";link.href="https://treegrow.xyz/";link.target="_blank";link.rel="noopener noreferrer";link.append("OPEN ARBORETUM ");const arrow=document.createElement("span");arrow.setAttribute("aria-hidden","true");arrow.textContent="→";link.append(arrow);old.replaceWith(link);})();</script><script id="tree-arcade-arboretum-link">(()=>{if(!/^\/play(?:\/|\/index\.html)?$/.test(location.pathname))return;const old=document.querySelector(".arboretum-card .game-action");if(!old||old.tagName==="A")return;const link=document.createElement("a");link.className="game-action play-action";link.href="https://treegrow.xyz/";link.target="_blank";link.rel="noopener noreferrer";link.append("OPEN ARBORETUM ");const arrow=document.createElement("span");arrow.setAttribute("aria-hidden","true");arrow.textContent="→";link.append(arrow);old.replaceWith(link);})();</script><script type="module" src="/scripts/arcade-navigation-v1.js"></script><script id="tree-arcade-arboretum-link">(()=>{if(!/^\/play(?:\/|\/index\.html)?$/.test(location.pathname))return;const old=document.querySelector(".arboretum-card .game-action");if(!old||old.tagName==="A")return;const link=document.createElement("a");link.className="game-action play-action";link.href="https://treegrow.xyz/";link.target="_blank";link.rel="noopener noreferrer";link.append("OPEN ARBORETUM ");const arrow=document.createElement("span");arrow.setAttribute("aria-hidden","true");arrow.textContent="→";link.append(arrow);old.replaceWith(link);})();</script></body>
 </html>
