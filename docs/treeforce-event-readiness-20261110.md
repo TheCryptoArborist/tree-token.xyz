@@ -6,7 +6,8 @@
 - Preview card matches the proposed Events tab card exactly. Entry is explicitly closed, dates are unset, and the sole game CTA is practice.
 - Preview has no JavaScript, forms, wallet connection or payment actions.
 - Checked prize/rules copy, exact article parity, poster path, game links, noindex, script syntax, and whitespace. All pass.
-- Inspected the published Arcade Events tab in the browser. It still displays its placeholder. Desktop/mobile visual validation of the new card is NOT complete: local Chromium could not launch in this environment and no preview was published.
+- Published the isolated preview at https://tree-token.xyz/play/events/treeforce89-preview/ and checked its desktop (1363 CSS px) and narrow (340 CSS px) layouts. Artwork loads, rules expand, and links fit without horizontal overflow. The narrow check used browser page zoom; it was not a mobile-device or touch test. Browser zoom was restored.
+- The main Arcade Events tab remains unchanged; tournament entry is not open.
 
 ## Current production and scoring findings
 
@@ -20,23 +21,18 @@ The staged `treeforce89` feature/tree-paid-continue sources provide wallet-bound
 
 ## Publication status
 
-No preview or event was published. The existing live Events page, game, wallets, payments, backend functions and scheduled jobs remain unchanged.
+Published preview-only deployment: `6af3559fba1ce0403584707f`, locked. Source commit: `0ef9fe3f0986c02b25887fd304d7ec1651a74ac4`. Fresh baseline: `6af34e39760c3d568bd12519`.
 
-The preservation check found ten unfinished historical deployments (August–October), in `prepared`, `uploading`, or `new` states. Automatic approval review rejected an attempted removal of the candidate’s active-build check. The check was restored; it remains enforced for candidate creation, verification and publication. No alternate deployment path was used.
+The release adds only `/play/events/treeforce89-preview/index.html`: all 390 existing static paths remain byte-for-byte unchanged (391 total). All 46 complete backend records, five schedules, runtime settings, build settings and normalized protected-environment fingerprints match the captured baseline. No game, wallet, payment or leaderboard behavior changed.
 
-IDs reported by the read-only inventory:
+After explicit user authorization, all ten historical unfinished deployments were canceled. Each was confirmed to belong to this site, predate October 7, and differ from the live release. Live publication remained unchanged throughout cleanup. See `treeforce-event-stale-deploy-cleanup-20261110.json` for the exact IDs and results.
 
-- 6ac52820279f7eb4a8d2457f — prepared
-- 6ac527e17cf112fbffd1d846 — prepared
-- 6ac5279f64ded4fdb3ab3beb — uploading
-- 6ac52772cdbea704934a7104 — uploading
-- 6ac51f782d2f32b1d81cc2ee — uploading
-- 6ac51ee343f065a97870c8c1 — uploading
-- 6aaef0c3bef6988a2854e692 — uploading
-- 6aaa1e51ab04ece07223c51a — uploading
-- 6a88c1e0f4f19fa43716b98e — new
-- 6a862cb81463fc03bfff46fa — new
+The active-build safeguard remained enabled for the successful candidate and publication. One transient deployment caused a later candidate attempt to stop; a fresh complete inventory confirmed no unfinished deployments before retrying. The first unpublished candidate was superseded by the corrected accessibility-label candidate; it was never published.
+
+The earlier automatic-review rejection was resolved through the explicitly authorized cleanup, without bypassing the release guard. No active unfinished deployment was canceled outside the ten approved IDs.
+
+Full preservation and layout results: `treeforce-event-preview-release-20261110.json`.
 
 ## Remaining
 
-Resolve unfinished deployments without bypassing release checks; capture a fresh full baseline; stage and verify the single added preview path, preserving all prior paths, exact function records, runtime settings and schedules. Then perform desktop and mobile visual checks before publication. Tournament dates and scoring integration remain pending. No payout has been initiated.
+Recover and audit the current deployed scoring backend, then implement event-bound authenticated results and server-owned continuation checks. Verify prize eligibility, duplicate submissions, tie timestamps, wallet binding and event boundaries before opening entries. Confirm event dates in America/Chicago. The proposed main Events card stays in draft PR #119; this preview does not accept entries or pay out the prize.
