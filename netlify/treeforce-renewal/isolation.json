@@ -1,0 +1,14 @@
+{
+  "branch": "feature/treeforce89-play-integration",
+  "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
+  "productionDatabaseIdentities": [
+    "5a940f1b6bdcce4a96dff3ffcfeb6a2b5de01b09fcfe2f8f1e351a9a0ef47712",
+    "5db7840e95d93a2a62119d00e7f2774591f307ea086ac00026f9a91777247141"
+  ],
+  "productionSupabaseProject": "lehswszuekjqottolmsf",
+  "previewDatabaseIdentity": "df2f0abee059d9898495a125018fa0a291d50b9050c0d4557231f409bed53065",
+  "isolationVerified": true,
+  "paymentsEnabled": false,
+  "dashboardVerifiedDeploy": "6ae551d85e378ea57f261a7f",
+  "previewPr": 70
+}

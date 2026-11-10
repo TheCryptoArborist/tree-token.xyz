@@ -1,0 +1,63 @@
+{
+  "candidate": "6af359316cee71c48cb0ce4e",
+  "baseline": "6af3559fba1ce0403584707f",
+  "ready": true,
+  "published": true,
+  "productionLocked": true,
+  "existingStaticFilesPreserved": 390,
+  "changedProductionFiles": [
+    "/play/treeforce89/index.html"
+  ],
+  "addedGameFiles": [
+    "/play/treeforce89/assets/arcade-renewal-r3.js",
+    "/play/treeforce89/assets/index-renewal-r3.js"
+  ],
+  "backendFunctionsPreserved": 46,
+  "addedFunctions": 1,
+  "schedulesPreserved": 5,
+  "runtimePreserved": true,
+  "environmentPreserved": true,
+  "deployId": "6af359316cee71c48cb0ce4e",
+  "locked": true,
+  "publishedAt": "2026-11-10T17:51:24.132Z",
+  "testsPassed": 20,
+  "holderWalletEndToEndTested": false,
+  "sourceBranch": "fix/treeforce-active-session-renewal",
+  "newFunction": {
+    "name": "treeforce-session-refresh",
+    "path": ".netlify/treeforce-renewal/treeforce-session-refresh.zip",
+    "sha256": "ec2d81f416e67a33e42ccd59203ae2b33c5f6490667c373ab5385cba6c5ae718",
+    "runtimeVersion": "nodejs22.x",
+    "invocationMode": "stream",
+    "buildData": {
+      "bootstrapVersion": "2.24.0",
+      "runtimeAPIVersion": 2
+    },
+    "routes": [
+      {
+        "pattern": "/play/treeforce89/session-refresh",
+        "literal": "/play/treeforce89/session-refresh",
+        "methods": []
+      }
+    ],
+    "trafficRules": {
+      "action": {
+        "type": "rate_limit",
+        "config": {
+          "rateLimitConfig": {
+            "windowLimit": 20,
+            "windowSize": 60,
+            "algorithm": "sliding_window"
+          },
+          "aggregate": {
+            "keys": [
+              {
+                "type": "ip"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

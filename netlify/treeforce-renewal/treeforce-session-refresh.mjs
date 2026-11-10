@@ -1,0 +1,20 @@
+import {createHash} from 'node:crypto';
+import {getDatabase} from '@netlify/database';
+import {SuiGrpcClient} from '@mysten/sui/grpc';
+import evidence from './isolation.json' with {type:'json'};
+import {checkDirectNFTreeOwnership} from './ownership.mjs';
+import {createRenewalService} from './service.mjs';
+import {createRenewalHandler} from './http.mjs';
+let service;
+export default createRenewalHandler({getService:async()=>{
+ if(service)return service;
+ const connectionString=typeof Netlify!=='undefined'?Netlify.env.get('TREEFORCE89_DEV_DATABASE_URL'):process.env.TREEFORCE89_DEV_DATABASE_URL;
+ if(!connectionString)throw Error('Database binding unavailable');
+ const url=new URL(connectionString);
+ if(!['postgres:','postgresql:'].includes(url.protocol)||!url.hostname.endsWith('.db.netlify.com')||url.pathname!=='/netlifydb')throw Error('Database provider refused');
+ const identity=createHash('sha256').update(url.hostname.replace(/-pooler(?=\.)/,'')+'|'+url.pathname).digest('hex');
+ if(!evidence.isolationVerified||identity!==evidence.previewDatabaseIdentity||evidence.productionDatabaseIdentities.includes(identity))throw Error('Database isolation refused');
+ const client=new SuiGrpcClient({network:'mainnet',baseUrl:'https://fullnode.mainnet.sui.io:443'});
+ service=createRenewalService({pool:getDatabase({connectionString}).pool,ownershipChecker:({wallet})=>checkDirectNFTreeOwnership({client,wallet})});return service;
+}});
+export const config={path:'/play/treeforce89/session-refresh',rateLimit:{action:'rate_limit',aggregateBy:['ip'],windowSize:60,windowLimit:20}};
