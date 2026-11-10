@@ -1,0 +1,23 @@
+{
+  "candidate": "6af34e39760c3d568bd12519",
+  "baseline": "6af30caebef27d13b6da7c6f",
+  "ready": true,
+  "unpublished": true,
+  "productionLocked": true,
+  "existingStaticFilesPreserved": 387,
+  "changedProductionFiles": [
+    "/play/treeforce89/index.html"
+  ],
+  "addedGameFiles": [
+    "/play/treeforce89/assets/arcade-session-r2.js",
+    "/play/treeforce89/assets/index-session-r2.js"
+  ],
+  "backendFunctionsPreserved": 46,
+  "schedulesPreserved": 5,
+  "runtimePreserved": true,
+  "environmentPreserved": true,
+  "deployId": "6af34e39760c3d568bd12519",
+  "locked": true,
+  "publishedAt": "2026-11-10T17:04:17.307Z",
+  "sourceBranch": "fix/treeforce-session-return"
+}

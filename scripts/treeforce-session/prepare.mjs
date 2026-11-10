@@ -1,0 +1,10 @@
+import fs from 'node:fs/promises';
+import {patch,sha} from './patch.mjs';
+const root='release/session-return';await fs.mkdir(root+'/assets',{recursive:true});
+const get=async name=>{const r=await fetch('https://tree-token.xyz/play/treeforce89/'+name);if(!r.ok)throw Error('Cannot read current live '+name);return r.text();};
+const [entry,game,html]=await Promise.all([get('assets/index-mobile-r1.js'),get('assets/arcade-mobile-r1.js'),get('')]);
+const result=patch(entry,game);
+const relink=s=>s.replaceAll('index-mobile-r1.js','index-session-r2.js').replaceAll('arcade-mobile-r1.js','arcade-session-r2.js');
+await Promise.all([fs.writeFile(root+'/assets/index-session-r2.js',relink(result.entry)),fs.writeFile(root+'/assets/arcade-session-r2.js',relink(result.game)),fs.writeFile(root+'/index.html',relink(html))]);
+await fs.writeFile(root+'/report.json',JSON.stringify({source:{entry:sha(entry),game:sha(game)},output:{entry:sha(relink(result.entry)),game:sha(relink(result.game))},scope:'Mounted run and back-forward cache only; hard reload recovery requires separate server-backed design',newBackendFunctions:0},null,2));
+console.log('Prepared session-return candidate; no deployment performed.');
