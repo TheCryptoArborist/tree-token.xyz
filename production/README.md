@@ -1,3 +1,44 @@
+# Current production — owned NFTrees in Profile Studio, 2026-11-10
+
+Locked deploy `6af3843998541eb5599dee67`, source
+`89f5b30e64a4c5a40cf62f93dadd7559b2c93fa4`, PR #125.
+Active Studio source is now `production/profile-feedback-static/index.html`,
+`scripts/tree-profile-studio-v4.js`, `scripts/profile-studio-access-v2.js`,
+`styles/tree-profile-studio-v4.css`. Header and all three navigation entries from
+PR #124 remain unchanged. All 47 backend function records and five schedules,
+runtime/provider/build settings and protected environment hashes preserved.
+
+Sui emblem and Tree Hero are in TREE Ecosystem. Free artwork no longer repeats
+category labels. Locked monthly artwork remains fully visible with an explicit
+lock explanation. Wallet identity, Connect/change wallet, Refresh collections and
+Arcade sign-in controls are now above the editor. Shared Arcade session parsing
+accepts its existing opaque token format and supports legacy sessionStorage;
+server authentication and existing one-hour expiry still control earned badges.
+
+The earlier six synthetic rarity-holder emblems are superseded by Your NFTrees:
+actual canonical NFT artwork, name and rarity from the connected wallet's direct
+and supported Kiosk holdings. Public ownership requires wallet connection; monthly
+awards additionally require the authenticated Arcade session. Ownership refreshes
+before every NFT export. Account change, transfer or verification failure revokes
+access. Same-wallet focus refresh preserves the selected artwork. Remote images
+load anonymously with CORS to preserve canvas export; the sample Pinata gateway
+returned Access-Control-Allow-Origin: *.
+
+Validation: focused direct/Kiosk metadata and artwork, opaque session restoration,
+monthly authorization, transfer/outage revocation, in-flight account change and
+same-wallet focus regression checks. Desktop browser verified the visible wallet
+panel, clean categories, eight locked monthly choices, no synthetic holder buttons
+and the signed-out Your NFTrees explanation. A 340 CSS-pixel layout check passed.
+No real-wallet connection/signature/payment was performed; authenticated behavior
+uses controlled tests. Release records and limits are in
+`docs/profile-owned-nftrees-release-20261110.json` and
+`docs/profile-owned-nftrees-validation-20261110.json`.
+
+Use a fresh current published baseline for every future release. Never publish
+the historical root snapshot. Utility: `scripts/profile-feedback/release.mjs`.
+
+---
+
 # Current production — Profile Studio access and navigation, 2026-11-10
 
 Locked deploy `6af3818fdc888d00cdad3d5f`, source
