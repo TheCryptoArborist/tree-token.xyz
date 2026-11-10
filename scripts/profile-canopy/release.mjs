@@ -30,7 +30,7 @@ if(mode==='candidate'){
  const files=await inventory(baseline.id),originalFiles={...files},changes={};
  const page=target==='preview'?'/play/profile-studio/canopy-preview/index.html':'/play/profile-studio/index.html';
  changes[page]=fs.readFileSync(root+'/production/profile-canopy-static/index.html');
- for(const p of ['/scripts/tree-profile-studio-v10.js','/scripts/profile-studio-access-v4.js','/scripts/profile-canopy-art.js','/assets/profile-studio/canopy-oak-warriors.png','/scripts/profile-partner-medallion.js','/assets/profile-studio/suidex-official.png','/assets/profile-studio/kelpie-official.png','/styles/tree-profile-studio-v8.css'])changes[p]=fs.readFileSync(root+p);
+ for(const p of ['/scripts/tree-profile-studio-v10.js','/scripts/profile-studio-access-v4.js','/scripts/profile-canopy-art.js','/assets/profile-studio/canopy-oak-warriors.png','/scripts/profile-partner-medallion.js','/assets/profile-studio/suidex-official.png','/assets/profile-studio/kelpie-official.png','/styles/tree-profile-studio-v9.css'])changes[p]=fs.readFileSync(root+p);
  for(const [p,bytes]of Object.entries(changes))files[p]=sha(bytes);
  assert.deepEqual(Object.keys(originalFiles).filter(p=>files[p]!==originalFiles[p]&&!Object.hasOwn(changes,p)),[],'Unapproved existing static path changed');
  assert(/^[a-f0-9]{40}$/.test(process.env.SOURCE_COMMIT||''),'A recorded source commit is required');
