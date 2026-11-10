@@ -1,3 +1,24 @@
+# Current production — isolated Tree Force event preview, 2026-11-10
+
+Locked deployment `6af3559fba1ce0403584707f` adds only
+`/play/events/treeforce89-preview/index.html`. It previews the proposed 25 SUI
+Tree Force ’89 event; entries are closed and dates are unset. Main Arcade and
+game behavior remain unchanged.
+
+Fresh baseline `6af34e39760c3d568bd12519` contained 390 static paths, 46 backend
+functions and five schedules. All prior paths and exact function records,
+runtime/build settings and protected environment fingerprints are preserved;
+there are now 391 static paths. Source commit is
+`0ef9fe3f0986c02b25887fd304d7ec1651a74ac4` in draft PR #119. See
+`docs/treeforce-event-preview-release-20261110.json` and
+`docs/treeforce-event-readiness-20261110.md`.
+
+Desktop and 340-CSS-pixel narrow-layout checks passed. This is not a tournament
+launch or a mobile gameplay test. Capture a fresh complete live inventory
+before future releases; do not deploy the historical root snapshot.
+
+---
+
 # Current production — homepage ecosystem refresh, 2026-11-07
 
 Deployment `6aef8152b93ffa0224e1f0cd` refreshes the homepage with live TREE Force ’89,

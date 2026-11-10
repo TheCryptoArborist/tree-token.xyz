@@ -82,3 +82,15 @@
  .growth-panel .monthly-actions summary{font-size:.63rem}
 }
 @media(max-width:380px){.growth-panel .growth-days{grid-template-columns:repeat(10,minmax(0,1fr))}.growth-panel .monthly-actions>details{flex-basis:100%}}
+
+/* First Tree Force event: announcement only until verified entry opens. */
+.force-event{display:grid;grid-template-columns:minmax(130px,210px) minmax(0,1fr);gap:24px;align-items:start}
+.force-event-art{display:block;width:100%;height:auto;border-radius:14px}
+.force-event-copy{min-width:0}
+.force-event-prize{color:#f6d574;font-size:clamp(1.8rem,5vw,2.8rem);font-weight:900;line-height:1.15;margin:14px 0}
+.force-event-prize span{display:block;font-size:.85rem;line-height:1.5}
+.force-event-rules{margin:18px 0}
+.force-event-rules summary{cursor:pointer;font-weight:700;padding:8px 0}
+.force-event-rules ul{padding-left:20px;line-height:1.6}
+.force-event-rules li+li{margin-top:7px}
+@media(max-width:640px){.force-event{grid-template-columns:1fr;gap:16px}.force-event-art{max-width:240px;margin-inline:auto}}

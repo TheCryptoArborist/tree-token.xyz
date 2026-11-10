@@ -1,0 +1,56 @@
+{
+  "baseline": "6af34e39760c3d568bd12519",
+  "liveUnchanged": true,
+  "results": [
+    {
+      "id": "6ac52820279f7eb4a8d2457f",
+      "previous": "prepared",
+      "state": "error"
+    },
+    {
+      "id": "6ac527e17cf112fbffd1d846",
+      "previous": "prepared",
+      "state": "error"
+    },
+    {
+      "id": "6ac5279f64ded4fdb3ab3beb",
+      "previous": "uploading",
+      "state": "error"
+    },
+    {
+      "id": "6ac52772cdbea704934a7104",
+      "previous": "uploading",
+      "state": "error"
+    },
+    {
+      "id": "6ac51f782d2f32b1d81cc2ee",
+      "previous": "uploading",
+      "state": "error"
+    },
+    {
+      "id": "6ac51ee343f065a97870c8c1",
+      "previous": "uploading",
+      "state": "error"
+    },
+    {
+      "id": "6aaef0c3bef6988a2854e692",
+      "previous": "uploading",
+      "state": "error"
+    },
+    {
+      "id": "6aaa1e51ab04ece07223c51a",
+      "previous": "uploading",
+      "state": "error"
+    },
+    {
+      "id": "6a88c1e0f4f19fa43716b98e",
+      "previous": "new",
+      "state": "error"
+    },
+    {
+      "id": "6a862cb81463fc03bfff46fa",
+      "previous": "new",
+      "state": "error"
+    }
+  ]
+}
