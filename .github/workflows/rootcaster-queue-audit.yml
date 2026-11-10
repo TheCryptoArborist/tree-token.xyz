@@ -1,0 +1,51 @@
+name: TreeRootCaster deploy-state forensic audit
+on:
+  push:
+    branches:
+      - diagnostic/rootcaster-deploy-guard-20261110
+    paths:
+      - .github/workflows/rootcaster-queue-audit.yml
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Read Netlify history without deployment changes
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: |
+          node --input-type=module <<'JS'
+          const token = process.env.NETLIFY_AUTH_TOKEN;
+          if (!token) throw Error('NETLIFY_AUTH_TOKEN is unavailable');
+          const site = 'aa62f324-b880-47d6-85b8-4ba0700ff5bf';
+          const terminal = new Set(['ready', 'error', 'rejected', 'canceled']);
+          let total = 0;
+          const blockers = [];
+          const today = [];
+          for (let page = 1; page <= 100; page++) {
+            const url = 'https://api.netlify.com/api/v1/sites/' + site +
+              '/deploys?per_page=100&page=' + page;
+            const response = await fetch(url, {
+              headers: { Authorization: 'Bearer ' + token, Accept: 'application/json' },
+              signal: AbortSignal.timeout(30000)
+            });
+            if (!response.ok) throw Error('Netlify deploy history HTTP ' + response.status);
+            const batch = await response.json();
+            if (!Array.isArray(batch)) throw Error('Non-array Netlify deploy history');
+            total += batch.length;
+            for (const d of batch) {
+              const row = { id: d.id, state: d.state, created_at: d.created_at,
+                title: d.title, branch: d.branch, context: d.context,
+                commit_ref: d.commit_ref || null, build_id: d.build_id || null,
+                published_at: d.published_at || null };
+              if (!terminal.has(d.state) && d.id !== '6af2a0496ec8d964b5fac75f') blockers.push(row);
+              if ((d.created_at || '').startsWith('2026-11-10')) today.push(row);
+            }
+            if (batch.length < 100) break;
+          }
+          console.log('HISTORY_DEPLOYS_SCANNED', total);
+          console.log('HISTORICAL_GUARD_MATCHES', JSON.stringify(blockers));
+          console.log('NOV10_DEPLOYMENTS', JSON.stringify(today.slice(0, 35)));
+          JS
