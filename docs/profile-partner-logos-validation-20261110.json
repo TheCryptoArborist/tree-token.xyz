@@ -1,0 +1,32 @@
+{
+  "deploy": "6af39210476c85cf56dbd130",
+  "sourceCommit": "d866f59aa3cc8f85d1db4272cbe04c9fa7756633",
+  "existingRegressionTests": 17,
+  "allPassed": true,
+  "desktopLive": "Official SuiDex and Kelpie choices present in Partners; SuiDex selected as padded bottom medallion; complete marks visible.",
+  "mobilePreview": "340 CSSpx viewport337px document; partner choices readable, no horizontal overflow.",
+  "exports": {
+    "SuiDex": {
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "centerAlpha": 0,
+      "cornerAlpha": 0,
+      "badgeCenterAlpha": 255
+    },
+    "Kelpie": {
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "centerAlpha": 0,
+      "cornerAlpha": 0,
+      "badgeCenterAlpha": 255
+    }
+  },
+  "limits": "No actual wallet connection/signing/payment or user photo upload performed. Ownership/session source unchanged.",
+  "screenshot": "/workspace/shared/profile-official-partners-live.png"
+}
