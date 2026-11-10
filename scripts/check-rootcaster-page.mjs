@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-import crypto from 'node:crypto';
+import {assertServedContent} from './rootcaster-served-content.mjs';
 import assert from 'node:assert/strict';
 import {pathToFileURL} from 'node:url';
 const state=JSON.parse(fs.readFileSync('.netlify/rootcaster-candidate.json'));
@@ -8,8 +8,7 @@ const base=`https://${state.id}--tree-token.netlify.app/rootcaster/`;
 for(const name of ['index.html','rootcaster.css','whisperleaf-watch.webp']) {
   const response=await fetch(base+name,{redirect:'error',signal:AbortSignal.timeout(30000)});
   assert(response.ok,'Candidate static file failed');
-  const digest=b=>crypto.createHash('sha256').update(b).digest('hex');
-  assert.equal(digest(Buffer.from(await response.arrayBuffer())),digest(fs.readFileSync('rootcaster/'+name)),'Candidate bytes differ');
+  assertServedContent(name,Buffer.from(await response.arrayBuffer()),fs.readFileSync('rootcaster/'+name));
 }
 const {chromium}=await import(pathToFileURL(process.env.ROOTCASTER_BROWSER_MODULE).href);
 const browser=await chromium.launch();
