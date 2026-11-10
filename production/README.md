@@ -1,3 +1,41 @@
+# Current production — seasonal Arcade and Profile Studio, 2026-11-10
+
+Locked deploy `6af36decd5317e3867e86e8f` publishes the seasonal Arcade UI on
+`/play/` and the local photo tool at `/play/profile-studio/`. Frontend source
+commit `a93907cfaa55b2517966deb2dda58428369def2c` is in PR #121.
+
+The active Arcade page source is `production/arcade-autumn-static/index.html`.
+Its presentation modules are `scripts/arcade-seasonal-data.js` and
+`scripts/arcade-seasonal-v1.js`, layered on the unchanged navigation module.
+Profile Studio source is `production/profile-studio-static/index.html`,
+`scripts/tree-profile-studio.js`, and `styles/tree-profile-studio.css`.
+
+November/December retain four existing attendance goals (3/7/14/21 days),
+with Autumn Hero/Christmas Hero at 21. December is an upcoming collection
+until December 1 UTC. Campaigns and Community use open scrolling sections;
+attendance has a persistent visible callout; Month badges precede the calendar.
+Profile Studio offers local photo crop, four borders, nine badge decorations,
+three ecosystem artwork choices and 1024px PNG/profile-frame downloads.
+Selecting artwork never awards an achievement.
+
+Fresh promotion baseline `6af36ba4757ed7f4d9bd47c5` had 412 static paths.
+Promotion changes only `/play/index.html` and the seasonal stylesheet;
+410 other paths, all 47 complete backend records, five schedules, runtime,
+build settings and protected environment fingerprints remain intact.
+The staged preview added 16 paths while preserving all prior 396 paths.
+See `docs/arcade-autumn-release-20261110.json`, the preview release record,
+and `docs/arcade-autumn-validation-20261110.json` for inventory and evidence.
+
+Desktop and 340-CSS-pixel narrow layout checks passed. Actual local-photo
+loading and PNG downloads passed; exported alpha and 1024px dimensions were
+inspected. Three focused Node tests passed. Original wallet/payment/game/
+quest scripts remain byte-exact; signed-in actions and payments were not
+exercised. The 25 SUI Tree Force event remains coming soon, entries closed.
+Capture a fresh full current baseline before every release. Never publish
+the historical root build as current production.
+
+---
+
 # Current production — Arcade history restoration, 2026-11-10
 
 Locked deployment `6af3618b197365bd03c62936` corrects Back/Forward restoration
