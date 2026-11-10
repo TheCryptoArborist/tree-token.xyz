@@ -1,3 +1,23 @@
+# Current production — Arcade history restoration, 2026-11-10
+
+Locked deployment `6af3618b197365bd03c62936` corrects Back/Forward restoration
+for the visible Arcade navigation. Source `0fd80495eff1a93d5c2dfff1e73f32e780da761d`
+is in PR #120. The fresh baseline is `6af35ef0c1679f00c601ca0e`.
+
+Only `/scripts/arcade-navigation-v1.js` changes. All 395 other static paths,
+47 complete backend records, five schedules, runtime/build settings and
+protected environment fingerprints are preserved (396 total static paths).
+The full current inventory is
+`docs/arcade-navigation-history-fix-release-20261110.json`.
+
+The main page remains `production/arcade-navigation-static/index.html`.
+Fresh /play/ defaults to Games; Daily → Back restores empty-hash Games;
+Forward restores Daily without adding a new history entry. The live browser
+regression evidence is in `docs/arcade-navigation-history-regression-20261110.json`.
+Capture a fresh complete baseline before every future release.
+
+---
+
 # Current production — visible Arcade sections, 2026-11-10
 
 Locked deployment `6af35ef0c1679f00c601ca0e` publishes the visible section menu

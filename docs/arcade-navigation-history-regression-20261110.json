@@ -1,0 +1,30 @@
+{
+  "deployment": "6af3618b197365bd03c62936",
+  "source": "0fd80495eff1a93d5c2dfff1e73f32e780da761d",
+  "steps": [
+    {
+      "gamesHidden": false,
+      "hash": "",
+      "step": "fresh hashless",
+      "view": "games"
+    },
+    {
+      "gamesHidden": true,
+      "hash": "#daily",
+      "step": "Daily",
+      "view": "daily"
+    },
+    {
+      "gamesHidden": false,
+      "hash": "",
+      "step": "Back",
+      "view": "games"
+    },
+    {
+      "gamesHidden": true,
+      "hash": "#daily",
+      "step": "Forward",
+      "view": "daily"
+    }
+  ]
+}
