@@ -14,7 +14,8 @@ async function noBuilds(){
   let exhausted=false;
   for(const rows of pages){
    assert(Array.isArray(rows),'Invalid deployment listing');
-   assert(!rows.some(x=>['new','pending_review','accepted','enqueued','building','uploading','uploaded','processing','prepared','retrying'].includes(x.state)),'Active build; wait before publishing');
+   const active=rows.filter(x=>['new','pending_review','accepted','enqueued','building','uploading','uploaded','processing','prepared','retrying'].includes(x.state));
+   assert(!active.length,'Active deployment; wait before publishing: '+active.map(x=>x.id+' '+x.state).join(', '));
    if(rows.length<100)exhausted=true;
   }
   if(exhausted)return;

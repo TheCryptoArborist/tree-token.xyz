@@ -48,6 +48,9 @@ export function mountArcadeNavigation(doc = document, view = window) {
     tabs[next].focus();
     tabs[next].scrollIntoView({ block: 'nearest', inline: 'nearest' });
   }, true);
+  for (const button of root.querySelectorAll('#growth-badge-preview, #growth-invitation-open')) {
+    button.addEventListener('click', () => tabFor.get('daily').click());
+  }
   // Also reflect programmatic selections made by existing Community/quest actions.
   new view.MutationObserver(() => {
     const active = tabs.find(tab => tab.getAttribute('aria-selected') === 'true');
