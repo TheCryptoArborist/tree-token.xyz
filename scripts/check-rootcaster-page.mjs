@@ -18,7 +18,7 @@ try {
     const errors=[];page.on('pageerror',e=>errors.push(e.message));
     const response=await page.goto(base,{waitUntil:'networkidle'});
     assert(response.ok());assert.equal(await page.locator('h1').count(),1);
-    assert(await page.locator('img').evaluate(e=>e.complete&&e.naturalWidth>0),'Artwork did not load');
+    assert(await page.locator('figure img').evaluate(e=>e.complete&&e.naturalWidth>0),'Artwork did not load');
     assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Horizontal overflow');
     for(const href of ['https://tree-token.xyz/','https://tree-token.xyz/dapp/','https://tree-token.xyz/play/','https://nftree.net/','https://tree-token.xyz/rewards/']) assert(await page.locator(`a[href="${href}"]`).count(),'Missing ecosystem destination');
     assert.equal(errors.length,0,'Browser script error');
