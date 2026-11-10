@@ -1,0 +1,7 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {collections,ranks,goals,artURL} from '../scripts/arcade-seasonal-data.js';
+test('both seasons keep four existing earning tiers and all artwork exists',()=>{assert.deepEqual(goals,[3,7,14,21]);assert.equal(ranks.length,4);for(const collection of Object.values(collections)){assert.equal(collection.items.length,4);for(const [name,slug]of collection.items){assert.ok(name);assert.ok(fs.existsSync('.'+artURL(slug)));}}assert.equal(collections['2026-11'].items[3][0],'Autumn Hero');assert.equal(collections['2026-12'].items[3][0],'Christmas Hero');});
+test('all original scripts remain byte-exact and new controls have unique ids',()=>{const baseline=fs.readFileSync('production/arcade-autumn-static/baseline.html','utf8'),page=fs.readFileSync('production/arcade-autumn-static/index.html','utf8');for(const script of baseline.matchAll(/<script\b[^>]*>[\s\S]*?<\/script>/g))assert.ok(page.includes(script[0]));const ids=[...page.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]).filter(id=>id!=='tree-arcade-arboretum-link');assert.equal(new Set(ids).size,ids.length);assert.ok(page.indexOf('id="growth-milestones"')<page.indexOf('id="growth-calendar"'));});
+test('maximum badge corners remain within the circular social crop',()=>{for(let size=200;size<=340;size++){const bottom=512+Math.sqrt(490**2-(size/2)**2)-10;for(const y of [bottom,bottom-size])assert.ok(Math.hypot(size/2,y-512)<496);}});
