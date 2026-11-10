@@ -1,0 +1,23 @@
+{
+  "deploy": "6af38cfd5ab474aae2a0cddf",
+  "sourceCommit": "24edebbae97333e854fa8536e28337b11d3021b9",
+  "focusedTests": 17,
+  "allPassed": true,
+  "liveReadOnlyWalletLookup": {
+    "canonicalNFTrees": 3,
+    "direct": 2,
+    "kiosk": 1,
+    "partial": false,
+    "graphqlCalls": 30
+  },
+  "sampleNFTArtworkHTTP": 200,
+  "sampleNFTArtworkCORS": "*",
+  "desktopLive": "NFTs panel below seasonal collections; instructions explicitly say bottom badge; compact wallet controls and separate profile-photo upload.",
+  "mobilePreview": {
+    "viewport": 340,
+    "document": 337,
+    "walletSectionHeight": 174
+  },
+  "limits": "Actual wallet connection/signing/payment and user-photo upload not performed. Bottom NFT selection/photo retention verified using actual selection/draw functions with isolated image/canvas fixtures. Public holdings tested live.",
+  "screenshot": "/workspace/shared/profile-nft-bottom-badge-live.png"
+}
