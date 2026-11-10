@@ -1,0 +1,12 @@
+{
+  "liveDeploy": "6af3843998541eb5599dee67",
+  "sourceCommit": "89f5b30e64a4c5a40cf62f93dadd7559b2c93fa4",
+  "focusedTests": 6,
+  "allPassed": true,
+  "desktop": "Published wallet panel above editor; Sui and Hero in TREE Ecosystem; no free-art category subtitles; eight locked monthly previews; Your NFTrees signed-out explanation present.",
+  "mobile": "340 CSS px; document337px; action buttons wrap and remain keyboard reachable.",
+  "publicMetadata": "Live GraphQL NFT #4647 has image_url, name, rarity and canonical ID. Pinata sample artwork HEAD200 with CORS *.",
+  "limits": "No live wallet connection/signing/payment. Direct/Kiosk ownership, opaque session, transfer/outage, wallet races and non-destructive focus behavior use controlled tests. Optional Node public full-wallet scan did not finish and was stopped; no success claimed.",
+  "review": "Focus invalidation finding addressed in 89f5b30 with focused regression.",
+  "screenshot": "/workspace/shared/profile-studio-wallet-update.png"
+}
