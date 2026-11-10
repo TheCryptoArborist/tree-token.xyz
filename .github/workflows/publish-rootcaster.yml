@@ -1,0 +1,105 @@
+name: Publish TreeRootCaster
+
+on:
+  pull_request:
+    paths:
+      - 'rootcaster/**'
+      - 'scripts/*rootcaster*'
+      - 'tests/rootcaster-release.test.mjs'
+      - '.github/workflows/publish-rootcaster.yml'
+  workflow_dispatch:
+    inputs:
+      expected_deploy:
+        description: Current published Netlify deploy ID (stop if it differs)
+        required: true
+        default: '6af2269339c88800be3ea322'
+        type: string
+      publish:
+        description: Publish the new candidate after preservation and browser checks
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tree-production-preservation-${{ github.event_name == 'workflow_dispatch' && 'release' || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node --test tests/rootcaster-release.test.mjs tests/preserved-release.test.mjs
+  rootcaster:
+    needs: verify
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Run release guard tests
+        run: node --test tests/rootcaster-release.test.mjs tests/preserved-release.test.mjs
+      - name: Capture current site and create verified candidate
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          ROOTCASTER_EXPECTED_DEPLOY: ${{ inputs.expected_deploy }}
+          REVIEWED_SHA: ${{ github.sha }}
+        run: |
+          test -n "$NETLIFY_AUTH_TOKEN" || { echo 'Add NETLIFY_AUTH_TOKEN in repository Settings > Secrets and variables > Actions.'; exit 1; }
+          test "$(git rev-parse HEAD)" = "$REVIEWED_SHA" || { echo 'Source branch changed after dispatch.'; exit 1; }
+          node scripts/release-rootcaster.mjs capture
+          node scripts/release-rootcaster.mjs plan --source-commit "$REVIEWED_SHA"
+          node scripts/release-rootcaster.mjs preview --source-commit "$REVIEWED_SHA"
+          node scripts/release-rootcaster.mjs verify --source-commit "$REVIEWED_SHA"
+      - name: Install isolated browser checker
+        run: |
+          npm install --prefix "$RUNNER_TEMP/rootcaster-browser" --ignore-scripts --no-audit --no-fund playwright@1.56.1
+          "$RUNNER_TEMP/rootcaster-browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Check candidate at desktop and phone widths
+        env:
+          ROOTCASTER_BROWSER_MODULE: ${{ runner.temp }}/rootcaster-browser/node_modules/playwright/index.mjs
+        run: node scripts/check-rootcaster-page.mjs
+      - name: Publish verified new candidate
+        if: inputs.publish
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          ROOTCASTER_EXPECTED_DEPLOY: ${{ inputs.expected_deploy }}
+          REVIEWED_SHA: ${{ github.sha }}
+        run: |
+          candidate=$(node -p "JSON.parse(require('fs').readFileSync('.netlify/rootcaster-candidate.json')).id")
+          node scripts/release-rootcaster.mjs publish --source-commit "$REVIEWED_SHA" --expected-candidate "$candidate"
+      - name: Write release summary
+        if: always()
+        run: |
+          node --input-type=module - <<'JS'
+          import fs from 'node:fs';
+          const file='.netlify/rootcaster-release-report.json';
+          if(fs.existsSync(file)) {
+            const r=JSON.parse(fs.readFileSync(file));
+            fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `### TreeRootCaster\n\nLast verified phase: ${r.mode}\n\nCandidate: ${r.url}rootcaster/\n\nProduction changed: ${r.productionChanged}\n\nPreserved: ${r.functionsPreserved} functions and ${r.schedulesPreserved} schedules.\n\nRead the job conclusion: a failed or interrupted publish requires checking Netlify before another run.\n`);
+          }
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rootcaster-public-checks-${{ github.run_id }}
+          path: |
+            .netlify/rootcaster-release-report.json
+            .netlify/rootcaster-desktop.png
+            .netlify/rootcaster-mobile.png
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 7
