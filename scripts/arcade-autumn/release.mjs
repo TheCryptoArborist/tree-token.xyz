@@ -36,7 +36,8 @@ if(mode==='candidate'){
  if(target==='preview')html=html.replace('</head>','<meta name="robots" content="noindex,nofollow"></head>').replace('<main class="suite-main">','<main class="suite-main"><p class="arcade-nav-preview-note">Seasonal Arcade preview · Daily check-in, open missions, badges and Profile Studio.</p>');
  const page=target==='preview'?'/play/autumn-preview/index.html':'/play/index.html';
  changes[page]=Buffer.from(html);
- for(const p of ['/scripts/arcade-autumn-v1.js','/styles/arcade-autumn-v1.css'])changes[p]=fs.readFileSync(root+p);
+ for(const p of ['/scripts/arcade-seasonal-data.js','/scripts/arcade-seasonal-v1.js','/scripts/tree-profile-studio.js','/styles/arcade-seasonal-v1.css','/styles/tree-profile-studio.css',...fs.readdirSync(root+'/assets/arcade-seasonal').map(name=>'/assets/arcade-seasonal/'+name)])changes[p]=fs.readFileSync(root+p);
+ changes['/play/profile-studio/index.html']=fs.readFileSync(root+'/production/profile-studio-static/index.html');
  for(const [p,bytes]of Object.entries(changes))files[p]=sha(bytes);
  assert.deepEqual(Object.keys(originalFiles).filter(p=>files[p]!==originalFiles[p]&&!Object.hasOwn(changes,p)),[],'Unapproved existing static path changed');
  assert(/^[a-f0-9]{40}$/.test(process.env.SOURCE_COMMIT||''),'A recorded source commit is required');
