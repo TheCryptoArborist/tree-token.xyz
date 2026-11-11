@@ -21,8 +21,24 @@
       "opaquePixelsOutsideCircle": 0
     }
   },
-  "eventRuleTests": "5 passed",
+  "eventRuleTests": "6 passed, including saved-title migration",
   "productionSnapshot": "passed: 196 files, 38 archived function packages",
-  "browserChecks": "Blocked: local Chromium cannot create a socket; remote browser cannot reach local server. Upload, export and responsive UI checks remain pending.",
-  "published": false
+  "browserChecks": "Local Chromium blocked by socket policy; canonical preview browser checks pending publication.",
+  "published": false,
+  "rendererExports": {
+    "cases": 6,
+    "dimensions": [
+      1024,
+      1024
+    ],
+    "transparentCorners": true,
+    "transparentOverlayCenters": true,
+    "photoCenterPreserved": true,
+    "opaquePixelsOutsideCircle": 0,
+    "note": "Source artwork has occasional 1/255-alpha pixels outside the circle; no opaque pixels."
+  },
+  "workshopFixes": [
+    "Canopy Crown \u201989 default with exact old-title migration only; custom names and event IDs preserved",
+    "Crown-only cosmetics hidden for other planned games"
+  ]
 }

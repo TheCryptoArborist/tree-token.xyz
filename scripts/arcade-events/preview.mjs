@@ -19,6 +19,6 @@ try{const saved=localStorage.getItem(key);if(saved){current=makeDraft(JSON.parse
 render(current);estimate();
 
 // Approved Canopy Crown ’89 examples. Other game options do not claim these cosmetics.
-function drawCosmetics(game){const version=++artVersion;for(const [kind,url]of Object.entries(CROWN_OVERLAYS)){const canvas=$(kind);canvas.hidden=game.id!=='treeforce89';if(canvas.hidden)continue;drawCrownProfile(canvas);const img=new Image();img.onload=()=>{if(version===artVersion)drawCrownProfile(canvas,{overlay:img});};img.src=url;}}
+function drawCosmetics(game){const version=++artVersion,isCrown=game.id==='treeforce89';$('crown-collection').hidden=!isCrown;$('game-cosmetics-pending').hidden=isCrown;if(!isCrown){$('game-cosmetics-pending').textContent=`Event cosmetics for ${game.name} will be designed before its tournament opens.`;return;}for(const [kind,url]of Object.entries(CROWN_OVERLAYS)){const canvas=$(kind);drawCrownProfile(canvas);const img=new Image();img.onload=()=>{if(version===artVersion)drawCrownProfile(canvas,{overlay:img});};img.src=url;}}
 
 installEventServerControls({readDraft:read,applyDraft:input=>{const draft=makeDraft(input);writeInputs(draft);render(draft);feedback('Loaded from the server. Save locally if you want a device copy.');}});
