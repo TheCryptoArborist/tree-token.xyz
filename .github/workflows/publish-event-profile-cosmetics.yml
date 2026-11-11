@@ -1,0 +1,55 @@
+name: Publish profile-first event cosmetics
+
+on:
+  workflow_dispatch:
+    inputs:
+      expected_deploy:
+        description: Current locked published deploy (stop if changed)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tree-production-preservation-release
+  cancel-in-progress: false
+
+jobs:
+  workshop:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Check event rules and scripts
+        run: |
+          node --test tests/arcade-event-core.test.mjs
+          node --check scripts/arcade-events/preview.mjs
+          node --check scripts/arcade-events/profile-cosmetics.mjs
+          node --check scripts/arcade-events/profile-review.mjs
+          node --check scripts/arcade-events/release-profile-cosmetics.mjs
+          git diff --check
+      - name: Publish preview-only routes with complete preservation
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          SOURCE_COMMIT: ${{ github.sha }}
+          EXPECTED_DEPLOY: ${{ inputs.expected_deploy }}
+        run: |
+          test -n "$NETLIFY_AUTH_TOKEN" || { echo 'Netlify release secret is unavailable.'; exit 1; }
+          node scripts/arcade-events/release-profile-cosmetics.mjs candidate preview
+          node scripts/arcade-events/release-profile-cosmetics.mjs verify preview
+          node scripts/arcade-events/release-profile-cosmetics.mjs publish preview
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: event-profile-cosmetics-release
+          path: .netlify/event-profile-cosmetics-preview/report.json
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 30
