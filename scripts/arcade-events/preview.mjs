@@ -1,4 +1,4 @@
-import {drawProfileCosmetic} from './profile-cosmetics.mjs';
+import {CROWN_OVERLAYS,drawCrownProfile} from './profile-cosmetics.mjs';
 import {installEventServerControls} from './server-controls.mjs';
 import {GAMES,makeDraft,economics,mistToSui,launchChecks} from './core.mjs';
 const $=id=>document.getElementById(id),key='tree-arcade:event-workshop:draft:v1';
@@ -18,7 +18,7 @@ $('entrants').addEventListener('input',estimate);
 try{const saved=localStorage.getItem(key);if(saved){current=makeDraft(JSON.parse(saved));writeInputs(current);feedback('Restored the draft saved on this device. Entry remains closed.');}}catch{feedback('A saved draft could not be restored. Starting a new draft.',true);}
 render(current);estimate();
 
-// Show cosmetics on a profile picture, with no embedded poster lettering.
-function drawCosmetics(game){const version=++artVersion;const renderProfiles=art=>{if(version===artVersion)for(const kind of ['frame','badge','champion'])drawProfileCosmetic($(kind),{kind,art});};if(game.id!=='treeforce89'){renderProfiles(null);return;}const img=new Image();img.onload=()=>renderProfiles(img);img.onerror=()=>renderProfiles(null);img.src=game.art;}
+// Approved Canopy Crown ’89 examples. Other game options do not claim these cosmetics.
+function drawCosmetics(game){const version=++artVersion,isCrown=game.id==='treeforce89';$('crown-collection').hidden=!isCrown;$('game-cosmetics-pending').hidden=isCrown;if(!isCrown){$('game-cosmetics-pending').textContent=`Event cosmetics for ${game.name} will be designed before its tournament opens.`;return;}for(const [kind,url]of Object.entries(CROWN_OVERLAYS)){const canvas=$(kind);drawCrownProfile(canvas);const img=new Image();img.onload=()=>{if(version===artVersion)drawCrownProfile(canvas,{overlay:img});};img.src=url;}}
 
 installEventServerControls({readDraft:read,applyDraft:input=>{const draft=makeDraft(input);writeInputs(draft);render(draft);feedback('Loaded from the server. Save locally if you want a device copy.');}});

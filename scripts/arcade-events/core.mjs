@@ -31,7 +31,8 @@ export function localToUtc(value,timeZone='America/Chicago'){
 }
 export function makeDraft(input={}){
  const game=GAMES.find(g=>g.id===(input.gameId||'treeforce89'));if(!game)throw Error('Select a supported game.');
- const title=String(input.title||'Defend the Canopy').trim();if(!title||title.length>80)throw Error('Use an event title of 1–80 characters.');
+ const suppliedTitle=String(input.title||'Canopy Crown ’89');
+ const title=(game.id==='treeforce89'&&suppliedTitle==='Defend the Canopy'?'Canopy Crown ’89':suppliedTitle).trim();if(!title||title.length>80)throw Error('Use an event title of 1–80 characters.');
  const timeZone=input.timeZone||'America/Chicago';if(!['America/Chicago','UTC'].includes(timeZone))throw Error('Select Central Time or UTC.');
  const startLocal=input.startLocal||'',endLocal=input.endLocal||'';
  if(Boolean(startLocal)!==Boolean(endLocal))throw Error('Set both the beginning and ending time.');

@@ -34,7 +34,8 @@ if(mode==='candidate'){
  changes['/play/events/preview/index.html']=fs.readFileSync(root+'/production/arcade-events-static/index.html');
  changes['/play/events/profile-cosmetics/mobile-review/index.html']=fs.readFileSync(root+'/production/event-profile-cosmetics/mobile.html');
  changes['/play/events/profile-cosmetics/index.html']=fs.readFileSync(root+'/production/event-profile-cosmetics/index.html');
- for(const p of ['/scripts/arcade-events/preview.mjs','/scripts/arcade-events/profile-cosmetics.mjs','/scripts/arcade-events/profile-review.mjs','/styles/event-profile-cosmetics-v1.css'])changes[p]=fs.readFileSync(root+p);
+ for(const p of ['/scripts/arcade-events/core.mjs','/scripts/arcade-events/preview.mjs','/scripts/arcade-events/profile-cosmetics.mjs','/scripts/arcade-events/profile-review.mjs','/styles/event-profile-cosmetics-v1.css','/styles/arcade-events-preview-v1.css'])changes[p]=fs.readFileSync(root+p);
+ for(const name of ['contender','champion']){const p='/assets/profile-studio/canopy-crown-89/'+name+'.png';changes[p]=fs.readFileSync(root+p);}
  for(const [p,bytes]of Object.entries(changes))files[p]=sha(bytes);
  assert.deepEqual(Object.keys(originalFiles).filter(p=>files[p]!==originalFiles[p]&&!Object.hasOwn(changes,p)),[],'Unapproved existing static path changed');
  assert(/^[a-f0-9]{40}$/.test(process.env.SOURCE_COMMIT||''),'A recorded source commit is required');

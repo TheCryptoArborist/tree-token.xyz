@@ -1,4 +1,26 @@
 export const PROFILE_SIZE=512;
+export const CROWN_OVERLAYS={contender:'/assets/profile-studio/canopy-crown-89/contender.png',champion:'/assets/profile-studio/canopy-crown-89/champion.png'};
+const crownPhotoMasks=new WeakMap();
+function crownPhotoMask(canvas,overlay){
+ let mask=crownPhotoMasks.get(overlay);if(mask)return mask;
+ // Flood-fill transparent pixels connected to the exterior. Unlike a circle,
+ // this follows each frame's leaves, lettering and belt without exposing photo
+ // beyond the illustrated rim. Cache the mask; slider redraws only composite it.
+ mask=typeof canvas.cloneNode==='function'?canvas.cloneNode(false):new canvas.constructor(1024,1024);
+ mask.width=mask.height=1024;const ctx=mask.getContext('2d',{willReadFrequently:true});ctx.drawImage(overlay,0,0,1024,1024);
+ const pixels=ctx.getImageData(0,0,1024,1024),data=pixels.data,exterior=new Uint8Array(1024*1024),queue=new Uint32Array(exterior.length);let head=0,tail=0;
+ const visit=i=>{if(!exterior[i]&&data[i*4+3]<128){exterior[i]=1;queue[tail++]=i;}};
+ for(let n=0;n<1024;n++){visit(n);visit(1023*1024+n);visit(n*1024);visit(n*1024+1023);}
+ while(head<tail){const i=queue[head++],x=i%1024,y=(i-x)/1024;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){if((dx||dy)&&x+dx>=0&&x+dx<1024&&y+dy>=0&&y+dy<1024)visit(i+dy*1024+dx);}}
+ const enclosed=!exterior[512*1024+512];
+ for(let i=0;i<exterior.length;i++){data[i*4]=data[i*4+1]=data[i*4+2]=255;data[i*4+3]=enclosed&&!exterior[i]?255:0;}
+ ctx.putImageData(pixels,0,0);crownPhotoMasks.set(overlay,mask);return mask;
+}
+export function drawCrownProfile(canvas,{overlay,photo=null,zoom=1,offsetX=0,offsetY=0,overlayOnly=false}={}){
+ canvas.width=canvas.height=1024;const c=canvas.getContext('2d');c.clearRect(0,0,1024,1024);
+ if(!overlayOnly&&overlay){c.save();c.scale(2,2);avatar(c,photo,zoom,offsetX,offsetY);c.restore();c.save();c.globalCompositeOperation='destination-in';c.drawImage(crownPhotoMask(canvas,overlay),0,0);c.restore();}
+ if(overlay)c.drawImage(overlay,0,0,1024,1024);
+}
 export const EMBLEM={x:400,y:400,r:44};
 function disk(c,x,y,r,fill,stroke,width=1){c.beginPath();c.arc(x,y,r,0,Math.PI*2);if(fill){c.fillStyle=fill;c.fill();}if(stroke){c.strokeStyle=stroke;c.lineWidth=width;c.stroke();}}
 function leaf(c,x,y,angle,color){c.save();c.translate(x,y);c.rotate(angle);c.beginPath();c.moveTo(-10,0);c.quadraticCurveTo(0,-9,10,0);c.quadraticCurveTo(0,9,-10,0);c.fillStyle=color;c.fill();c.restore();}

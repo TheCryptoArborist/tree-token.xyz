@@ -1,5 +1,13 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import {makeDraft,economics,suiToMist,mistToSui,localToUtc,phase,checkEvidence,standings,launchChecks} from '../scripts/arcade-events/core.mjs';
+test('Canopy Crown name replaces only the previous Tree Force default and preserves saved draft identity',()=>{
+ assert.equal(makeDraft().title,'Canopy Crown ’89');
+ const saved={id:'treeforce89-defend-the-canopy-01',title:'Defend the Canopy',startLocal:'2026-11-13T18:00',endLocal:'2026-11-15T18:00'};
+ const migrated=makeDraft(saved);assert.equal(migrated.title,'Canopy Crown ’89');assert.equal(migrated.id,saved.id);assert.equal(migrated.startLocal,saved.startLocal);assert.equal(migrated.endLocal,saved.endLocal);
+ for(const title of ['My Canopy Championship','Defend the Canopy — November','defend the canopy'])assert.equal(makeDraft({...saved,title}).title,title);
+ assert.equal(makeDraft({...saved,gameId:'canopy-breaker'}).title,'Defend the Canopy');
+ assert.equal(migrated.paymentEnabled,false);
+});
 test('5 SUI entry and guaranteed/80% prize arithmetic uses integer MIST',()=>{
  for(const [n,prize,net]of [[0,'25','-25'],[4,'25','-5'],[5,'25','0'],[6,'25','5'],[7,'28','7'],[10,'40','10'],[100,'400','100']]){const x=economics(n);assert.equal(mistToSui(x.prizeMist),prize);assert.equal(mistToSui(x.organizerNetBeforeCostsMist),net);}
  assert.equal(suiToMist('0.000000001'),1n);assert.equal(mistToSui('5000000000'),'5');
