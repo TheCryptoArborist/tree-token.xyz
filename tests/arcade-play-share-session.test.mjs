@@ -22,7 +22,7 @@ test('share controls unlock only for this wallet’s fresh completed game and cl
  const dom=new JSDOM(page,{url:'https://tree-token.xyz/play/'}),w=dom.window;
  const originalImage=globalThis.Image;
  globalThis.Image=class {set src(value){this.width=512;this.height=512;queueMicrotask(()=>this.onload?.());}};
- w.HTMLCanvasElement.prototype.getContext=()=>({createLinearGradient(){return {addColorStop(){}};},save(){},restore(){},beginPath(){},arc(){},stroke(){},fillRect(){},strokeRect(){},fillText(){},drawImage(){},measureText(){return {width:10};}});
+ w.HTMLCanvasElement.prototype.getContext=()=>({createLinearGradient(){return {addColorStop(){}};},save(){},restore(){},beginPath(){},arc(){},stroke(){},fillRect(){},strokeRect(){},fillText(){},strokeText(){},drawImage(){},measureText(){return {width:10};}});
  const fixed=Date.parse('2026-11-11T12:00:00Z');
  let currentSession={wallet,token:'a'.repeat(64),expiresAt:new Date(fixed+600000).toISOString()};
  const root=w.document.getElementById('arcade-daily-growth');

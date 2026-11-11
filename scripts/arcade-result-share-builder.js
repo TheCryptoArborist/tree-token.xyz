@@ -68,13 +68,13 @@ export function drawShareCard(c,{game,run=null,image=null,index=0,result=false,c
  c.save();c.globalAlpha=.28;c.strokeRect(20,20,1160,635);c.restore();
  for(const x of [14,1166])for(const y of [14,641]){c.fillStyle=accent;c.fillRect(x,y===14?14:658,20,3);c.fillRect(x===14?14:1183,y,3,20);}
  c.fillStyle=accent;c.fillRect(52,83,70,3);
- c.font='900 28px system-ui';c.fillText('TREE ARCADE',52,62);
+ c.font='900 28px system-ui';c.save();c.lineJoin='round';c.strokeStyle='#020908';c.lineWidth=5;c.strokeText('TREE ARCADE',52,62);c.fillText('TREE ARCADE',52,62);c.restore();
  c.textAlign='right';c.font='700 18px system-ui';c.fillStyle='#d2e2db';c.fillText(result?'SAVED RUN  /  PLAYER CHALLENGE':challenge?'THE CANOPY IS CALLING':'PICK UP. PLAY. GROW.',1148,60);c.textAlign='left';
  c.save();c.shadowColor=glow;c.shadowBlur=35;c.fillStyle='#081211';c.fillRect(55,104,440,418);c.restore();
  c.strokeStyle=accent;c.lineWidth=2;c.strokeRect(55,104,440,418);
  c.save();c.globalAlpha=.35;c.strokeRect(61,110,428,406);c.restore();
  if(image){const scale=Math.min(400/image.width,388/image.height),w=image.width*scale,h=image.height*scale;c.drawImage(image,75+(400-w)/2,119+(388-h)/2,w,h);}
- const fit=(value,x,y,max,size,weight='900',color='#fff9e9')=>{c.fillStyle=color;c.font=`${weight} ${size}px system-ui`;while(c.measureText(value).width>max&&size>16){size--;c.font=`${weight} ${size}px system-ui`;}c.fillText(value,x,y);};
+ const fit=(value,x,y,max,size,weight='900',color='#fff9e9')=>{c.fillStyle=color;c.font=`${weight} ${size}px system-ui`;while(c.measureText(value).width>max&&size>16){size--;c.font=`${weight} ${size}px system-ui`;}if(color!=='#0a211b'){c.save();c.lineJoin='round';c.strokeStyle='#020908';c.lineWidth=size>=60?6:4;c.strokeText(value,x,y);c.restore();}c.fillText(value,x,y);};
  const hasScore=result&&Number.isSafeInteger(run?.score);
  const headline=result?(hasScore?['CAN YOU TOP THIS?','SCORE TO SETTLE.','NEXT CHALLENGER?'][index]:['YOUR NEXT MATCH?','BRING YOUR STRATEGY.','THE GARDEN CALLS.'][index]):challenge?['YOUR MOVE.','CHALLENGE ACCEPTED?','CALLING THE TREE CREW.'][index]:['DEFEND THE CANOPY.','PICK YOUR ADVENTURE.','GROW. PLAY. REPEAT.'][index];
  fit(headline,540,139,610,43,'900',accent);
