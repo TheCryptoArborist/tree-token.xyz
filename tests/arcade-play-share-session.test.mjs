@@ -54,5 +54,5 @@ test('six-tab navigation makes Daily visible and routes the weekly vote back to 
  assert.equal(w.document.getElementById('arcade-daily-growth').dataset.arcadeView,'games');
  assert.equal(w.document.getElementById('cabinets').hidden,false);
  assert.equal(w.document.getElementById('growth-today-panel').hidden,true);
- }finally{w.close();}
+ }finally{await tick();w.close();}
 });
