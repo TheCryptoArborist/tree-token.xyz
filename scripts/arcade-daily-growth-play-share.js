@@ -99,7 +99,7 @@ function normalizeConfiguration(value) {
   if (new Set(eligibleGames.map((game) => game.id)).size !== eligibleGames.length) throw invalidData();
   const todayPick = value.todayPick ? gameDescriptor(value.todayPick) : null;
   if (todayPick && !eligibleGames.some((game) => game.id === todayPick.id)) throw invalidData();
-  return { enabledGames, eligibleGames, todayPick };
+  return completedQuestConfiguration({ enabledGames, eligibleGames, todayPick });
 }
 
 function normalizeProgress(value, expectedWallet) {
@@ -785,7 +785,7 @@ export function createDailyGrowth({
       ? 'Start one run of TREE FORCE ’89, or finish an eligible Garden Battle.'
       : 'Finish an eligible Garden Battle. Win or lose, it counts.';
     const selected = games.find((game) => game.id === state.selectedGameId);
-    const done = state.progress?.today.questCompleted;
+    const done = state.progress?.today.gameIds.some(id => games.some(game => game.id === id));
     ui['quest-state'].textContent = state.progress ? done ? '1 / 1 · Quest complete ✓' : '0 / 1 · Not completed' : state.apiUnavailable ? 'Progress unavailable' : state.configuration ? 'Sign in to save progress' : 'Checking availability…';
     ui['quest-state'].classList.toggle('is-done', Boolean(done));
     ui['pick-label'].textContent = selected?.id === state.configuration?.todayPick?.id ? 'Today’s pick:' : 'Your choice:';
@@ -1249,4 +1249,10 @@ export function createDailyGrowth({
 if (typeof document !== 'undefined') {
   const root = document.getElementById('arcade-daily-growth');
   if (root) createDailyGrowth({ root });
+}
+
+export function completedQuestConfiguration(configuration) {
+  const eligibleGames = configuration.eligibleGames.filter(game => ['garden-bot','pvp','arborist-trials'].includes(game.id) && game.creditRule === 'complete-result');
+  const todayPick = eligibleGames.find(game => game.id === configuration.todayPick?.id) || eligibleGames.find(game => game.id === 'garden-bot') || eligibleGames[0] || null;
+  return {...configuration,eligibleGames,todayPick};
 }

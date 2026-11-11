@@ -19,3 +19,11 @@ test('result messages name the finished game, fit X, and contain no fabricated s
  for(const message of messages){assert.ok(message.includes(game.name));assert.ok(message.includes('https://tree-token.xyz/play/'));assert.ok(message.length<=280);assert.doesNotMatch(message,/scored|winner|verified/i);}
  }
 });
+
+import {completedQuestConfiguration} from '../scripts/arcade-daily-growth-play-share.js';
+test('the first quest offers completed-result games and never defaults to a first-wave run',()=>{
+ const treeforce={id:'treeforce89',creditRule:'start-run'},garden={id:'garden-bot',creditRule:'complete-result'};
+ const result=completedQuestConfiguration({enabledGames:[treeforce,garden],eligibleGames:[treeforce,garden],todayPick:treeforce});
+ assert.deepEqual(result.eligibleGames,[garden]);assert.equal(result.todayPick,garden);
+ assert.deepEqual(result.enabledGames,[treeforce,garden]);
+});
