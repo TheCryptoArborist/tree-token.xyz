@@ -1,0 +1,44 @@
+{
+  "id": "6af47ccc900af8400ddb46b3",
+  "baseline": "6af47493326dce63051d6e92",
+  "mode": "publish",
+  "state": "ready",
+  "staticPaths": 505,
+  "preservedStaticPaths": 501,
+  "functionsPreserved": 48,
+  "totalFunctions": 48,
+  "schedulesPreserved": 5,
+  "target": "production",
+  "sourceCommit": "c2112219aa434c22c85cd12759669119caa9fb2c",
+  "changedPaths": [
+    "/play/index.html",
+    "/play/quests/preview/index.html",
+    "/play/quests/mobile-review/index.html",
+    "/scripts/arcade-share-handoff.js"
+  ],
+  "addedPaths": [],
+  "walletPaymentAndSessionLogicUnchanged": true,
+  "gameplayLogicUnchanged": true,
+  "frontendOnlyPromotion": true,
+  "releaseDate": "2026-11-11",
+  "githubWorkflowRun": 43039597029,
+  "fullInventoryArtifact": "arcade-play-share-production",
+  "nftree": {
+    "sourceCommit": "dda33dc179d2d30fb926ccf24a6e7b00bace0d8e",
+    "deploy": "6af47cad250bdeb5ebe799fc",
+    "lint": "passed",
+    "tests": 89,
+    "build": "passed",
+    "changedPaths": [
+      "public/battle/assets/arcade-share-handoff.js"
+    ]
+  },
+  "validation": {
+    "arcadeTests": 25,
+    "liveMainDailyVerified": true,
+    "legacyPreviewRedirectRetainsReceipt": true,
+    "unauthenticatedCompletionEndpoint": 401,
+    "liveGardenBotAndPvp": 200,
+    "realWalletAcceptance": "Not performed by agent; user test remains appropriate"
+  }
+}
