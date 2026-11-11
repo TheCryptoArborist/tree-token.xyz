@@ -1,3 +1,5 @@
+Implementation update: completed-run tracking is now implemented for all four working games; see `arcade-completed-runs-20261111.md`. The backend limitations below describe the earlier layout-only stage. Daily social-credit awards remain separate work.
+
 # Play then share — isolated review
 
 Community is removed from the preview navigation. Its share activity follows the Daily gameplay quest. Weekly voting and official social links move to the Arcade home outside tab panels. Friend challenge is removed from this new flow; historical progress remains in the existing service.

@@ -30,10 +30,10 @@ test('share controls unlock only for this wallet’s fresh completed game and cl
  try{
  app.sessionChanged();await tick();
  assert.equal(root.querySelector('#result-share-controls').hidden,true);
- const progress={wallet,dateKey:'2026-11-11',today:{gameIds:['garden-bot','treeforce89']}};
- root.dispatchEvent(new w.CustomEvent('arcade-progress',{detail:{sessionActive:true,stale:false,busy:false,progress}}));await tick();
+ const progress={wallet,dateKey:'2026-11-11',runs:[{id:'d'.repeat(64),gameId:'garden-bot',completedAt:'2026-11-11T11:59:00Z',score:null,outcome:'completed'}]};
+ root.dispatchEvent(new w.CustomEvent('arcade-completed-runs',{detail:{sessionActive:true,stale:false,loading:false,...progress}}));await tick();
  assert.equal(root.querySelector('#result-share-controls').hidden,false);
- assert.deepEqual([...root.querySelectorAll('#guided-share-score select option')].map(x=>x.value),['garden-bot']);
+ assert.deepEqual([...root.querySelectorAll('#guided-share-score select option')].map(x=>x.value),['d'.repeat(64)]);
  assert.match(root.querySelector('#guided-share-score .share-message').textContent,/I finished Garden Bot/);
  currentSession=null;app.sessionChanged();
  assert.equal(root.querySelector('#result-share-controls').hidden,true);

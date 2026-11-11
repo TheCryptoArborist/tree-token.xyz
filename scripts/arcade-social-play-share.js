@@ -8,29 +8,30 @@ export function createArcadeMissions({root, fetchImpl, getSession, now = () => D
   const progress = root.querySelector('#missions-progress');
   let identity = null, data = null, busy = false, serial = 0, disposed = false;
   const listeners = [];
-  let gameplay = null, completed = [];
+  let gameplay = null, completed = [], runSignature='';
   const controls = root.querySelector('#result-share-controls');
   const shareState = root.querySelector('#result-share-state');
   const shareHost = root.querySelector('#guided-share-score');
-  const freshToday = () => gameplay?.progress?.dateKey === new Date(now()).toISOString().slice(0,10);
+  const freshToday = () => gameplay?.dateKey === new Date(now()).toISOString().slice(0,10);
   function gameplayChanged(event) {
     gameplay = event.detail;
     const next = completedResultGames(gameplay, new Date(now()).toISOString().slice(0,10));
-    if (next.map(g=>g.id).join() !== completed.map(g=>g.id).join()) {
+    const signature=JSON.stringify(gameplay?.runs||[]);
+    if(signature!==runSignature){runSignature=signature;
       shareHost.replaceChildren(); delete shareHost.dataset.shareMounted;
-      if(next.length) mountShareBuilder(shareHost,{games:next,initialGame:next[0].id,result:true});
+      if(next.length) mountShareBuilder(shareHost,{games:next,initialGame:next[0].id,result:true,runs:gameplay.runs});
     }
     completed = next; render();
   }
-  on(root,'arcade-progress',gameplayChanged);
+  on(root,'arcade-completed-runs',gameplayChanged);
 
   function on(node, type, fn) { node.addEventListener(type,fn); listeners.push(() => node.removeEventListener(type,fn)); }
   function session() { const s = getSession(); return s && Date.parse(s.expiresAt) > now() ? s : null; }
   function render() {
     const signedIn = Boolean(session());
-    const unlocked = signedIn && completed.length > 0 && freshToday() && !gameplay?.stale && gameplay?.progress?.wallet === session()?.wallet;
+    const unlocked = signedIn && completed.length > 0 && freshToday() && !gameplay?.stale && gameplay?.wallet === session()?.wallet;
     controls.hidden = !unlocked; controls.disabled = !unlocked;
-    shareState.textContent = unlocked ? 'Unlocked ✓ · Choose today’s completed game and share your result.' : 'Locked · Finish and save Garden Bot, PvP, or Arborist Trials today, then refresh progress. Tree Force’s first-wave stamp does not confirm a finished run.';
+    shareState.textContent = unlocked ? 'Unlocked ✓ · Choose today’s completed game and share your result.' : 'Locked · Complete and save a run in Tree Force ’89, Canopy Breaker, Garden Bot, or PvP, then refresh saved runs.';
     refreshButton.disabled = busy || !signedIn;
     progress.textContent = data ? `${data.monthlyStamps} community stamp${data.monthlyStamps === 1 ? '' : 's'} this month · Weekly reset: ${new Date(data.resetsAt).toUTCString()}` : '';
     for (const form of forms) {
@@ -46,7 +47,7 @@ export function createArcadeMissions({root, fetchImpl, getSession, now = () => D
   function sessionChanged() {
     const s = session(), key = s ? `${s.wallet}:${s.token}` : null;
     if (identity === key) return;
-    identity = key; serial++; busy = false; data = null; gameplay = null; completed = [];
+    identity = key; serial++; busy = false; data = null; gameplay = null; completed = []; runSignature='';
     shareHost.replaceChildren(); delete shareHost.dataset.shareMounted;
     for (const form of forms) form.reset();
     status.textContent = key ? 'Refresh to load your saved post reviews and vote.' : 'Sign in above to load your saved community missions.';
@@ -76,9 +77,9 @@ export function createArcadeMissions({root, fetchImpl, getSession, now = () => D
   return {sessionChanged,refresh:() => request(),destroy(){disposed=true;clearInterval(freshnessTimer);serial++;listeners.forEach(remove => remove());}};
 }
 
-// Only server-reported completed results from this UTC day unlock sharing.
-// The existing Tree Force receipt proves first-wave participation only.
+// Only the completion endpoint can unlock result sharing. Legacy first-wave
+// events and client-side gameplay messages are never completion evidence.
 export function completedResultGames(detail,dateKey) {
-  if(!detail?.sessionActive || detail.stale || detail.busy || detail.progress?.dateKey !== dateKey) return [];
-  return shareGames.filter(g=>g.id !== 'treeforce89' && detail.progress.today?.gameIds?.includes(g.id));
+ if(!detail?.sessionActive||detail.stale||detail.loading||detail.dateKey!==dateKey||!Array.isArray(detail.runs))return [];
+ return shareGames.filter(game=>detail.runs.some(run=>run.gameId===game.id));
 }

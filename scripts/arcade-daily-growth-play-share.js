@@ -1,3 +1,4 @@
+import {createCompletedRunTracking,completedGames} from './arcade-completed-run-tracking.js';
 import { createQuestCampaigns } from './arcade-quest-campaigns-guided.js';
 import { createArcadeMissions } from './arcade-social-play-share.js';
 // Daily Growth has its own message-only wallet session. Opening a game link never grants credit.
@@ -30,12 +31,14 @@ const GROWTH_ART = {
   'arcade-passport': '/assets/tree-command-logo-v2-512.png',
   'garden-bot': '/assets/arcade/garden-bot-poster.webp',
   pvp: '/assets/arcade/pvp-battle-poster.webp',
+  'canopy-breaker':'/assets/arcade/canopy-breaker-game.webp',
   'arborist-trials': '/assets/arcade/arborist-trials-poster.webp',
   treeforce89: '/assets/arcade/tree-force-89-poster.webp',
 };
 const GAME_COPY = {
+  'canopy-breaker':{objective:'Finish a run. A victory or game over counts; results save automatically.',access:'NFTree access required · Existing continues and payment rules apply'},
   [TREE_FORCE_ID]: {
-    objective: 'Start a run and reach the first wave. You do not need to win or finish.',
+    objective: 'Finish your run, then save your mission result on the ending screen. Win or lose, it counts.',
     access: 'NFTree held directly in your wallet required · Kiosk-held NFTrees are not supported by this game',
   },
   'garden-bot': {
@@ -188,6 +191,7 @@ export function createDailyGrowth({
     selectedGameId: null, notice: 'Loading Daily Growth…', noticeKind: '', pickerOpen: false,
     availableWallets: [], apiUnavailable: false, launched: false,
   };
+  const runTracking = createCompletedRunTracking({root,fetchImpl,getSession:()=>state.session,now});
   const missions = createArcadeMissions({ root, fetchImpl, getSession: () => state.session, now });
   const campaigns = createQuestCampaigns({ root, fetchImpl, getSession: () => state.session, syncGames: () => refresh(), checkIn: () => checkIn(), getProgress: () => state.progress, now });
   let bridge = null;
@@ -621,6 +625,7 @@ export function createDailyGrowth({
   }
 
   function renderProgress() {
+    const completedToday=Boolean(state.completedRuns?.runs?.length && state.completedRuns.dateKey===new Date(now()).toISOString().slice(0,10) && !state.completedRuns.stale);
     const progress = state.progress;
     const unavailable = state.apiUnavailable || state.stale;
     const next = progress?.milestones.find((milestone) => !milestone.earned && milestone.target > progress.checkedInDays);
@@ -628,9 +633,9 @@ export function createDailyGrowth({
     renderInvitation(progress);
     renderJourney(progress);
     renderDayRail(progress);
-    meter(ui['quest-meter'], progress ? Number(progress.today.questCompleted) : null, 1, progress ? `${Number(progress.today.questCompleted)} of 1 daily quests complete` : unknown);
+    meter(ui['quest-meter'], progress ? Number(completedToday) : null, 1, progress ? `${Number(completedToday)} of 1 completed-game quests complete` : unknown);
     meter(ui['passport-meter'], progress?.passport.completedGameIds.length, progress?.passport.enabledGames.length, progress ? `${progress.passport.completedGameIds.length} of ${progress.passport.enabledGames.length} required Passport games` : unknown);
-    root.querySelector('.growth-quest').classList.toggle('is-complete', Boolean(progress?.today.questCompleted));
+    root.querySelector('.growth-quest').classList.toggle('is-complete', completedToday);
     ui['month-content'].hidden = !progress;
     ui['month-empty'].hidden = Boolean(progress);
     ui['month-empty'].textContent = unavailable ? 'Your monthly calendar is unavailable. Refresh to try again.' : 'Sign in to see your real monthly calendar.';
@@ -725,7 +730,7 @@ export function createDailyGrowth({
 
   function render() {
     if (disposed) return;
-    missions.sessionChanged();
+    missions.sessionChanged(); runTracking.sessionChanged();
     campaigns.sessionChanged();
     const busy = Boolean(state.busy);
     root.dataset.growthState = state.busy || (state.apiUnavailable ? 'unavailable' : state.session ? 'authenticated' : state.wallet ? 'connected' : 'signed-out');
@@ -782,10 +787,10 @@ export function createDailyGrowth({
         : 'TREE FORCE ’89 is an optional participation stamp for this month’s Passport.'
       : 'This month’s Passport uses the listed Garden Battles. TREE FORCE ’89 is not enabled for Daily Growth here.';
     ui['quest-rule'].textContent = treeForceEnabled
-      ? 'Start one run of TREE FORCE ’89, or finish an eligible Garden Battle.'
+      ? 'Complete a run in Tree Force ’89, Canopy Breaker, Garden Bot, or PvP. Win or lose, save the result.'
       : 'Finish an eligible Garden Battle. Win or lose, it counts.';
     const selected = games.find((game) => game.id === state.selectedGameId);
-    const done = state.progress?.today.gameIds.some(id => games.some(game => game.id === id));
+    const done = state.completedRuns?.runs?.length>0 && state.completedRuns.dateKey===new Date(now()).toISOString().slice(0,10) && !state.completedRuns.stale;
     ui['quest-state'].textContent = state.progress ? done ? '1 / 1 · Quest complete ✓' : '0 / 1 · Not completed' : state.apiUnavailable ? 'Progress unavailable' : state.configuration ? 'Sign in to save progress' : 'Checking availability…';
     ui['quest-state'].classList.toggle('is-done', Boolean(done));
     ui['pick-label'].textContent = selected?.id === state.configuration?.todayPick?.id ? 'Today’s pick:' : 'Your choice:';
@@ -821,7 +826,7 @@ export function createDailyGrowth({
         ? treeForceRequired
           ? 'Today’s quest is saved and you’re checked in. TREE FORCE ’89 counts toward this month’s Arcade Passport.'
           : 'Today’s quest is saved and you’re checked in. TREE FORCE participation is optional for this month’s Passport.'
-        : 'Participation is saved when your first wave starts. Refresh here to see it. One quest per UTC day; opening the link alone does not count.'
+        : 'Finish the run, then save your mission result. Refresh saved runs to unlock sharing. Starting the first wave alone does not complete this quest.'
       : done
         ? treeForceRequired
           ? 'Today’s quest is saved and you’re checked in. Refresh completed Garden Battles before 00:00 UTC for Passport stamps; TREE FORCE records its stamp when the first wave starts.'
@@ -1151,6 +1156,7 @@ export function createDailyGrowth({
       || (game.id === TREE_FORCE_ID && link.origin === view.location.origin && link.pathname === '/play/treeforce89/'));
     if (game) state.launched = true;
   });
+  on(root,'arcade-completed-runs',event=>{state.completedRuns=event.detail;render();});
   const tabs = [...root.querySelectorAll('[role="tab"]')];
   function selectTab(tab, focus = false) {
     for (const item of tabs) {
@@ -1233,7 +1239,7 @@ export function createDailyGrowth({
     ready, refresh, checkIn, signIn, signOut,
     destroy() {
       disposed = true;
-      missions.destroy();
+      missions.destroy(); runTracking.destroy();
       campaigns.destroy();
       if (ui['wallet-picker'].open) ui['wallet-picker'].close();
       epoch += 1;
@@ -1252,7 +1258,7 @@ if (typeof document !== 'undefined') {
 }
 
 export function completedQuestConfiguration(configuration) {
-  const eligibleGames = configuration.eligibleGames.filter(game => ['garden-bot','pvp','arborist-trials'].includes(game.id) && game.creditRule === 'complete-result');
-  const todayPick = eligibleGames.find(game => game.id === configuration.todayPick?.id) || eligibleGames.find(game => game.id === 'garden-bot') || eligibleGames[0] || null;
+  const eligibleGames=completedGames.map(game=>({...game}));
+  const todayPick=eligibleGames.find(game=>game.id===configuration.todayPick?.id)||eligibleGames.find(game=>game.id==='garden-bot');
   return {...configuration,eligibleGames,todayPick};
 }
