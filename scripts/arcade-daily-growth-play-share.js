@@ -821,17 +821,13 @@ export function createDailyGrowth({
       }
     }
     ui['game-select'].value = state.selectedGameId || '';
-    ui['quest-note'].textContent = selected?.id === TREE_FORCE_ID
-      ? done
-        ? treeForceRequired
-          ? 'Today’s quest is saved and you’re checked in. TREE FORCE ’89 counts toward this month’s Arcade Passport.'
-          : 'Today’s quest is saved and you’re checked in. TREE FORCE participation is optional for this month’s Passport.'
-        : 'Finish the run, then save your mission result. Refresh saved runs to unlock sharing. Starting the first wave alone does not complete this quest.'
-      : done
-        ? treeForceRequired
-          ? 'Today’s quest is saved and you’re checked in. Refresh completed Garden Battles before 00:00 UTC for Passport stamps; TREE FORCE records its stamp when the first wave starts.'
-          : 'Today’s quest is saved and you’re checked in. Refresh other completed Garden Battles before 00:00 UTC to add required passport stamps.'
-        : 'Complete the game and refresh before 00:00 UTC to earn that day’s quest and passport stamps. Opening a game alone does not count.';
+    ui['quest-note'].textContent = done
+      ? 'Completed run saved. Share that result below. Attendance and monthly badge progress are shown separately.'
+      : selected?.id===TREE_FORCE_ID
+        ? 'Finish the run, then save your mission result. Refresh saved runs to unlock sharing. Starting the first wave alone does not complete this quest.'
+        : selected?.id==='canopy-breaker'
+          ? 'Finish a run; a victory or game over counts and saves automatically. Return here and refresh saved runs to share it.'
+          : 'Finish an official battle and save the result. Return here and refresh saved runs. Opening a game link alone does not count.';
     ui.status.textContent = state.notice;
     ui.status.className = `growth-status${state.noticeKind ? ` is-${state.noticeKind}` : ''}`;
     renderProgress();
@@ -864,13 +860,8 @@ export function createDailyGrowth({
       setNotice(`Saved progress shown; ${labels.join(', ')} verification is unavailable or incomplete. Refresh again later to check for new results.`, 'error');
       return;
     }
-    if (state.progress?.today.questCompleted && !previous?.today.questCompleted) setNotice('Daily quest complete. You’re checked in for today, and your game participation is saved.', 'success');
-    else if ((state.progress?.passport.completedGameIds.length || 0) > (previous?.passport.completedGameIds.length || 0)) setNotice('A new passport stamp is saved. Today’s quest is already counted.', 'success');
-    else if ((state.progress?.passport.optionalCompletedGameIds.length || 0) > (previous?.passport.optionalCompletedGameIds.length || 0)) setNotice('An optional participation stamp is saved. Today’s quest is already counted; required Passport progress is unchanged.', 'success');
-    else if (state.progress?.today.questCompleted) setNotice('Progress refreshed. Today’s quest is already saved. Each UTC day can earn one quest stamp.', 'info');
-    else setNotice(state.configuration?.eligibleGames.some((game) => game.id === TREE_FORCE_ID)
-      ? 'Progress refreshed. A recorded first wave of TREE FORCE or a completed, saved Garden Battles result can count. Opening a game link alone does not count.'
-      : 'Progress refreshed. Only completed, verified Garden Battles results count. Opening a game link alone does not count.', 'info');
+    if ((state.progress?.passport.completedGameIds.length||0)>(previous?.passport.completedGameIds.length||0))setNotice('A new Passport stamp is saved. Completed runs are checked separately above.','success');
+    else setNotice('Attendance and Passport progress refreshed. Saved-run tracking checks all four games separately.','info');
   }
 
   async function refresh() {
