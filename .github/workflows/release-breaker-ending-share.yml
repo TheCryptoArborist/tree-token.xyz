@@ -2,7 +2,7 @@ name: Release Canopy Breaker ending share
 on:
   push:
     branches: [feature/breaker-ending-share]
-    paths: [games/canopy-breaker/src/app.js, games/canopy-breaker/tools/deploy-ending-share.mjs, .github/workflows/release-breaker-ending-share.yml]
+    paths: [games/canopy-breaker/tests/**, games/canopy-breaker/src/app.js, games/canopy-breaker/tools/deploy-ending-share.mjs, .github/workflows/release-breaker-ending-share.yml]
 permissions:
   contents: read
 concurrency:
