@@ -1,0 +1,28 @@
+{
+  "assets": {
+    "contender": {
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "transparentCenter": true,
+      "transparentCorners": true,
+      "opaquePixelsOutsideCircle": 0
+    },
+    "champion": {
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "transparentCenter": true,
+      "transparentCorners": true,
+      "opaquePixelsOutsideCircle": 0
+    }
+  },
+  "eventRuleTests": "5 passed",
+  "productionSnapshot": "passed: 196 files, 38 archived function packages",
+  "browserChecks": "Blocked: local Chromium cannot create a socket; remote browser cannot reach local server. Upload, export and responsive UI checks remain pending.",
+  "published": false
+}

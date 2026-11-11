@@ -1,4 +1,10 @@
 export const PROFILE_SIZE=512;
+export const CROWN_OVERLAYS={contender:'/assets/profile-studio/canopy-crown-89/contender.png',champion:'/assets/profile-studio/canopy-crown-89/champion.png'};
+export function drawCrownProfile(canvas,{overlay,photo=null,zoom=1,offsetX=0,offsetY=0,overlayOnly=false}={}){
+ canvas.width=canvas.height=1024;const c=canvas.getContext('2d');c.clearRect(0,0,1024,1024);
+ if(!overlayOnly){c.save();c.scale(2,2);avatar(c,photo,zoom,offsetX,offsetY);c.restore();}
+ if(overlay)c.drawImage(overlay,0,0,1024,1024);
+}
 export const EMBLEM={x:400,y:400,r:44};
 function disk(c,x,y,r,fill,stroke,width=1){c.beginPath();c.arc(x,y,r,0,Math.PI*2);if(fill){c.fillStyle=fill;c.fill();}if(stroke){c.strokeStyle=stroke;c.lineWidth=width;c.stroke();}}
 function leaf(c,x,y,angle,color){c.save();c.translate(x,y);c.rotate(angle);c.beginPath();c.moveTo(-10,0);c.quadraticCurveTo(0,-9,10,0);c.quadraticCurveTo(0,9,-10,0);c.fillStyle=color;c.fill();c.restore();}
