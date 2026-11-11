@@ -33,7 +33,9 @@ if(mode==='candidate'){
  assert.equal(target,'preview','Only a review workshop may be released');
  changes['/play/events/preview/index.html']=fs.readFileSync(root+'/production/arcade-events-static/index.html');
  changes['/play/events/mobile-review/index.html']=fs.readFileSync(root+'/production/arcade-events-static/mobile.html');
- for(const p of ['/scripts/arcade-events/core.mjs','/scripts/arcade-events/preview.mjs','/styles/arcade-events-preview-v1.css'])changes[p]=fs.readFileSync(root+p);
+ changes['/play/events/profile-cosmetics/index.html']=fs.readFileSync(root+'/production/event-profile-cosmetics/index.html');
+ changes['/play/events/profile-cosmetics/mobile-review/index.html']=fs.readFileSync(root+'/production/event-profile-cosmetics/mobile.html');
+ for(const p of ['/scripts/arcade-events/profile-cosmetics.mjs','/scripts/arcade-events/profile-review.mjs','/styles/event-profile-cosmetics-v1.css','/scripts/arcade-events/server-controls.mjs','/scripts/arcade-events/core.mjs','/scripts/arcade-events/preview.mjs','/styles/arcade-events-preview-v1.css'])changes[p]=fs.readFileSync(root+p);
  for(const [p,bytes]of Object.entries(changes))files[p]=sha(bytes);
  assert.deepEqual(Object.keys(originalFiles).filter(p=>files[p]!==originalFiles[p]&&!Object.hasOwn(changes,p)),[],'Unapproved existing static path changed');
  assert(/^[a-f0-9]{40}$/.test(process.env.SOURCE_COMMIT||''),'A recorded source commit is required');
