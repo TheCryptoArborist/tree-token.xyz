@@ -5,7 +5,6 @@ on:
     paths: [scripts/arcade-play-share/inspect-runs.mjs]
 permissions:
   contents: read
-  actions: write
 jobs:
   inspect:
     runs-on: ubuntu-24.04
@@ -17,12 +16,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - run: npm install --prefix /tmp/arcade-inspect @netlify/blobs@10.7.12 --no-audit --no-fund
-      - name: Remove generated diagnostic log
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          curl --fail --silent -X DELETE -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" https://api.github.com/repos/TheCryptoArborist/tree-token.xyz/actions/runs/42966188359/logs
+      - run: npm install --prefix /tmp/arcade-inspect pg@8.16.3 --no-audit --no-fund
       - name: Read record shapes only
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
