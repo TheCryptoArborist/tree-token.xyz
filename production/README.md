@@ -1,3 +1,13 @@
+# Current production — approved ninth Deadfall Run badge, 2026-11-10
+
+Locked deploy `6af3b401d0193c86219abb02`, source `1be865bd768123d2e5cc1fcc02e95c9e96884f00`, PR #135. Active page `production/profile-deadfall-static/index.html`, script `scripts/tree-profile-studio-v13.js`, helper `scripts/profile-deadfall-art.js`; existing stylesheet v9 unchanged.
+
+Adds the approved bright purple truck with lowered title as ninth ecosystem badge. The other eight live badges are unchanged. Pending original Canopy Breaker and Root Rage boss artwork remain in the separate v12 game-art preview. Live badge selection, exact nine-choice count and frame PNG export verified.
+
+Fresh release preserves 479 static paths (476 unchanged), all 47 complete backend records, five schedules and runtime/provider/build/protected-environment fingerprints. Source and release record: `docs/profile-deadfall-release-20261110.json`. Future releases use fresh published inventory; utility `scripts/profile-deadfall/release.mjs`.
+
+---
+
 # Current production — clear game badges and mobile photo upload, 2026-11-10
 
 Locked deploy `6af3ab2cd3c66da0f6847165`, source `6258bbaeeef5295294ed8bf34714bf6d268900be`, PR #132. Active page: `production/profile-ecosystem-static/index.html`; script `scripts/tree-profile-studio-v11.js`; stylesheet `styles/tree-profile-studio-v9.css`.
