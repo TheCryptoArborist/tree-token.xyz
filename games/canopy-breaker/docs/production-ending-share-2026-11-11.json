@@ -1,0 +1,197 @@
+{
+  "id": "6af476c7b4ee6dbea04b65a7",
+  "baseline": "6af476271f786cf9c2a0cd64",
+  "sourceCommit": "bc12efa963e4c56c05f714debe8483af3e6152af",
+  "staticPathsPreserved": 13,
+  "function": "breaker-access",
+  "functionHash": "d41163f612e19b3e297e31baf89772411cf6ae429b1d9cc0127226fd99e9e4ed",
+  "runtime": "nodejs24.x",
+  "invocationMode": "stream",
+  "schedulesPreserved": 0,
+  "environmentAndConfigurationPreserved": true,
+  "functionBefore": {
+    "n": "breaker-access",
+    "d": "db8707c714c6908d73efae5671ddb0d23f96bd34b157b73757e279efaf69cc98",
+    "dn": null,
+    "g": null,
+    "bd": {
+      "bootstrapVersion": "2.24.0",
+      "runtimeAPIVersion": 2
+    },
+    "rgo": "us-east-2",
+    "mo": 1024,
+    "ro": [
+      {
+        "p": "/play/canopy-breaker/api/access",
+        "l": "/play/canopy-breaker/api/access",
+        "e": null,
+        "m": null,
+        "ps": false
+      },
+      {
+        "p": "/play/canopy-breaker/api/game",
+        "l": "/play/canopy-breaker/api/game",
+        "e": null,
+        "m": null,
+        "ps": false
+      },
+      {
+        "p": "/play/canopy-breaker/api/health",
+        "l": "/play/canopy-breaker/api/health",
+        "e": null,
+        "m": null,
+        "ps": false
+      },
+      {
+        "p": "/play/canopy-breaker/api/leaderboard",
+        "l": "/play/canopy-breaker/api/leaderboard",
+        "e": null,
+        "m": null,
+        "ps": false
+      },
+      {
+        "p": "/play/canopy-breaker/api/completions",
+        "l": "/play/canopy-breaker/api/completions",
+        "e": null,
+        "m": null,
+        "ps": false
+      },
+      {
+        "p": "/play/canopy-breaker/src/*",
+        "l": null,
+        "e": "^\\/play\\/canopy-breaker\\/src(?:\\/(.*))\\/?$",
+        "m": null,
+        "ps": false
+      }
+    ],
+    "p": 10,
+    "tr": {
+      "action": {
+        "type": "rate_limit",
+        "config": {
+          "rate_limit_config": {
+            "algorithm": "sliding_window",
+            "window_size": 60,
+            "window_limit": 180
+          },
+          "aggregate": {
+            "keys": [
+              {
+                "type": "domain"
+              },
+              {
+                "type": "ip"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "id": "e0a361d9bd4b40b830ff23c101c723a72cb74fe58cccc740d935b3306cd9791d",
+    "a": "194385697179",
+    "c": "2026-11-11T14:03:50.094Z",
+    "im": "stream",
+    "m": 1024,
+    "obl": "netlify-observability-extension",
+    "oblv": 34,
+    "oid": "b0ffd1e70655ba8953188f95a1b08890839a0fc6c48af9c136df9da610788882",
+    "r": "nodejs24.x",
+    "rg": "us-east-2",
+    "s": 1636241
+  },
+  "functionAfter": {
+    "n": "breaker-access",
+    "d": "d41163f612e19b3e297e31baf89772411cf6ae429b1d9cc0127226fd99e9e4ed",
+    "dn": null,
+    "g": null,
+    "bd": {
+      "bootstrapVersion": "2.24.0",
+      "runtimeAPIVersion": 2
+    },
+    "rgo": "us-east-2",
+    "mo": 1024,
+    "ro": [
+      {
+        "p": "/play/canopy-breaker/api/access",
+        "l": "/play/canopy-breaker/api/access",
+        "e": null,
+        "m": null,
+        "ps": false
+      },
+      {
+        "p": "/play/canopy-breaker/api/game",
+        "l": "/play/canopy-breaker/api/game",
+        "e": null,
+        "m": null,
+        "ps": false
+      },
+      {
+        "p": "/play/canopy-breaker/api/health",
+        "l": "/play/canopy-breaker/api/health",
+        "e": null,
+        "m": null,
+        "ps": false
+      },
+      {
+        "p": "/play/canopy-breaker/api/leaderboard",
+        "l": "/play/canopy-breaker/api/leaderboard",
+        "e": null,
+        "m": null,
+        "ps": false
+      },
+      {
+        "p": "/play/canopy-breaker/api/completions",
+        "l": "/play/canopy-breaker/api/completions",
+        "e": null,
+        "m": null,
+        "ps": false
+      },
+      {
+        "p": "/play/canopy-breaker/src/*",
+        "l": null,
+        "e": "^\\/play\\/canopy-breaker\\/src(?:\\/(.*))\\/?$",
+        "m": null,
+        "ps": false
+      }
+    ],
+    "p": 10,
+    "tr": {
+      "action": {
+        "type": "rate_limit",
+        "config": {
+          "rate_limit_config": {
+            "algorithm": "sliding_window",
+            "window_size": 60,
+            "window_limit": 180
+          },
+          "aggregate": {
+            "keys": [
+              {
+                "type": "domain"
+              },
+              {
+                "type": "ip"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "id": "d623f9f51bad97849208e93375c57de5ff8c4d6e20d16fc65b813deb8b8461f1",
+    "a": "677604543295",
+    "c": "2026-11-11T14:08:12.077Z",
+    "im": "stream",
+    "m": 1024,
+    "obl": "netlify-observability-extension",
+    "oblv": 34,
+    "oid": "4de5bb2933f7c571c480062469136edf4816679e5a52e1ff4ae4a74d4d84c6ce",
+    "r": "nodejs24.x",
+    "rg": "us-east-2",
+    "s": 1636329
+  },
+  "scope": "Embedded app ending UI; game engine, wallet, payments, database and API source unchanged",
+  "testsPassed": 170,
+  "realWalletAcceptance": "Pending player test",
+  "arcadeTarget": "https://tree-token.xyz/play/quests/preview/",
+  "rootDeployment": "6af47493326dce63051d6e92"
+}

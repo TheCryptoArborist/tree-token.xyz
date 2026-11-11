@@ -1,0 +1,43 @@
+name: Release Canopy Breaker ending share
+on:
+  push:
+    branches: [feature/breaker-ending-share]
+    paths: [games/canopy-breaker/tests/**, games/canopy-breaker/src/app.js, games/canopy-breaker/tools/deploy-ending-share.mjs, .github/workflows/release-breaker-ending-share.yml]
+permissions:
+  contents: read
+concurrency:
+  group: tree-production-preservation-release
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: games/canopy-breaker
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Validate unchanged game and payment behavior
+        run: |
+          npm ci --no-audit --no-fund
+          npm test
+          npm run check
+          npm run build
+          git diff --check
+      - name: Preserve current Canopy site and publish ending UI
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          SOURCE_COMMIT: ${{ github.sha }}
+        run: node tools/deploy-ending-share.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canopy-ending-share-release
+          path: games/canopy-breaker/.netlify/ending-share-release.json
+          include-hidden-files: true
+          if-no-files-found: ignore
