@@ -1,3 +1,4 @@
+import {mountEndSharePrompt} from '/scripts/arcade-end-share-prompt.js';
 import {step,PICKUPS,BIOMES} from './engine.js';
 import {SAVE_EVERY_FRAMES,MAX_BATCH_FRAMES,MAX_PENDING_FRAMES} from './replay-limits.js';
 import {draw} from './art.js';
@@ -9,6 +10,13 @@ import {loadBackgroundArt} from './background-art.js';
 const $=id=>document.getElementById(id),api=window.breakerSession,canvas=$('game'),ctx=canvas.getContext('2d');
 let run=null,queue=[],sending=null,inFlightInputs=0,paused=false,connected=!!api.account,clock=0,last=performance.now(),target=400,launch=false,fire=false,events=0,syncError='',muted=false,opening=null,quote=null,buying=false,gameActionBusy=false,newGameRequest=null,gameRevision=0;
 let homeView=true;
+const shareHost=document.createElement('div');$('overlay').querySelector('.overlay-inner').append(shareHost);let shareDispose=null,shareSignature='',savedResultId=null;
+function paintShare(){
+ const ready=connected&&run&&['gameover','won'].includes(run.state.status)&&savedResultId===run.id&&!queue.length&&!sending&&!syncError&&!gameActionBusy&&!buying;
+ const signature=ready?[run.id,gameRevision,api.account?.address,run.state.score,run.state.level].join(':'):'hidden';if(signature===shareSignature)return;shareSignature=signature;shareDispose?.();shareDispose=null;shareHost.replaceChildren();
+ if(ready)shareDispose=mountEndSharePrompt(shareHost,{gameId:'canopy-breaker',runId:run.id,wallet:api.account.address,ready:true,score:run.state.score,stage:run.state.level});
+}
+
 let pauseReason='manual',pauseView=null,pauseSaving=false,resumeAt=0,resumeTask=false,pauseEpoch=0;
 const keys=new Set(),motion=!matchMedia('(prefers-reduced-motion: reduce)').matches;
 let controlStorage=null;try{controlStorage=localStorage;}catch{}
@@ -17,7 +25,7 @@ const canPause=()=>run&&['ready','playing','cleared'].includes(run.state.status)
 function toast(text,{pickup=null}={}){const box=$('toast');box.replaceChildren();box.classList.toggle('pickup-toast',!!pickup);if(pickup){const copy=document.createElement('div'),title=document.createElement('strong'),detail=document.createElement('span');title.textContent=(pickup.good?'':'Hazard · ')+pickup.name;detail.textContent=pickup.description;copy.append(title,detail);box.append(pickupIcon(pickup.id,{size:48}),copy);}else box.textContent=text;box.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>box.classList.remove('show'),pickup?3500:2500);}
 function clearControls(){keys.clear();launch=false;fire=false;clock=0;}
 function resetPause(){pauseEpoch++;paused=false;pauseView=null;pauseSaving=false;resumeAt=0;resumeTask=false;clock=0;}
-function replace(data){gameRevision++;if(data.id!==run?.id)newGameRequest=null;resetPause();run=data;queue=[];target=run.state.paddle;events=run.state.eventId;syncError='';paint();}
+function replace(data){savedResultId=['gameover','won'].includes(data.state.status)?data.id:null;gameRevision++;if(data.id!==run?.id)newGameRequest=null;resetPause();run=data;queue=[];target=run.state.paddle;events=run.state.eventId;syncError='';paint();}
 async function open(){
  const address=api.account?.address,stamp=gameRevision;
  if(opening?.address===address&&opening.stamp===stamp)return opening.promise;
@@ -27,7 +35,7 @@ async function open(){
 async function flush(){
  if(sending)return sending;if(!queue.length||!run||!connected)return;
  const inputs=queue.splice(0,MAX_BATCH_FRAMES),id=run.id,revision=run.revision,stamp=gameRevision;inFlightInputs=inputs.length;
- sending=(async()=>{try{const data=await api.request('frames',{id,revision,inputs});if(stamp!==gameRevision)return;if(data.resync){run=data;queue=[];events=run.state.eventId;toast('Saved run restored.');}else{run={...data,state:structuredClone(data.state)};for(const input of queue)step(run.state,input);}syncError='';if(['gameover','won'].includes(data.state.status)){resetPause();window.dispatchEvent(new Event('breaker-score-saved'));}}catch(e){if(stamp===gameRevision){queue.unshift(...inputs);syncError=e.message;pauseEpoch++;resumeAt=0;resumeTask=false;paused=true;pauseView=structuredClone(run.state);clearControls();}}finally{sending=null;inFlightInputs=0;paint();}})();return sending;
+ sending=(async()=>{try{const data=await api.request('frames',{id,revision,inputs});if(stamp!==gameRevision)return;if(data.resync){run=data;queue=[];events=run.state.eventId;toast('Saved run restored.');}else{run={...data,state:structuredClone(data.state)};for(const input of queue)step(run.state,input);}syncError='';if(['gameover','won'].includes(data.state.status)){savedResultId=data.id;resetPause();window.dispatchEvent(new Event('breaker-score-saved'));}}catch(e){if(stamp===gameRevision){queue.unshift(...inputs);syncError=e.message;pauseEpoch++;resumeAt=0;resumeTask=false;paused=true;pauseView=structuredClone(run.state);clearControls();}}finally{sending=null;inFlightInputs=0;paint();}})();return sending;
 }
 async function checkpoint(){while(sending||queue.length){if(sending)await sending;else await flush();if(syncError)throw Error(syncError);}}
 // Keep rendering a stable pause snapshot while authoritative checkpoints settle.
@@ -51,6 +59,7 @@ async function requestResume(){
 const pauseCopy={manual:'You paused the game.',focus:'The game window lost focus.',hidden:'The game tab was hidden.',controller:'Your active controller changed or disconnected.',setup:'Controller setup opened.',checkout:'Payment history opened a checkout.',leaderboard:'The leaderboard opened.',saving:'Saving fell behind, so the game paused to protect your run.',navigation:'Your run is saving before leaving the game.'};
 function overlay(kicker,title,text,label,note=''){const o=$('overlay');o.hidden=false;o.classList.remove('gameover-choices','pause-state','resume-countdown');$('overlay-kicker').textContent=kicker;$('overlay-title').textContent=title;$('overlay-text').textContent=text;$('primary').textContent=label;$('primary').disabled=gameActionBusy||buying;$('secondary').hidden=true;$('secondary').disabled=gameActionBusy||buying;$('overlay-note').textContent=note;$('return-home').hidden=homeView;}
 function paint(){
+ paintShare();
  const s=run?.state;if(s){$('level').textContent=String(s.level).padStart(2,'0')+' / 30';$('score').textContent=String(s.score).padStart(6,'0');$('lives').textContent=Array.from({length:3},(_,i)=>i<s.lives?'●':'○').join(' ');}
  if(!connected){overlay('NFTREE ACCESS REQUIRED','The canopy awaits.','Connect your Sui wallet and verify NFTree ownership.',api.authLabel||'Connect Wallet','Sign-in is a message. No TREE payment is needed to verify.');$('primary').disabled=!!api.authBusy;return;}
  if(syncError){overlay('FOREST CONNECTION','Your run is held.',syncError,'Reconnect','Your recorded payment and saved run remain recoverable.');return;}
