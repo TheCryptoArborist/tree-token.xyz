@@ -1,3 +1,23 @@
+# Current production — original game badges and NFTrees first, 2026-11-10
+
+Locked deploy `6af3b54193f114080480420b`, source `92c68c871cd1fd77fedb78f8a4703a505c4c9a19`, PR #134. Active page: `production/profile-nft-first-static/index.html`; script: `scripts/tree-profile-studio-v14.js`; composer: `scripts/profile-game-art.js`; existing stylesheet v9 unchanged.
+
+Owned NFTrees now appear above TREE Ecosystem. Canopy Breaker uses original forest arcade artwork; Root Rage uses original hero/chainsaw boss battle art. The approved bright purple truck is retained as the ninth ecosystem badge. No generic game symbols remain in the active collection. Wallet/session/ownership/payment behavior and all other artwork are unchanged. Native photo picker remains prominent.
+
+Complete fresh published inventory preserved: 480 static paths, 478 unchanged; 47 complete backend records and five schedules, runtime/provider/build settings and protected environment fingerprints unchanged. Release record: `docs/profile-art-nft-first-release-20261110.json`. Future releases capture a fresh live baseline using `scripts/profile-nft-first/release.mjs`.
+
+---
+
+# Current production — approved ninth Deadfall Run badge, 2026-11-10
+
+Locked deploy `6af3b401d0193c86219abb02`, source `1be865bd768123d2e5cc1fcc02e95c9e96884f00`, PR #135. Active page `production/profile-deadfall-static/index.html`, script `scripts/tree-profile-studio-v13.js`, helper `scripts/profile-deadfall-art.js`; existing stylesheet v9 unchanged.
+
+Adds the approved bright purple truck with lowered title as ninth ecosystem badge. The other eight live badges are unchanged. Pending original Canopy Breaker and Root Rage boss artwork remain in the separate v12 game-art preview. Live badge selection, exact nine-choice count and frame PNG export verified.
+
+Fresh release preserves 479 static paths (476 unchanged), all 47 complete backend records, five schedules and runtime/provider/build/protected-environment fingerprints. Source and release record: `docs/profile-deadfall-release-20261110.json`. Future releases use fresh published inventory; utility `scripts/profile-deadfall/release.mjs`.
+
+---
+
 # Current production — clear game badges and mobile photo upload, 2026-11-10
 
 Locked deploy `6af3ab2cd3c66da0f6847165`, source `6258bbaeeef5295294ed8bf34714bf6d268900be`, PR #132. Active page: `production/profile-ecosystem-static/index.html`; script `scripts/tree-profile-studio-v11.js`; stylesheet `styles/tree-profile-studio-v9.css`.
