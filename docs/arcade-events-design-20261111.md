@@ -120,7 +120,7 @@ wallet SDK change or gameplay timer is introduced.
 Focused verification uses the pinned dependencies in `vendor/arcade-events`:
 
 ```sh
-node --test tests/arcade-event-core.test.mjs tests/arcade-event-access.test.ts tests/arcade-event-database.test.mjs tests/arcade-event-controls.test.mjs
+node --test tests/arcade-event-core.test.mjs tests/arcade-event-access.test.ts tests/arcade-event-database.test.mjs tests/arcade-event-controls.test.mjs tests/arcade-event-release-guard.test.mjs
 ```
 
 ## Remaining launch integration
@@ -175,9 +175,22 @@ and preserves all static paths except these five workshop files:
 Only the isolated `arcade-events` package is rebuilt and replaced. Every other
 function’s complete record stays exact, apart from equivalent Netlify
 memory/region aliases. The replaced handler retains its route, rate limit,
-runtime, invocation mode, memory, region, provider account and other execution
-configuration. Its package digest, package/provisioning IDs, byte size and
-creation time may change; build metadata must match the new package manifest.
+runtime, invocation mode, memory, region and other execution configuration.
+Its package digest, provisioning IDs, Netlify-assigned provider account, byte
+size and creation time may change; build metadata must match the new manifest.
+Netlify's official CLI maps the compressed `a` field to the function log
+service's `account_id`; this is provisioned metadata, not a writable field in
+the published `functionConfig` API. The publisher verifies the approved new
+package and preserved configuration, then pins its complete raw function record
+in release state after successful candidate validation. Every later phase checks
+that exact record, including the new provider account, before and after locking.
+No provider-account changes are allowed for the other existing functions.
+
+Primary references:
+[Netlify CLI function-log source](https://github.com/netlify/cli/blob/3fe8202fe7424f8934d6373ac55b215c77433f7c/src/commands/logs/sources/functions.ts),
+[Netlify OpenAPI function configuration](https://github.com/netlify/open-api/blob/master/swagger.yml),
+and [Netlify's immutable function deployment model](https://docs.netlify.com/build/functions/overview/).
+
 All five schedules, deploy runtime settings, site build settings and protected
 environment fingerprints are preserved. The historical root build must not
 replace the current live site.
