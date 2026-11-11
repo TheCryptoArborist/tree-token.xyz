@@ -34,6 +34,7 @@ if(mode==='candidate'){
  assert.equal(target,'preview','Only the isolated play/share review may be released');
  changes['/play/quests/preview/index.html']=fs.readFileSync(root+'/production/arcade-play-share-static/index.html');
  changes['/play/quests/mobile-review/index.html']=fs.readFileSync(root+'/production/arcade-play-share-static/mobile.html');
+ changes['/play/quests/share-review/index.html']=fs.readFileSync(root+'/production/arcade-play-share-static/share-review.html');
  for(const p of ['/scripts/arcade-completed-run-tracking.js','/scripts/arcade-navigation-play-share.js','/scripts/arcade-daily-growth-play-share.js','/scripts/arcade-social-play-share.js','/scripts/arcade-guided-play-share.js','/scripts/arcade-result-share-builder.js']) {
    changes[p]=fs.readFileSync(root+p);
  }
