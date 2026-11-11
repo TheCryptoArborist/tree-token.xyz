@@ -40,5 +40,11 @@
   "workshopFixes": [
     "Canopy Crown \u201989 default with exact old-title migration only; custom names and event IDs preserved",
     "Crown-only cosmetics hidden for other planned games"
-  ]
+  ],
+  "frameEdgeChecks": {
+    "method": "independent 8-neighbor flood-fill of exterior transparency",
+    "normalAndMaximumPhotoPosition": "passed for both frames",
+    "exteriorPhotoLeakPixels": 0,
+    "originalArtworkUnchanged": true
+  }
 }
