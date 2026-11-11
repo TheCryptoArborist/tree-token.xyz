@@ -32,6 +32,7 @@ if(mode==='candidate'){
  const files=await inventory(baseline.id),originalFiles={...files},changes={};
  assert.equal(target,'preview','Only a review workshop may be released');
  changes['/play/events/preview/index.html']=fs.readFileSync(root+'/production/arcade-events-static/index.html');
+ changes['/play/events/profile-cosmetics/mobile-review/index.html']=fs.readFileSync(root+'/production/event-profile-cosmetics/mobile.html');
  changes['/play/events/profile-cosmetics/index.html']=fs.readFileSync(root+'/production/event-profile-cosmetics/index.html');
  for(const p of ['/scripts/arcade-events/preview.mjs','/scripts/arcade-events/profile-cosmetics.mjs','/scripts/arcade-events/profile-review.mjs','/styles/event-profile-cosmetics-v1.css'])changes[p]=fs.readFileSync(root+p);
  for(const [p,bytes]of Object.entries(changes))files[p]=sha(bytes);
