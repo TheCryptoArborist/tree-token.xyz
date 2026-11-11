@@ -27,7 +27,7 @@ function harness({captureDraw=true,home=false}={}){
  function element(id){
   if(!elements.has(id))elements.set(id,{
    id,textContent:'',hidden:true,disabled:false,open:false,events:new Map(),tagName:'DIV',
-   replaceChildren(){},append(){},classList:{add(){},remove(){},toggle(){}},
+   replaceChildren(){},append(){},querySelector(){return element('overlay-inner');},classList:{add(){},remove(){},toggle(){}},
    addEventListener(name,fn){add(this.events,name,fn);},setAttribute(){},focus(){},setPointerCapture(){},
    getContext:()=>context,getBoundingClientRect:()=>({left:0,top:0,width:800,height:900}),
    showModal(){this.open=true;},close(){this.open=false;for(const fn of this.events.get('close')||[])fn();},
@@ -38,9 +38,9 @@ function harness({captureDraw=true,home=false}={}){
   request(action,input){let resolve,reject;const promise=new Promise((r,j)=>{resolve=r;reject=j;});const call={action,input,startedAt:now,settled:false,resolve(value){call.settled=true;resolve(value);},reject(error){call.settled=true;reject(error);}};calls.push(call);return promise;},
   history:async()=>[],subscribe(fn){subscriber=fn;},openAuth(){},
  };
- const window={breakerSession:api,addEventListener(name,fn){add(events,name,fn);},dispatchEvent(event){dispatched.push(event.type);},location:{assign(){}}};
+ const window={sharePrompts:[],breakerSession:api,addEventListener(name,fn){add(events,name,fn);},dispatchEvent(event){dispatched.push(event.type);},location:{assign(){}}};
  const document={getElementById:element,querySelectorAll:()=>[],querySelector:selector=>element(selector==='.field'?'field':'cabinet'),addEventListener(name,fn){add(docEvents,name,fn);},hidden:false,createElement:()=>element('created')};
- const prelude=`const sound=()=>{},wakeAudio=async()=>{},setSound=()=>{},createControllerTracker=()=>({poll:readPad,pad:null}),createControllerCalibration=()=>({}),pickupIcon=()=>({});`;
+ const prelude=`const mountEndSharePrompt=(host,options)=>{window.sharePrompts.push(options);return()=>{};};const sound=()=>{},wakeAudio=async()=>{},setSound=()=>{},createControllerTracker=()=>({poll:readPad,pad:null}),createControllerCalibration=()=>({}),pickupIcon=()=>({});`;
  const boot=new Function('window','document','matchMedia','localStorage','requestAnimationFrame','setTimeout','clearTimeout','performance','step','PICKUPS','BIOMES','draw','readPad','SAVE_EVERY_FRAMES','MAX_BATCH_FRAMES','MAX_PENDING_FRAMES','MAX_CLOCK_CREDIT',prelude+source+`
  homeView=${home};
  return {replace,frame,primary,togglePause,flush,open,pauseGame,requestResume,
@@ -49,7 +49,7 @@ function harness({captureDraw=true,home=false}={}){
  const app=boot(window,document,()=>({matches:false}),{},()=>{},()=>1,()=>{},{now:()=>now},step,PICKUPS,BIOMES,(_ctx,state)=>{if(captureDraw)drawn=structuredClone(state);},()=>pad,SAVE_EVERY_FRAMES,MAX_BATCH_FRAMES,MAX_PENDING_FRAMES,MAX_CLOCK_CREDIT);
  function emit(map,name,event={}){for(const fn of map.get(name)||[])fn(event);}
  return {
-  app,api,calls,dispatched,document,element,
+  app,api,calls,dispatched,document,element,sharePrompts:window.sharePrompts,
   frameAt(time){now=time;app.frame(time);},
   drawn:()=>structuredClone(drawn),
   event(name,event){emit(events,name,event);},
@@ -194,8 +194,8 @@ test('paid continue review keeps the current grove and progress while the free c
 test('a predicted game over notifies completion listeners only after its terminal inputs are saved',async()=>{
  const h=harness(),base=playing();base.state.lives=1;base.state.balls[0].x=700;base.state.balls[0].y=500;h.app.replace(structuredClone(base));let time=0;
  while(h.app.snapshot().run.state.status!=='gameover'&&time<2000)h.frameAt(time+=20);
- assert.equal(h.app.snapshot().run.state.status,'gameover');assert.equal(h.calls.length,1);const first=acknowledged(base,h.calls[0]);assert.equal(first.state.status,'playing');h.calls[0].resolve(first);await settle();assert.deepEqual(h.dispatched,[]);
- const saving=h.app.flush();assert.equal(h.calls.length,2);const terminal=acknowledged(first,h.calls[1]);assert.equal(terminal.state.status,'gameover');h.calls[1].resolve(terminal);await saving;assert.deepEqual(h.dispatched,['breaker-score-saved']);
+ assert.equal(h.app.snapshot().run.state.status,'gameover');assert.equal(h.calls.length,1);const first=acknowledged(base,h.calls[0]);assert.equal(first.state.status,'playing');h.calls[0].resolve(first);await settle();assert.deepEqual(h.dispatched,[]);assert.equal(h.sharePrompts.length,0,'predicted endings cannot expose a saved-result share link');
+ const saving=h.app.flush();assert.equal(h.calls.length,2);const terminal=acknowledged(first,h.calls[1]);assert.equal(terminal.state.status,'gameover');h.calls[1].resolve(terminal);await saving;assert.deepEqual(h.dispatched,['breaker-score-saved']);assert.equal(h.sharePrompts.length,1);assert.equal(h.sharePrompts[0].runId,terminal.id);assert.equal(h.sharePrompts[0].score,terminal.state.score);assert.equal(h.sharePrompts[0].ready,true);
 });
 
 
