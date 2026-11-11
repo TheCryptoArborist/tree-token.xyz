@@ -203,3 +203,23 @@ checked again after locking the release. Existing game/wallet code, the Arcade
 event card and the approved profile artwork are outside this change set.
 Record the actual deploy, source commit, migration verification and canonical
 browser checks after publication.
+
+## Published verification
+
+The approved USDC proposal was published on 2026-11-11 at 22:42:49 UTC as locked
+deploy `6af4ef567e67ea8af9abe8ed`, from source
+`ae882dc0feb9a71e277611fbfa8c8589dbc80bc1`, workflow `43113929057`.
+The complete manifest records 513 static paths (508 unchanged), 49 functions
+(48 unchanged and the event handler replaced), and five preserved schedules.
+The candidate and canonical endpoints both report the exact version 2 policy
+with payment, scoring and awards disabled. All 29 focused tests passed.
+
+Canonical desktop and mobile browser checks confirmed the displayed ladder,
+calculator, guarantee accounting, local draft save/recovery and actual JSON
+download. The exported draft contains native USDC terms, six decimals, the
+approved tiers and `paymentEnabled: false`. Both layouts fit horizontally.
+See `canopy-crown-usdc-release-20261111.json`,
+`canopy-crown-usdc-validation-20261111.json`,
+`canopy-crown-usdc-api-validation-20261111.json` and
+`canopy-crown-usdc-database-validation-20261111.json`. The remaining launch
+integration above is still required before real entries or awards open.

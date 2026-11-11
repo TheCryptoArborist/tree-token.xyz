@@ -1,0 +1,393 @@
+{
+  "verifiedAt": "2026-11-11T22:45:54.177Z",
+  "canonicalUrl": "https://tree-token.xyz/play/events/preview/",
+  "mobileReviewUrl": "https://tree-token.xyz/play/events/mobile-review/",
+  "desktop": {
+    "clientWidth": 1348,
+    "scrollWidth": 1348
+  },
+  "mobile": {
+    "clientWidth": 375,
+    "scrollWidth": 375
+  },
+  "calculatorCases": [
+    {
+      "entrants": "50",
+      "values": [
+        {
+          "id": "revenue",
+          "text": "250 USDC"
+        },
+        {
+          "id": "estimate-prize",
+          "text": "200 USDC"
+        },
+        {
+          "id": "first-prize",
+          "text": "120 USDC"
+        },
+        {
+          "id": "second-prize",
+          "text": "50 USDC"
+        },
+        {
+          "id": "third-prize",
+          "text": "30 USDC"
+        },
+        {
+          "id": "organizer-allocation",
+          "text": "50 USDC"
+        },
+        {
+          "id": "guarantee-top-up",
+          "text": "0 USDC"
+        },
+        {
+          "id": "margin",
+          "text": "50 USDC"
+        }
+      ]
+    },
+    {
+      "entrants": "25",
+      "values": [
+        {
+          "id": "revenue",
+          "text": "125 USDC"
+        },
+        {
+          "id": "estimate-prize",
+          "text": "100 USDC"
+        },
+        {
+          "id": "first-prize",
+          "text": "75 USDC"
+        },
+        {
+          "id": "second-prize",
+          "text": "25 USDC"
+        },
+        {
+          "id": "third-prize",
+          "text": "0 USDC"
+        },
+        {
+          "id": "organizer-allocation",
+          "text": "25 USDC"
+        },
+        {
+          "id": "guarantee-top-up",
+          "text": "0 USDC"
+        },
+        {
+          "id": "margin",
+          "text": "25 USDC"
+        }
+      ]
+    },
+    {
+      "entrants": "100",
+      "values": [
+        {
+          "id": "revenue",
+          "text": "500 USDC"
+        },
+        {
+          "id": "estimate-prize",
+          "text": "400 USDC"
+        },
+        {
+          "id": "first-prize",
+          "text": "240 USDC"
+        },
+        {
+          "id": "second-prize",
+          "text": "100 USDC"
+        },
+        {
+          "id": "third-prize",
+          "text": "60 USDC"
+        },
+        {
+          "id": "organizer-allocation",
+          "text": "100 USDC"
+        },
+        {
+          "id": "guarantee-top-up",
+          "text": "0 USDC"
+        },
+        {
+          "id": "margin",
+          "text": "100 USDC"
+        }
+      ]
+    },
+    {
+      "entrants": "0",
+      "values": [
+        {
+          "id": "revenue",
+          "text": "0 USDC"
+        },
+        {
+          "id": "estimate-prize",
+          "text": "0 USDC"
+        },
+        {
+          "id": "first-prize",
+          "text": "0 USDC"
+        },
+        {
+          "id": "second-prize",
+          "text": "0 USDC"
+        },
+        {
+          "id": "third-prize",
+          "text": "0 USDC"
+        },
+        {
+          "id": "organizer-allocation",
+          "text": "0 USDC"
+        },
+        {
+          "id": "guarantee-top-up",
+          "text": "0 USDC"
+        },
+        {
+          "id": "margin",
+          "text": "0 USDC"
+        }
+      ]
+    },
+    {
+      "entrants": "1",
+      "values": [
+        {
+          "id": "revenue",
+          "text": "5 USDC"
+        },
+        {
+          "id": "estimate-prize",
+          "text": "25 USDC"
+        },
+        {
+          "id": "first-prize",
+          "text": "25 USDC"
+        },
+        {
+          "id": "second-prize",
+          "text": "0 USDC"
+        },
+        {
+          "id": "third-prize",
+          "text": "0 USDC"
+        },
+        {
+          "id": "organizer-allocation",
+          "text": "1 USDC"
+        },
+        {
+          "id": "guarantee-top-up",
+          "text": "21 USDC"
+        },
+        {
+          "id": "margin",
+          "text": "-20 USDC"
+        }
+      ]
+    },
+    {
+      "entrants": "6",
+      "values": [
+        {
+          "id": "revenue",
+          "text": "30 USDC"
+        },
+        {
+          "id": "estimate-prize",
+          "text": "25 USDC"
+        },
+        {
+          "id": "first-prize",
+          "text": "25 USDC"
+        },
+        {
+          "id": "second-prize",
+          "text": "0 USDC"
+        },
+        {
+          "id": "third-prize",
+          "text": "0 USDC"
+        },
+        {
+          "id": "organizer-allocation",
+          "text": "6 USDC"
+        },
+        {
+          "id": "guarantee-top-up",
+          "text": "1 USDC"
+        },
+        {
+          "id": "margin",
+          "text": "5 USDC"
+        }
+      ]
+    }
+  ],
+  "mobileCalculatorCase": {
+    "entrants": "25",
+    "values": [
+      {
+        "id": "revenue",
+        "text": "125 USDC"
+      },
+      {
+        "id": "estimate-prize",
+        "text": "100 USDC"
+      },
+      {
+        "id": "first-prize",
+        "text": "75 USDC"
+      },
+      {
+        "id": "second-prize",
+        "text": "25 USDC"
+      },
+      {
+        "id": "third-prize",
+        "text": "0 USDC"
+      },
+      {
+        "id": "organizer-allocation",
+        "text": "25 USDC"
+      },
+      {
+        "id": "guarantee-top-up",
+        "text": "0 USDC"
+      },
+      {
+        "id": "margin",
+        "text": "25 USDC"
+      }
+    ]
+  },
+  "localDraftSaveAndReload": true,
+  "localDraftRestoredMessage": "Restored the USDC draft saved on this device. Entry remains closed.",
+  "downloadedDraftVersion": 2,
+  "downloadedTerms": {
+    "version": 2,
+    "currency": "USDC",
+    "network": "sui-mainnet",
+    "decimals": 6,
+    "coinType": "0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC",
+    "entryFeeUnits": "5000000",
+    "minimumPrizeUnits": "25000000",
+    "prizeShareBps": 8000,
+    "organizerShareBps": 2000,
+    "payoutTiers": [
+      {
+        "id": "winner-only",
+        "minEntrants": 1,
+        "maxEntrants": 24,
+        "paidPlaces": 1,
+        "splitBps": [
+          10000,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "top-two",
+        "minEntrants": 25,
+        "maxEntrants": 49,
+        "paidPlaces": 2,
+        "splitBps": [
+          7500,
+          2500,
+          0
+        ]
+      },
+      {
+        "id": "top-three",
+        "minEntrants": 50,
+        "maxEntrants": null,
+        "paidPlaces": 3,
+        "splitBps": [
+          6000,
+          2500,
+          1500
+        ]
+      }
+    ],
+    "lives": 3,
+    "paidContinues": false,
+    "attempts": "unlimited",
+    "payout": "manual-after-review",
+    "access": "nftree-holder-only"
+  },
+  "paymentEnabled": false,
+  "cosmetics": {
+    "frame": "treeforce89-defend-the-canopy-01:participant-frame",
+    "badge": "treeforce89-defend-the-canopy-01:participant-badge",
+    "champion": "treeforce89-defend-the-canopy-01:champion-badge",
+    "permanent": true
+  },
+  "appConsoleErrors": [],
+  "screenshots": [
+    {
+      "path": "docs/validation/canopy-crown-usdc-20261111/desktop-workshop.jpg",
+      "bytes": 148356,
+      "sha256": "80e4ba7db2d8800172c92de0578e84e6ac14a8a8e976cc78d9e82fd9dda79c27"
+    },
+    {
+      "path": "docs/validation/canopy-crown-usdc-20261111/desktop-payouts.jpg",
+      "bytes": 171773,
+      "sha256": "4678448bee2ae5d39bb40b1c435c74f14795b79630bc9694b84fec0f70d1b095"
+    },
+    {
+      "path": "docs/validation/canopy-crown-usdc-20261111/mobile-hero.jpg",
+      "bytes": 80006,
+      "sha256": "b00e7182b41dffd0fd840026c832cb31816872cd2e60c361578d9195d7c38e5e"
+    },
+    {
+      "path": "docs/validation/canopy-crown-usdc-20261111/mobile-prize-ladder.jpg",
+      "bytes": 66905,
+      "sha256": "0d544cd1c9e133432804e87456877209f6193b5fe1655148b2d0d7577246b9cb"
+    },
+    {
+      "path": "docs/validation/canopy-crown-usdc-20261111/mobile-calculator.jpg",
+      "bytes": 50192,
+      "sha256": "25bfaedd9e5f5d009f9b924bd424c1ca4f6cd1a30eb7650bacdf42c47b7542b1"
+    }
+  ],
+  "published": true,
+  "deployId": "6af4ef567e67ea8af9abe8ed",
+  "deployLocked": true,
+  "publishedAt": "2026-11-11T22:42:49.282Z",
+  "sourceCommit": "ae882dc0feb9a71e277611fbfa8c8589dbc80bc1",
+  "workflowRun": 43113929057,
+  "workflowConclusion": "success",
+  "focusedTests": {
+    "passed": 29,
+    "failed": 0
+  },
+  "staticPaths": 513,
+  "unchangedStaticPaths": 508,
+  "functionsTotal": 49,
+  "unchangedFunctions": 48,
+  "schedulesPreserved": 5,
+  "migration": "20261111222359_arcade_event_usdc_terms",
+  "migrationVerification": "docs/canopy-crown-usdc-database-validation-20261111.json",
+  "apiVerification": "docs/canopy-crown-usdc-api-validation-20261111.json",
+  "actualDownloadedDraft": "docs/validation/canopy-crown-usdc-20261111/exported-draft.json",
+  "registrationClosed": true,
+  "productionSessionsOrPaymentsCreated": false,
+  "remainingLaunchIntegration": [
+    "Event and registration-close schedule",
+    "Organizer authorization and event fee recipient",
+    "Minimum first-prize funding",
+    "Idempotent native USDC receipt collection",
+    "Trusted tournament score validation",
+    "Permanent cosmetic unlock and recovery"
+  ]
+}
