@@ -5,7 +5,9 @@ export function installEventServerControls({readDraft,applyDraft,view=window,fet
  async function call(action,body){const s=session();if(!s)throw Error('Sign in to Tree Arcade with your Sui wallet, then return here.');
   const r=await fetchImpl(API+'?action='+action,{method:body?'POST':'GET',headers:{Authorization:'Bearer '+s.token,...(body?{'Content-Type':'application/json'}:{})},...(body?{body:JSON.stringify(body)}:{}),cache:'no-store'}),data=await r.json();
   if(session()?.token!==s.token||session()?.wallet!==s.wallet)throw Error('The connected wallet changed. Check again with the intended wallet.');
-  if(!r.ok||data.status!=='ok')throw Error(data.message||'The event service is temporarily unavailable.');return {data,wallet:s.wallet};
+  if(!r.ok||data.status!=='ok')throw Error(data.message||'The event service is temporarily unavailable.');
+  if(action.startsWith('admin-')&&(data.terms?.version!==2||data.terms?.currency!=='USDC'||(data.event&&data.event.terms_version!==2)))throw Error('The saved event uses different currency rules. Reload the workshop before continuing.');
+  return {data,wallet:s.wallet};
  }
  function bind(id,work,statusId){$(id).addEventListener('click',async()=>{if(busy)return;busy=true;buttons.forEach(id=>$(id).disabled=true);$(statusId).textContent='Checking…';try{await work();}catch(e){$(statusId).textContent=e.message;}finally{busy=false;buttons.forEach(id=>$(id).disabled=false);}});}
  bind('holder-check',async()=>{const {data}=await call('eligibility');$('holder-status').textContent=`NFTree ownership verified (${data.nftreeCount}). Entry remains closed. Ownership will be checked again before payment and each ranked run.`;},'holder-status');
@@ -14,6 +16,6 @@ export function installEventServerControls({readDraft,applyDraft,view=window,fet
   applyDraft({id:e.event_id,title:e.title,gameId:e.game_id,timeZone:e.time_zone,startLocal:local(e.starts_at),endLocal:local(e.ends_at)});version=e.version;identity=wallet+':'+e.event_id;$('server-status').textContent=`Loaded server draft · Version ${version}. Entry remains closed.`;
  },'server-status');
  bind('server-save',async()=>{const draft=readDraft(),s=session();if(!s)throw Error('Sign in to the Arcade first.');const expectedVersion=identity===s.wallet+':'+draft.id?version:0;
-  const {id,title,gameId,timeZone,startLocal,endLocal}=draft,{data,wallet}=await call('admin-save',{draft:{id,title,gameId,timeZone,startLocal,endLocal},expectedVersion});version=data.event.version;identity=wallet+':'+draft.id;$('server-status').textContent=`Saved on the server · Version ${version}. Entry remains closed.`;
+  const {id,title,gameId,timeZone,startLocal,endLocal}=draft,{data,wallet}=await call('admin-save',{termsVersion:2,draft:{id,title,gameId,timeZone,startLocal,endLocal},expectedVersion});version=data.event.version;identity=wallet+':'+draft.id;$('server-status').textContent=`Saved on the server · Version ${version}. Entry remains closed.`;
  },'server-status');
 }
