@@ -1,0 +1,29 @@
+{
+  "url": "https://tree-token.xyz/play/events/preview/",
+  "checkedAt": "2026-11-11",
+  "sourceCommit": "951fd28e0f90747cb80de11c74d7e4a5b5ee7862",
+  "desktop": {
+    "viewport": 1363,
+    "documentWidth": 1348,
+    "originalArtLoaded": true
+  },
+  "mobile": {
+    "iframeWidth": 390,
+    "contentWidth": 375,
+    "documentWidth": 375,
+    "horizontalOverflow": false
+  },
+  "checks": [
+    "draft save and reload restored dates",
+    "end-before-begin rejected",
+    "0 entrants: organizer contributes 25 SUI",
+    "100 entrants: prize 400 SUI",
+    "game planning choice updates art and adapter notice",
+    "entry button disabled",
+    "all 487 prior static paths unchanged",
+    "47 complete backend records and 5 schedules preserved"
+  ],
+  "paidEntryEnabled": false,
+  "walletUnlocksIntegrated": false,
+  "scoringIntegrated": false
+}
