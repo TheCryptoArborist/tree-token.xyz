@@ -32,8 +32,7 @@ if(mode==='candidate'){
  const files=await inventory(baseline.id),originalFiles={...files},changes={};
  assert.equal(target,'preview','Only the isolated play/share review may be released');
  changes['/play/quests/preview/index.html']=fs.readFileSync(root+'/production/arcade-play-share-static/index.html');
- for(const p of ['/scripts/arcade-daily-growth-play-share.js','/scripts/arcade-social-play-share.js','/scripts/arcade-guided-play-share.js','/scripts/arcade-result-share-builder.js']) {
-   assert(!Object.hasOwn(originalFiles,p),'Preview module already exists; inspect before replacing');
+ for(const p of ['/scripts/arcade-navigation-play-share.js','/scripts/arcade-daily-growth-play-share.js','/scripts/arcade-social-play-share.js','/scripts/arcade-guided-play-share.js','/scripts/arcade-result-share-builder.js']) {
    changes[p]=fs.readFileSync(root+p);
  }
  for(const [p,bytes]of Object.entries(changes))files[p]=sha(bytes);

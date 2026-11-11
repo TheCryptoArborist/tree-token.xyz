@@ -31,7 +31,16 @@ jobs:
           SOURCE_COMMIT: ${{ github.sha }}
         run: |
           test -n "$NETLIFY_AUTH_TOKEN"
-          node scripts/arcade-play-share/release.mjs candidate preview
+          for attempt in {1..20}; do
+            if node scripts/arcade-play-share/release.mjs candidate preview > /tmp/arcade-candidate.log 2>&1; then
+              cat /tmp/arcade-candidate.log
+              break
+            fi
+            cat /tmp/arcade-candidate.log
+            grep -q 'Active deployment; wait before publishing' /tmp/arcade-candidate.log || exit 1
+            sleep 15
+          done
+          test -f .netlify/arcade-play-share-preview/state.json
           node scripts/arcade-play-share/release.mjs verify preview
           node scripts/arcade-play-share/release.mjs publish preview
       - uses: actions/upload-artifact@v4

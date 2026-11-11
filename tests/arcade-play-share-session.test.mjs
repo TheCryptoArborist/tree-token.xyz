@@ -17,3 +17,42 @@ test('share drafts use actual game names and canonical Arcade URL without fabric
 test('monthly label is clear, badges retain their markup, and frames and emblem are separate',()=>{assert.match(page,/Monthly Progress/);assert.ok(fs.existsSync('assets/profile-studio/leafy-canopy.webp'));assert.ok(fs.existsSync('assets/profile-studio/sui-emblem.webp'));const old=new JSDOM(fs.readFileSync('production/arcade-guided-static/baseline.html','utf8')),current=new JSDOM(page);assert.equal(current.window.document.getElementById('growth-badges-panel').innerHTML,old.window.document.getElementById('growth-badges-panel').innerHTML);old.window.close();current.window.close();});
 
 test('saved game status distinguishes completed Garden results from Tree Force participation',()=>{const progress={today:{gameIds:['garden-bot','treeforce89']},passport:{completedGameIds:[]}};assert.match(savedGameStatus(progress,shareGames[0]),/^Completed/);assert.match(savedGameStatus(progress,shareGames[3]),/^Participation saved/);assert.doesNotMatch(savedGameStatus(null,shareGames[0]),/Completed/);});
+
+test('share controls unlock only for this wallet’s fresh completed game and clear on sign-out',async()=>{
+ const dom=new JSDOM(page,{url:'https://tree-token.xyz/play/'}),w=dom.window;
+ const originalImage=globalThis.Image;
+ globalThis.Image=class {set src(value){this.width=512;this.height=512;queueMicrotask(()=>this.onload?.());}};
+ w.HTMLCanvasElement.prototype.getContext=()=>({fillRect(){},strokeRect(){},fillText(){},drawImage(){},measureText(){return {width:10};}});
+ const fixed=Date.parse('2026-11-11T12:00:00Z');
+ let currentSession={wallet,token:'a'.repeat(64),expiresAt:new Date(fixed+600000).toISOString()};
+ const root=w.document.getElementById('arcade-daily-growth');
+ const app=createArcadeMissions({root,getSession:()=>currentSession,now:()=>fixed,fetchImpl:async()=>new Response(JSON.stringify({wallet,entries:[],monthlyStamps:0,resetsAt:'2026-11-16T00:00:00Z'}))});
+ try{
+ app.sessionChanged();await tick();
+ assert.equal(root.querySelector('#result-share-controls').hidden,true);
+ const progress={wallet,dateKey:'2026-11-11',today:{gameIds:['garden-bot','treeforce89']}};
+ root.dispatchEvent(new w.CustomEvent('arcade-progress',{detail:{sessionActive:true,stale:false,busy:false,progress}}));await tick();
+ assert.equal(root.querySelector('#result-share-controls').hidden,false);
+ assert.deepEqual([...root.querySelectorAll('#guided-share-score select option')].map(x=>x.value),['garden-bot']);
+ assert.match(root.querySelector('#guided-share-score .share-message').textContent,/I finished Garden Bot/);
+ currentSession=null;app.sessionChanged();
+ assert.equal(root.querySelector('#result-share-controls').hidden,true);
+ assert.equal(root.querySelector('#guided-share-score').children.length,0);
+ }finally{app.destroy();w.close();globalThis.Image=originalImage;}
+});
+
+test('six-tab navigation makes Daily visible and routes the weekly vote back to Games',async()=>{
+ const {mountArcadeNavigation}=await import('../scripts/arcade-navigation-play-share.js');
+ const dom=new JSDOM(page,{url:'https://tree-token.xyz/play/quests/preview/'}),w=dom.window;
+ w.HTMLElement.prototype.scrollIntoView=()=>{};
+ try{mountArcadeNavigation(w.document,w);
+ w.document.getElementById('growth-today-tab').click();
+ assert.equal(w.document.getElementById('arcade-daily-growth').dataset.arcadeView,'daily');
+ assert.equal(w.document.getElementById('growth-today-panel').hidden,false);
+ assert.equal(w.document.getElementById('cabinets').hidden,true);
+ w.document.getElementById('growth-games-tab').click();
+ assert.equal(w.document.getElementById('arcade-daily-growth').dataset.arcadeView,'games');
+ assert.equal(w.document.getElementById('cabinets').hidden,false);
+ assert.equal(w.document.getElementById('growth-today-panel').hidden,true);
+ }finally{w.close();}
+});
