@@ -4,6 +4,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import assert from 'node:assert/strict';
 import {TERMS} from './core.mjs';
+import {verifyEventFunctions} from './release-function-guard.mjs';
 
 // This release changes only the closed workshop and its isolated draft handler.
 // Apply and verify the additive USDC database migration before invoking it.
@@ -86,26 +87,6 @@ async function protectedEnvironmentHash(site){
  const normalized=[...rows].map(row=>({...row,scopes:[...row.scopes].sort(),values:[...row.values].sort((a,b)=>String(a.id).localeCompare(String(b.id)))})).sort((a,b)=>a.key.localeCompare(b.key));
  return sha(canonical(normalized),'sha256');
 }
-function normalizeAliases(fn,original){
- const normalized={...fn};
- for(const [override,effective]of [['mo','m'],['rgo','rg']])if(!Object.hasOwn(original,override)&&normalized[override]===original[effective])delete normalized[override];
- return normalized;
-}
-function verifyFunctions(deploy,baseline){
- assert.equal(canonical(deploy.available_functions.map(fn=>fn.n).sort()),canonical(baseline.available_functions.map(fn=>fn.n).sort()),'Function inventory changed');
- for(const original of baseline.available_functions){
-  const current=normalizeAliases(deploy.available_functions.find(fn=>fn.n===original.n),original);
-  if(original.n!==handlerName){assert.equal(canonical(current),canonical(original),'Unrelated function changed: '+original.n);continue;}
-  assert.equal(current.d,PACKAGE.sha256,'Wrong event package');
-  assert.equal(current.s,fs.statSync(path.join(root,PACKAGE.path)).size,'Wrong event package byte size');
-  assert.equal(canonical(current.bd),canonical(PACKAGE.buildData),'Wrong event build metadata');
-  // A new package receives new immutable provisioning identities and timestamps.
-  // Execution/provider configuration outside these package fields stays exact.
-  const packageFields=new Set(['d','id','oid','s','c','bd']);
-  const stable=record=>Object.fromEntries(Object.entries(record).filter(([key])=>!packageFields.has(key)));
-  assert.equal(canonical(stable(current)),canonical(stable(original)),'Event execution configuration changed');
- }
-}
 async function verifyConfiguration(origin){
  const response=await fetch(origin+'/api/arcade-events?action=configuration&release='+process.env.SOURCE_COMMIT,{headers:{'Cache-Control':'no-cache'},signal:AbortSignal.timeout(20000)});
  assert(response.ok,'Event configuration did not respond successfully');
@@ -130,8 +111,9 @@ async function ready(id){
 async function verifyDeployment(deploy,state){
  assert.equal(canonical(await inventory(deploy.id)),canonical(state.files),'Static inventory changed');
  assert.equal(canonical(deploy.function_schedules),canonical(state.baseline.function_schedules),'Schedules changed');
- verifyFunctions(deploy,state.baseline);
+ const eventRecord=verifyEventFunctions({functions:deploy.available_functions,baseline:state.baseline.available_functions,packageMetadata:{sha256:PACKAGE.sha256,size:fs.statSync(path.join(root,PACKAGE.path)).size,buildData:PACKAGE.buildData},pinnedEventRecord:state.eventFunctionRecord});
  for(const key of ['functions_region','functions_region_overrides','branch','context','database_branch_id','blobs_region','framework','edge_functions_present','server','database_migrations'])assert.equal(canonical(deploy[key]),canonical(state.baseline[key]),'Runtime changed: '+key);
+ return eventRecord;
 }
 
 let state;
@@ -179,11 +161,16 @@ if(mode==='candidate'){
  assert.equal(state.sourceCommit,process.env.SOURCE_COMMIT,'Release source changed');
  assert.equal(state.baseline.id,process.env.EXPECTED_DEPLOY,'Release baseline changed');
  assert.equal(state.packageSha256,PACKAGE.sha256,'Release package changed');
+ assert(state.eventFunctionRecord,'Candidate event provisioning record has not been verified and pinned');
 }
 
 let deploy=await ready(state.id);
-await verifyDeployment(deploy,state);
+const eventFunctionRecord=await verifyDeployment(deploy,state);
 const candidateConfiguration=await verifyConfiguration(`https://${deploy.id}--tree-token.netlify.app`);
+if(mode==='candidate'){
+ state.eventFunctionRecord=eventFunctionRecord;
+ fs.writeFileSync(path.join(dir,'state.json'),JSON.stringify(state));
+}
 if(mode==='verify')await noBuilds();
 let canonicalConfiguration;
 if(mode==='publish'){
@@ -193,6 +180,8 @@ if(mode==='publish'){
  assert.equal((await api('deploys/'+state.baseline.id)).locked,true,'Baseline lock changed');
  assert.equal(sha(canonical(site.build_settings),'sha256'),state.environmentHash,'Build configuration changed');
  assert.equal(await protectedEnvironmentHash(site),state.protectedEnvHash,'Protected environment changed');
+ // Re-read and compare the pinned complete record immediately before the lock.
+ await verifyDeployment(await api('deploys/'+deploy.id),state);
  await api('deploys/'+deploy.id+'/lock','POST');
  const published=await api('sites/'+siteId);
  assert.equal(published.published_deploy.id,deploy.id,'Wrong published deployment');
@@ -203,6 +192,6 @@ if(mode==='publish'){
  assert.equal(await protectedEnvironmentHash(published),state.protectedEnvHash,'Protected environment changed during publication');
  canonicalConfiguration=await verifyConfiguration('https://tree-token.xyz');
 }
-const report={id:deploy.id,baseline:state.baseline.id,mode,state:deploy.state,target,sourceCommit:state.sourceCommit,staticPaths:Object.keys(state.files).length,preservedStaticPaths:Object.keys(state.originalFiles).filter(file=>state.originalFiles[file]===state.files[file]).length,changedPaths:Object.keys(state.originalFiles).filter(file=>state.originalFiles[file]!==state.files[file]),addedPaths:[],functionsPreserved:state.baseline.available_functions.length-1,replacedFunction:handlerName,previousPackageSha256:state.baseline.available_functions.find(fn=>fn.n===handlerName).d,packageSha256:PACKAGE.sha256,functionsTotal:deploy.available_functions.length,schedulesPreserved:deploy.function_schedules.length,eventExecutionConfigurationPreserved:true,buildConfigurationHash:state.environmentHash,protectedEnvironmentHash:state.protectedEnvHash,candidateConfiguration,canonicalConfiguration,existingWalletAndGameJavaScriptUnchanged:true,paidEntryEnabled:false,eventWorkshopOnly:true,nftreeOnly:true,terms:TERMS,databaseMigrationVerification:'Required separately before workflow dispatch',files:state.files};
+const report={id:deploy.id,baseline:state.baseline.id,mode,state:deploy.state,target,sourceCommit:state.sourceCommit,staticPaths:Object.keys(state.files).length,preservedStaticPaths:Object.keys(state.originalFiles).filter(file=>state.originalFiles[file]===state.files[file]).length,changedPaths:Object.keys(state.originalFiles).filter(file=>state.originalFiles[file]!==state.files[file]),addedPaths:[],functionsPreserved:state.baseline.available_functions.length-1,replacedFunction:handlerName,previousPackageSha256:state.baseline.available_functions.find(fn=>fn.n===handlerName).d,packageSha256:PACKAGE.sha256,functionsTotal:deploy.available_functions.length,schedulesPreserved:deploy.function_schedules.length,eventExecutionConfigurationPreserved:true,previousEventProviderAccount:state.baseline.available_functions.find(fn=>fn.n===handlerName).a,eventFunctionRecord:state.eventFunctionRecord,eventProvisioningRecordPinned:true,buildConfigurationHash:state.environmentHash,protectedEnvironmentHash:state.protectedEnvHash,candidateConfiguration,canonicalConfiguration,existingWalletAndGameJavaScriptUnchanged:true,paidEntryEnabled:false,eventWorkshopOnly:true,nftreeOnly:true,terms:TERMS,databaseMigrationVerification:'Required separately before workflow dispatch',files:state.files};
 fs.writeFileSync(path.join(dir,'report.json'),JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify({...report,files:undefined}));

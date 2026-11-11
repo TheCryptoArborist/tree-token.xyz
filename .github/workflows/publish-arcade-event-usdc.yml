@@ -30,7 +30,7 @@ jobs:
       - name: Verify USDC rules and package only the event handler
         run: |
           npm ci --prefix vendor/arcade-events --ignore-scripts
-          node --test tests/arcade-event-core.test.mjs tests/arcade-event-access.test.ts tests/arcade-event-database.test.mjs tests/arcade-event-controls.test.mjs
+          node --test tests/arcade-event-core.test.mjs tests/arcade-event-access.test.ts tests/arcade-event-database.test.mjs tests/arcade-event-controls.test.mjs tests/arcade-event-release-guard.test.mjs
           node scripts/arcade-events/package.mjs
           node --check scripts/arcade-events/preview.mjs
           node --check scripts/arcade-events/server-controls.mjs
