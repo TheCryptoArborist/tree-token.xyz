@@ -1,3 +1,15 @@
+# Current production — NFTree-only tournament foundation, 2026-11-11
+
+Locked deploy `6af4a8a16b5775b6f672ecb0`, source `6994fb2fac05dcea36d694b4e8a70202dd6af701`, PR #141. Review page `/play/events/preview/`; isolated handler `netlify/event-functions/arcade-events.ts` at `/api/arcade-events`.
+
+Adds authenticated, uncached canonical NFTree eligibility checks (direct and wallet-controlled Kiosks), plus authorized organizer server draft save/load. Private organizer allowlist starts empty pending Peter's explicit management wallet. Entry collection, tournament run starts, scoring and cosmetic unlocks remain closed/unintegrated. The shared holder guard is prepared for fresh checks before future payment and each ranked run. Cosmetic concepts still await improvement/review.
+
+Fresh baseline `6af47ccc900af8400ddb46b3` included other Arcade work. Preserved **all 48 existing complete backend records and all five schedules**, adding only `arcade-events` (49 total). Now 506 static paths: 502 unchanged, three workshop paths updated and one server-controls module added. Existing games, wallet code, Profile Studio and community tracking remain unchanged. Runtime/provider/build/protected-environment fingerprints verified. Release: `docs/arcade-event-foundation-release-20261111.json`; workflow `43070383514`. Future releases capture fresh inventory. The first-install release utility refuses to replace any existing event handler.
+
+Validation: 15 focused tests plus existing NFTree ownership regression; required production-snapshot and STI regression workflows passed. Live configuration reports NFTree-only/entry off/scoring off, missing and invalid sessions reject with 401, unsupported entry/run actions return 404. Desktop 1363px and 390px mobile iframe checked; content/scroll width 375px, no overflow; signed-out holder and organizer controls display sign-in guidance; entry stays disabled. Positive authenticated ownership and organizer save tests use controlled fixtures; a real organizer-wallet round trip awaits allowlisting. Migration is installed, browser roles denied, and RLS enabled on all three new private tables. No organizer or paid event was seeded.
+
+---
+
 # Current production — scheduled event workshop preview, 2026-11-11
 
 Locked deploy `6af3f56c6ea78991ef999584`, source `951fd28e0f90747cb80de11c74d7e4a5b5ee7862`, PR #137. Review page `/play/events/preview/`; source `production/arcade-events-static/index.html`, modules `scripts/arcade-events/{core,preview}.mjs`, stylesheet `styles/arcade-events-preview-v1.css`.

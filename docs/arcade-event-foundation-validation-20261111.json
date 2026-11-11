@@ -1,0 +1,30 @@
+{
+  "url": "https://tree-token.xyz/play/events/preview/",
+  "deploy": "6af4a8a16b5775b6f672ecb0",
+  "sourceCommit": "6994fb2fac05dcea36d694b4e8a70202dd6af701",
+  "automatedTests": 15,
+  "nftreeVerifierRegression": "passed",
+  "requiredRepositoryChecks": "passed",
+  "desktop": {
+    "viewport": 1363,
+    "documentWidth": 1348
+  },
+  "mobile": {
+    "iframeWidth": 390,
+    "contentWidth": 375,
+    "scrollWidth": 375
+  },
+  "liveApi": {
+    "configuration": 200,
+    "noSession": 401,
+    "invalidSession": 401,
+    "entry": 404,
+    "runStart": 404
+  },
+  "liveUi": "signed-out holder and organizer controls prompt sign-in; entry disabled",
+  "organizerWallet": null,
+  "paymentEnabled": false,
+  "scoringEnabled": false,
+  "cosmeticUnlocksIntegrated": false,
+  "positiveAuthenticatedLiveWalletTest": "pending organizer selection; tested using controlled fixtures"
+}
