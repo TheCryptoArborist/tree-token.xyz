@@ -1,0 +1,24 @@
+{
+  "url": "https://tree-token.xyz/play/events/profile-cosmetics/",
+  "sourceCommit": "ea81a2de80eacb00e60aaf384fec2878ea7d370f",
+  "desktop": {
+    "viewport": 1363,
+    "documentWidth": 1348,
+    "smallCanvasAndCssWidths": [
+      48,
+      80,
+      128
+    ]
+  },
+  "mobile": {
+    "contentWidth": 375,
+    "scrollWidth": 375,
+    "photoLabelWidth": 307,
+    "photoLabelHeight": 52
+  },
+  "photoUpload": "passed with synthetic local fixture",
+  "photoReset": "passed",
+  "workshopEligibility": "signed-out sign-in prompt preserved",
+  "paidEntryEnabled": false,
+  "artifactType": "design-review-only"
+}

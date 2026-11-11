@@ -1,0 +1,39 @@
+{
+  "renderer": "@napi-rs/canvas 0.1.80",
+  "fixture": "local synthetic solid cyan photo",
+  "checks": [
+    {
+      "kind": "frame",
+      "outsideCirclePixels": 0,
+      "cornerAlpha": 0,
+      "photoCenter": [
+        18,
+        195,
+        220,
+        255
+      ]
+    },
+    {
+      "kind": "badge",
+      "outsideCirclePixels": 0,
+      "cornerAlpha": 0,
+      "photoCenter": [
+        18,
+        195,
+        220,
+        255
+      ]
+    },
+    {
+      "kind": "champion",
+      "outsideCirclePixels": 0,
+      "cornerAlpha": 0,
+      "photoCenter": [
+        18,
+        195,
+        220,
+        255
+      ]
+    }
+  ]
+}
