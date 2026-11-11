@@ -4,6 +4,12 @@ export const shareGames=[
  {id:'garden-bot',name:'Garden Bot',url:'https://nftree.net/battle/garden-bot',art:'/assets/arcade/garden-bot-poster.webp'},
  {id:'pvp',name:'PvP Battle',url:'https://nftree.net/battle/pvp',art:'/assets/arcade/pvp-battle-poster.webp'}
 ];
+const shareCardHooks={
+ treeforce89:['HOW MANY WAVES CAN YOU SURVIVE?','WHAT’S WAITING IN THE NEXT WAVE?','ONE MORE WAVE. THINK YOU’RE READY?'],
+ 'canopy-breaker':['WHAT’S HIDING BEHIND THE NEXT BRICK?','ONE BOUNCE CAN CHANGE EVERYTHING.','HOW FAR CAN ONE BALL TAKE YOU?'],
+ 'garden-bot':['CAN YOUR STRATEGY OUTSMART THE BOT?','YOUR NEXT MOVE COULD CHANGE THE MATCH.','WHAT WOULD YOU PLAY NEXT? FIND OUT.'],
+ pvp:['WHAT HAPPENS WHEN YOUR GARDEN GOES TO WAR?','WHO WINS WHEN TWO GARDENS COLLIDE?','YOUR NEXT RIVAL IS WAITING. READY?']
+};
 export function shareMessages(game,challenge=false){const link='https://tree-token.xyz/play/';return challenge?[
  `Who’s up for ${game.name}? Play a run and reply with your result. Let’s see what you’ve got! 🌳 ${link}`,
  `Your next arcade challenge: ${game.name}. I’m playing—join me and share your run! 🌳 ${link}`,
@@ -93,7 +99,7 @@ export function drawShareCard(c,{game,run=null,image=null,index=0,result=false,c
  c.save();c.shadowColor='#000000';c.shadowBlur=14;c.shadowOffsetY=4;c.fillStyle=accent;c.fillRect(26,550,1148,103);c.restore();
  c.strokeStyle='#071b19';c.lineWidth=4;c.strokeRect(32,556,1136,91);
  c.save();c.globalAlpha=.58;c.strokeStyle='#ffffff';c.lineWidth=1;c.strokeRect(37,561,1126,81);c.restore();
- fit(hasScore?'BEAT MY SCORE. SHARE YOUR RUN.':'PLAY YOUR MATCH. SHARE YOUR STORY.',56,590,1088,27,'900','#0a211b');
+ fit(shareCardHooks[game.id]?.[index]||'YOUR NEXT ARCADE ADVENTURE STARTS HERE.',56,590,1088,27,'900','#0a211b');
  fit('tree-token.xyz/play/',56,632,900,33,'900','#0a211b');
- c.textAlign='right';c.fillStyle='#0a211b';c.font='900 21px system-ui';c.fillText('YOUR TURN →',1140,630);c.textAlign='left';
+ c.textAlign='right';c.fillStyle='#0a211b';c.font='900 21px system-ui';c.fillText('PLAY & FIND OUT →',1140,630);c.textAlign='left';
 }
