@@ -1,5 +1,5 @@
 export const MIST=1_000_000_000n;
-export const TERMS=Object.freeze({entryFeeMist:'5000000000',minimumPrizeMist:'25000000000',prizeShareBps:8000,lives:3,paidContinues:false,attempts:'unlimited',payout:'manual-after-review',access:'existing-game-access'});
+export const TERMS=Object.freeze({entryFeeMist:'5000000000',minimumPrizeMist:'25000000000',prizeShareBps:8000,lives:3,paidContinues:false,attempts:'unlimited',payout:'manual-after-review',access:'nftree-holder-only'});
 export const GAMES=Object.freeze([
  {id:'treeforce89',name:'Tree Force ’89',art:'/assets/arcade/tree-force-89-poster.webp',path:'/play/treeforce89/'},
  {id:'canopy-breaker',name:'Canopy Breaker',art:'/assets/arcade/canopy-breaker-game.webp',path:'/play/canopy-breaker/'},

@@ -1,3 +1,4 @@
+import {installEventServerControls} from './server-controls.mjs';
 import {GAMES,makeDraft,economics,mistToSui,launchChecks} from './core.mjs';
 const $=id=>document.getElementById(id),key='tree-arcade:event-workshop:draft:v1';
 let current=makeDraft(),artVersion=0;
@@ -30,3 +31,5 @@ if(kind==='frame'){
  circle(ctx,256,cy,218,'#152c20',gradient,13);circle(ctx,256,cy,201,null,'#87a848',3);drawPoster(ctx,img,256,cy-8,174);circle(ctx,256,cy-8,176,null,gradient,4);arcText(ctx,name.toUpperCase().slice(0,28),205,cy,true,19);ribbon(ctx,kind==='champion'?'EVENT CHAMPION':'CANOPY CREW',354,kind==='champion'?'#f8de88':'#b8da78');ctx.fillStyle='#f1dc95';ctx.font='700 16px sans-serif';ctx.textAlign='center';ctx.fillText(kind==='champion'?'VERIFIED WINNER':'PARTICIPANT • EVENT EDITION',256,446);
 }}
 function drawCosmetics(game){const version=++artVersion,img=new Image();img.onload=()=>{if(version===artVersion)for(const kind of ['frame','badge','champion'])draw(kind,img,game.name);};img.onerror=()=>{if(version===artVersion)for(const kind of ['frame','badge','champion'])draw(kind,null,game.name);};img.src=game.art;}
+
+installEventServerControls({readDraft:read,applyDraft:input=>{const draft=makeDraft(input);writeInputs(draft);render(draft);feedback('Loaded from the server. Save locally if you want a device copy.');}});
