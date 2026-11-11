@@ -1,0 +1,32 @@
+{
+  "gold": {
+    "pixelIdentical": true
+  },
+  "mint": {
+    "pixelIdentical": true
+  },
+  "leafy": {
+    "size": [
+      1024,
+      1024
+    ],
+    "photoPixelsOutsideFrame": 0,
+    "transparentCorners": true
+  },
+  "christmas": {
+    "size": [
+      1024,
+      1024
+    ],
+    "photoPixelsOutsideFrame": 0,
+    "transparentCorners": true
+  },
+  "autumn": {
+    "size": [
+      1024,
+      1024
+    ],
+    "photoPixelsOutsideFrame": 0,
+    "transparentCorners": true
+  }
+}

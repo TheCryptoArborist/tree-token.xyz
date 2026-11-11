@@ -1,3 +1,15 @@
+# Current production — all illustrated borders fit their photo edges, 2026-11-10
+
+Locked deploy `6af3bb0fbd70015aaa06efb8`, source `f0e0a36c0d9d9635a3314d02efa2f25e7cf8b550`, PR #136. Active page `production/profile-border-fit-static/index.html`; script `scripts/tree-profile-studio-v16.js`; frame silhouette helper `scripts/profile-border-fit.js`; game art helper `scripts/profile-game-art.js`; existing stylesheet v9 unchanged.
+
+Leafy Canopy, Christmas Lights and Autumn Glow now use their actual illustrated outer contour to clip the photo underneath their rim. Original bulbs/leaves are retained. Downloaded 1024px PNGs using one high-contrast diagnostic photo show zero photo pixels outside all three frames and transparent corners. Classic Gold and Canopy Mint exports are pixel-identical to baseline. Validation: `docs/profile-border-validation-20261110.json`.
+
+The original Canopy Breaker arcade artwork and Root Rage boss action are live, all nine ecosystem choices including approved Deadfall Run are present, and owned NFTs precede TREE Ecosystem. Existing wallet/session/ownership/payment behavior is unchanged.
+
+Fresh inventory preserved: 487 static paths (486 unchanged at production promotion), all 47 complete backend records, five schedules and runtime/provider/build/protected-environment fingerprints. Release: `docs/profile-border-fit-release-20261110.json`. Future releases capture fresh published inventory using `scripts/profile-border-fit/release.mjs`.
+
+---
+
 # Current production — approved ninth Deadfall Run badge, 2026-11-10
 
 Locked deploy `6af3b401d0193c86219abb02`, source `1be865bd768123d2e5cc1fcc02e95c9e96884f00`, PR #135. Active page `production/profile-deadfall-static/index.html`, script `scripts/tree-profile-studio-v13.js`, helper `scripts/profile-deadfall-art.js`; existing stylesheet v9 unchanged.
