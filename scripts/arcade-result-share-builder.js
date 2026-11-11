@@ -55,6 +55,7 @@ export function resultMessages(game,run=null){
  return hooks.map((hook,i)=>`${hook}\n\n${game.name}: ${stats}.\n${invitations[i]}\n\n${link} #TreeArcade`);
 }
 
+// Keep the exported graphic at 1200 × 675; fit long saved scores inside its text column.
 export function drawShareCard(c,{game,run=null,image=null,index=0,result=false,challenge=false}){
  const palettes=[['#071b19','#c9f45c','#3baf94'],['#0b122b','#82f2d5','#687df1'],['#211329','#ffcf73','#b86ccf']];
  const [bg,accent,glow]=palettes[index];
