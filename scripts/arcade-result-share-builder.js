@@ -63,11 +63,16 @@ export function drawShareCard(c,{game,run=null,image=null,index=0,result=false,c
  c.save();c.globalAlpha=.18;c.strokeStyle=glow;c.lineWidth=2;
  for(let r=170;r<820;r+=65){c.beginPath();c.arc(270,310,r,0,Math.PI*2);c.stroke();}
  c.globalAlpha=.1;for(let y=0;y<560;y+=6){c.fillStyle='#ffffff';c.fillRect(0,y,1200,1);}c.restore();
- c.fillStyle=accent;c.fillRect(0,0,1200,9);
+ // A fine outer frame ties the header, artwork and footer into one finished card.
+ c.strokeStyle=accent;c.lineWidth=2;c.strokeRect(14,14,1172,647);
+ c.save();c.globalAlpha=.28;c.strokeRect(20,20,1160,635);c.restore();
+ for(const x of [14,1166])for(const y of [14,641]){c.fillStyle=accent;c.fillRect(x,y===14?14:658,20,3);c.fillRect(x===14?14:1183,y,3,20);}
+ c.fillStyle=accent;c.fillRect(52,83,70,3);
  c.font='900 28px system-ui';c.fillText('TREE ARCADE',52,62);
  c.textAlign='right';c.font='700 18px system-ui';c.fillStyle='#d2e2db';c.fillText(result?'SAVED RUN  /  PLAYER CHALLENGE':challenge?'THE CANOPY IS CALLING':'PICK UP. PLAY. GROW.',1148,60);c.textAlign='left';
  c.save();c.shadowColor=glow;c.shadowBlur=35;c.fillStyle='#081211';c.fillRect(55,104,440,418);c.restore();
  c.strokeStyle=accent;c.lineWidth=2;c.strokeRect(55,104,440,418);
+ c.save();c.globalAlpha=.35;c.strokeRect(61,110,428,406);c.restore();
  if(image){const scale=Math.min(400/image.width,388/image.height),w=image.width*scale,h=image.height*scale;c.drawImage(image,75+(400-w)/2,119+(388-h)/2,w,h);}
  const fit=(value,x,y,max,size,weight='900',color='#fff9e9')=>{c.fillStyle=color;c.font=`${weight} ${size}px system-ui`;while(c.measureText(value).width>max&&size>16){size--;c.font=`${weight} ${size}px system-ui`;}c.fillText(value,x,y);};
  const hasScore=result&&Number.isSafeInteger(run?.score);
@@ -84,8 +89,11 @@ export function drawShareCard(c,{game,run=null,image=null,index=0,result=false,c
   fit(result?'COMPLETE.':challenge?'ON.':'GROW.',540,413,610,84);
   fit(result?'YOUR TURN TO ENTER THE GARDEN.':'BRING YOUR GAME. JOIN THE TREE CREW.',542,480,600,23,'700',accent);
  }
- c.fillStyle=accent;c.fillRect(0,558,1200,117);
- fit(hasScore?'BEAT MY SCORE. SHARE YOUR RUN.':'PLAY YOUR MATCH. SHARE YOUR STORY.',52,601,1096,28,'900','#0a211b');
- fit('tree-token.xyz/play/',52,649,900,34,'900','#0a211b');
- c.textAlign='right';c.fillStyle='#0a211b';c.font='900 22px system-ui';c.fillText('YOUR TURN →',1148,645);c.textAlign='left';
+ // Inset the banner inside the card frame, with a dark trim and a light bevel.
+ c.save();c.shadowColor='#000000';c.shadowBlur=14;c.shadowOffsetY=4;c.fillStyle=accent;c.fillRect(26,550,1148,103);c.restore();
+ c.strokeStyle='#071b19';c.lineWidth=4;c.strokeRect(32,556,1136,91);
+ c.save();c.globalAlpha=.58;c.strokeStyle='#ffffff';c.lineWidth=1;c.strokeRect(37,561,1126,81);c.restore();
+ fit(hasScore?'BEAT MY SCORE. SHARE YOUR RUN.':'PLAY YOUR MATCH. SHARE YOUR STORY.',56,590,1088,27,'900','#0a211b');
+ fit('tree-token.xyz/play/',56,632,900,33,'900','#0a211b');
+ c.textAlign='right';c.fillStyle='#0a211b';c.font='900 21px system-ui';c.fillText('YOUR TURN →',1140,630);c.textAlign='left';
 }
