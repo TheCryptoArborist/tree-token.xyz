@@ -34,7 +34,7 @@ test('share controls unlock only for this wallet’s fresh completed game and cl
  root.dispatchEvent(new w.CustomEvent('arcade-completed-runs',{detail:{sessionActive:true,stale:false,loading:false,...progress}}));await tick();
  assert.equal(root.querySelector('#result-share-controls').hidden,false);
  assert.deepEqual([...root.querySelectorAll('#guided-share-score select option')].map(x=>x.value),['d'.repeat(64)]);
- assert.match(root.querySelector('#guided-share-score .share-message').textContent,/I finished Garden Bot/);
+ assert.match(root.querySelector('#guided-share-score .share-message').textContent,/Garden Bot: Match complete/);
  currentSession=null;app.sessionChanged();
  assert.equal(root.querySelector('#result-share-controls').hidden,true);
  assert.equal(root.querySelector('#guided-share-score').children.length,0);

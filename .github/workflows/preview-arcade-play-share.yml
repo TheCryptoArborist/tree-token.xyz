@@ -3,6 +3,9 @@ on:
   push:
     branches: [feature/arcade-play-then-share]
     paths:
+      - .github/workflows/preview-arcade-play-share.yml
+      - tests/arcade-play-share*.test.mjs
+      - tests/arcade-completed*.test.mjs
       - production/arcade-play-share-static/**
       - scripts/arcade-*-play-share.js
       - scripts/arcade-result-share-builder.js
