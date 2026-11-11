@@ -6,7 +6,7 @@ async function noBuilds(){for(let page=1;page<=100;page++){const rows=await api(
 async function inventory(id){const out={};for(let page=1;page<=100;page++){const rows=await api(`deploys/${id}/files?per_page=100&page=${page}`);for(const f of rows)out[f.path]=f.sha;if(rows.length<100)return out;}throw Error('Inventory incomplete');}
 const hash=x=>crypto.createHash('sha256').update(x).digest('hex');
 const module=await fetch('https://tree-token.xyz/scripts/arcade-end-share-prompt.js',{cache:'no-store'});assert(module.ok&& (await module.text()).includes('mountEndSharePrompt'),'Deploy the Arcade handoff first');
-await noBuilds();const site=await api('sites/'+siteId),old=await api('deploys/'+site.published_deploy.id);assert.equal(old.id,'6af148b52ec855974bf6fffd','Canopy release changed; inspect new baseline');assert.equal(old.available_functions.length,1);assert.equal(old.function_schedules.length,0);
+await noBuilds();const site=await api('sites/'+siteId),old=await api('deploys/'+site.published_deploy.id);assert(old.id==='6af148b52ec855974bf6fffd'||old.commit_ref==='f5971ba031ef5fbdb0238a24fb3d564cc4047ddc','Canopy release changed; inspect new baseline');assert.equal(old.available_functions.length,1);assert.equal(old.function_schedules.length,0);
 const original=old.available_functions[0];assert.equal(original.n,'breaker-access');const files=await inventory(old.id),environment=hash(canonical(await api('accounts/'+site.account_id+'/env?site_id='+siteId))),build=hash(canonical(site.build_settings));
 if(!old.locked)await api('deploys/'+old.id+'/lock','POST');
 const f=JSON.parse(fs.readFileSync('.netlify/breaker-functions/manifest.json')).functions[0];assert.equal(f.name,'breaker-access');const bytes=fs.readFileSync(f.path),digest=hash(bytes),config={};

@@ -10,10 +10,10 @@ import {loadBackgroundArt} from './background-art.js';
 const $=id=>document.getElementById(id),api=window.breakerSession,canvas=$('game'),ctx=canvas.getContext('2d');
 let run=null,queue=[],sending=null,inFlightInputs=0,paused=false,connected=!!api.account,clock=0,last=performance.now(),target=400,launch=false,fire=false,events=0,syncError='',muted=false,opening=null,quote=null,buying=false,gameActionBusy=false,newGameRequest=null,gameRevision=0;
 let homeView=true;
-const shareHost=document.createElement('div');$('overlay').querySelector('.overlay-inner').append(shareHost);let shareDispose=null,shareSignature='',savedResultId=null;
+const shareHost=document.createElement('div');$('primary').before(shareHost);let shareDispose=null,shareSignature='',savedResultId=null;
 function paintShare(){
  const ready=connected&&run&&['gameover','won'].includes(run.state.status)&&savedResultId===run.id&&!queue.length&&!sending&&!syncError&&!gameActionBusy&&!buying;
- const signature=ready?[run.id,gameRevision,api.account?.address,run.state.score,run.state.level].join(':'):'hidden';if(signature===shareSignature)return;shareSignature=signature;shareDispose?.();shareDispose=null;shareHost.replaceChildren();
+ const signature=ready?[run.id,gameRevision,api.account?.address,run.state.score,run.state.level].join(':'):'hidden';if(signature===shareSignature)return;shareSignature=signature;const overlay=$('overlay'),inner=overlay.querySelector('.overlay-inner');overlay.style.overflowY=ready?'auto':'';overlay.style.alignItems=ready?'flex-start':'';overlay.style.pointerEvents=ready?'auto':'';inner.style.marginBlock=ready?'auto':'';shareDispose?.();shareDispose=null;shareHost.replaceChildren();
  if(ready)shareDispose=mountEndSharePrompt(shareHost,{gameId:'canopy-breaker',runId:run.id,wallet:api.account.address,ready:true,score:run.state.score,stage:run.state.level});
 }
 

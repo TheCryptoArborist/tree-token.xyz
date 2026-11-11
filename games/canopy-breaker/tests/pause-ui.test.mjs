@@ -26,8 +26,8 @@ function harness({captureDraw=true,home=false}={}){
  const context=new Proxy({},{get:(object,key)=>object[key]??(()=>{}),set:(object,key,value)=>(object[key]=value,true)});
  function element(id){
   if(!elements.has(id))elements.set(id,{
-   id,textContent:'',hidden:true,disabled:false,open:false,events:new Map(),tagName:'DIV',
-   replaceChildren(){},append(){},querySelector(){return element('overlay-inner');},classList:{add(){},remove(){},toggle(){}},
+   id,style:{},textContent:'',hidden:true,disabled:false,open:false,events:new Map(),tagName:'DIV',
+   replaceChildren(){},append(){},before(){},querySelector(){return element('overlay-inner');},classList:{add(){},remove(){},toggle(){}},
    addEventListener(name,fn){add(this.events,name,fn);},setAttribute(){},focus(){},setPointerCapture(){},
    getContext:()=>context,getBoundingClientRect:()=>({left:0,top:0,width:800,height:900}),
    showModal(){this.open=true;},close(){this.open=false;for(const fn of this.events.get('close')||[])fn();},
