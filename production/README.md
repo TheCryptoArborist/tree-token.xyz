@@ -1,3 +1,15 @@
+# Current production — scheduled event workshop preview, 2026-11-11
+
+Locked deploy `6af3f56c6ea78991ef999584`, source `951fd28e0f90747cb80de11c74d7e4a5b5ee7862`, PR #137. Review page `/play/events/preview/`; source `production/arcade-events-static/index.html`, modules `scripts/arcade-events/{core,preview}.mjs`, stylesheet `styles/arcade-events-preview-v1.css`.
+
+Adds a separate event-planning and cosmetic-concept review only. Entry remains disabled. No wallet, fee collection, server scheduling, score submission or permanent entitlement grant is connected. Existing Arcade event card and gameplay remain unchanged. Scope and remaining integration: `docs/arcade-events-design-20261111.md`.
+
+Fresh inventory: 492 static paths, **all 487 prior static paths unchanged**, all 47 complete backend records, five schedules, runtime/provider/build configuration and protected environment fingerprints preserved. Release report: `docs/arcade-events-release-20261111.json`; workflow run `42962404360`. Future releases must capture fresh published inventory. `scripts/arcade-events/release.mjs` and its manual workflow permit preview routes only.
+
+Validation: five event-rule suites plus required production-snapshot and STI regression workflows passed. Desktop (1363px) and mobile iframe (375px content, 375px scroll width) checked; original art loads, draft save/reload works, invalid ending dates reject, entrant estimator handles zero/100 entrants, game planning choices update, and entry remains disabled. Validation record: `docs/arcade-events-validation-20261111.json`.
+
+---
+
 # Current production — all illustrated borders fit their photo edges, 2026-11-10
 
 Locked deploy `6af3bb0fbd70015aaa06efb8`, source `f0e0a36c0d9d9635a3314d02efa2f25e7cf8b550`, PR #136. Active page `production/profile-border-fit-static/index.html`; script `scripts/tree-profile-studio-v16.js`; frame silhouette helper `scripts/profile-border-fit.js`; game art helper `scripts/profile-game-art.js`; existing stylesheet v9 unchanged.
