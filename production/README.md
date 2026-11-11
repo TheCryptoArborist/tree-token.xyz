@@ -1,3 +1,46 @@
+# Current production — approved Canopy Crown ’89 design complete, 2026-11-11
+
+Locked preview release `6af4e675bad4dee995a99806`, source
+`ac34030d613ebdcb7ca49544194425c7fb9d18da`, PR #145, workflow
+`43108591709`. Finished try-on: `/play/events/profile-cosmetics/`;
+mobile review: `/play/events/profile-cosmetics/mobile-review/`;
+event workshop: `/play/events/preview/`.
+
+The approved Contender and Champion artwork now replaces the earlier sample
+frames. Contender has no belt; Champion has the championship belt. Both carry
+Canopy Crown ’89 and TREE TOKEN · SUI branding. Photo upload stays local, with
+zoom/position controls, small profile examples, and 1024px profile/transparent
+frame PNG downloads. A cached silhouette mask prevents the photo from leaking
+outside the illustrated frame. Original artwork bytes are preserved.
+
+Actual canonical-page browser checks passed: synthetic photo selection,
+maximum zoom/position, reset and both PNG export formats. Desktop viewport
+1363px has 1348px client/scroll width; mobile iframe has 375px client/scroll
+width and a 307×52px photo control. Both real downloaded PNGs are 1024×1024
+RGBA with transparent corners; the frame download also has a transparent center.
+Workshop uses the approved title and hides this collection for other planned
+games. Six event tests, six renderer cases, independent exterior-pixel checks,
+and both required GitHub checks passed. Records:
+`docs/canopy-crown-profile-validation-20261111.json` and
+`docs/canopy-crown-profile-release-20261111.json`.
+
+Fresh inventory preserved all 49 backend function records, five schedules,
+and runtime/provider/build/protected-environment fingerprints. Total 513 static
+paths: 503 unchanged, eight workshop presentation/helper paths changed, two
+approved PNGs added. Existing game and wallet/payment JavaScript is unchanged.
+
+This completes the approved design and try-on preview. Tournament entry,
+payments, ranked scoring and earned unlocks remain closed. The previous 5 SUI
+entry and 25 SUI-or-80% winner rule remain unchanged in the closed workshop.
+Peter has asked about 5 native USDC on Sui and second/third prizes; these are
+under discussion, not approved or implemented. The recommended alternative
+is 80% of fees to a shared prize pool, second place at 25 paid entrants and
+third at 50. Currency, minimum-prize redenomination and the full payout ladder
+must be agreed before checkout rules change. Future releases capture a fresh
+published inventory.
+
+---
+
 # Current production — photo-first event cosmetic review, 2026-11-11
 
 Locked deploy `6af4c09480dca6c4a8ad75d7`, source `ea81a2de80eacb00e60aaf384fec2878ea7d370f`, PR #143. Review `/play/events/profile-cosmetics/`, mobile-width review `/play/events/profile-cosmetics/mobile-review/`; workshop concepts updated at `/play/events/preview/`. Cosmetic approval and permanent ownership unlocks are still pending.

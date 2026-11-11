@@ -23,8 +23,55 @@
   },
   "eventRuleTests": "6 passed, including saved-title migration",
   "productionSnapshot": "passed: 196 files, 38 archived function packages",
-  "browserChecks": "Local Chromium blocked by socket policy; canonical preview browser checks pending publication.",
-  "published": false,
+  "browserChecks": {
+    "desktop": {
+      "viewport": 1363,
+      "clientWidth": 1348,
+      "scrollWidth": 1348,
+      "mainCanvasPixels": [
+        1024,
+        1024
+      ],
+      "smallCanvasCssWidths": [
+        48,
+        80,
+        128
+      ]
+    },
+    "mobileIframe": {
+      "clientWidth": 375,
+      "scrollWidth": 375,
+      "photoControlWidth": 307,
+      "photoControlHeight": 52,
+      "downloadButtonEnabled": true
+    },
+    "syntheticPhotoSelection": "passed",
+    "photoControls": "zoom 2.5, x -100, y 100 passed",
+    "reset": "passed",
+    "contenderPhotoDownload": {
+      "format": "PNG",
+      "pixels": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "transparentCorners": true
+    },
+    "championFrameDownload": {
+      "format": "PNG",
+      "pixels": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "transparentCorners": true,
+      "transparentCenter": true
+    },
+    "workshopTitle": "Canopy Crown \u201989",
+    "otherGameCollectionHidden": true,
+    "treeForceCollectionRestored": true
+  },
+  "published": true,
   "rendererExports": {
     "cases": 6,
     "dimensions": [
@@ -46,5 +93,9 @@
     "normalAndMaximumPhotoPosition": "passed for both frames",
     "exteriorPhotoLeakPixels": 0,
     "originalArtworkUnchanged": true
-  }
+  },
+  "publishedDeploy": "6af4e675bad4dee995a99806",
+  "sourceCommit": "ac34030d613ebdcb7ca49544194425c7fb9d18da",
+  "workflowRun": 43108591709,
+  "url": "https://tree-token.xyz/play/events/profile-cosmetics/"
 }
