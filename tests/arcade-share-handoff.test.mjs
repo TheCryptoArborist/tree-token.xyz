@@ -25,3 +25,5 @@ test('handoff selects the exact older run, rejects a missing run and clears on w
   current={...current,wallet:'0x'+'f'.repeat(64)};app.sessionChanged();send(detail([{...recent,id}]));assert.equal(root.querySelector('#result-share-controls').hidden,true);
  }finally{app.destroy();w.close();globalThis.Image=originalImage;}
 });
+
+test('share handoffs target the main Arcade Daily tab',()=>{const url=new URL(resultShareUrl('pvp','a'.repeat(64)));assert.equal(url.pathname,'/play/');assert.equal(url.hash,'#daily');});

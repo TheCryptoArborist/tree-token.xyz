@@ -25,6 +25,6 @@ export async function receiptIdForRun(gameId,runId,wallet){
 }
 export function resultShareUrl(gameId,receiptId){
  if(!HANDOFF_GAMES.includes(gameId)||!/^[a-f0-9]{64}$/.test(receiptId))throw Error('Invalid share link');
- return 'https://tree-token.xyz/play/quests/preview/?'+new URLSearchParams({shareGame:gameId,shareRun:receiptId})+'#daily';
+ return 'https://tree-token.xyz/play/?'+new URLSearchParams({shareGame:gameId,shareRun:receiptId})+'#daily';
 }
 export function readShareRequest(location){const p=new URLSearchParams(location.search);const gameId=p.get('shareGame'),id=p.get('shareRun');return HANDOFF_GAMES.includes(gameId)&&/^[a-f0-9]{64}$/.test(id||'')?{gameId,id}:null;}

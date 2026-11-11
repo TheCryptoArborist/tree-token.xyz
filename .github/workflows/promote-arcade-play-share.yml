@@ -1,0 +1,70 @@
+name: Promote Arcade play then share
+on:
+  push:
+    branches: [feature/arcade-share-production]
+    paths:
+      - .github/workflows/promote-arcade-play-share.yml
+      - tests/arcade-play-share*.test.mjs
+      - tests/arcade-completed*.test.mjs
+      - production/arcade-play-share-static/**
+      - scripts/arcade-*-play-share.js
+      - scripts/arcade-result-share-builder.js
+      - scripts/arcade-play-share/promote.mjs
+      - scripts/arcade-share-handoff.js
+      - scripts/arcade-end-share-prompt.js
+      - scripts/arcade-play-share/**
+      - tests/arcade-share-handoff.test.mjs
+      - scripts/arcade-completed-run-tracking.js
+      - netlify/completed-functions/**
+      - netlify/lib/arcade-completed-runs.mjs
+      - vendor/arcade-completed/**
+permissions:
+  contents: read
+concurrency:
+  group: tree-production-preservation-release
+  cancel-in-progress: false
+jobs:
+  preview:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Validate result gating and session navigation
+        run: |
+          npm ci --prefix vendor/arcade-completed --no-audit --no-fund
+          ln -s vendor/arcade-completed/node_modules node_modules
+          npm install --prefix /tmp/arcade-test jsdom@26 @electric-sql/pglite@0.2.17 --no-audit --no-fund
+          ARCADE_TEST_JSDOM=/tmp/arcade-test/node_modules/jsdom/lib/api.js ARCADE_TEST_PGLITE=/tmp/arcade-test/node_modules/@electric-sql/pglite/dist/index.js node --test tests/arcade-completed*.test.mjs tests/arcade-play-share*.test.mjs tests/arcade-share-handoff.test.mjs tests/arcade-monthly-database.test.mjs
+          node scripts/build-production-snapshot.mjs
+          node scripts/verify-production-snapshot.mjs
+          git diff --check
+      - name: Promote main Arcade while preserving current production
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          SOURCE_COMMIT: ${{ github.sha }}
+        run: |
+          test -n "$NETLIFY_AUTH_TOKEN"
+          for attempt in {1..20}; do
+            if node scripts/arcade-play-share/promote.mjs candidate production > /tmp/arcade-candidate.log 2>&1; then
+              cat /tmp/arcade-candidate.log
+              break
+            fi
+            cat /tmp/arcade-candidate.log
+            grep -q 'Active deployment; wait before publishing' /tmp/arcade-candidate.log || exit 1
+            sleep 15
+          done
+          test -f .netlify/arcade-play-share-production/state.json
+          node scripts/arcade-play-share/promote.mjs verify production
+          node scripts/arcade-play-share/promote.mjs publish production
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: arcade-play-share-production
+          path: .netlify/arcade-play-share-production/report.json
+          include-hidden-files: true
+          if-no-files-found: ignore
