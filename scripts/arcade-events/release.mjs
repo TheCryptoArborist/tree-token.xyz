@@ -1,6 +1,8 @@
 import fs from 'node:fs';import os from 'node:os';import path from 'node:path';import crypto from 'node:crypto';import assert from 'node:assert/strict';
 const root=path.resolve(import.meta.dirname,'../..'),target=process.argv[3]||'preview',dir=path.join(root,'.netlify/arcade-events-'+target);fs.mkdirSync(dir,{recursive:true});
-const saved=JSON.parse(fs.readFileSync(path.join(os.homedir(),'.config/netlify/config.json'))),a=saved.users[saved.userId].auth,token=typeof a==='string'?a:a.token;
+let token=process.env.NETLIFY_AUTH_TOKEN;
+if(!token){const saved=JSON.parse(fs.readFileSync(path.join(os.homedir(),'.config/netlify/config.json'))),a=saved.users[saved.userId].auth;token=typeof a==='string'?a:a.token;}
+assert(token,'Netlify authorization is required');
 const siteId='aa62f324-b880-47d6-85b8-4ba0700ff5bf',mode=process.argv[2]||'candidate';
 const canonical=x=>JSON.stringify(x,(_,v)=>v&&typeof v==='object'&&!Array.isArray(v)?Object.fromEntries(Object.entries(v).sort(([a],[b])=>a.localeCompare(b))):v);
 const sha=(x,algo='sha1')=>crypto.createHash(algo).update(x).digest('hex');
@@ -26,7 +28,7 @@ async function protectedEnvironmentHash(site){const rows=await api('accounts/'+s
 assert(['preview','live'].includes(target));
 let state;
 if(mode==='candidate'){
- await noBuilds();const site=await api('sites/'+siteId),baseline=await api('deploys/'+site.published_deploy.id);assert(baseline.locked);assert.equal(baseline.function_schedules.length,5);
+ await noBuilds();const site=await api('sites/'+siteId),baseline=await api('deploys/'+site.published_deploy.id);assert(baseline.locked);if(process.env.EXPECTED_DEPLOY)assert.equal(baseline.id,process.env.EXPECTED_DEPLOY,'Published baseline changed');assert.equal(baseline.function_schedules.length,5);
  const files=await inventory(baseline.id),originalFiles={...files},changes={};
  assert.equal(target,'preview','Only a review workshop may be released');
  changes['/play/events/preview/index.html']=fs.readFileSync(root+'/production/arcade-events-static/index.html');
