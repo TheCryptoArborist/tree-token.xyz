@@ -9,10 +9,10 @@ replace('function _h({session:e}){','function _h({session:e}){const[shareSaved,s
 replace('n.runId===e?.runId&&(c(n),','n.runId===e?.runId&&(setShareSaved(null),c(n),');
 replace("c(void 0);u('')},[e?.runId]);","c(void 0);u('');setShareSaved(null)},[e?.wallet,e?.runId]);");
 replace('n(i.username),o(i.badges);','n(i.username),o(i.badges);if(s?.ranked===true&&s.runId===e.runId)setShareSaved({wallet:e.wallet,runId:s.runId});');
-replace('e?(0,S.jsxs)(`form`,','s?.ranked===true&&s.runId===e?.runId&&(0,S.jsx)(EndSharePrompt,{React:x,gameId:"treeforce89",runId:s.runId,wallet:e.wallet,ready:shareSaved?.wallet===e.wallet&&shareSaved?.runId===s.runId,score:s.score,stage:s.wave+1}),e?(0,S.jsxs)(`form`,');
+replace('(0,S.jsx)(`div`,{className:`pilot-table`,','s?.ranked===true&&s.runId===e?.runId&&(0,S.jsx)(EndSharePrompt,{React:x,gameId:"treeforce89",runId:s.runId,wallet:e.wallet,ready:shareSaved?.wallet===e.wallet&&shareSaved?.runId===s.runId,score:s.score,stage:s.wave+1}),(0,S.jsx)(`div`,{className:`pilot-table`,');
 const output='import{EndSharePrompt}from"/scripts/arcade-end-share-prompt.js";\n'+original.slice(0,start)+profile+original.slice(end);
 assert.equal(output.slice(output.indexOf('var vh=')),original.slice(end),'Code after profile changed');assert.equal(output.slice(output.indexOf('\n')+1,output.indexOf('function _h(')),original.slice(0,start),'Wallet/payment/session code changed');
 const dir=new URL('../../release/arcade-end-share/',import.meta.url);await fs.mkdir(new URL('assets/',dir),{recursive:true});
-await fs.writeFile(new URL('assets/index-share-r4.js',dir),output);assert(html.includes('index-renewal-r3.js'));await fs.writeFile(new URL('index.html',dir),html.replaceAll('index-renewal-r3.js','index-share-r4.js'));
+await fs.writeFile(new URL('assets/index-share-r4.js',dir),output);assert(html.includes('index-renewal-r3.js')||html.includes('index-share-r4.js'));await fs.writeFile(new URL('index.html',dir),html.replaceAll('index-renewal-r3.js','index-share-r4.js'));
 await fs.writeFile(new URL('preparation.json',dir),JSON.stringify({source:sha(original),output:sha(output),scope:'Profile/result UI only; wallet/payment/session logic byte-identical'},null,2));
 console.log('Prepared Tree Force ending share prompt from pinned live source.');
