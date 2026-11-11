@@ -1,0 +1,38 @@
+{
+  "release": {
+    "id": "6af470248bda363174a0cb7f",
+    "baseline": "6af46fa892bd886ebd3e68ca",
+    "mode": "publish",
+    "state": "ready",
+    "staticPaths": 501,
+    "preservedStaticPaths": 500,
+    "functionsPreserved": 47,
+    "totalFunctions": 48,
+    "completedRunsFunction": "d8328bde233573b83f9dbe521bd74ec16ddada6261aa0584abec40f656179098",
+    "schedulesPreserved": 5,
+    "target": "preview",
+    "sourceCommit": "98fdf3467d6073f10373aa5d40f625227a90c3e3",
+    "changedPaths": [
+      "/scripts/arcade-result-share-builder.js"
+    ],
+    "addedPaths": [],
+    "existingWalletAndGameJavaScriptUnchanged": true,
+    "paidEntryEnabled": false,
+    "playShareReviewOnly": true
+  },
+  "workflowRun": 43031050025,
+  "fullManifestArtifact": 13860703704,
+  "validation": {
+    "targetedTestsPassed": 21,
+    "visualChecks": "All four game artworks; all three styles; final outlined headings and framed banner inspected",
+    "scoreCaptionMatrix": "All four games, no-score and maximum safe integer score, null and positive stages; captions <=280 characters",
+    "resultTracking": "User confirmed real saved-run sharing worked",
+    "automaticPosting": false
+  },
+  "design": {
+    "resultCard": "Large actual score and stage; per-game challenge captions; existing artwork",
+    "finishing": "Inset banner, dark trim, light bevel, outer frame, artwork frame, dark outlines on light card text"
+  },
+  "reviewUrl": "https://tree-token.xyz/play/quests/share-review/",
+  "mainArcade": "unchanged"
+}
