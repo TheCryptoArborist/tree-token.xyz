@@ -1,13 +1,20 @@
 import {CROWN_OVERLAYS,drawCrownProfile} from './profile-cosmetics.mjs';
 import {installEventServerControls} from './server-controls.mjs';
-import {GAMES,makeDraft,economics,mistToSui,launchChecks} from './core.mjs';
-const $=id=>document.getElementById(id),key='tree-arcade:event-workshop:draft:v1';
+import {GAMES,makeDraft,economics,unitsToUsdc,launchChecks} from './core.mjs';
+const $=id=>document.getElementById(id),key='tree-arcade:event-workshop:draft:v2',legacyKey='tree-arcade:event-workshop:draft:v1';
 let current=makeDraft(),artVersion=0;
-const currency=n=>`${mistToSui(n)} SUI`;
+const currency=n=>`${unitsToUsdc(n)} USDC`;
 function feedback(text,error=false){$('feedback').textContent=text;$('feedback').classList.toggle('error',error);}
-function read(){return makeDraft({id:current.id,title:$('title').value,gameId:$('game').value,timeZone:$('timezone').value,startLocal:$('starts').value,endLocal:$('ends').value});}
+function read(){return makeDraft({...current,title:$('title').value,gameId:$('game').value,timeZone:$('timezone').value,startLocal:$('starts').value,endLocal:$('ends').value});}
 function writeInputs(draft){$('title').value=draft.title;$('game').value=draft.gameId;$('timezone').value=draft.timeZone;$('starts').value=draft.startLocal;$('ends').value=draft.endLocal;}
-function estimate(){const n=Number($('entrants').value),money=economics(n);$('entrant-count').value=String(n);$('revenue').textContent=currency(money.revenueMist);$('estimate-prize').textContent=currency(money.prizeMist);$('margin').textContent=currency(money.organizerNetBeforeCostsMist);$('subsidy').textContent=BigInt(money.reserveTopUpMist)>0n?`Organizer contributes ${currency(money.reserveTopUpMist)} to cover the guaranteed prize. Illustration only.`:'Illustration only. Organizer margin is before payment, hosting and other costs.';}
+function estimate(){
+ const n=Number($('entrants').value),money=economics(n);$('entrant-count').value=String(n);
+ for(const [id,field]of Object.entries({revenue:'revenueUnits','estimate-prize':'prizePoolUnits','first-prize':'firstPrizeUnits','second-prize':'secondPrizeUnits','third-prize':'thirdPrizeUnits','organizer-allocation':'organizerAllocationUnits','guarantee-top-up':'guaranteeTopUpUnits',margin:'organizerNetBeforeCostsUnits'}))$(id).textContent=currency(money[field]);
+ $('second-prize-row').classList.toggle('unpaid',money.paidPlaces<2);$('third-prize-row').classList.toggle('unpaid',money.paidPlaces<3);$('margin').classList.toggle('negative',BigInt(money.organizerNetBeforeCostsUnits)<0n);
+ $('tier-note').textContent=n===0?'No entrants · no payout':n<25?`One paid place · ${25-n} more entrants unlock second place`:n<50?`Two paid places · ${50-n} more entrants unlock third place`:'Three paid places · 60% / 25% / 15%';
+ $('subsidy').textContent=n===0?'No entrants means no prize payout and no guarantee contribution.':BigInt(money.guaranteeTopUpUnits)>0n?`The organizer adds ${currency(money.guaranteeTopUpUnits)} to the ${currency(money.feePrizePoolUnits)} fee-funded pool to reach the 25 USDC first prize.`:'80% of entry revenue funds the prize pool. No guarantee contribution is needed at this entry count.';
+ for(const button of document.querySelectorAll('[data-entrants]'))button.setAttribute('aria-pressed',String(Number(button.dataset.entrants)===n));
+}
 function dateLine(draft){if(!draft.startsAt)return 'Beginning and ending times to be announced.';const f=new Intl.DateTimeFormat('en-US',{timeZone:draft.timeZone,month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit',timeZoneName:'short'});return `Begins ${f.format(new Date(draft.startsAt))}\nEnds ${f.format(new Date(draft.endsAt))}`;}
 function render(draft){current=draft;const game=GAMES.find(g=>g.id===draft.gameId);$('event-title').textContent=draft.title;$('game-name').textContent=game.name.toUpperCase();$('game-art').src=game.art;$('game-art').alt=`Original ${game.name} game artwork`;$('schedule-line').textContent=dateLine(draft);$('event-phase').textContent=draft.startsAt?'DRAFT · TIMES SELECTED':'DRAFT · NOT SCHEDULED';$('run-rule').textContent=game.id==='treeforce89'?'Start a fresh three-life run. Paid continues do not count toward event rankings.':'This game’s tournament rules and score validation must be defined before entry opens.';$('adapter-note').textContent=game.id==='treeforce89'?'Tree Force ’89 is the first planned integration. Payment and tournament scoring are not connected.':`${game.name} is a planning option. Its event rules and score validation are not connected.`;const checks=$('checks');checks.replaceChildren();for(const check of launchChecks(draft)){const li=document.createElement('li'),mark=document.createElement('span');li.classList.toggle('ready',check.ready);mark.textContent=check.ready?'✓':'○';mark.setAttribute('aria-hidden','true');li.append(mark,document.createTextNode(`${check.label}${check.ready?' · set':' · pending'}`));checks.append(li);}drawCosmetics(game);}
 function update(){try{render(read());feedback('Unsaved changes · Entry stays closed.');return true;}catch(e){feedback(e.message,true);return false;}}
@@ -15,7 +22,8 @@ $('settings').addEventListener('input',update);
 $('settings').addEventListener('submit',event=>{event.preventDefault();if(!update())return;try{localStorage.setItem(key,JSON.stringify(current));feedback('Draft saved on this device. Entry remains closed.');}catch{feedback('This browser could not save the draft. Use Download draft to keep a copy.',true);}});
 $('download').addEventListener('click',()=>{if(!update())return;const url=URL.createObjectURL(new Blob([JSON.stringify(current,null,2)+'\n'],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='tree-arcade-event-draft.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);feedback('Draft downloaded. Entry remains closed.');});
 $('entrants').addEventListener('input',estimate);
-try{const saved=localStorage.getItem(key);if(saved){current=makeDraft(JSON.parse(saved));writeInputs(current);feedback('Restored the draft saved on this device. Entry remains closed.');}}catch{feedback('A saved draft could not be restored. Starting a new draft.',true);}
+for(const button of document.querySelectorAll('[data-entrants]'))button.addEventListener('click',()=>{$('entrants').value=button.dataset.entrants;estimate();});
+try{const saved=localStorage.getItem(key)||localStorage.getItem(legacyKey);if(saved){const input=JSON.parse(saved);current=makeDraft(input);writeInputs(current);feedback(input.version===1?'Restored your draft with the approved 5 USDC rules. Save to keep this updated version. Entry remains closed.':'Restored the USDC draft saved on this device. Entry remains closed.');}}catch{feedback('The saved draft could not be safely restored. Its stored copy is unchanged; a new USDC draft is shown.',true);}
 render(current);estimate();
 
 // Approved Canopy Crown ’89 examples. Other game options do not claim these cosmetics.

@@ -1,0 +1,59 @@
+name: Publish Canopy Crown USDC rules
+
+on:
+  workflow_dispatch:
+    inputs:
+      expected_deploy:
+        description: Current locked published deploy (stop if changed)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tree-production-preservation-release
+  cancel-in-progress: false
+
+jobs:
+  workshop:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Verify USDC rules and package only the event handler
+        run: |
+          npm ci --prefix vendor/arcade-events --ignore-scripts
+          node --test tests/arcade-event-core.test.mjs tests/arcade-event-access.test.ts tests/arcade-event-database.test.mjs tests/arcade-event-controls.test.mjs
+          node scripts/arcade-events/package.mjs
+          node --check scripts/arcade-events/preview.mjs
+          node --check scripts/arcade-events/server-controls.mjs
+          node --check scripts/arcade-events/release-usdc-terms.mjs
+          git diff --check
+      # Apply and verify the additive USDC database migration before dispatch.
+      # Public configuration checks below establish the package/closed policy;
+      # they do not establish whether private organizer RPCs were migrated.
+      - name: Publish the closed workshop with complete preservation
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          SOURCE_COMMIT: ${{ github.sha }}
+          EXPECTED_DEPLOY: ${{ inputs.expected_deploy }}
+        run: |
+          test -n "$NETLIFY_AUTH_TOKEN" || { echo 'Netlify release secret is unavailable.'; exit 1; }
+          node scripts/arcade-events/release-usdc-terms.mjs candidate preview
+          node scripts/arcade-events/release-usdc-terms.mjs verify preview
+          node scripts/arcade-events/release-usdc-terms.mjs publish preview
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: arcade-event-usdc-release
+          path: .netlify/arcade-event-usdc-preview/report.json
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 30

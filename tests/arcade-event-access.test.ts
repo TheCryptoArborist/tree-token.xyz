@@ -2,6 +2,7 @@ import {test} from 'node:test';import assert from 'node:assert/strict';
 import {NFTREE_TYPE} from '../netlify/lib/tree-nftree-overview.ts';
 import {requireEventHolder} from '../netlify/lib/arcade-event-access.ts';
 import {createEventHandler} from '../netlify/event-functions/arcade-events.ts';
+import {TERMS} from '../scripts/arcade-events/core.mjs';
 const wallet='0x'+'a'.repeat(64),origin='https://tree-token.xyz',now=Date.parse('2026-11-11T18:00Z'),session={wallet,origin,revoked:false,expiresAt:new Date(now+60000).toISOString()};
 const own=(patch:any={})=>({address:wallet,network:'sui-mainnet',nftreeType:NFTREE_TYPE,methodology:'canonical-nftree-direct-and-kiosk-cap-v2',nftreeCount:1,directCount:1,kioskCount:0,...patch});
 test('direct and wallet-controlled Kiosk NFTrees qualify; other Arcade access does not',async()=>{
@@ -28,9 +29,22 @@ test('eligibility handler binds signed-in wallet and never opens entry or reques
  assert.equal((await handler(request('entry'))).status,404);assert.equal((await handler(request('run-start'))).status,404);
 });
 test('organizer save canonicalizes fixed NFTree-only rules and rejects client launch/ownership assertions',async()=>{
- let saved:any;const handler=createEventHandler({clock:()=>now,rpc:async(name:string,args:any)=>{if(name==='arcade_growth_read_session_v1')return session;assert.equal(name,'arcade_event_save_draft_v1');saved=args;return {version:1,payment_enabled:false};}});
- const payload={draft:{id:'defend-the-canopy-01',title:'Defend the Canopy',gameId:'treeforce89'},expectedVersion:0};
- assert.equal((await handler(request('admin-save','POST',payload))).status,200);assert.equal(saved.p_expected_version,0);assert.equal(saved.p_draft.terms.access,'nftree-holder-only');assert.equal(saved.p_draft.paymentEnabled,false);
+ let saved:any;const handler=createEventHandler({clock:()=>now,rpc:async(name:string,args:any)=>{if(name==='arcade_growth_read_session_v1')return session;assert.equal(name,'arcade_event_save_draft_v2');saved=args;return {version:1,terms_version:2,payment_enabled:false};}});
+ const payload={draft:{id:'defend-the-canopy-01',title:'Defend the Canopy',gameId:'treeforce89'},expectedVersion:0,termsVersion:2};
+ assert.equal((await handler(request('admin-save','POST',payload))).status,200);assert.equal(saved.p_expected_version,0);assert.deepEqual(saved.p_draft.terms,TERMS);assert.equal(saved.p_draft.version,2);assert.equal(saved.p_draft.paymentEnabled,false);
  for(const patch of [{paymentEnabled:true},{ownership:own()},{terms:{access:'public'}}])assert.equal((await handler(request('admin-save','POST',{...payload,draft:{...payload.draft,...patch}}))).status,400);
  assert.equal((await handler(request('admin-save','POST',{...payload,expectedVersion:-1}))).status,400);
+ for(const termsVersion of [undefined,1,'2',3]){saved=null;const r=await handler(request('admin-save','POST',{...payload,termsVersion}));assert.equal(r.status,409);assert.equal((await r.json()).error,'policy-conflict');assert.equal(saved,null);}
+});
+test('configuration exposes canonical USDC terms without activating money, scores or awards',async()=>{
+ const handler=createEventHandler({rpc:async()=>{throw Error('configuration must not access the database');}});
+ const r=await handler(new Request(`${origin}/api/arcade-events`)),data=await r.json();
+ assert.equal(r.status,200);assert.deepEqual(data.terms,TERMS);assert.equal(data.terms.currency,'USDC');assert.equal(data.terms.decimals,6);assert.equal(data.terms.entryFeeUnits,'5000000');assert.equal(data.terms.minimumPrizeUnits,'25000000');
+ for(const flag of ['paymentEnabled','scoringEnabled','awardsEnabled'])assert.equal(data[flag],false);
+ assert.equal(data.draftFormatVersion,2);assert.equal(r.headers.get('cache-control'),'no-store');
+});
+test('server draft load preserves event identity and optimistic version independently of terms version',async()=>{
+ const event={event_id:'canopy-crown-89-usdc',version:7,terms_version:2,currency:'USDC',terms:TERMS,payment_enabled:false};
+ const handler=createEventHandler({clock:()=>now,rpc:async(name:string,args:any)=>{if(name==='arcade_growth_read_session_v1')return session;assert.equal(name,'arcade_event_load_draft_v2');assert.equal(args.p_event_id,event.event_id);return event;}});
+ const r=await handler(request('admin-load&id='+event.event_id)),data=await r.json();assert.equal(r.status,200);assert.deepEqual(data.event,event);assert.equal(data.paymentEnabled,false);assert.equal(data.scoringEnabled,false);assert.equal(data.awardsEnabled,false);
 });
