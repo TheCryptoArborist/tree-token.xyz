@@ -1,3 +1,15 @@
+# Current production — photo-first event cosmetic review, 2026-11-11
+
+Locked deploy `6af4c09480dca6c4a8ad75d7`, source `ea81a2de80eacb00e60aaf384fec2878ea7d370f`, PR #143. Review `/play/events/profile-cosmetics/`, mobile-width review `/play/events/profile-cosmetics/mobile-review/`; workshop concepts updated at `/play/events/preview/`. Cosmetic approval and permanent ownership unlocks are still pending.
+
+Replaces poster medallions and tiny ribbons/lettering with a thin canopy frame, compact lower-right hero-face emblem and gold champion profile kit. Photo remains prominent; decoration stays inside the circular social crop. New try-on uses local-only photo upload/crop controls and actual 48/80/128px examples. No photo data is uploaded or stored on a server. The existing workshop publisher also includes all new renderer dependencies/routes.
+
+Validation: upload/reset tested in browser using a synthetic photo; desktop 1363px has 1348px document width; mobile content/scroll width 375px and photo label 307×52px. All nine small examples have exact 48/80/128 canvas/CSS widths at desktop. Separate raster check using @napi-rs/canvas 0.1.80 reports zero opaque pixels outside the social circle, transparent corners and unchanged center photo pixels for all three compositions: `docs/event-profile-cosmetics-render-validation-20261111.json`. Existing event-rule and required production-snapshot checks pass. Workshop eligibility still prompts signed-out users correctly and entry remains disabled.
+
+Fresh baseline `6af4a8a16b5775b6f672ecb0` preserved all 49 complete backend records, five schedules and runtime/provider/build/protected-environment fingerprints. 511 static paths; 504 unchanged, 2 workshop presentation paths changed, 5 review/renderer paths added. No Profile Studio, game, wallet, payment, eligibility, database or backend package changes. Release: `docs/event-profile-cosmetics-release-20261111.json`; workflow `43086635932`. Future releases capture fresh published inventory.
+
+---
+
 # Current production — NFTree-only tournament foundation, 2026-11-11
 
 Locked deploy `6af4a8a16b5775b6f672ecb0`, source `6994fb2fac05dcea36d694b4e8a70202dd6af701`, PR #141. Review page `/play/events/preview/`; isolated handler `netlify/event-functions/arcade-events.ts` at `/api/arcade-events`.
