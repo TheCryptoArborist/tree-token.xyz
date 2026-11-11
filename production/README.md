@@ -1,4 +1,53 @@
-# Current production — approved Canopy Crown ’89 design complete, 2026-11-11
+# Current production — Canopy Crown USDC proposal published, 2026-11-11
+
+Locked deploy `6af4ef567e67ea8af9abe8ed`, published at 22:42:49 UTC, source
+`ae882dc0feb9a71e277611fbfa8c8589dbc80bc1`, workflow `43113929057`.
+Canonical workshop: `/play/events/preview/`; mobile review:
+`/play/events/mobile-review/`. This approved policy supersedes the historical
+SUI proposal described below.
+
+Entry is **5 native USDC on Sui**, with 80% of fees funding prizes and a 20%
+organizer allocation before costs. First place receives at least 25 USDC when
+there is an entrant; the organizer funds any shortfall. At registration close,
+confirmed paid eligible NFTree holders set the ladder: 1–24 entrants pay first
+place 100%, 25–49 pay 75%/25%, and 50+ pay 60%/25%/15%. Zero entrants means no
+payout or subsidy. Payouts follow event completion and verified results. The
+page discloses that individual prizes can fall when another place unlocks.
+
+The page, calculator, local/downloaded drafts and isolated server draft handler
+now use terms version 2, six-decimal USDC units and the same approved policy.
+The additive production migration `20261111222359_arcade_event_usdc_terms`
+preserves legacy records and private service-only access. No organizer, draft,
+payment, score or award was created by this release.
+
+All 29 focused tests passed. Canonical desktop and mobile checks verified the
+prize ladder, calculator at 0/1/6/25/50/100 entrants, local save/reload and actual
+JSON download. Document client/scroll widths match at 1348px desktop and 375px
+mobile. Public API reports the exact policy with payment/scoring/awards false;
+unauthenticated private actions reject with 401 and unsupported entry/run-start
+actions reject with 404.
+
+Inventory remains **513 static paths, 49 functions and five schedules**. Exactly
+five workshop files and the isolated `arcade-events` package changed; all 508
+other static files, all 48 other complete function records, schedules, runtime,
+region overrides, build settings and protected environment fingerprints were
+preserved. Approved artwork, try-on, wallet and game code are unchanged.
+
+Release and validation records: `docs/canopy-crown-usdc-release-20261111.json`,
+`docs/canopy-crown-usdc-validation-20261111.json`,
+`docs/canopy-crown-usdc-api-validation-20261111.json` and
+`docs/canopy-crown-usdc-database-validation-20261111.json`. Browser screenshots
+and the real exported draft are in `docs/validation/canopy-crown-usdc-20261111/`.
+
+The approved event proposal and design are published. Registration remains
+closed pending schedule, organizer authorization/recipient, guaranteed funding,
+payment receipts, trusted tournament scoring and permanent cosmetic unlock
+integration. Saving a draft cannot launch the event. Future releases must
+capture a fresh full published inventory.
+
+---
+
+# Historical production — approved Canopy Crown ’89 artwork, 2026-11-11
 
 Locked preview release `6af4e675bad4dee995a99806`, source
 `ac34030d613ebdcb7ca49544194425c7fb9d18da`, PR #145, workflow

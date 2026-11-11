@@ -1,0 +1,70 @@
+{
+  "version": 2,
+  "id": "treeforce89-defend-the-canopy-01",
+  "title": "Canopy Crown ’89",
+  "gameId": "treeforce89",
+  "timeZone": "America/Chicago",
+  "startLocal": "",
+  "endLocal": "",
+  "startsAt": null,
+  "endsAt": null,
+  "status": "draft",
+  "terms": {
+    "version": 2,
+    "currency": "USDC",
+    "network": "sui-mainnet",
+    "decimals": 6,
+    "coinType": "0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC",
+    "entryFeeUnits": "5000000",
+    "minimumPrizeUnits": "25000000",
+    "prizeShareBps": 8000,
+    "organizerShareBps": 2000,
+    "payoutTiers": [
+      {
+        "id": "winner-only",
+        "minEntrants": 1,
+        "maxEntrants": 24,
+        "paidPlaces": 1,
+        "splitBps": [
+          10000,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "top-two",
+        "minEntrants": 25,
+        "maxEntrants": 49,
+        "paidPlaces": 2,
+        "splitBps": [
+          7500,
+          2500,
+          0
+        ]
+      },
+      {
+        "id": "top-three",
+        "minEntrants": 50,
+        "maxEntrants": null,
+        "paidPlaces": 3,
+        "splitBps": [
+          6000,
+          2500,
+          1500
+        ]
+      }
+    ],
+    "lives": 3,
+    "paidContinues": false,
+    "attempts": "unlimited",
+    "payout": "manual-after-review",
+    "access": "nftree-holder-only"
+  },
+  "cosmetics": {
+    "frame": "treeforce89-defend-the-canopy-01:participant-frame",
+    "badge": "treeforce89-defend-the-canopy-01:participant-badge",
+    "champion": "treeforce89-defend-the-canopy-01:champion-badge",
+    "permanent": true
+  },
+  "paymentEnabled": false
+}
