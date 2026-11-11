@@ -1,0 +1,48 @@
+{
+  "release": {
+    "id": "6af4301dcf80c6a9fb049034",
+    "baseline": "6af401b99e26e9889e98e8d5",
+    "mode": "publish",
+    "state": "ready",
+    "staticPaths": 500,
+    "preservedStaticPaths": 497,
+    "functionsPreserved": 47,
+    "totalFunctions": 48,
+    "completedRunsFunction": "8fd170e307ee40201b84ac9fadb647476966ee6ed0870c79bbf0faf254215e6e",
+    "schedulesPreserved": 5,
+    "target": "preview",
+    "sourceCommit": "66cd637b1a8ef2e062459be3bac0f6535317fbd0",
+    "changedPaths": [
+      "/play/quests/preview/index.html",
+      "/scripts/arcade-daily-growth-play-share.js"
+    ],
+    "addedPaths": [
+      "/play/quests/mobile-review/index.html"
+    ],
+    "existingWalletAndGameJavaScriptUnchanged": true,
+    "paidEntryEnabled": false,
+    "playShareReviewOnly": true
+  },
+  "validation": {
+    "testsPassed": 21,
+    "authenticatedLiveSmoke": {
+      "httpStatus": 200,
+      "walletMatched": true,
+      "runCount": 0,
+      "sources": {
+        "treeforce89": "ready",
+        "canopy-breaker": "ready"
+      }
+    },
+    "mobile": {
+      "clientWidth": 375,
+      "scrollWidth": 375
+    },
+    "desktop": "review inspected",
+    "migration": "applied",
+    "realWalletGameplay": "not performed",
+    "mainArcade": "unchanged",
+    "socialCredit": "existing weekly reviewed stamp; no second daily award"
+  },
+  "preview": "https://tree-token.xyz/play/quests/preview/#daily"
+}
