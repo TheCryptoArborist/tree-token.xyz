@@ -139,7 +139,9 @@ if(mode==='candidate'){
  }
  assert.deepEqual(Object.keys(originalFiles).filter(file=>files[file]!==originalFiles[file]&&!Object.hasOwn(approvedPaths,file)),[],'Unapproved existing static path changed');
  const functionsConfig=configs(baseline);
- functionsConfig[handlerName]={...functionsConfig[handlerName],build_data:PACKAGE.buildData,memory:originalHandler.mo??originalHandler.m,region:originalHandler.rgo??originalHandler.rg};
+ // Preserve whether resources inherit defaults; copying effective values here
+ // would introduce new per-function overrides in the deployment configuration.
+ functionsConfig[handlerName]={...functionsConfig[handlerName],build_data:PACKAGE.buildData};
  const environmentHash=sha(canonical(site.build_settings),'sha256'),protectedEnvHash=await protectedEnvironmentHash(site);
  const deploy=await api(`sites/${siteId}/deploys?title=Canopy%20Crown%20USDC%20prize%20rules%20preview`,'POST',{files,functions:{...Object.fromEntries(baseline.available_functions.map(fn=>[fn.n,fn.d])),[handlerName]:PACKAGE.sha256},functions_config:functionsConfig,function_schedules:baseline.function_schedules,draft:false,async:false,branch:baseline.branch,commit_ref:process.env.SOURCE_COMMIT});
  assert(/^[a-f0-9]{24}$/.test(deploy.id),'Unexpected deploy identifier');
