@@ -1,71 +1,53 @@
 # NFTree multichain pilot — November 12, 2026
 
-## Status
+## Current status: published and verified
 
-Built and tested on isolated branch `pilot/nftree-multichain-20261112`; draft PR #151. **Not published.** Target: `https://tree-token.xyz/play/multichaintest/`.
+Live test page: https://tree-token.xyz/play/multichaintest/
 
-The page was created from scratch. No prepared page was required or recovered.
+Published at **21:46:44 UTC / 3:46:44 PM Central on November 12, 2026**. Netlify deploy `6af6339b098ffae9bfb4e692` is ready, published and locked. Release source: `54921f6f4359ef94b1522c32f6a53fcde4823beb`.
 
-## Implemented
+The pilot remains isolated on `pilot/nftree-multichain-20261112`, draft PR #151. It was not merged into main. The page was created from scratch; no prepared page was required.
 
-- Responsive Tree Arcade pilot with Robinhood Chain, BNB Smart Chain, Base, Solana and Sui selection.
-- Proposed non-Sui Arcade pass prices: 25 USDG / 25 USDT / 25 USDC / 25 USDC respectively. Proposed continues: one unit of the corresponding stablecoin. Sui simulates existing NFTree access and shows the proposed $1 worth of TREE continue without fabricating an indexer quote or changing live prices.
-- Simulated access and an isolated playable copy of Tree Force '89.
-- Successful, cancelled and failed continue simulations. Success restores three lives while preserving score and wave. Cancellation and failure grant no lives.
-- Reset clears the pilot session and destroys the copied game instance.
-- Explicit simulation-only disclosure. No wallet access, signatures, approvals, payments, contract deployment, backend writes, real ownership verification, or production leaderboard submissions.
-- Pilot assets remain under `/play/multichaintest/`. Existing live games and shared wallet integrations are not edited.
+## Authentication resolved
 
-Game source: `TheCryptoArborist/treeforce89@87bca303eb84c38599b186defa23844134f2b1f2`. The copied engine's Git blob is verified before bundling. Pilot tooling installs separately without altering root dependencies.
+Peter updated the TREE repository's encrypted `NETLIFY_AUTH_TOKEN` secret. TREE-only diagnostic run `43311624068` then passed user authentication, site access, full deployment inventory access and protected file inventory access, all with HTTP 200. The previous authentication blocker is resolved; no further credential change is needed for this publication.
 
-## Validation
+Evidence: `docs/multichain-auth-restored-20261112.json`. Earlier failed-authentication reports are historical, not the current status.
 
-Validated commit: `5eb27d430fe01dc489c1b48f58de6358450aad44`.
+## What is available to test
 
-GitHub run: https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/43257955199
+Choose Robinhood Chain, BNB Smart Chain, Base, Solana or Sui; grant simulated access; then launch the isolated Tree Force '89 copy. The pilot displays the proposed chain-specific pass and continue pricing, but charges nothing.
 
-- Eight unit/isolation tests passed.
-- Isolated game build passed.
-- Chromium browser checks passed at 1280 x 1000, 390 x 844 and 375 x 812.
-- All five chain options rendered their expected proposed pricing.
-- The actual game loaded and started.
-- Continue success preserved score and wave; cancellation/failure did not grant lives.
-- No horizontal overflow, page errors, wallet-provider accesses or forbidden external/API/RPC requests were detected in these checks.
-- Reset removed the game canvas and returned access to its initial state.
-- Desktop and mobile screenshots were inspected.
+The Test controls & results section can trigger a continue without waiting to lose all three lives. Successful simulated continues restore three lives while retaining score and wave. Cancellation and failure grant no lives. Reset destroys the copied game and resets pilot access.
 
-These tests validate the simulated browser experience, not real blockchain integrations, ownership verification or payment processing.
+The page is explicitly **simulation only**. Real wallet connections, signatures, token approvals, NFT ownership verification, pass minting, payment processing and production leaderboard submissions are not connected. No contract was deployed and no wallet transaction was performed.
 
-Validation artifact: https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/43257955199/artifacts/13963800226
+Game source is pinned to `TheCryptoArborist/treeforce89@87bca303eb84c38599b186defa23844134f2b1f2`; the live game was not modified. Pilot scripts, game bundle and assets are contained under `/play/multichaintest/`.
 
-## Publication blocker
+## Preservation verified
 
-The existing GitHub Actions `NETLIFY_AUTH_TOKEN` is populated, but it is not authorized for the protected Netlify inventory requests required for safe publication.
+The release captured baseline `6af4ef567e67ea8af9abe8ed` and added only **13 new static paths**, for **526 total**. All **513 pre-existing static paths**, all **49 complete backend function records**, all **five schedules**, runtime/region configuration, build settings and protected environment fingerprints were preserved. Existing games, test routes, wallet integrations and site snippet configuration were unchanged.
 
-Read-only diagnostic run: https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/43258479163
+An existing Netlify-injected Arcade link snippet changes delivered HTML without changing stored file hashes. The release verifier recognizes only that exact inspected snippet by SHA-256; all new pilot HTML beyond that insertion and every other new asset are still checked byte-for-byte. The new pilot permits exactly one insertion. A pre-existing duplicate on the untouched lobby was not removed or changed.
 
-Observed responses:
+## Validation completed
 
-- Both deploy-detail endpoints returned HTTP 200 with only public metadata, omitting function/schedule/runtime inventories.
-- The site functions endpoint returned HTTP 401.
-- The deploy files endpoint returned HTTP 401.
+Successful workflow: https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/43313284565
 
-The connected Netlify app can read the full deployment record, but its currently exposed actions do not include deployment creation, upload or publication. The existing event-workshop workflow uses the same GitHub Actions secret; it is not a separate working release credential.
+All eight unit/isolation tests passed. Chromium browser checks passed on the local build, the immutable deployment candidate, and the actual `https://tree-token.xyz` origin at 1280 x 1000, 390 x 844 and 375 x 812.
 
-No release candidate was created, no files were uploaded to Netlify, and no production publication was performed. Both release attempts stopped before any Netlify mutation. Preservation assertions have not been weakened.
+Checks covered all five chain choices, actual game load/start, simulated success/cancellation/failure, score/wave retention and reset. No horizontal overflow, page errors, wallet-provider accesses or forbidden external/API requests were detected. The canonical desktop and small-mobile screenshots were reviewed. Canonical browser verification completed at `2026-11-12T21:47:13.043Z`.
 
-## Protected baseline
+This is browser-flow validation, not a test of real blockchain integrations, physical mobile-wallet browsers, payment receipts, or a full-game victory playthrough.
 
-Netlify site: `aa62f324-b880-47d6-85b8-4ba0700ff5bf` (`tree-token`).
+Release manifest and validation record: `docs/multichain-pilot-release-20261112.json`. Full 526-path manifest, browser reports and screenshots are in workflow artifact `13987162211`, SHA-256 `14417ad6e8e0e022fc1c3f6af5264acee6ad59f395aee5e8404eed76c316c006` (retention until December 12, 2026).
 
-Published deploy remains `6af4ef567e67ea8af9abe8ed`, ready and locked. The authenticated deployment record contains 49 backend functions and five schedules. Main remains `ee6db9f6c499b48a1ec22c138e3f7b0ea58bd7a5`; this pilot has not been merged.
+## Next stage
 
-## Required to complete publication
+The immediate next step is Peter's desktop/mobile review of the published simulation. Real-wallet connectivity, chain configuration, secure ownership/entitlement checks, payment receipt validation and on-chain deployment remain separate future work. Do not enable real payments or deploy contracts without the required authorization and validation.
 
-Repair or replace the repository's encrypted Actions secret `NETLIFY_AUTH_TOKEN` with a Netlify credential authorized for this site. Do not place credentials in source files, PR comments, logs or chat. After authorization is repaired, refresh the published baseline and rerun validation and the additive preservation release. Any changed baseline must be reassessed before publication.
-
-No PowerShell or user-local deployment bundle is required. Do not run the repository's historical snapshot build as a replacement for the live site.
+Future releases must capture a new live inventory; the old first-install publisher intentionally refuses to overwrite existing pilot paths or use a changed baseline. Do not run a historical root snapshot build as a replacement for the live site.
 
 ## Guidance consulted
 
-Current MystenLabs/skills README, `frontend-apps/SKILL.md`, `frontend-apps/limitations.md`, and `frontend-apps/non-react.md`; repository `AGENTS.md` and production preservation guidance; Netlify deployment coding context. No Sui SDK migration or live wallet rewrite was performed.
+Current MystenLabs/skills README, `frontend-apps/SKILL.md` and `frontend-apps/limitations.md`; repository preservation guidance; Netlify deployment coding context. No live Sui SDK migration or wallet rewrite was performed.
