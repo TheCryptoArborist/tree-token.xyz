@@ -10,39 +10,36 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 3
     steps:
-      - name: Compare read-only identity and inventory access
+      - name: Verify TREE-only authentication and preservation access
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
         shell: bash
         run: |
           node --input-type=module <<'NODE'
-          // GET requests only. Never print credentials, response bodies, hashes or user details.
-          const raw=process.env.NETLIFY_AUTH_TOKEN||'';
-          const trimmed=raw.trim();
-          const report={checkedAt:new Date().toISOString(),credentialPresent:raw.length>0,outerWhitespace:raw!==trimmed,results:[]};
-          const sites=[{label:'tree-token',id:'aa62f324-b880-47d6-85b8-4ba0700ff5bf',deploy:'6af4ef567e67ea8af9abe8ed'},{label:'tree251',id:'f1e13313-0015-44ed-9ff3-821012a9345d',deploy:'6af5d9507ba1638d5f9e87d9'}];
-          async function probe(label,resource,token){
-            const headers={Accept:'application/json'};
-            if(token)headers.Authorization='Bearer '+token;
-            try{
-              const response=await fetch('https://api.netlify.com/api/v1/'+resource,{method:'GET',headers,redirect:'error',signal:AbortSignal.timeout(20000)});
-              let data;try{data=await response.json()}catch{}
-              const row={label,status:response.status,isArray:Array.isArray(data),hasFunctions:Array.isArray(data?.available_functions),hasSchedules:Array.isArray(data?.function_schedules)};
-              if(resource==='user'&&response.ok)row.matchesConnectedNetlifyUser=data?.id==='69800888d1a3d0483003ae9b';
-              if(response.ok&&resource.includes('/deploys/')&&data?.id)row.deployMatchesRequested=resource.endsWith('/'+data.id);
-              if(Array.isArray(data))row.returnedItems=data.length;
-              report.results.push(row);
-            }catch(error){report.results.push({label,requestFailed:true,category:error?.name||'Error'});}
+          import assert from 'node:assert/strict';
+          import {appendFile} from 'node:fs/promises';
+          // GET requests only. No token values, response bodies or personal details in logs.
+          const token=process.env.NETLIFY_AUTH_TOKEN||'';
+          const siteId='aa62f324-b880-47d6-85b8-4ba0700ff5bf';
+          const report={checkedAt:new Date().toISOString(),credentialPresent:!!token,results:[]};
+          async function get(label,resource){
+            const r=await fetch('https://api.netlify.com/api/v1/'+resource,{method:'GET',headers:{Authorization:'Bearer '+token,Accept:'application/json'},redirect:'error',signal:AbortSignal.timeout(20000)});
+            report.results.push({label,status:r.status});assert(r.ok,label+' failed: HTTP '+r.status);return r.json();
           }
-          await probe('anonymous user control','user',null);
-          await probe('Actions secret user authentication','user',raw);
-          if(raw!==trimmed)await probe('trimmed secret user authentication','user',trimmed);
-          for(const site of sites){
-            await probe(site.label+' authenticated deploy detail',`sites/${site.id}/deploys/${site.deploy}`,raw);
-            await probe(site.label+' authenticated file inventory',`deploys/${site.deploy}/files?per_page=1&page=1`,raw);
-            await probe(site.label+' authenticated function inventory',`sites/${site.id}/functions`,raw);
-          }
+          try{
+            assert(token,'TREE repository publishing credential is unavailable');
+            const user=await get('User authentication','user');
+            report.matchesConnectedAccount=user.id==='69800888d1a3d0483003ae9b';
+            assert(report.matchesConnectedAccount,'Unexpected Netlify account');
+            const site=await get('TREE site access','sites/'+siteId);assert.equal(site.id,siteId);
+            const id=site.published_deploy?.id;assert(id,'Published TREE deployment is required');
+            const deploy=await get('TREE full deployment inventory',`sites/${siteId}/deploys/${id}`);
+            assert.equal(deploy.id,id);assert.equal(deploy.site_id,siteId);
+            assert(Array.isArray(deploy.available_functions),'Full function records unavailable');
+            assert(Array.isArray(deploy.function_schedules),'Schedule records unavailable');
+            const files=await get('TREE protected file inventory',`deploys/${id}/files?per_page=1&page=1`);assert(Array.isArray(files)&&files.length>0,'Static inventory unavailable');
+            report.publishedDeploy=id;report.locked=deploy.locked;report.functions=deploy.available_functions.length;report.schedules=deploy.function_schedules.length;report.passed=true;
+          }catch(error){report.passed=false;report.error=error.message;process.exitCode=1;}
           console.log(JSON.stringify(report,null,2));
-          const {appendFile}=await import('node:fs/promises');
-          await appendFile(process.env.GITHUB_STEP_SUMMARY,'## Read-only Netlify authentication recheck\n\n```json\n'+JSON.stringify(report,null,2)+'\n```\n\nNo Netlify mutations, secret changes, wallet actions, or deployment attempts.\n');
+          await appendFile(process.env.GITHUB_STEP_SUMMARY,'## TREE publishing access check\n\n```json\n'+JSON.stringify(report,null,2)+'\n```\n\nRead-only: no deployments, settings, secrets, contracts or wallets changed.\n');
           NODE
