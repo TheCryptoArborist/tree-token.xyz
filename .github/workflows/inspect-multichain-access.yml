@@ -1,0 +1,45 @@
+name: Inspect multichain preservation access
+on:
+  push:
+    branches: [pilot/nftree-multichain-20261112]
+    paths: [.github/workflows/inspect-multichain-access.yml]
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - name: Verify TREE-only authentication and preservation access
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import {appendFile} from 'node:fs/promises';
+          // GET requests only. No token values, response bodies or personal details in logs.
+          const token=process.env.NETLIFY_AUTH_TOKEN||'';
+          const siteId='aa62f324-b880-47d6-85b8-4ba0700ff5bf';
+          const report={checkedAt:new Date().toISOString(),credentialPresent:!!token,results:[]};
+          async function get(label,resource){
+            const r=await fetch('https://api.netlify.com/api/v1/'+resource,{method:'GET',headers:{Authorization:'Bearer '+token,Accept:'application/json'},redirect:'error',signal:AbortSignal.timeout(20000)});
+            report.results.push({label,status:r.status});assert(r.ok,label+' failed: HTTP '+r.status);return r.json();
+          }
+          try{
+            assert(token,'TREE repository publishing credential is unavailable');
+            const user=await get('User authentication','user');
+            report.matchesConnectedAccount=user.id==='69800888d1a3d0483003ae9b';
+            assert(report.matchesConnectedAccount,'Unexpected Netlify account');
+            const site=await get('TREE site access','sites/'+siteId);assert.equal(site.id,siteId);
+            const id=site.published_deploy?.id;assert(id,'Published TREE deployment is required');
+            const deploy=await get('TREE full deployment inventory',`sites/${siteId}/deploys/${id}`);
+            assert.equal(deploy.id,id);assert.equal(deploy.site_id,siteId);
+            assert(Array.isArray(deploy.available_functions),'Full function records unavailable');
+            assert(Array.isArray(deploy.function_schedules),'Schedule records unavailable');
+            const files=await get('TREE protected file inventory',`deploys/${id}/files?per_page=1&page=1`);assert(Array.isArray(files)&&files.length>0,'Static inventory unavailable');
+            report.publishedDeploy=id;report.locked=deploy.locked;report.functions=deploy.available_functions.length;report.schedules=deploy.function_schedules.length;report.passed=true;
+          }catch(error){report.passed=false;report.error=error.message;process.exitCode=1;}
+          console.log(JSON.stringify(report,null,2));
+          await appendFile(process.env.GITHUB_STEP_SUMMARY,'## TREE publishing access check\n\n```json\n'+JSON.stringify(report,null,2)+'\n```\n\nRead-only: no deployments, settings, secrets, contracts or wallets changed.\n');
+          NODE
