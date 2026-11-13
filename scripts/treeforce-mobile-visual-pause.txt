@@ -1,0 +1,30 @@
+togglePause(guide=false){
+ if(this.guideClose){this.guideClose();return}
+ if(!(guide&&this.paused))this.paused=!this.paused;
+ this.pauseOverlay?.destroy(true);this.pauseOverlay=undefined;this.clearTouchState();
+ this.bonusIntro?.card.setVisible(!this.paused);this.physics.world.isPaused=this.paused;this.time.paused=this.paused;
+ this.paused?this.tweens.pauseAll():this.tweens.resumeAll();this.tweens.killTweensOf(this.notice);this.notice.setVisible(false).setText('');
+ if(this.paused){
+  const shade=this.add.rectangle(240,360,480,720,L.bg,.93).setInteractive();const items=[shade];
+  const text=(x,y,value,size=12,color=I.text,center=false)=>{const t=this.add.text(x,y,value,R(size,color));if(center)t.setOrigin(.5);items.push(t);return t};
+  const rect=(x,y,w,h,color=L.green)=>{const r=this.add.rectangle(x,y,w,h,L.panel,.99).setStrokeStyle(2,color);items.push(r);return r};
+  const picture=(x,y,key,w,h=w)=>{const image=this.add.image(x,y,key).setDisplaySize(w,h);items.push(image);return image};
+  if(guide){
+   rect(240,350,424,526);text(240,126,'SHOOT · DODGE · COLLECT',19,I.gold,true);
+   rect(240,214,392,80);picture(80,218,'bat',36,28);picture(122,218,'borer',28,36);
+   text(166,185,'SHOOT ENEMIES',15,I.green);text(166,211,'Enemy formations and bosses.\nFire upward to destroy them.',11);
+   rect(240,305,392,80,L.danger);picture(80,293,'blightDart',18,30);picture(119,293,'barkDrill',20,30);picture(99,329,'windfallLimb',67,22);
+   text(166,276,'DODGE THESE',15,I.danger);text(166,302,'Red shots + falling branches.\nDodge enemy bodies, too.',11);
+   rect(240,396,392,80);picture(79,382,'growthSeed',25);picture(121,382,'weaponCore',27);picture(79,415,'victoryTurbo',28);picture(121,415,'boomLogo',28);
+   text(166,367,'COLLECT POWER-UPS',14,I.green);text(166,393,'Green seeds · violet cores\nVICTORY + BOOM tokens',11);
+   text(240,476,'DRAG LEFT / RIGHT · AUTO FIRE STARTS ON\nHOLD FIRE FOR FASTER SHOTS\nSHIELD: GROW + FULL CHARGE, THEN TAP',11,I.text,true).setAlign('center').setLineSpacing(6);
+  }else{
+   rect(240,354,424,382);text(240,200,'CANOPY PAUSED',22,I.gold,true);text(240,294,'YOUR RUN IS PAUSED\nTAP RESUME WHEN YOU ARE READY',12,I.text,true).setAlign('center').setLineSpacing(9);
+  }
+  const y=guide?550:438;const button=rect(240,y,284,guide?62:70);button.setInteractive();text(240,y,guide&&!this.mobileGuideSeen?'START MISSION':'▶ RESUME GAME',17,I.green,true);
+  button.on('pointerdown',()=>{this.mobileGuideSeen=true;try{localStorage.setItem('treeforce89_mobile_visual_guide_v2','1')}catch{}this.togglePause()});
+  if(!guide){const help=rect(240,506,284,54,L.gold).setInteractive();text(240,506,'HOW TO PLAY',14,I.gold,true);help.on('pointerdown',()=>this.togglePause(true))}
+  this.pauseOverlay=this.add.container(0,0,items).setDepth(60);
+ }else{this.pauseOverlay?.destroy(true);this.pauseOverlay=undefined}
+ this.pauseButtonText?.setText(this.paused?'▶ RESUME':'Ⅱ PAUSE');
+}
