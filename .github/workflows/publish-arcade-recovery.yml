@@ -1,0 +1,54 @@
+name: Publish Arcade recovery hotfix
+on:
+  workflow_dispatch:
+    inputs:
+      expected_deploy:
+        description: Current locked published deploy; stop if changed
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: tree-production-preservation-release
+  cancel-in-progress: false
+jobs:
+  recovery:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Test exact pinned SDK, existing recovery guards and live receipt
+        env:
+          RUN_RECOVERY_LIVE: '1'
+        run: |
+          npm ci --prefix vendor/arcade-monthly --ignore-scripts
+          ln -s vendor/arcade-monthly/node_modules node_modules
+          node --test tests/arcade-monthly-*.test.* tests/arcade-return-session.test.mjs
+          node --check scripts/release-arcade-recovery.mjs
+          node --check scripts/arcade-monthly.js
+          node_modules/.bin/esbuild vendor/arcade-monthly/src/recovery-wallet.js --bundle --format=esm --platform=browser --target=es2022 --minify --outfile=/tmp/arcade-recovery-wallet.js
+          cmp /tmp/arcade-recovery-wallet.js assets/arcade/arcade-recovery-wallet.js
+          git diff --check
+          node scripts/package-arcade-monthly.mjs
+      - name: Replace only arcade-monthly and preserve complete production inventory
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          SOURCE_COMMIT: ${{ github.sha }}
+          EXPECTED_DEPLOY: ${{ inputs.expected_deploy }}
+        run: node scripts/release-arcade-recovery.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: arcade-recovery-release
+          path: |
+            .netlify/arcade-recovery-release/report.json
+            .netlify/arcade-monthly-functions/manifest.json
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 30
