@@ -41,7 +41,7 @@ try {
     }
     const sap=Number(await page.locator('#sap').innerText());
     await page.locator('[data-unit="sprout"]').click();
-    assert(Number(await page.locator('#sap').innerText())<sap,'Summon did not spend sap');
+    await page.waitForFunction(before=>Number(document.getElementById('sap').textContent)<before,sap,{timeout:3000});
     await page.getByRole('button',{name:'Pause',exact:true}).click();
     await page.getByRole('heading',{name:'Take a breath.',exact:true}).waitFor();
     const pausedSap=await page.locator('#sap').innerText();
