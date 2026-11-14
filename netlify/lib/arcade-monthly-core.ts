@@ -10,6 +10,30 @@ export const memoFor=(intent:{id:string;dateKey:string})=>`TREE:CHECKIN-RECOVERY
 export class MonthlyError extends Error { code:string;status:number;constructor(code:string,message:string,status=400){super(message);this.code=code;this.status=status;} }
 const fail=()=>{throw new MonthlyError('payment-not-verified','This payment could not be verified. Keep your transaction digest and retry verification.');};
 const norm=(a:unknown)=>typeof a==='string'&&/^0x[0-9a-f]{1,64}$/i.test(a)?'0x'+a.slice(2).toLowerCase().padStart(64,'0'):'';
+
+// SDK 2.26.1's Core API omits checkpoint/timestamp even for settled payments.
+// Read them from the same mainnet client's ledger, never from the browser.
+// This adapter does not bypass any amount, sender, recipient, memo or time check.
+export async function readRecoveryTransaction(client:any,digest:string,signal=AbortSignal.timeout(15000)) {
+ const result=await client.core.getTransaction({digest,include:{transaction:true,balanceChanges:true},signal});
+ const t=result?.Transaction;
+ if(result?.$kind!=='Transaction'||t?.status?.success!==true||t.digest!==digest)fail();
+ const {response}=await client.ledgerService.getTransaction({digest,readMask:{paths:['digest','timestamp','checkpoint','effects.status']}},{abort:signal});
+ const ledger=response?.transaction;
+ if(!ledger||ledger.digest!==digest||ledger.effects?.status?.success!==true)fail();
+ if(ledger.timestamp==null||ledger.checkpoint==null)throw new MonthlyError('payment-pending','Payment confirmation is not ready yet. Retry verification without paying again.',409);
+ const integerText=(value:unknown)=>typeof value==='bigint'||typeof value==='string'?String(value):typeof value==='number'&&Number.isSafeInteger(value)?String(value):'';
+ const seconds=integerText(ledger.timestamp.seconds),checkpoint=integerText(ledger.checkpoint),nanos=ledger.timestamp.nanos;
+ if(!/^\d+$/.test(seconds)||!/^\d+$/.test(checkpoint)||BigInt(checkpoint)<=0n||!Number.isInteger(nanos)||nanos<0||nanos>=1000000000)fail();
+ const timestampMs=Number(seconds)*1000+Math.floor(nanos/1000000);
+ if(!Number.isSafeInteger(timestampMs)||timestampMs<=0||timestampMs>8640000000000000)fail();
+ // Reject contradictory metadata rather than overwriting it if a later SDK
+ // begins including these fields. Both reads must describe the same payment.
+ if(t.timestampMs!=null&&t.timestampMs!==timestampMs)fail();
+ if(t.checkpoint!=null&&String(t.checkpoint)!==checkpoint)fail();
+ return {...result,Transaction:{...t,timestampMs,checkpoint}};
+}
+
 export function verifyRecoveryPayment(result:any,intent:any,digest:string,now=Date.now()) {
  const t=result?.Transaction;
  if(result?.$kind!=='Transaction'||!t?.status?.success||t.digest!==digest||!Number.isFinite(t.timestampMs)||!t.checkpoint||norm(t.transaction?.sender)!==intent.wallet)fail();
