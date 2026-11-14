@@ -1,0 +1,43 @@
+name: Inspect multichain candidate HTML
+on:
+  push:
+    branches: [pilot/nftree-multichain-20261112]
+    paths: [.github/workflows/inspect-multichain-response.yml]
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Compare public candidate HTML with source
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs/promises';
+          import crypto from 'node:crypto';
+          const origin='https://6af63180ffc807e7c16b31cc--tree-token.netlify.app';
+          const expected=await fs.readFile('play/multichaintest/index.html','utf8');
+          const hash=x=>crypto.createHash('sha1').update(x).digest('hex');
+          await fs.mkdir('.netlify/pilot-delivery-inspection',{recursive:true});
+          const results=[];
+          for(const route of ['/play/multichaintest/index.html','/play/multichaintest/']){
+            const response=await fetch(origin+route,{signal:AbortSignal.timeout(30000)});
+            const actual=await response.text();let prefix=0;
+            while(prefix<Math.min(actual.length,expected.length)&&actual[prefix]===expected[prefix])prefix++;
+            let suffix=0;while(suffix<Math.min(actual.length,expected.length)-prefix&&actual[actual.length-1-suffix]===expected[expected.length-1-suffix])suffix++;
+            results.push({requested:route,finalURL:response.url,status:response.status,contentType:response.headers.get('content-type'),expectedHash:hash(expected),actualHash:hash(actual),expectedLength:expected.length,actualLength:actual.length,commonPrefix:prefix,commonSuffix:suffix,expectedDifference:expected.slice(prefix,Math.min(expected.length-suffix,prefix+1200)),actualDifference:actual.slice(prefix,Math.min(actual.length-suffix,prefix+1200)),scripts:[...actual.matchAll(/<script\b[^>]*>/gi)].map(x=>x[0])});
+            await fs.writeFile('.netlify/pilot-delivery-inspection/'+(route.endsWith('/')?'served-directory.html':'served-index.html'),actual);
+          }
+          await fs.writeFile('.netlify/pilot-delivery-inspection/report.json',JSON.stringify(results,null,2));
+          console.log(JSON.stringify(results,null,2));
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: multichain-candidate-html-inspection
+          path: .netlify/pilot-delivery-inspection/
+          include-hidden-files: true
+          retention-days: 7

@@ -1,0 +1,67 @@
+name: Publish isolated NFTree multichain pilot
+on:
+  push:
+    branches: [pilot/nftree-multichain-20261112]
+    paths:
+      - play/multichaintest/**
+      - scripts/multichain-pilot/**
+      - tests/multichain-pilot.test.mjs
+      - .github/workflows/publish-multichain-pilot.yml
+permissions:
+  contents: read
+concurrency:
+  group: tree-production-preservation-release
+  cancel-in-progress: false
+jobs:
+  pilot:
+    if: github.ref == 'refs/heads/pilot/nftree-multichain-20261112'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: TheCryptoArborist/treeforce89
+          ref: 87bca303eb84c38599b186defa23844134f2b1f2
+          path: upstream-game
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Verify simulation state and isolation
+        run: |
+          node --test tests/multichain-pilot.test.mjs
+          node --check play/multichaintest/pilot.mjs
+          node --check scripts/multichain-pilot/game-entry.mjs
+          node --check scripts/multichain-pilot/release.mjs
+          git diff --check
+      - name: Build only the isolated game copy
+        run: |
+          npm install --prefix .netlify/pilot-tooling --ignore-scripts --no-audit --no-fund esbuild@0.25.12 phaser@3.90.0 @playwright/test@1.56.1
+          node scripts/multichain-pilot/build.mjs
+      - name: Test desktop and mobile without wallets or external APIs
+        run: |
+          node .netlify/pilot-tooling/node_modules/playwright/cli.js install --with-deps chromium
+          node scripts/multichain-pilot/browser-check.mjs
+      - name: Publish additive pilot paths with full preservation
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          SOURCE_COMMIT: ${{ github.sha }}
+          EXPECTED_DEPLOY: 6af4ef567e67ea8af9abe8ed
+        run: |
+          test -n "$NETLIFY_AUTH_TOKEN" || { echo 'Netlify release authorization unavailable.'; exit 1; }
+          node scripts/multichain-pilot/release.mjs candidate
+          node scripts/multichain-pilot/release.mjs verify
+          node scripts/multichain-pilot/release.mjs publish
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: multichain-pilot-release-and-validation
+          path: |
+            .netlify/multichain-pilot-release/report.json
+            .netlify/multichain-pilot-validation/
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 30

@@ -1,0 +1,24 @@
+{
+  "checkedAt": "2026-11-12T21:34:50.422Z",
+  "repository": "TheCryptoArborist/tree-token.xyz",
+  "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
+  "branch": "pilot/nftree-multichain-20261112",
+  "workflowRun": 43311624068,
+  "workflowJob": 131508882487,
+  "credentialName": "NETLIFY_AUTH_TOKEN",
+  "credentialValueRecorded": false,
+  "authenticationRestored": true,
+  "matchesConnectedAccount": true,
+  "results": [
+    {"check": "User authentication", "status": 200},
+    {"check": "TREE site access", "status": 200},
+    {"check": "TREE full deployment inventory", "status": 200},
+    {"check": "TREE protected file inventory", "status": 200}
+  ],
+  "publishedDeployAtCheck": "6af4ef567e67ea8af9abe8ed",
+  "lockedAtCheck": true,
+  "functionsAtCheck": 49,
+  "schedulesAtCheck": 5,
+  "readOnlyDiagnostic": true,
+  "note": "The user updated the TREE repository secret. The authentication blocker described in earlier reports is resolved. This record alone does not assert that the pilot was published."
+}
