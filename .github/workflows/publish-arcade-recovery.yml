@@ -6,6 +6,9 @@ on:
         description: Current locked published deploy; stop if changed
         required: true
         type: string
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-arcade-recovery.yml']
 permissions:
   contents: read
 concurrency:
@@ -13,7 +16,8 @@ concurrency:
   cancel-in-progress: false
 jobs:
   recovery:
-    if: github.ref == 'refs/heads/main'
+    # Scoped, explicit release command; ordinary code pushes cannot publish.
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[publish arcade recovery]'))
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
@@ -40,7 +44,8 @@ jobs:
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           SOURCE_COMMIT: ${{ github.sha }}
-          EXPECTED_DEPLOY: ${{ inputs.expected_deploy }}
+          # Exact approved baseline; the script fails closed if production changes.
+          EXPECTED_DEPLOY: ${{ inputs.expected_deploy || '6af7eb5aeb5507b96b91d291' }}
         run: node scripts/release-arcade-recovery.mjs
       - uses: actions/upload-artifact@v4
         if: always()
