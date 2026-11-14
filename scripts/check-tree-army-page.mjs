@@ -29,7 +29,7 @@ try {
     await page.getByRole('heading',{name:'Grow your army',exact:true}).waitFor();
     await page.getByRole('button',{name:'Defend the grove',exact:true}).click();
     await page.locator('#overlay').waitFor({state:'hidden'});
-    assert(await page.locator('#field-note').isVisible(),'First-play guidance missing');
+    await page.locator('#field-note').waitFor({state:'visible'});
     if(label==='desktop') {
       await page.keyboard.down('ArrowRight');
       await page.waitForTimeout(250);
