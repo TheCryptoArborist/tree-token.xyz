@@ -80,7 +80,8 @@ document.querySelectorAll('[data-unit]').forEach(b=>b.onclick=()=>summon(b.datas
 $('skip').onclick=reset;
 $('next').onclick=()=>{if(mode==='ready'){briefingStep=0;briefing();}else if(mode==='briefing'){if(briefingStep<2){briefingStep++;briefing();}else reset();}else if(mode==='won'||mode==='lost')reset();else if(mode==='camp'){wave++;startWave();}else if(mode==='paused')pause();};
 addEventListener('keydown',e=>{if(e.target.closest('input,textarea,select'))return;const k=e.key.toLowerCase();if(['arrowleft','arrowright','a','d','q','e','1','2','3','p',' '].includes(k))e.preventDefault();if(k==='a'||k==='arrowleft')held.add('left');if(k==='d'||k==='arrowright')held.add('right');if(e.repeat)return;if(k==='1')summon('sprout');if(k==='2')summon('archer');if(k==='3')summon('oak');if(k==='q')cannon();if(k==='e')shield();if(k==='p'||k==='escape')pause();});
-addEventListener('keyup',e=>{if(['a','ArrowLeft'].includes(e.key))held.delete('left');if(['d','ArrowRight'].includes(e.key))held.delete('right');});addEventListener('blur',()=>{held.clear();if(mode==='battle')pause();});document.addEventListener('visibilitychange',()=>{if(document.hidden&&mode==='battle')pause();});
+addEventListener('keyup',e=>{const k=e.key.toLowerCase();if(['a','arrowleft'].includes(k))held.delete('left');if(['d','arrowright'].includes(k))held.delete('right');});addEventListener('blur',()=>{held.clear();if(mode==='battle')pause();});document.addEventListener('visibilitychange',()=>{if(document.hidden&&mode==='battle')pause();});
 function frame(now){const dt=Math.min(.04,(now-previous)/1000||0);previous=now;update(dt);draw();sync();requestAnimationFrame(frame);}requestAnimationFrame(frame);
 })();
 </script></body></html>
+
