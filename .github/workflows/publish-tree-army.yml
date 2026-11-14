@@ -78,47 +78,35 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Capture current site and verify additive candidate
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          TREE_ARMY_EXPECTED_DEPLOY: ${{ inputs.expected_deploy }}
-          REVIEWED_SHA: ${{ github.sha }}
-        run: |
-          test -n "$NETLIFY_AUTH_TOKEN" || { echo 'Netlify release secret is unavailable.'; exit 1; }
-          test "$(git rev-parse HEAD)" = "$REVIEWED_SHA"
-          node scripts/release-tree-army.mjs capture
-          node scripts/release-tree-army.mjs plan --source-commit "$REVIEWED_SHA"
-          node scripts/release-tree-army.mjs preview --source-commit "$REVIEWED_SHA"
-          node scripts/release-tree-army.mjs verify --source-commit "$REVIEWED_SHA"
       - name: Install isolated browser checker
         run: |
           npm install --prefix "$RUNNER_TEMP/tree-army-browser" --ignore-scripts --no-audit --no-fund playwright@1.56.1
           "$RUNNER_TEMP/tree-army-browser/node_modules/.bin/playwright" install --with-deps chromium
-      - name: Check candidate gameplay and phone controls
+      - name: Capture current site and verify additive candidate
         env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          EXPECTED_DEPLOY: ${{ inputs.expected_deploy }}
+          SOURCE_COMMIT: ${{ github.sha }}
           TREE_ARMY_BROWSER_MODULE: ${{ runner.temp }}/tree-army-browser/node_modules/playwright/index.mjs
-        run: node scripts/check-tree-army-page.mjs
-      - name: Publish verified new candidate
+        run: |
+          test -n "$NETLIFY_AUTH_TOKEN" || { echo 'Netlify release secret is unavailable.'; exit 1; }
+          test "$(git rev-parse HEAD)" = "$SOURCE_COMMIT"
+          node scripts/release-tree-army.mjs candidate
+          node scripts/release-tree-army.mjs verify
+      - name: Publish verified new candidate and check canonical route
         if: inputs.publish
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          TREE_ARMY_EXPECTED_DEPLOY: ${{ inputs.expected_deploy }}
-          REVIEWED_SHA: ${{ github.sha }}
-        run: |
-          candidate=$(node -p "JSON.parse(require('fs').readFileSync('.netlify/tree-army-candidate.json')).id")
-          node scripts/release-tree-army.mjs publish --source-commit "$REVIEWED_SHA" --expected-candidate "$candidate"
-      - name: Verify canonical test route
-        if: inputs.publish
-        env:
+          EXPECTED_DEPLOY: ${{ inputs.expected_deploy }}
+          SOURCE_COMMIT: ${{ github.sha }}
           TREE_ARMY_BROWSER_MODULE: ${{ runner.temp }}/tree-army-browser/node_modules/playwright/index.mjs
-          TREE_ARMY_TEST_BASE: https://www.tree-token.xyz
-        run: node scripts/check-tree-army-page.mjs
+        run: node scripts/release-tree-army.mjs publish
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: tree-army-release-${{ github.run_id }}
           path: |
-            .netlify/tree-army-release-report.json
+            .netlify/tree-army-release/report.json
             .netlify/tree-army-browser-checks.json
             .netlify/tree-army-*.png
           include-hidden-files: true
