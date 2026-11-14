@@ -1,6 +1,6 @@
 import {createHash} from 'node:crypto';
 import {SuiGrpcClient} from '@mysten/sui/grpc';
-import {AMOUNT,DECIMALS,MonthlyError,ORIGINS,TREE_TYPE,memoFor,recoveryConfig,verifyRecoveryPayment} from '../lib/arcade-monthly-core.ts';
+import {AMOUNT,DECIMALS,MonthlyError,ORIGINS,TREE_TYPE,memoFor,recoveryConfig,verifyRecoveryPayment,readRecoveryTransaction} from '../lib/arcade-monthly-core.ts';
 const hash=(s:string)=>createHash('sha256').update(s).digest('hex');
 const json=(body:unknown,status=200)=>new Response(JSON.stringify(body),{status,headers:{'Content-Type':'application/json','Cache-Control':'no-store','Netlify-CDN-Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 const environment=(key:string)=>(globalThis as any).Netlify?.env.get(key)??process.env[key];
@@ -42,7 +42,7 @@ export function createMonthlyHandler(deps:any={}){return async(request:Request)=
  const b=await readBody(request,['intentId','digest']);if(!uuid(b.intentId)||typeof b.digest!=='string'||!/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(b.digest))throw new MonthlyError('invalid-request','A valid checkout and transaction digest are required.');
  const intent=await rpc('arcade_recovery_intent_v1',{...base,p_date_key:null,p_intent_id:b.intentId});
  if(intent.wallet!==session.wallet||intent.id!==b.intentId)throw new MonthlyError('invalid-intent','Checkout identity mismatch.');
- const transaction=deps.getTransaction?await deps.getTransaction(b.digest):await client().core.getTransaction({digest:b.digest,include:{transaction:true,balanceChanges:true},signal:AbortSignal.timeout(15000)});
+ const transaction=deps.getTransaction?await deps.getTransaction(b.digest):await readRecoveryTransaction(deps.client||client(),b.digest);
  const paidAt=verifyRecoveryPayment(transaction,intent,b.digest,now);
  const progress=await rpc('arcade_recovery_confirm_v1',{...base,p_intent_id:b.intentId,p_digest:b.digest,p_paid_at:paidAt});
  return json({status:'ok',authenticated:true,configuration:config,progress,receipt:{dateKey:intent.dateKey,digest:b.digest,price:'20000'}});
