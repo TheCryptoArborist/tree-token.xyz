@@ -18,6 +18,9 @@ try {
     const response=await page.goto(url,{waitUntil:'networkidle'});
     assert(response?.ok(),'Playtest page did not load');
     assert.match(await page.title(),/Tree Army/);
+    await page.waitForFunction(()=>document.getElementById('asset-status').hidden);
+    assert.equal(await page.locator('.unit-portrait').count(),3,'Unit portraits missing');
+    assert(await page.locator('.unit-portrait').evaluateAll(nodes=>nodes.every(c=>{const a=c.getContext('2d').getImageData(0,0,c.width,c.height).data;return a.some((v,i)=>i%4===3&&v>0);})), 'Empty portrait artwork');
     assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Horizontal page overflow');
     assert.equal(await page.locator('meta[name="robots"]').getAttribute('content'),'noindex,nofollow');
     assert.equal(await page.getByRole('link',{name:/TREE ARCADE/}).getAttribute('href'),'/play/');
@@ -54,11 +57,21 @@ try {
     await page.locator('#shield').click();
     await page.waitForTimeout(100);
     assert(await page.locator('#shield').isDisabled(),'Shield cooldown missing');
+    await page.keyboard.down('ArrowRight');
+    await page.waitForTimeout(1600);
+    await page.keyboard.up('ArrowRight');
     await page.screenshot({path:`.netlify/tree-army-${label}.png`,fullPage:true});
     assert.equal(errors.length,0,errors.join('\n'));
     results.push({label,width,height,passed:true});
     await context.close();
   }
+  const failureContext=await browser.newContext();
+  const failurePage=await failureContext.newPage();
+  await failurePage.route('**/assets/tree-hero.webp',route=>route.abort());
+  await failurePage.goto(url,{waitUntil:'networkidle'});
+  await failurePage.getByText('The artwork could not load. Reload this page to try again.',{exact:true}).waitFor();
+  assert(await failurePage.locator('#next').isDisabled(),'Failed artwork must block battle start');
+  await failureContext.close();
 } finally {await browser.close();}
 fs.writeFileSync('.netlify/tree-army-browser-checks.json',JSON.stringify({url,results},null,2));
 console.log('Tree Army browser checks passed: '+results.map(r=>r.label).join(', '));
