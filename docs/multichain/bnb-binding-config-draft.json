@@ -1,0 +1,19 @@
+{
+  "chainId": "0x38",
+  "from": "0x90f9c1c0c675a0ce9d539c540db7f4a1f7e583ae",
+  "nonce": 323,
+  "value": "0x0",
+  "adapter": "0xb4c471c1fb8e31ddcbb518277e97a4575fc74779",
+  "pass": "0xe98fa205106028822572d2549ea41748f8bfd879",
+  "data": "0x10265fa5000000000000000000000000e98fa205106028822572d2549ea41748f8bfd879",
+  "dataSha256": "c6b4cdcd282b027c9a26c1c8a73f4e762854d8a6aa58e3ebff66dc6710e855fa",
+  "adapterCodeSha256": "c6e6b4d62602ba51f686ba1f86876ebf89cc4cf0fd4f9b1acecc32a1c77fa753",
+  "passCodeSha256": "4898f60c55f68274c10c20dc3b996b33883dca1375e5c459cb7a3d4eb1d5c6b4",
+  "passGetter": "0xa7a1ed72",
+  "binderGetter": "0xacba7b42",
+  "passAdapterGetter": "0x03eadcfc",
+  "adapterReceipt": "0xf06e6fbc4b99218c1cb68d216d16ac0164370a522c756d3fc5bd3633484643d2",
+  "passReceipt": "0x532199d60999a538991c000ec65db1f64a513eb2552c580627edb09c12faff1f",
+  "observedAt": "2026-11-16T21:07:43.734404+00:00",
+  "passBoundTopic": "0x3916d079df018feca66a550908f671cff67410227b4a8c24f13531847e12b9c8"
+}

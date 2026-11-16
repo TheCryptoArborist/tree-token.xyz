@@ -1,0 +1,29 @@
+{
+  "status": "VERIFIED_PASS_DEPLOYED_UNBOUND",
+  "hash": "0x532199d60999a538991c000ec65db1f64a513eb2552c580627edb09c12faff1f",
+  "contractAddress": "0xe98fa205106028822572d2549ea41748f8bfd879",
+  "chainId": 56,
+  "sender": "0x90f9c1c0c675a0ce9d539c540db7f4a1f7e583ae",
+  "nonce": 322,
+  "blockNumber": 133996393,
+  "gasUsed": 1703978,
+  "gasFeeWei": "85198900000000",
+  "gasFeeBNB": "0.000085198900",
+  "runtimeSha256": "4898f60c55f68274c10c20dc3b996b33883dca1375e5c459cb7a3d4eb1d5c6b4",
+  "verifiedFields": {
+    "currency": "0x55d398326f99059fF775485246999027B3197955",
+    "adapter": "0xb4c471c1fb8e31ddcbb518277e97a4575fc74779",
+    "treasury": "0xC440F06BBC7e58b0d055815f915447e4ae0E3720",
+    "walletA": "0x90f9c1c0c675A0ce9D539c540DB7F4A1f7e583AE",
+    "walletB": "0x0",
+    "route": "0x4ae75e55799f0a4e34941503542990f1628f1b5881f0b3917bca4e255ce6b25b",
+    "backingNFT": "0xc07d792d3700dea38f695d843f7eefa2e9c81efdf8aaf7da5fd151e4c58ef26c",
+    "PRICE": "25000000000000000000",
+    "state": "0",
+    "adapter_pass": "0",
+    "adapter_binder": "0x90f9c1c0c675A0ce9D539c540DB7F4A1f7e583AE"
+  },
+  "pendingNonce": 323,
+  "latestNonce": 323,
+  "limits": "Pass deployed, Unconfirmed, no purchase or mint; binding and LayerZero configuration remain pending."
+}
