@@ -1,4 +1,4 @@
-name: Publish isolated multichain connection preview
+name: Publish isolated NFTree bridge setup
 
 on:
   pull_request:
@@ -30,7 +30,7 @@ jobs:
         with:
           node-version: 24
       - run: |
-          node --test tests/multichain-preview.test.mjs tests/multichain-release.test.mjs tests/preserved-release.test.mjs
+          node --test tests/multichain-preview.test.mjs tests/multichain-setup.test.mjs tests/multichain-release.test.mjs tests/preserved-release.test.mjs
           node --check scripts/release-multichain-preview.mjs
           node --check scripts/multichain-preview-delivery.mjs
           git diff --check
@@ -47,7 +47,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Add only the connection preview and preserve the live site
+      - name: Add only the disposable bridge setup and preserve the live site
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           MULTICHAIN_EXPECTED_DEPLOY: '6af7f5cd5a0c9cd4569c3fa8'
