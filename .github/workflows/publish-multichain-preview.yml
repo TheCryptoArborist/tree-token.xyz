@@ -30,7 +30,7 @@ jobs:
         with:
           node-version: 24
       - run: |
-          node --test tests/multichain-preview.test.mjs tests/multichain-setup.test.mjs tests/multichain-release.test.mjs tests/preserved-release.test.mjs
+          node --test tests/multichain-preview.test.mjs tests/multichain-setup.test.mjs tests/multichain-bnb.test.mjs tests/multichain-release.test.mjs tests/preserved-release.test.mjs
           node --check scripts/release-multichain-preview.mjs
           node --check scripts/multichain-preview-delivery.mjs
           git diff --check
@@ -47,10 +47,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Update only the reviewed dev-wallet setup and preserve the live site
+      - name: Add only the BNB adapter setup and preserve the live site
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          MULTICHAIN_EXPECTED_DEPLOY: '6afb5ee1e0da5058b298ad6a'
+          MULTICHAIN_EXPECTED_DEPLOY: '6afb62823771123196482071'
           REVIEWED_SHA: ${{ github.sha }}
         run: |
           test -n "$NETLIFY_AUTH_TOKEN" || { echo 'The existing Netlify release connection is unavailable.'; exit 1; }
