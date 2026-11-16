@@ -1,4 +1,4 @@
-import {preflight,requestBinding,verifyReceipt,loadState,saveState} from './core.js?v=bind-1';
+import {preflight,requestDeployment,verifyReceipt,loadState,saveState} from './core.js?v=bind-1';
 
 const CONFIG_SHA256='4dfbb245f1e90bb7d3d91e789fe8082dd8e1f6aec1473e00ac747c00e62d7409';
 const el=id=>document.getElementById(id);
@@ -61,7 +61,7 @@ el('deploy').onclick=async()=>{
   if(busy||!provider||!cfg)return;
   const chosen=provider,version=epoch;busy=true;render();tell('Refreshing checks before opening your wallet…');
   try{
-    const result=await requestBinding({provider:chosen,cfg,storage:localStorage,locks:navigator.locks,key:key(),consent:el('consent').checked,isCurrent:()=>provider===chosen&&epoch===version&&el('consent').checked});
+    const result=await requestDeployment({provider:chosen,cfg,storage:localStorage,locks:navigator.locks,key:key(),consent:el('consent').checked,isCurrent:()=>provider===chosen&&epoch===version&&el('consent').checked});
     if(result)tell('Transaction submitted. Check the receipt below and send the transaction hash back.');
   }catch(error){tell(String(error?.message??error).slice(0,600)+(recorded()?' Check wallet activity before another request.':''));}
   finally{busy=false;quote=null;render();}

@@ -73,3 +73,12 @@ test('loading the binding page never requests account access or a transaction',a
   const context=vm.createContext({preflight,requestDeployment,verifyReceipt,loadState,saveState,crypto,TextDecoder,Uint8Array,Event:class{},window:{ethereum:{request:async()=>{requested++;}},addEventListener(){},dispatchEvent(){}},document:{getElementById:get,createElement:()=>({})},localStorage:{getItem:()=>null},navigator:{},fetch:async()=>({ok:true,arrayBuffer:async()=>bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength)})});
   await vm.runInContext('(async()=>{'+source.replace(/^import[^\n]+\n/,'')+'})()',context);assert.equal(requested,0);assert.equal(get('deploy').disabled,true);assert.equal(get('predicted').textContent,config.adapter);
 });
+
+test('all browser entry imports resolve to exports from the actual shared/binding modules',async()=>{
+  for(const directory of ['', 'pass/', 'bind/']){
+    const url=new URL('../play/multichaintest/setup/bnb/'+directory+'app.js',import.meta.url);
+    const source=fs.readFileSync(url,'utf8');const match=source.match(/^import \{([^}]+)\} from '([^']+)';/);assert(match);
+    const exports=await import(new URL(match[2],url).href);
+    for(const name of match[1].split(',').map(x=>x.trim()))assert.equal(typeof exports[name],'function',directory+': '+name);
+  }
+});
