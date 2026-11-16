@@ -1,0 +1,27 @@
+{
+  "eth_chainId": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": "0x38"
+  },
+  "eth_getTransactionCount:pending": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": "0x141"
+  },
+  "eth_getTransactionCount:latest": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": "0x141"
+  },
+  "eth_getBalance": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": "0x2132cc25851291"
+  },
+  "eth_gasPrice": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": "0x2faf080"
+  }
+}

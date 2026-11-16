@@ -1,0 +1,25 @@
+{
+  "status": "VERIFIED_PUBLICATION_ONLY",
+  "digest": "3PqsBcdj4CVTuQrpdWVCUqAGa5Nw7oLQp4PafcbmY1t4",
+  "sender": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+  "checkpoint": {
+    "sequenceNumber": 345966371
+  },
+  "gasMist": "46353600",
+  "suiPackage": "0x2f3671d48dd000a27fd466fd347796149f5cd30cb16e1d22d2d89466ffc3d900",
+  "bridge": "0x4ae75e55799f0a4e34941503542990f1628f1b5881f0b3917bca4e255ce6b25b",
+  "backingNFT": "0xc07d792d3700dea38f695d843f7eefa2e9c81efdf8aaf7da5fd151e4c58ef26c",
+  "oapp": "0x25a4c1a268dd726067558c8eddac5ef624b2507336ecec7d4ac1fd4553cbd789",
+  "capabilities": {
+    "0xfdc28afc0110cb2edb94e3e57f2b1ce69b5a99c503b06d15e51cfa212de56e24::oapp::AdminCap": "0x836af3f2cae2244fad88568943692dfd87cd4eb07344edb20b74ba46a1bc93c4",
+    "0x0000000000000000000000000000000000000000000000000000000000000002::package::UpgradeCap": "0xa205320e25d69be224c1a9b181741d1a7e1a836708d553e7a4b0f29c6cc5535a",
+    "0x2f3671d48dd000a27fd466fd347796149f5cd30cb16e1d22d2d89466ffc3d900::bridge::AdminCap": "0xf3c78dd3c49de3ddc4a783f1280a7f11e86cb202e1daa23df134adb0094fc292"
+  },
+  "moduleSha256Normalized": {
+    "bridge": "de8c4c767ea50bf9d28cfc58db161af1b87f7f13d4e14488c430272f5e3f8068",
+    "codec": "e0d19678c6c3ae4df672c0306bb2336a1ad5df21fed4edaa42a97e905d7fafa9"
+  },
+  "bound": false,
+  "released": false,
+  "scope": "One disposable NFT. Original NFTrees untouched. LayerZero registration, peers/security configuration, BNB deployment and bridge messages remain pending."
+}

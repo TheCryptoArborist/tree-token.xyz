@@ -1,0 +1,7 @@
+{
+  "suiPackage": "0x2f3671d48dd000a27fd466fd347796149f5cd30cb16e1d22d2d89466ffc3d900",
+  "bridge": "0x4ae75e55799f0a4e34941503542990f1628f1b5881f0b3917bca4e255ce6b25b",
+  "backingNFT": "0xc07d792d3700dea38f695d843f7eefa2e9c81efdf8aaf7da5fd151e4c58ef26c",
+  "chainId": 56,
+  "freshBnbNonce": 321
+}
