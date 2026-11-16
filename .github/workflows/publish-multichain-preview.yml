@@ -47,10 +47,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Fix only the reviewed BNB RPC response handling and preserve the live site
+      - name: Add the reviewed BNB pass setup and preserve the live site
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          MULTICHAIN_EXPECTED_DEPLOY: '6afb681fe3ef046578fbedd1'
+          MULTICHAIN_EXPECTED_DEPLOY: '6afb6c49562ccf8e9c3da8f6'
           REVIEWED_SHA: ${{ github.sha }}
         run: |
           test -n "$NETLIFY_AUTH_TOKEN" || { echo 'The existing Netlify release connection is unavailable.'; exit 1; }

@@ -1,0 +1,26 @@
+{
+  "status": "VERIFIED_ADAPTER_DEPLOYED_UNBOUND",
+  "hash": "0xf06e6fbc4b99218c1cb68d216d16ac0164370a522c756d3fc5bd3633484643d2",
+  "contractAddress": "0xb4c471c1fb8e31ddcbb518277e97a4575fc74779",
+  "sender": "0x90f9c1c0c675a0ce9d539c540db7f4a1f7e583ae",
+  "chainId": 56,
+  "blockNumber": 133994663,
+  "gasUsed": 1257643,
+  "gasFeeWei": "62882150000000",
+  "gasFeeBNB": "0.000062882150",
+  "runtimeSha256": "c6e6b4d62602ba51f686ba1f86876ebf89cc4cf0fd4f9b1acecc32a1c77fa753",
+  "verifiedFields": {
+    "endpoint": "0x1a44076050125825900e736c501f859c50fe728c",
+    "suiPeer": "0x2f3671d48dd000a27fd466fd347796149f5cd30cb16e1d22d2d89466ffc3d900",
+    "route": "0x4ae75e55799f0a4e34941503542990f1628f1b5881f0b3917bca4e255ce6b25b",
+    "backingNFT": "0xc07d792d3700dea38f695d843f7eefa2e9c81efdf8aaf7da5fd151e4c58ef26c",
+    "binder": "0x90f9c1c0c675A0ce9D539c540DB7F4A1f7e583AE",
+    "delegate": "0x90f9c1c0c675A0ce9D539c540DB7F4A1f7e583AE"
+  },
+  "suiEid": 30378,
+  "pass": "0x0000000000000000000000000000000000000000",
+  "pendingNonce": 322,
+  "latestNonce": 322,
+  "runtimeEvidence": "Current deployed runtime matches the reviewed simulation and exact submitted creation data. Historical-state lookup returned missing trie node; no historical-runtime claim is made.",
+  "limits": "Adapter deployment only. Pass, binding, application LayerZero configuration and bridge messages are pending."
+}

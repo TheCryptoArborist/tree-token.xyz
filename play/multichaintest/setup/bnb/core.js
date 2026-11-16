@@ -43,12 +43,12 @@ export async function preflight(provider,cfg) {
     if(nonce!==BigInt(cfg.nonce))throw Error('Wallet nonce changed. Send the new nonce back to the conversation; do not deploy this draft.');
   }
   const existing=await walletRead(provider,{method:'eth_getCode',params:[cfg.predictedAdapter,'latest']});
-  if(existing!=='0x')throw Error('The predicted adapter already has code. Check its receipt before continuing.');
+  if(existing!=='0x')throw Error('The predicted contract already has code. Check its receipt before continuing.');
   const endpoint=await walletRead(provider,{method:'eth_getCode',params:[cfg.endpoint,'latest']});
-  if(await hashHex(endpoint)!==cfg.endpointCodeSha256)throw Error('LayerZero endpoint code differs from the reviewed deployment.');
+  if(await hashHex(endpoint)!==cfg.endpointCodeSha256)throw Error('Required dependency code differs from the reviewed deployment.');
   const call={from:cfg.from,data:cfg.data,value:'0x0'};
   const runtime=await walletRead(provider,{method:'eth_call',params:[call,'latest']});
-  if(await hashHex(runtime)!==cfg.runtimeSha256)throw Error('Adapter simulation runtime differs from the reviewed contract.');
+  if(await hashHex(runtime)!==cfg.runtimeSha256)throw Error('Contract simulation runtime differs from the reviewed contract.');
   const gas=await readQuantity(provider,'eth_estimateGas',[call,'latest']);
   if(gas===0n||gas>3000000n)throw Error('Unexpected deployment gas estimate.');
   const gasLimit=(gas*120n+99n)/100n;
@@ -68,9 +68,9 @@ export async function verifyReceipt(provider,cfg,hash) {
   if(!same(receipt.contractAddress,cfg.predictedAdapter))throw Error('Unexpected deployed contract address.');
   const tx=await walletRead(provider,{method:'eth_getTransactionByHash',params:[hash]});
   if(!tx||!same(tx.hash,hash)||!same(tx.from,cfg.from)||tx.to!==null||quantity(tx.nonce,'transaction nonce')!==BigInt(cfg.nonce)||quantity(tx.value,'transaction value')!==0n||quantity(tx.chainId,'transaction chain ID')!==56n||!same(tx.input,cfg.data))throw Error('Deployed transaction does not match the reviewed draft.');
-  const runtime=await walletRead(provider,{method:'eth_getCode',params:[cfg.predictedAdapter,receipt.blockNumber]});
-  if(await hashHex(runtime)!==cfg.runtimeSha256)throw Error('Deployed adapter runtime does not match the reviewed simulation.');
-  return {status:'verified',hash,contractAddress:receipt.contractAddress,blockNumber:receipt.blockNumber};
+  const runtime=await walletRead(provider,{method:'eth_getCode',params:[cfg.predictedAdapter,'latest']});
+  if(await hashHex(runtime)!==cfg.runtimeSha256)throw Error('Deployed contract runtime does not match the reviewed simulation.');
+  return {status:'verified',hash,contractAddress:receipt.contractAddress,blockNumber:receipt.blockNumber,runtimeCheckedAt:'latest'};
 }
 export function loadState(storage,key) {
   const text=storage.getItem(key);
