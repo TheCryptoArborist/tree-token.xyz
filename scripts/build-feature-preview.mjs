@@ -7,7 +7,7 @@ const output = resolve(root, 'dist-preview');
 const manifest = JSON.parse(await readFile(resolve(root, 'production/manifest.json'), 'utf8'));
 const outputPath = file => file.path.slice(1);
 const allowed = new Set(manifest.files.map(file => outputPath(file).toLowerCase()));
-const additions = ['dapp/sti-widget.js', 'dapp/sti-purchase-core.js', 'dapp/sti-stats-core.js', 'dapp/challenge-funding-core.js', 'assets/sti-icon.svg', 'play/multichaintest/index.html', 'play/multichaintest/app.js', 'play/multichaintest/wallet-vendor.js', 'play/multichaintest/setup/index.html', 'play/multichaintest/setup/app.js', 'play/multichaintest/setup/bnb/index.html', 'play/multichaintest/setup/bnb/app.js', 'play/multichaintest/setup/bnb/core.js', 'play/multichaintest/setup/bnb/deployment.json'];
+const additions = ['dapp/sti-widget.js', 'dapp/sti-purchase-core.js', 'dapp/sti-stats-core.js', 'dapp/challenge-funding-core.js', 'assets/sti-icon.svg', 'play/multichaintest/index.html', 'play/multichaintest/app.js', 'play/multichaintest/wallet-vendor.js', 'play/multichaintest/setup/index.html', 'play/multichaintest/setup/app.js', 'play/multichaintest/setup/bnb/index.html', 'play/multichaintest/setup/bnb/app.js', 'play/multichaintest/setup/bnb/core.js', 'play/multichaintest/setup/bnb/deployment.json', 'play/multichaintest/setup/bnb/pass/index.html', 'play/multichaintest/setup/bnb/pass/app.js', 'play/multichaintest/setup/bnb/pass/deployment.json'];
 const overlays = ['dapp/v3-workspace.js', 'dapp/index.html', 'dapp/styles.css', 'dapp/panel-router.css', 'dapp/interaction-bootstrap.js', 'scripts/wallet.js', 'scripts/tree-knowledge-trial.js'];
 for (const file of additions) allowed.add(file);
 

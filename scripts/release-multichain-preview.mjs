@@ -14,9 +14,9 @@ import { verifyDelivery } from './multichain-preview-delivery.mjs';
 // unlocks a deploy, or accepts an arbitrary older deployment for publication.
 export const SITE_ID = 'aa62f324-b880-47d6-85b8-4ba0700ff5bf';
 export const ACCOUNT_ID = '69800888d1a3d0483003ae9e';
-export const BASELINE_ID = process.env.MULTICHAIN_EXPECTED_DEPLOY || '6afb681fe3ef046578fbedd1';
-export const ORIGINAL_CHANGES = ["/play/multichaintest/setup/bnb/index.html", "/play/multichaintest/setup/bnb/app.js", "/play/multichaintest/setup/bnb/core.js"];
-export const REPLACED_HASHES = {"/play/multichaintest/setup/bnb/index.html": "8052f475a6764df930d3a34773c8d1a98adcd942", "/play/multichaintest/setup/bnb/app.js": "f7584f0a1df95d0b321e9971f842a94bc5a51c5d", "/play/multichaintest/setup/bnb/core.js": "f13dec9d8a77c61c1a3947df04bf643193415214"};
+export const BASELINE_ID = process.env.MULTICHAIN_EXPECTED_DEPLOY || '6afb6c49562ccf8e9c3da8f6';
+export const ORIGINAL_CHANGES = ["/play/multichaintest/setup/bnb/core.js"];
+export const REPLACED_HASHES = {"/play/multichaintest/setup/bnb/core.js": "132bc5bfc86bf4e8e8b25e1e69b4e7863dbf2015"};
 // Historical orphaned API deploys individually audited on 2026-11-10.
 // These are not builds: all have null build_id/published_at and unchanged,
 // months-old states. Any new, changed, or genuinely queued deploy still blocks.
@@ -29,7 +29,7 @@ export function isAuditedInactiveDeploy(deploy) {
     deploy.commit_ref ?? null].every((value, i) => value === expected[i]);
 }
 
-export const MULTICHAIN_PATHS = ["/play/multichaintest/setup/bnb/index.html", "/play/multichaintest/setup/bnb/app.js", "/play/multichaintest/setup/bnb/core.js"];
+export const MULTICHAIN_PATHS = ["/play/multichaintest/setup/bnb/pass/index.html", "/play/multichaintest/setup/bnb/pass/app.js", "/play/multichaintest/setup/bnb/pass/deployment.json", "/play/multichaintest/setup/bnb/core.js"];
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const RUNTIME_FIELDS = ['branch', 'context', 'functions_region', 'functions_region_overrides',
   'database_branch_id', 'blobs_region', 'framework', 'edge_functions_present', 'server', 'database_migrations'];
@@ -157,7 +157,7 @@ export function assembleFiles(baselineFiles, overlays) {
   assert(files['/index.html'], 'Missing rewards entry.');
   assert(Object.keys(baselineFiles).every(p => Object.hasOwn(files, p)), 'Baseline path removed.');
   eq(Object.keys(sources).sort(), [...MULTICHAIN_PATHS].sort(), 'Unexpected gallery overlays');
-  assert(MULTICHAIN_PATHS.every(p => Object.hasOwn(baselineFiles,p)), 'Reviewed BNB setup path is missing.');
+  assert(MULTICHAIN_PATHS.every(p => ORIGINAL_CHANGES.includes(p) ? Object.hasOwn(baselineFiles,p) : !Object.hasOwn(baselineFiles,p)), 'Unexpected existing/missing BNB pass path.');
   return { files, sources, changedOriginals, addedPaths: Object.keys(files).filter(p => !Object.hasOwn(baselineFiles, p)).sort() };
 }
 

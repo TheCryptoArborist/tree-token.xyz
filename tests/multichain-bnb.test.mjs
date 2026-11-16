@@ -9,7 +9,7 @@ const address='0x90f9c1c0c675A0ce9D539c540DB7F4A1f7e583AE';
 const hash='0x'+'a'.repeat(64);
 async function fixture(changes={}) {
   const cfg={chainId:'0x38',from:address,nonce:321,value:'0x0',data:'0x6000',predictedAdapter:'0x'+'b'.repeat(40),endpoint:'0x'+'c'.repeat(40),endpointCodeSha256:await hashHex('0x6001'),runtimeSha256:await hashHex('0x60ff'),dataSha256:await hashHex('0x6000')};
-  const calls=[];let nonceCalls=0;
+  const calls=[];let nonceCalls=0,receiptSeen=false;
   const provider={request:async({method,params})=>{
     calls.push({method,params});
     if(changes[method])return changes[method](params,++nonceCalls);
@@ -17,13 +17,13 @@ async function fixture(changes={}) {
       case 'eth_chainId':return '0x38';
       case 'eth_accounts':return [address];
       case 'eth_getTransactionCount':return '0x141';
-      case 'eth_getCode':return params[0]===cfg.endpoint?'0x6001':params[1]==='latest'?'0x':'0x60ff';
+      case 'eth_getCode':return params[0]===cfg.endpoint?'0x6001':params[1]==='latest'&&!receiptSeen?'0x':'0x60ff';
       case 'eth_call':return '0x60ff';
       case 'eth_estimateGas':return '0x135c38';
       case 'eth_gasPrice':return '0x2faf080';
       case 'eth_getBalance':return '0x2132cc25851291';
       case 'eth_sendTransaction':return hash;
-      case 'eth_getTransactionReceipt':return {status:'0x1',transactionHash:hash,contractAddress:cfg.predictedAdapter,blockNumber:'0x100'};
+      case 'eth_getTransactionReceipt':receiptSeen=true;return {status:'0x1',transactionHash:hash,contractAddress:cfg.predictedAdapter,blockNumber:'0x100'};
       case 'eth_getTransactionByHash':return {hash,from:address,to:null,nonce:'0x141',value:'0x0',chainId:'0x38',input:cfg.data};
       default:throw Error('Unexpected RPC '+method);
     }
@@ -69,7 +69,7 @@ test('rejection clears the marker; ambiguous errors and missing hash preserve it
   const f=await fixture({eth_sendTransaction:()=>null});await assert.rejects(requestDeployment(f.options));assert(f.data.has('test-adapter'));
 });
 test('receipt verification binds hash, creation address, transaction data and deployed runtime',async()=>{
-  const f=await fixture();assert.equal((await verifyReceipt(f.provider,f.cfg,hash)).status,'verified');
+  const f=await fixture();assert.equal((await verifyReceipt(f.provider,f.cfg,hash)).status,'verified');assert(f.calls.some(x=>x.method==='eth_getCode'&&x.params[1]==='latest'));
   const pending=await fixture({eth_getTransactionReceipt:()=>null});assert.equal((await verifyReceipt(pending.provider,pending.cfg,hash)).status,'pending');
   for(const changes of [{eth_getTransactionReceipt:()=>({status:'0x0',transactionHash:hash})},{eth_getTransactionReceipt:()=>({status:'0x1',transactionHash:hash,contractAddress:'0x123'})},{eth_getTransactionByHash:()=>({hash,from:address,to:null,nonce:'0x141',value:'0x0',chainId:'0x38',input:'0x60aa'})}]){
     const bad=await fixture(changes);await assert.rejects(verifyReceipt(bad.provider,bad.cfg,hash));
@@ -87,7 +87,8 @@ test('published settings pin the actual verified Sui IDs and previously simulate
   assert(cfg.data.toLowerCase().endsWith(args));
 });
 test('loading and discovering wallets never request accounts or a transaction',async()=>{
-  const root=new URL('../play/multichaintest/setup/bnb/',import.meta.url);const source=fs.readFileSync(new URL('app.js',root),'utf8');const bytes=fs.readFileSync(new URL('deployment.json',root));
+  for(const directory of ['', 'pass/']) {
+  const root=new URL('../play/multichaintest/setup/bnb/'+directory,import.meta.url);const source=fs.readFileSync(new URL('app.js',root),'utf8');const bytes=fs.readFileSync(new URL('deployment.json',root));
   const elements=new Map(),get=id=>{if(!elements.has(id))elements.set(id,{children:[],textContent:'',checked:false,append(x){this.children.push(x);}});return elements.get(id);};
   let requested=0;const context=vm.createContext({preflight,requestDeployment,verifyReceipt,loadState:()=>null,saveState,crypto,TextDecoder,Uint8Array,Event:class{},window:{ethereum:{request:async()=>{requested++;}},addEventListener(){},dispatchEvent(){}},document:{getElementById:get,createElement:()=>({})},localStorage:{getItem:()=>null},navigator:{},fetch:async()=>({ok:true,arrayBuffer:async()=>bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength)})});
   await vm.runInContext('(async()=>{'+source.replace(/^import[^\n]+\n/,'')+'})()',context);
@@ -95,6 +96,7 @@ test('loading and discovering wallets never request accounts or a transaction',a
   await get('wallet-list').children[0].onclick();
   assert.match(get('wallet-status').textContent,/Deployment checks failed: eth_chainId/);
   assert.equal(get('deploy').disabled,true);
+  }
 });
 
 
@@ -116,4 +118,16 @@ test('null, empty, booleans, fractions, unsafe numbers and arbitrary objects rem
 test('a stalled read names the RPC method instead of leaving checks pending indefinitely',async t=>{
   t.mock.timers.enable({apis:['setTimeout']});
   try{const result=walletRead({request:()=>new Promise(()=>{})},{method:'eth_chainId'});const checked=assert.rejects(result,/eth_chainId.*30 seconds/);t.mock.timers.tick(30000);await checked;}finally{t.mock.timers.reset();}
+});
+
+test('pass deployment pins the verified live adapter, next nonce, constructor and runtime',()=>{
+  const root=new URL('../',import.meta.url),read=p=>JSON.parse(fs.readFileSync(new URL(p,root)));
+  const cfg=read('play/multichaintest/setup/bnb/pass/deployment.json'),verified=read('docs/multichain/bnb-adapter-verified.json'),prepared=read('docs/multichain/bnb-pass-preparation.json');
+  assert.equal(cfg.contractKind,'pass');assert.equal(cfg.nonce,verified.latestNonce);assert.equal(cfg.nonce,verified.pendingNonce);assert.equal(cfg.endpoint.toLowerCase(),verified.contractAddress);assert.equal(cfg.endpointCodeSha256,verified.runtimeSha256);assert.equal(cfg.data,prepared.transaction.data);assert.equal(cfg.runtimeSha256,prepared.runtimeSha256);assert.equal(cfg.predictedAdapter,prepared.predictedPass);
+  const words=cfg.data.slice(-7*64).match(/.{64}/g);
+  assert.equal('0x'+words[0].slice(-40),'0x55d398326f99059ff775485246999027b3197955');
+  assert.equal('0x'+words[1].slice(-40),verified.contractAddress);
+  assert.equal('0x'+words[2].slice(-40),'0xc440f06bbc7e58b0d055815f915447e4ae0e3720');
+  assert.equal('0x'+words[3].slice(-40),cfg.from.toLowerCase());assert.equal(BigInt('0x'+words[4]),0n);assert.equal('0x'+words[5],cfg.bridge);assert.equal('0x'+words[6],cfg.backingNFT);
+  const bytes=fs.readFileSync(new URL('play/multichaintest/setup/bnb/pass/deployment.json',root));const app=fs.readFileSync(new URL('play/multichaintest/setup/bnb/pass/app.js',root),'utf8');assert(app.includes(createHash('sha256').update(bytes).digest('hex')));
 });
