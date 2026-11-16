@@ -1,4 +1,4 @@
-import {preflight,requestDeployment,verifyReceipt,loadState,saveState} from './core.js';
+import {preflight,requestDeployment,verifyReceipt,loadState,saveState} from './core.js?v=rpc-2';
 
 const CONFIG_SHA256='ee73d0381ff05d70c8e987770b119f3c0558fd479e5b48f4781a0c659e5a030f';
 const el=id=>document.getElementById(id);
@@ -29,7 +29,7 @@ async function check(){
     quote=result;el('fee').textContent=fee(result.estimatedFeeWei)+' estimated';
     el('wallet-status').textContent='Designated BNB wallet connected: '+cfg.from;
     tell('Checks passed. Review the details and confirm before opening your wallet. Your wallet displays the final fee.');
-  }catch(error){tell(String(error?.message??error).slice(0,600));}
+  }catch(error){const message=String(error?.message??error).slice(0,600);el('wallet-status').textContent='Wallet connected. Deployment checks failed: '+message;tell(message);}
   finally{busy=false;render();}
 }
 function addProvider(wallet,name){
