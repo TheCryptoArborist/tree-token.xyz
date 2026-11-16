@@ -18,7 +18,7 @@
 <div class="controls"><div class="move"><button id="left" aria-label="Move left">←</button><button id="right" aria-label="Move right">→</button></div><div class="troops"><button data-unit="sprout">Seedling<small>25 sap · melee</small></button><button data-unit="archer">Acorn Archer<small>45 sap · ranged</small></button><button data-unit="oak">Oak Guardian<small>75 sap · tank</small></button></div><div class="powers"><button id="blast">Acorn Cannon<small>Q · 10s cooldown</small></button><button id="shield">Canopy Shield<small>E · 18s cooldown</small></button></div></div>
 </main>
 <div class="help"><p><kbd>A</kbd> <kbd>D</kbd> or arrows to move · <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> summon · <kbd>Q</kbd> cannon · <kbd>E</kbd> shield · <kbd>P</kbd> pause</p><p>Touch controls supported · Keep enemies away from the roots.</p></div>
-<footer>Prototype 0.2 · 10 waves · The Iron Stump awaits at wave 10. Progress lasts for this run.</footer>
+<footer>Prototype 0.3 · 10 waves · The Iron Stump awaits at wave 10. Progress lasts for this run.</footer>
 <script>
 (()=>{
 'use strict';
@@ -62,16 +62,55 @@ function ellipse(x,y,rx,ry,color){ctx.fillStyle=color;ctx.beginPath();ctx.ellips
 function line(x,y,x2,y2,color,width){ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x2,y2);ctx.stroke();}
 function tree(x,y,size,tint='#426f43'){line(x,y,x,y-size*.8,'#55472c',size*.17);line(x,y-size*.5,x-size*.28,y-size*.85,'#55472c',size*.08);ellipse(x,y-size*.9,size*.48,size*.38,tint);ellipse(x-size*.25,y-size*.7,size*.33,size*.28,tint);ellipse(x+size*.28,y-size*.78,size*.32,size*.3,tint);}
 function health(x,y,ratio,width=44){ctx.fillStyle='#0b1714';ctx.fillRect(x-width/2,y,width,4);ctx.fillStyle=ratio>.3?'#c3da8a':'#ef9c73';ctx.fillRect(x-width/2,y,width*Math.max(0,ratio),4);}
-function heroArt(x,y,size,color,heroic=false){const bob=mode==='battle'?Math.sin(clock*7+x)*2:0;y+=bob;ellipse(x,y+3,size*.6,5,'#06181170');line(x-8*size,y,x-7*size,y-22*size,'#766044',9*size);line(x+8*size,y,x+7*size,y-22*size,'#766044',9*size);line(x,y-18*size,x,y-47*size,'#796344',24*size);line(x-10*size,y-36*size,x-23*size,y-22*size,'#8c7450',8*size);line(x+10*size,y-36*size,x+24*size,y-27*size,'#8c7450',8*size);ellipse(x,y-52*size,19*size,16*size,color);ellipse(x-13*size,y-49*size,10*size,10*size,color);ellipse(x+12*size,y-54*size,11*size,12*size,color);ctx.fillStyle='#f9e3a6';ctx.fillRect(x-8*size,y-54*size,4*size,4*size);ctx.fillRect(x+4*size,y-54*size,4*size,4*size);if(heroic){line(x,y-27*size,x+hero.facing*31*size,y-32*size,'#d4bb75',9*size);ellipse(x+hero.facing*32*size,y-32*size,7*size,7*size,'#604d31');ctx.fillStyle='#cfb778';ctx.fillRect(x-9*size,y-38*size,18*size,7*size);}}
-function draw(){const w=canvas.width,h=canvas.height;ctx.clearRect(0,0,w,h);let sky=ctx.createLinearGradient(0,0,0,h);sky.addColorStop(0,'#102d2c');sky.addColorStop(1,'#638166');ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);ellipse(w*.76,90,36,36,'#e1d8a1');for(let layer=0;layer<3;layer++){const gap=170+layer*45;for(let i=-2;i<w/gap+3;i++){const x=i*gap-((camera*(.12+layer*.14))%gap);tree(x,GROUND-30+layer*12,180+layer*40,['#365a4c','#2b4d3c','#25402e'][layer]);}}
+function polygon(points,color){ctx.fillStyle=color;ctx.beginPath();points.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.closePath();ctx.fill();}
+function heroArt(x,y,size,color,heroic=false,type='sprout',cd=0){
+const active=mode==='battle',walk=active?Math.sin(clock*9+x)*3:0,attack=active&&cd>(heroic?.52:type==='oak'?1.1:.78);
+ctx.save();ctx.translate(x,y);ctx.scale(size,size);if(heroic)ctx.scale(hero.facing,1);
+ellipse(0,3,25,6,'#06181180');
+line(-9,0,-7+walk,-23,'#594229',10);line(9,0,7-walk,-23,'#594229',10);
+polygon([[-17,-25],[-20,-49],[0,-58],[20,-49],[16,-25],[0,-19]],heroic?'#735098':type==='oak'?'#607c68':'#8a693e');
+for(let i=-1;i<=1;i++)line(i*7,-27,i*6,-47,'#b19a6155',2);
+line(-16,-44,-25,-27,'#957247',9);line(16,-44,attack?32:24,attack?-43:-28,'#957247',9);
+ellipse(0,-64,15,17,'#917249');
+polygon([[-23,-66],[-19,-81],[-7,-76],[0,-91],[9,-76],[23,-80],[20,-62]],color);
+line(-8,-65,-3,-64,'#ffeab0',3);line(5,-64,10,-65,'#ffeab0',3);
+if(heroic){
+ellipse(-18,-48,13,9,'#a278c6');ellipse(18,-48,13,9,'#a278c6');
+polygon([[-8,-48],[0,-53],[8,-48],[0,-36]],'#e5d18a');
+const recoil=attack?-5:0;line(14,-34,39+recoil,-38,'#d7b56b',12);ellipse(40+recoil,-38,8,9,'#493824');line(18,-40,37+recoil,-43,'#f4df9a',3);
+if(attack)polygon([[48,-40],[61,-48],[57,-37],[66,-31],[48,-34]],'#ffe9a2');
+}else if(type==='archer'){
+ctx.strokeStyle='#e7cc88';ctx.lineWidth=3;ctx.beginPath();ctx.arc(25,-39,21,-1.3,1.3);ctx.stroke();line(31,-59,31,-19,'#e9efd5',1);line(13,-38,46,-38,'#e4c281',2);
+}else if(type==='oak'){
+polygon([[-31,-52],[-15,-57],[-10,-24],[-23,-15],[-35,-27]],'#547c58');line(-24,-47,-23,-25,'#cfdb9a',3);
+line(26,-32,attack?37:29,-66,'#9b7749',8);ellipse(attack?38:29,-70,14,10,'#9bba77');
+}else{line(23,-29,attack?43:31,attack?-49:-43,'#d7c38a',5);ellipse(-24,-30,10,14,'#739c52');}
+ctx.restore();}
+function enemyArt(e){const s=e.boss?2.1:e.tank?1.15:.8,x=e.x,y=GROUND,attack=mode==='battle'&&e.cd>e.rate-.25;ctx.save();ctx.translate(x,y);ctx.scale(s,s);ellipse(0,3,24,6,'#06181180');
+if(e.runner){
+line(-17,0,-8,-21,'#6f7041',6);line(16,0,5,-20,'#6f7041',6);line(0,-18,-7,-46,'#765279',15);
+polygon([[-22,-45],[-15,-64],[-7,-54],[4,-69],[13,-48],[4,-37]],e.flash>0?'#fff0ca':'#906799');
+line(-9,-48,-16,-47,'#e7ef8b',3);line(-9,-28,attack?-38:-25,-34,'#9e7eaa',6);
+}else{
+ctx.fillStyle=e.flash>0?'#fff0ca':e.boss?'#775370':'#667b78';ctx.fillRect(-18,-53,36,35);
+line(-12,-16,-15,0,'#353e42',10);line(12,-16,15,0,'#353e42',10);
+ctx.fillStyle='#3c454b';ctx.fillRect(-14,-73,28,18);ctx.fillStyle='#efab64';ctx.fillRect(-16,-77,32,6);line(-10,-64,6,-64,'#ff995c',4);
+line(12,-40,25,-28,'#88928b',8);line(-15,-40,attack?-36:-26,-25,'#88928b',8);
+const sawX=attack?-43:-31;ellipse(sawX,-24,e.tank||e.boss?19:12, e.tank||e.boss?19:12,'#b7bdb1');ellipse(sawX,-24,7,7,'#4e5b58');
+for(let i=0;i<8;i++){const t=i*Math.PI/4+(mode==='battle'?clock*6:0),r=e.tank||e.boss?21:14;line(sawX+Math.cos(t)*(r-5),-24+Math.sin(t)*(r-5),sawX+Math.cos(t)*r,-24+Math.sin(t)*r,'#d2d0b9',3);}
+if(e.boss){polygon([[-23,-56],[-30,-78],[-15,-69],[-4,-87],[7,-69],[22,-79],[23,-56]],'#bd8b5b');line(-11,-42,9,-31,'#e4a161',5);}
+}ctx.restore();health(x,y-90*s,e.hp/e.max,e.boss?100:40);if(e.boss){ctx.fillStyle='#ffe0a0';ctx.font='bold 13px system-ui';ctx.textAlign='center';ctx.fillText('THE IRON STUMP',x,y-101*s);}}
+function draw(){const w=canvas.width,h=canvas.height;ctx.clearRect(0,0,w,h);let sky=ctx.createLinearGradient(0,0,0,h);sky.addColorStop(0,'#102d2c');sky.addColorStop(1,'#638166');ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);ellipse(w*.76,90,36,36,'#e1d8a1');for(let i=0;i<24;i++){const x=(i*137-camera*.1)%(w+40);ellipse(x,40+(i*53)%210,1,1,'#e6ebc480');}for(let layer=0;layer<3;layer++){const gap=170+layer*45;for(let i=-2;i<w/gap+3;i++){const x=i*gap-((camera*(.12+layer*.14))%gap);tree(x,GROUND-30+layer*12,180+layer*40,['#365a4c','#2b4d3c','#25402e'][layer]);}}
 ctx.fillStyle='#344a2b';ctx.fillRect(0,GROUND,w,h-GROUND);ctx.fillStyle='#78834b';ctx.fillRect(0,GROUND,w,4);for(let i=0;i<45;i++){const x=(i*87-camera*.8)%(w+50);line(x,GROUND+18+(i%4)*17,x+12,GROUND+16+(i%4)*17,'#52633b',2);}ctx.save();ctx.translate(-camera,0);
-const glow=ctx.createRadialGradient(BASE,GROUND-90,5,BASE,GROUND-90,160);glow.addColorStop(0,'#d5e6a344');glow.addColorStop(1,'#d5e6a300');ctx.fillStyle=glow;ctx.fillRect(BASE-160,GROUND-250,320,320);tree(BASE,GROUND,185,'#91b65c');line(BASE-5,GROUND-10,BASE-38,GROUND+9,'#8e7846',10);line(BASE+8,GROUND-10,BASE+45,GROUND+8,'#8e7846',10);ellipse(BASE,GROUND-100,12,21,'#e5d987');health(BASE,GROUND-226,grove/groveMax,100);ctx.font='bold 11px system-ui';ctx.textAlign='center';ctx.fillStyle='#e7e9b7';ctx.fillText('TREE OF LIFE',BASE,GROUND-240);
+const glow=ctx.createRadialGradient(BASE,GROUND-90,5,BASE,GROUND-90,160);glow.addColorStop(0,'#d5e6a344');glow.addColorStop(1,'#d5e6a300');ctx.fillStyle=glow;ctx.fillRect(BASE-160,GROUND-250,320,320);tree(BASE,GROUND,185,grove/groveMax<.3?'#a58658':grove/groveMax<.6?'#a7a662':'#91b65c');
+for(let i=0;i<7;i++){const t=clock*.6+i;ellipse(BASE+Math.sin(t*1.7+i)*72,GROUND-70-(i*23+clock*10)%140,2,3,'#e1eeb0');}
+if(grove/groveMax<.6){line(BASE-5,GROUND-60,BASE+8,GROUND-83,'#382d27',4);line(BASE+8,GROUND-83,BASE-3,GROUND-105,'#382d27',3);}line(BASE-5,GROUND-10,BASE-38,GROUND+9,'#8e7846',10);line(BASE+8,GROUND-10,BASE+45,GROUND+8,'#8e7846',10);ellipse(BASE,GROUND-100,12,21,'#e5d987');health(BASE,GROUND-226,grove/groveMax,100);ctx.font='bold 11px system-ui';ctx.textAlign='center';ctx.fillStyle='#e7e9b7';ctx.fillText('TREE OF LIFE',BASE,GROUND-240);
 if(shieldTime>0){ctx.strokeStyle='#c6f2a6';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(BASE,GROUND-90,92,128,0,0,Math.PI*2);ctx.stroke();}
-for(const a of allies){heroArt(a.x,GROUND,a.type==='oak'?1.15:.75,a.color);if(a.type==='archer'){ctx.strokeStyle='#f4dda0';ctx.lineWidth=3;ctx.beginPath();ctx.arc(a.x+15,GROUND-23,16,-1.2,1.2);ctx.stroke();}health(a.x,GROUND-(a.type==='oak'?90:64),a.hp/a.max);}
-for(const e of enemies){const s=e.boss?2.1:e.tank?1.15:.8,x=e.x,y=GROUND;ellipse(x,y+3,22*s,6,'#06181180');ctx.fillStyle=e.flash>0?'#fff0ca':e.boss?'#7c6551':e.runner?'#a3916a':'#a5765c';ctx.fillRect(x-14*s,y-49*s,28*s,37*s);line(x-8*s,y-12*s,x-13*s,y,'#4b453b',7*s);line(x+8*s,y-12*s,x+13*s,y,'#4b453b',7*s);ellipse(x,y-58*s,16*s,12*s,'#746a52');ctx.fillStyle='#ffc277';ctx.fillRect(x-9*s,y-61*s,6*s,4*s);ctx.fillRect(x+3*s,y-61*s,6*s,4*s);line(x-13*s,y-35*s,x-27*s,y-20*s,'#b6b0a0',6*s);health(x,y-80*s,e.hp/e.max,e.boss?100:40);if(e.boss){ctx.fillStyle='#ffe0a0';ctx.font='bold 13px system-ui';ctx.fillText('THE IRON STUMP',x,y-91*s);}}
-heroArt(hero.x,GROUND,1.25,hero.flash>0?'#f9e9c6':'#bbcd77',true);health(hero.x,GROUND-105,hero.hp/hero.max,60);ctx.fillStyle='#e4e7b0';ctx.font='bold 10px system-ui';ctx.fillText('YOU',hero.x,GROUND-115);
+for(const a of allies){heroArt(a.x,GROUND,a.type==='oak'?1.15:.75,a.flash>0?'#fff0ca':a.color,false,a.type,a.cd);health(a.x,GROUND-(a.type==='oak'?119:80),a.hp/a.max);}
+for(const e of enemies)enemyArt(e);
+heroArt(hero.x,GROUND,1.25,hero.flash>0?'#f9e9c6':'#9cbb6d',true,'hero',hero.cd);health(hero.x,GROUND-126,hero.hp/hero.max,60);ctx.fillStyle='#e4e7b0';ctx.font='bold 10px system-ui';ctx.fillText('YOU',hero.x,GROUND-137);
 for(const s of shots){ellipse(s.x,s.y,s.blast?16:5,s.blast?9:4,s.blast?'#f8d67c':'#e6c288');if(s.blast)line(s.x-s.vx*.035,s.y,s.x,s.y,'#f0c96d',7);}for(const p of sparks){ctx.globalAlpha=Math.max(0,p.life);ellipse(p.x,p.y,3,3,p.color);}ctx.globalAlpha=1;ctx.restore();
-const vignette=ctx.createLinearGradient(0,0,0,h);vignette.addColorStop(0,'#081b2040');vignette.addColorStop(.6,'#0000');vignette.addColorStop(1,'#09170c88');ctx.fillStyle=vignette;ctx.fillRect(0,0,w,h);if(mode==='battle'){ctx.fillStyle='#f3edc6';ctx.font='12px system-ui';ctx.textAlign='right';ctx.fillText(`${enemies.length+planned-spawned} enemies remaining`,w-18,25);if(hero.x>750){ctx.textAlign='left';ctx.fillText('← Tree of Life',18,25);}}}
+const vignette=ctx.createLinearGradient(0,0,0,h);vignette.addColorStop(0,'#081b2040');vignette.addColorStop(.6,'#0000');vignette.addColorStop(1,'#09170c88');ctx.fillStyle=vignette;ctx.fillRect(0,0,w,h);if(mode==='battle'&&spawned<2){ctx.textAlign='center';ctx.font='bold 22px Georgia';ctx.fillStyle='#f6e7b2';ctx.fillText('WAVE '+wave+' / '+TOTAL,w/2,62);ctx.font='12px system-ui';ctx.fillText(wave===10?'THE IRON STUMP':'HOLD THE GROVE',w/2,83);}if(mode==='battle'){ctx.fillStyle='#f3edc6';ctx.font='12px system-ui';ctx.textAlign='right';ctx.fillText(`${enemies.length+planned-spawned} enemies remaining`,w-18,25);if(hero.x>750){ctx.textAlign='left';ctx.fillText('← Tree of Life',18,25);}}}
 function sync(){const note=$('field-note');note.hidden=mode!=='battle';if(mode==='battle'){note.textContent=grove/groveMax<.4?'Grove under threat! Fall back, summon defenders, and use Canopy Shield.':wave===1&&!hasMoved?'Hold ← or → to move your Tree Hero. He attacks nearby enemies automatically.':wave===1&&!hasSummoned?'Summon a Seedling below. Sap refills automatically, so keep your army growing.':wave===1?'Enemies arrive from the right. Fight beside your army and protect the glowing tree.':wave===10?'The Iron Stump approaches. Keep a strong front line and save your abilities.':'Lead your army. Clear this wave to earn seeds for upgrades.';}$('wave').textContent=wave+' / '+TOTAL;$('grove').textContent=Math.max(0,Math.ceil(grove/groveMax*100))+'%';$('hero').textContent=Math.max(0,Math.ceil(hero.hp/hero.max*100))+'%';$('sap').textContent=Math.floor(sap);$('seeds').textContent=seeds;for(const b of document.querySelectorAll('[data-unit]')){const type=b.dataset.unit;b.disabled=mode!=='battle'||sap<units[type].cost||cooldowns[type]>0||allies.length>=18;const role=type==='sprout'?'melee':type==='archer'?'ranged':'tank';b.querySelector('small').textContent=cooldowns[type]>0?Math.ceil(cooldowns[type])+'s cooldown':allies.length>=18?'Army full':units[type].cost+' sap · '+role;}$('blast').disabled=mode!=='battle'||blastCd>0;$('blast').querySelector('small').textContent=blastCd>0?Math.ceil(blastCd)+'s to ready':'Q · Ready';$('shield').disabled=mode!=='battle'||shieldCd>0;$('shield').querySelector('small').textContent=shieldCd>0?Math.ceil(shieldCd)+'s to ready':'E · Ready';$('pause').disabled=!['battle','paused'].includes(mode);}
 function resize(){const narrow=innerWidth<700;canvas.width=narrow?700:1100;canvas.height=470;}
 addEventListener('resize',resize);resize();
