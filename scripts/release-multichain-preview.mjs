@@ -14,8 +14,9 @@ import { verifyDelivery } from './multichain-preview-delivery.mjs';
 // unlocks a deploy, or accepts an arbitrary older deployment for publication.
 export const SITE_ID = 'aa62f324-b880-47d6-85b8-4ba0700ff5bf';
 export const ACCOUNT_ID = '69800888d1a3d0483003ae9e';
-export const BASELINE_ID = process.env.MULTICHAIN_EXPECTED_DEPLOY || '6af7f5cd5a0c9cd4569c3fa8';
-export const ORIGINAL_CHANGES = [];
+export const BASELINE_ID = process.env.MULTICHAIN_EXPECTED_DEPLOY || '6afb5ee1e0da5058b298ad6a';
+export const ORIGINAL_CHANGES = ["/play/multichaintest/setup/index.html", "/play/multichaintest/setup/app.js"];
+export const REPLACED_HASHES = {"/play/multichaintest/setup/index.html": "685b844def191b8b7b87b0e1ade045f5eede0acd", "/play/multichaintest/setup/app.js": "d8a253d33f166862138399bfd37fb0d8a2abdd63"};
 // Historical orphaned API deploys individually audited on 2026-11-10.
 // These are not builds: all have null build_id/published_at and unchanged,
 // months-old states. Any new, changed, or genuinely queued deploy still blocks.
@@ -141,6 +142,7 @@ export function functionsConfig(deploy) {
 }
 
 export function assembleFiles(baselineFiles, overlays) {
+  for (const [pathname, hash] of Object.entries(REPLACED_HASHES)) assert.equal(baselineFiles[pathname], hash, "Reviewed setup baseline changed: " + pathname);
   const files = { ...baselineFiles }, sources = {};
   for (const item of overlays) {
     const publicPath = publicUploadPath(item.path);
@@ -155,7 +157,7 @@ export function assembleFiles(baselineFiles, overlays) {
   assert(files['/index.html'], 'Missing rewards entry.');
   assert(Object.keys(baselineFiles).every(p => Object.hasOwn(files, p)), 'Baseline path removed.');
   eq(Object.keys(sources).sort(), [...MULTICHAIN_PATHS].sort(), 'Unexpected gallery overlays');
-  assert(MULTICHAIN_PATHS.every(p => !Object.hasOwn(baselineFiles,p)), 'Gallery path already exists; stop for review.');
+  assert(MULTICHAIN_PATHS.every(p => Object.hasOwn(baselineFiles,p)), 'Reviewed setup path is missing.');
   return { files, sources, changedOriginals, addedPaths: Object.keys(files).filter(p => !Object.hasOwn(baselineFiles, p)).sort() };
 }
 

@@ -7,7 +7,7 @@ import {webcrypto, createHash} from 'node:crypto';
 const bundle=fs.readFileSync(new URL('../play/multichaintest/setup/app.js',import.meta.url),'utf8');
 const source=bundle.slice(bundle.indexOf('var ws={modules:'));
 const evidence=JSON.parse(fs.readFileSync(new URL('../docs/multichain-setup-evidence-20261116.json',import.meta.url)));
-const wallet='0x18d72fc2a3df6d92d0806da3b04d92be056e2d6d35882a56c16ddb25f48d35d6';
+const wallet='0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4';
 function harness({account=wallet, pending=false, receipt=null, reject=false, sharedStorage=null, sharedLocks=null}={}) {
   const elements=new Map(), storage=sharedStorage??new Map(), commands=[];
   const lockState=sharedLocks??{held:false};
@@ -78,4 +78,15 @@ test('unavailable cross-tab coordination or unwritable storage never requests th
   const noWrites=harness();noWrites.element('reviewed').checked=true;
   vm.runInContext('localStorage.setItem = () => { throw Error("storage full") }',noWrites.context);
   await noWrites.element('publish').onclick();assert.equal(noWrites.requests(),0);
+});
+
+test("previous trading wallet cannot publish the dev-wallet draft",async()=>{const h=harness();await assert.rejects(h.context.Cm("0x18d72fc2a3df6d92d0806da3b04d92be056e2d6d35882a56c16ddb25f48d35d6"),/designated/);assert.equal(h.requests(),0);});
+
+test('versioned unsigned draft binds dev sender and UpgradeCap recipient to the page identity',()=>{
+  const bytes=fs.readFileSync(new URL('../docs/multichain-dev-publication-unsigned.json',import.meta.url));
+  const draft=JSON.parse(bytes);
+  assert.equal(draft.sender,wallet);
+  assert.equal('0x'+Buffer.from(draft.kind.programmableTransaction.inputs[0].pure,'base64').toString('hex'),wallet);
+  assert.equal(createHash('sha256').update(bytes).digest('hex'),evidence.publicationHashes.unsignedDraftSha256);
+  assert.equal(evidence.suiSimulation.data.simulateTransaction.effects.status,'SUCCESS');
 });

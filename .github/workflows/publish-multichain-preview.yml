@@ -47,10 +47,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Add only the disposable bridge setup and preserve the live site
+      - name: Update only the reviewed dev-wallet setup and preserve the live site
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          MULTICHAIN_EXPECTED_DEPLOY: '6af7f5cd5a0c9cd4569c3fa8'
+          MULTICHAIN_EXPECTED_DEPLOY: '6afb5ee1e0da5058b298ad6a'
           REVIEWED_SHA: ${{ github.sha }}
         run: |
           test -n "$NETLIFY_AUTH_TOKEN" || { echo 'The existing Netlify release connection is unavailable.'; exit 1; }
