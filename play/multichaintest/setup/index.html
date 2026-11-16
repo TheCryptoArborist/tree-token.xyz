@@ -7,7 +7,7 @@
 <section><h2>What you’re approving</h2><dl><dt>Network</dt><dd>Sui mainnet</dd><dt>Action</dt><dd>Publish two pilot modules</dd><dt>New test NFT</dt><dd>One disposable NFT</dd><dt>Simulated fee · Nov 16</dt><dd>0.0463536 SUI</dd></dl>
 <p class="small">Your wallet refreshes gas and shows the actual fee before approval. This first transaction creates a new package, a shared bridge and admin capabilities. The upgrade authority stays with your Sui wallet.</p>
 <p class="small">The original NFTrees and live arcade are not part of this transaction. The 25 USDT BNB purchase happens later.</p>
-<details><summary>Designated Sui wallet</summary><p><code id="expected"></code></p></details>
+<details><summary>Designated dev wallet</summary><p><code id="expected">0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4</code></p></details>
 </section>
 <section><h2>Bridge setup · first step</h2><p>BNB ↔ Sui is the first route. After this publication, we verify its receipt, deploy the BNB pilot, configure LayerZero and test the full redemption round trip.</p><p class="small">Robinhood’s endpoint currently has no default Sui path. The original NFTree collection will be integrated only after this disposable pilot succeeds.</p></section>
 <section><h2>Connect and review</h2><div class="wallet-path"><p><strong>Using Slush on your phone?</strong></p><p class="small">Open the signing page inside your installed Slush app, then connect your existing wallet. This avoids the web-wallet popup.</p><div class="actions"><a class="linkbutton" id="open-slush" href="https://my.slush.app/browse/https://tree-token.xyz/play/multichaintest/setup/">Open in Slush</a><button type="button" class="secondary" id="copy-page">Copy page link</button></div><p class="small" id="connection-help">If the link stays in your browser, open Slush → Apps and paste the copied page link. Use the designated Sui wallet for this pilot.</p></div><p class="small" id="wallet-discovery" role="status">Checking for an installed wallet…</p><p class="small">On desktop, use the browser where your Slush extension is installed and unlocked.</p>
@@ -18,4 +18,4 @@
 </section>
 <section id="receipt" hidden><h2>Publication receipt</h2><p class="small">Send this transaction digest back to the conversation. It lets us verify the new package and object IDs before preparing BNB deployment.</p><p><code id="digest"></code></p><div class="actions"><button class="secondary" id="copy">Copy digest</button><button class="secondary" id="download">Download receipt</button></div><p><a id="explorer" target="_blank" rel="noopener noreferrer">View transaction on SuiVision ↗</a></p></section>
 <footer>This isolated pilot page does not ask for a seed phrase or private key. Connection alone does not publish anything.</footer>
-</main><script type="module" src="./app.js?v=tree-setup-20261116"></script></body></html>
+</main><script type="module" src="./app.js?v=tree-setup-dev-20261116"></script></body></html>

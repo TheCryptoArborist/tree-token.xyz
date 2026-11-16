@@ -13,3 +13,11 @@ Publication uses the preserved-production release script with an exact two-path 
 Validation: 14 EVM contract tests; fresh Sui GraphQL simulation with checks and gas selection enabled; publication tests for exact module/dependency identities, designated wallet, consent, tamper rejection, duplicate suppression and cancellation; preservation tests. Wallet connection, signing, transaction execution and the bridge round trip still require the user's actual wallet and live receipts.
 
 Current external guidance consulted: MystenLabs `move-security/SKILL.md`, `move-security/best-practices.md`, `move-security/access-control.md`, and `sui-publish/SKILL.md`. No Move module or dependency was changed for this page.
+
+## Dev-wallet update
+
+The user designated `0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4` as the Sui development/admin wallet. It replaces `0x18d72fc2a3df6d92d0806da3b04d92be056e2d6d35882a56c16ddb25f48d35d6` as publisher, UpgradeCap recipient and pilot administrator. The old address is no longer accepted for publication. The EVM buyer and payment treasury are unchanged. This address update does not assign a new redemption recipient; that transaction will be reviewed separately.
+
+`multichain-dev-publication-unsigned.json` is the updated unsigned description, including both sender and pure UpgradeCap-recipient bytes. Its SHA-256 is the signing page's draft identity. Module bytes and dependencies are unchanged. The wallet page and these versioned records supersede the historical downloaded package's publication-wallet setting; do not run the old draft or old wallet preflight. Actual publication IDs remain pending.
+
+This release replaces only the two reviewed setup files, pinned to their exact prior hashes, against production `6afb5ee1e0da5058b298ad6a`. All other static files, function records, schedules and configuration must remain exact.

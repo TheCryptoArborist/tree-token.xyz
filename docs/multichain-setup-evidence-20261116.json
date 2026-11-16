@@ -121,8 +121,8 @@
   "suiSimulation": {
     "data": {
       "checkpoint": {
-        "sequenceNumber": 345958947,
-        "timestamp": "2026-11-16T19:42:17.771Z"
+        "sequenceNumber": 345964488,
+        "timestamp": "2026-11-16T20:04:44.571Z"
       },
       "simulateTransaction": {
         "effects": {
@@ -153,10 +153,12 @@
       "0x00245ba36f7a1cc643a2b037450dff1e4399e18069c6545fb5fcaaf37d39d7dc",
       "0x3de1504cf3fd75762759e353d9d95389618e557d0552697f19b52e4e927c1dee"
     ],
-    "unsignedDraftSha256": "21e8a29e96e859da241044856472e0aac0c0c3d0d89dc6f5e2d3b4e702b45606"
+    "unsignedDraftSha256": "400b0da69bceef6ebdf1f6faa6ebe6d08314e4f0310fc14d31e31e796e92071f"
   },
   "evmTests": {
     "passed": 14,
     "failed": 0
-  }
+  },
+  "suiPublisher": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+  "priorSuiPublisher": "0x18d72fc2a3df6d92d0806da3b04d92be056e2d6d35882a56c16ddb25f48d35d6"
 }

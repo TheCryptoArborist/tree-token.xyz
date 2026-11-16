@@ -1,0 +1,21 @@
+{
+  "data": {
+    "checkpoint": {
+      "sequenceNumber": 345964488,
+      "timestamp": "2026-11-16T20:04:44.571Z"
+    },
+    "simulateTransaction": {
+      "effects": {
+        "status": "SUCCESS",
+        "gasEffects": {
+          "gasSummary": {
+            "computationCost": 100000,
+            "storageCost": 46253600,
+            "storageRebate": 0,
+            "nonRefundableStorageFee": 0
+          }
+        }
+      }
+    }
+  }
+}
