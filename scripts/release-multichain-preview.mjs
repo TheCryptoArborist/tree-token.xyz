@@ -28,7 +28,7 @@ export function isAuditedInactiveDeploy(deploy) {
     deploy.commit_ref ?? null].every((value, i) => value === expected[i]);
 }
 
-export const MULTICHAIN_PATHS = ['/play/multichaintest/index.html', '/play/multichaintest/app.js', '/play/multichaintest/wallet-vendor.js'];
+export const MULTICHAIN_PATHS = ['/play/multichaintest/setup/index.html', '/play/multichaintest/setup/app.js'];
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const RUNTIME_FIELDS = ['branch', 'context', 'functions_region', 'functions_region_overrides',
   'database_branch_id', 'blobs_region', 'framework', 'edge_functions_present', 'server', 'database_migrations'];
@@ -303,7 +303,7 @@ export async function main(args = process.argv.slice(2)) {
     const overlay = assembleFiles(baselineFiles, overlayFiles());
     plan = { schemaVersion: 1, siteId: SITE_ID, baselineId: BASELINE_ID, baselineSha256: fingerprint(baseline),
       baselineCreatedAt: baseline.deploy.created_at, createdAt: new Date().toISOString(), sourceCommit, sourceBranch,
-      title: `NFTree multichain connection preview ${sourceCommit.slice(0, 12)}; preserve 49 backend packages`,
+      title: `NFTree disposable bridge setup ${sourceCommit.slice(0, 12)}; preserve 49 backend packages`,
       ...overlay, backend: { functions: baseline.deploy.available_functions, schedules: baseline.deploy.function_schedules, runtime: runtime(baseline.deploy) },
       environment: await protectedEnvironment(api, site) };
     await assertLiveBaseline(api, baseline, plan);

@@ -1,0 +1,162 @@
+{
+  "observedAt": "2026-11-16",
+  "scope": "One disposable NFT; no original collection integration or application deployed yet",
+  "bnb": {
+    "observedAt": "2026-11-16T19:39:38.838Z",
+    "rpc": "https://bsc-dataseed.bnbchain.org",
+    "chainId": "56",
+    "blockNumber": "133985032",
+    "endpoint": {
+      "eid": "30102",
+      "isSupportedEid": true,
+      "defaultSendLibrary": "0x9F8C645f2D0b2159767Bd6E0839DE4BE49e823DE",
+      "defaultReceiveLibrary": "0xB217266c3A98C8B2709Ee26836C98cf12f6cCEC1",
+      "nativeToken": "0x0000000000000000000000000000000000000000"
+    },
+    "usdt": {
+      "decimals": "18",
+      "name": "Tether USD",
+      "symbol": "USDT"
+    },
+    "code": {
+      "endpoint": {
+        "address": "0x1a44076050125825900e736c501f859c50fe728c",
+        "bytes": 24005,
+        "keccak256": "0x5ed1f4ec5f4d6bd5eac1fa92e0fb7474be2607dfc5f3eb82ced1c183b64fbeb9"
+      },
+      "sendUln": {
+        "address": "0x9f8c645f2d0b2159767bd6e0839de4be49e823de",
+        "bytes": 22995,
+        "keccak256": "0xdd60d5461da3a779567301a7f52c4de2fd7d4c829b3e8de663bb2149be857275"
+      },
+      "receiveUln": {
+        "address": "0xb217266c3a98c8b2709ee26836c98cf12f6ccec1",
+        "bytes": 11010,
+        "keccak256": "0xa24b487071c9c9f0b7d5dc4809c4390f5c921b353047ed7d203af1b0e69c27b2"
+      },
+      "usdt": {
+        "address": "0x55d398326f99059fF775485246999027B3197955",
+        "bytes": 4413,
+        "keccak256": "0x97a48aa4c129657440dafdacd4c836389734d28cc4a0ca7403e68da660a74a59"
+      },
+      "executor": {
+        "address": "0x3ebd570ed38b1b3b4bc886999fcf507e9d584859",
+        "bytes": 2304,
+        "keccak256": "0x389be47b3fd7cf26fb6d72c2454d05589f74d20be8cb09173cd63d40525a8035"
+      }
+    },
+    "defaults": {
+      "sendUln": {
+        "confirmations": "20",
+        "requiredDVNs": [
+          "0x247624e2143504730aeC22912ed41F092498bEf2",
+          "0x31F748a368a893Bdb5aBB67ec95F232507601A73",
+          "0xfA9bA83C102283958B997Adc8B44ED3A3CdB5dDa",
+          "0xfD6865c841c2d64565562fCc7e05e619A30615f0"
+        ],
+        "optionalDVNs": [],
+        "optionalDVNThreshold": "0"
+      },
+      "receiveUln": {
+        "confirmations": "5",
+        "requiredDVNs": [
+          "0x247624e2143504730aeC22912ed41F092498bEf2",
+          "0x31F748a368a893Bdb5aBB67ec95F232507601A73",
+          "0xfA9bA83C102283958B997Adc8B44ED3A3CdB5dDa",
+          "0xfD6865c841c2d64565562fCc7e05e619A30615f0"
+        ],
+        "optionalDVNs": [],
+        "optionalDVNThreshold": "0"
+      }
+    },
+    "limits": [
+      "Reads confirm deployed code and interface results; they do not establish source equivalence or audit status.",
+      "No NFTree application exists on mainnet yet; these are protocol defaults, not app-specific settings."
+    ]
+  },
+  "robinhood": {
+    "chainId": "0x1237",
+    "blockNumber": "0x6ea33d2",
+    "endpoint": {
+      "eid": "30416",
+      "isSupportedEid": false,
+      "defaultSendLibrary": "0x0000000000000000000000000000000000000000",
+      "defaultReceiveLibrary": "0x0000000000000000000000000000000000000000",
+      "nativeToken": "0x0000000000000000000000000000000000000000"
+    },
+    "usdg": {
+      "decimals": "6",
+      "name": "Global Dollar",
+      "symbol": "USDG"
+    },
+    "code": {
+      "endpoint": {
+        "address": "0x6f475642a6e85809b1c36fa62763669b1b48dd5b",
+        "bytes": 24005,
+        "keccak256": "0xcfbbc5787620fd3bc7117ecad89067b17fa445b3e6b7afd724e3a347a9d67763"
+      },
+      "sendUln": {
+        "address": "0xc39161c743d0307eb9bcc9fef03eeb9dc4802de7",
+        "bytes": 22995,
+        "keccak256": "0xcd2121f01434744b27de5bf44d17417ea7478f16068e183b4d3cc061505d832f"
+      },
+      "receiveUln": {
+        "address": "0xe1844c5d63a9543023008d332bd3d2e6f1fe1043",
+        "bytes": 11010,
+        "keccak256": "0x845ea4dac06daac781355bf6790478f2114a7917ec922936d5dbe7e6e2d4979f"
+      },
+      "usdg": {
+        "address": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+        "bytes": 170,
+        "keccak256": "0x864cc9ad53b338b82da1f7cab85ab0b3d5c8861acb422b6fec63cf36234f36a6"
+      },
+      "executor": {
+        "address": "0x4208d6e27538189bb48e603d6123a94b8abe0a0b",
+        "bytes": 2304,
+        "keccak256": "0x7957b471a6c849638a6c125d9a55585a166a9d428275b0de233b29870d707740"
+      }
+    },
+    "status": "NO_DEFAULT_PATH_TO_SUI"
+  },
+  "suiSimulation": {
+    "data": {
+      "checkpoint": {
+        "sequenceNumber": 345958947,
+        "timestamp": "2026-11-16T19:42:17.771Z"
+      },
+      "simulateTransaction": {
+        "effects": {
+          "status": "SUCCESS",
+          "gasEffects": {
+            "gasSummary": {
+              "computationCost": 100000,
+              "storageCost": 46253600,
+              "storageRebate": 0,
+              "nonRefundableStorageFee": 0
+            }
+          }
+        }
+      }
+    }
+  },
+  "publicationHashes": {
+    "moduleSha256": [
+      "e0d19678c6c3ae4df672c0306bb2336a1ad5df21fed4edaa42a97e905d7fafa9",
+      "de8c4c767ea50bf9d28cfc58db161af1b87f7f13d4e14488c430272f5e3f8068"
+    ],
+    "dependencies": [
+      "0x0000000000000000000000000000000000000000000000000000000000000001",
+      "0x0000000000000000000000000000000000000000000000000000000000000002",
+      "0x28de9e8e087a6347001907fb698fdf8ab0467b342229b74b19264067aebc4ae9",
+      "0x31beaef889b08b9c3b37d19280fc1f8b75bae5b2de2410fc3120f403e9a36dac",
+      "0xfdc28afc0110cb2edb94e3e57f2b1ce69b5a99c503b06d15e51cfa212de56e24",
+      "0x00245ba36f7a1cc643a2b037450dff1e4399e18069c6545fb5fcaaf37d39d7dc",
+      "0x3de1504cf3fd75762759e353d9d95389618e557d0552697f19b52e4e927c1dee"
+    ],
+    "unsignedDraftSha256": "21e8a29e96e859da241044856472e0aac0c0c3d0d89dc6f5e2d3b4e702b45606"
+  },
+  "evmTests": {
+    "passed": 14,
+    "failed": 0
+  }
+}
