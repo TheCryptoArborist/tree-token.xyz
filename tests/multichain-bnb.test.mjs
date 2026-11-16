@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {createHash} from 'node:crypto';
 import vm from 'node:vm';
-import {hashHex,preflight,requestDeployment,verifyReceipt,saveState} from '../play/multichaintest/setup/bnb/core.js';
+import {hashHex,preflight,requestDeployment,verifyReceipt,saveState,quantity,walletRead} from '../play/multichaintest/setup/bnb/core.js';
 
 const address='0x90f9c1c0c675A0ce9D539c540DB7F4A1f7e583AE';
 const hash='0x'+'a'.repeat(64);
@@ -92,4 +92,28 @@ test('loading and discovering wallets never request accounts or a transaction',a
   let requested=0;const context=vm.createContext({preflight,requestDeployment,verifyReceipt,loadState:()=>null,saveState,crypto,TextDecoder,Uint8Array,Event:class{},window:{ethereum:{request:async()=>{requested++;}},addEventListener(){},dispatchEvent(){}},document:{getElementById:get,createElement:()=>({})},localStorage:{getItem:()=>null},navigator:{},fetch:async()=>({ok:true,arrayBuffer:async()=>bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength)})});
   await vm.runInContext('(async()=>{'+source.replace(/^import[^\n]+\n/,'')+'})()',context);
   assert.equal(requested,0);assert.equal(get('deploy').disabled,true);assert.equal(get('wallet-list').children.length,1);
+  await get('wallet-list').children[0].onclick();
+  assert.match(get('wallet-status').textContent,/Deployment checks failed: eth_chainId/);
+  assert.equal(get('deploy').disabled,true);
+});
+
+
+test('exact decimal, safe-number and bigint quantities preserve the same deployment checks',async()=>{
+  for(const convert of [n=>Number(n),n=>n.toString(),n=>n]){
+    const f=await fixture({eth_chainId:()=>convert(56n),eth_getTransactionCount:()=>convert(321n),eth_estimateGas:()=>convert(1268792n),eth_gasPrice:()=>convert(50000000n),eth_getBalance:()=> '1000000000000000000'});
+    assert.equal((await preflight(f.provider,f.cfg)).gas,'1268792');assert(!f.calls.some(x=>x.method==='eth_sendTransaction'));
+  }
+});
+test('legacy JSON-RPC envelopes are unwrapped and error envelopes fail closed',async()=>{
+  const f=await fixture();const legacy={request:async req=>({jsonrpc:'2.0',id:1,result:await f.provider.request(req)})};
+  assert.equal((await preflight(legacy,f.cfg)).gas,'1268792');
+  await assert.rejects(walletRead({request:async()=>({jsonrpc:'2.0',id:1,error:{code:-32000,message:'unavailable'}})},{method:'eth_chainId'}),/eth_chainId: unavailable/);
+});
+test('null, empty, booleans, fractions, unsafe numbers and arbitrary objects remain invalid',async()=>{
+  for(const value of [null,undefined,'','0x',false,{},[],1.5,Number.MAX_SAFE_INTEGER+1,-1n,'-1','1.5',1n<<256n])assert.throws(()=>quantity(value,'eth_getBalance'),/eth_getBalance.*invalid numeric response/);
+  const f=await fixture({eth_gasPrice:()=>null});await assert.rejects(requestDeployment(f.options),/eth_gasPrice.*null/);assert(!f.calls.some(x=>x.method==='eth_sendTransaction'));
+});
+test('a stalled read names the RPC method instead of leaving checks pending indefinitely',async t=>{
+  t.mock.timers.enable({apis:['setTimeout']});
+  try{const result=walletRead({request:()=>new Promise(()=>{})},{method:'eth_chainId'});const checked=assert.rejects(result,/eth_chainId.*30 seconds/);t.mock.timers.tick(30000);await checked;}finally{t.mock.timers.reset();}
 });
