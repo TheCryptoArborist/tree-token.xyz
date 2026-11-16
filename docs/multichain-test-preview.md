@@ -19,8 +19,20 @@ snapshot build, manifest, production functions, scheduled jobs, existing games,
 wallet/session/payment modules and Netlify configuration are unchanged. A Netlify
 Deploy Preview is a separate wallet origin and uses the repository's existing
 read-only preview functions. It must not be promoted as the production site.
-Publication under the canonical domain requires a separately verified additive
-release from a newly captured complete live inventory.
+Publication under the canonical domain uses the dedicated additive publisher
+`scripts/release-multichain-preview.mjs`. It pins the approved current deployment,
+captures the complete live inventory, preserves all 49 full backend records and
+five schedules, and refuses any existing-path replacement. It verifies uploaded
+and served bytes before locking only its newly created candidate. Site/shared
+environment fingerprints, build settings, snippets and runtime remain protected.
+The explicit main-branch commit marker `[publish multichain preview]` triggers
+the dedicated workflow through the existing Netlify release secret. Other pushes
+cannot publish. The release commit uses `[skip netlify]` to avoid a root rebuild.
+The publisher refuses unknown nonterminal deployments, with only the exact ten
+historical orphan records already audited by the existing publisher excepted.
+Masked secret bytes and deployment-specific environment overrides are not exposed
+by the inventory API; this release makes no environment changes and retains the
+existing production context.
 
 Validation: `node --test tests/multichain-preview.test.mjs tests/sti-preview-build.test.mjs`.
 The existing snapshot test now counts the three explicit preview additions and

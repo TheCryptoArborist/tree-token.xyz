@@ -1,0 +1,71 @@
+name: Publish isolated multichain connection preview
+
+on:
+  pull_request:
+    paths:
+      - 'play/multichaintest/**'
+      - 'scripts/*multichain-preview*'
+      - 'tests/multichain-*.test.mjs'
+      - '.github/workflows/publish-multichain-preview.yml'
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-multichain-preview.yml']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tree-production-preservation-${{ github.event_name == 'push' && 'release' || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: |
+          node --test tests/multichain-preview.test.mjs tests/multichain-release.test.mjs tests/preserved-release.test.mjs
+          node --check scripts/release-multichain-preview.mjs
+          node --check scripts/multichain-preview-delivery.mjs
+          git diff --check
+  publish:
+    needs: verify
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[publish multichain preview]')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Add only the connection preview and preserve the live site
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          MULTICHAIN_EXPECTED_DEPLOY: '6af7f5cd5a0c9cd4569c3fa8'
+          REVIEWED_SHA: ${{ github.sha }}
+        run: |
+          test -n "$NETLIFY_AUTH_TOKEN" || { echo 'The existing Netlify release connection is unavailable.'; exit 1; }
+          test "$(git rev-parse HEAD)" = "$REVIEWED_SHA"
+          node scripts/release-multichain-preview.mjs capture
+          node scripts/release-multichain-preview.mjs plan --source-commit "$REVIEWED_SHA"
+          node scripts/release-multichain-preview.mjs preview --source-commit "$REVIEWED_SHA"
+          node scripts/release-multichain-preview.mjs verify --source-commit "$REVIEWED_SHA"
+          candidate=$(node -p "JSON.parse(require('fs').readFileSync('.netlify/multichain-preview-candidate.json')).id")
+          node scripts/release-multichain-preview.mjs publish --source-commit "$REVIEWED_SHA" --expected-candidate "$candidate"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: multichain-preview-release
+          path: .netlify/multichain-preview-release-report.json
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 30
