@@ -75,3 +75,15 @@ Current MystenLabs/skills README, `accessing-data/SKILL.md` and
 https://github.com/MystenLabs/skills/blob/main/accessing-data/SKILL.md
 https://github.com/MystenLabs/skills/blob/main/accessing-data/graphql.md
 Existing pinned SDK, wallet helpers and vendor bytes remain unchanged.
+
+## Confirmed publication
+
+Locked deployment `6afcb1e59274eb1f9d9a58c7` serves the canonical page.
+Release evidence is `original-bnb-page-release.json`. The user must now connect
+the designated BNB wallet, simulate, review, approve creation and return the hash.
+No adapter exists merely because this website has been published.
+
+`original-trial/bindings.json` and `original-trial/slot-bindings.json` are frozen
+pre-signing snapshots imported by published browser bundles. Record future BNB
+confirmations in new evidence/binding files. Rewriting those snapshots without
+rebuilding and reviewing dependent bundles breaks exact source/bundle parity.
