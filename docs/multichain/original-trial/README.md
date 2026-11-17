@@ -1,3 +1,41 @@
+# Confirmed original application LayerZero registration — 2026-11-17
+
+User-signed Sui mainnet digest:
+`5bmbJkDF9Z8EAkSbHeq2G7dXhPPjvFZ1gJ5yf5Jam4Pc`.
+The published strict registration receipt/recovery validator passed. Actual
+messaging channel:
+`0x0d376ab0c11fcbdfa480d4a691c9f7b5d00cc2249692e2949d26d32dafbf8aef`,
+initial shared version 1058683488. This is the actual signed channel, replacing
+all provisional simulation channel IDs for future configuration.
+
+Exact sender/gas owner, one vault::register call and original NFT type, four
+reviewed inputs, empty execution metadata, one endpoint registration event,
+typed registry field and shared channel effects were checked. Net gas:
+4,668,124 MIST (0.004668124 SUI). The matching live registry entry points to this
+channel with empty metadata and zero delegate; channel is for the package
+CallCap identity and has no configured channels or active send.
+
+Fresh Sui reads confirmed the publication/slot receipts, unchanged dev-owned
+original #2720 and capabilities, and exact empty/unbound Vault. The BNB binding
+receipt, exact PassBound event, both deployed runtimes, fixed settings and
+paused/unminted pass were reverified. No NFT deposit, stablecoin charge or sale.
+
+Latest actual bindings: `registration-bindings.json`.
+Evidence: `registration-receipt.json`, `registration-verified.json`.
+All earlier signing snapshots and bundles remain frozen. 15 registration checks,
+including the actual signed receipt as a regression fixture, passed.
+
+Next: prepare execution metadata and Sui–BNB peer/library/DVN/executor settings
+for these actual identities. Verify the complete route before any deposit or
+sale enablement. No website, backend, schedule, contract source or on-chain
+state was changed by the assistant while confirming this transaction.
+
+Guidance rechecked live:
+https://github.com/MystenLabs/skills/blob/main/accessing-data/SKILL.md
+https://github.com/MystenLabs/skills/blob/main/accessing-data/graphql.md
+
+---
+
 # Confirmed BNB pass binding — 2026-11-17
 
 User transaction:
