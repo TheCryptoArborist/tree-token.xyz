@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "checkedAt": "2026-11-17T22:58:05.820Z",
+  "gasMist": "9266741",
+  "channelId": "0x0d376ab0c11fcbdfa480d4a691c9f7b5d00cc2249692e2949d26d32dafbf8aef",
+  "vaultId": "0x45bf08499784ea9ff658937165a9449d509aa37de47a728af44e903387f3ca2c",
+  "peer": "0x00000000000000000000000090b5292a5074cfdd665c726b433cc0a97e0da6ab",
+  "bindingEntries": {
+    "peerEntry": "0x2dce7263cfb5454ed8f423ec46e3141957ce4cd4833955d97b2b0b34bb95384e",
+    "reserveOptions": "0xda7c270cbb1ec8bc5e37e5be181757e820434954b95cdde6f87eeda036ec4ebb",
+    "ackOptions": "0xe0e1a2f70f8361e4f61043a2e736e1552387763c82e9962b48b1cde0057407a8",
+    "channelPath": "0x7baca797fd8b2bf9531b09d9874af2f18d17fc75932645de2a99f4dcaadb58d3"
+  },
+  "quotedAt": 1794956285820,
+  "assistantSubmitted": false
+}
