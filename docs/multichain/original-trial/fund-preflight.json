@@ -1,0 +1,12 @@
+{
+  "gasMist": "-947955",
+  "grossGasMist": "7502400",
+  "vaultId": "0x45bf08499784ea9ff658937165a9449d509aa37de47a728af44e903387f3ca2c",
+  "nftId": "0x046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba",
+  "reserveFeeMist": "72951105",
+  "redemptionFeeWei": "4481595519267309",
+  "quotedAt": 1794958420174,
+  "checkedAt": "2026-11-17T23:33:40.174Z",
+  "assistantSubmitted": false,
+  "note": "Unsigned deposit + reserve quote simulations and read-only hypothetical redemption fee. No cross-chain message sent; original NFT still dev-owned. Live delivery not yet proven."
+}
