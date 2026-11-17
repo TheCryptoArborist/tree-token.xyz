@@ -1,3 +1,35 @@
+# Confirmed BNB pass binding — 2026-11-17
+
+User transaction:
+`0x64e4369cb2cf29d7a6f8cf7ee770ac27237227df9ecfab291699c1e3211b579c`.
+The strict published binding validator passed against BNB mainnet, nonce 337:
+exact sender, adapter target, zero value, chain, calldata and one PassBound event.
+Adapter.pass now equals confirmed pass
+`0x1d3da001E586a7DEFD397B77FADB29eD6F039c13`.
+Both reviewed runtimes, all immutable settings, endpoint delegation and BNB USDT
+bytecode/18 decimals were rechecked. Price remains 25 USDT to the fixed treasury.
+Pass state is Unconfirmed, purchasesPaused=true, buyer balance zero; no token
+was minted. Actual gas: 52,362 at 50,000,000 wei, fee 0.0000026181 BNB.
+
+Fresh Sui GraphQL checks confirmed publication/slot receipts, unchanged source
+caps and original #2720 still directly owned by the dev wallet with unchanged
+version/digest. The actual Vault remains empty, unbound and phase zero.
+
+Next: prepare fresh LayerZero registration and route configuration for these
+actual source/adapter identities; verify peers, libraries, DVNs and executor
+settings before any original NFT deposit or sale. Binding does not enable
+Arcade access. No website/backend change or assistant-submitted transaction
+occurred while confirming this receipt.
+
+Evidence: `bnb-binding-receipt.json`, `bnb-binding-verified.json`.
+All earlier signing snapshots and bundles remain frozen.
+
+Guidance rechecked:
+https://github.com/MystenLabs/skills/blob/main/accessing-data/SKILL.md
+https://github.com/MystenLabs/skills/blob/main/accessing-data/graphql.md
+
+---
+
 # Original NFTree trial: confirmed Vault, BNB adapter and pass
 
 ## Confirmed BNB suite-pass contract — 2026-11-17
