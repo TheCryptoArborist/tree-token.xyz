@@ -2,7 +2,8 @@
 module nftree_one_slot::vault_tests;
 use nftree_one_slot::{vault::{Self, Vault, Registry, AdminCap}, codec};
 use oapp::oapp::{Self, OApp, AdminCap as OAppAdminCap};
-use oapp::oapp_peer;
+use oapp::{oapp_peer, enforced_options};
+use endpoint_v2::{endpoint_send, endpoint_quote};
 use endpoint_v2::{endpoint_v2::{Self, EndpointV2}, messaging_channel::MessagingChannel, lz_receive};
 use call::{call, call_cap};
 use utils::{bytes32::{Self, Bytes32}, package};
@@ -163,3 +164,42 @@ fun returned_nft_cannot_reopen_this_route() {
 
 #[test, expected_failure(abort_code = 5, location = vault)]
 fun funding_before_peer_binding_is_rejected() { let mut s = setup_route(false, false, false); let mut v = s.take_shared<Vault<NFT>>(); let a = s.take_from_sender<AdminCap>(); let n = s.take_from_sender<NFT>(); vault::fund(&mut v, &a, n); abort 999 }
+
+#[test]
+fun enforced_options_and_extras_match_in_reserve_quote_and_send() {
+    let mut s = setup(true, false); let mut v = s.take_shared<Vault<NFT>>(); let mut o = s.take_shared<OApp>();
+    let min = x"00030100110100000000000000000000000000030d40";
+    assert_eq!(o.combine_options(30102, 1, vector[]), min);
+    assert_eq!(o.combine_options(30102, 3, vector[]), min);
+    let extras = x"000301001101000000000000000000000000000186a0";
+    let expected = o.combine_options(30102, 1, extras);
+    assert!(expected.length() > min.length());
+    let q = vault::quote(&v, &o, 1, extras, s.ctx());
+    assert_eq!(*endpoint_quote::options(call::param(&q)), expected);
+    let send = vault::send(&mut v, &mut o, 1, extras, coin::zero<SUI>(s.ctx()), s.ctx());
+    assert_eq!(*endpoint_send::options(call::param(&send)), expected);
+    destroy(q); destroy(send); test_scenario::return_shared(v); test_scenario::return_shared(o); s.end();
+}
+#[test]
+fun acknowledgement_uses_its_own_enforced_options() {
+    let mut s = setup(true, true); let mut v = s.take_shared<Vault<NFT>>(); let mut o = s.take_shared<OApp>();
+    let a = s.take_from_sender<OAppAdminCap>(); let expected = x"000301001101000000000000000000000000000493e0";
+    o.set_enforced_options(&a, 30102, 3, expected);
+    let m = message(&v, request(), @0xD); deliver(&mut v, &o, endpoint_address(), 30102, peer(), m, s.ctx());
+    let q = vault::quote(&v, &o, 3, vector[], s.ctx());
+    let send = vault::send(&mut v, &mut o, 3, vector[], coin::zero<SUI>(s.ctx()), s.ctx());
+    assert_eq!(*endpoint_quote::options(call::param(&q)), expected);
+    assert_eq!(*endpoint_send::options(call::param(&send)), expected);
+    destroy(q); destroy(send); test_scenario::return_shared(v); test_scenario::return_shared(o); s.return_to_sender(a); s.end();
+}
+#[test, expected_failure(abort_code = 3, location = enforced_options)]
+fun invalid_caller_options_cannot_bypass_execution_minimum() {
+    let mut s = setup(true, false); let v = s.take_shared<Vault<NFT>>(); let o = s.take_shared<OApp>();
+    let q = vault::quote(&v, &o, 1, vector[0,1], s.ctx()); destroy(q); abort 999
+}
+#[test, expected_failure(abort_code = 12, location = vault)]
+fun empty_admin_options_block_send_instead_of_consuming_one_shot() {
+    let mut s = setup(true, false); let mut v = s.take_shared<Vault<NFT>>(); let mut o = s.take_shared<OApp>();
+    let a = s.take_from_sender<OAppAdminCap>(); o.set_enforced_options(&a, 30102, 1, vector[0,3]);
+    let send = vault::send(&mut v, &mut o, 1, vector[], coin::zero<SUI>(s.ctx()), s.ctx()); destroy(send); abort 999
+}

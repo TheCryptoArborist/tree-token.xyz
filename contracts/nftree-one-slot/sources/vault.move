@@ -25,6 +25,8 @@ const EInvalidMessage: u64 = 8;
 const EReplay: u64 = 9;
 const EPaused: u64 = 10;
 const EVersion: u64 = 11;
+const EExecutionOptions: u64 = 12;
+const MIN_OPTIONS: vector<u8> = x"00030100110100000000000000000000000000030d40";
 public struct VAULT has drop {}
 public struct AdminCap has key { id: UID, registry: ID }
 public struct Registry has key {
@@ -93,6 +95,8 @@ public fun bind<T: key + store>(vault: &mut Vault<T>, admin: &AdminCap, oapp: &m
     vault_admin(vault, admin); assert!(!vault.bound && vault.phase == 0, EWrongState);
     assert!(object::id_address(oapp) == vault.oapp && !peer.is_zero(), EWrongApp);
     oapp.set_peer(oapp_admin, endpoint, channel, BNB_EID, peer, ctx);
+    oapp.set_enforced_options(oapp_admin, BNB_EID, 1, MIN_OPTIONS);
+    oapp.set_enforced_options(oapp_admin, BNB_EID, 3, MIN_OPTIONS);
     vault.peer = peer; vault.bound = true;
     event::emit(Bound { vault: object::id(vault), peer });
 }
@@ -131,11 +135,17 @@ fun payload<T: key + store>(vault: &Vault<T>, kind: u8): vector<u8> {
         codec::encode(3, vault.route, vault.backing, vault.request, vault.recipient)
     }
 }
+fun execution_options(oapp: &OApp, kind: u8, extras: vector<u8>): vector<u8> {
+    let msg_type = if (kind == 1) { 1u16 } else { 3u16 };
+    assert!(oapp.combine_options(BNB_EID, msg_type, vector[]).length() > 2, EExecutionOptions);
+    oapp.combine_options(BNB_EID, msg_type, extras)
+}
 public fun quote<T: key + store>(vault: &Vault<T>, oapp: &OApp, kind: u8, options: vector<u8>, ctx: &mut TxContext): Call<QuoteParam, MessagingFee> {
-    validate(vault, oapp); oapp.quote(&vault.cap, BNB_EID, payload(vault, kind), options, false, ctx)
+    validate(vault, oapp); let message = payload(vault, kind); let options = execution_options(oapp, kind, options);
+    oapp.quote(&vault.cap, BNB_EID, message, options, false, ctx)
 }
 public fun send<T: key + store>(vault: &mut Vault<T>, oapp: &mut OApp, kind: u8, options: vector<u8>, fee: Coin<SUI>, ctx: &mut TxContext): Call<SendParam, MessagingReceipt> {
-    validate(vault, oapp); let message = payload(vault, kind);
+    validate(vault, oapp); let message = payload(vault, kind); let options = execution_options(oapp, kind, options);
     if (kind == 1) { vault.announced = true } else { vault.ack_sent = true };
     oapp.lz_send(&vault.cap, BNB_EID, message, options, fee, option::none(), option::some(ctx.sender()), ctx)
 }

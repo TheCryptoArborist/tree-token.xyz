@@ -16,7 +16,12 @@ same type also fail the ID check.
 The one-shot lifecycle is Unfunded (0) → Funded (1) → Released (2). Peer binding is
 required before funding. No reset, second slot, arbitrary withdrawal, public NFT
 constructor, mutable UID exposure, or backing-ID setter exists. A second deposit
-or source announcement aborts. A release requires the standard OApp/CallCap
+or source announcement aborts. Binding installs type-3 receive options with
+200,000 gas for reserve and acknowledgement message types. Both quote and send
+combine the administrator-enforced options with caller extras. Empty enforced
+policy and malformed extras abort before a one-shot send can be consumed.
+The paired BNB contract must still be profiled before funding; the administrator
+can raise its configured minimum. A release requires the standard OApp/CallCap
 endpoint authorization and exact BNB EID, fixed peer, protocol version, route,
 backing NFT ID, nonzero request and recipient. Identical delivery is idempotent;
 changed request/recipient abort. Source acknowledgement can be sent once and
@@ -68,7 +73,7 @@ simulation separately verifies the emitted dependency bindings. This is not a
 wallet migration or user instruction to install a CLI. The CI-only config helper
 refuses local execution and any existing wallet config; its keystores are empty.
 
-31 Move tests pass. Tests use locally created fixture NFTs, test registries with
+35 Move tests pass. Tests use locally created fixture NFTs, test registries with
 fixture identity, synthetic endpoint capabilities and a fixture announcement
 state. Additional tests exercise the actual source send guards. These establish
 custody/state/authentication-boundary behavior, **not real DVN verification,
@@ -84,8 +89,8 @@ non-SUI payments. The complete local JS regression run passed 215 checks.
 ## Mainnet simulation and remaining execution work
 
 Saved evidence is in `../../docs/multichain/one-slot-vault/`. The unsigned
-publication simulation passed, with estimated net gas **57,685,200 MIST**
-(0.0576852 SUI). No gas was spent. It creates the new package, empty Registry,
+publication simulation passed, with estimated net gas **59,767,600 MIST**
+(0.0597676 SUI). No gas was spent. It creates the new package, empty Registry,
 OApp and three dev-owned capabilities. Only the simulator's SUI gas accounting
 changes; NFTree #2720 is not a transaction input/effect. Its current owner/type
 were independently read on mainnet. Native type resolution also passed.
