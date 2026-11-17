@@ -7,7 +7,6 @@
   "realUsdtLocalFork": "passed",
   "mainnetTransactionsSubmitted": 0,
   "originalNftsMoved": 0,
-  "websiteDeployments": 0,
   "broadRootSuite": {
     "tests": 495,
     "passed": 478,
@@ -39,5 +38,23 @@
     "Local mainnet fork impersonates endpoint, does not verify DVNs",
     "Live arcade is not connected to this pass",
     "New actual Sui/BNB contract bindings and security configuration still required"
-  ]
+  ],
+  "productionWebsiteDeployments": 0,
+  "productionPublishedDeployVerified": "6afc8866ac4011918f250328",
+  "automaticBranchPreview": "6afc96f1d3bc2bb6f0828493",
+  "ci": {
+    "sourceCommit": "8b1c9603f8a675e47d770fbcf49ea60d20a1605a",
+    "bnb": {
+      "runId": 44143713208,
+      "conclusion": "success"
+    },
+    "sui": {
+      "runId": 44143712405,
+      "conclusion": "success"
+    },
+    "productionSnapshot": {
+      "runId": 44143712380,
+      "conclusion": "success"
+    }
+  }
 }
