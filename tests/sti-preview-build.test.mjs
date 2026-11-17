@@ -3,6 +3,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import test from 'node:test';
+import { upgradeHeartwood } from '../scripts/heartwood-v04/build.mjs';
 
 test('production build stays byte-exact and STI preview changes only reviewed files', () => {
   const root = new URL('../', import.meta.url);
@@ -75,7 +76,11 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
     assert.equal(digest(new URL(`dist${file.path}`, root)), file.sha1, `Production ${file.path}`);
     assert.equal(digest(new URL(`dist-preview${file.path}`, root)), [...overlays, ...additions].includes(file.path) ? digest(new URL(file.path.slice(1), root)) : file.sha1, `Preview ${file.path}`);
   }
-  for (const file of additions) assert.equal(digest(new URL(`dist-preview${file}`, root)), digest(new URL(file.slice(1), root)));
+  for (const file of additions) {
+    const source = readFileSync(new URL(file.slice(1), root));
+    const expected = file === '/play/heartwood-expedition/test/index.html' ? upgradeHeartwood(source.toString('utf8')) : source;
+    assert.equal(digest(new URL(`dist-preview${file}`, root)), createHash('sha1').update(expected).digest('hex'), `Exact reviewed preview addition ${file}`);
+  }
   const files = readdirSync(new URL('dist-preview/', root), { recursive: true, withFileTypes: true }).filter(f => f.isFile());
   assert.equal(files.length, new Set([...manifest.files.map(f => f.path), ...additions]).size);
   assert.ok(!files.some(f => /production|recovery|netlify\/functions/.test(f.parentPath.split('dist-preview')[1])));
