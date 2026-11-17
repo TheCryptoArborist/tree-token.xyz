@@ -1,4 +1,49 @@
-# Original NFTree trial: confirmed Sui Vault and BNB adapter
+# Original NFTree trial: confirmed Vault, BNB adapter and pass
+
+## Confirmed BNB suite-pass contract — 2026-11-17
+
+The user signed creation
+`0xe969a6c0eba78468776b97d1e98cfc9e3f5b3d2cbd91903bee10de48d1e5e717`.
+The actual suite-pass contract is
+`0x1d3da001E586a7DEFD397B77FADB29eD6F039c13`, nonce 336 from the designated
+BNB wallet ending 83ae. The published strict pass receipt validator passed:
+exact creation input/value/chain/sender/CREATE address, zero creation logs,
+reviewed runtime/immutables, fixed adapter/buyer/controller/route/currency/treasury/
+price/token/backing getters, Unconfirmed state, paused purchases, zero redemption/
+recipient and zero buyer token balance. No pass token has been minted. Actual
+gas was 2,033,615 at 0.05 gwei: 0.00010168075 BNB. Creation charged no USDT.
+
+The actual adapter receipt/runtime/initial storage/delegate and BNB USDT code/
+18 decimals were rechecked. The adapter pass pointer is still zero. Fresh Sui
+GraphQL reads confirmed the exact Vault remains empty/unbound, #2720 remains
+directly dev-owned with unchanged version and digest, and all caps/OApp/compatible
+upgrade settings remain as reviewed. No original NFT deposit or sale is ready.
+Latest actual bindings are in `pass-bindings.json`. Earlier binding snapshots
+and unsigned creation artifacts remain frozen inputs to published bundles.
+
+The next `bindPass(actual pass)` call has been prepared against the actual adapter
+and simulated read-only on BNB mainnet at block 134185202. `eth_call` succeeded;
+`eth_estimateGas` returned 53,153 gas. At reference 0.05 gwei, estimated fee is
+0.00000265765 BNB. Reference nonce 337 and gas price must be refreshed before any
+wallet handoff. The intent sends zero native value and takes no USDT; the fixed
+25-USDT price and treasury are unchanged and purchases remain paused. The exact
+expected event is one adapter `PassBound` with the confirmed pass address.
+This is a simulation, not an actual state change or binding receipt.
+
+Next: prepare the isolated binding signing page; recheck source/adapter/pass
+state and exact code, wallet identity/nonce and gas; obtain the user's separate
+BNB approval; verify the exact event and actual adapter pass pointer. Fresh
+LayerZero registration/peer/library/DVN/executor verification still precedes any
+NFT deposit or purchase. Binding alone does not enable sales or live Arcade access.
+
+Evidence: `bnb-pass-receipt.json`, `bnb-pass-verified.json`, `pass-bindings.json`
+and `bnb-binding-unsigned.json`. Existing publication/slot/adapter/pass regression
+suite: 57 checks passed. No source contract, browser bundle, website, backend,
+runtime or schedule changed, and the assistant submitted no on-chain transaction.
+
+Guidance rechecked live for the current Sui reads:
+https://github.com/MystenLabs/skills/blob/main/accessing-data/SKILL.md
+https://github.com/MystenLabs/skills/blob/main/accessing-data/graphql.md
 
 ## Confirmed BNB adapter — 2026-11-17
 

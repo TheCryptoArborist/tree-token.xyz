@@ -1,0 +1,42 @@
+{
+  "status": "UNSIGNED_PASS_BINDING_SIMULATION_PASSED_NOT_SUBMITTED",
+  "checkedAt": "2026-11-17T20:41:34.346Z",
+  "chainId": "0x38",
+  "blockNumber": "134185202",
+  "from": "0x90f9c1c0c675a0ce9d539c540db7f4a1f7e583ae",
+  "to": "0x90b5292a5074CfDD665C726b433cc0A97e0dA6ab",
+  "data": "0x10265fa50000000000000000000000001d3da001e586a7defd397b77fadb29ed6f039c13",
+  "value": "0x0",
+  "dataSha256": "b0e08a9fe5bdb90e64b84070d0a07b7907132efeb38f8834fc957e29a541d8a3",
+  "pass": "0x1d3da001E586a7DEFD397B77FADB29eD6F039c13",
+  "adapter": "0x90b5292a5074CfDD665C726b433cc0A97e0dA6ab",
+  "passDigest": "0xe969a6c0eba78468776b97d1e98cfc9e3f5b3d2cbd91903bee10de48d1e5e717",
+  "peer": "0xac73072b94f14a87b23781c7004c77df6799fdee109f24271d4696bc4a6514a4",
+  "route": "0x45bf08499784ea9ff658937165a9449d509aa37de47a728af44e903387f3ca2c",
+  "nft": "0x046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba",
+  "controller": "0x90f9c1c0c675a0ce9d539c540db7f4a1f7e583ae",
+  "priceUnits": "25000000000000000000",
+  "treasury": "0xc440f06bbc7e58b0d055815f915447e4ae0e3720",
+  "currency": "0x55d398326f99059ff775485246999027b3197955",
+  "referenceNonce": "337",
+  "estimatedGas": "53153",
+  "referenceGasPriceWei": "50000000",
+  "referenceEstimatedFeeWei": "2657650000000",
+  "expectedEvent": {
+    "address": "0x90b5292a5074CfDD665C726b433cc0A97e0dA6ab",
+    "topics": [
+      "0x3916d079df018feca66a550908f671cff67410227b4a8c24f13531847e12b9c8",
+      "0x0000000000000000000000001d3da001e586a7defd397b77fadb29ed6f039c13"
+    ],
+    "data": "0x"
+  },
+  "expectedAdapterPassAfter": "0x1d3da001E586a7DEFD397B77FADB29eD6F039c13",
+  "purchasesRemainPaused": true,
+  "passTokenMinted": false,
+  "originalNftTransferred": false,
+  "usdtCharged": false,
+  "submitted": false,
+  "readyToFund": false,
+  "readyToSell": false,
+  "note": "Review-only bindPass intent. eth_call only; no actual state change. Refresh exact pass/adapter runtime and state, source Vault/NFT, wallet identity/nonce and gas before handoff. Bind receipt and fresh LayerZero route configuration must be verified before deposit or sale."
+}
