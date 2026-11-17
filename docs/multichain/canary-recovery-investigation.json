@@ -1,0 +1,541 @@
+{
+  "sourceReceipt": "5Uztr6gLvf9fSMNfFRSi2fTVTAHXC1rCSKSRwn4h8JQP",
+  "suiWorkerIdentity": {
+    "checkedAt": "2026-11-17T14:56:54.200Z",
+    "sui": {
+      "checkpoint": {
+        "sequenceNumber": 346244750,
+        "timestamp": "2026-11-17T14:56:49.418Z"
+      },
+      "worker": {
+        "address": "0xfa35508c624925c6f341113f8f9397e5f41750b833af87d0c945a6f5682887f0",
+        "owner": {
+          "__typename": "Shared",
+          "initialSharedVersion": 859689627
+        },
+        "asMoveObject": {
+          "contents": {
+            "type": {
+              "repr": "0x60d4ef2e0e057d19e947406ccec3ac4d0208adc8e1981964ab2552166a30f461::dvn::DVN"
+            },
+            "json": {
+              "id": "0xfa35508c624925c6f341113f8f9397e5f41750b833af87d0c945a6f5682887f0",
+              "vid": 378,
+              "worker": {
+                "deposit_address": "0x9004e1e4c6dcc42d1b73269db48d510192665677fcad2079a3c7d1e9e971d34e",
+                "message_libs": {
+                  "contents": [
+                    "0x3ce7457bed48ad23ee5d611dd3172ae4fbd0a22ea0e846782a7af224d905dbb0"
+                  ]
+                },
+                "worker_fee_lib": "0xc3213e769e222f573edb14c63bf11b6481f3d3b66f2206f5911be07032390883",
+                "price_feed": "0xea932d79771b24103a1cda8e87a65068d6116c047f9dccc3e487cf8316625576",
+                "default_multiplier_bps": 12000,
+                "paused": false,
+                "allowlist": {
+                  "contents": []
+                },
+                "denylist": {
+                  "contents": []
+                },
+                "supported_option_types": {
+                  "id": "0x804053c57e1dada0faa78fcdd868ed6fad09f0234a01e6f7e0b84b0710e74bc3",
+                  "size": "0"
+                },
+                "worker_cap": {
+                  "id": "0xccadfe0d875acd7391a696292cff2368b9032ea59837cb6edfa4599789b729a7",
+                  "cap_type": {
+                    "@variant": "Package",
+                    "pos0": "0x5ddd0e7338d03f52e98831b52ca28e09a145a0495eea80fe46c4a4b88a69278a"
+                  }
+                },
+                "admin_registry": {
+                  "active_admins": {
+                    "contents": [
+                      "0x9004e1e4c6dcc42d1b73269db48d510192665677fcad2079a3c7d1e9e971d34e"
+                    ]
+                  },
+                  "admin_to_admin_cap_id": {
+                    "id": "0x59e6d87d1435e082dead2010eb9cbcfb959c3596e9266fd03159803ea3b9e248",
+                    "size": "1"
+                  },
+                  "admin_cap_status": {
+                    "id": "0x988057b2e38a38832d017c9a3df01efa1751a3b4671b685f4fb54599e94e706a",
+                    "size": "1"
+                  }
+                },
+                "owner_cap_id": "0xf69b34d39f34e0389c6e094e95802d07163d38efe182414cd36e04b09d1badb8"
+              },
+              "dst_configs": {
+                "id": "0xdf6e83c9f03f3912dd40ee6aac47e975046a6ef2ee925eb03fb2168083a3c3ff",
+                "size": "283"
+              },
+              "multisig": {
+                "signers": {
+                  "contents": [
+                    "vsR5iKcNK+ZTadY0G3jcyp48zJngA1dMioK/XK3eSz2f7cKqbLv5XX/XK24y4uCceK2ThgGAgQDwo6vqdBJO7Q=="
+                  ]
+                },
+                "quorum": "1"
+              },
+              "used_hashes": {
+                "id": "0xbcd2cedc77486eeb8e14a7b23bd48105a857e228c85c37e23c277bf52ffaaa45",
+                "size": "0"
+              },
+              "owner_cap": {
+                "id": "0xf69b34d39f34e0389c6e094e95802d07163d38efe182414cd36e04b09d1badb8"
+              },
+              "ptb_builder_initialized": true
+            }
+          }
+        }
+      },
+      "objectKeyPtb": {
+        "dynamicField": null
+      },
+      "capKeyPtb": {
+        "dynamicField": {
+          "value": {
+            "json": {
+              "get_fee_ptb": [
+                {
+                  "function": {
+                    "package": "0x60d4ef2e0e057d19e947406ccec3ac4d0208adc8e1981964ab2552166a30f461",
+                    "module_name": "dvn",
+                    "function_name": "get_fee"
+                  },
+                  "arguments": [
+                    {
+                      "@variant": "Object",
+                      "pos0": "0xfa35508c624925c6f341113f8f9397e5f41750b833af87d0c945a6f5682887f0"
+                    },
+                    {
+                      "@variant": "ID",
+                      "pos0": {
+                        "bytes": "Gs6WK/A2Soopb/xzOplyuq2r6puCyqaryJgZSi3FYZg="
+                      }
+                    }
+                  ],
+                  "type_arguments": [],
+                  "is_builder_call": false,
+                  "result_ids": []
+                },
+                {
+                  "function": {
+                    "package": "0xc3213e769e222f573edb14c63bf11b6481f3d3b66f2206f5911be07032390883",
+                    "module_name": "dvn_fee_lib",
+                    "function_name": "get_fee"
+                  },
+                  "arguments": [
+                    {
+                      "@variant": "Object",
+                      "pos0": "0x7f7ded52a6073633f8d642458b7899b0eaa7cd1ed7fb8098bd61730853afd3f7"
+                    },
+                    {
+                      "@variant": "NestedResult",
+                      "pos0": 0,
+                      "pos1": 0
+                    }
+                  ],
+                  "type_arguments": [],
+                  "is_builder_call": false,
+                  "result_ids": []
+                },
+                {
+                  "function": {
+                    "package": "0xea932d79771b24103a1cda8e87a65068d6116c047f9dccc3e487cf8316625576",
+                    "module_name": "price_feed",
+                    "function_name": "estimate_fee_by_eid"
+                  },
+                  "arguments": [
+                    {
+                      "@variant": "Object",
+                      "pos0": "0x492ac62cfb43eb1e858a877cf7a0cf396bf38bc1420c727c747ecc19cf9f4e5c"
+                    },
+                    {
+                      "@variant": "NestedResult",
+                      "pos0": 1,
+                      "pos1": 0
+                    }
+                  ],
+                  "type_arguments": [],
+                  "is_builder_call": false,
+                  "result_ids": []
+                },
+                {
+                  "function": {
+                    "package": "0xc3213e769e222f573edb14c63bf11b6481f3d3b66f2206f5911be07032390883",
+                    "module_name": "dvn_fee_lib",
+                    "function_name": "confirm_get_fee"
+                  },
+                  "arguments": [
+                    {
+                      "@variant": "Object",
+                      "pos0": "0x7f7ded52a6073633f8d642458b7899b0eaa7cd1ed7fb8098bd61730853afd3f7"
+                    },
+                    {
+                      "@variant": "NestedResult",
+                      "pos0": 0,
+                      "pos1": 0
+                    },
+                    {
+                      "@variant": "NestedResult",
+                      "pos0": 1,
+                      "pos1": 0
+                    }
+                  ],
+                  "type_arguments": [],
+                  "is_builder_call": false,
+                  "result_ids": []
+                },
+                {
+                  "function": {
+                    "package": "0x60d4ef2e0e057d19e947406ccec3ac4d0208adc8e1981964ab2552166a30f461",
+                    "module_name": "dvn",
+                    "function_name": "confirm_get_fee"
+                  },
+                  "arguments": [
+                    {
+                      "@variant": "Object",
+                      "pos0": "0xfa35508c624925c6f341113f8f9397e5f41750b833af87d0c945a6f5682887f0"
+                    },
+                    {
+                      "@variant": "ID",
+                      "pos0": {
+                        "bytes": "Gs6WK/A2Soopb/xzOplyuq2r6puCyqaryJgZSi3FYZg="
+                      }
+                    },
+                    {
+                      "@variant": "NestedResult",
+                      "pos0": 0,
+                      "pos1": 0
+                    }
+                  ],
+                  "type_arguments": [],
+                  "is_builder_call": false,
+                  "result_ids": []
+                }
+              ],
+              "assign_job_ptb": [
+                {
+                  "function": {
+                    "package": "0x60d4ef2e0e057d19e947406ccec3ac4d0208adc8e1981964ab2552166a30f461",
+                    "module_name": "dvn",
+                    "function_name": "assign_job"
+                  },
+                  "arguments": [
+                    {
+                      "@variant": "Object",
+                      "pos0": "0xfa35508c624925c6f341113f8f9397e5f41750b833af87d0c945a6f5682887f0"
+                    },
+                    {
+                      "@variant": "ID",
+                      "pos0": {
+                        "bytes": "iDtUCMbkTQ1tzjiMf93ccdq70uZYS7nsFBeKNkn4wCo="
+                      }
+                    }
+                  ],
+                  "type_arguments": [],
+                  "is_builder_call": false,
+                  "result_ids": []
+                },
+                {
+                  "function": {
+                    "package": "0xc3213e769e222f573edb14c63bf11b6481f3d3b66f2206f5911be07032390883",
+                    "module_name": "dvn_fee_lib",
+                    "function_name": "get_fee"
+                  },
+                  "arguments": [
+                    {
+                      "@variant": "Object",
+                      "pos0": "0x7f7ded52a6073633f8d642458b7899b0eaa7cd1ed7fb8098bd61730853afd3f7"
+                    },
+                    {
+                      "@variant": "NestedResult",
+                      "pos0": 0,
+                      "pos1": 0
+                    }
+                  ],
+                  "type_arguments": [],
+                  "is_builder_call": false,
+                  "result_ids": []
+                },
+                {
+                  "function": {
+                    "package": "0xea932d79771b24103a1cda8e87a65068d6116c047f9dccc3e487cf8316625576",
+                    "module_name": "price_feed",
+                    "function_name": "estimate_fee_by_eid"
+                  },
+                  "arguments": [
+                    {
+                      "@variant": "Object",
+                      "pos0": "0x492ac62cfb43eb1e858a877cf7a0cf396bf38bc1420c727c747ecc19cf9f4e5c"
+                    },
+                    {
+                      "@variant": "NestedResult",
+                      "pos0": 1,
+                      "pos1": 0
+                    }
+                  ],
+                  "type_arguments": [],
+                  "is_builder_call": false,
+                  "result_ids": []
+                },
+                {
+                  "function": {
+                    "package": "0xc3213e769e222f573edb14c63bf11b6481f3d3b66f2206f5911be07032390883",
+                    "module_name": "dvn_fee_lib",
+                    "function_name": "confirm_get_fee"
+                  },
+                  "arguments": [
+                    {
+                      "@variant": "Object",
+                      "pos0": "0x7f7ded52a6073633f8d642458b7899b0eaa7cd1ed7fb8098bd61730853afd3f7"
+                    },
+                    {
+                      "@variant": "NestedResult",
+                      "pos0": 0,
+                      "pos1": 0
+                    },
+                    {
+                      "@variant": "NestedResult",
+                      "pos0": 1,
+                      "pos1": 0
+                    }
+                  ],
+                  "type_arguments": [],
+                  "is_builder_call": false,
+                  "result_ids": []
+                },
+                {
+                  "function": {
+                    "package": "0x60d4ef2e0e057d19e947406ccec3ac4d0208adc8e1981964ab2552166a30f461",
+                    "module_name": "dvn",
+                    "function_name": "confirm_assign_job"
+                  },
+                  "arguments": [
+                    {
+                      "@variant": "Object",
+                      "pos0": "0xfa35508c624925c6f341113f8f9397e5f41750b833af87d0c945a6f5682887f0"
+                    },
+                    {
+                      "@variant": "ID",
+                      "pos0": {
+                        "bytes": "iDtUCMbkTQ1tzjiMf93ccdq70uZYS7nsFBeKNkn4wCo="
+                      }
+                    },
+                    {
+                      "@variant": "NestedResult",
+                      "pos0": 0,
+                      "pos1": 0
+                    }
+                  ],
+                  "type_arguments": [],
+                  "is_builder_call": false,
+                  "result_ids": []
+                }
+              ]
+            }
+          }
+        }
+      },
+      "objectKeyInfo": {
+        "dynamicField": null
+      },
+      "capKeyInfo": {
+        "dynamicField": {
+          "value": {
+            "json": "AAECIgAB+jVQjGJJJcbzQRE/j5OX5fQXULgzr4fQyUWm9Wgoh/A="
+          }
+        }
+      }
+    },
+    "publishedCanaryMetadata": {
+      "0xfa35508c624925c6f341113f8f9397e5f41750b833af87d0c945a6f5682887f0": {
+        "canonicalName": "Canary",
+        "id": "canary",
+        "version": 2
+      }
+    }
+  },
+  "bnbProofs": {
+    "checkedAt": "2026-11-17T14:55:56.303Z",
+    "headerHash": "0xc61ff6a0009c2319a702dd7716af56988001695778a8d15b4f0348afeaab2176",
+    "payloadHash": "0x082e0932f09b5bfeae11aaa39fcdd02e24cc3a430d004667fcc6c5f006538992",
+    "requiredConfirmations": 5,
+    "verifiers": [
+      {
+        "dvn": "0x247624e2143504730aec22912ed41f092498bef2",
+        "submitted": true,
+        "confirmations": "5"
+      },
+      {
+        "dvn": "0x31f748a368a893bdb5abb67ec95f232507601a73",
+        "submitted": true,
+        "confirmations": "5"
+      },
+      {
+        "dvn": "0xfa9ba83c102283958b997adc8b44ed3a3cdb5dda",
+        "submitted": false,
+        "confirmations": "0"
+      },
+      {
+        "dvn": "0xfd6865c841c2d64565562fcc7e05e619a30615f0",
+        "submitted": true,
+        "confirmations": "5"
+      }
+    ],
+    "verifiable": false
+  },
+  "scan": {
+    "data": [
+      {
+        "pathway": {
+          "srcEid": 30378,
+          "dstEid": 30102,
+          "sender": {
+            "address": "0x2f3671d48dd000a27fd466fd347796149f5cd30cb16e1d22d2d89466ffc3d900",
+            "chain": "sui"
+          },
+          "receiver": {
+            "address": "0xb4c471c1fb8e31ddcbb518277e97a4575fc74779",
+            "chain": "bsc"
+          },
+          "id": "30378-30102-0x2f3671d48dd000a27fd466fd347796149f5cd30cb16e1d22d2d89466ffc3d900-0xb4c471c1fb8e31ddcbb518277e97a4575fc74779",
+          "nonce": 1
+        },
+        "source": {
+          "status": "SUCCEEDED",
+          "tx": {
+            "txHash": "5Uztr6gLvf9fSMNfFRSi2fTVTAHXC1rCSKSRwn4h8JQP",
+            "blockHash": "9bEF1vqSyw4C3VNhEbaWt87vErKasEPiLAXErMAQFooM",
+            "blockNumber": "346242879",
+            "blockTimestamp": 1794926980,
+            "from": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+            "payload": "0x01014ae75e55799f0a4e34941503542990f1628f1b5881f0b3917bca4e255ce6b25bc07d792d3700dea38f695d843f7eefa2e9c81efdf8aaf7da5fd151e4c58ef26c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+            "readinessTimestamp": 1794926981,
+            "options": {
+              "lzReceive": {
+                "gas": "200000",
+                "value": "0"
+              },
+              "ordered": false
+            }
+          }
+        },
+        "destination": {
+          "nativeDrop": {
+            "status": "N/A"
+          },
+          "lzCompose": {
+            "status": "N/A"
+          },
+          "status": "WAITING"
+        },
+        "verification": {
+          "dvn": {
+            "dvns": {
+              "0x247624e2143504730aec22912ed41f092498bef2": {
+                "txHash": "0x165f8d7522f1747d23e9e4dd8d43bcb51e33ade1cdb4d6e38652dc094fb4386e",
+                "blockHash": "0xc612a94d000f859ab1de10df87adc986bd9b790c9b2c88f3936bfecb0cca6d2f",
+                "blockNumber": 134138384,
+                "blockTimestamp": 1794926989,
+                "proof": {
+                  "packetHeader": "0x010000000000000001000076aa2f3671d48dd000a27fd466fd347796149f5cd30cb16e1d22d2d89466ffc3d90000007596000000000000000000000000b4c471c1fb8e31ddcbb518277e97a4575fc74779",
+                  "payloadHash": "0x082e0932f09b5bfeae11aaa39fcdd02e24cc3a430d004667fcc6c5f006538992"
+                },
+                "status": "WAITING_FOR_ULN_CONFIG"
+              },
+              "0x31f748a368a893bdb5abb67ec95f232507601a73": {
+                "txHash": "0xa60ca9ac2829a7fb16be3115af0c25204fb0c087d1c2ca0b9fd6e8170510c0e3",
+                "blockHash": "0x3fe303d76719996ba6ffc4ac5c131bf8d77f016f18e2c8172435ea2daa3dbe20",
+                "blockNumber": 134138385,
+                "blockTimestamp": 1794926989,
+                "proof": {
+                  "packetHeader": "0x010000000000000001000076aa2f3671d48dd000a27fd466fd347796149f5cd30cb16e1d22d2d89466ffc3d90000007596000000000000000000000000b4c471c1fb8e31ddcbb518277e97a4575fc74779",
+                  "payloadHash": "0x082e0932f09b5bfeae11aaa39fcdd02e24cc3a430d004667fcc6c5f006538992"
+                },
+                "status": "WAITING_FOR_ULN_CONFIG"
+              },
+              "0xfd6865c841c2d64565562fcc7e05e619a30615f0": {
+                "txHash": "0x08f8f1236092e339048d62d055361e447648477de7f7871a60ef26f03b0bd75e",
+                "blockHash": "0x5e287b99a38df5cdacddd9499906193bb9e67418fd3182659a0f9bfff03e1b1c",
+                "blockNumber": 134138389,
+                "blockTimestamp": 1794926991,
+                "proof": {
+                  "packetHeader": "0x010000000000000001000076aa2f3671d48dd000a27fd466fd347796149f5cd30cb16e1d22d2d89466ffc3d90000007596000000000000000000000000b4c471c1fb8e31ddcbb518277e97a4575fc74779",
+                  "payloadHash": "0x082e0932f09b5bfeae11aaa39fcdd02e24cc3a430d004667fcc6c5f006538992"
+                },
+                "status": "WAITING_FOR_ULN_CONFIG"
+              },
+              "0xfa9ba83c102283958b997adc8b44ed3a3cdb5dda": {
+                "status": "WAITING"
+              }
+            },
+            "status": "WAITING"
+          },
+          "sealer": {
+            "status": "WAITING"
+          }
+        },
+        "guid": "0x6a21b3ef6075b49ae3bdb1b839554326695df0d71c949db5aa8898ffc7967f8f",
+        "config": {
+          "error": true,
+          "errorMessage": "Probable DVN mismatch, verify that the same DVNs are used on source and destination",
+          "dvnConfigError": true,
+          "receiveLibrary": "0xB217266c3A98C8B2709Ee26836C98cf12f6cCEC1",
+          "sendLibrary": "0x3ce7457bed48ad23ee5d611dd3172ae4fbd0a22ea0e846782a7af224d905dbb0",
+          "inboundConfig": {
+            "confirmations": 5,
+            "requiredDVNCount": 4,
+            "optionalDVNCount": 0,
+            "optionalDVNThreshold": 0,
+            "requiredDVNs": [
+              "0x247624e2143504730aec22912ed41f092498bef2",
+              "0x31f748a368a893bdb5abb67ec95f232507601a73",
+              "0xfa9ba83c102283958b997adc8b44ed3a3cdb5dda",
+              "0xfd6865c841c2d64565562fcc7e05e619a30615f0"
+            ],
+            "requiredDVNNames": [
+              "Horizen",
+              "Twinstake",
+              "Canary",
+              "LayerZero Labs"
+            ],
+            "optionalDVNs": [],
+            "optionalDVNNames": []
+          },
+          "outboundConfig": {
+            "confirmations": 5,
+            "requiredDVNCount": 4,
+            "optionalDVNCount": 0,
+            "optionalDVNThreshold": 0,
+            "requiredDVNs": [
+              "0x0c12321ebe562b8fb8a74e6d29f144ea199a8f31a4cea3a417ce72477f6dfebb",
+              "0x52aa129049de845353484868d1be6e2df6878b0ed2213d94d3c827309aeae685",
+              "0x5ddd0e7338d03f52e98831b52ca28e09a145a0495eea80fe46c4a4b88a69278a",
+              "0x92128a5edf4a0f696464de66d00986ef41b37faf705ceb3d9d9a4e5c306fbf91"
+            ],
+            "requiredDVNNames": [
+              "Twinstake",
+              "LayerZero Labs",
+              "unknown",
+              "Horizen"
+            ],
+            "optionalDVNs": [],
+            "optionalDVNNames": []
+          },
+          "ulnSendVersion": "V302",
+          "ulnReceiveVersion": "V302"
+        },
+        "status": {
+          "name": "BLOCKED",
+          "message": "Config error"
+        },
+        "created": "2026-11-17T14:49:45.000Z",
+        "updated": "2026-11-17T14:50:02.000Z"
+      }
+    ]
+  },
+  "conclusion": "Canary proof missing; worker identity metadata discrepancy confirmed; offchain refusal reason not established. Provider investigation requested in an unsent draft. No quorum changes or resend."
+}
