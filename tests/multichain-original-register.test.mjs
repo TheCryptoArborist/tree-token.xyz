@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';
-import {C,registration,verifyRegistration,readEndpoint,preflight,requestRegistration,recoverReceipt,readStoredState} from '../scripts/multichain/original-register-core.mjs';
+import {C,registration,verifyRegistration,readEndpoint,readBnb,preflight,requestRegistration,recoverReceipt,readStoredState} from '../scripts/multichain/original-register-core.mjs';
 const load=name=>JSON.parse(fs.readFileSync(new URL('../docs/multichain/original-trial/'+name,import.meta.url)));
 const copy=()=>structuredClone(load('registration-simulation.json')),digest='7HgETFSYiM4BZjvUEWirbKFc7SBwkS5CTpmusms9XSXJ';
 const state=()=>structuredClone(load('bnb-binding-verified.json').currentSuiObjects);
@@ -41,4 +41,8 @@ test('receipt recovery requires exact actual channel registry proof and unchange
 });
 test('new page exposes Slush connection and receipt controls and reuses existing pinned wallet integration',()=>{
  const base=new URL('../play/multichaintest/original/register/',import.meta.url),app=fs.readFileSync(new URL('app.js',base),'utf8'),html=fs.readFileSync(new URL('index.html',base),'utf8');for(const m of app.matchAll(/el\(['"]([^'"]+)['"]\)/g))assert(html.includes('id="'+m[1]+'"'),m[1]);assert(app.includes('../../setup/sui/ack/wallet-vendor.js'));assert(app.includes('autoConnect:false'));assert(app.includes('slushWalletConfig:null'));assert(html.includes('Open Slush to register LayerZero'));assert(html.includes('Purchases remain paused'));assert(!app.includes('requestSlot'));
+});
+
+test('an unavailable BNB binding receipt blocks rather than accepting partial verification',async()=>{
+ const methods=[];await assert.rejects(()=>readBnb(state(),{fetcher:async(_url,options)=>{const q=JSON.parse(options.body);methods.push(q.method);return {ok:true,json:async()=>({jsonrpc:'2.0',id:q.id,result:q.method==='eth_chainId'?'0x38':null})};}}),/unavailable or pending/);assert.deepEqual(methods,['eth_chainId','eth_getTransactionReceipt']);
 });

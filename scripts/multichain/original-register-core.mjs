@@ -39,7 +39,7 @@ export async function readBnb(state,{fetcher=fetch}={}){
  const methods=new Set(['eth_chainId','eth_getTransactionReceipt','eth_getTransactionByHash','eth_getCode','eth_call']);let id=0;
  const provider={request:async({method,params=[]})=>{if(method==='eth_accounts')return [B.from];check(methods.has(method),'Only public receipt/state reads allowed.');const r=await fetcher('https://bsc-rpc.publicnode.com',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({jsonrpc:'2.0',id:++id,method,params}),signal:AbortSignal.timeout(30000)});check(r.ok,'BNB public state lookup failed.');const x=await r.json();check(!x.error,'BNB public state read failed.');return x.result;}};
  // This checks the historical public transaction sender, not a connected BNB wallet.
- return verifyBinding(provider,C.bindingDigest,{readState:(p,o)=>readContracts(p,{...o,source:async()=>state})});
+ const proof=await verifyBinding(provider,C.bindingDigest,{readState:(p,o)=>readContracts(p,{...o,source:async()=>state})});check(proof.status==='verified','The confirmed BNB binding receipt is unavailable or pending. Try the checks again later.');return proof;
 }
 export async function preflight(address,{client=newClient(),bnb=readBnb,source=readSui,now=Date.now}={}){
  const state=await source(client);await Promise.all([readEndpoint(client),bnb(state)]);const transaction=registration(address,state);
