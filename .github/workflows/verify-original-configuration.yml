@@ -1,0 +1,45 @@
+name: Verify original-NFT Sui route configuration page
+on:
+  pull_request:
+    paths:
+      - 'scripts/multichain/original-bnb-pass-core.mjs'
+      - 'scripts/multichain/original-bnb-bind-core.mjs'
+      - 'scripts/multichain/original-register-core.mjs'
+      - 'scripts/multichain/original-config-core.mjs'
+      - 'scripts/multichain/original-config-encoding.mjs'
+      - 'scripts/multichain/config-encoding.mjs'
+      - 'scripts/multichain/config-identities.mjs'
+      - 'scripts/multichain/verify-original-pass-build.mjs'
+      - 'scripts/multichain/original-bnb-core.mjs'
+      - 'scripts/multichain/original-slot-core.mjs'
+      - 'scripts/multichain/original-publish-core.mjs'
+      - 'docs/multichain/original-trial/**'
+      - 'docs/multichain/bnb-one-slot/reviewed-artifacts.json'
+      - 'contracts/bnb-one-slot/**'
+      - 'play/multichaintest/original/configure/**'
+      - 'tests/multichain-original-config.test.mjs'
+      - '.github/workflows/verify-original-configuration.yml'
+permissions:
+  contents: read
+jobs:
+  configuration:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci --ignore-scripts
+      - run: npm ci --ignore-scripts --prefix contracts/bnb-one-slot
+      - run: node contracts/bnb-one-slot/scripts/review-artifacts.mjs --check
+      - run: node scripts/multichain/verify-original-pass-build.mjs
+      - run: node --test tests/multichain-original-config.test.mjs tests/multichain-original-bnb.test.mjs tests/multichain-original-slot.test.mjs tests/multichain-original-publish.test.mjs
+      - run: npm test --prefix contracts/bnb-one-slot
+      - run: |
+          node_modules/.bin/esbuild scripts/multichain/original-config-core.mjs --bundle --format=esm --platform=browser --target=es2022 --minify --outfile=/tmp/pass-core.js
+          cmp /tmp/pass-core.js play/multichaintest/original/configure/core.js
+          node --check play/multichaintest/original/configure/app.js
+          git diff --check

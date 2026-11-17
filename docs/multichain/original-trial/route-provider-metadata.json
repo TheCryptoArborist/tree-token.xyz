@@ -1,0 +1,99 @@
+{
+  "source": "https://metadata.layerzero-api.com/v1/metadata/deployments",
+  "checkedAt": "2026-11-17T21:43:19.912589+00:00",
+  "chains": {
+    "sui-mainnet": {
+      "deployments": [
+        {
+          "version": 2,
+          "eid": "30378",
+          "stage": "mainnet",
+          "chainKey": "sui",
+          "endpointV2": {
+            "address": "0x31beaef889b08b9c3b37d19280fc1f8b75bae5b2de2410fc3120f403e9a36dac"
+          },
+          "executor": {
+            "address": "0xde7fe1a6648d587fcc991f124f3aa5b6389340610804108094d5c5fbf61d1989"
+          },
+          "receiveUln302": {
+            "address": "0x3ce7457bed48ad23ee5d611dd3172ae4fbd0a22ea0e846782a7af224d905dbb0"
+          },
+          "sendUln302": {
+            "address": "0x3ce7457bed48ad23ee5d611dd3172ae4fbd0a22ea0e846782a7af224d905dbb0"
+          }
+        }
+      ],
+      "dvns": {
+        "0x52aa129049de845353484868d1be6e2df6878b0ed2213d94d3c827309aeae685": {
+          "canonicalName": "LayerZero Labs",
+          "id": "layerzero-labs",
+          "version": 2
+        },
+        "0x0c12321ebe562b8fb8a74e6d29f144ea199a8f31a4cea3a417ce72477f6dfebb": {
+          "canonicalName": "Twinstake",
+          "id": "nethermind",
+          "version": 2
+        },
+        "0x92128a5edf4a0f696464de66d00986ef41b37faf705ceb3d9d9a4e5c306fbf91": {
+          "canonicalName": "Horizen",
+          "id": "horizen-labs",
+          "version": 2
+        }
+      }
+    },
+    "bsc-mainnet": {
+      "deployments": [
+        {
+          "version": 2,
+          "eid": "30102",
+          "stage": "mainnet",
+          "chainKey": "bsc",
+          "blockedMessageLib": {
+            "address": "0x1ccbf0db9c192d969de57e25b3ff09a25bb1d862"
+          },
+          "deadDVN": {
+            "address": "0xe9b5e4f9395a60799f4f608ba3abebdfc0ee6d9c"
+          },
+          "endpointV2": {
+            "address": "0x1a44076050125825900e736c501f859c50fe728c"
+          },
+          "endpointV2View": {
+            "address": "0x40b36b785a6872b40cd6957ce211e515e1be1081"
+          },
+          "executor": {
+            "address": "0x3ebd570ed38b1b3b4bc886999fcf507e9d584859"
+          },
+          "lzExecutor": {
+            "address": "0x821a99c061c00f6c9da0302aaec348945ba40284"
+          },
+          "readLib1002": {
+            "address": "0x37375049cdc522bd6baeebf527a42d54688d784c"
+          },
+          "receiveUln302": {
+            "address": "0xb217266c3a98c8b2709ee26836c98cf12f6ccec1"
+          },
+          "sendUln302": {
+            "address": "0x9f8c645f2d0b2159767bd6e0839de4be49e823de"
+          }
+        }
+      ],
+      "dvns": {
+        "0xfd6865c841c2d64565562fcc7e05e619a30615f0": {
+          "canonicalName": "LayerZero Labs",
+          "id": "layerzero-labs",
+          "version": 2
+        },
+        "0x31f748a368a893bdb5abb67ec95f232507601a73": {
+          "canonicalName": "Twinstake",
+          "id": "nethermind",
+          "version": 2
+        },
+        "0x247624e2143504730aec22912ed41f092498bef2": {
+          "canonicalName": "Horizen",
+          "id": "horizen-labs",
+          "version": 2
+        }
+      }
+    }
+  }
+}
