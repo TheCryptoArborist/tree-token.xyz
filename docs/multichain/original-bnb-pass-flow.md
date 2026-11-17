@@ -87,3 +87,10 @@ The current MystenLabs/skills README and applicable `accessing-data/SKILL.md` an
 https://github.com/MystenLabs/skills/blob/main/accessing-data/SKILL.md
 https://github.com/MystenLabs/skills/blob/main/accessing-data/graphql.md
 The pinned SDK GraphQL interface and existing wallet integration are reused.
+
+## Confirmed page publication
+
+Locked deploy `6afcb8faa4752b6b52595145` serves the canonical signing page.
+Release evidence is `original-bnb-pass-page-release.json`. Connect BNB wallet
+ending 83ae, simulate, review, approve creation, check the receipt and return
+its transaction hash. Website publication does not deploy or mint a pass.

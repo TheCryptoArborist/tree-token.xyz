@@ -1,3 +1,38 @@
+# Current production — original NFTree suite-pass page, 2026-11-17
+
+Locked deploy `6afcb8faa4752b6b52595145`, published at 20:29:16 UTC, source
+`72fb54181eeeab41a012e6b1405e6cd61f304ee2`, workflow `44169558421`.
+Canonical isolated page: `/play/multichaintest/original/bnb/pass/`.
+
+Exactly three files were added. All 586 existing paths remain byte-identical;
+total inventory is 589 paths, 49 complete backend packages and five schedules.
+Full package/provider/runtime identities, routes, region overrides, protected
+environment fingerprints and production lock were verified. No backend upload,
+migration or assistant-submitted on-chain transaction occurred.
+
+This page creates the reviewed suite-pass contract against confirmed adapter
+`0x90b5292a5074CfDD665C726b433cc0A97e0dA6ab` from BNB wallet ending 83ae.
+The constructor fixes the adapter, initial buyer/controller and actual Vault
+route; price is 25 USDT to the designated treasury and purchases start paused.
+Creation mints no pass token, takes no USDT and deposits no NFT. Fresh source/
+adapter/currency/endpoint/identity/nonce/runtime/gas checks and durable Web Locks/
+receipt recovery guard wallet approval. The original published signing pages,
+wallet helpers, contract source and dependency locks are unchanged.
+
+244 focused checks and 14 EVM contract tests passed. Exact bundle reproduction,
+pinned artifact/immutable-semantic checks and all source CI passed. Automated
+review of `c6e3811` completed without findings. Actual canonical rendering,
+expanded adapter/price/treasury bindings, visible connection controls, no-extension
+feedback and disconnected signing guards were checked. The cloud browser had no
+BNB wallet extension; actual user signature remains the next action in Brave.
+No wallet signature or transaction request was submitted by the assistant.
+
+Release record: `docs/multichain/original-bnb-pass-page-release.json`.
+Flow, fixed settings and remaining approvals: `docs/multichain/original-bnb-pass-flow.md`.
+Future releases must capture this actual current inventory afresh.
+
+---
+
 # Current production — original NFTree BNB adapter page, 2026-11-17
 
 Locked deploy `6afcb1e59274eb1f9d9a58c7`, published at 19:59:00 UTC, source
