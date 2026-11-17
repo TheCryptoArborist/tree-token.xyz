@@ -1,3 +1,42 @@
+# Current production — original NFTree deposit page, 2026-11-17
+
+Locked ready deploy `6afce679fb554257af0b2c57`, verified at 23:43:26 UTC, source
+`b629eefa6b9d11f14ba71523c58b7da360a995d2`, workflow `44201601429`.
+Canonical isolated page: `/play/multichaintest/original/fund/`.
+
+Exactly three files were added. All 604 previous paths remain byte-identical;
+total inventory is 607 static paths, 49 complete backend packages and five
+schedules. Full package/provider/runtime records, protected configuration and
+environment fingerprints, canonical delivery and production lock were verified.
+Release proof: `docs/multichain/original-sui-deposit-page-release.json`.
+
+The actual Sui peer-binding receipt is verified. Fresh mainnet preflight checks
+all signed source and BNB configuration/binding receipts, both fee routes and
+the exact unsigned NFT deposit. One generic vault::fund command wraps original
+NFTree #2720, borrowing the matching dev-held Vault AdminCap. The approval has
+no publish, upgrade, packet send, stablecoin payment, pass mint or activation.
+No actual deposit or blockchain transaction was submitted by the assistant.
+Until Peter approves, #2720 remains dev-owned and the BNB pass paused/unminted.
+
+Custody terms are explicit before consent: no direct admin withdrawal or reset;
+return requires BNB-pass redemption and LayerZero delivery. Full simulated vault
+BCS preserves the original NFT metadata. Receipt recovery checks actual wrapping
+and full funded/unannounced vault state, authorities, protocol and unused channel.
+Estimated gross gas is 7,502,400 MIST, with a storage rebate yielding net credit
+947,955 MIST. Gross usage and selected budget above 0.1 SUI are blocked.
+
+377 focused tests including 25 deposit tests and the preview/preserved build
+passed. All repository checks passed; automated review of `c9cde595b22ebb6336e59e7a0a9a122029f2467f`
+completed with no findings. The exact browser bundle was reproduced and compared.
+The canonical page renders, displays correct bindings/custody terms, exposes
+connect and adjacent receipt recovery, reports missing Slush, and keeps signing
+disabled without a wallet and fresh simulation even if consent is checked.
+The test consent was cleared. No wallet signature was requested. Slush reputation
+clearance was not asserted. See `docs/multichain/original-sui-deposit-flow.md`
+for scope, quote limitations and current Mysten guidance used.
+
+---
+
 # Current production — original NFTree Sui peer binding, 2026-11-17
 
 Locked deploy `6afcde0a032ffec83290f366`, verified at 23:07:27 UTC, source

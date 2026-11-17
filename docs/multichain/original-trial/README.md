@@ -1,3 +1,12 @@
+## Original deposit page published, 2026-11-17
+
+Canonical `/play/multichaintest/original/fund/` is live on locked deploy
+`6afce679fb554257af0b2c57`. All 604 previous files, 49 complete backend packages
+and five schedules were preserved. Actual #2720 deposit awaits Peter's Slush
+approval; no original NFT moved during publication. The pass is paused/unminted.
+See [release evidence](../original-sui-deposit-page-release.json) and
+[custody/route scope](../original-sui-deposit-flow.md).
+
 ## Next approval prepared: original #2720 deposit
 
 Signed peer binding FCG2538WHkd7rTAiC2McJanEw2Dr84BiaGcXoNzZUwsu is verified. Read-only route fee checks and unsigned deposit/quote simulations pass. The isolated deposit stage is documented in [original-sui-deposit-flow.md](../original-sui-deposit-flow.md). No real NFT deposit, reserve packet, pass mint, sale or payment has been submitted by the assistant. Return from this one-shot vault requires the BNB-pass redemption route; no direct admin withdrawal exists.
