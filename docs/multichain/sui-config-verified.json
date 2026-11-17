@@ -1,0 +1,30 @@
+{
+  "digest": "9KDBT9PfyX8QLrxtaH5KkAVUgCKfhVa7V42kkvNUuomE",
+  "network": "sui:mainnet",
+  "status": "verified_success",
+  "checkpoint": {
+    "sequenceNumber": 346051309,
+    "timestamp": "2026-11-17T01:54:54.028Z"
+  },
+  "sender": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+  "feeMist": "14807141",
+  "checks": {
+    "exactReviewedInputsAndCommands": true,
+    "exactSevenEvents": true,
+    "liveApplicationLibraries": true,
+    "liveSendAndReceiveDvns": true,
+    "liveExecutor": true,
+    "liveMetadata": true,
+    "adminOwnershipUnchanged": true,
+    "bridgeOappChannelStateUnchanged": true
+  },
+  "limitations": [
+    "BNB configuration remains pending.",
+    "No cross-chain packet has been sent.",
+    "Original NFTree collection is outside this disposable-NFT pilot."
+  ],
+  "guidance": [
+    "MystenLabs/skills/accessing-data/SKILL.md",
+    "MystenLabs/skills/accessing-data/graphql.md"
+  ]
+}
