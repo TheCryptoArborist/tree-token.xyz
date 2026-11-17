@@ -1,0 +1,38 @@
+{
+  "checkedAt": "2026-11-17T16:03:34.019Z",
+  "network": "BNB Smart Chain mainnet",
+  "status": "verified_purchase_complete",
+  "buyer": "0x90f9c1c0c675a0ce9d539c540db7f4a1f7e583ae",
+  "treasury": "0xc440f06bbc7e58b0d055815f915447e4ae0e3720",
+  "currency": "0x55d398326f99059ff775485246999027b3197955",
+  "paidUSDT": "25",
+  "suiBackingCustodyAndThreeVerifierSettingsVerified": true,
+  "receipts": [
+    {
+      "status": "verified",
+      "hash": "0xa9ae1c36061552bbd85fa48bb8c7aaff9e2caf56dd8599e0c2702524ed04074e",
+      "action": "approve",
+      "nonce": "331",
+      "blockNumber": "0x7feef17",
+      "liveAction": "complete"
+    },
+    {
+      "status": "verified",
+      "hash": "0xd32b5fd6345c3fce1999ef16dfd470fc8c219e57ee352fed2423d37b8681d566",
+      "action": "buy",
+      "nonce": "332",
+      "blockNumber": "0x7feef48",
+      "liveAction": "complete"
+    }
+  ],
+  "live": {
+    "block": "0x7fef015",
+    "passState": "2",
+    "tokenBalance": "477150001000000000000",
+    "allowance": "0",
+    "passBalance": "1",
+    "canPlay": "1",
+    "owner": "0x90f9c1c0c675a0ce9d539c540db7f4a1f7e583ae",
+    "action": "complete"
+  }
+}
