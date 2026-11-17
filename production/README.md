@@ -1,3 +1,54 @@
+# Current production — original NFTree Sui route settings, 2026-11-17
+
+Locked deploy `6afcccb3950cd53f974fe3bf`, verified at 21:53:22 UTC, source
+`9ec421796921666d2501fae70940484648f681aa`, workflow `44184227223`.
+Canonical isolated page: `/play/multichaintest/original/configure/`.
+
+Exactly three files were added. All 595 existing paths remain byte-identical;
+total inventory is 598 paths, 49 complete backend packages and five schedules.
+Full package/provider/runtime records, protected configuration/environment
+fingerprints, canonical delivery and production lock were verified.
+
+The page prepares one Sui approval containing nine exact application settings
+calls: ULN302 send/receive libraries, the approved three required DVNs, no
+optional verifiers, 5 Sui / 20 BNB confirmations, executor and original-vault
+receive metadata. Only OApp AdminCap, endpoint, ULN, application registry field
+and four derived application configuration entries may change. Original NFTree
+#2720, empty/unbound Vault, VaultAdmin, original Registry, OApp, UpgradeCap and
+actual messaging channel remain protected. BNB pass stays paused and unminted.
+No NFT deposit, stablecoin charge, message, mint, peer bind or sale occurs here.
+
+The new 278-byte receive metadata targets original vault::lz_receive with the
+original collection NFT generic; the retired nongeneric pilot callback is not
+reused. Deployed Move metadata encoder and endpoint call-ID simulations matched
+independently. Current official metadata confirms the three selected classic
+DVN identities on Sui and BNB. Preflight rechecks source/publication/slot,
+actual signed registration, empty application settings and a verified BNB
+binding result. Full command/argument/pure-byte/effect/event checks, fresh quote,
+wallet identity/network/epoch and durable Web Locks guard wallet handoff.
+Exact receipt recovery also checks actual live configured values.
+
+290 focused tests, 14 EVM tests, pinned artifact and exact bundle checks passed.
+Unsigned checked mainnet simulation passed with net gas 14,951,541 MIST
+(0.014951541 SUI). Slush selects final gas. Automated review of
+`2dff1e7ddff344fcc65aa6f59a361291f483ca1d` completed without findings;
+all source CI passed.
+
+Canonical title, expanded original bindings/three verifier rules, visible Slush
+connection/receipt controls, missing-extension feedback and disconnected signing
+guards were checked. Cloud browser has no Slush extension and requested no
+signature. Actual on-chain configuration remains Peter's next approval in Brave.
+The assistant submitted no transaction.
+
+Release record: `docs/multichain/original-sui-route-page-release.json`.
+Flow: `docs/multichain/original-sui-route-flow.md`.
+Capture this current full inventory afresh before future publication. Freeze
+all current signing snapshots and bundles. After verifying the actual Sui
+settings receipt, prepare matching BNB configuration and Sui peer binding.
+Complete route verification must precede original NFT deposit or sale.
+
+---
+
 # Current production — original NFTree LayerZero registration, 2026-11-17
 
 Locked deploy `6afcc6048594a4fe92aee28d`, verified at 21:24:55 UTC, source
