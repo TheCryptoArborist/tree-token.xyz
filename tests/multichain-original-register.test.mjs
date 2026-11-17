@@ -46,3 +46,10 @@ test('new page exposes Slush connection and receipt controls and reuses existing
 test('an unavailable BNB binding receipt blocks rather than accepting partial verification',async()=>{
  const methods=[];await assert.rejects(()=>readBnb(state(),{fetcher:async(_url,options)=>{const q=JSON.parse(options.body);methods.push(q.method);return {ok:true,json:async()=>({jsonrpc:'2.0',id:q.id,result:q.method==='eth_chainId'?'0x38':null})};}}),/unavailable or pending/);assert.deepEqual(methods,['eth_chainId','eth_getTransactionReceipt']);
 });
+test('actual user-signed mainnet registration matches the reviewed transaction and effects',()=>{
+ const r=load('registration-receipt.json'),proof=verifyRegistration(r);
+ assert.equal(r.Transaction.digest,'5bmbJkDF9Z8EAkSbHeq2G7dXhPPjvFZ1gJ5yf5Jam4Pc');
+ assert.equal(proof.channelId,'0x0d376ab0c11fcbdfa480d4a691c9f7b5d00cc2249692e2949d26d32dafbf8aef');
+ assert.equal(proof.registryEntryId,'0x2b68c14ea35bd0b208560bcbb9b29ac4e3382f9f46280b1ec4536e5fbeb7bea3');
+ assert.equal(proof.gasMist,'4668124');
+});
