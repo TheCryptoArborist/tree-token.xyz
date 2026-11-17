@@ -1,4 +1,51 @@
-# Original NFTree trial: confirmed publication and empty Vault
+# Original NFTree trial: confirmed Sui Vault and BNB adapter
+
+## Confirmed BNB adapter — 2026-11-17
+
+The user signed BNB mainnet creation
+`0x2bea9fd423d794de83f04c18381dc345ebf008d0a845a425ccb5c919beeca0ca`.
+The adapter is `0x90b5292a5074CfDD665C726b433cc0A97e0dA6ab`, nonce 335 from
+the designated BNB wallet ending 83ae. The published page's strict receipt
+validator passed against the actual receipt, exact creation input/value/chain,
+CREATE address, Endpoint DelegateSet event, exact reviewed runtime/immutables,
+initial adapter getters and live endpoint delegation. Actual gas was 1,551,602
+at 0.05 gwei: 0.0000775801 BNB. No USDT payment or NFT transfer occurred.
+
+Fresh Sui GraphQL reads verified original #2720 is still directly dev-owned with
+unchanged version/digest. The actual Vault is empty and unbound, all admin caps
+remain dev-owned and the OApp/compatible upgrade configuration is unchanged.
+The adapter has no pass bound, redemptionGas=30,000,000, redemptionSent=false,
+and the confirmed original package peer and actual Vault route. Latest actual
+bindings are in `adapter-bindings.json`. Prior `bindings.json` and
+`slot-bindings.json` remain frozen for published browser-bundle reproducibility.
+
+The next suite-pass constructor has been prepared against this actual adapter.
+Read-only BNB mainnet simulation at block 134180571 passed and returned the exact
+reviewed runtime with adapter, initial buyer, controller and Vault route values.
+The pinned compiler AST independently mapped immutable references 870=adapter,
+872=initialBuyer, 874=controller and 876=route. Reference nonce 336 and predicted
+address are review-only and must be refreshed before any wallet handoff.
+`eth_estimateGas` returned 2,050,922 gas; at reference 0.05 gwei this is
+0.0001025461 BNB. No pass contract has been deployed or token minted by this check.
+
+The pass is designed as one transferable token, with the initial sale paused,
+priced at 25 BNB USDT (18 decimals), paid directly to treasury
+`0xC440F06BBC7e58b0d055815f915447e4ae0E3720`. The intended initial buyer and
+controller remain the designated BNB wallet ending 83ae. Creation itself sends
+zero BNB value and takes no USDT; only deployment gas is paid at signing.
+
+Next: prepare the isolated suite-pass signing page, refresh current Sui/adapter
+state and wallet nonce/fee, then verify the user-signed creation. Binding and
+fresh LayerZero registration/peer/library/DVN/executor verification remain
+separate approvals before any original NFT deposit or sale. The website and
+contracts were not changed while verifying this receipt. No assistant-submitted
+transaction, backend change or schedule change occurred.
+
+Evidence: `bnb-adapter-receipt.json`, `bnb-adapter-verified.json`,
+`adapter-bindings.json`, `bnb-pass-unsigned.json`. The existing publication/slot/
+adapter regression suite passed 42 checks. Live guidance rechecked:
+https://github.com/MystenLabs/skills/blob/main/accessing-data/SKILL.md
+https://github.com/MystenLabs/skills/blob/main/accessing-data/graphql.md
 
 ## Confirmed empty Vault — 2026-11-17
 
