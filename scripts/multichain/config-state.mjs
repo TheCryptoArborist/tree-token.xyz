@@ -1,0 +1,24 @@
+import {C} from './config-identities.mjs';
+const objectFields='address version digest owner{__typename ... on Shared{initialSharedVersion} ... on AddressOwner{address{address}}} asMoveObject{contents{type{repr} json}}';
+const u32='lnUAAA==';
+const pathKey=btoa(String.fromCharCode(...Uint8Array.from((C.package.slice(2)+'96750000').match(/../g),v=>parseInt(v,16))));
+const tables={libraries:['0xa2371851318b3ba333270daf696dedbc7b89a1107ca362643798c1789ce05a01','u32',u32],send:['0x2bd7d044d837b718a7852959c701c04e842e648cf9047b442d55c838846a13e5','u32',u32],receive:['0x5ddc28272722231ecef30237bb48715f128d6995b89a46db25cd9adae0140835','u32',u32],executor:['0x346b468d90db8743673c7ed4fdbe1c40f6a587aac6acc730b3a9bb86cf0919f4','u32',u32],appLibraries:['0x0e679b0fcc94fb07a5ec9a14712f8e35e0994b892e64a434e898450eb670e920',C.endpointPackage+'::message_lib_manager::OAppConfigKey',pathKey],appSend:['0xc53b8a5592cdeea1a7421d209ba5c70e6843d2911e5bb86ad9fb744d888eab60',C.ulnPackage+'::send_uln::OAppConfigKey',pathKey],appReceive:['0x0d89da4d00f46c4b1dab465a867e60eacbf646e56f8816ae55cd7b9495c1bb09',C.ulnPackage+'::receive_uln::OAppConfigKey',pathKey],appExecutor:['0x357a98886ef14de3d15e538a808b410cfe026f6b1f971bb2398978d56e4dc181',C.ulnPackage+'::send_uln::OAppConfigKey',pathKey]};
+export const STATE_QUERY='query { checkpoint{sequenceNumber timestamp} '+Object.entries({endpoint:C.endpoint,uln:C.uln,oapp:C.oapp,admin:C.admin,bridge:C.bridge,channel:C.channel,registration:'0xd9bf1f319f6bf7cb95bda0e82beb1ba31fd543f218ed3a246120231c7171e857'}).map(([n,a])=>`${n}:object(address:"${a}"){${objectFields}}`).join(' ')+' '+Object.entries(tables).map(([n,[a,t,b]])=>`${n}:address(address:"${a}"){dynamicField(name:{type:"${t}",bcs:"${b}"}){value{... on MoveValue{json}}}}`).join(' ')+'}';
+export const content=o=>o?.asMoveObject?.contents?.json;
+export const canonical=x=>JSON.stringify(x,(_,v)=>v&&typeof v==='object'&&!Array.isArray(v)?Object.fromEntries(Object.entries(v).sort(([a],[b])=>a.localeCompare(b))):v);
+const eq=(a,b,m)=>{if(canonical(a)!==canonical(b))throw Error(m);};
+export function validateState(s){
+ for(const [name,id,type] of [['endpoint',C.endpoint,C.endpointPackage+'::endpoint_v2::EndpointV2'],['uln',C.uln,C.ulnPackage+'::uln_302::Uln302'],['oapp',C.oapp,C.oappPackage+'::oapp::OApp'],['bridge',C.bridge,C.package+'::bridge::Bridge'],['channel',C.channel,C.endpointPackage+'::messaging_channel::MessagingChannel']]){
+  const o=s[name];if(o?.address!==id||o.owner?.__typename!=='Shared'||String(o.owner.initialSharedVersion)!==({endpoint:'635685314',uln:'635685319',oapp:'1',bridge:'1',channel:'1058683484'})[name]||o.asMoveObject?.contents?.type?.repr!==type)throw Error('Wrong '+name+' object or ownership.');
+ }
+ if(s.admin?.address!==C.admin||s.admin.owner?.address?.address!==C.sender||s.admin.asMoveObject?.contents?.type?.repr!==C.oappPackage+'::oapp::AdminCap'||content(s.oapp).admin_cap!==C.admin)throw Error('Connect the dev wallet that owns the matching OApp admin capability.');
+ const b=content(s.bridge),o=content(s.oapp),r=content(s.registration);
+ if(b.bound||b.released||b.nft?.id!==C.nft||b.oapp!==C.oapp||b.cap.cap_type.pos0!==C.package||o.oapp_cap.cap_type.pos0!==C.package||o.sending_call!==null||o.peer.peers.size!=='0'||o.enforced_options.options.size!=='0')throw Error('Pilot custody or sending state changed; review before configuration.');
+ if(content(s.channel).oapp!==C.package||content(s.channel).channels.size!=='0'||r.name!==C.package||r.value.messaging_channel!==C.channel||r.value.oapp_info!==''||r.value.delegate!=='0x'+'0'.repeat(64))throw Error('Registration state changed or already configured; do not resubmit.');
+ for(const n of ['appLibraries','appSend','appReceive','appExecutor'])if(s[n]?.dynamicField!==null)throw Error('Application-specific configuration already exists; verify its receipt before continuing.');
+ const v=n=>s[n]?.dynamicField?.value?.json;
+ eq(v('libraries')?.send_lib,C.ulnPackage,'Default send library changed.');eq(v('libraries')?.receive_lib,C.ulnPackage,'Default receive library changed.');
+ for(const [n,count] of [['send','5'],['receive','20']])eq(v(n),{confirmations:count,required_dvns:[...C.dvns],optional_dvns:[],optional_dvn_threshold:0},'Default '+n+' security changed.');
+ eq(v('executor'),{max_message_size:'10000',executor:C.executor},'Default executor changed.');
+}
+export async function readState(fetcher=fetch){const r=await fetcher(C.graphql,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:STATE_QUERY}),signal:AbortSignal.timeout(30000)});if(!r.ok)throw Error('Sui state lookup failed.');const x=await r.json();if(x.errors||!x.data)throw Error('Sui state could not be verified: '+JSON.stringify(x.errors??[]).slice(0,300));validateState(x.data);return x.data;}

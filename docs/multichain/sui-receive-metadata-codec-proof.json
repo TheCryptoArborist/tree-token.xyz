@@ -1,0 +1,8 @@
+{
+  "status": "ONCHAIN_CODEC_SIMULATION_MATCH",
+  "signed": false,
+  "executed": false,
+  "metadataBase64": "AAElpMGiaN1yYGdVjI7drF72JLJQczbs7H1Kwf1FU8vXiQCdAQABAS82cdSN0ACif9Rm/TR3lhSfXNMMsW4dItLYlGb/w9kABmJyaWRnZQpsel9yZWNlaXZlAwFK515VeZ8KTjSUFQNUKZDxYo8bWIHws5F7yk4lXOayWwElpMGiaN1yYGdVjI7drF72JLJQczbs7H1Kwf1FU8vXiQAgZCAmFvdaVhSs+iZEGCWFISmetqiS7u6jkv7viUjH61MAAAAA",
+  "bytes": 195,
+  "receiveCallGlobalId": "64202616f75a5614acfa264418258521299eb6a892eeeea392feef8948c7eb53"
+}

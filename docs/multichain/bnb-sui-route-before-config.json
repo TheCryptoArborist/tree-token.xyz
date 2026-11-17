@@ -1,0 +1,48 @@
+{
+  "chainId": 56,
+  "blockNumber": 134033083,
+  "endpoint": {
+    "delegates": [
+      "0x90f9c1c0c675A0ce9D539c540DB7F4A1f7e583AE"
+    ],
+    "getSendLibrary": [
+      "0x9F8C645f2D0b2159767Bd6E0839DE4BE49e823DE"
+    ],
+    "getReceiveLibrary": [
+      "0xB217266c3A98C8B2709Ee26836C98cf12f6cCEC1",
+      true
+    ],
+    "defaultSendLibrary": [
+      "0x9F8C645f2D0b2159767Bd6E0839DE4BE49e823DE"
+    ],
+    "defaultReceiveLibrary": [
+      "0xB217266c3A98C8B2709Ee26836C98cf12f6cCEC1"
+    ]
+  },
+  "send": {
+    "confirmations": "20",
+    "requiredDVNs": [
+      "0x247624e2143504730aeC22912ed41F092498bEf2",
+      "0x31F748a368a893Bdb5aBB67ec95F232507601A73",
+      "0xfA9bA83C102283958B997Adc8B44ED3A3CdB5dDa",
+      "0xfD6865c841c2d64565562fCc7e05e619A30615f0"
+    ],
+    "optionalDVNs": [],
+    "optionalThreshold": 0
+  },
+  "receive": {
+    "confirmations": "5",
+    "requiredDVNs": [
+      "0x247624e2143504730aeC22912ed41F092498bEf2",
+      "0x31F748a368a893Bdb5aBB67ec95F232507601A73",
+      "0xfA9bA83C102283958B997Adc8B44ED3A3CdB5dDa",
+      "0xfD6865c841c2d64565562fCc7e05e619A30615f0"
+    ],
+    "optionalDVNs": [],
+    "optionalThreshold": 0
+  },
+  "executor": {
+    "maxMessageSize": 10000,
+    "executor": "0x3ebD570ed38B1b3b4BC886999fcF507e9D584859"
+  }
+}
