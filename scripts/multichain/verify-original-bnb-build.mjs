@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';import fs from 'node:fs';
+import solc from '../../contracts/bnb-one-slot/node_modules/solc/index.js';
+import {input,root} from '../../contracts/bnb-one-slot/scripts/compile.mjs';
+import reviewed from '../../docs/multichain/bnb-one-slot/reviewed-artifacts.json' with {type:'json'};
+input.settings.outputSelection['*']['']=['ast'];
+const output=JSON.parse(solc.compile(JSON.stringify(input),{import:p=>({contents:fs.readFileSync(root+'/node_modules/'+p,'utf8')})}));
+assert.deepEqual((output.errors??[]).filter(x=>x.severity==='error'),[]);
+const contract=output.sources['src/TreePassAdapter.sol'].ast.nodes.find(x=>x.nodeType==='ContractDefinition');
+const fields=Object.fromEntries(contract.nodes.filter(x=>x.mutability==='immutable').map(x=>[String(x.id),x.name]));
+assert.deepEqual(fields,{'61':'suiPeer','63':'route','65':'binder'});
+const a=output.contracts['src/TreePassAdapter.sol'].TreePassAdapter,r=reviewed.contracts.TreePassAdapter;
+assert.equal('0x'+a.evm.bytecode.object,r.creationBytecode);
+assert.equal('0x'+a.evm.deployedBytecode.object,r.runtimeTemplate);
+assert.deepEqual(a.evm.deployedBytecode.immutableReferences,r.immutableReferences);
+console.log('Pinned creation/runtime artifacts and semantic immutable layout verified.');
