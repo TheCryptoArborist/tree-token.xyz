@@ -8,8 +8,9 @@ const manifest = JSON.parse(await readFile(resolve(root, 'production/manifest.js
 const outputPath = file => file.path.slice(1);
 const allowed = new Set(manifest.files.map(file => outputPath(file).toLowerCase()));
 const additions = ['dapp/sti-widget.js', 'dapp/sti-purchase-core.js', 'dapp/sti-stats-core.js', 'dapp/challenge-funding-core.js', 'assets/sti-icon.svg', 'play/multichaintest/index.html', 'play/multichaintest/app.js', 'play/multichaintest/wallet-vendor.js', 'play/multichaintest/setup/index.html', 'play/multichaintest/setup/app.js', 'play/multichaintest/setup/bnb/index.html', 'play/multichaintest/setup/bnb/app.js', 'play/multichaintest/setup/bnb/core.js', 'play/multichaintest/setup/bnb/deployment.json', 'play/multichaintest/setup/bnb/pass/index.html', 'play/multichaintest/setup/bnb/pass/app.js', 'play/multichaintest/setup/bnb/pass/deployment.json', 'play/multichaintest/setup/bnb/bind/index.html', 'play/multichaintest/setup/bnb/bind/app.js', 'play/multichaintest/setup/bnb/bind/core.js', 'play/multichaintest/setup/bnb/bind/binding.json', 'play/multichaintest/setup/sui/register/index.html', 'play/multichaintest/setup/sui/register/app.js', 'play/multichaintest/setup/sui/register/core.js', 'play/multichaintest/setup/sui/register/wallet-vendor.js', 'play/multichaintest/setup/sui/configure/index.html', 'play/multichaintest/setup/sui/configure/app.js', 'play/multichaintest/setup/sui/configure/core.js', 'play/multichaintest/setup/sui/configure/wallet-vendor.js', 'play/multichaintest/setup/bnb/configure/index.html', 'play/multichaintest/setup/bnb/configure/app.js', 'play/multichaintest/setup/bnb/configure/core.js', 'play/multichaintest/setup/bnb/configure/configuration.json', 'play/multichaintest/setup/sui/bind/index.html', 'play/multichaintest/setup/sui/bind/app.js', 'play/multichaintest/setup/sui/bind/core.js', 'play/multichaintest/setup/sui/bind/wallet-vendor.js', 'play/multichaintest/setup/sui/reserve/index.html', 'play/multichaintest/setup/sui/reserve/app.js', 'play/multichaintest/setup/sui/reserve/core.js', 'play/multichaintest/setup/sui/reserve/wallet-vendor.js'];
+const privateArcadePaths = ['play/heart-of-africa-private/index.html', 'play/heartwood-expedition/test/index.html'];
 const overlays = ['dapp/v3-workspace.js', 'dapp/index.html', 'dapp/styles.css', 'dapp/panel-router.css', 'dapp/interaction-bootstrap.js', 'scripts/wallet.js', 'scripts/tree-knowledge-trial.js'];
-for (const file of additions) allowed.add(file);
+for (const file of [...additions, ...privateArcadePaths]) allowed.add(file);
 
 async function rejectUntrackedOutput(directory, prefix = '') {
   let entries;
@@ -33,7 +34,7 @@ for (const file of manifest.files) {
   await cp(resolve(root, file.source), destination);
 }
 
-for (const file of [...overlays, ...additions]) {
+for (const file of [...overlays, ...additions, ...privateArcadePaths]) {
   await mkdir(dirname(resolve(output, file)), { recursive: true });
   await cp(resolve(root, file), resolve(output, file));
 }
