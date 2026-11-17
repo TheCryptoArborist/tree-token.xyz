@@ -1,3 +1,32 @@
+# Current production — original NFTree empty-slot page, 2026-11-17
+
+Locked deploy `6afca1e2756277d1cf2ed161`, published at 18:50:45 UTC, source
+`38db1f6f311c4acc8bf444c45fbd3b4dc2297014`, workflow `44151963288`.
+Canonical isolated page: `/play/multichaintest/original/slot/`.
+
+Exactly three files were added. All 580 existing paths remain byte-identical;
+total inventory is 583 paths, 49 complete backend packages and five schedules.
+Existing provider/runtime records, package digests, routes, region overrides,
+protected environment fingerprints and production lock were verified unchanged.
+No backend upload, database migration or on-chain submission occurred.
+
+The page offers one `create_slot` call to the already confirmed original-NFT
+package from dev wallet ending 45c4. NFTree #2720 remains in that wallet. NFT
+deposit, BNB deployment and purchases are unavailable. A real unsigned mainnet
+preflight passed at 0.003832051 SUI estimated net gas. The wallet selects gas and
+shows its final budget. Actual creation requires the user's Slush signature.
+
+All source CI passed; automated review of `5bacec6` completed without findings.
+215 focused checks passed. The canonical page, disconnected signing guards and
+invalid receipt feedback were checked in the browser. The cloud browser had no
+user Slush extension; no wallet signature was requested.
+
+Release record: `docs/multichain/original-slot-page-release.json`.
+Flow, current bindings and next-stage constraints: `docs/multichain/original-slot-flow.md`.
+Future releases must capture this actual current inventory afresh.
+
+---
+
 # Current production — original NFTree trial publication page, 2026-11-17
 
 Locked deploy `6afc9ba2a979535dc510438e`, published at 18:23:53 UTC, source
