@@ -1,0 +1,21 @@
+{
+  "status": "UNSIGNED_PASS_PAGE_PREFLIGHT_PASSED",
+  "checkedAt": "2026-11-17T20:23:49.835Z",
+  "nonce": "336",
+  "predictedAddress": "0x1d3da001E586a7DEFD397B77FADB29eD6F039c13",
+  "gas": "2050922",
+  "gasLimit": "0x258db3",
+  "estimatedFeeWei": "102546100000000",
+  "gasLimitFeeWei": "123055350000000",
+  "quotedAt": 1794947029835,
+  "adapter": "0x90b5292a5074CfDD665C726b433cc0A97e0dA6ab",
+  "peer": "0xac73072b94f14a87b23781c7004c77df6799fdee109f24271d4696bc4a6514a4",
+  "route": "0x45bf08499784ea9ff658937165a9449d509aa37de47a728af44e903387f3ca2c",
+  "nft": "0x046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba",
+  "treasury": "0xc440f06bbc7e58b0d055815f915447e4ae0e3720",
+  "currency": "0x55d398326f99059ff775485246999027b3197955",
+  "priceUnits": "25000000000000000000",
+  "account": "0x90f9c1c0c675a0ce9d539c540db7f4a1f7e583ae",
+  "accountBasis": "Intended public BNB account used for simulation; actual extension identity must be checked in Brave",
+  "submitted": false
+}
