@@ -88,7 +88,9 @@ Tests cover initial sale, exact treasury payment, rollback and retries, maliciou
 ERC20/ERC721 callbacks, transfer/access behavior, authentication, replay and
 payload rejection, fixed gas/fees, failed send rollback and acknowledgement burn.
 Shared golden fixtures are checked by both Move and EVM tests. The production
-Sui bytecode remains byte-for-byte equal to the reviewed publication artifact.
+Sui artifact was rebuilt and freshly simulated after merged option validation was
+added; the codec is unchanged. Nonzero receive value, unsupported/malformed
+options and combined receive gas below 200,000 are rejected before source send.
 
 `node scripts/fork-smoke.mjs /tmp/proof.json` is an optional read-only-RPC local
 fork check. It keeps the real USDT code and buyer balance, locally funds gas,

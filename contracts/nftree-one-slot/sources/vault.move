@@ -138,7 +138,29 @@ fun payload<T: key + store>(vault: &Vault<T>, kind: u8): vector<u8> {
 fun execution_options(oapp: &OApp, kind: u8, extras: vector<u8>): vector<u8> {
     let msg_type = if (kind == 1) { 1u16 } else { 3u16 };
     assert!(oapp.combine_options(BNB_EID, msg_type, vector[]).length() > 2, EExecutionOptions);
-    oapp.combine_options(BNB_EID, msg_type, extras)
+    let combined = oapp.combine_options(BNB_EID, msg_type, extras);
+    // The BNB receiver accepts no native value. Restrict every merged option,
+    // including admin policy, before a permissionless one-shot send is consumed.
+    assert!(combined.length() >= 22 && combined[0] == 0 && combined[1] == 3, EExecutionOptions);
+    let mut offset = 2;
+    let mut total_gas = 0u128;
+    while (offset < combined.length()) {
+        assert!(offset + 4 <= combined.length(), EExecutionOptions);
+        let size = (combined[offset + 1] as u64) * 256 + (combined[offset + 2] as u64);
+        assert!(combined[offset] == 1 && combined[offset + 3] == 1, EExecutionOptions);
+        assert!((size == 17 || size == 33) && offset + 3 + size <= combined.length(), EExecutionOptions);
+        let mut gas = 0u128;
+        let mut i = 0;
+        while (i < 16) {
+            gas = (gas << 8) | (combined[offset + 4 + i] as u128);
+            if (size == 33) { assert!(combined[offset + 20 + i] == 0, EExecutionOptions) };
+            i = i + 1;
+        };
+        total_gas = total_gas + gas;
+        offset = offset + 3 + size;
+    };
+    assert!(total_gas >= 200_000, EExecutionOptions);
+    combined
 }
 public fun quote<T: key + store>(vault: &Vault<T>, oapp: &OApp, kind: u8, options: vector<u8>, ctx: &mut TxContext): Call<QuoteParam, MessagingFee> {
     validate(vault, oapp); let message = payload(vault, kind); let options = execution_options(oapp, kind, options);

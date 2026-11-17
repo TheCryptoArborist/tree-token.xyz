@@ -73,7 +73,7 @@ simulation separately verifies the emitted dependency bindings. This is not a
 wallet migration or user instruction to install a CLI. The CI-only config helper
 refuses local execution and any existing wallet config; its keystores are empty.
 
-36 Move tests pass. Tests use locally created fixture NFTs, test registries with
+43 Move tests pass. Tests use locally created fixture NFTs, test registries with
 fixture identity, synthetic endpoint capabilities and a fixture announcement
 state. Additional tests exercise the actual source send guards. These establish
 custody/state/authentication-boundary behavior, **not real DVN verification,
@@ -84,13 +84,13 @@ fixture Call destruction is test-only and not a deployable sending recipe.
 The release disassembly and build checks prove fixture constructors/bypasses are
 absent from mainnet bytecode. Five JS checks validate the unsigned publication and
 reject changed bytecode, dependencies, recipients, NFT effects, extra calls or
-non-SUI payments. The complete local JS regression run passed 215 checks.
+non-SUI payments. The focused multichain/publication/inventory regression run passed 186 checks.
 
 ## Mainnet simulation and remaining execution work
 
 Saved evidence is in `../../docs/multichain/one-slot-vault/`. The unsigned
-publication simulation passed, with estimated net gas **59,767,600 MIST**
-(0.0597676 SUI). No gas was spent. It creates the new package, empty Registry,
+publication simulation passed, with estimated net gas **63,750,000 MIST**
+(0.06375 SUI). No gas was spent. It creates the new package, empty Registry,
 OApp and three dev-owned capabilities. Only the simulator's SUI gas accounting
 changes; NFTree #2720 is not a transaction input/effect. Its current owner/type
 were independently read on mainnet. Native type resolution also passed.
@@ -123,3 +123,12 @@ naming-conventions/SKILL.md, ptbs/SKILL.md, ptbs/building.md, ptbs/commands.md,
 accessing-data/SKILL.md and accessing-data/graphql.md. Advice was checked against
 the pinned compiler, SDK and protocol source. The live arcade and its production
 functions/schedules are not modified by this branch.
+
+The paired-source review also requires validating all merged execution options:
+only Type-3 executor lzReceive entries with gas and absent/zero native value are
+accepted; combined receive gas must be at least 200,000. Unsupported workers,
+option types, malformed sizes, nonzero values and undersized admin policies fail
+in both quote and send before `announced`/`ack_sent` can be consumed. Seven new
+Move cases cover reserve/ack paths, admin policy and explicit zero-value options.
+Release vault bytecode was rebuilt and freshly simulated on mainnet without a
+signature or submission; the codec and BNB production artifacts are unchanged.

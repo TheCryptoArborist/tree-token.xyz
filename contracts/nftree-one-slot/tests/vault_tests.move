@@ -226,3 +226,52 @@ fun v2_wire_bytes_match_evm_golden_messages() {
     assert_eq!(kind, 3); assert_eq!(r, route); assert_eq!(n, nft);
     assert_eq!(req, request); assert_eq!(to, recipient);
 }
+
+#[test, expected_failure(abort_code = 12, location = vault)]
+fun reserve_send_rejects_nonzero_native_receive_value() {
+    let mut s = setup(true, false); let mut v = s.take_shared<Vault<NFT>>(); let mut o = s.take_shared<OApp>();
+    let options = x"000301002101000000000000000000000000000186a000000000000000000000000000000001";
+    let send = vault::send(&mut v, &mut o, 1, options, coin::zero<SUI>(s.ctx()), s.ctx()); destroy(send); abort 999
+}
+#[test, expected_failure(abort_code = 12, location = vault)]
+fun acknowledgement_quote_rejects_nonzero_native_receive_value() {
+    let mut s = setup(true, true); let mut v = s.take_shared<Vault<NFT>>(); let o = s.take_shared<OApp>();
+    let m = message(&v, request(), @0xD); deliver(&mut v, &o, endpoint_address(), 30102, peer(), m, s.ctx());
+    let options = x"000301002101000000000000000000000000000186a000000000000000000000000000000001";
+    let q = vault::quote(&v, &o, 3, options, s.ctx()); destroy(q); abort 999
+}
+#[test, expected_failure(abort_code = 12, location = vault)]
+fun admin_policy_cannot_attach_native_receive_value() {
+    let mut s = setup(true, false); let v = s.take_shared<Vault<NFT>>(); let mut o = s.take_shared<OApp>();
+    let a = s.take_from_sender<OAppAdminCap>();
+    o.set_enforced_options(&a, 30102, 1, x"00030100210100000000000000000000000000030d4000000000000000000000000000000001");
+    let q = vault::quote(&v, &o, 1, vector[], s.ctx()); destroy(q); abort 999
+}
+#[test, expected_failure(abort_code = 12, location = vault)]
+fun malformed_merged_option_is_rejected() {
+    let mut s = setup(true, false); let v = s.take_shared<Vault<NFT>>(); let o = s.take_shared<OApp>();
+    let q = vault::quote(&v, &o, 1, x"000301002101", s.ctx()); destroy(q); abort 999
+}
+#[test, expected_failure(abort_code = 12, location = vault)]
+fun unsupported_worker_option_is_rejected() {
+    let mut s = setup(true, false); let v = s.take_shared<Vault<NFT>>(); let o = s.take_shared<OApp>();
+    let q = vault::quote(&v, &o, 1, x"000302001101000000000000000000000000000186a0", s.ctx()); destroy(q); abort 999
+}
+#[test, expected_failure(abort_code = 12, location = vault)]
+fun admin_policy_below_receive_gas_floor_is_rejected() {
+    let mut s = setup(true, false); let v = s.take_shared<Vault<NFT>>(); let mut o = s.take_shared<OApp>();
+    let a = s.take_from_sender<OAppAdminCap>();
+    o.set_enforced_options(&a, 30102, 1, x"00030100110100000000000000000000000000000001");
+    let q = vault::quote(&v, &o, 1, vector[], s.ctx()); destroy(q); abort 999
+}
+#[test]
+fun explicit_zero_receive_value_preserves_quote_and_send_options() {
+    let mut s = setup(true, false); let mut v = s.take_shared<Vault<NFT>>(); let mut o = s.take_shared<OApp>();
+    let options = x"000301002101000000000000000000000000000186a000000000000000000000000000000000";
+    let expected = o.combine_options(30102, 1, options);
+    let q = vault::quote(&v, &o, 1, options, s.ctx());
+    let send = vault::send(&mut v, &mut o, 1, options, coin::zero<SUI>(s.ctx()), s.ctx());
+    assert_eq!(*endpoint_quote::options(call::param(&q)), expected);
+    assert_eq!(*endpoint_send::options(call::param(&send)), expected);
+    destroy(q); destroy(send); test_scenario::return_shared(v); test_scenario::return_shared(o); s.end();
+}
