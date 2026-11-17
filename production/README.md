@@ -1,3 +1,47 @@
+# Current production — original NFTree LayerZero registration, 2026-11-17
+
+Locked deploy `6afcc6048594a4fe92aee28d`, verified at 21:24:55 UTC, source
+`b0fc793e2d209daea4269dbc8e65f388760ed24e`, workflow `44179255810`.
+Canonical isolated page: `/play/multichaintest/original/register/`.
+
+Exactly three files were added. All 592 existing paths remain byte-identical;
+total inventory is 595 paths, 49 complete backend packages and five schedules.
+Full provider/package/runtime records, protected configuration/environment
+fingerprints, canonical delivery and production lock were verified.
+
+The page calls original vault::register with its actual Vault read-only, dev
+AdminCap, LayerZero endpoint and empty metadata. It creates a new messaging
+channel and typed registry entry for the package CallCap identity. Original
+NFTree #2720 stays dev-owned, the Vault remains empty/unbound and the BNB pass
+stays paused and unminted. No deposit, payment, cross-chain message or sale occurs.
+The assistant submitted no on-chain transaction; Peter's Slush approval is next.
+
+Fresh source/publication/slot/endpoint/absence/BNB binding checks, exact effects,
+two-minute review and durable Web Locks guard handoff. Receipt recovery verifies
+the actual channel and registration entry rather than a simulated ID. Public
+BNB receipt lookup must return verified status; a missing/pending receipt blocks.
+Review identified that missing-status guard; it was corrected and regression
+tested before release. Re-review of `6699eb6831c27d5afbf2a289a759e7fe6a994bbe`
+completed with no remaining findings. All source CI passed.
+
+274 focused tests, 14 EVM tests, pinned artifacts and exact bundle checks passed.
+A fresh unsigned checked mainnet simulation at 21:23:06 UTC confirmed net gas
+4,668,124 MIST (0.004668124 SUI). Slush selects final gas. Simulation channel IDs
+are provisional and must never become actual route configuration.
+
+Canonical title, expanded actual source/BNB/NFT bindings, visible connection and
+receipt controls, missing-extension feedback and disconnected signing guards
+were checked. The cloud browser has no Slush extension and requested no signature.
+
+Release record: `docs/multichain/original-registration-page-release.json`.
+Flow: `docs/multichain/original-registration-flow.md`.
+Capture this current full inventory afresh before future releases. After the
+user-signed registration, verify its actual receipt/channel, then configure and
+verify execution metadata, peers, libraries, DVNs and executor before funding
+or enabling a sale. Prior wallet bundles and signing snapshots remain frozen.
+
+---
+
 # Current production — original NFTree pass binding page, 2026-11-17
 
 Locked deploy `6afcbf06032b351187d30179`, verified at 20:55:04 UTC, source
