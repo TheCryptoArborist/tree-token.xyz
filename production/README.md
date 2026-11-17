@@ -1,3 +1,46 @@
+# Current production — original NFTree BNB route settings, 2026-11-17
+
+Locked deploy `6afcd3e553bde30fccc917df`, verified at 22:24:10 UTC, source
+`dce29e9ab89c86492f930270c8b7093db043a5c1`, workflow `44189472900`.
+Canonical isolated page: `/play/multichaintest/original/bnb/configure/`.
+
+Exactly three files were added. All 598 existing paths remain byte-identical;
+total inventory is 601 paths, 49 complete backend packages and five schedules.
+Full package/provider/runtime records, protected configuration/environment
+fingerprints, canonical delivery and production lock were verified.
+
+The page prepares four BNB approvals: explicit send and receive ULN302 libraries,
+send executor/security and receive security. All three classic DVNs must verify
+(Horizen, Twinstake, LayerZero Labs), with 20 BNB / 5 Sui confirmations and no
+optional verifiers. Each approval rechecks the signed Sui configuration, source
+NFT/empty Vault, confirmed BNB binding, paused/unminted pass, exact protocol
+code/settings, selected wallet account/network, fresh nonce and gas.
+Durable pending records block duplicate requests; exact receipt recovery accepts
+Speed Up replacement hashes only with the recorded nonce/stage/target/calldata.
+
+327 focused tests (19 new), 14 EVM tests, pinned artifact and exact bundle checks
+passed. All four unsigned mainnet calls simulated successfully. The complete
+sequence passed on an ephemeral local BNB fork with exact events and all five
+route states. No mainnet configuration transaction was submitted by the assistant.
+Automated review of `2c3ed9245fce128ec2b71979cd8bcdf1fe15c40f` completed
+without findings; all source CI passed. The earlier Speed Up recovery finding
+was fixed and regression-tested before publication.
+
+Canonical title, expanded actual bindings/three verifier rules, visible connection
+and adjacent receipt recovery controls, missing-extension feedback and disabled
+signing without a wallet/simulation were checked in the cloud browser. No wallet
+extension was available and no signature was requested. Actual four-step BNB
+configuration remains Peter's next approvals in Brave with account ending 83ae.
+Original #2720 is not deposited; Sui peer binding and full route verification
+remain later steps. Purchases remain paused and no pass token is minted.
+
+Release record: `docs/multichain/original-bnb-route-page-release.json`.
+Flow: `docs/multichain/original-bnb-route-flow.md`.
+Capture this current full inventory before future publication. Freeze the new
+unsigned configuration snapshot and signing bundles alongside all older pages.
+
+---
+
 # Current production — original NFTree Sui route settings, 2026-11-17
 
 Locked deploy `6afcccb3950cd53f974fe3bf`, verified at 21:53:22 UTC, source
