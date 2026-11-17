@@ -1,0 +1,41 @@
+INCLUDING DEPENDENCY MoveStdlib
+INCLUDING DEPENDENCY Sui
+INCLUDING DEPENDENCY call
+INCLUDING DEPENDENCY endpoint_v2
+INCLUDING DEPENDENCY oapp
+INCLUDING DEPENDENCY utils
+INCLUDING DEPENDENCY zro
+BUILDING nftree_one_slot
+Running Move unit tests
+[ PASS    ] nftree_one_slot::vault_tests::acknowledgement_before_release_is_rejected
+[ PASS    ] nftree_one_slot::vault_tests::acknowledgement_payload_cannot_be_used_as_redemption
+[ PASS    ] nftree_one_slot::vault_tests::actual_acknowledgement_send_is_one_shot
+[ PASS    ] nftree_one_slot::vault_tests::actual_reserve_send_is_one_shot
+[ PASS    ] nftree_one_slot::vault_tests::another_registry_cap_cannot_pause_or_fund_this_vault
+[ PASS    ] nftree_one_slot::vault_tests::changed_recipient_cannot_release_twice
+[ PASS    ] nftree_one_slot::vault_tests::changed_request_cannot_release_twice
+[ PASS    ] nftree_one_slot::vault_tests::disposable_protocol_v1_is_rejected
+[ PASS    ] nftree_one_slot::vault_tests::exact_backing_released_once_and_acknowledgement_preserves_recipient
+[ PASS    ] nftree_one_slot::vault_tests::forged_endpoint_cannot_release
+[ PASS    ] nftree_one_slot::vault_tests::funding_before_peer_binding_is_rejected
+[ PASS    ] nftree_one_slot::vault_tests::malformed_message_length_is_rejected
+[ PASS    ] nftree_one_slot::vault_tests::pause_blocks_funding
+[ PASS    ] nftree_one_slot::vault_tests::pause_blocks_new_reserve_announcement
+[ PASS    ] nftree_one_slot::vault_tests::paused_vault_still_completes_authenticated_release_and_acknowledgement
+[ PASS    ] nftree_one_slot::vault_tests::production_registry_rejects_fixture_type
+[ PASS    ] nftree_one_slot::vault_tests::publication_from_other_wallet_is_rejected
+[ PASS    ] nftree_one_slot::vault_tests::registry_cannot_create_a_second_slot
+[ PASS    ] nftree_one_slot::vault_tests::release_before_reserve_announcement_is_rejected
+[ PASS    ] nftree_one_slot::vault_tests::reserve_announcement_cannot_be_sent_twice
+[ PASS    ] nftree_one_slot::vault_tests::returned_nft_cannot_reopen_this_route
+[ PASS    ] nftree_one_slot::vault_tests::same_type_different_object_cannot_fund_slot
+[ PASS    ] nftree_one_slot::vault_tests::second_deposit_is_rejected_even_before_id_check
+[ PASS    ] nftree_one_slot::vault_tests::unfunded_vault_cannot_announce
+[ PASS    ] nftree_one_slot::vault_tests::wrong_backing_message_cannot_release
+[ PASS    ] nftree_one_slot::vault_tests::wrong_collection_type_cannot_create_slot
+[ PASS    ] nftree_one_slot::vault_tests::wrong_peer_cannot_release
+[ PASS    ] nftree_one_slot::vault_tests::wrong_route_message_cannot_release
+[ PASS    ] nftree_one_slot::vault_tests::wrong_source_chain_cannot_release
+[ PASS    ] nftree_one_slot::vault_tests::zero_recipient_cannot_release
+[ PASS    ] nftree_one_slot::vault_tests::zero_request_is_rejected
+Test result: OK. Total tests: 31; passed: 31; failed: 0

@@ -1,0 +1,165 @@
+#[test_only]
+module nftree_one_slot::vault_tests;
+use nftree_one_slot::{vault::{Self, Vault, Registry, AdminCap}, codec};
+use oapp::oapp::{Self, OApp, AdminCap as OAppAdminCap};
+use oapp::oapp_peer;
+use endpoint_v2::{endpoint_v2::{Self, EndpointV2}, messaging_channel::MessagingChannel, lz_receive};
+use call::{call, call_cap};
+use utils::{bytes32::{Self, Bytes32}, package};
+use sui::{test_scenario::{Self, Scenario}, coin, sui::SUI};
+use std::unit_test::{assert_eq, destroy};
+public struct NFT has key, store { id: UID }
+public struct OtherNFT has key, store { id: UID }
+fun peer(): Bytes32 { bytes32::from_address(@0xB) }
+fun request(): Bytes32 { bytes32::from_address(@0xC) }
+fun setup(funded: bool, announced: bool): Scenario { setup_route(funded, announced, true) }
+fun setup_route(funded: bool, announced: bool, bind_route: bool): Scenario {
+    let mut s = test_scenario::begin(@0xA);
+    endpoint_v2::init_for_test(s.ctx());
+    s.next_tx(@0xA);
+    let nft = NFT { id: object::new(s.ctx()) };
+    let cap = call_cap::new_package_cap_for_test(s.ctx());
+    let oadmin = oapp::create_admin_cap_for_test(s.ctx());
+    let oapp = oapp::create_oapp_for_test(&cap, &oadmin, s.ctx());
+    let (registry, admin) = vault::registry_for_testing(cap, object::id_address(&oapp), &nft, s.ctx());
+    vault::share_registry_for_testing(registry, admin, s.ctx());
+    oapp::share_oapp_for_test(oapp); transfer::public_transfer(oadmin, @0xA); transfer::public_transfer(nft, @0xA);
+    s.next_tx(@0xA);
+    let mut registry = s.take_shared<Registry>(); let admin = s.take_from_sender<AdminCap>();
+    vault::create_slot<NFT>(&mut registry, &admin, s.ctx());
+    test_scenario::return_shared(registry); s.return_to_sender(admin);
+    s.next_tx(@0xA);
+    let mut endpoint = s.take_shared<EndpointV2>(); let vault = s.take_shared<Vault<NFT>>(); let admin = s.take_from_sender<AdminCap>();
+    vault::register(&vault, &admin, &mut endpoint, vector[], s.ctx());
+    test_scenario::return_shared(endpoint); test_scenario::return_shared(vault); s.return_to_sender(admin);
+    s.next_tx(@0xA);
+    let mut endpoint = s.take_shared<EndpointV2>(); let mut channel = s.take_shared<MessagingChannel>();
+    let mut oapp = s.take_shared<OApp>(); let oadmin = s.take_from_sender<OAppAdminCap>();
+    let mut vault = s.take_shared<Vault<NFT>>(); let admin = s.take_from_sender<AdminCap>();
+    if (bind_route) { vault::bind(&mut vault, &admin, &mut oapp, &oadmin, &endpoint, &mut channel, peer(), s.ctx()); };
+    if (funded) { let nft = s.take_from_sender<NFT>(); vault::fund(&mut vault, &admin, nft); };
+    if (announced) {
+        vault::announced_for_testing(&mut vault);
+    };
+    test_scenario::return_shared(endpoint); test_scenario::return_shared(channel);
+    test_scenario::return_shared(oapp); test_scenario::return_shared(vault);
+    s.return_to_sender(admin); s.return_to_sender(oadmin); s.next_tx(@0xA); s
+}
+fun message(vault: &Vault<NFT>, req: Bytes32, recipient: address): vector<u8> {
+    codec::encode(2, vault::route(vault), vault::backing(vault), req, bytes32::from_address(recipient))
+}
+fun deliver(vault: &mut Vault<NFT>, oapp: &OApp, caller: address, eid: u32, sender: Bytes32, message: vector<u8>, ctx: &mut TxContext) {
+    let endpoint_cap = call_cap::new_package_cap_with_address_for_test(ctx, caller);
+    let p = lz_receive::create_param_for_test(eid, sender, 1, request(), message, @0xA, vector[], option::none());
+    let call = call::create(&endpoint_cap, oapp.oapp_cap_id(), true, p, ctx); destroy(endpoint_cap);
+    vault::lz_receive(vault, oapp, call);
+}
+fun endpoint_address(): address { package::original_package_of_type<EndpointV2>() }
+#[test]
+fun exact_backing_released_once_and_acknowledgement_preserves_recipient() {
+    let mut s = setup(true, true); let mut vault = s.take_shared<Vault<NFT>>(); let mut oapp = s.take_shared<OApp>();
+    let backing = vault::backing(&vault); let payload = message(&vault, request(), @0xD);
+    deliver(&mut vault, &oapp, endpoint_address(), 30102, peer(), payload, s.ctx());
+    assert_eq!(vault::phase(&vault), 2);
+    deliver(&mut vault, &oapp, endpoint_address(), 30102, peer(), payload, s.ctx());
+    let ack = vault::payload_for_review(&vault, 3); let (kind, _, nft, req, recipient) = codec::decode(&ack);
+    assert_eq!(kind, 3); assert_eq!(nft, backing); assert_eq!(req, request()); assert_eq!(recipient, bytes32::from_address(@0xD));
+    let send = vault::send(&mut vault, &mut oapp, 3, vector[], coin::zero<SUI>(s.ctx()), s.ctx()); destroy(send);
+    test_scenario::return_shared(vault); test_scenario::return_shared(oapp); s.next_tx(@0xD);
+    let nft = s.take_from_sender<NFT>(); assert_eq!(object::id(&nft), backing.to_id()); s.return_to_sender(nft); s.end();
+}
+#[test]
+fun paused_vault_still_completes_authenticated_release_and_acknowledgement() {
+    let mut s = setup(true, true); let mut vault = s.take_shared<Vault<NFT>>(); let mut oapp = s.take_shared<OApp>();
+    let admin = s.take_from_sender<AdminCap>(); vault::set_paused(&mut vault, &admin, true);
+    let payload = message(&vault, request(), @0xD); deliver(&mut vault, &oapp, endpoint_address(), 30102, peer(), payload, s.ctx());
+    let send = vault::send(&mut vault, &mut oapp, 3, vector[], coin::zero<SUI>(s.ctx()), s.ctx()); destroy(send);
+    assert_eq!(vault::phase(&vault), 2); test_scenario::return_shared(vault); test_scenario::return_shared(oapp); s.return_to_sender(admin); s.end();
+}
+#[test, expected_failure(abort_code = 3, location = vault)]
+fun registry_cannot_create_a_second_slot() { let mut s = setup(false, false); let mut r = s.take_shared<Registry>(); let a = s.take_from_sender<AdminCap>(); vault::create_slot<NFT>(&mut r, &a, s.ctx());  abort 999 }
+#[test, expected_failure(abort_code = 2, location = vault)]
+fun wrong_collection_type_cannot_create_slot() {
+    let mut s = test_scenario::begin(@0xA); let nft = NFT { id: object::new(s.ctx()) }; let cap = call_cap::new_package_cap_for_test(s.ctx());
+    let (mut r, a) = vault::registry_for_testing(cap, @0xB, &nft, s.ctx()); vault::create_slot<OtherNFT>(&mut r, &a, s.ctx()); destroy(r); destroy(a); destroy(nft);
+ abort 999 }
+#[test, expected_failure(abort_code = 4, location = vault)]
+fun same_type_different_object_cannot_fund_slot() { let mut s = setup(false, false); let mut v = s.take_shared<Vault<NFT>>(); let a = s.take_from_sender<AdminCap>(); let fake = NFT { id: object::new(s.ctx()) }; vault::fund(&mut v, &a, fake);  abort 999 }
+#[test, expected_failure(abort_code = 1, location = vault)]
+fun another_registry_cap_cannot_pause_or_fund_this_vault() {
+    let mut s = setup(false, false); let mut v = s.take_shared<Vault<NFT>>(); let n = NFT { id: object::new(s.ctx()) };
+    let c = call_cap::new_package_cap_for_test(s.ctx()); let (r, a) = vault::registry_for_testing(c, @0xB, &n, s.ctx());
+    vault::set_paused(&mut v, &a, true); destroy(r); destroy(a); destroy(n);
+ abort 999 }
+#[test, expected_failure(abort_code = 10, location = vault)]
+fun pause_blocks_funding() { let mut s = setup(false, false); let mut v = s.take_shared<Vault<NFT>>(); let a = s.take_from_sender<AdminCap>(); vault::set_paused(&mut v, &a, true); let n = s.take_from_sender<NFT>(); vault::fund(&mut v, &a, n);  abort 999 }
+#[test, expected_failure(abort_code = 10, location = vault)]
+fun pause_blocks_new_reserve_announcement() { let mut s = setup(true, false); let mut v = s.take_shared<Vault<NFT>>(); let a = s.take_from_sender<AdminCap>(); vault::set_paused(&mut v, &a, true); vault::payload_for_review(&v, 1);  abort 999 }
+#[test, expected_failure(abort_code = 5, location = vault)]
+fun unfunded_vault_cannot_announce() { let s = setup(false, false); let v = s.take_shared<Vault<NFT>>(); vault::payload_for_review(&v, 1);  abort 999 }
+#[test, expected_failure(abort_code = 5, location = vault)]
+fun reserve_announcement_cannot_be_sent_twice() { let s = setup(true, true); let v = s.take_shared<Vault<NFT>>(); vault::payload_for_review(&v, 1);  abort 999 }
+#[test, expected_failure(abort_code = 5, location = vault)]
+fun acknowledgement_before_release_is_rejected() { let s = setup(true, true); let v = s.take_shared<Vault<NFT>>(); vault::payload_for_review(&v, 3);  abort 999 }
+#[test, expected_failure(abort_code = 5, location = vault)]
+fun release_before_reserve_announcement_is_rejected() { let mut s = setup(true, false); let mut v = s.take_shared<Vault<NFT>>(); let o = s.take_shared<OApp>(); let m = message(&v, request(), @0xD); deliver(&mut v, &o, endpoint_address(), 30102, peer(), m, s.ctx());  abort 999 }
+#[test, expected_failure(abort_code = 5, location = oapp)]
+fun forged_endpoint_cannot_release() { let mut s = setup(true, true); let mut v = s.take_shared<Vault<NFT>>(); let o = s.take_shared<OApp>(); let m = message(&v, request(), @0xD); deliver(&mut v, &o, @0xBAD, 30102, peer(), m, s.ctx());  abort 999 }
+#[test, expected_failure(abort_code = 6, location = oapp)]
+fun wrong_peer_cannot_release() { let mut s = setup(true, true); let mut v = s.take_shared<Vault<NFT>>(); let o = s.take_shared<OApp>(); let m = message(&v, request(), @0xD); deliver(&mut v, &o, endpoint_address(), 30102, request(), m, s.ctx());  abort 999 }
+#[test, expected_failure(abort_code = 0, location = oapp_peer)]
+fun wrong_source_chain_cannot_release() { let mut s = setup(true, true); let mut v = s.take_shared<Vault<NFT>>(); let o = s.take_shared<OApp>(); let m = message(&v, request(), @0xD); deliver(&mut v, &o, endpoint_address(), 30416, peer(), m, s.ctx());  abort 999 }
+#[test, expected_failure(abort_code = 8, location = vault)]
+fun wrong_backing_message_cannot_release() { let mut s = setup(true, true); let mut v = s.take_shared<Vault<NFT>>(); let o = s.take_shared<OApp>(); let m = codec::encode(2, vault::route(&v), request(), request(), peer()); deliver(&mut v, &o, endpoint_address(), 30102, peer(), m, s.ctx());  abort 999 }
+#[test, expected_failure(abort_code = 8, location = vault)]
+fun wrong_route_message_cannot_release() { let mut s = setup(true, true); let mut v = s.take_shared<Vault<NFT>>(); let o = s.take_shared<OApp>(); let m = codec::encode(2, request(), vault::backing(&v), request(), peer()); deliver(&mut v, &o, endpoint_address(), 30102, peer(), m, s.ctx());  abort 999 }
+#[test, expected_failure(abort_code = 8, location = vault)]
+fun zero_recipient_cannot_release() { let mut s = setup(true, true); let mut v = s.take_shared<Vault<NFT>>(); let o = s.take_shared<OApp>(); let m = message(&v, request(), @0x0); deliver(&mut v, &o, endpoint_address(), 30102, peer(), m, s.ctx());  abort 999 }
+#[test, expected_failure(abort_code = 9, location = vault)]
+fun changed_request_cannot_release_twice() { let mut s = setup(true, true); let mut v = s.take_shared<Vault<NFT>>(); let o = s.take_shared<OApp>(); let m = message(&v, request(), @0xD); deliver(&mut v, &o, endpoint_address(), 30102, peer(), m, s.ctx()); let m = message(&v, peer(), @0xD); deliver(&mut v, &o, endpoint_address(), 30102, peer(), m, s.ctx());  abort 999 }
+#[test, expected_failure(abort_code = 9, location = vault)]
+fun changed_recipient_cannot_release_twice() { let mut s = setup(true, true); let mut v = s.take_shared<Vault<NFT>>(); let o = s.take_shared<OApp>(); let m = message(&v, request(), @0xD); deliver(&mut v, &o, endpoint_address(), 30102, peer(), m, s.ctx()); let m = message(&v, request(), @0xE); deliver(&mut v, &o, endpoint_address(), 30102, peer(), m, s.ctx());  abort 999 }
+#[test, expected_failure(abort_code = 100, location = codec)]
+fun disposable_protocol_v1_is_rejected() { let mut s = setup(true, true); let mut v = s.take_shared<Vault<NFT>>(); let o = s.take_shared<OApp>(); let mut m = message(&v, request(), @0xD); *m.borrow_mut(0) = 1; deliver(&mut v, &o, endpoint_address(), 30102, peer(), m, s.ctx());  abort 999 }
+#[test, expected_failure(abort_code = 1, location = vault)]
+fun publication_from_other_wallet_is_rejected() { let mut s = test_scenario::begin(@0xA); vault::init_for_testing(s.ctx()); abort 999 }
+#[test, expected_failure(abort_code = 2, location = vault)]
+fun production_registry_rejects_fixture_type() {
+    let dev = @0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4;
+    let mut s = test_scenario::begin(dev); vault::init_for_testing(s.ctx()); s.next_tx(dev);
+    let mut r = s.take_shared<Registry>(); let a = s.take_from_sender<AdminCap>(); vault::create_slot<NFT>(&mut r, &a, s.ctx()); abort 999
+}
+#[test, expected_failure(abort_code = 5, location = vault)]
+fun actual_reserve_send_is_one_shot() {
+    let mut s = setup(true, false); let mut v = s.take_shared<Vault<NFT>>(); let mut o = s.take_shared<OApp>();
+    let first = vault::send(&mut v, &mut o, 1, vector[], coin::zero<SUI>(s.ctx()), s.ctx()); destroy(first);
+    let second = vault::send(&mut v, &mut o, 1, vector[], coin::zero<SUI>(s.ctx()), s.ctx()); destroy(second); abort 999
+}
+#[test, expected_failure(abort_code = 5, location = vault)]
+fun actual_acknowledgement_send_is_one_shot() {
+    let mut s = setup(true, true); let mut v = s.take_shared<Vault<NFT>>(); let mut o = s.take_shared<OApp>();
+    let m = message(&v, request(), @0xD); deliver(&mut v, &o, endpoint_address(), 30102, peer(), m, s.ctx());
+    let first = vault::send(&mut v, &mut o, 3, vector[], coin::zero<SUI>(s.ctx()), s.ctx()); destroy(first);
+    let second = vault::send(&mut v, &mut o, 3, vector[], coin::zero<SUI>(s.ctx()), s.ctx()); destroy(second); abort 999
+}
+#[test, expected_failure(abort_code = 5, location = vault)]
+fun second_deposit_is_rejected_even_before_id_check() {
+    let mut s = setup(true, false); let mut v = s.take_shared<Vault<NFT>>(); let a = s.take_from_sender<AdminCap>();
+    let n = NFT { id: object::new(s.ctx()) }; vault::fund(&mut v, &a, n); abort 999
+}
+#[test, expected_failure(abort_code = 8, location = vault)]
+fun zero_request_is_rejected() { let mut s = setup(true, true); let mut v = s.take_shared<Vault<NFT>>(); let o = s.take_shared<OApp>(); let m = message(&v, bytes32::zero_bytes32(), @0xD); deliver(&mut v, &o, endpoint_address(), 30102, peer(), m, s.ctx()); abort 999 }
+#[test, expected_failure(abort_code = 8, location = vault)]
+fun acknowledgement_payload_cannot_be_used_as_redemption() { let mut s = setup(true, true); let mut v = s.take_shared<Vault<NFT>>(); let o = s.take_shared<OApp>(); let m = codec::encode(3, vault::route(&v), vault::backing(&v), request(), peer()); deliver(&mut v, &o, endpoint_address(), 30102, peer(), m, s.ctx()); abort 999 }
+#[test, expected_failure(abort_code = 100, location = codec)]
+fun malformed_message_length_is_rejected() { let mut s = setup(true, true); let mut v = s.take_shared<Vault<NFT>>(); let o = s.take_shared<OApp>(); deliver(&mut v, &o, endpoint_address(), 30102, peer(), vector[2,2], s.ctx()); abort 999 }
+#[test, expected_failure(abort_code = 5, location = vault)]
+fun returned_nft_cannot_reopen_this_route() {
+    let mut s = setup(true, true); let mut v = s.take_shared<Vault<NFT>>(); let o = s.take_shared<OApp>();
+    let m = message(&v, request(), @0xA); deliver(&mut v, &o, endpoint_address(), 30102, peer(), m, s.ctx());
+    test_scenario::return_shared(v); test_scenario::return_shared(o); s.next_tx(@0xA);
+    let mut v = s.take_shared<Vault<NFT>>(); let a = s.take_from_sender<AdminCap>(); let n = s.take_from_sender<NFT>(); vault::fund(&mut v, &a, n); abort 999
+}
+
+#[test, expected_failure(abort_code = 5, location = vault)]
+fun funding_before_peer_binding_is_rejected() { let mut s = setup_route(false, false, false); let mut v = s.take_shared<Vault<NFT>>(); let a = s.take_from_sender<AdminCap>(); let n = s.take_from_sender<NFT>(); vault::fund(&mut v, &a, n); abort 999 }

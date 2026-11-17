@@ -1,0 +1,1153 @@
+// Move bytecode v7
+module 0.vault {
+use 28de9e8e087a6347001907fb698fdf8ab0467b342229b74b19264067aebc4ae9::call;
+use 28de9e8e087a6347001907fb698fdf8ab0467b342229b74b19264067aebc4ae9::call_cap;
+use 31beaef889b08b9c3b37d19280fc1f8b75bae5b2de2410fc3120f403e9a36dac::endpoint_quote;
+use 31beaef889b08b9c3b37d19280fc1f8b75bae5b2de2410fc3120f403e9a36dac::endpoint_send;
+use 31beaef889b08b9c3b37d19280fc1f8b75bae5b2de2410fc3120f403e9a36dac::endpoint_v2;
+use 31beaef889b08b9c3b37d19280fc1f8b75bae5b2de2410fc3120f403e9a36dac::lz_receive;
+use 31beaef889b08b9c3b37d19280fc1f8b75bae5b2de2410fc3120f403e9a36dac::messaging_channel;
+use 31beaef889b08b9c3b37d19280fc1f8b75bae5b2de2410fc3120f403e9a36dac::messaging_fee;
+use 31beaef889b08b9c3b37d19280fc1f8b75bae5b2de2410fc3120f403e9a36dac::messaging_receipt;
+use 0000000000000000000000000000000000000000000000000000000000000000::codec;
+use fdc28afc0110cb2edb94e3e57f2b1ce69b5a99c503b06d15e51cfa212de56e24::oapp;
+use 0000000000000000000000000000000000000000000000000000000000000001::ascii;
+use 0000000000000000000000000000000000000000000000000000000000000001::option;
+use 0000000000000000000000000000000000000000000000000000000000000001::type_name;
+use 0000000000000000000000000000000000000000000000000000000000000002::coin;
+use 0000000000000000000000000000000000000000000000000000000000000002::event;
+use 0000000000000000000000000000000000000000000000000000000000000002::object;
+use 0000000000000000000000000000000000000000000000000000000000000002::sui;
+use 0000000000000000000000000000000000000000000000000000000000000002::transfer;
+use 0000000000000000000000000000000000000000000000000000000000000002::tx_context;
+use 00245ba36f7a1cc643a2b037450dff1e4399e18069c6545fb5fcaaf37d39d7dc::bytes32;
+use 3de1504cf3fd75762759e353d9d95389618e557d0552697f19b52e4e927c1dee::zro;
+
+struct VAULT has drop {
+	dummy_field: bool
+}
+
+struct AdminCap has key {
+	id: UID,
+	registry: ID
+}
+
+struct Registry has key {
+	id: UID,
+	version: u64,
+	cap: Option<CallCap>,
+	oapp: address,
+	slot: Option<ID>,
+	backing: address,
+	nft_type: vector<u8>
+}
+
+struct Vault<T: store + key> has key {
+	id: UID,
+	version: u64,
+	registry: ID,
+	cap: CallCap,
+	oapp: address,
+	nft: Option<T>,
+	backing: Bytes32,
+	route: Bytes32,
+	peer: Bytes32,
+	bound: bool,
+	paused: bool,
+	phase: u8,
+	announced: bool,
+	ack_sent: bool,
+	request: Bytes32,
+	recipient: Bytes32
+}
+
+struct SlotCreated has copy, drop {
+	registry: ID,
+	vault: ID,
+	nft: Bytes32
+}
+
+struct Funded has copy, drop {
+	vault: ID,
+	nft: Bytes32
+}
+
+struct Bound has copy, drop {
+	vault: ID,
+	peer: Bytes32
+}
+
+struct PauseChanged has copy, drop {
+	vault: ID,
+	paused: bool
+}
+
+struct Released has copy, drop {
+	vault: ID,
+	request: Bytes32,
+	recipient: Bytes32
+}
+
+init(otw#0#0: VAULT, ctx#0#0: &mut TxContext) {
+L2:	admin#1#0: AdminCap
+L3:	oapp#1#0: address
+L4:	oapp_admin#1#0: AdminCap
+L5:	registry#1#0: Registry
+B0:
+	0: CopyLoc[1](ctx#0#0: &mut TxContext)
+	1: FreezeRef
+	2: Call tx_context::sender(&TxContext): address
+	3: LdConst[3](address: 0x48..)
+	4: Eq
+	5: BrFalse(7)
+B1:
+	6: Branch(11)
+B2:
+	7: MoveLoc[1](ctx#0#0: &mut TxContext)
+	8: Pop
+	9: LdConst[0](u64: 1)
+	10: Abort
+B3:
+	11: ImmBorrowLoc[0](otw#0#0: VAULT)
+	12: CopyLoc[1](ctx#0#0: &mut TxContext)
+	13: Call oapp::new<VAULT>(&VAULT, &mut TxContext): CallCap * AdminCap * address
+	14: StLoc[3](oapp#1#0: address)
+	15: StLoc[4](oapp_admin#1#0: AdminCap)
+	16: MoveLoc[3](oapp#1#0: address)
+	17: LdConst[2](address: 0x04..)
+	18: LdConst[4](vector<u8>: "f6c..)
+	19: CopyLoc[1](ctx#0#0: &mut TxContext)
+	20: Call new_registry(CallCap, address, address, vector<u8>, &mut TxContext): Registry
+	21: StLoc[5](registry#1#0: Registry)
+	22: CopyLoc[1](ctx#0#0: &mut TxContext)
+	23: Call object::new(&mut TxContext): UID
+	24: ImmBorrowLoc[5](registry#1#0: Registry)
+	25: Call object::id<Registry>(&Registry): ID
+	26: Pack[1](AdminCap)
+	27: StLoc[2](admin#1#0: AdminCap)
+	28: MoveLoc[4](oapp_admin#1#0: AdminCap)
+	29: CopyLoc[1](ctx#0#0: &mut TxContext)
+	30: FreezeRef
+	31: Call tx_context::sender(&TxContext): address
+	32: Call transfer::public_transfer<AdminCap>(AdminCap, address)
+	33: MoveLoc[2](admin#1#0: AdminCap)
+	34: MoveLoc[1](ctx#0#0: &mut TxContext)
+	35: FreezeRef
+	36: Call tx_context::sender(&TxContext): address
+	37: Call transfer::transfer<AdminCap>(AdminCap, address)
+	38: MoveLoc[5](registry#1#0: Registry)
+	39: Call transfer::share_object<Registry>(Registry)
+	40: Ret
+}
+
+new_registry(cap#0#0: CallCap, oapp#0#0: address, backing#0#0: address, nft_type#0#0: vector<u8>, ctx#0#0: &mut TxContext): Registry {
+B0:
+	0: MoveLoc[4](ctx#0#0: &mut TxContext)
+	1: Call object::new(&mut TxContext): UID
+	2: LdConst[0](u64: 1)
+	3: MoveLoc[0](cap#0#0: CallCap)
+	4: Call option::some<CallCap>(CallCap): Option<CallCap>
+	5: MoveLoc[1](oapp#0#0: address)
+	6: Call option::none<ID>(): Option<ID>
+	7: MoveLoc[2](backing#0#0: address)
+	8: MoveLoc[3](nft_type#0#0: vector<u8>)
+	9: Pack[2](Registry)
+	10: Ret
+}
+
+registry_admin(registry#0#0: &Registry, admin#0#0: &AdminCap) {
+B0:
+	0: CopyLoc[0](registry#0#0: &Registry)
+	1: ImmBorrowField[0](Registry.version: u64)
+	2: ReadRef
+	3: LdConst[0](u64: 1)
+	4: Eq
+	5: BrFalse(7)
+B1:
+	6: Branch(13)
+B2:
+	7: MoveLoc[0](registry#0#0: &Registry)
+	8: Pop
+	9: MoveLoc[1](admin#0#0: &AdminCap)
+	10: Pop
+	11: LdConst[14](u64: 11)
+	12: Abort
+B3:
+	13: MoveLoc[1](admin#0#0: &AdminCap)
+	14: ImmBorrowField[1](AdminCap.registry: ID)
+	15: ReadRef
+	16: MoveLoc[0](registry#0#0: &Registry)
+	17: Call object::id<Registry>(&Registry): ID
+	18: Eq
+	19: BrFalse(21)
+B4:
+	20: Branch(23)
+B5:
+	21: LdConst[0](u64: 1)
+	22: Abort
+B6:
+	23: Ret
+}
+
+vault_admin<T: store + key>(vault#0#0: &Vault<T>, admin#0#0: &AdminCap) {
+B0:
+	0: CopyLoc[0](vault#0#0: &Vault<T>)
+	1: ImmBorrowFieldGeneric[0](Vault.version: u64)
+	2: ReadRef
+	3: LdConst[0](u64: 1)
+	4: Eq
+	5: BrFalse(7)
+B1:
+	6: Branch(13)
+B2:
+	7: MoveLoc[0](vault#0#0: &Vault<T>)
+	8: Pop
+	9: MoveLoc[1](admin#0#0: &AdminCap)
+	10: Pop
+	11: LdConst[14](u64: 11)
+	12: Abort
+B3:
+	13: MoveLoc[1](admin#0#0: &AdminCap)
+	14: ImmBorrowField[1](AdminCap.registry: ID)
+	15: ReadRef
+	16: MoveLoc[0](vault#0#0: &Vault<T>)
+	17: ImmBorrowFieldGeneric[1](Vault.registry: ID)
+	18: ReadRef
+	19: Eq
+	20: BrFalse(22)
+B4:
+	21: Branch(24)
+B5:
+	22: LdConst[0](u64: 1)
+	23: Abort
+B6:
+	24: Ret
+}
+
+public create_slot<T: store + key>(registry#0#0: &mut Registry, admin#0#0: &AdminCap, ctx#0#0: &mut TxContext) {
+L3:	%#1: bool
+L4:	id#1#0: UID
+L5:	vault#1#0: Vault<T>
+L6:	vault_id#1#0: ID
+B0:
+	0: CopyLoc[0](registry#0#0: &mut Registry)
+	1: FreezeRef
+	2: MoveLoc[1](admin#0#0: &AdminCap)
+	3: Call registry_admin(&Registry, &AdminCap)
+	4: Call type_name::with_original_ids<T>(): TypeName
+	5: Call type_name::into_string(TypeName): String
+	6: Call ascii::into_bytes(String): vector<u8>
+	7: CopyLoc[0](registry#0#0: &mut Registry)
+	8: ImmBorrowField[4](Registry.nft_type: vector<u8>)
+	9: ReadRef
+	10: Eq
+	11: BrFalse(13)
+B1:
+	12: Branch(19)
+B2:
+	13: MoveLoc[0](registry#0#0: &mut Registry)
+	14: Pop
+	15: MoveLoc[2](ctx#0#0: &mut TxContext)
+	16: Pop
+	17: LdConst[5](u64: 2)
+	18: Abort
+B3:
+	19: CopyLoc[0](registry#0#0: &mut Registry)
+	20: ImmBorrowField[5](Registry.slot: Option<ID>)
+	21: Call option::is_none<ID>(&Option<ID>): bool
+	22: BrFalse(28)
+B4:
+	23: CopyLoc[0](registry#0#0: &mut Registry)
+	24: ImmBorrowField[6](Registry.cap: Option<CallCap>)
+	25: Call option::is_some<CallCap>(&Option<CallCap>): bool
+	26: StLoc[3](%#1: bool)
+	27: Branch(30)
+B5:
+	28: LdFalse
+	29: StLoc[3](%#1: bool)
+B6:
+	30: MoveLoc[3](%#1: bool)
+	31: BrFalse(33)
+B7:
+	32: Branch(39)
+B8:
+	33: MoveLoc[0](registry#0#0: &mut Registry)
+	34: Pop
+	35: MoveLoc[2](ctx#0#0: &mut TxContext)
+	36: Pop
+	37: LdConst[6](u64: 3)
+	38: Abort
+B9:
+	39: MoveLoc[2](ctx#0#0: &mut TxContext)
+	40: Call object::new(&mut TxContext): UID
+	41: StLoc[4](id#1#0: UID)
+	42: ImmBorrowLoc[4](id#1#0: UID)
+	43: Call object::uid_to_inner(&UID): ID
+	44: StLoc[6](vault_id#1#0: ID)
+	45: MoveLoc[4](id#1#0: UID)
+	46: LdConst[0](u64: 1)
+	47: CopyLoc[0](registry#0#0: &mut Registry)
+	48: FreezeRef
+	49: Call object::id<Registry>(&Registry): ID
+	50: CopyLoc[0](registry#0#0: &mut Registry)
+	51: MutBorrowField[6](Registry.cap: Option<CallCap>)
+	52: Call option::extract<CallCap>(&mut Option<CallCap>): CallCap
+	53: CopyLoc[0](registry#0#0: &mut Registry)
+	54: ImmBorrowField[7](Registry.oapp: address)
+	55: ReadRef
+	56: Call option::none<T>(): Option<T>
+	57: CopyLoc[0](registry#0#0: &mut Registry)
+	58: ImmBorrowField[8](Registry.backing: address)
+	59: ReadRef
+	60: Call bytes32::from_address(address): Bytes32
+	61: CopyLoc[6](vault_id#1#0: ID)
+	62: Call bytes32::from_id(ID): Bytes32
+	63: Call bytes32::zero_bytes32(): Bytes32
+	64: LdFalse
+	65: LdFalse
+	66: LdU8(0)
+	67: LdFalse
+	68: LdFalse
+	69: Call bytes32::zero_bytes32(): Bytes32
+	70: Call bytes32::zero_bytes32(): Bytes32
+	71: PackGeneric[0](Vault<T>)
+	72: StLoc[5](vault#1#0: Vault<T>)
+	73: CopyLoc[0](registry#0#0: &mut Registry)
+	74: MutBorrowField[5](Registry.slot: Option<ID>)
+	75: CopyLoc[6](vault_id#1#0: ID)
+	76: Call option::fill<ID>(&mut Option<ID>, ID)
+	77: MoveLoc[0](registry#0#0: &mut Registry)
+	78: FreezeRef
+	79: Call object::id<Registry>(&Registry): ID
+	80: MoveLoc[6](vault_id#1#0: ID)
+	81: ImmBorrowLoc[5](vault#1#0: Vault<T>)
+	82: ImmBorrowFieldGeneric[2](Vault.backing: Bytes32)
+	83: ReadRef
+	84: Pack[4](SlotCreated)
+	85: Call event::emit<SlotCreated>(SlotCreated)
+	86: MoveLoc[5](vault#1#0: Vault<T>)
+	87: Call transfer::share_object<Vault<T>>(Vault<T>)
+	88: Ret
+}
+
+public fund<T: store + key>(vault#0#0: &mut Vault<T>, admin#0#0: &AdminCap, nft#0#0: T) {
+L3:	%#1: bool
+B0:
+	0: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	1: FreezeRef
+	2: MoveLoc[1](admin#0#0: &AdminCap)
+	3: Call vault_admin<T>(&Vault<T>, &AdminCap)
+	4: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	5: ImmBorrowFieldGeneric[3](Vault.paused: bool)
+	6: ReadRef
+	7: Not
+	8: BrFalse(10)
+B1:
+	9: Branch(14)
+B2:
+	10: MoveLoc[0](vault#0#0: &mut Vault<T>)
+	11: Pop
+	12: LdConst[13](u64: 10)
+	13: Abort
+B3:
+	14: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	15: ImmBorrowFieldGeneric[4](Vault.phase: u8)
+	16: ReadRef
+	17: LdU8(0)
+	18: Eq
+	19: BrFalse(32)
+B4:
+	20: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	21: ImmBorrowFieldGeneric[5](Vault.nft: Option<T>)
+	22: Call option::is_none<T>(&Option<T>): bool
+	23: BrFalse(29)
+B5:
+	24: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	25: ImmBorrowFieldGeneric[6](Vault.bound: bool)
+	26: ReadRef
+	27: StLoc[3](%#1: bool)
+	28: Branch(34)
+B6:
+	29: LdFalse
+	30: StLoc[3](%#1: bool)
+	31: Branch(34)
+B7:
+	32: LdFalse
+	33: StLoc[3](%#1: bool)
+B8:
+	34: MoveLoc[3](%#1: bool)
+	35: BrFalse(37)
+B9:
+	36: Branch(41)
+B10:
+	37: MoveLoc[0](vault#0#0: &mut Vault<T>)
+	38: Pop
+	39: LdConst[8](u64: 5)
+	40: Abort
+B11:
+	41: ImmBorrowLoc[2](nft#0#0: T)
+	42: Call object::id<T>(&T): ID
+	43: Call bytes32::from_id(ID): Bytes32
+	44: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	45: ImmBorrowFieldGeneric[2](Vault.backing: Bytes32)
+	46: ReadRef
+	47: Eq
+	48: BrFalse(50)
+B12:
+	49: Branch(54)
+B13:
+	50: MoveLoc[0](vault#0#0: &mut Vault<T>)
+	51: Pop
+	52: LdConst[7](u64: 4)
+	53: Abort
+B14:
+	54: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	55: MutBorrowFieldGeneric[5](Vault.nft: Option<T>)
+	56: MoveLoc[2](nft#0#0: T)
+	57: Call option::fill<T>(&mut Option<T>, T)
+	58: LdU8(1)
+	59: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	60: MutBorrowFieldGeneric[4](Vault.phase: u8)
+	61: WriteRef
+	62: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	63: FreezeRef
+	64: Call object::id<Vault<T>>(&Vault<T>): ID
+	65: MoveLoc[0](vault#0#0: &mut Vault<T>)
+	66: ImmBorrowFieldGeneric[2](Vault.backing: Bytes32)
+	67: ReadRef
+	68: Pack[5](Funded)
+	69: Call event::emit<Funded>(Funded)
+	70: Ret
+}
+
+public set_paused<T: store + key>(vault#0#0: &mut Vault<T>, admin#0#0: &AdminCap, paused#0#0: bool) {
+B0:
+	0: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	1: FreezeRef
+	2: MoveLoc[1](admin#0#0: &AdminCap)
+	3: Call vault_admin<T>(&Vault<T>, &AdminCap)
+	4: CopyLoc[2](paused#0#0: bool)
+	5: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	6: MutBorrowFieldGeneric[3](Vault.paused: bool)
+	7: WriteRef
+	8: MoveLoc[0](vault#0#0: &mut Vault<T>)
+	9: FreezeRef
+	10: Call object::id<Vault<T>>(&Vault<T>): ID
+	11: MoveLoc[2](paused#0#0: bool)
+	12: Pack[7](PauseChanged)
+	13: Call event::emit<PauseChanged>(PauseChanged)
+	14: Ret
+}
+
+public register<T: store + key>(vault#0#0: &Vault<T>, admin#0#0: &AdminCap, endpoint#0#0: &mut EndpointV2, info#0#0: vector<u8>, ctx#0#0: &mut TxContext): address {
+B0:
+	0: CopyLoc[0](vault#0#0: &Vault<T>)
+	1: MoveLoc[1](admin#0#0: &AdminCap)
+	2: Call vault_admin<T>(&Vault<T>, &AdminCap)
+	3: MoveLoc[2](endpoint#0#0: &mut EndpointV2)
+	4: MoveLoc[0](vault#0#0: &Vault<T>)
+	5: ImmBorrowFieldGeneric[7](Vault.cap: CallCap)
+	6: MoveLoc[3](info#0#0: vector<u8>)
+	7: MoveLoc[4](ctx#0#0: &mut TxContext)
+	8: Call endpoint_v2::register_oapp(&mut EndpointV2, &CallCap, vector<u8>, &mut TxContext): address
+	9: Ret
+}
+
+public bind<T: store + key>(vault#0#0: &mut Vault<T>, admin#0#0: &AdminCap, oapp#0#0: &mut OApp, oapp_admin#0#0: &AdminCap, endpoint#0#0: &EndpointV2, channel#0#0: &mut MessagingChannel, peer#0#0: Bytes32, ctx#0#0: &mut TxContext) {
+L8:	%#1: bool
+L9:	%#2: bool
+B0:
+	0: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	1: FreezeRef
+	2: MoveLoc[1](admin#0#0: &AdminCap)
+	3: Call vault_admin<T>(&Vault<T>, &AdminCap)
+	4: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	5: ImmBorrowFieldGeneric[6](Vault.bound: bool)
+	6: ReadRef
+	7: Not
+	8: BrFalse(16)
+B1:
+	9: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	10: ImmBorrowFieldGeneric[4](Vault.phase: u8)
+	11: ReadRef
+	12: LdU8(0)
+	13: Eq
+	14: StLoc[8](%#1: bool)
+	15: Branch(18)
+B2:
+	16: LdFalse
+	17: StLoc[8](%#1: bool)
+B3:
+	18: MoveLoc[8](%#1: bool)
+	19: BrFalse(21)
+B4:
+	20: Branch(35)
+B5:
+	21: MoveLoc[0](vault#0#0: &mut Vault<T>)
+	22: Pop
+	23: MoveLoc[3](oapp_admin#0#0: &AdminCap)
+	24: Pop
+	25: MoveLoc[2](oapp#0#0: &mut OApp)
+	26: Pop
+	27: MoveLoc[4](endpoint#0#0: &EndpointV2)
+	28: Pop
+	29: MoveLoc[7](ctx#0#0: &mut TxContext)
+	30: Pop
+	31: MoveLoc[5](channel#0#0: &mut MessagingChannel)
+	32: Pop
+	33: LdConst[8](u64: 5)
+	34: Abort
+B6:
+	35: CopyLoc[2](oapp#0#0: &mut OApp)
+	36: FreezeRef
+	37: Call object::id_address<OApp>(&OApp): address
+	38: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	39: ImmBorrowFieldGeneric[8](Vault.oapp: address)
+	40: ReadRef
+	41: Eq
+	42: BrFalse(48)
+B7:
+	43: ImmBorrowLoc[6](peer#0#0: Bytes32)
+	44: Call bytes32::is_zero(&Bytes32): bool
+	45: Not
+	46: StLoc[9](%#2: bool)
+	47: Branch(50)
+B8:
+	48: LdFalse
+	49: StLoc[9](%#2: bool)
+B9:
+	50: MoveLoc[9](%#2: bool)
+	51: BrFalse(53)
+B10:
+	52: Branch(67)
+B11:
+	53: MoveLoc[0](vault#0#0: &mut Vault<T>)
+	54: Pop
+	55: MoveLoc[3](oapp_admin#0#0: &AdminCap)
+	56: Pop
+	57: MoveLoc[2](oapp#0#0: &mut OApp)
+	58: Pop
+	59: MoveLoc[4](endpoint#0#0: &EndpointV2)
+	60: Pop
+	61: MoveLoc[7](ctx#0#0: &mut TxContext)
+	62: Pop
+	63: MoveLoc[5](channel#0#0: &mut MessagingChannel)
+	64: Pop
+	65: LdConst[9](u64: 6)
+	66: Abort
+B12:
+	67: MoveLoc[2](oapp#0#0: &mut OApp)
+	68: MoveLoc[3](oapp_admin#0#0: &AdminCap)
+	69: MoveLoc[4](endpoint#0#0: &EndpointV2)
+	70: MoveLoc[5](channel#0#0: &mut MessagingChannel)
+	71: LdConst[1](u32: 30102)
+	72: CopyLoc[6](peer#0#0: Bytes32)
+	73: MoveLoc[7](ctx#0#0: &mut TxContext)
+	74: Call oapp::set_peer(&mut OApp, &AdminCap, &EndpointV2, &mut MessagingChannel, u32, Bytes32, &mut TxContext)
+	75: CopyLoc[6](peer#0#0: Bytes32)
+	76: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	77: MutBorrowFieldGeneric[9](Vault.peer: Bytes32)
+	78: WriteRef
+	79: LdTrue
+	80: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	81: MutBorrowFieldGeneric[6](Vault.bound: bool)
+	82: WriteRef
+	83: MoveLoc[0](vault#0#0: &mut Vault<T>)
+	84: FreezeRef
+	85: Call object::id<Vault<T>>(&Vault<T>): ID
+	86: MoveLoc[6](peer#0#0: Bytes32)
+	87: Pack[6](Bound)
+	88: Call event::emit<Bound>(Bound)
+	89: Ret
+}
+
+validate<T: store + key>(vault#0#0: &Vault<T>, oapp#0#0: &OApp) {
+L2:	%#1: bool
+B0:
+	0: CopyLoc[0](vault#0#0: &Vault<T>)
+	1: ImmBorrowFieldGeneric[0](Vault.version: u64)
+	2: ReadRef
+	3: LdConst[0](u64: 1)
+	4: Eq
+	5: BrFalse(7)
+B1:
+	6: Branch(13)
+B2:
+	7: MoveLoc[0](vault#0#0: &Vault<T>)
+	8: Pop
+	9: MoveLoc[1](oapp#0#0: &OApp)
+	10: Pop
+	11: LdConst[14](u64: 11)
+	12: Abort
+B3:
+	13: CopyLoc[1](oapp#0#0: &OApp)
+	14: Call object::id_address<OApp>(&OApp): address
+	15: CopyLoc[0](vault#0#0: &Vault<T>)
+	16: ImmBorrowFieldGeneric[8](Vault.oapp: address)
+	17: ReadRef
+	18: Eq
+	19: BrFalse(21)
+B4:
+	20: Branch(27)
+B5:
+	21: MoveLoc[0](vault#0#0: &Vault<T>)
+	22: Pop
+	23: MoveLoc[1](oapp#0#0: &OApp)
+	24: Pop
+	25: LdConst[9](u64: 6)
+	26: Abort
+B6:
+	27: CopyLoc[0](vault#0#0: &Vault<T>)
+	28: ImmBorrowFieldGeneric[6](Vault.bound: bool)
+	29: ReadRef
+	30: BrFalse(40)
+B7:
+	31: MoveLoc[1](oapp#0#0: &OApp)
+	32: LdConst[1](u32: 30102)
+	33: Call oapp::get_peer(&OApp, u32): Bytes32
+	34: MoveLoc[0](vault#0#0: &Vault<T>)
+	35: ImmBorrowFieldGeneric[9](Vault.peer: Bytes32)
+	36: ReadRef
+	37: Eq
+	38: StLoc[2](%#1: bool)
+	39: Branch(46)
+B8:
+	40: MoveLoc[0](vault#0#0: &Vault<T>)
+	41: Pop
+	42: MoveLoc[1](oapp#0#0: &OApp)
+	43: Pop
+	44: LdFalse
+	45: StLoc[2](%#1: bool)
+B9:
+	46: MoveLoc[2](%#1: bool)
+	47: BrFalse(49)
+B10:
+	48: Branch(51)
+B11:
+	49: LdConst[10](u64: 7)
+	50: Abort
+B12:
+	51: Ret
+}
+
+public lz_receive<T: store + key>(vault#0#0: &mut Vault<T>, oapp#0#0: &OApp, call#0#0: Call<LzReceiveParam, Void>) {
+L3:	%#1: bool
+L4:	message#1#0: vector<u8>
+L5:	sender#1#0: Bytes32
+L6:	value#1#0: Option<Coin<SUI>>
+B0:
+	0: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	1: FreezeRef
+	2: CopyLoc[1](oapp#0#0: &OApp)
+	3: Call validate<T>(&Vault<T>, &OApp)
+	4: MoveLoc[1](oapp#0#0: &OApp)
+	5: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	6: ImmBorrowFieldGeneric[7](Vault.cap: CallCap)
+	7: MoveLoc[2](call#0#0: Call<LzReceiveParam, Void>)
+	8: Call oapp::lz_receive(&OApp, &CallCap, Call<LzReceiveParam, Void>): LzReceiveParam
+	9: Call lz_receive::destroy(LzReceiveParam): u32 * Bytes32 * u64 * Bytes32 * vector<u8> * address * vector<u8> * Option<Coin<SUI>>
+	10: StLoc[6](value#1#0: Option<Coin<SUI>>)
+	11: Pop
+	12: Pop
+	13: StLoc[4](message#1#0: vector<u8>)
+	14: Pop
+	15: Pop
+	16: StLoc[5](sender#1#0: Bytes32)
+	17: LdConst[1](u32: 30102)
+	18: Eq
+	19: BrFalse(33)
+B1:
+	20: MoveLoc[5](sender#1#0: Bytes32)
+	21: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	22: ImmBorrowFieldGeneric[9](Vault.peer: Bytes32)
+	23: ReadRef
+	24: Eq
+	25: BrFalse(30)
+B2:
+	26: ImmBorrowLoc[6](value#1#0: Option<Coin<SUI>>)
+	27: Call option::is_none<Coin<SUI>>(&Option<Coin<SUI>>): bool
+	28: StLoc[3](%#1: bool)
+	29: Branch(35)
+B3:
+	30: LdFalse
+	31: StLoc[3](%#1: bool)
+	32: Branch(35)
+B4:
+	33: LdFalse
+	34: StLoc[3](%#1: bool)
+B5:
+	35: MoveLoc[3](%#1: bool)
+	36: BrFalse(38)
+B6:
+	37: Branch(42)
+B7:
+	38: MoveLoc[0](vault#0#0: &mut Vault<T>)
+	39: Pop
+	40: LdConst[10](u64: 7)
+	41: Abort
+B8:
+	42: MoveLoc[6](value#1#0: Option<Coin<SUI>>)
+	43: Call option::destroy_none<Coin<SUI>>(Option<Coin<SUI>>)
+	44: MoveLoc[0](vault#0#0: &mut Vault<T>)
+	45: ImmBorrowLoc[4](message#1#0: vector<u8>)
+	46: Call process<T>(&mut Vault<T>, &vector<u8>)
+	47: Ret
+}
+
+process<T: store + key>(vault#0#0: &mut Vault<T>, message#0#0: &vector<u8>) {
+L2:	%#1: bool
+L3:	%#2: bool
+L4:	%#3: bool
+L5:	%#4: bool
+L6:	nft#1#0: Bytes32
+L7:	recipient#1#0: Bytes32
+L8:	request#1#0: Bytes32
+L9:	route#1#0: Bytes32
+B0:
+	0: MoveLoc[1](message#0#0: &vector<u8>)
+	1: Call codec::decode(&vector<u8>): u8 * Bytes32 * Bytes32 * Bytes32 * Bytes32
+	2: StLoc[7](recipient#1#0: Bytes32)
+	3: StLoc[8](request#1#0: Bytes32)
+	4: StLoc[6](nft#1#0: Bytes32)
+	5: StLoc[9](route#1#0: Bytes32)
+	6: LdU8(2)
+	7: Eq
+	8: BrFalse(25)
+B1:
+	9: MoveLoc[9](route#1#0: Bytes32)
+	10: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	11: ImmBorrowFieldGeneric[10](Vault.route: Bytes32)
+	12: ReadRef
+	13: Eq
+	14: BrFalse(22)
+B2:
+	15: MoveLoc[6](nft#1#0: Bytes32)
+	16: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	17: ImmBorrowFieldGeneric[2](Vault.backing: Bytes32)
+	18: ReadRef
+	19: Eq
+	20: StLoc[2](%#1: bool)
+	21: Branch(27)
+B3:
+	22: LdFalse
+	23: StLoc[2](%#1: bool)
+	24: Branch(27)
+B4:
+	25: LdFalse
+	26: StLoc[2](%#1: bool)
+B5:
+	27: MoveLoc[2](%#1: bool)
+	28: BrFalse(30)
+B6:
+	29: Branch(34)
+B7:
+	30: MoveLoc[0](vault#0#0: &mut Vault<T>)
+	31: Pop
+	32: LdConst[11](u64: 8)
+	33: Abort
+B8:
+	34: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	35: ImmBorrowFieldGeneric[11](Vault.announced: bool)
+	36: ReadRef
+	37: BrFalse(39)
+B9:
+	38: Branch(43)
+B10:
+	39: MoveLoc[0](vault#0#0: &mut Vault<T>)
+	40: Pop
+	41: LdConst[8](u64: 5)
+	42: Abort
+B11:
+	43: ImmBorrowLoc[8](request#1#0: Bytes32)
+	44: Call bytes32::is_zero(&Bytes32): bool
+	45: Not
+	46: BrFalse(52)
+B12:
+	47: ImmBorrowLoc[7](recipient#1#0: Bytes32)
+	48: Call bytes32::is_zero(&Bytes32): bool
+	49: Not
+	50: StLoc[3](%#2: bool)
+	51: Branch(54)
+B13:
+	52: LdFalse
+	53: StLoc[3](%#2: bool)
+B14:
+	54: MoveLoc[3](%#2: bool)
+	55: BrFalse(57)
+B15:
+	56: Branch(61)
+B16:
+	57: MoveLoc[0](vault#0#0: &mut Vault<T>)
+	58: Pop
+	59: LdConst[11](u64: 8)
+	60: Abort
+B17:
+	61: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	62: ImmBorrowFieldGeneric[4](Vault.phase: u8)
+	63: ReadRef
+	64: LdU8(2)
+	65: Eq
+	66: BrFalse(89)
+B18:
+	67: CopyLoc[8](request#1#0: Bytes32)
+	68: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	69: ImmBorrowFieldGeneric[12](Vault.request: Bytes32)
+	70: ReadRef
+	71: Eq
+	72: BrFalse(80)
+B19:
+	73: CopyLoc[7](recipient#1#0: Bytes32)
+	74: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	75: ImmBorrowFieldGeneric[13](Vault.recipient: Bytes32)
+	76: ReadRef
+	77: Eq
+	78: StLoc[4](%#3: bool)
+	79: Branch(82)
+B20:
+	80: LdFalse
+	81: StLoc[4](%#3: bool)
+B21:
+	82: MoveLoc[4](%#3: bool)
+	83: BrFalse(85)
+B22:
+	84: Branch(127)
+B23:
+	85: MoveLoc[0](vault#0#0: &mut Vault<T>)
+	86: Pop
+	87: LdConst[12](u64: 9)
+	88: Abort
+B24:
+	89: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	90: ImmBorrowFieldGeneric[4](Vault.phase: u8)
+	91: ReadRef
+	92: LdU8(1)
+	93: Eq
+	94: BrFalse(100)
+B25:
+	95: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	96: ImmBorrowFieldGeneric[5](Vault.nft: Option<T>)
+	97: Call option::is_some<T>(&Option<T>): bool
+	98: StLoc[5](%#4: bool)
+	99: Branch(102)
+B26:
+	100: LdFalse
+	101: StLoc[5](%#4: bool)
+B27:
+	102: MoveLoc[5](%#4: bool)
+	103: BrFalse(105)
+B28:
+	104: Branch(109)
+B29:
+	105: MoveLoc[0](vault#0#0: &mut Vault<T>)
+	106: Pop
+	107: LdConst[8](u64: 5)
+	108: Abort
+B30:
+	109: LdU8(2)
+	110: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	111: MutBorrowFieldGeneric[4](Vault.phase: u8)
+	112: WriteRef
+	113: CopyLoc[8](request#1#0: Bytes32)
+	114: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	115: MutBorrowFieldGeneric[12](Vault.request: Bytes32)
+	116: WriteRef
+	117: CopyLoc[7](recipient#1#0: Bytes32)
+	118: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	119: MutBorrowFieldGeneric[13](Vault.recipient: Bytes32)
+	120: WriteRef
+	121: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	122: MutBorrowFieldGeneric[5](Vault.nft: Option<T>)
+	123: Call option::extract<T>(&mut Option<T>): T
+	124: ImmBorrowLoc[7](recipient#1#0: Bytes32)
+	125: Call bytes32::to_address(&Bytes32): address
+	126: Call transfer::public_transfer<T>(T, address)
+B31:
+	127: MoveLoc[0](vault#0#0: &mut Vault<T>)
+	128: FreezeRef
+	129: Call object::id<Vault<T>>(&Vault<T>): ID
+	130: MoveLoc[8](request#1#0: Bytes32)
+	131: MoveLoc[7](recipient#1#0: Bytes32)
+	132: Pack[8](Released)
+	133: Call event::emit<Released>(Released)
+	134: Ret
+}
+
+payload<T: store + key>(vault#0#0: &Vault<T>, kind#0#0: u8): vector<u8> {
+L2:	%#1: bool
+L3:	%#2: bool
+L4:	%#3: vector<u8>
+B0:
+	0: CopyLoc[1](kind#0#0: u8)
+	1: LdU8(1)
+	2: Eq
+	3: BrFalse(54)
+B1:
+	4: CopyLoc[0](vault#0#0: &Vault<T>)
+	5: ImmBorrowFieldGeneric[3](Vault.paused: bool)
+	6: ReadRef
+	7: Not
+	8: BrFalse(10)
+B2:
+	9: Branch(14)
+B3:
+	10: MoveLoc[0](vault#0#0: &Vault<T>)
+	11: Pop
+	12: LdConst[13](u64: 10)
+	13: Abort
+B4:
+	14: CopyLoc[0](vault#0#0: &Vault<T>)
+	15: ImmBorrowFieldGeneric[4](Vault.phase: u8)
+	16: ReadRef
+	17: LdU8(1)
+	18: Eq
+	19: BrFalse(33)
+B5:
+	20: CopyLoc[0](vault#0#0: &Vault<T>)
+	21: ImmBorrowFieldGeneric[5](Vault.nft: Option<T>)
+	22: Call option::is_some<T>(&Option<T>): bool
+	23: BrFalse(30)
+B6:
+	24: CopyLoc[0](vault#0#0: &Vault<T>)
+	25: ImmBorrowFieldGeneric[11](Vault.announced: bool)
+	26: ReadRef
+	27: Not
+	28: StLoc[2](%#1: bool)
+	29: Branch(35)
+B7:
+	30: LdFalse
+	31: StLoc[2](%#1: bool)
+	32: Branch(35)
+B8:
+	33: LdFalse
+	34: StLoc[2](%#1: bool)
+B9:
+	35: MoveLoc[2](%#1: bool)
+	36: BrFalse(38)
+B10:
+	37: Branch(42)
+B11:
+	38: MoveLoc[0](vault#0#0: &Vault<T>)
+	39: Pop
+	40: LdConst[8](u64: 5)
+	41: Abort
+B12:
+	42: LdU8(1)
+	43: CopyLoc[0](vault#0#0: &Vault<T>)
+	44: ImmBorrowFieldGeneric[10](Vault.route: Bytes32)
+	45: ReadRef
+	46: MoveLoc[0](vault#0#0: &Vault<T>)
+	47: ImmBorrowFieldGeneric[2](Vault.backing: Bytes32)
+	48: ReadRef
+	49: Call bytes32::zero_bytes32(): Bytes32
+	50: Call bytes32::zero_bytes32(): Bytes32
+	51: Call codec::encode(u8, Bytes32, Bytes32, Bytes32, Bytes32): vector<u8>
+	52: StLoc[4](%#3: vector<u8>)
+	53: Branch(104)
+B13:
+	54: MoveLoc[1](kind#0#0: u8)
+	55: LdU8(3)
+	56: Eq
+	57: BrFalse(80)
+B14:
+	58: CopyLoc[0](vault#0#0: &Vault<T>)
+	59: ImmBorrowFieldGeneric[4](Vault.phase: u8)
+	60: ReadRef
+	61: LdU8(2)
+	62: Eq
+	63: BrFalse(77)
+B15:
+	64: CopyLoc[0](vault#0#0: &Vault<T>)
+	65: ImmBorrowFieldGeneric[5](Vault.nft: Option<T>)
+	66: Call option::is_none<T>(&Option<T>): bool
+	67: BrFalse(74)
+B16:
+	68: CopyLoc[0](vault#0#0: &Vault<T>)
+	69: ImmBorrowFieldGeneric[14](Vault.ack_sent: bool)
+	70: ReadRef
+	71: Not
+	72: StLoc[3](%#2: bool)
+	73: Branch(82)
+B17:
+	74: LdFalse
+	75: StLoc[3](%#2: bool)
+	76: Branch(82)
+B18:
+	77: LdFalse
+	78: StLoc[3](%#2: bool)
+	79: Branch(82)
+B19:
+	80: LdFalse
+	81: StLoc[3](%#2: bool)
+B20:
+	82: MoveLoc[3](%#2: bool)
+	83: BrFalse(85)
+B21:
+	84: Branch(89)
+B22:
+	85: MoveLoc[0](vault#0#0: &Vault<T>)
+	86: Pop
+	87: LdConst[8](u64: 5)
+	88: Abort
+B23:
+	89: LdU8(3)
+	90: CopyLoc[0](vault#0#0: &Vault<T>)
+	91: ImmBorrowFieldGeneric[10](Vault.route: Bytes32)
+	92: ReadRef
+	93: CopyLoc[0](vault#0#0: &Vault<T>)
+	94: ImmBorrowFieldGeneric[2](Vault.backing: Bytes32)
+	95: ReadRef
+	96: CopyLoc[0](vault#0#0: &Vault<T>)
+	97: ImmBorrowFieldGeneric[12](Vault.request: Bytes32)
+	98: ReadRef
+	99: MoveLoc[0](vault#0#0: &Vault<T>)
+	100: ImmBorrowFieldGeneric[13](Vault.recipient: Bytes32)
+	101: ReadRef
+	102: Call codec::encode(u8, Bytes32, Bytes32, Bytes32, Bytes32): vector<u8>
+	103: StLoc[4](%#3: vector<u8>)
+B24:
+	104: MoveLoc[4](%#3: vector<u8>)
+	105: Ret
+}
+
+public quote<T: store + key>(vault#0#0: &Vault<T>, oapp#0#0: &OApp, kind#0#0: u8, options#0#0: vector<u8>, ctx#0#0: &mut TxContext): Call<QuoteParam, MessagingFee> {
+B0:
+	0: CopyLoc[0](vault#0#0: &Vault<T>)
+	1: CopyLoc[1](oapp#0#0: &OApp)
+	2: Call validate<T>(&Vault<T>, &OApp)
+	3: MoveLoc[1](oapp#0#0: &OApp)
+	4: CopyLoc[0](vault#0#0: &Vault<T>)
+	5: ImmBorrowFieldGeneric[7](Vault.cap: CallCap)
+	6: LdConst[1](u32: 30102)
+	7: MoveLoc[0](vault#0#0: &Vault<T>)
+	8: MoveLoc[2](kind#0#0: u8)
+	9: Call payload<T>(&Vault<T>, u8): vector<u8>
+	10: MoveLoc[3](options#0#0: vector<u8>)
+	11: LdFalse
+	12: MoveLoc[4](ctx#0#0: &mut TxContext)
+	13: Call oapp::quote(&OApp, &CallCap, u32, vector<u8>, vector<u8>, bool, &mut TxContext): Call<QuoteParam, MessagingFee>
+	14: Ret
+}
+
+public send<T: store + key>(vault#0#0: &mut Vault<T>, oapp#0#0: &mut OApp, kind#0#0: u8, options#0#0: vector<u8>, fee#0#0: Coin<SUI>, ctx#0#0: &mut TxContext): Call<SendParam, MessagingReceipt> {
+L6:	message#1#0: vector<u8>
+B0:
+	0: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	1: FreezeRef
+	2: CopyLoc[1](oapp#0#0: &mut OApp)
+	3: FreezeRef
+	4: Call validate<T>(&Vault<T>, &OApp)
+	5: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	6: FreezeRef
+	7: CopyLoc[2](kind#0#0: u8)
+	8: Call payload<T>(&Vault<T>, u8): vector<u8>
+	9: StLoc[6](message#1#0: vector<u8>)
+	10: MoveLoc[2](kind#0#0: u8)
+	11: LdU8(1)
+	12: Eq
+	13: BrFalse(19)
+B1:
+	14: LdTrue
+	15: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	16: MutBorrowFieldGeneric[11](Vault.announced: bool)
+	17: WriteRef
+	18: Branch(23)
+B2:
+	19: LdTrue
+	20: CopyLoc[0](vault#0#0: &mut Vault<T>)
+	21: MutBorrowFieldGeneric[14](Vault.ack_sent: bool)
+	22: WriteRef
+B3:
+	23: MoveLoc[1](oapp#0#0: &mut OApp)
+	24: MoveLoc[0](vault#0#0: &mut Vault<T>)
+	25: ImmBorrowFieldGeneric[7](Vault.cap: CallCap)
+	26: LdConst[1](u32: 30102)
+	27: MoveLoc[6](message#1#0: vector<u8>)
+	28: MoveLoc[3](options#0#0: vector<u8>)
+	29: MoveLoc[4](fee#0#0: Coin<SUI>)
+	30: Call option::none<Coin<ZRO>>(): Option<Coin<ZRO>>
+	31: CopyLoc[5](ctx#0#0: &mut TxContext)
+	32: FreezeRef
+	33: Call tx_context::sender(&TxContext): address
+	34: Call option::some<address>(address): Option<address>
+	35: MoveLoc[5](ctx#0#0: &mut TxContext)
+	36: Call oapp::lz_send(&mut OApp, &CallCap, u32, vector<u8>, vector<u8>, Coin<SUI>, Option<Coin<ZRO>>, Option<address>, &mut TxContext): Call<SendParam, MessagingReceipt>
+	37: Ret
+}
+
+public confirm_send<T: store + key>(vault#0#0: &Vault<T>, oapp#0#0: &mut OApp, call#0#0: Call<SendParam, MessagingReceipt>): SendParam * MessagingReceipt {
+B0:
+	0: CopyLoc[0](vault#0#0: &Vault<T>)
+	1: CopyLoc[1](oapp#0#0: &mut OApp)
+	2: FreezeRef
+	3: Call validate<T>(&Vault<T>, &OApp)
+	4: MoveLoc[1](oapp#0#0: &mut OApp)
+	5: MoveLoc[0](vault#0#0: &Vault<T>)
+	6: ImmBorrowFieldGeneric[7](Vault.cap: CallCap)
+	7: MoveLoc[2](call#0#0: Call<SendParam, MessagingReceipt>)
+	8: Call oapp::confirm_lz_send(&mut OApp, &CallCap, Call<SendParam, MessagingReceipt>): SendParam * MessagingReceipt
+	9: Ret
+}
+
+public confirm_quote<T: store + key>(vault#0#0: &Vault<T>, oapp#0#0: &OApp, call#0#0: Call<QuoteParam, MessagingFee>): QuoteParam * MessagingFee {
+B0:
+	0: CopyLoc[0](vault#0#0: &Vault<T>)
+	1: CopyLoc[1](oapp#0#0: &OApp)
+	2: Call validate<T>(&Vault<T>, &OApp)
+	3: MoveLoc[1](oapp#0#0: &OApp)
+	4: MoveLoc[0](vault#0#0: &Vault<T>)
+	5: ImmBorrowFieldGeneric[7](Vault.cap: CallCap)
+	6: MoveLoc[2](call#0#0: Call<QuoteParam, MessagingFee>)
+	7: Call oapp::confirm_quote(&OApp, &CallCap, Call<QuoteParam, MessagingFee>): QuoteParam * MessagingFee
+	8: Ret
+}
+
+public phase<T: store + key>(vault#0#0: &Vault<T>): u8 {
+B0:
+	0: MoveLoc[0](vault#0#0: &Vault<T>)
+	1: ImmBorrowFieldGeneric[4](Vault.phase: u8)
+	2: ReadRef
+	3: Ret
+}
+
+public route<T: store + key>(vault#0#0: &Vault<T>): Bytes32 {
+B0:
+	0: MoveLoc[0](vault#0#0: &Vault<T>)
+	1: ImmBorrowFieldGeneric[10](Vault.route: Bytes32)
+	2: ReadRef
+	3: Ret
+}
+
+public backing<T: store + key>(vault#0#0: &Vault<T>): Bytes32 {
+B0:
+	0: MoveLoc[0](vault#0#0: &Vault<T>)
+	1: ImmBorrowFieldGeneric[2](Vault.backing: Bytes32)
+	2: ReadRef
+	3: Ret
+}
+
+public payload_for_review<T: store + key>(vault#0#0: &Vault<T>, kind#0#0: u8): vector<u8> {
+B0:
+	0: MoveLoc[0](vault#0#0: &Vault<T>)
+	1: MoveLoc[1](kind#0#0: u8)
+	2: Call payload<T>(&Vault<T>, u8): vector<u8>
+	3: Ret
+}
+
+Constants [
+	0 => u64: 1
+	1 => u32: 30102
+	2 => address: 0x046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba
+	3 => address: 0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4
+	4 => vector<u8>: "f6c6d439ea0da2f3e9ba79e4992a7a4c113215fbf54c442ac9020c315f953705::collection::NFT" // interpreted as UTF8 string
+	5 => u64: 2
+	6 => u64: 3
+	7 => u64: 4
+	8 => u64: 5
+	9 => u64: 6
+	10 => u64: 7
+	11 => u64: 8
+	12 => u64: 9
+	13 => u64: 10
+	14 => u64: 11
+]
+}

@@ -1,0 +1,6 @@
+[published.mainnet]
+chain-id = "35834a8a"
+published-at = "0x00245ba36f7a1cc643a2b037450dff1e4399e18069c6545fb5fcaaf37d39d7dc"
+original-id = "0x00245ba36f7a1cc643a2b037450dff1e4399e18069c6545fb5fcaaf37d39d7dc"
+version = 1
+toolchain-version = "1.54.1"

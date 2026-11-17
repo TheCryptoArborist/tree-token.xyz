@@ -1,0 +1,6 @@
+[package]
+name = "call"
+edition = "2024"
+
+[dependencies]
+utils = { local = "../../utils" }
