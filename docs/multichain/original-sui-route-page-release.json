@@ -1,0 +1,42 @@
+{
+  "mode": "publish",
+  "result": "passed",
+  "checkedAt": "2026-11-17T21:53:22.513Z",
+  "baselineId": "6afcc6048594a4fe92aee28d",
+  "candidateId": "6afcccb3950cd53f974fe3bf",
+  "sourceCommit": "9ec421796921666d2501fae70940484648f681aa",
+  "sourceBranch": "main",
+  "staticFiles": 598,
+  "changedOriginals": [],
+  "addedPaths": [
+    "/play/multichaintest/original/configure/app.js",
+    "/play/multichaintest/original/configure/core.js",
+    "/play/multichaintest/original/configure/index.html"
+  ],
+  "functionsPreserved": 49,
+  "schedulesPreserved": 5,
+  "planSha256": "c6405055417cd37698b6d44969d33811e6a95787b041c37336ffb09138d68ff4",
+  "productionChanged": true,
+  "url": "https://6afcccb3950cd53f974fe3bf--tree-token.netlify.app/",
+  "locked": true,
+  "canonicalPage": "https://tree-token.xyz/play/multichaintest/original/configure/",
+  "workflowRun": 44184227223,
+  "artifactId": 14373522912,
+  "sourcePr": 199,
+  "sourceReviewed": "2dff1e7ddff344fcc65aa6f59a361291f483ca1d",
+  "reviewFindings": false,
+  "originalStaticPathsPreserved": 595,
+  "productionRuntimeAndEnvironmentVerified": true,
+  "focusedTests": 290,
+  "evmTests": 14,
+  "originalNftsMoved": 0,
+  "assistantSubmittedTransactions": 0,
+  "browserVerification": {
+    "pageRendered": true,
+    "connectButtonVisible": true,
+    "missingExtensionFeedbackVerified": true,
+    "confirmedBindingsAndThreeVerifiersVisible": true,
+    "signingDisabledWithoutWalletAndSimulation": true,
+    "walletSignatureRequested": false
+  }
+}
