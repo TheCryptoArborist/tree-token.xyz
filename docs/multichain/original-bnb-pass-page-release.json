@@ -1,0 +1,38 @@
+{
+  "mode": "publish",
+  "result": "passed",
+  "checkedAt": "2026-11-17T20:29:19.664Z",
+  "baselineId": "6afcb1e59274eb1f9d9a58c7",
+  "candidateId": "6afcb8faa4752b6b52595145",
+  "sourceCommit": "72fb54181eeeab41a012e6b1405e6cd61f304ee2",
+  "sourceBranch": "main",
+  "staticFiles": 589,
+  "changedOriginals": [],
+  "addedPaths": [
+    "/play/multichaintest/original/bnb/pass/app.js",
+    "/play/multichaintest/original/bnb/pass/core.js",
+    "/play/multichaintest/original/bnb/pass/index.html"
+  ],
+  "functionsPreserved": 49,
+  "schedulesPreserved": 5,
+  "planSha256": "d327741f4db3816e74a71c4dadeaa4140ffd1ebb7bec25bc19db44ed283c69a0",
+  "productionChanged": true,
+  "url": "https://6afcb8faa4752b6b52595145--tree-token.netlify.app/",
+  "workflowRun": 44169558421,
+  "artifactId": 14366123980,
+  "locked": true,
+  "canonicalPage": "https://tree-token.xyz/play/multichaintest/original/bnb/pass/",
+  "originalStaticPathsPreserved": 586,
+  "productionRuntimeAndEnvironmentVerified": true,
+  "originalNftsMoved": 0,
+  "contractsPublishedByAssistant": 0,
+  "sourceReviewed": "c6e3811975be880718d8b9ea953a460fcfefb5ef",
+  "browserVerification": {
+    "pageRendered": true,
+    "connectButtonVisible": true,
+    "missingExtensionFeedbackVerified": true,
+    "confirmedAdapterPriceAndTreasuryVisible": true,
+    "signingDisabledWithoutWalletAndSimulation": true,
+    "walletSignatureRequested": false
+  }
+}
