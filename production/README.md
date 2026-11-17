@@ -1,3 +1,35 @@
+# Current production — original NFTree BNB adapter page, 2026-11-17
+
+Locked deploy `6afcb1e59274eb1f9d9a58c7`, published at 19:59:00 UTC, source
+`18d664df4104f99cfb98dfc4b2f87b8f2e931855`, workflow `44164114042`.
+Canonical isolated page: `/play/multichaintest/original/bnb/`.
+
+Exactly three files were added. All 583 existing paths remain byte-identical;
+total inventory is 586 paths, 49 complete backend packages and five schedules.
+Full backend package/provider/runtime identities, routes, region overrides,
+protected environment/runtime fingerprints and the production lock were verified.
+No backend upload, migration or assistant-submitted on-chain transaction occurred.
+
+The page offers one BNB adapter creation from wallet ending 83ae, fixing the actual
+original Sui package peer and confirmed empty Vault route. Fresh preflight checks
+actual Sui receipts/state, wallet identity, nonce, endpoint code/EID, exact runtime
+and immutables, and deployment gas. It reuses existing RPC fallback/parser helpers
+without modifying them. Web Locks and durable pending/receipt recovery guard the
+wallet handoff. Pass deployment, NFT deposit and sales remain subsequent steps.
+
+229 focused checks and 14 EVM contract tests passed. All source CI and exact bundle
+reproduction passed. Automated review of `2988c58` completed without findings.
+The canonical page rendered, exposed connection controls and extension help, and
+kept signing disabled without a wallet/simulation. Missing-extension feedback was
+checked. The cloud browser had no BNB extension; actual signature approval remains
+the user's action in their own Brave browser. No wallet request was submitted.
+
+Release record: `docs/multichain/original-bnb-page-release.json`.
+Flow and limits: `docs/multichain/original-bnb-deploy-flow.md`.
+Future website releases must capture this actual current inventory afresh.
+
+---
+
 # Current production — original NFTree empty-slot page, 2026-11-17
 
 Locked deploy `6afca1e2756277d1cf2ed161`, published at 18:50:45 UTC, source
