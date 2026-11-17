@@ -1,0 +1,351 @@
+{
+  "digest": "5Uztr6gLvf9fSMNfFRSi2fTVTAHXC1rCSKSRwn4h8JQP",
+  "verifiedAt": "2026-11-17T14:51:13.288Z",
+  "sourceVerified": true,
+  "destinationDelivered": false,
+  "checkpoint": {
+    "sequenceNumber": 346242879,
+    "timestamp": "2026-11-17T14:49:40.513Z"
+  },
+  "guid": "0x6a21b3ef6075b49ae3bdb1b839554326695df0d71c949db5aa8898ffc7967f8f",
+  "feeMist": "1034611781",
+  "gasMist": "4054192",
+  "totalMist": "1038665973",
+  "checks": {
+    "exactReviewedTransaction": true,
+    "exactReservePacket": true,
+    "allFourDvnFeesPaid": true,
+    "canaryIdentityCorrectedBothDirections": true,
+    "outboundNonceOne": true,
+    "disposableNftRetained": true,
+    "adminCapabilitiesRetained": true
+  },
+  "sourceEvents": [
+    {
+      "type": "0x3ce7457bed48ad23ee5d611dd3172ae4fbd0a22ea0e846782a7af224d905dbb0::send_uln::UlnConfigSetEvent",
+      "json": {
+        "sender": "0x2f3671d48dd000a27fd466fd347796149f5cd30cb16e1d22d2d89466ffc3d900",
+        "dst_eid": 30102,
+        "config": {
+          "use_default_confirmations": false,
+          "use_default_required_dvns": false,
+          "use_default_optional_dvns": false,
+          "uln_config": {
+            "confirmations": "5",
+            "required_dvns": [
+              "0x0c12321ebe562b8fb8a74e6d29f144ea199a8f31a4cea3a417ce72477f6dfebb",
+              "0x52aa129049de845353484868d1be6e2df6878b0ed2213d94d3c827309aeae685",
+              "0x5ddd0e7338d03f52e98831b52ca28e09a145a0495eea80fe46c4a4b88a69278a",
+              "0x92128a5edf4a0f696464de66d00986ef41b37faf705ceb3d9d9a4e5c306fbf91"
+            ],
+            "optional_dvns": [],
+            "optional_dvn_threshold": 0
+          }
+        }
+      }
+    },
+    {
+      "type": "0x3ce7457bed48ad23ee5d611dd3172ae4fbd0a22ea0e846782a7af224d905dbb0::receive_uln::UlnConfigSetEvent",
+      "json": {
+        "receiver": "0x2f3671d48dd000a27fd466fd347796149f5cd30cb16e1d22d2d89466ffc3d900",
+        "src_eid": 30102,
+        "config": {
+          "use_default_confirmations": false,
+          "use_default_required_dvns": false,
+          "use_default_optional_dvns": false,
+          "uln_config": {
+            "confirmations": "20",
+            "required_dvns": [
+              "0x0c12321ebe562b8fb8a74e6d29f144ea199a8f31a4cea3a417ce72477f6dfebb",
+              "0x52aa129049de845353484868d1be6e2df6878b0ed2213d94d3c827309aeae685",
+              "0x5ddd0e7338d03f52e98831b52ca28e09a145a0495eea80fe46c4a4b88a69278a",
+              "0x92128a5edf4a0f696464de66d00986ef41b37faf705ceb3d9d9a4e5c306fbf91"
+            ],
+            "optional_dvns": [],
+            "optional_dvn_threshold": 0
+          }
+        }
+      }
+    },
+    {
+      "type": "0x3ce7457bed48ad23ee5d611dd3172ae4fbd0a22ea0e846782a7af224d905dbb0::send_uln::ExecutorFeePaidEvent",
+      "json": {
+        "guid": {
+          "bytes": "aiGz72B1tJrjvbG4OVVDJmld8NcclJ21qoiY/8eWf48="
+        },
+        "executor": "0xde7fe1a6648d587fcc991f124f3aa5b6389340610804108094d5c5fbf61d1989",
+        "fee": {
+          "fee": "59774566",
+          "recipient": "0xf99b445ae678d3f28fe7acb91e5d7ee8ab538d7e231a837b12c593fb624ad630"
+        }
+      }
+    },
+    {
+      "type": "0x3ce7457bed48ad23ee5d611dd3172ae4fbd0a22ea0e846782a7af224d905dbb0::send_uln::DVNFeePaidEvent",
+      "json": {
+        "guid": {
+          "bytes": "aiGz72B1tJrjvbG4OVVDJmld8NcclJ21qoiY/8eWf48="
+        },
+        "dvns": [
+          "0x0c12321ebe562b8fb8a74e6d29f144ea199a8f31a4cea3a417ce72477f6dfebb",
+          "0x52aa129049de845353484868d1be6e2df6878b0ed2213d94d3c827309aeae685",
+          "0x5ddd0e7338d03f52e98831b52ca28e09a145a0495eea80fe46c4a4b88a69278a",
+          "0x92128a5edf4a0f696464de66d00986ef41b37faf705ceb3d9d9a4e5c306fbf91"
+        ],
+        "fees": [
+          {
+            "fee": "4358299",
+            "recipient": "0x9004e1e4c6dcc42d1b73269db48d510192665677fcad2079a3c7d1e9e971d34e"
+          },
+          {
+            "fee": "4409120",
+            "recipient": "0x9004e1e4c6dcc42d1b73269db48d510192665677fcad2079a3c7d1e9e971d34e"
+          },
+          {
+            "fee": "961660676",
+            "recipient": "0x9004e1e4c6dcc42d1b73269db48d510192665677fcad2079a3c7d1e9e971d34e"
+          },
+          {
+            "fee": "4409120",
+            "recipient": "0x9004e1e4c6dcc42d1b73269db48d510192665677fcad2079a3c7d1e9e971d34e"
+          }
+        ]
+      }
+    },
+    {
+      "type": "0x31beaef889b08b9c3b37d19280fc1f8b75bae5b2de2410fc3120f403e9a36dac::messaging_channel::PacketSentEvent",
+      "json": {
+        "encoded_packet": "AQAAAAAAAAABAAB2qi82cdSN0ACif9Rm/TR3lhSfXNMMsW4dItLYlGb/w9kAAAB1lgAAAAAAAAAAAAAAALTEccH7jjHdy7UYJ36XpFdfx0d5aiGz72B1tJrjvbG4OVVDJmld8NcclJ21qoiY/8eWf48BAUrnXlV5nwpONJQVA1QpkPFijxtYgfCzkXvKTiVc5rJbwH15LTcA3qOPaV2EP37vounIHv34qvfaX9FR5MWO8mwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "options": "AAMBABEBAAAAAAAAAAAAAAAAAAMNQA==",
+        "send_library": "0x3ce7457bed48ad23ee5d611dd3172ae4fbd0a22ea0e846782a7af224d905dbb0"
+      }
+    }
+  ],
+  "sourceBalanceChanges": [
+    {
+      "coinType": "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI",
+      "address": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+      "amount": "-1038665973"
+    },
+    {
+      "coinType": "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI",
+      "address": "0x9004e1e4c6dcc42d1b73269db48d510192665677fcad2079a3c7d1e9e971d34e",
+      "amount": "974837215"
+    },
+    {
+      "coinType": "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI",
+      "address": "0xf99b445ae678d3f28fe7acb91e5d7ee8ab538d7e231a837b12c593fb624ad630",
+      "amount": "59774566"
+    }
+  ],
+  "bnbVerification": {
+    "checkedAt": "2026-11-17T14:51:59.477Z",
+    "headerHash": "0xc61ff6a0009c2319a702dd7716af56988001695778a8d15b4f0348afeaab2176",
+    "payloadHash": "0x082e0932f09b5bfeae11aaa39fcdd02e24cc3a430d004667fcc6c5f006538992",
+    "requiredConfirmations": 5,
+    "verifiers": [
+      {
+        "dvn": "0x247624e2143504730aec22912ed41f092498bef2",
+        "submitted": true,
+        "confirmations": "5"
+      },
+      {
+        "dvn": "0x31f748a368a893bdb5abb67ec95f232507601a73",
+        "submitted": true,
+        "confirmations": "5"
+      },
+      {
+        "dvn": "0xfa9ba83c102283958b997adc8b44ed3a3cdb5dda",
+        "submitted": false,
+        "confirmations": "0"
+      },
+      {
+        "dvn": "0xfd6865c841c2d64565562fcc7e05e619a30615f0",
+        "submitted": true,
+        "confirmations": "5"
+      }
+    ],
+    "verifiable": false
+  },
+  "bnbPassState": {
+    "chain": {
+      "jsonrpc": "2.0",
+      "id": 1,
+      "result": "0x38"
+    },
+    "state": {
+      "jsonrpc": "2.0",
+      "id": 1,
+      "result": "0x0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "delivered": {
+      "jsonrpc": "2.0",
+      "id": 1,
+      "result": "0x0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  },
+  "layerZeroScan": {
+    "data": [
+      {
+        "pathway": {
+          "srcEid": 30378,
+          "dstEid": 30102,
+          "sender": {
+            "address": "0x2f3671d48dd000a27fd466fd347796149f5cd30cb16e1d22d2d89466ffc3d900",
+            "chain": "sui"
+          },
+          "receiver": {
+            "address": "0xb4c471c1fb8e31ddcbb518277e97a4575fc74779",
+            "chain": "bsc"
+          },
+          "id": "30378-30102-0x2f3671d48dd000a27fd466fd347796149f5cd30cb16e1d22d2d89466ffc3d900-0xb4c471c1fb8e31ddcbb518277e97a4575fc74779",
+          "nonce": 1
+        },
+        "source": {
+          "status": "SUCCEEDED",
+          "tx": {
+            "txHash": "5Uztr6gLvf9fSMNfFRSi2fTVTAHXC1rCSKSRwn4h8JQP",
+            "blockHash": "9bEF1vqSyw4C3VNhEbaWt87vErKasEPiLAXErMAQFooM",
+            "blockNumber": "346242879",
+            "blockTimestamp": 1794926980,
+            "from": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+            "payload": "0x01014ae75e55799f0a4e34941503542990f1628f1b5881f0b3917bca4e255ce6b25bc07d792d3700dea38f695d843f7eefa2e9c81efdf8aaf7da5fd151e4c58ef26c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+            "readinessTimestamp": 1794926981,
+            "options": {
+              "lzReceive": {
+                "gas": "200000",
+                "value": "0"
+              },
+              "ordered": false
+            }
+          }
+        },
+        "destination": {
+          "nativeDrop": {
+            "status": "N/A"
+          },
+          "lzCompose": {
+            "status": "N/A"
+          },
+          "status": "WAITING"
+        },
+        "verification": {
+          "dvn": {
+            "dvns": {
+              "0x247624e2143504730aec22912ed41f092498bef2": {
+                "txHash": "0x165f8d7522f1747d23e9e4dd8d43bcb51e33ade1cdb4d6e38652dc094fb4386e",
+                "blockHash": "0xc612a94d000f859ab1de10df87adc986bd9b790c9b2c88f3936bfecb0cca6d2f",
+                "blockNumber": 134138384,
+                "blockTimestamp": 1794926989,
+                "proof": {
+                  "packetHeader": "0x010000000000000001000076aa2f3671d48dd000a27fd466fd347796149f5cd30cb16e1d22d2d89466ffc3d90000007596000000000000000000000000b4c471c1fb8e31ddcbb518277e97a4575fc74779",
+                  "payloadHash": "0x082e0932f09b5bfeae11aaa39fcdd02e24cc3a430d004667fcc6c5f006538992"
+                },
+                "status": "WAITING_FOR_ULN_CONFIG"
+              },
+              "0x31f748a368a893bdb5abb67ec95f232507601a73": {
+                "txHash": "0xa60ca9ac2829a7fb16be3115af0c25204fb0c087d1c2ca0b9fd6e8170510c0e3",
+                "blockHash": "0x3fe303d76719996ba6ffc4ac5c131bf8d77f016f18e2c8172435ea2daa3dbe20",
+                "blockNumber": 134138385,
+                "blockTimestamp": 1794926989,
+                "proof": {
+                  "packetHeader": "0x010000000000000001000076aa2f3671d48dd000a27fd466fd347796149f5cd30cb16e1d22d2d89466ffc3d90000007596000000000000000000000000b4c471c1fb8e31ddcbb518277e97a4575fc74779",
+                  "payloadHash": "0x082e0932f09b5bfeae11aaa39fcdd02e24cc3a430d004667fcc6c5f006538992"
+                },
+                "status": "WAITING_FOR_ULN_CONFIG"
+              },
+              "0xfd6865c841c2d64565562fcc7e05e619a30615f0": {
+                "txHash": "0x08f8f1236092e339048d62d055361e447648477de7f7871a60ef26f03b0bd75e",
+                "blockHash": "0x5e287b99a38df5cdacddd9499906193bb9e67418fd3182659a0f9bfff03e1b1c",
+                "blockNumber": 134138389,
+                "blockTimestamp": 1794926991,
+                "proof": {
+                  "packetHeader": "0x010000000000000001000076aa2f3671d48dd000a27fd466fd347796149f5cd30cb16e1d22d2d89466ffc3d90000007596000000000000000000000000b4c471c1fb8e31ddcbb518277e97a4575fc74779",
+                  "payloadHash": "0x082e0932f09b5bfeae11aaa39fcdd02e24cc3a430d004667fcc6c5f006538992"
+                },
+                "status": "WAITING_FOR_ULN_CONFIG"
+              },
+              "0xfa9ba83c102283958b997adc8b44ed3a3cdb5dda": {
+                "status": "WAITING"
+              }
+            },
+            "status": "WAITING"
+          },
+          "sealer": {
+            "status": "WAITING"
+          }
+        },
+        "guid": "0x6a21b3ef6075b49ae3bdb1b839554326695df0d71c949db5aa8898ffc7967f8f",
+        "config": {
+          "error": true,
+          "errorMessage": "Probable DVN mismatch, verify that the same DVNs are used on source and destination",
+          "dvnConfigError": true,
+          "receiveLibrary": "0xB217266c3A98C8B2709Ee26836C98cf12f6cCEC1",
+          "sendLibrary": "0x3ce7457bed48ad23ee5d611dd3172ae4fbd0a22ea0e846782a7af224d905dbb0",
+          "inboundConfig": {
+            "confirmations": 5,
+            "requiredDVNCount": 4,
+            "optionalDVNCount": 0,
+            "optionalDVNThreshold": 0,
+            "requiredDVNs": [
+              "0x247624e2143504730aec22912ed41f092498bef2",
+              "0x31f748a368a893bdb5abb67ec95f232507601a73",
+              "0xfa9ba83c102283958b997adc8b44ed3a3cdb5dda",
+              "0xfd6865c841c2d64565562fcc7e05e619a30615f0"
+            ],
+            "requiredDVNNames": [
+              "Horizen",
+              "Twinstake",
+              "Canary",
+              "LayerZero Labs"
+            ],
+            "optionalDVNs": [],
+            "optionalDVNNames": []
+          },
+          "outboundConfig": {
+            "confirmations": 5,
+            "requiredDVNCount": 4,
+            "optionalDVNCount": 0,
+            "optionalDVNThreshold": 0,
+            "requiredDVNs": [
+              "0x0c12321ebe562b8fb8a74e6d29f144ea199a8f31a4cea3a417ce72477f6dfebb",
+              "0x52aa129049de845353484868d1be6e2df6878b0ed2213d94d3c827309aeae685",
+              "0x5ddd0e7338d03f52e98831b52ca28e09a145a0495eea80fe46c4a4b88a69278a",
+              "0x92128a5edf4a0f696464de66d00986ef41b37faf705ceb3d9d9a4e5c306fbf91"
+            ],
+            "requiredDVNNames": [
+              "Twinstake",
+              "LayerZero Labs",
+              "unknown",
+              "Horizen"
+            ],
+            "optionalDVNs": [],
+            "optionalDVNNames": []
+          },
+          "ulnSendVersion": "V302",
+          "ulnReceiveVersion": "V302"
+        },
+        "status": {
+          "name": "BLOCKED",
+          "message": "Config error"
+        },
+        "created": "2026-11-17T14:49:45.000Z",
+        "updated": "2026-11-17T14:50:02.000Z"
+      }
+    ]
+  },
+  "outcome": "Sui reserve message verified; BNB delivery blocked pending Canary proof. Do not resend or prepare a pass purchase until the existing message is resolved.",
+  "guidance": [
+    "accessing-data/SKILL.md",
+    "accessing-data/graphql.md"
+  ],
+  "canaryPublishedMetadata": {
+    "0xfa35508c624925c6f341113f8f9397e5f41750b833af87d0c945a6f5682887f0": {
+      "canonicalName": "Canary",
+      "id": "canary",
+      "version": 2
+    }
+  },
+  "suspectedCause": "Published Canary metadata and Scan name the worker object ID, while Sui worker capability/PTB registration uses the package identity. Provider mapping or worker-side processing needs confirmation; root cause is not yet proven.",
+  "sourceReceipt": "5Uztr6gLvf9fSMNfFRSi2fTVTAHXC1rCSKSRwn4h8JQP"
+}
