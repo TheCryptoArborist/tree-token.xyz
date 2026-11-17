@@ -1,3 +1,38 @@
+# Current production — original NFTree pass binding page, 2026-11-17
+
+Locked deploy `6afcbf06032b351187d30179`, verified at 20:55:04 UTC, source
+`79d5e5ae58453012ae8e809d712d49db5cf3f6c0`, workflow `44174076629`.
+Canonical isolated page: `/play/multichaintest/original/bnb/bind/`.
+
+Exactly three files were added. All 589 existing paths remain byte-identical;
+total inventory is 592 paths, 49 complete backend packages and five schedules.
+Full package/provider/runtime records, protected environment/runtime fingerprints,
+canonical delivery and production lock were verified. No backend rebuild occurred.
+
+The fixed bindPass call links confirmed pass
+`0x1d3da001E586a7DEFD397B77FADB29eD6F039c13` to adapter
+`0x90b5292a5074CfDD665C726b433cc0A97e0dA6ab` from BNB wallet ending 83ae.
+Fresh source, deployed-code, immutable, state, identity, nonce and gas checks guard
+approval. The exact receipt/event and bound pointer must be verified afterward.
+Purchases remain paused; no token is minted, USDT charged or original NFT moved.
+Actual wallet approval remains Peter's next step in Brave. The assistant has
+submitted no on-chain transaction.
+
+260 focused tests, 14 EVM contract tests, pinned artifact/semantic checks and exact
+bundle reproduction passed. All source CI passed; automated review of
+`f20646d6b3002a44eee6f9f017c7e716ed1a0907` completed without findings.
+Canonical rendering, expanded contract/price/treasury/source bindings, connection
+controls, explicit missing-extension feedback and disconnected signing guards
+were checked in the cloud browser, which has no BNB wallet extension.
+
+Release record: `docs/multichain/original-bnb-binding-page-release.json`.
+Flow: `docs/multichain/original-bnb-binding-flow.md`.
+Capture this current full inventory afresh before future releases. LayerZero
+registration/configuration verification still precedes any original NFT deposit
+or sale enablement. Freeze all prior signing snapshots and bundles.
+
+---
+
 # Current production — original NFTree suite-pass page, 2026-11-17
 
 Locked deploy `6afcb8faa4752b6b52595145`, published at 20:29:16 UTC, source

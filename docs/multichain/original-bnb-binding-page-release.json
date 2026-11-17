@@ -1,0 +1,41 @@
+{
+  "mode": "publish",
+  "result": "passed",
+  "checkedAt": "2026-11-17T20:55:04.792Z",
+  "baselineId": "6afcb8faa4752b6b52595145",
+  "candidateId": "6afcbf06032b351187d30179",
+  "sourceCommit": "79d5e5ae58453012ae8e809d712d49db5cf3f6c0",
+  "sourceBranch": "main",
+  "staticFiles": 592,
+  "changedOriginals": [],
+  "addedPaths": [
+    "/play/multichaintest/original/bnb/bind/app.js",
+    "/play/multichaintest/original/bnb/bind/core.js",
+    "/play/multichaintest/original/bnb/bind/index.html"
+  ],
+  "functionsPreserved": 49,
+  "schedulesPreserved": 5,
+  "planSha256": "4fb9843dcc4136db8ed11aac7d16106ec9cccb4738c37c644c6bc8f60dcc0369",
+  "productionChanged": true,
+  "url": "https://6afcbf06032b351187d30179--tree-token.netlify.app/",
+  "workflowRunId": 44174076629,
+  "artifactId": 14369256308,
+  "canonicalUrl": "https://tree-token.xyz/play/multichaintest/original/bnb/bind/",
+  "sourcePr": 193,
+  "reviewedHead": "f20646d6b3002a44eee6f9f017c7e716ed1a0907",
+  "reviewFindings": false,
+  "tests": {
+    "focused": 260,
+    "evm": 14
+  },
+  "visualChecks": [
+    "Canonical title and binding details rendered",
+    "Exact confirmed pass, adapter, treasury, package peer, Vault and NFT displayed",
+    "Connect control gives explicit no-extension feedback in cloud browser",
+    "Signing and receipt checks disabled while disconnected"
+  ],
+  "submittedOnChain": false,
+  "locked": true,
+  "originalStaticPathsPreserved": 589,
+  "productionRuntimeAndEnvironmentVerified": true
+}
