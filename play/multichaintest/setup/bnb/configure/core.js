@@ -10,11 +10,40 @@ export function resolveStage(reads,values){
   const stages=Array.from({length:5},(_,i)=>i).filter(stage=>reads.every((r,i)=>same(values[i],r.changesAt&&stage>=r.changesAt?r.after:r.before)));
   check(stages.length===1,'The live route differs from the reviewed sequence. Send this message back before signing.');return stages[0];
 }
+// Public chain reads are isolated from extension RPC outages. Identity and every
+// signing request still go to the selected wallet, with no submission retry.
+export const BNB_READ_ENDPOINTS=Object.freeze(['https://bsc-dataseed.bnbchain.org','https://bsc-dataseed-public.bnbchain.org']);
+const READ_METHODS=new Set(['eth_blockNumber','eth_getCode','eth_call','eth_getTransactionCount','eth_estimateGas','eth_gasPrice','eth_getBalance','eth_getTransactionReceipt','eth_getTransactionByHash']);
+export function createReadProvider(wallet,{fetcher=fetch,endpoints=BNB_READ_ENDPOINTS}={}){
+  let preferred=0,id=0;const verified=new Set();
+  const rpc=async(url,method,params)=>{
+    const requestId=++id;let response;
+    try{response=await fetcher(url,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'omit',referrerPolicy:'no-referrer',body:JSON.stringify({jsonrpc:'2.0',id:requestId,method,params:params??[]}),signal:AbortSignal.timeout(8000)});}catch{throw Object.assign(Error('Read endpoint could not be reached.'),{transport:true});}
+    if(!response.ok)throw Object.assign(Error('Read endpoint returned HTTP '+response.status+'.'),{transport:true});
+    let data;try{data=await response.json();}catch{throw Object.assign(Error('Read endpoint returned invalid JSON.'),{transport:true});}
+    if(data?.jsonrpc!=='2.0'||data.id!==requestId)throw Error('Read endpoint response identity mismatch.');
+    if(data.error){const e=Error(String(data.error.message??'RPC error').slice(0,250));if([-32005,-32603,-32601].includes(data.error.code)||/rate limit|too many requests|temporarily unavailable|limit exceeded/i.test(e.message))e.transport=true;throw e;}
+    if(!Object.hasOwn(data,'result'))throw Error('Read endpoint returned no result.');return data.result;
+  };
+  return {request:async request=>{
+    if(!READ_METHODS.has(request.method))return wallet.request(request);
+    let last;
+    for(let attempt=0;attempt<endpoints.length;attempt++){
+      const index=(preferred+attempt)%endpoints.length,url=endpoints[index];
+      try{
+        if(!verified.has(url)){if(quantity(await rpc(url,'eth_chainId',[]),'public chain ID')!==56n)throw Error('Public read endpoint is not BNB mainnet.');verified.add(url);}
+        const result=await rpc(url,request.method,request.params);preferred=index;return result;
+      }catch(e){last=e;if(!e.transport)throw Error(request.method+': '+e.message);verified.delete(url);}
+    }
+    throw Error(request.method+': BNB read connections are temporarily unavailable. Your pending receipt is retained. '+String(last?.message??''));
+  }};
+}
+
 export async function readRoute(provider,cfg){
   await identity(provider,cfg);
   const block=await walletRead(provider,{method:'eth_blockNumber'});quantity(block,'block number');
   for(const [address,expected] of Object.entries(cfg.code))check(await hashHex(await walletRead(provider,{method:'eth_getCode',params:[address,'latest']}))===expected,'Pilot or LayerZero contract code changed. Review before continuing.');
-  const values=await Promise.all(cfg.reads.map(r=>walletRead(provider,{method:'eth_call',params:[{to:r.to,data:r.data},'latest']})));
+  const values=[];for(const r of cfg.reads)values.push(await walletRead(provider,{method:'eth_call',params:[{to:r.to,data:r.data},'latest']}));
   return {stage:resolveStage(cfg.reads,values),block};
 }
 async function nonce(provider,cfg,stage){for(const tag of ['latest','pending'])check(quantity(await walletRead(provider,{method:'eth_getTransactionCount',params:[cfg.from,tag]}),'wallet nonce')===BigInt(cfg.startNonce+stage),'Wallet nonce changed or a transaction is pending. Check wallet activity and send this message back.');}

@@ -14,9 +14,9 @@ import { verifyDelivery } from './multichain-preview-delivery.mjs';
 // unlocks a deploy, or accepts an arbitrary older deployment for publication.
 export const SITE_ID = 'aa62f324-b880-47d6-85b8-4ba0700ff5bf';
 export const ACCOUNT_ID = '69800888d1a3d0483003ae9e';
-export const BASELINE_ID = process.env.MULTICHAIN_EXPECTED_DEPLOY || '6afbb30a12bb3e7a4e0385c6';
-export const ORIGINAL_CHANGES = [];
-export const REPLACED_HASHES = {};
+export const BASELINE_ID = process.env.MULTICHAIN_EXPECTED_DEPLOY || '6afbb8284a449e7693680bc7';
+export const ORIGINAL_CHANGES = ["/play/multichaintest/setup/bnb/configure/index.html", "/play/multichaintest/setup/bnb/configure/app.js", "/play/multichaintest/setup/bnb/configure/core.js"];
+export const REPLACED_HASHES = {"/play/multichaintest/setup/bnb/configure/index.html": "2b4b0fb028fd53afd94668188dce13773b2881ac", "/play/multichaintest/setup/bnb/configure/app.js": "d96b0804f676bffa84efafa6e856d3934fb4099f", "/play/multichaintest/setup/bnb/configure/core.js": "2fe9f8989cbc6c540ffc8a4e23f9871be396d885"};
 // Historical orphaned API deploys individually audited on 2026-11-10.
 // These are not builds: all have null build_id/published_at and unchanged,
 // months-old states. Any new, changed, or genuinely queued deploy still blocks.
@@ -29,7 +29,7 @@ export function isAuditedInactiveDeploy(deploy) {
     deploy.commit_ref ?? null].every((value, i) => value === expected[i]);
 }
 
-export const MULTICHAIN_PATHS = ["/play/multichaintest/setup/bnb/configure/index.html", "/play/multichaintest/setup/bnb/configure/app.js", "/play/multichaintest/setup/bnb/configure/core.js", "/play/multichaintest/setup/bnb/configure/configuration.json"];
+export const MULTICHAIN_PATHS = ["/play/multichaintest/setup/bnb/configure/index.html", "/play/multichaintest/setup/bnb/configure/app.js", "/play/multichaintest/setup/bnb/configure/core.js"];
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const RUNTIME_FIELDS = ['branch', 'context', 'functions_region', 'functions_region_overrides',
   'database_branch_id', 'blobs_region', 'framework', 'edge_functions_present', 'server', 'database_migrations'];
