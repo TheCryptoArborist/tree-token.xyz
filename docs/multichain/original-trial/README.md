@@ -1,3 +1,44 @@
+# Confirmed original Sui peer binding — 2026-11-17
+
+User-signed Sui mainnet digest:
+`FCG2538WHkd7rTAiC2McJanEw2Dr84BiaGcXoNzZUwsu`.
+The published strict peer-binding receipt/recovery validator passed against the
+actual signed transaction, current bound Sui state and fresh BNB route/pass reads.
+Both exact commands, original NFT generic, pure peer bytes, five ordered events,
+five expected application/capability writes and four deterministic dynamic-field
+entries matched. Net gas: 9,266,741 MIST (0.009266741 SUI).
+
+The Sui Vault now binds the confirmed BNB adapter
+0x90b5292a5074CfDD665C726b433cc0A97e0dA6ab, with the exact 32-byte peer and
+reserve/acknowledgment options requiring 200,000 destination gas and no native
+delivery. The channel path is initialized with zero inbound/outbound nonces and
+an empty inbound payload table. Existing Sui libraries, three required DVNs,
+confirmation rules, executor and original NFT receiver metadata are unchanged.
+
+Fresh source checks confirmed original #2720 remains directly dev-owned with
+unchanged version/digest. Vault is empty and bound, phase zero, unannounced;
+Registry, UpgradeCap, NFT and protocol/registration objects are protected. Both
+borrowed AdminCaps remain dev-owned. Fresh BNB checks reconfirm all four actual
+configuration receipts, binding/runtimes/fixed price and treasury, stage four,
+and paused/unminted pass. This is peer binding only: no NFT deposit, LayerZero
+packet, stablecoin charge, mint or sale activation occurred.
+
+Latest actual bindings: `peer-bindings.json`.
+Evidence: `peer-binding-receipt.json`, `peer-binding-verified.json`.
+All previous signing snapshots, baselines and public bundles remain frozen.
+Verification used public reads only; no wallet was connected or transaction
+submitted by the assistant. No website, backend, schedule or contract source
+changes accompany this verification record.
+
+Next: complete final route checks before preparing original NFT deposit.
+Ready-to-fund and ready-to-sell remain false pending those separate stages.
+
+Current guidance rechecked:
+https://github.com/MystenLabs/skills/blob/main/accessing-data/SKILL.md
+https://github.com/MystenLabs/skills/blob/main/accessing-data/graphql.md
+
+---
+
 # Confirmed original BNB route configuration — 2026-11-17
 
 All four user-signed BNB mainnet transactions passed the published strict
