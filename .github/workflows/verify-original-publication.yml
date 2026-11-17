@@ -3,6 +3,8 @@ on:
   pull_request:
     paths:
       - 'scripts/multichain/original-publish-core.mjs'
+      - 'scripts/multichain/original-slot-core.mjs'
+      - 'tests/multichain-original-slot.test.mjs'
       - 'play/multichaintest/original/**'
       - 'tests/multichain-original-publish.test.mjs'
       - 'docs/multichain/one-slot-vault/publication-bytecode.json'
@@ -21,9 +23,12 @@ jobs:
         with:
           node-version: 24
       - run: npm ci --ignore-scripts
-      - run: node --test tests/multichain-original-publish.test.mjs tests/one-slot-publication.test.mjs
+      - run: node --test tests/multichain-original-publish.test.mjs tests/one-slot-publication.test.mjs tests/multichain-original-slot.test.mjs
       - run: |
           node_modules/.bin/esbuild scripts/multichain/original-publish-core.mjs --bundle --format=esm --platform=browser --target=es2022 --minify --outfile=/tmp/original-core.js
           cmp /tmp/original-core.js play/multichaintest/original/core.js
           node --check play/multichaintest/original/app.js
+          node_modules/.bin/esbuild scripts/multichain/original-slot-core.mjs --bundle --format=esm --platform=browser --target=es2022 --minify --outfile=/tmp/slot-core.js
+          cmp /tmp/slot-core.js play/multichaintest/original/slot/core.js
+          node --check play/multichaintest/original/slot/app.js
           git diff --check
