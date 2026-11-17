@@ -47,10 +47,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Add the reviewed BNB configuration signing page and preserve the live site
+      - name: Repair BNB configuration receipt reads and preserve the live site
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          MULTICHAIN_EXPECTED_DEPLOY: '6afbb30a12bb3e7a4e0385c6'
+          MULTICHAIN_EXPECTED_DEPLOY: '6afbb8284a449e7693680bc7'
           REVIEWED_SHA: ${{ github.sha }}
         run: |
           test -n "$NETLIFY_AUTH_TOKEN" || { echo 'The existing Netlify release connection is unavailable.'; exit 1; }
