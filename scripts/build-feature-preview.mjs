@@ -1,5 +1,7 @@
-import { cp, mkdir, readFile, readdir } from 'node:fs/promises';
+import { cp, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
+import { execFileSync } from 'node:child_process';
+import { upgradeHeartwood } from './heartwood-v04/build.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 // Keep the candidate separate from the byte-exact published snapshot in dist/.
@@ -27,6 +29,8 @@ async function rejectUntrackedOutput(directory, prefix = '') {
   }
 }
 
+// Fail the preview build if expedition mechanics or full seeded routes regress.
+execFileSync(process.execPath, ['--test', 'scripts/heartwood-v04/tests/rules.test.cjs'], { cwd: root, stdio: 'inherit' });
 await rejectUntrackedOutput(output);
 for (const file of manifest.files) {
   const destination = resolve(output, outputPath(file));
@@ -36,7 +40,13 @@ for (const file of manifest.files) {
 
 for (const file of [...overlays, ...additions, ...privateArcadePaths]) {
   await mkdir(dirname(resolve(output, file)), { recursive: true });
-  await cp(resolve(root, file), resolve(output, file));
+  if (file === 'play/heartwood-expedition/test/index.html') {
+    const source = await readFile(resolve(root, file), 'utf8');
+    await writeFile(resolve(output, file), upgradeHeartwood(source));
+  } else {
+    await cp(resolve(root, file), resolve(output, file));
+  }
 }
 console.log(`Built a ${allowed.size}-file feature preview from the verified production file set and explicit STI additions.`);
+console.log('Heartwood v0.4 overlays only its isolated test HTML; approved character artwork is unchanged.');
 console.log('The production manifest and recovered function packages were not changed.');
