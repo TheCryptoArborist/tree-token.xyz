@@ -1,0 +1,18 @@
+{
+  "checkedAt": "2026-11-17T22:14:43.316Z",
+  "stage": 0,
+  "block": "0x7ffb094",
+  "sourceVerified": true,
+  "bindingVerified": true,
+  "nonce": "338",
+  "gas": "58554",
+  "gasLimit": "0x11279",
+  "gasPrice": "0x2faf080",
+  "estimatedFeeWei": "2927700000000",
+  "gasLimitFeeWei": "3513250000000",
+  "quotedAt": 1794953683316,
+  "sourceReceipt": "EFmDHsBSjkydv26Ajc8pvR9GFuNNmubo9tPjfrnc6Eos",
+  "publicReadsOnly": true,
+  "actualWalletConnected": false,
+  "assistantSubmitted": false
+}
