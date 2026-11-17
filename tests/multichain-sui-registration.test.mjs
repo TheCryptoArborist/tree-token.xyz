@@ -40,3 +40,17 @@ test('page imports actual local wallet exports and requires explicit interaction
  assert(app.includes("from '../../../wallet-vendor.js'"));assert(app.includes('autoConnect:false'));assert(app.includes('slushWalletConfig:null'));assert(html.includes('id="register" disabled'));assert(html.includes('empty execution metadata'));
  const vendor=await import('../play/multichaintest/wallet-vendor.js');assert.equal(typeof vendor.createDAppKit,'function');assert.equal(typeof vendor.SuiGrpcClient,'function');
 });
+
+import vm from 'node:vm';
+function pageHarness(initial=[]){
+ const elements=new Map(),storage=new Map();let connectCalls=0,signCalls=0,reloads=0;
+ const el=id=>{if(!elements.has(id))elements.set(id,{hidden:id==='wallet-help',disabled:false,checked:false,textContent:'',children:[],replaceChildren(){this.children=[];},append(b){this.children.push(b);}});return elements.get(id);};
+ function store(value){const subs=[];return {get:()=>value,subscribe:fn=>{subs.push(fn);fn(value);},set:v=>{value=v;subs.forEach(fn=>fn(value));}};}
+ const kit={stores:{$wallets:store(initial),$connection:store({}),$currentNetwork:store('mainnet')},connectWallet:async({wallet})=>{connectCalls++;kit.stores.$connection.set({account:{address:C.sender},wallet});},disconnectWallet:async()=>kit.stores.$connection.set({}),signAndExecuteTransaction:async()=>{signCalls++;}};
+ const app=fs.readFileSync(new URL('../play/multichaintest/setup/sui/register/app.js',import.meta.url),'utf8').replace(/^import .*;\n/gm,'');
+ vm.runInNewContext(app,{C,readState,requestRegistration,createDAppKit:()=>kit,SuiGrpcClient:class{},document:{getElementById:el,createElement:()=>({})},window:{addEventListener(){},location:{reload(){reloads++;}}},localStorage:{getItem:k=>storage.get(k)??null},navigator:{},Date,console});
+ return {el,kit,connectCalls:()=>connectCalls,signCalls:()=>signCalls,reloads:()=>reloads};
+}
+test('Connect wallet remains usable with no extension and gives actionable help',async()=>{const h=pageHarness();assert.equal(h.el('connect-wallet').disabled,false);assert.equal(h.el('connect-wallet').textContent,'Connect wallet');await h.el('connect-wallet').onclick();assert.equal(h.el('wallet-help').hidden,false);assert.match(h.el('status').textContent,/not been detected/);assert.equal(h.connectCalls(),0);assert.equal(h.signCalls(),0);assert.equal(h.el('register').disabled,true);h.el('reload-wallets').onclick();assert.equal(h.reloads(),1);});
+test('late Slush discovery offers connection; explicit click connects without signing',async()=>{const h=pageHarness();assert.equal(h.connectCalls(),0);h.kit.stores.$wallets.set([{name:'Slush'}]);assert.equal(h.el('wallet-list').children[0].textContent,'Connect Slush');await h.el('connect-wallet').onclick();assert.equal(h.connectCalls(),1);assert.equal(h.signCalls(),0);assert.match(h.el('wallet-status').textContent,/Connected:/);assert.equal(h.el('register').disabled,true);});
+test('multiple wallets require explicit choice and do not auto-connect',async()=>{const h=pageHarness([{name:'Slush'},{name:'Other wallet'}]);await h.el('connect-wallet').onclick();assert.equal(h.connectCalls(),0);assert.equal(h.el('wallet-list').children.length,2);await h.el('wallet-list').children[0].onclick();assert.equal(h.connectCalls(),1);assert.equal(h.signCalls(),0);});
