@@ -1,0 +1,112 @@
+{
+  "checkedAt": "2026-11-17T16:29:15.949667+00:00",
+  "status": "verified_sui_nft_release",
+  "digest": "Ai2yCaGUHrDZ8VSmq2e5dCbV4bmHt9YY9UkG8Wd3KNaZ",
+  "checkpoint": {
+    "sequenceNumber": 346267368,
+    "timestamp": "2026-11-17T16:25:51.617Z"
+  },
+  "guid": "0x4c2f2803af1a9b988e1fdef73c1c72da34bcaaf5339b579b23aa937f17d26586",
+  "request": "0x58ea0a82f5eef90c41ef40d2eebed01a4e9c89abb9b7fb304fbc1d4e2b4b2644",
+  "recipient": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+  "nft": "0xc07d792d3700dea38f695d843f7eefa2e9c81efdf8aaf7da5fd151e4c58ef26c",
+  "nftOwner": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+  "bridgeReleased": true,
+  "bridgeNftEmpty": true,
+  "events": [
+    {
+      "type": {
+        "repr": "0x31beaef889b08b9c3b37d19280fc1f8b75bae5b2de2410fc3120f403e9a36dac::messaging_channel::PacketDeliveredEvent"
+      },
+      "json": {
+        "src_eid": 30102,
+        "sender": {
+          "bytes": "AAAAAAAAAAAAAAAAtMRxwfuOMd3LtRgnfpekV1/HR3k="
+        },
+        "receiver": "0x2f3671d48dd000a27fd466fd347796149f5cd30cb16e1d22d2d89466ffc3d900",
+        "nonce": "1"
+      }
+    },
+    {
+      "type": {
+        "repr": "0x2f3671d48dd000a27fd466fd347796149f5cd30cb16e1d22d2d89466ffc3d900::bridge::Released"
+      },
+      "json": {
+        "app": "0x4ae75e55799f0a4e34941503542990f1628f1b5881f0b3917bca4e255ce6b25b",
+        "request": {
+          "bytes": "WOoKgvXu+QxB70DS7r7QGk6ciau5t/swT7wdTitLJkQ="
+        },
+        "recipient": {
+          "bytes": "SFlT4urfSqAq+VDPjpFPvStnUjOF5zw2EYNBRZ2NRcQ="
+        }
+      }
+    }
+  ],
+  "liveState": {
+    "bridge": {
+      "address": "0x4ae75e55799f0a4e34941503542990f1628f1b5881f0b3917bca4e255ce6b25b",
+      "version": 1093250509,
+      "digest": "4zcArHuYxst5rSdCDH49NzAmpvj3phKxXdv9ciJj3XDS",
+      "owner": {
+        "__typename": "Shared"
+      },
+      "asMoveObject": {
+        "contents": {
+          "type": {
+            "repr": "0x2f3671d48dd000a27fd466fd347796149f5cd30cb16e1d22d2d89466ffc3d900::bridge::Bridge"
+          },
+          "json": {
+            "id": "0x4ae75e55799f0a4e34941503542990f1628f1b5881f0b3917bca4e255ce6b25b",
+            "cap": {
+              "id": "0x5751532236c10416e0005f4aa3a3ee359a86cec078dfbedbd275373ae0ab0704",
+              "cap_type": {
+                "@variant": "Package",
+                "pos0": "0x2f3671d48dd000a27fd466fd347796149f5cd30cb16e1d22d2d89466ffc3d900"
+              }
+            },
+            "oapp": "0x25a4c1a268dd726067558c8eddac5ef624b2507336ecec7d4ac1fd4553cbd789",
+            "nft": null,
+            "backing": {
+              "bytes": "wH15LTcA3qOPaV2EP37vounIHv34qvfaX9FR5MWO8mw="
+            },
+            "route": {
+              "bytes": "SudeVXmfCk40lBUDVCmQ8WKPG1iB8LORe8pOJVzmsls="
+            },
+            "peer": {
+              "bytes": "AAAAAAAAAAAAAAAAtMRxwfuOMd3LtRgnfpekV1/HR3k="
+            },
+            "bound": true,
+            "released": true,
+            "request": {
+              "bytes": "WOoKgvXu+QxB70DS7r7QGk6ciau5t/swT7wdTitLJkQ="
+            },
+            "recipient": {
+              "bytes": "SFlT4urfSqAq+VDPjpFPvStnUjOF5zw2EYNBRZ2NRcQ="
+            }
+          }
+        }
+      }
+    },
+    "nft": {
+      "address": "0xc07d792d3700dea38f695d843f7eefa2e9c81efdf8aaf7da5fd151e4c58ef26c",
+      "version": 1093250509,
+      "digest": "AXtdp9qyMHVddoWCKJrBjfQEAiqPVMbmawnMjij5sJjn",
+      "owner": {
+        "__typename": "AddressOwner",
+        "address": {
+          "address": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4"
+        }
+      },
+      "asMoveObject": {
+        "contents": {
+          "type": {
+            "repr": "0x2f3671d48dd000a27fd466fd347796149f5cd30cb16e1d22d2d89466ffc3d900::bridge::DisposableNFT"
+          },
+          "json": {
+            "id": "0xc07d792d3700dea38f695d843f7eefa2e9c81efdf8aaf7da5fd151e4c58ef26c"
+          }
+        }
+      }
+    }
+  }
+}
