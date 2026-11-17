@@ -14,7 +14,7 @@ import { verifyDelivery } from './multichain-preview-delivery.mjs';
 // unlocks a deploy, or accepts an arbitrary older deployment for publication.
 export const SITE_ID = 'aa62f324-b880-47d6-85b8-4ba0700ff5bf';
 export const ACCOUNT_ID = '69800888d1a3d0483003ae9e';
-export const BASELINE_ID = process.env.MULTICHAIN_EXPECTED_DEPLOY || '6afbad80286adf9569314871';
+export const BASELINE_ID = process.env.MULTICHAIN_EXPECTED_DEPLOY || '6afbb30a12bb3e7a4e0385c6';
 export const ORIGINAL_CHANGES = [];
 export const REPLACED_HASHES = {};
 // Historical orphaned API deploys individually audited on 2026-11-10.
@@ -29,7 +29,7 @@ export function isAuditedInactiveDeploy(deploy) {
     deploy.commit_ref ?? null].every((value, i) => value === expected[i]);
 }
 
-export const MULTICHAIN_PATHS = ["/play/multichaintest/setup/sui/configure/index.html", "/play/multichaintest/setup/sui/configure/app.js", "/play/multichaintest/setup/sui/configure/core.js", "/play/multichaintest/setup/sui/configure/wallet-vendor.js"];
+export const MULTICHAIN_PATHS = ["/play/multichaintest/setup/bnb/configure/index.html", "/play/multichaintest/setup/bnb/configure/app.js", "/play/multichaintest/setup/bnb/configure/core.js", "/play/multichaintest/setup/bnb/configure/configuration.json"];
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const RUNTIME_FIELDS = ['branch', 'context', 'functions_region', 'functions_region_overrides',
   'database_branch_id', 'blobs_region', 'framework', 'edge_functions_present', 'server', 'database_migrations'];
