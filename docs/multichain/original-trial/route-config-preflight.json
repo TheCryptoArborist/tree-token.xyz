@@ -1,0 +1,26 @@
+{
+  "status": "UNSIGNED_CHECKED_MAINNET_SUI_ROUTE_CONFIGURATION_VERIFIED",
+  "gasMist": "14951541",
+  "channelId": "0x0d376ab0c11fcbdfa480d4a691c9f7b5d00cc2249692e2949d26d32dafbf8aef",
+  "configuredEntries": {
+    "appLibraries": "0x4a35168e11c34c573f549e5c21c002d04186ba83aefd4767aceb6864481384d8",
+    "appExecutor": "0x3b40ff19e59b2d7a92d9f4acda4654c232b449f9cfcb3b3dd8b9e7efcfa4d87e",
+    "appSend": "0x33876947021eac2020317170812cb95900eca3419952726ac678212cef8fb7cb",
+    "appReceive": "0x8b879c61e5e4b8aad90836252cf6e646a7444da714401b0b749153417f1e0596"
+  },
+  "checkedAt": "2026-11-17T21:47:47.774Z",
+  "doGasSelection": true,
+  "checksEnabled": true,
+  "requiredDvns": [
+    "0x0c12321ebe562b8fb8a74e6d29f144ea199a8f31a4cea3a417ce72477f6dfebb",
+    "0x52aa129049de845353484868d1be6e2df6878b0ed2213d94d3c827309aeae685",
+    "0x92128a5edf4a0f696464de66d00986ef41b37faf705ceb3d9d9a4e5c306fbf91"
+  ],
+  "sendConfirmations": 5,
+  "receiveConfirmations": 20,
+  "optionalDvns": [],
+  "metadataBase64": "AAEceUXklt3krTFC6/jVK5WUb07TRDVo3vqbl97DB8D50QDwAQABAaxzByuU8UqHsjeBxwBMd99nmf3uEJ8kJx1GlrxKZRSkBXZhdWx0Cmx6X3JlY2VpdmUDAUW/CEmXhOqf9liTcWWpRJ1QmqN95HpyivROkDOH88osARx5ReSW3eStMULr+NUrlZRvTtNENWje+puX3sMHwPnRACBkICYW91pWFKz6JkQYJYUhKZ62qJLu7qOS/u+JSMfrUwFTMHhmNmM2ZDQzOWVhMGRhMmYzZTliYTc5ZTQ5OTJhN2E0YzExMzIxNWZiZjU0YzQ0MmFjOTAyMGMzMTVmOTUzNzA1Ojpjb2xsZWN0aW9uOjpORlQAAAA=",
+  "submitted": false,
+  "readyToFund": false,
+  "readyToSell": false
+}
