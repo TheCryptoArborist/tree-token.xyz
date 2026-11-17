@@ -1,3 +1,53 @@
+# Current production — original NFTree Sui peer binding, 2026-11-17
+
+Locked deploy `6afcde0a032ffec83290f366`, verified at 23:07:27 UTC, source
+`3404dd237d20f976cf6681a327b05bbffaa65e35`, workflow `44196234748`.
+Canonical isolated page: `/play/multichaintest/original/bind/`.
+
+Exactly three files were added. All 601 existing paths remain byte-identical;
+total inventory is 604 paths, 49 complete backend packages and five schedules.
+Full package/provider/runtime records, protected configuration/environment
+fingerprints, canonical delivery and production lock were verified.
+
+The four actual BNB settings receipts are verified and recorded. The new page
+prepares one Sui approval with exactly two commands: construct the verified BNB
+peer Bytes32 and invoke the original generic vault::bind. This initializes an
+unused path, sets the peer and enforces reserve/acknowledgment delivery options.
+The approval has no NFT input, deposit, packet send, stablecoin payment, mint,
+upgrade or purchase activation. Both AdminCaps stay dev-owned. NFTree #2720
+stays directly dev-owned, Vault remains empty and BNB pass stays paused/unminted.
+
+Preflight rechecks the signed Sui publication/slot/registration/configuration,
+fresh source authority, exact live state, paused BNB pass/binding and all four
+actual BNB receipts. Exact command/input/pure-byte/event/effect/balance checks
+protect NFT, original Registry, UpgradeCap and protocol objects. Expected effects
+are five application/capability writes plus four deterministic dynamic fields.
+Web Locks, durable pending state, wallet account/network/epoch and fresh matching
+gas guard handoff. Recovery verifies the actual bound state and unused nonces.
+
+352 focused regressions, 25 new peer tests, preview build and 14 EVM tests passed.
+Pinned artifacts and exact bundle checks passed. Full read-only mainnet preflight
+and unsigned simulation passed with net gas 9,266,741 MIST (0.009266741 SUI).
+Execution-attached output objects independently pass the bound-state validator.
+No actual peer-binding transaction was submitted by the assistant. Review of
+`4f61887adb5bd7abd1680f30990c99c519057b05` completed without findings; all
+source CI passed. Existing SDK and wallet vendor remain unchanged.
+
+Canonical title, actual bindings and enforced delivery policy, visible connection
+and adjacent receipt recovery, missing-Slush feedback and disabled signing even
+with consent checked while disconnected were verified. Cloud browser had no
+Slush extension and requested no signature. The approval is completed in Peter's
+Brave/Slush dev wallet ending 45c4. Full route verification precedes NFT deposit
+or sale enablement.
+
+Release record: `docs/multichain/original-sui-peer-page-release.json`.
+Flow and current guidance: `docs/multichain/original-sui-peer-flow.md`.
+Latest stage bindings: `docs/multichain/original-trial/bnb-route-bindings.json`.
+Capture this current full inventory before future publication. Freeze the new
+peer baseline, signing snapshot and public bundle with all older pages.
+
+---
+
 # Current production — original NFTree BNB route settings, 2026-11-17
 
 Locked deploy `6afcd3e553bde30fccc917df`, verified at 22:24:10 UTC, source
