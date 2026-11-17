@@ -1,0 +1,14 @@
+{
+  "checkedAt": "2026-11-17T15:51:12.462Z",
+  "block": "0x7fee9e0",
+  "passState": "1",
+  "tokenBalance": "502150001000000000000",
+  "canPlay": "0",
+  "allowance": "0",
+  "passBalance": "0",
+  "action": "approve",
+  "nonce": "331",
+  "gas": "46588",
+  "gasLimit": "0xda62",
+  "estimatedFeeWei": "2329400000000"
+}

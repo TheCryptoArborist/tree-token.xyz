@@ -1,0 +1,15 @@
+# 25-USDT disposable pilot purchase
+
+The original Sui reserve packet was delivered automatically by LayerZero on BNB after the user's three configuration/commit transactions. Destination receipt `0x0f98024d76533bd1ae82525668a56b226191d4516eaf99c20c762dc4bec0674f` succeeded, emitting the exact ReserveConfirmed, MessageApplied and PacketDelivered events. The BNB pass is Ready; its delivered message hash and inbound nonce match the reviewed packet. Full direct-read verification is recorded alongside this review.
+
+The isolated `/play/multichaintest/setup/bnb/buy/` page requests an exact 25-USDT allowance to PilotPass `0xe98fa205106028822572d2549ea41748f8bfd879`, then a separate `buy()` transaction. An old nonzero allowance differing from 25 USDT must first be reset to zero. No unlimited approval is used. The immutable BNB USDT currency is `0x55d398326f99059ff775485246999027b3197955` (18 decimals); immutable treasury is the user's designated `0xc440f06bbc7e58b0d055815f915447e4ae0e3720`. All calldata and targets are bundled and pinned, with code hashes checked for USDT, pilot contracts and LayerZero libraries/endpoint.
+
+Before each wallet request, the page checks fresh Sui custody and three-required-verifier configuration with GraphQL, the delivered BNB reserve and full reviewed route settings, immutable contract bindings, wallet/chain identity, token balance, allowance, current/pending nonce, simulation and gas. It pins the current nonce and persists a pending marker before the single selected-wallet submission. Receipt verification requires the exact transaction, allowance/payment/mint events, pass ownership and contract `canPlay` result. The completed purchase must have zero remaining USDT allowance. Unknown wallet outcomes cannot automatically retry; manual hash recovery remains available.
+
+A local BNB mainnet fork executed approval, reset, approval and purchase with zero remote write requests. Treasury gained exactly 25 USDT; buyer paid exactly 25 USDT; token #1 was minted to the designated buyer; state became Active; `canPlay(buyer)` returned true; allowance became zero. Buy without allowance and a second buy were rejected. This proof is simulation only; no mainnet purchase has been executed by the agent. A live read-only preflight passed with a zero allowance and sufficient buyer token/gas balances.
+
+The restricted single-wallet pilot uses the disposable Sui NFT, not the original 5,000 NFTrees. This step does not unlock production arcade games or request redemption/cross-chain sending. The user must approve the actual token permission and purchase in their own wallet.
+
+Current MystenLabs guidance used for the source checks: `accessing-data/SKILL.md` and `accessing-data/graphql.md`. No Sui signing, Move changes or source transaction is needed for this step.
+
+Publish only three new test-route static assets against locked deploy `6afc73959df9749497f0a544`, preserving every existing static file, all 49 backend packages and their runtime/environment configuration, five schedules and the production lock. Use the existing reviewed preservation workflow.
