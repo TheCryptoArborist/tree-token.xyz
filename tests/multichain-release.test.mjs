@@ -27,3 +27,11 @@ test('only the ten exact historical orphan records bypass the queue guard',()=>{
     assert(!isAuditedInactiveDeploy({...record,id:'6af2a1f00000000000000000'}));
   }
 });
+
+import {moduleDependencies} from '../scripts/multichain-preview-delivery.mjs';
+test('production import closure refuses a wallet module present only in preview builds',()=>{
+ const base='/play/multichaintest/setup/sui/register/';
+ const source="import {createDAppKit} from './wallet-vendor.js';\nimport {C} from './core.js';";
+ assert.throws(()=>moduleDependencies(source,base+'app.js',{[base+'core.js']:'a'.repeat(40)}),/Missing production module/);
+ assert.deepEqual(moduleDependencies(source,base+'app.js',{[base+'core.js']:'a'.repeat(40),[base+'wallet-vendor.js']:'b'.repeat(40)}),[base+'wallet-vendor.js',base+'core.js']);
+});

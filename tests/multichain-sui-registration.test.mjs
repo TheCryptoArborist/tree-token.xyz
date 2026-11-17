@@ -37,8 +37,8 @@ test('ambiguity retains pending; explicit rejection and known onchain failure cl
 test('simultaneous tabs cannot open duplicate requests',async()=>{const h=harness();let resume;h.args.prepare=()=>new Promise(r=>resume=()=>r({}));const one=requestRegistration(h.args);await assert.rejects(requestRegistration(h.args),/Another tab/);resume();await one;assert.equal(h.calls(),1);});
 test('page imports actual local wallet exports and requires explicit interaction',async()=>{
  const app=fs.readFileSync(new URL('../play/multichaintest/setup/sui/register/app.js',import.meta.url),'utf8');const html=fs.readFileSync(new URL('../play/multichaintest/setup/sui/register/index.html',import.meta.url),'utf8');
- assert(app.includes("from '../../../wallet-vendor.js'"));assert(app.includes('autoConnect:false'));assert(app.includes('slushWalletConfig:null'));assert(html.includes('id="register" disabled'));assert(html.includes('empty execution metadata'));
- const vendor=await import('../play/multichaintest/wallet-vendor.js');assert.equal(typeof vendor.createDAppKit,'function');assert.equal(typeof vendor.SuiGrpcClient,'function');
+ assert(app.includes("from './wallet-vendor.js'"));assert(app.includes('autoConnect:false'));assert(app.includes('slushWalletConfig:null'));assert(html.includes('id="register" disabled'));assert(html.includes('empty execution metadata'));
+ const vendor=await import('../play/multichaintest/setup/sui/register/wallet-vendor.js');assert.equal(typeof vendor.createDAppKit,'function');assert.equal(typeof vendor.SuiGrpcClient,'function');
 });
 
 import vm from 'node:vm';
