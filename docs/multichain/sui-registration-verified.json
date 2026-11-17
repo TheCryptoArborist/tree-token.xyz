@@ -1,0 +1,30 @@
+{
+  "status": "VERIFIED_SUI_LAYERZERO_REGISTRATION",
+  "digest": "BAtQ9VoBDonDGdcJBNoYm9Gqcz1H63eVCZKWEEEce8Zd",
+  "sender": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+  "package": "0x2f3671d48dd000a27fd466fd347796149f5cd30cb16e1d22d2d89466ffc3d900",
+  "bridge": "0x4ae75e55799f0a4e34941503542990f1628f1b5881f0b3917bca4e255ce6b25b",
+  "messagingChannel": "0x2b8072647e1c9fa38a020058285c10aaaed463be1b90831f63ea8a6e862cccee",
+  "initialSharedVersion": "1058683484",
+  "registryEntry": "0xd9bf1f319f6bf7cb95bda0e82beb1ba31fd543f218ed3a246120231c7171e857",
+  "netGasMist": "4668124",
+  "netGasSUI": 0.004668124,
+  "currentStateCheckpoint": {
+    "sequenceNumber": 346045532,
+    "timestamp": "2026-11-17T01:31:26.282Z"
+  },
+  "executionMetadata": "empty",
+  "delegate": "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "bridgeBound": false,
+  "nftReleased": false,
+  "originalNFTreesInvolved": false,
+  "nextStage": "Application-specific send/receive libraries, DVN and executor configuration, execution metadata, peer binding, then disposable-NFT round-trip test.",
+  "guidance": [
+    "https://github.com/MystenLabs/skills/blob/main/accessing-data/SKILL.md",
+    "https://github.com/MystenLabs/skills/blob/main/accessing-data/graphql.md"
+  ],
+  "transactionCheckpoint": {
+    "sequenceNumber": 346045214,
+    "timestamp": "2026-11-17T01:30:09.037Z"
+  }
+}

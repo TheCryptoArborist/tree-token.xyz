@@ -1,0 +1,72 @@
+{
+  "data": {
+    "checkpoint": {
+      "sequenceNumber": 346047716,
+      "timestamp": "2026-11-17T01:40:18.437Z"
+    },
+    "libraries": {
+      "dynamicField": {
+        "value": {
+          "json": {
+            "send_lib": "0x3ce7457bed48ad23ee5d611dd3172ae4fbd0a22ea0e846782a7af224d905dbb0",
+            "receive_lib": "0x3ce7457bed48ad23ee5d611dd3172ae4fbd0a22ea0e846782a7af224d905dbb0",
+            "receive_lib_timeout": null
+          }
+        }
+      }
+    },
+    "send": {
+      "dynamicField": {
+        "value": {
+          "json": {
+            "confirmations": "5",
+            "required_dvns": [
+              "0x0c12321ebe562b8fb8a74e6d29f144ea199a8f31a4cea3a417ce72477f6dfebb",
+              "0x52aa129049de845353484868d1be6e2df6878b0ed2213d94d3c827309aeae685",
+              "0x92128a5edf4a0f696464de66d00986ef41b37faf705ceb3d9d9a4e5c306fbf91",
+              "0xfa35508c624925c6f341113f8f9397e5f41750b833af87d0c945a6f5682887f0"
+            ],
+            "optional_dvns": [],
+            "optional_dvn_threshold": 0
+          }
+        }
+      }
+    },
+    "receive": {
+      "dynamicField": {
+        "value": {
+          "json": {
+            "confirmations": "20",
+            "required_dvns": [
+              "0x0c12321ebe562b8fb8a74e6d29f144ea199a8f31a4cea3a417ce72477f6dfebb",
+              "0x52aa129049de845353484868d1be6e2df6878b0ed2213d94d3c827309aeae685",
+              "0x92128a5edf4a0f696464de66d00986ef41b37faf705ceb3d9d9a4e5c306fbf91",
+              "0xfa35508c624925c6f341113f8f9397e5f41750b833af87d0c945a6f5682887f0"
+            ],
+            "optional_dvns": [],
+            "optional_dvn_threshold": 0
+          }
+        }
+      }
+    },
+    "executor": {
+      "dynamicField": {
+        "value": {
+          "json": {
+            "max_message_size": "10000",
+            "executor": "0xde7fe1a6648d587fcc991f124f3aa5b6389340610804108094d5c5fbf61d1989"
+          }
+        }
+      }
+    },
+    "appSend": {
+      "dynamicField": null
+    },
+    "appReceive": {
+      "dynamicField": null
+    },
+    "appExecutor": {
+      "dynamicField": null
+    }
+  }
+}

@@ -1,0 +1,346 @@
+{
+  "checkpoint": {
+    "sequenceNumber": 346048233,
+    "timestamp": "2026-11-17T01:42:24.183Z"
+  },
+  "endpoint": {
+    "address": "0xd45b6890fa030bcb43347c0c69a9e5a1a288d1ca7b86b428014752b472f6bf91",
+    "version": 1058683484,
+    "digest": "2ifymraJNEXrTesCAHdTDHccqQviitiivReHr41kiXfx",
+    "owner": {
+      "__typename": "Shared",
+      "initialSharedVersion": 635685314
+    },
+    "asMoveObject": {
+      "contents": {
+        "type": {
+          "repr": "0x31beaef889b08b9c3b37d19280fc1f8b75bae5b2de2410fc3120f403e9a36dac::endpoint_v2::EndpointV2"
+        },
+        "json": {
+          "id": "0xd45b6890fa030bcb43347c0c69a9e5a1a288d1ca7b86b428014752b472f6bf91",
+          "eid": 30378,
+          "call_cap": {
+            "id": "0x8de954b904b90f887ff2e81ff3362ca89e883da6529e55723758cd5093234b0d",
+            "cap_type": {
+              "@variant": "Package",
+              "pos0": "0x31beaef889b08b9c3b37d19280fc1f8b75bae5b2de2410fc3120f403e9a36dac"
+            }
+          },
+          "oapp_registry": {
+            "oapps": {
+              "id": "0x720fc2300c05bb7ad68aefec00a9796b4451c4d1df78bc72cd8c98e774220bec",
+              "size": "141"
+            }
+          },
+          "composer_registry": {
+            "composers": {
+              "id": "0xb41ca35805177b946bebf5d339712b4e9bb562b068b33851001f9f0b66847814",
+              "size": "7"
+            }
+          },
+          "message_lib_manager": {
+            "registry": {
+              "libs": {
+                "contents": {
+                  "id": "0x520bbc08883e22efb29f50283e25b4561ffa7c7b9d7774b14fc1c6272e593e03",
+                  "size": "2"
+                }
+              },
+              "lib_to_type": {
+                "id": "0xb136bb2fc780a76e636c10f10b10ab33754a3573efa5f1285bf2b35eaf73b50d",
+                "size": "2"
+              }
+            },
+            "default_configs": {
+              "id": "0xa2371851318b3ba333270daf696dedbc7b89a1107ca362643798c1789ce05a01",
+              "size": "126"
+            },
+            "oapp_configs": {
+              "id": "0x0e679b0fcc94fb07a5ec9a14712f8e35e0994b892e64a434e898450eb670e920",
+              "size": "98"
+            }
+          }
+        }
+      }
+    }
+  },
+  "uln": {
+    "address": "0x8ebd7a0b102a5f7a3d4a08d84dd853fecc4ae0093be6eb02cf0d11dce7d4861f",
+    "version": 1058683486,
+    "digest": "Agd52guAb8ntsPC7Dmw9yuFZmxA7dA9wGcSreNrLKR1C",
+    "owner": {
+      "__typename": "Shared",
+      "initialSharedVersion": 635685319
+    },
+    "asMoveObject": {
+      "contents": {
+        "type": {
+          "repr": "0x3ce7457bed48ad23ee5d611dd3172ae4fbd0a22ea0e846782a7af224d905dbb0::uln_302::Uln302"
+        },
+        "json": {
+          "id": "0x8ebd7a0b102a5f7a3d4a08d84dd853fecc4ae0093be6eb02cf0d11dce7d4861f",
+          "call_cap": {
+            "id": "0xfacd801d08e3a99c907148fa00ec5f17a0a3ac831dbc95bcd75e601006caafa9",
+            "cap_type": {
+              "@variant": "Package",
+              "pos0": "0x3ce7457bed48ad23ee5d611dd3172ae4fbd0a22ea0e846782a7af224d905dbb0"
+            }
+          },
+          "send_uln": {
+            "default_executor_configs": {
+              "id": "0x346b468d90db8743673c7ed4fdbe1c40f6a587aac6acc730b3a9bb86cf0919f4",
+              "size": "126"
+            },
+            "default_uln_configs": {
+              "id": "0x2bd7d044d837b718a7852959c701c04e842e648cf9047b442d55c838846a13e5",
+              "size": "126"
+            },
+            "oapp_executor_configs": {
+              "id": "0x357a98886ef14de3d15e538a808b410cfe026f6b1f971bb2398978d56e4dc181",
+              "size": "52"
+            },
+            "oapp_uln_configs": {
+              "id": "0xc53b8a5592cdeea1a7421d209ba5c70e6843d2911e5bb86ad9fb744d888eab60",
+              "size": "212"
+            }
+          },
+          "receive_uln": {
+            "default_uln_configs": {
+              "id": "0x5ddc28272722231ecef30237bb48715f128d6995b89a46db25cd9adae0140835",
+              "size": "126"
+            },
+            "oapp_uln_configs": {
+              "id": "0x0d89da4d00f46c4b1dab465a867e60eacbf646e56f8816ae55cd7b9495c1bb09",
+              "size": "237"
+            },
+            "verification": "0x950f66ed27ec0a01a52bda147d74165d4cc20165f0cee0ecae6aaacde13d7741"
+          }
+        }
+      }
+    }
+  },
+  "oapp": {
+    "address": "0x25a4c1a268dd726067558c8eddac5ef624b2507336ecec7d4ac1fd4553cbd789",
+    "version": 1,
+    "digest": "GXkMMSjzp4NTuWq7pEbXybZGMstRZigsvqUyCZjV6gjw",
+    "owner": {
+      "__typename": "Shared",
+      "initialSharedVersion": 1
+    },
+    "asMoveObject": {
+      "contents": {
+        "type": {
+          "repr": "0xfdc28afc0110cb2edb94e3e57f2b1ce69b5a99c503b06d15e51cfa212de56e24::oapp::OApp"
+        },
+        "json": {
+          "id": "0x25a4c1a268dd726067558c8eddac5ef624b2507336ecec7d4ac1fd4553cbd789",
+          "oapp_cap": {
+            "id": "0x71dc5f182614aeea35c966e62461d55ee5c8d0cd0ce60e8a561d36eda1eccd16",
+            "cap_type": {
+              "@variant": "Package",
+              "pos0": "0x2f3671d48dd000a27fd466fd347796149f5cd30cb16e1d22d2d89466ffc3d900"
+            }
+          },
+          "admin_cap": "0x836af3f2cae2244fad88568943692dfd87cd4eb07344edb20b74ba46a1bc93c4",
+          "peer": {
+            "peers": {
+              "id": "0x1b61237d2bb56e6bbeb79d12417a15551b173dedc2abd8b50e36c69eb06211b1",
+              "size": "0"
+            }
+          },
+          "enforced_options": {
+            "options": {
+              "id": "0xcdde9635954cda56556bb08eddf379e2515e2aadcfd8b4eee622317dbb8dae3f",
+              "size": "0"
+            }
+          },
+          "sending_call": null
+        }
+      }
+    }
+  },
+  "admin": {
+    "address": "0x836af3f2cae2244fad88568943692dfd87cd4eb07344edb20b74ba46a1bc93c4",
+    "version": 1,
+    "digest": "4b8xJYYhPowq4fR3fefFsRfBqrBQwNEdSR9McojkwcYf",
+    "owner": {
+      "__typename": "AddressOwner",
+      "address": {
+        "address": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4"
+      }
+    },
+    "asMoveObject": {
+      "contents": {
+        "type": {
+          "repr": "0xfdc28afc0110cb2edb94e3e57f2b1ce69b5a99c503b06d15e51cfa212de56e24::oapp::AdminCap"
+        },
+        "json": {
+          "id": "0x836af3f2cae2244fad88568943692dfd87cd4eb07344edb20b74ba46a1bc93c4"
+        }
+      }
+    }
+  },
+  "bridge": {
+    "address": "0x4ae75e55799f0a4e34941503542990f1628f1b5881f0b3917bca4e255ce6b25b",
+    "version": 1,
+    "digest": "51C3MSRrXpByqigSpD1QDxpQB2Bt1EpdsrxceEmYWTVM",
+    "owner": {
+      "__typename": "Shared",
+      "initialSharedVersion": 1
+    },
+    "asMoveObject": {
+      "contents": {
+        "type": {
+          "repr": "0x2f3671d48dd000a27fd466fd347796149f5cd30cb16e1d22d2d89466ffc3d900::bridge::Bridge"
+        },
+        "json": {
+          "id": "0x4ae75e55799f0a4e34941503542990f1628f1b5881f0b3917bca4e255ce6b25b",
+          "cap": {
+            "id": "0x5751532236c10416e0005f4aa3a3ee359a86cec078dfbedbd275373ae0ab0704",
+            "cap_type": {
+              "@variant": "Package",
+              "pos0": "0x2f3671d48dd000a27fd466fd347796149f5cd30cb16e1d22d2d89466ffc3d900"
+            }
+          },
+          "oapp": "0x25a4c1a268dd726067558c8eddac5ef624b2507336ecec7d4ac1fd4553cbd789",
+          "nft": {
+            "id": "0xc07d792d3700dea38f695d843f7eefa2e9c81efdf8aaf7da5fd151e4c58ef26c"
+          },
+          "backing": {
+            "bytes": "wH15LTcA3qOPaV2EP37vounIHv34qvfaX9FR5MWO8mw="
+          },
+          "route": {
+            "bytes": "SudeVXmfCk40lBUDVCmQ8WKPG1iB8LORe8pOJVzmsls="
+          },
+          "peer": {
+            "bytes": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+          },
+          "bound": false,
+          "released": false,
+          "request": {
+            "bytes": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+          },
+          "recipient": {
+            "bytes": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+          }
+        }
+      }
+    }
+  },
+  "channel": {
+    "address": "0x2b8072647e1c9fa38a020058285c10aaaed463be1b90831f63ea8a6e862cccee",
+    "version": 1058683484,
+    "digest": "JC8gXtqPi3WxnxTJpJjcNWSyPe24RnEYwjcMNQ6WdM85",
+    "owner": {
+      "__typename": "Shared",
+      "initialSharedVersion": 1058683484
+    },
+    "asMoveObject": {
+      "contents": {
+        "type": {
+          "repr": "0x31beaef889b08b9c3b37d19280fc1f8b75bae5b2de2410fc3120f403e9a36dac::messaging_channel::MessagingChannel"
+        },
+        "json": {
+          "id": "0x2b8072647e1c9fa38a020058285c10aaaed463be1b90831f63ea8a6e862cccee",
+          "oapp": "0x2f3671d48dd000a27fd466fd347796149f5cd30cb16e1d22d2d89466ffc3d900",
+          "channels": {
+            "id": "0x83e16477284529d082e0754fefd9173a3d50a8e3a660b5a83d09ceeea6125000",
+            "size": "0"
+          },
+          "is_sending": false
+        }
+      }
+    }
+  },
+  "registration": {
+    "address": "0xd9bf1f319f6bf7cb95bda0e82beb1ba31fd543f218ed3a246120231c7171e857",
+    "version": 1058683484,
+    "digest": "CddDus67sBEg2XQXLK1Qa7jZyT1u4WyBeZRBvsVj3aB3",
+    "owner": {
+      "__typename": "ObjectOwner"
+    },
+    "asMoveObject": {
+      "contents": {
+        "type": {
+          "repr": "0x0000000000000000000000000000000000000000000000000000000000000002::dynamic_field::Field<address,0x31beaef889b08b9c3b37d19280fc1f8b75bae5b2de2410fc3120f403e9a36dac::oapp_registry::OAppRegistration>"
+        },
+        "json": {
+          "id": "0xd9bf1f319f6bf7cb95bda0e82beb1ba31fd543f218ed3a246120231c7171e857",
+          "name": "0x2f3671d48dd000a27fd466fd347796149f5cd30cb16e1d22d2d89466ffc3d900",
+          "value": {
+            "messaging_channel": "0x2b8072647e1c9fa38a020058285c10aaaed463be1b90831f63ea8a6e862cccee",
+            "oapp_info": "",
+            "delegate": "0x0000000000000000000000000000000000000000000000000000000000000000"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "dynamicField": {
+      "value": {
+        "json": {
+          "send_lib": "0x3ce7457bed48ad23ee5d611dd3172ae4fbd0a22ea0e846782a7af224d905dbb0",
+          "receive_lib": "0x3ce7457bed48ad23ee5d611dd3172ae4fbd0a22ea0e846782a7af224d905dbb0",
+          "receive_lib_timeout": null
+        }
+      }
+    }
+  },
+  "send": {
+    "dynamicField": {
+      "value": {
+        "json": {
+          "confirmations": "5",
+          "required_dvns": [
+            "0x0c12321ebe562b8fb8a74e6d29f144ea199a8f31a4cea3a417ce72477f6dfebb",
+            "0x52aa129049de845353484868d1be6e2df6878b0ed2213d94d3c827309aeae685",
+            "0x92128a5edf4a0f696464de66d00986ef41b37faf705ceb3d9d9a4e5c306fbf91",
+            "0xfa35508c624925c6f341113f8f9397e5f41750b833af87d0c945a6f5682887f0"
+          ],
+          "optional_dvns": [],
+          "optional_dvn_threshold": 0
+        }
+      }
+    }
+  },
+  "receive": {
+    "dynamicField": {
+      "value": {
+        "json": {
+          "confirmations": "20",
+          "required_dvns": [
+            "0x0c12321ebe562b8fb8a74e6d29f144ea199a8f31a4cea3a417ce72477f6dfebb",
+            "0x52aa129049de845353484868d1be6e2df6878b0ed2213d94d3c827309aeae685",
+            "0x92128a5edf4a0f696464de66d00986ef41b37faf705ceb3d9d9a4e5c306fbf91",
+            "0xfa35508c624925c6f341113f8f9397e5f41750b833af87d0c945a6f5682887f0"
+          ],
+          "optional_dvns": [],
+          "optional_dvn_threshold": 0
+        }
+      }
+    }
+  },
+  "executor": {
+    "dynamicField": {
+      "value": {
+        "json": {
+          "max_message_size": "10000",
+          "executor": "0xde7fe1a6648d587fcc991f124f3aa5b6389340610804108094d5c5fbf61d1989"
+        }
+      }
+    }
+  },
+  "appLibraries": {
+    "dynamicField": null
+  },
+  "appSend": {
+    "dynamicField": null
+  },
+  "appReceive": {
+    "dynamicField": null
+  },
+  "appExecutor": {
+    "dynamicField": null
+  }
+}
