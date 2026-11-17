@@ -1,3 +1,36 @@
+# Current production — original NFTree trial publication page, 2026-11-17
+
+Locked deploy `6afc9ba2a979535dc510438e`, published at 18:23:53 UTC, source
+`c27ec94f33452979a7ce2ba46e8016700263a0aa`, workflow `44147183482`.
+Canonical isolated page: `/play/multichaintest/original/`.
+
+The release adds exactly three static files. All 577 existing static paths remain
+byte-identical; total inventory is 580 paths, 49 complete backend packages and
+five schedules. Existing provider/runtime records, package digests, routes,
+explicit region overrides, protected environment fingerprints and production lock
+were verified unchanged. No function upload or database migration occurred.
+
+This page offers only publication of the reviewed empty Sui package from the dev
+wallet ending 45c4; NFTree #2720 and the original collection are not inputs.
+It discloses retained compatible upgrade authority and requires fresh mainnet
+simulation, identity checks, explicit review and a user Slush signature. BNB
+deployment, deposit, reserve and sales remain unavailable pending actual IDs and
+fresh LayerZero configuration verification. The assistant has signed/submitted no
+on-chain transaction and has moved no NFT. Test publication gas was 0.06375 SUI;
+the wallet displays the final cost before user approval.
+
+All six source CI workflows passed, including exact browser bundle reproduction;
+fresh automated review completed without findings. 201 focused checks passed.
+The actual canonical page, disconnected button guards and receipt input feedback
+were checked. This browser had no user Slush extension; actual wallet approval
+remains the user's next step on their own Brave browser.
+
+Release record: `docs/multichain/original-publication-page-release.json`.
+Wallet and remaining route setup: `docs/multichain/original-publish-flow.md`.
+Future website releases must capture this actual current inventory afresh.
+
+---
+
 # Current production — Canopy Crown USDC proposal published, 2026-11-11
 
 Locked deploy `6af4ef567e67ea8af9abe8ed`, published at 22:42:49 UTC, source
