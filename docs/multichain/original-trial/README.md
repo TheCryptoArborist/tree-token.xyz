@@ -1,3 +1,40 @@
+# Confirmed original BNB route configuration — 2026-11-17
+
+All four user-signed BNB mainnet transactions passed the published strict
+configuration receipt validator against actual receipts and current live state:
+
+1. Send library: `0x152e8c9fabebb5a3a0e80d16bebbb974980e973090cb95b277d4ec78e9b28f03`.
+2. Receive library: `0x634ad2f4bb02db9f66a9f389189dbed97c771fa630067562584c2c9f9b08b7af`.
+3. Send security/executor: `0x4eb2b8b45564da4fb8b53d54217c247a6d0cd17c030dd4d68c042c9828a6f5bc`.
+4. Receive security: `0x2497e669a526ca7dc1b0a89b233f4c254d81df5fcfb4d4131e42b8bef914a52a`.
+
+Exact sender, endpoint, chain, zero native transfer, calldata and ordered logs
+matched each reviewed step. Live route stage is 4. Both directions explicitly
+require classic Horizen, Twinstake and LayerZero Labs, with no optional DVNs.
+BNB send confirmations are 20 and receive confirmations are 5 Sui blocks.
+Explicit ULN302 libraries and the reviewed executor/max-message-size match.
+
+The signed Sui configuration/registration, source capabilities and original NFT
+were freshly checked. #2720 remains dev-owned and unchanged; Vault is empty and
+unbound. Confirmed BNB binding, runtime code, fixed 25-USDT price/treasury and
+paused/unminted pass were reverified. Verification used public chain reads only;
+no wallet was connected or transaction submitted by the assistant. No stablecoin
+charge, NFT deposit, pass mint, sale enablement or peer bind occurred here.
+
+Latest actual bindings: `bnb-route-bindings.json`.
+Evidence: `bnb-route-receipts.json`, `bnb-route-verified.json`.
+All earlier signing snapshots and public bundles remain frozen. No website,
+backend, scheduled job or contract source changes accompany this record.
+
+Next required stage: Sui peer binding from the dev wallet ending 45c4, followed
+by complete route verification before original NFT deposit or sale enablement.
+
+Current guidance rechecked:
+https://github.com/MystenLabs/skills/blob/main/accessing-data/SKILL.md
+https://github.com/MystenLabs/skills/blob/main/accessing-data/graphql.md
+
+---
+
 # Confirmed original Sui route configuration — 2026-11-17
 
 User-signed Sui mainnet digest:
