@@ -4,7 +4,7 @@ import {readRoute} from '../../play/multichaintest/setup/bnb/configure/core.js';
 const fetcher=async(u,o)=>{const r=await fetch(u,{...o,headers:{'Content-Type':'application/json'},signal:AbortSignal.timeout(45000)});if(!r.ok)throw Error('Read RPC HTTP '+r.status);return r;};
 // Synthetic identity is for unsigned public-read verification only; no wallet is connected.
 const wallet={request:async({method})=>{if(method==='eth_accounts')return [C.from];if(method==='eth_chainId')return '0x38';throw Error('NO PUBLIC SIGNING: '+method);}};
-const provider=createReadProvider(wallet,{fetcher,endpoints:['https://bsc-rpc.publicnode.com','https://bsc-rpc.publicnode.com']});
+const provider=createReadProvider(wallet,{fetcher,endpoints:['https://bsc-rpc.publicnode.com','https://bsc-dataseed.bnbchain.org']});
 const sourceProof=await readSource(newClient(fetcher));const live=await readState(provider,{source:async()=>sourceProof});if(live.stage!==0)throw Error('The original route is no longer unconfigured.');const quote=await preflight(provider,{read:async()=>live});fs.writeFileSync('docs/multichain/original-trial/bnb-route-preflight.json',JSON.stringify({...quote,checkedAt:new Date().toISOString(),sourceReceipt:'EFmDHsBSjkydv26Ajc8pvR9GFuNNmubo9tPjfrnc6Eos',publicReadsOnly:true,actualWalletConnected:false,assistantSubmitted:false},null,2)+'\n');
 // All following writes are in an ephemeral local fork. Remote provider is read-only.
 const {default:ganache}=await import('../../contracts/bnb-one-slot/node_modules/ganache/dist/node/core.js');
