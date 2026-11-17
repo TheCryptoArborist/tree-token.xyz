@@ -1,0 +1,3 @@
+[package]
+name = "zro"
+edition = "2024"

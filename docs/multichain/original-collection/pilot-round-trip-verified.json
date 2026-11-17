@@ -1,0 +1,19 @@
+{
+  "checkedAt": "2026-11-17T17:05:45.707Z",
+  "status": "verified_mainnet_round_trip_complete",
+  "sourceDigest": "7HgETFSYiM4BZjvUEWirbKFc7SBwkS5CTpmusms9XSXJ",
+  "destinationHash": "0x73cef953825af9f5e6c6de531b8becbc96ebda4a6cb562864dcf13b18e3dc86d",
+  "guid": "0xfa79848dee327e279114a78aad22f95563f3375487edec2e5b9a655178a10f2b",
+  "confirmations": "265",
+  "bnbState": "Retired",
+  "tokenId": "1",
+  "bnbBalance": "0",
+  "canPlay": false,
+  "ownerOfReverted": true,
+  "deliveredPayloadHash": "0x0bf96a70b1a41a4026a5d843a1a90f81153b09c39dd637ec00356918e5d5bae7",
+  "nftOwner": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+  "feeMist": "72951105",
+  "gasMist": "4052857",
+  "totalMist": "77003962",
+  "disposableNft": "0xc07d792d3700dea38f695d843f7eefa2e9c81efdf8aaf7da5fd151e4c58ef26c"
+}

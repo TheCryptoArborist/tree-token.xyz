@@ -1,0 +1,22 @@
+✔ deployment rejects another chain and rejects a six-decimal substitute (546.62757ms)
+✔ binding, purchase pause, and reserve require their designated authority (608.336466ms)
+✔ reserve rejects forged endpoint, origin, sequence, payload, and native value (837.81442ms)
+✔ 25 USDT initial sale pays only treasury; access follows unrestricted ERC721 transfers (1654.584196ms)
+✔ false-return payment rolls back mint, state, and treasury changes (792.656252ms)
+✔ fee-on-transfer payment rolls back mint, state, and treasury changes (798.72203ms)
+✔ no-return USDT cannot duplicate a purchase (853.082172ms)
+✔ reentrant token cannot duplicate a purchase (811.061802ms)
+✔ missing allowance rolls back, and rejected safe transfer retains ownership (952.895273ms)
+✔ redemption uses fixed v2 payload, minimum gas and exact fresh native fee; success is one-shot (1379.29191ms)
+✔ failed endpoint, unexpected token fee, and malformed receipt roll back send for retry (1487.650966ms)
+✔ only exact authenticated release acknowledgement retires the pass, with harmless retries (2199.429885ms)
+✔ EVM wire messages match the shared Move golden fixtures byte for byte (1.445822ms)
+✔ safe-mint rejection rolls back payment and contract-buyer reentrancy cannot lock during purchase (966.561237ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 16120.152263

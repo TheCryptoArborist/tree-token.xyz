@@ -1,0 +1,13 @@
+{
+  "checkedAt": "2026-11-17T17:16:21.139359+00:00",
+  "url": "https://tree-token.xyz/play/treeforce89/",
+  "bundleUrl": "https://tree-token.xyz/play/treeforce89/assets/index-share-r4.js",
+  "bundleSha256": "738c68535a66f68544a9ca30ba0ab6894bca312872568f89910a40954bd741bf",
+  "signInNetwork": "sui:mainnet",
+  "challenge": "/play/treeforce89/api/tree-challenge",
+  "session": "/play/treeforce89/api/tree-session",
+  "run": "/play/treeforce89/api/tree-run",
+  "evmAccountRequestPresent": false,
+  "bnbUsdtCheckoutPresent": false,
+  "interpretation": "Production frontend inspected; server implementation not audited here. An isolated server-authorized EVM access path remains to build."
+}

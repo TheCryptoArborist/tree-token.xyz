@@ -1,0 +1,185 @@
+// Move bytecode v7
+module 0.codec {
+use 0000000000000000000000000000000000000000000000000000000000000001::vector;
+use 00245ba36f7a1cc643a2b037450dff1e4399e18069c6545fb5fcaaf37d39d7dc::bytes32;
+
+public encode(kind#0#0: u8, route#0#0: Bytes32, nft#0#0: Bytes32, request#0#0: Bytes32, recipient#0#0: Bytes32): vector<u8> {
+L5:	%#1: bool
+L6:	out#1#0: vector<u8>
+B0:
+	0: CopyLoc[0](kind#0#0: u8)
+	1: LdU8(1)
+	2: Ge
+	3: BrFalse(9)
+B1:
+	4: CopyLoc[0](kind#0#0: u8)
+	5: LdU8(3)
+	6: Le
+	7: StLoc[5](%#1: bool)
+	8: Branch(11)
+B2:
+	9: LdFalse
+	10: StLoc[5](%#1: bool)
+B3:
+	11: MoveLoc[5](%#1: bool)
+	12: BrFalse(14)
+B4:
+	13: Branch(16)
+B5:
+	14: LdConst[0](u64: 100)
+	15: Abort
+B6:
+	16: LdU8(2)
+	17: MoveLoc[0](kind#0#0: u8)
+	18: VecPack(6, 2)
+	19: StLoc[6](out#1#0: vector<u8>)
+	20: MutBorrowLoc[6](out#1#0: vector<u8>)
+	21: ImmBorrowLoc[1](route#0#0: Bytes32)
+	22: Call bytes32::to_bytes(&Bytes32): vector<u8>
+	23: Call vector::append<u8>(&mut vector<u8>, vector<u8>)
+	24: MutBorrowLoc[6](out#1#0: vector<u8>)
+	25: ImmBorrowLoc[2](nft#0#0: Bytes32)
+	26: Call bytes32::to_bytes(&Bytes32): vector<u8>
+	27: Call vector::append<u8>(&mut vector<u8>, vector<u8>)
+	28: MutBorrowLoc[6](out#1#0: vector<u8>)
+	29: ImmBorrowLoc[3](request#0#0: Bytes32)
+	30: Call bytes32::to_bytes(&Bytes32): vector<u8>
+	31: Call vector::append<u8>(&mut vector<u8>, vector<u8>)
+	32: MutBorrowLoc[6](out#1#0: vector<u8>)
+	33: ImmBorrowLoc[4](recipient#0#0: Bytes32)
+	34: Call bytes32::to_bytes(&Bytes32): vector<u8>
+	35: Call vector::append<u8>(&mut vector<u8>, vector<u8>)
+	36: MoveLoc[6](out#1#0: vector<u8>)
+	37: Ret
+}
+
+public decode(message#0#0: &vector<u8>): u8 * Bytes32 * Bytes32 * Bytes32 * Bytes32 {
+L1:	%#1: bool
+L2:	%#2: bool
+L3:	kind#1#0: u8
+B0:
+	0: CopyLoc[0](message#0#0: &vector<u8>)
+	1: VecLen(6)
+	2: LdU64(130)
+	3: Eq
+	4: BrFalse(13)
+B1:
+	5: CopyLoc[0](message#0#0: &vector<u8>)
+	6: LdU64(0)
+	7: VecImmBorrow(6)
+	8: ReadRef
+	9: LdU8(2)
+	10: Eq
+	11: StLoc[1](%#1: bool)
+	12: Branch(15)
+B2:
+	13: LdFalse
+	14: StLoc[1](%#1: bool)
+B3:
+	15: MoveLoc[1](%#1: bool)
+	16: BrFalse(18)
+B4:
+	17: Branch(22)
+B5:
+	18: MoveLoc[0](message#0#0: &vector<u8>)
+	19: Pop
+	20: LdConst[0](u64: 100)
+	21: Abort
+B6:
+	22: CopyLoc[0](message#0#0: &vector<u8>)
+	23: LdU64(1)
+	24: VecImmBorrow(6)
+	25: ReadRef
+	26: StLoc[3](kind#1#0: u8)
+	27: CopyLoc[3](kind#1#0: u8)
+	28: LdU8(1)
+	29: Ge
+	30: BrFalse(36)
+B7:
+	31: CopyLoc[3](kind#1#0: u8)
+	32: LdU8(3)
+	33: Le
+	34: StLoc[2](%#2: bool)
+	35: Branch(38)
+B8:
+	36: LdFalse
+	37: StLoc[2](%#2: bool)
+B9:
+	38: MoveLoc[2](%#2: bool)
+	39: BrFalse(41)
+B10:
+	40: Branch(45)
+B11:
+	41: MoveLoc[0](message#0#0: &vector<u8>)
+	42: Pop
+	43: LdConst[0](u64: 100)
+	44: Abort
+B12:
+	45: MoveLoc[3](kind#1#0: u8)
+	46: CopyLoc[0](message#0#0: &vector<u8>)
+	47: LdU64(2)
+	48: Call word(&vector<u8>, u64): Bytes32
+	49: CopyLoc[0](message#0#0: &vector<u8>)
+	50: LdU64(34)
+	51: Call word(&vector<u8>, u64): Bytes32
+	52: CopyLoc[0](message#0#0: &vector<u8>)
+	53: LdU64(66)
+	54: Call word(&vector<u8>, u64): Bytes32
+	55: MoveLoc[0](message#0#0: &vector<u8>)
+	56: LdU64(98)
+	57: Call word(&vector<u8>, u64): Bytes32
+	58: Ret
+}
+
+word(message#0#0: &vector<u8>, offset#0#0: u64): Bytes32 {
+L2:	%#2: u8
+L3:	%#3: &mut vector<u8>
+L4:	i#1#10: u64
+L5:	i#1#11: u64
+L6:	i#1#7: u64
+L7:	v#1#1: vector<u8>
+B0:
+	0: LdConst[1](vector<u8>: "" /..)
+	1: StLoc[7](v#1#1: vector<u8>)
+	2: LdU64(0)
+	3: StLoc[6](i#1#7: u64)
+B1:
+	4: CopyLoc[6](i#1#7: u64)
+	5: LdU64(32)
+	6: Lt
+	7: BrFalse(29)
+B2:
+	8: CopyLoc[6](i#1#7: u64)
+	9: StLoc[4](i#1#10: u64)
+	10: MutBorrowLoc[7](v#1#1: vector<u8>)
+	11: StLoc[3](%#3: &mut vector<u8>)
+	12: MoveLoc[4](i#1#10: u64)
+	13: StLoc[5](i#1#11: u64)
+	14: CopyLoc[0](message#0#0: &vector<u8>)
+	15: CopyLoc[1](offset#0#0: u64)
+	16: MoveLoc[5](i#1#11: u64)
+	17: Add
+	18: VecImmBorrow(6)
+	19: ReadRef
+	20: StLoc[2](%#2: u8)
+	21: MoveLoc[3](%#3: &mut vector<u8>)
+	22: MoveLoc[2](%#2: u8)
+	23: VecPushBack(6)
+	24: MoveLoc[6](i#1#7: u64)
+	25: LdU64(1)
+	26: Add
+	27: StLoc[6](i#1#7: u64)
+	28: Branch(4)
+B3:
+	29: MoveLoc[0](message#0#0: &vector<u8>)
+	30: Pop
+	31: MoveLoc[7](v#1#1: vector<u8>)
+	32: Call bytes32::from_bytes(vector<u8>): Bytes32
+	33: Ret
+}
+
+Constants [
+	0 => u64: 100
+	1 => vector<u8>: "" // interpreted as UTF8 string
+]
+}

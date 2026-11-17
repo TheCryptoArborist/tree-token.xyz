@@ -14,7 +14,7 @@ import { verifyDelivery } from './multichain-preview-delivery.mjs';
 // unlocks a deploy, or accepts an arbitrary older deployment for publication.
 export const SITE_ID = 'aa62f324-b880-47d6-85b8-4ba0700ff5bf';
 export const ACCOUNT_ID = '69800888d1a3d0483003ae9e';
-export const BASELINE_ID = process.env.MULTICHAIN_EXPECTED_DEPLOY || '6afc7dff1b766ee9e7e26c7f';
+export const BASELINE_ID = process.env.MULTICHAIN_EXPECTED_DEPLOY || '6afc8866ac4011918f250328';
 export const ORIGINAL_CHANGES = [];
 export const REPLACED_HASHES = {};
 // Historical orphaned API deploys individually audited on 2026-11-10.
@@ -29,7 +29,7 @@ export function isAuditedInactiveDeploy(deploy) {
     deploy.commit_ref ?? null].every((value, i) => value === expected[i]);
 }
 
-export const MULTICHAIN_PATHS = ["/play/multichaintest/setup/sui/ack/index.html", "/play/multichaintest/setup/sui/ack/app.js", "/play/multichaintest/setup/sui/ack/core.js", "/play/multichaintest/setup/sui/ack/wallet-vendor.js"];
+export const MULTICHAIN_PATHS = ['/play/multichaintest/original/index.html', '/play/multichaintest/original/app.js', '/play/multichaintest/original/core.js'];
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const RUNTIME_FIELDS = ['branch', 'context', 'functions_region', 'functions_region_overrides',
   'database_branch_id', 'blobs_region', 'framework', 'edge_functions_present', 'server', 'database_migrations'];

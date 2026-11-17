@@ -1,0 +1,8 @@
+[package]
+name = "endpoint_v2"
+edition = "2024"
+
+[dependencies]
+zro = { local = "../zro" }
+call = { local = "../dynamic-call/call" }
+utils = { local = "../utils" }

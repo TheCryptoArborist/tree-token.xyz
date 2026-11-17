@@ -1,0 +1,25 @@
+{
+  "basis": "LOCAL_BNB_MAINNET_FORK_ONLY",
+  "checkedAt": "2026-11-17T18:00:38.204Z",
+  "blockNumber": 134163695,
+  "remoteWrites": 0,
+  "realUsdtContract": true,
+  "realUsdtDecimals": 18,
+  "treasuryDelta": "25000000000000000000",
+  "transferAccessFollowsOwner": true,
+  "redemptionLocksAccess": true,
+  "finalState": "Retired",
+  "gas": {
+    "reserveCallback": "83026",
+    "purchase": "100303",
+    "ackCallback": "79055"
+  },
+  "limitations": [
+    "Synthetic Sui package peer and shared Vault route IDs",
+    "Endpoint impersonated locally",
+    "Gas-funded locally, real USDT snapshot retained",
+    "No LayerZero send, DVN verification, Sui release, mainnet transaction or signature",
+    "Contract canPlay tested; live arcade integration is not implemented"
+  ],
+  "sourceIdentityNote": "Pinned LayerZero package CallCap identifies endpoint sender by original Sui package address; shared OApp object ID is a separate configuration input."
+}

@@ -1,0 +1,42 @@
+name: Verify one-NFT vault draft
+on:
+  pull_request:
+    paths:
+      - 'contracts/**'
+      - 'scripts/multichain/one-slot-publication.mjs'
+      - 'tests/one-slot-publication.test.mjs'
+      - 'docs/multichain/one-slot-vault/**'
+      - '.github/workflows/verify-one-slot-vault.yml'
+permissions:
+  contents: read
+jobs:
+  vault:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci --ignore-scripts
+      - name: Fetch checksum-pinned official Sui compiler
+        run: |
+          curl --fail --location --retry 2 --output /tmp/sui-release.tgz https://github.com/MystenLabs/sui/releases/download/mainnet-v1.83.1/sui-mainnet-v1.83.1-ubuntu-x86_64.tgz
+          echo 'a54b24da3c8fd4b88522f01c8718826ae5637512ee0953469a5759408e1f701b  /tmp/sui-release.tgz' | sha256sum --check
+          mkdir /tmp/sui-compiler
+          tar -xzf /tmp/sui-release.tgz -C /tmp/sui-compiler ./sui
+          /tmp/sui-compiler/sui --version
+      - name: Create build-only configuration without keys
+        run: python contracts/setup-build-config.py
+      - name: Execute Move tests and reproduce release bytecode
+        working-directory: contracts/nftree-one-slot
+        run: |
+          /tmp/sui-compiler/sui move test --build-env mainnet
+          /tmp/sui-compiler/sui move build --build-env mainnet --dump-bytecode-as-base64 --no-tree-shaking > /tmp/rebuilt-one-slot.json
+          python -c "import json; assert json.load(open('/tmp/rebuilt-one-slot.json')) == json.load(open('../../docs/multichain/one-slot-vault/publication-bytecode.json'))"
+      - name: Verify unsigned transaction and inventory boundaries
+        run: |
+          node --test tests/one-slot-publication.test.mjs tests/original-nftree-readiness.test.mjs
+          git diff --check

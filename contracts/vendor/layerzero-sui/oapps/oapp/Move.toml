@@ -1,0 +1,9 @@
+[package]
+name = "oapp"
+edition = "2024"
+
+[dependencies]
+endpoint_v2 = { local = "../../endpoint-v2" }
+call = { local = "../../dynamic-call/call" }
+utils = { local = "../../utils" }
+zro = { local = "../../zro" }

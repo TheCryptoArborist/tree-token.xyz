@@ -1,0 +1,28 @@
+name: Verify one-NFT BNB pass
+on:
+  pull_request:
+    paths:
+      - 'contracts/bnb-one-slot/**'
+      - 'contracts/nftree-one-slot/tests/**'
+      - '.github/workflows/verify-bnb-one-slot.yml'
+permissions:
+  contents: read
+jobs:
+  pass:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: contracts/bnb-one-slot
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci --ignore-scripts
+      - run: npm run compile
+      - run: node scripts/review-artifacts.mjs --check
+      - run: npm test
+      - run: git diff --check
