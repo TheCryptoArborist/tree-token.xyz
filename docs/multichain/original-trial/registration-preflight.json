@@ -1,0 +1,12 @@
+{
+  "status": "UNSIGNED_MAINNET_REGISTRATION_SIMULATION_VERIFIED",
+  "gasMist": "4668124",
+  "channelId": "0xeeaf18d5d182e1330c0933a4667ac051b61c43ba07b69aaab9711d2be137d43d",
+  "registryEntryId": "0x2b68c14ea35bd0b208560bcbb9b29ac4e3382f9f46280b1ec4536e5fbeb7bea3",
+  "verifiedAt": "2026-11-17T21:16:26.012Z",
+  "doGasSelection": true,
+  "checksEnabled": true,
+  "bnbBindingVerifiedBeforeSimulation": true,
+  "submitted": false,
+  "note": "Channel and registry IDs are simulation-only; actual IDs must come from the user-signed receipt."
+}
