@@ -1,0 +1,27 @@
+{
+  "checkedAt": "2026-11-17T16:27:51.993Z",
+  "status": "verified_source_lock_and_send",
+  "recipient": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+  "request": "0x58ea0a82f5eef90c41ef40d2eebed01a4e9c89abb9b7fb304fbc1d4e2b4b2644",
+  "guid": "0x4c2f2803af1a9b988e1fdef73c1c72da34bcaaf5339b579b23aa937f17d26586",
+  "receipts": [
+    {
+      "status": "verified",
+      "hash": "0x84fe54f8857f5dd71ac61aa7cdef9b229af66cdac0b09061302fca4770c11ae4",
+      "action": "lock",
+      "nonce": "333",
+      "valueWei": "0",
+      "blockNumber": "0x7fefbaf",
+      "liveAction": "sent"
+    },
+    {
+      "status": "verified",
+      "hash": "0xc6a234da2572a75f3c70659d27d7d2e8371370f03aa72ab81163ca6d8022376b",
+      "action": "send",
+      "nonce": "334",
+      "valueWei": "4481595519267309",
+      "blockNumber": "0x7fefbd3",
+      "liveAction": "sent"
+    }
+  ]
+}

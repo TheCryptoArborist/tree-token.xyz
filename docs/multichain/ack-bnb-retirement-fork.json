@@ -1,0 +1,58 @@
+{
+  "basis": "LOCAL_FORK_AUTHENTICATED_CALLBACK_ONLY",
+  "excludes": "This simulates the immutable adapter callback with a locally impersonated endpoint. It does not establish real DVN verification or mainnet delivery.",
+  "checkedAt": "2026-11-17T16:50:01.098Z",
+  "remoteWrites": 0,
+  "guid": "0xfa79848dee327e279114a78aad22f95563f3375487edec2e5b9a655178a10f2b",
+  "state": "Retired",
+  "balance": "0",
+  "canPlay": false,
+  "ownerOfReverts": true,
+  "gasUsed": "78579",
+  "events": [
+    {
+      "address": "0xe98fa205106028822572d2549ea41748f8bfd879",
+      "blockHash": "0x0e69817e57830eb33c6b263cd7b252e0514e2b1afd5b6bd5ba7ec699ec2ce452",
+      "blockNumber": "0x7ff081e",
+      "data": "0x",
+      "logIndex": "0x0",
+      "removed": false,
+      "topics": [
+        "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+        "0x00000000000000000000000090f9c1c0c675a0ce9d539c540db7f4a1f7e583ae",
+        "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "0x0000000000000000000000000000000000000000000000000000000000000001"
+      ],
+      "transactionHash": "0xe64376afac65e3e8b7d1fedb45a804840bba29fe83c3601c47ceb77be9f98436",
+      "transactionIndex": "0x0"
+    },
+    {
+      "address": "0xe98fa205106028822572d2549ea41748f8bfd879",
+      "blockHash": "0x0e69817e57830eb33c6b263cd7b252e0514e2b1afd5b6bd5ba7ec699ec2ce452",
+      "blockNumber": "0x7ff081e",
+      "data": "0x",
+      "logIndex": "0x1",
+      "removed": false,
+      "topics": [
+        "0x33bf3780ab321f3c6eb7eba598dcd21e3989005d9e37e811e7182984e5a86865",
+        "0x58ea0a82f5eef90c41ef40d2eebed01a4e9c89abb9b7fb304fbc1d4e2b4b2644"
+      ],
+      "transactionHash": "0xe64376afac65e3e8b7d1fedb45a804840bba29fe83c3601c47ceb77be9f98436",
+      "transactionIndex": "0x0"
+    },
+    {
+      "address": "0xb4c471c1fb8e31ddcbb518277e97a4575fc74779",
+      "blockHash": "0x0e69817e57830eb33c6b263cd7b252e0514e2b1afd5b6bd5ba7ec699ec2ce452",
+      "blockNumber": "0x7ff081e",
+      "data": "0x0000000000000000000000000000000000000000000000000000000000000003",
+      "logIndex": "0x2",
+      "removed": false,
+      "topics": [
+        "0x176250b792ff8febc09040b8cf326ac55711559470d02712a12ae9a19a937cff",
+        "0xfa79848dee327e279114a78aad22f95563f3375487edec2e5b9a655178a10f2b"
+      ],
+      "transactionHash": "0xe64376afac65e3e8b7d1fedb45a804840bba29fe83c3601c47ceb77be9f98436",
+      "transactionIndex": "0x0"
+    }
+  ]
+}
