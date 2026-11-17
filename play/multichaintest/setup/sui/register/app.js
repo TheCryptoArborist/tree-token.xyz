@@ -1,0 +1,26 @@
+import {createDAppKit,SuiGrpcClient} from '../../../wallet-vendor.js';
+import {C,requestRegistration,readState} from './core.js';
+const el=id=>document.getElementById(id),say=s=>el('status').textContent=s;
+const kit=createDAppKit({networks:['mainnet'],defaultNetwork:'mainnet',autoConnect:false,slushWalletConfig:null,createClient:network=>new SuiGrpcClient({network,baseUrl:'https://fullnode.mainnet.sui.io:443'})});
+let busy=false,connecting=false,epoch=0;
+el('expected').textContent=C.sender;
+function showReceipt(r){el('receipt').hidden=false;el('digest').textContent=r.digest;el('explorer').href='https://suivision.xyz/txblock/'+encodeURIComponent(r.digest);el('copy').onclick=async()=>{try{await navigator.clipboard.writeText(r.digest);say('Digest copied. Send it back to the conversation.');}catch{say('Copy the digest shown above.');}};}
+function update(){
+ const a=kit.stores.$connection.get().account?.address;
+ el('wallet-status').textContent=a?'Connected: '+a:'Connect the Sui dev wallet using Slush in Brave.';el('disconnect').hidden=!a;
+ let s;try{s=readState(localStorage);if(s.receipt)showReceipt(s.receipt);}catch{el('register').disabled=true;say('Storage is unavailable. Enable browser storage and check wallet activity.');return;}
+ el('register').disabled=busy||connecting||a?.toLowerCase()!==C.sender||kit.stores.$currentNetwork.get()!=='mainnet'||!el('reviewed').checked||s.pending||!!s.receipt;
+ el('register').textContent=busy?'Checking / waiting for wallet…':s.receipt?'Registration already submitted':s.pending?'Check wallet activity':'Open wallet to register';
+ if(!busy&&(s.pending||s.receipt))say(s.receipt?'A registration receipt is recorded. Send its digest back; do not register again.':'A wallet request may already be submitted. Check wallet activity and send back its digest before continuing.');
+}
+function wallets(){const ws=kit.stores.$wallets.get();el('wallet-list').replaceChildren();el('discovery').textContent=ws.length?'Choose your installed wallet.':'Open this page in Brave with the Slush extension installed and unlocked.';for(const wallet of ws){const b=document.createElement('button');b.type='button';b.textContent='Connect '+wallet.name;b.disabled=busy||connecting;b.onclick=async()=>{if(busy||connecting)return;connecting=true;wallets();update();say('Waiting for wallet connection…');try{await kit.connectWallet({wallet});say('Wallet connected. Check the selected dev account, then review the transaction.');}catch(e){say('Connection failed: '+String(e?.message??e).slice(0,450));}finally{connecting=false;wallets();update();}};el('wallet-list').append(b);}}
+kit.stores.$wallets.subscribe(wallets);kit.stores.$connection.subscribe(()=>{epoch++;el('reviewed').checked=false;update();});kit.stores.$currentNetwork.subscribe(()=>{epoch++;el('reviewed').checked=false;update();});
+el('disconnect').onclick=async()=>{if(busy)return;try{await kit.disconnectWallet();say('Select the Sui dev account in Slush, then reconnect.');}catch(e){say(String(e?.message??e));}};
+el('reviewed').onchange=update;
+window.addEventListener('storage',e=>{if(e.key===null||e.key===C.key||e.key===C.key+'-pending')update();});
+el('register').onclick=async()=>{if(busy)return;busy=true;update();wallets();say('Checking pilot objects and simulating registration. No signature requested yet…');try{
+ const r=await requestRegistration({storage:localStorage,locks:navigator.locks,identity:()=>({address:kit.stores.$connection.get().account?.address,network:kit.stores.$currentNetwork.get(),epoch}),reviewed:()=>el('reviewed').checked,sign:async input=>{say('Simulation passed. Review the registration and gas fee in Slush. Approving creates the pilot messaging channel.');return kit.signAndExecuteTransaction(input);},onReceipt:showReceipt});
+ say('Wallet reported success. Send this digest back so the actual messaging channel can be verified.');
+ try{await kit.getClient().core.waitForTransaction({digest:r.digest});say('Transaction indexed. Send the digest back to verify registration before peer and security configuration.');}catch{say('Submission recorded; receipt lookup has not completed. Send the digest back. Do not register again.');}
+}catch(e){let s;try{s=readState(localStorage);}catch{s={pending:true};}say(String(e?.message??e).slice(0,600)+(s.pending?' Check wallet activity before another attempt.':''));}finally{busy=false;update();wallets();}};
+update();

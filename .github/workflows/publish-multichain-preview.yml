@@ -30,7 +30,7 @@ jobs:
         with:
           node-version: 24
       - run: |
-          node --test tests/multichain-preview.test.mjs tests/multichain-setup.test.mjs tests/multichain-bnb.test.mjs tests/multichain-binding.test.mjs tests/multichain-release.test.mjs tests/preserved-release.test.mjs
+          node --test tests/multichain-preview.test.mjs tests/multichain-setup.test.mjs tests/multichain-bnb.test.mjs tests/multichain-binding.test.mjs tests/multichain-sui-registration.test.mjs tests/multichain-release.test.mjs tests/preserved-release.test.mjs
           node --check scripts/release-multichain-preview.mjs
           node --check scripts/multichain-preview-delivery.mjs
           git diff --check
@@ -47,10 +47,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Add the reviewed one-time BNB binding setup and preserve the live site
+      - name: Add the reviewed Sui LayerZero registration setup and preserve the live site
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          MULTICHAIN_EXPECTED_DEPLOY: '6afb6f5dc358aa4d21c42598'
+          MULTICHAIN_EXPECTED_DEPLOY: '6afb733aaa3097a7e3d3c698'
           REVIEWED_SHA: ${{ github.sha }}
         run: |
           test -n "$NETLIFY_AUTH_TOKEN" || { echo 'The existing Netlify release connection is unavailable.'; exit 1; }
