@@ -35,6 +35,7 @@ Running Move unit tests
 [ PASS    ] nftree_one_slot::vault_tests::same_type_different_object_cannot_fund_slot
 [ PASS    ] nftree_one_slot::vault_tests::second_deposit_is_rejected_even_before_id_check
 [ PASS    ] nftree_one_slot::vault_tests::unfunded_vault_cannot_announce
+[ PASS    ] nftree_one_slot::vault_tests::v2_wire_bytes_match_evm_golden_messages
 [ PASS    ] nftree_one_slot::vault_tests::wrong_backing_message_cannot_release
 [ PASS    ] nftree_one_slot::vault_tests::wrong_collection_type_cannot_create_slot
 [ PASS    ] nftree_one_slot::vault_tests::wrong_peer_cannot_release
@@ -42,4 +43,4 @@ Running Move unit tests
 [ PASS    ] nftree_one_slot::vault_tests::wrong_source_chain_cannot_release
 [ PASS    ] nftree_one_slot::vault_tests::zero_recipient_cannot_release
 [ PASS    ] nftree_one_slot::vault_tests::zero_request_is_rejected
-Test result: OK. Total tests: 35; passed: 35; failed: 0
+Test result: OK. Total tests: 36; passed: 36; failed: 0

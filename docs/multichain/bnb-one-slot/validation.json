@@ -1,0 +1,43 @@
+{
+  "checkedAt": "2026-11-17T18:03:00.035720+00:00",
+  "evmTests": 14,
+  "moveTests": 36,
+  "multichainRegressionTests": 186,
+  "releaseSuiBytecodeUnchanged": true,
+  "realUsdtLocalFork": "passed",
+  "mainnetTransactionsSubmitted": 0,
+  "originalNftsMoved": 0,
+  "websiteDeployments": 0,
+  "broadRootSuite": {
+    "tests": 495,
+    "passed": 478,
+    "failed": 17,
+    "sameFailuresOnUnmodifiedParent": true,
+    "parentCommit": "077065e8ef2bfc418d34e3689bdbd100e3d5d90f",
+    "failures": [
+      "tests/arcade-event-database.test.mjs",
+      "tests/arcade-guided.test.mjs",
+      "tests/arcade-monthly-database.test.mjs",
+      "tests/arcade-monthly-ui.test.mjs",
+      "tests/arcade-nftree-source.test.mjs",
+      "tests/arcade-return-session.test.mjs",
+      "tests/arcade-sui-wallet-source.test.mjs",
+      "tests/arcade-wallet-link-source.test.mjs",
+      "tests/homepage-simple-source.test.mjs",
+      "tests/leaderboard-ui-state.test.mjs",
+      "tests/netlify-routing-source.test.mjs",
+      "tests/panel-router-source.test.mjs",
+      "tests/robinhood-wallet-source.test.mjs",
+      "tests/tree-arcade-source.test.mjs",
+      "Knowledge Trial replaces the public raffle countdown with a fixed-duration skill summary",
+      "tests/tree-swap-client-source.test.mjs",
+      "tests/victory-center-source.test.mjs"
+    ]
+  },
+  "limits": [
+    "Fixture endpoint delivery in local tests",
+    "Local mainnet fork impersonates endpoint, does not verify DVNs",
+    "Live arcade is not connected to this pass",
+    "New actual Sui/BNB contract bindings and security configuration still required"
+  ]
+}

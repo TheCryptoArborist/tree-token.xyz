@@ -203,3 +203,26 @@ fun empty_admin_options_block_send_instead_of_consuming_one_shot() {
     let a = s.take_from_sender<OAppAdminCap>(); o.set_enforced_options(&a, 30102, 1, vector[0,3]);
     let send = vault::send(&mut v, &mut o, 1, vector[], coin::zero<SUI>(s.ctx()), s.ctx()); destroy(send); abort 999
 }
+
+#[test]
+fun v2_wire_bytes_match_evm_golden_messages() {
+    let route = bytes32::from_address(@0x000000000000000000000000000000000000000000000000000000000000beef);
+    let nft = bytes32::from_address(@0x046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba);
+    let request = bytes32::from_address(@0x0000000000000000000000000000000000000000000000000000000000c0ffee);
+    let recipient = bytes32::from_address(@0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4);
+    let encoded = codec::encode(1, route, nft, bytes32::zero_bytes32(), bytes32::zero_bytes32());
+    assert_eq!(encoded, x"0201000000000000000000000000000000000000000000000000000000000000beef046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+    let (kind, r, n, req, to) = codec::decode(&encoded);
+    assert_eq!(kind, 1); assert_eq!(r, route); assert_eq!(n, nft);
+    assert_eq!(req, bytes32::zero_bytes32()); assert_eq!(to, bytes32::zero_bytes32());
+    let encoded = codec::encode(2, route, nft, request, recipient);
+    assert_eq!(encoded, x"0202000000000000000000000000000000000000000000000000000000000000beef046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba0000000000000000000000000000000000000000000000000000000000c0ffee485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4");
+    let (kind, r, n, req, to) = codec::decode(&encoded);
+    assert_eq!(kind, 2); assert_eq!(r, route); assert_eq!(n, nft);
+    assert_eq!(req, request); assert_eq!(to, recipient);
+    let encoded = codec::encode(3, route, nft, request, recipient);
+    assert_eq!(encoded, x"0203000000000000000000000000000000000000000000000000000000000000beef046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba0000000000000000000000000000000000000000000000000000000000c0ffee485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4");
+    let (kind, r, n, req, to) = codec::decode(&encoded);
+    assert_eq!(kind, 3); assert_eq!(r, route); assert_eq!(n, nft);
+    assert_eq!(req, request); assert_eq!(to, recipient);
+}

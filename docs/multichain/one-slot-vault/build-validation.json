@@ -1,9 +1,9 @@
 {
-  "checkedAt": "2026-11-17T17:42:19.647203+00:00",
+  "checkedAt": "2026-11-17T18:01:05.630823+00:00",
   "compiler": "sui 1.83.1-6a567faf6de1",
   "compilerArchiveSha256": "a54b24da3c8fd4b88522f01c8718826ae5637512ee0953469a5759408e1f701b",
   "upstreamLayerZeroCommit": "9c741e7f9790639537b1710a203bcdfd73b0b9ac",
-  "moveTests": 35,
+  "moveTests": 36,
   "publications": 0,
   "originalNftsMoved": 0,
   "sourceHashes": {
@@ -11,7 +11,7 @@
     "contracts/nftree-one-slot/Move.toml": "e5a0f69ee2c0e650e9d12fff7a636ede44bce2ea57aae1990c37541170d29882",
     "contracts/nftree-one-slot/sources/codec.move": "3ee166380f39ef2c79321265562ee8bd67f12c7f1b82d15b1b0464246d8ad47a",
     "contracts/nftree-one-slot/sources/vault.move": "c0da3cad6a88d0f81b66972f62b5a8c5dfbf4494f02f64d7376b03584fac3c95",
-    "contracts/nftree-one-slot/tests/vault_tests.move": "33cfcca50ff88776a59cbd5c8d5b4e6b85d27dfc70db8aed561e318fef610f54",
+    "contracts/nftree-one-slot/tests/vault_tests.move": "a9f77d98b1c242644754b825265d7b4473bf032741a66943924d7ff5e1cc5791",
     "contracts/setup-build-config.py": "99bd2dca89b7e5d0eb48cc56e8ca5cc20c534404113417847c78b6d318d5e5f0",
     "contracts/vendor/layerzero-sui/UPSTREAM.txt": "16bf61335027710f57e0ef929e7e0dbf266eb7e603f56fce4525cdb755829a6b",
     "contracts/vendor/layerzero-sui/dynamic-call/call/Move.toml": "f4a40aac4806554d14700a3b8a27972d103cfea3d8ad89ced8678daa1f8c039f",
@@ -65,5 +65,7 @@
   },
   "jsTests": 215,
   "configHelperRefusesLocalExecutionAndExistingConfiguration": true,
-  "reviewFindingFixed": "Enforce configured destination execution options identically in quote and send; bind default is 200000 receive gas for kinds 1 and 3"
+  "reviewFindingFixed": "Enforce configured destination execution options identically in quote and send; bind default is 200000 receive gas for kinds 1 and 3",
+  "pairedWireGoldenTest": true,
+  "releaseBytecodeUnchanged": true
 }

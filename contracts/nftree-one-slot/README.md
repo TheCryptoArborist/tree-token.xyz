@@ -73,7 +73,7 @@ simulation separately verifies the emitted dependency bindings. This is not a
 wallet migration or user instruction to install a CLI. The CI-only config helper
 refuses local execution and any existing wallet config; its keystores are empty.
 
-35 Move tests pass. Tests use locally created fixture NFTs, test registries with
+36 Move tests pass. Tests use locally created fixture NFTs, test registries with
 fixture identity, synthetic endpoint capabilities and a fixture announcement
 state. Additional tests exercise the actual source send guards. These establish
 custody/state/authentication-boundary behavior, **not real DVN verification,
@@ -101,8 +101,12 @@ published bindings; never use them to deploy or configure a BNB counterpart.
 funding transaction ready to sign: an unpublished vault cannot yet be a genuine
 mainnet deposit target.
 
-Before offering funding: review the new BNB version-2 adapter/pass, its exact code,
-USDT/treasury purchase and transfer/redemption tests; review upgrade governance;
+The paired BNB version-2 adapter/pass and purchase/transfer/redemption tests now
+live in `../bnb-one-slot/`. Its golden messages match this Move codec byte for byte.
+The endpoint peer is the original published package identity used by the package
+CallCap; it is distinct from the shared OApp object ID and the shared Vault route ID.
+
+Before offering funding: complete paired-contract review; review upgrade governance;
 then publish and verify actual source/destination contracts, create the fixed
 slot, verify generic-NFT receive metadata and all endpoint/DVN/executor/peer
 settings on the new route, refresh NFT ownership, and simulate the exact one-NFT
