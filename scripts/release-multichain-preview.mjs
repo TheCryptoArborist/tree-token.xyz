@@ -14,7 +14,7 @@ import { verifyDelivery } from './multichain-preview-delivery.mjs';
 // unlocks a deploy, or accepts an arbitrary older deployment for publication.
 export const SITE_ID = 'aa62f324-b880-47d6-85b8-4ba0700ff5bf';
 export const ACCOUNT_ID = '69800888d1a3d0483003ae9e';
-export const BASELINE_ID = process.env.MULTICHAIN_EXPECTED_DEPLOY || '6afb6f5dc358aa4d21c42598';
+export const BASELINE_ID = process.env.MULTICHAIN_EXPECTED_DEPLOY || '6afb733aaa3097a7e3d3c698';
 export const ORIGINAL_CHANGES = [];
 export const REPLACED_HASHES = {};
 // Historical orphaned API deploys individually audited on 2026-11-10.
@@ -29,7 +29,7 @@ export function isAuditedInactiveDeploy(deploy) {
     deploy.commit_ref ?? null].every((value, i) => value === expected[i]);
 }
 
-export const MULTICHAIN_PATHS = ["/play/multichaintest/setup/bnb/bind/index.html", "/play/multichaintest/setup/bnb/bind/app.js", "/play/multichaintest/setup/bnb/bind/core.js", "/play/multichaintest/setup/bnb/bind/binding.json"];
+export const MULTICHAIN_PATHS = ["/play/multichaintest/setup/sui/register/index.html", "/play/multichaintest/setup/sui/register/app.js", "/play/multichaintest/setup/sui/register/core.js"];
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const RUNTIME_FIELDS = ['branch', 'context', 'functions_region', 'functions_region_overrides',
   'database_branch_id', 'blobs_region', 'framework', 'edge_functions_present', 'server', 'database_migrations'];
@@ -157,7 +157,7 @@ export function assembleFiles(baselineFiles, overlays) {
   assert(files['/index.html'], 'Missing rewards entry.');
   assert(Object.keys(baselineFiles).every(p => Object.hasOwn(files, p)), 'Baseline path removed.');
   eq(Object.keys(sources).sort(), [...MULTICHAIN_PATHS].sort(), 'Unexpected gallery overlays');
-  assert(MULTICHAIN_PATHS.every(p => !Object.hasOwn(baselineFiles,p)), 'BNB binding path already exists; review before replacement.');
+  assert(MULTICHAIN_PATHS.every(p => !Object.hasOwn(baselineFiles,p)), 'Sui registration path already exists; review before replacement.');
   return { files, sources, changedOriginals, addedPaths: Object.keys(files).filter(p => !Object.hasOwn(baselineFiles, p)).sort() };
 }
 

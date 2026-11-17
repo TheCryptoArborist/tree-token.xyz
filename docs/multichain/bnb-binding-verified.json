@@ -1,0 +1,19 @@
+{
+  "status": "VERIFIED_BNB_CONTRACTS_BOUND",
+  "hash": "0xaee4ba5624cfad0bb47364a5a5a8ef3043d0a66b9d2d85455f6444ea28f5787d",
+  "chainId": 56,
+  "blockNumber": 133998621,
+  "sender": "0x90f9c1c0c675a0ce9d539c540db7f4a1f7e583ae",
+  "adapter": "0xb4c471c1fb8e31ddcbb518277e97a4575fc74779",
+  "pass": "0xe98fa205106028822572d2549ea41748f8bfd879",
+  "gasUsed": 49933,
+  "gasFeeWei": "2496650000000",
+  "gasFeeBNB": "0.000002496650",
+  "checks": [
+    "Exact transaction account, target, nonce, zero value and bindPass calldata",
+    "Matching PassBound event",
+    "Both current code hashes match",
+    "Reciprocal live adapter/pass pointers match"
+  ],
+  "scope": "BNB deployment and local binding complete. LayerZero Sui registration, peers, security/execution settings and end-to-end messaging remain pending; no original NFTree integration or live arcade access."
+}
