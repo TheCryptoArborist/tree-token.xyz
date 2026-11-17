@@ -1,3 +1,7 @@
+## Next approval prepared: original #2720 deposit
+
+Signed peer binding FCG2538WHkd7rTAiC2McJanEw2Dr84BiaGcXoNzZUwsu is verified. Read-only route fee checks and unsigned deposit/quote simulations pass. The isolated deposit stage is documented in [original-sui-deposit-flow.md](../original-sui-deposit-flow.md). No real NFT deposit, reserve packet, pass mint, sale or payment has been submitted by the assistant. Return from this one-shot vault requires the BNB-pass redemption route; no direct admin withdrawal exists.
+
 # Confirmed original Sui peer binding — 2026-11-17
 
 User-signed Sui mainnet digest:
