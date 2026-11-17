@@ -46,7 +46,9 @@ shows Check receipt and continue alongside the approval button and a manual
 hash input. Receipt verification requires exact sender/target/chain/value,
 one of the four exact calldata values, exact ordered logs and current matching
 route/source/paused-pass state. A recorded pending request also requires the
-same nonce and stage. Cleared browser storage can recover an exact signed
+same nonce and stage. A wallet Speed Up replacement can supply a different hash;
+the exact recorded nonce, stage, target and calldata must still match.
+Cleared browser storage can recover an exact signed
 receipt without submitting another transaction.
 
 ## Validation and release

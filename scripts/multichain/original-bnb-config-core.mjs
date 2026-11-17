@@ -54,7 +54,7 @@ export async function verifyReceipt(provider,hash,{read=readState}={}){
 }
 export async function recoverReceipt({provider,hash,storage,locks,isCurrent=()=>true,verify=verifyReceipt}){
  check(locks?.request,'Use current Brave for receipt coordination.');return locks.request(C.key,{ifAvailable:true},async lock=>{
- check(lock,'Another tab is handling configuration.');const old=loadState(storage);check(!old.pending?.hash||same(old.pending.hash,hash),'A different request is pending. Check that receipt first.');const r=await verify(provider,hash);check(isCurrent(),'Wallet changed during verification.');check(JSON.stringify(loadState(storage))===JSON.stringify(old),'Stored state changed during verification.');if(r.status==='pending')return r;
+ check(lock,'Another tab is handling configuration.');const old=loadState(storage);const r=await verify(provider,hash);check(isCurrent(),'Wallet changed during verification.');check(JSON.stringify(loadState(storage))===JSON.stringify(old),'Stored state changed during verification.');if(r.status==='pending')return r;
  if(old.pending)check(r.stage===old.pending.stage&&r.nonce===old.pending.nonce&&same(r.target,old.pending.target)&&r.dataSha256===old.pending.dataSha256,'Receipt differs from the recorded request.');
  const prior=old.receipts.find(x=>x.stage===r.stage);check(!prior||same(prior.hash,r.hash),'A different receipt exists for this step.');saveState(storage,C.key,{receipts:[...old.receipts.filter(x=>x.stage!==r.stage),r].sort((a,b)=>a.stage-b.stage)});return r;
  });

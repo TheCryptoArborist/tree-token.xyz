@@ -1,0 +1,49 @@
+{
+  "checkedAt": "2026-11-17T22:19:55.024Z",
+  "forkBlock": "0x7ffb266",
+  "mode": "ephemeral-local-fork-only",
+  "results": [
+    {
+      "status": "verified",
+      "hash": "0xa349f526ab5903496d672bbef2e5c236053a4ca6a08c176710d0acbf683d340d",
+      "stage": 0,
+      "nonce": "338",
+      "target": "0x1a44076050125825900e736c501f859c50fe728c",
+      "dataSha256": "83d0c3e7e32924e14322feedcb2e72303f72fa7ba89b929e9dac6363ed1fcac6",
+      "blockNumber": "0x7ffb268",
+      "liveStage": 1
+    },
+    {
+      "status": "verified",
+      "hash": "0x57c718c2baa372dd5a1cf71ec1f7ae89b2da855864f51af9b2b1883db442c062",
+      "stage": 1,
+      "nonce": "339",
+      "target": "0x1a44076050125825900e736c501f859c50fe728c",
+      "dataSha256": "5507035450565e817b010d6dcc5da7c407d2cc6df0428835b62024851fa8ac27",
+      "blockNumber": "0x7ffb269",
+      "liveStage": 2
+    },
+    {
+      "status": "verified",
+      "hash": "0x2f4ee2c4e0c3b343d55c0cadfe7b9b5a75ae16d554d933287da923063ed59801",
+      "stage": 2,
+      "nonce": "340",
+      "target": "0x1a44076050125825900e736c501f859c50fe728c",
+      "dataSha256": "2c6be7865f43b1e81d4734c31ba6becbcd2b5f08bac5e0d8d0862600567a146f",
+      "blockNumber": "0x7ffb26a",
+      "liveStage": 3
+    },
+    {
+      "status": "verified",
+      "hash": "0x51b26398f779500b8aca2d330f9d10847f364eb6f77ccd78d6e25013abd5cf01",
+      "stage": 3,
+      "nonce": "341",
+      "target": "0x1a44076050125825900e736c501f859c50fe728c",
+      "dataSha256": "b5e9aff72b106be26dbb236ebb405cf0a370800d5d4ed546d2da78f2321fa415",
+      "blockNumber": "0x7ffb26b",
+      "liveStage": 4
+    }
+  ],
+  "actualMainnetTransactionsSubmitted": 0,
+  "assistantSubmitted": false
+}
