@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0b1714">
+<title>Heartwood Expedition — TREE Arcade Playtest</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1714;--panel:#172a22;--panel2:#20352a;--green:#bedf91;--gold:#e9cf82;--ink:#eef5e7;--muted:#abc2ae;--purple:#ac87e1}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 50% 0%,#283b2c 0%,#0b1714 64%);font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink);min-height:100vh}
+button,a{-webkit-tap-highlight-color:transparent}button{font:inherit;border:1px solid #56714c;background:#274333;color:var(--ink);border-radius:10px;padding:10px 13px;cursor:pointer;font-weight:720}button:hover{background:#385d40}button:disabled{opacity:.45;cursor:not-allowed}button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+a{color:var(--green)}.top,.layout,.under{max-width:1270px;margin:auto;padding-inline:16px}
+.top{display:flex;justify-content:space-between;align-items:center;padding-top:17px;padding-bottom:13px;gap:12px}
+.top a{text-decoration:none;font-size:12px;font-weight:800;letter-spacing:.08em}.label{font-size:10px;color:var(--gold);letter-spacing:.18em;font-weight:850}
+.intro{max-width:1270px;margin:0 auto 16px;padding:0 16px;display:flex;justify-content:space-between;align-items:end;gap:20px}
+.intro h1{font:800 clamp(32px,5vw,62px)/1 Georgia,serif;letter-spacing:-.055em;margin:6px 0}
+.intro h1 span{color:var(--green)}.intro p{color:var(--muted);margin:5px 0;font-size:14px;max-width:520px;line-height:1.55}
+.layout{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(270px,1fr);gap:14px}
+.board,.sidebox,.help{background:linear-gradient(165deg,#1a3025,#13251e);border:1px solid #465b41;box-shadow:0 14px 40px #0004;border-radius:16px;overflow:hidden}
+.stats{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px;background:#203b2d;padding:10px 14px}
+.stats>div{min-width:78px}.stats small{display:block;color:#9fbca5;font-size:10px;text-transform:uppercase;letter-spacing:.1em}.stats strong{font-size:19px;color:var(--gold)}
+.viewport{position:relative;line-height:0;background:#0c211b}canvas{width:100%;display:block;aspect-ratio:1.58;touch-action:manipulation;image-rendering:pixelated}
+.navpanel{padding:12px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+.navpanel p{margin:0;font-size:12px;color:#bad0b8;line-height:1.5}
+.quickactions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.quickactions button{padding:9px 11px;font-size:12px}.quickactions button.primary,.primary{background:var(--gold);border-color:#ffe8a3;color:#203124}.quickactions button.primary:hover,.primary:hover{background:#ffe5a0}
+.sidebox{padding:17px;margin-bottom:14px}.sidebox h2{font:750 21px Georgia,serif;margin:5px 0 9px}.sidebox p,.sidebox li{font-size:13px;line-height:1.55;color:#c9d6c6}
+.objective{border-left:3px solid var(--purple);padding:9px 12px;background:#26352e;border-radius:0 8px 8px 0;font-size:12px;line-height:1.65}
+.objective strong{color:#f0dbac}.objective span{display:block;color:#c4d4c2}
+#diary{list-style:none;margin:9px 0 0;padding:0;max-height:200px;overflow:auto}
+#diary li{padding:7px 0;border-bottom:1px solid #3b4f3b}.diary-empty{opacity:.7}
+#log{font:12px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre-wrap;color:#d1dbb8;max-height:154px;overflow:auto;background:#101e19;border:1px solid #355142;padding:10px;border-radius:8px}
+.tools{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.tools button{flex:1;font-size:12px;min-width:76px}
+.controls{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;background:#13251d;border-top:1px solid #3b5540}
+.pad{display:grid;grid-template-columns:repeat(3,50px);grid-template-rows:repeat(2,43px);gap:5px}
+.pad button{padding:0;font-size:20px}.pad button:nth-child(1){grid-column:2}.pad button:nth-child(2){grid-column:1;grid-row:2}.pad button:nth-child(3){grid-column:2;grid-row:2}.pad button:nth-child(4){grid-column:3;grid-row:2}
+.controls p{color:#b1c7b1;font-size:12px;max-width:360px;line-height:1.5}
+.readout{margin-top:10px;color:#dfd6a6;font-size:12px;line-height:1.5}
+.overlay{position:absolute;inset:0;background:#091c16e8;display:flex;align-items:center;justify-content:center;padding:15px;line-height:1.45;z-index:2}
+.overlay[hidden]{display:none}.modal{max-width:470px;padding:19px;border:1px solid #9dbd77;background:#203829;border-radius:14px;text-align:center;box-shadow:0 15px 65px #0009}
+.modal h2{font:800 clamp(24px,3vw,38px)/1.1 Georgia,serif;margin:12px 0;color:#f1e5b0}.modal p{font-size:14px;color:#e0e8d7;line-height:1.65}
+.modal button{margin:5px}.footer{max-width:1270px;margin:12px auto 30px;padding:0 16px;color:#a3b9a0;font-size:12px}
+strong.key{color:var(--gold)}.tag{display:inline-block;border:1px solid #6e885d;border-radius:15px;padding:5px 9px;font-size:10px;font-weight:800;letter-spacing:.1em;color:#c8ec9c}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.aside{display:grid;grid-template-columns:1fr 1fr;gap:10px}.sidebox{margin:0}.intro{display:block}.controls p{max-width:290px}}
+@media(max-width:560px){.top,.intro,.layout,.under{padding-inline:10px}.top{padding-top:10px}.top a{font-size:11px}.intro h1{font-size:37px}.intro p{font-size:12px}.stats{padding:8px 11px}.stats>div{min-width:53px}.stats strong{font-size:15px}.stats small{font-size:9px}canvas{aspect-ratio:1.05}.navpanel{grid-template-columns:1fr;padding:10px}.quickactions{justify-content:stretch}.quickactions button{flex:1}.controls{padding:9px}.pad{grid-template-columns:repeat(3,47px);grid-template-rows:repeat(2,44px)}.controls p{font-size:11px;max-width:175px}.aside{display:block}.sidebox{margin-bottom:10px;padding:13px}.modal{padding:12px}.modal p{font-size:12px}.footer{font-size:11px}}
+</style>
+</head>
+<body>
+<header class="top"><a href="/play/">← TREE ARCADE</a><span class="tag">ORIGINAL TREE GAME · FREE PLAYTEST</span></header>
+<section class="intro"><div><div class="label">AN EXPLORATION & SURVIVAL ADVENTURE</div><h1>HEARTWOOD <span>EXPEDITION</span></h1><p>Navigate an untamed woodland, learn from forest stewards, trade for supplies, and locate the hidden Heartseed before the canopy fades.</p></div><div class="label">VERSION 0.1 · NO WALLET · NO PAYMENTS</div></section>
+<main class="layout">
+<section class="board" aria-label="Heartwood Expedition gameplay">
+ <div class="stats">
+  <div><small>Trail day</small><strong id="day">1</strong></div>
+  <div><small>Health</small><strong id="hp">100</strong></div>
+  <div><small>Food</small><strong id="food">12</strong></div>
+  <div><small>Water</small><strong id="water">14</strong></div>
+  <div><small>Credits</small><strong id="credits">60</strong></div>
+  <div><small>Samples</small><strong id="samples">0</strong></div>
+ </div>
+ <div class="viewport">
+  <canvas id="map" width="864" height="576" aria-label="Exploration map showing a forest, rivers, trails, stations, your position, and discovered locations"></canvas>
+  <div class="overlay" id="overlay">
+   <div class="modal"><div class="label" id="modalKicker">FOREST FIELD OFFICE</div><h2 id="modalTitle">Welcome, Ranger.</h2><p id="modalText">The oldest tree in the canopy is fading. Visit ranger stations, collect ecological samples, and follow the field reports to find the lost Heartseed.</p>
+    <button id="modalPrimary" class="primary">Begin expedition</button><button id="modalSecondary" hidden>Cancel</button>
+   </div>
+  </div>
+ </div>
+ <div class="navpanel"><p id="status" aria-live="polite">Find a station marker. The woodland remembers every trail you explore.</p><div class="quickactions"><button id="search" class="primary">Inspect / collect</button><button id="trade">Station / trade</button><button id="scan">Survey (2 cr)</button></div></div>
+ <div class="controls"><div class="pad"><button data-dir="0,-1" aria-label="North">↑</button><button data-dir="-1,0" aria-label="West">←</button><button data-dir="0,1" aria-label="South">↓</button><button data-dir="1,0" aria-label="East">→</button></div><p>Move with <strong class="key">W A S D</strong>, arrow keys, or the touch pad. Inspect habitats and station maps. Each step consumes supplies.</p><div class="tools"><button id="save">Save</button><button id="reset">New game</button></div></div>
+</section>
+<aside class="aside">
+<section class="sidebox"><div class="label">YOUR MISSION</div><h2>Find the Heartseed</h2><div class="objective" id="objective"></div><p class="readout" id="location"></p></section>
+<section class="sidebox"><div class="label">FIELD JOURNAL</div><h2>Ranger intelligence</h2><ul id="diary"></ul></section>
+<section class="sidebox"><div class="label">EXPEDITION FEED</div><h2>Trail reports</h2><div id="log" aria-live="polite"></div><p class="readout">Forest samples are obtained by inspecting healthy forest tiles. Trade excess samples at ranger stations; keep at least <strong>4</strong> for the final restoration.</p></section>
+</aside>
+</main>
+<footer class="footer">Heartwood Expedition is an independent TREE-themed game prototype, built with original code and graphics. Inspired by the exploration genre, not a port of Heart of Africa. Local browser saves only. No blockchain transactions in this test.</footer>
+<script>
+(function(){
+"use strict";
+var W=30,H=22,SAVE="tree-heartwood-expedition-v1",canvas=document.getElementById("map"),ctx=canvas.getContext("2d");
+var stations=[{x:2,y:2,name:"Sprout Station",txt:"Northern canopy baseline"},{x:25,y:4,name:"Ridge Outpost",txt:"Stone ridge soil records"},{x:6,y:18,name:"Moss Camp",txt:"Wetland archive"},{x:25,y:18,name:"Elder Watch",txt:"Old grove monitoring"}];
+var biome={pine:"Pinewoods",grove:"Mixed forest",meadow:"Meadow",bog:"Wetland",stone:"Rocky ridge",river:"River"};
+var colors={pine:"#1e6143",grove:"#368455",meadow:"#7e9e59",bog:"#407e73",stone:"#7e8b7e",river:"#266f94"};
+var $=function(id){return document.getElementById(id);};
+var s=null,tiles=[],lastModal=null,phase="menu";
+function rng(seed){return function(){seed|=0;seed=(seed+0x6D2B79F5)|0;var t=Math.imul(seed^(seed>>>15),1|seed);t=(t+Math.imul(t^(t>>>7),61|t))^t;return ((t^(t>>>14))>>>0)/4294967296;};}
+function generate(seed){var r=rng(seed);tiles=[];for(var y=0;y<H;y++){var row=[];for(var x=0;x<W;x++){var v=r(),riverX=14+Math.round(3*Math.sin(y*.48))+Math.round(2*Math.sin(y*.18)),t=(Math.abs(x-riverX)<1?"river":x>20&&y<10&&v<.47?"stone":y>12&&x<12&&v<.33?"bog":v<.19?"meadow":v<.52?"pine":"grove");row.push(t);}tiles.push(row);}
+  for(var i=0;i<stations.length;i++){var p=stations[i];tiles[p.y][p.x]="meadow";}
+  for(var x=0;x<W;x++){tiles[2][x]=tiles[2][x]==="river"?"river":"meadow";}
+  for(var y=0;y<H;y++){if(tiles[y][2]!=="river")tiles[y][2]="meadow";}
+}
+function fresh(){var seed=Math.floor(Math.random()*2147483647)+1;generate(seed);var r=rng(seed^12345),h={x:17+Math.floor(r()*7),y:11+Math.floor(r()*7)};tiles[h.y][h.x]="grove";return {seed:seed,heart:h,x:2,y:2,day:1,steps:0,hp:100,food:12,water:14,credits:60,samples:0,reports:[],visited:{},seen:{},gathered:{},log:[],won:false,gameover:false,started:false};}
+function key(x,y){return x+","+y;}
+function reveal(x,y,r){for(var yy=Math.max(0,y-r);yy<=Math.min(H-1,y+r);yy++){for(var xx=Math.max(0,x-r);xx<=Math.min(W-1,x+r);xx++){if((xx-x)*(xx-x)+(yy-y)*(yy-y)<=(r+.3)*(r+.3))s.seen[key(xx,yy)]=1;}}}
+function record(str){s.log.unshift("DAY "+s.day+" · "+str);s.log=s.log.slice(0,28);}
+function save(silent){try{localStorage.setItem(SAVE,JSON.stringify(s));if(!silent)announce("Expedition saved to this browser.");}catch(err){if(!silent)announce("Browser storage unavailable; this run will not persist.");}}
+function announce(str){$("status").textContent=str;record(str);update();}
+function startNew(){s=fresh();reveal(2,2,3);visitStation(0,true);record("An ancient Heartseed is hidden in this woodland.");s.started=true;phase="play";save(true);update();closeModal();}
+function restore(){try{var raw=localStorage.getItem(SAVE);if(!raw)return false;var data=JSON.parse(raw);if(!data||!data.seed||!Number.isInteger(data.x)||!data.seen||!data.heart)return false;s=data;generate(s.seed);phase=s.won||s.gameover?"over":"play";update();return true;}catch(err){return false;}}
+function showModal(kicker,title,text,primary,primaryFn,secondary,secondaryFn){$("modalKicker").textContent=kicker;$("modalTitle").textContent=title;$("modalText").textContent=text;$("modalPrimary").textContent=primary;$("modalSecondary").hidden=!secondary;if(secondary)$("modalSecondary").textContent=secondary;lastModal={primary:primaryFn,secondary:secondaryFn};$("overlay").hidden=false;phase="modal";}
+function closeModal(){if(!s||s.gameover||s.won)phase="over";else phase="play";$("overlay").hidden=true;lastModal=null;}
+$("modalPrimary").addEventListener("click",function(){if(lastModal&&lastModal.primary)lastModal.primary();});
+$("modalSecondary").addEventListener("click",function(){if(lastModal&&lastModal.secondary)lastModal.secondary();else closeModal();});
+function visitStation(index,initial){var p=stations[index],visited=!!s.visited[index];if(!visited){s.visited[index]=true;var h=s.heart;var clue;
+  if(index===0)clue="The Heartseed pulse comes from the "+(h.x>W/2?"EASTERN":"WESTERN")+" woodland. A living grove lies beyond the river.";
+  if(index===1)clue="The rarest canopy signature is "+(h.y>p.y?"SOUTH":"NORTH")+" of Ridge Outpost. Search the "+biome[tiles[h.y][h.x]].toLowerCase()+".";
+  if(index===2)clue="Moss Camp records an ancient root signature near survey column "+(h.x+1)+" (±2).";
+  if(index===3)clue="Elder Watch estimates the origin near survey row "+(h.y+1)+" (±2).";
+  s.reports.push({station:p.name,text:clue});
+  s.food=Math.min(20,s.food+3);s.water=Math.min(22,s.water+4);s.hp=Math.min(100,s.hp+12);
+  record(p.name+" shared a field report and restored a few supplies.");
+  if(!initial)showModal("RANGER REPORT",p.name,clue+" Supplies: +3 food, +4 water, +12 health.","Continue",closeModal);
+ }else if(!initial){record("Returned to "+p.name+".");}
+}
+function stationAt(x,y){return stations.findIndex(function(p){return p.x===x&&p.y===y;});}
+function step(dx,dy){if(phase!=="play")return;var nx=s.x+dx,ny=s.y+dy;if(nx<0||nx>=W||ny<0||ny>=H)return;
+ s.x=nx;s.y=ny;s.steps++;if(s.steps%7===0)s.day++;var terrain=tiles[ny][nx];
+ s.water=Math.max(0,s.water-(terrain==="stone"||terrain==="bog"?2:1));
+ if(s.steps%3===0)s.food=Math.max(0,s.food-1);
+ if(s.water===0)s.hp-=9;if(s.food===0)s.hp-=4;if(terrain==="stone"&&s.steps%6===0)s.hp-=2;
+ if(s.steps%19===0){var r=rng(s.seed+s.steps)();if(r<.4){s.food=Math.max(0,s.food-2);record("A sudden squall soaked two food rations.");}else if(r<.8){s.water=Math.max(0,s.water-2);record("Hot winds consumed two extra water units.");}else{record("A cool front crossed the canopy. Safe traveling weather.");}}
+ reveal(nx,ny,2);var i=stationAt(nx,ny);if(i>=0)visitStation(i,false);
+ if(s.hp<=0){s.hp=0;s.gameover=true;showModal("EXPEDITION ENDED","The trail went quiet.","Your supplies ran out before the Heartseed could be restored. Try visiting more ranger stations and carrying extra water.","Begin new expedition",startNew);record("Expedition ended from exhaustion.");}
+ else if(nx===s.heart.x&&ny===s.heart.y){if(s.reports.length>=3&&s.samples>=4){s.won=true;record("Heartseed restored. The forest can grow again.");showModal("CANOPY RESTORED","You found the Heartseed!","After "+s.day+" days, "+s.reports.length+" ranger reports and "+s.samples+" field samples, your expedition restored the living heart of the woodland.","Play again",startNew);}else announce("A remarkable ancient grove is here. Need at least 3 reports and 4 samples to stabilize its Heartseed.");}
+ save(true);update();
+}
+function inspect(){if(phase!=="play")return;var i=stationAt(s.x,s.y),t=tiles[s.y][s.x],pos=key(s.x,s.y);
+ if(i>=0){trade();return;}
+ if(s.x===s.heart.x&&s.y===s.heart.y){announce("The Heartseed needs three ranger reports and four samples. Return when prepared.");return;}
+ if(t!=="pine"&&t!=="grove"&&t!=="bog"){announce("No suitable tree sample here. Try the forest or wetlands.");return;}
+ if(s.gathered[pos]){announce("This habitat was already sampled. Leave it undisturbed.");return;}
+ s.gathered[pos]=true;s.samples++;s.hp=Math.min(100,s.hp+1);announce("A sustainable field sample was collected from "+biome[t]+".");save(true);
+}
+function trade(){if(phase!=="play")return;var i=stationAt(s.x,s.y);if(i<0){announce("Trading is available only at marked ranger stations.");return;}
+ var msg="Supplies: water +8 (8 cr), food +6 (7 cr), rest +20 health (5 cr), trade one excess sample (+10 cr). Choose an option.";
+ showModal("FIELD STATION MARKET",stations[i].name,msg,"Purchase water",function(){purchase("water");},"More options",function(){moreTrade(i);});
+}
+function moreTrade(index){showModal("FIELD STATION MARKET",stations[index].name,"Choose food or open the field station's additional services.","Purchase food",function(){purchase("food");},"Other services",function(){showModal("FIELD STATION SERVICES","Rest or exchange", "Spend 5 credits to recover 20 health, or trade one sample for 10 credits.","Rest (5 cr)",function(){purchase("rest");},"Trade sample",function(){purchase("sample");});});}
+function purchase(k){if(!s)return;var cost={water:8,food:7,rest:5}[k]||0;if(k==="sample"){if(s.samples<=4){announce("Keep at least four samples for the Heartseed restoration.");closeModal();return;}s.samples--;s.credits+=10;announce("One surplus sample exchanged for 10 credits.");}
+ else if(s.credits<cost){announce("Insufficient credits. Sell surplus field samples or explore supply caches.");}
+ else{s.credits-=cost;if(k==="water")s.water=Math.min(25,s.water+8);if(k==="food")s.food=Math.min(24,s.food+6);if(k==="rest")s.hp=Math.min(100,s.hp+20);announce("Station supplied "+k+" for "+cost+" credits.");}save(true);closeModal();update();}
+function scan(){if(phase!=="play")return;if(s.credits<2){announce("Survey costs 2 credits; station supplies are a higher priority.");return;}s.credits-=2;reveal(s.x,s.y,5);announce("Canopy survey reveals nearby terrain (2 credits).");save(true);}
+function update(){if(!s)return;
+ ["day","hp","food","water","credits","samples"].forEach(function(k){$(k).textContent=s[k];});
+ var progress=s.reports.length,doneSamples=Math.min(s.samples,4);
+ $("objective").innerHTML="<strong>"+progress+" / 3+ ranger reports</strong><span>Collect reports by entering ranger stations.</span><strong>"+doneSamples+" / 4 ecological samples</strong><span>Inspect forest tiles to collect samples. Leave surplus forest intact.</span><strong>Final objective</strong><span>Find the hidden Heartseed, then restore it with knowledge and samples.</span>";
+ $("diary").replaceChildren();if(!progress){var li=document.createElement("li");li.className="diary-empty";li.textContent="No reports yet. Visit a marked station."; $("diary").append(li);}
+ s.reports.forEach(function(r){var li=document.createElement("li"),b=document.createElement("strong");b.textContent=r.station+" · ";li.append(b,document.createTextNode(r.text));$("diary").append(li);});
+ $("location").textContent="Coordinates "+(s.x+1)+", "+(s.y+1)+" · "+biome[tiles[s.y][s.x]]+". "+(s.hp<30?"Warning: low health.":"");
+ $("log").textContent=s.log.slice(0,8).join("\n");
+ $("trade").disabled=stationAt(s.x,s.y)<0||phase==="over";
+ $("search").disabled=phase==="over";$("scan").disabled=phase==="over";
+ draw();
+}
+function draw(){if(!s)return;var width=canvas.width,height=canvas.height,small=window.innerWidth<560;
+ var cols=small?11:17,rows=small?11:12,tile=Math.min(width/cols,height/rows),camX=s.x-(cols-1)/2,camY=s.y-(rows-1)/2;
+ ctx.fillStyle="#0a1b18";ctx.fillRect(0,0,width,height);
+ var ox=(width-cols*tile)/2,oy=(height-rows*tile)/2;
+ for(var ry=-1;ry<rows+1;ry++){for(var rx=-1;rx<cols+1;rx++){
+ var x=Math.round(camX+rx),y=Math.round(camY+ry),px=ox+rx*tile,py=oy+ry*tile;
+ if(x<0||x>=W||y<0||y>=H)continue;var known=!!s.seen[key(x,y)],t=tiles[y][x],n=(x*37+y*91+s.seed)%11;
+ ctx.fillStyle=known?colors[t]:"#101b1c";ctx.fillRect(px,py,tile+1,tile+1);
+ if(known){ctx.fillStyle="rgba(255,255,255,.07)";ctx.fillRect(px+3,py+4,(n%3)+2,2);
+ if(t==="pine"||t==="grove"){ctx.fillStyle=t==="pine"?"#123e2b":"#1a5635";ctx.beginPath();ctx.arc(px+tile*.49,py+tile*.48,tile*.3,0,Math.PI*2);ctx.fill();ctx.fillStyle=t==="pine"?"#83bd77":"#9ecd81";ctx.fillRect(px+tile*.49,py+tile*.55,Math.max(2,tile*.05),tile*.23);}
+ if(t==="river"){ctx.strokeStyle="#78c7cb";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(px+tile*.1,py+tile*.3);ctx.quadraticCurveTo(px+tile*.5,py+tile*.15,px+tile*.9,py+tile*.37);ctx.stroke();}
+ if(t==="stone"){ctx.fillStyle="#b5b5a3";ctx.beginPath();ctx.moveTo(px+tile*.18,py+tile*.74);ctx.lineTo(px+tile*.5,py+tile*.18);ctx.lineTo(px+tile*.83,py+tile*.74);ctx.fill();}
+ if(t==="bog"){ctx.strokeStyle="#90c9bd";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(px+tile*.15,py+tile*.68);ctx.lineTo(px+tile*.73,py+tile*.68);ctx.stroke();}
+ if(s.gathered[key(x,y)]){ctx.fillStyle="#e1dcb7";ctx.font="bold "+Math.round(tile*.24)+"px sans-serif";ctx.fillText("✓",px+3,py+tile*.27);}
+ }else{ctx.fillStyle="#0c1418";ctx.font=Math.round(tile*.24)+"px monospace";ctx.fillText("·",px+tile*.43,py+tile*.58);}
+ ctx.strokeStyle="rgba(9,21,16,.18)";ctx.lineWidth=1;ctx.strokeRect(px,py,tile,tile);
+ var i=stationAt(x,y);if(i>=0){ctx.fillStyle=known?"#f1d58b":"#a388b8";ctx.fillRect(px+tile*.2,py+tile*.22,tile*.62,tile*.55);ctx.fillStyle="#5b473a";ctx.fillRect(px+tile*.35,py+tile*.45,tile*.25,tile*.32);ctx.fillStyle="#f5edce";ctx.font="bold "+Math.round(tile*.23)+"px monospace";ctx.fillText(""+(i+1),px+tile*.04,py+tile*.2);}
+ if(known&&s.reports.length>=3&&x===s.heart.x&&y===s.heart.y){ctx.fillStyle="#d8adff";ctx.beginPath();ctx.arc(px+tile*.5,py+tile*.5,tile*.31,0,Math.PI*2);ctx.fill();ctx.fillStyle="#264333";ctx.beginPath();ctx.arc(px+tile*.5,py+tile*.5,tile*.17,0,Math.PI*2);ctx.fill();}
+ if(x===s.x&&y===s.y){ctx.fillStyle="#ead693";ctx.beginPath();ctx.arc(px+tile*.5,py+tile*.47,tile*.28,0,Math.PI*2);ctx.fill();ctx.fillStyle="#442f63";ctx.fillRect(px+tile*.35,py+tile*.55,tile*.3,tile*.24);ctx.strokeStyle="#fff7c4";ctx.lineWidth=2;ctx.strokeRect(px+tile*.2,py+tile*.18,tile*.6,tile*.65);}
+ }}
+ ctx.fillStyle="rgba(10,23,19,.85)";ctx.fillRect(8,9,Math.min(width-16,282),36);ctx.fillStyle="#f2dfaa";ctx.font="bold 16px monospace";ctx.fillText("HEARTWOOD / FIELD MAP",18,32);
+ ctx.fillStyle="rgba(10,23,19,.8)";ctx.fillRect(8,height-33,Math.min(width-16,430),25);ctx.fillStyle="#dceccf";ctx.font="13px monospace";ctx.fillText("★ Station  ○ Ranger  ◆ Heartseed  · Uncharted",15,height-16);
+}
+function moveFromString(str){var m=str.split(",");step(Number(m[0]),Number(m[1]));}
+document.querySelectorAll("[data-dir]").forEach(function(b){b.addEventListener("click",function(){moveFromString(b.dataset.dir);});});
+document.addEventListener("keydown",function(e){if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key))e.preventDefault();if(e.repeat)return;
+ var dirs={ArrowUp:[0,-1],w:[0,-1],W:[0,-1],ArrowDown:[0,1],s:[0,1],S:[0,1],ArrowLeft:[-1,0],a:[-1,0],A:[-1,0],ArrowRight:[1,0],d:[1,0],D:[1,0]};
+ if(dirs[e.key])step(dirs[e.key][0],dirs[e.key][1]);else if(e.key===" "||e.key==="Enter"){if(phase==="play")inspect();}});
+$("search").addEventListener("click",inspect);$("trade").addEventListener("click",trade);$("scan").addEventListener("click",scan);$("save").addEventListener("click",function(){if(s)save(false);});
+$("reset").addEventListener("click",function(){showModal("NEW EXPEDITION","Begin again?","This replaces your existing local save. Your current Heartseed location and field reports will be lost.","Start new game",startNew,"Keep playing",closeModal);});
+window.addEventListener("resize",draw);document.addEventListener("visibilitychange",function(){if(document.hidden&&s)save(true);});
+if(restore()){if(s.won){showModal("EXPEDITION COMPLETE","The canopy remembers.","You restored the Heartseed in this run.","Begin a new expedition",startNew);}
+else if(s.gameover){showModal("EXPEDITION ENDED","The woodland awaits.","Your previous run ended. Begin again.","Start a new expedition",startNew);}
+else showModal("WELCOME BACK","Resume your expedition?","Your field notes, supplies and explored map were preserved in this browser.","Continue journey",closeModal,"Start new",startNew);
+}else{s=fresh();reveal(2,2,3);update();showModal("FIELD OFFICE BRIEFING","The Heartseed is missing.","Four ranger outposts hold independent clues. Explore forest tiles for samples, buy provisions at stations, and restore the woodland's hidden Heartseed. The field is larger than the view: follow station numbers and mark your discoveries.","Begin expedition",startNew);}
+})();
+</script>
+</body></html>
