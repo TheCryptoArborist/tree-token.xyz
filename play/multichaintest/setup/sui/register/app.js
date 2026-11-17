@@ -1,4 +1,4 @@
-import {createDAppKit,SuiGrpcClient} from '../../../wallet-vendor.js';
+import {createDAppKit,SuiGrpcClient} from './wallet-vendor.js';
 import {C,requestRegistration,readState} from './core.js';
 const el=id=>document.getElementById(id),say=s=>el('status').textContent=s;
 const kit=createDAppKit({networks:['mainnet'],defaultNetwork:'mainnet',autoConnect:false,slushWalletConfig:null,createClient:network=>new SuiGrpcClient({network,baseUrl:'https://fullnode.mainnet.sui.io:443'})});

@@ -50,7 +50,7 @@ jobs:
       - name: Fix wallet discovery on the reviewed Sui registration page and preserve the live site
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          MULTICHAIN_EXPECTED_DEPLOY: '6afba93401d3403c0850c7a6'
+          MULTICHAIN_EXPECTED_DEPLOY: '6afbabbe403a66af1c3147e8'
           REVIEWED_SHA: ${{ github.sha }}
         run: |
           test -n "$NETLIFY_AUTH_TOKEN" || { echo 'The existing Netlify release connection is unavailable.'; exit 1; }

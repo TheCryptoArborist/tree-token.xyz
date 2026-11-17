@@ -14,9 +14,9 @@ import { verifyDelivery } from './multichain-preview-delivery.mjs';
 // unlocks a deploy, or accepts an arbitrary older deployment for publication.
 export const SITE_ID = 'aa62f324-b880-47d6-85b8-4ba0700ff5bf';
 export const ACCOUNT_ID = '69800888d1a3d0483003ae9e';
-export const BASELINE_ID = process.env.MULTICHAIN_EXPECTED_DEPLOY || '6afba93401d3403c0850c7a6';
+export const BASELINE_ID = process.env.MULTICHAIN_EXPECTED_DEPLOY || '6afbabbe403a66af1c3147e8';
 export const ORIGINAL_CHANGES = ["/play/multichaintest/setup/sui/register/index.html", "/play/multichaintest/setup/sui/register/app.js"];
-export const REPLACED_HASHES = {"/play/multichaintest/setup/sui/register/index.html": "c2266e66d543216cff4b23e7a0178fa8c6ed5202", "/play/multichaintest/setup/sui/register/app.js": "c73bb6d55d774b9dd90bde764ede1728dada31d5"};
+export const REPLACED_HASHES = {"/play/multichaintest/setup/sui/register/index.html": "19756a403e25a63f67036bd009db800e090a60bc", "/play/multichaintest/setup/sui/register/app.js": "47d35fa1a8ae22aa0dc7a808d2669af1b3b8d6fb"};
 // Historical orphaned API deploys individually audited on 2026-11-10.
 // These are not builds: all have null build_id/published_at and unchanged,
 // months-old states. Any new, changed, or genuinely queued deploy still blocks.
@@ -29,7 +29,7 @@ export function isAuditedInactiveDeploy(deploy) {
     deploy.commit_ref ?? null].every((value, i) => value === expected[i]);
 }
 
-export const MULTICHAIN_PATHS = ["/play/multichaintest/setup/sui/register/index.html", "/play/multichaintest/setup/sui/register/app.js"];
+export const MULTICHAIN_PATHS = ["/play/multichaintest/setup/sui/register/index.html", "/play/multichaintest/setup/sui/register/app.js", "/play/multichaintest/setup/sui/register/wallet-vendor.js"];
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const RUNTIME_FIELDS = ['branch', 'context', 'functions_region', 'functions_region_overrides',
   'database_branch_id', 'blobs_region', 'framework', 'edge_functions_present', 'server', 'database_migrations'];
