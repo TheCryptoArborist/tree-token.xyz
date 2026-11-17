@@ -1,3 +1,42 @@
+# Confirmed original Sui route configuration — 2026-11-17
+
+User-signed Sui mainnet digest:
+`EFmDHsBSjkydv26Ajc8pvR9GFuNNmubo9tPjfrnc6Eos`.
+The published strict configuration receipt/recovery validator passed against
+the actual transaction and current live state. All nine exact commands, pure
+bytes, original NFT receive generic, seven events and four deterministic
+application configuration fields matched. Net gas: 14,951,541 MIST
+(0.014951541 SUI).
+
+Live settings match the reviewed explicit ULN302 send/receive libraries,
+Twinstake + LayerZero Labs + Horizen required in both directions, no optional
+DVNs or default inheritance, send confirmations 5 / receive confirmations 20,
+executor/max-message-size 10,000 and the 278-byte original-vault receive metadata.
+The actual registered messaging channel remains unchanged.
+
+Fresh Sui checks confirmed #2720 remains directly dev-owned with unchanged
+version/digest; Vault is empty/unbound; VaultAdmin, original Registry, OApp,
+UpgradeCap and messaging channel remain unchanged. OApp AdminCap stays dev-owned.
+BNB binding receipt/event, both contract runtimes, fixed settings and the paused,
+unminted pass were reverified. No original NFT deposit or stablecoin charge.
+
+Latest actual bindings: `route-config-bindings.json`.
+Evidence: `route-config-receipt.json`, `route-config-verified.json`.
+All previous signing snapshots/bundles remain frozen. The 16 configuration tests,
+including the actual signed mainnet receipt, pass.
+
+Next: prepare matching BNB application libraries/verifier/executor settings,
+then bind the Sui peer and verify the complete route. Original NFT deposit and
+sale enablement remain unavailable until those checks complete. No website,
+backend, schedule, contract source or assistant-submitted transaction changed
+during this verification.
+
+Current guidance rechecked:
+https://github.com/MystenLabs/skills/blob/main/accessing-data/SKILL.md
+https://github.com/MystenLabs/skills/blob/main/accessing-data/graphql.md
+
+---
+
 # Confirmed original application LayerZero registration — 2026-11-17
 
 User-signed Sui mainnet digest:

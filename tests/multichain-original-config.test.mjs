@@ -48,3 +48,10 @@ test('receipt recovery checks actual config, registered source, exact live setti
 test('new page reuses the pinned Slush extension integration and exposes only Sui settings approval',()=>{
  const base=new URL('../play/multichaintest/original/configure/',import.meta.url),app=fs.readFileSync(new URL('app.js',base),'utf8'),html=fs.readFileSync(new URL('index.html',base),'utf8');for(const m of app.matchAll(/el\(['"]([^'"]+)['"]\)/g))assert(html.includes('id="'+m[1]+'"'),m[1]);assert(app.includes('../../setup/sui/ack/wallet-vendor.js'));assert(app.includes('autoConnect:false'));assert(app.includes('slushWalletConfig:null'));assert(html.includes('three required verifiers'));assert(html.includes('Purchases remain paused'));assert(!app.includes('requestRegistration'));assert(html.includes('Open Slush to configure Sui route'));
 });
+test('actual user-signed mainnet Sui configuration matches exact settings and deterministic entries',()=>{
+ const r=load('route-config-receipt.json'),proof=verifyConfiguration(r);
+ assert.equal(r.Transaction.digest,'EFmDHsBSjkydv26Ajc8pvR9GFuNNmubo9tPjfrnc6Eos');
+ assert.equal(proof.gasMist,'14951541');
+ assert.equal(proof.channelId,C.channel);
+ assert.deepEqual(proof.configuredEntries,Object.fromEntries(Object.entries(entries).map(([n,e])=>[n,e.id])));
+});
