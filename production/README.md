@@ -1,3 +1,42 @@
+# Stats market chart and holder source — published 2026-11-18
+
+Current locked production is `6afd423531560084e7dd48e8`, published from source
+commit `e54531dfcb85cb712798f7e5890fb04017582d51`. Read
+`production/stats-market-release-20261118.json` for the complete **614-path**
+static inventory, **49 complete backend package records**, five schedules,
+and candidate/canonical verification fingerprints. This is the newest live
+preservation baseline; capture it afresh before any subsequent release.
+
+Stats at `/dapp/#stats` now embeds the same Noodles TREE/USD chart as Market
+Insights and uses the homepage's Noodles-backed market holder count. The separate
+coin-object-owner count remains in Canopy accounting and cannot overwrite the
+market holder card. Holder verification times remain visibly dated during
+provider and browser-cache fallbacks.
+
+Authoritative frontend overlays for this release:
+
+- `production/stats-market-static/index.html` → `/dapp/index.html`
+- `production/stats-market-static/app.js` → `/dapp/app.js`
+- `production/stats-market-static/stats-market.css` → `/dapp/stats-market.css`
+
+These sources start from the exact prior production bytes, including Profile
+Studio navigation and the stored site snippet. Historical manifest-pinned root
+files remain archival build material. Preserve all current live paths and all
+backend/provider/runtime/schedule/environment configuration on future releases.
+
+The release changed only two existing static paths, added one scoped stylesheet,
+and preserved **611 existing paths** unchanged. All candidate and canonical
+layout checks passed at 320, 390, 768 and 1363 pixels. The production-snapshot,
+holder-source and STI/wallet regression checks passed. A manual canonical browser
+check confirmed actual Noodles candles and the seven-day range control; the
+homepage and Stats both displayed 606 holders during that check. No wallet was
+connected and no transaction was signed or submitted.
+
+Release procedure and metric definitions: `docs/stats-market-release.md`.
+Verification workflow: https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44249180370
+
+---
+
 # Current production — Market Insights, 2026-11-17 (America/Chicago)
 
 Locked ready deployment `6afd38b699fcd142a80207f5`, published at
