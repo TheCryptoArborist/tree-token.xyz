@@ -270,7 +270,19 @@ try {
       await page.getByRole('button',{name:/Disconnect.*forget/i}).click();
       await page.waitForFunction(()=>!window.getWalletConnectionState().connected);
       assert.equal(await page.locator('#stiImpactAccept').isChecked(),false);
+      // disconnectWallet emits the cleared session before the dialog's close
+      // event resolves openWalletManager. Wait for that caller to finish its
+      // connecting state as well; a cleared session alone is not UI completion.
+      await page.waitForFunction(()=>{
+        const dialog=document.getElementById('treeWalletDialog');
+        const wallet=document.getElementById('stiWalletButton');
+        const purchase=document.getElementById('stiBuyButton');
+        return !window.getWalletConnectionState().connected && dialog && !dialog.open &&
+          wallet.textContent==='Connect wallet' && !wallet.disabled &&
+          purchase.textContent==='Connect wallet' && !purchase.disabled;
+      });
       assert.equal(await page.locator('#stiBuyButton').textContent(),'Connect wallet');
+      assert.equal(await page.locator('#treeWalletDialog').isVisible(),false);
       await page.locator('#stiCloseBuy').click();
       await page.locator('.app-nav a[href="#swap"]').click();assert(await page.locator('#swap').isVisible());
       await page.locator('.app-nav a[href="#stats"]').click();assert(await page.locator('#stats').isVisible());
