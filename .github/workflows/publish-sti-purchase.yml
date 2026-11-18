@@ -59,7 +59,10 @@ jobs:
       - name: Install isolated browser checker
         run: |
           npm install --prefix "$RUNNER_TEMP/sti-purchase-browser" --ignore-scripts --no-audit --no-fund playwright@1.56.1
-          "$RUNNER_TEMP/sti-purchase-browser/node_modules/.bin/playwright" install --with-deps chromium
+          # Ubuntu 24.04 runners already provide the browser runtime libraries.
+          # Download the pinned browser without unrelated apt upgrades; the
+          # browser launch and all four-width checks below remain mandatory.
+          "$RUNNER_TEMP/sti-purchase-browser/node_modules/.bin/playwright" install chromium
       - name: Check quote review at desktop and phone widths without signing
         env:
           STI_PURCHASE_BROWSER_MODULE: ${{ runner.temp }}/sti-purchase-browser/node_modules/playwright/index.mjs
@@ -102,7 +105,8 @@ jobs:
       - name: Install isolated browser checker
         run: |
           npm install --prefix "$RUNNER_TEMP/sti-purchase-browser" --ignore-scripts --no-audit --no-fund playwright@1.56.1
-          "$RUNNER_TEMP/sti-purchase-browser/node_modules/.bin/playwright" install --with-deps chromium
+          # Use the runner's installed libraries; do not upgrade apt packages.
+          "$RUNNER_TEMP/sti-purchase-browser/node_modules/.bin/playwright" install chromium
       - name: Capture current production and verify a reviewable new candidate
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
