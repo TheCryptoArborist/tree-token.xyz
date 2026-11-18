@@ -32,10 +32,19 @@ A separate catalog-only audit verified the live non-recovery attendance writers.
 
 ## Validation and release
 
+- Published and locked on `6afe0141248c1062e8414ed7` at `2026-11-18T20:01:47.679Z`.
+  Publication workflow `44386363937` passed end to end. Complete inventory,
+  canonical delivery and lock checks passed at `2026-11-18T20:01:52.861Z`.
+  See `production/arcade-cutoff-release-20261118.json` and the newest section of
+  `production/README.md` for the exact source, inventory and browser evidence.
 - The monthly/session suite passed 85 tests, with the opt-in live-chain diagnostic skipped in the ordinary suite. That diagnostic then passed separately against an existing public payment without database writes or signatures.
 - Boundary coverage includes exact midnight rejection, one millisecond before midnight, ordinary earlier expiry, UTC time zones, leap February, December/January rollover, late reconciliation, earlier-season terms, replay protection, wallet binding and browser-role isolation.
 - The 32 organization/countdown/preview checks passed, including preservation of captured runtime bytes and the single explicit monthly panel replacement.
 - The isolated monthly package uses the unchanged `vendor/arcade-monthly` lock and SDK 2.26.1. The wallet adapter is not rebuilt or changed for this feature.
+- All 18 release-preservation tests and all five PR workflows passed. Six-tab
+  candidate reviews passed at 390 and 1200 pixels; canonical review passed at
+  1363 pixels, including a monthly deep-link reload and the recovery disclosure.
+  These signed-out checks did not create real check-ins, payments or awards.
 
 The production release must capture the actual current complete static/backend/runtime/provider/configuration inventory. It may replace `/play/index.html`, `/scripts/arcade-monthly.js` and the isolated `arcade-monthly` package, and add the four reviewed organization/countdown assets. Every other live path and backend record, including the five schedules, must be preserved. The historical root snapshot build is not a production release payload.
 

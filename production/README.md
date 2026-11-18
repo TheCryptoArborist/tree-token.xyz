@@ -1,3 +1,70 @@
+# Arcade organization and November cutoff — published 2026-11-18
+
+Current locked production is `6afe0141248c1062e8414ed7`, published at
+`2026-11-18T20:01:47.679Z` from reviewed source
+`09f77e96556bbbb39a8b1eee26c2cf712d4f3b9b`. PR223 merged as
+`e5dcee4d07a2483b1bb989641d0026650b438dca`; its entire tree equals the reviewed
+candidate tree `6a601123f7ca9ccee3199b6191cd63e2bc6f1909`.
+Publication workflow `44386363937` passed end to end, with final inventory,
+canonical delivery and lock verification at `2026-11-18T20:01:52.861Z`.
+
+Games now leads with the cabinets and compact attendance shortcuts. Daily
+contains check-in and quest actions followed by the Spotlight and Stay Connected
+panels. Campaigns explains the route from practice to Events and groups existing
+onboarding activities. Monthly Progress has polished action panels, and both it
+and Badge Collection display the November earning deadline: **December 1, 2026
+at 00:00 UTC**. This release does not activate a funded campaign or monthly cash
+program and preserves the existing Event terms.
+
+New attendance recovery expires at the earlier of fifteen minutes and the next
+UTC month boundary. For November 2026 and later, the successful checkpointed
+payment must precede the exclusive cutoff. Server and database checks enforce
+the rule independently. Eligible earlier payments remain verifiable after the
+month closes, existing receipts and earned badges remain intact, and earlier
+seasons retain their issued terms. Recovery remains 20,000 TREE plus SUI gas and
+does not award completed-game quest credit. Migration `20261118193129` was
+applied and its live RPC definitions and existing privileges verified.
+
+The fresh baseline was `6afde69b28000c929ce7a0a4`. The release replaced only
+`/play/index.html`, `/scripts/arcade-monthly.js` and the isolated `arcade-monthly`
+function, and added the four organization/countdown assets. All **614 other
+existing static paths**, **48 unrelated complete backend records**, **five
+schedules** and protected configuration were preserved. Current production has
+**620 static paths and 49 backend records**. The monthly package retained the
+existing pinned dependencies and wallet integration.
+
+Validation passed: **85 monthly/session tests**, **32 organization/countdown/
+preview checks**, **18 release-preservation tests**, and all five PR workflows.
+The existing public-chain payment diagnostic passed separately without writes or
+signatures. All six tabs passed candidate review at 390 and 1200 CSS pixels.
+Canonical review passed at 1363 pixels, including tab navigation, the monthly
+deep-link reload and recovery disclosure, at `2026-11-18T20:03:36.982Z`.
+No document-wide overflow or failed visible image was observed. No wallet was
+connected, no payment was made and no production check-in or sample award was
+created during review.
+
+Complete static inventory and publication report:
+`production/arcade-cutoff-release-20261118.json` (SHA-256
+`5f8e0bd444ce343922121475d5ccbb7eaa08abbcf0e62d1d637f36e8708b2ed2`).
+Complete published backend/runtime/schedule records and source/artifact binding:
+`production/arcade-cutoff-deployment-20261118.json`.
+Browser evidence: `production/arcade-cutoff-candidate-review-20261118.json`,
+`production/arcade-cutoff-canonical-review-20261118.json`, and
+`docs/arcade-games-live-20261118.jpg`, `docs/arcade-monthly-live-20261118.jpg`,
+`docs/arcade-recovery-live-20261118.jpg`.
+
+Implementation: https://github.com/TheCryptoArborist/tree-token.xyz/pull/223
+Publication: https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44386363937
+Rules and limitation of an already-open wallet approval:
+`docs/arcade-month-end-cutoff.md`. Release procedure:
+`docs/arcade-cutoff-release.md`.
+
+This is the newest live preservation baseline. Capture the complete live
+inventory afresh before a subsequent release. Historical root snapshots and
+ordinary PR previews must not replace current production.
+
+---
+
 # STI wallet loading and recovery — published 2026-11-18
 
 Current locked production is `6afde69b28000c929ce7a0a4`, published at

@@ -1,8 +1,16 @@
 # Arcade organization and authoritative month-end cutoff release
 
-This release is prepared for review. The source and database readiness report
-do not establish that the frontend/function candidate has been published.
-The final release report must identify the actual published candidate and lock.
+This release was published successfully on November 18, 2026. Production is
+locked on `6afe0141248c1062e8414ed7`; workflow `44386363937` passed end to end.
+The final report is `production/arcade-cutoff-release-20261118.json`, with the
+complete published provider/runtime inventory and artifact binding in
+`production/arcade-cutoff-deployment-20261118.json`. Read the newest section of
+`production/README.md` for observed verification and browser evidence.
+
+The procedure below records how this exact release was prepared and published.
+Its old baseline constant and completed control branch are not a reusable
+authorization to publish again. A subsequent release requires a fresh capture,
+source/candidate review and its own explicit publication control.
 
 ## Exact scope
 
