@@ -1,4 +1,8 @@
 /* Scoped STI quote review; existing Command Center styles remain unchanged. */
+.sti-purchase .sti-quote dd {
+  flex: 0 0 auto;
+  max-width: 100%;
+}
 .sti-impact-warning {
   margin: 12px 0;
   padding: 12px;
