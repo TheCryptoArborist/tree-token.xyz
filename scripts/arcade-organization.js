@@ -133,6 +133,15 @@ export function mountArcadeOrganization(doc = document, view = window) {
       }
     }
   }
+  function reflectCheckIn(event) {
+    // Only reduce duplicate confirmations after the existing runtime reports
+    // fresh, signed-in attendance. Keep every original control and all stale,
+    // loading and error guidance available; this flag never awards progress.
+    const state = event.detail;
+    daily.toggleAttribute('data-arcade-checkin-saved', Boolean(
+      state?.sessionActive && !state.stale && !state.busy && state.progress?.today?.checkedIn
+    ));
+  }
   function revealActivity(node) {
     let parent = node?.parentElement;
     while (parent && parent !== campaigns) {
@@ -159,6 +168,7 @@ export function mountArcadeOrganization(doc = document, view = window) {
   }
   // Capture opens the new details before preserved handlers scroll to a quiz/card.
   doc.addEventListener('click', onClick, true);
+  root.addEventListener('arcade-progress', reflectCheckIn);
   const viewObserver = new view.MutationObserver(reflectView);
   viewObserver.observe(root, { attributes: true, attributeFilter: ['data-arcade-view'] });
   if (community) viewObserver.observe(community, { attributes: true, attributeFilter: ['hidden'] });
@@ -177,6 +187,7 @@ export function mountArcadeOrganization(doc = document, view = window) {
     viewObserver.disconnect();
     copyObserver.disconnect();
     doc.removeEventListener('click', onClick, true);
+    root.removeEventListener('arcade-progress', reflectCheckIn);
     // Leave the arranged DOM in place; remounting must never duplicate controls.
   } };
   mounted.set(doc, controller);

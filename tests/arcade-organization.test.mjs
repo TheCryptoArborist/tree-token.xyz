@@ -262,6 +262,44 @@ test('signed-out visitors can reach Daily from Campaigns, monthly progress and B
   } finally { current.close(); }
 });
 
+test('fresh attendance reduces duplicate confirmations without suppressing stale or actionable check-in controls', () => {
+  const current = fixture('#daily');
+  try {
+    const { doc, view } = current;
+    const root = doc.getElementById('arcade-daily-growth');
+    const headerButton = doc.getElementById('growth-check-in');
+    const rowButton = doc.getElementById('growth-check-in-row');
+    const note = doc.getElementById('growth-check-note');
+    const notice = doc.getElementById('growth-status');
+    headerButton.hidden = rowButton.hidden = false;
+    headerButton.disabled = rowButton.disabled = true;
+    const notify = (detail) => root.dispatchEvent(new view.CustomEvent('arcade-progress', { detail }));
+    const saved = { sessionActive:true, stale:false, busy:null, progress:{ today:{ checkedIn:true } } };
+
+    notify(saved);
+    assert.equal(view.getComputedStyle(headerButton).display, 'none');
+    assert.equal(view.getComputedStyle(note).display, 'none');
+    assert.notEqual(view.getComputedStyle(rowButton).display, 'none');
+    assert.notEqual(view.getComputedStyle(notice).display, 'none');
+    assert.equal(doc.getElementById('growth-check-in-row'), rowButton);
+    assert.equal(rowButton.disabled, true);
+    assert.equal(headerButton.hidden, false, 'Presentation does not overwrite the original runtime hidden state');
+
+    for (const detail of [
+      { ...saved, stale:true },
+      { ...saved, busy:'loading' },
+      { ...saved, sessionActive:false },
+      { ...saved, progress:{ today:{ checkedIn:false } } },
+      { ...saved, progress:null },
+    ]) {
+      notify(detail);
+      assert.notEqual(view.getComputedStyle(headerButton).display, 'none', 'Original check-in control is restored');
+      assert.notEqual(view.getComputedStyle(note).display, 'none', 'Original attendance guidance remains available');
+      assert.equal(rowButton.disabled, true, 'Presentation never enables an action');
+    }
+  } finally { current.close(); }
+});
+
 test('both DOM countdowns close at the UTC boundary and wait for a real displayed December month', async () => {
   const current = fixture('#month');
   let countdown;
