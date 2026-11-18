@@ -1077,30 +1077,28 @@
         </section>
 
         <section class="mi-pane" id="mi-pane-cycles" role="tabpanel" aria-labelledby="mi-tab-cycles" hidden>
-          <h3>Bitcoin cycle history: then and now</h3>
-          <p class="mi-help">Choose a historical reference, then see what an investment at that Bitcoin price would be worth using the latest available BTC/USD estimate.</p>
-          <div class="mi-choices" role="group" aria-label="Choose historical Bitcoin cycle">
+          <h3>Bitcoin price history: then and now</h3>
+          <p class="mi-help">Choose a historical starting price, then see what an investment at that Bitcoin price would be worth using the latest available BTC/USD estimate.</p>
+          <div class="mi-choices" role="group" aria-label="Choose historical Bitcoin reference">
+            <button type="button" data-cycle="2009" aria-pressed="false">2009 · First quoted price</button>
             <button type="button" data-cycle="2018" aria-pressed="false">2018 low</button>
             <button type="button" data-cycle="2022" aria-pressed="true" class="selected">2022 low</button>
             <button type="button" data-cycle="2026" aria-pressed="false">2026 reference</button>
           </div>
-          <h4 id="mi-cycle-name">2022 bear-market bottom</h4>
-          <div class="mi-stat-grid">
-            <div><span>Prior peak (daily reference)</span><strong id="mi-cycle-peak">—</strong></div>
-            <div><span>Observed low (daily reference)</span><strong id="mi-cycle-low">—</strong></div>
-            <div><span>Peak-to-low drawdown</span><strong id="mi-cycle-loss">—</strong></div>
-            <div><span>Time / observation period</span><strong id="mi-cycle-days">—</strong></div>
-          </div>
-          <p class="mi-disclaimer" id="mi-cycle-caveat">Historical prices are retrospective. The original Rainbow band formula may not have existed at that observation.</p>
-          <section class="mi-calculator" aria-labelledby="mi-calc-heading">
-            <p class="mi-small" id="mi-calc-reference-label">Choose the calculator’s starting price</p>
-            <div class="mi-choices" role="group" aria-labelledby="mi-calc-reference-label">
-              <button type="button" id="mi-calc-cycle-choice" data-calc-reference="cycle" aria-pressed="true" class="selected">2022 low</button>
-              <button type="button" data-calc-reference="first" aria-pressed="false">2009 · First quoted price</button>
+          <div id="mi-cycle-overview">
+            <h4 id="mi-cycle-name">2022 bear-market bottom</h4>
+            <div class="mi-stat-grid">
+              <div><span>Prior peak (daily reference)</span><strong id="mi-cycle-peak">—</strong></div>
+              <div><span>Observed low (daily reference)</span><strong id="mi-cycle-low">—</strong></div>
+              <div><span>Peak-to-low drawdown</span><strong id="mi-cycle-loss">—</strong></div>
+              <div><span>Time / observation period</span><strong id="mi-cycle-days">—</strong></div>
             </div>
+            <p class="mi-disclaimer" id="mi-cycle-caveat">Historical prices are retrospective. The original Rainbow band formula may not have existed at that observation.</p>
+          </div>
+          <p class="mi-calc-origin" id="mi-calc-first-note" hidden><strong>October 5, 2009 · $1 USD = 1,309.03 BTC.</strong> New Liberty Standard’s earliest listed dollar quote was based on mining electricity costs. This is an early price reference, not Bitcoin’s launch date. <a href="https://web.archive.org/web/20091229132610/http://newlibertystandard.wetpaint.com/page/Exchange%2BRate" target="_blank" rel="noopener noreferrer">View the archived exchange-rate table</a>.</p>
+          <section class="mi-calculator" aria-labelledby="mi-calc-heading">
             <h4 id="mi-calc-heading">What would that investment be worth today?</h4>
             <p class="mi-help" id="mi-calc-intro">This assumes you bought Bitcoin at the selected historical reference and held the same amount of BTC until the price observation shown below. Change the year above or the amount you invested to compare.</p>
-            <p class="mi-calc-origin" id="mi-calc-first-note" hidden><strong>October 5, 2009 · $1 USD = 1,309.03 BTC.</strong> New Liberty Standard’s earliest listed dollar quote was based on mining electricity costs. This is an early price reference, not Bitcoin’s launch date. <a href="https://web.archive.org/web/20091229132610/http://newlibertystandard.wetpaint.com/page/Exchange%2BRate" target="_blank" rel="noopener noreferrer">View the archived exchange-rate table</a>.</p>
             <div class="mi-calc-inputs">
               <label>Starting investment (USD)<input id="mi-calc-principal" type="number" inputmode="decimal" min=".01" max="1000000000" step="any" value="1000" aria-describedby="mi-calc-assumptions"></label>
               <div><span id="mi-calc-entry-label">Selected historical BTC price</span><strong id="mi-calc-entry">—</strong></div>

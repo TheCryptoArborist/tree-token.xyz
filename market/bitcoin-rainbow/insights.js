@@ -82,7 +82,7 @@
   // New Liberty Standard's 2009-10-05 mid-market history: $1 USD = 1,309.03 BTC.
   // Keep the published ratio for arithmetic; its displayed USD inverse is rounded.
   const FIRST_QUOTED_BTC_PER_USD=1309.03;
-  let selectedCycle='2022', calcReference='cycle', btcQuote=null, btcQuotePending=false, btcQuoteAttempt=0, btcQuoteError='';
+  let selectedCycle='2022', btcQuote=null, btcQuotePending=false, btcQuoteAttempt=0, btcQuoteError='';
   const quoteTime = ms => new Intl.DateTimeFormat('en-US',{
     timeZone:'UTC',year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false
   }).format(new Date(ms))+' UTC';
@@ -381,32 +381,27 @@
   $('mi-cbbi-retry')?.addEventListener('click',()=>{fetchedCBBI=false;loadCBBI();});
 
   const compare=(year)=>{
-    const b=reference[year];if(!b)return;
+    const first=year==='2009', b=reference[year];if(!first&&!b)return;
     selectedCycle=year;
-    calcReference='cycle';
     setPressed('[data-cycle]','cycle',year);
-    $('mi-cycle-name').textContent=b[0];
-    $('mi-cycle-peak').textContent=fmtMoney(b[1]);
-    $('mi-cycle-low').textContent=fmtMoney(b[2]);
-    $('mi-cycle-loss').textContent=b[3];
-    $('mi-cycle-days').textContent=b[4];
-    $('mi-cycle-caveat').textContent=b[5];
+    $('mi-cycle-overview').hidden=first;
+    if(b){
+      $('mi-cycle-name').textContent=b[0];
+      $('mi-cycle-peak').textContent=fmtMoney(b[1]);
+      $('mi-cycle-low').textContent=fmtMoney(b[2]);
+      $('mi-cycle-loss').textContent=b[3];
+      $('mi-cycle-days').textContent=b[4];
+      $('mi-cycle-caveat').textContent=b[5];
+    }
     calculate();
   };
   $$('[data-cycle]').forEach(b=>b.addEventListener('click',()=>compare(b.dataset.cycle)));
-  $$('[data-calc-reference]').forEach(button=>button.addEventListener('click',()=>{
-    const next=button.dataset.calcReference;
-    if(!['cycle','first'].includes(next))return;
-    calcReference=next;calculate();
-  }));
   compare('2022');
 
   function calculate(){
-    const first=calcReference==='first', principal=Number($('mi-calc-principal').value);
+    const first=selectedCycle==='2009', principal=Number($('mi-calc-principal').value);
     const entry=first?1/FIRST_QUOTED_BTC_PER_USD:reference[selectedCycle][2];
     const referenceLabel=selectedCycle==='2026'?'2026 reference':selectedCycle+' low';
-    $('mi-calc-cycle-choice').textContent=referenceLabel;
-    setPressed('[data-calc-reference]','calcReference',calcReference);
     $('mi-calc-first-note').hidden=!first;
     $('mi-calc-heading').textContent=first?'What would an investment at Bitcoin’s first quoted price be worth today?':
       'What would an investment at the '+referenceLabel+' be worth today?';
