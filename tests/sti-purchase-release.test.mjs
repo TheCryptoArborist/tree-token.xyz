@@ -12,7 +12,7 @@ import { DELIVERY_PATHS, DELIVERY_SOURCES, ARBORETUM_SNIPPET, verifyDelivery } f
 process.env.STI_PURCHASE_EXPECTED_DEPLOY ||= '6afddc74d6c8647c67efdbad';
 const { SITE_ID, ACCOUNT_ID, BASELINE_ID, REPLACED_HASHES, PRESERVED_STI_HASHES, ORIGINAL_CHANGES, assembleFiles,
   validateBaseline, assertNewCandidate, assertNoConcurrentDeploys, validateBrowserReport,
-  assertBrowserVerification } = await import('../scripts/release-sti-purchase.mjs');
+  assertBrowserVerification, apiClient } = await import('../scripts/release-sti-purchase.mjs');
 const sha1 = value => crypto.createHash('sha1').update(value).digest('hex');
 const inventory = JSON.parse(await fs.readFile(new URL('../production/sti-purchase-release-20261118.json', import.meta.url), 'utf8')).files;
 const overlays = () => DELIVERY_PATHS.map((pathname, i) => ({ path: pathname, source: DELIVERY_SOURCES[pathname], sha1: PRESERVED_STI_HASHES[pathname] || String(i + 1).repeat(40) }));
@@ -40,6 +40,69 @@ test('capture refuses missing or unreviewed baseline IDs before accessing creden
     if (id) env.STI_PURCHASE_EXPECTED_DEPLOY = id; else delete env.STI_PURCHASE_EXPECTED_DEPLOY;
     const result = spawnSync(process.execPath, [new URL('../scripts/release-sti-purchase.mjs', import.meta.url).pathname, 'capture'], { env, encoding: 'utf8' });
     assert.equal(result.status, 1); assert.match(result.stderr, /STI_PURCHASE_EXPECTED_DEPLOY must identify/); assert.equal(result.stdout, '');
+  }
+});
+
+test('read-only Netlify requests recover from transport failures within three bounded attempts', async () => {
+  const calls = [], delays = [];
+  const api = apiClient('test-token', {
+    fetchImpl: async (url, options) => {
+      calls.push({ url, options });
+      if (calls.length < 3) throw new TypeError('Connection closed');
+      return Response.json({ id: SITE_ID });
+    },
+    delay: async milliseconds => delays.push(milliseconds),
+  });
+  assert.deepEqual(await api('sites/' + SITE_ID), { id: SITE_ID });
+  assert.equal(calls.length, 3); assert.deepEqual(delays, [250, 500]);
+  for (const call of calls) {
+    assert.equal(call.url, 'https://api.netlify.com/api/v1/sites/' + SITE_ID);
+    assert.equal(call.options.method, 'GET'); assert.equal(call.options.redirect, 'error');
+    assert.equal(call.options.headers.Authorization, 'Bearer test-token');
+    assert(call.options.signal instanceof AbortSignal);
+  }
+  assert.equal(new Set(calls.map(call => call.options.signal)).size, 3, 'Every attempt gets its own timeout.');
+});
+
+test('exhausted GET retries fail closed without revealing transport or credential details', async () => {
+  let calls = 0; const delays = [];
+  const api = apiClient('private-test-token', {
+    fetchImpl: async () => { calls++; throw new TypeError('private-test-token and private response details'); },
+    delay: async milliseconds => delays.push(milliseconds),
+  });
+  await assert.rejects(api('sites/' + SITE_ID), error => {
+    assert.equal(error.message, 'Netlify GET request failed after 3 attempts; raw details withheld.');
+    assert.equal(error.cause, undefined); assert(!error.stack.includes('private-test-token'));
+    return true;
+  });
+  assert.equal(calls, 3); assert.deepEqual(delays, [250, 500]);
+});
+
+test('Netlify POST and PUT transport failures are never automatically retried', async () => {
+  for (const method of ['POST', 'PUT']) {
+    let calls = 0, delays = 0;
+    const api = apiClient('test-token', {
+      fetchImpl: async () => { calls++; throw new TypeError('Connection closed after possible mutation'); },
+      delay: async () => { delays++; },
+    });
+    await assert.rejects(api('deploys/example/lock', method, { test: true }), {
+      message: `Netlify ${method} request failed; raw details withheld.`,
+    });
+    assert.equal(calls, 1); assert.equal(delays, 0);
+  }
+});
+
+test('Netlify HTTP rejections fail immediately without transport retries', async () => {
+  for (const status of [403, 503]) {
+    let calls = 0, delays = 0;
+    const api = apiClient('test-token', {
+      fetchImpl: async () => { calls++; return new Response('private denial details', { status }); },
+      delay: async () => { delays++; },
+    });
+    await assert.rejects(api('sites/' + SITE_ID), {
+      message: `Netlify GET failed (HTTP ${status}); raw details withheld.`,
+    });
+    assert.equal(calls, 1); assert.equal(delays, 0);
   }
 });
 

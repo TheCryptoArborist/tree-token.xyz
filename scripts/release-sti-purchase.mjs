@@ -112,16 +112,28 @@ function readRecord(filename) {
   assert.equal(fs.readFileSync(filename + '.sha256', 'utf8').trim(), fingerprint(value), 'Local release record integrity failed.');
   return value;
 }
-function apiClient(token) {
+export function apiClient(token, { fetchImpl = globalThis.fetch,
+  delay = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds)) } = {}) {
   return async (endpoint, method = 'GET', body) => {
     let response;
-    try {
-      response = await fetch('https://api.netlify.com/api/v1/' + endpoint, {
-        method, redirect: 'error', signal: AbortSignal.timeout(30000),
-        headers: { Authorization: 'Bearer ' + token, ...(body != null ? { 'Content-Type': 'application/json' } : {}) },
-        body: body != null ? JSON.stringify(body) : undefined,
-      });
-    } catch { throw Error(`Netlify ${method} request failed; raw details withheld.`); }
+    const attempts = method === 'GET' ? 3 : 1;
+    for (let attempt = 0; attempt < attempts; attempt++) {
+      try {
+        response = await fetchImpl('https://api.netlify.com/api/v1/' + endpoint, {
+          method, redirect: 'error', signal: AbortSignal.timeout(30000),
+          headers: { Authorization: 'Bearer ' + token, ...(body != null ? { 'Content-Type': 'application/json' } : {}) },
+          body: body != null ? JSON.stringify(body) : undefined,
+        });
+        break;
+      } catch {
+        if (attempt + 1 === attempts) {
+          throw Error(`Netlify ${method} request failed${attempts > 1 ? ` after ${attempts} attempts` : ''}; raw details withheld.`);
+        }
+        // A read can lose an idle connection while browser verification runs.
+        // Retry only transport failures; mutations and HTTP rejections stay final.
+        await delay(250 * (attempt + 1));
+      }
+    }
     assert(response.ok, `Netlify ${method} failed (HTTP ${response.status}); raw details withheld.`);
     try { return await response.json(); } catch { throw Error('Invalid Netlify response; raw details withheld.'); }
   };
