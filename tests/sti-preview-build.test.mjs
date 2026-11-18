@@ -127,7 +127,12 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
   const snapshot = arcadeRuntime.publicConfigurationSnapshots[0];
   assert.equal(snapshot.authenticated, false);
   assert.equal(snapshot.containsPlayerProgress, false);
-  const arcadeFiles = [...arcadeRuntime.files, snapshot, ...arcadeOverlays];
+  for (const file of arcadeRuntime.files) {
+    assert.equal(digest(new URL(file.source, root)), file.sha1, `Captured baseline source ${file.path}`);
+    if (arcadeInventory.files[file.path.toLowerCase()]) assert.equal(file.sha1, arcadeInventory.files[file.path.toLowerCase()]);
+  }
+  const arcadeFiles = [...arcadeRuntime.files.map(file => file.path === '/scripts/arcade-monthly.js'
+    ? { path: file.path, source: 'scripts/arcade-monthly.js' } : file), snapshot, ...arcadeOverlays];
   assert.equal(new Set(arcadeFiles.map(file => file.path)).size, arcadeFiles.length, 'Each Arcade preview path is reviewed once.');
   const arcadeExpected = new Map();
   for (const file of arcadeFiles) {

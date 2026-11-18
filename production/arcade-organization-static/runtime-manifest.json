@@ -399,10 +399,10 @@
     },
     {
       "path": "/scripts/arcade-monthly.js",
-      "source": "scripts/arcade-monthly.js",
+      "source": "production/arcade-organization-static/runtime/scripts/arcade-monthly.js",
       "sha1": "758dafc8846d2850017787ec20f9a671002eceea",
       "bytes": 8551,
-      "kind": "existing-repository-source",
+      "kind": "captured-live-runtime",
       "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
       "referencedBy": [
         "script /play/index.html"

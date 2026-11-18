@@ -1,7 +1,9 @@
 const API='/api/arcade-monthly',SESSION='tree-arcade:daily-growth:session:v1',PENDING='tree-arcade:recovery:pending:v1';
-export function createMonthlyPanel({root,fetchImpl=fetch,loadBridge=()=>import('/assets/arcade/arcade-growth-wallet.js'),loadPayment=()=>import('/assets/arcade/arcade-recovery-wallet.js')}={}){
+export function createMonthlyPanel({root,fetchImpl=fetch,now=Date.now,loadBridge=()=>import('/assets/arcade/arcade-growth-wallet.js'),loadPayment=()=>import('/assets/arcade/arcade-recovery-wallet.js')}={}){
  if(!root)return;const doc=root.ownerDocument,view=doc.defaultView,panel=doc.getElementById('arcade-monthly-panel');if(!panel)return;
- const el=id=>panel.querySelector('#monthly-'+id);let busy=false,latest=null,identity=null,pending=null,controller=null,lastSession=null,disposed=false,checking=false,successUntil=0;
+ const el=id=>panel.querySelector('#monthly-'+id);let busy=false,latest=null,identity=null,pending=null,controller=null,lastSession=null,disposed=false,checking=false,successUntil=0,expiryTimer=null,displayedIntentId=null;
+ const deadlineNote=doc.createElement('p');deadlineNote.id='monthly-recovery-deadline';panel.querySelector('.monthly-recovery summary').after(deadlineNote);
+ const utcTime=value=>new Intl.DateTimeFormat('en',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23',timeZone:'UTC'}).format(new Date(value))+' UTC';
  const session=()=>{for(const name of ['localStorage','sessionStorage']){try{const s=JSON.parse(view[name].getItem(SESSION)||'null');if(s&&/^[a-f0-9]{64}$/.test(s.token)&&/^0x[a-f0-9]{64}$/.test(s.wallet)&&Date.parse(s.expiresAt)>Date.now())return s;}catch{}}return null;};
  function notice(text){el('status').textContent=text;}
  function savePending(p){pending=p;try{if(p){view.sessionStorage.setItem(PENDING,JSON.stringify(p));if(!view.sessionStorage.getItem(PENDING))throw Error('storage');}else view.sessionStorage.removeItem(PENDING);}catch{if(p)throw Error('Your browser could not save this checkout. No new payment was requested. Allow session storage before trying again.');}}
@@ -17,8 +19,15 @@ export function createMonthlyPanel({root,fetchImpl=fetch,loadBridge=()=>import('
  el('today').textContent=p?(p.monthlyReward.todayQualified?'Today’s verified quest day is saved ✓':'Complete and refresh a verified quest today to add one verified quest day.'):'Complete verified quests on 20 different UTC days this month.';
  const dates=p?.attendance.missedDates||[],previous=el('date').value;el('date').replaceChildren();for(const date of dates){const option=doc.createElement('option');option.value=date;option.textContent=new Intl.DateTimeFormat('en',{month:'short',day:'numeric',timeZone:'UTC'}).format(new Date(date+'T12:00:00Z'));el('date').append(option);}if(dates.includes(previous))el('date').value=previous;
  const hasPending=Boolean(pending&&pending.wallet===identity?.wallet);el('recovery-controls').hidden=!authenticated;el('none').hidden=!authenticated||dates.length>0;
+ if(expiryTimer!==null){view.clearTimeout(expiryTimer);expiryTimer=null;}
+ const expiresAt=hasPending?Date.parse(pending.expiresAt):NaN;
+ const expired=Number.isFinite(expiresAt)&&expiresAt<=now();
+ deadlineNote.textContent=expired?'This checkout has expired for new payments. If you paid on time, use Verify payment. Keep your digest and do not pay again.':hasPending&&Number.isFinite(expiresAt)?`Checkout expires ${utcTime(expiresAt)}. Allow time for confirmation before the UTC month closes. Do not approve after the deadline; late payments cannot restore attendance. Payments made on time can still be verified later.`:'Recovery payments must confirm before 00:00 UTC on the first day of the next month. Payments made on time can still be verified after the month closes.';
+ if(hasPending&&Number.isFinite(Date.parse(pending.seasonEndsAt))&&!expired)deadlineNote.textContent+=` Month closes ${utcTime(pending.seasonEndsAt)}.`;
+ if(hasPending&&Number.isFinite(expiresAt)&&!expired)expiryTimer=view.setTimeout(()=>{expiryTimer=null;if(!disposed)render();},Math.min(expiresAt-now()+1,2147483647));
  el('date').disabled=busy||!dates.length||hasPending;el('pay').disabled=busy||!dates.length||hasPending;el('refresh').disabled=busy||!authenticated;
- el('retry').hidden=!hasPending;el('retry').disabled=busy;el('digest-form').hidden=!hasPending;el('digest').value=hasPending?pending.digest||'':'';
+ el('retry').hidden=!hasPending;el('retry').disabled=busy;el('digest-form').hidden=!hasPending;
+ if(!hasPending){el('digest').value='';displayedIntentId=null;}else if(displayedIntentId!==pending.intentId){el('digest').value=pending.digest||'';displayedIntentId=pending.intentId;}
  el('pay').textContent=busy?'Working…':'Recover day · 20,000 TREE';
  }
  function accept(p,s){if(!p?.progress||p.progress.wallet!==s.wallet||p.progress.monthlyReward?.requiredQuestDays!==20||!Array.isArray(p.progress.attendance?.missedDates)||!Number.isInteger(p.progress.monthlyReward.verifiedQuestDays)||p.progress.monthlyReward.verifiedQuestDays<0||p.progress.monthlyReward.verifiedQuestDays>31)throw Error('Monthly progress could not be verified.');latest=p.progress;}
@@ -29,8 +38,8 @@ export function createMonthlyPanel({root,fetchImpl=fetch,loadBridge=()=>import('
   const s=await current();if(!s)throw Error('Sign in to the Arcade before paying.');identity=s;if(pending?.wallet===s.wallet)throw Error('Verify your existing checkout before making another payment.');
   const dateKey=el('date').value;if(!dateKey||!latest?.attendance.missedDates.includes(dateKey))throw Error('Select a missed date from this month.');
   notice('Preparing your 20,000 TREE checkout…');const {intent}=await request('intent',{dateKey});if((await current())?.wallet!==s.wallet)throw Error('Wallet changed. No payment was requested.');
-  savePending({intentId:intent.id,wallet:s.wallet,dateKey,digest:null});render();notice(`Approve 20,000 TREE plus SUI gas in your wallet to recover ${dateKey}.`);
-  try{const {payForRecovery}=await loadPayment();const digest=await payForRecovery(intent,s);savePending({...pending,digest});el('digest').value=digest;notice('Payment submitted. Verifying the confirmed transaction…');await verify();}
+  savePending({intentId:intent.id,wallet:s.wallet,dateKey,digest:null,expiresAt:intent.expiresAt,seasonEndsAt:intent.seasonEndsAt});render();notice(`Approve 20,000 TREE plus SUI gas in your wallet to recover ${dateKey}. Confirm before the checkout deadline shown above.`);
+  try{const {payForRecovery}=await loadPayment();if(!Number.isFinite(Date.parse(intent.expiresAt))||Date.parse(intent.expiresAt)<=now())throw Error('This checkout has expired. No new wallet payment was requested.');const digest=await payForRecovery(intent,s);savePending({...pending,digest});el('digest').value=digest;notice('Payment submitted. Verifying the confirmed transaction…');await verify();}
   catch(e){throw Error(`${e.message} If you approved payment, keep or paste its digest and use Verify payment. Do not pay again while checking.`);}
  }));
  el('retry').addEventListener('click',()=>{const digest=el('digest').value.trim();void perform(()=>verify(digest));});el('digest-form').addEventListener('submit',e=>{e.preventDefault();const digest=el('digest').value.trim();void perform(()=>verify(digest));});
@@ -38,6 +47,6 @@ export function createMonthlyPanel({root,fetchImpl=fetch,loadBridge=()=>import('
  el('refresh').addEventListener('click',()=>void refresh());
  const observer=new view.MutationObserver(()=>{const s=session(),key=s?.token||'';if(root.dataset.growthState==='syncing'||root.dataset.growthState==='loading')return;if(key!==lastSession||root.dataset.growthState==='authenticated'){lastSession=key;void refresh();}});observer.observe(root,{attributes:true,attributeFilter:['data-growth-state']});
  const onReturn=()=>void refresh();view.addEventListener('focus',onReturn);view.addEventListener('pageshow',onReturn);render();void refresh();
- return {refresh,destroy(){disposed=true;controller?.abort();observer.disconnect();view.removeEventListener('focus',onReturn);view.removeEventListener('pageshow',onReturn);}};
+ return {refresh,destroy(){disposed=true;if(expiryTimer!==null)view.clearTimeout(expiryTimer);controller?.abort();observer.disconnect();deadlineNote.remove();view.removeEventListener('focus',onReturn);view.removeEventListener('pageshow',onReturn);}};
 }
 if(typeof document!=='undefined')createMonthlyPanel({root:document.getElementById('arcade-daily-growth')});

@@ -14,7 +14,7 @@
     <div><h1>TREE Arcade layout review</h1><p>The actual review page, shown at a selected CSS width.</p></div>
     <label for="review-width">Viewport <select id="review-width"><option value="320">320 px · narrow phone</option><option value="390" selected>390 px · phone</option><option value="768">768 px · tablet</option><option value="1200">1200 px · desktop</option></select></label>
     <label for="review-tab">Start tab <select id="review-tab"><option value="games">Games</option><option value="daily">Daily</option><option value="campaigns">Campaigns</option><option value="events">Events</option><option value="month">Monthly Progress</option><option value="badges">Badge Collection</option></select></label>
-    <a href="/play/" target="_blank" rel="noopener">Open full preview ↗</a>
+    <a id="review-open" href="/play/" target="_blank" rel="noopener">Open full preview ↗</a>
   </header>
   <main><iframe id="arcade-review-frame" title="TREE Arcade responsive review" src="/play/#games" width="390" height="800"></iframe></main>
   <script>
@@ -22,12 +22,18 @@
     const tabSelect=document.getElementById('review-tab');
     const frame=document.getElementById('arcade-review-frame');
     const params=new URLSearchParams(location.search);
+    // Review a known production candidate without publishing this helper there.
+    // Only this site's exact Netlify deploy-ID origin is accepted.
+    const candidate=params.get('candidate');
+    const candidateOrigin=/^[a-f0-9]{24}$/.test(candidate||'')?'https://'+candidate+'--tree-token.netlify.app':'';
+    const playURL=candidateOrigin+'/play/';
+    if(candidateOrigin){document.querySelector('header p').textContent='Production candidate '+candidate+' · visual review only; do not sign in or pay.';document.getElementById('review-open').href=playURL;}
     const validWidths=['320','390','768','1200'];
     const validTabs=['games','daily','campaigns','events','month','badges'];
     if(validWidths.includes(params.get('width')))widthSelect.value=params.get('width');
     if(validTabs.includes(params.get('tab')))tabSelect.value=params.get('tab');
-    function selectWidth(){frame.style.width=widthSelect.value+'px';frame.setAttribute('width',widthSelect.value);}
-    function selectTab(){frame.src='/play/#'+tabSelect.value;}
+    function selectWidth(){frame.style.boxSizing='content-box';frame.style.width=widthSelect.value+'px';frame.setAttribute('width',widthSelect.value);}
+    function selectTab(){frame.src=playURL+'#'+tabSelect.value;}
     widthSelect.addEventListener('change',selectWidth);
     tabSelect.addEventListener('change',selectTab);
     selectWidth();selectTab();

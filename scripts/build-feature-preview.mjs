@@ -60,8 +60,12 @@ for (const file of arcadeRuntime.files) {
   const expected = arcadeInventory.files[file.path.toLowerCase()];
   if (expected) assert.equal(file.sha1, expected, 'Arcade runtime differs from the captured live hash: ' + file.path);
   else assert(unreportedPublicAssets.has(file.path), 'Unreviewed asset outside the live inventory: ' + file.path);
+  await sourceBytes(file); // Preserve and verify captured bytes even for an explicit replacement.
 }
-const arcadeFiles = [...arcadeRuntime.files, ...publicSnapshots, ...arcadeOverlays];
+// Only the monthly panel is updated for checkout deadline/late-receipt guidance.
+// Keep its prior live source above so that the baseline remains independently verifiable.
+const arcadeFiles = [...arcadeRuntime.files.map(file => file.path === '/scripts/arcade-monthly.js'
+  ? { path: file.path, source: 'scripts/arcade-monthly.js' } : file), ...publicSnapshots, ...arcadeOverlays];
 for (const file of arcadeFiles) {
   await sourceBytes(file); // Fail before writing output if a source is absent or changed.
   allowed.add(file.path.slice(1).toLowerCase());

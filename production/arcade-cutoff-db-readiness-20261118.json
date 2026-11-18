@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "projectId": "lehswszuekjqottolmsf",
+  "verifiedAt": "2026-11-18T19:32:14.980Z",
+  "sourceMigration": "supabase/migrations/20261118192546_arcade_recovery_month_end_cutoff.sql",
+  "sourceMigrationSHA256": "bd744d687b4d856b5cbc41374b39c88bf6cd4e16df5c76263c5218a20fe51c8e",
+  "appliedMigration": {
+    "version": "20261118193129",
+    "name": "arcade_recovery_month_end_cutoff"
+  },
+  "rpcDefinitions": [
+    {
+      "name": "arcade_recovery_confirm_v1",
+      "sha256": "710b442a1afecad861b29fd4eb9f3b0bd17428ed33c6e98f3c34e30383cd1e12",
+      "securityDefiner": false,
+      "searchPath": "",
+      "executeRoles": [
+        "postgres",
+        "service_role"
+      ],
+      "deniedRoles": [
+        "PUBLIC",
+        "anon",
+        "authenticated"
+      ]
+    },
+    {
+      "name": "arcade_recovery_intent_v1",
+      "sha256": "22f9bbff7c1cdcabd8f5d9713fffd70a971c505425ecb5cbe14bfa8ea3e8fbb7",
+      "securityDefiner": false,
+      "searchPath": "",
+      "executeRoles": [
+        "postgres",
+        "service_role"
+      ],
+      "deniedRoles": [
+        "PUBLIC",
+        "anon",
+        "authenticated"
+      ]
+    }
+  ]
+}
