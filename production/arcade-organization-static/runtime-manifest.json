@@ -1,0 +1,601 @@
+{
+  "schemaVersion": 1,
+  "baselineId": "6afde69b28000c929ce7a0a4",
+  "capturedAt": "2026-11-18T18:53:21.438165+00:00",
+  "inventorySource": "production/sti-wallet-recovery-release-20261118.json",
+  "inventoryStaticPaths": 616,
+  "scope": "Current Arcade HTML asset references and literal transitive module/CSS dependencies. No private data, function packages, wallet state, or game page content.",
+  "files": [
+    {
+      "path": "/assets/arcade-growth/nftree-scout.webp",
+      "source": "production/arcade-organization-static/runtime/assets/arcade-growth/nftree-scout.webp",
+      "sha1": "85c5eb6f1490eb595d9decd527b481a8ccd1e9ae",
+      "bytes": 103982,
+      "kind": "captured-live-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "img /play/index.html",
+        "literal runtime asset /scripts/arcade-daily-growth-play-share.js"
+      ]
+    },
+    {
+      "path": "/assets/arcade-growth/thickquidity-legend.webp",
+      "source": "production/arcade-organization-static/runtime/assets/arcade-growth/thickquidity-legend.webp",
+      "sha1": "0f528b795ba89a9860273cb485784efd331aff3f",
+      "bytes": 129638,
+      "kind": "captured-live-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "img /play/index.html",
+        "literal runtime asset /scripts/arcade-daily-growth-play-share.js"
+      ]
+    },
+    {
+      "path": "/assets/arcade-growth/tree-force-vanguard.webp",
+      "source": "production/arcade-organization-static/runtime/assets/arcade-growth/tree-force-vanguard.webp",
+      "sha1": "d61c0f338277ed1b5ca7b007ac40fcb460c6ddc0",
+      "bytes": 129056,
+      "kind": "captured-live-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "img /play/index.html",
+        "literal runtime asset /scripts/arcade-daily-growth-play-share.js"
+      ]
+    },
+    {
+      "path": "/assets/arcade-growth/tree-spark.webp",
+      "source": "production/arcade-organization-static/runtime/assets/arcade-growth/tree-spark.webp",
+      "sha1": "4876ca05f3e6efbdc003fe8647f0ae50b9237946",
+      "bytes": 84986,
+      "kind": "captured-live-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "img /play/index.html",
+        "literal runtime asset /scripts/arcade-daily-growth-play-share.js"
+      ]
+    },
+    {
+      "path": "/assets/arcade-seasonal/dec-christmas-hero.webp",
+      "source": "assets/arcade-seasonal/dec-christmas-hero.webp",
+      "sha1": "d22f92461a705c57d0ed24665b59e37388651eb9",
+      "bytes": 87998,
+      "kind": "existing-repository-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "collection artwork /scripts/arcade-seasonal-data.js",
+        "img /play/index.html"
+      ]
+    },
+    {
+      "path": "/assets/arcade-seasonal/dec-frost-sprout.webp",
+      "source": "assets/arcade-seasonal/dec-frost-sprout.webp",
+      "sha1": "edce7752cba6136da6064aff74f2df93c79035eb",
+      "bytes": 78384,
+      "kind": "existing-repository-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "collection artwork /scripts/arcade-seasonal-data.js",
+        "img /play/index.html"
+      ]
+    },
+    {
+      "path": "/assets/arcade-seasonal/dec-holly-guardian.webp",
+      "source": "assets/arcade-seasonal/dec-holly-guardian.webp",
+      "sha1": "e4d3d1c9aeb8abb6530fcc6515729a478d2bdb48",
+      "bytes": 77188,
+      "kind": "existing-repository-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "collection artwork /scripts/arcade-seasonal-data.js",
+        "img /play/index.html"
+      ]
+    },
+    {
+      "path": "/assets/arcade-seasonal/dec-snowfall-vanguard.webp",
+      "source": "assets/arcade-seasonal/dec-snowfall-vanguard.webp",
+      "sha1": "7cf74d6a66141cad63b545951c6dfad2fab8b915",
+      "bytes": 93282,
+      "kind": "existing-repository-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "collection artwork /scripts/arcade-seasonal-data.js",
+        "img /play/index.html"
+      ]
+    },
+    {
+      "path": "/assets/arcade-seasonal/nov-acorn-scout.webp",
+      "source": "assets/arcade-seasonal/nov-acorn-scout.webp",
+      "sha1": "6a06f117f5cf19192b71f9d445d59c373e42d2cd",
+      "bytes": 61396,
+      "kind": "existing-repository-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "collection artwork /scripts/arcade-seasonal-data.js"
+      ]
+    },
+    {
+      "path": "/assets/arcade-seasonal/nov-amber-vanguard.webp",
+      "source": "assets/arcade-seasonal/nov-amber-vanguard.webp",
+      "sha1": "b52c2ebcb3c0999cac74a3e3c37a42db846adce0",
+      "bytes": 80284,
+      "kind": "existing-repository-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "collection artwork /scripts/arcade-seasonal-data.js"
+      ]
+    },
+    {
+      "path": "/assets/arcade-seasonal/nov-autumn-hero.webp",
+      "source": "assets/arcade-seasonal/nov-autumn-hero.webp",
+      "sha1": "ee0f3b86d14c46881709cd0b9cff321e3693c0fa",
+      "bytes": 78276,
+      "kind": "existing-repository-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "collection artwork /scripts/arcade-seasonal-data.js"
+      ]
+    },
+    {
+      "path": "/assets/arcade-seasonal/nov-harvest-guardian.webp",
+      "source": "assets/arcade-seasonal/nov-harvest-guardian.webp",
+      "sha1": "7f40a804e3cf5d15e2f53fad0103fd6156547277",
+      "bytes": 81240,
+      "kind": "existing-repository-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "collection artwork /scripts/arcade-seasonal-data.js"
+      ]
+    },
+    {
+      "path": "/assets/arcade-seasonal/tree-hero.webp",
+      "source": "assets/arcade-seasonal/tree-hero.webp",
+      "sha1": "64aced7f76e6066df5cb304f6bcc0c24ffc87626",
+      "bytes": 73316,
+      "kind": "existing-repository-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "collection artwork /scripts/arcade-seasonal-data.js",
+        "img /play/index.html"
+      ]
+    },
+    {
+      "path": "/assets/arcade/arboretum-poster.webp",
+      "source": "production/arcade-organization-static/runtime/assets/arcade/arboretum-poster.webp",
+      "sha1": "d0a36a78f2cf5973f9588431b1eb176fddda0c79",
+      "bytes": 51662,
+      "kind": "captured-live-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "img /play/index.html"
+      ]
+    },
+    {
+      "path": "/assets/arcade/arborist-trials-poster.webp",
+      "source": "production/arcade-organization-static/runtime/assets/arcade/arborist-trials-poster.webp",
+      "sha1": "08d275193774569211b3518b7d915612641889a6",
+      "bytes": 99784,
+      "kind": "captured-live-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "img /play/index.html",
+        "literal runtime asset /scripts/arcade-daily-growth-play-share.js",
+        "literal runtime asset /scripts/arcade-share-builder.js"
+      ]
+    },
+    {
+      "path": "/assets/arcade/arcade-growth-wallet.js",
+      "source": "production/arcade-organization-static/runtime/assets/arcade/arcade-growth-wallet.js",
+      "sha1": "e987f3f338c6470575d17eb6daa4e31fe86d5a70",
+      "bytes": 18993,
+      "kind": "captured-live-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "literal runtime asset /scripts/arcade-daily-growth-play-share.js",
+        "literal runtime asset /scripts/arcade-monthly.js",
+        "module import /scripts/arcade-monthly.js"
+      ]
+    },
+    {
+      "path": "/assets/arcade/arcade-recovery-wallet.js",
+      "source": "assets/arcade/arcade-recovery-wallet.js",
+      "sha1": "3f5eab16c2d1bd795d65418092307660c58c6530",
+      "bytes": 284592,
+      "kind": "existing-repository-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "literal runtime asset /scripts/arcade-monthly.js",
+        "module import /scripts/arcade-monthly.js"
+      ]
+    },
+    {
+      "path": "/assets/arcade/canopy-breaker-game.webp",
+      "source": "production/arcade-organization-static/runtime/assets/arcade/canopy-breaker-game.webp",
+      "sha1": "ac0a1f9aba82ad2f8b9e97ec554de48a6552e21a",
+      "bytes": 163582,
+      "kind": "captured-live-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "img /play/index.html",
+        "literal runtime asset /scripts/arcade-daily-growth-play-share.js",
+        "literal runtime asset /scripts/arcade-result-share-builder.js"
+      ]
+    },
+    {
+      "path": "/assets/arcade/canopy-clash-poster.webp",
+      "source": "production/arcade-organization-static/runtime/assets/arcade/canopy-clash-poster.webp",
+      "sha1": "1cf499037954c00ebf052605e1f452f54c1ee60d",
+      "bytes": 67206,
+      "kind": "captured-live-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "img /play/index.html"
+      ]
+    },
+    {
+      "path": "/assets/arcade/garden-bot-poster.webp",
+      "source": "production/arcade-organization-static/runtime/assets/arcade/garden-bot-poster.webp",
+      "sha1": "87d3289c4041d2ea1cc76b51c0992057817aba84",
+      "bytes": 43422,
+      "kind": "captured-live-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "img /play/index.html",
+        "literal runtime asset /scripts/arcade-daily-growth-play-share.js",
+        "literal runtime asset /scripts/arcade-result-share-builder.js",
+        "literal runtime asset /scripts/arcade-share-builder.js"
+      ]
+    },
+    {
+      "path": "/assets/arcade/nftree-wallet-mint.js",
+      "source": "production/arcade-organization-static/runtime/assets/arcade/nftree-wallet-mint.js",
+      "sha1": "8c5099377ea0c79aa5fd9b4f1e98032a9b270088",
+      "bytes": 361620,
+      "kind": "captured-live-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "literal runtime asset /scripts/arcade-nftree-access.js"
+      ]
+    },
+    {
+      "path": "/assets/arcade/pvp-battle-poster.webp",
+      "source": "production/arcade-organization-static/runtime/assets/arcade/pvp-battle-poster.webp",
+      "sha1": "3ec878ed71336daed62144c144eeceec7a70b43f",
+      "bytes": 62658,
+      "kind": "captured-live-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "img /play/index.html",
+        "literal runtime asset /scripts/arcade-daily-growth-play-share.js",
+        "literal runtime asset /scripts/arcade-result-share-builder.js",
+        "literal runtime asset /scripts/arcade-share-builder.js"
+      ]
+    },
+    {
+      "path": "/assets/arcade/tree-arcade-social.jpg",
+      "source": "production/arcade-organization-static/runtime/assets/arcade/tree-arcade-social.jpg",
+      "sha1": "73d1d40155cc6b5971c38c89cbb3cda6a8034c35",
+      "bytes": 348487,
+      "kind": "captured-live-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "img /play/index.html"
+      ]
+    },
+    {
+      "path": "/assets/arcade/tree-force-89-poster.webp",
+      "source": "production/arcade-organization-static/runtime/assets/arcade/tree-force-89-poster.webp",
+      "sha1": "07e1ef2e4ba452ed9d12f4eb71379f1212720b5a",
+      "bytes": 91624,
+      "kind": "captured-live-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "img /play/index.html",
+        "literal runtime asset /scripts/arcade-daily-growth-play-share.js",
+        "literal runtime asset /scripts/arcade-result-share-builder.js",
+        "literal runtime asset /scripts/arcade-share-builder.js"
+      ]
+    },
+    {
+      "path": "/assets/tree-arcade-world-bg-v2.webp",
+      "source": "assets/tree-arcade-world-bg-v2.webp",
+      "sha1": "d2e4bd23aad38f34ae19e4eff6bb0f8a54b13474",
+      "bytes": 156258,
+      "kind": "existing-repository-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "CSS asset /styles/tree-arcade-suite.css",
+        "literal runtime asset /styles/tree-arcade-suite.css"
+      ]
+    },
+    {
+      "path": "/assets/tree-command-logo-v2-512.png",
+      "source": "assets/tree-command-logo-v2-512.png",
+      "sha1": "4390f9723c27bd4809bf960119dc3ef4916be739",
+      "bytes": 319222,
+      "kind": "existing-repository-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "img /play/index.html",
+        "literal runtime asset /scripts/arcade-daily-growth-play-share.js"
+      ]
+    },
+    {
+      "path": "/assets/tree-token-logo-official.webp",
+      "source": "assets/tree-token-logo-official.webp",
+      "sha1": "fb6600ba506a3a97e3e813402b6f60e73610cfb1",
+      "bytes": 248014,
+      "kind": "existing-repository-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "img /play/index.html",
+        "stylesheet/icon /play/index.html"
+      ]
+    },
+    {
+      "path": "/play/canopy-defense/checkout-test/assets/brand/canopy-home-scene.webp",
+      "source": "production/arcade-organization-static/runtime/play/canopy-defense/checkout-test/assets/brand/canopy-home-scene.webp",
+      "sha1": "8e696a8c68ca86ebf27da08969268ebf2a82f77f",
+      "bytes": 491280,
+      "kind": "captured-live-source",
+      "verifiedAgainst": null,
+      "referencedBy": [
+        "img /play/index.html"
+      ]
+    },
+    {
+      "path": "/play/deadfall-run/preview-hype-v1.webp",
+      "source": "production/arcade-organization-static/runtime/play/deadfall-run/preview-hype-v1.webp",
+      "sha1": "d8617f338bc378df6bef05327a322afb2325d4f5",
+      "bytes": 56030,
+      "kind": "captured-live-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "img /play/index.html"
+      ]
+    },
+    {
+      "path": "/play/root-rage/boss-fight-cover.jpg",
+      "source": "production/arcade-organization-static/runtime/play/root-rage/boss-fight-cover.jpg",
+      "sha1": "9d19ba33c15a876f51333cf6d01e4043e7a8a6e7",
+      "bytes": 713815,
+      "kind": "captured-live-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "img /play/index.html"
+      ]
+    },
+    {
+      "path": "/scripts/arcade-completed-run-tracking.js",
+      "source": "production/arcade-organization-static/runtime/scripts/arcade-completed-run-tracking.js",
+      "sha1": "11fa0e60071ab4a1311ffd3fe8776cfb0cf997ba",
+      "bytes": 4566,
+      "kind": "captured-live-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "module import /scripts/arcade-daily-growth-play-share.js"
+      ]
+    },
+    {
+      "path": "/scripts/arcade-daily-growth-play-share.js",
+      "source": "production/arcade-organization-static/runtime/scripts/arcade-daily-growth-play-share.js",
+      "sha1": "b8ee5967f605229b2154c1b32d13e5244dc61dc4",
+      "bytes": 75693,
+      "kind": "captured-live-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "script /play/index.html"
+      ]
+    },
+    {
+      "path": "/scripts/arcade-guided-play-share.js",
+      "source": "production/arcade-organization-static/runtime/scripts/arcade-guided-play-share.js",
+      "sha1": "054eb6980ac0b18230106cd808a182351cecca4e",
+      "bytes": 4384,
+      "kind": "captured-live-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "script /play/index.html"
+      ]
+    },
+    {
+      "path": "/scripts/arcade-monthly.js",
+      "source": "production/arcade-organization-static/runtime/scripts/arcade-monthly.js",
+      "sha1": "758dafc8846d2850017787ec20f9a671002eceea",
+      "bytes": 8551,
+      "kind": "captured-live-runtime",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "script /play/index.html"
+      ]
+    },
+    {
+      "path": "/scripts/arcade-navigation-play-share.js",
+      "source": "production/arcade-organization-static/runtime/scripts/arcade-navigation-play-share.js",
+      "sha1": "050c6d4caab37ed4941dccd0f78c48df75ec4743",
+      "bytes": 5031,
+      "kind": "captured-live-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "script /play/index.html"
+      ]
+    },
+    {
+      "path": "/scripts/arcade-nftree-access-core.mjs",
+      "source": "production/arcade-organization-static/runtime/scripts/arcade-nftree-access-core.mjs",
+      "sha1": "13956f06548845efb3b7c52150994bf33a0add64",
+      "bytes": 20292,
+      "kind": "captured-live-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "module import /scripts/arcade-nftree-access.js"
+      ]
+    },
+    {
+      "path": "/scripts/arcade-nftree-access.js",
+      "source": "production/arcade-organization-static/runtime/scripts/arcade-nftree-access.js",
+      "sha1": "113fbd12943990895beac27f157c587be750754b",
+      "bytes": 18545,
+      "kind": "captured-live-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "script /play/index.html"
+      ]
+    },
+    {
+      "path": "/scripts/arcade-quest-campaigns-guided.js",
+      "source": "scripts/arcade-quest-campaigns-guided.js",
+      "sha1": "ad0625867efce224f175e8da0b91260597a4d1d4",
+      "bytes": 9176,
+      "kind": "existing-repository-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "module import /scripts/arcade-daily-growth-play-share.js"
+      ]
+    },
+    {
+      "path": "/scripts/arcade-result-share-builder.js",
+      "source": "production/arcade-organization-static/runtime/scripts/arcade-result-share-builder.js",
+      "sha1": "8a016a8d0dd59758159c50204d8020e2598427e9",
+      "bytes": 12842,
+      "kind": "captured-live-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "module import /scripts/arcade-social-play-share.js"
+      ]
+    },
+    {
+      "path": "/scripts/arcade-seasonal-data.js",
+      "source": "scripts/arcade-seasonal-data.js",
+      "sha1": "198ae13026d647678d61ef55b69324fccae40abd",
+      "bytes": 646,
+      "kind": "existing-repository-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "module import /scripts/arcade-seasonal-v1.js"
+      ]
+    },
+    {
+      "path": "/scripts/arcade-seasonal-v1.js",
+      "source": "scripts/arcade-seasonal-v1.js",
+      "sha1": "f5d03eb28e21bec47b62c9cbff872d1331faf66c",
+      "bytes": 4046,
+      "kind": "existing-repository-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "script /play/index.html"
+      ]
+    },
+    {
+      "path": "/scripts/arcade-share-builder.js",
+      "source": "scripts/arcade-share-builder.js",
+      "sha1": "0896439e4002c4cc1cae935dc110f271619c350c",
+      "bytes": 7158,
+      "kind": "existing-repository-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "module import /scripts/arcade-guided-play-share.js"
+      ]
+    },
+    {
+      "path": "/scripts/arcade-share-handoff.js",
+      "source": "production/arcade-organization-static/runtime/scripts/arcade-share-handoff.js",
+      "sha1": "de5b5f7fce9abe410c9f8bae5ae4ab3ba9334fae",
+      "bytes": 2710,
+      "kind": "captured-live-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "module import /scripts/arcade-social-play-share.js"
+      ]
+    },
+    {
+      "path": "/scripts/arcade-social-play-share.js",
+      "source": "production/arcade-organization-static/runtime/scripts/arcade-social-play-share.js",
+      "sha1": "ae276a35556f0bad7cea42644f064a189beec697",
+      "bytes": 8605,
+      "kind": "captured-live-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "module import /scripts/arcade-daily-growth-play-share.js"
+      ]
+    },
+    {
+      "path": "/styles/arcade-checkin-refresh.css",
+      "source": "styles/arcade-checkin-refresh.css",
+      "sha1": "9b74c8fac78531343762a7cffd61bd68bc08d23c",
+      "bytes": 10539,
+      "kind": "existing-repository-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "stylesheet/icon /play/index.html"
+      ]
+    },
+    {
+      "path": "/styles/arcade-guided-v2.css",
+      "source": "styles/arcade-guided-v2.css",
+      "sha1": "bed687e377a1994de34ff42070de6d82f1b8074f",
+      "bytes": 4144,
+      "kind": "existing-repository-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "stylesheet/icon /play/index.html"
+      ]
+    },
+    {
+      "path": "/styles/arcade-navigation-v1.css",
+      "source": "styles/arcade-navigation-v1.css",
+      "sha1": "2881ce89aea669cbf6ce7921397e2e9c862254a0",
+      "bytes": 4956,
+      "kind": "existing-repository-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "stylesheet/icon /play/index.html"
+      ]
+    },
+    {
+      "path": "/styles/arcade-seasonal-v1.css",
+      "source": "styles/arcade-seasonal-v1.css",
+      "sha1": "2e5d27cb90e3dad6a067359d8a7863665cd1ca82",
+      "bytes": 2656,
+      "kind": "existing-repository-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "stylesheet/icon /play/index.html"
+      ]
+    },
+    {
+      "path": "/styles/tree-arcade-new-cabinets.css",
+      "source": "production/arcade-organization-static/runtime/styles/tree-arcade-new-cabinets.css",
+      "sha1": "158c167495721a2ce4aa5fe47b710827bfc47ba1",
+      "bytes": 2167,
+      "kind": "captured-live-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "stylesheet/icon /play/index.html"
+      ]
+    },
+    {
+      "path": "/styles/tree-arcade-suite.css",
+      "source": "production/arcade-organization-static/runtime/styles/tree-arcade-suite.css",
+      "sha1": "0051cd0d7836c16345312d3d40d73e71df3749fc",
+      "bytes": 93152,
+      "kind": "captured-live-source",
+      "verifiedAgainst": "production/sti-wallet-recovery-release-20261118.json",
+      "referencedBy": [
+        "stylesheet/icon /play/index.html"
+      ]
+    }
+  ],
+  "publicConfigurationSnapshots": [
+    {
+      "requestPath": "/api/arcade-growth?action=status",
+      "path": "/arcade-preview-data/arcade-growth-status.json",
+      "source": "production/arcade-organization-static/runtime/preview-data/arcade-growth-status.json",
+      "sha1": "7b2835332757dbf87491786ac4678b0bdbe92140",
+      "bytes": 1389,
+      "capturedAt": "2026-11-18T18:54:30.712204+00:00",
+      "sourceUrl": "https://tree-token.xyz/api/arcade-growth?action=status",
+      "authenticated": false,
+      "containsPlayerProgress": false
+    }
+  ]
+}

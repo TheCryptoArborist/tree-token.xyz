@@ -10,6 +10,7 @@ on:
       - 'tests/arcade-monthly*'
       - 'tests/fixtures/arcade-monthly/**'
       - 'supabase/migrations/*arcade_monthly*'
+      - 'supabase/migrations/*arcade_recovery*'
       - '.github/workflows/verify-arcade-monthly.yml'
 permissions:
   contents: read

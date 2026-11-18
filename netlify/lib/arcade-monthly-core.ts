@@ -5,11 +5,22 @@ export const PRICE='20000';
 export const DECIMALS=6;
 export const AMOUNT=20_000_000_000n;
 export const ORIGINS=['https://tree-token.xyz','https://www.tree-token.xyz'];
-export const recoveryConfig={coinType:TREE_TYPE,recipient:RECIPIENT,price:PRICE,decimals:DECIMALS,amountBaseUnits:AMOUNT.toString(),scope:'current-month'};
+export const recoveryConfig={coinType:TREE_TYPE,recipient:RECIPIENT,price:PRICE,decimals:DECIMALS,amountBaseUnits:AMOUNT.toString(),scope:'current-month',cutoffPolicy:'utc-month-end-v1',cutoffEffectiveMonth:'2026-11',lateVerification:true};
 export const memoFor=(intent:{id:string;dateKey:string})=>`TREE:CHECKIN-RECOVERY:v1:${intent.id}:${intent.dateKey}`;
 export class MonthlyError extends Error { code:string;status:number;constructor(code:string,message:string,status=400){super(message);this.code=code;this.status=status;} }
 const fail=()=>{throw new MonthlyError('payment-not-verified','This payment could not be verified. Keep your transaction digest and retry verification.');};
 const norm=(a:unknown)=>typeof a==='string'&&/^0x[0-9a-f]{1,64}$/i.test(a)?'0x'+a.slice(2).toLowerCase().padStart(64,'0'):'';
+
+// November 2026 introduces the exclusive UTC month-end deadline. Earlier
+// seasons keep their issued checkout terms; never rewrite historical receipts.
+export function recoverySeasonDeadline(intent:any):string|null {
+ const createdAt=Date.parse(intent?.createdAt),expiresAt=Date.parse(intent?.expiresAt);
+ const dateKey=intent?.dateKey,date=typeof dateKey==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(dateKey)?new Date(dateKey+'T00:00:00.000Z'):null;
+ if(!date||!Number.isFinite(date.getTime())||date.toISOString().slice(0,10)!==dateKey||!Number.isFinite(createdAt)||!Number.isFinite(expiresAt)||expiresAt<=createdAt||new Date(createdAt).toISOString().slice(0,7)!==dateKey.slice(0,7)||dateKey>=new Date(createdAt).toISOString().slice(0,10))throw new MonthlyError('invalid-intent','This recovery checkout could not be verified. Keep your payment digest.');
+ if(dateKey<'2026-11-01')return null;
+ date.setUTCDate(1);date.setUTCMonth(date.getUTCMonth()+1);
+ return date.toISOString();
+}
 
 // SDK 2.26.1's Core API omits checkpoint/timestamp even for settled payments.
 // Read them from the same mainnet client's ledger, never from the browser.
@@ -35,8 +46,10 @@ export async function readRecoveryTransaction(client:any,digest:string,signal=Ab
 }
 
 export function verifyRecoveryPayment(result:any,intent:any,digest:string,now=Date.now()) {
+ const seasonEndsAt=recoverySeasonDeadline(intent);
  const t=result?.Transaction;
- if(result?.$kind!=='Transaction'||!t?.status?.success||t.digest!==digest||!Number.isFinite(t.timestampMs)||!t.checkpoint||norm(t.transaction?.sender)!==intent.wallet)fail();
+ if(result?.$kind!=='Transaction'||!t?.status?.success||t.digest!==digest||!Number.isSafeInteger(t.timestampMs)||!t.checkpoint||norm(t.transaction?.sender)!==intent.wallet)fail();
+ if(seasonEndsAt&&t.timestampMs>=Date.parse(seasonEndsAt))throw new MonthlyError('payment-after-season-end','This payment was confirmed after the UTC month closed and cannot recover that month’s check-in. Keep the transaction digest; do not pay again for this checkout.');
  if(t.timestampMs<Date.parse(intent.createdAt)-5000||t.timestampMs>Date.parse(intent.expiresAt)||t.timestampMs>now+5000)fail();
  let received=0n,spent=0n;
  try{for(const x of t.balanceChanges||[]){if(x.coinType===TREE_TYPE){if(norm(x.address)===RECIPIENT)received+=BigInt(x.amount);if(norm(x.address)===intent.wallet)spent+=BigInt(x.amount);}}}catch{fail();}

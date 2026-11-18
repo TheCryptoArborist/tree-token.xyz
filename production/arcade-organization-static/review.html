@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>TREE Arcade · Responsive layout review</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#08161a;color:#e9f3e5;font:14px/1.5 system-ui,sans-serif}header{position:sticky;top:0;z-index:2;padding:14px 20px;background:#10251fed;border-bottom:1px solid #51775b;display:flex;gap:12px 22px;align-items:center;flex-wrap:wrap}h1{margin:0;font-size:17px;color:#ecd995}label{display:flex;gap:8px;align-items:center}select,a{border:1px solid #789c70;border-radius:7px;padding:7px 10px;background:#18352a;color:#eaf6df;font:inherit}a{text-decoration:none}p{margin:0;color:#adc5b8;font-size:12px}main{padding:18px;display:grid;justify-items:center;overflow:auto}iframe{display:block;width:390px;max-width:none;height:calc(100vh - 125px);min-height:650px;border:1px solid #678768;border-radius:12px;background:#07171b}select:focus-visible,a:focus-visible{outline:2px solid #8ff4bd;outline-offset:3px}
+  </style>
+</head>
+<body>
+  <header>
+    <div><h1>TREE Arcade layout review</h1><p>The actual review page, shown at a selected CSS width.</p></div>
+    <label for="review-width">Viewport <select id="review-width"><option value="320">320 px · narrow phone</option><option value="390" selected>390 px · phone</option><option value="768">768 px · tablet</option><option value="1200">1200 px · desktop</option></select></label>
+    <label for="review-tab">Start tab <select id="review-tab"><option value="games">Games</option><option value="daily">Daily</option><option value="campaigns">Campaigns</option><option value="events">Events</option><option value="month">Monthly Progress</option><option value="badges">Badge Collection</option></select></label>
+    <a id="review-open" href="/play/" target="_blank" rel="noopener">Open full preview ↗</a>
+  </header>
+  <main><iframe id="arcade-review-frame" title="TREE Arcade responsive review" src="/play/#games" width="390" height="800"></iframe></main>
+  <script>
+    const widthSelect=document.getElementById('review-width');
+    const tabSelect=document.getElementById('review-tab');
+    const frame=document.getElementById('arcade-review-frame');
+    const params=new URLSearchParams(location.search);
+    // Review a known production candidate without publishing this helper there.
+    // Only this site's exact Netlify deploy-ID origin is accepted.
+    const candidate=params.get('candidate');
+    const candidateOrigin=/^[a-f0-9]{24}$/.test(candidate||'')?'https://'+candidate+'--tree-token.netlify.app':'';
+    const playURL=candidateOrigin+'/play/';
+    if(candidateOrigin){document.querySelector('header p').textContent='Production candidate '+candidate+' · visual review only; do not sign in or pay.';document.getElementById('review-open').href=playURL;}
+    const validWidths=['320','390','768','1200'];
+    const validTabs=['games','daily','campaigns','events','month','badges'];
+    if(validWidths.includes(params.get('width')))widthSelect.value=params.get('width');
+    if(validTabs.includes(params.get('tab')))tabSelect.value=params.get('tab');
+    function selectWidth(){frame.style.boxSizing='content-box';frame.style.width=widthSelect.value+'px';frame.setAttribute('width',widthSelect.value);}
+    function selectTab(){frame.src=playURL+'#'+tabSelect.value;}
+    widthSelect.addEventListener('change',selectWidth);
+    tabSelect.addEventListener('change',selectTab);
+    selectWidth();selectTab();
+  </script>
+</body>
+</html>
