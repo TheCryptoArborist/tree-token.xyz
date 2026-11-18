@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
-import {STI,SUI,TREE,POOL,CONFIG,INTEGRATE,parseSui,units,makeQuote,validateQuote,validatePool,requireBalance,parseFeed,buildPurchase,checkSimulation} from '../dapp/sti-purchase-core.js';
+import {STI,SUI,TREE,POOL,CONFIG,INTEGRATE,DEFAULT_MAX_IMPACT_BPS,MAX_REVIEWABLE_IMPACT_BPS,parseSui,units,makeQuote,validateQuote,validatePool,requiresImpactAcceptance,requireImpactAcceptance,requireBalance,parseFeed,buildPurchase,checkSimulation} from '../production/sti-purchase-static/sti-purchase-core.js';
 const now=1790052751000;
 const pool={id:POOL,coin_type_a:STI,coin_type_b:SUI,fee_rate:'2500',pool_status:{disable_swap:false},liquidity:'19616957339841',current_sqrt_price:'75118023302009553'};
 const raw={pool_address:POOL,current_sqrt_price:pool.current_sqrt_price,estimated_amount_in:'100000000',estimated_amount_out:'6007891535512',estimated_fee_amount:'250000',is_exceed:false,amount:'100000000',a2b:false,by_amount_in:true};
@@ -13,11 +13,42 @@ test('amounts are exact; rejects ambiguous and excessive precision inputs',()=>{
 test('rejects wrong pool, pair, fees, paused swaps and empty liquidity',()=>{
  for(const change of [{id:'0x1'},{coin_type_a:TREE},{coin_type_b:STI},{fee_rate:'3000'},{pool_status:{disable_swap:true}},{liquidity:'0'}])assert.throws(()=>validatePool({...pool,...change}));
 });
-test('protects full input, minimum output, and 3% price impact',()=>{
+test('protects full input, minimum output, and the 5% maximum price impact',()=>{
  const q=quote();assert.equal(q.minOut,5947812620156n);assert.ok(q.impactBps<300n);
  const spot=100000000n*(1n<<128n)/(BigInt(pool.current_sqrt_price)**2n);
- assert.throws(()=>makeQuote(pool,{...raw,estimated_amount_out:String(spot*9600n/10000n)},100000000n,now),/This quote has 4\.0[01]% price impact, above the 3% limit.*No purchase was submitted/);
+ assert.throws(()=>makeQuote(pool,{...raw,estimated_amount_out:String(spot*9400n/10000n)},100000000n,now),/This quote has 6\.0[01]% price impact, above the 5% maximum.*No purchase was submitted/);
  for(const change of [{is_exceed:true},{a2b:true},{by_amount_in:false},{pool_address:'0x1'},{amount:'1'},{estimated_amount_in:'90000000'},{estimated_amount_out:'0'},{estimated_amount_out:'100000000'}])assert.throws(()=>makeQuote(pool,{...raw,...change},100000000n,now));
+});
+// A unit-price pool gives exact basis-point boundaries without rounding noise.
+const boundaryQuote=impactBps=>makeQuote({...pool,current_sqrt_price:(1n<<64n).toString()},
+ {...raw,amount:'10000',estimated_amount_in:'10000',estimated_amount_out:String(10000n-impactBps),estimated_fee_amount:'25'},10000n,now);
+test('3% remains the default; 3.01% through 5% require exact quote acceptance',()=>{
+ assert.equal(DEFAULT_MAX_IMPACT_BPS,300n);assert.equal(MAX_REVIEWABLE_IMPACT_BPS,500n);
+ const atDefault=boundaryQuote(300n);
+ assert.equal(atDefault.impactBps,300n);assert.equal(requiresImpactAcceptance(atDefault),false);
+ assert.equal(requireImpactAcceptance(atDefault),atDefault);
+ for(const bps of [301n,350n,500n]){
+  const q=boundaryQuote(bps);assert.equal(q.impactBps,bps);assert.equal(requiresImpactAcceptance(q),true);
+  assert.throws(()=>requireImpactAcceptance(q),/Review and accept.*this quote/);
+  assert.equal(requireImpactAcceptance(q,q),q);
+ }
+ assert.throws(()=>boundaryQuote(501n),/5\.01%.*5% maximum/);
+});
+test('acceptance cannot transfer to an equal-looking, refreshed, or mutable quote',()=>{
+ const accepted=boundaryQuote(350n),refreshed=boundaryQuote(350n),copy=Object.freeze({...accepted}),mutable={...accepted};
+ assert.equal(Object.isFrozen(accepted),true);
+ assert.deepEqual(refreshed,accepted);
+ assert.throws(()=>requireImpactAcceptance(refreshed,accepted),/Review and accept/);
+ assert.throws(()=>requireImpactAcceptance(copy,accepted),/Review and accept/);
+ assert.throws(()=>requireImpactAcceptance(accepted,copy),/Review and accept/);
+ assert.throws(()=>requireImpactAcceptance(mutable,mutable),/Review and accept/);
+});
+test('malformed or excessive impact never bypasses the acceptance guard',()=>{
+ for(const impactBps of [undefined,null,NaN,350,'350',-1n,501n]){
+  const q=Object.freeze({...quote(),impactBps});
+  assert.throws(()=>validateQuote(q,q.amount,now),/Invalid purchase protection/);
+  assert.throws(()=>requireImpactAcceptance(q,q),/Invalid purchase protection/);
+ }
 });
 test('expired, future, changed amount or modified protection cannot execute',()=>{
  assert.equal(validateQuote(quote(),100000000n,now+29999).amount,100000000n);
@@ -49,6 +80,23 @@ test('locally constructed purchase spends only exact SUI through pinned Cetus fu
  assert.deepEqual(call.typeArguments,[STI,SUI]);assert.deepEqual(call.arguments.slice(0,2),[{id:CONFIG},{id:POOL}]);
  assert.deepEqual(call.arguments[5],{u64:'100000000'});assert.deepEqual(call.arguments[6],{u64:quote().minOut.toString()});
  assert.throws(()=>buildPurchase(Recorder,'not-a-wallet',quote(),now));
+});
+test('the observed 2 SUI / 3.50% quote requires acceptance without relaxing minimum output',()=>{
+ // Read-only observation on 2026-11-18: this verified pool returned the same
+ // 3.50% result as the live TREE panel; no transaction was submitted.
+ const observedPool={...pool,current_sqrt_price:'45139874400909872',liquidity:'24230343470405'};
+ const observedResponse={...raw,amount:'2000000000',estimated_amount_in:'2000000000',estimated_amount_out:'322321683251131',estimated_fee_amount:'5000000'};
+ const q=makeQuote(observedPool,observedResponse,2000000000n,now);
+ assert.equal(q.impactBps,350n);assert.equal(q.out,322321683251131n);assert.equal(q.minOut,319098466418619n);
+ class Unreachable {constructor(){assert.fail('An unaccepted quote must not construct a transaction.');}}
+ assert.throws(()=>buildPurchase(Unreachable,owner,q,now),/Review and accept/);
+ assert.throws(()=>buildPurchase(Unreachable,owner,q,now,Object.freeze({...q})),/Review and accept/);
+ const tx=buildPurchase(Recorder,owner,q,now,q);
+ assert.deepEqual(tx.split,{coin:'gas',amounts:[{u64:'2000000000'}]});
+ assert.deepEqual(tx.calls[1].arguments[6],{u64:'319098466418619'});
+ assert.throws(()=>buildPurchase(Recorder,owner,q,now+30000,q),/Quote expired/);
+ const unsafe=Object.freeze({...q,minOut:1n});
+ assert.throws(()=>buildPurchase(Recorder,owner,unsafe,now,unsafe),/Invalid purchase protection/);
 });
 const simulation=(changes,success=true)=>({Transaction:{effects:{status:{success}},balanceChanges:changes}});
 test('simulation must deliver minimum STI to owner with bounded SUI spend',()=>{
