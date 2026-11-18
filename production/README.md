@@ -3,8 +3,8 @@
 Current locked production is `6afd423531560084e7dd48e8`, published from source
 commit `e54531dfcb85cb712798f7e5890fb04017582d51`. Read
 `production/stats-market-release-20261118.json` for the complete **614-path**
-static inventory, **49 complete backend package records**, five schedules,
-and candidate/canonical verification fingerprints. This is the newest live
+static inventory and preservation fingerprints covering **49 complete backend
+package records**, five schedules, and candidate/canonical verification. This is the newest live
 preservation baseline; capture it afresh before any subsequent release.
 
 Stats at `/dapp/#stats` now embeds the same Noodles TREE/USD chart as Market
