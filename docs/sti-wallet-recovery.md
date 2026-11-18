@@ -34,7 +34,7 @@ release versions. The new independent recovery loader imports the widget once.
 
 ## Release boundary
 
-The current baseline is locked deployment `6afddc74d6c8647c67efdbad`, with
+The reviewed release baseline was locked deployment `6afddc74d6c8647c67efdbad`, with
 615 static paths, 49 complete backend package records and five schedules.
 The source release record is `production/sti-purchase-release-20261118.json`.
 
@@ -71,3 +71,39 @@ The narrow repair follows their guidance on shared connection state, loading
 states and explicit wallet actions, verified against the existing integration.
 It does not require an SDK migration. The exact original browser failure remains
 unverified; these checks demonstrate recovery from the reproduced loading gaps.
+
+## Published release and final verification
+
+Deploy `6afde69b28000c929ce7a0a4` was published and locked at
+`2026-11-18T17:57:21.131Z` (11:57 a.m. America/Chicago), from
+`0a354794c782d4f6c83e17b49e13b7e2577df929` through PR220.
+
+All 82 focused tests passed. Candidate and canonical browser checks passed all
+12 scenarios at 320, 390, 768 and 1363 CSS pixels. The preservation inventory
+contains 616 static paths: two existing paths changed, one was added and 613
+remained unchanged, with 49 complete backend records and five schedules retained.
+Complete provider/runtime records and protected configuration also matched.
+
+Publication run `44363664888` timed out after publication while checking
+canonical delivery. It must not be recorded as an end-to-end pass. Running the
+unchanged `verifyDelivery` locally subsequently passed at
+`2026-11-18T18:00:16.959Z`. Read-only audit workflow `44365536121`, introduced by
+PR221, passed at `2026-11-18T18:05:39.622Z`, with zero remote mutations. The audit
+pins the published deployment, source and candidate report, checks all delivery
+and preservation evidence, and verifies the publication and lock again after
+the canonical browser checks. Four dedicated audit guard tests also passed.
+
+Final report: `production/sti-wallet-recovery-release-20261118.json`.
+Report SHA-256: `c5317ebcf3d418b39578c5ad9e4c9037cfff517ab51676e9c396363653d142d0`.
+The input proof remains `production/sti-wallet-recovery-candidate-20261118.json`;
+its original verification phase must not be mistaken for publication completion.
+
+A separate manual canonical check opened the wallet picker through normal
+navigation, without selecting or connecting a wallet or initiating a transaction.
+Screenshot: `docs/sti-wallet-recovery-live-20261118.jpg`.
+
+The original browser-session failure remains unproven. These checks demonstrate
+recovery from reproduced loading failures. The live MystenLabs/skills README and
+the frontend files listed above informed the repair, with guidance checked
+against the existing integration. No SDK migration or shared-wallet rewrite was
+performed.
