@@ -259,7 +259,7 @@ try {
       assert.equal(await page.locator('#stiQuoteDetails').isVisible(),false);
       result.cases.push('Expiry and panel close discard quote acceptance and prepared transaction');
       await quote(page,'3');
-      assert.match(await page.locator('#stiPurchaseStatus').textContent(),/above the 5% limit/);
+      assert.match(await page.locator('#stiPurchaseStatus').textContent(),/above the 5% maximum/);
       assert.equal(await page.locator('#stiQuoteDetails').isVisible(),false);
       assert.equal(await page.locator('#stiBuyButton').isEnabled(),false);
       assert.equal(await page.evaluate(()=>window.__testSignCalls),1);
