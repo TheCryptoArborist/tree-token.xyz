@@ -1,3 +1,13 @@
+## Announcement signing page published, November 17 US Central
+
+`/play/multichaintest/original/reserve/` is live on locked deploy
+`6afd22ad90e2e583fed38ea7`. All 607 previous files, 49 complete backend packages
+and five schedules were preserved. NFT #2720 remains intact in the Sui vault;
+the actual backing announcement still awaits Peter's separate Slush approval.
+The release sent no packet and charged no USDT. Source receipt and destination
+delivery are explicitly separate. See [release proof](../original-sui-reserve-page-release.json)
+and [announcement scope/guidance](../original-sui-reserve-flow.md).
+
 ## Actual original #2720 deposit confirmed, 2026-11-17
 
 Receipt `GLXLAmCD3DrbdK55NXmppr7uPEWDdrYYF9JBd3C5XBvE` is verified against

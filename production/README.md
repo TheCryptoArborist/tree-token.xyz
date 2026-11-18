@@ -1,3 +1,51 @@
+# Current production — original backing announcement page, November 17 US Central
+
+Locked ready deploy `6afd22ad90e2e583fed38ea7`, verified at 04:00:17 UTC on
+2026-11-18 (22:00:17 CST November 17), source
+`8693f15f92caca5cb696f0276e2c586bd22eba2a`, workflow `44234096537`.
+Canonical isolated page: `/play/multichaintest/original/reserve/`.
+
+Exactly three files were added. All 607 existing paths remain byte-identical;
+total inventory is 610 static paths, 49 complete backend packages and five
+schedules. Full package/provider/runtime records, protected configuration and
+environment fingerprints, canonical delivery and production lock were verified.
+Release evidence: `docs/multichain/original-sui-reserve-page-release.json`.
+
+The actual original NFT #2720 deposit is confirmed. The new page prepares a
+separate Sui approval sending exactly one version-2 kind-1 LayerZero backing
+announcement, nonce one, to the verified BNB adapter. NFT #2720 remains intact
+inside its Sui vault. No NFT, admin capability, upgrade, mint, stablecoin payment,
+security change or purchase activation is included. No chain transaction or
+actual packet was submitted by the assistant during this publication.
+
+Fresh mainnet preflight verifies all signed source/deposit receipts, live source
+custody/security, BNB adapter/pass binding/runtime and all four actual route
+receipts, with the pass paused and unminted. It freshly quotes and simulates
+the exact original generic send, validating independent GUID/packet encoding,
+all three required DVNs, executor, worker payees, allowed effects and complete
+SUI balance changes. Reference quote 72,951,105 MIST plus net gas 4,053,443 MIST,
+total 77,004,548 MIST (0.077004548 SUI). Wallet selects final gas.
+
+Receipt recovery verifies the source packet and live announced vault/nonce,
+with full NFT metadata and protected authorities. It intentionally makes no BNB
+delivery claim. Delivery verification is required before purchase activation.
+Web Locks, durable pending state, wallet account/network/epoch, consent and
+fresh matching fee/gas checks guard handoff. Ambiguous wallet responses remain
+pending; explicit rejection permits retry. No duplicate send is offered.
+
+407 focused tests including 30 new announcement tests and the preserved
+production/preview build passed. The exact browser bundle reproduced byte-for-byte.
+All CI passed; automated review of `6300542675997c5bf592fa4a83a72ecd5df4f173`
+completed with no findings. Canonical browser inspection verified separate native
+message/gas/total fields, correct original backing/adapter/sender identities,
+visible connection and adjacent recovery controls, missing-Slush feedback,
+empty-receipt validation and disabled signing even with consent while disconnected.
+Test consent was cleared. No wallet signature requested and no Slush reputation
+clearance asserted. See `docs/multichain/original-sui-reserve-flow.md` for exact
+scope, invariants, limitations and current Mysten guidance used.
+
+---
+
 # Current production — original NFTree deposit page, 2026-11-17
 
 Locked ready deploy `6afce679fb554257af0b2c57`, verified at 23:43:26 UTC, source
