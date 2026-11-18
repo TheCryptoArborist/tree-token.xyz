@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "result": "passed",
+  "candidateId": "6afe0141248c1062e8414ed7",
+  "sourceCommit": "09f77e96556bbbb39a8b1eee26c2cf712d4f3b9b",
+  "checkedAt": "2026-11-18T20:03:36.982Z",
+  "origin": "https://tree-token.xyz",
+  "checks": [
+    {
+      "failedImages": [],
+      "overflow": 0,
+      "tab": "Games",
+      "url": "https://tree-token.xyz/play/",
+      "viewport": 1363,
+      "visibleHeadings": [
+        "Choose your game.",
+        "Standalone games",
+        "Garden Battles",
+        "New to TREE Arcade?",
+        "Choose your game",
+        "Check your access",
+        "Join the adventure",
+        "Tree Force ’89: Defend the Canopy"
+      ]
+    },
+    {
+      "deadline": [],
+      "failedImages": [],
+      "overflow": 0,
+      "tab": "Daily",
+      "url": "https://tree-token.xyz/play/#daily",
+      "viewport": 1363,
+      "visibleHeadings": [
+        "Daily check-in",
+        "Today’s tasks",
+        "Daily check-in",
+        "1. Complete a game",
+        "2. Share your results",
+        "Have your say. Stay connected.",
+        "Choose the next spotlight",
+        "Stay connected"
+      ]
+    },
+    {
+      "deadline": [],
+      "failedImages": [],
+      "overflow": 0,
+      "tab": "Campaigns",
+      "url": "https://tree-token.xyz/play/#campaigns",
+      "viewport": 1363,
+      "visibleHeadings": [
+        "Find your next challenge.",
+        "Get started in four simple steps"
+      ]
+    },
+    {
+      "deadline": [],
+      "failedImages": [],
+      "overflow": 0,
+      "tab": "Events 25 SUI",
+      "url": "https://tree-token.xyz/play/#events",
+      "viewport": 1363,
+      "visibleHeadings": [
+        "TREE Force ’89: Defend the Canopy"
+      ]
+    },
+    {
+      "deadline": [
+        {
+          "text": "December 1, 2026 · 00:00 UTC"
+        }
+      ],
+      "failedImages": [],
+      "overflow": 0,
+      "tab": "Badge Collection",
+      "url": "https://tree-token.xyz/play/#badges",
+      "viewport": 1363,
+      "visibleHeadings": [
+        "November badges",
+        "November · Autumn Guardians",
+        "Make your Tree profile picture",
+        "December · Christmas Guardians",
+        "Your earned badges",
+        "Acorn Scout"
+      ]
+    },
+    {
+      "deadline": [
+        {
+          "text": "December 1, 2026 · 00:00 UTC"
+        }
+      ],
+      "failedImages": [],
+      "overflow": 0,
+      "tab": "Monthly Progress",
+      "url": "https://tree-token.xyz/play/#month",
+      "viewport": 1363,
+      "visibleHeadings": [
+        "November badges",
+        "Your Monthly Progress",
+        "Monthly progress"
+      ]
+    }
+  ],
+  "monthlyDeepLinkReloadPassed": true,
+  "recoveryDeadlineDisclosureObserved": true,
+  "noWalletOrPaymentActions": true,
+  "screenshots": [
+    "docs/arcade-games-live-20261118.jpg",
+    "docs/arcade-monthly-live-20261118.jpg",
+    "docs/arcade-recovery-live-20261118.jpg"
+  ]
+}
