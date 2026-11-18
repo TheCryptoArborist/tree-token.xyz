@@ -1,0 +1,111 @@
+/* Scoped presentation overlay. Existing game, wallet and payment styles remain. */
+.arcade-organization-page #arcade-daily-growth:not([data-arcade-view="month"]) > [data-monthly-overview],
+.arcade-organization-page #arcade-daily-growth:not([data-arcade-view="month"]) > .arcade-month-deadline { display:none; }
+.arcade-organization-page [data-arcade-view="games"] { margin-bottom:18px; }
+.arcade-organization-page .floor-heading { align-items:center; gap:18px; }
+.arcade-organization-page .arcade-game-shortcuts { margin:0; gap:8px; justify-content:flex-end; }
+.arcade-organization-page .arcade-game-shortcuts button { min-height:42px; padding:10px 13px; border:1px solid #74b99b66; border-radius:9px; background:#102b25; color:#d8f1e4; font:700 .76rem/1.4 system-ui; cursor:pointer; }
+.arcade-organization-page .arcade-game-shortcuts #arcade-checkin-shortcut { color:#74f0b8; border-color:#50dc9c80; }
+.arcade-organization-page .arcade-game-shortcuts button:hover { background:#193d31; border-color:#74f0b8; }
+.arcade-organization-page .month-progress-summary { margin:0 18px 16px; background:linear-gradient(115deg,#17382c,#102329); border-color:#55775c; }
+.arcade-organization-page .month-progress-summary .month-summary-grid { gap:18px; }
+.arcade-organization-page .arcade-month-deadline { margin:18px; }
+.arcade-organization-page #growth-today-panel > .growth-strip { padding:18px; border:1px solid #35e89545; border-radius:14px; margin-bottom:14px; }
+.arcade-organization-page #growth-today-panel > .growth-status { margin:0 0 18px; }
+.arcade-organization-page #arcade-community-home { margin-top:28px; padding-top:24px; border-top:1px solid #3e655c; }
+.arcade-organization-page #arcade-community-home[hidden] { display:none!important; }
+.arcade-community-heading { margin-bottom:18px; }
+.arcade-community-heading h3 { color:#eff7e7; margin:5px 0 8px; font-size:1.22rem; }
+.arcade-community-heading p:last-child { color:#aec5c0; font-size:.86rem; line-height:1.6; margin:0; }
+.arcade-organization-page #arcade-community-home .quest-card-grid { grid-template-columns:repeat(2,minmax(0,1fr)); align-items:start; }
+.arcade-organization-page #arcade-community-home .community-vote-compact { max-width:none; }
+.arcade-organization-page #arcade-community-home .guided-card { border:0; margin:0; background:transparent; }
+.arcade-organization-page .arcade-featured-event { margin-top:28px; }
+
+.arcade-organization-page #growth-campaigns-panel .quest-board-heading { margin-bottom:18px; }
+.arcade-organization-page #growth-campaigns-panel .quest-board-heading h3 { font-size:clamp(1.6rem,3vw,2.15rem); line-height:1.16; margin:8px 0 12px; color:#f2f8e9; }
+.arcade-organization-page #growth-campaigns-panel .quest-board-heading p:last-child { max-width:760px; color:#bfd1c8; font-size:.94rem; line-height:1.7; }
+.arcade-campaign-feature { border:1px solid #76975c80; border-radius:17px; padding:24px; margin-bottom:22px; background:radial-gradient(ellipse at 90% 0,#d9be5120,transparent 55%),linear-gradient(120deg,#16392b,#0a1e24); }
+.arcade-campaign-state { display:inline-block; border:1px solid #a2924f88; border-radius:999px; padding:6px 10px; background:#473d1e55; color:#f2d991; font-size:.61rem; font-weight:800; letter-spacing:.08em; }
+.arcade-campaign-feature__intro h4 { margin:13px 0 8px; font-size:1.25rem; color:#f0f5df; }
+.arcade-campaign-feature p { color:#bfcec2; font-size:.84rem; line-height:1.7; }
+.arcade-campaign-feature__intro p { margin:0; max-width:760px; }
+.arcade-campaign-event { display:flex; align-items:center; gap:22px; padding:22px 0; margin-top:12px; }
+.arcade-campaign-event img { width:112px; height:112px; object-fit:contain; flex:none; }
+.arcade-campaign-event h4 { color:#f5dda0; font-size:1.16rem; margin:8px 0; }
+.arcade-campaign-event p { margin:0; }
+.arcade-campaign-event .growth-eyebrow { color:#75e5b0; font-size:.6rem; }
+.arcade-campaign-path { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); list-style:none; counter-reset:campaign-step; padding:0; margin:0 0 20px; border:1px solid #72927b55; border-radius:12px; overflow:hidden; }
+.arcade-campaign-path li { position:relative; padding:16px 14px 16px 43px; counter-increment:campaign-step; background:#071d1e66; }
+.arcade-campaign-path li + li { border-left:1px solid #72927b55; }
+.arcade-campaign-path li::before { content:counter(campaign-step); position:absolute; left:15px; top:17px; color:#86e3ad; font:800 .85rem/1.4 system-ui; }
+.arcade-campaign-path strong,.arcade-campaign-path span { display:block; }
+.arcade-campaign-path strong { color:#e4eedc; font-size:.83rem; margin-bottom:5px; }
+.arcade-campaign-path span { color:#adc3b6; font-size:.76rem; line-height:1.5; }
+.arcade-campaign-actions { display:flex; flex-wrap:wrap; gap:10px; }
+.arcade-campaign-actions a { display:inline-flex; align-items:center; justify-content:center; gap:10px; min-height:46px; padding:12px 16px; border-radius:9px; text-decoration:none; font-size:.82rem; font-weight:800; }
+.arcade-campaign-feature .arcade-campaign-footnote { margin:14px 0 0; color:#a8bdb1; font-size:.73rem; }
+.arcade-signin-help { display:flex; align-items:center; flex-wrap:wrap; gap:7px 15px; color:#a6bfb5; font-size:.76rem; line-height:1.5; margin:10px 0 15px; }
+.arcade-signin-help a { color:#8beab7; text-underline-offset:3px; font-weight:750; min-height:30px; display:inline-flex; align-items:center; }
+.arcade-organization-page #growth-campaigns-panel > .quest-toolbar { margin-bottom:18px; }
+.arcade-activity-section { margin:12px 0; border:1px solid #5f806b88; border-radius:13px; background:linear-gradient(110deg,#142d24,#101e24); overflow:hidden; }
+.arcade-activity-section > summary { display:flex; justify-content:space-between; gap:18px; align-items:center; cursor:pointer; padding:18px 20px; list-style:none; }
+.arcade-activity-section > summary::-webkit-details-marker { display:none; }
+.arcade-activity-section > summary strong { display:block; color:#e6dbac; font-size:.92rem; margin-bottom:6px; }
+.arcade-activity-section > summary > span > span { color:#acbfb4; font-size:.78rem; line-height:1.5; display:block; }
+.arcade-disclosure-icon { color:#8ce7b7; font-size:1.4rem; flex:none; transition:transform .15s ease; }
+.arcade-activity-section[open] > summary { border-bottom:1px solid #54776266; background:#1b382b66; }
+.arcade-activity-section[open] .arcade-disclosure-icon { transform:rotate(45deg); }
+.arcade-organization-page .arcade-activity-section > .guided-card,
+.arcade-organization-page .arcade-activity-section > .quest-tile { margin:0; border:0; border-radius:0; box-shadow:none; }
+.arcade-organization-page .arcade-activity-section .guided-legacy { padding-top:0; }
+.arcade-organization-page .arcade-activity-section .quest-cover { min-height:0; }
+
+.arcade-organization-page .monthly-actions { display:flex; flex-wrap:wrap; gap:12px; margin:16px 0 10px; align-items:flex-start; }
+.arcade-organization-page .growth-panel .monthly-actions > details { flex:1 1 260px; margin:0; padding:0; border:1px solid #668f766f; border-radius:12px; background:linear-gradient(115deg,#163329,#0b2026); box-shadow:0 5px 18px #0002; overflow:hidden; }
+.arcade-organization-page .growth-panel .monthly-actions > .monthly-recovery { border-color:#c4a75577; background:linear-gradient(115deg,#303223,#13242a); }
+.arcade-organization-page .growth-panel .monthly-actions > details[open] { flex-basis:100%; }
+.arcade-organization-page .growth-panel .monthly-actions summary { display:flex; gap:12px; align-items:center; min-height:76px; box-sizing:border-box; padding:15px 17px; font-size:.86rem; list-style:none; color:#eef7e5; }
+.arcade-organization-page .monthly-actions summary::-webkit-details-marker { display:none; }
+.arcade-organization-page .growth-panel .monthly-actions summary span { float:none; padding:0; margin:0; font-size:inherit; }
+.arcade-organization-page .monthly-action-copy { display:flex; flex:1; min-width:0; flex-direction:column; gap:6px; }
+.arcade-organization-page .growth-panel .monthly-actions .monthly-action-title { font-size:.88rem; font-weight:800; line-height:1.35; color:#edf6df; }
+.arcade-organization-page .growth-panel .monthly-actions .monthly-action-description { display:block; font-size:.73rem; font-weight:400; color:#b0c9bc; line-height:1.45; }
+.arcade-organization-page .growth-panel .monthly-actions .monthly-action-price { flex:none; border:1px solid #d8bc6270; border-radius:8px; padding:7px 9px; background:#4a3e2266; color:#f5d987; font-size:.68rem; font-weight:800; text-align:center; line-height:1.4; white-space:nowrap; }
+.arcade-organization-page .monthly-action-price small { display:block; font-size:.61rem; font-weight:500; color:#d2c49e; }
+.arcade-organization-page .growth-panel .monthly-actions .monthly-action-chevron { flex:none; color:#91ddb4; font-size:1.3rem; transform-origin:center; transition:transform .15s ease; }
+.arcade-organization-page .monthly-actions details[open] .monthly-action-chevron { transform:rotate(180deg); }
+.arcade-organization-page .monthly-actions details[open] summary { border-bottom:1px solid #70947955; }
+.arcade-organization-page .monthly-actions details > :not(summary) { margin-left:17px; margin-right:17px; }
+.arcade-organization-page .monthly-actions details > :last-child { margin-bottom:17px; }
+.arcade-organization-page .monthly-actions summary:hover,.arcade-activity-section > summary:hover { background:#74be8d0e; }
+.arcade-organization-page .monthly-actions summary:focus-visible,
+.arcade-activity-section > summary:focus-visible,
+.arcade-organization-page .arcade-campaign-actions a:focus-visible,
+.arcade-organization-page .arcade-game-shortcuts button:focus-visible { outline:2px solid #a5f7c9; outline-offset:-4px; }
+
+@media(max-width:780px) {
+  .arcade-organization-page .floor-heading { align-items:flex-start; flex-direction:column; gap:14px; }
+  .arcade-organization-page .arcade-game-shortcuts { justify-content:flex-start; }
+  .arcade-organization-page .month-progress-summary { margin:0 12px 14px; padding:15px; }
+  .arcade-organization-page .arcade-month-deadline { margin:14px 12px; }
+  .arcade-organization-page #arcade-community-home .quest-card-grid { grid-template-columns:1fr; }
+}
+@media(max-width:560px) {
+  .arcade-campaign-feature { padding:17px; }
+  .arcade-campaign-event { gap:13px; align-items:flex-start; }
+  .arcade-campaign-event img { width:72px; height:82px; }
+  .arcade-campaign-event h4 { font-size:1rem; }
+  .arcade-campaign-path { grid-template-columns:1fr; }
+  .arcade-campaign-path li { padding:12px 13px 12px 40px; }
+  .arcade-campaign-path li::before { top:12px; }
+  .arcade-campaign-path li + li { border-left:0; border-top:1px solid #72927b55; }
+  .arcade-campaign-actions a { width:100%; }
+  .arcade-activity-section > summary { padding:16px; gap:12px; }
+  .arcade-organization-page .growth-panel .monthly-actions summary { padding:14px 12px; gap:9px; }
+  .arcade-organization-page .growth-panel .monthly-actions .monthly-action-title { font-size:.8rem; }
+  .arcade-organization-page .growth-panel .monthly-actions .monthly-action-description { font-size:.68rem; }
+  .arcade-organization-page .month-progress-summary .month-summary-grid { grid-template-columns:1fr; gap:11px; }
+}
+@media(prefers-reduced-motion:reduce) { .arcade-disclosure-icon,.arcade-organization-page .monthly-actions .monthly-action-chevron { transition:none; } }
+@media(forced-colors:active) { .arcade-campaign-feature,.arcade-activity-section,.arcade-organization-page .monthly-actions details { border:1px solid CanvasText; } }

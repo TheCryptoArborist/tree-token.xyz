@@ -1,0 +1,35 @@
+name: Verify Arcade organization
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'production/arcade-organization-static/**'
+      - 'scripts/arcade-organization.js'
+      - 'scripts/arcade-season-deadline.js'
+      - 'scripts/arcade-preview-readonly.js'
+      - 'scripts/build-feature-preview.mjs'
+      - 'styles/arcade-organization.css'
+      - 'styles/arcade-season-deadline.css'
+      - 'tests/arcade-organization.test.mjs'
+      - 'tests/arcade-season-deadline.test.mjs'
+      - '.github/workflows/verify-arcade-organization.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  arcade-organization:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: vendor/arcade-monthly/package-lock.json
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+        working-directory: vendor/arcade-monthly
+      - run: node --test tests/arcade-season-deadline.test.mjs tests/arcade-organization.test.mjs
+      - run: npm run build:preview
+      - run: git diff --check
