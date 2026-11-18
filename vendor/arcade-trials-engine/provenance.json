@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "repository": "https://github.com/TheCryptoArborist/gardenbattles",
+  "commit": "4a27b3ac73ec815c9e28c23a6b0d07f09ee73794",
+  "sources": [
+    {
+      "path": "upstream/practiceBattle.ts",
+      "sourcePath": "apps/garden-battles/battle-gardenfrontend/src/lib/practiceBattle.ts",
+      "gitBlobSha1": "f6da78b4756abd8fe02482b7a2f198cf577bab07",
+      "sha256": "da64c32e69e47bbb09c861917491244f2b130526060375ce60d412ed175b8c82"
+    },
+    {
+      "path": "upstream/arboristTrials.ts",
+      "sourcePath": "apps/garden-battles/battle-gardenfrontend/src/lib/arboristTrials.ts",
+      "gitBlobSha1": "f3f79ec5b119b352b9d90f10e88a800d864b0271",
+      "sha256": "6c401a57d45415a2fac689d79fdad3c302cedc25044a0ef881db5affc8062e30"
+    },
+    {
+      "path": "upstream/trial-engine.ts",
+      "sourcePath": "apps/garden-battles/shared/trial-engine.ts",
+      "gitBlobSha1": "93f7e2d0a789b8f47166b1bd720bdf5ff7a728cb",
+      "sha256": "3fa495eb6d08e36869f555f7606bca953c4181fb6bd46079a18338ee809d27a9"
+    },
+    {
+      "path": "upstream/arborist-trials.ts",
+      "sourcePath": "apps/garden-battles/shared/arborist-trials.ts",
+      "gitBlobSha1": "ce05e6ba55cfac5a936c8a538432a3cf45bf75d5",
+      "sha256": "54bf14eb72b1a1a1a16db24532e2048cfa876e08f8a524e1ae2d7122be0d5f35"
+    },
+    {
+      "path": "upstream/sui-config.ts",
+      "sourcePath": "apps/garden-battles/battle-gardenfrontend/src/lib/sui-config.ts",
+      "gitBlobSha1": "207696c3827ceff1de0cc08eafebd1d628cdacb7",
+      "sha256": "74de482a3324b29d34e30f297fa0b42255454563a5224836f7eb35b3d3c61c3b"
+    }
+  ],
+  "transformations": [
+    "Erase TypeScript types with Node 24 stripTypeScriptTypes(mode=strip).",
+    "Remove whitespace-only padding lines left by type erasure; retain all original nonblank runtime lines.",
+    "Redirect only runtime imports to local generated modules; type-only UI imports erase automatically.",
+    "Extract MOVE_LABELS, MoveType, MoveMeta and MOVE_META from sui-config.ts, from its Short display label comment to before SELF_GROWTH_MOVE_IDS. Do not copy chain configuration into the runtime.",
+    "Preserve all game calculations, seeded RNG consumption (including log-entry random draws), portable shuffle, bot policy and round rules. Date.now remains upstream log metadata only; the adapter excludes it from replay results.",
+    "The adapter enforces portable-v1 and four standard cards, seeds every battle, and exposes no fifth-card, paid-advantage or debug option."
+  ],
+  "runtime": [
+    {
+      "path": "runtime/practice-battle.mjs",
+      "sha256": "5285d8898110e87e9f4d81da0f893dad7e6106f511db1be0ecae8ad866f7260f"
+    },
+    {
+      "path": "runtime/trial-game.mjs",
+      "sha256": "cda1cb3fbfb7268378f9571db13244c615b7cbc044dcb9974175fa126b367333"
+    },
+    {
+      "path": "runtime/trial-engine.mjs",
+      "sha256": "dcf6ac85a35a541e236bbaa99565daabb2fbbd98d604fd0704eabbb518980e04"
+    },
+    {
+      "path": "runtime/challenge-rules.mjs",
+      "sha256": "4d20cfafb98fd1eb178ecd16bf198832cb53d7c97cbb1cf14e47ba1c79222c25"
+    },
+    {
+      "path": "runtime/card-catalog.mjs",
+      "sha256": "1e133cf17ae3f440e1d8cee3a156c5582ef202999299a83ca25a39b71bc29d4b"
+    }
+  ],
+  "sourceHash": "9623279e03ddab211d51e26f89040afc0b8aee4ff86fc19af53243096215ca00",
+  "liveParityClaimed": false
+}

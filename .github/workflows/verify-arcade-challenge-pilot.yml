@@ -1,0 +1,37 @@
+name: Verify Arcade challenge pilot
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'netlify/challenge-functions/**'
+      - 'scripts/arcade-campaigns/**'
+      - 'vendor/arcade-trials-engine/**'
+      - 'vendor/arcade-events/package.json'
+      - 'vendor/arcade-events/package-lock.json'
+      - 'supabase/migrations/20261118223908_arcade_challenge_pilot.sql'
+      - 'tests/arcade-trials-adapter.test.mjs'
+      - 'tests/arcade-challenge-pilot-*.test.mjs'
+      - 'tests/fixtures/arcade-challenge-pilot/**'
+      - 'docs/arcade-challenge-pilot.md'
+      - '.github/workflows/verify-arcade-challenge-pilot.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  challenge-pilot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: vendor/arcade-events/package-lock.json
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+        working-directory: vendor/arcade-events
+      - run: node --test tests/arcade-trials-adapter.test.mjs tests/arcade-challenge-pilot-database.test.mjs tests/arcade-challenge-pilot-service.test.mjs tests/arcade-campaign-foundation.test.mjs
+      - run: node scripts/arcade-campaigns/pilot-demo.mjs
+      - run: node scripts/arcade-campaigns/package-pilot.mjs
+      - run: git diff --check

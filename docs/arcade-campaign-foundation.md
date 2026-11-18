@@ -14,6 +14,13 @@ player who meets the published target**. More successful attempts do not buy or
 earn more shares. Completing a campaign does not add an Event entry requirement.
 Monthly check-in rewards and the existing Event terms are separate decisions.
 
+The next implemented stage is now documented in
+[`arcade-challenge-pilot.md`](./arcade-challenge-pilot.md): a versioned Arborist
+Trials verifier, authenticated per-move service and private transactional pilot
+ledger. It is locally tested and explicitly nonpaying; hosted activation,
+canonical identity review and a funded campaign remain pending. This offline
+allocator keeps its original input-assertion and nonpayable boundaries.
+
 ## What is ready to review
 
 | File | Purpose |

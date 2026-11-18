@@ -1,0 +1,39 @@
+{
+  "classification": "synthetic-no-prize-fixtures",
+  "fastWin": {
+    "seedHex": "0000000000000000000000000000000000000000000000000000000000000005",
+    "dateKey": "2026-11-18",
+    "moves": [19, 27, 19],
+    "expected": {"completed": true, "won": true, "score": 16375, "rounds": 3, "turns": 5, "playerGrowth": 50, "botGrowth": 19, "uniqueMoves": 2, "specialtyBonus": 0}
+  },
+  "loss": {
+    "seedHex": "0000000000000000000000000000000000000000000000000000000000000000",
+    "dateKey": "2026-11-18",
+    "moves": [9, 30, 9, 30, 9, 30, 9, 30, 9, 30, 9, 30, 9, 30, 9, 30, 9, 30],
+    "expected": {"completed": true, "won": false, "score": 640, "rounds": 18, "turns": 36, "playerGrowth": 44, "botGrowth": 50, "uniqueMoves": 2, "specialtyBonus": 0}
+  },
+  "diagnosis": {
+    "seedHex": "0000000000000000000000000000000000000000000000000000000000000000",
+    "dateKey": "2026-11-19",
+    "moves": [21, 14, 21, 14, 21, 14],
+    "expected": {"completed": true, "won": true, "score": 16050, "rounds": 6, "turns": 11, "playerGrowth": 50, "botGrowth": 32, "uniqueMoves": 2, "specialtyBonus": 600}
+  },
+  "toolbelt": {
+    "seedHex": "0000000000000000000000000000000000000000000000000000000000000000",
+    "dateKey": "2026-11-21",
+    "moves": [16, 23, 15, 8, 23, 16, 15, 8, 23, 16, 15],
+    "expected": {"completed": true, "won": true, "score": 15600, "rounds": 11, "turns": 21, "playerGrowth": 50, "botGrowth": 42, "uniqueMoves": 4, "specialtyBonus": 1200}
+  },
+  "storm": {
+    "seedHex": "0000000000000000000000000000000000000000000000000000000000000000",
+    "dateKey": "2026-11-23",
+    "moves": [17, 10, 17, 10, 17, 10, 17, 10, 17, 10, 17],
+    "expected": {"completed": true, "won": true, "score": 15500, "rounds": 11, "turns": 21, "playerGrowth": 50, "botGrowth": 30, "uniqueMoves": 2, "specialtyBonus": 1000}
+  },
+  "ipm": {
+    "seedHex": "0000000000000000000000000000000000000000000000000000000000000000",
+    "dateKey": "2026-11-24",
+    "moves": [12, 23, 12, 23, 12, 23],
+    "expected": {"completed": true, "won": true, "score": 16450, "rounds": 6, "turns": 11, "playerGrowth": 50, "botGrowth": 32, "uniqueMoves": 2, "specialtyBonus": 1000}
+  }
+}
