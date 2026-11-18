@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 1,
+  "result": "passed",
+  "sourceCommit": "ac7005ff02bdb7d3e45ae71312a2ae4135026205",
+  "sourceTree": "3d436765752955fe0c7475420e9dd11b8df967e4",
+  "candidateId": "6afe22a623fe04c7a4a9d0c0",
+  "planSha256": "d348a2c344d3f079abdb611b1ec23988bef49362d8cf1ba4c98a6c8df7d662f8",
+  "origin": "https://6afe22a623fe04c7a4a9d0c0--tree-token.netlify.app",
+  "checkedAt": "2026-11-18T22:15:32.501Z",
+  "viewportWidths": [
+    320,
+    390,
+    1363
+  ],
+  "checks": {
+    "games": true,
+    "daily": true,
+    "campaigns": true,
+    "events": true,
+    "monthlyProgress": true,
+    "badgeCollection": true,
+    "mobileLayout": true,
+    "noMissingAssets": true,
+    "countdownUTC": true
+  },
+  "noWalletOrPaymentActions": true,
+  "observations": {
+    "checkedAt": "2026-11-18T22:15:32.501Z",
+    "candidateId": "6afe22a623fe04c7a4a9d0c0",
+    "desktop": [
+      {
+        "brokenVisibleImages": [],
+        "labels": [
+          {
+            "background": "rgb(22, 60, 43)",
+            "color": "rgb(173, 243, 197)",
+            "text": "LIVE"
+          },
+          {
+            "background": "rgb(43, 33, 60)",
+            "color": "rgb(227, 207, 255)",
+            "text": "PREVIEW"
+          },
+          {
+            "background": "rgb(43, 33, 60)",
+            "color": "rgb(227, 207, 255)",
+            "text": "PREVIEW"
+          },
+          {
+            "background": "rgb(22, 60, 43)",
+            "color": "rgb(173, 243, 197)",
+            "text": "LIVE"
+          },
+          {
+            "background": "rgb(22, 60, 43)",
+            "color": "rgb(173, 243, 197)",
+            "text": "LIVE"
+          },
+          {
+            "background": "rgb(43, 33, 60)",
+            "color": "rgb(227, 207, 255)",
+            "text": "PREVIEW"
+          },
+          {
+            "background": "rgb(27, 43, 43)",
+            "color": "rgb(187, 200, 198)",
+            "text": "COMING SOON"
+          },
+          {
+            "background": "rgb(27, 43, 43)",
+            "color": "rgb(187, 200, 198)",
+            "text": "COMING SOON"
+          },
+          {
+            "background": "rgb(22, 60, 43)",
+            "color": "rgb(173, 243, 197)",
+            "text": "LIVE"
+          },
+          {
+            "background": "rgb(22, 60, 43)",
+            "color": "rgb(173, 243, 197)",
+            "text": "LIVE"
+          },
+          {
+            "background": "rgb(22, 60, 43)",
+            "color": "rgb(173, 243, 197)",
+            "text": "LIVE"
+          },
+          {
+            "background": "rgb(43, 33, 60)",
+            "color": "rgb(227, 207, 255)",
+            "text": "PREVIEW"
+          }
+        ],
+        "scrollWidth": 1348,
+        "tab": "Games",
+        "width": 1363
+      },
+      {
+        "brokenVisibleImages": [],
+        "cards": [
+          {
+            "background": "linear-gradient(115deg, rgb(23, 56, 44), rgb(16, 35, 41))",
+            "overflow": false,
+            "radius": "16px",
+            "title": "growth-check-in-task"
+          },
+          {
+            "background": "linear-gradient(115deg, rgb(23, 56, 44), rgb(16, 35, 41))",
+            "overflow": false,
+            "radius": "16px",
+            "title": "growth-quest-details"
+          },
+          {
+            "background": "linear-gradient(115deg, rgb(23, 56, 44), rgb(16, 35, 41))",
+            "overflow": false,
+            "radius": "16px",
+            "title": "2. Share your results"
+          }
+        ],
+        "scrollWidth": 1348,
+        "tab": "Daily",
+        "width": 1363
+      },
+      {
+        "brokenVisibleImages": [],
+        "scrollWidth": 1348,
+        "tab": "Campaigns",
+        "width": 1363
+      },
+      {
+        "brokenVisibleImages": [],
+        "scrollWidth": 1363,
+        "tab": "Events 25 SUI",
+        "width": 1363
+      },
+      {
+        "brokenVisibleImages": [],
+        "countdown": "November badges\nLimited-time collection\n\nTime left to earn\n\n12\ndays\n1\nhour\n45\nminutes\n55\nseconds\n\nEnds December 1, 2026 · 00:00 UTC\n\nEarned badges stay in your collection.",
+        "scrollWidth": 1348,
+        "tab": "Monthly Progress",
+        "width": 1363
+      },
+      {
+        "brokenVisibleImages": [],
+        "countdown": "November badges\nLimited-time collection\n\nTime left to earn\n\n12\ndays\n1\nhour\n45\nminutes\n41\nseconds\n\nEnds December 1, 2026 · 00:00 UTC\n\nEarned badges stay in your collection.",
+        "scrollWidth": 1348,
+        "tab": "Badge Collection",
+        "width": 1363
+      }
+    ],
+    "phone": [
+      {
+        "brokenVisibleImages": [],
+        "scrollWidth": 375,
+        "tab": "Games",
+        "width": 390
+      },
+      {
+        "brokenVisibleImages": [],
+        "scrollWidth": 375,
+        "tab": "Daily",
+        "width": 390
+      },
+      {
+        "brokenVisibleImages": [],
+        "scrollWidth": 375,
+        "tab": "Campaigns",
+        "width": 390
+      },
+      {
+        "brokenVisibleImages": [],
+        "scrollWidth": 375,
+        "tab": "Events 25 SUI",
+        "width": 390
+      },
+      {
+        "brokenVisibleImages": [],
+        "scrollWidth": 375,
+        "tab": "Monthly Progress",
+        "width": 390
+      },
+      {
+        "brokenVisibleImages": [],
+        "scrollWidth": 375,
+        "tab": "Badge Collection",
+        "width": 390
+      }
+    ],
+    "narrow": {
+      "brokenVisibleImages": [],
+      "clockOverflow": false,
+      "clockWidth": 259,
+      "scrollWidth": 305,
+      "tab": "Monthly Progress",
+      "width": 320
+    },
+    "monthlyKeyboardDisclosures": {
+      "questDetails": true,
+      "recovery": true,
+      "focusVisible": true,
+      "summaryHeight": 76
+    },
+    "noWalletOrPaymentActions": true
+  },
+  "limitations": [
+    "Browser review used signed-out public state. Fresh completed, loading, stale and signed-out attendance presentation was verified with focused DOM tests.",
+    "No wallet connection, message signature, check-in, vote, gameplay award, recovery or transfer was submitted.",
+    "Tab navigation intentionally scrolls horizontally on narrow screens."
+  ]
+}

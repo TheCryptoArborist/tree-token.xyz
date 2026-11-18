@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "result": "passed",
+  "deployId": "6afe22a623fe04c7a4a9d0c0",
+  "sourceCommit": "ac7005ff02bdb7d3e45ae71312a2ae4135026205",
+  "origin": "https://tree-token.xyz",
+  "url": "https://tree-token.xyz/play/#month",
+  "checkedAt": "2026-11-18T22:19:35.662Z",
+  "viewportWidth": 1363,
+  "tabs": [
+    {
+      "brokenVisibleImages": [],
+      "scrollWidth": 1348,
+      "tab": "Games",
+      "width": 1363
+    },
+    {
+      "brokenVisibleImages": [],
+      "scrollWidth": 1348,
+      "tab": "Daily",
+      "width": 1363
+    },
+    {
+      "brokenVisibleImages": [],
+      "scrollWidth": 1348,
+      "tab": "Campaigns",
+      "width": 1363
+    },
+    {
+      "brokenVisibleImages": [],
+      "scrollWidth": 1363,
+      "tab": "Events 25 SUI",
+      "width": 1363
+    },
+    {
+      "brokenVisibleImages": [],
+      "scrollWidth": 1348,
+      "tab": "Badge Collection",
+      "width": 1363
+    },
+    {
+      "brokenVisibleImages": [],
+      "scrollWidth": 1348,
+      "tab": "Monthly Progress",
+      "width": 1363
+    }
+  ],
+  "monthlyDeepLinkReload": true,
+  "finalMonthlyState": {
+    "brokenVisibleImages": [],
+    "clock": "November badges\nLimited-time collection\n\nTime left to earn\n\n12\ndays\n1\nhour\n40\nminutes\n25\nseconds\n\nEnds December 1, 2026 · 00:00 UTC\n\nEarned badges stay in your collection.",
+    "clockHeight": 142.203125,
+    "scrollWidth": 1348,
+    "selected": "Monthly Progress",
+    "width": 1363
+  },
+  "noWalletOrPaymentActions": true,
+  "screenshots": [
+    "docs/arcade-polish-live-month-20261118.jpg",
+    "docs/arcade-polish-live-daily-20261118.jpg"
+  ],
+  "limitations": [
+    "Signed-out public browser review; authenticated actions were not exercised.",
+    "Phone layout was verified on the exact preserved candidate at 390 and 320 CSS pixels before publication."
+  ]
+}
