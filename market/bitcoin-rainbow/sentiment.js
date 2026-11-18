@@ -134,7 +134,7 @@
       $('mi-sentiment-label').textContent = 'Unavailable';
       $('mi-sentiment-asof').textContent = 'No verified observation';
       $('mi-sentiment-previous').textContent = 'Yesterday: — · Seven days ago: —';
-      $('mi-sentiment-meter').style.width = '0%';
+      $('mi-sentiment-meter').style.left = '0%';
       summary.textContent = 'Source data unavailable. No sentiment score is inferred.';
       $('mi-sentiment-components').replaceChildren();
       $('mi-sentiment-breakdown').textContent = 'No component observations available.';
@@ -149,7 +149,7 @@
     $('mi-sentiment-number').textContent = String(data.value);
     $('mi-sentiment-label').textContent = bandLabel(band);
     $('mi-sentiment-label').style.color = colors[band];
-    $('mi-sentiment-meter').style.width = Math.max(0, Math.min(100, data.value)) + '%';
+    $('mi-sentiment-meter').style.left = Math.max(0, Math.min(100, data.value)) + '%';
     $('mi-sentiment-asof').textContent = 'As of ' + fmtTime(obs) +
       (data.status === 'open' ? ' · Partial / intraday' : data.status === 'closed' ? ' · Final UTC day' : '') +
       (data.delayed ? ' · Provider reports delayed input' : '');
@@ -339,7 +339,7 @@
   });
   $('mi-sentiment-refresh')?.addEventListener('click',async()=>{
     setStatus('Refreshing the source readings…');
-    await Promise.allSettled([load('sui',366,true),load('btc',8,true),load('market',8,true)]);
+    await Promise.allSettled(['sui','btc','market'].map(asset => load(asset, Math.max(asset === 'sui' ? 366 : 8, state.loadedLimit[asset] || 0), true)));
     setStatus('Refresh attempted. Check each card’s as-of date and any unavailable readings.');
   });
   const summaryText=()=>{
