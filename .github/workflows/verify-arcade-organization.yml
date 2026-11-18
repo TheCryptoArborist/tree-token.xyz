@@ -14,6 +14,10 @@ on:
       - 'tests/arcade-organization.test.mjs'
       - 'tests/arcade-season-deadline.test.mjs'
       - 'tests/arcade-preview-readonly.test.mjs'
+      - 'scripts/arcade-campaigns/**'
+      - 'data/arcade-campaigns-draft.json'
+      - 'tests/arcade-campaign-foundation.test.mjs'
+      - 'docs/arcade-campaign-foundation.md'
       - '.github/workflows/verify-arcade-organization.yml'
 
 permissions:
@@ -31,6 +35,6 @@ jobs:
           cache-dependency-path: vendor/arcade-monthly/package-lock.json
       - run: npm ci --ignore-scripts --no-audit --no-fund
         working-directory: vendor/arcade-monthly
-      - run: node --test tests/arcade-season-deadline.test.mjs tests/arcade-organization.test.mjs tests/arcade-preview-readonly.test.mjs
+      - run: node --test tests/arcade-season-deadline.test.mjs tests/arcade-organization.test.mjs tests/arcade-preview-readonly.test.mjs tests/arcade-campaign-foundation.test.mjs
       - run: npm run build:preview
       - run: git diff --check
