@@ -111,3 +111,29 @@ Current Mysten Labs guidance was checked live: `README.md`,
 `frontend-apps/SKILL.md`, `frontend-apps/transactions.md`,
 `sui-sdks/SKILL.md`, `sui-sdks/typescript.md`, and
 `sui-sdks/llm-docs.md`. Existing pinned SDKs and wallet integration are retained.
+
+## Published outcome
+
+Published on November 18, 2026 at 11:12 a.m. America/Chicago.
+Locked deployment: `6afddc74d6c8647c67efdbad`.
+Published source: `9e68a5034c72d4d564e0a374a5cb0ef44c3fbc33`.
+
+The [final release workflow](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44355770097)
+passed all unit, candidate, canonical and complete-preservation gates. The
+[complete release record](../production/sti-purchase-release-20261118.json)
+contains all 615 static hashes, 611 unchanged existing paths, 49 preserved
+backend package records, five schedules and bound browser evidence.
+
+The original main run was cancelled during CI browser setup, before creating
+a candidate. A CI-only follow-up removed stalled, unrelated apt upgrades;
+the same pinned Chromium and all verification gates were retained. All four
+frontend files are byte-identical to the manually reviewed feature preview.
+
+A manual check of [the canonical panel](https://tree-token.xyz/dapp/#stats)
+at approximately 11:13 a.m. America/Chicago confirmed the real 2 SUI quote:
+322321.683251131 estimated STI, 319098.466418619 minimum STI, 3.50%
+price impact, an unchecked acceptance control and 1% slippage. These are
+dated quote observations. No wallet was connected and no transaction was
+signed or submitted.
+
+![Live STI quote with explicit price-impact acceptance](sti-purchase-live-20261118.jpg)
