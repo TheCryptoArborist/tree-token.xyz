@@ -303,6 +303,90 @@
       .action,.site-nav a,.header-cta { transition:none }
     }
 
+
+    /* Match the actual TREE homepage mobile menu shown in the Nov 17 reference:
+       brand/logo row, top-right hamburger, centered single-column dropdown. */
+    .site-nav .nav-home { color:var(--gold); }
+    .site-nav .nav-resources { position:relative; flex:0 0 auto; }
+    .site-nav .nav-resources summary {
+      cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;
+      color:var(--muted); font-weight:800; font-size:.79rem;
+      padding:9px 10px; border-radius:999px; list-style:none;
+      border:1px solid transparent; user-select:none;
+    }
+    .site-nav .nav-resources summary::-webkit-details-marker { display:none }
+    .site-nav .nav-resources summary::before {
+      content:"▶"; font-size:.63rem; display:inline-block; transition:transform .15s ease;
+    }
+    .site-nav .nav-resources[open] summary::before { transform:rotate(90deg) }
+    .site-nav .nav-resources summary:hover,.site-nav .nav-resources summary:focus-visible {
+      background:rgba(0,255,160,.06);color:var(--emerald-2)
+    }
+    .nav-resources-links {
+      display:grid; gap:3px; position:absolute; right:0; top:calc(100% + 4px);
+      min-width:190px; padding:8px; border:1px solid rgba(0,255,160,.20);
+      border-radius:12px; background:rgba(2,9,14,.98); box-shadow:0 24px 60px #000a;
+      z-index:4;
+    }
+    .nav-resources-links a { border-radius:8px; font-size:.83rem; padding:9px 12px }
+    @media(max-width:1230px) {
+      .site-header { background:rgba(2,8,12,.97); }
+      .brand-wrap { gap:10px; }
+      .logo { border-radius:14px; border-color:rgba(255,255,255,.09) }
+      .brand-title .brand-name { letter-spacing:.085em }
+      .nav-shell {
+        top:calc(100% + 10px); left:4%; right:4%; padding:15px 12px 17px;
+        background:rgba(2,9,14,.985); border:1px solid rgba(29,112,87,.52);
+        border-radius:23px; box-shadow:0 22px 70px #000c;
+      }
+      .site-nav { display:flex; flex-direction:column; gap:1px; align-items:stretch; }
+      .site-nav>a {
+        display:flex; align-items:center; justify-content:center;
+        border:0; border-radius:12px; min-height:46px; padding:9px 14px;
+        color:#bbc6d0; font-size:1rem; font-weight:800; text-align:center;
+        background:transparent;
+      }
+      .site-nav .nav-home { color:#ffe071; }
+      .site-nav>a:hover,.site-nav>a:focus-visible {
+        color:#ffe071; background:rgba(52,211,153,.06);
+      }
+      .site-nav .nav-resources { width:100%; }
+      .site-nav .nav-resources summary {
+        min-height:46px; font-size:1rem; font-weight:800;
+        border-radius:12px; color:#bbc6d0; padding:8px 14px;
+      }
+      .site-nav .nav-resources summary::before { font-size:.72rem }
+      .site-nav .nav-resources summary:hover,.site-nav .nav-resources summary:focus-visible {
+        color:#ffe071; background:rgba(52,211,153,.06)
+      }
+      .nav-resources-links {
+        position:static; min-width:0; margin:3px 12px 4px; padding:7px;
+        border-radius:12px; border:1px solid rgba(0,255,160,.14);
+        background:rgba(6,19,25,.88); box-shadow:none;
+      }
+      .nav-resources-links a { color:#b6c5c9; font-size:.9rem; padding:10px 12px; border-radius:9px }
+      .nav-shell { max-height:min(650px,calc(100dvh - 100px)); overflow-y:auto; }
+      .nav-toggle {
+        border-radius:13px; background:#0b141b; border:1px solid rgba(166,183,197,.19);
+        width:46px; height:46px;
+      }
+    }
+    @media(max-width:760px) {
+      .site-header { height:74px; padding:0 4%; }
+      .header-inner { gap:10px }
+      .logo { width:49px; height:49px }
+      .brand-title .brand-name { font-size:.89rem; letter-spacing:.09em; color:var(--ecosystem-gold) }
+      .brand-title small { display:none }
+      .nav-shell { left:4%; right:4%; top:calc(100% + 9px); padding:13px 12px 16px }
+      .site-nav>a,.site-nav .nav-resources summary { min-height:47px; font-size:1rem; }
+      .nav-toggle { width:45px; height:45px }
+      main.wrap { padding-top:96px }
+    }
+    @media(max-width:400px) {
+      .site-nav { display:flex; grid-template-columns:none }
+      .nav-shell { left:4%; right:4%; }
+      .site-nav>a,.site-nav .nav-resources summary { min-height:45px }
+    }
   </style>
 </head>
 <body>
@@ -316,14 +400,22 @@
       </a>
       <div class="nav-shell" id="mobile-nav">
         <nav class="site-nav" aria-label="TREE ecosystem navigation">
-          <a href="/">Home</a>
+          <a class="nav-home" href="/">Home</a>
+          <a href="/dapp/">App</a>
+          <a href="/play/">Arcade</a>
+          <a href="/play/profile-studio/">Profile Studio</a>
+          <a href="/#nftree">NFTrees</a>
+          <a href="/rewards/">NFTree Rewards</a>
           <a href="/#about">About</a>
-          <a href="/#ecosystem">Ecosystem</a>
-          <a class="nav-command" href="/dapp/">Command Center <span>DApp</span></a>
-          <a class="nav-nft" href="/#nftree">NFTree</a>
-          <a class="nav-impact" href="/#impact">TREE Fund</a>
-          <a href="/#litepaper">Litepaper</a>
-          <a class="nav-get-started" href="/#join">Get Started →</a>
+          <details class="nav-resources">
+            <summary>Resources</summary>
+            <div class="nav-resources-links">
+              <a href="/tokenomics/">Tokenomics</a>
+              <a href="/roadmap/">Roadmap</a>
+              <a href="/faq/">FAQ</a>
+              <a href="/documents/">Documents</a>
+            </div>
+          </details>
         </nav>
       </div>
       <div class="header-actions">
