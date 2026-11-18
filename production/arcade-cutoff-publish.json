@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "action": "publish-arcade-cutoff",
+  "sourceCommit": "09f77e96556bbbb39a8b1eee26c2cf712d4f3b9b",
+  "sourceTree": "6a601123f7ca9ccee3199b6191cd63e2bc6f1909",
+  "mainCommit": "e5dcee4d07a2483b1bb989641d0026650b438dca",
+  "expectedDeploy": "6afde69b28000c929ce7a0a4",
+  "candidateId": "6afe0141248c1062e8414ed7",
+  "planSha256": "34df8534809c675f0a844745f9fc5884580216ae6bf90de57c123e0441cf9b8b",
+  "candidateRunId": 44384132362,
+  "candidateArtifactId": 14464343844,
+  "candidateArtifactSHA256": "3df1cb10038af34fe911d553f6afc97a75cc2d2db79d20b0912faaa9fdd57600",
+  "browserReview": "production/arcade-cutoff-browser-review.json"
+}
