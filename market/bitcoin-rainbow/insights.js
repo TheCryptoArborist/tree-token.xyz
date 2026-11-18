@@ -25,6 +25,7 @@
     rainbowTabs.forEach((tab, index) => {
       tab.addEventListener('click', () => selectGuide(tab.dataset.rbTab));
       tab.addEventListener('keydown', event => {
+        if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
         if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
         event.preventDefault();
         const next = event.key === 'Home' ? 0 : event.key === 'End' ? rainbowTabs.length - 1
@@ -71,8 +72,8 @@
     }
   };
   const reference = {
-    '2018':['2018 bear-market bottom',19280,3232,'83.2%','364 days','2018 prices are historical. This particular BlockchainCenter Rainbow Chart had not yet been published; no real-time signal is implied.'],
-    '2022':['2022 bear-market bottom',67562,15760,'76.7%','378 days','Comparisons use reported daily observations, not a proven first Rainbow-band entry date. The 2022 formula changed in November.'],
+    '2018':['2018 bear-market bottom',19280,3232,'83.2%','364 days','Historical daily-price reference. Selecting the low uses hindsight; it does not show a signal available at the time.'],
+    '2022':['2022 bear-market bottom',67562,15760,'76.7%','378 days','Historical daily-price reference. Selecting the low uses hindsight; it does not show a signal available at the time.'],
     '2026':['2026 low observed by July 1',124777,58534,'53.1%','Reference through July 1, 2026','The date is a historical snapshot, not a prediction or confirmation of the final 2026 bottom.']
   };
   // Public indicative BTC/USD feed. Its time is a provider feed-update timestamp,
@@ -187,8 +188,8 @@
       allow_symbol_change:false,withdateranges:true,calendar:false,
       save_image:false,support_host:'https://www.tradingview.com'
     });
-    $('mi-tv-status').textContent='Loading provider-hosted chart…';
-    script.onerror=()=>{$('mi-tv-status').textContent='TradingView script unavailable; no prices are substituted.';};
+    $('mi-tv-status').textContent='Loading TradingView chart…';
+    script.onerror=()=>{$('mi-tv-status').textContent='This chart could not load. Open it on TradingView to continue.';};
     script.onload=()=>{$('mi-tv-status').textContent='Interactive chart and dates supplied by TradingView.';};
     host.appendChild(script);stage.appendChild(host);
   }
@@ -202,10 +203,10 @@
     if(!stage||!entry)return;
     const isTree=selectedPrice==='TREE';
     setPressed('[data-price-asset]','priceAsset',selectedPrice);
-    $('mi-price-description').textContent=isTree?'TREE / USD · Noodles coin chart':entry.name+' · Binance spot market · '+entry.pair+' · TradingView';
+    $('mi-price-description').textContent=isTree?'TREE · USD · Noodles':entry.name+' · Binance spot market · '+entry.pair+' · TradingView';
     $('mi-price-source').href=entry.source;
     $('mi-price-source').textContent=isTree?'Open TREE’s tracked markets on Noodles':'Open '+entry.pair+' on TradingView';
-    $('mi-price-reading').textContent=isTree?'TREE’s price history comes from Noodles’ coin-level view of its tracked markets, quoted in USD. Use the Noodles link to explore the markets behind the chart.':'Prices are quoted in USDT per '+selectedPrice+'. USDT is a dollar-linked stablecoin. Volume shows trading activity for this Binance spot pair.';
+    $('mi-price-reading').textContent=isTree?'TREE’s price is quoted in USD using markets tracked by Noodles. Open Noodles to see the markets included in the chart.':'Prices are quoted in USDT per '+selectedPrice+'. USDT is a dollar-linked stablecoin. Volume shows trading activity for this Binance spot pair.';
     if(lastPrice===selectedPrice)return;
     lastPrice=selectedPrice;
     const version=++priceLoadVersion;
@@ -300,14 +301,14 @@
       const fill=document.createElement('span');fill.style.width=valid?(recent.value*100)+'%':'0%';
       if(valid)fill.style.backgroundColor='hsl('+(210*(1-recent.value))+', 65%, 65%)';track.appendChild(fill);
       const date=document.createElement('small');
-      date.textContent=valid?fmtDate(recent.ts)+' UTC'+(recent.ts<cbbiNewest.ts?' · Older than overall score':'')+((Date.now()/1000-recent.ts)>7*86400?' · Over seven days old':''):'No verified score; the explanation still applies.';
+      date.textContent=valid?fmtDate(recent.ts)+' UTC'+(recent.ts<cbbiNewest.ts?' · Older than overall score':'')+((Date.now()/1000-recent.ts)>7*86400?' · Over seven days old':''):'No score available.';
       const details=document.createElement('details');details.className='mi-indicator-more';
       const summary=document.createElement('summary');summary.textContent='More about '+indicator.name.split(':')[0];
       const detail=document.createElement('p');detail.textContent=indicator.detail;
-      const source=document.createElement('a');source.href=indicator.source;source.target='_blank';source.rel='noopener noreferrer';source.textContent='Read the indicator explanation';
+      const source=document.createElement('a');source.href=indicator.source;source.target='_blank';source.rel='noopener noreferrer';source.textContent='View indicator source';
       details.append(summary,detail,source);item.append(name,explanation,reading,track,date,details);panel.appendChild(item);
     }
-    $('mi-cbbi-component-status').textContent=cbbiNewest?available+' of '+cbbiIndicators.length+' component scores available'+(older?' · '+older+' dated earlier than the overall score.':'.')+' Dates refer to CBBI’s observations; upstream inputs may update at different times.':'The nine explanations remain available. No component readings have been verified.';
+    $('mi-cbbi-component-status').textContent=cbbiNewest?available+' of '+cbbiIndicators.length+' component scores available'+(older?' · '+older+' dated earlier than the overall score.':'.')+' Dates show when CBBI recorded each score. The underlying data can update at different times.':'The nine explanations remain available. No component readings have been verified.';
   }
   paintCBBIIndicators();
   function paintCBBI(){
@@ -316,7 +317,7 @@
     score.textContent=(cbbiNewest.value*100).toFixed(1)+' / 100';
     stamp.textContent='CBBI observation: '+fmtDate(cbbiNewest.ts)+' UTC';
     const age=(Date.now()/1000-cbbiNewest.ts)/86400;
-    message.textContent=age>7?'The latest CBBI observation is over seven days old. These readings are outdated.':'Provider observation loaded. Lower scores are cooler; higher scores are hotter relative to past Bitcoin cycles.';
+    message.textContent=age>7?'The latest CBBI observation is over seven days old. These readings are outdated.':'Latest available CBBI reading loaded.';
     const rows=Object.entries(cbbiData.Confidence||{}).map(([s,v])=>({ts:Number(s),v})).filter(x=>Number.isSafeInteger(x.ts)&&x.ts>0&&Number.isFinite(x.v)&&x.v>=0&&x.v<=1&&x.ts<=cbbiNewest.ts&&x.ts>=cbbiNewest.ts-chartRange*86400).sort((a,b)=>a.ts-b.ts);
     svg.replaceChildren();
     if(rows.length>1){
@@ -390,6 +391,7 @@
       $('mi-cycle-peak').textContent=fmtMoney(b[1]);
       $('mi-cycle-low').textContent=fmtMoney(b[2]);
       $('mi-cycle-loss').textContent=b[3];
+      $('mi-cycle-days-label').textContent=year==='2026'?'Observation cutoff':'Time from peak to low';
       $('mi-cycle-days').textContent=b[4];
       $('mi-cycle-caveat').textContent=b[5];
     }
@@ -539,6 +541,7 @@
   $$('[data-mi-tab]').forEach(button=>{
     button.addEventListener('click',()=>activate(button.dataset.miTab));
     button.addEventListener('keydown',event=>{
+      if(event.ctrlKey||event.metaKey||event.altKey||event.shiftKey)return;
       if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
       event.preventDefault();
       const idx=tabIds.indexOf(button.dataset.miTab), next=event.key==='Home'?0:event.key==='End'?tabIds.length-1:(idx+(event.key==='ArrowRight'?1:-1)+tabIds.length)%tabIds.length;

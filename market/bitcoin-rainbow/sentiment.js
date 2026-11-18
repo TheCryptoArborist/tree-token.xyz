@@ -173,7 +173,7 @@
     $('mi-sentiment-label').style.color = colors[band];
     $('mi-sentiment-meter').style.left = Math.max(0, Math.min(100, data.value)) + '%';
     $('mi-sentiment-asof').textContent = 'As of ' + fmtTime(obs) +
-      (data.status === 'open' ? ' · Partial / intraday' : data.status === 'closed' ? ' · Final UTC day' : '') +
+      (data.status === 'open' ? ' · Day not final' : data.status === 'closed' ? ' · Completed UTC day' : '') +
       (data.delayed ? ' · Provider reports delayed input' : '');
     const previous = data.previous || {};
     const yesterday = validScore(previous.yesterday?.value) ? data.value - previous.yesterday.value : NaN;
@@ -181,8 +181,9 @@
     $('mi-sentiment-previous').textContent = 'Vs yesterday: ' + formatPoints(yesterday) +
       ' · Vs 7 days ago: ' + formatPoints(lastWeek);
     summary.textContent = (hours > state.staleHours ? 'Warning: the latest provider observation is older than six hours. ' : '') +
-      (data.status === 'open' ? 'Today’s reading is provisional and can change as new hourly data arrives. ' :
-      'This reading is marked final for its UTC day. ') +
+      (data.status === 'open' ? 'This reading is not final and can change as new hourly data arrives. ' :
+       data.status === 'closed' ? 'This UTC day is complete. CryptoKeyhole may revise the reading if its underlying data changes. ' :
+       'CryptoKeyhole has not supplied the day’s completion status. ') +
       (state.active === 'sui' ? 'SUI token sentiment is not a measurement of TREE token sentiment or on-chain Sui activity.' :
        state.active === 'eth' ? 'This measures sentiment around Ether (ETH). Individual projects on Ethereum can behave differently.' :
        state.active === 'bnb' ? 'This measures sentiment around BNB. Individual projects on BNB Chain can behave differently.' :
@@ -202,7 +203,7 @@
       $('mi-sentiment-breakdown').textContent = 'Component data unavailable from the provider.';
       return;
     }
-    $('mi-sentiment-breakdown').textContent = rows.length + ' available components · source-supplied scores and weights. Scores run from 0 (fear) to 100 (greed); they are sentiment scores, not the raw measurements.';
+    $('mi-sentiment-breakdown').textContent = rows.length + ' available components · scores and weights from CryptoKeyhole. Scores run from 0 (fear) to 100 (greed); they are sentiment scores, not the raw measurements.';
     rows.sort((a, b) => Number(b.weight) - Number(a.weight));
     for (const row of rows) {
       const item = document.createElement('div');
@@ -307,7 +308,7 @@
       const li = document.createElement('li');
       li.textContent = fmtDate(day.date+'T00:00:00Z') + ': ' + day.value + '/100 ' +
         (typeof day.label === 'string' ? day.label : bandLabel(bandFromScore(day.value))) +
-        (day.status === 'open' ? ' (partial)' : '');
+        (day.status === 'open' ? ' (day not final)' : '');
       recent.appendChild(li);
     }
     const frequencies = {'extreme-fear':0,fear:0,neutral:0,greed:0,'extreme-greed':0};
@@ -348,7 +349,9 @@
     const data = dataFor(asset);
     const old = data ? ageHours(observationDate(data)) > state.staleHours : true;
     setStatus(old ? 'Observation is older than six hours; refresh to check for new data.' :
-      'Provider observation loaded. '+(data.status === 'open'?'Current UTC day is provisional.':'UTC daily observation is final.'),old?'warning':'ok');
+      'Provider observation loaded. '+(data.status === 'open'?'This reading’s UTC day is not final.':
+        data.status === 'closed'?'This UTC day is complete; CryptoKeyhole may revise the reading.':
+        'The provider has not supplied the day’s completion status.'),old?'warning':'ok');
   }
   async function initial() {
     if(state.initialized) return;
@@ -376,9 +379,29 @@
     if(dataFor(state.active))renderHistory(dataFor(state.active));
   });
   $('mi-sentiment-refresh')?.addEventListener('click',async()=>{
-    setStatus('Refreshing the source readings…');
-    await Promise.allSettled(assetOrder.map(asset => load(asset, Math.max(asset === 'sui' ? 366 : 8, state.loadedLimit[asset] || 0), true)));
-    setStatus('Refresh attempted. Check each card’s as-of date and any unavailable readings.');
+    const button=$('mi-sentiment-refresh');
+    if(button.disabled)return;
+    button.disabled=true;
+    setStatus('Refreshing readings from CryptoKeyhole…');
+    try {
+      const results=await Promise.allSettled(assetOrder.map(asset => load(asset, Math.max(asset === 'sui' ? 366 : 8, state.loadedLimit[asset] || 0), true)));
+      const failed=assetOrder.filter((asset,index)=>results[index].status!=='fulfilled'||results[index].value!==true);
+      const activeFailed=failed.includes(state.active), activeData=dataFor(state.active);
+      if(!failed.length){
+        const old=activeData && ageHours(observationDate(activeData))>state.staleHours;
+        setStatus(old?'All five feeds loaded. The selected observation is older than six hours; check its source date.':
+          'All five feeds loaded from CryptoKeyhole. Check each card’s observation date.',old?'warning':'ok');
+      }else{
+        const message=failed.length===assetOrder.length?'No readings could be refreshed.':
+          (assetOrder.length-failed.length)+' of '+assetOrder.length+' readings refreshed. Could not refresh: '+failed.map(asset=>sources[asset].name).join(', ')+'.';
+        const detail=activeFailed?sources[state.active].name+': '+(activeData?
+          'showing the last successful observation at its original timestamp.':'no verified reading is available.'):
+          'Readings that could not refresh keep any previous observation and its original timestamp.';
+        setStatus(message+' '+detail,failed.length===assetOrder.length||(activeFailed&&!activeData)?'error':'warning');
+      }
+    } finally {
+      button.disabled=false;
+    }
   });
   const summaryText=()=>{
     const lines=['TREE Market Insights — Fear & Greed','Source: CryptoKeyhole (CC BY 4.0)'];
@@ -386,9 +409,10 @@
       const data=dataFor(asset);
       lines.push(sources[asset].name+': '+(data ?
         data.value+'/100 '+bandLabel(colors[data.band] ? data.band : bandFromScore(data.value))+
-        ' · '+fmtTime(observationDate(data))+' ('+(data.status==='open'?'provisional':'final')+')' :
+        ' · '+fmtTime(observationDate(data))+' ('+(data.status==='open'?'day not final':data.status==='closed'?'completed UTC day':'completion status unavailable')+')' :
         'no verified reading'));
     }
+    lines.push('Completed UTC-day readings may be revised by CryptoKeyhole.');
     lines.push('Coin sentiment does not measure every project on its chain; SUI sentiment is not TREE sentiment. Different providers use different methodologies.');
     lines.push('tree-token.xyz · Historical context, not financial advice.');
     return lines.join('\n');
@@ -422,7 +446,7 @@
       cx.fillText(d?bandLabel(colors[d.band]?d.band:bandFromScore(d.value)):'No verified data',665,yy+40);
       cx.fillStyle='#b5c9cd';cx.font='21px system-ui';
       const date=d?observationDate(d):null;
-      const timing=d?(fmtTime(date)+(d.status==='open'?' · provisional':d.status==='closed'?' · final':'')+
+      const timing=d?(fmtTime(date)+(d.status==='open'?' · day not final':d.status==='closed'?' · completed UTC day':'')+
         (ageHours(date)>state.staleHours?' · older than 6 hours':d.delayed?' · delayed':'')):'No verified observation';
       cx.fillText(timing,100,yy+77);
     }
