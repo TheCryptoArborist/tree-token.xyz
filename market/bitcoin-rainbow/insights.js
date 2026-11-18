@@ -51,7 +51,7 @@
       source:'https://axeladlerjr.com/charts/bitcoin-mvrv-ratio/',
       chartTitle:'MVRV ratio', title:'MVRV: price compared with estimated cost',
       description:'MVRV means Market Value to Realized Value. It compares Bitcoin’s market price with realized price (the estimated holder cost). A reading of 1 means those prices are equal; the reading is a ratio, not a dollar price.',
-      reading:'Use 1 as the comparison point: above 1 means market price is above estimated cost; below 1 means it is below. Higher values show a larger premium, without telling you when price will turn.'
+      reading:'Read MVRV on the right-hand axis. Bitcoin’s dollar price uses the left-hand axis. Above 1 means price is above estimated cost; below 1 means it is below.'
     },
     realized: {
       embed:'https://axeladlerjr.com/charts/bitcoin-realized-price/embed.html',
