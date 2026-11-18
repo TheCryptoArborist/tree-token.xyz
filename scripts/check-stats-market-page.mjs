@@ -144,8 +144,8 @@ async function configureNetwork(context, result) {
         `],
       ]);
       const fixture = sdkFixtures.get(url.href);
-      if (fixture !== undefined) return route.fulfill({ status: 200, contentType: 'application/javascript', body: fixture });
-      return route.fulfill({ status: 200, contentType: 'application/javascript',
+      if (fixture !== undefined) return route.fulfill({ status: 200, contentType: 'application/javascript', headers: { 'access-control-allow-origin': '*' }, body: fixture });
+      return route.fulfill({ status: 200, contentType: 'application/javascript', headers: { 'access-control-allow-origin': '*' },
         body: 'throw new Error(' + JSON.stringify('CI test: unexpected external module ' + url.href) + ');' });
     }
     return json({ testOnly: true, status: 'not-ready' });
