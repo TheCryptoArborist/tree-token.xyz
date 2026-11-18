@@ -1,3 +1,53 @@
+# STI wallet loading and recovery — published 2026-11-18
+
+Current locked production is `6afde69b28000c929ce7a0a4`, published at
+`2026-11-18T17:57:21.131Z` (11:57 a.m. America/Chicago) from source commit
+`0a354794c782d4f6c83e17b49e13b7e2577df929`, PR220. Final read-only verification
+passed at `2026-11-18T18:05:39.622Z` (12:05 p.m. America/Chicago).
+
+The STI panel now shows a loading state, waits for the shared wallet manager
+when Connect wallet is clicked, and offers Retry wallet connection and Reload
+wallet tools when loading fails. A deliberate reload can retain the entered
+amount; a fresh quote and any required impact acceptance are still necessary.
+Recovery cannot reload during purchase processing or pending confirmation and
+never retries a purchase.
+
+The release replaced `/dapp/index.html` and `/dapp/sti-widget.js`, added
+`/dapp/sti-wallet-recovery.js`, and preserved all **613 other existing paths**.
+The inventory contains **616 static paths**, **49 complete backend records**
+and **five schedules**. Authoritative frontend sources remain in
+`production/sti-purchase-static/`; shared wallet, purchase-core and stylesheet
+bytes were preserved. All provider/runtime records and protected configuration
+matched the freshly captured baseline.
+
+All **82 focused tests** and all **12 candidate and canonical browser scenarios**
+passed at 320, 390, 768 and 1363 CSS pixels. Four additional tests verified the
+read-only audit guards. A manual canonical check opened the wallet picker
+through normal navigation. No wallet was selected or connected and no
+transaction was initiated. Evidence: `docs/sti-wallet-recovery-live-20261118.jpg`.
+
+Publication workflow `44363664888` timed out during canonical delivery checks
+after publication; it did not pass end-to-end. The unchanged local
+`verifyDelivery` subsequently passed at `2026-11-18T18:00:16.959Z`. Read-only
+audit workflow `44365536121` (PR221) then passed the complete published inventory,
+configuration, canonical delivery and browser checks, with zero remote mutations.
+
+Final report: `production/sti-wallet-recovery-release-20261118.json`.
+Report SHA-256: `c5317ebcf3d418b39578c5ad9e4c9037cfff517ab51676e9c396363653d142d0`.
+Audit artifact 14454819494 SHA-256:
+`0818407c455d1b03dfe67197352592c4ce2cc3bd0aba4d5652771cb2cfac1cff`.
+Verification: https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44365536121
+Implementation: https://github.com/TheCryptoArborist/tree-token.xyz/pull/220
+
+The original browser-session cause remains unproven. The repair addresses the
+reproduced loading and recovery gaps. Diagnosis, verification boundaries and
+current Mysten guidance are recorded in `docs/sti-wallet-recovery.md`.
+This is the newest live preservation baseline. Capture the complete current
+inventory afresh before any subsequent release; historical root snapshots must
+not replace it.
+
+---
+
 # STI purchase quote review — published 2026-11-18
 
 Current locked production is `6afddc74d6c8647c67efdbad`, published at
