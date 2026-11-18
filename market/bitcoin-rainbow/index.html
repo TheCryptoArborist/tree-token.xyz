@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex, nofollow, noarchive">
   <meta name="googlebot" content="noindex, nofollow, noarchive">
   <meta name="description" content="A TREE Market Insights preview of an attributed, daily-updated Bitcoin Rainbow Chart. Research only; historical bands do not predict market bottoms.">
-  <title>Bitcoin Rainbow Chart | TREE Market Insights Preview</title>
+  <title>TREE Market Insights | Bitcoin Research Preview</title>
   <link rel="icon" href="/assets/thick-dwqrmagk-dwqrmagk.png">
   <style>
     :root { color-scheme:dark; --bg:#030b11; --panel:#081820; --line:#1a3439; --text:#effcf7; --muted:#a0b9bf; --green:#35ed96; --gold:#ffdb67; --cyan:#63d9eb; }
@@ -387,6 +387,86 @@
       .nav-shell { left:4%; right:4%; }
       .site-nav>a,.site-nav .nav-resources summary { min-height:45px }
     }
+
+    /* Source-backed research dashboard, localized to the unlisted page. */
+    .mi-explorer {
+      margin:23px 0; padding:clamp(16px,3vw,28px);
+      background:linear-gradient(145deg,rgba(5,14,18,.95),rgba(3,8,17,.96));
+      border:1px solid rgba(0,255,160,.17);border-radius:22px;
+      box-shadow:var(--shadow-deep),var(--shadow-glow);
+      scroll-margin-top:104px;
+    }
+    .mi-section-head { display:flex; align-items:center; justify-content:space-between; gap:15px; margin-bottom:20px }
+    .mi-section-head h2 { font-size:clamp(1.55rem,3.6vw,2.3rem);margin:4px 0;color:var(--gold) }
+    .mi-section-head p:last-child { color:var(--muted-soft);font-size:.93rem;max-width:70ch;margin:6px 0 }
+    .mi-tabbar { display:flex; gap:8px; overflow-x:auto; padding:0 0 12px; border-bottom:1px solid rgba(0,255,160,.12); scroll-snap-type:x mandatory }
+    .mi-tab { flex:1 0 auto; padding:12px 15px; border-radius:11px; border:1px solid rgba(255,255,255,.11); background:rgba(0,0,0,.32); color:#c5dcd4; font:800 .89rem/1.2 inherit; cursor:pointer; scroll-snap-align:start }
+    .mi-tab[aria-selected="true"] { color:#03160e;background:linear-gradient(130deg,#34d399,#00c2b3);border-color:transparent;box-shadow:0 7px 22px rgba(0,224,144,.14) }
+    .mi-pane { padding:24px 0 5px; }
+    .mi-pane[hidden] { display:none !important }
+    .mi-pane h3 { color:var(--gold);font-size:clamp(1.2rem,3vw,1.55rem);margin:0 0 5px }
+    .mi-pane h4 { color:#e9fcf4;margin:20px 0 9px;font-size:1.03rem }
+    .mi-help { margin:5px 0 16px;color:var(--muted-soft);font-size:.9rem;line-height:1.65 }
+    .mi-choices { display:flex;gap:8px;flex-wrap:wrap;margin:15px 0 13px }
+    .mi-choices button { border:1px solid rgba(0,255,160,.18);border-radius:99px;background:rgba(0,0,0,.34);color:#bcebd2;min-height:43px;padding:9px 15px;font:800 .88rem/1.2 inherit;cursor:pointer }
+    .mi-choices button.selected { color:#09170f;background:linear-gradient(130deg,#ffd166,#f1b72b);border-color:transparent }
+    .mi-description { color:#aabfc2;font-size:.88rem;max-width:78ch;margin:10px 0 17px;min-height:2em }
+    .mi-chart-container { background:#050d17;position:relative;border:1px solid rgba(255,255,255,.09);overflow:hidden;border-radius:14px }
+    .mi-tv { height:min(650px,76vh);min-height:490px;padding:7px }
+    .mi-tv .tradingview-widget-container { min-height:450px }
+    .mi-onchain { height:620px; padding:7px }
+    .mi-provider-iframe { display:block;border:0;width:100%;height:100%;background:#051018 }
+    .mi-footnotes { display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:11px;color:#91ada7;font-size:.76rem }
+    .mi-footnotes a { color:#8adfd1;text-underline-offset:3px }
+    .mi-disclaimer { color:#9fb7bb;font-size:.8rem;line-height:1.65;background:rgba(255,209,102,.04);border-left:2px solid rgba(255,209,102,.4);padding:10px 13px;margin-top:17px }
+    .mi-cbbi-header { display:flex;gap:20px;justify-content:space-between;align-items:center;background:rgba(2,13,18,.83);border:1px solid rgba(0,255,160,.15);border-radius:15px;padding:17px;margin:14px 0 }
+    .mi-overline { display:block;letter-spacing:.1em;font-size:.7rem;color:#72daba;text-transform:uppercase;font-weight:850 }
+    .mi-score { font-size:clamp(1.55rem,5vw,2.9rem);color:#ffe07d;font-weight:900;letter-spacing:-.04em }
+    .mi-small { color:#86a4a9;font-size:.75rem;line-height:1.6 }
+    .mi-score-scale { display:flex;align-items:center;gap:8px;color:#9bb3b8;font-size:.77rem;min-width:170px; }
+    .mi-score-scale div { width:130px;height:14px;border-radius:99px;background:linear-gradient(90deg,#5c81d9,#43c9bc,#e1da59,#f08f4b,#d34c4b) }
+    .mi-status { font-size:.86rem;color:#c2d6cb;margin:12px 0 }
+    .mi-graph-wrap { border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:12px;background:rgba(0,0,0,.22) }
+    .mi-graph-wrap svg { display:block;width:100%;height:auto;min-height:140px;max-height:250px }
+    .mi-graph-wrap p { margin:7px 0 0 }
+    .mi-metric-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px }
+    .mi-indicator { border:1px solid rgba(255,255,255,.09);padding:12px;border-radius:11px;background:#081b21;display:flex;flex-direction:column;gap:4px;min-width:0 }
+    .mi-indicator strong { color:#ffe09a;font-size:.8rem;overflow-wrap:anywhere }
+    .mi-indicator span { color:#d3fbe3;font-weight:850;font-size:1.13rem }
+    .mi-indicator small { color:#85a6a9;font-size:.7rem }
+    .mi-linkbutton { border:0;background:transparent;color:#80d9c2;cursor:pointer;text-decoration:underline;font:inherit }
+    .mi-stat-grid { display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:15px }
+    .mi-stat-grid>div { border:1px solid rgba(0,255,160,.14);border-radius:13px;padding:13px;background:#061519 }
+    .mi-stat-grid span { display:block;color:#9ab5b5;font-size:.75rem }
+    .mi-stat-grid strong { display:block;color:var(--gold);font-size:1.17rem;overflow-wrap:anywhere;margin-top:5px }
+    .mi-calculator,.mi-share { background:rgba(1,12,16,.74);border:1px solid rgba(0,255,160,.13);padding:16px;border-radius:15px;margin-top:17px }
+    .mi-form-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px }
+    .mi-form-grid label { color:#b6cdc8;font-size:.77rem;font-weight:700 }
+    .mi-form-grid input { display:block;width:100%;margin-top:8px;padding:12px;border:1px solid rgba(0,255,160,.23);border-radius:9px;color:#fff;background:#06141c;font-size:1rem }
+    .mi-calc-output { display:block;margin:16px 0 7px;line-height:1.6;color:#dafde9;font-weight:700;font-size:.9rem }
+    .mi-share-actions { display:flex;gap:9px;flex-wrap:wrap }
+    .mi-action-primary,.mi-action-secondary { padding:10px 14px;border-radius:999px;font:800 .87rem/1.3 inherit;cursor:pointer }
+    .mi-action-primary { background:linear-gradient(135deg,#00e090,#00c2b3);border:none;color:#07150c }
+    .mi-action-secondary { background:rgba(0,0,0,.3);border:1px dashed rgba(0,255,160,.32);color:#8cf6c4 }
+    @media(max-width:760px){
+      .mi-explorer { padding:16px 12px;margin:15px 0;border-radius:18px }
+      .mi-tabbar { margin-inline:-3px;gap:6px }
+      .mi-tab { padding:11px 12px;font-size:.8rem }
+      .mi-pane { padding-top:16px }
+      .mi-choices { gap:6px }
+      .mi-choices button { font-size:.8rem;padding:9px 11px }
+      .mi-tv { height:520px;min-height:480px;padding:3px }
+      .mi-onchain { height:540px;padding:3px }
+      .mi-cbbi-header { flex-direction:column;align-items:stretch;gap:12px }
+      .mi-metric-grid { grid-template-columns:repeat(2,minmax(0,1fr)) }
+      .mi-stat-grid { grid-template-columns:repeat(2,minmax(0,1fr)) }
+      .mi-form-grid { grid-template-columns:1fr }
+    }
+    @media(max-width:360px){
+      .mi-metric-grid { grid-template-columns:1fr }
+      .mi-tab { font-size:.77rem;padding:10px }
+    }
+
   </style>
 </head>
 <body>
@@ -430,10 +510,10 @@
     <section class="intro hero-shell" aria-labelledby="page-title">
       <div class="intro-copy">
         <p class="eyebrow"><span class="seed" aria-hidden="true"></span>TREE Market Insights · Research tools</p>
-        <h1 class="hero-title" id="page-title">Bitcoin <span class="rainbow">Rainbow Chart</span></h1>
-        <p class="lead">Explore Bitcoin's long-term price history using an attributed, interactive Rainbow Chart. The latest <strong>UTC daily close</strong> is compared with a mathematical trend, not a prediction of the next top or bottom.</p>
+        <h1 class="hero-title" id="page-title">Bitcoin <span class="rainbow">Market Insights</span></h1>
+        <p class="lead">Explore the sourced Bitcoin Rainbow Chart, market-cap indexes, on-chain valuations and CBBI historical confidence. Every live observation stays labeled by its original provider and data date.</p>
         <div class="hero-actions">
-          <a class="action" href="#rainbow-chart">Explore the chart</a>
+          <a class="action" href="#rainbow-chart">Rainbow Chart</a><a class="action secondary" href="#market-explorer">Market Explorer</a>
         </div>
       </div>
       <aside class="intro-note">
@@ -471,7 +551,118 @@
       <div class="source-warning"><strong>Model note:</strong> This is Axel Adler Jr.'s cycle-volatility-adjusted Rainbow Chart, <em>not</em> BlockchainCenter's original fixed-band version. Different Rainbow models can report different band labels for the same day. This chart refreshes after the UTC daily close; it is not a live tick-by-tick price feed.</div>
     </section>
 
-    <section class="cards" aria-label="How to read this chart">
+
+    <section class="mi-explorer" id="market-explorer" aria-labelledby="mi-explorer-title">
+      <div class="mi-section-head">
+        <div>
+          <p class="eyebrow"><span class="seed" aria-hidden="true"></span>EXPLORE MORE MARKET DATA</p>
+          <h2 id="mi-explorer-title">Crypto Market Explorer</h2>
+          <p>Switch between real provider-hosted charts, official CBBI readings and historical cycle references. No wallet connection needed.</p>
+        </div>
+      </div>
+      <div class="mi-tabbar" role="tablist" aria-label="Crypto research views">
+        <button class="mi-tab" role="tab" id="mi-tab-market" data-mi-tab="market" aria-controls="mi-pane-market" aria-selected="true">Market Caps</button>
+        <button class="mi-tab" role="tab" id="mi-tab-cbbi" data-mi-tab="cbbi" aria-controls="mi-pane-cbbi" aria-selected="false" tabindex="-1">CBBI</button>
+        <button class="mi-tab" role="tab" id="mi-tab-onchain" data-mi-tab="onchain" aria-controls="mi-pane-onchain" aria-selected="false" tabindex="-1">On-Chain</button>
+        <button class="mi-tab" role="tab" id="mi-tab-cycles" data-mi-tab="cycles" aria-controls="mi-pane-cycles" aria-selected="false" tabindex="-1">Cycle Tools</button>
+      </div>
+      <div class="mi-panels">
+        <section class="mi-pane" id="mi-pane-market" role="tabpanel" aria-labelledby="mi-tab-market">
+          <h3>Market Capitalization</h3>
+          <p class="mi-help">Five TradingView indicators, loaded one at a time. Prices, axes, trading ranges and data timing come directly from TradingView.</p>
+          <div class="mi-choices" role="group" aria-label="Choose crypto capitalization index">
+            <button type="button" data-tv-symbol="TOTAL" aria-pressed="false">TOTAL</button>
+            <button type="button" data-tv-symbol="TOTAL2" aria-pressed="false">TOTAL2</button>
+            <button type="button" data-tv-symbol="TOTAL3" aria-pressed="true" class="selected">TOTAL3</button>
+            <button type="button" data-tv-symbol="TOTAL3ES" aria-pressed="false">TOTAL3ES</button>
+            <button type="button" data-tv-symbol="BTCD" aria-pressed="false">BTC.D</button>
+          </div>
+          <p class="mi-description" id="mi-market-description">Top-125 cryptocurrency capitalization excluding Bitcoin and Ethereum; stablecoins remain included.</p>
+          <div id="mi-tv-stage" class="mi-chart-container mi-tv" aria-label="TradingView live market capitalization chart"></div>
+          <div class="mi-footnotes"><span id="mi-tv-status" role="status">Loading TradingView chart…</span><span>Market provider: TradingView · Widget attribution retained</span></div>
+          <p class="mi-disclaimer">TOTAL, TOTAL2, TOTAL3 and TOTAL3ES are TradingView indices of up to 125 ranked coins. TOTAL3 still includes stablecoins; TOTAL3ES excludes them. BTC.D is Bitcoin's share of the tracked market. They are not measures of all tokens in existence.</p>
+        </section>
+
+        <section class="mi-pane" id="mi-pane-cbbi" role="tabpanel" aria-labelledby="mi-tab-cbbi" hidden>
+          <h3>Bitcoin Bull Run Index (CBBI)</h3>
+          <p class="mi-help">An independent composite of nine indicators developed by Colin Talks Crypto. Higher confidence describes historical cycle-overheating conditions; it does not predict future prices or dates.</p>
+          <div class="mi-cbbi-header">
+            <div><span class="mi-overline">Official CBBI composite</span><div class="mi-score" id="mi-cbbi-value">Fetching…</div><span class="mi-small" id="mi-cbbi-date">Waiting for verified source date</span></div>
+            <div class="mi-score-scale" aria-hidden="true"><span>0</span><div></div><span>100</span></div>
+          </div>
+          <p id="mi-cbbi-message" class="mi-status" role="status" aria-live="polite">Loads only when the CBBI tab is opened.</p>
+          <div class="mi-choices" role="group" aria-label="CBBI historical range">
+            <button type="button" data-cbbi-range="90" aria-pressed="false">90 days</button>
+            <button type="button" data-cbbi-range="365" aria-pressed="true" class="selected">1 year</button>
+            <button type="button" data-cbbi-range="1460" aria-pressed="false">4 years</button>
+          </div>
+          <div class="mi-graph-wrap">
+            <svg id="mi-cbbi-graph" viewBox="0 0 640 185" role="img" aria-label="CBBI confidence over the selected historical range, measured from zero to one hundred"></svg>
+            <p class="mi-small" id="mi-cbbi-range">Awaiting sourced history</p>
+          </div>
+          <h4>Provider's underlying indicator series</h4>
+          <p class="mi-help">Where source readings are available, raw values are shown with their own observation date. Units differ by metric: these are <strong>not nine interchangeable confidence percentages</strong>.</p>
+          <div id="mi-cbbi-metrics" class="mi-metric-grid" aria-live="polite"></div>
+          <div class="mi-footnotes">
+            <span>Data: <a href="https://colintalkscrypto.com/cbbi/" target="_blank" rel="noopener noreferrer">Colin Talks Crypto — CBBI</a> · Official JSON feed · Observations may be revised</span>
+            <button type="button" id="mi-cbbi-retry" class="mi-linkbutton">Retry data</button>
+          </div>
+          <p class="mi-disclaimer">If the source blocks direct browser access or becomes unavailable, we show an explicit data error rather than guessed scores. The CBBI score is a retrospective model, not independent evidence of a guaranteed market bottom.</p>
+        </section>
+
+        <section class="mi-pane" id="mi-pane-onchain" role="tabpanel" aria-labelledby="mi-tab-onchain" hidden>
+          <h3>Bitcoin On-Chain Valuation</h3>
+          <p class="mi-help">Compare market value with the cost basis implied by movements on the Bitcoin blockchain.</p>
+          <div class="mi-choices" role="group" aria-label="Choose on-chain Bitcoin chart">
+            <button type="button" data-onchain="mvrv" aria-pressed="true" class="selected">MVRV</button>
+            <button type="button" data-onchain="realized" aria-pressed="false">Realized Price</button>
+          </div>
+          <h4 id="mi-onchain-title">MVRV ratio</h4>
+          <p class="mi-description" id="mi-onchain-description">Market value divided by realized value; the market-wide profit premium, not a trading recommendation.</p>
+          <div class="mi-chart-container mi-onchain" id="mi-onchain-stage" aria-label="Source-hosted Bitcoin on-chain chart"></div>
+          <p class="mi-footnotes">Chart by <a id="mi-onchain-credit" href="https://axeladlerjr.com/charts/bitcoin-mvrv-ratio/" target="_blank" rel="noopener noreferrer">Axel Adler Jr.</a> · Provider's UTC observation date and chart controls</p>
+          <p class="mi-disclaimer">MVRV and realized price are related measures of the same cost-basis framework, not independent confirmation signals. Source charts update daily and are not live intraday quotes.</p>
+        </section>
+
+        <section class="mi-pane" id="mi-pane-cycles" role="tabpanel" aria-labelledby="mi-tab-cycles" hidden>
+          <h3>Cycle History &amp; Hypothetical Scenarios</h3>
+          <p class="mi-help">Dated historical comparisons are separated from the calculator. Scenario inputs are not forecasts or suggested buying prices.</p>
+          <div class="mi-choices" role="group" aria-label="Choose historical Bitcoin cycle">
+            <button type="button" data-cycle="2018" aria-pressed="false">2018 low</button>
+            <button type="button" data-cycle="2022" aria-pressed="true" class="selected">2022 low</button>
+            <button type="button" data-cycle="2026" aria-pressed="false">2026 reference</button>
+          </div>
+          <h4 id="mi-cycle-name">2022 bear-market bottom</h4>
+          <div class="mi-stat-grid">
+            <div><span>Prior peak (daily reference)</span><strong id="mi-cycle-peak">—</strong></div>
+            <div><span>Observed low (daily reference)</span><strong id="mi-cycle-low">—</strong></div>
+            <div><span>Peak-to-low drawdown</span><strong id="mi-cycle-loss">—</strong></div>
+            <div><span>Time / observation period</span><strong id="mi-cycle-days">—</strong></div>
+          </div>
+          <p class="mi-disclaimer" id="mi-cycle-caveat">Historical prices are retrospective. The original Rainbow band formula may not have existed at that observation.</p>
+          <div class="mi-calculator">
+            <h4>Hypothetical Bitcoin price scenario</h4>
+            <div class="mi-form-grid">
+              <label>Starting investment (USD)<input id="mi-calc-principal" type="number" inputmode="decimal" min="0" max="1000000000" step="any" value="1000"></label>
+              <label>Assumed entry price (USD/BTC)<input id="mi-calc-price" type="number" inputmode="decimal" min=".01" max="1000000000" step="any" value="64000"></label>
+              <label>Hypothetical price change (%)<input id="mi-calc-move" type="number" inputmode="decimal" min="-99.9" max="1000" step=".1" value="-30"></label>
+            </div>
+            <output id="mi-calc-result" class="mi-calc-output" aria-live="polite">Enter scenario values to calculate.</output>
+            <p class="mi-small">The default price is a sample assumption for demonstration, not a live Bitcoin quote.</p>
+          </div>
+          <div class="mi-share">
+            <h4>Share a sourced TREE Market Insights summary</h4>
+            <p class="mi-help">Generate a local PNG or copy a text summary. The card includes the observation date only when the live CBBI data was successfully verified.</p>
+            <div class="mi-share-actions">
+              <button type="button" id="mi-download-report" class="mi-action-primary">Download 1:1 research graphic</button>
+              <button type="button" id="mi-copy-report" class="mi-action-secondary">Copy research summary</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+        <section class="cards" aria-label="How to read this chart">
       <article class="card">
         <p class="card-number">01 · Historical view</p>
         <h3>Look at multiple cycles</h3>
@@ -516,6 +707,7 @@
     </div>
   </footer>
 
+  <script src="/market/bitcoin-rainbow/insights.js" defer></script>
   <script>
     (() => {
       const toggle = document.getElementById('nav-toggle');
