@@ -320,13 +320,15 @@
   async function load(asset, limit, force = false) {
     try {
       await request(asset, limit, {force});
+      return true;
     } catch (error) {
       if(!dataFor(asset)) {
         $('mi-sentiment-card-label-'+asset).textContent = 'Unavailable';
-        setStatus('Could not retrieve the official '+sources[asset].name+' sentiment feed. Check connection or retry. No fallback estimates are shown.','error');
-      } else {
+        if(asset === state.active) setStatus('Could not retrieve the official '+sources[asset].name+' sentiment feed. Check connection or retry. No fallback estimates are shown.','error');
+      } else if(asset === state.active) {
         setStatus('Refresh failed; last successful observation remains labeled with its original timestamp.','warning');
       }
+      return false;
     } finally {
       updateCards();
       if(asset === state.active) updateDetails();
@@ -340,13 +342,13 @@
     const have = state.loadedLimit[asset] || 0;
     if (have < 366) {
       setStatus('Loading full '+sources[asset].name+' historical sentiment series…');
-      await load(asset, 366);
-    } else {
-      const data = dataFor(asset);
-      const old = data ? ageHours(observationDate(data)) > state.staleHours : true;
-      setStatus(old ? 'Observation is older than six hours; refresh to check for new data.' :
-        'Provider observation loaded. '+(data.status === 'open'?'Current UTC day is provisional.':'UTC daily observation is final.'),old?'warning':'ok');
+      const loaded = await load(asset, 366);
+      if(!loaded || asset !== state.active) return;
     }
+    const data = dataFor(asset);
+    const old = data ? ageHours(observationDate(data)) > state.staleHours : true;
+    setStatus(old ? 'Observation is older than six hours; refresh to check for new data.' :
+      'Provider observation loaded. '+(data.status === 'open'?'Current UTC day is provisional.':'UTC daily observation is final.'),old?'warning':'ok');
   }
   async function initial() {
     if(state.initialized) return;
