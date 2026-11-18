@@ -1,3 +1,47 @@
+## Actual original #2720 deposit confirmed, 2026-11-17
+
+Receipt `GLXLAmCD3DrbdK55NXmppr7uPEWDdrYYF9JBd3C5XBvE` is verified against
+the exact one-command generic original-NFT fund transaction. NFTree #2720 is
+wrapped intact inside Vault `0x45bf08499784ea9ff658937165a9449d509aa37de47a728af44e903387f3ca2c`,
+phase 1, bound, unannounced, with zero request/recipient and no acknowledgment.
+Vault AdminCap, OApp AdminCap, UpgradeCap, Registry, protocol configuration and
+NFT metadata remain correct. The old standalone NFT lookup is null as expected
+for wrapping, not deletion. The actual storage rebate yields net credit
+947,955 MIST. No USDT was paid and no cross-chain packet was included.
+
+Fresh BNB runtime, immutable binding, all four actual route receipts and pass
+state were checked: paused, unminted and unconfirmed. The Sui channel is unused.
+Signed receipt and live proof are `fund-receipt.json` / `fund-verified.json`;
+the newest actual deployment bindings are `fund-bindings.json`.
+
+The next reserve announcement was prepared and successfully simulated without
+signing: version 2, kind 1, original vault/NFT, zero request/recipient, nonce 1,
+Sui EID 30378 to BNB EID 30102, actual package CallCap sender and actual adapter
+receiver. Its GUID is `0x8e1331227a97541412fb436a355605469cdcfb0d97d3f7538b33185c06ca7f67`.
+All three configured DVNs and the executor are paid their exact quote. The
+reference message fee is 72,951,105 MIST plus 4,053,443 MIST net gas, total
+77,004,548 MIST (0.077004548 SUI). The simulated NFT remains intact in the vault.
+Only the announcement flag and outbound nonce advance; actual state remains
+unannounced with nonce zero. No signature, actual packet, BNB delivery or sale
+activation is claimed. A fresh preflight and reviewed signing page are still
+required before the separate wallet approval.
+
+`node scripts/multichain/verify-original-reserve-simulation.mjs` checks the
+unsigned command/input bytes, exact independently derived packet/GUID, three
+DVNs, executor, original vault contents, ownership, allowed writes, SUI-only
+fee recipients and complete balance changes. Raw simulations and unsigned
+preparations are recorded beside `reserve-preparation-verified.json`.
+There are no website, backend, deployment, contract or dependency changes.
+
+Live MystenLabs guidance consulted this turn:
+[accessing-data/SKILL.md](https://github.com/MystenLabs/skills/blob/main/accessing-data/SKILL.md),
+[graphql.md](https://github.com/MystenLabs/skills/blob/main/accessing-data/graphql.md),
+[ptbs/SKILL.md](https://github.com/MystenLabs/skills/blob/main/ptbs/SKILL.md),
+[building.md](https://github.com/MystenLabs/skills/blob/main/ptbs/building.md),
+[commands.md](https://github.com/MystenLabs/skills/blob/main/ptbs/commands.md),
+[move-security/SKILL.md](https://github.com/MystenLabs/skills/blob/main/move-security/SKILL.md),
+[best-practices.md](https://github.com/MystenLabs/skills/blob/main/move-security/best-practices.md).
+
 ## Original deposit page published, 2026-11-17
 
 Canonical `/play/multichaintest/original/fund/` is live on locked deploy

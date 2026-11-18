@@ -1,0 +1,39 @@
+{
+  "checkedAt": "2026-11-17T23:50:59.319Z",
+  "mode": "unsigned_simulation_only",
+  "result": "passed",
+  "depositDigest": "GLXLAmCD3DrbdK55NXmppr7uPEWDdrYYF9JBd3C5XBvE",
+  "guid": "0x8e1331227a97541412fb436a355605469cdcfb0d97d3f7538b33185c06ca7f67",
+  "payload": "0x020145bf08499784ea9ff658937165a9449d509aa37de47a728af44e903387f3ca2c046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "packet": "0x010000000000000001000076aaac73072b94f14a87b23781c7004c77df6799fdee109f24271d4696bc4a6514a40000759600000000000000000000000090b5292a5074cfdd665c726b433cc0a97e0da6ab8e1331227a97541412fb436a355605469cdcfb0d97d3f7538b33185c06ca7f67020145bf08499784ea9ff658937165a9449d509aa37de47a728af44e903387f3ca2c046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "feeMist": "72951105",
+  "gasMist": "4053443",
+  "totalMist": "77004548",
+  "originalNft": "0x046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba",
+  "vault": "0x45bf08499784ea9ff658937165a9449d509aa37de47a728af44e903387f3ca2c",
+  "receiver": "0x00000000000000000000000090b5292a5074cfdd665c726b433cc0a97e0da6ab",
+  "nonce": "1",
+  "sourceEid": 30378,
+  "destinationEid": 30102,
+  "requiredDvns": [
+    "0x0c12321ebe562b8fb8a74e6d29f144ea199a8f31a4cea3a417ce72477f6dfebb",
+    "0x52aa129049de845353484868d1be6e2df6878b0ed2213d94d3c827309aeae685",
+    "0x92128a5edf4a0f696464de66d00986ef41b37faf705ceb3d9d9a4e5c306fbf91"
+  ],
+  "executor": "0xde7fe1a6648d587fcc991f124f3aa5b6389340610804108094d5c5fbf61d1989",
+  "nftRemainsIntactInVault": true,
+  "simulatedAnnouncement": true,
+  "actualAnnouncementSent": false,
+  "assistantSubmittedTransactions": 0,
+  "saleEnabled": false,
+  "note": "Preparation only. A fresh browser preflight, reviewed signing page and separate user signature are still required. No actual reserve packet or BNB delivery is claimed.",
+  "guidance": [
+    "accessing-data/SKILL.md",
+    "accessing-data/graphql.md",
+    "ptbs/SKILL.md",
+    "ptbs/building.md",
+    "ptbs/commands.md",
+    "move-security/SKILL.md",
+    "move-security/best-practices.md"
+  ]
+}
