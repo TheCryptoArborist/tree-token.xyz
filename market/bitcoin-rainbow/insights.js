@@ -5,6 +5,37 @@
   'use strict';
   const $ = id => document.getElementById(id);
   const $$ = sel => Array.from(document.querySelectorAll(sel));
+  // Progressive enhancement: all guide sections remain readable without JS.
+  // Guide tabs are independent of the Market Explorer and never reload its iframe.
+  const rainbowTabs = $$('[data-rb-tab]');
+  const rainbowGuide = $('rb-guide-tabs');
+  if (rainbowGuide && rainbowTabs.length) {
+    const selectGuide = name => {
+      rainbowTabs.forEach(tab => {
+        const selected = tab.dataset.rbTab === name;
+        const panel = $('rb-panel-' + tab.dataset.rbTab);
+        tab.setAttribute('aria-selected', String(selected));
+        tab.tabIndex = selected ? 0 : -1;
+        panel.hidden = !selected;
+        panel.setAttribute('role', 'tabpanel');
+        panel.setAttribute('aria-labelledby', tab.id);
+        panel.tabIndex = 0;
+      });
+    };
+    rainbowTabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => selectGuide(tab.dataset.rbTab));
+      tab.addEventListener('keydown', event => {
+        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+        event.preventDefault();
+        const next = event.key === 'Home' ? 0 : event.key === 'End' ? rainbowTabs.length - 1
+          : (index + (event.key === 'ArrowRight' ? 1 : -1) + rainbowTabs.length) % rainbowTabs.length;
+        selectGuide(rainbowTabs[next].dataset.rbTab);
+        rainbowTabs[next].focus();
+      });
+    });
+    selectGuide('bands');
+    rainbowGuide.hidden = false;
+  }
   const fmtMoney = v => Number.isFinite(v) ? new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2}).format(v) : '—';
   const fmtDate = s => new Date(s*1000).toLocaleDateString('en-US',{timeZone:'UTC',year:'numeric',month:'short',day:'numeric'});
   const tvSymbols = {
