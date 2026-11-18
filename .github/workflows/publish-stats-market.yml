@@ -1,0 +1,114 @@
+name: Publish Stats Market
+
+on:
+  pull_request:
+    paths:
+      - 'production/stats-market-static/**'
+      - 'scripts/*stats-market*'
+      - 'tests/stats-market-release.test.mjs'
+      - 'tests/stats-market-data.test.mjs'
+      - '.github/workflows/publish-stats-market.yml'
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-stats-market.yml']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tree-production-preservation-${{ github.event_name == 'push' && 'release' || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Check release guards and browser source
+        run: |
+          node --test tests/stats-market-release.test.mjs tests/stats-market-data.test.mjs tests/preserved-release.test.mjs
+          node --check production/stats-market-static/app.js
+          node --check scripts/release-stats-market.mjs
+          node --check scripts/stats-market-delivery.mjs
+          node --check scripts/check-stats-market-page.mjs
+          git diff --check
+      - name: Install isolated layout checker
+        run: |
+          npm install --prefix "$RUNNER_TEMP/stats-market-browser" --ignore-scripts --no-audit --no-fund playwright@1.56.1
+          "$RUNNER_TEMP/stats-market-browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Check desktop and phone layouts
+        env:
+          STATS_MARKET_BROWSER_MODULE: ${{ runner.temp }}/stats-market-browser/node_modules/playwright/index.mjs
+          STATS_MARKET_TEST_BASE: http://127.0.0.1:8765
+        run: |
+          node scripts/check-stats-market-page.mjs --prepare-static "$RUNNER_TEMP/stats-market-site"
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory "$RUNNER_TEMP/stats-market-site" > "$RUNNER_TEMP/stats-market-http.log" 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          node scripts/check-stats-market-page.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: stats-market-layout-${{ github.run_id }}
+          path: |
+            .netlify/stats-market-*.png
+            .netlify/stats-market-browser-checks.json
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 14
+  publish:
+    needs: verify
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[publish stats market]')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install isolated layout checker
+        run: |
+          npm install --prefix "$RUNNER_TEMP/stats-market-browser" --ignore-scripts --no-audit --no-fund playwright@1.56.1
+          "$RUNNER_TEMP/stats-market-browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Capture current production and verify the new candidate
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          STATS_MARKET_EXPECTED_DEPLOY: '6afd38b699fcd142a80207f5'
+          REVIEWED_SHA: ${{ github.sha }}
+          STATS_MARKET_BROWSER_MODULE: ${{ runner.temp }}/stats-market-browser/node_modules/playwright/index.mjs
+        run: |
+          test -n "$NETLIFY_AUTH_TOKEN" || { echo 'The existing Netlify release connection is unavailable.'; exit 1; }
+          test "$(git rev-parse HEAD)" = "$REVIEWED_SHA"
+          node scripts/release-stats-market.mjs capture
+          node scripts/release-stats-market.mjs plan --source-commit "$REVIEWED_SHA"
+          node scripts/release-stats-market.mjs preview --source-commit "$REVIEWED_SHA"
+          node scripts/release-stats-market.mjs verify --source-commit "$REVIEWED_SHA"
+      - name: Publish the verified candidate and check the canonical route
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          STATS_MARKET_EXPECTED_DEPLOY: '6afd38b699fcd142a80207f5'
+          REVIEWED_SHA: ${{ github.sha }}
+          STATS_MARKET_BROWSER_MODULE: ${{ runner.temp }}/stats-market-browser/node_modules/playwright/index.mjs
+        run: |
+          candidate=$(node -p "JSON.parse(require('fs').readFileSync('.netlify/stats-market-candidate.json')).id")
+          node scripts/release-stats-market.mjs publish --source-commit "$REVIEWED_SHA" --expected-candidate "$candidate"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: stats-market-release-${{ github.run_id }}
+          path: |
+            .netlify/stats-market-release-report.json
+            .netlify/stats-market-browser-checks.json
+            .netlify/stats-market-*.png
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 30

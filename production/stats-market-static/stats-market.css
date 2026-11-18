@@ -1,0 +1,127 @@
+.app-tabbed body[data-active-panel="stats"] main,
+.app-tabbed main:has(#stats.active-panel) {
+  width: min(1060px, calc(100% - 30px));
+}
+
+#statsMarketPanel > #treeLiveChart.stats-noodles-chart {
+  display: block;
+  min-width: 0;
+  padding: 16px;
+}
+
+#treeLiveChart .stats-noodles-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+#treeLiveChart .stats-noodles-pair {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+
+#treeLiveChart .stats-noodles-pair img {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+#treeLiveChart .stats-noodles-pair h3 {
+  margin: 0;
+  color: var(--text);
+  font: 850 1rem/1.3 var(--mono);
+}
+
+#treeLiveChart .stats-noodles-source {
+  flex-shrink: 0;
+  color: var(--cyan);
+  font-size: .75rem;
+  font-weight: 750;
+  line-height: 1.4;
+  text-underline-offset: 3px;
+}
+
+#treeLiveChart .stats-noodles-source:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 5px;
+  border-radius: 2px;
+}
+
+#treeLiveChart .stats-noodles-frame {
+  width: 100%;
+  height: 600px;
+  overflow: hidden;
+  border: 1px solid rgba(53, 200, 255, .14);
+  border-radius: 10px;
+  background: #02070b;
+}
+
+#treeLiveChart .stats-noodles-frame iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+#treeLiveChart .stats-noodles-note,
+#statsMarketPanel .stats-holder-note {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: .72rem;
+  line-height: 1.55;
+}
+
+#statsMarketPanel .stats-holder-meta {
+  display: block;
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: .64rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+#statsMarketPanel .stats-holder-meta[data-state="cached"],
+#statsMarketPanel .stats-holder-meta[data-state="fallback"],
+#statsMarketPanel .stats-holder-meta[data-state="unavailable"] {
+  color: var(--gold);
+}
+
+@media (min-width: 760px) {
+  html:not(.tree-test-dapp) #statsMarketPanel > [data-stats-group="market"] .stat-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  #statsMarketPanel .stats-public-locks summary > b {
+    min-width: 0;
+    white-space: normal;
+  }
+
+  #statsMarketPanel > #treeLiveChart.stats-noodles-chart {
+    padding: 10px;
+  }
+
+  #treeLiveChart .stats-noodles-heading {
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    margin-bottom: 10px;
+  }
+
+  #treeLiveChart .stats-noodles-pair h3 {
+    font-size: .9rem;
+  }
+
+  #treeLiveChart .stats-noodles-source {
+    font-size: .7rem;
+  }
+
+  #treeLiveChart .stats-noodles-frame {
+    height: 460px;
+  }
+}
