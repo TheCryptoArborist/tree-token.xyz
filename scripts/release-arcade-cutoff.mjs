@@ -87,10 +87,11 @@ export function validateBackend(deploy) {
   assert(deploy.database_migrations == null || deploy.database_migrations.files?.length === 0, 'Unreviewed Netlify database migration.');
 }
 
-export function compareBackend(actual, expected, monthly = null) {
+export function compareBackend(actual, expected, monthly = null, pinnedMonthlyRecord) {
   validateBackend(actual); validateBackend(expected);
   assert.equal(actual.available_functions.length, expected.available_functions.length, 'Backend count changed.');
   const expectedByName = new Map(expected.available_functions.map(f => [f.n, f]));
+  let monthlyRecord;
   for (const f of actual.available_functions) {
     const original = expectedByName.get(f.n); assert(original, 'Unapproved function.');
     const copy = { ...f }, previous = { ...original };
@@ -100,14 +101,25 @@ export function compareBackend(actual, expected, monthly = null) {
     if (f.n === MONTHLY && monthly && monthly.sha256 !== original.d) {
       assert.equal(copy.d, monthly.sha256, 'Monthly package digest differs.');
       assert.equal(copy.s, monthly.bytes, 'Monthly package size differs.');
-      // A new ZIP necessarily receives new package identities and creation
-      // metadata. Every other known AND unknown provider/runtime field stays.
-      for (const field of ['d', 'id', 'oid', 'c', 's']) { delete copy[field]; delete previous[field]; }
+      // Netlify's CLI maps available_functions.a to the function log service's
+      // account_id; functionConfig exposes no account assignment setting:
+      // https://github.com/netlify/cli/blob/3fe8202fe7424f8934d6373ac55b215c77433f7c/src/commands/logs/sources/functions.ts
+      // A rebuilt, exact-digest ZIP may receive a new provider account along
+      // with its package identities. Every execution/configuration field stays.
+      assert(typeof copy.a === 'string' && /^\d{12}$/.test(copy.a), 'Invalid monthly provider account.');
+      for (const field of ['d', 'id', 'oid', 'a', 'c', 's']) { delete copy[field]; delete previous[field]; }
     }
     eq(copy, previous, 'Complete backend record for ' + f.n);
+    if (f.n === MONTHLY) {
+      // Once the new candidate is verified, even package/allocation metadata
+      // and API-materialized aliases must stay byte-for-value identical.
+      if (pinnedMonthlyRecord !== undefined) eq(f, pinnedMonthlyRecord, 'Pinned monthly provisioning record');
+      monthlyRecord = structuredClone(f);
+    }
   }
   eq(sorted(actual.function_schedules, 'name'), sorted(expected.function_schedules, 'name'), 'All schedules');
   eq(runtime(actual), runtime(expected), 'All deployment runtime settings');
+  return monthlyRecord;
 }
 
 export function functionsConfig(deploy) {
@@ -379,21 +391,24 @@ async function publicChecks(origin, plan) {
   assert.equal(status.configuration.recovery.cutoffPolicy, 'utc-month-end-v1');
   assert.equal(status.configuration.recovery.cutoffEffectiveMonth, '2026-11');
 }
-async function verifyCandidate(api, baseline, plan, state) {
+async function verifyCandidate(api, baseline, plan, state, allowInitialPin = false) {
   await assertLiveBaseline(api, baseline);
   const deploy = await api(`deploys/${state.id}`);
   assertNewCandidate(state, plan, deploy); assert.equal(deploy.state, 'ready'); assert(!deploy.published_at, 'Candidate already published; inspect the recorded release.');
-  compareBackend(deploy, baseline.deploy, plan.monthly);
+  assert(state.monthlyProviderRecord || allowInitialPin, 'Candidate monthly provisioning record was not pinned.');
+  const monthlyRecord = compareBackend(deploy, baseline.deploy, plan.monthly, state.monthlyProviderRecord ?? undefined);
   eq(await inventory(api, state.id), plan.files, 'Complete candidate static inventory');
   await publicChecks(originFor(state.id), { ...plan, candidateId: state.id });
   await assertLiveBaseline(api, baseline);
+  state.monthlyProviderRecord ??= monthlyRecord;
   return deploy;
 }
 async function verifyPublished(api, baseline, plan, state) {
   const site = await api(`sites/${SITE_ID}`), published = await api(`deploys/${state.id}`);
   assert.equal(site.published_deploy?.id, state.id); assert.equal(site.published_deploy.locked, true);
   assert.equal(published.state, 'ready'); assert.equal(published.locked, true); assertNewCandidate(state, plan, published);
-  compareBackend(published, baseline.deploy, plan.monthly);
+  assert(state.monthlyProviderRecord, 'Published audit requires the pinned candidate monthly record.');
+  compareBackend(published, baseline.deploy, plan.monthly, state.monthlyProviderRecord);
   eq(await inventory(api, state.id), plan.files, 'Complete published static inventory');
   eq(await protectedEnvironment(api, site), baseline.environment, 'Published protected configuration');
   return published;
@@ -475,7 +490,8 @@ export async function main(args = process.argv.slice(2)) {
       functions, functions_config: functionsConfig(baseline.deploy), function_schedules: baseline.deploy.function_schedules,
       draft: false, async: false, branch: baseline.deploy.branch });
     state = { schemaVersion: 1, siteId: SITE_ID, id: deploy.id, baselineId: expected, sourceCommit: plan.sourceCommit,
-      planSha256: fingerprint(plan), requestStartedAt, candidateCreatedAt: deploy.created_at, technicalVerifiedAt: null, browserReview: null };
+      planSha256: fingerprint(plan), requestStartedAt, candidateCreatedAt: deploy.created_at,
+      technicalVerifiedAt: null, browserReview: null, monthlyProviderRecord: null };
     writeRecord(statePath, state, true); assertNewCandidate(state, plan, deploy);
     for (const field of ['required_edge_functions', 'required_server']) assert(Array.isArray(deploy[field]) && deploy[field].length === 0, 'Unapproved edge/server upload.');
     assert(Array.isArray(deploy.required) && Array.isArray(deploy.required_functions), 'Missing upload requirements.');
@@ -507,7 +523,7 @@ export async function main(args = process.argv.slice(2)) {
       await verifyPublished(api, baseline, plan, state);
       state.lastAuditedAt = new Date().toISOString(); state.publishedAt = deploy.published_at;
     } else {
-      deploy = await verifyCandidate(api, baseline, plan, state); state.technicalVerifiedAt = new Date().toISOString();
+      deploy = await verifyCandidate(api, baseline, plan, state, mode === 'candidate'); state.technicalVerifiedAt = new Date().toISOString();
     }
     if ((mode === 'verify' || mode === 'audit') && values['browser-report']) {
       const report = read(path.resolve(ROOT, values['browser-report'])); validateBrowserReview(report, plan, state);
@@ -523,6 +539,10 @@ export async function main(args = process.argv.slice(2)) {
       assert.equal(git('rev-parse', `${mainCommit}^{tree}`), plan.sourceTree, 'Main differs from the complete reviewed candidate source tree.');
       await waitForAllBuilds(api, state.id);
       await assertLiveBaseline(api, baseline);
+      const beforeLock = await api(`deploys/${state.id}`);
+      assertNewCandidate(state, plan, beforeLock); assert.equal(beforeLock.state, 'ready');
+      assert(!beforeLock.published_at, 'Candidate was published while waiting; inspect it before continuing.');
+      compareBackend(beforeLock, baseline.deploy, plan.monthly, state.monthlyProviderRecord);
       // Recheck after the queue wait. An ordinary Git build never gets an
       // exception; only the already-audited inactive historical API records do.
       assert.equal((await activeDeploys(api, state.id)).length, 0, 'A new queued build blocks publication.');
@@ -552,6 +572,7 @@ export async function main(args = process.argv.slice(2)) {
     changedOriginals: plan.changedOriginals, addedPaths: plan.addedPaths, files: plan.files,
     backendRecords: baseline.deploy.available_functions.length, preservedBackendRecords: baseline.deploy.available_functions.length - Number(changedMonthly),
     replacedFunction: changedMonthly ? MONTHLY : null, monthlySHA256: plan.monthly?.sha256 ?? null,
+    monthlyProviderRecordSHA256: state?.monthlyProviderRecord ? fingerprint(state.monthlyProviderRecord) : null,
     schedulesPreserved: baseline.deploy.function_schedules.length, protectedConfigurationSHA256: fingerprint(baseline.environment),
     dbReadiness: plan.dbReadiness, browserReviewSHA256: state?.browserReview?.sha256 ?? null,
     productionChanged: mode === 'publish', publishedCandidateVerified: ['publish', 'audit'].includes(mode),

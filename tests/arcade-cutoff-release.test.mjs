@@ -30,7 +30,7 @@ test('capture, planning, verification and completion audit reject mutations befo
 });
 function backend() {
   const fn = name => ({ n: name, d: hash(name), id: 'package-' + name, oid: 'provider-' + name,
-    a: 'provider-account', c: '2026-11-18T10:00:00Z', r: 'nodejs22.x', rg: 'us-east-2', m: 1024,
+    a: '496498411776', c: '2026-11-18T10:00:00Z', r: 'nodejs22.x', rg: 'us-east-2', m: 1024,
     im: 'stream', s: 100, bd: { bootstrapVersion: '2.24.0', runtimeAPIVersion: 2 },
     ro: [{ p: '/api/' + name, l: '/api/' + name, e: null, m: ['GET', 'POST'], ps: false }],
     tr: { action: { type: 'rate_limit' } }, obl: 'extension', oblv: 34,
@@ -57,16 +57,40 @@ test('fresh backend inventory supports added current functions without historica
   assert.throws(() => compareBackend(missing, deploy), /count changed/);
 });
 
-test('only the rebuilt monthly package identities, time, size and digest may change', () => {
+test('only the rebuilt monthly package allocation, identities, time, size and digest may change', () => {
   const { before, after, monthly } = changedMonthly(); compareBackend(after, before, monthly);
   assert.throws(() => compareBackend(after, before), /Complete backend record/);
-  for (const [field, value] of Object.entries({ a: 'other-account', r: 'nodejs24.x', rg: 'other-region', im: 'buffer',
+  for (const [field, value] of Object.entries({ r: 'nodejs24.x', rg: 'other-region', im: 'buffer',
     m: 2048, obl: 'other-extension', oblv: 35, futureProviderField: { preserve: false }, ro: [], tr: {} })) {
     const bad = copy(after); bad.available_functions[0][field] = value;
     assert.throws(() => compareBackend(bad, before, monthly), /Complete backend record/, field);
   }
   const wrong = copy(after); wrong.available_functions[0].s++;
   assert.throws(() => compareBackend(wrong, before, monthly), /size differs/);
+});
+
+test('new monthly ZIP can receive a valid provider account only during initial provisioning', () => {
+  const { before, after, monthly } = changedMonthly();
+  after.available_functions[0].a = '761546455604';
+  const pinned = compareBackend(after, before, monthly);
+  assert.deepEqual(pinned, after.available_functions[0]); assert.notEqual(pinned, after.available_functions[0]);
+  compareBackend(after, before, monthly, pinned);
+  for (const [field, value] of [['a', '999999999999'], ['id', 'another-package'], ['oid', 'another-provider-package'],
+    ['c', '2026-11-18T19:59:00Z'], ['mo', 1024]]) {
+    const drifted = copy(after); drifted.available_functions[0][field] = value;
+    assert.throws(() => compareBackend(drifted, before, monthly, pinned), /Pinned monthly provisioning record/, field);
+  }
+});
+
+test('provider-account exception never applies to unchanged monthly ZIPs or unrelated functions', () => {
+  const original = backend(), unchanged = copy(original); unchanged.available_functions[0].a = '761546455604';
+  assert.throws(() => compareBackend(unchanged, original, { sha256: original.available_functions[0].d, bytes: 100 }), /Complete backend record/);
+  const { before, after, monthly } = changedMonthly(); after.available_functions[1].a = '761546455604';
+  assert.throws(() => compareBackend(after, before, monthly), /Complete backend record for scheduled/);
+  for (const invalid of ['', 'other-account', '12345678901', '1234567890123', 761546455604]) {
+    const bad = changedMonthly(); bad.after.available_functions[0].a = invalid;
+    assert.throws(() => compareBackend(bad.after, bad.before, bad.monthly), /Invalid monthly provider account/);
+  }
 });
 
 test('every unrelated provider field, digest, schedule and runtime setting is preserved', () => {

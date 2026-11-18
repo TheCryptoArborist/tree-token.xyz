@@ -25,10 +25,15 @@ release inputs.
 Only the isolated `arcade-monthly` ZIP may change. The manifest binds the exact
 handler/core files and existing vendor lock to its ZIP digest. All other
 function records stay identical, including unknown provider fields. The changed
-monthly function may receive new package IDs, creation time, size and digest;
-its provider account, runtime, memory, regions, routes, rate limit, observability
-and every other field must remain unchanged. API-materialized overrides are
-accepted only when equal to the captured effective setting.
+monthly function may receive new package IDs, creation time, size, digest and a
+valid 12-digit provider log-account allocation. Netlify's official CLI maps the
+compact `a` field to `account_id`; this initial provisioning exception applies
+only when the approved monthly ZIP digest actually changes. Its runtime,
+memory, regions, routes, rate limit, observability and every other configuration
+field remain unchanged. API-materialized overrides are accepted only when equal
+to the captured effective setting. The complete raw monthly record is then
+pinned and checked again before and after publication, including the allocation
+metadata. Every other function's complete record remains exact throughout.
 
 Every schedule and captured runtime setting, site/shared environment record
 fingerprint, build setting and site snippet fingerprint is checked again before
