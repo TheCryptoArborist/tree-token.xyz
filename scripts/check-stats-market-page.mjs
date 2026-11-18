@@ -95,7 +95,7 @@ async function configureNetwork(context, result) {
     if (url.origin === baseURL && ['GET', 'HEAD'].includes(request.method())) return route.continue();
     result.mockedExternalRequests.push(url.origin + url.pathname);
     if (request.resourceType() === 'document') return route.fulfill({ status: 200, contentType: 'text/html',
-      body: '<!doctype html><meta name="viewport" content="width=device-width"><style>body{margin:0;background:#081820;color:#a0b9bf;font:14px system-ui;padding:20px;overflow-wrap:anywhere}</style><p>CI TEST ONLY · Noodles chart placeholder</p>' });
+      body: '<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width"><style>body{margin:0;background:#081820;color:#a0b9bf;font:14px system-ui;padding:20px;overflow-wrap:anywhere}</style><p>CI TEST ONLY · Noodles chart placeholder</p>' });
     if (request.resourceType() === 'script') {
       // Preserve the exact pinned modules' named exports so the real application
       // modules can initialize. No external SDK runs and no wallet is registered.

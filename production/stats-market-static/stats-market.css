@@ -98,6 +98,11 @@
 }
 
 @media (max-width: 600px) {
+  #statsMarketPanel .stats-public-locks summary > b {
+    min-width: 0;
+    white-space: normal;
+  }
+
   #statsMarketPanel > #treeLiveChart.stats-noodles-chart {
     padding: 10px;
   }
