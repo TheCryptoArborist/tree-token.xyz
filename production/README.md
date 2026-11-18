@@ -1,3 +1,46 @@
+# Current production — Market Insights, 2026-11-17
+
+Locked ready deployment `6afd38b699fcd142a80207f5`, published at
+2026-11-18T05:34:19.756Z (UTC), source
+`81c802f3f2e0aba6959c490514396a0e2f201263`, release PR213,
+workflow `44244603229`. Canonical page: `/market-insights/`.
+The homepage now links to **Resources → Market Insights**.
+
+The release adds the three Market Insights application files and replaces only
+`/scripts/homepage-refresh.js` to add that navigation link. All **609 other
+existing paths remain byte-identical** to the freshly captured locked baseline
+`6afd22ad90e2e583fed38ea7`. The full current inventory is **613 static
+paths, 49 complete backend packages and five schedules**. Complete package,
+provider, runtime, schedule and protected configuration comparisons passed.
+The final published inventory and lock were checked again after canonical
+delivery and browser verification.
+
+All seven approved research views are available: Fear & Greed, Price Charts,
+Rainbow, Market Caps, CBBI, On-Chain and Cycle Tools. Both application scripts
+retain the approved preview bytes. Production HTML adds canonical metadata and
+navigation, removes preview indexing restrictions, and wraps long calculator
+result text on narrow phones.
+
+All 41 release/preservation tests passed. Candidate and canonical page checks
+passed at 320, 390, 768 and 1363 CSS pixels, covering the seven panels, keyboard
+navigation, mobile menu, chart labels and the maximum 2009 calculator case.
+Automated browser checks use labeled synthetic data and block third-party
+content. Separate desktop review of the live production page verified the
+Resources navigation, all seven tabs, all five live sentiment cards, 90-day
+history, BTC TradingView and TREE/Noodles charts, the Rainbow and Realized Price
+embeds, TOTAL3, all nine CBBI components and the current-price calculator.
+No wallet or transaction actions were performed.
+
+The complete publisher report, including all 613 file hashes and bound candidate
+and canonical browser evidence, is `docs/market-insights-release.json`.
+Its SHA-256 is `cfa0051e73c8544dadb46c1a01a5cd50a24416855edefc6562fb3f7299a6c001`.
+Release artifact `14401227320` has SHA-256
+`88fb4d2d38c198a4b47057083f862d7af4e906fd382fd53cea1325222ffd28b2`.
+Capture this full current baseline before any future publication; the historical
+root snapshot remains unsuitable for replacing current production.
+
+---
+
 # Current production — original NFTree deposit page, 2026-11-17
 
 Locked ready deploy `6afce679fb554257af0b2c57`, verified at 23:43:26 UTC, source

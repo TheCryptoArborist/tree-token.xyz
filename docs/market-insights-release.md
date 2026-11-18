@@ -6,9 +6,10 @@ tools together: Fear & Greed, Price Charts, Rainbow, Market Caps, CBBI, On-Chain
 and Cycle Tools.
 
 Approved preview source: `c819de96a5c37d2dd8f29470e5e47d85b74e1678` (draft PR210).
-The production page carries the same application scripts. Its HTML changes only
-production metadata, script paths, and navigation destinations. It no longer
-contains preview-only noindex directives or the preview title.
+The production page carries the same application scripts. Its HTML includes
+production metadata, script paths, navigation destinations, and a narrow-screen
+wrapping correction for long calculator output. It no longer contains preview-only
+noindex directives or the preview title.
 
 ## Public change boundary
 
@@ -46,3 +47,21 @@ provider data, attribution and freshness handling remain in the application.
 After publication, record the source commit, deployment ID, complete inventory
 comparison and verification result in `production/README.md` and a release
 record. Verify the canonical page and the homepage Resources link in the browser.
+
+## Published release
+
+Production: https://tree-token.xyz/market-insights/
+
+- Deployment: `6afd38b699fcd142a80207f5` (ready and locked).
+- Published source: `81c802f3f2e0aba6959c490514396a0e2f201263`.
+- Release PR: https://github.com/TheCryptoArborist/tree-token.xyz/pull/213
+- Workflow: https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44244603229
+- Complete release proof: [market-insights-release.json](market-insights-release.json).
+
+The complete inventory contains 613 paths: 609 existing paths unchanged, one
+reviewed homepage navigation replacement and three new page files. All 49
+backend packages, five schedules and protected configuration were preserved.
+Both candidate and canonical browser proofs passed at all four required widths.
+The separate live desktop review confirmed Resources navigation and the real
+provider feeds and embeds. Automated layout screenshots contain labeled test
+fixtures and must not be presented as current market data.
