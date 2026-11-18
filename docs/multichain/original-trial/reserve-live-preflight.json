@@ -1,0 +1,12 @@
+{
+  "feeMist": "72951105",
+  "gasMist": "4053443",
+  "totalMist": "77004548",
+  "guid": "0x8e1331227a97541412fb436a355605469cdcfb0d97d3f7538b33185c06ca7f67",
+  "vaultId": "0x45bf08499784ea9ff658937165a9449d509aa37de47a728af44e903387f3ca2c",
+  "nftId": "0x046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba",
+  "quotedAt": 1794973835247,
+  "checkedAt": "2026-11-18T03:50:35.247Z",
+  "assistantSubmitted": false,
+  "note": "Unsigned original reserve quote/send preflight only. Original NFT stays intact in its vault. No actual packet submitted or BNB delivery claimed."
+}
