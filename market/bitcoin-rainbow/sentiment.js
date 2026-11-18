@@ -14,6 +14,25 @@
     btc: { coin: 'btc', name: 'Bitcoin', page: ROOT + '/fear-and-greed-index/btc/' },
     market: { coin: 'market', name: 'Crypto market', page: ROOT + '/fear-and-greed-index/' }
   };
+  // Plain-language labels follow CryptoKeyhole's published component definitions.
+  // Match displayed names so provider-specific or newly added inputs are never guessed.
+  const componentDescriptions = {
+    'price momentum': 'price versus its 30-day and 90-day averages',
+    'volatility': 'size of daily price swings over the past month',
+    'funding rates': 'regular payments between traders in futures with no expiry',
+    'open interest': 'change in open futures positions over 30 days',
+    'taker flow': 'share of trading volume where buyers accept the asking price',
+    'long/short ratio': 'accounts betting on price rises versus falls',
+    'holder profit': 'paper gains or losses for recent buyers',
+    'exchange flows': 'coins entering exchanges minus coins leaving over 30 days',
+    'attention': 'recent Wikipedia views compared with their usual level',
+    'options implied volatility': 'size of future price swings implied by options prices',
+    'bitcoin': 'Bitcoin’s own combined fear and greed reading',
+    'ether': 'Ether’s own combined fear and greed reading',
+    'altcoins': 'average fear and greed across other eligible coins',
+    'market breadth': 'share of tracked coins above their 90-day average price',
+    'stablecoin flows': '30-day change in dollar stablecoin supply on Ethereum'
+  };
   const colors = { 'extreme-fear': '#e76b77', fear: '#f1a365', neutral: '#efd36e', greed: '#7cda9f', 'extreme-greed': '#34d399' };
   const state = {
     active: 'sui',
@@ -178,17 +197,28 @@
       $('mi-sentiment-breakdown').textContent = 'Component data unavailable from the provider.';
       return;
     }
-    $('mi-sentiment-breakdown').textContent = rows.length + ' available components · source-supplied scores and weights';
+    $('mi-sentiment-breakdown').textContent = rows.length + ' available components · source-supplied scores and weights. Scores run from 0 (fear) to 100 (greed); they are sentiment scores, not the raw measurements.';
     rows.sort((a, b) => Number(b.weight) - Number(a.weight));
     for (const row of rows) {
       const item = document.createElement('div');
       item.className = 'mi-sentiment-component';
       const top = document.createElement('div');
       top.className = 'mi-sentiment-component-top';
+      const label = document.createElement('div');
+      label.className = 'mi-sentiment-component-label';
       const name = document.createElement('strong'); name.textContent = row.name;
+      label.appendChild(name);
+      const description = componentDescriptions[row.name.trim().toLowerCase()];
+      if (description) {
+        const explanation = document.createElement('span');
+        explanation.className = 'mi-sentiment-component-description';
+        explanation.textContent = ' (' + description + ')';
+        label.appendChild(explanation);
+      }
       const details = document.createElement('span');
+      details.className = 'mi-sentiment-component-value';
       details.textContent = Math.round(row.score) + '/100 · ' + Number(row.weight).toFixed(0) + '% weight';
-      top.append(name, details);
+      top.append(label, details);
       const track = document.createElement('div'); track.className = 'mi-sentiment-component-track';
       const fill = document.createElement('div'); fill.className = 'mi-sentiment-component-fill';
       fill.style.width = row.score + '%';

@@ -525,9 +525,11 @@
     .mi-sentiment-lower {display:grid;grid-template-columns:1.2fr .8fr;gap:15px}
     .mi-sentiment-details h4 {margin:0 0 7px;color:var(--gold)}
     .mi-sentiment-component-list {display:grid;gap:12px}
-    .mi-sentiment-component-top {display:flex;align-items:flex-start;justify-content:space-between;gap:12px;font-size:.77rem;color:#c2dbd1}
+    .mi-sentiment-component-top {display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:4px 12px;font-size:.77rem;line-height:1.55;color:#c2dbd1}
+    .mi-sentiment-component-label{min-width:0;overflow-wrap:break-word}
     .mi-sentiment-component-top strong{color:#e6f8f2}
-    .mi-sentiment-component-top span{text-align:right;color:#b5d4c1}
+    .mi-sentiment-component-description{color:#b5d4c1;font-weight:400}
+    .mi-sentiment-component-value{text-align:right;white-space:nowrap;color:#b5d4c1}
     .mi-sentiment-component-track{margin-top:6px;background:#102d2b;border-radius:99px;height:7px;overflow:hidden}
     .mi-sentiment-component-fill{height:100%;border-radius:99px}
     .mi-sentiment-recent-list{padding-left:21px;font-size:.79rem;color:#c4d5d3;line-height:1.7}
@@ -553,6 +555,8 @@
       .mi-sentiment-card>span:not(.mi-sentiment-card-label){font-size:.69rem;line-height:1.3}
       .mi-sentiment-card>small{font-size:.62rem;overflow-wrap:anywhere}
       .mi-sentiment-current,.mi-sentiment-right,.mi-sentiment-details{padding:14px}
+      .mi-sentiment-component-top{grid-template-columns:minmax(0,1fr)}
+      .mi-sentiment-component-value{text-align:left}
       .mi-sentiment-controls{display:block}
       .mi-sentiment-actions>*{flex:1 1 100%}
     }
