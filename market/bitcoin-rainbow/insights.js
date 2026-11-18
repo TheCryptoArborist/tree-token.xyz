@@ -273,7 +273,7 @@
     },'image/png');
   });
 
-  const tabIds=['sentiment','market','cbbi','onchain','cycles'];
+  const tabIds=['sentiment','rainbow','market','cbbi','onchain','cycles'];
   const activate=(id)=>{
     if(!tabIds.includes(id))return;
     for(const name of tabIds){
@@ -295,5 +295,18 @@
       activate(tabIds[next]);$('mi-tab-'+tabIds[next])?.focus();
     });
   });
-  activate('sentiment');
+  // Preserve the existing Rainbow shortcut and direct links after moving the
+  // chart into the Explorer. Reveal the panel before the anchor scroll occurs.
+  const rainbowAnchors = ['#rainbow-chart', '#rainbow-guide', '#research-notes'];
+  const revealRainbowAnchor = () => {
+    if (!rainbowAnchors.includes(window.location.hash)) return;
+    activate('rainbow');
+    document.getElementById(window.location.hash.slice(1))?.scrollIntoView({block:'start'});
+  };
+  $$('a[href="#rainbow-chart"], a[href="#rainbow-guide"], a[href="#research-notes"]').forEach(link => {
+    link.addEventListener('click', () => activate('rainbow'));
+  });
+  window.addEventListener('hashchange', revealRainbowAnchor);
+  if (rainbowAnchors.includes(window.location.hash)) revealRainbowAnchor();
+  else activate('sentiment');
 })();

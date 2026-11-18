@@ -600,6 +600,12 @@
       .rb-band-name { gap:7px }
       .rb-reading-steps,.rb-metric-guide { grid-template-columns:1fr }
     }
+    .mi-rainbow-pane .chart-card { box-shadow:none }
+    .mi-rainbow-pane .chart-card-head h3 { font-size:1.4rem; margin:0 }
+    @media(max-width:650px) {
+      .mi-tabbar { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); overflow:visible; gap:6px }
+      .mi-tab { min-width:0; min-height:48px; padding:10px 5px; font-size:.78rem }
+    }
   </style>
 </head>
 <body>
@@ -644,7 +650,7 @@
       <div class="intro-copy">
         <p class="eyebrow"><span class="seed" aria-hidden="true"></span>TREE Market Insights · Research tools</p>
         <h1 class="hero-title" id="page-title">Crypto <span class="rainbow">Market Insights</span></h1>
-        <p class="lead">Explore the sourced Bitcoin Rainbow Chart, market-cap indexes, on-chain valuations and CBBI historical confidence. Every live observation stays labeled by its original provider and data date.</p>
+        <p class="lead">Explore the Bitcoin Rainbow Chart, SUI and crypto sentiment, market capitalization and on-chain valuation in one place. Read each observation with its source and data date.</p>
         <div class="hero-actions">
           <a class="action" href="#rainbow-chart">Rainbow Chart</a><a class="action secondary" href="#market-explorer">Market Explorer</a>
         </div>
@@ -655,101 +661,17 @@
       </aside>
     </section>
 
-    <section class="chart-card" id="rainbow-chart" aria-labelledby="chart-title">
-      <div class="chart-card-head">
-        <div>
-          <h2 id="chart-title">Bitcoin's historical valuation bands</h2>
-          <p>Interactive chart · logarithmic price scale · daily observations</p>
-        </div>
-        <span class="source-pill">Source updates daily</span>
-      </div>
-      <div class="rainbow-rule" aria-hidden="true"></div>
-      <div class="embed-box">
-        <iframe
-          class="chart-embed"
-          src="https://axeladlerjr.com/charts/bitcoin-rainbow-chart/embed.html"
-          title="Interactive Bitcoin Rainbow Chart from Axel Adler Jr., using daily UTC close prices"
-          width="100%"
-          height="590"
-          loading="eager"
-          referrerpolicy="strict-origin-when-cross-origin"
-        >
-          <p>Interactive chart unavailable in this browser. <a href="https://axeladlerjr.com/charts/bitcoin-rainbow-chart/">View the source chart</a>.</p>
-        </iframe>
-      </div>
-      <div class="embed-caption">
-        <div>Chart data and model: <a href="https://axeladlerjr.com/charts/bitcoin-rainbow-chart/" target="_blank" rel="noopener noreferrer" aria-label="Source attribution to Axel Adler Jr., opens in a new tab">Axel Adler Jr.</a> · Updated daily by provider</div>
-        <span>The observation date and price appear inside the source chart.</span>
-      </div>
-      <div class="rb-guide" id="rainbow-guide">
-        <div class="rb-guide-head">
-          <h3 id="rb-guide-title">Understand the rainbow</h3>
-          <span>Axel Adler Jr. model</span>
-        </div>
-        <div class="rb-guide-tabs" id="rb-guide-tabs" role="tablist" aria-label="Rainbow chart guide" hidden>
-          <button class="rb-guide-tab" id="rb-tab-bands" type="button" role="tab" aria-selected="true" aria-controls="rb-panel-bands" data-rb-tab="bands">Band guide</button>
-          <button class="rb-guide-tab" id="rb-tab-read" type="button" role="tab" aria-selected="false" aria-controls="rb-panel-read" tabindex="-1" data-rb-tab="read">How to read</button>
-          <button class="rb-guide-tab" id="rb-tab-details" type="button" role="tab" aria-selected="false" aria-controls="rb-panel-details" tabindex="-1" data-rb-tab="details">Reading details</button>
-        </div>
-        <section class="rb-guide-panel" id="rb-panel-bands" aria-labelledby="rb-heading-bands">
-          <h4 id="rb-heading-bands">What each band means</h4>
-          <table class="rb-band-table">
-            <caption>From the lowest band to the highest on the chart.</caption>
-            <thead><tr><th scope="col">Band</th><th scope="col">Position relative to the model</th></tr></thead>
-            <tbody>
-              <tr><th scope="row"><span class="rb-band-name"><span class="rb-band-swatch" style="--band-color:#3E4FA8" aria-hidden="true"></span>1 · Deep discount</span></th><td>Lowest zone, far beneath the trend.</td></tr>
-              <tr><th scope="row"><span class="rb-band-name"><span class="rb-band-swatch" style="--band-color:#3B7FD0" aria-hidden="true"></span>2 · Discount</span></th><td>A substantial gap below the trend.</td></tr>
-              <tr><th scope="row"><span class="rb-band-name"><span class="rb-band-swatch" style="--band-color:#3FA7C4" aria-hidden="true"></span>3 · Below trend</span></th><td>Below the statistical baseline.</td></tr>
-              <tr><th scope="row"><span class="rb-band-name"><span class="rb-band-swatch" style="--band-color:#4DB38A" aria-hidden="true"></span>4 · Slightly below trend</span></th><td>A modest gap below the trend.</td></tr>
-              <tr><th scope="row"><span class="rb-band-name"><span class="rb-band-swatch" style="--band-color:#8CC260" aria-hidden="true"></span>5 · Near trend</span></th><td>Around the fitted central curve.</td></tr>
-              <tr><th scope="row"><span class="rb-band-name"><span class="rb-band-swatch" style="--band-color:#E3C84A" aria-hidden="true"></span>6 · Above trend</span></th><td>Trading at a premium to the trend.</td></tr>
-              <tr><th scope="row"><span class="rb-band-name"><span class="rb-band-swatch" style="--band-color:#EE9F3F" aria-hidden="true"></span>7 · Stretched</span></th><td>An extended move above the trend.</td></tr>
-              <tr><th scope="row"><span class="rb-band-name"><span class="rb-band-swatch" style="--band-color:#E06A3B" aria-hidden="true"></span>8 · Overheated</span></th><td>Unusually high for the cycle's volatility.</td></tr>
-              <tr><th scope="row"><span class="rb-band-name"><span class="rb-band-swatch" style="--band-color:#C23B3B" aria-hidden="true"></span>9 · Extreme</span></th><td>Highest zone, beyond +2 on the model's standardized scale.</td></tr>
-            </tbody>
-          </table>
-          <p class="rb-guide-note">These names describe model position. A band alone does not tell you when to buy or sell.</p>
-        </section>
-        <section class="rb-guide-panel" id="rb-panel-read" aria-labelledby="rb-heading-read">
-          <h4 id="rb-heading-read">How to read this chart</h4>
-          <p class="rb-guide-intro">Follow Bitcoin's price through the colored zones, then compare it with the model curve for the same date.</p>
-          <ol class="rb-reading-steps">
-            <li><h5>Check the date</h5><p>Observations use UTC daily closes. The chart's data date can lag the price trading now.</p></li>
-            <li><h5>Read proportional moves</h5><p>The vertical axis is logarithmic: a doubling takes the same distance at any price level.</p></li>
-            <li><h5>Compare with the trend</h5><p>This version fits price against Bitcoin's age and adjusts band widths for each halving cycle's volatility.</p></li>
-            <li><h5>Use the wider context</h5><p>Price can stay in a zone for months. The fitted model can change; a band does not predict a reversal.</p></li>
-          </ol>
-          <p class="rb-guide-note">Use this model's own labels. Other Rainbow charts use different formulas and can place the same price in a different band.</p>
-        </section>
-        <section class="rb-guide-panel" id="rb-panel-details" aria-labelledby="rb-heading-details">
-          <h4 id="rb-heading-details">Understanding the provider's current reading</h4>
-          <p class="rb-guide-intro">The provider displays these six values together for one observation date. These are field explanations; the latest figures are available on the source page.</p>
-          <dl class="rb-metric-guide">
-            <div><dt>BTC price</dt><dd>Bitcoin's observed daily close in US dollars.</dd></div>
-            <div><dt>Model price</dt><dd>The fitted trend value on that date. It is a reference, not a price target.</dd></div>
-            <div><dt>Vs model</dt><dd>The percentage above or below the trend: (BTC price ÷ model price − 1) × 100.</dd></div>
-            <div><dt>Band floor</dt><dd>The lower boundary of the occupied band. A model boundary is not guaranteed support.</dd></div>
-            <div><dt>Band</dt><dd>The named zone and its position from 1 (lowest) to 9 (highest).</dd></div>
-            <div><dt>Band ceiling</dt><dd>The upper boundary of the occupied band. An outer boundary may be open-ended.</dd></div>
-          </dl>
-          <p class="rb-guide-note">“Open-ended” means the model has no boundary on that side; it does not mean $0. Compare values from the same source date.</p>
-          <p class="rb-reading-link"><a href="https://axeladlerjr.com/charts/bitcoin-rainbow-chart/" target="_blank" rel="noopener noreferrer">View latest Rainbow reading on Axel Adler Jr. ↗</a></p>
-        </section>
-        <p class="rb-guide-credit">Source: <a href="https://axeladlerjr.com/charts/bitcoin-rainbow-chart/" target="_blank" rel="noopener noreferrer">Axel Adler Jr.'s Rainbow Chart</a>. TREE explanations are condensed and reworded; chart data is licensed <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>.</p>
-      </div>
-    </section>
-
-
     <section class="mi-explorer" id="market-explorer" aria-labelledby="mi-explorer-title">
       <div class="mi-section-head">
         <div>
-          <p class="eyebrow"><span class="seed" aria-hidden="true"></span>EXPLORE MORE MARKET DATA</p>
+          <p class="eyebrow"><span class="seed" aria-hidden="true"></span>EXPLORE YOUR MARKET TOOLS</p>
           <h2 id="mi-explorer-title">Crypto Market Explorer</h2>
-          <p>Compare SUI, Bitcoin and overall crypto sentiment, then explore TradingView market caps, CBBI, on-chain valuation and historical cycle tools. No wallet connection needed.</p>
+          <p>Compare SUI, Bitcoin and overall crypto sentiment, then explore the Bitcoin Rainbow Chart, market caps, CBBI, on-chain valuation and historical cycles. No wallet connection needed.</p>
         </div>
       </div>
       <div class="mi-tabbar" role="tablist" aria-label="Crypto research views">
         <button class="mi-tab" role="tab" id="mi-tab-sentiment" data-mi-tab="sentiment" aria-controls="mi-pane-sentiment" aria-selected="true">Fear &amp; Greed</button>
+        <button class="mi-tab" type="button" role="tab" id="mi-tab-rainbow" data-mi-tab="rainbow" aria-controls="mi-pane-rainbow" aria-selected="false" tabindex="-1">Rainbow</button>
         <button class="mi-tab" role="tab" id="mi-tab-market" data-mi-tab="market" aria-controls="mi-pane-market" aria-selected="false" tabindex="-1">Market Caps</button>
         <button class="mi-tab" role="tab" id="mi-tab-cbbi" data-mi-tab="cbbi" aria-controls="mi-pane-cbbi" aria-selected="false" tabindex="-1">CBBI</button>
         <button class="mi-tab" role="tab" id="mi-tab-onchain" data-mi-tab="onchain" aria-controls="mi-pane-onchain" aria-selected="false" tabindex="-1">On-Chain</button>
@@ -831,6 +753,120 @@
             <button type="button" id="mi-sentiment-copy" class="mi-sentiment-secondary">Copy summary</button>
           </div>
           <p class="mi-sentiment-credit">Data, methodology and hourly observations: <a id="mi-sentiment-source-link" href="https://cryptokeyhole.com/fear-and-greed-index/sui/" target="_blank" rel="noopener noreferrer">CryptoKeyhole</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>. The reading is the sentiment of the selected <strong>asset</strong>, not a measure of TREE investor sentiment. BTC, SUI and market readings may have different timestamp cutoffs. No investment signal is implied.</p>
+        </section>
+
+        <section class="mi-pane mi-rainbow-pane" id="mi-pane-rainbow" role="tabpanel" aria-labelledby="mi-tab-rainbow" hidden>
+    <section class="chart-card" id="rainbow-chart" aria-labelledby="chart-title">
+      <div class="chart-card-head">
+        <div>
+          <h3 id="chart-title">Bitcoin's historical valuation bands</h3>
+          <p>Interactive chart · logarithmic price scale · daily observations</p>
+        </div>
+        <span class="source-pill">Source updates daily</span>
+      </div>
+      <div class="rainbow-rule" aria-hidden="true"></div>
+      <div class="embed-box">
+        <iframe
+          class="chart-embed"
+          src="https://axeladlerjr.com/charts/bitcoin-rainbow-chart/embed.html"
+          title="Interactive Bitcoin Rainbow Chart from Axel Adler Jr., using daily UTC close prices"
+          width="100%"
+          height="590"
+          loading="lazy"
+          referrerpolicy="strict-origin-when-cross-origin"
+        >
+          <p>Interactive chart unavailable in this browser. <a href="https://axeladlerjr.com/charts/bitcoin-rainbow-chart/">View the source chart</a>.</p>
+        </iframe>
+      </div>
+      <div class="embed-caption">
+        <div>Chart data and model: <a href="https://axeladlerjr.com/charts/bitcoin-rainbow-chart/" target="_blank" rel="noopener noreferrer" aria-label="Source attribution to Axel Adler Jr., opens in a new tab">Axel Adler Jr.</a> · Updated daily by provider</div>
+        <span>The observation date and price appear inside the source chart.</span>
+      </div>
+      <div class="rb-guide" id="rainbow-guide">
+        <div class="rb-guide-head">
+          <h3 id="rb-guide-title">Understand the rainbow</h3>
+          <span>Axel Adler Jr. model</span>
+        </div>
+        <div class="rb-guide-tabs" id="rb-guide-tabs" role="tablist" aria-label="Rainbow chart guide" hidden>
+          <button class="rb-guide-tab" id="rb-tab-bands" type="button" role="tab" aria-selected="true" aria-controls="rb-panel-bands" data-rb-tab="bands">Band guide</button>
+          <button class="rb-guide-tab" id="rb-tab-read" type="button" role="tab" aria-selected="false" aria-controls="rb-panel-read" tabindex="-1" data-rb-tab="read">How to read</button>
+          <button class="rb-guide-tab" id="rb-tab-details" type="button" role="tab" aria-selected="false" aria-controls="rb-panel-details" tabindex="-1" data-rb-tab="details">Reading details</button>
+        </div>
+        <section class="rb-guide-panel" id="rb-panel-bands" aria-labelledby="rb-heading-bands">
+          <h4 id="rb-heading-bands">What each band means</h4>
+          <table class="rb-band-table">
+            <caption>From the lowest band to the highest on the chart.</caption>
+            <thead><tr><th scope="col">Band</th><th scope="col">Position relative to the model</th></tr></thead>
+            <tbody>
+              <tr><th scope="row"><span class="rb-band-name"><span class="rb-band-swatch" style="--band-color:#3E4FA8" aria-hidden="true"></span>1 · Deep discount</span></th><td>Lowest zone, far beneath the trend.</td></tr>
+              <tr><th scope="row"><span class="rb-band-name"><span class="rb-band-swatch" style="--band-color:#3B7FD0" aria-hidden="true"></span>2 · Discount</span></th><td>A substantial gap below the trend.</td></tr>
+              <tr><th scope="row"><span class="rb-band-name"><span class="rb-band-swatch" style="--band-color:#3FA7C4" aria-hidden="true"></span>3 · Below trend</span></th><td>Below the statistical baseline.</td></tr>
+              <tr><th scope="row"><span class="rb-band-name"><span class="rb-band-swatch" style="--band-color:#4DB38A" aria-hidden="true"></span>4 · Slightly below trend</span></th><td>A modest gap below the trend.</td></tr>
+              <tr><th scope="row"><span class="rb-band-name"><span class="rb-band-swatch" style="--band-color:#8CC260" aria-hidden="true"></span>5 · Near trend</span></th><td>Around the fitted central curve.</td></tr>
+              <tr><th scope="row"><span class="rb-band-name"><span class="rb-band-swatch" style="--band-color:#E3C84A" aria-hidden="true"></span>6 · Above trend</span></th><td>Trading at a premium to the trend.</td></tr>
+              <tr><th scope="row"><span class="rb-band-name"><span class="rb-band-swatch" style="--band-color:#EE9F3F" aria-hidden="true"></span>7 · Stretched</span></th><td>An extended move above the trend.</td></tr>
+              <tr><th scope="row"><span class="rb-band-name"><span class="rb-band-swatch" style="--band-color:#E06A3B" aria-hidden="true"></span>8 · Overheated</span></th><td>Unusually high for the cycle's volatility.</td></tr>
+              <tr><th scope="row"><span class="rb-band-name"><span class="rb-band-swatch" style="--band-color:#C23B3B" aria-hidden="true"></span>9 · Extreme</span></th><td>Highest zone, beyond +2 on the model's standardized scale.</td></tr>
+            </tbody>
+          </table>
+          <p class="rb-guide-note">These names describe model position. A band alone does not tell you when to buy or sell.</p>
+        </section>
+        <section class="rb-guide-panel" id="rb-panel-read" aria-labelledby="rb-heading-read">
+          <h4 id="rb-heading-read">How to read this chart</h4>
+          <p class="rb-guide-intro">Follow Bitcoin's price through the colored zones, then compare it with the model curve for the same date.</p>
+          <ol class="rb-reading-steps">
+            <li><h5>Check the date</h5><p>Observations use UTC daily closes. The chart's data date can lag the price trading now.</p></li>
+            <li><h5>Read proportional moves</h5><p>The vertical axis is logarithmic: a doubling takes the same distance at any price level.</p></li>
+            <li><h5>Compare with the trend</h5><p>This version fits price against Bitcoin's age and adjusts band widths for each halving cycle's volatility.</p></li>
+            <li><h5>Use the wider context</h5><p>Price can stay in a zone for months. The fitted model can change; a band does not predict a reversal.</p></li>
+          </ol>
+          <p class="rb-guide-note">Use this model's own labels. Other Rainbow charts use different formulas and can place the same price in a different band.</p>
+        </section>
+        <section class="rb-guide-panel" id="rb-panel-details" aria-labelledby="rb-heading-details">
+          <h4 id="rb-heading-details">Understanding the provider's current reading</h4>
+          <p class="rb-guide-intro">The provider displays these six values together for one observation date. These are field explanations; the latest figures are available on the source page.</p>
+          <dl class="rb-metric-guide">
+            <div><dt>BTC price</dt><dd>Bitcoin's observed daily close in US dollars.</dd></div>
+            <div><dt>Model price</dt><dd>The fitted trend value on that date. It is a reference, not a price target.</dd></div>
+            <div><dt>Vs model</dt><dd>The percentage above or below the trend: (BTC price ÷ model price − 1) × 100.</dd></div>
+            <div><dt>Band floor</dt><dd>The lower boundary of the occupied band. A model boundary is not guaranteed support.</dd></div>
+            <div><dt>Band</dt><dd>The named zone and its position from 1 (lowest) to 9 (highest).</dd></div>
+            <div><dt>Band ceiling</dt><dd>The upper boundary of the occupied band. An outer boundary may be open-ended.</dd></div>
+          </dl>
+          <p class="rb-guide-note">“Open-ended” means the model has no boundary on that side; it does not mean $0. Compare values from the same source date.</p>
+          <p class="rb-reading-link"><a href="https://axeladlerjr.com/charts/bitcoin-rainbow-chart/" target="_blank" rel="noopener noreferrer">View latest Rainbow reading on Axel Adler Jr. ↗</a></p>
+        </section>
+        <p class="rb-guide-credit">Source: <a href="https://axeladlerjr.com/charts/bitcoin-rainbow-chart/" target="_blank" rel="noopener noreferrer">Axel Adler Jr.'s Rainbow Chart</a>. TREE explanations are condensed and reworded; chart data is licensed <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>.</p>
+      </div>
+    </section>
+        <section class="cards" aria-label="How to read this chart">
+      <article class="card">
+        <p class="card-number">01 · Historical view</p>
+        <h3>Look at multiple cycles</h3>
+        <p>Explore rallies, corrections, and drawdowns together rather than interpreting a single band in isolation.</p>
+      </article>
+      <article class="card">
+        <p class="card-number">02 · Model-relative</p>
+        <h3>Colors describe distance</h3>
+        <p>Cooler bands indicate prices further below the fitted trend; warmer bands indicate prices further above it. Colors are not trade instructions.</p>
+      </article>
+      <article class="card">
+        <p class="card-number">03 · Risk awareness</p>
+        <h3>A low band is not a floor</h3>
+        <p>Bitcoin can remain in a low band for months or fall further. Regression curves also change when new observations are fitted.</p>
+      </article>
+    </section>
+
+    <section class="notes" aria-labelledby="research-notes">
+      <h3 id="research-notes">Research notes &amp; verification</h3>
+      <p>Before treating a historical band as a signal, identify the precise model version, its fitted data at that time, and the UTC price series being compared. A revised chart fitted afterward is a hindsight reconstruction.</p>
+      <ul>
+        <li><strong>Price provenance:</strong> The embedded provider displays its own historical price observations and update date. We do not override them with a separately fetched quote.</li>
+        <li><strong>Model provenance:</strong> This version fits a long-term Bitcoin trend and adjusts band width for each halving cycle's observed volatility. It differs from other Rainbow formulas.</li>
+        <li><strong>Historical caution:</strong> A June 2022 public “Fire Sale” observation preceded further price declines. It does not establish the exact first-entry date; an event-study backtest needs verified archived band rules.</li>
+        <li><strong>Availability:</strong> If the embedded chart cannot load, its provider attribution link beneath the chart offers a direct source fallback. TREE does not replace unavailable market data with invented values.</li>
+      </ul>
+    </section>
         </section>
 
         <section class="mi-pane" id="mi-pane-market" role="tabpanel" aria-labelledby="mi-tab-market" hidden>
@@ -928,34 +964,6 @@
       </div>
     </section>
 
-        <section class="cards" aria-label="How to read this chart">
-      <article class="card">
-        <p class="card-number">01 · Historical view</p>
-        <h3>Look at multiple cycles</h3>
-        <p>Explore rallies, corrections, and drawdowns together rather than interpreting a single band in isolation.</p>
-      </article>
-      <article class="card">
-        <p class="card-number">02 · Model-relative</p>
-        <h3>Colors describe distance</h3>
-        <p>Cooler bands indicate prices further below the fitted trend; warmer bands indicate prices further above it. Colors are not trade instructions.</p>
-      </article>
-      <article class="card">
-        <p class="card-number">03 · Risk awareness</p>
-        <h3>A low band is not a floor</h3>
-        <p>Bitcoin can remain in a low band for months or fall further. Regression curves also change when new observations are fitted.</p>
-      </article>
-    </section>
-
-    <section class="notes" aria-labelledby="research-notes">
-      <h2 id="research-notes">Research notes &amp; verification</h2>
-      <p>Before treating a historical band as a signal, identify the precise model version, its fitted data at that time, and the UTC price series being compared. A revised chart fitted afterward is a hindsight reconstruction.</p>
-      <ul>
-        <li><strong>Price provenance:</strong> The embedded provider displays its own historical price observations and update date. We do not override them with a separately fetched quote.</li>
-        <li><strong>Model provenance:</strong> This version fits a long-term Bitcoin trend and adjusts band width for each halving cycle's observed volatility. It differs from other Rainbow formulas.</li>
-        <li><strong>Historical caution:</strong> A June 2022 public “Fire Sale” observation preceded further price declines. It does not establish the exact first-entry date; an event-study backtest needs verified archived band rules.</li>
-        <li><strong>Availability:</strong> If the embedded chart cannot load, its provider attribution link beneath the chart offers a direct source fallback. TREE does not replace unavailable market data with invented values.</li>
-      </ul>
-    </section>
   </main>
   <footer class="site-footer">
     <div class="footer-inner">
