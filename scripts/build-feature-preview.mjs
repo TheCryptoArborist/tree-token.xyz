@@ -21,6 +21,7 @@ const arcadeRuntime = JSON.parse(await readFile(resolve(root, arcadeDirectory, '
 const arcadeInventory = JSON.parse(await readFile(resolve(root, 'production/sti-wallet-recovery-release-20261118.json'), 'utf8'));
 const arcadeOverlays = [
   { path: '/play/index.html', source: `${arcadeDirectory}/index.html` },
+  { path: '/arcade-review/index.html', source: `${arcadeDirectory}/review.html` },
   { path: '/scripts/arcade-organization.js', source: 'scripts/arcade-organization.js' },
   { path: '/styles/arcade-organization.css', source: 'styles/arcade-organization.css' },
   { path: '/scripts/arcade-season-deadline.js', source: 'scripts/arcade-season-deadline.js' },

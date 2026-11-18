@@ -93,6 +93,19 @@ The last audited production inventory was 616 paths, 49 backend records and five
 schedules. Those counts are evidence from that release, not constants to assume
 at the next release. The review builder does not publish or switch production.
 
+## Verification recorded for review
+
+The 22 organization/countdown cases and nine preview-boundary cases pass locally.
+Coverage includes six initial tab hashes, keyboard/history routing, preserved
+control identity and input state, campaign disclosures, legacy hidden-state
+updates, UTC cutoff/rollover, and preview transport/control/storage restrictions.
+The feature preview builds 336 explicit files, including a preview-only responsive
+review frame at `/arcade-review/` with 320, 390, 768 and 1200 CSS-pixel widths.
+It loads the actual review page, not a separate mockup. All 50 captured/reused current
+Arcade assets and the anonymous public-rules snapshot are hash-checked by the
+builder. Existing archived snapshot and 38-handler source parity gates pass.
+Browser layout review remains separate from these automated checks.
+
 ## External technical guidance
 
 The live MystenLabs/skills README was checked for this request. Applicable
