@@ -1,0 +1,156 @@
+name: Verify and publish STI purchase repair
+
+on:
+  pull_request:
+    paths:
+      - 'production/sti-purchase-static/**'
+      - 'scripts/*sti-purchase*'
+      - 'tests/sti-purchase-*.test.mjs'
+      - 'tests/sti-approval-flow.test.mjs'
+      - '.github/workflows/publish-sti-purchase.yml'
+  push:
+    branches: [main, 'feature/sti-purchase-*']
+    paths:
+      - 'production/sti-purchase-static/**'
+      - 'scripts/*sti-purchase*'
+      - 'tests/sti-purchase-*.test.mjs'
+      - 'tests/sti-approval-flow.test.mjs'
+      - '.github/workflows/publish-sti-purchase.yml'
+  workflow_dispatch:
+    inputs:
+      expected_deploy:
+        description: Current locked deployment; a changed baseline requires a new review
+        required: true
+        default: '6afd423531560084e7dd48e8'
+        type: string
+      publish:
+        description: Publish the verified new candidate (main only)
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tree-production-preservation-${{ github.event_name == 'pull_request' && github.ref || 'release' }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Verify STI consent, purchase and preservation guards
+        run: |
+          node --test tests/sti-purchase-core.test.mjs tests/sti-approval-flow.test.mjs tests/sti-purchase-release.test.mjs tests/preserved-release.test.mjs
+          node --check production/sti-purchase-static/sti-purchase-core.js
+          node --check production/sti-purchase-static/sti-widget.js
+          node --check scripts/release-sti-purchase.mjs
+          node --check scripts/sti-purchase-delivery.mjs
+          node --check scripts/check-sti-purchase-page.mjs
+          git diff --check
+      - name: Install isolated browser checker
+        run: |
+          npm install --prefix "$RUNNER_TEMP/sti-purchase-browser" --ignore-scripts --no-audit --no-fund playwright@1.56.1
+          "$RUNNER_TEMP/sti-purchase-browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Check quote review at desktop and phone widths without signing
+        env:
+          STI_PURCHASE_BROWSER_MODULE: ${{ runner.temp }}/sti-purchase-browser/node_modules/playwright/index.mjs
+          STI_PURCHASE_TEST_BASE: http://127.0.0.1:8765
+          STI_PURCHASE_SOURCE_COMMIT: ${{ github.sha }}
+        run: |
+          node scripts/check-sti-purchase-page.mjs --prepare-static "$RUNNER_TEMP/sti-purchase-site"
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory "$RUNNER_TEMP/sti-purchase-site" > "$RUNNER_TEMP/sti-purchase-http.log" 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          node scripts/check-sti-purchase-page.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sti-purchase-local-${{ github.run_id }}
+          path: |
+            .netlify/sti-purchase-*.png
+            .netlify/sti-purchase-browser-checks.json
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 14
+  candidate:
+    needs: verify
+    if: >-
+      (github.event_name == 'push' &&
+        ((startsWith(github.ref, 'refs/heads/feature/sti-purchase-') && contains(github.event.head_commit.message, '[preview sti purchase]')) ||
+         (github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[publish sti purchase]')))) ||
+      (github.event_name == 'workflow_dispatch' &&
+        (github.ref == 'refs/heads/main' || (startsWith(github.ref, 'refs/heads/feature/sti-purchase-') && !inputs.publish)))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install isolated browser checker
+        run: |
+          npm install --prefix "$RUNNER_TEMP/sti-purchase-browser" --ignore-scripts --no-audit --no-fund playwright@1.56.1
+          "$RUNNER_TEMP/sti-purchase-browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Capture current production and verify a reviewable new candidate
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          STI_PURCHASE_EXPECTED_DEPLOY: ${{ inputs.expected_deploy || '6afd423531560084e7dd48e8' }}
+          REVIEWED_SHA: ${{ github.sha }}
+          STI_PURCHASE_BROWSER_MODULE: ${{ runner.temp }}/sti-purchase-browser/node_modules/playwright/index.mjs
+        run: |
+          test -n "$NETLIFY_AUTH_TOKEN" || { echo 'The existing Netlify release connection is unavailable.'; exit 1; }
+          test "$(git rev-parse HEAD)" = "$REVIEWED_SHA"
+          node scripts/release-sti-purchase.mjs capture
+          node scripts/release-sti-purchase.mjs plan --source-commit "$REVIEWED_SHA"
+          node scripts/release-sti-purchase.mjs preview --source-commit "$REVIEWED_SHA"
+          node scripts/release-sti-purchase.mjs verify --source-commit "$REVIEWED_SHA"
+      - name: Publish the verified candidate and verify the canonical route
+        if: >-
+          github.ref == 'refs/heads/main' &&
+          ((github.event_name == 'push' && contains(github.event.head_commit.message, '[publish sti purchase]')) ||
+           (github.event_name == 'workflow_dispatch' && inputs.publish))
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          STI_PURCHASE_EXPECTED_DEPLOY: ${{ inputs.expected_deploy || '6afd423531560084e7dd48e8' }}
+          REVIEWED_SHA: ${{ github.sha }}
+          STI_PURCHASE_BROWSER_MODULE: ${{ runner.temp }}/sti-purchase-browser/node_modules/playwright/index.mjs
+        run: |
+          candidate=$(node -p "JSON.parse(require('fs').readFileSync('.netlify/sti-purchase-candidate.json')).id")
+          node scripts/release-sti-purchase.mjs publish --source-commit "$REVIEWED_SHA" --expected-candidate "$candidate"
+      - name: Record candidate link and preservation outcome
+        if: always()
+        run: |
+          node --input-type=module - <<'JS'
+          import fs from 'node:fs';
+          const filename='.netlify/sti-purchase-release-report.json';
+          if (fs.existsSync(filename)) {
+            const report=JSON.parse(fs.readFileSync(filename));
+            fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+              `### STI purchase repair\n\nLast completed phase: ${report.mode}\n\nReview: ${report.url}\n\nProduction changed: ${report.productionChanged}\n\nStatic files: ${report.staticFiles}; unchanged existing paths: ${report.preservedStaticFiles}.\n\nPreserved: ${report.functionsPreserved} complete backend packages and ${report.schedulesPreserved} schedules.\n\nRead the job conclusion; an interrupted publish requires checking Netlify before another run.\n`);
+          }
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sti-purchase-release-${{ github.run_id }}
+          path: |
+            .netlify/sti-purchase-release-report.json
+            .netlify/sti-purchase-browser-checks.json
+            .netlify/sti-purchase-candidate-browser-checks.json
+            .netlify/sti-purchase-canonical-browser-checks.json
+            .netlify/sti-purchase-*.png
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 30
