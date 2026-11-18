@@ -11,6 +11,7 @@ export const DELIVERY_SOURCES = {
   '/dapp/sti-widget.js': 'production/sti-purchase-static/sti-widget.js',
   '/dapp/sti-purchase-core.js': 'production/sti-purchase-static/sti-purchase-core.js',
   '/dapp/sti-purchase.css': 'production/sti-purchase-static/sti-purchase.css',
+  '/dapp/sti-wallet-recovery.js': 'production/sti-purchase-static/sti-wallet-recovery.js',
 };
 export const DELIVERY_PATHS = Object.keys(DELIVERY_SOURCES);
 export { ARBORETUM_SNIPPET, assertServedContent };
@@ -40,7 +41,7 @@ export async function verifyDelivery(origin, plan, root, fetchImpl = globalThis.
       assert.equal(html.split(ARBORETUM_SNIPPET).length, 2, 'Preserve exactly one stored baseline site snippet.');
       const references = [...html.matchAll(/\b(?:src|href)\s*=\s*["']([^"']+)["']/g)]
         .map(match => new URL(match[1], 'https://tree-token.xyz/dapp/').pathname);
-      for (const dependency of ['/dapp/app.js', '/dapp/stats-market.css', '/dapp/sti-purchase.css']) {
+      for (const dependency of ['/dapp/app.js', '/dapp/stats-market.css', '/dapp/sti-purchase.css', '/dapp/sti-wallet-recovery.js']) {
         assert(references.includes(dependency), 'Missing current Stats dependency: ' + dependency);
         assert(Object.hasOwn(plan.files, dependency), 'Dependency is absent from production inventory: ' + dependency);
       }

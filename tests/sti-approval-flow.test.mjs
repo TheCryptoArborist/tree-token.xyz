@@ -76,6 +76,35 @@ test('missing and failing wallet manager show actionable errors',async()=>{
   s.window.openWalletManager=async()=>{throw Error('Connection popup closed');};await s.click('stiWalletButton');
   assert.match(s.el('stiPurchaseStatus').textContent,/Connection popup closed/);
 });
+test('early connect waits for the shared wallet manager and opens one picker',async()=>{
+  const s=setup({connected:false}),manager=s.window.openWalletManager;
+  delete s.window.openWalletManager;
+  let release,waiting=false;
+  s.window.treeStiRecovery={setPurchasePending(){},hideWalletRecovery(){},waitForWalletManager:()=>{
+    waiting=true;return new Promise(resolve=>{release=resolve;});
+  }};
+  const connecting=s.click('stiWalletButton');
+  assert.equal(waiting,true);assert.equal(s.counts().pickerCalls,0);
+  assert.equal(s.el('stiWalletButton').disabled,true);
+  assert.match(s.el('stiPurchaseStatus').textContent,/Loading wallet/);
+  await s.click('stiWalletButton');assert.equal(s.counts().pickerCalls,0);
+  s.window.openWalletManager=manager;release();await connecting;
+  assert.equal(s.counts().pickerCalls,1);assert.equal(s.counts().signCalls,0);
+  assert.equal(s.el('stiWalletButton').disabled,false);
+  assert.match(s.el('stiPurchaseStatus').textContent,/selection closed/);
+});
+test('wallet timeout offers recovery and late readiness restores normal connection controls',async()=>{
+  const s=setup({connected:false}),manager=s.window.openWalletManager;
+  delete s.window.openWalletManager;let recovery=false;
+  s.window.treeStiRecovery={setPurchasePending(){},hideWalletRecovery(){recovery=false;},showWalletRecovery(){recovery=true;},
+    waitForWalletManager:async()=>{throw Error('Wallet connection tools could not load. Retry wallet connection, or use Reload wallet tools.');}};
+  await s.click('stiOpenBuy');await s.click('stiWalletButton');
+  assert.equal(recovery,true);assert.equal(s.el('stiWalletButton').disabled,false);
+  assert.equal(s.el('stiWalletButton').textContent,'Retry wallet connection');
+  s.window.openWalletManager=manager;s.events.get('tree:wallet-manager-ready')();
+  assert.equal(recovery,false);assert.equal(s.el('stiWalletButton').textContent,'Connect wallet');
+  await s.click('stiWalletButton');assert.equal(s.counts().pickerCalls,1);assert.equal(s.counts().signCalls,0);
+});
 test('review only simulates; final approval calls wallet directly and reports rejection without re-quote',async()=>{
   const s=setup();await s.review();
   assert.deepEqual(s.counts(),{signCalls:0,poolCalls:1,simulateCalls:1,pickerCalls:0});
@@ -108,14 +137,18 @@ test('wallet with no transaction ID reports uncertainty rather than success',asy
   assert.match(s.el('stiPurchaseStatus').textContent,/No transaction ID.*Check your wallet activity/);assert.equal(s.counts().poolCalls,1);
 });
 test('pending wallet blocks duplicate approval and preserves a visible waiting message',async()=>{
-  const s=setup();await s.review();let release;s.result(()=>new Promise(resolve=>{release=resolve;}));
+  const s=setup();let reloadBlocked=false;s.window.treeStiRecovery={setPurchasePending(value){reloadBlocked=value;}};
+  await s.review();let release;s.result(()=>new Promise(resolve=>{release=resolve;}));
   const signing=s.click('stiBuyButton');await s.click('stiBuyButton');s.timers.at(-1)();
   assert.equal(s.counts().signCalls,1);assert.equal(s.el('stiWalletButton').disabled,true);assert.match(s.el('stiPurchaseStatus').textContent,/Still waiting/);
+  assert.equal(reloadBlocked,true);
   release({});await signing;
 });
 test('submitted transaction only offers confirmation, never an automatic second purchase',async()=>{
-  const s=setup();await s.review();s.result(()=>({digest:'test-digest'}));await s.click('stiBuyButton');
+  const s=setup();let reloadBlocked=false;s.window.treeStiRecovery={setPurchasePending(value){reloadBlocked=value;}};
+  await s.review();s.result(()=>({digest:'test-digest'}));await s.click('stiBuyButton');
   assert.equal(s.el('stiBuyButton').textContent,'Check confirmation');assert.equal(s.el('stiWalletButton').disabled,true);
+  assert.equal(reloadBlocked,true);
   s.connect(false);await s.click('stiBuyButton');assert.equal(s.counts().signCalls,1);assert.match(s.el('stiPurchaseStatus').textContent,/confirmation is pending/);
 });
 test('quotes above 3% through 5% remain visible but cannot simulate or sign without acknowledgment',async()=>{

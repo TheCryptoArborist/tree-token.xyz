@@ -17,22 +17,27 @@ import { DELIVERY_SOURCES, DELIVERY_PATHS, verifyDelivery } from './sti-purchase
 // complete backend/provider/runtime records and the existing schedule/configuration.
 // Only a new candidate created by this exact plan can be published and locked.
 export { SITE_ID, ACCOUNT_ID, compareBackend, functionsConfig, validateBrowserReport, assertBrowserVerification };
-export const REVIEWED_BASELINE_ID = '6afd423531560084e7dd48e8';
+export const REVIEWED_BASELINE_ID = '6afddc74d6c8647c67efdbad';
 export const BASELINE_ID = process.env.STI_PURCHASE_EXPECTED_DEPLOY || '';
 export const REPLACED_HASHES = {
-  '/dapp/index.html': '5f24f229ee2a6bd8253e7dfb0888ccac268e1370',
-  '/dapp/sti-widget.js': '471b2133f3d329dc089100e62e6779ada68f9a21',
-  '/dapp/sti-purchase-core.js': '1d6f5669d809a7a8bbabaaeccef6f7387e7e3bbd',
+  '/dapp/index.html': '2e804819503002ecaf86de488de4e64ada332347',
+  '/dapp/sti-widget.js': 'cae92237a45a78e9863f21b9e3837a7779c72dfe',
+};
+export const PRESERVED_STI_HASHES = {
+  '/dapp/sti-purchase-core.js': '5a5416c3f090aa4f9ab02a6d8574400a2714f252',
+  '/dapp/sti-purchase.css': '3d8e3b50eba2f9cfb6c30005cc87a85c84652b59',
 };
 export const ORIGINAL_CHANGES = Object.keys(REPLACED_HASHES).sort();
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const SOURCE_PATHS = [
-  'production/sti-purchase-static', 'scripts/release-sti-purchase.mjs',
+  'production/sti-purchase-static', 'production/sti-purchase-release-20261118.json',
+  'scripts/release-sti-purchase.mjs',
   'scripts/sti-purchase-delivery.mjs', 'scripts/check-sti-purchase-page.mjs',
   'scripts/release-stats-market.mjs', 'scripts/stats-market-delivery.mjs',
   'scripts/release-preserved-production.mjs', '.github/workflows/publish-sti-purchase.yml',
   'tests/sti-purchase-release.test.mjs', 'tests/sti-purchase-core.test.mjs',
-  'tests/sti-approval-flow.test.mjs', 'tests/fixtures/sti-badge.json', 'tests/fixtures/sti-price.json',
+  'tests/sti-approval-flow.test.mjs', 'tests/sti-wallet-recovery.test.mjs',
+  'tests/fixtures/sti-badge.json', 'tests/fixtures/sti-price.json',
 ];
 const sha1 = bytes => crypto.createHash('sha1').update(bytes).digest('hex');
 const safeId = id => typeof id === 'string' && /^[a-f0-9]{24}$/.test(id);
@@ -48,18 +53,18 @@ export function validateBaseline(baseline) {
   assert.equal(baseline.deploy.state, 'ready'); assert.equal(baseline.deploy.locked, true);
   validateBackend(baseline.deploy);
   const files = fileInventory(baseline.files);
-  assert.equal(Object.keys(files).length, 614, 'Capture all 614 current static files.');
-  for (const [pathname, hash] of Object.entries(REPLACED_HASHES)) {
+  assert.equal(Object.keys(files).length, 615, 'Capture all 615 current static files.');
+  for (const [pathname, hash] of Object.entries({ ...REPLACED_HASHES, ...PRESERVED_STI_HASHES })) {
     assert.equal(files[pathname], hash, 'Reviewed STI baseline changed: ' + pathname);
   }
   return files;
 }
 
 export function assembleFiles(baselineFiles, overlays) {
-  for (const [pathname, hash] of Object.entries(REPLACED_HASHES)) {
+  for (const [pathname, hash] of Object.entries({ ...REPLACED_HASHES, ...PRESERVED_STI_HASHES })) {
     assert.equal(baselineFiles[pathname], hash, 'Reviewed STI baseline changed: ' + pathname);
   }
-  assert(!Object.hasOwn(baselineFiles, '/dapp/sti-purchase.css'), 'The new STI stylesheet already exists; review before replacement.');
+  assert(!Object.hasOwn(baselineFiles, '/dapp/sti-wallet-recovery.js'), 'The new STI wallet recovery script already exists; review before replacement.');
   const files = { ...baselineFiles }, sources = {};
   for (const item of overlays) {
     const publicPath = publicUploadPath(item.path);
@@ -67,14 +72,17 @@ export function assembleFiles(baselineFiles, overlays) {
     assert(/^[a-f0-9]{40}$/.test(item.sha1), 'Invalid overlay digest.');
     assert(!Object.hasOwn(sources, publicPath), 'Duplicate or case-colliding public overlay.');
     assert.equal(item.source, DELIVERY_SOURCES[publicPath], 'Unapproved overlay source: ' + publicPath);
+    if (Object.hasOwn(PRESERVED_STI_HASHES, publicPath)) {
+      assert.equal(item.sha1, PRESERVED_STI_HASHES[publicPath], 'Protected STI purchase file changed: ' + publicPath);
+    }
     files[publicPath] = item.sha1; sources[publicPath] = item.source;
   }
   eq(Object.keys(sources).sort(), [...DELIVERY_PATHS].sort(), 'Complete STI overlay inventory');
   const changedOriginals = Object.keys(baselineFiles).filter(p => files[p] !== baselineFiles[p]).sort();
-  eq(changedOriginals, ORIGINAL_CHANGES, 'Only the three approved existing files must change');
+  eq(changedOriginals, ORIGINAL_CHANGES, 'Only the two approved existing files must change');
   assert(files['/index.html'], 'Missing homepage entry.');
   assert(Object.keys(baselineFiles).every(p => Object.hasOwn(files, p)), 'Baseline path removed.');
-  return { files, sources, changedOriginals, addedPaths: ['/dapp/sti-purchase.css'] };
+  return { files, sources, changedOriginals, addedPaths: ['/dapp/sti-wallet-recovery.js'] };
 }
 
 function overlays() {
@@ -104,16 +112,28 @@ function readRecord(filename) {
   assert.equal(fs.readFileSync(filename + '.sha256', 'utf8').trim(), fingerprint(value), 'Local release record integrity failed.');
   return value;
 }
-function apiClient(token) {
+export function apiClient(token, { fetchImpl = globalThis.fetch,
+  delay = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds)) } = {}) {
   return async (endpoint, method = 'GET', body) => {
     let response;
-    try {
-      response = await fetch('https://api.netlify.com/api/v1/' + endpoint, {
-        method, redirect: 'error', signal: AbortSignal.timeout(30000),
-        headers: { Authorization: 'Bearer ' + token, ...(body != null ? { 'Content-Type': 'application/json' } : {}) },
-        body: body != null ? JSON.stringify(body) : undefined,
-      });
-    } catch { throw Error(`Netlify ${method} request failed; raw details withheld.`); }
+    const attempts = method === 'GET' ? 3 : 1;
+    for (let attempt = 0; attempt < attempts; attempt++) {
+      try {
+        response = await fetchImpl('https://api.netlify.com/api/v1/' + endpoint, {
+          method, redirect: 'error', signal: AbortSignal.timeout(30000),
+          headers: { Authorization: 'Bearer ' + token, ...(body != null ? { 'Content-Type': 'application/json' } : {}) },
+          body: body != null ? JSON.stringify(body) : undefined,
+        });
+        break;
+      } catch {
+        if (attempt + 1 === attempts) {
+          throw Error(`Netlify ${method} request failed${attempts > 1 ? ` after ${attempts} attempts` : ''}; raw details withheld.`);
+        }
+        // A read can lose an idle connection while browser verification runs.
+        // Retry only transport failures; mutations and HTTP rejections stay final.
+        await delay(250 * (attempt + 1));
+      }
+    }
     assert(response.ok, `Netlify ${method} failed (HTTP ${response.status}); raw details withheld.`);
     try { return await response.json(); } catch { throw Error('Invalid Netlify response; raw details withheld.'); }
   };
@@ -225,7 +245,7 @@ export async function main(args = process.argv.slice(2)) {
     validateBaseline(baseline);
     await assertLiveBaseline(api, baseline, await protectedEnvironment(api, site));
     writeRecord(baselinePath, baseline, true);
-    console.log('Captured the current 614-path deployment; no remote changes.');
+    console.log('Captured the current 615-path deployment; no remote changes.');
     return;
   }
   const baseline = readRecord(baselinePath), baselineFiles = validateBaseline(baseline);
@@ -237,7 +257,7 @@ export async function main(args = process.argv.slice(2)) {
     const { site } = await assertLiveBaseline(api, baseline);
     plan = { schemaVersion: 1, siteId: SITE_ID, baselineId: BASELINE_ID, baselineSha256: fingerprint(baseline),
       baselineCreatedAt: baseline.deploy.created_at, createdAt: new Date().toISOString(), sourceCommit, sourceBranch,
-      title: `TREE STI purchase ${sourceCommit.slice(0, 12)}; preserve 49 backend packages`,
+      title: `TREE STI wallet recovery ${sourceCommit.slice(0, 12)}; preserve 49 backend packages`,
       ...assembleFiles(baselineFiles, overlays()),
       backend: { functions: baseline.deploy.available_functions, schedules: baseline.deploy.function_schedules, runtime: runtimeFor(baseline.deploy) },
       environment: await protectedEnvironment(api, site) };

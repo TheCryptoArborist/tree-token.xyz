@@ -1,4 +1,4 @@
-name: Verify and publish STI purchase repair
+name: Verify and publish STI wallet recovery
 
 on:
   pull_request:
@@ -7,6 +7,7 @@ on:
       - 'scripts/*sti-purchase*'
       - 'tests/sti-purchase-*.test.mjs'
       - 'tests/sti-approval-flow.test.mjs'
+      - 'tests/sti-wallet-recovery.test.mjs'
       - '.github/workflows/publish-sti-purchase.yml'
   push:
     branches: [main, 'feature/sti-purchase-*']
@@ -15,13 +16,14 @@ on:
       - 'scripts/*sti-purchase*'
       - 'tests/sti-purchase-*.test.mjs'
       - 'tests/sti-approval-flow.test.mjs'
+      - 'tests/sti-wallet-recovery.test.mjs'
       - '.github/workflows/publish-sti-purchase.yml'
   workflow_dispatch:
     inputs:
       expected_deploy:
         description: Current locked deployment; a changed baseline requires a new review
         required: true
-        default: '6afd423531560084e7dd48e8'
+        default: '6afddc74d6c8647c67efdbad'
         type: string
       publish:
         description: Publish the verified new candidate (main only)
@@ -47,11 +49,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Verify STI consent, purchase and preservation guards
+      - name: Verify wallet recovery, STI consent and preservation guards
         run: |
-          node --test tests/sti-purchase-core.test.mjs tests/sti-approval-flow.test.mjs tests/sti-purchase-release.test.mjs tests/preserved-release.test.mjs
+          node --test tests/sti-purchase-core.test.mjs tests/sti-approval-flow.test.mjs tests/sti-wallet-recovery.test.mjs tests/sti-purchase-release.test.mjs tests/preserved-release.test.mjs
           node --check production/sti-purchase-static/sti-purchase-core.js
           node --check production/sti-purchase-static/sti-widget.js
+          node --check production/sti-purchase-static/sti-wallet-recovery.js
           node --check scripts/release-sti-purchase.mjs
           node --check scripts/sti-purchase-delivery.mjs
           node --check scripts/check-sti-purchase-page.mjs
@@ -63,7 +66,7 @@ jobs:
           # Download the pinned browser without unrelated apt upgrades; the
           # browser launch and all four-width checks below remain mandatory.
           "$RUNNER_TEMP/sti-purchase-browser/node_modules/.bin/playwright" install chromium
-      - name: Check quote review at desktop and phone widths without signing
+      - name: Check wallet recovery and quote review at desktop and phone widths
         env:
           STI_PURCHASE_BROWSER_MODULE: ${{ runner.temp }}/sti-purchase-browser/node_modules/playwright/index.mjs
           STI_PURCHASE_TEST_BASE: http://127.0.0.1:8765
@@ -110,7 +113,7 @@ jobs:
       - name: Capture current production and verify a reviewable new candidate
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          STI_PURCHASE_EXPECTED_DEPLOY: ${{ inputs.expected_deploy || '6afd423531560084e7dd48e8' }}
+          STI_PURCHASE_EXPECTED_DEPLOY: ${{ inputs.expected_deploy || '6afddc74d6c8647c67efdbad' }}
           REVIEWED_SHA: ${{ github.sha }}
           STI_PURCHASE_BROWSER_MODULE: ${{ runner.temp }}/sti-purchase-browser/node_modules/playwright/index.mjs
         run: |
@@ -127,7 +130,7 @@ jobs:
            (github.event_name == 'workflow_dispatch' && inputs.publish))
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          STI_PURCHASE_EXPECTED_DEPLOY: ${{ inputs.expected_deploy || '6afd423531560084e7dd48e8' }}
+          STI_PURCHASE_EXPECTED_DEPLOY: ${{ inputs.expected_deploy || '6afddc74d6c8647c67efdbad' }}
           REVIEWED_SHA: ${{ github.sha }}
           STI_PURCHASE_BROWSER_MODULE: ${{ runner.temp }}/sti-purchase-browser/node_modules/playwright/index.mjs
         run: |
@@ -142,7 +145,7 @@ jobs:
           if (fs.existsSync(filename)) {
             const report=JSON.parse(fs.readFileSync(filename));
             fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
-              `### STI purchase repair\n\nLast completed phase: ${report.mode}\n\nReview: ${report.url}\n\nProduction changed: ${report.productionChanged}\n\nStatic files: ${report.staticFiles}; unchanged existing paths: ${report.preservedStaticFiles}.\n\nPreserved: ${report.functionsPreserved} complete backend packages and ${report.schedulesPreserved} schedules.\n\nRead the job conclusion; an interrupted publish requires checking Netlify before another run.\n`);
+              `### STI wallet recovery\n\nLast completed phase: ${report.mode}\n\nReview: ${report.url}\n\nProduction changed: ${report.productionChanged}\n\nStatic files: ${report.staticFiles}; unchanged existing paths: ${report.preservedStaticFiles}.\n\nPreserved: ${report.functionsPreserved} complete backend packages and ${report.schedulesPreserved} schedules.\n\nRead the job conclusion; an interrupted publish requires checking Netlify before another run.\n`);
           }
           JS
       - uses: actions/upload-artifact@v4
