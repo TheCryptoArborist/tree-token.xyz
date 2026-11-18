@@ -5,7 +5,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-const root = fileURLToPath(new URL('../', import.meta.url));
+const root = path.resolve(fileURLToPath(new URL('../', import.meta.url)));
 const overlays = { 'dapp/index.html': 'index.html', 'dapp/app.js': 'app.js', 'dapp/stats-market.css': 'stats-market.css' };
 if (process.argv[2] === '--prepare-static') {
   const destination = path.resolve(process.argv[3] || '');
