@@ -415,6 +415,22 @@
     .mi-tv { height:min(650px,76vh);min-height:490px;padding:7px }
     .mi-tv .tradingview-widget-container { min-height:450px }
     .mi-onchain { height:620px; padding:7px }
+    .mi-onchain-cue { padding:12px 15px;border:1px solid #27594c;border-radius:11px;background:#0b292080;color:#cbe9dc;font-size:.86rem;line-height:1.65;margin:0 0 15px }
+    .mi-onchain-cue strong { color:#e6fff1 }
+    .mi-onchain-levels { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 16px }
+    .mi-onchain-levels>div { padding:14px;border:1px solid #26433b;border-radius:12px;background:#0a211c80;min-width:0 }
+    .mi-onchain-levels dt { font-size:.88rem;font-weight:750;color:#f3d886;margin-bottom:5px }
+    .mi-onchain-levels dd { margin:0;font-size:.84rem;line-height:1.65;color:#bdd5cb }
+    .mi-onchain-guide[hidden] { display:none }
+    .mi-onchain-example { margin:16px 0;padding:15px 17px;border-left:3px solid #e4bb53;border-radius:0 11px 11px 0;background:#30280f40;font-size:.88rem;color:#d5e7df }
+    .mi-onchain-example strong { color:#ffe4a0 }
+    .mi-onchain-example p { margin:5px 0 0 }
+    .mi-onchain-more { border:1px solid #26433b;border-radius:12px;padding:0 15px;margin-top:16px;color:#b9d2c9;font-size:.85rem }
+    .mi-onchain-more summary { min-height:48px;padding:12px 0;cursor:pointer;color:#dff4e9;font-weight:750 }
+    .mi-onchain-more p { margin:0 0 13px }
+    .mi-onchain-more dl { margin:3px 0 15px }
+    .mi-onchain-more dt { font-weight:750;color:#e1f5ec;margin-top:10px }
+    .mi-onchain-more dd { margin:3px 0 0 }
     .mi-provider-iframe { display:block;border:0;width:100%;height:100%;background:#051018 }
     .mi-footnotes { display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:11px;color:#91ada7;font-size:.76rem }
     .mi-footnotes a { color:#8adfd1;text-underline-offset:3px }
@@ -444,6 +460,14 @@
     .mi-form-grid label { color:#b6cdc8;font-size:.77rem;font-weight:700 }
     .mi-form-grid input { display:block;width:100%;margin-top:8px;padding:12px;border:1px solid rgba(0,255,160,.23);border-radius:9px;color:#fff;background:#06141c;font-size:1rem }
     .mi-calc-output { display:block;margin:16px 0 7px;line-height:1.6;color:#dafde9;font-weight:700;font-size:.9rem }
+    .mi-calc-inputs { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:end }
+    .mi-calc-inputs label,.mi-calc-inputs>div>span { display:block;color:#b6cdc8;font-size:.78rem;font-weight:700 }
+    .mi-calc-inputs input { display:block;width:100%;margin-top:8px;padding:12px;border:1px solid #34735c;border-radius:9px;color:#fff;background:#06141c;font:inherit;font-size:1rem }
+    .mi-calc-inputs>div { min-width:0;padding:12px;border:1px solid #294b40;border-radius:9px;background:#06141c }
+    .mi-calc-inputs>div>strong { display:block;color:#ffe09a;font-size:1.13rem;margin-top:5px;overflow-wrap:anywhere }
+    .mi-calc-price-status { font-size:.8rem;line-height:1.65;color:#b9d2c7;margin:12px 0 }
+    .mi-calc-price-status[data-state=error] { color:#ffd0c3 }
+    .mi-calc-price-status[data-state=loading] { color:#f4db97 }
     .mi-share-actions { display:flex;gap:9px;flex-wrap:wrap }
     .mi-action-primary,.mi-action-secondary { padding:10px 14px;border-radius:999px;font-weight:800;font-size:.87rem;line-height:1.3;font-family:inherit;cursor:pointer }
     .mi-action-primary { background:linear-gradient(135deg,#00e090,#00c2b3);border:none;color:#07150c }
@@ -457,10 +481,12 @@
       .mi-choices button { font-size:.8rem;padding:9px 11px }
       .mi-tv { height:520px;min-height:480px;padding:3px }
       .mi-onchain { height:540px;padding:3px }
+      .mi-onchain-levels { grid-template-columns:1fr }
       .mi-cbbi-header { flex-direction:column;align-items:stretch;gap:12px }
       .mi-metric-grid { grid-template-columns:repeat(2,minmax(0,1fr)) }
       .mi-stat-grid { grid-template-columns:repeat(2,minmax(0,1fr)) }
       .mi-form-grid { grid-template-columns:1fr }
+      .mi-calc-inputs { grid-template-columns:1fr }
     }
     @media(max-width:360px){
       .mi-metric-grid { grid-template-columns:1fr }
@@ -921,22 +947,57 @@
         </section>
 
         <section class="mi-pane" id="mi-pane-onchain" role="tabpanel" aria-labelledby="mi-tab-onchain" hidden>
-          <h3>Bitcoin On-Chain Valuation</h3>
-          <p class="mi-help">Compare market value with the cost basis implied by movements on the Bitcoin blockchain.</p>
+          <h3>Bitcoin: price versus estimated holder cost</h3>
+          <p class="mi-help"><strong>“On-chain” means recorded on Bitcoin’s blockchain.</strong> These charts use the price when coins last moved to estimate their holders’ average cost. Start with the dollar amount, then explore the ratio.</p>
           <div class="mi-choices" role="group" aria-label="Choose on-chain Bitcoin chart">
-            <button type="button" data-onchain="mvrv" aria-pressed="true" class="selected">MVRV</button>
-            <button type="button" data-onchain="realized" aria-pressed="false">Realized Price</button>
+            <button type="button" data-onchain="realized" aria-pressed="true" class="selected">Realized Price (estimated cost)</button>
+            <button type="button" data-onchain="mvrv" aria-pressed="false">MVRV (price-to-cost ratio)</button>
           </div>
-          <h4 id="mi-onchain-title">MVRV ratio</h4>
-          <p class="mi-description" id="mi-onchain-description">Market value divided by realized value; the market-wide profit premium, not a trading recommendation.</p>
+          <div aria-live="polite" aria-atomic="true">
+            <h4 id="mi-onchain-title">Realized Price: estimated cost in dollars</h4>
+            <p class="mi-description" id="mi-onchain-description">Each amount of BTC is valued at the market price when it last moved, then those values are averaged across the supply. This estimates holder cost; it cannot show exactly what every owner paid.</p>
+          </div>
+          <p class="mi-onchain-cue"><strong>How to read it:</strong> <span id="mi-onchain-reading">Compare Bitcoin’s market-price line with the realized-price line on the same date. The gap shows how far market price is above or below the estimated cost.</span></p>
           <div class="mi-chart-container mi-onchain" id="mi-onchain-stage" aria-label="Source-hosted Bitcoin on-chain chart"></div>
-          <p class="mi-footnotes">Chart by <a id="mi-onchain-credit" href="https://axeladlerjr.com/charts/bitcoin-mvrv-ratio/" target="_blank" rel="noopener noreferrer">Axel Adler Jr.</a> · Provider's UTC observation date and chart controls</p>
-          <p class="mi-disclaimer">MVRV and realized price are related measures of the same cost-basis framework, not independent confirmation signals. Source charts update daily and are not live intraday quotes.</p>
+          <p class="mi-footnotes">Chart by <a id="mi-onchain-credit" href="https://axeladlerjr.com/charts/bitcoin-realized-price/" target="_blank" rel="noopener noreferrer">Axel Adler Jr.</a> · Use the chart legend and provider’s UTC observation date</p>
+          <section class="mi-onchain-guide" data-onchain-guide="realized" aria-labelledby="mi-realized-guide-heading">
+            <h4 id="mi-realized-guide-heading">Reading the two price lines</h4>
+            <dl class="mi-onchain-levels">
+              <div><dt>Market price above realized price</dt><dd>Bitcoin trades above the estimated cost of the supply. A wider gap means a larger premium to that estimate.</dd></div>
+              <div><dt>The two prices meet</dt><dd>Market price equals the estimated cost. This is the same point as an MVRV ratio of 1.</dd></div>
+              <div><dt>Market price below realized price</dt><dd>Bitcoin trades below the estimated cost of the supply. It can stay below that estimate or fall further.</dd></div>
+            </dl>
+          </section>
+          <section class="mi-onchain-guide" data-onchain-guide="mvrv" aria-labelledby="mi-mvrv-guide-heading" hidden>
+            <h4 id="mi-mvrv-guide-heading">Reading the ratio</h4>
+            <dl class="mi-onchain-levels">
+              <div><dt>Below 1</dt><dd>Market price is below estimated cost. For example, 0.8 means the price is 20% below that estimate.</dd></div>
+              <div><dt>At 1</dt><dd>Market price and estimated cost are equal. This is the comparison point for the ratio.</dd></div>
+              <div><dt>Above 1</dt><dd>Market price is above estimated cost. For example, 1.5 means the price is 50% above that estimate.</dd></div>
+            </dl>
+          </section>
+          <aside class="mi-onchain-example" aria-label="Example using made-up prices">
+            <strong>Example using made-up prices</strong>
+            <p>If Bitcoin traded at <strong>$60,000</strong> and realized price were <strong>$40,000</strong>, MVRV would be <strong>1.5</strong> ($60,000 ÷ $40,000). Market price would be 50% above estimated cost.</p>
+          </aside>
+          <p class="mi-help"><strong>Why use these charts?</strong> They put Bitcoin’s price moves in the context of estimated holder costs over time. Realized Price shows that cost in dollars; MVRV shows the comparison as a ratio. Both describe the same relationship.</p>
+          <details class="mi-onchain-more">
+            <summary>Terms, calculations and what the estimate can miss</summary>
+            <dl>
+              <dt>Market price (also called spot price)</dt><dd>The price one bitcoin trades for on the date you are viewing.</dd>
+              <dt>Cost basis</dt><dd>The cost used to compare a holding’s value with what was paid for it. These charts estimate that cost from blockchain movements.</dd>
+              <dt>Realized value (realized capitalization)</dt><dd>The total value of the Bitcoin supply using the market price when each coin last moved. Divide it by the supply to get realized price.</dd>
+              <dt>MVRV (Market Value to Realized Value)</dt><dd>Market capitalization divided by realized capitalization. Using the same date and supply, it also equals Bitcoin’s market price divided by realized price.</dd>
+            </dl>
+            <p>Moving coins between your own wallets can change the estimate without a purchase. Dormant or lost coins may retain very old reference prices. These are estimates across the coin supply, so they do not establish an individual holder’s profit or loss.</p>
+            <p>Definitions: <a href="https://studio.glassnode.com/charts/realizedprice-mvrv" target="_blank" rel="noopener noreferrer">Glassnode: Realized Price and MVRV</a> · <a href="https://docs.coinmetrics.io/network-data/network-data-overview/market/market-capitalization" target="_blank" rel="noopener noreferrer">Coin Metrics: realized capitalization</a>.</p>
+          </details>
+          <p class="mi-disclaimer">Price can stay above or below the estimate for long periods. Neither chart guarantees a price floor, a market top or the timing of a reversal. Read the daily observations in the context of the wider price trend.</p>
         </section>
 
         <section class="mi-pane" id="mi-pane-cycles" role="tabpanel" aria-labelledby="mi-tab-cycles" hidden>
-          <h3>Cycle History &amp; Hypothetical Scenarios</h3>
-          <p class="mi-help">Dated historical comparisons are separated from the calculator. Scenario inputs are not forecasts or suggested buying prices.</p>
+          <h3>Bitcoin cycle history: then and now</h3>
+          <p class="mi-help">Choose a historical reference, then see what an investment at that Bitcoin price would be worth using the latest available BTC/USD estimate.</p>
           <div class="mi-choices" role="group" aria-label="Choose historical Bitcoin cycle">
             <button type="button" data-cycle="2018" aria-pressed="false">2018 low</button>
             <button type="button" data-cycle="2022" aria-pressed="true" class="selected">2022 low</button>
@@ -950,16 +1011,26 @@
             <div><span>Time / observation period</span><strong id="mi-cycle-days">—</strong></div>
           </div>
           <p class="mi-disclaimer" id="mi-cycle-caveat">Historical prices are retrospective. The original Rainbow band formula may not have existed at that observation.</p>
-          <div class="mi-calculator">
-            <h4>Hypothetical Bitcoin price scenario</h4>
-            <div class="mi-form-grid">
-              <label>Starting investment (USD)<input id="mi-calc-principal" type="number" inputmode="decimal" min="0" max="1000000000" step="any" value="1000"></label>
-              <label>Assumed entry price (USD/BTC)<input id="mi-calc-price" type="number" inputmode="decimal" min=".01" max="1000000000" step="any" value="64000"></label>
-              <label>Hypothetical price change (%)<input id="mi-calc-move" type="number" inputmode="decimal" min="-99.9" max="1000" step=".1" value="-30"></label>
+          <section class="mi-calculator" aria-labelledby="mi-calc-heading">
+            <h4 id="mi-calc-heading">What would that investment be worth today?</h4>
+            <p class="mi-help">This assumes you bought Bitcoin at the selected historical reference and held the same amount of BTC until the price observation shown below. Change the year above or the amount you invested to compare.</p>
+            <div class="mi-calc-inputs">
+              <label>Starting investment (USD)<input id="mi-calc-principal" type="number" inputmode="decimal" min=".01" max="1000000000" step="any" value="1000" aria-describedby="mi-calc-assumptions"></label>
+              <div><span id="mi-calc-entry-label">Selected historical BTC price</span><strong id="mi-calc-entry">—</strong></div>
+              <div><span>Latest available BTC/USD estimate</span><strong id="mi-calc-quote">Awaiting price</strong></div>
             </div>
-            <output id="mi-calc-result" class="mi-calc-output" aria-live="polite">Enter scenario values to calculate.</output>
-            <p class="mi-small">The default price is a sample assumption for demonstration, not a live Bitcoin quote.</p>
-          </div>
+            <p id="mi-calc-price-status" class="mi-calc-price-status" role="status">A current price estimate loads when you open Cycle Tools.</p>
+            <button type="button" id="mi-calc-refresh" class="mi-action-secondary">Refresh Bitcoin price</button>
+            <div class="mi-stat-grid" aria-label="Historical investment comparison">
+              <div><span>BTC you could have bought</span><strong id="mi-calc-btc">—</strong></div>
+              <div><span>Estimated value at latest price</span><strong id="mi-calc-value">—</strong></div>
+              <div><span>Gain or loss (USD)</span><strong id="mi-calc-gain">—</strong></div>
+              <div><span>Return on starting investment</span><strong id="mi-calc-return">—</strong></div>
+            </div>
+            <output id="mi-calc-result" class="mi-calc-output" aria-live="polite">Waiting for a verified price estimate.</output>
+            <p class="mi-small" id="mi-calc-assumptions">Calculation: investment ÷ selected historical BTC price × latest BTC price. This is a hindsight comparison using the historical reference displayed above. Fees, taxes, interest and trading costs are excluded.</p>
+            <p class="mi-small">Latest BTC/USD estimate: <a href="https://mempool.space/docs/api/rest" target="_blank" rel="noopener noreferrer">mempool.space</a> · A periodically updated price estimate across exchanges. The timestamp shows when the provider updated its feed.</p>
+          </section>
           <div class="mi-share">
             <h4>Share a sourced TREE Market Insights summary</h4>
             <p class="mi-help">Generate a local PNG or copy a text summary. The card includes the observation date only when the live CBBI data was successfully verified.</p>

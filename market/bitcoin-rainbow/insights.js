@@ -46,16 +46,37 @@
     BTCD:['CRYPTOCAP:BTC.D','Bitcoin dominance: Bitcoin capitalization as a percentage of TradingView’s tracked TOTAL capitalization.']
   };
   const onchain = {
-    mvrv:['https://axeladlerjr.com/charts/bitcoin-mvrv-ratio/embed.html','https://axeladlerjr.com/charts/bitcoin-mvrv-ratio/','MVRV ratio','Market value divided by realized value; the market-wide profit premium, not a trading recommendation.'],
-    realized:['https://axeladlerjr.com/charts/bitcoin-realized-price/embed.html','https://axeladlerjr.com/charts/bitcoin-realized-price/','Realized price','Market-wide on-chain cost-basis estimate, not a guaranteed support price.']
+    mvrv: {
+      embed:'https://axeladlerjr.com/charts/bitcoin-mvrv-ratio/embed.html',
+      source:'https://axeladlerjr.com/charts/bitcoin-mvrv-ratio/',
+      chartTitle:'MVRV ratio', title:'MVRV: price compared with estimated cost',
+      description:'MVRV means Market Value to Realized Value. It compares Bitcoin’s market price with realized price (the estimated holder cost). A reading of 1 means those prices are equal; the reading is a ratio, not a dollar price.',
+      reading:'Use 1 as the comparison point: above 1 means market price is above estimated cost; below 1 means it is below. Higher values show a larger premium, without telling you when price will turn.'
+    },
+    realized: {
+      embed:'https://axeladlerjr.com/charts/bitcoin-realized-price/embed.html',
+      source:'https://axeladlerjr.com/charts/bitcoin-realized-price/',
+      chartTitle:'Realized Price', title:'Realized Price: estimated cost in dollars',
+      description:'Each amount of BTC is valued at the market price when it last moved, then those values are averaged across the supply. This estimates holder cost; it cannot show exactly what every owner paid.',
+      reading:'Compare Bitcoin’s market-price line with the realized-price line on the same date. The gap shows how far market price is above or below the estimated cost.'
+    }
   };
   const reference = {
     '2018':['2018 bear-market bottom',19280,3232,'83.2%','364 days','2018 prices are historical. This particular BlockchainCenter Rainbow Chart had not yet been published; no real-time signal is implied.'],
     '2022':['2022 bear-market bottom',67562,15760,'76.7%','378 days','Comparisons use reported daily observations, not a proven first Rainbow-band entry date. The 2022 formula changed in November.'],
     '2026':['2026 low observed by July 1',124777,58534,'53.1%','Reference through July 1, 2026','The date is a historical snapshot, not a prediction or confirmation of the final 2026 bottom.']
   };
+  // Public indicative BTC/USD feed. Its time is a provider feed-update timestamp,
+  // not an exchange trade time. Fetching never replaces that timestamp with now.
+  const BTC_PRICE_URL='https://mempool.space/api/v1/prices';
+  const BTC_PRICE_REFRESH_MS=5*60*1000, BTC_PRICE_MAX_AGE_MS=2*60*60*1000;
+  let selectedCycle='2022', btcQuote=null, btcQuotePending=false, btcQuoteAttempt=0, btcQuoteError='';
+  const quoteTime = ms => new Intl.DateTimeFormat('en-US',{
+    timeZone:'UTC',year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false
+  }).format(new Date(ms))+' UTC';
+  const quoteIsFresh = (quote,now=Date.now()) => !!quote && quote.updatedAt<=now+5*60*1000 && now-quote.updatedAt<=BTC_PRICE_MAX_AGE_MS;
   const indicatorNames=['Pi','RUPL','RHODL','Puell','2Y','Trolololo','MVRV','Reserve','TopCap'];
-  let selectedMarket='TOTAL3', lastMarket='', selectedOnchain='mvrv', lastOnchain='', fetchedCBBI=false, cbbiData=null, cbbiNewest=null, chartRange=365;
+  let selectedMarket='TOTAL3', lastMarket='', selectedOnchain='realized', lastOnchain='', fetchedCBBI=false, cbbiData=null, cbbiNewest=null, chartRange=365;
   const setPressed=(selector,datasetKey,current)=>{
     $$(selector).forEach(el=>{
       const active=el.dataset[datasetKey]===current;
@@ -111,14 +132,16 @@
     const entry=onchain[selectedOnchain],stage=$('mi-onchain-stage');
     if(!stage||!entry)return;
     setPressed('[data-onchain]','onchain',selectedOnchain);
-    $('mi-onchain-title').textContent=entry[2];
-    $('mi-onchain-description').textContent=entry[3];
-    $('mi-onchain-credit').href=entry[1];
+    $('mi-onchain-title').textContent=entry.title;
+    $('mi-onchain-description').textContent=entry.description;
+    $('mi-onchain-reading').textContent=entry.reading;
+    $('mi-onchain-credit').href=entry.source;
+    $$('[data-onchain-guide]').forEach(guide=>{guide.hidden=guide.dataset.onchainGuide!==selectedOnchain;});
     if(lastOnchain===selectedOnchain)return;
     lastOnchain=selectedOnchain;
     stage.replaceChildren();
     const frame=document.createElement('iframe');
-    frame.src=entry[0];frame.title='Historical Bitcoin '+entry[2]+' chart — Axel Adler Jr.';
+    frame.src=entry.embed;frame.title='Historical Bitcoin '+entry.chartTitle+' chart — Axel Adler Jr.';
     frame.loading='lazy';frame.className='mi-provider-iframe';
     frame.referrerPolicy='strict-origin-when-cross-origin';
     stage.appendChild(frame);
@@ -213,6 +236,7 @@
 
   const compare=(year)=>{
     const b=reference[year];if(!b)return;
+    selectedCycle=year;
     setPressed('[data-cycle]','cycle',year);
     $('mi-cycle-name').textContent=b[0];
     $('mi-cycle-peak').textContent=fmtMoney(b[1]);
@@ -220,21 +244,81 @@
     $('mi-cycle-loss').textContent=b[3];
     $('mi-cycle-days').textContent=b[4];
     $('mi-cycle-caveat').textContent=b[5];
+    calculate();
   };
   $$('[data-cycle]').forEach(b=>b.addEventListener('click',()=>compare(b.dataset.cycle)));
   compare('2022');
 
   function calculate(){
-    const principal=Number($('mi-calc-principal').value), entry=Number($('mi-calc-price').value), change=Number($('mi-calc-move').value);
-    if(!Number.isFinite(principal)||!Number.isFinite(entry)||!Number.isFinite(change)||principal<0||principal>1e9||entry<=0||entry>1e9||change<=-100||change>1000){
-      $('mi-calc-result').textContent='Enter valid positive amounts and a change above −100% and at most +1,000%.';
+    const principal=Number($('mi-calc-principal').value), entry=reference[selectedCycle][2];
+    const referenceLabel=selectedCycle==='2026'?'2026 reference':selectedCycle+' low';
+    $('mi-calc-heading').textContent='What would an investment at the '+referenceLabel+' be worth today?';
+    $('mi-calc-entry-label').textContent='BTC price at the '+referenceLabel;
+    $('mi-calc-entry').textContent=fmtMoney(entry);
+    $('mi-calc-quote').textContent=btcQuote?fmtMoney(btcQuote.usd):'Unavailable';
+    const status=$('mi-calc-price-status'), fresh=quoteIsFresh(btcQuote);
+    if(btcQuote){
+      const stamp='Provider feed updated '+quoteTime(btcQuote.updatedAt)+'. ';
+      status.textContent=stamp+(!fresh?'This estimate is over two hours old; current-value results are unavailable.':
+        btcQuoteError?'Refresh failed; the calculation uses the last successfully loaded estimate.':
+        btcQuotePending?'Refreshing the price estimate…':'Checked '+quoteTime(btcQuote.fetchedAt)+'.');
+      status.dataset.state=!fresh||btcQuoteError?'error':btcQuotePending?'loading':'ready';
+    }else{
+      status.textContent=btcQuotePending?'Loading the latest available BTC/USD estimate…':
+        btcQuoteError||'A current price estimate loads when you open Cycle Tools.';
+      status.dataset.state=btcQuotePending?'loading':btcQuoteError?'error':'idle';
+    }
+    for(const id of ['mi-calc-btc','mi-calc-value','mi-calc-gain','mi-calc-return']) $(id).textContent='—';
+    if(!Number.isFinite(principal)||principal<.01||principal>1e9){
+      $('mi-calc-result').textContent='Enter a starting investment from $0.01 to $1 billion.';
       return;
     }
-    const holdings=principal/entry,target=entry*(1+change/100),value=holdings*target,diff=value-principal;
-    $('mi-calc-result').textContent=fmtMoney(principal)+' at '+fmtMoney(entry)+' buys '+holdings.toFixed(6)+' BTC. At '+fmtMoney(target)+' ('+change.toFixed(1)+'%), the hypothetical position is '+fmtMoney(value)+' ('+(diff<0?'':'+' )+fmtMoney(diff)+'). Fees, taxes and slippage excluded.';
+    const holdings=principal/entry;
+    $('mi-calc-btc').textContent=holdings.toFixed(8)+' BTC';
+    if(!fresh){
+      $('mi-calc-result').textContent=fmtMoney(principal)+' at the '+referenceLabel+' reference price would buy '+holdings.toFixed(8)+' BTC. '+
+        (btcQuotePending?'The latest value is being checked.':'Refresh the Bitcoin price to calculate its estimated value today.');
+      return;
+    }
+    const value=holdings*btcQuote.usd, gain=value-principal, change=(btcQuote.usd/entry-1)*100;
+    $('mi-calc-value').textContent=fmtMoney(value);
+    $('mi-calc-gain').textContent=(gain>0?'+':'')+fmtMoney(gain);
+    $('mi-calc-return').textContent=(change>0?'+':'')+change.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})+'%';
+    $('mi-calc-result').textContent=fmtMoney(principal)+' ÷ '+fmtMoney(entry)+' × '+fmtMoney(btcQuote.usd)+' = '+fmtMoney(value)+
+      ' estimated value at the quoted price, assuming you held all the BTC.';
   }
-  for(const id of ['mi-calc-principal','mi-calc-price','mi-calc-move']) $(id)?.addEventListener('input',calculate);
-  calculate();
+  async function loadBitcoinPrice(force=false){
+    if(btcQuotePending)return;
+    const now=Date.now(), cooldown=force?60*1000:BTC_PRICE_REFRESH_MS;
+    if(btcQuoteAttempt && now-btcQuoteAttempt<cooldown){calculate();return;}
+    btcQuoteAttempt=now;btcQuotePending=true;btcQuoteError='';
+    $('mi-calc-refresh').disabled=true;
+    calculate();
+    const controller=new AbortController(), timer=setTimeout(()=>controller.abort(),10000);
+    try{
+      const response=await fetch(BTC_PRICE_URL,{mode:'cors',credentials:'omit',cache:'no-store',signal:controller.signal});
+      if(!response.ok)throw Error('Price HTTP '+response.status);
+      const data=await response.json(), usd=Number(data?.USD), seconds=Number(data?.time), updatedAt=seconds*1000;
+      if(!Number.isFinite(usd)||usd<=0||usd>1e9||!Number.isInteger(seconds)||seconds<=0||updatedAt>Date.now()+5*60*1000){
+        throw Error('Invalid price observation');
+      }
+      btcQuote={usd,updatedAt,fetchedAt:Date.now()};
+    }catch{
+      btcQuoteError='The latest Bitcoin price could not be loaded. You can try refreshing again in one minute.';
+    }finally{
+      clearTimeout(timer);btcQuotePending=false;
+      $('mi-calc-refresh').disabled=false;
+      calculate();
+    }
+  }
+  $('mi-calc-principal')?.addEventListener('input',calculate);
+  $('mi-calc-refresh')?.addEventListener('click',()=>loadBitcoinPrice(true));
+  const refreshVisibleBitcoinPrice=()=>{
+    if(!document.hidden && !$('mi-pane-cycles').hidden)loadBitcoinPrice();
+  };
+  // Only this visible browser panel polls; no scheduled server job is added.
+  setInterval(refreshVisibleBitcoinPrice,BTC_PRICE_REFRESH_MS);
+  document.addEventListener('visibilitychange',refreshVisibleBitcoinPrice);
 
   function reportText(){
     const score=cbbiNewest?'CBBI: '+(cbbiNewest.value*100).toFixed(1)+'/100 ('+fmtDate(cbbiNewest.ts)+' UTC; provider observation).':'CBBI: current observation not verified.';
@@ -285,6 +369,7 @@
     if(id==='market')loadMarket();
     if(id==='onchain')loadOnchain();
     if(id==='cbbi')loadCBBI();
+    if(id==='cycles')loadBitcoinPrice();
   };
   $$('[data-mi-tab]').forEach(button=>{
     button.addEventListener('click',()=>activate(button.dataset.miTab));
