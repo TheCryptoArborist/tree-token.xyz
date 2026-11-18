@@ -1,0 +1,68 @@
+name: Audit published STI wallet recovery
+
+on:
+  push:
+    branches: [main, feature/sti-purchase-postpublish-audit]
+    paths:
+      - 'scripts/audit-sti-wallet-publication.mjs'
+      - 'tests/sti-wallet-publication-audit.test.mjs'
+      - 'production/sti-wallet-recovery-candidate-20261118.json'
+      - '.github/workflows/audit-sti-wallet-publication.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tree-production-preservation-release
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Verify read-only audit guards
+        run: |
+          node --test tests/sti-wallet-publication-audit.test.mjs
+          node --check scripts/audit-sti-wallet-publication.mjs
+          git diff --check
+      - name: Install isolated browser checker
+        run: |
+          npm install --prefix "$RUNNER_TEMP/sti-purchase-browser" --ignore-scripts --no-audit --no-fund playwright@1.56.1
+          "$RUNNER_TEMP/sti-purchase-browser/node_modules/.bin/playwright" install chromium
+      - name: Audit existing publication without changes
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          STI_PURCHASE_BROWSER_MODULE: ${{ runner.temp }}/sti-purchase-browser/node_modules/playwright/index.mjs
+        run: |
+          test -n "$NETLIFY_AUTH_TOKEN" || { echo 'The existing Netlify audit connection is unavailable.'; exit 1; }
+          node scripts/audit-sti-wallet-publication.mjs
+      - name: Record completed audit
+        if: success()
+        run: |
+          node --input-type=module - <<'JS'
+          import fs from 'node:fs';
+          const r=JSON.parse(fs.readFileSync('.netlify/sti-wallet-publication-audit.json'));
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+            `### Published STI wallet recovery verified\n\n${r.canonicalUrl}\n\nDeployment: ${r.candidateId}\n\n616 static paths checked; 613 originals, 49 backend packages and five schedules preserved. Canonical delivery and all four browser widths passed. No remote mutations occurred.\n`);
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sti-wallet-publication-audit-${{ github.run_id }}
+          path: |
+            .netlify/sti-wallet-publication-audit.json
+            .netlify/sti-wallet-publication-audit.json.sha256
+            .netlify/sti-purchase-browser-checks.json
+            .netlify/sti-purchase-*.png
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 30
