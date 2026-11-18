@@ -1,3 +1,77 @@
+# Arcade tab design polish — published 2026-11-18
+
+Current locked production is `6afe22a623fe04c7a4a9d0c0`, published at
+`2026-11-18T22:17:52.239Z` from reviewed source
+`ac7005ff02bdb7d3e45ae71312a2ae4135026205`. PR225 merged as
+`90d95b6303c7ce4578d5be210d99153551536cee`; its entire tree equals the reviewed
+candidate tree `3d436765752955fe0c7475420e9dd11b8df967e4`.
+Publication workflow `44410001644` passed end to end, with final inventory,
+canonical delivery and lock verification at `2026-11-18T22:17:56.113Z`.
+
+Daily's task panels, heading sizes, utility buttons and community surfaces now
+share the forest-green and gold treatment used by Monthly Progress. Fresh
+signed-in attendance reduces duplicated confirmation text while retaining the
+original controls and loading/stale/error guidance. Games retains its cabinet
+artwork and individual play-button accents; LIVE labels are consistently green,
+PREVIEW purple and COMING SOON subdued. Active season countdowns place details
+on the left and timer values on the right at desktop widths, and stack on
+phones. Accessible keyboard focus and the existing UTC deadline are preserved.
+
+The fresh baseline was `6afe0141248c1062e8414ed7`. Exactly three existing assets
+changed: `/styles/arcade-organization.css`,
+`/styles/arcade-season-deadline.css` and `/scripts/arcade-organization.js`.
+All **617 other static paths**, **49 complete backend records**, **five
+schedules**, runtime settings and protected configuration were preserved. There
+are still **620 static paths and 49 backend records**. No backend package was
+uploaded. The page HTML, wallet and monthly JavaScript, database, payment flows,
+November cutoff enforcement and existing 25 SUI Event terms remain unchanged.
+
+The same reviewed Git tree adds an **offline campaign/skill-challenge planning
+foundation**. It includes an incomplete real draft, content-hashed rules,
+evidence consistency checks and exact-unit equal shares per input canonical
+player identity. It is excluded from the production payload. Every allocation
+report remains nonpayable and not launch-ready; actual budget, asset, network,
+dates, game/target and verifier choices remain unset. No funded campaign, live
+score verification, payout route or monthly cash program is activated.
+See `docs/arcade-campaign-foundation.md` for source-backed integration boundaries
+and the remaining implementation work.
+
+Validation passed: **94 focused tests**, covering 32 organization/countdown/
+preview checks, 34 current/historical preservation guards and 28 campaign
+foundation tests. All four PR workflows and the deploy-preview checks completed
+successfully. Independent release and campaign reviews found no blocking issues.
+The exact candidate's six tabs passed desktop (1363 CSS pixels) and phone
+(390 pixels) review; the countdown also passed at 320 pixels. Both monthly
+disclosures opened by keyboard with visible focus and 76-pixel summary targets.
+Canonical review of all six tabs and the Monthly Progress deep-link reload
+passed at `2026-11-18T22:19:35.662Z`. No document overflow or failed visible image
+was observed. Live browser review was signed out; fresh completed/stale/loading
+attendance presentation was tested with DOM fixtures. No wallet, signature,
+check-in, vote, recovery, payment or new award was submitted during review.
+
+Complete static inventory and publication report:
+`production/arcade-polish-release-20261118.json` (file SHA-256
+`8cfbb16a666369978dcaaaae69ab9478238c991edea17a47e98c3bb24d78a2f4`).
+Complete published backend/runtime/schedule records and source/artifact binding:
+`production/arcade-polish-deployment-20261118.json`.
+Browser evidence: `production/arcade-polish-candidate-review-20261118.json`,
+`production/arcade-polish-canonical-review-20261118.json`,
+`docs/arcade-polish-live-month-20261118.jpg`,
+`docs/arcade-polish-live-daily-20261118.jpg`,
+`docs/arcade-polish-daily-phone-20261118.jpg`, and
+`docs/arcade-polish-monthly-phone-20261118.jpg`.
+
+Implementation: https://github.com/TheCryptoArborist/tree-token.xyz/pull/225
+Publication: https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44410001644
+Release procedure: `docs/arcade-polish-release.md`.
+
+This is the newest live preservation baseline. Capture the complete live
+inventory afresh before a subsequent release. The earlier release sections below
+are historical records; ordinary Git builds and archived snapshots must not
+replace current production.
+
+---
+
 # Arcade organization and November cutoff — published 2026-11-18
 
 Current locked production is `6afe0141248c1062e8414ed7`, published at
