@@ -16,7 +16,7 @@
       <a href="https://nftree.net/">NFTrees</a><a href="/rewards/">NFTree Rewards</a>
       <a href="/about/">About</a>
       <details class="home-resources"><summary>Resources</summary><div>
-        <a href="/sui-guide/">Getting Started</a><a href="/tokenomics/">Tokenomics</a>
+        <a href="/sui-guide/">Getting Started</a><a href="/market-insights/">Market Insights</a><a href="/tokenomics/">Tokenomics</a>
         <a href="/roadmap/">Roadmap</a><a href="/faq/">FAQ</a><a href="/documents/">Docs</a>
       </div></details>`;
     nav.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {

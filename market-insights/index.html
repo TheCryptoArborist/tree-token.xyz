@@ -1,0 +1,1186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050714">
+  <meta name="description" content="Explore crypto sentiment, price charts, Bitcoin valuation and historical cycles with TREE’s plain-language market research tools.">
+  <title>Crypto Market Insights | TREE</title>
+  <link rel="canonical" href="https://tree-token.xyz/market-insights/">
+  <meta property="og:title" content="Crypto Market Insights | TREE">
+  <meta property="og:description" content="Explore crypto sentiment, price charts, Bitcoin valuation and historical cycles with plain-language guides.">
+  <meta property="og:url" content="https://tree-token.xyz/market-insights/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" href="/assets/thick-dwqrmagk-dwqrmagk.png">
+  <style>
+    :root { color-scheme:dark; --bg:#030b11; --panel:#081820; --line:#1a3439; --text:#effcf7; --muted:#a0b9bf; --green:#35ed96; --gold:#ffdb67; --cyan:#63d9eb; }
+    *,*::before,*::after { box-sizing:border-box }
+    html { scroll-behavior:smooth; background:var(--bg) }
+    body { margin:0; color:var(--text); font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.65; background:radial-gradient(ellipse 70% 33% at 85% 4%,#0b3c2f7c,transparent),radial-gradient(ellipse 60% 45% at 5% 35%,#102a486b,transparent),var(--bg); min-height:100vh }
+    a { color:var(--cyan); text-underline-offset:3px }
+    a:hover { color:#b8f5fe }
+    :focus-visible { outline:3px solid var(--gold); outline-offset:3px; border-radius:4px }
+    .skip { position:fixed; left:-9999px; top:0; background:var(--gold); color:#06131a; padding:8px 12px; z-index:2000 }
+    .skip:focus { left:12px; top:12px }
+    .wrap { width:min(1130px,calc(100% - 36px)); margin-inline:auto }
+    .topbar { border-bottom:1px solid #1a4038; background:#02080fd9 }
+    .topbar .wrap { display:flex; justify-content:space-between; align-items:center; gap:15px; padding:14px 0 }
+    .brand { display:inline-flex; align-items:center; gap:12px; text-decoration:none }
+    .brand img { width:42px; height:42px; object-fit:contain; border-radius:10px }
+    .brand strong { color:var(--gold); display:block; font-size:.93rem; letter-spacing:.06em }
+    .brand small { color:var(--muted); display:block; line-height:1.25; font-size:.7rem; letter-spacing:.08em; text-transform:uppercase }
+    .draft { color:#baf9da; border:1px solid #368568; border-radius:99px; font-size:.71rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; padding:6px 12px; white-space:nowrap }
+    main { padding:36px 0 74px }
+    .intro { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-end; gap:22px; margin-bottom:22px }
+    .intro-copy { max-width:700px }
+    h1 { font-size:clamp(2.15rem,5.7vw,4.3rem); letter-spacing:-.055em; line-height:1.06; margin:0 0 13px; font-weight:900 }
+    .rainbow { background:linear-gradient(95deg,#fd7564,#ffdc5a,#6ef59e,#4ee8e6,#71a8f5,#b18dff); -webkit-background-clip:text; background-clip:text; color:transparent }
+    .lead { font-size:1.05rem; color:#b6cdd2; margin:0; max-width:66ch }
+    .intro-note { flex:0 1 240px; color:#a2bfba; padding:13px 16px; border:1px solid #235248; border-radius:13px; background:#071e1a; font-size:.85rem }
+    .intro-note strong { color:var(--green); display:block; margin-bottom:3px; font-size:.83rem }
+    .chart-card { border:1px solid #285450; background:linear-gradient(145deg,#07191b,#060e17); border-radius:20px; box-shadow:0 25px 75px #0008; overflow:hidden }
+    .chart-card-head { padding:20px 23px 14px; display:flex; justify-content:space-between; flex-wrap:wrap; align-items:center; gap:12px }
+    h2 { margin:0; font-size:1.4rem; letter-spacing:-.025em; color:var(--gold) }
+    .chart-card-head p { color:var(--muted); margin:4px 0 0; font-size:.87rem }
+    .source-pill { background:#102b25; border:1px solid #2a6650; border-radius:99px; font-size:.76rem; padding:5px 10px; color:#b4f7d0; white-space:nowrap }
+    .rainbow-rule { height:5px; background:linear-gradient(90deg,#ff595f,#ff9f47,#f9de51,#55d579,#41cfdb,#4b7de4,#8060c6) }
+    .embed-box { padding:12px 15px 4px; background:#07141d }
+    .chart-embed { display:block; width:100%; height:590px; border:0; border-radius:10px; background:#0a151c; color:var(--text) }
+    .embed-caption { display:flex; justify-content:space-between; gap:12px; align-items:center; flex-wrap:wrap; padding:13px 23px 20px; font-size:.85rem; border-top:1px solid #1b383b; color:var(--muted) }
+    .embed-caption a { font-weight:700 }
+    .source-warning { padding:15px 20px; color:#cad6d5; background:#0a2021; border-top:1px solid #285450; font-size:.85rem }
+    .source-warning strong { color:#ffe490 }
+    .actions { display:flex; flex-wrap:wrap; gap:9px; margin:21px 0 0 }
+    .action { display:inline-flex; align-items:center; justify-content:center; padding:11px 16px; border:1px solid #34776f; border-radius:10px; text-decoration:none; color:#ddfff1; background:#0e342a; font-weight:800; font-size:.87rem }
+    .action:hover { color:#041310; background:#75f0b4 }
+    .action.secondary { background:transparent; border-color:#355164; color:#d7e4f0 }
+    .cards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:15px; margin-top:22px }
+    .card { padding:20px; border:1px solid #233e45; border-radius:15px; background:#071720cc }
+    .card-number { font-size:.74rem; letter-spacing:.08em; text-transform:uppercase; color:var(--green); font-weight:900; margin:0 0 7px }
+    h3 { font-size:1.07rem; margin:0 0 8px; letter-spacing:-.015em }
+    .card p:last-child { margin:0; color:var(--muted); font-size:.88rem }
+    .notes { margin-top:22px; padding:25px; border:1px solid #25493e; border-radius:17px; background:#071a19 }
+    .notes h2 { margin-bottom:10px }
+    .notes p { color:#b5c9c7; margin:9px 0 }
+    .notes ul { margin:8px 0 0; padding-left:22px; color:#b5c9c7 }
+    .notes li+li { margin-top:6px }
+    .foot { border-top:1px solid #17392f; padding:24px 0 35px; font-size:.83rem; color:#9cb3b8 }
+    .foot .wrap { display:flex; gap:14px; flex-wrap:wrap; justify-content:space-between }
+    .foot strong { color:var(--gold) }
+    @media(max-width:760px) {
+      .wrap { width:min(100% - 24px,1130px) }
+      main { padding-top:26px }
+      .intro-note { flex:1 1 100% }
+      .cards { grid-template-columns:1fr }
+      .chart-card-head { padding:16px }
+      .embed-box { padding:8px 5px }
+      .chart-embed { height:540px }
+      .embed-caption { padding:13px 15px }
+      .source-warning { padding:14px 15px }
+      .notes { padding:18px }
+    }
+    @media(max-width:380px) {
+      .brand strong { font-size:.79rem }
+      .draft { font-size:.63rem; padding:5px 8px }
+      h1 { font-size:2.15rem }
+      .chart-embed { height:575px }
+    }
+    @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto } }
+
+    /* TREE homepage design tokens and presentation styles — visually consistent with its current header, panels, buttons and footer. */
+    :root {
+      --ecosystem-bg:#050714; --ecosystem-bg-soft:#09121a; --ecosystem-panel:rgba(9,13,33,.88);
+      --ecosystem-cyan:#22e7d7; --ecosystem-green:#33f78f; --ecosystem-gold:#ffd84b;
+      --ecosystem-purple:#7041c3; --ecosystem-muted:#aeb7cc;
+      --emerald:#00e090; --emerald-2:#34d399; --teal:#00c2b3; --gold:#ffd166;
+      --muted:rgba(225,255,240,.95); --muted-soft:rgba(225,255,240,.72);
+      --glass-border:rgba(0,255,160,.08); --shadow-deep:0 24px 80px rgba(0,0,0,.55);
+      --shadow-glow:0 0 0 1px rgba(255,255,255,.02),0 20px 60px rgba(0,255,160,.08);
+      --bg:#050714; --panel:rgba(4,10,7,.68); --line:rgba(0,255,160,.16);
+      --text:#f4fbff; --green:#33f78f; --cyan:#22e7d7;
+    }
+    html { background:#02070b }
+    body {
+      background:#000; color:var(--muted); -webkit-font-smoothing:antialiased;
+      overflow-x:hidden; position:relative;
+    }
+    body::before {
+      content:""; position:fixed; inset:0; pointer-events:none; z-index:-2;
+      background:
+        radial-gradient(circle at 18% 12%,rgba(0,224,144,.12),transparent 24%),
+        radial-gradient(circle at 86% 18%,rgba(0,194,179,.12),transparent 26%),
+        linear-gradient(180deg,rgba(0,0,0,.14),rgba(0,0,0,.52)),
+        url('/assets/background5-dfotcuir-dfotcuir.jpg') center/cover no-repeat fixed;
+    }
+    body::after {
+      content:""; position:fixed; inset:0; pointer-events:none; z-index:-1;
+      background:linear-gradient(180deg,rgba(0,0,0,.14),rgba(0,0,0,.40)),
+        radial-gradient(circle at center,transparent 0%,rgba(0,0,0,.18) 72%,rgba(0,0,0,.42) 100%);
+    }
+    .wrap { width:min(1200px,calc(100% - 52px)); margin-inline:auto }
+    .site-header {
+      position:fixed; top:0; left:0; right:0; height:82px; z-index:1200;
+      display:flex; justify-content:center; align-items:center; padding:0 4%;
+      background:linear-gradient(180deg,rgba(0,0,0,.70),rgba(0,0,0,.38));
+      backdrop-filter:blur(10px) saturate(130%);
+      border-bottom:1px solid rgba(255,255,255,.055);
+    }
+    .header-inner {
+      max-width:1280px; width:100%; display:flex; align-items:center;
+      justify-content:space-between; gap:16px;
+    }
+    .brand-wrap { display:flex; align-items:center; gap:12px; text-decoration:none; flex:0 0 auto }
+    .logo {
+      width:58px; height:58px; border-radius:14px; overflow:hidden;
+      display:flex; align-items:center; justify-content:center;
+      background:linear-gradient(135deg,rgba(0,0,0,.52),rgba(6,12,10,.7));
+      border:1px solid rgba(255,255,255,.05);
+      box-shadow:0 8px 28px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.03);
+    }
+    .logo img { width:100%; height:100%; object-fit:contain; display:block }
+    .brand-title { display:flex; flex-direction:column; line-height:1.25 }
+    .brand-title .brand-name {
+      color:var(--ecosystem-gold); letter-spacing:.06em; font-size:1.02rem;
+      font-weight:900;
+    }
+    .brand-title small { color:rgba(225,255,240,.76); font-size:.78rem; margin-top:3px }
+    .nav-shell { display:flex; justify-content:center; flex:1 1 auto; min-width:0 }
+    .site-nav { display:flex; gap:2px; flex-wrap:nowrap; align-items:center; justify-content:center }
+    .site-nav a {
+      color:var(--muted); text-decoration:none; padding:9px 10px;
+      border-radius:999px; font-weight:800; font-size:.79rem; white-space:nowrap;
+      border:1px solid transparent; transition:background .15s,color .15s;
+    }
+    .site-nav a:hover,.site-nav a:focus-visible { color:var(--emerald-2); background:rgba(0,255,160,.06) }
+    .site-nav .nav-nft { color:var(--gold); border-color:rgba(255,209,102,.25); background:rgba(255,209,102,.06) }
+    .site-nav .nav-command { color:#e5fff5; background:rgba(0,224,144,.07) }
+    .site-nav .nav-command span { color:var(--emerald-2); font-size:.65rem }
+    .site-nav .nav-get-started { color:#04170f; background:linear-gradient(90deg,var(--emerald-2),var(--teal)); }
+    .site-nav .nav-get-started:hover { color:#04170f; background:#70f4b2 }
+    .header-actions { display:flex; align-items:center; gap:10px; flex:0 0 auto }
+    .header-cta {
+      display:inline-flex; padding:9px 14px; align-items:center; justify-content:center;
+      background:linear-gradient(135deg,rgba(0,224,144,.12),rgba(0,194,179,.08));
+      border:1px solid rgba(0,255,160,.35); border-radius:999px;
+      text-decoration:none; color:var(--emerald-2); font-weight:800; white-space:nowrap;
+      font-size:.8rem; transition:background .15s;
+    }
+    .header-cta:hover { color:var(--gold); background:rgba(0,224,144,.22) }
+    .nav-toggle {
+      display:none; flex:0 0 auto; align-items:center; justify-content:center;
+      width:42px; height:42px; border-radius:11px; border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.04); color:var(--muted); cursor:pointer;
+    }
+    .nav-toggle svg { width:22px; height:22px; display:block }
+    .nav-toggle[aria-expanded=true] { color:var(--gold); background:rgba(255,209,102,.08) }
+    main.wrap { padding:126px 0 62px; position:relative; z-index:1 }
+    .intro.hero-shell {
+      position:relative; display:flex; align-items:center; justify-content:space-between;
+      gap:20px; margin-bottom:22px; padding:clamp(22px,3.5vw,36px);
+      border:1px solid rgba(255,255,255,.07); border-radius:28px;
+      background:radial-gradient(circle at top right,rgba(0,224,144,.10),transparent 38%),
+        radial-gradient(circle at bottom left,rgba(0,194,179,.10),transparent 43%),
+        linear-gradient(160deg,rgba(4,11,8,.86),rgba(3,8,5,.75));
+      box-shadow:var(--shadow-deep),var(--shadow-glow);
+    }
+    .intro-copy { max-width:765px; min-width:0 }
+    h1.hero-title {
+      color:var(--gold); font-size:clamp(2.2rem,4.6vw,3.9rem);
+      line-height:1.04; letter-spacing:-.045em; margin:0 0 12px;
+    }
+    .lead { color:var(--muted-soft); font-size:1rem; line-height:1.7 }
+    .intro-note {
+      flex:0 0 260px; border:1px solid rgba(255,255,255,.07); border-radius:20px;
+      background:rgba(0,0,0,.22); color:var(--muted-soft); padding:18px;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.02);
+    }
+    .intro-note strong { color:var(--gold); font-weight:900; font-size:.98rem }
+    .hero-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:19px }
+    .action {
+      min-height:44px; padding:11px 16px; border-radius:999px; font-size:.89rem;
+      border:none; color:#021a10; font-weight:900;
+      background:linear-gradient(135deg,var(--emerald),var(--teal));
+      box-shadow:0 10px 28px rgba(0,255,160,.17);
+      text-decoration:none; transition:transform .16s,box-shadow .16s;
+    }
+    .action:hover { color:#021a10; transform:translateY(-2px); box-shadow:0 15px 38px rgba(0,255,160,.25) }
+    .action.secondary {
+      color:var(--emerald-2); background:rgba(0,0,0,.33);
+      border:1px dashed rgba(0,255,160,.26); box-shadow:none;
+    }
+    .action.secondary:hover { color:var(--gold); background:rgba(0,0,0,.48) }
+    #rainbow-chart,#rainbow-guide,#research-notes { scroll-margin-top:106px }
+    .chart-card {
+      border:1px solid rgba(0,255,160,.13); border-radius:22px;
+      background:linear-gradient(160deg,rgba(4,10,7,.87),rgba(3,7,5,.82));
+      box-shadow:var(--shadow-deep),var(--shadow-glow);
+    }
+    .chart-card-head { padding:22px 24px 17px }
+    .chart-card-head h2,.notes h2 { color:var(--gold); font-weight:900 }
+    .source-pill { background:linear-gradient(135deg,rgba(0,224,144,.13),rgba(0,194,179,.08)); color:var(--emerald-2); border:1px solid rgba(0,255,160,.24) }
+    .embed-box { background:rgba(0,0,0,.35) }
+    .embed-caption { border-top:1px solid var(--glass-border) }
+    .embed-caption a { color:var(--muted); text-decoration:underline; text-decoration-color:rgba(225,255,240,.4); font-weight:600 }
+    .source-warning { background:rgba(255,209,102,.035); border-top:1px solid rgba(255,209,102,.14) }
+    .source-warning strong { color:var(--gold) }
+    .cards { gap:17px }
+    .card {
+      border:1px solid rgba(0,255,160,.16); border-radius:18px;
+      background:rgba(4,13,19,.92); box-shadow:0 16px 48px rgba(0,0,0,.30);
+    }
+    .card-number { color:var(--emerald-2) }
+    .card h3 { color:var(--gold); font-weight:900 }
+    .card p:last-child { color:var(--muted-soft) }
+    .notes {
+      background:rgba(4,11,8,.85); border:1px solid rgba(0,255,160,.14);
+      border-radius:20px; box-shadow:var(--shadow-glow);
+    }
+    .notes p,.notes li { color:var(--muted-soft) }
+    .site-footer {
+      position:relative; z-index:1; text-align:center; padding:28px 4% 38px; margin-top:22px;
+      background:rgba(0,0,0,.40); color:rgba(225,255,240,.88);
+      border-top:1px solid rgba(0,255,160,.08); font-size:.82rem;
+    }
+    .footer-inner { max-width:1200px; margin:0 auto }
+    .site-footer p { margin:0 0 9px }
+    .site-footer .footer-risk { max-width:850px; margin:11px auto; color:var(--muted-soft); font-size:.78rem }
+    .site-footer a { color:#6ee7ff }
+    .footer-links { display:flex; flex-wrap:wrap; justify-content:center; gap:9px; margin-top:13px }
+    .footer-link {
+      text-decoration:none; color:var(--muted)!important; border:1px solid rgba(255,255,255,.08);
+      border-radius:999px; padding:9px 14px; background:rgba(0,0,0,.24); font-weight:800;
+    }
+    .footer-link:hover { color:var(--emerald-2)!important; border-color:rgba(0,255,160,.22) }
+    @media(max-width:1230px) {
+      .site-header { padding:0 4% }
+      .nav-shell {
+        display:none; position:absolute; top:calc(100% + 1px); left:4%; right:4%;
+        padding:13px; border:1px solid rgba(0,255,160,.18); border-radius:0 0 17px 17px;
+        background:rgba(3,11,16,.97); box-shadow:0 25px 70px rgba(0,0,0,.65);
+        max-height:calc(100dvh - 85px); overflow-y:auto; overscroll-behavior:contain;
+      }
+      .nav-shell.open { display:block }
+      .site-nav { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px }
+      .site-nav a { white-space:normal; text-align:center; font-size:.9rem; border-radius:11px; padding:12px }
+      .site-nav .nav-command span { display:inline }
+      .nav-toggle { display:flex }
+      .header-actions { margin-left:auto }
+    }
+    @media(max-width:760px) {
+      .wrap { width:calc(100% - 22px) }
+      .site-header { height:70px }
+      .logo { width:47px; height:47px; border-radius:12px }
+      .brand-title .brand-name { font-size:.88rem }
+      .brand-title small { font-size:.7rem }
+      .header-cta { display:none }
+      main.wrap { padding:94px 0 47px }
+      .intro.hero-shell { padding:24px 18px; border-radius:21px; flex-direction:column; align-items:stretch }
+      .intro-note { flex:1 1 auto; width:100%; padding:14px }
+      h1.hero-title { font-size:clamp(2.28rem,10.5vw,3.55rem) }
+      .chart-card-head { padding:17px 16px }
+      .embed-box { padding:8px 5px }
+      .embed-caption { padding:13px 15px }
+      .source-warning { padding:14px 15px }
+      .cards { gap:12px }
+      .card { padding:18px }
+      .notes { padding:19px }
+      .site-footer { padding:28px 15px }
+    }
+    @media(max-width:400px) {
+      .site-nav { grid-template-columns:1fr }
+      .brand-title small { display:none }
+      .brand-title .brand-name { font-size:.82rem }
+    }
+    @media(prefers-reduced-motion:reduce) {
+      .action,.site-nav a,.header-cta { transition:none }
+    }
+
+
+    /* Match the actual TREE homepage mobile menu shown in the Nov 17 reference:
+       brand/logo row, top-right hamburger, centered single-column dropdown. */
+    .site-nav .nav-home { color:var(--gold); }
+    .site-nav .nav-resources { position:relative; flex:0 0 auto; }
+    .site-nav .nav-resources summary {
+      cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;
+      color:var(--muted); font-weight:800; font-size:.79rem;
+      padding:9px 10px; border-radius:999px; list-style:none;
+      border:1px solid transparent; user-select:none;
+    }
+    .site-nav .nav-resources summary::-webkit-details-marker { display:none }
+    .site-nav .nav-resources summary::before {
+      content:"▶"; font-size:.63rem; display:inline-block; transition:transform .15s ease;
+    }
+    .site-nav .nav-resources[open] summary::before { transform:rotate(90deg) }
+    .site-nav .nav-resources summary:hover,.site-nav .nav-resources summary:focus-visible {
+      background:rgba(0,255,160,.06);color:var(--emerald-2)
+    }
+    .nav-resources-links {
+      display:grid; gap:3px; position:absolute; right:0; top:calc(100% + 4px);
+      min-width:190px; padding:8px; border:1px solid rgba(0,255,160,.20);
+      border-radius:12px; background:rgba(2,9,14,.98); box-shadow:0 24px 60px #000a;
+      z-index:4;
+    }
+    .nav-resources-links a { border-radius:8px; font-size:.83rem; padding:9px 12px }
+    @media(max-width:1230px) {
+      .site-header { background:rgba(2,8,12,.97); }
+      .brand-wrap { gap:10px; }
+      .logo { border-radius:14px; border-color:rgba(255,255,255,.09) }
+      .brand-title .brand-name { letter-spacing:.085em }
+      .nav-shell {
+        top:calc(100% + 10px); left:4%; right:4%; padding:15px 12px 17px;
+        background:rgba(2,9,14,.985); border:1px solid rgba(29,112,87,.52);
+        border-radius:23px; box-shadow:0 22px 70px #000c;
+      }
+      .site-nav { display:flex; flex-direction:column; gap:1px; align-items:stretch; }
+      .site-nav>a {
+        display:flex; align-items:center; justify-content:center;
+        border:0; border-radius:12px; min-height:46px; padding:9px 14px;
+        color:#bbc6d0; font-size:1rem; font-weight:800; text-align:center;
+        background:transparent;
+      }
+      .site-nav .nav-home { color:#ffe071; }
+      .site-nav>a:hover,.site-nav>a:focus-visible {
+        color:#ffe071; background:rgba(52,211,153,.06);
+      }
+      .site-nav .nav-resources { width:100%; }
+      .site-nav .nav-resources summary {
+        min-height:46px; font-size:1rem; font-weight:800;
+        border-radius:12px; color:#bbc6d0; padding:8px 14px;
+      }
+      .site-nav .nav-resources summary::before { font-size:.72rem }
+      .site-nav .nav-resources summary:hover,.site-nav .nav-resources summary:focus-visible {
+        color:#ffe071; background:rgba(52,211,153,.06)
+      }
+      .nav-resources-links {
+        position:static; min-width:0; margin:3px 12px 4px; padding:7px;
+        border-radius:12px; border:1px solid rgba(0,255,160,.14);
+        background:rgba(6,19,25,.88); box-shadow:none;
+      }
+      .nav-resources-links a { color:#b6c5c9; font-size:.9rem; padding:10px 12px; border-radius:9px }
+      .nav-shell { max-height:min(650px,calc(100dvh - 100px)); overflow-y:auto; }
+      .nav-toggle {
+        border-radius:13px; background:#0b141b; border:1px solid rgba(166,183,197,.19);
+        width:46px; height:46px;
+      }
+    }
+    @media(max-width:760px) {
+      .site-header { height:74px; padding:0 4%; }
+      .header-inner { gap:10px }
+      .logo { width:49px; height:49px }
+      .brand-title .brand-name { font-size:.89rem; letter-spacing:.09em; color:var(--ecosystem-gold) }
+      .brand-title small { display:none }
+      .nav-shell { left:4%; right:4%; top:calc(100% + 9px); padding:13px 12px 16px }
+      .site-nav>a,.site-nav .nav-resources summary { min-height:47px; font-size:1rem; }
+      .nav-toggle { width:45px; height:45px }
+      main.wrap { padding-top:96px }
+    }
+    @media(max-width:400px) {
+      .site-nav { display:flex; grid-template-columns:none }
+      .nav-shell { left:4%; right:4%; }
+      .site-nav>a,.site-nav .nav-resources summary { min-height:45px }
+    }
+
+    /* Source-backed research dashboard, localized to the unlisted page. */
+    .mi-explorer {
+      margin:23px 0; padding:clamp(16px,3vw,28px);
+      background:linear-gradient(145deg,rgba(5,14,18,.95),rgba(3,8,17,.96));
+      border:1px solid rgba(0,255,160,.17);border-radius:22px;
+      box-shadow:var(--shadow-deep),var(--shadow-glow);
+      scroll-margin-top:104px;
+    }
+    .mi-section-head { display:flex; align-items:center; justify-content:space-between; gap:15px; margin-bottom:20px }
+    .mi-section-head h2 { font-size:clamp(1.55rem,3.6vw,2.3rem);margin:0;color:var(--gold) }
+    .mi-section-head p:last-child { color:var(--muted-soft);font-size:.93rem;max-width:70ch;margin:6px 0 }
+    .mi-tabbar { display:flex; gap:8px; overflow-x:auto; padding:0 0 12px; border-bottom:1px solid rgba(0,255,160,.12); scroll-snap-type:x mandatory }
+    .mi-tab:focus-visible { outline-offset:-4px }
+    .mi-tab { flex:1 0 auto; padding:12px 15px; border-radius:11px; border:1px solid rgba(255,255,255,.11); background:rgba(0,0,0,.32); color:#c5dcd4; font-weight:800;font-size:.89rem;line-height:1.2;font-family:inherit; cursor:pointer; scroll-snap-align:start }
+    .mi-tab[aria-selected="true"] { color:#03160e;background:linear-gradient(130deg,#34d399,#00c2b3);border-color:transparent;box-shadow:0 7px 22px rgba(0,224,144,.14) }
+    .mi-pane { padding:24px 0 5px; }
+    .mi-pane[hidden] { display:none !important }
+    .mi-pane h3 { color:var(--gold);font-size:clamp(1.2rem,3vw,1.55rem);margin:0 0 5px }
+    .mi-pane h4 { color:#e9fcf4;margin:20px 0 9px;font-size:1.03rem }
+    .mi-help { margin:5px 0 16px;color:var(--muted-soft);font-size:.9rem;line-height:1.65 }
+    .mi-choices { display:flex;gap:8px;flex-wrap:wrap;margin:15px 0 13px }
+    .mi-choices button { border:1px solid rgba(0,255,160,.18);border-radius:99px;background:rgba(0,0,0,.34);color:#bcebd2;min-height:43px;padding:9px 15px;font-weight:800;font-size:.88rem;line-height:1.2;font-family:inherit;cursor:pointer }
+    .mi-choices button.selected { color:#09170f;background:linear-gradient(130deg,#ffd166,#f1b72b);border-color:transparent }
+    .mi-description { color:#aabfc2;font-size:.88rem;max-width:78ch;margin:10px 0 17px;min-height:2em }
+    .mi-chart-container { background:#050d17;position:relative;border:1px solid rgba(255,255,255,.09);overflow:hidden;border-radius:14px }
+    .mi-tv { height:min(650px,76vh);min-height:490px;padding:7px }
+    .mi-tv .tradingview-widget-container { min-height:450px }
+    .mi-onchain { height:620px; padding:7px }
+    .mi-onchain-cue { padding:12px 15px;border:1px solid #27594c;border-radius:11px;background:#0b292080;color:#cbe9dc;font-size:.86rem;line-height:1.65;margin:0 0 15px }
+    .mi-onchain-cue strong { color:#e6fff1 }
+    .mi-onchain-levels { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 16px }
+    .mi-onchain-levels>div { padding:14px;border:1px solid #26433b;border-radius:12px;background:#0a211c80;min-width:0 }
+    .mi-onchain-levels dt { font-size:.88rem;font-weight:750;color:#f3d886;margin-bottom:5px }
+    .mi-onchain-levels dd { margin:0;font-size:.84rem;line-height:1.65;color:#bdd5cb }
+    .mi-onchain-guide[hidden] { display:none }
+    .mi-onchain-example { margin:16px 0;padding:15px 17px;border-left:3px solid #e4bb53;border-radius:0 11px 11px 0;background:#30280f40;font-size:.88rem;color:#d5e7df }
+    .mi-onchain-example strong { color:#ffe4a0 }
+    .mi-onchain-example p { margin:5px 0 0 }
+    .mi-onchain-more { border:1px solid #26433b;border-radius:12px;padding:0 15px;margin-top:16px;color:#b9d2c9;font-size:.85rem }
+    .mi-onchain-more summary { min-height:48px;padding:12px 0;cursor:pointer;color:#dff4e9;font-weight:750 }
+    .mi-onchain-more p { margin:0 0 13px }
+    .mi-onchain-more dl { margin:3px 0 15px }
+    .mi-onchain-more dt { font-weight:750;color:#e1f5ec;margin-top:10px }
+    .mi-onchain-more dd { margin:3px 0 0 }
+    .mi-provider-iframe { display:block;border:0;width:100%;height:100%;background:#051018 }
+    .mi-footnotes { display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:11px;color:#91ada7;font-size:.76rem }
+    .mi-footnotes a { color:#8adfd1;text-underline-offset:3px }
+    .mi-disclaimer { color:#9fb7bb;font-size:.8rem;line-height:1.65;background:rgba(255,209,102,.04);border-left:2px solid rgba(255,209,102,.4);padding:10px 13px;margin-top:17px }
+    .mi-cbbi-header { display:flex;gap:20px;justify-content:space-between;align-items:center;background:rgba(2,13,18,.83);border:1px solid rgba(0,255,160,.15);border-radius:15px;padding:17px;margin:14px 0 }
+    .mi-overline { display:block;letter-spacing:.1em;font-size:.7rem;color:#72daba;text-transform:uppercase;font-weight:850 }
+    .mi-score { font-size:clamp(1.55rem,5vw,2.9rem);color:#ffe07d;font-weight:900;letter-spacing:-.04em }
+    .mi-small { color:#86a4a9;font-size:.75rem;line-height:1.6 }
+    .mi-score-scale { min-width:220px;max-width:360px;width:100%;color:#c5dbd3;font-size:.78rem }
+    .mi-score-scale>div { width:100%;height:14px;border-radius:99px;background:linear-gradient(90deg,#5c81d9,#43c9bc,#e1da59,#f08f4b,#d34c4b) }
+    .mi-score-scale p { display:flex;justify-content:space-between;gap:16px;margin:7px 0 0 }
+    .mi-cbbi-guide { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:15px 0 12px }
+    .mi-cbbi-guide>div { padding:13px 15px;border:1px solid #29493d;border-radius:11px;background:#071c1880;min-width:0 }
+    .mi-cbbi-guide dt { font-weight:750;font-size:.88rem;color:#f1d68b;margin-bottom:5px }
+    .mi-cbbi-guide dd { margin:0;font-size:.84rem;line-height:1.65;color:#bfd8cd }
+    .mi-cbbi-note { font-size:.85rem;line-height:1.65;color:#c8ded3;padding:12px 15px;background:#30280f40;border-left:3px solid #e4bb53;border-radius:0 10px 10px 0 }
+    .mi-cbbi-note strong { color:#ffe4a0 }
+    .mi-status { font-size:.86rem;color:#c2d6cb;margin:12px 0 }
+    .mi-graph-wrap { border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:12px;background:rgba(0,0,0,.22) }
+    .mi-graph-wrap svg { display:block;width:100%;height:auto;min-height:140px;max-height:250px }
+    .mi-graph-wrap p { margin:7px 0 0 }
+    .mi-metric-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px }
+    .mi-indicator { border:1px solid #27443c;padding:16px;border-radius:12px;background:#081b21;display:flex;flex-direction:column;gap:9px;min-width:0 }
+    .mi-indicator h5 { color:#ffe09a;font-size:.95rem;line-height:1.45;margin:0;overflow-wrap:anywhere }
+    .mi-indicator-description { color:#c4dcd2;font-size:.84rem;line-height:1.65;margin:0;flex:1 }
+    .mi-indicator-score { display:block;color:#e0ffec;font-weight:850;font-size:1.25rem }
+    .mi-indicator-score-label { display:block;color:#abc5ba;font-size:.73rem;margin-bottom:2px }
+    .mi-indicator-track { height:7px;border-radius:99px;background:#263d39;overflow:hidden }
+    .mi-indicator-track>span { display:block;height:100%;border-radius:inherit;background:#73dba9 }
+    .mi-indicator small { color:#a1beb5;font-size:.74rem;line-height:1.6 }
+    .mi-indicator-more { border-top:1px solid #29463e;margin-top:2px;font-size:.82rem;color:#bbd4ca;line-height:1.65 }
+    .mi-indicator-more summary { cursor:pointer;min-height:44px;padding:10px 0;color:#d8f4e5;font-weight:700 }
+    .mi-indicator-more p { margin:0 0 10px }
+    .mi-indicator-more a { color:#8adfd1;text-underline-offset:3px }
+    .mi-cbbi-about { border:1px solid #29463e;border-radius:12px;padding:0 15px;margin-top:17px;font-size:.85rem;color:#bdd5cb;line-height:1.65 }
+    .mi-cbbi-about summary { min-height:48px;padding:12px 0;cursor:pointer;font-weight:750;color:#e1f5e9 }
+    .mi-cbbi-about p { margin:0 0 13px }
+    .mi-cbbi-about a { color:#8adfd1;text-underline-offset:3px }
+    .mi-linkbutton { border:0;background:transparent;color:#80d9c2;cursor:pointer;text-decoration:underline;font:inherit }
+    .mi-stat-grid { display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:15px }
+    .mi-stat-grid>div { border:1px solid rgba(0,255,160,.14);border-radius:13px;padding:13px;background:#061519 }
+    .mi-stat-grid span { display:block;color:#9ab5b5;font-size:.75rem }
+    .mi-stat-grid strong { display:block;color:var(--gold);font-size:1.17rem;overflow-wrap:anywhere;margin-top:5px }
+    .mi-calculator,.mi-share { background:rgba(1,12,16,.74);border:1px solid rgba(0,255,160,.13);padding:16px;border-radius:15px;margin-top:17px }
+    .mi-calc-origin { border-left:3px solid var(--gold);background:#0b201c;padding:12px 15px;margin:12px 0 18px;color:#bad5cb;font-size:.85rem;line-height:1.65 }
+    .mi-calc-origin strong { color:#ffe09a }
+    .mi-form-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px }
+    .mi-form-grid label { color:#b6cdc8;font-size:.77rem;font-weight:700 }
+    .mi-form-grid input { display:block;width:100%;margin-top:8px;padding:12px;border:1px solid rgba(0,255,160,.23);border-radius:9px;color:#fff;background:#06141c;font-size:1rem }
+    .mi-calc-output { display:block;margin:16px 0 7px;line-height:1.6;color:#dafde9;font-weight:700;font-size:.9rem }
+    .mi-calc-inputs { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:end }
+    .mi-calc-inputs label,.mi-calc-inputs>div>span { display:block;color:#b6cdc8;font-size:.78rem;font-weight:700 }
+    .mi-calc-inputs input { display:block;width:100%;margin-top:8px;padding:12px;border:1px solid #34735c;border-radius:9px;color:#fff;background:#06141c;font:inherit;font-size:1rem }
+    .mi-calc-inputs>div { min-width:0;padding:12px;border:1px solid #294b40;border-radius:9px;background:#06141c }
+    .mi-calc-inputs>div>strong { display:block;color:#ffe09a;font-size:1.13rem;margin-top:5px;overflow-wrap:anywhere }
+    .mi-calc-price-status { font-size:.8rem;line-height:1.65;color:#b9d2c7;margin:12px 0 }
+    .mi-calc-price-status[data-state=error] { color:#ffd0c3 }
+    .mi-calc-price-status[data-state=loading] { color:#f4db97 }
+    .mi-share-actions { display:flex;gap:9px;flex-wrap:wrap }
+    .mi-action-primary,.mi-action-secondary { padding:10px 14px;border-radius:999px;font-weight:800;font-size:.87rem;line-height:1.3;font-family:inherit;cursor:pointer }
+    .mi-action-primary { background:linear-gradient(135deg,#00e090,#00c2b3);border:none;color:#07150c }
+    .mi-action-secondary { background:rgba(0,0,0,.3);border:1px dashed rgba(0,255,160,.32);color:#8cf6c4 }
+    @media(max-width:760px){
+      .mi-explorer { padding:16px 12px;margin:15px 0;border-radius:18px }
+      .mi-tabbar { margin-inline:-3px;gap:6px }
+      .mi-tab { padding:11px 12px;font-size:.8rem }
+      .mi-pane { padding-top:16px }
+      .mi-choices { gap:6px }
+      .mi-choices button { font-size:.8rem;padding:9px 11px }
+      .mi-tv { height:520px;min-height:480px;padding:3px }
+      .mi-onchain { height:540px;padding:3px }
+      .mi-onchain-levels { grid-template-columns:1fr }
+      .mi-cbbi-guide { grid-template-columns:1fr }
+      .mi-cbbi-header { flex-direction:column;align-items:stretch;gap:12px }
+      .mi-metric-grid { grid-template-columns:repeat(2,minmax(0,1fr)) }
+      .mi-stat-grid { grid-template-columns:repeat(2,minmax(0,1fr)) }
+      .mi-form-grid { grid-template-columns:1fr }
+      .mi-calc-inputs { grid-template-columns:1fr }
+    }
+    @media(max-width:600px){
+      #mi-cbbi-metrics { grid-template-columns:1fr }
+    }
+    @media(max-width:360px){
+      .mi-metric-grid { grid-template-columns:1fr }
+      .mi-tab { font-size:.77rem;padding:10px }
+    }
+
+
+    /* SUI-first, source-verified Fear & Greed explorer — matches TREE's dark/emerald/gold theme. */
+    .mi-sentiment-pane { color:#edf8f4 }
+    .mi-sentiment-cards { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; margin:17px 0 }
+    .mi-sentiment-card {
+      appearance:none; text-align:left; cursor:pointer; padding:17px; border-radius:17px;
+      background:rgba(4,17,20,.93); border:1px solid rgba(0,255,160,.19); color:#d7f1e7;
+      min-width:0; display:flex; flex-direction:column; align-items:flex-start; gap:4px;
+      font-family:inherit; transition:border-color .2s,transform .2s;
+    }
+    .mi-sentiment-card:hover { border-color:rgba(52,211,153,.75);transform:translateY(-2px) }
+    .mi-sentiment-card.selected,.mi-sentiment-card[aria-pressed="true"] {
+      border-color:var(--gold);box-shadow:0 0 0 1px rgba(255,209,102,.2),0 10px 45px rgba(255,209,102,.07);
+      background:linear-gradient(145deg,rgba(23,32,21,.97),rgba(7,20,21,.97));
+    }
+    .mi-sentiment-card-label { display:block;color:#fff9dc;font-weight:900;font-size:1.04rem }
+    .mi-sentiment-card-label small { display:block; color:#9ebbb5; font-size:.71rem;font-weight:650 }
+    .mi-sentiment-card>strong {font-size:clamp(1.8rem,4vw,2.45rem);line-height:1.12;color:var(--mi-sentiment-band,var(--gold));font-weight:900}
+    .mi-sentiment-card>span:not(.mi-sentiment-card-label){font-size:.86rem;font-weight:800}
+    .mi-sentiment-card>small{font-size:.7rem;color:#a6bdc0}
+    .mi-sentiment-main {display:grid;grid-template-columns:minmax(215px,.75fr) minmax(0,1.4fr);gap:15px}
+    .mi-sentiment-current,.mi-sentiment-right,.mi-sentiment-details {
+      border-radius:17px;border:1px solid rgba(0,255,160,.12);
+      background:rgba(2,12,17,.74);padding:18px;min-width:0
+    }
+    .mi-sentiment-overline {font-size:.68rem;letter-spacing:.13em;color:#62d9b2;font-weight:850}
+    .mi-sentiment-current h4 {margin:5px 0 9px;color:#e8f4ec}
+    .mi-sentiment-score {display:flex;align-items:baseline;gap:6px}
+    .mi-sentiment-score strong{font-size:clamp(3rem,8vw,4.7rem);line-height:1.05;color:var(--gold);letter-spacing:-.04em}
+    .mi-sentiment-score span{font-size:.9rem;color:#bdceca}
+    .mi-sentiment-zone{display:block;margin:6px 0 12px;font-size:1rem}
+    .mi-sentiment-scale {
+      position:relative;height:12px;border-radius:99px;
+      background:linear-gradient(90deg,#bb3e50,#ea8650 25%,#f1ce66 50%,#91d88f 75%,#28b781);
+    }
+    .mi-sentiment-scale-marker{
+      position:absolute;top:-4px;left:0%;height:20px;width:3px;border-radius:2px;
+      background:#fff;box-shadow:0 0 5px #000;transform:translateX(-50%);transition:left .25s;
+    }
+    .mi-sentiment-scale-labels {display:flex;justify-content:space-between;gap:10px;font-size:.66rem;color:#a6c3c0;margin-top:5px}
+    .mi-sentiment-delta {font-size:.85rem;color:#fff3b7;font-weight:780}
+    .mi-sentiment-summary{font-size:.8rem;color:#a8c3c0;line-height:1.65}
+    .mi-sentiment-current .mi-small{overflow-wrap:anywhere}
+    .mi-sentiment-controls {display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+    .mi-sentiment-controls h4{margin:0;color:var(--gold)}
+    .mi-sentiment-controls .mi-choices{margin:6px 0}
+    .mi-sentiment-controls .mi-choices button{min-height:35px;padding:7px 11px}
+    .mi-sentiment-ma{display:inline-flex;gap:7px;align-items:center;font-size:.78rem;color:#b1c8bf;cursor:pointer}
+    .mi-sentiment-ma input{accent-color:#34d399}
+    .mi-sentiment-chart-frame {overflow:hidden;margin-top:12px;background:rgba(1,7,13,.72);border:1px solid #214442;border-radius:12px;padding:10px 8px}
+    .mi-sentiment-chart-frame svg{display:block;width:100%;height:auto;min-height:135px}
+    .mi-sentiment-episodes {font-size:.76rem;color:#b0c9bd;line-height:1.7}
+    .mi-sentiment-status {padding:12px 15px;border-radius:12px;color:#b6e9c7;background:rgba(0,224,144,.07);border:1px solid rgba(0,255,160,.14);font-size:.8rem;margin:15px 0}
+    .mi-sentiment-status[data-state=error] {color:#ffd1c8;background:#3b191631;border-color:#c6575399}
+    .mi-sentiment-status[data-state=warning] {color:#ffe69e;background:#30210761;border-color:#b58d386a}
+    .mi-sentiment-lower {display:grid;grid-template-columns:1.2fr .8fr;gap:15px}
+    .mi-sentiment-details h4 {margin:0 0 7px;color:var(--gold)}
+    .mi-sentiment-component-list {display:grid;gap:12px}
+    .mi-sentiment-component-top {display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:4px 12px;font-size:.77rem;line-height:1.55;color:#c2dbd1}
+    .mi-sentiment-component-label{min-width:0;overflow-wrap:break-word}
+    .mi-sentiment-component-top strong{color:#e6f8f2}
+    .mi-sentiment-component-description{color:#b5d4c1;font-weight:400}
+    .mi-sentiment-component-value{text-align:right;white-space:nowrap;color:#b5d4c1}
+    .mi-sentiment-component-track{margin-top:6px;background:#102d2b;border-radius:99px;height:7px;overflow:hidden}
+    .mi-sentiment-component-fill{height:100%;border-radius:99px}
+    .mi-sentiment-recent-list{padding-left:21px;font-size:.79rem;color:#c4d5d3;line-height:1.7}
+    .mi-sentiment-recent-list li+li{margin-top:4px}
+    .mi-sentiment-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}
+    .mi-sentiment-primary,.mi-sentiment-secondary {
+      cursor:pointer;min-height:43px;padding:11px 16px;border-radius:99px;
+      font-family:inherit;font-size:.83rem;font-weight:850
+    }
+    .mi-sentiment-primary{background:linear-gradient(130deg,#34d399,#00c2b3);border:0;color:#06130d}
+    .mi-sentiment-secondary{background:rgba(0,0,0,.23);border:1px dashed #34d39966;color:#c6f8d8}
+    .mi-sentiment-credit{font-size:.73rem;color:#95b5a9;margin:16px 0 0;line-height:1.75}
+    .mi-sentiment-credit a{color:#9fd3c1;text-underline-offset:3px}
+    @media(max-width:980px){
+      .mi-sentiment-cards{grid-template-columns:repeat(3,minmax(0,1fr))}
+    }
+    @media(max-width:810px){
+      .mi-sentiment-main,.mi-sentiment-lower{grid-template-columns:1fr}
+    }
+    @media(max-width:600px){
+      .mi-sentiment-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+      #mi-sentiment-card-market{grid-column:1/-1}
+      .mi-sentiment-card{padding:11px 9px;border-radius:13px;min-width:0}
+      .mi-sentiment-card-label{font-size:.84rem}
+      .mi-sentiment-card-label small{font-size:.62rem}
+      .mi-sentiment-card>strong{font-size:1.7rem}
+      .mi-sentiment-card>span:not(.mi-sentiment-card-label){font-size:.69rem;line-height:1.3}
+      .mi-sentiment-card>small{font-size:.62rem;overflow-wrap:anywhere}
+      .mi-sentiment-current,.mi-sentiment-right,.mi-sentiment-details{padding:14px}
+      .mi-sentiment-component-top{grid-template-columns:minmax(0,1fr)}
+      .mi-sentiment-component-value{text-align:left}
+      .mi-sentiment-controls{display:block}
+      .mi-sentiment-actions>*{flex:1 1 100%}
+    }
+
+    /* Guide belongs to this Rainbow model, directly beside its source chart. */
+    .rb-guide { padding:22px 23px 18px; border-top:1px solid var(--glass-border,#285450); background:rgba(3,13,20,.6) }
+    .rb-guide-head { display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:14px }
+    .rb-guide-head h3 { margin:0; color:var(--gold); font-size:1.12rem }
+    .rb-guide-head span { font-size:.75rem; color:var(--muted) }
+    .rb-guide-tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px }
+    .rb-guide-tabs[hidden],.rb-guide-panel[hidden] { display:none }
+    .rb-guide-tab { appearance:none; min-height:44px; padding:9px 15px; border:1px solid #36544c; border-radius:10px; background:rgba(8,25,27,.7); color:#cce4dc; font:600 .85rem/1.3 Inter,system-ui,sans-serif; cursor:pointer }
+    .rb-guide-tab:hover { border-color:var(--green); color:#fff }
+    .rb-guide-tab[aria-selected="true"] { color:#061c12; border-color:var(--green); background:var(--green) }
+    .rb-guide-panel { scroll-margin-top:110px }
+    .rb-guide-panel h4 { margin:0 0 9px; font-size:1rem; color:#effcf7 }
+    .rb-guide-intro { margin:0 0 15px; color:var(--muted); font-size:.87rem; max-width:85ch }
+    .rb-band-table { width:100%; border-collapse:collapse; font-size:.86rem; line-height:1.5 }
+    .rb-band-table caption { text-align:left; color:var(--muted); font-size:.76rem; padding-bottom:9px }
+    .rb-band-table th,.rb-band-table td { padding:10px 12px; text-align:left; border-bottom:1px solid #203d39 }
+    .rb-band-table thead th { color:#bed6ce; font-size:.72rem; letter-spacing:.05em; text-transform:uppercase; background:#0b2522 }
+    .rb-band-table tbody th { width:36%; min-width:140px; font-weight:650; color:#effcf7 }
+    .rb-band-table td { color:#b7d0c7 }
+    .rb-band-name { display:flex; align-items:center; gap:10px }
+    .rb-band-swatch { flex:0 0 10px; height:26px; border-radius:4px; background:var(--band-color); box-shadow:0 0 0 1px #ffffff25 inset }
+    .rb-guide-note { margin:14px 0 0; color:#c2d6cf; font-size:.81rem }
+    .rb-reading-steps { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; padding:0; margin:0; list-style:none; counter-reset:rainbow-step }
+    .rb-reading-steps li { counter-increment:rainbow-step; padding:15px; border:1px solid #26433b; border-radius:12px; background:#0a211c80 }
+    .rb-reading-steps h5 { font-size:.87rem; margin:0 0 7px; color:#e6fff1 }
+    .rb-reading-steps h5::before { content:counter(rainbow-step,decimal-leading-zero) " / "; color:var(--green) }
+    .rb-reading-steps p { margin:0; color:#b7d0c7; font-size:.85rem }
+    .rb-metric-guide { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin:0 }
+    .rb-metric-guide>div { padding:15px; border:1px solid #26433b; border-radius:12px; background:#0a211c80 }
+    .rb-metric-guide dt { color:#e6fff1; font-weight:700; font-size:.88rem; margin-bottom:6px }
+    .rb-metric-guide dd { margin:0; color:#b7d0c7; font-size:.83rem }
+    .rb-reading-link { margin:15px 0 0; font-size:.85rem }
+    .rb-guide-credit { border-top:1px solid #203d39; margin:18px 0 0; padding-top:12px; font-size:.74rem; color:var(--muted) }
+    .rb-guide-credit a { color:inherit }
+    @media(max-width:650px) {
+      .rb-guide { padding:18px 14px 15px }
+      .rb-guide-tabs { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px }
+      .rb-guide-tab { padding:9px 5px; font-size:.78rem }
+      .rb-band-table th,.rb-band-table td { padding:9px 6px }
+      .rb-band-table tbody th { width:43%; min-width:0 }
+      .rb-band-name { gap:7px }
+      .rb-reading-steps,.rb-metric-guide { grid-template-columns:1fr }
+    }
+    .mi-rainbow-pane .chart-card { box-shadow:none }
+    .mi-rainbow-pane .chart-card-head h3 { font-size:1.4rem; margin:0 }
+    @media(max-width:650px) {
+      .mi-tabbar { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); overflow:visible; gap:6px }
+      .mi-tab { min-width:0; min-height:48px; padding:10px 5px; font-size:.78rem }
+      .mi-tab:last-child { grid-column:1/-1 }
+    }
+  </style>
+  <noscript><style>
+    .mi-tabbar,#mi-pane-sentiment { display:none !important }
+    #mi-pane-rainbow[hidden] { display:block !important }
+  </style></noscript>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <!-- Match the primary TREE ecosystem header. This research tool is read-only and does not sign transactions. -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand-wrap" href="/" aria-label="TREE Token home">
+        <span class="logo"><img src="/assets/thick-dwqrmagk-dwqrmagk.png" alt="TREE ecosystem logo" width="58" height="58"></span>
+        <span class="brand-title"><strong class="brand-name">THICKQUIDITY</strong><small>TREE on Sui</small></span>
+      </a>
+      <div class="nav-shell" id="mobile-nav">
+        <nav class="site-nav" aria-label="TREE ecosystem navigation">
+          <a href="/">Home</a>
+          <a href="/dapp/">App</a>
+          <a href="/play/">Arcade</a>
+          <a href="/play/profile-studio/">Profile Studio</a>
+          <a href="https://nftree.net/">NFTrees</a>
+          <a href="/rewards/">NFTree Rewards</a>
+          <a href="/about/">About</a>
+          <details class="nav-resources">
+            <summary>Resources</summary>
+            <div class="nav-resources-links">
+              <a href="/sui-guide/">Getting Started</a>
+              <a href="/market-insights/" aria-current="page">Market Insights</a>
+              <a href="/tokenomics/">Tokenomics</a>
+              <a href="/roadmap/">Roadmap</a>
+              <a href="/faq/">FAQ</a>
+              <a href="/documents/">Documents</a>
+            </div>
+          </details>
+        </nav>
+      </div>
+      <div class="header-actions">
+        <a class="header-cta" href="/dapp/" aria-label="Open TREE Command Center">Open DApp</a>
+        <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-label="Open menu" aria-controls="mobile-nav">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main id="main" class="wrap">
+    <section class="intro hero-shell" aria-labelledby="page-title">
+      <div class="intro-copy">
+        <h1 class="hero-title" id="page-title">Crypto <span class="rainbow">Market Insights</span></h1>
+        <p class="lead">Explore price charts, market sentiment and Bitcoin’s longer-term cycles, with plain-language guides for every tool.</p>
+      </div>
+      <aside class="intro-note">
+        <strong>Reading the data</strong>
+        Check the source and timestamp beside each tool. Price charts, sentiment readings and cycle models update on different schedules.
+      </aside>
+    </section>
+
+    <section class="mi-explorer" id="market-explorer" aria-labelledby="mi-explorer-title">
+      <div class="mi-section-head">
+        <div>
+          <h2 id="mi-explorer-title">Crypto Market Explorer</h2>
+        </div>
+      </div>
+      <div class="mi-tabbar" role="tablist" aria-label="Crypto research views">
+        <button class="mi-tab" type="button" role="tab" id="mi-tab-sentiment" data-mi-tab="sentiment" aria-controls="mi-pane-sentiment" aria-selected="true">Fear &amp; Greed</button>
+        <button class="mi-tab" type="button" role="tab" id="mi-tab-prices" data-mi-tab="prices" aria-controls="mi-pane-prices" aria-selected="false" tabindex="-1">Price Charts</button>
+        <button class="mi-tab" type="button" role="tab" id="mi-tab-rainbow" data-mi-tab="rainbow" aria-controls="mi-pane-rainbow" aria-selected="false" tabindex="-1">Rainbow</button>
+        <button class="mi-tab" type="button" role="tab" id="mi-tab-market" data-mi-tab="market" aria-controls="mi-pane-market" aria-selected="false" tabindex="-1">Market Caps</button>
+        <button class="mi-tab" type="button" role="tab" id="mi-tab-cbbi" data-mi-tab="cbbi" aria-controls="mi-pane-cbbi" aria-selected="false" tabindex="-1">CBBI</button>
+        <button class="mi-tab" type="button" role="tab" id="mi-tab-onchain" data-mi-tab="onchain" aria-controls="mi-pane-onchain" aria-selected="false" tabindex="-1">On-Chain</button>
+        <button class="mi-tab" type="button" role="tab" id="mi-tab-cycles" data-mi-tab="cycles" aria-controls="mi-pane-cycles" aria-selected="false" tabindex="-1">Cycle Tools</button>
+      </div>
+      <div class="mi-panels">
+        <section class="mi-pane mi-sentiment-pane" id="mi-pane-sentiment" role="tabpanel" aria-labelledby="mi-tab-sentiment">
+          <h3>Crypto Fear &amp; Greed</h3>
+          <p class="mi-help">Select an index to explore its history and what is driving its score. Each reading uses CryptoKeyhole’s methodology and the data available for that asset.</p>
+          <div class="mi-sentiment-cards" role="group" aria-label="Choose which sentiment index to explore">
+            <button type="button" class="mi-sentiment-card selected" id="mi-sentiment-card-sui" data-sentiment-asset="sui" aria-pressed="true">
+              <span class="mi-sentiment-card-label">SUI <small>SUI sentiment</small></span>
+              <strong id="mi-sentiment-card-score-sui">—</strong>
+              <span id="mi-sentiment-card-label-sui">Awaiting official data</span>
+              <small id="mi-sentiment-card-date-sui">Not verified</small>
+            </button>
+            <button type="button" class="mi-sentiment-card" id="mi-sentiment-card-eth" data-sentiment-asset="eth" aria-pressed="false">
+              <span class="mi-sentiment-card-label">Ethereum <small>ETH sentiment</small></span>
+              <strong id="mi-sentiment-card-score-eth">—</strong>
+              <span id="mi-sentiment-card-label-eth">Awaiting official data</span>
+              <small id="mi-sentiment-card-date-eth">Not verified</small>
+            </button>
+            <button type="button" class="mi-sentiment-card" id="mi-sentiment-card-bnb" data-sentiment-asset="bnb" aria-pressed="false">
+              <span class="mi-sentiment-card-label">BNB <small>BNB sentiment</small></span>
+              <strong id="mi-sentiment-card-score-bnb">—</strong>
+              <span id="mi-sentiment-card-label-bnb">Awaiting official data</span>
+              <small id="mi-sentiment-card-date-bnb">Not verified</small>
+            </button>
+            <button type="button" class="mi-sentiment-card" id="mi-sentiment-card-btc" data-sentiment-asset="btc" aria-pressed="false">
+              <span class="mi-sentiment-card-label">Bitcoin <small>BTC sentiment</small></span>
+              <strong id="mi-sentiment-card-score-btc">—</strong>
+              <span id="mi-sentiment-card-label-btc">Awaiting official data</span>
+              <small id="mi-sentiment-card-date-btc">Not verified</small>
+            </button>
+            <button type="button" class="mi-sentiment-card" id="mi-sentiment-card-market" data-sentiment-asset="market" aria-pressed="false">
+              <span class="mi-sentiment-card-label">Market <small>Broad crypto</small></span>
+              <strong id="mi-sentiment-card-score-market">—</strong>
+              <span id="mi-sentiment-card-label-market">Awaiting official data</span>
+              <small id="mi-sentiment-card-date-market">Not verified</small>
+            </button>
+          </div>
+          <div class="mi-sentiment-main">
+            <div class="mi-sentiment-current">
+              <div class="mi-sentiment-overline">SELECTED INDEX</div>
+              <h4 id="mi-sentiment-selected-name">SUI sentiment</h4>
+              <div class="mi-sentiment-score"><strong id="mi-sentiment-number">—</strong><span>/ 100</span></div>
+              <strong id="mi-sentiment-label" class="mi-sentiment-zone">Awaiting provider</strong>
+              <div class="mi-sentiment-scale" aria-label="Sentiment scale from extreme fear to extreme greed">
+                <div class="mi-sentiment-scale-marker" id="mi-sentiment-meter"></div>
+              </div>
+              <div class="mi-sentiment-scale-labels"><small>Extreme Fear</small><small>Extreme Greed</small></div>
+              <p id="mi-sentiment-asof" class="mi-small">No verified observation yet</p>
+              <p id="mi-sentiment-previous" class="mi-sentiment-delta">Yesterday: — · Seven days ago: —</p>
+              <p id="mi-sentiment-summary" class="mi-sentiment-summary">Loading official readings.</p>
+              <p id="mi-sentiment-spread" class="mi-small">Compare SUI and BTC after both indexes load.</p>
+            </div>
+            <div class="mi-sentiment-right">
+              <div class="mi-sentiment-controls">
+                <h4>Historical sentiment</h4>
+                <div class="mi-choices" role="group" aria-label="Choose Fear and Greed history timeframe">
+                  <button type="button" data-sentiment-range="7" aria-pressed="false">7D</button>
+                  <button type="button" data-sentiment-range="30" aria-pressed="true" class="selected">30D</button>
+                  <button type="button" data-sentiment-range="90" aria-pressed="false">90D</button>
+                  <button type="button" data-sentiment-range="365" aria-pressed="false">1Y</button>
+                </div>
+                <label class="mi-sentiment-ma"><input type="checkbox" id="mi-sentiment-ma"> 100-day moving average</label>
+              </div>
+              <div class="mi-sentiment-chart-frame">
+                <svg id="mi-sentiment-svg" viewBox="0 0 700 230" role="img" aria-label="Sourced Fear and Greed daily score history on a zero to one hundred scale"></svg>
+              </div>
+              <p class="mi-small" id="mi-sentiment-chart-meta">Historical data loads from CryptoKeyhole</p>
+              <p class="mi-sentiment-episodes" id="mi-sentiment-episodes">Loading historical distribution…</p>
+            </div>
+          </div>
+          <p class="mi-sentiment-status" id="mi-sentiment-status" role="status" aria-live="polite">Fetching official sentiment observations…</p>
+          <div class="mi-sentiment-lower">
+            <section aria-labelledby="mi-sentiment-breakdown-heading" class="mi-sentiment-details">
+              <h4 id="mi-sentiment-breakdown-heading">What is driving sentiment?</h4>
+              <p id="mi-sentiment-breakdown" class="mi-help">Component scores and weights supplied by the selected provider index.</p>
+              <div id="mi-sentiment-components" class="mi-sentiment-component-list"></div>
+            </section>
+            <section aria-labelledby="mi-sentiment-recent-heading" class="mi-sentiment-details">
+              <h4 id="mi-sentiment-recent-heading">Most recent daily readings</h4>
+              <ol id="mi-sentiment-recent" class="mi-sentiment-recent-list"></ol>
+              <p class="mi-help">A reading can change until its UTC day ends. Earlier readings may also change if CryptoKeyhole corrects its historical data.</p>
+            </section>
+          </div>
+          <div class="mi-sentiment-actions">
+            <button type="button" id="mi-sentiment-refresh" class="mi-sentiment-primary">Refresh readings</button>
+            <button type="button" id="mi-sentiment-share" class="mi-sentiment-secondary">Download square summary</button>
+            <button type="button" id="mi-sentiment-copy" class="mi-sentiment-secondary">Copy summary</button>
+          </div>
+          <p class="mi-sentiment-credit">Data, methodology and hourly observations: <a id="mi-sentiment-source-link" href="https://cryptokeyhole.com/fear-and-greed-index/sui/" target="_blank" rel="noopener noreferrer">CryptoKeyhole</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>. The reading is the sentiment of the selected <strong>asset</strong>, not a measure of TREE investor sentiment or every project on its chain. Check each reading’s date and time when comparing indexes. No investment signal is implied.</p>
+        </section>
+
+        <section class="mi-pane" id="mi-pane-prices" role="tabpanel" aria-labelledby="mi-tab-prices" hidden>
+          <h3>Price history and trading volume</h3>
+          <p class="mi-help">Choose a coin, then use the chart controls to explore its price and trading volume. BTC, ETH, SUI and BNB charts come from TradingView; TREE’s chart comes from Noodles.</p>
+          <div class="mi-choices" role="group" aria-label="Choose a cryptocurrency price chart">
+            <button type="button" data-price-asset="BTC" class="selected" aria-pressed="true">BTC</button>
+            <button type="button" data-price-asset="ETH" aria-pressed="false">ETH</button>
+            <button type="button" data-price-asset="SUI" aria-pressed="false">SUI</button>
+            <button type="button" data-price-asset="BNB" aria-pressed="false">BNB</button>
+            <button type="button" data-price-asset="TREE" aria-pressed="false">TREE</button>
+          </div>
+          <p id="mi-price-description" class="mi-description" aria-live="polite">Bitcoin · Binance spot market · BTC/USDT · TradingView</p>
+          <div id="mi-price-stage" class="mi-chart-container mi-tv" aria-label="Selected cryptocurrency price chart"></div>
+          <div class="mi-footnotes">
+            <span id="mi-price-status" role="status">The selected chart loads when this tab opens.</span>
+            <a id="mi-price-source" href="https://www.tradingview.com/symbols/BTCUSDT/?exchange=BINANCE" target="_blank" rel="noopener noreferrer">Open this market on TradingView</a>
+          </div>
+          <p id="mi-price-reading" class="mi-help">Prices are quoted in USDT per BTC. Volume shows trading activity for this Binance spot pair.</p>
+          <details class="mi-cbbi-about">
+            <summary>New to price charts? Start here</summary>
+            <p><strong>Candles:</strong> Each candle summarizes the price movement during one time period. The body shows the opening and closing prices; the thin lines show the highest and lowest prices.</p>
+            <p><strong>Time controls:</strong> The candle interval changes how much time one candle represents. The date range changes how much history you can see. Zoom or drag the chart to explore.</p>
+            <p><strong>Volume:</strong> Taller volume bars mean more trading during that period. Read the selected chart’s source and quote currency: TradingView uses Binance spot pairs in USDT; TREE uses Noodles’ coin-level USD chart.</p>
+          </details>
+        </section>
+
+        <section class="mi-pane mi-rainbow-pane" id="mi-pane-rainbow" role="tabpanel" aria-labelledby="mi-tab-rainbow" hidden>
+    <section class="chart-card" id="rainbow-chart" aria-labelledby="chart-title">
+      <div class="chart-card-head">
+        <div>
+          <h3 id="chart-title">Bitcoin's historical valuation bands</h3>
+          <p>Interactive chart · logarithmic price scale · daily observations</p>
+        </div>
+        <span class="source-pill">Source updates daily</span>
+      </div>
+      <div class="rainbow-rule" aria-hidden="true"></div>
+      <div class="embed-box">
+        <iframe
+          class="chart-embed"
+          src="https://axeladlerjr.com/charts/bitcoin-rainbow-chart/embed.html"
+          title="Interactive Bitcoin Rainbow Chart from Axel Adler Jr., using daily UTC close prices"
+          width="100%"
+          height="590"
+          loading="lazy"
+          referrerpolicy="strict-origin-when-cross-origin"
+        >
+          <p>Interactive chart unavailable in this browser. <a href="https://axeladlerjr.com/charts/bitcoin-rainbow-chart/">View the source chart</a>.</p>
+        </iframe>
+      </div>
+      <div class="embed-caption">
+        <div>Chart data and model: <a href="https://axeladlerjr.com/charts/bitcoin-rainbow-chart/" target="_blank" rel="noopener noreferrer" aria-label="Source attribution to Axel Adler Jr., opens in a new tab">Axel Adler Jr.</a> · Updated daily by provider</div>
+        <span>The observation date and price appear inside the source chart.</span>
+      </div>
+      <div class="rb-guide" id="rainbow-guide">
+        <div class="rb-guide-head">
+          <h3 id="rb-guide-title">Understand the rainbow</h3>
+          <span>Axel Adler Jr. model</span>
+        </div>
+        <div class="rb-guide-tabs" id="rb-guide-tabs" role="tablist" aria-label="Rainbow chart guide" hidden>
+          <button class="rb-guide-tab" id="rb-tab-bands" type="button" role="tab" aria-selected="true" aria-controls="rb-panel-bands" data-rb-tab="bands">Band guide</button>
+          <button class="rb-guide-tab" id="rb-tab-read" type="button" role="tab" aria-selected="false" aria-controls="rb-panel-read" tabindex="-1" data-rb-tab="read">How to read</button>
+          <button class="rb-guide-tab" id="rb-tab-details" type="button" role="tab" aria-selected="false" aria-controls="rb-panel-details" tabindex="-1" data-rb-tab="details">Reading details</button>
+        </div>
+        <section class="rb-guide-panel" id="rb-panel-bands" aria-labelledby="rb-heading-bands">
+          <h4 id="rb-heading-bands">What each band means</h4>
+          <table class="rb-band-table">
+            <caption>From the lowest band to the highest on the chart.</caption>
+            <thead><tr><th scope="col">Band</th><th scope="col">Position relative to the model</th></tr></thead>
+            <tbody>
+              <tr><th scope="row"><span class="rb-band-name"><span class="rb-band-swatch" style="--band-color:#3E4FA8" aria-hidden="true"></span>1 · Deep discount</span></th><td>Lowest zone, far beneath the trend.</td></tr>
+              <tr><th scope="row"><span class="rb-band-name"><span class="rb-band-swatch" style="--band-color:#3B7FD0" aria-hidden="true"></span>2 · Discount</span></th><td>A substantial gap below the trend.</td></tr>
+              <tr><th scope="row"><span class="rb-band-name"><span class="rb-band-swatch" style="--band-color:#3FA7C4" aria-hidden="true"></span>3 · Below trend</span></th><td>Below the statistical baseline.</td></tr>
+              <tr><th scope="row"><span class="rb-band-name"><span class="rb-band-swatch" style="--band-color:#4DB38A" aria-hidden="true"></span>4 · Slightly below trend</span></th><td>A modest gap below the trend.</td></tr>
+              <tr><th scope="row"><span class="rb-band-name"><span class="rb-band-swatch" style="--band-color:#8CC260" aria-hidden="true"></span>5 · Near trend</span></th><td>Around the fitted central curve.</td></tr>
+              <tr><th scope="row"><span class="rb-band-name"><span class="rb-band-swatch" style="--band-color:#E3C84A" aria-hidden="true"></span>6 · Above trend</span></th><td>Trading at a premium to the trend.</td></tr>
+              <tr><th scope="row"><span class="rb-band-name"><span class="rb-band-swatch" style="--band-color:#EE9F3F" aria-hidden="true"></span>7 · Stretched</span></th><td>An extended move above the trend.</td></tr>
+              <tr><th scope="row"><span class="rb-band-name"><span class="rb-band-swatch" style="--band-color:#E06A3B" aria-hidden="true"></span>8 · Overheated</span></th><td>Unusually high for the cycle's volatility.</td></tr>
+              <tr><th scope="row"><span class="rb-band-name"><span class="rb-band-swatch" style="--band-color:#C23B3B" aria-hidden="true"></span>9 · Extreme</span></th><td>Highest zone, beyond +2 on the model's standardized scale.</td></tr>
+            </tbody>
+          </table>
+          <p class="rb-guide-note">These names describe model position. A band alone does not tell you when to buy or sell.</p>
+        </section>
+        <section class="rb-guide-panel" id="rb-panel-read" aria-labelledby="rb-heading-read">
+          <h4 id="rb-heading-read">How to read this chart</h4>
+          <p class="rb-guide-intro">Follow Bitcoin's price through the colored zones, then compare it with the model curve for the same date.</p>
+          <ol class="rb-reading-steps">
+            <li><h5>Check the date</h5><p>Observations use UTC daily closes. The chart's data date can lag the price trading now.</p></li>
+            <li><h5>Read proportional moves</h5><p>The vertical axis is logarithmic: a doubling takes the same distance at any price level.</p></li>
+            <li><h5>Compare with the trend</h5><p>This version fits price against Bitcoin's age and adjusts band widths for each halving cycle's volatility.</p></li>
+            <li><h5>Use the wider context</h5><p>Price can stay in a zone for months. The fitted model can change; a band does not predict a reversal.</p></li>
+          </ol>
+          <p class="rb-guide-note">Use this model's own labels. Other Rainbow charts use different formulas and can place the same price in a different band.</p>
+        </section>
+        <section class="rb-guide-panel" id="rb-panel-details" aria-labelledby="rb-heading-details">
+          <h4 id="rb-heading-details">Understanding the provider's current reading</h4>
+          <p class="rb-guide-intro">These six values describe the same observation date. The explanations below show how to read them; open the source page for the latest figures.</p>
+          <dl class="rb-metric-guide">
+            <div><dt>BTC price</dt><dd>Bitcoin's observed daily close in US dollars.</dd></div>
+            <div><dt>Model price</dt><dd>The fitted trend value on that date. It is a reference, not a price target.</dd></div>
+            <div><dt>Vs model</dt><dd>The percentage above or below the trend: (BTC price ÷ model price − 1) × 100.</dd></div>
+            <div><dt>Band floor</dt><dd>The lower boundary of the occupied band. A model boundary is not guaranteed support.</dd></div>
+            <div><dt>Band</dt><dd>The named zone and its position from 1 (lowest) to 9 (highest).</dd></div>
+            <div><dt>Band ceiling</dt><dd>The upper boundary of the occupied band. An outer boundary may be open-ended.</dd></div>
+          </dl>
+          <p class="rb-guide-note">“Open-ended” means the model has no boundary on that side; it does not mean $0. Compare values from the same source date.</p>
+          <p class="rb-reading-link"><a href="https://axeladlerjr.com/charts/bitcoin-rainbow-chart/" target="_blank" rel="noopener noreferrer">View latest Rainbow reading on Axel Adler Jr. ↗</a></p>
+        </section>
+        <p class="rb-guide-credit">Source: <a href="https://axeladlerjr.com/charts/bitcoin-rainbow-chart/" target="_blank" rel="noopener noreferrer">Axel Adler Jr.'s Rainbow Chart</a>. TREE explanations are condensed and reworded; chart data is licensed <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>.</p>
+      </div>
+    </section>
+        <section class="cards" aria-label="How to read this chart">
+      <article class="card">
+        <p class="card-number">01 · Historical view</p>
+        <h3>Look at multiple cycles</h3>
+        <p>Explore rallies, corrections, and drawdowns together rather than interpreting a single band in isolation.</p>
+      </article>
+      <article class="card">
+        <p class="card-number">02 · Model-relative</p>
+        <h3>Colors describe distance</h3>
+        <p>Cooler bands indicate prices further below the fitted trend; warmer bands indicate prices further above it. Colors are not trade instructions.</p>
+      </article>
+      <article class="card">
+        <p class="card-number">03 · Risk awareness</p>
+        <h3>A low band is not a floor</h3>
+        <p>Bitcoin can remain in a low band for months or fall further. Regression curves also change when new observations are fitted.</p>
+      </article>
+    </section>
+
+    <section class="notes" aria-labelledby="research-notes">
+      <h3 id="research-notes">Sources and model limitations</h3>
+      <p>A chart updated today may show past prices differently from the chart available at the time. Check the model version and observation date when comparing historical readings.</p>
+      <ul>
+        <li><strong>Price data:</strong> The chart displays Axel Adler Jr.’s historical price observations and update date. Compare the price and bands from the same date.</li>
+        <li><strong>Model:</strong> This version fits a long-term Bitcoin trend and adjusts band width for each halving cycle's observed volatility. It differs from other Rainbow formulas.</li>
+        <li><strong>Historical comparisons:</strong> Use the model version and band rules published at the time. Later revisions can change how a past price is classified.</li>
+        <li><strong>Chart access:</strong> If the chart does not load, use the Axel Adler Jr. link beneath it to open the source chart.</li>
+      </ul>
+    </section>
+        </section>
+
+        <section class="mi-pane" id="mi-pane-market" role="tabpanel" aria-labelledby="mi-tab-market" hidden>
+          <h3>Market Capitalization</h3>
+          <p class="mi-help">Compare the combined value of cryptocurrencies and Bitcoin’s share of that market. Choose an index below.</p>
+          <div class="mi-choices" role="group" aria-label="Choose crypto capitalization index">
+            <button type="button" data-tv-symbol="TOTAL" aria-pressed="false">TOTAL</button>
+            <button type="button" data-tv-symbol="TOTAL2" aria-pressed="false">TOTAL2</button>
+            <button type="button" data-tv-symbol="TOTAL3" aria-pressed="true" class="selected">TOTAL3</button>
+            <button type="button" data-tv-symbol="TOTAL3ES" aria-pressed="false">TOTAL3ES</button>
+            <button type="button" data-tv-symbol="BTCD" aria-pressed="false">BTC.D</button>
+          </div>
+          <p class="mi-description" id="mi-market-description">Top-125 cryptocurrency capitalization excluding Bitcoin and Ethereum; stablecoins remain included.</p>
+          <div id="mi-tv-stage" class="mi-chart-container mi-tv" aria-label="TradingView live market capitalization chart"></div>
+          <div class="mi-footnotes"><span id="mi-tv-status" role="status">Loading TradingView chart…</span><span>Chart data: TradingView</span></div>
+          <p class="mi-disclaimer">TOTAL, TOTAL2, TOTAL3 and TOTAL3ES are TradingView indices of up to 125 ranked coins. TOTAL3 still includes stablecoins; TOTAL3ES excludes them. BTC.D is Bitcoin's share of the tracked market. They are not measures of all tokens in existence.</p>
+        </section>
+
+        <section class="mi-pane" id="mi-pane-cbbi" role="tabpanel" aria-labelledby="mi-tab-cbbi" hidden>
+          <h3>CBBI: how heated is Bitcoin’s market?</h3>
+          <p class="mi-help">The <strong>ColinTalksCrypto Bitcoin Bull Run Index</strong> combines nine measures of Bitcoin’s price, holder behavior and mining activity. Think of it as a cycle thermometer: it compares market conditions with patterns seen in Bitcoin’s past cycles.</p>
+          <div class="mi-cbbi-header">
+            <div><span class="mi-overline">Overall CBBI score</span><div class="mi-score" id="mi-cbbi-value">Fetching…</div><span class="mi-small" id="mi-cbbi-date">Waiting for the observation date</span></div>
+            <div class="mi-score-scale" aria-hidden="true"><div></div><p><span>0 · Cooler</span><span>100 · Hotter</span></p></div>
+          </div>
+          <dl class="mi-cbbi-guide" aria-label="How to understand the CBBI scale">
+            <div><dt>Closer to 0: cooler</dt><dd>Conditions look more like the lower end of past Bitcoin cycles.</dd></div>
+            <div><dt>Between the extremes</dt><dd>The combined score sits in between. Individual indicators can give different readings.</dd></div>
+            <div><dt>Closer to 100: hotter</dt><dd>Conditions look more like the overheated end of past Bitcoin cycles.</dd></div>
+          </dl>
+          <p class="mi-cbbi-note"><strong>Read it as a score, not odds.</strong> An 80/100 reading does not mean an 80% chance of a market top. CBBI gives long-term cycle context; it cannot tell you a future price or the date of a reversal.</p>
+          <p id="mi-cbbi-message" class="mi-status" role="status" aria-live="polite">Loading the latest available CBBI reading…</p>
+          <h4>How the CBBI score has changed</h4>
+          <p class="mi-help">A rising line means the combined reading became hotter; a falling line means it became cooler. The vertical scale shows the score, from 0 to 100.</p>
+          <div class="mi-choices" role="group" aria-label="CBBI historical range">
+            <button type="button" data-cbbi-range="90" aria-pressed="false">90 days</button>
+            <button type="button" data-cbbi-range="365" aria-pressed="true" class="selected">1 year</button>
+            <button type="button" data-cbbi-range="1460" aria-pressed="false">4 years</button>
+          </div>
+          <div class="mi-graph-wrap">
+            <svg id="mi-cbbi-graph" viewBox="0 0 640 200" role="img" aria-label="CBBI score over the selected historical range, measured from zero to one hundred"></svg>
+            <p class="mi-small" id="mi-cbbi-range">Loading score history…</p>
+          </div>
+          <h4>What goes into the CBBI score?</h4>
+          <p class="mi-help">Each card explains one ingredient and shows its <strong>CBBI score out of 100</strong>. Higher scores mean that measure looks hotter relative to past cycles. CBBI adjusts the original measurements to put these scores on the same scale.</p>
+          <p class="mi-small" id="mi-cbbi-component-status" role="status">The nine indicator explanations remain available while readings load.</p>
+          <div id="mi-cbbi-metrics" class="mi-metric-grid"></div>
+          <details class="mi-cbbi-about">
+            <summary>How are the scores combined, and what can they miss?</summary>
+            <p>The provider adjusts each indicator against historical cycle patterns, then averages the available component scores. The large number above is the provider’s published overall score. Individual dates can differ, so an older card is labeled.</p>
+            <p>A score of 0 or 100 can persist when a measure reaches the model’s lower or upper limit. Indicators can disagree, and earlier scores may change when the provider revises its model. Past cycle patterns do not guarantee the next top or bottom.</p>
+            <p>Methodology: <a href="https://colintalkscrypto.com/cbbi/faq.html" target="_blank" rel="noopener noreferrer">CBBI’s explanation</a> · <a href="https://github.com/Zaczero/CBBI" target="_blank" rel="noopener noreferrer">Official calculation source</a>.</p>
+          </details>
+          <div class="mi-footnotes">
+            <span>Data: <a href="https://colintalkscrypto.com/cbbi/" target="_blank" rel="noopener noreferrer">Colin Talks Crypto — CBBI</a> · Historical readings may be revised</span>
+            <button type="button" id="mi-cbbi-retry" class="mi-linkbutton">Refresh CBBI data</button>
+          </div>
+          <p class="mi-disclaimer">Use CBBI alongside the wider price trend and your own research. A low score does not establish a price floor, and a high score does not establish a market top.</p>
+        </section>
+
+        <section class="mi-pane" id="mi-pane-onchain" role="tabpanel" aria-labelledby="mi-tab-onchain" hidden>
+          <h3>Bitcoin: price versus estimated holder cost</h3>
+          <p class="mi-help"><strong>“On-chain” means recorded on Bitcoin’s blockchain.</strong> These charts use the price when coins last moved to estimate their holders’ average cost. Start with the dollar amount, then explore the ratio.</p>
+          <div class="mi-choices" role="group" aria-label="Choose on-chain Bitcoin chart">
+            <button type="button" data-onchain="realized" aria-pressed="true" class="selected">Realized Price (estimated cost)</button>
+            <button type="button" data-onchain="mvrv" aria-pressed="false">MVRV (price-to-cost ratio)</button>
+          </div>
+          <div aria-live="polite" aria-atomic="true">
+            <h4 id="mi-onchain-title">Realized Price: estimated cost in dollars</h4>
+            <p class="mi-description" id="mi-onchain-description">Each amount of BTC is valued at the market price when it last moved, then those values are averaged across the supply. This estimates holder cost; it cannot show exactly what every owner paid.</p>
+          </div>
+          <p class="mi-onchain-cue"><strong>How to read it:</strong> <span id="mi-onchain-reading">Compare Bitcoin’s market-price line with the realized-price line on the same date. The gap shows how far market price is above or below the estimated cost.</span></p>
+          <div class="mi-chart-container mi-onchain" id="mi-onchain-stage" aria-label="Source-hosted Bitcoin on-chain chart"></div>
+          <p class="mi-footnotes">Chart by <a id="mi-onchain-credit" href="https://axeladlerjr.com/charts/bitcoin-realized-price/" target="_blank" rel="noopener noreferrer">Axel Adler Jr.</a> · Use the chart legend and provider’s UTC observation date</p>
+          <section class="mi-onchain-guide" data-onchain-guide="realized" aria-labelledby="mi-realized-guide-heading">
+            <h4 id="mi-realized-guide-heading">Reading the two price lines</h4>
+            <dl class="mi-onchain-levels">
+              <div><dt>Market price above realized price</dt><dd>Bitcoin trades above the estimated cost of the supply. A wider gap means a larger premium to that estimate.</dd></div>
+              <div><dt>The two prices meet</dt><dd>Market price equals the estimated cost. This is the same point as an MVRV ratio of 1.</dd></div>
+              <div><dt>Market price below realized price</dt><dd>Bitcoin trades below the estimated cost of the supply. It can stay below that estimate or fall further.</dd></div>
+            </dl>
+          </section>
+          <section class="mi-onchain-guide" data-onchain-guide="mvrv" aria-labelledby="mi-mvrv-guide-heading" hidden>
+            <h4 id="mi-mvrv-guide-heading">Reading the ratio</h4>
+            <dl class="mi-onchain-levels">
+              <div><dt>Below 1</dt><dd>Market price is below estimated cost. For example, 0.8 means the price is 20% below that estimate.</dd></div>
+              <div><dt>At 1</dt><dd>Market price and estimated cost are equal. This is the comparison point for the ratio.</dd></div>
+              <div><dt>Above 1</dt><dd>Market price is above estimated cost. For example, 1.5 means the price is 50% above that estimate.</dd></div>
+            </dl>
+          </section>
+          <aside class="mi-onchain-example" aria-label="Example using made-up prices">
+            <strong>Example using made-up prices</strong>
+            <p>If Bitcoin traded at <strong>$60,000</strong> and realized price were <strong>$40,000</strong>, MVRV would be <strong>1.5</strong> ($60,000 ÷ $40,000). Market price would be 50% above estimated cost.</p>
+          </aside>
+          <p class="mi-help"><strong>Why use these charts?</strong> They put Bitcoin’s price moves in the context of estimated holder costs over time. Realized Price shows that cost in dollars; MVRV shows the comparison as a ratio. Both describe the same relationship.</p>
+          <details class="mi-onchain-more">
+            <summary>Terms, calculations and what the estimate can miss</summary>
+            <dl>
+              <dt>Market price (also called spot price)</dt><dd>The price one bitcoin trades for on the date you are viewing.</dd>
+              <dt>Log scale</dt><dd>Equal vertical steps represent equal percentage changes. A rise from $10,000 to $20,000 takes the same chart height as $20,000 to $40,000: both double the price.</dd>
+              <dt>Cost basis</dt><dd>The cost used to compare a holding’s value with what was paid for it. These charts estimate that cost from blockchain movements.</dd>
+              <dt>Realized value (realized capitalization)</dt><dd>The total value of the Bitcoin supply using the market price when each coin last moved. Divide it by the supply to get realized price.</dd>
+              <dt>MVRV (Market Value to Realized Value)</dt><dd>Market capitalization divided by realized capitalization. Using the same date and supply, it also equals Bitcoin’s market price divided by realized price.</dd>
+            </dl>
+            <p>Moving coins between your own wallets can change the estimate without a purchase. Dormant or lost coins may retain very old reference prices. These are estimates across the coin supply, so they do not establish an individual holder’s profit or loss.</p>
+            <p>Definitions: <a href="https://studio.glassnode.com/charts/realizedprice-mvrv" target="_blank" rel="noopener noreferrer">Glassnode: Realized Price and MVRV</a> · <a href="https://docs.coinmetrics.io/network-data/network-data-overview/market/market-capitalization" target="_blank" rel="noopener noreferrer">Coin Metrics: realized capitalization</a>.</p>
+          </details>
+          <p class="mi-disclaimer">Price can stay above or below the estimate for long periods. Neither chart guarantees a price floor, a market top or the timing of a reversal. Read the daily observations in the context of the wider price trend.</p>
+        </section>
+
+        <section class="mi-pane" id="mi-pane-cycles" role="tabpanel" aria-labelledby="mi-tab-cycles" hidden>
+          <h3>Bitcoin price history: then and now</h3>
+          <p class="mi-help">Choose a historical starting price, then see what an investment at that Bitcoin price would be worth using the latest available BTC/USD estimate.</p>
+          <div class="mi-choices" role="group" aria-label="Choose historical Bitcoin reference">
+            <button type="button" data-cycle="2009" aria-pressed="false">2009 · First quoted price</button>
+            <button type="button" data-cycle="2018" aria-pressed="false">2018 low</button>
+            <button type="button" data-cycle="2022" aria-pressed="true" class="selected">2022 low</button>
+            <button type="button" data-cycle="2026" aria-pressed="false">2026 reference</button>
+          </div>
+          <div id="mi-cycle-overview">
+            <h4 id="mi-cycle-name">2022 bear-market bottom</h4>
+            <div class="mi-stat-grid">
+              <div><span>Prior peak (daily reference)</span><strong id="mi-cycle-peak">—</strong></div>
+              <div><span>Observed low (daily reference)</span><strong id="mi-cycle-low">—</strong></div>
+              <div><span>Peak-to-low drawdown</span><strong id="mi-cycle-loss">—</strong></div>
+              <div><span id="mi-cycle-days-label">Time from peak to low</span><strong id="mi-cycle-days">—</strong></div>
+            </div>
+            <p class="mi-disclaimer" id="mi-cycle-caveat">Historical daily-price reference. Selecting the low uses hindsight; it does not show a signal available at the time.</p>
+          </div>
+          <p class="mi-calc-origin" id="mi-calc-first-note" hidden><strong>October 5, 2009 · $1 USD = 1,309.03 BTC.</strong> New Liberty Standard’s earliest listed dollar quote was based on mining electricity costs. This is an early price reference, not Bitcoin’s launch date. <a href="https://web.archive.org/web/20091229132610/http://newlibertystandard.wetpaint.com/page/Exchange%2BRate" target="_blank" rel="noopener noreferrer">View the archived exchange-rate table</a>.</p>
+          <section class="mi-calculator" aria-labelledby="mi-calc-heading">
+            <h4 id="mi-calc-heading">What would that investment be worth today?</h4>
+            <p class="mi-help" id="mi-calc-intro">This assumes you bought Bitcoin at the selected historical reference and held the same amount of BTC until the price observation shown below. Change the year above or the amount you invested to compare.</p>
+            <div class="mi-calc-inputs">
+              <label>Starting investment (USD)<input id="mi-calc-principal" type="number" inputmode="decimal" min=".01" max="1000000000" step="any" value="1000" aria-describedby="mi-calc-assumptions"></label>
+              <div><span id="mi-calc-entry-label">Selected historical BTC price</span><strong id="mi-calc-entry">—</strong></div>
+              <div><span>Latest available BTC/USD estimate</span><strong id="mi-calc-quote">Awaiting price</strong></div>
+            </div>
+            <p id="mi-calc-price-status" class="mi-calc-price-status" role="status">A current price estimate loads when you open Cycle Tools.</p>
+            <button type="button" id="mi-calc-refresh" class="mi-action-secondary">Refresh Bitcoin price</button>
+            <div class="mi-stat-grid" aria-label="Historical investment comparison">
+              <div><span id="mi-calc-btc-label">BTC you could have bought</span><strong id="mi-calc-btc">—</strong></div>
+              <div><span id="mi-calc-value-label">Estimated value at latest price</span><strong id="mi-calc-value">—</strong></div>
+              <div><span>Gain or loss (USD)</span><strong id="mi-calc-gain">—</strong></div>
+              <div><span>Return on starting investment</span><strong id="mi-calc-return">—</strong></div>
+            </div>
+            <output id="mi-calc-result" class="mi-calc-output" aria-live="polite">Waiting for a verified price estimate.</output>
+            <p class="mi-small" id="mi-calc-assumptions">Calculation: investment ÷ selected historical BTC price × latest BTC price. This is a hindsight comparison using the historical reference displayed above. Fees, taxes, interest and trading costs are excluded.</p>
+            <p class="mi-small">Latest BTC/USD estimate: <a href="https://mempool.space/docs/api/rest" target="_blank" rel="noopener noreferrer">mempool.space</a> · A periodically updated price estimate across exchanges. The timestamp shows when the provider updated its feed.</p>
+          </section>
+          <div class="mi-share">
+            <h4>Share a Bitcoin research summary</h4>
+            <p class="mi-help">Download a square summary of the research tools or copy the text. If you have loaded a CBBI reading, the summary includes its score and observation date.</p>
+            <div class="mi-share-actions">
+              <button type="button" id="mi-download-report" class="mi-action-primary">Download square summary</button>
+              <button type="button" id="mi-copy-report" class="mi-action-secondary">Copy summary</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+  </main>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>© <span id="copyright-year">2026</span> THICKQUIDITY (TREE). All rights reserved.</p>
+      <p>Growing utility across TREE, NFTree, rewards, games, and the Sui ecosystem.</p>
+      <p class="footer-risk">Sentiment readings and historical models provide context; they do not guarantee future prices. Cryptocurrency prices fluctuate substantially. Nothing on this website is financial advice.</p>
+      <p>Official website: <a href="https://tree-token.xyz/">tree-token.xyz</a> · TREE Market Insights is an independent educational reference.</p>
+      <div class="footer-links" aria-label="TREE ecosystem links">
+        <a href="/" class="footer-link">TREE Home</a>
+        <a href="/dapp/" class="footer-link">Command Center</a>
+        <a href="/play/" class="footer-link">Tree Arcade</a>
+        <a href="https://x.com/thickquidity" class="footer-link" target="_blank" rel="noopener noreferrer">X</a>
+        <a href="https://t.me/thickquidity" class="footer-link" target="_blank" rel="noopener noreferrer">Telegram</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/market-insights/insights.js" defer></script>
+  <script src="/market-insights/sentiment.js" defer></script>
+  <script>
+    (() => {
+      const toggle = document.getElementById('nav-toggle');
+      const menu = document.getElementById('mobile-nav');
+      const resources = menu?.querySelector('.nav-resources');
+      const closeMenu = () => {
+        if (!toggle || !menu) return;
+        menu.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'Open menu');
+        if (resources) resources.open = false;
+      };
+      toggle?.addEventListener('click', (event) => {
+        const open = menu.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', String(open));
+        toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        if (open && event.detail === 0) menu.querySelector('a')?.focus();
+      });
+      menu?.addEventListener('click', (event) => {
+        if (event.target.closest('a')) closeMenu();
+      });
+      document.addEventListener('keydown', (event) => {
+        if (event.key !== 'Escape') return;
+        if (menu?.classList.contains('open')) {
+          const returnFocus = menu.contains(document.activeElement);
+          closeMenu();
+          if (returnFocus) toggle?.focus();
+        } else if (resources?.open && resources.contains(document.activeElement)) {
+          resources.open = false;
+          resources.querySelector('summary')?.focus();
+        }
+      });
+      document.addEventListener('click', (event) => {
+        if (!event.target.closest('.site-header')) closeMenu();
+      });
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 1230) closeMenu();
+      });
+      const year = document.getElementById('copyright-year');
+      if (year) year.textContent = String(new Date().getFullYear());
+    })();
+  </script>
+</body>
+</html>

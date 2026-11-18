@@ -1,0 +1,117 @@
+name: Publish Market Insights
+
+on:
+  pull_request:
+    paths:
+      - 'market-insights/**'
+      - 'scripts/homepage-refresh.js'
+      - 'scripts/*market-insights*'
+      - 'tests/market-insights-release.test.mjs'
+      - '.github/workflows/publish-market-insights.yml'
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-market-insights.yml']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tree-production-preservation-${{ github.event_name == 'push' && 'release' || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Check release guards and browser source
+        run: |
+          node --test tests/market-insights-release.test.mjs tests/preserved-release.test.mjs
+          node --check market-insights/insights.js
+          node --check market-insights/sentiment.js
+          node --check scripts/homepage-refresh.js
+          node --check scripts/release-market-insights.mjs
+          node --check scripts/market-insights-delivery.mjs
+          node --check scripts/check-market-insights-page.mjs
+          git diff --check
+      - name: Install isolated layout checker
+        run: |
+          npm install --prefix "$RUNNER_TEMP/market-insights-browser" --ignore-scripts --no-audit --no-fund playwright@1.56.1
+          "$RUNNER_TEMP/market-insights-browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Check desktop and phone layouts
+        env:
+          MARKET_INSIGHTS_BROWSER_MODULE: ${{ runner.temp }}/market-insights-browser/node_modules/playwright/index.mjs
+          MARKET_INSIGHTS_TEST_BASE: http://127.0.0.1:8765
+        run: |
+          cp production/live-static/assets/thick-dwqrmagk-dwqrmagk.png assets/thick-dwqrmagk-dwqrmagk.png
+          cp production/live-static/assets/background5-dfotcuir-dfotcuir.jpg assets/background5-dfotcuir-dfotcuir.jpg
+          python3 -m http.server 8765 --bind 127.0.0.1 > "$RUNNER_TEMP/market-insights-http.log" 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          node scripts/check-market-insights-page.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: market-insights-layout-${{ github.run_id }}
+          path: |
+            .netlify/market-insights-*.png
+            .netlify/market-insights-browser-checks.json
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 14
+  publish:
+    needs: verify
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[publish market insights]')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install isolated layout checker
+        run: |
+          npm install --prefix "$RUNNER_TEMP/market-insights-browser" --ignore-scripts --no-audit --no-fund playwright@1.56.1
+          "$RUNNER_TEMP/market-insights-browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Capture current production and verify the new candidate
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          MARKET_INSIGHTS_EXPECTED_DEPLOY: '6afd22ad90e2e583fed38ea7'
+          REVIEWED_SHA: ${{ github.sha }}
+          MARKET_INSIGHTS_BROWSER_MODULE: ${{ runner.temp }}/market-insights-browser/node_modules/playwright/index.mjs
+        run: |
+          test -n "$NETLIFY_AUTH_TOKEN" || { echo 'The existing Netlify release connection is unavailable.'; exit 1; }
+          test "$(git rev-parse HEAD)" = "$REVIEWED_SHA"
+          node scripts/release-market-insights.mjs capture
+          node scripts/release-market-insights.mjs plan --source-commit "$REVIEWED_SHA"
+          node scripts/release-market-insights.mjs preview --source-commit "$REVIEWED_SHA"
+          node scripts/release-market-insights.mjs verify --source-commit "$REVIEWED_SHA"
+      - name: Publish the verified candidate and check the canonical route
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          MARKET_INSIGHTS_EXPECTED_DEPLOY: '6afd22ad90e2e583fed38ea7'
+          REVIEWED_SHA: ${{ github.sha }}
+          MARKET_INSIGHTS_BROWSER_MODULE: ${{ runner.temp }}/market-insights-browser/node_modules/playwright/index.mjs
+        run: |
+          candidate=$(node -p "JSON.parse(require('fs').readFileSync('.netlify/market-insights-candidate.json')).id")
+          node scripts/release-market-insights.mjs publish --source-commit "$REVIEWED_SHA" --expected-candidate "$candidate"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: market-insights-release-${{ github.run_id }}
+          path: |
+            .netlify/market-insights-release-report.json
+            .netlify/market-insights-browser-checks.json
+            .netlify/market-insights-*.png
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 30
