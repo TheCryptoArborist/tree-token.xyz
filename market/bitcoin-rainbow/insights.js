@@ -79,7 +79,10 @@
   // not an exchange trade time. Fetching never replaces that timestamp with now.
   const BTC_PRICE_URL='https://mempool.space/api/v1/prices';
   const BTC_PRICE_REFRESH_MS=5*60*1000, BTC_PRICE_MAX_AGE_MS=2*60*60*1000;
-  let selectedCycle='2022', btcQuote=null, btcQuotePending=false, btcQuoteAttempt=0, btcQuoteError='';
+  // New Liberty Standard's 2009-10-05 mid-market history: $1 USD = 1,309.03 BTC.
+  // Keep the published ratio for arithmetic; its displayed USD inverse is rounded.
+  const FIRST_QUOTED_BTC_PER_USD=1309.03;
+  let selectedCycle='2022', calcReference='cycle', btcQuote=null, btcQuotePending=false, btcQuoteAttempt=0, btcQuoteError='';
   const quoteTime = ms => new Intl.DateTimeFormat('en-US',{
     timeZone:'UTC',year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false
   }).format(new Date(ms))+' UTC';
@@ -380,6 +383,7 @@
   const compare=(year)=>{
     const b=reference[year];if(!b)return;
     selectedCycle=year;
+    calcReference='cycle';
     setPressed('[data-cycle]','cycle',year);
     $('mi-cycle-name').textContent=b[0];
     $('mi-cycle-peak').textContent=fmtMoney(b[1]);
@@ -390,14 +394,32 @@
     calculate();
   };
   $$('[data-cycle]').forEach(b=>b.addEventListener('click',()=>compare(b.dataset.cycle)));
+  $$('[data-calc-reference]').forEach(button=>button.addEventListener('click',()=>{
+    const next=button.dataset.calcReference;
+    if(!['cycle','first'].includes(next))return;
+    calcReference=next;calculate();
+  }));
   compare('2022');
 
   function calculate(){
-    const principal=Number($('mi-calc-principal').value), entry=reference[selectedCycle][2];
+    const first=calcReference==='first', principal=Number($('mi-calc-principal').value);
+    const entry=first?1/FIRST_QUOTED_BTC_PER_USD:reference[selectedCycle][2];
     const referenceLabel=selectedCycle==='2026'?'2026 reference':selectedCycle+' low';
-    $('mi-calc-heading').textContent='What would an investment at the '+referenceLabel+' be worth today?';
-    $('mi-calc-entry-label').textContent='BTC price at the '+referenceLabel;
-    $('mi-calc-entry').textContent=fmtMoney(entry);
+    $('mi-calc-cycle-choice').textContent=referenceLabel;
+    setPressed('[data-calc-reference]','calcReference',calcReference);
+    $('mi-calc-first-note').hidden=!first;
+    $('mi-calc-heading').textContent=first?'What would an investment at Bitcoin’s first quoted price be worth today?':
+      'What would an investment at the '+referenceLabel+' be worth today?';
+    $('mi-calc-intro').textContent=first?
+      'Use the documented 2009 quote as the starting point, then compare the BTC equivalent with the latest price below. Change your starting investment to explore the result.':
+      'This assumes you bought Bitcoin at the selected historical reference and held the same amount of BTC until the price observation shown below. Change the year above or the amount you invested to compare.';
+    $('mi-calc-entry-label').textContent=first?'BTC price · October 5, 2009':'BTC price at the '+referenceLabel;
+    $('mi-calc-entry').textContent=first?'≈ '+entry.toLocaleString('en-US',{style:'currency',currency:'USD',minimumFractionDigits:8,maximumFractionDigits:8}):fmtMoney(entry);
+    $('mi-calc-btc-label').textContent=first?'BTC equivalent at quoted rate':'BTC you could have bought';
+    $('mi-calc-value-label').textContent=first?'Illustrative value at latest price':'Estimated value at latest price';
+    $('mi-calc-assumptions').textContent=first?
+      'Calculation: investment × 1,309.03 BTC per USD × latest BTC/USD price. Assumes the full investment could have been exchanged at the quoted rate and all BTC was held. Fees, taxes, interest and trading costs are excluded.':
+      'Calculation: investment ÷ selected historical BTC price × latest BTC price. This is a hindsight comparison using the historical reference displayed above. Fees, taxes, interest and trading costs are excluded.';
     $('mi-calc-quote').textContent=btcQuote?fmtMoney(btcQuote.usd):'Unavailable';
     const status=$('mi-calc-price-status'), fresh=quoteIsFresh(btcQuote);
     if(btcQuote){
@@ -416,10 +438,12 @@
       $('mi-calc-result').textContent='Enter a starting investment from $0.01 to $1 billion.';
       return;
     }
-    const holdings=principal/entry;
-    $('mi-calc-btc').textContent=holdings.toFixed(8)+' BTC';
+    const holdings=first?principal*FIRST_QUOTED_BTC_PER_USD:principal/entry;
+    const holdingsText=first?holdings.toLocaleString('en-US',{maximumFractionDigits:8}):holdings.toFixed(8);
+    $('mi-calc-btc').textContent=holdingsText+' BTC';
     if(!fresh){
-      $('mi-calc-result').textContent=fmtMoney(principal)+' at the '+referenceLabel+' reference price would buy '+holdings.toFixed(8)+' BTC. '+
+      $('mi-calc-result').textContent=(first?fmtMoney(principal)+' at the published 2009 rate corresponds to '+holdingsText+' BTC in this illustration. ':
+        fmtMoney(principal)+' at the '+referenceLabel+' reference price would buy '+holdingsText+' BTC. ')+
         (btcQuotePending?'The latest value is being checked.':'Refresh the Bitcoin price to calculate its estimated value today.');
       return;
     }
@@ -427,7 +451,9 @@
     $('mi-calc-value').textContent=fmtMoney(value);
     $('mi-calc-gain').textContent=(gain>0?'+':'')+fmtMoney(gain);
     $('mi-calc-return').textContent=(change>0?'+':'')+change.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})+'%';
-    $('mi-calc-result').textContent=fmtMoney(principal)+' ÷ '+fmtMoney(entry)+' × '+fmtMoney(btcQuote.usd)+' = '+fmtMoney(value)+
+    $('mi-calc-result').textContent=first?
+      fmtMoney(principal)+' × 1,309.03 BTC per USD × '+fmtMoney(btcQuote.usd)+' per BTC = '+fmtMoney(value)+' illustrative value, assuming all BTC was held.':
+      fmtMoney(principal)+' ÷ '+fmtMoney(entry)+' × '+fmtMoney(btcQuote.usd)+' = '+fmtMoney(value)+
       ' estimated value at the quoted price, assuming you held all the BTC.';
   }
   async function loadBitcoinPrice(force=false){

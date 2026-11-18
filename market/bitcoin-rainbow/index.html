@@ -475,6 +475,8 @@
     .mi-stat-grid span { display:block;color:#9ab5b5;font-size:.75rem }
     .mi-stat-grid strong { display:block;color:var(--gold);font-size:1.17rem;overflow-wrap:anywhere;margin-top:5px }
     .mi-calculator,.mi-share { background:rgba(1,12,16,.74);border:1px solid rgba(0,255,160,.13);padding:16px;border-radius:15px;margin-top:17px }
+    .mi-calc-origin { border-left:3px solid var(--gold);background:#0b201c;padding:12px 15px;margin:12px 0 18px;color:#bad5cb;font-size:.85rem;line-height:1.65 }
+    .mi-calc-origin strong { color:#ffe09a }
     .mi-form-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px }
     .mi-form-grid label { color:#b6cdc8;font-size:.77rem;font-weight:700 }
     .mi-form-grid input { display:block;width:100%;margin-top:8px;padding:12px;border:1px solid rgba(0,255,160,.23);border-radius:9px;color:#fff;background:#06141c;font-size:1rem }
@@ -1091,8 +1093,14 @@
           </div>
           <p class="mi-disclaimer" id="mi-cycle-caveat">Historical prices are retrospective. The original Rainbow band formula may not have existed at that observation.</p>
           <section class="mi-calculator" aria-labelledby="mi-calc-heading">
+            <p class="mi-small" id="mi-calc-reference-label">Choose the calculator’s starting price</p>
+            <div class="mi-choices" role="group" aria-labelledby="mi-calc-reference-label">
+              <button type="button" id="mi-calc-cycle-choice" data-calc-reference="cycle" aria-pressed="true" class="selected">2022 low</button>
+              <button type="button" data-calc-reference="first" aria-pressed="false">2009 · First quoted price</button>
+            </div>
             <h4 id="mi-calc-heading">What would that investment be worth today?</h4>
-            <p class="mi-help">This assumes you bought Bitcoin at the selected historical reference and held the same amount of BTC until the price observation shown below. Change the year above or the amount you invested to compare.</p>
+            <p class="mi-help" id="mi-calc-intro">This assumes you bought Bitcoin at the selected historical reference and held the same amount of BTC until the price observation shown below. Change the year above or the amount you invested to compare.</p>
+            <p class="mi-calc-origin" id="mi-calc-first-note" hidden><strong>October 5, 2009 · $1 USD = 1,309.03 BTC.</strong> New Liberty Standard’s earliest listed dollar quote was based on mining electricity costs. This is an early price reference, not Bitcoin’s launch date. <a href="https://web.archive.org/web/20091229132610/http://newlibertystandard.wetpaint.com/page/Exchange%2BRate" target="_blank" rel="noopener noreferrer">View the archived exchange-rate table</a>.</p>
             <div class="mi-calc-inputs">
               <label>Starting investment (USD)<input id="mi-calc-principal" type="number" inputmode="decimal" min=".01" max="1000000000" step="any" value="1000" aria-describedby="mi-calc-assumptions"></label>
               <div><span id="mi-calc-entry-label">Selected historical BTC price</span><strong id="mi-calc-entry">—</strong></div>
@@ -1101,8 +1109,8 @@
             <p id="mi-calc-price-status" class="mi-calc-price-status" role="status">A current price estimate loads when you open Cycle Tools.</p>
             <button type="button" id="mi-calc-refresh" class="mi-action-secondary">Refresh Bitcoin price</button>
             <div class="mi-stat-grid" aria-label="Historical investment comparison">
-              <div><span>BTC you could have bought</span><strong id="mi-calc-btc">—</strong></div>
-              <div><span>Estimated value at latest price</span><strong id="mi-calc-value">—</strong></div>
+              <div><span id="mi-calc-btc-label">BTC you could have bought</span><strong id="mi-calc-btc">—</strong></div>
+              <div><span id="mi-calc-value-label">Estimated value at latest price</span><strong id="mi-calc-value">—</strong></div>
               <div><span>Gain or loss (USD)</span><strong id="mi-calc-gain">—</strong></div>
               <div><span>Return on starting investment</span><strong id="mi-calc-return">—</strong></div>
             </div>
