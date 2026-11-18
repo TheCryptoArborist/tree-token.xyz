@@ -328,7 +328,7 @@
     const range = Number(button.dataset.sentimentRange);
     if(![7,30,90,365].includes(range))return;
     state.range = range;
-    $('[data-sentiment-range]').forEach(el=>{ el.setAttribute('aria-pressed',String(el===button)); el.classList.toggle('selected',el===button); });
+    $$('[data-sentiment-range]').forEach(el=>{ el.setAttribute('aria-pressed',String(el===button)); el.classList.toggle('selected',el===button); });
     const data=dataFor(state.active);
     if(data && state.loadedLimit[state.active]>=range) renderHistory(data);
     else activate(state.active);
