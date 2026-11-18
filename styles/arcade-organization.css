@@ -1,4 +1,10 @@
 /* Scoped presentation overlay. Existing game, wallet and payment styles remain. */
+.arcade-organization-page {
+  --arcade-panel:linear-gradient(115deg,#17382c,#102329);
+  --arcade-panel-border:#55775c;
+  --arcade-panel-heading:#f5dfa1;
+  --arcade-panel-copy:#c2d5c9;
+}
 .arcade-organization-page #arcade-daily-growth:not([data-arcade-view="month"]) > [data-monthly-overview],
 .arcade-organization-page #arcade-daily-growth:not([data-arcade-view="month"]) > .arcade-month-deadline { display:none; }
 .arcade-organization-page [data-arcade-view="games"] { margin-bottom:18px; }
@@ -7,11 +13,55 @@
 .arcade-organization-page .arcade-game-shortcuts button { min-height:42px; padding:10px 13px; border:1px solid #74b99b66; border-radius:9px; background:#102b25; color:#d8f1e4; font:700 .76rem/1.4 system-ui; cursor:pointer; }
 .arcade-organization-page .arcade-game-shortcuts #arcade-checkin-shortcut { color:#74f0b8; border-color:#50dc9c80; }
 .arcade-organization-page .arcade-game-shortcuts button:hover { background:#193d31; border-color:#74f0b8; }
-.arcade-organization-page .month-progress-summary { margin:0 18px 16px; background:linear-gradient(115deg,#17382c,#102329); border-color:#55775c; }
+.arcade-organization-page .month-progress-summary { margin:0 18px 16px; background:var(--arcade-panel); border-color:var(--arcade-panel-border); }
 .arcade-organization-page .month-progress-summary .month-summary-grid { gap:18px; }
 .arcade-organization-page .arcade-month-deadline { margin:18px; }
-.arcade-organization-page #growth-today-panel > .growth-strip { padding:18px; border:1px solid #35e89545; border-radius:14px; margin-bottom:14px; }
+.arcade-organization-page #growth-today-panel > .growth-strip { padding:18px; border:1px solid var(--arcade-panel-border); border-radius:16px; margin-bottom:14px; background:var(--arcade-panel); }
 .arcade-organization-page #growth-today-panel > .growth-status { margin:0 0 18px; }
+
+/* Shared activity panels and controls. Cabinet artwork and play accents stay local. */
+.arcade-organization-page #growth-today-panel > :is(.growth-task,.growth-quest,.guided-card,.growth-passport) { margin:0 0 14px; border:1px solid var(--arcade-panel-border); border-radius:16px; background:var(--arcade-panel); color:var(--arcade-panel-copy); }
+.arcade-organization-page #growth-today-panel > :is(.growth-task,.guided-card),
+.arcade-organization-page #growth-today-panel .growth-quest > .growth-task { padding:18px; }
+.arcade-organization-page #growth-today-panel .growth-task { gap:14px; }
+.arcade-organization-page #growth-today-panel .growth-task-copy h3,
+.arcade-organization-page #growth-today-panel > .guided-card > .quest-cover h3 { margin:0 0 6px; color:var(--arcade-panel-heading); font-size:1rem; line-height:1.4; letter-spacing:0; }
+.arcade-organization-page #growth-today-panel .growth-task-copy p,
+.arcade-organization-page #growth-today-panel > .guided-card p { color:var(--arcade-panel-copy); font-size:.82rem; line-height:1.6; }
+.arcade-organization-page #growth-today-panel .growth-task-copy p strong { color:#edf4dc; }
+.arcade-organization-page #growth-today-panel :is(.growth-task-benefit,.growth-quest-state) { color:#aec8b9; font-size:.75rem; line-height:1.5; }
+.arcade-organization-page #growth-today-panel > .guided-card > .quest-cover { min-height:0; padding:0; margin:0 0 12px; background:transparent; cursor:default; }
+.arcade-organization-page #growth-today-panel > .guided-card > .quest-cover::before { display:none; }
+.arcade-organization-page #growth-today-panel > .guided-card > .quest-cover p { margin:0; max-width:850px; }
+.arcade-organization-page #growth-today-panel > .guided-card > p { margin:10px 0; }
+.arcade-organization-page #growth-today-panel > .guided-card > p:last-child { margin-bottom:0; font-size:.75rem; color:#aec8b9; }
+.arcade-organization-page #growth-today-panel .growth-quest-content { border-top:1px solid #55775c66; padding:16px 18px 18px; }
+.arcade-organization-page #growth-today-panel .growth-quest-content :is(.growth-small,.growth-objective) { font-size:.8rem; line-height:1.6; }
+.arcade-organization-page #growth-today-panel .growth-section-title { margin:18px 0 12px; gap:8px 16px; }
+.arcade-organization-page #growth-today-panel .growth-section-title h3 { font-size:1.02rem; }
+.arcade-organization-page #growth-today-panel .growth-section-title > span { font-size:.7rem; color:#aec8b9; }
+.arcade-organization-page #growth-today-panel .growth-task-note { margin:-3px 2px 16px; font-size:.75rem; line-height:1.5; }
+.arcade-organization-page #growth-today-panel[data-arcade-checkin-saved] #growth-check-in,
+.arcade-organization-page #growth-today-panel[data-arcade-checkin-saved] #growth-invitation-hint,
+.arcade-organization-page #growth-today-panel[data-arcade-checkin-saved] #growth-check-note { display:none; }
+.arcade-organization-page #growth-today-panel .growth-task.is-complete { border-color:#69b88d; }
+
+.arcade-organization-page #arcade-daily-growth :is(.growth-primary,.growth-secondary),
+.arcade-organization-page #growth-today-panel :is(.growth-task-disclosure,.guided-social-links a) { box-sizing:border-box; min-height:44px; padding:10px 14px; border:1px solid #769a7a; border-radius:10px; background:linear-gradient(115deg,#17382c,#112a2a); color:#e8eed9; font:750 .8rem/1.5 system-ui,sans-serif; text-decoration:none; box-shadow:none; }
+.arcade-organization-page #arcade-daily-growth .growth-primary { border-color:#e3c971; background:linear-gradient(115deg,#f5dda0,#dfc16c); color:#17291e; box-shadow:inset 0 1px 0 #fff5ce66; }
+.arcade-organization-page #arcade-daily-growth .growth-primary:not(:disabled):hover { border-color:#f7e6ae; background:#f4dfa1; color:#132319; }
+.arcade-organization-page #arcade-daily-growth .growth-secondary:not(:disabled):hover,
+.arcade-organization-page #growth-today-panel .growth-quest > summary:hover .growth-task-disclosure,
+.arcade-organization-page #growth-today-panel .guided-social-links a:hover { border-color:#9ad7ae; background:#204835; color:#f2f6df; }
+.arcade-organization-page #arcade-daily-growth :is(.growth-primary,.growth-secondary):disabled { opacity:.6; cursor:default; box-shadow:none; }
+.arcade-organization-page #growth-today-panel[data-arcade-checkin-saved] #growth-check-in-row { opacity:1; border-color:#659d7b; background:#123027; color:#9de8b9; }
+.arcade-organization-page #arcade-daily-growth :is(.growth-primary,.growth-secondary):focus-visible,
+.arcade-organization-page #growth-today-panel :is(.growth-quest > summary,.guided-social-links a):focus-visible { outline:2px solid #a5f7c9; outline-offset:3px; }
+
+/* Availability is semantic across all cabinets, including their existing inline green. */
+.arcade-organization-page .poster-topline .status-tag--live { color:#adf3c5; background:#163c2b; border-color:#4ab781; }
+.arcade-organization-page .poster-topline .status-tag--preview { color:#e3cfff; background:#2b213c; border-color:#9475bd; }
+.arcade-organization-page .poster-topline .status-tag--soon { color:#bbc8c6; background:#1b2b2b; border-color:#536a67; }
 .arcade-organization-page #arcade-community-home { margin-top:28px; padding-top:24px; border-top:1px solid #3e655c; }
 .arcade-organization-page #arcade-community-home[hidden] { display:none!important; }
 .arcade-community-heading { margin-bottom:18px; }
@@ -19,6 +69,7 @@
 .arcade-community-heading p:last-child { color:#aec5c0; font-size:.86rem; line-height:1.6; margin:0; }
 .arcade-organization-page #arcade-community-home .quest-card-grid { grid-template-columns:repeat(2,minmax(0,1fr)); align-items:start; }
 .arcade-organization-page #arcade-community-home .community-vote-compact { max-width:none; }
+.arcade-organization-page #arcade-community-home .quest-tile { border-color:var(--arcade-panel-border); border-radius:16px; background:var(--arcade-panel); }
 .arcade-organization-page #arcade-community-home .guided-card { border:0; margin:0; background:transparent; }
 .arcade-organization-page .arcade-featured-event { margin-top:28px; }
 
@@ -93,6 +144,15 @@
   .arcade-organization-page #arcade-community-home .quest-card-grid { grid-template-columns:1fr; }
 }
 @media(max-width:560px) {
+  .arcade-organization-page #growth-today-panel > :is(.growth-strip,.growth-task,.guided-card),
+  .arcade-organization-page #growth-today-panel .growth-quest > .growth-task { padding:14px; }
+  .arcade-organization-page #growth-today-panel .growth-task { grid-template-columns:34px minmax(0,1fr); gap:10px; }
+  .arcade-organization-page #growth-today-panel :is(.growth-row-action,.growth-task-disclosure) { grid-column:1/-1; justify-self:stretch; }
+  .arcade-organization-page #growth-today-panel .growth-task-copy h3,
+  .arcade-organization-page #growth-today-panel > .guided-card > .quest-cover h3 { font-size:.95rem; }
+  .arcade-organization-page #growth-today-panel .growth-quest-content { padding:14px; }
+  .arcade-organization-page #growth-today-panel .growth-strip-actions { justify-content:flex-start; }
+  .arcade-organization-page #growth-today-panel[data-arcade-checkin-saved] .growth-strip-actions { width:auto; }
   .arcade-campaign-feature { padding:17px; }
   .arcade-campaign-event { gap:13px; align-items:flex-start; }
   .arcade-campaign-event img { width:72px; height:82px; }
@@ -108,5 +168,5 @@
   .arcade-organization-page .growth-panel .monthly-actions .monthly-action-description { font-size:.68rem; }
   .arcade-organization-page .month-progress-summary .month-summary-grid { grid-template-columns:1fr; gap:11px; }
 }
-@media(prefers-reduced-motion:reduce) { .arcade-disclosure-icon,.arcade-organization-page .monthly-actions .monthly-action-chevron { transition:none; } }
-@media(forced-colors:active) { .arcade-campaign-feature,.arcade-activity-section,.arcade-organization-page .monthly-actions details { border:1px solid CanvasText; } }
+@media(prefers-reduced-motion:reduce) { .arcade-disclosure-icon,.arcade-organization-page .monthly-actions .monthly-action-chevron,.arcade-organization-page #arcade-daily-growth :is(.growth-primary,.growth-secondary),.arcade-organization-page #growth-today-panel .growth-task-disclosure > span { transition:none; } }
+@media(forced-colors:active) { .arcade-campaign-feature,.arcade-activity-section,.arcade-organization-page .monthly-actions details,.arcade-organization-page #growth-today-panel > :is(.growth-strip,.growth-task,.growth-quest,.guided-card,.growth-passport),.arcade-organization-page #arcade-community-home .quest-tile,.arcade-organization-page #arcade-daily-growth :is(.growth-primary,.growth-secondary),.arcade-organization-page #growth-today-panel .growth-task-disclosure,.arcade-organization-page .poster-topline .status-tag { border:1px solid CanvasText; box-shadow:none; } }

@@ -1,19 +1,26 @@
 .arcade-season-deadline {
-  margin: 0 0 22px;
-  padding: 22px;
+  box-sizing: border-box;
+  min-width: 0;
+  margin: 0 0 18px;
+  padding: 18px 20px;
   border: 1px solid #ad914d;
   border-radius: 18px;
   background: linear-gradient(120deg, #183c2c, #12271f);
   box-shadow: inset 0 1px 0 rgb(255 231 157 / 6%);
   color: #fff3cf;
+  overflow-wrap: anywhere;
+}
+
+.arcade-season-deadline > * {
+  min-width: 0;
 }
 
 .arcade-season-deadline__header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   flex-wrap: wrap;
-  gap: 8px 16px;
+  gap: 8px 12px;
 }
 
 .arcade-season-deadline .arcade-season-deadline__title {
@@ -24,6 +31,8 @@
 }
 
 .arcade-season-deadline__tag {
+  box-sizing: border-box;
+  max-width: 100%;
   padding: 5px 9px;
   border: 1px solid rgb(232 199 104 / 38%);
   border-radius: 999px;
@@ -34,9 +43,9 @@
 }
 
 .arcade-season-deadline .arcade-season-deadline__status {
-  margin: 12px 0 10px;
-  color: #edf0dc;
-  font-size: .95rem;
+  margin: 12px 0 8px;
+  color: #c7d9c6;
+  font-size: .82rem;
   font-weight: 650;
   line-height: 1.5;
 }
@@ -45,38 +54,37 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
-  max-width: 400px;
-  margin: 0 0 14px;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 0 10px;
   font-variant-numeric: tabular-nums;
 }
 
-.arcade-season-deadline__timer[hidden],
-.arcade-season-deadline__date[hidden] {
-  display: none;
-}
-
 .arcade-season-deadline__unit {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
   min-width: 0;
-  padding: 10px 5px;
+  padding: 8px 4px;
   border: 1px solid rgb(190 207 163 / 18%);
   border-radius: 10px;
   background: rgb(6 21 15 / 42%);
+  text-align: center;
 }
 
 .arcade-season-deadline__value {
   color: #ffe5a1;
-  font-size: clamp(1.35rem, 3vw, 1.8rem);
+  font-size: clamp(1.35rem, 3vw, 1.7rem);
   font-weight: 750;
   line-height: 1.25;
 }
 
 .arcade-season-deadline__label {
+  max-width: 100%;
   margin-top: 3px;
   color: #c7d9c6;
-  font-size: .73rem;
+  font-size: .7rem;
   line-height: 1.4;
 }
 
@@ -101,7 +109,6 @@
 
 .arcade-season-deadline[data-countdown-variant="compact"] .arcade-season-deadline__timer {
   max-width: 330px;
-  margin-bottom: 10px;
 }
 
 .arcade-season-deadline[data-countdown-variant="compact"] .arcade-season-deadline__unit {
@@ -116,6 +123,52 @@
 .arcade-season-deadline[data-countdown-state="closed"] .arcade-season-deadline__tag {
   border-color: #60816a;
   color: #d1e3d1;
+}
+
+/* Only an active clock needs the second column. Other phases remain compact
+   and follow the existing title/status/deadline/note reading order. */
+@media (min-width: 800px) {
+  .arcade-season-deadline[data-countdown-state="active"] {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 360px);
+    grid-template-areas:
+      "heading status"
+      "date timer"
+      "note timer";
+    gap: 6px 28px;
+    align-items: start;
+  }
+
+  .arcade-season-deadline[data-countdown-state="active"] .arcade-season-deadline__header {
+    grid-area: heading;
+  }
+
+  .arcade-season-deadline[data-countdown-state="active"] .arcade-season-deadline__status {
+    grid-area: status;
+    align-self: center;
+    margin: 0;
+  }
+
+  .arcade-season-deadline[data-countdown-state="active"] .arcade-season-deadline__timer {
+    grid-area: timer;
+    max-width: none;
+    margin: 0;
+  }
+
+  .arcade-season-deadline[data-countdown-state="active"] .arcade-season-deadline__date {
+    grid-area: date;
+    align-self: end;
+    margin: 0;
+  }
+
+  .arcade-season-deadline[data-countdown-state="active"] .arcade-season-deadline__note {
+    grid-area: note;
+    margin: 0;
+  }
+
+  .arcade-season-deadline[data-countdown-variant="compact"][data-countdown-state="active"] {
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 330px);
+  }
 }
 
 @media (max-width: 480px) {
@@ -138,7 +191,36 @@
   .arcade-season-deadline__unit { padding-inline: 2px; }
   .arcade-season-deadline__label {
     font-size: .68rem;
-    white-space: nowrap;
-    overflow-wrap: normal;
+  }
+}
+
+/* Keep phase/visibility semantics when the desktop layout becomes a grid. */
+.arcade-season-deadline[hidden],
+.arcade-season-deadline__timer[hidden],
+.arcade-season-deadline__date[hidden] {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arcade-season-deadline,
+  .arcade-season-deadline__unit,
+  .arcade-season-deadline__value {
+    animation: none;
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .arcade-season-deadline,
+  .arcade-season-deadline[data-countdown-state="closed"],
+  .arcade-season-deadline__unit {
+    border-color: CanvasText;
+    background: Canvas;
+    box-shadow: none;
+  }
+
+  .arcade-season-deadline__tag,
+  .arcade-season-deadline[data-countdown-state="closed"] .arcade-season-deadline__tag {
+    border-color: CanvasText;
   }
 }

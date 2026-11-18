@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "status": "draft",
+  "id": "weekly-skill-campaign-draft",
+  "title": null,
+  "rulesVersion": 1,
+  "game": { "id": null, "version": null, "ruleset": null },
+  "window": { "startsAt": null, "endsAt": null },
+  "reward": { "network": null, "assetId": null, "symbol": null, "decimals": null, "poolUnits": null },
+  "objective": { "id": null, "description": null, "metric": null, "operator": null, "targetUnits": null },
+  "eligibility": {
+    "entry": "free",
+    "purchaseRequired": false,
+    "identityPolicy": "one-verified-player",
+    "paidAdvantages": null,
+    "attempts": "repeat-attempts-one-share"
+  },
+  "allocation": { "method": "equal-shares", "residualPolicy": null, "noQualifiersPolicy": null },
+  "verification": { "runAdapterId": null, "runAdapterVersion": null, "identityReviewerId": null },
+  "associatedEvent": { "id": null, "href": null, "campaignRequiredForEntry": false },
+  "cancellationPolicy": null
+}
