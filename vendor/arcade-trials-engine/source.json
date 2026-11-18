@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "repository": "https://github.com/TheCryptoArborist/gardenbattles",
+  "commit": "4a27b3ac73ec815c9e28c23a6b0d07f09ee73794",
+  "license": "No separate LICENSE, LICENCE or COPYING file is present in the inspected source tree. This is project-owner source copied into the same owner's project; no additional license grant is asserted.",
+  "files": [
+    {
+      "path": "upstream/practiceBattle.ts",
+      "sourcePath": "apps/garden-battles/battle-gardenfrontend/src/lib/practiceBattle.ts",
+      "gitBlobSha1": "f6da78b4756abd8fe02482b7a2f198cf577bab07",
+      "sha256": "da64c32e69e47bbb09c861917491244f2b130526060375ce60d412ed175b8c82"
+    },
+    {
+      "path": "upstream/arboristTrials.ts",
+      "sourcePath": "apps/garden-battles/battle-gardenfrontend/src/lib/arboristTrials.ts",
+      "gitBlobSha1": "f3f79ec5b119b352b9d90f10e88a800d864b0271",
+      "sha256": "6c401a57d45415a2fac689d79fdad3c302cedc25044a0ef881db5affc8062e30"
+    },
+    {
+      "path": "upstream/trial-engine.ts",
+      "sourcePath": "apps/garden-battles/shared/trial-engine.ts",
+      "gitBlobSha1": "93f7e2d0a789b8f47166b1bd720bdf5ff7a728cb",
+      "sha256": "3fa495eb6d08e36869f555f7606bca953c4181fb6bd46079a18338ee809d27a9"
+    },
+    {
+      "path": "upstream/arborist-trials.ts",
+      "sourcePath": "apps/garden-battles/shared/arborist-trials.ts",
+      "gitBlobSha1": "ce05e6ba55cfac5a936c8a538432a3cf45bf75d5",
+      "sha256": "54bf14eb72b1a1a1a16db24532e2048cfa876e08f8a524e1ae2d7122be0d5f35"
+    },
+    {
+      "path": "upstream/sui-config.ts",
+      "sourcePath": "apps/garden-battles/battle-gardenfrontend/src/lib/sui-config.ts",
+      "gitBlobSha1": "207696c3827ceff1de0cc08eafebd1d628cdacb7",
+      "sha256": "74de482a3324b29d34e30f297fa0b42255454563a5224836f7eb35b3d3c61c3b"
+    }
+  ]
+}

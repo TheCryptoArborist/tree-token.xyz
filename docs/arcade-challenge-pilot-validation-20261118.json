@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "kind": "local-arborist-challenge-pilot-validation",
+  "recordedAt": {
+    "current_time": "2026-11-18 22:51:39 UTC"
+  },
+  "status": "source-and-local-pilot-verified",
+  "productionPublished": false,
+  "hostedMigrationApplied": false,
+  "publicPilotEnabled": false,
+  "payable": false,
+  "prizeEligible": false,
+  "awardsEnabled": false,
+  "tests": {
+    "passed": 75,
+    "failed": 0,
+    "engine": 20,
+    "database": 10,
+    "serviceIntegration": 17,
+    "existingCampaignFoundation": 28
+  },
+  "testCommand": "node --test tests/arcade-trials-adapter.test.mjs tests/arcade-challenge-pilot-database.test.mjs tests/arcade-challenge-pilot-service.test.mjs tests/arcade-campaign-foundation.test.mjs",
+  "runtime": "Node.js v24.22.3",
+  "database": "Existing pinned PGlite 0.2.17, actual migration and service_role RPC execution",
+  "rehearsal": {
+    "kind": "local-arborist-challenge-rehearsal",
+    "storage": "in-memory PGlite; no hosted changes",
+    "game": "arborist-trials",
+    "gameVersion": "campaign-pilot-4a27b3ac-v1",
+    "moves": [
+      19,
+      27,
+      19
+    ],
+    "progress": [
+      {
+        "round": 1,
+        "playerGrowth": 21,
+        "botGrowth": 8,
+        "phase": "playing"
+      },
+      {
+        "round": 2,
+        "playerGrowth": 29,
+        "botGrowth": 19,
+        "phase": "playing"
+      },
+      {
+        "round": 3,
+        "playerGrowth": 50,
+        "botGrowth": 19,
+        "phase": "won"
+      }
+    ],
+    "computedResult": {
+      "won": true,
+      "score": 16375,
+      "rounds": 3,
+      "ruleTargetMet": true
+    },
+    "checks": {
+      "forgedScoreRejected": true,
+      "identicalRetryPreserved": true,
+      "changedRetryRejected": true,
+      "recordedMoves": 3
+    },
+    "mode": "nonpaying-pilot",
+    "identityScope": "wallet-session-only",
+    "payable": false,
+    "prizeEligible": false,
+    "awardsEnabled": false,
+    "limits": [
+      "Synthetic wallet session; no human identity proof.",
+      "Pinned isolated pilot ruleset; no claim of full live-game parity.",
+      "Single-connection PGlite does not reproduce distributed PostgreSQL worker scheduling."
+    ]
+  },
+  "reviewPackage": {
+    "name": "arcade-challenge-pilot",
+    "sha256": "52f33fce941f9692043fa85de79e7155eced759229d6a2b5081ef581158a4564",
+    "runtimeVersion": "nodejs24.x",
+    "routes": [
+      {
+        "pattern": "/api/arcade-challenge-pilot",
+        "literal": "/api/arcade-challenge-pilot",
+        "methods": [
+          "GET",
+          "POST"
+        ]
+      }
+    ],
+    "deployed": false
+  },
+  "reviewFindingsResolved": [
+    "RPC error markers aligned with SQL errors",
+    "Disabled configuration lifecycle aligned",
+    "SELECT FOR SHARE privilege scoped and direct service configuration mutation denied",
+    "Database serverNow handles bounded host-clock skew"
+  ],
+  "boundaries": [
+    "Synthetic wallet sessions; real signed-in browser pilot remains pending",
+    "Single-connection PGlite does not prove separate-worker PostgreSQL lock scheduling",
+    "Versioned isolated source; full current daily-game parity not claimed",
+    "32-bit game PRNG and rule-valid moves do not establish human-only play or unique-person identity",
+    "Actual weekly budget, asset/network, target/difficulty, schedule and identity policy remain unselected"
+  ],
+  "sourceGuide": "docs/arcade-challenge-pilot.md"
+}

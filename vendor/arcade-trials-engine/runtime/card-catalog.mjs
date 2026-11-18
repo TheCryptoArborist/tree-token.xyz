@@ -1,0 +1,96 @@
+// Generated from the pinned project source. See ../source.json and ../README.md.
+// Short display label for buttons
+export const MOVE_LABELS                         = {
+  1: "Wedgebreaker",
+  2: "Skyreach Saw",
+  3: "Chainsaw Cyclone",
+  4: "Rootpiercer",
+  5: "Limbfall Slam",
+  6: "Acorn Barrage",
+  7: "Log Swing Rampage",
+  8: "Barklash Shield",
+  9: "Root Siphon",
+  10: "Beetle Blight",
+  11: "Lightning Crown",
+  12: "Air Spade Blast",
+  13: "Fungal Doom",
+  14: "Compost Cleanse",
+  15: "Rootlink Surge",
+  16: "Pruning Fury",
+  17: "Mulch Fortress",
+  18: "Graft Fusion",
+  19: "Wildwood Gamble",
+  20: "Root Revival",
+  21: "Solar Bloom",
+  22: "Rainmaker",
+  23: "Myco Might",
+  24: "Canopy Downpour",
+  25: "Potassium Power",
+  26: "Photosynthesis Overdrive",
+  27: "Ironbark Armor",
+  28: "Sap Surge",
+  29: "Gale Guard",
+  30: "Shadow Canopy",
+  31: "Chainsaw Cataclysm",
+  32: "Beetle Swarm Blitz",
+  33: "Lightning Split",
+  34: "Ancient Root Awakening",
+  35: "Canopy Explosion",
+  36: "Solar Crown Surge",
+  37: "Ironwood Fortress",
+  38: "Rootstorm Siphon",
+  39: "Arborist Ascension",
+};
+
+
+
+
+
+
+
+
+
+
+
+// Full metadata for tooltips and color-coding
+export const MOVE_META                           = {
+  1: { type: "attack", emoji: "", effect: "Drains 11 Growth. Against a block, breaks it and still drains 7." },
+  2: { type: "attack", emoji: "", effect: "Drains 8 Growth, or 12 when the opponent has at least 40 Growth." },
+  3: { type: "attack", emoji: "", effect: "75% chance to drain 16 Growth." },
+  4: { type: "attack", emoji: "", effect: "Pierces blocks and drains 11 Growth." },
+  5: { type: "attack", emoji: "", effect: "Drains 12 after an opponent Growth card; otherwise drains 8." },
+  6: { type: "attack", emoji: "", effect: "Fires two separate 6-Growth hits." },
+  7: { type: "attack", emoji: "", effect: "Drains 13 while you are behind; otherwise drains 10." },
+  8: { type: "hybrid", emoji: "", effect: "Gains 6 Growth and blocks the next hit; a fresh shield reflects 4." },
+  9: { type: "hybrid", emoji: "", effect: "Drains 6 Growth and gains 4 Growth." },
+  10: { type: "attack", emoji: "", effect: "Deals 4 poison damage for the opponent's next two turns; does not stack." },
+  11: { type: "attack", emoji: "", effect: "75% chance to drain 17 Growth." },
+  12: { type: "attack", emoji: "", effect: "Removes one block, then pierces for 10 Growth." },
+  13: { type: "attack", emoji: "", effect: "Drains 7 now and 4 more on the opponent's next turn." },
+  14: { type: "hybrid", emoji: "", effect: "Clears pending damage first; gains 14 when cleansing, otherwise 10." },
+  15: { type: "growth", emoji: "", effect: "Gains 12 Growth while behind; otherwise gains 8." },
+  16: { type: "attack", emoji: "", effect: "Spends 4 Growth to drain 16. Requires at least 4 Growth." },
+  17: { type: "hybrid", emoji: "", effect: "With a block, gains 10; otherwise gains 7 and adds one block." },
+  18: { type: "hybrid", emoji: "", effect: "Gains 5 Growth and drains 5 Growth." },
+  19: { type: "growth", emoji: "", effect: "60% chance to gain 20 Growth; otherwise loses 4." },
+  20: { type: "growth", emoji: "", effect: "Clears a pending one-turn penalty and gains 10 Growth." },
+  21: { type: "growth", emoji: "", effect: "Gains a random 8 to 14 Growth." },
+  22: { type: "growth", emoji: "", effect: "Gains 14 after an opponent Attack; otherwise gains 10." },
+  23: { type: "growth", emoji: "", effect: "Gains 15 if the opponent is protected; otherwise gains 10." },
+  24: { type: "growth", emoji: "", effect: "Gains 14 Growth while the opponent also gains 3." },
+  25: { type: "growth", emoji: "", effect: "75% chance to gain 15 Growth; otherwise gains 3." },
+  26: { type: "growth", emoji: "", effect: "Gains 13 after your Attack card; otherwise gains 11." },
+  27: { type: "hybrid", emoji: "", effect: "Gains 7 Growth and halves the next direct hit." },
+  28: { type: "growth", emoji: "", effect: "Gains 13 at 10 Growth or below; otherwise gains 10." },
+  29: { type: "hybrid", emoji: "", effect: "Gains 8 Growth with a 50% chance to add one block." },
+  30: { type: "growth", emoji: "", effect: "Gains 8 Growth and caps the next direct attack at 8." },
+  31: { type: "attack", emoji: "", effect: "Gains 3 Growth and drains 8.", fifthExclusive: true, draftLane: "offense" },
+  32: { type: "attack", emoji: "", effect: "Gains 4 Growth and deals 3 poison damage for two turns.", fifthExclusive: true, draftLane: "offense" },
+  33: { type: "attack", emoji: "", effect: "Gains 3 Growth with a 75% chance to drain 10.", fifthExclusive: true, draftLane: "offense" },
+  34: { type: "growth", emoji: "", effect: "Gains 11 Growth while behind; otherwise gains 10.", fifthExclusive: true, draftLane: "growth" },
+  35: { type: "growth", emoji: "", effect: "Removes one opponent block and gains 10 Growth.", fifthExclusive: true, draftLane: "growth" },
+  36: { type: "growth", emoji: "", effect: "Clears pending damage before it triggers and gains 9 Growth.", fifthExclusive: true, draftLane: "growth" },
+  37: { type: "hybrid", emoji: "", effect: "Gains 7 Growth and adds one block.", fifthExclusive: true, draftLane: "defense" },
+  38: { type: "hybrid", emoji: "", effect: "Gains 6 Growth and drains 6 Growth.", fifthExclusive: true, draftLane: "defense" },
+  39: { type: "hybrid", emoji: "", effect: "Gains 8 Growth and caps the next direct attack at 8.", fifthExclusive: true, draftLane: "defense" },
+};
