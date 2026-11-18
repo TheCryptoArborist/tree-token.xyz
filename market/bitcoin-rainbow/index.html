@@ -228,7 +228,7 @@
     .source-pill { background:linear-gradient(135deg,rgba(0,224,144,.13),rgba(0,194,179,.08)); color:var(--emerald-2); border:1px solid rgba(0,255,160,.24) }
     .embed-box { background:rgba(0,0,0,.35) }
     .embed-caption { border-top:1px solid var(--glass-border) }
-    .embed-caption a { color:#6ee7ff }
+    .embed-caption a { color:var(--muted); text-decoration:underline; text-decoration-color:rgba(225,255,240,.4); font-weight:600 }
     .source-warning { background:rgba(255,209,102,.035); border-top:1px solid rgba(255,209,102,.14) }
     .source-warning strong { color:var(--gold) }
     .cards { gap:17px }
@@ -342,7 +342,6 @@
         <p class="lead">Explore Bitcoin's long-term price history using an attributed, interactive Rainbow Chart. The latest <strong>UTC daily close</strong> is compared with a mathematical trend, not a prediction of the next top or bottom.</p>
         <div class="hero-actions">
           <a class="action" href="#rainbow-chart">Explore the chart</a>
-          <a class="action secondary" href="https://axeladlerjr.com/charts/bitcoin-rainbow-chart/" target="_blank" rel="noopener noreferrer">View original source ↗</a>
         </div>
       </div>
       <aside class="intro-note">
@@ -374,16 +373,11 @@
         </iframe>
       </div>
       <div class="embed-caption">
-        <div>Chart by <a href="https://axeladlerjr.com/charts/bitcoin-rainbow-chart/" target="_blank" rel="noopener noreferrer">Axel Adler Jr. — Bitcoin Rainbow Chart</a> (required attribution).</div>
+        <div>Chart data and model: <a href="https://axeladlerjr.com/charts/bitcoin-rainbow-chart/" target="_blank" rel="noopener noreferrer" aria-label="Source attribution to Axel Adler Jr., opens in a new tab">Axel Adler Jr.</a> · Updated daily by provider</div>
         <span>The observation date and price appear inside the source chart.</span>
       </div>
       <div class="source-warning"><strong>Model note:</strong> This is Axel Adler Jr.'s cycle-volatility-adjusted Rainbow Chart, <em>not</em> BlockchainCenter's original fixed-band version. Different Rainbow models can report different band labels for the same day. This chart refreshes after the UTC daily close; it is not a live tick-by-tick price feed.</div>
     </section>
-
-    <div class="actions" aria-label="Chart source links">
-      <a class="action" href="https://axeladlerjr.com/charts/bitcoin-rainbow-chart/" target="_blank" rel="noopener noreferrer">Open the full source chart ↗</a>
-      <a class="action secondary" href="https://www.blockchaincenter.net/bitcoin-rainbow-chart/" target="_blank" rel="noopener noreferrer">Compare with BlockchainCenter ↗</a>
-    </div>
 
     <section class="cards" aria-label="How to read this chart">
       <article class="card">
@@ -410,7 +404,7 @@
         <li><strong>Price provenance:</strong> The embedded provider displays its own historical price observations and update date. We do not override them with a separately fetched quote.</li>
         <li><strong>Model provenance:</strong> This version fits a long-term Bitcoin trend and adjusts band width for each halving cycle's observed volatility. It differs from other Rainbow formulas.</li>
         <li><strong>Historical caution:</strong> A June 2022 public “Fire Sale” observation preceded further price declines. It does not establish the exact first-entry date; an event-study backtest needs verified archived band rules.</li>
-        <li><strong>Availability:</strong> If the embed is blocked by a browser or provider, use the visible “Open the full source chart” link immediately above.</li>
+        <li><strong>Availability:</strong> If the embedded chart cannot load, its provider attribution link beneath the chart offers a direct source fallback. TREE does not replace unavailable market data with invented values.</li>
       </ul>
     </section>
   </main>
@@ -419,7 +413,7 @@
       <p>© <span id="copyright-year">2026</span> THICKQUIDITY (TREE). All rights reserved.</p>
       <p>Growing utility across TREE, NFTree, rewards, games, and the Sui ecosystem.</p>
       <p class="footer-risk">Bitcoin Rainbow bands are model-dependent and may be revised. They do not identify guaranteed market tops or bottoms. Cryptocurrency prices fluctuate substantially. Nothing on this website is financial advice.</p>
-      <p>Official website: <a href="https://tree-token.xyz/">tree-token.xyz</a> · Educational chart credit: <a href="https://axeladlerjr.com/charts/bitcoin-rainbow-chart/" target="_blank" rel="noopener noreferrer">Axel Adler Jr.</a></p>
+      <p>Official website: <a href="https://tree-token.xyz/">tree-token.xyz</a> · TREE Market Insights is an independent educational reference.</p>
       <div class="footer-links" aria-label="TREE ecosystem links">
         <a href="/" class="footer-link">TREE Home</a>
         <a href="/dapp/" class="footer-link">Command Center</a>
