@@ -133,3 +133,12 @@
     font-size: 1.15rem;
   }
 }
+
+@media (max-width: 380px) {
+  .arcade-season-deadline__unit { padding-inline: 2px; }
+  .arcade-season-deadline__label {
+    font-size: .68rem;
+    white-space: nowrap;
+    overflow-wrap: normal;
+  }
+}

@@ -104,7 +104,20 @@ review frame at `/arcade-review/` with 320, 390, 768 and 1200 CSS-pixel widths.
 It loads the actual review page, not a separate mockup. All 50 captured/reused current
 Arcade assets and the anonymous public-rules snapshot are hash-checked by the
 builder. Existing archived snapshot and 38-handler source parity gates pass.
-Browser layout review remains separate from these automated checks.
+The shared STI preview test was updated to include only these explicit Arcade
+overlays. It validates and reverses the exact preview-only HTML additions before
+checking the candidate hash; it does not exempt Arcade HTML from verification.
+That preview-build/proxy command passes all five cases.
+
+The signed-out hosted preview was reviewed across all six tabs in the desktop
+browser and width-constrained frames sized 320, 390 and 768 pixels. The frames'
+content widths, after borders and native scrollbars, were 303, 373 and 751 pixels.
+No document-level horizontal overflow or failed visible image was observed in
+those tab checks. The tab bar intentionally scrolls horizontally on narrow
+screens. Quest Details and the paid-recovery disclosure opened correctly; the
+existing cost remained visible. The narrow-phone review found and corrected
+wrapping of the countdown unit labels. These are visual/DOM checks; authenticated
+wallet operation, live attendance, and recovery payments were not exercised.
 
 ## External technical guidance
 
