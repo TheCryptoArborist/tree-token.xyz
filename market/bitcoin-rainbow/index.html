@@ -217,7 +217,7 @@
       border:1px dashed rgba(0,255,160,.26); box-shadow:none;
     }
     .action.secondary:hover { color:var(--gold); background:rgba(0,0,0,.48) }
-    #rainbow-chart { scroll-margin-top:106px }
+    #rainbow-chart,#rainbow-guide,#research-notes { scroll-margin-top:106px }
     .chart-card {
       border:1px solid rgba(0,255,160,.13); border-radius:22px;
       background:linear-gradient(160deg,rgba(4,10,7,.87),rgba(3,7,5,.82));
@@ -607,6 +607,10 @@
       .mi-tab { min-width:0; min-height:48px; padding:10px 5px; font-size:.78rem }
     }
   </style>
+  <noscript><style>
+    .mi-tabbar,#mi-pane-sentiment { display:none !important }
+    #mi-pane-rainbow[hidden] { display:block !important }
+  </style></noscript>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
