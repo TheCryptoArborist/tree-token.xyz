@@ -242,7 +242,7 @@
     },'image/png');
   });
 
-  const tabIds=['market','cbbi','onchain','cycles'];
+  const tabIds=['sentiment','market','cbbi','onchain','cycles'];
   const activate=(id)=>{
     if(!tabIds.includes(id))return;
     for(const name of tabIds){
@@ -250,6 +250,7 @@
       if(tab){tab.setAttribute('aria-selected',String(on));tab.tabIndex=on?0:-1;}
       if(pane)pane.hidden=!on;
     }
+    document.dispatchEvent(new CustomEvent('tree-market-tab-change',{detail:{id}}));
     if(id==='market')loadMarket();
     if(id==='onchain')loadOnchain();
     if(id==='cbbi')loadCBBI();
@@ -263,5 +264,5 @@
       activate(tabIds[next]);$('mi-tab-'+tabIds[next])?.focus();
     });
   });
-  activate('market');
+  activate('sentiment');
 })();
