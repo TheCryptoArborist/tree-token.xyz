@@ -1,3 +1,49 @@
+# STI purchase quote review — published 2026-11-18
+
+Current locked production is `6afddc74d6c8647c67efdbad`, published at
+2026-11-18T17:12:59.413Z (11:12 a.m. America/Chicago) from source commit
+`9e68a5034c72d4d564e0a374a5cb0ef44c3fbc33`. Final verification completed at
+`2026-11-18T17:13:11.813Z`. Read `production/sti-purchase-release-20261118.json`
+for the complete **615-path** inventory and bound candidate/canonical evidence.
+This is the newest live preservation baseline; capture it afresh before any
+subsequent release.
+
+The STI panel now displays quotes above 3% through 5% with explicit acceptance
+for the exact quote. Quotes above 5% remain blocked. The 1% slippage limit,
+minimum output, 30-second expiry, gas reserve, simulation checks and separate
+final wallet gesture remain in place. Acceptance resets on quote, amount,
+wallet, expiry or panel changes; revocation invalidates a prepared purchase.
+
+Authoritative frontend overlays for this release:
+
+- `production/sti-purchase-static/index.html` → `/dapp/index.html`
+- `production/sti-purchase-static/sti-widget.js` → `/dapp/sti-widget.js`
+- `production/sti-purchase-static/sti-purchase-core.js` → `/dapp/sti-purchase-core.js`
+- `production/sti-purchase-static/sti-purchase.css` → `/dapp/sti-purchase.css`
+
+The release replaced exactly three existing paths and added one stylesheet.
+All **611 other existing paths**, **49 complete backend package records**,
+**five schedules**, runtime settings and protected configuration were preserved.
+Historical manifest-pinned sources remain archival build material.
+
+69 focused unit/approval/preservation tests passed. Candidate and canonical
+browser checks passed all seven scenarios at 320, 390, 768 and 1363 pixels.
+A separate manual canonical check at approximately 11:13 a.m. America/Chicago
+returned a live 2 SUI quote with 3.50% impact, 322321.683251131 estimated STI
+and 319098.466418619 minimum STI, plus the acceptance warning and 1% slippage.
+No wallet was connected and no transaction was signed or submitted.
+
+Release procedure and dated diagnosis: `docs/sti-purchase-repair.md`.
+Live UI evidence: `docs/sti-purchase-live-20261118.jpg`.
+Verification workflow: https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44355770097
+Implementation PR: https://github.com/TheCryptoArborist/tree-token.xyz/pull/217
+CI setup repair PR: https://github.com/TheCryptoArborist/tree-token.xyz/pull/218
+
+Release report SHA-256: `f902ae5b58508ce5e85b30fd0bf62d3f0f4dcb3c8667df4133971934b7b6750a`.
+Artifact 14452971172 SHA-256: `aeb3f2e0b96d733373e64f0f7aa32526a0372cc9d5c1f9fefc5b7f1e60a2e8eb`.
+
+---
+
 # Stats market chart and holder source — published 2026-11-18
 
 Current locked production is `6afd423531560084e7dd48e8`, published from source
