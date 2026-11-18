@@ -1,4 +1,4 @@
-# Current production — Market Insights, 2026-11-17
+# Current production — Market Insights, 2026-11-17 (America/Chicago)
 
 Locked ready deployment `6afd38b699fcd142a80207f5`, published at
 2026-11-18T05:34:19.756Z (UTC), source
