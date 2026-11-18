@@ -1,9 +1,9 @@
-import {STI,SUI,POOL,FEED,GAS_RESERVE,QUOTE_TTL,parseSui,units,validatePool,makeQuote,validateQuote,requiresImpactAcceptance,requireImpactAcceptance,requireBalance,buildPurchase,checkSimulation,parseFeed} from './sti-purchase-core.js';
-import {PRICE_ENDPOINT,PRICE_QUERY,DATA_TTL,parsePoolPrice,parseNav,parseBasket} from './sti-stats-core.js';
+import {STI,SUI,POOL,FEED,GAS_RESERVE,QUOTE_TTL,parseSui,units,validatePool,makeQuote,validateQuote,requiresImpactAcceptance,requireImpactAcceptance,requireBalance,buildPurchase,checkSimulation,parseFeed} from './sti-purchase-core.js?v=20261118-wallet1';
+import {PRICE_ENDPOINT,PRICE_QUERY,DATA_TTL,parsePoolPrice,parseNav,parseBasket} from './sti-stats-core.js?v=20261118-wallet1';
 
 const el = Object.fromEntries(['Membership','Share','Basket','Price','Nav','PriceStatus','Held','Since','MintNote','Holders','DataStatus','OpenBuy','CloseBuy','Purchase','WalletButton','WalletStatus','Amount','Balance','QuoteButton','QuoteDetails','Estimated','Minimum','Fee','Impact','ImpactWarning','ImpactExplanation','ImpactAccept','ImpactAcceptanceText','Expiry','BuyButton','PurchaseStatus','Receipt'].map(key=>[key,document.getElementById('sti'+key)]));
 let runtimePromise, quote = null, busy = false, quoting = false, generation = 0, balance = null, balanceOwner = null, pendingDigest = null;
-let prepared = null, connecting = false, signing = false, acceptedQuote = null;
+let prepared = null, connecting = false, signing = false, acceptedQuote = null, walletUnavailable = false;
 const connection = () => window.getWalletConnectionState?.() || {connected:false};
 const owner = () => {const state=connection();return state.connected ? state.address : null;};
 const status = (message,error=false) => {el.PurchaseStatus.textContent=message;el.PurchaseStatus.dataset.error=String(error);};
@@ -26,11 +26,12 @@ async function runtime() {
 }
 function invalidate() {generation++;quote=null;prepared=null;acceptedQuote=null;el.ImpactAccept.checked=false;el.ImpactWarning.hidden=true;el.QuoteDetails.hidden=true;render();}
 function render() {
+  window.treeStiRecovery?.setPurchasePending(busy || Boolean(pendingDigest));
   const fresh=quote && Date.now()>=quote.at && Date.now()-quote.at<QUOTE_TTL;
   if(!fresh){acceptedQuote=null;prepared=null;el.ImpactAccept.checked=false;}
   const needsAcceptance=fresh && requiresImpactAcceptance(quote) && acceptedQuote!==quote;
   const state=connection();
-  el.WalletButton.textContent=connecting?'Opening wallet…':state.connected?'Manage / reconnect wallet':'Connect wallet';
+  el.WalletButton.textContent=connecting?'Opening wallet…':state.connected?'Manage / reconnect wallet':walletUnavailable?'Retry wallet connection':'Connect wallet';
   el.WalletButton.disabled=busy||connecting||Boolean(pendingDigest);
   el.WalletStatus.textContent=state.connected?`${state.name || 'Sui wallet'} · ${state.address.slice(0,8)}…${state.address.slice(-6)}`:'No signing wallet connected. Connect a wallet to continue.';
   el.WalletStatus.title=state.connected?state.address:'';
@@ -44,14 +45,24 @@ function render() {
 }
 async function connectPurchaseWallet() {
   if(busy||connecting||pendingDigest)return;
-  if(typeof window.openWalletManager!=='function'){status('Wallet tools are still loading or unavailable. Refresh the page and try Connect wallet again.',true);return;}
-  invalidate();connecting=true;render();status('Choose or reconnect your wallet in the wallet manager.');
+  invalidate();connecting=true;walletUnavailable=false;render();
+  status(typeof window.openWalletManager==='function'?'Choose or reconnect your wallet in the wallet manager.':'Loading wallet connection tools...');
   try {
+    if(typeof window.openWalletManager!=='function'){
+      if(!window.treeStiRecovery)throw Error('Wallet connection tools are unavailable. Use Reload wallet tools to try again.');
+      await window.treeStiRecovery.waitForWalletManager();
+    }
+    window.treeStiRecovery?.hideWalletRecovery();
+    status('Choose or reconnect your wallet in the wallet manager.');
     const result=await window.openWalletManager({mode:owner()?'manage':'picker'});
     if(result?.action==='cancel')status('Wallet selection closed. Use Connect wallet or Manage / reconnect wallet to try again.');
     else if(owner())status('Wallet connected. Get a fresh quote, then review the purchase.');
     else status('No signing wallet connected. Choose a wallet before approving a purchase.',true);
-  } catch(error){status(error?.message || 'Wallet connection failed. Use Connect wallet to try again.',true);}
+  } catch(error){
+    walletUnavailable=typeof window.openWalletManager!=='function';
+    if(walletUnavailable)window.treeStiRecovery?.showWalletRecovery();
+    status(error?.message || 'Wallet connection failed. Use Connect wallet to try again.',true);
+  }
   finally {connecting=false;render();await loadBalance();}
 }
 async function loadBalance() {
@@ -212,6 +223,12 @@ el.ImpactAccept.addEventListener('change',()=>{
 el.QuoteButton.addEventListener('click',getQuote);el.BuyButton.addEventListener('click',purchase);
 el.WalletButton.addEventListener('click',connectPurchaseWallet);
 window.addEventListener('tree:wallet-changed',()=>{invalidate();if(!el.Purchase.hidden)loadBalance();});
+window.addEventListener('tree:wallet-manager-ready',()=>{
+  if(walletUnavailable && typeof window.openWalletManager==='function'){
+    walletUnavailable=false;window.treeStiRecovery?.hideWalletRecovery();render();
+    if(!el.Purchase.hidden && !busy && !pendingDigest)status('Wallet tools are ready. Use Connect wallet to choose your wallet.');
+  }
+});
 new MutationObserver(()=>{loadStats();if(document.getElementById('stats').hidden)invalidate();}).observe(document.getElementById('stats'),{attributes:true,attributeFilter:['hidden']});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)loadStats();});
 setInterval(()=>{if(!el.Purchase.hidden)render();},1000);

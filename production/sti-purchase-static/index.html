@@ -21,7 +21,7 @@
   <script src="panel-router.js?v=20260826-1" defer></script>
   <script src="interaction-bootstrap.js?v=20260922-wallet2" defer></script>
   <script type="module" src="app.js?v=20260901-1"></script>
-  <script type="module" src="../scripts/wallet.js?v=20260826-1"></script>
+  <script type="module" src="../scripts/wallet.js?v=20261118-wallet1"></script>
   <script type="module" src="test-dapp.js?v=20260826-1"></script>
 <link rel="stylesheet" href="/styles/profile-site-navigation.css"><link rel="stylesheet" href="/dapp/stats-market.css"><link rel="stylesheet" href="/dapp/sti-purchase.css"></head>
 <body>
@@ -303,9 +303,10 @@
             <p class="sti-note">Pool purchase only; does not compare STI’s basket-minting option. No added TREE fee. Network gas is extra; keep 0.1 SUI available.</p>
             <button id="stiBuyButton" class="button" type="button">Connect wallet</button>
             <p id="stiPurchaseStatus" class="sti-note" role="status" aria-live="polite">Enter an amount to see what you will receive.</p>
+            <button id="stiReloadWallet" class="button secondary" type="button" hidden>Reload wallet tools</button>
             <p id="stiReceipt" class="sti-receipt" hidden></p>
           </div>
-          <script type="module" src="sti-widget.js"></script>
+          <script src="sti-wallet-recovery.js?v=20261118-wallet1"></script>
         </section>
         <section class="data-group stats-public-burn" aria-labelledby="statsPublicBurnTitle"><div class="group-heading"><div><h3 id="statsPublicBurnTitle">Burn Tracker</h3><p>Verified TREE burned on Sui Mainnet</p></div></div><div class="stat-grid"><article class="stat-card burned"><span>Tokens Burned</span><strong data-burn="zeroAddressBalance">—</strong></article><article class="stat-card burned"><span>Supply Burned</span><strong data-burn="removalPercentage">—</strong></article><article class="stat-card"><span>Circulating</span><strong data-burn="effectiveSupply">—</strong></article><article class="stat-card"><span>Burn Txs</span><strong data-burn-total-transactions>—</strong></article></div></section>
         <details class="stats-public-locks">

@@ -13,6 +13,7 @@ const sources = {
   'dapp/sti-widget.js': 'sti-widget.js',
   'dapp/sti-purchase-core.js': 'sti-purchase-core.js',
   'dapp/sti-purchase.css': 'sti-purchase.css',
+  'dapp/sti-wallet-recovery.js': 'sti-wallet-recovery.js',
 };
 if (process.argv[2] === '--prepare-static') {
   const destination = path.resolve(process.argv[3] || '');
@@ -21,7 +22,7 @@ if (process.argv[2] === '--prepare-static') {
   for (const [publicPath, source] of Object.entries(sources)) {
     await fs.copyFile(path.join(root, 'production/sti-purchase-static', source), path.join(destination, publicPath));
   }
-  console.log('Prepared current Stats page with the four STI purchase overlays.');
+  console.log('Prepared current Stats page with the five STI purchase delivery files.');
   process.exit(0);
 }
 
@@ -110,9 +111,20 @@ function sdkFixture(url) {
   `;
 }
 
-async function configureNetwork(context, result) {
+async function configureNetwork(context, result, recovery = {}) {
   await context.route('**/*', async route => {
     const request = route.request(), url = new URL(request.url());
+    if (url.origin === baseURL && url.pathname === '/scripts/wallet.js') {
+      if (recovery.holdWallet) await recovery.holdWallet;
+      if (recovery.failWalletOnce) { recovery.failWalletOnce = false; return route.abort(); }
+    }
+    if (url.origin === baseURL && url.pathname === '/dapp/sti-widget.js') {
+      if (recovery.widgetURLs) recovery.widgetURLs.push(url.href);
+      if (recovery.holdWidget) await recovery.holdWidget;
+    }
+    if (url.origin === baseURL && url.pathname === '/dapp/sti-purchase-core.js' && recovery.failCoreOnce) {
+      recovery.failCoreOnce = false; return route.abort();
+    }
     const json = body => route.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify(body) });
     if (url.origin === baseURL && url.pathname.startsWith('/api/')) {
       result.apiRequests.push({ method: request.method(), path: url.pathname });
@@ -179,6 +191,84 @@ async function quote(page, amount) {
 async function ready(page) {
   await page.locator('#stiBuyButton').click();
   await page.waitForFunction(()=>document.getElementById('stiBuyButton').textContent==='Approve purchase in wallet');
+}
+
+async function checkRecovery(browser, result) {
+  for (const scenario of ['late-wallet', 'failed-wallet', 'failed-widget', 'late-widget']) {
+    let release;
+    const held = new Promise(resolve => { release = resolve; });
+    const recovery = { widgetURLs: [], ...(scenario === 'late-wallet' ? { holdWallet: held } : {}),
+      ...(scenario === 'late-widget' ? { holdWidget: held } : {}),
+      failWalletOnce: scenario === 'failed-wallet', failCoreOnce: scenario === 'failed-widget' };
+    const context = await browser.newContext({ viewport: { width: result.width, height: 900 }, serviceWorkers: 'block' });
+    await configureNetwork(context, result, recovery);
+    const page = await context.newPage(); page.setDefaultTimeout(10000);
+    page.on('pageerror', error => result.pageErrors.push(error.message));
+    try {
+      await page.clock.install();
+      await page.goto(targetURL, { waitUntil: scenario === 'late-wallet' ? 'commit' : 'domcontentloaded' });
+      await page.waitForFunction(() => Boolean(window.treeStiRecovery));
+      if (scenario === 'late-wallet' || scenario === 'failed-wallet') {
+        await page.waitForFunction(() => window.treeStiRecovery.state === 'ready');
+      }
+      await page.locator('#stiOpenBuy').click();
+      await page.locator('#stiAmount').fill('2.5');
+      if (scenario === 'late-wallet') {
+        await page.locator('#stiWalletButton').click();
+        assert.match(await page.locator('#stiPurchaseStatus').textContent(), /Loading wallet/);
+        assert(await page.locator('#stiWalletButton').isDisabled());
+        release();
+        await page.locator('#treeWalletDialog[open]').waitFor();
+        await page.keyboard.press('Escape');
+        await page.locator('#stiWalletButton').click();
+        await page.locator('#treeWalletDialog[open]').waitFor();
+        assert.equal(await page.locator('#treeWalletDialog').count(), 1);
+        await page.keyboard.press('Escape');
+        assert.equal(await page.locator('#stiReloadWallet').isVisible(), false);
+      } else if (scenario === 'late-widget') {
+        assert.match(await page.locator('#stiPurchaseStatus').textContent(), /Loading purchase/);
+        assert(await page.locator('#stiBuyButton').isDisabled());
+        await page.clock.fastForward(8001);
+        assert(await page.locator('#stiReloadWallet').isVisible());
+        await checkLayout(page, result, scenario); await capture(page, result, scenario);
+        release();
+        await page.waitForFunction(() => window.treeStiRecovery.state === 'ready');
+        assert.equal(await page.locator('#stiReloadWallet').isVisible(), false);
+        await page.locator('#stiWalletButton').click();
+        await page.locator('#treeWalletDialog[open]').waitFor(); await page.keyboard.press('Escape');
+      } else {
+        if (scenario === 'failed-wallet') {
+          await page.locator('#stiWalletButton').click();
+          await page.clock.fastForward(8001);
+          await page.waitForFunction(() => document.getElementById('stiWalletButton').textContent === 'Retry wallet connection');
+          assert(await page.locator('#stiWalletButton').isEnabled());
+        } else {
+          await page.waitForFunction(() => window.treeStiRecovery.state === 'unavailable');
+          assert(await page.locator('#stiBuyButton').isDisabled());
+        }
+        assert(await page.locator('#stiReloadWallet').isVisible());
+        assert.match(await page.locator('#stiPurchaseStatus').textContent(), /Reload wallet tools/);
+        await checkLayout(page, result, scenario); await capture(page, result, scenario);
+        await page.evaluate(() => localStorage.setItem('sti-test:untouched', 'keep'));
+        await Promise.all([page.waitForNavigation({ waitUntil: 'domcontentloaded' }), page.locator('#stiReloadWallet').click()]);
+        await page.waitForFunction(() => window.treeStiRecovery.state === 'ready' && typeof window.openWalletManager === 'function');
+        assert.equal(page.url(), targetURL);
+        assert(await page.locator('#stiPurchase').isVisible());
+        assert.equal(await page.locator('#stiAmount').inputValue(), '2.5');
+        assert.equal(await page.locator('#stiQuoteDetails').isVisible(), false);
+        assert.equal(await page.locator('#stiImpactAccept').isChecked(), false);
+        assert.equal(await page.evaluate(() => sessionStorage.getItem('tree:sti:reload-draft')), null);
+        assert.equal(await page.evaluate(() => localStorage.getItem('sti-test:untouched')), 'keep');
+        assert.match(await page.locator('#stiPurchaseStatus').textContent(), /fresh quote/);
+        await page.locator('#stiWalletButton').click();
+        await page.locator('#treeWalletDialog[open]').waitFor(); await page.keyboard.press('Escape');
+      }
+      assert(recovery.widgetURLs.every(url => new URL(url).searchParams.get('v') === '20261118-wallet1'));
+      assert.equal(recovery.widgetURLs.length, scenario.startsWith('failed') ? 2 : 1);
+      assert.equal(await page.evaluate(() => window.__testSignCalls || 0), 0);
+      result.cases.push(scenario + ': recover without a keyboard shortcut, duplicate wallet instance or purchase replay');
+    } finally { release(); await context.close(); }
+  }
 }
 
 let browser;
@@ -288,6 +378,31 @@ try {
       await page.locator('.app-nav a[href="#stats"]').click();assert(await page.locator('#stats').isVisible());
       assert.equal(await page.locator('.studio-command-link').getAttribute('href'),'/play/profile-studio/');
       result.cases.push('Wallet disconnect clears acceptance; Stats/Swap and Profile Studio navigation remain intact');
+      // Exercise the actual click-time guard during both signing and confirmation,
+      // using a synthetic wallet result and the fixture that forbids execution.
+      await page.locator('#stiOpenBuy').click();
+      await page.locator('#stiWalletButton').click();
+      await page.getByRole('button',{name:/Test Sui Wallet/}).click();
+      await page.waitForFunction(()=>window.getWalletConnectionState().connected);
+      await quote(page,'2');await page.locator('#stiImpactAccept').check();await ready(page);
+      await page.evaluate(()=>{
+        window.treeStiRecovery.showWalletRecovery();
+        window.signAndExecuteTransactionBlock=()=>new Promise(resolve=>{window.__testReleaseApproval=resolve;});
+        window.__testReloadMarker='preserve';
+      });
+      await page.locator('#stiBuyButton').click();
+      assert(await page.locator('#stiReloadWallet').isDisabled());
+      await page.evaluate(()=>{const button=document.getElementById('stiReloadWallet');button.disabled=false;button.click();});
+      assert.equal(await page.evaluate(()=>window.__testReloadMarker),'preserve');
+      assert.equal(await page.evaluate(()=>sessionStorage.getItem('tree:sti:reload-draft')),null);
+      await page.evaluate(()=>window.__testReleaseApproval({digest:'ci-test-pending-confirmation'}));
+      await page.waitForFunction(()=>document.getElementById('stiBuyButton').textContent==='Check confirmation');
+      assert(await page.locator('#stiReloadWallet').isDisabled());
+      await page.evaluate(()=>{const button=document.getElementById('stiReloadWallet');button.disabled=false;button.click();});
+      assert.equal(await page.evaluate(()=>window.__testReloadMarker),'preserve');
+      assert.equal(await page.evaluate(()=>sessionStorage.getItem('tree:sti:reload-draft')),null);
+      result.cases.push('Reload recovery is blocked at click time during wallet approval and pending confirmation');
+      await checkRecovery(browser,result);
       assert.deepEqual(result.pageErrors,[],'Unexpected page JavaScript error');
       assert.deepEqual(result.unexpectedMutations,[],'Unexpected first-party mutation attempted');
       result.passed=true;
