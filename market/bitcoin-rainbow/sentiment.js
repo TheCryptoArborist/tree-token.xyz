@@ -11,9 +11,12 @@
   const API = ROOT + '/api/v1/fear-and-greed';
   const sources = {
     sui: { coin: 'sui', name: 'SUI', page: ROOT + '/fear-and-greed-index/sui/' },
+    eth: { coin: 'eth', name: 'Ethereum', page: ROOT + '/fear-and-greed-index/eth/' },
+    bnb: { coin: 'bnb', name: 'BNB', page: ROOT + '/fear-and-greed-index/bnb/' },
     btc: { coin: 'btc', name: 'Bitcoin', page: ROOT + '/fear-and-greed-index/btc/' },
     market: { coin: 'market', name: 'Crypto market', page: ROOT + '/fear-and-greed-index/' }
   };
+  const assetOrder = ['sui', 'eth', 'bnb', 'btc', 'market'];
   // Plain-language labels follow CryptoKeyhole's published component definitions.
   // Match displayed names so provider-specific or newly added inputs are never guessed.
   const componentDescriptions = {
@@ -113,7 +116,7 @@
     return task;
   }
   function updateCards() {
-    for (const asset of ['sui', 'btc', 'market']) {
+    for (const asset of assetOrder) {
       const card = $('mi-sentiment-card-' + asset);
       const score = $('mi-sentiment-card-score-' + asset);
       const label = $('mi-sentiment-card-label-' + asset);
@@ -181,6 +184,8 @@
       (data.status === 'open' ? 'Today’s reading is provisional and can change as new hourly data arrives. ' :
       'This reading is marked final for its UTC day. ') +
       (state.active === 'sui' ? 'SUI token sentiment is not a measurement of TREE token sentiment or on-chain Sui activity.' :
+       state.active === 'eth' ? 'This measures sentiment around Ether (ETH). Individual projects on Ethereum can behave differently.' :
+       state.active === 'bnb' ? 'This measures sentiment around BNB. Individual projects on BNB Chain can behave differently.' :
        state.active === 'market' ? 'The market score is CryptoKeyhole’s own weighted composite, not the Alternative.me index.' :
        'Bitcoin sentiment is measured by CryptoKeyhole’s asset-specific methodology.');
     renderComponents(data);
@@ -208,7 +213,9 @@
       label.className = 'mi-sentiment-component-label';
       const name = document.createElement('strong'); name.textContent = row.name;
       label.appendChild(name);
-      const description = componentDescriptions[row.name.trim().toLowerCase()];
+      const componentName = row.name.trim().toLowerCase();
+      const description = state.active === 'eth' && componentName === 'holder profit' ?
+        'estimated paper gains or losses across Ether holders' : componentDescriptions[componentName];
       if (description) {
         const explanation = document.createElement('span');
         explanation.className = 'mi-sentiment-component-description';
@@ -344,12 +351,11 @@
   async function initial() {
     if(state.initialized) return;
     state.initialized = true;
-    setStatus('Fetching official SUI, Bitcoin and crypto-market sentiment…');
+    setStatus('Fetching official SUI, Ethereum, BNB, Bitcoin and crypto-market sentiment…');
     updateCards();
-    // The SUI history loads only once, while BTC and Market initially use 8 rows.
-    await Promise.allSettled([
-      load('sui',366),load('btc',8),load('market',8)
-    ]);
+    // Full SUI history loads first; other cards initially need only 8 rows.
+    // Selecting any other asset loads its full history on demand.
+    await Promise.allSettled(assetOrder.map(asset => load(asset, asset === 'sui' ? 366 : 8)));
     await activate(state.active);
   }
 
@@ -369,20 +375,19 @@
   });
   $('mi-sentiment-refresh')?.addEventListener('click',async()=>{
     setStatus('Refreshing the source readings…');
-    await Promise.allSettled(['sui','btc','market'].map(asset => load(asset, Math.max(asset === 'sui' ? 366 : 8, state.loadedLimit[asset] || 0), true)));
+    await Promise.allSettled(assetOrder.map(asset => load(asset, Math.max(asset === 'sui' ? 366 : 8, state.loadedLimit[asset] || 0), true)));
     setStatus('Refresh attempted. Check each card’s as-of date and any unavailable readings.');
   });
   const summaryText=()=>{
-    const names=['sui','btc','market'];
     const lines=['TREE Market Insights — Fear & Greed','Source: CryptoKeyhole (CC BY 4.0)'];
-    for(const asset of names) {
+    for(const asset of assetOrder) {
       const data=dataFor(asset);
       lines.push(sources[asset].name+': '+(data ?
         data.value+'/100 '+bandLabel(colors[data.band] ? data.band : bandFromScore(data.value))+
         ' · '+fmtTime(observationDate(data))+' ('+(data.status==='open'?'provisional':'final')+')' :
         'no verified reading'));
     }
-    lines.push('SUI token sentiment is not TREE sentiment. Different providers use different methodologies.');
+    lines.push('Coin sentiment does not measure every project on its chain; SUI sentiment is not TREE sentiment. Different providers use different methodologies.');
     lines.push('tree-token.xyz · Historical context, not financial advice.');
     return lines.join('\n');
   };
@@ -405,19 +410,22 @@
     cx.fillStyle='#34d399';cx.fillRect(68,78,9,120);
     cx.fillStyle='#ffd166';cx.font='bold 48px system-ui';cx.fillText('TREE MARKET INSIGHTS',100,125);
     cx.fillStyle='#edf9f5';cx.font='bold 68px system-ui';cx.fillText('CRYPTO FEAR',70,256);cx.fillText('& GREED',70,343);
-    const boxes=[['sui','SUI'],['btc','BITCOIN'],['market','CRYPTO MARKET']];
-    for(let i=0;i<boxes.length;i++){
-      const [coin,label]=boxes[i],d=dataFor(coin),yy=438+i*147;
-      cx.fillStyle='rgba(10,33,36,.92)';cx.fillRect(68,yy,944,130);
-      cx.fillStyle='#34d399';cx.font='bold 30px system-ui';cx.fillText(label,100,yy+44);
-      cx.fillStyle='#f4fbff';cx.font='bold 52px system-ui';
-      cx.fillText(d?d.value+'/100':'Unavailable',100,yy+103);
-      cx.fillStyle='#aeb7cc';cx.font='24px system-ui';
-      cx.fillText(d?bandLabel(colors[d.band]?d.band:bandFromScore(d.value)):'No verified data',470,yy+98);
+    for(let i=0;i<assetOrder.length;i++){
+      const coin=assetOrder[i],d=dataFor(coin),yy=385+i*103;
+      cx.fillStyle='rgba(10,33,36,.92)';cx.fillRect(68,yy,944,94);
+      cx.fillStyle='#34d399';cx.font='bold 26px system-ui';cx.fillText(sources[coin].name.toUpperCase(),100,yy+36);
+      cx.fillStyle='#f4fbff';cx.font=(d?'bold 42px':'bold 30px')+' system-ui';
+      cx.fillText(d?d.value+'/100':'Unavailable',430,yy+43);
+      cx.fillStyle=d?colors[colors[d.band]?d.band:bandFromScore(d.value)]:'#aeb7cc';cx.font='28px system-ui';
+      cx.fillText(d?bandLabel(colors[d.band]?d.band:bandFromScore(d.value)):'No verified data',665,yy+40);
+      cx.fillStyle='#b5c9cd';cx.font='21px system-ui';
+      const date=d?observationDate(d):null;
+      const timing=d?(fmtTime(date)+(d.status==='open'?' · provisional':d.status==='closed'?' · final':'')+
+        (ageHours(date)>state.staleHours?' · older than 6 hours':d.delayed?' · delayed':'')):'No verified observation';
+      cx.fillText(timing,100,yy+77);
     }
-    const main=dataFor('sui');
-    cx.fillStyle='#aeb7cc';cx.font='25px system-ui';
-    cx.fillText('SUI as of: '+(main?fmtTime(observationDate(main)):'unavailable'),72,927);
+    cx.fillStyle='#aeb7cc';cx.font='22px system-ui';
+    cx.fillText('Coin sentiment · SUI is not a measure of TREE sentiment',72,935);
     cx.font='22px system-ui';
     cx.fillText('Source: CryptoKeyhole · CC BY 4.0 · cryptokeyhole.com',72,971);
     cx.fillText('tree-token.xyz · Educational only · Not a forecast',72,1008);

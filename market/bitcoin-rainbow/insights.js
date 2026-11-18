@@ -45,6 +45,15 @@
     TOTAL3ES:['CRYPTOCAP:TOTAL3ES','Top-125 crypto capitalization excluding BTC, ETH, and stablecoins. Earlier stablecoin exclusions have methodological limits.'],
     BTCD:['CRYPTOCAP:BTC.D','Bitcoin dominance: Bitcoin capitalization as a percentage of TradingView’s tracked TOTAL capitalization.']
   };
+  const priceAssets = {
+    BTC:{name:'Bitcoin',symbol:'BINANCE:BTCUSDT',pair:'BTC/USDT',source:'https://www.tradingview.com/symbols/BTCUSDT/?exchange=BINANCE'},
+    ETH:{name:'Ethereum',symbol:'BINANCE:ETHUSDT',pair:'ETH/USDT',source:'https://www.tradingview.com/symbols/ETHUSDT/?exchange=BINANCE'},
+    SUI:{name:'Sui',symbol:'BINANCE:SUIUSDT',pair:'SUI/USDT',source:'https://www.tradingview.com/symbols/SUIUSDT/?exchange=BINANCE'},
+    BNB:{name:'BNB',symbol:'BINANCE:BNBUSDT',pair:'BNB/USDT',source:'https://www.tradingview.com/symbols/BNBUSDT/?exchange=BINANCE'},
+    TREE:{name:'TREE',pair:'TREE/USD',source:'https://app.noodles.fi/coins/0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE',
+      embed:'https://noodles.fi/tv-widget?coin=0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf%3A%3Atree%3A%3ATREE&theme=dark'}
+  };
+  let selectedPrice='BTC',lastPrice='',priceLoadVersion=0;
   const onchain = {
     mvrv: {
       embed:'https://axeladlerjr.com/charts/bitcoin-mvrv-ratio/embed.html',
@@ -75,7 +84,64 @@
     timeZone:'UTC',year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false
   }).format(new Date(ms))+' UTC';
   const quoteIsFresh = (quote,now=Date.now()) => !!quote && quote.updatedAt<=now+5*60*1000 && now-quote.updatedAt<=BTC_PRICE_MAX_AGE_MS;
-  const indicatorNames=['Pi','RUPL','RHODL','Puell','2Y','Trolololo','MVRV','Reserve','TopCap'];
+  // Official latest.json contains adjusted component scores in [0,1], not raw
+  // indicator ratios. Keep the provider's published Confidence as the headline.
+  const cbbiIndicators = [
+    {
+      key:'PiCycle', name:'Pi Cycle Top',
+      description:'Compares recent and longer-term price trends for conditions seen around past Bitcoin cycle peaks.',
+      detail:'It compares the 111-day average price with twice the 350-day average. A moving average smooths daily price swings. CBBI turns this relationship into its own cycle score.',
+      source:'https://positivecrypto.medium.com/the-golden-ratio-multiplier-c2567401e12a'
+    },
+    {
+      key:'RUPL', name:'RUPL / NUPL: paper profit or loss',
+      description:'Estimates how much unrealized profit or loss Bitcoin holders have overall, before selling.',
+      detail:'It compares current market value with estimated cost based on the price when coins last moved. Unrealized means the gain or loss is still on paper. Wallet transfers are not always purchases, so this is an estimate.',
+      source:'https://research.glassnode.com/dissecting-bitcoins-unrealised-on-chain-profit-loss/'
+    },
+    {
+      key:'RHODL', name:'RHODL Ratio: recently moved vs older coins',
+      description:'Looks at the balance between the value of recently moved Bitcoin and coins held for longer.',
+      detail:'It compares coins moved within the past week with coins last moved one to two years ago, using their value at last movement and an age adjustment. It does not count individual buyers or sellers.',
+      source:'https://positivecrypto.medium.com/bitcoin-realized-hodl-ratio-9023db15a559'
+    },
+    {
+      key:'Puell', name:'Puell Multiple: new Bitcoin issuance',
+      description:'Compares the dollar value of newly mined Bitcoin each day with its average over the previous year.',
+      detail:'Issuance means new BTC entering circulation as mining rewards. The measure uses a 365-day average. It does not subtract electricity and other mining costs; halvings also change how much new BTC is issued.',
+      source:'https://studio.glassnode.com/charts/indicators.PuellMultiple?a=BTC'
+    },
+    {
+      key:'2YMA', name:'2-Year Moving Average: long-term price trend',
+      description:'Checks how far Bitcoin’s price has moved from its average over the previous two years.',
+      detail:'A two-year moving average smooths shorter-term swings. CBBI compares the distance from that average with fitted historical cycle boundaries, then converts it into a score.',
+      source:'https://github.com/Zaczero/CBBI/blob/main/metrics/two_year_moving_average.py'
+    },
+    {
+      key:'Trolololo', name:'Trolololo Trend: long-term growth model',
+      description:'Compares Bitcoin’s price with a mathematical model of its historical growth over time.',
+      detail:'Trolololo is the model’s name. CBBI uses fitted growth trend lines to place price in historical context. These model lines can change and do not establish what Bitcoin should be worth.',
+      source:'https://github.com/Zaczero/CBBI/blob/main/metrics/trolololo.py'
+    },
+    {
+      key:'MVRV', name:'MVRV Z-Score: value vs estimated cost',
+      description:'Checks how unusual the gap is between Bitcoin’s market value and the estimated cost of its coins.',
+      detail:'The Z-score scales that gap by historical variation in market value. CBBI then converts it into the 0–100 score shown here. The On-Chain tab’s MVRV chart shows a different form: the original price-to-cost ratio.',
+      source:'https://docs.glassnode.com/basic-api/endpoints/market'
+    },
+    {
+      key:'ReserveRisk', name:'Reserve Risk: long-term holding behavior',
+      description:'Compares Bitcoin’s price with a model of how long holders have kept their coins before moving them.',
+      detail:'The model builds a record of continued holding from coin-age and spending data. It infers holder behavior; it cannot observe investors’ intentions or calculate your chance of losing money.',
+      source:'https://www.kanaandkatana.com/valuation-depot-contents/2019/5/30/exploration-of-bitcoin-days-destroyed'
+    },
+    {
+      key:'Woobull', name:'Woobull Top Cap / CVDD: price models',
+      description:'Places Bitcoin’s price between two historical models based on market value and the movement of older coins.',
+      detail:'Top Cap uses long-run average market value. CVDD means Cumulative Value Days Destroyed; it combines the value and age of coins when they move. These are experimental reference lines, not guaranteed price ceilings or floors.',
+      source:'https://woocharts.com/bitcoin-price-models/'
+    }
+  ];
   let selectedMarket='TOTAL3', lastMarket='', selectedOnchain='realized', lastOnchain='', fetchedCBBI=false, cbbiData=null, cbbiNewest=null, chartRange=365;
   const setPressed=(selector,datasetKey,current)=>{
     $$(selector).forEach(el=>{
@@ -128,6 +194,57 @@
     selectedMarket=button.dataset.tvSymbol;loadMarket();
   }));
 
+  function loadPrices(){
+    const entry=priceAssets[selectedPrice],stage=$('mi-price-stage');
+    if(!stage||!entry)return;
+    const isTree=selectedPrice==='TREE';
+    setPressed('[data-price-asset]','priceAsset',selectedPrice);
+    $('mi-price-description').textContent=isTree?'TREE / USD · Noodles coin chart':entry.name+' · Binance spot market · '+entry.pair+' · TradingView';
+    $('mi-price-source').href=entry.source;
+    $('mi-price-source').textContent=isTree?'Open TREE’s tracked markets on Noodles':'Open '+entry.pair+' on TradingView';
+    $('mi-price-reading').textContent=isTree?'TREE’s price history comes from Noodles’ coin-level view of its tracked markets, quoted in USD. Use the Noodles link to explore the markets behind the chart.':'Prices are quoted in USDT per '+selectedPrice+'. USDT is a dollar-linked stablecoin. Volume shows trading activity for this Binance spot pair.';
+    if(lastPrice===selectedPrice)return;
+    lastPrice=selectedPrice;
+    const version=++priceLoadVersion;
+    stage.replaceChildren();
+    stage.setAttribute('aria-label',entry.name+' price chart supplied by '+(isTree?'Noodles':'TradingView'));
+    const status=$('mi-price-status');
+    status.textContent='Loading '+(isTree?'Noodles':'TradingView')+' chart…';
+    if(isTree){
+      const frame=document.createElement('iframe');
+      frame.src=entry.embed;frame.title='TREE / USD price chart — Noodles';
+      frame.className='mi-provider-iframe';frame.loading='lazy';frame.allowFullscreen=true;
+      frame.referrerPolicy='strict-origin-when-cross-origin';
+      frame.onload=()=>{if(version===priceLoadVersion)status.textContent='Chart controls and data are provided by Noodles.';};
+      frame.onerror=()=>{if(version===priceLoadVersion)status.textContent='Noodles could not load here. Open the source link to view TREE’s chart.';};
+      stage.appendChild(frame);return;
+    }
+    const host=document.createElement('div');host.className='tradingview-widget-container';
+    host.style.height='100%';host.style.width='100%';
+    const widget=document.createElement('div');widget.className='tradingview-widget-container__widget';
+    widget.style.height='calc(100% - 32px)';widget.style.width='100%';host.appendChild(widget);
+    const credit=document.createElement('div');credit.className='tradingview-widget-copyright';
+    const creditLink=document.createElement('a');creditLink.href=entry.source;creditLink.target='_blank';creditLink.rel='noopener noreferrer nofollow';
+    const symbolLabel=document.createElement('span');symbolLabel.className='blue-text';symbolLabel.textContent=entry.pair+' chart';creditLink.appendChild(symbolLabel);
+    const trademark=document.createElement('span');trademark.className='trademark';trademark.textContent=' by TradingView';
+    credit.append(creditLink,trademark);host.appendChild(credit);
+    const script=document.createElement('script');script.async=true;script.type='text/javascript';
+    script.src='https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
+    script.textContent=JSON.stringify({
+      autosize:true,symbol:entry.symbol,interval:'D',timezone:'Etc/UTC',theme:'dark',style:'1',locale:'en',
+      backgroundColor:'#050714',gridColor:'rgba(174,183,204,0.08)',hide_side_toolbar:true,
+      hide_top_toolbar:false,hide_legend:false,hide_volume:false,allow_symbol_change:false,
+      withdateranges:true,calendar:false,save_image:false,support_host:'https://www.tradingview.com'
+    });
+    script.onload=()=>{if(version===priceLoadVersion)status.textContent='Chart controls and data are provided by TradingView.';};
+    script.onerror=()=>{if(version===priceLoadVersion)status.textContent='TradingView could not load here. Open the source link to view this market.';};
+    host.appendChild(script);stage.appendChild(host);
+  }
+  $$('[data-price-asset]').forEach(button=>button.addEventListener('click',()=>{
+    if(!Object.hasOwn(priceAssets,button.dataset.priceAsset))return;
+    selectedPrice=button.dataset.priceAsset;loadPrices();
+  }));
+
   function loadOnchain() {
     const entry=onchain[selectedOnchain],stage=$('mi-onchain-stage');
     if(!stage||!entry)return;
@@ -152,80 +269,106 @@
   }));
 
   function latestFinite(series,ceiling=Infinity){
-    if(!series||typeof series!=='object')return null;
+    if(!series||typeof series!=='object'||Array.isArray(series))return null;
     let ts=-1,val=null;
     for(const [key,number] of Object.entries(series)){
       const t=Number(key);
-      if(t<=ceiling && t>ts && Number.isFinite(number)){ts=t;val=number;}
+      if(Number.isSafeInteger(t) && t>0 && t<=ceiling && t>ts && Number.isFinite(number)){ts=t;val=number;}
     }
     return ts>0?{ts,value:val}:null;
   }
+  function paintCBBIIndicators(){
+    const panel=$('mi-cbbi-metrics');
+    if(!panel)return;
+    panel.replaceChildren();
+    let available=0,older=0;
+    for(const indicator of cbbiIndicators){
+      const recent=cbbiNewest?latestFinite(cbbiData?.[indicator.key],cbbiNewest.ts):null;
+      const valid=!!recent && recent.value>=0 && recent.value<=1;
+      if(valid){available++;if(recent.ts<cbbiNewest.ts)older++;}
+      const item=document.createElement('article');item.className='mi-indicator';
+      const name=document.createElement('h5');name.textContent=indicator.name;
+      const explanation=document.createElement('p');explanation.className='mi-indicator-description';explanation.textContent=indicator.description;
+      const reading=document.createElement('div');
+      const label=document.createElement('span');label.className='mi-indicator-score-label';label.textContent='CBBI component score';
+      const number=document.createElement('span');number.className='mi-indicator-score';number.textContent=valid?(recent.value*100).toFixed(1)+' / 100':'Unavailable';
+      reading.append(label,number);
+      const track=document.createElement('div');track.className='mi-indicator-track';track.setAttribute('aria-hidden','true');
+      const fill=document.createElement('span');fill.style.width=valid?(recent.value*100)+'%':'0%';
+      if(valid)fill.style.backgroundColor='hsl('+(210*(1-recent.value))+', 65%, 65%)';track.appendChild(fill);
+      const date=document.createElement('small');
+      date.textContent=valid?fmtDate(recent.ts)+' UTC'+(recent.ts<cbbiNewest.ts?' · Older than overall score':'')+((Date.now()/1000-recent.ts)>7*86400?' · Over seven days old':''):'No verified score; the explanation still applies.';
+      const details=document.createElement('details');details.className='mi-indicator-more';
+      const summary=document.createElement('summary');summary.textContent='More about '+indicator.name.split(':')[0];
+      const detail=document.createElement('p');detail.textContent=indicator.detail;
+      const source=document.createElement('a');source.href=indicator.source;source.target='_blank';source.rel='noopener noreferrer';source.textContent='Read the indicator explanation';
+      details.append(summary,detail,source);item.append(name,explanation,reading,track,date,details);panel.appendChild(item);
+    }
+    $('mi-cbbi-component-status').textContent=cbbiNewest?available+' of '+cbbiIndicators.length+' component scores available'+(older?' · '+older+' dated earlier than the overall score.':'.')+' Dates refer to CBBI’s observations; upstream inputs may update at different times.':'The nine explanations remain available. No component readings have been verified.';
+  }
+  paintCBBIIndicators();
   function paintCBBI(){
     const message=$('mi-cbbi-message'), score=$('mi-cbbi-value'), stamp=$('mi-cbbi-date'),svg=$('mi-cbbi-graph');
     if(!cbbiData||!cbbiNewest)return;
     score.textContent=(cbbiNewest.value*100).toFixed(1)+' / 100';
     stamp.textContent='CBBI observation: '+fmtDate(cbbiNewest.ts)+' UTC';
     const age=(Date.now()/1000-cbbiNewest.ts)/86400;
-    message.textContent=age>7?'Provider’s most recent score is over seven days old; treat this observation as stale.':'CBBI composite confidence: higher scores indicate stronger historical cycle-overheating conditions, not a price target.';
-    const rows=Object.entries(cbbiData.Confidence||{}).map(([s,v])=>({ts:Number(s),v:Number(v)})).filter(x=>Number.isFinite(x.v)&&x.ts<=cbbiNewest.ts&&x.ts>=cbbiNewest.ts-chartRange*86400).sort((a,b)=>a.ts-b.ts);
+    message.textContent=age>7?'The latest CBBI observation is over seven days old. These readings are outdated.':'Provider observation loaded. Lower scores are cooler; higher scores are hotter relative to past Bitcoin cycles.';
+    const rows=Object.entries(cbbiData.Confidence||{}).map(([s,v])=>({ts:Number(s),v})).filter(x=>Number.isSafeInteger(x.ts)&&x.ts>0&&Number.isFinite(x.v)&&x.v>=0&&x.v<=1&&x.ts<=cbbiNewest.ts&&x.ts>=cbbiNewest.ts-chartRange*86400).sort((a,b)=>a.ts-b.ts);
     svg.replaceChildren();
     if(rows.length>1){
-      const width=640,height=185,pad=16,points=rows.map((r,i)=>{
-        const x=pad+i/(rows.length-1)*(width-2*pad);
-        const y=height-pad-(Math.max(0,Math.min(1,r.v))*(height-2*pad));
+      const width=640,height=200,left=40,right=16,top=16,bottom=32,first=rows[0].ts,last=rows[rows.length-1].ts,points=rows.map(r=>{
+        const x=left+(r.ts-first)/(last-first)*(width-left-right);
+        const y=height-bottom-r.v*(height-top-bottom);
         return x.toFixed(1)+','+y.toFixed(1);
       }).join(' ');
       const NS='http://www.w3.org/2000/svg';
       for(const level of [0,0.5,1]) {
-        const y=height-pad-level*(height-2*pad);
+        const y=height-bottom-level*(height-top-bottom);
         const line=document.createElementNS(NS,'line');
-        line.setAttribute('x1',String(pad));line.setAttribute('x2',String(width-pad));
+        line.setAttribute('x1',String(left));line.setAttribute('x2',String(width-right));
         line.setAttribute('y1',String(y));line.setAttribute('y2',String(y));
         line.setAttribute('stroke','rgba(174,183,204,.24)');line.setAttribute('stroke-dasharray','4 6');
         svg.appendChild(line);
+        const label=document.createElementNS(NS,'text');label.textContent=String(level*100);
+        label.setAttribute('x',String(left-8));label.setAttribute('y',String(y+4));label.setAttribute('text-anchor','end');
+        label.setAttribute('fill','#bad5cb');label.setAttribute('font-size','12');svg.appendChild(label);
       }
       const path=document.createElementNS(NS,'polyline');
       path.setAttribute('points',points);path.setAttribute('fill','none');
       path.setAttribute('stroke','#34d399');path.setAttribute('stroke-width','3');
       path.setAttribute('stroke-linecap','round');path.setAttribute('stroke-linejoin','round');
       svg.appendChild(path);
-      $('mi-cbbi-range').textContent='Observed confidence, last '+chartRange+' days · '+rows.length+' data points · 0–100 scale';
+      for(const [timestamp,x,anchor] of [[first,left,'start'],[last,width-right,'end']]){
+        const label=document.createElementNS(NS,'text');label.textContent=fmtDate(timestamp);
+        label.setAttribute('x',String(x));label.setAttribute('y',String(height-7));label.setAttribute('text-anchor',anchor);
+        label.setAttribute('fill','#bad5cb');label.setAttribute('font-size','12');svg.appendChild(label);
+      }
+      $('mi-cbbi-range').textContent=fmtDate(first)+'–'+fmtDate(last)+' UTC · '+rows.length+' observations · CBBI score, 0–100';
     }else $('mi-cbbi-range').textContent='Insufficient historical data for selected range.';
-    const panel=$('mi-cbbi-metrics');panel.replaceChildren();
-    for(const [key,series] of Object.entries(cbbiData)){
-      if(key==='Price'||key==='Confidence'||!series||typeof series!=='object')continue;
-      const recent=latestFinite(series,cbbiNewest.ts);
-      if(!recent)continue;
-      const item=document.createElement('article');item.className='mi-indicator';
-      const name=document.createElement('strong');name.textContent=key;
-      const number=document.createElement('span');number.textContent=Number(recent.value).toLocaleString('en-US',{maximumFractionDigits:4});
-      const detail=document.createElement('small');detail.textContent=fmtDate(recent.ts)+' UTC · provider units; not normalized score';
-      item.append(name,number,detail);panel.appendChild(item);
-    }
   }
   async function loadCBBI(){
     if(fetchedCBBI)return;
     fetchedCBBI=true;
+    $('mi-cbbi-retry').disabled=true;
     $('mi-cbbi-message').textContent='Loading official CBBI historical data…';
+    const controller=new AbortController(), timer=setTimeout(()=>controller.abort(),15000);
     try{
-      const controller=new AbortController(), timer=setTimeout(()=>controller.abort(),15000);
-      let res;
-      try{res=await fetch('https://colintalkscrypto.com/cbbi/data/latest.json',{mode:'cors',cache:'no-store',signal:controller.signal});}
-      finally{clearTimeout(timer);}
+      const res=await fetch('https://colintalkscrypto.com/cbbi/data/latest.json',{mode:'cors',cache:'no-store',signal:controller.signal});
       if(!res.ok)throw Error('HTTP '+res.status);
       const data=await res.json();
       if(!data||typeof data!=='object'||!data.Confidence||!data.Price)throw Error('Unexpected CBBI data format');
       const latest=latestFinite(data.Confidence,Math.floor(Date.now()/1000));
       if(!latest||latest.value<0||latest.value>1)throw Error('Invalid provider confidence value');
-      cbbiData=data;cbbiNewest=latest;paintCBBI();
+      cbbiData=data;cbbiNewest=latest;paintCBBI();paintCBBIIndicators();
     }catch(e){
-      fetchedCBBI=false;
+      fetchedCBBI=false;cbbiData=null;cbbiNewest=null;
       $('mi-cbbi-value').textContent='Unavailable';
       $('mi-cbbi-date').textContent='No verified current reading';
-      $('mi-cbbi-message').textContent='The official feed could not be read in this browser. It may block cross-origin requests, be offline, or time out. No score has been estimated or substituted.';
+      $('mi-cbbi-message').textContent='CBBI data could not be loaded. You can still read the guide below and use Refresh CBBI data to try again.';
       $('mi-cbbi-range').textContent='No data to chart';
-      $('mi-cbbi-metrics').replaceChildren();
-    }
+      $('mi-cbbi-graph').replaceChildren();paintCBBIIndicators();
+    }finally{clearTimeout(timer);$('mi-cbbi-retry').disabled=false;}
   }
   $$('[data-cbbi-range]').forEach(b=>b.addEventListener('click',()=>{
     chartRange=Number(b.dataset.cbbiRange)||365;
@@ -357,7 +500,7 @@
     },'image/png');
   });
 
-  const tabIds=['sentiment','rainbow','market','cbbi','onchain','cycles'];
+  const tabIds=['sentiment','prices','rainbow','market','cbbi','onchain','cycles'];
   const activate=(id)=>{
     if(!tabIds.includes(id))return;
     for(const name of tabIds){
@@ -366,6 +509,7 @@
       if(pane)pane.hidden=!on;
     }
     document.dispatchEvent(new CustomEvent('tree-market-tab-change',{detail:{id}}));
+    if(id==='prices')loadPrices();
     if(id==='market')loadMarket();
     if(id==='onchain')loadOnchain();
     if(id==='cbbi')loadCBBI();

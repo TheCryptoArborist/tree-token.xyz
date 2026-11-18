@@ -439,17 +439,36 @@
     .mi-overline { display:block;letter-spacing:.1em;font-size:.7rem;color:#72daba;text-transform:uppercase;font-weight:850 }
     .mi-score { font-size:clamp(1.55rem,5vw,2.9rem);color:#ffe07d;font-weight:900;letter-spacing:-.04em }
     .mi-small { color:#86a4a9;font-size:.75rem;line-height:1.6 }
-    .mi-score-scale { display:flex;align-items:center;gap:8px;color:#9bb3b8;font-size:.77rem;min-width:170px; }
-    .mi-score-scale div { width:130px;height:14px;border-radius:99px;background:linear-gradient(90deg,#5c81d9,#43c9bc,#e1da59,#f08f4b,#d34c4b) }
+    .mi-score-scale { min-width:220px;max-width:360px;width:100%;color:#c5dbd3;font-size:.78rem }
+    .mi-score-scale>div { width:100%;height:14px;border-radius:99px;background:linear-gradient(90deg,#5c81d9,#43c9bc,#e1da59,#f08f4b,#d34c4b) }
+    .mi-score-scale p { display:flex;justify-content:space-between;gap:16px;margin:7px 0 0 }
+    .mi-cbbi-guide { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:15px 0 12px }
+    .mi-cbbi-guide>div { padding:13px 15px;border:1px solid #29493d;border-radius:11px;background:#071c1880;min-width:0 }
+    .mi-cbbi-guide dt { font-weight:750;font-size:.88rem;color:#f1d68b;margin-bottom:5px }
+    .mi-cbbi-guide dd { margin:0;font-size:.84rem;line-height:1.65;color:#bfd8cd }
+    .mi-cbbi-note { font-size:.85rem;line-height:1.65;color:#c8ded3;padding:12px 15px;background:#30280f40;border-left:3px solid #e4bb53;border-radius:0 10px 10px 0 }
+    .mi-cbbi-note strong { color:#ffe4a0 }
     .mi-status { font-size:.86rem;color:#c2d6cb;margin:12px 0 }
     .mi-graph-wrap { border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:12px;background:rgba(0,0,0,.22) }
     .mi-graph-wrap svg { display:block;width:100%;height:auto;min-height:140px;max-height:250px }
     .mi-graph-wrap p { margin:7px 0 0 }
     .mi-metric-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px }
-    .mi-indicator { border:1px solid rgba(255,255,255,.09);padding:12px;border-radius:11px;background:#081b21;display:flex;flex-direction:column;gap:4px;min-width:0 }
-    .mi-indicator strong { color:#ffe09a;font-size:.8rem;overflow-wrap:anywhere }
-    .mi-indicator span { color:#d3fbe3;font-weight:850;font-size:1.13rem }
-    .mi-indicator small { color:#85a6a9;font-size:.7rem }
+    .mi-indicator { border:1px solid #27443c;padding:16px;border-radius:12px;background:#081b21;display:flex;flex-direction:column;gap:9px;min-width:0 }
+    .mi-indicator h5 { color:#ffe09a;font-size:.95rem;line-height:1.45;margin:0;overflow-wrap:anywhere }
+    .mi-indicator-description { color:#c4dcd2;font-size:.84rem;line-height:1.65;margin:0;flex:1 }
+    .mi-indicator-score { display:block;color:#e0ffec;font-weight:850;font-size:1.25rem }
+    .mi-indicator-score-label { display:block;color:#abc5ba;font-size:.73rem;margin-bottom:2px }
+    .mi-indicator-track { height:7px;border-radius:99px;background:#263d39;overflow:hidden }
+    .mi-indicator-track>span { display:block;height:100%;border-radius:inherit;background:#73dba9 }
+    .mi-indicator small { color:#a1beb5;font-size:.74rem;line-height:1.6 }
+    .mi-indicator-more { border-top:1px solid #29463e;margin-top:2px;font-size:.82rem;color:#bbd4ca;line-height:1.65 }
+    .mi-indicator-more summary { cursor:pointer;min-height:44px;padding:10px 0;color:#d8f4e5;font-weight:700 }
+    .mi-indicator-more p { margin:0 0 10px }
+    .mi-indicator-more a { color:#8adfd1;text-underline-offset:3px }
+    .mi-cbbi-about { border:1px solid #29463e;border-radius:12px;padding:0 15px;margin-top:17px;font-size:.85rem;color:#bdd5cb;line-height:1.65 }
+    .mi-cbbi-about summary { min-height:48px;padding:12px 0;cursor:pointer;font-weight:750;color:#e1f5e9 }
+    .mi-cbbi-about p { margin:0 0 13px }
+    .mi-cbbi-about a { color:#8adfd1;text-underline-offset:3px }
     .mi-linkbutton { border:0;background:transparent;color:#80d9c2;cursor:pointer;text-decoration:underline;font:inherit }
     .mi-stat-grid { display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:15px }
     .mi-stat-grid>div { border:1px solid rgba(0,255,160,.14);border-radius:13px;padding:13px;background:#061519 }
@@ -482,11 +501,15 @@
       .mi-tv { height:520px;min-height:480px;padding:3px }
       .mi-onchain { height:540px;padding:3px }
       .mi-onchain-levels { grid-template-columns:1fr }
+      .mi-cbbi-guide { grid-template-columns:1fr }
       .mi-cbbi-header { flex-direction:column;align-items:stretch;gap:12px }
       .mi-metric-grid { grid-template-columns:repeat(2,minmax(0,1fr)) }
       .mi-stat-grid { grid-template-columns:repeat(2,minmax(0,1fr)) }
       .mi-form-grid { grid-template-columns:1fr }
       .mi-calc-inputs { grid-template-columns:1fr }
+    }
+    @media(max-width:600px){
+      #mi-cbbi-metrics { grid-template-columns:1fr }
     }
     @media(max-width:360px){
       .mi-metric-grid { grid-template-columns:1fr }
@@ -496,7 +519,7 @@
 
     /* SUI-first, source-verified Fear & Greed explorer — matches TREE's dark/emerald/gold theme. */
     .mi-sentiment-pane { color:#edf8f4 }
-    .mi-sentiment-cards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin:17px 0 }
+    .mi-sentiment-cards { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; margin:17px 0 }
     .mi-sentiment-card {
       appearance:none; text-align:left; cursor:pointer; padding:17px; border-radius:17px;
       background:rgba(4,17,20,.93); border:1px solid rgba(0,255,160,.19); color:#d7f1e7;
@@ -569,11 +592,15 @@
     .mi-sentiment-secondary{background:rgba(0,0,0,.23);border:1px dashed #34d39966;color:#c6f8d8}
     .mi-sentiment-credit{font-size:.73rem;color:#95b5a9;margin:16px 0 0;line-height:1.75}
     .mi-sentiment-credit a{color:#9fd3c1;text-underline-offset:3px}
+    @media(max-width:980px){
+      .mi-sentiment-cards{grid-template-columns:repeat(3,minmax(0,1fr))}
+    }
     @media(max-width:810px){
       .mi-sentiment-main,.mi-sentiment-lower{grid-template-columns:1fr}
     }
     @media(max-width:600px){
-      .mi-sentiment-cards{gap:7px}
+      .mi-sentiment-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+      #mi-sentiment-card-market{grid-column:1/-1}
       .mi-sentiment-card{padding:11px 9px;border-radius:13px;min-width:0}
       .mi-sentiment-card-label{font-size:.84rem}
       .mi-sentiment-card-label small{font-size:.62rem}
@@ -635,6 +662,7 @@
     @media(max-width:650px) {
       .mi-tabbar { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); overflow:visible; gap:6px }
       .mi-tab { min-width:0; min-height:48px; padding:10px 5px; font-size:.78rem }
+      .mi-tab:last-child { grid-column:1/-1 }
     }
   </style>
   <noscript><style>
@@ -700,11 +728,12 @@
         <div>
           <p class="eyebrow"><span class="seed" aria-hidden="true"></span>EXPLORE YOUR MARKET TOOLS</p>
           <h2 id="mi-explorer-title">Crypto Market Explorer</h2>
-          <p>Compare SUI, Bitcoin and overall crypto sentiment, then explore the Bitcoin Rainbow Chart, market caps, CBBI, on-chain valuation and historical cycles. No wallet connection needed.</p>
+          <p>Compare SUI, Ethereum, BNB, Bitcoin and overall crypto sentiment, then explore price charts, market caps, the Bitcoin Rainbow Chart, CBBI and historical cycles. No wallet connection needed.</p>
         </div>
       </div>
       <div class="mi-tabbar" role="tablist" aria-label="Crypto research views">
         <button class="mi-tab" role="tab" id="mi-tab-sentiment" data-mi-tab="sentiment" aria-controls="mi-pane-sentiment" aria-selected="true">Fear &amp; Greed</button>
+        <button class="mi-tab" type="button" role="tab" id="mi-tab-prices" data-mi-tab="prices" aria-controls="mi-pane-prices" aria-selected="false" tabindex="-1">Price Charts</button>
         <button class="mi-tab" type="button" role="tab" id="mi-tab-rainbow" data-mi-tab="rainbow" aria-controls="mi-pane-rainbow" aria-selected="false" tabindex="-1">Rainbow</button>
         <button class="mi-tab" role="tab" id="mi-tab-market" data-mi-tab="market" aria-controls="mi-pane-market" aria-selected="false" tabindex="-1">Market Caps</button>
         <button class="mi-tab" role="tab" id="mi-tab-cbbi" data-mi-tab="cbbi" aria-controls="mi-pane-cbbi" aria-selected="false" tabindex="-1">CBBI</button>
@@ -714,13 +743,25 @@
       <div class="mi-panels">
         <section class="mi-pane mi-sentiment-pane" id="mi-pane-sentiment" role="tabpanel" aria-labelledby="mi-tab-sentiment">
           <h3>Crypto Fear &amp; Greed Index</h3>
-          <p class="mi-help">Explore SUI token sentiment first, then compare Bitcoin and the broader market—all calculated using the same CryptoKeyhole methodology. Values come from the live provider, not prefilled examples.</p>
+          <p class="mi-help">Explore SUI, Ethereum, BNB, Bitcoin and broad crypto sentiment using CryptoKeyhole’s methodology. Each coin uses its available data; select a card to see its history and what is driving its score.</p>
           <div class="mi-sentiment-cards" role="group" aria-label="Choose which sentiment index to explore">
             <button type="button" class="mi-sentiment-card selected" id="mi-sentiment-card-sui" data-sentiment-asset="sui" aria-pressed="true">
               <span class="mi-sentiment-card-label">SUI <small>TREE ecosystem</small></span>
               <strong id="mi-sentiment-card-score-sui">—</strong>
               <span id="mi-sentiment-card-label-sui">Awaiting official data</span>
               <small id="mi-sentiment-card-date-sui">Not verified</small>
+            </button>
+            <button type="button" class="mi-sentiment-card" id="mi-sentiment-card-eth" data-sentiment-asset="eth" aria-pressed="false">
+              <span class="mi-sentiment-card-label">Ethereum <small>ETH sentiment</small></span>
+              <strong id="mi-sentiment-card-score-eth">—</strong>
+              <span id="mi-sentiment-card-label-eth">Awaiting official data</span>
+              <small id="mi-sentiment-card-date-eth">Not verified</small>
+            </button>
+            <button type="button" class="mi-sentiment-card" id="mi-sentiment-card-bnb" data-sentiment-asset="bnb" aria-pressed="false">
+              <span class="mi-sentiment-card-label">BNB <small>BNB sentiment</small></span>
+              <strong id="mi-sentiment-card-score-bnb">—</strong>
+              <span id="mi-sentiment-card-label-bnb">Awaiting official data</span>
+              <small id="mi-sentiment-card-date-bnb">Not verified</small>
             </button>
             <button type="button" class="mi-sentiment-card" id="mi-sentiment-card-btc" data-sentiment-asset="btc" aria-pressed="false">
               <span class="mi-sentiment-card-label">Bitcoin <small>BTC sentiment</small></span>
@@ -786,7 +827,32 @@
             <button type="button" id="mi-sentiment-share" class="mi-sentiment-secondary">Download 1:1 social graphic</button>
             <button type="button" id="mi-sentiment-copy" class="mi-sentiment-secondary">Copy summary</button>
           </div>
-          <p class="mi-sentiment-credit">Data, methodology and hourly observations: <a id="mi-sentiment-source-link" href="https://cryptokeyhole.com/fear-and-greed-index/sui/" target="_blank" rel="noopener noreferrer">CryptoKeyhole</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>. The reading is the sentiment of the selected <strong>asset</strong>, not a measure of TREE investor sentiment. BTC, SUI and market readings may have different timestamp cutoffs. No investment signal is implied.</p>
+          <p class="mi-sentiment-credit">Data, methodology and hourly observations: <a id="mi-sentiment-source-link" href="https://cryptokeyhole.com/fear-and-greed-index/sui/" target="_blank" rel="noopener noreferrer">CryptoKeyhole</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>. The reading is the sentiment of the selected <strong>asset</strong>, not a measure of TREE investor sentiment or every project on its chain. Each index may have a different timestamp cutoff. No investment signal is implied.</p>
+        </section>
+
+        <section class="mi-pane" id="mi-pane-prices" role="tabpanel" aria-labelledby="mi-tab-prices" hidden>
+          <h3>Price history and trading volume</h3>
+          <p class="mi-help">Choose a coin, then use the chart controls to explore its history. BTC, ETH, SUI and BNB use TradingView. TREE uses Noodles’ coin-level chart.</p>
+          <div class="mi-choices" role="group" aria-label="Choose a cryptocurrency price chart">
+            <button type="button" data-price-asset="BTC" class="selected" aria-pressed="true">BTC · Bitcoin</button>
+            <button type="button" data-price-asset="ETH" aria-pressed="false">ETH · Ethereum</button>
+            <button type="button" data-price-asset="SUI" aria-pressed="false">SUI</button>
+            <button type="button" data-price-asset="BNB" aria-pressed="false">BNB</button>
+            <button type="button" data-price-asset="TREE" aria-pressed="false">TREE · Noodles</button>
+          </div>
+          <p id="mi-price-description" class="mi-description" aria-live="polite">Bitcoin · Binance spot market · BTC/USDT · TradingView</p>
+          <div id="mi-price-stage" class="mi-chart-container mi-tv" aria-label="Selected cryptocurrency price chart"></div>
+          <div class="mi-footnotes">
+            <span id="mi-price-status" role="status">The selected chart loads when this tab opens.</span>
+            <a id="mi-price-source" href="https://www.tradingview.com/symbols/BTCUSDT/?exchange=BINANCE" target="_blank" rel="noopener noreferrer">Open this market on TradingView</a>
+          </div>
+          <p id="mi-price-reading" class="mi-help">Prices are quoted in USDT per BTC. Volume shows trading activity for this Binance spot pair.</p>
+          <details class="mi-cbbi-about">
+            <summary>New to price charts? Start here</summary>
+            <p><strong>Candles:</strong> Each candle summarizes the price movement during one time period. The body shows the opening and closing prices; the thin lines show the highest and lowest prices.</p>
+            <p><strong>Time controls:</strong> The candle interval changes how much time one candle represents. The date range changes how much history you can see. Zoom or drag the chart to explore.</p>
+            <p><strong>Volume:</strong> Taller volume bars mean more trading during that period. Read the selected chart’s source and quote currency: TradingView uses Binance spot pairs in USDT; TREE uses Noodles’ coin-level USD chart.</p>
+          </details>
         </section>
 
         <section class="mi-pane mi-rainbow-pane" id="mi-pane-rainbow" role="tabpanel" aria-labelledby="mi-tab-rainbow" hidden>
@@ -920,30 +986,45 @@
         </section>
 
         <section class="mi-pane" id="mi-pane-cbbi" role="tabpanel" aria-labelledby="mi-tab-cbbi" hidden>
-          <h3>Bitcoin Bull Run Index (CBBI)</h3>
-          <p class="mi-help">An independent composite of nine indicators developed by Colin Talks Crypto. Higher confidence describes historical cycle-overheating conditions; it does not predict future prices or dates.</p>
+          <h3>CBBI: how heated is Bitcoin’s market?</h3>
+          <p class="mi-help">The <strong>ColinTalksCrypto Bitcoin Bull Run Index</strong> combines nine measures of Bitcoin’s price, holder behavior and mining activity. Think of it as a cycle thermometer: it compares market conditions with patterns seen in Bitcoin’s past cycles.</p>
           <div class="mi-cbbi-header">
-            <div><span class="mi-overline">Official CBBI composite</span><div class="mi-score" id="mi-cbbi-value">Fetching…</div><span class="mi-small" id="mi-cbbi-date">Waiting for verified source date</span></div>
-            <div class="mi-score-scale" aria-hidden="true"><span>0</span><div></div><span>100</span></div>
+            <div><span class="mi-overline">Overall CBBI score</span><div class="mi-score" id="mi-cbbi-value">Fetching…</div><span class="mi-small" id="mi-cbbi-date">Waiting for verified source date</span></div>
+            <div class="mi-score-scale" aria-hidden="true"><div></div><p><span>0 · Cooler</span><span>100 · Hotter</span></p></div>
           </div>
+          <dl class="mi-cbbi-guide" aria-label="How to understand the CBBI scale">
+            <div><dt>Closer to 0: cooler</dt><dd>Conditions look more like the lower end of past Bitcoin cycles.</dd></div>
+            <div><dt>Between the extremes</dt><dd>The combined score sits in between. Individual indicators can give different readings.</dd></div>
+            <div><dt>Closer to 100: hotter</dt><dd>Conditions look more like the overheated end of past Bitcoin cycles.</dd></div>
+          </dl>
+          <p class="mi-cbbi-note"><strong>Read it as a score, not odds.</strong> An 80/100 reading does not mean an 80% chance of a market top. CBBI gives long-term cycle context; it cannot tell you a future price or the date of a reversal.</p>
           <p id="mi-cbbi-message" class="mi-status" role="status" aria-live="polite">Loads only when the CBBI tab is opened.</p>
+          <h4>How the CBBI score has changed</h4>
+          <p class="mi-help">A rising line means the combined reading became hotter; a falling line means it became cooler. The vertical scale shows the score, from 0 to 100.</p>
           <div class="mi-choices" role="group" aria-label="CBBI historical range">
             <button type="button" data-cbbi-range="90" aria-pressed="false">90 days</button>
             <button type="button" data-cbbi-range="365" aria-pressed="true" class="selected">1 year</button>
             <button type="button" data-cbbi-range="1460" aria-pressed="false">4 years</button>
           </div>
           <div class="mi-graph-wrap">
-            <svg id="mi-cbbi-graph" viewBox="0 0 640 185" role="img" aria-label="CBBI confidence over the selected historical range, measured from zero to one hundred"></svg>
+            <svg id="mi-cbbi-graph" viewBox="0 0 640 200" role="img" aria-label="CBBI score over the selected historical range, measured from zero to one hundred"></svg>
             <p class="mi-small" id="mi-cbbi-range">Awaiting sourced history</p>
           </div>
-          <h4>Provider's underlying indicator series</h4>
-          <p class="mi-help">Where source readings are available, raw values are shown with their own observation date. Units differ by metric: these are <strong>not nine interchangeable confidence percentages</strong>.</p>
-          <div id="mi-cbbi-metrics" class="mi-metric-grid" aria-live="polite"></div>
+          <h4>What goes into the CBBI score?</h4>
+          <p class="mi-help">Each card explains one ingredient and shows its <strong>CBBI score out of 100</strong>. Higher scores mean that measure looks hotter relative to past cycles. CBBI adjusts the original measurements to put these scores on the same scale.</p>
+          <p class="mi-small" id="mi-cbbi-component-status" role="status">The nine indicator explanations remain available while readings load.</p>
+          <div id="mi-cbbi-metrics" class="mi-metric-grid"></div>
+          <details class="mi-cbbi-about">
+            <summary>How are the scores combined, and what can they miss?</summary>
+            <p>The provider adjusts each indicator against historical cycle patterns, then averages the available component scores. The large number above is the provider’s published overall score. Individual dates can differ, so an older card is labeled.</p>
+            <p>A score of 0 or 100 can persist when a measure reaches the model’s lower or upper limit. Indicators can disagree, and earlier scores may change when the provider revises its model. Past cycle patterns do not guarantee the next top or bottom.</p>
+            <p>Methodology: <a href="https://colintalkscrypto.com/cbbi/faq.html" target="_blank" rel="noopener noreferrer">CBBI’s explanation</a> · <a href="https://github.com/Zaczero/CBBI" target="_blank" rel="noopener noreferrer">Official calculation source</a>.</p>
+          </details>
           <div class="mi-footnotes">
             <span>Data: <a href="https://colintalkscrypto.com/cbbi/" target="_blank" rel="noopener noreferrer">Colin Talks Crypto — CBBI</a> · Official JSON feed · Observations may be revised</span>
-            <button type="button" id="mi-cbbi-retry" class="mi-linkbutton">Retry data</button>
+            <button type="button" id="mi-cbbi-retry" class="mi-linkbutton">Refresh CBBI data</button>
           </div>
-          <p class="mi-disclaimer">If the source blocks direct browser access or becomes unavailable, we show an explicit data error rather than guessed scores. The CBBI score is a retrospective model, not independent evidence of a guaranteed market bottom.</p>
+          <p class="mi-disclaimer">Use CBBI alongside the wider price trend and your own research. A low score does not establish a price floor, and a high score does not establish a market top.</p>
         </section>
 
         <section class="mi-pane" id="mi-pane-onchain" role="tabpanel" aria-labelledby="mi-tab-onchain" hidden>
