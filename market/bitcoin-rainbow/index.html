@@ -467,6 +467,96 @@
       .mi-tab { font-size:.77rem;padding:10px }
     }
 
+
+    /* SUI-first, source-verified Fear & Greed explorer — matches TREE's dark/emerald/gold theme. */
+    .mi-sentiment-pane { color:#edf8f4 }
+    .mi-sentiment-cards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin:17px 0 }
+    .mi-sentiment-card {
+      appearance:none; text-align:left; cursor:pointer; padding:17px; border-radius:17px;
+      background:rgba(4,17,20,.93); border:1px solid rgba(0,255,160,.19); color:#d7f1e7;
+      min-width:0; display:flex; flex-direction:column; align-items:flex-start; gap:4px;
+      font-family:inherit; transition:border-color .2s,transform .2s;
+    }
+    .mi-sentiment-card:hover { border-color:rgba(52,211,153,.75);transform:translateY(-2px) }
+    .mi-sentiment-card.selected,.mi-sentiment-card[aria-pressed="true"] {
+      border-color:var(--gold);box-shadow:0 0 0 1px rgba(255,209,102,.2),0 10px 45px rgba(255,209,102,.07);
+      background:linear-gradient(145deg,rgba(23,32,21,.97),rgba(7,20,21,.97));
+    }
+    .mi-sentiment-card-label { display:block;color:#fff9dc;font-weight:900;font-size:1.04rem }
+    .mi-sentiment-card-label small { display:block; color:#9ebbb5; font-size:.71rem;font-weight:650 }
+    .mi-sentiment-card>strong {font-size:clamp(1.8rem,4vw,2.45rem);line-height:1.12;color:var(--mi-sentiment-band,var(--gold));font-weight:900}
+    .mi-sentiment-card>span:not(.mi-sentiment-card-label){font-size:.86rem;font-weight:800}
+    .mi-sentiment-card>small{font-size:.7rem;color:#a6bdc0}
+    .mi-sentiment-main {display:grid;grid-template-columns:minmax(215px,.75fr) minmax(0,1.4fr);gap:15px}
+    .mi-sentiment-current,.mi-sentiment-right,.mi-sentiment-details {
+      border-radius:17px;border:1px solid rgba(0,255,160,.12);
+      background:rgba(2,12,17,.74);padding:18px;min-width:0
+    }
+    .mi-sentiment-overline {font-size:.68rem;letter-spacing:.13em;color:#62d9b2;font-weight:850}
+    .mi-sentiment-current h4 {margin:5px 0 9px;color:#e8f4ec}
+    .mi-sentiment-score {display:flex;align-items:baseline;gap:6px}
+    .mi-sentiment-score strong{font-size:clamp(3rem,8vw,4.7rem);line-height:1.05;color:var(--gold);letter-spacing:-.04em}
+    .mi-sentiment-score span{font-size:.9rem;color:#bdceca}
+    .mi-sentiment-zone{display:block;margin:6px 0 12px;font-size:1rem}
+    .mi-sentiment-scale {
+      position:relative;height:12px;border-radius:99px;
+      background:linear-gradient(90deg,#bb3e50,#ea8650 25%,#f1ce66 50%,#91d88f 75%,#28b781);
+    }
+    .mi-sentiment-scale-marker{
+      position:absolute;top:-4px;left:0%;height:20px;width:3px;border-radius:2px;
+      background:#fff;box-shadow:0 0 5px #000;transform:translateX(-50%);transition:left .25s;
+    }
+    .mi-sentiment-scale-labels {display:flex;justify-content:space-between;gap:10px;font-size:.66rem;color:#a6c3c0;margin-top:5px}
+    .mi-sentiment-delta {font-size:.85rem;color:#fff3b7;font-weight:780}
+    .mi-sentiment-summary{font-size:.8rem;color:#a8c3c0;line-height:1.65}
+    .mi-sentiment-current .mi-small{overflow-wrap:anywhere}
+    .mi-sentiment-controls {display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+    .mi-sentiment-controls h4{margin:0;color:var(--gold)}
+    .mi-sentiment-controls .mi-choices{margin:6px 0}
+    .mi-sentiment-controls .mi-choices button{min-height:35px;padding:7px 11px}
+    .mi-sentiment-ma{display:inline-flex;gap:7px;align-items:center;font-size:.78rem;color:#b1c8bf;cursor:pointer}
+    .mi-sentiment-ma input{accent-color:#34d399}
+    .mi-sentiment-chart-frame {overflow:hidden;margin-top:12px;background:rgba(1,7,13,.72);border:1px solid #214442;border-radius:12px;padding:10px 8px}
+    .mi-sentiment-chart-frame svg{display:block;width:100%;height:auto;min-height:135px}
+    .mi-sentiment-episodes {font-size:.76rem;color:#b0c9bd;line-height:1.7}
+    .mi-sentiment-status {padding:12px 15px;border-radius:12px;color:#b6e9c7;background:rgba(0,224,144,.07);border:1px solid rgba(0,255,160,.14);font-size:.8rem;margin:15px 0}
+    .mi-sentiment-status[data-state=error] {color:#ffd1c8;background:#3b191631;border-color:#c6575399}
+    .mi-sentiment-status[data-state=warning] {color:#ffe69e;background:#30210761;border-color:#b58d386a}
+    .mi-sentiment-lower {display:grid;grid-template-columns:1.2fr .8fr;gap:15px}
+    .mi-sentiment-details h4 {margin:0 0 7px;color:var(--gold)}
+    .mi-sentiment-component-list {display:grid;gap:12px}
+    .mi-sentiment-component-top {display:flex;align-items:flex-start;justify-content:space-between;gap:12px;font-size:.77rem;color:#c2dbd1}
+    .mi-sentiment-component-top strong{color:#e6f8f2}
+    .mi-sentiment-component-top span{text-align:right;color:#b5d4c1}
+    .mi-sentiment-component-track{margin-top:6px;background:#102d2b;border-radius:99px;height:7px;overflow:hidden}
+    .mi-sentiment-component-fill{height:100%;border-radius:99px}
+    .mi-sentiment-recent-list{padding-left:21px;font-size:.79rem;color:#c4d5d3;line-height:1.7}
+    .mi-sentiment-recent-list li+li{margin-top:4px}
+    .mi-sentiment-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}
+    .mi-sentiment-primary,.mi-sentiment-secondary {
+      cursor:pointer;min-height:43px;padding:11px 16px;border-radius:99px;
+      font-family:inherit;font-size:.83rem;font-weight:850
+    }
+    .mi-sentiment-primary{background:linear-gradient(130deg,#34d399,#00c2b3);border:0;color:#06130d}
+    .mi-sentiment-secondary{background:rgba(0,0,0,.23);border:1px dashed #34d39966;color:#c6f8d8}
+    .mi-sentiment-credit{font-size:.73rem;color:#95b5a9;margin:16px 0 0;line-height:1.75}
+    .mi-sentiment-credit a{color:#9fd3c1;text-underline-offset:3px}
+    @media(max-width:810px){
+      .mi-sentiment-main,.mi-sentiment-lower{grid-template-columns:1fr}
+    }
+    @media(max-width:600px){
+      .mi-sentiment-cards{gap:7px}
+      .mi-sentiment-card{padding:11px 9px;border-radius:13px;min-width:0}
+      .mi-sentiment-card-label{font-size:.84rem}
+      .mi-sentiment-card-label small{font-size:.62rem}
+      .mi-sentiment-card>strong{font-size:1.7rem}
+      .mi-sentiment-card>span:not(.mi-sentiment-card-label){font-size:.69rem;line-height:1.3}
+      .mi-sentiment-card>small{font-size:.62rem;overflow-wrap:anywhere}
+      .mi-sentiment-current,.mi-sentiment-right,.mi-sentiment-details{padding:14px}
+      .mi-sentiment-controls{display:block}
+      .mi-sentiment-actions>*{flex:1 1 100%}
+    }
+
   </style>
 </head>
 <body>
@@ -557,17 +647,95 @@
         <div>
           <p class="eyebrow"><span class="seed" aria-hidden="true"></span>EXPLORE MORE MARKET DATA</p>
           <h2 id="mi-explorer-title">Crypto Market Explorer</h2>
-          <p>Switch between real provider-hosted charts, official CBBI readings and historical cycle references. No wallet connection needed.</p>
+          <p>Compare SUI, Bitcoin and overall crypto sentiment, then explore TradingView market caps, CBBI, on-chain valuation and historical cycle tools. No wallet connection needed.</p>
         </div>
       </div>
       <div class="mi-tabbar" role="tablist" aria-label="Crypto research views">
-        <button class="mi-tab" role="tab" id="mi-tab-market" data-mi-tab="market" aria-controls="mi-pane-market" aria-selected="true">Market Caps</button>
+        <button class="mi-tab" role="tab" id="mi-tab-sentiment" data-mi-tab="sentiment" aria-controls="mi-pane-sentiment" aria-selected="true">Fear &amp; Greed</button>
+        <button class="mi-tab" role="tab" id="mi-tab-market" data-mi-tab="market" aria-controls="mi-pane-market" aria-selected="false" tabindex="-1">Market Caps</button>
         <button class="mi-tab" role="tab" id="mi-tab-cbbi" data-mi-tab="cbbi" aria-controls="mi-pane-cbbi" aria-selected="false" tabindex="-1">CBBI</button>
         <button class="mi-tab" role="tab" id="mi-tab-onchain" data-mi-tab="onchain" aria-controls="mi-pane-onchain" aria-selected="false" tabindex="-1">On-Chain</button>
         <button class="mi-tab" role="tab" id="mi-tab-cycles" data-mi-tab="cycles" aria-controls="mi-pane-cycles" aria-selected="false" tabindex="-1">Cycle Tools</button>
       </div>
       <div class="mi-panels">
-        <section class="mi-pane" id="mi-pane-market" role="tabpanel" aria-labelledby="mi-tab-market">
+        <section class="mi-pane mi-sentiment-pane" id="mi-pane-sentiment" role="tabpanel" aria-labelledby="mi-tab-sentiment">
+          <h3>Crypto Fear &amp; Greed Index</h3>
+          <p class="mi-help">Explore SUI token sentiment first, then compare Bitcoin and the broader market—all calculated using the same CryptoKeyhole methodology. Values come from the live provider, not prefilled examples.</p>
+          <div class="mi-sentiment-cards" role="group" aria-label="Choose which sentiment index to explore">
+            <button type="button" class="mi-sentiment-card selected" id="mi-sentiment-card-sui" data-sentiment-asset="sui" aria-pressed="true">
+              <span class="mi-sentiment-card-label">SUI <small>TREE ecosystem</small></span>
+              <strong id="mi-sentiment-card-score-sui">—</strong>
+              <span id="mi-sentiment-card-label-sui">Awaiting official data</span>
+              <small id="mi-sentiment-card-date-sui">Not verified</small>
+            </button>
+            <button type="button" class="mi-sentiment-card" id="mi-sentiment-card-btc" data-sentiment-asset="btc" aria-pressed="false">
+              <span class="mi-sentiment-card-label">Bitcoin <small>BTC sentiment</small></span>
+              <strong id="mi-sentiment-card-score-btc">—</strong>
+              <span id="mi-sentiment-card-label-btc">Awaiting official data</span>
+              <small id="mi-sentiment-card-date-btc">Not verified</small>
+            </button>
+            <button type="button" class="mi-sentiment-card" id="mi-sentiment-card-market" data-sentiment-asset="market" aria-pressed="false">
+              <span class="mi-sentiment-card-label">Market <small>Broad crypto</small></span>
+              <strong id="mi-sentiment-card-score-market">—</strong>
+              <span id="mi-sentiment-card-label-market">Awaiting official data</span>
+              <small id="mi-sentiment-card-date-market">Not verified</small>
+            </button>
+          </div>
+          <div class="mi-sentiment-main">
+            <div class="mi-sentiment-current">
+              <div class="mi-sentiment-overline">SELECTED INDEX</div>
+              <h4 id="mi-sentiment-selected-name">SUI sentiment</h4>
+              <div class="mi-sentiment-score"><strong id="mi-sentiment-number">—</strong><span>/ 100</span></div>
+              <strong id="mi-sentiment-label" class="mi-sentiment-zone">Awaiting provider</strong>
+              <div class="mi-sentiment-scale" aria-label="Sentiment scale from extreme fear to extreme greed">
+                <div class="mi-sentiment-scale-marker" id="mi-sentiment-meter"></div>
+              </div>
+              <div class="mi-sentiment-scale-labels"><small>Extreme Fear</small><small>Extreme Greed</small></div>
+              <p id="mi-sentiment-asof" class="mi-small">No verified observation yet</p>
+              <p id="mi-sentiment-previous" class="mi-sentiment-delta">Yesterday: — · Seven days ago: —</p>
+              <p id="mi-sentiment-summary" class="mi-sentiment-summary">Loading official readings.</p>
+              <p id="mi-sentiment-spread" class="mi-small">Compare SUI and BTC after both indexes load.</p>
+            </div>
+            <div class="mi-sentiment-right">
+              <div class="mi-sentiment-controls">
+                <h4>Historical sentiment</h4>
+                <div class="mi-choices" role="group" aria-label="Choose Fear and Greed history timeframe">
+                  <button type="button" data-sentiment-range="7" aria-pressed="false">7D</button>
+                  <button type="button" data-sentiment-range="30" aria-pressed="true" class="selected">30D</button>
+                  <button type="button" data-sentiment-range="90" aria-pressed="false">90D</button>
+                  <button type="button" data-sentiment-range="365" aria-pressed="false">1Y</button>
+                </div>
+                <label class="mi-sentiment-ma"><input type="checkbox" id="mi-sentiment-ma"> 100-day moving average</label>
+              </div>
+              <div class="mi-sentiment-chart-frame">
+                <svg id="mi-sentiment-svg" viewBox="0 0 700 230" role="img" aria-label="Sourced Fear and Greed daily score history on a zero to one hundred scale"></svg>
+              </div>
+              <p class="mi-small" id="mi-sentiment-chart-meta">Historical data loads from CryptoKeyhole</p>
+              <p class="mi-sentiment-episodes" id="mi-sentiment-episodes">Loading historical distribution…</p>
+            </div>
+          </div>
+          <p class="mi-sentiment-status" id="mi-sentiment-status" role="status" aria-live="polite">Fetching official sentiment observations…</p>
+          <div class="mi-sentiment-lower">
+            <section aria-labelledby="mi-sentiment-breakdown-heading" class="mi-sentiment-details">
+              <h4 id="mi-sentiment-breakdown-heading">What is driving sentiment?</h4>
+              <p id="mi-sentiment-breakdown" class="mi-help">Component scores and weights supplied by the selected provider index.</p>
+              <div id="mi-sentiment-components" class="mi-sentiment-component-list"></div>
+            </section>
+            <section aria-labelledby="mi-sentiment-recent-heading" class="mi-sentiment-details">
+              <h4 id="mi-sentiment-recent-heading">Most recent daily readings</h4>
+              <ol id="mi-sentiment-recent" class="mi-sentiment-recent-list"></ol>
+              <p class="mi-help">Each day's index may be revised when CryptoKeyhole corrects its input history. An open UTC day remains provisional.</p>
+            </section>
+          </div>
+          <div class="mi-sentiment-actions">
+            <button type="button" id="mi-sentiment-refresh" class="mi-sentiment-primary">Refresh readings</button>
+            <button type="button" id="mi-sentiment-share" class="mi-sentiment-secondary">Download 1:1 social graphic</button>
+            <button type="button" id="mi-sentiment-copy" class="mi-sentiment-secondary">Copy summary</button>
+          </div>
+          <p class="mi-sentiment-credit">Data, methodology and hourly observations: <a id="mi-sentiment-source-link" href="https://cryptokeyhole.com/fear-and-greed-index/sui/" target="_blank" rel="noopener noreferrer">CryptoKeyhole</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>. The reading is the sentiment of the selected <strong>asset</strong>, not a measure of TREE investor sentiment. BTC, SUI and market readings may have different timestamp cutoffs. No investment signal is implied.</p>
+        </section>
+
+        <section class="mi-pane" id="mi-pane-market" role="tabpanel" aria-labelledby="mi-tab-market" hidden>
           <h3>Market Capitalization</h3>
           <p class="mi-help">Five TradingView indicators, loaded one at a time. Prices, axes, trading ranges and data timing come directly from TradingView.</p>
           <div class="mi-choices" role="group" aria-label="Choose crypto capitalization index">
@@ -708,6 +876,7 @@
   </footer>
 
   <script src="/market/bitcoin-rainbow/insights.js" defer></script>
+  <script src="/market/bitcoin-rainbow/sentiment.js" defer></script>
   <script>
     (() => {
       const toggle = document.getElementById('nav-toggle');
