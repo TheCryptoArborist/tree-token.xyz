@@ -68,3 +68,23 @@ complete inventory and verified result in `production/README.md` and the release
 record. A manual live browser check should confirm the actual external chart and
 current provider count; isolated CI deliberately does not claim external provider
 availability or chart interior verification.
+
+## Published verification
+
+- Locked production deployment: `6afd423531560084e7dd48e8`.
+- Published source commit: `e54531dfcb85cb712798f7e5890fb04017582d51`.
+- Canonical route: https://tree-token.xyz/dapp/#stats.
+- Full release record: `production/stats-market-release-20261118.json`.
+- Hosted result: 614 static paths; 611 prior paths unchanged; all 49 backend
+  package/provider/runtime records, five schedules and protected configuration
+  preserved. Only the two reviewed dapp files and one new stylesheet differ.
+- Candidate and canonical byte verification and all four isolated browser
+  viewport checks passed. The production-snapshot and existing STI/wallet
+  regression checks also passed before publication.
+- Manual canonical check confirmed actual external Noodles chart data, a
+  working seven-day/one-hour-interval view, and 606 on both market holder
+  displays. This is a dated observation of provider data, not a fixed count.
+
+The chart and holder source changes are live. Future releases must capture this
+new current deployment instead of rerunning this publisher against its older
+pinned baseline.
