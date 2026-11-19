@@ -1,7 +1,7 @@
 // Server-only transport. Never import this module into browser code.
 import { PilotError, pilotDatabaseError } from './pilot-errors.mjs';
 
-const RPCS = new Set(['arcade_growth_read_session_v1', 'arcade_challenge_pilot_load_config_v1', 'arcade_challenge_pilot_start_v1', 'arcade_challenge_pilot_load_attempt_v1', 'arcade_challenge_pilot_commit_move_v1']);
+const RPCS = new Set(['arcade_challenge_pilot_read_session_v1', 'arcade_challenge_pilot_auth_create_challenge_v1', 'arcade_challenge_pilot_auth_read_challenge_v1', 'arcade_challenge_pilot_auth_create_session_v1', 'arcade_challenge_pilot_auth_revoke_session_v1', 'arcade_challenge_pilot_load_config_v1', 'arcade_challenge_pilot_start_v1', 'arcade_challenge_pilot_load_attempt_v1', 'arcade_challenge_pilot_commit_move_v1']);
 const env = key => globalThis.Netlify?.env?.get(key) ?? process.env[key];
 
 export function createPilotRpc({ getEnv = env, fetchImpl = fetch } = {}) {

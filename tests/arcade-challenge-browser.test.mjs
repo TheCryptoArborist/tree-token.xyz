@@ -21,8 +21,7 @@ async function scenario(run, { width = 1440, fixtureOptions, beforePage, signedO
   page.on('request', request => {
     const url = new URL(request.url());
     if (url.pathname.startsWith('/api/') && !(
-      url.pathname === '/api/arcade-challenge-pilot' && ['configuration', 'start', 'status', 'move'].includes(url.searchParams.get('action')) ||
-      url.pathname === '/api/arcade-growth' && ['challenge', 'session'].includes(url.searchParams.get('action'))
+      url.pathname === '/api/arcade-challenge-pilot' && ['configuration', 'start', 'status', 'move', 'auth-challenge', 'auth-session', 'auth-logout'].includes(url.searchParams.get('action'))
     )) unexpectedActions.push(url.pathname + url.search);
   });
   await page.route('**/*', route => {
@@ -99,13 +98,45 @@ test('synthetic signed-out flow requires explicit wallet and message actions bef
   await phase(page, 'signed-out');
   await screenshotWidths(page, 'signed-out');
   assert.equal((await inspection()).attempts.length, 0);
+  const originalArcade = await page.evaluate(() => {
+    const key = 'tree-arcade:daily-growth:session:v1';
+    localStorage.setItem(key, 'untouched-other-Arcade-storage');
+    sessionStorage.setItem(key, 'untouched-tab-Arcade-storage');
+    return [localStorage.getItem(key), sessionStorage.getItem(key)];
+  });
   await action(page, 'sign-in').click();
   const wallet = page.getByRole('button', { name: /Local test wallet/ });
   if (await wallet.isVisible()) await wallet.click();
   await phase(page, 'ready');
-  assert.equal((await inspection()).attempts.length, 0, 'Signing in does not start the game.');
+  const signedIn = await inspection();
+  assert.equal(signedIn.attempts.length, 0, 'Signing in does not start the game.');
+  assert.equal(signedIn.arcadeSessions, 1, 'Free sign-in does not create an Arcade/NFTree session.');
+  assert.equal(signedIn.pilotSessions, 1);
+  const saved = await page.evaluate(() => ({
+    pilot: JSON.parse(sessionStorage.getItem('tree-arcade:challenge-pilot:session:v1')),
+    arcade: [localStorage.getItem('tree-arcade:daily-growth:session:v1'), sessionStorage.getItem('tree-arcade:daily-growth:session:v1')],
+  }));
+  assert.match(saved.pilot.token, /^pilot_[a-f0-9]{64}$/);
+  assert.equal(saved.pilot.sessionScope, 'challenge-pilot');
+  assert.deepEqual(saved.arcade, originalArcade, 'Both shared Arcade storage locations remain byte-for-byte unchanged.');
+  assert.match(await page.locator('#challenge-session-note').innerText(), /Free pilot sign-in active/);
   await start(page);
   assert.equal((await inspection()).attempts.length, 1);
+}, { signedOut: true }));
+
+test('free pilot sign-in reload preserves its original attempt and exact pending retry', () => scenario(async ({ page, control, inspection }) => {
+  await phase(page, 'signed-out'); await action(page, 'sign-in').click();
+  await page.getByRole('button', { name: /Local test wallet/ }).click(); await phase(page, 'ready');
+  await start(page); await control('drop-next-move-response');
+  await move(page, 19).click(); await phase(page, 'pending');
+  await page.reload(); await phase(page, 'playing');
+  const evidence = await inspection();
+  assert.equal(evidence.attempts.length, 1); assert.equal(evidence.requestCount, 1);
+  assert.equal(evidence.log.filter(row => row.action === 'auth-challenge').length, 1);
+  assert.equal(evidence.log.filter(row => row.action === 'auth-session').length, 1);
+  const moves = evidence.log.filter(row => row.action === 'move');
+  assert.equal(moves.length, 2); assert.deepEqual(moves[1], moves[0]);
+  assert.equal(evidence.arcadeSessions, 1); assert.equal(evidence.pilotSessions, 1);
 }, { signedOut: true }));
 
 test('same-session reload resumes the exact committed match and does not create a new attempt', () => scenario(async ({ page, inspection }) => {
@@ -192,8 +223,9 @@ test('revoked cached sign-in can be renewed without attempting to reuse its old 
   await page.waitForTimeout(1200);
   await action(page, 'sign-in').click(); await phase(page, 'session-changed');
   const evidence = await inspection();
-  assert.equal(evidence.log.filter(row => row.scope === 'synthetic-auth' && row.action === 'challenge').length, 1);
-  assert.equal(evidence.log.filter(row => row.scope === 'synthetic-auth' && row.action === 'session').length, 1);
+  assert.equal(evidence.log.filter(row => row.action === 'auth-challenge').length, 1);
+  assert.equal(evidence.log.filter(row => row.action === 'auth-session').length, 1);
+  assert.equal(evidence.arcadeSessions, 1); assert.equal(evidence.pilotSessions, 1);
   assert.equal(evidence.attempts.length, 1);
   await action(page, 'start').click(); await phase(page, 'playing');
   assert.equal((await inspection()).attempts.length, 2);

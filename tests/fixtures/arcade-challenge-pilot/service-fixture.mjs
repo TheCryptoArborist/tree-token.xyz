@@ -18,6 +18,11 @@ export const requestId = randomUUID;
 
 const RPC_FIELDS = {
   arcade_growth_read_session_v1: ['p_token_sha256', 'p_origin'],
+  arcade_challenge_pilot_read_session_v1: ['p_token_sha256', 'p_origin'],
+  arcade_challenge_pilot_auth_create_challenge_v1: ['p_challenge_id','p_wallet','p_origin','p_message','p_expires_at'],
+  arcade_challenge_pilot_auth_read_challenge_v1: ['p_challenge_id'],
+  arcade_challenge_pilot_auth_create_session_v1: ['p_challenge_id','p_wallet','p_origin','p_token_sha256','p_expires_at'],
+  arcade_challenge_pilot_auth_revoke_session_v1: ['p_token_sha256','p_origin'],
   arcade_challenge_pilot_load_config_v1: ['p_token_sha256', 'p_origin', 'p_pilot_id'],
   arcade_challenge_pilot_start_v1: ['p_token_sha256', 'p_origin', 'p_pilot_id', 'p_rules_hash', 'p_attempt_token_sha256', 'p_seed_hex', 'p_challenge_hash'],
   arcade_challenge_pilot_load_attempt_v1: ['p_token_sha256', 'p_origin', 'p_attempt_token_sha256', 'p_request_id'],
@@ -30,6 +35,7 @@ export async function createServiceFixture(options = {}) {
     await db.exec('create role anon; create role authenticated; create role service_role bypassrls;');
     await db.exec(fs.readFileSync(new URL('../arcade-monthly/growth.sql', import.meta.url), 'utf8'));
     await db.exec(fs.readFileSync(new URL('../../../supabase/migrations/20261118223908_arcade_challenge_pilot.sql', import.meta.url), 'utf8'));
+    await db.exec(fs.readFileSync(new URL('../../../supabase/migrations/20261119005653_arcade_challenge_pilot_auth.sql', import.meta.url), 'utf8'));
     const now = Date.now();
     const rules = makePilotRules({
       pilotId: options.pilotId ?? 'local-arborist-pilot', challengeDate: '2026-11-18',
@@ -48,6 +54,16 @@ export async function createServiceFixture(options = {}) {
       return { rawToken, tokenHash, wallet, origin, expiresAt: expiry };
     }
     const session = await addSession();
+
+    async function addPilotSession({ rawToken = 'pilot_' + hash(randomUUID()), wallet = WALLET, origin = ORIGIN, remainingMs = 3300000 } = {}) {
+      const id = randomUUID(), tokenHash = hash(rawToken), expiresAt = new Date(Date.now() + remainingMs).toISOString();
+      await rpc('arcade_challenge_pilot_auth_create_challenge_v1', { p_challenge_id:id,p_wallet:wallet,p_origin:origin,
+        p_message:'Synthetic local fixture challenge only. '.repeat(4),p_expires_at:new Date(Date.now()+240000).toISOString() });
+      const value = await rpc('arcade_challenge_pilot_auth_create_session_v1', {
+        p_challenge_id:id,p_wallet:wallet,p_origin:origin,p_token_sha256:tokenHash,p_expires_at:expiresAt,
+      });
+      return { rawToken,tokenHash,...value };
+    }
 
     async function insertPilot(pilotRules = rules, status = options.pilotStatus ?? 'enabled') {
       await db.query(`insert into private.arcade_challenge_pilot_configs(pilot_id,status,rules_hash,adapter_id,adapter_version,source_hash,config,starts_at,ends_at,max_attempt_seconds)
@@ -78,7 +94,7 @@ export async function createServiceFixture(options = {}) {
       entropyCount += 1;
       return entropyCount % 2 ? Buffer.from(hash('local-attempt-' + entropyCount), 'hex') : Buffer.from(WIN_SEED, 'hex');
     }
-    function createHandler(deps = {}) { return createChallengePilotHandler({ rpc, randomBytes: entropy, ...deps }); }
+    function createHandler(deps = {}) { return createChallengePilotHandler({ rpc, randomBytes: entropy, ...options.handlerDependencies, ...deps }); }
     const handler = createHandler();
 
     async function call(action, body, config = {}) {
@@ -98,7 +114,7 @@ export async function createServiceFixture(options = {}) {
       if (!['attempts', 'requests'].includes(table)) throw Error('Unknown test table.');
       return (await db.query(`select count(*)::int as n from private.arcade_challenge_pilot_${table}`)).rows[0].n;
     };
-    return { db, rules, rulesHash, session, calls, handler, rpc, createHandler, addSession, insertPilot, call, start, move, count, close: () => db.close() };
+    return { db, rules, rulesHash, session, calls, handler, rpc, createHandler, addSession, addPilotSession, insertPilot, call, start, move, count, close: () => db.close() };
   } catch (error) { await db.close(); throw error; }
 }
 

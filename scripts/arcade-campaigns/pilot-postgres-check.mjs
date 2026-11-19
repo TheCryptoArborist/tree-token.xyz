@@ -21,6 +21,7 @@ const quote = value => value === null ? 'null' : typeof value === 'number' ? Str
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 const RPC_FIELDS = {
   arcade_growth_read_session_v1: ['p_token_sha256', 'p_origin'],
+  arcade_challenge_pilot_read_session_v1: ['p_token_sha256', 'p_origin'],
   arcade_challenge_pilot_load_config_v1: ['p_token_sha256', 'p_origin', 'p_pilot_id'],
   arcade_challenge_pilot_start_v1: ['p_token_sha256', 'p_origin', 'p_pilot_id', 'p_rules_hash', 'p_attempt_token_sha256', 'p_seed_hex', 'p_challenge_hash'],
   arcade_challenge_pilot_load_attempt_v1: ['p_token_sha256', 'p_origin', 'p_attempt_token_sha256', 'p_request_id'],
@@ -114,6 +115,7 @@ export async function verifyPostgresPilot() {
     await psql('create role anon; create role authenticated; create role service_role bypassrls;');
     await psql(await fs.readFile(path.join(ROOT, 'tests/fixtures/arcade-monthly/growth.sql'), 'utf8'));
     await psql(await fs.readFile(path.join(ROOT, 'supabase/migrations/20261118223908_arcade_challenge_pilot.sql'), 'utf8'));
+    await psql(await fs.readFile(path.join(ROOT, 'supabase/migrations/20261119005653_arcade_challenge_pilot_auth.sql'), 'utf8'));
     await addSession();
     const rules = await addPilot('postgres-race-pilot');
 

@@ -6,6 +6,9 @@ export class PilotError extends Error {
 
 export function pilotDatabaseError(message) {
   const errors = [
+    ['challenge-auth-invalid-input', 'invalid-request', 'Provide a valid pilot sign-in request.', 400],
+    ['challenge-auth-rate-limit', 'rate-limited', 'Too many pilot sign-in requests. Please wait and try again.', 429],
+    ['challenge-auth-invalid-challenge', 'invalid-challenge', 'Request a fresh pilot sign-in message.', 403],
     ['invalid-session', 'invalid-session', 'Sign in to the Arcade again.', 401],
     ['challenge-not-found', 'pilot-not-found', 'This pilot is unavailable.', 404],
     ['challenge-not-open', 'pilot-not-open', 'This pilot is not open for play.', 409],

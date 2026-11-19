@@ -12,7 +12,9 @@ const PILOT_ID = 'arborist-trials-november-2026';
 const PAGE_PATH = '/play/challenge/';
 const PAGE_URL = ORIGIN + PAGE_PATH + '?pilot=' + PILOT_ID;
 const WALLET_NAME = 'TREE pilot operator test';
-const SESSION_KEY = 'tree-arcade:daily-growth:session:v1';
+const SESSION_KEY = 'tree-arcade:challenge-pilot:session:v1';
+const ARCADE_SESSION_KEY = 'tree-arcade:daily-growth:session:v1';
+const PILOT_TOKEN = /^pilot_[a-f0-9]{64}$/;
 const HEX = /^[a-f0-9]{64}$/;
 const UUID = /^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/;
 const MAX_API_REQUESTS = 30;
@@ -26,6 +28,33 @@ const check = (condition, code) => { if (!condition) throw new LiveCheckError(co
 const noPrizes = value => value?.mode === 'nonpaying-pilot' && value?.identityScope === 'wallet-session-only' && value.payable === false && value.prizeEligible === false && value.awardsEnabled === false;
 const exactKeys = (value, keys) => value && !Array.isArray(value) && typeof value === 'object' && Object.keys(value).length === keys.length && keys.every(key => Object.hasOwn(value,key));
 const safeFailure = error => error instanceof LiveCheckError ? error.code : error?.name === 'TimeoutError' ? 'browser-check-timeout' : 'unexpected-runtime-error';
+
+// Only known categorical codes may leave the process. Never copy a server
+// message, arbitrary error string, or other response field into evidence.
+export function summarizeAuthenticationFailure(value) {
+  const categories = {
+    'invalid-signature':'signature', 'signature-invalid':'signature',
+    'invalid-wallet-signature':'signature', 'wallet-signature-invalid':'signature',
+    'signature-verification-failed':'signature', 'unsupported-signature':'signature',
+    'verification-failed':'verification', 'wallet-verification-failed':'verification',
+    'invalid-challenge':'challenge', 'challenge-expired':'challenge',
+    'challenge-used':'challenge', 'challenge-consumed':'challenge',
+    'challenge-not-found':'challenge', 'invalid-nonce':'challenge',
+    'invalid-wallet':'wallet', 'wallet-mismatch':'wallet',
+    'nftree-required':'eligibility', 'ownership-unavailable':'eligibility-service',
+    'origin-not-allowed':'origin', 'invalid-origin':'origin',
+    'invalid-request':'request', 'method-not-allowed':'request',
+    'rate-limited':'rate-limit', 'too-many-requests':'rate-limit',
+    'service-unavailable':'service', 'verification-unavailable':'service',
+    'signature-verification-unavailable':'service', 'internal-error':'service',
+    'invalid-session':'session', 'unauthorized':'authentication', 'forbidden':'forbidden',
+  };
+  const raw = typeof value?.error === 'string' ? value.error : typeof value?.code === 'string' ? value.code : '';
+  const code = raw.length <= 80 ? raw.toLowerCase().replace(/^arcade-growth-/, '').replaceAll('_', '-') : '';
+  return Object.hasOwn(categories, code)
+    ? {code,category:categories[code]}
+    : {code:'unrecognized-or-missing',category:'unspecified'};
+}
 
 function registerOperatorWallet({ address, publicKey, walletName }) {
   // This provider lives only in the test browser. Its private key stays in Node.
@@ -79,6 +108,7 @@ async function run() {
   const browserModule = process.env.ARCADE_PILOT_BROWSER_MODULE;
   const {chromium} = await import(browserModule.startsWith('file:') ? browserModule : pathToFileURL(path.resolve(browserModule)).href);
   const {Ed25519Keypair} = await import('../../vendor/arcade-monthly/node_modules/@mysten/sui/dist/keypairs/ed25519/index.mjs');
+  const {verifyPersonalMessageSignature} = await import('../../vendor/arcade-monthly/node_modules/@mysten/sui/dist/verify/index.mjs');
   const draft = JSON.parse(await fs.readFile(path.join(ROOT,'data/arcade-challenge-pilot-november-2026.json'),'utf8'));
   check(HEX.test(draft.rulesHash || '') && noPrizes(draft.rules) && draft.rules.pilotId === PILOT_ID,'reviewed-no-prize-config-required');
 
@@ -120,7 +150,7 @@ async function run() {
     const allowedPath = url.origin === ORIGIN && (
       [PAGE_PATH,'/api/arcade-growth','/api/arcade-challenge-pilot','/styles/arcade-challenge.css','/assets/tree-token-logo-official.webp','/assets/arcade/arcade-growth-wallet.js'].includes(url.pathname) || /^\/scripts\/arcade-challenge(?:-client|-view)?\.mjs$/.test(url.pathname)
     );
-    return {method:request.method(),path:allowedPath ? url.pathname : url.origin === ORIGIN ? '[other-canonical-read]' : '[external-request]',action:['challenge','session','logout','configuration','start','status','move'].includes(url.searchParams.get('action')) ? url.searchParams.get('action') : null,status:null};
+    return {method:request.method(),path:allowedPath ? url.pathname : url.origin === ORIGIN ? '[other-canonical-read]' : '[external-request]',action:['auth-challenge','auth-session','auth-logout','challenge','session','logout','configuration','start','status','move'].includes(url.searchParams.get('action')) ? url.searchParams.get('action') : null,status:null};
   }
   function validateConfiguration(value) {
     check(value?.status === 'ok' && noPrizes(value) && value.pilotOpen === true,'live-pilot-not-open-with-no-prize-flags');
@@ -142,6 +172,7 @@ async function run() {
 
   try {
     browser = await chromium.launch({headless:true,executablePath:process.env.ARCADE_PILOT_CHROME_PATH || undefined,args:['--no-sandbox','--disable-dev-shm-usage']});
+    report.browser = {version:browser.version(),executableSource:process.env.ARCADE_PILOT_CHROME_PATH ? 'runner-browser' : 'playwright-managed'};
     context = await browser.newContext({viewport:{width:1440,height:1000},serviceWorkers:'block'});
     page = await context.newPage();
     page.setDefaultTimeout(20000);
@@ -160,6 +191,15 @@ async function run() {
       check(Buffer.from(bytes).equals(Buffer.from(challenge.message,'utf8')),'signing-bytes-differ-from-captured-server-challenge');
       signingCount += 1;
       const signed = await keypair.signPersonalMessage(bytes);
+      report.checks.generatedSignatureVerifiedLocally = false;
+      try {
+        const verified = await verifyPersonalMessageSignature(bytes,signed.signature,{address:walletAddress});
+        check(verified.toSuiAddress() === walletAddress && Buffer.from(signed.bytes,'base64').equals(Buffer.from(bytes)),'generated-personal-message-signature-invalid');
+      } catch {
+        const error = new LiveCheckError('generated-personal-message-signature-invalid');
+        rejectRun(error); throw error;
+      }
+      report.checks.generatedSignatureVerifiedLocally = true;
       signedSignature = signed.signature;
       return {bytes:signed.bytes,signature:signed.signature};
     });
@@ -178,18 +218,18 @@ async function run() {
         }
         apiCount += 1; apiTimes.push(Date.now());
         check(apiCount <= MAX_API_REQUESTS && apiTimes.filter(time => Date.now()-time < 60000).length <= MAX_API_REQUESTS,'api-request-budget-exceeded');
-        check(!halted || cleanupMode && url.pathname === '/api/arcade-growth' && action === 'logout','request-after-failed-gate-blocked');
+        check(!halted || cleanupMode && url.pathname === '/api/arcade-challenge-pilot' && action === 'auth-logout','request-after-failed-gate-blocked');
         check(request.frame() === page.mainFrame(),'api-request-from-unexpected-frame');
         let body = null;
-        if (url.pathname === '/api/arcade-growth') {
-          check(method === 'POST' && ['challenge','session','logout'].includes(action),'non-auth-growth-action-blocked');
+        if (url.pathname === '/api/arcade-challenge-pilot' && ['auth-challenge','auth-session','auth-logout'].includes(action)) {
+          check(method === 'POST','unexpected-pilot-auth-method');
           check([...url.searchParams.keys()].every(key => key === 'action'),'unexpected-auth-query-parameter');
           body = bodyOf(request);
-          if (action === 'challenge') {
+          if (action === 'auth-challenge') {
             check(!challenge && exactKeys(body,['wallet']) && body.wallet === walletAddress,'unexpected-auth-challenge-request');
-          } else if (action === 'session') {
+          } else if (action === 'auth-session') {
             check(sessionCount === 0 && signingCount === 1 && exactKeys(body,['wallet','challengeId','signature']) && body.wallet === walletAddress && body.challengeId === challenge?.challengeId && body.signature === signedSignature,'unexpected-auth-session-request');
-          } else check(cleanupMode && exactKeys(body,[]) && request.headers().authorization === 'Bearer '+sessionToken,'unexpected-logout-request');
+          } else check(cleanupMode && PILOT_TOKEN.test(sessionToken || '') && exactKeys(body,[]) && request.headers().authorization === 'Bearer '+sessionToken,'unexpected-logout-request');
         } else if (url.pathname === '/api/arcade-challenge-pilot') {
           check(authenticated && request.headers().authorization === 'Bearer '+sessionToken,'pilot-request-without-issued-operator-session');
           check(['configuration','start','status','move'].includes(action),'unexpected-pilot-action');
@@ -222,17 +262,26 @@ async function run() {
 
         const response = await route.fetch({maxRedirects:0,timeout:15000});
         const entry = requestIndex.get(request); if (entry) entry.status = response.status();
+        if (response.status() !== 200 && ['auth-challenge','auth-session','auth-logout'].includes(action)) {
+          let failure = null;
+          try {
+            const bytes = await response.body();
+            if (bytes.length <= 8192) failure = JSON.parse(bytes.toString('utf8'));
+          } catch { /* Non-JSON failures retain only their HTTP status. */ }
+          report.authenticationFailure = {action,httpStatus:response.status(),...summarizeAuthenticationFailure(failure)};
+        }
         check(response.status() === 200,'live-api-response-not-successful');
         const value = await response.json();
         check(value?.status === 'ok','live-api-result-not-successful');
-        if (url.pathname === '/api/arcade-growth' && action === 'challenge') {
+        if (action === 'auth-challenge') {
           const issued = value.challenge;
-          check(issued?.wallet === walletAddress && typeof issued.challengeId === 'string' && issued.challengeId.length <= 300 && typeof issued.message === 'string' && issued.message.length > 0 && Buffer.byteLength(issued.message,'utf8') <= 8192 && Number.isFinite(Date.parse(issued.expiresAt)) && Date.parse(issued.expiresAt) > Date.now(),'invalid-issued-auth-challenge');
+          check(noPrizes(value) && issued?.wallet === walletAddress && issued.origin === ORIGIN && issued.sessionScope === 'challenge-pilot' && UUID.test(issued.challengeId || '') && typeof issued.message === 'string' && issued.message.includes('Audience: tree-arcade:challenge-pilot:v1') && issued.message.includes('Origin: '+ORIGIN) && issued.message.includes('Wallet: '+walletAddress) && issued.message.includes('Nonce: '+issued.challengeId) && Buffer.byteLength(issued.message,'utf8') <= 8192 && Number.isFinite(Date.parse(issued.expiresAt)) && Date.parse(issued.expiresAt) > Date.now() && Date.parse(issued.expiresAt) <= Date.now()+300000,'invalid-issued-auth-challenge');
           challenge = issued;
-        } else if (url.pathname === '/api/arcade-growth' && action === 'session') {
-          check(value.session?.wallet === walletAddress && HEX.test(value.session.token || '') && Date.parse(value.session.expiresAt) > Date.now(),'invalid-real-session-response');
+        } else if (action === 'auth-session') {
+          check(noPrizes(value) && value.session?.wallet === walletAddress && value.session.origin === ORIGIN && value.session.sessionScope === 'challenge-pilot' && PILOT_TOKEN.test(value.session.token || '') && Date.parse(value.session.expiresAt) > Date.now() && Date.parse(value.session.expiresAt) <= Date.now()+3600000,'invalid-real-session-response');
           sessionCount += 1; sessionToken = value.session.token; authenticated = true;
-        } else if (url.pathname === '/api/arcade-growth' && action === 'logout') {
+        } else if (action === 'auth-logout') {
+          check(noPrizes(value) && value.signedOut === true && value.sessionScope === 'challenge-pilot','invalid-pilot-logout-response');
           authenticated = false; report.cleanup.sessionRevoked = true;
         } else if (action === 'configuration') validateConfiguration(value);
         else {
@@ -287,7 +336,12 @@ async function run() {
     await guard(page.getByRole('button',{name:WALLET_NAME,exact:true}).click());
     await phase('ready');
     check(signingCount === 1 && sessionCount === 1 && startCount === 0 && configuration,'explicit-real-personal-message-auth-failed');
-    report.checks.realAuthentication = 'Published wallet bridge, one explicit provider connection, one exact server-issued personal-message signature, and the real session endpoint.';
+    check(await page.evaluate(({key,wallet}) => {
+      const value = JSON.parse(sessionStorage.getItem(key) || localStorage.getItem(key) || 'null');
+      return value?.wallet === wallet && value.origin === location.origin && value.sessionScope === 'challenge-pilot' && /^pilot_[a-f0-9]{64}$/.test(value.token || '');
+    },{key:SESSION_KEY,wallet:walletAddress}),'isolated-pilot-session-not-stored');
+    report.checks.isolatedPilotSessionStored = true;
+    report.checks.realAuthentication = 'Published wallet bridge, one explicit provider connection, one exact server-issued personal-message signature, and the isolated pilot-only session endpoint.';
     report.checks.signInHasNoAttendanceOrGameMutation = true;
     await screenshot(1440,'ready');
 
@@ -319,6 +373,9 @@ async function run() {
     await screenshot(1440,'after-resume');
     await screenshot(390,'after-resume');
     check(browserErrorCount === 0 && failures.size === 0,'browser-or-network-policy-failed');
+    check(await page.evaluate(key => localStorage.getItem(key) === null && sessionStorage.getItem(key) === null,ARCADE_SESSION_KEY),'pilot-overwrote-shared-arcade-session');
+    report.checks.sharedArcadeSessionUntouched = true;
+    report.checks.noGrowthEndpointRequests = requestRecords.every(record => record.path !== '/api/arcade-growth');
     report.checks.noUnrelatedWrites = true;
     report.checks.noFundedOrTransactionFeatures = true;
     report.checks.finalVersion = latestState.version;
@@ -329,18 +386,16 @@ async function run() {
     failures.add(safeFailure(error));
     report.passed = false;
   } finally {
-    // Revoke only the real session created by this test; never use an injected
-    // bearer or another player's storage. The one attempt expires naturally.
+    // Revoke only the real session issued to this test's signed challenge, even
+    // if browser storage failed. The one attempt expires naturally.
     if (authenticated && page && !page.isClosed()) {
       cleanupMode = true;
       try {
-        const result = await page.evaluate(async({sessionKey,expectedWallet}) => {
-          const raw = localStorage.getItem(sessionKey) || sessionStorage.getItem(sessionKey);
-          const session = JSON.parse(raw || 'null');
-          if (!session || session.wallet !== expectedWallet || !/^[a-f0-9]{64}$/.test(session.token || '')) return false;
-          const response = await fetch('/api/arcade-growth?action=logout',{method:'POST',cache:'no-store',credentials:'omit',redirect:'error',headers:{'Content-Type':'application/json',Authorization:'Bearer '+session.token},body:'{}'});
+        const result = await page.evaluate(async({token}) => {
+          if (!/^pilot_[a-f0-9]{64}$/.test(token || '')) return false;
+          const response = await fetch('/api/arcade-challenge-pilot?action=auth-logout',{method:'POST',cache:'no-store',credentials:'omit',redirect:'error',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:'{}'});
           return response.ok;
-        },{sessionKey:SESSION_KEY,expectedWallet:walletAddress});
+        },{token:sessionToken});
         if (!result || !report.cleanup.sessionRevoked) { failures.add('operator-session-cleanup-failed'); report.passed = false; }
       } catch { failures.add('operator-session-cleanup-failed'); report.passed = false; }
     }
@@ -349,7 +404,7 @@ async function run() {
     keypair = null;
     report.completedAt = new Date().toISOString();
     report.passed = report.passed && failures.size === 0;
-    report.counts = {apiRequests:apiCount,explicitSignatures:signingCount,realSessions:sessionCount,attemptStarts:startCount,distinctMoves:distinctMoves.size,browserErrors:browserErrorCount};
+    report.counts = {apiRequests:apiCount,growthEndpointRequests:requestRecords.filter(record => record.path === '/api/arcade-growth').length,explicitSignatures:signingCount,realSessions:sessionCount,attemptStarts:startCount,distinctMoves:distinctMoves.size,browserErrors:browserErrorCount};
     report.failures = [...failures];
     report.requests = requestRecords;
     const encoded = JSON.stringify(report,null,2) + '\n';

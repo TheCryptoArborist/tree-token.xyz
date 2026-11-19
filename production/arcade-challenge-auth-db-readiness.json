@@ -1,0 +1,422 @@
+{
+  "schemaVersion": 1,
+  "projectId": "lehswszuekjqottolmsf",
+  "sourceMigration": "supabase/migrations/20261119005653_arcade_challenge_pilot_auth.sql",
+  "sourceMigrationSHA256": "e0d0ab5165afe09b2632d2eb347909c64bc19563e82cc5d78c8911d8f403fbe3",
+  "appliedMigration": {
+    "name": "arcade_challenge_pilot_auth",
+    "version": "20261119010740"
+  },
+  "verifiedAt": "2026-11-19T01:08:07.870375+00:00",
+  "exactDefinitionMatch": true,
+  "functionCount": 20,
+  "rpcDefinitions": [
+    {
+      "name": "arcade_challenge_pilot_auth_create_challenge_v1",
+      "sha256": "b8158cb98d109bcc5dc8ad7ca6f9dd864a4e83d119023975c0c7c3e9c61c5038",
+      "securityDefiner": false,
+      "searchPath": "",
+      "executeRoles": [
+        "postgres",
+        "service_role"
+      ],
+      "deniedRoles": [
+        "PUBLIC",
+        "anon",
+        "authenticated"
+      ]
+    },
+    {
+      "name": "arcade_challenge_pilot_auth_create_session_v1",
+      "sha256": "57dff2f7da1ae9f8e150aebf171980a06a6ce6cadffd8105a59dd2a9cf2a0beb",
+      "securityDefiner": false,
+      "searchPath": "",
+      "executeRoles": [
+        "postgres",
+        "service_role"
+      ],
+      "deniedRoles": [
+        "PUBLIC",
+        "anon",
+        "authenticated"
+      ]
+    },
+    {
+      "name": "arcade_challenge_pilot_auth_read_challenge_v1",
+      "sha256": "445fe29dd1f379de524d97984a87f5f79f2d03761a8bd18b9b90c39b160acc72",
+      "securityDefiner": false,
+      "searchPath": "",
+      "executeRoles": [
+        "postgres",
+        "service_role"
+      ],
+      "deniedRoles": [
+        "PUBLIC",
+        "anon",
+        "authenticated"
+      ]
+    },
+    {
+      "name": "arcade_challenge_pilot_auth_revoke_session_v1",
+      "sha256": "2df1cd2beb7e675648e054b77b13a83ef13f64850099f25309104609a1f539d2",
+      "securityDefiner": false,
+      "searchPath": "",
+      "executeRoles": [
+        "postgres",
+        "service_role"
+      ],
+      "deniedRoles": [
+        "PUBLIC",
+        "anon",
+        "authenticated"
+      ]
+    },
+    {
+      "name": "arcade_challenge_pilot_commit_move_v1",
+      "sha256": "9ee7dce4e0884463f584e357b12a8c263d8c9001927ac8aeadc19979d6b16bef",
+      "securityDefiner": false,
+      "searchPath": "",
+      "executeRoles": [
+        "postgres",
+        "service_role"
+      ],
+      "deniedRoles": [
+        "PUBLIC",
+        "anon",
+        "authenticated"
+      ]
+    },
+    {
+      "name": "arcade_challenge_pilot_load_attempt_v1",
+      "sha256": "d47d7d4d5cf8d2c57088b03b8550e541d7ee54e42c59e7746c868e0f483f5630",
+      "securityDefiner": false,
+      "searchPath": "",
+      "executeRoles": [
+        "postgres",
+        "service_role"
+      ],
+      "deniedRoles": [
+        "PUBLIC",
+        "anon",
+        "authenticated"
+      ]
+    },
+    {
+      "name": "arcade_challenge_pilot_load_config_v1",
+      "sha256": "dbf4dc5eab8f53cb742846df7947df56740286f094f60bf3356796e26cd264e7",
+      "securityDefiner": false,
+      "searchPath": "",
+      "executeRoles": [
+        "postgres",
+        "service_role"
+      ],
+      "deniedRoles": [
+        "PUBLIC",
+        "anon",
+        "authenticated"
+      ]
+    },
+    {
+      "name": "arcade_challenge_pilot_read_session_v1",
+      "sha256": "2c902385e4a17a2ace88efdcd40e96445b8492e43c5fe352459b2438681de37c",
+      "securityDefiner": false,
+      "searchPath": "",
+      "executeRoles": [
+        "postgres",
+        "service_role"
+      ],
+      "deniedRoles": [
+        "PUBLIC",
+        "anon",
+        "authenticated"
+      ]
+    },
+    {
+      "name": "arcade_challenge_pilot_start_v1",
+      "sha256": "9bda66d2d796f6a40d72268d3e2d658f08b4b2f064faba9c1980ebc8ee0539ec",
+      "securityDefiner": false,
+      "searchPath": "",
+      "executeRoles": [
+        "postgres",
+        "service_role"
+      ],
+      "deniedRoles": [
+        "PUBLIC",
+        "anon",
+        "authenticated"
+      ]
+    }
+  ],
+  "allFunctionDefinitions": [
+    {
+      "schema": "private",
+      "name": "arcade_challenge_pilot_attempt_guard_v1",
+      "sha256": "1ecacc6486c595fbdde98513dfc4b0809a4d95528567c148ce502bcf40cce1ef",
+      "privilegesSHA256": "4e3c97e3e2904d509f85cfcfa24f545cfe04d30b0795bfb2ad23e4901c56d8d4"
+    },
+    {
+      "schema": "private",
+      "name": "arcade_challenge_pilot_attempt_json_v1",
+      "sha256": "e31c5b6cde118e96c63d87b9b98c01951def768c9e0b4f13690dab6eb55a258c",
+      "privilegesSHA256": "d7dba074a2a985f918d718efdfccd82872358abbb50aff02a6d4bc9a0f7d4238"
+    },
+    {
+      "schema": "private",
+      "name": "arcade_challenge_pilot_auth_challenge_guard_v1",
+      "sha256": "24df7a0300af344bf958c26f83bc06fdd3636f2301bd422d225bcc5954ac1f80",
+      "privilegesSHA256": "4e3c97e3e2904d509f85cfcfa24f545cfe04d30b0795bfb2ad23e4901c56d8d4"
+    },
+    {
+      "schema": "private",
+      "name": "arcade_challenge_pilot_auth_session_guard_v1",
+      "sha256": "5f664b89039ae9b8d35303edcb433fe5173562de2834d3bc75bdb3f217fe0b76",
+      "privilegesSHA256": "4e3c97e3e2904d509f85cfcfa24f545cfe04d30b0795bfb2ad23e4901c56d8d4"
+    },
+    {
+      "schema": "private",
+      "name": "arcade_challenge_pilot_binding_guard_v1",
+      "sha256": "07cb6c08b3c1462837d67050916fc9bfa43b73603e3167ced1f48c77bab24ec3",
+      "privilegesSHA256": "4e3c97e3e2904d509f85cfcfa24f545cfe04d30b0795bfb2ad23e4901c56d8d4"
+    },
+    {
+      "schema": "private",
+      "name": "arcade_challenge_pilot_config_guard_v1",
+      "sha256": "50b065e27fbc375f1afa0e1e160fd09e28967dd77d629ac6dc4016f3a3595412",
+      "privilegesSHA256": "4e3c97e3e2904d509f85cfcfa24f545cfe04d30b0795bfb2ad23e4901c56d8d4"
+    },
+    {
+      "schema": "private",
+      "name": "arcade_challenge_pilot_request_guard_v1",
+      "sha256": "c7d51a579594fa2fa49cbe55ac49b14401a82c52705e87a0cc91fa2863110d48",
+      "privilegesSHA256": "4e3c97e3e2904d509f85cfcfa24f545cfe04d30b0795bfb2ad23e4901c56d8d4"
+    },
+    {
+      "schema": "private",
+      "name": "arcade_challenge_pilot_require_session_v1",
+      "sha256": "32c27238c869199492bf8ee36c97312534f65a1071c12229d43dbbea2bb82333",
+      "privilegesSHA256": "d7dba074a2a985f918d718efdfccd82872358abbb50aff02a6d4bc9a0f7d4238"
+    },
+    {
+      "schema": "private",
+      "name": "arcade_challenge_pilot_require_session_v2",
+      "sha256": "0b1981898e107c01d8256fd4675f37aa4ea70d8d8bc0635b8bb303798128cb68",
+      "privilegesSHA256": "d7dba074a2a985f918d718efdfccd82872358abbb50aff02a6d4bc9a0f7d4238"
+    },
+    {
+      "schema": "private",
+      "name": "arcade_challenge_pilot_safe_json_v1",
+      "sha256": "758cd9ecda6c6ab0830e7e24a05bd1f687db2bfdb5f78beb8d9124123c2245a5",
+      "privilegesSHA256": "d7dba074a2a985f918d718efdfccd82872358abbb50aff02a6d4bc9a0f7d4238"
+    },
+    {
+      "schema": "private",
+      "name": "arcade_challenge_pilot_utc_v1",
+      "sha256": "c2c504bb185af8cac5e31744228c5c67f9cd2057823e70f0df07b893de63e77c",
+      "privilegesSHA256": "d7dba074a2a985f918d718efdfccd82872358abbb50aff02a6d4bc9a0f7d4238"
+    },
+    {
+      "schema": "public",
+      "name": "arcade_challenge_pilot_auth_create_challenge_v1",
+      "sha256": "b8158cb98d109bcc5dc8ad7ca6f9dd864a4e83d119023975c0c7c3e9c61c5038",
+      "privilegesSHA256": "d7dba074a2a985f918d718efdfccd82872358abbb50aff02a6d4bc9a0f7d4238"
+    },
+    {
+      "schema": "public",
+      "name": "arcade_challenge_pilot_auth_create_session_v1",
+      "sha256": "57dff2f7da1ae9f8e150aebf171980a06a6ce6cadffd8105a59dd2a9cf2a0beb",
+      "privilegesSHA256": "d7dba074a2a985f918d718efdfccd82872358abbb50aff02a6d4bc9a0f7d4238"
+    },
+    {
+      "schema": "public",
+      "name": "arcade_challenge_pilot_auth_read_challenge_v1",
+      "sha256": "445fe29dd1f379de524d97984a87f5f79f2d03761a8bd18b9b90c39b160acc72",
+      "privilegesSHA256": "d7dba074a2a985f918d718efdfccd82872358abbb50aff02a6d4bc9a0f7d4238"
+    },
+    {
+      "schema": "public",
+      "name": "arcade_challenge_pilot_auth_revoke_session_v1",
+      "sha256": "2df1cd2beb7e675648e054b77b13a83ef13f64850099f25309104609a1f539d2",
+      "privilegesSHA256": "d7dba074a2a985f918d718efdfccd82872358abbb50aff02a6d4bc9a0f7d4238"
+    },
+    {
+      "schema": "public",
+      "name": "arcade_challenge_pilot_commit_move_v1",
+      "sha256": "9ee7dce4e0884463f584e357b12a8c263d8c9001927ac8aeadc19979d6b16bef",
+      "privilegesSHA256": "d7dba074a2a985f918d718efdfccd82872358abbb50aff02a6d4bc9a0f7d4238"
+    },
+    {
+      "schema": "public",
+      "name": "arcade_challenge_pilot_load_attempt_v1",
+      "sha256": "d47d7d4d5cf8d2c57088b03b8550e541d7ee54e42c59e7746c868e0f483f5630",
+      "privilegesSHA256": "d7dba074a2a985f918d718efdfccd82872358abbb50aff02a6d4bc9a0f7d4238"
+    },
+    {
+      "schema": "public",
+      "name": "arcade_challenge_pilot_load_config_v1",
+      "sha256": "dbf4dc5eab8f53cb742846df7947df56740286f094f60bf3356796e26cd264e7",
+      "privilegesSHA256": "d7dba074a2a985f918d718efdfccd82872358abbb50aff02a6d4bc9a0f7d4238"
+    },
+    {
+      "schema": "public",
+      "name": "arcade_challenge_pilot_read_session_v1",
+      "sha256": "2c902385e4a17a2ace88efdcd40e96445b8492e43c5fe352459b2438681de37c",
+      "privilegesSHA256": "d7dba074a2a985f918d718efdfccd82872358abbb50aff02a6d4bc9a0f7d4238"
+    },
+    {
+      "schema": "public",
+      "name": "arcade_challenge_pilot_start_v1",
+      "sha256": "9bda66d2d796f6a40d72268d3e2d658f08b4b2f064faba9c1980ebc8ee0539ec",
+      "privilegesSHA256": "d7dba074a2a985f918d718efdfccd82872358abbb50aff02a6d4bc9a0f7d4238"
+    }
+  ],
+  "tables": [
+    {
+      "schema": "private",
+      "name": "arcade_challenge_pilot_attempts",
+      "rls": true,
+      "browserAccess": false,
+      "browserColumnAccess": false
+    },
+    {
+      "schema": "private",
+      "name": "arcade_challenge_pilot_configs",
+      "rls": true,
+      "browserAccess": false,
+      "browserColumnAccess": false
+    },
+    {
+      "schema": "private",
+      "name": "arcade_challenge_pilot_requests",
+      "rls": true,
+      "browserAccess": false,
+      "browserColumnAccess": false
+    },
+    {
+      "schema": "private",
+      "name": "arcade_challenge_pilot_session_bindings",
+      "rls": true,
+      "browserAccess": false,
+      "browserColumnAccess": false
+    },
+    {
+      "schema": "private",
+      "name": "arcade_challenge_pilot_sessions",
+      "rls": true,
+      "browserAccess": false,
+      "browserColumnAccess": false
+    },
+    {
+      "schema": "private",
+      "name": "arcade_challenge_pilot_wallet_challenges",
+      "rls": true,
+      "browserAccess": false,
+      "browserColumnAccess": false
+    }
+  ],
+  "protectedArcadeDefinitions": [
+    {
+      "schema": "private",
+      "name": "arcade_growth_require_session_v1",
+      "beforeDefinitionSHA256": "87ac805e54f37f6777cb29a134104484b1e721a6e0de0ad950b88bc9f9df065f",
+      "afterDefinitionSHA256": "87ac805e54f37f6777cb29a134104484b1e721a6e0de0ad950b88bc9f9df065f",
+      "beforePrivilegesSHA256": "d7dba074a2a985f918d718efdfccd82872358abbb50aff02a6d4bc9a0f7d4238",
+      "afterPrivilegesSHA256": "d7dba074a2a985f918d718efdfccd82872358abbb50aff02a6d4bc9a0f7d4238"
+    },
+    {
+      "schema": "public",
+      "name": "arcade_growth_create_challenge_v1",
+      "beforeDefinitionSHA256": "d32ca1b145907235d70ec04e5fc615078329154e90d2ed1b089c6e724b26074b",
+      "afterDefinitionSHA256": "d32ca1b145907235d70ec04e5fc615078329154e90d2ed1b089c6e724b26074b",
+      "beforePrivilegesSHA256": "d7dba074a2a985f918d718efdfccd82872358abbb50aff02a6d4bc9a0f7d4238",
+      "afterPrivilegesSHA256": "d7dba074a2a985f918d718efdfccd82872358abbb50aff02a6d4bc9a0f7d4238"
+    },
+    {
+      "schema": "public",
+      "name": "arcade_growth_create_session_v1",
+      "beforeDefinitionSHA256": "7d064e3e21c265e3ef1a52075b69a31925b6293830ec895748aa4691e6cd42a8",
+      "afterDefinitionSHA256": "7d064e3e21c265e3ef1a52075b69a31925b6293830ec895748aa4691e6cd42a8",
+      "beforePrivilegesSHA256": "d7dba074a2a985f918d718efdfccd82872358abbb50aff02a6d4bc9a0f7d4238",
+      "afterPrivilegesSHA256": "d7dba074a2a985f918d718efdfccd82872358abbb50aff02a6d4bc9a0f7d4238"
+    },
+    {
+      "schema": "public",
+      "name": "arcade_growth_read_challenge_v1",
+      "beforeDefinitionSHA256": "d71d565283ae7e81cab5976d24b01c036b9c47e2a21e2913a198fc873f18f681",
+      "afterDefinitionSHA256": "d71d565283ae7e81cab5976d24b01c036b9c47e2a21e2913a198fc873f18f681",
+      "beforePrivilegesSHA256": "d7dba074a2a985f918d718efdfccd82872358abbb50aff02a6d4bc9a0f7d4238",
+      "afterPrivilegesSHA256": "d7dba074a2a985f918d718efdfccd82872358abbb50aff02a6d4bc9a0f7d4238"
+    },
+    {
+      "schema": "public",
+      "name": "arcade_growth_read_session_v1",
+      "beforeDefinitionSHA256": "6ca70012cdcb50b839a52d883a85c3a1857f2f69b943f552e3800051bffb26d0",
+      "afterDefinitionSHA256": "6ca70012cdcb50b839a52d883a85c3a1857f2f69b943f552e3800051bffb26d0",
+      "beforePrivilegesSHA256": "d7dba074a2a985f918d718efdfccd82872358abbb50aff02a6d4bc9a0f7d4238",
+      "afterPrivilegesSHA256": "d7dba074a2a985f918d718efdfccd82872358abbb50aff02a6d4bc9a0f7d4238"
+    },
+    {
+      "schema": "public",
+      "name": "arcade_growth_revoke_session_v1",
+      "beforeDefinitionSHA256": "55ff0beb8c3b1f45e7779c3bb333ee81343b54f7c1f7f3191b19fee6e320cdcd",
+      "afterDefinitionSHA256": "55ff0beb8c3b1f45e7779c3bb333ee81343b54f7c1f7f3191b19fee6e320cdcd",
+      "beforePrivilegesSHA256": "d7dba074a2a985f918d718efdfccd82872358abbb50aff02a6d4bc9a0f7d4238",
+      "afterPrivilegesSHA256": "d7dba074a2a985f918d718efdfccd82872358abbb50aff02a6d4bc9a0f7d4238"
+    }
+  ],
+  "isolation": {
+    "arcadeSessionWrites": false,
+    "pilotSessionHashOverlapCount": 0,
+    "legacyAttemptsPreserved": true,
+    "legacyAttemptCount": 0,
+    "legacyBindingsCovered": 0,
+    "unboundAttempts": 0,
+    "legacyAttemptFingerprintBefore": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "legacyAttemptFingerprintAfter": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "arcadeSessionFingerprintBefore": "69bd22f6efd00e4c01214c8b3bb450c06be4a3e7bc87c20827aa22fd0719f3b4",
+    "arcadeSessionFingerprintAfter": "69bd22f6efd00e4c01214c8b3bb450c06be4a3e7bc87c20827aa22fd0719f3b4",
+    "pilotSessionCountAtVerification": 0,
+    "pilotChallengeCountAtVerification": 0
+  },
+  "pilot": {
+    "pilotId": "arborist-trials-november-2026",
+    "status": "enabled",
+    "rulesHash": "ef07c5212301565b10faffc1e8fb97347fad522c6dc3e3f15bdf58d12b3c9b2d",
+    "rules": {
+      "game": {
+        "id": "arborist-trials",
+        "ruleset": "portable-v1-four-card",
+        "version": "campaign-pilot-4a27b3ac-v1",
+        "sourceHash": "9623279e03ddab211d51e26f89040afc0b8aee4ff86fc19af53243096215ca00"
+      },
+      "mode": "nonpaying-pilot",
+      "access": {
+        "entry": "free",
+        "standardCards": 4,
+        "paidAdvantages": "forbidden",
+        "purchaseRequired": false
+      },
+      "window": {
+        "endsAt": "2026-12-01T00:00:00.000Z",
+        "startsAt": "2026-11-19T00:00:00.000Z"
+      },
+      "adapter": {
+        "id": "arborist-trials-portable-four-card",
+        "version": "1.0.0"
+      },
+      "payable": false,
+      "pilotId": "arborist-trials-november-2026",
+      "objective": {
+        "metric": "wins",
+        "operator": "eq",
+        "targetUnits": "1"
+      },
+      "awardsEnabled": false,
+      "challengeDate": "2026-11-18",
+      "identityScope": "wallet-session-only",
+      "prizeEligible": false,
+      "schemaVersion": 1,
+      "maxAttemptSeconds": 900
+    }
+  },
+  "verificationMethod": "Read-only hosted definitions and privileges compared to the exact locally applied migration; protected Arcade definitions, grants and session records compared to the captured live before-state. No operator sessions or attempts inserted by this verification."
+}

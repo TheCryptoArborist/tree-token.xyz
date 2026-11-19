@@ -1,6 +1,7 @@
 // Browser transport and recovery for the isolated no-prize challenge.
 // Game calculations and legal moves belong to the service, never this client.
 const HEX = /^[a-f0-9]{64}$/;
+const PILOT_TOKEN = /^pilot_[a-f0-9]{64}$/;
 const ADDRESS = /^0x[a-f0-9]{64}$/;
 const UUID = /^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/;
 const PILOT = /^[a-z0-9][a-z0-9-]{5,79}$/;
@@ -11,7 +12,15 @@ const fault = (code, message, status = 0) => Object.assign(new Error(message), {
 const badResponse = () => fault('invalid-response', 'The challenge returned an incomplete response. Refresh to recover your saved attempt.');
 
 export function validArcadeSession(value, now = Date.now()) {
-  return value?.version === 1 && HEX.test(value.token || '') && ADDRESS.test(value.wallet || '') && validTime(value.expiresAt) && Date.parse(value.expiresAt) > now;
+  return value?.version === 1 && HEX.test(value.token || '') && (!value.sessionScope || value.sessionScope === 'arcade') && ADDRESS.test(value.wallet || '') && validTime(value.expiresAt) && Date.parse(value.expiresAt) > now;
+}
+
+export function validPilotSession(value, now = Date.now(), origin) {
+  if (value?.version !== 1 || !PILOT_TOKEN.test(value.token || '') || value.sessionScope !== 'challenge-pilot' || !ADDRESS.test(value.wallet || '') || !validTime(value.expiresAt) || Date.parse(value.expiresAt) <= now || typeof value.origin !== 'string') return false;
+  try {
+    const parsed = new URL(value.origin);
+    return ['https:', 'http:'].includes(parsed.protocol) && parsed.origin === value.origin && (!origin || value.origin === origin);
+  } catch { return false; }
 }
 
 export function validatePilotConfiguration(value, pilotId) {
@@ -45,7 +54,7 @@ export function validatePilotState(value, pilotId, attemptId = null) {
 }
 
 /** Storage contains only this tab's attempt and a hash of its original session. */
-export function createPilotClient({ fetchImpl = globalThis.fetch?.bind(globalThis), storage, now = Date.now, cryptoImpl = globalThis.crypto, pilotId, onChange = () => {}, requestTimeoutMs = 15000 } = {}) {
+export function createPilotClient({ fetchImpl = globalThis.fetch?.bind(globalThis), storage, now = Date.now, cryptoImpl = globalThis.crypto, pilotId, origin, onChange = () => {}, requestTimeoutMs = 15000 } = {}) {
   if (!PILOT.test(pilotId || '')) throw Error('Choose a valid pilot ID.');
   const key = 'tree-arcade:challenge-pilot:v1:' + pilotId;
   let disposed = false, generation = 0, session = null, binding = null, record = null, saved = null, offset = 0;
@@ -87,7 +96,7 @@ export function createPilotClient({ fetchImpl = globalThis.fetch?.bind(globalThi
     if (disposed) return;
     if (session && Date.parse(session.expiresAt) <= now() + offset) {
       generation += 1; requests.forEach(controller => controller.abort()); session = null; binding = null;
-      update({ session: null, phase: 'signed-out', busy: false, notice: 'Your Arcade sign-in expired. Sign in again to start a new attempt; an old attempt stays bound to its original session.', noticeKind: 'info' });
+      update({ session: null, phase: 'signed-out', busy: false, notice: 'Your sign-in expired. Sign in to the free pilot again to start a new attempt; an old attempt stays bound to its original session.', noticeKind: 'info' });
       return;
     }
     const remainingSeconds = state.attempt ? Math.max(0, Math.ceil((Date.parse(state.attempt.expiresAt) - now() - offset) / 1000)) : null;
@@ -95,14 +104,14 @@ export function createPilotClient({ fetchImpl = globalThis.fetch?.bind(globalThi
     update({ remainingSeconds, ...(expired ? { phase: 'expired', notice: 'This attempt’s time has ended. You can start another while the pilot is open.', noticeKind: 'info' } : {}) });
   }
   async function request(action, body, ticket, { sync = true } = {}) {
-    if (!session || ticket !== generation) throw fault('session-changed', 'Your Arcade session changed.');
+    if (!session || ticket !== generation) throw fault('session-changed', 'Your sign-in session changed.');
     const controller = new AbortController(), started = now(); requests.add(controller);
     const timer = setTimeout(() => controller.abort(), requestTimeoutMs);
     try {
       const query = new URLSearchParams({ action, ...(action === 'configuration' ? { pilotId } : {}) });
       const response = await fetchImpl('/api/arcade-challenge-pilot?' + query, { method: body ? 'POST' : 'GET', cache: 'no-store', credentials: 'omit', redirect: 'error', headers: { Authorization: 'Bearer ' + session.token, ...(body ? { 'Content-Type': 'application/json' } : {}) }, ...(body ? { body: JSON.stringify(body) } : {}), signal: controller.signal });
       const value = await response.json();
-      if (ticket !== generation || disposed) throw fault('session-changed', 'Your Arcade session changed.');
+      if (ticket !== generation || disposed) throw fault('session-changed', 'Your sign-in session changed.');
       if (!response.ok || value.status !== 'ok') throw fault(typeof value.error === 'string' ? value.error : 'service-unavailable', typeof value.message === 'string' ? value.message : 'The challenge is temporarily unavailable.', response.status);
       if (sync) syncClock(value.serverNow, started);
       return value;
@@ -115,7 +124,7 @@ export function createPilotClient({ fetchImpl = globalThis.fetch?.bind(globalThi
     if (ticket !== generation || disposed) return;
     if (error.code === 'invalid-session') {
       session = null; binding = null;
-      update({ session: null, phase: 'signed-out', notice: 'Your Arcade sign-in is no longer valid. Sign in again to start a new attempt.', noticeKind: 'info' });
+      update({ session: null, phase: 'signed-out', notice: 'Your sign-in is no longer valid. Sign in to the free pilot again to start a new attempt.', noticeKind: 'info' });
     } else if (error.code === 'pilot-not-found') {
       update({ phase: 'closed', notice: 'This test challenge is not available yet. Check back from Campaigns.', noticeKind: 'info' });
     } else {
@@ -140,9 +149,9 @@ export function createPilotClient({ fetchImpl = globalThis.fetch?.bind(globalThi
   async function setSession(value) {
     const ticket = ++generation;
     requests.forEach(controller => controller.abort());
-    session = validArcadeSession(value, now()) ? { ...value } : null;
+    session = validPilotSession(value, now(), origin) || validArcadeSession(value, now()) ? { ...value } : null;
     binding = null; record = null;
-    update({ phase: session ? 'loading' : 'signed-out', session: session ? { wallet: session.wallet, walletName: session.walletName || 'Sui wallet' } : null, busy: Boolean(session), configuration: null, challenge: null, attempt: null, remainingSeconds: null, notice: session ? 'Restoring your challenge…' : 'Sign in with your Arcade wallet to try the challenge. Signing a message is free.', noticeKind: '' });
+    update({ phase: session ? 'loading' : 'signed-out', session: session ? { wallet: session.wallet, walletName: session.walletName || 'Sui wallet', sessionScope: session.sessionScope || 'arcade' } : null, busy: Boolean(session), configuration: null, challenge: null, attempt: null, remainingSeconds: null, notice: session ? 'Restoring your challenge…' : 'Sign in to the free pilot with your Sui wallet. No NFTree, purchase or gas fee is required.', noticeKind: '' });
     if (!session) return;
     try {
       const digest = await cryptoImpl.subtle.digest('SHA-256', new TextEncoder().encode(session.token));

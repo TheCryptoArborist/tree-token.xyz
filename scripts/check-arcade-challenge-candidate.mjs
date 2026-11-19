@@ -4,7 +4,9 @@ import assert from 'node:assert/strict';
 import { pathToFileURL } from 'node:url';
 import { fingerprint } from './release-preserved-production.mjs';
 
-const directory = '.netlify/arcade-challenge';
+const directory = process.env.ARCADE_PILOT_RELEASE_DIRECTORY || '.netlify/arcade-challenge';
+assert(['.netlify/arcade-challenge', '.netlify/arcade-challenge-auth'].includes(directory));
+const reportName = directory.endsWith('-auth') ? 'arcade-challenge-auth-browser-review.json' : 'arcade-challenge-browser-review.json';
 const plan = JSON.parse(await fs.readFile(path.join(directory, 'plan.json'), 'utf8'));
 const candidate = JSON.parse(await fs.readFile(path.join(directory, 'candidate.json'), 'utf8'));
 assert(/^[a-f0-9]{24}$/.test(candidate.id));
@@ -17,7 +19,7 @@ const { chromium } = await import(pathToFileURL(path.resolve(modulePath)).href);
 const output = process.env.ARCADE_PILOT_CANDIDATE_OUTPUT;
 assert(output, 'Choose an evidence directory outside the bounded release artifact.');
 await fs.mkdir(output, { recursive: true });
-const browser = await chromium.launch({ headless: true });
+const browser = await chromium.launch({ headless: true, executablePath: process.env.ARCADE_PILOT_CHROME_PATH || undefined });
 const widths = [1440, 390, 320], postRequests = [], errors = [];
 const screenshots = [];
 try {
@@ -62,9 +64,9 @@ try {
   assert.equal(response.status, 403); assert.equal((await response.json()).error, 'origin-not-allowed');
   const report = { schemaVersion: 1, result: 'passed', checkedAt: new Date().toISOString(), sourceCommit: plan.sourceCommit,
     sourceTree: plan.sourceTree, candidateId: candidate.id, planSha256: fingerprint(plan), origin,
-    noWalletOrPaymentActions: true, viewportWidths: widths,
+    noWalletOrPaymentActions: true, viewportWidths: widths, browserVersion: browser.version(),
     checks: { pilotPage: true, campaignLink: true, mobileLayout: true, keyboardFocus: true, noMissingAssets: true, noPrizeLabel: true, previewOriginBlocked: true },
     screenshots, boundary: 'Signed-out exact-candidate review. Play/recovery are exercised separately against the real local service using synthetic sessions; canonical signed-message testing follows publication.' };
-  await fs.writeFile(path.join(output, 'arcade-challenge-browser-review.json'), JSON.stringify(report, null, 2) + '\n');
+  await fs.writeFile(path.join(output, reportName), JSON.stringify(report, null, 2) + '\n');
   console.log(JSON.stringify(report));
 } finally { await browser.close(); }

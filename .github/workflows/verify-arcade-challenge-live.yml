@@ -2,7 +2,7 @@ name: Verify published no-prize Arborist Trials flow
 
 on:
   push:
-    branches: [release/arcade-challenge-live-test]
+    branches: [release/arcade-challenge-live-test, release/arcade-challenge-auth-live-test]
 
 permissions:
   contents: read
@@ -30,7 +30,18 @@ jobs:
       - name: Install isolated browser verification tools
         run: |
           npm install --prefix "$RUNNER_TEMP/arcade-pilot-browser" --ignore-scripts --no-audit --no-fund playwright@1.56.1
-          "$RUNNER_TEMP/arcade-pilot-browser/node_modules/.bin/playwright" install --with-deps chromium
+          pilot_chrome_path=''
+          for pilot_chrome_command in google-chrome google-chrome-stable chromium chromium-browser; do
+            if pilot_chrome_path="$(command -v "$pilot_chrome_command")"; then
+              break
+            fi
+          done
+          if [ -n "$pilot_chrome_path" ]; then
+            printf 'ARCADE_PILOT_CHROME_PATH=%s\n' "$pilot_chrome_path" >> "$GITHUB_ENV"
+            printf 'Using installed runner browser: %s\n' "$pilot_chrome_path"
+          else
+            "$RUNNER_TEMP/arcade-pilot-browser/node_modules/.bin/playwright" install --with-deps chromium
+          fi
       - name: Verify the real signed-message and pilot protocol with a temporary unfunded test wallet
         env:
           ARCADE_PILOT_BROWSER_MODULE: ${{ runner.temp }}/arcade-pilot-browser/node_modules/playwright/index.mjs
