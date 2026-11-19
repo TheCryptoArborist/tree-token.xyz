@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "action": "publish-arcade-challenge-auth",
+  "sourceCommit": "6c8622c64186e7b08c475cf2ae79758149f1545e",
+  "sourceTree": "b707c5224968ca9e3fbe1e9b4548df0a0194de27",
+  "mainCommit": "204861cdea1e095e383cffd940a691523760d188",
+  "expectedDeploy": "6afe412cc313992199456506",
+  "candidateId": "6afe4d06ab2e466f455605db",
+  "planSha256": "b115037f88cfcc19db6fe78730dcc8de5d4439c596e30c6c4339efad4f83f5e6",
+  "candidateRunId": 44434958866,
+  "candidateArtifactId": 14488177517,
+  "candidateArtifactSHA256": "45dcac17c33012b6b16fb9a3d95e291bd6104f6e54192d444428b8adf2063b8a",
+  "browserReview": "production/arcade-challenge-auth-browser-review.json"
+}
