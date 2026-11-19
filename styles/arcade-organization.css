@@ -206,9 +206,11 @@
 @media(max-width:560px) {
   .arcade-campaign-spotlight { grid-template-columns:1fr;gap:13px; }
   .arcade-campaign-spotlight-art { max-width:175px;max-height:175px;justify-self:center; }
-  .arcade-campaign-next { grid-template-columns:65px minmax(0,1fr);gap:11px;padding:13px; }
+  .arcade-campaign-next { display:block; padding:14px; }
+  .arcade-campaign-next img { display:none; }
+  .arcade-campaign-next > div { width:100%; }
   .arcade-campaign-next img { width:65px;height:65px; }
-  .arcade-campaign-next > a { grid-column:1/-1;justify-self:stretch; }
+  .arcade-campaign-next > a { display:flex; width:100%;margin-top:14px; }
   .arcade-campaign-rotation > summary { padding:14px; }
 }
 @media(forced-colors:active){ .arcade-campaign-next,.arcade-campaign-rotation { border:1px solid CanvasText; } }
