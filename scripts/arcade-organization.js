@@ -60,40 +60,68 @@ export function mountArcadeOrganization(doc = document, view = window) {
   const featured = byId('arcade-featured-event');
   if (featured) cabinets.after(featured);
 
-  const campaignHeading = campaigns.querySelector('.quest-board-heading');
-  if (campaignHeading) campaignHeading.innerHTML = '<div><p class="growth-eyebrow">PRACTICE FOR YOUR NEXT EVENT</p><h3>Find your next challenge.</h3><p>Discover a game, build your skills, then join its Event. Campaigns will introduce smaller reward opportunities along the way.</p></div>';
 
-  const campaignFeature = element('section', 'arcade-campaign-feature', `
-    <div class="arcade-campaign-feature__intro">
-      <span class="arcade-campaign-state">CAMPAIGNS IN PREPARATION</span>
-      <h4>Get ready for the next prize event.</h4>
-      <p>No funded campaign is open yet. Each campaign will show its goals, deadline, reward pool and payout network before entry opens.</p>
+  const campaignHeading = campaigns.querySelector('.quest-board-heading');
+  if (campaignHeading) campaignHeading.innerHTML = '<div><p class="growth-eyebrow">ARCADE SPOTLIGHTS</p><h3>Find your next game.</h3><p>Explore the featured game and the planned rotation. Every working Arcade game gets a turn.</p></div>';
+
+  // Presentation only: no scheduled window, eligible result, award or payout is implied.
+  const campaignFeature = element('section', 'arcade-campaign-feature arcade-campaign-spotlight', `
+    <img class="arcade-campaign-spotlight-art" src="/assets/arcade/tree-force-89-poster.webp" alt="" width="512" height="512" loading="lazy" decoding="async">
+    <div class="arcade-campaign-spotlight-copy">
+      <span class="arcade-campaign-state">FEATURED FIRST · PRACTICE SPOTLIGHT</span>
+      <h4>TREE Force ’89</h4>
+      <p>Take the Arborwing into battle. How far can you fight through the enemy waves?</p>
+      <div class="arcade-campaign-actions"><a class="growth-primary" href="/play/treeforce89/">Play TREE Force ’89 <span aria-hidden="true">→</span></a><a class="growth-secondary" href="#events" data-arcade-route="events">Explore its Event <span aria-hidden="true">→</span></a></div>
+      <p class="arcade-campaign-footnote">No funded campaign is open yet. Dates and rewards are not set; practice scores do not count toward an upcoming Event.</p>
     </div>
-    <div class="arcade-campaign-event">
-      <img src="/assets/arcade/tree-force-89-poster.webp" alt="" width="112" height="112" loading="lazy">
-      <div><p class="growth-eyebrow">EXPLORE THE UPCOMING EVENT</p><h4>TREE Force ’89: Defend the Canopy</h4><p>Try the game now and read the Event details. Event dates are still to be announced; practice scores do not count.</p></div>
-    </div>
-    <ol class="arcade-campaign-path" aria-label="Your path into an Event">
-      <li><strong>Explore</strong><span>Choose a game you enjoy.</span></li>
-      <li><strong>Practice</strong><span>Learn its goals and controls.</span></li>
-      <li><strong>Join an Event</strong><span>Read its rules when entry opens.</span></li>
-    </ol>
-    <div class="arcade-campaign-actions"><a class="growth-primary" href="/play/treeforce89/">Practice TREE Force ’89 <span aria-hidden="true">→</span></a><a class="growth-secondary" href="#events" data-arcade-route="events">View upcoming Event <span aria-hidden="true">→</span></a></div>
-    <p class="arcade-campaign-footnote">Campaign completion is not an Event entry requirement unless the published Event rules say so.</p>
   `);
   if (campaignHeading) campaignHeading.after(campaignFeature);
   else campaigns.prepend(campaignFeature);
 
+  const nextFeature = element('section', 'arcade-campaign-next', `
+    <img src="/play/canopy-defense/checkout-test/assets/brand/canopy-home-scene.webp" alt="" width="200" height="200" loading="eager" decoding="async">
+    <div><p class="growth-eyebrow">UP NEXT · SECOND IN ROTATION</p><h4>Canopy Defense</h4><p>Build towers, hold the line and protect the Tree of Life. Its spotlight dates are not set.</p></div>
+    <a class="growth-secondary" href="/play/canopy-defense/">Explore game <span aria-hidden="true">→</span></a>
+  `);
+  campaignFeature.after(nextFeature);
+
+  const rotation = element('details', 'arcade-campaign-rotation', `
+    <summary><span><strong>Full Arcade rotation</strong><small>All LIVE games get a turn before repeats · dates not scheduled.</small></span><span class="arcade-disclosure-icon" aria-hidden="true">+</span></summary>
+    <ol class="arcade-campaign-rotation-list"></ol>
+  `);
+  nextFeature.after(rotation);
+  const roster = rotation.querySelector('ol');
+  const priority = ['force-title', 'canopy-title'];
+  const liveCabinets = [...cabinets.querySelectorAll('article.game-poster')]
+    .filter(card => card.querySelector('.status-tag--live') && card.querySelector('.poster-link[href]') && card.querySelector('.poster-title'));
+  liveCabinets.sort((first, second) => {
+    const rank = card => { const i = priority.indexOf(card.querySelector('.poster-title')?.id); return i === -1 ? priority.length : i; };
+    return rank(first) - rank(second);
+  });
+  for (const card of liveCabinets) {
+    const href = card.querySelector('.poster-link').getAttribute('href') || '';
+    if (!/^\/play\/[a-z0-9/_-]+\/?$/.test(href) && !/^https:\/\/(?:tree-token\.xyz\/play\/|nftree\.net\/battle\/)[a-z0-9/_-]+\/?$/.test(href)) continue;
+    const li = element('li', 'arcade-campaign-rotation-item');
+    const number = element('span', 'arcade-campaign-rotation-number');
+    number.textContent = String(roster.children.length + 1).padStart(2, '0');
+    const link = element('a', '');
+    link.href = href;
+    link.textContent = card.querySelector('.poster-title').textContent.trim();
+    if (href.startsWith('https://nftree.net/')) { link.target = '_blank'; link.rel = 'noopener noreferrer'; }
+    li.append(number, link);
+    roster.append(li);
+  }
+  rotation.querySelector('summary small').textContent = roster.children.length + ' LIVE-listed games · one turn per game before repeating. No dates are scheduled.';
+
   const trialPilot = element('section', 'arcade-campaign-feature arcade-campaign-pilot', `
-    <div class="arcade-campaign-feature__intro">
-      <span class="arcade-campaign-state">TEST CHALLENGE · NO PRIZES</span>
-      <h4>Try Arborist Trials.</h4>
-      <p>Play four cards, grow your canopy and beat Garden Bot. This free pilot lets you try the challenge format before funded campaigns begin.</p>
-    </div>
+    <div class="arcade-campaign-feature__intro"><span class="arcade-campaign-state">TEST CHALLENGE · NO PRIZES</span><h4>Try Arborist Trials.</h4><p>Play four cards, grow your canopy and beat Garden Bot. This free pilot lets you try the challenge format before funded campaigns begin.</p></div>
     <div class="arcade-campaign-actions"><a class="growth-primary" href="/play/challenge/">Play the test challenge <span aria-hidden="true">→</span></a></div>
     <p class="arcade-campaign-footnote">Free entry · No purchase or gas fee · Sign in with your Arcade wallet. Test results do not award prizes, attendance or daily quest credit.</p>
   `);
-  campaignFeature.before(trialPilot);
+  const pilotDisclosure = element('details', 'arcade-activity-section arcade-campaign-technical',
+    '<summary><span><strong>Optional: Try the test challenge</strong><span>Arborist Trials · no prizes or quest credit</span></span><span class="arcade-disclosure-icon" aria-hidden="true">+</span></summary>');
+  pilotDisclosure.append(trialPilot);
+  rotation.after(pilotDisclosure);
 
   const access = element('p', 'arcade-signin-help', '<a href="#daily" data-arcade-route="daily">Open Daily to sign in</a><span>Your saved progress works across all six tabs.</span>');
   const toolbar = campaigns.querySelector('.quest-toolbar');

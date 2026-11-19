@@ -38,3 +38,34 @@ jobs:
       - run: node --test tests/arcade-season-deadline.test.mjs tests/arcade-organization.test.mjs tests/arcade-preview-readonly.test.mjs tests/arcade-campaign-foundation.test.mjs
       - run: npm run build:preview
       - run: git diff --check
+
+  campaigns-visual:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Build the existing read-only Arcade preview
+        run: npm run build:preview
+      - name: Install isolated browser
+        run: |
+          npm install --prefix "$RUNNER_TEMP/arcade-layout-browser" --ignore-scripts --no-audit --no-fund playwright@1.56.1
+          "$RUNNER_TEMP/arcade-layout-browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Verify Campaigns layout and save screenshots
+        env:
+          ARCADE_PLAYWRIGHT_MODULE: ${{ runner.temp }}/arcade-layout-browser/node_modules/playwright/index.mjs
+          ARCADE_LAYOUT_OUTPUT: ${{ runner.temp }}/arcade-layout-campaigns
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory dist-preview > "$RUNNER_TEMP/arcade-preview-server.log" 2>&1 &
+          node tests/arcade-campaigns-visual.mjs
+      - name: Save visual review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: arcade-campaigns-tab-review
+          path: ${{ runner.temp }}/arcade-layout-campaigns
+          if-no-files-found: warn
+          retention-days: 14
+

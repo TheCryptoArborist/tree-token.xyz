@@ -170,3 +170,47 @@
 }
 @media(prefers-reduced-motion:reduce) { .arcade-disclosure-icon,.arcade-organization-page .monthly-actions .monthly-action-chevron,.arcade-organization-page #arcade-daily-growth :is(.growth-primary,.growth-secondary),.arcade-organization-page #growth-today-panel .growth-task-disclosure > span { transition:none; } }
 @media(forced-colors:active) { .arcade-campaign-feature,.arcade-activity-section,.arcade-organization-page .monthly-actions details,.arcade-organization-page #growth-today-panel > :is(.growth-strip,.growth-task,.growth-quest,.guided-card,.growth-passport),.arcade-organization-page #arcade-community-home .quest-tile,.arcade-organization-page #arcade-daily-growth :is(.growth-primary,.growth-secondary),.arcade-organization-page #growth-today-panel .growth-task-disclosure,.arcade-organization-page .poster-topline .status-tag { border:1px solid CanvasText; box-shadow:none; } }
+
+
+/* Focused Campaigns tab layout. */
+.arcade-campaign-spotlight { display:grid;grid-template-columns:minmax(150px,30%) minmax(0,1fr);align-items:center;gap:24px; }
+.arcade-campaign-spotlight-art { width:100%;max-width:275px;height:auto;aspect-ratio:1;object-fit:contain;border-radius:12px;background:#0c2928; }
+.arcade-campaign-spotlight-copy { min-width:0; }
+.arcade-campaign-spotlight-copy h4 { margin:12px 0;color:#f4dda0;font-size:clamp(1.35rem,3vw,1.95rem); }
+.arcade-campaign-spotlight-copy > p:not(.arcade-campaign-footnote) { margin:0 0 15px; }
+.arcade-campaign-next { display:grid;grid-template-columns:82px minmax(0,1fr) auto;align-items:center;gap:17px;padding:16px;border:1px solid #55775c;border-radius:15px;background:linear-gradient(115deg,#183a2d,#102329);margin-bottom:14px; }
+.arcade-campaign-next img { width:82px;height:82px;object-fit:cover;border-radius:10px; }
+.arcade-campaign-next h4 { color:#f5dfa1;margin:3px 0 6px;font-size:1rem; }
+.arcade-campaign-next p { color:#bed0c4;font-size:.79rem;line-height:1.55;margin:0; }
+.arcade-campaign-next p.growth-eyebrow { color:#8ce7b7;font-size:.63rem; }
+.arcade-campaign-next > a { text-align:center;text-decoration:none; }
+.arcade-campaign-rotation { border:1px solid #55775c;border-radius:13px;background:#102824;margin-bottom:14px;overflow:hidden; }
+.arcade-campaign-rotation > summary { list-style:none;display:flex;align-items:center;justify-content:space-between;gap:15px;padding:17px 19px;cursor:pointer; }
+.arcade-campaign-rotation > summary::-webkit-details-marker { display:none; }
+.arcade-campaign-rotation summary strong { display:block;color:#f5dfa1;font-size:.9rem; }
+.arcade-campaign-rotation summary small { display:block;color:#bbd1c3;font-size:.74rem;line-height:1.5;margin-top:5px; }
+.arcade-campaign-rotation[open] > summary { border-bottom:1px solid #55775c; }
+.arcade-campaign-rotation[open] .arcade-disclosure-icon { transform:rotate(45deg); }
+.arcade-campaign-rotation-list { list-style:none;margin:0;padding:7px 17px 14px; }
+.arcade-campaign-rotation-item { display:flex;align-items:center;gap:15px;padding:11px 6px;border-bottom:1px solid #55775c66; }
+.arcade-campaign-rotation-item:last-child { border-bottom:0; }
+.arcade-campaign-rotation-number { color:#88e8b4;font-size:.74rem;font-weight:800;font-variant-numeric:tabular-nums; }
+.arcade-campaign-rotation-item a { color:#edf3e4;font-weight:700;font-size:.85rem;text-underline-offset:4px; }
+.arcade-campaign-technical > .arcade-campaign-pilot { border:0;border-radius:0;margin:0;padding:18px; }
+.arcade-campaign-rotation > summary:focus-visible,.arcade-campaign-rotation-item a:focus-visible { outline:2px solid #a5f7c9;outline-offset:-3px; }
+@media(max-width:790px) {
+  .arcade-campaign-next { grid-template-columns:70px minmax(0,1fr); }
+  .arcade-campaign-next img { width:70px;height:70px; }
+  .arcade-campaign-next > a { grid-column:2;justify-self:start; }
+}
+@media(max-width:560px) {
+  .arcade-campaign-spotlight { grid-template-columns:1fr;gap:13px; }
+  .arcade-campaign-spotlight-art { max-width:175px;max-height:175px;justify-self:center; }
+  .arcade-campaign-next { display:block; padding:14px; }
+  .arcade-campaign-next img { display:none; }
+  .arcade-campaign-next > div { width:100%; }
+  .arcade-campaign-next img { width:65px;height:65px; }
+  .arcade-campaign-next > a { display:flex; width:100%;margin-top:14px; }
+  .arcade-campaign-rotation > summary { padding:14px; }
+}
+@media(forced-colors:active){ .arcade-campaign-next,.arcade-campaign-rotation { border:1px solid CanvasText; } }
