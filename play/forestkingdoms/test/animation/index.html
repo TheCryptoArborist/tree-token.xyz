@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#0b1d18">
   <meta name="robots" content="noindex,nofollow">
-  <title>Tree Hero · Movement study · Forest Kingdoms</title>
-  <meta name="description" content="Review Tree Hero's first directional idle and walking animation assets at detail and gameplay size.">
+  <title>Tree Hero · Combat and movement study · Forest Kingdoms</title>
+  <meta name="description" content="Review Tree Hero's movement, strike, root cast, hit reaction, and defeat animations in four directions at detail and gameplay size.">
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
@@ -23,10 +23,10 @@
       <header class="study-heading">
         <div>
           <p class="eyebrow">WILLOWMERE · CHARACTER DEVELOPMENT</p>
-          <h1>Tree Hero <span>— Movement study</span></h1>
-          <p class="intro">A closer look at the forest's guardian, one step at a time.</p>
+          <h1>Tree Hero <span>— Motion &amp; combat</span></h1>
+          <p class="intro">See the guardian move, strike, summon roots, and react.</p>
         </div>
-        <span class="edition"><i aria-hidden="true"></i> Idle &amp; walk · First pass</span>
+        <span class="edition">Combat &amp; reactions · First pass</span>
       </header>
 
       <div class="study-layout">
@@ -37,16 +37,29 @@
           </div>
           <div class="clearing" id="detail-stage">
             <div class="light-shaft" aria-hidden="true"></div>
-            <canvas id="detail-canvas" tabindex="0" role="img" aria-label="Tree Hero animation detail. Focus here and use arrow keys or WASD to move around the clearing." aria-describedby="movement-help"></canvas>
+            <canvas id="detail-canvas" tabindex="0" role="img" aria-label="Tree Hero animation detail. Focus here to move with arrow keys or WASD, or review an action with J, K, H, or X." aria-describedby="movement-help action-help"></canvas>
             <div class="stage-caption"><span id="detail-size">Detail view</span><span>Willowmere light</span></div>
             <div id="loading-panel" class="loading-panel" role="status">
-              <span class="loading-mark" aria-hidden="true">✦</span><strong>Preparing the guardian</strong><span>Loading the movement artwork…</span>
+              <span class="loading-mark" aria-hidden="true">✦</span><strong>Preparing the guardian</strong><span>Loading movement and combat artwork…</span>
             </div>
             <div id="error-panel" class="error-panel" role="alert" hidden>
               <strong>The artwork couldn't load.</strong>
-              <p id="error-message">Please try loading the movement study again.</p>
+              <p id="error-message">Please try loading the animation study again.</p>
               <button class="primary-button" id="retry-button" type="button">Try again</button>
             </div>
+          </div>
+          <div class="action-bar">
+            <fieldset id="action-controls" disabled>
+              <legend>Combat &amp; reactions</legend>
+              <div class="action-choice" role="group" aria-label="Choose a combat or reaction animation">
+                <button type="button" data-animation="strike" aria-pressed="false">Strike <kbd aria-hidden="true">J</kbd></button>
+                <button type="button" data-animation="cast" aria-pressed="false">Root cast <kbd aria-hidden="true">K</kbd></button>
+                <button type="button" data-animation="hit" aria-pressed="false">Hit reaction <kbd aria-hidden="true">H</kbd></button>
+                <button type="button" data-animation="defeat" aria-pressed="false">Defeat <kbd aria-hidden="true">X</kbd></button>
+              </div>
+            </fieldset>
+            <p id="action-status">Choose an action to review its full sequence.</p>
+            <p id="action-help">Actions play once and hold the final pose. Focus the clearing for the letter shortcuts; use <kbd>R</kbd> to replay.</p>
           </div>
           <div class="movement-bar">
             <div class="movement-copy"><strong>Try a few steps</strong><p id="movement-help">Focus the clearing, then use <kbd>WASD</kbd> or <kbd>↑ ↓ ← →</kbd>. On a phone, hold a direction below.</p></div>
@@ -62,11 +75,11 @@
 
         <aside class="review-panel" aria-label="Animation controls and gameplay-size preview">
           <section class="control-card" aria-labelledby="controls-title">
-            <p class="eyebrow">EXPLORE THE MOVEMENT</p>
+            <p class="eyebrow">REVIEW THE ANIMATION</p>
             <h2 id="controls-title">Make it your view.</h2>
             <fieldset id="animation-controls" disabled>
-              <legend>Animation</legend>
-              <div class="segmented animation-choice" role="group" aria-label="Animation">
+              <legend>Movement</legend>
+              <div class="segmented animation-choice" role="group" aria-label="Movement animation">
                 <button type="button" data-animation="idle" aria-pressed="true">Idle</button>
                 <button type="button" data-animation="walk" aria-pressed="false">Walk</button>
               </div>
@@ -79,7 +92,8 @@
               </div>
               <div class="playback-row">
                 <button type="button" class="primary-button" id="play-button" aria-pressed="false">Pause</button>
-                <button type="button" class="secondary-button" id="step-button" aria-label="Pause and advance one animation frame">Step <span aria-hidden="true">→|</span></button>
+                <button type="button" class="secondary-button" id="step-button" aria-label="Pause and advance one animation frame">Step</button>
+                <button type="button" class="secondary-button" id="replay-button" aria-label="Replay the selected animation from its first frame">Replay</button>
               </div>
               <div class="control-label" id="speed-label">Playback speed</div>
               <div class="segmented speed-choice" role="group" aria-labelledby="speed-label">
@@ -95,14 +109,14 @@
           <section class="size-card" aria-labelledby="actual-title">
             <div class="size-heading"><div><p class="eyebrow">READABILITY CHECK</p><h2 id="actual-title">At gameplay size</h2></div><span class="size-number"><b>88</b> px</span></div>
             <div class="small-clearing"><canvas id="actual-canvas" role="img" aria-label="The same Tree Hero animation at 88 CSS pixels tall"></canvas></div>
-            <p class="size-note">The same frame, kept small. Check the armor, cape, and full silhouette as he moves.</p>
+            <p class="size-note">The same frame, kept small. Check the armor, cape, and the shape of each action.</p>
           </section>
         </aside>
       </div>
 
       <footer class="study-footer">
         <p><span aria-hidden="true">✦</span> Character animation study. The original prologue remains available for comparison.</p>
-        <p id="study-status" class="sr-only" aria-live="polite">Loading the movement study.</p>
+        <p id="study-status" class="sr-only" aria-live="polite">Loading the animation study.</p>
         <span class="footer-tag">PHASE 01 · TASK 02</span>
       </footer>
     </main>

@@ -22,9 +22,9 @@ This file is the authoritative project checklist. Update its statuses and add th
 
 **Completed foundation:** The Broken Crossing prologue already includes direct Tree Hero control, Bram, two raider waves, bridge repair, caravan rescue, a one-time grove harvest, ancestral workshop restoration, a working 20% material discount on one beaver recruit, and browser-local saves. Its mission, recruitment, and reload flow were played through in the browser. Phone-sized and tablet-sized layouts were reviewed; this is not physical-device certification.
 
-**Implementation state:** The playable prologue uses a custom Canvas 2D renderer. The first four-direction idle/walk artwork and isolated movement viewer are available. Phaser has been researched and selected as the working upgrade direction; it has **not** been integrated yet. Combat/reaction sprites and the later story/economy systems remain pending.
+**Implementation state:** The playable prologue uses a custom Canvas 2D renderer. The isolated character study now includes four-direction idle, walk, strike, root-cast, hit, and defeat artwork: 112 frames in the first full review set. Phaser has been researched and selected as the working upgrade direction; it has **not** been integrated yet. Integration, enemy artwork/reactions, and later story/economy systems remain pending.
 
-**Active task:** FK-02 — Tree Hero sprite and animation set. The first four-direction idle/walk review is implemented; combat and reaction animations follow.
+**Active task:** FK-02 — Tree Hero sprite and animation set. Movement and the first combat/reaction pass are implemented in the isolated viewer; full-set visual review and feedback remain before acceptance.
 
 **Current build target:** Milestone A — Upgraded Willowmere scene.
 
@@ -55,16 +55,16 @@ Evidence: the [art brief](ART_DIRECTION.md), [Concept 01 image](concepts/willowm
 
 ### FK-02 — Create the Tree Hero sprite and animation set
 
-Status: **In progress — first four-direction idle/walk preview**. Depends on FK-01.
+Status: **In progress — full first animation set ready for review**. Depends on FK-01.
 
 - [x] Establish a first in-game character design matching the supplied purple/green/gold hero, including green eyes and the canonical broader build.
 - [x] Create the first four-direction idle and walking set: four idle frames and eight walk frames per direction, 48 frames total.
-- [ ] Create strike, root-cast, hit, and defeat animations. Add extra directions only if needed after testing.
+- [x] Create a first four-direction strike, root-cast, hit, and defeat set: four frames per action/direction, 64 additional frames.
 - [x] Prepare transparent movement atlases and explicit frame rectangles, ground pivots, per-direction scale measurements, and playback timing.
 - [x] Inspect the movement preview at 88 CSS pixels and in a 390-by-844 browser viewport. Physical-device testing remains FK-08.
 - [ ] Incorporate movement feedback and verify the complete combat/reaction set before marking FK-02 done.
 
-Evidence: [movement study](https://deploy-preview-239--tree-token.netlify.app/play/forestkingdoms/test/animation/), [asset and review notes](SPRITES_01.md), [generation prompts](SPRITE_PROMPTS_01.md). The existing prologue remains the gameplay comparison; Phaser integration is FK-03.
+Evidence: [character animation study](https://deploy-preview-239--tree-token.netlify.app/play/forestkingdoms/test/animation/), [movement notes](SPRITES_01.md), [combat/reaction notes](SPRITES_02.md), [movement prompts](SPRITE_PROMPTS_01.md), and [combat prompts](COMBAT_PROMPTS_01.md). The existing prologue remains the gameplay comparison; Phaser integration is FK-03.
 
 Done when: a viewable animation preview and engine-ready assets exist; the full hero remains recognizable, proportions stay consistent between frames, and movement does not visibly slide or jump.
 
