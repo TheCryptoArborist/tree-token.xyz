@@ -10,7 +10,7 @@ try {
     const page=await browser.newPage({viewport:{width,height:850},deviceScaleFactor:1});
     try {
       await page.goto('http://127.0.0.1:8765/play/#daily',{waitUntil:'domcontentloaded'});
-      await page.locator('#growth-today-panel > .growth-strip').waitFor();
+      await page.locator('#growth-today-panel .arcade-daily-masthead > .growth-strip').waitFor();
       // Explicit, synthetic *presentation fixture*; no wallet sign-in or
       // API reward operation is performed or represented as a real success.
       await page.evaluate(()=>{
@@ -36,11 +36,11 @@ try {
       await page.waitForFunction(()=>document.getElementById('growth-status')?.hasAttribute('data-arcade-routine-refresh'));
       const metrics=await page.evaluate(()=>{
         const p=document.getElementById('growth-today-panel'), r=sel=>p.querySelector(sel)?.getBoundingClientRect().height;
-        return {strip:r(':scope > .growth-strip'),check:r('#growth-check-in-task'),quest:r('#growth-quest-details'),status:getComputedStyle(document.getElementById('growth-status')).display,
+        return {strip:r('.arcade-daily-masthead > .growth-strip'),check:r('#growth-check-in-task'),quest:r('#growth-quest-details'),status:getComputedStyle(document.getElementById('growth-status')).display,
           overflow:document.documentElement.scrollWidth-innerWidth,checkVisible:!!document.getElementById('growth-check-in-row'),nextVisible:!!p.querySelector('.guided-card')};
       });
       assert.equal(metrics.status,'none');
-      assert.ok(metrics.strip<=145,'Header should be compact at '+width+': '+metrics.strip);
+      assert.ok(metrics.strip<=(width===390?165:145),'Header should be compact at '+width+': '+metrics.strip);
       assert.ok(metrics.check<=145,'Saved attendance row should be compact at '+width+': '+metrics.check);
       assert.ok(metrics.quest<=145,'Quest summary should be compact at '+width+': '+metrics.quest);
       assert.ok(metrics.overflow<=1,'No horizontal overflow at '+width+': '+metrics.overflow);
@@ -54,6 +54,33 @@ try {
       });
       await page.waitForFunction(()=>!document.getElementById('growth-status').hasAttribute('data-arcade-routine-refresh'));
       assert.notEqual(await page.locator('#growth-status').evaluate(n=>getComputedStyle(n).display),'none');
+      const geometry=await page.evaluate(()=>{
+        const p=document.getElementById('growth-today-panel');
+        const mast=p.querySelector('.arcade-daily-masthead');
+        const row=p.querySelector('.arcade-daily-work-grid');
+        const strip=mast.querySelector('.growth-strip').getBoundingClientRect();
+        const check=mast.querySelector('#growth-check-in-task').getBoundingClientRect();
+        const quest=row.querySelector('#growth-quest-details').getBoundingClientRect();
+        const share=row.querySelector('.guided-card').getBoundingClientRect();
+        return {mastColumns:getComputedStyle(mast).gridTemplateColumns.split(' ').length,
+          taskColumns:getComputedStyle(row).gridTemplateColumns.split(' ').length,
+          stripLeft:strip.left,checkLeft:check.left,questLeft:quest.left,shareLeft:share.left,
+          questTop:quest.top,shareTop:share.top,questBottom:quest.bottom,shareWidth:share.width};
+      });
+      if(width===1200){
+        assert.equal(geometry.mastColumns,2,'Desktop check-in should sit beside wallet status');
+        assert.equal(geometry.taskColumns,2,'Desktop game quest and sharing must occupy two columns');
+        assert.ok(geometry.checkLeft>geometry.stripLeft);
+        assert.ok(geometry.shareLeft>geometry.questLeft);
+        assert.ok(Math.abs(geometry.questTop-geometry.shareTop)<3,'Activity cards must share a top row');
+        assert.ok(geometry.shareWidth>450,'Sharing should have useful width, not be cramped');
+      } else {
+        assert.equal(geometry.mastColumns,1);
+        assert.equal(geometry.taskColumns,1);
+        assert.ok(geometry.shareTop>=geometry.questBottom-2,'Mobile sharing should follow the game');
+      }
+      console.log('Dashboard columns '+width+'px:',geometry);
+
       console.log('Daily synthetic layout '+width+'px passed:',metrics);
     }finally{await page.close();}
   }

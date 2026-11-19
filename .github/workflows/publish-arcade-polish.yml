@@ -70,7 +70,7 @@ jobs:
       - name: Capture current production and create the review candidate
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          ARCADE_POLISH_EXPECTED_DEPLOY: '6afe4d06ab2e466f455605db'
+          ARCADE_POLISH_EXPECTED_DEPLOY: '6aff4a1398c18908a875f033'
           REVIEWED_SHA: ${{ github.sha }}
         run: |
           test -n "$NETLIFY_AUTH_TOKEN" || { echo 'The existing Netlify release connection is unavailable.'; exit 1; }

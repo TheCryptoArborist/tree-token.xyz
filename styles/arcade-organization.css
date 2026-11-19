@@ -341,3 +341,163 @@
     padding:13px;
   }
 }
+
+
+
+/* Daily dashboard: real two-column composition, not smaller full-width cards.
+ * No functional element is recreated or omitted. */
+.arcade-organization-page #growth-today-panel.arcade-daily-dashboard > .arcade-daily-masthead {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(260px,28%);
+  gap:12px;
+  align-items:start;
+  margin:0 0 10px;
+}
+.arcade-organization-page #growth-today-panel .arcade-daily-masthead > .growth-strip {
+  min-width:0;
+  padding:12px 15px;
+  margin:0;
+  border:1px solid var(--arcade-panel-border);
+  border-radius:14px;
+  background:var(--arcade-panel);
+  grid-template-columns:44px minmax(0,1fr) auto;
+  gap:10px 12px;
+}
+.arcade-organization-page #growth-today-panel .arcade-daily-masthead .growth-badge-preview { width:44px; min-height:48px; }
+.arcade-organization-page #growth-today-panel .arcade-daily-masthead .growth-strip-art { width:44px;height:48px; }
+.arcade-organization-page #growth-today-panel .arcade-daily-masthead .growth-strip-copy h2 { margin:0; font-size:clamp(1.2rem,2vw,1.45rem); }
+.arcade-organization-page #growth-today-panel .arcade-daily-masthead .growth-strip-actions { max-width:none;justify-content:flex-end;gap:6px; }
+.arcade-organization-page #growth-today-panel .arcade-daily-masthead > #growth-check-in-task {
+  display:grid;
+  grid-template-columns:32px minmax(0,1fr);
+  align-items:center;
+  gap:6px 9px;
+  min-width:0;
+  padding:12px;
+  margin:0;
+  border:1px solid var(--arcade-panel-border);
+  border-radius:14px;
+  background:var(--arcade-panel);
+  color:var(--arcade-panel-copy);
+}
+.arcade-organization-page #growth-today-panel .arcade-daily-masthead #growth-check-in-task .growth-task-art { width:30px;height:34px; }
+.arcade-organization-page #growth-today-panel .arcade-daily-masthead #growth-check-in-task .growth-task-copy { min-width:0; }
+.arcade-organization-page #growth-today-panel .arcade-daily-masthead #growth-check-in-task .growth-task-copy h3 {
+  margin:0 0 3px;
+  font-size:.89rem;
+  color:var(--arcade-panel-heading);
+}
+.arcade-organization-page #growth-today-panel .arcade-daily-masthead #growth-check-in-task .growth-task-copy p {
+  font-size:.76rem;
+  line-height:1.4;
+  margin:0;
+}
+.arcade-organization-page #growth-today-panel .arcade-daily-masthead #growth-check-in-task :is(.growth-row-action,#growth-task-auth) {
+  grid-column:2;
+  justify-self:start;
+  min-height:40px;
+  padding:6px 11px;
+  font-size:.72rem;
+}
+.arcade-organization-page #growth-today-panel[data-arcade-checkin-saved] .arcade-daily-masthead #growth-check-in-task .growth-task-benefit { display:none; }
+.arcade-organization-page #growth-today-panel.arcade-daily-dashboard > .growth-task-note { margin:0 0 7px; }
+.arcade-organization-page #growth-today-panel.arcade-daily-dashboard > .growth-section-title { margin:6px 0 10px; }
+.arcade-organization-page #growth-today-panel > .arcade-daily-work-grid {
+  display:grid;
+  grid-template-columns:minmax(255px,.82fr) minmax(0,1.38fr);
+  gap:12px;
+  align-items:start;
+  margin-bottom:13px;
+}
+.arcade-organization-page #growth-today-panel .arcade-daily-work-grid > :is(.growth-quest,.guided-card) {
+  min-width:0;
+  margin:0;
+  border:1px solid var(--arcade-panel-border);
+  border-radius:14px;
+  background:var(--arcade-panel);
+  color:var(--arcade-panel-copy);
+  box-shadow:none;
+}
+.arcade-organization-page #growth-today-panel .arcade-daily-work-grid > .growth-quest > summary.growth-task {
+  padding:14px;
+  grid-template-columns:32px minmax(0,1fr);
+  gap:8px 10px;
+}
+.arcade-organization-page #growth-today-panel .arcade-daily-work-grid .growth-quest .growth-task-art { width:30px;height:34px; }
+.arcade-organization-page #growth-today-panel .arcade-daily-work-grid .growth-quest .growth-task-copy h3 {
+  margin:0 0 5px;
+  font-size:1rem;
+  color:var(--arcade-panel-heading);
+}
+.arcade-organization-page #growth-today-panel .arcade-daily-work-grid .growth-quest .growth-task-disclosure {
+  grid-column:2;
+  justify-self:start;
+  min-height:40px;
+  padding:7px 10px;
+}
+.arcade-organization-page #growth-today-panel .arcade-daily-work-grid > .guided-card { padding:16px; }
+.arcade-organization-page #growth-today-panel .arcade-daily-work-grid > .guided-card > .quest-cover {
+  padding:0;
+  margin:0 0 10px;
+  min-height:0;
+  background:transparent;
+  cursor:default;
+}
+.arcade-organization-page #growth-today-panel .arcade-daily-work-grid > .guided-card > .quest-cover::before { display:none; }
+.arcade-organization-page #growth-today-panel .arcade-daily-work-grid .guided-card > .quest-cover h3 {
+  margin:0 0 5px;
+  color:var(--arcade-panel-heading);
+  font-size:1rem;
+  line-height:1.35;
+}
+.arcade-organization-page #growth-today-panel .arcade-daily-work-grid .guided-card p {
+  color:var(--arcade-panel-copy);
+  font-size:.8rem;
+  line-height:1.5;
+  margin:6px 0;
+}
+.arcade-organization-page #growth-today-panel .arcade-daily-work-grid .guided-card .share-card-preview { width:100%;max-width:100%;height:auto; }
+.arcade-organization-page #growth-today-panel .arcade-daily-work-grid > .guided-card button { max-width:100%; }
+@media (max-width:900px) {
+  .arcade-organization-page #growth-today-panel.arcade-daily-dashboard > .arcade-daily-masthead,
+  .arcade-organization-page #growth-today-panel > .arcade-daily-work-grid { grid-template-columns:minmax(0,1fr); }
+  .arcade-organization-page #growth-today-panel .arcade-daily-masthead > .growth-strip {
+    grid-template-columns:42px minmax(0,1fr);
+    padding:10px 12px;
+  }
+  .arcade-organization-page #growth-today-panel .arcade-daily-masthead .growth-strip-actions {
+    grid-column:1/-1;
+    width:100%;
+    justify-content:flex-end;
+  }
+  .arcade-organization-page #growth-today-panel .arcade-daily-masthead > #growth-check-in-task {
+    grid-template-columns:32px minmax(0,1fr) auto;
+    padding:10px 12px;
+    gap:8px;
+  }
+  .arcade-organization-page #growth-today-panel .arcade-daily-masthead #growth-check-in-task :is(.growth-row-action,#growth-task-auth) {
+    grid-column:3;
+    min-height:44px;
+  }
+  .arcade-organization-page #growth-today-panel .arcade-daily-work-grid > .growth-quest > summary.growth-task {
+    grid-template-columns:32px minmax(0,1fr) auto;
+  }
+  .arcade-organization-page #growth-today-panel .arcade-daily-work-grid .growth-quest .growth-task-disclosure { grid-column:3; }
+}
+@media (max-width:480px) {
+  .arcade-organization-page #growth-today-panel .arcade-daily-masthead > #growth-check-in-task {
+    grid-template-columns:30px minmax(0,1fr);
+  }
+  .arcade-organization-page #growth-today-panel .arcade-daily-masthead #growth-check-in-task :is(.growth-row-action,#growth-task-auth) {
+    grid-column:2;justify-self:start;
+  }
+  .arcade-organization-page #growth-today-panel .arcade-daily-work-grid > .growth-quest > summary.growth-task {
+    grid-template-columns:30px minmax(0,1fr);
+  }
+  .arcade-organization-page #growth-today-panel .arcade-daily-work-grid .growth-quest .growth-task-disclosure { grid-column:2; }
+  .arcade-organization-page #growth-today-panel .arcade-daily-work-grid > .guided-card { padding:13px; }
+}
+@media (forced-colors:active) {
+  .arcade-organization-page #growth-today-panel .arcade-daily-work-grid > :is(.growth-quest,.guided-card),
+  .arcade-organization-page #growth-today-panel .arcade-daily-masthead > :is(.growth-strip,.growth-task) { border:1px solid CanvasText; }
+}
