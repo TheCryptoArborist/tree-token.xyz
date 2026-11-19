@@ -12,10 +12,14 @@ on:
       - 'vendor/arcade-trials-engine/**'
       - 'vendor/arcade-events/package.json'
       - 'vendor/arcade-events/package-lock.json'
+      - 'vendor/arcade-monthly/package.json'
+      - 'vendor/arcade-monthly/package-lock.json'
       - 'supabase/migrations/20261118223908_arcade_challenge_pilot.sql'
+      - 'supabase/migrations/20261119005653_arcade_challenge_pilot_auth.sql'
       - 'tests/arcade-trials-adapter.test.mjs'
       - 'tests/arcade-challenge-pilot-*.test.mjs'
       - 'tests/arcade-challenge-client.test.mjs'
+      - 'tests/arcade-challenge-controller.test.mjs'
       - 'tests/arcade-challenge-browser.test.mjs'
       - 'tests/fixtures/arcade-challenge-pilot/**'
       - 'docs/arcade-challenge-pilot.md'
@@ -33,14 +37,20 @@ jobs:
         with:
           node-version: 24
           cache: npm
-          cache-dependency-path: vendor/arcade-events/package-lock.json
+          cache-dependency-path: |
+            vendor/arcade-events/package-lock.json
+            vendor/arcade-monthly/package-lock.json
       - run: npm ci --ignore-scripts --no-audit --no-fund
         working-directory: vendor/arcade-events
-      - run: node --test tests/arcade-trials-adapter.test.mjs tests/arcade-challenge-pilot-database.test.mjs tests/arcade-challenge-pilot-service.test.mjs tests/arcade-campaign-foundation.test.mjs
-      - run: node --test tests/arcade-challenge-client.test.mjs
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+        working-directory: vendor/arcade-monthly
+      - run: node --test tests/arcade-trials-adapter.test.mjs tests/arcade-challenge-pilot-*.test.mjs tests/arcade-campaign-foundation.test.mjs
+      - run: node --test tests/arcade-challenge-client.test.mjs tests/arcade-challenge-controller.test.mjs
       - run: node scripts/arcade-campaigns/pilot-demo.mjs
       - name: Exercise locks in independent PostgreSQL workers
         run: ARCADE_PG_BIN="$(pg_config --bindir)" node scripts/arcade-campaigns/pilot-postgres-check.mjs
+      - name: Exercise isolated sign-in nonce races in PostgreSQL workers
+        run: ARCADE_PG_BIN="$(pg_config --bindir)" node scripts/arcade-campaigns/pilot-auth-postgres-check.mjs
       - run: node scripts/arcade-campaigns/package-pilot.mjs
       - run: git diff --check
 
@@ -55,13 +65,28 @@ jobs:
         with:
           node-version: 24
           cache: npm
-          cache-dependency-path: vendor/arcade-events/package-lock.json
+          cache-dependency-path: |
+            vendor/arcade-events/package-lock.json
+            vendor/arcade-monthly/package-lock.json
       - run: npm ci --ignore-scripts --no-audit --no-fund
         working-directory: vendor/arcade-events
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+        working-directory: vendor/arcade-monthly
       - name: Install isolated browser verification tools
         run: npm install --prefix "$RUNNER_TEMP/arcade-pilot-browser" --ignore-scripts --no-audit --no-fund playwright@1.56.1
-      - name: Install Chromium for the test job
-        run: '"$RUNNER_TEMP/arcade-pilot-browser/node_modules/.bin/playwright" install --with-deps chromium'
+      - name: Select the installed runner browser or install Chromium
+        run: |
+          pilot_chrome_path=''
+          for pilot_chrome_command in google-chrome google-chrome-stable chromium chromium-browser; do
+            if pilot_chrome_path="$(command -v "$pilot_chrome_command")"; then
+              break
+            fi
+          done
+          if [ -n "$pilot_chrome_path" ]; then
+            printf 'ARCADE_PILOT_CHROME_PATH=%s\n' "$pilot_chrome_path" >> "$GITHUB_ENV"
+          else
+            "$RUNNER_TEMP/arcade-pilot-browser/node_modules/.bin/playwright" install --with-deps chromium
+          fi
       - name: Exercise actual page, service, SQL and engine with synthetic sessions
         env:
           ARCADE_PILOT_BROWSER_MODULE: ${{ runner.temp }}/arcade-pilot-browser/node_modules/playwright/index.mjs

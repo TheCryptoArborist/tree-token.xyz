@@ -132,7 +132,7 @@ export function mountChallengeView(root, {onStart,onMove,onRetry,onRefresh,onSig
     });
     for (const [id,button] of walletButtons) if (!ids.has(id)) {button.remove();walletButtons.delete(id);}
     show('wallet-picker',Boolean(model.pickerOpen));
-    write('wallet-hint',model.walletHint || (list.length ? 'Connect and approve one sign-in message. Playing this test has no gas fee.' : 'No compatible Sui wallet was detected. Open this page in a browser with your Sui wallet, then refresh.'));
+    write('wallet-hint',model.walletHint || (list.length ? 'Connect and approve one free pilot sign-in message. No NFTree, purchase or gas fee is required.' : 'No compatible Sui wallet was detected. Open this page in a browser with your Sui wallet, then refresh.'));
   }
   function restoreActionFocus(model) {
     if (!actionFocus || model.busy) return;
@@ -163,8 +163,8 @@ export function mountChallengeView(root, {onStart,onMove,onRetry,onRefresh,onSig
     root.setAttribute('aria-busy',String(busy));
     write('environment',model.environmentLabel || '');
     show('environment',Boolean(model.environmentLabel));
-    write('session-heading',session ? `${session.walletName || 'Sui wallet'} · ${shortWallet(session.wallet)}` : phase === 'loading' ? 'Loading your Arcade session…' : 'Sign in with your Arcade wallet');
-    write('session-note',session ? 'Arcade session active · No transaction needed to play.' : 'One sign-in message. No gas fee.');
+    write('session-heading',session ? `${session.walletName || 'Sui wallet'} · ${shortWallet(session.wallet)}` : phase === 'loading' ? 'Loading your free pilot sign-in…' : 'Sign in to the free pilot');
+    write('session-note',session ? session.sessionScope === 'challenge-pilot' ? 'Free pilot sign-in active · No NFTree or transaction needed.' : 'Existing Arcade sign-in reused · Free pilot play.' : 'One free sign-in message · No NFTree required.');
     el('session-heading').title = session?.wallet || '';
     el('session-dot').dataset.connected = String(Boolean(session));
     show('sign-in',!session && phase !== 'loading');
@@ -181,7 +181,7 @@ export function mountChallengeView(root, {onStart,onMove,onRetry,onRefresh,onSig
     write('start',model.startLabel || (phase === 'loading' ? 'Loading challenge…' : busy ? 'Please wait…' : phase === 'session-changed' ? 'Start a new match' : ended ? 'Start another match' : phase === 'closed' ? 'Pilot is closed' : 'Start free test match'));
     write('start-note',model.storageAvailable === false ? 'Allow browser storage to save and resume a match.' : session ? 'Four standard cards. No paid advantages.' : 'Sign in above to begin a free test match.');
     write('objective-note',challenge?.description || 'Reach the target Growth before Garden Bot. Your hand is dealt when the match starts.');
-    if (rules?.maxAttemptSeconds) write('time-rule',`Each match allows up to ${Math.ceil(rules.maxAttemptSeconds / 60)} minutes and 100 moves. It ends sooner if the pilot closes or your original Arcade session expires.`);
+    if (rules?.maxAttemptSeconds) write('time-rule',`Each match allows up to ${Math.ceil(rules.maxAttemptSeconds / 60)} minutes and 100 moves. It ends sooner if the pilot closes or your original sign-in session expires.`);
     const start = utcLabel(rules?.window?.startsAt); const end = utcLabel(rules?.window?.endsAt);
     write('window',start && end ? `Pilot window: ${start} to ${end}.` : '');
     show('window',Boolean(start && end));

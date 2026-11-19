@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { webcrypto } from 'node:crypto';
-import { createPilotClient } from '../scripts/arcade-challenge-client.mjs';
+import { createPilotClient, validArcadeSession, validPilotSession } from '../scripts/arcade-challenge-client.mjs';
 import { createServiceFixture, ORIGIN, RAW_TOKEN, WALLET } from './fixtures/arcade-challenge-pilot/service-fixture.mjs';
 
 const memoryStorage = () => {
@@ -135,4 +135,38 @@ test('disabling a pilot closes an active match after the authoritative rejection
   assert.equal(c.getState().retryable, false); assert.equal(c.getState().canStart, false);
   assert.equal(await fixture.count('requests'), 0);
   await c.move(27); assert.equal(await fixture.count('requests'), 0);
+}));
+
+test('pilot and Arcade bearer formats cannot be relabeled into each other', () => {
+  const now = Date.now(), common = { version: 1, wallet: WALLET, expiresAt: new Date(now + 600000).toISOString() };
+  const pilot = { ...common, token: 'pilot_' + 'd'.repeat(64), origin: ORIGIN, sessionScope: 'challenge-pilot' };
+  assert.equal(validPilotSession(pilot, now, ORIGIN), true);
+  assert.equal(validArcadeSession(pilot, now), false);
+  assert.equal(validArcadeSession({ ...common, token: RAW_TOKEN }, now), true);
+  assert.equal(validArcadeSession({ ...common, token: RAW_TOKEN, sessionScope: 'arcade' }, now), true);
+  for (const patch of [{ token: RAW_TOKEN }, { sessionScope: 'arcade' }, { sessionScope: undefined }, { origin: ORIGIN + '/play/' }, { origin: 'https://wrong-origin.example' }, { expiresAt: new Date(now).toISOString() }]) {
+    assert.equal(validPilotSession({ ...pilot, ...patch }, now, ORIGIN), false);
+  }
+  assert.equal(validArcadeSession({ ...common, token: RAW_TOKEN, sessionScope: 'challenge-pilot' }, now), false);
+});
+
+test('pilot-only token restores the original pending move while a replacement session requires a new attempt', () => scenario(async ({ client, fixture, session, storage, requests, setHook }) => {
+  const issued = await fixture.addPilotSession({ rawToken: 'pilot_' + 'd'.repeat(64) });
+  const pilotSession = { ...session, token: issued.rawToken, origin: ORIGIN, expiresAt: issued.expiresAt, sessionScope: 'challenge-pilot' };
+  const first = client({ origin: ORIGIN }); await first.setSession(pilotSession); await first.start();
+  assert.equal(first.getState().session.sessionScope, 'challenge-pilot');
+  let dropped = false;
+  setHook(async ({ action, perform }) => { const response = await perform(); if (action === 'move' && !dropped) { dropped = true; throw new TypeError('Lost pilot response after commit.'); } return response; });
+  await first.move(19); assert.equal(first.getState().phase, 'pending');
+  const key = 'tree-arcade:challenge-pilot:v1:' + fixture.rules.pilotId;
+  assert.equal(storage.getItem(key).includes(pilotSession.token), false);
+  first.destroy();
+  const resumed = client({ origin: ORIGIN }); await resumed.setSession(pilotSession);
+  assert.equal(resumed.getState().phase, 'playing'); assert.equal(resumed.getState().attempt.version, 1);
+  assert.equal(await fixture.count('requests'), 1);
+  const moves = requests.filter(row => row.action === 'move'); assert.deepEqual(moves[1].body, moves[0].body);
+  const prior = storage.getItem(key), replacement = await fixture.addPilotSession();
+  await resumed.setSession({ ...pilotSession, token: replacement.rawToken, expiresAt: replacement.expiresAt });
+  assert.equal(resumed.getState().phase, 'session-changed'); assert.equal(resumed.getState().canStart, true);
+  assert.equal(storage.getItem(key), prior); assert.equal(await fixture.count('attempts'), 1);
 }));

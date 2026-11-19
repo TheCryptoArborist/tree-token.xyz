@@ -1,0 +1,112 @@
+{
+  "kind": "arcade-challenge-pilot-canonical-browser-check",
+  "schemaVersion": 1,
+  "startedAt": "2026-11-19T00:51:37.840Z",
+  "origin": "https://tree-token.xyz",
+  "pilotId": "arborist-trials-november-2026",
+  "passed": false,
+  "testIdentity": "Fresh unfunded ephemeral operator wallet; protocol/UI integration test, not a Slush extension test or a real player.",
+  "mode": "nonpaying-pilot",
+  "payable": false,
+  "prizeEligible": false,
+  "awardsEnabled": false,
+  "privateKeyLocation": "Node process memory only; never sent to the browser or written to an artifact.",
+  "limits": {
+    "maxApiRequests": 30,
+    "maxDistinctMoves": 3,
+    "maxAttempts": 1
+  },
+  "checks": {
+    "generatedSignatureVerifiedLocally": true
+  },
+  "screenshots": [],
+  "cleanup": {
+    "sessionRevoked": false,
+    "attemptsExpireAutomatically": true
+  },
+  "browser": {
+    "version": "157.0.8103.50",
+    "executableSource": "runner-browser"
+  },
+  "authenticationFailure": {
+    "action": "session",
+    "httpStatus": 403,
+    "code": "nftree-required",
+    "category": "eligibility"
+  },
+  "completedAt": "2026-11-19T00:51:59.760Z",
+  "counts": {
+    "apiRequests": 2,
+    "explicitSignatures": 1,
+    "realSessions": 0,
+    "attemptStarts": 0,
+    "distinctMoves": 0,
+    "browserErrors": 0
+  },
+  "failures": [
+    "live-api-response-not-successful"
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/play/challenge/",
+      "action": null,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/styles/arcade-challenge.css",
+      "action": null,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/assets/tree-token-logo-official.webp",
+      "action": null,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/scripts/arcade-challenge.mjs",
+      "action": null,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/scripts/arcade-challenge-client.mjs",
+      "action": null,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/scripts/arcade-challenge-view.mjs",
+      "action": null,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/assets/arcade/arcade-growth-wallet.js",
+      "action": null,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/assets/tree-token-logo-official.webp",
+      "action": null,
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/arcade-growth",
+      "action": "challenge",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/arcade-growth",
+      "action": "session",
+      "status": 403,
+      "failed": true
+    }
+  ]
+}

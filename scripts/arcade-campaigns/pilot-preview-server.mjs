@@ -4,8 +4,7 @@ import http from 'node:http';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { randomUUID, randomBytes } from 'node:crypto';
-import { createServiceFixture, ORIGIN, RAW_TOKEN, WALLET } from '../../tests/fixtures/arcade-challenge-pilot/service-fixture.mjs';
+import { createServiceFixture, ORIGIN, RAW_TOKEN, WALLET, hash } from '../../tests/fixtures/arcade-challenge-pilot/service-fixture.mjs';
 
 const ROOT = fileURLToPath(new URL('../../', import.meta.url));
 const SESSION_KEY = 'tree-arcade:daily-growth:session:v1';
@@ -33,11 +32,17 @@ export async function disconnectWallet(){state={connected:false,address:null,wal
 
 /** Isolated actual service + SQL + engine, with synthetic authentication only. */
 export async function startPilotPreviewServer({ port = 0, fixtureOptions = {} } = {}) {
-  const fixture = await createServiceFixture(fixtureOptions);
+  const issuedMessages = new Set();
+  const fixture = await createServiceFixture({ ...fixtureOptions, handlerDependencies: {
+    ...fixtureOptions.handlerDependencies,
+    // A synthetic wallet remains explicit in this local-only fixture. The real
+    // challenge, single-use nonce and pilot-session SQL all run through the
+    // production handler; only signature verification is injected here.
+    verifyPersonalMessage: async ({ message, signature, wallet }) => wallet === WALLET && signature === 'LOCAL_FIXTURE_SIGNATURE' && issuedMessages.has(message),
+  } });
   let dropNextMove = false, failNextMove = false, closed = false;
-  const issuedChallenges = new Set();
   const log = [];
-  let authSession = { token: RAW_TOKEN, expiresAt: fixture.session.expiresAt };
+  let authSession = { token: RAW_TOKEN, expiresAt: fixture.session.expiresAt, origin: ORIGIN, sessionScope: 'arcade' };
   const session = () => ({ version: 1, ...authSession, wallet: WALLET, walletId: 'fixture-wallet', walletName: 'Local test wallet' });
   const send = (res, status, value, type = 'application/json; charset=utf-8') => {
     res.writeHead(status, { 'content-type': type, 'cache-control': 'no-store', 'x-content-type-options': 'nosniff' });
@@ -60,33 +65,26 @@ export async function startPilotPreviewServer({ port = 0, fixtureOptions = {} } 
         if (action === 'drop-next-move-response') dropNextMove = true;
         else if (action === 'fail-next-move') failNextMove = true;
         else if (action === 'disable-pilot') await fixture.db.query("update private.arcade_challenge_pilot_configs set status='disabled' where pilot_id=$1", [fixture.rules.pilotId]);
-        else if (action === 'revoke-session') await fixture.db.query('update private.arcade_growth_sessions set revoked_at=clock_timestamp() where token_sha256=$1', [fixture.session.tokenHash]);
+        else if (action === 'revoke-session') {
+          const table = authSession.sessionScope === 'challenge-pilot' ? 'arcade_challenge_pilot_sessions' : 'arcade_growth_sessions';
+          await fixture.db.query(`update private.${table} set revoked_at=clock_timestamp() where token_sha256=$1`, [hash(authSession.token)]);
+        }
         else if (action === 'new-session') {
-          const next = await fixture.addSession({ rawToken: 'c'.repeat(64) });
-          return send(res, 200, { session: { ...session(), token: next.rawToken, expiresAt: next.expiresAt } });
+          const pilot = authSession.sessionScope === 'challenge-pilot';
+          const next = await (pilot ? fixture.addPilotSession({ rawToken: 'pilot_' + 'c'.repeat(64) }) : fixture.addSession({ rawToken: 'c'.repeat(64) }));
+          authSession = { token: next.rawToken, expiresAt: next.expiresAt, origin: localOrigin, sessionScope: pilot ? 'challenge-pilot' : 'arcade' };
+          return send(res, 200, { session: session() });
         } else return send(res, 400, { error: 'unknown-fixture-action' });
         return send(res, 200, { localOnly: true, action });
       }
       if (url.pathname === '/__fixture/inspection' && req.method === 'GET') {
         const rows = await fixture.db.query('select version,status,moves from private.arcade_challenge_pilot_attempts order by started_at');
-        return send(res, 200, { attempts: rows.rows, requestCount: await fixture.count('requests'), log });
+        const arcadeSessions = (await fixture.db.query('select count(*)::int as n from private.arcade_growth_sessions')).rows[0].n;
+        const pilotSessions = (await fixture.db.query('select count(*)::int as n from private.arcade_challenge_pilot_sessions')).rows[0].n;
+        return send(res, 200, { attempts: rows.rows, requestCount: await fixture.count('requests'), arcadeSessions, pilotSessions, log });
       }
       if (url.pathname === '/assets/arcade/arcade-growth-wallet.js' && req.method === 'GET') return send(res, 200, bridgeSource(), 'text/javascript; charset=utf-8');
-      if (url.pathname === '/api/arcade-growth' && req.method === 'POST') {
-        const body = JSON.parse(await readBody(req));
-        const action = url.searchParams.get('action');
-        log.push({ action, scope: 'synthetic-auth' });
-        if (action === 'challenge' && body.wallet === WALLET) {
-          const challengeId = randomUUID(); issuedChallenges.add(challengeId);
-          return send(res, 200, { status: 'ok', challenge: { challengeId, wallet: WALLET, message: 'LOCAL TEST ONLY: synthetic Arcade sign-in. No wallet signature or transaction.', expiresAt: new Date(Date.now() + 240000).toISOString() } });
-        }
-        if (action === 'session' && body.wallet === WALLET && body.signature === 'LOCAL_FIXTURE_SIGNATURE' && issuedChallenges.delete(body.challengeId)) {
-          const created = await fixture.addSession({ rawToken: randomBytes(32).toString('hex') });
-          authSession = { token: created.rawToken, expiresAt: created.expiresAt };
-          return send(res, 200, { status: 'ok', session: session() });
-        }
-        return send(res, 400, { status: 'error', error: 'fixture-auth-only', message: 'Only synthetic message sign-in is available in the local harness.' });
-      }
+      if (url.pathname === '/api/arcade-growth') return send(res, 403, { status: 'error', error: 'nft-required', message: 'The existing Arcade gate is deliberately unavailable in this free-pilot fixture.' });
       if (url.pathname === '/api/arcade-challenge-pilot') {
         const raw = req.method === 'GET' ? undefined : await readBody(req);
         const action = url.searchParams.get('action');
@@ -99,6 +97,15 @@ export async function startPilotPreviewServer({ port = 0, fixtureOptions = {} } 
         if (req.headers.authorization) headers.set('authorization', req.headers.authorization);
         const response = await fixture.handler(new Request(ORIGIN + url.pathname + url.search, { method: req.method, headers, ...(raw === undefined ? {} : { body: raw }) }));
         if (action === 'move' && dropNextMove && response.ok) { dropNextMove = false; req.socket.destroy(); return; }
+        if (['auth-challenge', 'auth-session'].includes(action) && response.ok) {
+          const value = await response.json();
+          // The production handler remains restricted to canonical origins.
+          // Only this loopback adapter maps its public origin field back to the
+          // actual fixture page; the exact issued message is never rewritten.
+          if (action === 'auth-challenge') { issuedMessages.add(value.challenge.message); value.challenge.origin = localOrigin; }
+          else { value.session.origin = localOrigin; authSession = value.session; }
+          return send(res, response.status, value);
+        }
         res.writeHead(response.status, Object.fromEntries(response.headers));
         res.end(Buffer.from(await response.arrayBuffer())); return;
       }
@@ -107,7 +114,7 @@ export async function startPilotPreviewServer({ port = 0, fixtureOptions = {} } 
         let html = await fs.readFile(path.join(ROOT, 'production/arcade-challenge-static/index.html'), 'utf8');
         html = html.replace(/data-pilot-id="[^"]*"/g, `data-pilot-id="${fixture.rules.pilotId}"`);
         const marker = `<p style="margin:0;padding:8px 16px;background:#ffe263;color:#071710;font:700 13px system-ui;text-align:center">LOCAL TEST · Synthetic wallet · No production data, prizes or transactions</p>`;
-        const init = `<script>if(!sessionStorage.getItem('tree-pilot-fixture-initialized')){sessionStorage.setItem('tree-pilot-fixture-initialized','1');${url.searchParams.get('fixture') === 'signed-out' ? `localStorage.removeItem(${JSON.stringify(SESSION_KEY)});` : `localStorage.setItem(${JSON.stringify(SESSION_KEY)},${JSON.stringify(JSON.stringify(session()))});`}}</script>`;
+        const init = `<script>if(!sessionStorage.getItem('tree-pilot-fixture-initialized')){sessionStorage.setItem('tree-pilot-fixture-initialized','1');${url.searchParams.get('fixture') === 'signed-out' ? '' : `localStorage.setItem(${JSON.stringify(SESSION_KEY)},${JSON.stringify(JSON.stringify(session()))});`}}</script>`;
         html = html.replace(/<body([^>]*)>/, `<body$1>${marker}${init}`);
         return send(res, 200, html, 'text/html; charset=utf-8');
       }

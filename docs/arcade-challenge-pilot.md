@@ -2,18 +2,27 @@
 
 ## Status
 
-The next implementation after the offline campaign allocator is a working,
-**nonpaying server-authoritative Arborist Trials pilot service**. It includes a
-pinned game verifier, an authenticated HTTP handler, a private transactional
-attempt ledger, a reproducible rehearsal and an isolated function package.
+The initial **Test challenge — no prizes** page and game service were published
+at `/play/challenge/`. The subsequent canonical test with a fresh unfunded
+wallet found a real integration defect: the existing Arcade session endpoint
+returned `nftree-required`, so a new wallet could not enter the advertised free
+pilot. Existing signed-in fixtures had not exercised that ownership gate.
 
-The playable frontend is now implemented under `/play/challenge/`, with a
-Campaigns entry, four legal-action cards, Growth meters, current effects, round
-feedback and an explicit **Test challenge — no prizes** label. It reuses the
-published message-only wallet bridge and shared Arcade session. It never calls
-attendance, check-in, payment or transaction actions.
+This source now implements a separate, pilot-only sign-in to correct that
+defect. The auth correction is under release review and is not yet asserted as
+published or canonically verified here. The newest `production/README.md`
+section and dated release records identify the actual live deployment and
+observed outcomes. A successful asset publication is distinct from a successful
+fresh-wallet authentication/play check.
 
-The reviewed migration was applied to the hosted project as version
+The Campaigns entry opens a screen with four standard cards, Growth meters,
+current effects and round feedback. The correction keeps the published
+message-only wallet bridge. New sign-in requests use only the pilot endpoint;
+an already valid same-wallet Arcade session can still be read and reused for
+gameplay. Starting a match is explicit; the pilot does not submit attendance,
+check-in, payment or transaction actions.
+
+The initial reviewed migration was applied to the hosted project as version
 `20261119000653`. All eleven live helper/RPC definitions match an isolated
 application of the exact source byte for byte; browser roles cannot access the
 three private tables or four public RPCs. The enabled no-prize configuration
@@ -24,20 +33,61 @@ session expiry or pilot close. Its canonical rule hash is
 See `production/arcade-challenge-db-readiness.json` and
 `data/arcade-challenge-pilot-november-2026.json`.
 
-This source status does not assert publication. The newest
-`production/README.md` section and dated release records identify the current
-live deployment. The isolated preservation workflow publishes the five new
-page assets and one function only after the exact candidate is reviewed.
-Funded campaigns and prize eligibility remain disabled.
+The initial preservation release added five static paths and one function and
+changed only the Campaigns organization module. The separate auth migration,
+`supabase/migrations/20261119005653_arcade_challenge_pilot_auth.sql`, is now
+applied to the hosted project as version `20261119010740`. All twenty hosted
+pilot function definitions and grants match the reviewed local application
+exactly. All six protected Arcade auth definitions/grants and the Arcade
+session-row fingerprint remain unchanged; there were no prior pilot attempts,
+and the original enabled pilot configuration is unchanged. The hosted proof is
+`production/arcade-challenge-auth-db-readiness.json`. Auth-correction publication
+and fresh-wallet canonical verification remain pending. Funded campaigns,
+prize eligibility and payout execution remain disabled.
+
+## Isolated free pilot authentication
+
+New players explicitly connect a Sui wallet and approve a server-issued,
+single-use personal message. The message names the wallet, canonical origin,
+nonce, expiry and pilot-only audience. It states that the sign-in grants no
+check-ins, rewards, Event access, payments, transfers or other Arcade
+permissions. It requires no NFTree, purchase, funded account or transaction.
+
+All three actions use `/api/arcade-challenge-pilot`: `auth-challenge`,
+`auth-session` and `auth-logout`. The challenge is bounded to five minutes and
+the session to one hour. Issued tokens have the form `pilot_` plus 64 hex
+characters and carry `sessionScope: "challenge-pilot"`. The browser checks the
+challenge/session wallet, origin, scope and expiry before retaining a session;
+it checks the challenge before asking the wallet to sign.
+
+Pilot sessions are stored under the separate
+`tree-arcade:challenge-pilot:session:v1` key, preferring tab storage. The shared
+`tree-arcade:daily-growth:session:v1` key is read-only in this application: the
+pilot never creates, replaces, erases or revokes an Arcade session. Existing
+64-hex Arcade tokens remain accepted for pilot gameplay, while the new
+pilot-only token cannot authorize the original Arcade session reader or its
+attendance/reward routes, including when its prefix is stripped.
+
+The auth migration adds separate private challenge/session tables and a scoped
+binding layer for pilot attempts. It preserves existing Arcade session rows,
+function definitions and grants, as well as attempts bound to old Arcade
+sessions. Nonce consumption, session expiry and revocation are checked in the
+database. Personal-message verification remains on the server using the
+existing pinned SDK; no private signing key is placed in the production page.
 
 ## Player recovery
 
 The browser stores the opaque attempt token and a hash of its original session
-in tab storage. It does not copy the Arcade bearer token into that record.
+in tab storage. It does not copy either kind of bearer token into that record.
 An uncertain move is persisted with its original UUID, version and card before
 dispatch; refresh and reload resolve that same request before allowing another
 move. Reconnecting the same original session resumes the match. A replacement
 session requires an explicit new attempt, even for the same wallet.
+If both a valid pilot session and a valid Arcade session exist, restoration
+selects the exact original token matching the saved attempt. Wallet changes
+suspend the current match; a change during asynchronous restoration or signing
+cannot leave the previous wallet active in the interface. A newly issued pilot
+session that cannot be retained is revoked without touching Arcade sessions.
 
 Every displayed result is returned by the service. The countdown is anchored
 to database time, and closed/expired/finished states disable card choices.
@@ -72,9 +122,12 @@ access and ranked-result flows are separate.
 | --- | --- |
 | `scripts/arcade-campaigns/trials-adapter.mjs` | Reconstruct the pinned game from server entropy and stored moves; return computed results and a sanitized public view. |
 | `scripts/arcade-campaigns/pilot-rules.mjs` | Validate and content-hash an exact no-prize configuration, including game/build, objective, rules date, UTC window and attempt duration. |
-| `netlify/challenge-functions/arcade-challenge-pilot.mjs` | Authenticate the existing Arcade session, accept bounded action requests, create opaque attempts, invoke the verifier and persist atomic moves. This directory is outside the currently deployed function inventory. |
+| `netlify/challenge-functions/arcade-challenge-pilot.mjs` | Route scoped pilot auth and gameplay, accept existing Arcade sessions for gameplay, validate bounded requests, create opaque attempts, invoke the verifier and persist atomic moves. This isolated build directory is packaged separately from existing functions. |
+| `scripts/arcade-campaigns/pilot-auth.mjs` | Issue pilot-only challenges, verify exact personal messages with the pinned SDK, consume a nonce once, create bounded sessions and revoke only pilot tokens. |
 | `scripts/arcade-campaigns/pilot-rpc.mjs` | Server-only, allowlisted RPC transport using the existing database environment convention. Sanitized failures never expose keys or database details. |
 | `supabase/migrations/20261118223908_arcade_challenge_pilot.sql` | Empty private configuration, attempt and request tables; service-only RPCs; locks, immutable records, idempotency and server deadlines. |
+| `supabase/migrations/20261119005653_arcade_challenge_pilot_auth.sql` | Separate private pilot authentication, scoped session bindings and an upgrade preserving existing Arcade definitions, privileges, rows and session-bound attempts. |
+| `scripts/arcade-challenge.mjs`, `scripts/arcade-challenge-client.mjs`, `scripts/arcade-challenge-view.mjs` | Explicit scoped sign-in, read-only Arcade compatibility, original-session recovery and presentation of server-provided game state. |
 | `scripts/arcade-campaigns/pilot-demo.mjs` | Rehearse the real handler, engine and SQL locally using synthetic wallet sessions and PGlite. |
 | `scripts/arcade-campaigns/package-pilot.mjs` | Package this one function for review with the existing pinned build tooling. It contains no deployment operation. |
 
@@ -87,8 +140,9 @@ evidence.
 
 ### Start and rules
 
-The service reads the existing authenticated Arcade session, hashes its bearer
-token and loads an operator-configured pilot. The client supplies the pilot ID
+The service reads the authenticated pilot or existing Arcade session through
+the scoped pilot session reader, hashes its complete bearer token and loads an
+operator-configured pilot. Token format must match its stored scope. The client supplies the pilot ID
 and the rule hash it reviewed. The server verifies that hash against the exact
 configuration and its own allowlisted adapter. Unknown or changed builds fail
 closed.
@@ -181,7 +235,9 @@ From the repository root, restore the already pinned test/build tools if needed:
 
 ```sh
 npm ci --prefix vendor/arcade-events --ignore-scripts --no-audit --no-fund
+npm ci --prefix vendor/arcade-monthly --ignore-scripts --no-audit --no-fund
 node --test tests/arcade-trials-adapter.test.mjs tests/arcade-challenge-pilot-database.test.mjs tests/arcade-challenge-pilot-service.test.mjs tests/arcade-campaign-foundation.test.mjs
+node --test tests/arcade-challenge-pilot-auth.test.mjs tests/arcade-challenge-pilot-auth-database.test.mjs tests/arcade-challenge-client.test.mjs tests/arcade-challenge-controller.test.mjs
 node scripts/arcade-campaigns/pilot-demo.mjs
 node scripts/arcade-campaigns/package-pilot.mjs
 ```
@@ -212,25 +268,53 @@ PGlite runs through one connection. A separate disposable PostgreSQL 17.11
 test now verifies actual lock contention across 100 independent workers:
 competing moves, identical and divergent retries, disable/revocation before
 commit, cutoff while blocked and the active-attempt cap all passed. Evidence is
-in `docs/arcade-challenge-postgres-validation-20261119.json`. Eleven additional
-client/HTTP/SQL/engine tests cover recovery and session behavior. Browser tests
-use the same service and SQL with explicitly synthetic sessions; canonical
-signed-message verification is reported separately from wallet-extension UX.
+in `docs/arcade-challenge-postgres-validation-20261119.json`. The auth upgrade
+also has a separate independent-worker harness in
+`scripts/arcade-campaigns/pilot-auth-postgres-check.mjs`; actual results belong
+to its dated evidence and the final source CI run.
+
+The corrected client suite contains thirteen tests, including pilot-token
+separation, original-token binding and an interrupted committed move recovered
+with the exact same request. Eleven controller tests exercise explicit free
+sign-in, byte-for-byte preservation of both Arcade storage locations, reuse of
+existing Arcade sessions, original-session selection, revocation, wallet-switch
+races, origin/scope/expiry checks and cleanup of an unretained pilot session.
+These local suites use the actual HTTP handler and SQL with synthetic signatures
+only at the deliberate test verifier seam.
+
+The browser suite contains thirteen cases at desktop and narrow phone widths.
+It invokes the actual new auth handler/SQL; only the synthetic wallet signature
+verifier and local/canonical-origin adapter are confined to the loopback
+harness. Its legacy Arcade auth route deliberately returns an ownership error,
+so free sign-in cannot accidentally succeed through that endpoint. The suite
+checks isolated storage, explicit start and same-session lost-response recovery
+for new pilot tokens as well as existing Arcade-token gameplay. The updated
+browser cases require their own successful CI run; the initial twelve-case
+browser result does not establish the corrected flow.
+
+Canonical fresh-wallet verification uses real personal-message signatures and
+is reported separately from synthetic browser testing and installed wallet-
+extension permission-prompt UX. The initial canonical failure is retained as
+evidence; it must not be described as a successful authentication/play test.
 
 The package manifest is generated at
 `.netlify/arcade-challenge-pilot-functions/manifest.json`; it records exact source
 hashes, ZIP hash, the single route, Node 24 runtime and `deployed: false`. The
-existing production release scripts do not include this function or migration.
+isolated pilot preservation workflow publishes this function. The hosted
+migration is applied and verified separately; it is not part of the Netlify
+deployment.
 
 ## Next implementation milestone
 
-1. Complete desktop/phone candidate and playable-state browser review. The
-   screen, recovery implementation, private hosted schema/configuration and
-   independent-worker database verification are implemented.
-2. Publish the reviewed UI/function with a fresh complete preservation capture,
-   following `docs/arcade-challenge-release.md`. Verify canonical delivery and
-   actual signed-message start/play/resume/retry using an ephemeral operator
-   test wallet; do not conflate this with an installed wallet-extension review.
+1. Complete the scoped auth upgrade's final source CI and browser gates. Its
+   hosted migration, exact function/grant comparison and unchanged Arcade
+   boundaries are recorded in the auth database readiness proof.
+2. Publish the exact reviewed auth correction with a fresh complete preservation
+   capture, following `docs/arcade-challenge-auth-release.md`. Verify real
+   pilot-only signed-message start/play/resume/retry and session cleanup using
+   a fresh unfunded operator wallet, with zero Growth API requests and no
+   changes to shared Arcade storage. Do not conflate this with an installed
+   wallet-extension review.
 3. Observe the bounded no-prize pilot and collect practical usability findings.
 4. Review pilot difficulty and abuse evidence before setting the first funded
    week's target, budget, asset/network, dates and canonical identity policy.
@@ -238,11 +322,15 @@ existing production release scripts do not include this function or migration.
 
 ## Guidance checked for this change
 
-The current MystenLabs skills README was read live on November 18, 2026, followed
-by `frontend-apps/SKILL.md`, `frontend-apps/limitations.md` and
-`sui-ts-sdk-backend/SKILL.md`. The relevant boundary is server-owned authentication
-and secrets. No Sui SDK, wallet, Move, chain-reader or dependency upgrade was
-needed. Netlify Functions guidance and the current Supabase changelog/function
-security guidance informed the isolated handler, private service-only data and
-transactional authorization. Supabase CLI v3.2.0 generated the migration file;
-no command targeted a hosted database.
+The current MystenLabs skills README was checked live during November 18–19,
+2026. Applicable guidance was read from `frontend-apps/SKILL.md`,
+`frontend-apps/limitations.md`, `frontend-apps/non-react.md`,
+`frontend-apps/transactions.md`, `sui-ts-sdk-backend/SKILL.md` and
+`sui-ts-sdk-backend/bootstrap.md`. The working wallet bridge and pinned SDK
+remain in use. Netlify Functions guidance and the current Supabase
+changelog/function security guidance informed the isolated handler, private
+service-only data and transactional authorization. Supabase CLI v3.2.0 generated
+the initial migration file locally. The reviewed initial migration was subsequently
+applied to the hosted project; its actual version, exact-definition comparison
+and permission verification are recorded in
+`production/arcade-challenge-db-readiness.json`.

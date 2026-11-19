@@ -1,4 +1,90 @@
-# Arcade tab design polish — published 2026-11-18
+# Initial Arborist Trials pilot — published 2026-11-19
+
+Current locked production is `6afe412cc313992199456506`, published at
+`2026-11-19T00:33:21.154Z` from reviewed source
+`cabecd68d34d605988a5550fa45b3cd33caffd1b`. PR228 merged as
+`a2fae47e5c0b1fe9259d1c08409a48086a8e194a`; its complete tree equals the reviewed
+candidate tree `1577cdca4ef7e31903d198d74da5de0d85c73b55`.
+Publication workflow `44429745020` passed with final inventory, canonical asset
+delivery, public API and lock verification at `2026-11-19T00:33:26.574Z`.
+
+Campaigns now links to **Arborist Trials — Test challenge, no prizes** at
+`/play/challenge/`. The forest-green and gold page presents four standard cards,
+Growth meters, current effects, round feedback and saved practice results. It
+uses the existing Arcade session and unchanged personal-message wallet bridge.
+Starting a match requires an explicit action. A pending move retains its exact
+request identity across interruptions; the original session can resume the
+match after reload. Changed sessions, unavailable storage, expiry and pilot
+closure have explicit states.
+
+The pilot terms promise free entry without an NFTree, purchase or paid
+advantages. The fresh-wallet canonical check exposed an integration mismatch:
+the reused Arcade authentication returned `nftree-required` before issuing a
+session. Existing Arcade eligibility is correct and remains unchanged. The
+isolated pilot sign-in correction is documented in
+`docs/arcade-challenge-auth-release.md`; its production verification is a
+separate release gate. The test awards no prizes, badges, attendance or
+monthly quest credit. Its
+fixed November 18 ruleset is configured for November 19 at 00:00 UTC through
+the exclusive close of December 1 at 00:00 UTC. Attempts last at most fifteen
+minutes and 100 moves, shortened by original-session expiry or pilot close.
+Funded qualification, unique-player review and payouts remain future work.
+
+The newly captured baseline was `6afe22a623fe04c7a4a9d0c0`. The release adds
+five static paths and the single isolated `arcade-challenge-pilot` function,
+and replaces only `/scripts/arcade-organization.js` to add the Campaigns entry.
+All **619 other original static files**, **49 complete existing backend
+records**, **five schedules**, runtime settings and protected configuration
+were preserved. Current production has **625 static paths and 50 backend
+records**. The exact reviewed function ZIP was carried from preparation to
+publication, with SHA256
+`297ca0cd39d392d52378b985f35d224a1a2c9d49824df0a6fbbdf984964e8342`.
+Existing game, wallet, payment and monthly assets remain byte-identical, as do
+the existing Event terms and November badge cutoff.
+
+The hosted migration was applied separately as version `20261119000653`.
+All eleven live function definitions match the reviewed migration exactly;
+browser roles cannot access the three private tables or four public RPCs.
+The enabled configuration and every pilot result retain explicit nonpaying,
+not-prize-eligible flags. No migration is run by the Netlify publication job.
+
+All seven final-head PR workflows passed. Twelve browser cases exercised the
+actual service, SQL and engine with clearly labeled synthetic sessions at
+desktop and narrow phone widths. Seven PostgreSQL contention scenarios passed
+across 100 independent workers. The exact candidate passed layout, keyboard,
+image, Campaigns-link and no-prize-label review at 1440, 390 and 320 pixels;
+its API remains blocked on the preview origin.
+
+The canonical signed-message run `44432319554` verified the generated
+signature locally and received HTTP 403 `nftree-required` from the original
+Arcade session endpoint. It created no session, attempt or move. This initial
+release did **not** pass fresh-wallet sign-in. The exact failure report is
+retained below; it must not be presented as successful play verification.
+
+Publication evidence:
+`production/arcade-challenge-release-20261119.json` (file SHA256
+`68c0e52c2d7de91380d84bd26573787a43de24ff447fcb9d357f2ce558eeb55a`).
+Complete backend/runtime/schedule and artifact binding:
+`production/arcade-challenge-deployment-20261119.json`.
+Browser evidence:
+`production/arcade-challenge-candidate-review-20261119.json` and
+`production/arcade-challenge-canonical-review-20261119.json`.
+Hosted database and independent-worker evidence:
+`production/arcade-challenge-db-readiness.json` and
+`docs/arcade-challenge-postgres-validation-20261119.json`.
+
+Implementation: https://github.com/TheCryptoArborist/tree-token.xyz/pull/228
+Publication: https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44429745020
+Release procedure: `docs/arcade-challenge-release.md`.
+
+This is the newest live preservation baseline. Capture the complete current
+inventory afresh before any later release. Earlier sections below describe
+their historical deployment states; ordinary Git builds and archived snapshots
+must not replace current production.
+
+---
+
+# Earlier Arcade tab design polish — published 2026-11-18
 
 Current locked production is `6afe22a623fe04c7a4a9d0c0`, published at
 `2026-11-18T22:17:52.239Z` from reviewed source

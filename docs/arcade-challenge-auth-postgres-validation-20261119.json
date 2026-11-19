@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "result": "passed",
+  "checkedAt": "2026-11-19T01:04:27.616Z",
+  "postgres": "postgres (PostgreSQL) 17.11 (Debian 17.11-0+deb13u1)",
+  "environment": "disposable-local-loopback",
+  "syntheticSessions": true,
+  "productionMutated": false,
+  "sourceMigration": "supabase/migrations/20261119005653_arcade_challenge_pilot_auth.sql",
+  "sourceMigrationSHA256": "e0d0ab5165afe09b2632d2eb347909c64bc19563e82cc5d78c8911d8f403fbe3",
+  "independentWorkerCount": 20,
+  "checks": [
+    "single-use-challenge-under-competing-workers",
+    "challenge-expiry-rechecked-after-row-lock",
+    "wallet-rate-limit-serializes-concurrent-challenges",
+    "pilot-revocation-before-move",
+    "session-expiry-rechecked-after-row-lock",
+    "in-flight-move-holds-session-lock-through-commit",
+    "session-expiry-rechecked-after-start-advisory-lock"
+  ]
+}

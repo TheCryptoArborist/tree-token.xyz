@@ -1,10 +1,11 @@
-// Isolated service source. Not included in any current production release.
+// Isolated no-prize service. Pilot sign-in never grants other Arcade access.
 import { createHash, randomBytes } from 'node:crypto';
 import { contentHash } from '../../scripts/arcade-campaigns/core.mjs';
 import { ADAPTER, MAX_MOVES, createChallenge, inspectReplay, publicChallenge, TrialReplayError } from '../../scripts/arcade-campaigns/trials-adapter.mjs';
 import { verifyPilotRecord, verifyPilotRules } from '../../scripts/arcade-campaigns/pilot-rules.mjs';
 import { PilotError } from '../../scripts/arcade-campaigns/pilot-errors.mjs';
 import { createPilotRpc } from '../../scripts/arcade-campaigns/pilot-rpc.mjs';
+import { createPilotAuthenticator, PILOT_AUTH_ACTIONS, PILOT_SESSION_SCOPE } from '../../scripts/arcade-campaigns/pilot-auth.mjs';
 
 const ORIGINS = ['https://tree-token.xyz', 'https://www.tree-token.xyz'];
 const HEX = /^[a-f0-9]{64}$/;
@@ -16,7 +17,7 @@ const exact = (value, keys) => plain(value) && Object.keys(value).length === key
 const json = (body, status = 200) => Response.json(body, { status, headers: { 'Cache-Control': 'no-store', 'Netlify-CDN-Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' } });
 const unavailable = () => new PilotError('service-unavailable', 'Challenge verification is temporarily unavailable.', 503);
 
-async function readBody(req) {
+async function readBody(req, maxBytes = 4096) {
   if (!/^application\/json(?:\s*;|$)/i.test(req.headers.get('content-type') || '') || req.headers.has('content-encoding')) throw new PilotError('invalid-request', 'Send an uncompressed JSON request.');
   const reader = req.body?.getReader(), decoder = new TextDecoder('utf-8', { fatal: true });
   let text = '', size = 0;
@@ -24,7 +25,7 @@ async function readBody(req) {
     if (reader) for (;;) {
       const part = await reader.read(); if (part.done) break;
       size += part.value.byteLength;
-      if (size > 4096) { await reader.cancel(); throw new PilotError('request-too-large', 'The request is too large.', 413); }
+      if (size > maxBytes) { await reader.cancel(); throw new PilotError('request-too-large', 'The request is too large.', 413); }
       text += decoder.decode(part.value, { stream: true });
     }
     text += decoder.decode();
@@ -86,15 +87,21 @@ export function createChallengePilotHandler(deps = {}) {
   return async req => {
     try {
       const url = new URL(req.url), action = url.searchParams.get('action') || 'configuration';
-      if (!['configuration', 'start', 'status', 'move'].includes(action)) throw new PilotError('not-found', 'Unknown challenge action.', 404);
+      if (!['configuration', 'start', 'status', 'move', ...PILOT_AUTH_ACTIONS].includes(action)) throw new PilotError('not-found', 'Unknown challenge action.', 404);
       if (req.method !== (action === 'configuration' ? 'GET' : 'POST')) throw new PilotError('method-not-allowed', 'Method not allowed.', 405);
       const origin = req.headers.get('origin') || url.origin;
       if (!ORIGINS.includes(origin) || !ORIGINS.includes(url.origin) || req.headers.get('sec-fetch-site') === 'cross-site') throw new PilotError('origin-not-allowed', 'Use the official TREE Arcade.', 403);
       if (action === 'configuration' && !url.searchParams.has('pilotId')) return json({ status: 'ok', ...FLAGS, game: ADAPTER, pilotOpen: false, message: 'Arborist Trials pilot support. No funded campaign is open through this service.' });
-      const auth = /^Bearer ([a-f0-9]{64})$/.exec(req.headers.get('authorization') || '');
+      if (PILOT_AUTH_ACTIONS.includes(action)) {
+        const authenticate = createPilotAuthenticator({ rpc: deps.rpc || createPilotRpc(), clock, entropy: deps.authRandomBytes, nonce: deps.authRandomUUID, verifyPersonalMessage: deps.verifyPersonalMessage });
+        const result = await authenticate({ action, body: await readBody(req, action === 'auth-session' ? 24576 : 4096), origin, authorization: req.headers.get('authorization') });
+        return json({ status: 'ok', ...FLAGS, ...result });
+      }
+      const auth = /^Bearer ((?:pilot_)?[a-f0-9]{64})$/.exec(req.headers.get('authorization') || '');
       if (!auth) throw new PilotError('invalid-session', 'Sign in to the Arcade first.', 401);
       const rpc = deps.rpc || createPilotRpc(), base = { p_token_sha256: hash(auth[1]), p_origin: origin };
-      const session = validSession(await rpc('arcade_growth_read_session_v1', base), origin, clock());
+      const session = validSession(await rpc('arcade_challenge_pilot_read_session_v1', base), origin, clock());
+      if (session.sessionScope !== (auth[1].startsWith('pilot_') ? PILOT_SESSION_SCOPE : 'arcade')) throw new PilotError('invalid-session', 'Sign in to the challenge again.', 401);
       if (action === 'configuration') {
         const pilotId = url.searchParams.get('pilotId');
         if (!/^[a-z0-9][a-z0-9-]{5,79}$/.test(pilotId || '')) throw new PilotError('invalid-request', 'Choose a valid pilot.');

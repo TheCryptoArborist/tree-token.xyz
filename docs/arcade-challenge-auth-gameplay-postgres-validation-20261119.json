@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "result": "passed",
+  "checkedAt": "2026-11-19T01:04:29.232Z",
+  "postgres": "postgres (PostgreSQL) 17.11 (Debian 17.11-0+deb13u1)",
+  "environment": "disposable-local-loopback",
+  "syntheticSessions": true,
+  "productionMutated": false,
+  "independentWorkerCount": 100,
+  "checks": [
+    "different-request",
+    "identical-retry",
+    "conflicting-retry",
+    "disable-before-commit",
+    "revocation-before-commit",
+    "cutoff-while-row-locked",
+    "concurrent-active-attempt-cap"
+  ]
+}

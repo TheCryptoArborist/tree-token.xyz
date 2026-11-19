@@ -263,6 +263,6 @@ test('server-only RPC transport scopes credentials and sanitizes unavailable/bac
   assert.equal(seen[0].init.method, 'POST'); assert.equal(seen[0].init.headers.apikey, fakeSecret);
   await assert.rejects(rpc('arbitrary_table_reader', {}), /temporarily unavailable/); assert.equal(seen.length, 1);
   const broken = createPilotRpc({ getEnv, fetchImpl: async () => new Response('upstream proxy failed ' + fakeSecret, { status: 502 }) });
-  await assert.rejects(broken('arcade_growth_read_session_v1', {}), error => error.status === 503 && !error.message.includes(fakeSecret));
+  await assert.rejects(broken('arcade_challenge_pilot_read_session_v1', {}), error => error.status === 503 && !error.message.includes(fakeSecret));
   assert.throws(() => createPilotRpc({ getEnv: () => undefined }), /temporarily unavailable/);
 });
