@@ -27,6 +27,33 @@ const noPrizes = value => value?.mode === 'nonpaying-pilot' && value?.identitySc
 const exactKeys = (value, keys) => value && !Array.isArray(value) && typeof value === 'object' && Object.keys(value).length === keys.length && keys.every(key => Object.hasOwn(value,key));
 const safeFailure = error => error instanceof LiveCheckError ? error.code : error?.name === 'TimeoutError' ? 'browser-check-timeout' : 'unexpected-runtime-error';
 
+// Only known categorical codes may leave the process. Never copy a server
+// message, arbitrary error string, or other response field into evidence.
+export function summarizeAuthenticationFailure(value) {
+  const categories = {
+    'invalid-signature':'signature', 'signature-invalid':'signature',
+    'invalid-wallet-signature':'signature', 'wallet-signature-invalid':'signature',
+    'signature-verification-failed':'signature', 'unsupported-signature':'signature',
+    'verification-failed':'verification', 'wallet-verification-failed':'verification',
+    'invalid-challenge':'challenge', 'challenge-expired':'challenge',
+    'challenge-used':'challenge', 'challenge-consumed':'challenge',
+    'challenge-not-found':'challenge', 'invalid-nonce':'challenge',
+    'invalid-wallet':'wallet', 'wallet-mismatch':'wallet',
+    'nftree-required':'eligibility', 'ownership-unavailable':'eligibility-service',
+    'origin-not-allowed':'origin', 'invalid-origin':'origin',
+    'invalid-request':'request', 'method-not-allowed':'request',
+    'rate-limited':'rate-limit', 'too-many-requests':'rate-limit',
+    'service-unavailable':'service', 'verification-unavailable':'service',
+    'signature-verification-unavailable':'service', 'internal-error':'service',
+    'invalid-session':'session', 'unauthorized':'authentication', 'forbidden':'forbidden',
+  };
+  const raw = typeof value?.error === 'string' ? value.error : typeof value?.code === 'string' ? value.code : '';
+  const code = raw.length <= 80 ? raw.toLowerCase().replace(/^arcade-growth-/, '').replaceAll('_', '-') : '';
+  return Object.hasOwn(categories, code)
+    ? {code,category:categories[code]}
+    : {code:'unrecognized-or-missing',category:'unspecified'};
+}
+
 function registerOperatorWallet({ address, publicKey, walletName }) {
   // This provider lives only in the test browser. Its private key stays in Node.
   // It has no transaction, execution, payment, or funded account feature.
@@ -79,6 +106,7 @@ async function run() {
   const browserModule = process.env.ARCADE_PILOT_BROWSER_MODULE;
   const {chromium} = await import(browserModule.startsWith('file:') ? browserModule : pathToFileURL(path.resolve(browserModule)).href);
   const {Ed25519Keypair} = await import('../../vendor/arcade-monthly/node_modules/@mysten/sui/dist/keypairs/ed25519/index.mjs');
+  const {verifyPersonalMessageSignature} = await import('../../vendor/arcade-monthly/node_modules/@mysten/sui/dist/verify/index.mjs');
   const draft = JSON.parse(await fs.readFile(path.join(ROOT,'data/arcade-challenge-pilot-november-2026.json'),'utf8'));
   check(HEX.test(draft.rulesHash || '') && noPrizes(draft.rules) && draft.rules.pilotId === PILOT_ID,'reviewed-no-prize-config-required');
 
@@ -142,6 +170,7 @@ async function run() {
 
   try {
     browser = await chromium.launch({headless:true,executablePath:process.env.ARCADE_PILOT_CHROME_PATH || undefined,args:['--no-sandbox','--disable-dev-shm-usage']});
+    report.browser = {version:browser.version(),executableSource:process.env.ARCADE_PILOT_CHROME_PATH ? 'runner-browser' : 'playwright-managed'};
     context = await browser.newContext({viewport:{width:1440,height:1000},serviceWorkers:'block'});
     page = await context.newPage();
     page.setDefaultTimeout(20000);
@@ -160,6 +189,15 @@ async function run() {
       check(Buffer.from(bytes).equals(Buffer.from(challenge.message,'utf8')),'signing-bytes-differ-from-captured-server-challenge');
       signingCount += 1;
       const signed = await keypair.signPersonalMessage(bytes);
+      report.checks.generatedSignatureVerifiedLocally = false;
+      try {
+        const verified = await verifyPersonalMessageSignature(bytes,signed.signature,{address:walletAddress});
+        check(verified.toSuiAddress() === walletAddress && Buffer.from(signed.bytes,'base64').equals(Buffer.from(bytes)),'generated-personal-message-signature-invalid');
+      } catch {
+        const error = new LiveCheckError('generated-personal-message-signature-invalid');
+        rejectRun(error); throw error;
+      }
+      report.checks.generatedSignatureVerifiedLocally = true;
       signedSignature = signed.signature;
       return {bytes:signed.bytes,signature:signed.signature};
     });
@@ -222,6 +260,14 @@ async function run() {
 
         const response = await route.fetch({maxRedirects:0,timeout:15000});
         const entry = requestIndex.get(request); if (entry) entry.status = response.status();
+        if (response.status() !== 200 && url.pathname === '/api/arcade-growth') {
+          let failure = null;
+          try {
+            const bytes = await response.body();
+            if (bytes.length <= 8192) failure = JSON.parse(bytes.toString('utf8'));
+          } catch { /* Non-JSON failures retain only their HTTP status. */ }
+          report.authenticationFailure = {action,httpStatus:response.status(),...summarizeAuthenticationFailure(failure)};
+        }
         check(response.status() === 200,'live-api-response-not-successful');
         const value = await response.json();
         check(value?.status === 'ok','live-api-result-not-successful');
