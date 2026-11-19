@@ -84,6 +84,17 @@ export function mountArcadeOrganization(doc = document, view = window) {
   if (campaignHeading) campaignHeading.after(campaignFeature);
   else campaigns.prepend(campaignFeature);
 
+  const trialPilot = element('section', 'arcade-campaign-feature arcade-campaign-pilot', `
+    <div class="arcade-campaign-feature__intro">
+      <span class="arcade-campaign-state">TEST CHALLENGE · NO PRIZES</span>
+      <h4>Try Arborist Trials.</h4>
+      <p>Play four cards, grow your canopy and beat Garden Bot. This free pilot lets you try the challenge format before funded campaigns begin.</p>
+    </div>
+    <div class="arcade-campaign-actions"><a class="growth-primary" href="/play/challenge/">Play the test challenge <span aria-hidden="true">→</span></a></div>
+    <p class="arcade-campaign-footnote">Free entry · No purchase or gas fee · Sign in with your Arcade wallet. Test results do not award prizes, attendance or daily quest credit.</p>
+  `);
+  campaignFeature.before(trialPilot);
+
   const access = element('p', 'arcade-signin-help', '<a href="#daily" data-arcade-route="daily">Open Daily to sign in</a><span>Your saved progress works across all six tabs.</span>');
   const toolbar = campaigns.querySelector('.quest-toolbar');
   if (toolbar) toolbar.before(access);

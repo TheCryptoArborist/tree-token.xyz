@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "result": "passed",
+  "checkedAt": "2026-11-19T00:05:05.826Z",
+  "postgres": "postgres (PostgreSQL) 17.11 (Debian 17.11-0+deb13u1)",
+  "environment": "disposable-local-loopback",
+  "syntheticSessions": true,
+  "productionMutated": false,
+  "independentWorkerCount": 100,
+  "checks": [
+    "different-request",
+    "identical-retry",
+    "conflicting-retry",
+    "disable-before-commit",
+    "revocation-before-commit",
+    "cutoff-while-row-locked",
+    "concurrent-active-attempt-cap"
+  ],
+  "sourceFiles": [
+    {
+      "path": "scripts/arcade-campaigns/pilot-postgres-check.mjs",
+      "sha256": "2af2ff607590d134e274795702ba0ab959db71f43d61d812bc5d82f16094ee79"
+    },
+    {
+      "path": "netlify/challenge-functions/arcade-challenge-pilot.mjs",
+      "sha256": "c7b2e719bd338380253dbd1e7f72b8ca09901bc86b91829980484ca27e03c9b0"
+    },
+    {
+      "path": "supabase/migrations/20261118223908_arcade_challenge_pilot.sql",
+      "sha256": "a3574de3b17e5feace655df7fae1b8daf07866fd29df5c87a3170f619be0ba77"
+    },
+    {
+      "path": "scripts/arcade-campaigns/trials-adapter.mjs",
+      "sha256": "5b7d38abb9df4e9f8b82adb87af8b635d20bbe658de530b28b4456e26ea3e841"
+    },
+    {
+      "path": "tests/fixtures/arcade-monthly/growth.sql",
+      "sha256": "d3fe2502612ea9328a3c93321165bc83e0924637ba856c64b37fbaf13847417a"
+    }
+  ],
+  "runtimeProvenance": {
+    "source": "https://deb.debian.org/debian/dists/trixie/main/binary-amd64/Packages.xz",
+    "installation": "Downloaded official Debian binary packages, checked SHA256 against Packages index and extracted into a temporary directory; no global installation.",
+    "packages": [
+      {
+        "name": "postgresql-17",
+        "version": "17.11-0+deb13u1",
+        "sha256": "d2ce1ddffafa783f9acda4c92c86fc21e8288bff3782d739294f14fa797d7886"
+      },
+      {
+        "name": "postgresql-client-17",
+        "version": "17.11-0+deb13u1",
+        "sha256": "9d8558f8dd57c8e92e218a20698383575d53742ca3f9e7c2b7fe5f246d5216ae"
+      },
+      {
+        "name": "libpq5",
+        "version": "17.11-0+deb13u1",
+        "sha256": "20a4c9ef58b4baf90deda67cfb2cc062871c062830dddc234d28f5ac7931b86b"
+      }
+    ]
+  },
+  "limitations": [
+    "Synthetic wallet sessions; this does not establish a wallet extension signing experience.",
+    "Disposable local PostgreSQL 17.11; production was inspected read-only and has a different patch version.",
+    "These tests establish transactional serialization for the exercised races, not human identity, anti-bot resistance or funded eligibility."
+  ]
+}

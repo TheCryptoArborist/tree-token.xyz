@@ -63,7 +63,7 @@ function stateResponse(record, replay) {
     attemptId: record.attemptId, pilotId: record.pilotId, rulesHash: record.rulesHash,
     adapterId: ADAPTER.id, adapterVersion: ADAPTER.version,
     gameId: ADAPTER.gameId, gameVersion: ADAPTER.gameVersion,
-    version: record.version, startedAt: record.startedAt, expiresAt: record.expiresAt,
+    version: record.version, startedAt: record.startedAt, expiresAt: record.expiresAt, serverNow: record.serverNow,
     completedAt: record.completedAt ?? null, attemptStatus: record.status,
     view: replay.view, result: record.status === 'completed' ? record.result : null,
   };
@@ -101,7 +101,7 @@ export function createChallengePilotHandler(deps = {}) {
         const record = await rpc('arcade_challenge_pilot_load_config_v1', { ...base, p_pilot_id: pilotId });
         if (!record) throw new PilotError('pilot-not-found', 'This pilot is unavailable.', 404);
         const frozen = verifyPilotRecord(record), now = Date.parse(record.serverNow);
-        return json({ status: 'ok', ...FLAGS, pilotOpen: record.enabled && now >= Date.parse(record.startsAt) && now < Date.parse(record.endsAt), rulesHash: frozen.rulesHash, rules: frozen.rules });
+        return json({ status: 'ok', ...FLAGS, pilotOpen: record.enabled && now >= Date.parse(record.startsAt) && now < Date.parse(record.endsAt), serverNow: record.serverNow, rulesHash: frozen.rulesHash, rules: frozen.rules });
       }
       const body = await readBody(req);
       if (action === 'start') {

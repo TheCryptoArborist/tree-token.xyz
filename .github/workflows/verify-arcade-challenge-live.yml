@@ -1,0 +1,46 @@
+name: Verify published no-prize Arborist Trials flow
+
+on:
+  push:
+    branches: [release/arcade-challenge-live-test]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tree-arborist-pilot-live-test
+  cancel-in-progress: false
+
+jobs:
+  canonical-pilot:
+    if: contains(github.event.head_commit.message, '[verify arcade challenge live]') && contains(github.event.head_commit.message, '[skip netlify]')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: vendor/arcade-monthly/package-lock.json
+      - name: Restore the existing pinned message-signing SDK
+        run: npm ci --prefix vendor/arcade-monthly --ignore-scripts --no-audit --no-fund
+      - name: Install isolated browser verification tools
+        run: |
+          npm install --prefix "$RUNNER_TEMP/arcade-pilot-browser" --ignore-scripts --no-audit --no-fund playwright@1.56.1
+          "$RUNNER_TEMP/arcade-pilot-browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Verify the real signed-message and pilot protocol with a temporary unfunded test wallet
+        env:
+          ARCADE_PILOT_BROWSER_MODULE: ${{ runner.temp }}/arcade-pilot-browser/node_modules/playwright/index.mjs
+          ARCADE_PILOT_LIVE_OUTPUT: ${{ runner.temp }}/arcade-pilot-live-review
+        run: node scripts/arcade-campaigns/pilot-live-browser-check.mjs --allow-live-no-prize-test
+      - name: Save sanitized canonical evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: arcade-pilot-live-review-${{ github.run_id }}
+          path: ${{ runner.temp }}/arcade-pilot-live-review
+          if-no-files-found: warn
+          retention-days: 30

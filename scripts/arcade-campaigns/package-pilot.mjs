@@ -43,7 +43,7 @@ try {
     productionEnabled: false, payable: false, awardsEnabled: false,
     name: built.name, path: '.netlify/arcade-challenge-pilot-functions/arcade-challenge-pilot.zip',
     sha256: sha(await fs.readFile(built.path)), runtimeVersion: built.runtimeVersion,
-    invocationMode: built.invocationMode, routes: built.routes, trafficRules: built.trafficRules,
+    invocationMode: built.invocationMode, buildData: built.buildData, routes: built.routes, trafficRules: built.trafficRules,
     sourceFiles,
     tooling: { package: 'vendor/arcade-events/package.json', packageSha256: sha(await fs.readFile(path.join(root, 'vendor/arcade-events/package.json'))), lockSha256: sha(await fs.readFile(path.join(root, 'vendor/arcade-events/package-lock.json'))) },
   };

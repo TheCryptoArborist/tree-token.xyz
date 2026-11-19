@@ -1,0 +1,331 @@
+{
+  "schemaVersion": 1,
+  "projectId": "lehswszuekjqottolmsf",
+  "sourceMigration": "supabase/migrations/20261118223908_arcade_challenge_pilot.sql",
+  "sourceMigrationSHA256": "a3574de3b17e5feace655df7fae1b8daf07866fd29df5c87a3170f619be0ba77",
+  "appliedMigration": {
+    "version": "20261119000653",
+    "name": "arcade_challenge_pilot"
+  },
+  "verifiedAt": "2026-11-19T00:08:15.954Z",
+  "rpcDefinitions": [
+    {
+      "name": "arcade_challenge_pilot_commit_move_v1",
+      "sha256": "cf977d621e47527dc52a18855e2cf83dce9fb85f46b9cd57ba5f18222f0e55a7",
+      "securityDefiner": false,
+      "searchPath": "",
+      "executeRoles": [
+        "postgres",
+        "service_role"
+      ],
+      "deniedRoles": [
+        "PUBLIC",
+        "anon",
+        "authenticated"
+      ]
+    },
+    {
+      "name": "arcade_challenge_pilot_load_attempt_v1",
+      "sha256": "6b3b5f0239076011703bcd421d7d3f7320e17bc25db00a1bc8cf102465af24bd",
+      "securityDefiner": false,
+      "searchPath": "",
+      "executeRoles": [
+        "postgres",
+        "service_role"
+      ],
+      "deniedRoles": [
+        "PUBLIC",
+        "anon",
+        "authenticated"
+      ]
+    },
+    {
+      "name": "arcade_challenge_pilot_load_config_v1",
+      "sha256": "59a4a9582d63908027c9d4cf3137968185304f72de9da9861aecf45a8c3997ad",
+      "securityDefiner": false,
+      "searchPath": "",
+      "executeRoles": [
+        "postgres",
+        "service_role"
+      ],
+      "deniedRoles": [
+        "PUBLIC",
+        "anon",
+        "authenticated"
+      ]
+    },
+    {
+      "name": "arcade_challenge_pilot_start_v1",
+      "sha256": "9e742e6c867fbf61bb68fa54e7af1484396ceda0c15add4883ae0769d4a69190",
+      "securityDefiner": false,
+      "searchPath": "",
+      "executeRoles": [
+        "postgres",
+        "service_role"
+      ],
+      "deniedRoles": [
+        "PUBLIC",
+        "anon",
+        "authenticated"
+      ]
+    }
+  ],
+  "tables": [
+    {
+      "rls": true,
+      "name": "arcade_challenge_pilot_attempts",
+      "schema": "private",
+      "browserAccess": false,
+      "servicePrivileges": {
+        "insert": true,
+        "select": true,
+        "update": true
+      }
+    },
+    {
+      "rls": true,
+      "name": "arcade_challenge_pilot_configs",
+      "schema": "private",
+      "browserAccess": false,
+      "servicePrivileges": {
+        "insert": false,
+        "select": true,
+        "update": false
+      }
+    },
+    {
+      "rls": true,
+      "name": "arcade_challenge_pilot_requests",
+      "schema": "private",
+      "browserAccess": false,
+      "servicePrivileges": {
+        "insert": true,
+        "select": true,
+        "update": false
+      }
+    }
+  ],
+  "pilot": {
+    "rules": {
+      "game": {
+        "id": "arborist-trials",
+        "ruleset": "portable-v1-four-card",
+        "version": "campaign-pilot-4a27b3ac-v1",
+        "sourceHash": "9623279e03ddab211d51e26f89040afc0b8aee4ff86fc19af53243096215ca00"
+      },
+      "mode": "nonpaying-pilot",
+      "access": {
+        "entry": "free",
+        "standardCards": 4,
+        "paidAdvantages": "forbidden",
+        "purchaseRequired": false
+      },
+      "window": {
+        "endsAt": "2026-12-01T00:00:00.000Z",
+        "startsAt": "2026-11-19T00:00:00.000Z"
+      },
+      "adapter": {
+        "id": "arborist-trials-portable-four-card",
+        "version": "1.0.0"
+      },
+      "payable": false,
+      "pilotId": "arborist-trials-november-2026",
+      "objective": {
+        "metric": "wins",
+        "operator": "eq",
+        "targetUnits": "1"
+      },
+      "awardsEnabled": false,
+      "challengeDate": "2026-11-18",
+      "identityScope": "wallet-session-only",
+      "prizeEligible": false,
+      "schemaVersion": 1,
+      "maxAttemptSeconds": 900
+    },
+    "status": "enabled",
+    "payable": false,
+    "pilotId": "arborist-trials-november-2026",
+    "rulesHash": "ef07c5212301565b10faffc1e8fb97347fad522c6dc3e3f15bdf58d12b3c9b2d",
+    "awardsEnabled": false,
+    "prizeEligible": false
+  },
+  "definitionVerification": {
+    "method": "Applied exact source migration to a disposable local PostgreSQL-compatible PGlite database, then compared complete pg_get_functiondef output byte-for-byte against live metadata.",
+    "normalization": "none",
+    "allDefinitionsMatched": true,
+    "definitions": [
+      {
+        "schema": "private",
+        "name": "arcade_challenge_pilot_attempt_guard_v1",
+        "sha256": "1ecacc6486c595fbdde98513dfc4b0809a4d95528567c148ce502bcf40cce1ef",
+        "exactDefinitionMatch": true
+      },
+      {
+        "schema": "private",
+        "name": "arcade_challenge_pilot_attempt_json_v1",
+        "sha256": "e31c5b6cde118e96c63d87b9b98c01951def768c9e0b4f13690dab6eb55a258c",
+        "exactDefinitionMatch": true
+      },
+      {
+        "schema": "public",
+        "name": "arcade_challenge_pilot_commit_move_v1",
+        "sha256": "cf977d621e47527dc52a18855e2cf83dce9fb85f46b9cd57ba5f18222f0e55a7",
+        "exactDefinitionMatch": true
+      },
+      {
+        "schema": "private",
+        "name": "arcade_challenge_pilot_config_guard_v1",
+        "sha256": "50b065e27fbc375f1afa0e1e160fd09e28967dd77d629ac6dc4016f3a3595412",
+        "exactDefinitionMatch": true
+      },
+      {
+        "schema": "public",
+        "name": "arcade_challenge_pilot_load_attempt_v1",
+        "sha256": "6b3b5f0239076011703bcd421d7d3f7320e17bc25db00a1bc8cf102465af24bd",
+        "exactDefinitionMatch": true
+      },
+      {
+        "schema": "public",
+        "name": "arcade_challenge_pilot_load_config_v1",
+        "sha256": "59a4a9582d63908027c9d4cf3137968185304f72de9da9861aecf45a8c3997ad",
+        "exactDefinitionMatch": true
+      },
+      {
+        "schema": "private",
+        "name": "arcade_challenge_pilot_request_guard_v1",
+        "sha256": "c7d51a579594fa2fa49cbe55ac49b14401a82c52705e87a0cc91fa2863110d48",
+        "exactDefinitionMatch": true
+      },
+      {
+        "schema": "private",
+        "name": "arcade_challenge_pilot_require_session_v1",
+        "sha256": "32c27238c869199492bf8ee36c97312534f65a1071c12229d43dbbea2bb82333",
+        "exactDefinitionMatch": true
+      },
+      {
+        "schema": "private",
+        "name": "arcade_challenge_pilot_safe_json_v1",
+        "sha256": "758cd9ecda6c6ab0830e7e24a05bd1f687db2bfdb5f78beb8d9124123c2245a5",
+        "exactDefinitionMatch": true
+      },
+      {
+        "schema": "public",
+        "name": "arcade_challenge_pilot_start_v1",
+        "sha256": "9e742e6c867fbf61bb68fa54e7af1484396ceda0c15add4883ae0769d4a69190",
+        "exactDefinitionMatch": true
+      },
+      {
+        "schema": "private",
+        "name": "arcade_challenge_pilot_utc_v1",
+        "sha256": "c2c504bb185af8cac5e31744228c5c67f9cd2057823e70f0df07b893de63e77c",
+        "exactDefinitionMatch": true
+      }
+    ]
+  },
+  "configStatusColumnUpdate": true,
+  "indexes": [
+    {
+      "name": "arcade_challenge_pilot_requests_pkey",
+      "definition": "CREATE UNIQUE INDEX arcade_challenge_pilot_requests_pkey ON private.arcade_challenge_pilot_requests USING btree (attempt_id, request_id)"
+    },
+    {
+      "name": "arcade_challenge_pilot_requests_attempt_id_expected_version_key",
+      "definition": "CREATE UNIQUE INDEX arcade_challenge_pilot_requests_attempt_id_expected_version_key ON private.arcade_challenge_pilot_requests USING btree (attempt_id, expected_version)"
+    },
+    {
+      "name": "arcade_challenge_pilot_configs_pkey",
+      "definition": "CREATE UNIQUE INDEX arcade_challenge_pilot_configs_pkey ON private.arcade_challenge_pilot_configs USING btree (pilot_id)"
+    },
+    {
+      "name": "arcade_challenge_pilot_active_attempts",
+      "definition": "CREATE INDEX arcade_challenge_pilot_active_attempts ON private.arcade_challenge_pilot_attempts USING btree (wallet, pilot_id, expires_at) WHERE (status = 'active'::text)"
+    },
+    {
+      "name": "arcade_challenge_pilot_attempts_pkey",
+      "definition": "CREATE UNIQUE INDEX arcade_challenge_pilot_attempts_pkey ON private.arcade_challenge_pilot_attempts USING btree (attempt_id)"
+    },
+    {
+      "name": "arcade_challenge_pilot_attempts_attempt_token_sha256_key",
+      "definition": "CREATE UNIQUE INDEX arcade_challenge_pilot_attempts_attempt_token_sha256_key ON private.arcade_challenge_pilot_attempts USING btree (attempt_token_sha256)"
+    }
+  ],
+  "advisors": {
+    "scope": "Pilot tables and functions only; existing unrelated findings were not modified.",
+    "results": [
+      {
+        "type": "security",
+        "findings": [
+          {
+            "name": "rls_enabled_no_policy",
+            "level": "INFO",
+            "affected": [
+              {
+                "name": "arcade_challenge_pilot_attempts",
+                "type": "table",
+                "schema": "private"
+              },
+              {
+                "name": "arcade_challenge_pilot_configs",
+                "type": "table",
+                "schema": "private"
+              },
+              {
+                "name": "arcade_challenge_pilot_requests",
+                "type": "table",
+                "schema": "private"
+              }
+            ],
+            "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+            "assessment": "Intentional private service-only storage. Anonymous and authenticated access is revoked, service_role bypasses RLS, and guarded RPCs validate the Arcade session."
+          }
+        ]
+      },
+      {
+        "type": "performance",
+        "findings": [
+          {
+            "name": "unindexed_foreign_keys",
+            "level": "INFO",
+            "affected": [
+              {
+                "name": "arcade_challenge_pilot_attempts",
+                "type": "table",
+                "schema": "private",
+                "fkey_name": "arcade_challenge_pilot_attempts_pilot_id_fkey",
+                "fkey_columns": [
+                  3
+                ]
+              },
+              {
+                "name": "arcade_challenge_pilot_attempts",
+                "type": "table",
+                "schema": "private",
+                "fkey_name": "arcade_challenge_pilot_attempts_session_hash_fkey",
+                "fkey_columns": [
+                  13
+                ]
+              }
+            ],
+            "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0001_unindexed_foreign_keys",
+            "assessment": "Informational coverage for pilot_id and session_hash foreign keys. Current hot paths use unique attempt tokens and the wallet/pilot active-attempt index; referenced keys are immutable during normal play. Review full covering indexes before introducing parent cleanup or wider operator queries."
+          },
+          {
+            "name": "unused_index",
+            "level": "INFO",
+            "affected": [
+              {
+                "name": "arcade_challenge_pilot_attempts",
+                "type": "table",
+                "schema": "private"
+              }
+            ],
+            "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+            "assessment": "Expected before pilot traffic; retain the active-attempt lookup index."
+          }
+        ]
+      }
+    ]
+  },
+  "productionWritesByVerifier": false,
+  "checkedPlayerRows": false
+}
