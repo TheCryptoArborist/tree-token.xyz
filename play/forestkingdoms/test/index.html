@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1d18">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Forest Kingdoms · The Broken Crossing · Tree Arcade</title>
+  <meta name="description" content="Play as the Tree Hero. Rescue a woodland caravan, restore the river crossing, and plant the beginning of your kingdom.">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body data-mode="title">
+  <main id="game-shell" aria-label="Forest Kingdoms game">
+    <canvas id="world" tabindex="0" aria-label="The forest. Click or tap a clearing to move the Tree Hero. Use the labeled action buttons or keyboard controls."></canvas>
+    <div class="world-vignette" aria-hidden="true"></div>
+    <header class="topbar">
+      <button class="wordmark" id="home-button" aria-label="Forest Kingdoms title screen">
+        <svg viewBox="0 0 32 36" aria-hidden="true"><path d="M16 2 5 16h6L3 27h11v7h4v-7h11l-8-11h6Z" fill="currentColor"/></svg>
+        <span><small>TREE ARCADE</small><strong>FOREST KINGDOMS</strong></span>
+      </button>
+      <div class="chapter-tag"><span>THE BROKEN CROSSING</span><small>A FOREST WORTH FIGHTING FOR</small></div>
+      <nav aria-label="Game menu">
+        <button class="icon-button" id="journal-button" aria-label="Open chapter journal" title="Chapter journal (J)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h14a2 2 0 0 1 2 2v16H6a2 2 0 0 1-2-2Zm0 14h16M8 7h8M8 11h6"/></svg></button>
+        <button class="icon-button" id="sound-button" aria-label="Turn sound on" aria-pressed="false" title="Sound"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4ZM17 9l5 6m0-6-5 6"/></svg></button>
+        <button class="icon-button" id="pause-button" aria-label="Pause game" title="Pause (Esc)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg></button>
+      </nav>
+    </header>
+
+    <section class="play-ui" aria-label="Adventure status">
+      <div class="resource-strip" aria-label="Supplies">
+        <span title="Food for your allies"><i class="resource-icon food" aria-hidden="true"></i><b id="food-value">6</b><small>Food</small></span>
+        <span title="Materials for the crossing and workshop"><i class="resource-icon wood" aria-hidden="true"></i><b id="materials-value">12</b><small>Materials</small></span>
+        <span title="Seeds for your first grove"><i class="resource-icon seed" aria-hidden="true"></i><b id="seeds-value">2</b><small>Seeds</small></span>
+      </div>
+      <aside class="objective-card" aria-label="Current objective">
+        <div class="objective-eyebrow"><span id="objective-step">YOUR FIRST EXPEDITION</span><button id="help-button" aria-label="Show controls and help">?</button></div>
+        <h1 id="objective-title">Find the stranded caravan</h1>
+        <p id="objective-hint">Follow the path to Bram, the beaver engineer.</p>
+        <div class="objective-progress" aria-hidden="true"><i id="objective-progress"></i></div>
+      </aside>
+      <div class="location-chip"><span class="location-leaf" aria-hidden="true">✦</span><span id="location-label">WILLOWMERE · WEST BANK</span></div>
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+      <div class="interaction-hint" id="interaction-hint"></div>
+
+      <footer class="control-dock">
+        <div class="hero-status">
+          <div class="hero-medallion"><img src="./assets/hero.jpg" alt="Tree Hero"></div>
+          <div><span class="hero-name">TREE HERO <b id="hp-number">100</b></span><div class="health-track"><i id="hp-fill"></i></div><small id="save-status">Your adventure saves on this device</small></div>
+        </div>
+        <div class="keyboard-guide"><span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> / arrows</span><small>Move · or click a clearing</small></div>
+        <div class="actions">
+          <button class="action attack" id="attack-button" aria-label="Strike nearby enemies. Space key."><svg viewBox="0 0 32 32" aria-hidden="true"><path d="m8 24 16-16 3-4-5 1L6 21m-2-4 11 11M5 27l-2 2"/></svg><span>Strike</span><kbd>SPACE</kbd></button>
+          <button class="action roots" id="root-button" aria-label="Root snare. Q key."><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4v11m0-4-7-5m7 8 8-7M16 15l-6 7-6 1m12-8 6 6 6-1m-12-5v11l-5 4m5-4 5 3"/></svg><span id="root-label">Root snare</span><kbd>Q</kbd></button>
+          <button class="action interact" id="interact-button" aria-label="Interact with a nearby character or object. E key."><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4v8m0 8v8M4 16h8m8 0h8M16 11l5 5-5 5-5-5Z"/></svg><span id="interact-label">Interact</span><kbd>E</kbd></button>
+        </div>
+      </footer>
+      <div class="touch-stick" id="touch-stick" aria-label="Drag to move the Tree Hero"><span class="stick-cross" aria-hidden="true"></span><span id="stick-knob" aria-hidden="true"></span></div>
+    </section>
+
+    <section class="title-screen" id="title-screen" aria-label="Start adventure">
+      <div class="title-panel">
+        <div class="title-copy">
+          <div class="edition-label"><span></span> A TREE ARCADE ORIGINAL</div>
+          <p class="chapter-kicker">PROLOGUE · THE BROKEN CROSSING</p>
+          <h2>FOREST<br><em>KINGDOMS</em></h2>
+          <p class="title-description">A broken crossing. A stranded caravan.<br>A forest waiting for its guardian.</p>
+          <p class="title-story">Become the Tree Hero. Bring the woodland folk home, restore their first outpost, and plant the beginning of a kingdom.</p>
+          <div class="title-actions"><button class="primary-button" id="start-button">Begin the prologue</button><button class="secondary-button" id="continue-button" hidden>Continue adventure</button></div>
+          <div class="title-footnote"><span>FREE TO PLAY</span><span>No wallet required</span><span>Desktop + mobile</span></div>
+          <div class="title-controls"><strong>HOW TO PLAY</strong><span>WASD or tap to move · Space to strike · Q for roots · E to interact</span></div>
+        </div>
+        <div class="title-art"><img src="./assets/hero.jpg" alt="The purple and green Tree Hero in gold armor stands in an ancient forest."><div class="art-caption"><small>THE GUARDIAN RETURNS</small><p>Every expedition<br>leaves its roots.</p></div></div>
+      </div>
+      <div class="preview-label">PLAYABLE FIRST LOOK <span>·</span> Chapter 1 in development</div>
+    </section>
+
+    <dialog id="story-dialog" class="story-dialog">
+      <div class="dialog-speaker"><span class="speaker-badge" id="speaker-badge">B</span><div><small id="speaker-role">WILLOWMERE</small><h2 id="speaker-name">Bram</h2></div></div>
+      <p id="story-text"></p><button class="primary-button" id="story-next">Continue</button>
+    </dialog>
+
+    <dialog id="pause-dialog" class="menu-dialog">
+      <p class="chapter-kicker">TAKE A BREATH</p><h2>The forest can wait.</h2><p>Your adventure is paused.</p>
+      <button class="primary-button" id="resume-button">Return to the forest</button><button class="secondary-button" id="pause-help">Controls &amp; objectives</button><button class="text-button" id="return-title">Title screen</button>
+    </dialog>
+
+    <dialog id="help-dialog" class="menu-dialog">
+      <p class="chapter-kicker">A GUARDIAN'S FIELD GUIDE</p><h2>Lead the way.</h2>
+      <dl class="controls-list"><dt>Move</dt><dd>WASD, arrow keys, or click / tap a clearing. On touch screens, drag the movement pad.</dd><dt>Strike</dt><dd>Space or Strike. Move close to an enemy; the hero faces the nearest threat.</dd><dt>Root snare</dt><dd>Q or Root snare. Holds nearby enemies in place. Ready again after six seconds.</dd><dt>Interact</dt><dd>E or Interact. Approach characters, the bridge, supply cache, grove, or workshop.</dd><dt>Pause</dt><dd>Escape or the pause button. Dialogue also pauses the action.</dd></dl>
+      <p class="help-note">Follow the glowing marker and the objective card. This prologue saves on this browser and has no purchases or token rewards.</p><button class="primary-button" id="close-help">Got it</button>
+    </dialog>
+
+    <dialog id="journal-dialog" class="journal-dialog">
+      <p class="chapter-kicker">THE FOREST REMEMBERS</p><h2>Chapter journal</h2><p class="journal-intro">The Broken Crossing · Willowmere</p>
+      <ol id="journal-list"></ol><div class="faction-panel"><span class="faction-seal">B</span><div><h3>Beaver Guild</h3><p id="faction-status">Restore the ancestral workshop to earn their allegiance.</p></div></div>
+      <button class="primary-button" id="recruit-button" hidden>Recruit an engineer · 8 materials + 4 food</button><button class="secondary-button" id="close-journal">Return to adventure</button>
+    </dialog>
+
+    <dialog id="result-dialog" class="result-dialog">
+      <div class="victory-emblem" aria-hidden="true">✦</div><p class="chapter-kicker" id="result-kicker">A NEW BEGINNING</p><h2 id="result-title">Willowmere lives again.</h2><p id="result-description">The crossing is open. Your grove is growing. The Beaver Guild stands with you.</p>
+      <div class="result-stats" id="result-stats"><div><b id="rescued-total">3</b><span>allies home</span></div><div><b>20%</b><span>guild recruit discount</span></div><div><b>1</b><span>grove restored</span></div></div>
+      <p class="next-chapter" id="next-chapter">Beyond the river gate, someone is taking control of the headwaters. Your first expedition is only the beginning.</p>
+      <button class="primary-button" id="result-action">Explore your outpost</button><button class="text-button" id="result-journal">View the chapter journal</button>
+    </dialog>
+    <noscript><div class="no-script">Forest Kingdoms needs JavaScript to play. Enable it in your browser and reload.</div></noscript>
+  </main>
+  <script type="module" src="./app.mjs"></script>
+</body>
+</html>
