@@ -60,6 +60,7 @@ jobs:
         run: |
           python3 -m http.server 8765 --bind 127.0.0.1 --directory dist-preview > "$RUNNER_TEMP/arcade-preview-server.log" 2>&1 &
           node tests/arcade-campaigns-visual.mjs
+          node tests/arcade-daily-compact-visual.mjs
       - name: Save visual review
         if: always()
         uses: actions/upload-artifact@v4

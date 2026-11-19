@@ -208,6 +208,22 @@ export function mountArcadeOrganization(doc = document, view = window) {
   // Capture opens the new details before preserved handlers scroll to a quiz/card.
   doc.addEventListener('click', onClick, true);
   root.addEventListener('arcade-progress', reflectCheckIn);
+  function reflectRoutineStatus() {
+    // Do not hide errors or meaningful guidance. Only the exact, routine
+    // successful refresh message can collapse when fresh attendance is saved.
+    if (!status) return;
+    const routine = status.classList.contains('is-info')
+      && status.textContent.trim() === 'Attendance and Passport progress refreshed. Saved-run tracking checks all four games separately.';
+    status.toggleAttribute('data-arcade-routine-refresh', routine);
+  }
+  const routineObserver = new view.MutationObserver(reflectRoutineStatus);
+  if (status) {
+    routineObserver.observe(status, {
+      childList: true, characterData: true, subtree: true,
+      attributes: true, attributeFilter: ['class'],
+    });
+    reflectRoutineStatus();
+  }
   const viewObserver = new view.MutationObserver(reflectView);
   viewObserver.observe(root, { attributes: true, attributeFilter: ['data-arcade-view'] });
   if (community) viewObserver.observe(community, { attributes: true, attributeFilter: ['hidden'] });
@@ -225,6 +241,7 @@ export function mountArcadeOrganization(doc = document, view = window) {
     countdown.destroy();
     viewObserver.disconnect();
     copyObserver.disconnect();
+    routineObserver.disconnect();
     doc.removeEventListener('click', onClick, true);
     root.removeEventListener('arcade-progress', reflectCheckIn);
     // Leave the arranged DOM in place; remounting must never duplicate controls.

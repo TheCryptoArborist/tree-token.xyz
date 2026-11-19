@@ -417,3 +417,36 @@ test('Campaigns prioritizes TREE Force and Canopy Defense; the six-game rotation
     await settle();
   }finally{current.close();}
 });
+
+
+test('Daily only suppresses routine saved-attendance refresh, preserving warnings and new notices', async () => {
+  const current = fixture('#daily');
+  try {
+    const {doc,view}=current;
+    const panel=doc.getElementById('growth-today-panel');
+    const status=doc.getElementById('growth-status');
+    assert.ok(panel.contains(status));
+    panel.setAttribute('data-arcade-checkin-saved','');
+    status.className='growth-status is-info';
+    status.textContent='Attendance and Passport progress refreshed. Saved-run tracking checks all four games separately.';
+    await settle();
+    assert.equal(status.hasAttribute('data-arcade-routine-refresh'),true);
+    assert.equal(view.getComputedStyle(status).display,'none');
+    status.textContent='Important: saved runs are still being reviewed.';
+    await settle();
+    assert.equal(status.hasAttribute('data-arcade-routine-refresh'),false);
+    assert.notEqual(view.getComputedStyle(status).display,'none');
+    status.className='growth-status is-error';
+    status.textContent='Connection lost. Retry to refresh.';
+    await settle();
+    assert.notEqual(view.getComputedStyle(status).display,'none');
+    status.className='growth-status is-info';
+    status.textContent='Attendance and Passport progress refreshed. Saved-run tracking checks all four games separately.';
+    panel.removeAttribute('data-arcade-checkin-saved');
+    await settle();
+    assert.notEqual(view.getComputedStyle(status).display,'none');
+    assert.ok(doc.getElementById('growth-check-in-row'));
+    assert.ok(doc.getElementById('growth-task-auth'));
+    assert.ok(doc.getElementById('growth-quest-details'));
+  }finally{current.close();}
+});
