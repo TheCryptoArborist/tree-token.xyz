@@ -4,11 +4,23 @@ Updated: November 19, 2026 (America/Chicago)
 
 Related task: FK-01 in [ROADMAP.md](ROADMAP.md).
 
-## First deliverable
+## FK-01 deliverables — art direction
+
+**Status: Complete as a written specification and visual concept.** Concept 01 is the working visual target for the graphics upgrade. Peter's feedback can refine it during the next task; the existence of this image does not imply approval of every detail.
+
+- [Concept 01 — Willowmere and Tree Hero](concepts/willowmere-concept-01.png): an original illustrated scene with a separate full-body character study.
+- [Concept record and complete generation prompt](concepts/CONCEPT_01.md): reference provenance, review observations, and the implementation handoff.
+- This brief: the character, environment, camera, composition, and readability decisions that subsequent assets must follow.
+
+The concept is an art-direction illustration, not a gameplay screenshot, sprite sheet, finished animation, or Phaser build. Its character-study column belongs to this presentation, not to the game's interface. The existing playable prologue remains the gameplay reference.
+
+## Later milestone deliverable — upgraded playable scene
 
 A playable Willowmere clearing containing the Tree Hero, Bram, one raider type, the damaged crossing, a resource grove, and the beginnings of the beaver outpost. The player can walk, strike, cast roots, and interact. This scene establishes the art and animation standard for the rest of the game.
 
 Working technology direction: Phaser 4, with its exact version and renderer setup verified during FK-03. This document does not mean Phaser is already installed.
+
+The playable scene is the result of FK-02 through FK-05. The acceptance checklist at the end of this document applies to that milestone, separately from the completed FK-01 specification.
 
 ## Visual direction
 
@@ -23,6 +35,26 @@ Illustrated 2D woodland fantasy, viewed from a slightly angled overhead camera. 
 
 This first pass retains the existing overhead layout and routes. A true isometric grid, free camera rotation, and full 3D models are separate scope decisions.
 
+### Decisions established by Concept 01
+
+| Element | Working direction | Implementation consequence |
+| --- | --- | --- |
+| Illustration | Painted 2D forms with confident dark outlines and restrained surface texture | Simplify detail when it disappears at gameplay size; avoid treating the large character study as a ready-made sprite. |
+| Camera | Fixed, slightly angled overhead view | Keep the existing map topology and camera behavior as the starting point. Match every production sprite and prop to one actual game projection. |
+| Light | Warm light from the upper left, with soft contact shadows | Use the same light direction on characters, trees, and buildings. Add animated lighting only after measuring its cost. |
+| Hero | Purple body/head, green vine musculature, gold armor and cape | Preserve identity and natural proportions while reducing small decorative detail. Keep the complete silhouette visible. |
+| Woodland | Rounded oak-like crowns, conical pines, and a trailing riverbank willow | Give the trees recognizable silhouettes. The concept does not define botanical species or resource yields. |
+| Materials | Warm timber, earth paths, mossy stone, and turquoise water | Let traversable ground remain quieter than characters and interaction targets. |
+| Settlement | A modest timber workshop, canvas outpost tent, and young grove | The illustrated workshop is the restored appearance target. Damaged/restored building states and growth stages are separate production assets. |
+
+### Scene composition
+
+Use the prototype's west-to-east crossing as the organizing route. Tree Hero starts on the western approach and meets Bram before the damaged bridge. The river divides the settlement area from the starting bank. The grove sits on the eastern bank below the workshop; the outpost tent is nearby. Trees frame the clearing, with open ground around characters, the bridge entrance, and the workshop interaction point.
+
+The concept establishes spatial relationships and mood. Its illustrated distances, plants, props, and camera framing are not an exact collision map or a list of already implemented features. Keep the existing mission routes and world coordinates when building the upgraded scene unless a specific gameplay issue calls for a deliberate change.
+
+For a phone, frame the nearby action with the follow camera rather than shrinking the entire concept board or full world into the display. Actual sprite size, touch-control overlap, and roof/tree fading must be checked in the running scene.
+
 ## Tree Hero
 
 Canonical reference: the project owner's supplied artwork, retained in the prototype at [assets/hero.jpg](../../play/forestkingdoms/test/assets/hero.jpg).
@@ -32,10 +64,13 @@ Preserve:
 - Purple body and head with green vine/wood musculature.
 - Gold armor accents and a gold cape.
 - Recognizable face and heroic silhouette.
+- Green eyes, following the canonical reference; Concept 01's warmer eye highlight is not a palette change for production sprites.
 - Consistent, natural arm and leg proportions; two arms and two legs in every pose.
 - A full visible body at gameplay scale, with feet anchored consistently between frames.
 
 Start with four directional views. Prepare idle/walk first, then strike, root-cast, hit, and defeat. Use consistent cell dimensions, pivots, contact points, and timing. Extra diagonal poses can follow if the four-direction set looks inadequate during play.
+
+Concept 01 is slightly slimmer than the canonical reference. Recover the reference's broad shoulders, torso, and thigh mass in the sprite master while keeping natural arm and leg proportions. The in-scene figure also needs a consistent overhead projection across its production directions.
 
 Inspect actual animation frames together. A polished still image alone is not a finished character animation asset. Check foot sliding, changing limb lengths, cape clipping, direction changes, and frame-to-frame armor consistency before integrating.
 
@@ -93,7 +128,19 @@ Use the supplied Tree Hero reference and original artwork. Keep source files, ex
 
 Use transparent character assets and consistent animation boundaries. Pack and size assets for the game rather than shipping oversized source art. Measure actual loading and rendering behavior once the scene runs; do not promise performance from the engine choice alone.
 
-## Acceptance checklist for the upgraded scene
+## FK-01 completion record
+
+- [x] The canonical Tree Hero reference and identity requirements are recorded.
+- [x] Concept 01 shows a complete hero with natural proportions, purple/green/gold identity, and a recognizable face.
+- [x] A coherent illustrated forest, upper-left light direction, and camera target are established.
+- [x] The western approach, Bram, damaged bridge, eastern grove, and workshop form a clear scene composition.
+- [x] Phone readability requirements and the need for a follow camera are specified.
+- [x] The concept's provenance, complete prompt, observations, and next-task handoff are recorded.
+- [x] Concept art is explicitly distinguished from production sprites, animation, and implementation.
+
+These checks cover the visual specification. Animation consistency, actual game-scale readability, real-device behavior, and player feedback are still to be evaluated in the later tasks below.
+
+## Acceptance checklist for the upgraded playable scene — FK-02 through FK-05
 
 - [ ] The Tree Hero is immediately recognizable from the canonical artwork.
 - [ ] His body proportions and armor remain consistent during motion.

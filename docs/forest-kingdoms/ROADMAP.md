@@ -13,6 +13,7 @@ The immediate milestone is **one upgraded, playable Willowmere scene** using Pha
 - [Current playable prologue](https://deploy-preview-239--tree-token.netlify.app/play/forestkingdoms/test/)
 - [Source and draft PR #239](https://github.com/TheCryptoArborist/tree-token.xyz/pull/239)
 - [Art direction and first-scene brief](ART_DIRECTION.md)
+- [Concept 01 — Tree Hero and Willowmere](concepts/willowmere-concept-01.png)
 - [Current implementation notes](../../play/forestkingdoms/test/README.md)
 
 This file is the authoritative project checklist. Update its statuses and add the relevant preview or commit evidence as work finishes.
@@ -43,12 +44,14 @@ This file is the authoritative project checklist. Update its statuses and add th
 
 ### FK-01 — Define the first scene and art direction
 
-Status: **Done — written specification**
+Status: **Done — written specification and Concept 01**
 
 - [x] Record the existing Tree Hero reference, palette, proportions, camera direction, scene contents, and readability requirements.
 - [x] Define the first playable scene and its completion criteria in `ART_DIRECTION.md`.
+- [x] Create and review a concrete visual reference using the supplied Tree Hero artwork.
+- [x] Record the concept's provenance, complete prompt, composition decisions, and handoff to sprite production.
 
-Evidence: this roadmap and the accompanying art brief. This marks the specification complete, not the new artwork or engine integration.
+Evidence: the [art brief](ART_DIRECTION.md), [Concept 01 image](concepts/willowmere-concept-01.png), and [concept record](concepts/CONCEPT_01.md). This completes the visual specification and a reference illustration. Production sprites, animation, gameplay-scale/device checks, and engine integration remain separate tasks. Concept 01 is a working direction for Peter's review, not an assertion that every visual detail has been approved.
 
 ### FK-02 — Create the Tree Hero sprite and animation set
 
@@ -245,3 +248,13 @@ For each completed implementation task, append: task ID, changed behavior, previ
 - Roadmap created from the working prologue and Peter's requested direction.
 - Next: FK-02, Tree Hero sprites and animation.
 - No runtime changes or new release are part of this documentation step.
+
+### November 19, 2026 — FK-01 visual reference
+
+- Peter requested beginning Phase One, Task One. Expanded the existing written specification into a concrete visual target.
+- Created Concept 01 with the supplied Tree Hero identity, Bram, the broken crossing, grove, timber workshop, and a coherent original illustrated woodland style.
+- Reviewed the image for identity, complete body/proportions, scene composition, and the limits of translating a large illustration into game assets. No phone-size animation or physical-device result is claimed.
+- Separated FK-01 completion checks from the later playable-scene acceptance checklist.
+- Recorded the complete prompt, reference provenance, and production handoff in `concepts/CONCEPT_01.md`.
+- Next: FK-02, beginning with consistent directional idle and walk artwork.
+- The playable preview continues to show the original Canvas implementation; this art-direction step does not change the game runtime or production deployment.
