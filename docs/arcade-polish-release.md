@@ -6,11 +6,11 @@ published. Read the newest `production/README.md` section and the successful
 workflow report for the observed production state.
 
 The preparation workflow currently requires locked production deployment
-`6afe4d06ab2e466f455605db`. Its last verified inventory contains 625 static paths,
+`6aff4a1398c18908a875f033`. Its last verified inventory contains 625 static paths,
 50 backend records and five schedules. Those counts describe the starting point;
 the helper captures and verifies the complete live inventory afresh.
 
-The November countdown styling is already on the current locked site and is unchanged in this release. This release combines the merged Campaigns and Daily tab polish.
+The November countdown and Campaigns spotlight are already live on the locked site and stay unchanged. This follow-up releases the Daily dashboard restructure: existing check-in identity is positioned next to the signed-in wallet masthead, and original game/quest and sharing sections become side-by-side desktop columns, stacked on mobile. All original controls and backend records are retained.
 
 ## Approved scope
 
@@ -18,8 +18,8 @@ Exactly these existing public assets change:
 
 | Public path | Committed source | Purpose |
 | --- | --- | --- |
-| `/styles/arcade-organization.css` | `styles/arcade-organization.css` | Compact Daily status, check-in and quest panels; preserve the Campaigns spotlight layout |
-| `/scripts/arcade-organization.js` | `scripts/arcade-organization.js` | Campaigns presentation plus routine Daily success-message suppression |
+| `/styles/arcade-organization.css` | `styles/arcade-organization.css` | Position Daily masthead and task/share panels into responsive dashboard columns |
+| `/scripts/arcade-organization.js` | `scripts/arcade-organization.js` | Reparent existing Daily task and sharing DOM nodes without replacing wallet or result handlers |
 
 The helper requires both approved presentation changes. It rejects a new static path, a missing
 overlay, a source substitution or an unapproved upload. `/play/index.html`,
