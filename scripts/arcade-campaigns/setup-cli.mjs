@@ -13,7 +13,9 @@ const help = `Offline TREE Arcade weekly campaign setup
 
 review prints a six-section Markdown review, or JSON with --json.
 check prints validation and grouped missing decisions; incomplete/invalid setup exits 2.
-Both default to data/arcade-weekly-campaign-setup.json and compare exact pinned source.
+Promotion order is TREE Force ’89 first, then Canopy Defense.
+Both default to data/arcade-weekly-campaign-setup.json. The pinned Trials source is
+a technical reference only; it does not verify either promotion game's results.
 Complete choices remain unverified, nonpayable and not launch-ready.
 No file is changed, no network is contacted and no campaign or payment is created.
 `;

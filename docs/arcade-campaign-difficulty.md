@@ -4,6 +4,12 @@ This is **offline scripted-play evidence**, prepared November 18, 2026 in
 America/Chicago (November 19 UTC). It does not measure human skill, authorize
 rewards, change pilot rules or establish eligibility for a funded campaign.
 
+**Promotion scope correction, November 19:** TREE Force '89 is the first game
+to promote; Canopy Defense is second. This report remains an Arborist Trials
+technical reference only. Its win rates, card rules and retry findings do not
+measure either promoted game's difficulty or define their campaign objectives.
+See the [corrected campaign plan](./arcade-weekly-campaign-setup.md).
+
 The important result is that **a simple growth-first script won 2,073 of 2,560
 matches (80.98%)**. In each of its 256 groups of ten fresh attempts, it won at
 least three matches. Increasing the target from one win to three therefore
@@ -143,7 +149,7 @@ deliberate funded qualification design. Even a five-attempt allowance leaves
 the simple growth script at 255/256 for one win and 236/256 for three wins.
 
 The experiment does not select a cash budget, a launch window, a funded retry
-limit or a different live objective. A first funded campaign still needs those
+limit or a different live objective. A future funded use of this Trials implementation still needs those
 decisions and the verification/review work described in
 [`arcade-campaign-foundation.md`](./arcade-campaign-foundation.md).
 

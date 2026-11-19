@@ -20,10 +20,14 @@ const oneOf = values => value => values.includes(value);
 const isoUtc = value => Number.isFinite(utcMillis(value));
 
 export const SETUP_PROPOSAL = Object.freeze({
-  status: 'awaiting-operator-decisions-and-funded-design',
-  workingTitle: 'Arborist Trials Weekly Practice Challenge',
-  rulesBasis: 'review-pinned-pilot',
-  objective: Object.freeze({ choice: 'win-one-match', metric: 'wins', operator: 'eq', targetUnits: '1', scope: 'single-attempt', classification: 'participation-practice', fundedSkillTargetEstablished: false }),
+  status: 'awaiting-tree-force-review-and-campaign-terms',
+  promotionOrder: Object.freeze(['TREE Force ’89', 'Canopy Defense']),
+  workingTitle: 'TREE Force ’89 Weekly Campaign',
+  game: Object.freeze({ id: 'treeforce89', name: 'TREE Force ’89', version: null, ruleset: null, sourceHash: null }),
+  runAdapter: Object.freeze({ id: null, version: null }),
+  rulesBasis: null,
+  objective: null,
+  technicalReferenceRole: 'arborist-trials-only-not-promotion-game-qualification',
   attempts: Object.freeze({ choice: 'repeat-attempts-one-share', sharesPerReviewedPlayer: 1, weeklyStartLimit: null }),
   suggestedDurationDays: 7,
   allocation: Object.freeze({ method: 'equal-shares', residualPolicy: 'leave-unallocated', noQualifiersPolicy: 'leave-unallocated' }),
@@ -34,8 +38,8 @@ export const SETUP_PROPOSAL = Object.freeze({
 const FIELDS = [
   { id: 'challenge', title: 'Challenge', fields: [
     ['title', 'Campaign title', value => textIs(value, 100), 'Enter a short working title.'],
-    ['rulesBasis', 'Rules to review', oneOf(['review-pinned-pilot']), 'Only review-pinned-pilot is available; this is a candidate, not funded rules.'],
-    ['objectiveChoice', 'Proposed objective', oneOf(['win-one-match']), 'Only win-one-match is supported as a proposal. A multiple-win objective needs an aggregation implementation.'],
+    ['rulesBasis', 'TREE Force rules proposal', value => textIs(value), 'Describe the TREE Force rules needing review. Entered text is not a verified build or ruleset.'],
+    ['objectiveChoice', 'TREE Force objective proposal', value => textIs(value), 'Describe a proposed TREE Force objective for separate review; this does not implement or verify a target.'],
     ['attemptPolicy', 'Proposed attempt policy', oneOf(['repeat-attempts-one-share']), 'Only repeat-attempts-one-share is available as a proposal; no weekly start limit is implemented here.'],
   ] },
   { id: 'schedule', title: 'Schedule', fields: [
@@ -131,7 +135,7 @@ export function validateSetup(setup, sourceKnown) {
   if (setup.schemaVersion !== 1 || setup.kind !== 'offline-weekly-campaign-setup' || setup.status !== 'draft') add('$', 'Use the version-1 offline draft setup.');
   if (setup.payable !== false || setup.launchReady !== false) add('$', 'Setup records must remain nonpayable and not launch-ready.');
   if (!same(setup.sourceKnown, sourceKnown)) add('sourceKnown', 'The source reference drifted from the checked-in pilot, adapter or engine. Review the new source explicitly; do not silently refresh this record.');
-  if (!same(setup.proposal, SETUP_PROPOSAL)) add('proposal', 'Use the supported, explicitly unconfirmed proposal. Different objectives, attempt limits or reward methods require new reviewed implementation.');
+  if (!same(setup.proposal, SETUP_PROPOSAL)) add('proposal', 'Preserve the selected promotion order and unresolved game-specific implementation fields. Put unverified planning text in decisions; do not transfer the Trials reference into a campaign verifier.');
   if (!keysAre(setup.decisions, FIELDS.map(section => section.id))) {
     add('decisions', 'Use exactly the six setup sections.');
     return { valid: false, decisionsComplete: false, issues, missingDecisions };
@@ -176,16 +180,17 @@ export function reviewSetup(setup, sourceKnown) {
   return {
     schemaVersion: 1, kind: 'offline-weekly-campaign-setup-review', payable: false, launchReady: false,
     operatorClaimsAuthenticated: false, productionIntegrationReady: false,
+    campaignGameVerificationReady: false,
     decisionsComplete: validation.decisionsComplete,
-    sourceStatus: 'matches-checked-in-pilot-source',
+    sourceStatus: 'matches-checked-in-technical-reference-only',
     sourceKnown: clone(sourceKnown), proposal: clone(setup.proposal),
     sections: FIELDS.map(section => ({ id: section.id, title: section.title, fields: section.fields.map(([field, label]) => ({ path: 'decisions.' + section.id + '.' + field, label, value: setup.decisions[section.id][field], status: setup.decisions[section.id][field] === null ? 'not-selected' : 'operator-entered-not-verified' })) })),
     missingDecisions: validation.missingDecisions, sharePreview,
     limitations: [
       'Entered choices are an offline proposal. They do not publish terms, verify a person, prove funding or authorize a payment.',
-      'The win-one choice is an accessible participation/practice candidate, not an established demanding skill threshold. Objective and attempt preferences remain subject to difficulty review; changing a target cannot create multi-win aggregation.',
-      'The pilot deals variable four-card hands with chance effects. Balanced card types do not guarantee equal hand strength, pure skill or resistance to automation.',
-      'No weekly attempt-start limit is implemented here. The pilot active-attempt cap is a concurrency limit, not a weekly allowance; any future allowance must count starts, including abandoned and expired attempts, per reviewed player.',
+      'Promotion order is TREE Force ’89 first and Canopy Defense second. TREE Force build, ruleset, verifier and objective remain unresolved; entered rules and objective text are unverified planning only.',
+      'The Arborist Trials source snapshot and difficulty findings are a technical reference only. Its four-card rules, win-one objective, results and verifier do not qualify TREE Force ’89 or Canopy Defense campaigns.',
+      'No weekly attempt-start limit is implemented here. The Trials pilot active-attempt cap is a concurrency limit, not a weekly allowance or a TREE Force rule. A future campaign allowance needs game-specific accepted-start accounting.',
       'Wallet authentication does not establish a unique person. Identity methods and reviewer identifiers entered here are unverified operator assertions.',
       'Existing no-prize pilot results remain ineligible for funded rewards. A funded window requires its own authoritative records, rules, qualification and payout integration.',
       'The associated Event and its entry rules need independent confirmation. A general Events link does not establish a game-specific pairing.',
@@ -202,8 +207,12 @@ export function formatSetupReview(review) {
     '# Weekly campaign setup — offline review', '',
     '**Status:** ' + (review.decisionsComplete ? 'All planning choices entered; funded integration remains pending.' : 'Planning choices remain open.'),
     '**Payable:** No · **Launch-ready:** No · **Operator claims authenticated:** No', '',
-    '## Source-known starting point', '',
-    'These facts match the checked-in no-prize pilot. They are a proposed starting point for a future campaign.', '',
+    '## Promotion order', '',
+    ...review.proposal.promotionOrder.map((name, index) => (index + 1) + '. ' + markdownText(name)), '',
+    '## First campaign — TREE Force ’89', '',
+    markdownText(review.proposal.workingTitle) + ': promote TREE Force ’89 first, then Canopy Defense. The exact game build, ruleset, verifier and objective remain unresolved. An entered objective is planning text only; it does not become verified qualification. Pool, dates, eligibility and Event details remain open. This proposal creates no offer.', '',
+    '## Arborist Trials technical reference only', '',
+    'These source facts belong only to the checked-in no-prize Arborist Trials pilot. They do not supply the rules, objective or verifier for TREE Force ’89 or Canopy Defense.', '',
     '- Game: ' + markdownText(s.game.id) + ' · build ' + markdownText(s.game.version) + ' · ruleset ' + markdownText(s.game.ruleset),
     '- Adapter: ' + markdownText(s.adapter.id) + ' v' + markdownText(s.adapter.version),
     '- Fixed rules date: ' + markdownText(s.challengeDate) + ' · variant: ' + markdownText(s.variant.title) + ' (' + markdownText(s.variant.id) + ')',
@@ -212,8 +221,6 @@ export function formatSetupReview(review) {
     '- Deal: four separately dealt standard cards per side; attack, growth, hybrid, then another distinct standard card. No fifth card or paid advantage. Hands and chance effects vary.',
     '- Pilot rule hash: `' + s.pilotRulesHash + '`',
     '- Engine source hash: `' + s.game.sourceHash + '`', '',
-    '## Proposed first campaign', '',
-    markdownText(review.proposal.workingTitle) + ': an accessible participation/practice candidate using one single-attempt win, repeat attempts with one equal share per reviewed qualifying player, and a suggested seven-day window. This is not an established demanding skill threshold. Difficulty, identity, dates, pool and Event pairing remain operator decisions. This proposal creates no offer.', '',
   ];
   review.sections.forEach((section, index) => {
     lines.push('## ' + (index + 1) + '. ' + section.title, '', '| Choice | Entered value |', '| --- | --- |');

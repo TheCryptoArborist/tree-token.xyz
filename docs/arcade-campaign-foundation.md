@@ -14,6 +14,11 @@ player who meets the published target**. More successful attempts do not buy or
 earn more shares. Completing a campaign does not add an Event entry requirement.
 Monthly check-in rewards and the existing Event terms are separate decisions.
 
+**Confirmed promotion order (November 19, 2026): TREE Force '89 first, Canopy
+Defense second.** Arborist Trials is technical-reference work and is not the
+selected first campaign. Its card-game rules and difficulty findings do not
+establish a target or verifier for either promoted game.
+
 The next implemented stage is documented in
 [`arcade-challenge-pilot.md`](./arcade-challenge-pilot.md): a versioned Arborist
 Trials verifier, authenticated per-move service and private transactional pilot
@@ -23,12 +28,12 @@ verification. That protocol check did not finish a winning match or establish
 distinct-human identity. Funded qualification and payouts remain pending. This
 offline allocator keeps its original input-assertion and nonpayable boundaries.
 
-The next planning milestone is the
+The current promotion plan is the
 [`weekly campaign setup and working brief`](./arcade-weekly-campaign-setup.md),
-with a separate source-bound setup record, grouped operator choices and an
-offline share preview. The
+with the confirmed game order, grouped operator choices and an offline share
+preview. Its pinned Trials source record is a technical reference only. The
 [`difficulty evaluation`](./arcade-campaign-difficulty.md) reproduces 5,120
-scripted matches against the pinned pilot. These additions do not fill this
+scripted matches against that pilot, not the promoted games. These additions do not fill this
 foundation's actual draft or activate funded eligibility.
 
 ## What is ready to review
