@@ -15,7 +15,7 @@ const fresh = () => createSetup(source);
 const complete = () => {
   const setup = fresh();
   setup.decisions = {
-    challenge: { title: 'Synthetic practice proposal', rulesBasis: 'review-pinned-pilot', objectiveChoice: 'win-one-match', attemptPolicy: 'repeat-attempts-one-share' },
+    challenge: { title: 'Synthetic TREE Force proposal', rulesBasis: 'Synthetic TREE Force rules needing separate source review.', objectiveChoice: 'Synthetic TREE Force target needing a verifier.', attemptPolicy: 'repeat-attempts-one-share' },
     schedule: { startsAt: '2020-01-01T00:00:00Z', endsAt: '2020-01-08T00:00:00Z' },
     pool: { network: 'fictional-test-network', assetId: 'nontransferable:TEST', symbol: 'TEST', decimals: 2, poolUnits: '1001' },
     playersAndReview: {
@@ -29,7 +29,7 @@ const complete = () => {
   return setup;
 };
 
-test('the actual setup pins source facts but leaves all 22 choices open in six useful groups', () => {
+test('the actual setup selects TREE Force then Canopy Defense while keeping the Trials reference separate', () => {
   assert.deepEqual(actual, fresh());
   const before = JSON.stringify(actual), result = validateSetup(actual, source), review = reviewSetup(actual, source);
   assert.equal(result.valid, true);
@@ -37,8 +37,16 @@ test('the actual setup pins source facts but leaves all 22 choices open in six u
   assert.equal(result.missingDecisions.length, 6);
   assert.equal(result.missingDecisions.reduce((sum, group) => sum + group.fields.length, 0), 22);
   assert.ok(Object.values(actual.decisions).flatMap(group => Object.values(group)).every(value => value === null));
-  assert.equal(actual.proposal.objective.classification, 'participation-practice');
-  assert.equal(actual.proposal.objective.fundedSkillTargetEstablished, false);
+  assert.deepEqual(actual.proposal.promotionOrder, ['TREE Force ’89', 'Canopy Defense']);
+  assert.equal(actual.proposal.game.id, 'treeforce89');
+  for (const field of ['version', 'ruleset', 'sourceHash']) assert.equal(actual.proposal.game[field], null);
+  assert.deepEqual(actual.proposal.runAdapter, { id: null, version: null });
+  assert.equal(actual.proposal.rulesBasis, null);
+  assert.equal(actual.proposal.objective, null);
+  assert.equal(actual.proposal.technicalReferenceRole, 'arborist-trials-only-not-promotion-game-qualification');
+  assert.equal(source.game.id, 'arborist-trials');
+  assert.equal(review.campaignGameVerificationReady, false);
+  assert.equal(review.sourceStatus, 'matches-checked-in-technical-reference-only');
   assert.equal(source.challengeDate, '2026-11-18');
   assert.equal(source.variant.id, 'standard');
   assert.equal(source.maxAttemptSeconds, 900);
@@ -52,6 +60,7 @@ test('the actual setup pins source facts but leaves all 22 choices open in six u
 test('changes to every material source reference block review rather than silently refreshing it', () => {
   const changes = [
     s => { s.pilotRulesHash = '0'.repeat(64); }, s => { s.challengeDate = '2026-11-19'; },
+    s => { s.game.id = 'treeforce89'; },
     s => { s.game.version = 'another-version'; }, s => { s.game.sourceHash = '0'.repeat(64); },
     s => { s.game.ruleset = 'other-rules'; }, s => { s.adapter.version = '2.0.0'; },
     s => { s.variant.id = 'another-variant'; }, s => { s.variant.targetGrowth = 1; },
@@ -104,10 +113,13 @@ test('unknown fields and unsafe authority claims are rejected at every setup lev
   }
 });
 
-test('win-three and arbitrary start caps cannot be smuggled in as known objective/attempt choices', () => {
+test('planning text cannot transfer Trials qualification or claim implemented TREE Force rules and caps', () => {
   for (const change of [
-    s => { s.proposal.objective.targetUnits = '3'; },
-    s => { s.decisions.challenge.objectiveChoice = 'win-three-matches'; },
+    s => { s.proposal.objective = { metric: 'wins', operator: 'eq', targetUnits: '1' }; },
+    s => { s.proposal.runAdapter = clone(source.adapter); },
+    s => { s.proposal.game.version = source.game.version; },
+    s => { s.proposal.game.id = 'arborist-trials'; },
+    s => { s.proposal.promotionOrder.reverse(); },
     s => { s.decisions.challenge.targetUnits = '3'; },
     s => { s.decisions.challenge.attemptPolicy = 'twenty-starts-per-week'; },
     s => { s.proposal.attempts.weeklyStartLimit = 20; },
@@ -115,7 +127,13 @@ test('win-three and arbitrary start caps cannot be smuggled in as known objectiv
     const setup = fresh(); change(setup);
     assert.equal(validateSetup(setup, source).valid, false);
   }
-  assert.match(formatSetupReview(reviewSetup(fresh(), source)), /concurrency limit, not a weekly allowance/);
+  const entered = complete();
+  entered.decisions.challenge.objectiveChoice = 'Operator proposal: finish three matches; verification is not implemented.';
+  const review = reviewSetup(entered, source);
+  assert.equal(review.proposal.objective, null);
+  assert.equal(review.campaignGameVerificationReady, false);
+  assert.equal(review.launchReady, false);
+  assert.match(formatSetupReview(review), /concurrency limit, not a weekly allowance or a TREE Force rule/);
 });
 
 test('asset examples require every valid pool field and never infer an asset from a ticker', () => {
@@ -166,11 +184,13 @@ test('all entered terms remain nonpayable, unauthenticated and outside productio
   assert.equal(review.launchReady, false);
   assert.equal(review.operatorClaimsAuthenticated, false);
   assert.equal(review.productionIntegrationReady, false);
+  assert.equal(review.campaignGameVerificationReady, false);
   assert.ok(review.sections.flatMap(section => section.fields).every(field => field.status === 'operator-entered-not-verified'));
   const markdown = formatSetupReview(review);
   assert.match(markdown, /offline, unverified proposal/);
   assert.match(markdown, /Existing no-prize pilot results remain ineligible/);
-  assert.match(markdown, /not an established demanding skill threshold/);
+  assert.match(markdown, /do not qualify TREE Force ’89 or Canopy Defense campaigns/);
+  assert.match(markdown, /entered rules and objective text are unverified planning only/);
 });
 
 test('UTC boundaries and review/correction chronology must be explicit and valid', () => {
@@ -207,6 +227,11 @@ test('the CLI provides a six-section Markdown review and grouped JSON without ch
   assert.equal(await main(['review', path], value => { markdown += value; }), 0);
   assert.match(markdown, /## 1\. Challenge/);
   assert.match(markdown, /## 6\. Final terms/);
+  assert.ok(markdown.indexOf('1. TREE Force ’89') < markdown.indexOf('2. Canopy Defense'));
+  assert.match(markdown, /## First campaign — TREE Force ’89/);
+  assert.match(markdown, /## Arborist Trials technical reference only/);
+  assert.ok(!markdown.includes('Arborist Trials Weekly Practice Challenge'));
+  assert.ok(!markdown.includes('using one single-attempt win'));
   let output = '';
   assert.equal(await main(['check', path], value => { output += value; }), 2);
   assert.equal(JSON.parse(output).missingDecisions.length, 6);

@@ -61,18 +61,26 @@
     }
   },
   "proposal": {
-    "status": "awaiting-operator-decisions-and-funded-design",
-    "workingTitle": "Arborist Trials Weekly Practice Challenge",
-    "rulesBasis": "review-pinned-pilot",
-    "objective": {
-      "choice": "win-one-match",
-      "metric": "wins",
-      "operator": "eq",
-      "targetUnits": "1",
-      "scope": "single-attempt",
-      "classification": "participation-practice",
-      "fundedSkillTargetEstablished": false
+    "status": "awaiting-tree-force-review-and-campaign-terms",
+    "promotionOrder": [
+      "TREE Force ’89",
+      "Canopy Defense"
+    ],
+    "workingTitle": "TREE Force ’89 Weekly Campaign",
+    "game": {
+      "id": "treeforce89",
+      "name": "TREE Force ’89",
+      "version": null,
+      "ruleset": null,
+      "sourceHash": null
     },
+    "runAdapter": {
+      "id": null,
+      "version": null
+    },
+    "rulesBasis": null,
+    "objective": null,
+    "technicalReferenceRole": "arborist-trials-only-not-promotion-game-qualification",
     "attempts": {
       "choice": "repeat-attempts-one-share",
       "sharesPerReviewedPlayer": 1,
