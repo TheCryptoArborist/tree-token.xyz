@@ -1,0 +1,271 @@
+{
+  "kind": "arcade-challenge-pilot-canonical-browser-check",
+  "schemaVersion": 1,
+  "startedAt": "2026-11-19T01:18:43.700Z",
+  "origin": "https://tree-token.xyz",
+  "pilotId": "arborist-trials-november-2026",
+  "passed": true,
+  "testIdentity": "Fresh unfunded ephemeral operator wallet; protocol/UI integration test, not a Slush extension test or a real player.",
+  "mode": "nonpaying-pilot",
+  "payable": false,
+  "prizeEligible": false,
+  "awardsEnabled": false,
+  "privateKeyLocation": "Node process memory only; never sent to the browser or written to an artifact.",
+  "limits": {
+    "maxApiRequests": 30,
+    "maxDistinctMoves": 3,
+    "maxAttempts": 1
+  },
+  "checks": {
+    "generatedSignatureVerifiedLocally": true,
+    "isolatedPilotSessionStored": true,
+    "realAuthentication": "Published wallet bridge, one explicit provider connection, one exact server-issued personal-message signature, and the isolated pilot-only session endpoint.",
+    "signInHasNoAttendanceOrGameMutation": true,
+    "explicitStart": true,
+    "lostCommittedResponse": true,
+    "identicalRetryAppendedOnce": true,
+    "reloadResumedWithoutNewSignature": true,
+    "sharedArcadeSessionUntouched": true,
+    "noGrowthEndpointRequests": true,
+    "noUnrelatedWrites": true,
+    "noFundedOrTransactionFeatures": true,
+    "finalVersion": 3,
+    "finalAttemptStatus": "active",
+    "finalPhase": "playing"
+  },
+  "screenshots": [
+    {
+      "file": "pilot-canonical-1440-ready.png",
+      "width": 1440,
+      "phase": "ready",
+      "identityMasked": true
+    },
+    {
+      "file": "pilot-canonical-1440-playing.png",
+      "width": 1440,
+      "phase": "playing",
+      "identityMasked": true
+    },
+    {
+      "file": "pilot-canonical-390-playing.png",
+      "width": 390,
+      "phase": "playing",
+      "identityMasked": true
+    },
+    {
+      "file": "pilot-canonical-1440-after-resume.png",
+      "width": 1440,
+      "phase": "playing",
+      "identityMasked": true
+    },
+    {
+      "file": "pilot-canonical-390-after-resume.png",
+      "width": 390,
+      "phase": "playing",
+      "identityMasked": true
+    }
+  ],
+  "cleanup": {
+    "sessionRevoked": true,
+    "attemptsExpireAutomatically": true
+  },
+  "browser": {
+    "version": "157.0.8103.50",
+    "executableSource": "runner-browser"
+  },
+  "completedAt": "2026-11-19T01:19:09.001Z",
+  "counts": {
+    "apiRequests": 14,
+    "growthEndpointRequests": 0,
+    "explicitSignatures": 1,
+    "realSessions": 1,
+    "attemptStarts": 1,
+    "distinctMoves": 3,
+    "browserErrors": 0
+  },
+  "failures": [],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/play/challenge/",
+      "action": null,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/styles/arcade-challenge.css",
+      "action": null,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/assets/tree-token-logo-official.webp",
+      "action": null,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/scripts/arcade-challenge.mjs",
+      "action": null,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/scripts/arcade-challenge-client.mjs",
+      "action": null,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/scripts/arcade-challenge-view.mjs",
+      "action": null,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/assets/arcade/arcade-growth-wallet.js",
+      "action": null,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/assets/tree-token-logo-official.webp",
+      "action": null,
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/arcade-challenge-pilot",
+      "action": "auth-challenge",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/arcade-challenge-pilot",
+      "action": "auth-session",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/arcade-challenge-pilot",
+      "action": "configuration",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/arcade-challenge-pilot",
+      "action": "start",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/arcade-challenge-pilot",
+      "action": "move",
+      "status": 200,
+      "expectedInterruption": "Response deliberately dropped after the real move committed.",
+      "failed": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/arcade-challenge-pilot",
+      "action": "move",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/arcade-challenge-pilot",
+      "action": "status",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/play/challenge/",
+      "action": null,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/styles/arcade-challenge.css",
+      "action": null,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/assets/tree-token-logo-official.webp",
+      "action": null,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/scripts/arcade-challenge.mjs",
+      "action": null,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/scripts/arcade-challenge-client.mjs",
+      "action": null,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/scripts/arcade-challenge-view.mjs",
+      "action": null,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/assets/arcade/arcade-growth-wallet.js",
+      "action": null,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/assets/tree-token-logo-official.webp",
+      "action": null,
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/arcade-challenge-pilot",
+      "action": "configuration",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/arcade-challenge-pilot",
+      "action": "status",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/arcade-challenge-pilot",
+      "action": "move",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/arcade-challenge-pilot",
+      "action": "status",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/arcade-challenge-pilot",
+      "action": "move",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/arcade-challenge-pilot",
+      "action": "status",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/arcade-challenge-pilot",
+      "action": "auth-logout",
+      "status": 200
+    }
+  ]
+}

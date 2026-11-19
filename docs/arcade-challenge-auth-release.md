@@ -1,5 +1,16 @@
 # Isolated free pilot sign-in release
 
+## Published outcome
+
+PR229 source `6c8622c64186e7b08c475cf2ae79758149f1545e` is published as
+`6afe4d06ab2e466f455605db`. Publication run `44435573744` and the bounded
+canonical run `44435875741` passed. The live check issued one isolated session
+and one attempt, committed three distinct legal moves, recovered the identical
+retry and reload, made zero Growth API calls and revoked its own session.
+The current `production/README.md` and dated `arcade-challenge-auth-*` records
+contain the exact inventory, source, package and artifact bindings. The initial
+failed fresh-wallet test remains recorded separately.
+
 ## Problem and correction
 
 The initial Arborist Trials release reused Arcade authentication. The bounded
