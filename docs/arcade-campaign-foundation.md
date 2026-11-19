@@ -2,8 +2,8 @@
 
 This change prepares an **offline operator draft and allocation dry run**. It
 does not open a campaign, fund a pool, publish terms, verify a person, verify a
-game result, or authorize a payment. Nothing in this directory is wired into a
-public route or a production release. The actual draft keeps the budget, asset,
+game result, or authorize a payment. The foundation draft and allocation CLI
+are not wired into a public route or a production release. The actual draft keeps the budget, asset,
 network, dates, game build, skill target, verification adapters and associated
 Event unset.
 
@@ -14,12 +14,22 @@ player who meets the published target**. More successful attempts do not buy or
 earn more shares. Completing a campaign does not add an Event entry requirement.
 Monthly check-in rewards and the existing Event terms are separate decisions.
 
-The next implemented stage is now documented in
+The next implemented stage is documented in
 [`arcade-challenge-pilot.md`](./arcade-challenge-pilot.md): a versioned Arborist
 Trials verifier, authenticated per-move service and private transactional pilot
-ledger. It is locally tested and explicitly nonpaying; hosted activation,
-canonical identity review and a funded campaign remain pending. This offline
-allocator keeps its original input-assertion and nonpayable boundaries.
+ledger. The free, explicitly nonpaying pilot is published, with isolated
+pilot-only authentication and recorded canonical start/play/retry/resume
+verification. That protocol check did not finish a winning match or establish
+distinct-human identity. Funded qualification and payouts remain pending. This
+offline allocator keeps its original input-assertion and nonpayable boundaries.
+
+The next planning milestone is the
+[`weekly campaign setup and working brief`](./arcade-weekly-campaign-setup.md),
+with a separate source-bound setup record, grouped operator choices and an
+offline share preview. The
+[`difficulty evaluation`](./arcade-campaign-difficulty.md) reproduces 5,120
+scripted matches against the pinned pilot. These additions do not fill this
+foundation's actual draft or activate funded eligibility.
 
 ## What is ready to review
 
@@ -115,7 +125,7 @@ The following findings come from the repository source inspected for this task.
 | `production/arcade-organization-static/runtime/scripts/arcade-completed-run-tracking.js` | The client loads `/api/arcade-completed-runs` and validates wallet, UTC day, supported game ID, unique receipt ID, completion timestamp, optional integer score and completion outcome. | Useful for daily discovery/share cards. That response shape does not establish an authenticated challenge start, game build, paid-advantage policy or independently verified score. |
 | `scripts/arcade-events/core.mjs` and `docs/arcade-events-design-20261111.md` | The separate Canopy Crown workshop has USDC entry/ladder draft economics and best-score standings. Its design explicitly says the completed-run tracker is not tournament score verification and calls for trusted start tickets and game-specific validation. | Do not reuse its paid-entry economics or ranked standings for equal-share free campaigns. Do not treat the browser-importable evidence helper as a security boundary. |
 | `netlify/event-functions/arcade-events.ts` | Current actions are configuration, eligibility and authorized draft load/save; responses keep payment, scoring and awards disabled. | No existing enabled ranked-run or payout endpoint can be assumed. Campaign execution needs its own later integration. |
-| `production/README.md`, newest 2026-11-18 section | The live organization/cutoff release preserves existing Event terms, adds no funded campaign or monthly cash program, and separates paid attendance recovery from completed-game quest credit. | Leave the lobby's existing 25 SUI announcement, workshop terms, monthly attendance rules and running backend records unchanged in this work. |
+| `production/README.md`, 2026-11-18 organization/cutoff section | The organization/cutoff release preserves existing Event terms, adds no funded campaign or monthly cash program, and separates paid attendance recovery from completed-game quest credit. | Leave the lobby's existing 25 SUI announcement, workshop terms, monthly attendance rules and running backend records unchanged in this work. |
 
 The live MystenLabs skills README was checked for this request. This bounded
 addition uses standard Node tooling only and changes no Sui SDK, wallet, Move

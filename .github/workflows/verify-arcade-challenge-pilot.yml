@@ -17,6 +17,9 @@ on:
       - 'supabase/migrations/20261118223908_arcade_challenge_pilot.sql'
       - 'supabase/migrations/20261119005653_arcade_challenge_pilot_auth.sql'
       - 'tests/arcade-trials-adapter.test.mjs'
+      - 'tests/arcade-campaign-difficulty.test.mjs'
+      - 'tests/arcade-campaign-setup.test.mjs'
+      - 'data/arcade-weekly-campaign-setup.json'
       - 'tests/arcade-challenge-pilot-*.test.mjs'
       - 'tests/arcade-challenge-client.test.mjs'
       - 'tests/arcade-challenge-controller.test.mjs'
@@ -45,6 +48,7 @@ jobs:
       - run: npm ci --ignore-scripts --no-audit --no-fund
         working-directory: vendor/arcade-monthly
       - run: node --test tests/arcade-trials-adapter.test.mjs tests/arcade-challenge-pilot-*.test.mjs tests/arcade-campaign-foundation.test.mjs
+      - run: node --test tests/arcade-campaign-difficulty.test.mjs tests/arcade-campaign-setup.test.mjs
       - run: node --test tests/arcade-challenge-client.test.mjs tests/arcade-challenge-controller.test.mjs
       - run: node scripts/arcade-campaigns/pilot-demo.mjs
       - name: Exercise locks in independent PostgreSQL workers
