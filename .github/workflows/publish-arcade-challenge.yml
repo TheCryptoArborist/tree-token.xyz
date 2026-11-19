@@ -27,7 +27,7 @@ permissions:
   actions: read
 
 concurrency:
-  group: tree-production-preservation-${{ github.event_name == 'pull_request' && github.ref || 'release' }}
+  group: tree-production-preservation-${{ github.event_name == 'pull_request' && format('challenge-pr-{0}', github.event.pull_request.number) || 'release' }}
   cancel-in-progress: false
 
 jobs:
