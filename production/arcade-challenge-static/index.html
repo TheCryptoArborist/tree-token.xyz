@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Arborist Trials · Test Challenge | TREE Arcade</title>
+  <meta name="description" content="Try the TREE Arcade four-card Arborist Trials challenge. Free entry, server-checked moves, and no prizes during this pilot.">
+  <meta name="theme-color" content="#091a17">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="icon" href="/assets/tree-token-logo-official.webp">
+  <link rel="canonical" href="https://tree-token.xyz/play/challenge/">
+  <link rel="stylesheet" href="/styles/arcade-challenge.css">
+</head>
+<body class="challenge-page">
+  <a class="challenge-skip" href="#challenge-main">Skip to the challenge</a>
+  <header class="challenge-site-header">
+    <a class="challenge-brand" href="/play/" aria-label="TREE Arcade home">
+      <img src="/assets/tree-token-logo-official.webp" alt="" width="40" height="40">
+      <span><strong>TREE ARCADE</strong><small>BATTLE. GROW. DEFEND THE CANOPY.</small></span>
+    </a>
+    <a class="challenge-back" href="/play/#campaigns"><span aria-hidden="true">←</span> Back to Campaigns</a>
+  </header>
+
+  <main id="challenge-main" class="challenge-shell">
+    <section id="arcade-challenge" data-phase="loading" aria-labelledby="challenge-title">
+      <header class="challenge-hero">
+        <div class="challenge-hero-copy">
+          <div class="challenge-eyebrow"><span class="challenge-mode">Test challenge — no prizes</span><span class="challenge-edition">FOUR-CARD PILOT</span></div>
+          <h1 id="challenge-title">Arborist <span>Trials</span></h1>
+          <p class="challenge-lead">Grow your canopy. Read your opponent. Make every card count.</p>
+        </div>
+        <div class="challenge-hero-mark" aria-hidden="true">
+          <svg viewBox="0 0 100 112" focusable="false"><path d="M50 105V19M50 81 25 58M50 66 75 43M50 49 30 30"/><path d="M48 29C28 30 24 15 25 6c16 0 27 7 23 23ZM53 45c-1-20 12-31 29-31-1 17-9 29-29 31ZM43 65C21 69 10 55 11 39c18 0 31 8 32 26ZM56 82c0-21 16-30 32-29-1 18-12 30-32 29Z"/><path d="M28 105h44"/></svg>
+          <span>GROWTH / STRATEGY</span>
+        </div>
+      </header>
+
+      <p id="challenge-environment" class="challenge-environment" hidden></p>
+      <div class="challenge-session-bar">
+        <div class="challenge-session-copy"><span id="challenge-session-dot" class="challenge-session-dot" aria-hidden="true"></span><div><strong id="challenge-session-heading">Loading your Arcade session…</strong><p id="challenge-session-note">Your existing Arcade sign-in works here.</p></div></div>
+        <button id="challenge-sign-in" class="challenge-button challenge-button--secondary" type="button" hidden>Sign in to play</button>
+      </div>
+      <div id="challenge-wallet-picker" class="challenge-wallet-picker" hidden>
+        <h2>Choose your Sui wallet</h2>
+        <p id="challenge-wallet-hint">Connect and approve one sign-in message. Playing this test has no gas fee.</p>
+        <div id="challenge-wallet-options" class="challenge-wallet-options"></div>
+      </div>
+      <p id="challenge-notice" class="challenge-notice" role="status" aria-live="polite" aria-atomic="true">Loading the challenge…</p>
+
+      <section id="challenge-launch" class="challenge-launch challenge-panel" aria-labelledby="challenge-objective-title">
+        <div class="challenge-launch-copy">
+          <p class="challenge-kicker">YOUR OBJECTIVE</p>
+          <h2 id="challenge-objective-title">Win a four-card match</h2>
+          <p id="challenge-objective-note">Reach the target Growth before Garden Bot. Your hand is dealt when the match starts.</p>
+          <ul class="challenge-terms" aria-label="Pilot terms"><li>Free entry</li><li>No purchase or NFTree required</li><li>No prizes</li></ul>
+        </div>
+        <div class="challenge-launch-actions">
+          <button id="challenge-start" class="challenge-button challenge-button--primary" type="button" disabled>Loading challenge…</button>
+          <p id="challenge-start-note">Four standard cards. No paid advantages.</p>
+        </div>
+      </section>
+
+      <section id="challenge-board" class="challenge-board challenge-panel" aria-labelledby="challenge-match-title" hidden>
+        <div class="challenge-board-header">
+          <div><p class="challenge-kicker">THE MATCH</p><h2 id="challenge-match-title">Arborist Trials</h2><p id="challenge-match-subtitle"></p></div>
+          <div class="challenge-match-meta"><span id="challenge-round">Round 1</span><span class="challenge-timer" id="challenge-timer" role="timer" aria-label="Time remaining"><span aria-hidden="true">◷</span> <span id="challenge-time">—</span></span></div>
+        </div>
+
+        <div class="challenge-duel">
+          <section class="challenge-contender challenge-contender--player" aria-labelledby="challenge-player-label">
+            <div class="challenge-contender-top"><span id="challenge-player-label">YOUR CANOPY</span><span class="challenge-contender-icon" aria-hidden="true">↗</span></div>
+            <p class="challenge-growth"><strong id="challenge-player-growth">—</strong><span>/ <span id="challenge-player-target">—</span> Growth</span></p>
+            <div id="challenge-player-meter" class="challenge-meter" role="progressbar" aria-label="Your Growth" aria-valuemin="0" aria-valuemax="50" aria-valuenow="0"><span></span></div>
+            <p id="challenge-player-effects" class="challenge-effects">No active effects</p>
+          </section>
+          <span class="challenge-versus" aria-hidden="true">VS</span>
+          <section class="challenge-contender challenge-contender--bot" aria-labelledby="challenge-bot-label">
+            <div class="challenge-contender-top"><span id="challenge-bot-label">GARDEN BOT</span><span class="challenge-contender-icon" aria-hidden="true">◇</span></div>
+            <p class="challenge-growth"><strong id="challenge-bot-growth">—</strong><span>/ <span id="challenge-bot-target">—</span> Growth</span></p>
+            <div id="challenge-bot-meter" class="challenge-meter" role="progressbar" aria-label="Garden Bot Growth" aria-valuemin="0" aria-valuemax="50" aria-valuenow="0"><span></span></div>
+            <p id="challenge-bot-effects" class="challenge-effects">No active effects</p>
+          </section>
+        </div>
+
+        <p id="challenge-forecast" class="challenge-forecast" hidden></p>
+        <section id="challenge-result" class="challenge-result" aria-labelledby="challenge-result-title" hidden tabindex="-1">
+          <p id="challenge-result-eyebrow" class="challenge-kicker">MATCH COMPLETE</p>
+          <h3 id="challenge-result-title"></h3>
+          <p id="challenge-result-copy"></p>
+          <p id="challenge-result-score" class="challenge-result-score"></p>
+          <p class="challenge-result-note">This pilot does not award prizes, badges, or monthly quest credit.</p>
+        </section>
+
+        <div class="challenge-hand-heading"><div><h3 id="challenge-hand-title">Choose your card</h3><p id="challenge-hand-note">The server resolves your move and Garden Bot’s response.</p></div><span id="challenge-moves" class="challenge-moves">0 / 100 moves</span></div>
+        <div id="challenge-hand" class="challenge-hand" role="group" aria-labelledby="challenge-hand-title"></div>
+        <p class="challenge-hand-footnote">Cards marked “Unavailable” cannot be played under the current match rules.</p>
+
+        <details class="challenge-round-details" id="challenge-round-details" open>
+          <summary><span>Last round</span><span id="challenge-log-round" class="challenge-log-round">Waiting for your first move</span><span class="challenge-chevron" aria-hidden="true">⌄</span></summary>
+          <ol id="challenge-round-log" class="challenge-round-log"><li class="challenge-log-empty">Your moves and Garden Bot’s responses will appear here.</li></ol>
+        </details>
+      </section>
+
+      <div class="challenge-recovery-actions">
+        <button id="challenge-retry" class="challenge-button challenge-button--primary" type="button" hidden>Retry the same move</button>
+        <button id="challenge-refresh" class="challenge-button challenge-button--secondary" type="button" hidden>Refresh match</button>
+      </div>
+
+      <details id="challenge-rules" class="challenge-rules challenge-panel">
+        <summary><span><strong>How this test works</strong><small>Match rules, time limits, and session recovery</small></span><span class="challenge-chevron" aria-hidden="true">⌄</span></summary>
+        <div class="challenge-rules-content">
+          <div><h3>Play the hand you’re dealt</h3><p>Choose from four standard cards to grow your tree, slow Garden Bot, or protect your canopy. Some cards have chance effects. Only currently available cards can be played.</p><p id="challenge-special-rule" hidden></p></div>
+          <div><h3>Finish within the time limit</h3><p id="challenge-time-rule">The match timer begins when you start. The match also ends when the pilot closes or your original Arcade session expires.</p><p id="challenge-window" hidden></p></div>
+          <div><h3>Return to the same match</h3><p>Keep this browser and your original Arcade sign-in. Refreshing can restore your match while it is active. If a move is interrupted, use “Retry the same move” before choosing another card.</p></div>
+          <div><h3>Help test a future challenge</h3><p>This is free practice for the challenge system. Results are checked by the server. They do not qualify for any current or future prize pool, attendance reward, or badge.</p></div>
+        </div>
+      </details>
+      <noscript><p class="challenge-notice" data-kind="error">JavaScript is required to play this challenge. You can still <a href="/play/">return to TREE Arcade</a>.</p></noscript>
+    </section>
+    <footer class="challenge-footer"><span>TREE ARCADE · GROW TOGETHER</span><a href="/play/#events">Explore Arcade Events <span aria-hidden="true">→</span></a></footer>
+  </main>
+  <script type="module" src="/scripts/arcade-challenge.mjs"></script>
+</body>
+</html>

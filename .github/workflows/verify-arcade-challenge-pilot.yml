@@ -6,12 +6,17 @@ on:
     paths:
       - 'netlify/challenge-functions/**'
       - 'scripts/arcade-campaigns/**'
+      - 'scripts/arcade-challenge*.mjs'
+      - 'styles/arcade-challenge.css'
+      - 'production/arcade-challenge-static/**'
       - 'vendor/arcade-trials-engine/**'
       - 'vendor/arcade-events/package.json'
       - 'vendor/arcade-events/package-lock.json'
       - 'supabase/migrations/20261118223908_arcade_challenge_pilot.sql'
       - 'tests/arcade-trials-adapter.test.mjs'
       - 'tests/arcade-challenge-pilot-*.test.mjs'
+      - 'tests/arcade-challenge-client.test.mjs'
+      - 'tests/arcade-challenge-browser.test.mjs'
       - 'tests/fixtures/arcade-challenge-pilot/**'
       - 'docs/arcade-challenge-pilot.md'
       - '.github/workflows/verify-arcade-challenge-pilot.yml'
@@ -32,6 +37,41 @@ jobs:
       - run: npm ci --ignore-scripts --no-audit --no-fund
         working-directory: vendor/arcade-events
       - run: node --test tests/arcade-trials-adapter.test.mjs tests/arcade-challenge-pilot-database.test.mjs tests/arcade-challenge-pilot-service.test.mjs tests/arcade-campaign-foundation.test.mjs
+      - run: node --test tests/arcade-challenge-client.test.mjs
       - run: node scripts/arcade-campaigns/pilot-demo.mjs
+      - name: Exercise locks in independent PostgreSQL workers
+        run: ARCADE_PG_BIN="$(pg_config --bindir)" node scripts/arcade-campaigns/pilot-postgres-check.mjs
       - run: node scripts/arcade-campaigns/package-pilot.mjs
       - run: git diff --check
+
+  challenge-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: vendor/arcade-events/package-lock.json
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+        working-directory: vendor/arcade-events
+      - name: Install isolated browser verification tools
+        run: npm install --prefix "$RUNNER_TEMP/arcade-pilot-browser" --ignore-scripts --no-audit --no-fund playwright@1.56.1
+      - name: Install Chromium for the test job
+        run: '"$RUNNER_TEMP/arcade-pilot-browser/node_modules/.bin/playwright" install --with-deps chromium'
+      - name: Exercise actual page, service, SQL and engine with synthetic sessions
+        env:
+          ARCADE_PILOT_BROWSER_MODULE: ${{ runner.temp }}/arcade-pilot-browser/node_modules/playwright/index.mjs
+          ARCADE_PILOT_QA_OUTPUT: ${{ runner.temp }}/arcade-pilot-review
+        run: |
+          mkdir -p "$ARCADE_PILOT_QA_OUTPUT"
+          node --test --test-reporter=spec --test-reporter=junit --test-reporter-destination=stdout --test-reporter-destination="$ARCADE_PILOT_QA_OUTPUT/browser-results.xml" tests/arcade-challenge-browser.test.mjs
+      - name: Save candidate browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: arcade-pilot-browser-review
+          path: ${{ runner.temp }}/arcade-pilot-review
+          if-no-files-found: warn
+          retention-days: 14

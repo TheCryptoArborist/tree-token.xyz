@@ -196,7 +196,11 @@ test('campaign sections stay separate and quiz/share actions open their destinat
     assert.equal(firstRound.open, false);
     doc.getElementById('guided-open-share').click();
     assert.equal(share.open, true);
-    const feature = campaign.querySelector('.arcade-campaign-feature');
+    const pilot = campaign.querySelector('.arcade-campaign-pilot');
+    assert.match(pilot.textContent, /NO PRIZES/);
+    assert.match(pilot.textContent, /do not award prizes, attendance or daily quest credit/);
+    assert.ok(pilot.querySelector('a[href="/play/challenge/"]'));
+    const feature = campaign.querySelector('.arcade-campaign-feature:not(.arcade-campaign-pilot)');
     assert.match(feature.textContent, /No funded campaign is open yet/);
     assert.match(feature.textContent, /practice scores do not count/i);
     assert.ok(feature.querySelector('a[href="/play/treeforce89/"]'));
