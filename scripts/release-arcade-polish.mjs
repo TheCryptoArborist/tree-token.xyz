@@ -18,7 +18,6 @@ export const CONTROL_FILE = 'production/arcade-polish-publish.json';
 export const REVIEW_FILE = 'production/arcade-polish-browser-review.json';
 export const DELIVERY_SOURCES = {
   '/styles/arcade-organization.css': 'styles/arcade-organization.css',
-  '/styles/arcade-season-deadline.css': 'styles/arcade-season-deadline.css',
   '/scripts/arcade-organization.js': 'scripts/arcade-organization.js',
 };
 export const REQUIRED_CHANGES = Object.keys(DELIVERY_SOURCES);
@@ -27,7 +26,7 @@ const RECORD_DIR = '.netlify/arcade-polish';
 const SOURCE_PATHS = [...Object.values(DELIVERY_SOURCES), 'scripts/release-arcade-polish.mjs',
   'scripts/release-arcade-cutoff.mjs', 'scripts/release-preserved-production.mjs',
   'scripts/release-stats-market.mjs', 'scripts/release-sti-purchase.mjs', 'scripts/stats-market-delivery.mjs',
-  'tests/arcade-polish-release.test.mjs', '.github/workflows/publish-arcade-polish.yml', 'docs/arcade-polish-release.md'];
+  'tests/arcade-polish-release.test.mjs', '.github/workflows/publish-arcade-polish.yml', 'docs/arcade-polish-release.md', 'scripts/review-arcade-polish-candidate.mjs'];
 const sha = (bytes, algorithm = 'sha256') => crypto.createHash(algorithm).update(bytes).digest('hex');
 const safeId = value => typeof value === 'string' && /^[a-f0-9]{24}$/.test(value);
 const safeCommit = value => typeof value === 'string' && /^[a-f0-9]{40}$/.test(value);
@@ -60,7 +59,7 @@ export function assembleFiles(baselineFiles, overlays) {
   }
   eq(Object.keys(sources).sort(), Object.keys(DELIVERY_SOURCES).sort(), 'Complete approved source inventory');
   const changedOriginals = Object.keys(baselineFiles).filter(p => files[p] !== baselineFiles[p]).sort();
-  assert(REQUIRED_CHANGES.every(p => changedOriginals.includes(p)), 'All three reviewed presentation changes are required.');
+  assert(REQUIRED_CHANGES.every(p => changedOriginals.includes(p)), 'Both reviewed presentation changes are required.');
   assert(changedOriginals.every(p => Object.hasOwn(DELIVERY_SOURCES, p)), 'Unapproved static change.');
   eq(Object.keys(files).sort(), Object.keys(baselineFiles).sort(), 'Complete preserved static path inventory');
   return { files, sources, changedOriginals, addedPaths: [] };

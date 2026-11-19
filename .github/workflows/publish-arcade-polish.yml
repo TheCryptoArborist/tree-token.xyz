@@ -8,6 +8,7 @@ on:
       - 'styles/arcade-organization.css'
       - 'styles/arcade-season-deadline.css'
       - 'scripts/release-arcade-polish.mjs'
+      - 'scripts/review-arcade-polish-candidate.mjs'
       - 'scripts/release-arcade-cutoff.mjs'
       - 'scripts/release-preserved-production.mjs'
       - 'scripts/release-stats-market.mjs'
@@ -69,7 +70,7 @@ jobs:
       - name: Capture current production and create the review candidate
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          ARCADE_POLISH_EXPECTED_DEPLOY: '6afe0141248c1062e8414ed7'
+          ARCADE_POLISH_EXPECTED_DEPLOY: '6afe4d06ab2e466f455605db'
           REVIEWED_SHA: ${{ github.sha }}
         run: |
           test -n "$NETLIFY_AUTH_TOKEN" || { echo 'The existing Netlify release connection is unavailable.'; exit 1; }
@@ -78,6 +79,22 @@ jobs:
           node scripts/release-arcade-polish.mjs plan --source-commit "$REVIEWED_SHA"
           node scripts/release-arcade-polish.mjs candidate --source-commit "$REVIEWED_SHA"
           node scripts/release-arcade-polish.mjs verify --source-commit "$REVIEWED_SHA"
+
+      - name: Check candidate presentation at phone and desktop sizes without wallet actions
+        env:
+          BROWSER_BASE: ${{ runner.temp }}/arcade-polish-browser
+        run: |
+          mkdir -p "$RUNNER_TEMP/arcade-polish-browser"
+          npm install --prefix "$RUNNER_TEMP/arcade-polish-browser" --ignore-scripts --no-audit --no-fund playwright@1.56.1
+          "$RUNNER_TEMP/arcade-polish-browser/node_modules/.bin/playwright" install chromium --only-shell
+          ARCADE_PLAYWRIGHT_MODULE="$RUNNER_TEMP/arcade-polish-browser/node_modules/playwright/index.mjs" node scripts/review-arcade-polish-candidate.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: arcade-polish-visual-${{ github.run_id }}
+          path: .netlify/arcade-polish-review/
+          if-no-files-found: warn
+          retention-days: 30
       - uses: actions/upload-artifact@v4
         id: candidate_artifact
         if: always()

@@ -55,7 +55,7 @@ test('fresh baseline preserves the complete current inventory without count assu
   assert.equal(plan.files['/new-current-cabinet/index.html'], b.files['/new-current-cabinet/index.html']);
 });
 
-test('the exact three approved existing paths change and every other digest stays intact', () => {
+test('the exact two approved existing paths change and every other digest stays intact', () => {
   const b = baseline(), plan = assembleFiles(b.files, overlays());
   assert.deepEqual(plan.changedOriginals, Object.keys(DELIVERY_SOURCES).sort());
   assert.deepEqual(plan.addedPaths, []);
@@ -85,7 +85,7 @@ test('incomplete, duplicate, invalid and no-op overlay plans fail closed', () =>
   const bad = copy(rows); bad[0].sha1 = 'not-a-digest';
   assert.throws(() => assembleFiles(b.files, bad), /SHA1/);
   const noop = rows.map(row => ({ ...row, sha1: b.files[row.path] }));
-  assert.throws(() => assembleFiles(b.files, noop), /All three/);
+  assert.throws(() => assembleFiles(b.files, noop), /Both reviewed/);
 });
 
 test('every complete backend record including monthly identities and unknown provider fields is immutable', () => {
