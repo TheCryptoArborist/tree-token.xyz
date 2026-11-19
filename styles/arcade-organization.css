@@ -214,3 +214,130 @@
   .arcade-campaign-rotation > summary { padding:14px; }
 }
 @media(forced-colors:active){ .arcade-campaign-next,.arcade-campaign-rotation { border:1px solid CanvasText; } }
+
+
+
+/* Compact Daily layout: keep all wallet/quest controls, prioritize the next action.
+   Full error, loading and signed-out states remain visible. */
+.arcade-organization-page #growth-today-panel > .growth-strip {
+  grid-template-columns:44px minmax(0,1fr) auto;
+  gap:10px 12px;
+  padding:11px 15px;
+  margin-bottom:10px;
+  border-radius:13px;
+}
+.arcade-organization-page #growth-today-panel .growth-badge-preview {
+  width:44px;
+  min-height:46px;
+}
+.arcade-organization-page #growth-today-panel .growth-strip-art {
+  width:44px;
+  height:46px;
+}
+.arcade-organization-page #growth-today-panel .growth-strip-copy .suite-eyebrow {
+  margin:0 0 3px;
+  font-size:.6rem;
+  letter-spacing:.04em;
+}
+.arcade-organization-page #growth-today-panel .growth-strip-copy h2 {
+  margin:0;
+  font-size:clamp(1.2rem,2vw,1.45rem);
+}
+.arcade-organization-page #growth-today-panel .growth-strip-copy > .growth-rewards-link {
+  margin-top:2px !important;
+  font-size:.74rem !important;
+}
+.arcade-organization-page #growth-today-panel .growth-strip-copy > p.growth-wallet-identity {
+  margin-top:4px;
+}
+.arcade-organization-page #growth-today-panel .growth-strip-actions {
+  max-width:none;
+  gap:6px;
+  justify-content:flex-end;
+}
+.arcade-organization-page #growth-today-panel .growth-strip-actions #growth-sign-out {
+  min-height:44px;
+  padding:8px 10px;
+}
+.arcade-organization-page #growth-today-panel > .growth-status {
+  margin:0 0 10px !important;
+  padding:5px 9px;
+  font-size:.72rem;
+}
+/* Suppress only the routine refresh notice, and only after the backend reports
+   fresh saved attendance. New info, error, loading and stale messages remain. */
+.arcade-organization-page #growth-today-panel[data-arcade-checkin-saved] > #growth-status[data-arcade-routine-refresh] {
+  display:none;
+}
+.arcade-organization-page #growth-today-panel .growth-section-title {
+  margin:11px 0 8px;
+}
+.arcade-organization-page #growth-today-panel > :is(.growth-task,.growth-quest,.guided-card,.growth-passport) {
+  margin-bottom:10px;
+  border-radius:13px;
+}
+.arcade-organization-page #growth-today-panel > #growth-check-in-task,
+.arcade-organization-page #growth-today-panel #growth-quest-details > summary.growth-task {
+  padding:11px 13px;
+  gap:10px;
+}
+.arcade-organization-page #growth-today-panel #growth-check-in-task .growth-task-art,
+.arcade-organization-page #growth-today-panel #growth-quest-details > summary .growth-task-art {
+  width:32px;
+  height:36px;
+}
+.arcade-organization-page #growth-today-panel #growth-check-in-task .growth-task-copy h3,
+.arcade-organization-page #growth-today-panel #growth-quest-details > summary .growth-task-copy h3 {
+  margin:0 0 3px;
+  font-size:.95rem;
+}
+.arcade-organization-page #growth-today-panel :is(#growth-check-in-task,#growth-quest-details > summary) .growth-task-copy p {
+  margin:1px 0 0;
+  line-height:1.35;
+}
+.arcade-organization-page #growth-today-panel[data-arcade-checkin-saved] #growth-check-in-task .growth-task-benefit {
+  display:none;
+}
+.arcade-organization-page #growth-today-panel #growth-check-in-task .growth-row-action,
+.arcade-organization-page #growth-today-panel #growth-quest-details > summary .growth-task-disclosure {
+  min-height:44px;
+  padding:8px 12px;
+}
+.arcade-organization-page #growth-today-panel > .guided-card {
+  padding:14px 16px;
+}
+@media (max-width:600px) {
+  .arcade-organization-page #growth-today-panel > .growth-strip {
+    grid-template-columns:40px minmax(0,1fr);
+    padding:7px 11px;
+    gap:4px 8px;
+  }
+  .arcade-organization-page #growth-today-panel .growth-badge-preview {
+    width:40px;
+    min-height:42px;
+  }
+  .arcade-organization-page #growth-today-panel .growth-strip-art {
+    width:40px;
+    height:42px;
+  }
+  .arcade-organization-page #growth-today-panel .growth-strip-actions {
+    grid-column:1/-1;
+    width:100%;
+    justify-content:flex-end;
+    margin:0;
+  }
+  .arcade-organization-page #growth-today-panel > #growth-check-in-task,
+  .arcade-organization-page #growth-today-panel #growth-quest-details > summary.growth-task {
+    padding:10px 12px;
+  }
+  .arcade-organization-page #growth-today-panel[data-arcade-checkin-saved] #growth-check-in-task {
+    grid-template-columns:30px minmax(0,1fr);
+  }
+  .arcade-organization-page #growth-today-panel[data-arcade-checkin-saved] #growth-check-in-task .growth-row-action {
+    grid-column:2;
+    justify-self:start;
+  }
+  .arcade-organization-page #growth-today-panel > .guided-card {
+    padding:13px;
+  }
+}

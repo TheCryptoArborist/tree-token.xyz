@@ -52,7 +52,7 @@ jobs:
       - name: Install isolated browser
         run: |
           npm install --prefix "$RUNNER_TEMP/arcade-layout-browser" --ignore-scripts --no-audit --no-fund playwright@1.56.1
-          "$RUNNER_TEMP/arcade-layout-browser/node_modules/.bin/playwright" install --with-deps chromium
+          "$RUNNER_TEMP/arcade-layout-browser/node_modules/.bin/playwright" install chromium --only-shell
       - name: Verify Campaigns layout and save screenshots
         env:
           ARCADE_PLAYWRIGHT_MODULE: ${{ runner.temp }}/arcade-layout-browser/node_modules/playwright/index.mjs
@@ -60,6 +60,7 @@ jobs:
         run: |
           python3 -m http.server 8765 --bind 127.0.0.1 --directory dist-preview > "$RUNNER_TEMP/arcade-preview-server.log" 2>&1 &
           node tests/arcade-campaigns-visual.mjs
+          node tests/arcade-daily-compact-visual.mjs
       - name: Save visual review
         if: always()
         uses: actions/upload-artifact@v4
