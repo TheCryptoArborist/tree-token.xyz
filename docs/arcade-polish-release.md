@@ -6,9 +6,11 @@ published. Read the newest `production/README.md` section and the successful
 workflow report for the observed production state.
 
 The preparation workflow currently requires locked production deployment
-`6afe0141248c1062e8414ed7`. Its last verified inventory contains 620 static paths,
-49 backend records and five schedules. Those counts describe the starting point;
+`6afe4d06ab2e466f455605db`. Its last verified inventory contains 625 static paths,
+50 backend records and five schedules. Those counts describe the starting point;
 the helper captures and verifies the complete live inventory afresh.
+
+The November countdown styling is already on the current locked site and is unchanged in this release. This release combines the merged Campaigns and Daily tab polish.
 
 ## Approved scope
 
@@ -16,18 +18,17 @@ Exactly these existing public assets change:
 
 | Public path | Committed source | Purpose |
 | --- | --- | --- |
-| `/styles/arcade-organization.css` | `styles/arcade-organization.css` | Align Daily panels and controls, and game status labels |
-| `/styles/arcade-season-deadline.css` | `styles/arcade-season-deadline.css` | Compact the deadline panel while preserving its responsive states |
-| `/scripts/arcade-organization.js` | `scripts/arcade-organization.js` | Presentation state for completed Daily confirmation |
+| `/styles/arcade-organization.css` | `styles/arcade-organization.css` | Compact Daily status, check-in and quest panels; preserve the Campaigns spotlight layout |
+| `/scripts/arcade-organization.js` | `scripts/arcade-organization.js` | Campaigns presentation plus routine Daily success-message suppression |
 
-The helper requires all three changes. It rejects a new static path, a missing
+The helper requires both approved presentation changes. It rejects a new static path, a missing
 overlay, a source substitution or an unapproved upload. `/play/index.html`,
 the monthly and countdown JavaScript, wallet code and every other static digest
 remain unchanged. Campaign configuration, validation, dry-run code and related
 documents may exist in the reviewed Git tree, but cannot enter this release's
 static payload. No funded campaign is activated by this release.
 
-All 49 complete backend records must remain equal to the fresh capture,
+All 50 complete backend records must remain equal to the fresh capture,
 including the monthly function's package identities, provider account, creation
 time, digest, size, routes, observability, unknown provider fields and memory and
 region overrides. No backend upload is allowed. No function is packaged, no
@@ -73,14 +74,14 @@ unverifiable artifact requires a newly prepared and reviewed candidate.
    in the source commit message.
 2. Push that exact source SHA to `release/arcade-polish-prepare`. No extra
    trigger commit is needed. The workflow tests the source, captures current
-   locked production, assembles the exact three-path overlay, creates a new
+   locked production, assembles the exact two-path overlay, creates a new
    candidate and verifies it without publishing.
 3. Require the entire workflow to succeed. Its summary gives the candidate URL,
    source commit, whole-tree hash, current baseline, plan SHA256, candidate ID,
    original run ID, immutable artifact ID and archive SHA256.
 4. Review the concrete candidate at phone and desktop widths. Check all six
-   tabs, Daily's fresh completed versus stale/error states, the compact deadline
-   layout, uniform game-status labels, asset loading and the UTC countdown.
+   tabs, Daily's fresh completed versus stale/error states, the unchanged deadline
+   layout and game-status labels, asset loading and the UTC countdown.
    Record only checks actually observed.
 
 The candidate uses production backend routes. Do not connect a wallet, sign,
