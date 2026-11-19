@@ -396,3 +396,24 @@ test('a signed-out December collection has a December countdown while an explici
     assert.ok(cards.every((card) => card.dataset.resolvedSeasonMonth === '2026-12' && card.dataset.countdownState === 'active'));
   } finally { countdown?.destroy(); current.close(); }
 });
+
+
+test('Campaigns prioritizes TREE Force and Canopy Defense; the six-game rotation and optional pilot are collapsed',async()=>{
+  const current=fixture('#campaigns');
+  try {
+    const panel=current.doc.getElementById('growth-campaigns-panel');
+    const spot=panel.querySelector('.arcade-campaign-spotlight'),next=panel.querySelector('.arcade-campaign-next'),rot=panel.querySelector('.arcade-campaign-rotation'),pilot=panel.querySelector('.arcade-campaign-technical');
+    assert.ok(spot && next && rot && pilot);
+    assert.ok(spot.compareDocumentPosition(next) & current.view.Node.DOCUMENT_POSITION_FOLLOWING);
+    assert.ok(next.compareDocumentPosition(rot) & current.view.Node.DOCUMENT_POSITION_FOLLOWING);
+    assert.ok(rot.compareDocumentPosition(pilot) & current.view.Node.DOCUMENT_POSITION_FOLLOWING);
+    assert.equal(rot.open,false);assert.equal(pilot.open,false);
+    assert.deepEqual([...rot.querySelectorAll('li a')].map(a=>a.textContent),['TREE FORCE ’89','CANOPY DEFENSE','CANOPY BREAKER','GARDEN BOT','PVP BATTLE','ARBORIST TRIALS']);
+    assert.ok(spot.querySelector('a[href="/play/treeforce89/"]'));
+    assert.ok(next.querySelector('a[href="/play/canopy-defense/"]'));
+    assert.ok(pilot.querySelector('a[href="/play/challenge/"]'));
+    assert.match(spot.textContent,/No funded campaign is open yet/);
+    rot.querySelector('summary').click();assert.equal(rot.open,true);
+    await settle();
+  }finally{current.close();}
+});
