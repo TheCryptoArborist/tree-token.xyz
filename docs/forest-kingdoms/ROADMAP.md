@@ -22,9 +22,9 @@ This file is the authoritative project checklist. Update its statuses and add th
 
 **Completed foundation:** The Broken Crossing prologue already includes direct Tree Hero control, Bram, two raider waves, bridge repair, caravan rescue, a one-time grove harvest, ancestral workshop restoration, a working 20% material discount on one beaver recruit, and browser-local saves. Its mission, recruitment, and reload flow were played through in the browser. Phone-sized and tablet-sized layouts were reviewed; this is not physical-device certification.
 
-**Implementation state:** The playable version uses a custom Canvas 2D renderer. Phaser has been researched and selected as the working upgrade direction; it has **not** been integrated yet. New sprite artwork and the later story/economy systems are also pending.
+**Implementation state:** The playable prologue uses a custom Canvas 2D renderer. The first four-direction idle/walk artwork and isolated movement viewer are available. Phaser has been researched and selected as the working upgrade direction; it has **not** been integrated yet. Combat/reaction sprites and the later story/economy systems remain pending.
 
-**Next task:** FK-02 — Tree Hero sprite and animation set.
+**Active task:** FK-02 — Tree Hero sprite and animation set. The first four-direction idle/walk review is implemented; combat and reaction animations follow.
 
 **Current build target:** Milestone A — Upgraded Willowmere scene.
 
@@ -55,12 +55,16 @@ Evidence: the [art brief](ART_DIRECTION.md), [Concept 01 image](concepts/willowm
 
 ### FK-02 — Create the Tree Hero sprite and animation set
 
-Status: **Ready — next task**. Depends on FK-01.
+Status: **In progress — first four-direction idle/walk preview**. Depends on FK-01.
 
-- [ ] Establish one consistent in-game character design matching the supplied purple/green/gold hero.
-- [ ] Create four-direction idle and walking views, followed by strike, root-cast, hit, and defeat animations. Add extra directions only if needed after testing.
-- [ ] Prepare clean transparent assets with consistent scale, foot placement, pivots, and frame boundaries.
-- [ ] Inspect the animation at its actual phone display size.
+- [x] Establish a first in-game character design matching the supplied purple/green/gold hero, including green eyes and the canonical broader build.
+- [x] Create the first four-direction idle and walking set: four idle frames and eight walk frames per direction, 48 frames total.
+- [ ] Create strike, root-cast, hit, and defeat animations. Add extra directions only if needed after testing.
+- [x] Prepare transparent movement atlases and explicit frame rectangles, ground pivots, per-direction scale measurements, and playback timing.
+- [x] Inspect the movement preview at 88 CSS pixels and in a 390-by-844 browser viewport. Physical-device testing remains FK-08.
+- [ ] Incorporate movement feedback and verify the complete combat/reaction set before marking FK-02 done.
+
+Evidence: [movement study](https://deploy-preview-239--tree-token.netlify.app/play/forestkingdoms/test/animation/), [asset and review notes](SPRITES_01.md), [generation prompts](SPRITE_PROMPTS_01.md). The existing prologue remains the gameplay comparison; Phaser integration is FK-03.
 
 Done when: a viewable animation preview and engine-ready assets exist; the full hero remains recognizable, proportions stay consistent between frames, and movement does not visibly slide or jump.
 
@@ -258,3 +262,12 @@ For each completed implementation task, append: task ID, changed behavior, previ
 - Recorded the complete prompt, reference provenance, and production handoff in `concepts/CONCEPT_01.md`.
 - Next: FK-02, beginning with consistent directional idle and walk artwork.
 - The playable preview continues to show the original Canvas implementation; this art-direction step does not change the game runtime or production deployment.
+
+### November 19, 2026 — FK-02 first movement pass
+
+- Began FK-02 with four directional atlases: 16 idle frames and 32 walk frames. Kept the canonical green eyes and broader build with the purple/green/gold identity.
+- Added an isolated animation viewer with direction/animation selection, pause/step, speed controls, contact guides, keyboard/pointer movement, and a simultaneous 88 CSS pixel view.
+- Added explicit trimmed frame rectangles and relative ground pivots; kept the original generated PNG bytes and alpha. Saved complete prompts and provenance.
+- Reviewed the browser preview and a 390-by-844 viewport, checked source/frame integrity and syntax, and fixed unused-pad blur and shifted-key-release issues. No physical-phone result is claimed.
+- Expanded only the review builder's explicit static-file additions for the new viewer and artwork. The original prologue and production release configuration remain the comparison baseline.
+- FK-02 remains in progress: incorporate feedback, then create strike, root-cast, hit, and defeat before advancing to FK-03.

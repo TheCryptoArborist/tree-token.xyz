@@ -19,6 +19,14 @@ additions.push(
   'play/forestkingdoms/test/engine.mjs',
   'play/forestkingdoms/test/renderer.mjs',
   'play/forestkingdoms/test/assets/hero.jpg',
+  'play/forestkingdoms/test/animation/index.html',
+  'play/forestkingdoms/test/animation/styles.css',
+  'play/forestkingdoms/test/animation/viewer.mjs',
+  'play/forestkingdoms/test/assets/hero-sprites/animations.json',
+  'play/forestkingdoms/test/assets/hero-sprites/hero-south.png',
+  'play/forestkingdoms/test/assets/hero-sprites/hero-east.png',
+  'play/forestkingdoms/test/assets/hero-sprites/hero-north.png',
+  'play/forestkingdoms/test/assets/hero-sprites/hero-west.png',
 );
 for (const file of additions) allowed.add(file);
 
