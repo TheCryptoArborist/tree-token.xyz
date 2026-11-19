@@ -2,6 +2,10 @@
 
 An original, browser-playable Tree Arcade prologue starring the purple-and-green Tree Hero. This first playable slice establishes a continuing forest adventure: rescue woodland families, rebuild an outpost, grow its economy, and restore an animal faction's ancestral home.
 
+## Development plan
+
+The [development task list](../../../docs/forest-kingdoms/ROADMAP.md) tracks the graphics upgrade and later campaign work one task at a time. The [first-scene art brief](../../../docs/forest-kingdoms/ART_DIRECTION.md) defines the next visual milestone. The current playable version still uses its original Canvas 2D renderer; Phaser integration is a planned task.
+
 ## Play
 
 Preview entry: `/play/forestkingdoms/test/`
