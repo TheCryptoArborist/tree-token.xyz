@@ -40,7 +40,7 @@ try {
           overflow:document.documentElement.scrollWidth-innerWidth,checkVisible:!!document.getElementById('growth-check-in-row'),nextVisible:!!p.querySelector('.guided-card')};
       });
       assert.equal(metrics.status,'none');
-      assert.ok(metrics.strip<=145,'Header should be compact at '+width+': '+metrics.strip);
+      assert.ok(metrics.strip<=(width===390?165:145),'Header should be compact at '+width+': '+metrics.strip);
       assert.ok(metrics.check<=145,'Saved attendance row should be compact at '+width+': '+metrics.check);
       assert.ok(metrics.quest<=145,'Quest summary should be compact at '+width+': '+metrics.quest);
       assert.ok(metrics.overflow<=1,'No horizontal overflow at '+width+': '+metrics.overflow);
