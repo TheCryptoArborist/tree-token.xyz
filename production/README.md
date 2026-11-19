@@ -1,6 +1,92 @@
+# Isolated free pilot sign-in — published and verified 2026-11-19
+
+Current locked production is `6afe4d06ab2e466f455605db`, published at
+`2026-11-19T01:17:08.058Z`. Reviewed source
+`6c8622c64186e7b08c475cf2ae79758149f1545e` merged through PR229 as
+`204861cdea1e095e383cffd940a691523760d188`; the complete merged tree equals
+the reviewed candidate tree `b707c5224968ca9e3fbe1e9b4548df0a0194de27`.
+Publication workflow `44435573744` verified canonical asset delivery, the full
+inventory, protected configuration and production lock at
+`2026-11-19T01:17:11.739Z`.
+
+The free **Arborist Trials — Test challenge, no prizes** flow at
+`/play/challenge/` now works for a fresh Sui wallet without an NFTree, purchase
+or gas payment. New sign-in uses a separate pilot-only personal-message
+challenge and session. It preserves the published wallet bridge, pinned SDK,
+existing Arcade eligibility and both shared Arcade session storage locations.
+Existing Arcade sessions remain usable for pilot gameplay. Pilot tokens cannot
+authorize original Arcade actions, and pilot logout cannot revoke an Arcade
+session.
+
+The correction addresses the initial canonical `nftree-required` failure
+recorded below. The original Arcade gate was correct; it was never disabled or
+bypassed. The hosted auth migration was applied as `20261119010740`. All twenty
+pilot definitions/grants match the reviewed source, all six protected Arcade
+auth definitions/grants and existing session records remained unchanged, and
+the original enabled no-prize game configuration was preserved. Browser roles
+cannot access the six private pilot tables or nine public RPCs.
+
+Fresh baseline `6afe412cc313992199456506` was captured before preparing the new
+candidate. This release replaces exactly three existing pilot browser modules
+and the one isolated `arcade-challenge-pilot` function. It preserves **622 other
+static paths**, **49 other complete backend records**, **five schedules**, full
+runtime settings and protected configuration. Current production contains
+**625 static paths and 50 backend records**. The exact reviewed function ZIP
+was carried into publication with SHA256
+`4051add0bae6a9c5fcf8080eee11b4c564cd36d96f04d5cd1cbd1923f248f7a5`.
+All other live game, wallet, payment, monthly, event and styling assets retain
+their captured bytes.
+
+All seven source PR workflows passed. Pilot workflow `44434933521` passed
+**129 automated tests**, including thirteen
+browser cases. Both independent-worker PostgreSQL suites passed: seven
+gameplay scenarios across 100 workers and seven auth scenarios across twenty
+workers. The exact candidate was reviewed at 1440, 390 and 320 pixels, including
+keyboard focus, images, Campaigns navigation and the no-prize label. Its API
+continues to reject preview origins.
+
+Canonical workflow `44435875741` passed at `2026-11-19T01:19:09.001Z` with one
+fresh unfunded operator wallet, one actual personal-message signature, one
+pilot-only session, one test attempt and three distinct legal moves. Fourteen
+API calls verified a committed response lost in transit, its identical retry
+without a duplicate move, and same-session reload without another signature or
+attempt. It observed zero Growth API calls and zero browser errors, retained
+shared Arcade storage, then revoked only its own pilot session. All server
+responses were HTTP 200; the recorded failed delivery was the deliberate lost
+response after commitment. The bounded test ended with an active match at
+version three, not a completed win. Completed/winning states are covered by
+the source tests. This operator-provider check does not establish installed
+Slush extension prompt UX, unique-human identity or automation resistance.
+
+The pilot remains free and nonpaying. It awards no prizes, attendance, badges
+or monthly quest credit. Its November 18 ruleset and November 19–December 1 UTC
+window, four standard cards, fifteen-minute limit and no-paid-advantage terms
+remain unchanged. Funded campaigns, verified-person eligibility and payouts
+remain future work.
+
+Current release evidence:
+
+- `production/arcade-challenge-auth-release-20261119.json`, SHA256
+  `4e50b69e291fbd41d18c37e40a72bc668219ca44efc0243af27336320942b336`.
+- `production/arcade-challenge-auth-deployment-20261119.json` records the complete
+  backend/runtime/schedules, exact package, source and artifact identities.
+- `production/arcade-challenge-auth-candidate-review-20261119.json` and
+  `production/arcade-challenge-auth-canonical-review-20261119.json` record the
+  separate preview and live verification boundaries.
+- `production/arcade-challenge-auth-db-readiness.json` and
+  `docs/arcade-challenge-auth-ci-validation-20261119.json` record hosted SQL and
+  source verification. Local PostgreSQL 17.11 and CI PostgreSQL 18.6 both passed
+  the independent worker checks.
+
+Implementation: https://github.com/TheCryptoArborist/tree-token.xyz/pull/229
+Publication: https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44435573744
+Canonical verification: https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44435875741
+
+---
+
 # Initial Arborist Trials pilot — published 2026-11-19
 
-Current locked production is `6afe412cc313992199456506`, published at
+That release locked production at `6afe412cc313992199456506`, published at
 `2026-11-19T00:33:21.154Z` from reviewed source
 `cabecd68d34d605988a5550fa45b3cd33caffd1b`. PR228 merged as
 `a2fae47e5c0b1fe9259d1c08409a48086a8e194a`; its complete tree equals the reviewed

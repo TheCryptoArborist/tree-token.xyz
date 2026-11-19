@@ -8,12 +8,12 @@ wallet found a real integration defect: the existing Arcade session endpoint
 returned `nftree-required`, so a new wallet could not enter the advertised free
 pilot. Existing signed-in fixtures had not exercised that ownership gate.
 
-This source now implements a separate, pilot-only sign-in to correct that
-defect. The auth correction is under release review and is not yet asserted as
-published or canonically verified here. The newest `production/README.md`
-section and dated release records identify the actual live deployment and
-observed outcomes. A successful asset publication is distinct from a successful
-fresh-wallet authentication/play check.
+A separate pilot-only sign-in now corrects that defect in production. The
+reviewed auth correction was published as `6afe4d06ab2e466f455605db` at
+`2026-11-19T01:17:08.058Z`. Canonical fresh-wallet authentication, start, three
+legal moves, identical retry, reload recovery and session revocation passed at
+`2026-11-19T01:19:09.001Z`. The newest `production/README.md` section and dated
+auth release records bind these outcomes to the exact source and artifacts.
 
 The Campaigns entry opens a screen with four standard cards, Growth meters,
 current effects and round feedback. The correction keeps the published
@@ -23,8 +23,8 @@ gameplay. Starting a match is explicit; the pilot does not submit attendance,
 check-in, payment or transaction actions.
 
 The initial reviewed migration was applied to the hosted project as version
-`20261119000653`. All eleven live helper/RPC definitions match an isolated
-application of the exact source byte for byte; browser roles cannot access the
+`20261119000653`. At that initial verification all eleven helper/RPC definitions
+matched the exact locally applied source; browser roles could not access its
 three private tables or four public RPCs. The enabled no-prize configuration
 uses a fixed November 18 ruleset, opens November 19 at 00:00 UTC and closes
 December 1 at 00:00 UTC. Each match lasts at most fifteen minutes, shortened by
@@ -41,9 +41,9 @@ pilot function definitions and grants match the reviewed local application
 exactly. All six protected Arcade auth definitions/grants and the Arcade
 session-row fingerprint remain unchanged; there were no prior pilot attempts,
 and the original enabled pilot configuration is unchanged. The hosted proof is
-`production/arcade-challenge-auth-db-readiness.json`. Auth-correction publication
-and fresh-wallet canonical verification remain pending. Funded campaigns,
-prize eligibility and payout execution remain disabled.
+`production/arcade-challenge-auth-db-readiness.json`. The correction preserves
+622 other static files, 49 other complete backend records and five schedules.
+Funded campaigns, prize eligibility and payout execution remain disabled.
 
 ## Isolated free pilot authentication
 
@@ -288,14 +288,23 @@ verifier and local/canonical-origin adapter are confined to the loopback
 harness. Its legacy Arcade auth route deliberately returns an ownership error,
 so free sign-in cannot accidentally succeed through that endpoint. The suite
 checks isolated storage, explicit start and same-session lost-response recovery
-for new pilot tokens as well as existing Arcade-token gameplay. The updated
-browser cases require their own successful CI run; the initial twelve-case
-browser result does not establish the corrected flow.
+for new pilot tokens as well as existing Arcade-token gameplay. These thirteen
+updated cases passed in workflow `44434933521`, with 129 total source tests and
+both independent PostgreSQL race suites passing. The initial twelve-case
+browser result is separate historical evidence. Exact corrected counts and
+reports are preserved in
+`docs/arcade-challenge-auth-ci-validation-20261119.json`.
 
 Canonical fresh-wallet verification uses real personal-message signatures and
 is reported separately from synthetic browser testing and installed wallet-
 extension permission-prompt UX. The initial canonical failure is retained as
 evidence; it must not be described as a successful authentication/play test.
+The corrected canonical run `44435875741` passed with fourteen API requests,
+zero Growth requests, one signature/session/start and three distinct legal
+moves. It recovered the exact committed retry, resumed after reload, preserved
+shared Arcade storage and revoked its own pilot session. The match remained
+active at version three; this bounded test does not claim a completed win or
+an installed Slush extension review.
 
 The package manifest is generated at
 `.netlify/arcade-challenge-pilot-functions/manifest.json`; it records exact source
@@ -306,17 +315,10 @@ deployment.
 
 ## Next implementation milestone
 
-1. Complete the scoped auth upgrade's final source CI and browser gates. Its
-   hosted migration, exact function/grant comparison and unchanged Arcade
-   boundaries are recorded in the auth database readiness proof.
-2. Publish the exact reviewed auth correction with a fresh complete preservation
-   capture, following `docs/arcade-challenge-auth-release.md`. Verify real
-   pilot-only signed-message start/play/resume/retry and session cleanup using
-   a fresh unfunded operator wallet, with zero Growth API requests and no
-   changes to shared Arcade storage. Do not conflate this with an installed
-   wallet-extension review.
-3. Observe the bounded no-prize pilot and collect practical usability findings.
-4. Review pilot difficulty and abuse evidence before setting the first funded
+1. Observe the bounded no-prize pilot and collect practical usability findings.
+2. Review installed-wallet connection and permission-prompt behavior separately
+   from the completed operator-provider protocol check.
+3. Review pilot difficulty and abuse evidence before setting the first funded
    week's target, budget, asset/network, dates and canonical identity policy.
    Funded eligibility and payout remain separate implementations.
 

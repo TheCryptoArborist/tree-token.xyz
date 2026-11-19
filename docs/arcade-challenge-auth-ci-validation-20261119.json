@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "kind": "arcade-challenge-auth-ci-verification",
+  "runId": 44434933521,
+  "sourceCommit": "6c8622c64186e7b08c475cf2ae79758149f1545e",
+  "runConclusion": "success",
+  "jobs": [
+    {
+      "id": 135261302672,
+      "name": "challenge-pilot",
+      "conclusion": "success",
+      "testGroups": [
+        {
+          "name": "adapter, campaign foundation, SQL, auth and service",
+          "tests": 92,
+          "passed": 92,
+          "failed": 0
+        },
+        {
+          "name": "client and controller",
+          "tests": 24,
+          "passed": 24,
+          "failed": 0
+        }
+      ],
+      "raceReports": [
+        {
+          "schemaVersion": 1,
+          "result": "passed",
+          "checkedAt": "2026-11-19T01:11:54.420Z",
+          "postgres": "postgres (PostgreSQL) 18.6 (Ubuntu 18.6-1.pgdg26.04+2)",
+          "environment": "disposable-local-loopback",
+          "syntheticSessions": true,
+          "productionMutated": false,
+          "independentWorkerCount": 100,
+          "checks": [
+            "different-request",
+            "identical-retry",
+            "conflicting-retry",
+            "disable-before-commit",
+            "revocation-before-commit",
+            "cutoff-while-row-locked",
+            "concurrent-active-attempt-cap"
+          ]
+        },
+        {
+          "schemaVersion": 1,
+          "result": "passed",
+          "checkedAt": "2026-11-19T01:11:59.717Z",
+          "postgres": "postgres (PostgreSQL) 18.6 (Ubuntu 18.6-1.pgdg26.04+2)",
+          "environment": "disposable-local-loopback",
+          "syntheticSessions": true,
+          "productionMutated": false,
+          "sourceMigration": "supabase/migrations/20261119005653_arcade_challenge_pilot_auth.sql",
+          "sourceMigrationSHA256": "e0d0ab5165afe09b2632d2eb347909c64bc19563e82cc5d78c8911d8f403fbe3",
+          "independentWorkerCount": 20,
+          "checks": [
+            "single-use-challenge-under-competing-workers",
+            "challenge-expiry-rechecked-after-row-lock",
+            "wallet-rate-limit-serializes-concurrent-challenges",
+            "pilot-revocation-before-move",
+            "session-expiry-rechecked-after-row-lock",
+            "in-flight-move-holds-session-lock-through-commit",
+            "session-expiry-rechecked-after-start-advisory-lock"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 135261303196,
+      "name": "challenge-browser",
+      "conclusion": "success",
+      "tests": 13,
+      "passed": 13,
+      "failed": 0
+    }
+  ],
+  "tests": 129,
+  "failed": 0,
+  "browserArtifact": {
+    "id": 14487654320,
+    "name": "arcade-pilot-browser-review",
+    "size_in_bytes": 9560076,
+    "url": "https://api.github.com/repos/TheCryptoArborist/tree-token.xyz/actions/artifacts/14487654320",
+    "archive_download_url": "https://api.github.com/repos/TheCryptoArborist/tree-token.xyz/actions/artifacts/14487654320/zip",
+    "expired": false,
+    "created_at": "2026-11-19T01:12:02Z",
+    "expires_at": "2026-12-03T01:12:00Z",
+    "updated_at": "2026-11-19T01:12:02Z",
+    "digest": "sha256:366957f44cd2e266b23727778d0f9fbf2d35016b911fde2c599a77d59cbb206e",
+    "workflow_run": {
+      "id": 44434933521,
+      "repository_id": 1323502312,
+      "head_repository_id": 1323502312,
+      "head_branch": "fix/arcade-challenge-free-signin",
+      "head_sha": "6c8622c64186e7b08c475cf2ae79758149f1545e"
+    }
+  },
+  "source": "Completed GitHub Actions job logs and exact-head workflow metadata",
+  "productionMutated": false
+}
