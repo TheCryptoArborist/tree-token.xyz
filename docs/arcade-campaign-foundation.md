@@ -14,12 +14,22 @@ player who meets the published target**. More successful attempts do not buy or
 earn more shares. Completing a campaign does not add an Event entry requirement.
 Monthly check-in rewards and the existing Event terms are separate decisions.
 
-The next implemented stage is now documented in
+The next implemented stage is documented in
 [`arcade-challenge-pilot.md`](./arcade-challenge-pilot.md): a versioned Arborist
 Trials verifier, authenticated per-move service and private transactional pilot
-ledger. It is locally tested and explicitly nonpaying; hosted activation,
-canonical identity review and a funded campaign remain pending. This offline
-allocator keeps its original input-assertion and nonpayable boundaries.
+ledger. The free, explicitly nonpaying pilot is published, with isolated
+pilot-only authentication and recorded canonical start/play/retry/resume
+verification. That protocol check did not finish a winning match or establish
+distinct-human identity. Funded qualification and payouts remain pending. This
+offline allocator keeps its original input-assertion and nonpayable boundaries.
+
+The next planning milestone is the
+[`weekly campaign setup and working brief`](./arcade-weekly-campaign-setup.md),
+with a separate source-bound setup record, grouped operator choices and an
+offline share preview. The
+[`difficulty evaluation`](./arcade-campaign-difficulty.md) reproduces 5,120
+scripted matches against the pinned pilot. These additions do not fill this
+foundation's actual draft or activate funded eligibility.
 
 ## What is ready to review
 

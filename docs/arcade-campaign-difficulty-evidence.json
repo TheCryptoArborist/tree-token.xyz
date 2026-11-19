@@ -1,0 +1,538 @@
+{
+  "schemaVersion": 1,
+  "kind": "offline-synthetic-arborist-trials-difficulty",
+  "datasetId": "tree-arcade:offline-root-rush-difficulty:v1",
+  "classification": "scripted-play-evidence-not-human-difficulty",
+  "humanDifficultyMeasured": false,
+  "payable": false,
+  "prizeEligible": false,
+  "awardsEnabled": false,
+  "launchReady": false,
+  "experiment": {
+    "cohortCount": 256,
+    "attemptsPerCohort": 10,
+    "policies": [
+      "uniform-legal-v1",
+      "growth-first-v1"
+    ],
+    "totalMatches": 5120,
+    "challengeDate": "2026-11-18",
+    "title": "Root Rush",
+    "rule": "standard",
+    "targetGrowth": 50,
+    "maxMoves": 100,
+    "fourStandardCards": true,
+    "paidAdvantages": false,
+    "timeLimitModeled": false,
+    "seedDerivation": "SHA256(datasetId + LF + game + LF + zero-based cohort + LF + zero-based attempt)",
+    "choiceDerivation": "SHA256(datasetId + LF + policy-choice + LF + zero-based cohort + LF + zero-based attempt + LF + zero-based draw); first uint32 with rejection sampling",
+    "aggregation": "Actual grouped synthetic outcomes; no binomial extrapolation. Each independent fresh hand is completed or reaches the move limit; no restarts or seed selection.",
+    "pairedStarts": "Both policies use each starting seed. Their later RNG consumption and opponent actions can differ after different choices."
+  },
+  "provenance": {
+    "adapter": {
+      "id": "arborist-trials-portable-four-card",
+      "version": "1.0.0",
+      "gameId": "arborist-trials",
+      "gameVersion": "campaign-pilot-4a27b3ac-v1",
+      "gameRuleset": "portable-v1-four-card",
+      "sourceHash": "9623279e03ddab211d51e26f89040afc0b8aee4ff86fc19af53243096215ca00"
+    },
+    "upstreamRepository": "https://github.com/TheCryptoArborist/gardenbattles",
+    "upstreamCommit": "4a27b3ac73ec815c9e28c23a6b0d07f09ee73794",
+    "pilotRulesHash": "ef07c5212301565b10faffc1e8fb97347fad522c6dc3e3f15bdf58d12b3c9b2d",
+    "evaluationFiles": {
+      "scripts/arcade-campaigns/difficulty-evaluation.mjs": "d5598b79654344a26f411bb661e3b2c8835e6f23aabf520bc872945d50de4d28",
+      "scripts/arcade-campaigns/difficulty-policies.mjs": "1fb940b60725cfd21016a2ff2fe5ad4190fefac3e6c5e7c56076190639ff6747",
+      "scripts/arcade-campaigns/trials-adapter.mjs": "5b7d38abb9df4e9f8b82adb87af8b635d20bbe658de530b28b4456e26ea3e841"
+    },
+    "seedSequenceSha256": "792ddfb99e91ed84af576d4ed15280aa16548fd94dfb4cc468719084275cd527",
+    "orderedRunRecordsSha256": "53d02264da076627f3ec144cea3662cf81b2c1535a03e3d9dc4e2079ffbe2d20"
+  },
+  "policyDescriptions": {
+    "uniform-legal-v1": "Choose uniformly among currently legal cards using an independent synthetic choice stream.",
+    "growth-first-v1": "Choose the largest printed expected immediate own-Growth gain, including visible immediate cleansing; break ties by lowest card ID."
+  },
+  "policyInputBoundary": "Only the adapter public view enters choosePolicyMove. Uniform choice receives its own domain-separated stream. No game seed, RNG state, hidden opponent hand, future action, production record or wallet is an input.",
+  "results": {
+    "uniform-legal-v1": {
+      "attempts": 2560,
+      "wins": {
+        "count": 1362,
+        "total": 2560,
+        "fraction": 0.532031
+      },
+      "losses": {
+        "count": 1196,
+        "total": 2560,
+        "fraction": 0.467188
+      },
+      "moveLimit": {
+        "count": 2,
+        "total": 2560,
+        "fraction": 0.000781
+      },
+      "movesAllAttempts": {
+        "count": 2560,
+        "mean": 9.335938,
+        "median": 8,
+        "p90": 14,
+        "min": 3,
+        "max": 100
+      },
+      "movesWinningAttempts": {
+        "count": 1362,
+        "mean": 9.582232,
+        "median": 8,
+        "p90": 15,
+        "min": 3,
+        "max": 57
+      },
+      "qualification": [
+        {
+          "attemptBudget": 1,
+          "targets": [
+            {
+              "requiredWins": 1,
+              "count": 132,
+              "total": 256,
+              "fraction": 0.515625
+            },
+            {
+              "requiredWins": 2,
+              "count": 0,
+              "total": 256,
+              "fraction": 0
+            },
+            {
+              "requiredWins": 3,
+              "count": 0,
+              "total": 256,
+              "fraction": 0
+            }
+          ]
+        },
+        {
+          "attemptBudget": 3,
+          "targets": [
+            {
+              "requiredWins": 1,
+              "count": 226,
+              "total": 256,
+              "fraction": 0.882813
+            },
+            {
+              "requiredWins": 2,
+              "count": 142,
+              "total": 256,
+              "fraction": 0.554688
+            },
+            {
+              "requiredWins": 3,
+              "count": 37,
+              "total": 256,
+              "fraction": 0.144531
+            }
+          ]
+        },
+        {
+          "attemptBudget": 5,
+          "targets": [
+            {
+              "requiredWins": 1,
+              "count": 248,
+              "total": 256,
+              "fraction": 0.96875
+            },
+            {
+              "requiredWins": 2,
+              "count": 221,
+              "total": 256,
+              "fraction": 0.863281
+            },
+            {
+              "requiredWins": 3,
+              "count": 138,
+              "total": 256,
+              "fraction": 0.539063
+            }
+          ]
+        },
+        {
+          "attemptBudget": 10,
+          "targets": [
+            {
+              "requiredWins": 1,
+              "count": 255,
+              "total": 256,
+              "fraction": 0.996094
+            },
+            {
+              "requiredWins": 2,
+              "count": 252,
+              "total": 256,
+              "fraction": 0.984375
+            },
+            {
+              "requiredWins": 3,
+              "count": 247,
+              "total": 256,
+              "fraction": 0.964844
+            }
+          ]
+        }
+      ],
+      "handComposition": {
+        "attack:1,growth:1,hybrid:2": {
+          "attempts": 586,
+          "wins": 329,
+          "winFraction": 0.561433
+        },
+        "attack:1,growth:2,hybrid:1": {
+          "attempts": 974,
+          "wins": 587,
+          "winFraction": 0.602669
+        },
+        "attack:2,growth:1,hybrid:1": {
+          "attempts": 1000,
+          "wins": 446,
+          "winFraction": 0.446
+        }
+      }
+    },
+    "growth-first-v1": {
+      "attempts": 2560,
+      "wins": {
+        "count": 2073,
+        "total": 2560,
+        "fraction": 0.809766
+      },
+      "losses": {
+        "count": 487,
+        "total": 2560,
+        "fraction": 0.190234
+      },
+      "moveLimit": {
+        "count": 0,
+        "total": 2560,
+        "fraction": 0
+      },
+      "movesAllAttempts": {
+        "count": 2560,
+        "mean": 5.735547,
+        "median": 5,
+        "p90": 8,
+        "min": 3,
+        "max": 17
+      },
+      "movesWinningAttempts": {
+        "count": 2073,
+        "mean": 5.667631,
+        "median": 5,
+        "p90": 7,
+        "min": 3,
+        "max": 15
+      },
+      "qualification": [
+        {
+          "attemptBudget": 1,
+          "targets": [
+            {
+              "requiredWins": 1,
+              "count": 207,
+              "total": 256,
+              "fraction": 0.808594
+            },
+            {
+              "requiredWins": 2,
+              "count": 0,
+              "total": 256,
+              "fraction": 0
+            },
+            {
+              "requiredWins": 3,
+              "count": 0,
+              "total": 256,
+              "fraction": 0
+            }
+          ]
+        },
+        {
+          "attemptBudget": 3,
+          "targets": [
+            {
+              "requiredWins": 1,
+              "count": 252,
+              "total": 256,
+              "fraction": 0.984375
+            },
+            {
+              "requiredWins": 2,
+              "count": 223,
+              "total": 256,
+              "fraction": 0.871094
+            },
+            {
+              "requiredWins": 3,
+              "count": 131,
+              "total": 256,
+              "fraction": 0.511719
+            }
+          ]
+        },
+        {
+          "attemptBudget": 5,
+          "targets": [
+            {
+              "requiredWins": 1,
+              "count": 255,
+              "total": 256,
+              "fraction": 0.996094
+            },
+            {
+              "requiredWins": 2,
+              "count": 252,
+              "total": 256,
+              "fraction": 0.984375
+            },
+            {
+              "requiredWins": 3,
+              "count": 236,
+              "total": 256,
+              "fraction": 0.921875
+            }
+          ]
+        },
+        {
+          "attemptBudget": 10,
+          "targets": [
+            {
+              "requiredWins": 1,
+              "count": 256,
+              "total": 256,
+              "fraction": 1
+            },
+            {
+              "requiredWins": 2,
+              "count": 256,
+              "total": 256,
+              "fraction": 1
+            },
+            {
+              "requiredWins": 3,
+              "count": 256,
+              "total": 256,
+              "fraction": 1
+            }
+          ]
+        }
+      ],
+      "handComposition": {
+        "attack:1,growth:1,hybrid:2": {
+          "attempts": 586,
+          "wins": 476,
+          "winFraction": 0.812287
+        },
+        "attack:1,growth:2,hybrid:1": {
+          "attempts": 974,
+          "wins": 836,
+          "winFraction": 0.858316
+        },
+        "attack:2,growth:1,hybrid:1": {
+          "attempts": 1000,
+          "wins": 761,
+          "winFraction": 0.761
+        }
+      }
+    }
+  },
+  "pairedOutcomes": {
+    "starts": 2560,
+    "bothWon": 1191,
+    "uniformOnlyWon": 171,
+    "growthFirstOnlyWon": 882,
+    "neitherWon": 316
+  },
+  "auditExamples": [
+    {
+      "cohortIndex": 0,
+      "attemptIndex": 0,
+      "policyId": "uniform-legal-v1",
+      "initialCards": [
+        {
+          "id": 24,
+          "type": "growth"
+        },
+        {
+          "id": 2,
+          "type": "attack"
+        },
+        {
+          "id": 9,
+          "type": "hybrid"
+        },
+        {
+          "id": 18,
+          "type": "hybrid"
+        }
+      ],
+      "moves": [
+        2,
+        24,
+        18,
+        24,
+        9,
+        24,
+        18
+      ],
+      "decisionTranscriptSha256": "ab8b4afae711108bd88451fc76ab8d71747d3bee693ab37c33e4cc09f30eb7db",
+      "result": {
+        "phase": "won",
+        "completed": true,
+        "won": true,
+        "moveCount": 7,
+        "score": 15225,
+        "playerGrowth": 50,
+        "botGrowth": 41
+      }
+    },
+    {
+      "cohortIndex": 0,
+      "attemptIndex": 1,
+      "policyId": "uniform-legal-v1",
+      "initialCards": [
+        {
+          "id": 22,
+          "type": "growth"
+        },
+        {
+          "id": 1,
+          "type": "attack"
+        },
+        {
+          "id": 9,
+          "type": "hybrid"
+        },
+        {
+          "id": 8,
+          "type": "hybrid"
+        }
+      ],
+      "moves": [
+        1,
+        9,
+        8,
+        22,
+        8,
+        22,
+        9,
+        22,
+        8
+      ],
+      "decisionTranscriptSha256": "bf6bcab88d1b8e4f46dfdff4f18de576f288d130fb1b652a3a23fca9c5dc24d0",
+      "result": {
+        "phase": "won",
+        "completed": true,
+        "won": true,
+        "moveCount": 9,
+        "score": 15025,
+        "playerGrowth": 50,
+        "botGrowth": 33
+      }
+    },
+    {
+      "cohortIndex": 0,
+      "attemptIndex": 0,
+      "policyId": "growth-first-v1",
+      "initialCards": [
+        {
+          "id": 24,
+          "type": "growth"
+        },
+        {
+          "id": 2,
+          "type": "attack"
+        },
+        {
+          "id": 9,
+          "type": "hybrid"
+        },
+        {
+          "id": 18,
+          "type": "hybrid"
+        }
+      ],
+      "moves": [
+        24,
+        18,
+        24,
+        18,
+        24,
+        18,
+        24
+      ],
+      "decisionTranscriptSha256": "10f4d0c644aebc8339cddf690412349b18b83be3ac35e3c53447df71f8972e31",
+      "result": {
+        "phase": "won",
+        "completed": true,
+        "won": true,
+        "moveCount": 7,
+        "score": 14925,
+        "playerGrowth": 50,
+        "botGrowth": 45
+      }
+    },
+    {
+      "cohortIndex": 0,
+      "attemptIndex": 1,
+      "policyId": "growth-first-v1",
+      "initialCards": [
+        {
+          "id": 22,
+          "type": "growth"
+        },
+        {
+          "id": 1,
+          "type": "attack"
+        },
+        {
+          "id": 9,
+          "type": "hybrid"
+        },
+        {
+          "id": 8,
+          "type": "hybrid"
+        }
+      ],
+      "moves": [
+        22,
+        8,
+        22,
+        8,
+        22,
+        8,
+        22
+      ],
+      "decisionTranscriptSha256": "19cc6e2993d913d17816a56a37cf0b4c3826e49dfa83d22fd7e13abbdc5eda2d",
+      "result": {
+        "phase": "won",
+        "completed": true,
+        "won": true,
+        "moveCount": 7,
+        "score": 15125,
+        "playerGrowth": 50,
+        "botGrowth": 37
+      }
+    }
+  ],
+  "limitations": [
+    "These rates describe these two scripts on this fixed synthetic suite; they are not human win rates, causal skill estimates or an optimal-play bound.",
+    "Only the frozen November 18 Root Rush rules are tested. The other daily variants and current deployed Garden Battles game are outside scope.",
+    "The growth-first script uses printed expected own gains and current public conditions. It ignores natural-growth thresholds, gain clipping, attacks, defense value, enemy donations and future states, so its scores are intentionally approximate.",
+    "The fifteen-minute deadline, session expiry, network latency, human deliberation, accessibility, device behavior, abandonment and multi-account behavior are not simulated.",
+    "Synthetic cohorts are groups of independent attempts, not unique people; attempt counts exclude disconnects and abandoned starts. This does not establish an identity or enforce a retry rule.",
+    "Every starting hand contains Attack, Growth and Hybrid cards, but balanced card types do not establish equal hand strength. Selective hand abandonment and repeated rerolling are not modeled.",
+    "The pinned engine includes variable hands and chance effects and reduces entropy to a 32-bit PRNG; this evaluation makes no cryptographic randomness or anti-bot claim.",
+    "A win or repeated win does not prove human play. No funded qualification, payment, campaign activation or change to pilot rules results from this evidence."
+  ]
+}

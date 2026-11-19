@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "kind": "offline-weekly-campaign-setup",
+  "status": "draft",
+  "payable": false,
+  "launchReady": false,
+  "sourceKnown": {
+    "referenceKind": "checked-in-no-prize-pilot-source",
+    "pilotConfigPath": "data/arcade-challenge-pilot-november-2026.json",
+    "pilotId": "arborist-trials-november-2026",
+    "pilotRulesHash": "ef07c5212301565b10faffc1e8fb97347fad522c6dc3e3f15bdf58d12b3c9b2d",
+    "game": {
+      "id": "arborist-trials",
+      "version": "campaign-pilot-4a27b3ac-v1",
+      "ruleset": "portable-v1-four-card",
+      "sourceHash": "9623279e03ddab211d51e26f89040afc0b8aee4ff86fc19af53243096215ca00"
+    },
+    "adapter": {
+      "id": "arborist-trials-portable-four-card",
+      "version": "1.0.0"
+    },
+    "challengeDate": "2026-11-18",
+    "variant": {
+      "id": "standard",
+      "title": "Root Rush",
+      "targetGrowth": 50,
+      "playerStartGrowth": 0,
+      "botStartGrowth": 0
+    },
+    "engine": "portable-v1",
+    "maxAttemptSeconds": 900,
+    "maxMoves": 100,
+    "dealRules": {
+      "standardCardsPerSide": 4,
+      "guaranteedTypes": [
+        "attack",
+        "growth",
+        "hybrid"
+      ],
+      "fourthCard": "another-distinct-standard-card",
+      "hands": "separately-dealt-per-attempt",
+      "fifthCardEnabled": false,
+      "equalHandStrengthGuaranteed": false,
+      "chanceEffectsPresent": true
+    },
+    "currentPilotObjective": {
+      "metric": "wins",
+      "operator": "eq",
+      "targetUnits": "1"
+    },
+    "access": {
+      "entry": "free",
+      "purchaseRequired": false,
+      "standardCards": 4,
+      "paidAdvantages": "forbidden"
+    },
+    "identityScope": "wallet-session-only",
+    "implementationHashes": {
+      "adapterSha256": "5b7d38abb9df4e9f8b82adb87af8b635d20bbe658de530b28b4456e26ea3e841",
+      "pilotRulesSha256": "e1dc5796749524291191c7e81b40ddf550f6c3fa5e8b5c586c97c3fc38dd8d50"
+    }
+  },
+  "proposal": {
+    "status": "awaiting-operator-decisions-and-funded-design",
+    "workingTitle": "Arborist Trials Weekly Practice Challenge",
+    "rulesBasis": "review-pinned-pilot",
+    "objective": {
+      "choice": "win-one-match",
+      "metric": "wins",
+      "operator": "eq",
+      "targetUnits": "1",
+      "scope": "single-attempt",
+      "classification": "participation-practice",
+      "fundedSkillTargetEstablished": false
+    },
+    "attempts": {
+      "choice": "repeat-attempts-one-share",
+      "sharesPerReviewedPlayer": 1,
+      "weeklyStartLimit": null
+    },
+    "suggestedDurationDays": 7,
+    "allocation": {
+      "method": "equal-shares",
+      "residualPolicy": "leave-unallocated",
+      "noQualifiersPolicy": "leave-unallocated"
+    },
+    "identityOutcome": "one-reviewed-player",
+    "campaignRequiredForEventEntry": false
+  },
+  "decisions": {
+    "challenge": {
+      "title": null,
+      "rulesBasis": null,
+      "objectiveChoice": null,
+      "attemptPolicy": null
+    },
+    "schedule": {
+      "startsAt": null,
+      "endsAt": null
+    },
+    "pool": {
+      "network": null,
+      "assetId": null,
+      "symbol": null,
+      "decimals": null,
+      "poolUnits": null
+    },
+    "playersAndReview": {
+      "identityMethod": null,
+      "identityReviewerId": null,
+      "recipientReviewMethod": null,
+      "reviewEndsAt": null,
+      "payoutTiming": null,
+      "correctionPolicy": null
+    },
+    "associatedEvent": {
+      "id": null,
+      "href": null
+    },
+    "finalTerms": {
+      "residualPolicy": null,
+      "noQualifiersPolicy": null,
+      "cancellationPolicy": null
+    }
+  }
+}
