@@ -7,11 +7,43 @@ The next implementation after the offline campaign allocator is a working,
 pinned game verifier, an authenticated HTTP handler, a private transactional
 attempt ledger, a reproducible rehearsal and an isolated function package.
 
-This is reviewed source and local verification. The database migration has not
-been applied to the hosted project, the new function has not been published,
-and no playable public pilot, funded campaign or prize eligibility is enabled.
-The migration creates empty tables; it inserts no pilot. The existing Arcade
-release remains the live baseline in the newest `production/README.md` section.
+The playable frontend is now implemented under `/play/challenge/`, with a
+Campaigns entry, four legal-action cards, Growth meters, current effects, round
+feedback and an explicit **Test challenge — no prizes** label. It reuses the
+published message-only wallet bridge and shared Arcade session. It never calls
+attendance, check-in, payment or transaction actions.
+
+The reviewed migration was applied to the hosted project as version
+`20261119000653`. All eleven live helper/RPC definitions match an isolated
+application of the exact source byte for byte; browser roles cannot access the
+three private tables or four public RPCs. The enabled no-prize configuration
+uses a fixed November 18 ruleset, opens November 19 at 00:00 UTC and closes
+December 1 at 00:00 UTC. Each match lasts at most fifteen minutes, shortened by
+session expiry or pilot close. Its canonical rule hash is
+`ef07c5212301565b10faffc1e8fb97347fad522c6dc3e3f15bdf58d12b3c9b2d`.
+See `production/arcade-challenge-db-readiness.json` and
+`data/arcade-challenge-pilot-november-2026.json`.
+
+This source status does not assert publication. The newest
+`production/README.md` section and dated release records identify the current
+live deployment. The isolated preservation workflow publishes the five new
+page assets and one function only after the exact candidate is reviewed.
+Funded campaigns and prize eligibility remain disabled.
+
+## Player recovery
+
+The browser stores the opaque attempt token and a hash of its original session
+in tab storage. It does not copy the Arcade bearer token into that record.
+An uncertain move is persisted with its original UUID, version and card before
+dispatch; refresh and reload resolve that same request before allowing another
+move. Reconnecting the same original session resumes the match. A replacement
+session requires an explicit new attempt, even for the same wallet.
+
+Every displayed result is returned by the service. The countdown is anchored
+to database time, and closed/expired/finished states disable card choices.
+The UI supports unavailable storage, revoked-session renewal, server errors,
+stale-tab conflicts and a committed response lost during transport. Wallet
+connection and personal-message signing require deliberate player actions.
 
 ## Why Arborist Trials
 
@@ -176,11 +208,14 @@ The resulting score is **16,375**. The same rehearsal rejects a supplied fake
 score, preserves an identical retry, rejects a changed retry and verifies that
 only three moves were recorded. Public fixture entropy is for tests only.
 
-PGlite runs through one connection. The integration tests cover overlapping API
-requests and the actual transactional statements, but do not reproduce lock
-scheduling between independent PostgreSQL workers. A separate-worker test on
-a disposable PostgreSQL instance remains a hosting gate. Synthetic wallet
-sessions also do not replace a real signed-in browser pilot.
+PGlite runs through one connection. A separate disposable PostgreSQL 17.11
+test now verifies actual lock contention across 100 independent workers:
+competing moves, identical and divergent retries, disable/revocation before
+commit, cutoff while blocked and the active-attempt cap all passed. Evidence is
+in `docs/arcade-challenge-postgres-validation-20261119.json`. Eleven additional
+client/HTTP/SQL/engine tests cover recovery and session behavior. Browser tests
+use the same service and SQL with explicitly synthetic sessions; canonical
+signed-message verification is reported separately from wallet-extension UX.
 
 The package manifest is generated at
 `.netlify/arcade-challenge-pilot-functions/manifest.json`; it records exact source
@@ -189,16 +224,14 @@ existing production release scripts do not include this function or migration.
 
 ## Next implementation milestone
 
-1. Build the playable pilot view under the Arcade, using only the server's
-   public state and legal actions. Explain that it is a test without prizes.
-   Persist the opaque attempt token for the original session, recover from
-   interrupted requests and show a clear expiry/finished state.
-2. Exercise the real signed-in browser flow and independent-worker database
-   races in an isolated test environment. Verify draft/disabled behavior and
-   strict origin, request-size and rate limits.
-3. Prepare an additive preservation release using a freshly captured complete
-   production inventory. Apply the reviewed migration separately, create the
-   actual nonpaying pilot configuration and publish the tested UI/function.
+1. Complete desktop/phone candidate and playable-state browser review. The
+   screen, recovery implementation, private hosted schema/configuration and
+   independent-worker database verification are implemented.
+2. Publish the reviewed UI/function with a fresh complete preservation capture,
+   following `docs/arcade-challenge-release.md`. Verify canonical delivery and
+   actual signed-message start/play/resume/retry using an ephemeral operator
+   test wallet; do not conflate this with an installed wallet-extension review.
+3. Observe the bounded no-prize pilot and collect practical usability findings.
 4. Review pilot difficulty and abuse evidence before setting the first funded
    week's target, budget, asset/network, dates and canonical identity policy.
    Funded eligibility and payout remain separate implementations.

@@ -52,7 +52,11 @@ async function play(page, id, expected = 'playing') {
   await Promise.all([page.waitForResponse(response => response.url().includes('/api/arcade-challenge-pilot?action=move')), move(page, id).click()]);
   await phase(page, expected);
 }
-async function noOverflow(page) { assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, 'No document-wide horizontal overflow.'); }
+async function noOverflow(page) {
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, 'No document-wide horizontal overflow.');
+  const failed = await page.locator('img').evaluateAll(images => images.filter(image => image.getClientRects().length && (!image.complete || image.naturalWidth === 0)).map(image => image.getAttribute('src')));
+  assert.deepEqual(failed, [], 'Visible branded images load successfully.');
+}
 async function screenshot(page, file) {
   const output = process.env.ARCADE_PILOT_QA_OUTPUT;
   if (!output) return;

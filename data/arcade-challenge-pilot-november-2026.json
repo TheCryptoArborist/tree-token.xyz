@@ -1,0 +1,39 @@
+{
+  "rulesHash": "ef07c5212301565b10faffc1e8fb97347fad522c6dc3e3f15bdf58d12b3c9b2d",
+  "rules": {
+    "schemaVersion": 1,
+    "mode": "nonpaying-pilot",
+    "pilotId": "arborist-trials-november-2026",
+    "game": {
+      "id": "arborist-trials",
+      "version": "campaign-pilot-4a27b3ac-v1",
+      "ruleset": "portable-v1-four-card",
+      "sourceHash": "9623279e03ddab211d51e26f89040afc0b8aee4ff86fc19af53243096215ca00"
+    },
+    "adapter": {
+      "id": "arborist-trials-portable-four-card",
+      "version": "1.0.0"
+    },
+    "challengeDate": "2026-11-18",
+    "window": {
+      "startsAt": "2026-11-19T00:00:00.000Z",
+      "endsAt": "2026-12-01T00:00:00.000Z"
+    },
+    "maxAttemptSeconds": 900,
+    "objective": {
+      "metric": "wins",
+      "operator": "eq",
+      "targetUnits": "1"
+    },
+    "access": {
+      "entry": "free",
+      "purchaseRequired": false,
+      "standardCards": 4,
+      "paidAdvantages": "forbidden"
+    },
+    "identityScope": "wallet-session-only",
+    "payable": false,
+    "prizeEligible": false,
+    "awardsEnabled": false
+  }
+}

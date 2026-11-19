@@ -45,7 +45,9 @@ jobs:
       - run: git diff --check
 
   challenge-browser:
-    runs-on: ubuntu-latest
+    # Playwright 1.56.1 supports Ubuntu 24.04. Keep this runtime pinned so a
+    # moving ubuntu-latest image cannot silently invalidate the browser gate.
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
