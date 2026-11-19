@@ -14,10 +14,12 @@ player who meets the published target**. More successful attempts do not buy or
 earn more shares. Completing a campaign does not add an Event entry requirement.
 Monthly check-in rewards and the existing Event terms are separate decisions.
 
-**Confirmed promotion order (November 19, 2026): TREE Force '89 first, Canopy
-Defense second.** Arborist Trials is technical-reference work and is not the
-selected first campaign. Its card-game rules and difficulty findings do not
-establish a target or verifier for either promoted game.
+**Confirmed rotation scope (November 19, 2026): every working Arcade game.**
+TREE Force '89 opens the first cycle, followed by Canopy Defense, then the
+remaining working games before the cycle repeats. Ordinary LIVE Arborist Trials
+belongs in that roster. The isolated `/play/challenge/` Trials pilot remains a
+technical reference, not an additional rotation slot or a verifier for the
+other games or the ordinary Trials build.
 
 The next implemented stage is documented in
 [`arcade-challenge-pilot.md`](./arcade-challenge-pilot.md): a versioned Arborist

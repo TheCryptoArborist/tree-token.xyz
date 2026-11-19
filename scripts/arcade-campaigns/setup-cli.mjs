@@ -13,9 +13,14 @@ const help = `Offline TREE Arcade weekly campaign setup
 
 review prints a six-section Markdown review, or JSON with --json.
 check prints validation and grouped missing decisions; incomplete/invalid setup exits 2.
-Promotion order is TREE Force ’89 first, then Canopy Defense.
+The recurring rotation covers all working games: TREE Force ’89, Canopy Defense,
+Canopy Breaker, Garden Bot, PvP Battle and ordinary Arborist Trials.
+Plan: one featured game per suggested seven-day window; complete the eligible
+cycle before repeats, skip unavailable games, and admit new games in future cycles.
+The current roster follows LIVE listings, not verified gameplay or payout readiness.
 Both default to data/arcade-weekly-campaign-setup.json. The pinned Trials source is
-a technical reference only; it does not verify either promotion game's results.
+the separate /play/challenge/ technical pilot, not the ordinary Trials roster entry.
+No dates or automatic rotation are activated.
 Complete choices remain unverified, nonpayable and not launch-ready.
 No file is changed, no network is contacted and no campaign or payment is created.
 `;

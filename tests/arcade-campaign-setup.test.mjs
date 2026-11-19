@@ -29,7 +29,7 @@ const complete = () => {
   return setup;
 };
 
-test('the actual setup selects TREE Force then Canopy Defense while keeping the Trials reference separate', () => {
+test('the actual setup rotates all six LIVE-listed games and keeps the separate Trials pilot out of the roster', () => {
   assert.deepEqual(actual, fresh());
   const before = JSON.stringify(actual), result = validateSetup(actual, source), review = reviewSetup(actual, source);
   assert.equal(result.valid, true);
@@ -37,13 +37,19 @@ test('the actual setup selects TREE Force then Canopy Defense while keeping the 
   assert.equal(result.missingDecisions.length, 6);
   assert.equal(result.missingDecisions.reduce((sum, group) => sum + group.fields.length, 0), 22);
   assert.ok(Object.values(actual.decisions).flatMap(group => Object.values(group)).every(value => value === null));
-  assert.deepEqual(actual.proposal.promotionOrder, ['TREE Force ’89', 'Canopy Defense']);
+  assert.deepEqual(actual.proposal.promotionOrder, ['TREE Force ’89', 'Canopy Defense', 'Canopy Breaker', 'Garden Bot', 'PvP Battle', 'Arborist Trials']);
+  assert.deepEqual(actual.proposal.rotation, {
+    status: 'planned-not-scheduled', coverage: 'all-working-arcade-games', rosterEvidence: 'catalog-live-listing-only',
+    featuredGamesPerWindow: 1, repeatPolicy: 'complete-eligible-cycle-before-repeats',
+    unavailablePolicy: 'skip-temporarily-unavailable-games', newGamesPolicy: 'include-newly-working-games-in-future-cycles',
+    automaticActivation: false,
+  });
   assert.equal(actual.proposal.game.id, 'treeforce89');
   for (const field of ['version', 'ruleset', 'sourceHash']) assert.equal(actual.proposal.game[field], null);
   assert.deepEqual(actual.proposal.runAdapter, { id: null, version: null });
   assert.equal(actual.proposal.rulesBasis, null);
   assert.equal(actual.proposal.objective, null);
-  assert.equal(actual.proposal.technicalReferenceRole, 'arborist-trials-only-not-promotion-game-qualification');
+  assert.equal(actual.proposal.technicalReferenceRole, 'separate-challenge-pilot-not-ordinary-game-qualification');
   assert.equal(source.game.id, 'arborist-trials');
   assert.equal(review.campaignGameVerificationReady, false);
   assert.equal(review.sourceStatus, 'matches-checked-in-technical-reference-only');
@@ -120,6 +126,11 @@ test('planning text cannot transfer Trials qualification or claim implemented TR
     s => { s.proposal.game.version = source.game.version; },
     s => { s.proposal.game.id = 'arborist-trials'; },
     s => { s.proposal.promotionOrder.reverse(); },
+    s => { s.proposal.promotionOrder.splice(2); },
+    s => { s.proposal.promotionOrder.push('Root Rage'); },
+    s => { s.proposal.rotation.featuredGamesPerWindow = 2; },
+    s => { s.proposal.rotation.repeatPolicy = 'repeat-first-two'; },
+    s => { s.proposal.rotation.automaticActivation = true; },
     s => { s.decisions.challenge.targetUnits = '3'; },
     s => { s.decisions.challenge.attemptPolicy = 'twenty-starts-per-week'; },
     s => { s.proposal.attempts.weeklyStartLimit = 20; },
@@ -189,7 +200,7 @@ test('all entered terms remain nonpayable, unauthenticated and outside productio
   const markdown = formatSetupReview(review);
   assert.match(markdown, /offline, unverified proposal/);
   assert.match(markdown, /Existing no-prize pilot results remain ineligible/);
-  assert.match(markdown, /do not qualify TREE Force ’89 or Canopy Defense campaigns/);
+  assert.match(markdown, /do not establish funded qualification for any roster game, including ordinary Arborist Trials/);
   assert.match(markdown, /entered rules and objective text are unverified planning only/);
 });
 
@@ -228,6 +239,15 @@ test('the CLI provides a six-section Markdown review and grouped JSON without ch
   assert.match(markdown, /## 1\. Challenge/);
   assert.match(markdown, /## 6\. Final terms/);
   assert.ok(markdown.indexOf('1. TREE Force ’89') < markdown.indexOf('2. Canopy Defense'));
+  for (const [index, name] of actual.proposal.promotionOrder.entries()) assert.ok(markdown.includes((index + 1) + '. ' + name));
+  assert.match(markdown, /## Recurring rotation — all working Arcade games/);
+  assert.match(markdown, /one featured game per suggested seven-day window/);
+  assert.match(markdown, /complete the eligible cycle before repeating/);
+  assert.match(markdown, /skip temporarily unavailable games/);
+  assert.match(markdown, /add newly working games in future cycles/);
+  assert.match(markdown, /Listing status does not prove end-to-end gameplay or cash-prize readiness/);
+  assert.match(markdown, /ordinary Arcade game/);
+  assert.match(markdown, /separate \/play\/challenge\/ pilot remains a technical reference/);
   assert.match(markdown, /## First campaign — TREE Force ’89/);
   assert.match(markdown, /## Arborist Trials technical reference only/);
   assert.ok(!markdown.includes('Arborist Trials Weekly Practice Challenge'));

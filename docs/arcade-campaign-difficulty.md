@@ -4,10 +4,11 @@ This is **offline scripted-play evidence**, prepared November 18, 2026 in
 America/Chicago (November 19 UTC). It does not measure human skill, authorize
 rewards, change pilot rules or establish eligibility for a funded campaign.
 
-**Promotion scope correction, November 19:** TREE Force '89 is the first game
-to promote; Canopy Defense is second. This report remains an Arborist Trials
-technical reference only. Its win rates, card rules and retry findings do not
-measure either promoted game's difficulty or define their campaign objectives.
+**Rotation scope, November 19:** Every working Arcade game receives a turn,
+beginning with TREE Force '89 and Canopy Defense. Ordinary LIVE Arborist Trials
+is included. This report measures only the separate `/play/challenge/` technical
+pilot; it does not establish parity with the ordinary Trials build or measure
+other games' difficulty, and it does not define their campaign objectives.
 See the [corrected campaign plan](./arcade-weekly-campaign-setup.md).
 
 The important result is that **a simple growth-first script won 2,073 of 2,560
