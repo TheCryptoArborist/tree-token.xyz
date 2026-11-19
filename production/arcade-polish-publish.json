@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "action": "publish-arcade-polish",
+  "sourceCommit": "3535deceb0ab46b32e7e481cea72756e7c17d54b",
+  "sourceTree": "488870bacc3a05669ce2f49285d94233991fc8bc",
+  "mainCommit": "0c14b52e2204737ee4407ca927445b8658f20117",
+  "expectedDeploy": "6aff4a1398c18908a875f033",
+  "candidateId": "6aff527173dc08672f92903f",
+  "planSha256": "9ccb31aeb6a2447cd73f76fd280044758eebe30ca3b395aeb199dd3718006fc4",
+  "candidateRunId": 44601879622,
+  "candidateArtifactId": "14569105910",
+  "candidateArtifactSHA256": "4e524e48c550f21dadc02c3f84f51e398e452b9bb610a39914674d5664f5186b",
+  "browserReview": "production/arcade-polish-browser-review.json"
+}

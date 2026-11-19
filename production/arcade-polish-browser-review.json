@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "result": "passed",
+  "sourceCommit": "3535deceb0ab46b32e7e481cea72756e7c17d54b",
+  "sourceTree": "488870bacc3a05669ce2f49285d94233991fc8bc",
+  "candidateId": "6aff527173dc08672f92903f",
+  "planSha256": "9ccb31aeb6a2447cd73f76fd280044758eebe30ca3b395aeb199dd3718006fc4",
+  "origin": "https://6aff527173dc08672f92903f--tree-token.netlify.app",
+  "checkedAt": "2026-11-19T19:48:30.572Z",
+  "viewportWidths": [
+    390,
+    1280
+  ],
+  "noWalletOrPaymentActions": true,
+  "checks": {
+    "games": true,
+    "daily": true,
+    "campaigns": true,
+    "events": true,
+    "monthlyProgress": true,
+    "badgeCollection": true,
+    "mobileLayout": true,
+    "countdownUTC": true,
+    "noMissingAssets": true
+  },
+  "evidence": {
+    "screenshots": 14,
+    "inspection": "GET-only browser route checks; synthetic completed-state UI only"
+  }
+}
