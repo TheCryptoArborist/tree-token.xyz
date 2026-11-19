@@ -44,7 +44,8 @@
     TOTAL2:['CRYPTOCAP:TOTAL2','Top-125 cryptocurrency capitalization, excluding Bitcoin.'],
     TOTAL3:['CRYPTOCAP:TOTAL3','Top-125 cryptocurrency capitalization, excluding Bitcoin and Ethereum; stablecoins remain included.'],
     TOTAL3ES:['CRYPTOCAP:TOTAL3ES','Top-125 crypto capitalization excluding BTC, ETH, and stablecoins. Earlier stablecoin exclusions have methodological limits.'],
-    BTCD:['CRYPTOCAP:BTC.D','Bitcoin dominance: Bitcoin capitalization as a percentage of TradingView’s tracked TOTAL capitalization.']
+    BTCD:['CRYPTOCAP:BTC.D','Bitcoin dominance: Bitcoin capitalization as a percentage of TradingView’s tracked TOTAL capitalization.'],
+    STABLED:['CRYPTOCAP:STABLE.C.D','Stablecoin dominance: stablecoins’ market value as a percentage of TradingView’s tracked crypto market.']
   };
   const priceAssets = {
     BTC:{name:'Bitcoin',symbol:'BINANCE:BTCUSDT',pair:'BTC/USDT',source:'https://www.tradingview.com/symbols/BTCUSDT/?exchange=BINANCE'},
@@ -161,6 +162,9 @@
     const entry=tvSymbols[selectedMarket];
     setPressed('[data-tv-symbol]','tvSymbol',selectedMarket);
     $('mi-market-description').textContent=entry[1];
+    $('mi-stablecoin-guide')?.toggleAttribute('hidden',selectedMarket!=='STABLED');
+    $('mi-stablecoin-methodology')?.toggleAttribute('hidden',selectedMarket!=='STABLED');
+    stage.setAttribute('aria-label','TradingView chart: '+entry[0]);
     if(lastMarket===selectedMarket)return;
     lastMarket=selectedMarket;
     stage.replaceChildren();
@@ -173,7 +177,7 @@
     host.appendChild(widget);
     const credit=document.createElement('div'); credit.className='tradingview-widget-copyright';
     const creditLink=document.createElement('a');
-    creditLink.href='https://www.tradingview.com/symbols/CRYPTOCAP-'+(selectedMarket==='BTCD'?'BTC.D':selectedMarket)+'/';
+    creditLink.href='https://www.tradingview.com/symbols/CRYPTOCAP-'+entry[0].split(':')[1]+'/';
     creditLink.target='_blank';creditLink.rel='noopener noreferrer';
     creditLink.textContent='Chart by TradingView';
     credit.appendChild(creditLink);host.appendChild(credit);
@@ -488,7 +492,7 @@
 
   function reportText(){
     const score=cbbiNewest?'CBBI: '+(cbbiNewest.value*100).toFixed(1)+'/100 ('+fmtDate(cbbiNewest.ts)+' UTC; provider observation).':'CBBI: current observation not verified.';
-    return ['TREE MARKET INSIGHTS','Bitcoin research dashboard',score,'Crypto market-cap charts: TOTAL, TOTAL2, TOTAL3, TOTAL3ES and BTC.D (TradingView).','Cycle figures: historical references, not price forecasts.','Sources: TradingView · Axel Adler Jr. · ColinTalksCrypto CBBI','Explore on tree-token.xyz · Not financial advice.'].join('\n');
+    return ['TREE MARKET INSIGHTS','Bitcoin research dashboard',score,'Crypto market-cap and dominance charts: TOTAL, TOTAL2, TOTAL3, TOTAL3ES, BTC.D and STABLE.C.D (TradingView).','Cycle figures: historical references, not price forecasts.','Sources: TradingView · Axel Adler Jr. · ColinTalksCrypto CBBI','Explore on tree-token.xyz · Not financial advice.'].join('\n');
   }
   $('mi-copy-report')?.addEventListener('click',async()=>{
     const button=$('mi-copy-report');
