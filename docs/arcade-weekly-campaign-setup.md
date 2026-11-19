@@ -1,20 +1,48 @@
-# Weekly campaign plan — TREE Force '89 first
+# Weekly campaign rotation — every working Arcade game
 
-Corrected November 19, 2026 (America/Chicago), following the project owner's explicit promotion order.
+Updated November 19, 2026 (America/Chicago), following the project owner's direction to rotate every working game.
 
-**First: TREE Force '89. Second: Canopy Defense.** Small campaign rewards should encourage people to play the featured game and take an interest in its larger Event. The previous recommendation to make Arborist Trials the first campaign was an assistant assumption and is superseded by this order.
+**Every working Arcade game belongs in the recurring rotation. TREE Force '89 opens the first cycle, and Canopy Defense follows second.** Small campaign rewards should encourage people to play the featured game and take an interest in its larger Event. These opening priorities are part of the full Arcade rotation.
 
 No funded campaign is open. Amounts, assets, payout networks, dates and actual qualifying targets remain unselected.
 
-## Promotion order and purpose
+## Initial rotation and purpose
 
-| Order | Game | Campaign purpose | Next work |
-| --- | --- | --- | --- |
-| 1 | **TREE Force '89** | Get players into the shooter, learning its controls and working toward a clear game-specific goal that leads into its Event. | Audit current score, wave, completion and run records; determine which target can be verified reliably. |
-| 2 | **Canopy Defense** | Promote the tower-defense game after TREE Force, with a clear defense-specific objective and its own Event connection. | Audit supported map/wave completion, difficulty, upgrades and continues before choosing a qualifying target. |
-| Technical reference only | Arborist Trials | Retain useful authentication, retry, replay and exact-allocation implementation evidence. | Do not use its rules, verifier, card-win target or difficulty results as qualification for either promotion game. |
+The canonical [Arcade Games page](https://tree-token.xyz/play/) was read on November 19, 2026 and lists six LIVE cabinets. The first two positions follow the owner's instruction; the remaining positions follow the existing LIVE cabinet order.
 
-The promotion order is decided. Game-specific targets and funded terms are not. The setup records that distinction instead of treating an available technical test as the selected promotional game.
+| Turn | Game | Campaign focus to define from that game's evidence |
+| --- | --- | --- |
+| 1 | **TREE Force '89** | Shooter score, wave or completed-run objective; lead into its Event. |
+| 2 | **Canopy Defense** | Defense-specific map, wave or completion objective and Event. |
+| 3 | **Canopy Breaker** | A suitable score, stage or completion objective for the breaker game. |
+| 4 | **Garden Bot** | A suitable completed-match or strategy objective. |
+| 5 | **PvP Battle** | A suitable head-to-head objective using its actual entry and result rules. |
+| 6 | **Arborist Trials** | The ordinary LIVE daily game, with its own daily/practice rules. |
+| Next cycle | **Return to TREE Force '89** | Repeat through the eligible roster, including newly ready games. |
+
+These objective categories are planning options, not selected thresholds or claims of existing funded verification. LIVE labels establish the public listing, not a fresh end-to-end gameplay test. Recheck availability and actual access before featuring a game; assess funded qualification separately.
+
+**Ordinary Arborist Trials belongs in the rotation.** Its cabinet leads to the normal game at `https://nftree.net/battle/trials`. The separate `/play/challenge/` no-prize technical pilot is not an extra rotation entry, and its verifier does not automatically validate the ordinary game.
+
+### How the rotation should work
+
+- Feature one game per suggested seven-day window. Actual UTC dates remain unselected.
+- Give every currently eligible game a turn before repeating. After the six-game opening cycle, begin the next cycle.
+- Temporarily skip a game that is unavailable, retain it in the roster, and return it to a later eligible turn. Do not confuse an ordinary access requirement with an outage.
+- Add newly working games to future cycles. The roster can grow; it is not permanently limited to these six entries.
+- Keep a single featured campaign and any selected weekly pool focused on that game's turn. Membership in the rotation does not automatically fund a pool.
+- Set an objective suited to each game. Record its rules, prize terms and actual Event link before announcing a funded opportunity.
+- Keep existing live campaign terms fixed during their window. A roster change does not rewrite an active campaign's target, payout or cutoff.
+
+The planning record encodes this policy but has **no automatic activation or scheduler**. A recurring product rotation is not a background reminder task or permission to spend weekly funds.
+
+### Games waiting to join
+
+The current cabinets mark **Arboretum, Deadfall Run, TREE: Root Rage and Canopy Clash** as PREVIEW. Two other cabinets are unnamed COMING SOON slots. They join the rotation when their publicly playable release is ready. Preview status is not a claim that a game is broken; Root Rage's current cabinet, for example, links to a preview video.
+
+### Campaigns tab presentation
+
+The intended layout is a compact **This week's game** feature, **Up next**, and a readable or expandable **Full rotation** list within Campaigns. Keep Games focused on its playable cabinets. The existing Daily spotlight-voting control remains separate until its effect on a future cycle is explicitly designed; it must not silently prevent working games from receiving a turn.
 
 ## First campaign: TREE Force '89
 
@@ -40,21 +68,21 @@ Use the same clear presentation after TREE Force, with a Canopy Defense-specific
 
 Map, difficulty, upgrades and continues can affect comparability. Establish eligible conditions and the corresponding verifier before announcing rewards. The TREE Force scoring model and Trials win counter are not interchangeable with tower-defense qualification.
 
-Keep the second campaign's pool, date and Event association unselected until its terms are defined. Second in promotion order does not mean a calendar date or funded offer has been scheduled.
+Keep the second campaign's pool, date and Event association unselected until its terms are defined. Continue the cycle with Canopy Breaker, Garden Bot, PvP Battle and ordinary Arborist Trials. Rotation positions do not create scheduled dates or funded offers.
 
 ## Existing technical work and its limits
 
 The generic equal-share allocator, grouped setup workflow, exact-unit examples and many authentication/idempotency concepts remain useful. The [Arborist Trials pilot](./arcade-challenge-pilot.md) is a separate no-prize technical implementation.
 
-The [5,120-match difficulty assessment](./arcade-campaign-difficulty.md) tested only that pinned Trials card-game engine. It says nothing about TREE Force shooter difficulty or Canopy Defense difficulty. Its one-win/three-win results must not select, weaken or replace a goal for either promoted game.
+The [5,120-match difficulty assessment](./arcade-campaign-difficulty.md) tested only that pinned Trials card-game engine. It does not measure difficulty across the rotation or establish equivalence to the ordinary LIVE Arborist Trials build. Its one-win/three-win results must not select, weaken or replace the goals for other games.
 
-The setup preserves Trials' exact source snapshot as a labeled technical reference. It is not a verified build or result adapter for TREE Force or Canopy Defense. Their game-specific build, rules and verifier remain unresolved. Similarly, Trials' no-purchase/no-NFT access policy must not be presented as either promoted game's current access policy. Inspect and disclose the actual game eligibility before any funded offer.
+The setup preserves Trials' exact source snapshot as a labeled technical reference. It is not a verified build or result adapter for the other games, or proof of parity with ordinary LIVE Trials. Game-specific builds, rules and verifiers need their own review. Similarly, the technical pilot's no-purchase/no-NFT access policy must not be presented as every rotation game's current access policy. Inspect and disclose the actual game eligibility before any funded offer.
 
 ## Six setup sections
 
 | Section | Planning content |
 | --- | --- |
-| Challenge | TREE Force first, Canopy Defense second; exact game-specific build, target, eligible settings and attempt rules still to be reviewed. |
+| Challenge | Every working game rotates, opening with TREE Force and Canopy Defense; each game needs its own reviewed build, objective and eligible settings. |
 | Schedule | Actual inclusive UTC start and exclusive UTC close; no dates inferred from the Trials pilot or November badge deadline. |
 | Pool | Fixed amount, exact asset, decimals and one payout network. |
 | Players and review | How the qualifying player, linked wallets, result and payout recipient are reviewed; correction and payout timing. |
@@ -73,7 +101,7 @@ node scripts/arcade-campaigns/setup-cli.mjs review --json
 node scripts/arcade-campaigns/setup-cli.mjs check
 ```
 
-The default input is `data/arcade-weekly-campaign-setup.json`. Its 22 operator choices remain null; the confirmed promotion order is recorded separately. Use a private copy for planning and pass its path after `review` or `check`. `review` prints Markdown by default, or JSON with `--json`. `check` returns `2` for incomplete/invalid planning records, `0` for complete valid planning fields, and `1` for parsing, file-read or execution failures. A successful check never authorizes launch or payment.
+The default input is `data/arcade-weekly-campaign-setup.json`. Its 22 operator choices remain null; the initial six-game order and recurring rotation policy are recorded separately. Use a private copy for planning and pass its path after `review` or `check`. `review` prints Markdown by default, or JSON with `--json`. `check` returns `2` for incomplete/invalid planning records, `0` for complete valid planning fields, and `1` for parsing, file-read or execution failures. A successful check never authorizes launch or payment.
 
 When all five pool fields are valid, the review shows exact-unit examples for 0, 1, 5, 10 and 25 illustrative qualifiers. No budget is inferred. The original generic funding draft and allocator remain unchanged, with 25 unresolved fields in that draft. This local tool contacts no network and performs no signing, database write, deployment or transfer.
 
@@ -89,10 +117,10 @@ When all five pool fields are valid, the review shows exact-unit examples for 0,
 >
 > Ready to compete? Explore **[associated TREE Force Event and its entry details]**.
 
-Bracketed fields are unselected. This is working copy, not an active offer. The second campaign will use Canopy Defense-specific copy and rules.
+Bracketed fields are unselected. This is working copy, not an active offer. Subsequent campaigns use the same clear format with the featured game's own copy and rules.
 
 ## Next implementation step
 
-Audit TREE Force '89's current run/score/wave evidence and continue behavior, then implement a verifier and campaign objective for that game. Follow with Canopy Defense. Reuse shared infrastructure where it fits, but keep each game's qualification bound to its own evidence. Existing Trials results never become eligible for either promoted game's pool.
+Start the rotation's game-specific work with TREE Force '89's current run/score/wave evidence and continue behavior, then Canopy Defense. Continue through every working game in the roster. Reuse shared campaign infrastructure where it fits, while keeping each game's objective and qualification bound to its own evidence. Technical-pilot results never become eligible for the featured games' pools.
 
 The current [MystenLabs skills README](https://github.com/MystenLabs/skills) was checked live for this correction. This is campaign planning and offline review tooling; it makes no Sui SDK, wallet, transaction or dependency change.
