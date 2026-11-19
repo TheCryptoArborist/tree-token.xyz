@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "result": "passed",
+  "checkedAt": "2026-11-19T00:22:50.879Z",
+  "sourceCommit": "cabecd68d34d605988a5550fa45b3cd33caffd1b",
+  "sourceTree": "1577cdca4ef7e31903d198d74da5de0d85c73b55",
+  "candidateId": "6afe412cc313992199456506",
+  "planSha256": "2c2819c3012615e8f7810f53b11b9492fb2bd993f88ea130eb8bc94ab0bcdd39",
+  "origin": "https://6afe412cc313992199456506--tree-token.netlify.app",
+  "noWalletOrPaymentActions": true,
+  "viewportWidths": [
+    1440,
+    390,
+    320
+  ],
+  "checks": {
+    "pilotPage": true,
+    "campaignLink": true,
+    "mobileLayout": true,
+    "keyboardFocus": true,
+    "noMissingAssets": true,
+    "noPrizeLabel": true,
+    "previewOriginBlocked": true
+  },
+  "screenshots": [
+    "pilot-candidate-1440.png",
+    "campaign-pilot-1440.png",
+    "pilot-candidate-390.png",
+    "campaign-pilot-390.png",
+    "pilot-candidate-320.png",
+    "campaign-pilot-320.png"
+  ],
+  "boundary": "Signed-out exact-candidate review. Play/recovery are exercised separately against the real local service using synthetic sessions; canonical signed-message testing follows publication."
+}

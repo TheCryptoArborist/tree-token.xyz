@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "action": "publish-arcade-challenge",
+  "sourceCommit": "cabecd68d34d605988a5550fa45b3cd33caffd1b",
+  "sourceTree": "1577cdca4ef7e31903d198d74da5de0d85c73b55",
+  "mainCommit": "a2fae47e5c0b1fe9259d1c08409a48086a8e194a",
+  "expectedDeploy": "6afe22a623fe04c7a4a9d0c0",
+  "candidateId": "6afe412cc313992199456506",
+  "planSha256": "2c2819c3012615e8f7810f53b11b9492fb2bd993f88ea130eb8bc94ab0bcdd39",
+  "candidateRunId": 44428317500,
+  "candidateArtifactId": 14484753822,
+  "candidateArtifactSHA256": "9f49ecd820507bd9ecfeaf82a0e23ecc2b1e12d60051c92935a5da018dd22736",
+  "browserReview": "production/arcade-challenge-browser-review.json"
+}
