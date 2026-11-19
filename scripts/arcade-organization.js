@@ -33,10 +33,31 @@ export function mountArcadeOrganization(doc = document, view = window) {
 
   root.setAttribute('aria-label', 'TREE Arcade activities');
   root.removeAttribute('aria-labelledby');
+  // Reposition existing controls, never clone. Wallet, attendance, quest,
+  // result sharing and user input handlers retain their original DOM nodes.
   const strip = root.querySelector('.growth-strip');
-  if (strip) daily.prepend(strip);
   const status = byId('growth-status');
-  if (status && strip) strip.after(status);
+  const checkInTask = byId('growth-check-in-task');
+  const activityHeading = daily.querySelector(':scope > .growth-section-title');
+  const gameQuest = byId('growth-quest-details');
+  const shareCard = daily.querySelector(':scope > .guided-card');
+  const checkNote = byId('growth-check-note');
+  daily.classList.add('arcade-daily-dashboard');
+  if (strip && checkInTask) {
+    const masthead = element('div', 'arcade-daily-masthead');
+    masthead.append(strip, checkInTask);
+    daily.prepend(masthead);
+    if (status) masthead.after(status);
+  } else {
+    if (strip) daily.prepend(strip);
+    if (status && strip) strip.after(status);
+  }
+  if (activityHeading && gameQuest && shareCard) {
+    const workGrid = element('div', 'arcade-daily-work-grid');
+    workGrid.append(gameQuest, shareCard);
+    activityHeading.after(workGrid);
+    if (checkNote) activityHeading.before(checkNote);
+  }
 
   const summary = doc.querySelector('.month-progress-summary');
   const shortcuts = summary?.querySelector('.guided-actions');

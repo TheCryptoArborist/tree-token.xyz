@@ -114,7 +114,11 @@ test('moving controls preserves their identities, entered values and existing ha
       assert.ok(node.isConnected, `Retain original anchor ${href}`);
       assert.equal(node.getAttribute('href'), href);
     }
-    assert.equal(doc.getElementById('growth-today-panel').firstElementChild, saved.strip);
+    assert.equal(doc.getElementById('growth-today-panel').firstElementChild, doc.querySelector('.arcade-daily-masthead'));
+    assert.equal(saved.strip.parentElement, doc.querySelector('.arcade-daily-masthead'));
+    assert.equal(saved.strip.nextElementSibling, doc.getElementById('growth-check-in-task'));
+    assert.equal(doc.querySelector('.arcade-daily-work-grid > #growth-quest-details'), doc.getElementById('growth-quest-details'));
+    assert.equal(doc.querySelector('.arcade-daily-work-grid > .guided-card #guided-share-score'), doc.getElementById('guided-share-score'));
     assert.equal(doc.getElementById('growth-today-panel').lastElementChild, saved.community);
     assert.equal(doc.querySelector('.month-progress-summary'), saved.summary);
     assert.equal(doc.getElementById('cabinets').nextElementSibling, saved.featured);
@@ -448,5 +452,34 @@ test('Daily only suppresses routine saved-attendance refresh, preserving warning
     assert.ok(doc.getElementById('growth-check-in-row'));
     assert.ok(doc.getElementById('growth-task-auth'));
     assert.ok(doc.getElementById('growth-quest-details'));
+  }finally{current.close();}
+});
+
+
+test('Daily dashboard reuses check-in, game, share and wallet controls without replacing nodes',async()=>{
+  const ids=['growth-check-in-task','growth-check-in-row','growth-task-auth','growth-quest-details',
+    'growth-play','growth-refresh','guided-share-score','completed-runs-status',
+    'completed-runs-refresh','result-share-state','result-share-controls','mission-score-proof',
+    'growth-passport','growth-wallet-state','growth-sign-out'];
+  const kept=new Map();
+  const current=fixture('#daily',doc=>ids.forEach(id=>kept.set(id,doc.getElementById(id))));
+  try {
+    const p=current.doc.getElementById('growth-today-panel');
+    const mast=p.querySelector(':scope > .arcade-daily-masthead');
+    const work=p.querySelector(':scope > .arcade-daily-work-grid');
+    assert.ok(mast&&work);
+    assert.deepEqual([...mast.children].map(n=>n.id||n.className),['growth-strip','growth-check-in-task']);
+    assert.deepEqual([...work.children].map(n=>n.id||n.className),['growth-quest-details','guided-card']);
+    for(const [id,node] of kept)assert.equal(current.doc.getElementById(id),node,'Preserve '+id);
+    const share=current.doc.getElementById('completed-runs-refresh');
+    let clicked=0;
+    share.addEventListener('click',()=>clicked++);
+    share.disabled=false;share.click();
+    assert.equal(clicked,1);
+    for(const key of routes.keys()){
+      current.doc.getElementById(routes.get(key)).click();await settle();
+      assertRoute(current.doc,current.view,key);
+    }
+    assert.equal(p.lastElementChild,current.doc.getElementById('arcade-community-home'));
   }finally{current.close();}
 });
