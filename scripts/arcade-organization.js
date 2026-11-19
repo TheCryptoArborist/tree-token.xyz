@@ -79,7 +79,7 @@ export function mountArcadeOrganization(doc = document, view = window) {
   else campaigns.prepend(campaignFeature);
 
   const nextFeature = element('section', 'arcade-campaign-next', `
-    <img src="/play/canopy-defense/checkout-test/assets/brand/canopy-home-scene.webp" alt="" width="200" height="200" loading="lazy" decoding="async">
+    <img src="/play/canopy-defense/checkout-test/assets/brand/canopy-home-scene.webp" alt="" width="200" height="200" loading="eager" decoding="async">
     <div><p class="growth-eyebrow">UP NEXT · SECOND IN ROTATION</p><h4>Canopy Defense</h4><p>Build towers, hold the line and protect the Tree of Life. Its spotlight dates are not set.</p></div>
     <a class="growth-secondary" href="/play/canopy-defense/">Explore game <span aria-hidden="true">→</span></a>
   `);

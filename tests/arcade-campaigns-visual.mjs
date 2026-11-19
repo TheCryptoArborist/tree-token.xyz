@@ -13,6 +13,7 @@ try {
     try {
       await page.goto('http://127.0.0.1:8765/play/#campaigns', { waitUntil: 'domcontentloaded' });
       await page.locator('.arcade-campaign-spotlight').waitFor();
+      await page.waitForFunction(() => [...document.querySelectorAll('.arcade-campaign-spotlight-art,.arcade-campaign-next img')].every(img => img.complete && img.naturalWidth > 0));
       const result = await page.evaluate(() => {
         const panel = document.getElementById('growth-campaigns-panel');
         const [spot,next,rotation,pilot] = ['.arcade-campaign-spotlight','.arcade-campaign-next','.arcade-campaign-rotation','.arcade-campaign-technical'].map(s => panel?.querySelector(s));
@@ -23,6 +24,7 @@ try {
           count: rotation?.querySelectorAll('ol > li').length,
           collapsed: !rotation?.open && !pilot?.open,
           overflow: document.documentElement.scrollWidth - window.innerWidth,
+          spotlightHeight: spot?.getBoundingClientRect().height,
           eventLink: !!spot?.querySelector('a[href="#events"]'),
           noPrizeLabel: !!pilot?.textContent.includes('NO PRIZES'),
         };
@@ -31,6 +33,7 @@ try {
       assert.equal(result.count, 6); assert.equal(result.collapsed, true);
       assert.ok(result.overflow <= 1, 'Page overflow at ' + width + 'px: ' + result.overflow);
       assert.equal(result.eventLink, true); assert.equal(result.noPrizeLabel, true);
+      if (width === 1200) assert.ok(result.spotlightHeight < 450, 'Desktop feature should not be excessively tall: ' + result.spotlightHeight);
       await page.screenshot({ path: join(output, 'campaigns-' + width + '.png'), fullPage: true });
       await page.locator('.arcade-campaign-rotation > summary').click();
       assert.equal(await page.locator('.arcade-campaign-rotation').evaluate(n => n.open), true);

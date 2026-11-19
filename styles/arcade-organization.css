@@ -174,7 +174,7 @@
 
 /* Focused Campaigns tab layout. */
 .arcade-campaign-spotlight { display:grid;grid-template-columns:minmax(150px,30%) minmax(0,1fr);align-items:center;gap:24px; }
-.arcade-campaign-spotlight-art { width:100%;max-width:275px;aspect-ratio:1;object-fit:contain;border-radius:12px;background:#0c2928; }
+.arcade-campaign-spotlight-art { width:100%;max-width:275px;height:auto;aspect-ratio:1;object-fit:contain;border-radius:12px;background:#0c2928; }
 .arcade-campaign-spotlight-copy { min-width:0; }
 .arcade-campaign-spotlight-copy h4 { margin:12px 0;color:#f4dda0;font-size:clamp(1.35rem,3vw,1.95rem); }
 .arcade-campaign-spotlight-copy > p:not(.arcade-campaign-footnote) { margin:0 0 15px; }
