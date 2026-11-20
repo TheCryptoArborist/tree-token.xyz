@@ -1,3 +1,49 @@
+# Gold/Silver Ratio correction — published and verified 2026-11-20 UTC
+
+Current locked production is `6affb404f25e798bc619e2a8`, published at
+`2026-11-20T02:48:42.578Z`. Reviewed source
+`31909de7bce24b2deda7f7855521e06a4e955f95` merged through PR244 as
+`32cc4aadf536b5fc55aa6b56d9ec6ef6cd3c8643`; the complete merged source tree is
+`429d5a8f6467598001bb7caf214f5d6d34400226`. Publication workflow
+`44663246197` completed successfully and verified canonical asset delivery,
+the complete inventory, protected configuration and production lock at
+`2026-11-20T02:48:49.792Z`.
+
+**Market Caps** at `/market-insights/` now uses TradingView's dedicated
+**Gold/Silver Ratio** index, `TVC:GOLDSILVER`, after the Gold and Silver choices.
+The label, source link, reading guide and copied summary are corrected.
+The guide explains that a ratio of 80 means one troy ounce of gold is worth
+about 80 troy ounces of silver, and that a falling ratio means silver is gaining
+value relative to gold. This is a relative-value comparison; it does not by
+itself establish a rise in silver's U.S. dollar price.
+
+The fresh baseline was `6affb0e47dc837eae9bdc12d`, the preceding precious-metals
+release. Only `/market-insights/index.html` and
+`/market-insights/insights.js` changed. The release preserves **623 other static
+paths, all 50 complete backend records, five schedules**, full runtime settings,
+protected configuration and site snippets. Current production contains
+**625 static paths and 50 backend records**.
+
+All nine preservation guard tests passed. Provider-mocked checks verified the
+choices, correct symbols and source links, guide visibility, keyboard behavior
+and layouts at 320, 390, 768 and 1363 pixels. Separate actual-provider review
+confirmed populated Gold, Silver and Gold/Silver charts. A cloud-browser visit
+to the exact candidate verified the real 3M range control. The canonical page
+was opened after publication and showed the corrected label, explanation and
+populated native ratio data. No wallet or payment actions were used.
+
+Release evidence: `production/gold-silver-ratio-release-20261120.json`.
+Implementation: https://github.com/TheCryptoArborist/tree-token.xyz/pull/244
+Publication: https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44663246197
+Release procedure: `docs/precious-metals-release.md`.
+
+Capture the actual current live inventory afresh before any future release.
+The existing release script's baseline hashes describe this completed
+correction's input; update and review them for a new operation. Do not replace
+current production with an earlier release or the historical snapshot build.
+
+---
+
 # Stablecoin Dominance — published and verified 2026-11-20 UTC
 
 Current locked production is `6aff8d6c44e257067443ba98`, published at
