@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>NFTree #2720 · Complete the redemption</title>
+  <style>
+    :root{color-scheme:dark;font:16px/1.55 system-ui,sans-serif;background:#0b1713;color:#e7f1e9}
+    *{box-sizing:border-box}body{margin:0}main{max-width:790px;margin:auto;padding:34px 20px 60px}
+    header{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:30px}
+    .brand{font-weight:800;letter-spacing:.07em;color:#bbdc7b;font-size:.88rem;text-decoration:none}
+    .tag{font-size:.7rem;border:1px solid #46624b;padding:5px 10px;border-radius:20px;color:#c1d7be;text-align:center}
+    h1{font-size:clamp(2rem,5vw,2.8rem);line-height:1.15;margin:10px 0 16px}h2{font-size:1.2rem;margin:0 0 12px}
+    p{margin:12px 0}.lead{color:#bccdbf;max-width:65ch}.small{font-size:.86rem;color:#b4c7ba}
+    section{background:#14271e;border:1px solid #35513c;border-radius:18px;padding:24px;margin:22px 0}
+    .progress{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:0;margin:24px 0}
+    .progress li{padding:14px;border:1px solid #35513c;border-radius:12px;background:#112219;font-size:.84rem}
+    .progress strong,.progress span{display:block}.progress strong{color:#d5edaa;margin-bottom:4px}.progress span{color:#b4c7ba}
+    .progress .next{border-color:#7c9855;background:#192a1b}
+    dl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}dt{color:#afc5b5}dd{margin:0;text-align:right;font-weight:650}
+    code{font-size:.8rem;overflow-wrap:anywhere;word-break:break-word;color:#d8e6cb}.wallet{padding:12px;border:1px solid #45604b;border-radius:10px;margin:16px 0;overflow-wrap:anywhere}
+    .consent{display:flex;align-items:flex-start;gap:12px;margin:22px 0}.consent input{width:20px;height:20px;flex-shrink:0;margin-top:3px;accent-color:#bddf78}
+    button{border:0;border-radius:10px;background:#bddf78;color:#15220f;font:700 1rem system-ui;min-height:48px;max-width:100%;padding:12px 18px;cursor:pointer}
+    button:disabled{opacity:.4;cursor:not-allowed}.secondary{background:#294331;color:#e7f1e9}.actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+    a{color:#c1e582;overflow-wrap:anywhere}details{margin-top:20px}summary{cursor:pointer;color:#c2d8bc}
+    #status{white-space:pre-wrap;overflow-wrap:anywhere;min-height:52px}#storage-status{color:#ffcf9a;overflow-wrap:anywhere}
+    .receipt-label{display:block;font-size:.9rem;margin:20px 0 8px}.receipt-input{width:100%;min-height:48px;background:#0b1713;border:1px solid #45604b;border-radius:8px;color:inherit;font:inherit;padding:10px;margin-bottom:14px}
+    .evidence{display:flex;gap:10px 20px;flex-wrap:wrap;margin:18px 0 0;font-size:.86rem}footer{color:#9db2a3;font-size:.8rem;padding-top:12px}
+    [hidden]{display:none!important}a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #fff;outline-offset:4px}
+    @media(max-width:500px){main{padding:24px 16px 45px}header{align-items:flex-start}.brand{font-size:.76rem;max-width:140px}.tag{font-size:.65rem;max-width:135px}section{padding:18px}.progress{grid-template-columns:1fr;gap:8px}.progress li{padding:11px 14px}.progress strong{margin:0}.progress span{font-size:.8rem}dl{grid-template-columns:1fr;gap:6px}dt:not(:first-child){margin-top:10px}dd{text-align:left}}
+  </style>
+</head>
+<body>
+<main>
+  <header><a class="brand" href="/play/">NFTREE / TREE ARCADE</a><span class="tag">ORIGINAL NFT · FINAL ACKNOWLEDGEMENT</span></header>
+  <h1>Complete the redemption.</h1>
+  <p class="lead">NFTree #2720 was returned to your Sui wallet. Send the final acknowledgement so BNB can retire the locked pass.</p>
+  <ol class="progress" aria-label="Redemption progress">
+    <li><strong>1. Redemption sent</strong><span>Confirmed on BNB</span></li>
+    <li><strong>2. NFT returned</strong><span>Delivered to the Sui wallet ending 45c4</span></li>
+    <li class="next"><strong>3. Retire the pass</strong><span id="pass-stage">Awaiting your acknowledgement</span></li>
+  </ol>
+  <section>
+    <h2>What you’re approving</h2>
+    <dl>
+      <dt>Send from</dt><dd>Sui mainnet</dd>
+      <dt>Deliver to</dt><dd>BNB Smart Chain mainnet</dd>
+      <dt>Purpose</dt><dd>Acknowledge the NFT return</dd>
+      <dt>Result after delivery</dt><dd>BNB pass #1 is retired</dd>
+      <dt>LayerZero message fee</dt><dd id="message-fee">Get a fresh quote below</dd>
+      <dt>Estimated net gas</dt><dd id="gas-fee">Get a fresh quote below</dd>
+      <dt>Estimated total</dt><dd id="total-fee">Get a fresh quote below</dd>
+    </dl>
+    <p>This approval pays the SUI message fee and network gas. NFTree #2720 stays in your wallet. The BNB pass remains locked until the acknowledgement is delivered.</p>
+    <p class="small">Your wallet selects gas and displays the final budget. The page refreshes its checks before opening the approval.</p>
+    <p class="small">Sui dev wallet</p><code id="expected">0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4</code>
+    <div class="evidence">
+      <a href="https://bscscan.com/tx/0xa33612db18691d9805ebbc69ac24501d6e4476bd4edf2476b9b9b1710c50fe6f" target="_blank" rel="noopener noreferrer">BNB redemption receipt</a>
+      <a href="https://layerzeroscan.com/tx/0xa33612db18691d9805ebbc69ac24501d6e4476bd4edf2476b9b9b1710c50fe6f" target="_blank" rel="noopener noreferrer">LayerZero delivery</a>
+      <a href="https://suivision.xyz/txblock/Ay5gtMkYp5mjYidC3TJn4YuJLKYcHLg3Yxm8qRhTy9mU" target="_blank" rel="noopener noreferrer">Sui NFT return</a>
+      <a href="https://suivision.xyz/object/0x046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba" target="_blank" rel="noopener noreferrer">View NFTree #2720</a>
+    </div>
+    <details>
+      <summary>Transaction details and fee limits</summary>
+      <p class="small">The message fee must be at most 0.5 SUI. The simulation must keep gross gas and its gas budget at or below 0.1 SUI. Your wallet displays and controls the final gas budget. These are limits; the current quote appears above after simulation.</p>
+      <p>Original NFTree #2720</p><code id="nft"></code>
+      <p>Sui package</p><code id="package"></code>
+      <p>Sui vault</p><code id="vault"></code>
+      <p>BNB adapter</p><code id="adapter"></code>
+      <p>BNB pass contract</p><code id="pass"></code>
+      <p>Redemption request</p><code id="request"></code>
+      <p>Acknowledgement message GUID</p><code id="guid"></code>
+      <p class="small">This one-time acknowledgement uses the original NFT’s route and fixed recipient. It retires the pass after authenticated delivery on BNB.</p>
+    </details>
+  </section>
+  <section>
+    <h2>Connect your Sui wallet</h2>
+    <p>Open in Brave with Slush. Select the dev account ending <strong>45c4</strong> on <strong>Sui mainnet</strong>.</p>
+    <div class="actions"><button id="connect-wallet" type="button">Connect wallet</button><button id="disconnect" type="button" class="secondary" hidden>Disconnect</button></div>
+    <p id="discovery" class="small">Detecting Sui wallets…</p>
+    <div id="wallet-list" class="actions"></div>
+    <div id="wallet-help" class="small"><p>If Slush is missing, unlock it and check that the extension is enabled for this site.</p><button id="reload-wallets" type="button" class="secondary">Reload wallet detection</button></div>
+    <p id="wallet-status" class="wallet small">No wallet connected.</p>
+  </section>
+  <section>
+    <h2>Review the acknowledgement</h2>
+    <p>Check the NFT return, locked BNB pass, delivery settings and current fee. Simulation prepares the approval without spending funds.</p>
+    <button id="quote" type="button" class="secondary" disabled>Simulate acknowledgement</button>
+    <p id="quote-status" class="small">Checks can take a few minutes. A completed quote is valid for two minutes.</p>
+    <label class="consent"><input id="reviewed" type="checkbox" disabled><span>I reviewed the acknowledgement, SUI message fee and gas estimate. I want BNB pass #1 retired when this message is delivered.</span></label>
+    <div class="actions"><button id="configure" type="button" disabled>Open wallet to acknowledge release</button><button id="check-receipt-top" type="button" class="secondary">Check acknowledgement receipt</button></div>
+    <p id="status" role="status" aria-live="polite">Connect Slush, simulate, then review before signing.</p>
+    <p id="storage-status" class="small" role="alert" hidden></p>
+  </section>
+  <section id="receipt-section">
+    <h2>Acknowledgement receipt</h2>
+    <div id="receipt" hidden>
+      <p><code id="digest"></code></p>
+      <p id="receipt-status"></p>
+      <p id="pass-result" class="small"></p>
+      <div class="actions"><button id="copy" type="button" class="secondary">Copy transaction digest</button><a id="explorer" target="_blank" rel="noopener noreferrer">View Sui transaction</a></div>
+    </div>
+    <p class="small">After approval, the Sui receipt confirms that the acknowledgement was sent. Final completion also requires verified delivery and pass retirement on BNB.</p>
+    <p class="small">If the wallet response is delayed, copy the transaction digest from Slush and check it here. A saved or pending request blocks another send. Receipt checks work without a wallet connection.</p>
+    <label class="receipt-label" for="receipt-input">Sui acknowledgement transaction digest</label>
+    <input id="receipt-input" class="receipt-input" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Paste the transaction digest from Slush">
+    <button id="check-receipt" type="button" class="secondary">Check acknowledgement receipt</button>
+  </section>
+  <footer>Original NFTree #2720 redemption trial · Sui → BNB acknowledgement. Return the acknowledgement digest to the conversation for the final verification record.</footer>
+</main>
+<script type="module" src="./app.js?v=original-ack-1"></script>
+</body>
+</html>

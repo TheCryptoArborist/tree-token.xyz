@@ -1,0 +1,68 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {REPLACED_HASHES,ORIGINAL_CHANGES,REUSED_WALLET_PATH,REUSED_WALLET_SHA1,BASELINE_STATIC_FILES,validateBaseline,assembleFiles,compareBackend,functionsConfig,assertNewCandidate,MULTICHAIN_PATHS,SITE_ID,BASELINE_ID,AUDITED_STALE_DEPLOYS,isAuditedInactiveDeploy} from '../scripts/release-original-ack.mjs';
+const walletBaseline={[REUSED_WALLET_PATH]:REUSED_WALLET_SHA1};
+const overlays=()=>MULTICHAIN_PATHS.map((path,i)=>({path,source:path.slice(1),sha1:String(i+1).repeat(40)}));
+function backend(){return {id:BASELINE_ID,site_id:SITE_ID,context:'production',functions_region:'cmh',available_functions:Array.from({length:50},(_,i)=>({n:'test-'+i,d:'a'.repeat(64),id:'id-'+i,oid:'oid-'+i,a:'account',c:'created',r:'nodejs22.x',rg:'us-east-2',m:1024,im:'stream',s:100,bd:{bootstrapVersion:'2.24.0'},ro:[],tr:{action:'keep'}})),function_schedules:Array.from({length:5},(_,i)=>({name:'test-'+i,cron:'0 0 * * *'}))};}
+test('only reviewed acknowledgement-page additions, all other paths and bytes retained',()=>{const baseline={...walletBaseline,'/index.html':'a'.repeat(40),'/play/index.html':'b'.repeat(40),'/_headers':'c'.repeat(40),...REPLACED_HASHES};const result=assembleFiles(baseline,overlays());for(const [p,h]of Object.entries(baseline))if(!ORIGINAL_CHANGES.includes(p))assert.equal(result.files[p],h);assert.deepEqual(result.changedOriginals,[...ORIGINAL_CHANGES].sort());assert.deepEqual(result.addedPaths,MULTICHAIN_PATHS.filter(p=>!ORIGINAL_CHANGES.includes(p)).sort());});
+test('refuses unrelated uploads, existing acknowledgement paths and missing overlays',()=>{const b={...walletBaseline,'/index.html':'a'.repeat(40),...REPLACED_HASHES};assert.throws(()=>assembleFiles(b,[...overlays(),{path:'/other.html',source:'other.html',sha1:'d'.repeat(40)}]));assert.throws(()=>assembleFiles({...b,[MULTICHAIN_PATHS[0]]:'f'.repeat(40)},overlays()));assert.throws(()=>assembleFiles(b,overlays().slice(1)));});
+test('requires the already-published wallet module and refuses a second vendor upload',()=>{
+  const b={...walletBaseline,'/index.html':'a'.repeat(40)};
+  assert.throws(()=>assembleFiles({'/index.html':'a'.repeat(40)},overlays()),/existing Sui wallet module/);
+  assert.throws(()=>assembleFiles({...b,[REUSED_WALLET_PATH]:'f'.repeat(40)},overlays()),/existing Sui wallet module/);
+  assert.throws(()=>assembleFiles(b,[...overlays(),{path:'/play/multichaintest/original/sui/ack/wallet-vendor.js',source:'duplicate.js',sha1:'d'.repeat(40)}]),/Unapproved new public path/);
+});
+test('the freshly captured selected baseline must contain all 646 current static paths',()=>{
+  const files=[{path:REUSED_WALLET_PATH,sha:REUSED_WALLET_SHA1},...Array.from({length:BASELINE_STATIC_FILES-1},(_,i)=>({path:'/preserved/'+i+'.js',sha:'a'.repeat(40)}))];
+  const b={site:{id:SITE_ID,account_id:ACCOUNT_ID},deploy:{...backend(),state:'ready',locked:true},files};
+  assert.equal(Object.keys(validateBaseline(b)).length,646);
+  assert.throws(()=>validateBaseline({...b,files:files.slice(1)}),/Incomplete or unexpected/);
+  assert.throws(()=>validateBaseline({...b,files:[...files,{path:'/unexpected.js',sha:'b'.repeat(40)}]}),/Incomplete or unexpected/);
+  assert.throws(()=>validateBaseline({...b,deploy:{...b.deploy,id:'f'.repeat(24)}}),/newly captured current baseline/);
+});
+test('complete function records, runtime, package hashes and schedules protected',()=>{const expected=backend();compareBackend(structuredClone(expected),expected);for(const field of ['d','id','oid','r','rg','m','s','im','bd','tr','ro']){const actual=structuredClone(expected);actual.available_functions[0][field]='changed';assert.throws(()=>compareBackend(actual,expected));}const schedule=structuredClone(expected);schedule.function_schedules[0].cron='changed';assert.throws(()=>compareBackend(schedule,expected));const removed=backend();removed.available_functions.pop();assert.throws(()=>compareBackend(removed,expected));});
+test('function configuration retains traffic controls without adding runtime fields',()=>{const c=functionsConfig(backend());assert.equal(Object.keys(c).length,50);assert.deepEqual(c['test-0'].traffic_rules,{action:'keep'});assert(!('runtime' in c['test-0']));});
+test('an existing baseline cannot be published as the new candidate',()=>{assert.throws(()=>assertNewCandidate({schemaVersion:1,siteId:SITE_ID,id:BASELINE_ID},{},{}));});
+
+import {assertServedContent,ARBORETUM_SNIPPET} from '../scripts/rootcaster-served-content.mjs';
+test('served page accepts original bytes and only the exact existing body-end snippet',()=>{const original=Buffer.from('<html><body>Gallery</body></html>');assertServedContent('index.html',original,original);assertServedContent('index.html',Buffer.from('<html><body>Gallery'+ARBORETUM_SNIPPET+'</body></html>'),original);});
+test('served page rejects changed copy, modified scripts, extra scripts and unexpected assets',()=>{const original=Buffer.from('<html><body>Gallery</body></html>');for(const actual of ['<html><body>Changed'+ARBORETUM_SNIPPET+'</body></html>','<html><body>Gallery'+ARBORETUM_SNIPPET.replace('treegrow.xyz','other.invalid')+'</body></html>','<html><body>Gallery<script>unexpected()</script>'+ARBORETUM_SNIPPET+'</body></html>'])assert.throws(()=>assertServedContent('index.html',Buffer.from(actual),original));assert.throws(()=>assertServedContent('rootcaster.css',Buffer.from('different'),Buffer.from('original')));});
+
+test('only the ten exact historical orphan records bypass the queue guard',()=>{
+  assert.equal(AUDITED_STALE_DEPLOYS.size,10);
+  for(const [id,[state,created_at,updated_at,context,commit_ref]] of AUDITED_STALE_DEPLOYS){
+    const record={id,site_id:SITE_ID,state,created_at,updated_at,context,commit_ref,
+      build_id:null,published_at:null,locked:null};
+    assert(isAuditedInactiveDeploy(record),id+' should match its exact reviewed state');
+    for(const mutation of [{state:'building'},{updated_at:'2026-11-10T12:00:00.000Z'},
+      {build_id:'live-build'},{published_at:'2026-11-10T12:00:00.000Z'},
+      {locked:true},{site_id:'other-site'},{commit_ref:'unexpected'}]){
+      assert(!isAuditedInactiveDeploy({...record,...mutation}),id+' must reject changed record');
+    }
+    assert(!isAuditedInactiveDeploy({...record,id:'6af2a1f00000000000000000'}));
+  }
+});
+
+import {moduleDependencies} from '../scripts/multichain-preview-delivery.mjs';
+test('production import closure refuses a wallet module present only in preview builds',()=>{
+ const base='/play/multichaintest/setup/sui/register/';
+ const source="import {createDAppKit} from './wallet-vendor.js';\nimport {C} from './core.js';";
+ assert.throws(()=>moduleDependencies(source,base+'app.js',{[base+'core.js']:'a'.repeat(40)}),/Missing production module/);
+ assert.deepEqual(moduleDependencies(source,base+'app.js',{[base+'core.js']:'a'.repeat(40),[base+'wallet-vendor.js']:'b'.repeat(40)}),[base+'wallet-vendor.js',base+'core.js']);
+});
+test('acknowledgement module closure resolves the preserved shared Sui wallet bundle',()=>{
+ const source="import {createDAppKit} from '../../../setup/sui/ack/wallet-vendor.js';\nimport {C} from './core.js';";
+ const pathname='/play/multichaintest/original/sui/ack/app.js';
+ const core='/play/multichaintest/original/sui/ack/core.js';
+ const files={...walletBaseline,[core]:'b'.repeat(40)};
+ assert.deepEqual(moduleDependencies(source,pathname,files),[REUSED_WALLET_PATH,core]);
+ assert.throws(()=>moduleDependencies(source,pathname,{[core]:'b'.repeat(40)}),/Missing production module/);
+});
+
+import {protectCurrentBaseline,ACCOUNT_ID} from '../scripts/release-original-ack.mjs';
+test('protection locks only the still-current ready published baseline after a complete queue check',async()=>{
+ const d={...backend(),state:'ready',published_at:'2026-11-20T15:10:41Z',locked:false},calls=[];
+ const api=async(p,method='GET')=>{calls.push([p,method]);if(p===`deploys/${BASELINE_ID}/lock`){d.locked=true;return{}}if(p===`sites/${SITE_ID}`)return{id:SITE_ID,account_id:ACCOUNT_ID,published_deploy:{id:BASELINE_ID,locked:d.locked}};if(p===`deploys/${BASELINE_ID}`)return structuredClone(d);if(p.includes('/deploys?'))return[{id:BASELINE_ID,state:'ready'}];throw Error(p)};
+ assert.deepEqual(await protectCurrentBaseline(api),{baselineId:BASELINE_ID,locked:true});assert.equal(calls.filter(x=>x[1]==='POST').length,1);
+});
+test('protection refuses moved baseline, unpublished deploy and any queued build without changing a lock',async()=>{for(const mode of ['moved','unpublished','queued']){let wrote=false;const api=async(p,method='GET')=>{if(method!=='GET'){wrote=true;throw Error('unexpected write')};if(p===`sites/${SITE_ID}`)return{id:SITE_ID,account_id:ACCOUNT_ID,published_deploy:{id:mode==='moved'?'0'.repeat(24):BASELINE_ID,locked:false}};if(p===`deploys/${BASELINE_ID}`)return{...backend(),state:'ready',published_at:mode==='unpublished'?null:'now',locked:false};if(p.includes('/deploys?'))return[{id:'new-build',state:'building'}];return{id:'new-build',state:'building'}};await assert.rejects(()=>protectCurrentBaseline(api));assert.equal(wrote,false)}});

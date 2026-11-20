@@ -1,0 +1,35 @@
+{
+  "checkedAt": "2026-11-20T17:34:46.942Z",
+  "mode": "read_only_eth_call",
+  "block": "0x807e8c0",
+  "guid": "0xe9b1c9627995eb8c09471150e121847770e7b28d9d705acd7b2a7f42b5a44c8c",
+  "payload": "0x020345bf08499784ea9ff658937165a9449d509aa37de47a728af44e903387f3ca2c046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba76f08f56cc030f0b7db560cf46df3fee212d1ddcfa2c8135d1fbee4e85e38497485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+  "gasLimit": "200000",
+  "target": "0x90b5292a5074CfDD665C726b433cc0A97e0dA6ab",
+  "impersonatedCaller": "0x1a44076050125825900e736c501f859c50fe728c",
+  "valid": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": "0x"
+  },
+  "wrongNonce": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "error": {
+      "code": 3,
+      "message": "execution reverted",
+      "data": "0x6dac6a09"
+    }
+  },
+  "wrongSender": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "error": {
+      "code": 3,
+      "message": "execution reverted",
+      "data": "0x6dac6a09"
+    }
+  },
+  "assistantSubmittedTransactions": 0,
+  "note": "Read-only callback simulation using an impersonated endpoint caller. This proves callback acceptance and authentication/nonce rejection at the recorded block, not actual acknowledgement sending, DVN verification, BNB delivery, or a state change."
+}
