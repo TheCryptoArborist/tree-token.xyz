@@ -1,5 +1,11 @@
 # FK-02 recovery and verification — November 19, 2026
 
+## Subsequent gait review — visual acceptance failed
+
+Peter reported that a leg moves toward the body's center and then returns instead of walking naturally. Replayed all four directions and stepped through their eight-frame walk sequences in the live viewer. The south view has overly narrow/crossing foot paths; the north view has cramped stepping beneath the cape. East and west repeat similar stride shapes without a convincing alternating support-leg/weight-transfer cycle. The motion reads as shuffling or marching in place rather than a natural walk.
+
+The earlier technical checks remain valid, but they do not establish gait quality. FK-02 is not visually accepted. Next work is a focused walk-cycle correction in all four directions, with clear alternating contact, passing and push-off poses, stable leg identity/proportions, and coherent weight transfer. Inspect the wrap from frame 8 to frame 1 and compare normal/half-speed playback before acceptance. Preserve recovered sources as the comparison baseline. No artwork has been replaced during this review; FK-03 remains pending.
+
 Branch: `feature/forest-kingdoms-prologue`. Recovery branch: `recovery/forest-kingdoms-handoff`.
 Recovered checkpoint: `92ef91d8d999b0a7cb4b8e93b86b0377e5925acb` (includes `97fc544` and `6bc9119`).
 This verification commit follows that checkpoint; resolve it with `git log -1 --format=%H -- docs/forest-kingdoms/FK02_VERIFICATION.md`.
