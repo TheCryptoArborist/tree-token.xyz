@@ -33,18 +33,24 @@ const screenshotDirectory = '.netlify/market-overview-live';
 await fs.mkdir(screenshotDirectory, { recursive: true });
 
 function ohlcFromText(text) {
-  const lines = text.split(/\r?\n/).map(line => line.trim()).filter(Boolean), values = {};
-  let previous = -1;
-  for (const key of ['O', 'H', 'L', 'C']) {
-    const index = lines.findIndex((line, i) => i > previous && line === key);
-    if (index < 0) return null;
-    const raw = (lines[index + 1] || '').replace(/[\s\u00a0\u202f]/g, '');
-    if (!/^\d[\d,]*(?:\.\d+)?[KMBT]?%?$/i.test(raw)) return null;
-    const amount = Number(raw.replace(/[,KMBT%]/gi, ''));
-    if (!Number.isFinite(amount) || amount <= 0) return null;
-    values[key] = raw; previous = index;
+  const lines = text.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+  // The symbol avatar can also be the letter O. Accept only a complete native
+  // legend containing four consecutive OHLC labels and positive values.
+  for (let start = 0; start < lines.length; start++) {
+    if (lines[start] !== 'O') continue;
+    const values = {};
+    for (const [offset, key] of ['O', 'H', 'L', 'C'].entries()) {
+      const index = start + offset * 2;
+      if (lines[index] !== key) break;
+      const raw = (lines[index + 1] || '').replace(/[\s\u00a0\u202f]/g, '');
+      if (!/^\d[\d,]*(?:\.\d+)?[KMBT]?%?$/i.test(raw)) break;
+      const amount = Number(raw.replace(/[,KMBT%]/gi, ''));
+      if (!Number.isFinite(amount) || amount <= 0) break;
+      values[key] = raw;
+    }
+    if (Object.keys(values).length === 4) return values;
   }
-  return values;
+  return null;
 }
 
 async function chartFrames(page) {
@@ -93,7 +99,13 @@ try {
     if (!await page.locator('[data-tv-symbol="' + item.key + '"]').isVisible()) await page.locator('[data-market-group="' + item.group + '"]').click();
     await page.locator('[data-tv-symbol="' + item.key + '"]').click();
     assert.equal(await page.locator('[data-tv-symbol="' + item.key + '"]').getAttribute('aria-pressed'), 'true');
-    const config = JSON.parse(await page.locator('#mi-tv-stage script[src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js"]').textContent());
+    // TradingView replaces its loader script with the real iframe. Inspect the
+    // rendered provider request instead of waiting for that removed script.
+    const embed = page.locator('#mi-tv-stage iframe[title="advanced chart TradingView widget"]').first();
+    await embed.waitFor({ state: 'attached', timeout: 35000 });
+    const embedURL = new URL(await embed.getAttribute('src'));
+    assert(['https://www.tradingview-widget.com', 'https://www.tradingview.com'].includes(embedURL.origin), 'Official TradingView iframe is required');
+    const config = JSON.parse(decodeURIComponent(embedURL.hash.slice(1)));
     assert.equal(config.symbol, item.symbol, 'Selected chart request must match reviewed symbol');
     const loaded = await waitForPopulatedChart(page, item);
     const sourcePath = '/symbols/CRYPTOCAP-' + item.symbol.split(':')[1] + '/';
