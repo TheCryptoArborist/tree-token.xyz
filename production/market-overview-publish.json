@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "action": "publish-market-overview",
+  "sourceCommit": "21861aea559c59bd67a371c1f00811fd09e92896",
+  "sourceTree": "a384970a220343e18ce37a19b0f27986d204aae2",
+  "mainCommit": "70dbf26e010238dcbe18722b6d6178bf62a6084b",
+  "expectedDeploy": "6affc6cb821278e5a2a481e2",
+  "candidateId": "6affc81a0ebcfd39b2efbbb0",
+  "planSha256": "67840c5e55443e6f2b489fddfb741235e1568c28a6f86e1137ea9bfd4a83ce7f",
+  "candidateRunId": 44672426880,
+  "candidateArtifactId": 14599684796,
+  "candidateArtifactSHA256": "7cd3c2511a0682cd069c09760e729327fa06f03c8fabb7fddba1b1bb29749114",
+  "browserReview": "production/market-overview-browser-review.json"
+}

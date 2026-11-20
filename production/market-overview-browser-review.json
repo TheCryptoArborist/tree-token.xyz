@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 1,
+  "result": "passed",
+  "testOnly": false,
+  "sourceCommit": "21861aea559c59bd67a371c1f00811fd09e92896",
+  "sourceTree": "a384970a220343e18ce37a19b0f27986d204aae2",
+  "candidateId": "6affc81a0ebcfd39b2efbbb0",
+  "planSha256": "67840c5e55443e6f2b489fddfb741235e1568c28a6f86e1137ea9bfd4a83ce7f",
+  "origin": "https://6affc81a0ebcfd39b2efbbb0--tree-token.netlify.app",
+  "checkedAt": "2026-11-20T04:10:41.076Z",
+  "noWalletOrPaymentActions": true,
+  "provider": "TradingView",
+  "symbols": [
+    "CRYPTOCAP:OTHERS",
+    "CRYPTOCAP:ETH.D",
+    "CRYPTOCAP:STABLE.C",
+    "CRYPTOCAP:TOTALDEFI",
+    "CRYPTOCAP:TOTAL3ESBTC"
+  ],
+  "viewportWidths": [
+    1363
+  ],
+  "checks": {
+    "othersChartRendered": true,
+    "ethDominanceRendered": true,
+    "stablecoinMarketCapRendered": true,
+    "defiMarketCapRendered": true,
+    "altcoinsVsBtcRendered": true,
+    "populatedData": true,
+    "chartInteraction": true,
+    "sourceLinks": true
+  },
+  "charts": [
+    {
+      "key": "OTHERS",
+      "symbol": "CRYPTOCAP:OTHERS",
+      "evidence": {
+        "title": "TradingView Chart Widget",
+        "canvasCount": 2,
+        "textSample": "1m\n30m\n1h\nD\nIndicators\nO\nCrypto Total Market Cap Excluding Top 10, $\n1D\nCRYPTOCAP\nOpen\n1s updates\nO\n175.3 B\nH\n176.4 B\nL\n171.27 B\nC\n172.04 B\n−3.22 B (−1.83%)\n1D\n5D\n1M\n3M\n6M\nYTD\n1Y\n5Y\nAll\n04:10:32 UTC",
+        "ohlc": {
+          "O": "175.3B",
+          "H": "176.4B",
+          "L": "171.27B",
+          "C": "172.04B"
+        },
+        "providerFrameOrigin": "https://www.tradingview-widget.com",
+        "observedAt": "2026-11-20T04:10:33.168Z"
+      },
+      "source": "https://www.tradingview.com/symbols/CRYPTOCAP-OTHERS/",
+      "attribution": "https://www.tradingview.com/symbols/CRYPTOCAP-OTHERS/?utm_source=6affc81a0ebcfd39b2efbbb0--tree-token.netlify.app&utm_medium=widget_new&utm_campaign=advanced-chart",
+      "screenshot": ".netlify/market-overview-live/others.png"
+    },
+    {
+      "key": "ETHD",
+      "symbol": "CRYPTOCAP:ETH.D",
+      "evidence": {
+        "title": "TradingView Chart Widget",
+        "canvasCount": 2,
+        "textSample": "1m\n30m\n1h\nD\nIndicators\nE\nMarket Cap ETH Dominance, %\n1D\nCRYPTOCAP\nOpen\n1s updates\nO\n10.19%\nH\n10.19%\nL\n10.11%\nC\n10.11%\n−0.07 (−0.73%)\n1D\n5D\n1M\n3M\n6M\nYTD\n1Y\n5Y\nAll\n04:10:34 UTC",
+        "ohlc": {
+          "O": "10.19%",
+          "H": "10.19%",
+          "L": "10.11%",
+          "C": "10.11%"
+        },
+        "providerFrameOrigin": "https://www.tradingview-widget.com",
+        "observedAt": "2026-11-20T04:10:34.813Z"
+      },
+      "source": "https://www.tradingview.com/symbols/CRYPTOCAP-ETH.D/",
+      "attribution": "https://www.tradingview.com/symbols/CRYPTOCAP-ETH.D/?utm_source=6affc81a0ebcfd39b2efbbb0--tree-token.netlify.app&utm_medium=widget_new&utm_campaign=advanced-chart",
+      "screenshot": ".netlify/market-overview-live/ethd.png"
+    },
+    {
+      "key": "STABLECAP",
+      "symbol": "CRYPTOCAP:STABLE.C",
+      "evidence": {
+        "title": "TradingView Chart Widget",
+        "canvasCount": 2,
+        "textSample": "1m\n30m\n1h\nD\nIndicators\nS\nCrypto Stablecoins Market Cap, $\n1D\nCRYPTOCAP\nOpen\n1s updates\nO\n291.49 B\nH\n291.55 B\nL\n291.44 B\nC\n291.51 B\n+94.05 M (+0.03%)\n1D\n5D\n1M\n3M\n6M\nYTD\n1Y\n5Y\nAll\n04:10:36 UTC",
+        "ohlc": {
+          "O": "291.49B",
+          "H": "291.55B",
+          "L": "291.44B",
+          "C": "291.51B"
+        },
+        "providerFrameOrigin": "https://www.tradingview-widget.com",
+        "observedAt": "2026-11-20T04:10:36.278Z"
+      },
+      "source": "https://www.tradingview.com/symbols/CRYPTOCAP-STABLE.C/",
+      "attribution": "https://www.tradingview.com/symbols/CRYPTOCAP-STABLE.C/?utm_source=6affc81a0ebcfd39b2efbbb0--tree-token.netlify.app&utm_medium=widget_new&utm_campaign=advanced-chart",
+      "screenshot": ".netlify/market-overview-live/stablecap.png"
+    },
+    {
+      "key": "DEFI",
+      "symbol": "CRYPTOCAP:TOTALDEFI",
+      "evidence": {
+        "title": "TradingView Chart Widget",
+        "canvasCount": 2,
+        "textSample": "1m\n30m\n1h\nD\nIndicators\nT\nCrypto Total DeFi Market Cap, $\n1D\nCRYPTOCAP\nOpen\n1s updates\nO\n65.22 B\nH\n65.68 B\nL\n63.83 B\nC\n64.19 B\n−1.02 B (−1.57%)\n1D\n5D\n1M\n3M\n6M\nYTD\n1Y\n5Y\nAll\n04:10:37 UTC",
+        "ohlc": {
+          "O": "65.22B",
+          "H": "65.68B",
+          "L": "63.83B",
+          "C": "64.19B"
+        },
+        "providerFrameOrigin": "https://www.tradingview-widget.com",
+        "observedAt": "2026-11-20T04:10:37.663Z"
+      },
+      "source": "https://www.tradingview.com/symbols/CRYPTOCAP-TOTALDEFI/",
+      "attribution": "https://www.tradingview.com/symbols/CRYPTOCAP-TOTALDEFI/?utm_source=6affc81a0ebcfd39b2efbbb0--tree-token.netlify.app&utm_medium=widget_new&utm_campaign=advanced-chart",
+      "screenshot": ".netlify/market-overview-live/defi.png"
+    },
+    {
+      "key": "ALTSBTC",
+      "symbol": "CRYPTOCAP:TOTAL3ESBTC",
+      "evidence": {
+        "title": "TradingView Chart Widget",
+        "canvasCount": 2,
+        "textSample": "1m\n30m\n1h\nD\nIndicators\nT\nRatio Total Market Cap Excluding BTC, ETH and Stablecoins to BTC\n1D\nCRYPTOCAP\nOpen\n1s updates\nO\n0.304146\nH\n0.304146\nL\n0.300970\nC\n0.300970\n−0.003151 (−1.04%)\n1D\n5D\n1M\n3M\n6M\nYTD\n1Y\n5Y\nAll\n04:10:39 UTC",
+        "ohlc": {
+          "O": "0.304146",
+          "H": "0.304146",
+          "L": "0.300970",
+          "C": "0.300970"
+        },
+        "providerFrameOrigin": "https://www.tradingview-widget.com",
+        "observedAt": "2026-11-20T04:10:39.178Z"
+      },
+      "source": "https://www.tradingview.com/symbols/CRYPTOCAP-TOTAL3ESBTC/",
+      "attribution": "https://www.tradingview.com/symbols/CRYPTOCAP-TOTAL3ESBTC/?utm_source=6affc81a0ebcfd39b2efbbb0--tree-token.netlify.app&utm_medium=widget_new&utm_campaign=advanced-chart",
+      "screenshot": ".netlify/market-overview-live/altsbtc.png"
+    }
+  ],
+  "observations": [
+    "All five new instruments displayed matching labels, chart canvases and populated open/high/low/close values in actual TradingView embeds.",
+    "The visible 3M range control was clicked on Altcoins vs. BTC and the provider chart continued to display populated data."
+  ],
+  "limitations": [
+    "This verifies rendering and chart controls at the review time. It does not audit TradingView market data or guarantee future provider availability."
+  ],
+  "browserVersion": "141.0.7390.37",
+  "interaction": {
+    "symbol": "CRYPTOCAP:TOTAL3ESBTC",
+    "control": "3M",
+    "action": "clicked the visible TradingView range control",
+    "populatedAfterInteraction": true,
+    "evidence": {
+      "title": "TradingView Chart Widget",
+      "canvasCount": 2,
+      "textSample": "1m\n30m\n1h\nD\nIndicators\nT\nRatio Total Market Cap Excluding BTC, ETH and Stablecoins to BTC\n1h\nCRYPTOCAP\nOpen\n1s updates\nO\n0.300653\nH\n0.300988\nL\n0.300653\nC\n0.300974\n+0.000324 (+0.11%)\n1D\n5D\n1M\n3M\n6M\nYTD\n1Y\n5Y\nAll\n04:10:40 UTC\n3 months in 1 hour intervals",
+      "ohlc": {
+        "O": "0.300653",
+        "H": "0.300988",
+        "L": "0.300653",
+        "C": "0.300974"
+      },
+      "providerFrameOrigin": "https://www.tradingview-widget.com",
+      "observedAt": "2026-11-20T04:10:40.903Z"
+    },
+    "controlAttributes": {
+      "class": "js-button-text text-zm3YRUFG"
+    }
+  }
+}
