@@ -44,6 +44,11 @@ try {
         assert(box && box.x>=0 && box.y>=0 && box.x+box.width<=width+1 && box.y+box.height<=height+1,selector+' must stay inside phone viewport');
         assert(box.height>=44,selector+' touch target is too short');
       }
+      assert(await page.locator('.unit-name').evaluateAll(nodes=>nodes.every(node=>{
+        const range=document.createRange();range.selectNodeContents(node);
+        const text=range.getBoundingClientRect(),button=node.closest('button').getBoundingClientRect();
+        return text.left>=button.left && text.right<=button.right;
+      })), 'Troop names must fit their cards');
       const box=await page.locator('#battle').boundingBox();
       const ratio=await page.locator('#battle').evaluate(c=>c.width/c.height);
       assert(Math.abs(ratio-box.width/box.height)<.005,'Mobile canvas must preserve character proportions');

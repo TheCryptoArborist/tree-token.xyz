@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
-// Prototype 0.6: only gameplay HTML and the new gait atlas are deployed.
+// Prototype 0.6: narrow-phone follow-up replaces only gameplay HTML.
 export const REPLACED_HASHES = {
-  '/play/tree-army/test/index.html': '1f34641f581d957c682c81ed8e8a8bf2dad6a5a4',
+  '/play/tree-army/test/index.html': '136d0ecae51b1d61307380b4484e707c8e7b95be',
 };
-export const ADDED_PATHS = ['/play/tree-army/test/assets/forest-walk.webp'];
+export const ADDED_PATHS = [];
 export const DELIVERY_PATHS = [...Object.keys(REPLACED_HASHES), ...ADDED_PATHS];
 // Preview builds also need assets already present in production. Keep this
 // catalog independent of the smaller, one-time publication allowlist.
@@ -12,7 +12,7 @@ export const PREVIEW_PATHS = [
   '/play/tree-army/test/assets/grove-battlefield.webp',
   '/play/tree-army/test/assets/forest-army.webp',
   '/play/tree-army/test/assets/tree-hero.webp',
-  ...ADDED_PATHS,
+  '/play/tree-army/test/assets/forest-walk.webp',
   '/play/tree-army/preview-gameplay.mp4',
   '/play/tree-army/preview-gameplay.webm',
   '/play/tree-army/preview-gameplay.jpg',

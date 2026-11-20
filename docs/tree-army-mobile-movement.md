@@ -35,3 +35,12 @@ against its current published SHA1; add only `assets/forest-walk.webp` beneath
 that playtest. Fresh full inventory, backend/runtime/configuration and snippet
 preservation are mandatory in the release workflow. Existing cabinet/video
 remain the prior actual-gameplay preview. No backend or dependency changes.
+
+Initial publication: PR #256, source `83332f28a15936387464a12fb830b00b2060cb4c`,
+deploy `6b0062b486ca536dd1768394`, workflow `44760037142`. Full inventory is in
+`production/tree-army-mobile-initial-release-20261120.json`: 640 static paths,
+638 unrelated paths preserved, all 50 backend records and five schedules.
+Live screenshot inspection caught a production-font fit issue on the Guardian
+card at 320px. The follow-up narrows portraits/text only below 361px and adds
+an assertion that rendered troop-name text stays inside each card. Its release
+plan replaces only the newly pinned HTML; the atlas is already published.
