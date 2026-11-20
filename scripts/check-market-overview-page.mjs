@@ -110,8 +110,12 @@ async function createPage(context, result) {
 }
 
 async function goto(page, suffix = '') {
-  const response = await page.goto(targetURL + suffix, { waitUntil: 'domcontentloaded', timeout: 30000 });
-  assert(response?.ok(), 'Market Insights page request failed');
+  const before = new URL(page.url()), destination = new URL(targetURL + suffix);
+  const hashOnly = before.origin === destination.origin && before.pathname === destination.pathname && before.search === destination.search && before.hash !== destination.hash;
+  const response = await page.goto(destination.href, { waitUntil: 'domcontentloaded', timeout: 30000 });
+  // Playwright returns null for a same-document fragment navigation. Require
+  // the exact expected URL in that case; all document requests must succeed.
+  assert(response ? response.ok() : hashOnly && page.url() === destination.href, 'Market Insights page request failed');
   await page.waitForFunction(() => !!document.querySelector('[data-mi-tab][aria-selected="true"]'));
 }
 
