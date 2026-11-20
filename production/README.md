@@ -1,3 +1,45 @@
+# Tree Army illustrated playtest and preview — published November 20, 2026
+
+Current locked production is `6b000d7e752506183abed5ad`, published and verified
+by workflow [44707502086](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44707502086)
+at 09:07 UTC (03:07 America/Chicago). Published source:
+`bb36b82ce841a1e5b3b95ab4497367f125f1f103`, through PRs #253 and #254.
+
+Tree Army: Defend the Grove now serves illustrated Prototype 0.5 at
+`/play/tree-army/test/`. One existing Coming Soon cabinet on `/play/` opens a
+10-second actual-gameplay preview in a keyboard/touch accessible modal. Its
+still is captured gameplay, not the separately referenced original concept.
+Hero/archer projectile origins were corrected with point-blank collision coverage.
+
+The fresh baseline was `6affc81a0ebcfd39b2efbbb0`: 631 static paths, 50 backend
+records, five schedules. Only the playtest HTML and Arcade organization module
+changed; eight named art/media/module/style files were added. The release
+preserved **629 unrelated static paths, all 50 complete backend records, five
+schedules**, runtime settings, environment/build configuration and site snippets.
+Current inventory: **639 static paths and 50 backend records**. No wallet,
+payment, access policy, reward, database or dependency change was published.
+
+Both candidate and canonical game/cabinet checks passed at 1440×1000, 390×844,
+320×740 and 844×390. They cover actual video decoding/duration, keyboard/touch
+open/close, focus return, playback pause, gameplay controls and required-artwork
+failure. CI used normal certificate verification. Separate local live visual
+inspection required accommodation for this cloud workspace's proxy certificate;
+it is not evidence about the public site's certificate. Canonical desktop and
+phone screenshots were inspected.
+
+Evidence: `production/tree-army-release-20261120.json` contains the complete
+published static inventory. The adjacent `tree-army-game-browser-20261120.json`
+and `tree-army-cabinet-browser-20261120.json` contain canonical results. Original
+workflow artifact 14615478901 has SHA256
+`e7f1f0a5f92f250f997d667be6e97b6c1a9b719d65da7938bf4874e2402b1de4`.
+Details and remaining art/animation work: `docs/tree-army-continuation.md`.
+
+Capture a fresh live inventory for every later release. Do not reuse the Tree
+Army publisher's one-time replacement/addition plan for another update without
+reviewing its exact hashes and paths. Never publish the historical root build.
+
+---
+
 # Market Overview — published and verified 2026-11-20 UTC
 
 Current locked production is `6affc81a0ebcfd39b2efbbb0`, published at
