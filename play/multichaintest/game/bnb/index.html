@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Tree Force ’89 · BNB sign-in test</title>
+<style>
+:root{color-scheme:dark;background:#0b1713;color:#e6f1e9;font:16px/1.55 system-ui,sans-serif}
+*{box-sizing:border-box}body{margin:0}main{max-width:770px;margin:auto;padding:24px 18px 56px}
+a{color:#c6e87f}header{display:flex;justify-content:space-between;gap:12px;align-items:center;padding-bottom:26px}
+.brand{font-size:.85rem;letter-spacing:.08em;font-weight:800}.tag{border:1px solid #587653;border-radius:99px;padding:5px 10px;color:#c1d7ba;font-size:.75rem;text-align:center}
+h1{font-size:clamp(1.9rem,5vw,2.8rem);line-height:1.15;margin:0 0 12px}
+.lead,.subtle{color:#bed0bd}.lead{max-width:60ch}
+section{background:#14271e;border:1px solid #385540;padding:20px;margin:22px 0;border-radius:16px}
+section h2{font-size:1.18rem;margin:0 0 8px}button{border:0;min-height:48px;padding:11px 16px;border-radius:10px;background:#c5e881;color:#15230e;font-weight:750;font:inherit;cursor:pointer}
+button.secondary{background:#294331;color:#eaf3e9}button:disabled{opacity:.45;cursor:not-allowed}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}#status,#result,#wallet{white-space:pre-wrap;overflow-wrap:anywhere}
+#status{padding:12px;border:1px solid #587653;border-radius:10px;min-height:55px}
+dl{display:grid;grid-template-columns:1fr 1fr;gap:8px}dt{color:#b3c8b5}dd{margin:0;text-align:right;font-weight:700}
+strong{color:#e3f0c2}.small{font-size:.85rem;color:#aabfb0}
+a:focus-visible,button:focus-visible{outline:3px solid white;outline-offset:3px}
+@media(max-width:450px){header{align-items:flex-start}.tag{max-width:145px}.actions{flex-direction:column}.actions button{width:100%}dl{grid-template-columns:1fr}dd{text-align:left}}
+</style></head><body>
+<main>
+<header><a class="brand" href="/play/">NFTREE / TREE ARCADE</a><span class="tag">BNB CHAIN · SIGN-IN TEST</span></header>
+<h1>Tree Force ’89 on BNB.</h1>
+<p class="lead">Test a BNB wallet sign-in without a Sui wallet. Signing a login message does not pay USDT, transfer assets, or unlock gameplay.</p>
+<section><h2>Test boundaries</h2><dl>
+<dt>Network</dt><dd>BNB Smart Chain (56)</dd>
+<dt>Sign-in</dt><dd>Personal message only</dd>
+<dt>BNB game access</dt><dd>Not yet enabled</dd>
+<dt>Retired pass #1</dt><dd>Cannot play</dd>
+</dl><p class="small">The original NFTree #2720 has returned to Sui. The BNB test pass is permanently retired. An approved active-backed entitlement is needed before gameplay integration.</p></section>
+<section><h2>1. Connect a BNB wallet</h2>
+<p class="subtle">Open in a browser with an EVM wallet such as an installed BNB-compatible extension. Switch to BNB Smart Chain manually if requested.</p>
+<div class="actions"><button id="connect" type="button">Connect BNB wallet</button><button id="status-button" class="secondary" type="button">Check sign-in status</button></div>
+<p id="wallet" class="small" role="status">No BNB wallet selected.</p>
+</section>
+<section><h2>2. Sign in for testing</h2>
+<p>One signature proves control of your selected BNB address. The nonce is one-time and expires after five minutes. The server keeps the session cookie private.</p>
+<div class="actions"><button id="sign" type="button" disabled>Sign a login message</button><button id="logout" type="button" class="secondary">Sign out of this test</button></div>
+<p id="status" role="status" aria-live="polite">Connect the BNB wallet to begin.</p>
+</section>
+<section><h2>3. Check access</h2>
+<p>Access remains disabled until the verified backing registry and active-pass rules are deployed. A successful sign-in is not gameplay authorization.</p>
+<div class="actions"><button id="access" class="secondary" type="button" disabled>Check test entitlement</button><button type="button" disabled>Start BNB game (not enabled)</button></div>
+<p id="result" class="small">No entitlement check yet.</p></section>
+<footer class="small">This isolated test never requests your seed phrase, a token approval or a payment. If a wallet security warning appears, stop and investigate before signing.</footer>
+</main><script type="module" src="./app.js?v=bnb-signin-test-1"></script></body></html>
