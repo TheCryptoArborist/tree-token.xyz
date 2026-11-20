@@ -32,7 +32,8 @@ jobs:
         with:
           node-version: 24
       - run: npm ci --ignore-scripts
-      - run: |
+      - name: Verify protocols, preservation and served HTML
+        run: |
           node --test tests/multichain-original-send.test.mjs tests/multichain-original-send-release.test.mjs tests/multichain-original-enable.test.mjs tests/multichain-original-enable-release.test.mjs tests/multichain-original-ack.test.mjs tests/multichain-original-ack-release.test.mjs tests/multichain-original-redemption.test.mjs tests/multichain-original-redemption-release.test.mjs tests/multichain-original-purchase.test.mjs tests/multichain-original-purchase-release.test.mjs tests/multichain-preview.test.mjs tests/multichain-setup.test.mjs tests/multichain-bnb.test.mjs tests/multichain-binding.test.mjs tests/multichain-sui-registration.test.mjs tests/multichain-sui-config.test.mjs tests/multichain-bnb-config.test.mjs tests/multichain-sui-peer-bind.test.mjs tests/multichain-sui-reserve.test.mjs tests/multichain-sui-three-verifier.test.mjs tests/multichain-bnb-recovery.test.mjs tests/multichain-bnb-purchase.test.mjs tests/multichain-bnb-redemption.test.mjs tests/multichain-sui-ack.test.mjs tests/multichain-original-publish.test.mjs tests/multichain-original-slot.test.mjs tests/multichain-original-bnb.test.mjs tests/multichain-original-bnb-pass.test.mjs tests/multichain-original-bnb-bind.test.mjs tests/multichain-original-register.test.mjs tests/multichain-original-config.test.mjs tests/multichain-original-bnb-config.test.mjs tests/multichain-original-peer.test.mjs tests/multichain-original-fund.test.mjs tests/multichain-original-reserve.test.mjs tests/multichain-release.test.mjs tests/preserved-release.test.mjs
           node --check scripts/release-original-ack.mjs
           node --check scripts/multichain-preview-delivery.mjs
