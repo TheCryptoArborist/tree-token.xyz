@@ -1,3 +1,4 @@
+import { mountTreeArmyPreview } from './arcade-tree-army.js';
 import { mountSeasonCountdowns } from './arcade-season-deadline.js';
 
 // Presentation only: move existing nodes so wallet, quest and saved-state handlers
@@ -255,6 +256,7 @@ export function mountArcadeOrganization(doc = document, view = window) {
   }
   reflectView();
   updateSignInCopy();
+  mountTreeArmyPreview(doc);
   root.dataset.arcadeOrganization = 'ready';
   doc.body.classList.add('arcade-organization-page');
   const countdown = mountSeasonCountdowns({ root: doc });
