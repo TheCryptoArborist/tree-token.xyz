@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "action": "publish-precious-metals",
+  "sourceCommit": "3135bebcdfac3d9a0275debcfa59f83f7048aa71",
+  "sourceTree": "e7a6cdc56995625afaf0ae1546e41094caa03dc8",
+  "mainCommit": "b57a5779238947997c1e6993f7fe4a9964190c81",
+  "expectedDeploy": "6aff8d6c44e257067443ba98",
+  "candidateId": "6affb0e47dc837eae9bdc12d",
+  "planSha256": "7242bf274038d12b67080e522068aea9ebc0e2299ee39240de1bb9665cedddfc",
+  "candidateRunId": 44661211932,
+  "candidateArtifactId": 14595353157,
+  "candidateArtifactSHA256": "1afda9b8ac7f9c3608b967ee5fd8f99366dbcff191c3693343da2f45b093081f",
+  "browserReview": "production/precious-metals-browser-review.json"
+}

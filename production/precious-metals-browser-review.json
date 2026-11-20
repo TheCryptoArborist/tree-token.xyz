@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "result": "passed",
+  "testOnly": false,
+  "sourceCommit": "3135bebcdfac3d9a0275debcfa59f83f7048aa71",
+  "sourceTree": "e7a6cdc56995625afaf0ae1546e41094caa03dc8",
+  "candidateId": "6affb0e47dc837eae9bdc12d",
+  "planSha256": "7242bf274038d12b67080e522068aea9ebc0e2299ee39240de1bb9665cedddfc",
+  "origin": "https://6affb0e47dc837eae9bdc12d--tree-token.netlify.app",
+  "checkedAt": "2026-11-20T02:31:28Z",
+  "noWalletOrPaymentActions": true,
+  "provider": "TradingView",
+  "symbols": [
+    "TVC:GOLD",
+    "TVC:SILVER",
+    "TVC:SILVER/TVC:GOLD"
+  ],
+  "viewportWidths": [
+    1363
+  ],
+  "checks": {
+    "goldChartRendered": true,
+    "silverChartRendered": true,
+    "silverGoldRatioRendered": true,
+    "ratioCorrectDirection": true,
+    "chartInteraction": true,
+    "sourceLinks": true
+  },
+  "observations": [
+    "GitHub Actions run 44661211932 verified real third-party TradingView rendering without provider stubs. Gold chart showed a 3545.990 USD-per-ounce close and two chart canvases.",
+    "Silver chart showed a 41.8952 USD-per-ounce close and two canvases. Both instruments were labeled TVC by TradingView.",
+    "The rendered synthetic chart explicitly displayed SILVER/GOLD, a close around 0.0118, and two canvases; silver divided by gold is about 0.01181 for the observed price pair.",
+    "All three chart choices were selected and their TradingView credit URLs were checked. The Silver/Gold guide explained silver divided by gold and the rising/falling directions.",
+    "Mobile and tablet layout, keyboard and source selection were independently checked with clearly labeled mocks at widths 320, 390, 768 and 1363. Production wallet and payment actions were not used."
+  ]
+}
