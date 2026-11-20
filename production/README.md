@@ -1,3 +1,40 @@
+# Tree Army mobile controls and gait — published November 20, 2026
+
+Current locked production is `6b0070b57616d3344ac98c01`, published and verified
+by workflow [44769918848](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44769918848)
+at 16:11 UTC. Published source: `0f8bb69dcb250d03d935d811df882fa06939a525`,
+through PRs #256 and #257. Prototype 0.6 keeps the complete mobile command deck
+visible, labels movement/summon/ability controls, supports horizontal battlefield
+dragging with lift-to-stop, preserves portrait artwork proportions, and adds
+six travel-driven stepping poses for the three troops and thorn runner.
+
+The initial update replaced playtest HTML and added one walk atlas. The final
+320px typography correction replaced only HTML against fresh baseline
+`6b0062b486ca536dd1768394`, preserving **639 other static paths, all 50 backend
+records and five schedules**, runtime/configuration and site snippets.
+The complete current inventory contains **640 static paths**. No dependency,
+wallet, payment, reward, database or backend change was included.
+
+Candidate and canonical checks passed at 1440×1000, 390×844, 320×568 and 844×390.
+They exercise trusted touch drag/reverse/release, visible buttons, fitted troop
+names, correct canvas proportions, gameplay and the existing cabinet preview.
+The small-phone production screenshot was inspected. These are browser-emulated
+touch tests, not physical-device tests. The cabinet video remains the prior
+actual-gameplay preview. Six-pose cycles still allow further animation polish.
+
+Evidence: `production/tree-army-mobile-release-20261120.json` (complete final
+inventory), adjacent mobile game/cabinet checks, and
+`docs/tree-army-mobile-controls-20261120.png`. Initial release inventory is
+`production/tree-army-mobile-initial-release-20261120.json`. Final workflow
+artifact 14647016833 has SHA256
+`711c3b7bbbbe6b85d67ab720aa03da70f7a7d0bcf75b44ed7d6f6c081cc02ffb`.
+Implementation and asset provenance: `docs/tree-army-mobile-movement.md`.
+
+Capture a fresh live inventory and revise the one-time replacement hash before
+any later release. Never publish the historical root build.
+
+---
+
 # Tree Army illustrated playtest and preview — published November 20, 2026
 
 Current locked production is `6b000d7e752506183abed5ad`, published and verified
