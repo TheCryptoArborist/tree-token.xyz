@@ -1,0 +1,29 @@
+name: Verify isolated BNB game access foundation
+on:
+  pull_request:
+    paths:
+      - 'scripts/multichain/bnb-game-access-core.mjs'
+      - 'tests/multichain-bnb-game-access.test.mjs'
+      - '.github/workflows/verify-bnb-game-access.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/multichain/bnb-game-access-core.mjs'
+      - 'tests/multichain-bnb-game-access.test.mjs'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci --ignore-scripts
+      - name: Test EVM signatures, replay, backed entitlement and revocation
+        run: |
+          node --check scripts/multichain/bnb-game-access-core.mjs
+          node --test tests/multichain-bnb-game-access.test.mjs
+          git diff --check
