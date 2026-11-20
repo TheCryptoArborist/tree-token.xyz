@@ -176,7 +176,7 @@ try {
       assert(await page.locator('#mi-pane-market').isVisible());
       assert.equal(await page.locator('.mi-pane:visible').count(), 1);
       assert.deepEqual(await page.locator('[data-tv-symbol]').evaluateAll(els => els.map(el => el.dataset.tvSymbol)), keys);
-      assert.deepEqual((await page.locator('[data-tv-symbol]').allTextContents()).map(x => x.trim()), ['TOTAL', 'TOTAL2', 'TOTAL3', 'TOTAL3ES', 'BTC.D', 'Precious Metals', 'Gold', 'Silver', 'Silver/Gold Ratio']);
+      assert.deepEqual((await page.locator('[data-tv-symbol]').allTextContents()).map(x => x.trim()), ['TOTAL', 'TOTAL2', 'TOTAL3', 'TOTAL3ES', 'BTC.D', 'Stablecoin Dominance', 'Gold', 'Silver', 'Silver/Gold Ratio']);
       result.cases.push('Nine market choices; Precious Metals follows BTC.D, followed by Gold, Silver and Silver/Gold Ratio');
 
       for (const key of ['TOTAL3', 'BTCD']) await assertSelection(page, key, result);
