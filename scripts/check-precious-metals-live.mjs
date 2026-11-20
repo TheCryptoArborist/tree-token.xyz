@@ -20,13 +20,14 @@ try{
  await page.locator('#mi-tab-market').click();
  for(const [key,symbol,label] of symbols){
    await page.locator('[data-tv-symbol="'+key+'"]').click();
-   await page.waitForFunction(sym=>{try{return JSON.parse(document.querySelector('#mi-tv-stage script[src*="embed-widget-advanced-chart"]').textContent).symbol===sym}catch{return false}},symbol);
+   await page.waitForFunction(k=>document.querySelector('[data-tv-symbol="'+k+'"]')?.getAttribute('aria-pressed')==='true',key,{timeout:12000});
    let evidence=null;
    for(let i=0;i<12&&!evidence;i++){
      await page.waitForTimeout(2000);
      for(const frame of page.frames().filter(f=>f!==page.mainFrame()&&/tradingview/i.test(f.url()))){
        try{
          const state=await frame.evaluate(()=>({title:document.title,text:(document.body?.innerText||'').slice(0,8000),canvases:[...document.querySelectorAll('canvas')].filter(c=>c.width>180&&c.height>90).length}));
+         if(i===1||i===6||i===11)console.log(JSON.stringify({key,attempt:i,frameURL:frame.url(),title:state.title,canvases:state.canvases,text:state.text.slice(0,220)}));
          if(state.canvases>0&&label.test(state.title+' '+state.text)&&!/invalid symbol|symbol not found/i.test(state.text)){evidence={title:state.title,canvasCount:state.canvases,textSample:state.text.slice(0,300)};break;}
        }catch{}
      }
