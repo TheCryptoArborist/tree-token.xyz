@@ -22,3 +22,8 @@ The combat map supplies `strike`, `cast`, `hit`, and `defeat` definitions with `
 Read [the asset notes](../../../../docs/forest-kingdoms/SPRITES_01.md) for the art contract and remaining work. Run the focused playback and manifest checks from this repository with `node --test play/forestkingdoms/test/animation/viewer-check.mjs`.
 
 The viewer is dependency-free Canvas 2D and does not change the original prologue, saves, wallet integration, or game economy. Phaser integration is a subsequent roadmap task.
+
+Additional event and geometry verification: `node --test play/forestkingdoms/test/animation/viewer-events-check.mjs`.
+This runs the actual viewer handlers against DOM/Canvas doubles, including reduced motion,
+held-key cancellation, pointer release, and all 112 draw rectangles at desktop/phone widths.
+It is not a replacement for browser rendering or physical-device testing.

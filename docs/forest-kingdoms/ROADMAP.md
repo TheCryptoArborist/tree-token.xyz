@@ -24,7 +24,7 @@ This file is the authoritative project checklist. Update its statuses and add th
 
 **Implementation state:** The playable prologue uses a custom Canvas 2D renderer. The isolated character study now includes four-direction idle, walk, strike, root-cast, hit, and defeat artwork: 112 frames in the first full review set. Phaser has been researched and selected as the working upgrade direction; it has **not** been integrated yet. Integration, enemy artwork/reactions, and later story/economy systems remain pending.
 
-**Active task:** FK-02 — Tree Hero sprite and animation set. Movement and the first combat/reaction pass are implemented in the isolated viewer; full-set visual review and feedback remain before acceptance.
+**Active task:** FK-02 — Tree Hero sprite and animation set. Recovery, deployment and technical review are verified; Peter's final visual acceptance remains open. See [FK-02 verification](FK02_VERIFICATION.md) for exact checks and limitations.
 
 **Current build target:** Milestone A — Upgraded Willowmere scene.
 
@@ -55,7 +55,7 @@ Evidence: the [art brief](ART_DIRECTION.md), [Concept 01 image](concepts/willowm
 
 ### FK-02 — Create the Tree Hero sprite and animation set
 
-Status: **In progress — full first animation set ready for review**. Depends on FK-01.
+Status: **Verified first set — awaiting final visual acceptance**. Depends on FK-01. Recovery and verification evidence: [FK02_VERIFICATION.md](FK02_VERIFICATION.md).
 
 - [x] Establish a first in-game character design matching the supplied purple/green/gold hero, including green eyes and the canonical broader build.
 - [x] Create the first four-direction idle and walking set: four idle frames and eight walk frames per direction, 48 frames total.

@@ -1,5 +1,7 @@
 Continue Forest Kingdoms for Peter Toler's Tree Arcade. Work from the existing implementation and assets. Complete the next verified milestone without reconstructing the project from old chats.
 
+**Recovery update:** The three bundled commits have now been verified, fast-forwarded and pushed to the existing feature branch. The animation preview is confirmed live at `92ef91d`, Netlify deploy `6aff8c23d80bb9da7189d19d`. Read [FK02_VERIFICATION.md](FK02_VERIFICATION.md) for the newer checkpoint, actual automated/browser checks, and remaining visual acceptance. The original handoff below is retained as recovery history.
+
 ## Repository and working scope
 
 - Repository: https://github.com/TheCryptoArborist/tree-token.xyz
