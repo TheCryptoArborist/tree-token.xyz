@@ -126,3 +126,23 @@ was created, but its first still-preparing API response had no function records.
 The full-backend validator correctly rejected that incomplete response, before
 publication. The correction waits for ready before validating complete records;
 the baseline and all ready-candidate/post-publication checks remain mandatory.
+
+
+## Published milestone
+
+The readiness correction merged through PR #254. Workflow `44707502086`
+published source `bb36b82ce841a1e5b3b95ab4497367f125f1f103` as locked deploy
+`6b000d7e752506183abed5ad`. Final canonical verification passed at
+2026-11-20 09:07:38 UTC (03:07:38 America/Chicago). Both game and cabinet passed
+all four viewport checks on the real canonical domain without test fixtures.
+Full static inventory and canonical browser results are committed under
+`production/tree-army-*-20261120.json`. The downloaded artifact SHA256 matched
+GitHub's reported digest. Canonical desktop gameplay and phone preview images
+are `docs/tree-army-canonical-game-20261120.png` and
+`docs/tree-army-canonical-preview-phone-20261120.png`.
+
+Live: https://tree-token.xyz/play/tree-army/test/
+Cabinet: https://tree-token.xyz/play/#games
+
+The next concrete milestone is combat spacing and fuller movement/attack cycles,
+followed by dedicated Iron Stump artwork and balancing the later waves.
