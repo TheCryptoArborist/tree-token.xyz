@@ -76,7 +76,7 @@ async function signed(f,who=account){
 test('one-time EOA signature yields isolated, host-only HttpOnly test cookie; never gameplay',async()=>{
   const f=fixture();
   const {reply}=await signed(f);
-  assert.equal(reply.status,200);
+  assert.equal(reply.status,200,JSON.stringify(reply.data));
   assert.equal(reply.data.authenticated,true);
   assert.equal(reply.data.scope,BNB_IDENTITY_SCOPE);
   assert.equal(reply.data.gameplayAuthorized,false);
