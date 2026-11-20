@@ -962,21 +962,27 @@
         </section>
 
         <section class="mi-pane" id="mi-pane-market" role="tabpanel" aria-labelledby="mi-tab-market" hidden>
-          <h3>Market Capitalization &amp; Dominance</h3>
-          <p class="mi-help">Compare the combined value of cryptocurrencies with Bitcoin’s and stablecoins’ shares of the tracked market. Choose an index below.</p>
-          <div class="mi-choices" role="group" aria-label="Choose crypto capitalization or dominance index">
+          <h3>Market Capitalization, Dominance &amp; Precious Metals</h3>
+          <p class="mi-help">Compare crypto market capitalization and dominance, or explore gold, silver, and their relative performance. Select a chart below.</p>
+          <div class="mi-choices" role="group" aria-label="Choose a crypto market index or precious-metals chart">
             <button type="button" data-tv-symbol="TOTAL" aria-pressed="false">TOTAL</button>
             <button type="button" data-tv-symbol="TOTAL2" aria-pressed="false">TOTAL2</button>
             <button type="button" data-tv-symbol="TOTAL3" aria-pressed="true" class="selected">TOTAL3</button>
             <button type="button" data-tv-symbol="TOTAL3ES" aria-pressed="false">TOTAL3ES</button>
             <button type="button" data-tv-symbol="BTCD" aria-pressed="false">BTC.D</button>
             <button type="button" data-tv-symbol="STABLED" aria-pressed="false">Stablecoin Dominance</button>
+            <button type="button" data-tv-symbol="GOLD" aria-pressed="false">Gold</button>
+            <button type="button" data-tv-symbol="SILVER" aria-pressed="false">Silver</button>
+            <button type="button" data-tv-symbol="SILVERGOLD" aria-pressed="false">Silver/Gold Ratio</button>
           </div>
           <p class="mi-description" id="mi-market-description" aria-live="polite">Top-125 cryptocurrency capitalization excluding Bitcoin and Ethereum; stablecoins remain included.</p>
           <p class="mi-onchain-cue" id="mi-stablecoin-guide" hidden><strong>How to read it:</strong> A rising line means stablecoins make up a larger share of the tracked market; a falling line means a smaller share. The percentage can change because stablecoin market value changes, other crypto prices move, or both.</p>
+          <p class="mi-onchain-cue" id="mi-gold-guide" hidden><strong>Gold:</strong> TradingView’s TVC:GOLD tracks an indicative gold price in U.S. dollars per troy ounce. This is a precious-metals price series, not gold market capitalization or a retail bullion quote.</p>
+          <p class="mi-onchain-cue" id="mi-silver-guide" hidden><strong>Silver:</strong> TradingView’s TVC:SILVER is an indicative silver CFD price quoted in U.S. dollars per troy ounce. It is not silver market capitalization or a guaranteed physical dealer price.</p>
+          <p class="mi-onchain-cue" id="mi-silvergold-guide" hidden><strong>Silver/Gold Ratio:</strong> Silver price divided by gold price (TVC:SILVER ÷ TVC:GOLD), using the same TradingView TVC series shown here. A rising ratio means silver is gaining relative to gold; a falling ratio means gold is gaining relative to silver. This is the inverse of the more common Gold/Silver Ratio. The result is unitless, not dollars or a percentage.</p>
           <div id="mi-tv-stage" class="mi-chart-container mi-tv" aria-label="TradingView live market capitalization chart"></div>
           <div class="mi-footnotes"><span id="mi-tv-status" role="status">Loading TradingView chart…</span><span>Chart data: TradingView</span></div>
-          <p class="mi-disclaimer">TOTAL, TOTAL2, TOTAL3 and TOTAL3ES are TradingView indices of up to 125 ranked coins. TOTAL3 still includes stablecoins; TOTAL3ES excludes them. BTC.D is Bitcoin's share of the tracked market. They are not measures of all tokens in existence.</p>
+          <p class="mi-disclaimer">TOTAL, TOTAL2, TOTAL3 and TOTAL3ES are TradingView indices of up to 125 ranked coins. TOTAL3 still includes stablecoins; TOTAL3ES excludes them. BTC.D is Bitcoin's share of the tracked market. They are not measures of all tokens in existence. The gold and silver charts are separate metals-price series; the Silver/Gold Ratio is a price division, not market capitalization.</p>
           <p class="mi-help" id="mi-stablecoin-methodology" hidden><strong>What’s included:</strong> TradingView’s STABLE.C.D divides the market value of up to 100 coins in its Stablecoins category by its TOTAL index, then multiplies by 100. Stablecoins aim to track a currency or another reference asset. <a href="https://www.tradingview.com/support/solutions/43000550480-where-do-i-find-crypto-market-capitalization-and-dominance/" target="_blank" rel="noopener noreferrer">Read TradingView’s methodology ↗</a></p>
         </section>
 
