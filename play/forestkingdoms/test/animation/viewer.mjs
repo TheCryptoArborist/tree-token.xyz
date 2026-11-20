@@ -159,7 +159,12 @@ function bootViewer() {
   }
   function setDirection(name, announceChange = false) {
     if (!state.ready || !DIRECTIONS.includes(name)) return;
-    if (state.direction !== name) { state.direction = name; resetClock(); }
+    // A turn changes the view of the current step, not which foot is planted.
+    // Explicit direction buttons reset the clock in their own review handler.
+    if (state.direction !== name) {
+      state.direction = name;
+      if (state.animation !== 'walk') resetClock();
+    }
     updateControls(); draw();
     if (announceChange) announce(`Facing ${name}.`);
   }
@@ -294,7 +299,9 @@ function bootViewer() {
     if (!state.ready || state.paused || document.hidden || animationFinished(currentAnimation(), state.elapsed)) return;
     state.manualFrame = null;
     const directions = activeDirections();
+    let elapsedStep = dt * state.speed;
     if (directions.length) {
+      const previous = { ...state.position };
       const dx = Number(directions.includes('east')) - Number(directions.includes('west'));
       const dy = Number(directions.includes('south')) - Number(directions.includes('north'));
       if (dx || dy) {
@@ -302,8 +309,11 @@ function bootViewer() {
         state.position.x += dx / length * distance; state.position.y += dy / length * distance;
         clampPosition();
       }
+      // Only advance a moving stride by distance actually covered. Opposing
+      // inputs and a clamped stage edge must not keep cycling the feet.
+      elapsedStep = Math.hypot(state.position.x - previous.x, state.position.y - previous.y) / 78;
     }
-    state.elapsed += dt * state.speed;
+    state.elapsed += elapsedStep;
     if (animationFinished(currentAnimation(), state.elapsed)) {
       state.elapsed = currentAnimation().frames.length / currentAnimation().fps;
       updateControls();

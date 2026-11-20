@@ -118,6 +118,44 @@ test('pointer release, cancellation, lost capture and window blur clear movement
   v.stop();
 });
 
+test('turning during a stride preserves its phase while explicit review selection restarts it', async () => {
+  const v = await viewer(); const canvas = v.nodes['detail-canvas'];
+  canvas.emit('keydown', { key: 'd', repeat: false }); v.advance(7);
+  const phase = v.nodes['frame-label'].textContent;
+  assert.notEqual(phase, 'Frame 1 / 8');
+  canvas.emit('keydown', { key: 'w', repeat: false });
+  assert.equal(v.state(), 'North · Walking');
+  assert.equal(v.nodes['frame-label'].textContent, phase);
+  v.window.emit('keyup', { key: 'w' });
+  assert.equal(v.state(), 'East · Walking');
+  assert.equal(v.nodes['frame-label'].textContent, phase);
+  v.choose('direction', 'south');
+  assert.equal(v.nodes['frame-label'].textContent, 'Frame 1 / 8');
+  v.stop();
+});
+
+test('feet stop cycling when movement is blocked or opposing inputs cancel', async () => {
+  const v = await viewer(); const canvas = v.nodes['detail-canvas'];
+  canvas.emit('keydown', { key: 'd', repeat: false }); v.advance(7);
+  canvas.emit('keydown', { key: 'a', repeat: false });
+  const phase = v.nodes['frame-label'].textContent;
+  v.advance(20);
+  assert.equal(v.nodes['frame-label'].textContent, phase);
+  v.window.emit('keyup', { key: 'a' });
+  v.advance(200);
+  const edgePhase = v.nodes['frame-label'].textContent;
+  const edgeDraw = canvas.draw.slice(5);
+  v.advance(17);
+  assert.equal(v.nodes['frame-label'].textContent, edgePhase);
+  assert.deepEqual(canvas.draw.slice(5), edgeDraw);
+  v.window.emit('keyup', { key: 'd' });
+  assert.equal(v.state(), 'East · Idle');
+  // A deliberately selected walk-in-place remains a usable animation review.
+  v.choose('animation', 'walk'); v.advance(7);
+  assert.notEqual(v.nodes['frame-label'].textContent, 'Frame 1 / 8');
+  v.stop();
+});
+
 test('all 112 frame rectangles stay inside both canvases at desktop and phone widths', async () => {
   for (const width of [901, 330]) {
     const v = await viewer({ width, reduced: true });

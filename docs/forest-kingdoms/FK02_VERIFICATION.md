@@ -1,5 +1,13 @@
 # FK-02 recovery and verification — November 19, 2026
 
+## Follow-up: continuous steps while moving
+
+The viewer now preserves the current walk phase when held movement changes direction. Previously every turn restarted at frame 1. Explicit direction selection in the review controls still starts at frame 1 for comparison. Movement advances the animation by actual distance covered after stage clamping, so opposing inputs and the stage edge no longer continue cycling the feet. Walk-in-place playback remains available.
+
+All 13 viewer checks pass, including new real-handler regressions for turning, opposite inputs and blocked movement. `npm run build:preview` passes (356 files, 50 pinned Arcade assets). These fixes address playback continuity, not the remaining anatomical defects in the source sprites.
+
+Generated replacement candidates were inspected and rejected: repeated same-leg strides, missing passing poses, and inconsistent limb identity persist. None is wired into the viewer. Prompt records are saved in the local workspace's `recovery/walk-generation-prompts.json`; generated originals remain in the Codex generated-images folder for this chat. Do not promote those candidates merely because their frame count or dimensions are correct. Existing atlases and manifests remain unchanged. FK-02 visual acceptance and the four-direction artwork correction remain open.
+
 ## Subsequent gait review — visual acceptance failed
 
 Peter reported that a leg moves toward the body's center and then returns instead of walking naturally. Replayed all four directions and stepped through their eight-frame walk sequences in the live viewer. The south view has overly narrow/crossing foot paths; the north view has cramped stepping beneath the cape. East and west repeat similar stride shapes without a convincing alternating support-leg/weight-transfer cycle. The motion reads as shuffling or marching in place rather than a natural walk.
