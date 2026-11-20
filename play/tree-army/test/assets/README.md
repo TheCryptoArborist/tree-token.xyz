@@ -11,3 +11,17 @@ Source rectangles are explicit in `index.html` because the illustrated figures d
 Animation in this first integration uses pose switching plus slight movement bob/tilt. It is not a full hand-animated walk cycle. The Iron Stump currently uses an enlarged logging-bot sprite; a dedicated boss asset remains future work. Reduced-motion preference disables ambient bob/tilt/firefly motion.
 
 The three WebP files total approximately 1.6 MiB. All URLs are relative to `/play/tree-army/test/`; no new runtime dependencies, wallet connections, payments, backend handlers, or scheduled jobs are introduced.
+
+## Prototype 0.6 gait atlas
+
+`forest-walk.webp` is a 1536 × 1024 transparent atlas with six 256px cells
+per row: Seedling, Archer, Guardian, thorn runner. New poses were generated
+from the existing forest-army artwork. The user explicitly approved local
+sprite processing to remove the generator's unwanted white matte. Cleanup
+preserves bright sword/mouth details and removes edge matte contamination.
+The runtime uses fixed species scales and ground anchors, with frame selection
+based on distance traveled. Idle feet freeze; original attack poses are retained.
+Machines retain their original sprite with travel-driven wheel highlights.
+This is a six-pose prototype gait, not a skeletal animation rig. The existing
+hero artwork and enlarged-machine boss remain unchanged. Reduced motion freezes
+the gait frames as well as ambient movement.

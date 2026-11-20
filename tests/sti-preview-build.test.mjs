@@ -117,6 +117,7 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
       '/play/tree-army/test/assets/grove-battlefield.webp',
       '/play/tree-army/test/assets/forest-army.webp',
       '/play/tree-army/test/assets/tree-hero.webp',
+      '/play/tree-army/test/assets/forest-walk.webp',
       '/play/tree-army/preview-gameplay.jpg',
       '/play/tree-army/preview-gameplay.mp4',
       '/play/tree-army/preview-gameplay.webm',

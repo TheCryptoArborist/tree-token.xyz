@@ -11,19 +11,34 @@
 .controls{background:linear-gradient(180deg,#403320,#201e16);border-top:3px solid #a58b50;grid-template-columns:120px 1fr 240px}.troops{justify-content:center}.troops button{flex:0 1 130px;background:linear-gradient(#35402b,#151f17);border:2px solid #8c8762;padding:5px 7px;font-size:12px;border-radius:6px}.unit-portrait{display:block;width:54px;height:52px;margin:0 auto 3px;object-fit:contain;filter:drop-shadow(0 2px 3px #000)}.stats{background:linear-gradient(#3a3828,#20291e);border-bottom:2px solid #8c7950}.powers button{border:2px solid #92794b;background:radial-gradient(ellipse at top,#556234,#252b1a)}.move button{background:linear-gradient(#58492b,#2d2a1d);border-color:#a68b55}.card{background:#15251af2}.field-note{bottom:6px;padding:5px 10px}.asset-status{max-width:1160px;margin:8px auto;color:#e5ca7f;text-align:center;font-size:13px}.asset-status[hidden]{display:none}
 @media(max-width:700px){.controls{grid-template-columns:82px minmax(0,1fr);gap:7px;padding:8px}.troops{gap:5px}.troops button{min-width:0;padding:4px 2px;font-size:10px;flex:1}.unit-portrait{width:42px;height:44px}.controls small{font-size:10px}.powers{grid-column:1/-1}.powers button{min-height:45px}.move{gap:4px}.move button{padding:7px}.stats{gap:7px}}
 @media(prefers-reduced-motion:reduce){.unit-portrait{filter:none}}
+
+.desktop-badge{border:0;padding:0;border-radius:0}
+/* Mobile play is a single screen: the entire command deck stays visible. */
+.control-label{grid-column:1/-1;display:block;font-size:10px;letter-spacing:1px;color:#ecdcae;line-height:1.3;text-align:center;font-weight:800}
+.move,.troops,.powers{display:grid;grid-template-rows:auto 1fr;gap:6px}.move,.powers{grid-template-columns:repeat(2,minmax(0,1fr))}.troops{grid-template-columns:repeat(3,minmax(0,1fr))}.move button{font-size:18px;padding:8px}.move button span{display:block;font-size:11px;line-height:1.2;margin-top:4px}.controls button{touch-action:manipulation}.move button{touch-action:none}.controls button:disabled{opacity:.65}.controls .troops button{width:100%}.control-label .auto-fire{color:#c6e794}.touch-help{display:none}.field-note{pointer-events:none}.drag-cue{position:absolute;left:50%;bottom:48px;transform:translateX(-50%);padding:8px 14px;border:1px solid #e8d48b;border-radius:30px;background:#10251de8;color:#fff2bd;font:700 12px system-ui;line-height:1.4;pointer-events:none;white-space:nowrap}.drag-cue[hidden]{display:none}#battle{touch-action:none;user-select:none}.skip{display:inline-block}#notice{min-height:0}
+@media(max-width:900px),(pointer:coarse){
+ html{height:100%;overscroll-behavior:none}body{height:100svh;height:100dvh;overflow:hidden;display:flex;flex-direction:column;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+ header{flex:0 0 auto;width:100%;padding:8px 12px;min-height:38px}header a{font-size:11px;letter-spacing:1px}header span{font-size:10px;padding:4px 7px;letter-spacing:0}header span:before{content:'TREE ARMY · '}header span .desktop-badge{display:none}
+ .intro,.help,footer{display:none}.asset-status{font-size:11px;margin:2px 8px;flex:none}.shell{width:100%;max-width:none;flex:1;min-height:0;display:flex;flex-direction:column;border-radius:0;border:0}.stats{flex:none;display:grid;grid-template-columns:repeat(5,minmax(0,1fr)) auto;padding:7px 8px;gap:5px;min-height:42px}.stats span{font-size:9px;line-height:1.3;white-space:normal}.stats span strong{display:block;font-size:12px}.stats button{font-size:11px;padding:9px 7px;min-height:40px}
+ .stage{flex:1;min-height:100px;overflow:hidden}.stage>canvas{position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto}.veil{padding:8px}.card{padding:12px;max-height:100%;width:min(100%,480px)}.card h2{font-size:25px}.card p{font-size:12px}.card .eyebrow{font-size:9px}.card button{min-height:44px;padding:10px 12px;font-size:12px}.card .notice{font-size:10px;margin:5px 0 0}
+ .controls{flex:none;display:grid;grid-template-columns:1fr 1fr;grid-template-areas:'move powers' 'troops troops';padding:8px;gap:8px;border-top-width:2px}.move{grid-area:move}.powers{grid-area:powers}.troops{grid-area:troops;gap:6px}.control-label{font-size:9px;letter-spacing:.7px}.controls button{min-width:0;min-height:52px}.move button{font-size:18px;padding:6px}.move button span{font-size:11px}.powers button{font-size:11px;padding:7px 3px}.controls small{font-size:10px;margin-top:3px}.troops button{font-size:12px;padding:5px!important;display:grid;grid-template-columns:38px 1fr;grid-template-rows:1fr auto;text-align:left;align-items:center;column-gap:5px}.unit-portrait{width:38px;height:42px;grid-row:1/3;margin:0}.troops button .unit-name{font-size:11px;line-height:1.2}.troops small{font-size:10px;margin:2px 0 0}.touch-help{display:block;grid-column:1/-1;text-align:center;font-size:11px;line-height:1.3;color:#f0dfab;margin:0}.field-note{left:5px;right:5px;bottom:5px;font-size:11px;line-height:1.25;padding:6px}.drag-cue{bottom:52px}
+}
+@media(max-height:500px) and (orientation:landscape){
+ header{min-height:28px;padding:3px 12px}.stats{min-height:32px;padding:3px 8px}.stats span strong{display:inline;margin-left:4px}.stats button{min-height:28px;padding:4px 9px}.stage{min-height:80px}.controls{grid-template-columns:140px 1fr 210px;grid-template-areas:'move troops powers';gap:8px;padding:5px 8px}.controls button{min-height:44px}.troops button{grid-template-columns:30px 1fr}.unit-portrait{width:30px;height:33px}.control-label{font-size:8px}.touch-help{font-size:10px}.field-note{font-size:10px;padding:4px}.card h2{font-size:21px;margin:4px 0}.card p{margin:5px 0}.card{padding:8px}.card .notice{display:none}.drag-cue{bottom:32px}
+}
 </style></head>
 <body>
-<header><a href="/play/">← TREE ARCADE</a><span>EARLY PLAYTEST · FREE PLAY</span></header>
+<header><a href="/play/">← TREE ARCADE</a><span><span class="desktop-badge">EARLY PLAYTEST · </span>FREE PLAY</span></header>
 <section class="intro"><div><h1>Tree Army <em>/</em></h1><p>Defend the grove. Lead from the front.</p></div><p>A forest worth fighting for.</p></section>
 <p id="asset-status" class="asset-status" role="status">Growing the battlefield…</p>
 <main class="shell">
 <div class="stats" aria-label="Game status"><span>WAVE <strong id="wave">1 / 10</strong></span><span>GROVE <strong id="grove">100%</strong></span><span>HERO <strong id="hero">100%</strong></span><span>SAP <strong id="sap">100</strong></span><span>SEEDS <strong id="seeds">0</strong></span><button id="pause">Pause</button></div>
-<div class="stage"><canvas width="1100" height="470" id="battle" aria-label="Tree Hero and forest troops defending the Tree of Life from enemies advancing from the right"></canvas><div class="field-note" id="field-note" hidden></div>
-<section class="veil" id="overlay"><div class="card"><span class="eyebrow" id="kicker">DEFEND THE GROVE</span><h2 id="heading">Stand tall. Fight together.</h2><p id="description">Move your Tree Hero left and right. He attacks nearby enemies automatically. Spend regenerating sap to summon allies and protect the glowing Tree of Life on the left.</p><div id="shop" class="upgrades" hidden></div><button id="next" class="primary" disabled>Show me how</button><button id="skip" class="skip" hidden>Skip briefing</button><p class="notice" id="notice" aria-live="polite">Original TREE prototype · No wallet or payment needed</p></div></section></div>
-<div class="controls"><div class="move"><button id="left" aria-label="Move left">←</button><button id="right" aria-label="Move right">→</button></div><div class="troops"><button data-unit="sprout">Seedling<small>25 sap · melee</small></button><button data-unit="archer">Acorn Archer<small>45 sap · ranged</small></button><button data-unit="oak">Oak Guardian<small>75 sap · tank</small></button></div><div class="powers"><button id="blast">Acorn Cannon<small>Q · 10s cooldown</small></button><button id="shield">Canopy Shield<small>E · 18s cooldown</small></button></div></div>
+<div class="stage"><canvas width="1100" height="470" id="battle" aria-label="Tree Hero and forest troops defending the Tree of Life from enemies advancing from the right"></canvas><div class="field-note" id="field-note" hidden></div><div id="drag-cue" class="drag-cue" hidden></div>
+<section class="veil" id="overlay"><div class="card"><span class="eyebrow" id="kicker">DEFEND THE GROVE</span><h2 id="heading">Stand tall. Fight together.</h2><p id="description">Drag left or right on the battlefield, or hold a labeled movement button. Lift your finger to stop. Your hero fires automatically. Tap an ally card to summon help; use Cannon and Shield for extra support.</p><div id="shop" class="upgrades" hidden></div><button id="next" class="primary" disabled>Show me how</button><button id="skip" class="skip" disabled>Start battle</button><p class="notice" id="notice" aria-live="polite">Original TREE prototype · No wallet or payment needed</p></div></section></div>
+<div class="controls"><div class="move"><span class="control-label">MOVE · <span class="auto-fire">AUTO-FIRE ON</span></span><button id="left" aria-label="Hold to move left">←<span>Hold left</span></button><button id="right" aria-label="Hold to move right">→<span>Hold right</span></button></div><div class="troops"><span class="control-label">SUMMON ALLIES · TAP A CARD</span><button data-unit="sprout"><span class="unit-name">Seedling</span><small>25 sap · melee</small></button><button data-unit="archer"><span class="unit-name">Archer</span><small>45 sap · ranged</small></button><button data-unit="oak"><span class="unit-name">Guardian</span><small>75 sap · tank</small></button></div><div class="powers"><span class="control-label">SPECIAL ABILITIES · TAP</span><button id="blast">Cannon<small>Burst damage</small></button><button id="shield">Shield<small>Heal + protect</small></button></div><p class="touch-help">Drag battlefield ← → to move · Lift to stop · Fires automatically</p></div>
 </main>
 <div class="help"><p><kbd>A</kbd> <kbd>D</kbd> or arrows to move · <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> summon · <kbd>Q</kbd> cannon · <kbd>E</kbd> shield · <kbd>P</kbd> pause</p><p>Touch controls supported · Keep enemies away from the roots.</p></div>
-<footer>Prototype 0.5 · Illustrated battlefield · 10 waves · The Iron Stump awaits at wave 10. Progress lasts for this run.</footer>
+<footer>Prototype 0.6 · Illustrated battlefield · 10 waves · The Iron Stump awaits at wave 10. Progress lasts for this run.</footer>
 <script>
 (()=>{
 'use strict';
@@ -33,28 +48,36 @@ const art={ready:false,images:{},reduced:typeof matchMedia==='function'&&matchMe
 const spriteRects={sprout:[20,50,400,375],archer:[450,50,390,375],oak:[850,0,445,423],bot:[1295,45,479,378],sproutAttack:[0,490,409,350],archerAttack:[410,485,450,350],oakAttack:[800,470,500,370],thorn:[1290,510,484,350]};
 const heroRects=[[15,20,595,555],[630,20,600,555],[15,640,590,540],[570,660,685,525]];
 function loadArt(){
-const files={background:'grove-battlefield.webp',army:'forest-army.webp',hero:'tree-hero.webp'};
-return Promise.all(Object.entries(files).map(([key,file])=>new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>{art.images[key]=image;resolve();};image.onerror=()=>reject(Error('Unable to load '+file));image.src='./assets/'+file;}))).then(()=>{art.ready=true;$('asset-status').hidden=true;$('next').disabled=false;makePortraits();}).catch(()=>{$('asset-status').hidden=false;$('asset-status').textContent='The artwork could not load. Reload this page to try again.';$('next').disabled=true;});
+const files={background:'grove-battlefield.webp',army:'forest-army.webp',hero:'tree-hero.webp',walk:'forest-walk.webp'};
+return Promise.all(Object.entries(files).map(([key,file])=>new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>{art.images[key]=image;resolve();};image.onerror=()=>reject(Error('Unable to load '+file));image.src='./assets/'+file;}))).then(()=>{art.ready=true;$('asset-status').hidden=true;$('next').disabled=false;$('skip').disabled=false;makePortraits();}).catch(()=>{$('asset-status').hidden=false;$('asset-status').textContent='The artwork could not load. Reload this page to try again.';$('next').disabled=true;$('skip').disabled=true;});
 }
 function makePortraits(){for(const b of document.querySelectorAll('[data-unit]')){const c=document.createElement('canvas');c.width=100;c.height=100;c.className='unit-portrait';c.setAttribute('aria-hidden','true');const r={sprout:[120,75,210,180],archer:[540,80,210,180],oak:[940,40,245,230]}[b.dataset.unit];c.getContext('2d').drawImage(art.images.army,...r,0,0,100,100);b.prepend(c);}}
 function sprite(image,rect,x,y,height,flip=false,flash=false,lean=0){
 const width=height*rect[2]/rect[3];ctx.save();ctx.translate(x,y);if(flip)ctx.scale(-1,1);if(lean)ctx.rotate(lean);if(flash)ctx.filter='brightness(1.8)';ctx.drawImage(image,...rect,-width/2,-height,width,height);ctx.restore();}
 
+function advance(unit,nextX,stride=44){
+ const distance=Math.abs(nextX-unit.x);unit.moving=distance>.01;
+ if(unit.moving)unit.walk=(unit.walk||0)+distance/stride*Math.PI*2;
+ unit.x=nextX;
+}
 const units={sprout:{cost:25,hp:105,damage:18,reach:42,speed:60,rate:1,color:'#99c96b',name:'Seedling'},archer:{cost:45,hp:65,damage:24,reach:280,speed:48,rate:1.5,color:'#e2c878',name:'Acorn Archer'},oak:{cost:75,hp:330,damage:31,reach:56,speed:34,rate:1.35,color:'#84aa85',name:'Oak Guardian'}};
 let mode='ready',wave=1,sap=100,seeds=0,score=0,grove=1000,groveMax=1000,hero,allies=[],enemies=[],shots=[],sparks=[],clock=0,camera=0,spawnClock=0,spawned=0,planned=0,blastCd=0,shieldCd=0,shieldTime=0,heroLevel=0,sapLevel=0,treeLevel=0,serial=0;
+const pointerMoves=new Map();let drag=null;
+function clearMovement(){held.clear();pointerMoves.clear();drag=null;$('drag-cue').hidden=true;}
+function movementDirection(){const keyboard=(held.has('right')?1:0)-(held.has('left')?1:0);if(keyboard)return keyboard;const buttons=[...pointerMoves.values()].reduce((a,b)=>a+b,0);return Math.sign(buttons)||(drag?.direction||0);}
 const held=new Set(),cooldowns={sprout:0,archer:0,oak:0};let previous=0,briefingStep=0,hasMoved=false,hasSummoned=false;
 const briefings=[
 ['Protect the Tree of Life','The glowing tree on the left is your grove. Enemies approach from the right. If your hero or the grove loses all health, the run ends.','Next: your hero'],
-['Lead from the front','Hold the left or right arrow buttons to move. On a keyboard use A/D or the arrow keys. Your hero attacks automatically when enemies get close.','Next: your army'],
+['Lead from the front','Drag left or right on the battlefield and keep your finger down to move. Lift to stop. You can also hold the labeled movement buttons, or use A/D or arrow keys. Your hero fires automatically.','Next: your army'],
 ['Grow your army','Tap Seedling, Acorn Archer, or Oak Guardian to spend sap and summon allies. Sap refills during battle. Use Acorn Cannon for a burst of damage and Canopy Shield to protect the grove.','Defend the grove']
 ];
-function briefing(){mode='briefing';const b=briefings[briefingStep];show(b[0],b[1],b[2],'FIELD GUIDE '+(briefingStep+1)+' / 3');$('shop').hidden=true;$('skip').hidden=false;$('notice').textContent='Clear waves to earn seeds, then buy upgrades between battles.';}
-function freshHero(){return {x:330,hp:400,max:400,cd:0,facing:1,flash:0};}
+function briefing(){mode='briefing';const b=briefings[briefingStep];show(b[0],b[1],b[2],'FIELD GUIDE '+(briefingStep+1)+' / 3');$('shop').hidden=true;$('skip').hidden=false;$('skip').textContent='Start battle';$('notice').textContent='Clear waves to earn seeds, then buy upgrades between battles.';}
+function freshHero(){return {x:330,hp:400,max:400,cd:0,facing:1,flash:0,moving:false,walk:0};}
 hero=freshHero();
-function show(title,description,button,kicker='DEFEND THE GROVE'){ $('heading').textContent=title;$('description').textContent=description;$('next').textContent=button;$('kicker').textContent=kicker;$('overlay').hidden=false;held.clear();}
+function show(title,description,button,kicker='DEFEND THE GROVE'){ $('heading').textContent=title;$('description').textContent=description;$('next').textContent=button;$('kicker').textContent=kicker;$('overlay').hidden=false;clearMovement();}
 function reset(){if(!art.ready)return;wave=1;sap=100;seeds=0;score=0;groveMax=1000;grove=1000;heroLevel=0;sapLevel=0;treeLevel=0;hero=freshHero();startWave();}
-function startWave(){if(!art.ready)return;hasMoved=false;hasSummoned=false;$('skip').hidden=true;mode='battle';allies=[];enemies=[];shots=[];sparks=[];spawned=0;planned=5+wave*2;spawnClock=2;sap=100+sapLevel*15;blastCd=0;shieldCd=0;shieldTime=0;hero.x=330;hero.hp=Math.min(hero.max,hero.hp+hero.max*.35);hero.cd=0;hero.facing=1;camera=0;for(const k in cooldowns)cooldowns[k]=0;$('overlay').hidden=true;$('shop').hidden=true;$('pause').textContent='Pause';}
-function summon(type){if(mode!=='battle')return;const def=units[type];if(sap<def.cost||cooldowns[type]>0||allies.length>=18)return;hasSummoned=true;sap-=def.cost;cooldowns[type]=type==='oak'?4:1.5;allies.push({...def,type,x:BASE+85,hp:def.hp,max:def.hp,cd:0,id:++serial});burst(BASE+85,GROUND-35,'#c9ef9a',10);}
+function startWave(){if(!art.ready)return;clearMovement();hasMoved=false;hasSummoned=false;$('skip').hidden=true;mode='battle';allies=[];enemies=[];shots=[];sparks=[];spawned=0;planned=5+wave*2;spawnClock=2;sap=100+sapLevel*15;blastCd=0;shieldCd=0;shieldTime=0;hero.x=330;hero.moving=false;hero.walk=0;hero.hp=Math.min(hero.max,hero.hp+hero.max*.35);hero.cd=0;hero.facing=1;camera=0;for(const k in cooldowns)cooldowns[k]=0;$('overlay').hidden=true;$('shop').hidden=true;$('pause').textContent='Pause';}
+function summon(type){if(mode!=='battle')return;const def=units[type];if(sap<def.cost||cooldowns[type]>0||allies.length>=18)return;hasSummoned=true;sap-=def.cost;cooldowns[type]=type==='oak'?4:1.5;allies.push({...def,type,x:BASE+85,hp:def.hp,max:def.hp,cd:0,id:++serial,moving:false,walk:serial*.73});burst(BASE+85,GROUND-35,'#c9ef9a',10);}
 function burst(x,y,color,n=8){for(let i=0;i<n;i++)sparks.push({x,y,vx:(Math.random()-.5)*160,vy:-Math.random()*180,life:.6+Math.random()*.3,color});}
 function hurt(e,damage){if(e.hp<=0)return;e.hp-=damage;e.flash=.15;if(e.hp<=0){seeds+=e.boss?90:8;score+=e.boss?1000:100;burst(e.x,GROUND-30,e.boss?'#ffe8a0':'#c7a77a',14);}}
 function cannon(){if(mode!=='battle'||blastCd>0)return;blastCd=10;shots.push({originX:hero.x,x:hero.x+hero.facing*72,y:GROUND-108,vx:hero.facing*600,damage:110+heroLevel*25,life:1.4,blast:true,hit:new Set()});burst(hero.x+hero.facing*72,GROUND-108,'#f8da84');}
@@ -64,30 +87,56 @@ function shop(){const el=$('shop');el.hidden=false;el.replaceChildren();for(cons
 function camp(){mode='camp';seeds+=25+wave*5;show('The grove holds.',`Wave ${wave} cleared. Strengthen your army before the next assault.`, 'Begin wave '+(wave+1),'GROW STRONGER');shop();}
 function finish(win){mode=win?'won':'lost';$('shop').hidden=true;show(win?'Roots run deep.':'The grove needs you.',win?`All ten waves defeated. The Iron Stump has fallen. Final score: ${score}.`:`You reached wave ${wave}. Final score: ${score}. Summon a front line early and protect your hero.`, 'Start a new run',win?'GROVE SAVED':'GROVE FALLEN');$('notice').textContent='Free playtest · Your next grove is a fresh start';}
 function pause(){if(mode==='battle'){mode='paused';show('Take a breath.','Your grove is waiting.','Resume battle','PAUSED');$('shop').hidden=true;$('notice').textContent='Battle pauses when you switch tabs.';$('pause').textContent='Resume';}else if(mode==='paused'){mode='battle';$('overlay').hidden=true;$('pause').textContent='Pause';}}
-function spawn(){const boss=wave===TOTAL&&spawned===planned-1,tank=!boss&&spawned%4===3,runner=!tank&&!boss&&spawned%3===2;const hp=boss?2200:tank?180+wave*22:65+wave*12;enemies.push({x:wave===1?Math.max(canvas.width+40,hero.x+420):WORLD-100,hp,max:hp,damage:boss?70:tank?24:12,speed:boss?23:runner?70:tank?31:44,reach:boss?80:38,cd:0,rate:boss?1.7:1.2,boss,tank,runner,flash:0,id:++serial});spawned++;}
+function spawn(){const boss=wave===TOTAL&&spawned===planned-1,tank=!boss&&spawned%4===3,runner=!tank&&!boss&&spawned%3===2;const hp=boss?2200:tank?180+wave*22:65+wave*12;enemies.push({x:wave===1?Math.max(canvas.width+40,hero.x+420):WORLD-100,hp,max:hp,damage:boss?70:tank?24:12,speed:boss?23:runner?70:tank?31:44,reach:boss?80:38,cd:0,rate:boss?1.7:1.2,boss,tank,runner,flash:0,id:++serial,moving:false,walk:serial*.73});spawned++;}
 function update(dt){if(mode!=='battle')return;clock+=dt;blastCd=Math.max(0,blastCd-dt);shieldCd=Math.max(0,shieldCd-dt);shieldTime=Math.max(0,shieldTime-dt);for(const k in cooldowns)cooldowns[k]=Math.max(0,cooldowns[k]-dt);sap=Math.min(250,sap+dt*(7+sapLevel*2));
-let movement=(held.has('right')?1:0)-(held.has('left')?1:0);if(movement){hasMoved=true;hero.x=Math.max(BASE+80,Math.min(WORLD-220,hero.x+movement*dt*185));hero.facing=movement;}
+hero.moving=false;let movement=movementDirection();if(movement){hasMoved=true;advance(hero,Math.max(BASE+80,Math.min(WORLD-220,hero.x+movement*dt*185)),80);hero.facing=movement;}
 hero.cd=Math.max(0,hero.cd-dt);hero.flash=Math.max(0,hero.flash-dt);let near=enemies.filter(e=>e.hp>0&&Math.abs(e.x-hero.x)<210).sort((a,b)=>Math.abs(a.x-hero.x)-Math.abs(b.x-hero.x))[0];if(near&&hero.cd===0){hero.facing=Math.sign(near.x-hero.x)||1;hero.cd=.7;shots.push({originX:hero.x,x:hero.x+hero.facing*60,y:GROUND-108,vx:hero.facing*480,damage:29+heroLevel*9,life:.55,blast:false,hit:new Set()});}
 spawnClock-=dt;if(spawned<planned&&spawnClock<=0){spawn();spawnClock=Math.max(.85,2.7-wave*.12);}
-for(const a of allies){if(a.hp<=0)continue;a.flash=Math.max(0,(a.flash||0)-dt);a.cd=Math.max(0,a.cd-dt);const target=enemies.filter(e=>e.hp>0&&e.x>=a.x-30).sort((a,b)=>a.x-b.x)[0];if(target&&target.x-a.x<a.reach){if(a.cd===0){a.cd=a.rate;if(a.type==='archer')shots.push({originX:a.x,x:a.x+40,y:GROUND-56,vx:390,damage:a.damage,life:1,blast:false,hit:new Set()});else{hurt(target,a.damage);burst(target.x,GROUND-35,'#dce6ac',3);}}}else a.x=Math.min(WORLD-130,a.x+a.speed*dt);}
-for(const e of enemies){if(e.hp<=0)continue;e.cd=Math.max(0,e.cd-dt);e.flash=Math.max(0,e.flash-dt);const targets=[...allies.filter(a=>a.hp>0),hero].filter(a=>Math.abs(a.x-e.x)<e.reach+20).sort((a,b)=>Math.abs(a.x-e.x)-Math.abs(b.x-e.x));if(targets.length){if(e.cd===0){const t=targets[0];t.hp-=e.damage*(shieldTime>0?.3:1);t.flash=.2;e.cd=e.rate;burst(t.x,GROUND-40,'#e1a881',4);}}else if(e.x<BASE+70){if(e.cd===0){grove-=e.damage*(shieldTime>0?.15:1);e.cd=e.rate;burst(BASE,GROUND-90,'#f0d796',4);}}else e.x-=e.speed*dt;}
+for(const a of allies){a.moving=false;if(a.hp<=0)continue;a.flash=Math.max(0,(a.flash||0)-dt);a.cd=Math.max(0,a.cd-dt);const target=enemies.filter(e=>e.hp>0&&e.x>=a.x-30).sort((a,b)=>a.x-b.x)[0];if(target&&target.x-a.x<a.reach){if(a.cd===0){a.cd=a.rate;if(a.type==='archer')shots.push({originX:a.x,x:a.x+40,y:GROUND-56,vx:390,damage:a.damage,life:1,blast:false,hit:new Set()});else{hurt(target,a.damage);burst(target.x,GROUND-35,'#dce6ac',3);}}}else{const ahead=allies.filter(other=>other!==a&&other.type===a.type&&other.hp>0&&other.x>a.x).sort((u,v)=>u.x-v.x)[0];const limit=ahead?ahead.x-(a.type==='oak'?60:42):WORLD-130;advance(a,Math.max(a.x,Math.min(limit,a.x+a.speed*dt)),a.type==='oak'?48:44);}}
+for(const e of enemies){e.moving=false;if(e.hp<=0)continue;e.cd=Math.max(0,e.cd-dt);e.flash=Math.max(0,e.flash-dt);const targets=[...allies.filter(a=>a.hp>0),hero].filter(a=>Math.abs(a.x-e.x)<e.reach+20).sort((a,b)=>Math.abs(a.x-e.x)-Math.abs(b.x-e.x));if(targets.length){if(e.cd===0){const t=targets[0];t.hp-=e.damage*(shieldTime>0?.3:1);t.flash=.2;e.cd=e.rate;burst(t.x,GROUND-40,'#e1a881',4);}}else if(e.x<BASE+70){if(e.cd===0){grove-=e.damage*(shieldTime>0?.15:1);e.cd=e.rate;burst(BASE,GROUND-90,'#f0d796',4);}}else advance(e,e.x-e.speed*dt,e.runner?56:60);}
 for(const s of shots){const old=s.originX??s.x;delete s.originX;s.x+=s.vx*dt;s.life-=dt;for(const e of enemies){if(e.hp<=0||s.hit.has(e.id))continue;if(e.x>=Math.min(old,s.x)-20&&e.x<=Math.max(old,s.x)+20){hurt(e,s.damage);s.hit.add(e.id);if(!s.blast){s.life=0;break;}}}}
 for(const p of sparks){p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=300*dt;}allies=allies.filter(a=>a.hp>0);enemies=enemies.filter(e=>e.hp>0);shots=shots.filter(s=>s.life>0);sparks=sparks.filter(p=>p.life>0);camera+=(Math.max(0,Math.min(WORLD-canvas.width,hero.x-canvas.width*.35))-camera)*Math.min(1,dt*6);
 if(hero.hp<=0||grove<=0)finish(false);else if(spawned===planned&&enemies.length===0){if(wave===TOTAL)finish(true);else camp();}}
 function ellipse(x,y,rx,ry,color){ctx.fillStyle=color;ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,0,Math.PI*2);ctx.fill();}
 function line(x,y,x2,y2,color,width){ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x2,y2);ctx.stroke();}
 function health(x,y,ratio,width=44){ctx.fillStyle='#0b1714';ctx.fillRect(x-width/2,y,width,4);ctx.fillStyle=ratio>.3?'#c3da8a':'#ef9c73';ctx.fillRect(x-width/2,y,width*Math.max(0,ratio),4);}
-function heroArt(x,y,size,color,heroic=false,type='sprout',cd=0){
+// Six poses per gait, with one fixed scale and ground anchor per species.
+// Advance is driven by world distance, so stopping also stops the feet.
+function walkFrame(actor){return art.reduced?0:Math.floor((actor.walk||0)/(Math.PI*2)*6)%6;}
+function walkSprite(actor,row,height,flash=false){
+ const baseline=[241,242,244,199][row],bodyHeight=[220,222,234,157][row],scale=height/bodyHeight;
+ ctx.save();ctx.translate(actor.x,GROUND);if(flash)ctx.filter='brightness(1.8)';
+ ctx.drawImage(art.images.walk,walkFrame(actor)*256,row*256,256,256,-145*scale,-baseline*scale,256*scale,256*scale);ctx.restore();
+}
+function heroArt(x,y,size,color,heroic=false,type='sprout',cd=0,actor=hero){
 if(!art.ready)return;
-const active=mode==='battle',attack=active&&cd>(heroic?.52:type==='oak'?1.1:units[type].rate-.2);
-const moving=active&&!art.reduced&&(heroic?(held.has('left')!==held.has('right')):cd===0);
-const bob=moving?Math.sin(clock*9+x)*1.6:0;
+const attack=cd>(heroic?.52:type==='oak'?1.1:units[type].rate-.2);
+const moving=actor.moving&&!art.reduced;
+const bob=moving?Math.sin((actor.walk||0)*2)*.7:0;
 ellipse(x,y+3,heroic?35:size*28,6,'#06181170');
-if(heroic){const frame=attack?3:moving?(Math.floor(clock*7)%2?1:2):0;sprite(art.images.hero,heroRects[frame],x,y+bob,157,hero.facing<0,hero.flash>0);}
-else{const key=type+(attack?'Attack':'');sprite(art.images.army,spriteRects[key],x,y+bob,type==='oak'?137:103,false,color==='#fff0ca',moving?Math.sin(clock*7+x)*.015:0);}}
-function enemyArt(e){if(!art.ready)return;const size=e.boss?215:e.tank?144:e.runner?99:113,active=mode==='battle',rock=active&&!art.reduced?Math.sin(clock*8+e.id)*.015:0;
-ellipse(e.x,GROUND+4,size*.34,7,'#06181188');sprite(art.images.army,spriteRects[e.runner?'thorn':'bot'],e.x,GROUND,size,false,e.flash>0,rock);
-health(e.x,GROUND-size-12,e.hp/e.max,e.boss?110:45);if(e.boss){ctx.textAlign='center';ctx.fillStyle='#ffe0a0';ctx.font='bold 13px system-ui';ctx.fillText('THE IRON STUMP',e.x,GROUND-size-22);}}
+if(heroic){const frame=attack?3:moving?(Math.floor((actor.walk||0)/Math.PI)%2?1:2):0;sprite(art.images.hero,heroRects[frame],x,y+bob,157,hero.facing<0,hero.flash>0);}
+else if(attack){sprite(art.images.army,spriteRects[type+'Attack'],x,y,type==='oak'?137:103,false,color==='#fff0ca');}
+else walkSprite(actor,{sprout:0,archer:1,oak:2}[type],type==='oak'?137:103,color==='#fff0ca');}
+function enemyArt(e){
+ if(!art.ready)return;
+ const size=e.boss?215:e.tank?144:e.runner?99:113;
+ ellipse(e.x,GROUND+4,size*.34,7,'#06181188');
+ if(e.runner)walkSprite(e,3,size,e.flash>0);
+ else sprite(art.images.army,spriteRects.bot,e.x,GROUND,size,false,e.flash>0);
+ if(!e.runner){
+  // Original machine artwork faces left. These inset hub highlights rotate
+  // with distance traveled; a stopped/paused machine has no locomotion.
+  const width=size*479/378,phase=art.reduced?0:-(e.walk||0)*2;
+  for(const fraction of [-.14,.015,.16,.31]){
+   const x=e.x+width*fraction,y=GROUND-size*.105,r=size*.034;
+   ctx.save();ctx.translate(x,y);ctx.rotate(phase);ctx.strokeStyle='#cabf9d';ctx.lineWidth=1.3;
+   ctx.beginPath();ctx.moveTo(-r,0);ctx.lineTo(r,0);ctx.moveTo(0,-r);ctx.lineTo(0,r);ctx.stroke();ctx.restore();
+  }
+ }
+ health(e.x,GROUND-size-12,e.hp/e.max,e.boss?110:45);
+ if(e.boss){ctx.textAlign='center';ctx.fillStyle='#ffe0a0';ctx.font='bold 13px system-ui';ctx.fillText('THE IRON STUMP',e.x,GROUND-size-22);}
+}
+
 function draw(){const w=canvas.width,h=canvas.height;ctx.clearRect(0,0,w,h);
 if(!art.ready){ctx.fillStyle='#15291e';ctx.fillRect(0,0,w,h);return;}
 ctx.drawImage(art.images.background,-camera-100,0,WORLD+100,h);
@@ -97,7 +146,7 @@ if(vitality<.6){ctx.fillStyle='rgba(96,29,12,'+((1-vitality)*.24)+')';ctx.fillRe
 health(BASE,105,vitality,100);ctx.textAlign='center';ctx.font='bold 11px system-ui';ctx.fillStyle='#fff1bd';ctx.shadowColor='#000';ctx.shadowBlur=5;ctx.fillText('TREE OF LIFE',BASE,95);ctx.shadowBlur=0;
 for(let i=0;i<7;i++){const t=(art.reduced?0:clock)*.6+i;ellipse(BASE+Math.sin(t*1.7+i)*62,GROUND-100-(i*23+(art.reduced?0:clock)*10)%140,2,3,'#e1eeb0');}
 if(shieldTime>0){const glow=ctx.createRadialGradient(BASE,GROUND-90,20,BASE,GROUND-90,140);glow.addColorStop(0,'#c9ef9a00');glow.addColorStop(.85,'#b7ee9c33');glow.addColorStop(1,'#c9ef9a00');ctx.fillStyle=glow;ctx.fillRect(BASE-150,GROUND-240,300,285);ctx.strokeStyle='#c6f2a6';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(BASE,GROUND-90,100,135,0,0,Math.PI*2);ctx.stroke();}
-for(const a of allies){heroArt(a.x,GROUND,1,a.flash>0?'#fff0ca':a.color,false,a.type,a.cd);health(a.x,GROUND-(a.type==='oak'?150:116),a.hp/a.max);}
+for(const a of allies){heroArt(a.x,GROUND,1,a.flash>0?'#fff0ca':a.color,false,a.type,a.cd,a);health(a.x,GROUND-(a.type==='oak'?150:116),a.hp/a.max);}
 for(const e of enemies)enemyArt(e);
 heroArt(hero.x,GROUND,1,'',true,'hero',hero.cd);health(hero.x,GROUND-174,hero.hp/hero.max,60);ctx.fillStyle='#fff1bd';ctx.textAlign='center';ctx.font='bold 10px system-ui';ctx.fillText('YOU',hero.x,GROUND-184);
 for(const s of shots){const sign=Math.sign(s.vx);line(s.x-sign*(s.blast?38:14),s.y,s.x,s.y,s.blast?'#ffcd5b':'#f2dea1',s.blast?7:3);ellipse(s.x,s.y,s.blast?15:6,s.blast?10:4,'#f5d783');if(s.blast){ellipse(s.x-sign*3,s.y,8,11,'#9c6934');line(s.x-7,s.y-5,s.x+6,s.y-5,'#ead796',4);}}
@@ -105,15 +154,38 @@ for(const p of sparks){ctx.globalAlpha=Math.min(1,Math.max(0,p.life));ellipse(p.
 const vignette=ctx.createLinearGradient(0,0,0,h);vignette.addColorStop(0,'#081b2022');vignette.addColorStop(.6,'#0000');vignette.addColorStop(1,'#09170c66');ctx.fillStyle=vignette;ctx.fillRect(0,0,w,h);
 if(mode==='battle'&&spawned<2){ctx.textAlign='center';ctx.font='bold 22px Georgia';ctx.fillStyle='#fff0ba';ctx.shadowColor='#000';ctx.shadowBlur=6;ctx.fillText('WAVE '+wave+' / '+TOTAL,w/2,50);ctx.font='12px system-ui';ctx.fillText(wave===10?'THE IRON STUMP':'HOLD THE GROVE',w/2,70);ctx.shadowBlur=0;}
 if(mode==='battle'){ctx.fillStyle='#fff5cf';ctx.font='12px system-ui';ctx.textAlign='right';ctx.fillText(`${enemies.length+planned-spawned} enemies remaining`,w-18,25);if(hero.x>750){ctx.textAlign='left';ctx.fillText('← Tree of Life',18,25);}}}
-function sync(){const note=$('field-note');note.hidden=mode!=='battle';if(mode==='battle'){note.textContent=grove/groveMax<.4?'Grove under threat! Fall back, summon defenders, and use Canopy Shield.':wave===1&&!hasMoved?'Hold ← or → to move your Tree Hero. He attacks nearby enemies automatically.':wave===1&&!hasSummoned?'Summon a Seedling below. Sap refills automatically, so keep your army growing.':wave===1?'Enemies arrive from the right. Fight beside your army and protect the glowing tree.':wave===10?'The Iron Stump approaches. Keep a strong front line and save your abilities.':'Lead your army. Clear this wave to earn seeds for upgrades.';}$('wave').textContent=wave+' / '+TOTAL;$('grove').textContent=Math.max(0,Math.ceil(grove/groveMax*100))+'%';$('hero').textContent=Math.max(0,Math.ceil(hero.hp/hero.max*100))+'%';$('sap').textContent=Math.floor(sap);$('seeds').textContent=seeds;for(const b of document.querySelectorAll('[data-unit]')){const type=b.dataset.unit;b.disabled=mode!=='battle'||sap<units[type].cost||cooldowns[type]>0||allies.length>=18;const role=type==='sprout'?'melee':type==='archer'?'ranged':'tank';b.querySelector('small').textContent=cooldowns[type]>0?Math.ceil(cooldowns[type])+'s cooldown':allies.length>=18?'Army full':units[type].cost+' sap · '+role;}$('blast').disabled=mode!=='battle'||blastCd>0;$('blast').querySelector('small').textContent=blastCd>0?Math.ceil(blastCd)+'s to ready':'Q · Ready';$('shield').disabled=mode!=='battle'||shieldCd>0;$('shield').querySelector('small').textContent=shieldCd>0?Math.ceil(shieldCd)+'s to ready':'E · Ready';$('pause').disabled=!['battle','paused'].includes(mode);}
-function resize(){const narrow=innerWidth<700;canvas.width=narrow?700:1100;canvas.height=470;}
+function sync(){const note=$('field-note');note.hidden=mode!=='battle';if(mode==='battle'){note.textContent=grove/groveMax<.4?'Grove under threat! Fall back, summon defenders, and use Canopy Shield.':wave===1&&!hasMoved?'Hold a movement button or drag ← → on the battlefield. Your hero fires automatically.':wave===1&&!hasSummoned?'Summon a Seedling below. Sap refills automatically, so keep your army growing.':wave===1?'Enemies arrive from the right. Fight beside your army and protect the glowing tree.':wave===10?'The Iron Stump approaches. Keep a strong front line and save your abilities.':'Lead your army. Clear this wave to earn seeds for upgrades.';}$('wave').textContent=wave+' / '+TOTAL;$('grove').textContent=Math.max(0,Math.ceil(grove/groveMax*100))+'%';$('hero').textContent=Math.max(0,Math.ceil(hero.hp/hero.max*100))+'%';$('sap').textContent=Math.floor(sap);$('seeds').textContent=seeds;for(const b of document.querySelectorAll('[data-unit]')){const type=b.dataset.unit;b.disabled=mode!=='battle'||sap<units[type].cost||cooldowns[type]>0||allies.length>=18;const role=type==='sprout'?'melee':type==='archer'?'ranged':'tank';b.querySelector('small').textContent=cooldowns[type]>0?Math.ceil(cooldowns[type])+'s cooldown':allies.length>=18?'Army full':units[type].cost+' sap · '+role;}$('blast').disabled=mode!=='battle'||blastCd>0;$('blast').querySelector('small').textContent=blastCd>0?Math.ceil(blastCd)+'s to ready':'Burst damage';$('shield').disabled=mode!=='battle'||shieldCd>0;$('shield').querySelector('small').textContent=shieldCd>0?Math.ceil(shieldCd)+'s to ready':'Heal + protect';$('pause').disabled=!['battle','paused'].includes(mode);}
+function resize(){
+ const mobile=typeof matchMedia==='function'?matchMedia('(max-width:900px), (pointer:coarse)').matches:innerWidth<900;
+ const box=canvas.parentElement?.getBoundingClientRect?.();
+ canvas.width=mobile&&box?.height?Math.max(1,Math.round(470*box.width/box.height)):mobile?700:1100;
+ canvas.height=470;clearMovement();
+}
 addEventListener('resize',resize);resize();
-for(const [id,dir]of [['left','left'],['right','right']]){const b=$(id);b.addEventListener('pointerdown',e=>{e.preventDefault();b.setPointerCapture(e.pointerId);if(mode==='battle')held.add(dir);});for(const ev of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(ev,()=>held.delete(dir));}
+if(typeof ResizeObserver==='function')new ResizeObserver(resize).observe(canvas.parentElement);
+for(const [id,direction]of [['left',-1],['right',1]]){
+ const b=$(id);
+ b.addEventListener('pointerdown',e=>{if(mode!=='battle')return;e.preventDefault();b.setPointerCapture(e.pointerId);pointerMoves.set(e.pointerId,direction);});
+ for(const ev of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(ev,e=>pointerMoves.delete(e.pointerId));
+}
+canvas.addEventListener('pointerdown',e=>{
+ if(mode!=='battle'||drag||e.button>0)return;
+ e.preventDefault();canvas.setPointerCapture(e.pointerId);drag={id:e.pointerId,startX:e.clientX,direction:0};
+ $('drag-cue').textContent='Drag ← → to move';$('drag-cue').hidden=false;
+});
+canvas.addEventListener('pointermove',e=>{
+ if(!drag||drag.id!==e.pointerId)return;
+ const dx=e.clientX-drag.startX;drag.direction=Math.abs(dx)<12?0:Math.sign(dx);
+ $('drag-cue').textContent=drag.direction>0?'Moving right → · Lift to stop':drag.direction<0?'← Moving left · Lift to stop':'Drag ← → to move';
+});
+for(const ev of ['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(ev,e=>{
+ if(drag?.id===e.pointerId){drag=null;$('drag-cue').hidden=true;}
+});
 document.querySelectorAll('[data-unit]').forEach(b=>b.onclick=()=>summon(b.dataset.unit));$('blast').onclick=cannon;$('shield').onclick=shield;$('pause').onclick=pause;
 $('skip').onclick=reset;
 $('next').onclick=()=>{if(mode==='ready'&&art.ready){briefingStep=0;briefing();}else if(mode==='briefing'){if(briefingStep<2){briefingStep++;briefing();}else reset();}else if(mode==='won'||mode==='lost')reset();else if(mode==='camp'){wave++;startWave();}else if(mode==='paused')pause();};
 addEventListener('keydown',e=>{if(e.target.closest('input,textarea,select'))return;const k=e.key.toLowerCase();if(['arrowleft','arrowright','a','d','q','e','1','2','3','p',' '].includes(k))e.preventDefault();if(k==='a'||k==='arrowleft')held.add('left');if(k==='d'||k==='arrowright')held.add('right');if(e.repeat)return;if(k==='1')summon('sprout');if(k==='2')summon('archer');if(k==='3')summon('oak');if(k==='q')cannon();if(k==='e')shield();if(k==='p'||k==='escape')pause();});
-addEventListener('keyup',e=>{const k=e.key.toLowerCase();if(['a','arrowleft'].includes(k))held.delete('left');if(['d','arrowright'].includes(k))held.delete('right');});addEventListener('blur',()=>{held.clear();if(mode==='battle')pause();});document.addEventListener('visibilitychange',()=>{if(document.hidden&&mode==='battle')pause();});
+addEventListener('keyup',e=>{const k=e.key.toLowerCase();if(['a','arrowleft'].includes(k))held.delete('left');if(['d','arrowright'].includes(k))held.delete('right');});addEventListener('blur',()=>{clearMovement();if(mode==='battle')pause();});document.addEventListener('visibilitychange',()=>{if(document.hidden&&mode==='battle')pause();});
 loadArt();
 function frame(now){const dt=Math.min(.04,(now-previous)/1000||0);previous=now;update(dt);draw();sync();requestAnimationFrame(frame);}requestAnimationFrame(frame);
 })();

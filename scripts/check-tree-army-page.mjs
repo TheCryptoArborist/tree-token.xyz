@@ -11,7 +11,7 @@ fs.mkdirSync('.netlify',{recursive:true});
 const browser = await chromium.launch({headless:true});
 const results=[];
 try {
-  for (const [width,height,label] of [[1440,1000,'desktop'],[390,844,'mobile'],[320,740,'small-mobile'],[844,390,'landscape']]) {
+  for (const [width,height,label] of [[1440,1000,'desktop'],[390,844,'mobile'],[320,568,'small-mobile'],[844,390,'landscape']]) {
     const context=await browser.newContext({viewport:{width,height},hasTouch:width<900});
     const page=await context.newPage(), errors=[];
     page.on('pageerror',e=>errors.push(e.message));
@@ -39,8 +39,27 @@ try {
       await page.keyboard.up('ArrowRight');
       assert.match(await page.locator('#field-note').innerText(),/Summon/);
     } else {
-      const box=await page.locator('#right').boundingBox();
-      await page.touchscreen.tap(box.x+box.width/2,box.y+box.height/2);
+      for(const selector of ['#left','#right','#blast','#shield','[data-unit="sprout"]','[data-unit="archer"]','[data-unit="oak"]']) {
+        const box=await page.locator(selector).boundingBox();
+        assert(box && box.x>=0 && box.y>=0 && box.x+box.width<=width+1 && box.y+box.height<=height+1,selector+' must stay inside phone viewport');
+        assert(box.height>=44,selector+' touch target is too short');
+      }
+      const box=await page.locator('#battle').boundingBox();
+      const ratio=await page.locator('#battle').evaluate(c=>c.width/c.height);
+      assert(Math.abs(ratio-box.width/box.height)<.005,'Mobile canvas must preserve character proportions');
+      const client=await context.newCDPSession(page);
+      const y=Math.round(box.y+box.height*.45),x=Math.round(box.x+box.width*.45);
+      await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y,id:1}]});
+      await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x+45,y,id:1}]});
+      await page.waitForTimeout(200);
+      assert.match(await page.locator('#drag-cue').innerText(),/Moving right/);
+      assert.match(await page.locator('#field-note').innerText(),/Summon/);
+      await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x-45,y,id:1}]});
+      assert.match(await page.locator('#drag-cue').innerText(),/Moving left/);
+      await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+      assert(await page.locator('#drag-cue').isHidden(),'Lifting finger must end drag');
+      assert.equal(await page.evaluate(()=>scrollY),0,'Battlefield gesture must not scroll page');
+      await client.detach();
     }
     const sap=Number(await page.locator('#sap').innerText());
     await page.locator('[data-unit="sprout"]').click();

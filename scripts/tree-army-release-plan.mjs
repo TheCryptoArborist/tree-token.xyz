@@ -1,19 +1,24 @@
 import assert from 'node:assert/strict';
+// Prototype 0.6: only gameplay HTML and the new gait atlas are deployed.
 export const REPLACED_HASHES = {
-  '/play/tree-army/test/index.html': '9acbbd1fb6fe567d096e4f3f718c091e226288cd',
-  '/scripts/arcade-organization.js': '23097fbb79032124017f75ef79dc4381be3646c9',
+  '/play/tree-army/test/index.html': '1f34641f581d957c682c81ed8e8a8bf2dad6a5a4',
 };
-export const ADDED_PATHS = [
+export const ADDED_PATHS = ['/play/tree-army/test/assets/forest-walk.webp'];
+export const DELIVERY_PATHS = [...Object.keys(REPLACED_HASHES), ...ADDED_PATHS];
+// Preview builds also need assets already present in production. Keep this
+// catalog independent of the smaller, one-time publication allowlist.
+export const PREVIEW_PATHS = [
+  '/play/tree-army/test/index.html',
   '/play/tree-army/test/assets/grove-battlefield.webp',
   '/play/tree-army/test/assets/forest-army.webp',
   '/play/tree-army/test/assets/tree-hero.webp',
+  ...ADDED_PATHS,
   '/play/tree-army/preview-gameplay.mp4',
   '/play/tree-army/preview-gameplay.webm',
   '/play/tree-army/preview-gameplay.jpg',
   '/scripts/arcade-tree-army.js',
   '/styles/arcade-tree-army.css',
 ];
-export const DELIVERY_PATHS = [...Object.keys(REPLACED_HASHES), ...ADDED_PATHS];
 export function assembleFiles(original, overlays) {
   assert.deepEqual(Object.keys(overlays).sort(), [...DELIVERY_PATHS].sort(), 'Exact Tree Army allowlist required');
   for (const [path, hash] of Object.entries(REPLACED_HASHES)) assert.equal(original[path], hash, 'Reviewed replacement baseline changed: '+path);

@@ -1,7 +1,7 @@
 import { cp, mkdir, readFile, readdir, writeFile, lstat } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import assert from 'node:assert/strict';
-import { DELIVERY_PATHS as treeArmyPaths } from './tree-army-release-plan.mjs';
+import { PREVIEW_PATHS as treeArmyPaths } from './tree-army-release-plan.mjs';
 import { createHash } from 'node:crypto';
 
 const root = resolve(import.meta.dirname, '..');
