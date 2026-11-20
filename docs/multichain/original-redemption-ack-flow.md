@@ -2,7 +2,40 @@
 
 Signing page: `/play/multichaintest/original/sui/ack/`.
 
-## Verified redemption and remaining action
+## Completed on mainnet, November 20, 2026
+
+User-signed Sui acknowledgement
+`HB3aWPgmLd8Qt7kQ4igtQEvFXepRGGDfhqfWZmzqvCKb` succeeded at
+18:46:57 UTC (12:46:57 America/Chicago). The exact kind-3 message was delivered
+to BNB 15 seconds later by transaction
+`0x9abb0d72d3fcf207a518b6e558e5f7cf907e31d65bbbfc18d2eeb24d1ba1b44d`.
+All three required DVNs, sealing and destination execution succeeded.
+
+Independent Sui receipt/effects, LayerZero records, BNB receipt events and
+current contract reads agree: the original NFTree #2720 remains in the Sui
+wallet ending 45c4; its vault is phase 2, empty and `ack_sent=true`, with
+outbound nonce 2. BNB pass #1 is Retired and burned, its buyer balance is zero,
+and `canPlay` is zero. The acknowledgement did not input or mutate the NFT.
+The actual message fee was 0.094962136 SUI and net gas was 0.004053255 SUI,
+for an actual wallet debit of 0.099015391 SUI.
+
+The full receipt-recovery validator reports `stage: retired` and
+`destinationStatus: retired`. No additional transaction is needed for this
+trial. Exact identities, decoded events, raw BNB and LayerZero records,
+independent checks and the current Mysten guidance are recorded in
+[`original-trial/redemption-ack-verified.json`](original-trial/redemption-ack-verified.json).
+
+This closes the controlled original-NFT asset lifecycle. The next documented
+product milestone is the isolated Tree Force '89 BNB sign-in and access flow
+in `original-collection/integration-review.md`. The retired pass is a negative
+access case. Positive access testing needs a separately reviewed active
+entitlement; no additional inventory, sale expansion or gameplay deployment
+is included in this completion record.
+
+The sections below retain the preparation and publication history. Their
+pre-signing state observations are superseded by the completion evidence above.
+
+## Verified redemption and remaining action at preparation
 
 BNB transaction
 `0xa33612db18691d9805ebbc69ac24501d6e4476bd4edf2476b9b9b1710c50fe6f`

@@ -1,0 +1,732 @@
+{
+  "schemaVersion": 1,
+  "status": "complete",
+  "scope": "The controlled one-slot original NFTree #2720 redemption and acknowledgement round trip; not a public launch or Arcade gameplay integration.",
+  "recordedAt": "2026-11-20T18:51:01.594100Z",
+  "verificationMode": "Read-only verification of the user-supplied transaction. No assistant signature, chain submission or deployment.",
+  "sourceCommit": "be0e85498dd218e5418055f02ed97ebda5f66c37",
+  "publishedAcknowledgementDeploy": "6b00892b6acd6fc92a18fd20",
+  "validators": {
+    "receiptAndDestination": "scripts/multichain/original-ack-core.mjs:recoverReceipt",
+    "suiReceipt": "scripts/multichain/original-ack-core.mjs:verifySend",
+    "suiState": "scripts/multichain/original-ack-core.mjs:readState",
+    "bnbState": "scripts/multichain/original-ack-core.mjs:readBnb"
+  },
+  "sourceTransaction": "HB3aWPgmLd8Qt7kQ4igtQEvFXepRGGDfhqfWZmzqvCKb",
+  "destinationTransaction": "0x9abb0d72d3fcf207a518b6e558e5f7cf907e31d65bbbfc18d2eeb24d1ba1b44d",
+  "priorRedemptionSend": "0xa33612db18691d9805ebbc69ac24501d6e4476bd4edf2476b9b9b1710c50fe6f",
+  "priorNftReturn": "Ay5gtMkYp5mjYidC3TJn4YuJLKYcHLg3Yxm8qRhTy9mU",
+  "actualCostSui": {
+    "messageFee": "0.094962136",
+    "netGas": "0.004053255",
+    "totalWalletDebit": "0.099015391"
+  },
+  "receiptRecovery": {
+    "digest": "HB3aWPgmLd8Qt7kQ4igtQEvFXepRGGDfhqfWZmzqvCKb",
+    "network": "sui:mainnet",
+    "sender": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+    "status": "chain_verified",
+    "feeMist": "94962136",
+    "gasMist": "4053255",
+    "grossGasMist": "16599600",
+    "totalMist": "99015391",
+    "guid": "0xe9b1c9627995eb8c09471150e121847770e7b28d9d705acd7b2a7f42b5a44c8c",
+    "vaultId": "0x45bf08499784ea9ff658937165a9449d509aa37de47a728af44e903387f3ca2c",
+    "nftId": "0x046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba",
+    "request": "0x76f08f56cc030f0b7db560cf46df3fee212d1ddcfa2c8135d1fbee4e85e38497",
+    "recipient": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+    "stage": "retired",
+    "destinationStatus": "retired",
+    "verifiedAt": "2026-11-20T18:48:36.959Z"
+  },
+  "suiVerification": {
+    "checkedAt": "2026-11-20T18:48:21.278Z",
+    "digest": "HB3aWPgmLd8Qt7kQ4igtQEvFXepRGGDfhqfWZmzqvCKb",
+    "status": {
+      "success": true,
+      "error": null
+    },
+    "proof": {
+      "feeMist": "94962136",
+      "gasMist": "4053255",
+      "grossGasMist": "16599600",
+      "totalMist": "99015391",
+      "guid": "0xe9b1c9627995eb8c09471150e121847770e7b28d9d705acd7b2a7f42b5a44c8c",
+      "vaultId": "0x45bf08499784ea9ff658937165a9449d509aa37de47a728af44e903387f3ca2c",
+      "nftId": "0x046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba",
+      "request": "0x76f08f56cc030f0b7db560cf46df3fee212d1ddcfa2c8135d1fbee4e85e38497",
+      "recipient": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4"
+    },
+    "gasBudget": "5141156",
+    "gasPrice": "100",
+    "gasSummary": {
+      "computationCost": "100000",
+      "storageCost": "16499600",
+      "storageRebate": "12546345",
+      "nonRefundableStorageFee": "1255"
+    },
+    "gasSender": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+    "balanceChanges": [
+      {
+        "coinType": "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI",
+        "address": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+        "amount": "-99015391"
+      },
+      {
+        "coinType": "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI",
+        "address": "0x9004e1e4c6dcc42d1b73269db48d510192665677fcad2079a3c7d1e9e971d34e",
+        "amount": "13176539"
+      },
+      {
+        "coinType": "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI",
+        "address": "0xf99b445ae678d3f28fe7acb91e5d7ee8ab538d7e231a837b12c593fb624ad630",
+        "amount": "81785597"
+      }
+    ],
+    "events": [
+      {
+        "eventType": "0x3ce7457bed48ad23ee5d611dd3172ae4fbd0a22ea0e846782a7af224d905dbb0::send_uln::ExecutorFeePaidEvent",
+        "json": {
+          "guid": {
+            "bytes": "6bHJYnmV64wJRxFQ4SGEd3Dnso2dcFrNeyp/QrWkTIw="
+          },
+          "executor": "0xde7fe1a6648d587fcc991f124f3aa5b6389340610804108094d5c5fbf61d1989",
+          "fee": {
+            "fee": "81785597",
+            "recipient": "0xf99b445ae678d3f28fe7acb91e5d7ee8ab538d7e231a837b12c593fb624ad630"
+          }
+        }
+      },
+      {
+        "eventType": "0x3ce7457bed48ad23ee5d611dd3172ae4fbd0a22ea0e846782a7af224d905dbb0::send_uln::DVNFeePaidEvent",
+        "json": {
+          "guid": {
+            "bytes": "6bHJYnmV64wJRxFQ4SGEd3Dnso2dcFrNeyp/QrWkTIw="
+          },
+          "dvns": [
+            "0x0c12321ebe562b8fb8a74e6d29f144ea199a8f31a4cea3a417ce72477f6dfebb",
+            "0x52aa129049de845353484868d1be6e2df6878b0ed2213d94d3c827309aeae685",
+            "0x92128a5edf4a0f696464de66d00986ef41b37faf705ceb3d9d9a4e5c306fbf91"
+          ],
+          "fees": [
+            {
+              "fee": "4358299",
+              "recipient": "0x9004e1e4c6dcc42d1b73269db48d510192665677fcad2079a3c7d1e9e971d34e"
+            },
+            {
+              "fee": "4409120",
+              "recipient": "0x9004e1e4c6dcc42d1b73269db48d510192665677fcad2079a3c7d1e9e971d34e"
+            },
+            {
+              "fee": "4409120",
+              "recipient": "0x9004e1e4c6dcc42d1b73269db48d510192665677fcad2079a3c7d1e9e971d34e"
+            }
+          ]
+        }
+      },
+      {
+        "eventType": "0x31beaef889b08b9c3b37d19280fc1f8b75bae5b2de2410fc3120f403e9a36dac::messaging_channel::PacketSentEvent",
+        "json": {
+          "encoded_packet": "AQAAAAAAAAACAAB2qqxzByuU8UqHsjeBxwBMd99nmf3uEJ8kJx1GlrxKZRSkAAB1lgAAAAAAAAAAAAAAAJC1KSpQdM/dZlxya0M8wKl+Daar6bHJYnmV64wJRxFQ4SGEd3Dnso2dcFrNeyp/QrWkTIwCA0W/CEmXhOqf9liTcWWpRJ1QmqN95HpyivROkDOH88osBG2iqeFb2CK6BJHZeJR8wb+x/TDm+BOl+xC5srHWprp28I9WzAMPC321YM9G3z/uIS0d3PosgTXR++5OheOEl0hZU+Lq30qgKvlQz46RT70rZ1Izhec8NhGDQUWdjUXE",
+          "options": "AAMBABEBAAAAAAAAAAAAAAAAAAMNQA==",
+          "send_library": "0x3ce7457bed48ad23ee5d611dd3172ae4fbd0a22ea0e846782a7af224d905dbb0"
+        }
+      }
+    ],
+    "nonGasObjectChanges": [
+      {
+        "objectId": "0x0d376ab0c11fcbdfa480d4a691c9f7b5d00cc2249692e2949d26d32dafbf8aef",
+        "inputState": "Exists",
+        "inputVersion": "1100579540",
+        "inputDigest": "CnzvZ1J727KZqShnU1bmoFrc7uEW4r4sezhjWPG2hCGp",
+        "inputOwner": {
+          "Shared": {
+            "initialSharedVersion": "1058683488"
+          },
+          "$kind": "Shared"
+        },
+        "outputState": "ObjectWrite",
+        "outputVersion": "1100579541",
+        "outputDigest": "Dj7jMeXqJJpx3d28ajjYwu88nFCkh1XRP3LGAYY9A5Fi",
+        "outputOwner": {
+          "Shared": {
+            "initialSharedVersion": "1058683488"
+          },
+          "$kind": "Shared"
+        },
+        "idOperation": "None"
+      },
+      {
+        "objectId": "0x1c7945e496dde4ad3142ebf8d52b95946f4ed3443568defa9b97dec307c0f9d1",
+        "inputState": "Exists",
+        "inputVersion": "1096510929",
+        "inputDigest": "Eh21QrAyDgRa8zFfr6uBh7bprZS4vy2jSModALqwG2Gu",
+        "inputOwner": {
+          "Shared": {
+            "initialSharedVersion": "1"
+          },
+          "$kind": "Shared"
+        },
+        "outputState": "ObjectWrite",
+        "outputVersion": "1100579541",
+        "outputDigest": "7ScchqykcWHBiNBixhwXUiarF92UCRwUobARSUbf8sy7",
+        "outputOwner": {
+          "Shared": {
+            "initialSharedVersion": "1"
+          },
+          "$kind": "Shared"
+        },
+        "idOperation": "None"
+      },
+      {
+        "objectId": "0x45bf08499784ea9ff658937165a9449d509aa37de47a728af44e903387f3ca2c",
+        "inputState": "Exists",
+        "inputVersion": "1100579540",
+        "inputDigest": "4vyRVkQAoqWvmSUUrF5ou91m8yHagGfcT79G14XCwzpk",
+        "inputOwner": {
+          "Shared": {
+            "initialSharedVersion": "2"
+          },
+          "$kind": "Shared"
+        },
+        "outputState": "ObjectWrite",
+        "outputVersion": "1100579541",
+        "outputDigest": "9pcxxcCdFCAUwEQWb352JD2gd6qjyPx6t7sFDV5qq4SX",
+        "outputOwner": {
+          "Shared": {
+            "initialSharedVersion": "2"
+          },
+          "$kind": "Shared"
+        },
+        "idOperation": "None"
+      },
+      {
+        "objectId": "0x7baca797fd8b2bf9531b09d9874af2f18d17fc75932645de2a99f4dcaadb58d3",
+        "inputState": "Exists",
+        "inputVersion": "1100579540",
+        "inputDigest": "GnUaXnbkwc9hwo2G2LapoMzDtcjE9dcVHSjDVdsAiZpp",
+        "inputOwner": {
+          "ObjectOwner": "0xdd1e3f1024b36740b6c1ef8cc120e88f7b61127e665e7069ee3005985cad2c0a",
+          "$kind": "ObjectOwner"
+        },
+        "outputState": "ObjectWrite",
+        "outputVersion": "1100579541",
+        "outputDigest": "2JPiPZQWoAb9n2vqQ7kAesPxjNriS8cRE2fdDPpwkp11",
+        "outputOwner": {
+          "ObjectOwner": "0xdd1e3f1024b36740b6c1ef8cc120e88f7b61127e665e7069ee3005985cad2c0a",
+          "$kind": "ObjectOwner"
+        },
+        "idOperation": "None"
+      }
+    ],
+    "nftInput": false,
+    "adminInputs": [],
+    "nftChanged": false,
+    "currentCheckpoint": {
+      "sequenceNumber": 347374405,
+      "timestamp": "2026-11-20T18:48:19.243Z"
+    },
+    "currentNFT": {
+      "address": "0x046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba",
+      "version": 1100579540,
+      "digest": "4kUybSr2UuXay8xoJrQqsqTLqbmbaBB3nP3pjrAfQXxr",
+      "owner": {
+        "__typename": "AddressOwner",
+        "address": {
+          "address": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4"
+        }
+      },
+      "asMoveObject": {
+        "contents": {
+          "type": {
+            "repr": "0xf6c6d439ea0da2f3e9ba79e4992a7a4c113215fbf54c442ac9020c315f953705::collection::NFT"
+          },
+          "json": {
+            "id": "0x046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba",
+            "number": "2720",
+            "name": "Tree NFT #2720",
+            "description": "A unique tree from the Tree NFT collection. Rarity: Common",
+            "image_url": "https://black-persistent-capybara-279.mypinata.cloud/ipfs/bafybeieozgvnr7qc4ghsq36zwssuhj7xahuznjlmu6g63clnyt37hjsi4m/2720.jpg",
+            "rarity": "Common"
+          }
+        }
+      }
+    },
+    "currentVault": {
+      "id": "0x45bf08499784ea9ff658937165a9449d509aa37de47a728af44e903387f3ca2c",
+      "version": "1",
+      "registry": "0x4d531a6dfed56f977a8120b4c628392fc491065248b5c424b9405443b899df92",
+      "cap": {
+        "id": "0xfda64d5d7047727e9b6ada8e8cf591c2acf3e70529f475de81269ff18f126d80",
+        "cap_type": {
+          "@variant": "Package",
+          "pos0": "0xac73072b94f14a87b23781c7004c77df6799fdee109f24271d4696bc4a6514a4"
+        }
+      },
+      "oapp": "0x1c7945e496dde4ad3142ebf8d52b95946f4ed3443568defa9b97dec307c0f9d1",
+      "nft": null,
+      "backing": {
+        "bytes": "BG2iqeFb2CK6BJHZeJR8wb+x/TDm+BOl+xC5srHWpro="
+      },
+      "route": {
+        "bytes": "Rb8ISZeE6p/2WJNxZalEnVCao33kenKK9E6QM4fzyiw="
+      },
+      "peer": {
+        "bytes": "AAAAAAAAAAAAAAAAkLUpKlB0z91mXHJrQzzAqX4Npqs="
+      },
+      "bound": true,
+      "paused": false,
+      "phase": 2,
+      "announced": true,
+      "ack_sent": true,
+      "request": {
+        "bytes": "dvCPVswDDwt9tWDPRt8/7iEtHdz6LIE10fvuToXjhJc="
+      },
+      "recipient": {
+        "bytes": "SFlT4urfSqAq+VDPjpFPvStnUjOF5zw2EYNBRZ2NRcQ="
+      }
+    },
+    "currentChannel": {
+      "dynamicField": {
+        "value": {
+          "json": {
+            "outbound_nonce": "2",
+            "lazy_inbound_nonce": "1",
+            "inbound_payload_hashes": {
+              "id": "0x861288a8c14221c0922c3a7acb5c341bfc4a0c94c5c528858e7a2e2b95ae669b",
+              "size": "0"
+            }
+          }
+        }
+      }
+    }
+  },
+  "suiReceiptStructure": {
+    "commands": 29,
+    "inputs": 17,
+    "rawFetchedReceiptSha256": "daff4ba2dc50ccef0024858210cbdcf2ec1eb7d06eaa8a36bde6e6d75fbe18db",
+    "retrievalMethod": "SuiGraphQLClient.core.getTransaction with effects, events, transaction, balanceChanges and objectTypes included"
+  },
+  "deliveryVerification": {
+    "checkedAt": "2026-11-20T18:49:10.616Z",
+    "source": "https://scan.layerzero-api.com/v1/messages/tx/HB3aWPgmLd8Qt7kQ4igtQEvFXepRGGDfhqfWZmzqvCKb",
+    "guid": "0xe9b1c9627995eb8c09471150e121847770e7b28d9d705acd7b2a7f42b5a44c8c",
+    "status": "DELIVERED",
+    "path": {
+      "srcEid": 30378,
+      "dstEid": 30102,
+      "sender": {
+        "address": "0xac73072b94f14a87b23781c7004c77df6799fdee109f24271d4696bc4a6514a4",
+        "chain": "sui"
+      },
+      "receiver": {
+        "address": "0x90b5292a5074cfdd665c726b433cc0a97e0da6ab",
+        "chain": "bsc"
+      },
+      "id": "30378-30102-0xac73072b94f14a87b23781c7004c77df6799fdee109f24271d4696bc4a6514a4-0x90b5292a5074cfdd665c726b433cc0a97e0da6ab",
+      "nonce": 2
+    },
+    "sourceTransaction": "HB3aWPgmLd8Qt7kQ4igtQEvFXepRGGDfhqfWZmzqvCKb",
+    "sourceConfirmedAt": "2026-11-20T18:46:57.000Z",
+    "destinationTransaction": "0x9abb0d72d3fcf207a518b6e558e5f7cf907e31d65bbbfc18d2eeb24d1ba1b44d",
+    "destinationConfirmedAt": "2026-11-20T18:47:12.000Z",
+    "deliverySeconds": 15,
+    "requiredDVNNames": [
+      "Horizen",
+      "Twinstake",
+      "LayerZero Labs"
+    ],
+    "requiredDVNStatus": "SUCCEEDED",
+    "sealerStatus": "SUCCEEDED"
+  },
+  "bnbVerification": {
+    "verifiedAt": "2026-11-20T18:49:47.895Z",
+    "result": "passed",
+    "sourceDigest": "HB3aWPgmLd8Qt7kQ4igtQEvFXepRGGDfhqfWZmzqvCKb",
+    "sourceTime": "2026-11-20T18:46:57.000Z",
+    "destinationHash": "0x9abb0d72d3fcf207a518b6e558e5f7cf907e31d65bbbfc18d2eeb24d1ba1b44d",
+    "destinationTime": "2026-11-20T18:47:12.000Z",
+    "deliverySeconds": 15,
+    "guid": "0xe9b1c9627995eb8c09471150e121847770e7b28d9d705acd7b2a7f42b5a44c8c",
+    "route": {
+      "sourceEid": 30378,
+      "destinationEid": 30102,
+      "sender": "0xac73072b94f14a87b23781c7004c77df6799fdee109f24271d4696bc4a6514a4",
+      "receiver": "0x90b5292a5074CfDD665C726b433cc0A97e0dA6ab",
+      "nonce": 2
+    },
+    "payload": {
+      "version": 2,
+      "kind": 3,
+      "vault": "0x45bf08499784ea9ff658937165a9449d509aa37de47a728af44e903387f3ca2c",
+      "nft": "0x046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba",
+      "request": "0x76f08f56cc030f0b7db560cf46df3fee212d1ddcfa2c8135d1fbee4e85e38497",
+      "recipient": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4"
+    },
+    "messageHash": "0xeae29b0d6562d0bb6cd4aa315b1a0901980e92df930af54c987db0d5675f9f9a",
+    "packetPayloadHash": "0x3e8324ace52136c0d5c579d72438f9490a226c8a431a82c620d06aaf8358ed6b",
+    "layerzero": {
+      "status": {
+        "name": "DELIVERED",
+        "message": "Executor transaction confirmed"
+      },
+      "requiredDvns": [
+        "Horizen",
+        "Twinstake",
+        "LayerZero Labs"
+      ],
+      "verificationStatus": "SUCCEEDED",
+      "sealerStatus": "SUCCEEDED",
+      "destinationStatus": "SUCCEEDED",
+      "configError": false
+    },
+    "events": [
+      {
+        "address": "0x1d3da001e586a7defd397b77fadb29ed6f039c13",
+        "eventName": "Transfer",
+        "args": {
+          "from": "0x90f9c1c0c675A0ce9D539c540DB7F4A1f7e583AE",
+          "to": "0x0000000000000000000000000000000000000000",
+          "tokenId": "1"
+        }
+      },
+      {
+        "address": "0x1d3da001e586a7defd397b77fadb29ed6f039c13",
+        "eventName": "RedemptionFinalized",
+        "args": {
+          "request": "0x76f08f56cc030f0b7db560cf46df3fee212d1ddcfa2c8135d1fbee4e85e38497"
+        }
+      },
+      {
+        "address": "0x90b5292a5074cfdd665c726b433cc0a97e0da6ab",
+        "eventName": "MessageApplied",
+        "args": {
+          "guid": "0xe9b1c9627995eb8c09471150e121847770e7b28d9d705acd7b2a7f42b5a44c8c",
+          "kind": 3
+        }
+      },
+      {
+        "address": "0x1a44076050125825900e736c501f859c50fe728c",
+        "eventName": "PacketDelivered",
+        "args": {
+          "origin": {
+            "srcEid": 30378,
+            "sender": "0xac73072b94f14a87b23781c7004c77df6799fdee109f24271d4696bc4a6514a4",
+            "nonce": "2"
+          },
+          "receiver": "0x90b5292a5074CfDD665C726b433cc0A97e0dA6ab"
+        }
+      }
+    ],
+    "finalBnbState": {
+      "observedAt": "2026-11-20T18:48:51.332Z",
+      "block": "0x8080f3c",
+      "passState": "4",
+      "passBalance": "0",
+      "canPlay": "0",
+      "acknowledgementHash": "0xeae29b0d6562d0bb6cd4aa315b1a0901980e92df930af54c987db0d5675f9f9a"
+    }
+  },
+  "bnbReceipt": {
+    "observedAt": "2026-11-20T18:48:37.636084+00:00",
+    "rpc": "https://bsc-rpc.publicnode.com",
+    "transaction": {
+      "type": "0x0",
+      "chainId": "0x38",
+      "nonce": "0x347b9",
+      "gasPrice": "0x3938700",
+      "gas": "0x7c29a",
+      "to": "0x3ebd570ed38b1b3b4bc886999fcf507e9d584859",
+      "value": "0x0",
+      "input": "0xcfc32570000000000000000000000000000000000000000000000000000000000000002000000000000000000000000090b5292a5074cfdd665c726b433cc0a97e0da6ab00000000000000000000000000000000000000000000000000000000000076aaac73072b94f14a87b23781c7004c77df6799fdee109f24271d4696bc4a6514a40000000000000000000000000000000000000000000000000000000000000002e9b1c9627995eb8c09471150e121847770e7b28d9d705acd7b2a7f42b5a44c8c000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001c000000000000000000000000000000000000000000000000000000000000363de0000000000000000000000000000000000000000000000000000000000000082020345bf08499784ea9ff658937165a9449d509aa37de47a728af44e903387f3ca2c046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba76f08f56cc030f0b7db560cf46df3fee212d1ddcfa2c8135d1fbee4e85e38497485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c40000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "r": "0x1584b90aaca3345414ac0fbb6a4959c02c73d2edcfda05f4221177aed313eb0c",
+      "s": "0x569cbc91ef20facc39e2af619383804da4fecd35cd7a5b58fb0f6abf42954588",
+      "v": "0x94",
+      "hash": "0x9abb0d72d3fcf207a518b6e558e5f7cf907e31d65bbbfc18d2eeb24d1ba1b44d",
+      "blockHash": "0x107696abdda8ced4ac6330de2a18b7813d0d3f04a9143ce40c018ea562fcc969",
+      "blockNumber": "0x8080e7e",
+      "transactionIndex": "0x53",
+      "from": "0x7ddb0773e979cd36ef0dc8b6e594a6ebc876e654",
+      "blockTimestamp": "0x6b0095b0"
+    },
+    "receipt": {
+      "type": "0x0",
+      "status": "0x1",
+      "cumulativeGasUsed": "0x23ec18d",
+      "logs": [
+        {
+          "address": "0x1d3da001e586a7defd397b77fadb29ed6f039c13",
+          "topics": [
+            "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+            "0x00000000000000000000000090f9c1c0c675a0ce9d539c540db7f4a1f7e583ae",
+            "0x0000000000000000000000000000000000000000000000000000000000000000",
+            "0x0000000000000000000000000000000000000000000000000000000000000001"
+          ],
+          "data": "0x",
+          "blockHash": "0x107696abdda8ced4ac6330de2a18b7813d0d3f04a9143ce40c018ea562fcc969",
+          "blockNumber": "0x8080e7e",
+          "blockTimestamp": "0x6b0095b0",
+          "transactionHash": "0x9abb0d72d3fcf207a518b6e558e5f7cf907e31d65bbbfc18d2eeb24d1ba1b44d",
+          "transactionIndex": "0x53",
+          "logIndex": "0x2f4",
+          "removed": false
+        },
+        {
+          "address": "0x1d3da001e586a7defd397b77fadb29ed6f039c13",
+          "topics": [
+            "0x33bf3780ab321f3c6eb7eba598dcd21e3989005d9e37e811e7182984e5a86865",
+            "0x76f08f56cc030f0b7db560cf46df3fee212d1ddcfa2c8135d1fbee4e85e38497"
+          ],
+          "data": "0x",
+          "blockHash": "0x107696abdda8ced4ac6330de2a18b7813d0d3f04a9143ce40c018ea562fcc969",
+          "blockNumber": "0x8080e7e",
+          "blockTimestamp": "0x6b0095b0",
+          "transactionHash": "0x9abb0d72d3fcf207a518b6e558e5f7cf907e31d65bbbfc18d2eeb24d1ba1b44d",
+          "transactionIndex": "0x53",
+          "logIndex": "0x2f5",
+          "removed": false
+        },
+        {
+          "address": "0x90b5292a5074cfdd665c726b433cc0a97e0da6ab",
+          "topics": [
+            "0x176250b792ff8febc09040b8cf326ac55711559470d02712a12ae9a19a937cff",
+            "0xe9b1c9627995eb8c09471150e121847770e7b28d9d705acd7b2a7f42b5a44c8c"
+          ],
+          "data": "0x0000000000000000000000000000000000000000000000000000000000000003",
+          "blockHash": "0x107696abdda8ced4ac6330de2a18b7813d0d3f04a9143ce40c018ea562fcc969",
+          "blockNumber": "0x8080e7e",
+          "blockTimestamp": "0x6b0095b0",
+          "transactionHash": "0x9abb0d72d3fcf207a518b6e558e5f7cf907e31d65bbbfc18d2eeb24d1ba1b44d",
+          "transactionIndex": "0x53",
+          "logIndex": "0x2f6",
+          "removed": false
+        },
+        {
+          "address": "0x1a44076050125825900e736c501f859c50fe728c",
+          "topics": [
+            "0x3cd5e48f9730b129dc7550f0fcea9c767b7be37837cd10e55eb35f734f4bca04"
+          ],
+          "data": "0x00000000000000000000000000000000000000000000000000000000000076aaac73072b94f14a87b23781c7004c77df6799fdee109f24271d4696bc4a6514a4000000000000000000000000000000000000000000000000000000000000000200000000000000000000000090b5292a5074cfdd665c726b433cc0a97e0da6ab",
+          "blockHash": "0x107696abdda8ced4ac6330de2a18b7813d0d3f04a9143ce40c018ea562fcc969",
+          "blockNumber": "0x8080e7e",
+          "blockTimestamp": "0x6b0095b0",
+          "transactionHash": "0x9abb0d72d3fcf207a518b6e558e5f7cf907e31d65bbbfc18d2eeb24d1ba1b44d",
+          "transactionIndex": "0x53",
+          "logIndex": "0x2f7",
+          "removed": false
+        }
+      ],
+      "logsBloom": "0x00000000000000000000000000008000208000000000000000000000001000000000000000000000000000000000000000000400400000000000000000040000000000000000000000010008000004000000100002040000000000400000000000000010020000000000000000000800000000000010000000000010000000000000000000000000000000000000000000000040000000000200000000080000000000000000000000000000010000000008000000000000040000000000000000000002000000000000000000000000000000000000020000000000000060200020000000000000000000000000000000000000010000000000880000010000",
+      "transactionHash": "0x9abb0d72d3fcf207a518b6e558e5f7cf907e31d65bbbfc18d2eeb24d1ba1b44d",
+      "transactionIndex": "0x53",
+      "blockHash": "0x107696abdda8ced4ac6330de2a18b7813d0d3f04a9143ce40c018ea562fcc969",
+      "blockNumber": "0x8080e7e",
+      "gasUsed": "0x1ae35",
+      "effectiveGasPrice": "0x3938700",
+      "from": "0x7ddb0773e979cd36ef0dc8b6e594a6ebc876e654",
+      "to": "0x3ebd570ed38b1b3b4bc886999fcf507e9d584859",
+      "contractAddress": null
+    },
+    "block": {
+      "number": "0x8080e7e",
+      "hash": "0x107696abdda8ced4ac6330de2a18b7813d0d3f04a9143ce40c018ea562fcc969",
+      "timestamp": "0x6b0095b0"
+    }
+  },
+  "layerzeroRecord": {
+    "data": [
+      {
+        "pathway": {
+          "srcEid": 30378,
+          "dstEid": 30102,
+          "sender": {
+            "address": "0xac73072b94f14a87b23781c7004c77df6799fdee109f24271d4696bc4a6514a4",
+            "chain": "sui"
+          },
+          "receiver": {
+            "address": "0x90b5292a5074cfdd665c726b433cc0a97e0da6ab",
+            "chain": "bsc"
+          },
+          "id": "30378-30102-0xac73072b94f14a87b23781c7004c77df6799fdee109f24271d4696bc4a6514a4-0x90b5292a5074cfdd665c726b433cc0a97e0da6ab",
+          "nonce": 2
+        },
+        "source": {
+          "status": "SUCCEEDED",
+          "tx": {
+            "txHash": "HB3aWPgmLd8Qt7kQ4igtQEvFXepRGGDfhqfWZmzqvCKb",
+            "blockHash": "476c1jsLt4AgPGWV4XwtuehZCeMqRUz5dzum1zJTrMn9",
+            "blockNumber": "347374073",
+            "blockTimestamp": 1795200417,
+            "from": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+            "payload": "0x020345bf08499784ea9ff658937165a9449d509aa37de47a728af44e903387f3ca2c046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba76f08f56cc030f0b7db560cf46df3fee212d1ddcfa2c8135d1fbee4e85e38497485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+            "readinessTimestamp": 1795200418,
+            "options": {
+              "lzReceive": {
+                "gas": "200000",
+                "value": "0"
+              },
+              "ordered": false
+            }
+          }
+        },
+        "destination": {
+          "nativeDrop": {
+            "status": "N/A"
+          },
+          "lzCompose": {
+            "status": "N/A"
+          },
+          "tx": {
+            "txHash": "0x9abb0d72d3fcf207a518b6e558e5f7cf907e31d65bbbfc18d2eeb24d1ba1b44d",
+            "blockHash": "0x107696abdda8ced4ac6330de2a18b7813d0d3f04a9143ce40c018ea562fcc969",
+            "blockNumber": 134745726,
+            "blockTimestamp": 1795200432
+          },
+          "status": "SUCCEEDED"
+        },
+        "verification": {
+          "dvn": {
+            "dvns": {
+              "0x247624e2143504730aec22912ed41f092498bef2": {
+                "txHash": "0xb2ace3cb70025bfe74fae6f64b3eb45cfe5b300945fbb37d8050a7c13fbaf465",
+                "blockHash": "0xb4bb6a0d38a6d541cee318a6394667673ce8b9f8fc01630cfa41157fe52a1381",
+                "blockNumber": 134745716,
+                "blockTimestamp": 1795200427,
+                "proof": {
+                  "packetHeader": "0x010000000000000002000076aaac73072b94f14a87b23781c7004c77df6799fdee109f24271d4696bc4a6514a40000759600000000000000000000000090b5292a5074cfdd665c726b433cc0a97e0da6ab",
+                  "payloadHash": "0x3e8324ace52136c0d5c579d72438f9490a226c8a431a82c620d06aaf8358ed6b"
+                },
+                "optional": false,
+                "status": "SUCCEEDED"
+              },
+              "0x31f748a368a893bdb5abb67ec95f232507601a73": {
+                "txHash": "0x61d5992789f1ec74011b46bbf8e9d6aefd2c7919eb135662ac365a9f353ce155",
+                "blockHash": "0x4712a5114b68bc4648ab21eca060f520999ee4179bd5603c735dab522277e9c5",
+                "blockNumber": 134745717,
+                "blockTimestamp": 1795200427,
+                "proof": {
+                  "packetHeader": "0x010000000000000002000076aaac73072b94f14a87b23781c7004c77df6799fdee109f24271d4696bc4a6514a40000759600000000000000000000000090b5292a5074cfdd665c726b433cc0a97e0da6ab",
+                  "payloadHash": "0x3e8324ace52136c0d5c579d72438f9490a226c8a431a82c620d06aaf8358ed6b"
+                },
+                "optional": false,
+                "status": "SUCCEEDED"
+              },
+              "0xfd6865c841c2d64565562fcc7e05e619a30615f0": {
+                "txHash": "0xaa22737365ffa8f4b3ddce0b67dd808cc8b227b1c58cde7dbac62bbd65bb806c",
+                "blockHash": "0x4712a5114b68bc4648ab21eca060f520999ee4179bd5603c735dab522277e9c5",
+                "blockNumber": 134745717,
+                "blockTimestamp": 1795200427,
+                "proof": {
+                  "packetHeader": "0x010000000000000002000076aaac73072b94f14a87b23781c7004c77df6799fdee109f24271d4696bc4a6514a40000759600000000000000000000000090b5292a5074cfdd665c726b433cc0a97e0da6ab",
+                  "payloadHash": "0x3e8324ace52136c0d5c579d72438f9490a226c8a431a82c620d06aaf8358ed6b"
+                },
+                "optional": false,
+                "status": "SUCCEEDED"
+              }
+            },
+            "status": "SUCCEEDED"
+          },
+          "sealer": {
+            "tx": {
+              "txHash": "0x511260a19aadba7fa72ae9f412d3c33c965fb33ac4c19485f1540cf9d76c6ad0",
+              "blockHash": "0x4c15602ebb89374d4df5140bc5449d702457857f809f896799601de1fc748c80",
+              "blockNumber": 134745723,
+              "blockTimestamp": 1795200430
+            },
+            "status": "SUCCEEDED"
+          }
+        },
+        "guid": "0xe9b1c9627995eb8c09471150e121847770e7b28d9d705acd7b2a7f42b5a44c8c",
+        "config": {
+          "error": false,
+          "receiveLibrary": "0xB217266c3A98C8B2709Ee26836C98cf12f6cCEC1",
+          "sendLibrary": "0x3ce7457bed48ad23ee5d611dd3172ae4fbd0a22ea0e846782a7af224d905dbb0",
+          "inboundConfig": {
+            "confirmations": 5,
+            "requiredDVNCount": 3,
+            "optionalDVNCount": 0,
+            "optionalDVNThreshold": 0,
+            "requiredDVNs": [
+              "0x247624e2143504730aec22912ed41f092498bef2",
+              "0x31f748a368a893bdb5abb67ec95f232507601a73",
+              "0xfd6865c841c2d64565562fcc7e05e619a30615f0"
+            ],
+            "requiredDVNNames": [
+              "Horizen",
+              "Twinstake",
+              "LayerZero Labs"
+            ],
+            "optionalDVNs": [],
+            "optionalDVNNames": []
+          },
+          "outboundConfig": {
+            "confirmations": 5,
+            "requiredDVNCount": 3,
+            "optionalDVNCount": 0,
+            "optionalDVNThreshold": 0,
+            "requiredDVNs": [
+              "0x0c12321ebe562b8fb8a74e6d29f144ea199a8f31a4cea3a417ce72477f6dfebb",
+              "0x52aa129049de845353484868d1be6e2df6878b0ed2213d94d3c827309aeae685",
+              "0x92128a5edf4a0f696464de66d00986ef41b37faf705ceb3d9d9a4e5c306fbf91"
+            ],
+            "requiredDVNNames": [
+              "Twinstake",
+              "LayerZero Labs",
+              "Horizen"
+            ],
+            "optionalDVNs": [],
+            "optionalDVNNames": [],
+            "executor": "0xde7fe1a6648d587fcc991f124f3aa5b6389340610804108094d5c5fbf61d1989"
+          },
+          "ulnSendVersion": "V302",
+          "ulnReceiveVersion": "V302"
+        },
+        "status": {
+          "name": "DELIVERED",
+          "message": "Executor transaction confirmed"
+        },
+        "transfers": [],
+        "created": "2026-11-20T18:47:09.000Z",
+        "updated": "2026-11-20T18:47:26.000Z"
+      }
+    ]
+  },
+  "publicSources": {
+    "suiTransaction": "https://suivision.xyz/txblock/HB3aWPgmLd8Qt7kQ4igtQEvFXepRGGDfhqfWZmzqvCKb",
+    "suiGraphql": "https://graphql.mainnet.sui.io/graphql",
+    "layerzeroTransaction": "https://layerzeroscan.com/tx/HB3aWPgmLd8Qt7kQ4igtQEvFXepRGGDfhqfWZmzqvCKb",
+    "layerzeroApi": "https://scan.layerzero-api.com/v1/messages/tx/HB3aWPgmLd8Qt7kQ4igtQEvFXepRGGDfhqfWZmzqvCKb",
+    "layerzeroGuidApi": "https://scan.layerzero-api.com/v1/messages/guid/0xe9b1c9627995eb8c09471150e121847770e7b28d9d705acd7b2a7f42b5a44c8c",
+    "bnbTransaction": "https://bscscan.com/tx/0x9abb0d72d3fcf207a518b6e558e5f7cf907e31d65bbbfc18d2eeb24d1ba1b44d",
+    "bnbRpc": "https://bsc-rpc.publicnode.com",
+    "originalNft": "https://suivision.xyz/object/0x046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba"
+  },
+  "currentGuidance": {
+    "repository": "https://github.com/MystenLabs/skills",
+    "checkedDate": "2026-11-20",
+    "files": {
+      "README.md": "aa0ebd8574ba4839cdf4cd5315a965905f3fafb7",
+      "accessing-data/SKILL.md": "e6d82f7cbf4d21936870776c33cf2fc2d4fbd0dc",
+      "accessing-data/graphql.md": "e7726bd507d52b6bd4b3c325d1c28a09a9da22c8",
+      "move-security/SKILL.md": "c06f60e70188365acf04398928a209e3bcbacdb4",
+      "move-security/best-practices.md": "1b92a8cf472ddcc939a97f9984ac46b44b73ad9b"
+    },
+    "application": "Retained the pinned working GraphQL client and verified exact package/object relationships, receipt events, payment recipients and state effects."
+  },
+  "nextDocumentedMilestone": {
+    "reference": "docs/multichain/original-collection/integration-review.md#tree-force-89-and-suite-access",
+    "scope": "Isolated Tree Force 89 BNB authentication and game access integration.",
+    "requirements": [
+      "Origin, chain 56, wallet, purpose, nonce and expiry bound sign-in.",
+      "Server-side current owner, active/playable state and verified backing checks.",
+      "Recheck entitlement for runs and paid actions; revoke after transfer or redemption.",
+      "Retired pass #1 is a negative access case; a separate reviewed active entitlement is required for positive access testing."
+    ],
+    "notPerformed": [
+      "Gameplay integration",
+      "Additional inventory funding",
+      "Public sale expansion",
+      "Website or backend deployment"
+    ]
+  }
+}

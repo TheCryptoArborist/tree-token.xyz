@@ -1,3 +1,28 @@
+## Original #2720 round trip complete, 2026-11-20
+
+The original NFT is back in the Sui wallet ending 45c4, and BNB pass #1 has
+been retired and burned. Final Sui acknowledgement
+`HB3aWPgmLd8Qt7kQ4igtQEvFXepRGGDfhqfWZmzqvCKb` was confirmed at
+18:46:57 UTC; BNB delivery
+`0x9abb0d72d3fcf207a518b6e558e5f7cf907e31d65bbbfc18d2eeb24d1ba1b44d`
+succeeded at 18:47:12 UTC. Actual acknowledgement cost: 0.099015391 SUI.
+
+Exact Sui commands, inputs, events, payments and allowed object effects passed
+verification. The NFT was not an acknowledgement input and remains unchanged
+from its release. Current vault `ack_sent=true`, nonce 2, BNB Retired state,
+zero pass balance, disabled pass access, exact delivered payload hash and all
+four destination events were independently verified.
+
+See [`redemption-ack-verified.json`](redemption-ack-verified.json) for the
+completion proof and [`../original-redemption-ack-flow.md`](../original-redemption-ack-flow.md)
+for the full flow. There is no remaining wallet transaction for this trial.
+The planned Tree Force '89 BNB gameplay integration is a separate milestone;
+this record does not add inventory, open public sales or deploy site changes.
+
+Earlier entries below are dated historical checkpoints.
+
+---
+
 ## Actual original #2720 deposit confirmed, 2026-11-17
 
 Receipt `GLXLAmCD3DrbdK55NXmppr7uPEWDdrYYF9JBd3C5XBvE` is verified against
