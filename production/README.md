@@ -1,3 +1,46 @@
+# Market Overview — published and verified 2026-11-20 UTC
+
+Current locked production is `6affc81a0ebcfd39b2efbbb0`, published at
+`2026-11-20T04:18:30.303Z`. Reviewed source
+`21861aea559c59bd67a371c1f00811fd09e92896` merged through PR249 as
+`70dbf26e010238dcbe18722b6d6178bf62a6084b`; the complete merged source tree is
+`a384970a220343e18ce37a19b0f27986d204aae2`. Publication workflow
+`44673293820` passed, verifying canonical delivery, the complete inventory,
+protected configuration and the production lock at `2026-11-20T04:18:46.818Z`.
+
+**Market Overview** at `/market-insights/` now organizes fourteen charts into
+**Market Size**, **Dominance**, **Sectors & Ecosystems**, and **Metals & Ratios**.
+The five additions are OTHERS, ETH Dominance, Stablecoin Market Cap, DeFi Market
+Cap, and Altcoins vs. BTC. Every chart has a consistent reading guide and source
+link. Chart selections are remembered, and copied links open the selected
+chart. The other Explorer tools remain available.
+
+The fresh baseline was `6affc6cb821278e5a2a481e2`. Only
+`/market-insights/index.html` and `/market-insights/insights.js` changed.
+The release preserves **629 other static paths, all 50 complete backend
+records, five schedules**, runtime settings, protected configuration and site
+snippets. Current production contains **631 static paths and 50 backend
+records**.
+
+Preservation checks passed. Provider-mocked browser checks verified all fourteen
+charts, the seven Explorer sections, selection and link behavior, keyboard
+operation and layouts at 320, 390, 768 and 1363 pixels. Separate actual-provider
+review confirmed all five new TradingView instruments displayed populated data
+and the 3M range control worked. The canonical browser review records the
+separate observed live checks after publication. No wallet or payment actions
+were used.
+
+Release evidence: `production/market-overview-release-20261120.json`.
+Implementation: https://github.com/TheCryptoArborist/tree-token.xyz/pull/249
+Publication: https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44673293820
+Release procedure: `docs/market-overview-release.md`.
+
+Capture the actual current live inventory afresh before any future release.
+This release's baseline hashes describe its completed input. Do not replace
+current production with an earlier release or the historical snapshot build.
+
+---
+
 # Gold/Silver Ratio correction — published and verified 2026-11-20 UTC
 
 Current locked production is `6affb404f25e798bc619e2a8`, published at
