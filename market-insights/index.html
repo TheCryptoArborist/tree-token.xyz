@@ -962,19 +962,22 @@
         </section>
 
         <section class="mi-pane" id="mi-pane-market" role="tabpanel" aria-labelledby="mi-tab-market" hidden>
-          <h3>Market Capitalization</h3>
-          <p class="mi-help">Compare the combined value of cryptocurrencies and Bitcoin’s share of that market. Choose an index below.</p>
-          <div class="mi-choices" role="group" aria-label="Choose crypto capitalization index">
+          <h3>Market Capitalization &amp; Dominance</h3>
+          <p class="mi-help">Compare the combined value of cryptocurrencies with Bitcoin’s and stablecoins’ shares of the tracked market. Choose an index below.</p>
+          <div class="mi-choices" role="group" aria-label="Choose crypto capitalization or dominance index">
             <button type="button" data-tv-symbol="TOTAL" aria-pressed="false">TOTAL</button>
             <button type="button" data-tv-symbol="TOTAL2" aria-pressed="false">TOTAL2</button>
             <button type="button" data-tv-symbol="TOTAL3" aria-pressed="true" class="selected">TOTAL3</button>
             <button type="button" data-tv-symbol="TOTAL3ES" aria-pressed="false">TOTAL3ES</button>
             <button type="button" data-tv-symbol="BTCD" aria-pressed="false">BTC.D</button>
+            <button type="button" data-tv-symbol="STABLED" aria-pressed="false">Stablecoin Dominance</button>
           </div>
-          <p class="mi-description" id="mi-market-description">Top-125 cryptocurrency capitalization excluding Bitcoin and Ethereum; stablecoins remain included.</p>
+          <p class="mi-description" id="mi-market-description" aria-live="polite">Top-125 cryptocurrency capitalization excluding Bitcoin and Ethereum; stablecoins remain included.</p>
+          <p class="mi-onchain-cue" id="mi-stablecoin-guide" hidden><strong>How to read it:</strong> A rising line means stablecoins make up a larger share of the tracked market; a falling line means a smaller share. The percentage can change because stablecoin market value changes, other crypto prices move, or both.</p>
           <div id="mi-tv-stage" class="mi-chart-container mi-tv" aria-label="TradingView live market capitalization chart"></div>
           <div class="mi-footnotes"><span id="mi-tv-status" role="status">Loading TradingView chart…</span><span>Chart data: TradingView</span></div>
           <p class="mi-disclaimer">TOTAL, TOTAL2, TOTAL3 and TOTAL3ES are TradingView indices of up to 125 ranked coins. TOTAL3 still includes stablecoins; TOTAL3ES excludes them. BTC.D is Bitcoin's share of the tracked market. They are not measures of all tokens in existence.</p>
+          <p class="mi-help" id="mi-stablecoin-methodology" hidden><strong>What’s included:</strong> TradingView’s STABLE.C.D divides the market value of up to 100 coins in its Stablecoins category by its TOTAL index, then multiplies by 100. Stablecoins aim to track a currency or another reference asset. <a href="https://www.tradingview.com/support/solutions/43000550480-where-do-i-find-crypto-market-capitalization-and-dominance/" target="_blank" rel="noopener noreferrer">Read TradingView’s methodology ↗</a></p>
         </section>
 
         <section class="mi-pane" id="mi-pane-cbbi" role="tabpanel" aria-labelledby="mi-tab-cbbi" hidden>
