@@ -20,9 +20,9 @@ on:
       - '.github/workflows/publish-precious-metals.yml'
   push:
     branches:
-      - release/precious-metals-prepare
-      - release/precious-metals-publish
-      - release/precious-metals-audit
+      - release/gold-silver-prepare
+      - release/gold-silver-publish
+      - release/gold-silver-audit
 
 permissions:
   contents: read
@@ -81,7 +81,7 @@ jobs:
   prepare:
     needs: verify
     if: >-
-      github.event_name == 'push' && github.ref == 'refs/heads/release/precious-metals-prepare' &&
+      github.event_name == 'push' && github.ref == 'refs/heads/release/gold-silver-prepare' &&
       contains(github.event.head_commit.message, '[prepare precious metals]') &&
       contains(github.event.head_commit.message, '[skip netlify]')
     runs-on: ubuntu-24.04
@@ -97,7 +97,7 @@ jobs:
       - name: Capture current production and create the review candidate
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          PRECIOUS_METALS_EXPECTED_DEPLOY: '6aff8d6c44e257067443ba98'
+          PRECIOUS_METALS_EXPECTED_DEPLOY: '6affb0e47dc837eae9bdc12d'
           REVIEWED_SHA: ${{ github.sha }}
         run: |
           test -n "$NETLIFY_AUTH_TOKEN" || { echo 'The existing Netlify release connection is unavailable.'; exit 1; }
@@ -109,14 +109,14 @@ jobs:
       - name: Verify the exact candidate layout without wallet or payment actions
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          PRECIOUS_METALS_EXPECTED_DEPLOY: '6aff8d6c44e257067443ba98'
+          PRECIOUS_METALS_EXPECTED_DEPLOY: '6affb0e47dc837eae9bdc12d'
           REVIEWED_SHA: ${{ github.sha }}
           PRECIOUS_METALS_BROWSER_MODULE: ${{ runner.temp }}/precious-metals-browser/node_modules/playwright/index.mjs
         run: |
           npm install --prefix "$RUNNER_TEMP/precious-metals-browser" --ignore-scripts --no-audit --no-fund playwright@1.56.1
           "$RUNNER_TEMP/precious-metals-browser/node_modules/.bin/playwright" install chromium --only-shell
           node scripts/release-precious-metals.mjs verify --source-commit "$REVIEWED_SHA"
-      - name: Review actual Gold, Silver, and Silver/Gold charts without mocks
+      - name: Review actual Gold, Silver, and Gold/Silver charts without mocks
         env:
           PRECIOUS_METALS_BROWSER_MODULE: ${{ runner.temp }}/precious-metals-browser/node_modules/playwright/index.mjs
         run: node scripts/check-precious-metals-live.mjs
@@ -153,15 +153,15 @@ jobs:
           if (!fs.existsSync(filename)) process.exit(0);
           const r=JSON.parse(fs.readFileSync(filename));
           fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
-            `### Precious Metals candidate — production unchanged\n\nReview: ${r.url}\n\nSource: ${r.sourceCommit}\nTree: ${r.sourceTree}\nPlan SHA256: ${r.planSha256}\nCandidate: ${r.candidateId}\nBaseline: ${r.baselineId}\nRun: ${process.env.GITHUB_RUN_ID}\nArtifact: ${process.env.CANDIDATE_ARTIFACT_ID}\nArtifact SHA256: ${process.env.CANDIDATE_ARTIFACT_SHA256}\n\nPreserved ${r.preservedStaticFiles} existing static paths, ${r.preservedBackendRecords} complete backend records and ${r.schedulesPreserved} schedules.\n\nThe workflow must conclude successfully. Review the real Gold, Silver and Silver/Gold Ratio widgets, exact symbol expressions, tab order, controls and source links on this candidate before creating the separate publication control commit. Provider-mocked layout checks do not establish provider availability.\n`);
+            `### Precious Metals candidate — production unchanged\n\nReview: ${r.url}\n\nSource: ${r.sourceCommit}\nTree: ${r.sourceTree}\nPlan SHA256: ${r.planSha256}\nCandidate: ${r.candidateId}\nBaseline: ${r.baselineId}\nRun: ${process.env.GITHUB_RUN_ID}\nArtifact: ${process.env.CANDIDATE_ARTIFACT_ID}\nArtifact SHA256: ${process.env.CANDIDATE_ARTIFACT_SHA256}\n\nPreserved ${r.preservedStaticFiles} existing static paths, ${r.preservedBackendRecords} complete backend records and ${r.schedulesPreserved} schedules.\n\nThe workflow must conclude successfully. Review the real Gold, Silver and Gold/Silver Ratio widgets, exact symbol expressions, tab order, controls and source links on this candidate before creating the separate publication control commit. Provider-mocked layout checks do not establish provider availability.\n`);
           JS
 
   publish_or_audit:
     needs: verify
     if: >-
       github.event_name == 'push' && contains(github.event.head_commit.message, '[skip netlify]') &&
-      ((github.ref == 'refs/heads/release/precious-metals-publish' && contains(github.event.head_commit.message, '[publish precious metals]')) ||
-       (github.ref == 'refs/heads/release/precious-metals-audit' && contains(github.event.head_commit.message, '[audit precious metals]')))
+      ((github.ref == 'refs/heads/release/gold-silver-publish' && contains(github.event.head_commit.message, '[publish precious metals]')) ||
+       (github.ref == 'refs/heads/release/gold-silver-audit' && contains(github.event.head_commit.message, '[audit precious metals]')))
     runs-on: ubuntu-24.04
     timeout-minutes: 35
     steps:
@@ -186,7 +186,7 @@ jobs:
           import {CONTROL_FILE,REVIEW_FILE,validatePublicationControl,validateControlCommit} from './scripts/release-precious-metals.mjs';
           const git=(...args)=>execFileSync('git',args,{encoding:'utf8'}).trim();
           const control=JSON.parse(fs.readFileSync(CONTROL_FILE));
-          const mode=process.env.CONTROL_BRANCH==='release/precious-metals-publish'?'publish':'audit';
+          const mode=process.env.CONTROL_BRANCH==='release/gold-silver-publish'?'publish':'audit';
           validatePublicationControl(control,mode+'-precious-metals');
           validateControlCommit(control, {
             mode,
@@ -215,7 +215,7 @@ jobs:
             const c=JSON.parse(fs.readFileSync(path.join(process.env.RUNNER_TEMP,'precious-metals-control.json')));
             const run=(await github.rest.actions.getWorkflowRun({...context.repo,run_id:Number(c.candidateRunId)})).data;
             assert.equal(run.status,'completed'); assert.equal(run.conclusion,'success');
-            assert.equal(run.event,'push'); assert.equal(run.head_branch,'release/precious-metals-prepare');
+            assert.equal(run.event,'push'); assert.equal(run.head_branch,'release/gold-silver-prepare');
             assert.equal(run.head_sha,c.sourceCommit); assert.equal(run.path,'.github/workflows/publish-precious-metals.yml');
             assert.equal(run.repository.full_name,context.repo.owner+'/'+context.repo.repo);
             const artifact=(await github.rest.actions.getArtifact({...context.repo,artifact_id:Number(c.candidateArtifactId)})).data;
@@ -305,3 +305,4 @@ jobs:
           fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
             `### Precious Metals release evidence\n\nLast completed phase: ${r.mode}\nCandidate: ${r.candidateId}\nSource: ${r.sourceCommit}\nProduction changed in this phase: ${r.productionChanged}\nPublished candidate verified: ${r.publishedCandidateVerified}\n\nCanonical: https://tree-token.xyz/market-insights/\n\nRead the job conclusion. If a lock request succeeded before a timeout, use the exact candidate-bound read-only audit; never retry publication blindly.\n`);
           JS
+
