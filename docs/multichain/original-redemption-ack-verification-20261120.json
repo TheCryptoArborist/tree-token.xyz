@@ -1,0 +1,91 @@
+{
+  "checkedAt": "2026-11-20T17:56:27.780Z",
+  "sourceCommit": "be0e85498dd218e5418055f02ed97ebda5f66c37",
+  "reviewedImplementationHead": "8ab611da5a2a15c0158a1a95b5a6f3957b1ee1cf",
+  "reviewedFormatFixHead": "e96578353a8c626d1d4073bb35beb2a16d38de6c",
+  "workflowId": 44787344354,
+  "artifactId": 14655052416,
+  "artifactSha256": "ab872169b4a5df2d3a412e69d4286ccd032eea7cfb651d6f02f39c46a9747322",
+  "deployId": "6b00892b6acd6fc92a18fd20",
+  "baselineId": "6b00812738f2bd1e7367809f",
+  "canonicalUrl": "https://tree-token.xyz/play/multichaintest/original/sui/ack/",
+  "preservation": {
+    "oldStaticPaths": 646,
+    "currentStaticPaths": 649,
+    "changedOldPaths": 0,
+    "completeBackendRecordsIdentical": 50,
+    "schedulesIdentical": 5,
+    "runtimeIdentical": true,
+    "protectedEnvironmentAndSnippetEvidenceIdentical": true
+  },
+  "canonicalDelivery": {
+    "allThreeAssetsVerified": true,
+    "javascriptByteExact": true,
+    "htmlOnlyExactExistingSnippet": true,
+    "reusedWalletModuleByteExact": true
+  },
+  "browser": {
+    "canonicalTitle": "NFTree #2720 · Complete the redemption",
+    "canonicalPageVisuallyInspected": true,
+    "expectedRecipientVisible": true,
+    "disconnectedSigningDisabled": true,
+    "manualReceiptRecoveryVisible": true,
+    "ciWidths": [
+      1440,
+      390,
+      320
+    ],
+    "ciBrowserGate": "passed",
+    "installedWalletTest": false
+  },
+  "freshUnsignedPreflight": {
+    "durationMs": 10705,
+    "stage": "ready",
+    "feeMist": "94962136",
+    "gasMist": "4053255",
+    "grossGasMist": "16599600",
+    "totalMist": "99015391",
+    "guid": "0xe9b1c9627995eb8c09471150e121847770e7b28d9d705acd7b2a7f42b5a44c8c",
+    "vaultId": "0x45bf08499784ea9ff658937165a9449d509aa37de47a728af44e903387f3ca2c",
+    "nftId": "0x046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba",
+    "request": "0x76f08f56cc030f0b7db560cf46df3fee212d1ddcfa2c8135d1fbee4e85e38497",
+    "recipient": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+    "destinationStatus": "pending",
+    "releaseDigest": "Ay5gtMkYp5mjYidC3TJn4YuJLKYcHLg3Yxm8qRhTy9mU",
+    "quotedAt": 1795197377077
+  },
+  "formatFix": {
+    "checkedAt": "2026-11-20T17:49:43.766Z",
+    "candidateId": "6b00877b5a588bd2bdef44c7",
+    "originalSourceCommit": "007416889aba4bd596275d41b8b8ca047cd5731e",
+    "exactSingleExistingSnippet": true,
+    "noOtherServedMutation": true,
+    "actualSourceBytes": 10112,
+    "fixedSourceBytes": 10111,
+    "deletedBytes": 1,
+    "originalSourceSha256": "37b4569f0290c3246bb8676f9ae40f67d857544efa8c0df76aeed2ae171f0037",
+    "fixedSourceSha256": "2f7d7f0e581b664770d2230af56bef091a7e3d8ff318b0214192f0c88680bc7b",
+    "unchangedValidatorPassesAfterJoiningClosingTags": true,
+    "candidatePublished": false
+  },
+  "independentPublication": {
+    "checkedAt": "2026-11-20T17:55:37.842Z",
+    "result": "passed",
+    "candidateId": "6b00892b6acd6fc92a18fd20",
+    "sourceCommit": "be0e85498dd218e5418055f02ed97ebda5f66c37",
+    "publishedAt": "2026-11-20T17:54:20.217Z",
+    "state": "ready",
+    "locked": true,
+    "oldStaticPathsPreserved": 646,
+    "newStaticPaths": 649,
+    "changedOriginals": 0,
+    "functions": 50,
+    "schedules": 5,
+    "fullBackendRecordsMatchPreviousRelease": true,
+    "fullSchedulesMatchPreviousRelease": true,
+    "fullRuntimeMatchesPreviousRelease": true,
+    "allProtectedEnvironmentAndSnippetEvidenceMatchesPreviousRelease": true,
+    "actualLiveBackendMatchesReport": true
+  },
+  "assistantSubmittedTransactions": 0
+}
