@@ -8,3 +8,7 @@ Use fresh operation branches `release/gold-silver-prepare`, `release/gold-silver
 
 If the production baseline has changed, stop and recapture/review rather than overwriting another release.
 
+
+## Published correction
+
+Published deployment `6affb404f25e798bc619e2a8` supersedes the preparation baseline above. The complete record is `production/gold-silver-ratio-release-20261120.json`; read the newest section of `production/README.md` before another release. The successful source, preparation and publication are PR244, workflow run 44662805307, and workflow run 44663246197. Any future change requires a fresh capture and reviewed baseline hashes.
