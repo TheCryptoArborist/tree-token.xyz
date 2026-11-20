@@ -1,0 +1,104 @@
+{
+  "releaseWorkflow": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44781788410",
+  "artifact": {
+    "id": 14652448214,
+    "sha256": "d83924b7e5093ffd7eca04281ba473a5b6ae7e8844b821bf67d8c994cdb966e2"
+  },
+  "sourceCommit": "a2b7c9b002f31805f8bf8a04f2c2d02320a2378d",
+  "reviewedHead": "7ae3f676afb85e634bf6b053e42d0fe764ee049d",
+  "publishedDeployId": "6b00812738f2bd1e7367809f",
+  "publishedAt": "2026-11-20T17:19:59.455Z",
+  "publishedReadyAndLocked": true,
+  "unsignedPreflight": {
+    "checkedAt": "2026-11-20T17:16:39.942Z",
+    "submissionEnabled": false,
+    "guid": "0x1c493300e7be4fddd4f5cb61cd6b003e59b6873246df438a52d303dac89bb87d",
+    "sourceCustodyAndLockReceiptVerified": true,
+    "walletHasSufficientBnb": true,
+    "state": {
+      "block": "0x807df44",
+      "passState": "3",
+      "allowance": "0",
+      "passBalance": "1",
+      "canPlay": "0",
+      "sent": "0",
+      "outboundNonce": "0",
+      "action": "send",
+      "destinationStatus": "not_verified",
+      "nonce": "347",
+      "target": "0x90b5292a5074CfDD665C726b433cc0A97e0dA6ab",
+      "feeWei": "4577068618141518",
+      "gas": "404306",
+      "gasLimit": "0x76730",
+      "estimatedFeeWei": "20215300000000",
+      "gasLimitFeeWei": "24258400000000"
+    }
+  },
+  "canonicalDelivery": {
+    "checkedAt": "2026-11-20T17:20:26.357123+00:00",
+    "files": [
+      {
+        "path": "/play/multichaintest/original/bnb/send/index.html",
+        "url": "https://tree-token.xyz/play/multichaintest/original/bnb/send/index.html",
+        "status": 200,
+        "bytes": 8649,
+        "expectedSha1": "7661f50e6bb3efde0139fb12884c977f4c03b87b",
+        "servedSha1": "5442805d3cc458e3c20c767e7d688897a921b419",
+        "matchesReviewed": false,
+        "contentType": "text/html; charset=UTF-8"
+      },
+      {
+        "path": "/play/multichaintest/original/bnb/send/app.js",
+        "url": "https://tree-token.xyz/play/multichaintest/original/bnb/send/app.js",
+        "status": 200,
+        "bytes": 8527,
+        "expectedSha1": "f0b85a4fcfe5005fcc7836bcc2a6f3bf0eea5915",
+        "servedSha1": "f0b85a4fcfe5005fcc7836bcc2a6f3bf0eea5915",
+        "matchesReviewed": true,
+        "contentType": "application/javascript; charset=UTF-8"
+      },
+      {
+        "path": "/play/multichaintest/original/bnb/send/core.js",
+        "url": "https://tree-token.xyz/play/multichaintest/original/bnb/send/core.js",
+        "status": 200,
+        "bytes": 710366,
+        "expectedSha1": "9e17d0090e8735892373a66defbeada026100266",
+        "servedSha1": "9e17d0090e8735892373a66defbeada026100266",
+        "matchesReviewed": true,
+        "contentType": "application/javascript; charset=UTF-8"
+      }
+    ],
+    "htmlValidation": {
+      "passed": true,
+      "method": "assertServedContent",
+      "preservedSnippet": "tree-arcade-arboretum-link",
+      "onlyExistingExactSnippetDiffers": true,
+      "canonicalPage": "https://tree-token.xyz/play/multichaintest/original/bnb/send/"
+    }
+  },
+  "browserVerification": {
+    "url": "https://tree-token.xyz/play/multichaintest/original/bnb/send/",
+    "title": "NFTree \u2014 Send Original Redemption to Sui",
+    "livePageRendered": true,
+    "correctFixedRecipientRendered": true,
+    "disconnectedSubmissionDisabled": true,
+    "installedWalletConnectionTested": false,
+    "walletTransactionSubmitted": false,
+    "ciViewportWidths": [
+      1440,
+      390,
+      320
+    ]
+  },
+  "preservation": {
+    "oldPathsCompared": 643,
+    "oldPathHashesIdentical": true,
+    "completeBackendRecordsCompared": 50,
+    "completeBackendRecordsIdentical": true,
+    "schedulesCompared": 5,
+    "schedulesIdentical": true,
+    "runtimeIdentical": true,
+    "protectedEnvironmentAndSnippetsEvidenceIdentical": true
+  },
+  "nextStep": "User connects designated BNB wallet, refreshes live checks, reviews current fee and fixed recipient, approves sendRedemption in their own wallet, and returns its transaction hash. Verify BNB receipt, Sui delivery, and return acknowledgement separately."
+}
