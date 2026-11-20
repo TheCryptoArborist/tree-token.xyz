@@ -11,7 +11,7 @@ const root=process.cwd(),server=createServer((req,res)=>{
 });
 await new Promise(r=>server.listen(0,'127.0.0.1',r));let browser;
 try{
- browser=await chromium.launch({headless:true});
+ browser=await chromium.launch({channel:'chromium',headless:true});
  for(const width of [1440,390,320]){
   const page=await browser.newPage({viewport:{width,height:1000}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto('http://127.0.0.1:'+server.address().port+'/play/multichaintest/original/bnb/buy/');await page.waitForFunction(()=>document.getElementById('expected').textContent.startsWith('0x'));

@@ -11,10 +11,11 @@ TradingView's own time-range settings are not part of that saved page state.
 ## Fresh production baseline and permitted changes
 
 Use `.github/workflows/publish-market-overview.yml`. The reviewed current input
-deployment is `6affb90d186b9e416a040a80`, published at
-`2026-11-20T03:06:10.962Z`. It includes the original-backed NFTree BNB purchase
-enablement routes. It is newer than the Gold/Silver record that headed
-`production/README.md` when this work began.
+deployment is `6affc6cb821278e5a2a481e2`, published at
+`2026-11-20T04:04:56.921Z`. It includes the original-backed NFTree 25-USDT BNB
+purchase pages as well as the purchase enablement routes. This release has
+631 static paths and supersedes the earlier `6affb90d186b9e416a040a80` baseline
+used before the concurrent purchase release completed.
 
 Capture the entire current deployment afresh. The only permitted static changes
 are the two existing files below; their input SHA1s are pinned in the release
@@ -28,8 +29,8 @@ script.
 No public paths may be added or removed. Preserve every other captured static
 hash, all 50 complete function/provider/package records, five schedules,
 runtime settings, site snippets and API-visible protected configuration.
-The latest NFTree enablement HTML, app and core files are also required in the
-capture. No wallet, payment, backend package or environment changes are part
+The latest NFTree enablement and purchase HTML, app and core files are also
+required in the capture. No wallet, payment, backend package or environment changes are part
 of this release. A historical root build must not be used as the release body.
 
 If the actual live deployment or source baseline has changed, capture and

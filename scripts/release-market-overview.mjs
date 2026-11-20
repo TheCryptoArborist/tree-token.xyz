@@ -205,6 +205,8 @@ export function validateBaseline(baseline, expected) {
   for (const pathname of ['/index.html', '/dapp/index.html', '/play/index.html', '/play/challenge/index.html',
     '/play/multichaintest/original/bnb/enable/index.html', '/play/multichaintest/original/bnb/enable/app.js',
     '/play/multichaintest/original/bnb/enable/core.js',
+    '/play/multichaintest/original/bnb/buy/index.html', '/play/multichaintest/original/bnb/buy/app.js',
+    '/play/multichaintest/original/bnb/buy/core.js',
     '/market-insights/sentiment.js', ...Object.keys(DELIVERY_SOURCES)]) assert(files[pathname], 'Incomplete current inventory: ' + pathname);
   assert.equal(baseline.marketSHA1, files['/market-insights/index.html']);
   for (const [pathname, digest] of Object.entries(REPLACED_HASHES)) assert.equal(files[pathname], digest, 'Reviewed Market Insights baseline changed: ' + pathname);

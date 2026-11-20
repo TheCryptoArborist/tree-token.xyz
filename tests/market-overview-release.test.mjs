@@ -15,14 +15,17 @@ import {
   waitForAllBuilds, publicChecks,
 } from '../scripts/release-market-overview.mjs';
 
-const expectedDeploy = '6affb90d186b9e416a040a80';
+const expectedDeploy = '6affc6cb821278e5a2a481e2';
 const digest = bytes => crypto.createHash('sha1').update(bytes).digest('hex');
 const files = () => ({ '/index.html': 'a'.repeat(40), '/dapp/index.html': 'b'.repeat(40),
   '/play/index.html': 'c'.repeat(40), '/play/challenge/index.html': 'd'.repeat(40),
   '/market-insights/sentiment.js': 'e'.repeat(40),
   '/play/multichaintest/original/bnb/enable/index.html': '1'.repeat(40),
   '/play/multichaintest/original/bnb/enable/app.js': '2'.repeat(40),
-  '/play/multichaintest/original/bnb/enable/core.js': '3'.repeat(40), ...REPLACED_HASHES });
+  '/play/multichaintest/original/bnb/enable/core.js': '3'.repeat(40),
+  '/play/multichaintest/original/bnb/buy/index.html': '4'.repeat(40),
+  '/play/multichaintest/original/bnb/buy/app.js': '5'.repeat(40),
+  '/play/multichaintest/original/bnb/buy/core.js': '6'.repeat(40), ...REPLACED_HASHES });
 const overlays = () => Object.entries(DELIVERY_SOURCES).map(([path, source], i) => ({ path, source, sha1: String(i + 1).repeat(40) }));
 function backend() {
   return { id: expectedDeploy, site_id: SITE_ID, state: 'ready', locked: true, context: 'production', branch: 'main', functions_region: 'cmh',
@@ -78,7 +81,9 @@ test('fresh baseline requires the observed fifty complete backend records, five 
   }
   for (const pathname of ['/play/challenge/index.html', '/dapp/index.html', '/market-insights/sentiment.js',
     '/play/multichaintest/original/bnb/enable/index.html', '/play/multichaintest/original/bnb/enable/app.js',
-    '/play/multichaintest/original/bnb/enable/core.js']) {
+    '/play/multichaintest/original/bnb/enable/core.js',
+    '/play/multichaintest/original/bnb/buy/index.html', '/play/multichaintest/original/bnb/buy/app.js',
+    '/play/multichaintest/original/bnb/buy/core.js']) {
     const changed = structuredClone(baseline); delete changed.files[pathname];
     assert.throws(() => validateBaseline(changed, expectedDeploy));
   }

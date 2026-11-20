@@ -105,7 +105,7 @@ jobs:
       - name: Capture current production and create the review candidate
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          MARKET_OVERVIEW_EXPECTED_DEPLOY: '6affb90d186b9e416a040a80'
+          MARKET_OVERVIEW_EXPECTED_DEPLOY: '6affc6cb821278e5a2a481e2'
           REVIEWED_SHA: ${{ github.sha }}
         run: |
           test -n "$NETLIFY_AUTH_TOKEN" || { echo 'The existing Netlify release connection is unavailable.'; exit 1; }
@@ -117,7 +117,7 @@ jobs:
       - name: Verify the exact candidate layout without wallet or payment actions
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          MARKET_OVERVIEW_EXPECTED_DEPLOY: '6affb90d186b9e416a040a80'
+          MARKET_OVERVIEW_EXPECTED_DEPLOY: '6affc6cb821278e5a2a481e2'
           REVIEWED_SHA: ${{ github.sha }}
           MARKET_OVERVIEW_BROWSER_MODULE: ${{ runner.temp }}/market-overview-browser/node_modules/playwright/index.mjs
         run: |

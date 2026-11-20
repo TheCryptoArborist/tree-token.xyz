@@ -40,7 +40,7 @@ jobs:
       - name: Check desktop and mobile connection and recovery UX
         run: |
           npm install --prefix "$RUNNER_TEMP/enable-browser" --no-save --ignore-scripts playwright@1.56.1
-          node "$RUNNER_TEMP/enable-browser/node_modules/playwright/cli.js" install --with-deps chromium
+          node "$RUNNER_TEMP/enable-browser/node_modules/playwright/cli.js" install --with-deps chromium --no-shell
           node scripts/check-original-purchase-browser.mjs "$RUNNER_TEMP/enable-browser/node_modules/playwright/index.mjs"
   publish:
     needs: verify
