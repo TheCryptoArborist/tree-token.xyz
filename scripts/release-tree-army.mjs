@@ -15,7 +15,7 @@ const sha=(x,algorithm='sha1')=>crypto.createHash(algorithm).update(x).digest('h
 // exact bytes may be removed for the delivery comparison; static hashes remain exact.
 const preservedSnippetSHA256='bf05453dc91bcf9c53db98e08829c8321193495b0839021e68d458d56e5be98d';
 async function api(p,method='GET',body,binary=false){const r=await fetch('https://api.netlify.com/api/v1/'+p,{method,headers:{Authorization:'Bearer '+token,'Content-Type':binary?'application/octet-stream':'application/json'},body:body===undefined?undefined:binary?body:JSON.stringify(body),signal:AbortSignal.timeout(45000)});assert(r.ok,'Netlify request failed: '+r.status+' '+p);return r.json();}
-async function readDeploy(id){const d=await api(`sites/${siteId}/deploys/${id}`);assert.equal(d.id,id);assert.equal(d.site_id,siteId);assert(Array.isArray(d.available_functions),'Full function inventory unavailable; publication refused');assert(Array.isArray(d.function_schedules),'Schedule inventory unavailable; publication refused');validateBackend(d);return d;}
+async function readDeploy(id){const d=await api(`sites/${siteId}/deploys/${id}`);assert.equal(d.id,id);assert.equal(d.site_id,siteId);assert(Array.isArray(d.available_functions),'Full function inventory unavailable; publication refused');assert(Array.isArray(d.function_schedules),'Schedule inventory unavailable; publication refused');if(d.state==='ready')validateBackend(d);return d;}
 function immutableOrigin(d){const origin=d.links?.permalink;assert(origin&&new URL(origin).protocol==='https:'&&new URL(origin).hostname===`${d.id}--tree-token.netlify.app`,'Immutable TREE deployment permalink required');return origin;}
 async function inventory(id){const files={};for(let p=1;p<=100;p++){const rows=await api(`deploys/${id}/files?per_page=100&page=${p}`);assert(Array.isArray(rows));for(const f of rows){assert(f.path&&f.sha);files[f.path]=f.sha;}if(rows.length<100)return files;}throw Error('Inventory pagination exhausted; refuse publication');}
 const configs=functionsConfig;
@@ -32,7 +32,7 @@ async function browserCheck(origin,label){
 let state;
 if(mode==='candidate'){
  assert(!await fs.stat(dir+'/state.json').catch(()=>null),'Candidate state exists; verify it instead');
- await noBuilds();const site=await api('sites/'+siteId),baseline=await readDeploy(site.published_deploy.id);assert.equal(baseline.id,process.env.EXPECTED_DEPLOY,'Published baseline changed');assert(baseline.locked,'Production must remain locked');assert.equal(baseline.available_functions.length,50,'Unexpected backend inventory; reassess first');assert.equal(baseline.function_schedules.length,5);
+ await noBuilds();const site=await api('sites/'+siteId),baseline=await readDeploy(site.published_deploy.id);assert.equal(baseline.state,'ready');validateBackend(baseline);assert.equal(baseline.id,process.env.EXPECTED_DEPLOY,'Published baseline changed');assert(baseline.locked,'Production must remain locked');assert.equal(baseline.available_functions.length,50,'Unexpected backend inventory; reassess first');assert.equal(baseline.function_schedules.length,5);
  const originalFiles=await inventory(baseline.id),files=assembleFiles(originalFiles,overlays);
  // The existing lobby can already contain this snippet in its stored source in
  // addition to Netlify's delivery insertion. Only confirm the inspected snippet
