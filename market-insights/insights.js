@@ -48,7 +48,7 @@
     STABLED:['CRYPTOCAP:STABLE.C.D','Stablecoin dominance: stablecoins’ market value as a percentage of TradingView’s tracked crypto market.'],
     GOLD:['TVC:GOLD','Gold: TradingView’s indicative U.S. dollar price per troy ounce, not its total market capitalization.','https://www.tradingview.com/symbols/GOLD/'],
     SILVER:['TVC:SILVER','Silver: TradingView’s indicative CFD price in U.S. dollars per troy ounce, not its total market capitalization.','https://www.tradingview.com/symbols/SILVER/'],
-    SILVERGOLD:['TVC:SILVER/TVC:GOLD','Silver/Gold: price of one ounce of silver divided by one ounce of gold. A unitless relative-price ratio, not Gold/Silver or a percentage.','https://www.tradingview.com/chart/?symbol=TVC%3ASILVER%2FTVC%3AGOLD']
+    GOLDSILVER:['TVC:GOLDSILVER','Gold/Silver Ratio — how many troy ounces of silver have the same value as one troy ounce of gold.','https://www.tradingview.com/symbols/TVC-GOLDSILVER/']
   };
   const priceAssets = {
     BTC:{name:'Bitcoin',symbol:'BINANCE:BTCUSDT',pair:'BTC/USDT',source:'https://www.tradingview.com/symbols/BTCUSDT/?exchange=BINANCE'},
@@ -169,7 +169,7 @@
     $('mi-stablecoin-methodology')?.toggleAttribute('hidden',selectedMarket!=='STABLED');
     $('mi-gold-guide')?.toggleAttribute('hidden',selectedMarket!=='GOLD');
     $('mi-silver-guide')?.toggleAttribute('hidden',selectedMarket!=='SILVER');
-    $('mi-silvergold-guide')?.toggleAttribute('hidden',selectedMarket!=='SILVERGOLD');
+    $('mi-goldsilver-guide')?.toggleAttribute('hidden',selectedMarket!=='GOLDSILVER');
     stage.setAttribute('aria-label','TradingView chart: '+entry[0]);
     if(lastMarket===selectedMarket)return;
     lastMarket=selectedMarket;
@@ -498,7 +498,7 @@
 
   function reportText(){
     const score=cbbiNewest?'CBBI: '+(cbbiNewest.value*100).toFixed(1)+'/100 ('+fmtDate(cbbiNewest.ts)+' UTC; provider observation).':'CBBI: current observation not verified.';
-    return ['TREE MARKET INSIGHTS','Bitcoin research dashboard',score,'TradingView charts: TOTAL, TOTAL2, TOTAL3, TOTAL3ES, BTC.D, STABLE.C.D, Gold, Silver and Silver/Gold Ratio (silver divided by gold).','Cycle figures: historical references, not price forecasts.','Sources: TradingView · Axel Adler Jr. · ColinTalksCrypto CBBI','Explore on tree-token.xyz · Not financial advice.'].join('\n');
+    return ['TREE MARKET INSIGHTS','Bitcoin research dashboard',score,'TradingView charts: TOTAL, TOTAL2, TOTAL3, TOTAL3ES, BTC.D, STABLE.C.D, Gold, Silver and Gold/Silver Ratio (gold divided by silver).','Cycle figures: historical references, not price forecasts.','Sources: TradingView · Axel Adler Jr. · ColinTalksCrypto CBBI','Explore on tree-token.xyz · Not financial advice.'].join('\n');
   }
   $('mi-copy-report')?.addEventListener('click',async()=>{
     const button=$('mi-copy-report');

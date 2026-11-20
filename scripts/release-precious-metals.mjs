@@ -22,8 +22,8 @@ export const DELIVERY_SOURCES = {
   '/market-insights/insights.js': 'market-insights/insights.js',
 };
 export const REPLACED_HASHES = {
-  '/market-insights/index.html': 'f53510a3b09c253c3c89edce32f4765ae15c8c17',
-  '/market-insights/insights.js': '309590103ca53b0d901beb5e905627c557ee4b0b',
+  '/market-insights/index.html': '2129bd2818ea6052fafa56b5cf470de9dbd4baab',
+  '/market-insights/insights.js': '6b99eda47fe4aacf7ea8db21603e105b5a24e72d',
 };
 export const REQUIRED_CHANGES = Object.keys(DELIVERY_SOURCES);
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
@@ -127,13 +127,13 @@ export function validateBrowserReview(report, plan, state, now = Date.now()) {
   assert.equal(report.candidateId, state.id); assert.equal(report.planSha256, fingerprint(plan));
   assert.equal(report.origin, originFor(state.id)); assert.equal(report.noWalletOrPaymentActions, true);
   assert.equal(report.provider, 'TradingView');
-  assert.deepEqual(report.symbols, ['TVC:GOLD','TVC:SILVER','TVC:SILVER/TVC:GOLD']);
+  assert.deepEqual(report.symbols, ['TVC:GOLD','TVC:SILVER','TVC:GOLDSILVER']);
   const at = Date.parse(report.checkedAt);
   assert(Number.isFinite(at) && at >= Date.parse(state.candidateCreatedAt) && at <= now + 300000 && now - at <= 86400000,
     'Real-provider review must be current and after candidate creation.');
   assert(Array.isArray(report.viewportWidths) && report.viewportWidths.some(width => Number.isInteger(width) && width >= 1024),
     'Review the real provider chart at desktop width; automated checks cover the phone layouts.');
-  for (const name of ['goldChartRendered','silverChartRendered','silverGoldRatioRendered','ratioCorrectDirection','chartInteraction','sourceLinks']) {
+  for (const name of ['goldChartRendered','silverChartRendered','goldSilverRatioRendered','ratioCorrectDirection','chartInteraction','sourceLinks']) {
     assert.equal(report.checks?.[name], true, 'Missing real-provider check: ' + name);
   }
 }
@@ -324,7 +324,7 @@ export async function main(args = process.argv.slice(2)) {
     assertSource(sourceCommit, sourceTree); await assertLiveBaseline(api, baseline);
     plan = { schemaVersion: 1, siteId: SITE_ID, baselineId: expected, baselineSha256: fingerprint(baseline), baselineCreatedAt: baseline.deploy.created_at,
       createdAt: new Date().toISOString(), sourceCommit, sourceTree, sourceBranch: git('branch', '--show-current'),
-      title: `TREE Precious Metals ${sourceCommit.slice(0, 12)}; preserve current production`, ...assembleFiles(baselineFiles, overlays()) };
+      title: `TREE Gold/Silver Ratio correction ${sourceCommit.slice(0, 12)}; preserve current production`, ...assembleFiles(baselineFiles, overlays()) };
     writeRecord(planPath, plan, true);
   } else {
     plan = readRecord(planPath); assert.equal(plan.baselineSha256, fingerprint(baseline)); assert.equal(plan.baselineId, expected);
@@ -436,3 +436,4 @@ export async function main(args = process.argv.slice(2)) {
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   main().catch(error => { console.error(error.message); process.exitCode = 1; });
 }
+

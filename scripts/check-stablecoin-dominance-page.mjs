@@ -9,9 +9,9 @@ const baseURL = new URL(process.env.STABLECOIN_DOMINANCE_TEST_BASE || 'http://12
 const targetURL = new URL('/market-insights/', baseURL).href;
 const output = path.resolve('.netlify');
 const widths = [320, 390, 768, 1363];
-const keys = ['TOTAL', 'TOTAL2', 'TOTAL3', 'TOTAL3ES', 'BTCD', 'STABLED', 'GOLD', 'SILVER', 'SILVERGOLD'];
-const symbolMap = { TOTAL: 'CRYPTOCAP:TOTAL', TOTAL2: 'CRYPTOCAP:TOTAL2', TOTAL3: 'CRYPTOCAP:TOTAL3', TOTAL3ES: 'CRYPTOCAP:TOTAL3ES', BTCD: 'CRYPTOCAP:BTC.D', STABLED: 'CRYPTOCAP:STABLE.C.D', GOLD: 'TVC:GOLD', SILVER: 'TVC:SILVER', SILVERGOLD: 'TVC:SILVER/TVC:GOLD' };
-const sourcePath = { TOTAL: '/symbols/CRYPTOCAP-TOTAL/', TOTAL2: '/symbols/CRYPTOCAP-TOTAL2/', TOTAL3: '/symbols/CRYPTOCAP-TOTAL3/', TOTAL3ES: '/symbols/CRYPTOCAP-TOTAL3ES/', BTCD: '/symbols/CRYPTOCAP-BTC.D/', STABLED: '/symbols/CRYPTOCAP-STABLE.C.D/', GOLD: '/symbols/GOLD/', SILVER: '/symbols/SILVER/', SILVERGOLD: '/chart/' };
+const keys = ['TOTAL', 'TOTAL2', 'TOTAL3', 'TOTAL3ES', 'BTCD', 'STABLED', 'GOLD', 'SILVER', 'GOLDSILVER'];
+const symbolMap = { TOTAL: 'CRYPTOCAP:TOTAL', TOTAL2: 'CRYPTOCAP:TOTAL2', TOTAL3: 'CRYPTOCAP:TOTAL3', TOTAL3ES: 'CRYPTOCAP:TOTAL3ES', BTCD: 'CRYPTOCAP:BTC.D', STABLED: 'CRYPTOCAP:STABLE.C.D', GOLD: 'TVC:GOLD', SILVER: 'TVC:SILVER', GOLDSILVER: 'TVC:GOLDSILVER' };
+const sourcePath = { TOTAL: '/symbols/CRYPTOCAP-TOTAL/', TOTAL2: '/symbols/CRYPTOCAP-TOTAL2/', TOTAL3: '/symbols/CRYPTOCAP-TOTAL3/', TOTAL3ES: '/symbols/CRYPTOCAP-TOTAL3ES/', BTCD: '/symbols/CRYPTOCAP-BTC.D/', STABLED: '/symbols/CRYPTOCAP-STABLE.C.D/', GOLD: '/symbols/GOLD/', SILVER: '/symbols/SILVER/', GOLDSILVER: '/symbols/TVC-GOLDSILVER/' };
 const fixtureTime = Math.floor(Date.now() / 1000);
 const report = {
   baseURL, targetURL,
@@ -93,7 +93,6 @@ async function assertSelection(page, key, result) {
   const sourceURL = new URL(await source.getAttribute('href'));
   assert.equal(sourceURL.origin, 'https://www.tradingview.com');
   assert.equal(sourceURL.pathname, sourcePath[key], key + ': source link must match the embedded chart');
-  if (key === 'SILVERGOLD') assert.equal(sourceURL.searchParams.get('symbol'), 'TVC:SILVER/TVC:GOLD');
   assert.equal(await source.getAttribute('target'), '_blank');
   assert.match(await source.getAttribute('rel'), /(?:^|\s)noopener(?:\s|$)/);
   assert.match(await source.innerText(), /TradingView/);
@@ -101,7 +100,7 @@ async function assertSelection(page, key, result) {
   assert.equal(await page.locator('#mi-stablecoin-methodology').isVisible(), key === 'STABLED');
   assert.equal(await page.locator('#mi-gold-guide').isVisible(), key === 'GOLD');
   assert.equal(await page.locator('#mi-silver-guide').isVisible(), key === 'SILVER');
-  assert.equal(await page.locator('#mi-silvergold-guide').isVisible(), key === 'SILVERGOLD');
+  assert.equal(await page.locator('#mi-goldsilver-guide').isVisible(), key === 'GOLDSILVER');
   assert.equal(await page.locator('#mi-tv-stage').getAttribute('aria-label'), 'TradingView chart: ' + symbolMap[key]);
   result.chartSelections.push({ key, symbol: config.symbol, source: sourceURL.href, guideVisible: key === 'STABLED' });
 }
@@ -176,8 +175,8 @@ try {
       assert(await page.locator('#mi-pane-market').isVisible());
       assert.equal(await page.locator('.mi-pane:visible').count(), 1);
       assert.deepEqual(await page.locator('[data-tv-symbol]').evaluateAll(els => els.map(el => el.dataset.tvSymbol)), keys);
-      assert.deepEqual((await page.locator('[data-tv-symbol]').allTextContents()).map(x => x.trim()), ['TOTAL', 'TOTAL2', 'TOTAL3', 'TOTAL3ES', 'BTC.D', 'Stablecoin Dominance', 'Gold', 'Silver', 'Silver/Gold Ratio']);
-      result.cases.push('Nine market choices; Stablecoin Dominance follows BTC.D, followed by Gold, Silver and Silver/Gold Ratio');
+      assert.deepEqual((await page.locator('[data-tv-symbol]').allTextContents()).map(x => x.trim()), ['TOTAL', 'TOTAL2', 'TOTAL3', 'TOTAL3ES', 'BTC.D', 'Stablecoin Dominance', 'Gold', 'Silver', 'Gold/Silver Ratio']);
+      result.cases.push('Nine market choices; Stablecoin Dominance follows BTC.D, followed by Gold, Silver and Gold/Silver Ratio');
 
       for (const key of ['TOTAL3', 'BTCD']) await assertSelection(page, key, result);
       result.cases.push('Existing TOTAL3 and Bitcoin dominance retain their symbols and source links');
@@ -211,19 +210,21 @@ try {
       result.cases.push('Stablecoin widget uses CRYPTOCAP:STABLE.C.D, percentage caption, explanation and matching provider link');
       await checkLayout(page, result, 'stablecoin-dominance');
 
-      for (const metal of ['GOLD', 'SILVER', 'SILVERGOLD']) {
+      for (const metal of ['GOLD', 'SILVER', 'GOLDSILVER']) {
         await assertSelection(page, metal, result);
         const desc = await page.locator('#mi-market-description').innerText();
-        assert.match(desc, metal === 'SILVERGOLD' ? /unitless|ratio/i : /ounce|price/i);
-        const guideText = await page.locator('#mi-' + (metal === 'SILVERGOLD' ? 'silvergold' : metal.toLowerCase()) + '-guide').innerText();
-        assert.match(guideText, metal === 'SILVERGOLD' ? /inverse|silver.*gold/i : /ounce|price/i);
+        assert.match(desc, metal === 'GOLDSILVER' ? /unitless|ratio/i : /ounce|price/i);
+        const guideText = await page.locator('#mi-' + (metal === 'GOLDSILVER' ? 'goldsilver' : metal.toLowerCase()) + '-guide').innerText();
+        assert.match(guideText, metal === 'GOLDSILVER' ? /gold price divided by silver price/i : /ounce|price/i);
         await checkLayout(page, result, metal.toLowerCase());
       }
-      await assertSelection(page, 'SILVERGOLD', result);
-      const ratioGuide = await page.locator('#mi-silvergold-guide').innerText();
-      assert.match(ratioGuide, /rising ratio means silver/i);
-      assert.match(ratioGuide, /falling ratio means gold/i);
-      result.cases.push('Gold, silver and actual Silver/Gold division use consistent TVC symbols, source links and distinct explanations');
+      await assertSelection(page, 'GOLDSILVER', result);
+      const ratioGuide = await page.locator('#mi-goldsilver-guide').innerText();
+      assert.match(ratioGuide, /rising ratio means gold/i);
+      assert.match(ratioGuide, /falling ratio means silver/i);
+      assert.match(ratioGuide, /ratio of 80 means one troy ounce of gold is worth about 80 troy ounces of silver/i);
+      assert.doesNotMatch(await page.locator('#mi-pane-market').innerText(), /silver\/gold ratio|silver price divided by gold price/i);
+      result.cases.push('Gold, silver and Gold/Silver Ratio use consistent TVC symbols, source links and distinct explanations');
 
       await assertSelection(page, 'TOTAL3', result);
       await checkLayout(page, result, 'return-to-total3');

@@ -15,7 +15,7 @@ import {
   waitForAllBuilds, publicChecks,
 } from '../scripts/release-precious-metals.mjs';
 
-const expectedDeploy = '6aff8d6c44e257067443ba98';
+const expectedDeploy = '6affb0e47dc837eae9bdc12d';
 const digest = bytes => crypto.createHash('sha1').update(bytes).digest('hex');
 const files = () => ({ '/index.html': 'a'.repeat(40), '/dapp/index.html': 'b'.repeat(40),
   '/play/index.html': 'c'.repeat(40), '/play/challenge/index.html': 'd'.repeat(40),
@@ -157,12 +157,13 @@ test('automated layout evidence and actual-provider review are separately bound 
   const now = Date.parse('2026-11-19T20:05:00Z');
   const review = { schemaVersion: 1, result: 'passed', testOnly: false, sourceCommit: plan.sourceCommit, sourceTree: plan.sourceTree,
     candidateId: state.id, planSha256: fingerprint(plan), origin, checkedAt: '2026-11-19T20:04:00Z', noWalletOrPaymentActions: true,
-    provider: 'TradingView', symbols: ['TVC:GOLD','TVC:SILVER','TVC:SILVER/TVC:GOLD'], viewportWidths: [1363],
-    checks: { goldChartRendered: true, silverChartRendered: true, silverGoldRatioRendered: true, ratioCorrectDirection: true, chartInteraction: true, sourceLinks: true } };
+    provider: 'TradingView', symbols: ['TVC:GOLD','TVC:SILVER','TVC:GOLDSILVER'], viewportWidths: [1363],
+    checks: { goldChartRendered: true, silverChartRendered: true, goldSilverRatioRendered: true, ratioCorrectDirection: true, chartInteraction: true, sourceLinks: true } };
   validateBrowserReview(review, plan, state, now);
-  for (const mutation of [{ testOnly: true }, { symbols: ['TVC:GOLDSILVER'] }, { origin: 'https://tree-token.xyz' },
+  for (const mutation of [{ testOnly: true }, { symbols: ['TVC:GOLDSILVER'] },
+    { symbols: ['TVC:GOLD','TVC:SILVER','TVC:SILVER/TVC:GOLD'] }, { origin: 'https://tree-token.xyz' },
     { noWalletOrPaymentActions: false }, { viewportWidths: [390] }, { checkedAt: '2026-11-19T19:59:00Z' },
-    { checkedAt: '2026-11-18T20:00:00Z' }, { checks: { ...review.checks, silverGoldRatioRendered: false } }]) {
+    { checkedAt: '2026-11-18T20:00:00Z' }, { checks: { ...review.checks, goldSilverRatioRendered: false } }]) {
     assert.throws(() => validateBrowserReview({ ...review, ...mutation }, plan, state, now));
   }
   assert.throws(() => validateBrowserReview(layout, plan, state, now));
@@ -212,3 +213,4 @@ test('canonical delivery verifies exact two source bytes and accepts only the si
   await assert.rejects(publicChecks('https://tree-token.xyz', plan, root, fetchImpl), /HTML mutation/);
   await assert.rejects(publicChecks('https://unrelated.invalid', plan, root, fetchImpl), /origin/);
 });
+

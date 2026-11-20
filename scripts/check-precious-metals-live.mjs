@@ -9,8 +9,8 @@ const modulePath=process.env.PRECIOUS_METALS_BROWSER_MODULE;
 assert(modulePath,'Browser module required');
 const {chromium}=await import(pathToFileURL(modulePath).href);
 const origin='https://'+candidate.id+'--tree-token.netlify.app';
-const symbols=[['GOLD','TVC:GOLD',/gold/i],['SILVER','TVC:SILVER',/silver/i],['SILVERGOLD','TVC:SILVER/TVC:GOLD',/silver.*gold/i]];
-const report={schemaVersion:1,result:'failed',testOnly:false,sourceCommit:plan.sourceCommit,sourceTree:plan.sourceTree,candidateId:candidate.id,planSha256:fingerprint(plan),origin,checkedAt:new Date().toISOString(),noWalletOrPaymentActions:true,provider:'TradingView',symbols:symbols.map(x=>x[1]),viewportWidths:[1363],checks:{goldChartRendered:false,silverChartRendered:false,silverGoldRatioRendered:false,ratioCorrectDirection:false,chartInteraction:false,sourceLinks:false},charts:[],observations:[]};
+const symbols=[['GOLD','TVC:GOLD',/gold/i],['SILVER','TVC:SILVER',/silver/i],['GOLDSILVER','TVC:GOLDSILVER',/gold.*silver/i]];
+const report={schemaVersion:1,result:'failed',testOnly:false,sourceCommit:plan.sourceCommit,sourceTree:plan.sourceTree,candidateId:candidate.id,planSha256:fingerprint(plan),origin,checkedAt:new Date().toISOString(),noWalletOrPaymentActions:true,provider:'TradingView',symbols:symbols.map(x=>x[1]),viewportWidths:[1363],checks:{goldChartRendered:false,silverChartRendered:false,goldSilverRatioRendered:false,ratioCorrectDirection:false,chartInteraction:false,sourceLinks:false},charts:[],observations:[]};
 await fs.mkdir('.netlify/precious-metals-live',{recursive:true});
 const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
 try{
@@ -35,14 +35,14 @@ try{
    assert(evidence,'Real TradingView '+symbol+' chart did not render');
    const source=new URL(await page.locator('#mi-tv-stage .tradingview-widget-copyright a').getAttribute('href'));
    assert.equal(source.hostname,'www.tradingview.com');
-   if(key==='SILVERGOLD')assert.equal(source.searchParams.get('symbol'),symbol);
+   if(key==='GOLDSILVER')assert.equal(source.pathname,'/symbols/TVC-GOLDSILVER/');
    await page.locator('#mi-pane-market').screenshot({path:'.netlify/precious-metals-live/'+key.toLowerCase()+'.png'});
    report.charts.push({key,symbol,evidence,source:source.href});
  }
- const desc=await page.locator('#mi-silvergold-guide').innerText();
- assert.match(desc,/silver price divided by gold price/i);
- assert.match(desc,/rising ratio means silver/i);
- assert.match(desc,/falling ratio means gold/i);
+ const desc=await page.locator('#mi-goldsilver-guide').innerText();
+ assert.match(desc,/gold price divided by silver price/i);
+ assert.match(desc,/rising ratio means gold/i);
+ assert.match(desc,/falling ratio means silver/i);
  for(const k of Object.keys(report.checks))report.checks[k]=true;
  report.result='passed';
  report.observations.push('Actual TradingView frames displayed matching metal instruments and chart canvases, without synthetic provider fixtures.');
