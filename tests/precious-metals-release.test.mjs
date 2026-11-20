@@ -160,7 +160,7 @@ test('automated layout evidence and actual-provider review are separately bound 
     provider: 'TradingView', symbols: ['TVC:GOLD','TVC:SILVER','TVC:SILVER/TVC:GOLD'], viewportWidths: [1363],
     checks: { goldChartRendered: true, silverChartRendered: true, silverGoldRatioRendered: true, ratioCorrectDirection: true, chartInteraction: true, sourceLinks: true } };
   validateBrowserReview(review, plan, state, now);
-  for (const mutation of [{ testOnly: true }, { symbol: 'CRYPTOCAP:USDT.D' }, { origin: 'https://tree-token.xyz' },
+  for (const mutation of [{ testOnly: true }, { symbols: ['TVC:GOLDSILVER'] }, { origin: 'https://tree-token.xyz' },
     { noWalletOrPaymentActions: false }, { viewportWidths: [390] }, { checkedAt: '2026-11-19T19:59:00Z' },
     { checkedAt: '2026-11-18T20:00:00Z' }, { checks: { ...review.checks, silverGoldRatioRendered: false } }]) {
     assert.throws(() => validateBrowserReview({ ...review, ...mutation }, plan, state, now));
