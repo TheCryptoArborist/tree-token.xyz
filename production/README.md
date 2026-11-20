@@ -1,3 +1,50 @@
+# Original NFTree redemption send page — published November 20, 2026
+
+Current locked production is `6b00812738f2bd1e7367809f`, published at
+17:19:59 UTC (11:19:59 America/Chicago) by workflow
+[44781788410](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44781788410).
+Source: `a2b7c9b002f31805f8bf8a04f2c2d02320a2378d`, merging reviewed PR #261
+head `7ae3f676afb85e634bf6b053e42d0fe764ee049d`.
+
+`/play/multichaintest/original/bnb/send/` now provides the separate LayerZero
+send for the already locked original-backed BNB pass #1 and NFTree #2720.
+The only wallet call offered is `sendRedemption()` on the existing adapter,
+with the fixed Sui recipient ending 45c4 and current exact native BNB quote.
+It verifies the outgoing receipt; Sui delivery and the return acknowledgement
+remain separate steps requiring their own verification.
+
+The freshly captured baseline was `6b007400b0b6efcc0896ac43`. This release adds
+exactly the send page's HTML, app module and core module: **646 static paths**
+in total. All **643 pre-existing path hashes, 50 complete backend records,
+five schedules**, runtime settings, protected configuration and snippets were
+preserved. The final report was independently compared with the preceding
+lock-page release record. Canonical JavaScript bytes match reviewed source;
+HTML matches except for the exact preserved site-wide Arboretum snippet.
+
+The merged-source test suite and browser checks at 1440, 390 and 320 pixels
+passed. A fresh unsigned mainnet preflight at 17:16:39 UTC verified Locked,
+unsent state, original custody and prior lock receipt, exact route/GUID,
+sufficient BNB, message quote 0.004577068618141518 BNB and gas estimate 404306.
+These are timestamped observations; the page refreshes them before approval.
+The canonical page was separately opened and visually inspected. No installed
+wallet connection, signature, send transaction, Sui delivery or acknowledgement
+was performed by this page release.
+
+Complete inventory and runtime evidence:
+`docs/multichain/original-redemption-send-page-release.json`.
+Additional preflight, canonical-byte and browser verification:
+`docs/multichain/original-redemption-send-verification-20261120.json`.
+Workflow artifact 14652448214 SHA256:
+`d83924b7e5093ffd7eca04281ba473a5b6ae7e8844b821bf67d8c994cdb966e2`.
+Protocol continuation: `docs/multichain/original-redemption-send-flow.md`.
+
+Capture the actual current live inventory before future releases. This
+one-time publisher is pinned to its completed input and must not be reused
+against a newer baseline without a reviewed update. Preserve all other games
+and backend records; never deploy the historical root snapshot.
+
+---
+
 # Tree Army mobile controls and gait — published November 20, 2026
 
 Current locked production is `6b0070b57616d3344ac98c01`, published and verified
