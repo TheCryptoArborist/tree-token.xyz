@@ -14,7 +14,7 @@ import { verifyDelivery } from './multichain-preview-delivery.mjs';
 // unlocks a deploy, or accepts an arbitrary older deployment for publication.
 export const SITE_ID = 'aa62f324-b880-47d6-85b8-4ba0700ff5bf';
 export const ACCOUNT_ID = '69800888d1a3d0483003ae9e';
-export const BASELINE_ID = process.env.MULTICHAIN_EXPECTED_DEPLOY || '6b0062b486ca536dd1768394';
+export const BASELINE_ID = process.env.MULTICHAIN_EXPECTED_DEPLOY || '6b0070b57616d3344ac98c01';
 export const ORIGINAL_CHANGES = [];
 export const REPLACED_HASHES = {};
 // Historical orphaned API deploys individually audited on 2026-11-10.

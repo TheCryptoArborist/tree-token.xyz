@@ -58,7 +58,7 @@ jobs:
       - name: Add the reviewed original-backed redemption lock page and preserve the live site
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          MULTICHAIN_EXPECTED_DEPLOY: '6b0062b486ca536dd1768394'
+          MULTICHAIN_EXPECTED_DEPLOY: '6b0070b57616d3344ac98c01'
           REVIEWED_SHA: ${{ github.sha }}
         run: |
           test -n "$NETLIFY_AUTH_TOKEN" || { echo 'The existing Netlify release connection is unavailable.'; exit 1; }

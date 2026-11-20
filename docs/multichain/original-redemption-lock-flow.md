@@ -67,9 +67,9 @@ custody or resubmit a lock. Existing purchase/enable/reserve pages stay unchange
 
 ## Release preservation and checks
 
-The current actual baseline was selected as `6b0062b486ca536dd1768394` (Tree Army
-mobile controls), 50 backend records and five schedules. It was observed ready
-and current but unlocked. A narrow protection mode verifies this exact deployment
+The current actual baseline was selected as `6b0070b57616d3344ac98c01` (Tree Army
+mobile controls), 50 backend records and five schedules. The latest check found it ready, current and locked. An earlier site response
+pointed to the previous unlocked revision; that stale baseline was discarded. A narrow protection mode verifies this exact deployment
 is STILL current/published/ready, validates backend identity, refuses all queued
 or nonterminal builds except the ten unchanged audited historical API orphans,
 rechecks identity, and locks only that current version. It cannot publish an old
