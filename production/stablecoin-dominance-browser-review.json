@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "result": "passed",
+  "testOnly": false,
+  "sourceCommit": "12318adb226a20a0fdb9b8c558a4c6a25b3320b3",
+  "sourceTree": "a805f9318da65de375d2d697535fce305dd50b49",
+  "candidateId": "6aff8d6c44e257067443ba98",
+  "planSha256": "928abe46ae8ce28e78628faf9cfe8b1c5ccb3ab20a6a4926defe4f3ffab949c4",
+  "origin": "https://6aff8d6c44e257067443ba98--tree-token.netlify.app",
+  "checkedAt": "2026-11-20T00:01:38Z",
+  "noWalletOrPaymentActions": true,
+  "provider": "TradingView",
+  "symbol": "CRYPTOCAP:STABLE.C.D",
+  "viewportWidths": [
+    1363
+  ],
+  "checks": {
+    "stablecoinTabAfterBitcoin": true,
+    "actualStablecoinChartRendered": true,
+    "stablecoinSymbol": true,
+    "chartInteraction": true,
+    "sourceLink": true
+  },
+  "observations": [
+    "The candidate displays Stablecoin Dominance immediately to the right of BTC.D.",
+    "The real TradingView widget resolved Crypto Stablecoins Dominance, % with populated percentage OHLC values and a rendered historical chart.",
+    "Selecting the 3M range changed the chart from daily to hourly bars and rendered the updated history.",
+    "The source credit points to TradingView's CRYPTOCAP-STABLE.C.D symbol page.",
+    "Phone and tablet geometry is covered separately by the explicitly provider-mocked CI report at 320, 390, 768 and 1363 CSS pixels."
+  ]
+}

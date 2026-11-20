@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "action": "publish-stablecoin-dominance",
+  "sourceCommit": "12318adb226a20a0fdb9b8c558a4c6a25b3320b3",
+  "sourceTree": "a805f9318da65de375d2d697535fce305dd50b49",
+  "mainCommit": "bf57326c41989edcbba09dced015cb018d6836f5",
+  "expectedDeploy": "6aff527173dc08672f92903f",
+  "candidateId": "6aff8d6c44e257067443ba98",
+  "planSha256": "928abe46ae8ce28e78628faf9cfe8b1c5ccb3ab20a6a4926defe4f3ffab949c4",
+  "candidateRunId": 44642066612,
+  "candidateArtifactId": 14587965037,
+  "candidateArtifactSHA256": "c642bd9804900b7901ffe35e2751c1af3edd4cdf15ae088681367bb9fb5f4e91",
+  "browserReview": "production/stablecoin-dominance-browser-review.json"
+}
