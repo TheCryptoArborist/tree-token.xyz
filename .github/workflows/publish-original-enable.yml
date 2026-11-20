@@ -1,0 +1,79 @@
+name: Publish original-backed purchase enablement
+
+on:
+  pull_request:
+    paths:
+      - 'play/multichaintest/original/bnb/enable/**'
+      - 'scripts/multichain/original-enable-core.mjs'
+      - 'scripts/release-original-enable.mjs'
+      - 'scripts/check-original-enable-browser.mjs'
+      - 'tests/multichain-original-enable*.test.mjs'
+      - '.github/workflows/publish-original-enable.yml'
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-original-enable.yml']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tree-production-preservation-${{ github.event_name == 'push' && 'release' || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci --ignore-scripts
+      - run: |
+          node --test tests/multichain-original-enable.test.mjs tests/multichain-original-enable-release.test.mjs tests/multichain-preview.test.mjs tests/multichain-setup.test.mjs tests/multichain-bnb.test.mjs tests/multichain-binding.test.mjs tests/multichain-sui-registration.test.mjs tests/multichain-sui-config.test.mjs tests/multichain-bnb-config.test.mjs tests/multichain-sui-peer-bind.test.mjs tests/multichain-sui-reserve.test.mjs tests/multichain-sui-three-verifier.test.mjs tests/multichain-bnb-recovery.test.mjs tests/multichain-bnb-purchase.test.mjs tests/multichain-bnb-redemption.test.mjs tests/multichain-sui-ack.test.mjs tests/multichain-original-publish.test.mjs tests/multichain-original-slot.test.mjs tests/multichain-original-bnb.test.mjs tests/multichain-original-bnb-pass.test.mjs tests/multichain-original-bnb-bind.test.mjs tests/multichain-original-register.test.mjs tests/multichain-original-config.test.mjs tests/multichain-original-bnb-config.test.mjs tests/multichain-original-peer.test.mjs tests/multichain-original-fund.test.mjs tests/multichain-original-reserve.test.mjs tests/multichain-release.test.mjs tests/preserved-release.test.mjs
+          node --check scripts/release-original-enable.mjs
+          node --check scripts/multichain-preview-delivery.mjs
+          git diff --check
+      - name: Check desktop and mobile connection and recovery UX
+        run: |
+          npm install --prefix "$RUNNER_TEMP/enable-browser" --no-save --ignore-scripts playwright@1.56.1
+          node "$RUNNER_TEMP/enable-browser/node_modules/playwright/cli.js" install --with-deps chromium
+          node scripts/check-original-enable-browser.mjs "$RUNNER_TEMP/enable-browser/node_modules/playwright/index.mjs"
+  publish:
+    needs: verify
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[publish original enable]')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Add the reviewed original-backed purchase enablement page and preserve the live site
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          MULTICHAIN_EXPECTED_DEPLOY: '6affb404f25e798bc619e2a8'
+          REVIEWED_SHA: ${{ github.sha }}
+        run: |
+          test -n "$NETLIFY_AUTH_TOKEN" || { echo 'The existing Netlify release connection is unavailable.'; exit 1; }
+          test "$(git rev-parse HEAD)" = "$REVIEWED_SHA"
+          node scripts/release-original-enable.mjs capture
+          node scripts/release-original-enable.mjs plan --source-commit "$REVIEWED_SHA"
+          node scripts/release-original-enable.mjs preview --source-commit "$REVIEWED_SHA"
+          node scripts/release-original-enable.mjs verify --source-commit "$REVIEWED_SHA"
+          candidate=$(node -p "JSON.parse(require('fs').readFileSync('.netlify/original-enable-candidate.json')).id")
+          node scripts/release-original-enable.mjs publish --source-commit "$REVIEWED_SHA" --expected-candidate "$candidate"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: original-enable-release
+          path: .netlify/original-enable-release-report.json
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 30
