@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "result": "passed",
+  "testOnly": false,
+  "sourceCommit": "31909de7bce24b2deda7f7855521e06a4e955f95",
+  "sourceTree": "429d5a8f6467598001bb7caf214f5d6d34400226",
+  "candidateId": "6affb404f25e798bc619e2a8",
+  "planSha256": "cc6ebcd6e37667a993f06dc743eb398653ba7b7ab8b26a0e6ce05234c9ca3d7e",
+  "origin": "https://6affb404f25e798bc619e2a8--tree-token.netlify.app",
+  "checkedAt": "2026-11-20T02:47:11.461Z",
+  "noWalletOrPaymentActions": true,
+  "provider": "TradingView",
+  "symbols": [
+    "TVC:GOLD",
+    "TVC:SILVER",
+    "TVC:GOLDSILVER"
+  ],
+  "viewportWidths": [
+    1363
+  ],
+  "checks": {
+    "goldChartRendered": true,
+    "silverChartRendered": true,
+    "goldSilverRatioRendered": true,
+    "ratioCorrectDirection": true,
+    "chartInteraction": true,
+    "sourceLinks": true
+  },
+  "charts": [
+    {
+      "key": "GOLD",
+      "symbol": "TVC:GOLD",
+      "evidence": {
+        "title": "TradingView Chart Widget",
+        "canvasCount": 2,
+        "textSample": "1m\n30m\n1h\nD\nIndicators\nG\nGold\n1D\nTVC\nOpen\n1s updates\nO\n3,625.450\nH\n3,636.726\nL\n3,526.407\nC\n3,550.340\n−74.840 (−2.06%)\n1D\n5D\n1M\n3M\n6M\nYTD\n1Y\n5Y\nAll\n02:44:46 UTC"
+      },
+      "source": "https://www.tradingview.com/symbols/GOLD/?utm_source=6affb404f25e798bc619e2a8--tree-token.netlify.app&utm_medium=widget_new&utm_campaign=advanced-chart"
+    },
+    {
+      "key": "SILVER",
+      "symbol": "TVC:SILVER",
+      "evidence": {
+        "title": "TradingView Chart Widget",
+        "canvasCount": 2,
+        "textSample": "1m\n30m\n1h\nD\nIndicators\nS\nCFDs on Silver (US$ / OZ)\n1D\nTVC\nOpen\n1s updates\nO\n43.0170\nH\n43.2300\nL\n41.4477\nC\n42.0140\n−0.8557 (−2.00%)\n1D\n5D\n1M\n3M\n6M\nYTD\n1Y\n5Y\nAll\n02:44:48 UTC"
+      },
+      "source": "https://www.tradingview.com/symbols/SILVER/?utm_source=6affb404f25e798bc619e2a8--tree-token.netlify.app&utm_medium=widget_new&utm_campaign=advanced-chart"
+    },
+    {
+      "key": "GOLDSILVER",
+      "symbol": "TVC:GOLDSILVER",
+      "evidence": {
+        "title": "TradingView Chart Widget",
+        "canvasCount": 2,
+        "textSample": "1m\n30m\n1h\nD\nIndicators\nG\nGold/Silver Ratio\n1D\nTVC\nOpen\n1s updates\nO\n84.496\nH\n85.170\nL\n84.204\nC\n84.456\n−0.037 (−0.04%)\n1D\n5D\n1M\n3M\n6M\nYTD\n1Y\n5Y\nAll\n02:44:50 UTC"
+      },
+      "source": "https://www.tradingview.com/symbols/TVC-GOLDSILVER/?utm_source=6affb404f25e798bc619e2a8--tree-token.netlify.app&utm_medium=widget_new&utm_campaign=advanced-chart"
+    }
+  ],
+  "observations": [
+    "The actual TradingView Gold, Silver and Gold/Silver Ratio widgets rendered populated charts in GitHub Actions run 44662805307; their screenshots were visually inspected.",
+    "A separate cloud-browser visit to the exact candidate selected Gold/Silver Ratio and showed the native TVC:GOLDSILVER title, populated OHLC values and candles, with a then-observed close of 84.456.",
+    "The real widget's 3M range control was selected; the chart changed from daily to one-hour intervals and displayed populated three-month history.",
+    "The ratio guide, ratio-of-80 example, falling-ratio silver-strength explanation, and official TradingView source link were checked in the candidate.",
+    "Phone/tablet layout, choice ordering, accessibility and source selection were separately tested with provider mocks at 320, 390, 768 and 1363 pixels. No wallet or payment actions were used."
+  ]
+}
