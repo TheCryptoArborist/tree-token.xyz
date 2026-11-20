@@ -32,7 +32,7 @@ const SOURCE_PATHS = [...Object.values(DELIVERY_SOURCES), 'scripts/release-preci
   'scripts/release-arcade-cutoff.mjs', 'scripts/release-preserved-production.mjs',
   'scripts/release-stats-market.mjs', 'scripts/release-sti-purchase.mjs', 'scripts/stats-market-delivery.mjs',
   'scripts/sti-purchase-delivery.mjs',
-  'tests/precious-metals-release.test.mjs', '.github/workflows/publish-precious-metals.yml', 'docs/precious-metals-release.md', 'scripts/check-precious-metals-page.mjs', 'scripts/market-insights-delivery.mjs'];
+  'tests/precious-metals-release.test.mjs', '.github/workflows/publish-precious-metals.yml', 'docs/precious-metals-release.md', 'scripts/check-precious-metals-page.mjs', 'scripts/check-precious-metals-live.mjs', 'scripts/market-insights-delivery.mjs'];
 const sha = (bytes, algorithm = 'sha256') => crypto.createHash(algorithm).update(bytes).digest('hex');
 const safeId = value => typeof value === 'string' && /^[a-f0-9]{24}$/.test(value);
 const safeCommit = value => typeof value === 'string' && /^[a-f0-9]{40}$/.test(value);

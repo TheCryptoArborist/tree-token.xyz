@@ -8,6 +8,7 @@ on:
       - 'market-insights/insights.js'
       - 'scripts/release-precious-metals.mjs'
       - 'scripts/check-precious-metals-page.mjs'
+      - 'scripts/check-precious-metals-live.mjs'
       - 'scripts/market-insights-delivery.mjs'
       - 'scripts/release-arcade-cutoff.mjs'
       - 'scripts/release-preserved-production.mjs'
@@ -47,6 +48,7 @@ jobs:
           node --test tests/precious-metals-release.test.mjs
           node --check scripts/release-precious-metals.mjs
           node --check scripts/check-precious-metals-page.mjs
+          node --check scripts/check-precious-metals-live.mjs
           node --check market-insights/insights.js
           git diff --check
       - name: Install isolated layout checker
@@ -114,6 +116,10 @@ jobs:
           npm install --prefix "$RUNNER_TEMP/precious-metals-browser" --ignore-scripts --no-audit --no-fund playwright@1.56.1
           "$RUNNER_TEMP/precious-metals-browser/node_modules/.bin/playwright" install chromium --only-shell
           node scripts/release-precious-metals.mjs verify --source-commit "$REVIEWED_SHA"
+      - name: Review actual Gold, Silver, and Silver/Gold charts without mocks
+        env:
+          PRECIOUS_METALS_BROWSER_MODULE: ${{ runner.temp }}/precious-metals-browser/node_modules/playwright/index.mjs
+        run: node scripts/check-precious-metals-live.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -121,6 +127,8 @@ jobs:
           path: |
             .netlify/precious-metals-*.png
             .netlify/precious-metals-browser-checks.json
+            .netlify/precious-metals-live-review.json
+            .netlify/precious-metals-live/*.png
           include-hidden-files: true
           if-no-files-found: warn
           retention-days: 30
