@@ -44,12 +44,90 @@
     TOTAL2:['CRYPTOCAP:TOTAL2','Top-125 cryptocurrency capitalization, excluding Bitcoin.'],
     TOTAL3:['CRYPTOCAP:TOTAL3','Top-125 cryptocurrency capitalization, excluding Bitcoin and Ethereum; stablecoins remain included.'],
     TOTAL3ES:['CRYPTOCAP:TOTAL3ES','Top-125 crypto capitalization excluding BTC, ETH, and stablecoins. Earlier stablecoin exclusions have methodological limits.'],
+    OTHERS:['CRYPTOCAP:OTHERS','OTHERS: TradingView’s market-cap index excluding the top 10. It tracks a selected basket outside the largest coins, not every smaller token.'],
+    STABLECAP:['CRYPTOCAP:STABLE.C','Stablecoin Market Cap: the combined market value of up to 100 coins in TradingView’s Stablecoins category.'],
     BTCD:['CRYPTOCAP:BTC.D','Bitcoin dominance: Bitcoin capitalization as a percentage of TradingView’s tracked TOTAL capitalization.'],
     STABLED:['CRYPTOCAP:STABLE.C.D','Stablecoin dominance: stablecoins’ market value as a percentage of TradingView’s tracked crypto market.'],
+    ETHD:['CRYPTOCAP:ETH.D','ETH Dominance: Ethereum’s market capitalization as a percentage of TradingView’s tracked TOTAL capitalization.'],
+    DEFI:['CRYPTOCAP:TOTALDEFI','DeFi Market Cap: the combined market value of up to 125 coins in TradingView’s decentralized-finance category.'],
     GOLD:['TVC:GOLD','Gold: TradingView’s indicative U.S. dollar price per troy ounce, not its total market capitalization.','https://www.tradingview.com/symbols/GOLD/'],
     SILVER:['TVC:SILVER','Silver: TradingView’s indicative CFD price in U.S. dollars per troy ounce, not its total market capitalization.','https://www.tradingview.com/symbols/SILVER/'],
-    GOLDSILVER:['TVC:GOLDSILVER','Gold/Silver Ratio — how many troy ounces of silver have the same value as one troy ounce of gold.','https://www.tradingview.com/symbols/TVC-GOLDSILVER/']
+    GOLDSILVER:['TVC:GOLDSILVER','Gold/Silver Ratio — how many troy ounces of silver have the same value as one troy ounce of gold.','https://www.tradingview.com/symbols/TVC-GOLDSILVER/'],
+    ALTSBTC:['CRYPTOCAP:TOTAL3ESBTC','Altcoins vs. BTC: market capitalization excluding BTC, ETH and stablecoins, divided by Bitcoin’s market capitalization.']
   };
+  const marketGuides = {
+    TOTAL:{group:'size',title:'TOTAL',
+      shows:'The combined dollar market value of up to 125 ranked cryptocurrencies tracked by TradingView. Bitcoin, Ethereum and stablecoins are included.',
+      rises:'The tracked market has a higher combined value. Prices, circulating supply and changes to the basket can all affect it.',
+      falls:'The tracked market has a lower combined value. The dollar change is not the amount of money investors withdrew.',
+      compare:'Check TOTAL2 and TOTAL3 to see the market without its largest coins, then BTC.D to see Bitcoin’s share.'},
+    TOTAL2:{group:'size',title:'TOTAL2',
+      shows:'The tracked crypto market’s combined dollar value after removing Bitcoin. Ethereum and stablecoins remain included.',
+      rises:'The coins outside Bitcoin have a higher combined market value. Ethereum can have a large influence on this total.',
+      falls:'Their combined market value is lower. This may reflect price changes, supply changes or changes to the included coins.',
+      compare:'Compare TOTAL3 to remove Ethereum as well. ETH Dominance shows how large Ethereum is relative to the full tracked market.'},
+    TOTAL3:{group:'size',title:'TOTAL3',
+      shows:'The combined dollar value of the tracked crypto market after removing Bitcoin and Ethereum. Stablecoins are still included.',
+      rises:'The remaining coins have a higher combined market value. Prices, circulating supply and which coins are included can all affect the total.',
+      falls:'Their combined market value is lower. It does not establish how many dollars investors withdrew.',
+      compare:'Compare TOTAL3ES to remove stablecoins, and Altcoins vs. BTC to see how that basket compares with Bitcoin’s market value.'},
+    TOTAL3ES:{group:'size',title:'TOTAL3ES',
+      shows:'The tracked crypto market’s dollar value excluding Bitcoin, Ethereum and stablecoins. This offers a view of the remaining altcoin basket.',
+      rises:'That altcoin basket has a higher combined market value in dollars. This does not necessarily mean it is gaining relative to Bitcoin.',
+      falls:'The basket’s combined dollar value is lower. A changing supply or list of included coins can also affect the reading.',
+      compare:'Use Altcoins vs. BTC for the relative comparison, and TOTAL3 to see the effect of including stablecoins. Historical stablecoin exclusions have provider limitations.'},
+    OTHERS:{group:'size',title:'OTHERS',
+      shows:'TradingView’s market-cap index excluding the top 10. It follows selected coins outside the largest assets, rather than all small-cap tokens.',
+      rises:'The included coins have a higher combined dollar value. A few larger coins within the basket can still drive the move.',
+      falls:'Their combined dollar value is lower. Index membership and circulating supply can change as well as prices.',
+      compare:'Compare TOTAL3ES for a broader altcoin view. Check individual price charts before assuming every smaller coin moved together.'},
+    STABLECAP:{group:'size',title:'Stablecoin Market Cap',
+      shows:'The combined dollar market value of up to 100 tracked stablecoins. Stablecoins aim to follow a currency or another reference asset.',
+      rises:'The tracked stablecoins have more total market value. Token issuance, prices and changes to the included coins can contribute.',
+      falls:'Their total market value is lower. Redemptions or price changes can contribute; it does not identify where money went.',
+      compare:'Check Stablecoin Dominance for their share of crypto and TOTAL for overall market size. Stablecoin supply is not a promise of future buying.'},
+    BTCD:{group:'dominance',title:'Bitcoin Dominance',
+      shows:'Bitcoin’s market capitalization divided by TradingView’s TOTAL market capitalization, expressed as a percentage.',
+      rises:'Bitcoin makes up a larger share of the tracked market. This can happen even if Bitcoin’s dollar price is falling.',
+      falls:'Bitcoin makes up a smaller share. It does not by itself show that all altcoins are rising in dollar terms.',
+      compare:'Check BTC’s price and TOTAL for dollar direction, then Altcoins vs. BTC for the basket that excludes Ethereum and stablecoins.'},
+    STABLED:{group:'dominance',title:'Stablecoin Dominance',
+      shows:'The tracked stablecoin market value divided by TOTAL, expressed as a percentage of the tracked crypto market.',
+      rises:'Stablecoins account for a larger share. That can happen when other crypto prices fall, even if stablecoin market value stays flat.',
+      falls:'Stablecoins account for a smaller share. Other crypto may be gaining value, stablecoin value may be falling, or both.',
+      compare:'Use Stablecoin Market Cap and TOTAL together to see which side of the fraction is changing. Share alone cannot show traders’ intentions.'},
+    ETHD:{group:'dominance',title:'ETH Dominance',
+      shows:'Ethereum’s market capitalization divided by TradingView’s TOTAL market capitalization, expressed as a percentage. It measures ETH, not its whole ecosystem.',
+      rises:'Ethereum accounts for a larger share of the tracked crypto market. Its dollar price could still be falling.',
+      falls:'Ethereum accounts for a smaller share. This does not by itself show whether ETH’s dollar price is rising or falling.',
+      compare:'Check the ETH price chart, BTC.D and TOTAL. Together they help distinguish Ethereum’s relative share from the direction of the wider market.'},
+    DEFI:{group:'sectors',title:'DeFi Market Cap',
+      shows:'The combined market value of up to 125 coins in TradingView’s decentralized-finance category. It values tokens; it is not total value locked in protocols.',
+      rises:'The tracked DeFi tokens have a higher combined market value. Prices, circulating supply and category membership can all contribute.',
+      falls:'Their combined market value is lower. This does not establish that deposits, users or protocol revenue fell.',
+      compare:'Compare TOTAL3ES for wider altcoin conditions, then research individual projects’ usage and revenue to understand what sits behind token prices.'},
+    GOLD:{group:'ratios',title:'Gold',
+      shows:'TradingView’s indicative gold price in U.S. dollars per troy ounce. It is a price series, rather than the market value of all gold.',
+      rises:'One troy ounce of gold costs more in U.S. dollars on this series.',
+      falls:'One troy ounce costs less in U.S. dollars. This alone does not show how it performed against silver.',
+      compare:'Compare Silver and the Gold/Silver Ratio. The ratio shows their relative value; retail bullion prices may differ from these indicative charts.'},
+    SILVER:{group:'ratios',title:'Silver',
+      shows:'TradingView’s indicative silver CFD price in U.S. dollars per troy ounce. It is a price series, rather than silver’s total market capitalization.',
+      rises:'One troy ounce of silver has a higher quoted U.S. dollar price on this series.',
+      falls:'One troy ounce has a lower quoted U.S. dollar price. A retail dealer’s price can differ.',
+      compare:'Compare Gold and the Gold/Silver Ratio. A falling Gold/Silver Ratio means silver is gaining value relative to gold.'},
+    GOLDSILVER:{group:'ratios',title:'Gold/Silver Ratio',
+      shows:'Gold’s price divided by silver’s price. A reading of 80 means one troy ounce of gold has the same value as about 80 troy ounces of silver.',
+      rises:'Gold gains value relative to silver: it takes more ounces of silver to match one ounce of gold.',
+      falls:'Silver gains value relative to gold: it takes fewer ounces of silver to match one ounce of gold.',
+      compare:'Check both Gold and Silver for their dollar direction. Silver can strengthen relative to gold while both dollar prices are falling.'},
+    ALTSBTC:{group:'ratios',title:'Altcoins vs. BTC',
+      shows:'TOTAL3ES divided by Bitcoin’s market capitalization: the tracked altcoin basket excluding BTC, ETH and stablecoins, compared with Bitcoin.',
+      rises:'That altcoin basket’s market value gains relative to Bitcoin’s. Both sides could still be falling in dollar terms.',
+      falls:'The basket’s market value loses ground relative to Bitcoin’s. This does not establish that every altcoin is falling.',
+      compare:'Check TOTAL3ES and the BTC price chart for dollar direction. Supply and membership changes affect this ratio; it is not an investable portfolio’s return.'}
+  };
+  const marketGroupSelections={size:'TOTAL3',dominance:'BTCD',sectors:'DEFI',ratios:'GOLD'};
   const priceAssets = {
     BTC:{name:'Bitcoin',symbol:'BINANCE:BTCUSDT',pair:'BTC/USDT',source:'https://www.tradingview.com/symbols/BTCUSDT/?exchange=BINANCE'},
     ETH:{name:'Ethereum',symbol:'BINANCE:ETHUSDT',pair:'ETH/USDT',source:'https://www.tradingview.com/symbols/ETHUSDT/?exchange=BINANCE'},
@@ -150,7 +228,7 @@
       source:'https://woocharts.com/bitcoin-price-models/'
     }
   ];
-  let selectedMarket='TOTAL3', lastMarket='', selectedOnchain='realized', lastOnchain='', fetchedCBBI=false, cbbiData=null, cbbiNewest=null, chartRange=365;
+  let selectedMarket='TOTAL3', lastMarket='', marketLoadVersion=0, selectedOnchain='realized', lastOnchain='', fetchedCBBI=false, cbbiData=null, cbbiNewest=null, chartRange=365;
   const setPressed=(selector,datasetKey,current)=>{
     $$(selector).forEach(el=>{
       const active=el.dataset[datasetKey]===current;
@@ -163,8 +241,16 @@
     const stage=$('mi-tv-stage');
     if(!stage)return;
     const entry=tvSymbols[selectedMarket];
+    const guide=marketGuides[selectedMarket];
+    marketGroupSelections[guide.group]=selectedMarket;
     setPressed('[data-tv-symbol]','tvSymbol',selectedMarket);
+    setPressed('[data-market-group]','marketGroup',guide.group);
+    $$('[data-market-group-panel]').forEach(panel=>{panel.hidden=panel.dataset.marketGroupPanel!==guide.group;});
     $('mi-market-description').textContent=entry[1];
+    $('mi-market-guide-title').textContent='Reading '+guide.title;
+    for(const part of ['shows','rises','falls','compare'])$('mi-market-guide-'+part).textContent=guide[part];
+    const source=entry[2] || 'https://www.tradingview.com/symbols/CRYPTOCAP-'+entry[0].split(':')[1]+'/';
+    $('mi-market-source').href=source;
     $('mi-stablecoin-guide')?.toggleAttribute('hidden',selectedMarket!=='STABLED');
     $('mi-stablecoin-methodology')?.toggleAttribute('hidden',selectedMarket!=='STABLED');
     $('mi-gold-guide')?.toggleAttribute('hidden',selectedMarket!=='GOLD');
@@ -173,6 +259,7 @@
     stage.setAttribute('aria-label','TradingView chart: '+entry[0]);
     if(lastMarket===selectedMarket)return;
     lastMarket=selectedMarket;
+    const version=++marketLoadVersion;
     stage.replaceChildren();
     const host=document.createElement('div');
     host.className='tradingview-widget-container';
@@ -183,7 +270,7 @@
     host.appendChild(widget);
     const credit=document.createElement('div'); credit.className='tradingview-widget-copyright';
     const creditLink=document.createElement('a');
-    creditLink.href=entry[2] || 'https://www.tradingview.com/symbols/CRYPTOCAP-'+entry[0].split(':')[1]+'/';
+    creditLink.href=source;
     creditLink.target='_blank';creditLink.rel='noopener noreferrer';
     creditLink.textContent='Chart by TradingView';
     credit.appendChild(creditLink);host.appendChild(credit);
@@ -199,13 +286,17 @@
       save_image:false,support_host:'https://www.tradingview.com'
     });
     $('mi-tv-status').textContent='Loading TradingView chart…';
-    script.onerror=()=>{$('mi-tv-status').textContent='This chart could not load. Open it on TradingView to continue.';};
-    script.onload=()=>{$('mi-tv-status').textContent='Interactive chart and dates supplied by TradingView.';};
+    script.onerror=()=>{if(version===marketLoadVersion)$('mi-tv-status').textContent='This chart could not load. Open it on TradingView to continue.';};
+    script.onload=()=>{if(version===marketLoadVersion)$('mi-tv-status').textContent='Interactive chart and dates supplied by TradingView.';};
     host.appendChild(script);stage.appendChild(host);
   }
   $$('[data-tv-symbol]').forEach(button=>button.addEventListener('click',()=>{
-    if(!tvSymbols[button.dataset.tvSymbol])return;
-    selectedMarket=button.dataset.tvSymbol;loadMarket();
+    if(!Object.hasOwn(tvSymbols,button.dataset.tvSymbol))return;
+    selectedMarket=button.dataset.tvSymbol;loadMarket();recordView();
+  }));
+  $$('[data-market-group]').forEach(button=>button.addEventListener('click',()=>{
+    if(!Object.hasOwn(marketGroupSelections,button.dataset.marketGroup))return;
+    selectedMarket=marketGroupSelections[button.dataset.marketGroup];loadMarket();recordView();
   }));
 
   function loadPrices(){
@@ -256,7 +347,7 @@
   }
   $$('[data-price-asset]').forEach(button=>button.addEventListener('click',()=>{
     if(!Object.hasOwn(priceAssets,button.dataset.priceAsset))return;
-    selectedPrice=button.dataset.priceAsset;loadPrices();
+    selectedPrice=button.dataset.priceAsset;loadPrices();recordView();
   }));
 
   function loadOnchain() {
@@ -278,8 +369,8 @@
     stage.appendChild(frame);
   }
   $$('[data-onchain]').forEach(button=>button.addEventListener('click',()=>{
-    if(!onchain[button.dataset.onchain])return;
-    selectedOnchain=button.dataset.onchain;loadOnchain();
+    if(!Object.hasOwn(onchain,button.dataset.onchain))return;
+    selectedOnchain=button.dataset.onchain;loadOnchain();recordView();
   }));
 
   function latestFinite(series,ceiling=Infinity){
@@ -498,7 +589,7 @@
 
   function reportText(){
     const score=cbbiNewest?'CBBI: '+(cbbiNewest.value*100).toFixed(1)+'/100 ('+fmtDate(cbbiNewest.ts)+' UTC; provider observation).':'CBBI: current observation not verified.';
-    return ['TREE MARKET INSIGHTS','Bitcoin research dashboard',score,'TradingView charts: TOTAL, TOTAL2, TOTAL3, TOTAL3ES, BTC.D, STABLE.C.D, Gold, Silver and Gold/Silver Ratio (gold divided by silver).','Cycle figures: historical references, not price forecasts.','Sources: TradingView · Axel Adler Jr. · ColinTalksCrypto CBBI','Explore on tree-token.xyz · Not financial advice.'].join('\n');
+    return ['TREE MARKET INSIGHTS','Bitcoin research dashboard',score,'TradingView charts: TOTAL, TOTAL2, TOTAL3, TOTAL3ES, OTHERS, Stablecoin Market Cap, BTC.D, Stablecoin Dominance, ETH Dominance, DeFi Market Cap, Gold, Silver, Gold/Silver Ratio and Altcoins vs. BTC.','Cycle figures: historical references, not price forecasts.','Sources: TradingView · Axel Adler Jr. · ColinTalksCrypto CBBI','Explore on tree-token.xyz · Not financial advice.'].join('\n');
   }
   $('mi-copy-report')?.addEventListener('click',async()=>{
     const button=$('mi-copy-report');
@@ -534,8 +625,74 @@
   });
 
   const tabIds=['sentiment','prices','rainbow','market','cbbi','onchain','cycles'];
-  const activate=(id)=>{
+  const VIEW_STORAGE_KEY='tree-market-insights-view-v1';
+  const defaultView={version:1,view:'sentiment',chart:'TOTAL3',asset:'BTC',onchain:'realized'};
+  const rainbowAnchors=['#rainbow-chart','#rainbow-guide','#research-notes'];
+  let selectedView='sentiment',storageAvailable=true,shareAttempt=0;
+
+  // Save only this page's own controls. TradingView dates and settings remain
+  // provider-owned; sentiment filters and calculator inputs are not serialized.
+  function cleanView(raw,base=defaultView){
+    const state={...base,version:1};
+    if(!raw||typeof raw!=='object'||Array.isArray(raw))return state;
+    if(tabIds.includes(raw.view))state.view=raw.view;
+    if(typeof raw.chart==='string'&&Object.hasOwn(tvSymbols,raw.chart))state.chart=raw.chart;
+    if(typeof raw.asset==='string'&&Object.hasOwn(priceAssets,raw.asset))state.asset=raw.asset;
+    if(typeof raw.onchain==='string'&&Object.hasOwn(onchain,raw.onchain))state.onchain=raw.onchain;
+    return state;
+  }
+  function savedView(){
+    let text;
+    try{text=localStorage.getItem(VIEW_STORAGE_KEY);}
+    catch{storageAvailable=false;return {...defaultView};}
+    try{const state=JSON.parse(text);return state?.version===1?cleanView(state):{...defaultView};}
+    catch{return {...defaultView};}
+  }
+  function currentView(){
+    return {version:1,view:selectedView,chart:selectedMarket,asset:selectedPrice,onchain:selectedOnchain};
+  }
+  function rememberView(state){
+    try{localStorage.setItem(VIEW_STORAGE_KEY,JSON.stringify(state));storageAvailable=true;}
+    catch{storageAvailable=false;}
+  }
+  function viewURL(state){
+    // Construct from our page path, never from arbitrary incoming query fields.
+    const url=new URL(window.location.pathname,window.location.origin);
+    url.searchParams.set('view',state.view);
+    if(state.view==='market')url.searchParams.set('chart',state.chart);
+    if(state.view==='prices')url.searchParams.set('asset',state.asset);
+    if(state.view==='onchain')url.searchParams.set('onchain',state.onchain);
+    url.hash='market-explorer';
+    return url;
+  }
+  function viewName(state){
+    if(state.view==='market')return marketGuides[state.chart].title;
+    if(state.view==='prices')return state.asset+' price';
+    if(state.view==='onchain')return onchain[state.onchain].chartTitle;
+    return $('mi-tab-'+state.view)?.textContent.trim()||'research section';
+  }
+  function resetShare(){
+    shareAttempt++;
+    const chartView=['market','prices','onchain'].includes(selectedView);
+    $('mi-copy-link').textContent=chartView?'Copy chart link':'Copy section link';
+    $('mi-share-link-field').hidden=true;
+    $('mi-share-status').textContent=storageAvailable?
+      (chartView?'This chart choice and section are remembered here. Choose dates inside the chart.':'This section is remembered here. The link opens the section with its default controls.'):
+      'This browser cannot save choices. Copy a link to return to this view.';
+  }
+  function recordView(mode='push',updateURL=true){
+    const state=currentView();
+    rememberView(state);resetShare();
+    try{
+      const next=viewURL(state);
+      const method=mode==='replace'||next.href===window.location.href?'replaceState':'pushState';
+      if(updateURL)window.history[method]({treeMarketView:state},'',next.href);
+      else window.history.replaceState({treeMarketView:state},'');
+    }catch{/* Chart selection and copyable links still work without History API access. */}
+  }
+  const activate=(id,record=true)=>{
     if(!tabIds.includes(id))return;
+    selectedView=id;
     for(const name of tabIds){
       const tab=$('mi-tab-'+name),pane=$('mi-pane-'+name),on=id===name;
       if(tab){tab.setAttribute('aria-selected',String(on));tab.tabIndex=on?0:-1;}
@@ -547,6 +704,7 @@
     if(id==='onchain')loadOnchain();
     if(id==='cbbi')loadCBBI();
     if(id==='cycles')loadBitcoinPrice();
+    if(record)recordView();
   };
   $$('[data-mi-tab]').forEach(button=>{
     button.addEventListener('click',()=>activate(button.dataset.miTab));
@@ -558,18 +716,47 @@
       activate(tabIds[next]);$('mi-tab-'+tabIds[next])?.focus();
     });
   });
-  // Preserve the existing Rainbow shortcut and direct links after moving the
-  // chart into the Explorer. Reveal the panel before the anchor scroll occurs.
-  const rainbowAnchors = ['#rainbow-chart', '#rainbow-guide', '#research-notes'];
-  const revealRainbowAnchor = () => {
-    if (!rainbowAnchors.includes(window.location.hash)) return;
-    activate('rainbow');
-    document.getElementById(window.location.hash.slice(1))?.scrollIntoView({block:'start'});
-  };
-  $$('a[href="#rainbow-chart"], a[href="#rainbow-guide"], a[href="#research-notes"]').forEach(link => {
-    link.addEventListener('click', () => activate('rainbow'));
+  function restoreView(){
+    // A browser history entry restores all our controls. A fresh visit uses
+    // saved choices, then lets each valid, explicit URL choice take precedence.
+    const historyView=window.history.state?.treeMarketView;
+    const base=historyView?.version===1?cleanView(historyView):savedView();
+    const params=new URL(window.location.href).searchParams;
+    const state=cleanView({view:params.get('view'),chart:params.get('chart'),asset:params.get('asset'),onchain:params.get('onchain')},base);
+    if(!tabIds.includes(params.get('view'))){
+      if(Object.hasOwn(tvSymbols,params.get('chart')))state.view='market';
+      else if(Object.hasOwn(priceAssets,params.get('asset')))state.view='prices';
+      else if(Object.hasOwn(onchain,params.get('onchain')))state.view='onchain';
+    }
+    const rainbow=rainbowAnchors.includes(window.location.hash);
+    if(rainbow)state.view='rainbow';
+    selectedMarket=state.chart;selectedPrice=state.asset;selectedOnchain=state.onchain;
+    activate(state.view,false);
+    recordView('replace',false);
+    if(rainbow)document.getElementById(window.location.hash.slice(1))?.scrollIntoView({block:'start'});
+  }
+  $('mi-copy-link')?.addEventListener('click',async()=>{
+    const state=currentView(),url=viewURL(state).href,attempt=++shareAttempt;
+    const sectionOnly=!['market','prices','onchain'].includes(state.view);
+    try{
+      if(!navigator.clipboard?.writeText)throw Error('Clipboard unavailable');
+      await navigator.clipboard.writeText(url);
+      if(attempt!==shareAttempt)return;
+      $('mi-share-link-field').hidden=true;
+      $('mi-share-status').textContent='Copied link to '+viewName(state)+(sectionOnly?' section.':' chart.');
+    }catch{
+      if(attempt!==shareAttempt)return;
+      const field=$('mi-share-link-field');field.value=url;field.hidden=false;
+      $('mi-share-status').textContent='Automatic copying is unavailable. Copy the selected link below to '+viewName(state)+'.';
+      field.focus();field.select();
+    }
   });
-  window.addEventListener('hashchange', revealRainbowAnchor);
-  if (rainbowAnchors.includes(window.location.hash)) revealRainbowAnchor();
-  else activate('sentiment');
+  // Let native anchors create their normal history entries. Reveal first so
+  // the browser can scroll to the existing Rainbow guide and chart targets.
+  $$('a[href="#rainbow-chart"], a[href="#rainbow-guide"], a[href="#research-notes"]').forEach(link => {
+    link.addEventListener('click',()=>activate('rainbow',false));
+  });
+  window.addEventListener('popstate',restoreView);
+  window.addEventListener('hashchange',restoreView);
+  restoreView();
 })();
