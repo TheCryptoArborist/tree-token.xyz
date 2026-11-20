@@ -44,3 +44,10 @@ Live screenshot inspection caught a production-font fit issue on the Guardian
 card at 320px. The follow-up narrows portraits/text only below 361px and adds
 an assertion that rendered troop-name text stays inside each card. Its release
 plan replaces only the newly pinned HTML; the atlas is already published.
+
+Final publication: PR #257, source `0f8bb69dcb250d03d935d811df882fa06939a525`,
+deploy `6b0070b57616d3344ac98c01`, successful workflow `44769918848`.
+All canonical game/cabinet checks passed; the final 320px screenshot confirms
+full troop names fit inside the cards. Final inventory and check reports are
+in `production/tree-army-mobile-*20261120.json`; the screenshot is
+`docs/tree-army-mobile-controls-20261120.png`.
