@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import {REPLACED_HASHES,ORIGINAL_CHANGES,REUSED_WALLET_PATH,REUSED_WALLET_SHA1,BASELINE_STATIC_FILES,validateBaseline,assembleFiles,compareBackend,functionsConfig,assertNewCandidate,MULTICHAIN_PATHS,SITE_ID,BASELINE_ID,AUDITED_STALE_DEPLOYS,isAuditedInactiveDeploy} from '../scripts/release-original-ack.mjs';
 const walletBaseline={[REUSED_WALLET_PATH]:REUSED_WALLET_SHA1};
 const overlays=()=>MULTICHAIN_PATHS.map((path,i)=>({path,source:path.slice(1),sha1:String(i+1).repeat(40)}));
@@ -25,6 +26,11 @@ test('function configuration retains traffic controls without adding runtime fie
 test('an existing baseline cannot be published as the new candidate',()=>{assert.throws(()=>assertNewCandidate({schemaVersion:1,siteId:SITE_ID,id:BASELINE_ID},{},{}));});
 
 import {assertServedContent,ARBORETUM_SNIPPET} from '../scripts/rootcaster-served-content.mjs';
+test('the actual acknowledgement HTML accepts the exact preserved body-end snippet',()=>{
+ const original=fs.readFileSync('play/multichaintest/original/sui/ack/index.html');
+ const served=Buffer.from(original.toString('utf8').replace('</body>',ARBORETUM_SNIPPET+'</body>'));
+ assertServedContent('index.html',served,original);
+});
 test('served page accepts original bytes and only the exact existing body-end snippet',()=>{const original=Buffer.from('<html><body>Gallery</body></html>');assertServedContent('index.html',original,original);assertServedContent('index.html',Buffer.from('<html><body>Gallery'+ARBORETUM_SNIPPET+'</body></html>'),original);});
 test('served page rejects changed copy, modified scripts, extra scripts and unexpected assets',()=>{const original=Buffer.from('<html><body>Gallery</body></html>');for(const actual of ['<html><body>Changed'+ARBORETUM_SNIPPET+'</body></html>','<html><body>Gallery'+ARBORETUM_SNIPPET.replace('treegrow.xyz','other.invalid')+'</body></html>','<html><body>Gallery<script>unexpected()</script>'+ARBORETUM_SNIPPET+'</body></html>'])assert.throws(()=>assertServedContent('index.html',Buffer.from(actual),original));assert.throws(()=>assertServedContent('rootcaster.css',Buffer.from('different'),Buffer.from('original')));});
 
