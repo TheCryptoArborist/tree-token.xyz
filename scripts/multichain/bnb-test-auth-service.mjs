@@ -1,5 +1,6 @@
 // BNB-only Tree Force '89 identity test. This module cannot grant gameplay.
 import { createHash, randomBytes } from 'node:crypto';
+import { keccak256, toHex } from 'viem';
 import {
   BNB_ORIGIN, BNB_IDENTITY_SCOPE, BnbAccessError,
   issueBnbChallenge, formatBnbChallenge, verifyBnbChallenge,
@@ -107,7 +108,7 @@ export function createBnbTestHandler({rpc,client,clock=Date.now,entropy=randomBy
         await verifyBnbChallenge({record:rec,message,signature:b.signature,wallet:b.wallet,client,now:clock(),
           consumeNonce:async ({nonce,wallet,origin,scope,messageHash})=>{
             if(origin!==BNB_ORIGIN||scope!==SCOPE||wallet!==b.wallet.toLowerCase()||
-               messageHash.slice(2)!==sha(message))return false;
+               messageHash!==keccak256(toHex(message)))return false;
             issued=await rpc('arcade_bnb_test_consume_session_v1',{
               p_nonce:nonce,p_wallet:wallet,p_message_hash:sha(message),
               p_token_sha256:sha(raw),p_expires_at:expires,
