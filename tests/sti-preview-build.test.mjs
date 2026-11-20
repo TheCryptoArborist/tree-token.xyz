@@ -112,6 +112,17 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
   const arcadeRuntime = JSON.parse(readFileSync(new URL('production/arcade-organization-static/runtime-manifest.json', root)));
   const arcadeInventory = JSON.parse(readFileSync(new URL('production/sti-wallet-recovery-release-20261118.json', root)));
   const arcadeOverlays = [
+    ...[
+      '/play/tree-army/test/index.html',
+      '/play/tree-army/test/assets/grove-battlefield.webp',
+      '/play/tree-army/test/assets/forest-army.webp',
+      '/play/tree-army/test/assets/tree-hero.webp',
+      '/play/tree-army/preview-gameplay.jpg',
+      '/play/tree-army/preview-gameplay.mp4',
+      '/play/tree-army/preview-gameplay.webm',
+      '/scripts/arcade-tree-army.js',
+      '/styles/arcade-tree-army.css',
+    ].map(path => ({path, source:path.slice(1)})),
     { path: '/play/index.html', source: 'production/arcade-organization-static/index.html' },
     { path: '/arcade-review/index.html', source: 'production/arcade-organization-static/review.html' },
     { path: '/scripts/arcade-organization.js', source: 'scripts/arcade-organization.js' },
