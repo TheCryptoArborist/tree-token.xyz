@@ -114,3 +114,15 @@ The feature-preview builder now includes the explicit Tree Army delivery files;
 without those files its organization-module import failed. After that correction,
 Campaigns and synthetic Daily visual checks passed at 390 and 1200px. These remain
 review-fixture checks, distinct from candidate/canonical verification.
+
+
+## Initial release attempt
+
+PR #253 merged as `cdc57627539912719ce9b9da1fbbb1402373732a`. All head CI
+checks passed at `70e5c82bd472918e1a76a2b63b3feedfae852001`. Workflow
+`44703408350` captured production `6affc81a0ebcfd39b2efbbb0`: 631 static paths,
+50 backend records and five schedules. Candidate `6b00064e021da9f2964cba68`
+was created, but its first still-preparing API response had no function records.
+The full-backend validator correctly rejected that incomplete response, before
+publication. The correction waits for ready before validating complete records;
+the baseline and all ready-candidate/post-publication checks remain mandatory.
