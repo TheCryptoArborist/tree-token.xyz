@@ -1,0 +1,54 @@
+name: Verify isolated BNB Tree Force sign-in
+on:
+  pull_request:
+    paths:
+      - 'scripts/multichain/bnb-test-auth-service.mjs'
+      - 'netlify/bnb-test-functions/**'
+      - 'play/multichaintest/game/bnb/**'
+      - 'supabase/migrations/20261120193912_arcade_bnb_test_auth.sql'
+      - 'tests/multichain-bnb-test-auth-service.test.mjs'
+      - 'tests/sql/bnb-test-auth-smoke.sql'
+      - '.github/workflows/verify-bnb-test-auth.yml'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      PGHOST: localhost
+      PGPORT: 5432
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: postgres
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci --ignore-scripts
+      - name: Verify isolated handler, replay and wallet guards
+        run: |
+          node --check scripts/multichain/bnb-test-auth-service.mjs
+          node --check netlify/bnb-test-functions/arcade-bnb-test.mjs
+          node --check play/multichaintest/game/bnb/app.js
+          node --test tests/multichain-bnb-test-auth-service.test.mjs tests/multichain-bnb-game-access.test.mjs
+          git diff --check
+      - name: Validate isolated Postgres schema and service-role grants
+        run: |
+          psql -v ON_ERROR_STOP=1 -c 'create role anon; create role authenticated; create role service_role bypassrls; create schema private;'
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261120193912_arcade_bnb_test_auth.sql
+          psql -v ON_ERROR_STOP=1 -f tests/sql/bnb-test-auth-smoke.sql
