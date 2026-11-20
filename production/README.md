@@ -1,3 +1,60 @@
+# Original NFTree final acknowledgement page — published November 20, 2026
+
+Current locked production is `6b00892b6acd6fc92a18fd20`, published at
+17:54:20.217 UTC (11:54:20 America/Chicago) by workflow
+[44787344354](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44787344354).
+Published source: `be0e85498dd218e5418055f02ed97ebda5f66c37`, through
+implementation PR #263 and hosted-HTML correction PR #264.
+
+`/play/multichaintest/original/sui/ack/` provides the final Sui acknowledgement
+for the verified original NFTree #2720 release. BNB send
+`0xa33612db18691d9805ebbc69ac24501d6e4476bd4edf2476b9b9b1710c50fe6f`
+was delivered by Sui transaction
+`Ay5gtMkYp5mjYidC3TJn4YuJLKYcHLg3Yxm8qRhTy9mU`, returning the exact
+original NFT to the dev wallet ending 45c4. At the final preflight, the
+acknowledgement remained unsent and the original BNB pass was Locked.
+The new page requires the user's Sui wallet approval before sending kind 3;
+confirmed Sui sending and final BNB retirement are verified separately.
+
+The fresh release baseline was `6b00812738f2bd1e7367809f`. The page adds only
+HTML, app and core files, reusing the exact existing shared wallet module:
+**649 static paths** total. All **646 prior path hashes, 50 complete backend
+records, five schedules**, runtime settings, protected environment evidence
+and site snippets were independently confirmed identical. Canonical JavaScript
+bytes and the reused wallet module match source; HTML differs only by the exact
+preserved site-wide Arboretum snippet.
+
+Protocol/preservation tests, exact bundle regeneration, and full Chromium
+checks at 1440, 390 and 320 pixels passed. The canonical page was opened and
+visually inspected, with the expected recipient and disconnected signing
+controls verified. A fresh unsigned preflight from the verified browser bundle
+passed at 17:56:27 UTC in 10.705 seconds: message fee 94,962,136 MIST, net gas
+4,053,255 MIST, total 99,015,391 MIST. The page refreshes current fees and state
+before user approval. No installed-wallet signing or assistant chain submission
+is claimed.
+
+The initial candidate `6b00877b5a588bd2bdef44c7` was never published.
+The unchanged served-content gate caught a newline between the new HTML's
+closing tags. PR #264 joined those tags and added an actual-page snippet
+regression test; the successful release created a fresh candidate.
+
+Complete inventory and runtime evidence:
+`docs/multichain/original-redemption-ack-page-release.json`.
+Independent inventory, canonical delivery, browser, fresh preflight and
+format-correction evidence:
+`docs/multichain/original-redemption-ack-verification-20261120.json`.
+Protocol and current Mysten guidance:
+`docs/multichain/original-redemption-ack-flow.md`.
+Artifact 14655052416 SHA256:
+`ab872169b4a5df2d3a412e69d4286ccd032eea7cfb651d6f02f39c46a9747322`.
+
+Capture the actual current live inventory before any later release. This
+completed one-time publisher must not be reused blindly against a newer
+baseline. Preserve all games, backend packages and settings; do not deploy
+the historical root snapshot.
+
+---
+
 # Original NFTree redemption send page — published November 20, 2026
 
 Current locked production is `6b00812738f2bd1e7367809f`, published at
