@@ -108,3 +108,9 @@ so MP4 was inspected with ffprobe while actual browser playback exercised WebM.
 The gameplay logic suite and five preservation-plan tests passed. The 19 existing
 Arcade organization assertions passed; JSDOM emitted an asynchronous navigation
 observer teardown warning, so this is not claimed as a warning-free suite.
+
+The branch was subsequently rebased onto main `87390ef` without conflicts.
+The feature-preview builder now includes the explicit Tree Army delivery files;
+without those files its organization-module import failed. After that correction,
+Campaigns and synthetic Daily visual checks passed at 390 and 1200px. These remain
+review-fixture checks, distinct from candidate/canonical verification.

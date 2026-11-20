@@ -1,6 +1,7 @@
 import { cp, mkdir, readFile, readdir, writeFile, lstat } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import assert from 'node:assert/strict';
+import { DELIVERY_PATHS as treeArmyPaths } from './tree-army-release-plan.mjs';
 import { createHash } from 'node:crypto';
 
 const root = resolve(import.meta.dirname, '..');
@@ -20,6 +21,7 @@ const arcadeDirectory = 'production/arcade-organization-static';
 const arcadeRuntime = JSON.parse(await readFile(resolve(root, arcadeDirectory, 'runtime-manifest.json'), 'utf8'));
 const arcadeInventory = JSON.parse(await readFile(resolve(root, 'production/sti-wallet-recovery-release-20261118.json'), 'utf8'));
 const arcadeOverlays = [
+  ...treeArmyPaths.filter(path => path !== '/scripts/arcade-organization.js').map(path => ({path, source:path.slice(1)})),
   { path: '/play/index.html', source: `${arcadeDirectory}/index.html` },
   { path: '/arcade-review/index.html', source: `${arcadeDirectory}/review.html` },
   { path: '/scripts/arcade-organization.js', source: 'scripts/arcade-organization.js' },
