@@ -1,0 +1,316 @@
+name: Prepare and publish reviewed Market Overview
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'market-insights/index.html'
+      - 'market-insights/insights.js'
+      - 'scripts/release-market-overview.mjs'
+      - 'scripts/check-market-overview-page.mjs'
+      - 'scripts/check-market-overview-live.mjs'
+      - 'scripts/check-market-insights-page.mjs'
+      - 'scripts/market-insights-delivery.mjs'
+      - 'scripts/release-arcade-cutoff.mjs'
+      - 'scripts/release-preserved-production.mjs'
+      - 'scripts/release-stats-market.mjs'
+      - 'scripts/release-sti-purchase.mjs'
+      - 'scripts/stats-market-delivery.mjs'
+      - 'scripts/sti-purchase-delivery.mjs'
+      - 'tests/market-overview-release.test.mjs'
+      - 'docs/market-overview-release.md'
+      - '.github/workflows/publish-market-overview.yml'
+  push:
+    branches:
+      - release/market-overview-prepare
+      - release/market-overview-publish
+      - release/market-overview-audit
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: tree-production-preservation-${{ github.event_name == 'pull_request' && github.ref || 'release' }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Verify complete preservation guards and chart source
+        run: |
+          node --test tests/market-overview-release.test.mjs
+          node --check scripts/release-market-overview.mjs
+          node --check scripts/check-market-overview-page.mjs
+          node --check scripts/check-market-overview-live.mjs
+          node --check scripts/check-market-insights-page.mjs
+          node --check market-insights/insights.js
+          git diff --check
+      - name: Install isolated layout checker
+        run: |
+          npm install --prefix "$RUNNER_TEMP/market-overview-browser" --ignore-scripts --no-audit --no-fund playwright@1.56.1
+          "$RUNNER_TEMP/market-overview-browser/node_modules/.bin/playwright" install chromium --only-shell
+      - name: Check research views and all Explorer sections with provider mocks
+        env:
+          MARKET_OVERVIEW_BROWSER_MODULE: ${{ runner.temp }}/market-overview-browser/node_modules/playwright/index.mjs
+          MARKET_OVERVIEW_TEST_BASE: http://127.0.0.1:8765
+          MARKET_INSIGHTS_BROWSER_MODULE: ${{ runner.temp }}/market-overview-browser/node_modules/playwright/index.mjs
+          MARKET_INSIGHTS_TEST_BASE: http://127.0.0.1:8765
+          SOURCE_COMMIT: ${{ github.sha }}
+        run: |
+          cp production/live-static/assets/thick-dwqrmagk-dwqrmagk.png assets/thick-dwqrmagk-dwqrmagk.png
+          cp production/live-static/assets/background5-dfotcuir-dfotcuir.jpg assets/background5-dfotcuir-dfotcuir.jpg
+          python3 -m http.server 8765 --bind 127.0.0.1 > "$RUNNER_TEMP/market-overview-http.log" 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          node scripts/check-market-overview-page.mjs
+          node scripts/check-market-insights-page.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: market-overview-layout-${{ github.run_id }}
+          path: |
+            .netlify/market-overview-*.png
+            .netlify/market-overview-browser-checks.json
+            .netlify/market-insights-*.png
+            .netlify/market-insights-browser-checks.json
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 14
+
+  prepare:
+    needs: verify
+    if: >-
+      github.event_name == 'push' && github.ref == 'refs/heads/release/market-overview-prepare' &&
+      contains(github.event.head_commit.message, '[prepare market overview]') &&
+      contains(github.event.head_commit.message, '[skip netlify]')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Capture current production and create the review candidate
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          MARKET_OVERVIEW_EXPECTED_DEPLOY: '6affc6cb821278e5a2a481e2'
+          REVIEWED_SHA: ${{ github.sha }}
+        run: |
+          test -n "$NETLIFY_AUTH_TOKEN" || { echo 'The existing Netlify release connection is unavailable.'; exit 1; }
+          test "$(git rev-parse HEAD)" = "$REVIEWED_SHA"
+          node scripts/release-market-overview.mjs capture
+          node scripts/release-market-overview.mjs plan --source-commit "$REVIEWED_SHA"
+          node scripts/release-market-overview.mjs candidate --source-commit "$REVIEWED_SHA"
+
+      - name: Verify the exact candidate layout without wallet or payment actions
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          MARKET_OVERVIEW_EXPECTED_DEPLOY: '6affc6cb821278e5a2a481e2'
+          REVIEWED_SHA: ${{ github.sha }}
+          MARKET_OVERVIEW_BROWSER_MODULE: ${{ runner.temp }}/market-overview-browser/node_modules/playwright/index.mjs
+        run: |
+          npm install --prefix "$RUNNER_TEMP/market-overview-browser" --ignore-scripts --no-audit --no-fund playwright@1.56.1
+          "$RUNNER_TEMP/market-overview-browser/node_modules/.bin/playwright" install chromium --only-shell
+          node scripts/release-market-overview.mjs verify --source-commit "$REVIEWED_SHA"
+      - name: Review the five new TradingView charts with populated data and native controls
+        env:
+          MARKET_OVERVIEW_BROWSER_MODULE: ${{ runner.temp }}/market-overview-browser/node_modules/playwright/index.mjs
+        run: node scripts/check-market-overview-live.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: market-overview-visual-${{ github.run_id }}
+          path: |
+            .netlify/market-overview-*.png
+            .netlify/market-overview-browser-checks.json
+            .netlify/market-overview-live-review.json
+            .netlify/market-overview-live/*.png
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        id: candidate_artifact
+        if: always()
+        with:
+          name: market-overview-candidate-${{ github.run_id }}
+          path: .netlify/market-overview/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30
+      - name: Record the concrete review target
+        if: always()
+        env:
+          CANDIDATE_ARTIFACT_ID: ${{ steps.candidate_artifact.outputs.artifact-id }}
+          CANDIDATE_ARTIFACT_SHA256: ${{ steps.candidate_artifact.outputs.artifact-digest }}
+        run: |
+          node --input-type=module - <<'JS'
+          import fs from 'node:fs';
+          const filename='.netlify/market-overview/report.json';
+          if (!fs.existsSync(filename)) process.exit(0);
+          const r=JSON.parse(fs.readFileSync(filename));
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+            `### Market Overview candidate — production unchanged\n\nReview: ${r.url}\n\nSource: ${r.sourceCommit}\nTree: ${r.sourceTree}\nPlan SHA256: ${r.planSha256}\nCandidate: ${r.candidateId}\nBaseline: ${r.baselineId}\nRun: ${process.env.GITHUB_RUN_ID}\nArtifact: ${process.env.CANDIDATE_ARTIFACT_ID}\nArtifact SHA256: ${process.env.CANDIDATE_ARTIFACT_SHA256}\n\nPreserved ${r.preservedStaticFiles} existing static paths, ${r.preservedBackendRecords} complete backend records and ${r.schedulesPreserved} schedules.\n\nThe workflow must conclude successfully. Review the real OTHERS, ETH Dominance, Stablecoin Market Cap, DeFi Market Cap and Altcoins vs. BTC widgets, populated data, groups, controls and source links on this candidate before creating the separate publication control commit. Provider-mocked layout checks do not establish provider availability.\n`);
+          JS
+
+  publish_or_audit:
+    needs: verify
+    if: >-
+      github.event_name == 'push' && contains(github.event.head_commit.message, '[skip netlify]') &&
+      ((github.ref == 'refs/heads/release/market-overview-publish' && contains(github.event.head_commit.message, '[publish market overview]')) ||
+       (github.ref == 'refs/heads/release/market-overview-audit' && contains(github.event.head_commit.message, '[audit market overview]')))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Validate the narrow release control commit
+        id: control
+        env:
+          CONTROL_BRANCH: ${{ github.ref_name }}
+        run: |
+          node --input-type=module - <<'JS'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import assert from 'node:assert/strict';
+          import {execFileSync} from 'node:child_process';
+          import {CONTROL_FILE,REVIEW_FILE,validatePublicationControl,validateControlCommit} from './scripts/release-market-overview.mjs';
+          const git=(...args)=>execFileSync('git',args,{encoding:'utf8'}).trim();
+          const control=JSON.parse(fs.readFileSync(CONTROL_FILE));
+          const mode=process.env.CONTROL_BRANCH==='release/market-overview-publish'?'publish':'audit';
+          validatePublicationControl(control,mode+'-market-overview');
+          validateControlCommit(control, {
+            mode,
+            parents:git('rev-list','--parents','-n','1','HEAD').split(/\s+/).slice(1),
+            mainTree:git('rev-parse',control.mainCommit+'^{tree}'),
+            changedFiles:git('diff','--name-only',control.mainCommit,'HEAD').split('\n'),
+            message:git('log','-1','--format=%B'),
+          });
+          fs.copyFileSync(CONTROL_FILE,path.join(process.env.RUNNER_TEMP,'market-overview-control.json'));
+          fs.copyFileSync(REVIEW_FILE,path.join(process.env.RUNNER_TEMP,'market-overview-browser-review.json'));
+          fs.appendFileSync(process.env.GITHUB_OUTPUT,`source_commit=${control.sourceCommit}\nmode=${mode}\n`);
+          JS
+      - name: Check out the exact candidate source, independent of the control commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.control.outputs.source_commit }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify original run, immutable artifact identity and archive SHA256
+        uses: actions/github-script@v7
+        env:
+          GH_READ_TOKEN: ${{ github.token }}
+        with:
+          script: |
+            const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),assert=require('node:assert/strict');
+            const c=JSON.parse(fs.readFileSync(path.join(process.env.RUNNER_TEMP,'market-overview-control.json')));
+            const run=(await github.rest.actions.getWorkflowRun({...context.repo,run_id:Number(c.candidateRunId)})).data;
+            assert.equal(run.status,'completed'); assert.equal(run.conclusion,'success');
+            assert.equal(run.event,'push'); assert.equal(run.head_branch,'release/market-overview-prepare');
+            assert.equal(run.head_sha,c.sourceCommit); assert.equal(run.path,'.github/workflows/publish-market-overview.yml');
+            assert.equal(run.repository.full_name,context.repo.owner+'/'+context.repo.repo);
+            const artifact=(await github.rest.actions.getArtifact({...context.repo,artifact_id:Number(c.candidateArtifactId)})).data;
+            assert.equal(artifact.name,'market-overview-candidate-'+c.candidateRunId);
+            assert.equal(artifact.workflow_run.id,Number(c.candidateRunId)); assert.equal(artifact.workflow_run.head_sha,c.sourceCommit);
+            assert.equal(artifact.expired,false); assert.equal(artifact.digest,'sha256:'+c.candidateArtifactSHA256);
+            const request=await fetch(`https://api.github.com/repos/${context.repo.owner}/${context.repo.repo}/actions/artifacts/${c.candidateArtifactId}/zip`,
+              {redirect:'manual',headers:{Authorization:'Bearer '+process.env.GH_READ_TOKEN,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}});
+            assert.equal(request.status,302,'Artifact download redirect unavailable.');
+            const location=new URL(request.headers.get('location'));
+            assert(location.protocol==='https:' && (location.hostname.endsWith('.blob.core.windows.net') || location.hostname.endsWith('.githubusercontent.com') || location.hostname.endsWith('.actions.githubusercontent.com')),
+              'Unexpected artifact download host.');
+            const response=await fetch(location,{redirect:'error'}); assert.equal(response.status,200);
+            const bytes=Buffer.from(await response.arrayBuffer()); assert(bytes.length<5000000,'Unexpected artifact size.');
+            assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'),c.candidateArtifactSHA256,'Artifact archive digest mismatch.');
+            fs.writeFileSync(path.join(process.env.RUNNER_TEMP,'market-overview-candidate.zip'),bytes);
+      - name: Extract only the bounded static release records
+        run: |
+          python3 - <<'PY'
+          import os, pathlib, stat, zipfile
+          expected={'baseline.json','baseline.json.sha256','baseline-market.html','plan.json','plan.json.sha256','candidate.json','candidate.json.sha256','report.json','report.json.sha256'}
+          with zipfile.ZipFile(pathlib.Path(os.environ['RUNNER_TEMP'])/'market-overview-candidate.zip') as archive:
+              files=[entry for entry in archive.infolist() if not entry.is_dir()]
+              assert len(files)==len(expected) and {entry.filename for entry in files}==expected, 'Unexpected artifact contents'
+              assert all(not stat.S_ISLNK(entry.external_attr>>16) and entry.file_size<3000000 for entry in files), 'Unsafe artifact entry'
+              assert sum(entry.file_size for entry in files)<10000000, 'Artifact expands beyond the release scope'
+              for entry in files:
+                  target=pathlib.Path('.netlify/market-overview')/entry.filename
+                  target.parent.mkdir(parents=True,exist_ok=True)
+                  target.write_bytes(archive.read(entry))
+          PY
+      - name: Bind review and control to the downloaded candidate plan
+        run: |
+          node --input-type=module - <<'JS'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import assert from 'node:assert/strict';
+          import {fingerprint} from './scripts/release-preserved-production.mjs';
+          import {validateBrowserReview} from './scripts/release-market-overview.mjs';
+          const read=p=>JSON.parse(fs.readFileSync(p));
+          const c=read(path.join(process.env.RUNNER_TEMP,'market-overview-control.json'));
+          const plan=read('.netlify/market-overview/plan.json'),state=read('.netlify/market-overview/candidate.json');
+          assert.equal(fingerprint(plan),c.planSha256); assert.equal(plan.sourceCommit,c.sourceCommit); assert.equal(plan.sourceTree,c.sourceTree);
+          assert.equal(plan.baselineId,c.expectedDeploy); assert.equal(state.id,c.candidateId); assert(state.technicalVerifiedAt,'Candidate did not finish verification.');
+          validateBrowserReview(read(path.join(process.env.RUNNER_TEMP,'market-overview-browser-review.json')),plan,state);
+          JS
+      - name: Install isolated checker for final candidate and canonical checks
+        run: |
+          npm install --prefix "$RUNNER_TEMP/market-overview-browser" --ignore-scripts --no-audit --no-fund playwright@1.56.1
+          "$RUNNER_TEMP/market-overview-browser/node_modules/.bin/playwright" install chromium --only-shell
+      - name: Publish the reviewed candidate, or perform the explicitly read-only audit
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          RELEASE_MODE: ${{ steps.control.outputs.mode }}
+          MARKET_OVERVIEW_BROWSER_MODULE: ${{ runner.temp }}/market-overview-browser/node_modules/playwright/index.mjs
+        run: |
+          node --input-type=module - <<'JS'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import {main} from './scripts/release-market-overview.mjs';
+          const c=JSON.parse(fs.readFileSync(path.join(process.env.RUNNER_TEMP,'market-overview-control.json')));
+          const common=['--source-commit',c.sourceCommit,'--expected-deploy',c.expectedDeploy,'--expected-candidate',c.candidateId];
+          const review=path.join(process.env.RUNNER_TEMP,'market-overview-browser-review.json');
+          if(process.env.RELEASE_MODE==='publish'){
+            await main(['verify',...common,'--browser-report',review]);
+            await main(['publish',...common,'--main-commit',c.mainCommit]);
+          }else{
+            await main(['audit',...common,'--browser-report',review]);
+          }
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: market-overview-${{ steps.control.outputs.mode }}-${{ github.run_id }}
+          path: .netlify/market-overview/
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 30
+      - name: Record the observed outcome
+        if: always()
+        run: |
+          node --input-type=module - <<'JS'
+          import fs from 'node:fs';
+          const filename='.netlify/market-overview/report.json';
+          if (!fs.existsSync(filename)) process.exit(0);
+          const r=JSON.parse(fs.readFileSync(filename));
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+            `### Market Overview release evidence\n\nLast completed phase: ${r.mode}\nCandidate: ${r.candidateId}\nSource: ${r.sourceCommit}\nProduction changed in this phase: ${r.productionChanged}\nPublished candidate verified: ${r.publishedCandidateVerified}\n\nCanonical: https://tree-token.xyz/market-insights/\n\nRead the job conclusion. If a lock request succeeded before a timeout, use the exact candidate-bound read-only audit; never retry publication blindly.\n`);
+          JS
+
