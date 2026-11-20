@@ -5,7 +5,10 @@ on:
     paths:
       - 'play/tree-army/**'
       - 'scripts/*tree-army*'
-      - 'tests/tree-army-logic.cjs'
+      - 'scripts/arcade-tree-army.js'
+      - 'scripts/arcade-organization.js'
+      - 'styles/arcade-tree-army.css'
+      - 'tests/tree-army*'
       - '.github/workflows/publish-tree-army.yml'
   workflow_dispatch:
     inputs:
@@ -14,7 +17,7 @@ on:
         required: true
         type: string
       publish:
-        description: Publish the new isolated test page after all preservation checks
+        description: Publish the illustrated playtest and cabinet after all preservation checks
         required: true
         default: false
         type: boolean
@@ -40,6 +43,7 @@ jobs:
       - name: Verify gameplay and release source
         run: |
           node tests/tree-army-logic.cjs
+          node --test tests/tree-army-release.test.mjs
           node --check scripts/release-tree-army.mjs
           node --check scripts/check-tree-army-page.mjs
           git diff --check
@@ -56,6 +60,7 @@ jobs:
           server_pid=$!
           trap 'kill "$server_pid"' EXIT
           node scripts/check-tree-army-page.mjs
+          TREE_ARMY_CABINET_FIXTURE=1 node scripts/check-tree-army-cabinet.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -63,6 +68,7 @@ jobs:
           path: |
             .netlify/tree-army-*.png
             .netlify/tree-army-browser-checks.json
+            .netlify/tree-army-cabinet-checks.json
           include-hidden-files: true
           if-no-files-found: ignore
           retention-days: 7
@@ -82,7 +88,7 @@ jobs:
         run: |
           npm install --prefix "$RUNNER_TEMP/tree-army-browser" --ignore-scripts --no-audit --no-fund playwright@1.56.1
           "$RUNNER_TEMP/tree-army-browser/node_modules/.bin/playwright" install --with-deps chromium
-      - name: Capture current site and verify additive candidate
+      - name: Capture current site and verify scoped candidate
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           EXPECTED_DEPLOY: ${{ inputs.expected_deploy }}
@@ -108,6 +114,7 @@ jobs:
           path: |
             .netlify/tree-army-release/report.json
             .netlify/tree-army-browser-checks.json
+            .netlify/tree-army-cabinet-checks.json
             .netlify/tree-army-*.png
           include-hidden-files: true
           if-no-files-found: ignore

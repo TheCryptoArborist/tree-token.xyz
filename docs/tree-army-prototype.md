@@ -1,3 +1,5 @@
+> Current continuation: [illustrated 0.5, preview capture and scoped release](tree-army-continuation.md). The notes below record the historical 0.2 milestone.
+
 # Tree Army: Defend the Grove — prototype 0.2
 
 Original self-contained HTML/CSS/JavaScript implementation. No code, artwork, audio, or assets copied from the uploaded Army of Darkness remake. Procedural canvas art is placeholder art for review.
