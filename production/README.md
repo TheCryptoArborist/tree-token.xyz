@@ -1,3 +1,52 @@
+# Stablecoin Dominance — published and verified 2026-11-20 UTC
+
+Current locked production is `6aff8d6c44e257067443ba98`, published at
+`2026-11-20T00:03:37.405Z`. Reviewed source
+`12318adb226a20a0fdb9b8c558a4c6a25b3320b3` merged through PR240 as
+`bf57326c41989edcbba09dced015cb018d6836f5`; its complete tree equals reviewed candidate tree
+`a805f9318da65de375d2d697535fce305dd50b49`. Publication workflow
+`44642541103` completed successfully and verified canonical asset delivery,
+the complete inventory, protected configuration and production lock at
+`2026-11-20T00:03:44.588Z`.
+
+**Market Caps** at `/market-insights/` now includes **Stablecoin Dominance**
+immediately to the right of **BTC.D**, using TradingView's
+`CRYPTOCAP:STABLE.C.D` percentage index. A short reading guide explains a rising
+or falling market share; source notes link TradingView's methodology. The
+existing TOTAL, TOTAL2, TOTAL3, TOTAL3ES and Bitcoin dominance charts remain
+available.
+
+The fresh baseline was `6aff527173dc08672f92903f`, including the previously
+published Daily dashboard and all other current pages. This release replaces
+only `/market-insights/index.html` and `/market-insights/insights.js`. It
+preserves **623 other static paths**, **all 50 complete backend records**,
+**five schedules**, full runtime settings, protected configuration and site
+snippets. Current production has **625 static paths and 50 backend records**.
+
+All source PR checks and nine focused preservation guard tests passed.
+Separate automated checks verified tab ordering, keyboard activation, chart
+symbols and links, guide visibility and layouts at 320, 390, 768 and 1363
+pixels. Those checks explicitly mock external providers. Real browser review
+of the exact candidate confirmed populated stablecoin percentage data and
+working 3M range control. The canonical page was then reloaded and visually
+verified with the real TradingView chart and the requested tab placement.
+
+Current release evidence:
+`production/stablecoin-dominance-release-20261120.json`. It records the complete
+static inventory, preserved backend/runtime/configuration records, exact
+source and artifact identities, separate candidate and canonical browser
+reviews, and the provider-mocked layout evidence.
+
+Implementation: https://github.com/TheCryptoArborist/tree-token.xyz/pull/240
+Publication: https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44642541103
+Release procedure: `docs/stablecoin-dominance-release.md`.
+
+Capture the actual current live inventory afresh before any future release.
+Do not use an earlier release or the historical snapshot build as a new
+production baseline.
+
+---
+
 # Isolated free pilot sign-in — published and verified 2026-11-19
 
 Current locked production is `6afe4d06ab2e466f455605db`, published at

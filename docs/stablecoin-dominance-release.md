@@ -116,10 +116,29 @@ review through `release/stablecoin-dominance-audit`, action
 `audit-stablecoin-dominance` and `[skip netlify] [audit stablecoin dominance]`.
 Audit is read-only. Never restore an older deploy or blindly retry publication.
 
-## Release status
+## Published release
 
-This document describes preparation and verification requirements. Publication
-has not been established by this source change. After successful publication,
-record the exact source/main commit, candidate/deploy ID, final full inventory,
-workflow/artifact identities and canonical verification in a separate release
-record and the newest `production/README.md` section.
+The exact reviewed candidate `6aff8d6c44e257067443ba98` was published and locked
+at `2026-11-20T00:03:37.405Z` by successful workflow `44642541103`.
+Source commit `12318adb226a20a0fdb9b8c558a4c6a25b3320b3` merged in PR240 as
+`bf57326c41989edcbba09dced015cb018d6836f5`; the merged and reviewed source trees are identical.
+
+The final verification at `2026-11-20T00:03:44.588Z` confirmed all 625 static
+paths, all 50 complete backend records, five schedules, protected configuration,
+canonical asset bytes and the production lock. Only the two approved market
+files changed; 623 other static paths retained their captured bytes.
+
+Real browser review verified the stablecoin chart and 3M range control on the
+exact candidate, then confirmed the live chart and tab placement at
+https://tree-token.xyz/market-insights/. The separate provider-mocked candidate
+and canonical checks passed at all four viewport widths.
+
+Full release record:
+`production/stablecoin-dominance-release-20261120.json`.
+
+Preparation: https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44642066612
+Publication: https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44642541103
+Implementation: https://github.com/TheCryptoArborist/tree-token.xyz/pull/240
+
+This is historical evidence for this release, not a reusable future baseline.
+Capture current production again before another change.
