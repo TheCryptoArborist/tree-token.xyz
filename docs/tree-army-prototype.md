@@ -1,3 +1,13 @@
+# Published playtest — November 13, 2026 (America/Chicago)
+
+Live: https://tree-token.xyz/play/tree-army/test/
+
+Locked deployment `6af7eb5aeb5507b96b91d291`, source `78ffd394ba7805c4b0c309ca8a01267ef51a66e9`, GitHub Actions run `43559395195`. Only `/play/tree-army/test/index.html` was added. All 526 prior static paths are unchanged (527 total), and all 49 full backend records, five schedules, runtime settings, protected environment fingerprints, and site snippets were preserved. Desktop, 390px, 320px, and landscape browser gameplay checks passed on the candidate and canonical domain. The live tutorial and troop summoning were also checked interactively. Movement key release now normalizes Shift/Caps Lock input and has regression coverage. This remains a free original-code gameplay prototype with procedural placeholder art and no wallet or payment integration. Full static release inventory: `tree-army-release-20261113.json`.
+
+Earlier development notes below are historical; their unpublished status is superseded by this release.
+
+---
+
 # Tree Army: Defend the Grove — prototype 0.2
 
 Original self-contained HTML/CSS/JavaScript implementation. No code, artwork, audio, or assets copied from the uploaded Army of Darkness remake. Procedural canvas art is placeholder art for review.
