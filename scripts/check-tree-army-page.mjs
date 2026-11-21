@@ -72,9 +72,12 @@ try {
       await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:sx+20,y:sy-20,id:2}]});
       assert.match(await page.locator('#drag-cue').innerText(),/Moving ↑→/);
       const summon=await page.locator('[data-unit="sprout"]').boundingBox();
+      const multiSap=Number(await page.locator('#sap').innerText());
       const second={x:Math.round(summon.x+summon.width/2),y:Math.round(summon.y+summon.height/2),id:3};
       await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:sx+20,y:sy-20,id:2},second]});
-      await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[{x:sx+20,y:sy-20,id:2}]});
+      await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[second]});
+      await page.waitForFunction(before=>Number(document.getElementById('sap').textContent)<before,multiSap,{timeout:1500});
+      assert(await page.locator('#drag-cue').isVisible(),'Summoning must not release the held joystick');
       await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
       assert(await page.locator('#drag-cue').isHidden(),'Multi-touch release must reset joystick');
       await client.detach();

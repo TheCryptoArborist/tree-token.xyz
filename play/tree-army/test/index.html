@@ -247,7 +247,18 @@ for(const surface of [canvas,$('joystick')]){
  surface.addEventListener('pointermove',e=>{if(drag?.id===e.pointerId)setDrag(e);});
  for(const ev of ['pointerup','pointercancel','lostpointercapture'])surface.addEventListener(ev,e=>{if(drag?.id===e.pointerId){drag=null;resetStick();$('drag-cue').hidden=true;}});
 }
-document.querySelectorAll('[data-unit]').forEach(b=>b.onclick=()=>summon(b.dataset.unit));$('blast').onclick=cannon;$('shield').onclick=shield;$('pause').onclick=pause;
+function actionButton(button,action){
+ button.onclick=action;
+ // Secondary touch pointers do not reliably produce a compatibility click.
+ // Activate on their release as well; gameplay cooldowns prevent double casts.
+ button.addEventListener('pointerup',e=>{
+  if(e.pointerType!=='touch'||button.disabled)return;
+  const b=button.getBoundingClientRect();
+  if(e.clientX<b.x||e.clientX>b.x+b.width||e.clientY<b.y||e.clientY>b.y+b.height)return;
+  e.preventDefault();action();
+ });
+}
+document.querySelectorAll('[data-unit]').forEach(b=>actionButton(b,()=>summon(b.dataset.unit)));actionButton($('blast'),cannon);actionButton($('shield'),shield);$('pause').onclick=pause;
 $('skip').onclick=reset;
 $('next').onclick=()=>{if(mode==='ready'&&art.ready){briefingStep=0;briefing();}else if(mode==='briefing'){if(briefingStep<2){briefingStep++;briefing();}else reset();}else if(mode==='won'||mode==='lost')reset();else if(mode==='camp'){wave++;startWave();}else if(mode==='paused')pause();};
 addEventListener('keydown',e=>{if(e.target.closest('input,textarea,select'))return;const k=e.key.toLowerCase();if(['arrowleft','arrowright','arrowup','arrowdown','w','s','a','d','q','e','1','2','3','p',' '].includes(k))e.preventDefault();if(k==='a'||k==='arrowleft')held.add('left');if(k==='d'||k==='arrowright')held.add('right');if(k==='w'||k==='arrowup')held.add('up');if(k==='s'||k==='arrowdown')held.add('down');if(e.repeat)return;if(k==='1')summon('sprout');if(k==='2')summon('archer');if(k==='3')summon('oak');if(k==='q')cannon();if(k==='e')shield();if(k==='p'||k==='escape')pause();});
