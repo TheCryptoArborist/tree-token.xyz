@@ -1,0 +1,32 @@
+{
+  "candidate": "6af209ff9c76670c2a66714a",
+  "baseline": "6af1c0e464d4cdc85c4e9c34",
+  "ready": true,
+  "published": true,
+  "productionLocked": true,
+  "existingStaticFilesPreserved": 368,
+  "addedTestFiles": [
+    "/play/treeforce89/test/assets/arcade-cdwowitr.js",
+    "/play/treeforce89/test/assets/index-bw7nf3rr.css",
+    "/play/treeforce89/test/assets/index-c7slq93z.js",
+    "/play/treeforce89/test/gateway.css",
+    "/play/treeforce89/test/index.html",
+    "/play/treeforce89/test/assets/arborwing/tree-hero-arborwing-stages-v2.png",
+    "/play/treeforce89/test/assets/backgrounds/first-canopy-backdrop.png",
+    "/play/treeforce89/test/assets/backgrounds/first-canopy-foreground.png",
+    "/play/treeforce89/test/assets/backgrounds/first-canopy-midground.png",
+    "/play/treeforce89/test/assets/hero/tree-hero-canonical.jpg",
+    "/play/treeforce89/test/assets/powerups/boom-token.png",
+    "/play/treeforce89/test/assets/powerups/dex-reward-token.jpeg",
+    "/play/treeforce89/test/assets/graphql-bbwwdkhy.js"
+  ],
+  "backendFunctionsPreserved": 46,
+  "schedulesPreserved": 5,
+  "runtimePreserved": true,
+  "environmentPreserved": true,
+  "deployId": "6af209ff9c76670c2a66714a",
+  "locked": true,
+  "publishedAt": "2026-11-09T18:01:08.255Z",
+  "testUrl": "https://tree-token.xyz/play/treeforce89/test/",
+  "environmentComparison": "Sorted API-visible records and value identifiers; secret bytes remain masked"
+}

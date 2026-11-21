@@ -1,0 +1,23 @@
+{
+  "candidate": "6af21d8911a27d24c02264bc",
+  "baseline": "6af21232514520bf83ab83e9",
+  "ready": true,
+  "published": true,
+  "productionLocked": true,
+  "existingStaticFilesPreserved": 368,
+  "changedTestFiles": [
+    "/play/treeforce89/test/assets/arcade-cdwowitr.js",
+    "/play/treeforce89/test/gateway.css",
+    "/play/treeforce89/test/index.html"
+  ],
+  "addedTestFiles": [],
+  "backendFunctionsPreserved": 46,
+  "schedulesPreserved": 5,
+  "runtimePreserved": true,
+  "environmentPreserved": true,
+  "deployId": "6af21d8911a27d24c02264bc",
+  "locked": true,
+  "publishedAt": "2026-11-09T19:23:25.759Z",
+  "testUrl": "https://tree-token.xyz/play/treeforce89/test/",
+  "revision": "Mobile Test 4"
+}
