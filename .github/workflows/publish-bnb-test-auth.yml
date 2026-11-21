@@ -68,7 +68,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref_name }}
+          ref: ${{ github.sha }}
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
@@ -85,7 +85,7 @@ jobs:
           REVIEWED_SHA: ${{ github.sha }}
         run: |
           test -n "$NETLIFY_AUTH_TOKEN" || { echo 'The existing Netlify release connection is unavailable.'; exit 1; }
-          test "$(git rev-parse HEAD)" = "$REVIEWED_SHA"
+          test "$(git rev-parse HEAD)" = "$REVIEWED_SHA" || { echo 'The checkout differs from the reviewed release commit.'; exit 1; }
           node scripts/release-bnb-test-auth.mjs capture --source-commit "$REVIEWED_SHA"
           node scripts/release-bnb-test-auth.mjs plan --source-commit "$REVIEWED_SHA"
           node scripts/release-bnb-test-auth.mjs candidate --source-commit "$REVIEWED_SHA"
