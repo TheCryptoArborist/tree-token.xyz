@@ -8,7 +8,7 @@ import { ARBORETUM_SNIPPET, assertServedContent } from '../scripts/rootcaster-se
 import { sourceEvidence, toolingEvidence, sha256 } from '../scripts/package-bnb-test-auth.mjs';
 import { SITE_ID, ACCOUNT_ID, BASELINE_ID, FUNCTION_NAME, DELIVERY_SOURCES,
   ADDED_PATHS, EXPECTED_ROUTES, EXPECTED_TRAFFIC, validatePackage, validateBaseline,
-  assembleFiles, compareBackend, validateUploadRequirements, validateBrowserReview,
+  assembleFiles, compareBackend, validateUploadRequirements, createDeployPayload, validateBrowserReview,
   validatePublicationMessage, assertNewCandidate, scopedAPI, activeDeploys,
   waitForAllBuilds } from '../scripts/release-bnb-test-auth.mjs';
 
@@ -166,6 +166,36 @@ test('allows only the exact new ZIP and the two approved static upload hashes', 
     { required_server: ['new'] }, { required: undefined }]) {
     assert.throws(() => validateUploadRequirements({ ...allowed, ...change }, plan));
   }
+});
+
+test('create payload uses supported fields and preserves all source guards outside the API body', () => {
+  const before = baseline(), p = pack(), plan = {
+    ...assembleFiles(before.files, overlays()), functionPackage: p,
+    sourceCommit: 'b'.repeat(40), sourceTree: 'c'.repeat(40),
+    environment: { privateEvidence: 'never-submit-as-deploy-overrides' },
+  };
+  const payload = createDeployPayload(before, plan);
+  assert.deepEqual(Object.keys(payload).sort(), [
+    'async', 'branch', 'draft', 'files', 'function_schedules', 'functions', 'functions_config',
+  ]);
+  assert(!Object.hasOwn(payload, 'commit_ref'));
+  assert(!Object.hasOwn(payload, 'environment'));
+  assert.equal(plan.sourceCommit, 'b'.repeat(40)); assert.equal(plan.sourceTree, 'c'.repeat(40));
+  assert.equal(Object.keys(payload.files).length, 651);
+  for (const [pathname, digest] of Object.entries(before.files)) assert.equal(payload.files[pathname], digest);
+  assert.equal(Object.keys(payload.functions).length, 51);
+  assert.equal(Object.keys(payload.functions_config).length, 51);
+  const originalConfig = functionsConfig(before.deploy);
+  for (const f of before.deploy.available_functions) {
+    assert.equal(payload.functions[f.n], f.d);
+    assert.deepEqual(payload.functions_config[f.n], originalConfig[f.n]);
+  }
+  assert.equal(payload.functions[FUNCTION_NAME], p.sha256);
+  assert.deepEqual(payload.functions_config[FUNCTION_NAME], {
+    build_data: p.buildData, routes: p.routes, traffic_rules: EXPECTED_TRAFFIC,
+  });
+  assert.deepEqual(payload.function_schedules, before.deploy.function_schedules);
+  assert.equal(payload.draft, false); assert.equal(payload.async, false); assert.equal(payload.branch, 'main');
 });
 
 test('package manifest binds runtime, exact source closure, toolchain, traffic and archive bytes', () => {

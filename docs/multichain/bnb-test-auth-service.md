@@ -12,6 +12,44 @@ The handler remains outside Netlify's historical production functions directory
 and is packaged alone. Publication must preserve all 50 existing function
 package/provider/runtime records, five schedules and all current static files.
 
+## Publication status — blocked November 20, 2026
+
+The publication implementation merged through PR #270; PR #271 pins the
+publication checkout to its reviewed commit. The source, database and browser
+checks passed. Workflow
+[44865970994](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44865970994)
+captured the current 649-file/50-function/five-schedule baseline and passed the
+additive release plan, then Netlify rejected candidate creation with HTTP 403.
+No candidate was created and no production lock was changed.
+
+A subsequent independently authorized release for this same site exposed the
+provider's reason:
+`Account credit usage exceeded - new deploys are blocked until credits are added`.
+See [provider diagnostic job](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44866213576/job/136730718681).
+This identifies Netlify's reported account restriction; the actual credit
+balance was not read and no billing setting was changed.
+
+Independent checks after the rejection confirmed that the current deployment
+is still `6b00892b6acd6fc92a18fd20`, ready and locked, with all 50 existing
+functions and five schedules. Both isolated BNB database tables remain empty,
+and all 31 preexisting public Arcade procedure definitions and privileges have
+the same baseline fingerprint. The new BNB function is absent. The canonical
+login smoke test and Peter's Brave wallet acceptance remain pending.
+
+The create-deploy request also now omits the undocumented `commit_ref` body
+field, matching Netlify's current schema and the proven preservation publishers.
+Source identity remains pinned by the existing source/tree, plan, candidate,
+browser and remote-main checks. This request cleanup does not resolve the
+account-credit restriction. Its 20 focused preservation tests pass.
+
+Complete plan, artifact hashes, source-browser results and post-block audit:
+[`bnb-test-auth-publication-blocked-20261120.json`](./bnb-test-auth-publication-blocked-20261120.json).
+Once Netlify accepts deployments again, review the current source and live
+baseline, create a fresh candidate through the guarded publication workflow,
+and finish the canonical login/replay/logout checks before manual wallet testing.
+Do not reapply the migration, reuse this old plan as approval, or rerun a stale
+workflow commit against a newer main branch. Gameplay remains denied.
+
 ## Endpoint design
 
 Path after verified publication: POST /api/arcade-bnb-test on
