@@ -1,0 +1,127 @@
+import assert from 'node:assert/strict';
+import { Game, WORLD, SAVE_KEY } from './engine.mjs';
+
+const tick = (game, seconds, input = {}) => { for (let i = 0; i < Math.ceil(seconds * 60); i++) game.update(1 / 60, input); };
+const at = (game, location) => Object.assign(game.state.hero, location);
+const game = new Game();
+assert.ok(SAVE_KEY.includes('prologue'));
+assert.equal(game.getObjective().step, 1);
+assert.equal(game.interact(), false, 'Interactions require proximity');
+at(game, { x: 710, y: 650 }); tick(game, 2, { x: 1 });
+assert.equal(game.state.hero.x, 726, 'Unrepaired river stops movement');
+at(game, game.state.engineer); assert.equal(game.interact(), true);
+assert.equal(game.state.stage, 'defend');
+assert.equal(game.state.enemies.length, 3);
+assert.ok(game.state.enemies.every(e => e.spawning > 0), 'Raiders are telegraphed');
+const battleReload = new Game(game.serialize());
+assert.equal(battleReload.state.stage, 'defend');
+assert.equal(battleReload.state.enemies.length, 3);
+assert.equal(battleReload.state.enemies[0].spawning, 1.4);
+assert.equal(battleReload.state.combat.wave, 1);
+const aim = new Game(game.serialize());
+at(aim, { x: 270, y: 650 });
+Object.assign(aim.state.enemies[0], { x: 270, y: 570, spawning: 0 });
+Object.assign(aim.state.enemies[1], { x: 330, y: 650, spawning: 0 });
+Object.assign(aim.state.enemies[2], { x: 300, y: 720, spawning: 0 });
+aim.state.hero.dirX = -1; aim.state.hero.dirY = 0;
+aim.attack();
+assert.equal(aim.state.hero.dirX, 1, 'Attack faces the closest active enemy');
+assert.equal(aim.state.hero.dirY, 0);
+
+function beatWave(g) {
+  tick(g, 1.5);
+  for (const enemy of g.state.enemies) {
+    while (enemy.hp > 0 && g.state.status === 'playing') {
+      at(g, { x: enemy.x - 65, y: enemy.y });
+      g.snare(); g.attack(); tick(g, 0.4);
+    }
+  }
+}
+beatWave(game); tick(game, 1);
+assert.equal(game.state.combat.wave, 2);
+assert.equal(game.state.enemies.length, 2);
+beatWave(game); tick(game, 0.1);
+assert.equal(game.state.stage, 'repair');
+assert.equal(game.state.metrics.defeated, 5);
+at(game, { x: 704, y: 517 }); assert.equal(game.interact(), true);
+assert.equal(game.state.resources.materials, 4);
+assert.equal(game.state.stage, 'cross');
+at(game, { x: 800, y: 517 }); tick(game, 1, { y: 1 });
+assert.equal(game.state.hero.x, 800, 'Bridge rails do not teleport the hero to a bank');
+assert.equal(game.state.hero.y, 548);
+at(game, { x: 710, y: 650 }); tick(game, 1, { x: 1 });
+assert.equal(game.state.hero.x, 726, 'Only the bridge permits river passage');
+at(game, { x: 710, y: 517 }); tick(game, 1.05, { x: 1 });
+assert.equal(game.state.stage, 'cross', 'The faster hero reaching the bank does not rescue trailing families');
+assert.ok(game.state.villagers.some(v => v.x < 904));
+assert.match(game.getObjective().hint, /wait/i);
+for (let i = 0; i < 120 && game.state.metrics.rescued === 0; i++) tick(game, 0.05);
+assert.ok(game.state.metrics.rescued > 0 && game.state.metrics.rescued < 3, 'Each family is counted only when it reaches the bank');
+assert.equal(game.state.stage, 'cross');
+const partiallyCrossed = new Game(game.serialize());
+assert.equal(partiallyCrossed.state.metrics.rescued, game.state.metrics.rescued);
+assert.deepEqual(partiallyCrossed.state.villagers.map(v => v.safe), game.state.villagers.map(v => v.safe));
+tick(partiallyCrossed, 8);
+assert.equal(partiallyCrossed.state.stage, 'plant', 'A partial crossing resumes and completes after reload');
+tick(game, 8);
+assert.equal(game.state.stage, 'plant');
+assert.equal(game.state.metrics.rescued, 3);
+assert.ok(game.state.villagers.every(v => v.safe));
+assert.ok(game.state.villagers.every(v => v.x >= 904), 'Rescue story only fires after all families reach the eastern bank');
+const caravanReload = new Game(game.serialize());
+assert.equal(caravanReload.state.engineer.route, game.state.engineer.route);
+tick(caravanReload, 8);
+assert.ok(caravanReload.state.engineer.x > 1100, 'Bram walks across the bridge to the eastern camp');
+assert.equal(caravanReload.state.engineer.route, 3);
+
+at(game, WORLD.grove); game.interact();
+assert.equal(game.state.resources.food, 12);
+assert.equal(game.state.resources.seeds, 1);
+assert.equal(game.state.stage, 'restore');
+at(game, WORLD.workshop);
+assert.equal(game.getInteraction().enabled, false);
+assert.equal(game.interact(), false);
+assert.match(game.getObjective().hint, /cache/i);
+at(game, WORLD.cache); game.interact();
+assert.equal(game.state.resources.materials, 18);
+assert.equal(game.interact(), false, 'Cache cannot reward twice');
+const reloaded = new Game(JSON.stringify(game.serialize()));
+assert.equal(reloaded.state.resources.materials, 18);
+assert.equal(reloaded.state.world.cache, true);
+assert.equal(reloaded.interact(), false, 'Reload does not reopen collected cache');
+at(reloaded, WORLD.workshop); reloaded.interact();
+assert.equal(reloaded.state.stage, 'complete');
+assert.equal(reloaded.state.status, 'complete');
+assert.equal(reloaded.state.resources.materials, 8);
+assert.equal(reloaded.state.bonusDiscount, 0.2);
+assert.equal(reloaded.recruit(), true);
+assert.equal(reloaded.state.resources.materials, 0, '10 materials less 20% costs exactly 8');
+assert.equal(reloaded.state.resources.food, 8);
+assert.equal(reloaded.recruit(), false, 'Recruitment is one-time');
+const complete = new Game(reloaded.serialize());
+assert.equal(complete.state.stage, 'complete');
+assert.equal(complete.state.world.recruit, true);
+assert.equal(complete.recruit(), false);
+assert.equal(complete.state.resources.materials, 0);
+
+const invalid = new Game({ version: 999, stage: 'complete' });
+assert.equal(invalid.state.stage, 'meet');
+const corrupted = new Game({ ...game.serialize(), hero: { x: NaN, y: Infinity, hp: NaN }, resources: { food: NaN, materials: -2, seeds: Infinity } });
+assert.equal(corrupted.state.hero.x, 270);
+assert.equal(corrupted.state.hero.hp, 100);
+assert.equal(corrupted.state.resources.materials, 0);
+assert.ok(!JSON.stringify(corrupted.serialize()).includes('null'), 'Serialized numeric fields stay finite');
+
+const fallen = new Game();
+at(fallen, fallen.state.engineer); fallen.interact();
+fallen.state.hero.hp = 0; fallen.state.status = 'down';
+const downReload = new Game(fallen.serialize());
+assert.equal(downReload.state.status, 'down');
+assert.equal(downReload.restartCheckpoint(), true);
+assert.equal(downReload.state.hero.hp, 100);
+assert.equal(downReload.state.enemies.length, 3);
+assert.equal(downReload.state.resources.materials, 12);
+const events = reloaded.drainEvents();
+assert.ok(events.some(e => e.type === 'complete'));
+assert.equal(reloaded.drainEvents().length, 0);
+console.log('PASS: full prologue, two combat waves, river collision, costs, discounts, one-time rewards, reloads, invalid saves, and checkpoint recovery.');
