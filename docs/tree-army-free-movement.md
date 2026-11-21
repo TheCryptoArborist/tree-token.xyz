@@ -33,7 +33,7 @@ last published game HTML. It captures and preserves the full current production
 inventory, backend packages, schedules, configuration and snippets. Cabinet
 media remains the prior gameplay preview; no new assets or dependencies.
 
-## Release status
+## Initial blocked release attempts (resolved)
 
 Implementation merged through PR #269 as
 `5cb9630efb1faec70916f4e4f46a6d3816dfe2a7`. Workflow `44865719998` passed all
@@ -58,3 +58,15 @@ not canonical-site evidence. Original artifact 14691394067 has SHA256
 `8fea03b2904cbfadcdfaf8bbd8c21d4a243d8575503338f1e614f20464bcf258`.
 The earlier accidental dispatch `44865447132` was canceled with no jobs after
 a concurrent main-branch update rejected the first merge attempt.
+
+## Published after credits were added
+
+Workflow `44867337174` successfully published source
+`bcb8df4d0cecc94eb33fa918554a58e6a380a7f6` to locked deploy
+`6b01217f8e1995306b794031`. Candidate and canonical tests passed at all four
+sizes, and the final 320px screenshot was inspected. The release preserves
+648 unrelated static paths, all 50 backend records, five schedules and protected
+configuration. Complete published inventory and canonical checks are in
+`production/tree-army-courtyard-*20261120.json`; live screenshot:
+`docs/tree-army-courtyard-live-20261120.png`. The game is now live at
+https://tree-token.xyz/play/tree-army/test/ .

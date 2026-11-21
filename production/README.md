@@ -1,3 +1,41 @@
+# Tree Army courtyard movement — published November 20, 2026
+
+Current locked production is `6b01217f8e1995306b794031`, published and verified
+by workflow [44867337174](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44867337174)
+on November 20 at approximately 22:45 America/Chicago (November 21 04:45 UTC).
+Published source: `bcb8df4d0cecc94eb33fa918554a58e6a380a7f6`.
+Implementation PR #269 and bounded deployment-error diagnostics PR #272.
+
+Prototype 0.7 enables free movement within the courtyard floor: mobile joystick
+or battlefield dragging, WASD/all four arrow keys, and normalized diagonals.
+Combat now uses both coordinates for pursuit, range and swept projectile hits;
+actors draw in depth order. Secondary-touch summoning/abilities work while the
+joystick stays held. Existing illustrated assets and cabinet media are retained.
+
+Fresh baseline: `6b00892b6acd6fc92a18fd20`. Only the playtest HTML changed:
+**649 static paths**, **648 unrelated static paths preserved**, all **50 complete
+backend records and five schedules** preserved, with runtime configuration,
+protected environment and site snippets unchanged. No dependency/backend change.
+
+Candidate and canonical game/cabinet checks passed at 1440×1000, 390×844,
+320×568 and 844×390. They cover directional touch, diagonal joystick movement,
+second-finger summoning while held, release cleanup, layout, gameplay controls
+and asset failure. The canonical small-phone screenshot was inspected. These
+are emulated touch tests, not physical-device testing.
+
+The earlier Netlify credit block is resolved after the user added credits.
+Evidence: `production/tree-army-courtyard-release-20261120.json` holds the complete
+published inventory; adjacent courtyard game/cabinet check reports and
+`docs/tree-army-courtyard-live-20261120.png` record canonical results. Artifact
+14691898478 has SHA256
+`92ac7fa305c60e0ff23f298e01dfd786c1915eb83b188f77a7b6587b4240281c`.
+Implementation/history: `docs/tree-army-free-movement.md`.
+
+Capture a fresh baseline and revise the one-time HTML replacement hash before
+any subsequent release. Do not publish the historical root build.
+
+---
+
 # Original NFTree final acknowledgement page — published November 20, 2026
 
 Current locked production is `6b00892b6acd6fc92a18fd20`, published at

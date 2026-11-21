@@ -1,15 +1,21 @@
 {
   "implemented": true,
-  "published": false,
+  "published": true,
   "implementationPR": 269,
   "implementationCommit": "5cb9630efb1faec70916f4e4f46a6d3816dfe2a7",
   "diagnosticCommit": "7bd1a07c4c4ce484ba2addf2cdd0bcb5003bb7d9",
-  "workflowRun": 44866213576,
   "gameplayChecksPassed": true,
   "localBrowserChecksPassed": true,
-  "candidateCreated": false,
-  "providerStatus": 403,
-  "providerError": "Account credit usage exceeded - new deploys are blocked until credits are added",
-  "unchangedPublishedDeploy": "6b00892b6acd6fc92a18fd20",
-  "nextAction": "Team owner adds Netlify credits; then capture the fresh live baseline and rerun the scoped Tree Army publisher."
+  "candidateCreated": true,
+  "nextAction": "Published and verified; any future release must capture a fresh baseline.",
+  "previousBlockedAttempt": {
+    "workflowRun": 44866213576,
+    "providerStatus": 403,
+    "providerError": "Account credit usage exceeded - new deploys are blocked until credits are added",
+    "unchangedPublishedDeploy": "6b00892b6acd6fc92a18fd20"
+  },
+  "workflowRun": 44867337174,
+  "publishedDeploy": "6b01217f8e1995306b794031",
+  "publishedSource": "bcb8df4d0cecc94eb33fa918554a58e6a380a7f6",
+  "canonicalBrowserChecksPassed": true
 }
