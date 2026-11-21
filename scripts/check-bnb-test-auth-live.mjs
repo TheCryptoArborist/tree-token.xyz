@@ -57,10 +57,18 @@ try{
   assert.equal(r.response.status,200,'Live signature verification failed: '+r.body.error);
   const setCookie=r.response.headers.get('set-cookie')||'';
   assert(cookiePattern.test(setCookie),'Live sign-in must return a well-formed isolated session cookie');
-  const attributes=setCookie.split(';').slice(1).map(value=>value.trim().toLowerCase());
-  for(const attribute of ['HttpOnly','Secure','SameSite=Strict','Path='+PATH])
-    assert(attributes.includes(attribute.toLowerCase()),'Isolated session cookie is missing required attribute: '+attribute);
-  assert(!attributes.some(value=>value.startsWith('domain=')),'Isolated session cookie must be host-only');
+  const attributes=new Map(setCookie.split(';').slice(1).map(attribute=>{
+    const separator=attribute.indexOf('=');
+    return separator===-1?[attribute.trim().toLowerCase(),'']:
+      [attribute.slice(0,separator).trim().toLowerCase(),attribute.slice(separator+1).trim()];
+  }));
+  for(const attribute of ['HttpOnly','Secure'])
+    assert(attributes.has(attribute.toLowerCase()),'Isolated session cookie is missing required attribute: '+attribute);
+  assert(attributes.get('samesite')?.toLowerCase()==='strict',
+    'Isolated session cookie is missing required attribute: SameSite=Strict');
+  // Cookie attribute names are case-insensitive; URL path values are not.
+  assert(attributes.get('path')===PATH,'Isolated session cookie must use the exact isolated path');
+  assert(!attributes.has('domain'),'Isolated session cookie must be host-only');
   assert(cookie,'A valid synthetic session token is required for cleanup');
   assert.equal(r.body.authenticated,true);assert.equal(r.body.scope,BNB_IDENTITY_SCOPE);
   assert.equal(r.body.wallet,account.address.toLowerCase());

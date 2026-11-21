@@ -45,7 +45,7 @@ function runChecker(mode){
           if(signInCount>1)return response({error:'challenge-used'},403,
             mode==='replay-cookie'?{'Set-Cookie':expectedCookie+'; Path='+PATH}:{});
           const supplied=mode==='malformed-token'?token+'0':token;
-          const attributes=['Path='+PATH,'Secure','SameSite=Strict'];
+          const attributes=['Path='+(mode==='wrong-case-path'?PATH.toUpperCase():PATH),'Secure','SameSite=Strict'];
           if(mode!=='missing-http-only')attributes.push('HttpOnly');
           const extra={'Set-Cookie':COOKIE+'='+supplied+'; '+attributes.join('; ')};
           if(mode==='bad-cache')extra['Cache-Control']=token;
@@ -108,6 +108,7 @@ test('valid isolated cookie completes the real checker and revokes its mocked se
 
 for(const [mode,message,logoutCount] of [
   ['missing-http-only','Isolated session cookie is missing required attribute: HttpOnly',1],
+  ['wrong-case-path','Isolated session cookie must use the exact isolated path',1],
   ['bad-cache','Live response must disable caching',1],
   ['unexpected-cors','Live response must not grant CORS',1],
   ['replay-cookie','Replayed challenge must not set a session cookie',1],
