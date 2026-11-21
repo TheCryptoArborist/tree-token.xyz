@@ -235,6 +235,18 @@ export function validatePublicationMessage(message) {
   assert(message.includes('[publish bnb backing]') && message.includes('[skip netlify]'), 'Both explicit publication markers are required.');
 }
 
+export async function lockCandidateAfterBuilds(api, candidateId, revalidate) {
+  assert(safeId(candidateId) && candidateId !== BASELINE_ID, 'Only the new reviewed candidate may be locked.');
+  assert.equal(typeof revalidate, 'function', 'Final baseline and source checks are required.');
+  await waitForAllBuilds(api, candidateId);
+  await revalidate();
+  // A Git build can enter the queue during the baseline, source or proof checks.
+  // Reuse the exact audited orphan exclusions and make this the last read before
+  // locking; a newly queued or unknown nonterminal build must stop publication.
+  assert.equal((await activeDeploys(api, candidateId)).length, 0, 'A new queued build blocks publication.');
+  return api(`deploys/${candidateId}/lock`, 'POST');
+}
+
 function runtime(deploy) {
   const value = Object.fromEntries(RUNTIME_FIELDS.filter(k => Object.hasOwn(deploy, k)).map(k => [k, deploy[k]]));
   if (value.functions_region_overrides) value.functions_region_overrides = sorted(value.functions_region_overrides, 'name');
@@ -425,14 +437,14 @@ export async function main(args = process.argv.slice(2)) {
     }
     deploy = await verifyCandidate(api, baseline, plan, state, directory);
     if (mode === 'publish') {
-      await waitForAllBuilds(api, state.id);
-      await assertLiveBaseline(api, baseline); assertSource(plan.sourceCommit);
-      assert.equal(git('ls-remote', '--heads', 'origin', 'refs/heads/main').split(/\s+/)[0], plan.sourceCommit, 'Remote main moved while waiting.');
-      assert.equal(validateReadOnlyProof(readRecord(path.join(directory, 'read-only-proof.json')), plan.sourceCommit),
-        plan.readOnlyProofSha256, 'Read-only diagnostic proof changed or expired while waiting.');
       // Netlify publishes and locks this exact newly created candidate. Never
       // unlock production and never restore an older deployment.
-      await api(`deploys/${state.id}/lock`, 'POST');
+      await lockCandidateAfterBuilds(api, state.id, async () => {
+        await assertLiveBaseline(api, baseline); assertSource(plan.sourceCommit);
+        assert.equal(git('ls-remote', '--heads', 'origin', 'refs/heads/main').split(/\s+/)[0], plan.sourceCommit, 'Remote main moved while waiting.');
+        assert.equal(validateReadOnlyProof(readRecord(path.join(directory, 'read-only-proof.json')), plan.sourceCommit),
+          plan.readOnlyProofSha256, 'Read-only diagnostic proof changed or expired while waiting.');
+      });
       for (let attempt = 0; attempt < 60; attempt++) {
         const site = await api(`sites/${SITE_ID}`);
         if (site.published_deploy?.id === state.id && site.published_deploy.locked === true) break;

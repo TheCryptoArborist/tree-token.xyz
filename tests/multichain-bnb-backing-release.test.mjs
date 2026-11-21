@@ -11,7 +11,7 @@ import { SITE_ID, ACCOUNT_ID, BASELINE_ID, FUNCTION_NAME, DELIVERY_SOURCES,
   EXPECTED_ROUTES, EXPECTED_TRAFFIC, validatePackage, validateBaseline, validateReadOnlyProof,
   assembleFiles, compareBackend, validateUploadRequirements, createDeployPayload, validateBrowserReview,
   validatePublicationMessage, assertNewCandidate, scopedAPI, activeDeploys,
-  waitForAllBuilds } from '../scripts/release-bnb-backing.mjs';
+  waitForAllBuilds, lockCandidateAfterBuilds } from '../scripts/release-bnb-backing.mjs';
 
 const clone = value => structuredClone(value);
 const zip = Buffer.from('one reviewed isolated archive');
@@ -325,6 +325,59 @@ test('all-build guard waits for genuine queued builds and rejects an incomplete 
   assert.equal(waits, 1);
   const pending = async target => target.includes('/deploys?') ? [{id:'new-build',state:'building'}] : {id:'new-build',state:'building'};
   await assert.rejects(() => waitForAllBuilds(pending, '1'.repeat(24), {attempts:1,log:()=>{}}));
+});
+
+test('a build queued during the final baseline checks blocks the actual lock request', async () => {
+  for (const state of ['queued', 'enqueued', 'building', 'uploading', 'processing', 'pending_review', 'unknown-state']) {
+    const calls = []; let queued = false;
+    const build = { id: '2'.repeat(24), state, build_id: 'retried-git-build', site_id: SITE_ID };
+    const api = async (target, method = 'GET') => {
+      calls.push({ target, method });
+      if (target.includes('/deploys?')) return queued ? [build] : [];
+      if (target === `deploys/${build.id}`) return build;
+      if (target === `sites/${SITE_ID}`) { queued = true; return { id: SITE_ID }; }
+      throw Error('Unexpected request: ' + method + ' ' + target);
+    };
+    await assert.rejects(() => lockCandidateAfterBuilds(api, '1'.repeat(24), async () => {
+      await api(`sites/${SITE_ID}`);
+    }), /A new queued build blocks publication/, state);
+    assert.equal(calls.filter(c => c.target.includes('/deploys?')).length, 2, 'Queue is checked before and after revalidation.');
+    assert.equal(calls.some(c => c.method !== 'GET'), false, 'No deployment mutation is attempted.');
+  }
+});
+
+test('the final lock guard preserves exact orphan exclusions and rejects a resumed orphan', async () => {
+  const [id, [state,created_at,updated_at,context,commit_ref]] = [...AUDITED_STALE_DEPLOYS][0];
+  const orphan = { id,site_id:SITE_ID,state,created_at,updated_at,context,commit_ref,build_id:null,published_at:null,locked:null };
+  for (const resumed of [false, true]) {
+    const calls = []; let revalidated = false;
+    const api = async (target, method = 'GET') => {
+      calls.push({ target, method });
+      if (target.includes('/deploys?')) return [orphan];
+      if (target === `deploys/${id}`) return revalidated && resumed ? { ...orphan, build_id: 'resumed-git-build' } : orphan;
+      if (target === `deploys/${'1'.repeat(24)}/lock` && method === 'POST') return { locked: true };
+      throw Error('Unexpected request: ' + method + ' ' + target);
+    };
+    const publish = () => lockCandidateAfterBuilds(api, '1'.repeat(24), async () => { revalidated = true; });
+    if (resumed) {
+      await assert.rejects(publish, /A new queued build blocks publication/);
+      assert.equal(calls.some(c => c.method !== 'GET'), false);
+    } else {
+      assert.deepEqual(await publish(), { locked: true });
+      assert.deepEqual(calls.at(-1), { target: `deploys/${'1'.repeat(24)}/lock`, method: 'POST' });
+      assert.equal(calls.at(-2).target, `deploys/${id}`, 'The final active-build inspection immediately precedes locking.');
+    }
+  }
+});
+
+test('a failed final baseline or source check never reaches the lock request', async () => {
+  const calls = [];
+  const api = async (target, method = 'GET') => { calls.push({ target, method }); return []; };
+  await assert.rejects(() => lockCandidateAfterBuilds(api, '1'.repeat(24), async () => {
+    throw Error('Final source proof rejected');
+  }), /Final source proof rejected/);
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].method, 'GET');
 });
 
 test('only the exact historical orphan record may bypass active-build detection', async () => {
