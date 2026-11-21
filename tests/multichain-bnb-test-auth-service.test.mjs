@@ -144,3 +144,33 @@ test('missing hosted storage, RPC failure and wrong session cannot confer access
   assert(!JSON.stringify(result.data).includes('private database failure'));
   assert.equal((await call(f.handler,'status',{}, {cookie:'__Secure-tree_bnb_test=not-real'})).status,401);
 });
+test('malformed or excessive session expiry cannot create or restore authentication',async()=>{
+  for(const expiresAt of ['invalid',null,'infinity',new Date(NOW+3600001).toISOString(),'2026-11-20T20:00:00+00:00']){
+    const f=fixture(),{reply}=await signed(f),cookie=reply.cookie.split(';')[0];
+    for(const session of f.state.sessions.values())session.expiresAt=expiresAt;
+    // Bypass the fixture's read filter to test the handler against bad RPC data.
+    const handler=createBnbTestHandler({rpc:async(name,args)=>name==='arcade_bnb_test_read_session_v1'
+      ?[...f.state.sessions.values()][0]:f.rpc(name,args),client:{getChainId:async()=>56,verifyMessage},clock:()=>NOW});
+    assert.equal((await call(handler,'status',{}, {cookie})).status,401);
+    const fresh=fixture();
+    const badIssue=createBnbTestHandler({rpc:async(name,args)=>{
+      const result=await fresh.rpc(name,args);
+      return name==='arcade_bnb_test_consume_session_v1'?{...result,expiresAt}:result;
+    },client:{getChainId:async()=>56,verifyMessage},clock:()=>NOW});
+    const signedResult=await signed({...fresh,handler:badIssue});
+    assert.equal(signedResult.reply.status,503);assert.equal(signedResult.reply.cookie,null);
+  }
+});
+test('modern secret keys use apikey only; legacy server keys retain bearer compatibility',async()=>{
+  for(const key of ['sb_secret_test_placeholder_not_real','eyJ_test_only_legacy_server_placeholder']){
+    let captured;
+    const rpc=createBnbTestRpc({getEnv:n=>n==='BNB_TEST_SUPABASE_URL'?'https://lehswszuekjqottolmsf.supabase.co':key,
+      fetchImpl:async(url,options)=>{captured={url,options};return Response.json(null);}});
+    await rpc('arcade_bnb_test_read_challenge_v1',{p_nonce:'a'.repeat(64)});
+    assert.equal(captured.options.headers.apikey,key);
+    assert.equal(captured.options.headers.Authorization,key.startsWith('sb_secret_')?undefined:'Bearer '+key);
+    assert.equal(captured.url,'https://lehswszuekjqottolmsf.supabase.co/rest/v1/rpc/arcade_bnb_test_read_challenge_v1');
+    assert(!captured.options.body.includes(key));
+    await assert.rejects(()=>rpc('arcade_unrelated_function',{}),/service-unavailable/);
+  }
+});
