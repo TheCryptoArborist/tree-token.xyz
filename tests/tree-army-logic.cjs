@@ -28,3 +28,5 @@ console.log('PASS: vertical movement, equal diagonal speed, courtyard bounds, ve
 
 t.reset();t.placeEnemy(t.get().heroX+150);t.cannon();t.set({enemyY:290,enemySpeed:0,heroCd:10});const untouched=t.get().enemyHp;for(let i=0;i<15;i++)t.update(.04);assert.equal(t.get().enemyHp,untouched,'Projectile must miss a target outside its depth path');
 t.reset();pointer('joystick','pointerdown',{clientX:100,clientY:140});for(let i=0;i<50;i++)t.update(.04);pointer('joystick','pointerup');assert.equal(t.get().heroY,390,'Bottom ground boundary');
+
+t.reset();for(let i=0;i<6000&&t.get().mode==='battle';i++){t.summon('sprout');t.summon('archer');t.summon('oak');t.cannon();t.shield();t.update(.04);}assert.equal(t.get().mode,'camp','A real first wave must be winnable with summons and abilities, without forced kills');console.log('PASS: actual first-wave combat clears with normal summons/abilities.');
