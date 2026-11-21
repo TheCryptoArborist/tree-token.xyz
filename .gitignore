@@ -7,6 +7,7 @@
 node_modules/
 dist/
 dist-preview/
+hosted-public/
 .netlify/
 .sync-backups/
 raffle-contract/build/

@@ -1,0 +1,18 @@
+import fs from 'node:fs';import path from 'node:path';import os from 'node:os';import crypto from 'node:crypto';
+
+const c=JSON.parse(fs.readFileSync(path.join(process.env.XDG_CONFIG_HOME||path.join(os.homedir(),'.config'),'netlify/config.json')));const auth=c.users[c.userId].auth;
+const token=typeof auth==='string'?auth:auth.token;
+async function call(endpoint,method='GET',body){let r;try{r=await fetch('https://api.netlify.com/api/v1/'+endpoint,{method,headers:{Authorization:'Bearer '+token,...(body&&!(body instanceof Buffer)?{'Content-Type':'application/json'}:{})},body:body instanceof Buffer?body:body?JSON.stringify(body):undefined,signal:AbortSignal.timeout(30000)});}catch{throw Error('Netlify API network timeout');}if(!r.ok)throw Error('Netlify API HTTP '+r.status);return r.json();}
+const api={getSite:({siteId})=>call('sites/'+siteId),listDeployFiles:({deployId,page,perPage})=>call(`deploys/${deployId}/files?page=${page}&per_page=${perPage}`),createSiteDeploy:({siteId,title,body})=>call('sites/'+siteId+'/deploys?title='+encodeURIComponent(title),'POST',body),uploadDeployFunction:({deployId,name,body})=>call(`deploys/${deployId}/functions/${name}?runtime=js&invocation_mode=stream`,'PUT',fs.readFileSync(f.path)),getDeploy:({deployId})=>call('deploys/'+deployId)};
+const siteId='f054a440-1ff7-4fac-85da-3b8b9afcf8b0';
+const site=await api.getSite({siteId});const baseline=site.published_deploy.id;
+const files={};for(let page=1;;page++){const rows=await api.listDeployFiles({deployId:baseline,page,perPage:100});for(const row of rows)files[row.path]=row.sha;if(rows.length<100)break;}
+const f=JSON.parse(fs.readFileSync('.netlify/breaker-functions/manifest.json')).functions[0];let bytes=fs.readFileSync(f.path);const eocd=bytes.lastIndexOf(Buffer.from([0x50,0x4b,0x05,0x06]));if(eocd<0)throw Error('Invalid function ZIP');const comment=Buffer.from('Canopy Breaker completion feed - modern streaming function release 2026-11-07');bytes=Buffer.concat([bytes.subarray(0,eocd+22),comment]);bytes.writeUInt16LE(comment.length,eocd+20);fs.writeFileSync(f.path,bytes);const hash=crypto.createHash('sha256').update(bytes).digest('hex');
+const config={build_data:f.buildData,routes:f.routes,priority:f.priority,memory:1024,region:'us-east-2',traffic_rules:{action:{type:'rate_limit',config:{rate_limit_config:{algorithm:'sliding_window',window_size:60,window_limit:180},aggregate:{keys:[{type:'domain'},{type:'ip'}]}}}}};
+const deploy=await api.createSiteDeploy({siteId,title:'Canopy Breaker completion feed with preserved modern API routing',body:{files,functions:{'breaker-access':hash},functions_config:{'breaker-access':config},function_schedules:[],draft:false,async:false,commit_ref:'0f7c657d6918a44535b9a74c743aebac9078044f'}});
+console.log(JSON.stringify({id:deploy.id,state:deploy.state,requiredFunctions:deploy.required_functions}));
+fs.writeFileSync('.netlify/completion-feed-deploy.json',JSON.stringify({id:deploy.id,baseline,hash}));
+if(deploy.required?.length)throw Error('Unexpected static uploads requested');
+if(deploy.required_functions?.length)await api.uploadDeployFunction({deployId:deploy.id,name:'breaker-access',runtime:'js',invocationMode:'stream',body:()=>fs.createReadStream(f.path)});
+for(let i=0;i<45;i++){const d=await api.getDeploy({deployId:deploy.id});if(d.state==='error')throw Error(d.error_message||'Deployment failed');if(d.state==='ready'){console.log(JSON.stringify({id:d.id,state:d.state,routes:d.available_functions?.[0]?.ro,mode:d.available_functions?.[0]?.im,runtime:d.available_functions?.[0]?.r}));process.exit(0);}await new Promise(r=>setTimeout(r,1000));}throw Error('Deployment still pending');
+

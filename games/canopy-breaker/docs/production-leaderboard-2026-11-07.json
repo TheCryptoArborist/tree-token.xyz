@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "publishedAt": "2026-11-07T17:51:08.051Z",
+  "sourceCommit": "a7caabcf4500262bbd7cd861b9e91c9d6a47730c",
+  "gameURL": "https://tree-token.xyz/play/canopy-breaker/",
+  "leaderboardURL": "https://tree-token.xyz/play/canopy-breaker/#leaderboard",
+  "publicAPI": "https://tree-token.xyz/play/canopy-breaker/api/leaderboard",
+  "hostDeployId": "6aef64eb6cafc47f69d4fcdb",
+  "previousHostDeployId": "6aef60679ee349bfd9c6847a",
+  "arcadeDeployIdUnchanged": "6aef5d756e05b131e841a269",
+  "functionSha256": "356b1b67a307bcc9a865a7595c9ac6e55366ea484ede9e443e3d292ff40b4ec0",
+  "publicFilesSha1": {
+    "index.html": "11f0687a22bec4cbd1172eacd5ac9b664b89086a",
+    "style.css": "dd0c67e3c5f37f64e8b984f7e14db34a4d573cfc",
+    "gateway.js": "74f147b75172f3de20e1195ebe177c17a4d41bd4",
+    "leaderboard.js": "52297f13d1ab27548d151530a0b17adc0d30080e"
+  },
+  "migration": {
+    "name": "20261107180000_canopy_breaker_leaderboard",
+    "applied": true,
+    "addedTables": [
+      "breaker.player_profiles",
+      "breaker.leaderboard_scores"
+    ],
+    "existingRunsPaymentsAndAccountsPreserved": true
+  },
+  "behavior": {
+    "publicAllTimeTop": 20,
+    "oneBestPerWallet": true,
+    "publicationRequiresChosenUsername": true,
+    "usernameLength": [
+      3,
+      20
+    ],
+    "usernameCaseInsensitiveUnique": true,
+    "scoreSource": "Authoritative replay checkpoints and verified own saved run history; browser score claims rejected",
+    "historicalPaidCarryoverIncluded": true,
+    "ties": [
+      "score descending",
+      "grove descending",
+      "earliest saved achievement",
+      "stable internal wallet order"
+    ],
+    "publicFields": [
+      "rank",
+      "username",
+      "score",
+      "level"
+    ],
+    "publicWalletOrPaymentIdentifiers": false,
+    "leaderboardPauseAndSave": true,
+    "refreshEverySeconds": 30
+  },
+  "validation": {
+    "automatedTestsPassed": 108,
+    "syntaxPassed": true,
+    "isolatedBuildPassed": true,
+    "newMigrationAppliedInProduction": true,
+    "publicReadHTTP200": true,
+    "publicWriteHTTP405": true,
+    "unsignedGameAndPrivateSourceHTTP401": true,
+    "privateServerSourceHTTP404": true,
+    "savedGameAndLeaderboardTablesHealthy": true,
+    "canonicalUIObservedLoaded": true,
+    "rootSiteUnchangedAndLocked": true,
+    "realHolderUsernameSaveStillRequiresUserConfirmation": true,
+    "assistantSubmittedWalletTransaction": false
+  }
+}

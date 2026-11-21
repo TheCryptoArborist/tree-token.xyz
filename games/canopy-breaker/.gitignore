@@ -1,0 +1,6 @@
+node_modules/
+dist/
+.netlify/
+server/runtime-source.json
+.openai/
+*.log

@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "publishedAt": "2026-11-07T17:31:47.401Z",
+  "sourceCommit": "bc934a152669be8ff8af85c537498c953569a5cc",
+  "gameURL": "https://tree-token.xyz/play/canopy-breaker/",
+  "gameHostDeployId": "6aef60679ee349bfd9c6847a",
+  "previousGameHostDeployId": "6aef5b8a4cf0018145d4fae5",
+  "arcadeDeployIdUnchanged": "6aef5d756e05b131e841a269",
+  "functionSha256": "39da85de69cce083abede298e512926e927ebda658aba4b5c35d4fadae102ddf",
+  "publicFilesSha1": {
+    "index.html": "04760de5340cc9237416d9e045aa3a61c13bf746",
+    "style.css": "a4f79a25110cc14069937c355b78c066870bd562",
+    "gateway.js": "56ad3dedb900af2d08b49f7f7bb4413ca995e5d3"
+  },
+  "changes": [
+    "Paid restarts retain the authoritative saved score while restoring three lives at screen 1.",
+    "Earlier paid score resets are recovered once from same-wallet paid invoices and receipts on authenticated load, retaining points earned after the restart.",
+    "Arcade, TREE Home and Buy TREE buttons are visible inside the cabinet and fullscreen layout.",
+    "Buy TREE opens the existing TREE swap page in a new tab; Arcade/Home navigation checkpoints the game before leaving."
+  ],
+  "database": {
+    "branch": "production",
+    "schemaMigrationChanged": false,
+    "manualProductionDataEdits": false,
+    "legacyScoreRepair": "Normal authenticated game requests; idempotent state marker and revision change, no payment required."
+  },
+  "validation": {
+    "automatedTestsPassed": 86,
+    "syntaxCheckPassed": true,
+    "buildPassed": true,
+    "canonicalEntryAndNavigationPassed": true,
+    "canonicalStylesMatchBuiltBytes": true,
+    "savedGameHealthReady": true,
+    "unsignedAccessGameAndSourceReturn401": true,
+    "rootPublicationUnchangedAndLocked": true,
+    "browserObservedNavigation": true,
+    "userReportedOriginalPaymentSucceeded": true,
+    "independentNewWalletPaymentSubmitted": false,
+    "scoreRestorationInUserWalletStillAwaitingConfirmation": true,
+    "mobileWalletAndPhysicalNESChecksStillOutstanding": true
+  }
+}

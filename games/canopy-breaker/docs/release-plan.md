@@ -1,0 +1,94 @@
+# Production activation and remaining acceptance
+
+Target site: `aa62f324-b880-47d6-85b8-4ba0700ff5bf`, tree-token.xyz.
+Game prefix: `/play/canopy-breaker/`.
+
+Published November 7, 2026. Arcade deployment `6aef5d756e05b131e841a269`
+activates the cabinet and proxies the game path to isolated production host
+deployment `6aef5b8a4cf0018145d4fae5`. The saved-game migration is applied to
+the host's production database and `BREAKER_ENABLED=true` enables gameplay.
+The root release retains 302 static paths, all 43 existing function records,
+five schedules, runtime configuration and site environment records. Only the
+cabinet HTML and routing configuration changed; publication is locked.
+
+The free new-game choice is published as host deploy
+`6aefb1eeede846812c016c9a`. After defeat, a holder can start a new game at zero
+for free or pay 20,000 TREE to continue with the saved score. At that release,
+both began at screen 1 with three lives; current-grove continuation supersedes
+that earlier paid behavior below. Leaderboard bests, completed runs, payment recovery,
+and the SuiNS completion feed are preserved. This update makes no schema change.
+All 125 tests, syntax, isolated build and hosted endpoint checks pass. Browser
+inspection confirms the new choice instructions; real-holder game-over button
+acceptance still awaits confirmation. See `production-new-game-2026-11-07.json`
+for that release’s identities and runtime preservation evidence. Earlier
+records retain the leaderboard, score, completion-feed and initial integration
+release history.
+
+The pause and entry-action update is published as host deploy
+`6aefb5fa09b01fb891f90cb0`. Automatic
+pauses now identify their trigger. The paused picture stays frozen while pending
+checkpoints reconcile, and Resume waits for all inputs to save before a three-second
+countdown. Tab, controller, dialog and wallet changes cancel a pending resume.
+The entry button now opens Connect Wallet, then invokes Verify NFTree using the
+existing personal-message sign-in. No payment or server logic changes are included.
+All 151 automated checks pass. See `production-pause-auth-2026-11-07.json` for
+publication identities, live checks, and investigation limits.
+
+The save-throughput follow-up is published as host deploy
+`6aefb8a4f379759c891f2b7f`. Warm requests
+now share a lazy database pool, while transactions keep independent leased
+connections. Replay batches can catch up with 600 inputs, with 900 total queued
+plus in-flight inputs maximum and server elapsed-time credit enforced. Initial
+credit stays 120. Repeated 3-second saves and a 7-second spike run without a pause
+in the actual-app regression; prolonged stalls retain the safe pause/countdown.
+All 163 automated checks pass. No authentication, payment, dependency or schema
+changes are included. See `production-save-throughput-2026-11-07.json` for the
+that publication and validation record.
+
+The current-grove continue correction is published as host deploy
+`6aefbc5ed111c4f2d323b2da`, the latest isolated host release.
+A 20,000 TREE continue now keeps the saved score, grove, remaining bricks and
+their damage, boss progress and grove timing. It restores three lives and an
+attached seed waiting for explicit launch, while transient effects and projectiles
+reset. A free new game still starts at grove 1 with score zero and a fresh board.
+The payment verification/recovery flow, save-throughput improvements and
+leaderboard/completion records are preserved. No historical paid reset is
+retroactively changed. All 167 automated checks pass, including later-grove,
+final-boss, idempotent recovery and free-reset cases. See
+`production-grove-continue-2026-11-07.json` for current release identities.
+
+## Original pre-launch plan (historical)
+
+The following first-release plan records the state before this activation.
+Its infrastructure and deployment steps are superseded by the release record
+above; the real-wallet and physical-device acceptance work remains outstanding.
+
+1. Establish authenticated deployment access. The connected Netlify tools can
+   inspect the site but expose no deployment upload operation in this session;
+   the executor has no authenticated Netlify CLI session. No deployment or
+   database write was attempted.
+2. Prepare an isolated candidate using the committed additive migration and
+   Netlify's supported database-branch migration workflow. The six `breaker`
+   tables must be the only schema additions. Do not modify existing game data.
+3. Stage only the five files in `dist/` under the game prefix and the exact
+   `breaker-access` package/compiler manifest. Add no new scheduled job.
+   Do not deploy the downloadable mechanics-test HTML or local-test module.
+4. Preserve every existing static path and backend package identity, full
+   runtime/provider settings and all five schedules. Abort any candidate
+   requesting an unrelated function upload or changing existing records.
+   The root snapshot build and ordinary dashboard build are not release paths.
+5. Keep `BREAKER_ENABLED` off until candidate DB, gate, private source routes,
+   persisted run logic, payment history and payment recovery pass hosted
+   negative and positive checks. Wallet rejection must never submit payment.
+6. Have a real NFTree holder sign in and play; test one genuine 20,000 TREE
+   restart from a defeated run and recover the same recorded payment without
+   a second charge. Test a mobile wallet round trip. Automated synthetic
+   signatures and mocked chain receipts do not establish these live outcomes.
+7. Publish through the validated preservation workflow, record the exact source
+   commit, package digests and deployment ID, and reverify all protected
+   baseline identities. Add a cabinet to the latest live lobby only using a
+   separately scoped edit based on that live file. Never overwrite the lobby
+   with this checkout's historical copy.
+
+Source and tests are complete for the first playable. Hosted activation and
+real-wallet acceptance remain pending. Existing production was not modified.
