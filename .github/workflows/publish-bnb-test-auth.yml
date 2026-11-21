@@ -1,0 +1,110 @@
+name: Publish isolated BNB sign-in test
+
+on:
+  pull_request:
+    paths:
+      - 'play/multichaintest/game/bnb/**'
+      - 'netlify/bnb-test-functions/**'
+      - 'scripts/multichain/bnb-test-auth-service.mjs'
+      - 'scripts/package-bnb-test-auth.mjs'
+      - 'scripts/release-bnb-test-auth.mjs'
+      - 'scripts/check-bnb-test-auth-*.mjs'
+      - 'tests/multichain-bnb-test-*.test.mjs'
+      - '.github/workflows/publish-bnb-test-auth.yml'
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-bnb-test-auth.yml']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tree-production-preservation-${{ github.event_name == 'push' && 'release' || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci --ignore-scripts
+      - name: Verify isolated auth, credentials and preservation gates
+        run: |
+          node --test tests/multichain-bnb-game-access.test.mjs tests/multichain-bnb-test-auth-service.test.mjs tests/multichain-bnb-test-runtime.test.mjs tests/multichain-bnb-test-browser-state.test.mjs tests/multichain-bnb-test-auth-release.test.mjs
+          node --check scripts/check-bnb-test-auth-live.mjs
+          node --check play/multichaintest/game/bnb/app.js
+          node scripts/package-bnb-test-auth.mjs
+          git diff --check
+      - name: Check desktop and phone sign-in states with a simulated wallet
+        env:
+          REVIEWED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          npm install --prefix "$RUNNER_TEMP/bnb-browser" --no-save --ignore-scripts playwright@1.56.1
+          node "$RUNNER_TEMP/bnb-browser/node_modules/playwright/cli.js" install --with-deps chromium --no-shell
+          node scripts/check-bnb-test-auth-browser.mjs "$RUNNER_TEMP/bnb-browser/node_modules/playwright/index.mjs"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bnb-test-auth-source-review
+          path: |
+            .netlify/bnb-test-auth-browser.json
+            .netlify/bnb-test-auth-*.png
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 30
+
+  publish:
+    needs: verify
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[publish bnb auth]') && contains(github.event.head_commit.message, '[skip netlify]')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci --ignore-scripts
+      - name: Prepare the reviewed isolated function and browser checker
+        run: |
+          node scripts/package-bnb-test-auth.mjs
+          npm install --prefix "$RUNNER_TEMP/bnb-browser" --no-save --ignore-scripts playwright@1.56.1
+          node "$RUNNER_TEMP/bnb-browser/node_modules/playwright/cli.js" install --with-deps chromium --no-shell
+      - name: Capture, verify and publish against the locked live site
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          REVIEWED_SHA: ${{ github.sha }}
+        run: |
+          test -n "$NETLIFY_AUTH_TOKEN" || { echo 'The existing Netlify release connection is unavailable.'; exit 1; }
+          test "$(git rev-parse HEAD)" = "$REVIEWED_SHA"
+          node scripts/release-bnb-test-auth.mjs capture --source-commit "$REVIEWED_SHA"
+          node scripts/release-bnb-test-auth.mjs plan --source-commit "$REVIEWED_SHA"
+          node scripts/release-bnb-test-auth.mjs candidate --source-commit "$REVIEWED_SHA"
+          node scripts/release-bnb-test-auth.mjs verify --source-commit "$REVIEWED_SHA"
+          export BNB_TEST_CANDIDATE_ID=$(node -p "JSON.parse(require('fs').readFileSync('.netlify/bnb-test-auth-release/candidate.json')).id")
+          export BNB_TEST_PLAN_SHA256=$(node -p "JSON.parse(require('fs').readFileSync('.netlify/bnb-test-auth-release/candidate.json')).planSha256")
+          node scripts/check-bnb-test-auth-browser.mjs "$RUNNER_TEMP/bnb-browser/node_modules/playwright/index.mjs" "https://$BNB_TEST_CANDIDATE_ID--tree-token.netlify.app"
+          node scripts/release-bnb-test-auth.mjs publish --source-commit "$REVIEWED_SHA" --expected-candidate "$BNB_TEST_CANDIDATE_ID" --review .netlify/bnb-test-auth-browser.json
+          node scripts/check-bnb-test-auth-live.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bnb-test-auth-publication
+          path: |
+            .netlify/bnb-test-auth-release/report.json
+            .netlify/bnb-test-auth-functions/manifest.json
+            .netlify/bnb-test-auth-browser*
+            .netlify/bnb-test-auth-*.png
+            .netlify/bnb-test-auth-live.json
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 30

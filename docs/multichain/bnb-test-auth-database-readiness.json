@@ -1,0 +1,139 @@
+{
+  "checkedAt": "2026-11-21T04:13:37.223Z",
+  "projectId": "lehswszuekjqottolmsf",
+  "tableCounts": {
+    "private.arcade_bnb_test_sessions": 0,
+    "private.arcade_bnb_test_challenges": 0
+  },
+  "serviceRoleBypassesRls": true,
+  "existingPublicArcadeFunctions": {
+    "count": 31,
+    "identitySetSHA256": "4419f793255d6bb9508055673c187ba5dd1bbc9fc88dbcf19ac675e5b1c2791c",
+    "definitionAndAclSHA256": "3ab86c83e89f9e4016d0f81c5690087162d76f12be646e0de3051ba08c6fe229",
+    "fingerprintRecipe": "Order by identity = proname || '(' || pg_get_function_identity_arguments(oid) || ')'; UTF-8 SHA-256 over each identity + LF + pg_get_functiondef(oid) + LF + coalesce(proacl::text,'<default>'), joined with LF + '--' + LF. Scope: namespace public, proname regex ^arcade_, excluding ^arcade_bnb_test_."
+  },
+  "serviceRolePrivateSchemaUsage": true,
+  "bnbTestFunctions": [
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "name": "arcade_bnb_test_consume_session_v1",
+      "result": "jsonb",
+      "settings": [
+        "search_path=\"\""
+      ],
+      "arguments": "p_nonce text, p_wallet text, p_message_hash text, p_token_sha256 text, p_expires_at timestamp with time zone",
+      "volatility": "v",
+      "anon_execute": false,
+      "security_definer": false,
+      "definition_sha256": "bdd209956e77afb18d69051abc79fc5bdcadd54528f2c6c07b40636396492370",
+      "timestamp_example": "2026-11-21T12:34:56.789Z",
+      "service_role_execute": true,
+      "authenticated_execute": false
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "name": "arcade_bnb_test_create_challenge_v1",
+      "result": "jsonb",
+      "settings": [
+        "search_path=\"\""
+      ],
+      "arguments": "p_nonce text, p_wallet text, p_address text, p_issued_at timestamp with time zone, p_expires_at timestamp with time zone, p_message_hash text",
+      "volatility": "v",
+      "anon_execute": false,
+      "security_definer": false,
+      "definition_sha256": "0ecaab9087f7408d6d401d36056e3147c841421ae0f211cc7d21bcdf5d735a47",
+      "timestamp_example": "2026-11-21T12:34:56.789Z",
+      "service_role_execute": true,
+      "authenticated_execute": false
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "name": "arcade_bnb_test_read_challenge_v1",
+      "result": "jsonb",
+      "settings": [
+        "search_path=\"\""
+      ],
+      "arguments": "p_nonce text",
+      "volatility": "v",
+      "anon_execute": false,
+      "security_definer": false,
+      "definition_sha256": "b84ed3aa4a673a7393cb9bd2fe5bfade66e5a5cce7b99c6afd565b9783b4fb4f",
+      "timestamp_example": "2026-11-21T12:34:56.789Z",
+      "service_role_execute": true,
+      "authenticated_execute": false
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "name": "arcade_bnb_test_read_session_v1",
+      "result": "jsonb",
+      "settings": [
+        "search_path=\"\""
+      ],
+      "arguments": "p_token_sha256 text",
+      "volatility": "v",
+      "anon_execute": false,
+      "security_definer": false,
+      "definition_sha256": "05a3e8b06f2dfe9c1cd05f2b2b92db805abd9b0ad16554b376e2fc0663ec0b98",
+      "timestamp_example": "2026-11-21T12:34:56.789Z",
+      "service_role_execute": true,
+      "authenticated_execute": false
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "name": "arcade_bnb_test_revoke_session_v1",
+      "result": "boolean",
+      "settings": [
+        "search_path=\"\""
+      ],
+      "arguments": "p_token_sha256 text",
+      "volatility": "v",
+      "anon_execute": false,
+      "security_definer": false,
+      "definition_sha256": "1f820c7b7246ee44b8cfd7684563b061bb6aa9fa0fe8ec535b42cc9f7ce1c9e4",
+      "timestamp_example": null,
+      "service_role_execute": true,
+      "authenticated_execute": false
+    }
+  ],
+  "bnbTestTables": [
+    {
+      "acl": "{postgres=arwdDxtm/postgres,service_role=arw/postgres}",
+      "name": "arcade_bnb_test_challenges",
+      "row_security": true,
+      "force_row_security": false,
+      "anon_any_row_access": false,
+      "service_role_delete": false,
+      "service_role_insert": true,
+      "service_role_select": true,
+      "service_role_update": true,
+      "authenticated_any_row_access": false
+    },
+    {
+      "acl": "{postgres=arwdDxtm/postgres,service_role=arw/postgres}",
+      "name": "arcade_bnb_test_sessions",
+      "row_security": true,
+      "force_row_security": false,
+      "anon_any_row_access": false,
+      "service_role_delete": false,
+      "service_role_insert": true,
+      "service_role_select": true,
+      "service_role_update": true,
+      "authenticated_any_row_access": false
+    }
+  ],
+  "schemaVersion": 1,
+  "purpose": "Read-only baseline before isolated BNB-test authentication publication",
+  "readOnly": true,
+  "productionRowsRead": false,
+  "aggregateCountsRead": true,
+  "secretsAccessed": false,
+  "databaseMutations": 0,
+  "scope": "Two isolated BNB-test table counts; BNB-test RPC signatures, hashes, grants, RLS and timestamp compatibility; fingerprint of the 31 existing public arcade_* procedures. No user records or credentials.",
+  "qualification": "Counts can change through normal production activity; a count difference is evidence to investigate, not by itself proof of release mutation. Protected server credential health is not inferred from metadata; live post-publication integration verification is still required.",
+  "timestampCompatibility": "Evaluating the format extracted from each deployed RPC body at a constant timestamptz returns exact JavaScript ISO millisecond format. No RPC was invoked to create or mutate data.",
+  "migration": {
+    "path": "supabase/migrations/20261120193912_arcade_bnb_test_auth.sql",
+    "appliedBeforeThisPublication": true,
+    "sourceBlob": "2beef5a702b6f40ec2b10fc331a6e1bc090fa37c"
+  }
+}

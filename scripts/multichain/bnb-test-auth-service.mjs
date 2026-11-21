@@ -13,6 +13,8 @@ const HASH=/^[0-9a-f]{64}$/;
 const TOKEN=/^bnbtest_[0-9a-f]{64}$/;
 const WALLET=/^0x[0-9a-f]{40}$/;
 const sha=s=>createHash('sha256').update(s).digest('hex');
+const validExpiry=(value,now)=>typeof value==='string'&&Number.isFinite(Date.parse(value))&&
+  new Date(value).toISOString()===value&&Date.parse(value)>now&&Date.parse(value)<=now+3600000;
 const bad=(code,status=403)=>new BnbAccessError(code,status);
 const unavailable=()=>bad('service-unavailable',503);
 const exact=(o,keys)=>o && typeof o==='object'&&!Array.isArray(o)&&Object.keys(o).length===keys.length&&keys.every(k=>Object.hasOwn(o,k));
@@ -49,7 +51,8 @@ export function createBnbTestRpc({getEnv,fetchImpl=fetch}){
     if(!names.has(name))throw unavailable();
     try{
       const response=await fetchImpl(url.replace(/\/$/,'')+'/rest/v1/rpc/'+name,{
-        method:'POST',headers:{apikey:key,Authorization:'Bearer '+key,'Content-Type':'application/json'},
+        method:'POST',headers:{apikey:key,'Content-Type':'application/json',
+          ...(!key.startsWith('sb_secret_')?{Authorization:'Bearer '+key}:{})},
         body:JSON.stringify(args),signal:AbortSignal.timeout(12000),
       });
       if(!response.ok)throw unavailable();
@@ -65,7 +68,7 @@ export function createBnbTestHandler({rpc,client,clock=Date.now,entropy=randomBy
     const session=await rpc('arcade_bnb_test_read_session_v1',{p_token_sha256:sha(raw)});
     if(!session||session.authenticated!==true||session.origin!==BNB_ORIGIN||
        session.scope!==SCOPE||session.chainId!==56||session.revoked!==false||
-       !WALLET.test(session.wallet||'')||Date.parse(session.expiresAt||'')<=clock())throw bad('invalid-session',401);
+       !WALLET.test(session.wallet||'')||!validExpiry(session.expiresAt,clock()))throw bad('invalid-session',401);
     return session;
   };
   return async(req)=>{
@@ -117,8 +120,7 @@ export function createBnbTestHandler({rpc,client,clock=Date.now,entropy=randomBy
               issued.scope===SCOPE&&issued.origin===BNB_ORIGIN&&issued.revoked===false;
           },
         });
-        if(!issued||Date.parse(issued.expiresAt||'')<=clock()||
-           Date.parse(issued.expiresAt)>clock()+3600000)throw unavailable();
+        if(!issued||issued.expiresAt!==expires||!validExpiry(issued.expiresAt,clock()))throw unavailable();
         return reply({status:'ok',authenticated:true,scope:SCOPE,chainId:56,wallet:issued.wallet,
           expiresAt:issued.expiresAt,gameplayAuthorized:false,passAccess:'not-enabled'},200,{
           'Set-Cookie':setCookie(raw,3590),
