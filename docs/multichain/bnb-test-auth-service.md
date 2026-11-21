@@ -12,7 +12,27 @@ The handler remains outside Netlify's historical production functions directory
 and is packaged alone. Publication must preserve all 50 existing function
 package/provider/runtime records, five schedules and all current static files.
 
-## Publication status — blocked November 20, 2026
+## Resumption review — November 20, 2026
+
+Peter confirmed credits were available. The independently authorized Tree Army
+release then completed successfully in
+[workflow 44867337174](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44867337174),
+making `6b01217f8e1995306b794031` the current ready, locked deployment.
+Before repinning the BNB publisher, the complete 649-path report was compared
+with the preceding inventory: only `/play/tree-army/test/index.html` changed,
+and its digest matches the reviewed Tree Army source. All 50 complete backend
+records, five schedules and protected runtime fields remained identical.
+The successful Tree Army workflow also verified build settings, environment
+records and snippets before and after publication.
+
+The BNB publisher now pins that successor, preserving the same counts and all
+existing guards. Its database-readiness evidence includes a fresh read-only
+audit at `2026-11-21T04:42:22.676Z`: both isolated tables remain empty, all five
+RPC permissions remain restricted, and the 31 existing Arcade procedures retain
+their baseline fingerprint. The next BNB attempt must create a fresh capture,
+plan and candidate. Publication and canonical acceptance are still pending.
+
+## Earlier publication block — November 20, 2026
 
 The publication implementation merged through PR #270; PR #271 pins the
 publication checkout to its reviewed commit. The source, database and browser
@@ -100,7 +120,7 @@ existing locked dependencies. `scripts/release-bnb-test-auth.mjs` captures the
 actual live inventory, creates and checks a complete candidate, preserves
 existing backend records/configuration, waits for competing builds to finish,
 and switches the lock only to that verified candidate. The one-time baseline
-is `6b00892b6acd6fc92a18fd20`, with 649 existing static files. The release adds
+is `6b01217f8e1995306b794031`, with 649 existing static files. The release adds
 two page files and one function, for expected totals of 651 files, 51 functions
 and the same five schedules. Any baseline drift requires a reviewed update.
 

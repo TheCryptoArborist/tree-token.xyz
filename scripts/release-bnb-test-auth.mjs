@@ -18,7 +18,7 @@ import { FUNCTION_NAME, PACKAGE_SOURCES, PACKAGE_DIRECTORY, sourceEvidence, tool
 // One additive backend and two new static files. Existing production packages,
 // provider records, schedules, settings and environment are never rebuilt or edited.
 export { SITE_ID, ACCOUNT_ID, FUNCTION_NAME, scopedAPI, assertNewCandidate, activeDeploys, waitForAllBuilds };
-export const BASELINE_ID = '6b00892b6acd6fc92a18fd20';
+export const BASELINE_ID = '6b01217f8e1995306b794031';
 export const BASELINE_STATIC_FILES = 649;
 export const BASELINE_FUNCTIONS = 50;
 export const DATABASE_READINESS = 'docs/multichain/bnb-test-auth-database-readiness.json';
@@ -40,6 +40,7 @@ const SOURCE_PATHS = [...Object.values(DELIVERY_SOURCES), ...PACKAGE_SOURCES, 'p
   'scripts/package-bnb-test-auth.mjs', 'scripts/release-bnb-test-auth.mjs',
   'scripts/check-bnb-test-auth-browser.mjs', 'scripts/check-bnb-test-auth-live.mjs',
   'tests/multichain-bnb-test-auth-release.test.mjs', 'tests/multichain-bnb-test-runtime.test.mjs',
+  'tests/multichain-bnb-test-live-checker.test.mjs',
   'tests/multichain-bnb-test-auth-service.test.mjs', 'tests/multichain-bnb-game-access.test.mjs',
   '.github/workflows/publish-bnb-test-auth.yml',
   'scripts/release-preserved-production.mjs', 'scripts/release-sti-purchase.mjs',
