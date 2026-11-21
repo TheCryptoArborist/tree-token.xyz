@@ -21,7 +21,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: tree-production-preservation-${{ github.event_name == 'push' && 'release' || github.ref }}
+  group: tree-production-preservation-${{ github.event_name == 'push' && 'release' || format('{0}-{1}', github.workflow, github.ref) }}
   cancel-in-progress: false
 
 jobs:
@@ -54,6 +54,7 @@ jobs:
         run: |
           npm install --prefix "$RUNNER_TEMP/bnb-backing-browser" --no-save --ignore-scripts playwright@1.56.1
           node "$RUNNER_TEMP/bnb-backing-browser/node_modules/playwright/cli.js" install --with-deps chromium --no-shell
+          node scripts/check-bnb-test-auth-browser.mjs "$RUNNER_TEMP/bnb-backing-browser/node_modules/playwright/index.mjs"
           node scripts/check-bnb-backing-browser.mjs "$RUNNER_TEMP/bnb-backing-browser/node_modules/playwright/index.mjs"
       - uses: actions/upload-artifact@v4
         if: always()
@@ -64,6 +65,8 @@ jobs:
             .netlify/bnb-backing-browser.json
             .netlify/bnb-backing-*.png
             .netlify/bnb-backing-read-only.json
+            .netlify/bnb-test-auth-browser.json
+            .netlify/bnb-test-auth-*.png
           include-hidden-files: true
           if-no-files-found: ignore
           retention-days: 30
