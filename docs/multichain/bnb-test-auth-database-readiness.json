@@ -135,5 +135,120 @@
     "path": "supabase/migrations/20261120193912_arcade_bnb_test_auth.sql",
     "appliedBeforeThisPublication": true,
     "sourceBlob": "2beef5a702b6f40ec2b10fc331a6e1bc090fa37c"
+  },
+  "resumptionCheck": {
+    "checkedAt": "2026-11-21T04:42:22.676Z",
+    "projectId": "lehswszuekjqottolmsf",
+    "bnbTestFunctions": [
+      {
+        "acl": "{postgres=X/postgres,service_role=X/postgres}",
+        "name": "arcade_bnb_test_consume_session_v1",
+        "result": "jsonb",
+        "settings": [
+          "search_path=\"\""
+        ],
+        "arguments": "p_nonce text, p_wallet text, p_message_hash text, p_token_sha256 text, p_expires_at timestamp with time zone",
+        "anon_execute": false,
+        "public_execute": false,
+        "security_definer": false,
+        "definition_sha256": "bdd209956e77afb18d69051abc79fc5bdcadd54528f2c6c07b40636396492370",
+        "service_role_execute": true,
+        "authenticated_execute": false
+      },
+      {
+        "acl": "{postgres=X/postgres,service_role=X/postgres}",
+        "name": "arcade_bnb_test_create_challenge_v1",
+        "result": "jsonb",
+        "settings": [
+          "search_path=\"\""
+        ],
+        "arguments": "p_nonce text, p_wallet text, p_address text, p_issued_at timestamp with time zone, p_expires_at timestamp with time zone, p_message_hash text",
+        "anon_execute": false,
+        "public_execute": false,
+        "security_definer": false,
+        "definition_sha256": "0ecaab9087f7408d6d401d36056e3147c841421ae0f211cc7d21bcdf5d735a47",
+        "service_role_execute": true,
+        "authenticated_execute": false
+      },
+      {
+        "acl": "{postgres=X/postgres,service_role=X/postgres}",
+        "name": "arcade_bnb_test_read_challenge_v1",
+        "result": "jsonb",
+        "settings": [
+          "search_path=\"\""
+        ],
+        "arguments": "p_nonce text",
+        "anon_execute": false,
+        "public_execute": false,
+        "security_definer": false,
+        "definition_sha256": "b84ed3aa4a673a7393cb9bd2fe5bfade66e5a5cce7b99c6afd565b9783b4fb4f",
+        "service_role_execute": true,
+        "authenticated_execute": false
+      },
+      {
+        "acl": "{postgres=X/postgres,service_role=X/postgres}",
+        "name": "arcade_bnb_test_read_session_v1",
+        "result": "jsonb",
+        "settings": [
+          "search_path=\"\""
+        ],
+        "arguments": "p_token_sha256 text",
+        "anon_execute": false,
+        "public_execute": false,
+        "security_definer": false,
+        "definition_sha256": "05a3e8b06f2dfe9c1cd05f2b2b92db805abd9b0ad16554b376e2fc0663ec0b98",
+        "service_role_execute": true,
+        "authenticated_execute": false
+      },
+      {
+        "acl": "{postgres=X/postgres,service_role=X/postgres}",
+        "name": "arcade_bnb_test_revoke_session_v1",
+        "result": "boolean",
+        "settings": [
+          "search_path=\"\""
+        ],
+        "arguments": "p_token_sha256 text",
+        "anon_execute": false,
+        "public_execute": false,
+        "security_definer": false,
+        "definition_sha256": "1f820c7b7246ee44b8cfd7684563b061bb6aa9fa0fe8ec535b42cc9f7ce1c9e4",
+        "service_role_execute": true,
+        "authenticated_execute": false
+      }
+    ],
+    "isolatedTableCounts": {
+      "private.arcade_bnb_test_sessions": 0,
+      "private.arcade_bnb_test_challenges": 0
+    },
+    "existingPublicArcadeFunctions": {
+      "count": 31,
+      "definitionAndAclSHA256": "3ab86c83e89f9e4016d0f81c5690087162d76f12be646e0de3051ba08c6fe229"
+    },
+    "schemaVersion": 1,
+    "result": "passed",
+    "purpose": "Fresh read-only Supabase audit before resuming isolated BNB-test authentication publication",
+    "checks": {
+      "existingFunctionCountUnchanged": true,
+      "existingFunctionFingerprintUnchanged": true,
+      "isolatedTablesEmpty": true,
+      "exactlyFiveExpectedRpcs": true,
+      "allRpcPermissionsRestricted": true,
+      "allRpcFunctionsSecurityInvoker": true
+    },
+    "operations": {
+      "databaseMutations": 0,
+      "schemaChanges": 0,
+      "rpcMutations": 0,
+      "credentialsRetrieved": false,
+      "individualUserRowContentsRetrieved": false
+    },
+    "fingerprintRecipe": "Scope public functions matching ^arcade_, excluding ^arcade_bnb_test_. Order by identity = proname || '(' || pg_get_function_identity_arguments(oid) || ')'; UTF-8 SHA-256 over each identity + LF + pg_get_functiondef(oid) + LF + coalesce(proacl::text,'<default>'), joined with LF + '--' + LF.",
+    "method": "One SELECT statement over PostgreSQL function definitions and ACL metadata plus exact aggregate counts of the two isolated BNB-test tables. No authentication RPC invoked.",
+    "permissionQualification": "postgres is the function owner; service_role is the only non-owner execution grantee. PUBLIC, anon and authenticated cannot execute.",
+    "guidance": {
+      "mystenReadmeSha": "aa0ebd8574ba4839cdf4cd5315a965905f3fafb7",
+      "suiTechnicalGuidanceApplicable": false,
+      "supabaseSkillPreviouslyRead": true
+    }
   }
 }

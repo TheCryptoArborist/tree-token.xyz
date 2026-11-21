@@ -1,4 +1,5 @@
 name: Publish isolated BNB sign-in test
+run-name: BNB sign-in ${{ github.event_name }} at ${{ github.event.pull_request.head.sha || github.sha }}
 
 on:
   pull_request:
@@ -37,7 +38,7 @@ jobs:
       - run: npm ci --ignore-scripts
       - name: Verify isolated auth, credentials and preservation gates
         run: |
-          node --test tests/multichain-bnb-game-access.test.mjs tests/multichain-bnb-test-auth-service.test.mjs tests/multichain-bnb-test-runtime.test.mjs tests/multichain-bnb-test-browser-state.test.mjs tests/multichain-bnb-test-auth-release.test.mjs
+          node --test tests/multichain-bnb-game-access.test.mjs tests/multichain-bnb-test-auth-service.test.mjs tests/multichain-bnb-test-runtime.test.mjs tests/multichain-bnb-test-browser-state.test.mjs tests/multichain-bnb-test-auth-release.test.mjs tests/multichain-bnb-test-live-checker.test.mjs
           node --check scripts/check-bnb-test-auth-live.mjs
           node --check play/multichaintest/game/bnb/app.js
           node scripts/package-bnb-test-auth.mjs

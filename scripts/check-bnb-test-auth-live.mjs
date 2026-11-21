@@ -10,13 +10,25 @@ import { COOKIE, PATH } from './multichain/bnb-test-auth-service.mjs';
 const account=privateKeyToAccount('0x'+randomBytes(32).toString('hex'));
 let cookie=null,revoked=false;
 const results=[];
+const cookiePattern=new RegExp('^'+COOKIE+'=bnbtest_[a-f0-9]{64}(?=;|$)');
+function captureCleanupCookie(headers){
+  if(cookie)return;
+  const values=typeof headers.getSetCookie==='function'?headers.getSetCookie():[headers.get('set-cookie')||''];
+  for(const value of values){
+    const match=value.trim().match(cookiePattern);
+    if(match){cookie=match[0];return;}
+  }
+}
 async function call(action,fields={},options={}){
   const headers={'Content-Type':'application/json',Origin:options.origin??BNB_ORIGIN};
   if(cookie&&!options.anonymous)headers.Cookie=cookie;
   const response=await fetch(BNB_ORIGIN+PATH,{method:'POST',redirect:'error',cache:'no-store',
     headers,body:JSON.stringify({action,...fields}),signal:AbortSignal.timeout(30000)});
-  assert.match(response.headers.get('cache-control')||'',/no-store/);
-  assert.equal(response.headers.get('access-control-allow-origin'),null);
+  // Capture only the expected cookie name and exact token shape before any
+  // response validation can throw. Never include raw headers in assertions.
+  if(action==='sign-in')captureCleanupCookie(response.headers);
+  assert(/no-store/.test(response.headers.get('cache-control')||''),'Live response must disable caching');
+  assert(!response.headers.has('access-control-allow-origin'),'Live response must not grant CORS');
   const body=await response.json();
   assert.equal(body.gameplayAuthorized,false,'Test auth must never authorize gameplay');
   return {response,body};
@@ -44,16 +56,26 @@ try{
   r=await call('sign-in',signed);
   assert.equal(r.response.status,200,'Live signature verification failed: '+r.body.error);
   const setCookie=r.response.headers.get('set-cookie')||'';
-  assert.match(setCookie,new RegExp('^'+COOKIE+'=bnbtest_[a-f0-9]{64};'));
-  for(const attribute of ['HttpOnly','Secure','SameSite=Strict','Path='+PATH])assert(setCookie.includes(attribute));
-  assert(!/\bDomain=/i.test(setCookie));
-  cookie=setCookie.split(';')[0];
+  assert(cookiePattern.test(setCookie),'Live sign-in must return a well-formed isolated session cookie');
+  const attributes=new Map(setCookie.split(';').slice(1).map(attribute=>{
+    const separator=attribute.indexOf('=');
+    return separator===-1?[attribute.trim().toLowerCase(),'']:
+      [attribute.slice(0,separator).trim().toLowerCase(),attribute.slice(separator+1).trim()];
+  }));
+  for(const attribute of ['HttpOnly','Secure'])
+    assert(attributes.has(attribute.toLowerCase()),'Isolated session cookie is missing required attribute: '+attribute);
+  assert(attributes.get('samesite')?.toLowerCase()==='strict',
+    'Isolated session cookie is missing required attribute: SameSite=Strict');
+  // Cookie attribute names are case-insensitive; URL path values are not.
+  assert(attributes.get('path')===PATH,'Isolated session cookie must use the exact isolated path');
+  assert(!attributes.has('domain'),'Isolated session cookie must be host-only');
+  assert(cookie,'A valid synthetic session token is required for cleanup');
   assert.equal(r.body.authenticated,true);assert.equal(r.body.scope,BNB_IDENTITY_SCOPE);
   assert.equal(r.body.wallet,account.address.toLowerCase());
   results.push('real EOA signature accepted with isolated private cookie');
   r=await call('sign-in',signed);
   assert.equal(r.response.status,403,'Replayed challenge must be denied');
-  assert.equal(r.response.headers.get('set-cookie'),null);
+  assert(!r.response.headers.has('set-cookie'),'Replayed challenge must not set a session cookie');
   results.push('nonce replay denied');
   r=await call('status');
   assert.equal(r.response.status,200);assert.equal(r.body.authenticated,true);
@@ -64,10 +86,11 @@ try{
   results.push('signed-in gameplay denied');
   r=await call('logout');
   assert.equal(r.response.status,200);assert.equal(r.body.signedOut,true);
-  assert.match(r.response.headers.get('set-cookie')||'',/Max-Age=0/);
-  revoked=true;
+  assert((r.response.headers.get('set-cookie')||'').split(';').some(value=>/^\s*Max-Age=0\s*$/i.test(value)),
+    'Logout must expire the isolated session cookie');
   r=await call('status');
   assert.equal(r.response.status,401);assert.equal(r.body.error,'invalid-session');
+  revoked=true;
   results.push('logout revoked session and stale cookie denied');
   const report={passed:true,checkedAt:new Date().toISOString(),sourceCommit:process.env.REVIEWED_SHA,
     deploymentId:process.env.BNB_TEST_CANDIDATE_ID,origin:BNB_ORIGIN,path:PATH,
@@ -79,6 +102,7 @@ try{
 }finally{
   if(cookie&&!revoked){
     const r=await call('logout').catch(()=>null);
-    assert(r?.response.status===200,'Synthetic session cleanup failed; review this test session before continuing');
+    assert(r?.response.status===200&&r.body.signedOut===true,
+      'Synthetic session cleanup failed; review this test session before continuing');
   }
 }
