@@ -1,4 +1,33 @@
-# Isolated BNB-only Tree Force '89 authentication — server foundation
+# Isolated BNB-only Tree Force '89 authentication — published sign-in test
+
+The isolated page and endpoint are live as of November 20, 2026 at 22:55
+America/Chicago. Current locked deployment: `6b01240f1a94cf48c5b89830`.
+Published source: `75495d9577c56e6e44b4c8ef4a71420f9ee26a79`, through PR #276.
+
+- Page: https://tree-token.xyz/play/multichaintest/game/bnb/
+- Endpoint: https://tree-token.xyz/api/arcade-bnb-test
+- Successful release: https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44868193543
+
+All 58 focused tests, 12 candidate browser scenarios, complete preservation
+gates and the canonical real-signature acceptance test passed. The latter used
+a fresh unfunded synthetic identity and verified exact challenge issuance,
+signature acceptance, private cookie, nonce replay denial, durable session,
+denied gameplay, logout and stale-cookie rejection. No chain transaction was
+submitted. A post-test database audit found one consumed challenge and one
+revoked session, with no active session remaining.
+
+All 649 prior static hashes, 50 complete backend records, five schedules,
+runtime settings and protected configuration evidence remain unchanged. Only
+the two page files and one isolated handler were added: 651 paths and 51
+functions total. The canonical page was visually inspected and its signed-out
+status button returned the expected message. Mobile and desktop browser checks
+used mocked wallets; Peter's installed Brave wallet acceptance remains pending.
+
+Complete release evidence:
+[`bnb-test-auth-page-release.json`](./bnb-test-auth-page-release.json).
+Independent inventory/backend/database audits, browser evidence, canonical
+acceptance and UI observations:
+[`bnb-test-auth-publication-verification-20261120.json`](./bnb-test-auth-publication-verification-20261120.json).
 
 The isolated server source and schema are merged through PR #268. Migration
 `20261120193912_arcade_bnb_test_auth.sql` was applied to the existing project
@@ -7,12 +36,11 @@ private tables have RLS, and the five public RPCs allow execution only by the
 server role (plus database owner). The transactional smoke test passed and was
 rolled back. Existing Arcade procedure definitions and privileges were preserved.
 
-The endpoint is not live until the separate publication workflow completes.
 The handler remains outside Netlify's historical production functions directory
 and is packaged alone. Publication must preserve all 50 existing function
 package/provider/runtime records, five schedules and all current static files.
 
-## Resumption review — November 20, 2026
+## Resumption review — completed November 20, 2026
 
 Peter confirmed credits were available. The independently authorized Tree Army
 release then completed successfully in
@@ -29,8 +57,8 @@ The BNB publisher now pins that successor, preserving the same counts and all
 existing guards. Its database-readiness evidence includes a fresh read-only
 audit at `2026-11-21T04:42:22.676Z`: both isolated tables remain empty, all five
 RPC permissions remain restricted, and the 31 existing Arcade procedures retain
-their baseline fingerprint. The next BNB attempt must create a fresh capture,
-plan and candidate. Publication and canonical acceptance are still pending.
+their baseline fingerprint. The successful BNB attempt created a fresh capture,
+plan and candidate before publication and canonical acceptance.
 
 ## Earlier publication block — November 20, 2026
 
@@ -49,12 +77,13 @@ See [provider diagnostic job](https://github.com/TheCryptoArborist/tree-token.xy
 This identifies Netlify's reported account restriction; the actual credit
 balance was not read and no billing setting was changed.
 
-Independent checks after the rejection confirmed that the current deployment
-is still `6b00892b6acd6fc92a18fd20`, ready and locked, with all 50 existing
-functions and five schedules. Both isolated BNB database tables remain empty,
-and all 31 preexisting public Arcade procedure definitions and privileges have
-the same baseline fingerprint. The new BNB function is absent. The canonical
-login smoke test and Peter's Brave wallet acceptance remain pending.
+Independent checks immediately after the rejection confirmed that the deployment
+was still `6b00892b6acd6fc92a18fd20`, ready and locked, with all 50 existing
+functions and five schedules. Both isolated BNB database tables remained empty,
+and all 31 preexisting public Arcade procedure definitions and privileges had
+the same baseline fingerprint. The new BNB function was absent at that stage.
+The subsequent successful publication and canonical test are recorded above;
+Peter's installed-wallet acceptance remains pending.
 
 The create-deploy request also now omits the undocumented `commit_ref` body
 field, matching Netlify's current schema and the proven preservation publishers.
@@ -64,15 +93,13 @@ account-credit restriction. Its 20 focused preservation tests pass.
 
 Complete plan, artifact hashes, source-browser results and post-block audit:
 [`bnb-test-auth-publication-blocked-20261120.json`](./bnb-test-auth-publication-blocked-20261120.json).
-Once Netlify accepts deployments again, review the current source and live
-baseline, create a fresh candidate through the guarded publication workflow,
-and finish the canonical login/replay/logout checks before manual wallet testing.
-Do not reapply the migration, reuse this old plan as approval, or rerun a stale
-workflow commit against a newer main branch. Gameplay remains denied.
+That historical record remains evidence of the blocked attempt and must never
+be reused as approval for a later publication. Do not reapply the migration or
+rerun a stale workflow commit against a newer main branch. Gameplay remains denied.
 
 ## Endpoint design
 
-Path after verified publication: POST /api/arcade-bnb-test on
+Live path: POST /api/arcade-bnb-test on
 https://tree-token.xyz only.
 All requests require matching Origin, JSON, bounded bodies and no cross-site
 Fetch-Metadata. No CORS, no payment and no transactions. Actions: challenge,
@@ -140,6 +167,19 @@ candidate, complete preserved inventory, browser checks and live API results.
 
 No active production backing registry is approved. Positive BNB-only gameplay,
 real scoring, paid USDT continues and public sales are separate stages.
+
+## Manual Brave acceptance
+
+Open the live page in Brave, select BNB Smart Chain, and choose **Connect BNB
+wallet**. Choose **Sign a login message** and approve the isolated personal
+message in the wallet. Confirm that **Check sign-in status** recognizes the
+same wallet, then use **Sign out of this test** and confirm the session is gone.
+No token approval, asset transfer, payment or Sui wallet is part of this test.
+**Start BNB game** must remain disabled, including after successful sign-in.
+
+This one-time publisher's baseline has now been superseded by its own completed
+release. Any future publication needs a fresh reviewed scope and current
+inventory; do not blindly rerun it against the new 651-path/51-function site.
 
 Publication guidance refreshed from the live MystenLabs/skills README. This
 step adds EVM authentication hosting and makes no Sui technical change, so it
