@@ -1,0 +1,188 @@
+{
+  "schemaVersion": 1,
+  "implementationPR": 278,
+  "reviewedHead": "7f765176f8072dabc58a5b7ce333cf3e9a048bde",
+  "sourceCommit": "e5e3b1255846eb33b408f2fece7750befba69ff7",
+  "sourceTree": "366ab70cac02cba288f7b2a74bb44bbffb5125d1",
+  "workflowRun": 44920394429,
+  "baselineId": "6b01240f1a94cf48c5b89830",
+  "focusedTests": 174,
+  "sourceBrowserCases": 24,
+  "candidateBrowserCases": 12,
+  "widths": [
+    320,
+    390,
+    1440
+  ],
+  "reviewFix": {
+    "thread": "PRRT_kwDOTuMK6M66Yfq8",
+    "commit": "7f765176f8072dabc58a5b7ce333cf3e9a048bde",
+    "description": "Reinspect active Git builds immediately before candidate lock; late nonterminal builds and resumed orphan records block publication.",
+    "independentReviewPassed": true
+  },
+  "preReleaseDb": {
+    "checkedAt": "2026-11-21 15:26:58.03363+00",
+    "existingArcade": {
+      "functionCount": 31,
+      "definitionAndGrantSha256": "3ab86c83e89f9e4016d0f81c5690087162d76f12be646e0de3051ba08c6fe229"
+    },
+    "bnbTest": {
+      "functionCount": 5,
+      "definitionAndGrantSha256": "06887a06d86ac726d96177ab0f508bc64c0bd7e6d1c6c6aa1b24bfe742926343"
+    }
+  },
+  "manualSignInEvidence": "docs/multichain/bnb-manual-sign-in-observations-20261121.json",
+  "databaseAfter": [
+    {
+      "checked_at": "2026-11-21 15:44:18.482697+00",
+      "scope": "existing-arcade",
+      "function_count": 31,
+      "definition_and_grant_sha256": "3ab86c83e89f9e4016d0f81c5690087162d76f12be646e0de3051ba08c6fe229"
+    },
+    {
+      "checked_at": "2026-11-21 15:44:18.482697+00",
+      "scope": "bnb-test",
+      "function_count": 5,
+      "definition_and_grant_sha256": "06887a06d86ac726d96177ab0f508bc64c0bd7e6d1c6c6aa1b24bfe742926343"
+    }
+  ],
+  "databaseDefinitionsAndGrantsUnchanged": true,
+  "publishedDeployId": "6b01bbf2b66675f3aebc4a74",
+  "publishedAt": "2026-11-21T15:43:38.172Z",
+  "artifacts": {
+    "publication": {
+      "id": 14713910332,
+      "sha256": "ce6eb4b9cbf71d4c3e744c2d6c62d2d2c96a100d529d0a4ae0209586a5bb6745"
+    },
+    "sourceReview": {
+      "id": 14713387321,
+      "sha256": "056ba94960aadd0bda8742e1a9927a4ca2e6b971c46437633a130b95b51123ec"
+    }
+  },
+  "visualReview": {
+    "canonicalUrl": "https://tree-token.xyz/play/multichaintest/game/bnb/",
+    "canonicalDesktopInspected": true,
+    "signedOutStatusObserved": "No BNB test session. Connect and sign in to begin.",
+    "backingPromptObserved": "Sign in again before checking the trial backing.",
+    "backingButtonDisabledWhileSignedOut": true,
+    "gameButtonDisabled": true,
+    "candidate320pxInspected": true,
+    "source1440pxInspected": true,
+    "installedWalletTestPerformed": false,
+    "userWalletConnected": false,
+    "scope": "Canonical public page and signed-out status were observed in the browser. Candidate/source screenshots use mocked wallets and API responses; the independent canonical API test uses a fresh unfunded synthetic identity."
+  },
+  "kind": "bnb-backing-publication-verification",
+  "recordedAt": "2026-11-21T15:47:16.039646+00:00",
+  "passed": true,
+  "planSha256": "358d20b81ed02d94e5b2774295895701ef5e17814561fda2e3c85b304003ca85",
+  "independentAudit": {
+    "schemaVersion": 1,
+    "kind": "bnb-backing-independent-post-publication-audit",
+    "checkedAt": "2026-11-21T15:45:54Z",
+    "passed": true,
+    "sourceCommit": "e5e3b1255846eb33b408f2fece7750befba69ff7",
+    "sourceTree": "366ab70cac02cba288f7b2a74bb44bbffb5125d1",
+    "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
+    "baselineId": "6b01240f1a94cf48c5b89830",
+    "candidateId": "6b01bbf2b66675f3aebc4a74",
+    "publishedAt": "2026-11-21T15:43:38.172Z",
+    "workflowRunId": 44920394429,
+    "publicationArtifact": {
+      "id": 14713910332,
+      "sha256": "ce6eb4b9cbf71d4c3e744c2d6c62d2d2c96a100d529d0a4ae0209586a5bb6745",
+      "digestSource": "GitHub artifact metadata; archive checksum separately verified by release reviewer"
+    },
+    "releaseReportSha256": "08b61518b42a3f0bea4b54f9e751b48b6dfee4b5f1c1b902a04e00ee867c60ca",
+    "priorReport": {
+      "path": "docs/multichain/bnb-test-auth-page-release.json",
+      "sha256": "5407150d03c4c32c2eef01fcd752ae03b19fed78a7bfe3c738e21388fa9b1078"
+    },
+    "planSha256": "358d20b81ed02d94e5b2774295895701ef5e17814561fda2e3c85b304003ca85",
+    "checks": {
+      "exactMergedSource": true,
+      "sitePublishedCandidateMatches": true,
+      "liveReadyAndLocked": true,
+      "all51CompleteProviderRecordsMatchReport": true,
+      "replacementFullProviderRecordMatchesReport": true,
+      "all5SchedulesMatchReport": true,
+      "allRuntimeFieldsMatchReport": true,
+      "all50UnrelatedCompleteProviderRecordsMatchPreviousLive": true,
+      "allSchedulesMatchPreviousLive": true,
+      "runtimeMatchesPreviousLive": true,
+      "staticPathInventoryUnchanged": true,
+      "exactlyTwoApprovedStaticChanges": true,
+      "changedStaticHashesMatchReviewedSource": true,
+      "protectedConfigurationFingerprintsMatchPreviousReport": true,
+      "canonicalCheckerPassedAndSessionRevoked": true,
+      "pushWorkflowPassed": true
+    },
+    "counts": {
+      "staticFiles": 651,
+      "preservedStaticFiles": 649,
+      "completeFunctionRecords": 51,
+      "preservedUnrelatedFunctionRecords": 50,
+      "schedules": 5
+    },
+    "changedStaticPaths": [
+      "/play/multichaintest/game/bnb/app.js",
+      "/play/multichaintest/game/bnb/index.html"
+    ],
+    "replacementFunction": {
+      "name": "arcade-bnb-test",
+      "sha256": "47a003fa5e906c48adada91426c4b442a639202cc720e035bf077682216aa2be",
+      "bytes": 3067050
+    },
+    "evidenceScope": {
+      "providerRecordsSchedulesRuntime": "Fresh read-only Netlify site/deploy responses compared with the publication report and prepublication live deployment.",
+      "staticHashes": "Publication report inventory compared with the prior committed release report; the two changed hashes also checked against reviewed local source.",
+      "protectedConfiguration": "Publication report fingerprints compared with the prior committed release report. No independent environment-value read.",
+      "sessions": "Canonical checker artifact reports passed=true and sessionRevoked=true; no new authentication session was created by this audit."
+    },
+    "githubQueues": {
+      "queued": 0,
+      "inProgress": 0,
+      "waiting": 0
+    },
+    "mutationsPerformed": 0
+  },
+  "evidenceFiles": [
+    {
+      "path": "docs/multichain/bnb-backing-page-release.json",
+      "sha256": "08b61518b42a3f0bea4b54f9e751b48b6dfee4b5f1c1b902a04e00ee867c60ca"
+    },
+    {
+      "path": "docs/multichain/bnb-backing-canonical-live-20261121.json",
+      "sha256": "f96cd3648af1a1400b4d33ad21587cd4d3f6947147d042010dfbd5bedd01fbe9"
+    },
+    {
+      "path": "docs/multichain/bnb-backing-candidate-browser-20261121.json",
+      "sha256": "3678cd174c19f25a370976211a272f402125ad38d4e7a4a03d849050587fec86"
+    },
+    {
+      "path": "docs/multichain/bnb-backing-sign-in-browser-20261121.json",
+      "sha256": "4608646efb476b5df9769e6c620ed54dca4588ca4da1a8c700b8626ec3b24087"
+    },
+    {
+      "path": "docs/multichain/bnb-backing-source-browser-20261121.json",
+      "sha256": "caaf6e4574eacfb7add9baba8aef08296003ee5a158b5bef798f447b78f4654f"
+    }
+  ],
+  "canonicalOutcome": {
+    "checkedAt": "2026-11-21T15:43:43.821Z",
+    "sessionRevoked": true,
+    "chainTransactionsSubmitted": 0,
+    "userWalletUsed": false,
+    "gameplayAuthorized": false,
+    "productionApproved": false,
+    "classification": "trial-retired",
+    "bnbPassState": "Retired",
+    "suiCustodyLifecycle": "released"
+  },
+  "scopeLimitations": [
+    "The read-only diagnostic covers the completed original NFTree #2720 one-slot trial only.",
+    "No production custody/generation/pass route is deployed or approved by this release.",
+    "No installed user wallet or physical mobile device acceptance is claimed.",
+    "Static and protected configuration independent comparisons use exact publication reports; the publication workflow performs fresh live inventory/configuration checks."
+  ]
+}

@@ -1,0 +1,259 @@
+{
+  "passed": true,
+  "sourceCommit": "e5e3b1255846eb33b408f2fece7750befba69ff7",
+  "candidateId": null,
+  "planSha256": null,
+  "pageURL": "https://tree-token.xyz/play/multichaintest/game/bnb/",
+  "liveAssets": false,
+  "viewportWidths": [
+    1440,
+    390,
+    320
+  ],
+  "mockedWallet": true,
+  "mockedApi": true,
+  "installedWalletVerified": false,
+  "noWalletOrPaymentActions": true,
+  "gameplayAuthorized": false,
+  "playwrightVersion": "1.56.1",
+  "checkedAt": "2026-11-21T15:41:26.021Z",
+  "appSha256": "636b8d17f4789bc07a4883fa18957ea3c20d99a1a53d002e380a21bded717657",
+  "htmlSha256": "4c9b8ca2ab45cbd15e74ef37023fe864adea1303fbf1e142046cd7071f8d1fdf",
+  "scenarios": [
+    {
+      "name": "retired and released trial shown; logout clears observation",
+      "width": 1440,
+      "passed": true,
+      "apiActions": [
+        "challenge",
+        "sign-in",
+        "entitlement",
+        "logout"
+      ],
+      "walletMethods": [
+        "eth_chainId",
+        "eth_requestAccounts",
+        "eth_chainId",
+        "eth_accounts",
+        "eth_chainId",
+        "eth_accounts",
+        "personal_sign"
+      ]
+    },
+    {
+      "name": "held active fixture remains a diagnostic, never game access",
+      "width": 1440,
+      "passed": true,
+      "apiActions": [
+        "challenge",
+        "sign-in",
+        "entitlement"
+      ],
+      "walletMethods": [
+        "eth_chainId",
+        "eth_requestAccounts",
+        "eth_chainId",
+        "eth_accounts",
+        "eth_chainId",
+        "eth_accounts",
+        "personal_sign"
+      ]
+    },
+    {
+      "name": "retired and released trial shown; logout clears observation",
+      "width": 390,
+      "passed": true,
+      "apiActions": [
+        "challenge",
+        "sign-in",
+        "entitlement",
+        "logout"
+      ],
+      "walletMethods": [
+        "eth_chainId",
+        "eth_requestAccounts",
+        "eth_chainId",
+        "eth_accounts",
+        "eth_chainId",
+        "eth_accounts",
+        "personal_sign"
+      ]
+    },
+    {
+      "name": "held active fixture remains a diagnostic, never game access",
+      "width": 390,
+      "passed": true,
+      "apiActions": [
+        "challenge",
+        "sign-in",
+        "entitlement"
+      ],
+      "walletMethods": [
+        "eth_chainId",
+        "eth_requestAccounts",
+        "eth_chainId",
+        "eth_accounts",
+        "eth_chainId",
+        "eth_accounts",
+        "personal_sign"
+      ]
+    },
+    {
+      "name": "retired and released trial shown; logout clears observation",
+      "width": 320,
+      "passed": true,
+      "apiActions": [
+        "challenge",
+        "sign-in",
+        "entitlement",
+        "logout"
+      ],
+      "walletMethods": [
+        "eth_chainId",
+        "eth_requestAccounts",
+        "eth_chainId",
+        "eth_accounts",
+        "eth_chainId",
+        "eth_accounts",
+        "personal_sign"
+      ]
+    },
+    {
+      "name": "held active fixture remains a diagnostic, never game access",
+      "width": 320,
+      "passed": true,
+      "apiActions": [
+        "challenge",
+        "sign-in",
+        "entitlement"
+      ],
+      "walletMethods": [
+        "eth_chainId",
+        "eth_requestAccounts",
+        "eth_chainId",
+        "eth_accounts",
+        "eth_chainId",
+        "eth_accounts",
+        "personal_sign"
+      ]
+    },
+    {
+      "name": "unavailable backing response cannot imply eligibility",
+      "width": 320,
+      "passed": true,
+      "apiActions": [
+        "challenge",
+        "sign-in",
+        "entitlement"
+      ],
+      "walletMethods": [
+        "eth_chainId",
+        "eth_requestAccounts",
+        "eth_chainId",
+        "eth_accounts",
+        "eth_chainId",
+        "eth_accounts",
+        "personal_sign"
+      ]
+    },
+    {
+      "name": "malformed backing response cannot imply eligibility",
+      "width": 320,
+      "passed": true,
+      "apiActions": [
+        "challenge",
+        "sign-in",
+        "entitlement"
+      ],
+      "walletMethods": [
+        "eth_chainId",
+        "eth_requestAccounts",
+        "eth_chainId",
+        "eth_accounts",
+        "eth_chainId",
+        "eth_accounts",
+        "personal_sign"
+      ]
+    },
+    {
+      "name": "stale backing response cannot imply eligibility",
+      "width": 320,
+      "passed": true,
+      "apiActions": [
+        "challenge",
+        "sign-in",
+        "entitlement"
+      ],
+      "walletMethods": [
+        "eth_chainId",
+        "eth_requestAccounts",
+        "eth_chainId",
+        "eth_accounts",
+        "eth_chainId",
+        "eth_accounts",
+        "personal_sign"
+      ]
+    },
+    {
+      "name": "wrongwallet backing response cannot imply eligibility",
+      "width": 320,
+      "passed": true,
+      "apiActions": [
+        "challenge",
+        "sign-in",
+        "entitlement"
+      ],
+      "walletMethods": [
+        "eth_chainId",
+        "eth_requestAccounts",
+        "eth_chainId",
+        "eth_accounts",
+        "eth_chainId",
+        "eth_accounts",
+        "personal_sign"
+      ]
+    },
+    {
+      "name": "unauthorized backing response cannot imply eligibility",
+      "width": 320,
+      "passed": true,
+      "apiActions": [
+        "challenge",
+        "sign-in",
+        "entitlement"
+      ],
+      "walletMethods": [
+        "eth_chainId",
+        "eth_requestAccounts",
+        "eth_chainId",
+        "eth_accounts",
+        "eth_chainId",
+        "eth_accounts",
+        "personal_sign"
+      ]
+    },
+    {
+      "name": "late backing response cannot overwrite changed wallet state",
+      "width": 390,
+      "passed": true,
+      "apiActions": [
+        "challenge",
+        "sign-in",
+        "entitlement"
+      ],
+      "walletMethods": [
+        "eth_chainId",
+        "eth_requestAccounts",
+        "eth_chainId",
+        "eth_accounts",
+        "eth_chainId",
+        "eth_accounts",
+        "personal_sign"
+      ]
+    }
+  ],
+  "screenshots": [
+    "bnb-backing-1440.png",
+    "bnb-backing-320.png"
+  ]
+}

@@ -1,7 +1,31 @@
-# Isolated BNB-only Tree Force '89 authentication — published sign-in test
+# Isolated BNB-only Tree Force '89 authentication and backing diagnostics
 
-The isolated page and endpoint are live as of November 20, 2026 at 22:55
-America/Chicago. Current locked deployment: `6b01240f1a94cf48c5b89830`.
+## Current release — November 21, 2026
+
+Current locked production is `6b01bbf2b66675f3aebc4a74`, published at
+09:43:38 America/Chicago from `e5e3b1255846eb33b408f2fece7750befba69ff7`
+through PR #278 and
+[workflow 44920394429](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44920394429).
+The existing authentication flow now supports a session-bound, read-only
+**Check trial backing** action for original NFTree #2720. The server reads both
+chains and rechecks the session after the observation. The canonical test
+confirmed the pass is retired and the original NFT released; gameplay remains
+denied. The production custody/generation/pass system is still required.
+
+All 174 focused tests, both 12-case source browser suites, 12 candidate browser
+cases and canonical login/backing/logout acceptance passed. The synthetic test
+session was revoked. All 649 unrelated static paths, 50 other complete backend
+records, five schedules and protected configuration were preserved. Database
+definition/grant fingerprints are unchanged; no migration was reapplied.
+
+Current behavior, evidence and remaining contract milestone are documented in
+[`bnb-backing-check.md`](./bnb-backing-check.md). The following sections retain
+the initial sign-in release history and its timestamped evidence.
+
+## Initial sign-in release — November 20, 2026
+
+The isolated page and endpoint were initially published on November 20, 2026
+at 22:55 America/Chicago, in deployment `6b01240f1a94cf48c5b89830`.
 Published source: `75495d9577c56e6e44b4c8ef4a71420f9ee26a79`, through PR #276.
 
 - Page: https://tree-token.xyz/play/multichaintest/game/bnb/

@@ -1,0 +1,229 @@
+{
+  "sourceCommit": "e5e3b1255846eb33b408f2fece7750befba69ff7",
+  "candidateId": null,
+  "planSha256": null,
+  "pageURL": "https://tree-token.xyz/play/multichaintest/game/bnb/",
+  "liveAssets": false,
+  "viewportWidths": [
+    1440,
+    390,
+    320
+  ],
+  "passed": true,
+  "noWalletOrPaymentActions": true,
+  "mockedWallet": true,
+  "mockedApi": true,
+  "installedWalletVerified": false,
+  "playwrightVersion": "1.56.1",
+  "checkedAt": "2026-11-21T15:41:21.859Z",
+  "appSha256": "636b8d17f4789bc07a4883fa18957ea3c20d99a1a53d002e380a21bded717657",
+  "screenshots": [
+    "bnb-test-auth-1440.png",
+    "bnb-test-auth-320.png"
+  ],
+  "scenarios": [
+    {
+      "name": "disconnected layout and missing-wallet help",
+      "width": 1440,
+      "passed": true,
+      "apiActions": [],
+      "walletMethods": []
+    },
+    {
+      "name": "personal-message sign-in, cookie, denial, expiry and isolated logout",
+      "width": 1440,
+      "passed": true,
+      "apiActions": [
+        "challenge",
+        "sign-in",
+        "status",
+        "entitlement",
+        "status",
+        "challenge",
+        "sign-in",
+        "logout"
+      ],
+      "walletMethods": [
+        "eth_chainId",
+        "eth_requestAccounts",
+        "eth_chainId",
+        "eth_accounts",
+        "eth_chainId",
+        "eth_accounts",
+        "personal_sign",
+        "eth_chainId",
+        "eth_accounts",
+        "personal_sign"
+      ],
+      "privateCookie": true,
+      "otherCookiePreserved": true
+    },
+    {
+      "name": "disconnected layout and missing-wallet help",
+      "width": 390,
+      "passed": true,
+      "apiActions": [],
+      "walletMethods": []
+    },
+    {
+      "name": "personal-message sign-in, cookie, denial, expiry and isolated logout",
+      "width": 390,
+      "passed": true,
+      "apiActions": [
+        "challenge",
+        "sign-in",
+        "status",
+        "entitlement",
+        "status",
+        "challenge",
+        "sign-in",
+        "logout"
+      ],
+      "walletMethods": [
+        "eth_chainId",
+        "eth_requestAccounts",
+        "eth_chainId",
+        "eth_accounts",
+        "eth_chainId",
+        "eth_accounts",
+        "personal_sign",
+        "eth_chainId",
+        "eth_accounts",
+        "personal_sign"
+      ],
+      "privateCookie": true,
+      "otherCookiePreserved": true
+    },
+    {
+      "name": "disconnected layout and missing-wallet help",
+      "width": 320,
+      "passed": true,
+      "apiActions": [],
+      "walletMethods": []
+    },
+    {
+      "name": "personal-message sign-in, cookie, denial, expiry and isolated logout",
+      "width": 320,
+      "passed": true,
+      "apiActions": [
+        "challenge",
+        "sign-in",
+        "status",
+        "entitlement",
+        "status",
+        "challenge",
+        "sign-in",
+        "logout"
+      ],
+      "walletMethods": [
+        "eth_chainId",
+        "eth_requestAccounts",
+        "eth_chainId",
+        "eth_accounts",
+        "eth_chainId",
+        "eth_accounts",
+        "personal_sign",
+        "eth_chainId",
+        "eth_accounts",
+        "personal_sign"
+      ],
+      "privateCookie": true,
+      "otherCookiePreserved": true
+    },
+    {
+      "name": "signature rejection creates no session",
+      "width": 390,
+      "passed": true,
+      "apiActions": [
+        "challenge"
+      ],
+      "walletMethods": [
+        "eth_chainId",
+        "eth_requestAccounts",
+        "eth_chainId",
+        "eth_accounts",
+        "eth_chainId",
+        "eth_accounts",
+        "personal_sign"
+      ]
+    },
+    {
+      "name": "accountsChanged while sign-in response is pending",
+      "width": 390,
+      "passed": true,
+      "apiActions": [
+        "challenge",
+        "sign-in"
+      ],
+      "walletMethods": [
+        "eth_chainId",
+        "eth_requestAccounts",
+        "eth_chainId",
+        "eth_accounts",
+        "eth_chainId",
+        "eth_accounts",
+        "personal_sign"
+      ]
+    },
+    {
+      "name": "chainChanged while sign-in response is pending",
+      "width": 390,
+      "passed": true,
+      "apiActions": [
+        "challenge",
+        "sign-in"
+      ],
+      "walletMethods": [
+        "eth_chainId",
+        "eth_requestAccounts",
+        "eth_chainId",
+        "eth_accounts",
+        "eth_chainId",
+        "eth_accounts",
+        "personal_sign"
+      ]
+    },
+    {
+      "name": "chain change during wallet prompt blocks sign-in",
+      "width": 390,
+      "passed": true,
+      "apiActions": [
+        "challenge"
+      ],
+      "walletMethods": [
+        "eth_chainId",
+        "eth_requestAccounts",
+        "eth_chainId",
+        "eth_accounts",
+        "eth_chainId",
+        "eth_accounts",
+        "personal_sign"
+      ]
+    },
+    {
+      "name": "late provider injection still handles account changes",
+      "width": 320,
+      "passed": true,
+      "apiActions": [
+        "challenge"
+      ],
+      "walletMethods": [
+        "eth_chainId",
+        "eth_requestAccounts",
+        "eth_chainId",
+        "eth_accounts",
+        "eth_chainId",
+        "eth_accounts"
+      ]
+    },
+    {
+      "name": "wrong network blocked without automatic switching",
+      "width": 320,
+      "passed": true,
+      "apiActions": [],
+      "walletMethods": [
+        "eth_chainId"
+      ]
+    }
+  ]
+}
