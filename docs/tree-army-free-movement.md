@@ -42,3 +42,19 @@ creation. No candidate was published. The canonical playtest remains 0.6 on
 locked deploy `6b00892b6acd6fc92a18fd20`. A bounded provider-error diagnostic
 now reports code/message/error fields without logging request payloads or
 credentials, so a retry can identify the provider-side cause.
+
+Diagnostic retry `44866213576` (source
+`7bd1a07c4c4ce484ba2addf2cdd0bcb5003bb7d9`) passed gameplay and all four browser
+layouts again, then returned the provider's exact cause on candidate creation:
+**Account credit usage exceeded - new deploys are blocked until credits are added**.
+This is a Netlify account credit block, not a gameplay failure. No deployment
+was created or published. The team owner must add credits before a fresh scoped
+release can proceed. Do not work around the credit block with a different site
+or historical production build.
+
+Saved pre-publication evidence: `docs/tree-army-courtyard-local-checks-20261120.json`
+and `docs/tree-army-courtyard-preview-20261120.png`. These are CI-local checks,
+not canonical-site evidence. Original artifact 14691394067 has SHA256
+`8fea03b2904cbfadcdfaf8bbd8c21d4a243d8575503338f1e614f20464bcf258`.
+The earlier accidental dispatch `44865447132` was canceled with no jobs after
+a concurrent main-branch update rejected the first merge attempt.
