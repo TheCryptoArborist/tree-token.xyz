@@ -1,0 +1,58 @@
+import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';
+const {JSDOM}=await import(process.env.ARCADE_TEST_JSDOM||new URL('../vendor/arcade-monthly/node_modules/jsdom/lib/api.js',import.meta.url).href);
+import {createDailyGrowth} from '../scripts/arcade-daily-growth-play-share.js';
+import {createArcadeMissions} from '../scripts/arcade-social-play-share.js';
+import {shareMessages,shareGames,savedGameStatus} from '../scripts/arcade-share-builder.js';
+const page=fs.readFileSync('production/arcade-play-share-static/index.html','utf8'),wallet='0x'+'a'.repeat(64),key='tree-arcade:daily-growth:session:v1';
+const tick=()=>new Promise(r=>setTimeout(r,30));
+test('signed-in session survives repeated navigation across every tab without signatures or check-ins',async()=>{
+ const dom=new JSDOM(page,{url:'https://tree-token.xyz/play/'}),w=dom.window;let signatures=0;const session={version:1,token:'a'.repeat(64),wallet,walletId:'Test Wallet',walletName:'Test Wallet',expiresAt:new Date(Date.now()+600000).toISOString()};w.localStorage.setItem(key,JSON.stringify(session));let actual={connected:true,address:wallet,walletId:'Test Wallet',walletName:'Test Wallet'};let notify=()=>{};const calls=[];
+ const bridge={getWalletState:()=>actual,getAvailableWallets:()=>[{id:'Test Wallet',name:'Test Wallet'}],subscribeWalletState:f=>(notify=f,()=>{}),subscribeWallets:()=>()=>{},signPersonalMessage:async()=>{signatures++;throw Error('Unexpected signature');},restoreWallet:async()=>{actual={connected:true,address:wallet,walletId:'Test Wallet',walletName:'Test Wallet'};notify();}};
+ const envelope={status:'ok',authenticated:true,dateKey:'2026-11-10',monthKey:'2026-11',configuration:{enabledGames:[],eligibleGames:[]},progress:{wallet,monthKey:'2026-11',dateKey:'2026-11-10',calendar:Array.from({length:30},(_,i)=>({dateKey:`2026-11-${String(i+1).padStart(2,'0')}`,checkedIn:i===9,questCompleted:false,gameIds:[]})),checkedInDays:1,questDays:0,today:{checkedIn:true,questCompleted:false,gameIds:[]},passport:{monthKey:'2026-11',enabledGames:[],completedGameIds:[],complete:false},milestones:[],badges:[]}};
+ const app=createDailyGrowth({root:w.document.getElementById('arcade-daily-growth'),loadWallet:async()=>bridge,fetchImpl:async(url)=>{calls.push(url);if(url.includes('/api/arcade-campaign'))return new Response(JSON.stringify({status:'ok',progress:{wallet,campaignId:'first-round-v1',canClaim:false,quizCompleteThisWeek:false,learningStamps:0,tasks:{checkIn:true,quiz:false,game:false,share:false},startedAt:null,claimedAt:null}}));if(url.includes('/api/arcade-social'))return new Response(JSON.stringify({wallet,entries:[],monthlyStamps:0,resetsAt:new Date(Date.now()+60000).toISOString()}));return new Response(JSON.stringify(envelope));}});
+ try{await app.ready;for(let repeat=0;repeat<3;repeat++)for(const tab of w.document.querySelectorAll('#arcade-subnav button')){tab.click();await tick();}assert.equal(signatures,0);assert.equal(w.localStorage.getItem(key),JSON.stringify(session));assert.match(w.document.getElementById('growth-check-in-state').textContent,/saved/);assert.ok(!calls.some(url=>url.includes('action=check-in')||url.includes('action=session')));assert.equal(w.document.getElementById('campaign-check-status').textContent,'Completed ✓ · Today’s attendance is saved');}finally{app.destroy();w.close();}
+});
+test('community voting choices are usable signed out, but saving requires sign-in',()=>{const dom=new JSDOM(page),root=dom.window.document.getElementById('arcade-daily-growth'),app=createArcadeMissions({root,getSession:()=>null,fetchImpl:async()=>{throw Error('Unexpected request')}});try{assert.equal(root.querySelector('#mission-vote').disabled,false);assert.equal(root.querySelector('[data-mission="community-vote"] button').disabled,true);}finally{app.destroy();dom.window.close();}});
+test('share drafts use actual game names and canonical Arcade URL without fabricated scores',()=>{for(const game of shareGames)for(const challenge of [false,true]){const messages=shareMessages(game,challenge);assert.equal(messages.length,3);assert.equal(new Set(messages).size,3);for(const text of messages){assert.ok(text.includes(game.name));assert.ok(text.includes('https://tree-token.xyz/play/'));assert.ok(text.length<=280);assert.doesNotMatch(text.replace(game.name,''),/scored|verified|won|\d{2,}/i);}}});
+test('monthly label is clear, badges retain their markup, and frames and emblem are separate',()=>{assert.match(page,/Monthly Progress/);assert.ok(fs.existsSync('assets/profile-studio/leafy-canopy.webp'));assert.ok(fs.existsSync('assets/profile-studio/sui-emblem.webp'));const old=new JSDOM(fs.readFileSync('production/arcade-guided-static/baseline.html','utf8')),current=new JSDOM(page);assert.equal(current.window.document.getElementById('growth-badges-panel').innerHTML,old.window.document.getElementById('growth-badges-panel').innerHTML);old.window.close();current.window.close();});
+
+test('saved game status distinguishes completed Garden results from Tree Force participation',()=>{const progress={today:{gameIds:['garden-bot','treeforce89']},passport:{completedGameIds:[]}};assert.match(savedGameStatus(progress,shareGames[0]),/^Completed/);assert.match(savedGameStatus(progress,shareGames[3]),/^Participation saved/);assert.doesNotMatch(savedGameStatus(null,shareGames[0]),/Completed/);});
+
+test('share controls unlock only for this wallet’s fresh completed game and clear on sign-out',async()=>{
+ const dom=new JSDOM(page,{url:'https://tree-token.xyz/play/'}),w=dom.window;
+ const originalImage=globalThis.Image;
+ globalThis.Image=class {set src(value){this.width=512;this.height=512;queueMicrotask(()=>this.onload?.());}};
+ w.HTMLCanvasElement.prototype.getContext=()=>({createLinearGradient(){return {addColorStop(){}};},save(){},restore(){},beginPath(){},arc(){},stroke(){},fillRect(){},strokeRect(){},fillText(){},strokeText(){},drawImage(){},measureText(){return {width:10};}});
+ const fixed=Date.parse('2026-11-11T12:00:00Z');
+ let currentSession={wallet,token:'a'.repeat(64),expiresAt:new Date(fixed+600000).toISOString()};
+ const root=w.document.getElementById('arcade-daily-growth');
+ const app=createArcadeMissions({root,getSession:()=>currentSession,now:()=>fixed,fetchImpl:async()=>new Response(JSON.stringify({wallet,entries:[],monthlyStamps:0,resetsAt:'2026-11-16T00:00:00Z'}))});
+ try{
+ app.sessionChanged();await tick();
+ assert.equal(root.querySelector('#result-share-controls').hidden,true);
+ const progress={wallet,dateKey:'2026-11-11',runs:[{id:'d'.repeat(64),gameId:'garden-bot',completedAt:'2026-11-11T11:59:00Z',score:null,outcome:'completed'}]};
+ root.dispatchEvent(new w.CustomEvent('arcade-completed-runs',{detail:{sessionActive:true,stale:false,loading:false,...progress}}));await tick();
+ assert.equal(root.querySelector('#result-share-controls').hidden,false);
+ assert.deepEqual([...root.querySelectorAll('#guided-share-score select option')].map(x=>x.value),['d'.repeat(64)]);
+ assert.match(root.querySelector('#guided-share-score .share-message').textContent,/Garden Bot: Match complete/);
+ currentSession=null;app.sessionChanged();
+ assert.equal(root.querySelector('#result-share-controls').hidden,true);
+ assert.equal(root.querySelector('#guided-share-score').children.length,0);
+ }finally{app.destroy();w.close();globalThis.Image=originalImage;}
+});
+
+test('six-tab navigation makes Daily visible and routes the weekly vote back to Games',async()=>{
+ const {mountArcadeNavigation}=await import('../scripts/arcade-navigation-play-share.js');
+ const dom=new JSDOM(page,{url:'https://tree-token.xyz/play/quests/preview/'}),w=dom.window;
+ w.HTMLElement.prototype.scrollIntoView=()=>{};
+ try{mountArcadeNavigation(w.document,w);
+ w.document.getElementById('growth-today-tab').click();
+ assert.equal(w.document.getElementById('arcade-daily-growth').dataset.arcadeView,'daily');
+ assert.equal(w.document.getElementById('growth-today-panel').hidden,false);
+ assert.equal(w.document.getElementById('cabinets').hidden,true);
+ w.document.getElementById('growth-games-tab').click();
+ assert.equal(w.document.getElementById('arcade-daily-growth').dataset.arcadeView,'games');
+ assert.equal(w.document.getElementById('cabinets').hidden,false);
+ assert.equal(w.document.getElementById('growth-today-panel').hidden,true);
+ }finally{await tick();w.close();}
+});

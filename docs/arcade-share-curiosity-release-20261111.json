@@ -1,0 +1,28 @@
+{
+  "release": {
+    "id": "6af47189c0afe6b5d29fa598",
+    "baseline": "6af470248bda363174a0cb7f",
+    "mode": "publish",
+    "state": "ready",
+    "staticPaths": 501,
+    "preservedStaticPaths": 500,
+    "functionsPreserved": 47,
+    "totalFunctions": 48,
+    "completedRunsFunction": "c843d998840e17ca3354830d66ed5c81be5eb48cd7adcb2674c30a22c667fc8c",
+    "schedulesPreserved": 5,
+    "target": "preview",
+    "sourceCommit": "4042e89ec389ba42e3e6e32e49c1b553da81891e",
+    "changedPaths": [
+      "/scripts/arcade-result-share-builder.js"
+    ],
+    "addedPaths": [],
+    "existingWalletAndGameJavaScriptUnchanged": true,
+    "paidEntryEnabled": false,
+    "playShareReviewOnly": true
+  },
+  "workflowRun": 43031987370,
+  "targetedTestsPassed": 21,
+  "visualChecks": "Default footer hooks on all four games inspected without clipping",
+  "change": "Three game-specific curiosity hooks per game and PLAY & FIND OUT call to action; graphics and result data preserved",
+  "reviewUrl": "https://tree-token.xyz/play/quests/share-review/"
+}
