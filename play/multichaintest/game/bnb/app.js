@@ -2,19 +2,52 @@
 const by=id=>document.getElementById(id);
 const connect=by('connect'),sign=by('sign'),logout=by('logout'),
   statusButton=by('status-button'),access=by('access');
-let wallet=null,epoch=0,busy=false,authenticated=false,observedProvider=null;
+let wallet=null,sessionWallet=null,epoch=0,busy=false,authenticated=false,observedProvider=null;
 const SCOPE='eip155:56:treeforce89-test:v1';
+const ORIGINAL_NFT='0x046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba';
 const address=value=>typeof value==='string'&&/^0x[a-f0-9]{40}$/i.test(value);
 const same=(a,b)=>address(a)&&address(b)&&a.toLowerCase()===b.toLowerCase();
 function output(text){by('status').textContent=text;}
+function clearBacking(text='No trial backing check yet.'){by('result').textContent=text;}
+function backingSummary(report){
+  const checked=typeof report?.checkedAt==='string'?Date.parse(report.checkedAt):NaN;
+  const age=Date.now()-checked;
+  if(report?.schemaVersion!==1||report.mode!=='original-one-slot-diagnostic'||
+     report.gameplayAuthorized!==false||report.productionReady!==false||
+     !same(sessionWallet,report.inspectedWallet)||(wallet&&!same(wallet,report.inspectedWallet))||
+     !Number.isFinite(checked)||new Date(checked).toISOString()!==report.checkedAt||age < -5000||age > 60000||
+     report.backing?.nftId!==ORIGINAL_NFT||
+     report.bnb?.chainId!==56||report.bnb.finality!=='finalized'||
+     typeof report.bnb.ownerMatches!=='boolean'||typeof report.bnb.canPlay!=='boolean'||
+     !Array.isArray(report.blockers)||!report.blockers.includes('production-backing-registry-not-approved'))return null;
+  const state=report.bnb.passState,lifecycle=report.backing.lifecycle;
+  if(!['unfunded','held','released'].includes(lifecycle)||
+     report.backing.sourceCustodyConfirmed!==(lifecycle==='held'))return null;
+  let summary;
+  if(report.classification==='trial-retired'&&state==='Retired'&&lifecycle==='released'&&
+     report.bnb.ownerMatches===false&&report.bnb.canPlay===false){
+    summary='The BNB trial pass is retired. Original NFTree #2720 was released on Sui.';
+  }else if(report.classification==='trial-active-backed'&&state==='Active'&&lifecycle==='held'){
+    summary='The trial pass is active and its original NFT is held on Sui. This trial does not grant BNB game access.';
+  }else if(report.classification==='trial-redemption-pending'&&state==='Locked'&&lifecycle!=='unfunded'){
+    summary=lifecycle==='released'?'The original NFT was released on Sui. The trial pass is still locked while redemption finishes.':
+      'The trial pass is locked for redemption. Its original NFT is still held on Sui.';
+  }else if(report.classification==='trial-reserve-pending'&&['Unconfirmed','Ready'].includes(state)&&lifecycle==='held'){
+    summary='The original NFT is held on Sui, but the trial pass is not active.';
+  }else if(report.classification==='trial-unfunded'&&state==='Unconfirmed'&&lifecycle==='unfunded'){
+    summary='The trial has no original NFT held as backing on Sui.';
+  }else return null;
+  return summary+'\nBNB gameplay needs a new approved pass backed by an original NFT.'+
+    '\nChecked '+new Date(checked).toISOString().replace('T',' ').replace('Z',' UTC')+'. This check covers the #2720 trial only.';
+}
 function redraw(){
   sign.disabled=!wallet||busy;access.disabled=!authenticated||busy;
   connect.disabled=busy;statusButton.disabled=busy;logout.disabled=busy;
   by('wallet').textContent=wallet?'Selected BNB wallet: '+wallet:'No BNB wallet selected.';
 }
 function changed(){
-  epoch++;wallet=null;authenticated=false;
-  by('result').textContent='Wallet or network changed. Reconnect to continue.';
+  epoch++;wallet=null;sessionWallet=null;authenticated=false;
+  clearBacking('Wallet or network changed. Reconnect to check the trial again.');
   output('Wallet or network changed. Reconnect, or check the saved test session.');redraw();
 }
 function provider(){
@@ -39,30 +72,38 @@ async function chain56(){
   return p;
 }
 async function post(action,fields={}){
+  const requestEpoch=epoch;
   const response=await fetch('/api/arcade-bnb-test',{method:'POST',credentials:'same-origin',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({action,...fields}),cache:'no-store'});
   const data=await response.json().catch(()=>({error:'invalid-response'}));
   if(!response.ok){
-    if(response.status===401)authenticated=false;
-    const error=Error(data.error||data.reason||'service-unavailable');error.status=response.status;throw error;
+    const error=Error(data.error||data.reason||'service-unavailable');
+    error.status=response.status;error.data=data;error.requestEpoch=requestEpoch;
+    if(response.status===401&&requestEpoch===epoch){
+      authenticated=false;sessionWallet=null;epoch++;error.sessionInvalidated=true;
+      clearBacking('Sign in again before checking the trial backing.');
+    }
+    throw error;
   }
   return data;
 }
 const hex=text=>'0x'+[...new TextEncoder().encode(text)].map(v=>v.toString(16).padStart(2,'0')).join('');
 async function task(fn){if(busy)return;busy=true;redraw();try{await fn();}catch(e){output('Could not continue: '+(e?.message||'request failed')+'. No game access was granted.');}finally{busy=false;redraw();}}
 connect.addEventListener('click',()=>task(async()=>{
+  clearBacking();
   const p=await chain56(),accounts=await p.request({method:'eth_requestAccounts'});
   if(!Array.isArray(accounts)||!address(accounts[0]))throw Error('No BNB address returned.');
   if(await chain56()!==p)throw Error('Wallet provider changed. Reconnect.');
   const selected=await p.request({method:'eth_accounts'});
   if(!Array.isArray(selected)||!same(selected[0],accounts[0]))throw Error('Wallet account changed. Reconnect.');
-  wallet=accounts[0];authenticated=false;epoch++;
+  wallet=accounts[0];sessionWallet=null;authenticated=false;epoch++;
   output('Connected. Review the sign-in message before approving.');
 }));
 sign.addEventListener('click',()=>task(async()=>{
+  clearBacking();
   const current=wallet, marker=epoch,p=await chain56();
-  authenticated=false;
+  authenticated=false;sessionWallet=null;
   const accounts=await p.request({method:'eth_accounts'});
   if(!Array.isArray(accounts)||!same(accounts[0],current))throw Error('Wallet account changed.');
   unchanged(current,marker,p);
@@ -79,13 +120,17 @@ sign.addEventListener('click',()=>task(async()=>{
   unchanged(current,marker,p);
   if(signed.authenticated!==true||signed.gameplayAuthorized!==false||signed.chainId!==56||
       signed.scope!==SCOPE||!same(signed.wallet,current))throw Error('Unexpected server response.');
-  authenticated=true;output('BNB sign-in verified. Gameplay remains disabled.');
+  authenticated=true;sessionWallet=signed.wallet;output('BNB sign-in verified. Gameplay remains disabled.');
 }));
 statusButton.addEventListener('click',()=>task(async()=>{
-  const marker=epoch;authenticated=false;
+  const marker=epoch;authenticated=false;sessionWallet=null;
+  clearBacking();
   let r;
   try{r=await post('status');}catch(error){
-    if(error.status===401){output('No BNB test session. Connect and sign in to begin.');return;}
+    if(error.status===401){
+      if(error.sessionInvalidated&&error.requestEpoch===marker)output('No BNB test session. Connect and sign in to begin.');
+      return;
+    }
     throw error;
   }
   if(epoch!==marker)throw Error('Wallet changed while checking the session. Check sign-in status again.');
@@ -93,15 +138,37 @@ statusButton.addEventListener('click',()=>task(async()=>{
   if(wallet&&!same(wallet,r.wallet)){
     output('A test session exists for '+r.wallet+'. Sign in with the selected wallet to replace it. Gameplay remains disabled.');return;
   }
-  authenticated=true;
+  authenticated=true;sessionWallet=r.wallet;
   output('Test session active for '+r.wallet+'. Gameplay remains disabled.');
 }));
 logout.addEventListener('click',()=>task(async()=>{
-  await post('logout');authenticated=false;
+  const marker=++epoch;authenticated=false;sessionWallet=null;
+  clearBacking('Sign in or check your session before checking the trial again.');
+  await post('logout');
+  if(epoch!==marker)return;
   output('This BNB test session was signed out. Live Arcade sign-ins are untouched.');
 }));
 access.addEventListener('click',()=>task(async()=>{
-  try{const result=await post('entitlement');by('result').textContent=result.gameplayAuthorized===false?'Not authorized to play.':'Access remains disabled.';}
-  catch(e){by('result').textContent='No gameplay access: '+e.message+'.';}
+  if(!authenticated){clearBacking('Sign in before checking the trial backing.');return;}
+  const marker=epoch;
+  clearBacking('Checking the Original NFTree #2720 trial on BNB and Sui…');
+  let data,status;
+  try{data=await post('entitlement');status=200;}
+  catch(error){
+    if(error.status===401){
+      if(error.sessionInvalidated&&error.requestEpoch===marker)output('No BNB test session. Connect and sign in to begin.');
+      return;
+    }
+    data=error.data;status=error.status;
+  }
+  if(epoch!==marker||!authenticated)return;
+  if(status===403&&data?.reason==='production-backed-pass-not-enabled'&&data.gameplayAuthorized===false){
+    if(!Object.hasOwn(data,'backingCheck')){
+      clearBacking('No gameplay access: production-backed-pass-not-enabled.');return;
+    }
+    const summary=backingSummary(data.backingCheck);
+    if(summary){clearBacking(summary);return;}
+  }
+  clearBacking('Unable to verify the current trial backing. Try again shortly. Gameplay remains disabled.');
 }));
 redraw();

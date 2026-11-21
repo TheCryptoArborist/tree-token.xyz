@@ -60,7 +60,7 @@ export function createBnbTestRpc({getEnv,fetchImpl=fetch}){
     }catch{throw unavailable();}
   };
 }
-export function createBnbTestHandler({rpc,client,clock=Date.now,entropy=randomBytes}={}){
+export function createBnbTestHandler({rpc,client,inspectBacking,clock=Date.now,entropy=randomBytes}={}){
   if(typeof rpc!=='function'||typeof client?.verifyMessage!=='function')throw unavailable();
   const readSession=async req=>{
     const raw=getCookie(req);
@@ -136,9 +136,30 @@ export function createBnbTestHandler({rpc,client,clock=Date.now,entropy=randomBy
         const s=await readSession(req);
         if(b.action==='status')return reply({status:'ok',authenticated:true,scope:SCOPE,chainId:56,
           wallet:s.wallet,expiresAt:s.expiresAt,gameplayAuthorized:false});
-        // There is no audited multi-NFT BNB pass/registry yet: never enable.
+        // The exact completed trial can now be inspected on both chains. This
+        // observation is separate from approval of a production backing policy.
+        // Only the server supplies the reader and the authenticated wallet.
+        let backingCheck;
+        if(typeof inspectBacking==='function'){
+          try{backingCheck=await inspectBacking({wallet:s.wallet,signal:req.signal});}
+          catch{throw bad('backing-check-unavailable',503);}
+          if(!backingCheck||backingCheck.schemaVersion!==1||
+             backingCheck.mode!=='original-one-slot-diagnostic'||
+             backingCheck.gameplayAuthorized!==false||backingCheck.productionReady!==false||
+             backingCheck.inspectedWallet!==s.wallet||
+             typeof backingCheck.checkedAt!=='string'||
+             !Number.isFinite(Date.parse(backingCheck.checkedAt))||
+             Date.parse(backingCheck.checkedAt)<clock()-30000||
+             Date.parse(backingCheck.checkedAt)>clock()+2000||
+             JSON.stringify(backingCheck).length>24000)throw bad('backing-check-unavailable',503);
+          // A slow RPC read must not outlive a logout or the session's expiry.
+          const current=await readSession(req);
+          if(current.wallet!==s.wallet)throw bad('invalid-session',401);
+        }
+        // The production registry/pass is a separate contract milestone.
+        // Neither current nor historical trial observations can grant access.
         return reply({status:'denied',reason:'production-backed-pass-not-enabled',
-          gameplayAuthorized:false,authenticated:true},403);
+          gameplayAuthorized:false,authenticated:true,...(backingCheck?{backingCheck}:{})},403);
       }
       throw bad('unknown-action',404);
     }catch(e){return reply({status:'error',error:e instanceof BnbAccessError?e.code:'service-unavailable',

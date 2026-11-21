@@ -1,7 +1,9 @@
 // Separately packaged BNB sign-in function. Never rebuild the existing Arcade.
 import { createPublicClient, http } from 'viem';
 import { bsc } from 'viem/chains';
+import { SuiGrpcClient } from '@mysten/sui/grpc';
 import { createBnbTestHandler, createBnbTestRpc } from '../../scripts/multichain/bnb-test-auth-service.mjs';
+import { inspectBnbOriginalBacking } from '../../scripts/multichain/bnb-backing-reader.mjs';
 const getEnv=n=>globalThis.Netlify?.env?.get(n)??process.env[n];
 const DATABASE_URL='https://lehswszuekjqottolmsf.supabase.co';
 
@@ -25,7 +27,17 @@ export default async function handler(request){
   try{
     const configured=runtimeConfiguration(),{rpcUrl}=configured;
     const client=createPublicClient({chain:bsc,transport:http(rpcUrl,{timeout:10000})});
-    return createBnbTestHandler({rpc:createBnbTestRpc({getEnv:configured.getEnv}),client})(request);
+    return createBnbTestHandler({rpc:createBnbTestRpc({getEnv:configured.getEnv}),client,
+      inspectBacking:({wallet,signal})=>{
+        const boundedSignal=AbortSignal.any([signal,AbortSignal.timeout(20000)]);
+        return inspectBnbOriginalBacking({wallet,signal:boundedSignal,
+          suiClient:new SuiGrpcClient({network:'mainnet',baseUrl:'https://fullnode.mainnet.sui.io:443'}),
+          bnbClient:createPublicClient({chain:bsc,transport:http(rpcUrl,{
+            timeout:8000,retryCount:0,fetchOptions:{signal:boundedSignal},
+          })}),
+        });
+      },
+    })(request);
   }catch{
     return Response.json({status:'error',error:'service-unavailable',gameplayAuthorized:false},
       {status:503,headers:{'Cache-Control':'no-store','Netlify-CDN-Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
