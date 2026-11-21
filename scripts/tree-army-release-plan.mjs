@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
-// Prototype 0.6: narrow-phone follow-up replaces only gameplay HTML.
+// Prototype 0.7: free battlefield movement replaces only gameplay HTML.
 export const REPLACED_HASHES = {
-  '/play/tree-army/test/index.html': '136d0ecae51b1d61307380b4484e707c8e7b95be',
+  '/play/tree-army/test/index.html': '45944529735c0ededba1fae1e8a46cd1531c1263',
 };
 export const ADDED_PATHS = [];
 export const DELIVERY_PATHS = [...Object.keys(REPLACED_HASHES), ...ADDED_PATHS];

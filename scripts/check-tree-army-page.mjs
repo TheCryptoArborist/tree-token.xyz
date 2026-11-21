@@ -39,7 +39,7 @@ try {
       await page.keyboard.up('ArrowRight');
       assert.match(await page.locator('#field-note').innerText(),/Summon/);
     } else {
-      for(const selector of ['#left','#right','#blast','#shield','[data-unit="sprout"]','[data-unit="archer"]','[data-unit="oak"]']) {
+      for(const selector of ['#joystick','#blast','#shield','[data-unit="sprout"]','[data-unit="archer"]','[data-unit="oak"]']) {
         const box=await page.locator(selector).boundingBox();
         assert(box && box.x>=0 && box.y>=0 && box.x+box.width<=width+1 && box.y+box.height<=height+1,selector+' must stay inside phone viewport');
         assert(box.height>=44,selector+' touch target is too short');
@@ -57,15 +57,32 @@ try {
       await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y,id:1}]});
       await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x+45,y,id:1}]});
       await page.waitForTimeout(200);
-      assert.match(await page.locator('#drag-cue').innerText(),/Moving right/);
+      assert.match(await page.locator('#drag-cue').innerText(),/Moving →/);
       assert.match(await page.locator('#field-note').innerText(),/Summon/);
       await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x-45,y,id:1}]});
-      assert.match(await page.locator('#drag-cue').innerText(),/Moving left/);
+      assert.match(await page.locator('#drag-cue').innerText(),/Moving ←/);
+      await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x,y:y-40,id:1}]});
+      assert.match(await page.locator('#drag-cue').innerText(),/Moving ↑/);
       await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
       assert(await page.locator('#drag-cue').isHidden(),'Lifting finger must end drag');
       assert.equal(await page.evaluate(()=>scrollY),0,'Battlefield gesture must not scroll page');
+      const stick=await page.locator('#joystick').boundingBox();
+      const sx=Math.round(stick.x+stick.width/2),sy=Math.round(stick.y+stick.height/2);
+      await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:sx,y:sy,id:2}]});
+      await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:sx+20,y:sy-20,id:2}]});
+      assert.match(await page.locator('#drag-cue').innerText(),/Moving ↑→/);
+      const summon=await page.locator('[data-unit="sprout"]').boundingBox();
+      const multiSap=Number(await page.locator('#sap').innerText());
+      const second={x:Math.round(summon.x+summon.width/2),y:Math.round(summon.y+summon.height/2),id:3};
+      await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:sx+20,y:sy-20,id:2},second]});
+      await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[second]});
+      await page.waitForFunction(before=>Number(document.getElementById('sap').textContent)<before,multiSap,{timeout:1500});
+      assert(await page.locator('#drag-cue').isVisible(),'Summoning must not release the held joystick');
+      await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+      assert(await page.locator('#drag-cue').isHidden(),'Multi-touch release must reset joystick');
       await client.detach();
     }
+    await page.waitForFunction(()=>!document.querySelector('[data-unit="sprout"]').disabled);
     const sap=Number(await page.locator('#sap').innerText());
     await page.locator('[data-unit="sprout"]').click();
     await page.waitForFunction(before=>Number(document.getElementById('sap').textContent)<before,sap,{timeout:3000});
