@@ -21,7 +21,9 @@ runtime settings and protected configuration evidence remain unchanged. Only
 the two page files and one isolated handler were added: 651 paths and 51
 functions total. The canonical page was visually inspected and its signed-out
 status button returned the expected message. Mobile and desktop browser checks
-used mocked wallets; Peter's installed Brave wallet acceptance remains pending.
+used mocked wallets. Peter later supplied screenshots showing a successful
+wallet sign-in and a subsequent no-session status, with gameplay disabled in
+both. See the November 21 manual observations below for their exact scope.
 
 Complete release evidence:
 [`bnb-test-auth-page-release.json`](./bnb-test-auth-page-release.json).
@@ -83,7 +85,7 @@ functions and five schedules. Both isolated BNB database tables remained empty,
 and all 31 preexisting public Arcade procedure definitions and privileges had
 the same baseline fingerprint. The new BNB function was absent at that stage.
 The subsequent successful publication and canonical test are recorded above;
-Peter's installed-wallet acceptance remains pending.
+later user-supplied manual observations are recorded below.
 
 The create-deploy request also now omits the undocumented `commit_ref` body
 field, matching Netlify's current schema and the proven preservation publishers.
@@ -170,12 +172,29 @@ real scoring, paid USDT continues and public sales are separate stages.
 
 ## Manual Brave acceptance
 
+On November 21, Peter supplied the successful sign-in/denial screen and then
+the expected no-session screen after the requested logout/status sequence.
+[`bnb-manual-sign-in-observations-20261121.json`](./bnb-manual-sign-in-observations-20261121.json)
+records the evidence precisely. These images establish the displayed states;
+they do not independently show the intermediate active-session status, browser
+identity or server-side revocation of Peter's token. The separate synthetic
+canonical test verifies its own session's backend logout/replay behavior.
+
+The following remains the full manual test procedure for future releases:
+
 Open the live page in Brave, select BNB Smart Chain, and choose **Connect BNB
 wallet**. Choose **Sign a login message** and approve the isolated personal
 message in the wallet. Confirm that **Check sign-in status** recognizes the
 same wallet, then use **Sign out of this test** and confirm the session is gone.
 No token approval, asset transfer, payment or Sui wallet is part of this test.
 **Start BNB game** must remain disabled, including after successful sign-in.
+
+## Next read-only backing milestone
+
+The concrete two-chain trial inspector and isolated integration are documented
+in [`bnb-backing-check.md`](./bnb-backing-check.md). It observes the actual Sui
+Registry/Vault and BNB pass; it does not use the earlier hypothetical EVM
+registry callback as proof or approve the retired trial for production play.
 
 This one-time publisher's baseline has now been superseded by its own completed
 release. Any future publication needs a fresh reviewed scope and current

@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "observationDate": "2026-11-21",
+  "evidenceKind": "user-supplied screenshots in the project conversation",
+  "wallet": "0x90f9c1c0c675a0ce9d539c540db7f4a1f7e583ae",
+  "independentlyOperatedUserWallet": false,
+  "browserIdentityVisible": false,
+  "screenshots": [
+    {
+      "filename": "image(20261121-150501).png",
+      "sha256": "29429198aeee357a31b3f8458df2ffec62b9ea96235d0669cb4492a7ef313f0c",
+      "observations": [
+        "Selected BNB wallet matches the recorded wallet",
+        "BNB sign-in verified. Gameplay remains disabled.",
+        "No gameplay access: production-backed-pass-not-enabled.",
+        "Start BNB game remains disabled"
+      ]
+    },
+    {
+      "filename": "image(20261121-150927).png",
+      "sha256": "9d3b021b4a3db4c2bdc3237074966fe2bb18745deac6e05658c1a5fa1ce83c28",
+      "observations": [
+        "No BNB test session. Connect and sign in to begin.",
+        "Check test entitlement is disabled",
+        "Start BNB game remains disabled",
+        "Previous entitlement-denial message remains visible"
+      ]
+    }
+  ],
+  "interpretation": "The user-visible successful sign-in and subsequent no-session status match the expected signed-in and post-sign-out states. The old entitlement text is a retained previous result, not evidence of an active session.",
+  "notEstablishedByScreenshots": [
+    "The intermediate successful same-wallet Check sign-in status result",
+    "The actual logout API response or server-side revocation record for this wallet",
+    "Installed browser identity or an independent cookie/database audit"
+  ],
+  "fullIndependentInstalledWalletAuditClaimed": false,
+  "additionalWalletActionRequiredForScreenshotAcknowledgement": false
+}

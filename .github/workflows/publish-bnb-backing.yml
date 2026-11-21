@@ -1,0 +1,125 @@
+name: Publish read-only BNB backing diagnostics
+run-name: BNB backing ${{ github.event_name }} at ${{ github.event.pull_request.head.sha || github.sha }}
+
+on:
+  pull_request:
+    paths:
+      - 'play/multichaintest/game/bnb/**'
+      - 'netlify/bnb-test-functions/**'
+      - 'scripts/multichain/bnb-*.mjs'
+      - 'scripts/package-bnb-backing.mjs'
+      - 'scripts/release-bnb-backing.mjs'
+      - 'scripts/check-bnb-backing-*.mjs'
+      - 'tests/multichain-bnb-*.test.mjs'
+      - 'tests/fixtures/bnb-backing-reader/**'
+      - '.github/workflows/publish-bnb-backing.yml'
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-bnb-backing.yml']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tree-production-preservation-${{ github.event_name == 'push' && 'release' || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      REVIEWED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      BNB_BACKING_SOURCE_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci --ignore-scripts
+      - name: Verify isolated authentication, backing reads and replacement preservation
+        run: |
+          node --test tests/multichain-bnb-game-access.test.mjs tests/multichain-bnb-test-*.test.mjs tests/multichain-bnb-backing-*.test.mjs
+          node --check scripts/check-bnb-backing-live.mjs
+          node --check scripts/check-bnb-backing-browser.mjs
+          node --check play/multichaintest/game/bnb/app.js
+          node scripts/package-bnb-backing.mjs
+          git diff --check
+      - name: Verify current original-trial backing with read-only chain calls
+        run: node scripts/check-bnb-backing-live.mjs --read-only
+      - name: Check desktop and phone diagnostics with a simulated wallet
+        run: |
+          npm install --prefix "$RUNNER_TEMP/bnb-backing-browser" --no-save --ignore-scripts playwright@1.56.1
+          node "$RUNNER_TEMP/bnb-backing-browser/node_modules/playwright/cli.js" install --with-deps chromium --no-shell
+          node scripts/check-bnb-backing-browser.mjs "$RUNNER_TEMP/bnb-backing-browser/node_modules/playwright/index.mjs"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bnb-backing-source-review
+          path: |
+            .netlify/bnb-backing-functions/manifest.json
+            .netlify/bnb-backing-browser.json
+            .netlify/bnb-backing-*.png
+            .netlify/bnb-backing-read-only.json
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 30
+
+  publish:
+    needs: verify
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[publish bnb backing]') && contains(github.event.head_commit.message, '[skip netlify]')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      REVIEWED_SHA: ${{ github.sha }}
+      BNB_BACKING_SOURCE_COMMIT: ${{ github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci --ignore-scripts
+      - name: Prepare the exact replacement function and browser checker
+        run: |
+          node scripts/package-bnb-backing.mjs
+          npm install --prefix "$RUNNER_TEMP/bnb-backing-browser" --no-save --ignore-scripts playwright@1.56.1
+          node "$RUNNER_TEMP/bnb-backing-browser/node_modules/playwright/cli.js" install --with-deps chromium --no-shell
+      - name: Refresh live read-only backing evidence before planning
+        run: node scripts/check-bnb-backing-live.mjs --read-only
+      - name: Capture, verify and publish against the locked live site
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: |
+          test -n "$NETLIFY_AUTH_TOKEN" || { echo 'The existing Netlify release connection is unavailable.'; exit 1; }
+          test "$(git rev-parse HEAD)" = "$REVIEWED_SHA" || { echo 'The checkout differs from the reviewed release commit.'; exit 1; }
+          node scripts/release-bnb-backing.mjs capture --source-commit "$REVIEWED_SHA"
+          node scripts/release-bnb-backing.mjs plan --source-commit "$REVIEWED_SHA"
+          node scripts/release-bnb-backing.mjs candidate --source-commit "$REVIEWED_SHA"
+          node scripts/release-bnb-backing.mjs verify --source-commit "$REVIEWED_SHA"
+          export BNB_BACKING_CANDIDATE_ID=$(node -p "JSON.parse(require('fs').readFileSync('.netlify/bnb-backing-release/candidate.json')).id")
+          export BNB_BACKING_PLAN_SHA256=$(node -p "JSON.parse(require('fs').readFileSync('.netlify/bnb-backing-release/candidate.json')).planSha256")
+          node scripts/check-bnb-backing-browser.mjs "$RUNNER_TEMP/bnb-backing-browser/node_modules/playwright/index.mjs" "https://$BNB_BACKING_CANDIDATE_ID--tree-token.netlify.app"
+          node scripts/release-bnb-backing.mjs publish --source-commit "$REVIEWED_SHA" --expected-candidate "$BNB_BACKING_CANDIDATE_ID" --review .netlify/bnb-backing-browser.json
+          export BNB_TEST_CANDIDATE_ID="$BNB_BACKING_CANDIDATE_ID"
+          node scripts/check-bnb-backing-live.mjs --canonical
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bnb-backing-publication
+          path: |
+            .netlify/bnb-backing-release/report.json
+            .netlify/bnb-backing-functions/manifest.json
+            .netlify/bnb-backing-browser.json
+            .netlify/bnb-backing-*.png
+            .netlify/bnb-backing-read-only.json
+            .netlify/bnb-backing-live.json
+            .netlify/bnb-test-auth-live.json
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 30

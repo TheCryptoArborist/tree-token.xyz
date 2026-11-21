@@ -1,5 +1,12 @@
 # BNB Tree Force '89 access — isolated foundation (not deployed)
 
+Update, November 21: the authentication portion is now published. The production
+eligibility predicate below remains a mock-tested design boundary: its
+hypothetical EVM registry is not a deployed contract. The concrete read-only
+inspector of the actual Sui Registry/Vault and completed BNB trial is described
+in [`bnb-backing-check.md`](./bnb-backing-check.md). It always denies production
+eligibility. New production custody/generation/pass contracts remain required.
+
 ## Scope
 
 The original NFTree #2720 round trip completed successfully. The disposable
