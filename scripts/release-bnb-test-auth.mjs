@@ -146,6 +146,21 @@ export function validateUploadRequirements(deploy, plan) {
   for (const digest of deploy.required) assert(Object.keys(plan.sources).some(p => plan.files[p] === digest), 'An existing or unapproved static upload was requested.');
 }
 
+export function createDeployPayload(baseline, plan) {
+  // Only documented deployFiles properties. Source identity remains pinned in
+  // the plan, candidate record, browser review and remote-main guards.
+  return {
+    files: plan.files,
+    functions: { ...Object.fromEntries(baseline.deploy.available_functions.map(f => [f.n, f.d])), [FUNCTION_NAME]: plan.functionPackage.sha256 },
+    functions_config: { ...functionsConfig(baseline.deploy), [FUNCTION_NAME]: {
+      build_data: plan.functionPackage.buildData, routes: plan.functionPackage.routes,
+      traffic_rules: EXPECTED_TRAFFIC,
+    } },
+    function_schedules: baseline.deploy.function_schedules,
+    draft: false, async: false, branch: 'main',
+  };
+}
+
 export function validateBrowserReview(report, plan, state, now = Date.now()) {
   assert.equal(report.passed, true); assert.equal(report.noWalletOrPaymentActions, true); assert.equal(report.mockedWallet, true);
   assert.equal(report.sourceCommit, plan.sourceCommit); assert.equal(report.candidateId, state.id);
@@ -311,12 +326,7 @@ export async function main(args = process.argv.slice(2)) {
   if (mode === 'candidate') {
     assert(!fs.existsSync(statePath), 'Candidate exists; verify it rather than creating another.');
     const requestStartedAt = new Date().toISOString();
-    deploy = await api(`sites/${SITE_ID}/deploys?title=${encodeURIComponent(plan.title)}`, 'POST', {
-      files: plan.files, functions: { ...Object.fromEntries(baseline.deploy.available_functions.map(f => [f.n, f.d])), [FUNCTION_NAME]: plan.functionPackage.sha256 },
-      functions_config: { ...functionsConfig(baseline.deploy), [FUNCTION_NAME]: { build_data: plan.functionPackage.buildData,
-        routes: plan.functionPackage.routes, traffic_rules: EXPECTED_TRAFFIC } },
-      function_schedules: baseline.deploy.function_schedules, draft: false, async: false, branch: 'main', commit_ref: plan.sourceCommit,
-    });
+    deploy = await api(`sites/${SITE_ID}/deploys?title=${encodeURIComponent(plan.title)}`, 'POST', createDeployPayload(baseline, plan));
     state = { schemaVersion: 1, siteId: SITE_ID, id: deploy.id, baselineId: BASELINE_ID,
       sourceCommit: plan.sourceCommit, planSha256: fingerprint(plan), requestStartedAt,
       candidateCreatedAt: deploy.created_at, verifiedAt: null };
