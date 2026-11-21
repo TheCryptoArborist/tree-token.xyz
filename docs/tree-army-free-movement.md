@@ -32,3 +32,13 @@ The release replaces only `/play/tree-army/test/index.html`, pinned against the
 last published game HTML. It captures and preserves the full current production
 inventory, backend packages, schedules, configuration and snippets. Cabinet
 media remains the prior gameplay preview; no new assets or dependencies.
+
+## Release status
+
+Implementation merged through PR #269 as
+`5cb9630efb1faec70916f4e4f46a6d3816dfe2a7`. Workflow `44865719998` passed all
+local gameplay/browser checks but Netlify returned HTTP 403 on candidate
+creation. No candidate was published. The canonical playtest remains 0.6 on
+locked deploy `6b00892b6acd6fc92a18fd20`. A bounded provider-error diagnostic
+now reports code/message/error fields without logging request payloads or
+credentials, so a retry can identify the provider-side cause.

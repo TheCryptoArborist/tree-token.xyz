@@ -14,7 +14,12 @@ const sha=(x,algorithm='sha1')=>crypto.createHash(algorithm).update(x).digest('h
 // inspected from the candidate HTML, not inferred from a mismatch. Only these
 // exact bytes may be removed for the delivery comparison; static hashes remain exact.
 const preservedSnippetSHA256='bf05453dc91bcf9c53db98e08829c8321193495b0839021e68d458d56e5be98d';
-async function api(p,method='GET',body,binary=false){const r=await fetch('https://api.netlify.com/api/v1/'+p,{method,headers:{Authorization:'Bearer '+token,'Content-Type':binary?'application/octet-stream':'application/json'},body:body===undefined?undefined:binary?body:JSON.stringify(body),signal:AbortSignal.timeout(45000)});assert(r.ok,'Netlify request failed: '+r.status+' '+p);return r.json();}
+async function api(p,method='GET',body,binary=false){const r=await fetch('https://api.netlify.com/api/v1/'+p,{method,headers:{Authorization:'Bearer '+token,'Content-Type':binary?'application/octet-stream':'application/json'},body:body===undefined?undefined:binary?body:JSON.stringify(body),signal:AbortSignal.timeout(45000)});if(!r.ok){
+ // Preserve only bounded provider error fields, never request headers or payloads.
+ const error=await r.json().catch(()=>({}));
+ const detail=Object.fromEntries(['code','message','error'].filter(k=>typeof error[k]==='string'||typeof error[k]==='number').map(k=>[k,String(error[k]).slice(0,1000)]));
+ throw Error('Netlify request failed: '+r.status+' '+p+' '+JSON.stringify(detail));
+}return r.json();}
 async function readDeploy(id){const d=await api(`sites/${siteId}/deploys/${id}`);assert.equal(d.id,id);assert.equal(d.site_id,siteId);assert(Array.isArray(d.available_functions),'Full function inventory unavailable; publication refused');assert(Array.isArray(d.function_schedules),'Schedule inventory unavailable; publication refused');if(d.state==='ready')validateBackend(d);return d;}
 function immutableOrigin(d){const origin=d.links?.permalink;assert(origin&&new URL(origin).protocol==='https:'&&new URL(origin).hostname===`${d.id}--tree-token.netlify.app`,'Immutable TREE deployment permalink required');return origin;}
 async function inventory(id){const files={};for(let p=1;p<=100;p++){const rows=await api(`deploys/${id}/files?per_page=100&page=${p}`);assert(Array.isArray(rows));for(const f of rows){assert(f.path&&f.sha);files[f.path]=f.sha;}if(rows.length<100)return files;}throw Error('Inventory pagination exhausted; refuse publication');}
