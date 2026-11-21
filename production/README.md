@@ -1,3 +1,46 @@
+# Isolated BNB sign-in test — published November 20, 2026
+
+Current locked production is `6b01240f1a94cf48c5b89830`, published at
+22:55:20 America/Chicago (November 21, 04:55:20.522 UTC) by
+[workflow 44868193543](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44868193543).
+Published source: `75495d9577c56e6e44b4c8ef4a71420f9ee26a79`, through PR #276.
+
+The new page is https://tree-token.xyz/play/multichaintest/game/bnb/ and its
+isolated handler is `/api/arcade-bnb-test`. It verifies a BNB wallet login
+message and manages a private test-only session. Gameplay, payment and active
+backed-pass entitlement remain disabled. Retired original pass #1 cannot play.
+
+The fresh baseline was the just-published Tree Army deployment
+`6b01217f8e1995306b794031`. All **649 existing static path hashes, 50 complete
+backend records, five schedules**, runtime settings and protected configuration
+evidence remain identical. Only two page files and one isolated handler were
+added, for **651 paths and 51 functions**. The Tree Army courtyard update is
+preserved. No environment variables or existing backend packages were changed.
+
+All **58 focused tests** and **12 candidate browser scenarios** at 320, 390 and
+1440 pixels passed. Canonical live verification accepted a real login signature
+from a disposable unfunded identity, persisted its session, rejected nonce
+replay and gameplay, then revoked the session and rejected its stale cookie.
+No chain transaction or user-wallet action occurred. The database audit found
+one consumed challenge, one revoked session and zero active sessions; all 31
+preexisting public Arcade procedure definitions and privileges remain unchanged.
+
+The canonical desktop page and signed-out status were visually verified;
+the 320-pixel candidate screenshot was also inspected. Peter's installed Brave
+wallet acceptance is the remaining manual check.
+
+Complete release: `docs/multichain/bnb-test-auth-page-release.json`.
+Independent audits and acceptance evidence:
+`docs/multichain/bnb-test-auth-publication-verification-20261120.json`.
+Artifact 14691744903 SHA256:
+`dcdbdd2f1333c1bdbae3e49e288b9af0d89b3b4387d027a5f0ba6a21a1b7bb71`.
+
+Capture and review the actual current site before any subsequent release.
+This completed one-time publisher must not be reused blindly, and the historical
+root snapshot must not replace the preserved live inventory.
+
+---
+
 # Tree Army courtyard movement — published November 20, 2026
 
 Current locked production is `6b01217f8e1995306b794031`, published and verified

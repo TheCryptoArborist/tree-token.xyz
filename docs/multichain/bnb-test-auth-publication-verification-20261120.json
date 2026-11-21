@@ -1,0 +1,803 @@
+{
+  "schemaVersion": 1,
+  "result": "passed",
+  "recordedAt": "2026-11-21T04:59:26.545846+00:00",
+  "deploymentId": "6b01240f1a94cf48c5b89830",
+  "baselineId": "6b01217f8e1995306b794031",
+  "sourceCommit": "75495d9577c56e6e44b4c8ef4a71420f9ee26a79",
+  "sourceTree": "63dd937343ce067fad5330c6e2f303eaace2719f",
+  "publishedAt": "2026-11-21T04:55:20.522Z",
+  "publishedAtUserLocal": "2026-11-20 22:55:20 America/Chicago",
+  "pageUrl": "https://tree-token.xyz/play/multichaintest/game/bnb/",
+  "workflow": {
+    "runId": 44868193543,
+    "url": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44868193543",
+    "conclusion": "success",
+    "verifyJobId": 136736526940,
+    "publishJobId": 136736793741,
+    "focusedTestsPassed": 58,
+    "focusedTestsFailed": 0
+  },
+  "implementationPullRequests": [
+    270,
+    271,
+    274,
+    276
+  ],
+  "artifactAudit": {
+    "checkedAt": "2026-11-21T04:57:57.507047+00:00",
+    "result": "passed",
+    "sourceCommit": "75495d9577c56e6e44b4c8ef4a71420f9ee26a79",
+    "sourceTree": "63dd937343ce067fad5330c6e2f303eaace2719f",
+    "baselineId": "6b01217f8e1995306b794031",
+    "deploymentId": "6b01240f1a94cf48c5b89830",
+    "planSha256": "e31e5e7b8f21d43b4a051a467922e2dbba69f2acebbbefea18ba55d5a7cc1b07",
+    "all649PriorPathHashesIdentical": true,
+    "staticFiles": 651,
+    "addedPaths": [
+      "/play/multichaintest/game/bnb/app.js",
+      "/play/multichaintest/game/bnb/index.html"
+    ],
+    "newAssetsMatchSource": true,
+    "functionCount": 51,
+    "originalFunctionsPreserved": 50,
+    "schedulesPreserved": 5,
+    "candidateBrowserCases": 12,
+    "browserViewportWidths": [
+      1440,
+      390,
+      320
+    ],
+    "canonicalAcceptancePassed": true,
+    "syntheticSessionRevoked": true,
+    "publicationArtifactId": 14691744903,
+    "publicationArtifactSHA256": "dcdbdd2f1333c1bdbae3e49e288b9af0d89b3b4387d027a5f0ba6a21a1b7bb71",
+    "protectedEnvironmentEvidenceMatchesPreCreditBaseline": true,
+    "all50CompletePriorProviderRecordsIdentical": true,
+    "fullPublishedBackendMatchesPrimaryApi": true,
+    "configurationQualification": "API-visible records and value IDs only; masked secret bytes are not readable"
+  },
+  "independentBackendAudit": {
+    "checkedAt": "2026-11-21T04:56:12.614Z",
+    "result": "passed",
+    "baselineId": "6b01217f8e1995306b794031",
+    "deployId": "6b01240f1a94cf48c5b89830",
+    "currentPublishedDeployId": "6b01240f1a94cf48c5b89830",
+    "state": "ready",
+    "locked": true,
+    "publishedAt": "2026-11-21T04:55:20.522Z",
+    "expectedSourceCommit": "75495d9577c56e6e44b4c8ef4a71420f9ee26a79",
+    "titleSourcePrefixMatches": true,
+    "fullSourceBinding": "Root verifies workflow artifact independently",
+    "functionsTotal": 51,
+    "functionsPreserved": 50,
+    "schedulesPreserved": 5,
+    "all50CompleteProviderRecordsIdentical": true,
+    "all5SchedulesIdentical": true,
+    "allRuntimeFieldsIdentical": true,
+    "originalFunctionsSHA256": "ac9f60c5c69775e2649f42503dbe9d043dbb2ce09a2a9fbcc55390e0a34230c9",
+    "preservedFunctionsSHA256": "ac9f60c5c69775e2649f42503dbe9d043dbb2ce09a2a9fbcc55390e0a34230c9",
+    "originalSchedulesSHA256": "55820196e06ecdd0d19571e521938232705cee0964a96c9023fbb3ddf7b8ea45",
+    "currentSchedulesSHA256": "55820196e06ecdd0d19571e521938232705cee0964a96c9023fbb3ddf7b8ea45",
+    "originalRuntimeSHA256": "9eee1b57bde43b71aee1c0a845f9f2742059235e8753ff81fe8ec50617912d13",
+    "currentRuntimeSHA256": "9eee1b57bde43b71aee1c0a845f9f2742059235e8753ff81fe8ec50617912d13",
+    "newFunction": {
+      "n": "arcade-bnb-test",
+      "d": "5ba59e2447597eb470ebf6a753415f366da6bbae42e18d4560521625fecfed9f",
+      "dn": null,
+      "g": null,
+      "bd": {
+        "bootstrapVersion": "2.24.0",
+        "runtimeAPIVersion": 2
+      },
+      "ro": [
+        {
+          "p": "/api/arcade-bnb-test",
+          "l": "/api/arcade-bnb-test",
+          "e": null,
+          "m": [],
+          "ps": false
+        }
+      ],
+      "tr": {
+        "action": {
+          "type": "rate_limit",
+          "config": {
+            "aggregate": {
+              "keys": [
+                {
+                  "type": "domain"
+                },
+                {
+                  "type": "ip"
+                }
+              ]
+            },
+            "rate_limit_config": {
+              "algorithm": "sliding_window",
+              "window_size": 60,
+              "window_limit": 60
+            }
+          }
+        }
+      },
+      "id": "a846ff0f10127e6e5a8a5859e680c61733e0bcb95ac0853e147ef5a4a9e801b8",
+      "a": "976363549896",
+      "c": "2026-11-21T04:54:44.748Z",
+      "im": "stream",
+      "m": 1024,
+      "obl": "netlify-observability-extension",
+      "oblv": 34,
+      "oid": "479afb48888eca5972cc59c3151e8160eba7ae673468b3bc56bf8c846177500e",
+      "r": "nodejs24.x",
+      "rg": "us-east-2",
+      "s": 2750820
+    },
+    "newFunctionChecks": {
+      "exactPackageSHA256": true,
+      "exactPackageBytes": true,
+      "node24": true,
+      "modernStreamInvocation": true,
+      "bootstrapRuntimeAPI2": true,
+      "exactRoute": true,
+      "domainIp60PerMinuteRateLimit": true,
+      "noComputeRegionEventScheduleOverrides": true
+    },
+    "staticAndConfigurationEvidence": "Root separately verifies workflow artifact and canonical delivery",
+    "operations": {
+      "remoteMutations": 0,
+      "liveAuthRequests": 0,
+      "signatures": 0
+    },
+    "evidence": {
+      "baseline": "/tmp/bnb-auth-tree-army-successor-deploy.json",
+      "actualDeploy": "/tmp/bnb-auth-candidate-deploy.json"
+    }
+  },
+  "candidateBrowserReview": {
+    "sourceCommit": "75495d9577c56e6e44b4c8ef4a71420f9ee26a79",
+    "candidateId": "6b01240f1a94cf48c5b89830",
+    "planSha256": "e31e5e7b8f21d43b4a051a467922e2dbba69f2acebbbefea18ba55d5a7cc1b07",
+    "pageURL": "https://6b01240f1a94cf48c5b89830--tree-token.netlify.app/play/multichaintest/game/bnb/",
+    "liveAssets": true,
+    "viewportWidths": [
+      1440,
+      390,
+      320
+    ],
+    "passed": true,
+    "noWalletOrPaymentActions": true,
+    "mockedWallet": true,
+    "mockedApi": true,
+    "installedWalletVerified": false,
+    "playwrightVersion": "1.56.1",
+    "checkedAt": "2026-11-21T04:55:04.873Z",
+    "appSha256": "06dadd455aed7be67879cd1377e6a24368ac2e4d41fa3b5f3b9d747358474493",
+    "screenshots": [
+      "bnb-test-auth-1440.png",
+      "bnb-test-auth-320.png"
+    ],
+    "scenarios": [
+      {
+        "name": "disconnected layout and missing-wallet help",
+        "width": 1440,
+        "passed": true,
+        "apiActions": [],
+        "walletMethods": []
+      },
+      {
+        "name": "personal-message sign-in, cookie, denial, expiry and isolated logout",
+        "width": 1440,
+        "passed": true,
+        "apiActions": [
+          "challenge",
+          "sign-in",
+          "status",
+          "entitlement",
+          "status",
+          "challenge",
+          "sign-in",
+          "logout"
+        ],
+        "walletMethods": [
+          "eth_chainId",
+          "eth_requestAccounts",
+          "eth_chainId",
+          "eth_accounts",
+          "eth_chainId",
+          "eth_accounts",
+          "personal_sign",
+          "eth_chainId",
+          "eth_accounts",
+          "personal_sign"
+        ],
+        "privateCookie": true,
+        "otherCookiePreserved": true
+      },
+      {
+        "name": "disconnected layout and missing-wallet help",
+        "width": 390,
+        "passed": true,
+        "apiActions": [],
+        "walletMethods": []
+      },
+      {
+        "name": "personal-message sign-in, cookie, denial, expiry and isolated logout",
+        "width": 390,
+        "passed": true,
+        "apiActions": [
+          "challenge",
+          "sign-in",
+          "status",
+          "entitlement",
+          "status",
+          "challenge",
+          "sign-in",
+          "logout"
+        ],
+        "walletMethods": [
+          "eth_chainId",
+          "eth_requestAccounts",
+          "eth_chainId",
+          "eth_accounts",
+          "eth_chainId",
+          "eth_accounts",
+          "personal_sign",
+          "eth_chainId",
+          "eth_accounts",
+          "personal_sign"
+        ],
+        "privateCookie": true,
+        "otherCookiePreserved": true
+      },
+      {
+        "name": "disconnected layout and missing-wallet help",
+        "width": 320,
+        "passed": true,
+        "apiActions": [],
+        "walletMethods": []
+      },
+      {
+        "name": "personal-message sign-in, cookie, denial, expiry and isolated logout",
+        "width": 320,
+        "passed": true,
+        "apiActions": [
+          "challenge",
+          "sign-in",
+          "status",
+          "entitlement",
+          "status",
+          "challenge",
+          "sign-in",
+          "logout"
+        ],
+        "walletMethods": [
+          "eth_chainId",
+          "eth_requestAccounts",
+          "eth_chainId",
+          "eth_accounts",
+          "eth_chainId",
+          "eth_accounts",
+          "personal_sign",
+          "eth_chainId",
+          "eth_accounts",
+          "personal_sign"
+        ],
+        "privateCookie": true,
+        "otherCookiePreserved": true
+      },
+      {
+        "name": "signature rejection creates no session",
+        "width": 390,
+        "passed": true,
+        "apiActions": [
+          "challenge"
+        ],
+        "walletMethods": [
+          "eth_chainId",
+          "eth_requestAccounts",
+          "eth_chainId",
+          "eth_accounts",
+          "eth_chainId",
+          "eth_accounts",
+          "personal_sign"
+        ]
+      },
+      {
+        "name": "accountsChanged while sign-in response is pending",
+        "width": 390,
+        "passed": true,
+        "apiActions": [
+          "challenge",
+          "sign-in"
+        ],
+        "walletMethods": [
+          "eth_chainId",
+          "eth_requestAccounts",
+          "eth_chainId",
+          "eth_accounts",
+          "eth_chainId",
+          "eth_accounts",
+          "personal_sign"
+        ]
+      },
+      {
+        "name": "chainChanged while sign-in response is pending",
+        "width": 390,
+        "passed": true,
+        "apiActions": [
+          "challenge",
+          "sign-in"
+        ],
+        "walletMethods": [
+          "eth_chainId",
+          "eth_requestAccounts",
+          "eth_chainId",
+          "eth_accounts",
+          "eth_chainId",
+          "eth_accounts",
+          "personal_sign"
+        ]
+      },
+      {
+        "name": "chain change during wallet prompt blocks sign-in",
+        "width": 390,
+        "passed": true,
+        "apiActions": [
+          "challenge"
+        ],
+        "walletMethods": [
+          "eth_chainId",
+          "eth_requestAccounts",
+          "eth_chainId",
+          "eth_accounts",
+          "eth_chainId",
+          "eth_accounts",
+          "personal_sign"
+        ]
+      },
+      {
+        "name": "late provider injection still handles account changes",
+        "width": 320,
+        "passed": true,
+        "apiActions": [
+          "challenge"
+        ],
+        "walletMethods": [
+          "eth_chainId",
+          "eth_requestAccounts",
+          "eth_chainId",
+          "eth_accounts",
+          "eth_chainId",
+          "eth_accounts"
+        ]
+      },
+      {
+        "name": "wrong network blocked without automatic switching",
+        "width": 320,
+        "passed": true,
+        "apiActions": [],
+        "walletMethods": [
+          "eth_chainId"
+        ]
+      }
+    ]
+  },
+  "canonicalLiveAcceptance": {
+    "passed": true,
+    "checkedAt": "2026-11-21T04:55:24.284Z",
+    "sourceCommit": "75495d9577c56e6e44b4c8ef4a71420f9ee26a79",
+    "deploymentId": "6b01240f1a94cf48c5b89830",
+    "origin": "https://tree-token.xyz",
+    "path": "/api/arcade-bnb-test",
+    "testWallet": "0x0D0fE42A4C1dd401FCf94A83172aEc253924dc6B",
+    "syntheticUnfundedIdentity": true,
+    "chainTransactionsSubmitted": 0,
+    "userWalletUsed": false,
+    "gameplayAuthorized": false,
+    "sessionRevoked": true,
+    "results": [
+      "anonymous status denied",
+      "foreign origin denied",
+      "durable exact challenge issued",
+      "real EOA signature accepted with isolated private cookie",
+      "nonce replay denied",
+      "durable session read verified",
+      "signed-in gameplay denied",
+      "logout revoked session and stale cookie denied"
+    ]
+  },
+  "databaseBefore": {
+    "checkedAt": "2026-11-21T04:42:22.676Z",
+    "projectId": "lehswszuekjqottolmsf",
+    "bnbTestFunctions": [
+      {
+        "acl": "{postgres=X/postgres,service_role=X/postgres}",
+        "name": "arcade_bnb_test_consume_session_v1",
+        "result": "jsonb",
+        "settings": [
+          "search_path=\"\""
+        ],
+        "arguments": "p_nonce text, p_wallet text, p_message_hash text, p_token_sha256 text, p_expires_at timestamp with time zone",
+        "anon_execute": false,
+        "public_execute": false,
+        "security_definer": false,
+        "definition_sha256": "bdd209956e77afb18d69051abc79fc5bdcadd54528f2c6c07b40636396492370",
+        "service_role_execute": true,
+        "authenticated_execute": false
+      },
+      {
+        "acl": "{postgres=X/postgres,service_role=X/postgres}",
+        "name": "arcade_bnb_test_create_challenge_v1",
+        "result": "jsonb",
+        "settings": [
+          "search_path=\"\""
+        ],
+        "arguments": "p_nonce text, p_wallet text, p_address text, p_issued_at timestamp with time zone, p_expires_at timestamp with time zone, p_message_hash text",
+        "anon_execute": false,
+        "public_execute": false,
+        "security_definer": false,
+        "definition_sha256": "0ecaab9087f7408d6d401d36056e3147c841421ae0f211cc7d21bcdf5d735a47",
+        "service_role_execute": true,
+        "authenticated_execute": false
+      },
+      {
+        "acl": "{postgres=X/postgres,service_role=X/postgres}",
+        "name": "arcade_bnb_test_read_challenge_v1",
+        "result": "jsonb",
+        "settings": [
+          "search_path=\"\""
+        ],
+        "arguments": "p_nonce text",
+        "anon_execute": false,
+        "public_execute": false,
+        "security_definer": false,
+        "definition_sha256": "b84ed3aa4a673a7393cb9bd2fe5bfade66e5a5cce7b99c6afd565b9783b4fb4f",
+        "service_role_execute": true,
+        "authenticated_execute": false
+      },
+      {
+        "acl": "{postgres=X/postgres,service_role=X/postgres}",
+        "name": "arcade_bnb_test_read_session_v1",
+        "result": "jsonb",
+        "settings": [
+          "search_path=\"\""
+        ],
+        "arguments": "p_token_sha256 text",
+        "anon_execute": false,
+        "public_execute": false,
+        "security_definer": false,
+        "definition_sha256": "05a3e8b06f2dfe9c1cd05f2b2b92db805abd9b0ad16554b376e2fc0663ec0b98",
+        "service_role_execute": true,
+        "authenticated_execute": false
+      },
+      {
+        "acl": "{postgres=X/postgres,service_role=X/postgres}",
+        "name": "arcade_bnb_test_revoke_session_v1",
+        "result": "boolean",
+        "settings": [
+          "search_path=\"\""
+        ],
+        "arguments": "p_token_sha256 text",
+        "anon_execute": false,
+        "public_execute": false,
+        "security_definer": false,
+        "definition_sha256": "1f820c7b7246ee44b8cfd7684563b061bb6aa9fa0fe8ec535b42cc9f7ce1c9e4",
+        "service_role_execute": true,
+        "authenticated_execute": false
+      }
+    ],
+    "isolatedTableCounts": {
+      "private.arcade_bnb_test_sessions": 0,
+      "private.arcade_bnb_test_challenges": 0
+    },
+    "existingPublicArcadeFunctions": {
+      "count": 31,
+      "definitionAndAclSHA256": "3ab86c83e89f9e4016d0f81c5690087162d76f12be646e0de3051ba08c6fe229"
+    },
+    "schemaVersion": 1,
+    "result": "passed",
+    "purpose": "Fresh read-only Supabase audit before resuming isolated BNB-test authentication publication",
+    "checks": {
+      "existingFunctionCountUnchanged": true,
+      "existingFunctionFingerprintUnchanged": true,
+      "isolatedTablesEmpty": true,
+      "exactlyFiveExpectedRpcs": true,
+      "allRpcPermissionsRestricted": true,
+      "allRpcFunctionsSecurityInvoker": true
+    },
+    "operations": {
+      "databaseMutations": 0,
+      "schemaChanges": 0,
+      "rpcMutations": 0,
+      "credentialsRetrieved": false,
+      "individualUserRowContentsRetrieved": false
+    },
+    "fingerprintRecipe": "Scope public functions matching ^arcade_, excluding ^arcade_bnb_test_. Order by identity = proname || '(' || pg_get_function_identity_arguments(oid) || ')'; UTF-8 SHA-256 over each identity + LF + pg_get_functiondef(oid) + LF + coalesce(proacl::text,'<default>'), joined with LF + '--' + LF.",
+    "method": "One SELECT statement over PostgreSQL function definitions and ACL metadata plus exact aggregate counts of the two isolated BNB-test tables. No authentication RPC invoked.",
+    "permissionQualification": "postgres is the function owner; service_role is the only non-owner execution grantee. PUBLIC, anon and authenticated cannot execute.",
+    "guidance": {
+      "mystenReadmeSha": "aa0ebd8574ba4839cdf4cd5315a965905f3fafb7",
+      "suiTechnicalGuidanceApplicable": false,
+      "supabaseSkillPreviouslyRead": true
+    }
+  },
+  "databaseAfter": {
+    "sessions": {
+      "total": 1,
+      "active": 0,
+      "revoked": 1,
+      "unrevoked": 0
+    },
+    "checkedAt": "2026-11-21T04:56:23.738Z",
+    "projectId": "lehswszuekjqottolmsf",
+    "challenges": {
+      "total": 1,
+      "consumed": 1,
+      "unconsumed": 0,
+      "activeUnconsumed": 0
+    },
+    "bnbTestTables": [
+      {
+        "acl": "{postgres=arwdDxtm/postgres,service_role=arw/postgres}",
+        "name": "arcade_bnb_test_challenges",
+        "row_security": true,
+        "force_row_security": false,
+        "anon_any_row_access": false,
+        "service_role_delete": false,
+        "service_role_insert": true,
+        "service_role_select": true,
+        "service_role_update": true,
+        "authenticated_any_row_access": false
+      },
+      {
+        "acl": "{postgres=arwdDxtm/postgres,service_role=arw/postgres}",
+        "name": "arcade_bnb_test_sessions",
+        "row_security": true,
+        "force_row_security": false,
+        "anon_any_row_access": false,
+        "service_role_delete": false,
+        "service_role_insert": true,
+        "service_role_select": true,
+        "service_role_update": true,
+        "authenticated_any_row_access": false
+      }
+    ],
+    "bnbTestFunctions": [
+      {
+        "acl": "{postgres=X/postgres,service_role=X/postgres}",
+        "name": "arcade_bnb_test_consume_session_v1",
+        "result": "jsonb",
+        "settings": [
+          "search_path=\"\""
+        ],
+        "arguments": "p_nonce text, p_wallet text, p_message_hash text, p_token_sha256 text, p_expires_at timestamp with time zone",
+        "anon_execute": false,
+        "public_execute": false,
+        "security_definer": false,
+        "definition_sha256": "bdd209956e77afb18d69051abc79fc5bdcadd54528f2c6c07b40636396492370",
+        "service_role_execute": true,
+        "authenticated_execute": false
+      },
+      {
+        "acl": "{postgres=X/postgres,service_role=X/postgres}",
+        "name": "arcade_bnb_test_create_challenge_v1",
+        "result": "jsonb",
+        "settings": [
+          "search_path=\"\""
+        ],
+        "arguments": "p_nonce text, p_wallet text, p_address text, p_issued_at timestamp with time zone, p_expires_at timestamp with time zone, p_message_hash text",
+        "anon_execute": false,
+        "public_execute": false,
+        "security_definer": false,
+        "definition_sha256": "0ecaab9087f7408d6d401d36056e3147c841421ae0f211cc7d21bcdf5d735a47",
+        "service_role_execute": true,
+        "authenticated_execute": false
+      },
+      {
+        "acl": "{postgres=X/postgres,service_role=X/postgres}",
+        "name": "arcade_bnb_test_read_challenge_v1",
+        "result": "jsonb",
+        "settings": [
+          "search_path=\"\""
+        ],
+        "arguments": "p_nonce text",
+        "anon_execute": false,
+        "public_execute": false,
+        "security_definer": false,
+        "definition_sha256": "b84ed3aa4a673a7393cb9bd2fe5bfade66e5a5cce7b99c6afd565b9783b4fb4f",
+        "service_role_execute": true,
+        "authenticated_execute": false
+      },
+      {
+        "acl": "{postgres=X/postgres,service_role=X/postgres}",
+        "name": "arcade_bnb_test_read_session_v1",
+        "result": "jsonb",
+        "settings": [
+          "search_path=\"\""
+        ],
+        "arguments": "p_token_sha256 text",
+        "anon_execute": false,
+        "public_execute": false,
+        "security_definer": false,
+        "definition_sha256": "05a3e8b06f2dfe9c1cd05f2b2b92db805abd9b0ad16554b376e2fc0663ec0b98",
+        "service_role_execute": true,
+        "authenticated_execute": false
+      },
+      {
+        "acl": "{postgres=X/postgres,service_role=X/postgres}",
+        "name": "arcade_bnb_test_revoke_session_v1",
+        "result": "boolean",
+        "settings": [
+          "search_path=\"\""
+        ],
+        "arguments": "p_token_sha256 text",
+        "anon_execute": false,
+        "public_execute": false,
+        "security_definer": false,
+        "definition_sha256": "1f820c7b7246ee44b8cfd7684563b061bb6aa9fa0fe8ec535b42cc9f7ce1c9e4",
+        "service_role_execute": true,
+        "authenticated_execute": false
+      }
+    ],
+    "existingPublicArcadeFunctions": {
+      "count": 31,
+      "definitionAndAclSHA256": "3ab86c83e89f9e4016d0f81c5690087162d76f12be646e0de3051ba08c6fe229"
+    },
+    "serviceRolePrivateSchemaUsage": true,
+    "schemaVersion": 1,
+    "purpose": "Independent read-only database audit following successful BNB-test live authentication, replay-denial, and logout verification",
+    "result": "passed",
+    "checks": {
+      "existingFunctionCountUnchanged": true,
+      "existingFunctionFingerprintUnchanged": true,
+      "exactlyOneConsumedChallenge": true,
+      "exactlyOneRevokedSession": true,
+      "fiveRpcDefinitionsAndPermissionsUnchanged": true,
+      "serviceRoleOnlyNonOwnerRpcExecution": true,
+      "isolatedTableRlsAndGrantsPreserved": true,
+      "serviceRolePrivateSchemaUsagePreserved": true
+    },
+    "before": {
+      "checkedAt": "2026-11-21T04:42:22.676Z",
+      "isolatedTableCounts": {
+        "private.arcade_bnb_test_sessions": 0,
+        "private.arcade_bnb_test_challenges": 0
+      },
+      "existingPublicArcadeFunctions": {
+        "count": 31,
+        "definitionAndAclSHA256": "3ab86c83e89f9e4016d0f81c5690087162d76f12be646e0de3051ba08c6fe229"
+      }
+    },
+    "operations": {
+      "databaseMutations": 0,
+      "schemaChanges": 0,
+      "rpcMutations": 0,
+      "credentialsRetrieved": false,
+      "individualUserRowContentsRetrieved": false
+    },
+    "fingerprintRecipe": "Scope public functions matching ^arcade_, excluding ^arcade_bnb_test_. Order by identity = proname || '(' || pg_get_function_identity_arguments(oid) || ')'; UTF-8 SHA-256 over each identity + LF + pg_get_functiondef(oid) + LF + coalesce(proacl::text,'<default>'), joined with LF + '--' + LF.",
+    "method": "One SELECT statement; aggregate challenge/session state counts and PostgreSQL function/permission metadata only. No individual wallet, nonce, token hash, signature, or user record retrieved.",
+    "permissionQualification": "postgres remains each RPC's owner; service_role is the only non-owner execution grantee.",
+    "activeSessionDefinition": "revoked_at IS NULL AND expires_at > statement_timestamp()",
+    "publicationContext": {
+      "workflowRun": "44868193543",
+      "deploymentId": "6b01240f1a94cf48c5b89830",
+      "source": "Publication identifiers supplied by the release coordinator; this audit independently checks Supabase state."
+    },
+    "guidance": {
+      "mystenReadmeSha": "aa0ebd8574ba4839cdf4cd5315a965905f3fafb7",
+      "suiTechnicalGuidanceApplicable": false,
+      "supabaseSkillPreviouslyRead": true
+    }
+  },
+  "precedingTreeArmyPreservation": {
+    "staticAudit": {
+      "result": "passed",
+      "baselineId": "6b01217f8e1995306b794031",
+      "previousDeployId": "6b00892b6acd6fc92a18fd20",
+      "staticFiles": 649,
+      "unchangedPaths": 648,
+      "changedPaths": [
+        "/play/tree-army/test/index.html"
+      ],
+      "addedPaths": [],
+      "treeArmyPathSHA1": "a91f8af6e4c0b7c1640a498a414d0a56b6aa238c",
+      "matchesReviewedTreeArmySource": true,
+      "artifactId": 14691898478,
+      "artifactSHA256": "92ac7fa305c60e0ff23f298e01dfd786c1915eb83b188f77a7b6587b4240281c",
+      "workflowRun": 44867337174
+    },
+    "backendAudit": {
+      "checkedAt": "2026-11-21T04:45:35.641Z",
+      "result": "passed",
+      "previousDeployId": "6b00892b6acd6fc92a18fd20",
+      "successorDeployId": "6b01217f8e1995306b794031",
+      "currentPublishedDeployId": "6b01217f8e1995306b794031",
+      "state": "ready",
+      "locked": true,
+      "publishedAt": "2026-11-21T04:44:45.531Z",
+      "all50CompleteProviderRecordsIdentical": true,
+      "all5SchedulesIdentical": true,
+      "allRuntimeFieldsIdentical": true,
+      "functions": {
+        "count": 50,
+        "previousSHA256": "ac9f60c5c69775e2649f42503dbe9d043dbb2ce09a2a9fbcc55390e0a34230c9",
+        "successorSHA256": "ac9f60c5c69775e2649f42503dbe9d043dbb2ce09a2a9fbcc55390e0a34230c9"
+      },
+      "schedules": {
+        "count": 5,
+        "previousSHA256": "55820196e06ecdd0d19571e521938232705cee0964a96c9023fbb3ddf7b8ea45",
+        "successorSHA256": "55820196e06ecdd0d19571e521938232705cee0964a96c9023fbb3ddf7b8ea45"
+      },
+      "runtime": {
+        "fields": [
+          "branch",
+          "context",
+          "functions_region",
+          "functions_region_overrides",
+          "database_branch_id",
+          "blobs_region",
+          "framework",
+          "edge_functions_present",
+          "server",
+          "database_migrations"
+        ],
+        "previousSHA256": "9eee1b57bde43b71aee1c0a845f9f2742059235e8753ff81fe8ec50617912d13",
+        "successorSHA256": "9eee1b57bde43b71aee1c0a845f9f2742059235e8753ff81fe8ec50617912d13"
+      },
+      "bnbFunctionPresent": false,
+      "staticAndConfigurationEvidence": "Separate completed Tree Army release artifact required",
+      "mutations": 0,
+      "files": {
+        "previous": "/tmp/bnb-auth-live-deploy.json",
+        "successor": "/tmp/bnb-auth-tree-army-successor-deploy.json"
+      }
+    }
+  },
+  "liveUiReview": {
+    "canonicalUrl": "https://tree-token.xyz/play/multichaintest/game/bnb/",
+    "title": "Tree Force \u201989 \u00b7 BNB sign-in test",
+    "desktopVisuallyInspected": true,
+    "readOnlyStatusButtonChecked": true,
+    "observedStatus": "No BNB test session. Connect and sign in to begin.",
+    "loginDisabledUntilWalletConnected": true,
+    "gameplayStartDisabled": true,
+    "candidateMobileScreenshotVisuallyInspected": true,
+    "candidateMobileViewport": 320,
+    "userWalletConnected": false,
+    "userWalletSignatureRequested": false,
+    "installedBraveAcceptance": "Pending manual acceptance by Peter; not performed by automation"
+  },
+  "scope": {
+    "staticFilesBefore": 649,
+    "staticFilesAfter": 651,
+    "existingStaticFilesChanged": 0,
+    "functionsBefore": 50,
+    "functionsAfter": 51,
+    "existingFunctionsChanged": 0,
+    "schedulesBefore": 5,
+    "schedulesAfter": 5,
+    "environmentChanged": false,
+    "gameplayAuthorized": false,
+    "paymentsEnabled": false,
+    "chainTransactionsSubmitted": 0
+  },
+  "guidance": {
+    "mystenRepository": "https://github.com/MystenLabs/skills",
+    "liveReadmeCheckedThisRequest": true,
+    "suiTechnicalChange": false,
+    "appliedHostingSkills": [
+      "netlify-deploy/SKILL.md",
+      "netlify-functions/SKILL.md",
+      "netlify-config/SKILL.md",
+      "supabase/SKILL.md"
+    ]
+  },
+  "nextAcceptance": [
+    "Open the canonical page in Brave with a BNB-compatible wallet.",
+    "Select BNB Smart Chain, connect the wallet and sign the isolated login message.",
+    "Verify signed-in status, then sign out and confirm the session is no longer active.",
+    "Gameplay must remain disabled; production-backed pass entitlement is a separate implementation stage."
+  ]
+}
