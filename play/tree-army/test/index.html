@@ -153,7 +153,7 @@ for(const e of enemies){
 }
 for(const s of shots){
  const oldX=s.originX??s.x,oldY=s.originY??s.groundY;delete s.originX;delete s.originY;
- s.x+=s.vx*dt;s.groundY+=s.vy*dt;s.traveled+=Math.hypot(s.vx,s.vy)*dt;s.height=s.startHeight+(50-s.startHeight)*Math.min(1,s.traveled/s.targetDistance);s.y=s.groundY-s.height;s.life-=dt;
+ s.previousX=s.x;s.previousY=s.y;s.x+=s.vx*dt;s.groundY+=s.vy*dt;s.traveled+=Math.hypot(s.vx,s.vy)*dt;s.height=s.startHeight+(50-s.startHeight)*Math.min(1,s.traveled/s.targetDistance);s.y=s.groundY-s.height;s.life-=dt;
  const hits=enemies.filter(e=>e.hp>0&&!s.hit.has(e.id)&&segmentDistance(e.x,e.y,oldX,oldY,s.x,s.groundY)<(s.blast?28:20)).sort((a,b)=>Math.hypot(a.x-oldX,a.y-oldY)-Math.hypot(b.x-oldX,b.y-oldY));
  for(const e of hits){hurt(e,s.damage);s.hit.add(e.id);if(!s.blast){s.life=0;break;}}
 }
@@ -215,7 +215,7 @@ for(const actor of [...allies,...enemies,hero].sort((a,b)=>a.y-b.y||a.id-b.id)){
  else enemyArt(actor);
  ctx.restore();
 }
-for(const s of shots){const sign=Math.sign(s.vx);line(s.x-sign*(s.blast?38:14),s.y,s.x,s.y,s.blast?'#ffcd5b':'#f2dea1',s.blast?7:3);ellipse(s.x,s.y,s.blast?15:6,s.blast?10:4,'#f5d783');if(s.blast){ellipse(s.x-sign*3,s.y,8,11,'#9c6934');line(s.x-7,s.y-5,s.x+6,s.y-5,'#ead796',4);}}
+for(const s of shots){const sign=Math.sign(s.vx),dx=s.x-(s.previousX??s.x-s.vx),dy=s.y-(s.previousY??s.y-s.vy),length=Math.hypot(dx,dy)||1,tail=s.blast?38:14;line(s.x-dx/length*tail,s.y-dy/length*tail,s.x,s.y,s.blast?'#ffcd5b':'#f2dea1',s.blast?7:3);ellipse(s.x,s.y,s.blast?15:6,s.blast?10:4,'#f5d783');if(s.blast){ellipse(s.x-sign*3,s.y,8,11,'#9c6934');line(s.x-7,s.y-5,s.x+6,s.y-5,'#ead796',4);}}
 for(const p of sparks){ctx.globalAlpha=Math.min(1,Math.max(0,p.life));ellipse(p.x,p.y,3,3,p.color);}ctx.globalAlpha=1;ctx.restore();
 const vignette=ctx.createLinearGradient(0,0,0,h);vignette.addColorStop(0,'#081b2022');vignette.addColorStop(.6,'#0000');vignette.addColorStop(1,'#09170c66');ctx.fillStyle=vignette;ctx.fillRect(0,0,w,h);
 if(mode==='battle'&&spawned<2){ctx.textAlign='center';ctx.font='bold 22px Georgia';ctx.fillStyle='#fff0ba';ctx.shadowColor='#000';ctx.shadowBlur=6;ctx.fillText('WAVE '+wave+' / '+TOTAL,w/2,50);ctx.font='12px system-ui';ctx.fillText(wave===10?'THE IRON STUMP':'HOLD THE GROVE',w/2,70);ctx.shadowBlur=0;}
