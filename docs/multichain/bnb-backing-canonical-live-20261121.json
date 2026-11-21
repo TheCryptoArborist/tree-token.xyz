@@ -1,0 +1,111 @@
+{
+  "passed": true,
+  "mode": "canonical",
+  "sourceCommit": "e5e3b1255846eb33b408f2fece7750befba69ff7",
+  "deploymentId": "6b01bbf2b66675f3aebc4a74",
+  "checkedAt": "2026-11-21T15:43:43.821Z",
+  "gameplayAuthorized": false,
+  "productionApproved": false,
+  "chainTransactionsSubmitted": 0,
+  "userWalletUsed": false,
+  "sessionRevoked": true,
+  "syntheticUnfundedIdentity": true,
+  "proof": {
+    "schemaVersion": 1,
+    "mode": "original-one-slot-diagnostic",
+    "classification": "trial-retired",
+    "checkedAt": "2026-11-21T15:43:43.430Z",
+    "inspectedWallet": "0xa6363e287244964785fb265e3f236d3f15ea6fb7",
+    "eligible": false,
+    "productionReady": false,
+    "gameplayAuthorized": false,
+    "blockers": [
+      "production-backing-registry-not-approved",
+      "one-slot-trial-not-production",
+      "retired-one-slot-trial"
+    ],
+    "backing": {
+      "nftId": "0x046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba",
+      "nftType": "0xf6c6d439ea0da2f3e9ba79e4992a7a4c113215fbf54c442ac9020c315f953705::collection::NFT",
+      "lifecycle": "released",
+      "sourceCustodyConfirmed": false,
+      "redemptionPending": false,
+      "releasedTo": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+      "currentNftObservation": "queryable",
+      "currentNftOwnerType": "AddressOwner",
+      "currentNftOwner": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4"
+    },
+    "sui": {
+      "network": "sui:mainnet",
+      "chainIdentifier": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S",
+      "checkpoint": {
+        "sequenceNumber": "347683966",
+        "timestamp": "2026-11-21T15:43:42.535Z"
+      },
+      "checkpointStart": {
+        "sequenceNumber": "347683965",
+        "timestamp": "2026-11-21T15:43:42.284Z"
+      },
+      "consistency": "stable-objects-reread",
+      "package": {
+        "objectId": "0xac73072b94f14a87b23781c7004c77df6799fdee109f24271d4696bc4a6514a4",
+        "version": "1",
+        "digest": "6wkE7TgJ3rjAoaZAeVPeFK7TmocHNPcqSZacXtoGPvqp"
+      },
+      "packageBcsSha256": "47c9cfedbba902b8aa289329106035449bc7bf93ea3174fd486caa8f9e424b1a",
+      "registry": {
+        "objectId": "0x4d531a6dfed56f977a8120b4c628392fc491065248b5c424b9405443b899df92",
+        "version": "2",
+        "digest": "6dLNdxRWrpZdVjyq8YTqYq7bTvWQqnJVqx4qM3DPFD4y"
+      },
+      "vault": {
+        "objectId": "0x45bf08499784ea9ff658937165a9449d509aa37de47a728af44e903387f3ca2c",
+        "version": "1100579541",
+        "digest": "9pcxxcCdFCAUwEQWb352JD2gd6qjyPx6t7sFDV5qq4SX"
+      },
+      "upgradePolicy": "compatible-version-1-pinned",
+      "sourcePaused": false
+    },
+    "bnb": {
+      "chainId": 56,
+      "blockNumber": "134913197",
+      "blockHash": "0x6cab886f3ff6f662aceb5db0626bd8df64d5295c5a67a0e33391141a08863d2f",
+      "blockTimestamp": "2026-11-21T15:43:41.000Z",
+      "finality": "finalized",
+      "passAddress": "0x1d3da001e586a7defd397b77fadb29ed6f039c13",
+      "adapterAddress": "0x90b5292a5074cfdd665c726b433cc0a97e0da6ab",
+      "tokenId": "1",
+      "passState": "Retired",
+      "passStateCode": 4,
+      "owner": null,
+      "ownerMatches": false,
+      "canPlay": false,
+      "passCodeSha256": "714bee6acddef5999864affbc06b7c0025060d2c11827f47d19e99b23a4b2712",
+      "adapterCodeSha256": "7613e9c518ae74c8a46371ec1db80c113bde8982400532d5885453ee3a98c6bd"
+    }
+  },
+  "authentication": {
+    "passed": true,
+    "checkedAt": "2026-11-21T15:43:43.820Z",
+    "sourceCommit": "e5e3b1255846eb33b408f2fece7750befba69ff7",
+    "deploymentId": "6b01bbf2b66675f3aebc4a74",
+    "origin": "https://tree-token.xyz",
+    "path": "/api/arcade-bnb-test",
+    "testWallet": "0xA6363e287244964785FB265e3f236d3F15eA6FB7",
+    "syntheticUnfundedIdentity": true,
+    "chainTransactionsSubmitted": 0,
+    "userWalletUsed": false,
+    "gameplayAuthorized": false,
+    "sessionRevoked": true,
+    "results": [
+      "anonymous status denied",
+      "foreign origin denied",
+      "durable exact challenge issued",
+      "real EOA signature accepted with isolated private cookie",
+      "nonce replay denied",
+      "durable session read verified",
+      "signed-in gameplay denied",
+      "logout revoked session and stale cookie denied"
+    ]
+  }
+}

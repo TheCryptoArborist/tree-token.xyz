@@ -1,3 +1,47 @@
+# BNB original-NFT backing check — published November 21, 2026
+
+Current locked production is `6b01bbf2b66675f3aebc4a74`, published at
+09:43:38 America/Chicago (15:43:38.172 UTC) by
+[workflow 44920394429](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44920394429).
+Published source: `e5e3b1255846eb33b408f2fece7750befba69ff7`, through PR #278.
+
+The existing https://tree-token.xyz/play/multichaintest/game/bnb/ page now offers
+**Check trial backing** for original NFTree #2720 after BNB sign-in. The isolated
+handler reads current Sui custody and a finalized BNB pass state, then rechecks
+the authenticated session. The actual canonical result is **retired/released**.
+Every diagnostic result denies gameplay, including simulated Active/held cases;
+a new production custody/generation/pass route is still required.
+
+Fresh baseline: `6b01240f1a94cf48c5b89830`. Only the two existing BNB page files
+and isolated BNB function were replaced. **651 static paths, 51 functions and
+five schedules** remain. All **649 unrelated hashes, 50 other complete provider
+records**, schedules, runtime fields, protected environment and snippets were
+preserved. Independent post-publication API checks confirm the new ready,
+locked deployment and exact complete backend records. Database definitions and
+privileges remain unchanged for the 31 existing Arcade and five BNB procedures.
+
+All **174 focused tests**, **24 source browser cases** and **12 candidate browser
+cases** passed at 320, 390 and 1440 pixels. The real-chain preflight passed.
+Canonical acceptance verified a fresh unfunded identity's login, the structured
+backing report, gameplay denial, logout and rejection of its stale cookie.
+No user wallet or chain transaction was used. The canonical signed-out page and
+the 320-pixel candidate screenshot were visually inspected. Simulated browser
+checks and Peter's earlier screenshots are recorded separately.
+
+Complete inventory: `docs/multichain/bnb-backing-page-release.json`.
+Independent release audit: `docs/multichain/bnb-backing-publication-verification-20261121.json`.
+Canonical evidence: `docs/multichain/bnb-backing-canonical-live-20261121.json`.
+Implementation and remaining boundary: `docs/multichain/bnb-backing-check.md`.
+Publication artifact 14713910332 SHA256:
+`ce6eb4b9cbf71d4c3e744c2d6c62d2d2c96a100d529d0a4ae0209586a5bb6745`.
+
+Capture the full current site before any future release. The completed publisher
+pins its prior baseline and must not be reused blindly. Preserve all current
+games, packages and configuration; never replace production with the historical
+root snapshot. All real Git builds must finish before the final lock switch.
+
+---
+
 # Isolated BNB sign-in test — published November 20, 2026
 
 Current locked production is `6b01240f1a94cf48c5b89830`, published at

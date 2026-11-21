@@ -1,5 +1,39 @@
 # BNB original-NFT backing check
 
+## Published November 21, 2026
+
+The check is live at https://tree-token.xyz/play/multichaintest/game/bnb/.
+Locked production deploy `6b01bbf2b66675f3aebc4a74` was published at
+09:43:38 America/Chicago (15:43:38.172 UTC) by
+[workflow 44920394429](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44920394429),
+from source `e5e3b1255846eb33b408f2fece7750befba69ff7` through PR #278.
+
+Connect a BNB wallet, sign the existing login message if needed, then select
+**Check trial backing** under **3. Check NFT backing**. This last step performs
+only reads and requires no additional wallet signature. The canonical live
+check observed **Retired** on BNB and **released** on Sui, with gameplay denied.
+Its disposable, unfunded authentication session was revoked, and the old cookie
+was rejected. No user wallet or chain transaction was used.
+
+All **174 focused tests**, **24 source browser cases** and **12 candidate browser
+cases** passed. Browser cases cover 320, 390 and 1440 pixels with simulated
+wallet/API responses. Real chain preflights and the canonical API test are
+separate evidence. The canonical signed-out page and status control were also
+visually inspected; this is not an installed-wallet acceptance claim.
+
+The fresh release preserved **649 unrelated static hashes, 50 other complete
+backend records, five schedules**, runtime and protected configuration. Exactly
+the two existing BNB page files and the isolated handler were replaced. Totals
+remain **651 paths and 51 functions**. Post-release metadata fingerprints match
+the pre-release definitions and grants for all 31 existing Arcade procedures
+and five BNB test procedures. No migration or environment change was made.
+
+Complete inventory: [`bnb-backing-page-release.json`](./bnb-backing-page-release.json).
+Independent preservation, database and visual verification:
+[`bnb-backing-publication-verification-20261121.json`](./bnb-backing-publication-verification-20261121.json).
+Actual canonical chain and session result:
+[`bnb-backing-canonical-live-20261121.json`](./bnb-backing-canonical-live-20261121.json).
+
 ## Scope and current boundary
 
 This adds a real read-only inspector for the completed original NFTree #2720
