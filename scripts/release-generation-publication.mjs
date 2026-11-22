@@ -1,5 +1,5 @@
 import fs from 'node:fs';import assert from 'node:assert/strict';import {execFileSync} from 'node:child_process';import {createHash} from 'node:crypto';
-import {fingerprint,readToken} from './release-preserved-production.mjs';
+import {fingerprint,readToken,environmentFor} from './release-preserved-production.mjs';
 import {apiClient} from './release-sti-purchase.mjs';
 import {functionsConfig,waitForAllBuilds,validateBackend} from './release-arcade-cutoff.mjs';
 import {verifyHandoff} from '../contracts/nftree-generation/scripts/wallet-handoff.mjs';
@@ -26,7 +26,7 @@ async function protectedState(api,site){
  const base=`accounts/${ACCOUNT}/env`,q=`?site_id=${SITE}`;
  const data=await Promise.all([api(base+q),api(base+q+'&scope=functions'),api(base),api(base+'?scope=functions'),api(`sites/${SITE}/snippets`)]);
  const settings={...site.build_settings};delete settings.updated_at;
- return {settings:fingerprint(settings),environment:fingerprint(data),domain:site.custom_domain};
+ return {...environmentFor({site:data[0],siteFunctions:data[1],shared:data[2],sharedFunctions:data[3],buildSettings:settings}),snippets:fingerprint(data[4]),domain:site.custom_domain};
 }
 async function baselineCheck(api,b){const site=await api(`sites/${SITE}`);assert.equal(site.account_id,ACCOUNT);assert.equal(site.published_deploy?.id,BASE);assert.equal(site.published_deploy.locked,true);const d=await api(`deploys/${BASE}`);assert.equal(d.state,'ready');assert.equal(d.locked,true);eq(await inventory(api,BASE),b.files,'Baseline files');eq(d.available_functions,b.deploy.available_functions,'Baseline backend');eq(d.function_schedules,b.deploy.function_schedules,'Baseline schedules');eq(runtime(d),runtime(b.deploy),'Baseline runtime');eq(await protectedState(api,site),b.protected,'Protected configuration');return site;}
 async function served(origin,b){
