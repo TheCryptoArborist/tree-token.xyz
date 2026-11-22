@@ -26,3 +26,7 @@ Release scope: replace only `/play/generation-slot/index.html` and `app.js`.
 Fresh locked baseline is `6b037118d43fee18f79fb7a4`, which includes the newer
 seasonal-grove release. Preserve its full inventory, all 54 backend records,
 five schedules and protected configuration. No backend upload or rebuild.
+
+Published and locked as `6b03741d72033c45517f32e3`; see connection-live.json.
+133 tests and all five source/candidate/live browser cases passed. Actual user
+wallet connection is pending confirmation; no slot creation was submitted.

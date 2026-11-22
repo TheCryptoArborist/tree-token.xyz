@@ -1,3 +1,33 @@
+# Desktop Slush slot connection repair — published
+
+Current locked production is `6b03741d72033c45517f32e3`, published November 22,
+2026 at 17:02:51 America/Chicago (`2026-11-22T23:02:51.415Z`). Source `eb832e9`,
+control `123db0b`, workflow `45080969461`.
+
+Only `/play/generation-slot/index.html` and `app.js` changed. Fresh baseline
+`6b037118d43fee18f79fb7a4` includes the newer seasonal-grove release. Preserve
+all its other content: **667 static paths total, 665 unchanged hashes, all 54
+complete backend/provider records, five schedules**, captured runtime and
+API-visible protected configuration verified unchanged. No backend rebuild/upload.
+
+The page uses Slush's returned accounts when its getter is delayed, reuses an
+already-authorized account, follows account-change events, and displays shared
+addresses on a mismatch. It shows connection progress, a bounded timeout and
+script-loading errors. The initial status identifies `connection update 2`.
+Transaction, gas budget, signature checks, receipt lock and backend are unchanged.
+No chain transaction was submitted during this repair.
+
+Validation: 133 local/CI tooling tests, preview-preservation test, contract CI,
+five source/candidate/live mock-wallet connection scenarios, exact served-file
+hashes, and independent complete backend-record comparison. The user's actual
+Slush account sharing still needs confirmation on their desktop. Evidence is in
+`docs/multichain/generation-milestone/slot-review/connection-live.json` and
+`connection-repair.md`. GitHub artifact `14776944137` has SHA256
+`ec35189de1a2ad8d0c80deb3aea44fb623677961685a4f555c7a51d1d1197548`.
+Capture current production afresh before any later release.
+
+---
+
 # Canonical empty custody slot handoff — published
 
 Current locked production is `6b036cc41e40ebe1a1df7990`, published November 22,

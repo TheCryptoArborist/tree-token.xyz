@@ -1,0 +1,22 @@
+{
+  "deployId": "6b03741d72033c45517f32e3",
+  "baselineId": "6b037118d43fee18f79fb7a4",
+  "publishedAt": "2026-11-22T23:02:51.415Z",
+  "locked": true,
+  "sourceCommit": "eb832e9feb926ac52e129cccf298ddc9b222bc48",
+  "controlCommit": "123db0bbb9f2f18919d058bcf709053b7001d897",
+  "publishRun": 45080969461,
+  "artifactId": 14776944137,
+  "artifactSha256": "ec35189de1a2ad8d0c80deb3aea44fb623677961685a4f555c7a51d1d1197548",
+  "staticPaths": 667,
+  "preservedStaticPaths": 665,
+  "functions": 54,
+  "schedules": 5,
+  "backendDifferences": [],
+  "testsPassed": 133,
+  "sourceCandidateLiveBrowserCases": 5,
+  "htmlSha256": "6d1fa40d9b6fc4a5f7d05d852428186b3208b3041a3b2ce85d1bba2bd8a5ea87",
+  "appSha256": "f35ef6525f92b2655293b4720f9507d9756e6230c8861c3c92cdef02fb96a9b9",
+  "realWalletVerified": false,
+  "submitted": false
+}
