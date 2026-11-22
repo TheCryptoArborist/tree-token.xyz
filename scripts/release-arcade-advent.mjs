@@ -22,9 +22,16 @@ export const DELIVERY_SOURCES = {
   '/styles/arcade-organization.css': 'styles/arcade-organization.css',
   '/scripts/arcade-advent-grove.js': 'scripts/arcade-advent-grove.js',
   '/scripts/arcade-next-month-unlocks.js': 'scripts/arcade-next-month-unlocks.js',
+  '/assets/arcade-seasonal/november-emblem-tree.png': 'assets/arcade-seasonal/november-emblem-tree.png',
+  '/assets/arcade-seasonal/advent-art-preview.png': 'assets/arcade-seasonal/advent-art-preview.png',
+  '/play/advent-preview/index.html': 'play/advent-preview/index.html',
+  '/scripts/arcade-advent-preview.js': 'scripts/arcade-advent-preview.js',
+  '/styles/arcade-advent-preview.css': 'styles/arcade-advent-preview.css',
 };
 export const REQUIRED_CHANGES = ['/scripts/arcade-organization.js', '/scripts/arcade-attendance-forest.js', '/styles/arcade-organization.css'];
-export const ADDED_PATHS = ['/scripts/arcade-advent-grove.js', '/scripts/arcade-next-month-unlocks.js'];
+export const ADDED_PATHS = ['/scripts/arcade-advent-grove.js', '/scripts/arcade-next-month-unlocks.js',
+  '/assets/arcade-seasonal/november-emblem-tree.png', '/assets/arcade-seasonal/advent-art-preview.png',
+  '/play/advent-preview/index.html', '/scripts/arcade-advent-preview.js', '/styles/arcade-advent-preview.css'];
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const RECORD_DIR = '.netlify/arcade-advent';
 const SOURCE_PATHS = [...Object.values(DELIVERY_SOURCES),
@@ -37,7 +44,9 @@ const SOURCE_PATHS = [...Object.values(DELIVERY_SOURCES),
   'tests/arcade-monthly-wallet-switch.test.mjs', 'tests/arcade-monthly-ui.test.mjs',
   'tests/arcade-monthly-deadline-ui.test.mjs', 'tests/arcade-organization.test.mjs',
   'tests/arcade-season-deadline.test.mjs',
+  'scripts/build-feature-preview.mjs', 'tests/sti-preview-build.test.mjs',
   '.github/workflows/arcade-advent.yml',
+  '.github/workflows/verify-arcade-organization.yml',
   'production/arcade-organization-static/runtime/scripts/arcade-daily-growth-play-share.js',
   'production/arcade-organization-static/runtime/assets/arcade/arcade-growth-wallet.js'];
 const sha = (bytes, algorithm = 'sha256') => crypto.createHash(algorithm).update(bytes).digest('hex');
@@ -52,7 +61,8 @@ const delay = milliseconds => new Promise(resolve => setTimeout(resolve, millise
 const originFor = id => { assert(safeId(id)); return `https://${id}--tree-token.netlify.app`; };
 
 export const FOREST_BROWSER_CHECKS = ['checkinCount', 'streakCountdown', 'growingForest', 'missedDayEmbers',
-  'verifiedRecoveryRain', 'pendingRecoveryNoRain', 'walletIsolation', 'reducedMotion', 'monthRollover', 'staleProgress', 'adventGrove', 'recoveredTileIcon', 'nextMonthCountdown'];
+  'verifiedRecoveryRain', 'pendingRecoveryNoRain', 'walletIsolation', 'reducedMotion', 'monthRollover', 'staleProgress', 'adventGrove', 'recoveredTileIcon', 'nextMonthCountdown',
+  'autumnTheme', 'adventArtwork', 'adventPreview'];
 export function validateBrowserReview(report, plan, state, now = Date.now()) {
   validateTabBrowserReview(report, plan, state, now);
   assert.equal(report.syntheticWalletOnly, true, 'Forest review must use isolated synthetic wallet fixtures.');
@@ -60,6 +70,22 @@ export function validateBrowserReview(report, plan, state, now = Date.now()) {
   for (const name of FOREST_BROWSER_CHECKS) {
     assert.equal(report.checks?.[name], true, 'Missing candidate forest check: ' + name);
   }
+  for (const name of ['failures', 'browserErrors', 'assetFailures', 'unexpectedWrites']) {
+    assert(Array.isArray(report[name]) && report[name].length === 0, 'Browser review has errors: ' + name);
+  }
+  assert(Number.isSafeInteger(report.expectedScenarioCount) && report.expectedScenarioCount >= 21, 'Incomplete seasonal scenario coverage.');
+  assert.equal(report.attemptedScenarioCount, report.expectedScenarioCount, 'Not all seasonal scenarios ran.');
+  assert.equal(report.passedScenarioCount, report.expectedScenarioCount, 'Not all seasonal scenarios passed.');
+  assert(Array.isArray(report.viewports) && report.viewports.length === report.viewportWidths.length, 'Incomplete viewport evidence.');
+  eq(report.viewports.map(view => view.width).sort((a, b) => a - b), [...report.viewportWidths].sort((a, b) => a - b), 'Reviewed viewport widths');
+  let scenarioCount = 0;
+  for (const viewport of report.viewports) {
+    assert(Array.isArray(viewport.scenarios) && viewport.scenarios.length > 0, 'Missing viewport scenarios.');
+    assert(viewport.scenarios.every(scenario => scenario.result === 'passed'), 'A viewport scenario did not pass.');
+    for (const name of FOREST_BROWSER_CHECKS) assert.equal(viewport.checks?.[name], true, 'Missing viewport forest check: ' + name);
+    scenarioCount += viewport.scenarios.length;
+  }
+  assert.equal(scenarioCount, report.expectedScenarioCount, 'Scenario evidence differs from summary.');
 }
 
 export function compareBackend(actual, expected) {
@@ -76,7 +102,7 @@ export function assembleFiles(baselineFiles, overlays) {
     const pathname = publicUploadPath(item.path);
     assert(Object.hasOwn(DELIVERY_SOURCES, pathname), 'Unapproved overlay path.');
     if (ADDED_PATHS.includes(pathname)) {
-      assert(!Object.hasOwn(baselineFiles, pathname), 'An approved Advent module is already in production; capture a new release scope.');
+      assert(!Object.hasOwn(baselineFiles, pathname), 'An approved new seasonal asset is already in production; capture a new release scope.');
     } else {
       assert(Object.hasOwn(baselineFiles, pathname), 'An approved existing asset is missing from the baseline.');
     }
@@ -90,7 +116,7 @@ export function assembleFiles(baselineFiles, overlays) {
   assert(REQUIRED_CHANGES.every(p => changedOriginals.includes(p)), 'All three reviewed existing forest assets must change.');
   eq(changedOriginals, [...REQUIRED_CHANGES].sort(), 'Only the three approved existing assets');
   const addedPaths = Object.keys(files).filter(p => !Object.hasOwn(baselineFiles, p)).sort();
-  eq(addedPaths, [...ADDED_PATHS].sort(), 'Exactly the two new Advent modules');
+  eq(addedPaths, [...ADDED_PATHS].sort(), 'Exactly the seven new seasonal presentation assets');
   eq(Object.keys(files).sort(), [...Object.keys(baselineFiles), ...ADDED_PATHS].sort(), 'Complete preserved static path inventory');
   return { files, sources, changedOriginals, addedPaths };
 }
@@ -172,7 +198,7 @@ export function validateBaseline(baseline, expected) {
   const files = fileInventory(Object.entries(baseline.files).map(([path, sha]) => ({ path, sha })));
   for (const pathname of ['/index.html', '/play/index.html', '/scripts/arcade-monthly.js',
     '/scripts/arcade-season-deadline.js', ...REQUIRED_CHANGES]) assert(files[pathname], 'Incomplete current inventory: ' + pathname);
-  for (const pathname of ADDED_PATHS) assert(!Object.hasOwn(files, pathname), 'The approved new module is already in production; review a new scope.');
+  for (const pathname of ADDED_PATHS) assert(!Object.hasOwn(files, pathname), 'An approved new seasonal asset is already in production; review a new scope.');
   assert.equal(baseline.playSHA1, files['/play/index.html']);
   assert(baseline.environment?.site?.entries > 0 && safeHash(baseline.environment.snippetsSha256), 'Missing protected configuration evidence.');
   return files;
@@ -195,18 +221,30 @@ function overlays() {
     return { path: publicPath, source, sha1: sha(fs.readFileSync(filename), 'sha1') };
   });
 }
+export function validateDeliveredFile(publicPath, contentType, delivered, expectedSHA1) {
+  const mime = String(contentType).split(';', 1)[0].trim().toLowerCase();
+  const expectedType = publicPath.endsWith('.js') ? /^(?:application|text)\/(?:javascript|ecmascript)$/
+    : publicPath.endsWith('.css') ? /^text\/css$/
+    : publicPath.endsWith('.html') ? /^text\/html$/
+    : publicPath.endsWith('.png') ? /^image\/png$/ : null;
+  assert(expectedType && expectedType.test(mime), 'Unexpected content type: ' + publicPath);
+  const raw = Buffer.from(delivered);
+  if (publicPath.endsWith('.png')) {
+    assert(raw.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10])), 'Invalid PNG signature: ' + publicPath);
+  }
+  const bytes = publicPath.endsWith('.html') ? storedPlayHTML(raw, expectedSHA1) : raw;
+  assert.equal(sha(bytes, 'sha1'), expectedSHA1, 'Public bytes differ: ' + publicPath);
+  return bytes;
+}
 async function publicChecks(origin, plan, directory) {
   assert(origin === 'https://tree-token.xyz' || origin === originFor(plan.candidateId), 'Unapproved public check origin.');
   const paths = [...new Set([...Object.keys(plan.sources), '/play/index.html', '/scripts/arcade-monthly.js', '/scripts/arcade-season-deadline.js'])];
   for (const publicPath of paths) {
-    const pathname = publicPath === '/play/index.html' ? '/play/' : publicPath;
+    const pathname = publicPath.endsWith('/index.html') ? publicPath.slice(0, -'index.html'.length) : publicPath;
     const response = await fetch(new URL(pathname, origin), { redirect: 'error', signal: AbortSignal.timeout(30000) });
     assert.equal(response.status, 200, 'Public delivery failed: ' + pathname);
-    const type = response.headers.get('content-type') || '';
-    assert(publicPath.endsWith('.js') ? /javascript|ecmascript/i.test(type) : publicPath.endsWith('.css') ? /text\/css/i.test(type) : /text\/html/i.test(type), 'Unexpected content type.');
     const delivered = Buffer.from(await response.arrayBuffer());
-    const bytes = publicPath.endsWith('.html') ? storedPlayHTML(delivered, plan.files[publicPath]) : delivered;
-    assert.equal(sha(bytes, 'sha1'), plan.files[publicPath], 'Public bytes differ: ' + pathname);
+    const bytes = validateDeliveredFile(publicPath, response.headers.get('content-type'), delivered, plan.files[publicPath]);
     if (publicPath === '/play/index.html') assert(bytes.equals(fs.readFileSync(path.join(directory, 'baseline-play.html'))), 'Published HTML changed.');
     if (publicPath === '/scripts/arcade-organization.js') {
       const source = bytes.toString('utf8');
@@ -302,7 +340,7 @@ export async function main(args = process.argv.slice(2)) {
     assertSource(sourceCommit, sourceTree); await assertLiveBaseline(api, baseline);
     plan = { schemaVersion: 1, siteId: SITE_ID, baselineId: expected, baselineSha256: fingerprint(baseline), baselineCreatedAt: baseline.deploy.created_at,
       createdAt: new Date().toISOString(), sourceCommit, sourceTree, sourceBranch: git('branch', '--show-current'),
-      title: `TREE Arcade Advent Grove and countdowns ${sourceCommit.slice(0, 12)}; preserve current production`, ...assembleFiles(baselineFiles, overlays()) };
+      title: `TREE Arcade autumn grove and Advent art preview ${sourceCommit.slice(0, 12)}; preserve current production`, ...assembleFiles(baselineFiles, overlays()) };
     writeRecord(planPath, plan, true);
   } else {
     plan = readRecord(planPath); assert.equal(plan.baselineSha256, fingerprint(baseline)); assert.equal(plan.baselineId, expected);

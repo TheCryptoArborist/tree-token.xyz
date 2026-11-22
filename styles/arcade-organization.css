@@ -622,3 +622,66 @@
 @media(prefers-reduced-motion:reduce) {
   .advent-tile,.advent-tree-svg,.arcade-next-unlock { animation:none!important; transition:none!important; }
 }
+
+/* BEGIN SHARED ADVENT ART STYLES — also append to arcade-organization.css. */
+.arcade-advent-grove { grid-column: 1 / -1; min-width: 0; color: #e9efe0; }
+.arcade-advent-grove[hidden] { display: none; }
+.arcade-advent-grove .advent-heading { display: flex; justify-content: space-between; align-items: end; flex-wrap: wrap; gap: 12px; border-bottom: 1px solid #9d81454f; padding: 0 0 14px; }
+.arcade-advent-grove .advent-heading span, .arcade-advent-grove .advent-feature-copy > span { color: #e6c575; font-size: 10px; font-weight: 800; letter-spacing: .13em; }
+.arcade-advent-grove .advent-heading h4 { margin: 4px 0 0; color: #f9e1a1; font: 700 clamp(21px, 2.3vw, 30px)/1.15 Georgia, serif; }
+.arcade-advent-grove .advent-heading p { margin: 0; color: #afc9bd; font-size: 12px; }
+.arcade-advent-grove .advent-freshness { margin: 12px 0 17px; color: #b5cebd; font-size: 12px; line-height: 1.5; }
+.arcade-advent-grove .advent-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr); gap: 24px; align-items: start; }
+.arcade-advent-grove .advent-detail { display: block; min-width: 0; min-height: 0; padding: 0; margin: 0; overflow: hidden; border: 1px solid #b99a58; border-radius: 16px; background: #10251f; box-shadow: 0 12px 32px #0004, inset 0 0 0 3px #b99a5810; }
+.arcade-advent-grove .advent-feature-topline { display: flex; justify-content: space-between; gap: 10px; padding: 12px 16px; color: #f3dc9f; font-size: 12px; font-weight: 800; background: linear-gradient(110deg, #24302b, #28213b); border-bottom: 1px solid #b99a5833; }
+.arcade-advent-grove .advent-feature-topline span:last-child { color: #cab9e7; font-size: 10px; letter-spacing: .1em; }
+.arcade-advent-grove .advent-feature-art { display: flex; width: 100%; min-width: 0; justify-content: center; align-items: center; background: radial-gradient(ellipse at 50% 20%, #413254, #19202c 75%); }
+.arcade-advent-grove .advent-feature-art .advent-tree-svg { display: block; width: 100%; max-width: none; height: auto; max-height: none; }
+.arcade-advent-grove .advent-feature-art .advent-tree-svg:not(.advent-tree-illustrated) { max-height: 340px; padding: 24px; }
+.arcade-advent-grove .advent-feature-copy { padding: 17px 19px 19px; }
+.arcade-advent-grove .advent-feature-copy h5 { margin: 6px 0 9px; color: #ffebb1; font: 700 clamp(20px, 2.2vw, 29px)/1.15 Georgia, serif; }
+.arcade-advent-grove .advent-feature-copy p { margin: 0; color: #b6ccbf; font-size: 12px; line-height: 1.65; }
+.arcade-advent-grove .advent-feature-copy .advent-feature-status { display: inline-block; margin-top: 12px; padding: 5px 9px; border-radius: 7px; color: #caf0ba; border: 1px solid #72a46a55; background: #79b87510; font-size: 11px; }
+.arcade-advent-grove .advent-feature-status[data-advent-feature-status="recovered"] { color: #ddc9ff; border-color: #aa85d66b; background: #9870be1c; }
+.arcade-advent-grove .advent-overview { min-width: 0; padding: 17px; border: 1px solid #6f85544d; border-radius: 15px; background: linear-gradient(135deg, #13342b99, #0d201ff2); }
+.arcade-advent-grove .advent-calendar-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 15px; }
+.arcade-advent-grove .advent-calendar-heading h5 { margin: 0; color: #e8d8a8; font-size: 14px; }
+.arcade-advent-grove .advent-calendar-heading > span { color: #c0d3b2; font-size: 11px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.arcade-advent-grove .advent-calendar { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; }
+.arcade-advent-grove .advent-tile { position: relative; display: flex; align-items: center; justify-content: center; width: 100%; min-width: 0; min-height: 66px; aspect-ratio: .85; padding: 0; overflow: hidden; border: 1px solid #68855b8f; border-radius: 9px; color: #d8dec9; background: linear-gradient(135deg, #17392c, #0b2426); font: inherit; cursor: pointer; transition: border-color .15s, box-shadow .15s; }
+.arcade-advent-grove .advent-tile:disabled { opacity: 1; cursor: default; }
+.arcade-advent-grove .advent-tile[data-advent-status="future"] { background: linear-gradient(145deg, #142b27, #101d24); border-color: #56726255; }
+.arcade-advent-grove .advent-tile[data-advent-status="missed"] { background: radial-gradient(ellipse at 50% 85%, #6d41263d, #262820 80%); border-color: #a7784559; }
+.arcade-advent-grove .advent-tile[data-advent-status="today"] { border-color: #e5c779; background: radial-gradient(circle, #8d69294a, #172c23 80%); }
+.arcade-advent-grove .advent-tile[aria-pressed="true"] { outline: 2px solid #f2d074; outline-offset: 2px; box-shadow: 0 0 20px #f3cd632b; }
+.arcade-advent-grove .advent-tile:not(:disabled):hover { border-color: #f4e4a5; }
+.arcade-advent-grove .advent-tile:focus-visible { outline: 3px solid #e2caff; outline-offset: 3px; }
+.arcade-advent-grove .advent-tile-number { position: absolute; top: 4px; left: 4px; z-index: 1; display: grid; place-items: center; min-width: 19px; min-height: 19px; padding: 1px 3px; border-radius: 5px; background: #0b1b1ade; color: #fff0bc; font-size: 11px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.arcade-advent-grove .advent-tile > .advent-tree-svg { display: block; width: 100%; max-width: none; max-height: none; height: auto; }
+.arcade-advent-grove .advent-tile > .advent-tree-illustrated { height: 100%; object-fit: cover; }
+.arcade-advent-grove .advent-tile-closed { color: #7d9b8b; font-size: 24px; font-weight: 400; }
+.arcade-advent-grove .advent-tile[data-advent-status="today"] .advent-tile-closed { color: #f5d88c; font-size: 29px; }
+.arcade-advent-grove .advent-tile[data-advent-status="missed"] .advent-tile-closed { color: #cf9156; font-size: 25px; }
+.arcade-advent-grove .advent-tile-marker { position: absolute; right: 4px; bottom: 4px; top: auto; display: grid; place-items: center; width: 17px; height: 17px; border: 1px solid #092219; border-radius: 50%; color: #142219; font-size: 11px; font-weight: 900; line-height: 1; }
+.arcade-advent-grove .advent-tile-marker.is-saved, .arcade-advent-grove .advent-symbol.is-saved { background: #a3d785; }
+.arcade-advent-grove .advent-tile-marker.is-recovered, .arcade-advent-grove .advent-symbol.is-recovered { background: #c3a1f1; }
+.arcade-advent-grove .advent-tile-marker.is-missed, .arcade-advent-grove .advent-symbol.is-missed { background: #b57d4b; color: #fff3d4; }
+.arcade-advent-grove .advent-legend { display: flex; flex-wrap: wrap; gap: 10px 13px; margin: 18px 0 0; color: #bbcebf; font-size: 10px; }
+.arcade-advent-grove .advent-legend > span { display: inline-flex; align-items: center; gap: 5px; }
+.arcade-advent-grove .advent-symbol { display: inline-grid; place-items: center; width: 15px; height: 15px; border-radius: 50%; color: #122419; font-size: 10px; font-weight: 800; font-style: normal; }
+.arcade-advent-grove .advent-symbol.is-future { color: #c7d4cb; background: #324b40; }
+.arcade-advent-grove .advent-empty { width: 100%; min-height: 260px; padding: 40px 25px; text-align: center; }
+.arcade-advent-grove .advent-empty > span { color: #f6d991; font-size: 50px; }
+.arcade-advent-grove .advent-empty h5 { font: 700 25px/1.2 Georgia, serif; color: #f6e2ae; margin: 16px 0 9px; }
+.arcade-advent-grove .advent-empty p { color: #b6cebe; font-size: 13px; line-height: 1.6; }
+.arcade-advent-grove[data-advent-fresh="false"] .advent-feature-status { opacity: .7; }
+@media (max-width: 800px) { .arcade-advent-grove .advent-layout { grid-template-columns: 1fr; gap: 20px; } .arcade-advent-grove .advent-feature-art { max-height: 440px; overflow: hidden; } .arcade-advent-grove .advent-feature-art .advent-tree-illustrated { max-height: 440px; } }
+@media (max-width: 520px) { .arcade-advent-grove .advent-overview { padding: 13px; } .arcade-advent-grove .advent-calendar { grid-template-columns: repeat(5,minmax(0,1fr)); gap: 7px; } .arcade-advent-grove .advent-tile { min-height: 58px; } .arcade-advent-grove .advent-feature-copy { padding: 15px; } .arcade-advent-grove .advent-heading h4 { font-size: 23px; } }
+@media (max-width: 360px) { .arcade-advent-grove .advent-calendar { grid-template-columns: repeat(4,minmax(0,1fr)); } }
+@media (prefers-reduced-motion: reduce) { .arcade-advent-grove *, .advent-preview-page * { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+/* END SHARED ADVENT ART STYLES */
+
+.arcade-attendance-forest[data-forest-season="autumn"] { background:linear-gradient(120deg,#322533 0%,#243026 62%,#182821 100%); border-color:#9e7848; }
+.arcade-attendance-forest[data-forest-season="autumn"] .forest-art { background:#302333; border-color:#b9955955; }
+.arcade-attendance-forest[data-forest-season="autumn"] .growth-eyebrow { color:#e0bd83; }
+.arcade-attendance-forest[data-forest-season="autumn"] .forest-caption { color:#d0bc9c; }

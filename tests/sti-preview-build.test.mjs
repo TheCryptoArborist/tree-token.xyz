@@ -128,9 +128,14 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
     { path: '/arcade-review/index.html', source: 'production/arcade-organization-static/review.html' },
     { path: '/scripts/arcade-organization.js', source: 'scripts/arcade-organization.js' },
     { path: '/scripts/arcade-attendance-forest.js', source: 'scripts/arcade-attendance-forest.js' },
-    // Two read-only Advent modules are deliberately added to the Arcade preview inventory.
+    // Seasonal art and the isolated Advent interaction preview are explicit additions.
     { path: '/scripts/arcade-advent-grove.js', source: 'scripts/arcade-advent-grove.js' },
     { path: '/scripts/arcade-next-month-unlocks.js', source: 'scripts/arcade-next-month-unlocks.js' },
+    { path: '/assets/arcade-seasonal/november-emblem-tree.png', source: 'assets/arcade-seasonal/november-emblem-tree.png' },
+    { path: '/assets/arcade-seasonal/advent-art-preview.png', source: 'assets/arcade-seasonal/advent-art-preview.png' },
+    { path: '/play/advent-preview/index.html', source: 'play/advent-preview/index.html' },
+    { path: '/scripts/arcade-advent-preview.js', source: 'scripts/arcade-advent-preview.js' },
+    { path: '/styles/arcade-advent-preview.css', source: 'styles/arcade-advent-preview.css' },
     { path: '/styles/arcade-organization.css', source: 'styles/arcade-organization.css' },
     { path: '/scripts/arcade-season-deadline.js', source: 'scripts/arcade-season-deadline.js' },
     { path: '/styles/arcade-season-deadline.css', source: 'styles/arcade-season-deadline.css' },
