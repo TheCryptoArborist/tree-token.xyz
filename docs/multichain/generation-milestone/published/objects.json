@@ -1,0 +1,147 @@
+{
+  "data": {
+    "chainIdentifier": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S",
+    "checkpoint": {
+      "sequenceNumber": 348094265,
+      "timestamp": "2026-11-22T19:32:20.797Z"
+    },
+    "o0": {
+      "address": "0x0da3d845f4ab18a0a8d2f0669722a1d9161c2ea61ad714abc14d414721fd14e4",
+      "version": 1,
+      "digest": "7LeHSzqW2xxEA7QrcimgN8c7ZKaAJUL3fwvjNy9wnoar",
+      "owner": {
+        "__typename": "Shared",
+        "initialSharedVersion": 1
+      },
+      "asMoveObject": {
+        "contents": {
+          "type": {
+            "repr": "0xfdc28afc0110cb2edb94e3e57f2b1ce69b5a99c503b06d15e51cfa212de56e24::oapp::OApp"
+          },
+          "json": {
+            "id": "0x0da3d845f4ab18a0a8d2f0669722a1d9161c2ea61ad714abc14d414721fd14e4",
+            "oapp_cap": {
+              "id": "0x6b7c66d2135ce12efa6a23037bff2e5ca1b499db24bc200592d08c2595cf5a3a",
+              "cap_type": {
+                "@variant": "Package",
+                "pos0": "0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92"
+              }
+            },
+            "admin_cap": "0x97be99b8e5c3b8953323c0a481b848c990b9d32814950d803b754b4e140fe25d",
+            "peer": {
+              "peers": {
+                "id": "0x984eb93d6713b0909152e249bcfa465a6661e7403c5b01266353b97ff2318966",
+                "size": "0"
+              }
+            },
+            "enforced_options": {
+              "options": {
+                "id": "0xd1c0dbf02c954d88cf9602f43c877ddaed3d8cf5afb4e71f83ccf9fbed78e497",
+                "size": "0"
+              }
+            },
+            "sending_call": null
+          }
+        }
+      }
+    },
+    "o1": {
+      "address": "0x298204d60d1a886e72f1ece18de179065d487a76420f93b19bf7f61c7275c210",
+      "version": 1,
+      "digest": "C8HbQXjdhJTwpjy4aNx7PaYJp3oikopu9QwNgC5kdPaM",
+      "owner": {
+        "__typename": "Shared",
+        "initialSharedVersion": 1
+      },
+      "asMoveObject": {
+        "contents": {
+          "type": {
+            "repr": "0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92::vault::Registry"
+          },
+          "json": {
+            "id": "0x298204d60d1a886e72f1ece18de179065d487a76420f93b19bf7f61c7275c210",
+            "version": "1",
+            "cap": {
+              "id": "0x1711b6b0e442e8299ea3aceb30286234520c8f1c4d2294aa7d031308a3d7bcff",
+              "cap_type": {
+                "@variant": "Package",
+                "pos0": "0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92"
+              }
+            },
+            "oapp": "0x0da3d845f4ab18a0a8d2f0669722a1d9161c2ea61ad714abc14d414721fd14e4",
+            "slot": null,
+            "backing": "0x046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba",
+            "nft_type": "ZjZjNmQ0MzllYTBkYTJmM2U5YmE3OWU0OTkyYTdhNGMxMTMyMTVmYmY1NGM0NDJhYzkwMjBjMzE1Zjk1MzcwNTo6Y29sbGVjdGlvbjo6TkZU"
+          }
+        }
+      }
+    },
+    "o2": {
+      "address": "0x4e7fde0fa22d78a2916f7ea8d2e7d4688d04ee4c60152d8a09d4a334e89f6aac",
+      "version": 1,
+      "digest": "CXYbjFxRkbB7SDn82yNUgTdRGbjvNPpE8dBsyq13genK",
+      "owner": {
+        "__typename": "AddressOwner",
+        "address": {
+          "address": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4"
+        }
+      },
+      "asMoveObject": {
+        "contents": {
+          "type": {
+            "repr": "0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92::vault::AdminCap"
+          },
+          "json": {
+            "id": "0x4e7fde0fa22d78a2916f7ea8d2e7d4688d04ee4c60152d8a09d4a334e89f6aac",
+            "registry": "0x298204d60d1a886e72f1ece18de179065d487a76420f93b19bf7f61c7275c210"
+          }
+        }
+      }
+    },
+    "o3": {
+      "address": "0x97be99b8e5c3b8953323c0a481b848c990b9d32814950d803b754b4e140fe25d",
+      "version": 1,
+      "digest": "CRHN2g1UWgQYiN9TVWbRf8CcTd9FMtr2ky2jnfx79VVB",
+      "owner": {
+        "__typename": "AddressOwner",
+        "address": {
+          "address": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4"
+        }
+      },
+      "asMoveObject": {
+        "contents": {
+          "type": {
+            "repr": "0xfdc28afc0110cb2edb94e3e57f2b1ce69b5a99c503b06d15e51cfa212de56e24::oapp::AdminCap"
+          },
+          "json": {
+            "id": "0x97be99b8e5c3b8953323c0a481b848c990b9d32814950d803b754b4e140fe25d"
+          }
+        }
+      }
+    },
+    "o4": {
+      "address": "0xb70e2cdc18d562247bc34bf47efee620a05ec1f059cff5e812a8d433a722999d",
+      "version": 1,
+      "digest": "5SaYRBQ1KG5DD1bbYMLkDAPMmvfxkv6Q254Hm41cVrGR",
+      "owner": {
+        "__typename": "AddressOwner",
+        "address": {
+          "address": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4"
+        }
+      },
+      "asMoveObject": {
+        "contents": {
+          "type": {
+            "repr": "0x0000000000000000000000000000000000000000000000000000000000000002::package::UpgradeCap"
+          },
+          "json": {
+            "id": "0xb70e2cdc18d562247bc34bf47efee620a05ec1f059cff5e812a8d433a722999d",
+            "package": "0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92",
+            "version": "1",
+            "policy": 0
+          }
+        }
+      }
+    }
+  }
+}

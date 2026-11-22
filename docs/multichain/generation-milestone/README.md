@@ -1,4 +1,4 @@
-# Generation custody milestone — source only
+# Generation custody milestone
 
 Cloud worktree: `/workspace/tree-bnb-generation`, branch
 `feat/bnb-generation-custody`. GitHub is the durable source of truth. Baseline
@@ -7,7 +7,16 @@ started clean; the remote is `TheCryptoArborist/tree-token.xyz`, and all five
 requested guidance files are tracked and were read. No reset or local-file
 replacement was used. The Windows checkout has not been accessed.
 
-## Scope and preservation
+## Current status
+
+The subsequently approved empty Sui publication is complete and independently
+verified. See [publication receipt and verification](published/README.md).
+The registry has no slot, the OApp has no peers, and the original NFT remains
+in the dev wallet at the recorded checkpoint. Do not publish this package again.
+Slot creation, NFT deposit, BNB deployment, route configuration, sales and gameplay
+activation remain subsequent reviewed milestones.
+
+## Original source milestone scope and preservation
 
 New packages: `contracts/nftree-generation` and `contracts/bnb-generation`.
 The completed one-slot trial contracts, peers and route are unchanged. Published
@@ -42,7 +51,7 @@ an administrator nor another wallet can pull it from its owner. Deposit and
 monotonic `u64` generation increment are one atomic operation. Checked overflow
 aborts rather than wrapping. Only Empty or Completed permits deposit. Initial
 publication remains restricted to the designated dev wallet, consistent with the
-one-ID trial scope; nothing in this source authorizes that publication now.
+one-ID trial scope; publication required the separate approval now recorded in `publication-approval.json`.
 
 ## Protocol v3
 

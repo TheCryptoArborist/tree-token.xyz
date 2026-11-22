@@ -1,3 +1,17 @@
+# Empty Sui package publication — verified
+
+The user completed the approved desktop Slush publication. Receipt and independent
+mainnet verification are recorded in
+`docs/multichain/generation-milestone/published/README.md`. Gas was 0.0697236 SUI;
+the new registry has no slot and all three capabilities remain in the dev wallet.
+No NFT deposit, BNB deployment or gameplay activation was performed.
+This receipt update makes no website release; the current locked production
+baseline remains `6b0341e7545ba49e00a0e496` (658 static paths, 53 functions,
+five schedules), described below. Earlier pending-signature statements are
+historical release-time observations, superseded by this verified receipt.
+
+---
+
 # Canonical publication review clock repair — published
 
 Current locked production is `6b0341e7545ba49e00a0e496`, published at
