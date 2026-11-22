@@ -39,7 +39,7 @@ function createCard(doc, type) {
     + '<p data-unlock-date></p>';
   return el;
 }
-export function mountNextMonthUnlocks({ root = document, now = Date.now, timers = window } = {}) {
+export function mountNextMonthUnlocks({ root = globalThis.document, now = Date.now, timers = root?.defaultView || globalThis } = {}) {
   if (!root?.getElementById) return { update() {}, destroy() {} };
   if (activeMounts.has(root)) return activeMounts.get(root);
   const daily = root.getElementById('growth-today-panel');
@@ -68,8 +68,8 @@ export function mountNextMonthUnlocks({ root = document, now = Date.now, timers 
       node.querySelector('[data-unlock-badges]').textContent = result.collectionConfigured
         ? clock(result) : 'Not announced';
       node.querySelector('[data-unlock-date]').textContent = result.collectionConfigured
-        ? 'Both scheduled for '+result.label+' 1 · 00:00 UTC. Badge eligibility is verified by the Arcade.'
-        : 'Calendar begins '+result.label+' 1 · 00:00 UTC. No badge release date is configured yet.';
+        ? 'Both scheduled for '+names[new Date(result.startsAt).getUTCMonth()]+' 1, '+new Date(result.startsAt).getUTCFullYear()+' · 00:00 UTC. Badge eligibility is verified by the Arcade.'
+        : 'Calendar begins '+names[new Date(result.startsAt).getUTCMonth()]+' 1, '+new Date(result.startsAt).getUTCFullYear()+' · 00:00 UTC. No badge release date is configured yet.';
     }
   }
   const interval = timers.setInterval(update, 1000);
