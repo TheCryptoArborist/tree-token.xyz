@@ -198,3 +198,9 @@ The [unsigned readiness review](readiness/README.md) records successful mainnet
 publication/type simulations, exact capability effects, governance decisions and
 new-route sequencing. This does not authorize or prepare a live deposit. Its
 simulation-only tooling has 17 guard tests and no signing/submission path.
+
+
+BNB wallet selection is recorded in `selected-wallets.json`: administration is
+`0xF2Ab1eEBbEcb4E315FE95D8b532D1aB00F1A8789`; the existing treasury remains
+`0xC440F06BBC7e58b0d055815f915447e4ae0E3720`. This is a deployment-preparation
+input, not a deployment authorization. See the readiness review for role mapping.

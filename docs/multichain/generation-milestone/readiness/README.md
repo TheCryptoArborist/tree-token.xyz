@@ -34,6 +34,27 @@ bytecode: `../publication-bytecode.json`; its SHA256 must match
 `../validation.json`, and CI reproduces it with the pinned compiler. The simulation
 estimates can change and expire; fresh evidence is required before wallet approval.
 
+## Selected BNB administration and treasury
+
+The user selected BNB administration address
+`0xF2Ab1eEBbEcb4E315FE95D8b532D1aB00F1A8789` and explicitly retained treasury
+`0xC440F06BBC7e58b0d055815f915447e4ae0E3720`. Both addresses pass EIP-55 checksum
+validation; the treasury matches the unchanged Solidity Policy.TREASURY.
+
+The intended adapter and pass deployment sender is the selected admin address.
+With the current constructors this also sets the adapter binder, fixed pass
+controller, initial permitted buyer and initial endpoint delegate. Future unsigned
+BNB deployment preparation must enforce that exact sender and verify those roles
+against the deployed contracts before any deposit or purchase is offered. The
+non-Ledger testing wallet must not be substituted as deployer. Ledger custody is
+user-described; these checks do not attest hardware ownership.
+
+The treasury receives the 25 USDT pass purchase payment independently of admin
+ownership. This selection does not change future game-payment design, Sui roles
+or upgrade policy, and does not authorize deployment/deposit. Machine-readable
+selection: `../selected-wallets.json`. Contract bytecode is unchanged: the admin
+roles derive from the sender, while the treasury is already fixed in source.
+
 ## Governance assessment
 
 | Authority | Current source behavior | Pre-funding decision |
@@ -41,8 +62,8 @@ estimates can change and expire; fresh evidence is required before wallet approv
 | New Sui UpgradeCap | Baseline publication retains it with dev; compatible upgrades can change custody logic | Choose immutable package before funding, or explicitly reviewed upgrade custody/policy; do not describe current source as immutable |
 | Vault AdminCap | Controls slot creation, fixed peer binding and deposit/reserve pause; cannot withdraw or change admission | Dev custody in current init; key-only cap has no transfer/rotation function. Multisig custody would require a reviewed source change before publication |
 | Sui OApp AdminCap | Controls mutable peer/options; vault cross-checks the fixed peer, but incompatible changes can halt completion | Dedicated reviewed custody/configuration policy; preserve exit availability and ability to raise gas |
-| BNB binder/controller | Deployment sender binds pass once, controls purchase pause and raises receive gas; also the initial permitted buyer | Select deployment authority before deployment; these identities are immutable and lack controller rotation |
-| BNB endpoint delegate | Initially set to deployment sender; endpoint configuration influences message trust/availability | Independently review and verify delegate, libraries, DVNs and executor policy |
+| BNB binder/controller | Deployment sender binds pass once, controls purchase pause and raises receive gas; also the initial permitted buyer | User selected `0xF2Ab1eEBbEcb4E315FE95D8b532D1aB00F1A8789`; enforce this sender. These identities are immutable and lack controller rotation |
+| BNB endpoint delegate | Initially set to deployment sender; endpoint configuration influences message trust/availability | Initial delegate is the selected admin address; independently verify it and the libraries, DVNs and executor policy |
 | Original collection caps | Neither publication nor generic custody needs MintCap or collection UpgradeCap | Leave original collection authority unchanged |
 
 Recommendation: approve an explicit governance policy **before** publishing/funding.
