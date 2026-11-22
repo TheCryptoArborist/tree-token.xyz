@@ -30,11 +30,12 @@ jobs:
       - name: Install pinned simulation tooling and test unsigned guards
         run: |
           npm ci --ignore-scripts
-          node --test contracts/nftree-generation/scripts/readiness.test.mjs
+          node --test contracts/nftree-generation/scripts/*.test.mjs
       - name: Install isolated EVM dependencies
         run: npm ci --ignore-scripts --prefix contracts/bnb-generation
       - name: EVM contract tests
         run: npm test --prefix contracts/bnb-generation
+      - run: node --test contracts/bnb-generation/test/wallet-preflight.test.mjs
       - name: Compile release Solidity
         run: npm run compile --prefix contracts/bnb-generation
       - name: Fetch checksum-pinned Sui compiler
