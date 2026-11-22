@@ -1,3 +1,35 @@
+# Canonical publication review clock repair — published
+
+Current locked production is `6b0341e7545ba49e00a0e496`, published at
+`2026-11-22T19:28:47.582Z` by workflow `45060902548`. Source
+`e8c4294ab54358fc32aa4569d2a440f2dd323b68`, control `44c2f28`, PR #280.
+
+Only `/play/generation-publication/app.js` changed. Fresh baseline
+`6b032a964276045ddedb18ca`: all **657 unrelated static hashes, 53 complete
+backend records, five schedules**, runtime and API-visible protected
+configuration were preserved. Totals remain **658 static paths, 53 functions**.
+No backend upload or rebuild occurred. The release waited for all real Netlify
+builds before publishing and locking the verified new candidate.
+
+The review timer now uses the same-origin server response time plus monotonic
+elapsed time instead of the desktop wall clock. It still enforces the two-minute
+review limit before/after signing and after signature verification. This fixes
+fresh reviews being rejected when desktop time differs from server time.
+
+All 76 tooling/release tests passed. Three mock-wallet browser cases passed on
+source, the served candidate and the live canonical page: desktop a day behind,
+a day ahead, and a genuinely stale review. The served bundle SHA256 matches
+committed bytes. No real signature, Sui publication, NFT deposit or payment was
+performed. Real Slush acceptance remains the user's next action.
+
+Evidence: `docs/multichain/generation-milestone/review-clock-live.json` and
+`review-clock-repair.md`. Publication artifact `14769636004`, SHA256
+`36a53a5cc3ddb4e82af9998e5e703020ecdbde4d0a46b7c371ff9ba6f4a852fc`.
+Capture current production afresh before future releases; completed publishers
+are pinned to their old baselines and must not be reused blindly.
+
+---
+
 # Canonical generation signing page — published
 
 Current locked production is `6b032a964276045ddedb18ca`, published at

@@ -34,3 +34,7 @@ Reproduce the browser cases after installing Playwright separately:
 Alternatively omit CHROMIUM_PATH to use Playwright's installed browser and set
 PLAYWRIGHT_MODULE to an isolated Playwright module path when needed. Root lock
 and production application dependencies remain unchanged.
+
+## Published and verified
+
+Repair is live on locked deploy `6b0341e7545ba49e00a0e496`. The same three browser cases also passed against the canonical hosted page/service. See `review-clock-live.json` for source/bundle hashes and preservation evidence. User should reload the page to load the repaired bundle, reconnect Slush, then refresh the review.
