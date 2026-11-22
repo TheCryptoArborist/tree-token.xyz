@@ -1,0 +1,9 @@
+[package]
+name = "nftree_generation"
+edition = "2024"
+
+[dependencies]
+oapp = { local = "../vendor/layerzero-sui/oapps/oapp" }
+endpoint_v2 = { local = "../vendor/layerzero-sui/endpoint-v2" }
+call = { local = "../vendor/layerzero-sui/dynamic-call/call" }
+utils = { local = "../vendor/layerzero-sui/utils" }

@@ -1,0 +1,42 @@
+
+> nftree-bnb-generation@0.1.0 test
+> node --test test/pass.test.mjs
+
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_linux_x64_137.node'
+Require stack:
+- /workspace/tree-bnb-generation/contracts/bnb-generation/node_modules/ganache/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- /workspace/tree-bnb-generation/contracts/bnb-generation/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+✔ deployment rejects wrong chain, missing currency, six decimals, and wrong adapter binding (722.116934ms)
+✔ endpoint, peer, chain, GUID, wire and route authenticate every incoming reserve (914.596961ms)
+✔ private 25 USDT sale; transfer invalidates old owner; only current owner can lock; no resale after lock (1461.609828ms)
+✔ false-return rolls back payment and mint (568.856838ms)
+✔ short transfer rolls back payment and mint (567.758003ms)
+✔ no return data cannot duplicate purchase (902.753585ms)
+✔ reentrant token cannot duplicate purchase (903.460447ms)
+✔ currency runtime changes after reserve fail closed (600.412513ms)
+✔ identical reserves never unlock or remint; later generation forbidden while ready, active or locked (2332.486707ms)
+✔ acknowledgement requires exact locked generation, request and recipient; duplicates are safe (1759.532851ms)
+✔ permissionless fixed-payload retry and retirement confirmation; pause cannot block exit (3667.980252ms)
+✔ endpoint failure, token fees and malformed receipt leave pass locked and retryable (1766.113451ms)
+✔ two complete generations: burned IDs stay burned; every stale message is rejected (3954.797743ms)
+✔ reusing GUID with a changed payload cannot apply a later reserve (1513.847096ms)
+✔ ERC721 receiver rejection rolls back treasury; callback cannot redeem during mint (1385.742731ms)
+✔ wire v3 matches Move golden vectors, including multi-byte generation endian order (2.193544ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 26383.951673
+npm notice
+npm notice New major version of npm available! 11.19.1 -> 12.2.3
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.3
+npm notice To update run: npm install -g npm@12.2.3
+npm notice

@@ -1,0 +1,50 @@
+name: Verify generation custody and BNB protocol
+on:
+  pull_request:
+    paths:
+      - 'contracts/nftree-generation/**'
+      - 'contracts/bnb-generation/**'
+      - 'contracts/vendor/layerzero-sui/**'
+      - '.github/workflows/verify-generation-custody.yml'
+  push:
+    branches: ['feat/bnb-generation-custody']
+    paths:
+      - 'contracts/nftree-generation/**'
+      - 'contracts/bnb-generation/**'
+      - '.github/workflows/verify-generation-custody.yml'
+permissions:
+  contents: read
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install isolated EVM dependencies
+        run: npm ci --ignore-scripts --prefix contracts/bnb-generation
+      - name: EVM contract tests
+        run: npm test --prefix contracts/bnb-generation
+      - name: Compile release Solidity
+        run: npm run compile --prefix contracts/bnb-generation
+      - name: Fetch checksum-pinned Sui compiler
+        run: |
+          curl --fail --location --retry 2 --output /tmp/sui.tgz https://github.com/MystenLabs/sui/releases/download/mainnet-v1.83.1/sui-mainnet-v1.83.1-ubuntu-x86_64.tgz
+          echo 'a54b24da3c8fd4b88522f01c8718826ae5637512ee0953469a5759408e1f701b  /tmp/sui.tgz' | sha256sum --check
+          mkdir /tmp/sui-compiler
+          tar -xzf /tmp/sui.tgz -C /tmp/sui-compiler ./sui
+          /tmp/sui-compiler/sui --version
+          python contracts/nftree-generation/scripts/build-config.py /tmp/generation-build-config
+      - name: Move contracts and release build
+        env:
+          SUI_CONFIG_DIR: /tmp/generation-build-config
+          MOVE_HOME: /tmp/generation-move-cache
+        run: |
+          /tmp/sui-compiler/sui move test --path contracts/nftree-generation --build-env mainnet
+          /tmp/sui-compiler/sui move build --path contracts/nftree-generation --build-env mainnet --dump-bytecode-as-base64 --no-tree-shaking > /tmp/generation-bytecode.json
+          git diff --exit-code -- contracts/vendor contracts/nftree-generation/Move.lock
+          git diff --check
