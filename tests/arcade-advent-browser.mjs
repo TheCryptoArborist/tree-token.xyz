@@ -706,7 +706,8 @@ async function adventScenario({ page, api, width, viewport }) {
   const countdown = page.locator('#growth-today-panel [data-arcade-next-unlock="daily"]');
   await countdown.waitFor({ state: 'visible' });
   assert.equal(await countdown.getAttribute('data-next-month'), '2027-01');
-  assert.match(await countdown.locator('[data-unlock-badges]').textContent(), /Not announced/);
+  assert.equal(await countdown.locator('[role="timer"]').count(), 1);
+  assert.match(await countdown.locator('[data-unlock-description]').textContent(), /Next badge collection not announced/);
   assert.match(await countdown.locator('[data-unlock-date]').textContent(), /00:00 UTC/);
   await chooseTab(page, 'month');
   assert.equal(await page.locator('#growth-month-panel [data-arcade-next-unlock="monthly"]').count(), 1);
