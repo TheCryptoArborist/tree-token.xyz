@@ -1,13 +1,13 @@
 import {getWallets} from '@mysten/wallet-standard';
 import {SuiGraphQLClient} from '@mysten/sui/graphql';
 import {verifyTransactionSignature} from '@mysten/sui/verify';
-import {review,signReviewed,SENDER,CHAIN,check} from './core.mjs';
+import {review,signReviewed,SENDER,CHAIN,check,requireSigningLocation} from './core.mjs';
 const $=id=>document.getElementById(id),status=text=>{$('status').textContent=text;};
 const client=new SuiGraphQLClient({network:'mainnet',url:'https://graphql.mainnet.sui.io/graphql'});
 const KEY='tree-generation-empty-publication-v1';let wallet,account,packet,busy=false;
 const pending=()=>localStorage.getItem(KEY);
 const locked=()=>{if(pending()){$('publish').disabled=true;$('refresh').disabled=true;$('receipt').hidden=false;return true;}return false;};
-const run=fn=>async()=>{if(busy)return;busy=true;$('publish').disabled=true;try{await fn();}catch(e){status(String(e.message));}finally{busy=false;locked();}};
+const run=fn=>async()=>{if(busy)return;busy=true;$('publish').disabled=true;try{requireSigningLocation(window.location);await fn();}catch(e){status(String(e.message));}finally{busy=false;locked();}};
 async function fetchJSON(url){const r=await fetch(url,{cache:'no-store'});const j=await r.json();check(r.ok,j.error||'Review unavailable');return j;}
 function current(){return wallet?.accounts.find(a=>a.address.toLowerCase()===SENDER);}
 $('connect').onclick=run(async()=>{
@@ -38,3 +38,5 @@ $('publish').onclick=run(async()=>{
 async function receipt(){const digest=pending();check(digest,'No pending receipt.');status('Checking '+digest+'…');const r=await fetchJSON('/api/generation-publication?digest='+encodeURIComponent(digest));status('Publication verified. Save this receipt and return to Codex.\n'+JSON.stringify(r,null,2));}
 $('receipt').onclick=run(receipt);
 if(locked())status('A publication was already submitted or attempted. Check its receipt before any further action.');
+
+try{requireSigningLocation(window.location);}catch(e){for(const id of ['connect','refresh','publish','receipt'])$(id).disabled=true;status(e.message);}

@@ -55,10 +55,13 @@
       }
     }
   },
-  "note": "Approval persists. Refresh evidence immediately before signing; refresh hashes are historical, not deployed transaction digests. Desktop Slush preview handoff is prepared; signature and publication remain pending.",
+  "note": "User requires wallet-signing links under https://www.tree-token.xyz/play/. External preview signing is disabled. Canonical publication page is not yet deployed; preserve current live site when preparing it. Empty Sui publication approval persists; wallet signature remains pending.",
   "wallet": {
     "application": "Slush",
     "device": "desktop",
     "source": "User confirmed desktop, then Slush."
-  }
+  },
+  "requiredSigningOrigin": "https://www.tree-token.xyz",
+  "requiredSigningPathPrefix": "/play/",
+  "previewSigningPermitted": false
 }

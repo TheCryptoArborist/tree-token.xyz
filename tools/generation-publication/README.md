@@ -1,3 +1,11 @@
+# Required canonical wallet origin — user correction
+
+All user-facing wallet signing links must be under **https://www.tree-token.xyz/play/**. Do not direct the user to a Netlify preview hostname for wallet actions. The intended new path is `https://www.tree-token.xyz/play/generation-publication/`, but it is **not yet deployed**. Exact origin and path checks now disable connection, signing and submission on the preview and every other location. Do not bypass Slush warnings or assume a canonical URL by itself clears them.
+
+The older preview instructions below describe implementation history only. They no longer authorize signing there. A canonical release must freshly capture the entire current live inventory and preserve all existing static files, backend packages, schedules and configuration. Never publish dist-preview or the root historical build as production.
+
+---
+
 # Desktop Slush publication handoff
 
 Preview-only page `/generation-publication/`; built by `npm run build:preview`.
