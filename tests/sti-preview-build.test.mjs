@@ -143,8 +143,26 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
     assert.equal(digest(new URL(file.source, root)), file.sha1, `Captured baseline source ${file.path}`);
     if (arcadeInventory.files[file.path.toLowerCase()]) assert.equal(file.sha1, arcadeInventory.files[file.path.toLowerCase()]);
   }
-  const arcadeFiles = [...arcadeRuntime.files.map(file => file.path === '/scripts/arcade-monthly.js'
-    ? { path: file.path, source: 'scripts/arcade-monthly.js' } : file), snapshot, ...arcadeOverlays];
+  const approvedArcadeRuntimeChanges = [
+    { path: '/assets/arcade/arcade-growth-wallet.js', previousSha: 'e987f3f338c6470575d17eb6daa4e31fe86d5a70',
+      approvedSha: 'dc4a5e94e812069ad833c4b8d523f78d05d676d9' },
+    { path: '/scripts/arcade-daily-growth-play-share.js', previousSha: 'b8ee5967f605229b2154c1b32d13e5244dc61dc4',
+      approvedSha: 'f46f76ebb1a7b1bacfabe84137a12be3fd9e58d1' },
+  ];
+  const arcadeRuntimeReplacements = new Map([
+    ['/scripts/arcade-monthly.js', { path: '/scripts/arcade-monthly.js', source: 'scripts/arcade-monthly.js',
+      sha1: 'cc93d5c94cced41e25666f3956acee305f59b4f0' }],
+  ]);
+  for (const file of approvedArcadeRuntimeChanges) {
+    const captured = arcadeRuntime.files.find(entry => entry.path === file.path);
+    assert.equal(captured.source, 'production/arcade-organization-static/captured-runtime' + file.path);
+    assert.equal(captured.sha1, file.previousSha, `Keep the original captured hash for ${file.path}`);
+    assert.equal(arcadeInventory.files[file.path], file.previousSha);
+    assert.notEqual(file.approvedSha, file.previousSha, 'The reviewed update must not masquerade as captured bytes.');
+    arcadeRuntimeReplacements.set(file.path, { path: file.path,
+      source: 'production/arcade-organization-static/runtime' + file.path, sha1: file.approvedSha });
+  }
+  const arcadeFiles = [...arcadeRuntime.files.map(file => arcadeRuntimeReplacements.get(file.path) || file), snapshot, ...arcadeOverlays];
   assert.equal(new Set(arcadeFiles.map(file => file.path)).size, arcadeFiles.length, 'Each Arcade preview path is reviewed once.');
   const arcadeExpected = new Map();
   for (const file of arcadeFiles) {
