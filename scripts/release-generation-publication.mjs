@@ -3,6 +3,7 @@ import {fingerprint,readToken,environmentFor} from './release-preserved-producti
 import {apiClient} from './release-sti-purchase.mjs';
 import {functionsConfig,waitForAllBuilds,validateBackend} from './release-arcade-cutoff.mjs';
 import {verifyHandoff} from '../contracts/nftree-generation/scripts/wallet-handoff.mjs';
+import {zipFunction} from '@netlify/zip-it-and-ship-it';
 import {C} from '../contracts/nftree-generation/scripts/readiness.mjs';
 export const SITE='aa62f324-b880-47d6-85b8-4ba0700ff5bf',ACCOUNT='69800888d1a3d0483003ae9e',BASE='6b0282d222b49cfa17fa3731',FN='generation-publication';
 export const SOURCES={'/play/generation-publication/index.html':'tools/generation-publication/index.html','/play/generation-publication/app.js':'tools/generation-publication/app.js'};
@@ -37,29 +38,36 @@ async function served(origin,b){
 async function candidateCheck(api,b,s){
  assert(/^[a-f0-9]{24}$/.test(s.id)&&s.id!==BASE);assert.equal(s.baselineId,BASE);assert.equal(s.planHash,fingerprint(b));
  const d=await api('deploys/'+s.id);assert.equal(d.site_id,SITE);assert.equal(d.created_at,s.createdAt);assert.equal(d.title,b.title);assert(Date.parse(d.created_at)>=Date.parse(s.requestStartedAt)-10000);assert.equal(d.state,'ready');
- preserve(d,b.deploy,b.added);eq(await inventory(api,s.id),b.files,'Candidate files');return d;
+ assert(s.added,'New provider record was not verified');assert.equal(s.added.d,b.added.d);preserve(d,b.deploy,s.added);eq(await inventory(api,s.id),b.files,'Candidate files');return d;
 }
 export async function main(mode){
- assert(['prepare','publish','audit'].includes(mode));const token=readToken(),raw=apiClient(token);
- const api=(p,m='GET',body)=>{assert(m==='GET'||(mode==='prepare'&&m==='POST'&&p.startsWith(`sites/${SITE}/deploys?title=`))||(mode==='publish'&&m==='POST'&&/^deploys\/[a-f0-9]{24}\/lock$/.test(p)),'Forbidden operation');return raw(p,m,body);};
+ assert(['prepare','publish','audit'].includes(mode));const token=readToken(),raw=apiClient(token);let cancellable=null;
+ const api=(p,m='GET',body)=>{assert((mode==='prepare'&&m==='POST'&&p===`deploys/${cancellable}/cancel`)||m==='GET'||(mode==='prepare'&&m==='POST'&&p.startsWith(`sites/${SITE}/deploys?title=`))||(mode==='publish'&&m==='POST'&&/^deploys\/[a-f0-9]{24}\/lock$/.test(p)),'Forbidden operation');return raw(p,m,body);};
  fs.mkdirSync(DIR,{recursive:true});let b,s;
  if(mode==='prepare'){
   const commit=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
   const site=await api('sites/'+SITE),d=await api('deploys/'+BASE);assert.equal(site.published_deploy?.id,BASE);assert.equal(d.locked,true);validateBackend(d);
+  const old=await api(`sites/${SITE}/deploys?per_page=100`);
+  for(const row of old.filter(x=>x.title==='Approved empty Sui publication handoff 49b04b3789b3664dad8cefd7e74de3db219b4f4b'&&!['ready','error','rejected','canceled'].includes(x.state))){const failed=await api('deploys/'+row.id);assert.equal(failed.site_id,SITE);assert(!failed.published_at&&!failed.locked);assert.notEqual(failed.id,BASE);cancellable=failed.id;await api(`deploys/${failed.id}/cancel`,'POST');console.log('Canceled incomplete candidate '+failed.id);cancellable=null;}
   const files=await inventory(api,BASE);assert.equal(Object.keys(files).length,656);assert.equal(d.available_functions.length,52);assert.equal(d.function_schedules.length,5);assert(!d.available_functions.some(f=>f.n===FN));
   // Reuse only the exact source commit's ready preview package. No backend rebuild/upload.
   let preview;
   for(let i=0;i<60;i++){const rows=await api(`sites/${SITE}/deploys?per_page=100`);preview=rows.find(x=>x.commit_ref===commit&&x.context==='deploy-preview'&&x.state==='ready');if(preview)break;await delay(5000);}assert(preview,'Exact source preview not ready');
   preview=await api('deploys/'+preview.id);const added=preview.available_functions.find(f=>f.n===FN);assert(added);assert.equal(added.r,'nodejs24.x');assert.equal(added.im,'stream');assert.equal(added.ro.length,1);assert.equal(added.ro[0].p,'/api/generation-publication');
+  const built=await zipFunction('netlify/preview-functions/generation-publication.mjs',DIR,{basePath:process.cwd(),repositoryRoot:process.cwd(),config:{'*':{nodeBundler:'esbuild',nodeVersion:'24.x'}}});
+  assert.equal(built.name,FN);assert.equal(built.invocationMode,'stream');assert.equal(built.runtimeVersion,'nodejs24.x');assert(!built.schedule);eq(built.routes,[{pattern:'/api/generation-publication',literal:'/api/generation-publication',methods:[]}],'New function route');
+  const zip=fs.readFileSync(built.path);added.d=createHash('sha256').update(zip).digest('hex');added.s=zip.length;added.bd=built.buildData;
   const preserved={id:d.id,site_id:d.site_id,available_functions:d.available_functions,function_schedules:d.function_schedules,...runtime(d)};
   b={baselineId:BASE,sourceCommit:commit,title:'Approved empty Sui publication handoff '+commit,deploy:preserved,baselineFiles:files,files:assemble(files),added,previewId:preview.id,protected:await protectedState(api,site),createdAt:new Date().toISOString()};
   await baselineCheck(api,{...b,files:b.baselineFiles});write(DIR+'/plan.json',b);
   const combined={...d,available_functions:[...d.available_functions,added]};const start=new Date().toISOString();
   const out=await api(`sites/${SITE}/deploys?title=${encodeURIComponent(b.title)}`,'POST',{files:b.files,functions:Object.fromEntries(combined.available_functions.map(f=>[f.n,f.d])),functions_config:functionsConfig(combined),function_schedules:d.function_schedules,draft:false,async:false,branch:d.branch});
   s={id:out.id,baselineId:BASE,planHash:fingerprint(b),createdAt:out.created_at,requestStartedAt:start,sourceCommit:commit};write(DIR+'/candidate.json',s);
-  assert.notEqual(s.id,BASE);assert(!out.published_at&&!out.locked);for(const k of ['required_functions','required_edge_functions','required_server'])assert(!out[k]?.length,'Unexpected backend upload');
+  assert.notEqual(s.id,BASE);assert(!out.published_at&&!out.locked);for(const k of ['required_edge_functions','required_server'])assert(!out[k]?.length,'Unexpected backend upload');
+  for(const digest of out.required_functions||[]){assert.equal(digest,added.d,'Only the new service may be uploaded');const r=await fetch(`https://api.netlify.com/api/v1/deploys/${s.id}/functions/${FN}?runtime=nodejs24.x&invocation_mode=stream`,{method:'PUT',redirect:'error',headers:{Authorization:'Bearer '+token,'Content-Type':'application/octet-stream'},body:zip,signal:AbortSignal.timeout(30000)});assert(r.ok,'New service upload failed');}
   for(const digest of out.required||[]){const p=Object.keys(SOURCES).find(p=>b.files[p]===digest);assert(p,'Unexpected static upload');const bytes=fs.readFileSync(SOURCES[p]);assert.equal(hash(bytes),digest);const r=await fetch(`https://api.netlify.com/api/v1/deploys/${s.id}/files${p}`,{method:'PUT',redirect:'error',headers:{Authorization:'Bearer '+token,'Content-Type':'application/octet-stream'},body:bytes,signal:AbortSignal.timeout(30000)});assert(r.ok,'Static upload failed');}
   for(let i=0;i<90;i++){const x=await api('deploys/'+s.id);if(x.state==='ready')break;assert(!['error','canceled','rejected'].includes(x.state));await delay(1000);}
+  const provisioned=(await api('deploys/'+s.id)).available_functions.find(f=>f.n===FN);assert(provisioned);for(const key of ['d','s','r','im','bd','ro'])eq(provisioned[key],added[key],'New service '+key);s.added=provisioned;fs.writeFileSync(DIR+'/candidate.json',JSON.stringify(s,null,2)+'\n');
   await candidateCheck(api,b,s);const check=await served(`https://${s.id}--tree-token.netlify.app`,b);await baselineCheck(api,{...b,files:b.baselineFiles});write(DIR+'/verified.json',{candidate:s.id,planHash:fingerprint(b),...check});
  }else{
   b=read(DIR+'/plan.json');s=read(DIR+'/candidate.json');const v=read(DIR+'/verified.json');assert.equal(v.candidate,s.id);assert.equal(v.planHash,fingerprint(b));
