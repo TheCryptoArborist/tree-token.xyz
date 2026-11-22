@@ -36,7 +36,7 @@ const decoration = day => {
 export function adventTreeSVG(day, large=false) {
   const name = ADVENT_DAYS[day-1] || 'Holiday Tree';
   const illustration = ILLUSTRATIONS[day];
-  if (illustration) return '<svg class="advent-tree-svg advent-tree-illustrated'+(large?' advent-tree-svg--large':'')+'" data-advent-illustration="'+day+'" viewBox="'+(large?illustration.viewBox:illustration.thumbBox)+'" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+escape(name)+'" overflow="hidden">'
+  if (illustration) return '<svg class="advent-tree-svg advent-tree-illustrated'+(large?' advent-tree-svg--large':'')+'" data-advent-illustration="'+day+'" viewBox="'+(large?illustration.viewBox:illustration.thumbBox)+'" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+escape(name)+'" overflow="hidden">'
     +'<title>'+escape(name)+'</title><image href="'+ADVENT_ART_ASSET+'" width="1254" height="1254" /></svg>';
   return '<svg class="advent-tree-svg'+(large?' advent-tree-svg--large':'')+'" viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+escape(name)+'">'
     + '<ellipse cx="50" cy="98" rx="32" ry="6" fill="#342d50" opacity=".6"/>'
