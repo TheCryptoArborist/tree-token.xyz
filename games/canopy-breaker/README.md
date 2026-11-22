@@ -1,0 +1,161 @@
+# Canopy Breaker
+
+NFTree holder brick breaker for TREE Arcade. Canonical target: `/play/canopy-breaker/`.
+
+## Current status
+
+**Active in production since November 7, 2026:**
+[Play Canopy Breaker](https://tree-token.xyz/play/canopy-breaker/).
+The live Tree Arcade cabinet opens the NFTree access screen. The isolated game
+host has its production saved-game migration applied and gameplay enabled.
+The arcade release preserves all 43 existing function records, five schedules,
+other static files, runtime configuration and site environment records.
+
+All 167 automated tests, the build and hosted database/access checks pass.
+Peter reported successful live gameplay and a 20,000 TREE restart. The score
+carryover and navigation update also repairs earlier paid score resets on load.
+Score recovery in the user’s wallet, mobile wallet round trips and physical NES
+controller acceptance still await confirmation. See
+`docs/production-grove-continue-2026-11-07.json` for the current host release
+and `docs/production-release-2026-11-07.json` for the preserved arcade integration.
+
+## Play
+
+- Three lives; 30 screens across five themed forests; final Hollow Harvester boss.
+- Concrete brick positions extracted directly from 30 gameplay frames in the
+  supplied Arkannoyed.gam (1,540 placements), scaled for the browser field.
+- Branch Reach, Root Tether, Wildfire Seed, Thorn Volley and Seedburst power-ups;
+  Gale Force, Root Snare and Wild Wind hazards. The original seed controls lives,
+  including while bonus seeds survive.
+- Mouse, touch drag, A/D, arrows, Space to launch/fire, P to pause. Detected
+  NES USB controllers support D-pad, A/B launch/fire and Start pause/resume.
+  Standard and common four/eight-button USB layouts have defaults; Set controller
+  buttons learns left/right, A, B and Start for other adapters and saves that
+  mapping per controller in this browser. Select has no gameplay action.
+  Disconnect pauses the run; reconnect requires released controls and an explicit
+  resume. Physical NES hardware and iPhone wallet app round trips still require
+  real-device testing.
+- Pauses explain their trigger: manual, focus/tab change, save backlog, controller
+  change/setup, leaderboard or checkout. Resume waits for all queued inputs to save,
+  then holds the seed for a three-second countdown; a gold aim marker shows the
+  chosen target without moving the frozen branch. Hiding the tab or opening a
+  dialog cancels that countdown and requires a fresh resume.
+- Original canvas art, event sounds, reduced-motion support and fullscreen.
+- Carved wooden relics replace letter tiles: growing branch, root-held acorn,
+  flame seed, twin thorns, seedburst, speed chevrons, binding roots and a wind
+  spiral. Beneficial relics have leafy wood frames and gold fittings; hazards have
+  weathered amber diamonds. Bricks use the live TREE homepage’s emerald, cyan
+  and gold palette, with beveled faces, wood grain and leaf engravings.
+  The field guide and pickup notices share the same icons and explain the effect.
+
+## Access and restart rules
+
+The entry button opens the existing wallet picker as **Connect Wallet**, then
+becomes **Verify NFTree** to invoke the same free personal-message sign-in as the
+access panel. Fullscreen exits when needed to show those controls.
+
+Sui Mainnet personal-message signature plus NFTree ownership (direct and
+controlled standard/personal Kiosks) grants access. Sign-in is not a payment.
+An origin-bound five-minute nonce is consumed once; an opaque 15-minute
+HttpOnly/Secure/SameSite cookie holds the session. Ownership is rechecked at
+least every 30 seconds during active play. Failed checks lock the game.
+Protected JS modules are bundled privately in the isolated `breaker-access`
+function, never shipped in the public static directory. Previously downloaded
+code cannot be recalled; this is access control, not copy protection.
+
+Your NFTree includes fresh games. The server keeps one durable active run per wallet;
+reloading or signing in again resumes that run. It replays only bounded input
+batches, owns lives and score, and rejects browser state and fabricated run IDs.
+No rewards or token payouts are granted. Saves begin after 60 inputs and use
+one request at a time. Catch-up batches accept up to 600 inputs, bounded by
+server elapsed-time credit; total queued plus in-flight prediction is capped at
+900 inputs (15 seconds at 60 Hz). A reload discards the unsaved interval. Prolonged
+save stalls and network failures pause local prediction. Warm backend
+requests reuse one lazy database connection pool; each transaction still leases
+and releases its own connection. Initial run credit remains 120 frames, and the
+server continues to reject oversized, duplicate and clock-ahead batches.
+
+At zero lives, **Start New Game · Free** begins at screen 1 with three lives and
+score zero. Your public username, best leaderboard score and finished result
+remain saved. **Continue · 20,000 TREE** restores three lives at the saved grove
+while retaining your server-saved score, remaining bricks and their damage,
+and any final-boss damage. The seed waits on a fresh branch until you launch.
+Temporary pickups, hazards, shots, effects and combo reset; grove timing stays
+saved. Normal SUI gas applies to that paid option.
+Previously paid restarts that cleared the score recover it once from the verified
+restart history on the next load, including points earned since restarting.
+A completed 30-screen run
+can begin a new challenge without a defeat fee.
+
+Checkout uses the existing configured ecosystem recipient
+`0x6f1020c2fd6c91129f7cb5e0d651295e87f7245f96b7d090715c89b38197e77f`.
+Prices use verified on-chain TREE decimals. The server validates the signature,
+sender, exact transfer commands, coin ownership, recipient, amount, gas settings,
+derived transaction digest and checkpointed successful receipt. Signed bytes are
+recorded before execution; retries submit the same bytes. A unique receipt and
+new run are written in one database transaction. Payment history recovers
+uncertain submissions; only a finalized failed transfer can release a signed
+reservation. No swaps, burns, reward splits or treasury sales are introduced.
+
+## Develop and verify
+
+Node 22.12+:
+
+```sh
+npm ci
+npm test
+npm run check
+npm run build
+npm run preview
+```
+
+`preview` is explicitly local and simulated. It never connects a wallet or
+transfers TREE. The production bundle has no simulation switch or test route.
+
+`tools/package-playtest.mjs /absolute/output.html` creates one offline HTML
+mechanics test that opens directly in a browser. It is not a production package.
+
+To re-read the uploaded source placements:
+
+```sh
+python3 tools/extract-layouts.py /path/to/arkannoyed.zip
+```
+
+The source record and exact scope are in `docs/source-inspection.json` and
+`docs/source-adaptation.md`.
+
+## Release boundaries
+
+`dist/` contains only the public introduction, CSS, artwork/logo and bundled
+wallet gateway. `.netlify/breaker-functions/` contains the single protected
+function and compiler manifest. Never upload a project root as public static
+files. The migration under `netlify/database/migrations/` adds only the isolated
+`breaker` schema. It must reach hosted databases through Netlify's committed
+migration/deploy workflow; never apply it by a direct production DB connection.
+
+Activation uses `BREAKER_ENABLED=true` only after the migration and isolated
+candidate pass validation. Disabled or missing backend configuration fails closed.
+Follow `docs/release-plan.md`. Do not run an ordinary root dashboard build or
+replace any existing production function to release this game.
+
+
+## Public leaderboard and usernames
+
+The public all-time board shows the top 20 named players, with one best saved
+score per wallet. Players opt in by saving a public username after NFTree
+verification; usernames are 3–20 ASCII letters, numbers, spaces, underscores or
+hyphens, beginning with a letter or number, and are unique without regard to
+case. Wallet addresses and payment/run identifiers are omitted from the board.
+
+Only replayed server checkpoints update scores. Choosing a username also
+includes the wallet's best earlier saved run, including verified historical
+paid-restart score carryover. Ties use grove, then the earliest saved achievement.
+Paid restarts and new challenges never erase the best score. The board refreshes
+automatically, on request, and after a saved defeat or campaign completion.
+Opening the leaderboard or editing a username pauses active gameplay.
+
+Free new-game requests are tied to the defeated run and are idempotent. Unsigned
+continue quotes are cancelled atomically when a free game starts. A recorded
+signed payment must be recovered before the free reset so its purchased
+continuation cannot be orphaned. The original finished run remains available to
+completion alerts. No new-game request signs or submits a wallet transaction.

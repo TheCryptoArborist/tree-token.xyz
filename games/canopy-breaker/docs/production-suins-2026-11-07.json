@@ -1,0 +1,11 @@
+{
+ "status":"published",
+ "sourceCommit":"014b6a9e8edd21ab2ba7225a1001d785507c4c18",
+ "hostDeployId":"6aef9804520d04b7d818397f",
+ "siteId":"f054a440-1ff7-4fac-85da-3b8b9afcf8b0",
+ "scope":"Isolated Canopy Breaker completion feed; unchanged static game and private wallet fields",
+ "SuiNS":"Validated primary name record, matching target wallet and unexpired record; cached lookup with fail-open fallback",
+ "verification":{"completionGET":200,"healthGET":200,"liveName":"crypto-arborist.sui","rawWalletPublished":false,"endpointTests":7,"botNotificationTests":28,"queueAndSelfServiceTests":42,"isolatedBuild":"passed","fullTypecheck":"Runtime exited 137; production bundles compile"},
+ "functions":{"count":1,"runtime":"nodejs24.x","mode":"stream","bootstrap":"2.24.0","schedules":0},
+ "schemaChanges":false
+}

@@ -1,0 +1,180 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "sourceCommit": "abcecdfa3a6d0a95d0b1cda247ac01722154ac4c",
+  "previousHostDeployId": "6aefb5fa09b01fb891f90cb0",
+  "siteId": "f054a440-1ff7-4fac-85da-3b8b9afcf8b0",
+  "gameURL": "https://tree-token.xyz/play/canopy-breaker/",
+  "scope": "Isolated Canopy Breaker host only; parent TREE site not deployed",
+  "schemaChanges": false,
+  "dependencyChanges": false,
+  "authorizationLogicChanges": false,
+  "paymentLogicChanges": false,
+  "investigation": {
+    "userEvidence": "Screenshot confirms saving-backlog pause; user reported three additional occurrences.",
+    "databaseFinding": "transactionDatabase default called getDatabase on every request. Pinned @netlify/database 2.0.1 constructs a fresh pg.Pool or NeonPool each call, causing connection setup/pool churn instead of warm reuse.",
+    "transportFinding": "One in-flight save, maximum 120 inputs per batch, and 120 queued inputs made delayed requests beyond roughly 2 seconds open the pause menu and limited catch-up throughput.",
+    "productionPostRequestTimings": "Netlify observability query returned no data; no exact authenticated save duration or distribution was inferred.",
+    "healthBeforeReadOnlySamples": [
+      {
+        "ms": 3929,
+        "status": 200,
+        "body": "{\"ready\":true}"
+      },
+      {
+        "ms": 3000,
+        "status": 200,
+        "body": "{\"ready\":true}"
+      },
+      {
+        "ms": 3567,
+        "status": 200,
+        "body": "{\"ready\":true}"
+      }
+    ],
+    "healthTimingLimit": "These are read-only health requests from the executor, not the player\u2019s authenticated frame POSTs; cold starts, network and container placement affect them.",
+    "remainingBoundedHold": "A prolonged stall reaching the total unacknowledged limit or an actual network error still safely holds the run; resume countdown is retained.",
+    "healthAfterReadOnlySamples": [
+      {
+        "ms": 3130,
+        "status": 200,
+        "body": "{\"ready\":true}"
+      },
+      {
+        "ms": 3285,
+        "status": 200,
+        "body": "{\"ready\":true}"
+      },
+      {
+        "ms": 3268,
+        "status": 200,
+        "body": "{\"ready\":true}"
+      }
+    ],
+    "healthTimingConclusion": "Three samples before and after are both around3 seconds. These small read-only samples do not establish a meaningful player save latency improvement; pooling benefit is verified structurally and batching tolerance through deterministic regression."
+  },
+  "changes": {
+    "lazyDefaultDatabasePoolReusedAcrossWarmRequests": true,
+    "explicitPoolsRemainIsolated": true,
+    "eachTransactionLeasesAndReleasesOwnConnection": true,
+    "noTransactionOrPrincipalCaching": true,
+    "saveEveryInputs": 60,
+    "maxBatchInputs": 600,
+    "maxTotalQueuedAndInFlightInputs": 900,
+    "maxTotalUnacknowledgedSecondsAt60Hz": 15,
+    "maxServerElapsedTimeCredit": 900,
+    "initialRunCreditUnchanged": 120,
+    "oneInFlightRevision": true,
+    "serverReplayAndRevisionChecksPreserved": true,
+    "boundedPayloadUnderExisting70KBRequestLimit": true
+  },
+  "preserved": [
+    "NFTree gate and protected source",
+    "Three lives and 30 screens",
+    "Free new game resets score",
+    "20,000 TREE continue retains score",
+    "Signed payment recovery",
+    "Public usernames and top 20 leaderboard",
+    "Finished-run completion/SuiNS feed",
+    "In-cabinet navigation",
+    "Explicit pause reasons and frozen three-second resume countdown"
+  ],
+  "validation": {
+    "automatedTestsPassed": 163,
+    "databasePoolTestsPassed": 4,
+    "gameServiceTestsPassed": 34,
+    "pauseUITestsPassed": 17,
+    "slowSaveSimulation": "Three logical minutes of repeated 3-second frame saves, plus a 7-second spike, produce no saving pause; actual app loop and deterministic engine used.",
+    "longStallSimulation": "Total pending caps at 900 and freezes; checkpoint drains 60+600+240 with correct revisions before resume.",
+    "serverBatchChecks": "600 delayed frames accepted with elapsed credit; 601 rejected without writes; repeated/concurrent 600 applied once; sustained 60 Hz and 900 credit cap verified against actual local database.",
+    "testCommand": "for test_file in tests/*.test.mjs; do node --wasm-num-compilation-tasks=1 --max-old-space-size=192 --no-wasm-tier-up \"$test_file\" || exit; done",
+    "syntaxPassed": true,
+    "isolatedBuildPassed": true,
+    "assistantSignedWalletMessageOrTransaction": false,
+    "realHolderAcceptanceStillAwaitingConfirmation": true,
+    "canonicalStaticFilesUnchangedAndMatchBuild": true,
+    "hostedChecks": [
+      {
+        "path": "entry",
+        "method": "GET",
+        "status": 200,
+        "bytes": 9548
+      },
+      {
+        "path": "style.css",
+        "method": "GET",
+        "status": 200,
+        "bytes": 17285
+      },
+      {
+        "path": "gateway.js",
+        "method": "GET",
+        "status": 200,
+        "bytes": 491306
+      },
+      {
+        "path": "api/health",
+        "method": "GET",
+        "status": 200,
+        "bytes": 14
+      },
+      {
+        "path": "api/leaderboard",
+        "method": "GET",
+        "status": 200,
+        "bytes": 114
+      },
+      {
+        "path": "api/completions",
+        "method": "GET",
+        "status": 200,
+        "bytes": 634
+      },
+      {
+        "path": "src/app.js",
+        "method": "GET",
+        "status": 401,
+        "bytes": 35
+      },
+      {
+        "path": "src/replay-limits.js",
+        "method": "GET",
+        "status": 401,
+        "bytes": 35
+      },
+      {
+        "path": "api/game",
+        "method": "POST",
+        "status": 401,
+        "bytes": 43
+      },
+      {
+        "path": "api/completions",
+        "method": "POST",
+        "status": 405,
+        "bytes": 18
+      }
+    ]
+  },
+  "hostDeployId": "6aefb8a4f379759c891f2b7f",
+  "publishedAt": "2026-11-07T23:48:14.860Z",
+  "functionSha256": "ff712b91e6e721384ddc21c4beb7054dc3b52ec88b10980f62aaadd465dd9bef",
+  "parentDeployBefore": "6aefae6c038a955ed0dd4b70",
+  "parentDeployAfter": "6aefae6c038a955ed0dd4b70",
+  "runtimePreserved": {
+    "node": "nodejs24.x",
+    "invocationMode": "stream",
+    "buildData": {
+      "bootstrapVersion": "2.24.0",
+      "runtimeAPIVersion": 2
+    },
+    "memoryMB": 1024,
+    "region": "us-east-2",
+    "routeCount": 6,
+    "functionCount": 1,
+    "scheduleCount": 0,
+    "rateLimitPreserved": true,
+    "productionDatabaseBranchAndMigrationsPreserved": true,
+    "routeMethodsNote": "Unrestricted methods normalized from null/empty array before equality comparison."
+  }
+}

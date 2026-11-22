@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "status": "active-in-production",
+  "publishedAt": "2026-11-07T17:19:53.068Z",
+  "sourceCommit": "174eadb2e66a02e23ad8ce5c7ae22c97b5c67e09",
+  "gameURL": "https://tree-token.xyz/play/canopy-breaker/",
+  "arcadeURL": "https://tree-token.xyz/play/",
+  "arcade": {
+    "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
+    "deployId": "6aef5d756e05b131e841a269",
+    "previousDeployId": "6aef5ca7ec21331504c534f0",
+    "locked": true,
+    "staticPaths": 302,
+    "changedFiles": [
+      {
+        "path": "/play/index.html",
+        "sha1": "ae9f32a09ea2435e069aafadf6ed0e1d79f9e5b1",
+        "archivedSource": "docs/production-launch/arcade-index.html"
+      },
+      {
+        "path": "/netlify.toml",
+        "sha1": "d8a1d60c228a03178c7335c12543ca0dbb321e20",
+        "archivedSource": "docs/production-launch/netlify.toml"
+      }
+    ],
+    "otherStaticFilesPreserved": 300,
+    "completeFunctionRecordsPreserved": 43,
+    "schedulesPreserved": 5,
+    "runtimeConfigurationPreserved": true,
+    "siteEnvironmentRecordsPreserved": true,
+    "environmentVerificationLimit": "API-visible records and fingerprints; masked secret bytes are not readable.",
+    "preservationBaselineDeployId": "6aef402b05aed0cc8955b087"
+  },
+  "gameHost": {
+    "siteId": "f054a440-1ff7-4fac-85da-3b8b9afcf8b0",
+    "deployId": "6aef5b8a4cf0018145d4fae5",
+    "context": "production",
+    "databaseBranchId": "production",
+    "migration": {
+      "name": "20261105230000_canopy_breaker",
+      "applied": true
+    },
+    "function": {
+      "name": "breaker-access",
+      "sha256": "a541944a95365f936d58bdd82000676bed5ae98963f63f8ab5d37a842a16b927"
+    },
+    "gameplayEnabled": true,
+    "proxyTarget": "https://canopy-breaker.netlify.app/play/canopy-breaker/:splat"
+  },
+  "gameRules": {
+    "access": "NFTree ownership on Sui Mainnet with personal-message signature",
+    "initialLives": 3,
+    "restartAfterAllLivesLost": {
+      "amountTREE": 20000,
+      "additionalCost": "Normal SUI gas",
+      "resetsToScreen": 1,
+      "restoredLives": 3
+    }
+  },
+  "validation": {
+    "automatedTestsPassed": 76,
+    "syntaxCheckPassed": true,
+    "buildPassed": true,
+    "hostedChecks": {
+      "databaseHealthReady": true,
+      "canonicalOriginChallengeAccepted": true,
+      "foreignOriginChallengeRejected": true,
+      "unsignedGameplayRejected": true,
+      "unsignedProtectedModulesRejected": true,
+      "canonicalEntryReturned200WithoutRedirects": true,
+      "gatewayStylesAndThreeArtworkAtlasesReturned200": true,
+      "privateServerSourceReturned404": true,
+      "existingPreviewReturned200": true
+    },
+    "acceptanceStillRequired": {
+      "realNFTreeHolderGameplay": true,
+      "genuine20000TREERestartFromDefeatedRun": true,
+      "samePaymentRecoveryWithoutSecondCharge": true,
+      "mobileWalletRoundTrip": true,
+      "physicalNESController": true
+    },
+    "limit": "Automated signatures and mocked chain receipts do not establish real-holder, real-payment or physical-device acceptance.",
+    "hostedHTTPChecksPassed": 12
+  }
+}
