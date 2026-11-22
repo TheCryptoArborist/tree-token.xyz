@@ -9,13 +9,13 @@ on:
       - 'scripts/arcade-advent-grove.js'
       - 'scripts/arcade-next-month-unlocks.js'
       - 'tests/arcade-advent-and-next-month.test.mjs'
+      - 'tests/arcade-advent-release.test.mjs'
       - 'tests/arcade-advent-browser.mjs'
       - 'production/arcade-organization-static/runtime/scripts/arcade-daily-growth-play-share.js'
       - 'production/arcade-organization-static/runtime/assets/arcade/arcade-growth-wallet.js'
       - 'styles/arcade-organization.css'
       - 'scripts/release-arcade-advent.mjs'
       - 'scripts/arcade-monthly.js'
-      - 'tests/arcade-advent-browser.mjs'
       - 'tests/arcade-attendance-forest.test.mjs'
       - 'tests/arcade-attendance-events.test.mjs'
       - 'tests/arcade-wallet-switch.test.mjs'
@@ -64,14 +64,13 @@ jobs:
         run: npm ci --prefix vendor/arcade-monthly --ignore-scripts --no-audit --no-fund
       - name: Verify attendance states, wallet identity and complete preservation guards
         run: |
-          node --test tests/arcade-advent-and-next-month.test.mjs tests/arcade-attendance-forest-release.test.mjs tests/arcade-attendance-forest.test.mjs tests/arcade-attendance-events.test.mjs tests/arcade-growth-wallet-accounts.test.mjs tests/arcade-wallet-switch.test.mjs tests/arcade-monthly-wallet-switch.test.mjs tests/arcade-monthly-ui.test.mjs tests/arcade-monthly-deadline-ui.test.mjs tests/arcade-organization.test.mjs tests/arcade-season-deadline.test.mjs
+          node --test tests/arcade-advent-and-next-month.test.mjs tests/arcade-advent-release.test.mjs tests/arcade-attendance-forest-release.test.mjs tests/arcade-attendance-forest.test.mjs tests/arcade-attendance-events.test.mjs tests/arcade-growth-wallet-accounts.test.mjs tests/arcade-wallet-switch.test.mjs tests/arcade-monthly-wallet-switch.test.mjs tests/arcade-monthly-ui.test.mjs tests/arcade-monthly-deadline-ui.test.mjs tests/arcade-organization.test.mjs tests/arcade-season-deadline.test.mjs
           node --check scripts/release-arcade-advent.mjs
           node --check scripts/arcade-monthly.js
           node --check scripts/arcade-organization.js
           node --check scripts/arcade-attendance-forest.js
           node --check scripts/arcade-advent-grove.js
           node --check scripts/arcade-next-month-unlocks.js
-          node --check tests/arcade-advent-browser.mjs
           node --check production/arcade-organization-static/runtime/scripts/arcade-daily-growth-play-share.js
           node --check production/arcade-organization-static/runtime/assets/arcade/arcade-growth-wallet.js
           node --check tests/arcade-advent-browser.mjs
@@ -301,7 +300,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: arcade-attendance-forest-${{ steps.control.outputs.mode }}-${{ github.run_id }}
+          name: arcade-advent-${{ steps.control.outputs.mode }}-${{ github.run_id }}
           path: .netlify/arcade-advent/
           include-hidden-files: true
           if-no-files-found: ignore
