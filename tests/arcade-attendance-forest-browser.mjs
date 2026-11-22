@@ -291,7 +291,8 @@ async function forestSnapshot(page) {
       count: text('[data-forest-count]'), streak: text('[data-forest-streak]'),
       timer: text('[data-forest-timer]'), timerLabel: text('[data-forest-timer-label]'),
       deadline: deadline?.getAttribute('datetime') || deadline?.querySelector('time')?.getAttribute('datetime') || '',
-      deadlineText: deadline?.textContent?.trim() || '', status: text('[data-forest-status]'),
+      deadlineText: deadline?.textContent?.trim() || '', deadlineAriaLabel: deadline?.getAttribute('aria-label') || '',
+      status: text('[data-forest-status]'),
       dates: [...root.querySelectorAll('g[data-forest-tree][data-date]')].map((node) => node.dataset.date).sort(),
       embers: [...root.querySelectorAll('g[data-forest-embers]')].some(visible),
       visible: visible(root),
@@ -352,7 +353,12 @@ async function refresh(page, api, phase) {
 }
 
 async function assertDeadline(page, expected, label, expectedRemaining) {
-  const actual = await forestSnapshot(page);
+  // A legitimate background read briefly marks the same saved progress stale.
+  // Poll until fresh, then assert every related value from that one DOM read.
+  const actual = await until(async () => {
+    const value = await forestSnapshot(page);
+    return value && ['growing', 'empty', 'paused'].includes(value.state) ? value : false;
+  }, 'Fresh attendance countdown is available');
   assert.match(actual.timerLabel, label);
   assert.match(actual.timer, /\d/, 'A visible numerical countdown is required');
   if (expectedRemaining !== undefined) {
@@ -364,8 +370,7 @@ async function assertDeadline(page, expected, label, expectedRemaining) {
   }
   if (actual.deadline) assert.equal(Date.parse(actual.deadline), Date.parse(expected), 'Exact streak deadline must match UTC attendance rules');
   else {
-    const time = await page.locator(`${FOREST} [data-forest-deadline]`).getAttribute('aria-label');
-    const content = `${actual.deadlineText} ${time || ''}`;
+    const content = `${actual.deadlineText} ${actual.deadlineAriaLabel}`;
     assert.match(content, /UTC/);
     const expectedDay = new Date(expected).getUTCDate();
     const expectedMonth = new Intl.DateTimeFormat('en', { month: 'short', timeZone: 'UTC' }).format(new Date(expected));
@@ -581,10 +586,10 @@ async function openRecovery(page, selectedDate) {
 }
 
 async function recoveryScenario({ page, api, width, viewport }) {
-  await expectForest(page, { state: 'paused', count: 3, streak: 0, dates: dates(18, 19, 20) }, 'Missed yesterday pauses the streak without deleting old trees');
-  assert.equal((await forestSnapshot(page)).embers, true, 'Confirmed loss displays an ember patch');
+  const paused = await expectForest(page, { state: 'paused', count: 3, streak: 0, dates: dates(18, 19, 20) }, 'Missed yesterday pauses the streak without deleting old trees');
+  assert.equal(paused.embers, true, 'Confirmed loss displays an ember patch');
   await screenshot(page, `paused-${width}.png`);
-  assert.equal(await page.locator(`${FOREST} [data-forest-recover]`).isVisible(), true);
+  await page.locator(`${FOREST} [data-forest-recover]`).waitFor({ state: 'visible' });
   await page.locator(`${FOREST} [data-forest-recover]`).click();
   await until(() => page.evaluate(() => document.getElementById('arcade-daily-growth')?.dataset.arcadeView === 'month'), 'Forest recovery link opens Monthly');
   await openRecovery(page, '2026-11-17');
@@ -617,8 +622,7 @@ async function recoveryScenario({ page, api, width, viewport }) {
   const viewGrove = page.locator('#arcade-monthly-panel a[href="#daily"]').filter({ hasText: /view.*grove/i });
   await viewGrove.waitFor({ state: 'visible' }); await viewGrove.click();
   await until(async () => (await forestSnapshot(page))?.animation === 'rain', 'Verified recovery rain starts when the grove becomes visible');
-  await expectForest(page, { state: 'paused', count: 4, streak: 0, dates: dates(17, 18, 19, 20) }, 'Older recovered date adds attendance without inventing a current streak');
-  const partial = await forestSnapshot(page);
+  const partial = await expectForest(page, { state: 'paused', count: 4, streak: 0, dates: dates(17, 18, 19, 20) }, 'Older recovered date adds attendance without inventing a current streak');
   assert.doesNotMatch(partial.status, /streak (?:is )?restored|streak (?:is )?recovered/i, 'An unrelated recovered date cannot claim to restore the current streak');
   assert.match(partial.status, /17|recovered|restored/i);
   await screenshot(page, `rain-partial-${width}.png`, { motion: true });
@@ -653,8 +657,9 @@ async function boundaryScenario({ page, api, width, viewport }, monthRollover = 
   await expectForest(page, { state: 'growing', count: before.length, streak: before.length, dates: before }, 'Pre-boundary snapshot is fresh');
   const almostMidnight = Date.parse(monthRollover ? '2026-11-30T23:59:58.000Z' : '2026-11-22T23:59:58.000Z');
   api.now = almostMidnight;
-  await page.clock.setSystemTime(almostMidnight);
-  await page.clock.pauseAt(almostMidnight + 5);
+  // The scenario starts at 23:50. Jump directly to the future pause target;
+  // setting time first left only 5 ms for a second command to reach Chromium.
+  await page.clock.pauseAt(almostMidnight);
   await refresh(page, api, 'near-midnight');
   await until(() => page.evaluate((time) => window.__arcadeForestReview.attendance.some((entry) => entry.fresh && entry.serverTime === time), almostMidnight), 'Clock is anchored to the near-midnight HTTP Date');
   const fresh = await forestSnapshot(page); assert.equal(fresh.embers, false);
