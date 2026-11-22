@@ -1,3 +1,44 @@
+# Canonical generation signing page — published
+
+Current locked production is `6b032a964276045ddedb18ca`, published at
+`2026-11-22T17:49:33.817Z` by workflow `45051525680`. Source
+`2e2c440caba28ffd2fe0a5c5483c5a3e68e8957b` and publication control
+`51c3b5232f6f01034018d33e6659547440b7d7b4` are on PR #280's isolated branch.
+
+The new https://tree-token.xyz/play/generation-publication/ page supports the
+user-approved empty Sui package publication through desktop Slush. It requires
+the exact canonical origin/path and approved dev wallet, fresh exact-byte
+simulation, a verified wallet signature, and a maximum 0.1 SUI gas budget.
+External preview signing remains disabled. The user clarified that `www` is not
+required; its existing redirect to the apex domain is preserved.
+
+Fresh baseline: `6b0282d222b49cfa17fa3731` (attendance forest). The release adds
+exactly two static paths and one isolated read-only simulation/receipt function:
+**658 static paths, 53 functions, five schedules**. All **656 existing hashes**
+and **52 complete existing backend/provider records**, schedules, runtime
+settings and API-visible protected configuration were preserved. Only the new
+function was packaged/uploaded; no existing backend was rebuilt. All real Git
+builds finished before switching and locking the exact new candidate.
+
+The canonical page returns HTTP 200 without redirect. Its served JavaScript
+SHA256 matches committed bytes, and its fresh hosted full-byte Sui simulation
+passes independently at estimated 69,723,600 MIST. All 73 tooling/release tests
+and canonical-origin mock-wallet rejection/reload checks passed. Real Slush
+signing and actual blockchain publication remain pending; no NFT was deposited,
+no BNB contract deployed, no sale enabled and no gameplay activated.
+
+Evidence: `docs/multichain/generation-milestone/canonical-live-verification.json`
+and `canonical-candidate-review.json` in the same directory. Publication artifact
+`14765961630`, SHA256
+`c9f7f2e88d89396f4a0fd5d691ee91d5236ab746053c729cc99800e73ed7ecd7`, contains
+the complete capture, plan, candidate/provider record and publication report.
+Protected secret verification covers API-visible metadata/value IDs, not masked
+secret bytes. The completed publisher is pinned to its prior baseline; do not
+reuse it blindly. Capture the entire current inventory before any later release.
+Never publish the historical root build or preview directory as production.
+
+---
+
 # Tree Arcade attendance forest — published November 21, 2026
 
 Current locked production is `6b0282d222b49cfa17fa3731`, published at

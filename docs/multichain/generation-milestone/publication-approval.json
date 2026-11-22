@@ -55,7 +55,7 @@
       }
     }
   },
-  "note": "User clarified that www is not required. Use the existing canonical https://tree-token.xyz/play/ origin. Preview signing remains forbidden. Empty Sui publication approval persists; signature still required.",
+  "note": "User accepted the apex domain and instructed continuation of the canonical signing-page release. Website page is now published; blockchain publication approval persists, but wallet signature and Sui publication remain pending.",
   "wallet": {
     "application": "Slush",
     "device": "desktop",
@@ -63,5 +63,8 @@
   },
   "requiredSigningOrigin": "https://tree-token.xyz",
   "requiredSigningPathPrefix": "/play/",
-  "previewSigningPermitted": false
+  "previewSigningPermitted": false,
+  "canonicalPagePublished": true,
+  "canonicalPageURL": "https://tree-token.xyz/play/generation-publication/",
+  "canonicalPageDeployId": "6b032a964276045ddedb18ca"
 }

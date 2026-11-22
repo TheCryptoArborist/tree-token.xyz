@@ -1,3 +1,12 @@
+# Completed canonical release
+
+The user clarified that `www` is not required. The apex signing page is now live
+at https://tree-token.xyz/play/generation-publication/ . See
+[verification](canonical-live-verification.json). The earlier unresolved-origin
+notes below are historical preflight evidence, not an outstanding question.
+
+---
+
 # Canonical signing release preflight
 
 User requires wallet-signing links under `https://www.tree-token.xyz/play/`.
