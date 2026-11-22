@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "action": "publish-arcade-countdown",
+  "sourceCommit": "34b342f3f0b2c3c61d5984d05ea3a5d6bde1f979",
+  "sourceTree": "1351b345ece0299c4e7f05364c7aaeb8bf7aa986",
+  "mainCommit": "5f9b58a2fd39286b00897fea8b176a62d3a34699",
+  "expectedDeploy": "6b03741d72033c45517f32e3",
+  "candidateId": "6b03810de27178ba36227c42",
+  "planSha256": "858439fd223226fb5deaaa8ed2fef862eb90fd16fc1271c38e163f0b8130ce8f",
+  "candidateRunId": 45085802059,
+  "candidateArtifactId": 14778868678,
+  "candidateArtifactSHA256": "5f8749e223bea1f3452cbc4fdde7690383536d3de6769231ab1788e55d46d964",
+  "browserReview": "production/arcade-countdown-browser-review.json"
+}
