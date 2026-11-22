@@ -19,13 +19,18 @@ const checkNames = ['singleTimer', 'launchCopy', 'threePlacements', 'utcTargets'
   'monthRollover', 'unknownBadges', 'mobileLayout', 'noMissingAssets'];
 const scenarioNames = ['configured-december', 'january-rollover'];
 const requiredAssets = ['/scripts/arcade-next-month-unlocks.js', '/styles/arcade-organization.css'];
+const replacedLegacyImages = new Set([
+  '/assets/arcade-growth/nftree-scout.webp',
+  '/assets/arcade-growth/tree-force-vanguard.webp',
+  '/assets/arcade-growth/thickquidity-legend.webp',
+]);
 const report = {
   schemaVersion: 1, result: 'failed', checkedAt: new Date().toISOString(), viewportWidths: widths,
   noWalletOrPaymentActions: true, syntheticWalletOnly: true, syntheticDataOnly: true,
   expectedScenarioCount: widths.length * scenarioNames.length,
   checks: Object.fromEntries(checkNames.map(name => [name, false])),
   viewports: [], screenshots: [], failures: [], browserErrors: [], assetFailures: [], unexpectedWrites: [],
-  unsupportedAPIReads: [],
+  unsupportedAPIReads: [], verifiedImageCancellations: [], replacementImageChecks: [],
   evidence: {
     application: 'Actual candidate HTML, CSS and JavaScript are served without local overlays.',
     wallet: 'Fresh signed-out browser contexts; no wallet provider is installed or connected and no sign-in control is used.',
@@ -164,6 +169,59 @@ async function screenshot(page, filename) {
   report.screenshots.push(filename);
 }
 
+async function boundedImageDecode(promise, description) {
+  let timeout;
+  try {
+    return await Promise.race([promise, new Promise((_, reject) => {
+      // Node's clock remains real while Playwright's page clock is paused.
+      timeout = setTimeout(() => reject(new Error('Image decode timed out: ' + description)), 15_000);
+    })]);
+  } finally { clearTimeout(timeout); }
+}
+
+async function verifyImageCancellations(page, context, pending, item, width, scenario) {
+  item.verifiedImageCancellations = [];
+  if (!pending.size) return;
+  try {
+    for (const [url, occurrences] of pending) {
+      const response = await context.request.get(url, { timeout: 15_000, maxRedirects: 0 });
+      assert.equal(response.status(), 200, 'Cancelled legacy image must be available: ' + url);
+      const contentType = response.headers()['content-type'] || '';
+      assert.match(contentType, /^image\/[\w.+-]+(?:\s*;|$)/i, 'Cancelled asset must have an image MIME type');
+      const decoded = await boundedImageDecode(page.evaluate(async url => {
+        const image = new Image(); image.src = url;
+        await image.decode();
+        return { src: image.currentSrc || image.src, width: image.naturalWidth, height: image.naturalHeight };
+      }, url), url);
+      assert(decoded.width > 0 && decoded.height > 0, 'Cancelled image must actually decode: ' + url);
+      const evidence = { url, occurrences, status: response.status(), contentType, ...decoded };
+      item.verifiedImageCancellations.push(evidence);
+      report.verifiedImageCancellations.push({ viewportWidth: width, scenario, ...evidence });
+    }
+    const replacements = await boundedImageDecode(page.evaluate(async () => {
+      const images = [...document.querySelectorAll('.growth-rank-stop img')];
+      return Promise.all(images.map(async image => {
+        image.loading = 'eager';
+        await image.decode();
+        return { rank: image.closest('[data-rank-id]')?.dataset.rankId,
+          src: image.currentSrc || image.src, width: image.naturalWidth, height: image.naturalHeight };
+      }));
+    }), 'current seasonal rank images');
+    assert(replacements.length > 0, 'Current seasonal rank images must be present');
+    for (const image of replacements) {
+      assert(image.width > 0 && image.height > 0, 'Current rank image must actually decode: ' + image.src);
+      assert(!pending.has(image.src), 'The seasonal module must replace the cancelled legacy source');
+    }
+    item.replacementImageChecks = replacements;
+    report.replacementImageChecks.push({ width, scenario, images: replacements });
+    assert.equal(new Set(item.verifiedImageCancellations.map(image => image.url)).size, pending.size,
+      'Every unique cancelled legacy image must be independently verified');
+  } catch (error) {
+    report.assetFailures.push({ width, scenario, message: 'Unresolved image cancellation: ' + error.message });
+    throw error;
+  }
+}
+
 let browser, origin;
 async function runScenario(viewport, name) {
   const width = viewport.width;
@@ -174,6 +232,7 @@ async function runScenario(viewport, name) {
   const anchor = Date.parse(rollover ? '2026-11-30T23:59:58.000Z' : '2026-11-22T12:00:00.000Z');
   const api = publicAPI({ width, scenario: name, now: initial });
   const served = new Map();
+  const pendingImageCancellations = new Map();
   let closing = false;
   const context = await browser.newContext({ viewport: { width, height: 1000 }, deviceScaleFactor: 1,
     serviceWorkers: 'block', reducedMotion: 'reduce' });
@@ -201,7 +260,11 @@ async function runScenario(viewport, name) {
     if (closing) return; // Context teardown can cancel unrelated lazy assets.
     const url = new URL(request.url());
     if (url.origin === origin && ['image', 'script', 'stylesheet', 'font'].includes(request.resourceType())) {
-      report.assetFailures.push({ width, scenario: name, url: url.href, message: request.failure()?.errorText });
+      const message = request.failure()?.errorText;
+      if (request.resourceType() === 'image' && message === 'net::ERR_ABORTED'
+        && !url.search && !url.hash && replacedLegacyImages.has(url.pathname)) {
+        pendingImageCancellations.set(url.href, (pendingImageCancellations.get(url.href) || 0) + 1);
+      } else report.assetFailures.push({ width, scenario: name, url: url.href, message });
     }
   });
   try {
@@ -236,6 +299,7 @@ async function runScenario(viewport, name) {
     await screenshot(page, name + '-' + width + '.png');
     for (const asset of requiredAssets) assert.equal(served.get(asset), 200, 'Actual candidate source must load: ' + asset);
     item.servedAssets = Object.fromEntries(served);
+    await verifyImageCancellations(page, context, pendingImageCancellations, item, width, name);
     for (const errors of [report.browserErrors, report.assetFailures, report.unexpectedWrites]) {
       assert.equal(errors.filter(error => error.width === width && error.scenario === name).length, 0, 'Scenario has browser/network errors');
     }
@@ -297,6 +361,8 @@ try {
     expectedScenarioCount: report.expectedScenarioCount, attemptedScenarioCount: report.attemptedScenarioCount,
     passedScenarioCount: report.passedScenarioCount, failures: report.failures,
     browserErrors: report.browserErrors, assetFailures: report.assetFailures, unexpectedWrites: report.unexpectedWrites,
+    verifiedImageCancellations: report.verifiedImageCancellations,
+    replacementImageChecks: report.replacementImageChecks,
     screenshots: report.screenshots }, null, 2));
   if (report.result !== 'passed') process.exitCode = 1;
 }
