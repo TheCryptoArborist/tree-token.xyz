@@ -25,6 +25,7 @@ const replacedLegacyImages = new Set([
   '/assets/arcade-growth/tree-force-vanguard.webp',
   '/assets/arcade-growth/thickquidity-legend.webp',
 ]);
+const retainedLogo = '/assets/tree-command-logo-v2-512.png';
 const report = {
   schemaVersion: 1, result: 'failed', checkedAt: new Date().toISOString(), viewportWidths: widths,
   noWalletOrPaymentActions: true, syntheticWalletOnly: true, syntheticDataOnly: true,
@@ -186,7 +187,7 @@ async function verifyImageCancellations(page, context, pending, item, width, sce
   try {
     for (const [url, occurrences] of pending) {
       const response = await context.request.get(url, { timeout: 15_000, maxRedirects: 0 });
-      assert.equal(response.status(), 200, 'Cancelled legacy image must be available: ' + url);
+      assert.equal(response.status(), 200, 'Cancelled existing image must be available: ' + url);
       const contentType = response.headers()['content-type'] || '';
       assert.match(contentType, /^image\/[\w.+-]+(?:\s*;|$)/i, 'Cancelled asset must have an image MIME type');
       const decoded = await boundedImageDecode(page.evaluate(async url => {
@@ -198,6 +199,21 @@ async function verifyImageCancellations(page, context, pending, item, width, sce
       const evidence = { url, occurrences, status: response.status(), contentType, ...decoded };
       item.verifiedImageCancellations.push(evidence);
       report.verifiedImageCancellations.push({ viewportWidth: width, scenario, ...evidence });
+      if (new URL(url).pathname === retainedLogo) {
+        const displayed = await boundedImageDecode(page.evaluate(async url => {
+          const images = [...document.images].filter(image => (image.currentSrc || image.src) === url);
+          return Promise.all(images.map(async image => {
+            image.loading = 'eager';
+            await image.decode();
+            return { src: image.currentSrc || image.src, width: image.naturalWidth, height: image.naturalHeight };
+          }));
+        }, url), 'current logo images');
+        assert(displayed.length > 0, 'The retained logo must exist in the current document');
+        assert(displayed.every(image => image.src === url && image.width > 0 && image.height > 0),
+          'Every current logo image must actually decode');
+        evidence.currentDOMImages = displayed;
+        report.verifiedImageCancellations[report.verifiedImageCancellations.length - 1].currentDOMImages = displayed;
+      }
     }
     const replacements = await boundedImageDecode(page.evaluate(async () => {
       const images = [...document.querySelectorAll('.growth-rank-stop img')];
@@ -216,7 +232,7 @@ async function verifyImageCancellations(page, context, pending, item, width, sce
     item.replacementImageChecks = replacements;
     report.replacementImageChecks.push({ width, scenario, images: replacements });
     assert.equal(new Set(item.verifiedImageCancellations.map(image => image.url)).size, pending.size,
-      'Every unique cancelled legacy image must be independently verified');
+      'Every unique cancelled existing image must be independently verified');
   } catch (error) {
     report.assetFailures.push({ width, scenario, message: 'Unresolved image cancellation: ' + error.message });
     throw error;
@@ -263,7 +279,7 @@ async function runScenario(viewport, name) {
     if (url.origin === origin && ['image', 'script', 'stylesheet', 'font'].includes(request.resourceType())) {
       const message = request.failure()?.errorText;
       if (request.resourceType() === 'image' && message === 'net::ERR_ABORTED'
-        && !url.search && !url.hash && replacedLegacyImages.has(url.pathname)) {
+        && !url.search && !url.hash && (replacedLegacyImages.has(url.pathname) || url.pathname === retainedLogo)) {
         pendingImageCancellations.set(url.href, (pendingImageCancellations.get(url.href) || 0) + 1);
       } else report.assetFailures.push({ width, scenario: name, url: url.href, message });
     }
