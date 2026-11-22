@@ -295,6 +295,38 @@ n = /* @__PURE__ */ new WeakMap();
 //#region ../../../../tmp/tree-growth-wallet-9UpzsW/wallet-core.mjs
 function h(e) {
 	let t = "standard:connect", n = "sui:signPersonalMessage", r = /* @__PURE__ */ new Set(), i = /* @__PURE__ */ new Set(), a = null, o = null, s = 0, c = (e) => typeof e == "string" && /^0x[0-9a-f]{1,64}$/i.test(e) ? "0x" + e.slice(2).toLowerCase().padStart(64, "0") : "", l = (e) => Array.isArray(e) && e.some((e) => e === "sui:mainnet" || e === "sui"), u = (e, t) => !!c(e?.address) && (l(e?.chains) || !e?.chains?.length && l(t?.chains)), d = (e) => typeof e?.name == "string" && e.name.length > 0 && e.name.length <= 80 && typeof e.features?.[t]?.connect == "function" && typeof e.features?.[n]?.signPersonalMessage == "function" && (l(e.chains) || Array.from(e.accounts || []).some((t) => u(t, e)));
+	// Accounts come only from this provider's authorized Wallet Standard result.
+	// Keep the latest result because some wallets update wallet.accounts later.
+	const authorizedAccounts = new WeakMap();
+	function rememberAccounts(wallet, accounts) {
+		const unique = new Map();
+		for (const account of Array.from(accounts || [])) {
+			const address = c(account?.address);
+			if (u(account, wallet) && !unique.has(address)) unique.set(address, account);
+		}
+		const result = [...unique.values()];
+		authorizedAccounts.set(wallet, result);
+		return result;
+	}
+	function getAvailableAccounts(walletId = a?.wallet.name) {
+		_();
+		if (!a || a.wallet.name !== walletId) return [];
+		return (authorizedAccounts.get(a.wallet) || []).map(account => ({
+			address: c(account.address),
+			...(typeof account.label === "string" && account.label.trim()
+				? { label: account.label.trim().slice(0, 80) } : {})
+		}));
+	}
+	function selectAccount({ walletId = a?.wallet.name, address } = {}) {
+		_();
+		const normalized = c(address);
+		if (!a || a.wallet.name !== walletId || !normalized) throw Error("Connect this Sui wallet before selecting an account.");
+		const account = (authorizedAccounts.get(a.wallet) || []).find(account => c(account.address) === normalized);
+		if (!account) throw Error("This account is not shared by the connected wallet. Authorize it in your wallet and reconnect.");
+		// A pending signature for the previous selection must never be reused.
+		s += 1;
+		return v(a.wallet, account);
+	}
 	function f() {
 		let t = e.get().filter(d);
 		return t.filter((e) => t.filter((t) => t.name === e.name).length === 1);
@@ -325,6 +357,7 @@ function h(e) {
 	}
 	function g() {
 		let e = a !== null;
+		if (a) authorizedAccounts.delete(a.wallet);
 		s += 1, o?.(), o = null, a = null, e && h();
 	}
 	function _() {
@@ -339,7 +372,7 @@ function h(e) {
 		let n = e.features?.["standard:events"]?.on;
 		return typeof n == "function" && (o = n("change", (t) => {
 			if (!a || a.wallet !== e || !Object.hasOwn(t || {}, "accounts")) return;
-			let n = Array.from(t.accounts || []).find((t) => c(t?.address) === a.address && u(t, e));
+			let n = rememberAccounts(e, t.accounts).find((t) => c(t?.address) === a.address);
 			n ? (a.account = n, h()) : g();
 		})), h(), m();
 	}
@@ -349,7 +382,7 @@ function h(e) {
 		if (!r) throw Error("This Sui wallet is not available. Choose an installed wallet.");
 		let i = await r.features[t].connect();
 		if (n !== s || !f().includes(r)) throw Error("The wallet changed while connecting. Please connect again.");
-		let a = Array.from(i?.accounts || r.accounts || []).find((e) => u(e, r));
+		let a = rememberAccounts(r, i?.accounts || r.accounts).find((e) => u(e, r));
 		if (!a) throw Error("The wallet did not provide a Sui mainnet account.");
 		return v(r, a);
 	}
@@ -359,7 +392,7 @@ function h(e) {
 		g();
 		let i = s, a = f().find((t) => t.name === e);
 		if (!a) return m();
-		let o = Array.from(a.accounts || []).find((e) => c(e?.address) === r && u(e, a));
+		let o = rememberAccounts(a, a.accounts).find((e) => c(e?.address) === r);
 		if (!o) {
 			let e;
 			try {
@@ -368,7 +401,7 @@ function h(e) {
 				return m();
 			}
 			if (i !== s || !f().includes(a)) return m();
-			o = Array.from(e?.accounts || a.accounts || []).find((e) => c(e?.address) === r && u(e, a));
+			o = rememberAccounts(a, e?.accounts || a.accounts).find((e) => c(e?.address) === r);
 		}
 		return !o || i !== s ? m() : v(a, o);
 	}
@@ -407,6 +440,8 @@ function h(e) {
 	return e.on?.("register", T), e.on?.("unregister", T), {
 		getWalletState: _,
 		getAvailableWallets: p,
+		getAvailableAccounts,
+		selectAccount,
 		connectWallet: y,
 		restoreWallet: b,
 		disconnectWallet: x,
@@ -415,6 +450,6 @@ function h(e) {
 		subscribeWallets: w
 	};
 }
-var { getWalletState: g, getAvailableWallets: _, connectWallet: v, restoreWallet: y, disconnectWallet: b, signPersonalMessage: x, subscribeWalletState: S, subscribeWallets: C } = h(c());
+var { getWalletState: g, getAvailableWallets: _, getAvailableAccounts, selectAccount, connectWallet: v, restoreWallet: y, disconnectWallet: b, signPersonalMessage: x, subscribeWalletState: S, subscribeWallets: C } = h(c());
 //#endregion
-export { v as connectWallet, b as disconnectWallet, _ as getAvailableWallets, g as getWalletState, y as restoreWallet, x as signPersonalMessage, S as subscribeWalletState, C as subscribeWallets };
+export { v as connectWallet, b as disconnectWallet, _ as getAvailableWallets, getAvailableAccounts, selectAccount, g as getWalletState, y as restoreWallet, x as signPersonalMessage, S as subscribeWalletState, C as subscribeWallets };
