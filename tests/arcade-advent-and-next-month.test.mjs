@@ -55,16 +55,30 @@ test('advent calendar never shows the word Recovered on tiles and restores detai
  assert.equal(doc.querySelector('#arcade-advent-grove').hidden,true);
  widget.destroy();dom.window.close();
 });
-test('countdown tiles render on Daily, Monthly, and Badges and differentiate unscheduled badges',()=>{
+test('one launch countdown renders on each tab and distinguishes unscheduled badges at rollover',()=>{
  const dom=new JSDOM('<section id="growth-today-panel"><div id="arcade-attendance-forest"></div></section><section id="growth-month-panel"></section><section id="growth-badges-panel"></section>');
  const doc=dom.window.document;
  let current=Date.parse('2026-11-22T12:00:00Z'),callback,removed=false;
  const widget=mountNextMonthUnlocks({root:doc,now:()=>current,timers:{setInterval(fn){callback=fn;return 11;},clearInterval(n){assert.equal(n,11);removed=true;}}});
  assert.equal(doc.querySelectorAll('[data-arcade-next-unlock]').length,3);
- assert.match(doc.querySelector('[data-unlock-badge-name]').textContent,/Christmas Guardians/);
- assert.ok(doc.querySelector('[data-unlock-badges]').textContent.includes('d '));
+ for(const type of ['daily','monthly','badges']){
+  const card=doc.querySelector('[data-arcade-next-unlock="'+type+'"]');
+  assert.equal(card.querySelectorAll('[role="timer"]').length,1);
+  const timer=card.querySelector('[role="timer"]');
+  assert.equal(doc.getElementById(timer.getAttribute('aria-labelledby')),card.querySelector('[data-unlock-label]'));
+  assert.equal(timer.getAttribute('aria-live'),'off');
+  assert.equal(timer.textContent,'8d 12h 00m 00s');
+  assert.equal(card.querySelector('[data-unlock-label]').textContent,'December launches in');
+  assert.match(card.querySelector('[data-unlock-description]').textContent,/Advent Grove and Christmas Guardians badges/);
+  assert.match(card.querySelector('[data-unlock-date]').textContent,/Starts December 1, 2026 · 00:00 UTC/);
+ }
+ current+=1000;callback();
+ assert.equal(doc.querySelector('[data-unlock-calendar]').textContent,'8d 11h 59m 59s');
  current=Date.parse('2026-12-01T00:00:00Z');callback();
- assert.match(doc.querySelector('[data-unlock-badges]').textContent,/Not announced/);
+ assert.equal(doc.querySelector('[data-unlock-label]').textContent,'January calendar opens in');
+ assert.equal(doc.querySelector('[data-unlock-calendar]').textContent,'31d 00h 00m 00s');
+ assert.match(doc.querySelector('[data-unlock-description]').textContent,/Next badge collection not announced/);
+ assert.doesNotMatch(doc.querySelector('[data-unlock-description]').textContent,/Advent|Christmas/);
  assert.match(doc.querySelector('[data-unlock-date]').textContent,/No badge release date/);
  widget.destroy();assert.equal(removed,true);
  assert.equal(doc.querySelectorAll('[data-arcade-next-unlock]').length,0);

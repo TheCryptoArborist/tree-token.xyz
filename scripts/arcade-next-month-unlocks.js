@@ -32,10 +32,11 @@ function createCard(doc, type) {
   const el = doc.createElement('section');
   el.className = 'arcade-next-unlock';
   el.dataset.arcadeNextUnlock = type;
-  el.setAttribute('aria-label','Next monthly Arcade unlocks');
+  el.setAttribute('aria-label','Next monthly Arcade launch');
   el.innerHTML = '<div class="arcade-next-unlock__heading"><span>UP NEXT</span><strong data-unlock-month>Next month</strong></div>'
-    + '<div class="arcade-next-unlock__items"><div><span>New daily calendar</span><strong data-unlock-calendar role="timer" aria-live="off">—</strong></div>'
-    + '<div><span data-unlock-badge-name>Next badge collection</span><strong data-unlock-badges role="timer" aria-live="off">—</strong></div></div>'
+    + '<div class="arcade-next-unlock__items"><div><span id="arcade-next-unlock-label-'+type+'" data-unlock-label>Next month launches in</span>'
+    + '<strong data-unlock-calendar role="timer" aria-live="off" aria-labelledby="arcade-next-unlock-label-'+type+'">—</strong></div></div>'
+    + '<p data-unlock-description></p>'
     + '<p data-unlock-date></p>';
   return el;
 }
@@ -62,14 +63,20 @@ export function mountNextMonthUnlocks({ root = globalThis.document, now = Date.n
       node.hidden = false;
       node.dataset.nextMonth = result.key;
       node.querySelector('[data-unlock-month]').textContent = result.label;
+      const start = new Date(result.startsAt);
+      const monthName = names[start.getUTCMonth()];
+      const launchDate = monthName+' 1, '+start.getUTCFullYear()+' · 00:00 UTC.';
+      node.querySelector('[data-unlock-label]').textContent = monthName
+        + (result.collectionConfigured ? ' launches in' : ' calendar opens in');
       node.querySelector('[data-unlock-calendar]').textContent = clock(result);
-      node.querySelector('[data-unlock-badge-name]').textContent = result.collectionConfigured
-        ? result.collectionTitle+' badges' : 'Next badge collection';
-      node.querySelector('[data-unlock-badges]').textContent = result.collectionConfigured
-        ? clock(result) : 'Not announced';
+      node.querySelector('[data-unlock-description]').textContent = result.key === '2026-12' && result.collectionConfigured
+        ? 'Tree Hero’s Advent Grove and Christmas Guardians badges.'
+        : result.collectionConfigured
+          ? 'A new daily check-in calendar and '+result.collectionTitle+' badges.'
+          : 'A new daily check-in calendar. Next badge collection not announced.';
       node.querySelector('[data-unlock-date]').textContent = result.collectionConfigured
-        ? 'Both scheduled for '+names[new Date(result.startsAt).getUTCMonth()]+' 1, '+new Date(result.startsAt).getUTCFullYear()+' · 00:00 UTC. Badge eligibility is verified by the Arcade.'
-        : 'Calendar begins '+names[new Date(result.startsAt).getUTCMonth()]+' 1, '+new Date(result.startsAt).getUTCFullYear()+' · 00:00 UTC. No badge release date is configured yet.';
+        ? 'Starts '+launchDate+' Badge eligibility is verified by the Arcade.'
+        : 'Calendar begins '+launchDate+' No badge release date is configured yet.';
     }
   }
   const interval = timers.setInterval(update, 1000);
