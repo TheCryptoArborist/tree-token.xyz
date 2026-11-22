@@ -503,3 +503,60 @@
   .arcade-organization-page #growth-today-panel .arcade-daily-work-grid > :is(.growth-quest,.guided-card),
   .arcade-organization-page #growth-today-panel .arcade-daily-masthead > :is(.growth-strip,.growth-task) { border:1px solid CanvasText; }
 }
+.arcade-attendance-forest {
+  display: grid; grid-template-columns: minmax(250px, .92fr) minmax(0, 1.6fr);
+  gap: 12px 24px; padding: 18px 20px 12px; margin: 14px 0 18px;
+  background: linear-gradient(120deg, #142f29 0%, #0c2525 62%, #102d29 100%);
+  border: 1px solid #527859; border-radius: 15px; min-width: 0; overflow: hidden;
+  box-shadow: inset 0 1px 0 #d6eb9b0a;
+}
+.arcade-attendance-forest .growth-eyebrow { margin: 0 0 4px; color: #b8cd99; font-size: 9px; letter-spacing: .1em; }
+.arcade-attendance-forest h3 { color: #f1d77e; font-size: clamp(17px, 2vw, 21px); line-height: 1.2; margin: 0 0 10px; }
+.forest-copy, .forest-landscape { min-width: 0; }
+.forest-metrics { display: flex; gap: clamp(18px, 3vw, 36px); margin-bottom: 9px; }
+.forest-metrics > div { display: flex; flex-direction: column; gap: 2px; }
+.forest-metrics strong { color: #e3f0c7; font-size: 25px; font-variant-numeric: tabular-nums; font-weight: 800; line-height: 1.05; }
+.forest-metrics span { color: #adc7b9; font-size: 11px; }
+.forest-clock { display: flex; gap: 8px; flex-wrap: wrap; align-items: baseline; }
+.forest-clock > span { color: #bfd7c5; font-size: 11px; }
+.forest-clock > strong { color: #f4dc83; font-size: 17px; font-variant-numeric: tabular-nums; white-space: nowrap; letter-spacing: .03em; }
+.forest-deadline { color: #91aea0; font-size: 10px; line-height: 1.5; margin: 3px 0 0; }
+.forest-landscape { align-self: center; }
+.forest-art { width: 100%; overflow: hidden; border: 1px solid #7ca58032; border-radius: 12px; background: #112e2d; }
+.forest-art svg { display: block; width: 100%; height: auto; max-height: 160px; }
+.forest-caption { color: #91b09f; text-align: right; font-size: 10px; margin: 4px 3px 0; }
+.forest-footer { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid #74977429; min-height: 28px; padding-top: 6px; }
+.forest-footer p { color: #c2d5bd; font-size: 11px; line-height: 1.5; margin: 0; }
+.forest-footer button { flex-shrink: 0; border: 0; border-radius: 6px; background: transparent; color: #ebd782; padding: 8px 6px; font: inherit; font-size: 11px; cursor: pointer; }
+.forest-footer button:hover { background: #e6d28312; }
+.forest-footer button:focus-visible { outline: 2px solid #ffe169; outline-offset: 2px; }
+.forest-footer button:disabled { opacity: .6; cursor: wait; }
+.forest-footer button[hidden] { display: none; }
+[data-forest-state="paused"] { border-color: #9d704c; }
+[data-forest-state="paused"] .forest-footer p { color: #efd2a5; }
+[data-forest-state="stale"] .forest-art { opacity: .6; }
+.forest-tree.is-planted .forest-tree-growth { transform-origin: 0 0; animation: forest-plant .85s ease-out both; }
+.forest-embers.is-extinguishing { animation: forest-quench 1.5s ease-out both; }
+.forest-rain path:not(:first-child) { animation: forest-rain .55s linear 3; }
+.monthly-grove-link { display: inline-block; margin-left: 8px; color: #b7e79a; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+@keyframes forest-plant { from { transform: scale(.25); opacity: .2; } 75% { transform: scale(1.06); opacity: 1; } to { transform: scale(1); } }
+@keyframes forest-quench { 0%, 20% { opacity: 1; } 85%, 100% { opacity: 0; } }
+@keyframes forest-rain { from { transform: translate(4px, -12px); opacity: .3; } 35% { opacity: .9; } to { transform: translate(-4px, 14px); opacity: .2; } }
+@media (max-width: 680px) {
+  .arcade-attendance-forest { grid-template-columns: 1fr; gap: 10px; padding: 14px 14px 8px; margin: 12px 0 16px; }
+  .arcade-attendance-forest h3 { font-size: 18px; margin-bottom: 8px; }
+  .forest-copy { display: grid; grid-template-columns: 1fr 1fr; column-gap: 8px; align-items: center; }
+  .forest-copy .growth-eyebrow, .forest-copy h3 { grid-column: 1 / -1; }
+  .forest-metrics { grid-column: 1 / -1; gap: 28px; margin-bottom: 7px; }
+  .forest-metrics strong { font-size: 23px; }
+  .forest-clock, .forest-deadline { grid-column: 1 / -1; }
+  .forest-clock { gap: 6px; }
+  .forest-art svg { max-height: 110px; }
+  .forest-caption { font-size: 9px; text-align: left; margin-top: 3px; }
+  .forest-footer { align-items: flex-start; flex-wrap: wrap; gap: 1px 10px; }
+  .forest-footer button { min-height: 44px; padding: 7px 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .forest-tree.is-planted .forest-tree-growth, .forest-embers.is-extinguishing, .forest-rain path { animation: none !important; }
+  .forest-embers.is-extinguishing { opacity: 0; }
+}

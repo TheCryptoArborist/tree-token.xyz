@@ -1,0 +1,312 @@
+name: Verify and release Arcade attendance forest
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/arcade-organization.js'
+      - 'scripts/arcade-attendance-forest.js'
+      - 'production/arcade-organization-static/runtime/scripts/arcade-daily-growth-play-share.js'
+      - 'production/arcade-organization-static/runtime/assets/arcade/arcade-growth-wallet.js'
+      - 'styles/arcade-organization.css'
+      - 'scripts/release-arcade-attendance-forest.mjs'
+      - 'scripts/arcade-monthly.js'
+      - 'tests/arcade-attendance-forest-browser.mjs'
+      - 'tests/arcade-attendance-forest.test.mjs'
+      - 'tests/arcade-attendance-events.test.mjs'
+      - 'tests/arcade-wallet-switch.test.mjs'
+      - 'tests/arcade-monthly-ui.test.mjs'
+      - 'tests/arcade-monthly-deadline-ui.test.mjs'
+      - 'tests/arcade-organization.test.mjs'
+      - 'tests/arcade-season-deadline.test.mjs'
+      - 'tests/arcade-monthly-wallet-switch.test.mjs'
+      - 'tests/arcade-growth-wallet-accounts.test.mjs'
+      - 'scripts/release-arcade-cutoff.mjs'
+      - 'scripts/release-preserved-production.mjs'
+      - 'scripts/release-stats-market.mjs'
+      - 'scripts/release-sti-purchase.mjs'
+      - 'scripts/stats-market-delivery.mjs'
+      - 'tests/arcade-attendance-forest-release.test.mjs'
+      - 'docs/arcade-attendance-forest-release.md'
+      - '.github/workflows/arcade-attendance-forest.yml'
+  push:
+    branches:
+      - release/arcade-attendance-forest-prepare
+      - release/arcade-attendance-forest-publish
+      - release/arcade-attendance-forest-audit
+
+permissions:
+  contents: read
+  actions: read
+  checks: read
+  statuses: read
+
+concurrency:
+  group: ${{ github.event_name == 'pull_request' && format('tree-arcade-forest-pr-{0}', github.ref) || 'tree-production-preservation-release' }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install the existing DOM test dependency lock
+        run: npm ci --prefix vendor/arcade-monthly --ignore-scripts --no-audit --no-fund
+      - name: Verify attendance states, wallet identity and complete preservation guards
+        run: |
+          node --test tests/arcade-attendance-forest-release.test.mjs tests/arcade-attendance-forest.test.mjs tests/arcade-attendance-events.test.mjs tests/arcade-growth-wallet-accounts.test.mjs tests/arcade-wallet-switch.test.mjs tests/arcade-monthly-wallet-switch.test.mjs tests/arcade-monthly-ui.test.mjs tests/arcade-monthly-deadline-ui.test.mjs tests/arcade-organization.test.mjs tests/arcade-season-deadline.test.mjs
+          node --check scripts/release-arcade-attendance-forest.mjs
+          node --check scripts/arcade-monthly.js
+          node --check scripts/arcade-organization.js
+          node --check scripts/arcade-attendance-forest.js
+          node --check production/arcade-organization-static/runtime/scripts/arcade-daily-growth-play-share.js
+          node --check production/arcade-organization-static/runtime/assets/arcade/arcade-growth-wallet.js
+          node --check tests/arcade-attendance-forest-browser.mjs
+          git diff --check
+
+  prepare:
+    needs: verify
+    if: >-
+      github.event_name == 'push' && github.ref == 'refs/heads/release/arcade-attendance-forest-prepare' &&
+      contains(github.event.head_commit.message, '[prepare arcade attendance forest]') &&
+      contains(github.event.head_commit.message, '[skip netlify]')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Capture current production and create the review candidate
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          ARCADE_ATTENDANCE_FOREST_EXPECTED_DEPLOY: '6b027652b3eb61d8107261d0'
+          REVIEWED_SHA: ${{ github.sha }}
+        run: |
+          test -n "$NETLIFY_AUTH_TOKEN" || { echo 'The existing Netlify release connection is unavailable.'; exit 1; }
+          test "$(git rev-parse HEAD)" = "$REVIEWED_SHA"
+          node scripts/release-arcade-attendance-forest.mjs capture
+          node scripts/release-arcade-attendance-forest.mjs plan --source-commit "$REVIEWED_SHA"
+          node scripts/release-arcade-attendance-forest.mjs candidate --source-commit "$REVIEWED_SHA"
+          node scripts/release-arcade-attendance-forest.mjs verify --source-commit "$REVIEWED_SHA"
+
+      - name: Read the exact candidate origin
+        id: candidate
+        run: |
+          node --input-type=module - <<'JS'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          const state=JSON.parse(fs.readFileSync('.netlify/arcade-attendance-forest/candidate.json'));
+          assert(/^[a-f0-9]{24}$/.test(state.id)); assert(state.technicalVerifiedAt);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT,`origin=https://${state.id}--tree-token.netlify.app\n`);
+          JS
+      - name: Verify the served forest with synthetic attendance at phone and desktop sizes
+        env:
+          ARCADE_FOREST_ORIGIN: ${{ steps.candidate.outputs.origin }}
+          ARCADE_PLAYWRIGHT_MODULE: ${{ runner.temp }}/arcade-attendance-forest-browser/node_modules/playwright/index.mjs
+          ARCADE_FOREST_REVIEW_OUTPUT: .netlify/arcade-attendance-forest-review
+        run: |
+          npm install --prefix "$RUNNER_TEMP/arcade-attendance-forest-browser" --ignore-scripts --no-audit --no-fund playwright@1.56.1
+          "$RUNNER_TEMP/arcade-attendance-forest-browser/node_modules/.bin/playwright" install chromium --only-shell
+          test -z "${ARCADE_FOREST_LOCAL:-}" || { echo 'Local source substitution cannot verify a deployment candidate.'; exit 1; }
+          node tests/arcade-attendance-forest-browser.mjs
+      - name: Bind successful browser evidence to this candidate
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          ARCADE_ATTENDANCE_FOREST_EXPECTED_DEPLOY: '6b027652b3eb61d8107261d0'
+          REVIEWED_SHA: ${{ github.sha }}
+        run: node scripts/release-arcade-attendance-forest.mjs verify --source-commit "$REVIEWED_SHA" --browser-report .netlify/arcade-attendance-forest-review/browser-review.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: arcade-attendance-forest-visual-${{ github.run_id }}
+          path: .netlify/arcade-attendance-forest-review/
+          if-no-files-found: warn
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        id: candidate_artifact
+        if: always()
+        with:
+          name: arcade-attendance-forest-candidate-${{ github.run_id }}
+          path: .netlify/arcade-attendance-forest/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30
+      - name: Record the concrete review target
+        if: always()
+        env:
+          CANDIDATE_ARTIFACT_ID: ${{ steps.candidate_artifact.outputs.artifact-id }}
+          CANDIDATE_ARTIFACT_SHA256: ${{ steps.candidate_artifact.outputs.artifact-digest }}
+        run: |
+          node --input-type=module - <<'JS'
+          import fs from 'node:fs';
+          const filename='.netlify/arcade-attendance-forest/report.json';
+          if (!fs.existsSync(filename)) process.exit(0);
+          const r=JSON.parse(fs.readFileSync(filename));
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+            `### Arcade candidate — production unchanged\n\nReview: ${r.url}\n\nSource: ${r.sourceCommit}\nTree: ${r.sourceTree}\nPlan SHA256: ${r.planSha256}\nCandidate: ${r.candidateId}\nBaseline: ${r.baselineId}\nRun: ${process.env.GITHUB_RUN_ID}\nArtifact: ${process.env.CANDIDATE_ARTIFACT_ID}\nArtifact SHA256: ${process.env.CANDIDATE_ARTIFACT_SHA256}\n\nPreserved ${r.preservedStaticFiles} existing static paths, ${r.preservedBackendRecords} complete backend records and ${r.schedulesPreserved} schedules.\n\nThe workflow must conclude successfully. Review the actual candidate and its synthetic attendance and recovery evidence at phone and desktop widths before creating the separate publication control commit.\n`);
+          JS
+
+  publish_or_audit:
+    needs: verify
+    if: >-
+      github.event_name == 'push' && contains(github.event.head_commit.message, '[skip netlify]') &&
+      ((github.ref == 'refs/heads/release/arcade-attendance-forest-publish' && contains(github.event.head_commit.message, '[publish arcade attendance forest]')) ||
+       (github.ref == 'refs/heads/release/arcade-attendance-forest-audit' && contains(github.event.head_commit.message, '[audit arcade attendance forest]')))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Validate the narrow release control commit
+        id: control
+        env:
+          CONTROL_BRANCH: ${{ github.ref_name }}
+        run: |
+          node --input-type=module - <<'JS'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import assert from 'node:assert/strict';
+          import {execFileSync} from 'node:child_process';
+          import {CONTROL_FILE,REVIEW_FILE,validatePublicationControl,validateControlCommit} from './scripts/release-arcade-attendance-forest.mjs';
+          const git=(...args)=>execFileSync('git',args,{encoding:'utf8'}).trim();
+          const control=JSON.parse(fs.readFileSync(CONTROL_FILE));
+          const mode=process.env.CONTROL_BRANCH==='release/arcade-attendance-forest-publish'?'publish':'audit';
+          validatePublicationControl(control,mode+'-arcade-attendance-forest');
+          validateControlCommit(control, {
+            mode,
+            parents:git('rev-list','--parents','-n','1','HEAD').split(/\s+/).slice(1),
+            mainTree:git('rev-parse',control.mainCommit+'^{tree}'),
+            changedFiles:git('diff','--name-only',control.mainCommit,'HEAD').split('\n'),
+            message:git('log','-1','--format=%B'),
+          });
+          fs.copyFileSync(CONTROL_FILE,path.join(process.env.RUNNER_TEMP,'arcade-attendance-forest-control.json'));
+          fs.copyFileSync(REVIEW_FILE,path.join(process.env.RUNNER_TEMP,'arcade-attendance-forest-browser-review.json'));
+          fs.appendFileSync(process.env.GITHUB_OUTPUT,`source_commit=${control.sourceCommit}\nmode=${mode}\n`);
+          JS
+      - name: Check out the exact candidate source, independent of the control commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.control.outputs.source_commit }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify original run, immutable artifact identity and archive SHA256
+        uses: actions/github-script@v7
+        env:
+          GH_READ_TOKEN: ${{ github.token }}
+        with:
+          script: |
+            const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),assert=require('node:assert/strict');
+            const c=JSON.parse(fs.readFileSync(path.join(process.env.RUNNER_TEMP,'arcade-attendance-forest-control.json')));
+            const run=(await github.rest.actions.getWorkflowRun({...context.repo,run_id:Number(c.candidateRunId)})).data;
+            assert.equal(run.status,'completed'); assert.equal(run.conclusion,'success');
+            assert.equal(run.event,'push'); assert.equal(run.head_branch,'release/arcade-attendance-forest-prepare');
+            assert.equal(run.head_sha,c.sourceCommit); assert.equal(run.path,'.github/workflows/arcade-attendance-forest.yml');
+            assert.equal(run.repository.full_name,context.repo.owner+'/'+context.repo.repo);
+            if (c.action === 'publish-arcade-attendance-forest') for (const ref of new Set([c.sourceCommit,c.mainCommit])) {
+              const statuses=await github.paginate(github.rest.repos.listCommitStatusesForRef,{...context.repo,ref,per_page:100});
+              const latest=new Map(); for(const status of statuses) if(!latest.has(status.context)) latest.set(status.context,status);
+              for(const status of latest.values()) assert.equal(status.state,'success','Commit status not successful: '+status.context);
+              const checks=await github.paginate(github.rest.checks.listForRef,{...context.repo,ref,filter:'latest',per_page:100});
+              for(const check of checks) {
+                assert.equal(check.status,'completed','Unfinished check: '+check.name);
+                assert(['success','neutral','skipped'].includes(check.conclusion),'Unsuccessful check: '+check.name);
+              }
+            }
+            const artifact=(await github.rest.actions.getArtifact({...context.repo,artifact_id:Number(c.candidateArtifactId)})).data;
+            assert.equal(artifact.name,'arcade-attendance-forest-candidate-'+c.candidateRunId);
+            assert.equal(artifact.workflow_run.id,Number(c.candidateRunId)); assert.equal(artifact.workflow_run.head_sha,c.sourceCommit);
+            assert.equal(artifact.expired,false); assert.equal(artifact.digest,'sha256:'+c.candidateArtifactSHA256);
+            const request=await fetch(`https://api.github.com/repos/${context.repo.owner}/${context.repo.repo}/actions/artifacts/${c.candidateArtifactId}/zip`,
+              {redirect:'manual',headers:{Authorization:'Bearer '+process.env.GH_READ_TOKEN,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}});
+            assert.equal(request.status,302,'Artifact download redirect unavailable.');
+            const location=new URL(request.headers.get('location'));
+            assert(location.protocol==='https:' && (location.hostname.endsWith('.blob.core.windows.net') || location.hostname.endsWith('.githubusercontent.com') || location.hostname.endsWith('.actions.githubusercontent.com')),
+              'Unexpected artifact download host.');
+            const response=await fetch(location,{redirect:'error'}); assert.equal(response.status,200);
+            const bytes=Buffer.from(await response.arrayBuffer()); assert(bytes.length<5000000,'Unexpected artifact size.');
+            assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'),c.candidateArtifactSHA256,'Artifact archive digest mismatch.');
+            fs.writeFileSync(path.join(process.env.RUNNER_TEMP,'arcade-attendance-forest-candidate.zip'),bytes);
+      - name: Extract only the bounded static release records
+        run: |
+          python3 - <<'PY'
+          import os, pathlib, stat, zipfile
+          expected={'baseline.json','baseline.json.sha256','baseline-play.html','plan.json','plan.json.sha256','candidate.json','candidate.json.sha256','report.json','report.json.sha256'}
+          with zipfile.ZipFile(pathlib.Path(os.environ['RUNNER_TEMP'])/'arcade-attendance-forest-candidate.zip') as archive:
+              files=[entry for entry in archive.infolist() if not entry.is_dir()]
+              assert len(files)==len(expected) and {entry.filename for entry in files}==expected, 'Unexpected artifact contents'
+              assert all(not stat.S_ISLNK(entry.external_attr>>16) and entry.file_size<3000000 for entry in files), 'Unsafe artifact entry'
+              assert sum(entry.file_size for entry in files)<10000000, 'Artifact expands beyond the release scope'
+              for entry in files:
+                  target=pathlib.Path('.netlify/arcade-attendance-forest')/entry.filename
+                  target.parent.mkdir(parents=True,exist_ok=True)
+                  target.write_bytes(archive.read(entry))
+          PY
+      - name: Bind review and control to the downloaded candidate plan
+        run: |
+          node --input-type=module - <<'JS'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import assert from 'node:assert/strict';
+          import {fingerprint} from './scripts/release-preserved-production.mjs';
+          import {validateBrowserReview} from './scripts/release-arcade-attendance-forest.mjs';
+          const read=p=>JSON.parse(fs.readFileSync(p));
+          const c=read(path.join(process.env.RUNNER_TEMP,'arcade-attendance-forest-control.json'));
+          const plan=read('.netlify/arcade-attendance-forest/plan.json'),state=read('.netlify/arcade-attendance-forest/candidate.json');
+          assert.equal(fingerprint(plan),c.planSha256); assert.equal(plan.sourceCommit,c.sourceCommit); assert.equal(plan.sourceTree,c.sourceTree);
+          assert.equal(plan.baselineId,c.expectedDeploy); assert.equal(state.id,c.candidateId); assert(state.technicalVerifiedAt,'Candidate did not finish verification.');
+          validateBrowserReview(read(path.join(process.env.RUNNER_TEMP,'arcade-attendance-forest-browser-review.json')),plan,state);
+          JS
+      - name: Publish the reviewed candidate, or perform the explicitly read-only audit
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          RELEASE_MODE: ${{ steps.control.outputs.mode }}
+        run: |
+          node --input-type=module - <<'JS'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import {main} from './scripts/release-arcade-attendance-forest.mjs';
+          const c=JSON.parse(fs.readFileSync(path.join(process.env.RUNNER_TEMP,'arcade-attendance-forest-control.json')));
+          const common=['--source-commit',c.sourceCommit,'--expected-deploy',c.expectedDeploy,'--expected-candidate',c.candidateId];
+          const review=path.join(process.env.RUNNER_TEMP,'arcade-attendance-forest-browser-review.json');
+          if(process.env.RELEASE_MODE==='publish'){
+            await main(['verify',...common,'--browser-report',review]);
+            await main(['publish',...common,'--main-commit',c.mainCommit]);
+          }else{
+            await main(['audit',...common,'--browser-report',review]);
+          }
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: arcade-attendance-forest-${{ steps.control.outputs.mode }}-${{ github.run_id }}
+          path: .netlify/arcade-attendance-forest/
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 30
+      - name: Record the observed outcome
+        if: always()
+        run: |
+          node --input-type=module - <<'JS'
+          import fs from 'node:fs';
+          const filename='.netlify/arcade-attendance-forest/report.json';
+          if (!fs.existsSync(filename)) process.exit(0);
+          const r=JSON.parse(fs.readFileSync(filename));
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+            `### Arcade release evidence\n\nLast completed phase: ${r.mode}\nCandidate: ${r.candidateId}\nSource: ${r.sourceCommit}\nProduction changed in this phase: ${r.productionChanged}\nPublished candidate verified: ${r.publishedCandidateVerified}\n\nCanonical: https://tree-token.xyz/play/\n\nRead the job conclusion. If a lock request succeeded before a timeout, use the exact candidate-bound read-only audit; never retry publication blindly.\n`);
+          JS

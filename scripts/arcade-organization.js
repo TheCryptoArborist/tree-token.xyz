@@ -1,5 +1,6 @@
 import { mountTreeArmyPreview } from './arcade-tree-army.js';
 import { mountSeasonCountdowns } from './arcade-season-deadline.js';
+import { mountAttendanceForest } from './arcade-attendance-forest.js';
 
 // Presentation only: move existing nodes so wallet, quest and saved-state handlers
 // retain their original controls. This module never submits attendance or payments.
@@ -260,7 +261,9 @@ export function mountArcadeOrganization(doc = document, view = window) {
   root.dataset.arcadeOrganization = 'ready';
   doc.body.classList.add('arcade-organization-page');
   const countdown = mountSeasonCountdowns({ root: doc });
+  const forest = mountAttendanceForest({ root });
   const controller = { destroy() {
+    forest?.destroy();
     countdown.destroy();
     viewObserver.disconnect();
     copyObserver.disconnect();

@@ -25,6 +25,7 @@ const arcadeOverlays = [
   { path: '/play/index.html', source: `${arcadeDirectory}/index.html` },
   { path: '/arcade-review/index.html', source: `${arcadeDirectory}/review.html` },
   { path: '/scripts/arcade-organization.js', source: 'scripts/arcade-organization.js' },
+  { path: '/scripts/arcade-attendance-forest.js', source: 'scripts/arcade-attendance-forest.js' },
   { path: '/styles/arcade-organization.css', source: 'styles/arcade-organization.css' },
   { path: '/scripts/arcade-season-deadline.js', source: 'scripts/arcade-season-deadline.js' },
   { path: '/styles/arcade-season-deadline.css', source: 'styles/arcade-season-deadline.css' },
@@ -69,7 +70,7 @@ for (const file of arcadeRuntime.files) {
 // and every other captured file are verified above before using the updates.
 const arcadeRuntimeReplacements = new Map([
   ['/scripts/arcade-monthly.js', { path: '/scripts/arcade-monthly.js', source: 'scripts/arcade-monthly.js',
-    sha1: 'cc93d5c94cced41e25666f3956acee305f59b4f0' }],
+    sha1: 'b7c444dee061046d99c78f56d37f459c9cc65730' }],
   ['/assets/arcade/arcade-growth-wallet.js', {
     path: '/assets/arcade/arcade-growth-wallet.js',
     source: `${arcadeDirectory}/runtime/assets/arcade/arcade-growth-wallet.js`,
