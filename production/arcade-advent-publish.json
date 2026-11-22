@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "action": "publish-arcade-advent",
+  "sourceCommit": "46a28dad0dfb777ebc8f533bd45616164a9feb68",
+  "sourceTree": "33c208a94eddd9a7762dd2a3e8e7698a09bf77cc",
+  "mainCommit": "e853dee8b654e32199ffbc52c3be06cba4ade456",
+  "expectedDeploy": "6b036cc41e40ebe1a1df7990",
+  "candidateId": "6b037118d43fee18f79fb7a4",
+  "planSha256": "128de509f6b4300903041e21a44a09d8b159ea60abfb091edd2cfe7127cc4ef3",
+  "candidateRunId": 45079616899,
+  "candidateArtifactId": 14776956670,
+  "candidateArtifactSHA256": "66cd3c612bdb3fdd546895175afff5eb3e85a3cae45bb44f1f14a741984d3e54",
+  "browserReview": "production/arcade-advent-browser-review.json"
+}
