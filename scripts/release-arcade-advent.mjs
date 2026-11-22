@@ -126,7 +126,7 @@ export function validateControlCommit(control, { mode, parents, mainTree, change
   assert.equal(parents[0], control.mainCommit, 'Control commit is not based on the declared merged main.');
   assert.equal(mainTree, control.sourceTree, 'Merged main differs from reviewed source.');
   eq([...changedFiles].sort(), [CONTROL_FILE, REVIEW_FILE].sort(), 'Only the control and bound browser review JSON');
-  assert(message.includes('[skip netlify]') && message.includes('[' + mode + ' arcade attendance forest]'), 'Explicit release markers are required.');
+  assert(message.includes('[skip netlify]') && message.includes('[' + mode + ' arcade advent]'), 'Explicit release markers are required.');
 }
 
 function assertSource(commit, sourceTree) {
