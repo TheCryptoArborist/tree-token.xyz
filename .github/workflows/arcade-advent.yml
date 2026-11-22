@@ -104,7 +104,7 @@ jobs:
       - name: Capture current production and create the review candidate
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          ARCADE_ADVENT_EXPECTED_DEPLOY: '6b0341e7545ba49e00a0e496'
+          ARCADE_ADVENT_EXPECTED_DEPLOY: '6b036cc41e40ebe1a1df7990'
           REVIEWED_SHA: ${{ github.sha }}
         run: |
           test -n "$NETLIFY_AUTH_TOKEN" || { echo 'The existing Netlify release connection is unavailable.'; exit 1; }
@@ -137,7 +137,7 @@ jobs:
       - name: Bind successful browser evidence to this candidate
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          ARCADE_ADVENT_EXPECTED_DEPLOY: '6b0341e7545ba49e00a0e496'
+          ARCADE_ADVENT_EXPECTED_DEPLOY: '6b036cc41e40ebe1a1df7990'
           REVIEWED_SHA: ${{ github.sha }}
         run: node scripts/release-arcade-advent.mjs verify --source-commit "$REVIEWED_SHA" --browser-report .netlify/arcade-advent-review/browser-review.json
       - uses: actions/upload-artifact@v4
