@@ -66,3 +66,54 @@ published bytes/owners; create and verify the canonical empty slot; then prepare
 BNB adapter/pass deployment with the selected Ledger-described admin. Route
 security, lifecycle acceptance, renewed candidate verification and a separately
 approved one-NFT deposit follow. Public sales/gameplay remain disabled.
+
+## Complete unsigned wallet handoff
+
+`wallet-handoff.json` adds complete BCS transaction bytes, including sender, gas
+price/budget and validity. These exact bytes were simulated with checks enabled
+and **gas reselection disabled**; the returned transaction BCS must match byte for
+byte. This closes the gap between the earlier kind-only blueprint and a concrete
+transaction. Nothing is signed or submitted. This saved evidence is already stale
+for signing purposes; it is a regression fixture, not a wallet import invitation.
+
+Regenerate immediately before a separately approved wallet review:
+
+```sh
+node --use-env-proxy contracts/nftree-generation/scripts/prepare-wallet-handoff.mjs /workspace/new-wallet-handoff.json
+```
+
+The pinned SDK resolves address-balance SUI gas with no owned gas-coin inputs and
+a `ValidDuring` expiration bound to mainnet and two consecutive epochs. The
+verifier requires that shape and the simulation epoch inside that window. The
+stricter two-minute review expiry is an application check, not a chain-enforced
+two-minute deadline. A future wallet integration must preserve the exact bytes,
+check the connected dev address and `sui:mainnet`, obtain fresh trusted evidence,
+and compare wallet output to the reviewed bytes. Wallet compatibility with this
+transaction form has **not** been tested. No wallet UI or signing method has been
+connected, and private keys must not be imported into this Cloud workspace.
+
+A changed gas price, budget, payment, sender, command or validity requires a new
+checked simulation, not reuse of this evidence. `verifyHandoff` checks the full
+BCS against the simulation and reconstructs it only after wallet, chain,
+freshness, candidate and capability checks. RPC evidence remains trusted data,
+not an independently signed attestation. `authorized:false` and
+`submitted:false` accurately describe preparation, not authority to execute.
+
+Validation: **52 tooling tests pass**, including 16 new full-byte handoff tests.
+The fresh exact-byte simulation succeeds, estimates 69,723,600 MIST, and leaves
+#2720 unchanged. The previous commit `9f5ebfa` passed both contract CI runs,
+legacy vault tests and production-snapshot checks. Source contracts and pinned
+bytecode remain unchanged in this step.
+
+### Decision needed before live work
+
+Review proposal: publish only the empty new package from the selected Sui dev
+wallet with a maximum 0.1 SUI gas budget; retain its new UpgradeCap, vault AdminCap
+and OApp AdminCap in that wallet for the private pilot. Retaining UpgradeCap means
+that wallet can upgrade compatible custody logic; this is not immutable custody.
+This approval would cover only empty publication, not NFT deposit, BNB deployment,
+route activation, sales or gameplay. The original user scope reserved live
+deployment for a subsequent reviewed milestone, so preparation does not supply
+that approval. After explicit approval, a compatible wallet-signing surface and
+fresh simulation are still required; verify the actual transaction effects and
+published bytes before progressing to canonical slot creation.
