@@ -20,6 +20,7 @@ const checkNames = ['singleTimer', 'launchCopy', 'threePlacements', 'utcTargets'
 const scenarioNames = ['configured-december', 'january-rollover'];
 const requiredAssets = ['/scripts/arcade-next-month-unlocks.js', '/styles/arcade-organization.css'];
 const replacedLegacyImages = new Set([
+  '/assets/arcade-growth/tree-spark.webp',
   '/assets/arcade-growth/nftree-scout.webp',
   '/assets/arcade-growth/tree-force-vanguard.webp',
   '/assets/arcade-growth/thickquidity-legend.webp',
