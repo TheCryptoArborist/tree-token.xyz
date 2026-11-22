@@ -660,8 +660,16 @@ async function boundaryScenario({ page, api, width, viewport }, monthRollover = 
   // The scenario starts at 23:50. Jump directly to the future pause target;
   // setting time first left only 5 ms for a second command to reach Chromium.
   await page.clock.pauseAt(almostMidnight);
-  await refresh(page, api, 'near-midnight');
-  await until(() => page.evaluate((time) => window.__arcadeForestReview.attendance.some((entry) => entry.fresh && entry.serverTime === time), almostMidnight), 'Clock is anchored to the near-midnight HTTP Date');
+  api.phase = 'near-midnight';
+  await until(async () => {
+    const latest = await page.evaluate(() => window.__arcadeForestReview.attendance.at(-1));
+    if (latest?.fresh && !latest.loading && latest.wallet === A && latest.serverTime === almostMidnight) return true;
+    // An initial status read may already be completing with this exact Date.
+    // Let it settle; requesting focus while it is active is correctly deduped.
+    // If its clock is still older, request the normal read once it has settled.
+    if (!latest?.loading) await page.evaluate(() => window.dispatchEvent(new Event('focus')));
+    return false;
+  }, 'Clock is anchored to the fresh near-midnight HTTP Date');
   const fresh = await forestSnapshot(page); assert.equal(fresh.embers, false);
   const statusBefore = api.calls.filter((call) => call.path === '/api/arcade-monthly' && call.action === 'status').length;
   api.holdMonthly = true; api.phase = 'utc-boundary-held'; api.now = almostMidnight + 6_000;
