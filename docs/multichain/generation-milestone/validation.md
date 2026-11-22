@@ -20,7 +20,9 @@ Local Codex Cloud validation:
 - Golden v3 vectors agree across languages, including nontrivial u64 byte order.
 - Every file tracked at baseline main is unchanged, checked byte-for-byte against
   Git objects; `validation.json` records the count and release-build digest.
-  Root/production builds and live release workflows were not run.
+  No root build or live release workflow was run locally. The existing hosted
+  production-snapshot check builds the archived snapshot as verification only;
+  it must never be used as a replacement for current live production.
 - Fresh stable Sui GraphQL observations confirm candidate #2720's exact identity
   and dev-wallet ownership. A finalized BNB read confirms the fixed USDT address,
   contract presence and 18 decimals. Saved observations are not future deposit
@@ -37,3 +39,19 @@ governance, exact-type simulation, route configuration and activation gates.
 The new GitHub workflow repeats both test suites and release builds on the
 feature branch and PR. Its run status is recorded in the PR checks; do not treat
 this local report as a claim that hosted CI has passed before that run finishes.
+
+Source-level reasoning for the three lifecycle invariants: `invariants.md`.
+
+## Hosted verification of implementation commit 2a29a4c
+
+All checks passed:
+
+- [Generation contracts PR run](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44972892154): 52 Move tests, 16 EVM tests, both release builds, locked dependency/source cleanliness.
+- [Generation contracts branch run](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44972888547): passed independently.
+- [Retired one-slot regression](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44972892166): passed, including original bytecode reproduction and unsigned/inventory boundaries.
+- [Production snapshot/backend preservation](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44972892172): passed.
+
+GitHub/Netlify automatically built a PR preview. It was not promoted to production,
+and no live publication was requested. Follow-up documentation commits do not
+change the tested contract source. The PR checks remain the source for latest-head
+verification status.

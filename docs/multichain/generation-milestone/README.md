@@ -162,7 +162,9 @@ and wallet signing, including package resolution/bytecode and object reference.
 
 ## Validation and next steps
 
-See `validation.md` and saved test output for the completed checks.
+See `validation.md`, `invariants.md` and saved test output for the completed checks.
+Review PR: https://github.com/TheCryptoArborist/tree-token.xyz/pull/280.
+Implementation commit: `2a29a4c799d7866160fe159afc9c07a301c751ab`.
 
 Remaining reviewed milestones:
 
