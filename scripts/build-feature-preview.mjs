@@ -95,6 +95,8 @@ async function rejectUntrackedOutput(directory, prefix = '') {
   }
 }
 
+allowed.add('generation-publication/index.html');
+allowed.add('generation-publication/app.js');
 await rejectUntrackedOutput(output);
 for (const file of manifest.files) {
   const destination = resolve(output, outputPath(file));

@@ -162,7 +162,9 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
   }
   for (const file of additions) assert.equal(digest(new URL(`dist-preview${file}`, root)), digest(new URL(file.slice(1), root)));
   const files = readdirSync(new URL('dist-preview/', root), { recursive: true, withFileTypes: true }).filter(f => f.isFile());
-  const expectedPaths = new Set([...manifest.files.map(f => f.path), ...additions, ...arcadeExpected.keys()]);
+  const publicationPaths = ['/generation-publication/index.html', '/generation-publication/app.js'];
+  for (const path of publicationPaths) assert.equal(digest(new URL('dist-preview'+path, root)), digest(new URL('tools'+path, root)), 'Only the reviewed publication handoff is added');
+  const expectedPaths = new Set([...manifest.files.map(f => f.path), ...additions, ...arcadeExpected.keys(), ...publicationPaths]);
   const previewRoot = fileURLToPath(new URL('dist-preview/', root));
   const actualPaths = files.map(file => '/' + relative(previewRoot, resolve(file.parentPath, file.name)).split(sep).join('/'));
   assert.equal(files.length, expectedPaths.size);
