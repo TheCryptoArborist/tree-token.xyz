@@ -127,11 +127,18 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
     { path: '/play/index.html', source: 'production/arcade-organization-static/index.html' },
     { path: '/arcade-review/index.html', source: 'production/arcade-organization-static/review.html' },
     { path: '/scripts/arcade-organization.js', source: 'scripts/arcade-organization.js' },
+    { path: '/scripts/arcade-attendance-forest.js', source: 'scripts/arcade-attendance-forest.js' },
     { path: '/styles/arcade-organization.css', source: 'styles/arcade-organization.css' },
     { path: '/scripts/arcade-season-deadline.js', source: 'scripts/arcade-season-deadline.js' },
     { path: '/styles/arcade-season-deadline.css', source: 'styles/arcade-season-deadline.css' },
     { path: '/scripts/arcade-preview-readonly.js', source: 'scripts/arcade-preview-readonly.js' },
   ];
+  const forestPath = '/scripts/arcade-attendance-forest.js';
+  assert(!manifest.files.some(file => file.path === forestPath), 'The new forest module must not alter the historical production snapshot.');
+  assert(!arcadeRuntime.files.some(file => file.path === forestPath) && !arcadeInventory.files[forestPath],
+    'The forest module is an explicit new overlay, never a redefined captured asset.');
+  const organization = readFileSync(new URL('scripts/arcade-organization.js', root), 'utf8');
+  assert.match(organization, /\bfrom\s*['"]\.\/arcade-attendance-forest\.js['"]/, 'The guarded organization module must load the allowed forest source.');
   assert.equal(arcadeRuntime.schemaVersion, 1);
   assert.equal(arcadeRuntime.baselineId, arcadeInventory.candidateId);
   assert.equal(arcadeRuntime.inventoryStaticPaths, Object.keys(arcadeInventory.files).length);
@@ -151,7 +158,7 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
   ];
   const arcadeRuntimeReplacements = new Map([
     ['/scripts/arcade-monthly.js', { path: '/scripts/arcade-monthly.js', source: 'scripts/arcade-monthly.js',
-      sha1: 'cc93d5c94cced41e25666f3956acee305f59b4f0' }],
+      sha1: '1b3defc0bbb85265731f46084e367e7ad219defc' }],
   ]);
   for (const file of approvedArcadeRuntimeChanges) {
     const captured = arcadeRuntime.files.find(entry => entry.path === file.path);
