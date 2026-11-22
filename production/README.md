@@ -1,3 +1,55 @@
+# Tree Arcade autumn grove and Advent preview — published November 22, 2026
+
+Deployment `6b037118d43fee18f79fb7a4` was published at
+16:53:36.766 America/Chicago on November 22 (22:53:36.766 UTC) and verified ready and locked in
+[publication run 45080110220](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45080110220).
+The separate GET-only [canonical audit 45080216008](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45080216008)
+passed at `2026-11-22T22:54:37.602Z`.
+
+The live [Daily grove](https://tree-token.xyz/play/#daily) now gives November's
+trees autumn leaves and the shared Tree Hero chest emblem. December adds a
+31-date Advent Grove and four approved illustrations. The
+[interactive Advent preview](https://tree-token.xyz/play/advent-preview/) lets
+visitors try reveal, recovery and reset with sample progress. Saved attendance,
+wallet switching, UTC deadlines and confirmed recovery retain the existing
+attendance and wallet logic. November's verified-recovery rain remains visible.
+
+Fresh baseline: `6b036cc41e40ebe1a1df7990`. Publication and audit verified
+**667 static paths**, **657 unchanged existing hashes**, all **54 complete
+backend/provider records**, **five schedules**, runtime settings and
+API-visible protected configuration. Exactly three existing presentation files
+changed and seven seasonal assets were added. No backend package was rebuilt.
+
+Validation: **130 code tests** and **24/24 candidate browser scenarios** at
+**320, 390 and 1280 pixels**, with every named check passing and zero browser,
+asset or unexpected-write errors. Candidate screenshots and direct interaction
+confirmed the corrected artwork crops. A separate canonical preview reveal
+showed the Christmas artwork, rendered thumbnails, sample progress 3/31 and
+streak 1 day; canonical Daily showed the signed-out grove and December
+countdown. No real login, payment or chain transaction was performed. The
+candidate browser suite uses synthetic wallets and attendance data.
+
+Source `46a28dad0dfb777ebc8f533bd45616164a9feb68` and merged main
+`e853dee8b654e32199ffbc52c3be06cba4ade456` share tree
+`33c208a94eddd9a7762dd2a3e8e7698a09bf77cc`, incorporating PRs #286 and #287.
+Publication control: `42c6ddad3d65105dd779190f3c424c7729851689`.
+Audit control: `f9c3244cbcf3f84c83886f3cc6e20ccb8c13eb4d`.
+
+Complete reports and provenance:
+`docs/arcade-seasonal-release-20261122.json`,
+`docs/arcade-seasonal-browser-20261122.json`,
+`docs/arcade-seasonal-canonical-20261122.json`, and
+`docs/arcade-seasonal-deployment-20261122.json`.
+Original bounded archives are retained at
+`docs/arcade-seasonal-records-20261122/{prepare,publish,audit}.zip`; the index
+records their verified SHA256 values and the excluded earlier attempts.
+
+Capture the complete current site before any later release and preserve its
+current inventory and configuration. This completed publisher pins its prior
+baseline and must not be reused blindly.
+
+---
+
 # Tree Arcade attendance forest — published November 21, 2026
 
 Current locked production is `6b0282d222b49cfa17fa3731`, published at

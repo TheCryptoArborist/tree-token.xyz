@@ -23,6 +23,24 @@ Both PNGs were created with the built-in image-generation tool using the user's 
 
 ## Validation and release scope
 
+Published November 22, 2026 as locked deployment `6b037118d43fee18f79fb7a4`.
+The current November grove is at https://tree-token.xyz/play/#daily and the
+interactive sample calendar is at https://tree-token.xyz/play/advent-preview/.
+Implementation PR #286 and thumbnail-crop correction PR #287 are merged.
+The final source tree passed 130 focused tests and all 24 served-candidate
+browser scenarios at 320, 390 and 1280 pixels. Publication run `45080110220`
+and the separate GET-only canonical audit `45080216008` both succeeded.
+The release preserves 657 existing static hashes, all 54 complete backend
+records and five schedules; its complete inventory contains 667 static paths.
+
+Durable provenance and the precise testing boundaries are in
+`docs/arcade-seasonal-deployment-20261122.json`. The exact publication, browser
+and canonical reports are `docs/arcade-seasonal-release-20261122.json`,
+`docs/arcade-seasonal-browser-20261122.json` and
+`docs/arcade-seasonal-canonical-20261122.json`. The original bounded preparation,
+publication and audit archives are retained under
+`docs/arcade-seasonal-records-20261122/`.
+
 Meaningful code checks cover attendance consistency and UTC boundaries, wallet changes, exact-date recovery, preview count/streak behavior, accessible selection, source scope, and preserved deployment controls. Candidate browser review uses synthetic attendance and wallets at 320, 390 and 1280 pixels; it also decodes the exact served PNG assets and exercises all preview buttons. It makes no real wallet signatures or payments.
 
 Publication uses `scripts/release-arcade-advent.mjs` and its workflow. Every candidate captures a fresh locked production baseline, changes only its exact declared frontend paths, preserves all other static hashes and complete backend/provider/runtime/schedule/configuration records, and binds browser results to the exact candidate/source tree. The old snapshot build is not a replacement for the current production inventory.

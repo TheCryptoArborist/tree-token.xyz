@@ -1,0 +1,265 @@
+{
+  "schemaVersion": 1,
+  "kind": "arcade-seasonal-published-preservation",
+  "result": "passed",
+  "verifiedAt": "2026-11-22T22:54:37.602Z",
+  "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
+  "baselineId": "6b036cc41e40ebe1a1df7990",
+  "publishedDeploy": {
+    "id": "6b037118d43fee18f79fb7a4",
+    "state": "ready",
+    "locked": true,
+    "createdAt": "2026-11-22T22:47:52.392Z",
+    "publishedAt": "2026-11-22T22:53:36.766Z"
+  },
+  "sourceCommit": "46a28dad0dfb777ebc8f533bd45616164a9feb68",
+  "sourceTree": "33c208a94eddd9a7762dd2a3e8e7698a09bf77cc",
+  "mainCommit": "e853dee8b654e32199ffbc52c3be06cba4ade456",
+  "planSha256": "128de509f6b4300903041e21a44a09d8b159ea60abfb091edd2cfe7127cc4ef3",
+  "github": {
+    "implementationPullRequest": 286,
+    "implementationHead": "fca3c389fe1b78a97147bdc4090ac97d05c60a14",
+    "cropPullRequest": 287,
+    "cropHead": "8a72af51d0f174bf3cf246c5a50a215b4a61b8d1",
+    "workflowPath": ".github/workflows/arcade-advent.yml",
+    "prepareRunId": "45079616899",
+    "sourceVerifyJobId": "137384589286",
+    "publicationRunId": "45080110220",
+    "publicationJobId": "137386256214",
+    "publicationControlCommit": "42c6ddad3d65105dd779190f3c424c7729851689",
+    "auditRunId": "45080216008",
+    "auditJobId": "137386630492",
+    "auditControlCommit": "f9c3244cbcf3f84c83886f3cc6e20ccb8c13eb4d",
+    "prepareConclusion": "success",
+    "publicationConclusion": "success",
+    "auditConclusion": "success"
+  },
+  "artifacts": {
+    "prepare": {
+      "id": "14776956670",
+      "runId": "45079616899",
+      "name": "arcade-advent-candidate-45079616899",
+      "sha256": "66cd3c612bdb3fdd546895175afff5eb3e85a3cae45bb44f1f14a741984d3e54",
+      "durablePath": "docs/arcade-seasonal-records-20261122/prepare.zip",
+      "archiveAndExtractedBytesVerified": true
+    },
+    "publish": {
+      "id": "14776233804",
+      "runId": "45080110220",
+      "name": "arcade-advent-publish-45080110220",
+      "sha256": "dcdf845fd57a6f9da7f34ccd285c307e39b3c00e7862b1030e0dad4be86594d2",
+      "durablePath": "docs/arcade-seasonal-records-20261122/publish.zip",
+      "archiveAndExtractedBytesVerified": true
+    },
+    "audit": {
+      "id": "14776283688",
+      "runId": "45080216008",
+      "name": "arcade-advent-audit-45080216008",
+      "sha256": "b8c967c8df4265bd4852f372209791d6cea1995543dd7314491733ecfef82310",
+      "durablePath": "docs/arcade-seasonal-records-20261122/audit.zip",
+      "archiveAndExtractedBytesVerified": true
+    },
+    "visual": {
+      "id": "14776812207",
+      "runId": "45079616899",
+      "name": "arcade-advent-visual-45079616899",
+      "sha256": "639947b268d44c5b022c98031db4840f429c2060f1e579fce47048fc939227f3",
+      "archiveSHA256Verified": true,
+      "retentionDays": 30
+    }
+  },
+  "preservation": {
+    "staticFiles": 667,
+    "baselineStaticFiles": 660,
+    "preservedStaticFiles": 657,
+    "changedOriginals": [
+      "/scripts/arcade-attendance-forest.js",
+      "/scripts/arcade-organization.js",
+      "/styles/arcade-organization.css"
+    ],
+    "addedPaths": [
+      "/assets/arcade-seasonal/advent-art-preview.png",
+      "/assets/arcade-seasonal/november-emblem-tree.png",
+      "/play/advent-preview/index.html",
+      "/scripts/arcade-advent-grove.js",
+      "/scripts/arcade-advent-preview.js",
+      "/scripts/arcade-next-month-unlocks.js",
+      "/styles/arcade-advent-preview.css"
+    ],
+    "backendRecords": 54,
+    "preservedBackendRecords": 54,
+    "completeBackendSHA256": "12a639a59ced4b5e375e4bf55e13d1f8eee97684b07a5e8c0188d9897379679c",
+    "schedulesPreserved": 5,
+    "protectedConfigurationSHA256": "7e17f328b64a9cc4cb2a020bdcbb3047e1d17fc7130982a8ed9f56a6eabd7850"
+  },
+  "sourceTests": {
+    "tests": 130,
+    "passed": 130,
+    "failed": 0,
+    "skipped": 0,
+    "durationMilliseconds": 5012,
+    "jobId": "137384589286",
+    "evidence": "Root verified the final prepare verification-job log at 2026-11-22T22:47:28Z."
+  },
+  "candidateBrowserEvidence": {
+    "result": "passed",
+    "checkedAt": "2026-11-22T22:49:15.847Z",
+    "candidateId": "6b037118d43fee18f79fb7a4",
+    "origin": "https://6b037118d43fee18f79fb7a4--tree-token.netlify.app",
+    "reportFingerprint": "6eab09c74a852cec5cf079b04f6dea441bdd295eb39aaae74c8db90ea38cecb1",
+    "viewportWidths": [
+      320,
+      390,
+      1280
+    ],
+    "expectedScenarioCount": 24,
+    "attemptedScenarioCount": 24,
+    "passedScenarioCount": 24,
+    "checks": {
+      "games": true,
+      "daily": true,
+      "campaigns": true,
+      "events": true,
+      "monthlyProgress": true,
+      "badgeCollection": true,
+      "mobileLayout": true,
+      "noMissingAssets": true,
+      "countdownUTC": true,
+      "checkinCount": true,
+      "streakCountdown": true,
+      "growingForest": true,
+      "missedDayEmbers": true,
+      "verifiedRecoveryRain": true,
+      "pendingRecoveryNoRain": true,
+      "walletIsolation": true,
+      "reducedMotion": true,
+      "monthRollover": true,
+      "staleProgress": true,
+      "adventGrove": true,
+      "recoveredTileIcon": true,
+      "nextMonthCountdown": true,
+      "autumnTheme": true,
+      "adventArtwork": true,
+      "adventPreview": true
+    },
+    "failures": 0,
+    "browserErrors": 0,
+    "assetFailures": 0,
+    "unexpectedWrites": 0,
+    "syntheticWalletOnly": true,
+    "syntheticDataOnly": true,
+    "reviewedScreenshots": [
+      "growing-320.png",
+      "advent-preview-1280.png",
+      "advent-preview-320.png"
+    ],
+    "visualReviewer": "Root",
+    "additionalCandidateObservation": "Rapid-selection phone calendar captures showed transient unpainted thumbnails. Root used CUA on this exact candidate to reveal, recover, select First Light and then Nutcracker; all four thumbnails and featured art rendered with sample progress 4/31 and streak 1 day."
+  },
+  "canonicalAudit": {
+    "result": "passed",
+    "checkedAt": "2026-11-22T22:54:37.602Z",
+    "readOnly": true,
+    "remoteMethods": [
+      "GET"
+    ],
+    "productionChanged": false,
+    "publishedCandidateVerified": true,
+    "publishedIdentityAndLockRechecked": true,
+    "completePublishedInventoryEqualsPlan": true,
+    "allCompleteProviderRecordsSchedulesAndRuntimePreserved": true,
+    "protectedConfigurationMatchesBaseline": true,
+    "allTenDeliveredAssetsAndThreePreservedArcadeAssetsMatchPlannedBytes": true,
+    "canonicalMonthlyPublicStatusVerified": true,
+    "evidence": "Successful exact-source audit helper; original archive and records verified locally.",
+    "mainCommitBinding": "The original preparation state has no mainCommit annotation in the audit report; the validated audit control and publication report bind the main commit recorded above."
+  },
+  "canonicalUIObservation": {
+    "result": "passed",
+    "observer": "Root",
+    "method": "CUA on canonical production after publication",
+    "preview": {
+      "url": "https://tree-token.xyz/play/advent-preview/",
+      "action": "Preview today's reveal",
+      "observed": "Large Christmas artwork, sample progress 3/31, streak 1 day and rendered thumbnails."
+    },
+    "daily": {
+      "url": "https://tree-token.xyz/play/#daily",
+      "observed": "Signed-out grove and December countdown."
+    },
+    "loginPerformed": false,
+    "paymentPerformed": false,
+    "evidenceBoundary": "Direct observation reported by root; separate from the synthetic candidate browser suite."
+  },
+  "directNetlifyObservation": {
+    "observer": "Root",
+    "deployId": "6b037118d43fee18f79fb7a4",
+    "state": "ready",
+    "locked": true,
+    "functions": 54,
+    "schedules": 5
+  },
+  "previousAttempts": [
+    {
+      "runId": "45078914345",
+      "candidateId": "6b036f403ff4d1e5b1ea0a1f",
+      "result": "rejected-after-visual-review",
+      "browserScenariosPassed": 24,
+      "browserScenariosExpected": 24,
+      "reason": "Thumbnail artwork-title bleed, corrected in PR #287.",
+      "usedForPublication": false
+    },
+    {
+      "runId": "45079311292",
+      "sourceTree": "33c208a94eddd9a7762dd2a3e8e7698a09bf77cc",
+      "result": "unsuccessful",
+      "browserScenariosPassed": 23,
+      "browserScenariosExpected": 24,
+      "reason": "390-pixel growing screenshot hit the existing 15000-ms font-load timeout.",
+      "browserErrors": 0,
+      "assetFailures": 0,
+      "unexpectedWrites": 0,
+      "usedForPublication": false,
+      "retry": "Final run retried the identical tree with every check and timeout unchanged and passed 24/24."
+    }
+  ],
+  "recordFingerprints": {
+    "prepare": {
+      "baseline": "292c333d338c40a718ddfb5bbeb3743f35a54e018027e121097ad5d748cf1ba8",
+      "plan": "128de509f6b4300903041e21a44a09d8b159ea60abfb091edd2cfe7127cc4ef3",
+      "candidate": "04cc7d80284a6a3bf6fd6da1dc030b18674042b9f124be2f284d2668bfd066de",
+      "report": "35e5d3340c4a50865592f3eb2714495e70daf0d95584e34363233f909abb8f7c"
+    },
+    "publish": {
+      "baseline": "292c333d338c40a718ddfb5bbeb3743f35a54e018027e121097ad5d748cf1ba8",
+      "plan": "128de509f6b4300903041e21a44a09d8b159ea60abfb091edd2cfe7127cc4ef3",
+      "candidate": "cd731357d00db2539cbd3cfc9d0f806a6257ecc13ace674fff5c1679ac9f5684",
+      "report": "fdd77c7706f32dc1311efa75ffc3aa74c4f5010c3537441d867f00f9fa375075"
+    },
+    "audit": {
+      "baseline": "292c333d338c40a718ddfb5bbeb3743f35a54e018027e121097ad5d748cf1ba8",
+      "plan": "128de509f6b4300903041e21a44a09d8b159ea60abfb091edd2cfe7127cc4ef3",
+      "candidate": "2661d6bbbd7ed300b4164a722e8c09fc7faa05a68131445383f2174378311456",
+      "report": "b47eb08085ce973efc53dea0c142dcf8b07437de2c19de725ee7a130851f1559"
+    }
+  },
+  "evidenceFiles": {
+    "docs/arcade-seasonal-release-20261122.json": {
+      "sha256": "bb03fbbff8ef9671d097edfa3e42ac1f6b53c471e939af2afb908500f3f91bf3",
+      "content": "Exact publication report."
+    },
+    "docs/arcade-seasonal-browser-20261122.json": {
+      "sha256": "2d317372bf0b164e00ad1f1e07e3cecefa1eecc92996306fa98cc6a781e8d96d",
+      "content": "Exact candidate-bound browser report."
+    },
+    "docs/arcade-seasonal-canonical-20261122.json": {
+      "sha256": "494c51578b980aa29bf56019ce7210cf723a10242d596ffcd47c9b521d60c03f",
+      "content": "Exact GET-only audit report; canonical UI observation is recorded separately in this index."
+    }
+  },
+  "evidenceLimits": [
+    "Synthetic candidate checks do not establish installed-wallet or physical-device acceptance.",
+    "Canonical UI checks used the isolated preview and signed-out Daily view; no real login, wallet signature, payment or chain transaction was performed.",
+    "Protected configuration equality covers API-visible records and fingerprints; masked secret bytes are not independently exposed."
+  ]
+}
