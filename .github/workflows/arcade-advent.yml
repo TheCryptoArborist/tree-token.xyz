@@ -8,6 +8,14 @@ on:
       - 'scripts/arcade-attendance-forest.js'
       - 'scripts/arcade-advent-grove.js'
       - 'scripts/arcade-next-month-unlocks.js'
+      - 'assets/arcade-seasonal/november-emblem-tree.png'
+      - 'assets/arcade-seasonal/advent-art-preview.png'
+      - 'play/advent-preview/index.html'
+      - 'scripts/arcade-advent-preview.js'
+      - 'styles/arcade-advent-preview.css'
+      - 'scripts/build-feature-preview.mjs'
+      - 'tests/sti-preview-build.test.mjs'
+      - '.github/workflows/verify-arcade-organization.yml'
       - 'tests/arcade-advent-and-next-month.test.mjs'
       - 'tests/arcade-advent-release.test.mjs'
       - 'tests/arcade-advent-browser.mjs'
@@ -71,6 +79,7 @@ jobs:
           node --check scripts/arcade-attendance-forest.js
           node --check scripts/arcade-advent-grove.js
           node --check scripts/arcade-next-month-unlocks.js
+          node --check scripts/arcade-advent-preview.js
           node --check production/arcade-organization-static/runtime/scripts/arcade-daily-growth-play-share.js
           node --check production/arcade-organization-static/runtime/assets/arcade/arcade-growth-wallet.js
           node --check tests/arcade-advent-browser.mjs
@@ -95,7 +104,7 @@ jobs:
       - name: Capture current production and create the review candidate
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          ARCADE_ADVENT_EXPECTED_DEPLOY: '6b0341e7545ba49e00a0e496'
+          ARCADE_ADVENT_EXPECTED_DEPLOY: '6b036cc41e40ebe1a1df7990'
           REVIEWED_SHA: ${{ github.sha }}
         run: |
           test -n "$NETLIFY_AUTH_TOKEN" || { echo 'The existing Netlify release connection is unavailable.'; exit 1; }
@@ -128,7 +137,7 @@ jobs:
       - name: Bind successful browser evidence to this candidate
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          ARCADE_ADVENT_EXPECTED_DEPLOY: '6b0341e7545ba49e00a0e496'
+          ARCADE_ADVENT_EXPECTED_DEPLOY: '6b036cc41e40ebe1a1df7990'
           REVIEWED_SHA: ${{ github.sha }}
         run: node scripts/release-arcade-advent.mjs verify --source-commit "$REVIEWED_SHA" --browser-report .netlify/arcade-advent-review/browser-review.json
       - uses: actions/upload-artifact@v4
@@ -193,7 +202,7 @@ jobs:
           const git=(...args)=>execFileSync('git',args,{encoding:'utf8'}).trim();
           const control=JSON.parse(fs.readFileSync(CONTROL_FILE));
           const mode=process.env.CONTROL_BRANCH==='release/arcade-advent-publish'?'publish':'audit';
-          validatePublicationControl(control,mode+'-arcade-attendance-forest');
+          validatePublicationControl(control,mode+'-arcade-advent');
           validateControlCommit(control, {
             mode,
             parents:git('rev-list','--parents','-n','1','HEAD').split(/\s+/).slice(1),
@@ -224,7 +233,7 @@ jobs:
             assert.equal(run.event,'push'); assert.equal(run.head_branch,'release/arcade-advent-prepare');
             assert.equal(run.head_sha,c.sourceCommit); assert.equal(run.path,'.github/workflows/arcade-advent.yml');
             assert.equal(run.repository.full_name,context.repo.owner+'/'+context.repo.repo);
-            if (c.action === 'publish-arcade-attendance-forest') for (const ref of new Set([c.sourceCommit,c.mainCommit])) {
+            if (c.action === 'publish-arcade-advent') for (const ref of new Set([c.sourceCommit,c.mainCommit])) {
               const statuses=await github.paginate(github.rest.repos.listCommitStatusesForRef,{...context.repo,ref,per_page:100});
               const latest=new Map(); for(const status of statuses) if(!latest.has(status.context)) latest.set(status.context,status);
               for(const status of latest.values()) assert.equal(status.state,'success','Commit status not successful: '+status.context);

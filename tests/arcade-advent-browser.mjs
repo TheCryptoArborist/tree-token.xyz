@@ -25,11 +25,12 @@ const tabs = [
 ];
 const checkNames = [...tabs.map(([, , name]) => name), 'mobileLayout', 'noMissingAssets', 'countdownUTC',
   'checkinCount', 'streakCountdown', 'growingForest', 'missedDayEmbers', 'verifiedRecoveryRain',
-  'pendingRecoveryNoRain', 'walletIsolation', 'reducedMotion', 'monthRollover', 'staleProgress', 'adventGrove', 'recoveredTileIcon', 'nextMonthCountdown'];
+  'pendingRecoveryNoRain', 'walletIsolation', 'reducedMotion', 'monthRollover', 'staleProgress', 'adventGrove', 'recoveredTileIcon', 'nextMonthCountdown',
+  'autumnTheme', 'adventArtwork', 'adventPreview'];
 const report = {
   schemaVersion: 1, result: 'failed', checkedAt: new Date().toISOString(), viewportWidths: widths,
   noWalletOrPaymentActions: true, syntheticWalletOnly: true, syntheticDataOnly: true,
-  expectedScenarioCount: widths.length * 7,
+  expectedScenarioCount: widths.length * 8,
   checks: Object.fromEntries(checkNames.map((name) => [name, false])),
   viewports: [], screenshots: [], failures: [], browserErrors: [], assetFailures: [],
   unexpectedWrites: [], unsupportedAPIReads: [],
@@ -339,6 +340,25 @@ async function decodeImages(page, selectors, width, scenario) {
   assert.deepEqual(failures, [], `${scenario}: essential images must decode at ${width}px`);
 }
 
+async function decodeArtwork(page, selector, expectedPath, width, scenario) {
+  const result = await page.evaluate(async ({ selector, expectedPath }) => {
+    const nodes = [...document.querySelectorAll(selector)];
+    const urls = [...new Set(nodes.map(node => node.getAttribute('href') || node.getAttribute('xlink:href') || node.getAttribute('src')))];
+    const matches = urls.filter(url => new URL(url, location.href).pathname === expectedPath);
+    const loaded = await Promise.all(matches.map(async url => {
+      const probe = new Image(); probe.src = new URL(url, location.href).href;
+      try { await probe.decode(); return { src: probe.src, width: probe.naturalWidth, height: probe.naturalHeight }; }
+      catch (error) { return { src: probe.src, error: error.message }; }
+    }));
+    return { nodeCount: nodes.length, matches: matches.length, loaded };
+  }, { selector, expectedPath });
+  assert.ok(result.nodeCount > 0 && result.matches > 0, `${scenario}: expected illustrated artwork is in the served DOM at ${width}px`);
+  const failures = result.loaded.filter(image => image.error || !image.width || !image.height);
+  report.assetFailures.push(...failures.map(image => ({ width, scenario, ...image })));
+  assert.deepEqual(failures, [], `${scenario}: the actual served artwork must decode`);
+  return result;
+}
+
 async function screenshot(page, name, { motion = false } = {}) {
   await page.locator(FOREST).scrollIntoViewIfNeeded();
   await page.screenshot({ path: path.join(output, name), fullPage: false, animations: motion ? 'allow' : 'disabled' });
@@ -480,6 +500,13 @@ async function growingScenario({ page, api, width, viewport }) {
   const expectedDates = dates(2, 5, 10, 18, 19, 20, 21, 22);
   const initial = await expectForest(page, { state: 'growing', count: 8, streak: 5, dates: expectedDates }, 'Saved monthly grove and cross-gap current streak');
   assert.equal(initial.embers, false, 'Old missed dates must not burn a currently healthy streak');
+  assert.equal(await page.locator(FOREST).getAttribute('data-forest-season'), 'autumn');
+  assert.equal(await page.locator(`${FOREST} [data-forest-scene]`).getAttribute('data-forest-season'), 'autumn');
+  assert.equal(await page.locator(`${FOREST} [data-forest-tree] image`).count(), 8, 'Each saved November date has one illustrated autumn tree');
+  viewport.autumnArtwork = await decodeArtwork(page, `${FOREST} [data-forest-tree] image`, '/assets/arcade-seasonal/november-emblem-tree.png', width, 'November autumn');
+  const autumnSky = await page.locator(`${FOREST} #forest-sky stop`).first().getAttribute('stop-color');
+  assert.notEqual(autumnSky, '#102e32', 'November uses its seasonal dusk palette');
+  viewport.checks.autumnTheme = true;
   await assertDeadline(page, '2026-11-24T00:00:00.000Z', /next.*check.?in.*open/i, 43_200);
   viewport.checks.checkinCount = true; viewport.checks.streakCountdown = true;
   await decodeImages(page, ['.suite-brand img', '.suite-hero-art', '.growth-strip-art'], width, 'growing');
@@ -670,6 +697,10 @@ async function adventScenario({ page, api, width, viewport }) {
   assert.equal(await grove.locator('[data-advent-day="25"]').isDisabled(), true);
   await tile.click();
   assert.match(await grove.locator('[data-advent-detail]').textContent(), /December 4 check-in restored/);
+  await grove.locator('[data-advent-day="1"]').click();
+  assert.match(await grove.locator('[data-advent-detail]').textContent(), /First Light/);
+  viewport.adventArtwork = await decodeArtwork(page, '#arcade-advent-grove [data-advent-detail] image', '/assets/arcade-seasonal/advent-art-preview.png', width, 'December approved art');
+  viewport.checks.adventArtwork = true;
   viewport.checks.adventGrove = true;
   viewport.checks.recoveredTileIcon = true;
   const countdown = page.locator('#growth-today-panel [data-arcade-next-unlock="daily"]');
@@ -696,6 +727,62 @@ async function adventScenario({ page, api, width, viewport }) {
   await page.locator('#growth-sign-out').click();
   await signedOut(page);
   assert.equal(await grove.isVisible(), false, 'Advent earned artwork hides after sign-out');
+}
+
+async function adventPreviewScenario({ page, api, width, viewport }) {
+  const response = await page.goto(`${origin}/play/advent-preview/`, { waitUntil: 'domcontentloaded', timeout: 45_000 });
+  assert.equal(response?.status(), 200, 'Standalone December preview must load');
+  const grove = page.locator('#arcade-advent-grove');
+  await grove.waitFor({ state: 'visible' });
+  assert.equal(await grove.locator('[data-advent-day]').count(), 31);
+  assert.match(await page.locator('.preview-notice').textContent(), /sample progress/);
+  assert.match(await page.locator('.preview-brand').textContent(), /TREE ON SUI/);
+  assert.doesNotMatch(await page.locator('body').textContent(), /TREE ON BSC|11:59 PM UTC/);
+  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'), /noindex/);
+  const apiCount = api.calls.length;
+  assert.equal(await page.locator('[data-preview-count]').textContent(), '2 / 31');
+  assert.equal(await page.locator('[data-preview-streak]').textContent(), '0 days');
+  assert.equal(await grove.locator('[data-advent-day="3"]').getAttribute('data-advent-status'), 'missed');
+  assert.equal(await grove.locator('[data-advent-day="25"]').getAttribute('data-advent-status'), 'today');
+  assert.equal(await grove.locator('[data-advent-day="26"]').getAttribute('data-advent-status'), 'future');
+  assert.equal(await grove.locator('[data-advent-day="26"]').isDisabled(), true);
+  await decodeArtwork(page, '#arcade-advent-grove [data-advent-detail] image', '/assets/arcade-seasonal/advent-art-preview.png', width, 'Interactive preview initial art');
+  await page.locator('[data-preview-reveal]').click();
+  assert.equal(await page.locator('[data-preview-count]').textContent(), '3 / 31');
+  assert.equal(await page.locator('[data-preview-streak]').textContent(), '1 day');
+  assert.equal(await grove.locator('[data-advent-day="25"]').getAttribute('data-advent-status'), 'saved');
+  assert.equal(await grove.locator('[data-advent-detail] [data-advent-illustration="25"]').count(), 1);
+  assert.equal(await page.locator('[data-preview-deadline]').textContent(), 'Dec 27 · 00:00 UTC');
+  assert.equal(await page.locator('[data-preview-reveal]').isDisabled(), true);
+  await decodeArtwork(page, '#arcade-advent-grove [data-advent-detail] image', '/assets/arcade-seasonal/advent-art-preview.png', width, 'Christmas reveal art');
+  await assertNoOverflow(page, width, 'Interactive December reveal');
+  await page.locator('[data-preview-grove]').scrollIntoViewIfNeeded();
+  await page.screenshot({ path: path.join(output, `advent-preview-${width}.png`), fullPage: false, animations: 'disabled' });
+  report.screenshots.push(`advent-preview-${width}.png`);
+  await page.locator('[data-preview-recover]').click();
+  assert.equal(await page.locator('[data-preview-count]').textContent(), '4 / 31');
+  assert.equal(await page.locator('[data-preview-streak]').textContent(), '1 day', 'Restoring December 3 cannot repair a gap on December 24');
+  assert.equal(await grove.locator('[data-advent-day="3"]').getAttribute('data-advent-status'), 'recovered');
+  assert.equal(await grove.locator('[data-advent-detail] [data-advent-illustration="3"]').count(), 1);
+  assert.match(await grove.locator('[data-advent-detail]').textContent(), /December 3 check-in restored/);
+  assert.equal(await page.locator('[data-preview-recover]').isDisabled(), true);
+  await grove.locator('[data-advent-day="1"]').click();
+  assert.equal(await grove.locator('[data-advent-detail] [data-advent-illustration="1"]').count(), 1);
+  await grove.locator('[data-advent-day="10"]').click();
+  assert.equal(await grove.locator('[data-advent-detail] [data-advent-illustration="10"]').count(), 1);
+  await grove.locator('[data-advent-calendar]').scrollIntoViewIfNeeded();
+  await page.screenshot({ path: path.join(output, `advent-preview-calendar-${width}.png`), fullPage: false, animations: 'disabled' });
+  report.screenshots.push(`advent-preview-calendar-${width}.png`);
+  await page.locator('[data-preview-reset]').click();
+  assert.equal(await page.locator('[data-preview-count]').textContent(), '2 / 31');
+  assert.equal(await page.locator('[data-preview-streak]').textContent(), '0 days');
+  assert.equal(await grove.locator('[data-advent-day="25"]').getAttribute('data-advent-status'), 'today');
+  assert.equal(await grove.locator('[data-advent-day="3"]').getAttribute('data-advent-status'), 'missed');
+  assert.equal(await grove.locator('[data-advent-detail] [data-advent-illustration="10"]').count(), 1);
+  assert.equal(api.calls.length, apiCount, 'Preview controls never call a real or mocked attendance API');
+  assert.equal(await page.locator('a[href="/play/#daily"]').count(), 2);
+  await assertNoOverflow(page, width, 'Interactive December calendar');
+  viewport.checks.adventPreview = true;
 }
 
 async function boundaryScenario({ page, api, width, viewport }, monthRollover = false) {
@@ -775,6 +862,7 @@ try {
     ['month-rollover', { now: '2026-11-30T23:50:00.000Z', checked: dates(27, 28, 29, 30) }, (input) => boundaryScenario(input, true)],
     ['reduced-motion', { checked: dates(18, 19, 20, 21), reducedMotion: true }, (input) => checkInScenario(input, true)],
     ['advent', { now: '2026-12-06T12:00:00.000Z', checked: ['2026-12-01', '2026-12-02', '2026-12-04', '2026-12-05'], recoveredDates: ['2026-12-04'] }, adventScenario],
+    ['advent-preview', { checked: dates(18, 19, 20, 21) }, adventPreviewScenario],
   ];
   viewportLoop: for (const width of widths) {
     const viewport = { width, checks: Object.fromEntries(checkNames.map((name) => [name, false])), scenarios: [] };

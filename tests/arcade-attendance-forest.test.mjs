@@ -65,6 +65,47 @@ test('a newcomer with many missedDates has an empty grove, never a fire or inven
     assert.equal(x.root.querySelectorAll('[data-forest-embers]').length, 0);
   } finally { x.close(); }
 });
+test('November uses emblem artwork only for confirmed trees, with a smaller newly planted tree', () => {
+  const x = fixture(); try {
+    assert.equal(x.root.querySelectorAll('[data-forest-tree] image').length, 0);
+    x.state(progress({ saved: [1, 20, 21, 22], recovered: [20], streak: 3 }));
+    assert.equal(x.card().dataset.forestSeason, 'autumn');
+    assert.equal(x.el('scene').dataset.forestSeason, 'autumn');
+    const trees = [...x.root.querySelectorAll('[data-forest-tree]')];
+    assert.deepEqual(trees.map(tree => tree.dataset.date), ['2026-11-01', '2026-11-20', '2026-11-21', '2026-11-22']);
+    assert.equal(trees.length, Number(x.el('count').textContent));
+    for (const tree of trees) assert.equal(tree.querySelector('image').getAttribute('href'), '/assets/arcade-seasonal/november-emblem-tree.png');
+    assert.equal(trees.at(-1).dataset.forestStage, 'sapling');
+    assert.ok(Number(trees.at(-1).querySelector('image').getAttribute('height')) < Number(trees[0].querySelector('image').getAttribute('height')));
+    assert.match(trees[1].querySelector('title').textContent, /November 20 check-in restored/);
+    assert.equal(x.root.querySelectorAll('[data-forest-leaf-litter]').length, 1);
+    assert.equal(x.root.querySelectorAll('.forest-rain').length, 0);
+  } finally { x.close(); }
+});
+test('the accepted attendance month controls autumn through refresh and clears it at December rollover or sign-out', () => {
+  const x = fixture(); try {
+    x.setServer(Date.parse('2026-11-30T12:00:00Z'));
+    x.state(progress({ date: '2026-11-30', saved: [29, 30], streak: 2 }));
+    assert.equal(x.card().dataset.forestSeason, 'autumn');
+    x.advance(DAY);
+    x.view.dispatchEvent(new x.view.Event('focus'));
+    assert.equal(x.card().dataset.forestState, 'stale');
+    assert.equal(x.card().dataset.forestSeason, 'autumn');
+    assert.equal(x.root.querySelectorAll('[data-forest-tree] image').length, 2);
+    x.setServer(Date.parse('2026-12-01T12:00:00Z'));
+    x.state(progress({ date: '2026-12-01', saved: [], streak: 2 }));
+    assert.equal(x.card().dataset.forestSeason, 'evergreen');
+    assert.equal(x.el('scene').dataset.forestSeason, 'evergreen');
+    assert.equal(x.root.querySelectorAll('[data-forest-tree] image, [data-forest-leaf-litter]').length, 0);
+    assert.equal(x.el('streak').textContent, '2 days');
+    x.setServer(Date.parse('2026-11-22T12:00:00Z'));
+    x.state(progress({ wallet: B, saved: [21], streak: 1 }));
+    assert.equal(x.card().dataset.forestSeason, 'autumn');
+    x.send('arcade-progress', { sessionActive: false });
+    assert.equal(x.card().dataset.forestSeason, 'evergreen');
+    assert.equal(x.root.querySelectorAll('[data-forest-tree] image, [data-forest-leaf-litter]').length, 0);
+  } finally { x.close(); }
+});
 test('a confirmed lapse preserves all saved trees and shows an ember patch', () => {
   const x = fixture(); try {
     x.state(progress({ saved: range(1, 20), streak: 0 }));

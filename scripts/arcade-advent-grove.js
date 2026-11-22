@@ -10,6 +10,15 @@ export const ADVENT_DAYS = Object.freeze([
   'Moonlit Frost','Winter Wishes','Evergreen Resolve','Golden Countdown',
   'Midnight Celebration',
 ]);
+// Viewports into the approved artwork sheet. The original illustration stays unchanged.
+export const ADVENT_ART_ASSET = '/assets/arcade-seasonal/advent-art-preview.png';
+export const ADVENT_ILLUSTRATED_DAYS = Object.freeze([1, 3, 10, 25]);
+const ILLUSTRATIONS = Object.freeze({
+  1: { viewBox: '14 105 604 431', thumbBox: '78 106 470 425', description: 'Golden lights follow the familiar branching emblem, above a rich purple ribbon.' },
+  3: { viewBox: '639 105 602 431', thumbBox: '705 106 470 425', description: 'Gingerbread ornaments, icing and candy canes decorate the same Tree Hero emblem.' },
+  10: { viewBox: '14 617 604 517', thumbBox: '80 617 475 480', description: 'A red-and-gold nutcracker hat, toy-soldier trim and a little drum dress the tree.' },
+  25: { viewBox: '639 617 602 517', thumbBox: '700 617 480 480', description: 'Tree Hero guards a glowing Christmas tree, with a gold star and purple-and-gold gifts.' },
+});
 const keyOf = day => ADVENT_MONTH+'-'+String(day).padStart(2,'0');
 const escape = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const decoration = day => {
@@ -26,6 +35,9 @@ const decoration = day => {
 };
 export function adventTreeSVG(day, large=false) {
   const name = ADVENT_DAYS[day-1] || 'Holiday Tree';
+  const illustration = ILLUSTRATIONS[day];
+  if (illustration) return '<svg class="advent-tree-svg advent-tree-illustrated'+(large?' advent-tree-svg--large':'')+'" data-advent-illustration="'+day+'" viewBox="'+(large?illustration.viewBox:illustration.thumbBox)+'" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+escape(name)+'" overflow="hidden">'
+    +'<title>'+escape(name)+'</title><image href="'+ADVENT_ART_ASSET+'" width="1254" height="1254" /></svg>';
   return '<svg class="advent-tree-svg'+(large?' advent-tree-svg--large':'')+'" viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+escape(name)+'">'
     + '<ellipse cx="50" cy="98" rx="32" ry="6" fill="#342d50" opacity=".6"/>'
     + '<path d="M44 96Q47 73 47 35L53 35Q53 74 56 96Q52 103 44 96Z" fill="#6c4386" stroke="#c7a162" stroke-width="2"/>'
@@ -63,14 +75,24 @@ export function mountAdventGrove({ card, doc = card?.ownerDocument }={}) {
   section.hidden = true;
   section.innerHTML = '<div class="advent-heading"><div><span>DECEMBER 2026</span><h4>Tree Hero’s Advent Grove</h4></div><p>One holiday tree for each saved check-in</p></div>'
     + '<p class="advent-freshness" role="status" aria-live="polite"></p>'
-    + '<div class="advent-detail" data-advent-detail></div>'
+    + '<div class="advent-layout"><div class="advent-detail" data-advent-detail aria-labelledby="advent-feature-title"></div>'
+    + '<div class="advent-overview"><div class="advent-calendar-heading"><h5>Your December grove</h5><span data-advent-saved-count></span></div>'
     + '<div class="advent-calendar" data-advent-calendar aria-label="December Advent Grove calendar"></div>'
-    + '<p class="advent-legend"><span><b class="advent-symbol is-saved">✓</b> Saved</span><span><b class="advent-symbol is-recovered">✓</b> Restored</span><span><b class="advent-symbol is-missed">•</b> Missed</span><span><b class="advent-symbol is-future">⌁</b> Unopened</span></p>';
-  card.querySelector('.forest-landscape')?.after(section);
+    + '<p class="advent-legend"><span><b class="advent-symbol is-saved">✓</b> Saved</span><span><b class="advent-symbol is-recovered">✓</b> Recovered</span><span><b class="advent-symbol is-missed">•</b> Missed</span><span><b class="advent-symbol is-future">◇</b> Future</span></p></div></div>';
+  const landscape = card.querySelector('.forest-landscape');
+  if (landscape) landscape.after(section); else card.append(section);
   let lastWallet=null, selected=null, lastState='';
   let latest=null, latestFresh=false, latestWallet=null;
+  function hide() {
+    section.hidden=true;card.removeAttribute('data-advent-visible');
+    section.querySelector('[data-advent-detail]').replaceChildren();
+    section.querySelector('[data-advent-calendar]').replaceChildren();
+    section.querySelector('[data-advent-saved-count]').textContent='';
+    section.querySelector('.advent-freshness').textContent='';
+    selected=null;lastState='';
+  }
   function render() {
-    if (!latest || latest.monthKey !== ADVENT_MONTH || !latestWallet) { section.hidden=true; card.removeAttribute('data-advent-visible'); return; }
+    if (!latest || latest.monthKey!==ADVENT_MONTH || !latestWallet || latest.wallet!==latestWallet) { hide(); return; }
     section.hidden=false;card.dataset.adventVisible='true';
     const snapshot=latest;
     if (selected && !snapshot.checkedDates.includes(keyOf(selected))) selected=null;
@@ -78,41 +100,54 @@ export function mountAdventGrove({ card, doc = card?.ownerDocument }={}) {
     const stateKey=JSON.stringify([snapshot.wallet,snapshot.dateKey,snapshot.checkedDates,snapshot.recoveredDates,snapshot.missedDates,latestFresh,selected]);
     if (stateKey===lastState) return;
     lastState=stateKey;
+    section.dataset.adventFresh=String(latestFresh);
     section.querySelector('.advent-freshness').textContent=latestFresh
-      ? 'Tap any saved tree to view its holiday artwork.' : 'Showing last saved attendance while the Arcade refreshes.';
+      ? 'Select a saved tree to explore your holiday grove.' : 'Showing last saved attendance while the Arcade refreshes.';
+    section.querySelector('[data-advent-saved-count]').textContent=snapshot.checkedDates.length+' / 31 trees';
     const calendar=section.querySelector('[data-advent-calendar]');
+    const focusedDay=calendar.contains(doc.activeElement)?doc.activeElement?.dataset.adventDay:null;
     calendar.innerHTML=ADVENT_DAYS.map((name,index)=>{
       const day=index+1, status=adventDayStatus(day,snapshot,true), earned=status==='saved'||status==='recovered', pick=day===selected;
       const symbol=status==='recovered'?'<span class="advent-tile-marker is-recovered" aria-hidden="true">✓</span>'
         : status==='saved'?'<span class="advent-tile-marker is-saved" aria-hidden="true">✓</span>'
-        : status==='missed'?'<span class="advent-tile-marker is-missed" aria-hidden="true">•</span>'
-        : status==='future'?'<span class="advent-tile-marker is-future" aria-hidden="true">⌁</span>':'';
-      return '<button type="button" class="advent-tile" data-advent-day="'+day+'" data-advent-status="'+status+'" aria-pressed="'+pick+'" aria-label="December '+day+': '+(earned?escape(name)+', '+(status==='recovered'?'restored':'saved'):status)+'"'+(earned?'':' disabled')+'>'
-        +'<span class="advent-tile-number">'+day+'</span>'+(earned?adventTreeSVG(day):'<span class="advent-tile-closed" aria-hidden="true">'+(status==='missed'?'♨':status==='today'?'✦':'◇')+'</span>')
+        : status==='missed'?'<span class="advent-tile-marker is-missed" aria-hidden="true">•</span>':'';
+      const label=earned?name+', '+(status==='recovered'?'recovered; check-in restored':'saved')
+        :status==='today'?'today, check-in available':status==='future'?'future, opens December '+day:status==='unvisited'?'not checked in':'missed check-in';
+      return '<button type="button" class="advent-tile" data-advent-day="'+day+'" data-advent-status="'+status+'" aria-pressed="'+pick+'" aria-label="December '+day+': '+escape(label)+'"'+(earned?'':' disabled')+'>'
+        +'<span class="advent-tile-number">'+day+'</span>'+(earned?adventTreeSVG(day):'<span class="advent-tile-closed" aria-hidden="true">'+(status==='missed'?'•':status==='today'?'✦':'◇')+'</span>')
         +symbol+'</button>';
     }).join('');
+    if (focusedDay) calendar.querySelector('[data-advent-day="'+focusedDay+'"]:not([disabled])')?.focus({preventScroll:true});
     const detail=section.querySelector('[data-advent-detail]');
     if (selected) {
-      const status=adventDayStatus(selected,snapshot,true);
-      detail.innerHTML='<div class="advent-feature-art">'+adventTreeSVG(selected,true)+'</div><div class="advent-feature-copy">'
-        +'<span>DECEMBER '+selected+' · '+(selected===25?'CHRISTMAS DAY REVEAL':'HOLIDAY REVEAL')+'</span>'
-        +'<h5>'+escape(ADVENT_DAYS[selected-1])+'</h5>'
-        +'<p>'+(status==='recovered'?'December '+selected+' check-in restored.':'Saved for December '+selected+'.')+'</p></div>';
-    } else detail.innerHTML='<p>Complete a December check-in to reveal your first holiday tree.</p>';
+      const status=adventDayStatus(selected,snapshot,true), today=keyOf(selected)===snapshot.dateKey;
+      detail.innerHTML='<div class="advent-feature-topline"><span>'+(today?'Today’s reveal':'From your grove')+'</span><span>DEC '+selected+'</span></div>'
+        +'<div class="advent-feature-art">'+adventTreeSVG(selected,true)+'</div><div class="advent-feature-copy">'
+        +'<span>DECEMBER '+selected+' · '+(selected===25?'CHRISTMAS DAY':'HOLIDAY COLLECTION')+'</span>'
+        +'<h5 id="advent-feature-title">'+escape(ADVENT_DAYS[selected-1])+'</h5>'
+        +(ILLUSTRATIONS[selected]?'<p class="advent-art-description">'+escape(ILLUSTRATIONS[selected].description)+'</p>':'')
+        +'<p class="advent-feature-status" data-advent-feature-status="'+status+'">'+(status==='recovered'?'December '+selected+' check-in restored.':'Saved for December '+selected+'.')+'</p></div>';
+    } else detail.innerHTML='<div class="advent-empty"><span aria-hidden="true">✦</span><h5 id="advent-feature-title">Your first holiday tree awaits</h5><p>Complete a December check-in to reveal your first tree.</p></div>';
   }
-  section.addEventListener('click',event=>{
+  const onClick=event=>{
     const tile=event.target.closest?.('[data-advent-day]');
-    if (!tile || tile.disabled) return;
+    if (!tile || !section.contains(tile) || tile.disabled) return;
     selected=Number(tile.dataset.adventDay);
     lastState='';render();
-  });
+  };
+  section.addEventListener('click',onClick);
   const controller={
     update(snapshot,{wallet=null,fresh=false}={}) {
-      if (wallet!==lastWallet){selected=null;lastState='';lastWallet=wallet;}
-      latest=snapshot;latestWallet=wallet;latestFresh=fresh;
+      const sameWallet=wallet===lastWallet;
+      if (!sameWallet){selected=null;lastState='';lastWallet=wallet;}
+      if (sameWallet && fresh && latest?.wallet===wallet && snapshot?.wallet===wallet && latest.monthKey===snapshot.monthKey) {
+        const newlySaved=snapshot.checkedDates.filter(date=>!latest.checkedDates.includes(date)).at(-1);
+        if (newlySaved) selected=Number(newlySaved.slice(-2));
+      }
+      latest=snapshot;latestWallet=wallet;latestFresh=Boolean(fresh);
       render();
     },
-    destroy(){section.remove();card.removeAttribute('data-advent-visible');},
+    destroy(){section.removeEventListener('click',onClick);section.remove();card.removeAttribute('data-advent-visible');},
   };
   return controller;
 }
