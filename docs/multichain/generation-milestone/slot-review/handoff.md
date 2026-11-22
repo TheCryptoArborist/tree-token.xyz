@@ -26,3 +26,21 @@ real Slush acceptance requires the user's signature after canonical publication.
 
 No NFT deposit, BNB deployment, peer configuration or gameplay activation is
 included. Receipt verification must finish before any later milestone.
+
+## Published and verified
+
+The canonical page is live on locked deploy `6b036cc41e40ebe1a1df7990`.
+All 658 previous static hashes, 53 complete backend records, five schedules,
+runtime and API-visible protected configuration were preserved; totals are now
+660 static paths and 54 functions. See `live-verification.json` and the durable
+GitHub Actions artifact. All 120 tooling/release tests passed, as did the contract
+workflow and preview-preservation test. Three source/candidate/live mock-wallet
+browser scenarios passed, including stale review rejection, reload protection and
+noncanonical path blocking. Fresh live API review and served-byte equality were
+also independently checked. No real signature or slot creation was performed.
+
+User handoff: open the canonical URL, connect desktop Slush with dev account
+ending 45c4, refresh slot review, then sign and create the slot. Maximum gas is
+0.02 SUI. Save the verified receipt and return it to Codex. If submission has an
+uncertain result, use Check slot receipt; do not clear local storage or repeat
+creation. A receipt indexing delay may require pressing Check slot receipt again.

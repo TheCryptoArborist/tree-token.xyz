@@ -1,3 +1,36 @@
+# Canonical empty custody slot handoff — published
+
+Current locked production is `6b036cc41e40ebe1a1df7990`, published November 22,
+2026 at 16:31:58 America/Chicago (`2026-11-22T22:31:58.136Z`). Workflow
+`45078167893`, source `0d57f9907eddba3e27a26179f6e4b88fbbb71d37`, control `8f7ffd6`.
+
+The approved desktop Slush handoff is live at
+https://tree-token.xyz/play/generation-slot/ . It prepares only the single empty
+slot in the already-published Sui generation registry, with maximum 0.02 SUI gas.
+The user still must sign; no slot creation, NFT deposit, BNB deployment, sales or
+gameplay activation was performed by this website release.
+
+Fresh baseline `6b0341e7545ba49e00a0e496`: preserved all **658 existing static
+hashes, 53 complete backend/provider records, five schedules**, runtime and
+API-visible protected configuration. Added only two slot-page files and the
+isolated GET-only `generation-slot` function. Totals: **660 static paths and
+54 functions**. The historical root/preview build was never published. The
+release waited for all Git builds before switching and locking the new candidate.
+
+Validation: 120 tooling/release tests; source/candidate/live mock-wallet browser
+clock-skew, stale-review and reload checks; fresh exact-byte mainnet simulation;
+matching served bundle; independent backend-record comparison with no changes.
+Estimated slot gas: 0.003892851 SUI. Source contract CI also passed. These checks
+do not substitute for real installed Slush acceptance or a completed signature.
+
+Evidence: `docs/multichain/generation-milestone/slot-review/live-verification.json`
+and `handoff.md`. Publication artifact `14775903521`, SHA256
+`86041f31bb0f011dcdb600e0589da63a22bee69c69b9ed07d496b1f559b7a598`.
+Capture production afresh before any future release; completed release scripts
+are pinned to earlier baselines and must not be reused blindly.
+
+---
+
 # Empty Sui package publication — verified
 
 The user completed the approved desktop Slush publication. Receipt and independent

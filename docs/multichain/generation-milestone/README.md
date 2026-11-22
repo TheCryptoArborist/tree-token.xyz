@@ -14,7 +14,8 @@ verified. See [publication receipt and verification](published/README.md).
 The registry has no slot, the OApp has no peers, and the original NFT remains
 in the dev wallet at the recorded checkpoint. Do not publish this package again.
 [Empty slot preparation](slot-review/README.md) now has a successful mainnet
-simulation and adversarial checks; it remains unsigned.
+simulation and adversarial checks. The user approved creation and the canonical
+[Slush handoff](slot-review/handoff.md) is now published; it remains unsigned.
 Slot creation, NFT deposit, BNB deployment, route configuration, sales and gameplay
 activation remain subsequent reviewed milestones.
 
