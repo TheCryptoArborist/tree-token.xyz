@@ -128,6 +128,8 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
     { path: '/arcade-review/index.html', source: 'production/arcade-organization-static/review.html' },
     { path: '/scripts/arcade-organization.js', source: 'scripts/arcade-organization.js' },
     { path: '/scripts/arcade-attendance-forest.js', source: 'scripts/arcade-attendance-forest.js' },
+    { path: '/scripts/arcade-advent-grove.js', source: 'scripts/arcade-advent-grove.js' },
+    { path: '/scripts/arcade-next-month-unlocks.js', source: 'scripts/arcade-next-month-unlocks.js' },
     { path: '/styles/arcade-organization.css', source: 'styles/arcade-organization.css' },
     { path: '/scripts/arcade-season-deadline.js', source: 'scripts/arcade-season-deadline.js' },
     { path: '/styles/arcade-season-deadline.css', source: 'styles/arcade-season-deadline.css' },
