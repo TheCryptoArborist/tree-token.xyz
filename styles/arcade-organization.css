@@ -259,6 +259,8 @@
   min-height:44px;
   padding:8px 10px;
 }
+.growth-account-option .growth-wallet-copy { min-width:0; }
+.growth-account-option .growth-account-address { overflow-wrap:anywhere; white-space:normal; font-family:monospace; }
 .arcade-organization-page #growth-today-panel > .growth-status {
   margin:0 0 10px !important;
   padding:5px 9px;

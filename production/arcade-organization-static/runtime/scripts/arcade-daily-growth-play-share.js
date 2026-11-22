@@ -176,7 +176,7 @@ export function createDailyGrowth({
   }
   const byId = (id) => root.querySelector(`#growth-${id}`);
   const ui = Object.fromEntries([
-    'meta', 'season-tag', 'wallet-state', 'wallet-identity', 'wallet-identity-status', 'wallet-identity-name', 'wallet-identity-address', 'auth-note', 'connect', 'sign-in', 'sign-out', 'wallet-picker', 'wallet-options', 'wallet-close', 'wallet-status', 'no-wallet',
+    'meta', 'season-tag', 'wallet-state', 'wallet-identity', 'wallet-identity-status', 'wallet-identity-name', 'wallet-identity-address', 'auth-note', 'connect', 'sign-in', 'sign-out', 'wallet-picker', 'wallet-picker-label', 'wallet-intro', 'wallet-options', 'wallet-close', 'wallet-status', 'no-wallet',
     'quest-state', 'quest-rule', 'pick-label', 'game-name', 'objective', 'game-access', 'play', 'refresh', 'alternative', 'game-select',
     'quest-note', 'visit-count', 'check-note', 'check-in', 'check-in-row', 'check-in-task', 'check-in-state', 'task-auth', 'passport-count', 'passport-note', 'stamps',
     'passport-reward', 'passport-optional', 'optional-stamps', 'tracking-note', 'month-empty', 'month-content', 'month-visits', 'month-quests', 'next', 'calendar', 'milestones',
@@ -189,7 +189,7 @@ export function createDailyGrowth({
     wallet: null, walletId: null, walletReady: false, walletError: false, session: null, progress: null,
     configuration: null, dateKey: null, monthKey: null, busy: 'loading', stale: false,
     selectedGameId: null, notice: 'Loading Daily Growth…', noticeKind: '', pickerOpen: false,
-    availableWallets: [], apiUnavailable: false, launched: false,
+    availableWallets: [], accountWalletId: null, apiUnavailable: false, launched: false,
   };
   const runTracking = createCompletedRunTracking({root,fetchImpl,getSession:()=>state.session,now});
   const missions = createArcadeMissions({ root, fetchImpl, getSession: () => state.session, now });
@@ -250,15 +250,21 @@ export function createDailyGrowth({
   }
 
   function closePicker() {
+    const cancelSelection = state.pickerOpen && (state.accountWalletId || state.busy === 'connecting');
     state.pickerOpen = false;
     if (ui['wallet-picker'].open) ui['wallet-picker'].close();
     ui.connect.setAttribute('aria-expanded', 'false');
     const target = state.session ? ui['sign-out'] : state.wallet ? ui['sign-in'] : pickerTrigger || ui.connect;
     if (!target.hidden && !target.disabled) target.focus({ preventScroll: true });
+    if (cancelSelection) void signOut();
   }
 
   function renderPicker() {
     const dialog = ui['wallet-picker'];
+    ui['wallet-picker-label'].textContent = state.accountWalletId ? 'Choose your account' : 'Choose your wallet';
+    ui['wallet-intro'].textContent = state.accountWalletId
+      ? 'Select the account to use in Tree Arcade. If an account is missing, share it with this site in your wallet, then reconnect.'
+      : 'Choose a Sui wallet, then the account you want to use. Your saved progress belongs to that address.';
     ui.connect.setAttribute('aria-expanded', String(state.pickerOpen));
     renderWalletOptions();
     ui['wallet-status'].textContent = state.pickerOpen && (state.busy === 'connecting' || state.noticeKind === 'error') ? state.notice : '';
@@ -313,6 +319,12 @@ export function createDailyGrowth({
       if (session) storage?.setItem(SESSION_KEY, JSON.stringify(session));
       else storage?.removeItem(SESSION_KEY);
     } catch { /* Storage is optional; no progress or completion is stored in the browser. */ }
+    if (!session) {
+      // Explicit logout must also remove legacy tab state, even after a storage fallback.
+      for (const name of ['localStorage', 'sessionStorage']) {
+        try { view[name]?.removeItem(SESSION_KEY); } catch { /* Storage may be unavailable. */ }
+      }
+    }
   }
 
   function invalidateSession(message = '', { preserveSavedSession = false } = {}) {
@@ -448,8 +460,36 @@ export function createDailyGrowth({
   }
 
   function renderWalletOptions() {
-    const focusedId = ui['wallet-options'].contains(document.activeElement) ? document.activeElement?.closest('button[data-wallet-id]')?.dataset.walletId : null;
+    const focusedButton = ui['wallet-options'].contains(document.activeElement) ? document.activeElement?.closest('button') : null;
+    const focusedId = focusedButton?.dataset.walletId;
+    const focusedAddress = focusedButton?.dataset.accountAddress;
     ui['wallet-options'].replaceChildren();
+    if (state.accountWalletId) {
+      const accounts = bridge?.getAvailableAccounts?.(state.accountWalletId) || [];
+      for (const account of accounts) {
+        const address = normalizedAddress(account.address);
+        if (!address) continue;
+        const button = append(ui['wallet-options'], 'button', 'growth-wallet-option growth-account-option');
+        button.type = 'button';
+        button.disabled = Boolean(state.busy);
+        button.dataset.accountAddress = address;
+        const copy = append(button, 'span', 'growth-wallet-copy');
+        append(copy, 'strong', '', text(account.label, 80) ? account.label : shortAddress(address));
+        append(copy, 'small', 'growth-account-address', address);
+        append(button, 'span', 'growth-wallet-indicator', '→').setAttribute('aria-hidden', 'true');
+      }
+      const back = append(ui['wallet-options'], 'button', 'growth-wallet-option');
+      back.type = 'button';
+      back.dataset.walletBack = '';
+      back.disabled = Boolean(state.busy);
+      back.textContent = 'Choose a different wallet';
+      ui['no-wallet'].hidden = true;
+      if (focusedAddress && state.pickerOpen) {
+        const next = [...ui['wallet-options'].querySelectorAll('button')].find(button => button.dataset.accountAddress === focusedAddress && !button.disabled);
+        (next || back).focus({ preventScroll: true });
+      }
+      return;
+    }
     for (const wallet of state.availableWallets) {
       const connecting = state.busy === 'connecting' && state.walletId === wallet.id;
       const button = append(ui['wallet-options'], 'button', `growth-wallet-option${connecting ? ' is-connecting' : ''}`);
@@ -763,17 +803,17 @@ export function createDailyGrowth({
       ? 'Your progress belongs to this wallet. Sessions expire after one hour.'
       : state.walletError ? 'Wallet connection is unavailable. Refresh the page to try again.'
         : 'Sign-in uses a wallet message. It does not submit a transaction.';
-    ui.connect.disabled = busy || !state.walletReady;
-    ui.connect.hidden = Boolean(state.session);
+    ui.connect.disabled = state.busy === 'disconnecting' || !state.walletReady;
+    ui.connect.hidden = false;
     ui.connect.classList.toggle('growth-primary', !state.wallet);
     ui.connect.classList.toggle('growth-secondary', Boolean(state.wallet));
-    ui.connect.textContent = state.busy === 'connecting' ? 'Connecting…' : state.wallet ? 'Change wallet' : 'Connect to check in';
+    ui.connect.textContent = state.busy === 'disconnecting' ? 'Disconnecting…' : state.wallet || state.session || savedSession ? 'Switch wallet' : 'Connect to check in';
     const restoringSaved=Boolean(savedSession&&timestamp(savedSession.expiresAt)>now()&&(restoreInFlight||restorePending||state.busy==='restoring'));
     ui['sign-in'].hidden = !state.wallet || Boolean(state.session) || restoringSaved;
     ui['sign-in'].disabled = busy;
-    ui['sign-in'].textContent = state.busy === 'signing-in' ? 'Approve message in wallet…' : 'Sign in to check in';
-    ui['sign-out'].hidden = !state.session;
-    ui['sign-out'].disabled = busy;
+    ui['sign-in'].textContent = state.accountWalletId ? 'Choose account' : state.busy === 'signing-in' ? 'Approve message in wallet…' : 'Sign in to check in';
+    ui['sign-out'].hidden = !(state.wallet || state.session || savedSession || ['connecting', 'restoring', 'disconnecting'].includes(state.busy));
+    ui['sign-out'].disabled = state.busy === 'disconnecting';
     renderPicker();
     const games = state.configuration?.eligibleGames || [];
     const treeForceEnabled = games.some((game) => game.id === TREE_FORCE_ID);
@@ -910,6 +950,7 @@ export function createDailyGrowth({
 
   async function signIn() {
     if (state.busy || !bridge || !state.wallet) return;
+    if (state.accountWalletId) { state.pickerOpen = true; render(); return; }
     const wallet = currentWallet();
     if (!wallet) return;
     const ticket = epoch;
@@ -953,16 +994,25 @@ export function createDailyGrowth({
 
   async function connect(walletId) {
     if (state.busy || !bridge) return;
+    const ticket = epoch;
     state.busy = 'connecting';
     state.walletId = walletId;
     setNotice('Connect your wallet and approve one sign-in message. Today’s free check-in will be saved automatically.');
     render();
     try {
       await bridge.connectWallet(walletId);
-      if (disposed) return;
+      if (disposed || ticket !== epoch) return;
       state.wallet = currentWallet();
       if (!state.wallet) throw new Error('The wallet did not share a Sui account. Try connecting again.');
       state.walletId = state.wallet.walletId || walletId;
+      const accounts = bridge.getAvailableAccounts?.(state.walletId) || [];
+      if (accounts.length > 1) {
+        state.accountWalletId = state.walletId;
+        state.pickerOpen = true;
+        setNotice('Choose the account you want to use before signing in.');
+        return;
+      }
+      state.accountWalletId = null;
       state.pickerOpen = false;
       if (savedSession && savedSession.wallet === state.wallet.address && timestamp(savedSession.expiresAt) > now()) {
         state.session = { ...savedSession, walletId: state.walletId, walletName: state.wallet.walletName };
@@ -971,20 +1021,64 @@ export function createDailyGrowth({
       } else if (savedSession) persistSession(null);
       setNotice(state.session ? 'Loading your saved Daily Growth progress…' : 'Wallet connected. Sign in to Daily Growth to load your progress.');
     } catch (error) {
-      if (!disposed) setNotice(text(error?.message, 500) ? error.message : 'Wallet connection was not completed. Try again.', 'error');
+      if (!disposed && ticket === epoch) setNotice(text(error?.message, 500) ? error.message : 'Wallet connection was not completed. Try again.', 'error');
     } finally {
-      if (!disposed) { state.busy = null; render(); }
+      if (!disposed && ticket === epoch) { state.busy = null; render(); }
     }
-    if (state.session && !disposed) { await loadStatus(); if (state.session) { await refresh(); await checkIn(); } }
-    else if (state.wallet && !disposed) await signIn();
+    if (disposed || ticket !== epoch) return;
+    if (state.session) { await loadStatus(); if (ticket === epoch && state.session) { await refresh(); if (ticket === epoch) await checkIn(); } }
+    else if (state.wallet) await signIn();
   }
 
-  async function signOut() {
-    if (state.busy || !state.session) return;
-    const token = state.session.token;
-    invalidateSession('Signed out of Daily Growth. Your earned progress stays with your wallet.');
+  async function chooseAccount(address) {
+    if (state.busy || !state.accountWalletId || !bridge?.selectAccount) return;
+    const walletId = state.accountWalletId;
+    try {
+      bridge.selectAccount({ walletId, address });
+      state.wallet = currentWallet();
+      if (!state.wallet || state.wallet.address !== normalizedAddress(address)) throw new Error('That account is no longer available. Reconnect your wallet.');
+      state.walletId = state.wallet.walletId || walletId;
+      state.accountWalletId = null;
+      state.pickerOpen = false;
+      render();
+      await signIn();
+    } catch (error) {
+      if (!disposed) { setNotice(text(error?.message, 500) ? error.message : 'Account selection failed. Reconnect your wallet.', 'error'); render(); }
+    }
+  }
+
+  async function signOut({ chooseWallet = false, revoke = true, clearStoredSession = true } = {}) {
+    if (disposed || state.busy === 'disconnecting') return;
+    const token = state.session?.token || savedSession?.token;
+    state.wallet = null;
+    state.walletId = null;
+    state.accountWalletId = null;
+    state.pickerOpen = false;
+    invalidateSession('Signed out of Daily Growth. Your earned progress stays with your wallet.', { preserveSavedSession: !clearStoredSession });
+    savedSession = null;
+    const ticket = epoch;
+    state.busy = 'disconnecting';
     render();
-    try { await request('logout', { body: {}, token }); } catch { /* The local session is already removed and the token expires server-side. */ }
+    // Server revocation is best effort; a slow response must not trap the player.
+    if (token && revoke) void request('logout', { body: {}, token }).catch(() => {});
+    let timeout;
+    try {
+      await Promise.race([
+        Promise.resolve(bridge?.disconnectWallet?.()),
+        new Promise(resolve => { timeout = view.setTimeout(resolve, 4000); }),
+      ]);
+    } catch { /* The bridge clears its local account before notifying the wallet. */ }
+    finally {
+      view.clearTimeout(timeout);
+      if (!disposed && ticket === epoch) {
+        state.busy = null;
+        state.wallet = null;
+        state.pickerOpen = chooseWallet;
+        if (chooseWallet) setNotice('Choose the wallet and account you want to use.');
+        render();
+        if (!chooseWallet) ui.connect.focus({ preventScroll: true });
+      }
+    }
   }
 
   function walletChanged() {
@@ -1097,10 +1191,9 @@ export function createDailyGrowth({
   }
 
   on(ui.connect, 'click', () => {
-    if (state.busy || !state.walletReady) return;
+    if (state.busy === 'disconnecting' || !state.walletReady) return;
     pickerTrigger = ui.connect;
-    state.pickerOpen = true;
-    render();
+    void signOut({ chooseWallet: true });
   });
   on(ui['wallet-close'], 'click', closePicker);
   on(ui['wallet-picker'], 'cancel', (event) => { event.preventDefault(); closePicker(); });
@@ -1119,6 +1212,10 @@ export function createDailyGrowth({
     else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
   });
   on(ui['wallet-options'], 'click', (event) => {
+    const account = event.target.closest('button[data-account-address]');
+    if (account && ui['wallet-options'].contains(account)) { void chooseAccount(account.dataset.accountAddress); return; }
+    const back = event.target.closest('button[data-wallet-back]');
+    if (back && ui['wallet-options'].contains(back)) { void signOut({ chooseWallet: true }); return; }
     const button = event.target.closest('button[data-wallet-id]');
     if (button && ui['wallet-options'].contains(button)) void connect(button.dataset.walletId);
   });
@@ -1207,10 +1304,20 @@ export function createDailyGrowth({
   on(root, 'arcade-attendance-recovered', () => { if (!state.busy && state.session) void refresh(); });
   on(view, 'storage', (event) => {
     if (event.key !== SESSION_KEY || event.storageArea !== storage) return;
+    // Storage events can be queued while a tab sleeps. Never echo an old logout
+    // over a newer login that another tab has already saved.
+    try { if (storage.getItem(SESSION_KEY) !== event.newValue) return; } catch { return; }
     if (!event.newValue) {
-      invalidateSession('Signed out of Daily Growth in another tab.');
-    } else if (!state.session) {
-      savedSession = readSession(storage, now());
+      void signOut({ revoke: false });
+    } else {
+      const incoming = readSession(storage, now());
+      if (state.session && (!incoming || incoming.wallet !== state.session.wallet || incoming.token !== state.session.token)) {
+        // Drop this tab's old identity without erasing another tab's new login.
+        void signOut({ revoke: false, clearStoredSession: false });
+        return;
+      }
+      if (state.session) return;
+      savedSession = incoming;
       restorePending = Boolean(savedSession);
       queueSavedSessionRestore();
     }
