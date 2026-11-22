@@ -1,0 +1,18 @@
+{
+  "status": "approved_awaiting_wallet_signature",
+  "approvalSource": "User: You are authorized to proceed, in reply to the exact empty slot action, 0.02 SUI maximum and canonical Slush page proposal.",
+  "maximumGasBudgetMist": "20000000",
+  "signingURL": "https://tree-token.xyz/play/generation-slot/",
+  "authorizedActions": [
+    "Prepare and publish preserved canonical signing page",
+    "Create the single empty slot in the already-published generation registry through the dev wallet"
+  ],
+  "excludedActions": [
+    "NFT deposit",
+    "BNB deployment",
+    "Peer binding",
+    "Sales",
+    "Gameplay activation"
+  ],
+  "submitted": false
+}

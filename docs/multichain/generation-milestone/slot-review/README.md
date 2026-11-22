@@ -1,7 +1,9 @@
 # Empty custody slot — prepared, not submitted
 
 The verified published package is ready for a separate empty-slot transaction.
-This review does not authorize a signature or deployment of a signing page.
+The user subsequently approved the exact action and canonical signing page; see
+[approval.json](approval.json) and [handoff.md](handoff.md). Execution still requires
+the user's wallet signature.
 
 ## Exact proposed action
 
@@ -66,8 +68,8 @@ or dependency migration is included.
 
 ## Remaining boundary
 
-Obtain approval for this exact empty-slot action and 0.02 SUI maximum before
-requesting a signature. Any signing handoff must be served under
+Approval for this exact empty-slot action and 0.02 SUI maximum is recorded in
+`approval.json`. Any signing handoff must be served under
 `https://tree-token.xyz/play/`, with a fresh production capture and preservation
 release. No signing page or production file changed in this preparation milestone.
 After execution, independently verify the real Vault ID, Registry.slot, empty

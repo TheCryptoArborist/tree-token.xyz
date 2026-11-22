@@ -5,6 +5,8 @@ on:
       - 'docs/multichain/generation-milestone/**'
       - 'contracts/nftree-generation/**'
       - 'tools/generation-publication/**'
+      - 'tools/generation-slot/**'
+      - 'netlify/preview-functions/generation-slot.mjs'
       - 'netlify/preview-functions/generation-publication.mjs'
       - 'scripts/build-feature-preview.mjs'
       - 'contracts/bnb-generation/**'
@@ -16,6 +18,8 @@ on:
       - 'docs/multichain/generation-milestone/**'
       - 'contracts/nftree-generation/**'
       - 'tools/generation-publication/**'
+      - 'tools/generation-slot/**'
+      - 'netlify/preview-functions/generation-slot.mjs'
       - 'netlify/preview-functions/generation-publication.mjs'
       - 'scripts/build-feature-preview.mjs'
       - 'contracts/bnb-generation/**'
@@ -36,7 +40,9 @@ jobs:
       - name: Install pinned simulation tooling and test unsigned guards
         run: |
           npm ci --ignore-scripts
-          node --test contracts/nftree-generation/scripts/*.test.mjs tools/generation-publication/core.test.mjs
+          node --test contracts/nftree-generation/scripts/*.test.mjs tools/generation-publication/core.test.mjs tools/generation-slot/core.test.mjs
+          node tools/generation-slot/build.mjs
+          git diff --exit-code -- tools/generation-slot/app.js
           node tools/generation-publication/build.mjs
           git diff --exit-code -- tools/generation-publication/app.js
       - name: Install isolated EVM dependencies

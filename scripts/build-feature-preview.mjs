@@ -117,6 +117,8 @@ async function rejectUntrackedOutput(directory, prefix = '') {
 
 allowed.add('generation-publication/index.html');
 allowed.add('generation-publication/app.js');
+allowed.add('generation-slot/index.html');
+allowed.add('generation-slot/app.js');
 await rejectUntrackedOutput(output);
 for (const file of manifest.files) {
   const destination = resolve(output, outputPath(file));
@@ -156,3 +158,7 @@ console.log('The production manifest and recovered function packages were not ch
 await mkdir(resolve(output,'generation-publication'),{recursive:true});
 await cp(resolve(root,'tools/generation-publication/index.html'),resolve(output,'generation-publication/index.html'));
 await cp(resolve(root,'tools/generation-publication/app.js'),resolve(output,'generation-publication/app.js'));
+
+await mkdir(resolve(output,'generation-slot'),{recursive:true});
+await cp(resolve(root,'tools/generation-slot/index.html'),resolve(output,'generation-slot/index.html'));
+await cp(resolve(root,'tools/generation-slot/app.js'),resolve(output,'generation-slot/app.js'));
