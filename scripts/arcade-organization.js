@@ -1,5 +1,6 @@
 import { mountTreeArmyPreview } from './arcade-tree-army.js';
 import { mountSeasonCountdowns } from './arcade-season-deadline.js';
+import { mountNextMonthUnlocks } from './arcade-next-month-unlocks.js';
 import { mountAttendanceForest } from './arcade-attendance-forest.js';
 
 // Presentation only: move existing nodes so wallet, quest and saved-state handlers
@@ -262,8 +263,10 @@ export function mountArcadeOrganization(doc = document, view = window) {
   doc.body.classList.add('arcade-organization-page');
   const countdown = mountSeasonCountdowns({ root: doc });
   const forest = mountAttendanceForest({ root });
+  const nextMonth = mountNextMonthUnlocks({ root: doc });
   const controller = { destroy() {
     forest?.destroy();
+    nextMonth.destroy();
     countdown.destroy();
     viewObserver.disconnect();
     copyObserver.disconnect();
