@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "result": "passed",
+  "checkedAt": "2026-11-22T05:58:44.223Z",
+  "readOnly": true,
+  "remoteMethods": [
+    "GET"
+  ],
+  "source": "Independent Netlify connector metadata before and after canonical static GETs, bound to intact prepare and publication records",
+  "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
+  "publishedDeployId": "6b0282d222b49cfa17fa3731",
+  "publishedAt": "2026-11-22T05:56:03.580Z",
+  "ready": true,
+  "locked": true,
+  "publishedIdentityRecheckedAt": "2026-11-22T05:57:47.981Z",
+  "baselineId": "6b027652b3eb61d8107261d0",
+  "sourceCommit": "ac4696ea26e72fca6a3a997f1b0370acc37184d6",
+  "sourceTree": "50aa9355a12d1d42e19524882aa514c131a3125d",
+  "mainCommit": "2d4e356d56dcaf6667f94f3c256646f8033d2310",
+  "controlCommit": "081bb5269e243270ad1fb177fbef9fe5ed1cf63b",
+  "prepareRunId": "44991099455",
+  "publicationRunId": "44991408033",
+  "publicationJobId": "137113138472",
+  "planSHA256": "fa0e62b171dda2ca477f9864b8918bee5943568b4dcc1ecd858f1db1d1c1e810",
+  "completeProviderRecords": {
+    "count": 52,
+    "exactlyEqualBaseline": true,
+    "comparison": "Every JSON field of every record, sorted only by n; no fields removed or normalized",
+    "baselineSHA256": "5dd428fc6937f04824135884e38ee65e7f3b1befef654201256cbd2d55c5444a",
+    "publishedSHA256": "5dd428fc6937f04824135884e38ee65e7f3b1befef654201256cbd2d55c5444a"
+  },
+  "schedules": {
+    "count": 5,
+    "exactlyEqualBaseline": true,
+    "comparison": "Every JSON field, records sorted only by name",
+    "baselineSHA256": "55820196e06ecdd0d19571e521938232705cee0964a96c9023fbb3ddf7b8ea45",
+    "publishedSHA256": "55820196e06ecdd0d19571e521938232705cee0964a96c9023fbb3ddf7b8ea45"
+  },
+  "runtime": {
+    "exactlyEqualBaseline": true,
+    "fields": [
+      "functions_region",
+      "functions_region_overrides",
+      "branch",
+      "context",
+      "database_branch_id",
+      "blobs_region",
+      "framework",
+      "edge_functions_present",
+      "server",
+      "database_migrations"
+    ],
+    "baselineSHA256": "80a9035dbf8c509a6f108b09eec18f7482c1b736a769d54e1b7b81a8533e4451",
+    "publishedSHA256": "80a9035dbf8c509a6f108b09eec18f7482c1b736a769d54e1b7b81a8533e4451"
+  },
+  "plannedStaticPreservation": {
+    "baselinePaths": 655,
+    "candidatePaths": 656,
+    "unchangedPaths": 652,
+    "changedOriginals": [
+      "/scripts/arcade-monthly.js",
+      "/scripts/arcade-organization.js",
+      "/styles/arcade-organization.css"
+    ],
+    "addedPaths": [
+      "/scripts/arcade-attendance-forest.js"
+    ],
+    "allOtherPlannedHashesUnchanged": true,
+    "independentlyEnumeratedPublishedInventory": false
+  },
+  "protectedConfiguration": {
+    "baselineSHA256": "7e17f328b64a9cc4cb2a020bdcbb3047e1d17fc7130982a8ed9f56a6eabd7850",
+    "publicationReportSHA256": "7e17f328b64a9cc4cb2a020bdcbb3047e1d17fc7130982a8ed9f56a6eabd7850",
+    "publicationReportMatchesBaseline": true,
+    "independentlyReread": false,
+    "evidenceSource": "Successful publication workflow; its extracted report fingerprint matches the complete captured protected-configuration fingerprint.",
+    "workflowURL": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44991408033",
+    "independentVisibilityLimit": "The project connector does not expose all build settings or snippets; this audit did not re-read protected environment inventories."
+  },
+  "canonicalAssets": [
+    {
+      "path": "/scripts/arcade-attendance-forest.js",
+      "url": "https://tree-token.xyz/scripts/arcade-attendance-forest.js",
+      "status": 200,
+      "contentType": "application/javascript; charset=UTF-8",
+      "bytes": 19899,
+      "observedSHA1": "82cdfa5cd301d289b05b9d02c146f59fea6293ea",
+      "planSHA1": "82cdfa5cd301d289b05b9d02c146f59fea6293ea",
+      "contentTypeMatches": true,
+      "matches": true
+    },
+    {
+      "path": "/scripts/arcade-monthly.js",
+      "url": "https://tree-token.xyz/scripts/arcade-monthly.js",
+      "status": 200,
+      "contentType": "application/javascript; charset=UTF-8",
+      "bytes": 16003,
+      "observedSHA1": "1b3defc0bbb85265731f46084e367e7ad219defc",
+      "planSHA1": "1b3defc0bbb85265731f46084e367e7ad219defc",
+      "contentTypeMatches": true,
+      "matches": true
+    },
+    {
+      "path": "/scripts/arcade-organization.js",
+      "url": "https://tree-token.xyz/scripts/arcade-organization.js",
+      "status": 200,
+      "contentType": "application/javascript; charset=UTF-8",
+      "bytes": 16088,
+      "observedSHA1": "c3bbfd11b875cb160a6893d79cb41a0ca282b0fd",
+      "planSHA1": "c3bbfd11b875cb160a6893d79cb41a0ca282b0fd",
+      "contentTypeMatches": true,
+      "matches": true
+    },
+    {
+      "path": "/styles/arcade-organization.css",
+      "url": "https://tree-token.xyz/styles/arcade-organization.css",
+      "status": 200,
+      "contentType": "text/css; charset=UTF-8",
+      "bytes": 38606,
+      "observedSHA1": "fc32d1a0f13baa26479a1f82eaa54ce3d2798f55",
+      "planSHA1": "fc32d1a0f13baa26479a1f82eaa54ce3d2798f55",
+      "contentTypeMatches": true,
+      "matches": true
+    }
+  ],
+  "publicationEvidence": {
+    "prepareAndPublicationRecordIntegrityVerified": true,
+    "publicationReportFingerprint": "ee9c763c584d69de8079708cae2285002ff151e77b6a5cf4736ab7a35ee2b8cd",
+    "boundBrowserReviewSHA256": "c336adcc5e7f0e87411f5907398537e3c207deb5feb557f9ba5ac00caed418e7",
+    "artifactId": "14741594720",
+    "artifactArchiveSHA256AsProvided": "5bdfcf102c352856872b64b5db938e666000ed1301700f3934bb4e84b3cd9e20",
+    "workflowURL": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44991408033",
+    "publicationJobURL": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44991408033/job/137113138472"
+  },
+  "limits": [
+    "No real wallet, message signature, check-in, recovery payment or chain transaction was performed.",
+    "This independent audit directly verifies the live published ready/locked identity, complete provider records, schedules, captured runtime settings and the four canonical raw static assets. It does not independently enumerate every unchanged published static path.",
+    "The complete planned static preservation and protected environment/build-settings/snippet fingerprint are bound to the intact publication report and baseline; protected configuration was not independently re-read in this audit. Masked secret bytes and unexposed deploy overrides are not independently readable.",
+    "The publication artifact archive digest is recorded as supplied by the release operator; this audit verifies the extracted JSON record fingerprints, not the original ZIP archive digest."
+  ],
+  "metadataObservations": [
+    "attendance-forest-publication-observed-records-6b0282d2.json",
+    "attendance-forest-publication-final-observed-records-6b0282d2.json"
+  ]
+}
