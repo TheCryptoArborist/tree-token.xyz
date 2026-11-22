@@ -2,6 +2,7 @@ name: Verify generation custody and BNB protocol
 on:
   pull_request:
     paths:
+      - 'docs/multichain/generation-milestone/**'
       - 'contracts/nftree-generation/**'
       - 'contracts/bnb-generation/**'
       - 'contracts/vendor/layerzero-sui/**'
@@ -9,6 +10,7 @@ on:
   push:
     branches: ['feat/bnb-generation-custody']
     paths:
+      - 'docs/multichain/generation-milestone/**'
       - 'contracts/nftree-generation/**'
       - 'contracts/bnb-generation/**'
       - '.github/workflows/verify-generation-custody.yml'
@@ -25,6 +27,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+      - name: Install pinned simulation tooling and test unsigned guards
+        run: |
+          npm ci --ignore-scripts
+          node --test contracts/nftree-generation/scripts/readiness.test.mjs
       - name: Install isolated EVM dependencies
         run: npm ci --ignore-scripts --prefix contracts/bnb-generation
       - name: EVM contract tests
@@ -46,5 +52,6 @@ jobs:
         run: |
           /tmp/sui-compiler/sui move test --path contracts/nftree-generation --build-env mainnet
           /tmp/sui-compiler/sui move build --path contracts/nftree-generation --build-env mainnet --dump-bytecode-as-base64 --no-tree-shaking > /tmp/generation-bytecode.json
+          cmp /tmp/generation-bytecode.json docs/multichain/generation-milestone/publication-bytecode.json
           git diff --exit-code -- contracts/vendor contracts/nftree-generation/Move.lock
           git diff --check

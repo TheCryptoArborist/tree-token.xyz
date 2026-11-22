@@ -191,3 +191,10 @@ move-unit-testing, sui-build-test, sui-install and accessing-data (graphql.md).
 Advice was checked against the pinned compiler/dependency source. Repository and
 user instructions govern scope: pause never strands redemption, and there is no
 wallet/SDK migration or production release in this milestone.
+
+## Next-step readiness work
+
+The [unsigned readiness review](readiness/README.md) records successful mainnet
+publication/type simulations, exact capability effects, governance decisions and
+new-route sequencing. This does not authorize or prepare a live deposit. Its
+simulation-only tooling has 17 guard tests and no signing/submission path.
