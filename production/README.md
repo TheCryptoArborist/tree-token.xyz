@@ -1,3 +1,51 @@
+# Tree Arcade wallet switching — published November 21, 2026
+
+Current locked production is `6b027652b3eb61d8107261d0`, published at
+23:02:23.776 America/Chicago on November 21 (November 22, 05:02:23.776 UTC).
+The publication report passed at `2026-11-22T05:02:28.550Z` in
+[workflow 44987535226](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44987535226),
+job `137101391951`. Source `5c85fad4a8248a8098783916c78e3a5b033640a3` was merged
+through PR #281 as `9a6403a159e0fdf74b12a479e5dea4661d177721`; publication control
+commit: `abd9e0f3a35522bc79627b029d51ceb963608f69`.
+
+The live https://tree-token.xyz/play/ Daily panel now keeps **Switch wallet**
+available while signed in. **Sign out** clears the login and selected wallet;
+reconnection offers an explicit account choice when a provider shares multiple
+accounts. Pending responses cannot restore the previous identity, and monthly
+progress follows the active wallet. Saved recovery checkouts and payment digests
+remain associated with the wallet that created them.
+
+Fresh baseline: `6b0274526be03dc8db2280df`, including the intervening Root Rage
+update. Only four existing frontend assets changed. The publication workflow
+verified **655 static paths**, **651 unchanged unrelated hashes**, all **52
+complete backend/provider records**, **five schedules**, runtime settings and
+protected configuration. The independent post-publication check confirmed the
+ready, locked deployment, all 52 provider records, schedules, runtime settings,
+and HTTP 200 responses with exact planned hashes for the four canonical assets.
+
+The final served candidate passed browser checks at **320, 390 and 1280 pixels**
+in [workflow 44987253606](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44987253606).
+Signed-in and account-picker screenshots were visually reviewed. The tests used
+synthetic wallet accounts and intercepted every API request. No real wallet
+signature, payment or chain transaction was performed; acceptance in an
+installed user wallet or on a physical device is not established by this test.
+
+Complete publication report: `docs/arcade-wallet-switch-release-20261121.json`.
+Candidate browser report: `docs/arcade-wallet-switch-browser-20261121.json`.
+Independent canonical audit: `docs/arcade-wallet-switch-canonical-20261121.json`.
+Implementation and release provenance: `docs/arcade-wallet-switch.md`.
+
+Prepare artifact `14740192235`, SHA256:
+`aed17e38e8dda67943835bbc2eb55eac92540592fd4aa80ad38e2abc0466dae5`.
+Publication artifact `14740522896`, SHA256:
+`3013b1fa6367f89dee8926754315f7defcd1bd7238512cadefe3e77721321adf`.
+
+Capture the full current site before any later release. This completed publisher
+pins its prior baseline and must not be reused blindly. Preserve the current
+inventory and configuration, and wait for all Git builds before publication.
+
+---
+
 # BNB original-NFT backing check — published November 21, 2026
 
 Current locked production is `6b01bbf2b66675f3aebc4a74`, published at

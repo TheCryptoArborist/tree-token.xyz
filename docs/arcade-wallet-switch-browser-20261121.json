@@ -1,0 +1,576 @@
+{
+  "schemaVersion": 1,
+  "result": "passed",
+  "origin": "https://6b027652b3eb61d8107261d0--tree-token.netlify.app",
+  "checkedAt": "2026-11-22T04:58:24.136Z",
+  "viewportWidths": [
+    320,
+    390,
+    1280
+  ],
+  "noWalletOrPaymentActions": true,
+  "syntheticWalletOnly": true,
+  "checks": {
+    "games": true,
+    "daily": true,
+    "campaigns": true,
+    "events": true,
+    "monthlyProgress": true,
+    "badgeCollection": true,
+    "mobileLayout": true,
+    "noMissingAssets": true,
+    "countdownUTC": true,
+    "walletSignOut": true,
+    "walletSwitch": true,
+    "sameProviderAccountSelection": true,
+    "cancelKeepsSignedOut": true,
+    "noOldWalletData": true,
+    "returnsSignedOut": true
+  },
+  "viewports": [
+    {
+      "width": 320,
+      "checks": {
+        "games": true,
+        "daily": true,
+        "campaigns": true,
+        "events": true,
+        "monthlyProgress": true,
+        "badgeCollection": true,
+        "mobileLayout": true,
+        "noMissingAssets": true,
+        "countdownUTC": true,
+        "walletSignOut": true,
+        "walletSwitch": true,
+        "sameProviderAccountSelection": true,
+        "cancelKeepsSignedOut": true,
+        "noOldWalletData": true,
+        "returnsSignedOut": true
+      },
+      "mockedAPIRequests": [
+        {
+          "path": "/api/arcade-social",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-campaign",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-completed-runs",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-growth",
+          "action": "status",
+          "method": "GET",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-monthly",
+          "action": "status",
+          "method": "GET",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-completed-runs",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-growth",
+          "action": "sync",
+          "method": "POST",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-completed-runs",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-monthly",
+          "action": "status",
+          "method": "GET",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-monthly",
+          "action": "status",
+          "method": "GET",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-campaign",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-growth",
+          "action": "logout",
+          "method": "POST",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-growth",
+          "action": "challenge",
+          "method": "POST",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-growth",
+          "action": "session",
+          "method": "POST",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-completed-runs",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-growth",
+          "action": "sync",
+          "method": "POST",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-social",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-campaign",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-monthly",
+          "action": "status",
+          "method": "GET",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-completed-runs",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-growth",
+          "action": "check-in",
+          "method": "POST",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-completed-runs",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-completed-runs",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-monthly",
+          "action": "status",
+          "method": "GET",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-growth",
+          "action": "logout",
+          "method": "POST",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-growth",
+          "action": "status",
+          "method": "GET",
+          "wallet": null
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "checks": {
+        "games": true,
+        "daily": true,
+        "campaigns": true,
+        "events": true,
+        "monthlyProgress": true,
+        "badgeCollection": true,
+        "mobileLayout": true,
+        "noMissingAssets": true,
+        "countdownUTC": true,
+        "walletSignOut": true,
+        "walletSwitch": true,
+        "sameProviderAccountSelection": true,
+        "cancelKeepsSignedOut": true,
+        "noOldWalletData": true,
+        "returnsSignedOut": true
+      },
+      "mockedAPIRequests": [
+        {
+          "path": "/api/arcade-social",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-campaign",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-completed-runs",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-growth",
+          "action": "status",
+          "method": "GET",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-monthly",
+          "action": "status",
+          "method": "GET",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-completed-runs",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-growth",
+          "action": "sync",
+          "method": "POST",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-completed-runs",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-monthly",
+          "action": "status",
+          "method": "GET",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-campaign",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-growth",
+          "action": "logout",
+          "method": "POST",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-growth",
+          "action": "challenge",
+          "method": "POST",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-growth",
+          "action": "session",
+          "method": "POST",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-completed-runs",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-growth",
+          "action": "sync",
+          "method": "POST",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-social",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-campaign",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-monthly",
+          "action": "status",
+          "method": "GET",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-completed-runs",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-growth",
+          "action": "check-in",
+          "method": "POST",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-completed-runs",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-completed-runs",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-monthly",
+          "action": "status",
+          "method": "GET",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-growth",
+          "action": "logout",
+          "method": "POST",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-growth",
+          "action": "status",
+          "method": "GET",
+          "wallet": null
+        }
+      ]
+    },
+    {
+      "width": 1280,
+      "checks": {
+        "games": true,
+        "daily": true,
+        "campaigns": true,
+        "events": true,
+        "monthlyProgress": true,
+        "badgeCollection": true,
+        "mobileLayout": true,
+        "noMissingAssets": true,
+        "countdownUTC": true,
+        "walletSignOut": true,
+        "walletSwitch": true,
+        "sameProviderAccountSelection": true,
+        "cancelKeepsSignedOut": true,
+        "noOldWalletData": true,
+        "returnsSignedOut": true
+      },
+      "mockedAPIRequests": [
+        {
+          "path": "/api/arcade-social",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-campaign",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-completed-runs",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-growth",
+          "action": "status",
+          "method": "GET",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-monthly",
+          "action": "status",
+          "method": "GET",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-completed-runs",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-growth",
+          "action": "sync",
+          "method": "POST",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-completed-runs",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-monthly",
+          "action": "status",
+          "method": "GET",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-campaign",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-growth",
+          "action": "logout",
+          "method": "POST",
+          "wallet": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "/api/arcade-growth",
+          "action": "challenge",
+          "method": "POST",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-growth",
+          "action": "session",
+          "method": "POST",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-completed-runs",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-growth",
+          "action": "sync",
+          "method": "POST",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-social",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-campaign",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-monthly",
+          "action": "status",
+          "method": "GET",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-completed-runs",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-growth",
+          "action": "check-in",
+          "method": "POST",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-completed-runs",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-completed-runs",
+          "action": null,
+          "method": "GET",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-monthly",
+          "action": "status",
+          "method": "GET",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-growth",
+          "action": "logout",
+          "method": "POST",
+          "wallet": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/api/arcade-growth",
+          "action": "status",
+          "method": "GET",
+          "wallet": null
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    "signed-in-320.png",
+    "account-picker-320.png",
+    "signed-in-390.png",
+    "account-picker-390.png",
+    "signed-in-1280.png",
+    "account-picker-1280.png"
+  ],
+  "browserErrors": [],
+  "assetFailures": [],
+  "unexpectedWrites": [],
+  "unsupportedAPIReads": [],
+  "failures": [],
+  "evidence": {
+    "wallet": "Synthetic Test Slush provider with two fake accounts; no keys or real signatures.",
+    "network": "Every API request is intercepted. Unexpected writes are aborted; no backend writes are forwarded.",
+    "assets": "Essential header, hero, daily, cabinet and campaign images are decoded before inspection; encountered static failures are recorded."
+  },
+  "sourceCommit": "5c85fad4a8248a8098783916c78e3a5b033640a3",
+  "sourceTree": "2e546ec83f16412d76a973f577a1d4903292185d",
+  "candidateId": "6b027652b3eb61d8107261d0",
+  "planSha256": "6c3c8cbad2b102b627a473afd7cfadaae17256ece4600b4a467513e415bdd828"
+}
