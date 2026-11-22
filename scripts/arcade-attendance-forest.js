@@ -1,3 +1,4 @@
+import { mountAdventGrove } from './arcade-advent-grove.js';
 // A presentation of verified attendance. This module never signs, pays, or awards credit.
 const DAY = 86400000;
 const mounted = new WeakMap();
@@ -71,7 +72,7 @@ function tree(date, { small = false, recovered = false, planted = false } = {}) 
     + '<path d="M-4 0L-3-' + (small ? 16 : 39) + 'L3-' + (small ? 16 : 39) + 'L5 0Z" fill="#a37b47"/>'
     + (small ? '' : '<path d="M0-25L-13-43M1-19L14-40" fill="none" stroke="#b18a50" stroke-width="3"/>')
     + crown + '<path d="M-9 2L-4-4M9 2L12-3" stroke="#7ba85c" stroke-width="2"/>'
-    + (recovered ? '<path d="M19-16C19-16 13-8 13-5A6 6 0 0 0 25-5C25-8 19-16 19-16Z" fill="#82d8e7" stroke="#164d59" stroke-width="1.5"/>' : '') + '</g></g>';
+    + (recovered ? '<title>' + dayName(date) + ' check-in restored</title>' : '') + '</g></g>';
 }
 function embers(date, extinguishing = false) {
   const p = position(date);
@@ -128,6 +129,7 @@ export function mountAttendanceForest({ root, now } = {}) {
   const status = doc.getElementById('growth-status');
   const masthead = daily.querySelector('.arcade-daily-masthead');
   if (status?.parentElement === daily) status.after(card); else if (masthead) masthead.after(card); else daily.prepend(card);
+  const advent = mountAdventGrove({ card, doc });
   const get = name => card.querySelector('[data-forest-' + name + ']');
   let wallet = null, snapshot = null, lastFresh = null, clock = null, fresh = false, loading = false, failed = false;
   let hadStreak = false, pendingRain = null, animation = null, animationTimer = null, disposed = false, lastRefresh = -Infinity;
@@ -172,6 +174,7 @@ export function mountAttendanceForest({ root, now } = {}) {
     const paused = Boolean(snapshot && !stale && snapshot.streak === 0 && (snapshot.checkedInDays > 0 || hadStreak));
     const state = !wallet ? (loading ? 'loading' : 'signed-out') : !snapshot ? (failed ? 'stale' : 'loading') : stale ? 'stale' : paused ? 'paused' : snapshot.checkedInDays || snapshot.streak ? 'growing' : 'empty';
     card.dataset.forestState = state;
+    advent?.update(snapshot, { wallet, fresh: Boolean(fresh && !stale) });
     get('count').textContent = snapshot ? String(snapshot.checkedInDays) : '—';
     get('streak').textContent = snapshot ? snapshot.streak + (snapshot.streak === 1 ? ' day' : ' days') : '—';
     doc.getElementById('attendance-forest-title').textContent = snapshot ? 'Your ' + monthName(snapshot.dayStart) + ' grove' : 'Your check-in grove';
@@ -258,7 +261,7 @@ export function mountAttendanceForest({ root, now } = {}) {
     disposed = true; clearAnimation(); view.clearInterval(timer); view.clearTimeout(bootstrap); observer.disconnect();
     root.removeEventListener('arcade-attendance-state', onState); root.removeEventListener('arcade-attendance-recovered', onRecovered);
     root.removeEventListener('arcade-progress', onProgress); view.removeEventListener('focus', onReturn); view.removeEventListener('pageshow', onReturn);
-    card.remove(); mounted.delete(root);
+    advent?.destroy(); card.remove(); mounted.delete(root);
   } };
   mounted.set(root, controller);
   return controller;

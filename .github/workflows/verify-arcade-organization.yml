@@ -7,6 +7,9 @@ on:
       - 'production/arcade-organization-static/**'
       - 'scripts/arcade-organization.js'
       - 'scripts/arcade-season-deadline.js'
+      - 'scripts/arcade-advent-grove.js'
+      - 'scripts/arcade-next-month-unlocks.js'
+      - 'tests/arcade-advent-and-next-month.test.mjs'
       - 'scripts/arcade-preview-readonly.js'
       - 'scripts/build-feature-preview.mjs'
       - 'styles/arcade-organization.css'
@@ -35,7 +38,7 @@ jobs:
           cache-dependency-path: vendor/arcade-monthly/package-lock.json
       - run: npm ci --ignore-scripts --no-audit --no-fund
         working-directory: vendor/arcade-monthly
-      - run: node --test tests/arcade-season-deadline.test.mjs tests/arcade-organization.test.mjs tests/arcade-preview-readonly.test.mjs tests/arcade-campaign-foundation.test.mjs
+      - run: node --test tests/arcade-season-deadline.test.mjs tests/arcade-advent-and-next-month.test.mjs tests/arcade-organization.test.mjs tests/arcade-preview-readonly.test.mjs tests/arcade-campaign-foundation.test.mjs
       - run: npm run build:preview
       - run: git diff --check
 

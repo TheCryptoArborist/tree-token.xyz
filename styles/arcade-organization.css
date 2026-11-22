@@ -560,3 +560,65 @@
   .forest-tree.is-planted .forest-tree-growth, .forest-embers.is-extinguishing, .forest-rain path { animation: none !important; }
   .forest-embers.is-extinguishing { opacity: 0; }
 }
+
+
+/* Advent Grove is a read-only reflection of the existing verified daily attendance. */
+.arcade-attendance-forest[data-advent-visible="true"] .forest-landscape { display: none; }
+.arcade-advent-grove { grid-column: 1 / -1; min-width: 0; margin: 8px 0 2px; }
+.arcade-advent-grove[hidden] { display: none; }
+.advent-heading { display:flex; align-items:flex-end; justify-content:space-between; gap:12px; flex-wrap:wrap; border-bottom:1px solid #9c7c53; padding:0 0 9px; }
+.advent-heading span,.advent-feature-copy > span { font-size:10px; letter-spacing:.14em; color:#e5c776; font-weight:700; }
+.advent-heading h4 { margin:2px 0 0; color:#fae3a0; font-size:clamp(16px,2vw,22px); }
+.advent-heading p { margin:0; font-size:12px; color:#c1d4cb; }
+.advent-freshness { margin:8px 0; font-size:12px; color:#b8d3cc; }
+.advent-detail { display:flex; align-items:center; justify-content:center; gap:16px; padding:10px; margin:10px 0 12px; border:1px solid #866747; border-radius:14px; background:radial-gradient(ellipse at 25% 30%, #523764 0, #18283a 57%,#142b28 100%); min-height:124px; }
+.advent-detail > p { color:#e6dec2; font-size:13px; text-align:center; }
+.advent-feature-art { display:flex; justify-content:center; flex:0 0 min(40%,180px); }
+.advent-feature-art svg { display:block; width:min(100%,170px); height:auto; max-height:190px; }
+.advent-feature-copy { flex:1; min-width:0; }
+.advent-feature-copy h5 { margin:6px 0; color:#fff0b3; font-size:clamp(16px,2vw,22px); }
+.advent-feature-copy p { margin:0; color:#cbd9d3; font-size:12px; line-height:1.5; }
+.advent-calendar { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:7px; }
+.advent-tile { position:relative; display:flex; align-items:center; justify-content:center; min-width:0; min-height:61px; padding:9px 2px 3px; border:1px solid #617c65; border-radius:10px; background:linear-gradient(145deg,#183c32,#0e2428); color:#d3dacc; cursor:pointer; }
+.advent-tile[disabled] { cursor:default; opacity:.88; }
+.advent-tile[data-advent-status="missed"] { border-color:#a67740; background:linear-gradient(145deg,#422f2b,#232527); }
+.advent-tile[data-advent-status="today"] { border-color:#e6bd65; }
+.advent-tile[aria-pressed="true"] { outline:2px solid #e9bb56; outline-offset:1px; box-shadow:0 0 13px #e3bc4b55; }
+.advent-tile-number { position:absolute; z-index:1; left:5px; top:3px; font-size:11px; font-weight:800; color:#f6e2b2; }
+.advent-tree-svg { display:block; width:100%; max-width:63px; max-height:58px; }
+.advent-tile-closed { font-size:24px; color:#71877b; }
+.advent-tile[data-advent-status="missed"] .advent-tile-closed { color:#e4a054; }
+.advent-tile[data-advent-status="today"] .advent-tile-closed { color:#f3cc71; }
+.advent-tile-marker { position:absolute; right:3px; top:2px; display:grid; place-items:center; width:14px; height:14px; border-radius:50%; font-size:11px; line-height:1; font-weight:900; color:#082118; }
+.advent-tile-marker.is-saved { background:#8dd769; }
+.advent-tile-marker.is-recovered { background:#c39bff; }
+.advent-tile-marker.is-missed { color:#ffc16e; background:#733d27; }
+.advent-tile-marker.is-future { color:#adb7b0; background:#1a3030; }
+.advent-legend { display:flex; flex-wrap:wrap; gap:7px 16px; margin:12px 0 0; color:#cbd9cf; font-size:11px; }
+.advent-legend span { display:inline-flex; align-items:center; gap:5px; }
+.advent-symbol { display:inline-grid; place-items:center; width:15px; height:15px; border-radius:50%; font-size:11px; font-style:normal; color:#092119; }
+.advent-symbol.is-saved { background:#8dd769; }
+.advent-symbol.is-recovered { background:#c39bff; }
+.advent-symbol.is-missed { background:#925434; color:#f6d3a2; }
+.advent-symbol.is-future { background:#38524e; color:#e5e8de; }
+.arcade-next-unlock { margin:12px 0 16px; padding:14px 16px; border:1px solid #9e7e45; border-radius:14px; background:linear-gradient(125deg,#28344a,#132b29 65%); color:#f5e3b2; }
+.arcade-next-unlock__heading { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:8px; }
+.arcade-next-unlock__heading span { color:#b5d3bc; font-size:10px; font-weight:700; letter-spacing:.11em; }
+.arcade-next-unlock__heading strong { color:#f5db8a; font-size:16px; }
+.arcade-next-unlock__items { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+.arcade-next-unlock__items > div { display:flex; flex-direction:column; min-width:0; padding:9px 11px; border:1px solid #597967; border-radius:9px; background:#102820; }
+.arcade-next-unlock__items span { font-size:11px; color:#b4cfc0; }
+.arcade-next-unlock__items strong { margin-top:4px; font-size:clamp(13px,2vw,19px); color:#fff0ad; font-variant-numeric:tabular-nums; }
+.arcade-next-unlock > p { margin:8px 0 0; font-size:11px; color:#bfcfc1; }
+@media(max-width:520px) {
+  .advent-calendar { grid-template-columns:repeat(5,minmax(0,1fr)); gap:5px; }
+  .advent-tile { min-height:59px; }
+  .advent-feature-art { flex-basis:40%; }
+  .advent-detail { gap:10px; }
+  .arcade-next-unlock { padding:11px; }
+  .arcade-next-unlock__items > div { padding:8px; }
+}
+@media(max-width:360px) { .advent-calendar { grid-template-columns:repeat(4,minmax(0,1fr)); } }
+@media(prefers-reduced-motion:reduce) {
+  .advent-tile,.advent-tree-svg,.arcade-next-unlock { animation:none!important; transition:none!important; }
+}
