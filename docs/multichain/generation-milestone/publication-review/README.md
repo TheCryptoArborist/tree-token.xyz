@@ -117,3 +117,22 @@ deployment for a subsequent reviewed milestone, so preparation does not supply
 that approval. After explicit approval, a compatible wallet-signing surface and
 fresh simulation are still required; verify the actual transaction effects and
 published bytes before progressing to canonical slot creation.
+
+
+## User approval received
+
+The user explicitly approved the empty-publication proposal after commit
+`37e4449`. [Approval record](../publication-approval.json) records the exact scope,
+retained capabilities, 0.1 SUI maximum gas budget and exclusions. This supersedes
+the pending approval status above; **do not request that approval again**.
+All contract, vault and production-preservation checks passed at that head.
+A fresh exact-byte simulation also passed after approval.
+
+Publication still awaits the user's wallet signature. No Sui blockchain signer
+is exposed by the connected tools, and no wallet app/device has yet been identified
+for this handoff. Do not import a seed/private key into Cloud. The preparation
+packet's `authorized:false` is a legacy preparation-only marker; conversation
+authority is recorded separately here, not inferred from uploaded packet fields.
+Historical packets remain expired evidence. Regenerate and verify once the wallet
+surface is ready, obtain the user signature there, and verify actual publication
+effects before recording any real package IDs.

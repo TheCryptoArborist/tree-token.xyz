@@ -1,0 +1,59 @@
+{
+  "status": "approved_awaiting_wallet_signature",
+  "approvalSource": "User reply: \"you're approved to proceed\" to the explicit empty Sui publication proposal.",
+  "reviewedCommit": "37e4449",
+  "network": "sui:mainnet",
+  "sender": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+  "maximumGasBudgetMist": "100000000",
+  "approvedActions": [
+    "Publish only the empty new generation package",
+    "Retain its new UpgradeCap, vault AdminCap and OApp AdminCap in the Sui dev wallet"
+  ],
+  "excludedActions": [
+    "NFT deposit",
+    "BNB deployment",
+    "Canonical slot creation",
+    "Peer or route configuration",
+    "Public sales",
+    "Gameplay activation",
+    "Production website release"
+  ],
+  "walletSignatureObtained": false,
+  "submitted": false,
+  "refresh": {
+    "preparedAt": 1795322673440,
+    "transactionSha256": "d16569215f6784ac0c0637b1e7d37b21532a07a327ce06a5b880c318515f1286",
+    "estimatedNetGasMist": "69723600",
+    "checkpoint": {
+      "sequenceNumber": 347875205,
+      "timestamp": "2026-11-22T04:44:32.226Z"
+    },
+    "candidate": {
+      "address": "0x046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba",
+      "version": 1100579540,
+      "digest": "4kUybSr2UuXay8xoJrQqsqTLqbmbaBB3nP3pjrAfQXxr",
+      "owner": {
+        "__typename": "AddressOwner",
+        "address": {
+          "address": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4"
+        }
+      },
+      "asMoveObject": {
+        "contents": {
+          "type": {
+            "repr": "0xf6c6d439ea0da2f3e9ba79e4992a7a4c113215fbf54c442ac9020c315f953705::collection::NFT"
+          },
+          "json": {
+            "id": "0x046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba",
+            "number": "2720",
+            "name": "Tree NFT #2720",
+            "description": "A unique tree from the Tree NFT collection. Rarity: Common",
+            "image_url": "https://black-persistent-capybara-279.mypinata.cloud/ipfs/bafybeieozgvnr7qc4ghsq36zwssuhj7xahuznjlmu6g63clnyt37hjsi4m/2720.jpg",
+            "rarity": "Common"
+          }
+        }
+      }
+    }
+  },
+  "note": "Approval persists. Refresh evidence immediately before signing; refresh hashes are historical and not deployed transaction digests. Wallet app/device still needed for the signing handoff."
+}
