@@ -79,7 +79,7 @@ jobs:
       - name: Capture current production and create the review candidate
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          ARCADE_WALLET_SWITCH_EXPECTED_DEPLOY: '6b026f92f0abc1d08fbc4913'
+          ARCADE_WALLET_SWITCH_EXPECTED_DEPLOY: '6b0274526be03dc8db2280df'
           REVIEWED_SHA: ${{ github.sha }}
         run: |
           test -n "$NETLIFY_AUTH_TOKEN" || { echo 'The existing Netlify release connection is unavailable.'; exit 1; }
@@ -112,7 +112,7 @@ jobs:
       - name: Bind successful browser evidence to this candidate
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          ARCADE_WALLET_SWITCH_EXPECTED_DEPLOY: '6b026f92f0abc1d08fbc4913'
+          ARCADE_WALLET_SWITCH_EXPECTED_DEPLOY: '6b0274526be03dc8db2280df'
           REVIEWED_SHA: ${{ github.sha }}
         run: node scripts/release-arcade-wallet-switch.mjs verify --source-commit "$REVIEWED_SHA" --browser-report .netlify/arcade-wallet-switch-review/browser-review.json
       - uses: actions/upload-artifact@v4

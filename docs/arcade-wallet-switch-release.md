@@ -9,10 +9,19 @@ it is not evidence that a candidate or production release has been created.
 ## Scope and current baseline
 
 Preparation is pinned to the observed ready, locked production deployment
-`6b026f92f0abc1d08fbc4913` (Root Rage clock validation fix). Its observed backend
+`6b0274526be03dc8db2280df` (Root Rage combat refinements). Its observed backend
 inventory contains 52 complete records and five schedules. Every run captures
 the full current API inventory and refuses to continue if that deployment is no
 longer the published, locked baseline. Historical manifests must not replace it.
+
+The earlier preparation pinned `6b026f92f0abc1d08fbc4913`. A concurrent Root Rage
+publication advanced the live site, and run `44987061235` correctly stopped at
+capture without creating a candidate. The new ready, locked deployment was
+checked directly: all 52 complete backend records and five schedules match the
+prior capture, and all four wallet-release target assets are unchanged. The
+served play HTML differs by an appended existing Arboretum link snippet, with
+the wallet integration intact. Preparation now captures the new full inventory
+and configuration so every part of that concurrent release is preserved.
 
 Only these four existing assets may change:
 
