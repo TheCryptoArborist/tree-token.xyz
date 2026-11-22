@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { createMonthlyPanel } from '../scripts/arcade-monthly.js';
+import { mountAttendanceForest } from '../scripts/arcade-attendance-forest.js';
 
 const { JSDOM } = await import(process.env.ARCADE_TEST_JSDOM
   || new URL('../vendor/arcade-monthly/node_modules/jsdom/lib/api.js', import.meta.url).href);
@@ -188,6 +189,44 @@ test('a recovery receipt is emitted only after confirmation and keeps a stable d
     assert.equal(link?.getAttribute('href'), '#daily'); assert.equal(link?.textContent, 'View your grove');
     assert.equal(x.view.location.hash, '', 'Confirmed recovery must not navigate without the user');
   } finally { gate.resolve(); x.close(); }
+});
+
+test('an enabled verification supersedes a slow status read so old attendance cannot restore the fire', async () => {
+  const gate = deferred(), checkout = { ...savedCheckout(), dateKey: dateFor(24) };
+  const before = { ...progressFor(A), attendance: {
+    streak: 0, checkedInDays: 23, missedDates: [dateFor(24)], recoveredDates: [],
+  } };
+  const after = { ...before, attendance: {
+    streak: 24, checkedInDays: 24, missedDates: [], recoveredDates: [dateFor(24)],
+  } };
+  let hold = false, held = false;
+  const x = await fixture({ pending: checkout, reply: async call => {
+    if (call.action === 'status') {
+      if (hold) { held = true; await gate.promise; }
+      return json({ status: 'ok', progress: before });
+    }
+    if (call.action === 'verify') return json({ status: 'ok', progress: after,
+      receipt: { dateKey: checkout.dateKey, digest: DIGEST, price: '20000' } });
+  } });
+  const forest = mountAttendanceForest({ root: x.root });
+  const card = () => x.root.querySelector('#arcade-attendance-forest');
+  try {
+    await ready(x); await settle(); await ready(x);
+    assert.equal(card().dataset.forestState, 'paused');
+    hold = true;
+    const oldRead = x.app.refresh(); await until(() => held);
+    assert.equal(x.state().loading, true);
+    const retry = x.doc.getElementById('monthly-retry');
+    assert.equal(retry.disabled, false, 'Verification remains reachable during a status read');
+    retry.click(); await until(() => x.recoveries.length === 1);
+    gate.resolve(); await oldRead; await ready(x);
+    assert.deepEqual(x.state().progress, after);
+    assert.equal(x.root.querySelector('[data-forest-count]').textContent, '24');
+    assert.equal(x.root.querySelector('[data-forest-streak]').textContent, '24 days');
+    assert.equal(card().dataset.forestState, 'growing');
+    assert.equal(x.calls.filter(call => call.action === 'verify').length, 1);
+    assert.equal(x.recoveries.length, 1); assert.equal(x.saved(), null);
+  } finally { gate.resolve(); forest.destroy(); x.close(); }
 });
 
 for (const [label, receipt] of [

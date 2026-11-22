@@ -158,7 +158,7 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
   ];
   const arcadeRuntimeReplacements = new Map([
     ['/scripts/arcade-monthly.js', { path: '/scripts/arcade-monthly.js', source: 'scripts/arcade-monthly.js',
-      sha1: 'b7c444dee061046d99c78f56d37f459c9cc65730' }],
+      sha1: '1b3defc0bbb85265731f46084e367e7ad219defc' }],
   ]);
   for (const file of approvedArcadeRuntimeChanges) {
     const captured = arcadeRuntime.files.find(entry => entry.path === file.path);
