@@ -1,3 +1,7 @@
+# Canonical origin resolved
+
+User clarified that `www` is not required. The exact signing origin is now `https://tree-token.xyz` and the page path is `/play/generation-publication/`. Earlier www-only requirements below are superseded. External previews remain disabled. The production-preserving candidate adds exactly two static paths and reuses the exact source preview's read-only function package, preserving all existing production bytes and backend records.
+
 # Required canonical wallet origin — user correction
 
 All user-facing wallet signing links must be under **https://www.tree-token.xyz/play/**. Do not direct the user to a Netlify preview hostname for wallet actions. The intended new path is `https://www.tree-token.xyz/play/generation-publication/`, but it is **not yet deployed**. Exact origin and path checks now disable connection, signing and submission on the preview and every other location. Do not bypass Slush warnings or assume a canonical URL by itself clears them.

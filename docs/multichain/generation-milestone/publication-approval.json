@@ -55,13 +55,13 @@
       }
     }
   },
-  "note": "User requires wallet-signing links under https://www.tree-token.xyz/play/. External preview signing is disabled. Canonical publication page is not yet deployed; preserve current live site when preparing it. Empty Sui publication approval persists; wallet signature remains pending.",
+  "note": "User clarified that www is not required. Use the existing canonical https://tree-token.xyz/play/ origin. Preview signing remains forbidden. Empty Sui publication approval persists; signature still required.",
   "wallet": {
     "application": "Slush",
     "device": "desktop",
     "source": "User confirmed desktop, then Slush."
   },
-  "requiredSigningOrigin": "https://www.tree-token.xyz",
+  "requiredSigningOrigin": "https://tree-token.xyz",
   "requiredSigningPathPrefix": "/play/",
   "previewSigningPermitted": false
 }

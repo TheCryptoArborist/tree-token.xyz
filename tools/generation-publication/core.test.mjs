@@ -26,6 +26,6 @@ test('invalid signature cannot return a submission',async()=>{
 });
 
 test('only exact approved canonical signing URL is accepted',()=>{
- assert.doesNotThrow(()=>requireSigningLocation(new URL('https://www.tree-token.xyz/play/generation-publication/')));
- for(const url of ['https://deploy-preview-280--tree-token.netlify.app/generation-publication/','https://tree-token.xyz/play/generation-publication/','http://www.tree-token.xyz/play/generation-publication/','https://www.tree-token.xyz/generation-publication/','https://www.tree-token.xyz.attacker.example/play/generation-publication/'])assert.throws(()=>requireSigningLocation(new URL(url)));
+ assert.doesNotThrow(()=>requireSigningLocation(new URL('https://tree-token.xyz/play/generation-publication/')));
+ for(const url of ['https://deploy-preview-280--tree-token.netlify.app/generation-publication/','https://www.tree-token.xyz/play/generation-publication/','http://www.tree-token.xyz/play/generation-publication/','https://www.tree-token.xyz/generation-publication/','https://www.tree-token.xyz.attacker.example/play/generation-publication/'])assert.throws(()=>requireSigningLocation(new URL(url)));
 });

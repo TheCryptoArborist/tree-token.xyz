@@ -2,9 +2,9 @@ import {Transaction} from '@mysten/sui/transactions';
 import build from '../../docs/multichain/generation-milestone/publication-bytecode.json' with {type:'json'};
 export const SENDER='0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4';
 export const CHAIN='sui:mainnet';
-export const SIGNING_URL='https://www.tree-token.xyz/play/generation-publication/';
+export const SIGNING_URL='https://tree-token.xyz/play/generation-publication/';
 export function requireSigningLocation(location){
- check(location.origin==='https://www.tree-token.xyz'&&location.pathname==='/play/generation-publication/','Wallet signing is disabled here. Use the approved www.tree-token.xyz/play/ route once it is published.');
+ check(location.origin==='https://tree-token.xyz'&&location.pathname==='/play/generation-publication/','Wallet signing is disabled here. Use the approved tree-token.xyz/play/ route once it is published.');
 }
 export const NETWORK='4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S';
 export const check=(ok,message)=>{if(!ok)throw Error(message);};
