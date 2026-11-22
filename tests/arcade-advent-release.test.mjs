@@ -34,7 +34,7 @@ test('unreviewed files, missing modules, overwrite and backend uploads cannot pa
     assert.throws(()=>assembleFiles(base,[...rows,{path,source:path.slice(1),sha1:sha1('outside')}]),/Unapproved/);
   for (const added of ADDED_PATHS) {
     assert.throws(()=>assembleFiles(base,rows.filter(row=>row.path!==added)),/Complete approved source inventory/);
-    assert.throws(()=>assembleFiles({...base,[added]:sha1('already live')},rows),/already exists/);
+    assert.throws(()=>assembleFiles({...base,[added]:sha1('already live')},rows),/already in production/);
   }
   for(const old of REQUIRED_CHANGES) {
     const noOp=rows.map(row=>row.path===old?{...row,sha1:base[old]}:row);
