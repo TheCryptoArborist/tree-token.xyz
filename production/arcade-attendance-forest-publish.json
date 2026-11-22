@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "action": "publish-arcade-attendance-forest",
+  "sourceCommit": "ac4696ea26e72fca6a3a997f1b0370acc37184d6",
+  "sourceTree": "50aa9355a12d1d42e19524882aa514c131a3125d",
+  "mainCommit": "2d4e356d56dcaf6667f94f3c256646f8033d2310",
+  "expectedDeploy": "6b027652b3eb61d8107261d0",
+  "candidateId": "6b0282d222b49cfa17fa3731",
+  "planSha256": "fa0e62b171dda2ca477f9864b8918bee5943568b4dcc1ecd858f1db1d1c1e810",
+  "candidateRunId": "44991099455",
+  "candidateArtifactId": "14741813001",
+  "candidateArtifactSHA256": "eadc01faff83eeb68da8c42f9a68e52747eb09eab204844a0a53a14e3312c9b9",
+  "browserReview": "production/arcade-attendance-forest-browser-review.json"
+}
