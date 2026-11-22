@@ -45,3 +45,5 @@ The bytecode hash is unchanged; the existing 52 tests and compiler comparison
 still apply. Current Mysten skills revision is
 `a384d9a158c4639f075ad3f6644d925108ddfc78`; wallet/transaction guidance was checked
 against the installed Wallet Standard types and SDK 2.26.1.
+
+The browser bundle is committed and reproducibly rebuilt by `node tools/generation-publication/build.mjs`; CI rejects bundle drift. The historical preview copier remains dependency-free for its existing CI jobs.

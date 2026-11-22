@@ -37,6 +37,8 @@ jobs:
         run: |
           npm ci --ignore-scripts
           node --test contracts/nftree-generation/scripts/*.test.mjs tools/generation-publication/core.test.mjs
+          node tools/generation-publication/build.mjs
+          git diff --exit-code -- tools/generation-publication/app.js
       - name: Install isolated EVM dependencies
         run: npm ci --ignore-scripts --prefix contracts/bnb-generation
       - name: EVM contract tests

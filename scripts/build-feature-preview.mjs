@@ -131,7 +131,6 @@ console.log(`Built a ${allowed.size}-file feature preview with ${arcadeRuntime.f
 console.log('The production manifest and recovered function packages were not changed.');
 
 // Isolated approved empty-publication handoff. Never included in production builds.
-const {build:bundlePublication}=await import('esbuild');
 await mkdir(resolve(output,'generation-publication'),{recursive:true});
 await cp(resolve(root,'tools/generation-publication/index.html'),resolve(output,'generation-publication/index.html'));
-await bundlePublication({entryPoints:[resolve(root,'tools/generation-publication/app.mjs')],outfile:resolve(output,'generation-publication/app.js'),bundle:true,format:'esm',platform:'browser',target:'es2022'});
+await cp(resolve(root,'tools/generation-publication/app.js'),resolve(output,'generation-publication/app.js'));
