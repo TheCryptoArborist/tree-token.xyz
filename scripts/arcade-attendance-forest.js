@@ -62,8 +62,15 @@ function position(date) {
   const day = Number(date.slice(-2)) - 1, row = Math.min(2, Math.floor(day / 11)), col = day % 11;
   return { x: 25 + col * 49 + (row === 1 ? 13 : 0), y: 91 + row * 31, scale: .62 + row * .17 };
 }
-function tree(date, { small = false, recovered = false, planted = false } = {}) {
+function tree(date, { small = false, recovered = false, planted = false, autumn = false } = {}) {
   const p = position(date);
+  if (autumn) {
+    const width = small ? 34 : 50, height = small ? 56 : 84;
+    return '<g data-forest-tree data-date="' + date + '" data-forest-stage="' + (small ? 'sapling' : 'mature') + '" class="forest-tree' + (planted ? ' is-planted' : '') + '" transform="translate(' + p.x + ' ' + p.y + ') scale(' + p.scale + ')">'
+      + '<g class="forest-tree-growth"><ellipse cy="1" rx="' + (small ? 12 : 20) + '" ry="4" fill="#23151e" opacity=".5"/>'
+      + '<image href="/assets/arcade-seasonal/november-emblem-tree.png" x="' + (-width / 2) + '" y="' + (2 - height) + '" width="' + width + '" height="' + height + '" preserveAspectRatio="xMidYMax meet"/>'
+      + (recovered ? '<title>' + dayName(date) + ' check-in restored</title>' : '') + '</g></g>';
+  }
   const crown = small
     ? '<path d="M0-15C-18-35-25-15-2-12C1-36 21-34 13-21C9-16 5-14 0-15Z" fill="#b6e578"/><path d="M0-14L-8-22M0-15L10-24" stroke="#6caa66" stroke-width="2"/>'
     : '<path d="M-6-31C-33-19-41-41-27-53C-36-68-15-78-5-68C3-91 30-75 25-59C47-57 41-33 23-33C14-19 6-22-6-31Z" fill="#377e68"/><path d="M-23-53C-29-66-13-72-4-64C6-82 27-69 20-57C34-55 32-40 20-40C12-28 4-31-5-38C-22-27-32-41-23-53Z" fill="#6ab775"/><path d="M-4-61C1-73 20-67 14-57C27-53 19-41 9-44C0-32-16-42-11-50C-24-56-13-66-4-61Z" fill="#a5d879"/>';
@@ -82,19 +89,31 @@ function embers(date, extinguishing = false) {
     + '<path d="M-9-1C-16-10-3-15-5-23C7-12 4-7 8-5C5 3-2 5-9-1Z" fill="#f5cf68"/></g>';
 }
 function scene(snapshot, { paused, rain, planted, rainWasPaused, rainDate, empty } = {}) {
-  let art = '<svg data-forest-scene viewBox="0 0 560 180" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">'
-    + '<defs><linearGradient id="forest-sky" x2="0" y2="1"><stop stop-color="#102e32"/><stop offset="1" stop-color="#1b493d"/></linearGradient>'
-    + '<linearGradient id="forest-ground" x2="0" y2="1"><stop stop-color="#3a6850"/><stop offset="1" stop-color="#173e32"/></linearGradient></defs>'
+  const autumn = Boolean(snapshot?.monthKey.endsWith('-11'));
+  const colors = autumn
+    ? { sky: '#302133', horizon: '#895738', ground: '#95603e', groundShade: '#44302c', moon: '#f5d7a0', moonShade: '#4a313a', stars: '#efd6ae', hills: '#654141', middle: '#744c35', front: '#49312b' }
+    : { sky: '#102e32', horizon: '#1b493d', ground: '#3a6850', groundShade: '#173e32', moon: '#e6d98c', moonShade: '#163738', stars: '#bddebb', hills: '#274b43', middle: '#23503b', front: '#173c2e' };
+  let art = '<svg data-forest-scene data-forest-season="' + (autumn ? 'autumn' : 'evergreen') + '" viewBox="0 0 560 180" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">'
+    + '<defs><linearGradient id="forest-sky" x2="0" y2="1"><stop stop-color="' + colors.sky + '"/><stop offset="1" stop-color="' + colors.horizon + '"/></linearGradient>'
+    + '<linearGradient id="forest-ground" x2="0" y2="1"><stop stop-color="' + colors.ground + '"/><stop offset="1" stop-color="' + colors.groundShade + '"/></linearGradient></defs>'
     + '<rect width="560" height="180" rx="14" fill="url(#forest-sky)"/>'
-    + '<circle cx="473" cy="37" r="18" fill="#e6d98c" opacity=".75"/><circle cx="466" cy="31" r="17" fill="#163738"/>'
-    + '<g fill="#bddebb" opacity=".55"><circle cx="49" cy="25" r="1.4"/><circle cx="155" cy="15" r="1"/><circle cx="268" cy="32" r="1.3"/><circle cx="383" cy="17" r="1"/><circle cx="530" cy="49" r="1.4"/></g>'
-    + '<path d="M0 89Q65 31 126 76Q193 29 273 72Q350 35 409 76Q494 35 560 82V180H0Z" fill="#274b43"/>'
+    + '<circle cx="473" cy="37" r="18" fill="' + colors.moon + '" opacity=".75"/><circle cx="466" cy="31" r="17" fill="' + colors.moonShade + '"/>'
+    + '<g fill="' + colors.stars + '" opacity=".55"><circle cx="49" cy="25" r="1.4"/><circle cx="155" cy="15" r="1"/><circle cx="268" cy="32" r="1.3"/><circle cx="383" cy="17" r="1"/><circle cx="530" cy="49" r="1.4"/></g>'
+    + '<path d="M0 89Q65 31 126 76Q193 29 273 72Q350 35 409 76Q494 35 560 82V180H0Z" fill="' + colors.hills + '"/>'
     + '<path d="M0 112Q93 69 178 105Q276 73 374 110Q472 75 560 103V180H0Z" fill="url(#forest-ground)"/>'
-    + '<path d="M0 151Q90 113 180 145Q280 112 376 146Q477 121 560 142V180H0Z" fill="#23503b"/>'
-    + '<path d="M0 171Q134 142 248 169Q383 144 560 164V180H0Z" fill="#173c2e"/>';
+    + '<path d="M0 151Q90 113 180 145Q280 112 376 146Q477 121 560 142V180H0Z" fill="' + colors.middle + '"/>'
+    + '<path d="M0 171Q134 142 248 169Q383 144 560 164V180H0Z" fill="' + colors.front + '"/>';
+  if (autumn) {
+    art += '<g data-forest-leaf-litter opacity=".65">';
+    for (let i = 0; i < 20; i++) {
+      const x = 16 + (i * 83) % 524, y = 126 + (i * 17) % 49;
+      art += '<path d="M0 0Q2-6 8-3Q6 3 0 0Z" fill="' + ['#dfab51', '#bf6b3f', '#8c3f48'][i % 3] + '" transform="translate(' + x + ' ' + y + ') rotate(' + ((i * 37) % 180) + ')"/>';
+    }
+    art += '</g>';
+  }
   if (snapshot) for (const date of snapshot.checkedDates) art += tree(date, {
     small: date === snapshot.dateKey || date === rainDate,
-    recovered: snapshot.recoveredDates.includes(date), planted: date === planted,
+    recovered: snapshot.recoveredDates.includes(date), planted: date === planted, autumn,
   });
   if (paused) art += embers(snapshot.missedDates.at(-1) || snapshot.dateKey);
   if (rain && rainWasPaused && !paused) art += embers(rainDate || snapshot.dateKey, true);
@@ -174,6 +193,7 @@ export function mountAttendanceForest({ root, now } = {}) {
     const paused = Boolean(snapshot && !stale && snapshot.streak === 0 && (snapshot.checkedInDays > 0 || hadStreak));
     const state = !wallet ? (loading ? 'loading' : 'signed-out') : !snapshot ? (failed ? 'stale' : 'loading') : stale ? 'stale' : paused ? 'paused' : snapshot.checkedInDays || snapshot.streak ? 'growing' : 'empty';
     card.dataset.forestState = state;
+    card.dataset.forestSeason = snapshot?.monthKey.endsWith('-11') ? 'autumn' : 'evergreen';
     advent?.update(snapshot, { wallet, fresh: Boolean(fresh && !stale) });
     get('count').textContent = snapshot ? String(snapshot.checkedInDays) : '—';
     get('streak').textContent = snapshot ? snapshot.streak + (snapshot.streak === 1 ? ' day' : ' days') : '—';
