@@ -29,6 +29,7 @@ const checkNames = [...tabs.map(([, , name]) => name), 'mobileLayout', 'noMissin
 const report = {
   schemaVersion: 1, result: 'failed', checkedAt: new Date().toISOString(), viewportWidths: widths,
   noWalletOrPaymentActions: true, syntheticWalletOnly: true, syntheticDataOnly: true,
+  expectedScenarioCount: widths.length * 6,
   checks: Object.fromEntries(checkNames.map((name) => [name, false])),
   viewports: [], screenshots: [], failures: [], browserErrors: [], assetFailures: [],
   unexpectedWrites: [], unsupportedAPIReads: [],
@@ -52,10 +53,11 @@ export async function payForRecovery(intent, session) {
 }
 `;
 
-function installSyntheticWallet({ A, B, SESSION, WALLET }) {
+function installSyntheticWallet({ A, B, SESSION, WALLET, scenarioTime, sessionExpiresAt }) {
   const audit = {
     connections: [], disconnects: 0, signatures: [], forbiddenActions: [], paymentAttempts: [],
     paymentMode: 'reject', forest: [], attendance: [], recovery: [],
+    setup: { scenarioTime, initialBrowserTime: Date.now(), sessionExpiresAt, seeded: false },
   };
   Object.defineProperty(window, '__arcadeForestReview', { value: audit });
   const accounts = [A, B].map((address, index) => ({
@@ -100,9 +102,13 @@ function installSyntheticWallet({ A, B, SESSION, WALLET }) {
   const sentinel = 'tree-arcade:forest-review:seeded';
   if (!sessionStorage.getItem(sentinel)) {
     sessionStorage.setItem(sentinel, '1');
+    audit.setup.seeded = true;
     localStorage.setItem(SESSION, JSON.stringify({
       version: 1, token: 'a'.repeat(64), wallet: A, walletId: WALLET, walletName: WALLET,
-      expiresAt: new Date(Date.now() + 3_600_000).toISOString(),
+      // Init-script execution order relative to Playwright Clock is not
+      // guaranteed. Bind expiry to the same explicit scenario time instead
+      // of whichever Date implementation is installed when this script runs.
+      expiresAt: sessionExpiresAt,
     }));
   }
   // Pure observation: neither these listeners nor the observer write app state.
@@ -388,7 +394,8 @@ async function scenario(viewport, name, options, run) {
   const api = createAPI({ width, scenario: name, ...options });
   const context = await browser.newContext({ viewport: { width, height: 1000 }, deviceScaleFactor: 1,
     serviceWorkers: 'block', reducedMotion: options.reducedMotion ? 'reduce' : 'no-preference' });
-  await context.addInitScript(installSyntheticWallet, { A, B, SESSION, WALLET });
+  await context.addInitScript(installSyntheticWallet, { A, B, SESSION, WALLET,
+    scenarioTime: api.now, sessionExpiresAt: new Date(api.now + 3_600_000).toISOString() });
   await context.route('**/*', async (route) => {
     const request = route.request(), url = new URL(request.url());
     if (url.pathname.includes('/api/') || url.pathname.startsWith('/.netlify/functions/')) return api.handle(route, request, url);
@@ -411,12 +418,14 @@ async function scenario(viewport, name, options, run) {
       report.assetFailures.push({ width, scenario: name, src: url.href, status: response.status() });
     }
   });
+  let setupComplete = false;
   try {
     const response = await page.goto(`${origin}/play/#daily`, { waitUntil: 'domcontentloaded', timeout: 45_000 });
     assert.equal(response?.status(), 200, 'Candidate Arcade must load');
     await page.locator(FOREST).waitFor({ state: 'visible' });
     await until(() => page.evaluate(({ SESSION, A }) => JSON.parse(localStorage.getItem(SESSION) || 'null')?.wallet === A
       && document.getElementById('growth-wallet-state')?.textContent.includes('Signed in'), { SESSION, A }), 'Synthetic A session restored');
+    setupComplete = true;
     await run({ page, api, width, viewport, item });
     const audit = await page.evaluate(() => window.__arcadeForestReview);
     assert.deepEqual(audit.forbiddenActions, [], 'No on-chain wallet feature may run');
@@ -426,7 +435,31 @@ async function scenario(viewport, name, options, run) {
     item.result = 'passed';
     console.log(`${width}px ${name}: passed`);
   } catch (error) {
-    report.failures.push({ width, scenario: name, message: error.message, stack: error.stack });
+    item.setupFailed = !setupComplete;
+    report.failures.push({ width, scenario: name, stage: setupComplete ? 'scenario' : 'setup', message: error.message, stack: error.stack });
+    if (!setupComplete) {
+      try {
+        item.setupDiagnostics = await page.evaluate((key) => {
+          const browserTime = Date.now();
+          const stored = (storage) => {
+            try {
+              const value = JSON.parse(storage.getItem(key) || 'null');
+              if (!value) return null;
+              return { wallet: value.wallet, walletId: value.walletId, expiresAt: value.expiresAt,
+                expiredAtBrowserTime: !Number.isFinite(Date.parse(value.expiresAt)) || Date.parse(value.expiresAt) <= browserTime,
+                tokenPresent: typeof value.token === 'string' && value.token.length > 0 };
+            } catch { return { unreadable: true }; }
+          };
+          return { browserTime, browserTimeISO: new Date(browserTime).toISOString(), monotonicTime: performance.now(),
+            seed: window.__arcadeForestReview?.setup,
+            localSession: stored(localStorage), legacySession: stored(sessionStorage),
+            growthState: document.getElementById('arcade-daily-growth')?.dataset.growthState,
+            walletStatus: document.getElementById('growth-wallet-state')?.textContent,
+            notice: document.getElementById('growth-status')?.textContent,
+            forestState: document.getElementById('arcade-attendance-forest')?.dataset.forestState };
+        }, SESSION);
+      } catch (diagnosticError) { item.setupDiagnostics = { unavailable: diagnosticError.message }; }
+    }
     try { await page.screenshot({ path: path.join(output, `failure-${name}-${width}.png`), fullPage: false });
       report.screenshots.push(`failure-${name}-${width}.png`); } catch {}
     console.error(`${width}px ${name}: ${error.message}`);
@@ -435,6 +468,7 @@ async function scenario(viewport, name, options, run) {
     try { item.observations = await page.evaluate(() => window.__arcadeForestReview); } catch {}
     api.close(); await context.close();
   }
+  return item;
 }
 
 async function growingScenario({ page, api, width, viewport }) {
@@ -674,26 +708,44 @@ try {
     || '/opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs';
   const { chromium } = await import(modulePath.startsWith('file:') ? modulePath : pathToFileURL(modulePath).href);
   browser = await chromium.launch({ headless: true, executablePath: process.env.ARCADE_CHROMIUM_EXECUTABLE || undefined });
-  for (const width of widths) {
+  const scenarios = [
+    ['growing', { checked: dates(2, 5, 10, 18, 19, 20, 21, 22) }, growingScenario],
+    ['free-checkin', { checked: dates(18, 19, 20, 21) }, (input) => checkInScenario(input)],
+    ['recovery', { checked: dates(18, 19, 20) }, recoveryScenario],
+    ['utc-boundary', { now: '2026-11-22T23:50:00.000Z', checked: dates(19, 20, 21) }, (input) => boundaryScenario(input)],
+    ['month-rollover', { now: '2026-11-30T23:50:00.000Z', checked: dates(27, 28, 29, 30) }, (input) => boundaryScenario(input, true)],
+    ['reduced-motion', { checked: dates(18, 19, 20, 21), reducedMotion: true }, (input) => checkInScenario(input, true)],
+  ];
+  viewportLoop: for (const width of widths) {
     const viewport = { width, checks: Object.fromEntries(checkNames.map((name) => [name, false])), scenarios: [] };
     report.viewports.push(viewport);
-    await scenario(viewport, 'growing', { checked: dates(2, 5, 10, 18, 19, 20, 21, 22) }, growingScenario);
-    await scenario(viewport, 'free-checkin', { checked: dates(18, 19, 20, 21) }, (input) => checkInScenario(input));
-    await scenario(viewport, 'recovery', { checked: dates(18, 19, 20) }, recoveryScenario);
-    await scenario(viewport, 'utc-boundary', { now: '2026-11-22T23:50:00.000Z', checked: dates(19, 20, 21) }, (input) => boundaryScenario(input));
-    await scenario(viewport, 'month-rollover', { now: '2026-11-30T23:50:00.000Z', checked: dates(27, 28, 29, 30) }, (input) => boundaryScenario(input, true));
-    await scenario(viewport, 'reduced-motion', { checked: dates(18, 19, 20, 21), reducedMotion: true }, (input) => checkInScenario(input, true));
+    for (const [name, options, run] of scenarios) {
+      const result = await scenario(viewport, name, options, run);
+      if (result.setupFailed) {
+        report.abortedAfterSharedSetupFailure = { width, scenario: name };
+        console.error('Stopped after shared initialization failed; remaining coverage is unverified and the report cannot pass.');
+        break viewportLoop;
+      }
+    }
   }
   for (const name of checkNames) report.checks[name] = report.viewports.length === widths.length && report.viewports.every((viewport) => viewport.checks[name]);
   if (!report.failures.length && !report.browserErrors.length && !report.assetFailures.length && !report.unexpectedWrites.length
-    && Object.values(report.checks).every(Boolean) && report.viewports.every((viewport) => viewport.scenarios.every((scenario) => scenario.result === 'passed'))) report.result = 'passed';
+    && Object.values(report.checks).every(Boolean) && report.viewports.length === widths.length
+    && report.viewports.reduce((sum, viewport) => sum + viewport.scenarios.length, 0) === report.expectedScenarioCount
+    && report.viewports.every((viewport) => viewport.scenarios.length === scenarios.length
+      && viewport.scenarios.every((scenario, index) => scenario.name === scenarios[index][0] && scenario.result === 'passed'))) report.result = 'passed';
 } catch (error) {
   report.failures.push({ message: error.message, stack: error.stack });
 } finally {
   if (browser) await browser.close();
   report.checkedAt = new Date().toISOString();
+  report.attemptedScenarioCount = report.viewports.reduce((sum, viewport) => sum + viewport.scenarios.length, 0);
+  report.passedScenarioCount = report.viewports.reduce((sum, viewport) => sum + viewport.scenarios.filter((item) => item.result === 'passed').length, 0);
   fs.writeFileSync(path.join(output, 'browser-review.json'), `${JSON.stringify(report, null, 2)}\n`);
   console.log(JSON.stringify({ result: report.result, origin: report.origin, output, checks: report.checks,
+    expectedScenarioCount: report.expectedScenarioCount, attemptedScenarioCount: report.attemptedScenarioCount,
+    passedScenarioCount: report.passedScenarioCount,
+    setupFailure: report.viewports.flatMap((viewport) => viewport.scenarios).find((item) => item.setupFailed)?.setupDiagnostics || null,
     failures: report.failures.map(({ width, scenario, message }) => ({ width, scenario, message })),
     browserErrors: report.browserErrors, assetFailures: report.assetFailures, unexpectedWrites: report.unexpectedWrites,
     screenshots: report.screenshots }, null, 2));
