@@ -1,10 +1,10 @@
 import {getWallets} from '@mysten/wallet-standard';
 import {SuiGraphQLClient} from '@mysten/sui/graphql';
 import {verifyTransactionSignature} from '@mysten/sui/verify';
-import {review,signReviewed,SENDER,CHAIN,check,requireSigningLocation} from './core.mjs';
+import {review,signReviewed,SENDER,CHAIN,check,requireSigningLocation,responseReviewClock} from './core.mjs';
 const $=id=>document.getElementById(id),status=text=>{$('status').textContent=text;};
 const client=new SuiGraphQLClient({network:'mainnet',url:'https://graphql.mainnet.sui.io/graphql'});
-const KEY='tree-generation-empty-publication-v1';let wallet,account,packet,busy=false;
+const KEY='tree-generation-empty-publication-v1';let wallet,account,packet,reviewNow,busy=false;
 const pending=()=>localStorage.getItem(KEY);
 const locked=()=>{if(pending()){$('publish').disabled=true;$('refresh').disabled=true;$('receipt').hidden=false;return true;}return false;};
 const run=fn=>async()=>{if(busy)return;busy=true;$('publish').disabled=true;try{requireSigningLocation(window.location);await fn();}catch(e){status(String(e.message));}finally{busy=false;locked();}};
@@ -20,14 +20,18 @@ $('connect').onclick=run(async()=>{
 $('refresh').onclick=run(async()=>{
  check(!pending(),'A publication is already pending. Check its receipt.');
  account=current();status('Refreshing identity and simulating the exact transaction…');
- packet=await fetchJSON('/api/generation-publication');await review(packet,account);
+ const requestStarted=performance.now();
+ const response=await fetch('/api/generation-publication',{cache:'no-store'});
+ const next=await response.json();const received=performance.now();check(response.ok,next.error||'Review unavailable');
+ const clock=responseReviewClock(next,{date:response.headers.get('date'),age:response.headers.get('age'),requestStarted,received});
+ await review(next,account,clock());packet=next;reviewNow=clock;
  status('Verified empty publication. Estimated gas: '+Number(packet.estimatedNetGasMist)/1e9+' SUI. Maximum: 0.1 SUI.\nNew upgrade and admin capabilities stay in your dev wallet.\nReview expires in two minutes. Slush will ask for your signature.');$('publish').disabled=false;
 });
 $('publish').onclick=run(async()=>{
  check(!pending(),'Check the existing publication receipt first.');check(packet,'Refresh the review first.');
  const selected=current();check(selected?.address===account?.address,'Wallet account changed.');
  status('Review the empty publication in Slush.');
- const signed=await signReviewed({packet,account:selected,sign:input=>wallet.features['sui:signTransaction'].signTransaction(input),verifySignature:(bytes,signature)=>verifyTransactionSignature(bytes,signature,{address:SENDER,client})});
+ const signed=await signReviewed({packet,account:selected,now:reviewNow,sign:input=>wallet.features['sui:signTransaction'].signTransaction(input),verifySignature:(bytes,signature)=>verifyTransactionSignature(bytes,signature,{address:SENDER,client})});
  check(current()?.address===selected.address,'Wallet changed during signing. Nothing submitted.');
  // Persist first. If storage fails, never submit; if transport fails, retain digest.
  localStorage.setItem(KEY,signed.digest);check(pending()===signed.digest,'Cannot persist publication receipt.');

@@ -10,6 +10,18 @@ export const NETWORK='4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S';
 export const check=(ok,message)=>{if(!ok)throw Error(message);};
 export const decode=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
 const equal=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
+// Anchor to the trusted same-origin response clock, never the desktop wall clock.
+// Date has one-second precision; use its upper bound and the full request duration.
+export function responseReviewClock(packet,{date,age,requestStarted,received,monotonic=()=>performance.now()}){
+ const server=Date.parse(date),duration=received-requestStarted;
+ check(Number.isFinite(server),'The review response has no valid server time. Refresh again.');
+ check(Number.isFinite(duration)&&duration>=0&&duration<=30000,'The review request took too long. Refresh again.');
+ const ageSeconds=age==null?0:Number(age);
+ check(Number.isSafeInteger(ageSeconds)&&ageSeconds>=0,'The response age is invalid. Refresh again.');
+ const anchor=server+ageSeconds*1000+1000+duration;
+ check(Number.isFinite(packet.preparedAt)&&packet.preparedAt<=anchor&&anchor-packet.preparedAt<=120000,'The server review is stale. Refresh again.');
+ return ()=>{const elapsed=monotonic()-received;check(Number.isFinite(elapsed)&&elapsed>=0,'Review timer changed. Refresh again.');return anchor+elapsed;};
+}
 export async function review(packet,account,now=Date.now()){
  check(account?.address.toLowerCase()===SENDER,'Select the approved Sui dev wallet.');
  check(account.chains.includes(CHAIN),'This account does not support Sui mainnet.');
@@ -36,5 +48,6 @@ export async function signReviewed({packet,account,sign,verifySignature,now=Date
  check(signed.bytes===packet.transactionBase64,'Slush changed the reviewed bytes. Nothing submitted.');
  await review(packet,account,now());
  await verifySignature(decode(signed.bytes),signed.signature);
+ await review(packet,account,now());
  return {bytes:decode(signed.bytes),signature:signed.signature,digest:await tx.getDigest()};
 }

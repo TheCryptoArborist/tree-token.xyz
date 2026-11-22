@@ -1,6 +1,6 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import packet from '../../docs/multichain/generation-milestone/publication-review/wallet-handoff.json' with {type:'json'};
-import {review,signReviewed,SENDER,CHAIN,requireSigningLocation} from './core.mjs';
+import {review,signReviewed,SENDER,CHAIN,requireSigningLocation,responseReviewClock} from './core.mjs';
 const account={address:SENDER,chains:[CHAIN]};
 const now=()=>packet.preparedAt;
 test('review accepts the independently simulated full-byte fixture',async()=>assert(await review(packet,account,now())));
@@ -29,3 +29,16 @@ test('only exact approved canonical signing URL is accepted',()=>{
  assert.doesNotThrow(()=>requireSigningLocation(new URL('https://tree-token.xyz/play/generation-publication/')));
  for(const url of ['https://deploy-preview-280--tree-token.netlify.app/generation-publication/','https://www.tree-token.xyz/play/generation-publication/','http://www.tree-token.xyz/play/generation-publication/','https://www.tree-token.xyz/generation-publication/','https://www.tree-token.xyz.attacker.example/play/generation-publication/'])assert.throws(()=>requireSigningLocation(new URL(url)));
 });
+
+const responseContext=(t,elapsed=0)=>({date:new Date(t).toUTCString(),age:null,requestStarted:100,received:350,monotonic:()=>350+elapsed});
+test('fresh response review is independent of a fast or slow desktop clock',async()=>{
+ const real=Date.now;try{for(const offset of [-86400000,86400000]){Date.now=()=>packet.preparedAt+offset;const clock=responseReviewClock(packet,responseContext(packet.preparedAt));await review(packet,account,clock());}}finally{Date.now=real;}
+});
+test('monotonic elapsed time still expires review after two minutes',async()=>{
+ const clock=responseReviewClock(packet,responseContext(packet.preparedAt,120001));await assert.rejects(review(packet,account,clock()),/expired/);
+});
+for(const [label,change] of [['missing server time',{date:null}],['invalid server time',{date:'bad'}],['expired cached response',{age:'121'}],['slow request',{received:30101}],['backward timer',{monotonic:()=>349}]])test('response timer rejects '+label,()=>assert.throws(()=>responseReviewClock(packet,{...responseContext(packet.preparedAt),...change})()));
+test('old response body cannot be made fresh by a current Date header',()=>assert.throws(()=>responseReviewClock({...packet,preparedAt:packet.preparedAt-120001},responseContext(packet.preparedAt))));
+test('future packet is rejected against server time',()=>assert.throws(()=>responseReviewClock({...packet,preparedAt:packet.preparedAt+2000},responseContext(packet.preparedAt))));
+
+test('fresh one-second response Age is counted rather than falsely rejected',async()=>{const clock=responseReviewClock(packet,{...responseContext(packet.preparedAt),age:'1'});await review(packet,account,clock());});
