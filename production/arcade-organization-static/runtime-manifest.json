@@ -184,7 +184,7 @@
     },
     {
       "path": "/assets/arcade/arcade-growth-wallet.js",
-      "source": "production/arcade-organization-static/runtime/assets/arcade/arcade-growth-wallet.js",
+      "source": "production/arcade-organization-static/captured-runtime/assets/arcade/arcade-growth-wallet.js",
       "sha1": "e987f3f338c6470575d17eb6daa4e31fe86d5a70",
       "bytes": 18993,
       "kind": "captured-live-source",
@@ -377,7 +377,7 @@
     },
     {
       "path": "/scripts/arcade-daily-growth-play-share.js",
-      "source": "production/arcade-organization-static/runtime/scripts/arcade-daily-growth-play-share.js",
+      "source": "production/arcade-organization-static/captured-runtime/scripts/arcade-daily-growth-play-share.js",
       "sha1": "b8ee5967f605229b2154c1b32d13e5244dc61dc4",
       "bytes": 75693,
       "kind": "captured-live-source",

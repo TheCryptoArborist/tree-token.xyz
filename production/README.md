@@ -1,3 +1,102 @@
+# Tree Arcade attendance forest — published November 21, 2026
+
+Current locked production is `6b0282d222b49cfa17fa3731`, published at
+23:56:03.580 America/Chicago on November 21 (November 22, 05:56:03.580 UTC).
+The complete publication verification passed at `2026-11-22T05:56:07.980Z` in
+[workflow 44991408033](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44991408033),
+job `137113138472`. Source `ac4696ea26e72fca6a3a997f1b0370acc37184d6` was merged
+through PR #283 as `2d4e356d56dcaf6667f94f3c256646f8033d2310`; publication control
+commit: `081bb5269e243270ad1fb177fbef9fe5ed1cf63b`.
+
+The live https://tree-token.xyz/play/#daily page now shows this month's saved
+check-in count, current streak, next check-in countdown and exact UTC streak
+deadline. One tree represents each saved attendance date. A confirmed lapse
+shows an ember patch while keeping prior trees, and a matching server-verified
+recovery receipt brings rain. Rain waits until Daily is visible. The existing
+20,000 TREE recovery price plus SUI gas and attendance-only reward rules remain
+in effect. Sign-out, wallet switching, stale progress and reduced motion are
+covered by the new presentation. Older pending status reads cannot undo a
+confirmed recovery.
+
+Fresh baseline: `6b027652b3eb61d8107261d0`. The release replaced three existing
+frontend assets and added `/scripts/arcade-attendance-forest.js`. The publication
+workflow verified **656 static paths**, **652 preserved unrelated hashes**,
+all **52 complete backend/provider records**, **five schedules**, captured
+runtime settings and API-visible protected configuration. The separate canonical
+audit records its directly observed coverage and any limits.
+
+Validation: **111 focused code tests** and **18 browser scenarios** at **320,
+390 and 1280 pixels**, with every named check passing and no browser exceptions,
+missing assets or unexpected writes. The exact final candidate's phone
+growing/rain, desktop growing and month-rollover screenshots were reviewed.
+The browser tests use synthetic wallets, API data and a mocked payment
+boundary. They do not establish installed-wallet or physical-device acceptance
+and performed no real wallet signature, payment or chain transaction.
+
+Complete publication report: `docs/arcade-attendance-forest-release-20261121.json`.
+Candidate browser report: `docs/arcade-attendance-forest-browser-20261121.json`.
+Independent canonical audit: `docs/arcade-attendance-forest-canonical-20261121.json`.
+Implementation and behavior: `docs/arcade-attendance-forest.md`.
+
+Prepare artifact `14741813001`, SHA256:
+`eadc01faff83eeb68da8c42f9a68e52747eb09eab204844a0a53a14e3312c9b9`.
+Publication artifact `14741594720`, SHA256:
+`5bdfcf102c352856872b64b5db938e666000ed1301700f3934bb4e84b3cd9e20`.
+
+Capture the full current site before any later release. This completed publisher
+pins its prior baseline and must not be reused blindly. Preserve the current
+inventory and configuration, and wait for all Git builds before publication.
+
+---
+
+# Tree Arcade wallet switching — published November 21, 2026
+
+Current locked production is `6b027652b3eb61d8107261d0`, published at
+23:02:23.776 America/Chicago on November 21 (November 22, 05:02:23.776 UTC).
+The publication report passed at `2026-11-22T05:02:28.550Z` in
+[workflow 44987535226](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44987535226),
+job `137101391951`. Source `5c85fad4a8248a8098783916c78e3a5b033640a3` was merged
+through PR #281 as `9a6403a159e0fdf74b12a479e5dea4661d177721`; publication control
+commit: `abd9e0f3a35522bc79627b029d51ceb963608f69`.
+
+The live https://tree-token.xyz/play/ Daily panel now keeps **Switch wallet**
+available while signed in. **Sign out** clears the login and selected wallet;
+reconnection offers an explicit account choice when a provider shares multiple
+accounts. Pending responses cannot restore the previous identity, and monthly
+progress follows the active wallet. Saved recovery checkouts and payment digests
+remain associated with the wallet that created them.
+
+Fresh baseline: `6b0274526be03dc8db2280df`, including the intervening Root Rage
+update. Only four existing frontend assets changed. The publication workflow
+verified **655 static paths**, **651 unchanged unrelated hashes**, all **52
+complete backend/provider records**, **five schedules**, runtime settings and
+protected configuration. The independent post-publication check confirmed the
+ready, locked deployment, all 52 provider records, schedules, runtime settings,
+and HTTP 200 responses with exact planned hashes for the four canonical assets.
+
+The final served candidate passed browser checks at **320, 390 and 1280 pixels**
+in [workflow 44987253606](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/44987253606).
+Signed-in and account-picker screenshots were visually reviewed. The tests used
+synthetic wallet accounts and intercepted every API request. No real wallet
+signature, payment or chain transaction was performed; acceptance in an
+installed user wallet or on a physical device is not established by this test.
+
+Complete publication report: `docs/arcade-wallet-switch-release-20261121.json`.
+Candidate browser report: `docs/arcade-wallet-switch-browser-20261121.json`.
+Independent canonical audit: `docs/arcade-wallet-switch-canonical-20261121.json`.
+Implementation and release provenance: `docs/arcade-wallet-switch.md`.
+
+Prepare artifact `14740192235`, SHA256:
+`aed17e38e8dda67943835bbc2eb55eac92540592fd4aa80ad38e2abc0466dae5`.
+Publication artifact `14740522896`, SHA256:
+`3013b1fa6367f89dee8926754315f7defcd1bd7238512cadefe3e77721321adf`.
+
+Capture the full current site before any later release. This completed publisher
+pins its prior baseline and must not be reused blindly. Preserve the current
+inventory and configuration, and wait for all Git builds before publication.
+
+---
+
 # BNB original-NFT backing check — published November 21, 2026
 
 Current locked production is `6b01bbf2b66675f3aebc4a74`, published at

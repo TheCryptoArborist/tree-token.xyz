@@ -25,6 +25,7 @@ const arcadeOverlays = [
   { path: '/play/index.html', source: `${arcadeDirectory}/index.html` },
   { path: '/arcade-review/index.html', source: `${arcadeDirectory}/review.html` },
   { path: '/scripts/arcade-organization.js', source: 'scripts/arcade-organization.js' },
+  { path: '/scripts/arcade-attendance-forest.js', source: 'scripts/arcade-attendance-forest.js' },
   { path: '/styles/arcade-organization.css', source: 'styles/arcade-organization.css' },
   { path: '/scripts/arcade-season-deadline.js', source: 'scripts/arcade-season-deadline.js' },
   { path: '/styles/arcade-season-deadline.css', source: 'styles/arcade-season-deadline.css' },
@@ -64,10 +65,27 @@ for (const file of arcadeRuntime.files) {
   else assert(unreportedPublicAssets.has(file.path), 'Unreviewed asset outside the live inventory: ' + file.path);
   await sourceBytes(file); // Preserve and verify captured bytes even for an explicit replacement.
 }
-// Only the monthly panel is updated for checkout deadline/late-receipt guidance.
-// Keep its prior live source above so that the baseline remains independently verifiable.
-const arcadeFiles = [...arcadeRuntime.files.map(file => file.path === '/scripts/arcade-monthly.js'
-  ? { path: file.path, source: 'scripts/arcade-monthly.js' } : file), ...publicSnapshots, ...arcadeOverlays];
+// These reviewed replacements never redefine the captured inventory. The two
+// wallet baseline sources live under captured-runtime/; their original hashes
+// and every other captured file are verified above before using the updates.
+const arcadeRuntimeReplacements = new Map([
+  ['/scripts/arcade-monthly.js', { path: '/scripts/arcade-monthly.js', source: 'scripts/arcade-monthly.js',
+    sha1: '1b3defc0bbb85265731f46084e367e7ad219defc' }],
+  ['/assets/arcade/arcade-growth-wallet.js', {
+    path: '/assets/arcade/arcade-growth-wallet.js',
+    source: `${arcadeDirectory}/runtime/assets/arcade/arcade-growth-wallet.js`,
+    sha1: 'dc4a5e94e812069ad833c4b8d523f78d05d676d9',
+  }],
+  ['/scripts/arcade-daily-growth-play-share.js', {
+    path: '/scripts/arcade-daily-growth-play-share.js',
+    source: `${arcadeDirectory}/runtime/scripts/arcade-daily-growth-play-share.js`,
+    sha1: 'f46f76ebb1a7b1bacfabe84137a12be3fd9e58d1',
+  }],
+]);
+for (const path of arcadeRuntimeReplacements.keys()) {
+  assert(arcadeRuntime.files.some(file => file.path === path), 'Reviewed replacement is missing its captured baseline: ' + path);
+}
+const arcadeFiles = [...arcadeRuntime.files.map(file => arcadeRuntimeReplacements.get(file.path) || file), ...publicSnapshots, ...arcadeOverlays];
 for (const file of arcadeFiles) {
   await sourceBytes(file); // Fail before writing output if a source is absent or changed.
   allowed.add(file.path.slice(1).toLowerCase());

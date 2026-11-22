@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "result": "passed",
+  "checkedAt": "2026-11-22T05:03:20.167089+00:00",
+  "readOnly": true,
+  "remoteMethods": [
+    "GET"
+  ],
+  "source": "Independent Netlify connector metadata plus canonical static asset GETs",
+  "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
+  "publishedDeployId": "6b027652b3eb61d8107261d0",
+  "publishedAt": "2026-11-22T05:02:23.776Z",
+  "ready": true,
+  "locked": true,
+  "baselineId": "6b0274526be03dc8db2280df",
+  "sourceCommit": "5c85fad4a8248a8098783916c78e3a5b033640a3",
+  "sourceTree": "2e546ec83f16412d76a973f577a1d4903292185d",
+  "mainCommit": "9a6403a159e0fdf74b12a479e5dea4661d177721",
+  "controlCommit": "abd9e0f3a35522bc79627b029d51ceb963608f69",
+  "publicationRunId": "44987535226",
+  "publicationJobId": "137101391951",
+  "completeProviderRecords": {
+    "count": 52,
+    "exactlyEqualBaseline": true,
+    "comparison": "Every JSON field of every record, sorted only by n; no fields removed or normalized",
+    "baselineSHA256": "5dd428fc6937f04824135884e38ee65e7f3b1befef654201256cbd2d55c5444a",
+    "publishedSHA256": "5dd428fc6937f04824135884e38ee65e7f3b1befef654201256cbd2d55c5444a"
+  },
+  "schedules": {
+    "count": 5,
+    "exactlyEqualBaseline": true,
+    "baselineSHA256": "55820196e06ecdd0d19571e521938232705cee0964a96c9023fbb3ddf7b8ea45",
+    "publishedSHA256": "55820196e06ecdd0d19571e521938232705cee0964a96c9023fbb3ddf7b8ea45"
+  },
+  "runtime": {
+    "exactlyEqualBaseline": true,
+    "SHA256": "9eee1b57bde43b71aee1c0a845f9f2742059235e8753ff81fe8ec50617912d13"
+  },
+  "canonicalAssets": [
+    {
+      "path": "/assets/arcade/arcade-growth-wallet.js",
+      "url": "https://tree-token.xyz/assets/arcade/arcade-growth-wallet.js",
+      "status": 200,
+      "contentType": "application/javascript; charset=UTF-8",
+      "bytes": 20629,
+      "observedSHA1": "dc4a5e94e812069ad833c4b8d523f78d05d676d9",
+      "planSHA1": "dc4a5e94e812069ad833c4b8d523f78d05d676d9",
+      "matches": true
+    },
+    {
+      "path": "/scripts/arcade-daily-growth-play-share.js",
+      "url": "https://tree-token.xyz/scripts/arcade-daily-growth-play-share.js",
+      "status": 200,
+      "contentType": "application/javascript; charset=UTF-8",
+      "bytes": 81618,
+      "observedSHA1": "f46f76ebb1a7b1bacfabe84137a12be3fd9e58d1",
+      "planSHA1": "f46f76ebb1a7b1bacfabe84137a12be3fd9e58d1",
+      "matches": true
+    },
+    {
+      "path": "/scripts/arcade-monthly.js",
+      "url": "https://tree-token.xyz/scripts/arcade-monthly.js",
+      "status": 200,
+      "contentType": "application/javascript; charset=UTF-8",
+      "bytes": 12602,
+      "observedSHA1": "cc93d5c94cced41e25666f3956acee305f59b4f0",
+      "planSHA1": "cc93d5c94cced41e25666f3956acee305f59b4f0",
+      "matches": true
+    },
+    {
+      "path": "/styles/arcade-organization.css",
+      "url": "https://tree-token.xyz/styles/arcade-organization.css",
+      "status": 200,
+      "contentType": "text/css; charset=UTF-8",
+      "bytes": 34115,
+      "observedSHA1": "7cb94bfb8c99de07ff17ad7751fbd8b6ee93fae3",
+      "planSHA1": "7cb94bfb8c99de07ff17ad7751fbd8b6ee93fae3",
+      "matches": true
+    }
+  ],
+  "limits": [
+    "No real wallet, message, payment or chain transaction was performed.",
+    "This independent check covers complete backend/provider records, schedules, captured runtime settings and the four changed canonical assets; it does not independently enumerate every unchanged static asset or re-read protected environment records."
+  ],
+  "metadataObservation": "publication-observed-records-6b027652.json"
+}
