@@ -4,6 +4,9 @@ on:
     paths:
       - 'docs/multichain/generation-milestone/**'
       - 'contracts/nftree-generation/**'
+      - 'tools/generation-publication/**'
+      - 'netlify/preview-functions/generation-publication.mjs'
+      - 'scripts/build-feature-preview.mjs'
       - 'contracts/bnb-generation/**'
       - 'contracts/vendor/layerzero-sui/**'
       - '.github/workflows/verify-generation-custody.yml'
@@ -12,6 +15,9 @@ on:
     paths:
       - 'docs/multichain/generation-milestone/**'
       - 'contracts/nftree-generation/**'
+      - 'tools/generation-publication/**'
+      - 'netlify/preview-functions/generation-publication.mjs'
+      - 'scripts/build-feature-preview.mjs'
       - 'contracts/bnb-generation/**'
       - '.github/workflows/verify-generation-custody.yml'
 permissions:
@@ -30,7 +36,7 @@ jobs:
       - name: Install pinned simulation tooling and test unsigned guards
         run: |
           npm ci --ignore-scripts
-          node --test contracts/nftree-generation/scripts/*.test.mjs
+          node --test contracts/nftree-generation/scripts/*.test.mjs tools/generation-publication/core.test.mjs
       - name: Install isolated EVM dependencies
         run: npm ci --ignore-scripts --prefix contracts/bnb-generation
       - name: EVM contract tests

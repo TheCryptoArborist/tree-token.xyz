@@ -1,7 +1,6 @@
 // Simulation-only tooling. No keypair, wallet, signing or execution API.
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
-import {readFileSync} from 'node:fs';
 import {Transaction} from '@mysten/sui/transactions';
 import {SuiGraphQLClient} from '@mysten/sui/graphql';
 import {bcs} from '@mysten/sui/bcs';
@@ -18,7 +17,7 @@ export const C=Object.freeze({
 const check=(condition,message)=>assert(condition,message);
 const equal=(a,b,message)=>assert.deepEqual(a,b,message);
 export function verifyBuild() {
- const bytes=readFileSync(new URL('../../../docs/multichain/generation-milestone/publication-bytecode.json',import.meta.url));
+ const bytes=JSON.stringify(build)+'\n';
  assert.equal(createHash('sha256').update(bytes).digest('hex'),validation.moveReleaseBuildSha256);
  assert.equal(build.modules.length,2);
 }

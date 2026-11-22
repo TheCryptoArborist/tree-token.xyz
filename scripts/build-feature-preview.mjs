@@ -129,3 +129,9 @@ for (const file of arcadeFiles) {
 }
 console.log(`Built a ${allowed.size}-file feature preview with ${arcadeRuntime.files.length} pinned current Arcade runtime assets and a read-only review overlay.`);
 console.log('The production manifest and recovered function packages were not changed.');
+
+// Isolated approved empty-publication handoff. Never included in production builds.
+const {build:bundlePublication}=await import('esbuild');
+await mkdir(resolve(output,'generation-publication'),{recursive:true});
+await cp(resolve(root,'tools/generation-publication/index.html'),resolve(output,'generation-publication/index.html'));
+await bundlePublication({entryPoints:[resolve(root,'tools/generation-publication/app.mjs')],outfile:resolve(output,'generation-publication/app.js'),bundle:true,format:'esm',platform:'browser',target:'es2022'});
