@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
-// Prototype 0.10: opening-wave pacing; replace only the reviewed 0.9 HTML.
+// Prototype 0.11: shared weapon muzzle; replace only the reviewed 0.10 HTML.
 export const REPLACED_HASHES = {
-  '/play/tree-army/test/index.html': '158cdcfb509a85b768710ef44bc70127b57660a4',
+  '/play/tree-army/test/index.html': '98317eadd573c295cb5a6048ae91ba8adc0c2e1c',
 };
 export const ADDED_PATHS = [];
 export const DELIVERY_PATHS = [...Object.keys(REPLACED_HASHES), ...ADDED_PATHS];
