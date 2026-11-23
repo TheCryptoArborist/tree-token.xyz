@@ -1,3 +1,23 @@
+# Private purchase and redemption lock complete — November 23, 2026
+
+All five approved user-signed transactions independently verify. Exactly **25 USDT**
+reached unchanged treasury 3720; total gas was **0.00001482515 BNB**, below the
+0.0001-BNB ceiling. Allowance is zero. The BNB pass is **Locked, generation 1,
+purchases paused, canPlay false**, with redemption fixed to Sui dev 45c4.
+
+NFTree #2720 remains in new-vault custody on Sui, phase 1/generation 1. The return
+message has not been sent by Codex. Next is a fresh return-message quote/send
+review with its own native fee/gas authorization. No repeat purchase, allowance,
+unpause or lock is needed. Website gameplay remains disabled.
+
+Exact hashes, user receipt, independent chain evidence, setup and remaining tasks:
+`docs/multichain/generation-milestone/private-purchase-completed/`.
+This receipt update changes no production website or contracts. Earlier pending
+signature/Ready-state notes below are historical; recapture the current complete
+live inventory before any future release, preserving newer unrelated deployments.
+
+---
+
 # Private purchase and lock handoff — published November 23, 2026
 
 Locked deployment `6b04578a357874523bed70a8` was published at **09:13:46
