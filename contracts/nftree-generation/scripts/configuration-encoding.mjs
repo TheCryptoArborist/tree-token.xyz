@@ -1,15 +1,8 @@
 // New generation only. Constructs unsigned review transactions; no submission.
 import {Transaction} from '@mysten/sui/transactions';
 import {bcs} from '@mysten/sui/bcs';
-import {C as R} from './registration-review.mjs';
-import receipt from '../../../docs/multichain/generation-milestone/registration-completed/user-receipt.json' with {type:'json'};
-export const C=Object.freeze({...R,admin:R.oappAdmin,vaultAdmin:R.admin,
- uln:'0x8ebd7a0b102a5f7a3d4a08d84dd853fecc4ae0093be6eb02cf0d11dce7d4861f',
- ulnPackage:'0x3ce7457bed48ad23ee5d611dd3172ae4fbd0a22ea0e846782a7af224d905dbb0',
- executor:'0xde7fe1a6648d587fcc991f124f3aa5b6389340610804108094d5c5fbf61d1989',
- receiveCallId:'64202616f75a5614acfa264418258521299eb6a892eeeea392feef8948c7eb53',
- dvns:['0x0c12321ebe562b8fb8a74e6d29f144ea199a8f31a4cea3a417ce72477f6dfebb','0x52aa129049de845353484868d1be6e2df6878b0ed2213d94d3c827309aeae685','0x92128a5edf4a0f696464de66d00986ef41b37faf705ceb3d9d9a4e5c306fbf91'],
- channel:receipt.channelId,channelVersion:'1089269258',registration:receipt.registryEntryId,registrationDigest:receipt.digest,remoteEid:30102});
+import identities from './configuration-identities.json' with {type:'json'};
+export const C=Object.freeze(identities);
 const Arg=bcs.enum('Argument',{ID:bcs.vector(bcs.u8()),Object:bcs.Address,Pure:bcs.vector(bcs.u8()),NestedResult:bcs.struct('NestedResult',{call_index:bcs.u16(),result_index:bcs.u16()})});
 export const Calls=bcs.vector(bcs.struct('MoveCall',{function:bcs.struct('Function',{package:bcs.Address,module_name:bcs.string(),name:bcs.string()}),arguments:bcs.vector(Arg),type_arguments:bcs.vector(bcs.string()),is_builder_call:bcs.bool(),result_ids:bcs.vector(bcs.vector(bcs.u8()))}));
 export const Info=bcs.struct('OAppInfoV1',{oapp_object:bcs.Address,next_nonce_info:bcs.vector(bcs.u8()),lz_receive_info:bcs.vector(bcs.u8()),extra_info:bcs.vector(bcs.u8())});
