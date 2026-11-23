@@ -14,5 +14,10 @@
   "deploymentAuthorized": false,
   "depositAuthorized": false,
   "publicSaleEnabled": false,
-  "gameplayEnabled": false
+  "gameplayEnabled": false,
+  "signingApplication": {
+    "application": "MetaMask",
+    "hardwareWallet": "Ledger",
+    "source": "User selected MetaMask with Ledger for BNB account ending 8789."
+  }
 }

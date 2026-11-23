@@ -49,7 +49,7 @@ jobs:
         run: npm ci --ignore-scripts --prefix contracts/bnb-generation
       - name: EVM contract tests
         run: npm test --prefix contracts/bnb-generation
-      - run: node --test contracts/bnb-generation/test/wallet-preflight.test.mjs
+      - run: node --test contracts/bnb-generation/test/wallet-preflight.test.mjs contracts/bnb-generation/test/deployment-review.test.mjs
       - name: Compile release Solidity
         run: npm run compile --prefix contracts/bnb-generation
       - name: Fetch checksum-pinned Sui compiler

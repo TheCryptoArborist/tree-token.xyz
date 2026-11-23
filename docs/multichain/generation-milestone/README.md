@@ -18,6 +18,9 @@ and all three capabilities remain in the dev wallet at the recorded checkpoints.
 Do not republish the package or create another slot. The successful receipt
 supersedes prior pending-signature and account-connection troubleshooting notes.
 
+The [BNB deployment review](bnb-deployment-review/README.md) now includes two
+successful mainnet-fork runs using the real Sui route, exact unsigned transactions,
+fee limits and MetaMask/Ledger selection. Deployment is not yet authorized.
 BNB deployment, route configuration, NFT deposit, sales and gameplay activation
 remain subsequent reviewed milestones. Historical preparation and website release
 records remain available under [slot-review](slot-review/README.md).

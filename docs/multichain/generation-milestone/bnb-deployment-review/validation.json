@@ -1,0 +1,22 @@
+{
+  "status": "prepared_not_authorized",
+  "wallet": "MetaMask with Ledger",
+  "forkBlocks": [
+    135184193,
+    135184352
+  ],
+  "evmLifecycleTestsPassed": 16,
+  "deploymentAndWalletTestsPassed": 19,
+  "compiler": "0.8.30",
+  "optimizerRuns": 200,
+  "evmVersion": "shanghai",
+  "bnbPackageLockSha256": "f63e8b4d338addfba0acead33fcb5f62182c38f00c93ad1475ac62ad4b0d1c2c",
+  "sourceHashes": {
+    "src/Policy.sol": "b8d8cbe423413a49d7336ddd313e13c7febdf7ac30e775aa32ac692541a8e981",
+    "src/TreeSuitePass.sol": "48abe773c222dd475159384aff0468b60e3854a787f42accb51a7001312ae5c7",
+    "src/TreePassAdapter.sol": "aa9a9faaf09d665c579f59ec45fb77a24fb6901dcedee4862e1fa8ee107104ec"
+  },
+  "proposedMaximumTotalFeeWei": "1000000000000000",
+  "deploymentAuthorized": false,
+  "submitted": false
+}

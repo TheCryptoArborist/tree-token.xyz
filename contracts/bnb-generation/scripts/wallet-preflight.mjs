@@ -15,5 +15,5 @@ export function verifyWalletIntent({address,chainId,treasury}) {
  const policy=readFileSync(new URL('../src/Policy.sol',import.meta.url),'utf8');
  assert(policy.includes('TREASURY = '+fee+';'),'Source treasury differs from approved selection');
  return {admin,treasury:fee,chainId:56,deploymentReady:false,
-  remaining:'Verify actual new Sui publication and canonical Vault, then construct and simulate exact BNB deployments. Simulation object IDs are not bindings.'};
+  remaining:'New Sui publication and canonical Vault are recorded. Refresh the BNB deployment review, nonce and exact bytes before separately approved MetaMask/Ledger signing. Simulation BNB addresses remain conditional predictions.'};
 }
