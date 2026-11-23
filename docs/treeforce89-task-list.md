@@ -7,7 +7,7 @@ Work one item at a time with a focused commit and verification evidence. Local r
 | 1     | Restore reliable combat sound feedback            | Complete locally | Fire cannot throttle hit/kill; impacts survive reward cues at reduced volume; bounded voices; mute and cleanup; actual engine routing checked |
 | 2     | Preserve attack-warning and hit-flash duration    | Complete locally | Gold warning and white flash survive updates until expiry; stun/mutation/captor/boss states do not erase each other                           |
 | 3     | Own audio lifecycle and make music zero silent    | Complete locally | Destroy clears timers/nodes; zero music has no output; define pause/hidden/resume behavior; simulated wallet return checked                   |
-| 4     | Keep the boss silhouette clear of HUD             | Queued           | Full entrance/bob/phase bounds reviewed at 320/390px and desktop; assess collision implications before moving the boss                        |
+| 4     | Keep the boss silhouette clear of HUD             | Complete locally | Full entrance/bob/phase bounds reviewed at 320/390px and desktop; assess collision implications before moving the boss                        |
 | 5     | Improve original music and sound identity         | Queued           | Longer musical phrases; distinguish normal/bonus/boss moods and weapon/impact families; compare equal-loudness recordings                     |
 | 6     | Improve enemy animation and combat contrast       | Queued           | Path-following orientation and original poses; readable threats over forest; preserve Arborwing and hero clearance                            |
 | 7     | Refine pacing, transitions and reward explanation | Queued           | Novice opening review; compact repeat transitions; explain earned points; keep rules unchanged                                                |
@@ -27,4 +27,8 @@ Attack warnings and hit flashes survive enemy updates and restore the appropriat
 
 ## Completed task 3
 
-Music zero is silent; pause/interruption stops audio, and destruction releases the scheduler, nodes, context and listeners. Twelve browser lifecycle checks, ten wallet/session regressions and eight audio tests pass. See [implementation and verification](treeforce89-audio-lifecycle-20261123.md). Real-phone audio unlock and Slush return checks remain pending. Next: task 4, boss silhouette clearance beneath the HUD.
+Music zero is silent; pause/interruption stops audio, and destruction releases the scheduler, nodes, context and listeners. Twelve browser lifecycle checks, ten wallet/session regressions and eight audio tests pass. See [implementation and verification](treeforce89-audio-lifecycle-20261123.md). Real-phone audio unlock and Slush return checks remain pending.
+
+## Completed task 4
+
+Boss movement and phase banners now clear the HUD. Before/after entrance and four-phase bounds checked at 320/390/1000px, screenshots inspected, and ten browser regressions passed. See [implementation, geometry tradeoff and verification](treeforce89-boss-clearance-20261123.md). Real-phone dodge-space review remains pending. Next: task 5, original music and sound identity.

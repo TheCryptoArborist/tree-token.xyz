@@ -52,7 +52,7 @@
       location.replace("/__local/practice?lab=1");
     else {
       const params = new URLSearchParams(location.search);
-      const revision = ["r6", "r7", "r8"].includes(params.get("revision"))
+      const revision = ["r6", "r7", "r8", "r9"].includes(params.get("revision"))
         ? params.get("revision")
         : "r5";
       const { createCanopyGame } = await import(
