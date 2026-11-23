@@ -21,7 +21,7 @@ capability references, events, effects, live empty generation-zero bound vault,
 peer, enforced options, channel nonce state, unchanged security and admin owners.
 BNB remains paused and non-playable. A simulation is not an executed receipt.
 
-Fresh simulation estimated **0.009266747 SUI**. 41 focused checks and 128 existing
+Fresh simulation estimated **0.009266747 SUI**. 46 focused checks and 128 existing
 Sui review regressions passed, plus eight source mock-wallet browser scenarios.
 Tests cover modified transaction bytes, gas, sender, accounts, NFT identity,
 BNB receipt/runtime/settings changes, expiry, pending recovery and preservation.

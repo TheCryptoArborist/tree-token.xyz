@@ -1,0 +1,20 @@
+{
+  "candidateId": "6b03cc46411c5bac0b910909",
+  "planHash": "71cc7184319f929e8b4d5af1f321b125566d1e4f8658e7a63d6049e35e1196b2",
+  "sourceCommit": "6d988b2385f348aed146bca7dd4331fd3b599a54",
+  "runId": 45116610999,
+  "baselineId": "6b03c711ca6052a6cd8f7399",
+  "staticPaths": 677,
+  "preservedStaticPaths": 675,
+  "functions": 57,
+  "preservedFunctions": 56,
+  "schedules": 5,
+  "backendRecordsPreserved": true,
+  "schedulesPreserved": true,
+  "candidateBrowserCasesPassed": 8,
+  "releaseChecksPassed": 189,
+  "artifact": {
+    "id": 14791549418,
+    "digest": "sha256:dc61b8c738ebf74e5e90aae54168b2d0e3974679e87da838de51ae61ab0535af"
+  }
+}
