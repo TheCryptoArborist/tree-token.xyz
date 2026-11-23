@@ -1,3 +1,25 @@
+# First reserve delivered — November 23, 2026
+
+The approved atomic deposit and reserve is complete. Sui digest
+`i6nTSPBKFSUf7GXhsnocnFfuuMtkqvQASR91YTZZdfE` independently verifies at
+**0.09884395 SUI total** (0.094851295 message fee + 0.003992655 net gas).
+Original NFTree #2720 is now in new-vault custody, phase 1, generation 1.
+
+The initial pending BNB message has delivered. Destination transaction
+`0x689d2c8683f56af38d9e94ee032872829bef97a2673b77dd2f72c060e0860024`
+confirms the exact GUID and ReserveConfirmed(1). The pass is **Ready, generation 1,
+purchases paused, canPlay false**. Do not repeat the deposit or reserve send.
+No USDT purchase occurred. Private purchase/redemption and gameplay remain later
+reviewed milestones; no direct admin withdrawal exists in the published lifecycle.
+
+Evidence, reproducible verification and remaining tasks:
+`docs/multichain/generation-milestone/reserve-completed/`.
+This receipt update makes no website or additional chain changes. The prior release
+below is historical; recapture current full live inventory before any later release.
+Earlier pending-signature/empty-custody notes below are superseded by this receipt.
+
+---
+
 # Atomic reserve handoff — published November 23, 2026
 
 Locked deployment `6b03d785177d7651c28d69aa` was published at **00:07:42

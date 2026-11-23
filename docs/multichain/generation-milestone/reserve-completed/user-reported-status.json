@@ -1,0 +1,23 @@
+{
+  "source": "User-pasted receipt",
+  "digest": "i6nTSPBKFSUf7GXhsnocnFfuuMtkqvQASR91YTZZdfE",
+  "checkpoint": {
+    "sequenceNumber": 348380439,
+    "timestamp": "2026-11-23T14:49:47.676Z"
+  },
+  "messageFeeMist": "94851295",
+  "netGasMist": "3992655",
+  "totalMist": "98843950",
+  "sourceVerified": true,
+  "nftHeld": true,
+  "phase": 1,
+  "generation": 1,
+  "announced": true,
+  "destinationVerified": false,
+  "bnbBlock": "0x8105bf4",
+  "bnbState": "Unconfirmed",
+  "bnbGeneration": 0,
+  "bnbPurchasesPaused": true,
+  "bnbCanPlay": false,
+  "note": "Summary of original pending receipt. Later independent verification and destination receipt are stored separately."
+}

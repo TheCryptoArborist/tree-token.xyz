@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+const root=new URL('../../../../',import.meta.url).pathname.replace(/\/$/,'');
+const {newClient}=await import(root+'/contracts/nftree-generation/scripts/readiness.mjs');
+const {verifyReserveReceipt}=await import(root+'/contracts/nftree-generation/scripts/reserve-handoff.mjs');
+const {verifyReserveBnb}=await import(root+'/contracts/nftree-generation/scripts/reserve-bnb.mjs');
+const dir=root+'/docs/multichain/generation-milestone/reserve-completed';fs.mkdirSync(dir,{recursive:true});
+const client=newClient(),query=client.query.bind(client);let n=0;const reads=[];
+client.query=async x=>{const r=await query(x);fs.writeFileSync(dir+'/sui-read-'+(++n)+'.json',JSON.stringify({query:x.query,result:r},null,2));return r;};
+const digest='i6nTSPBKFSUf7GXhsnocnFfuuMtkqvQASR91YTZZdfE';
+fs.writeFileSync(dir+'/transaction.json',JSON.stringify(await client.core.getTransaction({digest,include:{effects:true,events:true,transaction:true,balanceChanges:true,objectTypes:true,bcs:true}}),null,2));
+const fetcher=async(url,options)=>{for(let i=0;i<3;i++){const r=await fetch(url,options),j=await r.json();reads.push({request:JSON.parse(options.body),response:j});fs.writeFileSync(dir+'/bnb-rpc-reads.json',JSON.stringify(reads,null,2));if(!j.error)return Response.json(j,{status:r.status});console.log({attempt:i,error:j.error});await new Promise(resolve=>setTimeout(resolve,500));}throw Error('RPC errors persisted');};
+const p=await verifyReserveReceipt(digest,client,()=>verifyReserveBnb(fetcher));fs.writeFileSync(dir+'/verification.json',JSON.stringify(p,null,2));console.log(p);
