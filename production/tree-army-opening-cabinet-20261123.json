@@ -1,0 +1,26 @@
+{
+  "base": "https://tree-token.xyz",
+  "fixture": false,
+  "results": [
+    {
+      "width": 1440,
+      "height": 1000,
+      "passed": true
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "passed": true
+    },
+    {
+      "width": 320,
+      "height": 740,
+      "passed": true
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "passed": true
+    }
+  ]
+}
