@@ -1,0 +1,121 @@
+{
+  "synthetic": true,
+  "origin": "http://127.0.0.1:4174",
+  "checks": [
+    {
+      "name": "initial application mounts",
+      "actual": 1
+    },
+    {
+      "name": "mounts after lazy GraphQL",
+      "actual": 1
+    },
+    {
+      "name": "verified run survives lazy GraphQL",
+      "actual": 1
+    },
+    {
+      "name": "fresh run zero score and three lives",
+      "actual": true
+    },
+    {
+      "name": "temporary disconnect retains paused run",
+      "actual": true
+    },
+    {
+      "name": "expiry and same-wallet recovery retain mounted run",
+      "actual": true
+    },
+    {
+      "name": "failed save retry and receipt handoff",
+      "actual": true
+    },
+    {
+      "name": "share card keeps landscape proportions",
+      "actual": 1.7672849915682969
+    },
+    {
+      "name": "explicit disconnect clears game identity",
+      "actual": true
+    },
+    {
+      "name": "second wallet starts separate run and profile",
+      "actual": true
+    }
+  ],
+  "errors": [],
+  "requests": [
+    {
+      "path": "/api/treeforce89-leaderboard",
+      "method": "GET"
+    },
+    {
+      "path": "/play/treeforce89/api/tree-challenge",
+      "method": "POST"
+    },
+    {
+      "path": "/play/treeforce89/api/tree-session",
+      "method": "POST"
+    },
+    {
+      "path": "/api/treeforce89-leaderboard",
+      "method": "GET"
+    },
+    {
+      "path": "/api/treeforce89-leaderboard",
+      "method": "GET"
+    },
+    {
+      "path": "/play/treeforce89/api/tree-challenge",
+      "method": "POST"
+    },
+    {
+      "path": "/play/treeforce89/api/tree-session",
+      "method": "POST"
+    },
+    {
+      "path": "/play/treeforce89/session-refresh",
+      "method": "POST"
+    },
+    {
+      "path": "/api/treeforce89-leaderboard",
+      "method": "GET"
+    },
+    {
+      "path": "/api/treeforce89-leaderboard",
+      "method": "POST"
+    },
+    {
+      "path": "/api/treeforce89-leaderboard",
+      "method": "POST"
+    },
+    {
+      "path": "/api/treeforce89-leaderboard",
+      "method": "GET"
+    },
+    {
+      "path": "/play/treeforce89/api/tree-logout",
+      "method": "POST"
+    },
+    {
+      "path": "/api/treeforce89-leaderboard",
+      "method": "GET"
+    },
+    {
+      "path": "/play/treeforce89/api/tree-challenge",
+      "method": "POST"
+    },
+    {
+      "path": "/play/treeforce89/api/tree-session",
+      "method": "POST"
+    },
+    {
+      "path": "/api/treeforce89-leaderboard",
+      "method": "GET"
+    },
+    {
+      "path": "/api/treeforce89-leaderboard",
+      "method": "GET"
+    }
+  ]
+}

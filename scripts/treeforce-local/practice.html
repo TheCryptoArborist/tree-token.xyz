@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <meta charset="utf-8" /><meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  /><title>Tree Force ’89 · local practice</title>
+  <link
+    rel="stylesheet"
+    href="/play/treeforce89/assets/index-Bw7NF3rR.css"
+  /><link rel="stylesheet" href="/play/treeforce89/mobile-review-r5.css" />
+  <style>
+    body {
+      display: block;
+    }
+    #root {
+      display: none !important;
+    }
+    .local-note {
+      padding: 12px;
+      color: #fff7df;
+      background: #39205a;
+      text-align: center;
+      font: 14px/1.5 system-ui;
+    }
+    .game-frame {
+      margin: 0 auto;
+      max-width: 480px;
+    }
+    .local-note a {
+      color: #c9f45c;
+    }
+  </style>
+  <div class="local-note">
+    <strong>LOCAL PRACTICE · UNRANKED · NO PAYMENTS OR SAVES</strong
+    ><br />Captured current game with reviewed module links.
+    <a href="/play/treeforce89/">Inspect the gated app</a><br /><span
+      id="notice"
+      >Use the game’s guide, Pause, Auto Fire, Fire and Shield controls.</span
+    >
+  </div>
+  <div id="root" hidden></div>
+  <main class="game-frame">
+    <div class="nftree-game-shell">
+      <div class="game-viewport">
+        <div id="practice" class="phaser-mount"></div>
+      </div>
+    </div>
+  </main>
+  <script type="module">
+    // This harness is served only by the local server, never placed in an overlay.
+    if (!new URLSearchParams(location.search).has("lab"))
+      location.replace("/__local/practice?lab=1");
+    else {
+      const { createCanopyGame } = await import(
+        "/play/treeforce89/assets/arcade-review-r5.js"
+      );
+      let game;
+      const start = (initialScene = "game") => {
+        game?.destroy(true);
+        game = createCanopyGame(document.getElementById("practice"), {
+          initialScene,
+          requestNewRun: async (scene) => {
+            setTimeout(() => start(scene), 0);
+          },
+          requestCheckout: () => {
+            document.getElementById("notice").textContent =
+              "Payments are disabled in local practice. Use New Game or Return to Title.";
+          },
+        });
+      };
+      start();
+    }
+  </script>
+</html>

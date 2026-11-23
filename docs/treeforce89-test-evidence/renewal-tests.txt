@@ -1,0 +1,28 @@
+✔ active near-expiry session renews without changing run, score, lives or payment state (4.633401ms)
+✔ healthy session requires no database mutation (0.279961ms)
+✔ ownership loss cannot extend a session (1.030553ms)
+✔ logout winning the row lock prevents renewal (0.582128ms)
+✔ 24-hour cap requires fresh signing (1.296979ms)
+✔ fresh signed same-wallet session rotates credentials and preserves original run identity (0.896152ms)
+✔ recovery rejects another wallet (0.461868ms)
+✔ recovery rejects expired proof (0.375817ms)
+✔ recovery rejects old proof (0.320455ms)
+✔ recovery rejects used continue (0.337515ms)
+✔ recovery rejects open checkout (0.897464ms)
+✔ completed and old runs cannot be revived (0.651726ms)
+✔ old credential alone is never sufficient for expired recovery (4.053296ms)
+✔ HTTP rejects foreign origins, client-supplied identity and oversized bodies before services (49.690459ms)
+✔ HTTP rejects invalid credential without touching the database (0.508913ms)
+✔ expiry pauses the same mounted run without revoking or clearing it (1.047826ms)
+✔ renewal response cannot swap the wallet, run, or fabricate an unbounded expiry (1.401056ms)
+✔ lost recovery response can retry without creating another session or extending expiry (0.429072ms)
+✔ emitted verify handler keeps the mounted run and reuses proof after a lost response (4.048237ms)
+✔ an expired bearer cannot be silently renewed (0.168031ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 214.854002

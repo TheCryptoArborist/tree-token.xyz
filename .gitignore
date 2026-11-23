@@ -20,3 +20,7 @@ Thumbs.db
 .idea/
 
 /node_modules
+
+# Captured Tree Force review inputs and generated comparison overlay
+/release/treeforce-baseline/
+/release/treeforce-candidate/

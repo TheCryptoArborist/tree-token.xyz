@@ -1,0 +1,19 @@
+{
+  "synthetic": true,
+  "origin": "http://127.0.0.1:4173",
+  "checks": [
+    {
+      "name": "initial application mounts",
+      "actual": 2
+    },
+    {
+      "name": "mounts after lazy GraphQL",
+      "actual": 3
+    },
+    {
+      "name": "verified run survives lazy GraphQL",
+      "actual": 0
+    }
+  ],
+  "errors": []
+}

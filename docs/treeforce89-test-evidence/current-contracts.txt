@@ -1,0 +1,40 @@
+✔ 13 distinct achievements have reachable thresholds (1.990699ms)
+✔ practice and malformed statistics cannot rank (8.75661ms)
+✔ pilot names are bounded plain text (0.509098ms)
+✔ continue contract stays exact and achievements survive authorized resume (1.018709ms)
+✔ the actual campaign routes both bonus types and retains ten combat waves (4.082643ms)
+✔ actual challenge launch clears combat and an entirely missed round exits after all 40 targets (36.792094ms)
+✔ actual challenge target hits award once, skip combat drops and cannot hurt the pilot (0.890043ms)
+✔ perfect completion rewards all targets regardless of extra missed shots, once only (0.772263ms)
+✔ actual shield spends one growth and lasts three seconds, with an expiry cue (0.719998ms)
+✔ original event motifs differ; priority audio preempts shots and independent SFX mute is honored (1.137177ms)
+✔ both bonus intros hold the title for three seconds, then READY and GO; gameplay clocks stay at zero (1.03341ms)
+✔ intro phase boundaries are deterministic, including a slow frame crossing the full sequence (0.210705ms)
+✔ collected cores advance all five weapon profiles without skipping tiers (4.314278ms)
+✔ tutorial stays predictable; later attacks include distinct curves and a dodge warning (1.154065ms)
+✔ bonus occurs between waves four/five and eight/nine, never after the final boss (8.461774ms)
+✔ bonus rewards are score and one earned core; no extra lives or token entitlement (0.428654ms)
+✔ uses exact TREE base units and rejects altered snapshots (2.161633ms)
+✔ real SDK transaction is handed to the wallet; authorization is required before acknowledgement (54.599541ms)
+✔ wallet cancellation and failed transactions grant no lives (1.871959ms)
+✔ wrong recipient, amount, network or holder wallet cannot open checkout (0.489816ms)
+✔ double click never submits two wallet transactions (1.710037ms)
+✔ delayed indexing retries only verification and retains the submitted digest (1.559826ms)
+✔ network failure after payment never automatically charges again (1.44032ms)
+✔ account switching after submission preserves recovery but grants no access (0.798267ms)
+✔ refresh recovery uses a fresh authenticated lease, not another payment (2.793514ms)
+✔ unverifiable grants and unknown wallet errors preserve a recoverable checkout (3.281196ms)
+✔ a lost wallet response is recovered automatically without a second signature or manual digest (3.055485ms)
+✔ automatic recovery never authorizes a mismatched candidate or discards a pending offer (2.053035ms)
+✔ an unindexed payment stays recoverable and cannot start another payment (0.914654ms)
+✔ discovers only recent successful TREE treasury receipts from this sender (3.94116ms)
+✔ trusted mainnet archival lookup recovers after gRPC lookup fails (0.714228ms)
+✔ lookup is bounded and rejects a different network (1.182879ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 32
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 412.417617
