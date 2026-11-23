@@ -1,0 +1,30 @@
+✔ fresh mainnet reads prepare only the first exact configuration call (44.862183ms)
+✔ all four real-fork calls and receipts match approved requests (0.478141ms)
+✔ completed Sui configuration proves empty custody and inactive pass (7.444617ms)
+✔ reject changed request sender (0.443349ms)
+✔ reject changed request recipient (0.1258ms)
+✔ reject changed request nonce (0.199201ms)
+✔ reject changed request chain (0.167262ms)
+✔ reject changed request data (0.117207ms)
+✔ reject changed request value (0.131478ms)
+✔ reject changed request gas (0.264699ms)
+✔ reject changed request fee (0.140362ms)
+✔ reject changed request extra field (0.132821ms)
+✔ reject wallet alteration gas increase (0.143767ms)
+✔ reject wallet alteration price increase (0.076536ms)
+✔ reject wallet alteration wrong transaction (0.068734ms)
+✔ reject wallet alteration wrong nonce (0.159761ms)
+✔ high remaining aggregate fees fail before signing (25.337402ms)
+✔ pending nonce fails before signing (23.725551ms)
+✔ unresolved request prevents another preparation (0.375236ms)
+✔ duplicate receipt hashes rejected (0.154303ms)
+✔ wrong Sui configuration or bound custody rejected (2.082614ms)
+✔ only canonical new configuration path may sign (0.176156ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 346.522626

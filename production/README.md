@@ -1,3 +1,20 @@
+# BNB configuration receipts complete — November 22, 2026
+
+Approved steps 2–5 are complete and independently verified. All four BNB calls
+match exact reviewed transaction contents, successful canonical receipts and final
+security settings. Combined fees: **0.00002372695 BNB**, below the **0.0001-BNB**
+ceiling. Do not repeat them. Evidence and reproduction:
+`docs/multichain/generation-milestone/bnb-configuration-completed/`.
+
+The final Sui binding remains approved (0.1 SUI maximum). Fresh checked simulation
+estimates 0.009266747 SUI and verifies an empty generation-zero bound post-state;
+it has not been submitted. Its canonical signing handoff remains to be prepared.
+Current custody is empty/unbound, and purchases/gameplay are disabled. This
+receipt update changes no live website or chain state. Recapture the full current
+live inventory before publishing the final handoff.
+
+---
+
 # BNB configuration handoff — published November 22, 2026
 
 Locked deployment `6b03c667c92f828214793fb9` was published at **22:53:35
