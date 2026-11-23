@@ -126,8 +126,10 @@ allowed.add('generation-slot/index.html');
 allowed.add('generation-slot/app.js');
 allowed.add('generation-registration/index.html');
 allowed.add('generation-configuration/index.html');
+allowed.add('bnb-configuration/index.html');
 allowed.add('generation-registration/app.js');
 allowed.add('generation-configuration/app.js');
+allowed.add('bnb-configuration/app.js');
 allowed.add('bnb-generation/index.html');
 allowed.add('bnb-generation/app.js');
 await rejectUntrackedOutput(output);
@@ -172,10 +174,13 @@ await cp(resolve(root,'tools/generation-publication/app.js'),resolve(output,'gen
 
 await mkdir(resolve(output,'generation-registration'),{recursive:true});
 await mkdir(resolve(output,'generation-configuration'),{recursive:true});
+await mkdir(resolve(output,'bnb-configuration'),{recursive:true});
 await cp(resolve(root,'tools/generation-registration/index.html'),resolve(output,'generation-registration/index.html'));
 await cp(resolve(root,'tools/generation-configuration/index.html'),resolve(output,'generation-configuration/index.html'));
+await cp(resolve(root,'tools/bnb-configuration/index.html'),resolve(output,'bnb-configuration/index.html'));
 await cp(resolve(root,'tools/generation-registration/app.js'),resolve(output,'generation-registration/app.js'));
 await cp(resolve(root,'tools/generation-configuration/app.js'),resolve(output,'generation-configuration/app.js'));
+await cp(resolve(root,'tools/bnb-configuration/app.js'),resolve(output,'bnb-configuration/app.js'));
 await mkdir(resolve(output,'generation-slot'),{recursive:true});
 await cp(resolve(root,'tools/generation-slot/index.html'),resolve(output,'generation-slot/index.html'));
 await cp(resolve(root,'tools/generation-slot/app.js'),resolve(output,'generation-slot/app.js'));

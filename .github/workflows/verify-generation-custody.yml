@@ -11,6 +11,7 @@ on:
       - 'netlify/preview-functions/generation-registration.mjs'
       - 'netlify/preview-functions/generation-configuration.mjs'
       - 'tools/bnb-generation/**'
+      - 'tools/bnb-configuration/**'
       - 'netlify/preview-functions/generation-slot.mjs'
       - 'netlify/preview-functions/generation-publication.mjs'
       - 'scripts/build-feature-preview.mjs'
@@ -29,6 +30,7 @@ on:
       - 'netlify/preview-functions/generation-registration.mjs'
       - 'netlify/preview-functions/generation-configuration.mjs'
       - 'tools/bnb-generation/**'
+      - 'tools/bnb-configuration/**'
       - 'netlify/preview-functions/generation-slot.mjs'
       - 'netlify/preview-functions/generation-publication.mjs'
       - 'scripts/build-feature-preview.mjs'
@@ -62,11 +64,13 @@ jobs:
       - name: Install isolated EVM dependencies
         run: npm ci --ignore-scripts --prefix contracts/bnb-generation
       - run: |
+          node tools/bnb-configuration/build.mjs
+          git diff --exit-code -- tools/bnb-configuration/app.js
           node tools/bnb-generation/build.mjs
           git diff --exit-code -- tools/bnb-generation/app.js
       - name: EVM contract tests
         run: npm test --prefix contracts/bnb-generation
-      - run: node --test contracts/bnb-generation/test/wallet-preflight.test.mjs contracts/bnb-generation/test/deployment-review.test.mjs contracts/bnb-generation/test/handoff.test.mjs contracts/bnb-generation/test/read-rpc.test.mjs contracts/bnb-generation/test/path-review.test.mjs
+      - run: node --test contracts/bnb-generation/test/wallet-preflight.test.mjs contracts/bnb-generation/test/deployment-review.test.mjs contracts/bnb-generation/test/handoff.test.mjs contracts/bnb-generation/test/read-rpc.test.mjs contracts/bnb-generation/test/path-review.test.mjs contracts/bnb-generation/test/configuration-handoff.test.mjs
       - name: Compile release Solidity
         run: npm run compile --prefix contracts/bnb-generation
       - name: Fetch checksum-pinned Sui compiler
