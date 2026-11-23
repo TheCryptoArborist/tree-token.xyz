@@ -5,7 +5,7 @@ import {functionsConfig,waitForAllBuilds,validateBackend} from './release-arcade
 import {review} from '../tools/generation-registration/core.mjs';
 import {zipFunction} from '@netlify/zip-it-and-ship-it';
 import {C} from '../contracts/nftree-generation/scripts/readiness.mjs';
-export const SITE='aa62f324-b880-47d6-85b8-4ba0700ff5bf',ACCOUNT='69800888d1a3d0483003ae9e',BASE='6b03b405294864b8628c3244',FN='generation-registration';
+export const SITE='aa62f324-b880-47d6-85b8-4ba0700ff5bf',ACCOUNT='69800888d1a3d0483003ae9e',BASE='6b03b6a483cce56f74fa4bfc',FN='generation-registration';
 export const SOURCES={'/play/generation-registration/index.html':'tools/generation-registration/index.html','/play/generation-registration/app.js':'tools/generation-registration/app.js'};
 const DIR='.netlify/generation-registration-release';
 const hash=b=>createHash('sha1').update(b).digest('hex');

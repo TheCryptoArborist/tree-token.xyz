@@ -40,7 +40,7 @@ time plus a monotonic clock rather than the desktop wall clock.
 ## Preservation release
 
 `scripts/release-generation-registration.mjs` captures the entire locked live
-baseline 6b03b405294864b8628c3244, preserving every existing static hash, all 54
+baseline 6b03b6a483cce56f74fa4bfc, preserving every existing static hash, all 54
 complete backend/provider records, five schedules and protected configuration.
 It adds only two page files and one isolated read-only function. The exact-source
 preview provides metadata for that new function; no existing function is rebuilt.
