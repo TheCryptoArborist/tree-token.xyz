@@ -1,11 +1,11 @@
 // Unsigned, simulation-only binding proposal for the registered generation.
-import assert from 'node:assert/strict';
+const assert=Object.assign((v,m='Binding validation failed')=>{if(!v)throw Error(m);},{equal:(a,b,m)=>{if(a!==b)throw Error(m||'Binding value differs');},deepEqual:(a,b)=>{if(canonical(a)!==canonical(b))throw Error('Binding structure differs');}});
 import {Transaction} from '@mysten/sui/transactions';
 import {C,canonical} from './configuration-encoding.mjs';
 import P from '../../bnb-generation/browser/pinned-build.json' with {type:'json'};
 export const peer='0x'+P.addresses.adapter.slice(2).toLowerCase().padStart(64,'0');
 export const options='00030100110100000000000000000000000000030d40';
-const json=o=>o.asMoveObject.contents.json,base64=h=>Buffer.from(h.replace(/^0x/,''),'hex').toString('base64');
+const json=o=>o.asMoveObject.contents.json,base64=h=>btoa(String.fromCharCode(...Uint8Array.from(h.replace(/^0x/,'').match(/../g),x=>parseInt(x,16))));
 const norm=x=>JSON.parse(JSON.stringify(x,(k,v)=>k==='$kind'||k==='type'?undefined:['initialSharedVersion','version'].includes(k)?String(v):v));
 export function binding(state){
  const v=json(state.vault);assert.equal(state.vault.address,C.vault);assert.equal(v.nft,null);assert.equal(v.bound,false);assert.equal(v.phase,0);assert.equal(v.generation,'0');

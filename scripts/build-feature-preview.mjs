@@ -129,6 +129,8 @@ allowed.add('generation-configuration/index.html');
 allowed.add('bnb-configuration/index.html');
 allowed.add('generation-registration/app.js');
 allowed.add('generation-configuration/app.js');
+allowed.add('generation-binding/index.html');
+allowed.add('generation-binding/app.js');
 allowed.add('bnb-configuration/app.js');
 allowed.add('bnb-generation/index.html');
 allowed.add('bnb-generation/app.js');
@@ -188,3 +190,7 @@ await cp(resolve(root,'tools/generation-slot/app.js'),resolve(output,'generation
 await mkdir(resolve(output,'bnb-generation'),{recursive:true});
 await cp(resolve(root,'tools/bnb-generation/index.html'),resolve(output,'bnb-generation/index.html'));
 await cp(resolve(root,'tools/bnb-generation/app.js'),resolve(output,'bnb-generation/app.js'));
+
+await mkdir(resolve(output,'generation-binding'),{recursive:true});
+await cp(resolve(root,'tools/generation-binding/index.html'),resolve(output,'generation-binding/index.html'));
+await cp(resolve(root,'tools/generation-binding/app.js'),resolve(output,'generation-binding/app.js'));
