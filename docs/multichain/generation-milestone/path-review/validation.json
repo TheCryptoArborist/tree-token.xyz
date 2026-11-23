@@ -1,0 +1,19 @@
+{
+  "mystenSkillsCommit": "a384d9a158c4639f075ad3f6644d925108ddfc78",
+  "mystenRead": [
+    "README.md",
+    "ptbs/SKILL.md",
+    "ptbs/building.md",
+    "ptbs/commands.md",
+    "accessing-data/SKILL.md",
+    "accessing-data/graphql.md",
+    "sui-ts-sdk-backend/SKILL.md",
+    "sui-ts-sdk-backend/transactions.md"
+  ],
+  "layerZeroUlnSource": "https://raw.githubusercontent.com/LayerZero-Labs/LayerZero-v2/main/packages/layerzero-v2/evm/messagelib/contracts/uln/UlnBase.sol",
+  "layerZeroUlnSha256": "a7d95c8a810ecc06dafd9ed7b26f62898333a10ce8e89e3bd596a53d954be8b6",
+  "regressionTests": 103,
+  "focusedTests": 21,
+  "mainnetTransactionsSubmitted": 0,
+  "websiteDeployments": 0
+}

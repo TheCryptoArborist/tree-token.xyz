@@ -1,0 +1,29 @@
+✔ all proposed writes target the new adapter via Endpoint and transfer zero value (5.386569ms)
+✔ explicit no-optionals sentinel is distinguished from effective zero count (3.586583ms)
+✔ fork evidence rejects each unauthorized setter and keeps the pass inactive (0.194764ms)
+✔ same three named classic operators exist on each chain without deprecated/read-only variants (0.246873ms)
+✔ checked mainnet simulation creates only its own channel and registry entry (2.335385ms)
+✔ registration intent only registers the new package and empty vault (3.704831ms)
+✔ preflight rejects wrong owner (1.313402ms)
+✔ preflight rejects retired vault (0.494466ms)
+✔ preflight rejects already registered (0.862141ms)
+✔ preflight rejects bound vault (0.380124ms)
+✔ preflight rejects funded vault (0.461667ms)
+✔ preflight rejects wrong endpoint (0.374756ms)
+✔ preflight rejects stale state (2.446732ms)
+✔ simulation proof rejects sender (0.664953ms)
+✔ simulation proof rejects extra command (0.39767ms)
+✔ simulation proof rejects wrong package (0.386614ms)
+✔ simulation proof rejects over-budget (0.428697ms)
+✔ simulation proof rejects metadata injection (0.455437ms)
+✔ simulation proof rejects NFT mutation (0.463109ms)
+✔ simulation proof rejects cap transfer (0.546765ms)
+✔ simulation proof rejects wrong registration identity (0.406543ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 416.633523

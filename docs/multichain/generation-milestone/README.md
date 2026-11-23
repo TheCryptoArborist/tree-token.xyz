@@ -1,3 +1,8 @@
+Current next-step review: [LayerZero registration and path proposal](./path-review/README.md).
+The new Sui application is unregistered. A checked registration simulation passed
+at 0.004668124 SUI with a proposed 0.02-SUI ceiling. No new live write occurred;
+registration approval and its canonical wallet handoff are next.
+
 # Completed BNB deployment — November 22, 2026 (America/Chicago)
 
 The user completed all three approved MetaMask/Ledger transactions. Independent
