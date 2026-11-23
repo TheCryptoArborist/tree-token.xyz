@@ -28,7 +28,7 @@ try {
     await page.getByRole('heading',{name:'Protect the Tree of Life',exact:true}).waitFor();
     await page.getByRole('button',{name:'Next: your hero',exact:true}).click();
     await page.getByRole('heading',{name:'Lead from the front',exact:true}).waitFor();
-    assert.match(await page.locator('#description').innerText(),/fires automatically when enemies are in range/);
+    assert.match(await page.locator('#description').innerText(),/Stop to attack automatically/);
     assert.match(await page.locator('#description').innerText(),/Hold Left or Right/);
     await page.getByRole('button',{name:'Next: your army',exact:true}).click();
     await page.getByRole('heading',{name:'Grow your army',exact:true}).waitFor();
@@ -116,7 +116,7 @@ try {
   }
   const failureContext=await browser.newContext();
   const failurePage=await failureContext.newPage();
-  await failurePage.route('**/assets/tree-hero-rig.webp',route=>route.abort());
+  await failurePage.route('**/assets/combat-parts.webp',route=>route.abort());
   await failurePage.goto(url,{waitUntil:'networkidle'});
   await failurePage.getByText('The artwork could not load. Reload this page to try again.',{exact:true}).waitFor();
   assert(await failurePage.locator('#next').isDisabled(),'Failed artwork must block battle start');

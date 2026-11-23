@@ -25,3 +25,13 @@ Machines retain their original sprite with travel-driven wheel highlights.
 This is a six-pose prototype gait, not a skeletal animation rig. The existing
 hero artwork and enlarged-machine boss remain unchanged. Reduced motion freezes
 the gait frames as well as ambient movement.
+
+## Prototype 0.12 combat parts
+
+`combat-parts.webp` is an original generated 1536×1024 transparent atlas using
+our existing hero and machine designs as references. Six explicit source
+rectangles supply the hero torso, gun arm, fist arm, machine chassis, articulated
+machine arm and saw blade. Arms rotate about shoulders; the blade rotates about
+its axle. The original cape and leg rig remain in use. This update does not
+claim acceptance of the hero's existing walk cycle. Approved forest troop art
+is unchanged. No Army of Darkness sprites, audio or source code are included.
