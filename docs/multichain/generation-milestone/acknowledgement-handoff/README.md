@@ -63,7 +63,7 @@ function packaged successfully as Node 24 streaming, exact single API route.
 
 ## Production and remaining work
 
-Fresh locked baseline `6b0466dbe649f3c4abd225f9`: 684 static paths, 59 full backend
+Fresh locked baseline `6b046c3ccb8dfd3eb651353c`: 684 static paths, 59 full backend
 records and five schedules. Preserve every existing static hash, full provider
 record, runtime/protected settings and schedules. Add exactly two page files and
 one GET-only service (686 paths, 60 functions). Never deploy the historical root
@@ -72,3 +72,7 @@ build. Capture newer unrelated production if the baseline changes.
 Next: audit exact-source candidate, publish/verify canonical page, obtain the
 user's one Slush signature/receipt, verify actual BNB burn, then separately review
 BNB completion. GitHub feature branch and PR #280 are the durable record.
+
+Initial preparation run 45219415615 stopped before candidate creation because
+Tree Army projectile-origin release changed the baseline to
+`6b046c3ccb8dfd3eb651353c`. The replacement preserves that newer release.

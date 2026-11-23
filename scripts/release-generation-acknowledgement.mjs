@@ -5,7 +5,7 @@ import {functionsConfig,waitForAllBuilds,validateBackend} from './release-arcade
 import {review} from '../tools/generation-acknowledgement/core.mjs';
 import {zipFunction} from '@netlify/zip-it-and-ship-it';
 import {C} from '../contracts/nftree-generation/scripts/readiness.mjs';
-export const SITE='aa62f324-b880-47d6-85b8-4ba0700ff5bf',ACCOUNT='69800888d1a3d0483003ae9e',BASE='6b0466dbe649f3c4abd225f9',FN='generation-acknowledgement';
+export const SITE='aa62f324-b880-47d6-85b8-4ba0700ff5bf',ACCOUNT='69800888d1a3d0483003ae9e',BASE='6b046c3ccb8dfd3eb651353c',FN='generation-acknowledgement';
 export const SOURCES={'/play/generation-acknowledgement/index.html':'tools/generation-acknowledgement/index.html','/play/generation-acknowledgement/app.js':'tools/generation-acknowledgement/app.js'};
 const DIR='.netlify/generation-acknowledgement-release';
 const hash=b=>createHash('sha1').update(b).digest('hex');

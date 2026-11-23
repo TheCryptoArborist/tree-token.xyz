@@ -7,7 +7,7 @@ are prepared and tested; publication is pending. Original NFTree #2720 stays in
 dev wallet 45c4. BNB burn delivery is verified separately after source execution.
 No live acknowledgement has been submitted by Codex.
 
-Preserve freshly observed locked baseline `6b0466dbe649f3c4abd225f9`: **684 static
+Preserve freshly observed locked baseline `6b046c3ccb8dfd3eb651353c`: **684 static
 paths, 59 full backend records, five schedules**. Add only two static files and one
 read-only service; preserve runtime/protected settings and all newer releases.
 Never publish the historical root build. Source tests, setup, evidence and remaining
