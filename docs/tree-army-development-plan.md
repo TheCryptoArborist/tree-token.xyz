@@ -60,3 +60,20 @@ Candidate and canonical game/cabinet browser checks all passed. The live phone
 screenshot was inspected. The release preserved 681 unrelated static paths,
 59 complete backend/provider records, five schedules and protected configuration.
 Task 2 is next; task 3 still includes the unaccepted hero walking animation.
+
+## Opening-wave pacing follow-up
+
+The November 23 playtest feedback reported an opening lasting about ten seconds.
+The 0.9 code scheduled seven enemies from 2 to approximately 17.5 seconds;
+stationary hero/special and army/special simulations cleared it in 20–21 seconds.
+The reported ten-second result was not reproduced.
+
+Prototype 0.10 schedules ten opening enemies at 2, 6, 10, 15, 20, 25, 30, 35,
+40 and 45 seconds of active battle. Completion still requires all scheduled
+enemies to be defeated. There is no extra victory-delay timer. Normal summons
+and specials cleared the revised wave in 47.68–49.60 simulated seconds across
+320, 390, 844 and 1100px canvas widths; actual player time will vary. The normal
+per-enemy seed reward means wave-one earnings rise from 86 to 110 seeds.
+Pause, restart, early field clearing and unchanged wave-two cadence are tested.
+Later waves, hero weapons, projectile origins and animation are unchanged.
+Latest MystenLabs/skills README checked; this change uses no Sui APIs.
