@@ -1,3 +1,32 @@
+# Return-message signing handoff — published November 23, 2026
+
+Locked deployment `6b0466dbe649f3c4abd225f9` was published at **10:19:04
+America/Chicago** (`2026-11-23T16:19:04.644Z`). Canonical page:
+**https://tree-token.xyz/play/bnb-return/**.
+
+One approved new-adapter `send(2)`, MetaMask + Ledger admin 8789, to return the
+original NFTree #2720 to Sui dev 45c4. Maximum **0.006 BNB total** (0.0059 message
+fee + 0.0001 gas). No USDT. The user signature remains pending; Codex submitted
+no live return transaction. Source confirmation is not proof of Sui delivery.
+Verify actual release/ownership independently afterward. Acknowledgement,
+completion, sales and gameplay remain separate reviewed milestones.
+
+Preserved all **682 existing static paths, 59 complete backend/provider records,
+and five schedules**, runtime and protected settings from newer Tree Army release
+`6b0465140cb614081b5a0f52`. Exactly two static paths were added; no backend changes.
+Total: **684 static paths, 59 functions, five schedules**. The initial publication
+attempt safely stopped when its older baseline changed. Never publish the
+historical root build or overwrite newer unrelated updates.
+
+Source `8757aaf`, control `674af45`; candidate/publication runs
+`45214517145` / `45214868520`. All 365 regression/preservation checks, hosted 52
+Move and 16 EVM lifecycle tests, and nine browser scenarios across source,
+candidate and canonical site passed. Exact canonical bytes and current custody
+were checked independently. Setup, artifact digests, evidence and remaining work:
+`docs/multichain/generation-milestone/return-handoff/`.
+
+---
+
 # Approved return-message handoff preparation — November 23, 2026
 
 The user authorized one BNB `send(2)` for the locked redemption request to Sui dev

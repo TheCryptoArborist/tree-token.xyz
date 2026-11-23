@@ -5,8 +5,7 @@ at **0.006 BNB total**: native message fee at most 0.0059 BNB and gas at most
 0.0001 BNB. No further USDT payment, repeat purchase, acknowledgement, completion,
 security change, upgrade, public sale or gameplay activation is included.
 
-Canonical page: `https://tree-token.xyz/play/bnb-return/` (publication pending
-until a release record is added). MetaMask + Ledger admin 8789 signs one request,
+Canonical page: `https://tree-token.xyz/play/bnb-return/` (published and locked; see `release.json`). MetaMask + Ledger admin 8789 signs one request,
 nonce 4751, to the new adapter. The page refreshes the exact live fee; the fixed
 gas limit is 600000, checked against current estimation and the gas/total caps.
 The padded review estimate was lower; the larger signing gas limit still fits the
@@ -74,8 +73,8 @@ provider/runtime record, schedule and protected setting is compared before and
 after publication. Preserve newer unrelated releases and never publish the
 historical root build.
 
-Remaining: audit candidate, publish/verify the canonical page, obtain the user's
-source signature/receipt, then independently verify Sui delivery. Later Sui burn
+Remaining: obtain the user's source signature/receipt, then independently verify
+Sui delivery. Later Sui burn
 acknowledgement and BNB generation completion require fresh reviews. No live
 return message has been sent by Codex, and website gameplay remains disabled.
 
@@ -88,3 +87,8 @@ The initial candidate was superseded before publication by Tree Army release
 `6b0465140cb614081b5a0f52` (one updated existing static path). Publication run
 45211806293 correctly stopped on the changed baseline without publishing. The
 replacement candidate preserves this newer release; wallet source is unchanged.
+
+Published at 10:19:04 America/Chicago on November 23, 2026. All nine browser
+scenarios also passed against the replacement candidate and canonical site.
+Canonical script bytes and live custody were independently verified. Complete
+release/artifact identifiers are recorded in `release.json`.
