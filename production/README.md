@@ -1,3 +1,38 @@
+# Tree Army timed combat and articulated weapons — published November 23, 2026
+
+[Prototype 0.12](https://tree-token.xyz/play/tree-army/test/) implements stop-to-attack,
+a distinct close-range punch, neutral gun carry/aim/fire/recovery, and spinning
+machine saws with wind-up/contact/recovery. Ordinary ranged hits resolve at the
+firing moment; Power Shot remains a separate travelling special. Retreat can
+dodge enemy strikes. Approved opening spawn timing/count and troop artwork remain.
+
+Deployment `6b048faddcf2eb2d8c595f60` was published at **13:11:50 America/Chicago**
+(`2026-11-23T19:11:50.734Z`) and verified ready and locked by
+[run 45243887801](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45243887801).
+Source: `40110da43b62a3df930801081cd9893aa925a5ac`, PR #302.
+Fresh baseline: `6b047fa4c9ac1e8b32621216`.
+
+Only playtest HTML changed and the original `combat-parts.webp` atlas was added.
+All **687 unrelated static paths**, **60 complete backend/provider records**,
+**five schedules**, runtime and protected configuration were preserved;
+total inventory **689 paths**. No backend packages were rebuilt.
+
+Gameplay outcomes, release preservation, historical preview inventory and four
+viewport checks passed. Candidate and canonical game/cabinet checks passed.
+The canonical phone screenshot was inspected. A normal UI mobile run cleared
+wave one in **47.786 seconds**; simulations cleared in 47.04–49.44 seconds.
+An unaccelerated diagnostic recording exercises the new attacks in both facings
+and retreat. The existing hero leg rig remains a separate, unaccepted visual issue.
+
+Records: `production/tree-army-combat-{release,backend,browser,cabinet}-20261123.json`,
+`docs/tree-army-combat-live-phone-20261123.png`, the development task list,
+and `docs/tree-army-combat-{mobile-20261123.webm,walltime-20261123.json}`.
+Original release artifact #14853897524 SHA256:
+`e521fdd3f37dabe34519256fd402945fe846c191b631af85ecf8ac597394738a`.
+Capture a fresh complete live baseline before subsequent publication.
+
+---
+
 # Tree Army hero projectile origins — published November 23, 2026
 
 [Prototype 0.11](https://tree-token.xyz/play/tree-army/test/) aligns ordinary
