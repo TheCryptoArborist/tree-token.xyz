@@ -47,7 +47,7 @@ A read-only BNB `eth_call` models the exact authenticated endpoint invocation;
 its receiver gas estimate is **98,370**, below configured **200,000**. An ordinary
 admin caller is rejected. This is not a live endpoint delivery or burn, nor proof
 of future verifier/executor completion. Actual source receipt, BNB packet delivery,
-PassBurned/Transfer-to-zero events, Retired state and nonexistent token ownership
+RedemptionFinalized/Transfer-to-zero events, Retired state and nonexistent token ownership
 must be independently verified after the user signs.
 
 All **42 checks passed**: 14 acknowledgement verifier/builder cases, 12 existing
