@@ -1,3 +1,23 @@
+# Private purchase review prepared — November 23, 2026
+
+A local mainnet-fork rehearsal passed the proposed exact 25-USDT approval,
+private unpause, generation-1 purchase, re-pause and redemption lock to dev 45c4.
+No balances/storage were overridden and no live transaction was submitted.
+The five-action proposed cap is **25 USDT + 0.0001 BNB gas**; observed gas limits
+at current price sum to 0.00001975075 BNB. Separate explicit payment/lock approval
+is still required before a signing handoff. The subsequent return message quote
+is 0.004577084124304116 BNB plus gas and is outside that cap.
+
+Live state remains original in Sui custody and BNB Ready/paused/nonplayable.
+Purchase would make the contract pass Active until redemption lock; pausing alone
+does not revoke it. Website gameplay remains disabled. Evidence, calldata, fee
+boundaries and remaining return steps:
+`docs/multichain/generation-milestone/private-purchase-review/`.
+No website or contract changes were deployed. Preserve the full current live
+inventory before any later canonical signing-page release.
+
+---
+
 # First reserve delivered — November 23, 2026
 
 The approved atomic deposit and reserve is complete. Sui digest
