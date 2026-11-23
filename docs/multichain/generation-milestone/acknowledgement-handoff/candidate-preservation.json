@@ -1,0 +1,13 @@
+{
+  "baseline": "6b046c3ccb8dfd3eb651353c",
+  "candidate": "6b046d714f59325f88ea55af",
+  "existingFullBackendRecordsPreserved": 59,
+  "schedulesEqual": true,
+  "newFunction": "generation-acknowledgement",
+  "newFunctionHash": "4575e849879516892458ed953953e88b3431ddde3dcb109518875ff34e14b8dc",
+  "newFunctionRuntime": "nodejs24.x",
+  "newFunctionRoute": "/api/generation-acknowledgement",
+  "candidateRun": "45219737786",
+  "candidateArtifactId": "14841200090",
+  "candidateArtifactDigest": "sha256:581f8ae8dc052373497ef1d6099c3f5dbcf2e1537dfe032a72569c6f318736f0"
+}
