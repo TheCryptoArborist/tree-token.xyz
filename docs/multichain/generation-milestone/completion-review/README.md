@@ -72,3 +72,5 @@ This review changes no live website or contract. After approval, preserve the
 complete then-current production baseline and use only a canonical
 `tree-token.xyz/play/` MetaMask/Ledger handoff. GitHub branch/PR #280 retain the
 review, setup, evidence and remaining task.
+
+Hosted [CI run 45232405636](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45232405636) passed for source `63272b9e2fed9c7529589c5700a835fb34797f60`: 52 Move contract tests and release build, 16 EVM contract tests, 398 unsigned guard tests and 103 BNB guard tests, with no failures. `validation.json` records these results. New completion fee approval remains pending.
