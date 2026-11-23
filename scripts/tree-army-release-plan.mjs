@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
-// Prototype 0.8: articulated hero gait; preserve the current courtyard release.
+// Prototype 0.9: single-lane controls; replace only the reviewed 0.8 HTML.
 export const REPLACED_HASHES = {
-  '/play/tree-army/test/index.html': 'a91f8af6e4c0b7c1640a498a414d0a56b6aa238c',
+  '/play/tree-army/test/index.html': '9533798a3c190a919ad9b95146ba96331b5ca401',
 };
-export const ADDED_PATHS = ['/play/tree-army/test/assets/tree-hero-rig.webp'];
+export const ADDED_PATHS = [];
 export const DELIVERY_PATHS = [...Object.keys(REPLACED_HASHES), ...ADDED_PATHS];
 // Preview builds also need assets already present in production. Keep this
 // catalog independent of the smaller, one-time publication allowlist.
