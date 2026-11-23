@@ -1,0 +1,31 @@
+{
+  "verifiedAt": "2026-11-23T03:12:31.155Z",
+  "mockedWalletIdentity": true,
+  "simulatedWalletReadFailure": true,
+  "realChainReads": true,
+  "submittedTransactions": 0,
+  "adapterProgressPreserved": true,
+  "status": "Step 2 of 3: Deploy BNB pass.\nMaximum remaining fees at this quote: 0.0001181764 BNB. Approved total cap: 0.001 BNB.\nConfirm on Ledger when MetaMask asks. Do not increase fee limits in MetaMask. Review expires in two minutes.",
+  "methods": [
+    "eth_chainId",
+    "eth_getCode",
+    "eth_getCode",
+    "eth_getCode",
+    "eth_getTransactionByHash",
+    "eth_getTransactionReceipt",
+    "eth_getCode",
+    "eth_getCode",
+    "eth_call",
+    "eth_call",
+    "eth_call",
+    "eth_call",
+    "eth_call",
+    "eth_call",
+    "eth_call",
+    "eth_getTransactionCount",
+    "eth_getTransactionCount",
+    "eth_gasPrice",
+    "eth_getBalance",
+    "eth_estimateGas"
+  ]
+}
