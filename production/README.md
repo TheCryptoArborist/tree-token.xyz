@@ -1,3 +1,31 @@
+# Sui acknowledgement signing handoff — published November 23, 2026
+
+Locked deployment `6b046d714f59325f88ea55af` was published at **10:47:27
+America/Chicago** (`2026-11-23T16:47:27.549Z`). Canonical Slush page:
+**https://tree-token.xyz/play/generation-acknowledgement/**.
+
+One approved Sui `send(3)` acknowledgement, dev account 45c4, maximum **0.2 SUI
+(0.15 message fee + 0.05 gas)**. NFTree #2720 stays in the wallet. No USDT payment,
+new deposit, sales or gameplay activation. The user's signature remains pending;
+Codex submitted no live acknowledgement. Source receipt confirmation explicitly
+leaves BNB burn unchecked; verify actual destination delivery afterward. BNB
+completion remains a separately reviewed later transaction.
+
+Preserved **684 static paths, all 59 existing complete backend/provider records,
+five schedules, runtime and protected settings** from Tree Army projectile-origin
+release `6b046c3ccb8dfd3eb651353c`. Added two static page files and one fixed GET-only
+service: **686 paths, 60 functions, five schedules**. The first preparation stopped
+safely when its baseline changed. Never publish the historical root build.
+
+Source `96b6225`, control `6e42d5d`; candidate/publication runs
+`45219737786` / `45220208588`. All 388 regression checks, 11 preservation/preview
+checks, hosted 52 Move/16 EVM lifecycle tests, and eight browser scenarios against
+source/candidate/canonical passed. Exact canonical script bytes and a complete
+fresh live review were independently verified. Evidence, artifact digests, setup
+and remaining tasks: `docs/multichain/generation-milestone/acknowledgement-handoff/`.
+
+---
+
 # Approved acknowledgement handoff preparation — November 23, 2026
 
 The user approved one Sui `send(3)` acknowledgement, maximum **0.2 SUI total**

@@ -1,0 +1,54 @@
+{
+  "assetOrigin": "https://tree-token.xyz",
+  "realWalletUsed": false,
+  "cases": [
+    {
+      "scenario": "returned-account",
+      "passed": true,
+      "mockSignatureRequests": 0,
+      "chainSubmissions": 0
+    },
+    {
+      "scenario": "rejection",
+      "passed": true,
+      "mockSignatureRequests": 1,
+      "chainSubmissions": 0
+    },
+    {
+      "scenario": "wrong-account",
+      "passed": true,
+      "mockSignatureRequests": 0,
+      "chainSubmissions": 0
+    },
+    {
+      "scenario": "stale-review",
+      "passed": true,
+      "mockSignatureRequests": 0,
+      "chainSubmissions": 0
+    },
+    {
+      "scenario": "desktop-clock-skew",
+      "passed": true,
+      "mockSignatureRequests": 0,
+      "chainSubmissions": 0
+    },
+    {
+      "scenario": "changed-wallet-bytes",
+      "passed": true,
+      "mockSignatureRequests": 1,
+      "chainSubmissions": 0
+    },
+    {
+      "scenario": "pending-receipt",
+      "passed": true,
+      "mockSignatureRequests": 0,
+      "chainSubmissions": 0
+    },
+    {
+      "scenario": "off-origin",
+      "passed": true,
+      "mockSignatureRequests": 0,
+      "chainSubmissions": 0
+    }
+  ]
+}

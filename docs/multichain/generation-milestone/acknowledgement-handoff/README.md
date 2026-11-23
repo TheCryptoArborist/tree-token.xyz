@@ -6,7 +6,7 @@ security changes, public sale or gameplay activation. BNB completion remains a
 later reviewed step. No live acknowledgement has been submitted by Codex.
 
 Canonical route: `https://tree-token.xyz/play/generation-acknowledgement/`.
-Publication is pending until a release record is added. Use desktop Slush account
+Published and locked; see `release.json`. Use desktop Slush account
 45c4. Never use preview domains for wallet signing.
 
 ## Safeguards and verification boundaries
@@ -69,10 +69,15 @@ record, runtime/protected settings and schedules. Add exactly two page files and
 one GET-only service (686 paths, 60 functions). Never deploy the historical root
 build. Capture newer unrelated production if the baseline changes.
 
-Next: audit exact-source candidate, publish/verify canonical page, obtain the
-user's one Slush signature/receipt, verify actual BNB burn, then separately review
+Next: obtain the user's one Slush signature/receipt, verify actual BNB burn,
+then separately review
 BNB completion. GitHub feature branch and PR #280 are the durable record.
 
 Initial preparation run 45219415615 stopped before candidate creation because
 Tree Army projectile-origin release changed the baseline to
 `6b046c3ccb8dfd3eb651353c`. The replacement preserves that newer release.
+
+Published November 23, 2026 at **10:47:27 America/Chicago**. All eight browser
+scenarios also passed against candidate and canonical assets. Exact served script
+bytes and a complete fresh live review were independently verified. Source CI
+45219737385 passed, including 52 Move and 16 EVM lifecycle tests.
