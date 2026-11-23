@@ -2,9 +2,17 @@ const { chromium } = require("playwright"),
   assert = require("node:assert/strict"),
   fs = require("node:fs");
 const revision = process.env.TREEFORCE_REVISION || "r11";
-assert.ok(["r10", "r11"].includes(revision));
+assert.ok(["r10", "r11", "r12", "r13"].includes(revision));
 const origin =
-  revision === "r11" ? "http://127.0.0.1:4185" : "http://127.0.0.1:4184";
+  process.env.TREEFORCE_URL ||
+  (revision === "r13"
+    ? "http://127.0.0.1:4187"
+    : revision === "r12"
+      ? "http://127.0.0.1:4186"
+      : revision === "r11"
+        ? "http://127.0.0.1:4185"
+        : "http://127.0.0.1:4184");
+assert.match(origin, /^http:\/\/127\.0\.0\.1:\d+$/);
 (async () => {
   const browser = await chromium.launch({
     headless: true,
@@ -181,7 +189,7 @@ const origin =
       assert.equal(result.hero.key, "playerSheet");
       assert.equal(result.dims.width, 30);
       assert.equal(result.dims.height, 22);
-      if (revision === "r11") {
+      if (revision !== "r10") {
         assert.notEqual(result.pose0, result.pose1);
         assert.equal(result.contrast, 0.18);
         assert.equal(result.foreground, 0.22);

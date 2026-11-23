@@ -2,9 +2,17 @@ const { chromium } = require("playwright");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const revision = process.env.TREEFORCE_REVISION || "r8";
-assert.ok(["r8", "r10"].includes(revision));
+assert.ok(["r8", "r10", "r12", "r13"].includes(revision));
 const origin =
-  revision === "r10" ? "http://127.0.0.1:4184" : "http://127.0.0.1:4182";
+  process.env.TREEFORCE_URL ||
+  (revision === "r13"
+    ? "http://127.0.0.1:4187"
+    : revision === "r12"
+      ? "http://127.0.0.1:4186"
+      : revision !== "r8"
+        ? "http://127.0.0.1:4184"
+        : "http://127.0.0.1:4182");
+assert.match(origin, /^http:\/\/127\.0\.0\.1:\d+$/);
 (async () => {
   const browser = await chromium.launch({
     headless: true,
@@ -53,7 +61,7 @@ const origin =
         else
           body = body.replace(
             "function W(e){",
-            `window.__audit={lifecycle:audioLifecycle,mixer:U,audio:K,start:J,cue:W${revision === "r10" ? ",score:canopyScore" : ""}};function W(e){`,
+            `window.__audit={lifecycle:audioLifecycle,mixer:U,audio:K,start:J,cue:W${revision !== "r8" ? ",score:canopyScore" : ""}};function W(e){`,
           );
         return route.fulfill({ response, body });
       }
@@ -80,7 +88,7 @@ const origin =
     });
     await page.waitForFunction(() => __audit.lifecycle.timer !== undefined);
     checks.push("music starts after user gesture");
-    if (revision === "r10") {
+    if (revision !== "r8") {
       await page.evaluate(() => s.startChallenge(2));
       await page.waitForFunction(() => __audit.score.mood === "bonus");
       await page.evaluate(() => s.startWave(3));
@@ -274,7 +282,7 @@ const origin =
     assert.deepEqual(errors, []);
     const report = { synthetic: true, checks, zero, destroyed, errors };
     fs.writeFileSync(
-      revision === "r10"
+      revision !== "r8"
         ? "docs/treeforce89-sound-identity-browser.json"
         : "docs/treeforce89-audio-lifecycle-checks.json",
       JSON.stringify(report, null, 2),

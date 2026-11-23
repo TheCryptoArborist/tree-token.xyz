@@ -1,6 +1,10 @@
 const { chromium } = require("playwright"),
   assert = require("node:assert/strict"),
   fs = require("node:fs");
+const revision = process.env.TREEFORCE_REVISION || "r12";
+assert.ok(["r12", "r13"].includes(revision));
+const origin = process.env.TREEFORCE_URL || "http://127.0.0.1:4186";
+assert.match(origin, /^http:\/\/127\.0\.0\.1:\d+$/);
 (async () => {
   const browser = await chromium.launch({
     headless: true,
@@ -19,7 +23,7 @@ const { chromium } = require("playwright"),
       page.on("pageerror", (e) => errors.push(e.message));
       await page.route("**/*", async (route) => {
         const url = new URL(route.request().url());
-        if (url.origin !== "http://127.0.0.1:4186") return route.abort();
+        if (url.origin !== origin) return route.abort();
         if (url.pathname === "/__local/practice") {
           const response = await route.fetch();
           return route.fulfill({
@@ -32,9 +36,7 @@ const { chromium } = require("playwright"),
         }
         return route.continue();
       });
-      await page.goto(
-        "http://127.0.0.1:4186/__local/practice?lab=1&revision=r12",
-      );
+      await page.goto(origin + `/__local/practice?lab=1&revision=${revision}`);
       await page.waitForFunction(
         () => window.__game?.scene.getScene("game")?.player,
       );
@@ -151,7 +153,7 @@ const { chromium } = require("playwright"),
       assert.ok(challenge.text.includes("COMPLETION BONUS +10,000"));
       assert.ok(challenge.fits);
       await page.screenshot({
-        path: `docs/treeforce89-challenge-r12-${width}.png`,
+        path: `docs/treeforce89-challenge-${revision}-${width}.png`,
       });
       const partial = await page.evaluate(() => {
         s.time.removeAllEvents();
@@ -216,7 +218,7 @@ const { chromium } = require("playwright"),
       assert.ok(wave.text.includes("+1,234 POINTS THIS ATTEMPT"));
       assert.ok(wave.fits);
       await page.screenshot({
-        path: `docs/treeforce89-wave-clear-r12-${width}.png`,
+        path: `docs/treeforce89-wave-clear-${revision}-${width}.png`,
       });
       assert.deepEqual(errors, []);
       results.push({ width, timing, challenge, partial, wave, errors });

@@ -3,6 +3,8 @@ const { chromium } = require("playwright");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const origin = process.env.TREEFORCE_URL || "http://127.0.0.1:4180";
+const revision = process.env.TREEFORCE_REVISION || "r6";
+assert.ok(["r6", "r12", "r13"].includes(revision));
 assert.match(origin, /^http:\/\/127\.0\.0\.1:\d+$/);
 (async () => {
   const browser = await chromium.launch({
@@ -19,26 +21,28 @@ assert.match(origin, /^http:\/\/127\.0\.0\.1:\d+$/);
       if (url.origin !== origin) return route.abort();
       if (
         url.pathname === "/__local/practice" ||
-        url.pathname.endsWith("/arcade-review-r6.js")
+        url.pathname.endsWith(`/arcade-review-${revision}.js`)
       ) {
         const response = await route.fetch();
         let body = await response.text();
         const needle =
           url.pathname === "/__local/practice"
             ? "game = createCanopyGame"
-            : "function W(e){if(!B)";
+            : "function W(e){";
         assert.equal(body.split(needle).length, 2);
         body = body.replace(
           needle,
           url.pathname === "/__local/practice"
             ? "game = window.__game = createCanopyGame"
-            : "window.__audit={mixer:U,audio:K};function W(e){if(!B)",
+            : "window.__audit={mixer:U,audio:K};function W(e){",
         );
         return route.fulfill({ response, body });
       }
       return route.continue();
     });
-    await page.goto(origin + "/__local/practice?lab=1&revision=r6&scene=title");
+    await page.goto(
+      origin + `/__local/practice?lab=1&revision=${revision}&scene=title`,
+    );
     await page.waitForFunction(() => window.__game?.scene.isActive("title"));
     await page
       .locator("#practice canvas")

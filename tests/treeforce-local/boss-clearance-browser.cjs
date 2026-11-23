@@ -2,9 +2,17 @@ const { chromium } = require("playwright");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const revision = process.env.TREEFORCE_REVISION || "r9";
-assert.ok(["r8", "r9"].includes(revision));
+assert.ok(["r8", "r9", "r12", "r13"].includes(revision));
 const origin =
-  revision === "r9" ? "http://127.0.0.1:4183" : "http://127.0.0.1:4182";
+  process.env.TREEFORCE_URL ||
+  (revision === "r13"
+    ? "http://127.0.0.1:4187"
+    : revision === "r12"
+      ? "http://127.0.0.1:4186"
+      : revision === "r9"
+        ? "http://127.0.0.1:4183"
+        : "http://127.0.0.1:4182");
+assert.match(origin, /^http:\/\/127\.0\.0\.1:\d+$/);
 (async () => {
   const browser = await chromium.launch({
     headless: true,
@@ -115,13 +123,11 @@ const origin =
         boss.x = 240;
         boss.y = 180;
         s.enemyFire(boss);
-        const shots = s.bullets
-          .getChildren()
-          .map((b) => ({
-            x: b.x,
-            y: b.y,
-            speed: Math.hypot(b.body.velocity.x, b.body.velocity.y),
-          }));
+        const shots = s.bullets.getChildren().map((b) => ({
+          x: b.x,
+          y: b.y,
+          speed: Math.hypot(b.body.velocity.x, b.body.velocity.y),
+        }));
         boss.body.updateFromGameObject();
         boss.body.updateCenter();
         const body = {
@@ -169,7 +175,7 @@ const origin =
       assert.ok(Math.abs(result.body.height - 82 * 1.08) < 0.001);
       assert.ok(Math.abs(result.body.centerX - result.body.spriteX) < 1);
       assert.ok(Math.abs(result.body.centerY - result.body.spriteY) < 1);
-      if (revision === "r9") {
+      if (revision !== "r8") {
         assert.ok(result.minTop > result.hudBottom + 6);
         assert.ok(result.damageMin > result.hudBottom);
         assert.ok(result.maxBottom < result.bannerTop);

@@ -1,0 +1,64 @@
+connected {
+  score: 0,
+  lives: 3,
+  paused: true,
+  wave: 0,
+  playerY: 460,
+  gameCount: 2
+}
+after graph {
+  score: 0,
+  lives: 3,
+  paused: true,
+  wave: 0,
+  playerY: 460,
+  gameCount: 2
+}
+testing disconnect
+testing expiry
+testing save
+{
+  "checks": [
+    {
+      "name": "initial application mounts",
+      "actual": 1
+    },
+    {
+      "name": "mounts after lazy GraphQL",
+      "actual": 1
+    },
+    {
+      "name": "verified run survives lazy GraphQL",
+      "actual": 1
+    },
+    {
+      "name": "fresh run zero score and three lives",
+      "actual": true
+    },
+    {
+      "name": "temporary disconnect retains paused run",
+      "actual": true
+    },
+    {
+      "name": "expiry and same-wallet recovery retain mounted run",
+      "actual": true
+    },
+    {
+      "name": "failed save retry and receipt handoff",
+      "actual": true
+    },
+    {
+      "name": "share card keeps landscape proportions",
+      "actual": 1.7694870086608927
+    },
+    {
+      "name": "explicit disconnect clears game identity",
+      "actual": true
+    },
+    {
+      "name": "second wallet starts separate run and profile",
+      "actual": true
+    }
+  ],
+  "errors": []
+}
