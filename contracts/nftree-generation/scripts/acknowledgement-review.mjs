@@ -1,5 +1,5 @@
 import {acknowledgementTransaction} from './acknowledgement-transaction.mjs';
-import {Q} from '../../bnb-generation/browser/return-core.mjs';
+import Q from '../../bnb-generation/browser/purchase-pinned.json' with {type:'json'};
 const redemption=Q.redemption;
 const assert=Object.assign((v,m='Acknowledgement validation failed')=>{if(!v)throw Error(m);},{equal:(a,b,m)=>{if(a!==b)throw Error(m||'Acknowledgement value differs');},deepEqual:(a,b)=>{if(canonical(a)!==canonical(b))throw Error('Acknowledgement structure differs');}});import {encodePacked,keccak256,concatHex} from 'viem';import {C,canonical} from './configuration-encoding.mjs';import {peer,options} from './binding-review.mjs';
 export const executorPayee='0xf99b445ae678d3f28fe7acb91e5d7ee8ab538d7e231a837b12c593fb624ad630',dvnPayee='0x9004e1e4c6dcc42d1b73269db48d510192665677fcad2079a3c7d1e9e971d34e';

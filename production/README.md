@@ -1,3 +1,20 @@
+# Approved acknowledgement handoff preparation — November 23, 2026
+
+The user approved one Sui `send(3)` acknowledgement, maximum **0.2 SUI total**
+(0.15 message fee + 0.05 gas). The canonical
+`/play/generation-acknowledgement/` page and fixed GET-only review/receipt service
+are prepared and tested; publication is pending. Original NFTree #2720 stays in
+dev wallet 45c4. BNB burn delivery is verified separately after source execution.
+No live acknowledgement has been submitted by Codex.
+
+Preserve freshly observed locked baseline `6b0466dbe649f3c4abd225f9`: **684 static
+paths, 59 full backend records, five schedules**. Add only two static files and one
+read-only service; preserve runtime/protected settings and all newer releases.
+Never publish the historical root build. Source tests, setup, evidence and remaining
+tasks: `docs/multichain/generation-milestone/acknowledgement-handoff/`.
+
+---
+
 # Sui burn acknowledgement review prepared — November 23, 2026
 
 The next single `send(3)` review passed checked Sui simulation and read-only BNB
