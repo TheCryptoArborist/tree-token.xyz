@@ -86,7 +86,13 @@ Only two new static paths are added. No backend is uploaded or rebuilt, and the
 historical root build is never published. The publisher waits for all queued
 builds and rechecks the full locked baseline before switching.
 
-Finish candidate/canonical release verification and save publication evidence.
+Published and locked as `6b03c667c92f828214793fb9` at 22:53:35 America/Chicago
+on November 22, 2026. Totals: 675 static paths, 56 functions, five schedules.
+Preparation run 45114093569 and publication run 45114413903 passed 207 checks
+each; eight browser cases passed on both candidate and canonical assets.
+Canonical JavaScript matches source and the live Sui prerequisite verified.
+Evidence: `candidate.json`, `publication.json`, `canonical-check.json` and
+`*-browser-tests.json`. Source `a859f39`, publication control `3ab6f8f`.
 Then the user signs each BNB call, checks receipts and refreshes the next review.
 Independently verify all four final receipts/current states before preparing
 already-approved final Sui binding (maximum 0.1 SUI). Deposits, sales and gameplay

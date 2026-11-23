@@ -1,3 +1,39 @@
+# BNB configuration handoff — published November 22, 2026
+
+Locked deployment `6b03c667c92f828214793fb9` was published at **22:53:35
+America/Chicago** (`2026-11-23T04:53:35.913Z`). Canonical signing page:
+https://tree-token.xyz/play/bnb-configuration/.
+
+This static-only release adds two paths to freshly captured Root Rage baseline
+`6b03c2e83a5903c9f492dbf6`. All **673 prior static hashes**, **56 complete backend/
+provider records**, **five schedules**, runtime and protected configuration are
+preserved. Totals: **675 paths, 56 functions, five schedules**. No backend was
+uploaded or rebuilt; the historical root build was not published. Recapture the
+full current inventory before every subsequent release.
+
+The page exposes approved steps 2–5 of the six-step configuration sequence:
+four BNB calls with **0.0001 BNB combined maximum fees**, using MetaMask with
+Ledger admin ending 8789. It verifies the completed Sui configuration receipt,
+exact BNB state, nonce and remaining aggregate fee budget before each signature.
+User signatures are pending. Final Sui binding remains approved (0.1 SUI maximum)
+after all four receipts are independently verified. Custody remains empty/unbound;
+purchases and gameplay remain disabled. Deposits, sales and gameplay activation
+are excluded.
+
+Validation: 42 focused checks; 207 checks in each release job; full hosted contract
+regressions; eight mock-wallet browser scenarios on source, candidate and canonical
+assets; a complete four-call local fork with unauthorized-caller rejection. Fork
+fees totaled 0.00002372695 BNB. Canonical JavaScript matches source and the live
+Sui receipt/current state verified. Cloud submitted no mainnet transaction.
+
+Source `a859f396611b5aa8678e5eafa1050c2b6fe99f32`; control `3ab6f8f`.
+Preparation: [45114093569](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45114093569).
+Publication: [45114413903](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45114413903).
+Control: `production/bnb-configuration-publish.json`. Setup, validation and remaining
+tasks: `docs/multichain/generation-milestone/bnb-configuration-handoff/`.
+
+---
+
 # Sui configuration receipt complete — November 22, 2026
 
 Step 1 of the approved six-step configuration/binding sequence is complete.

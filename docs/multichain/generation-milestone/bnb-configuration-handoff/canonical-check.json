@@ -1,0 +1,12 @@
+{
+  "checkedAt": "2026-11-23T04:54:13.233Z",
+  "origin": "https://tree-token.xyz",
+  "appSha256": "f0965fbdba68f4d5c7b15bc6bd75d6d4a4c0f8c4827e1543c521a34bf96cf62d",
+  "sourceBytesMatch": true,
+  "suiReceiptVerified": true,
+  "suiDigest": "6sbCjzYbNLWYBY8QuZjLyKeGnGZjtLUWktmrZZb1fRU8",
+  "checkpoint": {
+    "sequenceNumber": 348233150,
+    "timestamp": "2026-11-23T04:54:11.247Z"
+  }
+}
