@@ -48,3 +48,5 @@ Later clear cards and repeat bonus introductions are shorter; first-time teachin
 ## Task 8: local integration verified; real phones pending
 
 The combined r13 build passes all twelve verification jobs, including simulated wallet/session and receipt sharing checks at 320/390/1280px. Integrated input testing reproduced and fixed toolbar clicks reaching both DOM and Phaser handlers. Continue restoration and fresh-run isolation pass in the emitted game. See [review and remaining phone checklist](treeforce89-integrated-review-20261123.md). No production deployment or real payment was performed.
+
+A [portable private phone-review kit](treeforce89-phone-review-20261123.md) now packages r13 with a play link and device checklist. Landing-to-play, rotation round trip, controls and local-only requests pass at 320/390/430px. Physical-phone and authenticated Slush checks remain pending.
