@@ -1,3 +1,24 @@
+# Acknowledgement delivered; BNB pass burned — November 23, 2026
+
+The approved Sui acknowledgement and actual BNB burn independently verify.
+Source `ENfwF1vVK1ozuYgVZcyr422UZTjnzUEk7f3iQeGDGEeh` cost **0.099892457 SUI**
+total. BNB transaction `0x938da761ac35a1635edc0568c04bebbf0e94eea288c0374797de17ca92cf8c7c`
+contains the exact packet delivery, burn and RedemptionFinalized events. Token 1
+no longer exists; pass state is **Retired, paused, nonplayable**.
+
+NFTree #2720 remains in Sui dev wallet 45c4. Vault phase 2/generation 1 is empty,
+ack_sent true. Completion has not been sent; BNB outbound nonce is still 1. Do not
+resend the acknowledgement. Next is a separately quoted/reviewed BNB kind-4
+completion to close generation 1 on Sui. Purchases/gameplay remain disabled.
+
+Receipts, canonical evidence, reproducible verifier, 14 passing focused tests and
+remaining tasks: `docs/multichain/generation-milestone/acknowledgement-completed/`.
+No website or contract deployment occurs in this update. Preserve all newer
+production changes before a future signing-page release; never publish the
+historical root build.
+
+---
+
 # Sui acknowledgement signing handoff — published November 23, 2026
 
 Locked deployment `6b046d714f59325f88ea55af` was published at **10:47:27

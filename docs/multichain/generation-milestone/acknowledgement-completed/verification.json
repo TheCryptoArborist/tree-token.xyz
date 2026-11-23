@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-11-23T17:00:28.008Z",
+  "suiDigest": "ENfwF1vVK1ozuYgVZcyr422UZTjnzUEk7f3iQeGDGEeh",
+  "sourceVerified": true,
+  "actualTotalMist": "99892457",
+  "nftOwner": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+  "phase": 2,
+  "generation": 1,
+  "ackSent": true,
+  "destinationVerified": true,
+  "bnbTransaction": "0x938da761ac35a1635edc0568c04bebbf0e94eea288c0374797de17ca92cf8c7c",
+  "burnVerified": true,
+  "bnbState": "Retired",
+  "purchasesPaused": true,
+  "canPlay": false,
+  "completionSent": false
+}
