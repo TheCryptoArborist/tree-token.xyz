@@ -119,3 +119,37 @@ Published in deployment `6b046c3ccb8dfd3eb651353c`, source PR #300, release run
 `45217408843`. All candidate/canonical checks passed. Diagnostic firing images
 are `docs/tree-army-weapon-{right,left,special}-20261123.png`. The full melee and
 weapon-art milestone remains open; the reported projectile-origin defect is fixed.
+
+## Combat action milestone — Prototype 0.12
+
+Implemented stop-to-attack, a separate close-range punch, and raised carry →
+aim/fire → recovery using independent hero arms. Ordinary ranged hits resolve
+at the firing moment with muzzle flash and impact; only the explicit Power Shot
+uses the travelling special projectile. Walking cancels a pending normal attack.
+Power Shot retains its own short cast and ten-second cooldown.
+
+Machines now spin a separate saw and lift/sweep/recover their arm. Enemy damage
+resolves 0.40 seconds after wind-up starts, with range and facing rechecked at
+contact. Retreat can dodge. Hero punch contact is at 0.22 seconds; ordinary fire
+at 0.24 seconds. These are Tree Army tuning choices, not measured original-game
+frame timings. Reduced motion suppresses continuous blade spin, retaining the
+action poses needed to read an incoming strike.
+
+Reference audit: original 2011 GameFAQs FAQ 62546 and Sparky125/aod-rebuild at
+commit ea762ba46f684356e9870844dc7ba25a06571a0e (unit.gd/main.gd). Used
+stop-to-attack and delayed-strike concepts; no third-party code or original-game
+assets copied. The fan rebuild is not authoritative proof of exact original
+values. Latest MystenLabs skills README checked; no SDK changes.
+
+Ten opening spawns remain at 2,6,10,15,20,25,30,35,40,45 seconds. Simulations clear
+in 47.04–49.44 seconds. Logic tests cover both-facing dodge/punch, damage timing,
+no melee projectile, no repeated recovery damage, walk cancellation, pause and
+restart; desktop and three mobile browser sizes pass. A real-time mobile combat
+recording exercises ranged/punch actions in both directions and retreat using
+controlled stationary targets (diagnostic setup, unaccelerated animation loop).
+See `tree-army-combat-mobile-20261123.webm`; normal UI first-wave timing is recorded
+separately in `tree-army-combat-walltime-20261123.json`.
+
+Hero gait still needs the user's visual acceptance; this milestone changes
+combat arms and enemy telegraphs, not the existing leg rig. Dedicated boss art
+and further balance progression remain later work.

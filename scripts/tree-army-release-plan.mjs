@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
-// Prototype 0.11: shared weapon muzzle; replace only the reviewed 0.10 HTML.
+// Prototype 0.12: timed combat actions and an original articulated parts atlas.
 export const REPLACED_HASHES = {
-  '/play/tree-army/test/index.html': '98317eadd573c295cb5a6048ae91ba8adc0c2e1c',
+  '/play/tree-army/test/index.html': '35839385a591cbaf2a06ae396284a6909f956a75',
 };
-export const ADDED_PATHS = [];
+export const ADDED_PATHS = ['/play/tree-army/test/assets/combat-parts.webp'];
 export const DELIVERY_PATHS = [...Object.keys(REPLACED_HASHES), ...ADDED_PATHS];
 // Preview builds also need assets already present in production. Keep this
 // catalog independent of the smaller, one-time publication allowlist.
@@ -14,6 +14,7 @@ export const PREVIEW_PATHS = [
   '/play/tree-army/test/assets/tree-hero.webp',
   '/play/tree-army/test/assets/forest-walk.webp',
   '/play/tree-army/test/assets/tree-hero-rig.webp',
+  '/play/tree-army/test/assets/combat-parts.webp',
   '/play/tree-army/preview-gameplay.mp4',
   '/play/tree-army/preview-gameplay.webm',
   '/play/tree-army/preview-gameplay.jpg',
