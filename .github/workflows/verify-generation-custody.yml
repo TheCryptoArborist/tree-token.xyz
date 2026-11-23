@@ -11,6 +11,7 @@ on:
       - 'tools/generation-binding/**'
       - 'tools/generation-reserve/**'
       - 'tools/bnb-purchase/**'
+      - 'tools/bnb-return/**'
       - 'netlify/preview-functions/generation-registration.mjs'
       - 'netlify/preview-functions/generation-configuration.mjs'
       - 'netlify/preview-functions/generation-binding.mjs'
@@ -36,6 +37,7 @@ on:
       - 'tools/generation-binding/**'
       - 'tools/generation-reserve/**'
       - 'tools/bnb-purchase/**'
+      - 'tools/bnb-return/**'
       - 'netlify/preview-functions/generation-registration.mjs'
       - 'netlify/preview-functions/generation-configuration.mjs'
       - 'netlify/preview-functions/generation-binding.mjs'
@@ -66,7 +68,9 @@ jobs:
       - name: Install pinned simulation tooling and test unsigned guards
         run: |
           npm ci --ignore-scripts
-          node --test contracts/nftree-generation/scripts/*.test.mjs tools/generation-publication/core.test.mjs tools/generation-slot/*.test.mjs tools/generation-registration/*.test.mjs tools/generation-configuration/*.test.mjs tools/generation-binding/*.test.mjs tools/generation-reserve/*.test.mjs tools/bnb-purchase/*.test.mjs
+          node --test contracts/nftree-generation/scripts/*.test.mjs tools/generation-publication/core.test.mjs tools/generation-slot/*.test.mjs tools/generation-registration/*.test.mjs tools/generation-configuration/*.test.mjs tools/generation-binding/*.test.mjs tools/generation-reserve/*.test.mjs tools/bnb-purchase/*.test.mjs tools/bnb-return/*.test.mjs
+          node tools/bnb-return/build.mjs
+          git diff --exit-code -- tools/bnb-return/app.js
           node tools/bnb-purchase/build.mjs
           git diff --exit-code -- tools/bnb-purchase/app.js
           node tools/generation-reserve/build.mjs

@@ -1,3 +1,19 @@
+# Approved return-message handoff preparation — November 23, 2026
+
+The user authorized one BNB `send(2)` for the locked redemption request to Sui dev
+45c4, **0.006 BNB total maximum** (0.0059 message fee + 0.0001 gas). The new
+`/play/bnb-return/` signing handoff is being prepared; no live send has occurred.
+The page prevents a repeat first-send, reconciles exact source events/fees and
+keeps source confirmation separate from actual Sui NFT release.
+
+This is a static-only addition using the existing read-only custody endpoint
+before signing. Fresh locked baseline `6b045ada195938dd6638275a` has 59 functions
+and five schedules; preserve its complete inventory and newer unrelated updates.
+Evidence, setup and remaining tasks:
+`docs/multichain/generation-milestone/return-handoff/`.
+
+---
+
 # Redemption return-message review prepared — November 23, 2026
 
 A local mainnet-fork review passed the first new-adapter `send(2)` with exact
