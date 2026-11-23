@@ -34,9 +34,11 @@ try {
     await page.locator('#overlay').waitFor({state:'hidden'});
     await page.locator('#field-note').waitFor({state:'visible'});
     if(label==='desktop') {
-      await page.keyboard.down('ArrowRight');
-      await page.waitForTimeout(250);
-      await page.keyboard.up('ArrowRight');
+      for(const keys of [['ArrowRight'],['ArrowLeft'],['ArrowUp'],['ArrowDown'],['ArrowRight','ArrowUp'],['ArrowLeft','ArrowDown'],['ArrowLeft','ArrowUp'],['ArrowRight','ArrowDown']]) {
+        for(const key of keys)await page.keyboard.down(key);
+        await page.waitForTimeout(100);
+        for(const key of keys)await page.keyboard.up(key);
+      }
       assert.match(await page.locator('#field-note').innerText(),/Summon/);
     } else {
       for(const selector of ['#joystick','#blast','#shield','[data-unit="sprout"]','[data-unit="archer"]','[data-unit="oak"]']) {
@@ -80,6 +82,14 @@ try {
       assert(await page.locator('#drag-cue').isVisible(),'Summoning must not release the held joystick');
       await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
       assert(await page.locator('#drag-cue').isHidden(),'Multi-touch release must reset joystick');
+      for(const [dx,dy,cue] of [[30,0,'→'],[-30,0,'←'],[0,-30,'↑'],[0,30,'↓'],[20,-20,'↑→'],[-20,20,'↓←'],[-20,-20,'↑←'],[20,20,'↓→']]) {
+        await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:sx,y:sy,id:4}]});
+        await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:sx+dx,y:sy+dy,id:4}]});
+        await page.waitForTimeout(100);
+        assert((await page.locator('#drag-cue').innerText()).includes(cue),'Eight-direction joystick feedback: '+cue);
+        await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+        assert(await page.locator('#drag-cue').isHidden(),'Release after '+cue);
+      }
       await client.detach();
     }
     await page.waitForFunction(()=>!document.querySelector('[data-unit="sprout"]').disabled);
@@ -108,7 +118,7 @@ try {
   }
   const failureContext=await browser.newContext();
   const failurePage=await failureContext.newPage();
-  await failurePage.route('**/assets/tree-hero.webp',route=>route.abort());
+  await failurePage.route('**/assets/tree-hero-rig.webp',route=>route.abort());
   await failurePage.goto(url,{waitUntil:'networkidle'});
   await failurePage.getByText('The artwork could not load. Reload this page to try again.',{exact:true}).waitFor();
   assert(await failurePage.locator('#next').isDisabled(),'Failed artwork must block battle start');
