@@ -61,6 +61,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+      - name: Install isolated EVM dependencies
+        run: npm ci --ignore-scripts --prefix contracts/bnb-generation
       - name: Install pinned simulation tooling and test unsigned guards
         run: |
           npm ci --ignore-scripts
@@ -79,8 +81,6 @@ jobs:
           git diff --exit-code -- tools/generation-slot/app.js
           node tools/generation-publication/build.mjs
           git diff --exit-code -- tools/generation-publication/app.js
-      - name: Install isolated EVM dependencies
-        run: npm ci --ignore-scripts --prefix contracts/bnb-generation
       - run: |
           node tools/bnb-configuration/build.mjs
           git diff --exit-code -- tools/bnb-configuration/app.js

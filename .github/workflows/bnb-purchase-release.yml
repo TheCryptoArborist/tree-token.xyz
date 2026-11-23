@@ -21,6 +21,7 @@ jobs:
         with:
           node-version: 24
       - run: npm ci --ignore-scripts
+      - run: npm ci --ignore-scripts --prefix contracts/bnb-generation
       - run: |
           node --test contracts/nftree-generation/scripts/*.test.mjs tools/generation-publication/core.test.mjs tools/bnb-purchase/*.test.mjs tests/bnb-purchase-release.test.mjs
           node tools/bnb-purchase/build.mjs
@@ -48,6 +49,7 @@ jobs:
         with:
           node-version: 24
       - run: npm ci --ignore-scripts
+      - run: npm ci --ignore-scripts --prefix contracts/bnb-generation
       - name: Read reviewed candidate run
         id: control
         run: |
