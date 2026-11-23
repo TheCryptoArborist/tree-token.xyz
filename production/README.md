@@ -1,3 +1,19 @@
+# Approved reserve handoff preparation
+
+The atomic original NFTree #2720 deposit + reserve announcement is approved with
+maximum 0.25 SUI message fee plus 0.1 SUI gas. The new signing handoff is being
+prepared; it is not published yet and no source transaction has been submitted.
+Fresh checked address-balance simulation estimates 0.106791186 SUI total. All
+299 tests and eight mocked-browser scenarios pass. Setup, scope, evidence and
+remaining tasks: `docs/multichain/generation-milestone/reserve-handoff/README.md`.
+
+Current live baseline freshly observed: locked `6b03d4e9938b4d8d124cfdaf`, with
+57 backend functions and five schedules. Preserve its complete inventory and
+newer Canopy Defense update. USDT spending, purchase unpause, redemption, public
+sales and gameplay activation remain outside this approved first step.
+
+---
+
 # Atomic reserve quote review — November 22, 2026
 
 Read-only preparation now verifies an atomic new-vault deposit plus reserve send.

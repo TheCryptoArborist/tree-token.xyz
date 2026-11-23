@@ -1,9 +1,9 @@
-import assert from 'node:assert/strict';import {encodePacked,keccak256,concatHex} from 'viem';import {C,canonical} from './configuration-encoding.mjs';import {peer,options} from './binding-review.mjs';
+const assert=Object.assign((v,m='Reserve validation failed')=>{if(!v)throw Error(m);},{equal:(a,b,m)=>{if(a!==b)throw Error(m||'Reserve value differs');},deepEqual:(a,b)=>{if(canonical(a)!==canonical(b))throw Error('Reserve structure differs');}});import {encodePacked,keccak256,concatHex} from 'viem';import {C,canonical} from './configuration-encoding.mjs';import {peer,options} from './binding-review.mjs';
 export const executorPayee='0xf99b445ae678d3f28fe7acb91e5d7ee8ab538d7e231a837b12c593fb624ad630',dvnPayee='0x9004e1e4c6dcc42d1b73269db48d510192665677fcad2079a3c7d1e9e971d34e';
 export const guid=keccak256(encodePacked(['uint64','uint32','bytes32','uint32','bytes32'],[1n,30378,C.package,30102,peer]));
 export const payload='0x0301'+C.vault.slice(2)+C.nft.slice(2)+'0000000000000001'+'00'.repeat(64);
 export const packet=concatHex([encodePacked(['uint8','uint64','uint32','bytes32','uint32','bytes32'],[1,1n,30378,C.package,30102,peer]),guid,payload]);
-const b64=h=>Buffer.from(h.replace(/^0x/,''),'hex').toString('base64'),json=o=>o.asMoveObject.contents.json,norm=x=>JSON.parse(JSON.stringify(x,(k,v)=>k==='$kind'||k==='type'?undefined:['initialSharedVersion','version'].includes(k)?String(v):v));
+const b64=h=>btoa(String.fromCharCode(...Uint8Array.from(h.replace(/^0x/,'').match(/../g),x=>parseInt(x,16)))),json=o=>o.asMoveObject.contents.json,norm=x=>JSON.parse(JSON.stringify(x,(k,v)=>k==='$kind'||k==='type'?undefined:['initialSharedVersion','version'].includes(k)?String(v):v));
 export function verifyReserve(result,unsigned,before,post,fee){
  assert.equal(result.$kind,'Transaction');const t=result.Transaction;assert.equal(t.status.success,true);assert.equal(t.transaction.sender,C.sender);assert.equal(t.transaction.gasData.owner,C.sender);assert.equal(t.transaction.gasData.budget,'100000000');assert(BigInt(fee)>0n&&BigInt(fee)<=250000000n);
  for(const k of ['inputs','commands'])assert.equal(canonical(norm(t.transaction[k])),canonical(norm(unsigned[k])),'Exact '+k);
