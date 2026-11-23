@@ -14,8 +14,9 @@ The historical root build was not published and must never replace the live site
 The user approved three BNB mainnet transactions: new adapter deployment, new
 pass deployment and one-time binding, with total fees capped at **0.001 BNB**.
 MetaMask/Ledger admin ends in **8789**; treasury remains unchanged. Cloud has
-submitted no BNB transaction. Real wallet signatures and receipt verification
-remain pending. Sui custody remains empty and unbound; no deposit, sale,
+submitted no BNB transaction. The adapter deployment is now independently verified (receipt in
+`docs/multichain/generation-milestone/bnb-deployed/adapter-receipt.json`);
+pass deployment and binding remain pending. Sui custody remains empty and unbound; no deposit, sale,
 message-path configuration or gameplay activation is included.
 
 Validation: 194 local contract/handoff/regression tests plus the preview-build
@@ -24,8 +25,8 @@ scenarios passed against source, served candidate and canonical assets, with
 mocked wallet responses and zero real transactions. Actual browser-core fork
 execution completed all three steps with paused, Unconfirmed, generation-zero
 state. Canonical JavaScript matches source byte-for-byte; a fresh canonical Sui
-receipt check confirmed the empty slot. Real MetaMask/Ledger acceptance is still
-for the user to complete.
+receipt check confirmed the empty slot. The user has completed the first MetaMask/Ledger transaction; the remaining
+two transactions are pending.
 
 Source: `dbcc0faa8c4209f420a7c7c82f72b717041044a5`. Publication control:
 `efdc436`. Preparation run: [45099075862](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45099075862).

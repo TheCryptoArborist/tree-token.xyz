@@ -14,8 +14,8 @@ Changed fees or transaction content stop further steps when the receipt is read.
 
 The pinned sender nonce is 4739. Predicted adapter:
 `0x74c20dEB476Dca58459956b1AcD65771197900C9`; predicted pass:
-`0x418cC337FC19D8cf3b41a9C6E3138a60E34Eb9b5`. These are predictions, not a claim of
-mainnet deployment. If the nonce has changed, stop and prepare a newly reviewed
+`0x418cC337FC19D8cf3b41a9C6E3138a60E34Eb9b5`. The adapter address is now verified on mainnet; the pass remains a prediction.
+See `../bnb-deployed/adapter-receipt.json`. If the nonce has changed, stop and prepare a newly reviewed
 sequence; do not change the nonce in the wallet. A saved unresolved request blocks
 resubmission across reloads. Recover its verified transaction hash before proceeding.
 Use one browser; export/import progress to resume elsewhere. Never clear progress
@@ -63,3 +63,19 @@ The user signs and returns the three-transaction receipt.
 Independently verify those receipts and deployed state, record actual addresses
 and fees, and then prepare the next separately reviewed milestone. No deposits,
 sales, gameplay activation, or retired trial routes are part of this handoff.
+
+## Actual BNB progress — November 22, 2026 (America/Chicago)
+
+Step 1 is complete: transaction
+`0x016aa9570de26f1d25d3db2137fa1ef7dbac8e3a2efa1cab45c2e872deafee98`
+deployed the reviewed adapter from the selected admin at nonce 4739. Independent
+BNB reads verified successful status, exact creation bytes, expected address,
+runtime and immutable getters, Endpoint delegate and zero pass binding. Gas fee:
+**0.0000795131 BNB**. The pass was not deployed at verification time.
+The exact receipt and transaction are in `../bnb-deployed/adapter-receipt.json`.
+
+Next, use Check receipts then Refresh deployment review on the existing canonical
+page to deploy the pass. If the browser lost the adapter hash, use Recover hash
+with this transaction before continuing. Do not repeat adapter deployment.
+Binding follows pass deployment; both remain within the previously approved
+three-step sequence and aggregate fee cap.

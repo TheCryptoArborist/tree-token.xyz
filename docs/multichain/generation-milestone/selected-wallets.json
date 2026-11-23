@@ -1,5 +1,5 @@
 {
-  "status": "user_selected_addresses_not_deployed",
+  "status": "bnb_adapter_deployed_pass_and_binding_pending",
   "chainId": 56,
   "bnb": {
     "deployer": "0xF2Ab1eEBbEcb4E315FE95D8b532D1aB00F1A8789",
@@ -30,5 +30,8 @@
     "signingPage": "https://tree-token.xyz/play/bnb-generation/",
     "source": "User approved the proposed three-transaction sequence and canonical signing page after selecting MetaMask with Ledger.",
     "submittedByAgent": false
+  },
+  "bnbDeploymentReceipts": {
+    "adapter": "0x016aa9570de26f1d25d3db2137fa1ef7dbac8e3a2efa1cab45c2e872deafee98"
   }
 }
