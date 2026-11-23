@@ -37,6 +37,10 @@ captured site, including all 58 backend/provider records and five schedules
 inspected from locked live deploy `6b03d785177d7651c28d69aa` (newer than the
 countdown record, with generation registration/configuration/binding/reserve). No wallet/backend/dependency
 changes. Latest MystenLabs/skills README consulted; this is not a Sui change.
-Publication evidence will be recorded after canonical verification.
+Published and canonically verified in workflow `45122756229`, deployment
+`6b03da694fbbb07f59b07001`, source `24b681a8385c97335d308c3b6cb7bb0c1039effe`.
+The complete resulting inventory has 680 static paths, 678 unrelated files
+preserved, 58 backend records and five schedules. See the November 23 hero
+release records in `production/` and the canonical phone screenshot in `docs/`.
 
 Atlas SHA256: `0a5d6b63543068a7f1708ec5f08af9adcb100e2998aba7e69fe7f95a60cf0bea`.
