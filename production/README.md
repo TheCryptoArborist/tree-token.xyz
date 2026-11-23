@@ -1,3 +1,37 @@
+# Tree Army hero stride — published November 23, 2026
+
+Deployment `6b03da694fbbb07f59b07001` was published at **00:18:26 America/Chicago**
+(`2026-11-23T06:18:26.162Z`) and verified ready and locked by
+[release run 45122756229](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45122756229).
+Source: `24b681a8385c97335d308c3b6cb7bb0c1039effe`, PR #294.
+
+[Tree Army Prototype 0.8](https://tree-token.xyz/play/tree-army/test/) now uses
+independently articulated hero legs with alternating planted/swinging phases,
+travel-driven stepping, an idle blend, and upper-body-only firing recoil. The
+approved troop walks and courtyard controls are preserved. Physical-phone
+feedback remains the next visual acceptance check.
+
+Fresh baseline `6b03d785177d7651c28d69aa` included the newer generation reserve
+handoff. Only the pinned game HTML changed; one hero parts atlas was added.
+The release verified **680 static paths**, **678 unchanged unrelated hashes**,
+all **58 complete backend/provider records**, **five schedules**, runtime and
+protected configuration. No backend package was rebuilt.
+
+Gameplay, gait/contact, eight-direction input, firing, release-plan and build
+preservation tests passed. Candidate and canonical browser checks passed for
+1440×1000 desktop, 390×844 phone, 320×568 small phone and 844×390 landscape,
+including eight-direction joystick movement and multitouch summons. All four
+canonical cabinet checks also passed. The final phone screenshot was inspected.
+
+Records: `production/tree-army-hero-{release,backend,browser,cabinet}-20261123.json`,
+`docs/tree-army-hero-live-phone-20261123.png`, and
+`docs/tree-army-hero-stride.md`. Original workflow release artifact #14794786667
+SHA256: `21a42ba65c996e76318b17e2b9bef0ee6053570ca801609d6325f1e769aeff53`.
+Capture a new complete live baseline before later releases; this publisher's
+replacement hash and addition allowlist describe a completed one-time release.
+
+---
+
 # Tree Arcade single launch countdown — published November 22, 2026
 
 Deployment `6b03810de27178ba36227c42` was published at **17:58:49.627 America/Chicago**
