@@ -85,3 +85,6 @@ handoff with a newly captured complete production baseline. After one signature,
 verify source send and actual BNB burn separately. Do not resend based on delayed
 indexing. Review BNB completion afterward to close generation 1 on Sui. Keep the
 old trial retired and purchases/gameplay disabled.
+
+Hosted CI run **45217948440** passed on source `5cd2114`, including unsigned
+guards, 16 EVM and 52 Move lifecycle tests, and both release builds.

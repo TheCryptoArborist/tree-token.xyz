@@ -8,5 +8,9 @@
   "checkedNegativeSimulations": 2,
   "totalTests": 42,
   "submitted": false,
-  "approvalPending": true
+  "approvalPending": true,
+  "hostedCIRun": "45217948440",
+  "hostedCIConclusion": "success",
+  "hostedCISourceCommit": "5cd2114",
+  "moveLifecycleTests": 52
 }
