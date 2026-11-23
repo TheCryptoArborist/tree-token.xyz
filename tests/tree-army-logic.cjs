@@ -58,3 +58,22 @@ const actor={walk:1.4,gait:1,cd:0,facing:1,flash:0};drawCalls.length=0;t.articul
 const feet=drawCalls.filter(a=>a[1]===1296&&a[2]===524).map(a=>a.slice(1));drawCalls.length=0;
 t.articulatedHero({...actor,cd:.7},330,365,true);
 assert.deepEqual(drawCalls.filter(a=>a[1]===1296&&a[2]===524).map(a=>a.slice(1)),feet,'Shooting must draw the identical leg pose at the same gait phase');
+
+// Clearing the field early must never skip future opening reinforcements.
+t.reset();for(let i=0;i<1000;i++){t.update(.04);t.killAll();}
+assert.equal(t.get().mode,'battle','Even instant kills cannot finish the opening before final reinforcements');
+assert(t.get().spawned<t.get().planned);
+const beforePause=t.get().spawned;t.pause();for(let i=0;i<500;i++)t.update(.04);
+assert.equal(t.get().spawned,beforePause,'Pause freezes reinforcement schedule');t.pause();
+for(let i=0;i<300&&t.get().mode==='battle';i++){t.update(.04);t.killAll();}
+assert.equal(t.get().mode,'camp','Clearing all scheduled reinforcements completes the wave');
+t.reset();t.update(.04);assert.equal(t.get().spawned,0,'Restart resets the opening schedule');
+for(const width of [320,390,844,1100]){
+ element('battle').width=width;t.reset();let elapsed=0;
+ for(;elapsed<90&&t.get().mode==='battle';elapsed+=.04){t.summon('sprout');t.summon('archer');t.summon('oak');t.cannon();t.shield();t.update(.04);}
+ assert.equal(t.get().mode,'camp','Opening remains winnable with normal combat');
+ assert(elapsed>=45&&elapsed<=65,`Opening pacing out of range at ${width}px: ${elapsed}`);
+ console.log(`PASS: opening wave ${width}px clears in ${elapsed.toFixed(2)} simulated seconds`);
+}
+t.set({wave:2});t.startWave();assert.equal(t.get().planned,9,'Later-wave enemy budget unchanged');
+for(let i=0;i<115;i++)t.update(.04);assert.equal(t.get().spawned,2,'Later-wave spawn cadence unchanged');

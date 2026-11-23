@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
-// Prototype 0.9: single-lane controls; replace only the reviewed 0.8 HTML.
+// Prototype 0.10: opening-wave pacing; replace only the reviewed 0.9 HTML.
 export const REPLACED_HASHES = {
-  '/play/tree-army/test/index.html': '9533798a3c190a919ad9b95146ba96331b5ca401',
+  '/play/tree-army/test/index.html': '158cdcfb509a85b768710ef44bc70127b57660a4',
 };
 export const ADDED_PATHS = [];
 export const DELIVERY_PATHS = [...Object.keys(REPLACED_HASHES), ...ADDED_PATHS];
