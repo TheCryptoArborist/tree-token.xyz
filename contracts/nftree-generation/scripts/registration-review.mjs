@@ -14,18 +14,18 @@ export const C=Object.freeze({...BASE,package:P.peer,vault:P.route,registry:P.re
  endpointRegistry:'0x720fc2300c05bb7ad68aefec00a9796b4451c4d1df78bc72cd8c98e774220bec',maxGasMist:20000000n});
 const check=(v,m)=>assert(v,m),eq=(a,b,m)=>assert.deepEqual(a,b,m),idPattern=/^0x[0-9a-f]{64}$/;
 const fields='address version digest owner{__typename ...on Shared{initialSharedVersion} ...on AddressOwner{address{address}}} asMoveObject{contents{type{repr} json}}';
-export function validateState(s){
+export function validateState(s,{registered=false}={}){
  assert.equal(s.chainIdentifier,C.chain);assert(s.checkpoint?.timestamp);const age=Date.now()-Date.parse(s.checkpoint.timestamp);assert(age>=-30000&&age<=120000,'Stale state');
  for(const [name,id]of [['vault',C.vault],['admin',C.admin],['endpoint',C.endpoint]])assert.equal(s[name]?.address,id);
  assert.equal(s.admin.owner.address.address,C.sender);assert.equal(s.admin.asMoveObject.contents.type.repr,C.package+'::vault::AdminCap');assert.equal(s.admin.asMoveObject.contents.json.registry,C.registry);
  assert.equal(s.vault.owner.__typename,'Shared');assert.equal(s.vault.asMoveObject.contents.type.repr,C.package+'::vault::Vault<'+C.nftType+'>');
  const v=s.vault.asMoveObject.contents.json;assert.equal(v.registry,C.registry);assert.equal(v.oapp,C.oapp);assert.equal(v.cap.cap_type.pos0,C.package);assert.equal(v.nft,null);assert.equal(v.bound,false);assert.equal(v.phase,0);assert.equal(v.generation,'0');
  assert.equal(s.endpoint.owner.__typename,'Shared');assert.equal(String(s.endpoint.owner.initialSharedVersion),'635685314');assert.equal(s.endpoint.asMoveObject.contents.type.repr,C.endpointPackage+'::endpoint_v2::EndpointV2');assert.equal(s.endpoint.asMoveObject.contents.json.eid,30378);assert.equal(s.endpoint.asMoveObject.contents.json.oapp_registry.oapps.id,C.endpointRegistry);
- assert(s.registration&&Object.hasOwn(s.registration,'dynamicField'));assert.equal(s.registration.dynamicField,null,'Already registered: recover the existing channel; do not register again');
+ assert(s.registration&&Object.hasOwn(s.registration,'dynamicField'));if(!registered)assert.equal(s.registration.dynamicField,null,'Already registered: recover the existing channel; do not register again');
 }
-export async function readState(client=newClient()){
+export async function readState(client=newClient(),options={}){
  const key=Buffer.from(C.package.slice(2),'hex').toString('base64');
- const r=await client.query({query:`query {chainIdentifier checkpoint{sequenceNumber timestamp} vault:object(address:"${C.vault}"){${fields}} admin:object(address:"${C.admin}"){${fields}} endpoint:object(address:"${C.endpoint}"){${fields}} registration:address(address:"${C.endpointRegistry}"){dynamicField(name:{type:"address",bcs:"${key}"}){value{...on MoveValue{json}}}}}`,signal:AbortSignal.timeout(30000)});assert(!r.errors,JSON.stringify(r.errors));validateState(r.data);return r.data;
+ const r=await client.query({query:`query {chainIdentifier checkpoint{sequenceNumber timestamp} vault:object(address:"${C.vault}"){${fields}} admin:object(address:"${C.admin}"){${fields}} endpoint:object(address:"${C.endpoint}"){${fields}} registration:address(address:"${C.endpointRegistry}"){dynamicField(name:{type:"address",bcs:"${key}"}){value{...on MoveValue{json}}}}}`,signal:AbortSignal.timeout(30000)});assert(!r.errors,JSON.stringify(r.errors));validateState(r.data,options);return r.data;
 }
 export function registration(state){validateState(state);const tx=new Transaction();tx.setSender(C.sender);tx.setGasBudget(C.maxGasMist);tx.moveCall({target:C.package+'::vault::register',typeArguments:[C.nftType],arguments:[tx.sharedObjectRef({objectId:C.vault,initialSharedVersion:String(state.vault.owner.initialSharedVersion),mutable:false}),tx.objectRef({objectId:C.admin,version:String(state.admin.version),digest:state.admin.digest}),tx.sharedObjectRef({objectId:C.endpoint,initialSharedVersion:'635685314',mutable:true}),tx.pure.vector('u8',[])]});return tx;}
 export function verifyRegistration(result,state){
