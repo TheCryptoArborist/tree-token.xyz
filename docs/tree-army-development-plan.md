@@ -87,3 +87,30 @@ browser errors. See `production/tree-army-opening-walltime-20261123.json` and
 Published as Prototype 0.10 in deployment `6b0465140cb614081b5a0f52`, source
 PR #298, workflow run `45211270718`. All candidate/canonical checks passed.
 The hero weapon/projectile-origin audit remains outstanding.
+
+## Hero weapon-origin follow-up (Prototype 0.11)
+
+The user accepted the 0.10 opening timing and requested the weapon/hand-projectile
+check next. Ordinary shots previously started at x±60, specials at x±72, while
+the rendered muzzle was x±82. Target-distance clamping could pull a shot farther
+back into the hand; full-length trails could also extend back through the sprite.
+
+Both attacks now share the rendered muzzle's mirrored position, gait bob and
+recoil. Hero rounds stay at their firing height instead of dropping through the
+hand area, and trails cannot extend behind their emission point. An independent
+firing timer drives both normal and special flashes; the normal attack cooldown
+no longer determines whether a special has a firing effect. Close-range collision
+sweeps still include the distance between the hero and muzzle, so nearby enemies
+are not skipped. Archer projectile behavior is retained.
+
+While moving, ordinary auto-fire selects only enemies ahead; stopping can aim at
+either side. This removes the one-frame retreat-facing flip. It does not implement
+the full stop-to-attack policy or melee yet. Existing damage/cooldowns, opening
+schedule, approved troop artwork, and hero gait are unchanged. Full saw/fist
+contact and revised weapon/attack artwork remain the next combat milestone;
+this fix is not an accepted hero animation redesign.
+
+Tests cover both facings, ordinary/special shots, close targets, height, separate
+firing timers, pause/reset, retreat/stop aiming and the accepted opening timing.
+Rendered right/left firing poses were inspected against the existing barrel.
+Latest MystenLabs/skills README checked; no Sui APIs changed.

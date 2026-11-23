@@ -48,7 +48,7 @@
 <div class="controls"><div class="move"><span class="control-label">MOVE · <span class="auto-fire">AUTO-FIRE ON</span></span><button id="move-left" aria-label="Move left" aria-describedby="move-help" aria-pressed="false">←<span>Left</span></button><button id="move-right" aria-label="Move right" aria-describedby="move-help" aria-pressed="false">→<span>Right</span></button><span id="move-help">Hold to move · Release to stop</span></div><div class="troops"><span class="control-label">SUMMON ALLIES · TAP A CARD</span><button data-unit="sprout"><span class="unit-name">Seedling</span><small>25 sap · melee</small></button><button data-unit="archer"><span class="unit-name">Archer</span><small>45 sap · ranged</small></button><button data-unit="oak"><span class="unit-name">Guardian</span><small>75 sap · tank</small></button></div><div class="powers"><span class="control-label">SPECIAL ABILITIES · TAP</span><button id="blast">Power Shot<small>Special · burst</small></button><button id="shield">Shield<small>Heal + protect</small></button></div><p class="touch-help">Hold Left / Right · Release to stop · Auto-fire</p></div>
 </main>
 <div class="help"><p><kbd>A</kbd> / <kbd>D</kbd> or <kbd>←</kbd> / <kbd>→</kbd> to move · <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> summon · <kbd>Q</kbd> power shot · <kbd>E</kbd> shield · <kbd>P</kbd> pause</p><p>Touch controls supported · Keep enemies away from the roots.</p></div>
-<footer>Prototype 0.10 · Illustrated battlefield · 10 waves · The Iron Stump awaits at wave 10. Progress lasts for this run.</footer>
+<footer>Prototype 0.11 · Illustrated battlefield · 10 waves · The Iron Stump awaits at wave 10. Progress lasts for this run.</footer>
 <script>
 (()=>{
 'use strict';
@@ -77,11 +77,24 @@ function approach(unit,target,dt,stop=0){
  const step=Math.min(unit.speed*dt,d-stop);
  advance(unit,unit.x+(target.x-unit.x)/d*step,unit.type==='oak'?48:unit.runner?56:44);
 }
+function heroWeaponPose(actor){
+ const gait=art.reduced?0:actor.gait||0;
+ const bob=-Math.cos((actor.walk||0)*2)*1.2*gait;
+ const recoil=clamp((actor.fireTime||0)/.12,0,1)*1.5;
+ return {bob,recoil,muzzleX:82-recoil,muzzleY:-113+bob};
+}
 function fire(actor,target,speed,damage,blast=false,muzzle=60,height=108){
  const facing=Math.sign(target.x-actor.x)||actor.facing||1;actor.facing=facing;
  const dx=target.x-actor.x,dy=target.y-actor.y,d=Math.hypot(dx,dy)||1;
- shots.push({originX:actor.x,originY:actor.y,x:actor.x+dx/d*Math.min(muzzle,d),groundY:actor.y+dy/d*Math.min(muzzle,d),
-  y:actor.y-height,height,startHeight:height,traveled:Math.min(muzzle,d),targetDistance:d,vx:dx/d*speed,vy:dy/d*speed,damage,life:blast?1.4:1.1,blast,hit:new Set()});
+ const heroShot=actor===hero;
+ let x=actor.x+dx/d*Math.min(muzzle,d),groundY=actor.y+dy/d*Math.min(muzzle,d);
+ if(heroShot){
+  actor.fireTime=.12;actor.powerFlash=blast;
+  const pose=heroWeaponPose(actor);x=actor.x+facing*pose.muzzleX;groundY=actor.y;height=-pose.muzzleY;
+ }
+ shots.push({originX:actor.x,originY:actor.y,x,groundY,startX:x,startY:groundY-height,
+  y:groundY-height,height,startHeight:height,traveled:heroShot?0:Math.min(muzzle,d),targetDistance:d,
+  vx:heroShot?facing*speed:dx/d*speed,vy:heroShot?0:dy/d*speed,damage,life:blast?1.4:1.1,blast,heroShot,hit:new Set()});
 }
 function segmentDistance(x,y,ax,ay,bx,by){
  const dx=bx-ax,dy=by-ay,t=clamp(((x-ax)*dx+(y-ay)*dy)/(dx*dx+dy*dy||1),0,1);
@@ -108,17 +121,17 @@ const briefings=[
 ['Grow your army','Tap Seedling, Acorn Archer, or Oak Guardian to spend sap and summon allies. Sap refills during battle. Power Shot and Shield are separate special abilities. Tap them when needed; their timers do not control your normal auto-fire.','Defend the grove']
 ];
 function briefing(){mode='briefing';const b=briefings[briefingStep];show(b[0],b[1],b[2],'FIELD GUIDE '+(briefingStep+1)+' / 3');$('shop').hidden=true;$('skip').hidden=false;$('skip').textContent='Start battle';$('notice').textContent='Clear waves to earn seeds, then buy upgrades between battles.';}
-function freshHero(){return {x:330,y:GROUND,hp:400,max:400,cd:0,facing:1,flash:0,moving:false,walk:0,gait:0};}
+function freshHero(){return {x:330,y:GROUND,hp:400,max:400,cd:0,fireTime:0,powerFlash:false,facing:1,flash:0,moving:false,walk:0,gait:0};}
 hero=freshHero();
 function show(title,description,button,kicker='DEFEND THE GROVE'){ $('heading').textContent=title;$('description').textContent=description;$('next').textContent=button;$('kicker').textContent=kicker;$('overlay').hidden=false;clearMovement();}
 function reset(){if(!art.ready)return;wave=1;sap=100;seeds=0;score=0;groveMax=1000;grove=1000;heroLevel=0;sapLevel=0;treeLevel=0;hero=freshHero();startWave();}
-function startWave(){if(!art.ready)return;clearMovement();hasMoved=false;hasSummoned=false;$('skip').hidden=true;mode='battle';allies=[];enemies=[];shots=[];sparks=[];spawned=0;waveElapsed=0;planned=wave===1?OPENING_SPAWNS.length:5+wave*2;spawnClock=2;sap=100+sapLevel*15;blastCd=0;shieldCd=0;shieldTime=0;hero.x=330;hero.y=GROUND;hero.moving=false;hero.walk=0;hero.hp=Math.min(hero.max,hero.hp+hero.max*.35);hero.cd=0;hero.facing=1;camera=0;for(const k in cooldowns)cooldowns[k]=0;$('overlay').hidden=true;$('shop').hidden=true;$('pause').textContent='Pause';}
+function startWave(){if(!art.ready)return;clearMovement();hasMoved=false;hasSummoned=false;$('skip').hidden=true;mode='battle';allies=[];enemies=[];shots=[];sparks=[];spawned=0;waveElapsed=0;planned=wave===1?OPENING_SPAWNS.length:5+wave*2;spawnClock=2;sap=100+sapLevel*15;blastCd=0;shieldCd=0;shieldTime=0;hero.x=330;hero.y=GROUND;hero.moving=false;hero.walk=0;hero.hp=Math.min(hero.max,hero.hp+hero.max*.35);hero.cd=0;hero.fireTime=0;hero.powerFlash=false;hero.facing=1;camera=0;for(const k in cooldowns)cooldowns[k]=0;$('overlay').hidden=true;$('shop').hidden=true;$('pause').textContent='Pause';}
 function summon(type){if(mode!=='battle')return;const def=units[type];if(sap<def.cost||cooldowns[type]>0||allies.length>=18)return;hasSummoned=true;sap-=def.cost;cooldowns[type]=type==='oak'?4:1.5;allies.push({...def,type,x:BASE+85,y:GROUND,facing:1,hp:def.hp,max:def.hp,cd:0,id:++serial,moving:false,walk:serial*.73});burst(BASE+85,GROUND-35,'#c9ef9a',10);}
 function burst(x,y,color,n=8){for(let i=0;i<n;i++)sparks.push({x,y,vx:(Math.random()-.5)*160,vy:-Math.random()*180,life:.6+Math.random()*.3,color});}
 function hurt(e,damage){if(e.hp<=0)return;e.hp-=damage;e.flash=.15;if(e.hp<=0){seeds+=e.boss?90:8;score+=e.boss?1000:100;burst(e.x,e.y-30,e.boss?'#ffe8a0':'#c7a77a',14);}}
 function cannon(){if(mode!=='battle'||blastCd>0)return;blastCd=10;
  const target=enemies.filter(e=>e.hp>0&&Math.sign(e.x-hero.x)===hero.facing&&distance(hero,e)<800).sort((a,b)=>distance(hero,a)-distance(hero,b))[0]||{x:hero.x+hero.facing*800,y:hero.y};
- fire(hero,target,600,110+heroLevel*25,true,72);burst(hero.x+hero.facing*72,hero.y-108,'#f8da84');}
+ fire(hero,target,600,110+heroLevel*25,true);}
 function shield(){if(mode!=='battle'||shieldCd>0)return;shieldCd=18;shieldTime=5;grove=Math.min(groveMax,grove+80);burst(BASE,GROUND-80,'#b7ebad',20);}
 function upgrade(kind){if(mode!=='camp')return;const level=kind==='hero'?heroLevel:kind==='sap'?sapLevel:treeLevel,cost=40+level*30;if(seeds<cost||level>=5)return;seeds-=cost;if(kind==='hero'){heroLevel++;hero.max+=65;hero.hp=Math.min(hero.max,hero.hp+120);}else if(kind==='sap')sapLevel++;else{treeLevel++;groveMax+=180;grove=Math.min(groveMax,grove+330);}shop();sync();}
 function shop(){const el=$('shop');el.hidden=false;el.replaceChildren();for(const [kind,label,level]of [['hero','Hero strength',heroLevel],['sap','Sap spring',sapLevel],['tree','Grove vitality',treeLevel]]){const b=document.createElement('button'),cost=40+level*30;b.textContent=level>=5?label+' · MAX':label+' '+level+'/5 · '+cost+' seeds';b.disabled=level>=5||seeds<cost;b.onclick=()=>upgrade(kind);el.append(b);}$('notice').textContent=seeds+' seeds available · Upgrades last for this run';}
@@ -130,8 +143,8 @@ function update(dt){if(mode!=='battle')return;clock+=dt;waveElapsed+=dt;blastCd=
 hero.moving=false;const movement=movementDirection();
 if(movement.x||movement.y){advance(hero,hero.x+movement.x*dt*185,80);hasMoved=hasMoved||hero.moving;}
 hero.gait+=(Number(hero.moving&&!art.reduced)-hero.gait)*Math.min(1,dt*14);
-hero.cd=Math.max(0,hero.cd-dt);hero.flash=Math.max(0,hero.flash-dt);
-const near=enemies.filter(e=>e.hp>0&&distance(hero,e)<210).sort((a,b)=>distance(hero,a)-distance(hero,b))[0];
+hero.fireTime=Math.max(0,hero.fireTime-dt);hero.cd=Math.max(0,hero.cd-dt);hero.flash=Math.max(0,hero.flash-dt);
+const near=enemies.filter(e=>e.hp>0&&distance(hero,e)<210&&(!hero.moving||Math.sign(e.x-hero.x)===hero.facing)).sort((a,b)=>distance(hero,a)-distance(hero,b))[0];
 if(near&&hero.cd===0){hero.cd=.7;fire(hero,near,480,29+heroLevel*9);}
 if(wave===1){if(spawned<planned&&waveElapsed>=OPENING_SPAWNS[spawned])spawn();}
 else{spawnClock-=dt;if(spawned<planned&&spawnClock<=0){spawn();spawnClock=Math.max(.85,2.7-wave*.12);}}
@@ -157,7 +170,7 @@ for(const e of enemies){
 }
 for(const s of shots){
  const oldX=s.originX??s.x,oldY=s.originY??s.groundY;delete s.originX;delete s.originY;
- s.previousX=s.x;s.previousY=s.y;s.x+=s.vx*dt;s.groundY+=s.vy*dt;s.traveled+=Math.hypot(s.vx,s.vy)*dt;s.height=s.startHeight+(50-s.startHeight)*Math.min(1,s.traveled/s.targetDistance);s.y=s.groundY-s.height;s.life-=dt;
+ s.previousX=s.x;s.previousY=s.y;s.x+=s.vx*dt;s.groundY+=s.vy*dt;s.traveled+=Math.hypot(s.vx,s.vy)*dt;s.height=s.heroShot?s.startHeight:s.startHeight+(50-s.startHeight)*Math.min(1,s.traveled/s.targetDistance);s.y=s.groundY-s.height;s.life-=dt;
  const hits=enemies.filter(e=>e.hp>0&&!s.hit.has(e.id)&&segmentDistance(e.x,e.y,oldX,oldY,s.x,s.groundY)<(s.blast?28:20)).sort((a,b)=>Math.hypot(a.x-oldX,a.y-oldY)-Math.hypot(b.x-oldX,b.y-oldY));
  for(const e of hits){hurt(e,s.damage);s.hit.add(e.id);if(!s.blast){s.life=0;break;}}
 }
@@ -195,7 +208,7 @@ function heroBone(rect,from,to,width){
 }
 function articulatedHero(actor,x,y,attack){
  const gait=art.reduced?0:actor.gait||0,phase=actor.walk||0;
- const bob=-Math.cos(phase*2)*1.2*gait;
+ const {bob,recoil,muzzleX,muzzleY}=heroWeaponPose(actor);
  ctx.save();ctx.translate(x,y);if(actor.facing<0)ctx.scale(-1,1);if(actor.flash>0)ctx.filter='brightness(1.8)';
  // Cape behind the legs, then far leg, near leg, tabard, and upper body.
  rigPart([656,12,525,463],-64,-133+bob,95,118);
@@ -207,9 +220,8 @@ function articulatedHero(actor,x,y,attack){
   rigPart([1296,524,294,188],foot.x-8,foot.y-11,29,18);ctx.restore();
  }
  rigPart([1296,12,181,357],-12,-80+bob,24,47);
- const recoil=attack?Math.max(0,(actor.cd-.6)/.1)*1.5:0;
  rigPart([16,12,592,487],-59-recoil,-157+bob,142,116);
- if(attack&&actor.cd>.64){ellipse(82-recoil,-113+bob,5,2,'#ffe6a0');}
+ if(actor.fireTime>0){ellipse(muzzleX,muzzleY,actor.powerFlash?10:5,actor.powerFlash?5:2,'#ffe6a0');}
  ctx.restore();
 }
 function heroArt(x,y,size,color,heroic=false,type='sprout',cd=0,actor=hero){
@@ -255,7 +267,7 @@ for(const actor of [...allies,...enemies,hero].sort((a,b)=>a.y-b.y||a.id-b.id)){
  else enemyArt(actor);
  ctx.restore();
 }
-for(const s of shots){const sign=Math.sign(s.vx),dx=s.x-(s.previousX??s.x-s.vx),dy=s.y-(s.previousY??s.y-s.vy),length=Math.hypot(dx,dy)||1,tail=s.blast?38:14;line(s.x-dx/length*tail,s.y-dy/length*tail,s.x,s.y,s.blast?'#ffcd5b':'#f2dea1',s.blast?7:3);ellipse(s.x,s.y,s.blast?15:6,s.blast?10:4,'#f5d783');if(s.blast){ellipse(s.x-sign*3,s.y,8,11,'#9c6934');line(s.x-7,s.y-5,s.x+6,s.y-5,'#ead796',4);}}
+for(const s of shots){const sign=Math.sign(s.vx),dx=s.x-(s.previousX??s.x-s.vx),dy=s.y-(s.previousY??s.y-s.vy),length=Math.hypot(dx,dy)||1,tail=Math.min(s.blast?38:14,Math.hypot(s.x-s.startX,s.y-s.startY));line(s.x-dx/length*tail,s.y-dy/length*tail,s.x,s.y,s.blast?'#ffcd5b':'#f2dea1',s.blast?7:3);ellipse(s.x,s.y,s.blast?15:6,s.blast?10:4,'#f5d783');if(s.blast){ellipse(s.x-sign*3,s.y,8,11,'#9c6934');line(s.x-7,s.y-5,s.x+6,s.y-5,'#ead796',4);}}
 for(const p of sparks){ctx.globalAlpha=Math.min(1,Math.max(0,p.life));ellipse(p.x,p.y,3,3,p.color);}ctx.globalAlpha=1;ctx.restore();
 const vignette=ctx.createLinearGradient(0,0,0,h);vignette.addColorStop(0,'#081b2022');vignette.addColorStop(.6,'#0000');vignette.addColorStop(1,'#09170c66');ctx.fillStyle=vignette;ctx.fillRect(0,0,w,h);
 if(mode==='battle'&&spawned<2){ctx.textAlign='center';ctx.font='bold 22px Georgia';ctx.fillStyle='#fff0ba';ctx.shadowColor='#000';ctx.shadowBlur=6;ctx.fillText('WAVE '+wave+' / '+TOTAL,w/2,50);ctx.font='12px system-ui';ctx.fillText(wave===10?'THE IRON STUMP':'HOLD THE GROVE',w/2,70);ctx.shadowBlur=0;}
