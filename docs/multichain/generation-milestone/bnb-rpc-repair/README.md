@@ -39,3 +39,8 @@ all 54 complete backend records, five schedules and protected configuration.
 No root build or backend rebuild is involved. The existing localStorage progress
 key is retained. After publication, reload the same canonical page, reconnect the
 Ledger admin and check receipts before refreshing step 2. Do not redeploy adapter.
+
+Published and locked: `6b03af26a54fc9961a7944cc`; see `publication.json`.
+Canonical assets passed all six scenarios. Reload the same page with Ctrl+Shift+R,
+connect MetaMask, Check receipts, then Refresh deployment review. Saved adapter
+progress is retained. Signatures and submissions still require MetaMask/Ledger.

@@ -1,3 +1,38 @@
+# BNB handoff RPC repair — published November 22, 2026
+
+Locked deployment `6b03af26a54fc9961a7944cc` was published at **21:14:43
+America/Chicago** on November 22 (`2026-11-23T03:14:43.997Z`). The canonical page
+remains https://tree-token.xyz/play/bnb-generation/.
+
+After the user's successful adapter deployment, a wallet RPC error blocked the
+next review. The page now uses a chain-checked, read-only public BNB fallback when
+wallet reads fail. Account access, network selection and all signing/submission
+remain in MetaMask/Ledger. Transaction bytes, fee limits and saved progress are
+unchanged. The specific failed read is now identified if both transports fail.
+
+This replaces only `/play/bnb-generation/app.js` from fresh baseline
+`6b03a2c688e99f705a3b9f3e`, preserving the newer Canopy mobile review and **668
+other static hashes**, **54 complete backend/provider records**, **five schedules**,
+runtime and protected configuration. Totals remain **669 paths, 54 functions,
+five schedules**. No backend or historical root build was published.
+
+Validation: 39 focused tests, 171 CI release checks and six browser scenarios on
+source, candidate and canonical assets passed. A browser with simulated wallet
+read failure and actual live chain data resumed the user's adapter receipt at
+step 2 without submitting a transaction. Canonical JavaScript matches source;
+backup RPC CORS preflight passed. The user's actual wallet retry remains pending.
+
+Source `62dfcbb38d1845b4e763587fbcd10f53200767d2`; control `6a17ab1`.
+Preparation run: [45104505657](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45104505657).
+Publication run: [45104692560](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45104692560).
+Control: `production/bnb-rpc-publish.json`. Evidence and setup:
+`docs/multichain/generation-milestone/bnb-rpc-repair/`.
+The adapter is already deployed; pass deployment and binding remain pending.
+No NFT deposit, sale, peer configuration or gameplay activation is included.
+Capture a fresh complete live baseline before any future release.
+
+---
+
 # BNB generation signing handoff — published November 22, 2026
 
 Locked deployment `6b03a1ca204de42e6892dd3a` was published at **20:17:27

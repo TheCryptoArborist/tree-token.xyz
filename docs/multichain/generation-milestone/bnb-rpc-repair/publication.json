@@ -1,0 +1,28 @@
+{
+  "deployId": "6b03af26a54fc9961a7944cc",
+  "baselineId": "6b03a2c688e99f705a3b9f3e",
+  "publishedAt": "2026-11-23T03:14:43.997Z",
+  "locked": true,
+  "staticPaths": 669,
+  "unchangedStaticPaths": 668,
+  "changedPaths": [
+    "/play/bnb-generation/app.js"
+  ],
+  "preservedBackendRecords": 54,
+  "preservedSchedules": 5,
+  "prepareRun": 45104505657,
+  "publishRun": 45104692560,
+  "sourceCommit": "62dfcbb38d1845b4e763587fbcd10f53200767d2",
+  "controlCommit": "6a17ab1",
+  "releaseTestsPassed": 171,
+  "focusedTestsPassed": 39,
+  "browserScenariosPerSurface": 6,
+  "canonicalJavaScriptMatchesSource": true,
+  "publicRpcCorsPreflight": {
+    "status": 204,
+    "allowOrigin": "*",
+    "allowMethods": "GET,HEAD,OPTIONS,POST",
+    "allowHeaders": "content-type"
+  },
+  "transactionsSubmittedByAgent": 0
+}
