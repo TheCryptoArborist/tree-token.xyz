@@ -1,0 +1,65 @@
+{
+  "checkedAt": "2026-11-23T18:05:54.063Z",
+  "exactScriptBytes": true,
+  "sui": {
+    "digest": "ENfwF1vVK1ozuYgVZcyr422UZTjnzUEk7f3iQeGDGEeh",
+    "packageId": "0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92",
+    "vaultId": "0xf5dff8e2cc96824f89735fa16c068ee8194fbb7e8d697aeebe5d135f8a5916eb",
+    "originalNft": "0x046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba",
+    "guid": "0x08156a875c94a547e7bdb2cb5e5720e26d97795abf35a82499cfc7b116b78341",
+    "payload": "0x0303f5dff8e2cc96824f89735fa16c068ee8194fbb7e8d697aeebe5d135f8a5916eb046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba0000000000000001c99c328de96599e4ea3332e097436cdc5bd542a0a479f892543b3008664128b3485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+    "messageFeeMist": "94851295",
+    "netGasMist": "5041162",
+    "grossGasMist": "16660400",
+    "estimatedTotalMist": "99892457",
+    "fees": [
+      {
+        "fee": "81674756",
+        "recipient": "0xf99b445ae678d3f28fe7acb91e5d7ee8ab538d7e231a837b12c593fb624ad630"
+      },
+      {
+        "fee": "4358299",
+        "recipient": "0x9004e1e4c6dcc42d1b73269db48d510192665677fcad2079a3c7d1e9e971d34e"
+      },
+      {
+        "fee": "4409120",
+        "recipient": "0x9004e1e4c6dcc42d1b73269db48d510192665677fcad2079a3c7d1e9e971d34e"
+      },
+      {
+        "fee": "4409120",
+        "recipient": "0x9004e1e4c6dcc42d1b73269db48d510192665677fcad2079a3c7d1e9e971d34e"
+      }
+    ],
+    "acknowledgementOnly": true,
+    "submitted": true,
+    "sourceVerified": true,
+    "phase": 2,
+    "generation": 1,
+    "ackSent": true,
+    "checkpoint": {
+      "sequenceNumber": 348428953,
+      "timestamp": "2026-11-23T18:05:46.364Z"
+    },
+    "destinationVerified": false,
+    "destinationStatus": "not checked"
+  },
+  "bnb": {
+    "complete": false,
+    "stage": 0,
+    "block": "0x810c1f0",
+    "index": 0,
+    "transaction": {
+      "from": "0xF2Ab1eEBbEcb4E315FE95D8b532D1aB00F1A8789",
+      "to": "0x74c20dEB476Dca58459956b1AcD65771197900C9",
+      "data": "0x07f53ee70000000000000000000000000000000000000000000000000000000000000004",
+      "value": "0x1042d5715612f4",
+      "chainId": "0x38",
+      "nonce": "0x1290",
+      "gas": "0x927c0",
+      "gasPrice": "0x2faf080"
+    },
+    "messageFeeWei": "4577084124304116",
+    "remainingMaximumFee": "4607084124304116"
+  },
+  "liveTransactionSubmitted": false
+}

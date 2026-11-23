@@ -56,10 +56,17 @@ complete current baseline, all static hashes/backend records/runtime/settings
 and five schedules. Add only two new static paths and upload no backend.
 Never publish the historical root snapshot. Stop and recapture on baseline change.
 
-Remaining: publish/verify canonical page, user signs once, verify actual BNB
+Remaining: user signs once, verify actual BNB
 source receipt and Sui completion. No next generation or public activation is
 implicitly authorized.
 
 Pre-release verification: **234 regression/preservation/preview tests passed**,
 plus eight browser connection/failure scenarios and the full single-send mock
 flow. Fresh maximum at the fixed 600000 gas limit: **0.004607084124304116 BNB**.
+
+Published and locked at 12:05:12 America/Chicago on November 23, 2026. All nine
+browser scenarios passed on the candidate and canonical site. Exact IDs and
+artifact digests are in `release.json`; the approved one-send signature remains
+pending. The GitHub-hosted publication downloaded and revalidated the complete
+candidate artifact. Local artifact downloads encountered a proxy 403; independent
+provider metadata, served bytes and browser verification passed.

@@ -1,3 +1,31 @@
+# Final BNB completion signing page published — November 23, 2026
+
+Locked deploy `6b047fa4c9ac1e8b32621216`, published at **12:05:12 America/Chicago**
+(`2026-11-23T18:05:12.849Z`). Canonical page:
+**https://tree-token.xyz/play/bnb-completion/**.
+
+One user-approved `send(4)` from MetaMask + Ledger admin 8789, maximum
+**0.006 BNB total (0.0059 message fee + 0.0001 gas)**. NFTree #2720 stays in
+Sui dev wallet 45c4. No USDT, deposit, mint, security change, sales or gameplay
+activation. User signature is pending; Codex submitted no live completion.
+After source confirmation independently verify actual Sui Completed/phase 3.
+Do not resend an uncertain submission.
+
+Preserved all **686 existing static paths, 60 complete backend/provider records,
+runtime/protected configuration and five schedules** from locked baseline
+`6b046d714f59325f88ea55af`. Added two static page files: **688 paths**, no backend
+uploads. Never publish the historical root snapshot. Before later releases,
+recapture actual current production and preserve any newer unrelated work.
+
+Source `d76e874`, control `6033a78`; candidate/publication runs
+`45233815169` / `45234330517`. Source contract CI `45233815244` passed; 234 local
+regression/preservation/preview checks and nine browser scenarios on each of
+source/candidate/canonical passed. Exact served script bytes and current review
+are independently checked. Setup, source/fork evidence, artifact digests,
+release IDs and remaining tasks: `docs/multichain/generation-milestone/completion-handoff/`.
+
+---
+
 # Final BNB completion handoff approved — November 23, 2026
 
 The user approved one new adapter `send(4)`, capped at **0.006 BNB total**
