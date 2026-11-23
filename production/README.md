@@ -1,3 +1,50 @@
+# Tree Arcade single launch countdown — published November 22, 2026
+
+Deployment `6b03810de27178ba36227c42` was published at **17:58:49.627 America/Chicago**
+on November 22 (`2026-11-22T23:58:49.627Z`) and verified ready and locked by
+[publication run 45086007525](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45086007525).
+Final canonical verification passed at `2026-11-22T23:58:53.931Z`.
+
+The [Daily page](https://tree-token.xyz/play/#daily) now shows one Up Next launch
+countdown, labeled **December launches in**, with **Tree Hero’s Advent Grove and
+Christmas Guardians badges** described together. Daily, Monthly Progress and
+Badge Collection each retain one accessible timer. The exact UTC launch date,
+badge eligibility qualification and unannounced January collection wording are
+preserved. Root directly checked canonical Daily after publication and observed
+the single timer and the intended description; the live tab was retained for review.
+
+Fresh baseline: `6b03741d72033c45517f32e3`, including the newer Slush connection
+repair. The release replaced only `/scripts/arcade-next-month-unlocks.js` and
+`/styles/arcade-organization.css`, added no paths, and verified **667 static
+paths**, **665 unchanged unrelated hashes**, **54 complete backend/provider
+records**, **five schedules**, runtime and protected configuration. No backend
+package was rebuilt.
+
+Validation: **20 focused tests** and **6/6 exact candidate browser scenarios**
+at **320, 390 and 1280 pixels**, covering one timer, three tab placements,
+accessible labels, ticking, UTC month rollover and responsive layout. Every
+named check passed with zero unresolved browser errors, asset failures or
+unexpected writes. Existing image-request cancellations were resolved only
+after independent HTTP, image MIME and browser decoding checks; retained logo
+nodes and seasonal replacement artwork were also decoded in the actual DOM.
+Three earlier failed previews were never published and are listed in the index.
+
+Source `34b342f3f0b2c3c61d5984d05ea3a5d6bde1f979` and merged main
+`5f9b58a2fd39286b00897fea8b176a62d3a34699` share tree
+`1351b345ece0299c4e7f05364c7aaeb8bf7aa986`, incorporating PRs #289–#292.
+Publication control: `fe5cfadbbbed13a2c8799ac4ada424d0aca3031f`.
+Preparation run: [45085802059](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45085802059).
+
+Complete records: `docs/arcade-countdown-release-20261122.json`,
+`docs/arcade-countdown-browser-20261122.json`, and
+`docs/arcade-countdown-deployment-20261122.json`. Verified original archives
+are retained at `docs/arcade-countdown-records-20261122/{prepare,publish}.zip`.
+The index records their SHA256 values, canonical UI observation and current
+Mysten guidance consulted. Capture the complete current site before any later
+release; this completed publisher is pinned to its reviewed prior baseline.
+
+---
+
 # Tree Arcade autumn grove and Advent preview — published November 22, 2026
 
 Deployment `6b037118d43fee18f79fb7a4` was published at

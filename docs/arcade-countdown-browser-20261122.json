@@ -1,0 +1,2073 @@
+{
+  "schemaVersion": 1,
+  "result": "passed",
+  "checkedAt": "2026-11-22T23:56:28.884Z",
+  "viewportWidths": [
+    320,
+    390,
+    1280
+  ],
+  "noWalletOrPaymentActions": true,
+  "syntheticWalletOnly": true,
+  "syntheticDataOnly": true,
+  "expectedScenarioCount": 6,
+  "checks": {
+    "singleTimer": true,
+    "launchCopy": true,
+    "threePlacements": true,
+    "utcTargets": true,
+    "ticking": true,
+    "monthRollover": true,
+    "unknownBadges": true,
+    "mobileLayout": true,
+    "noMissingAssets": true
+  },
+  "viewports": [
+    {
+      "width": 320,
+      "checks": {
+        "singleTimer": true,
+        "launchCopy": true,
+        "threePlacements": true,
+        "utcTargets": true,
+        "ticking": true,
+        "monthRollover": true,
+        "unknownBadges": true,
+        "mobileLayout": true,
+        "noMissingAssets": true
+      },
+      "scenarios": [
+        {
+          "name": "configured-december",
+          "result": "passed",
+          "placements": [
+            {
+              "type": "daily",
+              "layout": {
+                "viewport": 320,
+                "pageWidth": 320,
+                "left": 21,
+                "right": 299,
+                "timerLeft": 42,
+                "timerRight": 278,
+                "scrollWidth": 276,
+                "clientWidth": 276
+              }
+            },
+            {
+              "type": "monthly",
+              "layout": {
+                "viewport": 320,
+                "pageWidth": 320,
+                "left": 21,
+                "right": 299,
+                "timerLeft": 42,
+                "timerRight": 278,
+                "scrollWidth": 276,
+                "clientWidth": 276
+              }
+            },
+            {
+              "type": "badges",
+              "layout": {
+                "viewport": 320,
+                "pageWidth": 320,
+                "left": 21,
+                "right": 299,
+                "timerLeft": 42,
+                "timerRight": 278,
+                "scrollWidth": 276,
+                "clientWidth": 276
+              }
+            }
+          ],
+          "apiReads": [
+            {
+              "path": "/api/arcade-growth",
+              "method": "GET",
+              "action": "status"
+            }
+          ],
+          "before": {
+            "now": 1795348800000,
+            "cards": [
+              {
+                "type": "daily",
+                "parent": "growth-today-panel",
+                "monthKey": "2026-12",
+                "heading": "December 2026",
+                "label": "December launches in",
+                "description": "Tree Hero’s Advent Grove and Christmas Guardians badges.",
+                "timer": "8d 12h 00m 00s",
+                "footer": "Starts December 1, 2026 · 00:00 UTC. Badge eligibility is verified by the Arcade.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-daily",
+                "validLabel": true,
+                "labelIdCount": 1
+              },
+              {
+                "type": "monthly",
+                "parent": "growth-month-panel",
+                "monthKey": "2026-12",
+                "heading": "December 2026",
+                "label": "December launches in",
+                "description": "Tree Hero’s Advent Grove and Christmas Guardians badges.",
+                "timer": "8d 12h 00m 00s",
+                "footer": "Starts December 1, 2026 · 00:00 UTC. Badge eligibility is verified by the Arcade.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-monthly",
+                "validLabel": true,
+                "labelIdCount": 1
+              },
+              {
+                "type": "badges",
+                "parent": "growth-badges-panel",
+                "monthKey": "2026-12",
+                "heading": "December 2026",
+                "label": "December launches in",
+                "description": "Tree Hero’s Advent Grove and Christmas Guardians badges.",
+                "timer": "8d 12h 00m 00s",
+                "footer": "Starts December 1, 2026 · 00:00 UTC. Badge eligibility is verified by the Arcade.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-badges",
+                "validLabel": true,
+                "labelIdCount": 1
+              }
+            ]
+          },
+          "after": {
+            "now": 1795348801000,
+            "cards": [
+              {
+                "type": "daily",
+                "parent": "growth-today-panel",
+                "monthKey": "2026-12",
+                "heading": "December 2026",
+                "label": "December launches in",
+                "description": "Tree Hero’s Advent Grove and Christmas Guardians badges.",
+                "timer": "8d 11h 59m 59s",
+                "footer": "Starts December 1, 2026 · 00:00 UTC. Badge eligibility is verified by the Arcade.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-daily",
+                "validLabel": true,
+                "labelIdCount": 1
+              },
+              {
+                "type": "monthly",
+                "parent": "growth-month-panel",
+                "monthKey": "2026-12",
+                "heading": "December 2026",
+                "label": "December launches in",
+                "description": "Tree Hero’s Advent Grove and Christmas Guardians badges.",
+                "timer": "8d 11h 59m 59s",
+                "footer": "Starts December 1, 2026 · 00:00 UTC. Badge eligibility is verified by the Arcade.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-monthly",
+                "validLabel": true,
+                "labelIdCount": 1
+              },
+              {
+                "type": "badges",
+                "parent": "growth-badges-panel",
+                "monthKey": "2026-12",
+                "heading": "December 2026",
+                "label": "December launches in",
+                "description": "Tree Hero’s Advent Grove and Christmas Guardians badges.",
+                "timer": "8d 11h 59m 59s",
+                "footer": "Starts December 1, 2026 · 00:00 UTC. Badge eligibility is verified by the Arcade.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-badges",
+                "validLabel": true,
+                "labelIdCount": 1
+              }
+            ]
+          },
+          "servedAssets": {
+            "/styles/arcade-organization.css": 200,
+            "/scripts/arcade-next-month-unlocks.js": 200
+          },
+          "verifiedImageCancellations": [
+            {
+              "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/nftree-scout.webp",
+              "occurrences": 2,
+              "status": 200,
+              "contentType": "image/webp",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/nftree-scout.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/tree-force-vanguard.webp",
+              "occurrences": 2,
+              "status": 200,
+              "contentType": "image/webp",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/tree-force-vanguard.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/thickquidity-legend.webp",
+              "occurrences": 2,
+              "status": 200,
+              "contentType": "image/webp",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/thickquidity-legend.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+              "occurrences": 1,
+              "status": 200,
+              "contentType": "image/png",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+              "width": 512,
+              "height": 512,
+              "currentDOMImages": [
+                {
+                  "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+                  "width": 512,
+                  "height": 512
+                },
+                {
+                  "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+                  "width": 512,
+                  "height": 512
+                },
+                {
+                  "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+                  "width": 512,
+                  "height": 512
+                }
+              ]
+            }
+          ],
+          "replacementImageChecks": [
+            {
+              "rank": "seedling",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/nov-acorn-scout.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "rank": "sapling",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/nov-harvest-guardian.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "rank": "deep-roots",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/nov-amber-vanguard.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "rank": "full-canopy",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/nov-autumn-hero.webp",
+              "width": 512,
+              "height": 512
+            }
+          ]
+        },
+        {
+          "name": "january-rollover",
+          "result": "passed",
+          "placements": [
+            {
+              "type": "daily",
+              "layout": {
+                "viewport": 320,
+                "pageWidth": 320,
+                "left": 21,
+                "right": 299,
+                "timerLeft": 42,
+                "timerRight": 278,
+                "scrollWidth": 276,
+                "clientWidth": 276
+              }
+            },
+            {
+              "type": "monthly",
+              "layout": {
+                "viewport": 320,
+                "pageWidth": 320,
+                "left": 21,
+                "right": 299,
+                "timerLeft": 42,
+                "timerRight": 278,
+                "scrollWidth": 276,
+                "clientWidth": 276
+              }
+            },
+            {
+              "type": "badges",
+              "layout": {
+                "viewport": 320,
+                "pageWidth": 320,
+                "left": 21,
+                "right": 299,
+                "timerLeft": 42,
+                "timerRight": 278,
+                "scrollWidth": 276,
+                "clientWidth": 276
+              }
+            }
+          ],
+          "apiReads": [
+            {
+              "path": "/api/arcade-growth",
+              "method": "GET",
+              "action": "status"
+            }
+          ],
+          "before": {
+            "now": 1796083198000,
+            "cards": [
+              {
+                "type": "daily",
+                "parent": "growth-today-panel",
+                "monthKey": "2026-12",
+                "heading": "December 2026",
+                "label": "December launches in",
+                "description": "Tree Hero’s Advent Grove and Christmas Guardians badges.",
+                "timer": "0d 00h 00m 02s",
+                "footer": "Starts December 1, 2026 · 00:00 UTC. Badge eligibility is verified by the Arcade.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-daily",
+                "validLabel": true,
+                "labelIdCount": 1
+              },
+              {
+                "type": "monthly",
+                "parent": "growth-month-panel",
+                "monthKey": "2026-12",
+                "heading": "December 2026",
+                "label": "December launches in",
+                "description": "Tree Hero’s Advent Grove and Christmas Guardians badges.",
+                "timer": "0d 00h 00m 02s",
+                "footer": "Starts December 1, 2026 · 00:00 UTC. Badge eligibility is verified by the Arcade.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-monthly",
+                "validLabel": true,
+                "labelIdCount": 1
+              },
+              {
+                "type": "badges",
+                "parent": "growth-badges-panel",
+                "monthKey": "2026-12",
+                "heading": "December 2026",
+                "label": "December launches in",
+                "description": "Tree Hero’s Advent Grove and Christmas Guardians badges.",
+                "timer": "0d 00h 00m 02s",
+                "footer": "Starts December 1, 2026 · 00:00 UTC. Badge eligibility is verified by the Arcade.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-badges",
+                "validLabel": true,
+                "labelIdCount": 1
+              }
+            ]
+          },
+          "after": {
+            "now": 1796083201000,
+            "cards": [
+              {
+                "type": "daily",
+                "parent": "growth-today-panel",
+                "monthKey": "2027-01",
+                "heading": "January 2027",
+                "label": "January calendar opens in",
+                "description": "A new daily check-in calendar. Next badge collection not announced.",
+                "timer": "30d 23h 59m 59s",
+                "footer": "Calendar begins January 1, 2027 · 00:00 UTC. No badge release date is configured yet.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-daily",
+                "validLabel": true,
+                "labelIdCount": 1
+              },
+              {
+                "type": "monthly",
+                "parent": "growth-month-panel",
+                "monthKey": "2027-01",
+                "heading": "January 2027",
+                "label": "January calendar opens in",
+                "description": "A new daily check-in calendar. Next badge collection not announced.",
+                "timer": "30d 23h 59m 59s",
+                "footer": "Calendar begins January 1, 2027 · 00:00 UTC. No badge release date is configured yet.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-monthly",
+                "validLabel": true,
+                "labelIdCount": 1
+              },
+              {
+                "type": "badges",
+                "parent": "growth-badges-panel",
+                "monthKey": "2027-01",
+                "heading": "January 2027",
+                "label": "January calendar opens in",
+                "description": "A new daily check-in calendar. Next badge collection not announced.",
+                "timer": "30d 23h 59m 59s",
+                "footer": "Calendar begins January 1, 2027 · 00:00 UTC. No badge release date is configured yet.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-badges",
+                "validLabel": true,
+                "labelIdCount": 1
+              }
+            ]
+          },
+          "servedAssets": {
+            "/styles/arcade-organization.css": 200,
+            "/scripts/arcade-next-month-unlocks.js": 200
+          },
+          "verifiedImageCancellations": [
+            {
+              "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/nftree-scout.webp",
+              "occurrences": 1,
+              "status": 200,
+              "contentType": "image/webp",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/nftree-scout.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/tree-force-vanguard.webp",
+              "occurrences": 1,
+              "status": 200,
+              "contentType": "image/webp",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/tree-force-vanguard.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/thickquidity-legend.webp",
+              "occurrences": 1,
+              "status": 200,
+              "contentType": "image/webp",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/thickquidity-legend.webp",
+              "width": 512,
+              "height": 512
+            }
+          ],
+          "replacementImageChecks": [
+            {
+              "rank": "seedling",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/dec-frost-sprout.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "rank": "sapling",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/dec-holly-guardian.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "rank": "deep-roots",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/dec-snowfall-vanguard.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "rank": "full-canopy",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/dec-christmas-hero.webp",
+              "width": 512,
+              "height": 512
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "checks": {
+        "singleTimer": true,
+        "launchCopy": true,
+        "threePlacements": true,
+        "utcTargets": true,
+        "ticking": true,
+        "monthRollover": true,
+        "unknownBadges": true,
+        "mobileLayout": true,
+        "noMissingAssets": true
+      },
+      "scenarios": [
+        {
+          "name": "configured-december",
+          "result": "passed",
+          "placements": [
+            {
+              "type": "daily",
+              "layout": {
+                "viewport": 390,
+                "pageWidth": 390,
+                "left": 27,
+                "right": 363,
+                "timerLeft": 48,
+                "timerRight": 342,
+                "scrollWidth": 334,
+                "clientWidth": 334
+              }
+            },
+            {
+              "type": "monthly",
+              "layout": {
+                "viewport": 390,
+                "pageWidth": 390,
+                "left": 27,
+                "right": 363,
+                "timerLeft": 48,
+                "timerRight": 342,
+                "scrollWidth": 334,
+                "clientWidth": 334
+              }
+            },
+            {
+              "type": "badges",
+              "layout": {
+                "viewport": 390,
+                "pageWidth": 390,
+                "left": 27,
+                "right": 363,
+                "timerLeft": 48,
+                "timerRight": 342,
+                "scrollWidth": 334,
+                "clientWidth": 334
+              }
+            }
+          ],
+          "apiReads": [
+            {
+              "path": "/api/arcade-growth",
+              "method": "GET",
+              "action": "status"
+            }
+          ],
+          "before": {
+            "now": 1795348800000,
+            "cards": [
+              {
+                "type": "daily",
+                "parent": "growth-today-panel",
+                "monthKey": "2026-12",
+                "heading": "December 2026",
+                "label": "December launches in",
+                "description": "Tree Hero’s Advent Grove and Christmas Guardians badges.",
+                "timer": "8d 12h 00m 00s",
+                "footer": "Starts December 1, 2026 · 00:00 UTC. Badge eligibility is verified by the Arcade.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-daily",
+                "validLabel": true,
+                "labelIdCount": 1
+              },
+              {
+                "type": "monthly",
+                "parent": "growth-month-panel",
+                "monthKey": "2026-12",
+                "heading": "December 2026",
+                "label": "December launches in",
+                "description": "Tree Hero’s Advent Grove and Christmas Guardians badges.",
+                "timer": "8d 12h 00m 00s",
+                "footer": "Starts December 1, 2026 · 00:00 UTC. Badge eligibility is verified by the Arcade.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-monthly",
+                "validLabel": true,
+                "labelIdCount": 1
+              },
+              {
+                "type": "badges",
+                "parent": "growth-badges-panel",
+                "monthKey": "2026-12",
+                "heading": "December 2026",
+                "label": "December launches in",
+                "description": "Tree Hero’s Advent Grove and Christmas Guardians badges.",
+                "timer": "8d 12h 00m 00s",
+                "footer": "Starts December 1, 2026 · 00:00 UTC. Badge eligibility is verified by the Arcade.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-badges",
+                "validLabel": true,
+                "labelIdCount": 1
+              }
+            ]
+          },
+          "after": {
+            "now": 1795348801000,
+            "cards": [
+              {
+                "type": "daily",
+                "parent": "growth-today-panel",
+                "monthKey": "2026-12",
+                "heading": "December 2026",
+                "label": "December launches in",
+                "description": "Tree Hero’s Advent Grove and Christmas Guardians badges.",
+                "timer": "8d 11h 59m 59s",
+                "footer": "Starts December 1, 2026 · 00:00 UTC. Badge eligibility is verified by the Arcade.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-daily",
+                "validLabel": true,
+                "labelIdCount": 1
+              },
+              {
+                "type": "monthly",
+                "parent": "growth-month-panel",
+                "monthKey": "2026-12",
+                "heading": "December 2026",
+                "label": "December launches in",
+                "description": "Tree Hero’s Advent Grove and Christmas Guardians badges.",
+                "timer": "8d 11h 59m 59s",
+                "footer": "Starts December 1, 2026 · 00:00 UTC. Badge eligibility is verified by the Arcade.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-monthly",
+                "validLabel": true,
+                "labelIdCount": 1
+              },
+              {
+                "type": "badges",
+                "parent": "growth-badges-panel",
+                "monthKey": "2026-12",
+                "heading": "December 2026",
+                "label": "December launches in",
+                "description": "Tree Hero’s Advent Grove and Christmas Guardians badges.",
+                "timer": "8d 11h 59m 59s",
+                "footer": "Starts December 1, 2026 · 00:00 UTC. Badge eligibility is verified by the Arcade.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-badges",
+                "validLabel": true,
+                "labelIdCount": 1
+              }
+            ]
+          },
+          "servedAssets": {
+            "/styles/arcade-organization.css": 200,
+            "/scripts/arcade-next-month-unlocks.js": 200
+          },
+          "verifiedImageCancellations": [
+            {
+              "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/nftree-scout.webp",
+              "occurrences": 2,
+              "status": 200,
+              "contentType": "image/webp",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/nftree-scout.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/tree-force-vanguard.webp",
+              "occurrences": 2,
+              "status": 200,
+              "contentType": "image/webp",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/tree-force-vanguard.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/thickquidity-legend.webp",
+              "occurrences": 2,
+              "status": 200,
+              "contentType": "image/webp",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/thickquidity-legend.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+              "occurrences": 1,
+              "status": 200,
+              "contentType": "image/png",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+              "width": 512,
+              "height": 512,
+              "currentDOMImages": [
+                {
+                  "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+                  "width": 512,
+                  "height": 512
+                },
+                {
+                  "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+                  "width": 512,
+                  "height": 512
+                },
+                {
+                  "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+                  "width": 512,
+                  "height": 512
+                }
+              ]
+            }
+          ],
+          "replacementImageChecks": [
+            {
+              "rank": "seedling",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/nov-acorn-scout.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "rank": "sapling",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/nov-harvest-guardian.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "rank": "deep-roots",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/nov-amber-vanguard.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "rank": "full-canopy",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/nov-autumn-hero.webp",
+              "width": 512,
+              "height": 512
+            }
+          ]
+        },
+        {
+          "name": "january-rollover",
+          "result": "passed",
+          "placements": [
+            {
+              "type": "daily",
+              "layout": {
+                "viewport": 390,
+                "pageWidth": 390,
+                "left": 27,
+                "right": 363,
+                "timerLeft": 48,
+                "timerRight": 342,
+                "scrollWidth": 334,
+                "clientWidth": 334
+              }
+            },
+            {
+              "type": "monthly",
+              "layout": {
+                "viewport": 390,
+                "pageWidth": 390,
+                "left": 27,
+                "right": 363,
+                "timerLeft": 48,
+                "timerRight": 342,
+                "scrollWidth": 334,
+                "clientWidth": 334
+              }
+            },
+            {
+              "type": "badges",
+              "layout": {
+                "viewport": 390,
+                "pageWidth": 390,
+                "left": 27,
+                "right": 363,
+                "timerLeft": 48,
+                "timerRight": 342,
+                "scrollWidth": 334,
+                "clientWidth": 334
+              }
+            }
+          ],
+          "apiReads": [
+            {
+              "path": "/api/arcade-growth",
+              "method": "GET",
+              "action": "status"
+            }
+          ],
+          "before": {
+            "now": 1796083198000,
+            "cards": [
+              {
+                "type": "daily",
+                "parent": "growth-today-panel",
+                "monthKey": "2026-12",
+                "heading": "December 2026",
+                "label": "December launches in",
+                "description": "Tree Hero’s Advent Grove and Christmas Guardians badges.",
+                "timer": "0d 00h 00m 02s",
+                "footer": "Starts December 1, 2026 · 00:00 UTC. Badge eligibility is verified by the Arcade.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-daily",
+                "validLabel": true,
+                "labelIdCount": 1
+              },
+              {
+                "type": "monthly",
+                "parent": "growth-month-panel",
+                "monthKey": "2026-12",
+                "heading": "December 2026",
+                "label": "December launches in",
+                "description": "Tree Hero’s Advent Grove and Christmas Guardians badges.",
+                "timer": "0d 00h 00m 02s",
+                "footer": "Starts December 1, 2026 · 00:00 UTC. Badge eligibility is verified by the Arcade.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-monthly",
+                "validLabel": true,
+                "labelIdCount": 1
+              },
+              {
+                "type": "badges",
+                "parent": "growth-badges-panel",
+                "monthKey": "2026-12",
+                "heading": "December 2026",
+                "label": "December launches in",
+                "description": "Tree Hero’s Advent Grove and Christmas Guardians badges.",
+                "timer": "0d 00h 00m 02s",
+                "footer": "Starts December 1, 2026 · 00:00 UTC. Badge eligibility is verified by the Arcade.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-badges",
+                "validLabel": true,
+                "labelIdCount": 1
+              }
+            ]
+          },
+          "after": {
+            "now": 1796083201000,
+            "cards": [
+              {
+                "type": "daily",
+                "parent": "growth-today-panel",
+                "monthKey": "2027-01",
+                "heading": "January 2027",
+                "label": "January calendar opens in",
+                "description": "A new daily check-in calendar. Next badge collection not announced.",
+                "timer": "30d 23h 59m 59s",
+                "footer": "Calendar begins January 1, 2027 · 00:00 UTC. No badge release date is configured yet.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-daily",
+                "validLabel": true,
+                "labelIdCount": 1
+              },
+              {
+                "type": "monthly",
+                "parent": "growth-month-panel",
+                "monthKey": "2027-01",
+                "heading": "January 2027",
+                "label": "January calendar opens in",
+                "description": "A new daily check-in calendar. Next badge collection not announced.",
+                "timer": "30d 23h 59m 59s",
+                "footer": "Calendar begins January 1, 2027 · 00:00 UTC. No badge release date is configured yet.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-monthly",
+                "validLabel": true,
+                "labelIdCount": 1
+              },
+              {
+                "type": "badges",
+                "parent": "growth-badges-panel",
+                "monthKey": "2027-01",
+                "heading": "January 2027",
+                "label": "January calendar opens in",
+                "description": "A new daily check-in calendar. Next badge collection not announced.",
+                "timer": "30d 23h 59m 59s",
+                "footer": "Calendar begins January 1, 2027 · 00:00 UTC. No badge release date is configured yet.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-badges",
+                "validLabel": true,
+                "labelIdCount": 1
+              }
+            ]
+          },
+          "servedAssets": {
+            "/styles/arcade-organization.css": 200,
+            "/scripts/arcade-next-month-unlocks.js": 200
+          },
+          "verifiedImageCancellations": [
+            {
+              "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/nftree-scout.webp",
+              "occurrences": 1,
+              "status": 200,
+              "contentType": "image/webp",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/nftree-scout.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/tree-force-vanguard.webp",
+              "occurrences": 1,
+              "status": 200,
+              "contentType": "image/webp",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/tree-force-vanguard.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/thickquidity-legend.webp",
+              "occurrences": 1,
+              "status": 200,
+              "contentType": "image/webp",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/thickquidity-legend.webp",
+              "width": 512,
+              "height": 512
+            }
+          ],
+          "replacementImageChecks": [
+            {
+              "rank": "seedling",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/dec-frost-sprout.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "rank": "sapling",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/dec-holly-guardian.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "rank": "deep-roots",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/dec-snowfall-vanguard.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "rank": "full-canopy",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/dec-christmas-hero.webp",
+              "width": 512,
+              "height": 512
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 1280,
+      "checks": {
+        "singleTimer": true,
+        "launchCopy": true,
+        "threePlacements": true,
+        "utcTargets": true,
+        "ticking": true,
+        "monthRollover": true,
+        "unknownBadges": true,
+        "mobileLayout": true,
+        "noMissingAssets": true
+      },
+      "scenarios": [
+        {
+          "name": "configured-december",
+          "result": "passed",
+          "placements": [
+            {
+              "type": "daily",
+              "layout": {
+                "viewport": 1280,
+                "pageWidth": 1280,
+                "left": 53,
+                "right": 1227,
+                "timerLeft": 82,
+                "timerRight": 1198,
+                "scrollWidth": 1172,
+                "clientWidth": 1172
+              }
+            },
+            {
+              "type": "monthly",
+              "layout": {
+                "viewport": 1280,
+                "pageWidth": 1280,
+                "left": 53,
+                "right": 1227,
+                "timerLeft": 82,
+                "timerRight": 1198,
+                "scrollWidth": 1172,
+                "clientWidth": 1172
+              }
+            },
+            {
+              "type": "badges",
+              "layout": {
+                "viewport": 1280,
+                "pageWidth": 1280,
+                "left": 53,
+                "right": 927,
+                "timerLeft": 82,
+                "timerRight": 898,
+                "scrollWidth": 872,
+                "clientWidth": 872
+              }
+            }
+          ],
+          "apiReads": [
+            {
+              "path": "/api/arcade-growth",
+              "method": "GET",
+              "action": "status"
+            }
+          ],
+          "before": {
+            "now": 1795348800000,
+            "cards": [
+              {
+                "type": "daily",
+                "parent": "growth-today-panel",
+                "monthKey": "2026-12",
+                "heading": "December 2026",
+                "label": "December launches in",
+                "description": "Tree Hero’s Advent Grove and Christmas Guardians badges.",
+                "timer": "8d 12h 00m 00s",
+                "footer": "Starts December 1, 2026 · 00:00 UTC. Badge eligibility is verified by the Arcade.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-daily",
+                "validLabel": true,
+                "labelIdCount": 1
+              },
+              {
+                "type": "monthly",
+                "parent": "growth-month-panel",
+                "monthKey": "2026-12",
+                "heading": "December 2026",
+                "label": "December launches in",
+                "description": "Tree Hero’s Advent Grove and Christmas Guardians badges.",
+                "timer": "8d 12h 00m 00s",
+                "footer": "Starts December 1, 2026 · 00:00 UTC. Badge eligibility is verified by the Arcade.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-monthly",
+                "validLabel": true,
+                "labelIdCount": 1
+              },
+              {
+                "type": "badges",
+                "parent": "growth-badges-panel",
+                "monthKey": "2026-12",
+                "heading": "December 2026",
+                "label": "December launches in",
+                "description": "Tree Hero’s Advent Grove and Christmas Guardians badges.",
+                "timer": "8d 12h 00m 00s",
+                "footer": "Starts December 1, 2026 · 00:00 UTC. Badge eligibility is verified by the Arcade.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-badges",
+                "validLabel": true,
+                "labelIdCount": 1
+              }
+            ]
+          },
+          "after": {
+            "now": 1795348801000,
+            "cards": [
+              {
+                "type": "daily",
+                "parent": "growth-today-panel",
+                "monthKey": "2026-12",
+                "heading": "December 2026",
+                "label": "December launches in",
+                "description": "Tree Hero’s Advent Grove and Christmas Guardians badges.",
+                "timer": "8d 11h 59m 59s",
+                "footer": "Starts December 1, 2026 · 00:00 UTC. Badge eligibility is verified by the Arcade.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-daily",
+                "validLabel": true,
+                "labelIdCount": 1
+              },
+              {
+                "type": "monthly",
+                "parent": "growth-month-panel",
+                "monthKey": "2026-12",
+                "heading": "December 2026",
+                "label": "December launches in",
+                "description": "Tree Hero’s Advent Grove and Christmas Guardians badges.",
+                "timer": "8d 11h 59m 59s",
+                "footer": "Starts December 1, 2026 · 00:00 UTC. Badge eligibility is verified by the Arcade.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-monthly",
+                "validLabel": true,
+                "labelIdCount": 1
+              },
+              {
+                "type": "badges",
+                "parent": "growth-badges-panel",
+                "monthKey": "2026-12",
+                "heading": "December 2026",
+                "label": "December launches in",
+                "description": "Tree Hero’s Advent Grove and Christmas Guardians badges.",
+                "timer": "8d 11h 59m 59s",
+                "footer": "Starts December 1, 2026 · 00:00 UTC. Badge eligibility is verified by the Arcade.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-badges",
+                "validLabel": true,
+                "labelIdCount": 1
+              }
+            ]
+          },
+          "servedAssets": {
+            "/styles/arcade-organization.css": 200,
+            "/scripts/arcade-next-month-unlocks.js": 200
+          },
+          "verifiedImageCancellations": [
+            {
+              "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/nftree-scout.webp",
+              "occurrences": 2,
+              "status": 200,
+              "contentType": "image/webp",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/nftree-scout.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/tree-force-vanguard.webp",
+              "occurrences": 2,
+              "status": 200,
+              "contentType": "image/webp",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/tree-force-vanguard.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/thickquidity-legend.webp",
+              "occurrences": 2,
+              "status": 200,
+              "contentType": "image/webp",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/thickquidity-legend.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+              "occurrences": 1,
+              "status": 200,
+              "contentType": "image/png",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+              "width": 512,
+              "height": 512,
+              "currentDOMImages": [
+                {
+                  "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+                  "width": 512,
+                  "height": 512
+                },
+                {
+                  "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+                  "width": 512,
+                  "height": 512
+                },
+                {
+                  "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+                  "width": 512,
+                  "height": 512
+                }
+              ]
+            }
+          ],
+          "replacementImageChecks": [
+            {
+              "rank": "seedling",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/nov-acorn-scout.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "rank": "sapling",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/nov-harvest-guardian.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "rank": "deep-roots",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/nov-amber-vanguard.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "rank": "full-canopy",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/nov-autumn-hero.webp",
+              "width": 512,
+              "height": 512
+            }
+          ]
+        },
+        {
+          "name": "january-rollover",
+          "result": "passed",
+          "placements": [
+            {
+              "type": "daily",
+              "layout": {
+                "viewport": 1280,
+                "pageWidth": 1280,
+                "left": 53,
+                "right": 1227,
+                "timerLeft": 82,
+                "timerRight": 1198,
+                "scrollWidth": 1172,
+                "clientWidth": 1172
+              }
+            },
+            {
+              "type": "monthly",
+              "layout": {
+                "viewport": 1280,
+                "pageWidth": 1280,
+                "left": 53,
+                "right": 1227,
+                "timerLeft": 82,
+                "timerRight": 1198,
+                "scrollWidth": 1172,
+                "clientWidth": 1172
+              }
+            },
+            {
+              "type": "badges",
+              "layout": {
+                "viewport": 1280,
+                "pageWidth": 1280,
+                "left": 53,
+                "right": 927,
+                "timerLeft": 82,
+                "timerRight": 898,
+                "scrollWidth": 872,
+                "clientWidth": 872
+              }
+            }
+          ],
+          "apiReads": [
+            {
+              "path": "/api/arcade-growth",
+              "method": "GET",
+              "action": "status"
+            }
+          ],
+          "before": {
+            "now": 1796083198000,
+            "cards": [
+              {
+                "type": "daily",
+                "parent": "growth-today-panel",
+                "monthKey": "2026-12",
+                "heading": "December 2026",
+                "label": "December launches in",
+                "description": "Tree Hero’s Advent Grove and Christmas Guardians badges.",
+                "timer": "0d 00h 00m 02s",
+                "footer": "Starts December 1, 2026 · 00:00 UTC. Badge eligibility is verified by the Arcade.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-daily",
+                "validLabel": true,
+                "labelIdCount": 1
+              },
+              {
+                "type": "monthly",
+                "parent": "growth-month-panel",
+                "monthKey": "2026-12",
+                "heading": "December 2026",
+                "label": "December launches in",
+                "description": "Tree Hero’s Advent Grove and Christmas Guardians badges.",
+                "timer": "0d 00h 00m 02s",
+                "footer": "Starts December 1, 2026 · 00:00 UTC. Badge eligibility is verified by the Arcade.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-monthly",
+                "validLabel": true,
+                "labelIdCount": 1
+              },
+              {
+                "type": "badges",
+                "parent": "growth-badges-panel",
+                "monthKey": "2026-12",
+                "heading": "December 2026",
+                "label": "December launches in",
+                "description": "Tree Hero’s Advent Grove and Christmas Guardians badges.",
+                "timer": "0d 00h 00m 02s",
+                "footer": "Starts December 1, 2026 · 00:00 UTC. Badge eligibility is verified by the Arcade.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-badges",
+                "validLabel": true,
+                "labelIdCount": 1
+              }
+            ]
+          },
+          "after": {
+            "now": 1796083201000,
+            "cards": [
+              {
+                "type": "daily",
+                "parent": "growth-today-panel",
+                "monthKey": "2027-01",
+                "heading": "January 2027",
+                "label": "January calendar opens in",
+                "description": "A new daily check-in calendar. Next badge collection not announced.",
+                "timer": "30d 23h 59m 59s",
+                "footer": "Calendar begins January 1, 2027 · 00:00 UTC. No badge release date is configured yet.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-daily",
+                "validLabel": true,
+                "labelIdCount": 1
+              },
+              {
+                "type": "monthly",
+                "parent": "growth-month-panel",
+                "monthKey": "2027-01",
+                "heading": "January 2027",
+                "label": "January calendar opens in",
+                "description": "A new daily check-in calendar. Next badge collection not announced.",
+                "timer": "30d 23h 59m 59s",
+                "footer": "Calendar begins January 1, 2027 · 00:00 UTC. No badge release date is configured yet.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-monthly",
+                "validLabel": true,
+                "labelIdCount": 1
+              },
+              {
+                "type": "badges",
+                "parent": "growth-badges-panel",
+                "monthKey": "2027-01",
+                "heading": "January 2027",
+                "label": "January calendar opens in",
+                "description": "A new daily check-in calendar. Next badge collection not announced.",
+                "timer": "30d 23h 59m 59s",
+                "footer": "Calendar begins January 1, 2027 · 00:00 UTC. No badge release date is configured yet.",
+                "timerCount": 1,
+                "calendarCount": 1,
+                "oldBadgeNodes": 0,
+                "timerRole": "timer",
+                "live": "off",
+                "labelId": "arcade-next-unlock-label-badges",
+                "validLabel": true,
+                "labelIdCount": 1
+              }
+            ]
+          },
+          "servedAssets": {
+            "/styles/arcade-organization.css": 200,
+            "/scripts/arcade-next-month-unlocks.js": 200
+          },
+          "verifiedImageCancellations": [
+            {
+              "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/nftree-scout.webp",
+              "occurrences": 2,
+              "status": 200,
+              "contentType": "image/webp",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/nftree-scout.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/tree-force-vanguard.webp",
+              "occurrences": 2,
+              "status": 200,
+              "contentType": "image/webp",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/tree-force-vanguard.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/thickquidity-legend.webp",
+              "occurrences": 2,
+              "status": 200,
+              "contentType": "image/webp",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/thickquidity-legend.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+              "occurrences": 1,
+              "status": 200,
+              "contentType": "image/png",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+              "width": 512,
+              "height": 512,
+              "currentDOMImages": [
+                {
+                  "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+                  "width": 512,
+                  "height": 512
+                },
+                {
+                  "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+                  "width": 512,
+                  "height": 512
+                },
+                {
+                  "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+                  "width": 512,
+                  "height": 512
+                }
+              ]
+            }
+          ],
+          "replacementImageChecks": [
+            {
+              "rank": "seedling",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/dec-frost-sprout.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "rank": "sapling",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/dec-holly-guardian.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "rank": "deep-roots",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/dec-snowfall-vanguard.webp",
+              "width": 512,
+              "height": 512
+            },
+            {
+              "rank": "full-canopy",
+              "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/dec-christmas-hero.webp",
+              "width": 512,
+              "height": 512
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    "configured-december-320.png",
+    "january-rollover-320.png",
+    "configured-december-390.png",
+    "january-rollover-390.png",
+    "configured-december-1280.png",
+    "january-rollover-1280.png"
+  ],
+  "failures": [],
+  "browserErrors": [],
+  "assetFailures": [],
+  "unexpectedWrites": [],
+  "unsupportedAPIReads": [],
+  "verifiedImageCancellations": [
+    {
+      "viewportWidth": 320,
+      "scenario": "configured-december",
+      "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/nftree-scout.webp",
+      "occurrences": 2,
+      "status": 200,
+      "contentType": "image/webp",
+      "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/nftree-scout.webp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "viewportWidth": 320,
+      "scenario": "configured-december",
+      "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/tree-force-vanguard.webp",
+      "occurrences": 2,
+      "status": 200,
+      "contentType": "image/webp",
+      "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/tree-force-vanguard.webp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "viewportWidth": 320,
+      "scenario": "configured-december",
+      "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/thickquidity-legend.webp",
+      "occurrences": 2,
+      "status": 200,
+      "contentType": "image/webp",
+      "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/thickquidity-legend.webp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "viewportWidth": 320,
+      "scenario": "configured-december",
+      "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+      "occurrences": 1,
+      "status": 200,
+      "contentType": "image/png",
+      "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+      "width": 512,
+      "height": 512,
+      "currentDOMImages": [
+        {
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+          "width": 512,
+          "height": 512
+        }
+      ]
+    },
+    {
+      "viewportWidth": 320,
+      "scenario": "january-rollover",
+      "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/nftree-scout.webp",
+      "occurrences": 1,
+      "status": 200,
+      "contentType": "image/webp",
+      "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/nftree-scout.webp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "viewportWidth": 320,
+      "scenario": "january-rollover",
+      "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/tree-force-vanguard.webp",
+      "occurrences": 1,
+      "status": 200,
+      "contentType": "image/webp",
+      "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/tree-force-vanguard.webp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "viewportWidth": 320,
+      "scenario": "january-rollover",
+      "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/thickquidity-legend.webp",
+      "occurrences": 1,
+      "status": 200,
+      "contentType": "image/webp",
+      "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/thickquidity-legend.webp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "viewportWidth": 390,
+      "scenario": "configured-december",
+      "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/nftree-scout.webp",
+      "occurrences": 2,
+      "status": 200,
+      "contentType": "image/webp",
+      "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/nftree-scout.webp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "viewportWidth": 390,
+      "scenario": "configured-december",
+      "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/tree-force-vanguard.webp",
+      "occurrences": 2,
+      "status": 200,
+      "contentType": "image/webp",
+      "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/tree-force-vanguard.webp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "viewportWidth": 390,
+      "scenario": "configured-december",
+      "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/thickquidity-legend.webp",
+      "occurrences": 2,
+      "status": 200,
+      "contentType": "image/webp",
+      "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/thickquidity-legend.webp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "viewportWidth": 390,
+      "scenario": "configured-december",
+      "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+      "occurrences": 1,
+      "status": 200,
+      "contentType": "image/png",
+      "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+      "width": 512,
+      "height": 512,
+      "currentDOMImages": [
+        {
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+          "width": 512,
+          "height": 512
+        }
+      ]
+    },
+    {
+      "viewportWidth": 390,
+      "scenario": "january-rollover",
+      "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/nftree-scout.webp",
+      "occurrences": 1,
+      "status": 200,
+      "contentType": "image/webp",
+      "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/nftree-scout.webp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "viewportWidth": 390,
+      "scenario": "january-rollover",
+      "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/tree-force-vanguard.webp",
+      "occurrences": 1,
+      "status": 200,
+      "contentType": "image/webp",
+      "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/tree-force-vanguard.webp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "viewportWidth": 390,
+      "scenario": "january-rollover",
+      "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/thickquidity-legend.webp",
+      "occurrences": 1,
+      "status": 200,
+      "contentType": "image/webp",
+      "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/thickquidity-legend.webp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "viewportWidth": 1280,
+      "scenario": "configured-december",
+      "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/nftree-scout.webp",
+      "occurrences": 2,
+      "status": 200,
+      "contentType": "image/webp",
+      "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/nftree-scout.webp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "viewportWidth": 1280,
+      "scenario": "configured-december",
+      "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/tree-force-vanguard.webp",
+      "occurrences": 2,
+      "status": 200,
+      "contentType": "image/webp",
+      "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/tree-force-vanguard.webp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "viewportWidth": 1280,
+      "scenario": "configured-december",
+      "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/thickquidity-legend.webp",
+      "occurrences": 2,
+      "status": 200,
+      "contentType": "image/webp",
+      "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/thickquidity-legend.webp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "viewportWidth": 1280,
+      "scenario": "configured-december",
+      "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+      "occurrences": 1,
+      "status": 200,
+      "contentType": "image/png",
+      "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+      "width": 512,
+      "height": 512,
+      "currentDOMImages": [
+        {
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+          "width": 512,
+          "height": 512
+        }
+      ]
+    },
+    {
+      "viewportWidth": 1280,
+      "scenario": "january-rollover",
+      "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/nftree-scout.webp",
+      "occurrences": 2,
+      "status": 200,
+      "contentType": "image/webp",
+      "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/nftree-scout.webp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "viewportWidth": 1280,
+      "scenario": "january-rollover",
+      "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/tree-force-vanguard.webp",
+      "occurrences": 2,
+      "status": 200,
+      "contentType": "image/webp",
+      "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/tree-force-vanguard.webp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "viewportWidth": 1280,
+      "scenario": "january-rollover",
+      "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/thickquidity-legend.webp",
+      "occurrences": 2,
+      "status": 200,
+      "contentType": "image/webp",
+      "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-growth/thickquidity-legend.webp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "viewportWidth": 1280,
+      "scenario": "january-rollover",
+      "url": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+      "occurrences": 1,
+      "status": 200,
+      "contentType": "image/png",
+      "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+      "width": 512,
+      "height": 512,
+      "currentDOMImages": [
+        {
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/tree-command-logo-v2-512.png",
+          "width": 512,
+          "height": 512
+        }
+      ]
+    }
+  ],
+  "replacementImageChecks": [
+    {
+      "width": 320,
+      "scenario": "configured-december",
+      "images": [
+        {
+          "rank": "seedling",
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/nov-acorn-scout.webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "rank": "sapling",
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/nov-harvest-guardian.webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "rank": "deep-roots",
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/nov-amber-vanguard.webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "rank": "full-canopy",
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/nov-autumn-hero.webp",
+          "width": 512,
+          "height": 512
+        }
+      ]
+    },
+    {
+      "width": 320,
+      "scenario": "january-rollover",
+      "images": [
+        {
+          "rank": "seedling",
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/dec-frost-sprout.webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "rank": "sapling",
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/dec-holly-guardian.webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "rank": "deep-roots",
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/dec-snowfall-vanguard.webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "rank": "full-canopy",
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/dec-christmas-hero.webp",
+          "width": 512,
+          "height": 512
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "scenario": "configured-december",
+      "images": [
+        {
+          "rank": "seedling",
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/nov-acorn-scout.webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "rank": "sapling",
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/nov-harvest-guardian.webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "rank": "deep-roots",
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/nov-amber-vanguard.webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "rank": "full-canopy",
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/nov-autumn-hero.webp",
+          "width": 512,
+          "height": 512
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "scenario": "january-rollover",
+      "images": [
+        {
+          "rank": "seedling",
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/dec-frost-sprout.webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "rank": "sapling",
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/dec-holly-guardian.webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "rank": "deep-roots",
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/dec-snowfall-vanguard.webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "rank": "full-canopy",
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/dec-christmas-hero.webp",
+          "width": 512,
+          "height": 512
+        }
+      ]
+    },
+    {
+      "width": 1280,
+      "scenario": "configured-december",
+      "images": [
+        {
+          "rank": "seedling",
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/nov-acorn-scout.webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "rank": "sapling",
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/nov-harvest-guardian.webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "rank": "deep-roots",
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/nov-amber-vanguard.webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "rank": "full-canopy",
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/nov-autumn-hero.webp",
+          "width": 512,
+          "height": 512
+        }
+      ]
+    },
+    {
+      "width": 1280,
+      "scenario": "january-rollover",
+      "images": [
+        {
+          "rank": "seedling",
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/dec-frost-sprout.webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "rank": "sapling",
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/dec-holly-guardian.webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "rank": "deep-roots",
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/dec-snowfall-vanguard.webp",
+          "width": 512,
+          "height": 512
+        },
+        {
+          "rank": "full-canopy",
+          "src": "https://6b03810de27178ba36227c42--tree-token.netlify.app/assets/arcade-seasonal/dec-christmas-hero.webp",
+          "width": 512,
+          "height": 512
+        }
+      ]
+    }
+  ],
+  "evidence": {
+    "application": "Actual candidate HTML, CSS and JavaScript are served without local overlays.",
+    "wallet": "Fresh signed-out browser contexts; no wallet provider is installed or connected and no sign-in control is used.",
+    "network": "Every API read is intercepted with synthetic public data. Every non-GET/HEAD request is aborted and reported.",
+    "clock": "Playwright Clock tests one-second ticking and the November-to-December UTC boundary."
+  },
+  "sourceCommit": "34b342f3f0b2c3c61d5984d05ea3a5d6bde1f979",
+  "sourceTree": "1351b345ece0299c4e7f05364c7aaeb8bf7aa986",
+  "candidateId": "6b03810de27178ba36227c42",
+  "planSha256": "858439fd223226fb5deaaa8ed2fef862eb90fd16fc1271c38e163f0b8130ce8f",
+  "origin": "https://6b03810de27178ba36227c42--tree-token.netlify.app",
+  "attemptedScenarioCount": 6,
+  "passedScenarioCount": 6
+}
