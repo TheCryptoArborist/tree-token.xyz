@@ -1,6 +1,13 @@
+import { IdentityMixer } from "../../treeforce89/frontend/game/sound-identity.mjs";
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { CueMixer, CUES } from "../../treeforce89/frontend/game/audio-cues.mjs";
+import {
+  CueMixer as LegacyCueMixer,
+  CUES,
+} from "../../treeforce89/frontend/game/audio-cues.mjs";
+const CueMixer = process.env.TREEFORCE_SOUND_IDENTITY
+  ? IdentityMixer
+  : LegacyCueMixer;
 
 function context() {
   const nodes = [],

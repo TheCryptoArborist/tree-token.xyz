@@ -8,7 +8,7 @@ Work one item at a time with a focused commit and verification evidence. Local r
 | 2     | Preserve attack-warning and hit-flash duration    | Complete locally | Gold warning and white flash survive updates until expiry; stun/mutation/captor/boss states do not erase each other                           |
 | 3     | Own audio lifecycle and make music zero silent    | Complete locally | Destroy clears timers/nodes; zero music has no output; define pause/hidden/resume behavior; simulated wallet return checked                   |
 | 4     | Keep the boss silhouette clear of HUD             | Complete locally | Full entrance/bob/phase bounds reviewed at 320/390px and desktop; assess collision implications before moving the boss                        |
-| 5     | Improve original music and sound identity         | Queued           | Longer musical phrases; distinguish normal/bonus/boss moods and weapon/impact families; compare equal-loudness recordings                     |
+| 5     | Improve original music and sound identity         | Complete locally | Longer musical phrases; distinguish normal/bonus/boss moods and weapon/impact families; compare equal-loudness recordings                     |
 | 6     | Improve enemy animation and combat contrast       | Queued           | Path-following orientation and original poses; readable threats over forest; preserve Arborwing and hero clearance                            |
 | 7     | Refine pacing, transitions and reward explanation | Queued           | Novice opening review; compact repeat transitions; explain earned points; keep rules unchanged                                                |
 | 8     | Integrated device and regression review           | Queued           | Phone touch/audio, Slush interruptions, wallet switching, scoring/continues, names/achievements and saved-run sharing                         |
@@ -31,4 +31,8 @@ Music zero is silent; pause/interruption stops audio, and destruction releases t
 
 ## Completed task 4
 
-Boss movement and phase banners now clear the HUD. Before/after entrance and four-phase bounds checked at 320/390/1000px, screenshots inspected, and ten browser regressions passed. See [implementation, geometry tradeoff and verification](treeforce89-boss-clearance-20261123.md). Real-phone dodge-space review remains pending. Next: task 5, original music and sound identity.
+Boss movement and phase banners now clear the HUD. Before/after entrance and four-phase bounds checked at 320/390/1000px, screenshots inspected, and ten browser regressions passed. See [implementation, geometry tradeoff and verification](treeforce89-boss-clearance-20261123.md). Real-phone dodge-space review remains pending.
+
+## Completed task 5
+
+Three original 19.2-second musical phrases and distinct combat timbres are implemented. Five score tests, both eight-test mixer suites, thirteen browser audio checks and ten wallet/session regressions passed. See [implementation and verification](treeforce89-sound-identity-20261123.md) and [matched-volume listening samples](treeforce89-sound-review/index.html). Musical preference and phone/dense-combat listening remain pending. Next: task 6, enemy animation and combat contrast.

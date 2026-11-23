@@ -67,6 +67,10 @@ export class CueMixer {
     };
   }
 
+  combatTone(category, frequency, duration, volume, priority) {
+    return this.tone(frequency, duration, volume, priority);
+  }
+
   combat(context, category, frequency, duration = 0.05, volume = 0.04) {
     if (category === "legacy")
       return this.shot(context, frequency, duration, volume);
@@ -78,7 +82,13 @@ export class CueMixer {
     const gain = impact && context.currentTime < this.duckUntil ? 0.55 : 1;
     return this.schedule(
       context,
-      this.tone(frequency, duration, volume * gain, impact ? 4 : 0),
+      this.combatTone(
+        category,
+        frequency,
+        duration,
+        volume * gain,
+        impact ? 4 : 0,
+      ),
       `combat:${category}`,
       impact ? 0.035 : category === "enemyFire" ? 0.09 : 0.065,
       impact ? "impact" : category,

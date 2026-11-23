@@ -1,7 +1,10 @@
 const { chromium } = require("playwright");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
-const origin = "http://127.0.0.1:4182";
+const revision = process.env.TREEFORCE_REVISION || "r8";
+assert.ok(["r8", "r10"].includes(revision));
+const origin =
+  revision === "r10" ? "http://127.0.0.1:4184" : "http://127.0.0.1:4182";
 (async () => {
   const browser = await chromium.launch({
     headless: true,
@@ -38,7 +41,7 @@ const origin = "http://127.0.0.1:4182";
       if (url.origin !== origin) return route.abort();
       if (
         url.pathname === "/__local/practice" ||
-        url.pathname.endsWith("/arcade-review-r8.js")
+        url.pathname.endsWith(`/arcade-review-${revision}.js`)
       ) {
         const response = await route.fetch();
         let body = await response.text();
@@ -50,13 +53,15 @@ const origin = "http://127.0.0.1:4182";
         else
           body = body.replace(
             "function W(e){",
-            "window.__audit={lifecycle:audioLifecycle,mixer:U,audio:K,start:J,cue:W};function W(e){",
+            `window.__audit={lifecycle:audioLifecycle,mixer:U,audio:K,start:J,cue:W${revision === "r10" ? ",score:canopyScore" : ""}};function W(e){`,
           );
         return route.fulfill({ response, body });
       }
       return route.continue();
     });
-    await page.goto(origin + "/__local/practice?lab=1&revision=r8&scene=title");
+    await page.goto(
+      origin + `/__local/practice?lab=1&revision=${revision}&scene=title`,
+    );
     await page.waitForFunction(() => window.__game?.scene.isActive("title"));
     await page
       .locator("#practice canvas")
@@ -75,6 +80,23 @@ const origin = "http://127.0.0.1:4182";
     });
     await page.waitForFunction(() => __audit.lifecycle.timer !== undefined);
     checks.push("music starts after user gesture");
+    if (revision === "r10") {
+      await page.evaluate(() => s.startChallenge(2));
+      await page.waitForFunction(() => __audit.score.mood === "bonus");
+      await page.evaluate(() => s.startWave(3));
+      await page.waitForFunction(() => __audit.score.mood === "normal");
+      await page.evaluate(() => s.startWindfall(9));
+      await page.waitForFunction(() => __audit.score.mood === "bonus");
+      await page.evaluate(() => s.finishWindfall());
+      await page.waitForFunction(() => __audit.score.mood === "boss");
+      await page.evaluate(() => (s.waveClearing = true));
+      await page.waitForFunction(() => __audit.score.mood === "normal");
+      await page.evaluate(() => s.startWave(0));
+      checks.push(
+        "actual challenge, windfall, normal, boss and clear states select correct score",
+      );
+    }
+
     await page.evaluate(() => {
       __audit.mixer.sfxVolume = 0;
       __audit.mixer.musicVolume = 0;
@@ -252,7 +274,9 @@ const origin = "http://127.0.0.1:4182";
     assert.deepEqual(errors, []);
     const report = { synthetic: true, checks, zero, destroyed, errors };
     fs.writeFileSync(
-      "docs/treeforce89-audio-lifecycle-checks.json",
+      revision === "r10"
+        ? "docs/treeforce89-sound-identity-browser.json"
+        : "docs/treeforce89-audio-lifecycle-checks.json",
       JSON.stringify(report, null, 2),
     );
     console.log(JSON.stringify(report, null, 2));
