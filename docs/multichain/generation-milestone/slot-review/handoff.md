@@ -1,5 +1,10 @@
 # Approved empty-slot Slush handoff
 
+**Completed:** the user signed and the empty slot was independently verified.
+See [actual receipt](../slot-created/README.md). Pending-signature wording below
+records the earlier preparation state; do not repeat slot creation.
+
+
 The user approved the exact one-slot transaction, 0.02 SUI maximum and canonical
 signing page. See approval.json. The only permitted signing location is
 `https://tree-token.xyz/play/generation-slot/`. Desktop Slush signs directly;

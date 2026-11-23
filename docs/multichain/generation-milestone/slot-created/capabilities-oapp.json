@@ -1,0 +1,90 @@
+{
+  "data": {
+    "chainIdentifier": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S",
+    "checkpoint": {
+      "sequenceNumber": 348177886,
+      "timestamp": "2026-11-23T01:10:16.643Z"
+    },
+    "o0": {
+      "address": "0x97be99b8e5c3b8953323c0a481b848c990b9d32814950d803b754b4e140fe25d",
+      "version": 1,
+      "owner": {
+        "__typename": "AddressOwner",
+        "address": {
+          "address": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4"
+        }
+      },
+      "asMoveObject": {
+        "contents": {
+          "type": {
+            "repr": "0xfdc28afc0110cb2edb94e3e57f2b1ce69b5a99c503b06d15e51cfa212de56e24::oapp::AdminCap"
+          },
+          "json": {
+            "id": "0x97be99b8e5c3b8953323c0a481b848c990b9d32814950d803b754b4e140fe25d"
+          }
+        }
+      }
+    },
+    "o1": {
+      "address": "0xb70e2cdc18d562247bc34bf47efee620a05ec1f059cff5e812a8d433a722999d",
+      "version": 1,
+      "owner": {
+        "__typename": "AddressOwner",
+        "address": {
+          "address": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4"
+        }
+      },
+      "asMoveObject": {
+        "contents": {
+          "type": {
+            "repr": "0x0000000000000000000000000000000000000000000000000000000000000002::package::UpgradeCap"
+          },
+          "json": {
+            "id": "0xb70e2cdc18d562247bc34bf47efee620a05ec1f059cff5e812a8d433a722999d",
+            "package": "0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92",
+            "version": "1",
+            "policy": 0
+          }
+        }
+      }
+    },
+    "o2": {
+      "address": "0x0da3d845f4ab18a0a8d2f0669722a1d9161c2ea61ad714abc14d414721fd14e4",
+      "version": 1,
+      "owner": {
+        "__typename": "Shared"
+      },
+      "asMoveObject": {
+        "contents": {
+          "type": {
+            "repr": "0xfdc28afc0110cb2edb94e3e57f2b1ce69b5a99c503b06d15e51cfa212de56e24::oapp::OApp"
+          },
+          "json": {
+            "id": "0x0da3d845f4ab18a0a8d2f0669722a1d9161c2ea61ad714abc14d414721fd14e4",
+            "oapp_cap": {
+              "id": "0x6b7c66d2135ce12efa6a23037bff2e5ca1b499db24bc200592d08c2595cf5a3a",
+              "cap_type": {
+                "@variant": "Package",
+                "pos0": "0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92"
+              }
+            },
+            "admin_cap": "0x97be99b8e5c3b8953323c0a481b848c990b9d32814950d803b754b4e140fe25d",
+            "peer": {
+              "peers": {
+                "id": "0x984eb93d6713b0909152e249bcfa465a6661e7403c5b01266353b97ff2318966",
+                "size": "0"
+              }
+            },
+            "enforced_options": {
+              "options": {
+                "id": "0xd1c0dbf02c954d88cf9602f43c877ddaed3d8cf5afb4e71f83ccf9fbed78e497",
+                "size": "0"
+              }
+            },
+            "sending_call": null
+          }
+        }
+      }
+    }
+  }
+}

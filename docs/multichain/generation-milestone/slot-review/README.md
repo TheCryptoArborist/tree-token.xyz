@@ -1,5 +1,10 @@
 # Empty custody slot — prepared, not submitted
 
+**Completed:** the user signed and the empty slot was independently verified.
+See [actual receipt](../slot-created/README.md). Pending-signature wording below
+records the earlier preparation state; do not repeat slot creation.
+
+
 The verified published package is ready for a separate empty-slot transaction.
 The user subsequently approved the exact action and canonical signing page; see
 [approval.json](approval.json) and [handoff.md](handoff.md). Execution still requires

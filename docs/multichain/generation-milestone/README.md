@@ -11,13 +11,16 @@ replacement was used. The Windows checkout has not been accessed.
 
 The subsequently approved empty Sui publication is complete and independently
 verified. See [publication receipt and verification](published/README.md).
-The registry has no slot, the OApp has no peers, and the original NFT remains
-in the dev wallet at the recorded checkpoint. Do not publish this package again.
-[Empty slot preparation](slot-review/README.md) now has a successful mainnet
-simulation and adversarial checks. The user approved creation and the canonical
-[Slush handoff](slot-review/handoff.md) is now published; it remains unsigned.
-Slot creation, NFT deposit, BNB deployment, route configuration, sales and gameplay
-activation remain subsequent reviewed milestones.
+The approved empty slot has also been created and independently verified; see
+[actual slot receipt](slot-created/README.md). The registry now points to the real
+Vault ending `916eb`, which is empty, unbound and at generation 0. NFTree #2720
+and all three capabilities remain in the dev wallet at the recorded checkpoints.
+Do not republish the package or create another slot. The successful receipt
+supersedes prior pending-signature and account-connection troubleshooting notes.
+
+BNB deployment, route configuration, NFT deposit, sales and gameplay activation
+remain subsequent reviewed milestones. Historical preparation and website release
+records remain available under [slot-review](slot-review/README.md).
 
 ## Original source milestone scope and preservation
 

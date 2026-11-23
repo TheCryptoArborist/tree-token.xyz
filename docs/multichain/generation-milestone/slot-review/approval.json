@@ -1,5 +1,5 @@
 {
-  "status": "approved_awaiting_wallet_signature",
+  "status": "slot_created_verified",
   "approvalSource": "User: You are authorized to proceed, in reply to the exact empty slot action, 0.02 SUI maximum and canonical Slush page proposal.",
   "maximumGasBudgetMist": "20000000",
   "signingURL": "https://tree-token.xyz/play/generation-slot/",
@@ -14,8 +14,18 @@
     "Sales",
     "Gameplay activation"
   ],
-  "submitted": false,
+  "submitted": true,
   "canonicalPagePublished": true,
   "canonicalPageDeployId": "6b036cc41e40ebe1a1df7990",
-  "walletSignatureObtained": false
+  "walletSignatureObtained": true,
+  "receipt": {
+    "digest": "GNDWXqgPJnZyeQaVFqnZ1HuXSnSiHUAKV1vL4Ke49yMX",
+    "gasMist": "3892851",
+    "packageId": "0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92",
+    "registryId": "0x298204d60d1a886e72f1ece18de179065d487a76420f93b19bf7f61c7275c210",
+    "vaultId": "0xf5dff8e2cc96824f89735fa16c068ee8194fbb7e8d697aeebe5d135f8a5916eb",
+    "empty": true,
+    "bound": false
+  },
+  "verificationEvidence": "../slot-created/README.md"
 }
