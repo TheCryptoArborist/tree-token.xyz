@@ -124,6 +124,8 @@ allowed.add('generation-publication/index.html');
 allowed.add('generation-publication/app.js');
 allowed.add('generation-slot/index.html');
 allowed.add('generation-slot/app.js');
+allowed.add('bnb-generation/index.html');
+allowed.add('bnb-generation/app.js');
 await rejectUntrackedOutput(output);
 for (const file of manifest.files) {
   const destination = resolve(output, outputPath(file));
@@ -167,3 +169,7 @@ await cp(resolve(root,'tools/generation-publication/app.js'),resolve(output,'gen
 await mkdir(resolve(output,'generation-slot'),{recursive:true});
 await cp(resolve(root,'tools/generation-slot/index.html'),resolve(output,'generation-slot/index.html'));
 await cp(resolve(root,'tools/generation-slot/app.js'),resolve(output,'generation-slot/app.js'));
+
+await mkdir(resolve(output,'bnb-generation'),{recursive:true});
+await cp(resolve(root,'tools/bnb-generation/index.html'),resolve(output,'bnb-generation/index.html'));
+await cp(resolve(root,'tools/bnb-generation/app.js'),resolve(output,'bnb-generation/app.js'));

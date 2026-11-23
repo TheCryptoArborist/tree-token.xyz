@@ -11,7 +11,7 @@
   },
   "authoritySource": "User designated the admin address and explicitly retained the existing fee wallet.",
   "hardwareCustody": "Ledger-backed per user discussion; not independently attested.",
-  "deploymentAuthorized": false,
+  "deploymentAuthorized": true,
   "depositAuthorized": false,
   "publicSaleEnabled": false,
   "gameplayEnabled": false,
@@ -19,5 +19,16 @@
     "application": "MetaMask",
     "hardwareWallet": "Ledger",
     "source": "User selected MetaMask with Ledger for BNB account ending 8789."
+  },
+  "deploymentApproval": {
+    "scope": [
+      "deploy new adapter",
+      "deploy new pass",
+      "bind new pass to adapter"
+    ],
+    "maxTotalGasFeeWei": "1000000000000000",
+    "signingPage": "https://tree-token.xyz/play/bnb-generation/",
+    "source": "User approved the proposed three-transaction sequence and canonical signing page after selecting MetaMask with Ledger.",
+    "submittedByAgent": false
   }
 }

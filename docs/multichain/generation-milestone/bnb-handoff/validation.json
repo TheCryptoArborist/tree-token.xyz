@@ -1,0 +1,9 @@
+{
+  "focusedAndRegressionTests": 194,
+  "passed": 194,
+  "failed": 0,
+  "browserScenarios": 5,
+  "localForkComplete": true,
+  "realWalletAcceptance": "pending user signatures",
+  "mainnetTransactionsByAgent": 0
+}
