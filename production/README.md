@@ -1,3 +1,20 @@
+# Sui burn acknowledgement review prepared — November 23, 2026
+
+The next single `send(3)` review passed checked Sui simulation and read-only BNB
+receiver simulation. NFTree #2720 remains in Sui dev wallet 45c4 and is untouched.
+BNB remains Locked/nonplayable with purchases paused. Current estimated total:
+**0.099892457 SUI** (0.094851295 fee + 0.005041162 net gas). Proposed new cap:
+**0.2 SUI total** (0.15 message fee + 0.05 gas). Explicit fee approval is pending;
+no acknowledgement has been submitted and no website was changed.
+
+Exact packet/fee/effect checks, 42 passing tests, two negative Sui simulations,
+setup and remaining tasks: `docs/multichain/generation-milestone/acknowledgement-review/`.
+After approval, use a canonical `/play/` signing page and preserve a newly
+captured full production baseline. Actual BNB burn and later completion must be
+verified separately; no sales or gameplay activation is authorized.
+
+---
+
 # NFT return independently verified — November 23, 2026
 
 The approved BNB return message and actual Sui delivery are complete. Original

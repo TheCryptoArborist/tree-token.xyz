@@ -1,0 +1,12 @@
+{
+  "checkedAt": "2026-11-23",
+  "tests": {
+    "acknowledgement": 14,
+    "reserveRegression": 12,
+    "bnbLifecycle": 16
+  },
+  "checkedNegativeSimulations": 2,
+  "totalTests": 42,
+  "submitted": false,
+  "approvalPending": true
+}
