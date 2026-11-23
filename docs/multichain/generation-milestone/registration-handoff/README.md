@@ -50,7 +50,18 @@ baseline before switching. The historical root build is never published.
 
 ## Remaining work
 
-Complete candidate/canonical release verification and record publication evidence.
+Published and locked deployment `6b03b87be261d7f909354675` at
+2026-11-22 21:54:50 America/Chicago. All eight browser scenarios passed against
+served candidate and canonical assets; canonical JavaScript matches source. Fresh
+canonical simulation passed at 0.004668124 SUI. Both release jobs passed 153 tests.
+Final inventory: 671 paths, 55 functions, five schedules. Preparation run
+45108444152; publication run 45108631810. See publication.json.
+
+The initial preparation correctly stopped when another mobile story release
+changed the baseline; no candidate was created from that stale baseline. The
+replacement captured the newer locked site. GitHub retains complete inventory
+artifacts; local download was blocked by the Cloud proxy, so independent backend
+comparison used Netlify records and the release job verified every static hash.
 The user then connects desktop Slush, refreshes the registration review, signs the
 single transaction and returns the receipt. Independently verify that receipt and
 record the actual messaging channel before reviewing any peer/security changes.

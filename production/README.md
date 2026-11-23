@@ -1,3 +1,37 @@
+# Sui registration handoff — published November 22, 2026
+
+Locked deployment `6b03b87be261d7f909354675` was published at **21:54:50
+America/Chicago** (`2026-11-23T03:54:50.706Z`). The approved desktop Slush page is
+https://tree-token.xyz/play/generation-registration/.
+
+The release adds two new static paths and one isolated GET-only simulation/receipt
+function to freshly captured baseline `6b03b6a483cce56f74fa4bfc`. It preserves all
+**669 existing static hashes**, **54 complete backend/provider records**, **five
+schedules**, runtime and protected configuration, including the newer Canopy
+mobile story review. Totals are **671 paths, 55 functions, five schedules**.
+No existing backend was rebuilt; the historical root build was not published.
+Always capture the current full inventory before another release.
+
+The user approved one LayerZero registration transaction for the new Sui package,
+with a **0.02-SUI** maximum. Fresh canonical simulation estimates **0.004668124
+SUI**. Cloud has not submitted it; desktop Slush signing and receipt verification
+remain pending. The empty custody slot remains unbound, and the completed BNB
+pass remains paused/non-playable. No peer/security configuration, NFT deposit,
+sale or gameplay activation is included.
+
+Validation: 133 local automated checks, 153 checks in each release CI job, and
+eight mock-wallet browser scenarios on source, candidate and canonical assets.
+Canonical JavaScript matches source. Actual Slush acceptance remains separate.
+The connection getter-lag and server-clock review protections are retained.
+
+Source `befedcec41c1e1de7691d0eda42152a7ff29ab83`; control `b3c510e`.
+Preparation: [45108444152](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45108444152).
+Publication: [45108631810](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45108631810).
+Control: `production/generation-registration-publish.json`. Setup, approval,
+validation and remaining tasks: `docs/multichain/generation-milestone/registration-handoff/`.
+
+---
+
 # BNB deployment receipts complete — November 22, 2026
 
 The user completed adapter deployment, pass deployment and binding through

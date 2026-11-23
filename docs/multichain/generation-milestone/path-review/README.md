@@ -1,5 +1,11 @@
 # New generation path review — source and simulation only
 
+Current continuation: the user approved the single registration transaction.
+Its canonical signing handoff is now published; see
+[registration-handoff](../registration-handoff/README.md). The actual signature
+and registration receipt remain pending. The notes below describe the earlier
+read-only review, not authorization for later configuration.
+
 **No chain transaction was submitted, and no page or backend was deployed.** The
 new BNB adapter/pass remain bound, paused and non-playable; Sui custody remains
 empty and unbound. No retired trial object or route is a write target.
