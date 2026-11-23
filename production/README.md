@@ -7,7 +7,7 @@ The page prevents a repeat first-send, reconciles exact source events/fees and
 keeps source confirmation separate from actual Sui NFT release.
 
 This is a static-only addition using the existing read-only custody endpoint
-before signing. Fresh locked baseline `6b045ada195938dd6638275a` has 59 functions
+before signing. Fresh locked baseline `6b0465140cb614081b5a0f52` has 59 functions
 and five schedules; preserve its complete inventory and newer unrelated updates.
 Evidence, setup and remaining tasks:
 `docs/multichain/generation-milestone/return-handoff/`.

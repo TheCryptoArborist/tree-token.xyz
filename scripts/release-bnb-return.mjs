@@ -4,7 +4,7 @@ import {apiClient} from './release-sti-purchase.mjs';
 import {functionsConfig,waitForAllBuilds,validateBackend} from './release-arcade-cutoff.mjs';
 import {verifySuiReceipt,Q} from '../contracts/bnb-generation/browser/return-core.mjs';
 import {C} from '../contracts/nftree-generation/scripts/readiness.mjs';
-export const SITE='aa62f324-b880-47d6-85b8-4ba0700ff5bf',ACCOUNT='69800888d1a3d0483003ae9e',BASE='6b045ada195938dd6638275a',FN='generation-purchase-custody';
+export const SITE='aa62f324-b880-47d6-85b8-4ba0700ff5bf',ACCOUNT='69800888d1a3d0483003ae9e',BASE='6b0465140cb614081b5a0f52',FN='generation-purchase-custody';
 export const SOURCES={'/play/bnb-return/app.js':'tools/bnb-return/app.js','/play/bnb-return/index.html':'tools/bnb-return/index.html'};
 const DIR='.netlify/bnb-return-release';
 const hash=b=>createHash('sha1').update(b).digest('hex');

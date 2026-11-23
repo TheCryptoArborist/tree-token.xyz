@@ -67,7 +67,7 @@ and resend. Source fees from the simulation are evidence, not live expenditure.
 
 ## Preservation and remaining work
 
-Baseline is newly observed locked `6b045ada195938dd6638275a`, with 59 complete
+Baseline is newly observed locked `6b0465140cb614081b5a0f52`, with 59 complete
 backend records and five schedules. This release is **static only**: exactly two
 new paths, no backend uploads/rebuilds. Every existing static hash, complete
 provider/runtime record, schedule and protected setting is compared before and
@@ -83,3 +83,8 @@ Validation before candidate: all 365 regression/preservation checks passed, plus
 eight browser failure/connection scenarios and the complete one-send mock flow.
 Fresh live quote is 0.004577084124304116 BNB; at the fixed 600000 gas limit and
 current gas price, maximum combined cost is 0.004607084124304116 BNB.
+
+The initial candidate was superseded before publication by Tree Army release
+`6b0465140cb614081b5a0f52` (one updated existing static path). Publication run
+45211806293 correctly stopped on the changed baseline without publishing. The
+replacement candidate preserves this newer release; wallet source is unchanged.
