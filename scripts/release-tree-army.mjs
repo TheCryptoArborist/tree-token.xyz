@@ -37,7 +37,7 @@ async function browserCheck(origin,label){
 let state;
 if(mode==='candidate'){
  assert(!await fs.stat(dir+'/state.json').catch(()=>null),'Candidate state exists; verify it instead');
- await noBuilds();const site=await api('sites/'+siteId),baseline=await readDeploy(site.published_deploy.id);assert.equal(baseline.state,'ready');validateBackend(baseline);assert.equal(baseline.id,process.env.EXPECTED_DEPLOY,'Published baseline changed');assert(baseline.locked,'Production must remain locked');assert.equal(baseline.available_functions.length,58,'Unexpected backend inventory; reassess first');assert.equal(baseline.function_schedules.length,5);
+ await noBuilds();const site=await api('sites/'+siteId),baseline=await readDeploy(site.published_deploy.id);assert.equal(baseline.state,'ready');validateBackend(baseline);assert.equal(baseline.id,process.env.EXPECTED_DEPLOY,'Published baseline changed');assert(baseline.locked,'Production must remain locked');assert.equal(baseline.available_functions.length,59,'Unexpected backend inventory; reassess first');assert.equal(baseline.function_schedules.length,5);
  const originalFiles=await inventory(baseline.id),files=assembleFiles(originalFiles,overlays);
  // The existing lobby can already contain this snippet in its stored source in
  // addition to Netlify's delivery insertion. Only confirm the inspected snippet

@@ -48,5 +48,5 @@ cancellation, pause, abilities and failed artwork handling.
 Release scope: replace only `/play/tree-army/test/index.html`, based on the
 published 0.8 SHA1 `9533798a3c190a919ad9b95146ba96331b5ca401`. No new assets,
 backend packages or dependencies. Preserve the freshly captured complete live
-inventory, 58 backend/provider records, five schedules and protected configuration.
+inventory, 59 backend/provider records, five schedules and protected configuration.
 Latest MystenLabs/skills README checked; no Sui API change applies to this step.
