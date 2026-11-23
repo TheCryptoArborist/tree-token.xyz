@@ -114,3 +114,8 @@ Tests cover both facings, ordinary/special shots, close targets, height, separat
 firing timers, pause/reset, retreat/stop aiming and the accepted opening timing.
 Rendered right/left firing poses were inspected against the existing barrel.
 Latest MystenLabs/skills README checked; no Sui APIs changed.
+
+Published in deployment `6b046c3ccb8dfd3eb651353c`, source PR #300, release run
+`45217408843`. All candidate/canonical checks passed. Diagnostic firing images
+are `docs/tree-army-weapon-{right,left,special}-20261123.png`. The full melee and
+weapon-art milestone remains open; the reported projectile-origin defect is fixed.

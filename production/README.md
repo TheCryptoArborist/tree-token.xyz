@@ -1,3 +1,36 @@
+# Tree Army hero projectile origins — published November 23, 2026
+
+[Prototype 0.11](https://tree-token.xyz/play/tree-army/test/) aligns ordinary
+rounds, Power Shot and firing flashes with one mirrored barrel anchor, including
+recoil/bob. Hero rounds keep their firing height; trails do not extend behind the
+emission point. Forward target selection while moving prevents the transient
+retreat-facing flip. Damage, cooldowns, opening pacing and artwork are unchanged.
+Full melee and the hero animation/weapon-art redesign remain outstanding.
+
+Deployment `6b046c3ccb8dfd3eb651353c` was published at **10:40:36 America/Chicago**
+(`2026-11-23T16:40:36.320Z`) and verified ready and locked by
+[run 45217408843](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45217408843).
+Source: `4d073f056f28f59017c2c050adab0f3b4aa60583`, PR #300.
+Fresh baseline: `6b0466dbe649f3c4abd225f9`, including the newer BNB return handoff.
+
+Only playtest HTML changed. All **683 unrelated static paths**, **59 complete
+backend/provider records**, **five schedules**, runtime and protected configuration
+were preserved; total inventory **684 paths**. No new published assets or backend rebuilds.
+
+Gameplay, projectile-origin, retreat-facing, release preservation and historical
+preview checks passed. Opening simulations still clear in 47.68–49.60 seconds.
+Candidate and canonical game/cabinet browser checks passed at four viewport sizes.
+The live phone screenshot and local diagnostic right/left/special firing renders
+were inspected. These checks do not establish acceptance of natural hero motion.
+
+Records: `production/tree-army-weapon-{release,backend,browser,cabinet}-20261123.json`,
+`docs/tree-army-weapon-{right,left,special}-20261123.png`, and the development task list.
+Original artifact #14838034595 SHA256:
+`fddd6b65758469a46e1c66643f6a4a22eb7078a19ea06512b39772d610ef689b`.
+Capture a fresh complete live baseline before subsequent publication.
+
+---
+
 # Tree Army opening-wave pacing — published November 23, 2026
 
 [Prototype 0.10](https://tree-token.xyz/play/tree-army/test/) spreads ten opening
