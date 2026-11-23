@@ -99,11 +99,12 @@ try {
     await page.waitForTimeout(200);
     assert.equal(await page.locator('#sap').innerText(),pausedSap,'Pause did not freeze battle');
     await page.getByRole('button',{name:'Resume battle',exact:true}).click();
+    await page.waitForFunction(()=>!document.querySelector('#move-right').disabled);
     if(!await page.locator('#blast').isDisabled())await page.locator('#blast').click();
-    await page.waitForTimeout(100);
-    assert(await page.locator('#blast').isDisabled(),'Cannon cooldown missing');
+    await page.waitForFunction(()=>document.querySelector('#blast').disabled,null,{timeout:1500});
+    assert(await page.locator('#blast').isDisabled(),'Power Shot cooldown missing');
     await page.locator('#shield').click();
-    await page.waitForTimeout(100);
+    await page.waitForFunction(()=>document.querySelector('#shield').disabled,null,{timeout:1500});
     assert(await page.locator('#shield').isDisabled(),'Shield cooldown missing');
     await page.keyboard.down('ArrowRight');
     await page.waitForTimeout(1600);
