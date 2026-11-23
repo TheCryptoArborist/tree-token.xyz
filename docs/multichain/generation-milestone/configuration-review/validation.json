@@ -1,0 +1,13 @@
+{
+  "sourceCommit": "6f6126f",
+  "runId": 45111374252,
+  "conclusion": "success",
+  "localChecks": 151,
+  "ciSuiAndHandoffChecks": 187,
+  "ciEvmContractTests": 16,
+  "ciEvmReviewTests": 55,
+  "ciMoveTests": 52,
+  "releaseBytecodeUnchanged": true,
+  "frontendBundlesUnchanged": true,
+  "submittedToMainnet": false
+}

@@ -52,7 +52,11 @@ for this application; it is not a claim that defaults already match.
 
 ## Evidence and checks
 
-151 automated checks passed, including 25 new configuration/binding checks.
+151 local automated checks passed, including 25 new configuration/binding checks.
+[Hosted regression run 45111374252](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45111374252)
+passed for source commit `6f6126f`: 187 Sui/handoff checks, 16 EVM contract
+tests, 55 EVM wallet/review checks and 52 Move tests. Release bytecode and
+frontend bundle comparisons passed unchanged.
 Fresh checks-enabled Sui simulations verify exact commands/inputs, all expected
 events, permitted object writes/creation, capability ownership and gas-only
 balance changes. A second simulation of the same bytes reads resulting objects:
