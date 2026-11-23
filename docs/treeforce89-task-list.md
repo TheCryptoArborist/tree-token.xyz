@@ -10,7 +10,7 @@ Work one item at a time with a focused commit and verification evidence. Local r
 | 4     | Keep the boss silhouette clear of HUD             | Complete locally | Full entrance/bob/phase bounds reviewed at 320/390px and desktop; assess collision implications before moving the boss                        |
 | 5     | Improve original music and sound identity         | Complete locally | Longer musical phrases; distinguish normal/bonus/boss moods and weapon/impact families; compare equal-loudness recordings                     |
 | 6     | Improve enemy animation and combat contrast       | Complete locally | Path-following orientation and original poses; readable threats over forest; preserve Arborwing and hero clearance                            |
-| 7     | Refine pacing, transitions and reward explanation | Queued           | Novice opening review; compact repeat transitions; explain earned points; keep rules unchanged                                                |
+| 7     | Refine pacing, transitions and reward explanation | Complete locally | Novice opening review; compact repeat transitions; explain earned points; keep rules unchanged                                                |
 | 8     | Integrated device and regression review           | Queued           | Phone touch/audio, Slush interruptions, wallet switching, scoring/continues, names/achievements and saved-run sharing                         |
 
 Preserve three lives, NFTree verification, wallet authentication, the 20,000 TREE continue restoring three lives while keeping score and replaying the same wave, thirteen achievements, per-wallet best-score leaderboard, shared Arcade services, receipt sharing, all backend functions and schedules. No real payment or tournament activation.
@@ -39,4 +39,8 @@ Three original 19.2-second musical phrases and distinct combat timbres are imple
 
 ## Completed task 6
 
-Entry/dive facing follows existing curves, ordinary bats and mutated wasps have wing poses, and combat foreground contrast is improved. Four focused tests, 81 unchanged geometry samples, 30 warning/flash checks and ten wallet/session regressions passed. See [implementation and verification](treeforce89-combat-visuals-20261123.md). Phone motion/readability/performance review remains pending. Next: task 7, pacing, transitions and reward explanation.
+Entry/dive facing follows existing curves, ordinary bats and mutated wasps have wing poses, and combat foreground contrast is improved. Four focused tests, 81 unchanged geometry samples, 30 warning/flash checks and ten wallet/session regressions passed. See [implementation and verification](treeforce89-combat-visuals-20261123.md). Phone motion/readability/performance review remains pending. The user approved the visual previews.
+
+## Completed task 7
+
+Later clear cards and repeat bonus introductions are shorter; first-time teaching and combat timing are preserved. Result cards explain wave-attempt points and separate target earnings from completion bonuses without changing scores. Timing, pause, reward/idempotence and text bounds pass at 320/390/1000px, plus ten wallet/session regressions. See [implementation and verification](treeforce89-round-presentation-20261123.md). Next: task 8, integrated device and regression review.
