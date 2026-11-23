@@ -1,3 +1,26 @@
+# Final binding receipt complete — November 22, 2026
+
+All six approved security-configuration/binding steps are complete. Final Sui
+digest `EkZHu7fFx93QkttEekqXuqHrnQnfS6pNbZLUmeCcVf1a` independently verifies
+at **0.009266747 SUI** net gas. Combined Sui configuration/binding fees are
+**0.024218288 SUI**; four BNB configuration calls cost **0.00002372695 BNB**.
+Both are within the approved caps. Do not repeat completed transactions.
+
+The Sui vault is **bound and empty**, generation zero. Original NFTree #2720
+remains in the dev wallet; BNB purchases and gameplay remain disabled. Exact
+peer/options/channel state, security, retained admin ownership and completed BNB
+receipts/settings reverified. Evidence and reproduction:
+`docs/multichain/generation-milestone/binding-completed/`.
+
+This receipt/documentation update changes no website or additional chain state.
+Next is an end-to-end delivery validation plan, followed by separately reviewed
+deposit/sales/gameplay milestones. Earlier pending-signature notes below describe
+historical handoffs. The live release baseline below must be freshly recaptured
+before any subsequent release. Pre-binding reviews now correctly reject the
+bound vault; use the final binding receipt verifier for current-state checks.
+
+---
+
 # Final Sui binding handoff — published November 22, 2026
 
 Locked deployment `6b03cc46411c5bac0b910909` was published at **23:19:01
