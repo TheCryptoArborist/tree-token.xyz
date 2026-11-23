@@ -1,0 +1,25 @@
+{
+  "deployId": "6b03a1ca204de42e6892dd3a",
+  "baselineId": "6b0391dcbf530645497f3393",
+  "publishedAt": "2026-11-23T02:17:27.188Z",
+  "verifiedAt": "2026-11-23T02:18:17.612Z",
+  "locked": true,
+  "state": "ready",
+  "staticPaths": 669,
+  "preservedStaticPaths": 667,
+  "functions": 54,
+  "schedules": 5,
+  "backendRecordsIndependentlyCompared": true,
+  "canonicalAppSha256": "40a5357fe1ef14b5164679732de6da81c428679794383f0a26087c0db6b04c6e",
+  "canonicalAppEqualsSource": true,
+  "suiReceiptVerified": true,
+  "suiCheckpoint": {
+    "sequenceNumber": 348194587,
+    "timestamp": "2026-11-23T02:18:15.977Z"
+  },
+  "prepareRun": 45099075862,
+  "publishRun": 45099281724,
+  "sourceCommit": "dbcc0faa8c4209f420a7c7c82f72b717041044a5",
+  "controlCommit": "efdc436",
+  "mainnetBnbTransactionsByAgent": 0
+}

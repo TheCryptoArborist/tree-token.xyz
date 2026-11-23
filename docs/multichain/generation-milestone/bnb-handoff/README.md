@@ -1,4 +1,4 @@
-# Approved BNB signing handoff
+# Published BNB signing handoff
 
 The user approved deploying the new adapter, deploying the new pass, and binding
 that pass once, using MetaMask with Ledger account ending 8789. Aggregate fee
@@ -58,7 +58,8 @@ five schedules and protected configuration. It reuses the existing read-only
 queued builds and locks the reviewed candidate. The root historical build must
 never replace production.
 
-After publication, the user signs and returns the three-transaction receipt.
+Published and locked: `6b03a1ca204de42e6892dd3a`; see `publication.json`.
+The user signs and returns the three-transaction receipt.
 Independently verify those receipts and deployed state, record actual addresses
 and fees, and then prepare the next separately reviewed milestone. No deposits,
 sales, gameplay activation, or retired trial routes are part of this handoff.

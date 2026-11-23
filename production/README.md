@@ -1,3 +1,42 @@
+# BNB generation signing handoff — published November 22, 2026
+
+Locked deployment `6b03a1ca204de42e6892dd3a` was published at **20:17:27
+America/Chicago** on November 22 (`2026-11-23T02:17:27.188Z`). The approved
+MetaMask/Ledger page is https://tree-token.xyz/play/bnb-generation/.
+
+This release adds exactly two static paths to fresh live baseline
+`6b0391dcbf530645497f3393`. It preserves all **667 existing static hashes**,
+all **54 complete backend/provider records**, **five schedules**, runtime and
+protected configuration. Totals are **669 static paths, 54 functions, five
+schedules**. No backend was rebuilt. The current Sui receipt endpoint is reused.
+The historical root build was not published and must never replace the live site.
+
+The user approved three BNB mainnet transactions: new adapter deployment, new
+pass deployment and one-time binding, with total fees capped at **0.001 BNB**.
+MetaMask/Ledger admin ends in **8789**; treasury remains unchanged. Cloud has
+submitted no BNB transaction. Real wallet signatures and receipt verification
+remain pending. Sui custody remains empty and unbound; no deposit, sale,
+message-path configuration or gameplay activation is included.
+
+Validation: 194 local contract/handoff/regression tests plus the preview-build
+preservation test passed; CI release checks passed 159 tests. Five browser
+scenarios passed against source, served candidate and canonical assets, with
+mocked wallet responses and zero real transactions. Actual browser-core fork
+execution completed all three steps with paused, Unconfirmed, generation-zero
+state. Canonical JavaScript matches source byte-for-byte; a fresh canonical Sui
+receipt check confirmed the empty slot. Real MetaMask/Ledger acceptance is still
+for the user to complete.
+
+Source: `dbcc0faa8c4209f420a7c7c82f72b717041044a5`. Publication control:
+`efdc436`. Preparation run: [45099075862](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45099075862).
+Publication run: [45099281724](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45099281724).
+Control file: `production/bnb-generation-publish.json`. Setup, fork evidence,
+browser results, actual release verification and remaining tasks:
+`docs/multichain/generation-milestone/bnb-handoff/`.
+Capture the current live inventory anew before any subsequent release.
+
+---
+
 # Tree Arcade single launch countdown — published November 22, 2026
 
 Deployment `6b03810de27178ba36227c42` was published at **17:58:49.627 America/Chicago**
