@@ -1,0 +1,17 @@
+{
+  "candidateId": "6b03b87be261d7f909354675",
+  "planHash": "e1bb2cc80281380602611e7cba257b108b1a9cb98a6e4485ea3d0d0069ef4595",
+  "sourceCommit": "befedcec41c1e1de7691d0eda42152a7ff29ab83",
+  "runId": 45108444152,
+  "baselineId": "6b03b6a483cce56f74fa4bfc",
+  "staticPaths": 671,
+  "preservedStaticPaths": 669,
+  "functions": 55,
+  "preservedCompleteBackendRecords": 54,
+  "schedules": 5,
+  "ciTestsPassed": 153,
+  "artifactId": 14787873464,
+  "artifactDigest": "sha256:2208364e21c6ca88cacf2ab33bb83655b4931601349eb7e9d4b8fc1ca55caa24",
+  "independentBackendComparison": "all 54 complete records equal after canonical key ordering; schedules equal",
+  "artifactDownload": "Cloud proxy blocks Azure artifact host; Actions retains the artifact and publication job downloads it with github.token."
+}
