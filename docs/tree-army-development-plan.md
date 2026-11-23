@@ -153,3 +153,11 @@ separately in `tree-army-combat-walltime-20261123.json`.
 Hero gait still needs the user's visual acceptance; this milestone changes
 combat arms and enemy telegraphs, not the existing leg rig. Dedicated boss art
 and further balance progression remain later work.
+
+Published in deployment `6b048faddcf2eb2d8c595f60`, source PR #302, release run
+`45243887801`. Candidate and canonical checks passed at all four viewports.
+The normal UI mobile run cleared in 47.786 seconds. See the production release
+record and `tree-army-combat-live-phone-20261123.png` for verified delivery.
+
+Reference links: [2011 gameplay guide](https://gamefaqs.gamespot.com/android/697753-army-of-darkness-defense/faqs/62546),
+[fan rebuild source](https://github.com/Sparky125/aod-rebuild/tree/ea762ba46f684356e9870844dc7ba25a06571a0e).
