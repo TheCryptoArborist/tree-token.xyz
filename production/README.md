@@ -1,3 +1,38 @@
+# Final Sui binding handoff — published November 22, 2026
+
+Locked deployment `6b03cc46411c5bac0b910909` was published at **23:19:01
+America/Chicago** (`2026-11-23T05:19:01.448Z`). Canonical Slush signing page:
+https://tree-token.xyz/play/generation-binding/.
+
+This release preserves all **675 existing static hashes**, **56 complete backend/
+provider records**, **five schedules**, runtime and protected configuration from
+freshly captured Root Rage baseline `6b03c711ca6052a6cd8f7399`. It adds two static
+paths and one isolated GET-only review/receipt service. Totals: **677 paths,
+57 functions, five schedules**. Existing functions were not rebuilt. The historical
+root build was not published. Always recapture the current full inventory before
+another release.
+
+The page exposes only approved final step 6: binding the empty Sui custody slot
+to the verified new BNB adapter, capped at **0.1 SUI**. Fresh checked simulation
+estimates **0.009266747 SUI**. The prior Sui configuration and four BNB calls are
+complete and must not be repeated. User signing is pending; custody remains
+empty/unbound and the BNB pass paused/non-playable. No NFT deposit, sale or
+gameplay activation is included.
+
+Validation: 46 focused checks, 128 Sui review regressions, full hosted contract
+regressions, eight mock-wallet browser scenarios on source/candidate/canonical
+assets, and fresh exact live simulation. Preparation passed 189 checks; publication
+passed 194. Canonical source bytes match; original backend records/schedules and
+published ID/lock were independently checked. Cloud submitted no mainnet transaction.
+
+Source `6d988b2385f348aed146bca7dd4331fd3b599a54`; control `76224a3`.
+Preparation: [45116610999](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45116610999).
+Publication: [45116895004](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45116895004).
+Control: `production/generation-binding-publish.json`. Setup, evidence and remaining
+tasks: `docs/multichain/generation-milestone/binding-handoff/`.
+
+---
+
 # BNB configuration receipts complete — November 22, 2026
 
 Approved steps 2–5 are complete and independently verified. All four BNB calls

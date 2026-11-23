@@ -1,0 +1,22 @@
+{
+  "checkedAt": "2026-11-23T05:19:37.984Z",
+  "sourceBytesMatch": true,
+  "appSha256": "3bee7305ae1c5b44a6f3bca9113d54f67d7c3572bc32b6a67b5400f0cd73279a",
+  "estimatedNetGasMist": "9266747",
+  "bnbConfiguration": {
+    "complete": true,
+    "stage": 4,
+    "block": "0x80f334d",
+    "hashes": [
+      "0x6a9ae80a8d3745ea00b4447417bd2e786b74f37174a80564e9f3f6c3c42dd733",
+      "0x2d0ccd98cc44f8f3a4bffdfb791ae3800e3180920aa141778b1e7e0a15537a2b",
+      "0x033aa1f377e6e670c1d8fe11ba328f773b339557e6890b798ba3f7f6ec832d5a",
+      "0x1fbbdd74254b902908ccbcd7821536738e7d5c1d20f64ec0d9a1f1a226f19b8b"
+    ],
+    "totalGasFeeWei": "23726950000000"
+  },
+  "checkpoint": {
+    "sequenceNumber": 348239450,
+    "timestamp": "2026-11-23T05:19:36.330Z"
+  }
+}

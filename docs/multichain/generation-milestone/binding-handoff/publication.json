@@ -1,0 +1,32 @@
+{
+  "candidateId": "6b03cc46411c5bac0b910909",
+  "planHash": "71cc7184319f929e8b4d5af1f321b125566d1e4f8658e7a63d6049e35e1196b2",
+  "sourceCommit": "6d988b2385f348aed146bca7dd4331fd3b599a54",
+  "runId": 45116610999,
+  "baselineId": "6b03c711ca6052a6cd8f7399",
+  "staticPaths": 677,
+  "preservedStaticPaths": 675,
+  "functions": 57,
+  "preservedFunctions": 56,
+  "schedules": 5,
+  "backendRecordsPreserved": true,
+  "schedulesPreserved": true,
+  "candidateBrowserCasesPassed": 8,
+  "releaseChecksPassed": 189,
+  "artifact": {
+    "id": 14791549418,
+    "digest": "sha256:dc61b8c738ebf74e5e90aae54168b2d0e3974679e87da838de51ae61ab0535af"
+  },
+  "publicationRun": 45116895004,
+  "publicationControlCommit": "76224a3",
+  "publishedAt": "2026-11-23T05:19:01.448Z",
+  "currentDeployVerified": true,
+  "locked": true,
+  "canonicalBrowserCasesPassed": 8,
+  "publicationChecksPassed": 194,
+  "fullContractRegressionRun": 45116619833,
+  "publicationArtifact": {
+    "id": 14791594530,
+    "digest": "sha256:e0f3e599d285394a01a868f53e72ea292e44bdac256a4f6691e8d8d92013f968"
+  }
+}

@@ -50,7 +50,15 @@ configuration. Add only two static paths and one isolated GET-only function.
 Never publish the historical root build. Exact-source preview supplies new
 provider metadata only; canonical publication uses the full captured inventory.
 
-Remaining: candidate/canonical release checks, user signature, independent final
-receipt verification. End-to-end messaging validation, deposits, sales and gameplay
+Published and locked as `6b03cc46411c5bac0b910909` at 23:19:01 America/Chicago
+on November 22, 2026. Totals: 677 paths, 57 functions, five schedules.
+Preparation run 45116610999 passed 189 checks; publication run 45116895004
+passed 194 checks. Full contract regression run 45116619833 passed. Eight browser
+cases passed on source, candidate and canonical assets. Canonical JavaScript
+matches source and the fresh live review verified. Source `6d988b2`, control
+`76224a3`; evidence is in `candidate.json`, `publication.json`,
+`canonical-check.json` and browser result files.
+
+Remaining: user signature and independent final receipt verification. End-to-end messaging validation, deposits, sales and gameplay
 are subsequent reviewed milestones. Refresh original identity/ownership before any
 deposit. The retired trial remains retired.
