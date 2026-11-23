@@ -1,3 +1,37 @@
+# Tree Army single battle lane and controls — published November 23, 2026
+
+[Prototype 0.9](https://tree-token.xyz/play/tree-army/test/) implements Task 1:
+one horizontal battle lane, labeled Left/Right hold controls, release to stop,
+visible mobile troop cards and specials, and a tutorial explaining automatic
+ranged attacks. The special cannon button is now labeled Power Shot. Hero melee,
+combat-facing changes and natural hero animation remain later tasks.
+
+Deployment `6b045ada195938dd6638275a` was published at **09:26:16 America/Chicago**
+(`2026-11-23T15:26:16.118Z`) and verified ready and locked by
+[release run 45204472155](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45204472155).
+Source: `8311f08cf61771503d6dc19464fc0fa4a36164bc`, PR #296.
+
+Fresh baseline `6b0458db91d3250f95aef932` included the newer private-purchase
+backend and Root Rage release. Only `/play/tree-army/test/index.html` changed;
+no paths were added. Verified **682 static paths**, **681 unchanged unrelated
+hashes**, all **59 complete backend/provider records**, **five schedules**,
+runtime and protected configuration. No backend package was rebuilt.
+
+Gameplay, real first-wave completion, release-plan and historical preview
+preservation tests passed. Candidate and canonical browser checks passed at
+1440×1000, 390×844, 320×568 and 844×390, including held movement with second-finger
+summoning and specials. All four cabinet checks passed. The final phone screenshot
+was inspected. These checks do not establish acceptance of the hero animation.
+
+Records: `production/tree-army-lane-{release,backend,browser,cabinet}-20261123.json`,
+`docs/tree-army-lane-live-phone-20261123.png`, and
+`docs/tree-army-development-plan.md`. Original release artifact #14831989587
+SHA256: `5d772a43dfa01f4ba03f2513656fe0bd8e2eb5995bf12448d411fa5cb48ca3a6`.
+Capture a new complete live baseline before later releases; this publisher's
+replacement hash describes a completed one-time release.
+
+---
+
 # Tree Army hero stride — published November 23, 2026
 
 Deployment `6b03da694fbbb07f59b07001` was published at **00:18:26 America/Chicago**
