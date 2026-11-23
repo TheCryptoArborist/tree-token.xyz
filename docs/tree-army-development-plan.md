@@ -77,3 +77,13 @@ per-enemy seed reward means wave-one earnings rise from 86 to 110 seeds.
 Pause, restart, early field clearing and unchanged wave-two cadence are tested.
 Later waves, hero weapons, projectile origins and animation are unchanged.
 Latest MystenLabs/skills README checked; this change uses no Sui APIs.
+
+A separate 390×844 browser run completed the opening in 48.046 seconds of wall
+time using normal UI summons/specials, with the unmodified animation loop, no
+forced kills and no clock acceleration. It reached the wave-one camp with no
+browser errors. See `production/tree-army-opening-walltime-20261123.json` and
+`docs/tree-army-opening-cleared-phone-20261123.png`.
+
+Published as Prototype 0.10 in deployment `6b0465140cb614081b5a0f52`, source
+PR #298, workflow run `45211270718`. All candidate/canonical checks passed.
+The hero weapon/projectile-origin audit remains outstanding.

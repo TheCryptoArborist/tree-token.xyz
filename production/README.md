@@ -1,3 +1,33 @@
+# Tree Army opening-wave pacing — published November 23, 2026
+
+[Prototype 0.10](https://tree-token.xyz/play/tree-army/test/) spreads ten opening
+enemies over 45 seconds of active battle. Victory still requires defeating all
+scheduled enemies. Waves 2–10 and hero combat/artwork are unchanged.
+
+Deployment `6b0465140cb614081b5a0f52` was published at **10:10:09 America/Chicago**
+(`2026-11-23T16:10:09.898Z`) and verified ready and locked by
+[run 45211270718](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45211270718).
+Source: `66aabdbc44c703f0586140d185d0108a18192c4b`, PR #298.
+Fresh baseline: `6b045ada195938dd6638275a`.
+
+Only the playtest HTML changed. All **681 unrelated static paths**, **59 complete
+backend/provider records**, **five schedules** and protected configuration were
+preserved; total inventory remains **682 paths**. No new assets or backend rebuilds.
+
+Gameplay and release-preservation tests passed. Normal summon/special simulations
+cleared the opening in 47.68–49.60 seconds. An unaccelerated local 390×844 browser
+run cleared it in **48.046 seconds**, with no browser errors. Candidate and
+canonical game/cabinet checks passed at all four viewport sizes; the live phone
+screenshot was inspected. Physical-player timing and feel still need feedback.
+
+Records: `production/tree-army-opening-{release,backend,browser,cabinet,walltime}-20261123.json`,
+`docs/tree-army-opening-cleared-phone-20261123.png`, and the development task list.
+Original artifact #14838405273 SHA256:
+`e2f3a3e20f1031ed0d4fa9f4bd1ed4bc1ffb9781dce5fd77afe0b355046c0e7d`.
+Capture a fresh complete live baseline before any subsequent publication.
+
+---
+
 # Tree Army single battle lane and controls — published November 23, 2026
 
 [Prototype 0.9](https://tree-token.xyz/play/tree-army/test/) implements Task 1:
