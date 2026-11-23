@@ -1,3 +1,20 @@
+# Approved private purchase handoff preparation — November 23, 2026
+
+The user approved five BNB actions: exact 25-USDT approval, private unpause/buy,
+re-pause and redemption lock to dev 45c4, with **0.0001 BNB combined gas maximum**.
+The new canonical handoff at `/play/bnb-purchase/` is being prepared, not yet
+published. The NFT-return message and later fees remain separate reviewed actions.
+No live purchase, lock or gameplay activation has been submitted by Codex.
+
+The actual signing/reconciliation code passed a no-balance-override mainnet-fork
+rehearsal with 0.00001482515 BNB local gas. It enforces exact payment/mint/lock
+events, intermediate states, nonce, total fee cap and uncertain-request recovery.
+Fresh baseline `6b03da694fbbb07f59b07001` has 58 functions and five schedules;
+preserve its complete inventory. Setup, evidence and remaining tasks:
+`docs/multichain/generation-milestone/private-purchase-handoff/`.
+
+---
+
 # Private purchase review prepared — November 23, 2026
 
 A local mainnet-fork rehearsal passed the proposed exact 25-USDT approval,

@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "admin": "0xF2Ab1eEBbEcb4E315FE95D8b532D1aB00F1A8789",
+  "baseNonce": 4746,
+  "maxTotalFeeWei": "100000000000000",
+  "suiDigest": "i6nTSPBKFSUf7GXhsnocnFfuuMtkqvQASR91YTZZdfE",
+  "currency": "0x55d398326f99059fF775485246999027B3197955",
+  "price": "25000000000000000000",
+  "recipient": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+  "redemption": "0xc99c328de96599e4ea3332e097436cdc5bd542a0a479f892543b3008664128b3",
+  "gasLimits": [
+    70000,
+    50000,
+    180000,
+    70000,
+    140000
+  ],
+  "steps": [
+    {
+      "label": "Approve exactly 25 USDT",
+      "to": "0x55d398326f99059fF775485246999027B3197955",
+      "data": "0x095ea7b3000000000000000000000000418cc337fc19d8cf3b41a9c6e3138a60e34eb9b50000000000000000000000000000000000000000000000015af1d78b58c40000"
+    },
+    {
+      "label": "Unpause private purchase",
+      "to": "0x418cC337FC19D8cf3b41a9C6E3138a60E34Eb9b5",
+      "data": "0x325832ac0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "label": "Buy generation 1",
+      "to": "0x418cC337FC19D8cf3b41a9C6E3138a60E34Eb9b5",
+      "data": "0xa6f2ae3a"
+    },
+    {
+      "label": "Pause further purchases",
+      "to": "0x418cC337FC19D8cf3b41a9C6E3138a60E34Eb9b5",
+      "data": "0x325832ac0000000000000000000000000000000000000000000000000000000000000001"
+    },
+    {
+      "label": "Lock redemption to dev Sui wallet",
+      "to": "0x418cC337FC19D8cf3b41a9C6E3138a60E34Eb9b5",
+      "data": "0x97579dd3485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4"
+    }
+  ],
+  "codeHashes": {
+    "0x74c20dEB476Dca58459956b1AcD65771197900C9": "0x6efff3014469a796f571b62eb85981489aa5c17103595fa4557ce7c72f1e2e1b",
+    "0x418cC337FC19D8cf3b41a9C6E3138a60E34Eb9b5": "0xa2fb16a830bce8f5c1e173915fb3f7ad7016be1ff9f0891b92a2921dc3ab1ef4",
+    "0x55d398326f99059fF775485246999027B3197955": "0x97a48aa4c129657440dafdacd4c836389734d28cc4a0ca7403e68da660a74a59"
+  }
+}

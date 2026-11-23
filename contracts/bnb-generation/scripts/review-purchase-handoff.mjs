@@ -1,0 +1,7 @@
+// LOCAL FORK ONLY: exercise the same guards and receipts used by the signing page.
+import fs from 'node:fs';import assert from 'node:assert/strict';import ganache from 'ganache';
+import {readOnlyRemote} from './deployment-review.mjs';import {P,Q,blankSession,prepare,inspect} from '../browser/purchase-core.mjs';
+const out=process.argv[2];assert(out);const remote=readOnlyRemote(),block=Number(BigInt(await remote.request({method:'eth_blockNumber'}))),fork=ganache.provider({fork:{provider:remote,blockNumber:block,disableCache:true},chain:{chainId:56,hardfork:'shanghai'},wallet:{totalAccounts:1,unlockedAccounts:[P.admin]},logging:{quiet:true}});const stages=[],s=blankSession();
+try{for(let i=0;i<=5;i++){const reads=[],provider={request:async q=>{const result=await (q.method==='eth_gasPrice'?remote:fork).request(q);reads.push({...q,result});return result;}};const review=await prepare(provider,s);stages.push({index:i,session:structuredClone(s),review,reads});if(i===5){assert(review.complete&&review.state===3&&!review.canPlay&&review.purchasesPaused);break;}const hash=await fork.request({method:'eth_sendTransaction',params:[review.transaction]});s.hashes.push(hash);s.requests.push(review.transaction);}
+ fs.writeFileSync(out,JSON.stringify({mode:'LOCAL_FORK_ONLY',submittedToMainnet:false,balanceOverrides:false,block,stages},(_,v)=>typeof v==='bigint'?String(v):v,2));console.log({stages:stages.length,spent:String(stages.at(-1).review.spent),final:stages.at(-1).review.state});
+}finally{await fork.disconnect();}

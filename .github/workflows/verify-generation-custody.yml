@@ -10,10 +10,12 @@ on:
       - 'tools/generation-configuration/**'
       - 'tools/generation-binding/**'
       - 'tools/generation-reserve/**'
+      - 'tools/bnb-purchase/**'
       - 'netlify/preview-functions/generation-registration.mjs'
       - 'netlify/preview-functions/generation-configuration.mjs'
       - 'netlify/preview-functions/generation-binding.mjs'
       - 'netlify/preview-functions/generation-reserve.mjs'
+      - 'netlify/preview-functions/generation-purchase-custody.mjs'
       - 'tools/bnb-generation/**'
       - 'tools/bnb-configuration/**'
       - 'netlify/preview-functions/generation-slot.mjs'
@@ -33,10 +35,12 @@ on:
       - 'tools/generation-configuration/**'
       - 'tools/generation-binding/**'
       - 'tools/generation-reserve/**'
+      - 'tools/bnb-purchase/**'
       - 'netlify/preview-functions/generation-registration.mjs'
       - 'netlify/preview-functions/generation-configuration.mjs'
       - 'netlify/preview-functions/generation-binding.mjs'
       - 'netlify/preview-functions/generation-reserve.mjs'
+      - 'netlify/preview-functions/generation-purchase-custody.mjs'
       - 'tools/bnb-generation/**'
       - 'tools/bnb-configuration/**'
       - 'netlify/preview-functions/generation-slot.mjs'
@@ -60,7 +64,9 @@ jobs:
       - name: Install pinned simulation tooling and test unsigned guards
         run: |
           npm ci --ignore-scripts
-          node --test contracts/nftree-generation/scripts/*.test.mjs tools/generation-publication/core.test.mjs tools/generation-slot/*.test.mjs tools/generation-registration/*.test.mjs tools/generation-configuration/*.test.mjs tools/generation-binding/*.test.mjs tools/generation-reserve/*.test.mjs
+          node --test contracts/nftree-generation/scripts/*.test.mjs tools/generation-publication/core.test.mjs tools/generation-slot/*.test.mjs tools/generation-registration/*.test.mjs tools/generation-configuration/*.test.mjs tools/generation-binding/*.test.mjs tools/generation-reserve/*.test.mjs tools/bnb-purchase/*.test.mjs
+          node tools/bnb-purchase/build.mjs
+          git diff --exit-code -- tools/bnb-purchase/app.js
           node tools/generation-reserve/build.mjs
           git diff --exit-code -- tools/generation-reserve/app.js
           node tools/generation-binding/build.mjs

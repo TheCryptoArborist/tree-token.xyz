@@ -1,0 +1,77 @@
+name: Preserve and publish private BNB purchase handoff
+on:
+  push:
+    branches: ['feat/bnb-generation-custody']
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: tree-production-preservation-release
+  cancel-in-progress: false
+jobs:
+  prepare:
+    if: contains(github.event.head_commit.message, '[prepare bnb purchase]')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci --ignore-scripts
+      - run: |
+          node --test contracts/nftree-generation/scripts/*.test.mjs tools/generation-publication/core.test.mjs tools/bnb-purchase/*.test.mjs tests/bnb-purchase-release.test.mjs
+          node tools/bnb-purchase/build.mjs
+          git diff --exit-code -- tools/bnb-purchase/app.js
+      - name: Capture current production and prepare exact new candidate
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: node scripts/release-bnb-purchase.mjs prepare
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bnb-purchase-candidate
+          path: .netlify/bnb-purchase-release
+          include-hidden-files: true
+          if-no-files-found: warn
+  publish:
+    if: contains(github.event.head_commit.message, '[publish bnb purchase]')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci --ignore-scripts
+      - name: Read reviewed candidate run
+        id: control
+        run: |
+          node --input-type=module - <<'JS'
+          import fs from 'node:fs';import assert from 'node:assert/strict';
+          const c=JSON.parse(fs.readFileSync('production/bnb-purchase-publish.json'));
+          assert(/^\d+$/.test(String(c.runId)));
+          fs.appendFileSync(process.env.GITHUB_OUTPUT,`run=${c.runId}\n`);
+          JS
+      - uses: actions/download-artifact@v4
+        with:
+          name: bnb-purchase-candidate
+          path: .netlify/bnb-purchase-release
+          run-id: ${{ steps.control.outputs.run }}
+          github-token: ${{ github.token }}
+      - run: node --test contracts/nftree-generation/scripts/*.test.mjs tools/generation-publication/core.test.mjs tools/bnb-purchase/*.test.mjs tests/bnb-purchase-release.test.mjs
+      - name: Verify preserved candidate, wait for all builds, publish and lock
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: node scripts/release-bnb-purchase.mjs publish
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bnb-purchase-publication
+          path: .netlify/bnb-purchase-release
+          include-hidden-files: true
+          if-no-files-found: error
