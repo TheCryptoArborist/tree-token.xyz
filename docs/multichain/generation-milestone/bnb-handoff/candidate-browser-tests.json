@@ -1,0 +1,32 @@
+{
+  "browser": "Chromium",
+  "assetOrigin": "https://6b03a1ca204de42e6892dd3a--tree-token.netlify.app",
+  "realTransactions": 0,
+  "results": [
+    {
+      "scenario": "complete",
+      "passed": true,
+      "mockedWalletSends": 3
+    },
+    {
+      "scenario": "rejected",
+      "passed": true,
+      "mockedWalletSends": 1
+    },
+    {
+      "scenario": "uncertain",
+      "passed": true,
+      "mockedWalletSends": 1
+    },
+    {
+      "scenario": "wrong-account",
+      "passed": true,
+      "mockedWalletSends": 0
+    },
+    {
+      "scenario": "off-origin",
+      "passed": true,
+      "mockedWalletSends": 0
+    }
+  ]
+}
