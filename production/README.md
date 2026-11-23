@@ -1,3 +1,20 @@
+# Final BNB completion handoff approved — November 23, 2026
+
+The user approved one new adapter `send(4)`, capped at **0.006 BNB total**
+(0.0059 message fee + 0.0001 gas), signed by MetaMask + Ledger admin 8789.
+The canonical handoff is being prepared at `/play/bnb-completion/`. No live
+completion transaction has been submitted. NFTree #2720 stays in dev wallet
+45c4; purchases and gameplay remain disabled. Source confirmation must be
+followed by independent Sui Completed/phase-3 verification; do not resend.
+
+Static-only preservation release: recapture locked `6b046d714f59325f88ea55af`,
+preserve all 686 existing static paths, 60 complete backend/provider records,
+runtime/protected settings and five schedules; add exactly two new page files.
+Stop if the baseline changes. Evidence and setup:
+`docs/multichain/generation-milestone/completion-handoff/`.
+
+---
+
 # Final BNB completion review prepared — November 23, 2026
 
 The new adapter's first `send(4)` passed a no-balance/storage-override local

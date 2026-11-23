@@ -1,6 +1,6 @@
 # Final generation-1 completion review — November 23, 2026
 
-Prepared and tested; **approval for this new BNB fee is pending**. No live
+Prepared and tested; **the user approved this new BNB fee on November 23, 2026**. No live
 completion transaction has been submitted. One new-adapter `send(4)` from the
 MetaMask + Ledger admin ending 8789 tells Sui that the pass is burned, closing
 generation 1. NFTree #2720 stays in Sui wallet 45c4. No USDT, deposit, mint,
@@ -73,4 +73,4 @@ complete then-current production baseline and use only a canonical
 `tree-token.xyz/play/` MetaMask/Ledger handoff. GitHub branch/PR #280 retain the
 review, setup, evidence and remaining task.
 
-Hosted [CI run 45232405636](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45232405636) passed for source `63272b9e2fed9c7529589c5700a835fb34797f60`: 52 Move contract tests and release build, 16 EVM contract tests, 398 unsigned guard tests and 103 BNB guard tests, with no failures. `validation.json` records these results. New completion fee approval remains pending.
+Hosted [CI run 45232405636](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45232405636) passed for source `63272b9e2fed9c7529589c5700a835fb34797f60`: 52 Move contract tests and release build, 16 EVM contract tests, 398 unsigned guard tests and 103 BNB guard tests, with no failures. `validation.json` records these results. The user subsequently approved the single completion with these caps.
