@@ -177,3 +177,8 @@ opening simulations still clear in 47.04–49.44 seconds. No art files, attack
 rules, troop movement or opening schedule changed. This corrects the arm pose;
 the separate existing leg-gait feedback remains unresolved. Latest MystenLabs
 skills README checked; no SDK changes.
+
+Published in deployment `6b04bdf56959e6a5452c7622`, source PR #304, release run
+`45278903790`. Candidate and canonical game/cabinet checks passed at four
+viewports. See the complete production carry-release record and
+`tree-army-carry-live-phone-20261123.png`.
