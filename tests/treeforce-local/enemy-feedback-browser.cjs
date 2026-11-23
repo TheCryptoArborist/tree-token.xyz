@@ -5,7 +5,7 @@ const fs = require("node:fs");
 const origin = process.env.TREEFORCE_URL || "http://127.0.0.1:4181";
 const revision = process.env.TREEFORCE_REVISION || "r7";
 assert.match(origin, /^http:\/\/127\.0\.0\.1:\d+$/);
-assert.ok(["r6", "r7"].includes(revision));
+assert.ok(["r6", "r7", "r11"].includes(revision));
 (async () => {
   const browser = await chromium.launch({
     headless: true,
@@ -191,7 +191,9 @@ assert.ok(["r6", "r7"].includes(revision));
       step(55);
       expect(
         "mutation keeps wasp texture without stuck flash",
-        e.texture.key === "wasp" && !e.tintFill && e.tintTopLeft === normal,
+        e.texture.key.replace(/-flight-[01]$/, "") === "wasp" &&
+          !e.tintFill &&
+          e.tintTopLeft === normal,
         { texture: e.texture.key, ...appearance(e) },
       );
       e = spawn();
@@ -267,7 +269,7 @@ assert.ok(["r6", "r7"].includes(revision));
         JSON.stringify(report, null, 2),
       );
     console.log(JSON.stringify(report, null, 2));
-    if (revision === "r7")
+    if (revision !== "r6")
       assert.ok(
         checks.every((c) => c.passed),
         "Enemy feedback checks failed",

@@ -9,7 +9,7 @@ Work one item at a time with a focused commit and verification evidence. Local r
 | 3     | Own audio lifecycle and make music zero silent    | Complete locally | Destroy clears timers/nodes; zero music has no output; define pause/hidden/resume behavior; simulated wallet return checked                   |
 | 4     | Keep the boss silhouette clear of HUD             | Complete locally | Full entrance/bob/phase bounds reviewed at 320/390px and desktop; assess collision implications before moving the boss                        |
 | 5     | Improve original music and sound identity         | Complete locally | Longer musical phrases; distinguish normal/bonus/boss moods and weapon/impact families; compare equal-loudness recordings                     |
-| 6     | Improve enemy animation and combat contrast       | Queued           | Path-following orientation and original poses; readable threats over forest; preserve Arborwing and hero clearance                            |
+| 6     | Improve enemy animation and combat contrast       | Complete locally | Path-following orientation and original poses; readable threats over forest; preserve Arborwing and hero clearance                            |
 | 7     | Refine pacing, transitions and reward explanation | Queued           | Novice opening review; compact repeat transitions; explain earned points; keep rules unchanged                                                |
 | 8     | Integrated device and regression review           | Queued           | Phone touch/audio, Slush interruptions, wallet switching, scoring/continues, names/achievements and saved-run sharing                         |
 
@@ -35,4 +35,8 @@ Boss movement and phase banners now clear the HUD. Before/after entrance and fou
 
 ## Completed task 5
 
-Three original 19.2-second musical phrases and distinct combat timbres are implemented. Five score tests, both eight-test mixer suites, thirteen browser audio checks and ten wallet/session regressions passed. See [implementation and verification](treeforce89-sound-identity-20261123.md) and [matched-volume listening samples](treeforce89-sound-review/index.html). Musical preference and phone/dense-combat listening remain pending. Next: task 6, enemy animation and combat contrast.
+Three original 19.2-second musical phrases and distinct combat timbres are implemented. Five score tests, both eight-test mixer suites, thirteen browser audio checks and ten wallet/session regressions passed. See [implementation and verification](treeforce89-sound-identity-20261123.md) and [matched-volume listening samples](treeforce89-sound-review/index.html). The user approved the musical direction; phone/dense-combat listening remains pending.
+
+## Completed task 6
+
+Entry/dive facing follows existing curves, ordinary bats and mutated wasps have wing poses, and combat foreground contrast is improved. Four focused tests, 81 unchanged geometry samples, 30 warning/flash checks and ten wallet/session regressions passed. See [implementation and verification](treeforce89-combat-visuals-20261123.md). Phone motion/readability/performance review remains pending. Next: task 7, pacing, transitions and reward explanation.
