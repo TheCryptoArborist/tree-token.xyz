@@ -1,0 +1,25 @@
+{
+  "checkedAt": "2026-11-23T15:12:43.850Z",
+  "stage": 0,
+  "block": "0x81067d3",
+  "state": 1,
+  "generation": 1,
+  "purchasesPaused": true,
+  "canPlay": false,
+  "allowance": "0",
+  "spent": "0",
+  "receipts": [],
+  "complete": false,
+  "index": 0,
+  "transaction": {
+    "from": "0xF2Ab1eEBbEcb4E315FE95D8b532D1aB00F1A8789",
+    "to": "0x55d398326f99059fF775485246999027B3197955",
+    "data": "0x095ea7b3000000000000000000000000418cc337fc19d8cf3b41a9c6e3138a60e34eb9b50000000000000000000000000000000000000000000000015af1d78b58c40000",
+    "value": "0x0",
+    "chainId": "0x38",
+    "nonce": "0x128a",
+    "gas": "0x11170",
+    "gasPrice": "0x2faf080"
+  },
+  "remainingMaximumFee": "25500000000000"
+}

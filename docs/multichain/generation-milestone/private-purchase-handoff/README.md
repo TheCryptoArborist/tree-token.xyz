@@ -6,8 +6,8 @@ purchase and lock only: exact approval, unpause, buy generation 1, re-pause, loc
 to dev Sui 45c4. It does not authorize the return message, acknowledgement,
 completion, public sales, upgrades, changes to security or gameplay activation.
 
-Canonical page: `https://tree-token.xyz/play/bnb-purchase/` (publication pending
-until recorded below). MetaMask + Ledger account ends 8789. The 25 USDT goes to
+Canonical page: `https://tree-token.xyz/play/bnb-purchase/`, published and locked
+as `6b04578a357874523bed70a8`. Exact release records are in `release.json`. MetaMask + Ledger account ends 8789. The 25 USDT goes to
 the unchanged treasury ending 3720; redemption does not refund it. The original
 stays in custody until a separately reviewed return message is delivered.
 
@@ -83,8 +83,12 @@ Preparation pins newly observed locked baseline `6b03da694fbbb07f59b07001`,
 existing static hash and provider/runtime/protected setting, adding only two
 new page files and one GET-only service. Never publish the historical root build.
 
-Remaining: prepare/audit preserved candidate, publish and verify canonical bytes
-and API, then user signs five separate MetaMask/Ledger requests. Independently
+Candidate and publication runs passed full preservation checks. Canonical script
+bytes, live custody API and all nine browser scenarios passed; independent backend
+records/schedules comparison passed. Hosted CI passed 52 Move and 16 EVM lifecycle
+tests. The workflow installs both pinned dependency sets before running guards.
+
+Remaining: user signs five separate MetaMask/Ledger requests. Independently
 reconcile their final receipts before quoting the return message. No real private
 purchase or redemption lock has been submitted by Codex.
 

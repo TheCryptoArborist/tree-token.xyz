@@ -1,17 +1,30 @@
-# Approved private purchase handoff preparation — November 23, 2026
+# Private purchase and lock handoff — published November 23, 2026
 
-The user approved five BNB actions: exact 25-USDT approval, private unpause/buy,
-re-pause and redemption lock to dev 45c4, with **0.0001 BNB combined gas maximum**.
-The new canonical handoff at `/play/bnb-purchase/` is being prepared, not yet
-published. The NFT-return message and later fees remain separate reviewed actions.
-No live purchase, lock or gameplay activation has been submitted by Codex.
+Locked deployment `6b04578a357874523bed70a8` was published at **09:13:46
+America/Chicago** (`2026-11-23T15:13:46.906Z`). Canonical MetaMask/Ledger page:
+**https://tree-token.xyz/play/bnb-purchase/**.
 
-The actual signing/reconciliation code passed a no-balance-override mainnet-fork
-rehearsal with 0.00001482515 BNB local gas. It enforces exact payment/mint/lock
-events, intermediate states, nonce, total fee cap and uncertain-request recovery.
-Fresh baseline `6b03da694fbbb07f59b07001` has 58 functions and five schedules;
-preserve its complete inventory. Setup, evidence and remaining tasks:
-`docs/multichain/generation-milestone/private-purchase-handoff/`.
+Five approved actions: exactly 25-USDT allowance, private unpause/buy generation 1,
+re-pause, redemption lock to Sui dev 45c4. Combined gas ceiling: **0.0001 BNB**.
+The private payment goes to unchanged treasury 3720 and is not refunded by
+redemption. The NFT-return message and subsequent fees are separate reviews.
+User signatures remain pending; Codex submitted no live transactions. The original
+remains in Sui custody and live website gameplay remains disabled.
+
+Preserved all **680 existing static paths, 58 complete backend/provider records,
+and five schedules** from `6b03da694fbbb07f59b07001`. New inventory: **682 static
+paths, 59 functions, five schedules**. Only two signing-page files and one fixed
+GET-only custody service were added. Runtime and protected configuration were
+preserved. Never publish the historical root build.
+
+Source `aa26cb5`, control `2a41acc`; candidate/publication runs
+`45202130222` / `45202579789`. All 336 local checks, hosted 52 Move/16 EVM lifecycle
+tests, and nine browser scenarios against source/candidate/canonical passed.
+A complete no-balance-override local fork using the actual signing/reconciliation
+code cost 0.00001482515 BNB in simulated gas. Fresh live preflight confirms Ready,
+paused state, correct nonce and zero allowance. Canonical bytes and custody API
+were independently checked. Exact evidence, artifact digests, setup and remaining
+tasks: `docs/multichain/generation-milestone/private-purchase-handoff/`.
 
 ---
 
