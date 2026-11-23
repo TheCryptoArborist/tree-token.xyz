@@ -1,3 +1,23 @@
+# Final BNB completion review prepared — November 23, 2026
+
+The new adapter's first `send(4)` passed a no-balance/storage-override local
+mainnet-fork review. Current combined maximum quote: **0.004599629374304116 BNB**
+(0.004577084124304116 message fee plus padded gas). Proposed new authorization:
+**one completion, 0.006 BNB total** (0.0059 message + 0.0001 gas). Approval is
+pending; no live completion transaction has been submitted.
+
+NFTree #2720 stays in Sui dev wallet 45c4. BNB remains Retired/paused/nonplayable;
+Sui is empty phase 2/generation 1 with ack_sent true. Actual completion delivery
+must independently confirm phase 3; simulation does not establish that outcome.
+No new deposit, USDT, mint, security change, sales or gameplay activation.
+
+Exact review, 26 passing focused tests, setup and remaining work:
+`docs/multichain/generation-milestone/completion-review/`. This review does not
+change the live website. Before any approved signing-page release, recapture and
+preserve the complete current production baseline; never publish the root snapshot.
+
+---
+
 # Acknowledgement delivered; BNB pass burned — November 23, 2026
 
 The approved Sui acknowledgement and actual BNB burn independently verify.
