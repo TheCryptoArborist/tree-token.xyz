@@ -1,3 +1,24 @@
+# NFT return independently verified — November 23, 2026
+
+The approved BNB return message and actual Sui delivery are complete. Original
+NFTree #2720 is back in Sui dev wallet ending **45c4**. The new vault is empty at
+phase 2/generation 1, acknowledgement not sent. BNB remains **Locked, purchases
+paused, canPlay false**. The generation remains allocated pending burn
+acknowledgement and completion. Do not resend or repeat completed actions.
+
+Total source cost: **0.004595594974304116 BNB**, within the 0.006-BNB cap. No
+additional USDT was spent. BNB source ends `87e3b0`; Sui delivery digest is
+`CYqYhXynf4fvaUNN8TnQxX6J1YMB3T2ab5avAbtnwZzn`. Complete receipts, canonical
+reads, reproducible verifier, 37 passing focused tests and remaining milestones:
+`docs/multichain/generation-milestone/return-completed/`.
+
+This evidence update does not deploy or change the live website. Later Sui
+acknowledgement and BNB completion require fresh transaction/fee reviews. Preserve
+the current full production inventory, including unrelated newer releases, before
+any future signing-page release. Never publish the historical root build.
+
+---
+
 # Return-message signing handoff — published November 23, 2026
 
 Locked deployment `6b0466dbe649f3c4abd225f9` was published at **10:19:04
