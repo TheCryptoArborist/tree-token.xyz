@@ -48,8 +48,9 @@ stage; do not interpret a future precondition failure as a failed registration.
 
 ## Next milestone
 
-Prepare and simulate the explicit message-path security configuration and Sui
-peer binding using the actual channel above. Review the complete two-direction
+The explicit message-path security configuration and Sui peer binding are now
+prepared and simulated using the actual channel above; see
+[configuration review](../configuration-review/README.md). Review the complete two-direction
 configuration and executor requirements before presenting concrete transactions
 for approval. The existing proposal is in `../path-review/README.md` and has not
 been submitted. Do not use simulated channel IDs or reopen the retired trial.

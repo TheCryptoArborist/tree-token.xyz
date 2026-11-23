@@ -1,0 +1,350 @@
+{
+  "checkpoint": {
+    "sequenceNumber": 348223740,
+    "timestamp": "2026-11-23T04:16:13.683Z"
+  },
+  "endpoint": {
+    "address": "0xd45b6890fa030bcb43347c0c69a9e5a1a288d1ca7b86b428014752b472f6bf91",
+    "version": 1089269258,
+    "digest": "7KKLMt5sQiGPhFLHNRdqBs66sm5viuvUQ9Jqxrw4rqKx",
+    "owner": {
+      "__typename": "Shared",
+      "initialSharedVersion": 635685314
+    },
+    "asMoveObject": {
+      "contents": {
+        "type": {
+          "repr": "0x31beaef889b08b9c3b37d19280fc1f8b75bae5b2de2410fc3120f403e9a36dac::endpoint_v2::EndpointV2"
+        },
+        "json": {
+          "id": "0xd45b6890fa030bcb43347c0c69a9e5a1a288d1ca7b86b428014752b472f6bf91",
+          "eid": 30378,
+          "call_cap": {
+            "id": "0x8de954b904b90f887ff2e81ff3362ca89e883da6529e55723758cd5093234b0d",
+            "cap_type": {
+              "@variant": "Package",
+              "pos0": "0x31beaef889b08b9c3b37d19280fc1f8b75bae5b2de2410fc3120f403e9a36dac"
+            }
+          },
+          "oapp_registry": {
+            "oapps": {
+              "id": "0x720fc2300c05bb7ad68aefec00a9796b4451c4d1df78bc72cd8c98e774220bec",
+              "size": "143"
+            }
+          },
+          "composer_registry": {
+            "composers": {
+              "id": "0xb41ca35805177b946bebf5d339712b4e9bb562b068b33851001f9f0b66847814",
+              "size": "7"
+            }
+          },
+          "message_lib_manager": {
+            "registry": {
+              "libs": {
+                "contents": {
+                  "id": "0x520bbc08883e22efb29f50283e25b4561ffa7c7b9d7774b14fc1c6272e593e03",
+                  "size": "2"
+                }
+              },
+              "lib_to_type": {
+                "id": "0xb136bb2fc780a76e636c10f10b10ab33754a3573efa5f1285bf2b35eaf73b50d",
+                "size": "2"
+              }
+            },
+            "default_configs": {
+              "id": "0xa2371851318b3ba333270daf696dedbc7b89a1107ca362643798c1789ce05a01",
+              "size": "126"
+            },
+            "oapp_configs": {
+              "id": "0x0e679b0fcc94fb07a5ec9a14712f8e35e0994b892e64a434e898450eb670e920",
+              "size": "100"
+            }
+          }
+        }
+      }
+    }
+  },
+  "uln": {
+    "address": "0x8ebd7a0b102a5f7a3d4a08d84dd853fecc4ae0093be6eb02cf0d11dce7d4861f",
+    "version": 1096510921,
+    "digest": "3X8N5Tg1GzQXZPtWGvDu6GhhDrjUy5aL1h486XDuETaY",
+    "owner": {
+      "__typename": "Shared",
+      "initialSharedVersion": 635685319
+    },
+    "asMoveObject": {
+      "contents": {
+        "type": {
+          "repr": "0x3ce7457bed48ad23ee5d611dd3172ae4fbd0a22ea0e846782a7af224d905dbb0::uln_302::Uln302"
+        },
+        "json": {
+          "id": "0x8ebd7a0b102a5f7a3d4a08d84dd853fecc4ae0093be6eb02cf0d11dce7d4861f",
+          "call_cap": {
+            "id": "0xfacd801d08e3a99c907148fa00ec5f17a0a3ac831dbc95bcd75e601006caafa9",
+            "cap_type": {
+              "@variant": "Package",
+              "pos0": "0x3ce7457bed48ad23ee5d611dd3172ae4fbd0a22ea0e846782a7af224d905dbb0"
+            }
+          },
+          "send_uln": {
+            "default_executor_configs": {
+              "id": "0x346b468d90db8743673c7ed4fdbe1c40f6a587aac6acc730b3a9bb86cf0919f4",
+              "size": "126"
+            },
+            "default_uln_configs": {
+              "id": "0x2bd7d044d837b718a7852959c701c04e842e648cf9047b442d55c838846a13e5",
+              "size": "126"
+            },
+            "oapp_executor_configs": {
+              "id": "0x357a98886ef14de3d15e538a808b410cfe026f6b1f971bb2398978d56e4dc181",
+              "size": "54"
+            },
+            "oapp_uln_configs": {
+              "id": "0xc53b8a5592cdeea1a7421d209ba5c70e6843d2911e5bb86ad9fb744d888eab60",
+              "size": "214"
+            }
+          },
+          "receive_uln": {
+            "default_uln_configs": {
+              "id": "0x5ddc28272722231ecef30237bb48715f128d6995b89a46db25cd9adae0140835",
+              "size": "126"
+            },
+            "oapp_uln_configs": {
+              "id": "0x0d89da4d00f46c4b1dab465a867e60eacbf646e56f8816ae55cd7b9495c1bb09",
+              "size": "239"
+            },
+            "verification": "0x950f66ed27ec0a01a52bda147d74165d4cc20165f0cee0ecae6aaacde13d7741"
+          }
+        }
+      }
+    }
+  },
+  "oapp": {
+    "address": "0x0da3d845f4ab18a0a8d2f0669722a1d9161c2ea61ad714abc14d414721fd14e4",
+    "version": 1,
+    "digest": "7LeHSzqW2xxEA7QrcimgN8c7ZKaAJUL3fwvjNy9wnoar",
+    "owner": {
+      "__typename": "Shared",
+      "initialSharedVersion": 1
+    },
+    "asMoveObject": {
+      "contents": {
+        "type": {
+          "repr": "0xfdc28afc0110cb2edb94e3e57f2b1ce69b5a99c503b06d15e51cfa212de56e24::oapp::OApp"
+        },
+        "json": {
+          "id": "0x0da3d845f4ab18a0a8d2f0669722a1d9161c2ea61ad714abc14d414721fd14e4",
+          "oapp_cap": {
+            "id": "0x6b7c66d2135ce12efa6a23037bff2e5ca1b499db24bc200592d08c2595cf5a3a",
+            "cap_type": {
+              "@variant": "Package",
+              "pos0": "0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92"
+            }
+          },
+          "admin_cap": "0x97be99b8e5c3b8953323c0a481b848c990b9d32814950d803b754b4e140fe25d",
+          "peer": {
+            "peers": {
+              "id": "0x984eb93d6713b0909152e249bcfa465a6661e7403c5b01266353b97ff2318966",
+              "size": "0"
+            }
+          },
+          "enforced_options": {
+            "options": {
+              "id": "0xd1c0dbf02c954d88cf9602f43c877ddaed3d8cf5afb4e71f83ccf9fbed78e497",
+              "size": "0"
+            }
+          },
+          "sending_call": null
+        }
+      }
+    }
+  },
+  "admin": {
+    "address": "0x97be99b8e5c3b8953323c0a481b848c990b9d32814950d803b754b4e140fe25d",
+    "version": 1,
+    "digest": "CRHN2g1UWgQYiN9TVWbRf8CcTd9FMtr2ky2jnfx79VVB",
+    "owner": {
+      "__typename": "AddressOwner",
+      "address": {
+        "address": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4"
+      }
+    },
+    "asMoveObject": {
+      "contents": {
+        "type": {
+          "repr": "0xfdc28afc0110cb2edb94e3e57f2b1ce69b5a99c503b06d15e51cfa212de56e24::oapp::AdminCap"
+        },
+        "json": {
+          "id": "0x97be99b8e5c3b8953323c0a481b848c990b9d32814950d803b754b4e140fe25d"
+        }
+      }
+    }
+  },
+  "vault": {
+    "address": "0xf5dff8e2cc96824f89735fa16c068ee8194fbb7e8d697aeebe5d135f8a5916eb",
+    "version": 2,
+    "digest": "EiVf4xEufWiA56rUMda9QJ7bSYtP6XDDdWHQcxyP1gJq",
+    "owner": {
+      "__typename": "Shared",
+      "initialSharedVersion": 2
+    },
+    "asMoveObject": {
+      "contents": {
+        "type": {
+          "repr": "0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92::vault::Vault<0xf6c6d439ea0da2f3e9ba79e4992a7a4c113215fbf54c442ac9020c315f953705::collection::NFT>"
+        },
+        "json": {
+          "id": "0xf5dff8e2cc96824f89735fa16c068ee8194fbb7e8d697aeebe5d135f8a5916eb",
+          "version": "1",
+          "registry": "0x298204d60d1a886e72f1ece18de179065d487a76420f93b19bf7f61c7275c210",
+          "cap": {
+            "id": "0x1711b6b0e442e8299ea3aceb30286234520c8f1c4d2294aa7d031308a3d7bcff",
+            "cap_type": {
+              "@variant": "Package",
+              "pos0": "0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92"
+            }
+          },
+          "oapp": "0x0da3d845f4ab18a0a8d2f0669722a1d9161c2ea61ad714abc14d414721fd14e4",
+          "nft": null,
+          "backing": {
+            "bytes": "BG2iqeFb2CK6BJHZeJR8wb+x/TDm+BOl+xC5srHWpro="
+          },
+          "route": {
+            "bytes": "9d/44syWgk+Jc1+hbAaO6BlPu36NaXruvl0TX4pZFus="
+          },
+          "peer": {
+            "bytes": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+          },
+          "bound": false,
+          "paused": false,
+          "phase": 0,
+          "generation": "0",
+          "announced": false,
+          "ack_sent": false,
+          "request": {
+            "bytes": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+          },
+          "recipient": {
+            "bytes": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+          }
+        }
+      }
+    }
+  },
+  "channel": {
+    "address": "0x63ee0fb967cf71aecd39d095a02aae6607d18b087c9537f4d7c4d0c8cf199023",
+    "version": 1089269258,
+    "digest": "864jUfZhozh3q9nS2x8Pu7WmX8fQxL7iidcGXqp6nbUm",
+    "owner": {
+      "__typename": "Shared",
+      "initialSharedVersion": 1089269258
+    },
+    "asMoveObject": {
+      "contents": {
+        "type": {
+          "repr": "0x31beaef889b08b9c3b37d19280fc1f8b75bae5b2de2410fc3120f403e9a36dac::messaging_channel::MessagingChannel"
+        },
+        "json": {
+          "id": "0x63ee0fb967cf71aecd39d095a02aae6607d18b087c9537f4d7c4d0c8cf199023",
+          "oapp": "0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92",
+          "channels": {
+            "id": "0xc631f02da694ee43bc4923570de9f6d53cbccbdb72986cf63dc84e77744c0e95",
+            "size": "0"
+          },
+          "is_sending": false
+        }
+      }
+    }
+  },
+  "registration": {
+    "address": "0x6e8f3156b67d9e5f35c4874604b868bdecf9df52d61a6be90a87b5033ecd9d3a",
+    "version": 1089269258,
+    "digest": "7adt8jhhsGqFZMbKHoWje3qLDKWWLMehF7Zf9SduGeei",
+    "owner": {
+      "__typename": "ObjectOwner"
+    },
+    "asMoveObject": {
+      "contents": {
+        "type": {
+          "repr": "0x0000000000000000000000000000000000000000000000000000000000000002::dynamic_field::Field<address,0x31beaef889b08b9c3b37d19280fc1f8b75bae5b2de2410fc3120f403e9a36dac::oapp_registry::OAppRegistration>"
+        },
+        "json": {
+          "id": "0x6e8f3156b67d9e5f35c4874604b868bdecf9df52d61a6be90a87b5033ecd9d3a",
+          "name": "0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92",
+          "value": {
+            "messaging_channel": "0x63ee0fb967cf71aecd39d095a02aae6607d18b087c9537f4d7c4d0c8cf199023",
+            "oapp_info": "",
+            "delegate": "0x0000000000000000000000000000000000000000000000000000000000000000"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "dynamicField": {
+      "value": {
+        "json": {
+          "send_lib": "0x3ce7457bed48ad23ee5d611dd3172ae4fbd0a22ea0e846782a7af224d905dbb0",
+          "receive_lib": "0x3ce7457bed48ad23ee5d611dd3172ae4fbd0a22ea0e846782a7af224d905dbb0",
+          "receive_lib_timeout": null
+        }
+      }
+    }
+  },
+  "send": {
+    "dynamicField": {
+      "value": {
+        "json": {
+          "confirmations": "5",
+          "required_dvns": [
+            "0x0c12321ebe562b8fb8a74e6d29f144ea199a8f31a4cea3a417ce72477f6dfebb",
+            "0x52aa129049de845353484868d1be6e2df6878b0ed2213d94d3c827309aeae685",
+            "0x92128a5edf4a0f696464de66d00986ef41b37faf705ceb3d9d9a4e5c306fbf91",
+            "0xfa35508c624925c6f341113f8f9397e5f41750b833af87d0c945a6f5682887f0"
+          ],
+          "optional_dvns": [],
+          "optional_dvn_threshold": 0
+        }
+      }
+    }
+  },
+  "receive": {
+    "dynamicField": {
+      "value": {
+        "json": {
+          "confirmations": "20",
+          "required_dvns": [
+            "0x0c12321ebe562b8fb8a74e6d29f144ea199a8f31a4cea3a417ce72477f6dfebb",
+            "0x52aa129049de845353484868d1be6e2df6878b0ed2213d94d3c827309aeae685",
+            "0x92128a5edf4a0f696464de66d00986ef41b37faf705ceb3d9d9a4e5c306fbf91",
+            "0xfa35508c624925c6f341113f8f9397e5f41750b833af87d0c945a6f5682887f0"
+          ],
+          "optional_dvns": [],
+          "optional_dvn_threshold": 0
+        }
+      }
+    }
+  },
+  "executor": {
+    "dynamicField": {
+      "value": {
+        "json": {
+          "max_message_size": "10000",
+          "executor": "0xde7fe1a6648d587fcc991f124f3aa5b6389340610804108094d5c5fbf61d1989"
+        }
+      }
+    }
+  },
+  "appLibraries": {
+    "dynamicField": null
+  },
+  "appSend": {
+    "dynamicField": null
+  },
+  "appReceive": {
+    "dynamicField": null
+  },
+  "appExecutor": {
+    "dynamicField": null
+  }
+}

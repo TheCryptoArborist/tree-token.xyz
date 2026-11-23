@@ -3,7 +3,7 @@ import fs from 'node:fs';import assert from 'node:assert/strict';import ganache 
 import {Interface,AbiCoder,keccak256,id} from 'ethers';
 import {P,inspect,blankSession} from '../browser/core.mjs';
 import {readOnlyRemote} from './deployment-review.mjs';
-const dir='docs/multichain/generation-milestone/path-review',meta=JSON.parse(fs.readFileSync(dir+'/protocol-metadata.json'));
+const dir=process.argv[2]||'docs/multichain/generation-milestone/path-review',meta=JSON.parse(fs.readFileSync(dir+'/protocol-metadata.json'));
 const b=meta.networks['bsc-mainnet'],s=meta.networks['sui-mainnet'];const dep=b.deployments.find(d=>d.version===2),sd=s.deployments.find(d=>d.version===2);
 assert.equal(dep.eid,'30102');assert.equal(sd.eid,'30378');
 const operators=['horizen-labs','nethermind','layerzero-labs'];
