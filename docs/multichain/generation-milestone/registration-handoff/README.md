@@ -62,6 +62,7 @@ changed the baseline; no candidate was created from that stale baseline. The
 replacement captured the newer locked site. GitHub retains complete inventory
 artifacts; local download was blocked by the Cloud proxy, so independent backend
 comparison used Netlify records and the release job verified every static hash.
-The user then connects desktop Slush, refreshes the registration review, signs the
-single transaction and returns the receipt. Independently verify that receipt and
-record the actual messaging channel before reviewing any peer/security changes.
+The user has now signed successfully. The actual receipt and channel were
+independently verified: see [registration completed](../registration-completed/README.md).
+Do not repeat registration. Explicit message-path security configuration and peer
+binding are the next review; deposits, sales and gameplay remain later milestones.

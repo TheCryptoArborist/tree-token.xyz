@@ -1,9 +1,9 @@
 # New generation path review — source and simulation only
 
 Current continuation: the user approved the single registration transaction.
-Its canonical signing handoff is now published; see
-[registration-handoff](../registration-handoff/README.md). The actual signature
-and registration receipt remain pending. The notes below describe the earlier
+The transaction is now signed and independently verified; see
+[registration completed](../registration-completed/README.md) for the actual
+channel and receipt. Do not repeat registration. The notes below describe the earlier
 read-only review, not authorization for later configuration.
 
 **No chain transaction was submitted, and no page or backend was deployed.** The

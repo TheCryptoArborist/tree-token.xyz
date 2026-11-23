@@ -1,3 +1,22 @@
+# Sui registration receipt complete — November 22, 2026
+
+The user completed the single approved registration in desktop Slush. Independent
+verification confirms digest `DF8dMqSXXtYBoemHsPYk2QJDkuUY2m8zTRDdcu6Y9DFt`
+and actual messaging channel
+`0x63ee0fb967cf71aecd39d095a02aae6607d18b087c9537f4d7c4d0c8cf199023`.
+Net gas was **0.004668124 SUI**, below the **0.02-SUI** cap. Do not repeat it.
+Custody remains empty and unbound; the BNB pass remains paused/non-playable.
+
+Evidence and reproducible verification:
+`docs/multichain/generation-milestone/registration-completed/README.md`.
+This receipt/documentation update changes no website or chain configuration.
+The website release baseline is recorded below; always recapture the current
+live inventory before another release. Peer/security configuration, NFT deposits,
+sales and gameplay activation remain subsequent reviewed milestones. Earlier
+pending-registration notes describe the historical handoff.
+
+---
+
 # Sui registration handoff — published November 22, 2026
 
 Locked deployment `6b03b87be261d7f909354675` was published at **21:54:50
