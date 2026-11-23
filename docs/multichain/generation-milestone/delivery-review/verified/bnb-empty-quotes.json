@@ -1,0 +1,28 @@
+[
+  {
+    "kind": 2,
+    "data": "0xc13bd9360000000000000000000000000000000000000000000000000000000000000002",
+    "response": {
+      "jsonrpc": "2.0",
+      "id": 2,
+      "error": {
+        "code": 3,
+        "message": "execution reverted",
+        "data": "0x6dac6a09"
+      }
+    }
+  },
+  {
+    "kind": 4,
+    "data": "0xc13bd9360000000000000000000000000000000000000000000000000000000000000004",
+    "response": {
+      "jsonrpc": "2.0",
+      "id": 4,
+      "error": {
+        "code": 3,
+        "message": "execution reverted",
+        "data": "0x6dac6a09"
+      }
+    }
+  }
+]

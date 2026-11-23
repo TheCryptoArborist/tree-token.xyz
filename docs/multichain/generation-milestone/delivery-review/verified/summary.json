@@ -1,0 +1,22 @@
+{
+  "checkedAt": "2026-11-23T05:29:29.039Z",
+  "submitted": false,
+  "actualVaultEmpty": true,
+  "actualVaultBound": true,
+  "originalStillDevOwned": true,
+  "emptySuiKindsRejected": [
+    1,
+    3
+  ],
+  "inactiveBnbKindsRejected": [
+    2,
+    4
+  ],
+  "simulatedFundGeneration": 1,
+  "simulatedReservePayload": "0x0301f5dff8e2cc96824f89735fa16c068ee8194fbb7e8d697aeebe5d135f8a5916eb046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "simulatedFundNetGasMist": "-948102",
+  "messageFeeQuoted": false,
+  "depositAuthorized": false,
+  "salesAuthorized": false,
+  "gameplayEnabled": false
+}

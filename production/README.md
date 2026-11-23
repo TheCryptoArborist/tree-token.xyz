@@ -1,3 +1,24 @@
+# Delivery validation plan — November 22, 2026
+
+Read-only review confirms that the new route cannot send a heartbeat while its
+vault is empty. A reserve requires depositing the exact original; a full round
+trip requires the deployed private 25-USDT purchase/redemption lifecycle. There
+is no direct admin withdrawal. Do not deposit solely to test connectivity.
+
+Checked simulations reject both empty-vault outbound kinds, produce the expected
+generation-1 reserve payload only after simulated funding, and confirm the actual
+NFT/vault remain unchanged. Inactive BNB outbound quotes reject; 16 BNB lifecycle
+tests passed. Plan/evidence: `docs/multichain/generation-milestone/delivery-review/`.
+
+No additional transaction, fee, deposit, purchase or gameplay activation is
+approved by this plan. Next prepare the full new-route reserve quote/send effects,
+fee recipients, receiver budget and private round-trip recovery review before
+requesting further live authorization. This planning milestone changes no live
+website or chain state. The published preservation baseline below remains a
+historical record; recapture the current full inventory before any future release.
+
+---
+
 # Final binding receipt complete — November 22, 2026
 
 All six approved security-configuration/binding steps are complete. Final Sui
