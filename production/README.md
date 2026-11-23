@@ -1,16 +1,29 @@
-# Approved reserve handoff preparation
+# Atomic reserve handoff — published November 23, 2026
 
-The atomic original NFTree #2720 deposit + reserve announcement is approved with
-maximum 0.25 SUI message fee plus 0.1 SUI gas. The new signing handoff is being
-prepared; it is not published yet and no source transaction has been submitted.
-Fresh checked address-balance simulation estimates 0.106791186 SUI total. All
-299 tests and eight mocked-browser scenarios pass. Setup, scope, evidence and
-remaining tasks: `docs/multichain/generation-milestone/reserve-handoff/README.md`.
+Locked deployment `6b03d785177d7651c28d69aa` was published at **00:07:42
+America/Chicago** (`2026-11-23T06:07:42.830Z`). Canonical signing page:
+**https://tree-token.xyz/play/generation-reserve/**.
 
-Current live baseline freshly observed: locked `6b03d4e9938b4d8d124cfdaf`, with
-57 backend functions and five schedules. Preserve its complete inventory and
-newer Canopy Defense update. USDT spending, purchase unpause, redemption, public
-sales and gameplay activation remain outside this approved first step.
+The approved single transaction deposits original NFTree #2720 and sends its
+reserve announcement atomically. Maximum message fee is 0.25 SUI plus 0.1 SUI
+gas; current checked estimate is 0.106791186 SUI total. User Slush signature and
+source/destination receipt reconciliation remain pending. No transaction was
+submitted by Codex. USDT spending, purchase unpause, redemption, public sales and
+gameplay activation remain separate milestones.
+
+Preserved all **677 existing static paths, 57 complete backend/provider records,
+and five schedules** from `6b03d4e9938b4d8d124cfdaf`, including its Canopy Defense
+update. New inventory: **679 static paths, 58 functions, five schedules**. Only
+two new signing files and one GET-only service were added. Runtime and protected
+configuration remain preserved. Never publish the historical root build.
+
+Source `d1046d6`, publication control `8063912`, candidate/publication runs
+`45121661258` / `45121910926`. All 299 local checks passed; hosted CI passed
+52 Move and 16 EVM lifecycle tests. Eight mock-wallet browser scenarios passed
+against source, candidate and canonical served assets, without chain submission.
+Canonical script bytes and fresh transaction review were independently verified.
+Setup, exact evidence, durable artifact digests and remaining tasks:
+`docs/multichain/generation-milestone/reserve-handoff/`.
 
 ---
 

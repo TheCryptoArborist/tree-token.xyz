@@ -7,7 +7,8 @@ unpausing purchases, redemption, sales or gameplay. Previous review-only notes
 are historical; this document records the approved preparation scope.
 
 The browser handoff is restricted to `https://tree-token.xyz/play/generation-reserve/`.
-Publication is pending until a release record is added here. No source transaction
+Published and locked deployment `6b03d785177d7651c28d69aa` is recorded in
+`release.json`. No source transaction
 has been submitted by Codex. The user must review and sign in desktop Slush using
 the approved dev account ending 45c4.
 
@@ -66,8 +67,13 @@ compares every existing static hash, all 57 complete backend/provider records,
 five schedules and protected/runtime settings. It waits for all Git builds before
 publication. Never publish the historical root build.
 
-Remaining: prepare and audit candidate, publish the preserved handoff, verify its
-canonical assets and review API, obtain the user's signed source receipt, then
+Candidate and publication runs passed. Independent complete backend/schedule
+comparison passed. Canonical JS bytes and fresh simulation review passed; all
+eight browser scenarios passed against source, candidate and canonical assets.
+Hosted CI also passed 52 Move and 16 EVM lifecycle tests. See `release.json` for
+source/control commits, workflow runs and durable artifact digests.
+
+Remaining: obtain the user's signed source receipt, then
 independently confirm source custody and destination Ready state. Do not activate
 purchases or gameplay. If delivery is delayed, diagnose the original GUID instead
 of sending another reserve. Subsequent private purchase/redemption is separate.
