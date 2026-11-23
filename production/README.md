@@ -1,3 +1,20 @@
+# Atomic reserve quote review — November 22, 2026
+
+Read-only preparation now verifies an atomic new-vault deposit plus reserve send.
+Observed message fee is 0.102798531 SUI, net gas 0.003004754 SUI, total
+0.105803285 SUI. Proposed (not approved) first-step ceiling is 0.35 SUI: 0.25
+message fee plus 0.1 gas. Original #2720 remains in the wallet; no live action or
+website change occurred. Source effects/payees and local-fork BNB receiver budget
+passed. 12 focused checks and 140 Sui regressions passed.
+
+Review, exact simulation evidence, hypothetical later return-fee estimates and
+recovery gates: `docs/multichain/generation-milestone/reserve-review/README.md`.
+Explicit deposit+reserve approval is required before a signing handoff. USDT
+purchase, redemption fees, sales and gameplay remain outside that first-step scope.
+Preserve the full current site and recapture its live baseline before any release.
+
+---
+
 # Delivery validation plan — November 22, 2026
 
 Read-only review confirms that the new route cannot send a heartbeat while its

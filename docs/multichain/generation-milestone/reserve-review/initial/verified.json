@@ -1,0 +1,28 @@
+{
+  "guid": "0xecfb51b3c1866ca41d2698129f8247504c83b759812a84df0bd30990c41f03f8",
+  "payload": "0x0301f5dff8e2cc96824f89735fa16c068ee8194fbb7e8d697aeebe5d135f8a5916eb046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "messageFeeMist": "102798531",
+  "netGasMist": "3004754",
+  "grossGasMist": "18545200",
+  "estimatedTotalMist": "105803285",
+  "fees": [
+    {
+      "fee": "89621992",
+      "recipient": "0xf99b445ae678d3f28fe7acb91e5d7ee8ab538d7e231a837b12c593fb624ad630"
+    },
+    {
+      "fee": "4358299",
+      "recipient": "0x9004e1e4c6dcc42d1b73269db48d510192665677fcad2079a3c7d1e9e971d34e"
+    },
+    {
+      "fee": "4409120",
+      "recipient": "0x9004e1e4c6dcc42d1b73269db48d510192665677fcad2079a3c7d1e9e971d34e"
+    },
+    {
+      "fee": "4409120",
+      "recipient": "0x9004e1e4c6dcc42d1b73269db48d510192665677fcad2079a3c7d1e9e971d34e"
+    }
+  ],
+  "atomicDepositAndSend": true,
+  "submitted": false
+}
