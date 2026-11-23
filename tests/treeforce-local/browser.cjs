@@ -131,8 +131,8 @@ if (!/^http:\/\/127\.0\.0\.1:\d+$/.test(origin))
       const response = await route.fetch();
       let text = await response.text();
       text = text.replace(
-        "installMobileTouchbar(game,e);return game",
-        "installMobileTouchbar(game,e);window.__games.push(game);return game",
+        "installMobileTouchbar(game,e);",
+        "installMobileTouchbar(game,e);window.__games.push(game);",
       );
       await route.fulfill({ response, body: text });
       return;
