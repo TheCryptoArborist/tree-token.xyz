@@ -161,3 +161,19 @@ record and `tree-army-combat-live-phone-20261123.png` for verified delivery.
 
 Reference links: [2011 gameplay guide](https://gamefaqs.gamespot.com/android/697753-army-of-darkness-defense/faqs/62546),
 [fan rebuild source](https://github.com/Sparky125/aod-rebuild/tree/ea762ba46f684356e9870844dc7ba25a06571a0e).
+
+## Bent-elbow carry correction — Prototype 0.13
+
+The 0.12 gun arm rotated as one straight sprite, creating the user-reported
+locked elbow held in the air. Split that existing atlas region at the elbow
+in the renderer. The upper arm hangs alongside the torso; an independently
+rotated forearm carries the gun lower, close to the body. Both joints blend
+into aiming, and muzzle placement follows the same joint transforms.
+
+Phone-size renders checked idle, walking left/right and aiming. An unaccelerated
+mobile recording exercises both walking directions. See `tree-army-carry-phone-20261123.png`
+and `tree-army-carry-mobile-20261123.webm`. Existing combat outcome/muzzle tests pass;
+opening simulations still clear in 47.04–49.44 seconds. No art files, attack
+rules, troop movement or opening schedule changed. This corrects the arm pose;
+the separate existing leg-gait feedback remains unresolved. Latest MystenLabs
+skills README checked; no SDK changes.

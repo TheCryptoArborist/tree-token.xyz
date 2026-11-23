@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
-// Prototype 0.12: timed combat actions and an original articulated parts atlas.
+// Prototype 0.13: articulated elbow carry, HTML-only correction.
 export const REPLACED_HASHES = {
-  '/play/tree-army/test/index.html': '35839385a591cbaf2a06ae396284a6909f956a75',
+  '/play/tree-army/test/index.html': '0667f42168b3e04b2b3b4623ba102983bc062e51',
 };
-export const ADDED_PATHS = ['/play/tree-army/test/assets/combat-parts.webp'];
+export const ADDED_PATHS = [];
 export const DELIVERY_PATHS = [...Object.keys(REPLACED_HASHES), ...ADDED_PATHS];
 // Preview builds also need assets already present in production. Keep this
 // catalog independent of the smaller, one-time publication allowlist.
