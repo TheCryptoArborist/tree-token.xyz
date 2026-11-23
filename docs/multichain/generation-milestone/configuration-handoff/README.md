@@ -57,7 +57,16 @@ are historical, not a reusable signing packet.
 
 ## Remaining work
 
-Complete preserving release, candidate/canonical checks and publication evidence.
+Published and locked deployment `6b03c120638a62e773a0de91` at
+2026-11-22 22:31:35 America/Chicago. Totals: 673 paths, 56 functions, five
+schedules; all 671 prior hashes and 55 backend records are preserved. Source
+`6ba8e21`, control `8389a7a`; preparation run 45112070048, publication run
+45112287530. 158 local checks, 178 release checks, and eight mock-wallet browser
+scenarios on source/candidate/canonical assets passed. Full contract regression
+run 45112074417 passed. Canonical JavaScript matches source; fresh canonical
+simulation passed at 0.014951541 SUI. Actual Slush signing remains pending.
+Complete release evidence is retained in the GitHub Actions artifacts referenced
+in publication.json.
 The user then signs step 1 and returns its verified receipt. Persist that actual
 receipt before advancing. The remaining five transactions are already approved,
 but depend on verified prior state and fresh fee quotes. NFT deposits, public

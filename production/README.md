@@ -1,3 +1,40 @@
+# Sui configuration handoff — published November 22, 2026
+
+Locked deployment `6b03c120638a62e773a0de91` was published at **22:31:35
+America/Chicago** (`2026-11-23T04:31:35.930Z`). Canonical signing page:
+https://tree-token.xyz/play/generation-configuration/.
+
+This adds exactly two new static paths and one isolated GET-only review/receipt
+service to baseline `6b03bf7710cd526cae89e2ef` (Root Rage complete free Greenbelt).
+All **671 prior static hashes**, **55 complete backend/provider records**, **five
+schedules**, runtime and protected configuration are preserved. Totals are
+**673 paths, 56 functions, five schedules**. Existing backends were not rebuilt;
+the historical root build was not published. Capture a fresh full live inventory
+before any subsequent release.
+
+The user approved all six configuration/binding transactions: 0.2 SUI total for
+two Sui steps (0.1 each), and 0.0001 BNB total for four BNB steps. This page exposes
+only **step 1**, Sui security configuration and receiver metadata, with **0.1 SUI**
+maximum gas. Fresh simulation estimates **0.014951541 SUI**. No transaction was
+submitted by Cloud. After its receipt, the four BNB calls and final Sui binding
+remain approved but require fresh state/fee checks and prior receipt verification.
+Custody remains empty/unbound; purchases and gameplay are disabled. Deposits,
+sales and gameplay activation are excluded.
+
+Validation: 158 local checks, 178 checks in each release job, eight mock-wallet
+browser scenarios on source/candidate/canonical assets, and full hosted contract
+regressions passed. Canonical JavaScript matches source. Actual signing remains
+pending. The working Slush helper and server-based review clock are preserved.
+
+Source `6ba8e211ec0ce70a82c903034b8a4cf17a5ff7ce`; control `8389a7a`.
+Preparation: [45112070048](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45112070048).
+Publication: [45112287530](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45112287530).
+Contract regressions: [45112074417](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45112074417).
+Control: `production/generation-configuration-publish.json`. Approval, setup,
+remaining tasks and evidence: `docs/multichain/generation-milestone/configuration-handoff/`.
+
+---
+
 # Sui registration receipt complete — November 22, 2026
 
 The user completed the single approved registration in desktop Slush. Independent
