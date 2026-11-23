@@ -605,7 +605,7 @@
 .arcade-next-unlock__heading { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:8px; }
 .arcade-next-unlock__heading span { color:#b5d3bc; font-size:10px; font-weight:700; letter-spacing:.11em; }
 .arcade-next-unlock__heading strong { color:#f5db8a; font-size:16px; }
-.arcade-next-unlock__items { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+.arcade-next-unlock__items { display:grid; grid-template-columns:minmax(0,1fr); }
 .arcade-next-unlock__items > div { display:flex; flex-direction:column; min-width:0; padding:9px 11px; border:1px solid #597967; border-radius:9px; background:#102820; }
 .arcade-next-unlock__items span { font-size:11px; color:#b4cfc0; }
 .arcade-next-unlock__items strong { margin-top:4px; font-size:clamp(13px,2vw,19px); color:#fff0ad; font-variant-numeric:tabular-nums; }

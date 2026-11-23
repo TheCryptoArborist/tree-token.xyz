@@ -1,3 +1,99 @@
+# Tree Arcade single launch countdown — published November 22, 2026
+
+Deployment `6b03810de27178ba36227c42` was published at **17:58:49.627 America/Chicago**
+on November 22 (`2026-11-22T23:58:49.627Z`) and verified ready and locked by
+[publication run 45086007525](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45086007525).
+Final canonical verification passed at `2026-11-22T23:58:53.931Z`.
+
+The [Daily page](https://tree-token.xyz/play/#daily) now shows one Up Next launch
+countdown, labeled **December launches in**, with **Tree Hero’s Advent Grove and
+Christmas Guardians badges** described together. Daily, Monthly Progress and
+Badge Collection each retain one accessible timer. The exact UTC launch date,
+badge eligibility qualification and unannounced January collection wording are
+preserved. Root directly checked canonical Daily after publication and observed
+the single timer and the intended description; the live tab was retained for review.
+
+Fresh baseline: `6b03741d72033c45517f32e3`, including the newer Slush connection
+repair. The release replaced only `/scripts/arcade-next-month-unlocks.js` and
+`/styles/arcade-organization.css`, added no paths, and verified **667 static
+paths**, **665 unchanged unrelated hashes**, **54 complete backend/provider
+records**, **five schedules**, runtime and protected configuration. No backend
+package was rebuilt.
+
+Validation: **20 focused tests** and **6/6 exact candidate browser scenarios**
+at **320, 390 and 1280 pixels**, covering one timer, three tab placements,
+accessible labels, ticking, UTC month rollover and responsive layout. Every
+named check passed with zero unresolved browser errors, asset failures or
+unexpected writes. Existing image-request cancellations were resolved only
+after independent HTTP, image MIME and browser decoding checks; retained logo
+nodes and seasonal replacement artwork were also decoded in the actual DOM.
+Three earlier failed previews were never published and are listed in the index.
+
+Source `34b342f3f0b2c3c61d5984d05ea3a5d6bde1f979` and merged main
+`5f9b58a2fd39286b00897fea8b176a62d3a34699` share tree
+`1351b345ece0299c4e7f05364c7aaeb8bf7aa986`, incorporating PRs #289–#292.
+Publication control: `fe5cfadbbbed13a2c8799ac4ada424d0aca3031f`.
+Preparation run: [45085802059](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45085802059).
+
+Complete records: `docs/arcade-countdown-release-20261122.json`,
+`docs/arcade-countdown-browser-20261122.json`, and
+`docs/arcade-countdown-deployment-20261122.json`. Verified original archives
+are retained at `docs/arcade-countdown-records-20261122/{prepare,publish}.zip`.
+The index records their SHA256 values, canonical UI observation and current
+Mysten guidance consulted. Capture the complete current site before any later
+release; this completed publisher is pinned to its reviewed prior baseline.
+
+---
+
+# Tree Arcade autumn grove and Advent preview — published November 22, 2026
+
+Deployment `6b037118d43fee18f79fb7a4` was published at
+16:53:36.766 America/Chicago on November 22 (22:53:36.766 UTC) and verified ready and locked in
+[publication run 45080110220](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45080110220).
+The separate GET-only [canonical audit 45080216008](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45080216008)
+passed at `2026-11-22T22:54:37.602Z`.
+
+The live [Daily grove](https://tree-token.xyz/play/#daily) now gives November's
+trees autumn leaves and the shared Tree Hero chest emblem. December adds a
+31-date Advent Grove and four approved illustrations. The
+[interactive Advent preview](https://tree-token.xyz/play/advent-preview/) lets
+visitors try reveal, recovery and reset with sample progress. Saved attendance,
+wallet switching, UTC deadlines and confirmed recovery retain the existing
+attendance and wallet logic. November's verified-recovery rain remains visible.
+
+Fresh baseline: `6b036cc41e40ebe1a1df7990`. Publication and audit verified
+**667 static paths**, **657 unchanged existing hashes**, all **54 complete
+backend/provider records**, **five schedules**, runtime settings and
+API-visible protected configuration. Exactly three existing presentation files
+changed and seven seasonal assets were added. No backend package was rebuilt.
+
+Validation: **130 code tests** and **24/24 candidate browser scenarios** at
+**320, 390 and 1280 pixels**, with every named check passing and zero browser,
+asset or unexpected-write errors. Candidate screenshots and direct interaction
+confirmed the corrected artwork crops. A separate canonical preview reveal
+showed the Christmas artwork, rendered thumbnails, sample progress 3/31 and
+streak 1 day; canonical Daily showed the signed-out grove and December
+countdown. No real login, payment or chain transaction was performed. The
+candidate browser suite uses synthetic wallets and attendance data.
+
+Source `46a28dad0dfb777ebc8f533bd45616164a9feb68` and merged main
+`e853dee8b654e32199ffbc52c3be06cba4ade456` share tree
+`33c208a94eddd9a7762dd2a3e8e7698a09bf77cc`, incorporating PRs #286 and #287.
+Publication control: `42c6ddad3d65105dd779190f3c424c7729851689`.
+Audit control: `f9c3244cbcf3f84c83886f3cc6e20ccb8c13eb4d`.
+
+Complete reports and provenance:
+`docs/arcade-seasonal-release-20261122.json`,
+`docs/arcade-seasonal-browser-20261122.json`,
+`docs/arcade-seasonal-canonical-20261122.json`, and
+`docs/arcade-seasonal-deployment-20261122.json`.
+Original bounded archives are retained at
+`docs/arcade-seasonal-records-20261122/{prepare,publish,audit}.zip`; the index
+records their verified SHA256 values and the excluded earlier attempts.
+
+Capture the complete current site before any later release and preserve its
+current inventory and configuration. This completed publisher pins its prior
+baseline and must not be reused blindly.
 # Desktop Slush slot connection repair — published
 
 Current locked production is `6b03741d72033c45517f32e3`, published November 22,

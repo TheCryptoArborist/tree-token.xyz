@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Replace the duplicate Up Next timers with one monthly launch countdown.",
+  "sourcePullRequests": [
+    289,
+    290,
+    291,
+    292
+  ],
+  "expectedBaseline": "6b03741d72033c45517f32e3",
+  "sourceCommit": "34b342f3f0b2c3c61d5984d05ea3a5d6bde1f979",
+  "sourceTree": "1351b345ece0299c4e7f05364c7aaeb8bf7aa986",
+  "changedPaths": [
+    "/scripts/arcade-next-month-unlocks.js",
+    "/styles/arcade-organization.css"
+  ],
+  "expectedStaticFiles": 667,
+  "expectedPreservedStaticFiles": 665,
+  "expectedBackendRecords": 54,
+  "expectedSchedules": 5,
+  "excludedAttempts": [
+    {
+      "sourceCommit": "5cfc530d193c5ab93865354a83415b2e25e4465a",
+      "sourceTree": "18ab4dc0da3db2296ec07b20022d30a8ce55cda7",
+      "runId": 45084815585,
+      "candidateId": "6b037e633ee02542a3b9acf5",
+      "reason": "Legacy badge requests cancelled during seasonal source replacement; no production publication."
+    },
+    {
+      "sourceCommit": "91a287a2f49f82b82090e1d939de0fab5308464a",
+      "sourceTree": "0d7efa735e08aeba9acf8c5a4b69e5184b475d0b",
+      "runId": 45085199570,
+      "candidateId": "6b037f71dfa9429f7592dcb4",
+      "reason": "Five of six scenarios passed. Fourth original rank image tree-spark.webp was cancelled by the same verified seasonal source-swap mechanism; production was not published."
+    },
+    {
+      "sourceCommit": "46b2bb5eafbfb739f6bf235af16874e5d7c95751",
+      "sourceTree": "b61fa51b4d42087eb0053a0dd0e5e596a3939920",
+      "runId": 45085522748,
+      "candidateId": "6b03803b5e2830bd6952fc91",
+      "reason": "Four of six scenarios passed. Desktop tests reported a cancelled retained logo request; code inspection identifies preserved renderQuest assigning the same fallback source. No publication."
+    }
+  ],
+  "guidance": {
+    "checkedLive": true,
+    "repository": "https://github.com/MystenLabs/skills",
+    "files": [
+      "README.md",
+      "frontend-apps/SKILL.md",
+      "frontend-apps/queries.md"
+    ],
+    "scope": "Presentation-only; pinned wallet/SDK integration preserved."
+  },
+  "mainCommit": "5f9b58a2fd39286b00897fea8b176a62d3a34699",
+  "publicationControl": "fe5cfadbbbed13a2c8799ac4ada424d0aca3031f",
+  "publishedDeploy": "6b03810de27178ba36227c42",
+  "publishedAt": "2026-11-22T23:58:49.627Z",
+  "publicationVerifiedAt": "2026-11-22T23:58:53.931Z",
+  "publicationRunId": 45086007525,
+  "publicationJobId": 137404746122,
+  "preparationRunId": 45085802059,
+  "preparationJobId": 137404124571,
+  "unitTests": {
+    "passed": 20,
+    "failed": 0
+  },
+  "browser": {
+    "passed": 6,
+    "expected": 6,
+    "widths": [
+      320,
+      390,
+      1280
+    ],
+    "report": "docs/arcade-countdown-browser-20261122.json",
+    "reportSHA256": "eff8439833f5c23eda2fc58a9a31fc76bfa14c03dbb7a9cd9541fff6fe860e8d",
+    "unresolvedErrors": 0
+  },
+  "scope": {
+    "changedOriginals": [
+      "/scripts/arcade-next-month-unlocks.js",
+      "/styles/arcade-organization.css"
+    ],
+    "addedPaths": [],
+    "staticFiles": 667,
+    "preservedStaticFiles": 665,
+    "completeBackendRecords": 54,
+    "schedules": 5
+  },
+  "manifest": "docs/arcade-countdown-release-20261122.json",
+  "archives": [
+    {
+      "path": "docs/arcade-countdown-records-20261122/prepare.zip",
+      "artifactId": 14778868678,
+      "runId": 45085802059,
+      "sha256": "5f8749e223bea1f3452cbc4fdde7690383536d3de6769231ab1788e55d46d964"
+    },
+    {
+      "path": "docs/arcade-countdown-records-20261122/publish.zip",
+      "artifactId": 14779281721,
+      "runId": 45086007525,
+      "sha256": "2c31eb3ec120f2529aad5f19d02c1457484147784ad86da32172b1db62ecc926"
+    }
+  ],
+  "canonicalUI": {
+    "url": "https://tree-token.xyz/play/#daily",
+    "browserTabId": "26",
+    "state": "signed out",
+    "heading": "December 2026",
+    "timerLabel": "December launches in",
+    "observedCountdown": "8d 00h 00m 41s",
+    "description": "Tree Hero’s Advent Grove and Christmas Guardians badges.",
+    "footer": "Starts December 1, 2026 · 00:00 UTC. Badge eligibility is verified by the Arcade.",
+    "singleVisibleCountdown": true,
+    "markedDeliverable": true,
+    "noWalletOrPaymentActions": true
+  },
+  "audit": "The publication phase verified current canonical bytes, complete static inventory, backend/provider/runtime records, schedules and protected configuration twice after the new candidate was published. A separate audit run was unnecessary; no ambiguous publication result occurred."
+}
