@@ -1,3 +1,21 @@
+# Sui configuration receipt complete — November 22, 2026
+
+Step 1 of the approved six-step configuration/binding sequence is complete.
+Independent verification confirms digest
+`6sbCjzYbNLWYBY8QuZjLyKeGnGZjtLUWktmrZZb1fRU8`, exact explicit security
+settings and receiver metadata. Net gas was **0.014951541 SUI**, below the
+**0.1-SUI** step ceiling. Do not repeat this transaction.
+
+Evidence: `docs/multichain/generation-milestone/configuration-completed/README.md`.
+This documentation/receipt update changes no website or additional chain state.
+The four BNB calls (0.0001 BNB combined) and final Sui binding (0.1 SUI maximum)
+remain approved, subject to fresh state/fees and prior receipt verification.
+Custody remains empty/unbound; purchases and gameplay stay disabled. Earlier
+pending-signature notes below describe the historical handoff. Recapture the
+current full live inventory before any new site release.
+
+---
+
 # Sui configuration handoff — published November 22, 2026
 
 Locked deployment `6b03c120638a62e773a0de91` was published at **22:31:35

@@ -67,7 +67,8 @@ run 45112074417 passed. Canonical JavaScript matches source; fresh canonical
 simulation passed at 0.014951541 SUI. Actual Slush signing remains pending.
 Complete release evidence is retained in the GitHub Actions artifacts referenced
 in publication.json.
-The user then signs step 1 and returns its verified receipt. Persist that actual
-receipt before advancing. The remaining five transactions are already approved,
+The user has now signed step 1, and the receipt was independently verified and
+saved: see [configuration completed](../configuration-completed/README.md).
+Do not repeat the Sui configuration. The remaining five transactions are already approved,
 but depend on verified prior state and fresh fee quotes. NFT deposits, public
 sales and gameplay activation are not approved by this configuration milestone.
