@@ -1,3 +1,36 @@
+# Tree Army bent-elbow carry — published November 23, 2026
+
+[Prototype 0.13](https://tree-token.xyz/play/tree-army/test/) corrects the rigid
+raised gun arm. Upper arm and forearm now rotate independently at the elbow:
+carry keeps the upper arm beside the torso and the gun lower; aiming blends
+both joints. The muzzle follows the same transforms. Combat rules, opening
+schedule/count, assets and other characters are unchanged.
+
+Deployment `6b04bdf56959e6a5452c7622` was published at **16:29:15 America/Chicago**
+(`2026-11-23T22:29:15.614Z`) and verified ready and locked by
+[run 45278903790](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45278903790).
+Source: `9881c476412b539250dbd2a7f8648c2d43d5d92d`, PR #304.
+Fresh baseline: `6b048faddcf2eb2d8c595f60`.
+
+Only playtest HTML changed. All **688 unrelated static paths**, **60 complete
+backend/provider records**, **five schedules**, runtime and protected
+configuration were preserved; total inventory **689 paths**.
+
+Gameplay/muzzle and release-preservation checks passed. Candidate and canonical
+game/cabinet checks passed at four viewports. Phone-size carry/aim renders,
+both-direction walking recording and the canonical phone screenshot were inspected.
+Opening simulations still clear in 47.04–49.44 seconds. Existing leg-gait feedback
+remains a separate unresolved visual issue.
+
+Records: `production/tree-army-carry-{release,backend,browser,cabinet}-20261123.json`,
+`docs/tree-army-carry-{phone,live-phone}-20261123.png`,
+`docs/tree-army-carry-mobile-20261123.webm` and the development task list.
+Original release artifact #14867469950 SHA256:
+`b001c4246ec907fb7a31d9f5ea98d0d339b782f7c33977bc59c351a08f5ff310`.
+Capture a fresh complete live baseline before subsequent publication.
+
+---
+
 # Tree Army timed combat and articulated weapons — published November 23, 2026
 
 [Prototype 0.12](https://tree-token.xyz/play/tree-army/test/) implements stop-to-attack,
