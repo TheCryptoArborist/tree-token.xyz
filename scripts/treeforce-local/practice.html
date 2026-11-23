@@ -51,8 +51,10 @@
     if (!new URLSearchParams(location.search).has("lab"))
       location.replace("/__local/practice?lab=1");
     else {
+      const params = new URLSearchParams(location.search);
+      const revision = params.get("revision") === "r6" ? "r6" : "r5";
       const { createCanopyGame } = await import(
-        "/play/treeforce89/assets/arcade-review-r5.js"
+        `/play/treeforce89/assets/arcade-review-${revision}.js`
       );
       let game;
       const start = (initialScene = "game") => {
@@ -68,7 +70,7 @@
           },
         });
       };
-      start();
+      start(params.get("scene") === "title" ? "title" : "game");
     }
   </script>
 </html>

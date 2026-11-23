@@ -232,7 +232,7 @@ if (!/^http:\/\/127\.0\.0\.1:\d+$/.test(origin))
   // Import the real lazy dependency while an authenticated run is mounted.
   const graph = origin.includes("4173")
     ? "graphql-mobile-r1.js"
-    : "graphql-review-r5.js";
+    : `graphql-review-${process.env.TREEFORCE_REVISION || "r5"}.js`;
   await page.evaluate(async (name) => {
     await import("/play/treeforce89/assets/" + name);
   }, graph);
