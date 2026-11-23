@@ -1,3 +1,24 @@
+# Redemption return-message review prepared — November 23, 2026
+
+A local mainnet-fork review passed the first new-adapter `send(2)` with exact
+locked request, original NFT, dev recipient 45c4, first GUID/nonce and security
+settings. The current native fee is **0.004577084124304116 BNB**; including padded
+gas, the quoted maximum is **0.004600695624304116 BNB**. Proposed authorization
+is one send, **0.006 BNB total** (0.0059 message + 0.0001 gas caps). Explicit
+approval for this new native fee remains pending. No live send occurred.
+
+The pass remains Locked/nonplayable and NFTree #2720 remains in Sui custody.
+Source-send simulation is not proof of Sui release. Verify actual delivery and
+ownership before separately reviewing acknowledgement/completion. No further
+USDT payment, gameplay or security change is included. Evidence, exact calldata,
+fee allocation, focused tests and remaining tasks:
+`docs/multichain/generation-milestone/return-review/`.
+
+This review changes no live website. Recapture and preserve the complete current
+production inventory before any later canonical signing handoff.
+
+---
+
 # Private purchase and redemption lock complete — November 23, 2026
 
 All five approved user-signed transactions independently verify. Exactly **25 USDT**
