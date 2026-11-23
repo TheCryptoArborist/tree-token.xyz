@@ -4,7 +4,7 @@ The November 23 audit and the user's subsequent direction establish Army of
 Darkness: Defense's core mechanics as the reference. Tree Army keeps its forest
 characters and setting. The earlier free-roaming courtyard direction is superseded.
 
-1. **Battlefield and controls — implemented in Prototype 0.9; release checks pending.**
+1. **Battlefield and controls — published in Prototype 0.9; release checks passed.**
    One horizontal battle lane for the hero, allies, and enemies; labeled Left/Right
    hold controls; A/D and left/right arrows; release to stop. Summoning and specials
    stay visible on mobile. The tutorial explains automatic ranged attacks and
@@ -50,3 +50,13 @@ published 0.8 SHA1 `9533798a3c190a919ad9b95146ba96331b5ca401`. No new assets,
 backend packages or dependencies. Preserve the freshly captured complete live
 inventory, 59 backend/provider records, five schedules and protected configuration.
 Latest MystenLabs/skills README checked; no Sui API change applies to this step.
+
+## Task 1 published result
+
+Published November 23, 2026 at 09:26:16 America/Chicago. Source PR #296,
+commit `8311f08cf61771503d6dc19464fc0fa4a36164bc`, deployment
+`6b045ada195938dd6638275a`, workflow run `45204472155`.
+Candidate and canonical game/cabinet browser checks all passed. The live phone
+screenshot was inspected. The release preserved 681 unrelated static paths,
+59 complete backend/provider records, five schedules and protected configuration.
+Task 2 is next; task 3 still includes the unaccepted hero walking animation.
