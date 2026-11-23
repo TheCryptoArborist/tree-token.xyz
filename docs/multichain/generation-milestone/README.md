@@ -1,3 +1,28 @@
+# Completed BNB deployment — November 22, 2026 (America/Chicago)
+
+The user completed all three approved MetaMask/Ledger transactions. Independent
+BNB verification at block **135197952** confirms exact transaction bytes and
+nonces, both contract runtimes and immutable settings, the selected admin and
+unchanged treasury, reciprocal adapter/pass binding and Endpoint delegate.
+Total fees: **0.0001740542 BNB**, below the **0.001 BNB** approved ceiling.
+
+- Adapter: `0x74c20dEB476Dca58459956b1AcD65771197900C9`
+- Pass: `0x418cC337FC19D8cf3b41a9C6E3138a60E34Eb9b5`
+- Purchases paused; state Unconfirmed; generation 0; canPlay false.
+- A fresh Sui receipt read confirms the custody slot remains empty and unbound.
+
+Complete evidence and reproducible read-only verification:
+[`bnb-deployed/README.md`](./bnb-deployed/README.md). This supersedes earlier
+pending-deployment and pending-wallet-retry notes. Do not redeploy either contract
+or repeat binding. No website deployment was required to record these receipts.
+
+Next reviewed milestone: review and prepare the LayerZero message-path security
+configuration and Sui peer binding using these actual addresses. No such write,
+NFT deposit, sale or gameplay activation is authorized by this receipt update.
+Refresh the original NFT's identity and ownership before any later deposit.
+
+---
+
 # Generation custody milestone
 
 Cloud worktree: `/workspace/tree-bnb-generation`, branch

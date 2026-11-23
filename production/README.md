@@ -1,3 +1,21 @@
+# BNB deployment receipts complete — November 22, 2026
+
+The user completed adapter deployment, pass deployment and binding through
+MetaMask/Ledger. Independent verification confirms the reviewed runtime, immutable
+settings, reciprocal binding and admin/delegate. Total gas fees were
+**0.0001740542 BNB** against the **0.001 BNB** ceiling. Purchases remain paused,
+state Unconfirmed, generation zero and gameplay disabled. Sui custody is still
+empty and unbound. Do not repeat deployment or binding.
+
+Evidence: `docs/multichain/generation-milestone/bnb-deployed/README.md`.
+This receipt/documentation update does not change the site or deploy any assets.
+The website preservation baseline is recorded in the publication section below;
+re-capture the live inventory before any future release. Cross-chain security
+configuration, Sui peer binding, deposits, sales and gameplay remain subsequent
+reviewed milestones. Earlier pending-signature/RPC-retry notes are historical.
+
+---
+
 # BNB handoff RPC repair — published November 22, 2026
 
 Locked deployment `6b03af26a54fc9961a7944cc` was published at **21:14:43

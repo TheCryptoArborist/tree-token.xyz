@@ -1,0 +1,35 @@
+{
+  "verifiedAt": "2026-11-23T03:20:02.229Z",
+  "chainId": 56,
+  "blockNumber": 135197952,
+  "blockHash": "0x27866db8091b6ebdffea0acffe13f79e49424d0475be2bcc7fd1ec70be3cfc61",
+  "adapterAddress": "0x74c20dEB476Dca58459956b1AcD65771197900C9",
+  "passAddress": "0x418cC337FC19D8cf3b41a9C6E3138a60E34Eb9b5",
+  "admin": "0xF2Ab1eEBbEcb4E315FE95D8b532D1aB00F1A8789",
+  "treasury": "0xC440F06BBC7e58b0d055815f915447e4ae0E3720",
+  "suiPeer": "0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92",
+  "route": "0xf5dff8e2cc96824f89735fa16c068ee8194fbb7e8d697aeebe5d135f8a5916eb",
+  "transactionHashes": [
+    "0x016aa9570de26f1d25d3db2137fa1ef7dbac8e3a2efa1cab45c2e872deafee98",
+    "0x9dd9e68b4c1d226e79f788d009a42cf47d4c7662ddc58b16670b4583226192b3",
+    "0x6304ed426f3653eb73f6eade845c5ef1e8b2e34be5270e1ac7b3b8a4431e8ebe"
+  ],
+  "totalGasFeeWei": "174054200000000",
+  "totalGasFeeBNB": 0.0001740542,
+  "approvedTotalCapBNB": 0.001,
+  "confirmations": [
+    2310,
+    309,
+    143
+  ],
+  "exactTransactionsAndRuntimeVerified": true,
+  "reciprocalBindingVerified": true,
+  "endpointDelegateVerified": true,
+  "purchasesPaused": true,
+  "state": "Unconfirmed",
+  "generation": 0,
+  "canPlay": false,
+  "suiVaultEmpty": true,
+  "suiVaultBound": false,
+  "submittedByVerifier": false
+}
