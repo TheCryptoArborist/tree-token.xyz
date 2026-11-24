@@ -1,0 +1,21 @@
+{
+  "localOnly": true,
+  "checks": [
+    "existing identity function definitions and grants unchanged",
+    "durable insert and duplicate denial",
+    "wrong generation and null action rejected",
+    "12 independent workers: exactly one consumption",
+    "consumption persists across connections",
+    "database-clock expiry",
+    "five-per-minute durable session rate limit",
+    "public RPC and table permissions denied",
+    "revocation commit wins while consumption waits on session lock",
+    "revoked session cannot issue",
+    "RLS enabled and security invoker",
+    "HTTP plus real session/store: concurrent consume one 200 and one 403, no game grant",
+    "HTTP backing loss denies existing durable ticket",
+    "HTTP real database revocation denies issue and consume",
+    "HTTP refuses client identity override"
+  ],
+  "passed": 15
+}

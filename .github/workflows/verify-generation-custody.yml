@@ -26,6 +26,9 @@ on:
       - 'scripts/build-feature-preview.mjs'
       - 'scripts/multichain/bnb-run-authorization.mjs'
       - 'scripts/multichain/bnb-run-http.mjs'
+      - 'netlify/bnb-run-review-functions/**'
+      - 'scripts/package-bnb-run-review.mjs'
+      - 'tests/multichain-bnb-run-runtime.test.mjs'
       - 'scripts/multichain/check-bnb-run-postgres.mjs'
       - 'supabase/migrations/*arcade_bnb_run_review.sql'
       - 'tests/multichain-bnb-run-http.test.mjs'
@@ -60,6 +63,9 @@ on:
       - 'scripts/build-feature-preview.mjs'
       - 'scripts/multichain/bnb-run-authorization.mjs'
       - 'scripts/multichain/bnb-run-http.mjs'
+      - 'netlify/bnb-run-review-functions/**'
+      - 'scripts/package-bnb-run-review.mjs'
+      - 'tests/multichain-bnb-run-runtime.test.mjs'
       - 'scripts/multichain/check-bnb-run-postgres.mjs'
       - 'supabase/migrations/*arcade_bnb_run_review.sql'
       - 'tests/multichain-bnb-run-http.test.mjs'
@@ -134,3 +140,13 @@ jobs:
 
       - name: Disposable PostgreSQL ticket concurrency and revocation checks
         run: BNB_PG_BIN="$(pg_config --bindir)" node scripts/multichain/check-bnb-run-postgres.mjs
+
+      - name: Test and package disabled isolated review endpoint
+        run: |
+          node --test tests/multichain-bnb-run-runtime.test.mjs
+          node scripts/package-bnb-run-review.mjs --outdir /tmp/bnb-run-review-package
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bnb-run-review-candidate
+          path: /tmp/bnb-run-review-package/
+          retention-days: 30
