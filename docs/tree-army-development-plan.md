@@ -215,3 +215,12 @@ recording uses controlled high-health targets to inspect punch/cut animations.
 Original art: `hero-melee.webp`. See `tree-army-melee-mobile-20261123.webm` and
 the release screenshots. Hero leg-gait acceptance remains separate. Latest
 MystenLabs skills README checked; no SDK changes or third-party game code copied.
+
+### Right-fist correction before release
+
+The user identified the initial metal-fist artwork as a left fist on the hero's
+right arm. Release run `45326131972` was cancelled during verification, before
+candidate creation or publication; live remained Prototype 0.13. Regenerated the
+fist as the outside/back view of the right hand, preserving arm/wrist alignment
+and the chainsaw mounting. Refreshed the diagnostic recording and contact images.
+Combat rules, purchase behavior and the 0.14 delivery allowlist are unchanged.

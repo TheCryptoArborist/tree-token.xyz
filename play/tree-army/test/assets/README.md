@@ -45,3 +45,8 @@ Both use a shared shoulder scale. The chainsaw has a separate lift/cut/recovery
 arc, with chain markers that freeze when paused and are omitted for reduced
 motion. The metal fist uses the existing punch timing. The gun rig and troop
 assets remain unchanged.
+
+Before publication, the metal fist was corrected to the dorsal/outside view of
+the hero's right hand: back-of-hand plating and knuckles face the viewer, with
+the thumb on the inner/far side. The chainsaw replaces that same wrist. The
+first preview's palm-side fist artwork was not published.
