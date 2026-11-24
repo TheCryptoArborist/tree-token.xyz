@@ -75,3 +75,5 @@ and end-to-end tests. Keep authentication distinct from backing assessment and
 retain explicit private activation gates. Paid USDT actions, in-flight score
 policy, a new deposit/purchase for live positive acceptance, public sales and
 tournaments remain separate reviews. The current burned pass cannot play.
+
+Hosted [CI 45335438369](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45335438369) passed on source `da76407`: 52 Move tests and release build, 16 EVM contract tests, 398 unsigned guards and 139 BNB guard/reader tests; zero failures. See `validation.json`.
