@@ -334,3 +334,6 @@ cooldowns change. Existing combat, muzzle, progression and enemy-spacing tests
 pass. Opening simulations clear in 49.04–49.72 seconds. Diagnostic phone renders
 cover idle, both facings, walking and aiming, with fist and chainsaw checks.
 Release scope is the playtest HTML only; no new assets or backend rebuild.
+
+Published in deployment `6b053a10d32f94ea6fc35ef1`, source PR #316, release run
+`45345427663`. Candidate and canonical checks passed.
