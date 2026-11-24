@@ -311,3 +311,7 @@ mobile and desktop poses are reviewed. Visual acceptance remains pending the
 user's next playtest, not inferred from passing logic tests.
 
 Publication replaces playtest HTML and adds only `hero-walk-legs.webp`.
+
+Published in deployment `6b053183229603fcba59509e`, source PR #314, release run
+`45339983272`. Candidate and canonical checks passed; natural-motion
+acceptance remains pending the user's playtest.
