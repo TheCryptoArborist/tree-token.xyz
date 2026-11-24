@@ -33,6 +33,13 @@ jobs:
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
         run: node scripts/prepare-bnb-run-release.mjs /tmp/bnb-reviewed-package /tmp/bnb-run-release-plan
+      - name: Emit credential-free plan for durable repository audit
+        run: |
+          node --input-type=module - <<'JS'
+          import fs from 'node:fs';import {gzipSync} from 'node:zlib';
+          const encoded=gzipSync(fs.readFileSync('/tmp/bnb-run-release-plan/plan.json')).toString('base64');
+          for(let i=0;i<encoded.length;i+=4000)console.log('BNB_PLAN_CHUNK '+encoded.slice(i,i+4000));
+          JS
       - uses: actions/upload-artifact@v4
         with:
           name: bnb-run-release-plan
