@@ -1,0 +1,41 @@
+name: Prepare disabled BNB run-review release plan
+on:
+  push:
+    branches: ['feat/bnb-generation-custody']
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: tree-production-preservation-release
+  cancel-in-progress: false
+jobs:
+  plan:
+    if: contains(github.event.head_commit.message, '[prepare bnb run review]')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci --ignore-scripts
+      - run: npm ci --ignore-scripts --prefix contracts/bnb-generation
+      - run: node --test tests/bnb-run-release-plan.test.mjs tests/multichain-bnb-run-runtime.test.mjs tests/multichain-bnb-run-http.test.mjs tests/multichain-bnb-run-authorization.test.mjs
+      - uses: actions/download-artifact@v4
+        with:
+          name: bnb-run-review-candidate
+          path: /tmp/bnb-reviewed-package
+          run-id: 45340749351
+          github-token: ${{ github.token }}
+      - name: Capture current production and prepare GET-only plan
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: node scripts/prepare-bnb-run-release.mjs /tmp/bnb-reviewed-package /tmp/bnb-run-release-plan
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bnb-run-release-plan
+          path: /tmp/bnb-run-release-plan
+          if-no-files-found: error
+          retention-days: 30
