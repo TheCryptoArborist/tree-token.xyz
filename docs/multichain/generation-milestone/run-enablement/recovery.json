@@ -1,0 +1,14 @@
+{
+  "checkedAt": "2026-11-24T19:24:15.752Z",
+  "baselineId": "6b053b8285e0ee251b84ad06",
+  "baselineHash": "f302111ce87333bfefd9fd275f88cb70732aca30b09a73639e4d18678a4609e7",
+  "candidateId": "6b05e3d127c690a986593ce7",
+  "candidateState": "error",
+  "cancellation": "requested",
+  "requiredFunctions": 61,
+  "environmentRestored": true,
+  "productionUnchanged": true,
+  "endpointStatus": 503,
+  "gameplayAuthorized": false,
+  "ci": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45469679175"
+}

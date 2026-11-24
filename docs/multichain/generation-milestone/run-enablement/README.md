@@ -1,4 +1,21 @@
-# Generation 1 review enablement preparation
+# Generation 1 review enablement — publication blocked
+
+The November 24 attempt stopped before publication. Netlify requested all 61
+function ZIPs after the production environment change, so package reuse alone
+cannot apply this configuration. The guard rejected the request; no function was
+rebuilt or uploaded. Both newly added flags were removed. The existing locked
+live deployment remains `6b053b8285e0ee251b84ad06`, with review disabled.
+
+`blocked.json` records the attempt and exact missing archive identities. There
+are 38 exact matching ZIPs locally; recover the remaining 23 from their original
+CI release artifacts and verify their SHA-256 values before attempting this
+milestone again. Do not rebuild unrelated handlers to bypass this requirement.
+Do not rerun the publisher against the incomplete candidate. Refresh the live
+plan and verify all package bytes before any further environment mutation.
+
+All 43 focused tests passed; hosted read-only preparation succeeded. Fresh
+mainnet checks observed BNB state 4 (Retired), no owner, `canPlay: false`, and Sui
+phase 3, generation 1. No authenticated live-wallet acceptance is claimed.
 
 This is the next operational milestone after the database/runtime binding check.
 The completed generation 1 remains retired and cannot issue an eligible review
@@ -38,3 +55,6 @@ prepare a fresh preservation release rather than restoring an old deployment.
 The user owns the routine daily expired-ticket check once issuance is enabled;
 Codex assists on request. Keep records seven days after expiration. No automatic
 job or reminder is installed; review counts before any bounded deletion.
+
+Recovery CI 45469679175 verified the original protected baseline exactly and
+cancelled the incomplete candidate (terminal `error`). See `recovery.json`.

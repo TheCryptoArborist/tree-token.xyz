@@ -1,3 +1,25 @@
+# BNB review enablement — blocked safely November 24, 2026
+
+The generation-1 enablement attempt did not publish. Netlify required all 61
+function ZIPs after the two production/function flags changed; the preservation
+guard stopped before any upload or publication. Both new flags were removed.
+Candidate `6b05e3d127c690a986593ce7` was cancelled and is in `error` state.
+[Recovery check 45469679175](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45469679175)
+verified the entire protected baseline matches its starting snapshot, including
+all 691 static paths, 61 functions, five schedules and environment fingerprints.
+Current locked production remains `6b053b8285e0ee251b84ad06`; review returns 503
+`review-disabled`. Gameplay and payments were not activated.
+
+Forty-three focused tests passed. Fresh chain reads confirmed generation 1 is
+Retired on BNB and phase 3 on Sui. Before retrying, recover the 23 missing exact
+function ZIPs from their original release artifacts; 38 match local archives.
+Verify every SHA-256, refresh the complete current baseline, and only then
+prepare a new preservation candidate. Do not rebuild unrelated handlers or
+retry the cancelled candidate. Evidence, hashes and remaining tasks:
+`docs/multichain/generation-milestone/run-enablement/`.
+
+---
+
 # BNB run-review database foundation — applied November 24, 2026
 
 The single reviewed Supabase migration is recorded as
