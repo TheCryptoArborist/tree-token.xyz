@@ -75,7 +75,7 @@ try{
  const expired=await fixture({issuedAt:Date.now()-100,expiresAt:Date.now()+1000});await store.insertChallenge(expired);await owner.query('select pg_sleep(1.1)');assert.equal(await store.open(expired),false);checks.push('database-clock quote expiry');
  await assert.rejects(pool.query('delete from private.arcade_bnb_continue_receipts'));
  await assert.rejects(pool.query('update private.arcade_bnb_continue_checkouts set terms=terms'));
- await assert.rejects(pool.query('delete from private.arcade_bnb_continue_checkouts')); 
+ await assert.rejects(pool.query('delete from private.arcade_bnb_continue_checkouts'));
  await assert.rejects(pool.query("update private.arcade_bnb_continue_receipts set tx_hash=tx_hash"));
  const role=await owner.connect();try {await role.query('set role anon');await assert.rejects(role.query('select * from private.arcade_bnb_continue_checkouts'));}finally{await role.query('reset role');role.release();}
  assert.equal((await owner.query("select count(*)::int as n from pg_class where relname like 'arcade_bnb_continue_%' and relkind='r' and relrowsecurity")).rows[0].n,3);checks.push('private RLS tables; public access and runtime receipt edits/deletes denied');
