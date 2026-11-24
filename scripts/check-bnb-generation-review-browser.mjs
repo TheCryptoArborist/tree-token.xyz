@@ -3,7 +3,7 @@ import fs from 'node:fs';import path from 'node:path';import assert from 'node:a
 const {chromium}=await import(pathToFileURL(path.resolve(process.argv[2])).href);
 const out=process.argv[3]||'/tmp/bnb-generation-review-evidence';fs.mkdirSync(out,{recursive:true});
 const A='0x'+'a1'.repeat(20),B='0x'+'b2'.repeat(20),SCOPE='eip155:56:treeforce89-test:v1',PATH='/play/generation-review/',ORIGIN='https://tree-token.xyz';
-const browser=await chromium.launch({headless:true,...(process.env.CHROMIUM_PATH?{executablePath:process.env.CHROMIUM_PATH}:{}),args:['--no-sandbox']});
+const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||chromium.executablePath(),args:['--no-sandbox']});
 const results=[];
 async function open(width,variant='deny',origin=ORIGIN){
  const context=await browser.newContext({viewport:{width,height:1000}});
