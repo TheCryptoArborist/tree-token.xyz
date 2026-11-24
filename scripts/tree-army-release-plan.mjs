@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
-// Prototype 0.16: enemy attack spacing; existing artwork stays byte-exact.
+// Prototype 0.17: illustrated whole-leg walk poses and corrected proportions.
 export const REPLACED_HASHES = {
-  '/play/tree-army/test/index.html': 'c3ea2d6fa7980b6c3b06b7890cb7c2ae6cffe840',
+  '/play/tree-army/test/index.html': '6e4e1da7f5e0b09b114122bae172711847af249a',
 };
-export const ADDED_PATHS = [];
+export const ADDED_PATHS = ['/play/tree-army/test/assets/hero-walk-legs.webp'];
 export const DELIVERY_PATHS = [...Object.keys(REPLACED_HASHES), ...ADDED_PATHS];
 // Preview builds also need assets already present in production. Keep this
 // catalog independent of the smaller, one-time publication allowlist.
@@ -16,6 +16,7 @@ export const PREVIEW_PATHS = [
   '/play/tree-army/test/assets/tree-hero-rig.webp',
   '/play/tree-army/test/assets/combat-parts.webp',
   '/play/tree-army/test/assets/hero-melee.webp',
+  '/play/tree-army/test/assets/hero-walk-legs.webp',
   '/play/tree-army/preview-gameplay.mp4',
   '/play/tree-army/preview-gameplay.webm',
   '/play/tree-army/preview-gameplay.jpg',

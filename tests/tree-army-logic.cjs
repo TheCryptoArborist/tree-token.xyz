@@ -1,6 +1,6 @@
 const fs=require('fs'),vm=require('vm'),assert=require('assert/strict');const html=fs.readFileSync(require('path').join(__dirname,'../play/tree-army/test/index.html'),'utf8');let script=html.match(/<script>([\s\S]*)<\/script>/)[1];
 const drawCalls=[],noop=()=>{},elements=new Map();const element=id=>{if(!elements.has(id))elements.set(id,{textContent:'',hidden:false,disabled:false,dataset:{},style:{setProperty:noop},getBoundingClientRect:()=>({x:60,y:60,width:80,height:80}),listeners:{},addEventListener(name,fn){(this.listeners[name]??=[]).push(fn)},setAttribute:noop,setPointerCapture:noop,replaceChildren:noop,append:noop,querySelector:()=>element(id+'-small'),getContext:()=>new Proxy({drawImage:(...args)=>drawCalls.push(args),createLinearGradient:()=>({addColorStop:noop}),createRadialGradient:()=>({addColorStop:noop})},{get:(o,k)=>o[k]||noop}),width:1100,height:470});return elements.get(id)};
-const handlers={};const context={console,Math,Set,document:{getElementById:element,querySelectorAll:()=>[],createElement:()=>element(Math.random()),addEventListener:noop},innerWidth:1100,addEventListener:(name,fn)=>{handlers[name]=fn},requestAnimationFrame:noop};context.window=context;script=script.replace('requestAnimationFrame(frame);\n})();',`requestAnimationFrame(frame);window.test={enemyState:()=>enemies[0],enemiesState:()=>enemies,heroWeaponPose,fireHero:(dx,blast=false)=>fire(hero,{x:hero.x+dx,y:hero.y},480,29,blast),shot:()=>shots[shots.length-1],heroState:()=>({...hero}),placeEnemy:x=>{spawn();enemies[0].x=x;enemies[0].y=hero.y;},shotX:()=>shots[0]?.x,heroFoot,heroKnee,articulatedHero,walkFrame,reset,update,draw,sync,summon,upgrade,pause,cannon,shield,startWave,get:()=>({mode,wave,sap,seeds,heroLevel,allies:allies.length,enemies:enemies.length,spawned,planned,grove,heroHp:hero.hp,heroX:hero.x,heroY:hero.y,firstEnemyX:enemies[0]?.x,heroWalk:hero.walk,heroGait:hero.gait,allOnLane:[hero,...allies,...enemies].every(a=>a.y===GROUND),enemyHp:enemies[0]?.hp,enemyY:enemies[0]?.y,heroMoving:hero.moving,allyX:allies[0]?.x,allyWalk:allies[0]?.walk}),set:v=>{if(v.heroX!==undefined)hero.x=v.heroX;if(v.wave)wave=v.wave;if(v.seeds!==undefined)seeds=v.seeds;if(v.grove!==undefined)grove=v.grove;if(v.hp!==undefined)hero.hp=v.hp;if(v.heroY!==undefined)hero.y=v.heroY;if(v.enemyY!==undefined)enemies[0].y=v.enemyY;if(v.heroCd!==undefined)hero.cd=v.heroCd;if(v.enemySpeed!==undefined)enemies[0].speed=v.enemySpeed;if(v.enemyBoss!==undefined){enemies[0].boss=v.enemyBoss;enemies[0].reach=v.enemyBoss?150:88;}if(v.enemyTank!==undefined)enemies[0].tank=v.enemyTank;if(v.enemyHp!==undefined)enemies[0].hp=v.enemyHp;},clear:()=>{spawned=planned;enemies=[];update(.01);},killAll:()=>{for(const e of enemies)hurt(e,99999);},move:v=>held.add(v)};})();`);script=script.replace('loadArt();\nfunction frame', 'art.ready=true;art.images={background:{},army:{},hero:{},walk:{},heroRig:{}};\nfunction frame');vm.runInNewContext(script,context);const t=context.test;
+const handlers={};const context={console,Math,Set,document:{getElementById:element,querySelectorAll:()=>[],createElement:()=>element(Math.random()),addEventListener:noop},innerWidth:1100,addEventListener:(name,fn)=>{handlers[name]=fn},requestAnimationFrame:noop};context.window=context;script=script.replace('requestAnimationFrame(frame);\n})();',`requestAnimationFrame(frame);window.test={reduced:value=>art.reduced=value,enemyState:()=>enemies[0],enemiesState:()=>enemies,heroWeaponPose,fireHero:(dx,blast=false)=>fire(hero,{x:hero.x+dx,y:hero.y},480,29,blast),shot:()=>shots[shots.length-1],heroState:()=>({...hero}),placeEnemy:x=>{spawn();enemies[0].x=x;enemies[0].y=hero.y;},shotX:()=>shots[0]?.x,heroLegFrame,articulatedHero,walkFrame,reset,update,draw,sync,summon,upgrade,pause,cannon,shield,startWave,get:()=>({mode,wave,sap,seeds,heroLevel,allies:allies.length,enemies:enemies.length,spawned,planned,grove,heroHp:hero.hp,heroX:hero.x,heroY:hero.y,firstEnemyX:enemies[0]?.x,heroWalk:hero.walk,heroGait:hero.gait,allOnLane:[hero,...allies,...enemies].every(a=>a.y===GROUND),enemyHp:enemies[0]?.hp,enemyY:enemies[0]?.y,heroMoving:hero.moving,allyX:allies[0]?.x,allyWalk:allies[0]?.walk}),set:v=>{if(v.heroX!==undefined)hero.x=v.heroX;if(v.wave)wave=v.wave;if(v.seeds!==undefined)seeds=v.seeds;if(v.grove!==undefined)grove=v.grove;if(v.hp!==undefined)hero.hp=v.hp;if(v.heroY!==undefined)hero.y=v.heroY;if(v.enemyY!==undefined)enemies[0].y=v.enemyY;if(v.heroCd!==undefined)hero.cd=v.heroCd;if(v.enemySpeed!==undefined)enemies[0].speed=v.enemySpeed;if(v.enemyBoss!==undefined){enemies[0].boss=v.enemyBoss;enemies[0].reach=v.enemyBoss?150:88;}if(v.enemyTank!==undefined)enemies[0].tank=v.enemyTank;if(v.enemyHp!==undefined)enemies[0].hp=v.enemyHp;},clear:()=>{spawned=planned;enemies=[];update(.01);},killAll:()=>{for(const e of enemies)hurt(e,99999);},move:v=>held.add(v)};})();`);script=script.replace('loadArt();\nfunction frame', 'art.ready=true;art.images={background:{},army:{},hero:{},walk:{},heroRig:{}};\nfunction frame');vm.runInNewContext(script,context);const t=context.test;
 element('next').onclick();assert.equal(t.get().mode,'briefing');assert.equal(element('heading').textContent,'Protect the Tree of Life');element('next').onclick();assert.equal(element('heading').textContent,'Lead from the front');element('next').onclick();assert.equal(element('heading').textContent,'Grow your army');element('next').onclick();assert.equal(t.get().mode,'battle');t.sync();assert.match(element('field-note').textContent,/Hold/);const beforeX=t.get().heroX;handlers.keydown({key:'ArrowRight',target:{closest:()=>null},preventDefault:noop,repeat:false});t.update(.04);handlers.keyup({key:'ArrowRight'});assert(t.get().heroX>beforeX);t.sync();assert.match(element('field-note').textContent,/Summon/);t.reset();handlers.keydown({key:'D',target:{closest:()=>null},preventDefault:noop,repeat:false});t.update(.04);handlers.keyup({key:'D'});const releasedX=t.get().heroX;t.update(.04);assert.equal(t.get().heroX,releasedX,'Uppercase D must stop on release');t.reset();for(let i=0;i<52;i++)t.update(.04);assert(t.get().enemies>0);assert(t.get().firstEnemyX<1180);t.reset();t.summon('oak');assert.equal(t.get().allies,1);assert.equal(t.get().sap,25);t.summon('oak');assert.equal(t.get().allies,1);t.pause();assert.equal(t.get().mode,'paused');t.update(1);assert.equal(t.get().sap,25);t.pause();assert.equal(t.get().mode,'battle');t.clear();assert.equal(t.get().mode,'camp');t.set({seeds:100});t.upgrade('hero');assert.equal(t.get().heroLevel,1);assert.equal(t.get().seeds,60);t.set({wave:10});t.startWave();for(let i=0;i<5000&&t.get().mode==='battle';i++){t.update(.04);t.killAll();}assert.equal(t.get().mode,'won');t.reset();t.set({grove:0});t.update(.01);assert.equal(t.get().mode,'lost');t.reset();t.set({hp:0});t.update(.01);assert.equal(t.get().mode,'lost');t.reset();assert.equal(t.get().allies,0);assert.equal(t.get().heroLevel,0);t.reset();t.placeEnemy(t.get().heroX+30);t.cannon();assert.equal(t.get().enemyHp,77,'Power Shot waits for its cast');t.update(.24);assert.equal(t.get().enemies,0,'Muzzle offset must not skip enemies at point-blank range');t.draw();t.sync();console.log('PASS: three-step briefing, keyboard movement, contextual hints, closer first-wave entrance, summon cost and cooldown, insufficient sap, pause freezes simulation, camp transition, upgrade cost/effect, actual wave-10 spawning and victory, grove/hero defeat, clean restart, render/HUD smoke check. Visual browser/touch checks remain pending.');
 
 
@@ -29,31 +29,18 @@ console.log('PASS: disabled vertical input, common lane for hero/troops/enemies,
 
 t.reset();for(let i=0;i<6000&&t.get().mode==='battle';i++){t.summon('sprout');t.summon('archer');t.summon('oak');t.cannon();t.shield();t.update(.04);}assert.equal(t.get().mode,'camp','A real first wave must be winnable with summons and abilities, without forced kills');console.log('PASS: actual first-wave combat clears with normal summons/abilities.');
 
-// Foot contact is an outcome, not a pose counter: world travel must cancel
-// the planted foot's local travel, while the other knee clears the ground.
-for(const side of [0,1]){
- const phase=(side?Math.PI:0)+.2;
- const a=t.heroFoot(phase,side,1),b=t.heroFoot(phase+.2,side,1);
- assert(a.planted&&b.planted);assert.equal(a.y,-6);assert.equal(b.y,-6);
- assert(Math.abs(b.x-a.x+112*.2/(2*Math.PI))<1e-9,'Planted boot must not slide across the ground');
- const other=t.heroFoot(phase,1-side,1);assert(!other.planted);assert(other.y<-6,'Swinging foot clears the ground');
+// Both illustrated legs must traverse every pose, half a cycle apart.
+const seen=new Set();
+for(let i=0;i<8;i++){
+ const actor={gait:1,walk:(i+.1)*Math.PI*2/8};
+ const near=t.heroLegFrame(actor,1),far=t.heroLegFrame(actor,0);
+ seen.add(near);assert.equal((far-near+8)%8,4,'Legs alternate lead/support roles');
 }
-for(let i=0;i<32;i++){
- const phase=i*Math.PI/16,foot=t.heroFoot(phase,0,1),hip={x:-4,y:-62+Math.cos(phase*2)*1.8},knee=t.heroKnee(hip,foot);
- assert(Math.abs(Math.hypot(knee.x-hip.x,knee.y-hip.y)-32)<1e-8,'Thigh length must remain fixed');
- assert(Math.abs(Math.hypot(knee.x-foot.x,knee.y-foot.y)-34)<1e-8,'Shin length must remain fixed');
- assert.equal(t.heroFoot(phase,0,0).x,-8);assert.equal(t.heroFoot(phase,0,0).y,-6);
-}
-// Both legs must pass through toe-off, clearance and landing, with no ankle
-// snap at contact. At each half-cycle the opposite foot owns the same pose.
-for(let i=0;i<64;i++){
- const phase=i*Math.PI/32,a=t.heroFoot(phase,0,1),b=t.heroFoot(phase+Math.PI,1,1);
- assert(Math.abs(a.x-b.x)<1e-8&&Math.abs(a.y-b.y)<1e-8,'Both legs perform the complete same stride');
- if(a.planted)assert.equal(a.angle,0,'Planted sole remains flat');
-}
-for(const phase of [0,Math.PI,Math.PI*2]){
- const a=t.heroFoot(phase-1e-6,0,1),b=t.heroFoot(phase+1e-6,0,1);
- assert(Math.abs(a.x-b.x)<.001&&Math.abs(a.y-b.y)<.001&&Math.abs(a.angle-b.angle)<.001,'No pose pop at contact or toe-off');
+assert.equal(seen.size,8,'Full cycle includes all eight illustrated poses');
+t.reduced(true);assert.equal(t.heroLegFrame({gait:1,walk:2},1),1,'Reduced motion keeps a planted stance while movement remains available');t.reduced(false);
+for(const phase of [0,1,3,7]){
+ assert.equal(t.heroLegFrame({gait:0,walk:phase},1),1,'Stopped hero uses planted near foot');
+ assert.equal(t.heroLegFrame({gait:0,walk:phase},0),2,'Stopped hero uses planted far foot');
 }
 for(const keys of [['d'],['a'],['ArrowRight'],['ArrowLeft']]){
  t.reset();const before=t.get();for(const key of keys)handlers.keydown({key,target:{closest:()=>null},preventDefault:noop});t.update(.04);for(const key of keys)handlers.keyup({key});
@@ -63,7 +50,7 @@ for(const keys of [['d'],['a'],['ArrowRight'],['ArrowLeft']]){
  assert.equal(t.get().heroWalk,after.heroWalk,'Release does not keep stepping');
 }
 t.reset();t.placeEnemy(t.get().heroX+150);t.move('right');t.update(.04);const firingWalk=t.get().heroWalk;t.update(.04);handlers.blur();assert(t.get().heroWalk>firingWalk,'Movement advances gait while auto-attack is suspended');
-console.log('PASS: alternating planted/swinging feet, ground contact, fixed bone lengths, horizontal distance phase, smooth stop and movement priority.');
+console.log('PASS: eight illustrated whole-leg poses, alternating lead legs, planted idle stance, distance phase, stopping and movement priority.');
 
 const actor={walk:1.4,gait:1,cd:0,facing:1,flash:0};drawCalls.length=0;t.articulatedHero(actor,330,365,false);
 const feet=drawCalls.filter(a=>a[1]===1296&&a[2]===524).map(a=>a.slice(1));drawCalls.length=0;

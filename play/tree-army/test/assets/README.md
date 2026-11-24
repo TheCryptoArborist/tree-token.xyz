@@ -50,3 +50,19 @@ Before publication, the metal fist was corrected to the dorsal/outside view of
 the hero's right hand: back-of-hand plating and knuckles face the viewer, with
 the thumb on the inner/far side. The chainsaw replaces that same wrist. The
 first preview's palm-side fist artwork was not published.
+
+## Prototype 0.17 illustrated hero legs
+
+`hero-walk-legs.webp` is an original 1536×1024 transparent atlas containing eight
+complete right-facing leg illustrations, hip to boot, generated from the existing
+hero identity. Source rectangles and hip/ground anchors are explicit because
+the poses do not fit perfectly uniform cells. Near and far legs use the same
+cycle offset by four poses. This replaces independently rotated thigh, shin and
+boot cutouts; no separated knee or ankle seams remain. The upper body is scaled
+to .88 and lifted 28 pixels to restore leg/torso proportion. Weapon muzzle
+coordinates use the same transform. Existing fist/chainsaw artwork is retained.
+
+The initial two generated paired-leg sheets were rejected for repeating the
+same leading leg. The final single-leg sheet makes every phase explicit. Source
+PNG `exec-2fe5406d-f635-4e72-af2f-0a3d9c4ae8f8.png` was converted to WebP while
+preserving its alpha; no background cleanup or third-party game artwork used.
