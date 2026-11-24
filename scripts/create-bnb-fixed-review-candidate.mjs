@@ -20,8 +20,9 @@ export function compare(d,b,m){
  for(const f of b.deploy.available_functions)if(f.n!==FN)eq(d.available_functions.find(x=>x.n===f.n),f);
  const added=d.available_functions.find(f=>f.n===FN),old=b.deploy.available_functions.find(f=>f.n===FN);assert(added);assert.equal(added.d,m.sha256);assert.equal(added.s,m.bytes);
  // Netlify normalizes absent prefer_static to false. Everything else in the
- // replacement provider record stays exact except package identity/time/size.
- const stable=f=>Object.fromEntries(Object.entries(f).filter(([k])=>!['d','id','c','s'].includes(k)));eq(stable(added),stable(old));
+ // replacement provider record stays exact except newly assigned package/account/observability identity, time and size.
+ assert(/^[0-9]{12}$/.test(added.a));assert(/^[a-f0-9]{64}$/.test(added.oid));
+ const stable=f=>Object.fromEntries(Object.entries(f).filter(([k])=>!['d','id','a','oid','c','s'].includes(k)));eq(stable(added),stable(old));
  eq(d.function_schedules,b.deploy.function_schedules);eq(runtime(d),runtime(b.deploy));return added;
 }
 export async function main(){
@@ -33,7 +34,9 @@ export async function main(){
   const r=await raw(p,method,body);if(method==='GET'&&p.startsWith(`accounts/${ACCOUNT}/env`))for(const row of r)assert(!['BNB_RUN_REVIEW_ENABLED','BNB_RUN_REVIEW_GENERATION'].includes(row.key),'Legacy flag present');return r;
  };
  const baseline=await capture(api,LIVE),request=candidateRequest(baseline,m);eq(await capture(api,LIVE),baseline);
- const d=await api(`sites/${SITE}/deploys?title=Isolated%20generation%201%20review%20candidate`,'POST',request);assert(/^[a-f0-9]{24}$/.test(d.id)&&d.id!==LIVE);assert(!d.published_at&&!d.locked);
+ const resume=process.env.BNB_FIXED_REVIEW_RESUME;
+ if(resume){assert.equal(resume,'6b05eac4008e25aba5f361e1');assert.equal(m.sha256,'fb9f5de69404133aeff2db288cc387d8ae37582bcbd077517d58ca6e42732661');}
+ const d=resume?await api('deploys/'+resume):await api(`sites/${SITE}/deploys?title=Isolated%20generation%201%20review%20candidate`,'POST',request);assert(/^[a-f0-9]{24}$/.test(d.id)&&d.id!==LIVE);assert(!d.published_at&&!d.locked);
  fs.writeFileSync(out+'/candidate.json',JSON.stringify({id:d.id,baselineId:LIVE}));console.log('BNB_FIXED_CANDIDATE '+d.id);
  for(const k of ['required','required_edge_functions','required_server'])assert.equal(d[k].length,0);
  assert(d.required_functions.length<=1&&d.required_functions.every(h=>h===m.sha256),'Unrelated function upload requested');
