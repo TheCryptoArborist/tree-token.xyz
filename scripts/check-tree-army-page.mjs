@@ -9,7 +9,7 @@ const base = process.env.TREE_ARMY_TEST_BASE || `https://${candidate.id}--tree-t
 const url = base.replace(/\/$/,'') + '/play/tree-army/test/';
 fs.mkdirSync('.netlify',{recursive:true});
 const browser = await chromium.launch({headless:true});
-const results=[];
+const results=[];let meleeUpgrade;
 try {
   for (const [width,height,label] of [[1440,1000,'desktop'],[390,844,'mobile'],[320,568,'small-mobile'],[844,390,'landscape']]) {
     const context=await browser.newContext({viewport:{width,height},hasTouch:width<900});
@@ -114,13 +114,46 @@ try {
     results.push({label,width,height,passed:true});
     await context.close();
   }
+  // Exercise the actual earn -> camp purchase -> next-wave path at phone size.
+  const upgradeContext=await browser.newContext({viewport:{width:390,height:844},hasTouch:true});
+  const upgradePage=await upgradeContext.newPage(), upgradeErrors=[];
+  upgradePage.on('pageerror',e=>upgradeErrors.push(e.message));
+  await upgradePage.goto(url,{waitUntil:'networkidle'});
+  await upgradePage.waitForFunction(()=>document.getElementById('asset-status').hidden);
+  await upgradePage.getByRole('button',{name:'Show me how',exact:true}).click();
+  await upgradePage.getByRole('button',{name:'Start battle',exact:true}).click();
+  const began=Date.now();
+  while(Date.now()-began<80000 && await upgradePage.locator('#overlay').isHidden()){
+    for(const selector of ['[data-unit="sprout"]','[data-unit="archer"]','[data-unit="oak"]','#blast','#shield']){
+      const button=upgradePage.locator(selector);if(await button.isEnabled()){await button.click({timeout:1500});await upgradePage.waitForTimeout(60);}
+    }
+    await upgradePage.waitForTimeout(150);
+  }
+  assert.equal(await upgradePage.locator('#heading').innerText(),'The grove holds.','Normal play must reach camp');
+  const earned=Number(await upgradePage.locator('#seeds').innerText());
+  assert(earned>=80,'First-wave earnings must afford the chainsaw');
+  const purchase=upgradePage.locator('#upgrade-chainsaw');await purchase.click();
+  assert.equal(Number(await upgradePage.locator('#seeds').innerText()),earned-80,'Charge the displayed cost once');
+  assert(await purchase.isDisabled(),'Equipped chainsaw cannot be bought twice');
+  assert.match(await purchase.innerText(),/EQUIPPED/);
+  await upgradePage.screenshot({path:'.netlify/tree-army-chainsaw-shop.png',fullPage:true});
+  await upgradePage.getByRole('button',{name:'Begin wave 2',exact:true}).click();
+  await upgradePage.locator('#overlay').waitFor({state:'hidden'});
+  assert.match(await upgradePage.locator('#melee-status').innerText(),/Chainsaw/,'Weapon stays equipped into wave two');
+  await upgradePage.screenshot({path:'.netlify/tree-army-chainsaw-equipped.png',fullPage:true});
+  await upgradePage.locator('#pause').click();
+  assert(await upgradePage.locator('#shop').isHidden(),'Pause must not expose camp-only purchases');
+  assert(await upgradePage.locator('#skip').isHidden(),'Pause must not expose the tutorial restart shortcut');
+  assert.equal(upgradeErrors.length,0,upgradeErrors.join('\n'));
+  meleeUpgrade={passed:true,earned,cost:80,elapsedSeconds:(Date.now()-began)/1000};
+  await upgradeContext.close();
   const failureContext=await browser.newContext();
   const failurePage=await failureContext.newPage();
-  await failurePage.route('**/assets/combat-parts.webp',route=>route.abort());
+  await failurePage.route('**/assets/hero-melee.webp',route=>route.abort());
   await failurePage.goto(url,{waitUntil:'networkidle'});
   await failurePage.getByText('The artwork could not load. Reload this page to try again.',{exact:true}).waitFor();
   assert(await failurePage.locator('#next').isDisabled(),'Failed artwork must block battle start');
   await failureContext.close();
 } finally {await browser.close();}
-fs.writeFileSync('.netlify/tree-army-browser-checks.json',JSON.stringify({url,results},null,2));
+fs.writeFileSync('.netlify/tree-army-browser-checks.json',JSON.stringify({url,results,meleeUpgrade},null,2));
 console.log('Tree Army browser checks passed: '+results.map(r=>r.label).join(', '));
