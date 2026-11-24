@@ -1,0 +1,41 @@
+name: Publish exact isolated generation-1 review candidate
+on:
+  push:
+    branches: ['feat/bnb-generation-custody']
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: tree-production-preservation-release
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: contains(github.event.head_commit.message, '[publish bnb fixed review]')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci --ignore-scripts
+      - run: npm ci --ignore-scripts --prefix contracts/bnb-generation
+      - run: node --test tests/bnb-fixed-review-publication.test.mjs tests/bnb-fixed-review-candidate.test.mjs tests/multichain-bnb-run-runtime.test.mjs tests/multichain-bnb-run-http.test.mjs tests/multichain-bnb-run-authorization.test.mjs
+      - uses: actions/download-artifact@v4
+        with:
+          name: bnb-fixed-review-candidate
+          run-id: 45474913229
+          github-token: ${{ github.token }}
+          path: /tmp/bnb-fixed-reviewed
+      - name: Revalidate and publish exact reviewed candidate
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: node scripts/publish-bnb-fixed-review.mjs /tmp/bnb-fixed-reviewed /tmp/bnb-fixed-published
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bnb-fixed-review-publication
+          path: /tmp/bnb-fixed-published
+          if-no-files-found: warn
