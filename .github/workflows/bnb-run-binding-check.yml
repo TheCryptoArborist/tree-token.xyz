@@ -1,0 +1,29 @@
+name: Verify BNB review production database binding
+on:
+  push:
+    branches: ['feat/bnb-generation-custody']
+permissions:
+  contents: read
+jobs:
+  verify:
+    if: contains(github.event.head_commit.message, '[check bnb run binding]')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci --ignore-scripts
+      - run: node --test tests/bnb-run-binding.test.mjs
+      - name: Verify read-only RPC access with existing production binding
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: node scripts/multichain/check-bnb-run-binding.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bnb-run-binding-check
+          path: /tmp/bnb-binding-result
+          if-no-files-found: error

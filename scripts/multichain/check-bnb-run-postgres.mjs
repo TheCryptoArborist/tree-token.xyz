@@ -43,5 +43,12 @@ try{
  const next=await http(req({action:'issue'}));assert.equal(next.status,200);const t2=(await next.json()).ticket;eligible=false;assert.equal((await http(req({action:'consume',ticket:t2}))).status,403);eligible=true;checks.push('HTTP backing loss denies existing durable ticket');
  await sql(`select public.arcade_bnb_test_revoke_session_v1('${hs}');`);assert.equal((await http(req({action:'consume',ticket:t2}))).status,403);assert.equal((await http(req({action:'issue'}))).status,403);checks.push('HTTP real database revocation denies issue and consume');
  assert.equal((await http(req({action:'issue',wallet}))).status,400);checks.push('HTTP refuses client identity override');
+ // Disposable-only retention fixtures; never use real hosted sessions.
+ await sql(`insert into private.arcade_bnb_run_reviews(hash,session_hash,wallet,generation,issued_at,expires_at) select md5('retention-'||n)::text||md5('retention-'||n)::text,'${sh}','${wallet}','1',clock_timestamp()-interval '8 days',clock_timestamp()-interval '8 days'+interval '30 seconds' from generate_series(1,1001) n;`);
+ const keep=await sql("select count(*) from private.arcade_bnb_run_reviews where expires_at>=statement_timestamp()-interval '7 days'");
+ const countSql=fs.readFileSync('scripts/multichain/maintenance/bnb-run-retention-count.sql','utf8'),cleanupSql=fs.readFileSync('scripts/multichain/maintenance/bnb-run-retention-batch.sql','utf8');
+ assert.equal(await sql(countSql),'1001');assert.equal(await sql(cleanupSql),'1000');assert.equal(await sql(countSql),'1');checks.push('retention batch deletes at most 1000 records expired over seven days');
+ assert.equal(await sql("select count(*) from private.arcade_bnb_run_reviews where expires_at>=statement_timestamp()-interval '7 days'"),keep);assert.equal(await sql(`select count(*) from private.arcade_bnb_test_sessions where token_sha256 in ('${sh}','${hs}')`),'2');checks.push('retention preserves recent tickets and identity sessions');
+ await assert.rejects(sql('set role service_role;'+cleanupSql));checks.push('runtime service role cannot execute retention deletion');
  console.log(JSON.stringify({localOnly:true,checks,passed:checks.length},null,2));
 }finally{if(started)execFileSync(exe('pg_ctl'),['-D',data,'-m','immediate','-w','stop'],{stdio:'pipe'});fs.rmSync(dir,{recursive:true,force:true});}
