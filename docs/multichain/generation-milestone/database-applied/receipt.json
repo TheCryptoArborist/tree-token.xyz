@@ -24,5 +24,10 @@
   },
   "environmentChanged": false,
   "websiteDeployed": false,
-  "gameplayAuthorized": false
+  "gameplayAuthorized": false,
+  "ci": {
+    "run": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45462408795",
+    "sourceCommit": "32cf3e99e738d6760d615929de36c55c17476154",
+    "conclusion": "success"
+  }
 }
