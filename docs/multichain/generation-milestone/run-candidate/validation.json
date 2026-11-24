@@ -1,0 +1,28 @@
+{
+  "sourceCommit": "7e64897",
+  "run": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45347567727",
+  "conclusion": "success",
+  "artifact": {
+    "id": 14897969879,
+    "digest": "sha256:8e62543c4bf3ee1737eb1b1d6d659426a144cc11a1c6f80674e943ddc607fd60"
+  },
+  "focusedTests": 50,
+  "candidateId": "6b053b8285e0ee251b84ad06",
+  "liveBaselineId": "6b053a10d32f94ea6fc35ef1",
+  "independentProviderCheck": {
+    "candidateReady": true,
+    "candidatePublishedAt": null,
+    "candidateLocked": false,
+    "functions": 61,
+    "schedules": 5,
+    "liveBaselineUnchanged": true
+  },
+  "stalePlanRun": {
+    "run": 45346027372,
+    "result": "rejected before creation after concurrent Tree Army release changed baseline"
+  },
+  "refreshedPlanRun": 45347371432,
+  "productionSwitchApproved": false,
+  "migrationApplied": false,
+  "gameplayAuthorized": false
+}

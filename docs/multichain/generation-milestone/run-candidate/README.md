@@ -29,3 +29,18 @@ database migration, enablement, sales, deposits and gameplay remain separate.
 During candidate preparation, the queued Tree Army arm-proportions release
 advanced production to `6b053a10d32f94ea6fc35ef1`. The older plan was not used
 to overwrite it; preparation was repeated against the new locked baseline.
+
+## Verified inactive candidate
+
+Candidate `6b053b8285e0ee251b84ad06` is ready, unpublished and unlocked.
+[Run 45347567727](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45347567727)
+passed all checks; `verified.json` pins its full new provider record and HTTP
+results. Independent provider reads confirmed the candidate has 61 functions
+and five schedules while production remains `6b053a10d32f94ea6fc35ef1`.
+
+No wallet interaction is needed. The next decision is publication of this exact
+disabled candidate. Before switching, reverify complete baseline/configuration
+and candidate records, wait for all pending builds, and reject any drift.
+A later live release makes this candidate stale; preserve that release by
+preparing a new candidate rather than publishing the old inventory. No SQL or
+environment toggle is included.
