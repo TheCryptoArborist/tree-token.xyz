@@ -28,21 +28,29 @@ try {
     await page.getByRole('heading',{name:'Protect the Tree of Life',exact:true}).waitFor();
     await page.getByRole('button',{name:'Next: your hero',exact:true}).click();
     await page.getByRole('heading',{name:'Lead from the front',exact:true}).waitFor();
+    assert.match(await page.locator('#description').innerText(),/Stop to attack automatically/);
+    assert.match(await page.locator('#description').innerText(),/Hold Left or Right/);
     await page.getByRole('button',{name:'Next: your army',exact:true}).click();
     await page.getByRole('heading',{name:'Grow your army',exact:true}).waitFor();
+    assert.match(await page.locator('#description').innerText(),/separate special abilities/);
     await page.getByRole('button',{name:'Defend the grove',exact:true}).click();
     await page.locator('#overlay').waitFor({state:'hidden'});
     await page.locator('#field-note').waitFor({state:'visible'});
     if(label==='desktop') {
-      await page.keyboard.down('ArrowRight');
-      await page.waitForTimeout(250);
-      await page.keyboard.up('ArrowRight');
+      for(const keys of [['ArrowRight'],['ArrowLeft'],['a'],['d']]) {
+        for(const key of keys)await page.keyboard.down(key);
+        await page.waitForTimeout(100);
+        for(const key of keys)await page.keyboard.up(key);
+      }
       assert.match(await page.locator('#field-note').innerText(),/Summon/);
+      await page.locator('#move-left').focus();await page.keyboard.down('Space');await page.waitForTimeout(150);
+      assert.match(await page.locator('#drag-cue').innerText(),/Moving ←/);
+      await page.keyboard.up('Space');assert(await page.locator('#drag-cue').isHidden(),'Keyboard button release stops movement');
     } else {
-      for(const selector of ['#joystick','#blast','#shield','[data-unit="sprout"]','[data-unit="archer"]','[data-unit="oak"]']) {
+      for(const selector of ['#move-left','#move-right','#blast','#shield','[data-unit="sprout"]','[data-unit="archer"]','[data-unit="oak"]']) {
         const box=await page.locator(selector).boundingBox();
         assert(box && box.x>=0 && box.y>=0 && box.x+box.width<=width+1 && box.y+box.height<=height+1,selector+' must stay inside phone viewport');
-        assert(box.height>=44,selector+' touch target is too short');
+        assert(box.height>=44&&box.width>=44,selector+' touch target is too small');
       }
       assert(await page.locator('.unit-name').evaluateAll(nodes=>nodes.every(node=>{
         const range=document.createRange();range.selectNodeContents(node);
@@ -53,33 +61,32 @@ try {
       const ratio=await page.locator('#battle').evaluate(c=>c.width/c.height);
       assert(Math.abs(ratio-box.width/box.height)<.005,'Mobile canvas must preserve character proportions');
       const client=await context.newCDPSession(page);
-      const y=Math.round(box.y+box.height*.45),x=Math.round(box.x+box.width*.45);
-      await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y,id:1}]});
-      await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x+45,y,id:1}]});
+      const center=async(selector,id)=>{const b=await page.locator(selector).boundingBox();return {x:Math.round(b.x+b.width/2),y:Math.round(b.y+b.height/2),id};};
+      const right=await center('#move-right',1),left=await center('#move-left',2);
+      await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[right]});
       await page.waitForTimeout(200);
       assert.match(await page.locator('#drag-cue').innerText(),/Moving →/);
+      assert.equal(await page.locator('#move-right').getAttribute('aria-pressed'),'true');
       assert.match(await page.locator('#field-note').innerText(),/Summon/);
-      await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x-45,y,id:1}]});
-      assert.match(await page.locator('#drag-cue').innerText(),/Moving ←/);
-      await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x,y:y-40,id:1}]});
-      assert.match(await page.locator('#drag-cue').innerText(),/Moving ↑/);
-      await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
-      assert(await page.locator('#drag-cue').isHidden(),'Lifting finger must end drag');
-      assert.equal(await page.evaluate(()=>scrollY),0,'Battlefield gesture must not scroll page');
-      const stick=await page.locator('#joystick').boundingBox();
-      const sx=Math.round(stick.x+stick.width/2),sy=Math.round(stick.y+stick.height/2);
-      await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:sx,y:sy,id:2}]});
-      await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:sx+20,y:sy-20,id:2}]});
-      assert.match(await page.locator('#drag-cue').innerText(),/Moving ↑→/);
-      const summon=await page.locator('[data-unit="sprout"]').boundingBox();
-      const multiSap=Number(await page.locator('#sap').innerText());
-      const second={x:Math.round(summon.x+summon.width/2),y:Math.round(summon.y+summon.height/2),id:3};
-      await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:sx+20,y:sy-20,id:2},second]});
+      const multiSap=Number(await page.locator('#sap').innerText()),second=await center('[data-unit="sprout"]',3);
+      await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[right,second]});
       await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[second]});
       await page.waitForFunction(before=>Number(document.getElementById('sap').textContent)<before,multiSap,{timeout:1500});
-      assert(await page.locator('#drag-cue').isVisible(),'Summoning must not release the held joystick');
+      assert(await page.locator('#drag-cue').isVisible(),'Summoning must not release held movement');
+      const special=await center('#blast',4);
+      await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[right,special]});
+      await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[special]});
+      await page.waitForFunction(()=>document.getElementById('blast').disabled,null,{timeout:1500});
+      assert(await page.locator('#drag-cue').isVisible(),'Special must not release held movement');
       await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
-      assert(await page.locator('#drag-cue').isHidden(),'Multi-touch release must reset joystick');
+      assert(await page.locator('#drag-cue').isHidden(),'Release stops movement');
+      assert.equal(await page.locator('#move-right').getAttribute('aria-pressed'),'false');
+      await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[left]});
+      await page.waitForTimeout(150);
+      assert.match(await page.locator('#drag-cue').innerText(),/Moving ←/);
+      await client.send('Input.dispatchTouchEvent',{type:'touchCancel',touchPoints:[]});
+      assert(await page.locator('#drag-cue').isHidden(),'Cancelled touch resets movement');
+      assert.equal(await page.evaluate(()=>scrollY),0,'Movement controls must not scroll page');
       await client.detach();
     }
     await page.waitForFunction(()=>!document.querySelector('[data-unit="sprout"]').disabled);
@@ -92,11 +99,12 @@ try {
     await page.waitForTimeout(200);
     assert.equal(await page.locator('#sap').innerText(),pausedSap,'Pause did not freeze battle');
     await page.getByRole('button',{name:'Resume battle',exact:true}).click();
-    await page.locator('#blast').click();
-    await page.waitForTimeout(100);
-    assert(await page.locator('#blast').isDisabled(),'Cannon cooldown missing');
+    await page.waitForFunction(()=>!document.querySelector('#move-right').disabled);
+    if(!await page.locator('#blast').isDisabled())await page.locator('#blast').click();
+    await page.waitForFunction(()=>document.querySelector('#blast').disabled,null,{timeout:1500});
+    assert(await page.locator('#blast').isDisabled(),'Power Shot cooldown missing');
     await page.locator('#shield').click();
-    await page.waitForTimeout(100);
+    await page.waitForFunction(()=>document.querySelector('#shield').disabled,null,{timeout:1500});
     assert(await page.locator('#shield').isDisabled(),'Shield cooldown missing');
     await page.keyboard.down('ArrowRight');
     await page.waitForTimeout(1600);
@@ -108,7 +116,7 @@ try {
   }
   const failureContext=await browser.newContext();
   const failurePage=await failureContext.newPage();
-  await failurePage.route('**/assets/tree-hero.webp',route=>route.abort());
+  await failurePage.route('**/assets/combat-parts.webp',route=>route.abort());
   await failurePage.goto(url,{waitUntil:'networkidle'});
   await failurePage.getByText('The artwork could not load. Reload this page to try again.',{exact:true}).waitFor();
   assert(await failurePage.locator('#next').isDisabled(),'Failed artwork must block battle start');

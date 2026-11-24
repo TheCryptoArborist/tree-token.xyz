@@ -1,3 +1,200 @@
+# Tree Army bent-elbow carry — published November 23, 2026
+
+[Prototype 0.13](https://tree-token.xyz/play/tree-army/test/) corrects the rigid
+raised gun arm. Upper arm and forearm now rotate independently at the elbow:
+carry keeps the upper arm beside the torso and the gun lower; aiming blends
+both joints. The muzzle follows the same transforms. Combat rules, opening
+schedule/count, assets and other characters are unchanged.
+
+Deployment `6b04bdf56959e6a5452c7622` was published at **16:29:15 America/Chicago**
+(`2026-11-23T22:29:15.614Z`) and verified ready and locked by
+[run 45278903790](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45278903790).
+Source: `9881c476412b539250dbd2a7f8648c2d43d5d92d`, PR #304.
+Fresh baseline: `6b048faddcf2eb2d8c595f60`.
+
+Only playtest HTML changed. All **688 unrelated static paths**, **60 complete
+backend/provider records**, **five schedules**, runtime and protected
+configuration were preserved; total inventory **689 paths**.
+
+Gameplay/muzzle and release-preservation checks passed. Candidate and canonical
+game/cabinet checks passed at four viewports. Phone-size carry/aim renders,
+both-direction walking recording and the canonical phone screenshot were inspected.
+Opening simulations still clear in 47.04–49.44 seconds. Existing leg-gait feedback
+remains a separate unresolved visual issue.
+
+Records: `production/tree-army-carry-{release,backend,browser,cabinet}-20261123.json`,
+`docs/tree-army-carry-{phone,live-phone}-20261123.png`,
+`docs/tree-army-carry-mobile-20261123.webm` and the development task list.
+Original release artifact #14867469950 SHA256:
+`b001c4246ec907fb7a31d9f5ea98d0d339b782f7c33977bc59c351a08f5ff310`.
+Capture a fresh complete live baseline before subsequent publication.
+
+---
+
+# Tree Army timed combat and articulated weapons — published November 23, 2026
+
+[Prototype 0.12](https://tree-token.xyz/play/tree-army/test/) implements stop-to-attack,
+a distinct close-range punch, neutral gun carry/aim/fire/recovery, and spinning
+machine saws with wind-up/contact/recovery. Ordinary ranged hits resolve at the
+firing moment; Power Shot remains a separate travelling special. Retreat can
+dodge enemy strikes. Approved opening spawn timing/count and troop artwork remain.
+
+Deployment `6b048faddcf2eb2d8c595f60` was published at **13:11:50 America/Chicago**
+(`2026-11-23T19:11:50.734Z`) and verified ready and locked by
+[run 45243887801](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45243887801).
+Source: `40110da43b62a3df930801081cd9893aa925a5ac`, PR #302.
+Fresh baseline: `6b047fa4c9ac1e8b32621216`.
+
+Only playtest HTML changed and the original `combat-parts.webp` atlas was added.
+All **687 unrelated static paths**, **60 complete backend/provider records**,
+**five schedules**, runtime and protected configuration were preserved;
+total inventory **689 paths**. No backend packages were rebuilt.
+
+Gameplay outcomes, release preservation, historical preview inventory and four
+viewport checks passed. Candidate and canonical game/cabinet checks passed.
+The canonical phone screenshot was inspected. A normal UI mobile run cleared
+wave one in **47.786 seconds**; simulations cleared in 47.04–49.44 seconds.
+An unaccelerated diagnostic recording exercises the new attacks in both facings
+and retreat. The existing hero leg rig remains a separate, unaccepted visual issue.
+
+Records: `production/tree-army-combat-{release,backend,browser,cabinet}-20261123.json`,
+`docs/tree-army-combat-live-phone-20261123.png`, the development task list,
+and `docs/tree-army-combat-{mobile-20261123.webm,walltime-20261123.json}`.
+Original release artifact #14853897524 SHA256:
+`e521fdd3f37dabe34519256fd402945fe846c191b631af85ecf8ac597394738a`.
+Capture a fresh complete live baseline before subsequent publication.
+
+---
+
+# Tree Army hero projectile origins — published November 23, 2026
+
+[Prototype 0.11](https://tree-token.xyz/play/tree-army/test/) aligns ordinary
+rounds, Power Shot and firing flashes with one mirrored barrel anchor, including
+recoil/bob. Hero rounds keep their firing height; trails do not extend behind the
+emission point. Forward target selection while moving prevents the transient
+retreat-facing flip. Damage, cooldowns, opening pacing and artwork are unchanged.
+Full melee and the hero animation/weapon-art redesign remain outstanding.
+
+Deployment `6b046c3ccb8dfd3eb651353c` was published at **10:40:36 America/Chicago**
+(`2026-11-23T16:40:36.320Z`) and verified ready and locked by
+[run 45217408843](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45217408843).
+Source: `4d073f056f28f59017c2c050adab0f3b4aa60583`, PR #300.
+Fresh baseline: `6b0466dbe649f3c4abd225f9`, including the newer BNB return handoff.
+
+Only playtest HTML changed. All **683 unrelated static paths**, **59 complete
+backend/provider records**, **five schedules**, runtime and protected configuration
+were preserved; total inventory **684 paths**. No new published assets or backend rebuilds.
+
+Gameplay, projectile-origin, retreat-facing, release preservation and historical
+preview checks passed. Opening simulations still clear in 47.68–49.60 seconds.
+Candidate and canonical game/cabinet browser checks passed at four viewport sizes.
+The live phone screenshot and local diagnostic right/left/special firing renders
+were inspected. These checks do not establish acceptance of natural hero motion.
+
+Records: `production/tree-army-weapon-{release,backend,browser,cabinet}-20261123.json`,
+`docs/tree-army-weapon-{right,left,special}-20261123.png`, and the development task list.
+Original artifact #14838034595 SHA256:
+`fddd6b65758469a46e1c66643f6a4a22eb7078a19ea06512b39772d610ef689b`.
+Capture a fresh complete live baseline before subsequent publication.
+
+---
+
+# Tree Army opening-wave pacing — published November 23, 2026
+
+[Prototype 0.10](https://tree-token.xyz/play/tree-army/test/) spreads ten opening
+enemies over 45 seconds of active battle. Victory still requires defeating all
+scheduled enemies. Waves 2–10 and hero combat/artwork are unchanged.
+
+Deployment `6b0465140cb614081b5a0f52` was published at **10:10:09 America/Chicago**
+(`2026-11-23T16:10:09.898Z`) and verified ready and locked by
+[run 45211270718](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45211270718).
+Source: `66aabdbc44c703f0586140d185d0108a18192c4b`, PR #298.
+Fresh baseline: `6b045ada195938dd6638275a`.
+
+Only the playtest HTML changed. All **681 unrelated static paths**, **59 complete
+backend/provider records**, **five schedules** and protected configuration were
+preserved; total inventory remains **682 paths**. No new assets or backend rebuilds.
+
+Gameplay and release-preservation tests passed. Normal summon/special simulations
+cleared the opening in 47.68–49.60 seconds. An unaccelerated local 390×844 browser
+run cleared it in **48.046 seconds**, with no browser errors. Candidate and
+canonical game/cabinet checks passed at all four viewport sizes; the live phone
+screenshot was inspected. Physical-player timing and feel still need feedback.
+
+Records: `production/tree-army-opening-{release,backend,browser,cabinet,walltime}-20261123.json`,
+`docs/tree-army-opening-cleared-phone-20261123.png`, and the development task list.
+Original artifact #14838405273 SHA256:
+`e2f3a3e20f1031ed0d4fa9f4bd1ed4bc1ffb9781dce5fd77afe0b355046c0e7d`.
+Capture a fresh complete live baseline before any subsequent publication.
+
+---
+
+# Tree Army single battle lane and controls — published November 23, 2026
+
+[Prototype 0.9](https://tree-token.xyz/play/tree-army/test/) implements Task 1:
+one horizontal battle lane, labeled Left/Right hold controls, release to stop,
+visible mobile troop cards and specials, and a tutorial explaining automatic
+ranged attacks. The special cannon button is now labeled Power Shot. Hero melee,
+combat-facing changes and natural hero animation remain later tasks.
+
+Deployment `6b045ada195938dd6638275a` was published at **09:26:16 America/Chicago**
+(`2026-11-23T15:26:16.118Z`) and verified ready and locked by
+[release run 45204472155](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45204472155).
+Source: `8311f08cf61771503d6dc19464fc0fa4a36164bc`, PR #296.
+
+Fresh baseline `6b0458db91d3250f95aef932` included the newer private-purchase
+backend and Root Rage release. Only `/play/tree-army/test/index.html` changed;
+no paths were added. Verified **682 static paths**, **681 unchanged unrelated
+hashes**, all **59 complete backend/provider records**, **five schedules**,
+runtime and protected configuration. No backend package was rebuilt.
+
+Gameplay, real first-wave completion, release-plan and historical preview
+preservation tests passed. Candidate and canonical browser checks passed at
+1440×1000, 390×844, 320×568 and 844×390, including held movement with second-finger
+summoning and specials. All four cabinet checks passed. The final phone screenshot
+was inspected. These checks do not establish acceptance of the hero animation.
+
+Records: `production/tree-army-lane-{release,backend,browser,cabinet}-20261123.json`,
+`docs/tree-army-lane-live-phone-20261123.png`, and
+`docs/tree-army-development-plan.md`. Original release artifact #14831989587
+SHA256: `5d772a43dfa01f4ba03f2513656fe0bd8e2eb5995bf12448d411fa5cb48ca3a6`.
+Capture a new complete live baseline before later releases; this publisher's
+replacement hash describes a completed one-time release.
+
+---
+
+# Tree Army hero stride — published November 23, 2026
+
+Deployment `6b03da694fbbb07f59b07001` was published at **00:18:26 America/Chicago**
+(`2026-11-23T06:18:26.162Z`) and verified ready and locked by
+[release run 45122756229](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45122756229).
+Source: `24b681a8385c97335d308c3b6cb7bb0c1039effe`, PR #294.
+
+[Tree Army Prototype 0.8](https://tree-token.xyz/play/tree-army/test/) now uses
+independently articulated hero legs with alternating planted/swinging phases,
+travel-driven stepping, an idle blend, and upper-body-only firing recoil. The
+approved troop walks and courtyard controls are preserved. Physical-phone
+feedback remains the next visual acceptance check.
+
+Fresh baseline `6b03d785177d7651c28d69aa` included the newer generation reserve
+handoff. Only the pinned game HTML changed; one hero parts atlas was added.
+The release verified **680 static paths**, **678 unchanged unrelated hashes**,
+all **58 complete backend/provider records**, **five schedules**, runtime and
+protected configuration. No backend package was rebuilt.
+
+Gameplay, gait/contact, eight-direction input, firing, release-plan and build
+preservation tests passed. Candidate and canonical browser checks passed for
+1440×1000 desktop, 390×844 phone, 320×568 small phone and 844×390 landscape,
+including eight-direction joystick movement and multitouch summons. All four
+canonical cabinet checks also passed. The final phone screenshot was inspected.
+
+Records: `production/tree-army-hero-{release,backend,browser,cabinet}-20261123.json`,
+`docs/tree-army-hero-live-phone-20261123.png`, and
+`docs/tree-army-hero-stride.md`. Original workflow release artifact #14794786667
+SHA256: `21a42ba65c996e76318b17e2b9bef0ee6053570ca801609d6325f1e769aeff53`.
+Capture a new complete live baseline before later releases; this publisher's
+replacement hash and addition allowlist describe a completed one-time release.
+
 # Generation 1 lifecycle completed — November 23, 2026
 
 The approved final BNB completion independently verifies at source and on Sui.

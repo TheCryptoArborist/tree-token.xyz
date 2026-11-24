@@ -1,7 +1,19 @@
-Current next-step review: [LayerZero registration and path proposal](./path-review/README.md).
-The new Sui application is unregistered. A checked registration simulation passed
-at 0.004668124 SUI with a proposed 0.02-SUI ceiling. No new live write occurred;
-registration approval and its canonical wallet handoff are next.
+# Current status: generation 1 closed
+
+The full private lifecycle completed and independently verified on both chains.
+NFTree #2720 is back in dev wallet 45c4; the empty Sui vault is phase 3/generation
+1; the BNB pass is Retired, purchases paused and nonplayable. Do not repeat any
+historical registration, deployment, binding, deposit or message described below.
+
+- [Final completion evidence and 59 focused checks](./completion-completed/README.md)
+- [Next source milestone: generation-aware access](./access-integration-review.md)
+- Review PR: https://github.com/TheCryptoArborist/tree-token.xyz/pull/280
+
+The sections below are historical records, not pending instructions. No further
+transaction is needed to close generation 1. Public sales, larger inventory,
+new deposits, payments and gameplay activation remain separate reviews.
+
+---
 
 # Completed BNB deployment — November 22, 2026 (America/Chicago)
 

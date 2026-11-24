@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
-// Prototype 0.7: free battlefield movement replaces only gameplay HTML.
+// Prototype 0.13: articulated elbow carry, HTML-only correction.
 export const REPLACED_HASHES = {
-  '/play/tree-army/test/index.html': '45944529735c0ededba1fae1e8a46cd1531c1263',
+  '/play/tree-army/test/index.html': '0667f42168b3e04b2b3b4623ba102983bc062e51',
 };
 export const ADDED_PATHS = [];
 export const DELIVERY_PATHS = [...Object.keys(REPLACED_HASHES), ...ADDED_PATHS];
@@ -13,6 +13,8 @@ export const PREVIEW_PATHS = [
   '/play/tree-army/test/assets/forest-army.webp',
   '/play/tree-army/test/assets/tree-hero.webp',
   '/play/tree-army/test/assets/forest-walk.webp',
+  '/play/tree-army/test/assets/tree-hero-rig.webp',
+  '/play/tree-army/test/assets/combat-parts.webp',
   '/play/tree-army/preview-gameplay.mp4',
   '/play/tree-army/preview-gameplay.webm',
   '/play/tree-army/preview-gameplay.jpg',

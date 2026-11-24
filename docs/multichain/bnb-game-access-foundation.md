@@ -1,3 +1,11 @@
+> Current status (November 23, 2026): the new generation contracts completed the
+> private round trip; generation 1 is closed and its pass is burned. This document
+> describes the earlier foundation/trial. Its hypothetical EVM registry and old
+> trial reader do not implement the new Sui generation registry. See
+> [the next access-integration review](generation-milestone/access-integration-review.md)
+> and [completed lifecycle evidence](generation-milestone/completion-completed/README.md).
+> Gameplay remains disabled.
+
 # BNB Tree Force '89 access — isolated foundation (not deployed)
 
 Update, November 21: the authentication portion is now published. The production
