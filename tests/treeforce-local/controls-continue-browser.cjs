@@ -162,20 +162,24 @@ const origin =
         await shield.click();
         assert.equal(await page.evaluate(() => s.stage), 0);
         checks.push("Shield requires growth/charge and spends growth");
-        await page.evaluate(() => {
-          s.dragging = true;
-          s.dragPointerId = 1;
-          s.fireHeld = true;
-        });
-        await auto.dispatchEvent("pointerup", {
-          pointerId: 1,
-          pointerType: "touch",
-        });
+        const bounds = await page.locator("#practice canvas").boundingBox();
+        const button = await auto.boundingBox();
+        await page.mouse.move(
+          bounds.x + bounds.width / 2,
+          bounds.y + bounds.height * 0.65,
+        );
+        await page.mouse.down();
+        assert.equal(await page.evaluate(() => s.fireHeld), true);
+        await page.mouse.move(
+          button.x + button.width / 2,
+          button.y + button.height / 2,
+        );
+        await page.mouse.up();
         assert.equal(
           await page.evaluate(() => !s.dragging && !s.fireHeld),
           true,
         );
-        checks.push("release over toolbar clears prior canvas input");
+        checks.push("mouse release over toolbar clears canvas firing");
         await fire.dispatchEvent("pointerdown", {
           pointerId: 8,
           pointerType: "touch",

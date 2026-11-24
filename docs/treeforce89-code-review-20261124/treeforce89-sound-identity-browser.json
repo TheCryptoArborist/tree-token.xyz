@@ -1,0 +1,31 @@
+{
+  "synthetic": true,
+  "checks": [
+    "music starts after user gesture",
+    "actual challenge, windfall, normal, boss and clear states select correct score",
+    "music zero produces exact zero samples and no new oscillators",
+    "music zero leaves SFX available",
+    "raising music volume restarts one scheduler",
+    "Pause stops notes and music timer",
+    "Resume restores music",
+    "wallet-style blur/focus retains paused run and silent audio",
+    "hidden/visible return waits for Resume",
+    "master sound toggle stops and restores soundtrack",
+    "user interaction recovers suspended AudioContext",
+    "destroy closes context and clears all voices and scheduler",
+    "recreated game owns fresh context; stale destruction cannot silence it"
+  ],
+  "zero": {
+    "newOsc": 0,
+    "peak": 0,
+    "voices": 0,
+    "timer": false
+  },
+  "destroyed": {
+    "owner": null,
+    "timer": false,
+    "voices": 0,
+    "sfx": 0
+  },
+  "errors": []
+}

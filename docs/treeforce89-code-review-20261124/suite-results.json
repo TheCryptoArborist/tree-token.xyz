@@ -1,0 +1,67 @@
+[
+  {
+    "name": "unit",
+    "exitCode": 0,
+    "seconds": 0.243
+  },
+  {
+    "name": "identity-mixer",
+    "exitCode": 0,
+    "seconds": 0.145
+  },
+  {
+    "name": "audio-lifecycle-browser.cjs",
+    "exitCode": 0,
+    "seconds": 24.004
+  },
+  {
+    "name": "combat-audio-browser.cjs",
+    "exitCode": 0,
+    "seconds": 3.014
+  },
+  {
+    "name": "enemy-feedback-browser.cjs",
+    "exitCode": 0,
+    "seconds": 4.17
+  },
+  {
+    "name": "boss-clearance-browser.cjs",
+    "exitCode": 0,
+    "seconds": 5.837
+  },
+  {
+    "name": "combat-visuals-browser.cjs",
+    "exitCode": 0,
+    "seconds": 5.73
+  },
+  {
+    "name": "round-presentation-browser.cjs",
+    "exitCode": 0,
+    "seconds": 5.78
+  },
+  {
+    "name": "controls-continue-browser.cjs",
+    "exitCode": 0,
+    "seconds": 26.601
+  },
+  {
+    "name": "multitouch-browser.cjs",
+    "exitCode": 0,
+    "seconds": 6.092
+  },
+  {
+    "name": "wallet-320",
+    "exitCode": 0,
+    "seconds": 14.208
+  },
+  {
+    "name": "wallet-390",
+    "exitCode": 0,
+    "seconds": 14.566
+  },
+  {
+    "name": "wallet-1280",
+    "exitCode": 0,
+    "seconds": 15.351
+  }
+]

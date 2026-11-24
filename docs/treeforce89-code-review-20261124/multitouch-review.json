@@ -1,0 +1,14 @@
+{
+  "synthetic": true,
+  "physicalPhone": false,
+  "fireRelease": {
+    "drag": true,
+    "fire": false,
+    "x": 240
+  },
+  "steeringAfterRelease": {
+    "drag": true,
+    "x": 264.61538461538464
+  },
+  "allTouchesReleased": true
+}

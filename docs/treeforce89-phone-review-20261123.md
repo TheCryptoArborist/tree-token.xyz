@@ -1,5 +1,7 @@
 # Private phone-review kit
 
+**Superseded:** use `/workspace/treeforce89-phone-review-20261124.zip` after the [multi-touch correction](treeforce89-code-review-20261124.md). The checksum below describes the original November 23 archive, retained for provenance.
+
 The next step after the integrated r13 review is physical-phone listening and play. The current cloud environment exposes SSH but has no configured public HTTP preview endpoint. A portable private LAN kit is therefore prepared; nothing was deployed or exposed through a new public tunnel.
 
 Download `/workspace/treeforce89-phone-review-r13.zip` (8,169,150 bytes). SHA-256: `6806c9cb7d7e1d140b18d6c41e4a81798dfc7fa11d6de77fe03890285540e778`.

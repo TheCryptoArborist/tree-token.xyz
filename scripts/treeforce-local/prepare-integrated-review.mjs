@@ -33,7 +33,7 @@ export async function prepareIntegratedReview(source, output) {
       body = replaceOnce(
         body,
         " const press=()=>{const s=usable();",
-        ' const detachInput=isolateTouchbarInput(bar,()=>{release();scene()?.clearTouchState()});game.events.once("destroy",detachInput);\n const press=()=>{const s=usable();',
+        ' const detachInput=isolateTouchbarInput(bar,()=>{const s=scene();if(s?.firePointerId===0){s.fireHeld=false;s.firePointerId=-1}});game.events.once("destroy",detachInput);\n const press=()=>{const s=usable();',
       );
     }
     await save(

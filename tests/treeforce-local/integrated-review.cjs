@@ -38,6 +38,7 @@ const jobs = [
     "combat-visuals-browser.cjs",
     "round-presentation-browser.cjs",
     "controls-continue-browser.cjs",
+    "multitouch-browser.cjs",
   ].map((n) => [n, [path.join(__dirname, n)]]),
   ...[320, 390, 1280].map((width) => [
     "wallet-" + width,
