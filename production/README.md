@@ -1,3 +1,24 @@
+# Canonical generation review page — published November 24, 2026
+
+Deployment `6b060d9d9feb3f962c534534` is current, ready and locked, published at
+**16:20:30 America/Chicago** (22:20:30 UTC). The new page is live at
+https://tree-token.xyz/play/generation-review/.
+
+Exactly two static paths were added. All 691 previous static hashes, all 61
+complete backend/provider records, five schedules, runtime and protected
+configuration were preserved. The current total is **693 static paths**.
+No backend was rebuilt or uploaded; no historical root build was deployed.
+
+Publication run 45499597917 passed four source/preservation checks and all 17
+browser scenarios against both source and live canonical assets. Wallet and API
+responses were simulated for browser checks. Separate live endpoint checks
+still deny missing/nonexistent sessions with 401/403 and false gameplay. Real
+MetaMask/Ledger acceptance is pending; gameplay, payments and new deposits remain
+disabled. Evidence: `docs/multichain/generation-milestone/review-page/`.
+Before future publication, capture this complete current live baseline anew.
+
+---
+
 # Generation-1 review endpoint — published November 24, 2026
 
 Deployment `6b05eac4008e25aba5f361e1` is current, ready and locked, published at

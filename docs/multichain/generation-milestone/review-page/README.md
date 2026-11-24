@@ -1,10 +1,18 @@
-# Canonical generation-1 review page — source milestone
+# Canonical generation-1 review page — published
 
-Prepared `play/generation-review/index.html` and `app.js` for the canonical path
-`https://tree-token.xyz/play/generation-review/`. **These files are not deployed.**
-Do not send the user to that path until a preservation release verifies it live.
-No preview wallet URL is provided. The page disables all wallet controls on
-noncanonical origins.
+The page is live at https://tree-token.xyz/play/generation-review/.
+Deployment `6b060d9d9feb3f962c534534` published and locked November 24 at
+16:20:30 America/Chicago (22:20:30 UTC). `published.json` records exact asset
+hashes and preservation: all 691 old paths, 61 complete function/provider
+records, five schedules, runtime and environment remain unchanged. Only the
+two new static files were added, for 693 total paths. No backend uploads.
+
+Run 45499597917 passed four source/preservation checks and the same 17 browser
+scenarios against both source files and live canonical assets (`browser-live.json`).
+Live HTML permits only the exact existing site-wide Arboretum snippet injection;
+JavaScript bytes must match exactly. Browser wallet/API responses remain mocked.
+Separate real endpoint requests confirmed 401/403 denials and false gameplay.
+No real wallet, payment or deposit was used during publication.
 
 The page copies the published BNB connect, personal-message sign-in and status
 handlers without changing their protocol. Source tests compare those handlers
@@ -51,9 +59,9 @@ node --test tests/bnb-generation-review-page.test.mjs
 node scripts/check-bnb-generation-review-browser.mjs /PATH/TO/playwright/index.mjs /tmp/FRESH-EVIDENCE
 ```
 
-## Remaining release and acceptance
+## Completed release and remaining wallet acceptance
 
-Capture the full current locked production baseline anew. Add only the two new
+The completed release captured the full current locked production baseline. Future releases must capture it anew. Add only the two new
 static paths and preserve all existing paths, all 61 complete function/provider
 records, five schedules, runtime and protected settings. No historical root
 build or backend rebuild. Refuse any function upload requirement. Check the
@@ -65,3 +73,16 @@ wallet and an explicitly reviewed login message. Expected outcome for retired
 generation 1 is denial with no ticket or gameplay. This milestone used only
 mocks and does not claim installed MetaMask/Ledger acceptance. No wallet action,
 payment, NFT deposit or chain transaction is needed to review this source.
+
+## User acceptance steps
+
+1. Open the canonical page in the desktop browser with MetaMask and Ledger.
+2. Select BNB Smart Chain and the intended BNB account. Click **Connect BNB wallet**.
+3. Click **Sign a login message** and review/approve the personal-message prompt.
+   This is identity verification, with no transaction or fee. An existing valid
+   session can instead be restored with **Check sign-in status**.
+4. Click **Review generation 1**. Expected: **Review denied**, with gameplay disabled.
+5. Record the displayed result. A denial after sign-in is the expected retired-
+   generation outcome; it is not a positive gameplay acceptance test.
+
+This real-wallet step remains pending until the user reports its outcome.

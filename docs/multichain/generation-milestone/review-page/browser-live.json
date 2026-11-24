@@ -1,0 +1,37 @@
+{
+  "passed": 17,
+  "scenarios": [
+    "sign-in / deny / logout / layout 320",
+    "sign-in / deny / logout / layout 390",
+    "sign-in / deny / logout / layout 1440",
+    "expired denied without grant",
+    "limited denied without grant",
+    "outage denied without grant",
+    "ticket denied without grant",
+    "forged denied without grant",
+    "malformed denied without grant",
+    "network denied without grant",
+    "late result discarded after accountsChanged",
+    "late result discarded after chainChanged",
+    "late result discarded after providerReplacement",
+    "wrong-wallet session blocked",
+    "absent session blocked",
+    "wrong chain blocked before challenge",
+    "noncanonical origin cannot request wallet"
+  ],
+  "files": [
+    {
+      "path": "play/generation-review/index.html",
+      "sha256": "5692225d1c4d03cac50804bc588965f29a675f80f4d7f496ec7609cb5a76466d"
+    },
+    {
+      "path": "play/generation-review/app.js",
+      "sha256": "056d1979ed8b400101bc99fd83d58a05d1a2dbe0c5aa17eeef305a484e8bee2d"
+    }
+  ],
+  "mode": "live canonical assets with mocked wallet and API",
+  "liveWalletTest": false,
+  "deployed": true,
+  "gameplayAuthorized": false,
+  "ci": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45499597917"
+}
