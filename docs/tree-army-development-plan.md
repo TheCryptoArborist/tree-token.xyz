@@ -315,3 +315,22 @@ Publication replaces playtest HTML and adds only `hero-walk-legs.webp`.
 Published in deployment `6b053183229603fcba59509e`, source PR #314, release run
 `45339983272`. Candidate and canonical checks passed; natural-motion
 acceptance remains pending the user's playtest.
+
+## Arm proportions — Prototype 0.18
+
+The user's November 24 screenshot shows thin arms relative to the chest.
+The melee arm's rendered muscle width was too small, while the gun-side upper
+arm was largely hidden inside the torso. Thicken the melee muscle perpendicular
+to its length, with a smooth maximum 60% increase tapering to the unchanged
+wrist. The corrected metal fist and chainsaw are rendered at their original
+dimensions. Gun-side upper-arm thickness increases 35%; the lower forearm/grip
+gains 30% depth below the weapon. The barrel pixels remain unchanged.
+
+Move the gun-side shoulder from local x10 to x23 so the upper arm and elbow
+show beside the torso. The shared muzzle calculation follows that shoulder,
+keeping normal/special shot origins and flashes attached to the barrel.
+No art files, leg poses, body scale, movement speed, damage, attack ranges or
+cooldowns change. Existing combat, muzzle, progression and enemy-spacing tests
+pass. Opening simulations clear in 49.04–49.72 seconds. Diagnostic phone renders
+cover idle, both facings, walking and aiming, with fist and chainsaw checks.
+Release scope is the playtest HTML only; no new assets or backend rebuild.
