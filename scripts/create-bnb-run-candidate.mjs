@@ -29,8 +29,9 @@ export async function checkEndpoint(origin,fetcher=fetch){
   assert.equal(r.headers.get('cache-control'),'no-store');assert(!r.headers.has('set-cookie'));assert(!r.headers.has('access-control-allow-origin'));checks.push({method,status:r.status});
  }
  const r=await fetcher(origin+'/api/arcade-bnb-test',{method:'POST',redirect:'error',signal:AbortSignal.timeout(45000),headers:{Origin:'https://tree-token.xyz','Content-Type':'application/json'},body:'{"action":"status"}'});
- assert.equal(r.status,403);const b=await r.json();assert.equal(b.error,'origin-denied');assert.equal(b.gameplayAuthorized,false);assert(!r.headers.has('set-cookie'));
- return {disabled:checks,existingAuth:{status:403,error:'origin-denied'},walletUsed:false};
+ const status=origin==='https://tree-token.xyz'?401:403,error=status===401?'invalid-session':'origin-denied';
+ assert.equal(r.status,status);const b=await r.json();assert.equal(b.error,error);assert.equal(b.gameplayAuthorized,false);assert(!r.headers.has('set-cookie'));
+ return {disabled:checks,existingAuth:{status,error},walletUsed:false};
 }
 export async function main(){
  const [pkg,out]=process.argv.slice(2);assert(pkg&&out);assert(!fs.existsSync(out),'Candidate output exists; audit it rather than recreate');

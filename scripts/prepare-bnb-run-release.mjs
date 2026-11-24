@@ -44,14 +44,14 @@ export async function inventory(api,id=BASE){const files={};for(let page=1;page<
  for(const r of rows){assert(typeof r.path==='string'&&r.path.startsWith('/')&&!Object.hasOwn(files,r.path));assert(/^[a-f0-9]{40}$/.test(r.sha));files[r.path]=r.sha;}
  if(rows.length<100)return files;
  }throw Error('Incomplete inventory');}
-export async function capture(api){
- const site=await api('sites/'+SITE);assert.equal(site.account_id,ACCOUNT);assert.equal(site.published_deploy?.id,BASE);assert.equal(site.published_deploy.locked,true);
- const d=await api('deploys/'+BASE);validateBackend(d);assert.equal(d.state,'ready');assert.equal(d.locked,true);
+export async function capture(api,id=BASE){
+ const site=await api('sites/'+SITE);assert.equal(site.account_id,ACCOUNT);assert.equal(site.published_deploy?.id,id);assert.equal(site.published_deploy.locked,true);
+ const d=await api('deploys/'+id);validateBackend(d);assert.equal(d.state,'ready');assert.equal(d.locked,true);
  const q=`?site_id=${SITE}`,base=`accounts/${ACCOUNT}/env`;
  const env=await Promise.all([api(base+q),api(base+q+'&scope=functions'),api(base),api(base+'?scope=functions')]);
  assertDisabled([...env[0],...env[2]],site.build_settings);
  const protectedState={...environmentFor({site:env[0],siteFunctions:env[1],shared:env[2],sharedFunctions:env[3],buildSettings:site.build_settings}),snippets:fingerprint(await api('sites/'+SITE+'/snippets')),domain:site.custom_domain};
- return {deploy:{id:d.id,site_id:d.site_id,state:d.state,locked:d.locked,available_functions:d.available_functions,function_schedules:d.function_schedules,...runtime(d)},files:await inventory(api),protected:protectedState};
+ return {deploy:{id:d.id,site_id:d.site_id,state:d.state,locked:d.locked,available_functions:d.available_functions,function_schedules:d.function_schedules,...runtime(d)},files:await inventory(api,id),protected:protectedState};
 }
 export async function main(){
  const directory=process.argv[2],out=process.argv[3];assert(directory&&out,'Usage: prepare-bnb-run-release.mjs PACKAGE_DIR OUTPUT_DIR');assert(!fs.existsSync(out),'Use a fresh output directory');
