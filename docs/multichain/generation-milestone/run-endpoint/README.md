@@ -70,3 +70,8 @@ newer Tree Army work, existing functions/runtime/provider settings and schedules
 never reuse an old baseline or publish the historical root build. A disabled
 publication and a later read-only enablement need an explicit release scope.
 Gameplay/session-to-score integration remains a separate reviewed milestone.
+
+Hosted validation for source `905fd47` passed: see `validation.json` for the
+run, counts and exact hosted artifact/ZIP hashes. It includes the extracted-ZIP
+check. Local and hosted bundles have separate manifests; build paths may affect
+bytes, so a future release must select and verify one exact artifact.
