@@ -19,6 +19,7 @@ export async function main(){const out=process.argv[2];assert(out&&!fs.existsSyn
  let ready;for(let i=0;i<90;i++){ready=await api('deploys/'+id);if(ready.state==='ready')break;assert(!['error','canceled','rejected'].includes(ready.state));await new Promise(r=>setTimeout(r,1000));}
  const verify=async published=>{const d=await api('deploys/'+id);compare(d,baseline);assert.equal(Boolean(d.published_at),published);assert.equal(Boolean(d.locked),published);eq(await inventory(api,id),request.files);return d;};
  await verify(false);await assets(`https://${id}--tree-token.netlify.app`);await waitForAllBuilds(api,id);eq(await capture(api,BASE),baseline);await verify(false);
+ const finalSite=await api('sites/'+SITE);assert.equal(finalSite.published_deploy?.id,BASE,'Concurrent manual publication; recapture before repair');assert.equal(finalSite.published_deploy.locked,true);
  await api(`deploys/${id}/lock`,'POST');const published=await verify(true),live=await capture(api,id);eq(live.protected,baseline.protected);eq(live.files,request.files);await assets('https://tree-token.xyz');const checks=await checkEnabled();
  // Detect a competing manual publisher after the initial lock switch.
  for(let i=0;i<3;i++){await new Promise(r=>setTimeout(r,15000));eq(await capture(api,id),live);await assets('https://tree-token.xyz');}
