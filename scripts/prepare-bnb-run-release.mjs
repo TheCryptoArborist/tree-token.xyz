@@ -9,7 +9,7 @@ import {apiClient} from './release-sti-purchase.mjs';
 import {validateBackend,functionsConfig,packageTrafficRules} from './release-arcade-cutoff.mjs';
 import {FUNCTION_NAME,ROOT,sha256,sourceEvidence,toolingEvidence} from './package-bnb-run-review.mjs';
 export const SITE='aa62f324-b880-47d6-85b8-4ba0700ff5bf',ACCOUNT='69800888d1a3d0483003ae9e';
-export const BASE='6b053183229603fcba59509e';
+export const BASE='6b053a10d32f94ea6fc35ef1';
 export const MIGRATION='supabase/migrations/20261124060157_arcade_bnb_run_review.sql';
 export const ROUTES=[{pattern:'/api/arcade-bnb-test/run-review',literal:'/api/arcade-bnb-test/run-review',methods:[]}];
 export const TRAFFIC={action:{type:'rate_limit',config:{rateLimitConfig:{windowLimit:20,windowSize:60,algorithm:'sliding_window'},aggregate:{keys:[{type:'domain'},{type:'ip'}]}}}};

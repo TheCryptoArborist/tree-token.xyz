@@ -5,7 +5,7 @@ import {assemble,assertDisabled,readOnly,SITE,BASE,ROUTES,TRAFFIC,validatePackag
 import {functionsConfig,packageTrafficRules} from '../scripts/release-arcade-cutoff.mjs';
 const backend=JSON.parse(fs.readFileSync('production/tree-army-drawn-walk-backend-20261124.json'));
 const files=JSON.parse(fs.readFileSync('production/tree-army-drawn-walk-release-20261124.json')).files;
-const deploy=()=>({...structuredClone(backend),site_id:SITE,context:'production',branch:'main',functions_region:'cmh'});
+const deploy=()=>({...structuredClone(backend),id:BASE,site_id:SITE,context:'production',branch:'main',functions_region:'cmh'});
 const pack=()=>({sha256:'a'.repeat(64),buildData:{bootstrapVersion:'2.24.0',runtimeAPIVersion:2},routes:ROUTES,trafficRules:TRAFFIC});
 test('complete current static/backend inventory retained with only one added function',()=>{
  const d=deploy(),before=structuredClone(d),f=structuredClone(files),p=assemble(d,f,pack());
