@@ -1,0 +1,14 @@
+{
+  "sourceCommit": "17b43828d1110397f5822b9e647f5a3bf80575ff",
+  "runId": "45337947535",
+  "conclusion": "success",
+  "localFocusedJsTests": 45,
+  "independentPostgresChecks": 11,
+  "hostedUnsignedGuards": 398,
+  "hostedEvmTests": 16,
+  "hostedBnbGuardAndHttpTests": 174,
+  "hostedMoveTests": 52,
+  "migrationAppliedToProduction": false,
+  "endpointPublished": false,
+  "gameplayActivated": false
+}
