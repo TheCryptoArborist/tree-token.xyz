@@ -44,3 +44,18 @@ and candidate records, wait for all pending builds, and reject any drift.
 A later live release makes this candidate stale; preserve that release by
 preparing a new candidate rather than publishing the old inventory. No SQL or
 environment toggle is included.
+
+## Published disabled
+
+The user authorized the next publication step after reviewing the candidate.
+Run [45426140480](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45426140480)
+published and locked this exact candidate. `published.json` records the successful
+canonical checks and unchanged environment/inventory. Independent provider reads
+confirmed current/ready/locked, 61 functions and five schedules. The earlier
+inactive evidence above describes the preparation state, not the current state.
+
+The next milestone is hosted database readiness and migration review before any
+read-only enablement. Retention ownership and hosted permission checks remain
+required; gameplay and new-generation custody are not authorized by this release.
+Do not rerun candidate creation against the obsolete baseline. Publication code
+can audit this already-published candidate without repeating the lock operation.

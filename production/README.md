@@ -1,3 +1,31 @@
+# Disabled BNB run-review endpoint — published November 24, 2026
+
+Deployment `6b053b8285e0ee251b84ad06` published at **09:31:15 America/Chicago**
+(`2026-11-24T15:31:15.993Z`), verified ready, current and locked.
+[Publication run 45426140480](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45426140480)
+rechecked the exact reviewed candidate and baseline `6b053a10d32f94ea6fc35ef1`,
+waited for all pending builds, then published and verified the canonical route.
+
+All **691 static paths**, **60 existing complete backend/provider records** and
+**five schedules** were preserved. The only addition is `arcade-bnb-run-review`:
+there are now **61 functions**. Runtime and protected environment configuration
+are unchanged; newer Tree Army arm-proportions work is retained. No historical
+root build was published.
+
+`/api/arcade-bnb-test/run-review` is disabled: canonical GET/POST return 503
+`review-disabled`, false gameplay, no-store and no session cookie. Existing BNB
+authentication retains its unauthenticated 401 response. No SQL migration,
+environment enablement, payment, NFT deposit, sale or gameplay activation occurred.
+No wallet interaction is required for this release.
+
+Receipt: `docs/multichain/generation-milestone/run-candidate/published.json`.
+Full preserved inventory: `docs/multichain/generation-milestone/run-release/plan.json`;
+new complete provider record: `docs/multichain/generation-milestone/run-candidate/verified.json`.
+Source `58f9d9a3a0792199c933a3a03656bedbf61a2114`; 53 focused tests passed.
+Before another release, capture the complete current live baseline anew.
+
+---
+
 # Tree Army hero arm proportions — published November 24, 2026
 
 [Prototype 0.18](https://tree-token.xyz/play/tree-army/test/) restores fuller hero

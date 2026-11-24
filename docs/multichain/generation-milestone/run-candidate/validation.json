@@ -22,7 +22,15 @@
     "result": "rejected before creation after concurrent Tree Army release changed baseline"
   },
   "refreshedPlanRun": 45347371432,
-  "productionSwitchApproved": false,
+  "productionSwitchApproved": true,
   "migrationApplied": false,
-  "gameplayAuthorized": false
+  "gameplayAuthorized": false,
+  "publication": {
+    "run": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45426140480",
+    "sourceCommit": "58f9d9a3a0792199c933a3a03656bedbf61a2114",
+    "focusedTests": 53,
+    "conclusion": "success",
+    "independentProviderCheck": "current, ready and locked; 61 functions and 5 schedules",
+    "receipt": "published.json"
+  }
 }
