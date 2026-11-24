@@ -120,6 +120,8 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
       '/play/tree-army/test/assets/forest-walk.webp',
       '/play/tree-army/test/assets/tree-hero-rig.webp',
       '/play/tree-army/test/assets/combat-parts.webp',
+      '/play/tree-army/test/assets/hero-melee.webp',
+      '/play/tree-army/test/assets/hero-walk-legs.webp',
       '/play/tree-army/preview-gameplay.jpg',
       '/play/tree-army/preview-gameplay.mp4',
       '/play/tree-army/preview-gameplay.webm',

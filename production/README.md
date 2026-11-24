@@ -1,3 +1,147 @@
+# Tree Army illustrated hero walking — published November 24, 2026
+
+[Prototype 0.17](https://tree-token.xyz/play/tree-army/test/) replaces the rejected
+thigh/shin/boot cutout gait with eight connected whole-leg illustrations. Both
+legs traverse the full cycle half a cycle apart. Fuller legs, a smaller upper
+body and a planted idle stance address the compressed proportions and high
+knees in the user's recording. Weapon muzzle coordinates share the resized
+upper-body transform. Natural-motion acceptance remains pending user playtest.
+
+Deployment `6b053183229603fcba59509e` published at **00:43:03 America/Chicago**
+(`2026-11-24T06:43:03.245Z`), verified ready and locked.
+Source PR #314, commit `4c67a1d333b8b3d01940fd6c247c18ddc437b2b4`;
+[release run 45339983272](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45339983272).
+Fresh baseline: `6b0525020b1bdef34dace0f1`.
+
+Only playtest HTML changed and `hero-walk-legs.webp` was added. All
+**689 unrelated static paths**, **60 complete backend/provider records**,
+**5 schedules**, runtime and protected configuration were preserved.
+Total **691 paths**. No backend packages were rebuilt.
+
+PR verification run `45338662053` hit its ten-minute timeout during browser
+installation after a GitHub checkout connection retry and slow Ubuntu mirror
+downloads; browser checks did not run in that attempt. The publication run
+repeated verification and passed before creating/publishing the candidate.
+
+Pose alternation/idle/reduced motion/stopping, shared muzzle, combat, progression,
+enemy spacing, preservation and preview checks passed. Candidate and canonical
+game/cabinet checks passed at four viewports, including earned-seed chainsaw
+purchase, equipped wave two and failure of either required hero atlas.
+Opening simulations clear in 49.00–49.68 seconds. Normal-speed mobile and desktop
+recordings and sampled poses are in `docs/tree-army-drawn-walk-*`.
+
+Records: `production/tree-army-drawn-walk-{release,backend,browser,cabinet}-20261124.json`
+and `docs/tree-army-drawn-walk-live-phone-20261124.png`.
+Release artifact #14896203328 SHA256:
+`6287a16293e46437d0c43aaa2a7e67ff263898e29fbabb8baaaca20a951d02ff`.
+Capture a fresh full live baseline before subsequent publication.
+
+---
+
+# Tree Army enemy attack spacing — published November 23, 2026
+
+[Prototype 0.16](https://tree-token.xyz/play/tree-army/test/) starts enemy attacks
+at distances matched to their blade/body scale. Center-to-center reach is 88px
+for ordinary machines, 108px for heavy machines, 64px for thorn runners and
+150px for the boss (formerly 58/58/58/100). Approach stops within four pixels
+of the bound. Wind-up and contact use the same reach; retreat still dodges.
+Damage, attack timing, movement speed, art and opening spawns remain unchanged.
+
+Deployment `6b0525020b1bdef34dace0f1` published at **23:49:36 America/Chicago**
+(`2026-11-24T05:49:36.311Z`), verified ready and locked.
+Source PR #312, commit `297e82d9a4c7094375eb742307e40381c80c324b`;
+[release run 45334582545](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45334582545).
+Fresh baseline: `6b051af87755a75a0915a338`.
+
+Only playtest HTML changed; no new assets. All **689 unrelated
+static paths**, **60 complete backend/provider records**, **5 schedules**,
+runtime and protected configuration were preserved. Total **690 paths**.
+Gameplay, both-facing/type approach/stop/wind-up/contact/dodge tests, preservation
+and preview checks passed. Candidate and canonical game/cabinet checks passed
+at four viewports, including earned-seed chainsaw purchase and equipped wave two.
+Opening simulations clear in 49.04–49.68 seconds. Mobile contact screenshots
+were inspected, with a full-speed controlled-enemy diagnostic recording.
+
+Records: `production/tree-army-spacing-{release,backend,browser,cabinet}-20261123.json`
+and `docs/tree-army-spacing-live-phone-20261123.png`.
+Release artifact #14894022923 SHA256:
+`6d367632ca7810487e85d253b89d46cd297506ed9983c5087f723ea0964e0c93`.
+Capture a fresh full live baseline before subsequent publication.
+
+---
+
+# Tree Army hero walking — published November 23, 2026
+
+[Prototype 0.15](https://tree-token.xyz/play/tree-army/test/) refines the hero's
+walk: longer stride at the same movement speed, slower cadence, ankle flex,
+more visible knee passing, coordinated body/arm motion and a raised cape hem.
+Both fist and chainsaw walking are recorded in both directions. This is a
+playtest revision; natural-motion acceptance remains with the user.
+
+Deployment `6b051af87755a75a0915a338` published at **23:06:46 America/Chicago**
+(`2026-11-24T05:06:46.856Z`), verified ready and locked.
+Source PR #310, commit `b447709a91ffe8d9c41519de5b6c09baa5de5976`;
+[release run 45329775899](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45329775899).
+Fresh baseline: `6b0514cbcf9d22003b6d784e`.
+
+Only playtest HTML changed; no new assets. All **689 unrelated
+static paths**, **60 complete backend/provider records**, **5 schedules**,
+runtime and protected configuration were preserved. Total **690 paths**.
+Gameplay, foot contact/clearance/continuity, release-preservation and preview
+checks passed. Candidate and canonical game/cabinet checks passed at four
+viewports, including earned-seed chainsaw purchase and equipped wave two.
+Opening simulations remain 47.04–49.44 seconds. Sampled phone walking poses
+were inspected; diagnostic recording and sequence are in `docs/tree-army-walk-*`.
+
+Records: `production/tree-army-walk-{release,backend,browser,cabinet}-20261123.json`
+and `docs/tree-army-walk-live-phone-20261123.png`.
+Release artifact #14891384312 SHA256:
+`3c3a14c4c54ad734ada8979d11f46df92c31819e4c8b2c2443a8e8eb59556386`.
+Capture a fresh full live baseline before subsequent publication.
+
+---
+
+# Tree Army metal fist and chainsaw upgrade — published November 23, 2026
+
+[Prototype 0.14](https://tree-token.xyz/play/tree-army/test/) starts each run with
+a metal fist. An 80-seed between-wave purchase replaces it with a wrist-mounted
+chainsaw for the rest of the run. The chainsaw adds melee damage, reach and
+knockback with a distinct cutting animation. Ordinary enemies can have their
+attacks interrupted; tanks resist displacement and bosses retain their attack
+commitment. The shotgun's ranged role and opening spawn schedule/count remain.
+
+The user identified incorrect fist handedness in the initial preview. The first
+release run `45326131972` was cancelled during verification before publication.
+The published atlas uses the outside/back view of the right metal fist, with
+the thumb on the inner side. The chainsaw replaces that same wrist.
+
+Deployment `6b0514cbcf9d22003b6d784e` was published at **22:40:29 America/Chicago**
+(`2026-11-24T04:40:29.033Z`), verified ready and locked by
+[run 45326594565](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45326594565).
+Source: `5d136a162e5eb40bd23b72fe095e3021fdb34b01`, PRs #307 and #308.
+Fresh baseline: `6b04bdf56959e6a5452c7622`.
+
+Only playtest HTML changed and original `hero-melee.webp` was added. All
+**688 unrelated static paths**, **60 complete backend/provider records**,
+**5 schedules**, runtime and protected configuration were preserved;
+total inventory **690 paths**. No backend packages were rebuilt.
+
+Gameplay outcomes, purchase/persistence/reset, knockback/interruption/resistance,
+release preservation and historical preview checks passed. Candidate and
+canonical game/cabinet checks passed at four viewports. Each game check also
+played wave one with normal UI actions, earned 110 seeds, purchased the chainsaw
+for 80 and verified it equipped in wave two. Live shop/equipped screenshots were
+inspected. Opening simulations remain 47.04–49.44 seconds. Existing leg-gait
+feedback remains separate and unresolved.
+
+Records: `production/tree-army-melee-{release,backend,browser,cabinet}-20261123.json`,
+`docs/tree-army-melee-live-{equipped,shop}-20261123.png`, the corrected diagnostic
+recording and the development task list. Release artifact #14889818921 SHA256:
+`08f3970f67eb512cf497947fb82033c52058a50ea9e5543b7283a67967dfb070`.
+Capture a fresh full live baseline before subsequent publication.
+
+---
+
 # Tree Army bent-elbow carry — published November 23, 2026
 
 [Prototype 0.13](https://tree-token.xyz/play/tree-army/test/) corrects the rigid

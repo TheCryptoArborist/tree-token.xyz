@@ -14,11 +14,11 @@ characters and setting. The earlier free-roaming courtyard direction is supersed
    resize clear holds. Separate pointer IDs preserve movement while a second finger
    summons or uses a special. Opposing directions cancel; releasing one preserves
    the other. Focused move buttons also support holding Space/Enter.
-2. **Hero combat — next.** Ordinary ranged attack, automatic saw melee with readable
+2. **Hero combat — foundation published in Prototype 0.14.** Ordinary ranged attack, automatic saw melee with readable
    contact and bounded knockback, stable facing while retreating/target switching,
    and distinct power-shot behavior. Preserve the difference between ordinary
    attack cadence and special cooldowns.
-3. **Hero animation — pending.** Coordinated walking, idle, ranged and saw attacks.
+3. **Hero animation — Prototype 0.15 walking refinement; acceptance pending.** Coordinated walking, idle, ranged and saw attacks.
    Review full-speed motion before publication; the existing cutout animation is
    not considered visually accepted by the user.
 4. **Representative wave and balance — pending.** Meaningful hero positioning,
@@ -182,3 +182,136 @@ Published in deployment `6b04bdf56959e6a5452c7622`, source PR #304, release run
 `45278903790`. Candidate and canonical game/cabinet checks passed at four
 viewports. See the complete production carry-release record and
 `tree-army-carry-live-phone-20261123.png`.
+
+## Metal fist → chainsaw hand — Prototype 0.14
+
+New runs begin with a visible metal fist. Between waves, an 80-seed purchase
+replaces it with a wrist-mounted chainsaw for the remainder of that run. The
+first wave earns 110 seeds before other purchases. The shop prevents duplicate
+charges and buying during battle; the equipped label persists into the next
+wave. A fresh run restores the fist. The mobile control hint names the equipped
+melee weapon. Small-phone upgrade lists scroll while Begin wave stays visible;
+hidden camp controls and the tutorial shortcut stay hidden in other modes.
+
+Fist: 35 + 10 per hero-strength level damage, 66 reach, contact at .22 seconds,
+26-pixel push. Chainsaw: 58 + 14 per level damage, 88 reach, contact at .30 seconds,
+42-pixel push and a .9-second attack cooldown. Its unique animation lifts,
+cuts through, then recovers; moving before contact cancels the attack. These
+are Tree Army tuning values. Regular ranged shooting and Power Shot remain.
+
+Push eases over .14 seconds and interrupts ordinary enemy wind-ups. Tanks take
+60% displacement. Bosses take 20% and keep their attack commitment, preventing
+a boss stun lock. Damage resolves once at contact after checking live target,
+range and facing. Killing hits do not push corpses.
+
+Tests cover purchase affordability/duplicate/camp guards, persistence and reset,
+reach/damage/contact, both-facing push, interruption, resistance, movement
+cancellation and ranged fallback. Original opening spawn schedule/count remain;
+opening simulations clear in 47.04–49.44 seconds. Browser checks now include a
+normal-UI first-wave clear, earned-seed purchase and equipped second wave, as
+well as four viewport checks and asset failure. The unaccelerated diagnostic
+recording uses controlled high-health targets to inspect punch/cut animations.
+
+Original art: `hero-melee.webp`. See `tree-army-melee-mobile-20261123.webm` and
+the release screenshots. Hero leg-gait acceptance remains separate. Latest
+MystenLabs skills README checked; no SDK changes or third-party game code copied.
+
+### Right-fist correction before release
+
+The user identified the initial metal-fist artwork as a left fist on the hero's
+right arm. Release run `45326131972` was cancelled during verification, before
+candidate creation or publication; live remained Prototype 0.13. Regenerated the
+fist as the outside/back view of the right hand, preserving arm/wrist alignment
+and the chainsaw mounting. Refreshed the diagnostic recording and contact images.
+Combat rules, purchase behavior and the 0.14 delivery allowlist are unchanged.
+
+Published in deployment `6b0514cbcf9d22003b6d784e`, source PRs #307/#308, release run
+`45326594565`. The corrected right-fist artwork passed through the full release.
+Candidate and canonical checks include a real first-wave earning/purchase/next-wave
+flow. See the production melee release record and live equipped/shop screenshots.
+
+## Hero walking refinement — Prototype 0.15
+
+Lengthened the full stride from 80 to 112 world pixels without changing movement
+speed (185 pixels/second). Cadence falls from about 4.6 to 3.3 steps per second.
+The planted foot still cancels world travel, while the swinging knee lifts
+further and the ankle flexes through toe-off and landing. Lower hips maintain
+bent knees; body height now rises during passing and drops at contact.
+Opposing carry-arm swings and a lifted, lightly swaying cape expose the rear
+leg's passing motion. Both legs perform the same cycle half a stride apart.
+
+Existing art files, right-hand orientation, combat rules, movement speed,
+approved troop animation and opening spawns remain unchanged. Tests cover
+contact/clearance, fixed bone lengths, mirrored phase, ankle continuity, stopping,
+combat and progression. Opening simulations remain 47.04–49.44 seconds.
+The unaccelerated 390×844 diagnostic recording exercises walking both ways
+with fist and chainsaw; sampled phone poses were inspected. See
+`tree-army-walk-mobile-20261123.webm`. Numeric tests and sampled poses are not
+user acceptance of natural motion; that remains pending the next playtest.
+
+Release scope is the playtest HTML only, with no new assets or backend rebuild.
+
+Published in deployment `6b051af87755a75a0915a338`, source PR #310, release run
+`45329775899`. Candidate and canonical checks passed. Visual acceptance of the
+revised gait remains pending user playtest.
+
+## Enemy approach and attack spacing — Prototype 0.16
+
+Ordinary and heavy machines previously started wind-up at only 58 pixels
+center-to-center (38 reach + 20 tolerance), regardless of their visual size.
+This crowded the machine chassis into the target before the blade attack.
+New center-to-center reach: ordinary machine 88, heavy machine 108, thorn runner
+64 and boss 150 (formerly 58, 58, 58 and 100). Machine values account for the
+forward blade at contact and target body width at each rendered scale.
+
+Approach stops within four pixels of that bound; wind-up and strike use the
+same reach. The .40-second wind-up and .85-second action remain. A retreat out
+of reach still dodges, strikes resolve only once, and no forward creep occurs
+during wind-up. Damage, speed, cooldowns, hero combat, artwork, troop movement
+and the opening spawn schedule/count are unchanged. Earlier enemy contact does
+slightly affect combat pacing: normal opening simulations clear in 49.04–49.68
+seconds across the existing viewport scenarios.
+
+Tests exercise actual spawned normal/heavy/runner/boss sizes, approaching from
+both directions, stop distance, pre-hit telegraph, single contact, outside-range
+rejection and retreat dodges. A full-speed mobile diagnostic uses high-health
+enemies and disables hero auto-attacks to expose approach and strike timing;
+see `tree-army-enemy-spacing-mobile-20261123.webm` and contact screenshots.
+Release scope is playtest HTML only; preserve existing art and full live site.
+
+Published in deployment `6b0525020b1bdef34dace0f1`, source PR #312, release run
+`45334582545`. Candidate and canonical game/cabinet checks passed.
+
+## Recorded walking feedback — Prototype 0.17
+
+The user's November 24 recording rejects the 0.15 gait refinement. Close frame
+samples show compressed legs, high knees and a disproportionately large torso.
+The previous numeric foot-contact checks did not establish natural-looking motion.
+
+Replace the independently rotated thigh/shin/boot pieces with eight connected
+whole-leg illustrations. Near and far legs traverse all eight phases, four
+poses apart, so both lead and trail. Knees recover behind the body and the
+passing foot stays lower. Fixed source hip/ground anchors keep the illustrations
+aligned; idle and reduced motion use planted poses. New leg height is about
+85px; upper body scales to .88 with a -28px offset, giving fuller legs and a
+smaller torso. The shared weapon muzzle follows that same transform.
+
+Two paired-leg generation attempts were rejected for repeating one leading leg.
+The accepted source method illustrates one complete leg across the full cycle,
+then offsets the second leg. The final transparent atlas is original art,
+converted to WebP without matte cleanup. Existing right fist, chainsaw, weapon
+actions, troop walking, movement speed and enemy attack spacing remain.
+
+Validation covers all eight poses on both legs, opposite phase, stable idle,
+reduced motion, stopping, shared muzzle, combat, progression and enemy spacing.
+Obsolete cutout bone-length/foot-IK tests were removed with the old renderer.
+Opening simulations clear in 49.00–49.68 seconds. Diagnostic recordings run
+unaccelerated with walks in both directions and both melee weapons; sampled
+mobile and desktop poses are reviewed. Visual acceptance remains pending the
+user's next playtest, not inferred from passing logic tests.
+
+Publication replaces playtest HTML and adds only `hero-walk-legs.webp`.
+
+Published in deployment `6b053183229603fcba59509e`, source PR #314, release run
+`45339983272`. Candidate and canonical checks passed; natural-motion
+acceptance remains pending the user's playtest.

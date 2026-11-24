@@ -1,6 +1,6 @@
 const fs=require('fs'),vm=require('vm'),assert=require('assert/strict');const html=fs.readFileSync(require('path').join(__dirname,'../play/tree-army/test/index.html'),'utf8');let script=html.match(/<script>([\s\S]*)<\/script>/)[1];
 const drawCalls=[],noop=()=>{},elements=new Map();const element=id=>{if(!elements.has(id))elements.set(id,{textContent:'',hidden:false,disabled:false,dataset:{},style:{setProperty:noop},getBoundingClientRect:()=>({x:60,y:60,width:80,height:80}),listeners:{},addEventListener(name,fn){(this.listeners[name]??=[]).push(fn)},setAttribute:noop,setPointerCapture:noop,replaceChildren:noop,append:noop,querySelector:()=>element(id+'-small'),getContext:()=>new Proxy({drawImage:(...args)=>drawCalls.push(args),createLinearGradient:()=>({addColorStop:noop}),createRadialGradient:()=>({addColorStop:noop})},{get:(o,k)=>o[k]||noop}),width:1100,height:470});return elements.get(id)};
-const handlers={};const context={console,Math,Set,document:{getElementById:element,querySelectorAll:()=>[],createElement:()=>element(Math.random()),addEventListener:noop},innerWidth:1100,addEventListener:(name,fn)=>{handlers[name]=fn},requestAnimationFrame:noop};context.window=context;script=script.replace('requestAnimationFrame(frame);\n})();',`requestAnimationFrame(frame);window.test={enemyState:()=>enemies[0],heroWeaponPose,fireHero:(dx,blast=false)=>fire(hero,{x:hero.x+dx,y:hero.y},480,29,blast),shot:()=>shots[shots.length-1],heroState:()=>({...hero}),placeEnemy:x=>{spawn();enemies[0].x=x;enemies[0].y=hero.y;},shotX:()=>shots[0]?.x,heroFoot,heroKnee,articulatedHero,walkFrame,reset,update,draw,sync,summon,upgrade,pause,cannon,shield,startWave,get:()=>({mode,wave,sap,seeds,heroLevel,allies:allies.length,enemies:enemies.length,spawned,planned,grove,heroHp:hero.hp,heroX:hero.x,heroY:hero.y,firstEnemyX:enemies[0]?.x,heroWalk:hero.walk,heroGait:hero.gait,allOnLane:[hero,...allies,...enemies].every(a=>a.y===GROUND),enemyHp:enemies[0]?.hp,enemyY:enemies[0]?.y,heroMoving:hero.moving,allyX:allies[0]?.x,allyWalk:allies[0]?.walk}),set:v=>{if(v.wave)wave=v.wave;if(v.seeds!==undefined)seeds=v.seeds;if(v.grove!==undefined)grove=v.grove;if(v.hp!==undefined)hero.hp=v.hp;if(v.heroY!==undefined)hero.y=v.heroY;if(v.enemyY!==undefined)enemies[0].y=v.enemyY;if(v.heroCd!==undefined)hero.cd=v.heroCd;if(v.enemySpeed!==undefined)enemies[0].speed=v.enemySpeed;},clear:()=>{spawned=planned;enemies=[];update(.01);},killAll:()=>{for(const e of enemies)hurt(e,99999);},move:v=>held.add(v)};})();`);script=script.replace('loadArt();\nfunction frame', 'art.ready=true;art.images={background:{},army:{},hero:{},walk:{},heroRig:{}};\nfunction frame');vm.runInNewContext(script,context);const t=context.test;
+const handlers={};const context={console,Math,Set,document:{getElementById:element,querySelectorAll:()=>[],createElement:()=>element(Math.random()),addEventListener:noop},innerWidth:1100,addEventListener:(name,fn)=>{handlers[name]=fn},requestAnimationFrame:noop};context.window=context;script=script.replace('requestAnimationFrame(frame);\n})();',`requestAnimationFrame(frame);window.test={reduced:value=>art.reduced=value,enemyState:()=>enemies[0],enemiesState:()=>enemies,heroWeaponPose,fireHero:(dx,blast=false)=>fire(hero,{x:hero.x+dx,y:hero.y},480,29,blast),shot:()=>shots[shots.length-1],heroState:()=>({...hero}),placeEnemy:x=>{spawn();enemies[0].x=x;enemies[0].y=hero.y;},shotX:()=>shots[0]?.x,heroLegFrame,articulatedHero,walkFrame,reset,update,draw,sync,summon,upgrade,pause,cannon,shield,startWave,get:()=>({mode,wave,sap,seeds,heroLevel,allies:allies.length,enemies:enemies.length,spawned,planned,grove,heroHp:hero.hp,heroX:hero.x,heroY:hero.y,firstEnemyX:enemies[0]?.x,heroWalk:hero.walk,heroGait:hero.gait,allOnLane:[hero,...allies,...enemies].every(a=>a.y===GROUND),enemyHp:enemies[0]?.hp,enemyY:enemies[0]?.y,heroMoving:hero.moving,allyX:allies[0]?.x,allyWalk:allies[0]?.walk}),set:v=>{if(v.heroX!==undefined)hero.x=v.heroX;if(v.wave)wave=v.wave;if(v.seeds!==undefined)seeds=v.seeds;if(v.grove!==undefined)grove=v.grove;if(v.hp!==undefined)hero.hp=v.hp;if(v.heroY!==undefined)hero.y=v.heroY;if(v.enemyY!==undefined)enemies[0].y=v.enemyY;if(v.heroCd!==undefined)hero.cd=v.heroCd;if(v.enemySpeed!==undefined)enemies[0].speed=v.enemySpeed;if(v.enemyBoss!==undefined){enemies[0].boss=v.enemyBoss;enemies[0].reach=v.enemyBoss?150:88;}if(v.enemyTank!==undefined)enemies[0].tank=v.enemyTank;if(v.enemyHp!==undefined)enemies[0].hp=v.enemyHp;},clear:()=>{spawned=planned;enemies=[];update(.01);},killAll:()=>{for(const e of enemies)hurt(e,99999);},move:v=>held.add(v)};})();`);script=script.replace('loadArt();\nfunction frame', 'art.ready=true;art.images={background:{},army:{},hero:{},walk:{},heroRig:{}};\nfunction frame');vm.runInNewContext(script,context);const t=context.test;
 element('next').onclick();assert.equal(t.get().mode,'briefing');assert.equal(element('heading').textContent,'Protect the Tree of Life');element('next').onclick();assert.equal(element('heading').textContent,'Lead from the front');element('next').onclick();assert.equal(element('heading').textContent,'Grow your army');element('next').onclick();assert.equal(t.get().mode,'battle');t.sync();assert.match(element('field-note').textContent,/Hold/);const beforeX=t.get().heroX;handlers.keydown({key:'ArrowRight',target:{closest:()=>null},preventDefault:noop,repeat:false});t.update(.04);handlers.keyup({key:'ArrowRight'});assert(t.get().heroX>beforeX);t.sync();assert.match(element('field-note').textContent,/Summon/);t.reset();handlers.keydown({key:'D',target:{closest:()=>null},preventDefault:noop,repeat:false});t.update(.04);handlers.keyup({key:'D'});const releasedX=t.get().heroX;t.update(.04);assert.equal(t.get().heroX,releasedX,'Uppercase D must stop on release');t.reset();for(let i=0;i<52;i++)t.update(.04);assert(t.get().enemies>0);assert(t.get().firstEnemyX<1180);t.reset();t.summon('oak');assert.equal(t.get().allies,1);assert.equal(t.get().sap,25);t.summon('oak');assert.equal(t.get().allies,1);t.pause();assert.equal(t.get().mode,'paused');t.update(1);assert.equal(t.get().sap,25);t.pause();assert.equal(t.get().mode,'battle');t.clear();assert.equal(t.get().mode,'camp');t.set({seeds:100});t.upgrade('hero');assert.equal(t.get().heroLevel,1);assert.equal(t.get().seeds,60);t.set({wave:10});t.startWave();for(let i=0;i<5000&&t.get().mode==='battle';i++){t.update(.04);t.killAll();}assert.equal(t.get().mode,'won');t.reset();t.set({grove:0});t.update(.01);assert.equal(t.get().mode,'lost');t.reset();t.set({hp:0});t.update(.01);assert.equal(t.get().mode,'lost');t.reset();assert.equal(t.get().allies,0);assert.equal(t.get().heroLevel,0);t.reset();t.placeEnemy(t.get().heroX+30);t.cannon();assert.equal(t.get().enemyHp,77,'Power Shot waits for its cast');t.update(.24);assert.equal(t.get().enemies,0,'Muzzle offset must not skip enemies at point-blank range');t.draw();t.sync();console.log('PASS: three-step briefing, keyboard movement, contextual hints, closer first-wave entrance, summon cost and cooldown, insufficient sap, pause freezes simulation, camp transition, upgrade cost/effect, actual wave-10 spawning and victory, grove/hero defeat, clean restart, render/HUD smoke check. Visual browser/touch checks remain pending.');
 
 
@@ -29,30 +29,28 @@ console.log('PASS: disabled vertical input, common lane for hero/troops/enemies,
 
 t.reset();for(let i=0;i<6000&&t.get().mode==='battle';i++){t.summon('sprout');t.summon('archer');t.summon('oak');t.cannon();t.shield();t.update(.04);}assert.equal(t.get().mode,'camp','A real first wave must be winnable with summons and abilities, without forced kills');console.log('PASS: actual first-wave combat clears with normal summons/abilities.');
 
-// Foot contact is an outcome, not a pose counter: world travel must cancel
-// the planted foot's local travel, while the other knee clears the ground.
-for(const side of [0,1]){
- const phase=(side?Math.PI:0)+.2;
- const a=t.heroFoot(phase,side,1),b=t.heroFoot(phase+.2,side,1);
- assert(a.planted&&b.planted);assert.equal(a.y,-6);assert.equal(b.y,-6);
- assert(Math.abs(b.x-a.x+80*.2/(2*Math.PI))<1e-9,'Planted boot must not slide across the ground');
- const other=t.heroFoot(phase,1-side,1);assert(!other.planted);assert(other.y<-6,'Swinging foot clears the ground');
+// Both illustrated legs must traverse every pose, half a cycle apart.
+const seen=new Set();
+for(let i=0;i<8;i++){
+ const actor={gait:1,walk:(i+.1)*Math.PI*2/8};
+ const near=t.heroLegFrame(actor,1),far=t.heroLegFrame(actor,0);
+ seen.add(near);assert.equal((far-near+8)%8,4,'Legs alternate lead/support roles');
 }
-for(let i=0;i<32;i++){
- const phase=i*Math.PI/16,foot=t.heroFoot(phase,0,1),hip={x:-4,y:-66-Math.cos(phase*2)*1.2},knee=t.heroKnee(hip,foot);
- assert(Math.abs(Math.hypot(knee.x-hip.x,knee.y-hip.y)-32)<1e-8,'Thigh length must remain fixed');
- assert(Math.abs(Math.hypot(knee.x-foot.x,knee.y-foot.y)-34)<1e-8,'Shin length must remain fixed');
- assert.equal(t.heroFoot(phase,0,0).x,-8);assert.equal(t.heroFoot(phase,0,0).y,-6);
+assert.equal(seen.size,8,'Full cycle includes all eight illustrated poses');
+t.reduced(true);assert.equal(t.heroLegFrame({gait:1,walk:2},1),1,'Reduced motion keeps a planted stance while movement remains available');t.reduced(false);
+for(const phase of [0,1,3,7]){
+ assert.equal(t.heroLegFrame({gait:0,walk:phase},1),1,'Stopped hero uses planted near foot');
+ assert.equal(t.heroLegFrame({gait:0,walk:phase},0),2,'Stopped hero uses planted far foot');
 }
 for(const keys of [['d'],['a'],['ArrowRight'],['ArrowLeft']]){
  t.reset();const before=t.get();for(const key of keys)handlers.keydown({key,target:{closest:()=>null},preventDefault:noop});t.update(.04);for(const key of keys)handlers.keyup({key});
  const after=t.get(),travel=Math.hypot(after.heroX-before.heroX,after.heroY-before.heroY);
- assert(Math.abs(after.heroWalk-travel/80*2*Math.PI)<1e-9,'Every direction drives gait by actual distance');
+ assert(Math.abs(after.heroWalk-travel/112*2*Math.PI)<1e-9,'Every direction drives gait by actual distance');
  assert(after.heroGait>0);t.update(.04);assert(t.get().heroGait<after.heroGait,'Release blends toward a stable stance');
  assert.equal(t.get().heroWalk,after.heroWalk,'Release does not keep stepping');
 }
 t.reset();t.placeEnemy(t.get().heroX+150);t.move('right');t.update(.04);const firingWalk=t.get().heroWalk;t.update(.04);handlers.blur();assert(t.get().heroWalk>firingWalk,'Movement advances gait while auto-attack is suspended');
-console.log('PASS: alternating planted/swinging feet, ground contact, fixed bone lengths, horizontal distance phase, smooth stop and movement priority.');
+console.log('PASS: eight illustrated whole-leg poses, alternating lead legs, planted idle stance, distance phase, stopping and movement priority.');
 
 const actor={walk:1.4,gait:1,cd:0,facing:1,flash:0};drawCalls.length=0;t.articulatedHero(actor,330,365,false);
 const feet=drawCalls.filter(a=>a[1]===1296&&a[2]===524).map(a=>a.slice(1));drawCalls.length=0;
@@ -115,3 +113,43 @@ t.move('left');for(let i=0;i<8;i++)t.update(.04);assert.equal(t.get().enemyHp,77
 t.reset();t.placeEnemy(t.get().heroX+120);t.update(.01);const attackTime=t.heroState().action.time;t.pause();t.update(1);assert.equal(t.heroState().action.time,attackTime,'Pause freezes wind-up');t.pause();t.reset();assert.equal(t.heroState().action,null,'Restart clears pending strikes');
 t.placeEnemy(t.get().heroX+50);t.update(.01);t.killAll();t.update(.24);assert.equal(t.shot(),undefined,'Dead melee target cannot create a phantom shot');
 console.log('PASS: bidirectional retreat dodges, delayed punch with no projectile, one strike per action, stop-to-fire, movement cancellation, pause and reset.');
+
+// A weapon purchase is camp-only, charged once and retained through waves.
+t.reset();assert.equal(t.heroState().melee,'fist');t.set({seeds:100});t.upgrade('chainsaw');assert.equal(t.heroState().melee,'fist','No mid-battle purchase');assert.equal(t.get().seeds,100);
+t.clear();t.set({seeds:79});t.upgrade('chainsaw');assert.equal(t.heroState().melee,'fist','Insufficient seeds leave fist equipped');assert.equal(t.get().seeds,79);
+t.set({seeds:80});t.upgrade('chainsaw');assert.equal(t.heroState().melee,'saw');assert.equal(t.get().seeds,0);t.set({seeds:100});t.upgrade('chainsaw');assert.equal(t.get().seeds,100,'An equipped upgrade cannot charge again');t.set({wave:2});t.startWave();assert.equal(t.heroState().melee,'saw','Weapon persists across waves');t.reset();assert.equal(t.heroState().melee,'fist','New run starts with the metal fist');
+function equipSaw(){t.reset();t.clear();t.set({seeds:80});t.upgrade('chainsaw');t.set({wave:2});t.startWave();}
+for(const direction of [-1,1]){
+ equipSaw();const start=t.get().heroX+direction*80;t.placeEnemy(start);t.set({enemyHp:300,enemySpeed:0});t.update(.01);assert.equal(t.heroState().action.kind,'saw','Chainsaw reaches beyond fist range');t.update(.20);assert.equal(t.get().enemyHp,300,'No damage during wind-up');t.pause();const pausedX=t.get().firstEnemyX;t.update(1);assert.equal(t.get().firstEnemyX,pausedX);assert.equal(t.get().enemyHp,300);t.pause();t.update(.10);assert.equal(t.get().enemyHp,242,'Chainsaw contact deals its upgraded damage once');assert.equal(t.shot(),undefined,'Chainsaw is not a projectile');for(let i=0;i<4;i++)t.update(.04);assert.equal(t.get().enemyHp,242,'No repeat damage during recovery');assert(Math.abs(t.get().firstEnemyX-start-direction*42)<1e-6,'Full knockback follows the facing in either direction');
+}
+// A hit interrupts a committed ordinary attack, not just enemy movement.
+t.reset();t.placeEnemy(t.get().heroX+50);t.set({enemySpeed:0,enemyHp:300});t.update(.01);assert(t.enemyState().action);const safeHp=t.get().heroHp;t.update(.22);assert.equal(t.enemyState().action,null,'Punch cancels the pending enemy strike');for(let i=0;i<5;i++)t.update(.04);assert.equal(t.get().heroHp,safeHp,'Cancelled enemy strike cannot deal delayed damage');assert(Math.abs(t.get().firstEnemyX-t.get().heroX-76)<1e-6,'Metal fist pushes 26 pixels');
+for(const [flag,factor] of [['enemyTank',.6],['enemyBoss',.2]]){
+ equipSaw();t.placeEnemy(t.get().heroX+50);t.set({enemyHp:300,enemySpeed:0,[flag]:true});t.update(.01);t.update(.30);for(let i=0;i<4;i++)t.update(.04);assert(Math.abs(t.get().firstEnemyX-t.get().heroX-50-42*factor)<1e-6,'Heavy enemies resist knockback');if(flag==='enemyBoss')assert(t.get().heroHp<400,'Boss attack continues through the hit');
+}
+equipSaw();t.placeEnemy(t.get().heroX+50);t.set({enemyHp:300,enemySpeed:0});t.update(.01);t.move('left');for(let i=0;i<10;i++)t.update(.04);assert.equal(t.get().enemyHp,300,'Moving cancels chainsaw wind-up');
+equipSaw();t.placeEnemy(t.get().heroX+150);t.set({enemySpeed:0});t.update(.01);assert.equal(t.heroState().action.kind,'shot','Chainsaw does not replace ranged shotgun');
+console.log('PASS: metal fist to chainsaw purchase, cost/duplicate guards, wave persistence, fresh-run reset, upgraded reach/damage, timed hit, mirrored knockback, attack interruption, tank/boss resistance and movement cancellation.');
+
+// Actual spawned sizes must stop at blade/claw reach in either facing, signal
+// the strike before damage, and miss a target that retreats beyond that reach.
+for(const [kind,reach] of [['normal',88],['tank',108],['runner',64],['boss',150]])for(const direction of [-1,1]){
+ t.reset();t.set({heroX:1000});if(kind==='boss'){t.set({wave:10});t.startWave();t.set({heroX:1000});}
+ for(let i=0;i<(kind==='boss'?t.get().planned:4);i++)t.placeEnemy(1000);
+ const e=t.enemiesState().find(e=>kind==='boss'?e.boss:kind==='tank'?e.tank:kind==='runner'?e.runner:!e.boss&&!e.tank&&!e.runner);
+ assert(e);assert.equal(e.reach,reach,'Spawn reach follows the rendered species size');
+ t.enemiesState().splice(0,t.enemiesState().length,e);e.x=t.get().heroX+direction*(reach+35);e.hp=10000;t.set({heroCd:100});
+ const health=t.get().heroHp;
+ for(let i=0;i<100&&!e.action;i++)t.update(.02);
+ assert(e.action,'Approaching enemy starts its wind-up');
+ const gap=Math.abs(e.x-t.get().heroX);assert(gap<=reach&&gap>=reach-4,'Enemy stops outside the body instead of crowding its center');
+ assert.equal(t.get().heroHp,health,'Wind-up is visible before damage');
+ const stopped=e.x;t.update(.35);assert.equal(e.x,stopped,'Enemy does not creep closer during wind-up');assert.equal(t.get().heroHp,health);
+ t.update(.06);assert.equal(t.get().heroHp,health-e.damage,'Blade/claw contact damages once at its new reach');
+ t.update(.2);assert.equal(t.get().heroHp,health-e.damage,'Recovery does not repeat damage');
+ e.action=null;e.cd=0;e.x=t.get().heroX+direction*(reach+1);e.speed=0;t.update(.01);assert.equal(e.action,null,'Just outside reach cannot start an attack');
+ e.x=t.get().heroX+direction*(reach-2);t.update(.01);assert(e.action);const beforeDodge=t.get().heroHp;
+ t.move(direction>0?'left':'right');for(let i=0;i<11;i++)t.update(.04);
+ assert.equal(t.get().heroHp,beforeDodge,'Retreat beyond the new contact reach still dodges');
+}
+console.log('PASS: normal/heavy/runner/boss approach spacing in both facings, visible wind-up, no creeping, bounded single contact and retreat dodge.');
