@@ -1,3 +1,14 @@
+# Mixed-chain continues source requirement — November 24, 2026
+
+Existing Sui holders must be able to pay for continues using BNB USDT without
+buying another pass. The user selected 1 USDT plus BNB network gas. Source-only
+wallet-link and receipt validation now targets the existing paid-delivery protocol;
+no live endpoint, database, payment or gameplay behavior changed. Durable ledger,
+game delivery, recovery and canonical wallet UI integration remain launch gates.
+See `docs/multichain/generation-milestone/mixed-chain-continues/README.md`.
+
+---
+
 # BNB run boundary source milestone — November 24, 2026
 
 An isolated shadow-run coordinator and proposed local-only schema now cover atomic
