@@ -13,9 +13,9 @@ an inert package from the later database and backing-review enablement.
 - Function ZIP SHA256 `8c226ea9fd3390292e4f2e63363c65bfefd96b03fdd0a2258891ca67770caa14`, 645897 bytes.
 - Modern Node 24, stream invocation, bootstrap 2.24.0/API 2.
 - Route `/api/arcade-bnb-test/run-review`; 20 requests per 60 seconds per domain/IP.
-- Current reviewed live baseline: `6b053183229603fcba59509e`, ready and locked,
+- Current reviewed live baseline: `6b053a10d32f94ea6fc35ef1`, ready and locked,
   691 static paths, 60 functions and five schedules. This includes the latest
-  Tree Army illustrated walking release. `origin/main` at `38b452b` was merged;
+  Tree Army arm-proportions release. `origin/main` at `38b452b` was merged;
   incoming Tree Army source/assets remain identical to main.
 
 The GET-only `scripts/prepare-bnb-run-release.mjs` verifies the exact hosted ZIP,
