@@ -1,3 +1,38 @@
+# Tree Army hero arm proportions — published November 24, 2026
+
+[Prototype 0.18](https://tree-token.xyz/play/tree-army/test/) restores fuller hero
+arms beside the broad chest. Melee muscle thickness increases with a smooth
+taper to the original wrist; the metal fist and chainsaw retain their dimensions.
+The gun-side upper arm and lower forearm/grip are broader, with the shoulder
+moved outward to reveal the elbow. The shared muzzle follows the shoulder;
+barrel dimensions, arm lengths, walking proportions and combat rules remain.
+
+Deployment `6b053a10d32f94ea6fc35ef1` published at **01:19:22 America/Chicago**
+(`2026-11-24T07:19:22.221Z`), verified ready and locked.
+Source PR #316, commit `ee24097ac4146e33a55608e8c2b0122746b72413`;
+[release run 45345427663](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45345427663).
+Fresh baseline: `6b053183229603fcba59509e`.
+
+Only playtest HTML changed; no new assets. All **690 unrelated
+static paths**, **60 complete backend/provider records**, **5 schedules**,
+runtime and protected configuration were preserved. Total **691 paths**.
+No backend packages were rebuilt.
+
+Gameplay, shared muzzle, progression, enemy spacing, preservation and preview
+checks passed. Candidate and canonical game/cabinet checks passed at four
+viewports, including earned-seed chainsaw purchase and equipped wave two.
+Opening simulations clear in 49.04–49.72 seconds. Inspected diagnostic idle,
+aim and both-facing fist/chainsaw images and a normal-speed mobile recording
+are in `docs/tree-army-arm-proportions-*`.
+
+Records: `production/tree-army-arm-{release,backend,browser,cabinet}-20261124.json`
+and `docs/tree-army-arm-live-phone-20261124.png`.
+Release artifact #14899305123 SHA256:
+`e69f24263759605d2676d0e0318ffff51f1ba1987c5f23b0b78a7339c1a972ba`.
+Capture a fresh full live baseline before subsequent publication.
+
+---
+
 # Tree Army illustrated hero walking — published November 24, 2026
 
 [Prototype 0.17](https://tree-token.xyz/play/tree-army/test/) replaces the rejected
