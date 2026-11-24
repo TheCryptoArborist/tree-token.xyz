@@ -1,3 +1,5 @@
+> Follow-up: [durable store and HTTP source](../run-storage/README.md) now implements the storage contract below and passes local PostgreSQL concurrency tests. Neither migration nor endpoint is deployed.
+
 # Isolated session and run review coordinator — source only
 
 The new `scripts/multichain/bnb-run-authorization.mjs` validates existing BNB

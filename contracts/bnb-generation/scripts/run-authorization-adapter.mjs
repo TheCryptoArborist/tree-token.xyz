@@ -9,3 +9,9 @@ export function createGenerationRunReview({identityRpc,store,provider,sui,approv
   assess:({wallet,approvedGeneration})=>assessGenerationBacking({wallet,approvedGeneration,provider,sui,clock}),
  });
 }
+import {createRunStore,createRunHttp} from '../../../scripts/multichain/bnb-run-http.mjs';
+export function createGenerationRunReviewHttp({identityRpc,runRpc,provider,sui,approvedGeneration,clock=Date.now,admit}){
+ const store=createRunStore(runRpc);
+ const service=createGenerationRunReview({identityRpc,store,provider,sui,approvedGeneration,clock});
+ return createRunHttp({service,admit});
+}
