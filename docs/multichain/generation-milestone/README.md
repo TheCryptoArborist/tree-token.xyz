@@ -6,7 +6,8 @@ NFTree #2720 is back in dev wallet 45c4; the empty Sui vault is phase 3/generati
 historical registration, deployment, binding, deposit or message described below.
 
 - [Final completion evidence and 59 focused checks](./completion-completed/README.md)
-- [Next source milestone: generation-aware access](./access-integration-review.md)
+- [Implemented source-only generation backing reader](./access-reader/README.md)
+- [Remaining server access-integration review](./access-integration-review.md)
 - Review PR: https://github.com/TheCryptoArborist/tree-token.xyz/pull/280
 
 The sections below are historical records, not pending instructions. No further
