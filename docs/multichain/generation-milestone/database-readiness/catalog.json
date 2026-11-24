@@ -1,0 +1,271 @@
+{
+  "tables": [
+    {
+      "acl": "{postgres=arwdDxtm/postgres,service_role=arw/postgres}",
+      "rls": true,
+      "name": "arcade_bnb_test_challenges",
+      "constraints": [
+        "CHECK ((chain_id = 56))",
+        "CHECK (((address ~ '^0x[0-9a-fA-F]{40}$'::text) AND (lower(address) = wallet)))",
+        "CHECK ((isfinite(issued_at) AND isfinite(expires_at) AND (expires_at > issued_at) AND (expires_at <= (issued_at + '00:05:00'::interval))))",
+        "CHECK (((consumed_at IS NULL) OR (isfinite(consumed_at) AND (consumed_at >= issued_at) AND (consumed_at < expires_at))))",
+        "CHECK ((message_hash ~ '^[a-f0-9]{64}$'::text))",
+        "CHECK ((nonce ~ '^[a-f0-9]{64}$'::text))",
+        "CHECK ((origin = 'https://tree-token.xyz'::text))",
+        "PRIMARY KEY (nonce)",
+        "CHECK ((scope = 'eip155:56:treeforce89-test:v1'::text))",
+        "CHECK ((uri = 'https://tree-token.xyz/play/multichaintest/game/bnb/'::text))",
+        "CHECK (((wallet ~ '^0x[0-9a-f]{40}$'::text) AND (wallet <> ('0x'::text || repeat('0'::text, 40)))))"
+      ]
+    },
+    {
+      "acl": "{postgres=arwdDxtm/postgres,service_role=arw/postgres}",
+      "rls": true,
+      "name": "arcade_bnb_test_sessions",
+      "constraints": [
+        "CHECK ((chain_id = 56))",
+        "FOREIGN KEY (challenge_nonce) REFERENCES private.arcade_bnb_test_challenges(nonce)",
+        "UNIQUE (challenge_nonce)",
+        "CHECK ((isfinite(issued_at) AND isfinite(expires_at) AND (expires_at > issued_at) AND (expires_at <= (issued_at + '01:00:00'::interval))))",
+        "CHECK (((revoked_at IS NULL) OR (isfinite(revoked_at) AND (revoked_at >= issued_at))))",
+        "CHECK ((origin = 'https://tree-token.xyz'::text))",
+        "PRIMARY KEY (token_sha256)",
+        "CHECK ((scope = 'eip155:56:treeforce89-test:v1'::text))",
+        "CHECK ((token_sha256 ~ '^[a-f0-9]{64}$'::text))",
+        "CHECK ((wallet ~ '^0x[0-9a-f]{40}$'::text))"
+      ]
+    }
+  ],
+  "columns": [
+    {
+      "name": "nonce",
+      "type": "text",
+      "table": "arcade_bnb_test_challenges",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "name": "wallet",
+      "type": "text",
+      "table": "arcade_bnb_test_challenges",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "name": "address",
+      "type": "text",
+      "table": "arcade_bnb_test_challenges",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "name": "origin",
+      "type": "text",
+      "table": "arcade_bnb_test_challenges",
+      "default": "'https://tree-token.xyz'::text",
+      "nullable": "NO"
+    },
+    {
+      "name": "uri",
+      "type": "text",
+      "table": "arcade_bnb_test_challenges",
+      "default": "'https://tree-token.xyz/play/multichaintest/game/bnb/'::text",
+      "nullable": "NO"
+    },
+    {
+      "name": "chain_id",
+      "type": "integer",
+      "table": "arcade_bnb_test_challenges",
+      "default": "56",
+      "nullable": "NO"
+    },
+    {
+      "name": "scope",
+      "type": "text",
+      "table": "arcade_bnb_test_challenges",
+      "default": "'eip155:56:treeforce89-test:v1'::text",
+      "nullable": "NO"
+    },
+    {
+      "name": "message_hash",
+      "type": "text",
+      "table": "arcade_bnb_test_challenges",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "name": "issued_at",
+      "type": "timestamp with time zone",
+      "table": "arcade_bnb_test_challenges",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "name": "expires_at",
+      "type": "timestamp with time zone",
+      "table": "arcade_bnb_test_challenges",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "name": "consumed_at",
+      "type": "timestamp with time zone",
+      "table": "arcade_bnb_test_challenges",
+      "default": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "token_sha256",
+      "type": "text",
+      "table": "arcade_bnb_test_sessions",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "name": "challenge_nonce",
+      "type": "text",
+      "table": "arcade_bnb_test_sessions",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "name": "wallet",
+      "type": "text",
+      "table": "arcade_bnb_test_sessions",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "name": "origin",
+      "type": "text",
+      "table": "arcade_bnb_test_sessions",
+      "default": "'https://tree-token.xyz'::text",
+      "nullable": "NO"
+    },
+    {
+      "name": "chain_id",
+      "type": "integer",
+      "table": "arcade_bnb_test_sessions",
+      "default": "56",
+      "nullable": "NO"
+    },
+    {
+      "name": "scope",
+      "type": "text",
+      "table": "arcade_bnb_test_sessions",
+      "default": "'eip155:56:treeforce89-test:v1'::text",
+      "nullable": "NO"
+    },
+    {
+      "name": "issued_at",
+      "type": "timestamp with time zone",
+      "table": "arcade_bnb_test_sessions",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "name": "expires_at",
+      "type": "timestamp with time zone",
+      "table": "arcade_bnb_test_sessions",
+      "default": null,
+      "nullable": "NO"
+    },
+    {
+      "name": "revoked_at",
+      "type": "timestamp with time zone",
+      "table": "arcade_bnb_test_sessions",
+      "default": null,
+      "nullable": "YES"
+    }
+  ],
+  "new_rpc": null,
+  "functions": [
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "args": "p_nonce text, p_wallet text, p_message_hash text, p_token_sha256 text, p_expires_at timestamp with time zone",
+      "name": "arcade_bnb_test_consume_session_v1",
+      "config": [
+        "search_path=\"\""
+      ],
+      "source_md5": "3854be8b13a210b7665edee574b7462b",
+      "anon_execute": false,
+      "definition_md5": "7e5253c9df5e73c74f7d3df56b0ec451",
+      "service_execute": true,
+      "security_definer": false,
+      "authenticated_execute": false
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "args": "p_nonce text, p_wallet text, p_address text, p_issued_at timestamp with time zone, p_expires_at timestamp with time zone, p_message_hash text",
+      "name": "arcade_bnb_test_create_challenge_v1",
+      "config": [
+        "search_path=\"\""
+      ],
+      "source_md5": "35a456369e2f3ed7950097cae11493f8",
+      "anon_execute": false,
+      "definition_md5": "8358dae5001f2278852de3127940973d",
+      "service_execute": true,
+      "security_definer": false,
+      "authenticated_execute": false
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "args": "p_nonce text",
+      "name": "arcade_bnb_test_read_challenge_v1",
+      "config": [
+        "search_path=\"\""
+      ],
+      "source_md5": "6c0c36c267103a5521d0d3381b7cf4cb",
+      "anon_execute": false,
+      "definition_md5": "6dfcb017baa9925eb964c93ea911a8eb",
+      "service_execute": true,
+      "security_definer": false,
+      "authenticated_execute": false
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "args": "p_token_sha256 text",
+      "name": "arcade_bnb_test_read_session_v1",
+      "config": [
+        "search_path=\"\""
+      ],
+      "source_md5": "deb41139f7829dde5adb673a28e65d62",
+      "anon_execute": false,
+      "definition_md5": "4e5aabb4f7d1150b85178bd067cccf81",
+      "service_execute": true,
+      "security_definer": false,
+      "authenticated_execute": false
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "args": "p_token_sha256 text",
+      "name": "arcade_bnb_test_revoke_session_v1",
+      "config": [
+        "search_path=\"\""
+      ],
+      "source_md5": "37562712d8182b3bebab56e1b76e02a1",
+      "anon_execute": false,
+      "definition_md5": "fc0c19e2a3f897e2b53bdc02bef898f8",
+      "service_execute": true,
+      "security_definer": false,
+      "authenticated_execute": false
+    }
+  ],
+  "new_table": null,
+  "checked_at": "2026-11-24T18:32:02.927441+00:00",
+  "service_role": {
+    "superuser": false,
+    "bypass_rls": true
+  },
+  "private_usage": {
+    "anon": false,
+    "service": true,
+    "authenticated": false
+  },
+  "session_privileges": {
+    "anon_select": false,
+    "service_select": true,
+    "service_update": true,
+    "authenticated_select": false
+  }
+}

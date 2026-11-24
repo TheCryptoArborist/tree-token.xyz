@@ -1,0 +1,263 @@
+{
+  "lints": [
+    {
+      "name": "unindexed_foreign_keys",
+      "title": "Unindexed foreign keys",
+      "level": "INFO",
+      "facing": "EXTERNAL",
+      "categories": [
+        "PERFORMANCE"
+      ],
+      "description": "Identifies foreign key constraints without a covering index, which can impact database performance.",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0001_unindexed_foreign_keys",
+      "count": 8,
+      "findings": [
+        {
+          "detail": "Table \\`private.arcade_challenge_pilot_attempts\\` has a foreign key \\`arcade_challenge_pilot_attempts_pilot_id_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+          "metadata": {
+            "name": "arcade_challenge_pilot_attempts",
+            "type": "table",
+            "schema": "private",
+            "fkey_name": "arcade_challenge_pilot_attempts_pilot_id_fkey",
+            "fkey_columns": [
+              3
+            ]
+          },
+          "observed_at": "2026-11-24T18:32:36.955Z"
+        },
+        {
+          "detail": "Table \\`private.arcade_challenge_pilot_attempts\\` has a foreign key \\`arcade_challenge_pilot_attempts_session_hash_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+          "metadata": {
+            "name": "arcade_challenge_pilot_attempts",
+            "type": "table",
+            "schema": "private",
+            "fkey_name": "arcade_challenge_pilot_attempts_session_hash_fkey",
+            "fkey_columns": [
+              13
+            ]
+          },
+          "observed_at": "2026-11-24T18:32:36.955Z"
+        },
+        {
+          "detail": "Table \\`private.arcade_event_drafts\\` has a foreign key \\`arcade_event_drafts_updated_by_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+          "metadata": {
+            "name": "arcade_event_drafts",
+            "type": "table",
+            "schema": "private",
+            "fkey_name": "arcade_event_drafts_updated_by_fkey",
+            "fkey_columns": [
+              14
+            ]
+          },
+          "observed_at": "2026-11-24T18:32:36.955Z"
+        },
+        {
+          "detail": "Table \\`private.arcade_growth_daily_quests\\` has a foreign key \\`arcade_growth_daily_quests_source_source_id_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+          "metadata": {
+            "name": "arcade_growth_daily_quests",
+            "type": "table",
+            "schema": "private",
+            "fkey_name": "arcade_growth_daily_quests_source_source_id_fkey",
+            "fkey_columns": [
+              4,
+              5
+            ]
+          },
+          "observed_at": "2026-11-24T18:32:36.955Z"
+        },
+        {
+          "detail": "Table \\`private.arcade_growth_monthly_badges\\` has a foreign key \\`arcade_growth_monthly_badges_month_key_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+          "metadata": {
+            "name": "arcade_growth_monthly_badges",
+            "type": "table",
+            "schema": "private",
+            "fkey_name": "arcade_growth_monthly_badges_month_key_fkey",
+            "fkey_columns": [
+              2
+            ]
+          },
+          "observed_at": "2026-11-24T18:32:36.955Z"
+        },
+        {
+          "detail": "Table \\`tree_continue_v1.journal\\` has a foreign key \\`journal_order_id_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+          "metadata": {
+            "name": "journal",
+            "type": "table",
+            "schema": "tree_continue_v1",
+            "fkey_name": "journal_order_id_fkey",
+            "fkey_columns": [
+              2
+            ]
+          },
+          "observed_at": "2026-11-24T18:32:36.955Z"
+        },
+        {
+          "detail": "Table \\`tree_continue_v1.orders\\` has a foreign key \\`direct_claim_matches_order\\` without a covering index. This can lead to suboptimal query performance.",
+          "metadata": {
+            "name": "orders",
+            "type": "table",
+            "schema": "tree_continue_v1",
+            "fkey_name": "direct_claim_matches_order",
+            "fkey_columns": [
+              8,
+              3
+            ]
+          },
+          "observed_at": "2026-11-24T18:32:36.955Z"
+        },
+        {
+          "detail": "Table \\`tree_continue_v1.paid_delivery_events\\` has a foreign key \\`paid_delivery_events_order_id_fkey\\` without a covering index. This can lead to suboptimal query performance.",
+          "metadata": {
+            "name": "paid_delivery_events",
+            "type": "table",
+            "schema": "tree_continue_v1",
+            "fkey_name": "paid_delivery_events_order_id_fkey",
+            "fkey_columns": [
+              2
+            ]
+          },
+          "observed_at": "2026-11-24T18:32:36.955Z"
+        }
+      ]
+    },
+    {
+      "name": "auth_rls_initplan",
+      "title": "Auth RLS Initialization Plan",
+      "level": "WARN",
+      "facing": "EXTERNAL",
+      "categories": [
+        "PERFORMANCE"
+      ],
+      "description": "Detects if calls to \\`current_setting()\\` and \\`auth.<function>()\\` in RLS policies are being unnecessarily re-evaluated for each row",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0003_auth_rls_initplan",
+      "count": 3,
+      "findings": [
+        {
+          "detail": "Table \\`public.cromwell_halloween_2026\\` has a row level security policy \\`Add house with edit credential\\` that re-evaluates current_setting() or auth.<function>() for each row. This produces suboptimal query performance at scale. Resolve the issue by replacing \\`auth.<function>()\\` with \\`(select auth.<function>())\\`. See [docs](https://supabase.com/docs/guides/database/postgres/row-level-security#call-functions-with-select) for more info.",
+          "metadata": {
+            "name": "cromwell_halloween_2026",
+            "type": "table",
+            "schema": "public"
+          },
+          "observed_at": "2026-11-24T18:32:36.955Z"
+        },
+        {
+          "detail": "Table \\`public.cromwell_halloween_2026\\` has a row level security policy \\`Edit only with private credential\\` that re-evaluates current_setting() or auth.<function>() for each row. This produces suboptimal query performance at scale. Resolve the issue by replacing \\`auth.<function>()\\` with \\`(select auth.<function>())\\`. See [docs](https://supabase.com/docs/guides/database/postgres/row-level-security#call-functions-with-select) for more info.",
+          "metadata": {
+            "name": "cromwell_halloween_2026",
+            "type": "table",
+            "schema": "public"
+          },
+          "observed_at": "2026-11-24T18:32:36.955Z"
+        },
+        {
+          "detail": "Table \\`public.cromwell_halloween_2026\\` has a row level security policy \\`Remove only with private credential\\` that re-evaluates current_setting() or auth.<function>() for each row. This produces suboptimal query performance at scale. Resolve the issue by replacing \\`auth.<function>()\\` with \\`(select auth.<function>())\\`. See [docs](https://supabase.com/docs/guides/database/postgres/row-level-security#call-functions-with-select) for more info.",
+          "metadata": {
+            "name": "cromwell_halloween_2026",
+            "type": "table",
+            "schema": "public"
+          },
+          "observed_at": "2026-11-24T18:32:36.955Z"
+        }
+      ]
+    },
+    {
+      "name": "unused_index",
+      "title": "Unused Index",
+      "level": "INFO",
+      "facing": "EXTERNAL",
+      "categories": [
+        "PERFORMANCE"
+      ],
+      "description": "Detects if an index has never been used and may be a candidate for removal.",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+      "count": 7,
+      "findings": [
+        {
+          "detail": "Index \\`tree_knowledge_trial_passes_qualifying_tx_idx\\` on table \\`private.tree_knowledge_trial_passes\\` has not been used",
+          "metadata": {
+            "name": "tree_knowledge_trial_passes",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:32:36.955Z"
+        },
+        {
+          "detail": "Index \\`tree_knowledge_trial_rounds_question_set_idx\\` on table \\`private.tree_knowledge_trial_rounds\\` has not been used",
+          "metadata": {
+            "name": "tree_knowledge_trial_rounds",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:32:36.955Z"
+        },
+        {
+          "detail": "Index \\`tree_knowledge_trial_rounds_winner_attempt_idx\\` on table \\`private.tree_knowledge_trial_rounds\\` has not been used",
+          "metadata": {
+            "name": "tree_knowledge_trial_rounds",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:32:36.955Z"
+        },
+        {
+          "detail": "Index \\`tree_knowledge_trial_rounds_winner_tiebreak_attempt_idx\\` on table \\`private.tree_knowledge_trial_rounds\\` has not been used",
+          "metadata": {
+            "name": "tree_knowledge_trial_rounds",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:32:36.955Z"
+        },
+        {
+          "detail": "Index \\`tree_knowledge_trial_wallet_challenges_qualifying_tx_idx\\` on table \\`private.tree_knowledge_trial_wallet_challenges\\` has not been used",
+          "metadata": {
+            "name": "tree_knowledge_trial_wallet_challenges",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:32:36.955Z"
+        },
+        {
+          "detail": "Index \\`tree_knowledge_trial_tiebreak_attempts_rank_idx\\` on table \\`private.tree_knowledge_trial_tiebreak_attempts\\` has not been used",
+          "metadata": {
+            "name": "tree_knowledge_trial_tiebreak_attempts",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:32:36.955Z"
+        },
+        {
+          "detail": "Index \\`arcade_bnb_test_sessions_wallet_time\\` on table \\`private.arcade_bnb_test_sessions\\` has not been used",
+          "metadata": {
+            "name": "arcade_bnb_test_sessions",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:32:36.955Z"
+        }
+      ]
+    },
+    {
+      "name": "auth_db_connections_absolute",
+      "title": "Auth DB Connection Strategy is not Percentage",
+      "level": "INFO",
+      "facing": "EXTERNAL",
+      "categories": [
+        "PERFORMANCE"
+      ],
+      "description": "Using a percentage based allocation connection strategy for Auth can help to improve the server's performance when increasing instance size.",
+      "remediation": "https://supabase.com/docs/guides/deployment/going-into-prod",
+      "count": 1,
+      "findings": [
+        {
+          "detail": "Your project's Auth server is configured to use at most 10 connections. Increasing the instance size without manually adjusting this number will not improve the performance of the Auth server. Switch to a percentage based connection allocation strategy instead.",
+          "metadata": {
+            "type": "auth",
+            "entity": "Auth"
+          }
+        }
+      ]
+    }
+  ]
+}

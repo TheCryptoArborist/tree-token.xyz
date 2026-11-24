@@ -30,6 +30,7 @@ on:
       - 'scripts/package-bnb-run-review.mjs'
       - 'tests/multichain-bnb-run-runtime.test.mjs'
       - 'scripts/multichain/check-bnb-run-postgres.mjs'
+      - 'scripts/multichain/check-bnb-run-database-readiness.mjs'
       - 'supabase/migrations/*arcade_bnb_run_review.sql'
       - 'tests/multichain-bnb-run-http.test.mjs'
       - 'tests/multichain-bnb-run-authorization.test.mjs'
@@ -67,6 +68,7 @@ on:
       - 'scripts/package-bnb-run-review.mjs'
       - 'tests/multichain-bnb-run-runtime.test.mjs'
       - 'scripts/multichain/check-bnb-run-postgres.mjs'
+      - 'scripts/multichain/check-bnb-run-database-readiness.mjs'
       - 'supabase/migrations/*arcade_bnb_run_review.sql'
       - 'tests/multichain-bnb-run-http.test.mjs'
       - 'tests/multichain-bnb-run-authorization.test.mjs'
@@ -150,3 +152,6 @@ jobs:
           name: bnb-run-review-candidate
           path: /tmp/bnb-run-review-package/
           retention-days: 30
+
+      - name: Verify captured hosted database readiness against committed source
+        run: node scripts/multichain/check-bnb-run-database-readiness.mjs
