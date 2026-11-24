@@ -1,5 +1,5 @@
 """Read original CI artifacts; retain only ZIP bytes matching pinned live hashes."""
-import concurrent.futures, hashlib, io, json, os, pathlib, urllib.request, zipfile
+import concurrent.futures, hashlib, io, json, pathlib, zipfile
 ROOT=pathlib.Path(__file__).resolve().parent.parent
 OUT=ROOT/'production/recovered-function-archives'
 DOC=ROOT/'docs/multichain/generation-milestone/package-recovery'
@@ -20,14 +20,13 @@ def matches(data, source, depth=0):
                 result.extend(matches(z.read(entry),source+[entry.filename],depth+1))
     return result
 def inspect(a):
-    req=urllib.request.Request(f"https://api.github.com/repos/TheCryptoArborist/tree-token.xyz/actions/artifacts/{a['id']}/zip",headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'})
-    try:
-        with urllib.request.urlopen(req,timeout=45) as r: data=r.read(100*1024*1024+1)
-        if len(data)>100*1024*1024: raise ValueError('Artifact exceeds limit')
-        return a,matches(data,[]),None
-    except Exception as e:
-        # Do not print signed URLs, token headers or response bodies.
-        return a,[],type(e).__name__
+    directory=pathlib.Path('/tmp/bnb-original-artifacts')/str(a['id'])
+    if not directory.exists(): return a,[],'ArtifactDownloadUnavailable'
+    result=[]
+    for path in directory.rglob('*.zip'):
+        if path.is_file() and path.stat().st_size<=50*1024*1024:
+            result.extend(matches(path.read_bytes(),[str(path.relative_to(directory))]))
+    return a,result,None
 found={}; errors=[]
 with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
     for a,results,error in pool.map(inspect,artifacts):
@@ -40,4 +39,5 @@ with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
             print('RECOVERED',name,digest,flush=True)
 report={'baselineId':plan['baselineId'],'artifactsInspected':len(artifacts),'recovered':list(found.values()),'unmatched':[{'name':n,'sha256':h} for h,n in wanted.items() if n not in found],'errors':errors,'productionChanged':False,'packagesRebuilt':False}
 (DOC/'recovered.json').write_text(json.dumps(report,indent=2)+'\n')
+print('RECOVERY_ERRORS',json.dumps(errors[:3]))
 print('RECOVERY_SUMMARY',json.dumps({'matches':len(found),'errors':len(errors),'unmatched':len(report['unmatched'])}))
