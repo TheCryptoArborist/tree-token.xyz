@@ -144,3 +144,5 @@ reference material were fetched before Sui integration decisions. No SDK migrati
 or Sui transaction was introduced. The existing pinned signature primitive is
 retained; new entitlement reads must use the reviewed server adapter and current
 supported data APIs, not browser ownership claims.
+
+Hosted [CI 45509536990](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45509536990) passed on `3ac69f5`, including the new mixed-chain checks, existing Move/EVM regressions and isolated PostgreSQL/endpoint suites. No live changes accompanied validation.
