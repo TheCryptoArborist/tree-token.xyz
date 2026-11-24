@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
-// Prototype 0.17: illustrated whole-leg walk poses and corrected proportions.
+// Prototype 0.18: hero arm proportions; existing artwork stays byte-exact.
 export const REPLACED_HASHES = {
-  '/play/tree-army/test/index.html': '6e4e1da7f5e0b09b114122bae172711847af249a',
+  '/play/tree-army/test/index.html': '49ab3c713e0931cc8e42f1494e8d25c76632d9d6',
 };
-export const ADDED_PATHS = ['/play/tree-army/test/assets/hero-walk-legs.webp'];
+export const ADDED_PATHS = [];
 export const DELIVERY_PATHS = [...Object.keys(REPLACED_HASHES), ...ADDED_PATHS];
 // Preview builds also need assets already present in production. Keep this
 // catalog independent of the smaller, one-time publication allowlist.
