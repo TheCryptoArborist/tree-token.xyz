@@ -1,3 +1,15 @@
+# BNB run boundary source milestone — November 24, 2026
+
+An isolated shadow-run coordinator and proposed local-only schema now cover atomic
+ticket allocation, bounded leases, completion replay protection and diagnostic
+recovery. The default score verifier denies all submissions. No HTTP handler,
+hosted migration, deployment, gameplay or leaderboard change accompanied this work.
+See `docs/multichain/generation-milestone/run-lifecycle/README.md` for tests and
+remaining integration. The user's original-artwork requirement and current pass
+metadata gap are documented alongside it in `artwork.md`.
+
+---
+
 # Generation-1 wallet review accepted — November 24, 2026
 
 The user reported successful BNB sign-in for account ending 8789 and the expected

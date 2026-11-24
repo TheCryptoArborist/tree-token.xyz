@@ -24,6 +24,9 @@ on:
       - 'netlify/preview-functions/generation-slot.mjs'
       - 'netlify/preview-functions/generation-publication.mjs'
       - 'scripts/build-feature-preview.mjs'
+      - 'scripts/multichain/bnb-run-lifecycle.mjs'
+      - 'scripts/multichain/check-bnb-lifecycle-postgres.mjs'
+      - 'tests/multichain-bnb-run-lifecycle.test.mjs'
       - 'scripts/multichain/bnb-run-authorization.mjs'
       - 'scripts/multichain/bnb-run-http.mjs'
       - 'netlify/bnb-run-review-functions/**'
@@ -64,6 +67,9 @@ on:
       - 'netlify/preview-functions/generation-slot.mjs'
       - 'netlify/preview-functions/generation-publication.mjs'
       - 'scripts/build-feature-preview.mjs'
+      - 'scripts/multichain/bnb-run-lifecycle.mjs'
+      - 'scripts/multichain/check-bnb-lifecycle-postgres.mjs'
+      - 'tests/multichain-bnb-run-lifecycle.test.mjs'
       - 'scripts/multichain/bnb-run-authorization.mjs'
       - 'scripts/multichain/bnb-run-http.mjs'
       - 'netlify/bnb-run-review-functions/**'
@@ -122,7 +128,7 @@ jobs:
           git diff --exit-code -- tools/bnb-generation/app.js
       - name: EVM contract tests
         run: npm test --prefix contracts/bnb-generation
-      - run: node --test contracts/bnb-generation/test/wallet-preflight.test.mjs contracts/bnb-generation/test/deployment-review.test.mjs contracts/bnb-generation/test/handoff.test.mjs contracts/bnb-generation/test/read-rpc.test.mjs contracts/bnb-generation/test/path-review.test.mjs contracts/bnb-generation/test/configuration-handoff.test.mjs contracts/bnb-generation/test/return-fees.test.mjs contracts/bnb-generation/test/completion-review.test.mjs contracts/bnb-generation/test/generation-access.test.mjs tests/multichain-bnb-run-authorization.test.mjs tests/multichain-bnb-run-http.test.mjs
+      - run: node --test contracts/bnb-generation/test/wallet-preflight.test.mjs contracts/bnb-generation/test/deployment-review.test.mjs contracts/bnb-generation/test/handoff.test.mjs contracts/bnb-generation/test/read-rpc.test.mjs contracts/bnb-generation/test/path-review.test.mjs contracts/bnb-generation/test/configuration-handoff.test.mjs contracts/bnb-generation/test/return-fees.test.mjs contracts/bnb-generation/test/completion-review.test.mjs contracts/bnb-generation/test/generation-access.test.mjs tests/multichain-bnb-run-authorization.test.mjs tests/multichain-bnb-run-http.test.mjs tests/multichain-bnb-run-lifecycle.test.mjs
       - name: Compile release Solidity
         run: npm run compile --prefix contracts/bnb-generation
       - name: Fetch checksum-pinned Sui compiler
@@ -146,6 +152,9 @@ jobs:
 
       - name: Disposable PostgreSQL ticket concurrency and revocation checks
         run: BNB_PG_BIN="$(pg_config --bindir)" node scripts/multichain/check-bnb-run-postgres.mjs
+
+      - name: Disposable PostgreSQL shadow run concurrency and score checks
+        run: BNB_PG_BIN="$(pg_config --bindir)" node scripts/multichain/check-bnb-lifecycle-postgres.mjs
 
       - name: Test and package disabled isolated review endpoint
         run: |

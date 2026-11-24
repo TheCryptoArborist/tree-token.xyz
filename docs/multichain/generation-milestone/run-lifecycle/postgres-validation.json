@@ -1,0 +1,26 @@
+{
+  "localOnly": true,
+  "gameplayAuthorized": false,
+  "positiveBacking": "synthetic fixtures only",
+  "checks": [
+    "existing identity function definitions and grants unchanged",
+    "existing identity/review definitions and grants unchanged",
+    "failed allocation leaves ticket unconsumed and transaction recoverable",
+    "12 workers atomically consume once/create one run; retries do not extend lease",
+    "12 concurrent renewals: one revision winner",
+    "12 concurrent finalizations: one durable score",
+    "finished runs cannot restart or renew",
+    "terminal close beats stale positive renew and finalization",
+    "stale/future server proof and wrong generation rejected",
+    "evidence replay across runs rolls back finalization",
+    "expired lease cannot be revived or scored",
+    "logout committed while finalizer waits denies score and new starts",
+    "RLS, invoker and service-only RPC; runtime DELETE denied",
+    "real coordinator/review store/run store: idempotent recovery, renew and verifier-derived score",
+    "actual coordinator permanently closes durable run after entitlement loss",
+    "already-consumed review ticket cannot be exchanged for a run",
+    "lease expiring during verifier denies finalization despite fresh backing",
+    "administrator ticket retention cascades only the expired parent run; recent runs preserved"
+  ],
+  "passed": 18
+}

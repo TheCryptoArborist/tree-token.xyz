@@ -5,6 +5,8 @@ NFTree #2720 is back in dev wallet 45c4; the empty Sui vault is phase 3/generati
 1; the BNB pass is Retired, purchases paused and nonplayable. Do not repeat any
 historical registration, deployment, binding, deposit or message described below.
 
+- [Source-only shadow run lifecycle and score boundary](./run-lifecycle/README.md)
+- [Original artwork requirement and current metadata gap](./run-lifecycle/artwork.md)
 - [Real-wallet negative acceptance and next source milestone](./review-acceptance/README.md)
 - [Published canonical review page and 404 repair](./review-page/README.md)
 - [Published fixed-generation review endpoint](./fixed-review-candidate/README.md)
