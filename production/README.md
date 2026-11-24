@@ -1,3 +1,27 @@
+# Generation 1 lifecycle completed — November 23, 2026
+
+The approved final BNB completion independently verifies at source and on Sui.
+BNB `0x3e62c5a7479937bc2e07756a8e8fdcf106c39a07131cdcb70542983dfe077bee`
+cost **0.004594741974304116 BNB total**, within 0.006 approval. Sui delivery
+`EPyf5Kc1BzjFq519ng7F3Q5Gs2g3oVML2Cay4npq7TaR` emitted the exact Completed
+and PacketDelivered events. The vault is empty **phase 3 / generation 1**;
+NFTree #2720 remains in dev wallet **45c4**. BNB pass stays Retired, paused and
+nonplayable. No more transaction is required to close this generation; do not resend.
+
+Evidence, reproducible read-only verifier, **59 passing focused checks**, setup
+and remaining tasks: `docs/multichain/generation-milestone/completion-completed/`.
+Public sales and gameplay remain disabled. The earlier 25-USDT purchase is not
+refunded by redemption/completion. Later deposits, spending and activation require
+separate reviewed milestones.
+
+This is evidence/documentation only: no website or contract deployment. Preserve
+newer unrelated main/production work, including Tree Army updates. Before any
+future release capture the actual current full inventory and preserve all existing
+static files, complete backend/provider/runtime records, settings and five schedules.
+Never replace live production with the historical root snapshot.
+
+---
+
 # Final BNB completion signing page published — November 23, 2026
 
 Locked deploy `6b047fa4c9ac1e8b32621216`, published at **12:05:12 America/Chicago**
