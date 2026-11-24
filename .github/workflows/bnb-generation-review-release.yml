@@ -1,0 +1,42 @@
+name: Preserve and publish canonical generation review page
+on:
+  push:
+    branches: ['feat/bnb-generation-custody']
+permissions:
+  contents: read
+concurrency:
+  group: tree-production-preservation-release
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: contains(github.event.head_commit.message, '[publish generation review page]')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci --ignore-scripts
+      - run: npm ci --ignore-scripts --prefix contracts/bnb-generation
+      - run: node --test tests/bnb-generation-review-release.test.mjs tests/bnb-generation-review-page.test.mjs
+      - run: npm install --prefix /tmp/bnb-review-browser --no-save --ignore-scripts playwright@1.56.1
+      - run: node /tmp/bnb-review-browser/node_modules/playwright/cli.js install --with-deps chromium --no-shell
+      - run: node scripts/check-bnb-generation-review-browser.mjs /tmp/bnb-review-browser/node_modules/playwright/index.mjs /tmp/bnb-review-source-browser
+      - name: Capture current production, add only two static files and verify publication
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: node scripts/release-bnb-generation-review-page.mjs /tmp/bnb-review-page-release
+      - name: Verify canonical live assets with simulated wallet and API
+        run: node scripts/check-bnb-generation-review-browser.mjs /tmp/bnb-review-browser/node_modules/playwright/index.mjs /tmp/bnb-review-live-browser live
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bnb-generation-review-page-publication
+          path: |
+            /tmp/bnb-review-source-browser
+            /tmp/bnb-review-page-release
+            /tmp/bnb-review-live-browser
+          if-no-files-found: warn

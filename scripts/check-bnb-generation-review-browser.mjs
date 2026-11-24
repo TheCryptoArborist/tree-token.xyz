@@ -1,5 +1,7 @@
 // Canonical-origin browser simulation; no real wallet/session/chain operations.
 import fs from 'node:fs';import path from 'node:path';import assert from 'node:assert/strict';import {pathToFileURL} from 'node:url';import {createHash} from 'node:crypto';
+import {assertServedContent} from './rootcaster-served-content.mjs';
+const liveAssets=process.argv[4]==='live';
 const {chromium}=await import(pathToFileURL(path.resolve(process.argv[2])).href);
 const out=process.argv[3]||'/tmp/bnb-generation-review-evidence';fs.mkdirSync(out,{recursive:true});
 const A='0x'+'a1'.repeat(20),B='0x'+'b2'.repeat(20),SCOPE='eip155:56:treeforce89-test:v1',PATH='/play/generation-review/',ORIGIN='https://tree-token.xyz';
@@ -12,6 +14,9 @@ async function open(width,variant='deny',origin=ORIGIN){
  page.on('pageerror',e=>errors.push(e.message));
  await context.route('**/*',async route=>{
   const req=route.request(),u=new URL(req.url());
+  if(liveAssets&&origin===ORIGIN&&[PATH,PATH+'index.html',PATH+'app.js'].includes(u.pathname)){
+   const name=u.pathname.endsWith('app.js')?'app.js':'index.html',r=await route.fetch(),body=await r.body();assert.equal(r.status(),200);assertServedContent(name,body,fs.readFileSync('play/generation-review/'+name));return route.fulfill({response:r,body});
+  }
   if(u.origin===origin&&[PATH,PATH+'index.html'].includes(u.pathname))return route.fulfill({contentType:'text/html',body:fs.readFileSync('play/generation-review/index.html')});
   if(u.origin===origin&&u.pathname===PATH+'app.js')return route.fulfill({contentType:'application/javascript',body:fs.readFileSync('play/generation-review/app.js')});
   const reply=(status,body)=>route.fulfill({status,contentType:'application/json',body:JSON.stringify(body)});
@@ -55,5 +60,5 @@ try{
  {const x=await open(390);await x.page.evaluate(()=>window.mock.chain='0x1');await x.page.locator('#connect').click();await x.page.waitForFunction(()=>document.querySelector('#status').textContent.includes('Select BNB Smart Chain'));assert.equal(x.actions.length,0);await x.close();results.push('wrong chain blocked before challenge');}
  {const x=await open(390,'deny','https://untrusted.invalid');assert.equal(await x.page.locator('button:enabled').count(),0);assert.equal(x.actions.length,0);await x.close();results.push('noncanonical origin cannot request wallet');}
  const files=['play/generation-review/index.html','play/generation-review/app.js'].map(p=>({path:p,sha256:createHash('sha256').update(fs.readFileSync(p)).digest('hex')}));
- const report={passed:results.length,scenarios:results,files,mode:'mocked wallet and API on canonical origin',liveWalletTest:false,deployed:false,gameplayAuthorized:false};fs.writeFileSync(out+'/browser.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report));
+ const report={passed:results.length,scenarios:results,files,mode:liveAssets?'live canonical assets with mocked wallet and API':'mocked wallet and API on canonical origin',liveWalletTest:false,deployed:liveAssets,gameplayAuthorized:false};fs.writeFileSync(out+'/browser.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report));
 }finally{await browser.close();}
