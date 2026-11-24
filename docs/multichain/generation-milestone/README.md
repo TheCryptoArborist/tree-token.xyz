@@ -7,6 +7,7 @@ historical registration, deployment, binding, deposit or message described below
 
 - [Final completion evidence and 59 focused checks](./completion-completed/README.md)
 - [Implemented source-only generation backing reader](./access-reader/README.md)
+- [Implemented source-only session/run review coordinator](./run-authorization/README.md)
 - [Remaining server access-integration review](./access-integration-review.md)
 - Review PR: https://github.com/TheCryptoArborist/tree-token.xyz/pull/280
 
