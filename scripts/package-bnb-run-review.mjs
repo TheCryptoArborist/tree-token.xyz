@@ -8,7 +8,7 @@ import { parseArgs } from 'node:util';
 import os from 'node:os';
 import { execFileSync } from 'node:child_process';
 import { build } from 'esbuild';
-import { config as runtimeConfig } from '../netlify/bnb-run-review-functions/arcade-bnb-run-review.mjs';
+import { config as runtimeConfig, reviewPolicy } from '../netlify/bnb-run-review-functions/arcade-bnb-run-review.mjs';
 import { zipFunction } from '@netlify/zip-it-and-ship-it';
 
 export const FUNCTION_NAME = 'arcade-bnb-run-review';
@@ -96,11 +96,15 @@ export async function main(args = process.argv.slice(2)) {
       const r=await handler(new Request('https://tree-token.xyz/api/arcade-bnb-test/run-review'));
       assert.equal(r.status,503);
       assert.deepEqual(await r.json(),{error:'review-disabled',gameplayAuthorized:false});
+      globalThis.Netlify={env:{get:n=>({TREE_KNOWLEDGE_TRIAL_SUPABASE_URL:'https://lehswszuekjqottolmsf.supabase.co',TREE_KNOWLEDGE_TRIAL_SUPABASE_SECRET_KEY:'sb_secret_'+'x'.repeat(32)})[n]}};
+      const missing=await handler(new Request('https://tree-token.xyz/api/arcade-bnb-test/run-review',{method:'POST',headers:{Origin:'https://tree-token.xyz','Content-Type':'application/json'},body:'{"action":"issue"}'}),{site:{id:'aa62f324-b880-47d6-85b8-4ba0700ff5bf'},ip:'192.0.2.1'});
+      assert.equal(missing.status,401);assert.deepEqual(await missing.json(),{error:'invalid-session',gameplayAuthorized:false});
+
     `],{cwd:smoke,stdio:'pipe'});
   } finally {fs.rmSync(smoke,{recursive:true});}
   const bytes = fs.readFileSync(built.path);
   const manifest = { schemaVersion: 1, kind: 'bnb-run-review-package', name: FUNCTION_NAME,
-    extractedZipSmokePassed: true, deployed: false, gameplayAuthorized: false, productionApproved: false, paymentsEnabled: false,
+    reviewPolicy, extractedZipSmokePassed: true, deployed: false, gameplayAuthorized: false, productionApproved: false, paymentsEnabled: false,
     filename: FUNCTION_NAME + '.zip', sha256: sha256(bytes), bytes: bytes.length,
     runtimeVersion: built.runtimeVersion, invocationMode: built.invocationMode,
     buildData: built.buildData, routes: built.routes, trafficRules: built.trafficRules,
