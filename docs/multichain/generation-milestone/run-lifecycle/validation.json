@@ -12,5 +12,12 @@
     "scripts/multichain/check-bnb-lifecycle-postgres.mjs": "bd211b7bfd8c5fde4cdc82d4842f4205c436d5211a48f710aaba20bba02ce967",
     "tests/multichain-bnb-run-lifecycle.test.mjs": "c8244ca6551418432671d4c54baab41ca3d65fb8842318ded71fab953e7a45ae",
     "docs/multichain/generation-milestone/run-lifecycle/schema.sql": "29b3cfa2b19d4c9b12b9944b734b1ab05be74ce69b2e19ab2db7896278e68b0e"
+  },
+  "hostedCi": {
+    "conclusion": "success",
+    "headSha": "fa608679e16fd75df5d4389255fa10becbba80ea",
+    "status": "completed",
+    "updatedAt": "2026-11-24T22:58:07Z",
+    "url": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45505461813"
   }
 }
