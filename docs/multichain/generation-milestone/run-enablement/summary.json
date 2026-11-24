@@ -1,0 +1,45 @@
+{
+  "baselineId": "6b053b8285e0ee251b84ad06",
+  "planHash": "ccad4b92072f41c99e9bf9a32b3bad1006637097992d08b3c4add23d79f1211e",
+  "sourceCommit": "c58053ccf898a460a2261e867e837cafbca81fff",
+  "preparedAt": "2026-11-24T19:19:53.477Z",
+  "staticPaths": 691,
+  "functions": 61,
+  "schedules": 5,
+  "backing": {
+    "backingEligible": false,
+    "gameplayAuthorized": false,
+    "reason": "generation-not-active-backed",
+    "wallet": "0xf2ab1eebbecb4e315fe95d8b532d1ab00f1a8789",
+    "approvedGeneration": "1",
+    "bnb": {
+      "block": "0x813d627",
+      "hash": "0x7b2bf1704e31bf36d076035527df03dca3d1388b3df496cf5c24326f81539db3",
+      "timestamp": "0x6b05e355",
+      "state": 4,
+      "generation": "1",
+      "owner": null,
+      "canPlay": false,
+      "redemption": "0xc99c328de96599e4ea3332e097436cdc5bd542a0a479f892543b3008664128b3",
+      "recipient": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4"
+    },
+    "sui": {
+      "eligible": false,
+      "phase": 3,
+      "generation": "1",
+      "checkpoint": {
+        "sequenceNumber": 348803512,
+        "timestamp": "2026-11-24T19:19:48.672Z"
+      }
+    },
+    "checkedAt": "2026-11-24T19:19:51.451Z"
+  },
+  "generation": "1",
+  "readOnlyPreparation": true,
+  "environmentChanged": false,
+  "published": false,
+  "paymentsEnabled": false,
+  "gameplayAuthorized": false,
+  "newDeposits": false,
+  "ci": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45468891584"
+}
