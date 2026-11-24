@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-11-24T23:59:01.351511+00:00",
+  "sourceOnly": true,
+  "postgresChecks": 20,
+  "existingPolicyTests": 40,
+  "hostedSchemaChanged": false,
+  "gameDeliveryConnected": false,
+  "livePaymentsEnabled": false,
+  "hashes": {
+    "scripts/multichain/sui-bnb-continue-store.mjs": "d29c87d99dfce92cb77786e72c1645cf99b1f42d294e9b87ad05aa3c13bd08ae",
+    "scripts/multichain/check-sui-bnb-continue-postgres.mjs": "8554715d5d2e9a204fad060dea89682fec579e976eca889715e5530a4812e49e",
+    "docs/multichain/generation-milestone/mixed-chain-store/schema.sql": "f158040be61e120af2e9f6dcffdb2d0109395f1f29367fa59c24551822121976",
+    "vendor/bnb-continue-store/package-lock.json": "3c9793f231a7c03504f59c57b87d6ff0d7316fe04a037ca1c3705c6209048b42"
+  }
+}

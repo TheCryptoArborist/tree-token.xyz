@@ -1,3 +1,15 @@
+# Mixed-chain checkout store source — November 24, 2026
+
+A source-only PostgreSQL adapter now atomically records signed checkouts, BNB
+receipts and pending delivery-review records. Twenty disposable database checks
+and 40 existing payment-policy tests passed. No hosted schema, site package,
+Sui authentication/payment behavior or game delivery changed. The pending records
+do not grant lives. Next is the reviewed bridge to the existing paid-delivery
+protocol and authoritative Sui session/flight mapping. Evidence:
+`docs/multichain/generation-milestone/mixed-chain-store/README.md`.
+
+---
+
 # Mixed-chain continues source requirement — November 24, 2026
 
 Existing Sui holders must be able to pay for continues using BNB USDT without

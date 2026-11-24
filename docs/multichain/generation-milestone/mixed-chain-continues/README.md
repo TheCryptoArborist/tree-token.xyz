@@ -1,3 +1,5 @@
+> The durable store is now implemented and locally tested; see [store milestone](../mixed-chain-store/README.md). The original in-memory-only validation below describes the earlier policy milestone. Production identity mapping and game delivery are still pending.
+
 # Launch requirement: Sui access with BNB USDT continues
 
 On November 24, 2026 the user made this an initial-launch requirement: at least
