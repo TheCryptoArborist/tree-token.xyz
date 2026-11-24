@@ -36,6 +36,12 @@
 .powers{align-content:start}.powers button{max-height:92px}
 @media(max-width:900px),(pointer:coarse){.controls{grid-template-columns:1fr 1fr;row-gap:5px}.move{gap:4px}.move button,.powers button{min-height:64px}.powers button{height:64px}}
 @media(max-height:500px) and (orientation:landscape){.controls{grid-template-columns:140px 1fr 210px}#move-help{display:none}.move{grid-template-rows:auto 1fr}.move button,.powers button{height:48px;min-height:48px}}
+/* Keep the next-wave button visible while a small phone scrolls upgrades. */
+.upgrades[hidden],.skip[hidden]{display:none}
+.card:has(.upgrades:not([hidden])){display:flex;flex-direction:column;overflow:hidden}
+.card:has(.upgrades:not([hidden])) .upgrades{min-height:0;overflow-y:auto;align-content:flex-start}
+.card:has(.upgrades:not([hidden])) #next{flex-shrink:0}
+@media(max-width:900px),(pointer:coarse){.card:has(.upgrades:not([hidden])) #description{display:none}.card:has(.upgrades:not([hidden])) h2{flex-shrink:0}.upgrades small{font-size:11px}.upgrades button{min-height:44px}#upgrade-chainsaw{flex-basis:100%}}
 </style></head>
 <body>
 <header><a href="/play/">← TREE ARCADE</a><span><span class="desktop-badge">EARLY PLAYTEST · </span>FREE PLAY</span></header>
@@ -44,11 +50,11 @@
 <main class="shell">
 <div class="stats" aria-label="Game status"><span>WAVE <strong id="wave">1 / 10</strong></span><span>GROVE <strong id="grove">100%</strong></span><span>HERO <strong id="hero">100%</strong></span><span>SAP <strong id="sap">100</strong></span><span>SEEDS <strong id="seeds">0</strong></span><button id="pause">Pause</button></div>
 <div class="stage"><canvas width="1100" height="470" id="battle" aria-label="Tree Hero and forest troops defending the Tree of Life from enemies advancing from the right"></canvas><div class="field-note" id="field-note" hidden></div><div id="drag-cue" class="drag-cue" hidden></div>
-<section class="veil" id="overlay"><div class="card"><span class="eyebrow" id="kicker">DEFEND THE GROVE</span><h2 id="heading">Stand tall. Fight together.</h2><p id="description">Hold Left or Right to move along the battle lane. Release to stop. Stop to attack automatically: shoot at range or punch nearby enemies. Spend sap on allies; Power Shot and Shield are separate special abilities.</p><div id="shop" class="upgrades" hidden></div><button id="next" class="primary" disabled>Show me how</button><button id="skip" class="skip" disabled>Start battle</button><p class="notice" id="notice" aria-live="polite">Original TREE prototype · No wallet or payment needed</p></div></section></div>
-<div class="controls"><div class="move"><span class="control-label">MOVE · <span class="auto-fire">STOP TO ATTACK</span></span><button id="move-left" aria-label="Move left" aria-describedby="move-help" aria-pressed="false">←<span>Left</span></button><button id="move-right" aria-label="Move right" aria-describedby="move-help" aria-pressed="false">→<span>Right</span></button><span id="move-help">Hold to move · Release to stop</span></div><div class="troops"><span class="control-label">SUMMON ALLIES · TAP A CARD</span><button data-unit="sprout"><span class="unit-name">Seedling</span><small>25 sap · melee</small></button><button data-unit="archer"><span class="unit-name">Archer</span><small>45 sap · ranged</small></button><button data-unit="oak"><span class="unit-name">Guardian</span><small>75 sap · tank</small></button></div><div class="powers"><span class="control-label">SPECIAL ABILITIES · TAP</span><button id="blast">Power Shot<small>Special · burst</small></button><button id="shield">Shield<small>Heal + protect</small></button></div><p class="touch-help">Hold Left / Right · Release to attack · Punch up close</p></div>
+<section class="veil" id="overlay"><div class="card"><span class="eyebrow" id="kicker">DEFEND THE GROVE</span><h2 id="heading">Stand tall. Fight together.</h2><p id="description">Hold Left or Right to move along the battle lane. Release to stop. Stop to attack automatically: shoot at range or use your melee hand nearby. Spend sap on allies; Power Shot and Shield are separate special abilities.</p><div id="shop" class="upgrades" hidden></div><button id="next" class="primary" disabled>Show me how</button><button id="skip" class="skip" disabled>Start battle</button><p class="notice" id="notice" aria-live="polite">Original TREE prototype · No wallet or payment needed</p></div></section></div>
+<div class="controls"><div class="move"><span class="control-label">MOVE · <span class="auto-fire">STOP TO ATTACK</span></span><button id="move-left" aria-label="Move left" aria-describedby="move-help" aria-pressed="false">←<span>Left</span></button><button id="move-right" aria-label="Move right" aria-describedby="move-help" aria-pressed="false">→<span>Right</span></button><span id="move-help">Hold to move · Release to stop</span></div><div class="troops"><span class="control-label">SUMMON ALLIES · TAP A CARD</span><button data-unit="sprout"><span class="unit-name">Seedling</span><small>25 sap · melee</small></button><button data-unit="archer"><span class="unit-name">Archer</span><small>45 sap · ranged</small></button><button data-unit="oak"><span class="unit-name">Guardian</span><small>75 sap · tank</small></button></div><div class="powers"><span class="control-label">SPECIAL ABILITIES · TAP</span><button id="blast">Power Shot<small>Special · burst</small></button><button id="shield">Shield<small>Heal + protect</small></button></div><p class="touch-help">Hold Left / Right · Release to attack · <span id="melee-status">Metal fist up close</span></p></div>
 </main>
 <div class="help"><p><kbd>A</kbd> / <kbd>D</kbd> or <kbd>←</kbd> / <kbd>→</kbd> to move · <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> summon · <kbd>Q</kbd> power shot · <kbd>E</kbd> shield · <kbd>P</kbd> pause</p><p>Touch controls supported · Keep enemies away from the roots.</p></div>
-<footer>Prototype 0.13 · Illustrated battlefield · 10 waves · The Iron Stump awaits at wave 10. Progress lasts for this run.</footer>
+<footer>Prototype 0.14 · Illustrated battlefield · 10 waves · The Iron Stump awaits at wave 10. Progress lasts for this run.</footer>
 <script>
 (()=>{
 'use strict';
@@ -59,7 +65,7 @@ const distance=(a,b)=>Math.abs(a.x-b.x);
 const art={ready:false,images:{},reduced:typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches};
 const spriteRects={sprout:[20,50,400,375],archer:[450,50,390,375],oak:[850,0,445,423],bot:[1295,45,479,378],sproutAttack:[0,490,409,350],archerAttack:[410,485,450,350],oakAttack:[800,470,500,370],thorn:[1290,510,484,350]};
 function loadArt(){
-const files={background:'grove-battlefield.webp',army:'forest-army.webp',walk:'forest-walk.webp',heroRig:'tree-hero-rig.webp',combat:'combat-parts.webp'};
+const files={background:'grove-battlefield.webp',army:'forest-army.webp',walk:'forest-walk.webp',heroRig:'tree-hero-rig.webp',combat:'combat-parts.webp',melee:'hero-melee.webp'};
 return Promise.all(Object.entries(files).map(([key,file])=>new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>{art.images[key]=image;resolve();};image.onerror=()=>reject(Error('Unable to load '+file));image.src='./assets/'+file;}))).then(()=>{art.ready=true;$('asset-status').hidden=true;$('next').disabled=false;$('skip').disabled=false;makePortraits();}).catch(()=>{$('asset-status').hidden=false;$('asset-status').textContent='The artwork could not load. Reload this page to try again.';$('next').disabled=true;$('skip').disabled=true;});
 }
 function makePortraits(){for(const b of document.querySelectorAll('[data-unit]')){const c=document.createElement('canvas');c.width=100;c.height=100;c.className='unit-portrait';c.setAttribute('aria-hidden','true');const r={sprout:[120,75,210,180],archer:[540,80,210,180],oak:[940,40,245,230]}[b.dataset.unit];c.getContext('2d').drawImage(art.images.army,...r,0,0,100,100);b.prepend(c);}}
@@ -79,7 +85,7 @@ function approach(unit,target,dt,stop=0){
 }
 // Every attack owns one strike time. Movement cancels ordinary wind-up;
 // enemy strikes recheck range at contact, so backing away is a real dodge.
-const ACTIONS={shot:{hit:.24,end:.64,range:210},punch:{hit:.22,end:.58,range:66},power:{hit:.24,end:.66,range:800},enemy:{hit:.40,end:.85}};
+const ACTIONS={shot:{hit:.24,end:.64,range:210},punch:{hit:.22,end:.58,range:66},saw:{hit:.30,end:.78,range:88},power:{hit:.24,end:.66,range:800},enemy:{hit:.40,end:.85}};
 function beginAction(actor,kind,target){
  actor.action={kind,target,time:0,struck:false,facing:Math.sign(target.x-actor.x)||actor.facing};
  actor.facing=actor.action.facing;
@@ -112,11 +118,20 @@ function tickHeroAction(dt){
   a.struck=true;const target=a.target;
   if(a.kind==='power')fire(hero,{x:hero.x+a.facing*800,y:GROUND},600,110+heroLevel*25,true);
   else if(target.hp>0&&distance(hero,target)<=d.range&&Math.sign(target.x-hero.x)===a.facing){
-   if(a.kind==='punch'){hurt(target,35+heroLevel*10);burst(target.x,GROUND-65,'#f6dea0',6);}
+   if(a.kind==='punch'||a.kind==='saw'){const saw=a.kind==='saw';hurt(target,(saw?58:35)+heroLevel*(saw?14:10));meleePush(target,a.facing,saw);burst(target.x,GROUND-65,saw?'#e7c181':'#f6dea0',saw?10:6);}
    else{hero.fireTime=.12;hero.powerFlash=false;hurt(target,29+heroLevel*9);burst(target.x,GROUND-70,'#e8d6a0',4);}
   }
  }
  if(a.time>=d.end)hero.action=null;
+}
+// Contact interrupts ordinary enemies. Heavy machines resist displacement;
+// the boss keeps its attack commitment and cannot be stun-locked.
+function meleePush(target,direction,saw){
+ if(target.hp<=0)return;
+ const resistance=target.boss?.2:target.tank?.6:1;
+ target.push=(saw?42:26)*resistance*direction;
+ target.pushTime=.14;
+ if(!target.boss){target.action=null;target.stagger=saw?.32:.22;target.cd=Math.max(target.cd,.45);}
 }
 function tickEnemyAction(e,dt){
  const a=e.action;if(!a)return;const d=ACTIONS.enemy;a.time+=dt;
@@ -163,11 +178,11 @@ function clearMovement(){held.clear();movePointers.clear();syncMovement();}
 const held=new Set(),cooldowns={sprout:0,archer:0,oak:0};let previous=0,briefingStep=0,hasMoved=false,hasSummoned=false;
 const briefings=[
 ['Protect the Tree of Life','The glowing tree on the left is your grove. Enemies approach from the right. If your hero or the grove loses all health, the run ends.','Next: your hero'],
-['Lead from the front','Hold Left or Right to move along the lane; release to stop. Use A/D or the left/right arrow keys on a keyboard. Stop to attack automatically: shoot at range or punch nearby enemies — no attack button needed.','Next: your army'],
-['Grow your army','Tap Seedling, Acorn Archer, or Oak Guardian to spend sap and summon allies. Sap refills during battle. Power Shot and Shield are separate special abilities. Tap them when needed; their timers do not control your normal auto-fire.','Defend the grove']
+['Lead from the front','Hold Left or Right to move along the lane; release to stop. Use A/D or the left/right arrow keys on a keyboard. Stop to attack automatically: shoot at range or use your melee hand nearby — no attack button needed.','Next: your army'],
+['Grow your army','Tap Seedling, Acorn Archer, or Oak Guardian to spend sap and summon allies. Sap refills during battle. Power Shot and Shield are separate special abilities. Tap them when needed; their timers do not control your normal auto-fire. Between waves, spend 80 seeds to replace your metal fist with a chainsaw hand.','Defend the grove']
 ];
 function briefing(){mode='briefing';const b=briefings[briefingStep];show(b[0],b[1],b[2],'FIELD GUIDE '+(briefingStep+1)+' / 3');$('shop').hidden=true;$('skip').hidden=false;$('skip').textContent='Start battle';$('notice').textContent='Clear waves to earn seeds, then buy upgrades between battles.';}
-function freshHero(){return {x:330,y:GROUND,hp:400,max:400,cd:0,fireTime:0,powerFlash:false,facing:1,flash:0,moving:false,walk:0,gait:0,action:null};}
+function freshHero(){return {x:330,y:GROUND,hp:400,max:400,cd:0,fireTime:0,powerFlash:false,facing:1,flash:0,moving:false,walk:0,gait:0,action:null,melee:'fist'};}
 hero=freshHero();
 function show(title,description,button,kicker='DEFEND THE GROVE'){ $('heading').textContent=title;$('description').textContent=description;$('next').textContent=button;$('kicker').textContent=kicker;$('overlay').hidden=false;clearMovement();}
 function reset(){if(!art.ready)return;wave=1;sap=100;seeds=0;score=0;groveMax=1000;grove=1000;heroLevel=0;sapLevel=0;treeLevel=0;hero=freshHero();startWave();}
@@ -179,8 +194,8 @@ function cannon(){if(mode!=='battle'||blastCd>0)return;blastCd=10;
  // Explicit special queues a short cast; basic attacks still require stopping.
  beginAction(hero,'power',{x:hero.x+hero.facing*800,y:GROUND});}
 function shield(){if(mode!=='battle'||shieldCd>0)return;shieldCd=18;shieldTime=5;grove=Math.min(groveMax,grove+80);burst(BASE,GROUND-80,'#b7ebad',20);}
-function upgrade(kind){if(mode!=='camp')return;const level=kind==='hero'?heroLevel:kind==='sap'?sapLevel:treeLevel,cost=40+level*30;if(seeds<cost||level>=5)return;seeds-=cost;if(kind==='hero'){heroLevel++;hero.max+=65;hero.hp=Math.min(hero.max,hero.hp+120);}else if(kind==='sap')sapLevel++;else{treeLevel++;groveMax+=180;grove=Math.min(groveMax,grove+330);}shop();sync();}
-function shop(){const el=$('shop');el.hidden=false;el.replaceChildren();for(const [kind,label,level]of [['hero','Hero strength',heroLevel],['sap','Sap spring',sapLevel],['tree','Grove vitality',treeLevel]]){const b=document.createElement('button'),cost=40+level*30;b.textContent=level>=5?label+' · MAX':label+' '+level+'/5 · '+cost+' seeds';b.disabled=level>=5||seeds<cost;b.onclick=()=>upgrade(kind);el.append(b);}$('notice').textContent=seeds+' seeds available · Upgrades last for this run';}
+function upgrade(kind){if(mode!=='camp')return;if(kind==='chainsaw'){if(hero.melee==='saw'||seeds<80)return;seeds-=80;hero.melee='saw';shop();sync();return;}const level=kind==='hero'?heroLevel:kind==='sap'?sapLevel:treeLevel,cost=40+level*30;if(seeds<cost||level>=5)return;seeds-=cost;if(kind==='hero'){heroLevel++;hero.max+=65;hero.hp=Math.min(hero.max,hero.hp+120);}else if(kind==='sap')sapLevel++;else{treeLevel++;groveMax+=180;grove=Math.min(groveMax,grove+330);}shop();sync();}
+function shop(){const el=$('shop');el.hidden=false;el.replaceChildren();const saw=document.createElement('button');saw.id='upgrade-chainsaw';saw.textContent=hero.melee==='saw'?'Chainsaw hand · EQUIPPED':'Chainsaw hand · 80 seeds';saw.disabled=hero.melee==='saw'||seeds<80;saw.onclick=()=>upgrade('chainsaw');el.append(saw);const detail=document.createElement('small');detail.textContent=hero.melee==='saw'?'Chainsaw equipped for this run · Higher melee damage, reach and knockback':'Replace your metal fist with a chainsaw · Higher melee damage, reach and knockback';detail.style.flexBasis='100%';el.append(detail);for(const [kind,label,level]of [['hero','Hero strength',heroLevel],['sap','Sap spring',sapLevel],['tree','Grove vitality',treeLevel]]){const b=document.createElement('button'),cost=40+level*30;b.textContent=level>=5?label+' · MAX':label+' '+level+'/5 · '+cost+' seeds';b.disabled=level>=5||seeds<cost;b.onclick=()=>upgrade(kind);el.append(b);}$('notice').textContent=seeds+' seeds available · Upgrades last for this run';}
 function camp(){mode='camp';seeds+=25+wave*5;show('The grove holds.',`Wave ${wave} cleared. Strengthen your army before the next assault.`, 'Begin wave '+(wave+1),'GROW STRONGER');shop();}
 function finish(win){mode=win?'won':'lost';$('shop').hidden=true;show(win?'Roots run deep.':'The grove needs you.',win?`All ten waves defeated. The Iron Stump has fallen. Final score: ${score}.`:`You reached wave ${wave}. Final score: ${score}. Summon a front line early and protect your hero.`, 'Start a new run',win?'GROVE SAVED':'GROVE FALLEN');$('notice').textContent='Free playtest · Your next grove is a fresh start';}
 function pause(){if(mode==='battle'){mode='paused';show('Take a breath.','Your grove is waiting.','Resume battle','PAUSED');$('shop').hidden=true;$('notice').textContent='Battle pauses when you switch tabs.';$('pause').textContent='Resume';}else if(mode==='paused'){mode='battle';$('overlay').hidden=true;$('pause').textContent='Pause';}}
@@ -192,7 +207,7 @@ hero.gait+=(Number(hero.moving&&!art.reduced)-hero.gait)*Math.min(1,dt*14);
 hero.fireTime=Math.max(0,hero.fireTime-dt);hero.cd=Math.max(0,hero.cd-dt);hero.flash=Math.max(0,hero.flash-dt);
 tickHeroAction(dt);
 const near=enemies.filter(e=>e.hp>0&&distance(hero,e)<210).sort((a,b)=>distance(hero,a)-distance(hero,b))[0];
-if(near&&!movement.x&&!hero.action&&hero.cd===0){hero.cd=.7;beginAction(hero,distance(hero,near)<=66?'punch':'shot',near);}
+if(near&&!movement.x&&!hero.action&&hero.cd===0){const melee=hero.melee==='saw'?'saw':'punch',kind=distance(hero,near)<=ACTIONS[melee].range?melee:'shot';hero.cd=kind==='saw'?.9:.7;beginAction(hero,kind,near);}
 if(wave===1){if(spawned<planned&&waveElapsed>=OPENING_SPAWNS[spawned])spawn();}
 else{spawnClock-=dt;if(spawned<planned&&spawnClock<=0){spawn();spawnClock=Math.max(.85,2.7-wave*.12);}}
 for(const a of allies){
@@ -210,6 +225,8 @@ for(const a of allies){
 for(const e of enemies){
  e.moving=false;if(e.hp<=0)continue;e.cd=Math.max(0,e.cd-dt);e.flash=Math.max(0,e.flash-dt);
  e.blade=(e.blade||0)+dt*(e.action?28:12);
+ if(e.pushTime>0){const step=Math.min(dt,e.pushTime),fraction=step/e.pushTime;e.x=clamp(e.x+e.push*fraction,BASE+35,WORLD-100);e.push*=1-fraction;e.pushTime-=step;}
+ if(e.stagger>0){e.stagger=Math.max(0,e.stagger-dt);continue;}
  if(e.action){tickEnemyAction(e,dt);continue;}
  const target=[...allies.filter(a=>a.hp>0),hero].filter(a=>a.hp>0&&distance(a,e)<260).sort((a,b)=>distance(a,e)-distance(b,e))[0];
  if(target&&distance(target,e)<=e.reach+20){e.facing=Math.sign(target.x-e.x)||-1;if(e.cd===0){e.cd=e.rate;beginAction(e,'enemy',target);}}
@@ -275,9 +292,23 @@ function articulatedHero(actor,x,y,attack){
  ctx.save();ctx.translate(elbow.x,elbow.y);ctx.rotate(forearmAngle);
  combatPart([700,162,310,198],-.8-recoil,-21.28,49.6,31.68);ctx.restore();
  combatPart([67,17,348,477],-39,-157+bob,70,96);
- const punch=actionWeight(actor,'punch');
- ctx.save();ctx.translate(-23+punch*12,-116+bob+punch*12);ctx.rotate(1.35*(1-punch)+.42*punch);
- combatPart([1069,191,425,162],-5,-11,64,24);ctx.restore();
+ const saw=actor.melee==='saw',punch=actionWeight(actor,'punch');
+ let angle=1.35*(1-punch)+.42*punch,drive=punch;
+ if(saw){
+  const t=actor.action?.kind==='saw'?actor.action.time:null;
+  angle=t===null?1.10:t<.20?1.10-t/.20*1.40:t<.30?-.30+(t-.20)/.10*.62:t<.46?.32+(t-.30)/.16*.33:.65+clamp((t-.46)/.32,0,1)*.45;
+  drive=actionWeight(actor,'saw');
+ }
+ ctx.save();ctx.translate(-23+drive*12,-116+bob+drive*12);ctx.rotate(angle);
+ if(saw){
+  ctx.drawImage(art.images.melee,40,550,1470,350,-8.45,-11.05,95.55,22.75);
+  // Moving chain markers stay on the guide-bar edges and freeze on pause.
+  // Reduced motion retains the essential cutting arc without chain movement.
+  if(!art.reduced){const shift=(clock*(actor.action?.kind==='saw'?40:16))%5;
+   for(let i=0;i<5;i++){const x=60+i*5+shift;line(x,1.2,x+1.4,1.2,'#e1dfc5',.8);line(84-i*5-shift,8.4,82.6-i*5-shift,8.4,'#e1dfc5',.8);}
+  }
+ }else ctx.drawImage(art.images.melee,40,120,1065,350,-8.45,-11.05,69.225,22.75);
+ ctx.restore();
  if(actor.fireTime>0){ellipse(muzzleX,muzzleY,actor.powerFlash?10:5,actor.powerFlash?5:2,'#ffe6a0');}
  ctx.restore();
 }
@@ -337,7 +368,7 @@ for(const p of sparks){ctx.globalAlpha=Math.min(1,Math.max(0,p.life));ellipse(p.
 const vignette=ctx.createLinearGradient(0,0,0,h);vignette.addColorStop(0,'#081b2022');vignette.addColorStop(.6,'#0000');vignette.addColorStop(1,'#09170c66');ctx.fillStyle=vignette;ctx.fillRect(0,0,w,h);
 if(mode==='battle'&&spawned<2){ctx.textAlign='center';ctx.font='bold 22px Georgia';ctx.fillStyle='#fff0ba';ctx.shadowColor='#000';ctx.shadowBlur=6;ctx.fillText('WAVE '+wave+' / '+TOTAL,w/2,50);ctx.font='12px system-ui';ctx.fillText(wave===10?'THE IRON STUMP':'HOLD THE GROVE',w/2,70);ctx.shadowBlur=0;}
 if(mode==='battle'){ctx.fillStyle='#fff5cf';ctx.font='12px system-ui';ctx.textAlign='right';ctx.fillText(`${enemies.length+planned-spawned} enemies remaining`,w-18,25);if(hero.x>750){ctx.textAlign='left';ctx.fillText('← Tree of Life',18,25);}}}
-function sync(){for(const direction of ['left','right'])$('move-'+direction).disabled=mode!=='battle';const note=$('field-note');note.hidden=mode!=='battle';if(mode==='battle'){note.textContent=grove/groveMax<.4?'Grove under threat! Fall back, summon defenders, and use Canopy Shield.':wave===1&&!hasMoved?'Hold Left or Right to move. Release to stop. Stand still to shoot; nearby enemies trigger a punch.':wave===1&&!hasSummoned?'Summon a Seedling below. Sap refills automatically, so keep your army growing.':wave===1?'Reinforcements arrive from the right. Keep summoning and protect the glowing tree.':wave===10?'The Iron Stump approaches. Keep a strong front line and save your abilities.':'Lead your army. Clear this wave to earn seeds for upgrades.';}$('wave').textContent=wave+' / '+TOTAL;$('grove').textContent=Math.max(0,Math.ceil(grove/groveMax*100))+'%';$('hero').textContent=Math.max(0,Math.ceil(hero.hp/hero.max*100))+'%';$('sap').textContent=Math.floor(sap);$('seeds').textContent=seeds;for(const b of document.querySelectorAll('[data-unit]')){const type=b.dataset.unit;b.disabled=mode!=='battle'||sap<units[type].cost||cooldowns[type]>0||allies.length>=18;const role=type==='sprout'?'melee':type==='archer'?'ranged':'tank';b.querySelector('small').textContent=cooldowns[type]>0?Math.ceil(cooldowns[type])+'s cooldown':allies.length>=18?'Army full':units[type].cost+' sap · '+role;}$('blast').disabled=mode!=='battle'||blastCd>0;$('blast').querySelector('small').textContent=blastCd>0?Math.ceil(blastCd)+'s to ready':'Special · burst';$('shield').disabled=mode!=='battle'||shieldCd>0;$('shield').querySelector('small').textContent=shieldCd>0?Math.ceil(shieldCd)+'s to ready':'Heal + protect';$('pause').disabled=!['battle','paused'].includes(mode);}
+function sync(){$('melee-status').textContent=hero.melee==='saw'?'Chainsaw up close':'Metal fist up close';for(const direction of ['left','right'])$('move-'+direction).disabled=mode!=='battle';const note=$('field-note');note.hidden=mode!=='battle';if(mode==='battle'){note.textContent=grove/groveMax<.4?'Grove under threat! Fall back, summon defenders, and use Canopy Shield.':wave===1&&!hasMoved?'Hold Left or Right to move. Release to stop. Stand still to shoot; nearby enemies trigger your melee hand.':wave===1&&!hasSummoned?'Summon a Seedling below. Sap refills automatically, so keep your army growing.':wave===1?'Reinforcements arrive from the right. Keep summoning and protect the glowing tree.':wave===10?'The Iron Stump approaches. Keep a strong front line and save your abilities.':'Lead your army. Clear this wave to earn seeds for upgrades.';}$('wave').textContent=wave+' / '+TOTAL;$('grove').textContent=Math.max(0,Math.ceil(grove/groveMax*100))+'%';$('hero').textContent=Math.max(0,Math.ceil(hero.hp/hero.max*100))+'%';$('sap').textContent=Math.floor(sap);$('seeds').textContent=seeds;for(const b of document.querySelectorAll('[data-unit]')){const type=b.dataset.unit;b.disabled=mode!=='battle'||sap<units[type].cost||cooldowns[type]>0||allies.length>=18;const role=type==='sprout'?'melee':type==='archer'?'ranged':'tank';b.querySelector('small').textContent=cooldowns[type]>0?Math.ceil(cooldowns[type])+'s cooldown':allies.length>=18?'Army full':units[type].cost+' sap · '+role;}$('blast').disabled=mode!=='battle'||blastCd>0;$('blast').querySelector('small').textContent=blastCd>0?Math.ceil(blastCd)+'s to ready':'Special · burst';$('shield').disabled=mode!=='battle'||shieldCd>0;$('shield').querySelector('small').textContent=shieldCd>0?Math.ceil(shieldCd)+'s to ready':'Heal + protect';$('pause').disabled=!['battle','paused'].includes(mode);}
 function resize(){
  const mobile=typeof matchMedia==='function'?matchMedia('(max-width:900px), (pointer:coarse)').matches:innerWidth<900;
  const box=canvas.parentElement?.getBoundingClientRect?.();

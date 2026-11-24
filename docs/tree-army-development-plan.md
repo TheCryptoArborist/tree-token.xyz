@@ -182,3 +182,36 @@ Published in deployment `6b04bdf56959e6a5452c7622`, source PR #304, release run
 `45278903790`. Candidate and canonical game/cabinet checks passed at four
 viewports. See the complete production carry-release record and
 `tree-army-carry-live-phone-20261123.png`.
+
+## Metal fist → chainsaw hand — Prototype 0.14
+
+New runs begin with a visible metal fist. Between waves, an 80-seed purchase
+replaces it with a wrist-mounted chainsaw for the remainder of that run. The
+first wave earns 110 seeds before other purchases. The shop prevents duplicate
+charges and buying during battle; the equipped label persists into the next
+wave. A fresh run restores the fist. The mobile control hint names the equipped
+melee weapon. Small-phone upgrade lists scroll while Begin wave stays visible;
+hidden camp controls and the tutorial shortcut stay hidden in other modes.
+
+Fist: 35 + 10 per hero-strength level damage, 66 reach, contact at .22 seconds,
+26-pixel push. Chainsaw: 58 + 14 per level damage, 88 reach, contact at .30 seconds,
+42-pixel push and a .9-second attack cooldown. Its unique animation lifts,
+cuts through, then recovers; moving before contact cancels the attack. These
+are Tree Army tuning values. Regular ranged shooting and Power Shot remain.
+
+Push eases over .14 seconds and interrupts ordinary enemy wind-ups. Tanks take
+60% displacement. Bosses take 20% and keep their attack commitment, preventing
+a boss stun lock. Damage resolves once at contact after checking live target,
+range and facing. Killing hits do not push corpses.
+
+Tests cover purchase affordability/duplicate/camp guards, persistence and reset,
+reach/damage/contact, both-facing push, interruption, resistance, movement
+cancellation and ranged fallback. Original opening spawn schedule/count remain;
+opening simulations clear in 47.04–49.44 seconds. Browser checks now include a
+normal-UI first-wave clear, earned-seed purchase and equipped second wave, as
+well as four viewport checks and asset failure. The unaccelerated diagnostic
+recording uses controlled high-health targets to inspect punch/cut animations.
+
+Original art: `hero-melee.webp`. See `tree-army-melee-mobile-20261123.webm` and
+the release screenshots. Hero leg-gait acceptance remains separate. Latest
+MystenLabs skills README checked; no SDK changes or third-party game code copied.

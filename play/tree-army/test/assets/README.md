@@ -35,3 +35,13 @@ machine arm and saw blade. Arms rotate about shoulders; the blade rotates about
 its axle. The original cape and leg rig remain in use. This update does not
 claim acceptance of the hero's existing walk cycle. Approved forest troop art
 is unchanged. No Army of Darkness sprites, audio or source code are included.
+
+## Prototype 0.14 melee hands
+
+`hero-melee.webp` is an original transparent 1536×1024 two-arm atlas generated
+from our TREE hero design: a silver metal fist and a wrist-mounted arborist
+chainsaw replacing the fist. No original Army of Darkness art is included.
+Both use a shared shoulder scale. The chainsaw has a separate lift/cut/recovery
+arc, with chain markers that freeze when paused and are omitted for reduced
+motion. The metal fist uses the existing punch timing. The gun rig and troop
+assets remain unchanged.

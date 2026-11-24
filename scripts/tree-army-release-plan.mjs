@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
-// Prototype 0.13: articulated elbow carry, HTML-only correction.
+// Prototype 0.14: metal-fist/chainsaw progression and original melee atlas.
 export const REPLACED_HASHES = {
-  '/play/tree-army/test/index.html': '0667f42168b3e04b2b3b4623ba102983bc062e51',
+  '/play/tree-army/test/index.html': '839c43636366e570a52ad574ed62764272bad972',
 };
-export const ADDED_PATHS = [];
+export const ADDED_PATHS = ['/play/tree-army/test/assets/hero-melee.webp'];
 export const DELIVERY_PATHS = [...Object.keys(REPLACED_HASHES), ...ADDED_PATHS];
 // Preview builds also need assets already present in production. Keep this
 // catalog independent of the smaller, one-time publication allowlist.
@@ -15,6 +15,7 @@ export const PREVIEW_PATHS = [
   '/play/tree-army/test/assets/forest-walk.webp',
   '/play/tree-army/test/assets/tree-hero-rig.webp',
   '/play/tree-army/test/assets/combat-parts.webp',
+  '/play/tree-army/test/assets/hero-melee.webp',
   '/play/tree-army/preview-gameplay.mp4',
   '/play/tree-army/preview-gameplay.webm',
   '/play/tree-army/preview-gameplay.jpg',
