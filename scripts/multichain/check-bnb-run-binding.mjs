@@ -17,7 +17,10 @@ export function productionValues(siteRows,sharedRows){
 export async function main(){
  const api=apiClient(readToken()),url=`accounts/${account}/env`;
  const get=()=>Promise.all([api(url+`?site_id=${site}&scope=functions`),api(url+'?scope=functions')]);
- const before=await get(),values=productionValues(...before),c=runtimeConfiguration(n=>values.get(n));
+ const before=await get();
+ console.log('Binding metadata '+JSON.stringify(before.flat().filter(r=>['BNB_TEST_SUPABASE_URL','BNB_TEST_SUPABASE_SECRET_KEY','TREE_KNOWLEDGE_TRIAL_SUPABASE_URL','TREE_KNOWLEDGE_TRIAL_SUPABASE_SECRET_KEY','BNB_RUN_REVIEW_ENABLED'].includes(r.key)).map(r=>({key:r.key,scopes:r.scopes,secret:r.is_secret,values:r.values.map(v=>({context:v.context,hasValue:typeof v.value==='string'}))}))));
+ const values=productionValues(...before),c=runtimeConfiguration(n=>values.get(n));
+ console.log('Production binding resolved');
  // Never print credentials or API response bodies. Calls are restricted to reads.
  const run=createRunRpc({url:c.getEnv('BNB_TEST_SUPABASE_URL'),key:c.getEnv('BNB_TEST_SUPABASE_SECRET_KEY')});
  const identity=createBnbTestRpc({getEnv:c.getEnv});
