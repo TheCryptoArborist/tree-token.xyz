@@ -31,6 +31,7 @@ on:
       - 'tests/multichain-bnb-run-runtime.test.mjs'
       - 'scripts/multichain/check-bnb-run-postgres.mjs'
       - 'scripts/multichain/check-bnb-run-database-readiness.mjs'
+      - 'scripts/multichain/check-bnb-run-applied.mjs'
       - 'supabase/migrations/*arcade_bnb_run_review.sql'
       - 'tests/multichain-bnb-run-http.test.mjs'
       - 'tests/multichain-bnb-run-authorization.test.mjs'
@@ -69,6 +70,7 @@ on:
       - 'tests/multichain-bnb-run-runtime.test.mjs'
       - 'scripts/multichain/check-bnb-run-postgres.mjs'
       - 'scripts/multichain/check-bnb-run-database-readiness.mjs'
+      - 'scripts/multichain/check-bnb-run-applied.mjs'
       - 'supabase/migrations/*arcade_bnb_run_review.sql'
       - 'tests/multichain-bnb-run-http.test.mjs'
       - 'tests/multichain-bnb-run-authorization.test.mjs'
@@ -155,3 +157,6 @@ jobs:
 
       - name: Verify captured hosted database readiness against committed source
         run: node scripts/multichain/check-bnb-run-database-readiness.mjs
+
+      - name: Verify applied migration evidence and preserved identity
+        run: node scripts/multichain/check-bnb-run-applied.mjs

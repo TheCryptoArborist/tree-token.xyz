@@ -1,0 +1,28 @@
+{
+  "projectId": "lehswszuekjqottolmsf",
+  "name": "arcade_bnb_run_review",
+  "hostedVersion": "20261124184014",
+  "sourceFile": "supabase/migrations/20261124060157_arcade_bnb_run_review.sql",
+  "sha256": "15a8f418df1b9155d4d54833c51a40811e39aa80405c4a0464edba03cbfcfe3e",
+  "applyResult": {
+    "success": true
+  },
+  "preflightCatalogMatched": true,
+  "identityMetadataUnchanged": true,
+  "newRows": 0,
+  "roleChecks": {
+    "anon": "42501 permission denied for function arcade_bnb_run_review_v1",
+    "authenticated": "42501 permission denied for function arcade_bnb_run_review_v1",
+    "service_role": {
+      "missing_ticket": null
+    }
+  },
+  "canonicalEndpoint": {
+    "status": 503,
+    "error": "review-disabled",
+    "gameplayAuthorized": false
+  },
+  "environmentChanged": false,
+  "websiteDeployed": false,
+  "gameplayAuthorized": false
+}

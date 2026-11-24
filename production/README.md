@@ -1,3 +1,18 @@
+# BNB run-review database foundation — applied November 24, 2026
+
+The single reviewed Supabase migration is recorded as
+`20261124184014_arcade_bnb_run_review` in project `lehswszuekjqottolmsf`.
+It adds the private review-ticket table/index and service-only RPC. Hosted role
+checks, RLS/grants, exact RPC source hash and unchanged BNB identity metadata
+passed. The table is empty and the canonical endpoint remains disabled (503).
+No website deployment or environment change accompanied this migration.
+
+Evidence: `docs/multichain/generation-milestone/database-applied/`.
+The current site baseline remains the locked 691-path, 61-function, five-schedule
+release below. Gameplay, payments and new-generation custody remain separate.
+
+---
+
 # Disabled BNB run-review endpoint — published November 24, 2026
 
 Deployment `6b053b8285e0ee251b84ad06` published at **09:31:15 America/Chicago**

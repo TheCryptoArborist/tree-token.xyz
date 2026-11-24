@@ -1,0 +1,57 @@
+{
+  "rls": true,
+  "rpc": {
+    "acl": "{postgres=X/postgres,service_role=X/postgres}",
+    "config": [
+      "search_path=\"\""
+    ],
+    "source_md5": "f5a2ea0766876c4eebe3b7b3ac176e5d",
+    "definition_md5": "7e5fc660f3aaaf95a279ebc123b241f2",
+    "security_definer": false
+  },
+  "rows": 0,
+  "table": "private.arcade_bnb_run_reviews",
+  "indexes": [
+    "CREATE UNIQUE INDEX arcade_bnb_run_reviews_pkey ON private.arcade_bnb_run_reviews USING btree (hash)",
+    "CREATE INDEX arcade_bnb_run_reviews_session_time ON private.arcade_bnb_run_reviews USING btree (session_hash, issued_at)"
+  ],
+  "table_acl": "{postgres=arwdDxtm/postgres,service_role=arw/postgres}",
+  "privileges": [
+    {
+      "role": "anon",
+      "delete": false,
+      "insert": false,
+      "select": false,
+      "update": false,
+      "execute": false,
+      "schema_usage": false
+    },
+    {
+      "role": "authenticated",
+      "delete": false,
+      "insert": false,
+      "select": false,
+      "update": false,
+      "execute": false,
+      "schema_usage": false
+    },
+    {
+      "role": "service_role",
+      "delete": false,
+      "insert": true,
+      "select": true,
+      "update": true,
+      "execute": true,
+      "schema_usage": true
+    }
+  ],
+  "constraints": [
+    "CHECK ((isfinite(issued_at) AND isfinite(expires_at) AND (expires_at > issued_at) AND (expires_at <= (issued_at + '00:01:00'::interval))))",
+    "CHECK (((consumed_at IS NULL) OR (isfinite(consumed_at) AND (consumed_at >= issued_at) AND (consumed_at < expires_at))))",
+    "CHECK (((generation ~ '^[1-9][0-9]*$'::text) AND ((generation)::numeric <= '18446744073709551615'::numeric)))",
+    "CHECK ((hash ~ '^[a-f0-9]{64}$'::text))",
+    "PRIMARY KEY (hash)",
+    "FOREIGN KEY (session_hash) REFERENCES private.arcade_bnb_test_sessions(token_sha256)",
+    "CHECK ((wallet ~ '^0x[0-9a-f]{40}$'::text))"
+  ]
+}
