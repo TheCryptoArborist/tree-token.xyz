@@ -22,6 +22,14 @@ The completed/retired generation is described separately as lifecycle context.
 Network errors, malformed responses and rate limits have separate messages.
 Account, chain or provider changes discard pending results and clear the display.
 
+Hosted verification passed in
+[run 45495408772](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45495408772).
+`browser-ci.json` confirms the same exact asset hashes and all 17 scenarios,
+plus two source checks. The source files are commit `2ce768e`; `dd1c1ad` fixes
+only the browser executable selection and records evidence. The initial CI
+attempt stopped before testing because the headless-shell executable was not
+installed; the successful run uses the installed full Chromium binary.
+
 ## Validation
 
 Two source checks preserve authentication and prohibit the old entitlement,
