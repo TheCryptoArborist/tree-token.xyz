@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
-// Prototype 0.15: hero walking refinement; existing artwork stays byte-exact.
+// Prototype 0.16: enemy attack spacing; existing artwork stays byte-exact.
 export const REPLACED_HASHES = {
-  '/play/tree-army/test/index.html': '21613748477d592adef257bb1880b9f22e0df588',
+  '/play/tree-army/test/index.html': 'c3ea2d6fa7980b6c3b06b7890cb7c2ae6cffe840',
 };
 export const ADDED_PATHS = [];
 export const DELIVERY_PATHS = [...Object.keys(REPLACED_HASHES), ...ADDED_PATHS];

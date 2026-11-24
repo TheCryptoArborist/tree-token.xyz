@@ -254,3 +254,27 @@ Release scope is the playtest HTML only, with no new assets or backend rebuild.
 Published in deployment `6b051af87755a75a0915a338`, source PR #310, release run
 `45329775899`. Candidate and canonical checks passed. Visual acceptance of the
 revised gait remains pending user playtest.
+
+## Enemy approach and attack spacing — Prototype 0.16
+
+Ordinary and heavy machines previously started wind-up at only 58 pixels
+center-to-center (38 reach + 20 tolerance), regardless of their visual size.
+This crowded the machine chassis into the target before the blade attack.
+New center-to-center reach: ordinary machine 88, heavy machine 108, thorn runner
+64 and boss 150 (formerly 58, 58, 58 and 100). Machine values account for the
+forward blade at contact and target body width at each rendered scale.
+
+Approach stops within four pixels of that bound; wind-up and strike use the
+same reach. The .40-second wind-up and .85-second action remain. A retreat out
+of reach still dodges, strikes resolve only once, and no forward creep occurs
+during wind-up. Damage, speed, cooldowns, hero combat, artwork, troop movement
+and the opening spawn schedule/count are unchanged. Earlier enemy contact does
+slightly affect combat pacing: normal opening simulations clear in 49.04–49.68
+seconds across the existing viewport scenarios.
+
+Tests exercise actual spawned normal/heavy/runner/boss sizes, approaching from
+both directions, stop distance, pre-hit telegraph, single contact, outside-range
+rejection and retreat dodges. A full-speed mobile diagnostic uses high-health
+enemies and disables hero auto-attacks to expose approach and strike timing;
+see `tree-army-enemy-spacing-mobile-20261123.webm` and contact screenshots.
+Release scope is playtest HTML only; preserve existing art and full live site.
