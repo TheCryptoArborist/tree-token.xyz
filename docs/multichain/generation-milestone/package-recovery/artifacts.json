@@ -1,1 +1,1640 @@
-[{"created_at": "2026-11-24T19:19:54Z", "expired": false, "id": 14956476170, "name": "bnb-run-enablement-plan", "size_in_bytes": 338232, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "c58053ccf898a460a2261e867e837cafbca81fff", "id": 45468891584, "repository_id": 1323502312}}, {"created_at": "2026-11-24T19:21:55Z", "expired": false, "id": 14956321047, "name": "bnb-run-enabled", "size_in_bytes": 211, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "cc99e4e7da0786d418eba093d3add271fea53966", "id": 45469250115, "repository_id": 1323502312}}, {"created_at": "2026-11-24T19:10:28Z", "expired": false, "id": 14954303786, "name": "bnb-run-binding-check", "size_in_bytes": 339366, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "448707c3ba963077bf5856f677a44a05161f45ee", "id": 45466344470, "repository_id": 1323502312}}, {"created_at": "2026-11-24T15:31:21Z", "expired": false, "id": 14935759807, "name": "bnb-run-publication", "size_in_bytes": 600, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "58f9d9a3a0792199c933a3a03656bedbf61a2114", "id": 45426140480, "repository_id": 1323502312}}, {"created_at": "2026-11-24T07:22:27Z", "expired": false, "id": 14898362655, "name": "bnb-run-release-plan", "size_in_bytes": 62035, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "3ce138ef39534b0c4172b50c99052e67c3c0867b", "id": 45347371432, "repository_id": 1323502312}}, {"created_at": "2026-11-24T07:05:37Z", "expired": false, "id": 14898330019, "name": "bnb-run-release-plan", "size_in_bytes": 62040, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "3b0ecb87f8339b5f0623e0bd56aa44bc12477085", "id": 45345210056, "repository_id": 1323502312}}, {"created_at": "2026-11-24T07:23:58Z", "expired": false, "id": 14897969879, "name": "bnb-run-candidate-verification", "size_in_bytes": 1367, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "7e6489700dbe8729b79d36f129deff94eadc3b22", "id": 45347567727, "repository_id": 1323502312}}, {"created_at": "2026-11-24T07:03:37Z", "expired": false, "id": 14897477978, "name": "bnb-run-release-plan", "size_in_bytes": 62037, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "b9745d2c4b0390ab793527468ba707c9822755cf", "id": 45344962719, "repository_id": 1323502312}}, {"created_at": "2026-11-23T18:05:17Z", "expired": false, "id": 14849150444, "name": "bnb-completion-publication", "size_in_bytes": 56727, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "6033a7841cd76d47c6f90d45215e5ced4ddc81c2", "id": 45234330517, "repository_id": 1323502312}}, {"created_at": "2026-11-23T18:02:17Z", "expired": false, "id": 14849120119, "name": "bnb-completion-candidate", "size_in_bytes": 56299, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "d76e87448a0dfad31ea3bdb3cc1ec94cbde6441c", "id": 45233815169, "repository_id": 1323502312}}, {"created_at": "2026-11-23T16:44:52Z", "expired": false, "id": 14841200090, "name": "generation-acknowledgement-candidate", "size_in_bytes": 2033252, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "96b6225bcadd1d2f763cab01a005afd42637e6a0", "id": 45219737786, "repository_id": 1323502312}}, {"created_at": "2026-11-23T16:47:38Z", "expired": false, "id": 14840232621, "name": "generation-acknowledgement-publication", "size_in_bytes": 2033647, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "6e42d5d43aca75b636ebe8ff71463638dc562bab", "id": 45220208588, "repository_id": 1323502312}}, {"created_at": "2026-11-23T16:19:09Z", "expired": false, "id": 14838985197, "name": "bnb-return-publication", "size_in_bytes": 56284, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "674af450461be32e7036dd4c44c3af0609ade925", "id": 45214868520, "repository_id": 1323502312}}, {"created_at": "2026-11-23T16:11:44Z", "expired": false, "id": 14838065656, "name": "bnb-return-publication", "size_in_bytes": 55852, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "2ef0bcea2b8af91345fbf81140a8c573e6266f47", "id": 45211806293, "repository_id": 1323502312}}, {"created_at": "2026-11-23T16:16:35Z", "expired": false, "id": 14837672342, "name": "bnb-return-candidate", "size_in_bytes": 55862, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "8757aaf03886a5a440d155e93d420e612ff539a2", "id": 45214517145, "repository_id": 1323502312}}, {"created_at": "2026-11-23T15:59:03Z", "expired": false, "id": 14834848940, "name": "bnb-return-candidate", "size_in_bytes": 55852, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "ce5e1ce24712bc5564917c320bf2fdca7090eef9", "id": 45211112429, "repository_id": 1323502312}}, {"created_at": "2026-11-23T15:11:20Z", "expired": false, "id": 14831963382, "name": "bnb-purchase-candidate", "size_in_bytes": 2145674, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "aa26cb5b3ea108bd4297462e0b2d347d69391883", "id": 45202130222, "repository_id": 1323502312}}, {"created_at": "2026-11-23T15:13:51Z", "expired": false, "id": 14830949036, "name": "bnb-purchase-publication", "size_in_bytes": 2146046, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "2a41acc312f2f8704162ef6eb9f5a5c824bee5d1", "id": 45202579789, "repository_id": 1323502312}}, {"created_at": "2026-11-23T06:07:50Z", "expired": false, "id": 14794490728, "name": "generation-reserve-publication", "size_in_bytes": 2176202, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "806391242780d7e0fbe1c53cc96b717f6d32ea14", "id": 45121910926, "repository_id": 1323502312}}, {"created_at": "2026-11-23T06:05:09Z", "expired": false, "id": 14793284985, "name": "generation-reserve-candidate", "size_in_bytes": 2175808, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "d1046d69c1541a2204c996bc25a4fe9ae5e9d63f", "id": 45121661258, "repository_id": 1323502312}}, {"created_at": "2026-11-23T05:19:08Z", "expired": false, "id": 14791594530, "name": "generation-binding-publication", "size_in_bytes": 2161020, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "76224a35c8ee7884c8f74d1275f13cef87da2c1d", "id": 45116895004, "repository_id": 1323502312}}, {"created_at": "2026-11-23T05:17:12Z", "expired": false, "id": 14791549418, "name": "generation-binding-candidate", "size_in_bytes": 2160626, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "6d988b2385f348aed146bca7dd4331fd3b599a54", "id": 45116610999, "repository_id": 1323502312}}, {"created_at": "2026-11-23T04:53:39Z", "expired": false, "id": 14791480226, "name": "bnb-configuration-publication", "size_in_bytes": 55225, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "3ab6f8f65f0f2d75ce16006e9a1005f17f446760", "id": 45114413903, "repository_id": 1323502312}}, {"created_at": "2026-11-23T04:51:57Z", "expired": false, "id": 14790434633, "name": "bnb-configuration-candidate", "size_in_bytes": 54805, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "a859f396611b5aa8678e5eafa1050c2b6fe99f32", "id": 45114093569, "repository_id": 1323502312}}, {"created_at": "2026-11-23T04:29:37Z", "expired": false, "id": 14790425980, "name": "generation-configuration-candidate", "size_in_bytes": 2016537, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "6ba8e211ec0ce70a82c903034b8a4cf17a5ff7ce", "id": 45112070048, "repository_id": 1323502312}}, {"created_at": "2026-11-23T04:31:40Z", "expired": false, "id": 14790241934, "name": "generation-configuration-publication", "size_in_bytes": 2016931, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "8389a7a72223de6ccac51762053d89f10be0ec86", "id": 45112287530, "repository_id": 1323502312}}, {"created_at": "2026-11-23T03:54:55Z", "expired": false, "id": 14789030447, "name": "generation-registration-publication", "size_in_bytes": 2004927, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "b3c510e24c6865f8b98b2b3f8fd607b7122521aa", "id": 45108631810, "repository_id": 1323502312}}, {"created_at": "2026-11-23T03:52:39Z", "expired": false, "id": 14787873464, "name": "generation-registration-candidate", "size_in_bytes": 2004533, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "befedcec41c1e1de7691d0eda42152a7ff29ab83", "id": 45108444152, "repository_id": 1323502312}}, {"created_at": "2026-11-23T03:14:47Z", "expired": false, "id": 14787226784, "name": "bnb-rpc-publication", "size_in_bytes": 54564, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "6a17ab16595711b587b020668999d4261dfe3267", "id": 45104692560, "repository_id": 1323502312}}, {"created_at": "2026-11-23T03:12:45Z", "expired": false, "id": 14786862515, "name": "bnb-rpc-candidate", "size_in_bytes": 54146, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "62dfcbb38d1845b4e763587fbcd10f53200767d2", "id": 45104505657, "repository_id": 1323502312}}, {"created_at": "2026-11-23T02:17:30Z", "expired": false, "id": 14784572671, "name": "bnb-generation-publication", "size_in_bytes": 54454, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "efdc436740eddbf65d1ffab736e9f468b751ffd1", "id": 45099281724, "repository_id": 1323502312}}, {"created_at": "2026-11-23T02:15:46Z", "expired": false, "id": 14784199639, "name": "bnb-generation-candidate", "size_in_bytes": 54035, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "dbcc0faa8c4209f420a7c7c82f72b717041044a5", "id": 45099075862, "repository_id": 1323502312}}, {"created_at": "2026-11-22T23:58:55Z", "expired": false, "id": 14779281721, "name": "arcade-countdown-publish-45086007525", "size_in_bytes": 96250, "workflow_run": {"head_branch": "release/arcade-countdown-publish", "head_repository_id": 1323502312, "head_sha": "fe5cfadbbbed13a2c8799ac4ada424d0aca3031f", "id": 45086007525, "repository_id": 1323502312}}, {"created_at": "2026-11-22T23:49:28Z", "expired": false, "id": 14779206656, "name": "arcade-countdown-candidate-45085199570", "size_in_bytes": 92665, "workflow_run": {"head_branch": "release/arcade-countdown-prepare", "head_repository_id": 1323502312, "head_sha": "91a287a2f49f82b82090e1d939de0fab5308464a", "id": 45085199570, "repository_id": 1323502312}}, {"created_at": "2026-11-22T23:56:38Z", "expired": false, "id": 14778868678, "name": "arcade-countdown-candidate-45085802059", "size_in_bytes": 96151, "workflow_run": {"head_branch": "release/arcade-countdown-prepare", "head_repository_id": 1323502312, "head_sha": "34b342f3f0b2c3c61d5984d05ea3a5d6bde1f979", "id": 45085802059, "repository_id": 1323502312}}, {"created_at": "2026-11-22T23:44:59Z", "expired": false, "id": 14778771211, "name": "arcade-countdown-candidate-45084815585", "size_in_bytes": 92663, "workflow_run": {"head_branch": "release/arcade-countdown-prepare", "head_repository_id": 1323502312, "head_sha": "5cfc530d193c5ab93865354a83415b2e25e4465a", "id": 45084815585, "repository_id": 1323502312}}, {"created_at": "2026-11-22T23:52:54Z", "expired": false, "id": 14778738510, "name": "arcade-countdown-candidate-45085522748", "size_in_bytes": 92663, "workflow_run": {"head_branch": "release/arcade-countdown-prepare", "head_repository_id": 1323502312, "head_sha": "46b2bb5eafbfb739f6bf235af16874e5d7c95751", "id": 45085522748, "repository_id": 1323502312}}, {"created_at": "2026-11-22T23:00:51Z", "expired": false, "id": 14777186215, "name": "generation-slot-connection-candidate", "size_in_bytes": 53929, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "eb832e9feb926ac52e129cccf298ddc9b222bc48", "id": 45080806848, "repository_id": 1323502312}}, {"created_at": "2026-11-22T22:49:27Z", "expired": false, "id": 14776956670, "name": "arcade-advent-candidate-45079616899", "size_in_bytes": 108251, "workflow_run": {"head_branch": "release/arcade-advent-prepare", "head_repository_id": 1323502312, "head_sha": "46a28dad0dfb777ebc8f533bd45616164a9feb68", "id": 45079616899, "repository_id": 1323502312}}, {"created_at": "2026-11-22T23:02:55Z", "expired": false, "id": 14776944137, "name": "generation-slot-connection-publication", "size_in_bytes": 54322, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "123db0bbb9f2f18919d058bcf709053b7001d897", "id": 45080969461, "repository_id": 1323502312}}, {"created_at": "2026-11-22T22:41:35Z", "expired": false, "id": 14776885759, "name": "arcade-advent-candidate-45078914345", "size_in_bytes": 108583, "workflow_run": {"head_branch": "release/arcade-advent-prepare", "head_repository_id": 1323502312, "head_sha": "18150a5927f079d42b01f792154e3f38d8638ed4", "id": 45078914345, "repository_id": 1323502312}}, {"created_at": "2026-11-22T22:46:04Z", "expired": false, "id": 14776712050, "name": "arcade-advent-candidate-45079311292", "size_in_bytes": 92608, "workflow_run": {"head_branch": "release/arcade-advent-prepare", "head_repository_id": 1323502312, "head_sha": "9d66b127a24d0f6947e2d3e181d47bd7e3f61a6a", "id": 45079311292, "repository_id": 1323502312}}, {"created_at": "2026-11-22T22:54:39Z", "expired": false, "id": 14776283688, "name": "arcade-advent-audit-45080216008", "size_in_bytes": 108292, "workflow_run": {"head_branch": "release/arcade-advent-audit", "head_repository_id": 1323502312, "head_sha": "f9c3244cbcf3f84c83886f3cc6e20ccb8c13eb4d", "id": 45080216008, "repository_id": 1323502312}}, {"created_at": "2026-11-22T22:53:40Z", "expired": false, "id": 14776233804, "name": "arcade-advent-publish-45080110220", "size_in_bytes": 108343, "workflow_run": {"head_branch": "release/arcade-advent-publish", "head_repository_id": 1323502312, "head_sha": "42c6ddad3d65105dd779190f3c424c7729851689", "id": 45080110220, "repository_id": 1323502312}}, {"created_at": "2026-11-22T22:32:02Z", "expired": false, "id": 14775903521, "name": "generation-slot-publication", "size_in_bytes": 947195, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "8f7ffd6c6e65d2f9f306ebbc492c782f2d62eeb8", "id": 45078167893, "repository_id": 1323502312}}, {"created_at": "2026-11-22T22:29:38Z", "expired": false, "id": 14775514398, "name": "generation-slot-candidate", "size_in_bytes": 946799, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "0d57f9907eddba3e27a26179f6e4b88fbbb71d37", "id": 45077920747, "repository_id": 1323502312}}, {"created_at": "2026-11-22T21:43:37Z", "expired": false, "id": 14774207236, "name": "arcade-advent-candidate-45073496347", "size_in_bytes": 106871, "workflow_run": {"head_branch": "release/arcade-advent-prepare", "head_repository_id": 1323502312, "head_sha": "d67424a1663bbd4f3123f12df2b3656734b60514", "id": 45073496347, "repository_id": 1323502312}}, {"created_at": "2026-11-22T19:28:51Z", "expired": false, "id": 14769636004, "name": "generation-review-clock-publication", "size_in_bytes": 53579, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "44c2f28b9bac35051f471e0c6756d10bcc8eb27b", "id": 45060902548, "repository_id": 1323502312}}, {"created_at": "2026-11-22T19:26:37Z", "expired": false, "id": 14768399454, "name": "generation-review-clock-candidate", "size_in_bytes": 53185, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "e8c4294ab54358fc32aa4569d2a440f2dd323b68", "id": 45060715586, "repository_id": 1323502312}}, {"created_at": "2026-11-22T17:47:16Z", "expired": false, "id": 14766085238, "name": "generation-canonical-candidate", "size_in_bytes": 889985, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "2e2c440caba28ffd2fe0a5c5483c5a3e68e8957b", "id": 45051305254, "repository_id": 1323502312}}, {"created_at": "2026-11-22T17:49:38Z", "expired": false, "id": 14765961630, "name": "generation-canonical-publication", "size_in_bytes": 890381, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "51c3b5232f6f01034018d33e6659547440b7d7b4", "id": 45051525680, "repository_id": 1323502312}}, {"created_at": "2026-11-22T17:46:18Z", "expired": false, "id": 14765382110, "name": "generation-canonical-candidate", "size_in_bytes": 836302, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "b791f4f9104c01d9cb014d915dd7070529186013", "id": 45051249365, "repository_id": 1323502312}}, {"created_at": "2026-11-22T17:44:01Z", "expired": false, "id": 14765198971, "name": "generation-canonical-candidate", "size_in_bytes": 52989, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "49b04b3789b3664dad8cefd7e74de3db219b4f4b", "id": 45051036303, "repository_id": 1323502312}}, {"created_at": "2026-11-22T05:52:25Z", "expired": false, "id": 14741813001, "name": "arcade-attendance-forest-candidate-44991099455", "size_in_bytes": 103768, "workflow_run": {"head_branch": "release/arcade-attendance-forest-prepare", "head_repository_id": 1323502312, "head_sha": "ac4696ea26e72fca6a3a997f1b0370acc37184d6", "id": 44991099455, "repository_id": 1323502312}}, {"created_at": "2026-11-22T05:48:31Z", "expired": false, "id": 14741751798, "name": "arcade-attendance-forest-candidate-44990839648", "size_in_bytes": 91253, "workflow_run": {"head_branch": "release/arcade-attendance-forest-prepare", "head_repository_id": 1323502312, "head_sha": "bfc3fe323f5c26585cb6bdd7713e74c03e935146", "id": 44990839648, "repository_id": 1323502312}}, {"created_at": "2026-11-22T05:56:09Z", "expired": false, "id": 14741594720, "name": "arcade-attendance-forest-publish-44991408033", "size_in_bytes": 103860, "workflow_run": {"head_branch": "release/arcade-attendance-forest-publish", "head_repository_id": 1323502312, "head_sha": "081bb5269e243270ad1fb177fbef9fe5ed1cf63b", "id": 44991408033, "repository_id": 1323502312}}, {"created_at": "2026-11-22T05:36:03Z", "expired": false, "id": 14741198300, "name": "arcade-attendance-forest-candidate-44989653869", "size_in_bytes": 91252, "workflow_run": {"head_branch": "release/arcade-attendance-forest-prepare", "head_repository_id": 1323502312, "head_sha": "a82ad5f2d0886afa3e2b3ace7da7398eb4eed583", "id": 44989653869, "repository_id": 1323502312}}, {"created_at": "2026-11-22T05:41:51Z", "expired": false, "id": 14741062974, "name": "arcade-attendance-forest-candidate-44989930297", "size_in_bytes": 91249, "workflow_run": {"head_branch": "release/arcade-attendance-forest-prepare", "head_repository_id": 1323502312, "head_sha": "a946a79870a66851c24adfc07e96db4d25d1cb95", "id": 44989930297, "repository_id": 1323502312}}, {"created_at": "2026-11-22T05:43:27Z", "expired": false, "id": 14741054783, "name": "arcade-attendance-forest-candidate-44990323030", "size_in_bytes": 91255, "workflow_run": {"head_branch": "release/arcade-attendance-forest-prepare", "head_repository_id": 1323502312, "head_sha": "37ce76e7de1d9c3d2f3a1ad68feef9416026fb8f", "id": 44990323030, "repository_id": 1323502312}}, {"created_at": "2026-11-22T05:02:29Z", "expired": false, "id": 14740522896, "name": "arcade-wallet-switch-publish-44987535226", "size_in_bytes": 92561, "workflow_run": {"head_branch": "release/arcade-wallet-switch-publish", "head_repository_id": 1323502312, "head_sha": "abd9e0f3a35522bc79627b029d51ceb963608f69", "id": 44987535226, "repository_id": 1323502312}}, {"created_at": "2026-11-22T04:58:33Z", "expired": false, "id": 14740192235, "name": "arcade-wallet-switch-candidate-44987253606", "size_in_bytes": 92475, "workflow_run": {"head_branch": "release/arcade-wallet-switch-prepare", "head_repository_id": 1323502312, "head_sha": "5c85fad4a8248a8098783916c78e3a5b033640a3", "id": 44987253606, "repository_id": 1323502312}}, {"created_at": "2026-11-22T04:49:15Z", "expired": false, "id": 14740022588, "name": "arcade-wallet-switch-candidate-44986623909", "size_in_bytes": 92482, "workflow_run": {"head_branch": "release/arcade-wallet-switch-prepare", "head_repository_id": 1323502312, "head_sha": "0775e0ac41b5788b008860a2338fe698ff81824e", "id": 44986623909, "repository_id": 1323502312}}, {"created_at": "2026-11-21T15:43:45Z", "expired": false, "id": 14713910332, "name": "bnb-backing-publication", "size_in_bytes": 415215, "workflow_run": {"head_branch": "main", "head_repository_id": 1323502312, "head_sha": "e5e3b1255846eb33b408f2fece7750befba69ff7", "id": 44920394429, "repository_id": 1323502312}}, {"created_at": "2026-11-21T04:55:25Z", "expired": false, "id": 14691744903, "name": "bnb-test-auth-publication", "size_in_bytes": 349637, "workflow_run": {"head_branch": "main", "head_repository_id": 1323502312, "head_sha": "75495d9577c56e6e44b4c8ef4a71420f9ee26a79", "id": 44868193543, "repository_id": 1323502312}}, {"created_at": "2026-11-21T04:20:41Z", "expired": false, "id": 14691692228, "name": "bnb-test-auth-publication", "size_in_bytes": 1012, "workflow_run": {"head_branch": "main", "head_repository_id": 1323502312, "head_sha": "0373b8bb21bd0aa122c6b6e7fdc0938b4a2cabb7", "id": 44865447829, "repository_id": 1323502312}}, {"created_at": "2026-11-21T04:26:40Z", "expired": false, "id": 14691568810, "name": "bnb-test-auth-publication", "size_in_bytes": 33693, "workflow_run": {"head_branch": "main", "head_repository_id": 1323502312, "head_sha": "38d82eead22344024715ece21b5ef6fc218cc312", "id": 44865970994, "repository_id": 1323502312}}, {"created_at": "2026-11-20T17:46:42Z", "expired": false, "id": 14655230761, "name": "original-ack-release", "size_in_bytes": 31764, "workflow_run": {"head_branch": "main", "head_repository_id": 1323502312, "head_sha": "007416889aba4bd596275d41b8b8ca047cd5731e", "id": 44786130671, "repository_id": 1323502312}}, {"created_at": "2026-11-20T17:54:24Z", "expired": false, "id": 14655052416, "name": "original-ack-release", "size_in_bytes": 31801, "workflow_run": {"head_branch": "main", "head_repository_id": 1323502312, "head_sha": "be0e85498dd218e5418055f02ed97ebda5f66c37", "id": 44787344354, "repository_id": 1323502312}}, {"created_at": "2026-11-20T17:20:01Z", "expired": false, "id": 14652448214, "name": "original-send-release", "size_in_bytes": 31725, "workflow_run": {"head_branch": "main", "head_repository_id": 1323502312, "head_sha": "a2b7c9b002f31805f8bf8a04f2c2d02320a2378d", "id": 44781788410, "repository_id": 1323502312}}, {"created_at": "2026-11-20T16:23:54Z", "expired": false, "id": 14647593782, "name": "original-redemption-release", "size_in_bytes": 31678, "workflow_run": {"head_branch": "main", "head_repository_id": 1323502312, "head_sha": "c448f8844c14e8154200487c9a31ce3683924745", "id": 44772572497, "repository_id": 1323502312}}, {"created_at": "2026-11-20T04:05:01Z", "expired": false, "id": 14600117403, "name": "original-purchase-release", "size_in_bytes": 31259, "workflow_run": {"head_branch": "main", "head_repository_id": 1323502312, "head_sha": "e7a9199d31acf58f48f27dab4534877e8180548d", "id": 44671537288, "repository_id": 1323502312}}, {"created_at": "2026-11-20T03:06:13Z", "expired": false, "id": 14597707237, "name": "original-enable-release", "size_in_bytes": 31174, "workflow_run": {"head_branch": "main", "head_repository_id": 1323502312, "head_sha": "6ce946cc0e4904e0fa5e7b0bc8b695adb7307d42", "id": 44665025911, "repository_id": 1323502312}}, {"created_at": "2026-11-20T02:48:50Z", "expired": false, "id": 14596796333, "name": "precious-metals-publish-44663246197", "size_in_bytes": 100649, "workflow_run": {"head_branch": "release/gold-silver-publish", "head_repository_id": 1323502312, "head_sha": "95c3b0eb1ee0b5ed9e43a586d7cc027eb5cff119", "id": 44663246197, "repository_id": 1323502312}}, {"created_at": "2026-11-20T02:44:53Z", "expired": false, "id": 14596621129, "name": "precious-metals-candidate-44662805307", "size_in_bytes": 98683, "workflow_run": {"head_branch": "release/gold-silver-prepare", "head_repository_id": 1323502312, "head_sha": "31909de7bce24b2deda7f7855521e06a4e955f95", "id": 44662805307, "repository_id": 1323502312}}, {"created_at": "2026-11-20T02:31:30Z", "expired": false, "id": 14595353157, "name": "precious-metals-candidate-44661211932", "size_in_bytes": 98362, "workflow_run": {"head_branch": "release/precious-metals-prepare", "head_repository_id": 1323502312, "head_sha": "3135bebcdfac3d9a0275debcfa59f83f7048aa71", "id": 44661211932, "repository_id": 1323502312}}, {"created_at": "2026-11-20T02:26:16Z", "expired": false, "id": 14595332393, "name": "precious-metals-candidate-44660534458", "size_in_bytes": 98361, "workflow_run": {"head_branch": "release/precious-metals-prepare", "head_repository_id": 1323502312, "head_sha": "5925fdbe81118bebb5914238909ee5ab142c7d21", "id": 44660534458, "repository_id": 1323502312}}, {"created_at": "2026-11-20T02:34:25Z", "expired": false, "id": 14594709870, "name": "precious-metals-publish-44661566247", "size_in_bytes": 99900, "workflow_run": {"head_branch": "release/precious-metals-publish", "head_repository_id": 1323502312, "head_sha": "14221a06da7b4520b36e2f2a7d33bff74655f910", "id": 44661566247, "repository_id": 1323502312}}, {"created_at": "2026-11-19T19:48:34Z", "expired": false, "id": 14569105910, "name": "arcade-polish-candidate-44601879622", "size_in_bytes": 88079, "workflow_run": {"head_branch": "release/arcade-polish-prepare", "head_repository_id": 1323502312, "head_sha": "3535deceb0ab46b32e7e481cea72756e7c17d54b", "id": 44601879622, "repository_id": 1323502312}}, {"created_at": "2026-11-19T19:51:04Z", "expired": false, "id": 14568222376, "name": "arcade-polish-publish-44602354084", "size_in_bytes": 88607, "workflow_run": {"head_branch": "release/arcade-polish-publish", "head_repository_id": 1323502312, "head_sha": "835ef11c9d7ddff5ee9a9ae01b0f3c88bee911cc", "id": 44602354084, "repository_id": 1323502312}}, {"created_at": "2026-11-19T19:17:32Z", "expired": false, "id": 14566925497, "name": "arcade-polish-publish-44596575511", "size_in_bytes": 88616, "workflow_run": {"head_branch": "release/arcade-polish-publish", "head_repository_id": 1323502312, "head_sha": "f041958a5d4ce7b61a23e6df4b42a0bd24e8cd42", "id": 44596575511, "repository_id": 1323502312}}, {"created_at": "2026-11-19T19:12:53Z", "expired": false, "id": 14566330808, "name": "arcade-polish-candidate-44595686113", "size_in_bytes": 88093, "workflow_run": {"head_branch": "release/arcade-polish-prepare", "head_repository_id": 1323502312, "head_sha": "da1e8c1df9c78423259fe923bec89d85603f7025", "id": 44595686113, "repository_id": 1323502312}}, {"created_at": "2026-11-19T01:19:10Z", "expired": false, "id": 14488293277, "name": "arcade-pilot-live-review-44435875741", "size_in_bytes": 2578271, "workflow_run": {"head_branch": "release/arcade-challenge-auth-live-test", "head_repository_id": 1323502312, "head_sha": "b94355c1b37d76dd582216f01550bdba8778bed8", "id": 44435875741, "repository_id": 1323502312}}, {"created_at": "2026-11-19T01:17:12Z", "expired": false, "id": 14488268010, "name": "arcade-challenge-auth-publish-44435573744", "size_in_bytes": 800662, "workflow_run": {"head_branch": "release/arcade-challenge-auth-publish", "head_repository_id": 1323502312, "head_sha": "b300ccfea949c140a76898037c247ba6917ac8ad", "id": 44435573744, "repository_id": 1323502312}}, {"created_at": "2026-11-19T01:13:44Z", "expired": false, "id": 14488177517, "name": "arcade-challenge-auth-candidate-44434958866", "size_in_bytes": 800052, "workflow_run": {"head_branch": "release/arcade-challenge-auth-prepare", "head_repository_id": 1323502312, "head_sha": "6c8622c64186e7b08c475cf2ae79758149f1545e", "id": 44434958866, "repository_id": 1323502312}}, {"created_at": "2026-11-19T00:33:27Z", "expired": false, "id": 14486006725, "name": "arcade-challenge-publish-44429745020", "size_in_bytes": 453615, "workflow_run": {"head_branch": "release/arcade-challenge-publish", "head_repository_id": 1323502312, "head_sha": "6d7868c75a62108661f005caefcae46acf9ae45a", "id": 44429745020, "repository_id": 1323502312}}, {"created_at": "2026-11-19T00:52:01Z", "expired": false, "id": 14485983600, "name": "arcade-pilot-live-review-44432319554", "size_in_bytes": 1040, "workflow_run": {"head_branch": "release/arcade-challenge-live-test", "head_repository_id": 1323502312, "head_sha": "81e5cf84fa508b5351cee69bbdc5770af1be0c48", "id": 44432319554, "repository_id": 1323502312}}, {"created_at": "2026-11-19T00:43:45Z", "expired": false, "id": 14485908412, "name": "arcade-pilot-live-review-44430042469", "size_in_bytes": 915, "workflow_run": {"head_branch": "release/arcade-challenge-live-test", "head_repository_id": 1323502312, "head_sha": "02645db2229e579407fe79d2ebabe5d97012fa7e", "id": 44430042469, "repository_id": 1323502312}}, {"created_at": "2026-11-19T00:22:52Z", "expired": false, "id": 14484753822, "name": "arcade-challenge-candidate-44428317500", "size_in_bytes": 453017, "workflow_run": {"head_branch": "release/arcade-challenge-prepare", "head_repository_id": 1323502312, "head_sha": "cabecd68d34d605988a5550fa45b3cd33caffd1b", "id": 44428317500, "repository_id": 1323502312}}, {"created_at": "2026-11-18T22:12:06Z", "expired": false, "id": 14477116677, "name": "arcade-polish-candidate-44409079871", "size_in_bytes": 87470, "workflow_run": {"head_branch": "release/arcade-polish-prepare", "head_repository_id": 1323502312, "head_sha": "ac7005ff02bdb7d3e45ae71312a2ae4135026205", "id": 44409079871, "repository_id": 1323502312}}, {"created_at": "2026-11-18T22:17:56Z", "expired": false, "id": 14476937794, "name": "arcade-polish-publish-44410001644", "size_in_bytes": 88860, "workflow_run": {"head_branch": "release/arcade-polish-publish", "head_repository_id": 1323502312, "head_sha": "bb871628a8e2c0052eb041dd3fefbc2bc1986c61", "id": 44410001644, "repository_id": 1323502312}}, {"created_at": "2026-11-18T20:01:54Z", "expired": false, "id": 14466432244, "name": "arcade-cutoff-publish-44386363937", "size_in_bytes": 90150, "workflow_run": {"head_branch": "release/arcade-cutoff-publish", "head_repository_id": 1323502312, "head_sha": "56f753c40b4078e896c4231216863d7bceaf4ef5", "id": 44386363937, "repository_id": 1323502312}}, {"created_at": "2026-11-18T19:49:44Z", "expired": false, "id": 14464343844, "name": "arcade-cutoff-candidate-44384132362", "size_in_bytes": 696373, "workflow_run": {"head_branch": "release/arcade-cutoff-prepare", "head_repository_id": 1323502312, "head_sha": "09f77e96556bbbb39a8b1eee26c2cf712d4f3b9b", "id": 44384132362, "repository_id": 1323502312}}, {"created_at": "2026-11-18T19:41:06Z", "expired": false, "id": 14463284003, "name": "arcade-cutoff-candidate-44382593554", "size_in_bytes": 695752, "workflow_run": {"head_branch": "release/arcade-cutoff-prepare", "head_repository_id": 1323502312, "head_sha": "a1000328d9495871e328a92f423bdff29fa52323", "id": 44382593554, "repository_id": 1323502312}}, {"created_at": "2026-11-14T05:47:05Z", "expired": false, "id": 14100672727, "name": "arcade-recovery-release", "size_in_bytes": 18214, "workflow_run": {"head_branch": "main", "head_repository_id": 1323502312, "head_sha": "ffc0823ecca2647ccb858dd2c1fc30fea11cbf54", "id": 43563122919, "repository_id": 1323502312}}, {"created_at": "2026-11-11T22:42:52Z", "expired": false, "id": 13898001097, "name": "arcade-event-usdc-release", "size_in_bytes": 18295, "workflow_run": {"head_branch": "main", "head_repository_id": 1323502312, "head_sha": "ae882dc0feb9a71e277611fbfa8c8589dbc80bc1", "id": 43113929057, "repository_id": 1323502312}}, {"created_at": "2026-11-11T22:04:54Z", "expired": false, "id": 13894723625, "name": "event-profile-cosmetics-release", "size_in_bytes": 17097, "workflow_run": {"head_branch": "main", "head_repository_id": 1323502312, "head_sha": "ac34030d613ebdcb7ca49544194425c7fb9d18da", "id": 43108591709, "repository_id": 1323502312}}, {"created_at": "2026-11-11T19:23:17Z", "expired": false, "id": 13885954064, "name": "event-profile-cosmetics-release", "size_in_bytes": 16986, "workflow_run": {"head_branch": "main", "head_repository_id": 1323502312, "head_sha": "ea81a2de80eacb00e60aaf384fec2878ea7d370f", "id": 43086635932, "repository_id": 1323502312}}, {"created_at": "2026-11-11T17:41:08Z", "expired": false, "id": 13878940276, "name": "arcade-event-foundation-release", "size_in_bytes": 16821, "workflow_run": {"head_branch": "main", "head_repository_id": 1323502312, "head_sha": "6994fb2fac05dcea36d694b4e8a70202dd6af701", "id": 43070383514, "repository_id": 1323502312}}, {"created_at": "2026-11-11T14:34:02Z", "expired": false, "id": 13864632349, "name": "arcade-play-share-production", "size_in_bytes": 16730, "workflow_run": {"head_branch": "feature/arcade-share-production", "head_repository_id": 1323502312, "head_sha": "c2112219aa434c22c85cd12759669119caa9fb2c", "id": 43039597029, "repository_id": 1323502312}}, {"created_at": "2026-11-11T14:08:16Z", "expired": false, "id": 13863391030, "name": "canopy-ending-share-release", "size_in_bytes": 1764, "workflow_run": {"head_branch": "feature/breaker-ending-share", "head_repository_id": 1323502312, "head_sha": "bc12efa963e4c56c05f714debe8483af3e6152af", "id": 43035474384, "repository_id": 1323502312}}, {"created_at": "2026-11-11T13:56:53Z", "expired": false, "id": 13863140423, "name": "arcade-play-share-preview", "size_in_bytes": 16856, "workflow_run": {"head_branch": "feature/arcade-play-then-share", "head_repository_id": 1323502312, "head_sha": "629e211fd64a9de50f08d5c14500025b44082451", "id": 43033645694, "repository_id": 1323502312}}, {"created_at": "2026-11-11T13:59:04Z", "expired": false, "id": 13862192262, "name": "arcade-play-share-preview", "size_in_bytes": 16813, "workflow_run": {"head_branch": "feature/arcade-play-then-share", "head_repository_id": 1323502312, "head_sha": "2809b9a83518435b41ce3b92a10eeba045644299", "id": 43033981257, "repository_id": 1323502312}}, {"created_at": "2026-11-11T14:05:32Z", "expired": false, "id": 13861389441, "name": "canopy-ending-share-release", "size_in_bytes": 1772, "workflow_run": {"head_branch": "feature/breaker-ending-share", "head_repository_id": 1323502312, "head_sha": "f5971ba031ef5fbdb0238a24fb3d564cc4047ddc", "id": 43035046373, "repository_id": 1323502312}}, {"created_at": "2026-11-11T13:40:07Z", "expired": false, "id": 13860703704, "name": "arcade-play-share-preview", "size_in_bytes": 16640, "workflow_run": {"head_branch": "feature/arcade-play-then-share", "head_repository_id": 1323502312, "head_sha": "98fdf3467d6073f10373aa5d40f625227a90c3e3", "id": 43031050025, "repository_id": 1323502312}}, {"created_at": "2026-11-11T13:46:02Z", "expired": false, "id": 13860304540, "name": "arcade-play-share-preview", "size_in_bytes": 16640, "workflow_run": {"head_branch": "feature/arcade-play-then-share", "head_repository_id": 1323502312, "head_sha": "4042e89ec389ba42e3e6e32e49c1b553da81891e", "id": 43031987370, "repository_id": 1323502312}}, {"created_at": "2026-11-11T13:35:40Z", "expired": false, "id": 13860098262, "name": "arcade-play-share-preview", "size_in_bytes": 16662, "workflow_run": {"head_branch": "feature/arcade-play-then-share", "head_repository_id": 1323502312, "head_sha": "9d3ef7de27ca0265022e8289f2c9cac613813616", "id": 43030403913, "repository_id": 1323502312}}, {"created_at": "2026-11-11T13:38:03Z", "expired": false, "id": 13859284216, "name": "arcade-play-share-preview", "size_in_bytes": 16641, "workflow_run": {"head_branch": "feature/arcade-play-then-share", "head_repository_id": 1323502312, "head_sha": "4ab7f2327bdd547cba9d14f6e69470a629a82a32", "id": 43030777806, "repository_id": 1323502312}}, {"created_at": "2026-11-11T09:06:59Z", "expired": false, "id": 13842157607, "name": "arcade-play-share-preview", "size_in_bytes": 16632, "workflow_run": {"head_branch": "feature/arcade-play-then-share", "head_repository_id": 1323502312, "head_sha": "66cd637b1a8ef2e062459be3bac0f6535317fbd0", "id": 42992329299, "repository_id": 1323502312}}, {"created_at": "2026-11-11T05:48:56Z", "expired": false, "id": 13831759153, "name": "arcade-play-share-preview", "size_in_bytes": 16638, "workflow_run": {"head_branch": "feature/arcade-play-then-share", "head_repository_id": 1323502312, "head_sha": "7da6b01022309b0828b84af588412e1a8e1288b1", "id": 42968092548, "repository_id": 1323502312}}, {"created_at": "2026-11-11T05:12:07Z", "expired": false, "id": 13830800335, "name": "arcade-play-share-preview", "size_in_bytes": 16487, "workflow_run": {"head_branch": "feature/arcade-play-then-share", "head_repository_id": 1323502312, "head_sha": "754759e10e673258e56144bce6717c2638778b2f", "id": 42964034968, "repository_id": 1323502312}}, {"created_at": "2026-11-11T05:14:03Z", "expired": false, "id": 13830640932, "name": "arcade-play-share-preview", "size_in_bytes": 16485, "workflow_run": {"head_branch": "feature/arcade-play-then-share", "head_repository_id": 1323502312, "head_sha": "062022e909330cc0b00750c8a0d17e77c1ee190d", "id": 42964310178, "repository_id": 1323502312}}, {"created_at": "2026-11-11T04:56:26Z", "expired": false, "id": 13830235569, "name": "arcade-event-workshop-release", "size_in_bytes": 16318, "workflow_run": {"head_branch": "main", "head_repository_id": 1323502312, "head_sha": "951fd28e0f90747cb80de11c74d7e4a5b5ee7862", "id": 42962404360, "repository_id": 1323502312}}, {"created_at": "2026-11-11T05:16:09Z", "expired": false, "id": 13830174262, "name": "arcade-play-share-preview", "size_in_bytes": 16483, "workflow_run": {"head_branch": "feature/arcade-play-then-share", "head_repository_id": 1323502312, "head_sha": "411830400bbdef3010d722b42f91f1157e0d6769", "id": 42964548709, "repository_id": 1323502312}}, {"created_at": "2026-11-24T06:30:43Z", "expired": false, "id": 14896150960, "name": "bnb-run-review-candidate", "size_in_bytes": 728452, "workflow_run": {"head_branch": "feat/bnb-generation-custody", "head_repository_id": 1323502312, "head_sha": "905fd47313efa4fbea599b4e5c7ce87be9fc0dfa", "id": 45340749351, "repository_id": 1323502312}}, {"created_at": "2026-11-21T15:41:27Z", "expired": false, "id": 14713387321, "name": "bnb-backing-source-review", "size_in_bytes": 713979, "workflow_run": {"head_branch": "main", "head_repository_id": 1323502312, "head_sha": "e5e3b1255846eb33b408f2fece7750befba69ff7", "id": 44920394429, "repository_id": 1323502312}}, {"created_at": "2026-11-21T15:39:15Z", "expired": false, "id": 14712778264, "name": "bnb-backing-source-review", "size_in_bytes": 714621, "workflow_run": {"head_branch": "feat/bnb-backing-eligibility", "head_repository_id": 1323502312, "head_sha": "7f765176f8072dabc58a5b7ce333cf3e9a048bde", "id": 44920199145, "repository_id": 1323502312}}, {"created_at": "2026-11-21T15:33:35Z", "expired": false, "id": 14712937306, "name": "bnb-backing-source-review", "size_in_bytes": 714539, "workflow_run": {"head_branch": "feat/bnb-backing-eligibility", "head_repository_id": 1323502312, "head_sha": "b9af1a87971a08518bf0bc46b915b10361166f02", "id": 44919683422, "repository_id": 1323502312}}]
+[
+  {
+    "created_at": "2026-11-24T19:19:54Z",
+    "expired": false,
+    "id": 14956476170,
+    "name": "bnb-run-enablement-plan",
+    "size_in_bytes": 338232,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "c58053ccf898a460a2261e867e837cafbca81fff",
+      "id": 45468891584,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-24T19:21:55Z",
+    "expired": false,
+    "id": 14956321047,
+    "name": "bnb-run-enabled",
+    "size_in_bytes": 211,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "cc99e4e7da0786d418eba093d3add271fea53966",
+      "id": 45469250115,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-24T19:10:28Z",
+    "expired": false,
+    "id": 14954303786,
+    "name": "bnb-run-binding-check",
+    "size_in_bytes": 339366,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "448707c3ba963077bf5856f677a44a05161f45ee",
+      "id": 45466344470,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-24T15:31:21Z",
+    "expired": false,
+    "id": 14935759807,
+    "name": "bnb-run-publication",
+    "size_in_bytes": 600,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "58f9d9a3a0792199c933a3a03656bedbf61a2114",
+      "id": 45426140480,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-24T07:22:27Z",
+    "expired": false,
+    "id": 14898362655,
+    "name": "bnb-run-release-plan",
+    "size_in_bytes": 62035,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "3ce138ef39534b0c4172b50c99052e67c3c0867b",
+      "id": 45347371432,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-24T07:05:37Z",
+    "expired": false,
+    "id": 14898330019,
+    "name": "bnb-run-release-plan",
+    "size_in_bytes": 62040,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "3b0ecb87f8339b5f0623e0bd56aa44bc12477085",
+      "id": 45345210056,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-24T07:23:58Z",
+    "expired": false,
+    "id": 14897969879,
+    "name": "bnb-run-candidate-verification",
+    "size_in_bytes": 1367,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "7e6489700dbe8729b79d36f129deff94eadc3b22",
+      "id": 45347567727,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-24T07:03:37Z",
+    "expired": false,
+    "id": 14897477978,
+    "name": "bnb-run-release-plan",
+    "size_in_bytes": 62037,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "b9745d2c4b0390ab793527468ba707c9822755cf",
+      "id": 45344962719,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-23T18:05:17Z",
+    "expired": false,
+    "id": 14849150444,
+    "name": "bnb-completion-publication",
+    "size_in_bytes": 56727,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "6033a7841cd76d47c6f90d45215e5ced4ddc81c2",
+      "id": 45234330517,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-23T18:02:17Z",
+    "expired": false,
+    "id": 14849120119,
+    "name": "bnb-completion-candidate",
+    "size_in_bytes": 56299,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "d76e87448a0dfad31ea3bdb3cc1ec94cbde6441c",
+      "id": 45233815169,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-23T16:44:52Z",
+    "expired": false,
+    "id": 14841200090,
+    "name": "generation-acknowledgement-candidate",
+    "size_in_bytes": 2033252,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "96b6225bcadd1d2f763cab01a005afd42637e6a0",
+      "id": 45219737786,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-23T16:47:38Z",
+    "expired": false,
+    "id": 14840232621,
+    "name": "generation-acknowledgement-publication",
+    "size_in_bytes": 2033647,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "6e42d5d43aca75b636ebe8ff71463638dc562bab",
+      "id": 45220208588,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-23T16:19:09Z",
+    "expired": false,
+    "id": 14838985197,
+    "name": "bnb-return-publication",
+    "size_in_bytes": 56284,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "674af450461be32e7036dd4c44c3af0609ade925",
+      "id": 45214868520,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-23T16:11:44Z",
+    "expired": false,
+    "id": 14838065656,
+    "name": "bnb-return-publication",
+    "size_in_bytes": 55852,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "2ef0bcea2b8af91345fbf81140a8c573e6266f47",
+      "id": 45211806293,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-23T16:16:35Z",
+    "expired": false,
+    "id": 14837672342,
+    "name": "bnb-return-candidate",
+    "size_in_bytes": 55862,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "8757aaf03886a5a440d155e93d420e612ff539a2",
+      "id": 45214517145,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-23T15:59:03Z",
+    "expired": false,
+    "id": 14834848940,
+    "name": "bnb-return-candidate",
+    "size_in_bytes": 55852,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "ce5e1ce24712bc5564917c320bf2fdca7090eef9",
+      "id": 45211112429,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-23T15:11:20Z",
+    "expired": false,
+    "id": 14831963382,
+    "name": "bnb-purchase-candidate",
+    "size_in_bytes": 2145674,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "aa26cb5b3ea108bd4297462e0b2d347d69391883",
+      "id": 45202130222,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-23T15:13:51Z",
+    "expired": false,
+    "id": 14830949036,
+    "name": "bnb-purchase-publication",
+    "size_in_bytes": 2146046,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "2a41acc312f2f8704162ef6eb9f5a5c824bee5d1",
+      "id": 45202579789,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-23T06:07:50Z",
+    "expired": false,
+    "id": 14794490728,
+    "name": "generation-reserve-publication",
+    "size_in_bytes": 2176202,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "806391242780d7e0fbe1c53cc96b717f6d32ea14",
+      "id": 45121910926,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-23T06:05:09Z",
+    "expired": false,
+    "id": 14793284985,
+    "name": "generation-reserve-candidate",
+    "size_in_bytes": 2175808,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "d1046d69c1541a2204c996bc25a4fe9ae5e9d63f",
+      "id": 45121661258,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-23T05:19:08Z",
+    "expired": false,
+    "id": 14791594530,
+    "name": "generation-binding-publication",
+    "size_in_bytes": 2161020,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "76224a35c8ee7884c8f74d1275f13cef87da2c1d",
+      "id": 45116895004,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-23T05:17:12Z",
+    "expired": false,
+    "id": 14791549418,
+    "name": "generation-binding-candidate",
+    "size_in_bytes": 2160626,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "6d988b2385f348aed146bca7dd4331fd3b599a54",
+      "id": 45116610999,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-23T04:53:39Z",
+    "expired": false,
+    "id": 14791480226,
+    "name": "bnb-configuration-publication",
+    "size_in_bytes": 55225,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "3ab6f8f65f0f2d75ce16006e9a1005f17f446760",
+      "id": 45114413903,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-23T04:51:57Z",
+    "expired": false,
+    "id": 14790434633,
+    "name": "bnb-configuration-candidate",
+    "size_in_bytes": 54805,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "a859f396611b5aa8678e5eafa1050c2b6fe99f32",
+      "id": 45114093569,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-23T04:29:37Z",
+    "expired": false,
+    "id": 14790425980,
+    "name": "generation-configuration-candidate",
+    "size_in_bytes": 2016537,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "6ba8e211ec0ce70a82c903034b8a4cf17a5ff7ce",
+      "id": 45112070048,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-23T04:31:40Z",
+    "expired": false,
+    "id": 14790241934,
+    "name": "generation-configuration-publication",
+    "size_in_bytes": 2016931,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "8389a7a72223de6ccac51762053d89f10be0ec86",
+      "id": 45112287530,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-23T03:54:55Z",
+    "expired": false,
+    "id": 14789030447,
+    "name": "generation-registration-publication",
+    "size_in_bytes": 2004927,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "b3c510e24c6865f8b98b2b3f8fd607b7122521aa",
+      "id": 45108631810,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-23T03:52:39Z",
+    "expired": false,
+    "id": 14787873464,
+    "name": "generation-registration-candidate",
+    "size_in_bytes": 2004533,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "befedcec41c1e1de7691d0eda42152a7ff29ab83",
+      "id": 45108444152,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-23T03:14:47Z",
+    "expired": false,
+    "id": 14787226784,
+    "name": "bnb-rpc-publication",
+    "size_in_bytes": 54564,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "6a17ab16595711b587b020668999d4261dfe3267",
+      "id": 45104692560,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-23T03:12:45Z",
+    "expired": false,
+    "id": 14786862515,
+    "name": "bnb-rpc-candidate",
+    "size_in_bytes": 54146,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "62dfcbb38d1845b4e763587fbcd10f53200767d2",
+      "id": 45104505657,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-23T02:17:30Z",
+    "expired": false,
+    "id": 14784572671,
+    "name": "bnb-generation-publication",
+    "size_in_bytes": 54454,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "efdc436740eddbf65d1ffab736e9f468b751ffd1",
+      "id": 45099281724,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-23T02:15:46Z",
+    "expired": false,
+    "id": 14784199639,
+    "name": "bnb-generation-candidate",
+    "size_in_bytes": 54035,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "dbcc0faa8c4209f420a7c7c82f72b717041044a5",
+      "id": 45099075862,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-22T23:58:55Z",
+    "expired": false,
+    "id": 14779281721,
+    "name": "arcade-countdown-publish-45086007525",
+    "size_in_bytes": 96250,
+    "workflow_run": {
+      "head_branch": "release/arcade-countdown-publish",
+      "head_repository_id": 1323502312,
+      "head_sha": "fe5cfadbbbed13a2c8799ac4ada424d0aca3031f",
+      "id": 45086007525,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-22T23:49:28Z",
+    "expired": false,
+    "id": 14779206656,
+    "name": "arcade-countdown-candidate-45085199570",
+    "size_in_bytes": 92665,
+    "workflow_run": {
+      "head_branch": "release/arcade-countdown-prepare",
+      "head_repository_id": 1323502312,
+      "head_sha": "91a287a2f49f82b82090e1d939de0fab5308464a",
+      "id": 45085199570,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-22T23:56:38Z",
+    "expired": false,
+    "id": 14778868678,
+    "name": "arcade-countdown-candidate-45085802059",
+    "size_in_bytes": 96151,
+    "workflow_run": {
+      "head_branch": "release/arcade-countdown-prepare",
+      "head_repository_id": 1323502312,
+      "head_sha": "34b342f3f0b2c3c61d5984d05ea3a5d6bde1f979",
+      "id": 45085802059,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-22T23:44:59Z",
+    "expired": false,
+    "id": 14778771211,
+    "name": "arcade-countdown-candidate-45084815585",
+    "size_in_bytes": 92663,
+    "workflow_run": {
+      "head_branch": "release/arcade-countdown-prepare",
+      "head_repository_id": 1323502312,
+      "head_sha": "5cfc530d193c5ab93865354a83415b2e25e4465a",
+      "id": 45084815585,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-22T23:52:54Z",
+    "expired": false,
+    "id": 14778738510,
+    "name": "arcade-countdown-candidate-45085522748",
+    "size_in_bytes": 92663,
+    "workflow_run": {
+      "head_branch": "release/arcade-countdown-prepare",
+      "head_repository_id": 1323502312,
+      "head_sha": "46b2bb5eafbfb739f6bf235af16874e5d7c95751",
+      "id": 45085522748,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-22T23:00:51Z",
+    "expired": false,
+    "id": 14777186215,
+    "name": "generation-slot-connection-candidate",
+    "size_in_bytes": 53929,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "eb832e9feb926ac52e129cccf298ddc9b222bc48",
+      "id": 45080806848,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-22T22:49:27Z",
+    "expired": false,
+    "id": 14776956670,
+    "name": "arcade-advent-candidate-45079616899",
+    "size_in_bytes": 108251,
+    "workflow_run": {
+      "head_branch": "release/arcade-advent-prepare",
+      "head_repository_id": 1323502312,
+      "head_sha": "46a28dad0dfb777ebc8f533bd45616164a9feb68",
+      "id": 45079616899,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-22T23:02:55Z",
+    "expired": false,
+    "id": 14776944137,
+    "name": "generation-slot-connection-publication",
+    "size_in_bytes": 54322,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "123db0bbb9f2f18919d058bcf709053b7001d897",
+      "id": 45080969461,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-22T22:41:35Z",
+    "expired": false,
+    "id": 14776885759,
+    "name": "arcade-advent-candidate-45078914345",
+    "size_in_bytes": 108583,
+    "workflow_run": {
+      "head_branch": "release/arcade-advent-prepare",
+      "head_repository_id": 1323502312,
+      "head_sha": "18150a5927f079d42b01f792154e3f38d8638ed4",
+      "id": 45078914345,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-22T22:46:04Z",
+    "expired": false,
+    "id": 14776712050,
+    "name": "arcade-advent-candidate-45079311292",
+    "size_in_bytes": 92608,
+    "workflow_run": {
+      "head_branch": "release/arcade-advent-prepare",
+      "head_repository_id": 1323502312,
+      "head_sha": "9d66b127a24d0f6947e2d3e181d47bd7e3f61a6a",
+      "id": 45079311292,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-22T22:54:39Z",
+    "expired": false,
+    "id": 14776283688,
+    "name": "arcade-advent-audit-45080216008",
+    "size_in_bytes": 108292,
+    "workflow_run": {
+      "head_branch": "release/arcade-advent-audit",
+      "head_repository_id": 1323502312,
+      "head_sha": "f9c3244cbcf3f84c83886f3cc6e20ccb8c13eb4d",
+      "id": 45080216008,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-22T22:53:40Z",
+    "expired": false,
+    "id": 14776233804,
+    "name": "arcade-advent-publish-45080110220",
+    "size_in_bytes": 108343,
+    "workflow_run": {
+      "head_branch": "release/arcade-advent-publish",
+      "head_repository_id": 1323502312,
+      "head_sha": "42c6ddad3d65105dd779190f3c424c7729851689",
+      "id": 45080110220,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-22T22:32:02Z",
+    "expired": false,
+    "id": 14775903521,
+    "name": "generation-slot-publication",
+    "size_in_bytes": 947195,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "8f7ffd6c6e65d2f9f306ebbc492c782f2d62eeb8",
+      "id": 45078167893,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-22T22:29:38Z",
+    "expired": false,
+    "id": 14775514398,
+    "name": "generation-slot-candidate",
+    "size_in_bytes": 946799,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "0d57f9907eddba3e27a26179f6e4b88fbbb71d37",
+      "id": 45077920747,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-22T21:43:37Z",
+    "expired": false,
+    "id": 14774207236,
+    "name": "arcade-advent-candidate-45073496347",
+    "size_in_bytes": 106871,
+    "workflow_run": {
+      "head_branch": "release/arcade-advent-prepare",
+      "head_repository_id": 1323502312,
+      "head_sha": "d67424a1663bbd4f3123f12df2b3656734b60514",
+      "id": 45073496347,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-22T19:28:51Z",
+    "expired": false,
+    "id": 14769636004,
+    "name": "generation-review-clock-publication",
+    "size_in_bytes": 53579,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "44c2f28b9bac35051f471e0c6756d10bcc8eb27b",
+      "id": 45060902548,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-22T19:26:37Z",
+    "expired": false,
+    "id": 14768399454,
+    "name": "generation-review-clock-candidate",
+    "size_in_bytes": 53185,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "e8c4294ab54358fc32aa4569d2a440f2dd323b68",
+      "id": 45060715586,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-22T17:47:16Z",
+    "expired": false,
+    "id": 14766085238,
+    "name": "generation-canonical-candidate",
+    "size_in_bytes": 889985,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "2e2c440caba28ffd2fe0a5c5483c5a3e68e8957b",
+      "id": 45051305254,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-22T17:49:38Z",
+    "expired": false,
+    "id": 14765961630,
+    "name": "generation-canonical-publication",
+    "size_in_bytes": 890381,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "51c3b5232f6f01034018d33e6659547440b7d7b4",
+      "id": 45051525680,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-22T17:46:18Z",
+    "expired": false,
+    "id": 14765382110,
+    "name": "generation-canonical-candidate",
+    "size_in_bytes": 836302,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "b791f4f9104c01d9cb014d915dd7070529186013",
+      "id": 45051249365,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-22T17:44:01Z",
+    "expired": false,
+    "id": 14765198971,
+    "name": "generation-canonical-candidate",
+    "size_in_bytes": 52989,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "49b04b3789b3664dad8cefd7e74de3db219b4f4b",
+      "id": 45051036303,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-22T05:52:25Z",
+    "expired": false,
+    "id": 14741813001,
+    "name": "arcade-attendance-forest-candidate-44991099455",
+    "size_in_bytes": 103768,
+    "workflow_run": {
+      "head_branch": "release/arcade-attendance-forest-prepare",
+      "head_repository_id": 1323502312,
+      "head_sha": "ac4696ea26e72fca6a3a997f1b0370acc37184d6",
+      "id": 44991099455,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-22T05:48:31Z",
+    "expired": false,
+    "id": 14741751798,
+    "name": "arcade-attendance-forest-candidate-44990839648",
+    "size_in_bytes": 91253,
+    "workflow_run": {
+      "head_branch": "release/arcade-attendance-forest-prepare",
+      "head_repository_id": 1323502312,
+      "head_sha": "bfc3fe323f5c26585cb6bdd7713e74c03e935146",
+      "id": 44990839648,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-22T05:56:09Z",
+    "expired": false,
+    "id": 14741594720,
+    "name": "arcade-attendance-forest-publish-44991408033",
+    "size_in_bytes": 103860,
+    "workflow_run": {
+      "head_branch": "release/arcade-attendance-forest-publish",
+      "head_repository_id": 1323502312,
+      "head_sha": "081bb5269e243270ad1fb177fbef9fe5ed1cf63b",
+      "id": 44991408033,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-22T05:36:03Z",
+    "expired": false,
+    "id": 14741198300,
+    "name": "arcade-attendance-forest-candidate-44989653869",
+    "size_in_bytes": 91252,
+    "workflow_run": {
+      "head_branch": "release/arcade-attendance-forest-prepare",
+      "head_repository_id": 1323502312,
+      "head_sha": "a82ad5f2d0886afa3e2b3ace7da7398eb4eed583",
+      "id": 44989653869,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-22T05:41:51Z",
+    "expired": false,
+    "id": 14741062974,
+    "name": "arcade-attendance-forest-candidate-44989930297",
+    "size_in_bytes": 91249,
+    "workflow_run": {
+      "head_branch": "release/arcade-attendance-forest-prepare",
+      "head_repository_id": 1323502312,
+      "head_sha": "a946a79870a66851c24adfc07e96db4d25d1cb95",
+      "id": 44989930297,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-22T05:43:27Z",
+    "expired": false,
+    "id": 14741054783,
+    "name": "arcade-attendance-forest-candidate-44990323030",
+    "size_in_bytes": 91255,
+    "workflow_run": {
+      "head_branch": "release/arcade-attendance-forest-prepare",
+      "head_repository_id": 1323502312,
+      "head_sha": "37ce76e7de1d9c3d2f3a1ad68feef9416026fb8f",
+      "id": 44990323030,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-22T05:02:29Z",
+    "expired": false,
+    "id": 14740522896,
+    "name": "arcade-wallet-switch-publish-44987535226",
+    "size_in_bytes": 92561,
+    "workflow_run": {
+      "head_branch": "release/arcade-wallet-switch-publish",
+      "head_repository_id": 1323502312,
+      "head_sha": "abd9e0f3a35522bc79627b029d51ceb963608f69",
+      "id": 44987535226,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-22T04:58:33Z",
+    "expired": false,
+    "id": 14740192235,
+    "name": "arcade-wallet-switch-candidate-44987253606",
+    "size_in_bytes": 92475,
+    "workflow_run": {
+      "head_branch": "release/arcade-wallet-switch-prepare",
+      "head_repository_id": 1323502312,
+      "head_sha": "5c85fad4a8248a8098783916c78e3a5b033640a3",
+      "id": 44987253606,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-22T04:49:15Z",
+    "expired": false,
+    "id": 14740022588,
+    "name": "arcade-wallet-switch-candidate-44986623909",
+    "size_in_bytes": 92482,
+    "workflow_run": {
+      "head_branch": "release/arcade-wallet-switch-prepare",
+      "head_repository_id": 1323502312,
+      "head_sha": "0775e0ac41b5788b008860a2338fe698ff81824e",
+      "id": 44986623909,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-21T15:43:45Z",
+    "expired": false,
+    "id": 14713910332,
+    "name": "bnb-backing-publication",
+    "size_in_bytes": 415215,
+    "workflow_run": {
+      "head_branch": "main",
+      "head_repository_id": 1323502312,
+      "head_sha": "e5e3b1255846eb33b408f2fece7750befba69ff7",
+      "id": 44920394429,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-21T04:55:25Z",
+    "expired": false,
+    "id": 14691744903,
+    "name": "bnb-test-auth-publication",
+    "size_in_bytes": 349637,
+    "workflow_run": {
+      "head_branch": "main",
+      "head_repository_id": 1323502312,
+      "head_sha": "75495d9577c56e6e44b4c8ef4a71420f9ee26a79",
+      "id": 44868193543,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-21T04:20:41Z",
+    "expired": false,
+    "id": 14691692228,
+    "name": "bnb-test-auth-publication",
+    "size_in_bytes": 1012,
+    "workflow_run": {
+      "head_branch": "main",
+      "head_repository_id": 1323502312,
+      "head_sha": "0373b8bb21bd0aa122c6b6e7fdc0938b4a2cabb7",
+      "id": 44865447829,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-21T04:26:40Z",
+    "expired": false,
+    "id": 14691568810,
+    "name": "bnb-test-auth-publication",
+    "size_in_bytes": 33693,
+    "workflow_run": {
+      "head_branch": "main",
+      "head_repository_id": 1323502312,
+      "head_sha": "38d82eead22344024715ece21b5ef6fc218cc312",
+      "id": 44865970994,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-20T17:46:42Z",
+    "expired": false,
+    "id": 14655230761,
+    "name": "original-ack-release",
+    "size_in_bytes": 31764,
+    "workflow_run": {
+      "head_branch": "main",
+      "head_repository_id": 1323502312,
+      "head_sha": "007416889aba4bd596275d41b8b8ca047cd5731e",
+      "id": 44786130671,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-20T17:54:24Z",
+    "expired": false,
+    "id": 14655052416,
+    "name": "original-ack-release",
+    "size_in_bytes": 31801,
+    "workflow_run": {
+      "head_branch": "main",
+      "head_repository_id": 1323502312,
+      "head_sha": "be0e85498dd218e5418055f02ed97ebda5f66c37",
+      "id": 44787344354,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-20T17:20:01Z",
+    "expired": false,
+    "id": 14652448214,
+    "name": "original-send-release",
+    "size_in_bytes": 31725,
+    "workflow_run": {
+      "head_branch": "main",
+      "head_repository_id": 1323502312,
+      "head_sha": "a2b7c9b002f31805f8bf8a04f2c2d02320a2378d",
+      "id": 44781788410,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-20T16:23:54Z",
+    "expired": false,
+    "id": 14647593782,
+    "name": "original-redemption-release",
+    "size_in_bytes": 31678,
+    "workflow_run": {
+      "head_branch": "main",
+      "head_repository_id": 1323502312,
+      "head_sha": "c448f8844c14e8154200487c9a31ce3683924745",
+      "id": 44772572497,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-20T04:05:01Z",
+    "expired": false,
+    "id": 14600117403,
+    "name": "original-purchase-release",
+    "size_in_bytes": 31259,
+    "workflow_run": {
+      "head_branch": "main",
+      "head_repository_id": 1323502312,
+      "head_sha": "e7a9199d31acf58f48f27dab4534877e8180548d",
+      "id": 44671537288,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-20T03:06:13Z",
+    "expired": false,
+    "id": 14597707237,
+    "name": "original-enable-release",
+    "size_in_bytes": 31174,
+    "workflow_run": {
+      "head_branch": "main",
+      "head_repository_id": 1323502312,
+      "head_sha": "6ce946cc0e4904e0fa5e7b0bc8b695adb7307d42",
+      "id": 44665025911,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-20T02:48:50Z",
+    "expired": false,
+    "id": 14596796333,
+    "name": "precious-metals-publish-44663246197",
+    "size_in_bytes": 100649,
+    "workflow_run": {
+      "head_branch": "release/gold-silver-publish",
+      "head_repository_id": 1323502312,
+      "head_sha": "95c3b0eb1ee0b5ed9e43a586d7cc027eb5cff119",
+      "id": 44663246197,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-20T02:44:53Z",
+    "expired": false,
+    "id": 14596621129,
+    "name": "precious-metals-candidate-44662805307",
+    "size_in_bytes": 98683,
+    "workflow_run": {
+      "head_branch": "release/gold-silver-prepare",
+      "head_repository_id": 1323502312,
+      "head_sha": "31909de7bce24b2deda7f7855521e06a4e955f95",
+      "id": 44662805307,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-20T02:31:30Z",
+    "expired": false,
+    "id": 14595353157,
+    "name": "precious-metals-candidate-44661211932",
+    "size_in_bytes": 98362,
+    "workflow_run": {
+      "head_branch": "release/precious-metals-prepare",
+      "head_repository_id": 1323502312,
+      "head_sha": "3135bebcdfac3d9a0275debcfa59f83f7048aa71",
+      "id": 44661211932,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-20T02:26:16Z",
+    "expired": false,
+    "id": 14595332393,
+    "name": "precious-metals-candidate-44660534458",
+    "size_in_bytes": 98361,
+    "workflow_run": {
+      "head_branch": "release/precious-metals-prepare",
+      "head_repository_id": 1323502312,
+      "head_sha": "5925fdbe81118bebb5914238909ee5ab142c7d21",
+      "id": 44660534458,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-20T02:34:25Z",
+    "expired": false,
+    "id": 14594709870,
+    "name": "precious-metals-publish-44661566247",
+    "size_in_bytes": 99900,
+    "workflow_run": {
+      "head_branch": "release/precious-metals-publish",
+      "head_repository_id": 1323502312,
+      "head_sha": "14221a06da7b4520b36e2f2a7d33bff74655f910",
+      "id": 44661566247,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-19T19:48:34Z",
+    "expired": false,
+    "id": 14569105910,
+    "name": "arcade-polish-candidate-44601879622",
+    "size_in_bytes": 88079,
+    "workflow_run": {
+      "head_branch": "release/arcade-polish-prepare",
+      "head_repository_id": 1323502312,
+      "head_sha": "3535deceb0ab46b32e7e481cea72756e7c17d54b",
+      "id": 44601879622,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-19T19:51:04Z",
+    "expired": false,
+    "id": 14568222376,
+    "name": "arcade-polish-publish-44602354084",
+    "size_in_bytes": 88607,
+    "workflow_run": {
+      "head_branch": "release/arcade-polish-publish",
+      "head_repository_id": 1323502312,
+      "head_sha": "835ef11c9d7ddff5ee9a9ae01b0f3c88bee911cc",
+      "id": 44602354084,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-19T19:17:32Z",
+    "expired": false,
+    "id": 14566925497,
+    "name": "arcade-polish-publish-44596575511",
+    "size_in_bytes": 88616,
+    "workflow_run": {
+      "head_branch": "release/arcade-polish-publish",
+      "head_repository_id": 1323502312,
+      "head_sha": "f041958a5d4ce7b61a23e6df4b42a0bd24e8cd42",
+      "id": 44596575511,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-19T19:12:53Z",
+    "expired": false,
+    "id": 14566330808,
+    "name": "arcade-polish-candidate-44595686113",
+    "size_in_bytes": 88093,
+    "workflow_run": {
+      "head_branch": "release/arcade-polish-prepare",
+      "head_repository_id": 1323502312,
+      "head_sha": "da1e8c1df9c78423259fe923bec89d85603f7025",
+      "id": 44595686113,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-19T01:19:10Z",
+    "expired": false,
+    "id": 14488293277,
+    "name": "arcade-pilot-live-review-44435875741",
+    "size_in_bytes": 2578271,
+    "workflow_run": {
+      "head_branch": "release/arcade-challenge-auth-live-test",
+      "head_repository_id": 1323502312,
+      "head_sha": "b94355c1b37d76dd582216f01550bdba8778bed8",
+      "id": 44435875741,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-19T01:17:12Z",
+    "expired": false,
+    "id": 14488268010,
+    "name": "arcade-challenge-auth-publish-44435573744",
+    "size_in_bytes": 800662,
+    "workflow_run": {
+      "head_branch": "release/arcade-challenge-auth-publish",
+      "head_repository_id": 1323502312,
+      "head_sha": "b300ccfea949c140a76898037c247ba6917ac8ad",
+      "id": 44435573744,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-19T01:13:44Z",
+    "expired": false,
+    "id": 14488177517,
+    "name": "arcade-challenge-auth-candidate-44434958866",
+    "size_in_bytes": 800052,
+    "workflow_run": {
+      "head_branch": "release/arcade-challenge-auth-prepare",
+      "head_repository_id": 1323502312,
+      "head_sha": "6c8622c64186e7b08c475cf2ae79758149f1545e",
+      "id": 44434958866,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-19T00:33:27Z",
+    "expired": false,
+    "id": 14486006725,
+    "name": "arcade-challenge-publish-44429745020",
+    "size_in_bytes": 453615,
+    "workflow_run": {
+      "head_branch": "release/arcade-challenge-publish",
+      "head_repository_id": 1323502312,
+      "head_sha": "6d7868c75a62108661f005caefcae46acf9ae45a",
+      "id": 44429745020,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-19T00:52:01Z",
+    "expired": false,
+    "id": 14485983600,
+    "name": "arcade-pilot-live-review-44432319554",
+    "size_in_bytes": 1040,
+    "workflow_run": {
+      "head_branch": "release/arcade-challenge-live-test",
+      "head_repository_id": 1323502312,
+      "head_sha": "81e5cf84fa508b5351cee69bbdc5770af1be0c48",
+      "id": 44432319554,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-19T00:43:45Z",
+    "expired": false,
+    "id": 14485908412,
+    "name": "arcade-pilot-live-review-44430042469",
+    "size_in_bytes": 915,
+    "workflow_run": {
+      "head_branch": "release/arcade-challenge-live-test",
+      "head_repository_id": 1323502312,
+      "head_sha": "02645db2229e579407fe79d2ebabe5d97012fa7e",
+      "id": 44430042469,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-19T00:22:52Z",
+    "expired": false,
+    "id": 14484753822,
+    "name": "arcade-challenge-candidate-44428317500",
+    "size_in_bytes": 453017,
+    "workflow_run": {
+      "head_branch": "release/arcade-challenge-prepare",
+      "head_repository_id": 1323502312,
+      "head_sha": "cabecd68d34d605988a5550fa45b3cd33caffd1b",
+      "id": 44428317500,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-18T22:12:06Z",
+    "expired": false,
+    "id": 14477116677,
+    "name": "arcade-polish-candidate-44409079871",
+    "size_in_bytes": 87470,
+    "workflow_run": {
+      "head_branch": "release/arcade-polish-prepare",
+      "head_repository_id": 1323502312,
+      "head_sha": "ac7005ff02bdb7d3e45ae71312a2ae4135026205",
+      "id": 44409079871,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-18T22:17:56Z",
+    "expired": false,
+    "id": 14476937794,
+    "name": "arcade-polish-publish-44410001644",
+    "size_in_bytes": 88860,
+    "workflow_run": {
+      "head_branch": "release/arcade-polish-publish",
+      "head_repository_id": 1323502312,
+      "head_sha": "bb871628a8e2c0052eb041dd3fefbc2bc1986c61",
+      "id": 44410001644,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-18T20:01:54Z",
+    "expired": false,
+    "id": 14466432244,
+    "name": "arcade-cutoff-publish-44386363937",
+    "size_in_bytes": 90150,
+    "workflow_run": {
+      "head_branch": "release/arcade-cutoff-publish",
+      "head_repository_id": 1323502312,
+      "head_sha": "56f753c40b4078e896c4231216863d7bceaf4ef5",
+      "id": 44386363937,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-18T19:49:44Z",
+    "expired": false,
+    "id": 14464343844,
+    "name": "arcade-cutoff-candidate-44384132362",
+    "size_in_bytes": 696373,
+    "workflow_run": {
+      "head_branch": "release/arcade-cutoff-prepare",
+      "head_repository_id": 1323502312,
+      "head_sha": "09f77e96556bbbb39a8b1eee26c2cf712d4f3b9b",
+      "id": 44384132362,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-18T19:41:06Z",
+    "expired": false,
+    "id": 14463284003,
+    "name": "arcade-cutoff-candidate-44382593554",
+    "size_in_bytes": 695752,
+    "workflow_run": {
+      "head_branch": "release/arcade-cutoff-prepare",
+      "head_repository_id": 1323502312,
+      "head_sha": "a1000328d9495871e328a92f423bdff29fa52323",
+      "id": 44382593554,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-14T05:47:05Z",
+    "expired": false,
+    "id": 14100672727,
+    "name": "arcade-recovery-release",
+    "size_in_bytes": 18214,
+    "workflow_run": {
+      "head_branch": "main",
+      "head_repository_id": 1323502312,
+      "head_sha": "ffc0823ecca2647ccb858dd2c1fc30fea11cbf54",
+      "id": 43563122919,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-11T22:42:52Z",
+    "expired": false,
+    "id": 13898001097,
+    "name": "arcade-event-usdc-release",
+    "size_in_bytes": 18295,
+    "workflow_run": {
+      "head_branch": "main",
+      "head_repository_id": 1323502312,
+      "head_sha": "ae882dc0feb9a71e277611fbfa8c8589dbc80bc1",
+      "id": 43113929057,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-11T22:04:54Z",
+    "expired": false,
+    "id": 13894723625,
+    "name": "event-profile-cosmetics-release",
+    "size_in_bytes": 17097,
+    "workflow_run": {
+      "head_branch": "main",
+      "head_repository_id": 1323502312,
+      "head_sha": "ac34030d613ebdcb7ca49544194425c7fb9d18da",
+      "id": 43108591709,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-11T19:23:17Z",
+    "expired": false,
+    "id": 13885954064,
+    "name": "event-profile-cosmetics-release",
+    "size_in_bytes": 16986,
+    "workflow_run": {
+      "head_branch": "main",
+      "head_repository_id": 1323502312,
+      "head_sha": "ea81a2de80eacb00e60aaf384fec2878ea7d370f",
+      "id": 43086635932,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-11T17:41:08Z",
+    "expired": false,
+    "id": 13878940276,
+    "name": "arcade-event-foundation-release",
+    "size_in_bytes": 16821,
+    "workflow_run": {
+      "head_branch": "main",
+      "head_repository_id": 1323502312,
+      "head_sha": "6994fb2fac05dcea36d694b4e8a70202dd6af701",
+      "id": 43070383514,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-11T14:34:02Z",
+    "expired": false,
+    "id": 13864632349,
+    "name": "arcade-play-share-production",
+    "size_in_bytes": 16730,
+    "workflow_run": {
+      "head_branch": "feature/arcade-share-production",
+      "head_repository_id": 1323502312,
+      "head_sha": "c2112219aa434c22c85cd12759669119caa9fb2c",
+      "id": 43039597029,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-11T14:08:16Z",
+    "expired": false,
+    "id": 13863391030,
+    "name": "canopy-ending-share-release",
+    "size_in_bytes": 1764,
+    "workflow_run": {
+      "head_branch": "feature/breaker-ending-share",
+      "head_repository_id": 1323502312,
+      "head_sha": "bc12efa963e4c56c05f714debe8483af3e6152af",
+      "id": 43035474384,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-11T13:56:53Z",
+    "expired": false,
+    "id": 13863140423,
+    "name": "arcade-play-share-preview",
+    "size_in_bytes": 16856,
+    "workflow_run": {
+      "head_branch": "feature/arcade-play-then-share",
+      "head_repository_id": 1323502312,
+      "head_sha": "629e211fd64a9de50f08d5c14500025b44082451",
+      "id": 43033645694,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-11T13:59:04Z",
+    "expired": false,
+    "id": 13862192262,
+    "name": "arcade-play-share-preview",
+    "size_in_bytes": 16813,
+    "workflow_run": {
+      "head_branch": "feature/arcade-play-then-share",
+      "head_repository_id": 1323502312,
+      "head_sha": "2809b9a83518435b41ce3b92a10eeba045644299",
+      "id": 43033981257,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-11T14:05:32Z",
+    "expired": false,
+    "id": 13861389441,
+    "name": "canopy-ending-share-release",
+    "size_in_bytes": 1772,
+    "workflow_run": {
+      "head_branch": "feature/breaker-ending-share",
+      "head_repository_id": 1323502312,
+      "head_sha": "f5971ba031ef5fbdb0238a24fb3d564cc4047ddc",
+      "id": 43035046373,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-11T13:40:07Z",
+    "expired": false,
+    "id": 13860703704,
+    "name": "arcade-play-share-preview",
+    "size_in_bytes": 16640,
+    "workflow_run": {
+      "head_branch": "feature/arcade-play-then-share",
+      "head_repository_id": 1323502312,
+      "head_sha": "98fdf3467d6073f10373aa5d40f625227a90c3e3",
+      "id": 43031050025,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-11T13:46:02Z",
+    "expired": false,
+    "id": 13860304540,
+    "name": "arcade-play-share-preview",
+    "size_in_bytes": 16640,
+    "workflow_run": {
+      "head_branch": "feature/arcade-play-then-share",
+      "head_repository_id": 1323502312,
+      "head_sha": "4042e89ec389ba42e3e6e32e49c1b553da81891e",
+      "id": 43031987370,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-11T13:35:40Z",
+    "expired": false,
+    "id": 13860098262,
+    "name": "arcade-play-share-preview",
+    "size_in_bytes": 16662,
+    "workflow_run": {
+      "head_branch": "feature/arcade-play-then-share",
+      "head_repository_id": 1323502312,
+      "head_sha": "9d3ef7de27ca0265022e8289f2c9cac613813616",
+      "id": 43030403913,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-11T13:38:03Z",
+    "expired": false,
+    "id": 13859284216,
+    "name": "arcade-play-share-preview",
+    "size_in_bytes": 16641,
+    "workflow_run": {
+      "head_branch": "feature/arcade-play-then-share",
+      "head_repository_id": 1323502312,
+      "head_sha": "4ab7f2327bdd547cba9d14f6e69470a629a82a32",
+      "id": 43030777806,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-11T09:06:59Z",
+    "expired": false,
+    "id": 13842157607,
+    "name": "arcade-play-share-preview",
+    "size_in_bytes": 16632,
+    "workflow_run": {
+      "head_branch": "feature/arcade-play-then-share",
+      "head_repository_id": 1323502312,
+      "head_sha": "66cd637b1a8ef2e062459be3bac0f6535317fbd0",
+      "id": 42992329299,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-11T05:48:56Z",
+    "expired": false,
+    "id": 13831759153,
+    "name": "arcade-play-share-preview",
+    "size_in_bytes": 16638,
+    "workflow_run": {
+      "head_branch": "feature/arcade-play-then-share",
+      "head_repository_id": 1323502312,
+      "head_sha": "7da6b01022309b0828b84af588412e1a8e1288b1",
+      "id": 42968092548,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-11T05:12:07Z",
+    "expired": false,
+    "id": 13830800335,
+    "name": "arcade-play-share-preview",
+    "size_in_bytes": 16487,
+    "workflow_run": {
+      "head_branch": "feature/arcade-play-then-share",
+      "head_repository_id": 1323502312,
+      "head_sha": "754759e10e673258e56144bce6717c2638778b2f",
+      "id": 42964034968,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-11T05:14:03Z",
+    "expired": false,
+    "id": 13830640932,
+    "name": "arcade-play-share-preview",
+    "size_in_bytes": 16485,
+    "workflow_run": {
+      "head_branch": "feature/arcade-play-then-share",
+      "head_repository_id": 1323502312,
+      "head_sha": "062022e909330cc0b00750c8a0d17e77c1ee190d",
+      "id": 42964310178,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-11T04:56:26Z",
+    "expired": false,
+    "id": 13830235569,
+    "name": "arcade-event-workshop-release",
+    "size_in_bytes": 16318,
+    "workflow_run": {
+      "head_branch": "main",
+      "head_repository_id": 1323502312,
+      "head_sha": "951fd28e0f90747cb80de11c74d7e4a5b5ee7862",
+      "id": 42962404360,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-11T05:16:09Z",
+    "expired": false,
+    "id": 13830174262,
+    "name": "arcade-play-share-preview",
+    "size_in_bytes": 16483,
+    "workflow_run": {
+      "head_branch": "feature/arcade-play-then-share",
+      "head_repository_id": 1323502312,
+      "head_sha": "411830400bbdef3010d722b42f91f1157e0d6769",
+      "id": 42964548709,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-24T06:30:43Z",
+    "expired": false,
+    "id": 14896150960,
+    "name": "bnb-run-review-candidate",
+    "size_in_bytes": 728452,
+    "workflow_run": {
+      "head_branch": "feat/bnb-generation-custody",
+      "head_repository_id": 1323502312,
+      "head_sha": "905fd47313efa4fbea599b4e5c7ce87be9fc0dfa",
+      "id": 45340749351,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-21T15:41:27Z",
+    "expired": false,
+    "id": 14713387321,
+    "name": "bnb-backing-source-review",
+    "size_in_bytes": 713979,
+    "workflow_run": {
+      "head_branch": "main",
+      "head_repository_id": 1323502312,
+      "head_sha": "e5e3b1255846eb33b408f2fece7750befba69ff7",
+      "id": 44920394429,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-21T15:39:15Z",
+    "expired": false,
+    "id": 14712778264,
+    "name": "bnb-backing-source-review",
+    "size_in_bytes": 714621,
+    "workflow_run": {
+      "head_branch": "feat/bnb-backing-eligibility",
+      "head_repository_id": 1323502312,
+      "head_sha": "7f765176f8072dabc58a5b7ce333cf3e9a048bde",
+      "id": 44920199145,
+      "repository_id": 1323502312
+    }
+  },
+  {
+    "created_at": "2026-11-21T15:33:35Z",
+    "expired": false,
+    "id": 14712937306,
+    "name": "bnb-backing-source-review",
+    "size_in_bytes": 714539,
+    "workflow_run": {
+      "head_branch": "feat/bnb-backing-eligibility",
+      "head_repository_id": 1323502312,
+      "head_sha": "b9af1a87971a08518bf0bc46b915b10361166f02",
+      "id": 44919683422,
+      "repository_id": 1323502312
+    }
+  }
+]

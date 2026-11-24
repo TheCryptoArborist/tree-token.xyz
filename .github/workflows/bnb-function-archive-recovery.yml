@@ -832,8 +832,6 @@ jobs:
           run-id: 44919683422
           github-token: ${{ github.token }}
       - name: Inspect original artifacts without executing their contents
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: python3 scripts/recover-bnb-function-archives.py
       - name: Commit hash-matched archives to the same feature branch
         run: |
@@ -841,7 +839,7 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add docs/multichain/generation-milestone/package-recovery/recovered.json
           if compgen -G 'production/recovered-function-archives/*.zip' > /dev/null; then git add -f production/recovered-function-archives/*.zip; fi
-          git commit -m 'Archive exact recovered live function packages [skip netlify]'
+          if ! git diff --cached --quiet; then git commit -m 'Archive exact recovered live function packages [skip netlify]'; fi
           git push origin HEAD:feat/bnb-generation-custody
       - uses: actions/upload-artifact@v4
         if: always()

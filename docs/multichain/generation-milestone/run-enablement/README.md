@@ -6,9 +6,10 @@ cannot apply this configuration. The guard rejected the request; no function was
 rebuilt or uploaded. Both newly added flags were removed. The existing locked
 live deployment remains `6b053b8285e0ee251b84ad06`, with review disabled.
 
-`blocked.json` records the attempt and exact missing archive identities. There
-are 38 exact matching ZIPs locally; recover the remaining 23 from their original
-CI release artifacts and verify their SHA-256 values before attempting this
+`blocked.json` records the attempt and exact missing archive identities. At the failed attempt there
+were 38 exact matching ZIPs locally. Subsequent recovery found 11 more; 12 remain
+missing from inspected artifacts. See `../package-recovery/README.md`. Recover any
+remaining originals from archived release artifacts and verify their SHA-256 values before attempting this
 milestone again. Do not rebuild unrelated handlers to bypass this requirement.
 Do not rerun the publisher against the incomplete candidate. Refresh the live
 plan and verify all package bytes before any further environment mutation.

@@ -1,3 +1,18 @@
+# BNB exact function archive recovery — November 24, 2026
+
+Eleven original live function ZIPs were recovered from GitHub Actions and
+independently verified against their production SHA-256 hashes. Combined with
+38 existing archives, 49 of 61 packages are now durable in GitHub. Twelve remain
+unavailable in the 117 inspected artifacts. No handler was rebuilt, no settings
+changed, and no deploy was created or published. Live remains
+`6b053b8285e0ee251b84ad06`, with review and gameplay disabled.
+
+Evidence and remaining implementation option:
+`docs/multichain/generation-milestone/package-recovery/`.
+Recovered ZIPs are server deployment archives, never public static files.
+
+---
+
 # BNB review enablement — blocked safely November 24, 2026
 
 The generation-1 enablement attempt did not publish. Netlify required all 61
