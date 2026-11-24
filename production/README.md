@@ -1,3 +1,44 @@
+# Tree Army metal fist and chainsaw upgrade — published November 23, 2026
+
+[Prototype 0.14](https://tree-token.xyz/play/tree-army/test/) starts each run with
+a metal fist. An 80-seed between-wave purchase replaces it with a wrist-mounted
+chainsaw for the rest of the run. The chainsaw adds melee damage, reach and
+knockback with a distinct cutting animation. Ordinary enemies can have their
+attacks interrupted; tanks resist displacement and bosses retain their attack
+commitment. The shotgun's ranged role and opening spawn schedule/count remain.
+
+The user identified incorrect fist handedness in the initial preview. The first
+release run `45326131972` was cancelled during verification before publication.
+The published atlas uses the outside/back view of the right metal fist, with
+the thumb on the inner side. The chainsaw replaces that same wrist.
+
+Deployment `6b0514cbcf9d22003b6d784e` was published at **22:40:29 America/Chicago**
+(`2026-11-24T04:40:29.033Z`), verified ready and locked by
+[run 45326594565](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45326594565).
+Source: `5d136a162e5eb40bd23b72fe095e3021fdb34b01`, PRs #307 and #308.
+Fresh baseline: `6b04bdf56959e6a5452c7622`.
+
+Only playtest HTML changed and original `hero-melee.webp` was added. All
+**688 unrelated static paths**, **60 complete backend/provider records**,
+**5 schedules**, runtime and protected configuration were preserved;
+total inventory **690 paths**. No backend packages were rebuilt.
+
+Gameplay outcomes, purchase/persistence/reset, knockback/interruption/resistance,
+release preservation and historical preview checks passed. Candidate and
+canonical game/cabinet checks passed at four viewports. Each game check also
+played wave one with normal UI actions, earned 110 seeds, purchased the chainsaw
+for 80 and verified it equipped in wave two. Live shop/equipped screenshots were
+inspected. Opening simulations remain 47.04–49.44 seconds. Existing leg-gait
+feedback remains separate and unresolved.
+
+Records: `production/tree-army-melee-{release,backend,browser,cabinet}-20261123.json`,
+`docs/tree-army-melee-live-{equipped,shop}-20261123.png`, the corrected diagnostic
+recording and the development task list. Release artifact #14889818921 SHA256:
+`08f3970f67eb512cf497947fb82033c52058a50ea9e5543b7283a67967dfb070`.
+Capture a fresh full live baseline before subsequent publication.
+
+---
+
 # Tree Army bent-elbow carry — published November 23, 2026
 
 [Prototype 0.13](https://tree-token.xyz/play/tree-army/test/) corrects the rigid
