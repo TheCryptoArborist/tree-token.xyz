@@ -1,3 +1,26 @@
+# Generation review 404 repaired — November 24, 2026
+
+Current ready/locked deployment: `6b060f725f10a0dbfc4f05d6`, published at
+**16:28:19 America/Chicago** (22:28:19 UTC). The canonical page is serving again:
+https://tree-token.xyz/play/generation-review/.
+
+The original page release was superseded 27 seconds later by manual Canopy
+Defense deployment `6b060d444f7305e01efe5019`, which changed `/_redirects` from
+its earlier baseline but omitted the two newly published review files. The repair
+captured that newer deployment, preserved its exact redirect change and every
+other existing hash, and added only the two review files. No old site was restored.
+
+All 691 current static paths, 61 complete function/provider records, five
+schedules, runtime and protected settings were preserved; total is 693 paths.
+Run 45500974455 passed five source/preservation checks and 17 browser scenarios
+against source and live assets. Three delayed full-state/canonical checks and
+an independent cloud HTTP request confirmed the page remained available. The
+publisher now checks the live ID immediately before locking its new candidate.
+Real wallet acceptance is still pending; gameplay/payments remain disabled.
+Evidence: `docs/multichain/generation-milestone/review-page/repair-404.json`.
+
+---
+
 # Canonical generation review page — published November 24, 2026
 
 Deployment `6b060d9d9feb3f962c534534` is current, ready and locked, published at

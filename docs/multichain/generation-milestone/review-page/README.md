@@ -1,4 +1,14 @@
-# Canonical generation-1 review page — published
+# Canonical generation-1 review page — published and repaired
+
+The initial release was superseded by a competing manual Canopy Defense
+publication 27 seconds later, causing the user's 404. Repair deployment
+`6b060f725f10a0dbfc4f05d6` preserves that newer deployment's exact `/_redirects`
+change and restores only the two reviewed static files. It published/locked at
+16:28:19 America/Chicago on November 24. Five source/preservation checks and 17
+source/live browser scenarios passed; three delayed full-state and canonical
+checks also passed. See `repair-404.json` and `browser-live-repaired.json`.
+The original `published.json` below remains historical evidence of the first
+release; use the repair receipt as the current baseline.
 
 The page is live at https://tree-token.xyz/play/generation-review/.
 Deployment `6b060d9d9feb3f962c534534` published and locked November 24 at

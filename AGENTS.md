@@ -1,3 +1,15 @@
+# Concurrent manual publication preservation
+
+A ready, unpublished manual candidate is not a queued Git build. Waiting for Git
+builds does not serialize other manual publishers. Recheck the currently
+published deployment ID and lock immediately before the publication call. If the
+baseline changed, stop and prepare a fresh candidate that preserves the newer
+release. Never publish a stale snapshot over another task's completed changes.
+Verify the active ID, full inventory and canonical routes again after publication
+and before reporting completion. The generation review files at
+`/play/generation-review/index.html` and `/play/generation-review/app.js` are now
+part of the preserved live inventory; use the newest production README receipt.
+
 # Current published Arcade baseline
 
 Lobby sign-in is persisted in localStorage (with legacy sessionStorage migration/fallback), remains bound to the same wallet, and retains the existing one-hour server expiry. Both Daily Growth and monthly progress must read it. Transient silent restoration must never delete the shared session or invalidate its own ticket. Connect-to-check-in proceeds through one sign-in message and a free server check-in; payments still require separate explicit wallet approval.
