@@ -54,7 +54,7 @@
 <div class="controls"><div class="move"><span class="control-label">MOVE · <span class="auto-fire">STOP TO ATTACK</span></span><button id="move-left" aria-label="Move left" aria-describedby="move-help" aria-pressed="false">←<span>Left</span></button><button id="move-right" aria-label="Move right" aria-describedby="move-help" aria-pressed="false">→<span>Right</span></button><span id="move-help">Hold to move · Release to stop</span></div><div class="troops"><span class="control-label">SUMMON ALLIES · TAP A CARD</span><button data-unit="sprout"><span class="unit-name">Seedling</span><small>25 sap · melee</small></button><button data-unit="archer"><span class="unit-name">Archer</span><small>45 sap · ranged</small></button><button data-unit="oak"><span class="unit-name">Guardian</span><small>75 sap · tank</small></button></div><div class="powers"><span class="control-label">SPECIAL ABILITIES · TAP</span><button id="blast">Power Shot<small>Special · burst</small></button><button id="shield">Shield<small>Heal + protect</small></button></div><p class="touch-help">Hold Left / Right · Release to attack · <span id="melee-status">Metal fist up close</span></p></div>
 </main>
 <div class="help"><p><kbd>A</kbd> / <kbd>D</kbd> or <kbd>←</kbd> / <kbd>→</kbd> to move · <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> summon · <kbd>Q</kbd> power shot · <kbd>E</kbd> shield · <kbd>P</kbd> pause</p><p>Touch controls supported · Keep enemies away from the roots.</p></div>
-<footer>Prototype 0.15 · Illustrated battlefield · 10 waves · The Iron Stump awaits at wave 10. Progress lasts for this run.</footer>
+<footer>Prototype 0.16 · Illustrated battlefield · 10 waves · The Iron Stump awaits at wave 10. Progress lasts for this run.</footer>
 <script>
 (()=>{
 'use strict';
@@ -138,7 +138,7 @@ function tickEnemyAction(e,dt){
  if(!a.struck&&a.time>=d.hit){
   a.struck=true;const target=a.target;
   if(target.grove){if(e.x<BASE+70)grove-=e.damage*(shieldTime>0?.15:1);}
-  else if(target.hp>0&&distance(e,target)<=e.reach+20&&Math.sign(target.x-e.x)===a.facing){
+  else if(target.hp>0&&distance(e,target)<=e.reach&&Math.sign(target.x-e.x)===a.facing){
    target.hp-=e.damage*(shieldTime>0?.3:1);target.flash=.2;burst(target.x,GROUND-40,'#e1a881',4);
   }
  }
@@ -199,7 +199,9 @@ function shop(){const el=$('shop');el.hidden=false;el.replaceChildren();const sa
 function camp(){mode='camp';seeds+=25+wave*5;show('The grove holds.',`Wave ${wave} cleared. Strengthen your army before the next assault.`, 'Begin wave '+(wave+1),'GROW STRONGER');shop();}
 function finish(win){mode=win?'won':'lost';$('shop').hidden=true;show(win?'Roots run deep.':'The grove needs you.',win?`All ten waves defeated. The Iron Stump has fallen. Final score: ${score}.`:`You reached wave ${wave}. Final score: ${score}. Summon a front line early and protect your hero.`, 'Start a new run',win?'GROVE SAVED':'GROVE FALLEN');$('notice').textContent='Free playtest · Your next grove is a fresh start';}
 function pause(){if(mode==='battle'){mode='paused';show('Take a breath.','Your grove is waiting.','Resume battle','PAUSED');$('shop').hidden=true;$('notice').textContent='Battle pauses when you switch tabs.';$('pause').textContent='Resume';}else if(mode==='paused'){mode='battle';$('overlay').hidden=true;$('pause').textContent='Pause';}}
-function spawn(){const boss=wave===TOTAL&&spawned===planned-1,tank=!boss&&spawned%4===3,runner=!tank&&!boss&&spawned%3===2;const hp=boss?2200:tank?180+wave*22:65+wave*12;enemies.push({x:wave===1?Math.max(canvas.width+40,hero.x+420):WORLD-100,y:GROUND,facing:-1,hp,max:hp,damage:boss?70:tank?24:12,speed:boss?23:runner?70:tank?31:44,reach:boss?80:38,cd:0,rate:boss?1.7:1.2,boss,tank,runner,flash:0,id:++serial,moving:false,walk:serial*.73});spawned++;}
+// Center-to-center attack reach includes the forward blade and target body.
+// Larger machines stop farther out; contact uses the same bound as wind-up.
+function spawn(){const boss=wave===TOTAL&&spawned===planned-1,tank=!boss&&spawned%4===3,runner=!tank&&!boss&&spawned%3===2;const hp=boss?2200:tank?180+wave*22:65+wave*12;enemies.push({x:wave===1?Math.max(canvas.width+40,hero.x+420):WORLD-100,y:GROUND,facing:-1,hp,max:hp,damage:boss?70:tank?24:12,speed:boss?23:runner?70:tank?31:44,reach:boss?150:tank?108:runner?64:88,cd:0,rate:boss?1.7:1.2,boss,tank,runner,flash:0,id:++serial,moving:false,walk:serial*.73});spawned++;}
 function update(dt){if(mode!=='battle')return;clock+=dt;waveElapsed+=dt;blastCd=Math.max(0,blastCd-dt);shieldCd=Math.max(0,shieldCd-dt);shieldTime=Math.max(0,shieldTime-dt);for(const k in cooldowns)cooldowns[k]=Math.max(0,cooldowns[k]-dt);sap=Math.min(250,sap+dt*(7+sapLevel*2));
 hero.moving=false;const movement=movementDirection();
 if(movement.x||movement.y){if(hero.action?.kind!=='power')hero.action=null;advance(hero,hero.x+movement.x*dt*185,112);hasMoved=hasMoved||hero.moving;}
@@ -229,8 +231,8 @@ for(const e of enemies){
  if(e.stagger>0){e.stagger=Math.max(0,e.stagger-dt);continue;}
  if(e.action){tickEnemyAction(e,dt);continue;}
  const target=[...allies.filter(a=>a.hp>0),hero].filter(a=>a.hp>0&&distance(a,e)<260).sort((a,b)=>distance(a,e)-distance(b,e))[0];
- if(target&&distance(target,e)<=e.reach+20){e.facing=Math.sign(target.x-e.x)||-1;if(e.cd===0){e.cd=e.rate;beginAction(e,'enemy',target);}}
- else if(target)approach(e,target,dt,e.reach+16);
+ if(target&&distance(target,e)<=e.reach){e.facing=Math.sign(target.x-e.x)||-1;if(e.cd===0){e.cd=e.rate;beginAction(e,'enemy',target);}}
+ else if(target)approach(e,target,dt,e.reach-4);
  else if(e.x<BASE+70){if(e.cd===0){e.cd=e.rate;beginAction(e,'enemy',{x:BASE,y:GROUND,grove:true});}}
  else approach(e,{x:BASE+50,y:e.y},dt);
 }
