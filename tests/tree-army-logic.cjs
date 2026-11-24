@@ -35,19 +35,30 @@ for(const side of [0,1]){
  const phase=(side?Math.PI:0)+.2;
  const a=t.heroFoot(phase,side,1),b=t.heroFoot(phase+.2,side,1);
  assert(a.planted&&b.planted);assert.equal(a.y,-6);assert.equal(b.y,-6);
- assert(Math.abs(b.x-a.x+80*.2/(2*Math.PI))<1e-9,'Planted boot must not slide across the ground');
+ assert(Math.abs(b.x-a.x+112*.2/(2*Math.PI))<1e-9,'Planted boot must not slide across the ground');
  const other=t.heroFoot(phase,1-side,1);assert(!other.planted);assert(other.y<-6,'Swinging foot clears the ground');
 }
 for(let i=0;i<32;i++){
- const phase=i*Math.PI/16,foot=t.heroFoot(phase,0,1),hip={x:-4,y:-66-Math.cos(phase*2)*1.2},knee=t.heroKnee(hip,foot);
+ const phase=i*Math.PI/16,foot=t.heroFoot(phase,0,1),hip={x:-4,y:-62+Math.cos(phase*2)*1.8},knee=t.heroKnee(hip,foot);
  assert(Math.abs(Math.hypot(knee.x-hip.x,knee.y-hip.y)-32)<1e-8,'Thigh length must remain fixed');
  assert(Math.abs(Math.hypot(knee.x-foot.x,knee.y-foot.y)-34)<1e-8,'Shin length must remain fixed');
  assert.equal(t.heroFoot(phase,0,0).x,-8);assert.equal(t.heroFoot(phase,0,0).y,-6);
 }
+// Both legs must pass through toe-off, clearance and landing, with no ankle
+// snap at contact. At each half-cycle the opposite foot owns the same pose.
+for(let i=0;i<64;i++){
+ const phase=i*Math.PI/32,a=t.heroFoot(phase,0,1),b=t.heroFoot(phase+Math.PI,1,1);
+ assert(Math.abs(a.x-b.x)<1e-8&&Math.abs(a.y-b.y)<1e-8,'Both legs perform the complete same stride');
+ if(a.planted)assert.equal(a.angle,0,'Planted sole remains flat');
+}
+for(const phase of [0,Math.PI,Math.PI*2]){
+ const a=t.heroFoot(phase-1e-6,0,1),b=t.heroFoot(phase+1e-6,0,1);
+ assert(Math.abs(a.x-b.x)<.001&&Math.abs(a.y-b.y)<.001&&Math.abs(a.angle-b.angle)<.001,'No pose pop at contact or toe-off');
+}
 for(const keys of [['d'],['a'],['ArrowRight'],['ArrowLeft']]){
  t.reset();const before=t.get();for(const key of keys)handlers.keydown({key,target:{closest:()=>null},preventDefault:noop});t.update(.04);for(const key of keys)handlers.keyup({key});
  const after=t.get(),travel=Math.hypot(after.heroX-before.heroX,after.heroY-before.heroY);
- assert(Math.abs(after.heroWalk-travel/80*2*Math.PI)<1e-9,'Every direction drives gait by actual distance');
+ assert(Math.abs(after.heroWalk-travel/112*2*Math.PI)<1e-9,'Every direction drives gait by actual distance');
  assert(after.heroGait>0);t.update(.04);assert(t.get().heroGait<after.heroGait,'Release blends toward a stable stance');
  assert.equal(t.get().heroWalk,after.heroWalk,'Release does not keep stepping');
 }

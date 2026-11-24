@@ -14,11 +14,11 @@ characters and setting. The earlier free-roaming courtyard direction is supersed
    resize clear holds. Separate pointer IDs preserve movement while a second finger
    summons or uses a special. Opposing directions cancel; releasing one preserves
    the other. Focused move buttons also support holding Space/Enter.
-2. **Hero combat — next.** Ordinary ranged attack, automatic saw melee with readable
+2. **Hero combat — foundation published in Prototype 0.14.** Ordinary ranged attack, automatic saw melee with readable
    contact and bounded knockback, stable facing while retreating/target switching,
    and distinct power-shot behavior. Preserve the difference between ordinary
    attack cadence and special cooldowns.
-3. **Hero animation — pending.** Coordinated walking, idle, ranged and saw attacks.
+3. **Hero animation — Prototype 0.15 walking refinement; acceptance pending.** Coordinated walking, idle, ranged and saw attacks.
    Review full-speed motion before publication; the existing cutout animation is
    not considered visually accepted by the user.
 4. **Representative wave and balance — pending.** Meaningful hero positioning,
@@ -229,3 +229,24 @@ Published in deployment `6b0514cbcf9d22003b6d784e`, source PRs #307/#308, releas
 `45326594565`. The corrected right-fist artwork passed through the full release.
 Candidate and canonical checks include a real first-wave earning/purchase/next-wave
 flow. See the production melee release record and live equipped/shop screenshots.
+
+## Hero walking refinement — Prototype 0.15
+
+Lengthened the full stride from 80 to 112 world pixels without changing movement
+speed (185 pixels/second). Cadence falls from about 4.6 to 3.3 steps per second.
+The planted foot still cancels world travel, while the swinging knee lifts
+further and the ankle flexes through toe-off and landing. Lower hips maintain
+bent knees; body height now rises during passing and drops at contact.
+Opposing carry-arm swings and a lifted, lightly swaying cape expose the rear
+leg's passing motion. Both legs perform the same cycle half a stride apart.
+
+Existing art files, right-hand orientation, combat rules, movement speed,
+approved troop animation and opening spawns remain unchanged. Tests cover
+contact/clearance, fixed bone lengths, mirrored phase, ankle continuity, stopping,
+combat and progression. Opening simulations remain 47.04–49.44 seconds.
+The unaccelerated 390×844 diagnostic recording exercises walking both ways
+with fist and chainsaw; sampled phone poses were inspected. See
+`tree-army-walk-mobile-20261123.webm`. Numeric tests and sampled poses are not
+user acceptance of natural motion; that remains pending the next playtest.
+
+Release scope is the playtest HTML only, with no new assets or backend rebuild.

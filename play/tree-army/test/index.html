@@ -54,7 +54,7 @@
 <div class="controls"><div class="move"><span class="control-label">MOVE · <span class="auto-fire">STOP TO ATTACK</span></span><button id="move-left" aria-label="Move left" aria-describedby="move-help" aria-pressed="false">←<span>Left</span></button><button id="move-right" aria-label="Move right" aria-describedby="move-help" aria-pressed="false">→<span>Right</span></button><span id="move-help">Hold to move · Release to stop</span></div><div class="troops"><span class="control-label">SUMMON ALLIES · TAP A CARD</span><button data-unit="sprout"><span class="unit-name">Seedling</span><small>25 sap · melee</small></button><button data-unit="archer"><span class="unit-name">Archer</span><small>45 sap · ranged</small></button><button data-unit="oak"><span class="unit-name">Guardian</span><small>75 sap · tank</small></button></div><div class="powers"><span class="control-label">SPECIAL ABILITIES · TAP</span><button id="blast">Power Shot<small>Special · burst</small></button><button id="shield">Shield<small>Heal + protect</small></button></div><p class="touch-help">Hold Left / Right · Release to attack · <span id="melee-status">Metal fist up close</span></p></div>
 </main>
 <div class="help"><p><kbd>A</kbd> / <kbd>D</kbd> or <kbd>←</kbd> / <kbd>→</kbd> to move · <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> summon · <kbd>Q</kbd> power shot · <kbd>E</kbd> shield · <kbd>P</kbd> pause</p><p>Touch controls supported · Keep enemies away from the roots.</p></div>
-<footer>Prototype 0.14 · Illustrated battlefield · 10 waves · The Iron Stump awaits at wave 10. Progress lasts for this run.</footer>
+<footer>Prototype 0.15 · Illustrated battlefield · 10 waves · The Iron Stump awaits at wave 10. Progress lasts for this run.</footer>
 <script>
 (()=>{
 'use strict';
@@ -97,11 +97,11 @@ function actionWeight(actor,kind){
 }
 function heroWeaponPose(actor){
  const gait=art.reduced?0:actor.gait||0;
- const bob=-Math.cos((actor.walk||0)*2)*1.2*gait;
+ const bob=Math.cos((actor.walk||0)*2)*1.8*gait;
  const aim=Math.max(actionWeight(actor,'shot'),actionWeight(actor,'power'));
  // Upper arm hangs beside the ribs during carry. The forearm has its own
  // elbow pivot; raising the weapon must never rotate a locked whole arm.
- const swing=Math.sin(actor.walk||0)*.04*gait*(1-aim);
+ const swing=-Math.sin(actor.walk||0)*.12*gait*(1-aim);
  const upperAngle=1.45*(1-aim)+.15*aim+swing;
  const forearmAngle=.15*(1-aim)-.07*aim;
  const recoil=clamp((actor.fireTime||0)/.12,0,1)*3;
@@ -202,7 +202,7 @@ function pause(){if(mode==='battle'){mode='paused';show('Take a breath.','Your g
 function spawn(){const boss=wave===TOTAL&&spawned===planned-1,tank=!boss&&spawned%4===3,runner=!tank&&!boss&&spawned%3===2;const hp=boss?2200:tank?180+wave*22:65+wave*12;enemies.push({x:wave===1?Math.max(canvas.width+40,hero.x+420):WORLD-100,y:GROUND,facing:-1,hp,max:hp,damage:boss?70:tank?24:12,speed:boss?23:runner?70:tank?31:44,reach:boss?80:38,cd:0,rate:boss?1.7:1.2,boss,tank,runner,flash:0,id:++serial,moving:false,walk:serial*.73});spawned++;}
 function update(dt){if(mode!=='battle')return;clock+=dt;waveElapsed+=dt;blastCd=Math.max(0,blastCd-dt);shieldCd=Math.max(0,shieldCd-dt);shieldTime=Math.max(0,shieldTime-dt);for(const k in cooldowns)cooldowns[k]=Math.max(0,cooldowns[k]-dt);sap=Math.min(250,sap+dt*(7+sapLevel*2));
 hero.moving=false;const movement=movementDirection();
-if(movement.x||movement.y){if(hero.action?.kind!=='power')hero.action=null;advance(hero,hero.x+movement.x*dt*185,80);hasMoved=hasMoved||hero.moving;}
+if(movement.x||movement.y){if(hero.action?.kind!=='power')hero.action=null;advance(hero,hero.x+movement.x*dt*185,112);hasMoved=hasMoved||hero.moving;}
 hero.gait+=(Number(hero.moving&&!art.reduced)-hero.gait)*Math.min(1,dt*14);
 hero.fireTime=Math.max(0,hero.fireTime-dt);hero.cd=Math.max(0,hero.cd-dt);hero.flash=Math.max(0,hero.flash-dt);
 tickHeroAction(dt);
@@ -253,14 +253,14 @@ function walkSprite(actor,row,height,flash=false){
  ctx.save();ctx.translate(actor.x,GROUND);if((row===3&&actor.facing>0)||(row!==3&&actor.facing<0))ctx.scale(-1,1);if(flash)ctx.filter='brightness(1.8)';
  ctx.drawImage(art.images.walk,walkFrame(actor)*256,row*256,256,256,-145*scale,-baseline*scale,256*scale,256*scale);ctx.restore();
 }
-// Independent legs: each planted foot travels 40px back during half of an
-// 80px world stride. The opposite foot swings forward with a bent knee.
+// Each planted foot travels 56px back during half of a 112px world stride.
+// Longer steps slow the cadence; the free ankle flexes as its knee passes.
 // Phase depends only on travel; recoil never replaces the leg animation.
 function heroFoot(phase,side,gait){
  const p=((phase/(Math.PI*2)+side*.5)%1+1)%1;
  const swing=p>=.5,t=swing?(p-.5)*2:p*2;
- const x=swing?-20+40*(t*t*(3-2*t)):20-40*t;
- return {x:(side?8:-8)*(1-gait)+x*gait,y:-6-(swing?Math.sin(t*Math.PI)*13:0)*gait,planted:!swing};
+ const x=swing?-28+56*(t*t*(3-2*t)):28-56*t;
+ return {x:(side?8:-8)*(1-gait)+x*gait,y:-6-(swing?Math.sin(t*Math.PI)*18:0)*gait,angle:swing?Math.sin(t*Math.PI*2)*.32*gait:0,planted:!swing};
 }
 function heroKnee(hip,foot){
  const dx=foot.x-hip.x,dy=foot.y-hip.y,d=Math.max(.001,Math.hypot(dx,dy));
@@ -277,13 +277,15 @@ function articulatedHero(actor,x,y,attack){
  const {bob,recoil,upperAngle,forearmAngle,shoulder,elbow,muzzleX,muzzleY}=heroWeaponPose(actor);
  ctx.save();ctx.translate(x,y);if(actor.facing<0)ctx.scale(-1,1);if(actor.flash>0)ctx.filter='brightness(1.8)';
  // Cape behind the legs, then far leg, near leg, tabard, and upper body.
- rigPart([656,12,525,463],-64,-133+bob,95,118);
+ ctx.save();ctx.translate(-17,-129+bob);ctx.rotate(-.07*gait+Math.sin(phase)*.025*gait);
+ rigPart([656,12,525,463],-47,-4,95,118-10*gait);ctx.restore();
  for(const side of [0,1]){
-  const hip={x:side?3:-4,y:-66+bob},foot=heroFoot(phase,side,gait),knee=heroKnee(hip,foot);
+  const hip={x:side?3:-4,y:-62+bob},foot=heroFoot(phase,side,gait),knee=heroKnee(hip,foot);
   ctx.save();if(!side)ctx.filter=actor.flash>0?'brightness(1.4)':'brightness(.72)';
   heroBone([16,524,185,391],hip,knee,19);
   heroBone([656,524,160,358],knee,foot,16);
-  rigPart([1296,524,294,188],foot.x-8,foot.y-11,29,18);ctx.restore();
+  ctx.translate(foot.x,foot.y);ctx.rotate(foot.angle);
+  rigPart([1296,524,294,188],-8,-11,29,18);ctx.restore();
  }
  rigPart([1296,12,181,357],-12,-80+bob,24,47);
  // Separate arms allow a relaxed carry and a real close-range punch.
@@ -293,10 +295,11 @@ function articulatedHero(actor,x,y,attack){
  combatPart([700,162,310,198],-.8-recoil,-21.28,49.6,31.68);ctx.restore();
  combatPart([67,17,348,477],-39,-157+bob,70,96);
  const saw=actor.melee==='saw',punch=actionWeight(actor,'punch');
- let angle=1.35*(1-punch)+.42*punch,drive=punch;
+ const carrySwing=Math.sin(phase)*.10*gait;
+ let angle=1.35*(1-punch)+.42*punch+carrySwing*(1-punch),drive=punch;
  if(saw){
   const t=actor.action?.kind==='saw'?actor.action.time:null;
-  angle=t===null?1.10:t<.20?1.10-t/.20*1.40:t<.30?-.30+(t-.20)/.10*.62:t<.46?.32+(t-.30)/.16*.33:.65+clamp((t-.46)/.32,0,1)*.45;
+  angle=t===null?1.10+carrySwing:t<.20?1.10-t/.20*1.40:t<.30?-.30+(t-.20)/.10*.62:t<.46?.32+(t-.30)/.16*.33:.65+clamp((t-.46)/.32,0,1)*.45;
   drive=actionWeight(actor,'saw');
  }
  ctx.save();ctx.translate(-23+drive*12,-116+bob+drive*12);ctx.rotate(angle);
