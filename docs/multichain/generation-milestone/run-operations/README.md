@@ -7,21 +7,33 @@ promise that Codex runs when the chat is closed. While issuance is enabled, the
 owner should request the check daily; while disabled and empty there is no data
 to clean. Retention applies seven days after expiry, not ticket creation.
 
-## Binding check boundary
+## Verified runtime binding
 
-`check-bnb-run-binding.mjs` reads only the existing production/function-scoped
-Netlify binding into CI memory, uses the same runtime configuration resolver and
-RPC clients, and calls only the new ticket read and existing identity read with
-nonexistent all-zero hashes. It never issues/consumes a ticket or creates/revokes
-a session. It does not save or print credentials, responses or environment values.
-It refuses unresolved/masked/ambiguous credentials and checks unchanged binding
-metadata afterward. No new service secret is provisioned or copied into the repo.
+[Run 45466344470](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45466344470)
+passed the check inside an unpublished Netlify production-context candidate
+`6b05e11ad1a29353fee22226`. It used the normal runtime environment binding and
+made only two read RPC calls for nonexistent all-zero identifiers: new review
+ticket and existing identity session. Both returned null as expected. No user
+rows were written or credentials exported. The check preserved all 691 live
+static paths, 61 existing complete provider records, runtime, protected settings
+and five schedules. Canonical production stayed disabled and unchanged at
+`6b053b8285e0ee251b84ad06`. See `runtime-binding.json`.
 
-The workflow also checks the canonical endpoint still returns 503 disabled.
-A passing result proves the production binding and hosted PostgREST transport
-work from CI. It does **not** prove an enabled request executed inside Netlify:
-that controlled server check belongs to a later enablement step. No browser or
-wallet connection is required, and no preview link is offered.
+**Do not publish the diagnostic candidate.** It adds an audit-only function and
+exists solely to verify runtime connectivity. It is not the gameplay or endpoint
+enablement candidate. No wallet interaction or preview link is needed.
+
+The initial attempt to resolve credentials in GitHub CI did not succeed; it was
+replaced by this in-runtime check, and its workflow/script were removed. The
+runtime workflow first failed on a missing preservation-tool dependency before
+creating anything; installing the unchanged isolated lock corrected that issue.
+The final hosted check passed. Secrets were not saved or logged by either path.
+
+The diagnostic reads the same explicit-override/fallback production binding and
+requires the intended site, POST method, and disabled flag. Tests cover wrong
+site/method, missing/partial binding, enabled flag, read-only calls and no secret
+response. The actual published run-review handler remains disabled; its enabled
+HTTP/session behavior still needs a separate controlled check.
 
 ## Administrator retention procedure
 
@@ -48,3 +60,16 @@ The seven-day policy is a target maintained by the owner; it is not an automatic
 retention guarantee. Missed checks mean old rows may remain longer, while ticket
 expiry still prevents reuse. Pause enablement if ongoing maintenance cannot be
 provided. Payments, scores, gameplay, NFT custody and other data are out of scope.
+
+## Validation and next step
+
+Eighteen disposable PostgreSQL checks passed, including the three retention
+checks; [contract CI 45465413809](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45465413809)
+also passed. The initial hosted count found zero rows and zero expired records;
+no deletion occurred. User ownership with Codex assistance was explicitly accepted.
+No automatic scheduler/reminder or runtime DELETE grant was added.
+
+Next is a reviewed, controlled generation-1 read-only enablement. Generation 1
+is retired, so backing checks must deny playable access. Do not enable gameplay,
+start a new custody generation, accept payment or publish the diagnostic candidate
+as part of that step. Recheck current production and binding before any toggle.

@@ -21,7 +21,7 @@ jobs:
           node-version: 24
       - run: npm ci --ignore-scripts
       - run: npm ci --ignore-scripts --prefix contracts/bnb-generation
-      - run: node --test tests/bnb-run-binding.test.mjs tests/bnb-run-runtime-binding.test.mjs
+      - run: node --test tests/bnb-run-runtime-binding.test.mjs
       - name: Verify read-only RPC access with existing production binding
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
