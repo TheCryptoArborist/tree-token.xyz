@@ -15,7 +15,7 @@ successfully. The earlier custom transport retrieved none and made no changes.
 `artifacts.json` identifies the inspected artifacts; `recovered.json` maps each
 matching ZIP to its original artifact/run and archive entry. The recovery reads
 ZIP contents without executing them and retains only exact live SHA-256 matches.
-Recovery ZIPs are private server deployment material in the source repository;
+Recovery ZIPs are server-side deployment archives in the source repository;
 never copy this directory into public/static website output.
 
 Run `node scripts/check-bnb-function-archives.mjs` to independently hash every

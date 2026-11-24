@@ -1,3 +1,19 @@
+# Isolated BNB review replacement — candidate verified November 24, 2026
+
+Unpublished candidate `6b05eac4008e25aba5f361e1` replaces only the review handler
+with a fixed generation-1, review-only policy. Forty-four focused tests and hosted
+verification passed. All 691 static paths, the other 60 complete function/provider
+records, five schedules, runtime and protected settings remain exact. No
+site-wide environment change or unrelated function upload was required.
+
+This is not a publication: current locked production is still
+`6b053b8285e0ee251b84ad06`; the canonical review endpoint remains disabled (503).
+Gameplay, payments and new NFT deposits remain disabled. The complete candidate
+receipt and remaining publication checks are in
+`docs/multichain/generation-milestone/fixed-review-candidate/`.
+
+---
+
 # BNB exact function archive recovery — November 24, 2026
 
 Eleven original live function ZIPs were recovered from GitHub Actions and

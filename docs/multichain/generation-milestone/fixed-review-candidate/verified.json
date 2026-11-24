@@ -1,0 +1,78 @@
+{
+  "candidateId": "6b05eac4008e25aba5f361e1",
+  "baselineId": "6b053b8285e0ee251b84ad06",
+  "checkedAt": "2026-11-24T19:54:22.712Z",
+  "published": false,
+  "productionUnchanged": true,
+  "environmentUnchanged": true,
+  "staticPaths": 691,
+  "unchangedFunctions": 60,
+  "totalFunctions": 61,
+  "schedules": 5,
+  "packageSha256": "fb9f5de69404133aeff2db288cc387d8ae37582bcbd077517d58ca6e42732661",
+  "packageBytes": 645912,
+  "reviewPolicy": {
+    "mode": "review-only",
+    "approvedGeneration": "1",
+    "gameplayAuthorized": false
+  },
+  "candidateStatus": 403,
+  "liveStatus": 503,
+  "functionProviderRecord": {
+    "n": "arcade-bnb-run-review",
+    "d": "fb9f5de69404133aeff2db288cc387d8ae37582bcbd077517d58ca6e42732661",
+    "dn": null,
+    "g": null,
+    "bd": {
+      "bootstrapVersion": "2.24.0",
+      "runtimeAPIVersion": 2
+    },
+    "ro": [
+      {
+        "p": "/api/arcade-bnb-test/run-review",
+        "l": "/api/arcade-bnb-test/run-review",
+        "e": null,
+        "m": [],
+        "ps": false
+      }
+    ],
+    "tr": {
+      "action": {
+        "type": "rate_limit",
+        "config": {
+          "rate_limit_config": {
+            "window_limit": 20,
+            "window_size": 60,
+            "algorithm": "sliding_window"
+          },
+          "aggregate": {
+            "keys": [
+              {
+                "type": "domain"
+              },
+              {
+                "type": "ip"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "id": "598e66d6a06a88d094d0559f7373cc83790bfe35e13538836586215263bcf508",
+    "a": "073635757191",
+    "c": "2026-11-24T19:51:37.814Z",
+    "im": "stream",
+    "m": 1024,
+    "obl": "netlify-observability-extension",
+    "oblv": 34,
+    "oid": "651e48dbcebb6f767d048d979ad7881575930c7790ffab3175ef02486d78b6d7",
+    "r": "nodejs24.x",
+    "rg": "us-east-2",
+    "s": 645912
+  },
+  "verificationRun": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45474913229",
+  "packageRun": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45474450448",
+  "focusedTestsPassed": 44,
+  "sourceCommit": "1295824",
+  "verifierCommit": "7a05aa9"
+}

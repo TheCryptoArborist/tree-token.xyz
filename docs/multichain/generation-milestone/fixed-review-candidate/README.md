@@ -1,4 +1,20 @@
-# Isolated generation-1 review replacement
+# Isolated generation-1 review replacement — candidate verified
+
+Candidate `6b05eac4008e25aba5f361e1` is ready and **unpublished**. Verification
+run 45474913229 passed all 44 focused tests and preservation checks. The exact
+reviewed ZIP hash is
+`fb9f5de69404133aeff2db288cc387d8ae37582bcbd077517d58ca6e42732661` (645,912 bytes),
+from artifact `bnb-fixed-review-candidate`, packaging run 45474450448. The latter
+run created the candidate but stopped at an overly strict replacement-identity
+comparison; the successful verification reused that same candidate and package.
+Only its new package/AWS hosting/observability identifiers, creation time and
+size differ; all other replacement configuration and all 60 unrelated complete
+records are preserved. `verified.json` pins the complete new provider record.
+
+The initial source commit is `1295824`; verifier/test refinement is `7a05aa9`.
+The exact package, full baseline and verification record are also retained in
+GitHub Actions artifacts. Never substitute a locally rebuilt ZIP for this hash.
+Production remains locked at `6b053b8285e0ee251b84ad06` with review disabled.
 
 This candidate replaces only `arcade-bnb-run-review`. Its frozen package policy
 is `review-only`, approved generation `1`, and `gameplayAuthorized: false`.
