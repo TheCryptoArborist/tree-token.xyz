@@ -278,3 +278,6 @@ rejection and retreat dodges. A full-speed mobile diagnostic uses high-health
 enemies and disables hero auto-attacks to expose approach and strike timing;
 see `tree-army-enemy-spacing-mobile-20261123.webm` and contact screenshots.
 Release scope is playtest HTML only; preserve existing art and full live site.
+
+Published in deployment `6b0525020b1bdef34dace0f1`, source PR #312, release run
+`45334582545`. Candidate and canonical game/cabinet checks passed.
