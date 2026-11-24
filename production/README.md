@@ -1,3 +1,35 @@
+# Tree Army enemy attack spacing — published November 23, 2026
+
+[Prototype 0.16](https://tree-token.xyz/play/tree-army/test/) starts enemy attacks
+at distances matched to their blade/body scale. Center-to-center reach is 88px
+for ordinary machines, 108px for heavy machines, 64px for thorn runners and
+150px for the boss (formerly 58/58/58/100). Approach stops within four pixels
+of the bound. Wind-up and contact use the same reach; retreat still dodges.
+Damage, attack timing, movement speed, art and opening spawns remain unchanged.
+
+Deployment `6b0525020b1bdef34dace0f1` published at **23:49:36 America/Chicago**
+(`2026-11-24T05:49:36.311Z`), verified ready and locked.
+Source PR #312, commit `297e82d9a4c7094375eb742307e40381c80c324b`;
+[release run 45334582545](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45334582545).
+Fresh baseline: `6b051af87755a75a0915a338`.
+
+Only playtest HTML changed; no new assets. All **689 unrelated
+static paths**, **60 complete backend/provider records**, **5 schedules**,
+runtime and protected configuration were preserved. Total **690 paths**.
+Gameplay, both-facing/type approach/stop/wind-up/contact/dodge tests, preservation
+and preview checks passed. Candidate and canonical game/cabinet checks passed
+at four viewports, including earned-seed chainsaw purchase and equipped wave two.
+Opening simulations clear in 49.04–49.68 seconds. Mobile contact screenshots
+were inspected, with a full-speed controlled-enemy diagnostic recording.
+
+Records: `production/tree-army-spacing-{release,backend,browser,cabinet}-20261123.json`
+and `docs/tree-army-spacing-live-phone-20261123.png`.
+Release artifact #14894022923 SHA256:
+`6d367632ca7810487e85d253b89d46cd297506ed9983c5087f723ea0964e0c93`.
+Capture a fresh full live baseline before subsequent publication.
+
+---
+
 # Tree Army hero walking — published November 23, 2026
 
 [Prototype 0.15](https://tree-token.xyz/play/tree-army/test/) refines the hero's
