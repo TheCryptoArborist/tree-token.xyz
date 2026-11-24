@@ -1,0 +1,34 @@
+name: Prepare generation-1 read-only review enablement
+on:
+  push:
+    branches: ['feat/bnb-generation-custody']
+concurrency:
+  group: tree-production-preservation-release
+  cancel-in-progress: false
+permissions:
+  contents: read
+jobs:
+  verify:
+    if: contains(github.event.head_commit.message, '[prepare bnb review enablement]')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci --ignore-scripts
+      - run: npm ci --ignore-scripts --prefix contracts/bnb-generation
+      - run: node --test tests/bnb-run-enablement.test.mjs
+      - name: Capture current production and retired generation without mutation
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: node scripts/prepare-bnb-run-enablement.mjs /tmp/bnb-run-enablement
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bnb-run-enablement-plan
+          path: /tmp/bnb-run-enablement
+          if-no-files-found: warn
