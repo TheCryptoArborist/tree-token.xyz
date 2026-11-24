@@ -1,3 +1,9 @@
+> Current status (November 24): the generation-1 review database, endpoint and
+> canonical page are published, and the user's visible sign-in/denial check is
+> accepted. See [current acceptance and next source milestone](../review-acceptance/README.md).
+> Source-stage deployment instructions below are historical; do not replay the
+> migration or earlier publication. Gameplay and new-generation funding remain disabled.
+
 > Follow-up: [durable store and HTTP source](../run-storage/README.md) now implements the storage contract below and passes local PostgreSQL concurrency tests. Neither migration nor endpoint is deployed.
 
 # Isolated session and run review coordinator — source only

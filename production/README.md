@@ -1,3 +1,18 @@
+# Generation-1 wallet review accepted — November 24, 2026
+
+The user reported successful BNB sign-in for account ending 8789 and the expected
+review denial. A subsequent aggregate database read found zero review tickets;
+a separate mainnet check confirmed generation 1 retired/completed and ineligible.
+The generic UI denial alone does not establish its internal server-side cause.
+
+No production or database writes accompanied this acceptance record. Existing
+site deployment and disabled gameplay/payment boundaries remain unchanged.
+Evidence and the next isolated run/score source milestone:
+`docs/multichain/generation-milestone/review-acceptance/README.md`.
+No further wallet transaction is requested for this completed check.
+
+---
+
 # Generation review 404 repaired — November 24, 2026
 
 Current ready/locked deployment: `6b060f725f10a0dbfc4f05d6`, published at

@@ -1,3 +1,9 @@
+> Current status (November 24): the generation-1 review database, endpoint and
+> canonical page are published, and the user's visible sign-in/denial check is
+> accepted. See [current acceptance and next source milestone](../review-acceptance/README.md).
+> Source-stage deployment instructions below are historical; do not replay the
+> migration or earlier publication. Gameplay and new-generation funding remain disabled.
+
 # Durable run-review tickets and HTTP factory — not deployed
 
 This source milestone implements the prior coordinator's durable store contract.

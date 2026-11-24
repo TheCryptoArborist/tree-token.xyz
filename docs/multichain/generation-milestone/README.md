@@ -1,14 +1,18 @@
-# Current status: generation 1 closed
+# Current status: generation 1 closed; negative wallet review accepted
 
 The full private lifecycle completed and independently verified on both chains.
 NFTree #2720 is back in dev wallet 45c4; the empty Sui vault is phase 3/generation
 1; the BNB pass is Retired, purchases paused and nonplayable. Do not repeat any
 historical registration, deployment, binding, deposit or message described below.
 
+- [Real-wallet negative acceptance and next source milestone](./review-acceptance/README.md)
+- [Published canonical review page and 404 repair](./review-page/README.md)
+- [Published fixed-generation review endpoint](./fixed-review-candidate/README.md)
+- [Applied review database migration](./database-applied/README.md)
 - [Final completion evidence and 59 focused checks](./completion-completed/README.md)
-- [Implemented source-only generation backing reader](./access-reader/README.md)
-- [Implemented source-only session/run review coordinator](./run-authorization/README.md)
-- [Implemented local-tested durable storage and HTTP factory](./run-storage/README.md)
+- [Generation backing reader implementation](./access-reader/README.md)
+- [Session/run review coordinator implementation](./run-authorization/README.md)
+- [Durable storage and HTTP implementation](./run-storage/README.md)
 - [Remaining server access-integration review](./access-integration-review.md)
 - Review PR: https://github.com/TheCryptoArborist/tree-token.xyz/pull/280
 

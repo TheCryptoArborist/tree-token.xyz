@@ -95,4 +95,6 @@ payment, NFT deposit or chain transaction is needed to review this source.
 5. Record the displayed result. A denial after sign-in is the expected retired-
    generation outcome; it is not a positive gameplay acceptance test.
 
-This real-wallet step remains pending until the user reports its outcome.
+The user has now supplied the expected sign-in/denial screenshot. See
+`../review-acceptance/README.md` for the recorded observation, independent
+checks and limits of this negative acceptance.
