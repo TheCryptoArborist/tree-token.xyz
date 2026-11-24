@@ -36,12 +36,19 @@ BNB_PG_BIN="$(pg_config --bindir)" node scripts/multichain/check-bnb-run-postgre
 node scripts/package-bnb-run-review.mjs --outdir /tmp/bnb-run-review-new
 ```
 
-Use a fresh output directory. The package includes source, dependency-lock and
+Use a fresh output directory. Node 24 and `unzip` are required. The package includes source, dependency-lock and
 traced-file hashes, the exact route, rate rule, runtime and build metadata.
 `package-review.json` records the local candidate and unapplied migration hash.
 CI produces a ZIP plus complete manifest as `bnb-run-review-candidate` (30-day
 artifact retention); committed sources and lock allow regeneration after expiry.
 No workflow deploys this artifact.
+
+An extracted-ZIP test exposed missing nested `ethers` dependencies in the initial
+ZISI-only candidate. The corrected package first bundles across both pinned
+dependency roots, then uses ZISI for the platform wrapper and metadata. Packaging
+now extracts the ZIP outside the repository and imports/invokes its handler in a
+fresh Node process, with network calls forbidden, before writing the manifest.
+The initial candidate hash is superseded; use only the current review manifest.
 
 Local validation: 40 HTTP/coordinator/runtime tests and 15 disposable PostgreSQL
 checks passed. The latter now invokes real exported HTTP handlers with Web

@@ -2,13 +2,14 @@
   "schemaVersion": 1,
   "kind": "bnb-run-review-package",
   "name": "arcade-bnb-run-review",
+  "extractedZipSmokePassed": true,
   "deployed": false,
   "gameplayAuthorized": false,
   "productionApproved": false,
   "paymentsEnabled": false,
   "filename": "arcade-bnb-run-review.zip",
-  "sha256": "e8b0cf78fa18fb3f4f0d7dc28b629eebea365ac54974075bac4b13b6cac53cbb",
-  "bytes": 3396223,
+  "sha256": "bda788bdbe40ba74c7b4ba091cc13d5096bbb5572f434577e3a65f7be91440c2",
+  "bytes": 645894,
   "runtimeVersion": "nodejs24.x",
   "invocationMode": "stream",
   "buildData": {
@@ -75,6 +76,8 @@
     }
   ],
   "tooling": {
+    "contractLockSha256": "f63e8b4d338addfba0acead33fcb5f62182c38f00c93ad1475ac62ad4b0d1c2c",
+    "ethers": "6.15.0",
     "package": "package.json",
     "packageSha256": "2ece6ffd478948d8a037103bb1f874e5643e761757362b091d692fc1b5a0dbca",
     "lock": "package-lock.json",
@@ -83,7 +86,7 @@
     "viem": "2.56.3",
     "zipItAndShipIt": "16.3.0"
   },
-  "tracedFileCount": 2877,
+  "tracedFileCount": 1752,
   "tracedFilesNote": "Full traced-file hashes accompany the ZIP in the CI artifact; no ZIP is committed.",
   "migration": {
     "path": "supabase/migrations/20261124060157_arcade_bnb_run_review.sql",
