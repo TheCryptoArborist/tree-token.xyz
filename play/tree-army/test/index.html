@@ -54,18 +54,19 @@
 <div class="controls"><div class="move"><span class="control-label">MOVE · <span class="auto-fire">STOP TO ATTACK</span></span><button id="move-left" aria-label="Move left" aria-describedby="move-help" aria-pressed="false">←<span>Left</span></button><button id="move-right" aria-label="Move right" aria-describedby="move-help" aria-pressed="false">→<span>Right</span></button><span id="move-help">Hold to move · Release to stop</span></div><div class="troops"><span class="control-label">SUMMON ALLIES · TAP A CARD</span><button data-unit="sprout"><span class="unit-name">Seedling</span><small>25 sap · melee</small></button><button data-unit="archer"><span class="unit-name">Archer</span><small>45 sap · ranged</small></button><button data-unit="oak"><span class="unit-name">Guardian</span><small>75 sap · tank</small></button></div><div class="powers"><span class="control-label">SPECIAL ABILITIES · TAP</span><button id="blast">Power Shot<small>Special · burst</small></button><button id="shield">Shield<small>Heal + protect</small></button></div><p class="touch-help">Hold Left / Right · Release to attack · <span id="melee-status">Metal fist up close</span></p></div>
 </main>
 <div class="help"><p><kbd>A</kbd> / <kbd>D</kbd> or <kbd>←</kbd> / <kbd>→</kbd> to move · <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> summon · <kbd>Q</kbd> power shot · <kbd>E</kbd> shield · <kbd>P</kbd> pause</p><p>Touch controls supported · Keep enemies away from the roots.</p></div>
-<footer>Prototype 0.16 · Illustrated battlefield · 10 waves · The Iron Stump awaits at wave 10. Progress lasts for this run.</footer>
+<footer>Prototype 0.17 · Illustrated battlefield · 10 waves · The Iron Stump awaits at wave 10. Progress lasts for this run.</footer>
 <script>
 (()=>{
 'use strict';
 const $=id=>document.getElementById(id),canvas=$('battle'),ctx=canvas.getContext('2d');
 const WORLD=2400,GROUND=365,BASE=155,TOTAL=10;
+const HERO_UPPER_SCALE=.88,HERO_UPPER_Y=-28;
 const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
 const distance=(a,b)=>Math.abs(a.x-b.x);
 const art={ready:false,images:{},reduced:typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches};
 const spriteRects={sprout:[20,50,400,375],archer:[450,50,390,375],oak:[850,0,445,423],bot:[1295,45,479,378],sproutAttack:[0,490,409,350],archerAttack:[410,485,450,350],oakAttack:[800,470,500,370],thorn:[1290,510,484,350]};
 function loadArt(){
-const files={background:'grove-battlefield.webp',army:'forest-army.webp',walk:'forest-walk.webp',heroRig:'tree-hero-rig.webp',combat:'combat-parts.webp',melee:'hero-melee.webp'};
+const files={background:'grove-battlefield.webp',army:'forest-army.webp',walk:'forest-walk.webp',heroRig:'tree-hero-rig.webp',heroLegs:'hero-walk-legs.webp',combat:'combat-parts.webp',melee:'hero-melee.webp'};
 return Promise.all(Object.entries(files).map(([key,file])=>new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>{art.images[key]=image;resolve();};image.onerror=()=>reject(Error('Unable to load '+file));image.src='./assets/'+file;}))).then(()=>{art.ready=true;$('asset-status').hidden=true;$('next').disabled=false;$('skip').disabled=false;makePortraits();}).catch(()=>{$('asset-status').hidden=false;$('asset-status').textContent='The artwork could not load. Reload this page to try again.';$('next').disabled=true;$('skip').disabled=true;});
 }
 function makePortraits(){for(const b of document.querySelectorAll('[data-unit]')){const c=document.createElement('canvas');c.width=100;c.height=100;c.className='unit-portrait';c.setAttribute('aria-hidden','true');const r={sprout:[120,75,210,180],archer:[540,80,210,180],oak:[940,40,245,230]}[b.dataset.unit];c.getContext('2d').drawImage(art.images.army,...r,0,0,100,100);b.prepend(c);}}
@@ -109,8 +110,8 @@ function heroWeaponPose(actor){
  const elbow={x:shoulder.x+Math.cos(upperAngle)*23.79,y:shoulder.y+Math.sin(upperAngle)*23.79};
  const barrel=48.16-recoil;
  return {bob,recoil,upperAngle,forearmAngle,shoulder,elbow,
-  muzzleX:elbow.x+Math.cos(forearmAngle)*barrel+Math.sin(forearmAngle)*8.8,
-  muzzleY:elbow.y+Math.sin(forearmAngle)*barrel-Math.cos(forearmAngle)*8.8};
+  muzzleX:(elbow.x+Math.cos(forearmAngle)*barrel+Math.sin(forearmAngle)*8.8)*HERO_UPPER_SCALE,
+  muzzleY:(elbow.y+Math.sin(forearmAngle)*barrel-Math.cos(forearmAngle)*8.8)*HERO_UPPER_SCALE+HERO_UPPER_Y};
 }
 function tickHeroAction(dt){
  const a=hero.action;if(!a)return;const d=ACTIONS[a.kind];a.time+=dt;
@@ -255,40 +256,43 @@ function walkSprite(actor,row,height,flash=false){
  ctx.save();ctx.translate(actor.x,GROUND);if((row===3&&actor.facing>0)||(row!==3&&actor.facing<0))ctx.scale(-1,1);if(flash)ctx.filter='brightness(1.8)';
  ctx.drawImage(art.images.walk,walkFrame(actor)*256,row*256,256,256,-145*scale,-baseline*scale,256*scale,256*scale);ctx.restore();
 }
-// Each planted foot travels 56px back during half of a 112px world stride.
-// Longer steps slow the cadence; the free ankle flexes as its knee passes.
-// Phase depends only on travel; recoil never replaces the leg animation.
-function heroFoot(phase,side,gait){
- const p=((phase/(Math.PI*2)+side*.5)%1+1)%1;
- const swing=p>=.5,t=swing?(p-.5)*2:p*2;
- const x=swing?-28+56*(t*t*(3-2*t)):28-56*t;
- return {x:(side?8:-8)*(1-gait)+x*gait,y:-6-(swing?Math.sin(t*Math.PI)*18:0)*gait,angle:swing?Math.sin(t*Math.PI*2)*.32*gait:0,planted:!swing};
+// Whole-leg illustrations preserve the knee, ankle and boot silhouette. The
+// rear leg follows the same eight poses half a cycle later; no cutout joints.
+const HERO_LEG_POSES=[
+ {rect:[90,18,342,470],hip:[151,44],floor:482},
+ {rect:[483,18,235,470],hip:[535,44],floor:482},
+ {rect:[867,17,197,471],hip:[921,44],floor:482},
+ {rect:[1215,17,171,471],hip:[1300,44],floor:482},
+ {rect:[20,528,228,476],hip:[170,555],floor:998},
+ {rect:[409,529,245,419],hip:[550,555],floor:998},
+ {rect:[793,528,206,469],hip:[933,555],floor:998},
+ {rect:[1239,529,282,466],hip:[1300,555],floor:998}
+];
+function heroLegFrame(actor,side){
+ if(art.reduced||(actor.gait||0)<.15)return side?1:2;
+ const phase=((actor.walk||0)/(Math.PI*2)%1+1)%1;
+ return (Math.floor(phase*8)+(side?0:4))%8;
 }
-function heroKnee(hip,foot){
- const dx=foot.x-hip.x,dy=foot.y-hip.y,d=Math.max(.001,Math.hypot(dx,dy));
- const along=(32*32-34*34+d*d)/(2*d),bend=Math.sqrt(Math.max(0,32*32-along*along));
- return {x:hip.x+dx/d*along+dy/d*bend,y:hip.y+dy/d*along-dx/d*bend};
+function drawHeroLeg(actor,side){
+ const frame=heroLegFrame(actor,side),p=HERO_LEG_POSES[frame];
+ const scale=85/(p.floor-p.hip[1]),lift=frame===6?6:0;
+ ctx.save();if(!side)ctx.filter=actor.flash>0?'brightness(1.4)':'brightness(.76)';
+ ctx.drawImage(art.images.heroLegs,...p.rect,
+  (side?4:-4)+(p.rect[0]-p.hip[0])*scale,
+  -84-lift+(p.rect[1]-p.hip[1])*scale,p.rect[2]*scale,p.rect[3]*scale);
+ ctx.restore();
 }
 function rigPart(rect,x,y,w,h){ctx.drawImage(art.images.heroRig,...rect,x,y,w,h);}
-function heroBone(rect,from,to,width){
- ctx.save();ctx.translate(from.x,from.y);ctx.rotate(Math.atan2(to.y-from.y,to.x-from.x)-Math.PI/2);
- rigPart(rect,-width/2,-3,width,Math.hypot(to.x-from.x,to.y-from.y)+6);ctx.restore();
-}
 function articulatedHero(actor,x,y,attack){
  const gait=art.reduced?0:actor.gait||0,phase=actor.walk||0;
  const {bob,recoil,upperAngle,forearmAngle,shoulder,elbow,muzzleX,muzzleY}=heroWeaponPose(actor);
  ctx.save();ctx.translate(x,y);if(actor.facing<0)ctx.scale(-1,1);if(actor.flash>0)ctx.filter='brightness(1.8)';
- // Cape behind the legs, then far leg, near leg, tabard, and upper body.
- ctx.save();ctx.translate(-17,-129+bob);ctx.rotate(-.07*gait+Math.sin(phase)*.025*gait);
- rigPart([656,12,525,463],-47,-4,95,118-10*gait);ctx.restore();
- for(const side of [0,1]){
-  const hip={x:side?3:-4,y:-62+bob},foot=heroFoot(phase,side,gait),knee=heroKnee(hip,foot);
-  ctx.save();if(!side)ctx.filter=actor.flash>0?'brightness(1.4)':'brightness(.72)';
-  heroBone([16,524,185,391],hip,knee,19);
-  heroBone([656,524,160,358],knee,foot,16);
-  ctx.translate(foot.x,foot.y);ctx.rotate(foot.angle);
-  rigPart([1296,524,294,188],-8,-11,29,18);ctx.restore();
- }
+ // Cape hangs behind two complete illustrated legs. Keep enough clearance
+ // to read the trailing boot without stretching separate thigh/shin cutouts.
+ ctx.save();ctx.translate(-17,-141+bob*.5);ctx.rotate(-.05*gait+Math.sin(phase)*.02*gait);
+ rigPart([656,12,525,463],-43,-4,86,113-7*gait);ctx.restore();
+ drawHeroLeg(actor,0);drawHeroLeg(actor,1);
+ ctx.save();ctx.translate(0,HERO_UPPER_Y);ctx.scale(HERO_UPPER_SCALE,HERO_UPPER_SCALE);
  rigPart([1296,12,181,357],-12,-80+bob,24,47);
  // Separate arms allow a relaxed carry and a real close-range punch.
  ctx.save();ctx.translate(shoulder.x,shoulder.y);ctx.rotate(upperAngle-Math.atan2(50,140));
@@ -314,6 +318,7 @@ function articulatedHero(actor,x,y,attack){
   }
  }else ctx.drawImage(art.images.melee,40,120,1065,350,-8.45,-11.05,69.225,22.75);
  ctx.restore();
+ ctx.restore(); // Upper-body scale also feeds the shared projectile muzzle.
  if(actor.fireTime>0){ellipse(muzzleX,muzzleY,actor.powerFlash?10:5,actor.powerFlash?5:2,'#ffe6a0');}
  ctx.restore();
 }

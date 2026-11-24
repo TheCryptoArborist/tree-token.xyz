@@ -281,3 +281,33 @@ Release scope is playtest HTML only; preserve existing art and full live site.
 
 Published in deployment `6b0525020b1bdef34dace0f1`, source PR #312, release run
 `45334582545`. Candidate and canonical game/cabinet checks passed.
+
+## Recorded walking feedback — Prototype 0.17
+
+The user's November 24 recording rejects the 0.15 gait refinement. Close frame
+samples show compressed legs, high knees and a disproportionately large torso.
+The previous numeric foot-contact checks did not establish natural-looking motion.
+
+Replace the independently rotated thigh/shin/boot pieces with eight connected
+whole-leg illustrations. Near and far legs traverse all eight phases, four
+poses apart, so both lead and trail. Knees recover behind the body and the
+passing foot stays lower. Fixed source hip/ground anchors keep the illustrations
+aligned; idle and reduced motion use planted poses. New leg height is about
+85px; upper body scales to .88 with a -28px offset, giving fuller legs and a
+smaller torso. The shared weapon muzzle follows that same transform.
+
+Two paired-leg generation attempts were rejected for repeating one leading leg.
+The accepted source method illustrates one complete leg across the full cycle,
+then offsets the second leg. The final transparent atlas is original art,
+converted to WebP without matte cleanup. Existing right fist, chainsaw, weapon
+actions, troop walking, movement speed and enemy attack spacing remain.
+
+Validation covers all eight poses on both legs, opposite phase, stable idle,
+reduced motion, stopping, shared muzzle, combat, progression and enemy spacing.
+Obsolete cutout bone-length/foot-IK tests were removed with the old renderer.
+Opening simulations clear in 49.00–49.68 seconds. Diagnostic recordings run
+unaccelerated with walks in both directions and both melee weapons; sampled
+mobile and desktop poses are reviewed. Visual acceptance remains pending the
+user's next playtest, not inferred from passing logic tests.
+
+Publication replaces playtest HTML and adds only `hero-walk-legs.webp`.

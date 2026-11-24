@@ -147,13 +147,15 @@ try {
   assert.equal(upgradeErrors.length,0,upgradeErrors.join('\n'));
   meleeUpgrade={passed:true,earned,cost:80,elapsedSeconds:(Date.now()-began)/1000};
   await upgradeContext.close();
+  for(const asset of ['hero-melee.webp','hero-walk-legs.webp']){
   const failureContext=await browser.newContext();
   const failurePage=await failureContext.newPage();
-  await failurePage.route('**/assets/hero-melee.webp',route=>route.abort());
+  await failurePage.route('**/assets/'+asset,route=>route.abort());
   await failurePage.goto(url,{waitUntil:'networkidle'});
   await failurePage.getByText('The artwork could not load. Reload this page to try again.',{exact:true}).waitFor();
   assert(await failurePage.locator('#next').isDisabled(),'Failed artwork must block battle start');
   await failureContext.close();
+  }
 } finally {await browser.close();}
 fs.writeFileSync('.netlify/tree-army-browser-checks.json',JSON.stringify({url,results,meleeUpgrade},null,2));
 console.log('Tree Army browser checks passed: '+results.map(r=>r.label).join(', '));
