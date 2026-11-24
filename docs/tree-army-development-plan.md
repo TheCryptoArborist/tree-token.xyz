@@ -224,3 +224,8 @@ candidate creation or publication; live remained Prototype 0.13. Regenerated the
 fist as the outside/back view of the right hand, preserving arm/wrist alignment
 and the chainsaw mounting. Refreshed the diagnostic recording and contact images.
 Combat rules, purchase behavior and the 0.14 delivery allowlist are unchanged.
+
+Published in deployment `6b0514cbcf9d22003b6d784e`, source PRs #307/#308, release run
+`45326594565`. The corrected right-fist artwork passed through the full release.
+Candidate and canonical checks include a real first-wave earning/purchase/next-wave
+flow. See the production melee release record and live equipped/shop screenshots.
