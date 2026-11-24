@@ -49,6 +49,7 @@ assert.match(origin, /^http:\/\/127\.0\.0\.1:\d+$/);
         s.enemies.clear(true, true);
         s.invincible = true;
         s.autoFire = false;
+        const retainedChildren = new Set(s.children.list);
         const phases = [];
         for (const kind of ["challenge", "windfall"])
           for (const repeat of [false, true]) {
@@ -90,17 +91,19 @@ assert.match(origin, /^http:\/\/127\.0\.0\.1:\d+$/);
         s.time.delayedCall = original;
         s.time.removeAllEvents();
         s.time.preUpdate();
-        // Destroy synthetic result cards before the readable snapshots below.
+        // Remove only new synthetic result cards; preserve the depth-25 Pause button.
         s.children.list
-          .filter((o) => o.depth === 25)
+          .filter((o) => o.depth === 25 && !retainedChildren.has(o))
           .forEach((o) => o.destroy());
         return {
+          pauseControlRetained: !!(s.pauseButtonBg?.active && s.pauseButtonBg.visible),
           phases,
           clearDelays: durations.filter((ms) =>
             [1800, 2400, 3600].includes(ms),
           ),
         };
       });
+      assert.equal(timing.pauseControlRetained, true);
       for (const p of timing.phases)
         assert.deepEqual(p.timeline, [
           "title",
