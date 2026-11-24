@@ -75,3 +75,9 @@ to enable the endpoint. Seven-day expired-ticket retention and operator ownershi
 remain part of the later enablement review, as documented in `../run-release/`.
 If validation fails, leave the endpoint disabled and fix forward; do not drop
 identity objects, audit rows or restore an older site.
+
+Hosted default privileges were also inspected (`default-privileges.json`): no
+private-schema or global defaults add runtime permissions. Public RPC defaults
+include anon/authenticated EXECUTE, which the migration explicitly revokes.
+[CI 45460963810](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45460963810)
+passed the saved readiness validator and full existing contract/test workflow.
