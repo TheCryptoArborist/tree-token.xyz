@@ -15,7 +15,7 @@ export const ROUTES=[{pattern:'/api/arcade-bnb-test/run-review',literal:'/api/ar
 export const TRAFFIC={action:{type:'rate_limit',config:{rateLimitConfig:{windowLimit:20,windowSize:60,algorithm:'sliding_window'},aggregate:{keys:[{type:'domain'},{type:'ip'}]}}}};
 const read=p=>JSON.parse(fs.readFileSync(p));
 const equal=(a,b,label)=>assert(fingerprint(a)===fingerprint(b),label+' changed; stop');
-const runtime=d=>Object.fromEntries(['branch','context','functions_region','functions_region_overrides','database_branch_id','blobs_region','framework','edge_functions_present','server','database_migrations'].map(k=>[k,d[k]??null]));
+export const runtime=d=>Object.fromEntries(['branch','context','functions_region','functions_region_overrides','database_branch_id','blobs_region','framework','edge_functions_present','server','database_migrations'].map(k=>[k,d[k]??null]));
 export function readOnly(api){return (p,method='GET',body)=>{assert.equal(method,'GET','Planning is GET-only');assert.equal(body,undefined);return api(p);};}
 export function validatePackage(m,bytes,proof){
  assert.equal(m.kind,'bnb-run-review-package');assert.equal(m.name,FUNCTION_NAME);assert.equal(m.filename,FUNCTION_NAME+'.zip');
@@ -39,12 +39,12 @@ export function assertDisabled(rows,buildSettings={}){
  for(const row of rows)if(row.key==='BNB_RUN_REVIEW_ENABLED')for(const v of row.values||[])assert(v.value!==undefined&&v.value!=='true','Enabled or masked review toggle; disabled publication not proven');
  assert(buildSettings.env?.BNB_RUN_REVIEW_ENABLED!=='true','Build toggle already enabled');
 }
-async function inventory(api){const files={};for(let page=1;page<=100;page++){
- const rows=await api(`deploys/${BASE}/files?per_page=100&page=${page}`);assert(Array.isArray(rows));
+export async function inventory(api,id=BASE){const files={};for(let page=1;page<=100;page++){
+ const rows=await api(`deploys/${id}/files?per_page=100&page=${page}`);assert(Array.isArray(rows));
  for(const r of rows){assert(typeof r.path==='string'&&r.path.startsWith('/')&&!Object.hasOwn(files,r.path));assert(/^[a-f0-9]{40}$/.test(r.sha));files[r.path]=r.sha;}
  if(rows.length<100)return files;
  }throw Error('Incomplete inventory');}
-async function capture(api){
+export async function capture(api){
  const site=await api('sites/'+SITE);assert.equal(site.account_id,ACCOUNT);assert.equal(site.published_deploy?.id,BASE);assert.equal(site.published_deploy.locked,true);
  const d=await api('deploys/'+BASE);validateBackend(d);assert.equal(d.state,'ready');assert.equal(d.locked,true);
  const q=`?site_id=${SITE}`,base=`accounts/${ACCOUNT}/env`;
