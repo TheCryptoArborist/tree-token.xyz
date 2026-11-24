@@ -1,0 +1,5 @@
+import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';
+const original=fs.readFileSync('play/multichaintest/game/bnb/app.js','utf8'),review=fs.readFileSync('play/generation-review/app.js','utf8');
+const section=(s,start,end)=>s.slice(s.indexOf(start),s.indexOf(end,s.indexOf(start)));
+test('review page retains the published connect, signing and status protocol exactly',()=>{for(const [start,end] of [["connect.addEventListener('click'","sign.addEventListener('click'"],["sign.addEventListener('click'","statusButton.addEventListener('click'"],["statusButton.addEventListener('click'","logout.addEventListener('click'"]])assert.equal(section(review,start,end),section(original,start,end));});
+test('review page does not call the old entitlement, consume a ticket, or persist access',()=>{assert(!review.includes("post('entitlement')"));assert(!review.includes("action:'consume'"));assert(!/localStorage|sessionStorage|eth_sendTransaction|wallet_switchEthereumChain/.test(review));assert(review.includes("location.origin!=='https://tree-token.xyz'"));});
