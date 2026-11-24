@@ -1,3 +1,34 @@
+# Tree Army hero walking — published November 23, 2026
+
+[Prototype 0.15](https://tree-token.xyz/play/tree-army/test/) refines the hero's
+walk: longer stride at the same movement speed, slower cadence, ankle flex,
+more visible knee passing, coordinated body/arm motion and a raised cape hem.
+Both fist and chainsaw walking are recorded in both directions. This is a
+playtest revision; natural-motion acceptance remains with the user.
+
+Deployment `6b051af87755a75a0915a338` published at **23:06:46 America/Chicago**
+(`2026-11-24T05:06:46.856Z`), verified ready and locked.
+Source PR #310, commit `b447709a91ffe8d9c41519de5b6c09baa5de5976`;
+[release run 45329775899](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45329775899).
+Fresh baseline: `6b0514cbcf9d22003b6d784e`.
+
+Only playtest HTML changed; no new assets. All **689 unrelated
+static paths**, **60 complete backend/provider records**, **5 schedules**,
+runtime and protected configuration were preserved. Total **690 paths**.
+Gameplay, foot contact/clearance/continuity, release-preservation and preview
+checks passed. Candidate and canonical game/cabinet checks passed at four
+viewports, including earned-seed chainsaw purchase and equipped wave two.
+Opening simulations remain 47.04–49.44 seconds. Sampled phone walking poses
+were inspected; diagnostic recording and sequence are in `docs/tree-army-walk-*`.
+
+Records: `production/tree-army-walk-{release,backend,browser,cabinet}-20261123.json`
+and `docs/tree-army-walk-live-phone-20261123.png`.
+Release artifact #14891384312 SHA256:
+`3c3a14c4c54ad734ada8979d11f46df92c31819e4c8b2c2443a8e8eb59556386`.
+Capture a fresh full live baseline before subsequent publication.
+
+---
+
 # Tree Army metal fist and chainsaw upgrade — published November 23, 2026
 
 [Prototype 0.14](https://tree-token.xyz/play/tree-army/test/) starts each run with

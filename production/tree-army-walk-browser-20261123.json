@@ -1,0 +1,35 @@
+{
+  "url": "https://tree-token.xyz/play/tree-army/test/",
+  "results": [
+    {
+      "label": "desktop",
+      "width": 1440,
+      "height": 1000,
+      "passed": true
+    },
+    {
+      "label": "mobile",
+      "width": 390,
+      "height": 844,
+      "passed": true
+    },
+    {
+      "label": "small-mobile",
+      "width": 320,
+      "height": 568,
+      "passed": true
+    },
+    {
+      "label": "landscape",
+      "width": 844,
+      "height": 390,
+      "passed": true
+    }
+  ],
+  "meleeUpgrade": {
+    "passed": true,
+    "earned": 110,
+    "cost": 80,
+    "elapsedSeconds": 48.083
+  }
+}

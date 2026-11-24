@@ -250,3 +250,7 @@ with fist and chainsaw; sampled phone poses were inspected. See
 user acceptance of natural motion; that remains pending the next playtest.
 
 Release scope is the playtest HTML only, with no new assets or backend rebuild.
+
+Published in deployment `6b051af87755a75a0915a338`, source PR #310, release run
+`45329775899`. Candidate and canonical checks passed. Visual acceptance of the
+revised gait remains pending user playtest.
