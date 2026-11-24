@@ -1,0 +1,25 @@
+{
+  "planSourceCommit": "3b0ecb87f8339b5f0623e0bd56aa44bc12477085",
+  "planHash": "a8608f62d4d64320826dc3be624335394102bb52086f78b64ee5503608a0e848",
+  "planningRun": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45345210056",
+  "planningConclusion": "success",
+  "artifact": {
+    "id": 14898330019,
+    "digest": "sha256:1cf350c4d2527460ec73f8eb017963874c93542c8a1eed9abae401a2df2b2ad4"
+  },
+  "mergedSourceContractCI": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45344971747",
+  "contractCIConclusion": "success",
+  "focusedTests": 45,
+  "treeArmyReleaseTests": 5,
+  "treeArmyLogicChecks": "passed",
+  "incomingTreeArmyByteExactToMain": "38b452b",
+  "hostedCandidateCreated": false,
+  "publication": false,
+  "migrationApplied": false,
+  "gameplayAuthorized": false,
+  "notes": [
+    "Full credential-free plan recovered from hosted CI log because direct artifact download returned HTTP 403; canonical plan hash matches CI output.",
+    "Tree Army browser script requires configured browser module and was not run; no visual or wallet acceptance claimed.",
+    "Published baseline must be recaptured if it changes before candidate creation/publication."
+  ]
+}

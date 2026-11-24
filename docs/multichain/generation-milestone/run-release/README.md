@@ -95,3 +95,11 @@ Supabase changelog and securing-the-API guidance were refreshed during planning.
 The current PostgreSQL ltree/pgcrypto upgrade notice does not require changes to
 this plain SQL ticket table/RPC. No SDK, database upgrade or Sui protocol change
 is included.
+
+## Verified capture
+
+`plan.json` is the complete credential-free hosted capture and proposed request,
+not just a summary. Its canonical fingerprint and passing planning/contract CI
+links are recorded in `validation.json`. No deploy was created. The plan is stale
+as soon as any live inventory or protected configuration changes; re-capture
+before candidate creation and recheck immediately before publication.
