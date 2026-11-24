@@ -71,3 +71,5 @@ explicit private activation and an independently reviewed positive entitlement
 test. USDT payments, deposits, public sales, scores and tournaments remain
 separate milestones. Capture then-current production before any later release;
 never publish the historical root build. No current completed message is repeated.
+
+Validation: **31 focused tests passed**. Hosted [CI 45335995797](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45335995797) passed for source `2d1fc9f`, including the new coordinator tests and existing contract/release checks. No production persistence or endpoint is deployed.
