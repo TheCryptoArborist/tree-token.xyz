@@ -1,0 +1,45 @@
+name: Archive exact published generation review package
+on:
+  push:
+    branches: ['feat/bnb-generation-custody']
+permissions:
+  contents: write
+  actions: read
+jobs:
+  archive:
+    if: contains(github.event.head_commit.message, '[archive bnb fixed review]')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: bnb-fixed-review-candidate
+          run-id: 45474913229
+          github-token: ${{ github.token }}
+          path: /tmp/bnb-fixed-reviewed
+      - name: Retain only the exact verified live ZIP and its manifest
+        run: |
+          python3 - <<'PY'
+          import json,pathlib,hashlib
+          doc=pathlib.Path('docs/multichain/generation-milestone/fixed-review-candidate')
+          receipt=json.loads((doc/'published.json').read_text())
+          assert receipt['id']=='6b05eac4008e25aba5f361e1' and receipt['locked'] is True
+          source=pathlib.Path('/tmp/bnb-fixed-reviewed/bnb-fixed-package')
+          data=(source/'arcade-bnb-run-review.zip').read_bytes()
+          manifest=json.loads((source/'manifest.json').read_text())
+          assert hashlib.sha256(data).hexdigest()==receipt['packageSha256']==manifest['sha256']
+          assert len(data)==manifest['bytes']==645912
+          target=pathlib.Path('production/recovered-function-archives/arcade-bnb-run-review-fixed.zip')
+          assert not target.exists() or target.read_bytes()==data
+          target.write_bytes(data)
+          (doc/'package-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+          PY
+      - name: Commit durable archive to the feature branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f production/recovered-function-archives/arcade-bnb-run-review-fixed.zip
+          git add docs/multichain/generation-milestone/fixed-review-candidate/package-manifest.json
+          if ! git diff --cached --quiet; then git commit -m 'Archive exact published generation-1 review package [skip netlify]'; fi
+          git push origin HEAD:feat/bnb-generation-custody

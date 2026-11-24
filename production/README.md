@@ -1,3 +1,25 @@
+# Generation-1 review endpoint — published November 24, 2026
+
+Deployment `6b05eac4008e25aba5f361e1` is current, ready and locked, published at
+**15:43:59 America/Chicago** (21:43:59 UTC). The isolated review endpoint now uses
+a fixed generation-1-only policy. All 691 static paths, 60 other complete backend
+provider records, five schedules, runtime and protected environment settings were
+preserved. Totals remain 61 functions. No historical root build was deployed.
+
+Publication run 45493842003 passed 46 focused tests and verified the exact reviewed
+ZIP before switching. Canonical missing-session requests return 401; nonexistent
+sessions return 403. Existing BNB authentication is unchanged. Fresh chain reads
+confirm generation 1 retired/completed and non-playable, and the review table is
+still empty. Gameplay, payments and new custody allocations remain disabled.
+No authenticated live-wallet acceptance is claimed.
+
+Evidence and exact provider/package identity:
+`docs/multichain/generation-milestone/fixed-review-candidate/published.json`.
+Before any future release, capture this full current baseline anew. Retain the
+exact published ZIP as server deployment material, never a public static file.
+
+---
+
 # Isolated BNB review replacement — candidate verified November 24, 2026
 
 Unpublished candidate `6b05eac4008e25aba5f361e1` replaces only the review handler

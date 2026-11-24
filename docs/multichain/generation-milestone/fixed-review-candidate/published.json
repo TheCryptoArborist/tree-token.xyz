@@ -1,0 +1,61 @@
+{
+  "id": "6b05eac4008e25aba5f361e1",
+  "baselineId": "6b053b8285e0ee251b84ad06",
+  "publishedAt": "2026-11-24T21:43:59.058Z",
+  "locked": true,
+  "staticPaths": 691,
+  "unchangedFunctions": 60,
+  "totalFunctions": 61,
+  "schedules": 5,
+  "environmentUnchanged": true,
+  "packageSha256": "fb9f5de69404133aeff2db288cc387d8ae37582bcbd077517d58ca6e42732661",
+  "reviewPolicy": {
+    "mode": "review-only",
+    "approvedGeneration": "1",
+    "gameplayAuthorized": false
+  },
+  "checks": [
+    {
+      "status": 401,
+      "error": "invalid-session"
+    },
+    {
+      "status": 403,
+      "error": "review-denied"
+    }
+  ],
+  "existingAuthStatus": 401,
+  "backing": {
+    "backingEligible": false,
+    "gameplayAuthorized": false,
+    "reason": "generation-not-active-backed",
+    "wallet": "0xf2ab1eebbecb4e315fe95d8b532d1ab00f1a8789",
+    "approvedGeneration": "1",
+    "bnb": {
+      "block": "0x8142157",
+      "hash": "0x5312a7d430f041eb0c536cb552dbf043f5b8cc9d39ec96d3772f3403287ba19a",
+      "timestamp": "0x6b06052b",
+      "state": 4,
+      "generation": "1",
+      "owner": null,
+      "canPlay": false,
+      "redemption": "0xc99c328de96599e4ea3332e097436cdc5bd542a0a479f892543b3008664128b3",
+      "recipient": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4"
+    },
+    "sui": {
+      "eligible": false,
+      "phase": 3,
+      "generation": "1",
+      "checkpoint": {
+        "sequenceNumber": 348839140,
+        "timestamp": "2026-11-24T21:44:10.199Z"
+      }
+    },
+    "checkedAt": "2026-11-24T21:44:16.538Z"
+  },
+  "gameplayAuthorized": false,
+  "paymentsEnabled": false,
+  "authenticatedWalletTest": false,
+  "ci": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45493842003",
+  "focusedTestsPassed": 46
+}
