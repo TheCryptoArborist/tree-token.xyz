@@ -43,6 +43,7 @@ jobs:
       - name: Verify gameplay and release source
         run: |
           node tests/grove-chess-gameplay.mjs
+          node --test tests/grove-chess-trial.test.mjs
           node --test tests/grove-chess-finishes.test.mjs tests/grove-chess-finishes-release.test.mjs
           node --test tests/grove-chess-release.test.mjs
           node --check scripts/release-grove-chess-finishes.mjs

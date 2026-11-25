@@ -33,6 +33,18 @@ try{for(const [width,height]of [[1440,1000],[390,844],[320,740],[844,390]]){
  assert(await page.locator('#finish-dialog').evaluate(e=>e.scrollWidth<=e.clientWidth),'Finish dialog must fit');
  await page.screenshot({path:`.netlify/grove-chess-finishes-${width}.png`});
  await page.click('#close-finishes');
+ assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('grove-chess:trial:v1')).used),1);
+ await page.reload({waitUntil:'networkidle'});
+ assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('grove-chess:trial:v1')).used),1,'Reload does not spend a trial');
+ await page.click('#new');await page.click('#confirm-new');
+ await page.locator('[data-square="e2"]').click();await page.locator('[data-square="e4"]').click();
+ assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('grove-chess:trial:v1')).used),2);
+ await page.click('#new');await page.click('#confirm-new');await page.locator('[data-square="e2"]').click();
+ assert(await page.locator('#access-dialog').evaluate(e=>e.open),'Third game requires NFTree');
+ assert.equal(await page.locator('#move-count').textContent(),'0 HALF-MOVES');
+ await page.screenshot({path:`.netlify/grove-chess-trial-gate-${width}.png`});await page.click('#access-close');
+ await page.reload({waitUntil:'networkidle'});await page.locator('[data-square="e2"]').click();
+ assert(await page.locator('#access-dialog').evaluate(e=>e.open),'Direct route reload cannot reset trial');await page.click('#access-close');
  assert.deepEqual(errors,[],'Game browser errors');
  if(process.env.GROVE_CHESS_CABINET_FIXTURE==='1'){
   await page.route(base+'/play/',route=>route.fulfill({contentType:'text/html',body:fs.readFileSync('production/arcade-organization-static/index.html','utf8').replace(/<script\b[^>]*>[\s\S]*?<\/script>/g,tag=>/src="\/scripts\/arcade-(organization|navigation-play-share)\.js"/.test(tag)?tag:'')}));
@@ -55,8 +67,12 @@ try{for(const [width,height]of [[1440,1000],[390,844],[320,740],[844,390]]){
   await page.click('#close-finishes');
   assert.notEqual(await page.locator('[data-square="e2"] .hero-base').evaluate(e=>getComputedStyle(e).borderTopColor),await page.locator('[data-square="e7"] .hero-base').evaluate(e=>getComputedStyle(e).borderTopColor));
   await page.locator('.board-frame').scrollIntoViewIfNeeded();await page.screenshot({path:'.netlify/grove-chess-unlocked-finishes.png'});
+  await page.locator('[data-square="e2"]').click();await page.locator('[data-square="e4"]').click();
+  assert.equal(await page.locator('#move-count').textContent(),'1 HALF-MOVES','Holder starts a third game');
+  assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('grove-chess:trial:v1')).used),2);
   await page.evaluate(()=>window.testDisconnect());
   await page.waitForFunction(()=>document.body.dataset.finishW==='gold'&&document.body.dataset.finishB==='gold');
+  await page.locator('[data-square="e7"]').click();assert(await page.locator('#access-dialog').evaluate(e=>e.open),'Disconnect locks holder-only game');
  }
  results.push({width,height,passed:true});await page.close();
 }}finally{await browser.close()}
