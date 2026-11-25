@@ -33,6 +33,17 @@ jobs:
           test -n "$NETLIFY_AUTH_TOKEN" || { echo 'Existing Netlify audit connection unavailable'; exit 1; }
           node scripts/treeforce-local/capture-production-inventory.mjs capture --expected-deploy 6b063e9462762ae02c0fd5db --baseline .netlify/treeforce-inventory/baseline.json --report .netlify/treeforce-inventory/capture.json
           node scripts/treeforce-local/capture-production-inventory.mjs verify --baseline .netlify/treeforce-inventory/baseline.json --report .netlify/treeforce-inventory/verify.json
+      - name: Retain sanitized inventory through readable audit logs
+        run: |
+          node --input-type=module - <<'JS'
+          import fs from 'node:fs';
+          import { gzipSync } from 'node:zlib';
+          // Only the already-sanitized artifact files: no raw API responses or credentials.
+          const names = ['baseline.json','baseline.json.sha256','capture.json','verify.json'];
+          const files = Object.fromEntries(names.map(name => [name, fs.readFileSync('.netlify/treeforce-inventory/' + name, 'utf8')]));
+          const encoded = gzipSync(JSON.stringify(files)).toString('base64');
+          for(let i=0;i<encoded.length;i+=2000) console.log('INVENTORY_DATA ' + encoded.slice(i,i+2000));
+          JS
       - uses: actions/upload-artifact@v4
         if: success()
         with:
