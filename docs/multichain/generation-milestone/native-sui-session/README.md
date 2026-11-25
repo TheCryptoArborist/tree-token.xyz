@@ -90,3 +90,5 @@ records the results. GitHub CI includes this check with existing regressions.
 Current Mysten README, `sui-ts-sdk-backend`, `accessing-data` and the gRPC reference
 were read before this inspection. No SDK, wallet, signature or chain-read API was
 changed; existing pinned dependencies are preserved.
+
+Hosted [CI 45523590260](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45523590260) passed on `2b07a5b`, including the 14 native-session checks and existing regressions. See `hosted-ci.json`.
