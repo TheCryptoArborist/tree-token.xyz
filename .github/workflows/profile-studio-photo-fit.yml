@@ -1,0 +1,231 @@
+name: Verify and release Profile Studio photo fit
+
+on:
+  pull_request:
+    paths:
+      - 'production/profile-studio-photo-fit-static/**'
+      - 'scripts/tree-profile-studio-v17.js'
+      - 'scripts/profile-photo-fit.js'
+      - 'styles/tree-profile-studio-v10.css'
+      - 'tests/profile-photo-fit.test.mjs'
+      - 'scripts/release-profile-studio-photo-fit.mjs'
+      - '.github/workflows/profile-studio-photo-fit.yml'
+  push:
+    branches:
+      - release/profile-studio-photo-fit-prepare
+      - release/profile-studio-photo-fit-publish
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: tree-production-preservation-${{ github.event_name == 'pull_request' && github.ref || 'release' }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Verify photo geometry and release syntax
+        run: |
+          node --test tests/profile-photo-fit.test.mjs
+          node --check scripts/tree-profile-studio-v17.js
+          node --check scripts/profile-photo-fit.js
+          node --check scripts/release-profile-studio-photo-fit.mjs
+          git diff --check
+
+  prepare:
+    needs: verify
+    if: >-
+      github.event_name == 'push' && github.ref == 'refs/heads/release/profile-studio-photo-fit-prepare' &&
+      contains(github.event.head_commit.message, '[prepare profile studio photo fit]') &&
+      contains(github.event.head_commit.message, '[skip netlify]')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Read the explicit baseline pin
+        id: pin
+        env:
+          RELEASE_MESSAGE: ${{ github.event.head_commit.message }}
+        run: |
+          node --input-type=module - <<'JS'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          import {REVIEWED_BASELINE} from './scripts/release-profile-studio-photo-fit.mjs';
+          const lines=process.env.RELEASE_MESSAGE.split(/\r?\n/).filter(s=>s.startsWith('Profile-Studio-Expected-Deploy: '));
+          assert.equal(lines.length,1,'Pin exactly one freshly reviewed baseline in the commit message.');
+          const id=lines[0].slice('Profile-Studio-Expected-Deploy: '.length).trim();
+          assert.equal(id,REVIEWED_BASELINE);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT,`expected_deploy=${id}\n`);
+          JS
+      - name: Capture live inventory and verify the narrow candidate
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          EXPECTED_DEPLOY: ${{ steps.pin.outputs.expected_deploy }}
+          SOURCE_COMMIT: ${{ github.sha }}
+        run: |
+          node scripts/release-profile-studio-photo-fit.mjs candidate
+          node scripts/release-profile-studio-photo-fit.mjs verify
+      - uses: actions/upload-artifact@v4
+        id: candidate_artifact
+        if: always()
+        with:
+          name: profile-studio-photo-fit-candidate-${{ github.run_id }}
+          path: .netlify/profile-studio-photo-fit/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30
+      - name: Record the concrete review candidate
+        if: always()
+        env:
+          ARTIFACT_ID: ${{ steps.candidate_artifact.outputs.artifact-id }}
+          ARTIFACT_SHA256: ${{ steps.candidate_artifact.outputs.artifact-digest }}
+        run: |
+          node --input-type=module - <<'JS'
+          import fs from 'node:fs';
+          const filename='.netlify/profile-studio-photo-fit/report.json';
+          if(!fs.existsSync(filename))process.exit(0);
+          const r=JSON.parse(fs.readFileSync(filename));
+          const c={sourceCommit:r.sourceCommit,expectedDeploy:r.baselineId,candidateId:r.candidateId,
+            candidateRunId:process.env.GITHUB_RUN_ID,candidateArtifactId:process.env.ARTIFACT_ID,candidateArtifactSHA256:process.env.ARTIFACT_SHA256};
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+            `### Profile Studio candidate — production unchanged\n\nReview: ${r.url}\n\nSource: ${r.sourceCommit}\nCandidate: ${r.candidateId}\nBaseline: ${r.baselineId}\n\nPreserved ${r.preservedStaticPaths} static paths, ${r.functionsPreserved} complete backend records and ${r.schedulesPreserved} schedules.\n\nThis run must finish successfully. Perform desktop and phone browser QA, record the actual outcomes in docs/profile-studio-photo-fit-validation.json, then create a separate publish commit.\n\nPublication control line:\n\n\`Profile-Studio-Release: ${JSON.stringify(c)}\`\n`);
+          JS
+
+  publish_or_audit:
+    needs: verify
+    if: >-
+      github.event_name == 'push' && github.ref == 'refs/heads/release/profile-studio-photo-fit-publish' &&
+      contains(github.event.head_commit.message, '[skip netlify]') &&
+      (contains(github.event.head_commit.message, '[publish profile studio photo fit]') ||
+       contains(github.event.head_commit.message, '[audit profile studio photo fit]'))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Validate the explicit control and actual browser review
+        id: control
+        env:
+          RELEASE_MESSAGE: ${{ github.event.head_commit.message }}
+        run: |
+          node --input-type=module - <<'JS'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import assert from 'node:assert/strict';
+          import {execFileSync} from 'node:child_process';
+          import {REVIEWED_BASELINE,SOURCE_PATHS,REVIEW_PATH} from './scripts/release-profile-studio-photo-fit.mjs';
+          const lines=process.env.RELEASE_MESSAGE.split(/\r?\n/).filter(s=>s.startsWith('Profile-Studio-Release: '));
+          assert.equal(lines.length,1,'Pin exactly one candidate release control.');
+          const c=JSON.parse(lines[0].slice('Profile-Studio-Release: '.length));
+          assert(/^[a-f0-9]{40}$/.test(c.sourceCommit)); assert(/^[a-f0-9]{24}$/.test(c.candidateId));
+          assert.equal(c.expectedDeploy,REVIEWED_BASELINE); assert.notEqual(c.candidateId,c.expectedDeploy);
+          for(const key of ['candidateRunId','candidateArtifactId'])assert(/^[1-9]\d*$/.test(String(c[key])));
+          assert(/^[a-f0-9]{64}$/.test(c.candidateArtifactSHA256));
+          const publish=process.env.RELEASE_MESSAGE.includes('[publish profile studio photo fit]');
+          const audit=process.env.RELEASE_MESSAGE.includes('[audit profile studio photo fit]');
+          assert(publish!==audit,'Choose exactly one release action.'); c.mode=publish?'publish':'audit';
+          for(const p of SOURCE_PATHS)assert(fs.readFileSync(p).equals(execFileSync('git',['show',`${c.sourceCommit}:${p}`])),`Candidate source changed: ${p}`);
+          const review=JSON.parse(fs.readFileSync(REVIEW_PATH));
+          assert.equal(review.validated,true); assert.equal(review.candidateId,c.candidateId); assert.equal(review.sourceCommit,c.sourceCommit);
+          fs.writeFileSync(path.join(process.env.RUNNER_TEMP,'profile-studio-control.json'),JSON.stringify(c));
+          fs.copyFileSync(REVIEW_PATH,path.join(process.env.RUNNER_TEMP,'profile-studio-browser-review.json'));
+          fs.appendFileSync(process.env.GITHUB_OUTPUT,`source_commit=${c.sourceCommit}\nmode=${c.mode}\n`);
+          JS
+      - name: Check out the exact verified candidate source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.control.outputs.source_commit }}
+          persist-credentials: false
+      - name: Verify successful prepare run and immutable artifact
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),assert=require('node:assert/strict');
+            const c=JSON.parse(fs.readFileSync(path.join(process.env.RUNNER_TEMP,'profile-studio-control.json')));
+            const run=(await github.rest.actions.getWorkflowRun({...context.repo,run_id:Number(c.candidateRunId)})).data;
+            assert.equal(run.status,'completed'); assert.equal(run.conclusion,'success');
+            assert.equal(run.event,'push'); assert.equal(run.head_branch,'release/profile-studio-photo-fit-prepare');
+            assert.equal(run.path,'.github/workflows/profile-studio-photo-fit.yml'); assert.equal(run.head_sha,c.sourceCommit);
+            assert.equal(run.repository.full_name,context.repo.owner+'/'+context.repo.repo);
+            const artifact=(await github.rest.actions.getArtifact({...context.repo,artifact_id:Number(c.candidateArtifactId)})).data;
+            assert.equal(artifact.name,'profile-studio-photo-fit-candidate-'+c.candidateRunId);
+            assert.equal(artifact.workflow_run.id,Number(c.candidateRunId)); assert.equal(artifact.workflow_run.head_sha,c.sourceCommit);
+            assert.equal(artifact.expired,false); assert.equal(artifact.digest,'sha256:'+c.candidateArtifactSHA256);
+            const response=await github.rest.actions.downloadArtifact({...context.repo,artifact_id:Number(c.candidateArtifactId),archive_format:'zip'});
+            const bytes=Buffer.from(response.data); assert(bytes.length<5000000,'Unexpected archive size.');
+            assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'),c.candidateArtifactSHA256,'Archive digest mismatch.');
+            fs.writeFileSync(path.join(process.env.RUNNER_TEMP,'profile-studio-candidate.zip'),bytes);
+      - name: Extract only bounded release records
+        run: |
+          python3 - <<'PY'
+          import os, pathlib, stat, zipfile
+          expected={'state.json','state.json.sha256','report.json','report.json.sha256'}
+          with zipfile.ZipFile(pathlib.Path(os.environ['RUNNER_TEMP'])/'profile-studio-candidate.zip') as archive:
+              entries=[entry for entry in archive.infolist() if not entry.is_dir()]
+              assert len(entries)==len(expected) and {entry.filename for entry in entries}==expected, 'Unexpected archive contents'
+              assert all(not stat.S_ISLNK(entry.external_attr>>16) and entry.file_size<3000000 for entry in entries), 'Unsafe archive entry'
+              assert sum(entry.file_size for entry in entries)<6000000, 'Unexpected expanded archive size'
+              destination=pathlib.Path('.netlify/profile-studio-photo-fit')
+              destination.mkdir(parents=True,exist_ok=True)
+              for entry in entries:(destination/entry.filename).write_bytes(archive.read(entry))
+          PY
+      - name: Reverify everything and publish only the reviewed new candidate, or audit read-only
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: |
+          node --input-type=module - <<'JS'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import assert from 'node:assert/strict';
+          import {fingerprint} from './scripts/release-preserved-production.mjs';
+          import {main,validateBrowserReview} from './scripts/release-profile-studio-photo-fit.mjs';
+          const c=JSON.parse(fs.readFileSync(path.join(process.env.RUNNER_TEMP,'profile-studio-control.json')));
+          const state=JSON.parse(fs.readFileSync('.netlify/profile-studio-photo-fit/state.json'));
+          assert.equal(fs.readFileSync('.netlify/profile-studio-photo-fit/state.json.sha256','utf8').trim(),fingerprint(state));
+          assert.equal(state.id,c.candidateId); assert.equal(state.sourceCommit,c.sourceCommit); assert(state.technicalVerifiedAt);
+          const reviewFile=path.join(process.env.RUNNER_TEMP,'profile-studio-browser-review.json');
+          validateBrowserReview(JSON.parse(fs.readFileSync(reviewFile)),state);
+          Object.assign(process.env,{EXPECTED_DEPLOY:c.expectedDeploy,EXPECTED_CANDIDATE:c.candidateId,
+            SOURCE_COMMIT:c.sourceCommit,PROFILE_STUDIO_VALIDATION_FILE:reviewFile});
+          if(c.mode==='publish')await main('verify');
+          await main(c.mode);
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: profile-studio-photo-fit-${{ steps.control.outputs.mode }}-${{ github.run_id }}
+          path: .netlify/profile-studio-photo-fit/
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 30
+      - name: Record observed outcome
+        if: always()
+        run: |
+          node --input-type=module - <<'JS'
+          import fs from 'node:fs';
+          const filename='.netlify/profile-studio-photo-fit/report.json';
+          if(!fs.existsSync(filename))process.exit(0);
+          const r=JSON.parse(fs.readFileSync(filename));
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+            `### Profile Studio release evidence\n\nLast completed phase: ${r.mode}\nCandidate: ${r.candidateId}\nSource: ${r.sourceCommit}\nPublished candidate verified: ${r.publishedCandidateVerified}\n\n${r.canonicalUrl}\n\nRead the job conclusion. If a lock request succeeded before a timeout, use the exact candidate-bound audit marker; never retry publication blindly.\n`);
+          JS
