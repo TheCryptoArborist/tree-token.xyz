@@ -1,0 +1,131 @@
+{
+  "candidateId": "6b067ef9d3a45ad909958ce7",
+  "sourceCommit": "e35976f8e6ea6641a0d8a4bfeee0be1ed432f5a0",
+  "origin": "https://6b067ef9d3a45ad909958ce7--tree-token.netlify.app",
+  "checkedAt": "2026-11-25T06:34:22.425Z",
+  "validated": true,
+  "viewportWidths": [
+    375,
+    1348
+  ],
+  "checks": {
+    "badgeSliders": true,
+    "badgeDrag": true,
+    "independentPhoto": true,
+    "resetBadge": true,
+    "mobileLayout": true,
+    "profilePng": true,
+    "frameOnlyPng": true
+  },
+  "photoValuesBeforeAndAfter": {
+    "zoom": 0.469195266066712,
+    "x": 0,
+    "y": -65.1465766941335
+  },
+  "exportedBadge": {
+    "x": -231.507353223661,
+    "y": 110.876921991342,
+    "size": 340
+  },
+  "exports": {
+    "profile": {
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "sha256": "923f997bbb03290b5d4eaeeba5d882bb867230f6753977c510f7722e7b17e66c",
+      "corners": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "badgeCenter": [
+        127,
+        156,
+        35,
+        255
+      ],
+      "center": [
+        246,
+        212,
+        200,
+        255
+      ]
+    },
+    "frame": {
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "sha256": "646de25322d5775aa7522cc2ec33e6b2c6b48ec50cf2092130917ac2e044abcd",
+      "corners": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "badgeCenter": [
+        126,
+        155,
+        33,
+        253
+      ],
+      "center": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "notes": [
+    "The supplied 320x320 portrait was loaded into the immutable candidate with Leafy Canopy and Tree Hero.",
+    "Candidate X/Y sliders, size, reset and direct badge drag preserved all observed photo zoom/X/Y values.",
+    "Both candidate PNG downloads were inspected: 1024x1024 RGBA, transparent outside corners, badge visible at the chosen position. Frame-only center is transparent for this badge placement; badge source artwork has partial alpha at some pixels.",
+    "Candidate controls and a badge slider were exercised in a 390px iframe (375px content width); no horizontal overflow. Same-source local preview also passed badge-only mouse dragging at phone width before photo upload.",
+    "Physical iPhone touch gestures were not exercised."
+  ]
+}
