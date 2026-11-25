@@ -1,3 +1,15 @@
+# Native BNB checkout entry candidate — November 25, 2026
+
+An offline generator now prepares an opt-in patch against the actual pinned native
+ContinuationReview source on the game integration branch. Existing callers retain
+the original Sui checkout; no caller has been switched. Tests passed: five entry
+and six assembled browser checks. Candidate generation never overwrites a checkout
+or publishes; current source/release parity and host activation remain pending.
+No production, payment, gameplay or NFT change occurred. Details:
+`docs/multichain/generation-milestone/netlify-gateway/bnb-native-entry.md`.
+
+---
+
 # Assembled BNB checkout review mount — November 25, 2026
 
 A source-only mount now joins session transport, selected-wallet adapters,
