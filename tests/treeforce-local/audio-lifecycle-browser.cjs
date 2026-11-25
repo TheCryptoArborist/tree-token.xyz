@@ -2,7 +2,7 @@ const { chromium } = require("playwright");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const revision = process.env.TREEFORCE_REVISION || "r8";
-assert.ok(["r8", "r10", "r12", "r13"].includes(revision));
+assert.ok(["r8", "r10", "r12", "r13", "r15"].includes(revision));
 const origin =
   process.env.TREEFORCE_URL ||
   (revision === "r13"

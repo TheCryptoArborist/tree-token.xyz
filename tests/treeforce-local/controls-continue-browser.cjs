@@ -3,9 +3,11 @@ const { chromium } = require("playwright"),
   assert = require("node:assert/strict"),
   fs = require("node:fs");
 const revision = process.env.TREEFORCE_REVISION || "r13";
-assert.ok(["r12", "r13"].includes(revision));
+assert.ok(["r12", "r13", "r15"].includes(revision));
 const origin =
-  revision === "r13" ? "http://127.0.0.1:4187" : "http://127.0.0.1:4186";
+  process.env.TREEFORCE_URL ||
+  (revision === "r13" ? "http://127.0.0.1:4187" : "http://127.0.0.1:4186");
+assert.match(origin, /^http:\/\/127\.0\.0\.1:\d+$/);
 (async () => {
   const browser = await chromium.launch({
     headless: true,

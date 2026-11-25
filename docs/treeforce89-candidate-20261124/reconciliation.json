@@ -1,0 +1,18 @@
+{
+  "checkedAt": "2026-11-25",
+  "treeforceSourceCommit": "b5aa5d913cfd134d44215c2d020c71eb1fcbe535",
+  "multichain": {
+    "pr": "https://github.com/TheCryptoArborist/tree-token.xyz/pull/280",
+    "head": "0deda412f82e20c3e4a86242665c0af148917589",
+    "sourceOnlyDelivery": true,
+    "liveRestorationEnabled": false
+  },
+  "changedPathOverlap": [],
+  "liveGameFilesCompared": 23,
+  "liveGameDrift": [],
+  "mergedOrDeployed": false,
+  "limitations": [
+    "No semantic compatibility certification for future shared payment-delivery cutover",
+    "Complete production static inventory and protected configuration unavailable through connected tools"
+  ]
+}

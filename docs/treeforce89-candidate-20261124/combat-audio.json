@@ -1,0 +1,54 @@
+{
+  "synthetic": true,
+  "origin": "http://127.0.0.1:4192",
+  "checks": {
+    "events": [
+      {
+        "key": "combat:fire",
+        "category": "fire",
+        "accepted": true
+      },
+      {
+        "key": "combat:enemyFire",
+        "category": "enemyFire",
+        "accepted": true
+      },
+      {
+        "key": "combat:hit",
+        "category": "impact",
+        "accepted": true
+      },
+      {
+        "key": "combat:kill",
+        "category": "impact",
+        "accepted": true
+      },
+      {
+        "key": "combat:fire",
+        "category": "fire",
+        "accepted": true
+      },
+      {
+        "key": "combat:hit",
+        "category": "impact",
+        "accepted": true
+      },
+      {
+        "key": "upgrade",
+        "accepted": true
+      },
+      {
+        "key": "combat:kill",
+        "category": "impact",
+        "accepted": true
+      }
+    ],
+    "fire": true,
+    "hit": true,
+    "upgrade": true,
+    "kill": true,
+    "voices": 6,
+    "audioState": "running"
+  },
+  "errors": []
+}

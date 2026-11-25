@@ -4,7 +4,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const origin = process.env.TREEFORCE_URL || "http://127.0.0.1:4180";
 const revision = process.env.TREEFORCE_REVISION || "r6";
-assert.ok(["r6", "r12", "r13"].includes(revision));
+assert.ok(["r6", "r12", "r13", "r15"].includes(revision));
 assert.match(origin, /^http:\/\/127\.0\.0\.1:\d+$/);
 (async () => {
   const browser = await chromium.launch({

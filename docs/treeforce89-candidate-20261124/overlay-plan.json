@@ -1,0 +1,239 @@
+{
+  "revision": "r15",
+  "productionRelease": false,
+  "completeSiteInventory": false,
+  "capturedAt": "2026-11-25T01:31:00.832Z",
+  "sourceBaseline": "2026-11-23T05:26:22.759Z",
+  "verifiedLiveGameFiles": 23,
+  "files": [
+    {
+      "path": "/play/treeforce89/assets/index-review-r5.js",
+      "sha256": "8ef3d85099268ae3945e0216014dea2dedee8a297db7f03ed2f4ad0a7314dc64",
+      "bytes": 652862
+    },
+    {
+      "path": "/play/treeforce89/assets/arcade-review-r5.js",
+      "sha256": "6d6003e2e075e92b0b5bde0040a3565b54f29bfc67cf04009bb04c520b1c6939",
+      "bytes": 1294926
+    },
+    {
+      "path": "/play/treeforce89/assets/graphql-review-r5.js",
+      "sha256": "fd99b0257eafe3fde1395c21ef9b828de367a85da83b6b1b73f0493b8041d2b1",
+      "bytes": 54745
+    },
+    {
+      "path": "/play/treeforce89/mobile-review-r5.css",
+      "sha256": "3c03a67551fd382424bc1dd8c0cfcd1a8fec75e811805e76f962b23d1ea0ea90",
+      "bytes": 26200
+    },
+    {
+      "path": "/play/treeforce89/assets/combat-feedback-r6.js",
+      "sha256": "94dcc3a48bda486324177ff2e112fda5de2977a3b695987fc4128d0ab8ac2e8a",
+      "bytes": 6382
+    },
+    {
+      "path": "/play/treeforce89/assets/index-review-r6.js",
+      "sha256": "ac1286d831f07e82180e9d10078e4a61459a80af12b2adbf0b82279ecf7a5df1",
+      "bytes": 652862
+    },
+    {
+      "path": "/play/treeforce89/assets/arcade-review-r6.js",
+      "sha256": "a3160957d6c58892920ca2c47e4a3c7bd0417676b12e46d9c8590d550bcb9f84",
+      "bytes": 1295084
+    },
+    {
+      "path": "/play/treeforce89/assets/graphql-review-r6.js",
+      "sha256": "c569e7e5db0a1862f3531a257ce4684659c841da04a69b85c7e445aa3bb9be3d",
+      "bytes": 54745
+    },
+    {
+      "path": "/play/treeforce89/assets/enemy-feedback-r7.js",
+      "sha256": "552eda26f2201d24b3edcd0487be769c47c614f6371f4d21e6c98028d0ea9ebd",
+      "bytes": 1565
+    },
+    {
+      "path": "/play/treeforce89/assets/index-review-r7.js",
+      "sha256": "9c4c2b4a1cb62051d1c3f08fddde8aab739baf4d25754f4b58617ccb0c7b6982",
+      "bytes": 652862
+    },
+    {
+      "path": "/play/treeforce89/assets/arcade-review-r7.js",
+      "sha256": "953804b6611269bc5a5e30a046a360922dbb4356af2362cb7f43a1f5ee353d59",
+      "bytes": 1294977
+    },
+    {
+      "path": "/play/treeforce89/assets/graphql-review-r7.js",
+      "sha256": "91d828877c8f480b509c28cf70c904d3f0d3fb78caf1d3726f2a8275ff2bfe96",
+      "bytes": 54745
+    },
+    {
+      "path": "/play/treeforce89/assets/audio-lifecycle-r8.js",
+      "sha256": "849afabe65c40d93fdf38db7270adc7c2b6f05c066484e3d96068eec07594f4a",
+      "bytes": 4722
+    },
+    {
+      "path": "/play/treeforce89/assets/index-review-r8.js",
+      "sha256": "6fcfa8c489e0c4d57ff4f04663a186fc31f9838b202414e36d9551228f3d9f9e",
+      "bytes": 652862
+    },
+    {
+      "path": "/play/treeforce89/assets/arcade-review-r8.js",
+      "sha256": "ba5719533624b6d31b3dcfeefc157167fd146e54d7f4ced58c85858747cd32dc",
+      "bytes": 1294971
+    },
+    {
+      "path": "/play/treeforce89/assets/graphql-review-r8.js",
+      "sha256": "d7f61c2b9d7130e77f195ec94b8cf89da849770fd79a53487e6cf2d6ed001aec",
+      "bytes": 54745
+    },
+    {
+      "path": "/play/treeforce89/assets/index-review-r9.js",
+      "sha256": "5bc135dc7cba61e0cf23a01aa0578e905e8824f2ef3a06d40bb8cf57b7a475e0",
+      "bytes": 652862
+    },
+    {
+      "path": "/play/treeforce89/assets/arcade-review-r9.js",
+      "sha256": "181b07189cc24472bd9eb1a6693fb51be424e0608173d7171e51dfbcd8f57a42",
+      "bytes": 1294993
+    },
+    {
+      "path": "/play/treeforce89/assets/graphql-review-r9.js",
+      "sha256": "1758d5823a31f3a59e974012b2416417d5993a24a333dd15817241e05087b7e5",
+      "bytes": 54745
+    },
+    {
+      "path": "/play/treeforce89/assets/sound-identity-r10.js",
+      "sha256": "6343ef8be858924ff350f8a8df484edbffa9c73a812fa0be17c5dc0a18ca9b5d",
+      "bytes": 4645
+    },
+    {
+      "path": "/play/treeforce89/assets/index-review-r10.js",
+      "sha256": "9aed4144949a1b0eaa4bc783d6ecafe4ded89485c8537620dbedbad588958a53",
+      "bytes": 652864
+    },
+    {
+      "path": "/play/treeforce89/assets/arcade-review-r10.js",
+      "sha256": "fb97cab6a075b71c0008bd65c46e2828da2c268c9d4252f91492497fad3e8b77",
+      "bytes": 1294811
+    },
+    {
+      "path": "/play/treeforce89/assets/graphql-review-r10.js",
+      "sha256": "a33a59ba687e3591c2c35725487defb0d1c4ccd6e8ff2766d05b9f6ce231af43",
+      "bytes": 54746
+    },
+    {
+      "path": "/play/treeforce89/assets/combat-visuals-r11.js",
+      "sha256": "822ee1649b04133e0433cfb644526890935e52b8fbe1ff607a0d42331b5c3447",
+      "bytes": 2853
+    },
+    {
+      "path": "/play/treeforce89/assets/index-review-r11.js",
+      "sha256": "503c9355700b0af65d8372ac2f53bebd04c5d379d57257830c9921306ab9aa17",
+      "bytes": 652864
+    },
+    {
+      "path": "/play/treeforce89/assets/arcade-review-r11.js",
+      "sha256": "c9fe568a1621e401013b829584c1fff023f4c868b4e5721a396ce9911b022e1c",
+      "bytes": 1294894
+    },
+    {
+      "path": "/play/treeforce89/assets/graphql-review-r11.js",
+      "sha256": "9f48a58bdb3e7fb46c77a8b565adbb738b4c1a2c6493791d6b517234fd7f0247",
+      "bytes": 54746
+    },
+    {
+      "path": "/play/treeforce89/assets/round-presentation-r12.js",
+      "sha256": "b4ad61a098912fa66a9825175e95207c4b57a95541431b9e64a43389e6cd3cd0",
+      "bytes": 1007
+    },
+    {
+      "path": "/play/treeforce89/assets/index-review-r12.js",
+      "sha256": "f7b6aceac0f1502ecf46c9d4d5665f2cb8ad71fd4e8a95f770e808ee26e62a52",
+      "bytes": 652864
+    },
+    {
+      "path": "/play/treeforce89/assets/arcade-review-r12.js",
+      "sha256": "67a076714bed34e268a6ecb01d3d74b39f13ffb51e0bfe1592e6f5ed3d5424d7",
+      "bytes": 1295135
+    },
+    {
+      "path": "/play/treeforce89/assets/graphql-review-r12.js",
+      "sha256": "cbf474d176361f5b342d17b24583e2621e0363b425209635c2d287bea684a931",
+      "bytes": 54746
+    },
+    {
+      "path": "/play/treeforce89/assets/touchbar-input-r13.js",
+      "sha256": "c27fade88be3fee5d4bc1b27fff73625c83b194daf4997b4979cc92672b8a1ba",
+      "bytes": 1001
+    },
+    {
+      "path": "/play/treeforce89/assets/index-review-r13.js",
+      "sha256": "2b87078be22f8d6ce9f80700b15fa361c1d173181fafeb9eb5e9b23d6d60b910",
+      "bytes": 652864
+    },
+    {
+      "path": "/play/treeforce89/assets/arcade-review-r13.js",
+      "sha256": "bc6c62cf59ca9e929b8265221aaa188ca8fc0b7c9439952b85bf1c52f69a9a9b",
+      "bytes": 1295367
+    },
+    {
+      "path": "/play/treeforce89/assets/graphql-review-r13.js",
+      "sha256": "52c77cc277735c5967668f81cf6540fb168417c74c5c859446b0623a4d7d6da1",
+      "bytes": 54746
+    },
+    {
+      "path": "/play/treeforce89/assets/enemy-animation-r14.js",
+      "sha256": "3139d1390da18ca8774b2246739472ea520c75d5230a05ab611dd578d024437b",
+      "bytes": 3433
+    },
+    {
+      "path": "/play/treeforce89/assets/index-review-r14.js",
+      "sha256": "8d298f5e4beebf13c82465c8fb372655236c211028385f29670332a7a104f0f8",
+      "bytes": 652864
+    },
+    {
+      "path": "/play/treeforce89/assets/arcade-review-r14.js",
+      "sha256": "31a65c4377305eb296df78043127705b82aad9fa36cccae2ce6c2fc14d08b549",
+      "bytes": 1295368
+    },
+    {
+      "path": "/play/treeforce89/assets/graphql-review-r14.js",
+      "sha256": "a78bf413826fa65974ae9a6bb1c661eacc83dedddc3fc8553b6ea2cb1ba8254f",
+      "bytes": 54746
+    },
+    {
+      "path": "/play/treeforce89/assets/impact-effects-r15.js",
+      "sha256": "aa4a3e81df82c7c74cd1a585fe11d78ce1d4447689b339aac45ad97336792a1a",
+      "bytes": 2237
+    },
+    {
+      "path": "/play/treeforce89/assets/index-review-r15.js",
+      "sha256": "779480021997a4293beaa00fa2518eef5ab32e3351103dda71800b451fc68740",
+      "bytes": 652864
+    },
+    {
+      "path": "/play/treeforce89/assets/arcade-review-r15.js",
+      "sha256": "01e75b2f546270117e9767861eab8cc838c9b8803f7b02a0400f0555527567d6",
+      "bytes": 1295551
+    },
+    {
+      "path": "/play/treeforce89/assets/graphql-review-r15.js",
+      "sha256": "bc6bee6214d66f0c500a36ae307a7877b37244f046ac18b892e3b49543b4d0f2",
+      "bytes": 54746
+    },
+    {
+      "path": "/play/treeforce89/index.html",
+      "sha256": "3a047731b9fa0be087de7bb0377a662d278d41eb14da466972641bc8bc26b837",
+      "bytes": 5116
+    }
+  ],
+  "backendChanges": 0,
+  "schedulesChanged": 0,
+  "requiredBeforeRelease": [
+    "Fresh complete static inventory and protected configuration capture",
+    "Preserve every current backend/provider record and schedule",
+    "Check overlay path collisions against that inventory",
+    "Recheck current production ID and multichain branch",
+    "Owner phone review and separate production authorization"
+  ]
+}

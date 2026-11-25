@@ -2,7 +2,7 @@ const { chromium } = require("playwright"),
   assert = require("node:assert/strict"),
   fs = require("node:fs");
 const revision = process.env.TREEFORCE_REVISION || "r12";
-assert.ok(["r12", "r13"].includes(revision));
+assert.ok(["r12", "r13", "r15"].includes(revision));
 const origin = process.env.TREEFORCE_URL || "http://127.0.0.1:4186";
 assert.match(origin, /^http:\/\/127\.0\.0\.1:\d+$/);
 (async () => {
@@ -96,7 +96,9 @@ assert.match(origin, /^http:\/\/127\.0\.0\.1:\d+$/);
           .filter((o) => o.depth === 25 && !retainedChildren.has(o))
           .forEach((o) => o.destroy());
         return {
-          pauseControlRetained: !!(s.pauseButtonBg?.active && s.pauseButtonBg.visible),
+          pauseControlRetained: !!(
+            s.pauseButtonBg?.active && s.pauseButtonBg.visible
+          ),
           phases,
           clearDelays: durations.filter((ms) =>
             [1800, 2400, 3600].includes(ms),

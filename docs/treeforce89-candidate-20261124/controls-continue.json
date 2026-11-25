@@ -1,0 +1,221 @@
+{
+  "synthetic": true,
+  "realPayment": false,
+  "results": [
+    {
+      "width": 320,
+      "checks": [
+        "fresh run and first mobile guide",
+        "hero fits play area at all five growth stages",
+        "touch fire releases on cancel, capture loss and pointer-up",
+        "Auto Fire click toggles exactly once",
+        "touch tap and keyboard activation toggle once",
+        "keyboard Fire does not also trigger Shield",
+        "Shield requires growth/charge and spends growth",
+        "mouse release over toolbar clears canvas firing",
+        "interruption cancels held fire and pauses",
+        "simulated paid-continue resume retains score, wave, identity and achievement progress; restores three lives",
+        "next individual run starts clean"
+      ],
+      "hero": [
+        {
+          "stage": 0,
+          "top": 320,
+          "bottom": 600,
+          "left": 128,
+          "right": 352
+        },
+        {
+          "stage": 1,
+          "top": 324,
+          "bottom": 596,
+          "left": 131.2,
+          "right": 348.79999999999995
+        },
+        {
+          "stage": 2,
+          "top": 336,
+          "bottom": 584,
+          "left": 140.8,
+          "right": 339.20000000000005
+        },
+        {
+          "stage": 3,
+          "top": 344,
+          "bottom": 576,
+          "left": 147.2,
+          "right": 332.79999999999995
+        },
+        {
+          "stage": 4,
+          "top": 352,
+          "bottom": 568,
+          "left": 153.6,
+          "right": 326.4
+        }
+      ],
+      "resumed": {
+        "score": 43210,
+        "wave": 4,
+        "lives": 3,
+        "kills": 100,
+        "maxChain": 25,
+        "boomPickups": 1,
+        "turboPickups": 1,
+        "runId": "grove-10543ebc",
+        "seed": 273956540,
+        "originalRunId": "grove-10543ebc",
+        "originalSeed": 273956540
+      },
+      "fresh": {
+        "score": 0,
+        "wave": 0,
+        "lives": 3,
+        "maxChain": 0,
+        "runId": "grove-dddddddddddddddddddddddddddddddd"
+      },
+      "errors": []
+    },
+    {
+      "width": 390,
+      "checks": [
+        "fresh run and first mobile guide",
+        "hero fits play area at all five growth stages",
+        "touch fire releases on cancel, capture loss and pointer-up",
+        "Auto Fire click toggles exactly once",
+        "touch tap and keyboard activation toggle once",
+        "keyboard Fire does not also trigger Shield",
+        "Shield requires growth/charge and spends growth",
+        "mouse release over toolbar clears canvas firing",
+        "interruption cancels held fire and pauses",
+        "simulated paid-continue resume retains score, wave, identity and achievement progress; restores three lives",
+        "next individual run starts clean"
+      ],
+      "hero": [
+        {
+          "stage": 0,
+          "top": 320,
+          "bottom": 600,
+          "left": 128,
+          "right": 352
+        },
+        {
+          "stage": 1,
+          "top": 324,
+          "bottom": 596,
+          "left": 131.2,
+          "right": 348.79999999999995
+        },
+        {
+          "stage": 2,
+          "top": 336,
+          "bottom": 584,
+          "left": 140.8,
+          "right": 339.20000000000005
+        },
+        {
+          "stage": 3,
+          "top": 344,
+          "bottom": 576,
+          "left": 147.2,
+          "right": 332.79999999999995
+        },
+        {
+          "stage": 4,
+          "top": 352,
+          "bottom": 568,
+          "left": 153.6,
+          "right": 326.4
+        }
+      ],
+      "resumed": {
+        "score": 43210,
+        "wave": 4,
+        "lives": 3,
+        "kills": 100,
+        "maxChain": 25,
+        "boomPickups": 1,
+        "turboPickups": 1,
+        "runId": "grove-10546d31",
+        "seed": 273968433,
+        "originalRunId": "grove-10546d31",
+        "originalSeed": 273968433
+      },
+      "fresh": {
+        "score": 0,
+        "wave": 0,
+        "lives": 3,
+        "maxChain": 0,
+        "runId": "grove-dddddddddddddddddddddddddddddddd"
+      },
+      "errors": []
+    },
+    {
+      "width": 1280,
+      "checks": [
+        "fresh run and first mobile guide",
+        "hero fits play area at all five growth stages",
+        "simulated paid-continue resume retains score, wave, identity and achievement progress; restores three lives",
+        "next individual run starts clean"
+      ],
+      "hero": [
+        {
+          "stage": 0,
+          "top": 320,
+          "bottom": 600,
+          "left": 128,
+          "right": 352
+        },
+        {
+          "stage": 1,
+          "top": 324,
+          "bottom": 596,
+          "left": 131.2,
+          "right": 348.79999999999995
+        },
+        {
+          "stage": 2,
+          "top": 336,
+          "bottom": 584,
+          "left": 140.8,
+          "right": 339.20000000000005
+        },
+        {
+          "stage": 3,
+          "top": 344,
+          "bottom": 576,
+          "left": 147.2,
+          "right": 332.79999999999995
+        },
+        {
+          "stage": 4,
+          "top": 352,
+          "bottom": 568,
+          "left": 153.6,
+          "right": 326.4
+        }
+      ],
+      "resumed": {
+        "score": 43210,
+        "wave": 4,
+        "lives": 3,
+        "kills": 100,
+        "maxChain": 25,
+        "boomPickups": 1,
+        "turboPickups": 1,
+        "runId": "grove-10549b4c",
+        "seed": 273980236,
+        "originalRunId": "grove-10549b4c",
+        "originalSeed": 273980236
+      },
+      "fresh": {
+        "score": 0,
+        "wave": 0,
+        "lives": 3,
+        "maxChain": 0,
+        "runId": "grove-dddddddddddddddddddddddddddddddd"
+      },
+      "errors": []
+    }
+  ]
+}

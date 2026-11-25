@@ -1,0 +1,257 @@
+[
+  {
+    "width": 320,
+    "timing": {
+      "pauseControlRetained": true,
+      "phases": [
+        {
+          "kind": "challenge",
+          "repeat": false,
+          "timeline": [
+            "title",
+            "title",
+            "title",
+            "ready",
+            "ready",
+            "go",
+            "go",
+            "complete"
+          ]
+        },
+        {
+          "kind": "challenge",
+          "repeat": true,
+          "timeline": [
+            "title",
+            "title",
+            "title",
+            "ready",
+            "ready",
+            "go",
+            "go",
+            "complete"
+          ]
+        },
+        {
+          "kind": "windfall",
+          "repeat": false,
+          "timeline": [
+            "title",
+            "title",
+            "title",
+            "ready",
+            "ready",
+            "go",
+            "go",
+            "complete"
+          ]
+        },
+        {
+          "kind": "windfall",
+          "repeat": true,
+          "timeline": [
+            "title",
+            "title",
+            "title",
+            "ready",
+            "ready",
+            "go",
+            "go",
+            "complete"
+          ]
+        }
+      ],
+      "clearDelays": [
+        2400,
+        1800,
+        3600
+      ]
+    },
+    "challenge": {
+      "score": 14000,
+      "afterRepeat": 14000,
+      "text": "PERFECT CANOPY!\n\nTARGETS 40 / 40 · MISSED 0\nSHOT ACCURACY 100%\nTARGET POINTS +4,000 (EARNED)\nCOMPLETION BONUS +10,000\n\nNEXT // ROOTSNARE AMBUSH",
+      "fits": true
+    },
+    "partial": {
+      "score": 3900,
+      "text": "CANOPY CHALLENGE COMPLETE\n\nTARGETS 39 / 40 · MISSED 1\nSHOT ACCURACY 98%\nTARGET POINTS +3,900 (EARNED)\nCOMPLETION BONUS +0\n\nNEXT // ROOTSNARE AMBUSH"
+    },
+    "wave": {
+      "score": 6234,
+      "text": "BLIGHT CLEARED  12\nCHAIN          8\n+1,234 POINTS THIS ATTEMPT\n\nNEXT // TWILIGHT TALON RAID",
+      "fits": true
+    },
+    "errors": []
+  },
+  {
+    "width": 390,
+    "timing": {
+      "pauseControlRetained": true,
+      "phases": [
+        {
+          "kind": "challenge",
+          "repeat": false,
+          "timeline": [
+            "title",
+            "title",
+            "title",
+            "ready",
+            "ready",
+            "go",
+            "go",
+            "complete"
+          ]
+        },
+        {
+          "kind": "challenge",
+          "repeat": true,
+          "timeline": [
+            "title",
+            "title",
+            "title",
+            "ready",
+            "ready",
+            "go",
+            "go",
+            "complete"
+          ]
+        },
+        {
+          "kind": "windfall",
+          "repeat": false,
+          "timeline": [
+            "title",
+            "title",
+            "title",
+            "ready",
+            "ready",
+            "go",
+            "go",
+            "complete"
+          ]
+        },
+        {
+          "kind": "windfall",
+          "repeat": true,
+          "timeline": [
+            "title",
+            "title",
+            "title",
+            "ready",
+            "ready",
+            "go",
+            "go",
+            "complete"
+          ]
+        }
+      ],
+      "clearDelays": [
+        2400,
+        1800,
+        3600
+      ]
+    },
+    "challenge": {
+      "score": 14000,
+      "afterRepeat": 14000,
+      "text": "PERFECT CANOPY!\n\nTARGETS 40 / 40 · MISSED 0\nSHOT ACCURACY 100%\nTARGET POINTS +4,000 (EARNED)\nCOMPLETION BONUS +10,000\n\nNEXT // ROOTSNARE AMBUSH",
+      "fits": true
+    },
+    "partial": {
+      "score": 3900,
+      "text": "CANOPY CHALLENGE COMPLETE\n\nTARGETS 39 / 40 · MISSED 1\nSHOT ACCURACY 98%\nTARGET POINTS +3,900 (EARNED)\nCOMPLETION BONUS +0\n\nNEXT // ROOTSNARE AMBUSH"
+    },
+    "wave": {
+      "score": 6234,
+      "text": "BLIGHT CLEARED  12\nCHAIN          8\n+1,234 POINTS THIS ATTEMPT\n\nNEXT // TWILIGHT TALON RAID",
+      "fits": true
+    },
+    "errors": []
+  },
+  {
+    "width": 1000,
+    "timing": {
+      "pauseControlRetained": true,
+      "phases": [
+        {
+          "kind": "challenge",
+          "repeat": false,
+          "timeline": [
+            "title",
+            "title",
+            "title",
+            "ready",
+            "ready",
+            "go",
+            "go",
+            "complete"
+          ]
+        },
+        {
+          "kind": "challenge",
+          "repeat": true,
+          "timeline": [
+            "title",
+            "title",
+            "title",
+            "ready",
+            "ready",
+            "go",
+            "go",
+            "complete"
+          ]
+        },
+        {
+          "kind": "windfall",
+          "repeat": false,
+          "timeline": [
+            "title",
+            "title",
+            "title",
+            "ready",
+            "ready",
+            "go",
+            "go",
+            "complete"
+          ]
+        },
+        {
+          "kind": "windfall",
+          "repeat": true,
+          "timeline": [
+            "title",
+            "title",
+            "title",
+            "ready",
+            "ready",
+            "go",
+            "go",
+            "complete"
+          ]
+        }
+      ],
+      "clearDelays": [
+        2400,
+        1800,
+        3600
+      ]
+    },
+    "challenge": {
+      "score": 14000,
+      "afterRepeat": 14000,
+      "text": "PERFECT CANOPY!\n\nTARGETS 40 / 40 · MISSED 0\nSHOT ACCURACY 100%\nTARGET POINTS +4,000 (EARNED)\nCOMPLETION BONUS +10,000\n\nNEXT // ROOTSNARE AMBUSH",
+      "fits": true
+    },
+    "partial": {
+      "score": 3900,
+      "text": "CANOPY CHALLENGE COMPLETE\n\nTARGETS 39 / 40 · MISSED 1\nSHOT ACCURACY 98%\nTARGET POINTS +3,900 (EARNED)\nCOMPLETION BONUS +0\n\nNEXT // ROOTSNARE AMBUSH"
+    },
+    "wave": {
+      "score": 6234,
+      "text": "BLIGHT CLEARED  12\nCHAIN          8\n+1,234 POINTS THIS ATTEMPT\n\nNEXT // TWILIGHT TALON RAID",
+      "fits": true
+    },
+    "errors": []
+  }
+]

@@ -1,6 +1,10 @@
 const { chromium } = require("playwright"),
   assert = require("node:assert/strict"),
   fs = require("node:fs");
+const origin = process.env.TREEFORCE_URL || "http://127.0.0.1:4187";
+const revision = process.env.TREEFORCE_REVISION || "r13";
+assert.match(origin, /^http:\/\/127\.0\.0\.1:\d+$/);
+assert.ok(["r13", "r15"].includes(revision));
 (async () => {
   const b = await chromium.launch({
     executablePath: "/usr/bin/chromium",
@@ -16,7 +20,7 @@ const { chromium } = require("playwright"),
     p.on("pageerror", (e) => errors.push(e.message));
     await p.route("**/*", async (r) => {
       const url = new URL(r.request().url());
-      if (url.origin !== "http://127.0.0.1:4187") return r.abort();
+      if (url.origin !== origin) return r.abort();
       if (url.pathname !== "/__local/practice") return r.continue();
       const s = await r.fetch();
       return r.fulfill({
@@ -27,7 +31,7 @@ const { chromium } = require("playwright"),
         ),
       });
     });
-    await p.goto("http://127.0.0.1:4187/__local/practice?lab=1&revision=r13");
+    await p.goto(`${origin}/__local/practice?lab=1&revision=${revision}`);
     await p.waitForFunction(
       () => window.__game?.scene.getScene("game")?.player,
     );

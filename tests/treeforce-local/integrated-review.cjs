@@ -8,8 +8,8 @@ const output = path.resolve(
 fs.mkdirSync(path.join(output, "docs"), { recursive: true });
 const env = {
   ...process.env,
-  TREEFORCE_URL: "http://127.0.0.1:4187",
-  TREEFORCE_REVISION: "r13",
+  TREEFORCE_URL: process.env.TREEFORCE_URL || "http://127.0.0.1:4187",
+  TREEFORCE_REVISION: process.env.TREEFORCE_REVISION || "r13",
   TREEFORCE_VISUAL_REPORT: path.join(output, "docs/enemy-feedback.json"),
   TREEFORCE_AUDIO_REPORT: path.join(output, "docs/combat-audio.json"),
 };
@@ -22,6 +22,8 @@ const jobs = [
         "combat-audio.test.mjs",
         "sound-identity.test.mjs",
         "combat-visuals.test.mjs",
+        "enemy-animation.test.mjs",
+        "impact-effects.test.mjs",
       ].map((n) => path.join(__dirname, n)),
     ],
   ],

@@ -13,6 +13,13 @@ await fs.mkdir(output);
 const review = JSON.parse(
   await fs.readFile(path.join(source, "review.json"), "utf8"),
 );
+const entry = await fs.readFile(
+  path.join(source, "play/treeforce89/index.html"),
+  "utf8",
+);
+const revision = entry.match(/\/assets\/index-review-(r\d+)\.js/)?.[1];
+if (!["r13", "r14", "r15"].includes(revision))
+  throw Error("Unrecognized reviewed entry revision");
 const hashes = {};
 for (const [name, expected] of Object.entries(review.changed)) {
   const actual = createHash("sha256")
@@ -80,9 +87,11 @@ practice = practice.replace(
   'href="/">Review checklist',
 );
 await fs.writeFile(path.join(output, "server/practice.html"), practice);
-await fs.copyFile(
-  new URL("./device-review.html", import.meta.url),
+await fs.writeFile(
   path.join(output, "site/index.html"),
+  (
+    await fs.readFile(new URL("./device-review.html", import.meta.url), "utf8")
+  ).replaceAll("r13", revision),
 );
 await fs.writeFile(
   path.join(output, "start.mjs"),
@@ -92,7 +101,7 @@ const port = Number(process.argv[2] || 4187);
 if (!Number.isInteger(port) || port < 1024 || port > 65535) throw new Error('Choose a port from 1024 to 65535');
 process.argv[2] = fileURLToPath(new URL('./site', import.meta.url));
 process.argv[3] = String(port);
-console.log('Tree Force 89 r13 • private practice • no wallets, payments or saves');
+console.log('Tree Force 89 ${revision} • private practice • no wallets, payments or saves');
 console.log('Computer: http://127.0.0.1:' + port + '/');
 for (const records of Object.values(networkInterfaces())) for (const a of records || [])
   if (a.family === 'IPv4' && !a.internal) console.log('Same-Wi-Fi phone: http://' + a.address + ':' + port + '/');
@@ -102,7 +111,7 @@ await import('./server/serve.mjs');
 );
 await fs.writeFile(
   path.join(output, "README.txt"),
-  `TREE FORCE 89 — PRIVATE PHONE REVIEW — r13
+  `TREE FORCE 89 — PRIVATE PHONE REVIEW — ${revision}
 
 1. Extract this entire folder on a computer with Node.js 22 or later.
 2. Open a terminal in the extracted folder and run: node start.mjs
@@ -131,7 +140,7 @@ await fs.writeFile(
   path.join(output, "review-manifest.json"),
   JSON.stringify(
     {
-      revision: "r13",
+      revision,
       purpose: "Private LAN device review",
       productionRelease: false,
       sourceBaseline: review.source,
