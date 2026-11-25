@@ -68,3 +68,5 @@ or a real payment. GitHub CI runs this checker alongside the existing suite.
 The source scan did not recover the exact published `treeforce89-dev` backend.
 No production identity mapping is asserted. This milestone adds no HTTP handler,
 public grants, cleanup job, score submission or wallet transaction.
+
+Hosted [CI 45521980976](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45521980976) passed on source `a7f1b7c`, including the shared checker and existing regression suite. Machine-readable evidence is in `hosted-ci.json`.
