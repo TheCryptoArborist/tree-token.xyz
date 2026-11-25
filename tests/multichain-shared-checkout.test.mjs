@@ -1,0 +1,19 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {createSharedNativeCheckout} from '../scripts/multichain/browser/shared-native-checkout.mjs';
+import {TREE_COIN_TYPE,TREE_RECIPIENT} from '../docs/multichain/generation-milestone/native-sui-payments/upstream/contract.mjs';
+function fixture(){
+ let session={wallet:'0x'+'a'.repeat(64),nativeRunId:'grove-'+'b'.repeat(32),sessionToken:'c'.repeat(64),epoch:'one'},signs=0,failRecord=false,failSign=false;
+ const data=new Map(),storage={getItem:k=>data.get(k)||null,setItem:(k,v)=>data.set(k,v)};let queue=Promise.resolve();
+ const locks={request:(k,o,fn)=>{const p=queue.then(fn);queue=p.catch(()=>{});return p;}};
+ const offer={enabled:true,recipientConfirmed:true,wallet:session.wallet,runId:session.nativeRunId,network:'sui:mainnet',coinType:TREE_COIN_TYPE,recipient:TREE_RECIPIENT,price:'20000',decimals:6,amountBaseUnits:'20000000000',lives:3,offerId:'d'.repeat(48),expiresAt:Date.now()+60000};
+ class Transaction{pure={address:v=>v};coin(v){return v;}transferObjects(){}}
+ const options={getSession:()=>session,transport:{record:async p=>{if(failRecord)throw Error('lost response');return {...p,status:'recorded',paymentId:'payment',restoreAuthorized:false};}},Transaction,storage,locks,signAndExecute:async()=>{signs++;if(failSign)throw Error('unknown wallet result');return {$kind:'Transaction',Transaction:{digest:'D'.repeat(44)}};}};
+ return {options,offer,data,storage,client:createSharedNativeCheckout(options),signs:()=>signs,setFailRecord:v=>failRecord=v,setFailSign:v=>failSign=v,switchWallet:()=>session={...session,wallet:'0x'+'e'.repeat(64)}};
+}
+test('concurrent payment clicks produce one signature',async()=>{const f=fixture();const results=await Promise.allSettled([f.client.pay(f.offer),f.client.pay(f.offer)]);assert.equal(results.filter(r=>r.status==='fulfilled').length,1);assert.equal(f.signs(),1);});
+test('lost recording response reconciles saved digest without another signature',async()=>{const f=fixture();f.setFailRecord(true);await assert.rejects(f.client.pay(f.offer));f.setFailRecord(false);assert.equal((await f.client.reconcile()).status,'recorded');await assert.rejects(f.client.pay(f.offer));assert.equal(f.signs(),1);});
+test('unknown signing outcome keeps durable marker and prevents another payment',async()=>{const f=fixture();f.setFailSign(true);await assert.rejects(f.client.pay(f.offer));await assert.rejects(f.client.pay(f.offer),/recover-existing/);await assert.rejects(f.client.reconcile(),/receipt-review/);assert.equal(f.signs(),1);});
+test('storage failure blocks before wallet request',async()=>{const f=fixture();f.storage.setItem=()=>{};await assert.rejects(f.client.pay(f.offer),/durable/);assert.equal(f.signs(),0);});
+test('legacy pending checkout prevents shared payment',async()=>{const f=fixture();f.data.set('treeforce89-pending-continue:'+f.offer.wallet,'legacy receipt');await assert.rejects(f.client.pay(f.offer),/recover-existing/);assert.equal(f.signs(),0);});
+test('wallet switch after signature retains original-wallet digest and denies record',async()=>{const f=fixture();const client=createSharedNativeCheckout({...f.options,signAndExecute:async()=>{f.switchWallet();return {$kind:'Transaction',Transaction:{digest:'D'.repeat(44)}};}});await assert.rejects(client.pay(f.offer),/session-changed/);assert([...f.data.values()].some(v=>JSON.parse(v).digest==='D'.repeat(44)));});
+test('expired or changed offer never signs',async()=>{const f=fixture();await assert.rejects(f.client.pay({...f.offer,expiresAt:0}));await assert.rejects(f.client.pay({...f.offer,recipient:'0x'+'e'.repeat(64)}));assert.equal(f.signs(),0);});

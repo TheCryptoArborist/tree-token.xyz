@@ -1,3 +1,15 @@
+# Bundled native offer/shared checkout rehearsal — November 24, 2026
+
+The released native offer service now runs in an isolated test bundle with the
+shared host. A separate checkout adapter records mocked payment evidence and
+reconciles without re-signing; it does not restore gameplay. All 73 unit, 38
+Netlify-role database/browser and 35 original-role database checks pass locally.
+The old checkout/UI, deployed bundle and live database are unchanged. Public UI
+wiring, cross-store pending checks, journal completion and operational cutover
+remain gates. Evidence: `docs/multichain/generation-milestone/netlify-gateway/bundled-checkout.md`.
+
+---
+
 # Native host assembly and checkout transport — November 24, 2026
 
 The source host assembles shared services against one verified database/runtime

@@ -1,5 +1,7 @@
 # Netlify schema and gateway boundary rehearsal
 
+Latest: [bundled native offer and shared checkout](bundled-checkout.md).
+
 Latest: [host assembly and canonical checkout transport](host.md).
 
 Follow-on: [authenticated composition and cutover tests](composition.md) now

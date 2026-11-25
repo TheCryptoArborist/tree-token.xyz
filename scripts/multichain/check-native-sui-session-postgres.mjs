@@ -233,6 +233,30 @@ try{
  assert.equal((await recorder({sessionHash:excess.native.sessionHash,offerId:excess.offerId,digest:excess.digest})).sequence,1);
  const over=(await owner.query('select amount,received from private.arcade_native_sui_payments where offer_id=$1',[excess.offerId])).rows[0];assert.equal(over.amount,policy.amount);assert.equal(over.received,(BigInt(policy.amount)*2n).toString());checks.push('native overpayment remains one continue with excess recorded');
 
+ if(process.env.NATIVE_BUNDLE_CHECK==='1'){
+  const {loadNativeContinueTestBundle}=await import('./load-native-continue-test-bundle.mjs');
+  const {createSharedNativeCheckout}=await import('./browser/shared-native-checkout.mjs');
+  const bundle=await loadNativeContinueTestBundle();
+  try{
+   const player=await fixture(),snapshot={runId:player.nativeRunId,seed:1,score:0,wave:1,kills:0,perfect:0,maxStage:1,shotsFired:0,shotsHit:0,start:1,mode:'ARCADE'};
+   let transaction,signatures=0;
+   const client={network:'mainnet',core:{getCoinMetadata:async()=>({coinMetadata:{decimals:6}}),getTransaction:async()=>transaction},ledgerService:{getCheckpoint:async()=>({response:{checkpoint:{sequenceNumber:'10'}}})}};
+   const nativePaidService=bundle.module.createPaidContinueService({pool,client,enabled:true,ownershipChecker:async()=>true});
+   const packagedHost=bundle.module.createNativeContinueHost({pool,nativePaidService,legacyHandler:()=>assert.fail(),verifyRuntime:async()=>({...runtime,runtimeDigest:hostDigest}),checkOwnership:options.checkOwnership,readTransaction:createMainnetTransactionReader(client),runtimeDigest:hostDigest,databaseIdentity:runtime.databaseIdentity,readMode:async()=> 'shared',readCutover:async()=>({legacyWritersDrained:true,paymentsPaused:true,runtimeDigest:hostDigest,databaseIdentity:runtime.databaseIdentity,checkedAt:Date.now(),expiresAt:Date.now()+30000})});
+   const call=async(action,input)=>{const response=await packagedHost(new Request('https://tree-token.xyz/play/treeforce89/api/shared-continue-'+action,{method:'POST',headers:{origin:'https://tree-token.xyz',authorization:'Bearer '+player.token,'content-type':'application/json'},body:JSON.stringify(input)}));assert.equal(response.status,200);return response.json();};
+   const values=new Map(),storage={getItem:k=>values.get(k)||null,setItem:(k,v)=>values.set(k,v)};
+   class Transaction {pure={address:v=>v};coin(input){assert.equal(input.balance,20000000000n);return input;}transferObjects(coins,to){assert.equal(to,policy.recipient);}}
+   const checkout=createSharedNativeCheckout({getSession:()=>({wallet:player.wallet,nativeRunId:player.nativeRunId,sessionToken:player.token,epoch:'fixture'}),transport:{offer:i=>call('offer',i),record:i=>call('record',i)},Transaction,storage,locks:{request:async(k,o,fn)=>fn()},signAndExecute:async()=>{
+    signatures++;const digest='D'+hex().replaceAll('0','1').slice(0,43);transaction={$kind:'Transaction',Transaction:{digest,status:{success:true},effects:{status:{success:true}},checkpoint:'11',timestampMs:Date.now(),transaction:{sender:player.wallet},balanceChanges:[{coinType:policy.token,address:policy.recipient,amount:policy.amount}]}};return transaction;
+   }});
+   const offer=await checkout.review(snapshot),again=await checkout.review(snapshot);assert.equal(offer.offerId,again.offerId);
+   const receipt=await checkout.pay(offer);assert.equal(receipt.status,'recorded');assert.equal(receipt.restoreAuthorized,false);
+   await assert.rejects(checkout.pay(offer),/recover-existing-payment/);assert.equal((await checkout.reconcile()).paymentId,receipt.paymentId);assert.equal(signatures,1);
+   assert.equal((await owner.query('select continuation_number from public.tree_game_sessions where session_id=$1',[player.id])).rows[0].continuation_number,0);
+   checks.push('bundled released native offer and shared checkout record one mocked chain payment; retry reconciles without re-signing or restoration');
+   console.log(JSON.stringify({nativeBundle:bundle.evidence,chainEvidence:'mocked; no wallet or network call'},null,2));
+  }finally{bundle.close();}
+ }
  if(process.env.CONTINUE_PHASER_CHECK==='1'){
   const {createRestoreAuthorization}=await import('./continue-restore-authorization.mjs');
   const {checkPhaserRestore}=await import('./check-phaser-restore.mjs');
