@@ -120,7 +120,7 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
       '/play/grove-chess/assets/woodland-court.png',
       '/play/grove-chess/index.html',
       '/play/grove-chess/style.css',
-      '/play/grove-chess/vendor/LICENSE-chess.js',
+      '/play/grove-chess/vendor/license-chess.txt',
       '/play/grove-chess/vendor/chess.js',
       '/scripts/arcade-grove-chess.js',
       '/play/tree-army/test/index.html',
