@@ -113,6 +113,16 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
   const arcadeInventory = JSON.parse(readFileSync(new URL('production/sti-wallet-recovery-release-20261118.json', root)));
   const arcadeOverlays = [
     ...[
+      '/play/grove-chess/app.js',
+      '/play/grove-chess/assets/tree-crest-pawn.png',
+      '/play/grove-chess/assets/tree-hero.webp',
+      '/play/grove-chess/assets/tree-logo.webp',
+      '/play/grove-chess/assets/woodland-court.png',
+      '/play/grove-chess/index.html',
+      '/play/grove-chess/style.css',
+      '/play/grove-chess/vendor/LICENSE-chess.js',
+      '/play/grove-chess/vendor/chess.js',
+      '/scripts/arcade-grove-chess.js',
       '/play/tree-army/test/index.html',
       '/play/tree-army/test/assets/grove-battlefield.webp',
       '/play/tree-army/test/assets/forest-army.webp',
