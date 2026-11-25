@@ -1,3 +1,15 @@
+# Mixed-chain delivery compatibility check — November 24, 2026
+
+The inspected delivery schema is Sui TREE-only and the paired identity gateway
+maps preview sessions only. Nine actual-schema checks establish that a BNB adapter
+cannot be connected unchanged. Pending ledger records now explicitly declare
+incompatibility; all 20 ledger checks still pass. No production session mapping,
+Sui/BNB delivery bridge, hosted migration or deployment is claimed. Evidence and
+the revised shared-delivery implementation sequence:
+`docs/multichain/generation-milestone/delivery-compatibility/README.md`.
+
+---
+
 # Mixed-chain checkout store source — November 24, 2026
 
 A source-only PostgreSQL adapter now atomically records signed checkouts, BNB

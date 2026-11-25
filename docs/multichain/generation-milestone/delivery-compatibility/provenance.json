@@ -1,0 +1,32 @@
+{
+  "repository": "TheCryptoArborist/tree-token.xyz",
+  "commit": "23e3f8bc216098121f966d7a11e99535cd350061",
+  "files": [
+    {
+      "source": "services/canopy-credits/direct-continue-schema.sql",
+      "snapshot": "docs/multichain/generation-milestone/delivery-compatibility/upstream/direct-continue-schema.sql",
+      "sha256": "dd62536f902080a2828f21914120ef1e6723efc2007111514fb37e64655cfe21"
+    },
+    {
+      "source": "services/canopy-credits/migrations/flight-storage-v1.sql",
+      "snapshot": "docs/multichain/generation-milestone/delivery-compatibility/upstream/flight-storage-v1.sql",
+      "sha256": "be001f0ac242c8010661e4efd822a9305ebc0a214d47b694bc6b87d5d03d8eae"
+    },
+    {
+      "source": "services/canopy-credits/migrations/paid-delivery-v1.sql",
+      "snapshot": "docs/multichain/generation-milestone/delivery-compatibility/upstream/paid-delivery-v1.sql",
+      "sha256": "452559543564bf3003a2183abf9571a27d2a29f14570f6444d6eb0996c1f061f"
+    },
+    {
+      "source": "services/canopy-credits/continue-gateway.mjs",
+      "snapshot": "docs/multichain/generation-milestone/delivery-compatibility/upstream/continue-gateway.mjs",
+      "sha256": "e25f2f8f4bfd085f6764a625228f153a9e1c31a8aa30ac6e42cc9c67ce4cb375"
+    },
+    {
+      "source": "netlify/lib/tree-account-core.mjs",
+      "snapshot": "docs/multichain/generation-milestone/delivery-compatibility/upstream/tree-account-core.mjs",
+      "sha256": "bb2da6459e7de0bc701898207fa969818353dfc8c3262ffd742176e4699d2957"
+    }
+  ],
+  "purpose": "read-only compatibility fixtures; not deployment inputs"
+}

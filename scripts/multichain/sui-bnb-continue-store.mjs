@@ -108,7 +108,8 @@ export function createPostgresContinueStore({pool, lockSuiRun}) {
           join private.arcade_bnb_continue_delivery_pending d using(checkout_id) where r.checkout_id=$1 and d.state='pending-review'`,[id]);
         check(row.status==='paid-review' && result.rows.length===1,'payment-not-recorded');
         const r=result.rows[0];
-        return {protocol:'tree-paid-delivery.v1',checkoutId:id,accountId:row.accountId,runId:row.runId,
+        return {protocol:'tree-mixed-payment-review.v1',targetDeliveryProtocol:'tree-paid-delivery.v1',
+          deliveryCompatible:false,compatibilityReason:'sui-only-order-and-preview-identity',checkoutId:id,accountId:row.accountId,runId:row.runId,
           accessWallet:{family:'sui',address:row.suiWallet},payment:{network:'eip155:56',payer:row.payer,
             token:row.paymentTerms.token,amountRaw:row.paymentTerms.amount,recipient:row.paymentTerms.treasury,
             receiptId:r.payment_key,txHash:r.tx_hash,blockHash:r.block_hash},

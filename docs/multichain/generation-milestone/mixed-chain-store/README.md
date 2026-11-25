@@ -1,3 +1,5 @@
+> Integration inspection found that the target is Sui-only and its identity gateway is preview-only. See [compatibility evidence and revised plan](../delivery-compatibility/README.md). Pending records now use `tree-mixed-payment-review.v1` and explicitly declare `deliveryCompatible:false`.
+
 # Durable mixed-chain checkout and receipt ledger — source only
 
 This implements the store contract for the [Sui-access / BNB-USDT continue
