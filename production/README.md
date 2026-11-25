@@ -1,3 +1,16 @@
+# Authenticated BNB checkout boundary — November 24, 2026
+
+Source-only host/HTTP/transport actions now connect wallet-link challenge,
+signature verification and BNB receipt reconciliation to native sessions. Exact
+request fields and bearer/origin checks reject injected identity or payment terms;
+responses remain review-only. Local validation passed: 86 unit tests, 43 Netlify
+mode and 39 restricted-role database checks, including the native host/HTTP path
+with test signatures and synthetic chain evidence. No route, wallet UI, database
+migration, payment or gameplay change was deployed. Setup, evidence and remaining
+work: `docs/multichain/generation-milestone/netlify-gateway/bnb-http.md`.
+
+---
+
 # Native BNB checkout/session bridge — November 24, 2026
 
 The v2 BNB coordinator now has a source-only bridge to real native session/run

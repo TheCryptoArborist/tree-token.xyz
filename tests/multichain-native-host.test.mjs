@@ -3,7 +3,7 @@ import {createNativeContinueHost} from '../scripts/multichain/native-continue-ho
 import {createNativeContinueTransport} from '../scripts/multichain/browser/native-continue-transport.mjs';
 const origin='https://tree-token.xyz',session={sessionToken:'a'.repeat(64),nativeRunId:'grove-'+'b'.repeat(32),epoch:'first',expiresAt:Date.now()+60000};
 const response=()=>Response.json({restoreAuthorized:false,status:'recorded'});
-for(const action of ['offer','record','recover','prepare','activate'])test('canonical '+action+' transport sends once without cookies or redirects',async()=>{
+for(const action of ['bnb-challenge','bnb-open','bnb-reconcile','offer','record','recover','prepare','activate'])test('canonical '+action+' transport sends once without cookies or redirects',async()=>{
  let count=0;const transport=createNativeContinueTransport({origin,getSession:()=>session,fetch:async(url,options)=>{count++;assert.equal(url,origin+'/play/treeforce89/api/shared-continue-'+action);assert.equal(options.headers.Authorization,'Bearer '+session.sessionToken);assert.equal(options.credentials,'omit');assert.equal(options.redirect,'error');return response();}});
  await transport[action]({runId:session.nativeRunId});assert.equal(count,1);
 });
@@ -46,4 +46,11 @@ test('changed shared run during response parsing is rejected',async()=>{
  let current={...session,runId:'first'};
  const transport=createNativeContinueTransport({origin,getSession:()=>current,fetch:async()=>({ok:true,json:async()=>{current={...current,runId:'second'};return {restoreAuthorized:false};}})});
  await assert.rejects(transport.recover({}),/session-changed/);
+});
+test('BNB signature transport permits bounded larger body and rejects restoration',async()=>{
+ let calls=0;const transport=createNativeContinueTransport({origin,getSession:()=>session,fetch:async()=>{calls++;return response();}});
+ await transport['bnb-open']({suiSignature:'A'.repeat(5000)});
+ await assert.rejects(transport['bnb-open']({suiSignature:'A'.repeat(9000)}),/request-too-large/);assert.equal(calls,1);
+ const bad=createNativeContinueTransport({origin,getSession:()=>session,fetch:async()=>Response.json({restoreAuthorized:true})});
+ for(const action of ['bnb-challenge','bnb-open','bnb-reconcile'])await assert.rejects(bad[action]({}),/invalid-continue-response/);
 });
