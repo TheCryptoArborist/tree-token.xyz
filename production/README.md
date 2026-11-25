@@ -1,3 +1,15 @@
+# Browser continue restoration source — November 24, 2026
+
+An isolated browser controller and native render adapter now cover persistent
+restore-attempt journalling, cross-tab locking and interrupted-response handling.
+Seventeen headless Chromium checks passed with all requests intercepted; no live
+site or wallet requests occurred. Native helpers and scene props are tested, not
+a full Phaser mount. Current shadow responses are rejected before activation.
+No deployment, payment or existing gameplay changed. Evidence and release gates:
+`docs/multichain/generation-milestone/browser-restoration/README.md`.
+
+---
+
 # Native Sui payment evidence source — November 24, 2026
 
 Native Sui TREE verification now records immutable payment evidence and a shared
