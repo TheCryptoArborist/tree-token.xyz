@@ -1,3 +1,39 @@
+# Profile Studio movable badges — published November 25, 2026
+
+[Profile Studio](https://tree-token.xyz/play/profile-studio/) lets users drag the
+badge or adjust its left/right and up/down sliders. The **Badge** panel below
+the preview also has size and reset controls. Badge edits leave the photo's
+crop unchanged; artwork stays inside the circular export. Positioning works
+before photo upload and is retained in both PNG downloads.
+
+Deploy `6b067ef9d3a45ad909958ce7` published at **00:35:30 America/Chicago**
+(`2026-11-25T06:35:30.534Z`), verified ready and locked.
+Source PR #325: `e35976f8e6ea6641a0d8a4bfeee0be1ed432f5a0`, merged as
+`71aecb1e30af8bf1181645b6710c0f473400193a`.
+[Publication run 45561601550](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45561601550) passed.
+
+Fresh baseline `6b067d4aeb466ab5049cf6d9`; **779 total static paths**,
+**775 existing paths preserved**, **61 complete backend/provider records**
+and **5 schedules** preserved with protected configuration. Only Studio HTML
+was replaced; added JS v18, the badge-position helper and CSS v11. The shared
+photo-fitting helper remains byte-identical. No backend packages were rebuilt.
+
+All 26 geometry tests and source PR checks passed. Actual candidate checks
+covered the user's portrait, badge sliders/size/reset/drag, unchanged photo
+values, 375px and 1348px layouts, and both 1024 × 1024 RGBA PNG exports.
+Phone-width badge-only dragging passed in the same-source local preview.
+Physical iPhone touch gestures were not exercised. Canonical Badge controls
+were observed after publication; canonical asset bytes passed verification.
+
+Full static manifest and provenance:
+`production/profile-studio-badge-position-release-20261125.json`.
+Browser evidence: `docs/profile-studio-badge-position-validation.json`.
+Publication artifact #14998057106 SHA256:
+`492e4188eacb57c20709ebcff0d48eba7c5576a93186af7c4e05ad265588bd4e`.
+Capture a fresh full live baseline before every subsequent release.
+
+---
+
 # Grove Chess trial, NFTree finishes and cabinet cover — published November 25, 2026
 
 Two games per browser are included; NFTree ownership is required afterward.
