@@ -253,8 +253,8 @@ try{
  let linkedOwnership=true,linkedCheckpoint=true,linkedBadHash=false,linkedProof;
  const linkedSnapshot=JSON.stringify({format:'treeforce89.checkpoint.v1',ruleset:'treeforce89.v1',runId:linkedMap.runId,lives:0,continuesUsed:0,nativeSnapshot:{runId:linked.nativeRunId,seed:1,score:0,wave:1,kills:0,perfect:0,maxStage:1,shotsFired:0,shotsHit:0,start:1,mode:'ARCADE'}});
  const bnbGateway=createNativeContinueHost({pool,legacyHandler:()=>assert.fail('no legacy fallback'),nativePaidService:{offer:()=>{throw Error('not used');}},verifyRuntime:async()=>({...runtime,runtimeDigest:hostDigest}),checkOwnership:async()=>({owned:linkedOwnership,checkedAt:Date.now()}),readReviewedCheckpoint:async()=>linkedCheckpoint?{validated:true,snapshotText:linkedSnapshot,hash:linkedBadHash?hex():sha(linkedSnapshot)}:null,readBnbPayment:async()=>linkedProof,readTransaction:reader,runtimeDigest:hostDigest,databaseIdentity:runtime.databaseIdentity,readMode:async()=> 'shared',readCutover:async()=>({legacyWritersDrained:true,paymentsPaused:true,runtimeDigest:hostDigest,databaseIdentity:runtime.databaseIdentity,checkedAt:Date.now(),expiresAt:Date.now()+30000})});
- const nativeBnb=Object.fromEntries(['challenge','open','reconcile'].map(action=>[action,async input=>{
-  const keys={challenge:['payer'],open:['id','suiSignature','bnbSignature'],reconcile:['id','txHash']}[action];
+ const nativeBnb=Object.fromEntries(['context','challenge','open','reconcile'].map(action=>[action,async input=>{
+  const keys={context:[],challenge:['payer'],open:['id','suiSignature','bnbSignature'],reconcile:['id','txHash']}[action];
   const response=await bnbGateway(new Request('https://tree-token.xyz/play/treeforce89/api/shared-continue-bnb-'+action,{method:'POST',headers:{origin:input.origin,authorization:'Bearer '+input.sessionToken,'content-type':'application/json'},body:JSON.stringify(Object.fromEntries(keys.map(k=>[k,input[k]])))}));
   const result=await response.json();if(response.status!==200)throw Error(result.code);assert.equal(result.paymentEnabled,false);assert.equal(result.restoreAuthorized,false);return result;
  }]));
@@ -263,6 +263,8 @@ try{
  linkedBadHash=true;await assert.rejects(nativeBnb.challenge(linkedInput),/REVIEW_REQUIRED/);linkedBadHash=false;
  linkedCheckpoint=false;await assert.rejects(nativeBnb.challenge(linkedInput),/REVIEW_REQUIRED/);linkedCheckpoint=true;
  linkedOwnership=false;await assert.rejects(nativeBnb.challenge(linkedInput),/REVIEW_REQUIRED/);linkedOwnership=true;
+ const authenticatedContext=await nativeBnb.context(linkedInput);assert.equal(authenticatedContext.runId,linkedMap.runId);assert.equal(authenticatedContext.suiWallet,nativeSuiKey.toSuiAddress());assert.equal(authenticatedContext.nativeRunId,linked.nativeRunId);assert(!('sessionToken' in authenticatedContext));
+ linkedOwnership=false;await assert.rejects(nativeBnb.context(linkedInput),/REVIEW_REQUIRED/);linkedOwnership=true;checks.push('authenticated BNB context returns native mapping without bearer and rejects lost ownership');
  const linkedChallenge=await nativeBnb.challenge(linkedInput);
  const linkedSigned={...linkedInput,id:linkedChallenge.id,suiSignature:(await nativeSuiKey.signPersonalMessage(new TextEncoder().encode(linkedChallenge.message))).signature,bnbSignature:await nativeEvmKey.signMessage({message:linkedChallenge.message})};
  linkedOwnership=false;await assert.rejects(nativeBnb.open(linkedSigned),/REVIEW_REQUIRED/);linkedOwnership=true;

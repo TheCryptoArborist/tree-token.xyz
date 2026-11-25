@@ -43,8 +43,8 @@ test('draining denies new payments but cannot cancel a previously admitted legac
  mode='shared';assert.equal((await gateway(req('record',inputs.record))).status,503);
 });
 
-const bnbInputs={'bnb-challenge':{payer:'0x'+'a'.repeat(40)},'bnb-open':{id:'b'.repeat(64),suiSignature:'YWJj',bnbSignature:'0x'+'c'.repeat(130)},'bnb-reconcile':{id:'b'.repeat(64),txHash:'0x'+'d'.repeat(64)}};
-function bnbSetup(service,enabled=true){const fn=async()=>({});return createNativeContinueComposition({legacyHandler:()=>assert.fail('legacy called'),readMode:async()=> 'shared',readCutover:async()=>({legacyWritersDrained:true,paymentsPaused:true,runtimeDigest:'1'.repeat(64),databaseIdentity:'2'.repeat(64),checkedAt:Date.now(),expiresAt:Date.now()+30000}),authorization:{prepare:fn,activate:fn},recordPayment:fn,recoverPayment:fn,nativeOffer:fn,...(enabled?{bnbCheckout:{challenge:service,open:service,reconcile:service}}:{})});}
+const bnbInputs={'bnb-context':{},'bnb-challenge':{payer:'0x'+'a'.repeat(40)},'bnb-open':{id:'b'.repeat(64),suiSignature:'YWJj',bnbSignature:'0x'+'c'.repeat(130)},'bnb-reconcile':{id:'b'.repeat(64),txHash:'0x'+'d'.repeat(64)}};
+function bnbSetup(service,enabled=true){const fn=async()=>({});return createNativeContinueComposition({legacyHandler:()=>assert.fail('legacy called'),readMode:async()=> 'shared',readCutover:async()=>({legacyWritersDrained:true,paymentsPaused:true,runtimeDigest:'1'.repeat(64),databaseIdentity:'2'.repeat(64),checkedAt:Date.now(),expiresAt:Date.now()+30000}),authorization:{prepare:fn,activate:fn},recordPayment:fn,recoverPayment:fn,nativeOffer:fn,...(enabled?{bnbCheckout:{context:service,challenge:service,open:service,reconcile:service}}:{})});}
 for(const [action,input] of Object.entries(bnbInputs)){
  test(action+' derives credentials, projects response and forces review-only flags',async()=>{
   let calls=0;const gateway=bnbSetup(async got=>{calls++;assert.deepEqual(got,{...input,sessionToken:token,origin:'https://tree-token.xyz'});return {id:input.id,message:'link',paymentVerified:true,sessionToken:token,checkpoint:'secret',paymentEnabled:true,continueAuthorized:true,gameplayAuthorized:true,restoreAuthorized:true};});
@@ -57,7 +57,7 @@ for(const [action,input] of Object.entries(bnbInputs)){
   for(const field of ['sessionToken','origin','runId','accountId','deliveryProtocol','amount'])assert.equal((await gateway(req(action,{...input,[field]:'injected'}))).status,400);
   assert.equal((await gateway(req(action,input,{authorization:''}))).status,401);
   assert.equal((await gateway(req(action,input,{origin:'https://evil.test'}))).status,403);
-  assert.equal((await gateway(req(action,{}))).status,400);
+  assert.equal((await gateway(req(action,action==='bnb-context'?[]:{}))).status,400);
   assert.equal((await gateway(req(action,{...input,padding:'x'.repeat(9000)}))).status,400);
   assert.equal(calls,0);
  });

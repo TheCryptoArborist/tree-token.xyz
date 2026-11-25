@@ -1,3 +1,16 @@
+# BNB authenticated context and wallet adapters — November 25, 2026
+
+Undeployed context/assembly code now binds the review controller to authenticated
+native run identity and selected Sui/BNB wallets. Personal-message adapters check
+accounts/networks before and after signing and invalidate results on wallet events.
+Local checks passed: 66 unit, 43 Netlify-mode database/bundle, 40 restricted-role
+and six Chromium regression checks. Real disposable-key signatures verify against
+the server; no extension or live chain transaction was exercised. No deployment,
+payment, gameplay or existing wallet integration changed. Setup and remaining
+host mounting/launch gates: `docs/multichain/generation-milestone/netlify-gateway/bnb-context-wallets.md`.
+
+---
+
 # BNB wallet-link review controls — November 24, 2026
 
 An undeployed controller/DOM component now displays the exact wallet-link message,

@@ -1,5 +1,7 @@
 # Netlify schema and gateway boundary rehearsal
 
+Latest: [authenticated context and wallet adapters](bnb-context-wallets.md).
+
 Latest: [wallet-link and checkout review UI](bnb-review-ui.md).
 
 Latest: [authenticated BNB checkout boundary](bnb-http.md).

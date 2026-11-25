@@ -33,5 +33,10 @@ export function createNativeBnbCheckout({pool,verifyRuntime,checkOwnership,readR
   }catch(error){await db.query('rollback').catch(()=>{});throw error;}finally{db.release();}
  };
  const store=createPostgresContinueStore({pool,lockSuiRun,deliveryProtocol});
- return createSuiBnbContinue({readSuiRun,store,readPayment,deliveryProtocol});
+ const coordinator=createSuiBnbContinue({readSuiRun,store,readPayment,deliveryProtocol});
+ return Object.freeze({...coordinator,async context({sessionToken}){
+  const s=await readSuiRun(sessionToken);
+  if(!s.continueAllowed||s.expiresAt<=Date.now())throw Error('continue-denied');
+  return {suiWallet:s.suiWallet,accountId:s.accountId,runId:s.runId,nativeRunId:s.nativeRunId,sequence:s.sequence,expiresAt:s.expiresAt,network:'sui:mainnet'};
+ }});
 }

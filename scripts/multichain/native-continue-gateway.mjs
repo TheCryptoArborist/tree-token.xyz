@@ -2,6 +2,7 @@
 // No route registration or default activation. The new shared client is required.
 const prefix='/play/treeforce89/api/';
 const sharedPaths={
+ 'shared-continue-bnb-context':'bnb-context',
  'shared-continue-bnb-challenge':'bnb-challenge','shared-continue-bnb-open':'bnb-open','shared-continue-bnb-reconcile':'bnb-reconcile',
  'shared-continue-bnb-record':'bnb-record',
  'shared-continue-complete':'complete',

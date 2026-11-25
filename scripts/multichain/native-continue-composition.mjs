@@ -2,6 +2,7 @@
 import {createRestoreHttpHandler} from './continue-restore-http.mjs';
 import {createNativeContinueGateway} from './native-continue-gateway.mjs';
 const outputFields={
+ 'bnb-context':['suiWallet','accountId','runId','nativeRunId','sequence','expiresAt','network'],
  'bnb-challenge':['id','message','expiresAt'],
  'bnb-open':['id','product','restoreLives','chainId','token','recipient','amount','notBefore','data','expiresAt'],
  'bnb-reconcile':['id','paymentVerified'],
@@ -13,10 +14,10 @@ const outputFields={
 };
 export function createNativeContinueComposition({legacyHandler,readMode,authorization,recordPayment,recoverPayment,nativeOffer,bnbCheckout,recordBnbPayment=async()=>{throw Error('bnb-record-disabled');},completePayment=async()=>{throw Error('completion-disabled');},readCutover=async()=>null,clock=()=>Date.now()}){
  const bnbAction=method=>input=>{if(typeof bnbCheckout?.[method]!=='function')throw Error('bnb-checkout-disabled');return bnbCheckout[method](input);};
- const services={'bnb-challenge':bnbAction('challenge'),'bnb-open':bnbAction('open'),'bnb-reconcile':bnbAction('reconcile'),'bnb-record':recordBnbPayment,complete:completePayment,prepare:authorization?.prepare?.bind(authorization),activate:authorization?.activate?.bind(authorization),record:recordPayment,recover:recoverPayment,offer:nativeOffer};
+ const services={'bnb-context':bnbAction('context'),'bnb-challenge':bnbAction('challenge'),'bnb-open':bnbAction('open'),'bnb-reconcile':bnbAction('reconcile'),'bnb-record':recordBnbPayment,complete:completePayment,prepare:authorization?.prepare?.bind(authorization),activate:authorization?.activate?.bind(authorization),record:recordPayment,recover:recoverPayment,offer:nativeOffer};
  if(!Object.values(services).every(fn=>typeof fn==='function'))throw Error('complete-native-services-required');
  const actions={...services};
- for(const action of ['bnb-challenge','bnb-open','bnb-reconcile','bnb-record','complete','record','recover','offer'])actions[action]=async input=>{
+ for(const action of ['bnb-context','bnb-challenge','bnb-open','bnb-reconcile','bnb-record','complete','record','recover','offer'])actions[action]=async input=>{
   const result=await services[action](input);
   if(!result||typeof result!=='object')throw Error('service-result-required');
   // Offer/record/recover never release a checkpoint or expose service credentials.
