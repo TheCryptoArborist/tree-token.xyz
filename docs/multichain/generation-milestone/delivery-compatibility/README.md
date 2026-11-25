@@ -89,3 +89,5 @@ localhost databases, no hosted credentials. Upstream snapshots are hash-checked
 before execution. `postgres-validation.json` and `ledger-regression.json` retain
 the results. CI includes both. The current Mysten skills README was refreshed;
 this work introduces no Sui SDK, signature, on-chain read or transaction change.
+
+Hosted [CI 45515841710](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45515841710) passed on `9c8a5f4`, including nine compatibility checks, 20 ledger checks and existing contract/endpoint regressions. Passing means the incompatibility is reproducible and guarded; it does not mean the BNB delivery integration is enabled.
