@@ -52,7 +52,7 @@ try{for(const [width,height]of [[1440,1000],[390,844],[320,740],[844,390]]){
  }
  await page.goto(base+'/play/#games',{waitUntil:'networkidle'});
  const cabinet=page.locator('.poster--grove-chess');await cabinet.waitFor();assert.equal(await cabinet.count(),1);
- assert((await cabinet.locator('img').getAttribute('src')).endsWith('/grove-chess-cover.png'));await cabinet.locator('img').evaluate(i=>i.decode());
+ assert((await cabinet.locator('img').getAttribute('src')).endsWith('/grove-chess-cover.png'));await cabinet.scrollIntoViewIfNeeded();await page.waitForFunction(()=>{const i=document.querySelector('.poster--grove-chess img');return i.complete&&i.naturalWidth>0;});
  assert.equal(await cabinet.locator('.poster-genre').count(),0,'No canopy-defense slogan on the chess cabinet');
  assert.equal(await page.locator('#reserved-2-title').textContent(),'Tree Army');
  assert.equal(await page.locator('#reserved-3-title').textContent(),'GROVE CHESS');
