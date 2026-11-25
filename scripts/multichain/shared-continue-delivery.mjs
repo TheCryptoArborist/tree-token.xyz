@@ -79,7 +79,7 @@ export function createSharedContinueDelivery({pool,lockSessionAndFlight,loadPaym
   const c=s.checkpoint;check(s.entitled===true&&Number.isSafeInteger(s.entitlementCheckedAt)&&s.entitlementCheckedAt<=now&&now-s.entitlementCheckedAt<=5000&&c?.validated===true&&typeof c.snapshotText==='string'&&Buffer.byteLength(c.snapshotText)<=262144&&sha(c.snapshotText)===c.hash,'unreviewed-checkpoint');
   const p=JSON.parse(c.snapshotText);check(p.runId===s.runId&&p.ruleset==='treeforce89.v1'&&p.format==='treeforce89.checkpoint.v1'&&p.lives===0&&Number.isSafeInteger(p.continuesUsed)&&p.continuesUsed>=0&&p.continuesUsed<2147483647&&p.finished!==true,'invalid-checkpoint');return {...c,sequence:p.continuesUsed+1};
  }
- const response=(s,extra={})=>({protocol:'tree-paid-delivery.v2',runId:s.runId,requiresPayment:false,restoreAuthorized:false,...extra});
+ const response=(s,extra={})=>({protocol:'tree-paid-delivery.v2',runId:s.runId,nativeRunId:s.nativeRunId,requiresPayment:false,restoreAuthorized:false,...extra});
  return Object.freeze({
   async importPayment(input){
    check(Object.hasOwn(PAYMENT_TERMS_V2,input.source),'invalid-payment-source');

@@ -1,1 +1,11 @@
-{"name":"tree-continue-browser-test","private":true,"version":"1.0.0","type":"module","dependencies":{"playwright":"1.62.1"}}
+{
+  "name": "tree-continue-browser-test",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "playwright": "1.62.1",
+    "phaser": "3.90.0",
+    "esbuild": "0.21.5"
+  }
+}

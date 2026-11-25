@@ -1,0 +1,46 @@
+{
+  "commit": "9974d7f0b5c03b9621561d15a8040e8bf558e1db",
+  "files": [
+    {
+      "path": "treeforce89/frontend/game/arcade.ts",
+      "snapshot": "upstream/arcade.ts",
+      "sha256": "77e6221da789cbd229fee257b1f892256a363108f2923955d6bcab3f65596509"
+    },
+    {
+      "path": "treeforce89/frontend/game/audio-cues.mjs",
+      "snapshot": "upstream/audio-cues.mjs",
+      "sha256": "c30968cf06814b3112327b23062d817d99608072581da9f56900af56f92d49c3"
+    },
+    {
+      "path": "treeforce89/frontend/game/chapter-rules.mjs",
+      "snapshot": "upstream/chapter-rules.mjs",
+      "sha256": "c392ee97d005af0a6663c9eecd696b073076db24f7c08631d0246dcc50828ab1"
+    },
+    {
+      "path": "treeforce89/frontend/game/config.ts",
+      "snapshot": "upstream/config.ts",
+      "sha256": "d63544cd5a7e22dbb2d8a8255ae3ad2174724a59cf52e7ef77c16d86fb64637c"
+    },
+    {
+      "path": "treeforce89/frontend/game/gameplay-rules.mjs",
+      "snapshot": "upstream/gameplay-rules.mjs",
+      "sha256": "1d00fe83f397e762f63076df8a1237ec3e8f4ab0fc19adbf932f1490b7b8137a"
+    },
+    {
+      "path": "treeforce89/pinned-frontend/app/game/events.ts",
+      "snapshot": "upstream/events.ts",
+      "sha256": "916f7c957307adee0c6d3826a8889db105118de0130c8786f3fc2726b08f3e3d"
+    },
+    {
+      "path": "treeforce89/pinned-frontend/app/game/rng.ts",
+      "snapshot": "upstream/rng.ts",
+      "sha256": "5456aaf0e0d84c148fbce2ec873657137cfdb0b6988d8f03b0eb7abfd428162b"
+    },
+    {
+      "path": "treeforce89/pinned-frontend/app/game/run-restart.mjs",
+      "snapshot": "upstream/run-restart.mjs",
+      "sha256": "7a4aa66e18b5c908142394a0e443cd17285b1c5c05ff3d56474c045437cfb023"
+    }
+  ],
+  "currentProductionParityVerified": false
+}

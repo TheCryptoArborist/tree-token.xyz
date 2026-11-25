@@ -1,0 +1,28 @@
+{
+  "localOnly": true,
+  "browser": "156.0.8078.79",
+  "passed": 18,
+  "checks": [
+    "12 clicks activate and enqueue native restore once, preserving progress and scene props",
+    "refreshed page cannot replay a completed restore",
+    "real Web Locks and localStorage serialize two tabs for the same run/sequence",
+    "shadow prevents activation and rendering",
+    "tamper prevents activation and rendering",
+    "wrong-run prevents activation and rendering",
+    "expired prevents activation and rendering",
+    "wrong-sequence prevents activation and rendering",
+    "session-change prevents activation and rendering",
+    "storage-failure prevents activation and rendering",
+    "lost-response leaves durable review marker and cannot retry after reload",
+    "activation-denied leaves durable review marker and cannot retry after reload",
+    "stale-activation leaves durable review marker and cannot retry after reload",
+    "stale-policy leaves durable review marker and cannot retry after reload",
+    "activation-session-change leaves durable review marker and cannot retry after reload",
+    "renderer-failure leaves durable review marker and cannot retry after reload",
+    "separate paid sequence permits one further restore of the same run",
+    "missing cross-tab lock support fails closed"
+  ],
+  "liveRequests": 0,
+  "authorization": "explicit test fixtures only",
+  "liveRestorationEnabled": false
+}

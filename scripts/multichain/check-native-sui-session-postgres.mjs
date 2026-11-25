@@ -199,5 +199,24 @@ try{
  const excess=await paymentFixture();excess.body.Transaction.balanceChanges[0].amount=(BigInt(policy.amount)*2n).toString();evidence=excess.body;
  assert.equal((await recorder({sessionHash:excess.native.sessionHash,offerId:excess.offerId,digest:excess.digest})).sequence,1);
  const over=(await owner.query('select amount,received from private.arcade_native_sui_payments where offer_id=$1',[excess.offerId])).rows[0];assert.equal(over.amount,policy.amount);assert.equal(over.received,(BigInt(policy.amount)*2n).toString());checks.push('native overpayment remains one continue with excess recorded');
+
+ if(process.env.CONTINUE_PHASER_CHECK==='1'){
+  const {createRestoreAuthorization}=await import('./continue-restore-authorization.mjs');
+  const {checkPhaserRestore}=await import('./check-phaser-restore.mjs');
+  const browserResults=[];
+  for(const source of ['sui-native-tree','bnb-usdt']){
+   const actor=await fixture(),mapping=await tx(db=>adapter.bind(db,actor)),sourceId=hex();
+   const snapshotText=JSON.stringify({format:'treeforce89.checkpoint.v1',ruleset:'treeforce89.v1',runId:mapping.runId,lives:0,continuesUsed:0,nativeSnapshot:{runId:actor.nativeRunId,seed:12,score:55,wave:2,kills:6,perfect:1,maxStage:2,shotsFired:10,shotsHit:8,start:100,mode:'ARCADE'}});
+   const authAdapter=createNativeSuiSessionAdapter({...options,readReviewedCheckpoint:async()=>({validated:true,snapshotText,hash:sha(snapshotText)})});
+   const delivery=createSharedContinueDelivery({pool,lockSessionAndFlight:authAdapter.lockSessionAndFlight,consumeRun:authAdapter.consumeRun,settlePayment:async()=>{},loadPayment:async()=>({accountId:mapping.accountId,runId:mapping.runId,suiWallet:actor.wallet,sequence:1,receiptId:source+':'+hex(),payment:{...PAYMENT_TERMS_V2[source],payer:source.startsWith('sui-')?actor.wallet:'0x'+hex().slice(0,40)}})});
+   const payment=await delivery.importPayment({sessionHash:actor.sessionHash,runId:mapping.runId,source,sourceId});
+   const authorization=createRestoreAuthorization({delivery,readReleasePolicy:async()=>({enabled:true,runtimeVerified:true,origin:'https://tree-token.xyz',environment:'isolated-test',checkpointPolicy:'native-client-nonreward-v1',releaseId:'1'.repeat(64),sourceCommit:provenance.commit,gameCodeHash:sha(fs.readFileSync('docs/multichain/generation-milestone/phaser-restoration/provenance.json')),checkedAt:Date.now(),expiresAt:Date.now()+60000})});
+   browserResults.push({source,...await checkPhaserRestore({authorization,sessionHash:actor.sessionHash,paymentId:payment.paymentId,session:{accountId:mapping.accountId,runId:mapping.runId,nativeRunId:actor.nativeRunId,epoch:'isolated-fixture',expiresAt:(await owner.query('select expires_at from public.tree_game_sessions where session_id=$1',[actor.id])).rows[0].expires_at.getTime()}})});
+   assert.equal((await owner.query('select continuation_number from public.tree_game_sessions where session_id=$1',[actor.id])).rows[0].continuation_number,1);
+   assert.equal((await owner.query("select count(*)::int n from private.arcade_continue_claims_v2 where run_id=$1 and state='started'",[mapping.runId])).rows[0].n,1);
+  }
+  checks.push('Sui and BNB typed payments each traverse real shared PostgreSQL consumption and actual Phaser restore once');
+  console.log(JSON.stringify({phaserResults:browserResults,localOnly:true,releasePolicy:'isolated fixture only'},null,2));
+ }
  console.log(JSON.stringify({localOnly:true,passed:checks.length,checks,nativeSourceCommit:provenance.commit,productionParityVerified:false,liveRestorationEnabled:false},null,2));
 }catch(error){if(!started&&fs.existsSync(path.join(dir,'log')))process.stderr.write(fs.readFileSync(path.join(dir,'log'),'utf8'));throw error;}finally{await pool?.end();await owner?.end();if(started)execFileSync(exe('pg_ctl'),['-D',data,'-m','immediate','-w','stop'],{env,stdio:'pipe'});fs.rmSync(dir,{recursive:true,force:true});}

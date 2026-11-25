@@ -1,0 +1,21 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
+import {createRestoreAuthorization} from '../scripts/multichain/continue-restore-authorization.mjs';
+const runId='22222222-2222-4222-8222-222222222222',paymentId='33333333-3333-4333-8333-333333333333',nativeRunId='grove-'+'a'.repeat(32);
+function fixture(){let now=100000,enabled=true,calls=0;const p={enabled:true,runtimeVerified:true,origin:'https://tree-token.xyz',environment:'isolated-test',checkpointPolicy:'native-client-nonreward-v1',releaseId:'1'.repeat(64),sourceCommit:'a'.repeat(40),gameCodeHash:'2'.repeat(64)};
+ const nativeSnapshot={runId:nativeRunId,seed:1,score:55,wave:2,kills:6,perfect:1,maxStage:2,shotsFired:10,shotsHit:8,start:100,mode:'ARCADE'};
+ const snapshotText=JSON.stringify({format:'treeforce89.checkpoint.v1',ruleset:'treeforce89.v1',runId,lives:0,continuesUsed:0,nativeSnapshot});
+ const prepared={protocol:'tree-paid-delivery.v2',status:'prepared',runId,paymentId,nativeRunId,sequence:1,snapshotText,checkpointHash:createHash('sha256').update(snapshotText).digest('hex'),restoreAuthorized:false};
+ const delivery={prepare:async()=>{calls++;return prepared;},activate:async i=>{calls++;return {protocol:'tree-paid-delivery.v2',runId,status:'started',activationId:i.requestId,sequence:1,consumed:true};}};
+ const readReleasePolicy=async()=>({...p,enabled,checkedAt:now,expiresAt:now+60000});
+ return {p,prepared,delivery,readReleasePolicy,clock:()=>now,disable:()=>enabled=false,calls:()=>calls};
+}
+test('default boundary denies before touching delivery',async()=>{const f=fixture(),s=createRestoreAuthorization({delivery:f.delivery});assert.equal((await s.prepare({runId,paymentId})).restoreAuthorized,false);assert.equal(f.calls(),0);});
+test('approved policy binds prepare and first consumed activation',async()=>{const f=fixture(),s=createRestoreAuthorization(f),p=await s.prepare({runId,paymentId});assert.equal(p.restoreAuthorized,true);assert.equal((await s.activate({runId,requestId:'fixture',policyDigest:p.policyDigest})).restoreAuthorized,true);});
+test('release change between prepare and activation blocks consumption',async()=>{const f=fixture(),s=createRestoreAuthorization(f),p=await s.prepare({runId,paymentId});f.p.releaseId='3'.repeat(64);assert.equal((await s.activate({runId,policyDigest:p.policyDigest})).restoreAuthorized,false);assert.equal(f.calls(),1);});
+test('disable after consumption denies grant without pretending rollback',async()=>{const f=fixture(),s=createRestoreAuthorization(f),p=await s.prepare({runId,paymentId});f.delivery.activate=async i=>{f.disable();return {protocol:'tree-paid-delivery.v2',runId,status:'started',activationId:i.requestId,consumed:true};};assert.equal((await s.activate({runId,requestId:'fixture',policyDigest:p.policyDigest})).restoreAuthorized,false);});
+test('replay review result cannot become a new restore grant',async()=>{const f=fixture(),s=createRestoreAuthorization(f),p=await s.prepare({runId,paymentId});f.delivery.activate=async()=>({status:'review-required'});assert.equal((await s.activate({runId,policyDigest:p.policyDigest})).restoreAuthorized,false);});
+for(const [name,patch]of [['unverified runtime',{runtimeVerified:false}],['wrong origin',{origin:'https://example.com'}],['unknown checkpoint trust policy',{checkpointPolicy:'anything'}]])test(name+' denies preparation',async()=>{const f=fixture();Object.assign(f.p,patch);assert.equal((await createRestoreAuthorization(f).prepare({runId,paymentId})).restoreAuthorized,false);assert.equal(f.calls(),0);});
+test('native run mismatch cannot be authorized',async()=>{const f=fixture();f.prepared.nativeRunId='grove-'+'b'.repeat(32);await assert.rejects(createRestoreAuthorization(f).prepare({runId,paymentId}));});
+
+test('stale release observation cannot authorize',async()=>{const f=fixture();f.readReleasePolicy=async()=>({...f.p,checkedAt:1,expiresAt:110000});assert.equal((await createRestoreAuthorization(f).prepare({runId,paymentId})).restoreAuthorized,false);assert.equal(f.calls(),0);});
+test('release change while preparing denies browser grant',async()=>{const f=fixture();f.delivery.prepare=async()=>{f.p.releaseId='4'.repeat(64);return f.prepared;};assert.equal((await createRestoreAuthorization(f).prepare({runId,paymentId})).restoreAuthorized,false);});

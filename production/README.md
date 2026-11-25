@@ -1,3 +1,16 @@
+# Server restore boundary and Phaser source validation — November 24, 2026
+
+A default-deny server boundary now binds positive restore responses to fresh
+trusted release-policy observations and the shared consumption result. Isolated
+Sui/BNB fixtures traverse actual PostgreSQL consumption and mount the recovered
+Phaser game once, restoring three lives and preserving run/score/wave. Eleven
+boundary tests, 18 browser checks and 34 native database checks pass locally.
+No live release policy, HTTP route, database migration or deployment is installed.
+Evidence, fixture limits and current-inventory cross-reference:
+`docs/multichain/generation-milestone/phaser-restoration/README.md`.
+
+---
+
 # Browser continue restoration source — November 24, 2026
 
 An isolated browser controller and native render adapter now cover persistent

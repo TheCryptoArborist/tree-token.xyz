@@ -28,6 +28,9 @@ on:
       - 'scripts/multichain/check-sui-bnb-continue-postgres.mjs'
       - 'scripts/multichain/check-delivery-compatibility-postgres.mjs'
       - 'scripts/multichain/native-sui-payment.mjs'
+      - 'scripts/multichain/continue-restore-authorization.mjs'
+      - 'scripts/multichain/check-phaser-restore.mjs'
+      - 'tests/multichain-restore-authorization.test.mjs'
       - 'scripts/multichain/browser/**'
       - 'scripts/multichain/check-continue-browser.mjs'
       - 'vendor/continue-browser-test/**'
@@ -86,6 +89,9 @@ on:
       - 'scripts/multichain/check-sui-bnb-continue-postgres.mjs'
       - 'scripts/multichain/check-delivery-compatibility-postgres.mjs'
       - 'scripts/multichain/native-sui-payment.mjs'
+      - 'scripts/multichain/continue-restore-authorization.mjs'
+      - 'scripts/multichain/check-phaser-restore.mjs'
+      - 'tests/multichain-restore-authorization.test.mjs'
       - 'scripts/multichain/browser/**'
       - 'scripts/multichain/check-continue-browser.mjs'
       - 'vendor/continue-browser-test/**'
@@ -192,7 +198,6 @@ jobs:
           BNB_PG_BIN="$(pg_config --bindir)" node scripts/multichain/check-sui-bnb-continue-postgres.mjs
           BNB_PG_BIN="$(pg_config --bindir)" node scripts/multichain/check-delivery-compatibility-postgres.mjs
           BNB_PG_BIN="$(pg_config --bindir)" node scripts/multichain/check-shared-delivery-postgres.mjs
-          BNB_PG_BIN="$(pg_config --bindir)" node scripts/multichain/check-native-sui-session-postgres.mjs
 
       - name: Browser continue restoration and interruption checks
         run: |
@@ -204,7 +209,9 @@ jobs:
           else
             node vendor/continue-browser-test/node_modules/playwright/cli.js install --with-deps chromium
           fi
+          node --test tests/multichain-restore-authorization.test.mjs
           node scripts/multichain/check-continue-browser.mjs
+          CONTINUE_PHASER_CHECK=1 BNB_PG_BIN="$(pg_config --bindir)" node scripts/multichain/check-native-sui-session-postgres.mjs
 
       - name: Test and package disabled isolated review endpoint
         run: |

@@ -25,7 +25,7 @@ export function createPaidContinueController({prepare,activate,getSession,render
     const clientKey=secret(),requestId=crypto.randomUUID();
     const p=await prepare({runId:s.runId,paymentId,clientKey});unchanged(s);
     check(p?.protocol==='tree-paid-delivery.v2'&&p.status==='prepared'&&p.restoreAuthorized===true,'restoration-not-enabled');
-    check(p.runId===s.runId&&p.paymentId===paymentId&&p.sequence===sequence&&uuid(p.leaseId)&&hex(p.checkpointHash)&&Number.isSafeInteger(p.leaseExpiresAt)&&p.leaseExpiresAt>clock()&&p.leaseExpiresAt<=s.expiresAt,'invalid-prepare-binding');
+    check(p.runId===s.runId&&p.paymentId===paymentId&&p.sequence===sequence&&uuid(p.leaseId)&&hex(p.policyDigest)&&hex(p.checkpointHash)&&Number.isSafeInteger(p.leaseExpiresAt)&&p.leaseExpiresAt>clock()&&p.leaseExpiresAt<=s.expiresAt,'invalid-prepare-binding');
     check(typeof p.snapshotText==='string'&&new TextEncoder().encode(p.snapshotText).length<=262144&&await digest(p.snapshotText)===p.checkpointHash,'checkpoint-integrity-failed');
     const checkpoint=JSON.parse(p.snapshotText);
     check(checkpoint.format==='treeforce89.checkpoint.v1'&&checkpoint.ruleset==='treeforce89.v1'&&checkpoint.runId===s.runId&&checkpoint.lives===0&&checkpoint.continuesUsed===sequence-1&&checkpoint.finished!==true&&checkpoint.nativeSnapshot?.runId===s.nativeRunId,'invalid-native-checkpoint');
@@ -38,8 +38,8 @@ export function createPaidContinueController({prepare,activate,getSession,render
     persist('activation-pending');
     let restoreAttempted=false;
     try{
-     const a=await activate({runId:s.runId,clientKey,leaseId:p.leaseId,checkpointHash:p.checkpointHash,requestId});unchanged(s);
-     check(a?.protocol==='tree-paid-delivery.v2'&&a.status==='started'&&a.restoreAuthorized===true&&a.runId===s.runId&&a.sequence===sequence&&a.activationId===requestId&&a.consumed===true,'activation-not-authorized');
+     const a=await activate({runId:s.runId,clientKey,leaseId:p.leaseId,checkpointHash:p.checkpointHash,policyDigest:p.policyDigest,requestId});unchanged(s);
+     check(a?.protocol==='tree-paid-delivery.v2'&&a.status==='started'&&a.restoreAuthorized===true&&a.runId===s.runId&&a.sequence===sequence&&a.activationId===requestId&&a.consumed===true&&a.policyDigest===p.policyDigest,'activation-not-authorized');
      // Write ahead of the renderer: crashes, exceptions and refreshed tabs must
      // never replay a potentially completed scene restore.
      persist('restore-attempted');unchanged(s);
