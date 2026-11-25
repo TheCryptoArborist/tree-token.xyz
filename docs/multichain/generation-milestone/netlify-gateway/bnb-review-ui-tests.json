@@ -1,0 +1,19 @@
+{
+  "localOnly": true,
+  "unitTests": 50,
+  "newControllerTests": 9,
+  "browser": {
+    "localOnly": true,
+    "browser": "156.0.8078.79",
+    "passed": 6,
+    "checks": [
+      "exact server link is visible before either wallet signature",
+      "rejection unlocks explicit retry without leaking wallet errors or prompting BNB",
+      "separate signature clicks lead to review-only terms with no payment button",
+      "account epoch change during prompt prevents the next signature",
+      "lost verification response disables repeat verification and new checkout",
+      "teardown removes controls; all requests intercepted with no wallet or chain calls"
+    ],
+    "evidence": "real DOM/controller; injected wallet and endpoint fixtures"
+  }
+}

@@ -1,3 +1,16 @@
+# BNB wallet-link review controls — November 24, 2026
+
+An undeployed controller/DOM component now displays the exact wallet-link message,
+requests each personal-message signature separately and reviews fixed 1 USDT BNB
+terms. Context changes, altered messages and uncertain verification responses
+block progress. No payment/send control is included. Local validation passed:
+50 unit tests and six Chromium checks with injected wallet/endpoint fixtures.
+No live wallet, route, payment, game, NFT or production change occurred. Host
+context/wallet wiring and remaining gates are documented in
+`docs/multichain/generation-milestone/netlify-gateway/bnb-review-ui.md`.
+
+---
+
 # Authenticated BNB checkout boundary — November 24, 2026
 
 Source-only host/HTTP/transport actions now connect wallet-link challenge,

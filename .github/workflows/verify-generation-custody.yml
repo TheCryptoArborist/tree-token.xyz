@@ -41,6 +41,9 @@ on:
       - 'scripts/multichain/check-checkout-recovery-browser.mjs'
       - 'tests/multichain-shared-checkout.test.mjs'
       - 'scripts/multichain/browser/native-continue-transport.mjs'
+      - 'scripts/multichain/browser/bnb-checkout-review.mjs'
+      - 'scripts/multichain/check-bnb-checkout-review-browser.mjs'
+      - 'tests/multichain-bnb-checkout-review.test.mjs'
       - 'tests/multichain-native-host.test.mjs'
       - 'scripts/multichain/native-shared-offer.mjs'
       - 'tests/multichain-native-composition.test.mjs'
@@ -122,6 +125,9 @@ on:
       - 'scripts/multichain/check-checkout-recovery-browser.mjs'
       - 'tests/multichain-shared-checkout.test.mjs'
       - 'scripts/multichain/browser/native-continue-transport.mjs'
+      - 'scripts/multichain/browser/bnb-checkout-review.mjs'
+      - 'scripts/multichain/check-bnb-checkout-review-browser.mjs'
+      - 'tests/multichain-bnb-checkout-review.test.mjs'
       - 'tests/multichain-native-host.test.mjs'
       - 'scripts/multichain/native-shared-offer.mjs'
       - 'tests/multichain-native-composition.test.mjs'
@@ -261,6 +267,8 @@ jobs:
           node --test tests/multichain-shared-checkout.test.mjs tests/multichain-bnb-journal.test.mjs
           node --test tests/multichain-native-gateway.test.mjs tests/multichain-native-composition.test.mjs tests/multichain-native-host.test.mjs
           NETLIFY_CONTINUE_SCHEMA=1 NATIVE_BUNDLE_CHECK=1 CONTINUE_PHASER_CHECK=1 BNB_PG_BIN="$(pg_config --bindir)" node scripts/multichain/check-native-sui-session-postgres.mjs
+          node --test tests/multichain-bnb-checkout-review.test.mjs
+          node scripts/multichain/check-bnb-checkout-review-browser.mjs
           node scripts/multichain/check-checkout-recovery-browser.mjs
           node scripts/multichain/check-continue-browser.mjs
           CONTINUE_PHASER_CHECK=1 BNB_PG_BIN="$(pg_config --bindir)" node scripts/multichain/check-native-sui-session-postgres.mjs
