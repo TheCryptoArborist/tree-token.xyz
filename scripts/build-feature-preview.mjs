@@ -3,7 +3,8 @@ import { dirname, resolve } from 'node:path';
 import assert from 'node:assert/strict';
 import { ADDED_PATHS as groveChessOriginalPaths } from './grove-chess-release-plan.mjs';
 import { ADDED_PATHS as groveChessFinishPaths } from './grove-chess-finishes-release-plan.mjs';
-const groveChessPaths = [...groveChessOriginalPaths,...groveChessFinishPaths,'/play/grove-chess/online.js'];
+import { ADDED_PATHS as groveChessPolishPaths } from './grove-chess-polish-release-plan.mjs';
+const groveChessPaths = [...groveChessOriginalPaths,...groveChessFinishPaths,...groveChessPolishPaths,'/play/grove-chess/online.js'];
 import { PREVIEW_PATHS as treeArmyPaths } from './tree-army-release-plan.mjs';
 import { createHash } from 'node:crypto';
 
