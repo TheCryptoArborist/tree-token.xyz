@@ -1,3 +1,43 @@
+# Profile Studio tree ribbons — published November 25, 2026
+
+[Profile Studio](https://tree-token.xyz/play/profile-studio/) now includes six
+optional ribbons: Merry Christmas, Happy Thanksgiving, Happy Holidays,
+Tree-Token.xyz, Buy Tree, and NFTrees with “Grow Your Grove.” Every ribbon has
+two illustrated trees, folded tails, gold trim, and seasonal or leafy details.
+The **Ribbon** panel below the preview provides design, left/right, up/down,
+size and reset controls. Direct dragging works independently of the photo and
+badge. Both PNG downloads retain the chosen ribbon and its position.
+
+Deploy `6b06878dfd7f410f60dc04f1` published at **01:09:48 America/Chicago**
+(`2026-11-25T07:09:48.759Z`), verified ready and locked.
+Source PR #329: `99aa74534256219c2b4afbd33d6a606bd5513ea4`, merged as
+`fc43a50636c2190a6332b28ddd4467faa48e4434`.
+[Publication run 45565841352](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45565841352) passed.
+
+Fresh baseline `6b06863254e602a4bde6395d`; **783 total static paths**,
+**779 existing paths preserved**, all **62 complete backend/provider records**
+and **5 schedules** preserved with protected configuration. Only Studio HTML
+was replaced; added JS v19, the ribbon renderer and CSS v12. Both existing
+photo-fit and badge-position helpers remain byte-identical.
+
+All 30 geometry/catalog tests and source PR checks passed. Browser review
+covered all six designs, independent editing, direct dragging, edge constraints,
+reset/removal, and layouts at 375px and 1348px. Both actual candidate exports
+were verified as 1024 × 1024 RGBA with transparent outside corners and matching
+ribbon pixels. The supplied portrait was exercised on the actual candidate.
+Phone-width pointer interaction passed; physical iPhone touch gestures were not
+exercised. Canonical Ribbon controls and Christmas artwork were observed after
+publication, and canonical asset bytes passed verification.
+
+Full static manifest and provenance:
+`production/profile-studio-ribbons-release-20261125.json`.
+Browser evidence: `docs/profile-studio-ribbons-validation.json`.
+Publication artifact #14999603180 SHA256:
+`d759bddc8a30968f954284e22ae8b9bf6b0e9cb781a8fd4e6a18ec4455f4c932`.
+Capture a fresh complete live baseline before each subsequent release.
+
+---
+
 # Grove Chess online multiplayer and Telegram invitations — published November 25, 2026
 
 [Grove Chess](https://tree-token.xyz/play/grove-chess/) now supports computer,
