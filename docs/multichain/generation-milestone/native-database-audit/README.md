@@ -74,3 +74,10 @@ not enumerate current constraints, policies, privileges or the seven proposed
 tables. Their hosted state remains unknown; absence must not be inferred from
 the disposable reference. The coordinated gateway stays source-only pending the
 full audit and migration/activation review.
+
+## Single-binding audit authorization
+
+The owner approved using only `TREEFORCE89_DEV_DATABASE_URL` inside GitHub
+Actions for the read-only audit, without printing or saving the credential.
+This authorizes the narrowed runner and no environment listing, migration,
+application-row read, deployment or gameplay activation.
