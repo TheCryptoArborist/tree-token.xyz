@@ -1,3 +1,43 @@
+# Profile Studio full-photo fitting — published November 25, 2026
+
+[Profile Studio](https://tree-token.xyz/play/profile-studio/) now starts uploaded
+pictures with the full photo inside the visible frame, leaving room above the
+selected bottom badge. **Fit full photo**, **Fill circle**, Zoom below 100%,
+dragging and working position controls allow users to choose their crop.
+Exposed space uses colors sampled from the photo; exports remain 1024 × 1024
+with transparent outside corners.
+
+Deploy `6b067851aece2f26cdeff93a` published at **00:03:19 America/Chicago**
+(`2026-11-25T06:03:19.730Z`), verified ready and locked. Source PR #321:
+`5fade9d905fe53e89f36f10b097ef052e74ca174`, merged as
+`cb087115960aa4e4309dfeef0e394fec8e734a31`.
+[Publication run 45557604435](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45557604435) passed.
+
+Fresh baseline `6b0673793ee10594fad75fe6`; **770 total paths**,
+**766 existing paths preserved**, **61 complete backend/provider records**
+and **5 schedules** preserved, together with protected runtime, environment
+and snippet configuration. No backend packages were rebuilt.
+Only `/play/profile-studio/index.html` was replaced; added
+`/scripts/tree-profile-studio-v17.js`, `/scripts/profile-photo-fit.js`
+and `/styles/tree-profile-studio-v10.css`.
+
+All 18 geometry tests and required PR checks passed. The supplied 320 × 320
+portrait was tested with Leafy Canopy and Tree Hero. Full-photo fitting,
+fill, zoom, phone layout and both PNG exports passed candidate checks;
+candidate exports matched the reviewed local preview exactly. Phone-width
+dragging was exercised in the same-source local preview. Physical iPhone
+pinch gestures were not tested. The canonical page was reloaded and its new
+controls observed after publication; the workflow verified canonical bytes.
+
+The full static hash manifest, provenance and preservation results are in
+`production/profile-studio-photo-fit-release-20261125.json`; the browser record is
+`docs/profile-studio-photo-fit-validation.json`.
+Publication artifact #14996496537 SHA256:
+`3142ee003abd5afeef603927f96faccf9ed283f1c2d438650638a6882514e856`.
+Capture a fresh full live baseline before every subsequent release.
+
+---
+
 # Grove Chess — published November 24, 2026
 
 Grove Chess is live at `/play/grove-chess/`, linked from the final cabinet in
