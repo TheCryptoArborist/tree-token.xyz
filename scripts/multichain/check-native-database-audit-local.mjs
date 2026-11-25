@@ -1,6 +1,6 @@
 // Disposable database only. Builds the reference catalog from pinned native SQL.
 import fs from 'node:fs';import os from 'node:os';import path from 'node:path';import assert from 'node:assert/strict';import {execFileSync} from 'node:child_process';
-import pg from '../../vendor/bnb-continue-store/node_modules/pg/lib/index.js';import {readNativeCatalog,auditNativeDatabase,compareNativeCatalog,nativeDatabaseIdentity} from './native-database-audit.mjs';
+import pg from '../../vendor/bnb-continue-store/node_modules/pg/lib/index.js';import {readNativeCatalog,auditNativeDatabase,compareNativeCatalog,nativeDatabaseIdentity,assertNativeAuditReadPath} from './native-database-audit.mjs';
 const bin=process.env.BNB_PG_BIN;assert(bin);const dir=fs.mkdtempSync(path.join(os.tmpdir(),'native-audit-')),data=path.join(dir,'data'),exe=n=>path.join(bin,n);let started=false,pool;const checks=[];
 try{
  const args=['-D',data,'-A','trust','--no-locale','--encoding=UTF8'];if(process.env.BNB_PG_SHARE)args.push('-L',process.env.BNB_PG_SHARE);
@@ -22,6 +22,8 @@ try{
   const broken={query:async sql=>{if(sql==='ROLLBACK')return {rows:[]};if(sql.startsWith('BEGIN'))return {rows:[]};return {rows:[{read_only:'off'}]};}};await assert.rejects(auditNativeDatabase(broken,expected),/read-only/);checks.push('read-only mode must be independently observed');
   for(const url of ['postgres://user:secret@other.example/netlifydb','postgres://user:secret@wrong.db.netlify.com/netlifydb','postgres://user:secret@wrong.db.netlify.com/other'])assert.throws(()=>nativeDatabaseIdentity(url));checks.push('wrong provider path and database identity denied');
   let rollback=false;await assert.rejects(auditNativeDatabase({query:async sql=>{if(sql==='ROLLBACK'){rollback=true;return;}if(sql.startsWith('BEGIN'))return {};if(sql.includes('current_setting'))return {rows:[{read_only:'on'}]};throw Error('catalog unavailable');}},expected));assert(rollback);checks.push('catalog failure always rolls back');
+  assertNativeAuditReadPath('accounts/69800888d1a3d0483003ae9e/env/TREEFORCE89_DEV_DATABASE_URL?site_id=aa62f324-b880-47d6-85b8-4ba0700ff5bf');
+  for(const p of ['accounts/69800888d1a3d0483003ae9e/env?site_id=aa62f324-b880-47d6-85b8-4ba0700ff5bf','sites/other','deploys/../env','accounts/69800888d1a3d0483003ae9e/env/OTHER'])assert.throws(()=>assertNativeAuditReadPath(p));checks.push('environment listing and unrelated binding paths are denied');
   console.log(JSON.stringify({localOnly:true,passed:checks.length,checks},null,2));
  }finally{db.release();}
 }finally{await pool?.end();if(started)execFileSync(exe('pg_ctl'),['-D',data,'-m','immediate','-w','stop'],{stdio:'pipe'});fs.rmSync(dir,{recursive:true,force:true});}

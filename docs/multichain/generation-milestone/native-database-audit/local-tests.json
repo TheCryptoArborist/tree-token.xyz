@@ -1,6 +1,6 @@
 {
   "localOnly": true,
-  "passed": 10,
+  "passed": 11,
   "checks": [
     "reference matches exact pinned native SQL",
     "actual catalog verifies native structure and seven absent proposed tables",
@@ -11,6 +11,7 @@
     "RLS drift denied",
     "read-only mode must be independently observed",
     "wrong provider path and database identity denied",
-    "catalog failure always rolls back"
+    "catalog failure always rolls back",
+    "environment listing and unrelated binding paths are denied"
   ]
 }

@@ -45,3 +45,10 @@ export async function auditNativeDatabase(db,expected){
   return {readOnly:true,applicationRowsRead:0,catalog,proposedRolesPresent:roles,privateSchema,...compareNativeCatalog(catalog,expected)};
  }finally{await db.query('ROLLBACK');}
 }
+
+export function assertNativeAuditReadPath(path){
+ assert(path==='sites/aa62f324-b880-47d6-85b8-4ba0700ff5bf'||
+  /^deploys\/[a-f0-9]{24}$/.test(path)||
+  path==='accounts/69800888d1a3d0483003ae9e/env/TREEFORCE89_DEV_DATABASE_URL?site_id=aa62f324-b880-47d6-85b8-4ba0700ff5bf','audit-path-denied');
+ return path;
+}

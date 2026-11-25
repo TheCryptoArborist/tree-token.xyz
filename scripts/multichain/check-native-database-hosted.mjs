@@ -1,16 +1,16 @@
 import fs from 'node:fs';import assert from 'node:assert/strict';import pg from '../../vendor/bnb-continue-store/node_modules/pg/lib/index.js';
-import {nativeDatabaseIdentity,auditNativeDatabase} from './native-database-audit.mjs';
+import {nativeDatabaseIdentity,auditNativeDatabase,assertNativeAuditReadPath} from './native-database-audit.mjs';
 const SITE='aa62f324-b880-47d6-85b8-4ba0700ff5bf',ACCOUNT='69800888d1a3d0483003ae9e',KEY='TREEFORCE89_DEV_DATABASE_URL';
 const NATIVE_HASH='af1bc6f03de12e0ee77b10cd118ab346e8f5fa3c9e92cb05ee8ed8a264532a63';
 const root='docs/multichain/generation-milestone/native-database-audit/';let pool,phase='metadata';
 async function get(path){
- const r=await fetch('https://api.netlify.com/api/v1/'+path,{method:'GET',redirect:'error',headers:{Authorization:'Bearer '+process.env.NETLIFY_AUTH_TOKEN},signal:AbortSignal.timeout(15000)});
+ const r=await fetch('https://api.netlify.com/api/v1/'+assertNativeAuditReadPath(path),{method:'GET',redirect:'error',headers:{Authorization:'Bearer '+process.env.NETLIFY_AUTH_TOKEN},signal:AbortSignal.timeout(15000)});
  assert(r.ok,'netlify-read-failed-'+r.status);return r.json();
 }
 async function current(){const s=await get('sites/'+SITE);assert.equal(s.account_id,ACCOUNT);const d=await get('deploys/'+s.published_deploy.id);assert.equal(d.locked,true);assert.equal(d.state,'ready');assert.equal(d.available_functions.find(f=>f.n==='treeforce89-dev')?.d,NATIVE_HASH);return d.id;}
 try{
  assert(process.env.NETLIFY_AUTH_TOKEN,'missing-netlify-connection');const before=await current();
- phase='binding';const all=await get(`accounts/${ACCOUNT}/env?site_id=${SITE}&scope=functions`);const matches=all.filter(e=>e.key===KEY);assert.equal(matches.length,1);const entry=matches[0];assert(entry.scopes.includes('functions'));
+ phase='binding';const entry=await get(`accounts/${ACCOUNT}/env/${KEY}?site_id=${SITE}`);assert.equal(entry.key,KEY);assert(entry.scopes.includes('functions'));
  const production=entry.values.filter(v=>v.context==='production');const values=production.length?production:entry.values.filter(v=>v.context==='all');assert.equal(values.length,1);
  const connectionString=values[0].value;const identity=nativeDatabaseIdentity(connectionString);
  phase='catalog';pool=new pg.Pool({connectionString,max:1,connectionTimeoutMillis:10000,options:'-c default_transaction_read_only=on -c statement_timeout=5000 -c lock_timeout=1000 -c idle_in_transaction_session_timeout=15000'});

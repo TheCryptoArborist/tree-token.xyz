@@ -6,7 +6,7 @@ permissions:
   contents: read
 jobs:
   audit:
-    if: contains(github.event.head_commit.message, '[audit native database]')
+    if: contains(github.event.head_commit.message, '[approved native binding audit]')
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:

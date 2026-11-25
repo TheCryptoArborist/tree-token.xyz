@@ -1,3 +1,15 @@
+# Native database runtime readiness check — November 24, 2026
+
+The existing canonical status endpoint confirms native schema/payment readiness
+and database isolation; this describes the existing Sui path only. The complete
+catalog audit stopped before connecting, and an environment-list request was
+rejected by automatic approval review. A narrower single-binding audit is
+prepared but not run pending specific access approval. Eleven disposable audit
+tests pass. No migration, live payment or deployment occurred. Evidence:
+`docs/multichain/generation-milestone/native-database-audit/README.md`.
+
+---
+
 # Native backend package identity verified — November 24, 2026
 
 The native game backend was reproduced from its released source and locks with
