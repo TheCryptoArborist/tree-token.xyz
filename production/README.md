@@ -1,3 +1,14 @@
+# Native backend package identity verified — November 24, 2026
+
+The native game backend was reproduced from its released source and locks with
+an exact match to the live package SHA-256 and byte count. All 11 pinned session
+and payment source entries match the released source. Nine archive/configuration
+guards pass. Hosted database parity, frontend/gateway integration and activation
+remain separate gates. No deployment or live behavior changed. See
+`docs/multichain/generation-milestone/native-runtime-parity/README.md`.
+
+---
+
 # Authenticated restore transport source — November 24, 2026
 
 A source-only Fetch handler now carries the native bearer credential into the

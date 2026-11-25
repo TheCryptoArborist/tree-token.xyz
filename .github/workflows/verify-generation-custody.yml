@@ -30,6 +30,9 @@ on:
       - 'scripts/multichain/native-sui-payment.mjs'
       - 'scripts/multichain/continue-restore-authorization.mjs'
       - 'scripts/multichain/continue-restore-http.mjs'
+      - 'scripts/multichain/check-native-runtime-parity.mjs'
+      - 'tests/multichain-native-runtime-parity.test.mjs'
+      - 'production/recovered-function-archives/treeforce89-dev.zip'
       - 'tests/multichain-restore-http.test.mjs'
       - 'scripts/multichain/check-phaser-restore.mjs'
       - 'tests/multichain-restore-authorization.test.mjs'
@@ -93,6 +96,9 @@ on:
       - 'scripts/multichain/native-sui-payment.mjs'
       - 'scripts/multichain/continue-restore-authorization.mjs'
       - 'scripts/multichain/continue-restore-http.mjs'
+      - 'scripts/multichain/check-native-runtime-parity.mjs'
+      - 'tests/multichain-native-runtime-parity.test.mjs'
+      - 'production/recovered-function-archives/treeforce89-dev.zip'
       - 'tests/multichain-restore-http.test.mjs'
       - 'scripts/multichain/check-phaser-restore.mjs'
       - 'tests/multichain-restore-authorization.test.mjs'
@@ -202,6 +208,11 @@ jobs:
           BNB_PG_BIN="$(pg_config --bindir)" node scripts/multichain/check-sui-bnb-continue-postgres.mjs
           BNB_PG_BIN="$(pg_config --bindir)" node scripts/multichain/check-delivery-compatibility-postgres.mjs
           BNB_PG_BIN="$(pg_config --bindir)" node scripts/multichain/check-shared-delivery-postgres.mjs
+
+      - name: Verify native backend archive evidence
+        run: |
+          node scripts/multichain/check-native-runtime-parity.mjs
+          node --test tests/multichain-native-runtime-parity.test.mjs
 
       - name: Browser continue restoration and interruption checks
         run: |

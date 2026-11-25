@@ -1,0 +1,69 @@
+{
+  "releaseCommit": "bf4537220bb9a9b096cfaab9598fa2cd13556db9",
+  "pinnedAdapterSourceCommit": "9974d7f0b5c03b9621561d15a8040e8bf558e1db",
+  "files": [
+    {
+      "releasePath": "netlify/database/migrations/20261016030500_tree_authentication.sql",
+      "snapshot": "docs/multichain/generation-milestone/native-sui-session/upstream/20261016030500_tree_authentication.sql",
+      "releaseSourceSha256": "c98e97212e3b9bc2a8731324f2b11a682cc03fbd6c262fb1ab93ac1aa3076c36"
+    },
+    {
+      "releasePath": "netlify/database/migrations/20261031045000_tree_paid_continue.sql",
+      "snapshot": "docs/multichain/generation-milestone/native-sui-session/upstream/20261031045000_tree_paid_continue.sql",
+      "releaseSourceSha256": "5bb885df440d47c5b491f1ec189d60c901ba6d7d14a68f6a3b219c49ab10a851"
+    },
+    {
+      "releasePath": "netlify/preview-lib/treeforce89-source/game/credential-revocation.mjs",
+      "snapshot": "docs/multichain/generation-milestone/native-sui-session/upstream/credential-revocation.mjs",
+      "releaseSourceSha256": "97865c065d614612ca22917dba8bcbee191bda27a1afea3c4a23e56e2fac6731"
+    },
+    {
+      "releasePath": "netlify/preview-lib/treeforce89-source/game/authenticated-session.mjs",
+      "snapshot": "docs/multichain/generation-milestone/native-sui-session/upstream/authenticated-session.mjs",
+      "releaseSourceSha256": "54e952a9cb5cc5c22cdf314eb90330dca89629777cf20521b1af21993e6a86d8"
+    },
+    {
+      "releasePath": "netlify/preview-lib/treeforce89-source/game/game-run-service.mjs",
+      "snapshot": "docs/multichain/generation-milestone/native-sui-session/upstream/game-run-service.mjs",
+      "releaseSourceSha256": "5442912df513baa2c724d4554ee67ec7999fd8bacffb91e7678f7bcdccef9108"
+    },
+    {
+      "releasePath": "netlify/preview-lib/treeforce89-database.mjs",
+      "snapshot": "docs/multichain/generation-milestone/native-sui-session/upstream/treeforce89-database.mjs",
+      "releaseSourceSha256": "13be161a2f5952b518968aadbb58a80a6b9e471c0aad3f0234abb04e91638e60"
+    },
+    {
+      "releasePath": "netlify/preview-lib/treeforce89-gateway.mjs",
+      "snapshot": "docs/multichain/generation-milestone/native-sui-session/upstream/treeforce89-gateway.mjs",
+      "releaseSourceSha256": "54372023a5dc9f58cf84a2b11cf65321030397bfce98b12395f69c0aa40cc591"
+    },
+    {
+      "releasePath": "netlify/preview-lib/treeforce89-paid-continue.mjs",
+      "snapshot": "docs/multichain/generation-milestone/native-sui-session/upstream/treeforce89-paid-continue.mjs",
+      "releaseSourceSha256": "b8b161d0bb04aae973be84230aa8f118f4601fd2097b636dcf68be14ccba2b52"
+    },
+    {
+      "releasePath": "treeforce89/paid/contract.mjs",
+      "snapshot": "docs/multichain/generation-milestone/native-sui-session/upstream/contract.mjs",
+      "releaseSourceSha256": "598bb7c823910c61eeebc860efdda34fe340b121dec90fcb67ecd924aa81bcc8"
+    },
+    {
+      "releasePath": "treeforce89/paid/mainnet-transaction-reader.mjs",
+      "snapshot": "docs/multichain/generation-milestone/native-sui-payments/upstream/mainnet-transaction-reader.mjs",
+      "releaseSourceSha256": "4e2a01fc904601b410231e219ba2c4d40bef1d05bc9b4fe3935d66b2cfbd973f"
+    },
+    {
+      "releasePath": "treeforce89/paid/contract.mjs",
+      "snapshot": "docs/multichain/generation-milestone/native-sui-payments/upstream/contract.mjs",
+      "releaseSourceSha256": "598bb7c823910c61eeebc860efdda34fe340b121dec90fcb67ecd924aa81bcc8"
+    }
+  ],
+  "lockFiles": {
+    "package-lock.json": "7211d6f5bd71cf00aa91f53eaef7e30f3e44c803881917463f1eb9d2994cea52",
+    "netlify/preview-lib/treeforce89-source/package-lock.json": "00e3c587b171fdbb282d49f1704dbbc249712bdaa55b92b52c4aa1fe027a632c"
+  },
+  "buildNode": "22.21.1",
+  "packagingScript": "scripts/prepare-treeforce89-scoped-api.mjs",
+  "dependencyModes": "0644 non-executable;0755 executable",
+  "liveDatabaseRead": false
+}
