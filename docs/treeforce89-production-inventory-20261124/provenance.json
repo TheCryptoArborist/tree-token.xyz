@@ -1,0 +1,10 @@
+{
+  "digest": "sha256:a553a03c4d7f247467c763963574eed0da9495aaa469097542f8308fa7674b86",
+  "id": 14983379023,
+  "name": "treeforce-production-inventory-45529494565",
+  "size_in_bytes": 36186,
+  "run": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45529494565",
+  "sourceCommit": "78f0e08dcd64a0f535b5552b6d3f5d9a6e8d10a1",
+  "localRecovery": "Sanitized gzip/base64 record from successful GitHub job log; canonical baseline SHA256 verified locally. Direct Azure artifact download returned 403.",
+  "guardTests": 31
+}
