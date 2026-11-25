@@ -35,7 +35,7 @@ jobs:
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           TREEFORCE_PLAYWRIGHT_MODULE: ${{ runner.temp }}/tf-browser/node_modules/playwright
-        run: node scripts/treeforce-local/publish-holiday-review.mjs publish-review 6b06574ec5470d0f6ad7ea82 .netlify/tf-holiday-review
+        run: node scripts/treeforce-local/publish-holiday-review.mjs publish-review 6b065bb45e354c7f83d75727 .netlify/tf-holiday-review
       - name: Retain sanitized preservation evidence
         if: always()
         run: |

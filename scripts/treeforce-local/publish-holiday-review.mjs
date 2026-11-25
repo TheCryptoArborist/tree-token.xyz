@@ -16,7 +16,7 @@ import { configurations, validateRequired } from "./host-preserved-preview.mjs";
 import { assertServedContent } from "../stats-market-delivery.mjs";
 import { waitForAllBuilds } from "../release-arcade-cutoff.mjs";
 export const REVIEW = "/play/treeforce89/review/holiday/index.html";
-const LIVE = "/play/treeforce89/index.html", SOURCE = "6b06574ec5470d0f6ad7ea82";
+const LIVE = "/play/treeforce89/index.html", SOURCE = "6b065bb45e354c7f83d75727";
 export function assembleHoliday(b, approved) {
   assertPreserved(b, approved.baseline);
   assert.equal(approved.reviewPath, REVIEW);

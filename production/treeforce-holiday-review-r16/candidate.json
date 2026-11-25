@@ -1,10 +1,10 @@
 {
   "baseline": {
     "schemaVersion": 2,
-    "capturedAt": "2026-11-25T03:48:21.377Z",
+    "capturedAt": "2026-11-25T03:56:24.562Z",
     "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
     "accountId": "69800888d1a3d0483003ae9e",
-    "deployId": "6b06574ec5470d0f6ad7ea82",
+    "deployId": "6b065bb45e354c7f83d75727",
     "functions": [
       {
         "n": "arcade-wallet-link",
@@ -2687,7 +2687,7 @@
       "/play/canopy-defense/preview/gameplay.mp4": "5ca180b5fc18ecffbb5d95be77de56b89e655af7",
       "/play/canopy-defense/preview/gameplay-poster.jpg": "5f7293aca9c03f56aefd5f1af13b481e54c6d5a4",
       "/play/canopy-defense/gateway.js": "b9a486cdead61eb2d0fa891c2a2accb35392fe53",
-      "/_redirects": "066df9c0bc3d573cedeb57fd2a9541d9f9bfde1f",
+      "/_redirects": "2cf15fedfa734c185b7c92ce93ec5da9d9c4659a",
       "/assets/arcade-growth/tree-spark.webp": "4876ca05f3e6efbdc003fe8647f0ae50b9237946",
       "/assets/arcade-growth/nftree-scout.webp": "85c5eb6f1490eb595d9decd527b481a8ccd1e9ae",
       "/assets/arcade-growth/tree-force-vanguard.webp": "d61c0f338277ed1b5ca7b007ac40fcb460c6ddc0",
@@ -3223,7 +3223,7 @@
       "buildSettingsUpdatedAt": "2026-11-24T07:23:57.298Z"
     }
   },
-  "baselineFingerprint": "4cdabea2e811488a04a66fe89057623c2c61f49a9edb904b7df1f9b19219884b",
+  "baselineFingerprint": "2a35613ae69c8c675b3c761dcc6f4e5ecc0d52040a0ff6f4d55c6277edea775c",
   "files": {
     "/tree.jpg": "5ca16c779edf1d559e5be5a02a6edd2e626d9c2f",
     "/tokenomics/index.html": "7e838cb7bdf00d911b22023003b399f11589e05a",
@@ -3508,7 +3508,7 @@
     "/play/canopy-defense/preview/gameplay.mp4": "5ca180b5fc18ecffbb5d95be77de56b89e655af7",
     "/play/canopy-defense/preview/gameplay-poster.jpg": "5f7293aca9c03f56aefd5f1af13b481e54c6d5a4",
     "/play/canopy-defense/gateway.js": "b9a486cdead61eb2d0fa891c2a2accb35392fe53",
-    "/_redirects": "066df9c0bc3d573cedeb57fd2a9541d9f9bfde1f",
+    "/_redirects": "2cf15fedfa734c185b7c92ce93ec5da9d9c4659a",
     "/assets/arcade-growth/tree-spark.webp": "4876ca05f3e6efbdc003fe8647f0ae50b9237946",
     "/assets/arcade-growth/nftree-scout.webp": "85c5eb6f1490eb595d9decd527b481a8ccd1e9ae",
     "/assets/arcade-growth/tree-force-vanguard.webp": "d61c0f338277ed1b5ca7b007ac40fcb460c6ddc0",
