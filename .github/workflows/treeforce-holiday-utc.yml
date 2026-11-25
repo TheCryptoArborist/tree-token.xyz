@@ -1,0 +1,56 @@
+name: Publish Tree Force holiday UTC wording
+on:
+  push:
+    branches: [review/treeforce-holiday-utc]
+    paths:
+      - '.github/workflows/treeforce-holiday-utc.yml'
+      - 'scripts/treeforce-local/publish-holiday-utc.mjs'
+      - 'tests/treeforce-holiday-utc-publication.test.mjs'
+      - 'tests/treeforce-holiday-utc-preserved-browser.cjs'
+permissions:
+  contents: read
+concurrency:
+  group: tree-production-preservation-release
+  cancel-in-progress: false
+jobs:
+  review:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Check additive publication and preservation guards
+        run: |
+          node --test tests/treeforce-holiday-utc-publication.test.mjs tests/treeforce-production-inventory.test.mjs tests/treeforce-hosted-preview.test.mjs
+          git diff --check
+      - name: Install isolated browser checker
+        run: |
+          npm install --prefix "$RUNNER_TEMP/tf-browser" --ignore-scripts --no-audit --no-fund playwright@1.56.1
+          "$RUNNER_TEMP/tf-browser/node_modules/.bin/playwright" install chromium
+      - name: Publish only the owner-requested holiday review addition
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          TREEFORCE_PLAYWRIGHT_MODULE: ${{ runner.temp }}/tf-browser/node_modules/playwright
+        run: node scripts/treeforce-local/publish-holiday-utc.mjs publish-review 6b065e78e15fbc01d5c5eefb .netlify/tf-holiday-utc
+      - name: Retain sanitized preservation evidence
+        if: always()
+        run: |
+          node --input-type=module - <<'JS'
+          import fs from 'node:fs';import {gzipSync} from 'node:zlib';
+          const root='.netlify/tf-holiday-utc',files={};
+          for(const name of ['plan.json','state.json','candidate-browser.json','canonical-browser.json'])if(fs.existsSync(root+'/'+name))files[name]=fs.readFileSync(root+'/'+name,'utf8');
+          const encoded=gzipSync(JSON.stringify(files)).toString('base64');
+          for(let i=0;i<encoded.length;i+=2000)console.log('CANONICAL_REVIEW_DATA '+encoded.slice(i,i+2000));
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: treeforce-canonical-review-${{ github.run_id }}
+          path: .netlify/tf-holiday-utc/
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 30

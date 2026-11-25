@@ -1,0 +1,22 @@
+const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs');
+(async()=>{const b=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox']});const out='docs/treeforce89-holiday-utc';fs.mkdirSync(out,{recursive:true});const checks=[];
+try{for(const width of [320,390,1000]){const p=await b.newPage({viewport:{width,height:950}});const errors=[];p.on('pageerror',e=>errors.push(e.message));
+await p.route('**/*',async r=>{const u=new URL(r.request().url());if(u.origin!=='http://127.0.0.1:4200')return r.abort();if(u.pathname==='/__local/practice'){const response=await r.fetch();let body=await response.text();body=body.replace('"r14", "r15"','"r14", "r15", "r17"').replace('game = createCanopyGame','game = window.__game = createCanopyGame');return r.fulfill({response,body});}return r.continue();});
+await p.goto('http://127.0.0.1:4200/__local/practice?lab=1&revision=r17&scene=title');await p.waitForFunction(()=>window.__game?.scene.isActive('title'));
+await p.evaluate(()=>{__game.registry.get('holidayPolicy').now=()=>Date.parse('2026-11-27T05:59:59Z');});
+await p.waitForFunction(()=>document.querySelector('[role=status]').textContent==='Christmas mode unlocks November 27 at 06:00 UTC.');
+assert.equal(await p.getByRole('timer').textContent(),'0d 00h 00m 01s');
+assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+await p.screenshot({path:`${out}/opening-${width}.png`});
+await p.evaluate(()=>{__game.registry.get('holidayPolicy').now=()=>Date.parse('2026-11-27T06:00:00Z');});
+await p.getByText('Ends January 1 at 06:00 UTC.',{exact:true}).waitFor({state:'visible'});
+assert.equal(await p.getByRole('timer').textContent(),'35d 00h 00m 00s');
+assert.equal(await p.getByLabel('Game theme').evaluate(e=>e.options[1].disabled),false);
+assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+await p.screenshot({path:`${out}/available-${width}.png`});
+await p.evaluate(()=>{__game.registry.get('holidayPolicy').now=()=>Date.parse('2027-01-01T06:00:00Z');});
+await p.getByText('Ends January 1 at 06:00 UTC.',{exact:true}).waitFor({state:'hidden'});
+assert.equal(await p.getByLabel('Game theme').evaluate(e=>e.options[1].disabled),true);
+await p.evaluate(()=>__game.destroy(true));await p.waitForTimeout(100);assert.deepEqual(errors,[]);checks.push({width,UTCOpening:true,UTCClosing:true,noOverflow:true,boundaries:true,errors});await p.close();}
+fs.writeFileSync(out+'/checks.json',JSON.stringify(checks,null,2));console.log(checks);
+}finally{await b.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

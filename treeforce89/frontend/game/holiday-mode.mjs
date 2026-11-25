@@ -1,6 +1,6 @@
 // Cosmetic selection only; never used as authentication or award eligibility.
-export const HOLIDAY_START = Date.parse('2026-11-27T00:00:00-06:00');
-export const HOLIDAY_END = Date.parse('2027-01-01T00:00:00-06:00');
+export const HOLIDAY_START = Date.parse('2026-11-27T06:00:00Z');
+export const HOLIDAY_END = Date.parse('2027-01-01T06:00:00Z');
 export function holidayAvailable(now = Date.now()) {
   return Number.isFinite(now) && now >= HOLIDAY_START && now < HOLIDAY_END;
 }
@@ -44,13 +44,15 @@ export function installHolidaySelector(game, mount, options = {}) {
   select.value=policy.selected;
   const note=document.createElement('span');note.setAttribute('role','status');
   const countdown=document.createElement('span');countdown.setAttribute('role','timer');countdown.setAttribute('aria-live','off');countdown.setAttribute('aria-label','Time until Christmas mode unlocks');countdown.style.fontVariantNumeric='tabular-nums';
-  label.append(select);panel.append(label,note,countdown);mount.parentElement.insertBefore(panel,mount);
+  const deadline=document.createElement('span');deadline.textContent='Ends January 1 at 06:00 UTC.';
+  label.append(select);panel.append(label,note,countdown,deadline);mount.parentElement.insertBefore(panel,mount);
   const update=()=>{
     const active=!!game.scene.getScene('game')?.sys.isActive();
     const currentTime=policy.now();
     const available=holidayAvailable(currentTime);
     const remaining=holidayCountdown(currentTime);
     countdown.hidden=!remaining;
+    deadline.hidden=!available;
     const timerLabel=available?'Time remaining in Christmas mode':'Time until Christmas mode unlocks';
     if(countdown.getAttribute('aria-label')!==timerLabel)countdown.setAttribute('aria-label',timerLabel);
     if(countdown.textContent!==remaining)countdown.textContent=remaining;
@@ -60,7 +62,7 @@ export function installHolidaySelector(game, mount, options = {}) {
     select.options[1].disabled=!available;
     if(!active&&!available){policy.selected='normal';select.value='normal';}
     const message=currentTime < HOLIDAY_START
-      ? 'Christmas mode unlocks November 27 · midnight Central.'
+      ? 'Christmas mode unlocks November 27 at 06:00 UTC.'
       : available ? 'Christmas mode is available for…'
       : active ? 'Christmas season has ended. This run keeps its selected theme.'
       : 'Christmas season has ended. Normal mode is available.';
