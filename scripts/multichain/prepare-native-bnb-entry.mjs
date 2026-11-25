@@ -48,7 +48,7 @@ export function prepareNativeBnbEntry(output){
  fs.writeFileSync(path.join(target,'NFTreeGateway.tsx'),gateway);
  const browserDir=fileURLToPath(new URL('./browser/',import.meta.url)),dest=path.join(target,'bnb-review');fs.mkdirSync(dest);
  const modules=['bnb-provider-picker.mjs','bnb-native-host-options.mjs','native-bnb-review-mount.mjs','native-continue-transport.mjs','bnb-review-wallets.mjs','bnb-connected-review.mjs','bnb-checkout-review.mjs'];for(const name of modules)fs.copyFileSync(path.join(browserDir,name),path.join(dest,name));
- const receipt={sourceOnly:true,deployable:false,source:nativeEntry,gateway:{...nativeGateway,candidateSha256:createHash('sha256').update(gateway).digest('hex')},legacyDefault:true,modules,entrySha256:createHash('sha256').update(patched).digest('hex')};fs.writeFileSync(path.join(output,'provenance.json'),JSON.stringify(receipt,null,2)+'\n');return receipt;
+ const receipt={sourceOnly:true,deployable:false,frontendReleaseParity:false,publicationBlocker:'pinned TSX has not reproduced the live r18 frontend',source:nativeEntry,gateway:{...nativeGateway,candidateSha256:createHash('sha256').update(gateway).digest('hex')},legacyDefault:true,modules,entrySha256:createHash('sha256').update(patched).digest('hex')};fs.writeFileSync(path.join(output,'provenance.json'),JSON.stringify(receipt,null,2)+'\n');return receipt;
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
  if(process.argv.length!==3)throw Error('usage: node prepare-native-bnb-entry.mjs NEW_OUTPUT_DIRECTORY');

@@ -47,6 +47,8 @@ on:
       - 'scripts/multichain/browser/native-bnb-review-mount.mjs'
       - 'scripts/multichain/check-native-bnb-mount-browser.mjs'
       - 'scripts/multichain/prepare-native-bnb-entry.mjs'
+      - 'scripts/multichain/check-native-frontend-release.mjs'
+      - 'tests/multichain-native-frontend-release.test.mjs'
       - 'tests/multichain-native-bnb-entry.test.mjs'
       - 'scripts/multichain/browser/bnb-native-host-options.mjs'
       - 'scripts/multichain/browser/bnb-provider-picker.mjs'
@@ -142,6 +144,8 @@ on:
       - 'scripts/multichain/browser/native-bnb-review-mount.mjs'
       - 'scripts/multichain/check-native-bnb-mount-browser.mjs'
       - 'scripts/multichain/prepare-native-bnb-entry.mjs'
+      - 'scripts/multichain/check-native-frontend-release.mjs'
+      - 'tests/multichain-native-frontend-release.test.mjs'
       - 'tests/multichain-native-bnb-entry.test.mjs'
       - 'scripts/multichain/browser/bnb-native-host-options.mjs'
       - 'scripts/multichain/browser/bnb-provider-picker.mjs'
@@ -292,6 +296,8 @@ jobs:
           node --test tests/multichain-bnb-checkout-review.test.mjs tests/multichain-bnb-review-wallets.test.mjs
           node scripts/multichain/check-bnb-checkout-review-browser.mjs
           git fetch --no-tags origin 4cd2119a3fefc3b6078befd01ad4f63fb74a695a
+          git fetch --no-tags origin b052f377494d238679525c91c47276c0c588fa33
+          node --test tests/multichain-native-frontend-release.test.mjs
           node --test tests/multichain-native-bnb-entry.test.mjs tests/multichain-bnb-native-host-options.test.mjs
           node scripts/multichain/check-native-bnb-mount-browser.mjs
           node scripts/multichain/check-bnb-provider-picker-browser.mjs

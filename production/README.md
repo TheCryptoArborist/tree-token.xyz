@@ -1,3 +1,15 @@
+# BNB frontend release compatibility check — November 25, 2026
+
+Read-only checks inspected 22 live static paths against recorded r18: 19 matched;
+game HTML, main CSS and seasonal-message module differed. The r18 entry bundle
+matched. The older TSX candidate has not reproduced the current frontend and is
+explicitly blocked from publication. Ten offline checker/candidate tests passed.
+No live asset, backend, wallet, game or NFT state changed. Preserve all newer
+release bytes; do not rebuild the historical root. Evidence and required lineage
+reconciliation: `docs/multichain/generation-milestone/netlify-gateway/frontend-release-check.md`.
+
+---
+
 # Explicit BNB wallet selection candidate — November 25, 2026
 
 The offline gateway candidate now includes an opt-in EIP-6963 wallet picker.
