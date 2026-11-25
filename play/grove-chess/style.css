@@ -22,3 +22,8 @@
  .mobile-return{display:block;position:sticky;top:8px;z-index:4;width:100%;padding:12px;background:#123b28;border:1px solid #467451;border-radius:5px;margin-bottom:12px;font-size:12px}
 }
 @media(max-width:670px) and (max-height:450px){.board-frame{max-width:min(100%,calc(100svh - 40px))}}
+
+/* Keep the two-step move instruction visible before the first move on every device. */
+.board-instructions{order:-1;text-align:left;margin:0 0 10px;color:#b9d3c3}.keyboard-instructions{display:block;font-size:9px;color:#91aa9a}
+@media(max-width:670px){.board-instructions{display:block;order:-1;min-height:32px;margin:0 0 4px;font-size:10px;line-height:1.5}.keyboard-instructions{display:none}.board-frame{max-width:min(100%,calc(100svh - 311px))}}
+@media(max-width:670px) and (max-height:450px){.board-frame{max-width:min(100%,calc(100svh - 40px))}}

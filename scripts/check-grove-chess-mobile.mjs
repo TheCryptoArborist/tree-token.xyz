@@ -12,6 +12,7 @@ try{for(const [width,height] of [[390,664],[320,568],[430,740]]){
  assert(rect.y>=0&&rect.y+rect.height<=height,'Entire board visible on arrival');
  assert(tools.y+tools.height<=height,'Move controls visible without scrolling');
  assert.equal(await page.evaluate(()=>scrollY),0);
+ const instruction=page.locator('#board-instructions');assert(await instruction.isVisible());assert((await instruction.textContent()).includes('No dragging needed'));const hint=await instruction.boundingBox();assert(hint.y>=0&&hint.y+hint.height<rect.y,'Move instructions visible above the board');
  const retained=await page.locator('[data-square="e2"]').elementHandle();
  const tap=async square=>{const box=await page.locator(`[data-square="${square}"]`).boundingBox();assert(box.y>=0&&box.y+box.height<=height);await page.touchscreen.tap(box.x+box.width/2,box.y+box.height/2);await page.waitForTimeout(80);assert.equal(await page.evaluate(()=>scrollY),0,'Tapping must not move the viewport');};
  await tap('e2');await tap('e4');await page.waitForFunction(()=>document.querySelector('#move-count').textContent==='2 HALF-MOVES');
