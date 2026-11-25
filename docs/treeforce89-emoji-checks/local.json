@@ -1,0 +1,30 @@
+{
+  "origin": "http://127.0.0.1:4200",
+  "results": [
+    {
+      "width": 390,
+      "cabinetCountdown": true,
+      "seasonTransition": true,
+      "seasonEndedHidden": true,
+      "mainR18": true,
+      "walletGate": true,
+      "pricingPreserved": true,
+      "gameFestiveCopy": true,
+      "holidaySelection": true,
+      "errors": []
+    },
+    {
+      "width": 1000,
+      "cabinetCountdown": true,
+      "seasonTransition": true,
+      "seasonEndedHidden": true,
+      "mainR18": true,
+      "walletGate": true,
+      "pricingPreserved": true,
+      "gameFestiveCopy": true,
+      "holidaySelection": true,
+      "errors": []
+    }
+  ],
+  "payment": false
+}

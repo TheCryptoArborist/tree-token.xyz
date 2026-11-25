@@ -9,5 +9,5 @@ export function holidayCountdown(now = Date.now()) {
 }
 export function holidayMessage(now = Date.now()) {
  if(!Number.isFinite(now)||now>=HOLIDAY_END)return '';
- return now<HOLIDAY_START?'A little Christmas magic arrives in…':'Keep the Christmas spirit flying! Time remaining…';
+ return now<HOLIDAY_START?'🎄✨ A little Christmas magic arrives in…':'🎄🎁 Keep the Christmas spirit flying! Time remaining…';
 }
