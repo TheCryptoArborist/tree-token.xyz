@@ -1,0 +1,6 @@
+{
+  "engineAudioHolidayAndGraphQL": "Byte-identical after dependency filename normalization",
+  "achievementDefinitionsAndHandlers": "Byte-identical",
+  "walletPaymentAndApplicationLogic": "Byte-identical",
+  "changedLogic": "Presentation-only JSX inside the existing pilot component"
+}

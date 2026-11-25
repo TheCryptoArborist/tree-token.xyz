@@ -1,0 +1,32 @@
+[
+  {
+    "width": 320,
+    "topTen": true,
+    "safeNames": true,
+    "thirteenMedals": true,
+    "noOverflow": true,
+    "emptyAndError": true,
+    "savedAndNewlyUnlocked": true,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "topTen": true,
+    "safeNames": true,
+    "thirteenMedals": true,
+    "noOverflow": true,
+    "emptyAndError": true,
+    "savedAndNewlyUnlocked": true,
+    "errors": []
+  },
+  {
+    "width": 1000,
+    "topTen": true,
+    "safeNames": true,
+    "thirteenMedals": true,
+    "noOverflow": true,
+    "emptyAndError": true,
+    "savedAndNewlyUnlocked": true,
+    "errors": []
+  }
+]

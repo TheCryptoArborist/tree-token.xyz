@@ -1,0 +1,46 @@
+/* Presentation only: server order, wallet scores and achievement rules are retained. */
+.pilot-board .pilot-heading h2{color:#fff0bc;font-size:clamp(24px,5vw,34px);letter-spacing:-.7px}
+.pilot-board .pilot-table{border:1px solid #44624e;border-radius:14px;background:linear-gradient(135deg,#10291f,#071710);padding:0 12px}
+.pilot-board table{table-layout:fixed;border-collapse:separate;border-spacing:0 7px}
+.pilot-board caption{font-size:12px;letter-spacing:.5px;padding:18px 5px 8px;color:#c6dccc}
+.pilot-board thead th{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#b7d3c0;border:0}
+.pilot-board th:first-child{width:14%}.pilot-board th:nth-child(2){width:42%}.pilot-board th:nth-child(3){width:27%}.pilot-board th:nth-child(4){width:17%}
+.pilot-board tbody td,.pilot-board tbody th{background:#10271e;border-top:1px solid #294b3a;border-bottom:1px solid #294b3a;padding:14px 7px;color:#d8e9df;font-size:14px}
+.pilot-board tbody td:first-child{border-left:1px solid #294b3a;border-radius:9px 0 0 9px}
+.pilot-board tbody td:last-child{border-right:1px solid #294b3a;border-radius:0 9px 9px 0;color:#adc7b7;font-size:12px}
+.pilot-board td:nth-child(3),.pilot-board th:nth-child(3){text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pilot-board td:last-child,.pilot-board thead th:last-child{text-align:center}
+.pilot-display-name{display:block;overflow-wrap:anywhere;font-weight:700}
+.pilot-board .pilot-rank-title{font-size:9px;letter-spacing:1.2px;margin:4px 0 0;color:inherit}
+.pilot-rank-number{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;font-weight:800;font-size:14px;color:#c3ddcb;background:#213e2d}
+.pilot-board .pilot-rank-1>*{background:linear-gradient(180deg,#514021,#302a18);border-color:#c99d43;color:#ffe9a3;padding-top:21px;padding-bottom:21px}
+.pilot-board .pilot-rank-1 td:first-child,.pilot-board .pilot-rank-1 td:last-child{border-color:#c99d43}
+.pilot-rank-1 .pilot-rank-number{background:linear-gradient(135deg,#fff2b5,#d7a12f);color:#30230b;box-shadow:0 0 18px #f1c35855;width:34px;height:34px;font-size:20px}
+.pilot-rank-1 .pilot-display-name{font-size:18px}.pilot-board .pilot-rank-1 td:nth-child(3){font-weight:800;font-size:18px;color:#fff2bf}
+.pilot-board .pilot-rank-2>*{background:#23363c;border-color:#718e98;color:#dcebf4}.pilot-rank-2 .pilot-rank-number{background:#cadce2;color:#20333d}
+.pilot-board .pilot-rank-3>*{background:#362c25;border-color:#9c7454;color:#f2d5b7}.pilot-rank-3 .pilot-rank-number{background:#d9a377;color:#302218}
+.pilot-board summary:focus-visible,.pilot-board button:focus-visible{outline:3px solid #ffe7a0;outline-offset:5px}
+.pilot-board .pilot-badges{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.pilot-board .pilot-badges article{min-width:0;align-items:center;gap:15px;padding:17px 12px;background:linear-gradient(145deg,#142a21,#081b15);border:1px solid #365343;border-radius:14px}
+.pilot-board .pilot-medal{display:block;flex:0 0 104px;width:104px;height:104px;align-self:center;border-radius:50%;clip-path:circle(49%);background-image:url('/assets/treeforce-achievements/canopy-medals-r19.png');background-size:400% 400%;background-color:#071b17;filter:saturate(.5) brightness(.8);image-rendering:auto}
+.pilot-board .earned .pilot-medal{filter:none;background-color:#071b17}
+.pilot-board .pilot-badges article.earned{border-color:#b99343;background:linear-gradient(145deg,#2d3521,#0b2118);box-shadow:inset 0 1px #e9cc7133}
+.pilot-board .pilot-badges h3{font-size:15px;color:#e8f3e6;line-height:1.3}
+.pilot-board .pilot-badges p{font-size:12px;line-height:1.5;color:#b9cdbf;margin:6px 0}
+.pilot-board .pilot-badges small{font-size:9px;letter-spacing:1px;color:#a7bcad;line-height:1.5}
+.pilot-board .pilot-badges .earned small{color:#ffe1a0}
+@media(max-width:650px){
+ .pilot-board .pilot-badges{grid-template-columns:1fr}
+ .pilot-board .pilot-table{padding:0 5px}
+ .pilot-board tbody td,.pilot-board tbody th{padding-left:4px;padding-right:4px;font-size:12px}
+ .pilot-board .pilot-rank-1 td:nth-child(3),.pilot-rank-1 .pilot-display-name{font-size:14px}
+ .pilot-board .pilot-rank-title{font-size:8px;letter-spacing:.6px}
+ .pilot-board thead th{font-size:9px;letter-spacing:.3px}
+ .pilot-board .pilot-rank-number{width:24px;height:24px;font-size:13px}
+ .pilot-board .pilot-rank-1 .pilot-rank-number{width:28px;height:28px;font-size:17px}
+ .pilot-board .pilot-medal{flex-basis:96px;width:96px;height:96px}
+}
+/* Override the legacy cabinet's tall, centered symbol tiles. */
+.pilot-board .pilot-badges article{flex-direction:row;text-align:left;min-height:138px}
+.pilot-board .pilot-badges article>div{min-width:0;flex:1}
+.pilot-board .pilot-badges h3{letter-spacing:.3px}
