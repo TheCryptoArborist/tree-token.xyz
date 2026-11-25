@@ -1,5 +1,7 @@
 # Netlify schema and gateway boundary rehearsal
 
+Latest: [pending stores and recovery controls](recovery-controls.md).
+
 Latest: [bundled native offer and shared checkout](bundled-checkout.md).
 
 Latest: [host assembly and canonical checkout transport](host.md).

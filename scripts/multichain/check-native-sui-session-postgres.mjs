@@ -246,12 +246,12 @@ try{
    const call=async(action,input)=>{const response=await packagedHost(new Request('https://tree-token.xyz/play/treeforce89/api/shared-continue-'+action,{method:'POST',headers:{origin:'https://tree-token.xyz',authorization:'Bearer '+player.token,'content-type':'application/json'},body:JSON.stringify(input)}));assert.equal(response.status,200);return response.json();};
    const values=new Map(),storage={getItem:k=>values.get(k)||null,setItem:(k,v)=>values.set(k,v)};
    class Transaction {pure={address:v=>v};coin(input){assert.equal(input.balance,20000000000n);return input;}transferObjects(coins,to){assert.equal(to,policy.recipient);}}
-   const checkout=createSharedNativeCheckout({getSession:()=>({wallet:player.wallet,nativeRunId:player.nativeRunId,sessionToken:player.token,epoch:'fixture'}),transport:{offer:i=>call('offer',i),record:i=>call('record',i)},Transaction,storage,locks:{request:async(k,o,fn)=>fn()},signAndExecute:async()=>{
+   const checkout=createSharedNativeCheckout({getSession:()=>({wallet:player.wallet,nativeRunId:player.nativeRunId,sessionToken:player.token,epoch:'fixture'}),transport:{offer:i=>call('offer',i),record:i=>call('record',i),recover:i=>call('recover',i)},Transaction,storage,legacyStorage:storage,locks:{request:async(k,o,fn)=>fn()},signAndExecute:async()=>{
     signatures++;const digest='D'+hex().replaceAll('0','1').slice(0,43);transaction={$kind:'Transaction',Transaction:{digest,status:{success:true},effects:{status:{success:true}},checkpoint:'11',timestampMs:Date.now(),transaction:{sender:player.wallet},balanceChanges:[{coinType:policy.token,address:policy.recipient,amount:policy.amount}]}};return transaction;
    }});
    const offer=await checkout.review(snapshot),again=await checkout.review(snapshot);assert.equal(offer.offerId,again.offerId);
    const receipt=await checkout.pay(offer);assert.equal(receipt.status,'recorded');assert.equal(receipt.restoreAuthorized,false);
-   await assert.rejects(checkout.pay(offer),/recover-existing-payment/);assert.equal((await checkout.reconcile()).paymentId,receipt.paymentId);assert.equal(signatures,1);
+   await assert.rejects(checkout.pay(offer),/recover-existing-payment/);assert.equal((await checkout.reconcile()).paymentId,receipt.paymentId);assert.equal(signatures,1);assert.equal((await checkout.recoverPending()).status,'recovered');assert.equal(checkout.pending().canPay,false);
    assert.equal((await owner.query('select continuation_number from public.tree_game_sessions where session_id=$1',[player.id])).rows[0].continuation_number,0);
    checks.push('bundled released native offer and shared checkout record one mocked chain payment; retry reconciles without re-signing or restoration');
    console.log(JSON.stringify({nativeBundle:bundle.evidence,chainEvidence:'mocked; no wallet or network call'},null,2));

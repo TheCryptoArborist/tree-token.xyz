@@ -1,3 +1,15 @@
+# Shared checkout recovery controls — November 24, 2026
+
+The opt-in browser adapter now reads both shared localStorage and legacy
+sessionStorage before payment. Recovery controls verify a supplied digest and
+recover a paid run without signing, payment or restoration. All 79 unit, six
+browser-control, 38 Netlify-role database/Phaser and 35 original-role database
+checks passed locally. No live/UI deployment occurred. Journal completion and
+cancellation recovery remain gated; no unsafe clear action exists. Evidence:
+`docs/multichain/generation-milestone/netlify-gateway/recovery-controls.md`.
+
+---
+
 # Bundled native offer/shared checkout rehearsal — November 24, 2026
 
 The released native offer service now runs in an isolated test bundle with the
