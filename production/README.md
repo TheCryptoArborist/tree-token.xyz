@@ -1,3 +1,28 @@
+# Grove Chess leaderboard, badges and match layout — published November 25, 2026
+
+The Grove Hall adds an online leaderboard and ten illustrated chess badges derived
+from server-recorded completed games. Games need at least four half-moves; local,
+computer, cancelled and same-wallet matches do not count. Guest records follow the
+browser identity; authenticated games follow the verified wallet. Private records
+are service-only and public aliases expose no wallet addresses.
+
+The Tree Hero now anchors a larger title and illustrated turn-status card. The
+access banner is compact, captures and recent moves sit beside the desktop board,
+and piece guide / full match log / records open as focused panels from Game controls.
+
+Locked ready deploy `6b072a462f1fe15134450132`, source
+`7a61f0b4c1e6fb41d3d2f7d50a4a27e75ad42036` (PR #351).
+[Publication run 45675812729](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45675812729)
+passed candidate and canonical browser, phone, simulated sharing and records checks.
+All 784 unrelated static paths and 61 unrelated backend/provider records were
+preserved. Only the chess function changed; total 801 static paths, 62 functions,
+and all five schedules. Archived backend source parity passed. The additive
+`20261125181009_grove_chess_records.sql` migration is applied. No live invitations,
+Telegram messages, wallet approvals or artificial match records were created.
+Full report: [grove-chess-records-release-20261125.json](grove-chess-records-release-20261125.json).
+
+---
+
 # Grove Chess friend invitations — published November 25, 2026
 
 Invite a friend creates a private match with native sharing, text-message, X,
