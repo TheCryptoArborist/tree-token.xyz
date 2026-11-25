@@ -1,0 +1,16 @@
+{
+  "localOnly": true,
+  "passed": 10,
+  "checks": [
+    "reference matches exact pinned native SQL",
+    "actual catalog verifies native structure and seven absent proposed tables",
+    "PostgreSQL enforces read-only writes denial",
+    "column drift denied",
+    "constraint drift denied",
+    "index drift denied",
+    "RLS drift denied",
+    "read-only mode must be independently observed",
+    "wrong provider path and database identity denied",
+    "catalog failure always rolls back"
+  ]
+}
