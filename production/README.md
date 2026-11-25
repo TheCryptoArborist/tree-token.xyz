@@ -1,3 +1,11 @@
+# Tree Force holiday canonical review — published November 24, 2026
+
+https://tree-token.xyz/play/treeforce89/review/holiday/
+
+Locked deploy `6b065cc63c6a47f65e6a58e8` preserves all 737 previous paths, 61 backend records and five schedules; eight additions, 745 total. Main game unchanged. See [publication evidence](../docs/treeforce89-holiday-publication.md). Capture fresh inventory before later releases.
+
+---
+
 # Tree Force canonical review — published November 24, 2026
 
 Owner-requested review: https://tree-token.xyz/play/treeforce89/review/ .

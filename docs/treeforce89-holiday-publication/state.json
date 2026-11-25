@@ -1,0 +1,50 @@
+{
+  "id": "6b065cc63c6a47f65e6a58e8",
+  "baseline": "6b065bb45e354c7f83d75727",
+  "url": "https://tree-token.xyz/play/treeforce89/review/holiday/",
+  "published": true,
+  "locked": true,
+  "existingPathsPreserved": 737,
+  "addedPaths": 8,
+  "changedExistingPaths": 0,
+  "totalPaths": 745,
+  "backendRecords": 61,
+  "schedules": 5,
+  "uploads": [
+    {
+      "path": "/play/treeforce89/assets/index-review-r16.js",
+      "bytes": 652864
+    },
+    {
+      "path": "/play/treeforce89/assets/arcade-review-r16.js",
+      "bytes": 1295783
+    },
+    {
+      "path": "/play/treeforce89/assets/graphql-review-r16.js",
+      "bytes": 54746
+    },
+    {
+      "path": "/play/treeforce89/assets/sound-identity-r16.js",
+      "bytes": 4817
+    },
+    {
+      "path": "/play/treeforce89/assets/christmas-look-r16.js",
+      "bytes": 2181
+    },
+    {
+      "path": "/play/treeforce89/assets/christmas-audio-r16.js",
+      "bytes": 490
+    },
+    {
+      "path": "/play/treeforce89/assets/holiday-mode-r16.js",
+      "bytes": 5223
+    },
+    {
+      "path": "/play/treeforce89/review/holiday/index.html",
+      "bytes": 4596
+    }
+  ],
+  "planSha256": "2b53848dbbcfd7b3ed1f9875ffda95003a81e4ea62be2b9ecaaf9fa20b13864e",
+  "checkedAt": "2026-11-25T03:58:29.604Z",
+  "slushWarningClearance": "Owner verification pending"
+}
