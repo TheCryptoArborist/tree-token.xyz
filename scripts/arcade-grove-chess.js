@@ -2,11 +2,11 @@
 export function mountGroveChess(doc = document) {
   const title = doc.getElementById('reserved-3-title');
   const card = title?.closest('article.poster--reserved');
-  if (!card || doc.getElementById('grove-chess-title')) return;
+  if (!card || doc.querySelector('.poster--grove-chess')) return;
   card.classList.remove('poster--reserved');
   card.classList.add('poster--grove-chess');
-  card.setAttribute('aria-labelledby', 'grove-chess-title');
-  card.innerHTML = `<a class="poster-link" href="/play/grove-chess/" aria-labelledby="grove-chess-title" aria-describedby="grove-chess-description">
+  card.setAttribute('aria-labelledby', 'reserved-3-title');
+  card.innerHTML = `<a class="poster-link" href="/play/grove-chess/" aria-labelledby="reserved-3-title" aria-describedby="grove-chess-description">
     <div class="poster-artwork" style="background:radial-gradient(ellipse at center,#304c2b,#071a13)">
       <div class="poster-topline"><span class="poster-number">WOODLAND CHESS</span><span class="status-tag status-tag--live">LIVE</span></div>
       <img class="poster-art" src="/play/grove-chess/assets/tree-hero.webp" alt="Tree Hero, king of the Grove Chess woodland court" width="512" height="512" loading="lazy" decoding="async" style="object-fit:contain;padding:24px">
@@ -17,4 +17,6 @@ export function mountGroveChess(doc = document) {
       <p class="poster-facts">Free play · 3 difficulty levels · Local two-player</p>
       <span class="poster-cta"><span>PLAY GROVE CHESS</span><span aria-hidden="true">→</span></span>
     </div></a>`;
+  title.textContent = 'GROVE CHESS';
+  card.querySelector('#grove-chess-title').replaceWith(title);
 }

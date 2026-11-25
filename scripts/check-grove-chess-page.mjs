@@ -35,7 +35,7 @@ try{for(const [width,height]of [[1440,1000],[390,844],[320,740],[844,390]]){
  await page.goto(base+'/play/#games',{waitUntil:'networkidle'});
  const cabinet=page.locator('.poster--grove-chess');await cabinet.waitFor();assert.equal(await cabinet.count(),1);
  assert.equal(await page.locator('#reserved-2-title').textContent(),'Tree Army');
- assert.equal(await page.locator('#reserved-3-title').count(),0);
+ assert.equal(await page.locator('#reserved-3-title').textContent(),'GROVE CHESS');
  assert.equal(await cabinet.locator('a').getAttribute('href'),'/play/grove-chess/');
  await cabinet.scrollIntoViewIfNeeded();await page.screenshot({path:`.netlify/grove-chess-cabinet-${width}.png`});
  await cabinet.locator('a').click();await page.waitForURL('**/play/grove-chess/');await page.locator('.square').last().waitFor();
