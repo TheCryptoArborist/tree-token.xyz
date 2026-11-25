@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-11-23T03:55:23.272Z",
+  "origin": "https://tree-token.xyz",
+  "exactJavaScript": true,
+  "exactSimulationVerified": true,
+  "gasMist": "4668124",
+  "bnb": {
+    "chainId": 56,
+    "block": "0x80f076e",
+    "adapter": "0x74c20dEB476Dca58459956b1AcD65771197900C9",
+    "pass": "0x418cC337FC19D8cf3b41a9C6E3138a60E34Eb9b5",
+    "purchasesPaused": true,
+    "state": "Unconfirmed",
+    "generation": 0,
+    "canPlay": false
+  }
+}

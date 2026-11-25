@@ -1,0 +1,3 @@
+import test from 'node:test';import assert from 'node:assert/strict';import handler from '../../netlify/preview-functions/generation-reserve.mjs';
+test('service refuses writes without fetching',async()=>{const r=await handler(new Request('https://tree-token.xyz/api/generation-reserve',{method:'POST',body:'signature'}));assert.equal(r.status,405);assert.equal(r.headers.get('cache-control'),'no-store');});
+for(const query of ['?transaction=anything','?digest=invalid','?digest=GNDWXqgPJnZyeQaVFqnZ1HuXSnSiHUAKV1vL4Ke49yMX&extra=true'])test('service rejects unrecognized input '+query,async()=>{assert.equal((await handler(new Request('https://tree-token.xyz/api/generation-reserve'+query))).status,502);});

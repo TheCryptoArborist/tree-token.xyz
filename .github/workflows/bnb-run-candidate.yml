@@ -1,0 +1,42 @@
+name: Create disabled BNB run-review candidate
+on:
+  push:
+    branches: ['feat/bnb-generation-custody']
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: tree-production-preservation-release
+  cancel-in-progress: false
+jobs:
+  candidate:
+    if: contains(github.event.head_commit.message, '[candidate bnb run review]')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci --ignore-scripts
+      - run: npm ci --ignore-scripts --prefix contracts/bnb-generation
+      - run: node --test tests/bnb-run-candidate.test.mjs tests/bnb-run-release-plan.test.mjs tests/multichain-bnb-run-runtime.test.mjs tests/multichain-bnb-run-http.test.mjs tests/multichain-bnb-run-authorization.test.mjs
+      - uses: actions/download-artifact@v4
+        with:
+          name: bnb-run-review-candidate
+          path: /tmp/bnb-reviewed-package
+          run-id: 45340749351
+          github-token: ${{ github.token }}
+      - name: Create and verify inactive candidate only
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: node scripts/create-bnb-run-candidate.mjs /tmp/bnb-reviewed-package /tmp/bnb-run-candidate
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bnb-run-candidate-verification
+          path: /tmp/bnb-run-candidate
+          if-no-files-found: warn
+          retention-days: 30

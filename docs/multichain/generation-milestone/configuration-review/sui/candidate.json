@@ -1,0 +1,33 @@
+{
+  "chainIdentifier": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S",
+  "checkpoint": {
+    "sequenceNumber": 348224384,
+    "timestamp": "2026-11-23T04:18:49.202Z"
+  },
+  "nft": {
+    "address": "0x046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba",
+    "version": 1100579540,
+    "digest": "4kUybSr2UuXay8xoJrQqsqTLqbmbaBB3nP3pjrAfQXxr",
+    "owner": {
+      "__typename": "AddressOwner",
+      "address": {
+        "address": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4"
+      }
+    },
+    "asMoveObject": {
+      "contents": {
+        "type": {
+          "repr": "0xf6c6d439ea0da2f3e9ba79e4992a7a4c113215fbf54c442ac9020c315f953705::collection::NFT"
+        },
+        "json": {
+          "id": "0x046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba",
+          "number": "2720",
+          "name": "Tree NFT #2720",
+          "description": "A unique tree from the Tree NFT collection. Rarity: Common",
+          "image_url": "https://black-persistent-capybara-279.mypinata.cloud/ipfs/bafybeieozgvnr7qc4ghsq36zwssuhj7xahuznjlmu6g63clnyt37hjsi4m/2720.jpg",
+          "rarity": "Common"
+        }
+      }
+    }
+  }
+}

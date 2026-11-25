@@ -1,0 +1,19 @@
+{
+  "candidateId": "6b03c667c92f828214793fb9",
+  "planHash": "2d0e120513e4daee9ad12ad6fec0d7ffe132f3d31863b6002e92093f401a48a7",
+  "sourceCommit": "a859f396611b5aa8678e5eafa1050c2b6fe99f32",
+  "runId": 45114093569,
+  "baselineId": "6b03c2e83a5903c9f492dbf6",
+  "staticPaths": 675,
+  "preservedStaticPaths": 673,
+  "functions": 56,
+  "schedules": 5,
+  "independentBackendRecordsEqual": true,
+  "independentSchedulesEqual": true,
+  "candidateBrowserScenariosPassed": 8,
+  "contractRegressionRun": 45114099364,
+  "artifact": {
+    "id": 14790434633,
+    "digest": "sha256:f725ebf7e24b1f80eba1621fa493e0eb52ac4fc76e5b7e3bfed8d8407001a384"
+  }
+}

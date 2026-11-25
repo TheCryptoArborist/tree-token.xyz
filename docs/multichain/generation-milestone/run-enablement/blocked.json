@@ -1,0 +1,111 @@
+{
+  "candidateId": "6b05e3d127c690a986593ce7",
+  "published": false,
+  "publicationRun": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45469250115",
+  "blocker": "Netlify requested all 61 exact function ZIPs after the two production function environment settings changed. Publication guard stopped before uploading or publishing.",
+  "requiredFunctions": 61,
+  "localExactArchiveMatches": 38,
+  "missingArchives": [
+    {
+      "name": "treeforce89-dev",
+      "sha256": "af1bc6f03de12e0ee77b10cd118ab346e8f5fa3c9e92cb05ee8ed8a264532a63"
+    },
+    {
+      "name": "arcade-growth",
+      "sha256": "2bc510db550e019f388c8a7f5eb8cda7360205000eff6c73745d05c978b2573c"
+    },
+    {
+      "name": "canopy-access",
+      "sha256": "8bca11eb41ca6657102b82ff28ff927e5fc529687af4a6f002152ff3384b3e4a"
+    },
+    {
+      "name": "arcade-social",
+      "sha256": "f94a10175609fb4e6e54dd7ade78d94bece40edb90bc336fd0a6b6a4d6a0853e"
+    },
+    {
+      "name": "arcade-campaign",
+      "sha256": "60c0c8039aaef863f5380b731176e13d4d93084dcd13da5b873c0b2b89dc5822"
+    },
+    {
+      "name": "treeforce89-scores",
+      "sha256": "8a1442286cc0d6c006dc99124fc14cb6e7b8a31241fa61a54c4bb331ff915dde"
+    },
+    {
+      "name": "arcade-monthly",
+      "sha256": "1523ddea256d57be94a54e58c36ea6b9c99fe1be1114715098bc89d230a9160e"
+    },
+    {
+      "name": "arcade-streak-milestones",
+      "sha256": "33e865b72e811394969508a307bb3065d60a09e228e868ae13d5466cd569d18f"
+    },
+    {
+      "name": "treeforce-session-refresh",
+      "sha256": "ec2d81f416e67a33e42ccd59203ae2b33c5f6490667c373ab5385cba6c5ae718"
+    },
+    {
+      "name": "arcade-completed-runs",
+      "sha256": "95d60aaacc0b7c9ec8ab09dc7cbe4afad92156e44ca261af1d72eb617b338f2e"
+    },
+    {
+      "name": "arcade-events",
+      "sha256": "c0b93960cbfd4b6234ce8352b2dab617550494cc1ef008740f2217c6cdf20633"
+    },
+    {
+      "name": "arcade-challenge-pilot",
+      "sha256": "4051add0bae6a9c5fcf8080eee11b4c564cd36d96f04d5cd1cbd1923f248f7a5"
+    },
+    {
+      "name": "arcade-bnb-test",
+      "sha256": "47a003fa5e906c48adada91426c4b442a639202cc720e035bf077682216aa2be"
+    },
+    {
+      "name": "root-rage-access",
+      "sha256": "42f0f9adbaae1ef2510a8f5a1fc2f8b021cb718a7d27510d0d6893e4801c68b0"
+    },
+    {
+      "name": "generation-publication",
+      "sha256": "a489a334e16b3e3df0efced6f6df37eb2e074cfe7467028048f297746e28f81d"
+    },
+    {
+      "name": "generation-slot",
+      "sha256": "5d229cf9677158213eecb78834c32eab48b283bec4a457d4372d8c7125dedca8"
+    },
+    {
+      "name": "generation-registration",
+      "sha256": "44ea7d57057481c098a67ffb37ee99672b1a171b99c6e10f7a4682a44007e1ab"
+    },
+    {
+      "name": "generation-configuration",
+      "sha256": "398e740c93eb38b06e1d54609b189ee469b7dcc7b88dcc4bf1565444104fd28b"
+    },
+    {
+      "name": "generation-binding",
+      "sha256": "f8ec65526cc6ab08c25be818cf6c648023bcd2a7661ebfe409c082370e3d4815"
+    },
+    {
+      "name": "generation-reserve",
+      "sha256": "6e74481089c2fef5a8cf85242e9412068c49e312b1dfc23f4d85e3180021af53"
+    },
+    {
+      "name": "generation-purchase-custody",
+      "sha256": "6267a4647b4fe45f1f729bfeac82f59fbb67b31d243ff1f2f5dfb496e5862407"
+    },
+    {
+      "name": "generation-acknowledgement",
+      "sha256": "4575e849879516892458ed953953e88b3431ddde3dcb109518875ff34e14b8dc"
+    },
+    {
+      "name": "arcade-bnb-run-review",
+      "sha256": "8c226ea9fd3390292e4f2e63363c65bfefd96b03fdd0a2258891ca67770caa14"
+    }
+  ],
+  "tests": {
+    "focusedPassed": 43,
+    "preparationCI": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45468891584"
+  },
+  "environmentSettingsRemoved": [
+    "BNB_RUN_REVIEW_ENABLED",
+    "BNB_RUN_REVIEW_GENERATION"
+  ],
+  "gameplayAuthorized": false
+}

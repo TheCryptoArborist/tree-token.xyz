@@ -1,0 +1,198 @@
+{
+  "digest": "DF8dMqSXXtYBoemHsPYk2QJDkuUY2m8zTRDdcu6Y9DFt",
+  "packageId": "0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92",
+  "vaultId": "0xf5dff8e2cc96824f89735fa16c068ee8194fbb7e8d697aeebe5d135f8a5916eb",
+  "gasMist": "4668124",
+  "channelId": "0x63ee0fb967cf71aecd39d095a02aae6607d18b087c9537f4d7c4d0c8cf199023",
+  "registryEntryId": "0x6e8f3156b67d9e5f35c4874604b868bdecf9df52d61a6be90a87b5033ecd9d3a",
+  "empty": true,
+  "bound": false,
+  "current": {
+    "chainIdentifier": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S",
+    "checkpoint": {
+      "sequenceNumber": 348224390,
+      "timestamp": "2026-11-23T04:18:50.687Z"
+    },
+    "vault": {
+      "address": "0xf5dff8e2cc96824f89735fa16c068ee8194fbb7e8d697aeebe5d135f8a5916eb",
+      "version": 2,
+      "digest": "EiVf4xEufWiA56rUMda9QJ7bSYtP6XDDdWHQcxyP1gJq",
+      "owner": {
+        "__typename": "Shared",
+        "initialSharedVersion": 2
+      },
+      "asMoveObject": {
+        "contents": {
+          "type": {
+            "repr": "0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92::vault::Vault<0xf6c6d439ea0da2f3e9ba79e4992a7a4c113215fbf54c442ac9020c315f953705::collection::NFT>"
+          },
+          "json": {
+            "id": "0xf5dff8e2cc96824f89735fa16c068ee8194fbb7e8d697aeebe5d135f8a5916eb",
+            "version": "1",
+            "registry": "0x298204d60d1a886e72f1ece18de179065d487a76420f93b19bf7f61c7275c210",
+            "cap": {
+              "id": "0x1711b6b0e442e8299ea3aceb30286234520c8f1c4d2294aa7d031308a3d7bcff",
+              "cap_type": {
+                "@variant": "Package",
+                "pos0": "0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92"
+              }
+            },
+            "oapp": "0x0da3d845f4ab18a0a8d2f0669722a1d9161c2ea61ad714abc14d414721fd14e4",
+            "nft": null,
+            "backing": {
+              "bytes": "BG2iqeFb2CK6BJHZeJR8wb+x/TDm+BOl+xC5srHWpro="
+            },
+            "route": {
+              "bytes": "9d/44syWgk+Jc1+hbAaO6BlPu36NaXruvl0TX4pZFus="
+            },
+            "peer": {
+              "bytes": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+            },
+            "bound": false,
+            "paused": false,
+            "phase": 0,
+            "generation": "0",
+            "announced": false,
+            "ack_sent": false,
+            "request": {
+              "bytes": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+            },
+            "recipient": {
+              "bytes": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+            }
+          }
+        }
+      }
+    },
+    "admin": {
+      "address": "0x4e7fde0fa22d78a2916f7ea8d2e7d4688d04ee4c60152d8a09d4a334e89f6aac",
+      "version": 1089269258,
+      "digest": "AHLq258yMBD9Sm3K88zi35nmtLJpK4itLJSajaAX9gc8",
+      "owner": {
+        "__typename": "AddressOwner",
+        "address": {
+          "address": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4"
+        }
+      },
+      "asMoveObject": {
+        "contents": {
+          "type": {
+            "repr": "0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92::vault::AdminCap"
+          },
+          "json": {
+            "id": "0x4e7fde0fa22d78a2916f7ea8d2e7d4688d04ee4c60152d8a09d4a334e89f6aac",
+            "registry": "0x298204d60d1a886e72f1ece18de179065d487a76420f93b19bf7f61c7275c210"
+          }
+        }
+      }
+    },
+    "endpoint": {
+      "address": "0xd45b6890fa030bcb43347c0c69a9e5a1a288d1ca7b86b428014752b472f6bf91",
+      "version": 1089269258,
+      "digest": "7KKLMt5sQiGPhFLHNRdqBs66sm5viuvUQ9Jqxrw4rqKx",
+      "owner": {
+        "__typename": "Shared",
+        "initialSharedVersion": 635685314
+      },
+      "asMoveObject": {
+        "contents": {
+          "type": {
+            "repr": "0x31beaef889b08b9c3b37d19280fc1f8b75bae5b2de2410fc3120f403e9a36dac::endpoint_v2::EndpointV2"
+          },
+          "json": {
+            "id": "0xd45b6890fa030bcb43347c0c69a9e5a1a288d1ca7b86b428014752b472f6bf91",
+            "eid": 30378,
+            "call_cap": {
+              "id": "0x8de954b904b90f887ff2e81ff3362ca89e883da6529e55723758cd5093234b0d",
+              "cap_type": {
+                "@variant": "Package",
+                "pos0": "0x31beaef889b08b9c3b37d19280fc1f8b75bae5b2de2410fc3120f403e9a36dac"
+              }
+            },
+            "oapp_registry": {
+              "oapps": {
+                "id": "0x720fc2300c05bb7ad68aefec00a9796b4451c4d1df78bc72cd8c98e774220bec",
+                "size": "143"
+              }
+            },
+            "composer_registry": {
+              "composers": {
+                "id": "0xb41ca35805177b946bebf5d339712b4e9bb562b068b33851001f9f0b66847814",
+                "size": "7"
+              }
+            },
+            "message_lib_manager": {
+              "registry": {
+                "libs": {
+                  "contents": {
+                    "id": "0x520bbc08883e22efb29f50283e25b4561ffa7c7b9d7774b14fc1c6272e593e03",
+                    "size": "2"
+                  }
+                },
+                "lib_to_type": {
+                  "id": "0xb136bb2fc780a76e636c10f10b10ab33754a3573efa5f1285bf2b35eaf73b50d",
+                  "size": "2"
+                }
+              },
+              "default_configs": {
+                "id": "0xa2371851318b3ba333270daf696dedbc7b89a1107ca362643798c1789ce05a01",
+                "size": "126"
+              },
+              "oapp_configs": {
+                "id": "0x0e679b0fcc94fb07a5ec9a14712f8e35e0994b892e64a434e898450eb670e920",
+                "size": "100"
+              }
+            }
+          }
+        }
+      }
+    },
+    "registration": {
+      "dynamicField": {
+        "value": {
+          "json": {
+            "messaging_channel": "0x63ee0fb967cf71aecd39d095a02aae6607d18b087c9537f4d7c4d0c8cf199023",
+            "oapp_info": "",
+            "delegate": "0x0000000000000000000000000000000000000000000000000000000000000000"
+          }
+        }
+      }
+    }
+  },
+  "channel": {
+    "data": {
+      "object": {
+        "owner": {
+          "__typename": "Shared",
+          "initialSharedVersion": 1089269258
+        },
+        "asMoveObject": {
+          "contents": {
+            "type": {
+              "repr": "0x31beaef889b08b9c3b37d19280fc1f8b75bae5b2de2410fc3120f403e9a36dac::messaging_channel::MessagingChannel"
+            },
+            "json": {
+              "id": "0x63ee0fb967cf71aecd39d095a02aae6607d18b087c9537f4d7c4d0c8cf199023",
+              "oapp": "0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92",
+              "channels": {
+                "id": "0xc631f02da694ee43bc4923570de9f6d53cbccbdb72986cf63dc84e77744c0e95",
+                "size": "0"
+              },
+              "is_sending": false
+            }
+          }
+        }
+      }
+    }
+  },
+  "bnb": {
+    "chainId": 56,
+    "block": "0x80f13aa",
+    "adapter": "0x74c20dEB476Dca58459956b1AcD65771197900C9",
+    "pass": "0x418cC337FC19D8cf3b41a9C6E3138a60E34Eb9b5",
+    "purchasesPaused": true,
+    "state": "Unconfirmed",
+    "generation": 0,
+    "canPlay": false
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "auditCompleted": false,
+  "phase": "binding-identity",
+  "bindingSource": "named Netlify site binding; same-name Actions secret unavailable",
+  "bindingCheck": {
+    "parseable": false,
+    "matchesPinnedIdentity": false
+  },
+  "reason": "Read-only audit failed; no credentials or database error details emitted.",
+  "runtimeAuthorized": false,
+  "run": {
+    "conclusion": "failure",
+    "databaseId": 45536657699,
+    "headSha": "c9c8c5c39cd628defe3f34fd511139a216b71fc7",
+    "status": "completed",
+    "updatedAt": "2026-11-25T02:58:45Z",
+    "url": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45536657699"
+  },
+  "hostedConnectionOpened": false,
+  "credentialPrintedOrSaved": false
+}

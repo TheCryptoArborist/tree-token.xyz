@@ -1,0 +1,28 @@
+{
+  "localOnly": true,
+  "positivePayment": "synthetic chain receipt; real signatures and PostgreSQL",
+  "passed": 20,
+  "checks": [
+    "existing identity functions and grants unchanged",
+    "challenge durable across adapter instances",
+    "immutable payment policy snapshot rejects changed pricing instead of reinterpreting old receipts",
+    "12 independent connections consume one link challenge once",
+    "12 receipt retries persist one receipt and one delivery candidate",
+    "typed delivery candidate is recoverable and never grants lives",
+    "same transaction cannot change recorded block evidence",
+    "payer uniqueness spans different sessions/accounts",
+    "run/continue uniqueness holds across different BNB payers",
+    "receipt cannot be claimed by another checkout; failed claim rolls back",
+    "receipt/order/delivery insert roll back together and retry succeeds",
+    "session revocation committed while opener waits prevents checkout",
+    "flight state rechecked under lock before opening",
+    "five-per-minute challenge limit serialized by session lock",
+    "another session cannot recover a payment candidate",
+    "stored signed terms cannot be changed at opening",
+    "expired session cannot open an unexpired checkout",
+    "database-clock quote expiry",
+    "private RLS tables; public access and runtime receipt edits/deletes denied",
+    "real two-wallet signatures -> coordinator -> PostgreSQL receipt -> typed pending delivery"
+  ],
+  "livePaymentsEnabled": false
+}

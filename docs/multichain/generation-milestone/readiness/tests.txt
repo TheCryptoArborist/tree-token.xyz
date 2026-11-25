@@ -1,0 +1,25 @@
+✔ reviewed publication reproduces pinned bytecode and creates only the six expected objects (6.336113ms)
+✔ publication rejects failed transaction (1.084669ms)
+✔ publication rejects extra command (0.244548ms)
+✔ publication rejects changed bytecode (0.88725ms)
+✔ publication rejects changed dependency (0.535415ms)
+✔ publication rejects extra NFT input (0.41623ms)
+✔ publication rejects NFT effect (0.299418ms)
+✔ publication rejects unexpected object mutation (0.298677ms)
+✔ publication rejects capability sent elsewhere (0.475877ms)
+✔ publication rejects wrong sender (0.36842ms)
+✔ publication rejects wrong gas owner (0.392655ms)
+✔ publication rejects non-SUI payment (0.445253ms)
+✔ publication rejects excess gas (0.497859ms)
+✔ publication rejects unknown created type (0.617334ms)
+✔ native type probe verifies exact canonical result and rejects substituted call or result (1.392701ms)
+✔ candidate checks reject stale observations, changed owner, type and identity (1.122555ms)
+✔ network wrapper permits simulation queries but rejects mutation or an unexpected endpoint before fetch (1.334515ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 282.963527

@@ -1,0 +1,28 @@
+name: Verify canonical generation review page source
+on:
+  push:
+    branches: ['feat/bnb-generation-custody']
+permissions:
+  contents: read
+jobs:
+  browser:
+    if: contains(github.event.head_commit.message, '[check generation review page]')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node --test tests/bnb-generation-review-page.test.mjs
+      - run: npm install --prefix /tmp/bnb-review-browser --no-save --ignore-scripts playwright@1.56.1
+      - run: node /tmp/bnb-review-browser/node_modules/playwright/cli.js install --with-deps chromium --no-shell
+      - run: node scripts/check-bnb-generation-review-browser.mjs /tmp/bnb-review-browser/node_modules/playwright/index.mjs /tmp/bnb-review-page-evidence
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bnb-generation-review-page
+          path: /tmp/bnb-review-page-evidence
+          if-no-files-found: error

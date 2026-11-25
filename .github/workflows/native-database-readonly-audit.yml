@@ -1,0 +1,30 @@
+name: Native game database read-only compatibility audit
+on:
+  push:
+    branches: ['feat/bnb-generation-custody']
+permissions:
+  contents: read
+jobs:
+  audit:
+    if: contains(github.event.head_commit.message, '[approved native binding audit]')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci --prefix vendor/bnb-continue-store --ignore-scripts --no-audit --no-fund
+      - name: Verify audit on disposable PostgreSQL
+        run: BNB_PG_BIN="$(pg_config --bindir)" node scripts/multichain/check-native-database-audit-local.mjs
+      - name: Read pinned native database catalog only
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: node scripts/multichain/check-native-database-hosted.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-database-readonly-audit
+          path: /tmp/native-database-audit/report.json
+          if-no-files-found: error

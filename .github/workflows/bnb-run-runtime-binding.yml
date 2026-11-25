@@ -1,0 +1,34 @@
+name: Verify BNB database binding inside unpublished Netlify runtime
+on:
+  push:
+    branches: ['feat/bnb-generation-custody']
+concurrency:
+  group: tree-production-preservation-release
+  cancel-in-progress: false
+permissions:
+  contents: read
+jobs:
+  verify:
+    if: contains(github.event.head_commit.message, '[check bnb runtime binding]')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci --ignore-scripts
+      - run: npm ci --ignore-scripts --prefix contracts/bnb-generation
+      - run: node --test tests/bnb-run-runtime-binding.test.mjs
+      - name: Verify read-only RPC access with existing production binding
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: node scripts/check-bnb-run-runtime-binding.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bnb-run-binding-check
+          path: /tmp/bnb-runtime-binding
+          if-no-files-found: warn

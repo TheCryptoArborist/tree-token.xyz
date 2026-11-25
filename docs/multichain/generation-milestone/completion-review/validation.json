@@ -1,0 +1,15 @@
+{
+  "sourceCommit": "63272b9e2fed9c7529589c5700a835fb34797f60",
+  "workflowRun": 45232405636,
+  "url": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45232405636",
+  "conclusion": "success",
+  "checks": {
+    "moveContractTests": 52,
+    "evmContractTests": 16,
+    "unsignedGuardTests": 398,
+    "bnbGuardTests": 103,
+    "focusedLocalTests": 26
+  },
+  "liveCompletionSubmitted": false,
+  "newFeeApproval": "approved by user: one completion, 0.006 BNB total"
+}

@@ -1,0 +1,25 @@
+{
+  "results": [
+    {
+      "scenario": "existing",
+      "passed": true
+    },
+    {
+      "scenario": "returned",
+      "passed": true
+    },
+    {
+      "scenario": "wrong",
+      "passed": true
+    },
+    {
+      "scenario": "hung",
+      "passed": true
+    },
+    {
+      "scenario": "late-change",
+      "passed": true
+    }
+  ],
+  "realWalletUsed": false
+}

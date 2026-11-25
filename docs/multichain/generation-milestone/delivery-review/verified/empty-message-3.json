@@ -1,0 +1,17 @@
+{
+  "expectedRejection": true,
+  "error": {
+    "$kind": "MoveAbort",
+    "message": "MoveAbort in 1st command, abort code: 5, in '0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92::vault::payload' (instruction 86)",
+    "command": 0,
+    "MoveAbort": {
+      "abortCode": "5",
+      "location": {
+        "package": "0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92",
+        "module": "vault",
+        "functionName": "payload",
+        "instruction": 86
+      }
+    }
+  }
+}

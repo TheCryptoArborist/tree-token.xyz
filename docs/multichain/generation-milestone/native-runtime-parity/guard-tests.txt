@@ -1,0 +1,17 @@
+✔ exact observed archive verifies but never grants runtime or database approval (4.194814ms)
+✔ one altered archive byte is rejected (7.65736ms)
+✔ digest mismatch is rejected (1.440308ms)
+✔ size mismatch is rejected (1.273566ms)
+✔ runtime mismatch is rejected (1.214006ms)
+✔ route mismatch is rejected (1.201657ms)
+✔ rate limit mismatch is rejected (1.681834ms)
+✔ unlocked deploy mismatch is rejected (0.228215ms)
+✔ wrong site mismatch is rejected (0.374647ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 124.823548

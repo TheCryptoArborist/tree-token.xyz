@@ -1,0 +1,276 @@
+{
+  "query": "query{checkpoint{sequenceNumber timestamp} o0:object(address:\"0x0da3d845f4ab18a0a8d2f0669722a1d9161c2ea61ad714abc14d414721fd14e4\"){address version digest owner{__typename ... on Shared{initialSharedVersion} ... on AddressOwner{address{address}}} asMoveObject{contents{type{repr} json}}} o1:object(address:\"0x133554387c5849c882969aef91bff4262b7afb80dc11b960c1329b9d4007d3fe\"){address version digest owner{__typename ... on Shared{initialSharedVersion} ... on AddressOwner{address{address}}} asMoveObject{contents{type{repr} json}}} o2:object(address:\"0x58948c72e8fb5c1572a9e0b3ef9d98fc5d8d1b7215bd9d1303299c813301adb1\"){address version digest owner{__typename ... on Shared{initialSharedVersion} ... on AddressOwner{address{address}}} asMoveObject{contents{type{repr} json}}} o3:object(address:\"0x63ee0fb967cf71aecd39d095a02aae6607d18b087c9537f4d7c4d0c8cf199023\"){address version digest owner{__typename ... on Shared{initialSharedVersion} ... on AddressOwner{address{address}}} asMoveObject{contents{type{repr} json}}} o4:object(address:\"0x68245d4e9839b26845f261c2864fd3c54ff9b9aca813431945ac637caf58832a\"){address version digest owner{__typename ... on Shared{initialSharedVersion} ... on AddressOwner{address{address}}} asMoveObject{contents{type{repr} json}}} o5:object(address:\"0x6ed44d00a1767f72c5fd8cd23e05ee218a6dac8e97f1dd7c5c36008433398687\"){address version digest owner{__typename ... on Shared{initialSharedVersion} ... on AddressOwner{address{address}}} asMoveObject{contents{type{repr} json}}} o6:object(address:\"0x7045f9c30d3ca52ea5792fa024293023b3c6d25ce5748630673daa20e15ca50a\"){address version digest owner{__typename ... on Shared{initialSharedVersion} ... on AddressOwner{address{address}}} asMoveObject{contents{type{repr} json}}} o7:object(address:\"0xeecc743818179153432dca61cc618a80987ff0fcd69ee1c0e9bc9833c0fe17ea\"){address version digest owner{__typename ... on Shared{initialSharedVersion} ... on AddressOwner{address{address}}} asMoveObject{contents{type{repr} json}}} o8:object(address:\"0xf5dff8e2cc96824f89735fa16c068ee8194fbb7e8d697aeebe5d135f8a5916eb\"){address version digest owner{__typename ... on Shared{initialSharedVersion} ... on AddressOwner{address{address}}} asMoveObject{contents{type{repr} json}}}}",
+  "result": {
+    "data": {
+      "checkpoint": {
+        "sequenceNumber": 348380738,
+        "timestamp": "2026-11-23T14:50:59.069Z"
+      },
+      "o0": {
+        "address": "0x0da3d845f4ab18a0a8d2f0669722a1d9161c2ea61ad714abc14d414721fd14e4",
+        "version": 1106221114,
+        "digest": "7SgwU4oGTynAF4e7mh15ZnMjPBahXEvGBh2mwB66qQ8p",
+        "owner": {
+          "__typename": "Shared",
+          "initialSharedVersion": 1
+        },
+        "asMoveObject": {
+          "contents": {
+            "type": {
+              "repr": "0xfdc28afc0110cb2edb94e3e57f2b1ce69b5a99c503b06d15e51cfa212de56e24::oapp::OApp"
+            },
+            "json": {
+              "id": "0x0da3d845f4ab18a0a8d2f0669722a1d9161c2ea61ad714abc14d414721fd14e4",
+              "oapp_cap": {
+                "id": "0x6b7c66d2135ce12efa6a23037bff2e5ca1b499db24bc200592d08c2595cf5a3a",
+                "cap_type": {
+                  "@variant": "Package",
+                  "pos0": "0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92"
+                }
+              },
+              "admin_cap": "0x97be99b8e5c3b8953323c0a481b848c990b9d32814950d803b754b4e140fe25d",
+              "peer": {
+                "peers": {
+                  "id": "0x984eb93d6713b0909152e249bcfa465a6661e7403c5b01266353b97ff2318966",
+                  "size": "1"
+                }
+              },
+              "enforced_options": {
+                "options": {
+                  "id": "0xd1c0dbf02c954d88cf9602f43c877ddaed3d8cf5afb4e71f83ccf9fbed78e497",
+                  "size": "2"
+                }
+              },
+              "sending_call": null
+            }
+          }
+        }
+      },
+      "o1": {
+        "address": "0x133554387c5849c882969aef91bff4262b7afb80dc11b960c1329b9d4007d3fe",
+        "version": 1106221114,
+        "digest": "F9nsYmAqbctN3iCF81HBB1z4FaFsasRojAferzdjsfP8",
+        "owner": {
+          "__typename": "AddressOwner",
+          "address": {
+            "address": "0xf99b445ae678d3f28fe7acb91e5d7ee8ab538d7e231a837b12c593fb624ad630"
+          }
+        },
+        "asMoveObject": {
+          "contents": {
+            "type": {
+              "repr": "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin<0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI>"
+            },
+            "json": {
+              "id": "0x133554387c5849c882969aef91bff4262b7afb80dc11b960c1329b9d4007d3fe",
+              "balance": "81674756"
+            }
+          }
+        }
+      },
+      "o2": {
+        "address": "0x58948c72e8fb5c1572a9e0b3ef9d98fc5d8d1b7215bd9d1303299c813301adb1",
+        "version": 1106221114,
+        "digest": "DRwwWfNSXQhriaNvBtNMKBWZyD9j1D56dmRXauKHw1Ti",
+        "owner": {
+          "__typename": "ObjectOwner"
+        },
+        "asMoveObject": {
+          "contents": {
+            "type": {
+              "repr": "0x0000000000000000000000000000000000000000000000000000000000000002::dynamic_field::Field<0x31beaef889b08b9c3b37d19280fc1f8b75bae5b2de2410fc3120f403e9a36dac::messaging_channel::ChannelKey,0x31beaef889b08b9c3b37d19280fc1f8b75bae5b2de2410fc3120f403e9a36dac::messaging_channel::Channel>"
+            },
+            "json": {
+              "id": "0x58948c72e8fb5c1572a9e0b3ef9d98fc5d8d1b7215bd9d1303299c813301adb1",
+              "name": {
+                "remote_eid": 30102,
+                "remote_oapp": {
+                  "bytes": "AAAAAAAAAAAAAAAAdMIN60dtylhFmVaxrNZXcRl5AMk="
+                }
+              },
+              "value": {
+                "outbound_nonce": "1",
+                "lazy_inbound_nonce": "0",
+                "inbound_payload_hashes": {
+                  "id": "0x689d08ff7c0391af6f2e9ab82cb59f8ccbd1f4fa2940b7d6124ce0c75945f5d3",
+                  "size": "0"
+                }
+              }
+            }
+          }
+        }
+      },
+      "o3": {
+        "address": "0x63ee0fb967cf71aecd39d095a02aae6607d18b087c9537f4d7c4d0c8cf199023",
+        "version": 1106221114,
+        "digest": "GVXxhrwBXQEfiQjMY8rhHeMJpUSNMCtsSrrXEy2qGg8C",
+        "owner": {
+          "__typename": "Shared",
+          "initialSharedVersion": 1089269258
+        },
+        "asMoveObject": {
+          "contents": {
+            "type": {
+              "repr": "0x31beaef889b08b9c3b37d19280fc1f8b75bae5b2de2410fc3120f403e9a36dac::messaging_channel::MessagingChannel"
+            },
+            "json": {
+              "id": "0x63ee0fb967cf71aecd39d095a02aae6607d18b087c9537f4d7c4d0c8cf199023",
+              "oapp": "0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92",
+              "channels": {
+                "id": "0xc631f02da694ee43bc4923570de9f6d53cbccbdb72986cf63dc84e77744c0e95",
+                "size": "1"
+              },
+              "is_sending": false
+            }
+          }
+        }
+      },
+      "o4": {
+        "address": "0x68245d4e9839b26845f261c2864fd3c54ff9b9aca813431945ac637caf58832a",
+        "version": 1106221114,
+        "digest": "ZRaHNYj5Gbv9EFtELHmSqtyEZHwXBv6wzZwiNngz1qJ",
+        "owner": {
+          "__typename": "AddressOwner",
+          "address": {
+            "address": "0x9004e1e4c6dcc42d1b73269db48d510192665677fcad2079a3c7d1e9e971d34e"
+          }
+        },
+        "asMoveObject": {
+          "contents": {
+            "type": {
+              "repr": "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin<0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI>"
+            },
+            "json": {
+              "id": "0x68245d4e9839b26845f261c2864fd3c54ff9b9aca813431945ac637caf58832a",
+              "balance": "4409120"
+            }
+          }
+        }
+      },
+      "o5": {
+        "address": "0x6ed44d00a1767f72c5fd8cd23e05ee218a6dac8e97f1dd7c5c36008433398687",
+        "version": 1106221114,
+        "digest": "9kMWDuc7LQkpCMkRi2HQm4cstCUhiLEdJqoz3VoHVzX8",
+        "owner": {
+          "__typename": "AddressOwner",
+          "address": {
+            "address": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4"
+          }
+        },
+        "asMoveObject": {
+          "contents": {
+            "type": {
+              "repr": "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin<0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI>"
+            },
+            "json": {
+              "id": "0x6ed44d00a1767f72c5fd8cd23e05ee218a6dac8e97f1dd7c5c36008433398687",
+              "balance": "0"
+            }
+          }
+        }
+      },
+      "o6": {
+        "address": "0x7045f9c30d3ca52ea5792fa024293023b3c6d25ce5748630673daa20e15ca50a",
+        "version": 1106221114,
+        "digest": "G1DM2PmKEcGKUioLSdMWvVdry167gYp8T3fFy6dY7h1W",
+        "owner": {
+          "__typename": "AddressOwner",
+          "address": {
+            "address": "0x9004e1e4c6dcc42d1b73269db48d510192665677fcad2079a3c7d1e9e971d34e"
+          }
+        },
+        "asMoveObject": {
+          "contents": {
+            "type": {
+              "repr": "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin<0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI>"
+            },
+            "json": {
+              "id": "0x7045f9c30d3ca52ea5792fa024293023b3c6d25ce5748630673daa20e15ca50a",
+              "balance": "4358299"
+            }
+          }
+        }
+      },
+      "o7": {
+        "address": "0xeecc743818179153432dca61cc618a80987ff0fcd69ee1c0e9bc9833c0fe17ea",
+        "version": 1106221114,
+        "digest": "838WNkHKuEWKhAeFefKpbDUrP5XEjQU4HkZjGQwCDMxr",
+        "owner": {
+          "__typename": "AddressOwner",
+          "address": {
+            "address": "0x9004e1e4c6dcc42d1b73269db48d510192665677fcad2079a3c7d1e9e971d34e"
+          }
+        },
+        "asMoveObject": {
+          "contents": {
+            "type": {
+              "repr": "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin<0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI>"
+            },
+            "json": {
+              "id": "0xeecc743818179153432dca61cc618a80987ff0fcd69ee1c0e9bc9833c0fe17ea",
+              "balance": "4409120"
+            }
+          }
+        }
+      },
+      "o8": {
+        "address": "0xf5dff8e2cc96824f89735fa16c068ee8194fbb7e8d697aeebe5d135f8a5916eb",
+        "version": 1106221114,
+        "digest": "FwY8xVBfQ4PyBgegsMEPfjkZc1vP81u4LpuPzDRocSrK",
+        "owner": {
+          "__typename": "Shared",
+          "initialSharedVersion": 2
+        },
+        "asMoveObject": {
+          "contents": {
+            "type": {
+              "repr": "0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92::vault::Vault<0xf6c6d439ea0da2f3e9ba79e4992a7a4c113215fbf54c442ac9020c315f953705::collection::NFT>"
+            },
+            "json": {
+              "id": "0xf5dff8e2cc96824f89735fa16c068ee8194fbb7e8d697aeebe5d135f8a5916eb",
+              "version": "1",
+              "registry": "0x298204d60d1a886e72f1ece18de179065d487a76420f93b19bf7f61c7275c210",
+              "cap": {
+                "id": "0x1711b6b0e442e8299ea3aceb30286234520c8f1c4d2294aa7d031308a3d7bcff",
+                "cap_type": {
+                  "@variant": "Package",
+                  "pos0": "0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92"
+                }
+              },
+              "oapp": "0x0da3d845f4ab18a0a8d2f0669722a1d9161c2ea61ad714abc14d414721fd14e4",
+              "nft": {
+                "id": "0x046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba",
+                "number": "2720",
+                "name": "Tree NFT #2720",
+                "description": "A unique tree from the Tree NFT collection. Rarity: Common",
+                "image_url": "https://black-persistent-capybara-279.mypinata.cloud/ipfs/bafybeieozgvnr7qc4ghsq36zwssuhj7xahuznjlmu6g63clnyt37hjsi4m/2720.jpg",
+                "rarity": "Common"
+              },
+              "backing": {
+                "bytes": "BG2iqeFb2CK6BJHZeJR8wb+x/TDm+BOl+xC5srHWpro="
+              },
+              "route": {
+                "bytes": "9d/44syWgk+Jc1+hbAaO6BlPu36NaXruvl0TX4pZFus="
+              },
+              "peer": {
+                "bytes": "AAAAAAAAAAAAAAAAdMIN60dtylhFmVaxrNZXcRl5AMk="
+              },
+              "bound": true,
+              "paused": false,
+              "phase": 1,
+              "generation": "1",
+              "announced": true,
+              "ack_sent": false,
+              "request": {
+                "bytes": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+              },
+              "recipient": {
+                "bytes": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

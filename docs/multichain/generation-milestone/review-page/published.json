@@ -1,0 +1,37 @@
+{
+  "id": "6b060d9d9feb3f962c534534",
+  "baselineId": "6b05eac4008e25aba5f361e1",
+  "publishedAt": "2026-11-24T22:20:30.641Z",
+  "locked": true,
+  "preservedStaticPaths": 691,
+  "addedStaticPaths": 2,
+  "totalStaticPaths": 693,
+  "preservedFunctions": 61,
+  "schedules": 5,
+  "environmentUnchanged": true,
+  "sourceFiles": [
+    {
+      "path": "play/generation-review/index.html",
+      "sha256": "5692225d1c4d03cac50804bc588965f29a675f80f4d7f496ec7609cb5a76466d"
+    },
+    {
+      "path": "play/generation-review/app.js",
+      "sha256": "056d1979ed8b400101bc99fd83d58a05d1a2dbe0c5aa17eeef305a484e8bee2d"
+    }
+  ],
+  "reviewEndpointChecks": [
+    {
+      "status": 401,
+      "error": "invalid-session"
+    },
+    {
+      "status": 403,
+      "error": "review-denied"
+    }
+  ],
+  "gameplayAuthorized": false,
+  "paymentsEnabled": false,
+  "liveWalletTest": false,
+  "ci": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45499597917",
+  "sourceAndPreservationChecksPassed": 4
+}

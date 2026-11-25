@@ -1,0 +1,23 @@
+{
+  "checkedAt": "2026-11-23T16:26:47.691Z",
+  "bnbHash": "0xedb9edeecf1fd27e8851e57e436d9a7944933d9f0c85101d4f59be3e2f87e3b0",
+  "sourceVerified": true,
+  "totalWei": "4595594974304116",
+  "messageFeeWei": "4577084124304116",
+  "gasWei": "18510850000000",
+  "guid": "0xb46132353e03697bb27ed5581c3ac1b2e0a2ba1e365a11a388bcf0390cba6b99",
+  "destinationVerified": true,
+  "nftReturned": true,
+  "recipient": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+  "suiDigest": "CYqYhXynf4fvaUNN8TnQxX6J1YMB3T2ab5avAbtnwZzn",
+  "phase": 2,
+  "generation": 1,
+  "ackSent": false,
+  "checkpoint": {
+    "sequenceNumber": 348404471,
+    "timestamp": "2026-11-23T16:26:45.957Z"
+  },
+  "bnbState": "Locked",
+  "purchasesPaused": true,
+  "canPlay": false
+}

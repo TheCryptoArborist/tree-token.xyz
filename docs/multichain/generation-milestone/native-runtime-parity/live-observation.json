@@ -1,0 +1,88 @@
+{
+  "observedAt": "2026-11-25T02:33:37.789Z",
+  "source": "Netlify get-project then get-deploy read-only connector",
+  "siteId": "aa62f324-b880-47d6-85b8-4ba0700ff5bf",
+  "deployId": "6b06476aad525a8e3c5afdf9",
+  "state": "ready",
+  "locked": true,
+  "publishedAt": "2026-11-25T02:28:17.246Z",
+  "functionCount": 61,
+  "schedules": [
+    {
+      "name": "tree-badges-refresh-scheduled",
+      "cron": "47 */6 * * *"
+    },
+    {
+      "name": "tree-exposure-refresh-scheduled",
+      "cron": "27 */6 * * *"
+    },
+    {
+      "name": "tree-knowledge-trial-resolver",
+      "cron": "5 * * * *"
+    },
+    {
+      "name": "tree-knowledge-trial-rotation-scheduled",
+      "cron": "15 * * * *"
+    },
+    {
+      "name": "tree-leaderboard-refresh-scheduled",
+      "cron": "17 */6 * * *"
+    }
+  ],
+  "native": {
+    "n": "treeforce89-dev",
+    "d": "af1bc6f03de12e0ee77b10cd118ab346e8f5fa3c9e92cb05ee8ed8a264532a63",
+    "dn": null,
+    "g": null,
+    "bd": {
+      "bootstrapVersion": "2.24.0",
+      "runtimeAPIVersion": 2
+    },
+    "rgo": "us-east-2",
+    "mo": 1024,
+    "ro": [
+      {
+        "p": "/play/treeforce89/api/*",
+        "l": null,
+        "e": "^\\/play\\/treeforce89\\/api(?:\\/(.*))\\/?$",
+        "m": [],
+        "ps": false
+      }
+    ],
+    "p": 10,
+    "tr": {
+      "action": {
+        "type": "rate_limit",
+        "config": {
+          "aggregate": {
+            "keys": [
+              {
+                "type": "ip"
+              }
+            ]
+          },
+          "rate_limit_config": {
+            "algorithm": "sliding_window",
+            "window_size": 60,
+            "window_limit": 60
+          }
+        }
+      }
+    },
+    "id": "e98ac9989bf2c291858df5bf2cd749129e76d94b085c1219911a0fd5ae42cbd5",
+    "rg": "us-east-2",
+    "m": 1024,
+    "s": 1753757,
+    "r": "nodejs22.x",
+    "c": "2026-11-05T14:59:17.122Z",
+    "a": "430503858661",
+    "oid": "c754f08c43121c8d7aef300d81d9a22693447a7bfde54aec19ff6f62ecb87cf1",
+    "im": "stream",
+    "obl": "netlify-observability-extension",
+    "oblv": 34
+  },
+  "limitations": [
+    "Metadata only; not complete inventory or database parity",
+    "No deployment permission implied"
+  ]
+}

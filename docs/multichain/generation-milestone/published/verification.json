@@ -1,0 +1,112 @@
+{
+  "digest": "DVoQj1tPzfASPesS1bdEsEBQnQ7AhzNS4kxeuEiQVq6S",
+  "gasMist": "69723600",
+  "packageId": "0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92",
+  "registryId": "0x298204d60d1a886e72f1ece18de179065d487a76420f93b19bf7f61c7275c210",
+  "oappId": "0x0da3d845f4ab18a0a8d2f0669722a1d9161c2ea61ad714abc14d414721fd14e4",
+  "objects": [
+    {
+      "id": "0x0da3d845f4ab18a0a8d2f0669722a1d9161c2ea61ad714abc14d414721fd14e4",
+      "type": "0xfdc28afc0110cb2edb94e3e57f2b1ce69b5a99c503b06d15e51cfa212de56e24::oapp::OApp",
+      "owner": {
+        "Shared": {
+          "initialSharedVersion": "1"
+        },
+        "$kind": "Shared"
+      }
+    },
+    {
+      "id": "0x298204d60d1a886e72f1ece18de179065d487a76420f93b19bf7f61c7275c210",
+      "type": "0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92::vault::Registry",
+      "owner": {
+        "Shared": {
+          "initialSharedVersion": "1"
+        },
+        "$kind": "Shared"
+      }
+    },
+    {
+      "id": "0x4e7fde0fa22d78a2916f7ea8d2e7d4688d04ee4c60152d8a09d4a334e89f6aac",
+      "type": "0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92::vault::AdminCap",
+      "owner": {
+        "AddressOwner": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+        "$kind": "AddressOwner"
+      }
+    },
+    {
+      "id": "0x97be99b8e5c3b8953323c0a481b848c990b9d32814950d803b754b4e140fe25d",
+      "type": "0xfdc28afc0110cb2edb94e3e57f2b1ce69b5a99c503b06d15e51cfa212de56e24::oapp::AdminCap",
+      "owner": {
+        "AddressOwner": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+        "$kind": "AddressOwner"
+      }
+    },
+    {
+      "id": "0xb70e2cdc18d562247bc34bf47efee620a05ec1f059cff5e812a8d433a722999d",
+      "type": "0x0000000000000000000000000000000000000000000000000000000000000002::package::UpgradeCap",
+      "owner": {
+        "AddressOwner": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+        "$kind": "AddressOwner"
+      }
+    },
+    {
+      "id": "0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92",
+      "type": "package",
+      "owner": null
+    }
+  ],
+  "modules": [
+    {
+      "name": "codec",
+      "bytes": 822,
+      "sha256": "d10b7a1e9bdac5ddbe460b7a9ab491b989e1b20baa9aec453a3db723f358a60a",
+      "selfAddressOffset": 220
+    },
+    {
+      "name": "vault",
+      "bytes": 5970,
+      "sha256": "52fe7b96ee51dadb0876aa869795b22e2f14933eb0d23eb2f5e4a5719022cc09",
+      "selfAddressOffset": 2567
+    }
+  ],
+  "stateCheckpoint": {
+    "sequenceNumber": 348094265,
+    "timestamp": "2026-11-22T19:32:20.797Z"
+  },
+  "nftCheckpoint": {
+    "sequenceNumber": 348094135,
+    "timestamp": "2026-11-22T19:31:49.042Z"
+  },
+  "candidate": {
+    "address": "0x046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba",
+    "version": 1100579540,
+    "digest": "4kUybSr2UuXay8xoJrQqsqTLqbmbaBB3nP3pjrAfQXxr",
+    "owner": {
+      "__typename": "AddressOwner",
+      "address": {
+        "address": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4"
+      }
+    },
+    "asMoveObject": {
+      "contents": {
+        "type": {
+          "repr": "0xf6c6d439ea0da2f3e9ba79e4992a7a4c113215fbf54c442ac9020c315f953705::collection::NFT"
+        },
+        "json": {
+          "id": "0x046da2a9e15bd822ba0491d978947cc1bfb1fd30e6f813a5fb10b9b2b1d6a6ba",
+          "number": "2720",
+          "name": "Tree NFT #2720",
+          "description": "A unique tree from the Tree NFT collection. Rarity: Common",
+          "image_url": "https://black-persistent-capybara-279.mypinata.cloud/ipfs/bafybeieozgvnr7qc4ghsq36zwssuhj7xahuznjlmu6g63clnyt37hjsi4m/2720.jpg",
+          "rarity": "Common"
+        }
+      }
+    }
+  },
+  "capabilitiesOwnedBy": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+  "upgradePolicy": "compatible retained in dev wallet",
+  "emptyRegistry": true,
+  "slotCreated": false,
+  "peersConfigured": false,
+  "nftDeposited": false
+}

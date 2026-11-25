@@ -1,0 +1,17 @@
+{
+  "localOnly": true,
+  "checks": [
+    "existing identity function definitions and grants unchanged",
+    "durable insert and duplicate denial",
+    "wrong generation and null action rejected",
+    "12 independent workers: exactly one consumption",
+    "consumption persists across connections",
+    "database-clock expiry",
+    "five-per-minute durable session rate limit",
+    "public RPC and table permissions denied",
+    "revocation commit wins while consumption waits on session lock",
+    "revoked session cannot issue",
+    "RLS enabled and security invoker"
+  ],
+  "passed": 11
+}

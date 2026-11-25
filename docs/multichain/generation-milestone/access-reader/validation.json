@@ -1,0 +1,12 @@
+{
+  "sourceCommit": "da7640738b7c3016b16f40420d67f124a5b2e1f5",
+  "runId": "45335438369",
+  "conclusion": "success",
+  "focusedLocalTests": 46,
+  "hostedMoveTests": 52,
+  "hostedEvmContractTests": 16,
+  "hostedUnsignedGuards": 398,
+  "hostedBnbGuardsIncludingReader": 139,
+  "gameplayAuthorized": false,
+  "liveDeployment": false
+}

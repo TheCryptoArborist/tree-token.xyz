@@ -1,0 +1,36 @@
+name: Publish verified disabled BNB run-review endpoint
+on:
+  push:
+    branches: ['feat/bnb-generation-custody']
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: tree-production-preservation-release
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: contains(github.event.head_commit.message, '[publish bnb run review]')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci --ignore-scripts
+      - run: npm ci --ignore-scripts --prefix contracts/bnb-generation
+      - run: node --test tests/bnb-run-publication.test.mjs tests/bnb-run-candidate.test.mjs tests/bnb-run-release-plan.test.mjs tests/multichain-bnb-run-runtime.test.mjs tests/multichain-bnb-run-http.test.mjs tests/multichain-bnb-run-authorization.test.mjs
+      - name: Reverify exact candidate, wait for builds, publish and lock disabled endpoint
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: node scripts/publish-bnb-run-review.mjs /tmp/bnb-run-publication
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bnb-run-publication
+          path: /tmp/bnb-run-publication
+          if-no-files-found: warn
+          retention-days: 30

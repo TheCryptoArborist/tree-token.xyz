@@ -1,0 +1,17 @@
+{
+  "observedAt": "2026-11-25T02:52:53.186903+00:00",
+  "url": "https://tree-token.xyz/play/treeforce89/api/status",
+  "method": "POST",
+  "httpStatus": 200,
+  "response": {
+    "schemaReady": true,
+    "tableCount": 4,
+    "isolationVerified": true,
+    "paymentSchemaReady": true,
+    "paymentsEnabled": true
+  },
+  "applicationRowsRequested": false,
+  "walletActions": false,
+  "fullCatalogVerified": false,
+  "sharedRestoreAuthorized": false
+}

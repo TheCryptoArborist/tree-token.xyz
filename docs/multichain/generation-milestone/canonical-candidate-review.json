@@ -1,0 +1,22 @@
+{
+  "candidateId": "6b032a964276045ddedb18ca",
+  "baselineId": "6b0282d222b49cfa17fa3731",
+  "sourceCommit": "2e2c440caba28ffd2fe0a5c5483c5a3e68e8957b",
+  "workflowRunId": 45051305254,
+  "preparationPassed": true,
+  "staticPaths": 658,
+  "existingStaticPathsPreserved": 656,
+  "functions": 53,
+  "existingCompleteFunctionRecordsIndependentlyCompared": 52,
+  "existingCompleteFunctionDifferences": [],
+  "schedulesPreserved": 5,
+  "addedFunctionSHA256": "a489a334e16b3e3df0efced6f6df37eb2e074cfe7467028048f297746e28f81d",
+  "servedBundleMatchesCommittedBundle": true,
+  "freshHostedSimulationIndependentlyVerified": true,
+  "estimatedNetGasMist": "69723600",
+  "localToolingAndReleaseTestsPassed": 73,
+  "mockWalletBrowserChecks": ["connect", "review", "signature rejection without submission", "persistent reload lock"],
+  "realWalletSignatureTested": false,
+  "publicSalesEnabled": false,
+  "gameplayEnabled": false
+}

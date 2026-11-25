@@ -1,0 +1,15 @@
+{
+  "baseline": "6b046d714f59325f88ea55af",
+  "candidate": "6b047fa4c9ac1e8b32621216",
+  "functions": 60,
+  "completeBackendRecordsEqual": true,
+  "schedulesEqual": true,
+  "candidateRun": "45233815169",
+  "candidateArtifactId": "14849120119",
+  "candidateArtifactDigest": "sha256:43f37d5e0b6d404fbcd8f7cb8745b905209a0c2da0f75669b24b3e4b98ac2df4",
+  "sourceContractCIRun": "45233815244",
+  "sourceContractCIConclusion": "success",
+  "servedScriptMatchesSource": true,
+  "liveAcknowledgementVerified": true,
+  "browserScenariosPassed": 9
+}

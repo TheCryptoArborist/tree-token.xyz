@@ -1,0 +1,54 @@
+{
+  "assetOrigin": "https://6b0466dbe649f3c4abd225f9--tree-token.netlify.app",
+  "realWalletUsed": false,
+  "cases": [
+    {
+      "scenario": "connect-review",
+      "passed": true,
+      "mockWalletRequests": 0,
+      "realChainSubmissions": 0
+    },
+    {
+      "scenario": "wrong-account",
+      "passed": true,
+      "mockWalletRequests": 0,
+      "realChainSubmissions": 0
+    },
+    {
+      "scenario": "rejection",
+      "passed": true,
+      "mockWalletRequests": 1,
+      "realChainSubmissions": 0
+    },
+    {
+      "scenario": "uncertain-submission",
+      "passed": true,
+      "mockWalletRequests": 1,
+      "realChainSubmissions": 0
+    },
+    {
+      "scenario": "pending-reload",
+      "passed": true,
+      "mockWalletRequests": 0,
+      "realChainSubmissions": 0
+    },
+    {
+      "scenario": "stale-review",
+      "passed": true,
+      "mockWalletRequests": 0,
+      "realChainSubmissions": 0
+    },
+    {
+      "scenario": "rpc-fallback",
+      "passed": true,
+      "mockWalletRequests": 0,
+      "realChainSubmissions": 0
+    },
+    {
+      "scenario": "off-origin",
+      "passed": true,
+      "mockWalletRequests": 0,
+      "realChainSubmissions": 0
+    }
+  ]
+}

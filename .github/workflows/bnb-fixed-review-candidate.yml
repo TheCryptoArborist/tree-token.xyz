@@ -1,0 +1,50 @@
+name: Verify isolated generation-1 review replacement candidate
+on:
+  push:
+    branches: ['feat/bnb-generation-custody']
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: tree-production-preservation-release
+  cancel-in-progress: false
+jobs:
+  candidate:
+    if: contains(github.event.head_commit.message, '[candidate bnb fixed review]') || contains(github.event.head_commit.message, '[verify bnb fixed review]')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci --ignore-scripts
+      - run: npm ci --ignore-scripts --prefix contracts/bnb-generation
+      - run: node --test tests/bnb-fixed-review-candidate.test.mjs tests/multichain-bnb-run-runtime.test.mjs tests/multichain-bnb-run-http.test.mjs tests/multichain-bnb-run-authorization.test.mjs
+      - run: node scripts/package-bnb-run-review.mjs --outdir /tmp/bnb-fixed-package
+        if: contains(github.event.head_commit.message, '[candidate bnb fixed review]')
+      - uses: actions/download-artifact@v4
+        if: contains(github.event.head_commit.message, '[verify bnb fixed review]')
+        with:
+          name: bnb-fixed-review-candidate
+          run-id: 45474450448
+          github-token: ${{ github.token }}
+          path: /tmp/bnb-fixed-resume
+      - run: cp -a /tmp/bnb-fixed-resume/bnb-fixed-package /tmp/bnb-fixed-package
+        if: contains(github.event.head_commit.message, '[verify bnb fixed review]')
+      - name: Create inactive candidate preserving production settings and other packages
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          BNB_FIXED_REVIEW_RESUME: ${{ contains(github.event.head_commit.message, '[verify bnb fixed review]') && '6b05eac4008e25aba5f361e1' || '' }}
+        run: node scripts/create-bnb-fixed-review-candidate.mjs /tmp/bnb-fixed-package /tmp/bnb-fixed-candidate
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bnb-fixed-review-candidate
+          path: |
+            /tmp/bnb-fixed-package
+            /tmp/bnb-fixed-candidate
+          if-no-files-found: error
+          retention-days: 30

@@ -1,0 +1,290 @@
+name: Verify generation custody and BNB protocol
+on:
+  pull_request:
+    paths:
+      - 'docs/multichain/generation-milestone/**'
+      - 'contracts/nftree-generation/**'
+      - 'tools/generation-publication/**'
+      - 'tools/generation-slot/**'
+      - 'tools/generation-registration/**'
+      - 'tools/generation-configuration/**'
+      - 'tools/generation-binding/**'
+      - 'tools/generation-reserve/**'
+      - 'tools/generation-acknowledgement/**'
+      - 'tools/bnb-purchase/**'
+      - 'tools/bnb-return/**'
+      - 'netlify/preview-functions/generation-registration.mjs'
+      - 'netlify/preview-functions/generation-configuration.mjs'
+      - 'netlify/preview-functions/generation-binding.mjs'
+      - 'netlify/preview-functions/generation-reserve.mjs'
+      - 'netlify/preview-functions/generation-acknowledgement.mjs'
+      - 'netlify/preview-functions/generation-purchase-custody.mjs'
+      - 'tools/bnb-generation/**'
+      - 'tools/bnb-configuration/**'
+      - 'netlify/preview-functions/generation-slot.mjs'
+      - 'netlify/preview-functions/generation-publication.mjs'
+      - 'scripts/build-feature-preview.mjs'
+      - 'scripts/multichain/sui-bnb-continue-store.mjs'
+      - 'scripts/multichain/check-sui-bnb-continue-postgres.mjs'
+      - 'scripts/multichain/check-delivery-compatibility-postgres.mjs'
+      - 'scripts/multichain/native-sui-payment.mjs'
+      - 'scripts/multichain/continue-restore-authorization.mjs'
+      - 'scripts/multichain/continue-restore-http.mjs'
+      - 'scripts/multichain/native-continue-composition.mjs'
+      - 'scripts/multichain/native-continue-host.mjs'
+      - 'scripts/multichain/native-payment-completion.mjs'
+      - 'scripts/multichain/load-native-continue-test-bundle.mjs'
+      - 'scripts/multichain/browser/shared-native-checkout.mjs'
+      - 'scripts/multichain/browser/bnb-payment-journal.mjs'
+      - 'tests/multichain-bnb-journal.test.mjs'
+      - 'scripts/multichain/browser/checkout-recovery-controls.mjs'
+      - 'scripts/multichain/check-checkout-recovery-browser.mjs'
+      - 'tests/multichain-shared-checkout.test.mjs'
+      - 'scripts/multichain/browser/native-continue-transport.mjs'
+      - 'scripts/multichain/browser/bnb-checkout-review.mjs'
+      - 'scripts/multichain/check-bnb-checkout-review-browser.mjs'
+      - 'tests/multichain-bnb-checkout-review.test.mjs'
+      - 'tests/multichain-native-host.test.mjs'
+      - 'scripts/multichain/native-shared-offer.mjs'
+      - 'tests/multichain-native-composition.test.mjs'
+      - 'scripts/multichain/check-native-runtime-parity.mjs'
+      - 'tests/multichain-native-runtime-parity.test.mjs'
+      - 'production/recovered-function-archives/treeforce89-dev.zip'
+      - 'tests/multichain-restore-http.test.mjs'
+      - 'scripts/multichain/check-phaser-restore.mjs'
+      - 'tests/multichain-restore-authorization.test.mjs'
+      - 'scripts/multichain/browser/**'
+      - 'scripts/multichain/check-continue-browser.mjs'
+      - 'vendor/continue-browser-test/**'
+      - 'scripts/multichain/native-sui-session.mjs'
+      - 'scripts/multichain/native-bnb-checkout.mjs'
+      - 'scripts/multichain/native-paid-run-recovery.mjs'
+      - 'scripts/multichain/check-native-sui-session-postgres.mjs'
+      - 'scripts/multichain/shared-continue-delivery.mjs'
+      - 'scripts/multichain/check-shared-delivery-postgres.mjs'
+      - 'vendor/bnb-continue-store/**'
+      - 'scripts/multichain/sui-bnb-continue.mjs'
+      - 'tests/multichain-sui-bnb-continue.test.mjs'
+      - 'scripts/multichain/bnb-run-lifecycle.mjs'
+      - 'scripts/multichain/check-bnb-lifecycle-postgres.mjs'
+      - 'tests/multichain-bnb-run-lifecycle.test.mjs'
+      - 'scripts/multichain/bnb-run-authorization.mjs'
+      - 'scripts/multichain/bnb-run-http.mjs'
+      - 'netlify/bnb-run-review-functions/**'
+      - 'scripts/package-bnb-run-review.mjs'
+      - 'tests/multichain-bnb-run-runtime.test.mjs'
+      - 'scripts/multichain/check-bnb-run-postgres.mjs'
+      - 'scripts/multichain/maintenance/**'
+      - 'scripts/multichain/check-bnb-run-database-readiness.mjs'
+      - 'scripts/multichain/check-bnb-run-applied.mjs'
+      - 'supabase/migrations/*arcade_bnb_run_review.sql'
+      - 'tests/multichain-bnb-run-http.test.mjs'
+      - 'tests/multichain-bnb-run-authorization.test.mjs'
+      - 'contracts/bnb-generation/**'
+      - 'contracts/vendor/layerzero-sui/**'
+      - '.github/workflows/verify-generation-custody.yml'
+  push:
+    branches: ['feat/bnb-generation-custody']
+    paths:
+      - 'docs/multichain/generation-milestone/**'
+      - 'contracts/nftree-generation/**'
+      - 'tools/generation-publication/**'
+      - 'tools/generation-slot/**'
+      - 'tools/generation-registration/**'
+      - 'tools/generation-configuration/**'
+      - 'tools/generation-binding/**'
+      - 'tools/generation-reserve/**'
+      - 'tools/generation-acknowledgement/**'
+      - 'tools/bnb-purchase/**'
+      - 'tools/bnb-return/**'
+      - 'netlify/preview-functions/generation-registration.mjs'
+      - 'netlify/preview-functions/generation-configuration.mjs'
+      - 'netlify/preview-functions/generation-binding.mjs'
+      - 'netlify/preview-functions/generation-reserve.mjs'
+      - 'netlify/preview-functions/generation-acknowledgement.mjs'
+      - 'netlify/preview-functions/generation-purchase-custody.mjs'
+      - 'tools/bnb-generation/**'
+      - 'tools/bnb-configuration/**'
+      - 'netlify/preview-functions/generation-slot.mjs'
+      - 'netlify/preview-functions/generation-publication.mjs'
+      - 'scripts/build-feature-preview.mjs'
+      - 'scripts/multichain/sui-bnb-continue-store.mjs'
+      - 'scripts/multichain/check-sui-bnb-continue-postgres.mjs'
+      - 'scripts/multichain/check-delivery-compatibility-postgres.mjs'
+      - 'scripts/multichain/native-sui-payment.mjs'
+      - 'scripts/multichain/continue-restore-authorization.mjs'
+      - 'scripts/multichain/continue-restore-http.mjs'
+      - 'scripts/multichain/native-continue-composition.mjs'
+      - 'scripts/multichain/native-continue-host.mjs'
+      - 'scripts/multichain/native-payment-completion.mjs'
+      - 'scripts/multichain/load-native-continue-test-bundle.mjs'
+      - 'scripts/multichain/browser/shared-native-checkout.mjs'
+      - 'scripts/multichain/browser/bnb-payment-journal.mjs'
+      - 'tests/multichain-bnb-journal.test.mjs'
+      - 'scripts/multichain/browser/checkout-recovery-controls.mjs'
+      - 'scripts/multichain/check-checkout-recovery-browser.mjs'
+      - 'tests/multichain-shared-checkout.test.mjs'
+      - 'scripts/multichain/browser/native-continue-transport.mjs'
+      - 'scripts/multichain/browser/bnb-checkout-review.mjs'
+      - 'scripts/multichain/check-bnb-checkout-review-browser.mjs'
+      - 'tests/multichain-bnb-checkout-review.test.mjs'
+      - 'tests/multichain-native-host.test.mjs'
+      - 'scripts/multichain/native-shared-offer.mjs'
+      - 'tests/multichain-native-composition.test.mjs'
+      - 'scripts/multichain/check-native-runtime-parity.mjs'
+      - 'tests/multichain-native-runtime-parity.test.mjs'
+      - 'production/recovered-function-archives/treeforce89-dev.zip'
+      - 'tests/multichain-restore-http.test.mjs'
+      - 'scripts/multichain/check-phaser-restore.mjs'
+      - 'tests/multichain-restore-authorization.test.mjs'
+      - 'scripts/multichain/browser/**'
+      - 'scripts/multichain/check-continue-browser.mjs'
+      - 'vendor/continue-browser-test/**'
+      - 'scripts/multichain/native-sui-session.mjs'
+      - 'scripts/multichain/native-bnb-checkout.mjs'
+      - 'scripts/multichain/native-paid-run-recovery.mjs'
+      - 'scripts/multichain/check-native-sui-session-postgres.mjs'
+      - 'scripts/multichain/shared-continue-delivery.mjs'
+      - 'scripts/multichain/check-shared-delivery-postgres.mjs'
+      - 'vendor/bnb-continue-store/**'
+      - 'scripts/multichain/sui-bnb-continue.mjs'
+      - 'tests/multichain-sui-bnb-continue.test.mjs'
+      - 'scripts/multichain/bnb-run-lifecycle.mjs'
+      - 'scripts/multichain/check-bnb-lifecycle-postgres.mjs'
+      - 'tests/multichain-bnb-run-lifecycle.test.mjs'
+      - 'scripts/multichain/bnb-run-authorization.mjs'
+      - 'scripts/multichain/bnb-run-http.mjs'
+      - 'netlify/bnb-run-review-functions/**'
+      - 'scripts/package-bnb-run-review.mjs'
+      - 'tests/multichain-bnb-run-runtime.test.mjs'
+      - 'scripts/multichain/check-bnb-run-postgres.mjs'
+      - 'scripts/multichain/maintenance/**'
+      - 'scripts/multichain/check-bnb-run-database-readiness.mjs'
+      - 'scripts/multichain/check-bnb-run-applied.mjs'
+      - 'supabase/migrations/*arcade_bnb_run_review.sql'
+      - 'tests/multichain-bnb-run-http.test.mjs'
+      - 'tests/multichain-bnb-run-authorization.test.mjs'
+      - 'contracts/bnb-generation/**'
+      - '.github/workflows/verify-generation-custody.yml'
+permissions:
+  contents: read
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install isolated EVM dependencies
+        run: npm ci --ignore-scripts --prefix contracts/bnb-generation
+      - name: Install pinned simulation tooling and test unsigned guards
+        run: |
+          npm ci --ignore-scripts
+          node --test contracts/nftree-generation/scripts/*.test.mjs tools/generation-publication/core.test.mjs tools/generation-slot/*.test.mjs tools/generation-registration/*.test.mjs tools/generation-configuration/*.test.mjs tools/generation-binding/*.test.mjs tools/generation-reserve/*.test.mjs tools/generation-acknowledgement/*.test.mjs tools/bnb-purchase/*.test.mjs tools/bnb-return/*.test.mjs
+          node tools/bnb-return/build.mjs
+          git diff --exit-code -- tools/bnb-return/app.js
+          node tools/bnb-purchase/build.mjs
+          git diff --exit-code -- tools/bnb-purchase/app.js
+          node tools/generation-acknowledgement/build.mjs
+          git diff --exit-code -- tools/generation-acknowledgement/app.js vendor/generation-acknowledgement/bnb-verifier.mjs
+          node tools/generation-reserve/build.mjs
+          git diff --exit-code -- tools/generation-reserve/app.js
+          node tools/generation-binding/build.mjs
+          git diff --exit-code -- tools/generation-binding/app.js
+          node tools/generation-configuration/build.mjs
+          git diff --exit-code -- tools/generation-configuration/app.js
+          node tools/generation-registration/build.mjs
+          git diff --exit-code -- tools/generation-registration/app.js
+          node tools/generation-slot/build.mjs
+          git diff --exit-code -- tools/generation-slot/app.js
+          node tools/generation-publication/build.mjs
+          git diff --exit-code -- tools/generation-publication/app.js
+      - run: |
+          node tools/bnb-configuration/build.mjs
+          git diff --exit-code -- tools/bnb-configuration/app.js
+          node tools/bnb-generation/build.mjs
+          git diff --exit-code -- tools/bnb-generation/app.js
+      - name: EVM contract tests
+        run: npm test --prefix contracts/bnb-generation
+      - run: node --test contracts/bnb-generation/test/wallet-preflight.test.mjs contracts/bnb-generation/test/deployment-review.test.mjs contracts/bnb-generation/test/handoff.test.mjs contracts/bnb-generation/test/read-rpc.test.mjs contracts/bnb-generation/test/path-review.test.mjs contracts/bnb-generation/test/configuration-handoff.test.mjs contracts/bnb-generation/test/return-fees.test.mjs contracts/bnb-generation/test/completion-review.test.mjs contracts/bnb-generation/test/generation-access.test.mjs tests/multichain-bnb-run-authorization.test.mjs tests/multichain-bnb-run-http.test.mjs tests/multichain-bnb-run-lifecycle.test.mjs tests/multichain-sui-bnb-continue.test.mjs
+      - name: Compile release Solidity
+        run: npm run compile --prefix contracts/bnb-generation
+      - name: Fetch checksum-pinned Sui compiler
+        run: |
+          curl --fail --location --retry 2 --output /tmp/sui.tgz https://github.com/MystenLabs/sui/releases/download/mainnet-v1.83.1/sui-mainnet-v1.83.1-ubuntu-x86_64.tgz
+          echo 'a54b24da3c8fd4b88522f01c8718826ae5637512ee0953469a5759408e1f701b  /tmp/sui.tgz' | sha256sum --check
+          mkdir /tmp/sui-compiler
+          tar -xzf /tmp/sui.tgz -C /tmp/sui-compiler ./sui
+          /tmp/sui-compiler/sui --version
+          python contracts/nftree-generation/scripts/build-config.py /tmp/generation-build-config
+      - name: Move contracts and release build
+        env:
+          SUI_CONFIG_DIR: /tmp/generation-build-config
+          MOVE_HOME: /tmp/generation-move-cache
+        run: |
+          /tmp/sui-compiler/sui move test --path contracts/nftree-generation --build-env mainnet
+          /tmp/sui-compiler/sui move build --path contracts/nftree-generation --build-env mainnet --dump-bytecode-as-base64 --no-tree-shaking > /tmp/generation-bytecode.json
+          cmp /tmp/generation-bytecode.json docs/multichain/generation-milestone/publication-bytecode.json
+          git diff --exit-code -- contracts/vendor contracts/nftree-generation/Move.lock
+          git diff --check
+
+      - name: Disposable PostgreSQL ticket concurrency and revocation checks
+        run: BNB_PG_BIN="$(pg_config --bindir)" node scripts/multichain/check-bnb-run-postgres.mjs
+
+      - name: Disposable PostgreSQL shadow run concurrency and score checks
+        run: BNB_PG_BIN="$(pg_config --bindir)" node scripts/multichain/check-bnb-lifecycle-postgres.mjs
+
+      - name: Disposable PostgreSQL mixed-chain checkout and receipt ledger
+        run: |
+          npm ci --prefix vendor/bnb-continue-store --ignore-scripts --no-audit --no-fund
+          BNB_PG_BIN="$(pg_config --bindir)" node scripts/multichain/check-sui-bnb-continue-postgres.mjs
+          BNB_DELIVERY_PROTOCOL=tree-paid-delivery.v2 BNB_PG_BIN="$(pg_config --bindir)" node scripts/multichain/check-sui-bnb-continue-postgres.mjs
+          BNB_PG_BIN="$(pg_config --bindir)" node scripts/multichain/check-delivery-compatibility-postgres.mjs
+          BNB_PG_BIN="$(pg_config --bindir)" node scripts/multichain/check-shared-delivery-postgres.mjs
+
+      - name: Verify native backend archive evidence
+        run: |
+          node scripts/multichain/check-native-runtime-parity.mjs
+          node --test tests/multichain-native-runtime-parity.test.mjs
+
+      - name: Browser continue restoration and interruption checks
+        run: |
+          npm ci --prefix vendor/continue-browser-test --ignore-scripts --no-audit --no-fund
+          if command -v google-chrome >/dev/null; then
+            export CHROMIUM_PATH="$(command -v google-chrome)"
+          elif command -v chromium >/dev/null; then
+            export CHROMIUM_PATH="$(command -v chromium)"
+          else
+            node vendor/continue-browser-test/node_modules/playwright/cli.js install --with-deps chromium
+          fi
+          node --test tests/multichain-restore-authorization.test.mjs tests/multichain-restore-http.test.mjs
+          node scripts/multichain/build-netlify-continue-schema.mjs --check
+          git fetch --no-tags origin bf4537220bb9a9b096cfaab9598fa2cd13556db9
+          node --test tests/multichain-shared-checkout.test.mjs tests/multichain-bnb-journal.test.mjs
+          node --test tests/multichain-native-gateway.test.mjs tests/multichain-native-composition.test.mjs tests/multichain-native-host.test.mjs
+          NETLIFY_CONTINUE_SCHEMA=1 NATIVE_BUNDLE_CHECK=1 CONTINUE_PHASER_CHECK=1 BNB_PG_BIN="$(pg_config --bindir)" node scripts/multichain/check-native-sui-session-postgres.mjs
+          node --test tests/multichain-bnb-checkout-review.test.mjs
+          node scripts/multichain/check-bnb-checkout-review-browser.mjs
+          node scripts/multichain/check-checkout-recovery-browser.mjs
+          node scripts/multichain/check-continue-browser.mjs
+          CONTINUE_PHASER_CHECK=1 BNB_PG_BIN="$(pg_config --bindir)" node scripts/multichain/check-native-sui-session-postgres.mjs
+
+      - name: Test and package disabled isolated review endpoint
+        run: |
+          node --test tests/multichain-bnb-run-runtime.test.mjs
+          node scripts/package-bnb-run-review.mjs --outdir /tmp/bnb-run-review-package
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bnb-run-review-candidate
+          path: /tmp/bnb-run-review-package/
+          retention-days: 30
+
+      - name: Verify captured hosted database readiness against committed source
+        run: node scripts/multichain/check-bnb-run-database-readiness.mjs
+
+      - name: Verify applied migration evidence and preserved identity
+        run: node scripts/multichain/check-bnb-run-applied.mjs

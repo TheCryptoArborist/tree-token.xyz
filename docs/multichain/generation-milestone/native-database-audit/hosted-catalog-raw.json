@@ -1,0 +1,641 @@
+{
+  "checkedAt": "2026-11-25T03:06:07.321Z",
+  "deployId": "6b064f079c4511c1d31205e3",
+  "nativePackageSha256": "af1bc6f03de12e0ee77b10cd118ab346e8f5fa3c9e92cb05ee8ed8a264532a63",
+  "databaseIdentity": "df2f0abee059d9898495a125018fa0a291d50b9050c0d4557231f409bed53065",
+  "bindingContext": "feature/treeforce89-play-integration",
+  "bindingSource": "documented existing Netlify database branch, netlifydb_readonly role",
+  "bindingEvidence": "release-recorded existing branch; database identity verified; read-only role; no environment-variable access",
+  "readOnly": true,
+  "applicationRowsRead": 0,
+  "catalog": {
+    "columns": [
+      {
+        "table_name": "tree_continue_redemptions",
+        "column_name": "digest",
+        "data_type": "text",
+        "udt_name": "text",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "table_name": "tree_continue_redemptions",
+        "column_name": "session_id",
+        "data_type": "text",
+        "udt_name": "text",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "table_name": "tree_continue_redemptions",
+        "column_name": "continuation_number",
+        "data_type": "integer",
+        "udt_name": "int4",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "table_name": "tree_continue_redemptions",
+        "column_name": "wallet",
+        "data_type": "text",
+        "udt_name": "text",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "table_name": "tree_continue_redemptions",
+        "column_name": "run_id",
+        "data_type": "text",
+        "udt_name": "text",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "table_name": "tree_continue_redemptions",
+        "column_name": "redeemed_at",
+        "data_type": "timestamp with time zone",
+        "udt_name": "timestamptz",
+        "is_nullable": "NO",
+        "column_default": "now()"
+      },
+      {
+        "table_name": "tree_continue_redemptions",
+        "column_name": "offer_id",
+        "data_type": "text",
+        "udt_name": "text",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "table_name": "tree_continue_redemptions",
+        "column_name": "snapshot",
+        "data_type": "jsonb",
+        "udt_name": "jsonb",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "table_name": "tree_continue_redemptions",
+        "column_name": "payment_timestamp_ms",
+        "data_type": "bigint",
+        "udt_name": "int8",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "table_name": "tree_continue_redemptions",
+        "column_name": "checkpoint",
+        "data_type": "text",
+        "udt_name": "text",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "column_name": "session_id",
+        "data_type": "text",
+        "udt_name": "text",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "column_name": "wallet",
+        "data_type": "text",
+        "udt_name": "text",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "column_name": "session_token_hash",
+        "data_type": "character",
+        "udt_name": "bpchar",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "column_name": "expires_at",
+        "data_type": "timestamp with time zone",
+        "udt_name": "timestamptz",
+        "is_nullable": "NO",
+        "column_default": "(now() + '02:00:00'::interval)"
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "column_name": "run_id",
+        "data_type": "text",
+        "udt_name": "text",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "column_name": "wave",
+        "data_type": "integer",
+        "udt_name": "int4",
+        "is_nullable": "NO",
+        "column_default": "0"
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "column_name": "continuation_number",
+        "data_type": "integer",
+        "udt_name": "int4",
+        "is_nullable": "NO",
+        "column_default": "0"
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "column_name": "game_over",
+        "data_type": "boolean",
+        "udt_name": "bool",
+        "is_nullable": "NO",
+        "column_default": "false"
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "column_name": "cleared",
+        "data_type": "boolean",
+        "udt_name": "bool",
+        "is_nullable": "NO",
+        "column_default": "false"
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "column_name": "continue_pending",
+        "data_type": "boolean",
+        "udt_name": "bool",
+        "is_nullable": "NO",
+        "column_default": "false"
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "column_name": "created_at",
+        "data_type": "timestamp with time zone",
+        "udt_name": "timestamptz",
+        "is_nullable": "NO",
+        "column_default": "now()"
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "column_name": "continue_offer_id",
+        "data_type": "text",
+        "udt_name": "text",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "column_name": "continue_offer_created_at",
+        "data_type": "timestamp with time zone",
+        "udt_name": "timestamptz",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "column_name": "continue_offer_expires_at",
+        "data_type": "timestamp with time zone",
+        "udt_name": "timestamptz",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "column_name": "continue_offer_checkpoint",
+        "data_type": "text",
+        "udt_name": "text",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "column_name": "continue_snapshot",
+        "data_type": "jsonb",
+        "udt_name": "jsonb",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "table_name": "tree_wallet_challenges",
+        "column_name": "challenge_hash",
+        "data_type": "character",
+        "udt_name": "bpchar",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "table_name": "tree_wallet_challenges",
+        "column_name": "wallet",
+        "data_type": "text",
+        "udt_name": "text",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "table_name": "tree_wallet_challenges",
+        "column_name": "message",
+        "data_type": "text",
+        "udt_name": "text",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "table_name": "tree_wallet_challenges",
+        "column_name": "expires_at",
+        "data_type": "timestamp with time zone",
+        "udt_name": "timestamptz",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "table_name": "tree_wallet_challenges",
+        "column_name": "created_at",
+        "data_type": "timestamp with time zone",
+        "udt_name": "timestamptz",
+        "is_nullable": "NO",
+        "column_default": "now()"
+      },
+      {
+        "table_name": "tree_wallet_logins",
+        "column_name": "token_hash",
+        "data_type": "character",
+        "udt_name": "bpchar",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "table_name": "tree_wallet_logins",
+        "column_name": "wallet",
+        "data_type": "text",
+        "udt_name": "text",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "table_name": "tree_wallet_logins",
+        "column_name": "expires_at",
+        "data_type": "timestamp with time zone",
+        "udt_name": "timestamptz",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "table_name": "tree_wallet_logins",
+        "column_name": "revoked_at",
+        "data_type": "timestamp with time zone",
+        "udt_name": "timestamptz",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "table_name": "tree_wallet_logins",
+        "column_name": "created_at",
+        "data_type": "timestamp with time zone",
+        "udt_name": "timestamptz",
+        "is_nullable": "NO",
+        "column_default": "now()"
+      }
+    ],
+    "constraints": [
+      {
+        "table_name": "tree_continue_redemptions",
+        "name": "tree_continue_redemptions_continuation_number_not_null",
+        "type": "n",
+        "definition": "NOT NULL continuation_number"
+      },
+      {
+        "table_name": "tree_continue_redemptions",
+        "name": "tree_continue_redemptions_digest_not_null",
+        "type": "n",
+        "definition": "NOT NULL digest"
+      },
+      {
+        "table_name": "tree_continue_redemptions",
+        "name": "tree_continue_redemptions_pkey",
+        "type": "p",
+        "definition": "PRIMARY KEY (digest)"
+      },
+      {
+        "table_name": "tree_continue_redemptions",
+        "name": "tree_continue_redemptions_redeemed_at_not_null",
+        "type": "n",
+        "definition": "NOT NULL redeemed_at"
+      },
+      {
+        "table_name": "tree_continue_redemptions",
+        "name": "tree_continue_redemptions_run_id_not_null",
+        "type": "n",
+        "definition": "NOT NULL run_id"
+      },
+      {
+        "table_name": "tree_continue_redemptions",
+        "name": "tree_continue_redemptions_session_id_continuation_number_key",
+        "type": "u",
+        "definition": "UNIQUE (session_id, continuation_number)"
+      },
+      {
+        "table_name": "tree_continue_redemptions",
+        "name": "tree_continue_redemptions_session_id_fkey",
+        "type": "f",
+        "definition": "FOREIGN KEY (session_id) REFERENCES tree_game_sessions(session_id)"
+      },
+      {
+        "table_name": "tree_continue_redemptions",
+        "name": "tree_continue_redemptions_session_id_not_null",
+        "type": "n",
+        "definition": "NOT NULL session_id"
+      },
+      {
+        "table_name": "tree_continue_redemptions",
+        "name": "tree_continue_redemptions_wallet_not_null",
+        "type": "n",
+        "definition": "NOT NULL wallet"
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "name": "tree_game_sessions_cleared_not_null",
+        "type": "n",
+        "definition": "NOT NULL cleared"
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "name": "tree_game_sessions_continuation_number_check",
+        "type": "c",
+        "definition": "CHECK ((continuation_number >= 0))"
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "name": "tree_game_sessions_continuation_number_not_null",
+        "type": "n",
+        "definition": "NOT NULL continuation_number"
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "name": "tree_game_sessions_continue_pending_not_null",
+        "type": "n",
+        "definition": "NOT NULL continue_pending"
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "name": "tree_game_sessions_created_at_not_null",
+        "type": "n",
+        "definition": "NOT NULL created_at"
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "name": "tree_game_sessions_expires_at_not_null",
+        "type": "n",
+        "definition": "NOT NULL expires_at"
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "name": "tree_game_sessions_game_over_not_null",
+        "type": "n",
+        "definition": "NOT NULL game_over"
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "name": "tree_game_sessions_pkey",
+        "type": "p",
+        "definition": "PRIMARY KEY (session_id)"
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "name": "tree_game_sessions_run_id_key",
+        "type": "u",
+        "definition": "UNIQUE (run_id)"
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "name": "tree_game_sessions_run_id_not_null",
+        "type": "n",
+        "definition": "NOT NULL run_id"
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "name": "tree_game_sessions_session_id_not_null",
+        "type": "n",
+        "definition": "NOT NULL session_id"
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "name": "tree_game_sessions_session_token_hash_key",
+        "type": "u",
+        "definition": "UNIQUE (session_token_hash)"
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "name": "tree_game_sessions_wallet_not_null",
+        "type": "n",
+        "definition": "NOT NULL wallet"
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "name": "tree_game_sessions_wave_check",
+        "type": "c",
+        "definition": "CHECK ((wave >= 0))"
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "name": "tree_game_sessions_wave_not_null",
+        "type": "n",
+        "definition": "NOT NULL wave"
+      },
+      {
+        "table_name": "tree_wallet_challenges",
+        "name": "tree_wallet_challenges_challenge_hash_not_null",
+        "type": "n",
+        "definition": "NOT NULL challenge_hash"
+      },
+      {
+        "table_name": "tree_wallet_challenges",
+        "name": "tree_wallet_challenges_created_at_not_null",
+        "type": "n",
+        "definition": "NOT NULL created_at"
+      },
+      {
+        "table_name": "tree_wallet_challenges",
+        "name": "tree_wallet_challenges_expires_at_not_null",
+        "type": "n",
+        "definition": "NOT NULL expires_at"
+      },
+      {
+        "table_name": "tree_wallet_challenges",
+        "name": "tree_wallet_challenges_message_not_null",
+        "type": "n",
+        "definition": "NOT NULL message"
+      },
+      {
+        "table_name": "tree_wallet_challenges",
+        "name": "tree_wallet_challenges_pkey",
+        "type": "p",
+        "definition": "PRIMARY KEY (challenge_hash)"
+      },
+      {
+        "table_name": "tree_wallet_challenges",
+        "name": "tree_wallet_challenges_wallet_not_null",
+        "type": "n",
+        "definition": "NOT NULL wallet"
+      },
+      {
+        "table_name": "tree_wallet_logins",
+        "name": "tree_wallet_logins_created_at_not_null",
+        "type": "n",
+        "definition": "NOT NULL created_at"
+      },
+      {
+        "table_name": "tree_wallet_logins",
+        "name": "tree_wallet_logins_expires_at_not_null",
+        "type": "n",
+        "definition": "NOT NULL expires_at"
+      },
+      {
+        "table_name": "tree_wallet_logins",
+        "name": "tree_wallet_logins_pkey",
+        "type": "p",
+        "definition": "PRIMARY KEY (token_hash)"
+      },
+      {
+        "table_name": "tree_wallet_logins",
+        "name": "tree_wallet_logins_token_hash_not_null",
+        "type": "n",
+        "definition": "NOT NULL token_hash"
+      },
+      {
+        "table_name": "tree_wallet_logins",
+        "name": "tree_wallet_logins_wallet_not_null",
+        "type": "n",
+        "definition": "NOT NULL wallet"
+      }
+    ],
+    "indexes": [
+      {
+        "table_name": "tree_continue_redemptions",
+        "name": "tree_continue_redemptions_offer_idx",
+        "definition": "CREATE UNIQUE INDEX tree_continue_redemptions_offer_idx ON public.tree_continue_redemptions USING btree (offer_id) WHERE (offer_id IS NOT NULL)"
+      },
+      {
+        "table_name": "tree_continue_redemptions",
+        "name": "tree_continue_redemptions_pkey",
+        "definition": "CREATE UNIQUE INDEX tree_continue_redemptions_pkey ON public.tree_continue_redemptions USING btree (digest)"
+      },
+      {
+        "table_name": "tree_continue_redemptions",
+        "name": "tree_continue_redemptions_session_id_continuation_number_key",
+        "definition": "CREATE UNIQUE INDEX tree_continue_redemptions_session_id_continuation_number_key ON public.tree_continue_redemptions USING btree (session_id, continuation_number)"
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "name": "tree_game_sessions_continue_offer_idx",
+        "definition": "CREATE UNIQUE INDEX tree_game_sessions_continue_offer_idx ON public.tree_game_sessions USING btree (continue_offer_id) WHERE (continue_offer_id IS NOT NULL)"
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "name": "tree_game_sessions_pkey",
+        "definition": "CREATE UNIQUE INDEX tree_game_sessions_pkey ON public.tree_game_sessions USING btree (session_id)"
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "name": "tree_game_sessions_run_id_key",
+        "definition": "CREATE UNIQUE INDEX tree_game_sessions_run_id_key ON public.tree_game_sessions USING btree (run_id)"
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "name": "tree_game_sessions_session_token_hash_key",
+        "definition": "CREATE UNIQUE INDEX tree_game_sessions_session_token_hash_key ON public.tree_game_sessions USING btree (session_token_hash)"
+      },
+      {
+        "table_name": "tree_game_sessions",
+        "name": "tree_game_sessions_wallet_idx",
+        "definition": "CREATE INDEX tree_game_sessions_wallet_idx ON public.tree_game_sessions USING btree (wallet)"
+      },
+      {
+        "table_name": "tree_wallet_challenges",
+        "name": "tree_wallet_challenges_pkey",
+        "definition": "CREATE UNIQUE INDEX tree_wallet_challenges_pkey ON public.tree_wallet_challenges USING btree (challenge_hash)"
+      },
+      {
+        "table_name": "tree_wallet_logins",
+        "name": "tree_wallet_logins_pkey",
+        "definition": "CREATE UNIQUE INDEX tree_wallet_logins_pkey ON public.tree_wallet_logins USING btree (token_hash)"
+      },
+      {
+        "table_name": "tree_wallet_logins",
+        "name": "tree_wallet_logins_wallet_idx",
+        "definition": "CREATE INDEX tree_wallet_logins_wallet_idx ON public.tree_wallet_logins USING btree (wallet)"
+      }
+    ],
+    "tables": [
+      {
+        "name": "tree_continue_redemptions",
+        "kind": "r",
+        "rls": false,
+        "force_rls": false,
+        "can_select": true,
+        "can_insert": false,
+        "can_update": false,
+        "can_delete": false
+      },
+      {
+        "name": "tree_game_sessions",
+        "kind": "r",
+        "rls": false,
+        "force_rls": false,
+        "can_select": true,
+        "can_insert": false,
+        "can_update": false,
+        "can_delete": false
+      },
+      {
+        "name": "tree_wallet_challenges",
+        "kind": "r",
+        "rls": false,
+        "force_rls": false,
+        "can_select": true,
+        "can_insert": false,
+        "can_update": false,
+        "can_delete": false
+      },
+      {
+        "name": "tree_wallet_logins",
+        "kind": "r",
+        "rls": false,
+        "force_rls": false,
+        "can_select": true,
+        "can_insert": false,
+        "can_update": false,
+        "can_delete": false
+      }
+    ],
+    "proposed": [],
+    "triggers": [],
+    "policies": []
+  },
+  "proposedRolesPresent": [],
+  "privateSchema": [],
+  "checks": {
+    "columns": true,
+    "constraints": false,
+    "indexes": true,
+    "triggers": true,
+    "policies": true,
+    "rowSecurity": true,
+    "tables": true
+  },
+  "nativeSchemaMatches": false,
+  "proposedTablesPresent": [],
+  "missingProposedTables": [
+    "arcade_native_sui_accounts",
+    "arcade_native_sui_runs",
+    "arcade_native_paid_recoveries",
+    "arcade_native_sui_payments",
+    "arcade_continue_payments_v2",
+    "arcade_continue_claims_v2",
+    "arcade_continue_events_v2"
+  ],
+  "runtimeAuthorized": false,
+  "migrationApplied": false
+}

@@ -1,0 +1,12 @@
+{
+  "action": "publish-reviewed-canonical-generation-handoff",
+  "candidateId": "6b032a964276045ddedb18ca",
+  "planHash": "91d6aacd13ae0eb434fc56e69edddbcec4617e09565f8c92ab185c235b482160",
+  "sourceCommit": "2e2c440caba28ffd2fe0a5c5483c5a3e68e8957b",
+  "runId": 45051305254,
+  "artifactId": 14766085238,
+  "artifactSha256": "a094455b21c3fdbcbd64eab6140beb021f6a5d178d51770dbe1bc165cf110ec5",
+  "canonicalURL": "https://tree-token.xyz/play/generation-publication/",
+  "walletSignatureObtained": false,
+  "blockchainPublicationPerformed": false
+}

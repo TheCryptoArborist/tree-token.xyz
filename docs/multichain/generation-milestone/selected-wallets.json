@@ -1,0 +1,47 @@
+{
+  "status": "bnb_deployment_and_binding_verified_inactive",
+  "chainId": 56,
+  "bnb": {
+    "deployer": "0xF2Ab1eEBbEcb4E315FE95D8b532D1aB00F1A8789",
+    "adapterBinder": "0xF2Ab1eEBbEcb4E315FE95D8b532D1aB00F1A8789",
+    "passController": "0xF2Ab1eEBbEcb4E315FE95D8b532D1aB00F1A8789",
+    "initialBuyer": "0xF2Ab1eEBbEcb4E315FE95D8b532D1aB00F1A8789",
+    "initialEndpointDelegate": "0xF2Ab1eEBbEcb4E315FE95D8b532D1aB00F1A8789",
+    "treasury": "0xC440F06BBC7e58b0d055815f915447e4ae0E3720"
+  },
+  "authoritySource": "User designated the admin address and explicitly retained the existing fee wallet.",
+  "hardwareCustody": "Ledger-backed per user discussion; not independently attested.",
+  "deploymentAuthorized": true,
+  "depositAuthorized": false,
+  "publicSaleEnabled": false,
+  "gameplayEnabled": false,
+  "signingApplication": {
+    "application": "MetaMask",
+    "hardwareWallet": "Ledger",
+    "source": "User selected MetaMask with Ledger for BNB account ending 8789."
+  },
+  "deploymentApproval": {
+    "scope": [
+      "deploy new adapter",
+      "deploy new pass",
+      "bind new pass to adapter"
+    ],
+    "maxTotalGasFeeWei": "1000000000000000",
+    "signingPage": "https://tree-token.xyz/play/bnb-generation/",
+    "source": "User approved the proposed three-transaction sequence and canonical signing page after selecting MetaMask with Ledger.",
+    "submittedByAgent": false
+  },
+  "bnbDeploymentReceipts": {
+    "adapter": "0x016aa9570de26f1d25d3db2137fa1ef7dbac8e3a2efa1cab45c2e872deafee98",
+    "pass": "0x9dd9e68b4c1d226e79f788d009a42cf47d4c7662ddc58b16670b4583226192b3",
+    "binding": "0x6304ed426f3653eb73f6eade845c5ef1e8b2e34be5270e1ac7b3b8a4431e8ebe"
+  },
+  "deployedContracts": {
+    "adapter": "0x74c20dEB476Dca58459956b1AcD65771197900C9",
+    "pass": "0x418cC337FC19D8cf3b41a9C6E3138a60E34Eb9b5",
+    "verification": "bnb-deployed/completed/verification.json",
+    "purchasesPaused": true,
+    "generation": 0,
+    "state": "Unconfirmed"
+  }
+}

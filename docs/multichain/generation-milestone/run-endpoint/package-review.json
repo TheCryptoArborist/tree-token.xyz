@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "kind": "bnb-run-review-package",
+  "name": "arcade-bnb-run-review",
+  "extractedZipSmokePassed": true,
+  "deployed": false,
+  "gameplayAuthorized": false,
+  "productionApproved": false,
+  "paymentsEnabled": false,
+  "filename": "arcade-bnb-run-review.zip",
+  "sha256": "bda788bdbe40ba74c7b4ba091cc13d5096bbb5572f434577e3a65f7be91440c2",
+  "bytes": 645894,
+  "runtimeVersion": "nodejs24.x",
+  "invocationMode": "stream",
+  "buildData": {
+    "bootstrapVersion": "2.24.0",
+    "runtimeAPIVersion": 2
+  },
+  "routes": [
+    {
+      "pattern": "/api/arcade-bnb-test/run-review",
+      "literal": "/api/arcade-bnb-test/run-review",
+      "methods": []
+    }
+  ],
+  "trafficRules": {
+    "action": {
+      "type": "rate_limit",
+      "config": {
+        "rateLimitConfig": {
+          "windowLimit": 20,
+          "windowSize": 60,
+          "algorithm": "sliding_window"
+        },
+        "aggregate": {
+          "keys": [
+            {
+              "type": "domain"
+            },
+            {
+              "type": "ip"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "sourceFiles": [
+    {
+      "path": "netlify/bnb-run-review-functions/arcade-bnb-run-review.mjs",
+      "sha256": "b64cfa698eadb5387eb4c7a0726fd1c8b077145e59415902a9cc6280bc28c7b7"
+    },
+    {
+      "path": "scripts/multichain/bnb-test-auth-service.mjs",
+      "sha256": "d171ba964855e012658eb98d50ba7a9ffdfb0a2da4e7337ce8903b5754023680"
+    },
+    {
+      "path": "scripts/multichain/bnb-game-access-core.mjs",
+      "sha256": "362fddc2744eda46016155b7bb1ca3971bba5fbb4ebe17875e41ea9c5e81dc63"
+    },
+    {
+      "path": "scripts/multichain/bnb-run-http.mjs",
+      "sha256": "c70e7a2113a7fb81c8b569c8fc480d3d91bb914656a05717dfeae88c20d63ae9"
+    },
+    {
+      "path": "scripts/multichain/bnb-run-authorization.mjs",
+      "sha256": "f58e81d8314d59c7a9f2c8518d6a6ff6fd91ea625339fd57392e1b6400dd9e45"
+    },
+    {
+      "path": "contracts/bnb-generation/scripts/run-authorization-adapter.mjs",
+      "sha256": "5075d48b61f50a6585bbdf5e3419fd829fa51f17ce56a27eb0c44eb110803e0d"
+    },
+    {
+      "path": "contracts/bnb-generation/scripts/generation-access.mjs",
+      "sha256": "14e753f7c84ca8d1337b51e2235dd4857f2e46f5a19865985d8f6d0792adf794"
+    }
+  ],
+  "tooling": {
+    "contractLockSha256": "f63e8b4d338addfba0acead33fcb5f62182c38f00c93ad1475ac62ad4b0d1c2c",
+    "ethers": "6.15.0",
+    "package": "package.json",
+    "packageSha256": "2ece6ffd478948d8a037103bb1f874e5643e761757362b091d692fc1b5a0dbca",
+    "lock": "package-lock.json",
+    "lockSha256": "f4c0726549471554450a38e62caa3d14f9b90404d1ad5164113f0a366b9b57eb",
+    "sui": "2.26.1",
+    "viem": "2.56.3",
+    "zipItAndShipIt": "16.3.0"
+  },
+  "tracedFileCount": 1752,
+  "tracedFilesNote": "Full traced-file hashes accompany the ZIP in the CI artifact; no ZIP is committed.",
+  "migration": {
+    "path": "supabase/migrations/20261124060157_arcade_bnb_run_review.sql",
+    "sha256": "15a8f418df1b9155d4d54833c51a40811e39aa80405c4a0464edba03cbfcfe3e",
+    "applied": false
+  }
+}

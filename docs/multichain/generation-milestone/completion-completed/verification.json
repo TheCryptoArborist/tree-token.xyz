@@ -1,0 +1,28 @@
+{
+  "checkedAt": "2026-11-24T04:11:24.777Z",
+  "bnbHash": "0x3e62c5a7479937bc2e07756a8e8fdcf106c39a07131cdcb70542983dfe077bee",
+  "sourceVerified": true,
+  "totalWei": "4594741974304116",
+  "messageFeeWei": "4577084124304116",
+  "gasWei": "17657850000000",
+  "guid": "0x89477a7ab8cb4e05877abe4322254432cd58e45f1f0d19f26a8a4c0558d283b8",
+  "destinationVerified": true,
+  "nftInDevWallet": true,
+  "recipient": "0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4",
+  "suiDigest": "EPyf5Kc1BzjFq519ng7F3Q5Gs2g3oVML2Cay4npq7TaR",
+  "phase": 3,
+  "generation": 1,
+  "ackSent": true,
+  "checkpoint": {
+    "sequenceNumber": 348578810,
+    "timestamp": "2026-11-24T04:11:23.079Z"
+  },
+  "bnbState": "Retired",
+  "purchasesPaused": true,
+  "canPlay": false,
+  "validation": {
+    "focusedTestsPassed": 59,
+    "sourceReceiptCheckedAgainstCanonicalBnb": true,
+    "actualSuiCompletionAndCurrentOwnershipChecked": true
+  }
+}

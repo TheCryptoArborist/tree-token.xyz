@@ -1,3 +1,11 @@
+> Current status (November 23, 2026): the new generation contracts completed the
+> private round trip; generation 1 is closed and its pass is burned. This document
+> describes the earlier foundation/trial. Its hypothetical EVM registry and old
+> trial reader do not implement the new Sui generation registry. See
+> [the next access-integration review](generation-milestone/access-integration-review.md)
+> and [completed lifecycle evidence](generation-milestone/completion-completed/README.md).
+> Gameplay remains disabled.
+
 # BNB original-NFT backing check
 
 ## Published November 21, 2026

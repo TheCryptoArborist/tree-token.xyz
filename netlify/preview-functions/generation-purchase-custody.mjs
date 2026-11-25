@@ -1,0 +1,4 @@
+// Read-only fixed source-custody check; BNB lifecycle is verified separately in the browser.
+import {verifyReserveReceipt} from '../../contracts/nftree-generation/scripts/reserve-handoff.mjs';
+export const config={path:'/api/generation-purchase-custody'};
+export default async function handler(request){const headers={'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'};if(request.method!=='GET')return new Response('Read-only endpoint',{status:405,headers});try{if(new URL(request.url).search)throw Error('Unexpected parameters');const r=await verifyReserveReceipt('i6nTSPBKFSUf7GXhsnocnFfuuMtkqvQASR91YTZZdfE',undefined,async()=>({checkedSeparately:true}));const {bnb,destinationVerified,...source}=r;return Response.json({schema:'tree-purchase-custody-v1',...source},{headers});}catch(e){return Response.json({error:String(e.message)},{status:502,headers});}}

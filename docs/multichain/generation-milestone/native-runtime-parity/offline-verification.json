@@ -1,0 +1,11 @@
+{
+  "observedDeployId": "6b06476aad525a8e3c5afdf9",
+  "observedAt": "2026-11-25T02:33:37.789Z",
+  "archiveSha256": "af1bc6f03de12e0ee77b10cd118ab346e8f5fa3c9e92cb05ee8ed8a264532a63",
+  "bytes": 1753757,
+  "matchesObservedNativePackage": true,
+  "currentRuntimeAuthorized": false,
+  "databaseParityVerified": false,
+  "deployable": false,
+  "pinnedFilesVerified": 11
+}

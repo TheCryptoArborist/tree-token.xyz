@@ -1,0 +1,43 @@
+✔ rechecks completed receipts and current settings without writes (70.380604ms)
+✔ reject changed eth_chainId (1.741148ms)
+✔ reject changed eth_getCode (4.225437ms)
+✔ reject changed eth_call (9.931037ms)
+✔ reject changed eth_getTransactionReceipt (6.568322ms)
+✔ reject changed eth_getTransactionByHash (2.702078ms)
+✔ reject changed eth_getBlockByNumber (7.737206ms)
+✔ exact checked binding bytes pass (33.222205ms)
+✔ reject stale (2.567294ms)
+✔ reject future (2.174481ms)
+✔ reject already configured (9.19117ms)
+✔ reject wrong owner (2.864423ms)
+✔ reject changed simulation (9.329989ms)
+✔ reject active pass (6.503675ms)
+✔ reject bound vault (2.768748ms)
+✔ reject wrong original (5.344475ms)
+✔ reject extra command (5.389142ms)
+✔ reject excess gas (2.76967ms)
+✔ reject wrong sender (2.890192ms)
+✔ changed wallet bytes are never verified (4.977051ms)
+✔ expiry during signing fails closed (8.001034ms)
+✔ only canonical binding page can sign (0.269096ms)
+✔ wrong peer (1.608046ms)
+✔ incomplete BNB (4.824151ms)
+✔ wrong BNB receipts (4.249663ms)
+✔ wrong vault admin (2.477609ms)
+✔ receipt verifier accepts exact simulated executed shape and live bound post-state (77.611491ms)
+✔ receipt rejects changed digest (2.875189ms)
+✔ receipt rejects occupied vault (6.765499ms)
+✔ receipt rejects changed security (4.878222ms)
+✔ receipt rejects moved admin (7.375971ms)
+✔ service refuses writes without fetching (21.004491ms)
+✔ service rejects unrecognized input ?transaction=anything (0.780999ms)
+✔ service rejects unrecognized input ?digest=invalid (0.488848ms)
+✔ service rejects unrecognized input ?digest=GNDWXqgPJnZyeQaVFqnZ1HuXSnSiHUAKV1vL4Ke49yMX&extra=true (0.421045ms)
+ℹ tests 35
+ℹ suites 0
+ℹ pass 35
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 647.949685

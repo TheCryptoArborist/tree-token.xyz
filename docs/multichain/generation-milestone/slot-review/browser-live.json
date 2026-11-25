@@ -1,0 +1,20 @@
+{
+  "cases": [
+    {
+      "name": "desktop one day behind",
+      "passed": true,
+      "noSubmission": true
+    },
+    {
+      "name": "desktop one day ahead",
+      "passed": true,
+      "noSubmission": true
+    },
+    {
+      "name": "genuinely stale server review",
+      "passed": true,
+      "noSubmission": true
+    }
+  ],
+  "realWalletUsed": false
+}

@@ -1,0 +1,16 @@
+{
+  "verified": true,
+  "project": "lehswszuekjqottolmsf",
+  "runRead": true,
+  "identityRead": true,
+  "userRowsWritten": 0,
+  "enabled": false,
+  "gameplayAuthorized": false,
+  "candidateId": "6b05e11ad1a29353fee22226",
+  "baselineId": "6b053b8285e0ee251b84ad06",
+  "checkedAt": "2026-11-24T19:10:27.643Z",
+  "execution": "Netlify production-context unpublished candidate",
+  "productionUnchanged": true,
+  "published": false,
+  "credentialsExported": false
+}

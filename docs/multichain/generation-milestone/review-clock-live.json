@@ -1,0 +1,37 @@
+{
+  "cases": [
+    {
+      "name": "desktop one day behind",
+      "passed": true,
+      "noSubmission": true
+    },
+    {
+      "name": "desktop one day ahead",
+      "passed": true,
+      "noSubmission": true
+    },
+    {
+      "name": "genuinely stale server review",
+      "passed": true,
+      "noSubmission": true
+    }
+  ],
+  "realWalletUsed": false,
+  "url": "https://tree-token.xyz/play/generation-publication/",
+  "deployId": "6b0341e7545ba49e00a0e496",
+  "publishedAt": "2026-11-22T19:28:47.582Z",
+  "locked": true,
+  "baselineId": "6b032a964276045ddedb18ca",
+  "sourceCommit": "e8c4294ab54358fc32aa4569d2a440f2dd323b68",
+  "publicationRunId": 45060902548,
+  "artifactId": 14769636004,
+  "artifactSHA256": "36a53a5cc3ddb4e82af9998e5e703020ecdbde4d0a46b7c371ff9ba6f4a852fc",
+  "servedBundleSHA256": "0db6e6efad668a63d27880e9e2bbbed69f0767e05bc2a17c5b08528d9c053553",
+  "servedBundleMatchesCommittedBytes": true,
+  "staticPaths": 658,
+  "unrelatedStaticHashesPreserved": 657,
+  "all53FunctionRecordsPreserved": true,
+  "schedulesPreserved": 5,
+  "toolingTestsPassed": 76,
+  "blockchainTransactionSubmitted": false
+}

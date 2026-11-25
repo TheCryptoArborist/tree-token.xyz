@@ -1,0 +1,540 @@
+{
+  "lints": [
+    {
+      "name": "rls_enabled_no_policy",
+      "title": "RLS Enabled No Policy",
+      "level": "INFO",
+      "facing": "EXTERNAL",
+      "categories": [
+        "SECURITY"
+      ],
+      "description": "Detects cases where row level security (RLS) has been enabled on a table but no RLS policies have been created.",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "count": 58,
+      "findings": [
+        {
+          "detail": "Table \\`private.arcade_badge_notifications\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "arcade_badge_notifications",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.arcade_bnb_test_challenges\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "arcade_bnb_test_challenges",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.arcade_bnb_test_sessions\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "arcade_bnb_test_sessions",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.arcade_campaign_claims\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "arcade_campaign_claims",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.arcade_campaign_enrollments\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "arcade_campaign_enrollments",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.arcade_campaign_quiz_attempts\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "arcade_campaign_quiz_attempts",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.arcade_challenge_pilot_attempts\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "arcade_challenge_pilot_attempts",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.arcade_challenge_pilot_configs\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "arcade_challenge_pilot_configs",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.arcade_challenge_pilot_requests\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "arcade_challenge_pilot_requests",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.arcade_challenge_pilot_session_bindings\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "arcade_challenge_pilot_session_bindings",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.arcade_challenge_pilot_sessions\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "arcade_challenge_pilot_sessions",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.arcade_challenge_pilot_wallet_challenges\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "arcade_challenge_pilot_wallet_challenges",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.arcade_checkin_recovery_intents\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "arcade_checkin_recovery_intents",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.arcade_completed_runs\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "arcade_completed_runs",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.arcade_event_draft_history\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "arcade_event_draft_history",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.arcade_event_drafts\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "arcade_event_drafts",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.arcade_event_organizers\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "arcade_event_organizers",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.arcade_growth_checkins\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "arcade_growth_checkins",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.arcade_growth_daily_quests\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "arcade_growth_daily_quests",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.arcade_growth_game_events\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "arcade_growth_game_events",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.arcade_growth_month_rules\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "arcade_growth_month_rules",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.arcade_growth_monthly_badges\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "arcade_growth_monthly_badges",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.arcade_growth_sessions\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "arcade_growth_sessions",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.arcade_growth_wallet_challenges\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "arcade_growth_wallet_challenges",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.arcade_monthly_reward_qualifications\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "arcade_monthly_reward_qualifications",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.arcade_social_entries\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "arcade_social_entries",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.arcade_streak_milestones\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "arcade_streak_milestones",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.tree_knowledge_trial_admin_events\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "tree_knowledge_trial_admin_events",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.tree_knowledge_trial_attempts\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "tree_knowledge_trial_attempts",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.tree_knowledge_trial_awards\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "tree_knowledge_trial_awards",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.tree_knowledge_trial_passes\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "tree_knowledge_trial_passes",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.tree_knowledge_trial_question_sets\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "tree_knowledge_trial_question_sets",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.tree_knowledge_trial_rounds\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "tree_knowledge_trial_rounds",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.tree_knowledge_trial_tiebreak_attempts\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "tree_knowledge_trial_tiebreak_attempts",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.tree_knowledge_trial_tiebreak_qualifiers\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "tree_knowledge_trial_tiebreak_qualifiers",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.tree_knowledge_trial_tiebreak_questions\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "tree_knowledge_trial_tiebreak_questions",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.tree_knowledge_trial_wallet_challenges\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "tree_knowledge_trial_wallet_challenges",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.tree_raffle_draw_snapshots\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "tree_raffle_draw_snapshots",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.tree_raffle_keeper_cursors\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "tree_raffle_keeper_cursors",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.tree_raffle_round_wallets\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "tree_raffle_round_wallets",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.tree_raffle_rounds\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "tree_raffle_rounds",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.tree_raffle_verified_buys\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "tree_raffle_verified_buys",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.tree_raffle_wallet_streaks\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "tree_raffle_wallet_streaks",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`private.tree_raffle_winners\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "tree_raffle_winners",
+            "type": "table",
+            "schema": "private"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`tree_continue_v1.accounts\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "accounts",
+            "type": "table",
+            "schema": "tree_continue_v1"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`tree_continue_v1.candidate_limits\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "candidate_limits",
+            "type": "table",
+            "schema": "tree_continue_v1"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`tree_continue_v1.checkpoint_reviews\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "checkpoint_reviews",
+            "type": "table",
+            "schema": "tree_continue_v1"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`tree_continue_v1.checkpoints\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "checkpoints",
+            "type": "table",
+            "schema": "tree_continue_v1"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`tree_continue_v1.commerce_policy\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "commerce_policy",
+            "type": "table",
+            "schema": "tree_continue_v1"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`tree_continue_v1.flights\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "flights",
+            "type": "table",
+            "schema": "tree_continue_v1"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`tree_continue_v1.journal\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "journal",
+            "type": "table",
+            "schema": "tree_continue_v1"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`tree_continue_v1.orders\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "orders",
+            "type": "table",
+            "schema": "tree_continue_v1"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`tree_continue_v1.paid_deliveries\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "paid_deliveries",
+            "type": "table",
+            "schema": "tree_continue_v1"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`tree_continue_v1.paid_delivery_events\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "paid_delivery_events",
+            "type": "table",
+            "schema": "tree_continue_v1"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`tree_continue_v1.preview_lookup_limits\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "preview_lookup_limits",
+            "type": "table",
+            "schema": "tree_continue_v1"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`tree_continue_v1.receipt_scan_attempts\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "receipt_scan_attempts",
+            "type": "table",
+            "schema": "tree_continue_v1"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`tree_continue_v1.receipts\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "receipts",
+            "type": "table",
+            "schema": "tree_continue_v1"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        },
+        {
+          "detail": "Table \\`tree_entry_v1.orders\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "orders",
+            "type": "table",
+            "schema": "tree_entry_v1"
+          },
+          "observed_at": "2026-11-24T18:31:34.436Z"
+        }
+      ]
+    }
+  ]
+}

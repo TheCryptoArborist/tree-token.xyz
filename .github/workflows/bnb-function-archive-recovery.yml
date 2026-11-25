@@ -1,0 +1,850 @@
+name: Recover exact live function packages from original artifacts
+on:
+  push:
+    branches: ['feat/bnb-generation-custody']
+permissions:
+  contents: write
+  actions: read
+jobs:
+  recover:
+    if: contains(github.event.head_commit.message, '[recover bnb function archives]')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bnb-run-enablement-plan
+          path: /tmp/bnb-original-artifacts/14956476170
+          run-id: 45468891584
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bnb-run-enabled
+          path: /tmp/bnb-original-artifacts/14956321047
+          run-id: 45469250115
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bnb-run-binding-check
+          path: /tmp/bnb-original-artifacts/14954303786
+          run-id: 45466344470
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bnb-run-publication
+          path: /tmp/bnb-original-artifacts/14935759807
+          run-id: 45426140480
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bnb-run-release-plan
+          path: /tmp/bnb-original-artifacts/14898362655
+          run-id: 45347371432
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bnb-run-release-plan
+          path: /tmp/bnb-original-artifacts/14898330019
+          run-id: 45345210056
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bnb-run-candidate-verification
+          path: /tmp/bnb-original-artifacts/14897969879
+          run-id: 45347567727
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bnb-run-release-plan
+          path: /tmp/bnb-original-artifacts/14897477978
+          run-id: 45344962719
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bnb-completion-publication
+          path: /tmp/bnb-original-artifacts/14849150444
+          run-id: 45234330517
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bnb-completion-candidate
+          path: /tmp/bnb-original-artifacts/14849120119
+          run-id: 45233815169
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: generation-acknowledgement-candidate
+          path: /tmp/bnb-original-artifacts/14841200090
+          run-id: 45219737786
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: generation-acknowledgement-publication
+          path: /tmp/bnb-original-artifacts/14840232621
+          run-id: 45220208588
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bnb-return-publication
+          path: /tmp/bnb-original-artifacts/14838985197
+          run-id: 45214868520
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bnb-return-publication
+          path: /tmp/bnb-original-artifacts/14838065656
+          run-id: 45211806293
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bnb-return-candidate
+          path: /tmp/bnb-original-artifacts/14837672342
+          run-id: 45214517145
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bnb-return-candidate
+          path: /tmp/bnb-original-artifacts/14834848940
+          run-id: 45211112429
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bnb-purchase-candidate
+          path: /tmp/bnb-original-artifacts/14831963382
+          run-id: 45202130222
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bnb-purchase-publication
+          path: /tmp/bnb-original-artifacts/14830949036
+          run-id: 45202579789
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: generation-reserve-publication
+          path: /tmp/bnb-original-artifacts/14794490728
+          run-id: 45121910926
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: generation-reserve-candidate
+          path: /tmp/bnb-original-artifacts/14793284985
+          run-id: 45121661258
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: generation-binding-publication
+          path: /tmp/bnb-original-artifacts/14791594530
+          run-id: 45116895004
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: generation-binding-candidate
+          path: /tmp/bnb-original-artifacts/14791549418
+          run-id: 45116610999
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bnb-configuration-publication
+          path: /tmp/bnb-original-artifacts/14791480226
+          run-id: 45114413903
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bnb-configuration-candidate
+          path: /tmp/bnb-original-artifacts/14790434633
+          run-id: 45114093569
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: generation-configuration-candidate
+          path: /tmp/bnb-original-artifacts/14790425980
+          run-id: 45112070048
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: generation-configuration-publication
+          path: /tmp/bnb-original-artifacts/14790241934
+          run-id: 45112287530
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: generation-registration-publication
+          path: /tmp/bnb-original-artifacts/14789030447
+          run-id: 45108631810
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: generation-registration-candidate
+          path: /tmp/bnb-original-artifacts/14787873464
+          run-id: 45108444152
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bnb-rpc-publication
+          path: /tmp/bnb-original-artifacts/14787226784
+          run-id: 45104692560
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bnb-rpc-candidate
+          path: /tmp/bnb-original-artifacts/14786862515
+          run-id: 45104505657
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bnb-generation-publication
+          path: /tmp/bnb-original-artifacts/14784572671
+          run-id: 45099281724
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bnb-generation-candidate
+          path: /tmp/bnb-original-artifacts/14784199639
+          run-id: 45099075862
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-countdown-publish-45086007525
+          path: /tmp/bnb-original-artifacts/14779281721
+          run-id: 45086007525
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-countdown-candidate-45085199570
+          path: /tmp/bnb-original-artifacts/14779206656
+          run-id: 45085199570
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-countdown-candidate-45085802059
+          path: /tmp/bnb-original-artifacts/14778868678
+          run-id: 45085802059
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-countdown-candidate-45084815585
+          path: /tmp/bnb-original-artifacts/14778771211
+          run-id: 45084815585
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-countdown-candidate-45085522748
+          path: /tmp/bnb-original-artifacts/14778738510
+          run-id: 45085522748
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: generation-slot-connection-candidate
+          path: /tmp/bnb-original-artifacts/14777186215
+          run-id: 45080806848
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-advent-candidate-45079616899
+          path: /tmp/bnb-original-artifacts/14776956670
+          run-id: 45079616899
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: generation-slot-connection-publication
+          path: /tmp/bnb-original-artifacts/14776944137
+          run-id: 45080969461
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-advent-candidate-45078914345
+          path: /tmp/bnb-original-artifacts/14776885759
+          run-id: 45078914345
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-advent-candidate-45079311292
+          path: /tmp/bnb-original-artifacts/14776712050
+          run-id: 45079311292
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-advent-audit-45080216008
+          path: /tmp/bnb-original-artifacts/14776283688
+          run-id: 45080216008
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-advent-publish-45080110220
+          path: /tmp/bnb-original-artifacts/14776233804
+          run-id: 45080110220
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: generation-slot-publication
+          path: /tmp/bnb-original-artifacts/14775903521
+          run-id: 45078167893
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: generation-slot-candidate
+          path: /tmp/bnb-original-artifacts/14775514398
+          run-id: 45077920747
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-advent-candidate-45073496347
+          path: /tmp/bnb-original-artifacts/14774207236
+          run-id: 45073496347
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: generation-review-clock-publication
+          path: /tmp/bnb-original-artifacts/14769636004
+          run-id: 45060902548
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: generation-review-clock-candidate
+          path: /tmp/bnb-original-artifacts/14768399454
+          run-id: 45060715586
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: generation-canonical-candidate
+          path: /tmp/bnb-original-artifacts/14766085238
+          run-id: 45051305254
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: generation-canonical-publication
+          path: /tmp/bnb-original-artifacts/14765961630
+          run-id: 45051525680
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: generation-canonical-candidate
+          path: /tmp/bnb-original-artifacts/14765382110
+          run-id: 45051249365
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: generation-canonical-candidate
+          path: /tmp/bnb-original-artifacts/14765198971
+          run-id: 45051036303
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-attendance-forest-candidate-44991099455
+          path: /tmp/bnb-original-artifacts/14741813001
+          run-id: 44991099455
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-attendance-forest-candidate-44990839648
+          path: /tmp/bnb-original-artifacts/14741751798
+          run-id: 44990839648
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-attendance-forest-publish-44991408033
+          path: /tmp/bnb-original-artifacts/14741594720
+          run-id: 44991408033
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-attendance-forest-candidate-44989653869
+          path: /tmp/bnb-original-artifacts/14741198300
+          run-id: 44989653869
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-attendance-forest-candidate-44989930297
+          path: /tmp/bnb-original-artifacts/14741062974
+          run-id: 44989930297
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-attendance-forest-candidate-44990323030
+          path: /tmp/bnb-original-artifacts/14741054783
+          run-id: 44990323030
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-wallet-switch-publish-44987535226
+          path: /tmp/bnb-original-artifacts/14740522896
+          run-id: 44987535226
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-wallet-switch-candidate-44987253606
+          path: /tmp/bnb-original-artifacts/14740192235
+          run-id: 44987253606
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-wallet-switch-candidate-44986623909
+          path: /tmp/bnb-original-artifacts/14740022588
+          run-id: 44986623909
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bnb-backing-publication
+          path: /tmp/bnb-original-artifacts/14713910332
+          run-id: 44920394429
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bnb-test-auth-publication
+          path: /tmp/bnb-original-artifacts/14691744903
+          run-id: 44868193543
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bnb-test-auth-publication
+          path: /tmp/bnb-original-artifacts/14691692228
+          run-id: 44865447829
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bnb-test-auth-publication
+          path: /tmp/bnb-original-artifacts/14691568810
+          run-id: 44865970994
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: original-ack-release
+          path: /tmp/bnb-original-artifacts/14655230761
+          run-id: 44786130671
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: original-ack-release
+          path: /tmp/bnb-original-artifacts/14655052416
+          run-id: 44787344354
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: original-send-release
+          path: /tmp/bnb-original-artifacts/14652448214
+          run-id: 44781788410
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: original-redemption-release
+          path: /tmp/bnb-original-artifacts/14647593782
+          run-id: 44772572497
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: original-purchase-release
+          path: /tmp/bnb-original-artifacts/14600117403
+          run-id: 44671537288
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: original-enable-release
+          path: /tmp/bnb-original-artifacts/14597707237
+          run-id: 44665025911
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: precious-metals-publish-44663246197
+          path: /tmp/bnb-original-artifacts/14596796333
+          run-id: 44663246197
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: precious-metals-candidate-44662805307
+          path: /tmp/bnb-original-artifacts/14596621129
+          run-id: 44662805307
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: precious-metals-candidate-44661211932
+          path: /tmp/bnb-original-artifacts/14595353157
+          run-id: 44661211932
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: precious-metals-candidate-44660534458
+          path: /tmp/bnb-original-artifacts/14595332393
+          run-id: 44660534458
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: precious-metals-publish-44661566247
+          path: /tmp/bnb-original-artifacts/14594709870
+          run-id: 44661566247
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-polish-candidate-44601879622
+          path: /tmp/bnb-original-artifacts/14569105910
+          run-id: 44601879622
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-polish-publish-44602354084
+          path: /tmp/bnb-original-artifacts/14568222376
+          run-id: 44602354084
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-polish-publish-44596575511
+          path: /tmp/bnb-original-artifacts/14566925497
+          run-id: 44596575511
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-polish-candidate-44595686113
+          path: /tmp/bnb-original-artifacts/14566330808
+          run-id: 44595686113
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-pilot-live-review-44435875741
+          path: /tmp/bnb-original-artifacts/14488293277
+          run-id: 44435875741
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-challenge-auth-publish-44435573744
+          path: /tmp/bnb-original-artifacts/14488268010
+          run-id: 44435573744
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-challenge-auth-candidate-44434958866
+          path: /tmp/bnb-original-artifacts/14488177517
+          run-id: 44434958866
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-challenge-publish-44429745020
+          path: /tmp/bnb-original-artifacts/14486006725
+          run-id: 44429745020
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-pilot-live-review-44432319554
+          path: /tmp/bnb-original-artifacts/14485983600
+          run-id: 44432319554
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-pilot-live-review-44430042469
+          path: /tmp/bnb-original-artifacts/14485908412
+          run-id: 44430042469
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-challenge-candidate-44428317500
+          path: /tmp/bnb-original-artifacts/14484753822
+          run-id: 44428317500
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-polish-candidate-44409079871
+          path: /tmp/bnb-original-artifacts/14477116677
+          run-id: 44409079871
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-polish-publish-44410001644
+          path: /tmp/bnb-original-artifacts/14476937794
+          run-id: 44410001644
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-cutoff-publish-44386363937
+          path: /tmp/bnb-original-artifacts/14466432244
+          run-id: 44386363937
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-cutoff-candidate-44384132362
+          path: /tmp/bnb-original-artifacts/14464343844
+          run-id: 44384132362
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-cutoff-candidate-44382593554
+          path: /tmp/bnb-original-artifacts/14463284003
+          run-id: 44382593554
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-recovery-release
+          path: /tmp/bnb-original-artifacts/14100672727
+          run-id: 43563122919
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-event-usdc-release
+          path: /tmp/bnb-original-artifacts/13898001097
+          run-id: 43113929057
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: event-profile-cosmetics-release
+          path: /tmp/bnb-original-artifacts/13894723625
+          run-id: 43108591709
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: event-profile-cosmetics-release
+          path: /tmp/bnb-original-artifacts/13885954064
+          run-id: 43086635932
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-event-foundation-release
+          path: /tmp/bnb-original-artifacts/13878940276
+          run-id: 43070383514
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-play-share-production
+          path: /tmp/bnb-original-artifacts/13864632349
+          run-id: 43039597029
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: canopy-ending-share-release
+          path: /tmp/bnb-original-artifacts/13863391030
+          run-id: 43035474384
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-play-share-preview
+          path: /tmp/bnb-original-artifacts/13863140423
+          run-id: 43033645694
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-play-share-preview
+          path: /tmp/bnb-original-artifacts/13862192262
+          run-id: 43033981257
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: canopy-ending-share-release
+          path: /tmp/bnb-original-artifacts/13861389441
+          run-id: 43035046373
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-play-share-preview
+          path: /tmp/bnb-original-artifacts/13860703704
+          run-id: 43031050025
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-play-share-preview
+          path: /tmp/bnb-original-artifacts/13860304540
+          run-id: 43031987370
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-play-share-preview
+          path: /tmp/bnb-original-artifacts/13860098262
+          run-id: 43030403913
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-play-share-preview
+          path: /tmp/bnb-original-artifacts/13859284216
+          run-id: 43030777806
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-play-share-preview
+          path: /tmp/bnb-original-artifacts/13842157607
+          run-id: 42992329299
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-play-share-preview
+          path: /tmp/bnb-original-artifacts/13831759153
+          run-id: 42968092548
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-play-share-preview
+          path: /tmp/bnb-original-artifacts/13830800335
+          run-id: 42964034968
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-play-share-preview
+          path: /tmp/bnb-original-artifacts/13830640932
+          run-id: 42964310178
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-event-workshop-release
+          path: /tmp/bnb-original-artifacts/13830235569
+          run-id: 42962404360
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: arcade-play-share-preview
+          path: /tmp/bnb-original-artifacts/13830174262
+          run-id: 42964548709
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bnb-run-review-candidate
+          path: /tmp/bnb-original-artifacts/14896150960
+          run-id: 45340749351
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bnb-backing-source-review
+          path: /tmp/bnb-original-artifacts/14713387321
+          run-id: 44920394429
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bnb-backing-source-review
+          path: /tmp/bnb-original-artifacts/14712778264
+          run-id: 44920199145
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: bnb-backing-source-review
+          path: /tmp/bnb-original-artifacts/14712937306
+          run-id: 44919683422
+          github-token: ${{ github.token }}
+      - name: Inspect original artifacts without executing their contents
+        run: python3 scripts/recover-bnb-function-archives.py
+      - name: Commit hash-matched archives to the same feature branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/multichain/generation-milestone/package-recovery/recovered.json
+          if compgen -G 'production/recovered-function-archives/*.zip' > /dev/null; then git add -f production/recovered-function-archives/*.zip; fi
+          if ! git diff --cached --quiet; then git commit -m 'Archive exact recovered live function packages [skip netlify]'; fi
+          git push origin HEAD:feat/bnb-generation-custody
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: recovered-live-function-packages
+          path: |
+            production/recovered-function-archives
+            docs/multichain/generation-milestone/package-recovery/recovered.json

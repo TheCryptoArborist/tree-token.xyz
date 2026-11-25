@@ -1,0 +1,4 @@
+// Fixed GET-only simulation and receipt verifier. No signature/submission inputs.
+import {prepareConfigurationHandoff,verifyConfigurationReceipt} from '../../contracts/nftree-generation/scripts/configuration-handoff.mjs';
+export const config={path:'/api/generation-configuration'};
+export default async function handler(request){const headers={'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'};if(request.method!=='GET')return new Response('Read-only endpoint',{status:405,headers});try{const url=new URL(request.url),digest=url.searchParams.get('digest');if(digest){if(!/^[1-9A-HJ-NP-Za-km-z]{43,44}$/.test(digest)||[...url.searchParams].length!==1)throw Error('Invalid receipt request');return Response.json(await verifyConfigurationReceipt(digest),{headers});}if(url.search)throw Error('Unexpected parameters');return Response.json(await prepareConfigurationHandoff(),{headers});}catch(e){return Response.json({error:String(e.message)},{status:502,headers});}}

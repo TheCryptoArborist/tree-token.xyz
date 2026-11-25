@@ -1,0 +1,25 @@
+{
+  "sourceCommit": "905fd47313efa4fbea599b4e5c7ce87be9fc0dfa",
+  "ci": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45340749351",
+  "conclusion": "success",
+  "checks": {
+    "unsignedGuards": 398,
+    "evmContracts": 16,
+    "bnbGuardsAndHttp": 174,
+    "moveContracts": 52,
+    "postgresIncludingHttp": 15,
+    "runtime": 5,
+    "extractedZipSmoke": true
+  },
+  "artifact": {
+    "id": 14896150960,
+    "name": "bnb-run-review-candidate",
+    "artifactDigest": "sha256:a9bf544071ba0605927595a207353b41ad2b49de39c6bcb4bfaae5c802b318fb",
+    "functionZipSha256": "8c226ea9fd3390292e4f2e63363c65bfefd96b03fdd0a2258891ca67770caa14",
+    "functionZipBytes": 645897,
+    "note": "Hosted artifact has its own full manifest. Build-path comments can change ZIP hashes between environments; do not substitute local bytes for hosted reviewed bytes."
+  },
+  "deployed": false,
+  "migrationApplied": false,
+  "gameplayAuthorized": false
+}

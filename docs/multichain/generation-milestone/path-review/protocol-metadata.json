@@ -1,0 +1,665 @@
+{
+  "source": "https://metadata.layerzero-api.com/v1/metadata/deployments",
+  "fetchedAt": "2026-11-23T03:25:48.362Z",
+  "networks": {
+    "bsc-mainnet": {
+      "chainKey": "bsc",
+      "chainDetails": {
+        "cgNetworkId": "bsc",
+        "nativeChainId": 56,
+        "name": "BNB Chain",
+        "shortName": "BNB",
+        "chainKey": "bsc",
+        "chainType": "evm",
+        "chainLayer": "L1",
+        "chainStatus": "ACTIVE",
+        "nativeCurrency": {
+          "name": "BNB TOKEN",
+          "symbol": "BNB",
+          "decimals": 18,
+          "cgId": "binancecoin",
+          "cmcId": 1839
+        },
+        "averageBlockTime": 1400
+      },
+      "deployments": [
+        {
+          "version": 0,
+          "eid": "2",
+          "stage": "mainnet",
+          "chainKey": "bsc",
+          "relayer": {
+            "address": "0xfe7c30860d01e28371d40434806f4a8fcdd3a098"
+          }
+        },
+        {
+          "version": 1,
+          "eid": "102",
+          "stage": "mainnet",
+          "chainKey": "bsc",
+          "endpoint": {
+            "address": "0x3c2269811836af69497e5f486a85d7316753cf62"
+          },
+          "fPValidator": {
+            "address": "0x28a5536ca9f36c45a9d2ac8d2b62fc46fde024b6"
+          },
+          "mPTValidator01": {
+            "address": "0x462f7ec57c6492b983a8c8322b4369a7f149b859"
+          },
+          "mPTValidatorV4": {
+            "address": "0x6c73c7a416d96d9c6fa57671aa1ed7ed0fdf5127"
+          },
+          "mPTValidatorV5": {
+            "address": "0x9bdf3ae7e2e3d211811e5e782a808ca0a75bf1fc"
+          },
+          "nonceContract": {
+            "address": "0x5b905fe05f81f3a8ad8b28c6e17779cfabf76068"
+          },
+          "receiveUln301": {
+            "address": "0xff3da3a1cd39bbaeb8d7cb2deb83efc065cbb38f"
+          },
+          "relayer": {
+            "address": "0xfe7c30860d01e28371d40434806f4a8fcdd3a098"
+          },
+          "relayerV2": {
+            "address": "0xa27a2ca24dd28ce14fb5f5844b59851f03dcf182"
+          },
+          "sendUln301": {
+            "address": "0xfcce712c9be5a78fe5f842008e0ed7af59455278"
+          },
+          "treasuryV2": {
+            "address": "0x3773e1e9deb273fcdf9f80bc88bb387b1e6ce34d"
+          },
+          "ultraLightNode": {
+            "address": "0x66a71dcef29a0ffbdbe3c6a460a3b5bc225cd675"
+          },
+          "ultraLightNodeV2": {
+            "address": "0x4d73adb72bc3dd368966edd0f0b2148401a178e2"
+          }
+        },
+        {
+          "version": 2,
+          "eid": "30102",
+          "stage": "mainnet",
+          "chainKey": "bsc",
+          "blockedMessageLib": {
+            "address": "0x1ccbf0db9c192d969de57e25b3ff09a25bb1d862"
+          },
+          "deadDVN": {
+            "address": "0xe9b5e4f9395a60799f4f608ba3abebdfc0ee6d9c"
+          },
+          "endpointV2": {
+            "address": "0x1a44076050125825900e736c501f859c50fe728c"
+          },
+          "endpointV2View": {
+            "address": "0x40b36b785a6872b40cd6957ce211e515e1be1081"
+          },
+          "executor": {
+            "address": "0x3ebd570ed38b1b3b4bc886999fcf507e9d584859"
+          },
+          "lzExecutor": {
+            "address": "0x821a99c061c00f6c9da0302aaec348945ba40284"
+          },
+          "readLib1002": {
+            "address": "0x37375049cdc522bd6baeebf527a42d54688d784c"
+          },
+          "receiveUln302": {
+            "address": "0xb217266c3a98c8b2709ee26836c98cf12f6ccec1"
+          },
+          "sendUln302": {
+            "address": "0x9f8c645f2d0b2159767bd6e0839de4be49e823de"
+          }
+        }
+      ],
+      "blockExplorers": [
+        {
+          "url": "https://bscscan.com"
+        }
+      ],
+      "dvns": {
+        "0xd56e4eab23cb81f43168f9f45211eb027b9ac7cc": {
+          "canonicalName": "Google",
+          "id": "google-cloud",
+          "version": 2
+        },
+        "0x5a54fe5234e811466d5366846283323c954310b2": {
+          "canonicalName": "TSS",
+          "id": "tss",
+          "version": 1
+        },
+        "0xfd6865c841c2d64565562fcc7e05e619a30615f0": {
+          "canonicalName": "LayerZero Labs",
+          "id": "layerzero-labs",
+          "version": 2
+        },
+        "0xabc9b1819cc4d9846550f928b985993cf6240439": {
+          "canonicalName": "StableLab",
+          "id": "stablelab",
+          "version": 2
+        },
+        "0x31f748a368a893bdb5abb67ec95f232507601a73": {
+          "canonicalName": "Twinstake",
+          "id": "nethermind",
+          "version": 2
+        },
+        "0x25e0e650a78e6304a3983fc4b7ffc6544b1beea6": {
+          "canonicalName": "MIM",
+          "id": "mim",
+          "version": 2
+        },
+        "0x247624e2143504730aec22912ed41f092498bef2": {
+          "canonicalName": "Horizen",
+          "id": "horizen-labs",
+          "version": 2
+        },
+        "0x1bab20e7fdc79257729cb596bef85db76c44915e": {
+          "canonicalName": "Nodes.Guru",
+          "id": "nodes-guru",
+          "version": 2
+        },
+        "0xfe1cd27827e16b07e61a4ac96b521bdb35e00328": {
+          "canonicalName": "BWare",
+          "id": "bware-labs",
+          "version": 2,
+          "deprecated": true
+        },
+        "0x05aaefdf9db6e0f7d27fa3b6ee099edb33da029e": {
+          "canonicalName": "Planetarium Labs",
+          "id": "planetarium-labs",
+          "version": 2
+        },
+        "0x439264fb87581a70bb6d7befd16b636521b0ad2d": {
+          "canonicalName": "P2P",
+          "id": "p2p",
+          "version": 2
+        },
+        "0xbd40c9047980500c46b8aed4462e2f889299febe": {
+          "canonicalName": "Portal",
+          "id": "portal",
+          "version": 2
+        },
+        "0x9eeee79f5dbc4d99354b5cb547c138af432f937b": {
+          "canonicalName": "Delegate",
+          "id": "delegate",
+          "version": 2
+        },
+        "0x8fc629aa400d4d9c0b118f2685a49316552abf27": {
+          "canonicalName": "01node",
+          "id": "01node",
+          "version": 2
+        },
+        "0x4d52f5bc932cf1a854381a85ad9ed79b8497c153": {
+          "canonicalName": "Restake",
+          "id": "restake",
+          "version": 2
+        },
+        "0xd36246c322ee102a2203bca9cafb84c179d306f6": {
+          "canonicalName": "BCW Group",
+          "id": "bcw",
+          "version": 2
+        },
+        "0xf0809f6e760a5452ee567975eda7a28da4a83d38": {
+          "canonicalName": "Switchboard",
+          "id": "switchboard",
+          "version": 2
+        },
+        "0x2afa3787cd95fee5d5753cd717ef228eb259f4ea": {
+          "canonicalName": "Gitcoin",
+          "id": "gitcoin",
+          "version": 2,
+          "deprecated": true
+        },
+        "0xe4b64c3a70cd7f7c38d48f66ba5db9a41c485f64": {
+          "canonicalName": "Gitcoin",
+          "id": "gitcoin",
+          "version": 2
+        },
+        "0x313328609a9c38459cae56625fff7f2ad6dcde3b": {
+          "canonicalName": "Animoca-Blockdaemon",
+          "id": "animoca-blockdaemon",
+          "version": 2
+        },
+        "0x2c7185f5b0976397d9eb5c19d639d4005e6708f0": {
+          "canonicalName": "Luganodes",
+          "id": "luganodes",
+          "version": 2
+        },
+        "0xd841a741addcb6dea735d3b8c9faf96ba3f3d30d": {
+          "canonicalName": "StakingCabin",
+          "id": "stakingcabin",
+          "version": 2,
+          "deprecated": true
+        },
+        "0x33e5fcc13d7439cc62d54c41aa966197145b3cd7": {
+          "canonicalName": "P-OPS",
+          "id": "p-ops-team",
+          "version": 2
+        },
+        "0xb4fa7f1c67e5ec99b556ec92cbddbcdd384106f2": {
+          "canonicalName": "Shrapnel",
+          "id": "mercury",
+          "version": 2,
+          "deprecated": true
+        },
+        "0x5a4c666e9c7aa86fd4fbfdfbfd04646dcc45c6c5": {
+          "canonicalName": "Omni X",
+          "id": "omni-x",
+          "version": 2
+        },
+        "0xe5491fac6965aa664efd6d1ae5e7d1d56da4fdda": {
+          "canonicalName": "Zenrock",
+          "id": "zenrock",
+          "version": 2,
+          "deprecated": true
+        },
+        "0xac8de74ce0a44a5e73bbc709fe800406f58431e0": {
+          "canonicalName": "Stargate",
+          "id": "stargate",
+          "version": 2,
+          "deprecated": true
+        },
+        "0xdff3f73c260b3361d4f006b02972c6af6c5c5417": {
+          "canonicalName": "Omnicat",
+          "id": "omnicat",
+          "version": 2,
+          "deprecated": true
+        },
+        "0xa2ceb887f545400b8247dfb7e9ccada7ababbde8": {
+          "canonicalName": "BitGo",
+          "id": "bitgo",
+          "version": 2,
+          "deprecated": true
+        },
+        "0x150a58e9e6bf69cceb1dba5ae97c166dc8792539": {
+          "canonicalName": "Chainlink",
+          "id": "ccip",
+          "version": 1
+        },
+        "0x878c20d3685cdbc5e2680a8a0e7fb97389344fe1": {
+          "canonicalName": "Axelar",
+          "id": "axelar",
+          "version": 2,
+          "deprecated": true
+        },
+        "0xd791948db16ab4373fa394b74c727ddb7fb02520": {
+          "canonicalName": "BitGo",
+          "id": "bitgo",
+          "version": 2,
+          "deprecated": true
+        },
+        "0x82f6ad698f3116ca1b71836a7f1303628fa855db": {
+          "canonicalName": "Paxos",
+          "id": "paxos",
+          "version": 2,
+          "deprecated": true
+        },
+        "0x089e70bc883ad0b6551e513bf7a71ffd2059f9f1": {
+          "canonicalName": "Ondo Staging",
+          "id": "ondo-staging",
+          "version": 2
+        },
+        "0xf4c489afd83625f510947e63ff8f90dfee0ae46c": {
+          "canonicalName": "Superform",
+          "id": "superform",
+          "version": 2
+        },
+        "0x509889389cfb7a89850017425810116a44676f58": {
+          "canonicalName": "LayerZero Labs",
+          "id": "layerzero-labs",
+          "version": 2,
+          "lzReadCompatible": true
+        },
+        "0x0321a1b9e48ccdc5a8a32c524b858e10072ef798": {
+          "canonicalName": "Twinstake",
+          "id": "nethermind",
+          "version": 2,
+          "lzReadCompatible": true
+        },
+        "0xd4925b81f62457caca368412315d230535b9a48a": {
+          "canonicalName": "Animoca-Blockdaemon",
+          "id": "animoca-blockdaemon",
+          "version": 2,
+          "lzReadCompatible": true
+        },
+        "0x48ecf6d66045aad8d75e72109489ac29da6066a9": {
+          "canonicalName": "Nocturnal Labs",
+          "id": "nocturnal-labs",
+          "version": 2,
+          "lzReadCompatible": true
+        },
+        "0x5246d80e5673251eb1977ae9d07a93fbd8649963": {
+          "canonicalName": "BCW Group",
+          "id": "bcw",
+          "version": 2,
+          "lzReadCompatible": true
+        },
+        "0xdb979d0a36af0525afa60fc265b1525505c55d79": {
+          "canonicalName": "AltLayer",
+          "id": "altlayer",
+          "version": 2,
+          "lzReadCompatible": true
+        },
+        "0xfa9ba83c102283958b997adc8b44ed3a3cdb5dda": {
+          "canonicalName": "Canary",
+          "id": "canary",
+          "version": 2
+        },
+        "0x00e91548787caf130d811ef1872f2bc2c0583d90": {
+          "canonicalName": "Flowdesk",
+          "id": "flowdesk",
+          "version": 2
+        },
+        "0x00efecf8714c2bc9376f8391f47a2ffce8bcdfea": {
+          "canonicalName": "Ondo",
+          "id": "ondo",
+          "version": 2
+        },
+        "0x72f697797ac173f09eda73dd9c11a141376d2b57": {
+          "canonicalName": "USDT0",
+          "id": "usdt0",
+          "version": 2
+        },
+        "0xa3858e2a9860c935fc9586a617e9b2a674c3e4c8": {
+          "canonicalName": "Muon",
+          "id": "muon",
+          "version": 2
+        },
+        "0x534c6b3e6805e9287ff1d49c349d5f7a01b9b7f5": {
+          "canonicalName": "Nansen",
+          "id": "nansen",
+          "version": 2
+        },
+        "0x0a25b9aaa98c26c1cfd0f20ef40db5ba21369055": {
+          "canonicalName": "Mantle Bank",
+          "id": "mantle-bank",
+          "version": 2
+        },
+        "0xf0a5c5306adbfd4e3dfd5d4b148b451c411d3878": {
+          "canonicalName": "Deutsche Telekom",
+          "id": "deutsche-telekom",
+          "version": 2
+        },
+        "0x8ed0a851964604bb1b6b1a703f4c8234ee684d76": {
+          "canonicalName": "Bera",
+          "id": "bera",
+          "version": 2
+        },
+        "0xd4bf35ce3bfc7f7d7dfc0694a7d4aa8b8c60a38c": {
+          "canonicalName": "Frax",
+          "id": "frax",
+          "version": 2
+        },
+        "0x81d8516adae92b655acaf6a04c9526716baeb849": {
+          "canonicalName": "Horizen",
+          "id": "horizen-labs",
+          "version": 2,
+          "lzReadCompatible": true
+        },
+        "0x92453ce02159f774f1c846a4a0693008ed020f59": {
+          "canonicalName": "Zeeve",
+          "id": "zeeve",
+          "version": 2
+        },
+        "0xd29dcf66e264aa7d6833bdac6b9279791a7c246b": {
+          "canonicalName": "WBTC Canary",
+          "id": "canary-wbtc",
+          "version": 2
+        },
+        "0xeece50190806fa57016028d31d8631419882401c": {
+          "canonicalName": "Nodit",
+          "id": "nodit",
+          "version": 2
+        },
+        "0xc6e1f0fc326913bd31fb11699c61f6f1f2a5e6d2": {
+          "canonicalName": "Curve",
+          "id": "curve",
+          "version": 2,
+          "lzReadCompatible": true
+        },
+        "0xbc625fc2db9754fd4cd3cfb7dbaa81b9c6f6e2e2": {
+          "canonicalName": "Brale",
+          "id": "brale",
+          "version": 2
+        },
+        "0x0cea5a94f8cd3330c4f84944bf4500f8dacd440c": {
+          "canonicalName": "StablecoinX",
+          "id": "stablecoinx",
+          "version": 2
+        },
+        "0xee412dc75e4244d45e5820544411ede5af6e16d1": {
+          "canonicalName": "Fidelity Center for Applied Technology",
+          "id": "fidelity",
+          "version": 2
+        },
+        "0xf7ddee427507cdb6885e53caaaa1973b1fe29357": {
+          "canonicalName": "Republic",
+          "id": "republic-crypto",
+          "version": 2
+        },
+        "0x53561bcfe6b3f23bc72e5b9919c12322729942e8": {
+          "canonicalName": "Chainlink CCIP",
+          "id": "ccip",
+          "version": 2
+        },
+        "0x9188b373378d284c9174ae474c2b0a937924b34b": {
+          "canonicalName": "EigenZero",
+          "id": "eigenzero",
+          "version": 2
+        },
+        "0xe48a3dd4d207338a8fabe4e929d78d78c38cadea": {
+          "canonicalName": "Citrea",
+          "id": "citrea",
+          "version": 2
+        },
+        "0xec65a0245c19a084650cb5b85fd1a2bc7b0fd452": {
+          "canonicalName": "Mantle03",
+          "id": "mantle03",
+          "version": 2
+        },
+        "0xe9b5e4f9395a60799f4f608ba3abebdfc0ee6d9c": {
+          "canonicalName": "LZDeadDVN",
+          "id": "lz-dead-dvn",
+          "version": 2,
+          "deprecated": true
+        },
+        "0x68dd7cceca7d2738728185bca3db0c9199ed567a": {
+          "canonicalName": "Blockaid",
+          "id": "blockaid",
+          "version": 2
+        },
+        "0xb7485cac48e809276f63d7ad93ec3206070775c2": {
+          "canonicalName": "FurtherFP",
+          "id": "FurtherFP",
+          "version": 2
+        },
+        "0x8e2248f0137e8d3c628de5d6376089e0b8541400": {
+          "canonicalName": "Anchorage",
+          "id": "anchorage",
+          "version": 2
+        },
+        "0xccf6ee53aa0b7c7f190d2a7b273e7b04cce14d21": {
+          "canonicalName": "StakingCabin",
+          "id": "stakingcabin",
+          "version": 2,
+          "deprecated": true
+        },
+        "0x547bf6889b1095b7cc6e525a1f8e8fdb26134a38": {
+          "canonicalName": "Blockhunters",
+          "id": "blockhunters",
+          "version": 2,
+          "deprecated": true
+        },
+        "0x8ddf05f9a5c488b4973897e278b58895bf87cb24": {
+          "canonicalName": "Polyhedra zkBridge",
+          "id": "polyhedra-network",
+          "version": 2,
+          "deprecated": true
+        },
+        "0x7decf96f235ad5878f29b69885df428b5ffc3239": {
+          "canonicalName": "LayerZero Labs Subsidized",
+          "id": "layerzero-labs-subsidized",
+          "version": 2
+        },
+        "0xe014fe8c4d5c23edb7ac4011f226e869ac7ef5cc": {
+          "canonicalName": "Polyhedra zkBridge",
+          "id": "polyhedra-network",
+          "version": 1,
+          "deprecated": true
+        },
+        "0x68389e9d2a1a015f25850d13fd7b2df59bd40a87": {
+          "canonicalName": "ApeDVN",
+          "id": "apedvn",
+          "version": 2
+        },
+        "0x97e19088d0c9d490a99b57fb52ad3636d7c3612c": {
+          "canonicalName": "Canary Sponsored",
+          "id": "canary-sponsored",
+          "version": 2
+        },
+        "0x165bcb144efe79a955c608a3d69e08e21c91c79d": {
+          "canonicalName": "Canary Subsidized",
+          "id": "canary-subsidized",
+          "version": 2
+        }
+      }
+    },
+    "sui-mainnet": {
+      "chainKey": "sui",
+      "chainDetails": {
+        "chainKey": "sui",
+        "chainType": "sui",
+        "chainLayer": "L1",
+        "chainStatus": "ACTIVE",
+        "nativeCurrency": {
+          "name": "SUI TOKEN",
+          "symbol": "SUI",
+          "decimals": 9,
+          "cgId": "sui",
+          "cmcId": 20947
+        }
+      },
+      "deployments": [
+        {
+          "version": 2,
+          "eid": "30378",
+          "stage": "mainnet",
+          "chainKey": "sui",
+          "endpointV2": {
+            "address": "0x31beaef889b08b9c3b37d19280fc1f8b75bae5b2de2410fc3120f403e9a36dac"
+          },
+          "executor": {
+            "address": "0xde7fe1a6648d587fcc991f124f3aa5b6389340610804108094d5c5fbf61d1989"
+          },
+          "receiveUln302": {
+            "address": "0x3ce7457bed48ad23ee5d611dd3172ae4fbd0a22ea0e846782a7af224d905dbb0"
+          },
+          "sendUln302": {
+            "address": "0x3ce7457bed48ad23ee5d611dd3172ae4fbd0a22ea0e846782a7af224d905dbb0"
+          }
+        }
+      ],
+      "blockExplorers": [
+        {
+          "url": "https://suivision.xyz"
+        }
+      ],
+      "dvns": {
+        "0xc3f25fb140745ca0d4cde0ec382fd76e2f20d5a76a7fd9264340b4af949fd38b": {
+          "canonicalName": "LayerZero Labs",
+          "id": "layerzero-labs",
+          "version": 2,
+          "deprecated": true
+        },
+        "0x52aa129049de845353484868d1be6e2df6878b0ed2213d94d3c827309aeae685": {
+          "canonicalName": "LayerZero Labs",
+          "id": "layerzero-labs",
+          "version": 2
+        },
+        "0x0557fbacc8a85fe33848ce3471e9f4554956a7ce1ad280a47f00d6c3126e2ff6": {
+          "canonicalName": "Twinstake",
+          "id": "nethermind",
+          "version": 2,
+          "deprecated": true
+        },
+        "0x0c12321ebe562b8fb8a74e6d29f144ea199a8f31a4cea3a417ce72477f6dfebb": {
+          "canonicalName": "Twinstake",
+          "id": "nethermind",
+          "version": 2
+        },
+        "0x9edc19a8bbb9271ee7ac99bbb364a2457106e14179842a9c6c3fe0a87db6d59f": {
+          "canonicalName": "Horizen",
+          "id": "horizen-labs",
+          "version": 2,
+          "deprecated": true
+        },
+        "0x92128a5edf4a0f696464de66d00986ef41b37faf705ceb3d9d9a4e5c306fbf91": {
+          "canonicalName": "Horizen",
+          "id": "horizen-labs",
+          "version": 2
+        },
+        "0x38f0cf09de1f952e140df4a57f904e4c851deeb747ec4f737a00564a6cda2551": {
+          "canonicalName": "P2P",
+          "id": "p2p",
+          "version": 2
+        },
+        "0xb5c7e0ad19f3aa1fe60bdc2af6d39af3de088f06bdccb35ecfd7d9465579cb55": {
+          "canonicalName": "Luganodes",
+          "id": "luganodes",
+          "version": 2
+        },
+        "0xfa35508c624925c6f341113f8f9397e5f41750b833af87d0c945a6f5682887f0": {
+          "canonicalName": "Canary",
+          "id": "canary",
+          "version": 2
+        },
+        "0x8c4e6f80df3e0c16e82f9fb46d26e8763c77982a299cc427e6f136012398760a": {
+          "canonicalName": "Nansen",
+          "id": "nansen",
+          "version": 2
+        },
+        "0x6d593b3f473eafc58ad01d21de6bd4673535f83cceda8a4287cb187eafaac464": {
+          "canonicalName": "Deutsche Telekom",
+          "id": "deutsche-telekom",
+          "version": 2
+        },
+        "0xef6da181feda6ae0a4efb2553afa80c508ae0f0f545522278ffc6d15fa3b01ed": {
+          "canonicalName": "Mysten Labs",
+          "id": "mysten-labs",
+          "version": 2,
+          "deprecated": true
+        },
+        "0x3efa9a92de7f4575fa04fb841aeb566f7c437d13515796d2842376e97ce82cba": {
+          "canonicalName": "Mysten Labs",
+          "id": "mysten-labs",
+          "version": 2
+        },
+        "0x4a9cb9e7910bb17cce04f0416ef41d3828d4a9598deb4da0fc7edb86a3976fbe": {
+          "canonicalName": "B-Harvest",
+          "id": "bharvest",
+          "version": 2
+        },
+        "0x8c8a86bfcfecfdceb17ff556543c24cb141e0f765c35e8807b8ef56b647040a8": {
+          "canonicalName": "01node",
+          "id": "01node",
+          "version": 2
+        },
+        "0x344b60b53f97b96d829255394925bdd95e6bbfbfcc79588a81d00748ef7f5375": {
+          "canonicalName": "Blockaid",
+          "id": "blockaid",
+          "version": 2
+        },
+        "0x825963b9f56614be069e5bd28e720b9ec00b06dc995cb3ab53708dbb62912367": {
+          "canonicalName": "BitGo",
+          "id": "bitgo",
+          "version": 2,
+          "deprecated": true
+        },
+        "0x4021372bf6f9ce502ace24000dec5d3805422e3875fcd562367b3ef385eb1b53": {
+          "canonicalName": "FurtherFP",
+          "id": "FurtherFP",
+          "version": 2
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,4 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {verifyReturnFees} from '../scripts/return-fees.mjs';import p from '../../../docs/multichain/generation-milestone/return-review/fork.json' with {type:'json'};
+test('executor and all required verifier fees reconcile exactly',()=>{const r=verifyReturnFees(p.receipt,p.nativeFeeWei);assert.equal(r.requiredDvns.length,3);});
+for(const [name,change] of [['changed executor',r=>r.logs[0].data='0x'+'0'.repeat(64)+r.logs[0].data.slice(66)],['missing verifier event',r=>r.logs.splice(1,1)],['changed fee',r=>r.logs[0].data=r.logs[0].data.slice(0,-1)+'f'],['extra fee event',r=>r.logs.push(r.logs[0])]])test('reject '+name,()=>{const r=structuredClone(p.receipt);change(r);assert.throws(()=>verifyReturnFees(r,p.nativeFeeWei));});
+test('reject fee quote mismatch',()=>assert.throws(()=>verifyReturnFees(p.receipt,BigInt(p.nativeFeeWei)+1n)));

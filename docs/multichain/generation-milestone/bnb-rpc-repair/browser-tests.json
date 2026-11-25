@@ -1,0 +1,37 @@
+{
+  "browser": "Chromium",
+  "assetOrigin": "local source",
+  "realTransactions": 0,
+  "results": [
+    {
+      "scenario": "complete",
+      "passed": true,
+      "mockedWalletSends": 3
+    },
+    {
+      "scenario": "rpc-fallback",
+      "passed": true,
+      "mockedWalletSends": 3
+    },
+    {
+      "scenario": "rejected",
+      "passed": true,
+      "mockedWalletSends": 1
+    },
+    {
+      "scenario": "uncertain",
+      "passed": true,
+      "mockedWalletSends": 1
+    },
+    {
+      "scenario": "wrong-account",
+      "passed": true,
+      "mockedWalletSends": 0
+    },
+    {
+      "scenario": "off-origin",
+      "passed": true,
+      "mockedWalletSends": 0
+    }
+  ]
+}

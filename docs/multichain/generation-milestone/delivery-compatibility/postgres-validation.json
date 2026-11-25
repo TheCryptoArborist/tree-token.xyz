@@ -1,0 +1,19 @@
+{
+  "localOnly": true,
+  "upstreamCommit": "23e3f8bc216098121f966d7a11e99535cd350061",
+  "passed": 9,
+  "checks": [
+    "exact pinned upstream schema loads without modifications",
+    "valid reviewed Sui TREE order still inserts",
+    "actual upstream SQL rejects BNB network",
+    "actual upstream SQL rejects one USDT raw amount",
+    "actual upstream SQL rejects BNB treasury",
+    "actual upstream SQL rejects USDT token",
+    "delivery requires its own verified order; a side-ledger receipt alone cannot restore",
+    "upstream SQL contains account bindings but no lockable authentication session table",
+    "inspected gateway explicitly maps preview identity to release-candidate only"
+  ],
+  "compatibleWithBnb": false,
+  "productionSessionAdapterAvailable": false,
+  "gameplayAuthorized": false
+}

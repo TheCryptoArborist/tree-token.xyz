@@ -1,0 +1,8 @@
+{
+  "sourceCommit": "2d1fc9f9c8cbe1a71b45147c99a4d8e1b32d828f",
+  "ciRun": "45335995797",
+  "conclusion": "success",
+  "focusedLocalTests": 31,
+  "liveDeployment": false,
+  "productionPersistenceImplemented": false
+}

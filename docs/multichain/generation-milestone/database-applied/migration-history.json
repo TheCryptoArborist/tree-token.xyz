@@ -1,0 +1,214 @@
+[
+  {
+    "version": "20260623042247",
+    "name": "consult_request_intake_and_verification"
+  },
+  {
+    "version": "20260623042353",
+    "name": "harden_consultation_request_insert_policy"
+  },
+  {
+    "version": "20260623042511",
+    "name": "drop_speculative_consultation_indexes"
+  },
+  {
+    "version": "20260820154943",
+    "name": "tree_raffle_round_lifecycle"
+  },
+  {
+    "version": "20260820163018",
+    "name": "tree_raffle_draw_audit"
+  },
+  {
+    "version": "20260820164226",
+    "name": "tree_raffle_winner_claim_reconciliation"
+  },
+  {
+    "version": "20260820165725",
+    "name": "tree_raffle_public_claim_identity"
+  },
+  {
+    "version": "20260820182117",
+    "name": "tree_raffle_daily_only"
+  },
+  {
+    "version": "20260821005154",
+    "name": "tree_knowledge_trial"
+  },
+  {
+    "version": "20260821005203",
+    "name": "tree_knowledge_trial_wallet_security"
+  },
+  {
+    "version": "20260821005214",
+    "name": "tree_knowledge_trial_sudden_death"
+  },
+  {
+    "version": "20260821005400",
+    "name": "tree_knowledge_trial_admin_setup"
+  },
+  {
+    "version": "20260821010339",
+    "name": "tree_knowledge_trial_fk_indexes"
+  },
+  {
+    "version": "20260821015205",
+    "name": "tree_knowledge_trial_round_activation"
+  },
+  {
+    "version": "20260821022103",
+    "name": "tree_knowledge_trial_award_settlement"
+  },
+  {
+    "version": "20260823012545",
+    "name": "tree_knowledge_trial_three_question_rotation"
+  },
+  {
+    "version": "20260823020918",
+    "name": "tree_knowledge_trial_participation_activity"
+  },
+  {
+    "version": "20260823021149",
+    "name": "fix_tree_knowledge_trial_participation_snapshot"
+  },
+  {
+    "version": "20260824134139",
+    "name": "tree_knowledge_trial_three_question_schedule_fix"
+  },
+  {
+    "version": "20260827231814",
+    "name": "make_raffle_keeper_cursor_idempotent"
+  },
+  {
+    "version": "20260828015303",
+    "name": "read_next_resolvable_knowledge_round"
+  },
+  {
+    "version": "20260828021319",
+    "name": "fix_knowledge_award_coalesce"
+  },
+  {
+    "version": "20260828022918",
+    "name": "fix_knowledge_public_active_round"
+  },
+  {
+    "version": "20260828023705",
+    "name": "expose_recent_knowledge_awards"
+  },
+  {
+    "version": "20260922170025",
+    "name": "record_tree_knowledge_trial_verified_buy"
+  },
+  {
+    "version": "20260930222217",
+    "name": "tree_continue_private_purchase_storage_v1"
+  },
+  {
+    "version": "20260930223727",
+    "name": "tree_continue_private_flight_storage_v1"
+  },
+  {
+    "version": "20260930232356",
+    "name": "tree_recovery_candidate_gateway_v1"
+  },
+  {
+    "version": "20261001020648",
+    "name": "tree_continue_paid_delivery_v1"
+  },
+  {
+    "version": "20261001020823",
+    "name": "tree_continue_purchase_recovery_v1"
+  },
+  {
+    "version": "20261001022226",
+    "name": "tree_continue_hosted_preview_lookup_v1"
+  },
+  {
+    "version": "20261007015339",
+    "name": "tree_continue_scoped_commerce_v1"
+  },
+  {
+    "version": "20261012161413",
+    "name": "tree_continue_platform_role_access_v1"
+  },
+  {
+    "version": "20261012191013",
+    "name": "tree_continue_standard_transfer_v1"
+  },
+  {
+    "version": "20261021031517",
+    "name": "cromwell_halloween_2026"
+  },
+  {
+    "version": "20261031211739",
+    "name": "arcade_growth"
+  },
+  {
+    "version": "20261031211743",
+    "name": "arcade_growth_challenge_rate_scope"
+  },
+  {
+    "version": "20261031220110",
+    "name": "arcade_growth_treeforce_participation"
+  },
+  {
+    "version": "20261101161214",
+    "name": "arcade_growth_treeforce_required_passport"
+  },
+  {
+    "version": "20261105012643",
+    "name": "arcade_social_missions"
+  },
+  {
+    "version": "20261105012652",
+    "name": "arcade_campaign_progress"
+  },
+  {
+    "version": "20261107212842",
+    "name": "arcade_monthly_rewards"
+  },
+  {
+    "version": "20261107214306",
+    "name": "arcade_recovery_reconciliation"
+  },
+  {
+    "version": "20261109123020",
+    "name": "arcade_streak_notifications"
+  },
+  {
+    "version": "20261109124834",
+    "name": "arcade_badge_notifications"
+  },
+  {
+    "version": "20261111054503",
+    "name": "arcade_completed_runs"
+  },
+  {
+    "version": "20261111173553",
+    "name": "arcade_event_foundation"
+  },
+  {
+    "version": "20261111222359",
+    "name": "arcade_event_usdc_terms"
+  },
+  {
+    "version": "20261118193129",
+    "name": "arcade_recovery_month_end_cutoff"
+  },
+  {
+    "version": "20261119000653",
+    "name": "arcade_challenge_pilot"
+  },
+  {
+    "version": "20261119010740",
+    "name": "arcade_challenge_pilot_auth"
+  },
+  {
+    "version": "20261121040149",
+    "name": "arcade_bnb_test_auth"
+  },
+  {
+    "version": "20261124184014",
+    "name": "arcade_bnb_run_review"
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "checkedAt": "2026-11-23",
+  "tests": {
+    "acknowledgement": 14,
+    "reserveRegression": 12,
+    "bnbLifecycle": 16
+  },
+  "checkedNegativeSimulations": 2,
+  "totalTests": 42,
+  "submitted": false,
+  "approvalPending": true,
+  "hostedCIRun": "45217948440",
+  "hostedCIConclusion": "success",
+  "hostedCISourceCommit": "5cd2114",
+  "moveLifecycleTests": 52
+}

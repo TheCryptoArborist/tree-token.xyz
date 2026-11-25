@@ -1,0 +1,40 @@
+{
+  "checkedAt": "2026-11-23T04:19:47.551Z",
+  "evidence": [
+    {
+      "kind": "duplicate-binding",
+      "checksEnabled": true,
+      "submitted": false,
+      "rejection": {
+        "$kind": "MoveAbort",
+        "message": "MoveAbort in 3rd command, abort code: 5, in '0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92::vault::bind' (instruction 34)",
+        "command": 2,
+        "MoveAbort": {
+          "abortCode": "5",
+          "location": {
+            "package": "0xc445519bf1d6ed8ab6002d20ad7ed81a9ad25e31990df9b72203d0ad86fd2e92",
+            "module": "vault",
+            "functionName": "bind",
+            "instruction": 34
+          }
+        }
+      }
+    },
+    {
+      "kind": "unauthorized-configuration",
+      "checksEnabled": true,
+      "submitted": false,
+      "rejection": {
+        "message": "Invalid argument: Error checking transaction input objects: Transaction was not signed by the correct sender: Object 0x97be99b8e5c3b8953323c0a481b848c990b9d32814950d803b754b4e140fe25d is owned by account address 0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4, but given owner/signer address is 0x18d72fc2a3df6d92d0806da3b04d92be056e2d6d35882a56c16ddb25f48d35d6"
+      }
+    },
+    {
+      "kind": "unauthorized-binding",
+      "checksEnabled": true,
+      "submitted": false,
+      "rejection": {
+        "message": "Invalid argument: Error checking transaction input objects: Transaction was not signed by the correct sender: Object 0x4e7fde0fa22d78a2916f7ea8d2e7d4688d04ee4c60152d8a09d4a334e89f6aac is owned by account address 0x485953e2eadf4aa02af950cf8e914fbd2b67523385e73c36118341459d8d45c4, but given owner/signer address is 0x18d72fc2a3df6d92d0806da3b04d92be056e2d6d35882a56c16ddb25f48d35d6"
+      }
+    }
+  ]
+}

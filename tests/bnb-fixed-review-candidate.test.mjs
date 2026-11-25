@@ -1,0 +1,11 @@
+import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import {candidateRequest,compare} from '../scripts/create-bnb-fixed-review-candidate.mjs';import {ROUTES,TRAFFIC} from '../scripts/prepare-bnb-run-release.mjs';
+const b=JSON.parse(fs.readFileSync('docs/multichain/generation-milestone/run-enablement/plan.json')).baseline;
+const m={name:'arcade-bnb-run-review',reviewPolicy:{mode:'review-only',approvedGeneration:'1',gameplayAuthorized:false},routes:ROUTES,trafficRules:TRAFFIC,runtimeVersion:'nodejs24.x',invocationMode:'stream',buildData:{bootstrapVersion:'2.24.0',runtimeAPIVersion:2},extractedZipSmokePassed:true,deployed:false,gameplayAuthorized:false,sha256:'a'.repeat(64)};
+test('replacement request preserves every static digest and all 60 unrelated packages',()=>{const r=candidateRequest(b,m);assert.deepEqual(r.files,b.files);assert.deepEqual(r.function_schedules,b.deploy.function_schedules);for(const f of b.deploy.available_functions)assert.equal(r.functions[f.n],f.n===m.name?m.sha256:f.d);assert.equal(Object.keys(r.functions).length,61);});
+test('rejects generation expansion, gameplay, missing admission and wrong baseline',()=>{for(const change of [m=>m.reviewPolicy.approvedGeneration='2',m=>m.reviewPolicy.gameplayAuthorized=true,m=>m.trafficRules={},m=>m.routes=[],m=>m.extractedZipSmokePassed=false]){const next=structuredClone(m);change(next);assert.throws(()=>candidateRequest(b,next));}const next=structuredClone(b);next.deploy.id='old';assert.throws(()=>candidateRequest(next,m));});
+
+test('candidate verifier detects changes to unrelated provider configuration and schedules',()=>{
+ const manifest={...m,bytes:123};const d=structuredClone(b.deploy);d.locked=false;d.published_at=null;const f=d.available_functions.find(x=>x.n===m.name);f.d=m.sha256;f.s=123;f.id='new-package-id';f.a='073635757191';f.oid='b'.repeat(64);f.c='2026-11-24T20:00:00Z';
+ assert.equal(compare(d,b,manifest).d,m.sha256);
+ for(const mutate of [x=>x.available_functions.find(f=>f.n!==m.name).r='nodejs99.x',x=>x.function_schedules.pop(),x=>x.functions_region='unexpected',x=>x.locked=true,x=>x.available_functions.find(f=>f.n===m.name).tr=null]){const next=structuredClone(d);mutate(next);assert.throws(()=>compare(next,b,manifest));}
+});

@@ -1,0 +1,9 @@
+{
+  "recoveredArchiveCommit": "00e9d0e0f7968751559c6f9458d5bdd1b3384afa",
+  "recoveredArchivePath": "production/arcade-session-return-functions/treeforce89-dev.zip",
+  "recoveredArchiveSha256": "725fe5a7e7ff30c2c83f7b6a1bf1af534a72ee2efa1cc6faf64151743cf84905",
+  "previouslyCapturedPublishedSha256": "af1bc6f03de12e0ee77b10cd118ab346e8f5fa3c9e92cb05ee8ed8a264532a63",
+  "publishedEvidence": "../package-recovery/coverage.json",
+  "matchesCapturedPackage": false,
+  "freshProductionReadPerformed": false
+}

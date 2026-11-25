@@ -1,0 +1,26 @@
+{
+  "deployId": "6b047fa4c9ac1e8b32621216",
+  "baselineId": "6b046d714f59325f88ea55af",
+  "locked": true,
+  "publishedAt": "2026-11-23T18:05:12.849Z",
+  "sourceCommit": "d76e87448a0dfad31ea3bdb3cc1ec94cbde6441c",
+  "controlCommit": "6033a7841cd76d47c6f90d45215e5ced4ddc81c2",
+  "candidateRun": "45233815169",
+  "publicationRun": "45234330517",
+  "sourceContractCIRun": "45233815244",
+  "staticPaths": 688,
+  "preservedStaticPaths": 686,
+  "functions": 60,
+  "preservedFunctions": 60,
+  "schedules": 5,
+  "publicationArtifactId": "14849150444",
+  "publicationArtifactDigest": "sha256:ed7fbe05c87b6b2b2b3782619619e5b5ddb13a6811a1db3ea50ccc858e760b9b",
+  "regressionAndPreviewChecks": 234,
+  "browserScenariosPerSurface": 9,
+  "surfaces": [
+    "source",
+    "candidate",
+    "canonical"
+  ],
+  "liveCompletionSubmittedByCodex": false
+}

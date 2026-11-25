@@ -1,0 +1,14 @@
+{
+  "dateReceived": "2026-11-24",
+  "evidenceType": "user-provided screenshot in task conversation; visible text transcribed",
+  "wallet": "0xf2ab1eebbecb4e315fe95d8b532d1ab00f1a8789",
+  "walletSetup": "MetaMask with Ledger, as previously specified by user",
+  "observedSignInMessage": "BNB sign-in verified. Gameplay remains disabled.",
+  "observedReviewMessage": "Review denied. No access was granted. Check sign-in status if your session may have expired. Gameplay remains disabled.",
+  "result": "visible real-wallet sign-in and expected retired-generation denial accepted",
+  "serverDenialCauseProven": false,
+  "positiveEntitlementTest": false,
+  "hardwarePromptIndependentlyObserved": false,
+  "gameplayAuthorized": false,
+  "additionalTransactionRequired": false
+}

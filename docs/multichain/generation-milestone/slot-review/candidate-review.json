@@ -1,0 +1,23 @@
+{
+  "candidateId": "6b036cc41e40ebe1a1df7990",
+  "planHash": "51411bb46f39cf98a0360d872c6f340d0b5dcbbcfa2806fca9365ccf46288386",
+  "sourceCommit": "0d57f9907eddba3e27a26179f6e4b88fbbb71d37",
+  "runId": 45077920747,
+  "status": "candidate_verified_not_yet_published",
+  "baselineId": "6b0341e7545ba49e00a0e496",
+  "staticPaths": 660,
+  "preservedStaticPaths": 658,
+  "functions": 54,
+  "preservedFunctions": 53,
+  "schedules": 5,
+  "existingBackendDifferences": [],
+  "appSha256": "7749d96be791003634181951f1333a5c392f30132d6e0d1299f51661f921657f",
+  "candidateArtifactId": 14775514398,
+  "candidateArtifactSha256": "afea010d8ea88033ed16ed2a4af30651cf5d2716bbcaa93501a26de1589cca02",
+  "toolingTestsPassed": 120,
+  "estimatedNetGasMist": "3892851",
+  "sourceContractWorkflow": 45077920853,
+  "contractWorkflowConclusion": "success",
+  "browserChecks": "Three served-candidate mock-wallet scenarios passed; fresh API review and exact served bundle verified separately. Reload lock and noncanonical path checks passed. The wrong-path harness was corrected to serve the slot page at its index.html alias rather than load the separate publication application.",
+  "submitted": false
+}

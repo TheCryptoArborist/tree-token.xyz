@@ -1,0 +1,161 @@
+{
+  "localOnly": true,
+  "unitChecks": 43,
+  "v1": {
+    "localOnly": true,
+    "deliveryProtocol": "tree-paid-delivery.v1",
+    "positivePayment": "synthetic chain receipt; real signatures and PostgreSQL",
+    "passed": 21,
+    "checks": [
+      "existing identity functions and grants unchanged",
+      "challenge durable across adapter instances",
+      "immutable payment policy snapshot rejects changed pricing instead of reinterpreting old receipts",
+      "12 independent connections consume one link challenge once",
+      "12 receipt retries persist one receipt and one delivery candidate",
+      "typed delivery candidate is recoverable and never grants lives",
+      "same transaction cannot change recorded block evidence",
+      "payer uniqueness spans different sessions/accounts",
+      "run/continue uniqueness holds across different BNB payers",
+      "receipt cannot be claimed by another checkout; failed claim rolls back",
+      "receipt/order/delivery insert roll back together and retry succeeds",
+      "session revocation committed while opener waits prevents checkout",
+      "flight state rechecked under lock before opening",
+      "five-per-minute challenge limit serialized by session lock",
+      "another session cannot recover a payment candidate",
+      "stored signed terms cannot be changed at opening",
+      "expired session cannot open an unexpired checkout",
+      "database-clock quote expiry",
+      "private RLS tables; public access and runtime receipt edits/deletes denied",
+      "signatures and store configured for another delivery protocol cannot open checkout",
+      "real two-wallet signatures -> coordinator -> PostgreSQL receipt -> typed pending delivery"
+    ],
+    "livePaymentsEnabled": false
+  },
+  "v2": {
+    "localOnly": true,
+    "deliveryProtocol": "tree-paid-delivery.v2",
+    "positivePayment": "synthetic chain receipt; real signatures and PostgreSQL",
+    "passed": 21,
+    "checks": [
+      "existing identity functions and grants unchanged",
+      "challenge durable across adapter instances",
+      "immutable payment policy snapshot rejects changed pricing instead of reinterpreting old receipts",
+      "12 independent connections consume one link challenge once",
+      "12 receipt retries persist one receipt and one delivery candidate",
+      "typed delivery candidate is recoverable and never grants lives",
+      "same transaction cannot change recorded block evidence",
+      "payer uniqueness spans different sessions/accounts",
+      "run/continue uniqueness holds across different BNB payers",
+      "receipt cannot be claimed by another checkout; failed claim rolls back",
+      "receipt/order/delivery insert roll back together and retry succeeds",
+      "session revocation committed while opener waits prevents checkout",
+      "flight state rechecked under lock before opening",
+      "five-per-minute challenge limit serialized by session lock",
+      "another session cannot recover a payment candidate",
+      "stored signed terms cannot be changed at opening",
+      "expired session cannot open an unexpired checkout",
+      "database-clock quote expiry",
+      "private RLS tables; public access and runtime receipt edits/deletes denied",
+      "signatures and store configured for another delivery protocol cannot open checkout",
+      "real two-wallet signatures -> coordinator -> PostgreSQL receipt -> typed pending delivery"
+    ],
+    "livePaymentsEnabled": false
+  },
+  "nativeRegression": [
+    {
+      "nativeBundle": {
+        "commit": "bf4537220bb9a9b096cfaab9598fa2cd13556db9",
+        "sources": [
+          {
+            "file": "netlify/preview-lib/treeforce89-paid-continue.mjs",
+            "sha256": "b8b161d0bb04aae973be84230aa8f118f4601fd2097b636dcf68be14ccba2b52"
+          },
+          {
+            "file": "netlify/preview-lib/treeforce89-source/game/authenticated-session.mjs",
+            "sha256": "54e952a9cb5cc5c22cdf314eb90330dca89629777cf20521b1af21993e6a86d8"
+          },
+          {
+            "file": "netlify/preview-lib/treeforce89-source/game/tree-payment.mjs",
+            "sha256": "b51117e071ad9c4a5f239b40bf262d3ded560de2ebed0453acae6c166c8d3275"
+          },
+          {
+            "file": "treeforce89/paid/mainnet-transaction-reader.mjs",
+            "sha256": "4e2a01fc904601b410231e219ba2c4d40bef1d05bc9b4fe3935d66b2cfbd973f"
+          },
+          {
+            "file": "treeforce89/paid/contract.mjs",
+            "sha256": "598bb7c823910c61eeebc860efdda34fe340b121dec90fcb67ecd924aa81bcc8"
+          }
+        ],
+        "bundleSha256": "e22a378f7152a2982247610fd7edf6724e087d5e12f26c3e831e572709d7eb90",
+        "deployable": false
+      },
+      "chainEvidence": "mocked; no wallet or network call"
+    },
+    {
+      "localOnly": true,
+      "netlifyMode": true,
+      "passed": 40,
+      "checks": [
+        "all recovered native source hashes match pinned provenance",
+        "proposal preserves native columns and relation grants; reapplication fails and rolls back",
+        "Netlify owner is nonsuperuser without bypassrls; readonly denied; no Supabase roles needed",
+        "12 native binding retries persist one account and one mapped run",
+        "new native run retains wallet account but receives distinct run identity",
+        "foreign credential and mismatched native run cannot acquire mapping",
+        "native session authenticates without inventing reviewed checkpoint",
+        "shared engine refuses native client snapshot by default",
+        "runtime provenance cannot relabel preview as mainnet",
+        "cached ownership is not stamped fresh",
+        "ownership loss denies entitlement",
+        "native Sui consumption change invalidates prepared shared activation",
+        "actual native logout invalidates prepared shared activation",
+        "native logout waits for shared row lock then prevents subsequent admission",
+        "expired bearer cannot create a mapping",
+        "runtime cannot rewrite or delete native identity bindings",
+        "mixed Sui/BNB race increments native counter once with shared claim",
+        "paid sequence cannot skip forward or reuse an earlier consumption",
+        "second continue advances once; journal failure rolls back native counter and claim",
+        "paid recovery rejects foreign wallet and ownership loss",
+        "failed recovery journals roll back both native credential changes",
+        "fresh signed session recovers paid run idempotently without another payment or grant",
+        "recovered payment respects old lease then consumes third continue once",
+        "lost activation response cannot recover consumed payment as a new grant",
+        "offer wrapper persists one authenticated run mapping across retries and rejects mismatched runs before native service",
+        "native reader and recorder reject failed, mismatched, stale and underpaid Sui evidence",
+        "12 authenticated gateway verification retries record one receipt without consuming or restoring",
+        "same Sui digest cannot fund another native offer or run",
+        "completion requires consumed claim plus native redemption/counter; denies foreign wallet and supports fresh same-wallet login",
+        "native evidence settles once with shared claim and counter; redemption failure rolls all back",
+        "legacy native redemption cannot be imported as unused payment",
+        "timely checkpointed payment remains reconcilable after offer expiry",
+        "runtime cannot rewrite or delete native Sui payment evidence",
+        "fresh login reconciles paid native offer and recovers original run without old credential",
+        "native redemption after verification is rejected by shared receipt adapter",
+        "native and shared payment evidence commit or roll back together",
+        "native overpayment remains one continue with excess recorded",
+        "real BNB loader/settlement consumes ledger once; completion rejects unconsumed, foreign-wallet, mismatched terms and counter evidence",
+        "BNB journal imports verified receipt through authenticated host, recovers without payment, and archives only after consumption",
+        "bundled released native offer and shared checkout record one mocked chain payment; retry reconciles without re-signing or restoration"
+      ],
+      "nativeSourceCommit": "9974d7f0b5c03b9621561d15a8040e8bf558e1db",
+      "productionParityVerified": false,
+      "liveRestorationEnabled": false
+    }
+  ],
+  "liveChanges": false,
+  "mystenReferences": [
+    {
+      "url": "https://raw.githubusercontent.com/MystenLabs/skills/main/README.md",
+      "sha256": "b39ccef539d067e4a96e5a15dcb34acf0ee2e77b58319fa64ad31f9d4574b5e9"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/MystenLabs/skills/main/sui-ts-sdk-backend/SKILL.md",
+      "sha256": "a6af517c9be63e5336ce60813169f188839936f3e3f438cd2a332b766bd9204a"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/MystenLabs/skills/main/sui-ts-sdk-backend/signing.md",
+      "sha256": "38bf81f30683def48b221e73596c5e57f40290d8239ad2880b1bd716bb33bbcf"
+    }
+  ]
+}

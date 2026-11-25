@@ -120,6 +120,30 @@ async function rejectUntrackedOutput(directory, prefix = '') {
   }
 }
 
+allowed.add('generation-publication/index.html');
+allowed.add('generation-publication/app.js');
+allowed.add('generation-slot/index.html');
+allowed.add('generation-slot/app.js');
+allowed.add('generation-registration/index.html');
+allowed.add('generation-configuration/index.html');
+allowed.add('bnb-configuration/index.html');
+allowed.add('generation-registration/app.js');
+allowed.add('generation-configuration/app.js');
+allowed.add('generation-binding/index.html');
+allowed.add('generation-reserve/index.html');
+allowed.add('bnb-purchase/index.html');
+allowed.add('bnb-return/index.html');
+allowed.add('bnb-completion/index.html');
+allowed.add('generation-acknowledgement/index.html');
+allowed.add('generation-acknowledgement/app.js');
+allowed.add('generation-binding/app.js');
+allowed.add('generation-reserve/app.js');
+allowed.add('bnb-purchase/app.js');
+allowed.add('bnb-return/app.js');
+allowed.add('bnb-completion/app.js');
+allowed.add('bnb-configuration/app.js');
+allowed.add('bnb-generation/index.html');
+allowed.add('bnb-generation/app.js');
 await rejectUntrackedOutput(output);
 for (const file of manifest.files) {
   const destination = resolve(output, outputPath(file));
@@ -154,3 +178,45 @@ for (const file of arcadeFiles) {
 }
 console.log(`Built a ${allowed.size}-file feature preview with ${arcadeRuntime.files.length} pinned current Arcade runtime assets and a read-only review overlay.`);
 console.log('The production manifest and recovered function packages were not changed.');
+
+// Isolated approved empty-publication handoff. Never included in production builds.
+await mkdir(resolve(output,'generation-publication'),{recursive:true});
+await cp(resolve(root,'tools/generation-publication/index.html'),resolve(output,'generation-publication/index.html'));
+await cp(resolve(root,'tools/generation-publication/app.js'),resolve(output,'generation-publication/app.js'));
+
+await mkdir(resolve(output,'generation-registration'),{recursive:true});
+await mkdir(resolve(output,'generation-configuration'),{recursive:true});
+await mkdir(resolve(output,'bnb-configuration'),{recursive:true});
+await cp(resolve(root,'tools/generation-registration/index.html'),resolve(output,'generation-registration/index.html'));
+await cp(resolve(root,'tools/generation-configuration/index.html'),resolve(output,'generation-configuration/index.html'));
+await cp(resolve(root,'tools/bnb-configuration/index.html'),resolve(output,'bnb-configuration/index.html'));
+await cp(resolve(root,'tools/generation-registration/app.js'),resolve(output,'generation-registration/app.js'));
+await cp(resolve(root,'tools/generation-configuration/app.js'),resolve(output,'generation-configuration/app.js'));
+await cp(resolve(root,'tools/bnb-configuration/app.js'),resolve(output,'bnb-configuration/app.js'));
+await mkdir(resolve(output,'generation-slot'),{recursive:true});
+await cp(resolve(root,'tools/generation-slot/index.html'),resolve(output,'generation-slot/index.html'));
+await cp(resolve(root,'tools/generation-slot/app.js'),resolve(output,'generation-slot/app.js'));
+
+await mkdir(resolve(output,'bnb-generation'),{recursive:true});
+await cp(resolve(root,'tools/bnb-generation/index.html'),resolve(output,'bnb-generation/index.html'));
+await cp(resolve(root,'tools/bnb-generation/app.js'),resolve(output,'bnb-generation/app.js'));
+
+await mkdir(resolve(output,'generation-binding'),{recursive:true});
+await mkdir(resolve(output,'generation-reserve'),{recursive:true});
+await mkdir(resolve(output,'bnb-purchase'),{recursive:true});
+await mkdir(resolve(output,'bnb-return'),{recursive:true});
+await mkdir(resolve(output,'bnb-completion'),{recursive:true});
+await cp(resolve(root,'tools/generation-binding/index.html'),resolve(output,'generation-binding/index.html'));
+await cp(resolve(root,'tools/generation-reserve/index.html'),resolve(output,'generation-reserve/index.html'));
+await cp(resolve(root,'tools/bnb-purchase/index.html'),resolve(output,'bnb-purchase/index.html'));
+await cp(resolve(root,'tools/bnb-return/index.html'),resolve(output,'bnb-return/index.html'));
+await cp(resolve(root,'tools/bnb-completion/index.html'),resolve(output,'bnb-completion/index.html'));
+await cp(resolve(root,'tools/generation-binding/app.js'),resolve(output,'generation-binding/app.js'));
+await cp(resolve(root,'tools/generation-reserve/app.js'),resolve(output,'generation-reserve/app.js'));
+await cp(resolve(root,'tools/bnb-purchase/app.js'),resolve(output,'bnb-purchase/app.js'));
+await cp(resolve(root,'tools/bnb-return/app.js'),resolve(output,'bnb-return/app.js'));
+await cp(resolve(root,'tools/bnb-completion/app.js'),resolve(output,'bnb-completion/app.js'));
+
+await mkdir(resolve(output,'generation-acknowledgement'),{recursive:true});
+await cp(resolve(root,'tools/generation-acknowledgement/index.html'),resolve(output,'generation-acknowledgement/index.html'));
+await cp(resolve(root,'tools/generation-acknowledgement/app.js'),resolve(output,'generation-acknowledgement/app.js'));

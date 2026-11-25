@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-11-24T23:23:10.775785+00:00",
+  "sourceOnly": true,
+  "testsPassed": 40,
+  "existingWalletLinkCryptography": "passed unchanged",
+  "paymentFixtures": "synthetic; real Sui/EVM signatures",
+  "durableStoreImplemented": false,
+  "livePaymentsEnabled": false,
+  "deliveryBranchReviewed": "23e3f8bc216098121f966d7a11e99535cd350061",
+  "hashes": {
+    "scripts/multichain/sui-bnb-continue.mjs": "ca84c553204e74c08a997e968648955bfbc9f2925bb10e1424e05d08e1126239",
+    "tests/multichain-sui-bnb-continue.test.mjs": "61755ebe99b030bba0015489129f29cff45549b08b702a4215d09d96a1b03e6c"
+  },
+  "hostedCi": {
+    "conclusion": "success",
+    "headSha": "3ac69f530f491ab94a51a4aaede26b0a2167654a",
+    "status": "completed",
+    "updatedAt": "2026-11-24T23:25:30Z",
+    "url": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45509536990"
+  }
+}

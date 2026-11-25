@@ -1,0 +1,12 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {verifySlotReceipt} from './slot-handoff.mjs';import {verifyCandidate,C} from './readiness.mjs';
+import transaction from '../../../docs/multichain/generation-milestone/slot-created/transaction.json' with {type:'json'};
+import receipt from '../../../docs/multichain/generation-milestone/slot-created/receipt.json' with {type:'json'};
+import candidate from '../../../docs/multichain/generation-milestone/slot-created/candidate.json' with {type:'json'};
+import extras from '../../../docs/multichain/generation-milestone/slot-created/capabilities-oapp.json' with {type:'json'};
+const DIGEST='GNDWXqgPJnZyeQaVFqnZ1HuXSnSiHUAKV1vL4Ke49yMX';
+const client=(tx=transaction,state=receipt.state)=>({core:{getTransaction:async()=>tx},query:async()=>state});
+test('actual signed slot creation matches exact action, gas and empty linked vault',async()=>{const result=await verifySlotReceipt(DIGEST,client());assert.deepEqual(result,receipt);assert.equal(result.vaultId,'0xf5dff8e2cc96824f89735fa16c068ee8194fbb7e8d697aeebe5d135f8a5916eb');assert.equal(result.gasMist,'3892851');});
+test('original remains dev-owned at the recorded checkpoint',()=>verifyCandidate(candidate,Date.parse(candidate.checkpoint.timestamp)));
+test('other capabilities remain dev-owned and OApp unconfigured at recorded checkpoint',()=>{assert.equal(extras.data.chainIdentifier,C.chain);for(const key of ['o0','o1'])assert.equal(extras.data[key].owner.address.address,C.sender);assert.equal(extras.data.o2.asMoveObject.contents.json.peer.peers.size,'0');assert.equal(extras.data.o2.asMoveObject.contents.json.sending_call,null);});
+for(const [name,change] of [['wrong digest',t=>t.Transaction.digest='other'],['extra command',t=>t.Transaction.transaction.commands.push(t.Transaction.transaction.commands[0])],['cap transferred',t=>t.Transaction.effects.changedObjects.find(x=>x.outputOwner?.AddressOwner).outputOwner.AddressOwner='0x1']])test('actual receipt rejects '+name,async()=>{const t=structuredClone(transaction);change(t);await assert.rejects(verifySlotReceipt(DIGEST,client(t)));});

@@ -1,0 +1,83 @@
+{
+  "results": [
+    {
+      "phaserResults": [
+        {
+          "source": "sui-native-tree",
+          "browser": "156.0.8078.79",
+          "lives": 3,
+          "score": 55,
+          "wave": 2,
+          "mounts": 1,
+          "activations": 1,
+          "refreshBlocked": true,
+          "teardownVerified": true,
+          "liveRequests": 0,
+          "foreignCredentialDenied": true,
+          "transport": "strict Fetch handler with native bearer hash",
+          "assets": "explicit placeholder textures; artwork not validated"
+        },
+        {
+          "source": "bnb-usdt",
+          "browser": "156.0.8078.79",
+          "lives": 3,
+          "score": 55,
+          "wave": 2,
+          "mounts": 1,
+          "activations": 1,
+          "refreshBlocked": true,
+          "teardownVerified": true,
+          "liveRequests": 0,
+          "foreignCredentialDenied": true,
+          "transport": "strict Fetch handler with native bearer hash",
+          "assets": "explicit placeholder textures; artwork not validated"
+        }
+      ],
+      "localOnly": true,
+      "releasePolicy": "isolated fixture only"
+    },
+    {
+      "localOnly": true,
+      "passed": 34,
+      "checks": [
+        "all recovered native source hashes match pinned provenance",
+        "12 native binding retries persist one account and one mapped run",
+        "new native run retains wallet account but receives distinct run identity",
+        "foreign credential and mismatched native run cannot acquire mapping",
+        "native session authenticates without inventing reviewed checkpoint",
+        "shared engine refuses native client snapshot by default",
+        "runtime provenance cannot relabel preview as mainnet",
+        "cached ownership is not stamped fresh",
+        "ownership loss denies entitlement",
+        "native Sui consumption change invalidates prepared shared activation",
+        "actual native logout invalidates prepared shared activation",
+        "native logout waits for shared row lock then prevents subsequent admission",
+        "expired bearer cannot create a mapping",
+        "runtime cannot rewrite or delete native identity bindings",
+        "mixed Sui/BNB race increments native counter once with shared claim",
+        "paid sequence cannot skip forward or reuse an earlier consumption",
+        "second continue advances once; journal failure rolls back native counter and claim",
+        "paid recovery rejects foreign wallet and ownership loss",
+        "failed recovery journals roll back both native credential changes",
+        "fresh signed session recovers paid run idempotently without another payment or grant",
+        "recovered payment respects old lease then consumes third continue once",
+        "lost activation response cannot recover consumed payment as a new grant",
+        "native reader and recorder reject failed, mismatched, stale and underpaid Sui evidence",
+        "12 native verification retries record one receipt without consuming or restoring",
+        "same Sui digest cannot fund another native offer or run",
+        "native evidence settles once with shared claim and counter; redemption failure rolls all back",
+        "legacy native redemption cannot be imported as unused payment",
+        "timely checkpointed payment remains reconcilable after offer expiry",
+        "runtime cannot rewrite or delete native Sui payment evidence",
+        "fresh login reconciles paid native offer and recovers original run without old credential",
+        "native redemption after verification is rejected by shared receipt adapter",
+        "native and shared payment evidence commit or roll back together",
+        "native overpayment remains one continue with excess recorded",
+        "Sui and BNB typed payments each traverse real shared PostgreSQL consumption and actual Phaser restore once"
+      ],
+      "nativeSourceCommit": "9974d7f0b5c03b9621561d15a8040e8bf558e1db",
+      "productionParityVerified": false,
+      "liveRestorationEnabled": false
+    }
+  ]
+}

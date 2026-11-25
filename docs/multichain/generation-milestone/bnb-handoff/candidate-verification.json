@@ -1,0 +1,19 @@
+{
+  "candidate": "6b03a1ca204de42e6892dd3a",
+  "verifiedAt": "2026-11-23T02:16:18.575Z",
+  "results": [
+    {
+      "file": "app.js",
+      "sha256": "40a5357fe1ef14b5164679732de6da81c428679794383f0a26087c0db6b04c6e",
+      "exactSource": true
+    },
+    {
+      "file": "index.html",
+      "sha256": "6c90d5479322fb1169c08ad3fe118f3bdeb49115ca5c8e723abfe2ae84a9821b",
+      "exactSource": false
+    }
+  ],
+  "backendRecordsPreserved": 54,
+  "schedulesPreserved": 5,
+  "existingStaticPathsPreserved": 667
+}

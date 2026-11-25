@@ -1,0 +1,62 @@
+INCLUDING DEPENDENCY MoveStdlib
+INCLUDING DEPENDENCY Sui
+INCLUDING DEPENDENCY call
+INCLUDING DEPENDENCY endpoint_v2
+INCLUDING DEPENDENCY oapp
+INCLUDING DEPENDENCY utils
+INCLUDING DEPENDENCY zro
+BUILDING nftree_generation
+Running Move unit tests
+[ PASS    ] nftree_generation::vault_tests::acknowledgement_before_release_is_rejected
+[ PASS    ] nftree_generation::vault_tests::acknowledgement_payload_cannot_be_used_as_redemption
+[ PASS    ] nftree_generation::vault_tests::acknowledgement_quote_rejects_nonzero_native_receive_value
+[ PASS    ] nftree_generation::vault_tests::acknowledgement_uses_its_own_enforced_options
+[ PASS    ] nftree_generation::vault_tests::admin_policy_below_receive_gas_floor_is_rejected
+[ PASS    ] nftree_generation::vault_tests::admin_policy_cannot_attach_native_receive_value
+[ PASS    ] nftree_generation::vault_tests::another_registry_cap_cannot_pause_this_vault
+[ PASS    ] nftree_generation::vault_tests::changed_recipient_cannot_release_twice
+[ PASS    ] nftree_generation::vault_tests::changed_request_cannot_release_twice
+[ PASS    ] nftree_generation::vault_tests::changed_retirement_recipient_is_rejected
+[ PASS    ] nftree_generation::vault_tests::current_original_owner_can_redeposit_without_admin_cap_after_completion
+[ PASS    ] nftree_generation::vault_tests::disposable_protocol_v1_is_rejected
+[ PASS    ] nftree_generation::vault_tests::empty_admin_options_block_send_instead_of_consuming_one_shot
+[ PASS    ] nftree_generation::vault_tests::enforced_options_and_extras_match_in_reserve_quote_and_send
+[ PASS    ] nftree_generation::vault_tests::exact_backing_released_once_and_acknowledgement_preserves_recipient
+[ PASS    ] nftree_generation::vault_tests::explicit_zero_receive_value_preserves_quote_and_send_options
+[ PASS    ] nftree_generation::vault_tests::forged_endpoint_cannot_release
+[ PASS    ] nftree_generation::vault_tests::funding_before_peer_binding_is_rejected
+[ PASS    ] nftree_generation::vault_tests::invalid_caller_options_cannot_bypass_execution_minimum
+[ PASS    ] nftree_generation::vault_tests::legacy_v2_wire_is_rejected
+[ PASS    ] nftree_generation::vault_tests::malformed_merged_option_is_rejected
+[ PASS    ] nftree_generation::vault_tests::malformed_message_length_is_rejected
+[ PASS    ] nftree_generation::vault_tests::no_rebind_to_another_chain_or_adapter
+[ PASS    ] nftree_generation::vault_tests::pause_allows_retirement_completion_but_not_early_reuse
+[ PASS    ] nftree_generation::vault_tests::pause_blocks_funding
+[ PASS    ] nftree_generation::vault_tests::pause_blocks_new_reserve_announcement
+[ PASS    ] nftree_generation::vault_tests::paused_vault_still_completes_authenticated_release_and_acknowledgement
+[ PASS    ] nftree_generation::vault_tests::production_registry_rejects_fixture_type
+[ PASS    ] nftree_generation::vault_tests::publication_from_other_wallet_is_rejected
+[ PASS    ] nftree_generation::vault_tests::registry_cannot_create_a_second_slot
+[ PASS    ] nftree_generation::vault_tests::release_before_reserve_announcement_is_rejected
+[ PASS    ] nftree_generation::vault_tests::reserve_send_rejects_nonzero_native_receive_value
+[ PASS    ] nftree_generation::vault_tests::retirement_before_release_is_rejected
+[ PASS    ] nftree_generation::vault_tests::retirement_confirmation_allows_exact_original_next_generation
+[ PASS    ] nftree_generation::vault_tests::retries_preserve_payload_and_generation
+[ PASS    ] nftree_generation::vault_tests::returned_nft_cannot_reallocate_before_completion
+[ PASS    ] nftree_generation::vault_tests::same_type_different_object_cannot_fund_slot
+[ PASS    ] nftree_generation::vault_tests::second_deposit_is_rejected_even_before_id_check
+[ PASS    ] nftree_generation::vault_tests::sending_ack_is_not_proof_of_retirement
+[ PASS    ] nftree_generation::vault_tests::stale_release_cannot_touch_next_generation
+[ PASS    ] nftree_generation::vault_tests::stale_retirement_cannot_complete_new_generation
+[ PASS    ] nftree_generation::vault_tests::unfunded_vault_cannot_announce
+[ PASS    ] nftree_generation::vault_tests::unsupported_worker_option_is_rejected
+[ PASS    ] nftree_generation::vault_tests::v3_wire_matches_shared_golden_vectors
+[ PASS    ] nftree_generation::vault_tests::wrong_backing_message_cannot_release
+[ PASS    ] nftree_generation::vault_tests::wrong_collection_type_cannot_create_slot
+[ PASS    ] nftree_generation::vault_tests::wrong_peer_cannot_release
+[ PASS    ] nftree_generation::vault_tests::wrong_route_message_cannot_release
+[ PASS    ] nftree_generation::vault_tests::wrong_source_chain_cannot_release
+[ PASS    ] nftree_generation::vault_tests::zero_generation_wire_is_rejected
+[ PASS    ] nftree_generation::vault_tests::zero_recipient_cannot_release
+[ PASS    ] nftree_generation::vault_tests::zero_request_is_rejected
+Test result: OK. Total tests: 52; passed: 52; failed: 0

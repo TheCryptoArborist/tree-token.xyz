@@ -1,3 +1,513 @@
+# BNB wallet-link review controls — November 24, 2026
+
+An undeployed controller/DOM component now displays the exact wallet-link message,
+requests each personal-message signature separately and reviews fixed 1 USDT BNB
+terms. Context changes, altered messages and uncertain verification responses
+block progress. No payment/send control is included. Local validation passed:
+50 unit tests and six Chromium checks with injected wallet/endpoint fixtures.
+No live wallet, route, payment, game, NFT or production change occurred. Host
+context/wallet wiring and remaining gates are documented in
+`docs/multichain/generation-milestone/netlify-gateway/bnb-review-ui.md`.
+
+---
+
+# Authenticated BNB checkout boundary — November 24, 2026
+
+Source-only host/HTTP/transport actions now connect wallet-link challenge,
+signature verification and BNB receipt reconciliation to native sessions. Exact
+request fields and bearer/origin checks reject injected identity or payment terms;
+responses remain review-only. Local validation passed: 86 unit tests, 43 Netlify
+mode and 39 restricted-role database checks, including the native host/HTTP path
+with test signatures and synthetic chain evidence. No route, wallet UI, database
+migration, payment or gameplay change was deployed. Setup, evidence and remaining
+work: `docs/multichain/generation-milestone/netlify-gateway/bnb-http.md`.
+
+---
+
+# Native BNB checkout/session bridge — November 24, 2026
+
+The v2 BNB coordinator now has a source-only bridge to real native session/run
+records and reviewed checkpoints. Disposable database tests exercise real test
+wallet signatures, synthetic receipt verification and idempotent shared import,
+with no native counter change. Invalid credentials/checkpoints, lost entitlement
+and challenge replay deny admission. Local unit, both database permission models
+and Phaser regression checks passed; evidence and remaining HTTP/UI work are in
+`docs/multichain/generation-milestone/netlify-gateway/native-bnb-checkout.md`.
+No hosted migration, deployment, live payment or gameplay activation occurred.
+Individual NFT/artwork requirements remain separate launch gates.
+
+---
+
+# Individual inventory requirements and BNB protocol isolation — November 24, 2026
+
+The owner's 5,000-original collection/unique-artwork requirement is now explicit
+in `docs/multichain/generation-milestone/individual-inventory-requirements.md`.
+Each admitted original needs exact identity, artwork and a global one-to-one
+allocation. No batch selection, expanded custody or metadata deployment occurred.
+BNB link/store code now supports explicit v2 configuration while preserving v1
+by default and rejecting cross-protocol signatures/rows. Local checks passed:
+43 unit, 21 database per protocol, and 40 native/shared regression checks.
+No live changes. Evidence: `docs/multichain/generation-milestone/netlify-gateway/link-protocol-v2.md`.
+
+---
+
+# BNB recorded-payment import and recovery journal — November 24, 2026
+
+The shared gateway now imports an already-verified BNB ledger receipt with an
+exact transaction-hash check. A separate recovery-only browser journal records,
+recovers and archives matching completed BNB payments without wallet calls.
+Local checks passed: 90 unit, seven Chromium, 41 Netlify-role and 38 original-role
+database checks. The chain receipt is synthetic; live services are unchanged.
+Native v2 checkout/link verification/receipt ingestion and mounted UI remain
+pending. Evidence: `docs/multichain/generation-milestone/netlify-gateway/bnb-journal.md`.
+
+---
+
+# BNB completion verification — November 24, 2026
+
+The read-only completion action now verifies consumed BNB USDT checkout/receipt,
+shared claim, exact payment terms and native run counter. The real database
+loader/settlement path passes replay and mismatch tests using synthetic verified
+chain evidence. Local checks passed: 83 unit, seven Chromium, 40 Netlify-role
+and 37 original-role database checks. Nothing changed live. BNB browser journal
+integration and wallet/RPC E2E remain pending. Evidence:
+`docs/multichain/generation-milestone/netlify-gateway/bnb-completion.md`.
+
+---
+
+# Verified native payment completion — November 24, 2026
+
+A read-only completion action now verifies matching consumed claim, native
+redemption and run counter before the browser archives a pending native payment.
+Reported wallet cancellation retains its marker; it does not authorize repayment.
+Local checks: 83 unit, seven Chromium, 39 Netlify-role database/Phaser and 36
+original-role database checks passed. No live changes. BNB completion, unresolved
+cancellation recovery and release integration remain gated. Evidence:
+`docs/multichain/generation-milestone/netlify-gateway/completion.md`.
+
+---
+
+# Shared checkout recovery controls — November 24, 2026
+
+The opt-in browser adapter now reads both shared localStorage and legacy
+sessionStorage before payment. Recovery controls verify a supplied digest and
+recover a paid run without signing, payment or restoration. All 79 unit, six
+browser-control, 38 Netlify-role database/Phaser and 35 original-role database
+checks passed locally. No live/UI deployment occurred. Journal completion and
+cancellation recovery remain gated; no unsafe clear action exists. Evidence:
+`docs/multichain/generation-milestone/netlify-gateway/recovery-controls.md`.
+
+---
+
+# Bundled native offer/shared checkout rehearsal — November 24, 2026
+
+The released native offer service now runs in an isolated test bundle with the
+shared host. A separate checkout adapter records mocked payment evidence and
+reconciles without re-signing; it does not restore gameplay. All 73 unit, 38
+Netlify-role database/browser and 35 original-role database checks pass locally.
+The old checkout/UI, deployed bundle and live database are unchanged. Public UI
+wiring, cross-store pending checks, journal completion and operational cutover
+remain gates. Evidence: `docs/multichain/generation-milestone/netlify-gateway/bundled-checkout.md`.
+
+---
+
+# Native host assembly and checkout transport — November 24, 2026
+
+The source host assembles shared services against one verified database/runtime
+identity. The canonical browser transport now drives the actual Phaser restore
+fixture. Local checks passed: 66 unit, 37 Netlify-role database/browser, and 34
+original-role database checks. No native game files or live services changed.
+Packaged host/UI integration, full financial E2E and operational drain/fencing
+remain release gates. Evidence and wiring:
+`docs/multichain/generation-milestone/netlify-gateway/host.md`.
+
+---
+
+# Shared gateway composition tested — November 24, 2026
+
+Strict offer, receipt-recording and paid-run recovery adapters now compose with
+prepare/activate. Fifty-two unit checks, 37 Netlify-role database/browser checks
+and 34 original-role database checks pass locally. Actual Phaser restoration
+crosses the composed gateway for both typed payment fixtures. A drain overlap
+test confirms a mode flip cannot cancel an already admitted legacy writer; the
+composition blocks shared mode without a fresh trusted drain attestation.
+No live change occurred. Exact host wiring, checkout client and operational drain
+remain pending: `docs/multichain/generation-milestone/netlify-gateway/composition.md`.
+
+---
+
+# Netlify shared-schema rehearsal — November 24, 2026
+
+The review-only Netlify proposal passed 35 disposable database checks; the
+original role model still passed 33. Five gateway boundary tests passed. The
+owner-role rehearsal caught and fixed native payment-evidence mutation access.
+No hosted database or live game changed. Full gateway adapters and a drained
+legacy-writer cutover remain required before activation. Setup, evidence and
+limits: `docs/multichain/generation-milestone/netlify-gateway/README.md`.
+
+---
+
+# Native hosted schema audit passed — November 24, 2026
+
+The existing Netlify game branch was audited using its read-only role. All four
+native tables match the verified backend SQL, accounting for PostgreSQL 18's
+validated/enforced NOT NULL catalog entries. Sixteen local guards and the hosted
+audit passed. No player rows were read; no data, schema or deployment changed.
+The seven shared tables, private schema and Supabase-style roles are absent, so
+the proposed SQL needs a Netlify-specific permission/migration review. No owner
+credential setup is needed. This supersedes the binding-access blocker below.
+Evidence: `docs/multichain/generation-milestone/native-database-audit/README.md`.
+
+---
+
+# Approved native database audit: binding unavailable — November 24, 2026
+
+The owner-approved single-binding audit passed eleven local checks but stopped
+before connecting: the named Netlify value is not a parseable URL and the same
+GitHub Actions secret is unavailable. A usable existing game-database binding
+must be added securely as the repository secret `TREEFORCE89_DEV_DATABASE_URL`.
+The deployed native status check remains separate evidence; full catalog parity
+is still unknown. No database connection, migration or deployment occurred.
+Failure receipt and setup: `docs/multichain/generation-milestone/native-database-audit/README.md`.
+
+---
+
+# Native database runtime readiness check — November 24, 2026
+
+The existing canonical status endpoint confirms native schema/payment readiness
+and database isolation; this describes the existing Sui path only. The complete
+catalog audit stopped before connecting, and an environment-list request was
+rejected by automatic approval review. A narrower single-binding audit is
+prepared but not run pending specific access approval. Eleven disposable audit
+tests pass. No migration, live payment or deployment occurred. Evidence:
+`docs/multichain/generation-milestone/native-database-audit/README.md`.
+
+---
+
+# Native backend package identity verified — November 24, 2026
+
+The native game backend was reproduced from its released source and locks with
+an exact match to the live package SHA-256 and byte count. All 11 pinned session
+and payment source entries match the released source. Nine archive/configuration
+guards pass. Hosted database parity, frontend/gateway integration and activation
+remain separate gates. No deployment or live behavior changed. See
+`docs/multichain/generation-milestone/native-runtime-parity/README.md`.
+
+---
+
+# Authenticated restore transport source — November 24, 2026
+
+A source-only Fetch handler now carries the native bearer credential into the
+transactional restore checks. Strict origin/body/identity validation and generic
+review-only errors pass 23 HTTP tests plus 11 authorization tests. Both payment
+fixtures traverse the handler, actual PostgreSQL and recovered Phaser game.
+No route, migration, deployment or live behavior changed. Current production
+source parity remains unverified. Evidence and integration gates:
+`docs/multichain/generation-milestone/restore-http/README.md`.
+
+---
+
+# Server restore boundary and Phaser source validation — November 24, 2026
+
+A default-deny server boundary now binds positive restore responses to fresh
+trusted release-policy observations and the shared consumption result. Isolated
+Sui/BNB fixtures traverse actual PostgreSQL consumption and mount the recovered
+Phaser game once, restoring three lives and preserving run/score/wave. Eleven
+boundary tests, 18 browser checks and 34 native database checks pass locally.
+No live release policy, HTTP route, database migration or deployment is installed.
+Evidence, fixture limits and current-inventory cross-reference:
+`docs/multichain/generation-milestone/phaser-restoration/README.md`.
+
+---
+
+# Browser continue restoration source — November 24, 2026
+
+An isolated browser controller and native render adapter now cover persistent
+restore-attempt journalling, cross-tab locking and interrupted-response handling.
+Seventeen headless Chromium checks passed with all requests intercepted; no live
+site or wallet requests occurred. Native helpers and scene props are tested, not
+a full Phaser mount. Current shadow responses are rejected before activation.
+No deployment, payment or existing gameplay changed. Evidence and release gates:
+`docs/multichain/generation-milestone/browser-restoration/README.md`.
+
+---
+
+# Native Sui payment evidence source — November 24, 2026
+
+Native Sui TREE verification now records immutable payment evidence and a shared
+sequence-bound payment without restoring a run. Shared consumption writes the
+native redemption atomically with counter/claim/journal updates. Fresh-login
+reconciliation preserves timely payments after native logout or offer expiry.
+The expanded native checker passes 33 tests; 17 shared regressions also pass.
+This remains source-only, with no live endpoint, migration or deployment change.
+Evidence and remaining renderer/runtime gates:
+`docs/multichain/generation-milestone/native-sui-payments/README.md`.
+
+---
+
+# Repeated continues and paid-run recovery source — November 24, 2026
+
+Shared claims now bind payment to account/run/continue sequence. Native counter
+advancement, consumption, BNB reservation release and the consumption journal
+commit together. A fresh same-wallet session can recover an unconsumed paid run;
+consumed or competing payments remain review-only. Local checks passed: 22 native,
+17 shared-delivery, 20 ledger and 41 payment-policy tests. This is source-only:
+no hosted migration, deployment, payment or live gameplay change occurred.
+See `docs/multichain/generation-milestone/repeated-continues/README.md` for setup,
+recovery limits, evidence and remaining native runtime integration.
+
+---
+
+# Native Sui session source recovered — November 24, 2026
+
+The native PostgreSQL gateway source is now pinned and a source-only adapter
+maps its wallet/run IDs while locking the real session row used by logout.
+Fourteen database checks pass, including the unmodified native logout service.
+Current published-package parity is still unverified. Native receipt storage,
+client-reported checkpoints and repeated-continue behavior differ from the earlier
+preview delivery schema; those require coordinated integration before release.
+No production behavior or hosted schema changed. See
+`docs/multichain/generation-milestone/native-sui-session/README.md`.
+
+---
+
+# Shared continue delivery source — November 24, 2026
+
+A proposed v2 consumption record now accepts separately typed Sui TREE and BNB
+USDT receipts. Sixteen disposable PostgreSQL checks cover competing payments,
+activation retries, revocation, expiry, rollback and both persisted receipt
+adapters. This remains a shadow implementation: every response denies live
+restoration. Production session authority, game integration and a coordinated
+cutover of both payment paths remain required. No deployment or hosted migration
+occurred. Setup, evidence and limitations:
+`docs/multichain/generation-milestone/shared-delivery/README.md`.
+
+---
+
+# Mixed-chain delivery compatibility check — November 24, 2026
+
+The inspected delivery schema is Sui TREE-only and the paired identity gateway
+maps preview sessions only. Nine actual-schema checks establish that a BNB adapter
+cannot be connected unchanged. Pending ledger records now explicitly declare
+incompatibility; all 20 ledger checks still pass. No production session mapping,
+Sui/BNB delivery bridge, hosted migration or deployment is claimed. Evidence and
+the revised shared-delivery implementation sequence:
+`docs/multichain/generation-milestone/delivery-compatibility/README.md`.
+
+---
+
+# Mixed-chain checkout store source — November 24, 2026
+
+A source-only PostgreSQL adapter now atomically records signed checkouts, BNB
+receipts and pending delivery-review records. Twenty disposable database checks
+and 40 existing payment-policy tests passed. No hosted schema, site package,
+Sui authentication/payment behavior or game delivery changed. The pending records
+do not grant lives. Next is the reviewed bridge to the existing paid-delivery
+protocol and authoritative Sui session/flight mapping. Evidence:
+`docs/multichain/generation-milestone/mixed-chain-store/README.md`.
+
+---
+
+# Mixed-chain continues source requirement — November 24, 2026
+
+Existing Sui holders must be able to pay for continues using BNB USDT without
+buying another pass. The user selected 1 USDT plus BNB network gas. Source-only
+wallet-link and receipt validation now targets the existing paid-delivery protocol;
+no live endpoint, database, payment or gameplay behavior changed. Durable ledger,
+game delivery, recovery and canonical wallet UI integration remain launch gates.
+See `docs/multichain/generation-milestone/mixed-chain-continues/README.md`.
+
+---
+
+# BNB run boundary source milestone — November 24, 2026
+
+An isolated shadow-run coordinator and proposed local-only schema now cover atomic
+ticket allocation, bounded leases, completion replay protection and diagnostic
+recovery. The default score verifier denies all submissions. No HTTP handler,
+hosted migration, deployment, gameplay or leaderboard change accompanied this work.
+See `docs/multichain/generation-milestone/run-lifecycle/README.md` for tests and
+remaining integration. The user's original-artwork requirement and current pass
+metadata gap are documented alongside it in `artwork.md`.
+
+---
+
+# Generation-1 wallet review accepted — November 24, 2026
+
+The user reported successful BNB sign-in for account ending 8789 and the expected
+review denial. A subsequent aggregate database read found zero review tickets;
+a separate mainnet check confirmed generation 1 retired/completed and ineligible.
+The generic UI denial alone does not establish its internal server-side cause.
+
+No production or database writes accompanied this acceptance record. Existing
+site deployment and disabled gameplay/payment boundaries remain unchanged.
+Evidence and the next isolated run/score source milestone:
+`docs/multichain/generation-milestone/review-acceptance/README.md`.
+No further wallet transaction is requested for this completed check.
+
+---
+
+# Generation review 404 repaired — November 24, 2026
+
+Current ready/locked deployment: `6b060f725f10a0dbfc4f05d6`, published at
+**16:28:19 America/Chicago** (22:28:19 UTC). The canonical page is serving again:
+https://tree-token.xyz/play/generation-review/.
+
+The original page release was superseded 27 seconds later by manual Canopy
+Defense deployment `6b060d444f7305e01efe5019`, which changed `/_redirects` from
+its earlier baseline but omitted the two newly published review files. The repair
+captured that newer deployment, preserved its exact redirect change and every
+other existing hash, and added only the two review files. No old site was restored.
+
+All 691 current static paths, 61 complete function/provider records, five
+schedules, runtime and protected settings were preserved; total is 693 paths.
+Run 45500974455 passed five source/preservation checks and 17 browser scenarios
+against source and live assets. Three delayed full-state/canonical checks and
+an independent cloud HTTP request confirmed the page remained available. The
+publisher now checks the live ID immediately before locking its new candidate.
+Real wallet acceptance is still pending; gameplay/payments remain disabled.
+Evidence: `docs/multichain/generation-milestone/review-page/repair-404.json`.
+
+---
+
+# Canonical generation review page — published November 24, 2026
+
+Deployment `6b060d9d9feb3f962c534534` is current, ready and locked, published at
+**16:20:30 America/Chicago** (22:20:30 UTC). The new page is live at
+https://tree-token.xyz/play/generation-review/.
+
+Exactly two static paths were added. All 691 previous static hashes, all 61
+complete backend/provider records, five schedules, runtime and protected
+configuration were preserved. The current total is **693 static paths**.
+No backend was rebuilt or uploaded; no historical root build was deployed.
+
+Publication run 45499597917 passed four source/preservation checks and all 17
+browser scenarios against both source and live canonical assets. Wallet and API
+responses were simulated for browser checks. Separate live endpoint checks
+still deny missing/nonexistent sessions with 401/403 and false gameplay. Real
+MetaMask/Ledger acceptance is pending; gameplay, payments and new deposits remain
+disabled. Evidence: `docs/multichain/generation-milestone/review-page/`.
+Before future publication, capture this complete current live baseline anew.
+
+---
+
+# Generation-1 review endpoint — published November 24, 2026
+
+Deployment `6b05eac4008e25aba5f361e1` is current, ready and locked, published at
+**15:43:59 America/Chicago** (21:43:59 UTC). The isolated review endpoint now uses
+a fixed generation-1-only policy. All 691 static paths, 60 other complete backend
+provider records, five schedules, runtime and protected environment settings were
+preserved. Totals remain 61 functions. No historical root build was deployed.
+
+Publication run 45493842003 passed 46 focused tests and verified the exact reviewed
+ZIP before switching. Canonical missing-session requests return 401; nonexistent
+sessions return 403. Existing BNB authentication is unchanged. Fresh chain reads
+confirm generation 1 retired/completed and non-playable, and the review table is
+still empty. Gameplay, payments and new custody allocations remain disabled.
+No authenticated live-wallet acceptance is claimed.
+
+Evidence and exact provider/package identity:
+`docs/multichain/generation-milestone/fixed-review-candidate/published.json`.
+Before any future release, capture this full current baseline anew. Retain the
+exact published ZIP as server deployment material, never a public static file.
+
+---
+
+# Isolated BNB review replacement — candidate verified November 24, 2026
+
+Unpublished candidate `6b05eac4008e25aba5f361e1` replaces only the review handler
+with a fixed generation-1, review-only policy. Forty-four focused tests and hosted
+verification passed. All 691 static paths, the other 60 complete function/provider
+records, five schedules, runtime and protected settings remain exact. No
+site-wide environment change or unrelated function upload was required.
+
+This is not a publication: current locked production is still
+`6b053b8285e0ee251b84ad06`; the canonical review endpoint remains disabled (503).
+Gameplay, payments and new NFT deposits remain disabled. The complete candidate
+receipt and remaining publication checks are in
+`docs/multichain/generation-milestone/fixed-review-candidate/`.
+
+---
+
+# BNB exact function archive recovery — November 24, 2026
+
+Eleven original live function ZIPs were recovered from GitHub Actions and
+independently verified against their production SHA-256 hashes. Combined with
+38 existing archives, 49 of 61 packages are now durable in GitHub. Twelve remain
+unavailable in the 117 inspected artifacts. No handler was rebuilt, no settings
+changed, and no deploy was created or published. Live remains
+`6b053b8285e0ee251b84ad06`, with review and gameplay disabled.
+
+Evidence and remaining implementation option:
+`docs/multichain/generation-milestone/package-recovery/`.
+Recovered ZIPs are server deployment archives, never public static files.
+
+---
+
+# BNB review enablement — blocked safely November 24, 2026
+
+The generation-1 enablement attempt did not publish. Netlify required all 61
+function ZIPs after the two production/function flags changed; the preservation
+guard stopped before any upload or publication. Both new flags were removed.
+Candidate `6b05e3d127c690a986593ce7` was cancelled and is in `error` state.
+[Recovery check 45469679175](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45469679175)
+verified the entire protected baseline matches its starting snapshot, including
+all 691 static paths, 61 functions, five schedules and environment fingerprints.
+Current locked production remains `6b053b8285e0ee251b84ad06`; review returns 503
+`review-disabled`. Gameplay and payments were not activated.
+
+Forty-three focused tests passed. Fresh chain reads confirmed generation 1 is
+Retired on BNB and phase 3 on Sui. Before retrying, recover the 23 missing exact
+function ZIPs from their original release artifacts; 38 match local archives.
+Verify every SHA-256, refresh the complete current baseline, and only then
+prepare a new preservation candidate. Do not rebuild unrelated handlers or
+retry the cancelled candidate. Evidence, hashes and remaining tasks:
+`docs/multichain/generation-milestone/run-enablement/`.
+
+---
+
+# BNB run-review database foundation — applied November 24, 2026
+
+The single reviewed Supabase migration is recorded as
+`20261124184014_arcade_bnb_run_review` in project `lehswszuekjqottolmsf`.
+It adds the private review-ticket table/index and service-only RPC. Hosted role
+checks, RLS/grants, exact RPC source hash and unchanged BNB identity metadata
+passed. The table is empty and the canonical endpoint remains disabled (503).
+No website deployment or environment change accompanied this migration.
+
+Evidence: `docs/multichain/generation-milestone/database-applied/`.
+The current site baseline remains the locked 691-path, 61-function, five-schedule
+release below. Gameplay, payments and new-generation custody remain separate.
+
+---
+
+# Disabled BNB run-review endpoint — published November 24, 2026
+
+Deployment `6b053b8285e0ee251b84ad06` published at **09:31:15 America/Chicago**
+(`2026-11-24T15:31:15.993Z`), verified ready, current and locked.
+[Publication run 45426140480](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45426140480)
+rechecked the exact reviewed candidate and baseline `6b053a10d32f94ea6fc35ef1`,
+waited for all pending builds, then published and verified the canonical route.
+
+All **691 static paths**, **60 existing complete backend/provider records** and
+**five schedules** were preserved. The only addition is `arcade-bnb-run-review`:
+there are now **61 functions**. Runtime and protected environment configuration
+are unchanged; newer Tree Army arm-proportions work is retained. No historical
+root build was published.
+
+`/api/arcade-bnb-test/run-review` is disabled: canonical GET/POST return 503
+`review-disabled`, false gameplay, no-store and no session cookie. Existing BNB
+authentication retains its unauthenticated 401 response. No SQL migration,
+environment enablement, payment, NFT deposit, sale or gameplay activation occurred.
+No wallet interaction is required for this release.
+
+Receipt: `docs/multichain/generation-milestone/run-candidate/published.json`.
+Full preserved inventory: `docs/multichain/generation-milestone/run-release/plan.json`;
+new complete provider record: `docs/multichain/generation-milestone/run-candidate/verified.json`.
+Source `58f9d9a3a0792199c933a3a03656bedbf61a2114`; 53 focused tests passed.
+Before another release, capture the complete current live baseline anew.
+
+---
+
 # Tree Army hero arm proportions — published November 24, 2026
 
 [Prototype 0.18](https://tree-token.xyz/play/tree-army/test/) restores fuller hero
@@ -374,6 +884,734 @@ SHA256: `21a42ba65c996e76318b17e2b9bef0ee6053570ca801609d6325f1e769aeff53`.
 Capture a new complete live baseline before later releases; this publisher's
 replacement hash and addition allowlist describe a completed one-time release.
 
+# Generation 1 lifecycle completed — November 23, 2026
+
+The approved final BNB completion independently verifies at source and on Sui.
+BNB `0x3e62c5a7479937bc2e07756a8e8fdcf106c39a07131cdcb70542983dfe077bee`
+cost **0.004594741974304116 BNB total**, within 0.006 approval. Sui delivery
+`EPyf5Kc1BzjFq519ng7F3Q5Gs2g3oVML2Cay4npq7TaR` emitted the exact Completed
+and PacketDelivered events. The vault is empty **phase 3 / generation 1**;
+NFTree #2720 remains in dev wallet **45c4**. BNB pass stays Retired, paused and
+nonplayable. No more transaction is required to close this generation; do not resend.
+
+Evidence, reproducible read-only verifier, **59 passing focused checks**, setup
+and remaining tasks: `docs/multichain/generation-milestone/completion-completed/`.
+Public sales and gameplay remain disabled. The earlier 25-USDT purchase is not
+refunded by redemption/completion. Later deposits, spending and activation require
+separate reviewed milestones.
+
+This is evidence/documentation only: no website or contract deployment. Preserve
+newer unrelated main/production work, including Tree Army updates. Before any
+future release capture the actual current full inventory and preserve all existing
+static files, complete backend/provider/runtime records, settings and five schedules.
+Never replace live production with the historical root snapshot.
+
+---
+
+# Final BNB completion signing page published — November 23, 2026
+
+Locked deploy `6b047fa4c9ac1e8b32621216`, published at **12:05:12 America/Chicago**
+(`2026-11-23T18:05:12.849Z`). Canonical page:
+**https://tree-token.xyz/play/bnb-completion/**.
+
+One user-approved `send(4)` from MetaMask + Ledger admin 8789, maximum
+**0.006 BNB total (0.0059 message fee + 0.0001 gas)**. NFTree #2720 stays in
+Sui dev wallet 45c4. No USDT, deposit, mint, security change, sales or gameplay
+activation. User signature is pending; Codex submitted no live completion.
+After source confirmation independently verify actual Sui Completed/phase 3.
+Do not resend an uncertain submission.
+
+Preserved all **686 existing static paths, 60 complete backend/provider records,
+runtime/protected configuration and five schedules** from locked baseline
+`6b046d714f59325f88ea55af`. Added two static page files: **688 paths**, no backend
+uploads. Never publish the historical root snapshot. Before later releases,
+recapture actual current production and preserve any newer unrelated work.
+
+Source `d76e874`, control `6033a78`; candidate/publication runs
+`45233815169` / `45234330517`. Source contract CI `45233815244` passed; 234 local
+regression/preservation/preview checks and nine browser scenarios on each of
+source/candidate/canonical passed. Exact served script bytes and current review
+are independently checked. Setup, source/fork evidence, artifact digests,
+release IDs and remaining tasks: `docs/multichain/generation-milestone/completion-handoff/`.
+
+---
+
+# Final BNB completion handoff approved — November 23, 2026
+
+The user approved one new adapter `send(4)`, capped at **0.006 BNB total**
+(0.0059 message fee + 0.0001 gas), signed by MetaMask + Ledger admin 8789.
+The canonical handoff is being prepared at `/play/bnb-completion/`. No live
+completion transaction has been submitted. NFTree #2720 stays in dev wallet
+45c4; purchases and gameplay remain disabled. Source confirmation must be
+followed by independent Sui Completed/phase-3 verification; do not resend.
+
+Static-only preservation release: recapture locked `6b046d714f59325f88ea55af`,
+preserve all 686 existing static paths, 60 complete backend/provider records,
+runtime/protected settings and five schedules; add exactly two new page files.
+Stop if the baseline changes. Evidence and setup:
+`docs/multichain/generation-milestone/completion-handoff/`.
+
+---
+
+# Final BNB completion review prepared — November 23, 2026
+
+The new adapter's first `send(4)` passed a no-balance/storage-override local
+mainnet-fork review. Current combined maximum quote: **0.004599629374304116 BNB**
+(0.004577084124304116 message fee plus padded gas). Proposed new authorization:
+**one completion, 0.006 BNB total** (0.0059 message + 0.0001 gas). Approval is
+pending; no live completion transaction has been submitted.
+
+NFTree #2720 stays in Sui dev wallet 45c4. BNB remains Retired/paused/nonplayable;
+Sui is empty phase 2/generation 1 with ack_sent true. Actual completion delivery
+must independently confirm phase 3; simulation does not establish that outcome.
+No new deposit, USDT, mint, security change, sales or gameplay activation.
+
+Exact review, 26 passing focused tests, setup and remaining work:
+`docs/multichain/generation-milestone/completion-review/`. This review does not
+change the live website. Before any approved signing-page release, recapture and
+preserve the complete current production baseline; never publish the root snapshot.
+
+---
+
+# Acknowledgement delivered; BNB pass burned — November 23, 2026
+
+The approved Sui acknowledgement and actual BNB burn independently verify.
+Source `ENfwF1vVK1ozuYgVZcyr422UZTjnzUEk7f3iQeGDGEeh` cost **0.099892457 SUI**
+total. BNB transaction `0x938da761ac35a1635edc0568c04bebbf0e94eea288c0374797de17ca92cf8c7c`
+contains the exact packet delivery, burn and RedemptionFinalized events. Token 1
+no longer exists; pass state is **Retired, paused, nonplayable**.
+
+NFTree #2720 remains in Sui dev wallet 45c4. Vault phase 2/generation 1 is empty,
+ack_sent true. Completion has not been sent; BNB outbound nonce is still 1. Do not
+resend the acknowledgement. Next is a separately quoted/reviewed BNB kind-4
+completion to close generation 1 on Sui. Purchases/gameplay remain disabled.
+
+Receipts, canonical evidence, reproducible verifier, 14 passing focused tests and
+remaining tasks: `docs/multichain/generation-milestone/acknowledgement-completed/`.
+No website or contract deployment occurs in this update. Preserve all newer
+production changes before a future signing-page release; never publish the
+historical root build.
+
+---
+
+# Sui acknowledgement signing handoff — published November 23, 2026
+
+Locked deployment `6b046d714f59325f88ea55af` was published at **10:47:27
+America/Chicago** (`2026-11-23T16:47:27.549Z`). Canonical Slush page:
+**https://tree-token.xyz/play/generation-acknowledgement/**.
+
+One approved Sui `send(3)` acknowledgement, dev account 45c4, maximum **0.2 SUI
+(0.15 message fee + 0.05 gas)**. NFTree #2720 stays in the wallet. No USDT payment,
+new deposit, sales or gameplay activation. The user's signature remains pending;
+Codex submitted no live acknowledgement. Source receipt confirmation explicitly
+leaves BNB burn unchecked; verify actual destination delivery afterward. BNB
+completion remains a separately reviewed later transaction.
+
+Preserved **684 static paths, all 59 existing complete backend/provider records,
+five schedules, runtime and protected settings** from Tree Army projectile-origin
+release `6b046c3ccb8dfd3eb651353c`. Added two static page files and one fixed GET-only
+service: **686 paths, 60 functions, five schedules**. The first preparation stopped
+safely when its baseline changed. Never publish the historical root build.
+
+Source `96b6225`, control `6e42d5d`; candidate/publication runs
+`45219737786` / `45220208588`. All 388 regression checks, 11 preservation/preview
+checks, hosted 52 Move/16 EVM lifecycle tests, and eight browser scenarios against
+source/candidate/canonical passed. Exact canonical script bytes and a complete
+fresh live review were independently verified. Evidence, artifact digests, setup
+and remaining tasks: `docs/multichain/generation-milestone/acknowledgement-handoff/`.
+
+---
+
+# Approved acknowledgement handoff preparation — November 23, 2026
+
+The user approved one Sui `send(3)` acknowledgement, maximum **0.2 SUI total**
+(0.15 message fee + 0.05 gas). The canonical
+`/play/generation-acknowledgement/` page and fixed GET-only review/receipt service
+are prepared and tested; publication is pending. Original NFTree #2720 stays in
+dev wallet 45c4. BNB burn delivery is verified separately after source execution.
+No live acknowledgement has been submitted by Codex.
+
+Preserve freshly observed locked baseline `6b046c3ccb8dfd3eb651353c`: **684 static
+paths, 59 full backend records, five schedules**. Add only two static files and one
+read-only service; preserve runtime/protected settings and all newer releases.
+Never publish the historical root build. Source tests, setup, evidence and remaining
+tasks: `docs/multichain/generation-milestone/acknowledgement-handoff/`.
+
+---
+
+# Sui burn acknowledgement review prepared — November 23, 2026
+
+The next single `send(3)` review passed checked Sui simulation and read-only BNB
+receiver simulation. NFTree #2720 remains in Sui dev wallet 45c4 and is untouched.
+BNB remains Locked/nonplayable with purchases paused. Current estimated total:
+**0.099892457 SUI** (0.094851295 fee + 0.005041162 net gas). Proposed new cap:
+**0.2 SUI total** (0.15 message fee + 0.05 gas). Explicit fee approval is pending;
+no acknowledgement has been submitted and no website was changed.
+
+Exact packet/fee/effect checks, 42 passing tests, two negative Sui simulations,
+setup and remaining tasks: `docs/multichain/generation-milestone/acknowledgement-review/`.
+After approval, use a canonical `/play/` signing page and preserve a newly
+captured full production baseline. Actual BNB burn and later completion must be
+verified separately; no sales or gameplay activation is authorized.
+
+---
+
+# NFT return independently verified — November 23, 2026
+
+The approved BNB return message and actual Sui delivery are complete. Original
+NFTree #2720 is back in Sui dev wallet ending **45c4**. The new vault is empty at
+phase 2/generation 1, acknowledgement not sent. BNB remains **Locked, purchases
+paused, canPlay false**. The generation remains allocated pending burn
+acknowledgement and completion. Do not resend or repeat completed actions.
+
+Total source cost: **0.004595594974304116 BNB**, within the 0.006-BNB cap. No
+additional USDT was spent. BNB source ends `87e3b0`; Sui delivery digest is
+`CYqYhXynf4fvaUNN8TnQxX6J1YMB3T2ab5avAbtnwZzn`. Complete receipts, canonical
+reads, reproducible verifier, 37 passing focused tests and remaining milestones:
+`docs/multichain/generation-milestone/return-completed/`.
+
+This evidence update does not deploy or change the live website. Later Sui
+acknowledgement and BNB completion require fresh transaction/fee reviews. Preserve
+the current full production inventory, including unrelated newer releases, before
+any future signing-page release. Never publish the historical root build.
+
+---
+
+# Return-message signing handoff — published November 23, 2026
+
+Locked deployment `6b0466dbe649f3c4abd225f9` was published at **10:19:04
+America/Chicago** (`2026-11-23T16:19:04.644Z`). Canonical page:
+**https://tree-token.xyz/play/bnb-return/**.
+
+One approved new-adapter `send(2)`, MetaMask + Ledger admin 8789, to return the
+original NFTree #2720 to Sui dev 45c4. Maximum **0.006 BNB total** (0.0059 message
+fee + 0.0001 gas). No USDT. The user signature remains pending; Codex submitted
+no live return transaction. Source confirmation is not proof of Sui delivery.
+Verify actual release/ownership independently afterward. Acknowledgement,
+completion, sales and gameplay remain separate reviewed milestones.
+
+Preserved all **682 existing static paths, 59 complete backend/provider records,
+and five schedules**, runtime and protected settings from newer Tree Army release
+`6b0465140cb614081b5a0f52`. Exactly two static paths were added; no backend changes.
+Total: **684 static paths, 59 functions, five schedules**. The initial publication
+attempt safely stopped when its older baseline changed. Never publish the
+historical root build or overwrite newer unrelated updates.
+
+Source `8757aaf`, control `674af45`; candidate/publication runs
+`45214517145` / `45214868520`. All 365 regression/preservation checks, hosted 52
+Move and 16 EVM lifecycle tests, and nine browser scenarios across source,
+candidate and canonical site passed. Exact canonical bytes and current custody
+were checked independently. Setup, artifact digests, evidence and remaining work:
+`docs/multichain/generation-milestone/return-handoff/`.
+
+---
+
+# Approved return-message handoff preparation — November 23, 2026
+
+The user authorized one BNB `send(2)` for the locked redemption request to Sui dev
+45c4, **0.006 BNB total maximum** (0.0059 message fee + 0.0001 gas). The new
+`/play/bnb-return/` signing handoff is being prepared; no live send has occurred.
+The page prevents a repeat first-send, reconciles exact source events/fees and
+keeps source confirmation separate from actual Sui NFT release.
+
+This is a static-only addition using the existing read-only custody endpoint
+before signing. Fresh locked baseline `6b0465140cb614081b5a0f52` has 59 functions
+and five schedules; preserve its complete inventory and newer unrelated updates.
+Evidence, setup and remaining tasks:
+`docs/multichain/generation-milestone/return-handoff/`.
+
+---
+
+# Redemption return-message review prepared — November 23, 2026
+
+A local mainnet-fork review passed the first new-adapter `send(2)` with exact
+locked request, original NFT, dev recipient 45c4, first GUID/nonce and security
+settings. The current native fee is **0.004577084124304116 BNB**; including padded
+gas, the quoted maximum is **0.004600695624304116 BNB**. Proposed authorization
+is one send, **0.006 BNB total** (0.0059 message + 0.0001 gas caps). Explicit
+approval for this new native fee remains pending. No live send occurred.
+
+The pass remains Locked/nonplayable and NFTree #2720 remains in Sui custody.
+Source-send simulation is not proof of Sui release. Verify actual delivery and
+ownership before separately reviewing acknowledgement/completion. No further
+USDT payment, gameplay or security change is included. Evidence, exact calldata,
+fee allocation, focused tests and remaining tasks:
+`docs/multichain/generation-milestone/return-review/`.
+
+This review changes no live website. Recapture and preserve the complete current
+production inventory before any later canonical signing handoff.
+
+---
+
+# Private purchase and redemption lock complete — November 23, 2026
+
+All five approved user-signed transactions independently verify. Exactly **25 USDT**
+reached unchanged treasury 3720; total gas was **0.00001482515 BNB**, below the
+0.0001-BNB ceiling. Allowance is zero. The BNB pass is **Locked, generation 1,
+purchases paused, canPlay false**, with redemption fixed to Sui dev 45c4.
+
+NFTree #2720 remains in new-vault custody on Sui, phase 1/generation 1. The return
+message has not been sent by Codex. Next is a fresh return-message quote/send
+review with its own native fee/gas authorization. No repeat purchase, allowance,
+unpause or lock is needed. Website gameplay remains disabled.
+
+Exact hashes, user receipt, independent chain evidence, setup and remaining tasks:
+`docs/multichain/generation-milestone/private-purchase-completed/`.
+This receipt update changes no production website or contracts. Earlier pending
+signature/Ready-state notes below are historical; recapture the current complete
+live inventory before any future release, preserving newer unrelated deployments.
+
+---
+
+# Private purchase and lock handoff — published November 23, 2026
+
+Locked deployment `6b04578a357874523bed70a8` was published at **09:13:46
+America/Chicago** (`2026-11-23T15:13:46.906Z`). Canonical MetaMask/Ledger page:
+**https://tree-token.xyz/play/bnb-purchase/**.
+
+Five approved actions: exactly 25-USDT allowance, private unpause/buy generation 1,
+re-pause, redemption lock to Sui dev 45c4. Combined gas ceiling: **0.0001 BNB**.
+The private payment goes to unchanged treasury 3720 and is not refunded by
+redemption. The NFT-return message and subsequent fees are separate reviews.
+User signatures remain pending; Codex submitted no live transactions. The original
+remains in Sui custody and live website gameplay remains disabled.
+
+Preserved all **680 existing static paths, 58 complete backend/provider records,
+and five schedules** from `6b03da694fbbb07f59b07001`. New inventory: **682 static
+paths, 59 functions, five schedules**. Only two signing-page files and one fixed
+GET-only custody service were added. Runtime and protected configuration were
+preserved. Never publish the historical root build.
+
+Source `aa26cb5`, control `2a41acc`; candidate/publication runs
+`45202130222` / `45202579789`. All 336 local checks, hosted 52 Move/16 EVM lifecycle
+tests, and nine browser scenarios against source/candidate/canonical passed.
+A complete no-balance-override local fork using the actual signing/reconciliation
+code cost 0.00001482515 BNB in simulated gas. Fresh live preflight confirms Ready,
+paused state, correct nonce and zero allowance. Canonical bytes and custody API
+were independently checked. Exact evidence, artifact digests, setup and remaining
+tasks: `docs/multichain/generation-milestone/private-purchase-handoff/`.
+
+---
+
+# Private purchase review prepared — November 23, 2026
+
+A local mainnet-fork rehearsal passed the proposed exact 25-USDT approval,
+private unpause, generation-1 purchase, re-pause and redemption lock to dev 45c4.
+No balances/storage were overridden and no live transaction was submitted.
+The five-action proposed cap is **25 USDT + 0.0001 BNB gas**; observed gas limits
+at current price sum to 0.00001975075 BNB. Separate explicit payment/lock approval
+is still required before a signing handoff. The subsequent return message quote
+is 0.004577084124304116 BNB plus gas and is outside that cap.
+
+Live state remains original in Sui custody and BNB Ready/paused/nonplayable.
+Purchase would make the contract pass Active until redemption lock; pausing alone
+does not revoke it. Website gameplay remains disabled. Evidence, calldata, fee
+boundaries and remaining return steps:
+`docs/multichain/generation-milestone/private-purchase-review/`.
+No website or contract changes were deployed. Preserve the full current live
+inventory before any later canonical signing-page release.
+
+---
+
+# First reserve delivered — November 23, 2026
+
+The approved atomic deposit and reserve is complete. Sui digest
+`i6nTSPBKFSUf7GXhsnocnFfuuMtkqvQASR91YTZZdfE` independently verifies at
+**0.09884395 SUI total** (0.094851295 message fee + 0.003992655 net gas).
+Original NFTree #2720 is now in new-vault custody, phase 1, generation 1.
+
+The initial pending BNB message has delivered. Destination transaction
+`0x689d2c8683f56af38d9e94ee032872829bef97a2673b77dd2f72c060e0860024`
+confirms the exact GUID and ReserveConfirmed(1). The pass is **Ready, generation 1,
+purchases paused, canPlay false**. Do not repeat the deposit or reserve send.
+No USDT purchase occurred. Private purchase/redemption and gameplay remain later
+reviewed milestones; no direct admin withdrawal exists in the published lifecycle.
+
+Evidence, reproducible verification and remaining tasks:
+`docs/multichain/generation-milestone/reserve-completed/`.
+This receipt update makes no website or additional chain changes. The prior release
+below is historical; recapture current full live inventory before any later release.
+Earlier pending-signature/empty-custody notes below are superseded by this receipt.
+
+---
+
+# Atomic reserve handoff — published November 23, 2026
+
+Locked deployment `6b03d785177d7651c28d69aa` was published at **00:07:42
+America/Chicago** (`2026-11-23T06:07:42.830Z`). Canonical signing page:
+**https://tree-token.xyz/play/generation-reserve/**.
+
+The approved single transaction deposits original NFTree #2720 and sends its
+reserve announcement atomically. Maximum message fee is 0.25 SUI plus 0.1 SUI
+gas; current checked estimate is 0.106791186 SUI total. User Slush signature and
+source/destination receipt reconciliation remain pending. No transaction was
+submitted by Codex. USDT spending, purchase unpause, redemption, public sales and
+gameplay activation remain separate milestones.
+
+Preserved all **677 existing static paths, 57 complete backend/provider records,
+and five schedules** from `6b03d4e9938b4d8d124cfdaf`, including its Canopy Defense
+update. New inventory: **679 static paths, 58 functions, five schedules**. Only
+two new signing files and one GET-only service were added. Runtime and protected
+configuration remain preserved. Never publish the historical root build.
+
+Source `d1046d6`, publication control `8063912`, candidate/publication runs
+`45121661258` / `45121910926`. All 299 local checks passed; hosted CI passed
+52 Move and 16 EVM lifecycle tests. Eight mock-wallet browser scenarios passed
+against source, candidate and canonical served assets, without chain submission.
+Canonical script bytes and fresh transaction review were independently verified.
+Setup, exact evidence, durable artifact digests and remaining tasks:
+`docs/multichain/generation-milestone/reserve-handoff/`.
+
+---
+
+# Atomic reserve quote review — November 22, 2026
+
+Read-only preparation now verifies an atomic new-vault deposit plus reserve send.
+Observed message fee is 0.102798531 SUI, net gas 0.003004754 SUI, total
+0.105803285 SUI. Proposed (not approved) first-step ceiling is 0.35 SUI: 0.25
+message fee plus 0.1 gas. Original #2720 remains in the wallet; no live action or
+website change occurred. Source effects/payees and local-fork BNB receiver budget
+passed. 12 focused checks and 140 Sui regressions passed.
+
+Review, exact simulation evidence, hypothetical later return-fee estimates and
+recovery gates: `docs/multichain/generation-milestone/reserve-review/README.md`.
+Explicit deposit+reserve approval is required before a signing handoff. USDT
+purchase, redemption fees, sales and gameplay remain outside that first-step scope.
+Preserve the full current site and recapture its live baseline before any release.
+
+---
+
+# Delivery validation plan — November 22, 2026
+
+Read-only review confirms that the new route cannot send a heartbeat while its
+vault is empty. A reserve requires depositing the exact original; a full round
+trip requires the deployed private 25-USDT purchase/redemption lifecycle. There
+is no direct admin withdrawal. Do not deposit solely to test connectivity.
+
+Checked simulations reject both empty-vault outbound kinds, produce the expected
+generation-1 reserve payload only after simulated funding, and confirm the actual
+NFT/vault remain unchanged. Inactive BNB outbound quotes reject; 16 BNB lifecycle
+tests passed. Plan/evidence: `docs/multichain/generation-milestone/delivery-review/`.
+
+No additional transaction, fee, deposit, purchase or gameplay activation is
+approved by this plan. Next prepare the full new-route reserve quote/send effects,
+fee recipients, receiver budget and private round-trip recovery review before
+requesting further live authorization. This planning milestone changes no live
+website or chain state. The published preservation baseline below remains a
+historical record; recapture the current full inventory before any future release.
+
+---
+
+# Final binding receipt complete — November 22, 2026
+
+All six approved security-configuration/binding steps are complete. Final Sui
+digest `EkZHu7fFx93QkttEekqXuqHrnQnfS6pNbZLUmeCcVf1a` independently verifies
+at **0.009266747 SUI** net gas. Combined Sui configuration/binding fees are
+**0.024218288 SUI**; four BNB configuration calls cost **0.00002372695 BNB**.
+Both are within the approved caps. Do not repeat completed transactions.
+
+The Sui vault is **bound and empty**, generation zero. Original NFTree #2720
+remains in the dev wallet; BNB purchases and gameplay remain disabled. Exact
+peer/options/channel state, security, retained admin ownership and completed BNB
+receipts/settings reverified. Evidence and reproduction:
+`docs/multichain/generation-milestone/binding-completed/`.
+
+This receipt/documentation update changes no website or additional chain state.
+Next is an end-to-end delivery validation plan, followed by separately reviewed
+deposit/sales/gameplay milestones. Earlier pending-signature notes below describe
+historical handoffs. The live release baseline below must be freshly recaptured
+before any subsequent release. Pre-binding reviews now correctly reject the
+bound vault; use the final binding receipt verifier for current-state checks.
+
+---
+
+# Final Sui binding handoff — published November 22, 2026
+
+Locked deployment `6b03cc46411c5bac0b910909` was published at **23:19:01
+America/Chicago** (`2026-11-23T05:19:01.448Z`). Canonical Slush signing page:
+https://tree-token.xyz/play/generation-binding/.
+
+This release preserves all **675 existing static hashes**, **56 complete backend/
+provider records**, **five schedules**, runtime and protected configuration from
+freshly captured Root Rage baseline `6b03c711ca6052a6cd8f7399`. It adds two static
+paths and one isolated GET-only review/receipt service. Totals: **677 paths,
+57 functions, five schedules**. Existing functions were not rebuilt. The historical
+root build was not published. Always recapture the current full inventory before
+another release.
+
+The page exposes only approved final step 6: binding the empty Sui custody slot
+to the verified new BNB adapter, capped at **0.1 SUI**. Fresh checked simulation
+estimates **0.009266747 SUI**. The prior Sui configuration and four BNB calls are
+complete and must not be repeated. User signing is pending; custody remains
+empty/unbound and the BNB pass paused/non-playable. No NFT deposit, sale or
+gameplay activation is included.
+
+Validation: 46 focused checks, 128 Sui review regressions, full hosted contract
+regressions, eight mock-wallet browser scenarios on source/candidate/canonical
+assets, and fresh exact live simulation. Preparation passed 189 checks; publication
+passed 194. Canonical source bytes match; original backend records/schedules and
+published ID/lock were independently checked. Cloud submitted no mainnet transaction.
+
+Source `6d988b2385f348aed146bca7dd4331fd3b599a54`; control `76224a3`.
+Preparation: [45116610999](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45116610999).
+Publication: [45116895004](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45116895004).
+Control: `production/generation-binding-publish.json`. Setup, evidence and remaining
+tasks: `docs/multichain/generation-milestone/binding-handoff/`.
+
+---
+
+# BNB configuration receipts complete — November 22, 2026
+
+Approved steps 2–5 are complete and independently verified. All four BNB calls
+match exact reviewed transaction contents, successful canonical receipts and final
+security settings. Combined fees: **0.00002372695 BNB**, below the **0.0001-BNB**
+ceiling. Do not repeat them. Evidence and reproduction:
+`docs/multichain/generation-milestone/bnb-configuration-completed/`.
+
+The final Sui binding remains approved (0.1 SUI maximum). Fresh checked simulation
+estimates 0.009266747 SUI and verifies an empty generation-zero bound post-state;
+it has not been submitted. Its canonical signing handoff remains to be prepared.
+Current custody is empty/unbound, and purchases/gameplay are disabled. This
+receipt update changes no live website or chain state. Recapture the full current
+live inventory before publishing the final handoff.
+
+---
+
+# BNB configuration handoff — published November 22, 2026
+
+Locked deployment `6b03c667c92f828214793fb9` was published at **22:53:35
+America/Chicago** (`2026-11-23T04:53:35.913Z`). Canonical signing page:
+https://tree-token.xyz/play/bnb-configuration/.
+
+This static-only release adds two paths to freshly captured Root Rage baseline
+`6b03c2e83a5903c9f492dbf6`. All **673 prior static hashes**, **56 complete backend/
+provider records**, **five schedules**, runtime and protected configuration are
+preserved. Totals: **675 paths, 56 functions, five schedules**. No backend was
+uploaded or rebuilt; the historical root build was not published. Recapture the
+full current inventory before every subsequent release.
+
+The page exposes approved steps 2–5 of the six-step configuration sequence:
+four BNB calls with **0.0001 BNB combined maximum fees**, using MetaMask with
+Ledger admin ending 8789. It verifies the completed Sui configuration receipt,
+exact BNB state, nonce and remaining aggregate fee budget before each signature.
+User signatures are pending. Final Sui binding remains approved (0.1 SUI maximum)
+after all four receipts are independently verified. Custody remains empty/unbound;
+purchases and gameplay remain disabled. Deposits, sales and gameplay activation
+are excluded.
+
+Validation: 42 focused checks; 207 checks in each release job; full hosted contract
+regressions; eight mock-wallet browser scenarios on source, candidate and canonical
+assets; a complete four-call local fork with unauthorized-caller rejection. Fork
+fees totaled 0.00002372695 BNB. Canonical JavaScript matches source and the live
+Sui receipt/current state verified. Cloud submitted no mainnet transaction.
+
+Source `a859f396611b5aa8678e5eafa1050c2b6fe99f32`; control `3ab6f8f`.
+Preparation: [45114093569](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45114093569).
+Publication: [45114413903](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45114413903).
+Control: `production/bnb-configuration-publish.json`. Setup, validation and remaining
+tasks: `docs/multichain/generation-milestone/bnb-configuration-handoff/`.
+
+---
+
+# Sui configuration receipt complete — November 22, 2026
+
+Step 1 of the approved six-step configuration/binding sequence is complete.
+Independent verification confirms digest
+`6sbCjzYbNLWYBY8QuZjLyKeGnGZjtLUWktmrZZb1fRU8`, exact explicit security
+settings and receiver metadata. Net gas was **0.014951541 SUI**, below the
+**0.1-SUI** step ceiling. Do not repeat this transaction.
+
+Evidence: `docs/multichain/generation-milestone/configuration-completed/README.md`.
+This documentation/receipt update changes no website or additional chain state.
+The four BNB calls (0.0001 BNB combined) and final Sui binding (0.1 SUI maximum)
+remain approved, subject to fresh state/fees and prior receipt verification.
+Custody remains empty/unbound; purchases and gameplay stay disabled. Earlier
+pending-signature notes below describe the historical handoff. Recapture the
+current full live inventory before any new site release.
+
+---
+
+# Sui configuration handoff — published November 22, 2026
+
+Locked deployment `6b03c120638a62e773a0de91` was published at **22:31:35
+America/Chicago** (`2026-11-23T04:31:35.930Z`). Canonical signing page:
+https://tree-token.xyz/play/generation-configuration/.
+
+This adds exactly two new static paths and one isolated GET-only review/receipt
+service to baseline `6b03bf7710cd526cae89e2ef` (Root Rage complete free Greenbelt).
+All **671 prior static hashes**, **55 complete backend/provider records**, **five
+schedules**, runtime and protected configuration are preserved. Totals are
+**673 paths, 56 functions, five schedules**. Existing backends were not rebuilt;
+the historical root build was not published. Capture a fresh full live inventory
+before any subsequent release.
+
+The user approved all six configuration/binding transactions: 0.2 SUI total for
+two Sui steps (0.1 each), and 0.0001 BNB total for four BNB steps. This page exposes
+only **step 1**, Sui security configuration and receiver metadata, with **0.1 SUI**
+maximum gas. Fresh simulation estimates **0.014951541 SUI**. No transaction was
+submitted by Cloud. After its receipt, the four BNB calls and final Sui binding
+remain approved but require fresh state/fee checks and prior receipt verification.
+Custody remains empty/unbound; purchases and gameplay are disabled. Deposits,
+sales and gameplay activation are excluded.
+
+Validation: 158 local checks, 178 checks in each release job, eight mock-wallet
+browser scenarios on source/candidate/canonical assets, and full hosted contract
+regressions passed. Canonical JavaScript matches source. Actual signing remains
+pending. The working Slush helper and server-based review clock are preserved.
+
+Source `6ba8e211ec0ce70a82c903034b8a4cf17a5ff7ce`; control `8389a7a`.
+Preparation: [45112070048](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45112070048).
+Publication: [45112287530](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45112287530).
+Contract regressions: [45112074417](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45112074417).
+Control: `production/generation-configuration-publish.json`. Approval, setup,
+remaining tasks and evidence: `docs/multichain/generation-milestone/configuration-handoff/`.
+
+---
+
+# Sui registration receipt complete — November 22, 2026
+
+The user completed the single approved registration in desktop Slush. Independent
+verification confirms digest `DF8dMqSXXtYBoemHsPYk2QJDkuUY2m8zTRDdcu6Y9DFt`
+and actual messaging channel
+`0x63ee0fb967cf71aecd39d095a02aae6607d18b087c9537f4d7c4d0c8cf199023`.
+Net gas was **0.004668124 SUI**, below the **0.02-SUI** cap. Do not repeat it.
+Custody remains empty and unbound; the BNB pass remains paused/non-playable.
+
+Evidence and reproducible verification:
+`docs/multichain/generation-milestone/registration-completed/README.md`.
+This receipt/documentation update changes no website or chain configuration.
+The website release baseline is recorded below; always recapture the current
+live inventory before another release. Peer/security configuration, NFT deposits,
+sales and gameplay activation remain subsequent reviewed milestones. Earlier
+pending-registration notes describe the historical handoff.
+
+---
+
+# Sui registration handoff — published November 22, 2026
+
+Locked deployment `6b03b87be261d7f909354675` was published at **21:54:50
+America/Chicago** (`2026-11-23T03:54:50.706Z`). The approved desktop Slush page is
+https://tree-token.xyz/play/generation-registration/.
+
+The release adds two new static paths and one isolated GET-only simulation/receipt
+function to freshly captured baseline `6b03b6a483cce56f74fa4bfc`. It preserves all
+**669 existing static hashes**, **54 complete backend/provider records**, **five
+schedules**, runtime and protected configuration, including the newer Canopy
+mobile story review. Totals are **671 paths, 55 functions, five schedules**.
+No existing backend was rebuilt; the historical root build was not published.
+Always capture the current full inventory before another release.
+
+The user approved one LayerZero registration transaction for the new Sui package,
+with a **0.02-SUI** maximum. Fresh canonical simulation estimates **0.004668124
+SUI**. Cloud has not submitted it; desktop Slush signing and receipt verification
+remain pending. The empty custody slot remains unbound, and the completed BNB
+pass remains paused/non-playable. No peer/security configuration, NFT deposit,
+sale or gameplay activation is included.
+
+Validation: 133 local automated checks, 153 checks in each release CI job, and
+eight mock-wallet browser scenarios on source, candidate and canonical assets.
+Canonical JavaScript matches source. Actual Slush acceptance remains separate.
+The connection getter-lag and server-clock review protections are retained.
+
+Source `befedcec41c1e1de7691d0eda42152a7ff29ab83`; control `b3c510e`.
+Preparation: [45108444152](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45108444152).
+Publication: [45108631810](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45108631810).
+Control: `production/generation-registration-publish.json`. Setup, approval,
+validation and remaining tasks: `docs/multichain/generation-milestone/registration-handoff/`.
+
+---
+
+# BNB deployment receipts complete — November 22, 2026
+
+The user completed adapter deployment, pass deployment and binding through
+MetaMask/Ledger. Independent verification confirms the reviewed runtime, immutable
+settings, reciprocal binding and admin/delegate. Total gas fees were
+**0.0001740542 BNB** against the **0.001 BNB** ceiling. Purchases remain paused,
+state Unconfirmed, generation zero and gameplay disabled. Sui custody is still
+empty and unbound. Do not repeat deployment or binding.
+
+Evidence: `docs/multichain/generation-milestone/bnb-deployed/README.md`.
+This receipt/documentation update does not change the site or deploy any assets.
+The website preservation baseline is recorded in the publication section below;
+re-capture the live inventory before any future release. Cross-chain security
+configuration, Sui peer binding, deposits, sales and gameplay remain subsequent
+reviewed milestones. Earlier pending-signature/RPC-retry notes are historical.
+
+---
+
+# BNB handoff RPC repair — published November 22, 2026
+
+Locked deployment `6b03af26a54fc9961a7944cc` was published at **21:14:43
+America/Chicago** on November 22 (`2026-11-23T03:14:43.997Z`). The canonical page
+remains https://tree-token.xyz/play/bnb-generation/.
+
+After the user's successful adapter deployment, a wallet RPC error blocked the
+next review. The page now uses a chain-checked, read-only public BNB fallback when
+wallet reads fail. Account access, network selection and all signing/submission
+remain in MetaMask/Ledger. Transaction bytes, fee limits and saved progress are
+unchanged. The specific failed read is now identified if both transports fail.
+
+This replaces only `/play/bnb-generation/app.js` from fresh baseline
+`6b03a2c688e99f705a3b9f3e`, preserving the newer Canopy mobile review and **668
+other static hashes**, **54 complete backend/provider records**, **five schedules**,
+runtime and protected configuration. Totals remain **669 paths, 54 functions,
+five schedules**. No backend or historical root build was published.
+
+Validation: 39 focused tests, 171 CI release checks and six browser scenarios on
+source, candidate and canonical assets passed. A browser with simulated wallet
+read failure and actual live chain data resumed the user's adapter receipt at
+step 2 without submitting a transaction. Canonical JavaScript matches source;
+backup RPC CORS preflight passed. The user's actual wallet retry remains pending.
+
+Source `62dfcbb38d1845b4e763587fbcd10f53200767d2`; control `6a17ab1`.
+Preparation run: [45104505657](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45104505657).
+Publication run: [45104692560](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45104692560).
+Control: `production/bnb-rpc-publish.json`. Evidence and setup:
+`docs/multichain/generation-milestone/bnb-rpc-repair/`.
+The adapter is already deployed; pass deployment and binding remain pending.
+No NFT deposit, sale, peer configuration or gameplay activation is included.
+Capture a fresh complete live baseline before any future release.
+
+---
+
+# BNB generation signing handoff — published November 22, 2026
+
+Locked deployment `6b03a1ca204de42e6892dd3a` was published at **20:17:27
+America/Chicago** on November 22 (`2026-11-23T02:17:27.188Z`). The approved
+MetaMask/Ledger page is https://tree-token.xyz/play/bnb-generation/.
+
+This release adds exactly two static paths to fresh live baseline
+`6b0391dcbf530645497f3393`. It preserves all **667 existing static hashes**,
+all **54 complete backend/provider records**, **five schedules**, runtime and
+protected configuration. Totals are **669 static paths, 54 functions, five
+schedules**. No backend was rebuilt. The current Sui receipt endpoint is reused.
+The historical root build was not published and must never replace the live site.
+
+The user approved three BNB mainnet transactions: new adapter deployment, new
+pass deployment and one-time binding, with total fees capped at **0.001 BNB**.
+MetaMask/Ledger admin ends in **8789**; treasury remains unchanged. Cloud has
+submitted no BNB transaction. The adapter deployment is now independently verified (receipt in
+`docs/multichain/generation-milestone/bnb-deployed/adapter-receipt.json`);
+pass deployment and binding remain pending. Sui custody remains empty and unbound; no deposit, sale,
+message-path configuration or gameplay activation is included.
+
+Validation: 194 local contract/handoff/regression tests plus the preview-build
+preservation test passed; CI release checks passed 159 tests. Five browser
+scenarios passed against source, served candidate and canonical assets, with
+mocked wallet responses and zero real transactions. Actual browser-core fork
+execution completed all three steps with paused, Unconfirmed, generation-zero
+state. Canonical JavaScript matches source byte-for-byte; a fresh canonical Sui
+receipt check confirmed the empty slot. The user has completed the first MetaMask/Ledger transaction; the remaining
+two transactions are pending.
+
+Source: `dbcc0faa8c4209f420a7c7c82f72b717041044a5`. Publication control:
+`efdc436`. Preparation run: [45099075862](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45099075862).
+Publication run: [45099281724](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45099281724).
+Control file: `production/bnb-generation-publish.json`. Setup, fork evidence,
+browser results, actual release verification and remaining tasks:
+`docs/multichain/generation-milestone/bnb-handoff/`.
+Capture the current live inventory anew before any subsequent release.
+
 ---
 
 # Tree Arcade single launch countdown — published November 22, 2026
@@ -472,6 +1710,153 @@ records their verified SHA256 values and the excluded earlier attempts.
 Capture the complete current site before any later release and preserve its
 current inventory and configuration. This completed publisher pins its prior
 baseline and must not be reused blindly.
+# Desktop Slush slot connection repair — published
+
+Current locked production is `6b03741d72033c45517f32e3`, published November 22,
+2026 at 17:02:51 America/Chicago (`2026-11-22T23:02:51.415Z`). Source `eb832e9`,
+control `123db0b`, workflow `45080969461`.
+
+Only `/play/generation-slot/index.html` and `app.js` changed. Fresh baseline
+`6b037118d43fee18f79fb7a4` includes the newer seasonal-grove release. Preserve
+all its other content: **667 static paths total, 665 unchanged hashes, all 54
+complete backend/provider records, five schedules**, captured runtime and
+API-visible protected configuration verified unchanged. No backend rebuild/upload.
+
+The page uses Slush's returned accounts when its getter is delayed, reuses an
+already-authorized account, follows account-change events, and displays shared
+addresses on a mismatch. It shows connection progress, a bounded timeout and
+script-loading errors. The initial status identifies `connection update 2`.
+Transaction, gas budget, signature checks, receipt lock and backend are unchanged.
+No chain transaction was submitted during this repair.
+
+Validation: 133 local/CI tooling tests, preview-preservation test, contract CI,
+five source/candidate/live mock-wallet connection scenarios, exact served-file
+hashes, and independent complete backend-record comparison. The user's actual
+Slush account sharing still needs confirmation on their desktop. Evidence is in
+`docs/multichain/generation-milestone/slot-review/connection-live.json` and
+`connection-repair.md`. GitHub artifact `14776944137` has SHA256
+`ec35189de1a2ad8d0c80deb3aea44fb623677961685a4f555c7a51d1d1197548`.
+Capture current production afresh before any later release.
+
+---
+
+# Canonical empty custody slot handoff — published
+
+Current locked production is `6b036cc41e40ebe1a1df7990`, published November 22,
+2026 at 16:31:58 America/Chicago (`2026-11-22T22:31:58.136Z`). Workflow
+`45078167893`, source `0d57f9907eddba3e27a26179f6e4b88fbbb71d37`, control `8f7ffd6`.
+
+The approved desktop Slush handoff is live at
+https://tree-token.xyz/play/generation-slot/ . It prepares only the single empty
+slot in the already-published Sui generation registry, with maximum 0.02 SUI gas.
+The user still must sign; no slot creation, NFT deposit, BNB deployment, sales or
+gameplay activation was performed by this website release.
+
+Fresh baseline `6b0341e7545ba49e00a0e496`: preserved all **658 existing static
+hashes, 53 complete backend/provider records, five schedules**, runtime and
+API-visible protected configuration. Added only two slot-page files and the
+isolated GET-only `generation-slot` function. Totals: **660 static paths and
+54 functions**. The historical root/preview build was never published. The
+release waited for all Git builds before switching and locking the new candidate.
+
+Validation: 120 tooling/release tests; source/candidate/live mock-wallet browser
+clock-skew, stale-review and reload checks; fresh exact-byte mainnet simulation;
+matching served bundle; independent backend-record comparison with no changes.
+Estimated slot gas: 0.003892851 SUI. Source contract CI also passed. These checks
+do not substitute for real installed Slush acceptance or a completed signature.
+
+Evidence: `docs/multichain/generation-milestone/slot-review/live-verification.json`
+and `handoff.md`. Publication artifact `14775903521`, SHA256
+`86041f31bb0f011dcdb600e0589da63a22bee69c69b9ed07d496b1f559b7a598`.
+Capture production afresh before any future release; completed release scripts
+are pinned to earlier baselines and must not be reused blindly.
+
+---
+
+# Empty Sui package publication — verified
+
+The user completed the approved desktop Slush publication. Receipt and independent
+mainnet verification are recorded in
+`docs/multichain/generation-milestone/published/README.md`. Gas was 0.0697236 SUI;
+the new registry has no slot and all three capabilities remain in the dev wallet.
+No NFT deposit, BNB deployment or gameplay activation was performed.
+This receipt update makes no website release; the current locked production
+baseline remains `6b0341e7545ba49e00a0e496` (658 static paths, 53 functions,
+five schedules), described below. Earlier pending-signature statements are
+historical release-time observations, superseded by this verified receipt.
+
+---
+
+# Canonical publication review clock repair — published
+
+Current locked production is `6b0341e7545ba49e00a0e496`, published at
+`2026-11-22T19:28:47.582Z` by workflow `45060902548`. Source
+`e8c4294ab54358fc32aa4569d2a440f2dd323b68`, control `44c2f28`, PR #280.
+
+Only `/play/generation-publication/app.js` changed. Fresh baseline
+`6b032a964276045ddedb18ca`: all **657 unrelated static hashes, 53 complete
+backend records, five schedules**, runtime and API-visible protected
+configuration were preserved. Totals remain **658 static paths, 53 functions**.
+No backend upload or rebuild occurred. The release waited for all real Netlify
+builds before publishing and locking the verified new candidate.
+
+The review timer now uses the same-origin server response time plus monotonic
+elapsed time instead of the desktop wall clock. It still enforces the two-minute
+review limit before/after signing and after signature verification. This fixes
+fresh reviews being rejected when desktop time differs from server time.
+
+All 76 tooling/release tests passed. Three mock-wallet browser cases passed on
+source, the served candidate and the live canonical page: desktop a day behind,
+a day ahead, and a genuinely stale review. The served bundle SHA256 matches
+committed bytes. No real signature, Sui publication, NFT deposit or payment was
+performed. Real Slush acceptance remains the user's next action.
+
+Evidence: `docs/multichain/generation-milestone/review-clock-live.json` and
+`review-clock-repair.md`. Publication artifact `14769636004`, SHA256
+`36a53a5cc3ddb4e82af9998e5e703020ecdbde4d0a46b7c371ff9ba6f4a852fc`.
+Capture current production afresh before future releases; completed publishers
+are pinned to their old baselines and must not be reused blindly.
+
+---
+
+# Canonical generation signing page — published
+
+Current locked production is `6b032a964276045ddedb18ca`, published at
+`2026-11-22T17:49:33.817Z` by workflow `45051525680`. Source
+`2e2c440caba28ffd2fe0a5c5483c5a3e68e8957b` and publication control
+`51c3b5232f6f01034018d33e6659547440b7d7b4` are on PR #280's isolated branch.
+
+The new https://tree-token.xyz/play/generation-publication/ page supports the
+user-approved empty Sui package publication through desktop Slush. It requires
+the exact canonical origin/path and approved dev wallet, fresh exact-byte
+simulation, a verified wallet signature, and a maximum 0.1 SUI gas budget.
+External preview signing remains disabled. The user clarified that `www` is not
+required; its existing redirect to the apex domain is preserved.
+
+Fresh baseline: `6b0282d222b49cfa17fa3731` (attendance forest). The release adds
+exactly two static paths and one isolated read-only simulation/receipt function:
+**658 static paths, 53 functions, five schedules**. All **656 existing hashes**
+and **52 complete existing backend/provider records**, schedules, runtime
+settings and API-visible protected configuration were preserved. Only the new
+function was packaged/uploaded; no existing backend was rebuilt. All real Git
+builds finished before switching and locking the exact new candidate.
+
+The canonical page returns HTTP 200 without redirect. Its served JavaScript
+SHA256 matches committed bytes, and its fresh hosted full-byte Sui simulation
+passes independently at estimated 69,723,600 MIST. All 73 tooling/release tests
+and canonical-origin mock-wallet rejection/reload checks passed. Real Slush
+signing and actual blockchain publication remain pending; no NFT was deposited,
+no BNB contract deployed, no sale enabled and no gameplay activated.
+
+Evidence: `docs/multichain/generation-milestone/canonical-live-verification.json`
+and `canonical-candidate-review.json` in the same directory. Publication artifact
+`14765961630`, SHA256
+`c9f7f2e88d89396f4a0fd5d691ee91d5236ab746053c729cc99800e73ed7ecd7`, contains
+the complete capture, plan, candidate/provider record and publication report.
+Protected secret verification covers API-visible metadata/value IDs, not masked
+secret bytes. The completed publisher is pinned to its prior baseline; do not
+reuse it blindly. Capture the entire current inventory before any later release.
+Never publish the historical root build or preview directory as production.
 
 ---
 

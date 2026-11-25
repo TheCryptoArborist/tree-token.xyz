@@ -1,0 +1,20 @@
+✔ new-route atomic deposit/send exact effects and fees (19.79215ms)
+✔ reject altered payee (7.190592ms)
+✔ reject fee mismatch (5.228171ms)
+✔ reject fee cap (8.81954ms)
+✔ reject wrong payload (6.146197ms)
+✔ reject extra event (5.881747ms)
+✔ reject changed command (6.642625ms)
+✔ reject wrong sender (5.987706ms)
+✔ reject admin mutation (6.666832ms)
+✔ reject missing custody (7.01043ms)
+✔ reject bad generation (7.171734ms)
+✔ reject unaccounted payment (7.600951ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 499.531727

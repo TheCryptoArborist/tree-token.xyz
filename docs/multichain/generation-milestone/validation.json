@@ -1,0 +1,12 @@
+{
+  "baseline": "462ff86a7b120f3c89bc9a24eccc46fbac8a491f",
+  "baselineTrackedFilesPreserved": 1785,
+  "moveReleaseModuleCount": 2,
+  "moveReleaseBuildSha256": "75255e5a7721f244580d206fe98a528968a07795d52eba1635cacf5b15b6d473",
+  "moveTests": 52,
+  "evmTests": 16,
+  "compiler": "sui 1.83.1-6a567faf6de1",
+  "solc": "0.8.30",
+  "deployment": false,
+  "gameplayEnabled": false
+}

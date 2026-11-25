@@ -1,0 +1,88 @@
+{
+  "id": "6b053b8285e0ee251b84ad06",
+  "baselineId": "6b053a10d32f94ea6fc35ef1",
+  "planHash": "da8db103a786478083dbb17c0d5780abb8a59efcdcefce7c0b95afdf5e560b79",
+  "createdAt": "2026-11-24T07:23:46.007Z",
+  "requestStartedAt": "2026-11-24T07:23:45.899Z",
+  "checkedAt": "2026-11-24T07:23:58.070Z",
+  "state": "ready",
+  "published": false,
+  "locked": false,
+  "preservedStaticPaths": 691,
+  "preservedFunctions": 60,
+  "totalFunctions": 61,
+  "schedules": 5,
+  "packageSha256": "8c226ea9fd3390292e4f2e63363c65bfefd96b03fdd0a2258891ca67770caa14",
+  "functionProviderRecord": {
+    "n": "arcade-bnb-run-review",
+    "d": "8c226ea9fd3390292e4f2e63363c65bfefd96b03fdd0a2258891ca67770caa14",
+    "dn": null,
+    "g": null,
+    "bd": {
+      "bootstrapVersion": "2.24.0",
+      "runtimeAPIVersion": 2
+    },
+    "ro": [
+      {
+        "p": "/api/arcade-bnb-test/run-review",
+        "l": "/api/arcade-bnb-test/run-review",
+        "e": null,
+        "m": [],
+        "ps": false
+      }
+    ],
+    "tr": {
+      "action": {
+        "type": "rate_limit",
+        "config": {
+          "rate_limit_config": {
+            "window_limit": 20,
+            "window_size": 60,
+            "algorithm": "sliding_window"
+          },
+          "aggregate": {
+            "keys": [
+              {
+                "type": "domain"
+              },
+              {
+                "type": "ip"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "id": "8e605b37b413b375cfa14e4b0439fc8ccb47ab084a5adcbc5218362c144fd292",
+    "a": "042287751506",
+    "c": "2026-11-24T07:23:50.619Z",
+    "im": "stream",
+    "m": 1024,
+    "obl": "netlify-observability-extension",
+    "oblv": 34,
+    "oid": "d9d6c8f0eb9d633a31cc83a92d3d38b076039ba22e3bd0e1710087de1c9ea9b7",
+    "r": "nodejs24.x",
+    "rg": "us-east-2",
+    "s": 645897
+  },
+  "endpoint": {
+    "disabled": [
+      {
+        "method": "GET",
+        "status": 503
+      },
+      {
+        "method": "POST",
+        "status": 503
+      }
+    ],
+    "existingAuth": {
+      "status": 403,
+      "error": "origin-denied"
+    },
+    "walletUsed": false
+  },
+  "productionUnchanged": true,
+  "migrationApplied": false,
+  "gameplayAuthorized": false
+}

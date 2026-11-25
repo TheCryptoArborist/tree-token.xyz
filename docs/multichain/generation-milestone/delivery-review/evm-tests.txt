@@ -1,0 +1,37 @@
+
+> nftree-bnb-generation@0.1.0 test
+> node --test test/pass.test.mjs
+
+This version of µWS is not compatible with your Node.js build:
+
+Error: Cannot find module '../binaries/uws_linux_x64_137.node'
+Require stack:
+- /workspace/tree-bnb-generation/contracts/bnb-generation/node_modules/ganache/node_modules/@trufflesuite/uws-js-unofficial/src/uws.js
+- /workspace/tree-bnb-generation/contracts/bnb-generation/node_modules/ganache/dist/node/core.js
+Falling back to a NodeJS implementation; performance may be degraded.
+
+
+✔ deployment rejects wrong chain, missing currency, six decimals, and wrong adapter binding (771.203536ms)
+✔ endpoint, peer, chain, GUID, wire and route authenticate every incoming reserve (1041.755926ms)
+✔ private 25 USDT sale; transfer invalidates old owner; only current owner can lock; no resale after lock (1382.922445ms)
+✔ false-return rolls back payment and mint (580.24842ms)
+✔ short transfer rolls back payment and mint (614.64097ms)
+✔ no return data cannot duplicate purchase (808.42792ms)
+✔ reentrant token cannot duplicate purchase (964.119946ms)
+✔ currency runtime changes after reserve fail closed (598.96282ms)
+✔ identical reserves never unlock or remint; later generation forbidden while ready, active or locked (2392.31027ms)
+✔ acknowledgement requires exact locked generation, request and recipient; duplicates are safe (1728.520138ms)
+✔ permissionless fixed-payload retry and retirement confirmation; pause cannot block exit (3336.511662ms)
+✔ endpoint failure, token fees and malformed receipt leave pass locked and retryable (1678.52766ms)
+✔ two complete generations: burned IDs stay burned; every stale message is rejected (3469.258513ms)
+✔ reusing GUID with a changed payload cannot apply a later reserve (1137.589347ms)
+✔ ERC721 receiver rejection rolls back treasury; callback cannot redeem during mint (1116.464421ms)
+✔ wire v3 matches Move golden vectors, including multi-byte generation endian order (2.232229ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 24836.081345

@@ -1,0 +1,19 @@
+✔ default boundary denies before touching delivery (1.998608ms)
+✔ approved policy binds prepare and first consumed activation (1.170908ms)
+✔ release change between prepare and activation blocks consumption (2.531303ms)
+✔ disable after consumption denies grant without pretending rollback (0.352543ms)
+✔ replay review result cannot become a new restore grant (0.453605ms)
+✔ unverified runtime denies preparation (0.173713ms)
+✔ wrong origin denies preparation (0.098518ms)
+✔ unknown checkpoint trust policy denies preparation (0.112039ms)
+✔ native run mismatch cannot be authorized (0.6822ms)
+✔ stale release observation cannot authorize (0.330589ms)
+✔ release change while preparing denies browser grant (0.369468ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 102.800393

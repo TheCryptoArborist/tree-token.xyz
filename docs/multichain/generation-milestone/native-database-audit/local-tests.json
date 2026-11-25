@@ -1,0 +1,22 @@
+{
+  "localOnly": true,
+  "passed": 16,
+  "checks": [
+    "reference matches exact pinned native SQL",
+    "actual catalog verifies native structure and seven absent proposed tables",
+    "PostgreSQL enforces read-only writes denial",
+    "column drift denied",
+    "constraint drift denied",
+    "index drift denied",
+    "RLS drift denied",
+    "PG18 redundant NOT NULL catalog entry matches checked column",
+    "NOT NULL on nullable column is not normalized away",
+    "unknown NOT NULL constraint is rejected",
+    "unvalidated NOT NULL is rejected",
+    "unenforced NOT NULL is rejected",
+    "read-only mode must be independently observed",
+    "wrong provider path and database identity denied",
+    "catalog failure always rolls back",
+    "environment listing and unrelated binding paths are denied"
+  ]
+}

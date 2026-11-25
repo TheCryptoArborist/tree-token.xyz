@@ -1,0 +1,6 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {verifyConfiguredBnb} from '../../contracts/nftree-generation/scripts/binding-bnb.mjs';
+import reads from '../../docs/multichain/generation-milestone/bnb-configuration-completed/verified/rpc-reads.json' with {type:'json'};
+const fixture=mutate=>async(_,options)=>{const q=JSON.parse(options.body);let row=reads.find(x=>x.method===q.method&&(['eth_getCode','eth_call'].includes(q.method)?JSON.stringify(x.params[0])===JSON.stringify(q.params[0]):JSON.stringify(x.params)===JSON.stringify(q.params)));if(q.method==='eth_blockNumber')row={result:reads.find(x=>x.method==='eth_blockNumber').result};assert(row,'Unexpected RPC '+q.method);let result=structuredClone(row.result);if(mutate)result=mutate(q,result);return Response.json({jsonrpc:'2.0',id:q.id,result});};
+test('rechecks completed receipts and current settings without writes',async()=>assert((await verifyConfiguredBnb(fixture())).complete));
+for(const method of ['eth_chainId','eth_getCode','eth_call','eth_getTransactionReceipt','eth_getTransactionByHash','eth_getBlockByNumber'])test('reject changed '+method,async()=>{await assert.rejects(verifyConfiguredBnb(fixture((q,r)=>q.method===method?(typeof r==='string'?'0x00':{...r,hash:'0x00',status:'0x0'}):r)));});

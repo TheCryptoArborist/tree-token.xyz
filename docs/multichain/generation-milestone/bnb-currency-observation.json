@@ -1,0 +1,11 @@
+{
+  "observedAt": "2026-11-22T01:42:26.163796+00:00",
+  "chainId": 56,
+  "block": "0x80bd465",
+  "blockHash": "0x4b4903fecfdb78c002cf106947e937515510e3fa98630062a92edea97e36ec08",
+  "blockTimestamp": "0x6b02487f",
+  "address": "0x55d398326f99059fF775485246999027B3197955",
+  "decimals": 18,
+  "runtimeBytes": 4413,
+  "purpose": "Read-only finalized-block currency identity observation. Reverify before deployment; no payment or signature."
+}
