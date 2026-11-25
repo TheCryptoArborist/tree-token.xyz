@@ -32,8 +32,8 @@ const same = (actual, expected, label) => check(canonical(actual) === canonical(
 const pick = (object, keys) => Object.fromEntries(keys.filter(key => Object.hasOwn(object, key)).map(key => [key, object[key]]));
 
 export function validateFunctions(functions) {
-  check(Array.isArray(functions) && functions.length === 61, 'Expected all 61 function records.');
-  check(new Set(functions.map(fn => fn.n)).size === 61, 'Duplicate function names.');
+  check(Array.isArray(functions) && functions.length === 62, 'Expected all 62 function records.');
+  check(new Set(functions.map(fn => fn.n)).size === 62, 'Duplicate function names.');
   for (const fn of functions) {
     check(typeof fn.n === 'string' && /^[a-z0-9-]+$/.test(fn.n), 'Invalid function name.');
     check(typeof fn.d === 'string' && /^[a-f0-9]{64}$/.test(fn.d), 'Missing function package SHA256.');

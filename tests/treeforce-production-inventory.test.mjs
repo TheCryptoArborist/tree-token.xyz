@@ -9,7 +9,7 @@ import {
 } from '../scripts/treeforce-local/capture-production-inventory.mjs';
 
 const ID = '6ae8112dce29c5db8b725ff0';
-const functions = Array.from({ length: 61 }, (_, index) => ({
+const functions = Array.from({ length: 62 }, (_, index) => ({
   n: 'test-' + index, d: 'a'.repeat(64), id: 'provider-' + index, oid: 'object-' + index,
   a: 'account-' + index, c: 'created', r: 'nodejs22.x', rg: 'us-east-2', m: 1024, im: 'stream', s: 100,
   bd: { bootstrapVersion: '2.24.0' }, ro: [{ p: '/api/test-' + index, m: [] }],
@@ -44,7 +44,7 @@ function fakeApi(transform = () => {}) {
   return api;
 }
 
-test('fresh capture and exact read-back validate all 61 full records and five schedules', async () => {
+test('fresh capture and exact read-back validate all 62 full records and five schedules', async () => {
   const a = await captureCurrent(fakeApi(), ID);
   assertPreserved(await captureCurrent(fakeApi(), ID), a);
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'tree-preservation-'));
@@ -71,8 +71,8 @@ for (const field of ['d', 'id', 'oid', 'a', 'c', 'r', 'rg', 'm', 'im', 'bd', 'ro
 test('rejects missing fields, additions, removals, and duplicate functions', () => {
   const missing = clone(functions); delete missing[0].oid;
   assert.throws(() => validateFunctions(missing), /Incomplete/);
-  assert.throws(() => validateFunctions(functions.slice(1)), /61/);
-  assert.throws(() => validateFunctions([...functions, functions[0]]), /61/);
+  assert.throws(() => validateFunctions(functions.slice(1)), /62/);
+  assert.throws(() => validateFunctions([...functions, functions[0]]), /62/);
   assert.throws(() => validateFunctions([...functions.slice(1), functions[1]]), /Duplicate/);
 });
 
