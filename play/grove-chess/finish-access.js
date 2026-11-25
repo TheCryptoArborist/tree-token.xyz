@@ -16,7 +16,7 @@ export function createFinishAccess({view=window,loadBridge=()=>import('/assets/a
  const current=()=>{try {const w=bridge?.getWalletState();return w?.connected?address(w.address):null;}catch{return null;}};
  const emit=()=>{if(!destroyed)onChange(state);};
  function clear(message,busy=false){serial++;view.clearTimeout(timer);state={wallet:current(),rarities:new Set(),expiresAt:0,busy,message};emit();}
- async function getBridge(){if(!bridgePromise)bridgePromise=loadBridge().then(b=>{bridge=b;unsub=b.subscribeWalletState?.(()=>{clear('Wallet changed. Checking your NFTrees…',true);void refresh();});return b;}).catch(e=>{bridgePromise=null;throw e;});return bridgePromise;}
+ async function getBridge(){if(!bridgePromise)bridgePromise=loadBridge().then(b=>{bridge=b;let observed=current();unsub=b.subscribeWalletState?.(()=>{const next=current();if(next===observed)return;observed=next;clear('Wallet changed. Checking your NFTrees…',true);void refresh();});return b;}).catch(e=>{bridgePromise=null;throw e;});return bridgePromise;}
  function allowed(id){return id==='gold'||Boolean(FINISHES.some(f=>f.id===id)&&state.expiresAt>now()&&current()===state.wallet&&state.wallet&&state.rarities.has(id));}
  async function refresh({restore=false}={}) {
   clear('Checking NFTree finishes…',true);const ticket=serial;
