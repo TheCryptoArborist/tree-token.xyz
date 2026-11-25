@@ -1,0 +1,39 @@
+{
+  "candidateId": "6b067851aece2f26cdeff93a",
+  "sourceCommit": "5fade9d905fe53e89f36f10b097ef052e74ca174",
+  "origin": "https://6b067851aece2f26cdeff93a--tree-token.netlify.app",
+  "checkedAt": "2026-11-25T06:01:10.603217+00:00",
+  "validated": true,
+  "viewportWidths": [
+    375,
+    1348
+  ],
+  "checks": {
+    "portraitFullVisible": true,
+    "fitFillZoom": true,
+    "mobileLayout": true,
+    "profilePng": true,
+    "frameOnlyPng": true
+  },
+  "exports": {
+    "profile": {
+      "width": 1024,
+      "height": 1024,
+      "sha256": "937df6ea39c49fc706ea477067f606906d87f60200abcdcb3f45bd977b2f7360",
+      "matchesReviewedPreviewExport": true
+    },
+    "frame": {
+      "width": 1024,
+      "height": 1024,
+      "sha256": "773405c063dc9e730b761679e6c54c59c4399359427f2617c02cf5fd3ca562b5",
+      "matchesReviewedPreviewExport": true
+    }
+  },
+  "notes": [
+    "Original 320x320 portrait tested in the immutable candidate with Leafy Canopy and Tree Hero.",
+    "Fit full photo shows full hair and chin; Fill circle sets 100%; Zoom can shrink to 10%.",
+    "Candidate phone layout inspected in a 390px-wide iframe (375px content area); no horizontal overflow.",
+    "The exact same source was also exercised with the portrait and dragging at phone width in the local preview. Cross-origin iframe file chooser automation did not return an event; candidate portrait upload and both exports were verified in the top-level candidate tab.",
+    "Physical iPhone pinch gestures were not tested. Existing wallet and backend source are unchanged."
+  ]
+}
