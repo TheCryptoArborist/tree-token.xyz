@@ -1,0 +1,30 @@
+{
+  "origin": "https://6b06687527d719b675652622--tree-token.netlify.app",
+  "results": [
+    {
+      "width": 390,
+      "cabinetCountdown": true,
+      "seasonTransition": true,
+      "seasonEndedHidden": true,
+      "mainR18": true,
+      "walletGate": true,
+      "pricingPreserved": true,
+      "gameFestiveCopy": true,
+      "holidaySelection": true,
+      "errors": []
+    },
+    {
+      "width": 1000,
+      "cabinetCountdown": true,
+      "seasonTransition": true,
+      "seasonEndedHidden": true,
+      "mainR18": true,
+      "walletGate": true,
+      "pricingPreserved": true,
+      "gameFestiveCopy": true,
+      "holidaySelection": true,
+      "errors": []
+    }
+  ],
+  "payment": false
+}

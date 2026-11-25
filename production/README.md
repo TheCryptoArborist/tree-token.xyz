@@ -1,3 +1,9 @@
+# Tree Force festive emoji accents — published November 24, 2026
+
+Locked deploy `6b06687527d719b675652622`: 757 paths, 61 backend records, five schedules. Only the shared festive message module changed (961-byte upload). Main game and cabinet share the emoji text. [Evidence](../docs/treeforce89-emoji-publication.md). Capture fresh inventory before later publication.
+
+---
+
 # Tree Force main game and festive cabinet — published November 24, 2026
 
 Main: https://tree-token.xyz/play/treeforce89/ · Arcade: https://tree-token.xyz/play/

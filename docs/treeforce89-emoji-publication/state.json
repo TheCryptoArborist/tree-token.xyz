@@ -1,0 +1,22 @@
+{
+  "id": "6b06687527d719b675652622",
+  "baseline": "6b06668752cda878be6a57e9",
+  "url": "https://tree-token.xyz/play/treeforce89/",
+  "published": true,
+  "locked": true,
+  "existingPathsPreserved": 756,
+  "addedPaths": 0,
+  "changedExistingPaths": 1,
+  "totalPaths": 757,
+  "backendRecords": 61,
+  "schedules": 5,
+  "uploads": [
+    {
+      "path": "/scripts/treeforce-season-r18.mjs",
+      "bytes": 961
+    }
+  ],
+  "planSha256": "5e348aeae207e48b80d8f97e758326741f8bfc9c5f012a6b481fb6febe619d1f",
+  "checkedAt": "2026-11-25T04:48:30.989Z",
+  "slushWarningClearance": "Owner verification pending"
+}
