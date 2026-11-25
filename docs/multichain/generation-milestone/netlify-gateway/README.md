@@ -1,5 +1,7 @@
 # Netlify schema and gateway boundary rehearsal
 
+Latest: [assembled BNB review mount](bnb-review-mount.md).
+
 Latest: [authenticated context and wallet adapters](bnb-context-wallets.md).
 
 Latest: [wallet-link and checkout review UI](bnb-review-ui.md).

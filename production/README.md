@@ -1,3 +1,15 @@
+# Assembled BNB checkout review mount — November 25, 2026
+
+A source-only mount now joins session transport, selected-wallet adapters,
+authenticated context and review controls. Navigation during loading/signing
+removes subscriptions and blocks late mounting, preserving the host checkout.
+Local checks passed: 35 unit tests and six assembled Chromium checks with injected
+wallet/server responses. No live frontend, game, payment or NFT change occurred.
+Evidence and remaining native-entry-point integration:
+`docs/multichain/generation-milestone/netlify-gateway/bnb-review-mount.md`.
+
+---
+
 # BNB authenticated context and wallet adapters — November 25, 2026
 
 Undeployed context/assembly code now binds the review controller to authenticated
