@@ -1,3 +1,22 @@
+# Grove Chess mobile controls — published November 25, 2026
+
+Game controls above the mobile board opens a dialog containing the existing mode,
+difficulty, new game and online match controls, with a direct wallet/sets action.
+Back to board and Escape close it without changing the board scroll position.
+Desktop controls retain their locations. Trial and wallet behavior is unchanged.
+
+Locked ready deploy `6b071727d9ec8726a27af725`, source
+`d1dccacf237b1bd3bf45c7ff9fc553027a0341c1` (PR #346).
+[Publication run 45661076512](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45661076512)
+passed local, candidate and canonical four-viewport checks and three-phone fit /
+scroll checks. Mobile coverage includes mode/difficulty choices, new-game cancel,
+Escape, online control reachability, wallet round trip, and AI/local moves.
+Total 789 static paths; 786 unrelated paths, all 62 backend/provider records and
+five schedules preserved. No Telegram send or real wallet approval occurred.
+Full report: [grove-chess-mobile-controls-release-20261125.json](grove-chess-mobile-controls-release-20261125.json).
+
+---
+
 # Grove Chess Arcade header — published November 25, 2026
 
 Grove Chess now matches the Arcade home header: THICKQUIDITY / TREE on Sui,
