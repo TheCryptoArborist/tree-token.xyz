@@ -1,3 +1,45 @@
+# Grove Chess online multiplayer and Telegram invitations — published November 25, 2026
+
+[Grove Chess](https://tree-token.xyz/play/grove-chess/) now supports computer,
+local two-player and online two-player games. Online rooms provide fixed seats,
+server-validated moves, reconnect, read-only spectating and resignation. Two
+browser trials are shared across modes; continued play requires a signed Arcade
+session and server-verified NFTree ownership. Waiting invitations do not consume
+a game. Existing rarity finishes remain available.
+
+**Find an opponent · Telegram** explicitly announces the waiting match through
+@NFTreeHolderBot in https://t.me/cryptoarborist/115319, with the exact cabinet cover
+and a direct join button. Private matches do not notify. The bot remains hosted
+by the existing Garden Battles Railway service, using its existing credential.
+Invitations expire in 15 minutes; matches expire after 24 hours without a move.
+
+Locked Netlify deploy `6b06863254e602a4bde6395d` published at **00:55:36
+America/Chicago**, source `fc91fbbe2a98180bd318eb5fcca8269d356aaafc` (PR #328).
+Run `45563712322` passed candidate and canonical checks. Fresh baseline
+`6b067ef9d3a45ad909958ce7` includes movable Profile Studio badges. All **776
+unrelated static paths**, **61 complete existing backend/provider records**, **5
+schedules**, runtime settings, protected environment and snippets were preserved.
+Total **780 static paths**, **62 functions**; only the isolated `grove-chess`
+function was added. Service-only room migration `20261125064318` has RLS enabled
+and no direct anonymous/authenticated table access.
+
+The companion Garden Battles PR #10 deployed successfully on Railway as
+`298ebea6-9b1c-4c1f-a2ee-e70ba099157e`, source
+`bda9bd5326c66a9b43bce8f3cbee160550738758`; runtime logs verified the bot username.
+All 42 notifier regression tests passed. Live private-browser checks passed for
+moves, two seats, reconnect, one-time trial debit, spectating and resignation.
+No live Telegram test notifications were sent. Wallet signing/ownership scenarios
+used test fixtures; no user's wallet was signed during validation.
+
+Record/full manifest: `production/grove-chess-online-release-20261125.json`.
+Release artifact #14998819332 SHA256:
+`c7f57f7ad0c7ecb219c766be3bed1b6918e03f2035bf124797202d8af5b9096c`.
+The manifest combines the recorded 779-path baseline with the exact verified
+release overlays; the publisher independently compared the full live inventory.
+Capture a new current baseline before subsequent releases.
+
+---
+
 # Profile Studio movable badges — published November 25, 2026
 
 [Profile Studio](https://tree-token.xyz/play/profile-studio/) lets users drag the
