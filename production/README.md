@@ -1,3 +1,30 @@
+# Grove Chess move instructions — published November 25, 2026
+
+[Grove Chess](https://tree-token.xyz/play/grove-chess/) now shows persistent
+instructions above the board on phones and desktop: tap or click a piece, then
+a highlighted square to move; no dragging is needed. Desktop also displays
+keyboard guidance. How to play explicitly explains taps and clicks. Short-phone
+board sizing keeps the instructions, board and move controls in view.
+
+Locked ready deploy `6b06fcd2dc679f4899d86f5d`, source
+`8e0c93e60457690e9bc471a3fffb7a890648ac1c` (PR #337).
+[Publication run 45643650260](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45643650260) passed, including canonical checks.
+Fresh baseline `6b06f9ffcbcab3a8de97d4d4`; **789 static paths**,
+**787 unrelated paths preserved**, all **62 backend/provider records** and
+**5 schedules** preserved. Only chess HTML and CSS changed.
+
+Candidate and canonical four-viewport game/cabinet checks passed, as did the
+three-phone instruction visibility, board/control fit and scroll stability checks.
+The checks use browser-emulated phones, not a physical iPhone in-app browser.
+
+Full report, static manifest and canonical mobile results:
+`production/grove-chess-instructions-release-20261125.json`.
+Publication artifact #15036992730 SHA256:
+`6c97ff70d94a5613120fb4bf674201b994d11406fc66ef491044c54164ead859`.
+Capture a fresh full live baseline before every subsequent release.
+
+---
+
 # Grove Chess mobile board — published November 25, 2026
 
 [Grove Chess](https://tree-token.xyz/play/grove-chess/) puts the complete board
