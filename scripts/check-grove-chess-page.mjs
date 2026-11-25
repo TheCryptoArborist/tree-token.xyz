@@ -19,6 +19,10 @@ try{for(const [width,height]of [[1440,1000],[390,844],[320,740],[844,390]]){
  assert(Math.abs(board.width-board.height)<2,'Board must be square');
  assert(board.x>=frame.x&&board.x+board.width<=frame.x+frame.width,'Board must fit frame');
  assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'No page overflow');
+ assert.equal(await page.locator('#play-access-heading').textContent(),'Start your free game here');
+ assert.equal(await page.locator('#play-access-play').textContent(),'Start free game');
+ assert.equal(await page.locator('#new').textContent(),'Start new game');
+ await page.click('#play-access-play');assert.equal(await page.evaluate(()=>localStorage.getItem('grove-chess:trial:v1')),null,'Main play button does not spend a trial');
  await page.click('#browse-finishes');await page.selectOption('#finish-wallets','slush');
  assert.equal(await page.locator('#finish-connect').textContent(),'Connect Slush');assert(await page.locator('#finish-connect').isEnabled());
  assert.equal(await page.locator('#finish-connection-label').textContent(),'Wallet not connected');
@@ -51,7 +55,8 @@ try{for(const [width,height]of [[1440,1000],[390,844],[320,740],[844,390]]){
  await page.screenshot({path:`.netlify/grove-chess-trial-gate-${width}.png`});await page.click('#access-close');
  await page.reload({waitUntil:'networkidle'});await page.locator('[data-square="e2"]').click();
  assert(await page.locator('#access-dialog').evaluate(e=>e.open),'Direct route reload cannot reset trial');await page.click('#access-close');
- await page.click('#browse-finishes');assert(await page.locator('#finish-play').isDisabled(),'No free-play promise after two games');await page.click('#close-finishes');
+ assert.equal(await page.locator('#play-access-heading').textContent(),'Unlock access to keep playing');assert.equal(await page.locator('#play-access-play').textContent(),'Connect wallet to unlock access');
+ await page.click('#play-access-play');assert(await page.locator('#finish-dialog').evaluate(e=>e.open));assert(await page.locator('#finish-play').isDisabled(),'No free-play promise after two games');await page.click('#close-finishes');
  assert.deepEqual(errors,[],'Game browser errors');
  if(process.env.GROVE_CHESS_CABINET_FIXTURE==='1'){
   await page.route(base+'/play/',route=>route.fulfill({contentType:'text/html',body:fs.readFileSync('production/arcade-organization-static/index.html','utf8').replace(/<script\b[^>]*>[\s\S]*?<\/script>/g,tag=>/src="\/scripts\/arcade-(organization|navigation-play-share)\.js"/.test(tag)?tag:'')}));
@@ -71,6 +76,7 @@ try{for(const [width,height]of [[1440,1000],[390,844],[320,740],[844,390]]){
   await page.route('**/scripts/profile-studio-access-v4.js',r=>r.fulfill({contentType:'text/javascript',body:`export async function readHeldNFTrees(){return ['common','rare','epic','legendary','mythic','one-of-one'].map(rarity=>({rarity}));}`}));
   await page.reload({waitUntil:'networkidle'});await page.click('#browse-finishes');
   await page.waitForFunction(()=>document.querySelectorAll('[data-apply]:disabled').length===0);
+  assert.equal(await page.locator('#play-access-heading').textContent(),'You’re ready to play');assert.equal(await page.locator('#play-access-play').textContent(),'Play chess — start here');
   assert.equal(await page.locator('#finish-connection-label').textContent(),'Slush connected');assert((await page.locator('#finish-connection-address').textContent()).includes('0xaaaaaa'));
   assert.equal(await page.locator('#finish-play').textContent(),'Play chess');assert(await page.locator('#finish-play').isEnabled());
   await page.screenshot({path:'.netlify/grove-chess-connected-play.png'});

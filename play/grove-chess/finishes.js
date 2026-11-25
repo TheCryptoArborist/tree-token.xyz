@@ -26,7 +26,7 @@ function draw(){
 $('#board').onAccessUpdate=draw;onHolderChange(draw);draw();
 $('#browse-finishes').onclick=async()=>{dialog.showModal();draw();try{const wallets=await access.wallets();const select=$('#finish-wallets');select.replaceChildren(new Option(wallets.length?'Choose a wallet':'No supported wallet found',''));for(const w of wallets)select.add(new Option(w.name,w.id));const connection=access.connection();if(connection){const match=wallets.find(w=>w.id===connection.id||w.name===connection.name);if(match)select.value=match.id;}draw();}catch{$('#finish-access-status').textContent='Wallet connection is unavailable. You can browse every finish below.';}void access.refresh({restore:true});};
 $('#finish-wallets').onchange=()=>draw();
-$('#finish-play').onclick=()=>{if(!$('#board').playEntry?.().allowed){draw();return;}dialog.close();$('.play-area').scrollIntoView({block:'start',behavior:'smooth'});};
+$('#finish-play').onclick=()=>{if(!$('#board').playEntry?.().allowed){draw();return;}dialog.close();$('#board').enterPlay();};
 $('#close-finishes').onclick=()=>dialog.close();$('#finish-side').onchange=e=>{side=e.target.value;draw();};
 $('#finish-connect').onclick=async()=>{const id=$('#finish-wallets').value;if(!id){$('#finish-access-status').textContent='Choose an installed Sui wallet first.';return;}$('#finish-connect').disabled=true;try{await access.connect(id);}finally{draw();}};
 $('#finish-refresh').onclick=()=>{void access.refresh({restore:true});};
