@@ -29,3 +29,19 @@ body:not([data-finish-w="gold"]) .side-w .hero-base,body:not([data-finish-b="gol
 /* Separate starting play from wallet/set management in the main access panel. */
 .play-access-actions{display:flex;flex-direction:column;gap:8px;flex:0 1 260px;min-width:0}.play-access-banner .play-access-actions button{white-space:normal;line-height:1.45;text-align:center}.play-access-banner #play-access-play{margin:0;background:#35e895;color:#052718;border-color:#35e895;font-size:13px;padding:12px 16px}.play-access-banner #play-access-play:disabled{background:#294b38;color:#bdcfc1;cursor:default}.play-access-banner #play-access-connect{font-size:11px;padding:8px 12px}
 @media(max-width:670px){.play-access-actions{flex:auto;width:100%}}
+
+/* Team identity stays high contrast across every collectible finish. */
+#board .side-w,#board .side-b{border-radius:38% 38% 18% 18%;border:2px solid;box-sizing:border-box}
+#board .side-w{background:linear-gradient(#fffef2,#f5e3b3);border-color:#fffef6;box-shadow:0 1px 3px #13261be6}
+#board .side-b{background:linear-gradient(#123f38,#031b18);border-color:#075349;box-shadow:0 0 0 1px #93d5bf,0 2px 3px #0009}
+#board .side-w img,#board .side-w .court-art{filter:brightness(1.12) drop-shadow(0 1px 1px #493516)}
+#board .side-b img,#board .side-b .court-art{filter:brightness(.7) saturate(.8) drop-shadow(0 1px 1px #000)}
+#board .side-w .hero-base{background:#fff9e4;color:#092b22;border-color:#fff;box-shadow:0 0 0 1px #805e28}
+#board .side-b .hero-base{background:#031b18;color:#d9fff0;border-color:#58ad91;box-shadow:0 0 0 1px #031b18}
+/* Departure is dashed; arrival is solid. Both remain until the next move. */
+#board .square.last-from{background:#d8b65a;outline:3px dashed #533910;outline-offset:-4px}
+#board .square.last-to{background:#f8d864;outline:3px solid #664305;outline-offset:-4px}
+#board .square.last-to::before{content:'↘';position:absolute;left:2px;top:1px;z-index:4;font-size:14px;font-weight:900;color:#251a04;pointer-events:none}
+#board .square.selected{outline:3px solid #fff;outline-offset:-4px;background:#93d5bf}
+#board .square:focus-visible{outline:3px solid #fff;outline-offset:-3px}
+@media(max-width:670px){#board .side-w,#board .side-b{border-width:1px}#board .square.last-to::before{font-size:11px}}
