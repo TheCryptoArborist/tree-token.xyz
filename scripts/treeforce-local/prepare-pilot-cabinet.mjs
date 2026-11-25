@@ -12,10 +12,11 @@ const modules=['index-review','arcade-review','graphql-review','holiday-mode','s
 for(const name of modules){let s=fs.readFileSync(source+base+'assets/'+name+'-r18.js','utf8');
  for(const dep of modules)s=s.replaceAll(dep+'-r18.js',dep+'-r19.js');
  if(name==='index-review'){
- s=once(s,'children:`Top 50 pilots · best score per wallet`','children:(0,S.jsxs)(`div`,{className:`pilot-hall-title`,children:[(0,S.jsx)(`span`,{className:`pilot-hall-brand`,children:`TREE FORCE ’89`}),(0,S.jsx)(`span`,{className:`pilot-hall-kicker`,children:`CANOPY HALL OF FAME`}),(0,S.jsx)(`strong`,{children:`TOP 10 PILOTS`}),(0,S.jsx)(`span`,{className:`pilot-hall-rule`,children:`Best score per wallet`})]})');
+ s=once(s,'children:`Top 50 pilots · best score per wallet`','children:(0,S.jsxs)(`div`,{className:`pilot-hall-title`,children:[(0,S.jsx)(`img`,{className:`pilot-hall-logo`,src:`/assets/tree-force-89-logo-black.webp`,alt:`TREE FORCE ’89: Canopy Command`,width:1280,height:1280,decoding:`async`}),(0,S.jsx)(`span`,{className:`pilot-hall-kicker`,children:`CANOPY HALL OF FAME`}),(0,S.jsx)(`strong`,{children:`TOP 10 PILOTS`}),(0,S.jsx)(`span`,{className:`pilot-hall-rule`,children:`Best score per wallet`})]})');
  s=once(s,'children:r.map((e,t)=>(0,S.jsxs)(`tr`,{children:','children:r.slice(0,10).map((e,t)=>(0,S.jsxs)(`tr`,{className:`pilot-rank pilot-rank-${t+1}`,children:');
  s=once(s,'children:t<3?[`🥇`,`🥈`,`🥉`][t]:t+1','children:(0,S.jsx)(`span`,{className:`pilot-rank-number`,children:t+1})');
  s=once(s,'scope:`row`,children:e.username','scope:`row`,children:[(0,S.jsx)(`span`,{className:`pilot-display-name`,children:e.username}),t<3&&(0,S.jsx)(`small`,{className:`pilot-rank-title`,children:[`CANOPY CHAMPION`,`ELITE WING`,`ACE PILOT`][t]})]');
+ s=once(s,']},t))})]})}),!r.length',']},t))}),(0,S.jsx)(`tfoot`,{children:(0,S.jsx)(`tr`,{children:(0,S.jsx)(`td`,{colSpan:4,children:(0,S.jsx)(`a`,{className:`pilot-hall-link`,href:`https://tree-token.xyz/play/`,children:`tree-token.xyz/play/`})})})})]})}),!r.length');
  s=once(s,'children:mh.map(([e,t,n,,,r])=>','children:mh.map(([e,t,n,,,r],badgeIndex)=>');
  s=once(s,'className:`pilot-medal`,"aria-hidden":`true`,children:r','className:`pilot-medal`,"aria-hidden":`true`,style:{backgroundPosition:`${(badgeIndex%4)*100/3}% ${Math.floor(badgeIndex/4)*100/3}%`}');
  }

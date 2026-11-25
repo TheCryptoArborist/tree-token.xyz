@@ -17,6 +17,9 @@ try{for(const width of [320,390,1000]){
  return r.continue();});
  await p.goto(origin+'/play/treeforce89/',{waitUntil:'networkidle'});
  const board=p.locator('.pilot-board');await board.locator(':scope > summary').click();
+ assert.equal(await board.locator('.pilot-hall-logo').getAttribute('alt'),'TREE FORCE ’89: Canopy Command');
+ assert.equal(await board.locator('.pilot-hall-link').getAttribute('href'),'https://tree-token.xyz/play/');
+ await p.waitForFunction(()=>document.querySelector('.pilot-hall-logo')?.naturalWidth>0);
  const rows=board.locator('tbody tr');await rows.nth(9).waitFor();assert.equal(await rows.count(),10);
  assert.equal(await rows.nth(0).locator('th').innerText(),'ArborwingAce\nCANOPY CHAMPION');
  assert.equal(await rows.nth(4).locator('th').textContent(),'<img src=x onerror=1>');assert.equal(await board.locator('tbody img').count(),0);

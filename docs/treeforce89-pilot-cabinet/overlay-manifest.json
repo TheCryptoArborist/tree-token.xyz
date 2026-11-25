@@ -3,8 +3,8 @@
   "source": "production/treeforce-main-r18",
   "files": {
     "/play/treeforce89/assets/index-review-r19.js": {
-      "bytes": 653514,
-      "sha256": "3d03c11abe6b5de83471fffde5227ed81361e35338d7375fcfff331381b3723d"
+      "bytes": 653814,
+      "sha256": "a7705718e61fef6c16f2e2a643d1296d560908c1cb49988b56cacd0cafc7128c"
     },
     "/play/treeforce89/assets/arcade-review-r19.js": {
       "bytes": 1295783,
@@ -31,8 +31,8 @@
       "sha256": "d7a5b22c9bfd57db08ab578a73d8902c85fbd2b35850cdbabe0242553fcff299"
     },
     "/play/treeforce89/pilot-cabinet-r19.css": {
-      "bytes": 9250,
-      "sha256": "b699ead250b677a5ee25ebe02a6c764716d557e067923a98b4fc7aaac4de6f73"
+      "bytes": 9775,
+      "sha256": "1ba3ec7ee6839dd254beb706e99049148b66161f7e3be72a6761210b2eb44d92"
     },
     "/assets/treeforce-achievements/canopy-medals-r19.webp": {
       "bytes": 395134,

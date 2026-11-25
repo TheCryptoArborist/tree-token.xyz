@@ -1,0 +1,23 @@
+{
+  "mode": "capture",
+  "result": "passed",
+  "checkedAt": "2026-11-25T21:14:36.930Z",
+  "deployId": "6b07390bd4c3075b43e2c541",
+  "baselineSha256": "ab4f4a9c998636fc73d0ae2c050a1f718f58efc8ef725b0dbc219d767a6eea30",
+  "functions": 62,
+  "schedules": 5,
+  "staticFiles": 804,
+  "completeFunctionRecordsMatch": true,
+  "runtimeMatch": true,
+  "environmentRecordsMatch": true,
+  "siteFunctionEnvironmentEntries": 54,
+  "locked": true,
+  "remoteMethods": [
+    "GET"
+  ],
+  "productionChanged": false,
+  "limitations": [
+    "API-visible records and value IDs only; masked secret bytes are not readable",
+    "Deploy-specific overrides are not exposed by these GET endpoints"
+  ]
+}

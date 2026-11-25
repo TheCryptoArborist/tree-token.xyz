@@ -1,0 +1,10 @@
+/* Desktop presentation only. Preserve the 480×720 game world and all mobile rules. */
+@media(min-width:1000px) and (min-height:651px){
+ .site-shell{padding:8px;align-items:start}
+ .game-frame{width:min(calc(100vw - 32px),860px,calc((100svh - 130px - var(--player-status-height))*2/3));margin-inline:auto}
+ .game-header{height:30px;padding-inline:12px}
+ .game-navigation{min-height:40px;padding:3px 12px}
+ .game-controls{height:30px}
+ .game-viewport{aspect-ratio:2/3;height:auto;max-height:none}
+ .game-frame .pilot-board{margin-top:10px}
+}

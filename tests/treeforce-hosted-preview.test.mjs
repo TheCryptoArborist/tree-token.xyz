@@ -6,18 +6,12 @@ import {
   validateRequired,
   main,
 } from "../scripts/treeforce-local/host-preserved-preview.mjs";
-const c = JSON.parse(
-  fs.readFileSync(
-    new URL(
-      "../docs/treeforce89-preserved-candidate-20261124/candidate.json",
-      import.meta.url,
-    ),
-  ),
-);
+const approved=JSON.parse(fs.readFileSync(new URL('../production/treeforce-pilot-r19/candidate.json',import.meta.url)));
+const c={...approved.baseline,baseline:approved.baseline,files:approved.files,payload:Object.entries(approved.payload).map(([path,f])=>({path,...f})),publicationAuthorized:false,published:false};
 test("candidate creation retains complete digest inventory and backend configuration", () => {
   const r = candidateRequest(c);
   assert.deepEqual(r.files, c.files);
-  assert.equal(Object.keys(r.functions).length, 61);
+  assert.equal(Object.keys(r.functions).length, 62);
   assert.deepEqual(r.function_schedules, c.schedules);
   assert.equal(r.branch, c.runtime.branch);
   assert.equal(r.draft, false);

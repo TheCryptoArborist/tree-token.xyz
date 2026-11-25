@@ -46,3 +46,11 @@ The desktop-only stylesheet removes the old 530px cap and reduces framing overhe
 Files: `styles/treeforce-desktop.css`, `tests/treeforce-desktop-browser.cjs`. Evidence: `desktop-checks.json`, `desktop-1440.png`, `desktop-1920.png`, `wallet-regressions-desktop.json`, and `overlay-manifest.json` alongside the cabinet evidence. Physical monitors/phones and slow-network timing are not measured by these browser checks.
 
 Release status: local implementation and explicit frontend overlay prepared; no production deployment has been made. Next release operation must capture and compare the current live baseline and merge only the manifest-listed changes through the existing full-inventory preservation workflow. The historical deploy ID recorded above is not permission to overwrite newer Arcade/multichain work.
+
+## Final branding and fresh release baseline
+
+Added the existing official Tree Hero / Tree Force ’89 logo in the leaderboard header and a canonical Arcade address link in its footer. Existing receipt-based saved-run sharing is untouched. The logo is reused from production, so it is not a new upload.
+
+Read-only audit run 45702450542 captured current locked deploy `6b07390bd4c3075b43e2c541`: **804 static paths, 62 full backend records, five schedules**. The additional `grove-chess` backend was independently confirmed through the Netlify connector before changing the old exact-count guard. The first read-only audit stopped at that guard; it made no deployment. The fresh baseline retains the current Profile Studio release and all other Arcade work.
+
+Frozen release payload: `production/treeforce-pilot-r19`. Fourteen payload files change only the main Tree Force HTML and add thirteen paths, producing 817 total paths. All five deployed r18 source module hashes match the source used for the visual patch. The HTML patch is applied to the newly captured current entry, preserving its other bytes. All 38 release/backend preservation guards pass. Workflow `.github/workflows/treeforce-pilot-cabinet.yml` rechecks the current inventory before creating a deploy, blocks backend uploads and unknown paths, checks exact served bytes and browser rendering before publication, waits for queued builds, and verifies the complete inventory afterward.
