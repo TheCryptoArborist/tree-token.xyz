@@ -1,3 +1,38 @@
+# Profile Studio curved ribbons — published November 25, 2026
+
+All six ribbons now follow the circular frame with curved lettering, gold trim,
+folded tails and a green/gold circuit leaf at each end. Along top and Along bottom
+presets align the arc with the frame; bottom text stays upright. Independent
+ribbon dragging, size, position and reset remain available.
+
+Locked ready deploy `6b07390bd4c3075b43e2c541`, published
+`2026-11-25T19:46:33.744Z`, source
+`d74643549e9c31c30e91fc1983a44ed9ca09a320`.
+The implementation is recorded in PR #332; PR #353 refreshed its baseline after
+other site releases. [Publication run 45688316283](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45688316283)
+passed and canonical Profile Studio was visually checked after publication.
+
+Only the existing Profile Studio HTML changed; three versioned assets were added.
+All 800 unrelated existing static paths, all 62 complete function/provider/runtime
+records, all five schedules and protected configuration were preserved.
+Total: **804 static paths, 62 functions and five schedules**.
+
+Validation covered all six ribbon selections, curved top/bottom lettering,
+dragging, slider limits, reset, independent badge/photo controls, 375px phone
+layout and the actual candidate frame PNG. The unchanged source draw/save
+functions also produced 24 valid local Canvas PNGs across all six ribbons and
+both orientations. Browser photo upload could not be exercised because the
+managed browser administrator disabled local file access; the local export
+fixture was public Tree Hero artwork. Physical phone touch and wallet/NFT
+authorization were outside this visual change.
+
+Full release manifest:
+[profile-studio-ribbon-flow-release-20261125.json](profile-studio-ribbon-flow-release-20261125.json).
+Actual review and export evidence:
+[profile-studio-ribbon-flow-validation.json](../docs/profile-studio-ribbon-flow-validation.json).
+
+---
+
 # Grove Chess leaderboard, badges and match layout — published November 25, 2026
 
 The Grove Hall adds an online leaderboard and ten illustrated chess badges derived
