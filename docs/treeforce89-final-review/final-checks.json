@@ -1,0 +1,121 @@
+{
+  "initial": {
+    "buffer": [
+      960,
+      1440
+    ],
+    "layouts": [
+      {
+        "source": {
+          "x": 146,
+          "y": 11,
+          "width": 304,
+          "height": 577
+        },
+        "box": {
+          "x": 45,
+          "y": 71,
+          "width": 41,
+          "height": 55
+        },
+        "x": 51.01126516464471,
+        "y": 71,
+        "width": 28.977469670710573,
+        "height": 55
+      },
+      {
+        "source": {
+          "x": 670,
+          "y": 11,
+          "width": 399,
+          "height": 580
+        },
+        "box": {
+          "x": 35,
+          "y": 57,
+          "width": 56,
+          "height": 68
+        },
+        "x": 39.610344827586204,
+        "y": 57,
+        "width": 46.779310344827586,
+        "height": 68
+      },
+      {
+        "source": {
+          "x": 54,
+          "y": 617,
+          "width": 488,
+          "height": 602
+        },
+        "box": {
+          "x": 33,
+          "y": 49,
+          "width": 63,
+          "height": 79
+        },
+        "x": 33,
+        "y": 50.2827868852459,
+        "width": 63,
+        "height": 77.7172131147541
+      },
+      {
+        "source": {
+          "x": 601,
+          "y": 617,
+          "width": 552,
+          "height": 624
+        },
+        "box": {
+          "x": 21,
+          "y": 25,
+          "width": 84,
+          "height": 110
+        },
+        "x": 21,
+        "y": 40.04347826086956,
+        "width": 84,
+        "height": 94.95652173913044
+      }
+    ],
+    "sources": 6
+  },
+  "fallback": {
+    "paused": 960,
+    "buffer": [
+      480,
+      720
+    ],
+    "state": {
+      "density": 1,
+      "mode": "auto",
+      "fallback": true,
+      "logicalWidth": 480,
+      "logicalHeight": 720
+    }
+  },
+  "pointer": [
+    239.24563791609947,
+    299.56143679772964
+  ],
+  "pauseResumeAfterFallback": true,
+  "recreated": {
+    "canvases": 1,
+    "sources": 6,
+    "quality": {
+      "density": 2,
+      "mode": "auto",
+      "fallback": false,
+      "logicalWidth": 480,
+      "logicalHeight": 720
+    },
+    "lives": 3
+  },
+  "effects": {
+    "target": [
+      160,
+      180
+    ]
+  },
+  "errors": []
+}

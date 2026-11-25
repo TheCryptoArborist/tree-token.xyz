@@ -39,3 +39,7 @@ node tests/treeforce-render-recovery.cjs
 ```
 
 Both test files passed syntax checks; `git diff --check` passed. No payments, saves, real wallet sessions or production operations were performed.
+
+## Combined batch follow-up
+
+The automatic fallback, remaining four stage assets and final rendering checks are now recorded in [the combined graphics review](treeforce89-combined-graphics-review.md). That report supersedes the remaining-work list above.

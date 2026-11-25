@@ -1,0 +1,52 @@
+[
+  {
+    "mode": "standard",
+    "timing": {
+      "samples": 77,
+      "medianMs": 50,
+      "p95Ms": 550.1000000000004,
+      "over33Ms": 42,
+      "gpu": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
+    },
+    "recovery": {
+      "buffer": [
+        480,
+        720
+      ],
+      "viewport": [
+        0,
+        0,
+        480,
+        720
+      ],
+      "source": 1,
+      "active": true
+    },
+    "errors": []
+  },
+  {
+    "mode": "hd",
+    "timing": {
+      "samples": 29,
+      "medianMs": 150,
+      "p95Ms": 1216.7000000000007,
+      "over33Ms": 29,
+      "gpu": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
+    },
+    "recovery": {
+      "buffer": [
+        960,
+        1440
+      ],
+      "viewport": [
+        0,
+        0,
+        960,
+        1440
+      ],
+      "source": 1,
+      "active": true
+    },
+    "errors": []
+  }
+]

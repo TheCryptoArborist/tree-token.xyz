@@ -38,3 +38,7 @@ The existing local server serves `/workspace/treeforce-arborwing-preview` on por
 ## Follow-up
 
 Growth/capture/rescue/restart evidence is recorded in [the lifecycle review](treeforce89-render-lifecycle.md). See that report for the latest validation scope and remaining release work.
+
+## Combined batch follow-up
+
+The automatic fallback, remaining four stage assets and final rendering checks are now recorded in [the combined graphics review](treeforce89-combined-graphics-review.md). That report supersedes the remaining-work list above.

@@ -1,0 +1,4 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {createQualityMonitor} from '../treeforce89/frontend/game/render-quality.mjs';
+test('sustained slowdown downgrades once; fast frames never upgrade mid-run',()=>{const m=createQualityMonitor();for(let t=0;t<6000;t+=34)m.sample(t,true);assert(m.fallback);for(let t=6000;t<12000;t+=16)m.sample(t,true);assert(m.fallback)});
+test('healthy frames and isolated stalls retain HD',()=>{const m=createQualityMonitor();for(let t=0;t<12000;t+=16)m.sample(t,true);assert(!m.fallback);m.sample(15000,true);assert(!m.fallback)});
+test('paused or hidden time does not accumulate slow windows',()=>{const m=createQualityMonitor();for(let t=0;t<3000;t+=40)m.sample(t,true);m.sample(15000,false);for(let t=15001;t<18000;t+=40)m.sample(t,true);assert(!m.fallback);m.sample(20000,false);for(let t=20001;t<26000;t+=16)m.sample(t,true);assert(!m.fallback)});
