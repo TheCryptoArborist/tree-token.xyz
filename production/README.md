@@ -1,3 +1,28 @@
+# Grove Chess trial, NFTree finishes and cabinet cover — published November 25, 2026
+
+Two games per browser are included; NFTree ownership is required afterward.
+Holders unlock six rarity finishes. Birch/Pine can choose separately for local
+two-player play. The cabinet now shows a recognizable chess set on a board,
+without the canopy-defense slogan. This version supports computer and shared-device
+play; online multiplayer and Telegram invitations are not included in this release.
+
+Locked deployment `6b067d4aeb466ab5049cf6d9` published at 00:17 America/Chicago.
+Source `ced2b6905a4e9a9420e6f228e456ac5c31df6bf5` (PRs #320, #322, #324).
+Release run `45559134054` passed candidate and canonical checks at four viewports.
+Fresh baseline `6b067851aece2f26cdeff93a` includes the Profile Studio update.
+All **767 unrelated static paths**, **61 complete backend/provider records**,
+**5 schedules**, protected environment, runtime and snippets were preserved.
+Total **776 static paths**. No backend package was rebuilt.
+
+Record/full static manifest: `production/grove-chess-finishes-release-20261125.json`.
+Artifact #14997606192 SHA256:
+`4a41f0732fe1e4c6bdb048c9e4f0490f6892fe8e9ca0965f67ce462154b5d345`.
+Holder browser tests used simulated wallets; no real signing was exercised.
+Anonymous trial storage can be reset by clearing site data. Capture a fresh full
+live inventory before any subsequent release.
+
+---
+
 # Profile Studio full-photo fitting — published November 25, 2026
 
 [Profile Studio](https://tree-token.xyz/play/profile-studio/) now starts uploaded
