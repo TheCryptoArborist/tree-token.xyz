@@ -30,3 +30,11 @@ The preview is `/workspace/treeforce-arborwing-preview`, assembled from the curr
 - After: `http://127.0.0.1:4206/arborwing-review.html?lab=1&revision=r20&art=after`
 
 The local practice shell is unranked and has no payments or saves. The r20 module graph is only a local experiment and is not a production payload. The generated source artwork is kept in `assets/arborwing-review/seedling-hd.png`.
+
+## Body-type correction from the owner's reference
+
+The owner supplied `hero prototype.PNG` as the authoritative physique reference: tall muscular adult, broad shoulders, tapered waist, long limbs, proportionate head, original purple/emerald vine suit, dark mask lenses and cape. The initial stockier cel-shaded study was rejected as the body-type direction and is superseded by the revised `seedling-hd.png`.
+
+The atlas composer previously stretched a narrow illustration to fill the 36×59 occupied envelope. It now fits uniformly inside that envelope, horizontally centered and bottom aligned. The new source crop is x165/y59, 693×1392 pixels. It draws at approximately 29.37×59 logical pixels instead of stretching to 36×59. Frame dimensions, display scale, origin, body dimensions, body offsets and position remain unchanged. A narrower painted silhouette is intentional; no collision adjustment was made.
+
+The browser comparison was rerun at 390×844 and 1920×1080. Both passed the existing geometry checks and new aspect-ratio/containment checks, with no page errors. The latest actual-game screenshots and comparison image show this revised art. The full five-stage upgrade, high-density canvas investigation and gameplay edge-case tests remain separate follow-ups. No production release or Netlify deployment occurred.

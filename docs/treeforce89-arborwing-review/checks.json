@@ -56,6 +56,18 @@
     "after": {
       "renderer": 2,
       "review": true,
+      "artLayout": {
+        "source": {
+          "x": 165,
+          "y": 59,
+          "width": 693,
+          "height": 1392
+        },
+        "width": 29.372844827586206,
+        "height": 58.99999999999999,
+        "x": 48.3135775862069,
+        "y": 75
+      },
       "geometry": {
         "x": 240,
         "y": 460,
@@ -164,6 +176,18 @@
     "after": {
       "renderer": 2,
       "review": true,
+      "artLayout": {
+        "source": {
+          "x": 165,
+          "y": 59,
+          "width": 693,
+          "height": 1392
+        },
+        "width": 29.372844827586206,
+        "height": 58.99999999999999,
+        "x": 48.3135775862069,
+        "y": 75
+      },
       "geometry": {
         "x": 240,
         "y": 460,
