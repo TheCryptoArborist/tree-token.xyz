@@ -1,0 +1,161 @@
+{
+  "sourceOnly": true,
+  "unitTests": 12,
+  "generation": {
+    "sourceOnly": true,
+    "deployable": false,
+    "paymentsEnabled": false,
+    "reviewEnabled": false,
+    "prefix": "/play/treeforce89/review/bnb-preserved",
+    "captured": [
+      {
+        "path": "/play/treeforce89/index.html",
+        "sha256": "f0814abba654e9cc0e00bfafc285232a41584b1ea21654741c6f2ab9b90b932a",
+        "bytes": 5258
+      },
+      {
+        "path": "/play/treeforce89/retro-achievements.css",
+        "sha256": "af0a37bfbfad70ef7cd79ba7acf79ba70ca384ff6d0c645d7b2486152625ee0f",
+        "bytes": 19803
+      },
+      {
+        "path": "/play/treeforce89/assets/index-Bw7NF3rR.css",
+        "sha256": "96fd9ad080126487bee5f51eca0e70d0584e2ea22967453f57951ad325af4dff",
+        "bytes": 29631
+      },
+      {
+        "path": "/play/treeforce89/assets/index-review-r19.js",
+        "sha256": "a7705718e61fef6c16f2e2a643d1296d560908c1cb49988b56cacd0cafc7128c",
+        "bytes": 653814
+      },
+      {
+        "path": "/play/treeforce89/desktop-r19.css",
+        "sha256": "d7a5b22c9bfd57db08ab578a73d8902c85fbd2b35850cdbabe0242553fcff299",
+        "bytes": 542
+      },
+      {
+        "path": "/play/treeforce89/mobile-review-r5.css",
+        "sha256": "3c03a67551fd382424bc1dd8c0cfcd1a8fec75e811805e76f962b23d1ea0ea90",
+        "bytes": 26200
+      },
+      {
+        "path": "/play/treeforce89/pilot-cabinet-r19.css",
+        "sha256": "1ba3ec7ee6839dd254beb706e99049148b66161f7e3be72a6761210b2eb44d92",
+        "bytes": 9775
+      },
+      {
+        "path": "/play/treeforce89/assets/arcade-review-r19.js",
+        "sha256": "d9deb34ae44b5210260c4ba43336dda460a0da3bc75fa95120cc7be07229d927",
+        "bytes": 1295783
+      },
+      {
+        "path": "/play/treeforce89/assets/graphql-review-r19.js",
+        "sha256": "6a1b224c0517765f5c3592f707beda4f3e57d778cbe6d50ea04242e453bdc727",
+        "bytes": 54746
+      },
+      {
+        "path": "/scripts/arcade-end-share-prompt.js",
+        "sha256": "f84ae85176c6978b1b5f0ab807fbbd5a751f3f7d467dcc03524477ad3501c3e7",
+        "bytes": 2672
+      },
+      {
+        "path": "/play/treeforce89/assets/audio-lifecycle-r8.js",
+        "sha256": "849afabe65c40d93fdf38db7270adc7c2b6f05c066484e3d96068eec07594f4a",
+        "bytes": 4722
+      },
+      {
+        "path": "/play/treeforce89/assets/christmas-look-r16.js",
+        "sha256": "0be574d6a5588be14b3a9010e4073f70cae2689ea0c74a02b19cb4e774057528",
+        "bytes": 2181
+      },
+      {
+        "path": "/play/treeforce89/assets/combat-feedback-r6.js",
+        "sha256": "94dcc3a48bda486324177ff2e112fda5de2977a3b695987fc4128d0ab8ac2e8a",
+        "bytes": 6382
+      },
+      {
+        "path": "/play/treeforce89/assets/enemy-animation-r14.js",
+        "sha256": "3139d1390da18ca8774b2246739472ea520c75d5230a05ab611dd578d024437b",
+        "bytes": 3433
+      },
+      {
+        "path": "/play/treeforce89/assets/enemy-feedback-r7.js",
+        "sha256": "552eda26f2201d24b3edcd0487be769c47c614f6371f4d21e6c98028d0ea9ebd",
+        "bytes": 1565
+      },
+      {
+        "path": "/play/treeforce89/assets/holiday-mode-r19.js",
+        "sha256": "e90283804080fe03fa056246325aae63664c380fe1d019cb20d173425383ac79",
+        "bytes": 4718
+      },
+      {
+        "path": "/play/treeforce89/assets/impact-effects-r15.js",
+        "sha256": "aa4a3e81df82c7c74cd1a585fe11d78ce1d4447689b339aac45ad97336792a1a",
+        "bytes": 2237
+      },
+      {
+        "path": "/play/treeforce89/assets/round-presentation-r12.js",
+        "sha256": "b4ad61a098912fa66a9825175e95207c4b57a95541431b9e64a43389e6cd3cd0",
+        "bytes": 1007
+      },
+      {
+        "path": "/play/treeforce89/assets/sound-identity-r19.js",
+        "sha256": "1401f39b9cf21c9016b86064815cc2223970065efced1dfe1e8b0d61c02252ca",
+        "bytes": 4817
+      },
+      {
+        "path": "/play/treeforce89/assets/touchbar-input-r13.js",
+        "sha256": "c27fade88be3fee5d4bc1b27fff73625c83b194daf4997b4979cc92672b8a1ba",
+        "bytes": 1001
+      },
+      {
+        "path": "/scripts/arcade-result-share-builder.js",
+        "sha256": "c4cca3826b35b853998329f7b242c1d5a98509b1571ba95683debc5d621a412e",
+        "bytes": 12842
+      },
+      {
+        "path": "/scripts/arcade-share-handoff.js",
+        "sha256": "75ca64b529aa9ccb9e94fd13b329548067ee026bd08222378b6178b061d8f621",
+        "bytes": 2710
+      },
+      {
+        "path": "/play/treeforce89/assets/combat-visuals-r11.js",
+        "sha256": "822ee1649b04133e0433cfb644526890935e52b8fbe1ff607a0d42331b5c3447",
+        "bytes": 2853
+      },
+      {
+        "path": "/scripts/treeforce-season-r18.mjs",
+        "sha256": "2490af1986b844c77df6038a4702ee9a9cdc0ef5936908bd5ded9a724f418265",
+        "bytes": 961
+      },
+      {
+        "path": "/play/treeforce89/assets/christmas-audio-r16.js",
+        "sha256": "f0d4d5bf426ee09eb777b1620fab6a65919b332061615f8189894bb61bdfa366",
+        "bytes": 490
+      }
+    ],
+    "entryOriginalSha256": "a7705718e61fef6c16f2e2a643d1296d560908c1cb49988b56cacd0cafc7128c",
+    "entryCandidateSha256": "0fbcda5b45e026d348d332fa09bddd870d76e62b3f762ba234acfa1d37e21ddb",
+    "fullProductionInventory": false,
+    "backendChanged": false,
+    "limitations": [
+      "Literal reference snapshot is not full runtime asset inventory.",
+      "Canonical review depends on preserved existing CSS, shared scripts and other assets.",
+      "Actual extension and full game regression testing remain required."
+    ]
+  },
+  "browser": {
+    "localOnly": true,
+    "passed": 3,
+    "checks": [
+      "captured files and every unchanged copied module retain exact hashes",
+      "captured and candidate wallet gates match at 390px without BNB activation or network calls",
+      "captured and candidate wallet gates match at 1000px without BNB activation or network calls"
+    ],
+    "browser": "156.0.8078.79",
+    "limitations": [
+      "Missing image/font requests were stubbed; this is not an artwork or gameplay comparison.",
+      "Leaderboard GET was a local empty fixture; no wallet, transaction or live backend was exercised."
+    ]
+  }
+}

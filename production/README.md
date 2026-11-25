@@ -1,3 +1,16 @@
+# Isolated BNB r19 preservation candidate — November 25, 2026
+
+A concurrent r19 game release invalidated the old capture; the guard stopped
+before output. The new offline candidate pins 25 current static files, copies
+current game modules and applies only a reversible checkout entry wrapper.
+BNB review is hard-disabled. Twelve offline tests and three captured/browser gate
+checks passed at phone/desktop widths with local leaderboard/media fixtures.
+No live publication, payment, gameplay or NFT change occurred. Full game/wallet
+regression and preservation inventory remain gates. Evidence/setup:
+`docs/multichain/generation-milestone/netlify-gateway/preserved-review.md`.
+
+---
+
 # BNB focused frontend reconciliation — November 25, 2026
 
 The 22-path focused check is reconciled: 20 recorded static matches, one documented

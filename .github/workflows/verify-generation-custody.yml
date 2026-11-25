@@ -47,6 +47,10 @@ on:
       - 'scripts/multichain/browser/native-bnb-review-mount.mjs'
       - 'scripts/multichain/check-native-bnb-mount-browser.mjs'
       - 'scripts/multichain/prepare-native-bnb-entry.mjs'
+      - 'scripts/multichain/prepare-preserved-bnb-review.mjs'
+      - 'scripts/multichain/check-preserved-bnb-browser.mjs'
+      - 'scripts/multichain/browser/preserved-bnb-checkout.mjs'
+      - 'tests/multichain-preserved-bnb-review.test.mjs'
       - 'scripts/multichain/check-native-frontend-release.mjs'
       - 'scripts/multichain/reconcile-native-frontend-release.mjs'
       - 'tests/multichain-native-frontend-release.test.mjs'
@@ -145,6 +149,10 @@ on:
       - 'scripts/multichain/browser/native-bnb-review-mount.mjs'
       - 'scripts/multichain/check-native-bnb-mount-browser.mjs'
       - 'scripts/multichain/prepare-native-bnb-entry.mjs'
+      - 'scripts/multichain/prepare-preserved-bnb-review.mjs'
+      - 'scripts/multichain/check-preserved-bnb-browser.mjs'
+      - 'scripts/multichain/browser/preserved-bnb-checkout.mjs'
+      - 'tests/multichain-preserved-bnb-review.test.mjs'
       - 'scripts/multichain/check-native-frontend-release.mjs'
       - 'scripts/multichain/reconcile-native-frontend-release.mjs'
       - 'tests/multichain-native-frontend-release.test.mjs'
@@ -299,6 +307,8 @@ jobs:
           node scripts/multichain/check-bnb-checkout-review-browser.mjs
           git fetch --no-tags origin 4cd2119a3fefc3b6078befd01ad4f63fb74a695a
           git fetch --no-tags origin b052f377494d238679525c91c47276c0c588fa33
+          git fetch --no-tags origin 64060196606bd8636c498c1cd6dc5c6c318d75a8
+          node --test tests/multichain-preserved-bnb-review.test.mjs
           node --test tests/multichain-native-frontend-release.test.mjs
           node --test tests/multichain-native-bnb-entry.test.mjs tests/multichain-bnb-native-host-options.test.mjs
           node scripts/multichain/check-native-bnb-mount-browser.mjs

@@ -1,5 +1,7 @@
 # Netlify schema and gateway boundary rehearsal
 
+Latest: [isolated r19 preservation candidate](preserved-review.md).
+
 Latest: [reconciled frontend observations and CSS-check correction](frontend-reconciliation.md).
 
 Latest: [live frontend compatibility check and publication blocker](frontend-release-check.md).
