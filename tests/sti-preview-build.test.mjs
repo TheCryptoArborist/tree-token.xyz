@@ -117,6 +117,8 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
       '/play/grove-chess/finish-access.js',
       '/play/grove-chess/finishes.js',
       '/play/grove-chess/finishes.css',
+      '/play/grove-chess/play-access.js',
+      '/play/grove-chess/holder-session.js',
       '/play/grove-chess/assets/tree-crest-pawn.png',
       '/play/grove-chess/assets/tree-hero.webp',
       '/play/grove-chess/assets/tree-logo.webp',
