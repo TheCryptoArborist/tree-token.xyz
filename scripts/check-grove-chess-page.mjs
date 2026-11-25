@@ -4,7 +4,7 @@ import {pathToFileURL} from 'node:url';
 const {chromium}=await import(pathToFileURL(process.env.GROVE_CHESS_BROWSER_MODULE).href);
 const base=process.env.GROVE_CHESS_TEST_BASE||'http://127.0.0.1:8765';
 fs.mkdirSync('.netlify',{recursive:true});
-const browser=await chromium.launch({headless:true,channel:'chromium'}),results=[];
+const browser=await chromium.launch({headless:true,channel:'chromium',...(process.env.GROVE_CHESS_CHROMIUM?{executablePath:process.env.GROVE_CHESS_CHROMIUM}:{})}),results=[];
 try{for(const [width,height]of [[1440,1000],[390,844],[320,740],[844,390]]){
  const page=await browser.newPage({viewport:{width,height},hasTouch:width<900});page.setDefaultTimeout(15000);
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
@@ -27,6 +27,12 @@ try{for(const [width,height]of [[1440,1000],[390,844],[320,740],[844,390]]){
  await page.locator('#legend [data-piece="n"]').click();assert(await page.locator('#piece-info').evaluate(e=>e.open));await page.click('#piece-info-close');
  await page.locator('.board-frame').scrollIntoViewIfNeeded();await page.screenshot({path:`.netlify/grove-chess-board-${width}.png`});
  await page.locator('.piece-guide').scrollIntoViewIfNeeded();await page.screenshot({path:`.netlify/grove-chess-guide-${width}.png`});
+ await page.click('#browse-finishes');await page.locator('#finish-dialog[open]').waitFor();
+ assert.equal(await page.locator('.finish-card').count(),7);
+ assert.equal(await page.locator('[data-apply]:disabled').count(),6);
+ assert(await page.locator('#finish-dialog').evaluate(e=>e.scrollWidth<=e.clientWidth),'Finish dialog must fit');
+ await page.screenshot({path:`.netlify/grove-chess-finishes-${width}.png`});
+ await page.click('#close-finishes');
  assert.deepEqual(errors,[],'Game browser errors');
  if(process.env.GROVE_CHESS_CABINET_FIXTURE==='1'){
   await page.route(base+'/play/',route=>route.fulfill({contentType:'text/html',body:fs.readFileSync('production/arcade-organization-static/index.html','utf8').replace(/<script\b[^>]*>[\s\S]*?<\/script>/g,tag=>/src="\/scripts\/arcade-(organization|navigation-play-share)\.js"/.test(tag)?tag:'')}));
@@ -39,6 +45,19 @@ try{for(const [width,height]of [[1440,1000],[390,844],[320,740],[844,390]]){
  assert.equal(await cabinet.locator('a').getAttribute('href'),'/play/grove-chess/');
  await cabinet.scrollIntoViewIfNeeded();await page.screenshot({path:`.netlify/grove-chess-cabinet-${width}.png`});
  await cabinet.locator('a').click();await page.waitForURL('**/play/grove-chess/');await page.locator('.square').last().waitFor();
+ if(width===1440){
+  await page.route('**/assets/arcade/arcade-growth-wallet.js',r=>r.fulfill({contentType:'text/javascript',body:`let address='0x'+'a'.repeat(64),listeners=[];export const getWalletState=()=>({connected:!!address,address});export const subscribeWalletState=f=>(listeners.push(f),()=>{});export const getAvailableWallets=()=>[{id:'test',name:'Test wallet'}];window.testDisconnect=()=>{address=null;listeners.forEach(f=>f());};`}));
+  await page.route('**/scripts/profile-studio-access-v4.js',r=>r.fulfill({contentType:'text/javascript',body:`export async function readHeldNFTrees(){return ['common','rare','epic','legendary','mythic','one-of-one'].map(rarity=>({rarity}));}`}));
+  await page.reload({waitUntil:'networkidle'});await page.click('#browse-finishes');
+  await page.waitForFunction(()=>document.querySelectorAll('[data-apply]:disabled').length===0);
+  await page.click('[data-apply="rare"]');await page.selectOption('#finish-side','b');await page.click('[data-apply="mythic"]');
+  assert.equal(await page.locator('body').getAttribute('data-finish-w'),'rare');assert.equal(await page.locator('body').getAttribute('data-finish-b'),'mythic');
+  await page.click('#close-finishes');
+  assert.notEqual(await page.locator('[data-square="e2"] .hero-base').evaluate(e=>getComputedStyle(e).borderTopColor),await page.locator('[data-square="e7"] .hero-base').evaluate(e=>getComputedStyle(e).borderTopColor));
+  await page.locator('.board-frame').scrollIntoViewIfNeeded();await page.screenshot({path:'.netlify/grove-chess-unlocked-finishes.png'});
+  await page.evaluate(()=>window.testDisconnect());
+  await page.waitForFunction(()=>document.body.dataset.finishW==='gold'&&document.body.dataset.finishB==='gold');
+ }
  results.push({width,height,passed:true});await page.close();
 }}finally{await browser.close()}
 fs.writeFileSync('.netlify/grove-chess-browser-checks.json',JSON.stringify({base,fixture:process.env.GROVE_CHESS_CABINET_FIXTURE==='1',results},null,2));

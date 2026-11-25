@@ -1,0 +1,39 @@
+{
+  "id": "6b0673793ee10594fad75fe6",
+  "baseline": "6b06687527d719b675652622",
+  "mode": "publish",
+  "state": "ready",
+  "sourceCommit": "22f87efbd6fd9cb562cb6faad191ce26f2f872ae",
+  "staticPaths": 767,
+  "preservedStaticPaths": 756,
+  "functionsPreserved": 61,
+  "schedulesPreserved": 5,
+  "changedExistingPaths": [
+    "/scripts/arcade-organization.js"
+  ],
+  "addedPaths": [
+    "/play/grove-chess/app.js",
+    "/play/grove-chess/assets/tree-crest-pawn.png",
+    "/play/grove-chess/assets/tree-hero.webp",
+    "/play/grove-chess/assets/tree-logo.webp",
+    "/play/grove-chess/assets/woodland-court.png",
+    "/play/grove-chess/index.html",
+    "/play/grove-chess/style.css",
+    "/play/grove-chess/vendor/license-chess.txt",
+    "/play/grove-chess/vendor/chess.js",
+    "/scripts/arcade-grove-chess.js"
+  ],
+  "walletsEnabled": false,
+  "paymentsEnabled": false,
+  "onChainDeployments": false,
+  "otherGameAndWalletCodeUnchanged": true,
+  "siteSnippetConfigurationUnchanged": true,
+  "preservedSnippetSHA256": "bf05453dc91bcf9c53db98e08829c8321193495b0839021e68d458d56e5be98d",
+  "canonicalBrowserChecksPassed": true,
+  "canonicalPath": "https://tree-token.xyz/play/grove-chess/",
+  "locked": true,
+  "releaseRun": 45554257689,
+  "artifactId": 14994429264,
+  "artifactSHA256": "081fe5c3c4640ae1dc5a0dea6c1405fd70a6a50c8bd5c940c3553b0b643658fd",
+  "fullManifestArtifact": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45554257689/artifacts/14994429264"
+}

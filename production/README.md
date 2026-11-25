@@ -1,3 +1,20 @@
+# Grove Chess — published November 24, 2026
+
+Grove Chess is live at `/play/grove-chess/`, linked from the final cabinet in
+Arcade row two. Role labels, illustrated Tree Crest pawns, a movement guide,
+computer/local play and board/flip fixes passed gameplay and browser checks
+at four viewports. The canonical cabinet link was also followed manually.
+
+Locked deploy `6b0673793ee10594fad75fe6`; source
+`22f87efbd6fd9cb562cb6faad191ce26f2f872ae` (PRs #318 and #319).
+Release run `45554257689` passed. Total **767 paths**, **756 unrelated paths**,
+**61 complete backend/provider records**, **5 schedules**, protected environment,
+runtime and snippet configuration preserved from `6b06687527d719b675652622`.
+Record: `production/grove-chess-release-20261124.json`; full manifest is in its
+linked release artifact. Capture a fresh complete baseline before any release.
+
+---
+
 # Tree Army hero arm proportions — published November 24, 2026
 
 [Prototype 0.18](https://tree-token.xyz/play/tree-army/test/) restores fuller hero
