@@ -27,3 +27,12 @@
 .board-instructions{order:-1;text-align:left;margin:0 0 10px;color:#b9d3c3}.keyboard-instructions{display:block;font-size:9px;color:#91aa9a}
 @media(max-width:670px){.board-instructions{display:block;order:-1;min-height:32px;margin:0 0 4px;font-size:10px;line-height:1.5}.keyboard-instructions{display:none}.board-frame{max-width:min(100%,calc(100svh - 311px))}}
 @media(max-width:670px) and (max-height:450px){.board-frame{max-width:min(100%,calc(100svh - 40px))}}
+
+/* TREE player coins: side identity stays distinct, minted rims follow the selected set. */
+.player .avatar.tree-coin{position:relative;flex-shrink:0;isolation:isolate;overflow:hidden;border:1.5px solid var(--finish,#edcd73);box-shadow:inset 0 0 0 1px var(--finish-deep,#70501d),0 2px 5px #0007;background:radial-gradient(circle at 32% 22%,#397950,#0b291d 75%)}
+.player .avatar.tree-coin.birch{background:radial-gradient(circle at 30% 20%,#fffdf0,#e8dcb2 74%,#b59a5b)}
+.tree-coin::before{content:"";position:absolute;inset:3px;border:1px dashed var(--finish,#edcd73);border-radius:50%;opacity:.65;z-index:-1}
+.tree-coin svg{width:78%;height:78%;overflow:visible;filter:drop-shadow(0 1px 1px #0005)}
+.tree-coin .coin-trunk{fill:#cda94b}.tree-coin .coin-leaves{fill:#42c979;stroke:#e3c766;stroke-width:1.2;stroke-linejoin:round}.tree-coin .coin-veins{fill:none;stroke:#ebcf72;stroke-width:1.7;stroke-linecap:round}.tree-coin .coin-spark{fill:#ffe7a1}
+.tree-coin.birch .coin-leaves{fill:#267643;stroke:#aa8739;stroke-width:1}.tree-coin.birch .coin-trunk{fill:#96732d}.tree-coin.birch .coin-veins{stroke:#96732d;stroke-width:2.5}
+@media(max-width:670px){.player .avatar.tree-coin{border-width:1px}.tree-coin::before{inset:2px}.tree-coin svg{width:80%;height:80%}}
