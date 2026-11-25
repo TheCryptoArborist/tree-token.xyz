@@ -10,7 +10,7 @@ We are at validation and release preparation, not the start of another feature c
 
 | Order | Task | Completion condition | Status |
 | --- | --- | --- | --- |
-| 1 | Corrected private phone preview | Owner-authenticated HTTP link opens the exact corrected game from a phone | Game running on port 4189; HTTP portal configuration pending |
+| 1 | Corrected private phone preview | Owner-authenticated HTTP link opens the exact corrected game from a phone | Canonical review live at /play/treeforce89/review/; owner Slush/phone check pending |
 | 2 | Graphics comparison with supplied Deluxe Galaga | Compare enemy motion/poses, silhouettes, projectiles/effects, background contrast, HUD and transitions at playing size; address only demonstrated gaps in a bounded visual patch | Comparison, r14 enemy animation and r15 impact effects complete locally; phone readability review remains |
 | 3 | Complete preserved release candidate | Capture current full site/backend/schedule inventory; integrate only reviewed Tree Force changes; verify preserved bytes/configuration and authenticated candidate behavior | Complete local digest-based r15 candidate assembled: 736 paths, 61 functions, five schedules; hosted preview verification next; no production switch |
 | 4 | Short owner phone review | Practice: controls, sound, visibility and pause/return. Authenticated candidate: Slush expiry/return, wallet switching, saves and existing receipt sharing. Record outcomes and fix only reproduced defects | Queued; no real-payment requirement |
@@ -65,3 +65,7 @@ The [candidate preparation report](treeforce89-candidate-preparation-20261124.md
 ## Hosted review preview complete
 
 [Task 3 preview](treeforce89-hosted-preview-20261124.md) is ready at https://6b0644f389c93c42eac2606d--tree-token.netlify.app/play/treeforce89/ . Full inventory/backend/configuration preservation passed, plus 30 simulated browser checks at three widths and a real signed-out smoke check. One unpublished candidate was created; no full site/backend rebuild or production switch occurred. Reuse this preview for owner phone review and batch any fixes to control deployment costs.
+
+## Canonical phone review supersedes the Netlify hostname
+
+Use **https://tree-token.xyz/play/treeforce89/review/**. The [owner-authorized additive publication](treeforce89-canonical-review-20261124.md) preserved every existing path and backend record. The old Netlify preview hostname was flagged by the owner’s Slush wallet and should not be used for wallet review. The new page is live on the established domain; actual Slush warning clearance remains for the owner to verify. No replacement of the existing live game occurred.
