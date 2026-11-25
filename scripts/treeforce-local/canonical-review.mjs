@@ -72,6 +72,7 @@ export async function main(args = process.argv.slice(2)) {
   const expected = args[1],
     out = path.resolve(args[2]);
   assert(/^[a-f0-9]{24}$/.test(expected));
+  await fs.mkdir(path.dirname(out), { recursive: true });
   await fs.mkdir(out);
   const token = readToken(),
     get = readOnlyApi(token);
