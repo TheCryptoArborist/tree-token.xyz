@@ -114,6 +114,7 @@ test('production build stays byte-exact and STI preview changes only reviewed fi
   const arcadeOverlays = [
     ...[
       '/play/grove-chess/app.js',
+      '/play/grove-chess/online.js',
       '/play/grove-chess/finish-access.js',
       '/play/grove-chess/finishes.js',
       '/play/grove-chess/finishes.css',
