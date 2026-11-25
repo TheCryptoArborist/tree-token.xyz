@@ -35,18 +35,29 @@ export async function readNativeCatalog(db){
 }
 export function compareNativeCatalog(actual,expected){
  const same=k=>JSON.stringify(actual[k])===JSON.stringify(expected[k]);
- const checks={columns:same('columns'),constraints:same('constraints'),indexes:same('indexes'),triggers:same('triggers'),policies:same('policies'),rowSecurity:JSON.stringify(actual.tables.map(t=>[t.name,t.rls,t.force_rls]))===JSON.stringify(expected.tables.map(t=>[t.name,t.rls,t.force_rls])),tables:NATIVE_TABLES.every(n=>actual.tables.some(t=>t.name===n&&t.kind==='r'))};
+ // PG18 adds contype=n rows for NOT NULL already represented in columns.
+ // Ignore only exact redundant constraints on a known non-null column.
+ const constraints=c=>{
+  for(const row of c.constraints.filter(r=>r.type==='n')){
+   const column=c.columns.find(v=>v.table_name===row.table_name&&v.is_nullable==='NO'&&row.definition==='NOT NULL '+v.column_name);
+   if(!column)return null;
+  }
+  return c.constraints.filter(r=>r.type!=='n');
+ };
+ const actualConstraints=constraints(actual),expectedConstraints=constraints(expected);
+ const equivalentConstraints=actualConstraints!==null&&expectedConstraints!==null&&JSON.stringify(actualConstraints)===JSON.stringify(expectedConstraints);
+ const checks={columns:same('columns'),constraints:equivalentConstraints,indexes:same('indexes'),triggers:same('triggers'),policies:same('policies'),rowSecurity:JSON.stringify(actual.tables.map(t=>[t.name,t.rls,t.force_rls]))===JSON.stringify(expected.tables.map(t=>[t.name,t.rls,t.force_rls])),tables:NATIVE_TABLES.every(n=>actual.tables.some(t=>t.name===n&&t.kind==='r'))};
  return {checks,nativeSchemaMatches:Object.values(checks).every(Boolean),proposedTablesPresent:actual.proposed.map(t=>t.name),
   missingProposedTables:PROPOSED_TABLES.filter(n=>!actual.proposed.some(t=>t.name===n)),runtimeAuthorized:false,migrationApplied:false};
 }
 export async function auditNativeDatabase(db,expected){
  await db.query('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY');
  try{
-  const flags=(await db.query("select current_setting('transaction_read_only') as read_only")).rows[0];assert.equal(flags.read_only,'on','read-only-transaction-required');
+  const flags=(await db.query("select current_setting('transaction_read_only') as read_only,current_setting('server_version_num') as server_version_num")).rows[0];assert.equal(flags.read_only,'on','read-only-transaction-required');
   const catalog=await readNativeCatalog(db);
   const roles=(await db.query("select rolname from pg_roles where rolname=any($1::text[]) order by rolname",[['anon','authenticated','service_role']])).rows.map(r=>r.rolname);
   const privateSchema=(await db.query("select has_schema_privilege(oid,'USAGE') as can_use,has_schema_privilege(oid,'CREATE') as can_create from pg_namespace where nspname='private'")).rows;
-  return {readOnly:true,applicationRowsRead:0,catalog,proposedRolesPresent:roles,privateSchema,...compareNativeCatalog(catalog,expected)};
+  return {readOnly:true,serverVersionNumber:flags.server_version_num,applicationRowsRead:0,catalog,proposedRolesPresent:roles,privateSchema,...compareNativeCatalog(catalog,expected)};
  }finally{await db.query('ROLLBACK');}
 }
 
