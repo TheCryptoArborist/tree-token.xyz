@@ -1,3 +1,20 @@
+# Grove Chess Arcade header — published November 25, 2026
+
+Grove Chess now matches the Arcade home header: THICKQUIDITY / TREE on Sui,
+Home, App, Arcade, and Get an NFTree, with chess How to play retained. All links
+remain visible on mobile, with board sizing adjusted to keep move controls in view.
+
+Locked ready deploy `6b0711d1a77f78bccc7fb8fc`, source
+`3d2dd0ddc75df250f2003819107c2b53ee31a24b` (PR #344).
+[Publication run 45657774295](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45657774295)
+passed local, candidate, and canonical four-viewport checks and three-phone fit /
+scroll checks. Total 789 static paths; 787 unrelated paths, all 62 backend/provider
+records and five schedules preserved. Only chess HTML and CSS changed. No wallet
+approval or Telegram send occurred. Full report:
+[grove-chess-header-release-20261125.json](grove-chess-header-release-20261125.json).
+
+---
+
 # Grove Chess clear game controls — published November 25, 2026
 
 The main panel offers Start free game, holder play, or Connect wallet to unlock
