@@ -1,18 +1,6 @@
 // Cosmetic selection only; never used as authentication or award eligibility.
-export const HOLIDAY_START = Date.parse('2026-11-27T06:00:00Z');
-export const HOLIDAY_END = Date.parse('2027-01-01T06:00:00Z');
-export function holidayAvailable(now = Date.now()) {
-  return Number.isFinite(now) && now >= HOLIDAY_START && now < HOLIDAY_END;
-}
-export function holidayCountdown(now = Date.now()) {
-  if (!Number.isFinite(now) || now >= HOLIDAY_END) return '';
-  const target = now < HOLIDAY_START ? HOLIDAY_START : HOLIDAY_END;
-  const seconds = Math.ceil((target - now) / 1000);
-  const days = Math.floor(seconds / 86400);
-  const hours = Math.floor(seconds % 86400 / 3600);
-  const minutes = Math.floor(seconds % 3600 / 60);
-  return `${days}d ${String(hours).padStart(2,'0')}h ${String(minutes).padStart(2,'0')}m ${String(seconds % 60).padStart(2,'0')}s`;
-}
+import {HOLIDAY_START,HOLIDAY_END,holidayAvailable,holidayCountdown,holidayMessage} from './holiday-season.mjs';
+export {HOLIDAY_START,HOLIDAY_END,holidayAvailable,holidayCountdown};
 export function beginHolidayScene(scene) {
   if (scene.sys.settings.key !== 'game') return;
   const policy = scene.game.registry.get('holidayPolicy');
@@ -40,11 +28,11 @@ export function installHolidaySelector(game, mount, options = {}) {
   const label = document.createElement('label');label.textContent='Game theme ';
   const select = document.createElement('select');select.setAttribute('aria-label','Game theme');
   select.style.cssText='font:inherit;min-height:44px;background:#173e36;color:#fff7df;border:1px solid #9ecf9b;border-radius:6px;padding:6px';
-  for(const [value,text] of [['normal','Normal'],['christmas','Christmas']]){const option=document.createElement('option');option.value=value;option.textContent=text;select.append(option);}
+  for(const [value,text] of [['normal','Normal'],['christmas','Holiday']]){const option=document.createElement('option');option.value=value;option.textContent=text;select.append(option);}
   select.value=policy.selected;
   const note=document.createElement('span');note.setAttribute('role','status');
-  const countdown=document.createElement('span');countdown.setAttribute('role','timer');countdown.setAttribute('aria-live','off');countdown.setAttribute('aria-label','Time until Christmas mode unlocks');countdown.style.fontVariantNumeric='tabular-nums';
-  const deadline=document.createElement('span');deadline.textContent='Ends January 1 at 06:00 UTC.';
+  const countdown=document.createElement('span');countdown.setAttribute('role','timer');countdown.setAttribute('aria-live','off');countdown.setAttribute('aria-label','Time until the holiday season begins');countdown.style.fontVariantNumeric='tabular-nums';
+  const deadline=document.createElement('span');deadline.textContent='';
   label.append(select);panel.append(label,note,countdown,deadline);mount.parentElement.insertBefore(panel,mount);
   const update=()=>{
     const active=!!game.scene.getScene('game')?.sys.isActive();
@@ -52,8 +40,10 @@ export function installHolidaySelector(game, mount, options = {}) {
     const available=holidayAvailable(currentTime);
     const remaining=holidayCountdown(currentTime);
     countdown.hidden=!remaining;
-    deadline.hidden=!available;
-    const timerLabel=available?'Time remaining in Christmas mode':'Time until Christmas mode unlocks';
+    deadline.hidden=!remaining;
+    const dateLabel=available?'Ends January 1 at 06:00 UTC.':'Arrives November 27 at 06:00 UTC.';
+    if(deadline.textContent!==dateLabel)deadline.textContent=dateLabel;
+    const timerLabel=available?'Time remaining in the holiday season':'Time until the holiday season begins';
     if(countdown.getAttribute('aria-label')!==timerLabel)countdown.setAttribute('aria-label',timerLabel);
     if(countdown.textContent!==remaining)countdown.textContent=remaining;
     // Keep the full combat viewport and touch coordinates unchanged during play.
@@ -61,11 +51,7 @@ export function installHolidaySelector(game, mount, options = {}) {
     select.disabled=active;
     select.options[1].disabled=!available;
     if(!active&&!available){policy.selected='normal';select.value='normal';}
-    const message=currentTime < HOLIDAY_START
-      ? 'Christmas mode unlocks November 27 at 06:00 UTC.'
-      : available ? 'Christmas mode is available for…'
-      : active ? 'Christmas season has ended. This run keeps its selected theme.'
-      : 'Christmas season has ended. Normal mode is available.';
+    const message=holidayMessage(currentTime) || 'The holiday season has ended. Normal play is available.';
     if(note.textContent!==message)note.textContent=message;
   };
   select.addEventListener('change',()=>{
