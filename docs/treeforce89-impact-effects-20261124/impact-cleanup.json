@@ -1,0 +1,11 @@
+{
+  "synthetic": true,
+  "frames": 72,
+  "fps": 24,
+  "cleanup": {
+    "after": 0,
+    "pausedProgressHeld": true,
+    "afterResume": 0
+  },
+  "errors": []
+}

@@ -4,14 +4,14 @@ Work one task at a time. The operation is the owner plus this assistant: no hire
 
 ## Current position
 
-The planned gameplay/audio/presentation improvements are implemented on PR #306. The latest game-code commit is `150749f`; its 13 local verification jobs passed. Its GitHub production-snapshot job and Netlify deploy-preview status subsequently passed. The generic Netlify preview does not include the corrected game and must not be presented as the phone-review build.
+The planned gameplay/audio/presentation improvements are implemented on PR #306. The latest pushed game-code commit is `150749f`; its 13 local verification jobs passed. Subsequent r14 animation and r15 impact polish are local review changes awaiting the next batched integration milestone. Its GitHub production-snapshot job and Netlify deploy-preview status subsequently passed. The generic Netlify preview does not include the corrected game and must not be presented as the phone-review build.
 
 We are at validation and release preparation, not the start of another feature cycle. An exact release date or percentage would be misleading before the visual comparison, phone observations and full preservation candidate are complete. No production publication or real payment is authorized.
 
 | Order | Task | Completion condition | Status |
 | --- | --- | --- | --- |
 | 1 | Corrected private phone preview | Owner-authenticated HTTP link opens the exact corrected game from a phone | Game running on port 4189; HTTP portal configuration pending |
-| 2 | Graphics comparison with supplied Deluxe Galaga | Compare enemy motion/poses, silhouettes, projectiles/effects, background contrast, HUD and transitions at playing size; address only demonstrated gaps in a bounded visual patch | Comparison and r14 enemy-animation polish complete locally; impact-effects pass next |
+| 2 | Graphics comparison with supplied Deluxe Galaga | Compare enemy motion/poses, silhouettes, projectiles/effects, background contrast, HUD and transitions at playing size; address only demonstrated gaps in a bounded visual patch | Comparison, r14 enemy animation and r15 impact effects complete locally; phone readability review remains |
 | 3 | Complete preserved release candidate | Capture current full site/backend/schedule inventory; integrate only reviewed Tree Force changes; verify preserved bytes/configuration and authenticated candidate behavior | Queued; no production switch |
 | 4 | Short owner phone review | Practice: controls, sound, visibility and pause/return. Authenticated candidate: Slush expiry/return, wallet switching, saves and existing receipt sharing. Record outcomes and fix only reproduced defects | Queued; no real-payment requirement |
 | 5 | Final approval and release | Present exact candidate, test results and known limitations; publish only after separate explicit owner approval, then verify production and inventory | Not authorized yet |
@@ -48,4 +48,4 @@ Continue presentation and controls independently. Before task 3 integrates anyth
 
 ## Completed enemy-animation polish
 
-The [r14 animation candidate](treeforce89-enemy-animation-20261124.md) adds six wing poses and curve-based banking while preserving all 81 sampled movement/body measurements. Eight unit tests, three browser widths and all 30 enemy-feedback checks passed. The review includes an actual before/after motion clip. Impact effects remain a separate task; phone and multichain integration checks are still open.
+The [r14 animation candidate](treeforce89-enemy-animation-20261124.md) adds six wing poses and curve-based banking while preserving all 81 sampled movement/body measurements. Eight unit tests, three browser widths and all 30 enemy-feedback checks passed. The review includes an actual before/after motion clip. The subsequent [r15 impact-effects pass](treeforce89-impact-effects-20261124.md) is complete locally. Three focused unit tests, emitted-game parity for three enemy families, all 30 enemy-feedback checks and particle pause/cleanup checks passed. Phone and multichain integration checks are still open.

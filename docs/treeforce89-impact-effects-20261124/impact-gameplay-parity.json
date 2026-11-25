@@ -1,0 +1,224 @@
+{
+  "synthetic": true,
+  "matched": true,
+  "reports": [
+    {
+      "revision": "r14",
+      "checks": [
+        {
+          "kind": "bat",
+          "hit": {
+            "hp": 1,
+            "score": 0,
+            "kills": 0
+          },
+          "score": 100,
+          "kills": 1,
+          "chain": 1,
+          "pruneCharge": 10,
+          "lives": 3,
+          "randomCalls": 27,
+          "randomState": 3009829496,
+          "nextGameRandom": 0.34747186047025025,
+          "drops": [],
+          "remainingEnemies": []
+        },
+        {
+          "kind": "borer",
+          "hit": {
+            "hp": 1,
+            "score": 0,
+            "kills": 0
+          },
+          "score": 250,
+          "kills": 1,
+          "chain": 1,
+          "pruneCharge": 18,
+          "lives": 3,
+          "randomCalls": 48,
+          "randomState": 2969651627,
+          "nextGameRandom": 0.8250224851071835,
+          "drops": [
+            {
+              "type": "growth",
+              "x": 240,
+              "y": 260,
+              "vx": 15.260851800441742,
+              "vy": 78
+            },
+            {
+              "type": "boom",
+              "x": 240,
+              "y": 260,
+              "vx": 15.898446060717106,
+              "vy": 62
+            }
+          ],
+          "remainingEnemies": []
+        },
+        {
+          "kind": "spore",
+          "hit": {
+            "hp": 1,
+            "score": 0,
+            "kills": 0
+          },
+          "score": 200,
+          "kills": 1,
+          "chain": 1,
+          "pruneCharge": 15,
+          "lives": 3,
+          "randomCalls": 27,
+          "randomState": 3009829496,
+          "nextGameRandom": 0.8250224851071835,
+          "drops": [
+            {
+              "type": "growth",
+              "x": 240,
+              "y": 260,
+              "vx": 15.260851800441742,
+              "vy": 78
+            },
+            {
+              "type": "boom",
+              "x": 240,
+              "y": 260,
+              "vx": 15.898446060717106,
+              "vy": 62
+            }
+          ],
+          "remainingEnemies": [
+            {
+              "kind": "small",
+              "hp": 1,
+              "vx": -75,
+              "vy": 90
+            },
+            {
+              "kind": "small",
+              "hp": 1,
+              "vx": 0,
+              "vy": 90
+            },
+            {
+              "kind": "small",
+              "hp": 1,
+              "vx": 75,
+              "vy": 90
+            }
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "revision": "r15",
+      "checks": [
+        {
+          "kind": "bat",
+          "hit": {
+            "hp": 1,
+            "score": 0,
+            "kills": 0
+          },
+          "score": 100,
+          "kills": 1,
+          "chain": 1,
+          "pruneCharge": 10,
+          "lives": 3,
+          "randomCalls": 27,
+          "randomState": 3009829496,
+          "nextGameRandom": 0.34747186047025025,
+          "drops": [],
+          "remainingEnemies": []
+        },
+        {
+          "kind": "borer",
+          "hit": {
+            "hp": 1,
+            "score": 0,
+            "kills": 0
+          },
+          "score": 250,
+          "kills": 1,
+          "chain": 1,
+          "pruneCharge": 18,
+          "lives": 3,
+          "randomCalls": 48,
+          "randomState": 2969651627,
+          "nextGameRandom": 0.8250224851071835,
+          "drops": [
+            {
+              "type": "growth",
+              "x": 240,
+              "y": 260,
+              "vx": 15.260851800441742,
+              "vy": 78
+            },
+            {
+              "type": "boom",
+              "x": 240,
+              "y": 260,
+              "vx": 15.898446060717106,
+              "vy": 62
+            }
+          ],
+          "remainingEnemies": []
+        },
+        {
+          "kind": "spore",
+          "hit": {
+            "hp": 1,
+            "score": 0,
+            "kills": 0
+          },
+          "score": 200,
+          "kills": 1,
+          "chain": 1,
+          "pruneCharge": 15,
+          "lives": 3,
+          "randomCalls": 27,
+          "randomState": 3009829496,
+          "nextGameRandom": 0.8250224851071835,
+          "drops": [
+            {
+              "type": "growth",
+              "x": 240,
+              "y": 260,
+              "vx": 15.260851800441742,
+              "vy": 78
+            },
+            {
+              "type": "boom",
+              "x": 240,
+              "y": 260,
+              "vx": 15.898446060717106,
+              "vy": 62
+            }
+          ],
+          "remainingEnemies": [
+            {
+              "kind": "small",
+              "hp": 1,
+              "vx": -75,
+              "vy": 90
+            },
+            {
+              "kind": "small",
+              "hp": 1,
+              "vx": 0,
+              "vy": 90
+            },
+            {
+              "kind": "small",
+              "hp": 1,
+              "vx": 75,
+              "vy": 90
+            }
+          ]
+        }
+      ],
+      "errors": []
+    }
+  ]
+}
