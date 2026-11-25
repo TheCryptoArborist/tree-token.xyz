@@ -1,0 +1,22 @@
+{
+  "id": "6b0648c1a375b045129de7b0",
+  "baseline": "6b06476aad525a8e3c5afdf9",
+  "url": "https://tree-token.xyz/play/treeforce89/review/",
+  "published": true,
+  "locked": true,
+  "existingPathsPreserved": 693,
+  "addedPaths": 44,
+  "changedExistingPaths": 0,
+  "totalPaths": 737,
+  "backendRecords": 61,
+  "schedules": 5,
+  "uploads": [
+    {
+      "path": "/play/treeforce89/review/index.html",
+      "bytes": 4588
+    }
+  ],
+  "planSha256": "c29f9daab3b43ba92d7577c94fb9cf80b8d40a915ce47b80d69f169f2842d668",
+  "checkedAt": "2026-11-25T02:33:04.358Z",
+  "slushWarningClearance": "Owner verification pending"
+}

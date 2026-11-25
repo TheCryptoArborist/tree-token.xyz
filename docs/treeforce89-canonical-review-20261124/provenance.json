@@ -1,0 +1,8 @@
+{
+  "workflow": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45533622267",
+  "sourceCommit": "ffcc32b4",
+  "previousFailedRun": "45533499108",
+  "previousFailure": "Missing parent output directory; failed before any Netlify request or deployment",
+  "tests": 39,
+  "authorization": "Owner explicitly requested the review under https://tree-token.xyz/play/ after Slush flagged the Netlify preview hostname. Additive review publication only; live game unchanged."
+}

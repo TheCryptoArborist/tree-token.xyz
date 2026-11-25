@@ -1,3 +1,25 @@
+# Tree Force canonical review — published November 24, 2026
+
+Owner-requested review: https://tree-token.xyz/play/treeforce89/review/ .
+Ready/locked deploy `6b0648c1a375b045129de7b0`, fresh baseline
+`6b06476aad525a8e3c5afdf9`. All 693 previous static hashes, 61 complete
+backend/provider records, five schedules, runtime and API-visible protected
+configuration were preserved. Added 44 review paths; total 737. Zero existing
+paths changed, including the live game and Arcade lobby. Only the 4,588-byte
+review HTML required upload; all reviewed game assets/backend packages were reused.
+
+[Release run 45533622267](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45533622267)
+passed 39 guards, candidate and canonical browser checks, all served payload hashes
+and complete preservation checks. Source `ffcc32b4`. Full records and limitations:
+`docs/treeforce89-canonical-review-20261124.md` and its evidence directory.
+
+This additive review was explicitly authorized after Slush flagged the Netlify
+preview hostname. Slush clearance and physical phone acceptance are still pending;
+the live game replacement is not authorized by this review publication. Capture a
+fresh complete live baseline before any later release.
+
+---
+
 # Tree Arcade single launch countdown — published November 22, 2026
 
 Deployment `6b03810de27178ba36227c42` was published at **17:58:49.627 America/Chicago**
