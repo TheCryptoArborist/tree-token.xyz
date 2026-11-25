@@ -1,3 +1,9 @@
+# Tree Force pilot cabinet and desktop polish — published November 25, 2026
+
+Locked deploy `6b0750990d056f6dd28623fd`: **817 static paths, 62 backend records, five schedules**. Main game: https://tree-token.xyz/play/treeforce89/ . Branded forest leaderboard shows ten pilots with trophy/medal/crest ranks, thirteen illustrated achievement medals, and larger desktop presentation. One main-game HTML changed; thirteen paths added; every other existing path and the complete backend/runtime inventory preserved. Source `fbbf1a2`, workflow [45702944127](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45702944127). [Evidence](../docs/treeforce89-pilot-cabinet.md). Capture a fresh live inventory before subsequent releases.
+
+---
+
 # Tree Force festive emoji accents — published November 24, 2026
 
 Locked deploy `6b06687527d719b675652622`: 757 paths, 61 backend records, five schedules. Only the shared festive message module changed (961-byte upload). Main game and cabinet share the emoji text. [Evidence](../docs/treeforce89-emoji-publication.md). Capture fresh inventory before later publication.

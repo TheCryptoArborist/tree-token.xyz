@@ -1,0 +1,70 @@
+{
+  "id": "6b0750990d056f6dd28623fd",
+  "baseline": "6b07390bd4c3075b43e2c541",
+  "url": "https://tree-token.xyz/play/treeforce89/",
+  "published": true,
+  "locked": true,
+  "existingPathsPreserved": 803,
+  "addedPaths": 13,
+  "changedExistingPaths": 1,
+  "totalPaths": 817,
+  "backendRecords": 62,
+  "schedules": 5,
+  "uploads": [
+    {
+      "path": "/play/treeforce89/index.html",
+      "bytes": 4686
+    },
+    {
+      "path": "/play/treeforce89/assets/index-review-r19.js",
+      "bytes": 653814
+    },
+    {
+      "path": "/play/treeforce89/assets/arcade-review-r19.js",
+      "bytes": 1295783
+    },
+    {
+      "path": "/play/treeforce89/assets/graphql-review-r19.js",
+      "bytes": 54746
+    },
+    {
+      "path": "/play/treeforce89/assets/sound-identity-r19.js",
+      "bytes": 4817
+    },
+    {
+      "path": "/play/treeforce89/desktop-r19.css",
+      "bytes": 542
+    },
+    {
+      "path": "/play/treeforce89/pilot-cabinet-r19.css",
+      "bytes": 9775
+    },
+    {
+      "path": "/assets/treeforce-achievements/canopy-medals-r19.webp",
+      "bytes": 395134
+    },
+    {
+      "path": "/assets/treeforce-ranks/hall-of-fame.webp",
+      "bytes": 204934
+    },
+    {
+      "path": "/assets/treeforce-ranks/champion.svg",
+      "bytes": 1340
+    },
+    {
+      "path": "/assets/treeforce-ranks/silver.svg",
+      "bytes": 958
+    },
+    {
+      "path": "/assets/treeforce-ranks/bronze.svg",
+      "bytes": 958
+    },
+    {
+      "path": "/assets/treeforce-ranks/contender.svg",
+      "bytes": 889
+    }
+  ],
+  "planSha256": "aee1e7f30bf4a5e8425ab7cd73bb78a4c755842d6a31d87303a709b3d2e2bb16",
+  "checkedAt": "2026-11-25T21:19:05.512Z",
+  "slushWarningClearance": "Owner verification pending"
+}

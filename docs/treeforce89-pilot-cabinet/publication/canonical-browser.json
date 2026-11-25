@@ -1,0 +1,38 @@
+{
+  "origin": "https://tree-token.xyz",
+  "results": [
+    {
+      "width": 390,
+      "height": 844,
+      "mainR19": true,
+      "officialLogo": true,
+      "thirteenBadges": true,
+      "assetsLoaded": true,
+      "noOverflow": true,
+      "originalCanvas": {
+        "w": 390,
+        "h": 585,
+        "iw": 480,
+        "ih": 720
+      },
+      "errors": []
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "mainR19": true,
+      "officialLogo": true,
+      "thirteenBadges": true,
+      "assetsLoaded": true,
+      "noOverflow": true,
+      "originalCanvas": {
+        "w": 511.328125,
+        "h": 766.984375,
+        "iw": 480,
+        "ih": 720
+      },
+      "errors": []
+    }
+  ],
+  "payment": false
+}
