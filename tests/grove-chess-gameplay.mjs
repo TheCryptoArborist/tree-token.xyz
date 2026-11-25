@@ -9,7 +9,7 @@ function setup(saved=null){
  const nodes=new Map(),timers=new Map();let next=0,data=saved;
  const document={activeElement:null,querySelector(s){if(!nodes.has(s))nodes.set(s,element());return nodes.get(s)},createElement:()=>element()};
  function element(){return {children:[],style:{},dataset:{},attributes:{},value:'1',textContent:'',html:'',get innerHTML(){return this.html},set innerHTML(v){this.html=v;this.children=[]},setAttribute(k,v){this.attributes[k]=v},append(c){this.children.push(c)},contains(e){return this.children.includes(e)},querySelector(s){return this.children.find(c=>s.includes('"'+c.dataset.square+'"'))},focus(){document.activeElement=this},showModal(){this.open=true},close(){this.open=false}}}
- const context=vm.createContext({Chess,createPlayAccess,crypto:{randomUUID},holderAccess:{isHolder:()=>true,state:{busy:false,wallet:null}},onHolderChange(){},document,localStorage:{getItem:()=>data,setItem(k,v){data=v}},setTimeout(fn){timers.set(++next,fn);return next},clearTimeout(id){timers.delete(id)},console,Math});
+ const context=vm.createContext({createOnline:()=>({room:null,activate(){},deactivate(){}}),URLSearchParams,location:{search:""},Chess,createPlayAccess,crypto:{randomUUID},holderAccess:{isHolder:()=>true,state:{busy:false,wallet:null}},onHolderChange(){},document,localStorage:{getItem:()=>data,setItem(k,v){data=v}},setTimeout(fn){timers.set(++next,fn);return next},clearTimeout(id){timers.delete(id)},console,Math});
  const run=s=>vm.runInContext(s,context);run(code);
  return {run,nodes,document,timers,saved:()=>data,click:s=>run(`clickSquare('${s}')`),square:s=>nodes.get('#board').children.find(x=>x.dataset.square===s)};
 }

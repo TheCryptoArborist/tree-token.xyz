@@ -13,7 +13,7 @@ export function mountGroveChess(doc = document) {
     </div>
     <div class="poster-details"><h4 class="poster-title" id="grove-chess-title">GROVE CHESS</h4>
       <p class="poster-description" id="grove-chess-description">Lead Tree Hero and an illustrated woodland court. Learn each piece as you play the computer or share a board with a friend.</p>
-      <p class="poster-facts">2 free games · NFTree holder access · Local two-player</p>
+      <p class="poster-facts">2 free games · NFTree holder access · Online & local two-player</p>
       <span class="poster-cta"><span>PLAY GROVE CHESS</span><span aria-hidden="true">→</span></span>
     </div></a>`;
   title.textContent = 'GROVE CHESS';
