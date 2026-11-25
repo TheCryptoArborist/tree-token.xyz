@@ -1,3 +1,34 @@
+# Grove Chess access wording and collectible sets — published November 25, 2026
+
+[Grove Chess](https://tree-token.xyz/play/grove-chess/) clearly explains the two
+free games without a wallet, followed by required NFTree ownership and wallet
+connection for continued play. “Check access & unlock sets” explains verification
+and how to recheck after a purchase or transfer. Each rarity now has distinctive
+leafwork, crystal spires, rune rings, oak crowns, rosefire petals or opal crowns
+on the original artwork, with descriptive collection previews.
+
+Locked ready deploy `6b06f3d38906e16d06a5ff16`, source
+`a79f5a61d4072c65cd670cfe3a158b80290afc17` (PR #333).
+[Publication run 45636457940](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45636457940) passed.
+Fresh baseline `6b068b98811fe19a1a6d9cda`; **789 total static paths**,
+**777 unrelated existing paths preserved**, all **62 backend/provider records**
+and **5 schedules** preserved, with protected configuration unchanged.
+Six existing chess presentation files changed and six SVG ornaments were added.
+
+Gameplay, trial access, rarity eligibility, preservation and preview tests passed.
+Candidate and canonical browser flows passed at four desktop/mobile widths,
+including the third-game gate, wallet unlock/disconnect and separate team sets.
+No new Telegram invitations were sent. The Christmas check-in reward is not
+part of this release.
+
+Full release report and static manifest:
+`production/grove-chess-polish-release-20261125.json`.
+Publication artifact #15034460808 SHA256:
+`a5837c923c2b4b17962ef9e8835b629e80c25d72cbdf0e15e96326c8494aec9c`.
+Capture a fresh complete live baseline before every subsequent release.
+
+---
+
 # Profile Studio tree ribbons — published November 25, 2026
 
 [Profile Studio](https://tree-token.xyz/play/profile-studio/) now includes six
