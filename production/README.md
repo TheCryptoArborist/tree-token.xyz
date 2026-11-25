@@ -1,3 +1,15 @@
+# BNB completion verification — November 24, 2026
+
+The read-only completion action now verifies consumed BNB USDT checkout/receipt,
+shared claim, exact payment terms and native run counter. The real database
+loader/settlement path passes replay and mismatch tests using synthetic verified
+chain evidence. Local checks passed: 83 unit, seven Chromium, 40 Netlify-role
+and 37 original-role database checks. Nothing changed live. BNB browser journal
+integration and wallet/RPC E2E remain pending. Evidence:
+`docs/multichain/generation-milestone/netlify-gateway/bnb-completion.md`.
+
+---
+
 # Verified native payment completion — November 24, 2026
 
 A read-only completion action now verifies matching consumed claim, native

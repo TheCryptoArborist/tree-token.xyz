@@ -49,12 +49,12 @@ test('browser wiring uses distinct local and session stores',async()=>{
  old.clear();assert.equal(c.pending().kind,'none');await c.pay(f.offer);assert.equal(f.data.size,1);assert.equal(old.size,0);
 });
 
-function withCompletion(f,change={}){return createSharedNativeCheckout({...f.options,transport:{...f.options.transport,complete:async({paymentId})=>({paymentId,status:'completed',archiveAllowed:true,restoreAuthorized:false,requiresPayment:false,offerId:f.offer.offerId,digest:'D'.repeat(44),nativeRunId:f.offer.runId,...change})}});}
+function withCompletion(f,change={}){return createSharedNativeCheckout({...f.options,transport:{...f.options.transport,complete:async({paymentId})=>({paymentId,source:'sui-native-tree',status:'completed',archiveAllowed:true,restoreAuthorized:false,requiresPayment:false,offerId:f.offer.offerId,digest:'D'.repeat(44),nativeRunId:f.offer.runId,...change})}});}
 test('matching server completion archives before removing pending marker',async()=>{
  const f=fixture();await f.client.pay(f.offer);const c=withCompletion(f);assert.equal((await c.archiveCompleted()).status,'archived');assert.equal(c.pending().canPay,true);assert.equal(f.data.size,1);assert.equal(JSON.parse([...f.data.values()][0]).status,'completed');assert.equal(f.signs(),1);
 });
 test('mismatched or incomplete completion never clears marker',async()=>{
- for(const change of [{archiveAllowed:false},{status:'review-required'},{digest:'E'.repeat(44)},{offerId:'e'.repeat(48)},{nativeRunId:'grove-'+'e'.repeat(32)},{restoreAuthorized:true}]){
+ for(const change of [{source:'bnb-usdt'},{archiveAllowed:false},{status:'review-required'},{digest:'E'.repeat(44)},{offerId:'e'.repeat(48)},{nativeRunId:'grove-'+'e'.repeat(32)},{restoreAuthorized:true}]){
  const f=fixture();await f.client.pay(f.offer);await assert.rejects(withCompletion(f,change).archiveCompleted());assert.equal(f.client.pending().canPay,false);assert.equal(f.signs(),1);
  }
 });

@@ -46,6 +46,7 @@ try{
  }else{
  await owner.query(fs.readFileSync(root+'schema.sql','utf8'));
  await owner.query(fs.readFileSync('docs/multichain/generation-milestone/shared-delivery/schema.sql','utf8'));
+ await owner.query(fs.readFileSync('docs/multichain/generation-milestone/mixed-chain-store/schema.sql','utf8'));
  // Test-only role grant. The proposed schema never grants native session writes.
  await owner.query('grant select,update on public.tree_game_sessions to service_role');
  }
@@ -242,6 +243,42 @@ try{
  assert.equal((await recorder({sessionHash:excess.native.sessionHash,offerId:excess.offerId,digest:excess.digest})).sequence,1);
  const over=(await owner.query('select amount,received from private.arcade_native_sui_payments where offer_id=$1',[excess.offerId])).rows[0];assert.equal(over.amount,policy.amount);assert.equal(over.received,(BigInt(policy.amount)*2n).toString());checks.push('native overpayment remains one continue with excess recorded');
 
+ // Synthetic verified BNB ledger rows; real shared loader, settlement and completion.
+ const bnbActor=await fixture(),bnbMap=await tx(db=>adapter.bind(db,bnbActor)),bnbId=hex(),payer='0x'+hex().slice(0,40),bnbHash='0x'+hex(),receiptId='56:'+bnbHash+':0';
+ const bnbTerms={id:bnbId,sessionHash:bnbActor.sessionHash,accountId:bnbMap.accountId,runId:bnbMap.runId,payer,suiWallet:bnbActor.wallet,sequence:1,deliveryProtocol:'tree-paid-delivery.v2',issuedAt:Date.now(),expiresAt:Date.now()+60000,status:'paid-review'};
+ const bnbPrice=PAYMENT_TERMS_V2['bnb-usdt'];
+ await owner.query(`insert into private.arcade_bnb_continue_checkouts(id,session_hash,account_id,run_id,payer,sequence,terms,payment_terms,issued_at,expires_at,status) values($1,$2,$3,$4,$5,1,$6,$7,clock_timestamp(),clock_timestamp()+interval '1 minute','paid-review')`,[bnbId,bnbActor.sessionHash,bnbMap.accountId,bnbMap.runId,payer,bnbTerms,{policyVersion:'bnb-usdt-continue-v1',token:bnbPrice.token,amount:bnbPrice.amount,treasury:bnbPrice.recipient}]);
+ await owner.query(`insert into private.arcade_bnb_continue_receipts(checkout_id,payment_key,tx_hash,block_hash,paid_at) values($1,$2,$3,$4,clock_timestamp())`,[bnbId,receiptId,bnbHash,'0x'+hex()]);
+ await owner.query('insert into private.arcade_bnb_continue_delivery_pending(checkout_id) values($1)',[bnbId]);
+ const bnbSnapshot=JSON.stringify({format:'treeforce89.checkpoint.v1',ruleset:'treeforce89.v1',runId:bnbMap.runId,lives:0,continuesUsed:0});
+ const bnbAdapter=createNativeSuiSessionAdapter({...options,readReviewedCheckpoint:async()=>({validated:true,snapshotText:bnbSnapshot,hash:sha(bnbSnapshot)})});
+ const bnbDelivery=createSharedContinueDelivery({pool,lockSessionAndFlight:bnbAdapter.lockSessionAndFlight,consumeRun:bnbAdapter.consumeRun});
+ const bnbInput={sessionHash:bnbActor.sessionHash,runId:bnbMap.runId,source:'bnb-usdt',sourceId:bnbId};
+ const bnbPayment=await bnbDelivery.importPayment(bnbInput),bnbClient=hex(),bnbLease=await bnbDelivery.prepare({...bnbInput,paymentId:bnbPayment.paymentId,clientKey:bnbClient});
+ assert.equal((await throughGateway('complete',bnbActor.token,{paymentId:bnbPayment.paymentId})).archiveAllowed,false);
+ await bnbDelivery.activate({...bnbInput,paymentId:bnbPayment.paymentId,clientKey:bnbClient,leaseId:bnbLease.leaseId,checkpointHash:bnbLease.checkpointHash,requestId:randomUUID()});
+ assert.equal((await owner.query('select status from private.arcade_bnb_continue_checkouts where id=$1',[bnbId])).rows[0].status,'consumed');
+ assert.equal((await bnbDelivery.activate({...bnbInput,paymentId:bnbPayment.paymentId,clientKey:bnbClient,leaseId:bnbLease.leaseId,checkpointHash:bnbLease.checkpointHash,requestId:randomUUID()})).status,'review-required');
+ const bnbComplete=await throughGateway('complete',bnbActor.token,{paymentId:bnbPayment.paymentId});assert.equal(bnbComplete.archiveAllowed,true);assert.equal(bnbComplete.source,'bnb-usdt');assert.equal(bnbComplete.txHash,bnbHash);assert.equal(bnbComplete.receiptId,receiptId);assert.equal(bnbComplete.payer,payer);
+ const bnbStranger=await fixture();assert.equal((await throughGateway('complete',bnbStranger.token,{paymentId:bnbPayment.paymentId})).archiveAllowed,false);
+ const bnbFresh=await fixture(bnbActor.wallet);assert.equal((await throughGateway('complete',bnbFresh.token,{paymentId:bnbPayment.paymentId})).archiveAllowed,true);
+ const savedPayment=(await owner.query('select payment from private.arcade_continue_payments_v2 where id=$1',[bnbPayment.paymentId])).rows[0].payment;
+ for(const patch of [{amount:'1'},{payer:'0x'+hex().slice(0,40)},{network:'eip155:1'},{token:'wrong'},{recipient:'wrong'}]){
+  await owner.query('update private.arcade_continue_payments_v2 set payment=$2 where id=$1',[bnbPayment.paymentId,{...savedPayment,...patch}]);
+  assert.equal((await throughGateway('complete',bnbActor.token,{paymentId:bnbPayment.paymentId})).archiveAllowed,false);
+ }
+ await owner.query('update private.arcade_continue_payments_v2 set payment=$2 where id=$1',[bnbPayment.paymentId,savedPayment]);
+ await owner.query('update public.tree_game_sessions set continuation_number=0 where session_id=$1',[bnbActor.id]);assert.equal((await throughGateway('complete',bnbActor.token,{paymentId:bnbPayment.paymentId})).archiveAllowed,false);
+ await owner.query('update public.tree_game_sessions set continuation_number=1 where session_id=$1',[bnbActor.id]);
+ assert.equal((await throughGateway('complete',bnbActor.token,{paymentId:bnbPayment.paymentId})).archiveAllowed,true);
+ const originalReceipt=(await owner.query('select *,paid_at::text as paid_text from private.arcade_bnb_continue_receipts where checkout_id=$1',[bnbId])).rows[0];
+ const alteredHash='0x'+hex();await owner.query('update private.arcade_bnb_continue_receipts set tx_hash=$2,payment_key=$3 where checkout_id=$1',[bnbId,alteredHash,'56:'+alteredHash+':0']);
+ assert.equal((await throughGateway('complete',bnbActor.token,{paymentId:bnbPayment.paymentId})).archiveAllowed,false);
+ await owner.query(`update private.arcade_bnb_continue_receipts set tx_hash=$2,payment_key=$3,paid_at=clock_timestamp()+interval '1 day' where checkout_id=$1`,[bnbId,originalReceipt.tx_hash,originalReceipt.payment_key]);
+ assert.equal((await throughGateway('complete',bnbActor.token,{paymentId:bnbPayment.paymentId})).archiveAllowed,false);
+ await owner.query('update private.arcade_bnb_continue_receipts set paid_at=$2 where checkout_id=$1',[bnbId,originalReceipt.paid_text]);
+ assert.equal((await throughGateway('complete',bnbActor.token,{paymentId:bnbPayment.paymentId})).archiveAllowed,true);
+ checks.push('real BNB loader/settlement consumes ledger once; completion rejects unconsumed, foreign-wallet, mismatched terms and counter evidence');
  if(process.env.NATIVE_BUNDLE_CHECK==='1'){
   const {loadNativeContinueTestBundle}=await import('./load-native-continue-test-bundle.mjs');
   const {createSharedNativeCheckout}=await import('./browser/shared-native-checkout.mjs');

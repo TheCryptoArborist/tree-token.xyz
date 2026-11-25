@@ -1,5 +1,7 @@
 # Netlify schema and gateway boundary rehearsal
 
+Latest: [BNB payment completion verification](bnb-completion.md).
+
 Latest: [verified native payment completion](completion.md).
 
 Latest: [pending stores and recovery controls](recovery-controls.md).

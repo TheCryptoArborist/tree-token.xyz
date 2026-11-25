@@ -37,7 +37,7 @@ export function createSharedNativeCheckout({getSession,transport,Transaction,sig
    same(s);if(legacy(s))throw Error('legacy-payment-review-required');const original=storage.getItem(key(s)),p=load(s);
    if(!uuid(p.paymentId)||!p.digest)throw Error('receipt-review-required');
    const r=await transport.complete({paymentId:p.paymentId});same(s);
-   if(r?.status!=='completed'||r.archiveAllowed!==true||r.restoreAuthorized!==false||r.requiresPayment!==false||r.paymentId!==p.paymentId||r.offerId!==p.offerId||r.digest!==p.digest||r.nativeRunId!==p.nativeRunId)throw Error('completion-review-required');
+   if(r?.source!=='sui-native-tree'||r?.status!=='completed'||r.archiveAllowed!==true||r.restoreAuthorized!==false||r.requiresPayment!==false||r.paymentId!==p.paymentId||r.offerId!==p.offerId||r.digest!==p.digest||r.nativeRunId!==p.nativeRunId)throw Error('completion-review-required');
    if(storage.getItem(key(s))!==original)throw Error('pending-payment-changed');
    const archiveKey=key(s)+':completed:'+p.paymentId,text=JSON.stringify({...p,status:'completed'});
    storage.setItem(archiveKey,text);if(storage.getItem(archiveKey)!==text)throw Error('durable-archive-required');

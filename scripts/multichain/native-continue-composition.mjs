@@ -2,7 +2,7 @@
 import {createRestoreHttpHandler} from './continue-restore-http.mjs';
 import {createNativeContinueGateway} from './native-continue-gateway.mjs';
 const outputFields={
- complete:['status','paymentId','runId','nativeRunId','sequence','offerId','digest','archiveAllowed'],
+ complete:['source','checkoutId','txHash','receiptId','payer','status','paymentId','runId','nativeRunId','sequence','offerId','digest','archiveAllowed'],
  record:['status','paymentId','offerId','digest','runId','sequence'],
  recover:['status','paymentId','runId','nativeRunId','sequence'],
  offer:['enabled','recipientConfirmed','offerId','wallet','runId','network','coinType','recipient','price','decimals','amountBaseUnits','lives','expiresAt'],
