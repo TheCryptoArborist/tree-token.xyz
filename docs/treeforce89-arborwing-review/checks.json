@@ -1,0 +1,218 @@
+[
+  {
+    "width": 390,
+    "before": {
+      "renderer": 2,
+      "review": false,
+      "geometry": {
+        "x": 240,
+        "y": 460,
+        "w": 128,
+        "h": 160,
+        "displayWidth": 224,
+        "displayHeight": 280,
+        "originX": 0.5,
+        "originY": 0.5,
+        "bodyWidth": 31.5,
+        "bodyHeight": 45.5,
+        "offsetX": 55,
+        "offsetY": 67,
+        "bodyX": 224.25,
+        "bodyY": 437.25
+      },
+      "frames": [
+        {
+          "w": 128,
+          "h": 160,
+          "rw": 128,
+          "rh": 160
+        },
+        {
+          "w": 128,
+          "h": 160,
+          "rw": 128,
+          "rh": 160
+        },
+        {
+          "w": 128,
+          "h": 160,
+          "rw": 128,
+          "rh": 160
+        },
+        {
+          "w": 128,
+          "h": 160,
+          "rw": 128,
+          "rh": 160
+        },
+        {
+          "w": 128,
+          "h": 160,
+          "rw": 128,
+          "rh": 160
+        }
+      ]
+    },
+    "after": {
+      "renderer": 2,
+      "review": true,
+      "geometry": {
+        "x": 240,
+        "y": 460,
+        "w": 128,
+        "h": 160,
+        "displayWidth": 224,
+        "displayHeight": 280,
+        "originX": 0.5,
+        "originY": 0.5,
+        "bodyWidth": 31.5,
+        "bodyHeight": 45.5,
+        "offsetX": 55,
+        "offsetY": 67,
+        "bodyX": 224.25,
+        "bodyY": 437.25
+      },
+      "frames": [
+        {
+          "w": 128,
+          "h": 160,
+          "rw": 128,
+          "rh": 160
+        },
+        {
+          "w": 128,
+          "h": 160,
+          "rw": 128,
+          "rh": 160
+        },
+        {
+          "w": 128,
+          "h": 160,
+          "rw": 128,
+          "rh": 160
+        },
+        {
+          "w": 128,
+          "h": 160,
+          "rw": 128,
+          "rh": 160
+        },
+        {
+          "w": 128,
+          "h": 160,
+          "rw": 128,
+          "rh": 160
+        }
+      ]
+    },
+    "geometryUnchanged": true
+  },
+  {
+    "width": 1920,
+    "before": {
+      "renderer": 2,
+      "review": false,
+      "geometry": {
+        "x": 240,
+        "y": 460,
+        "w": 128,
+        "h": 160,
+        "displayWidth": 224,
+        "displayHeight": 280,
+        "originX": 0.5,
+        "originY": 0.5,
+        "bodyWidth": 31.5,
+        "bodyHeight": 45.5,
+        "offsetX": 55,
+        "offsetY": 67,
+        "bodyX": 224.25,
+        "bodyY": 437.25
+      },
+      "frames": [
+        {
+          "w": 128,
+          "h": 160,
+          "rw": 128,
+          "rh": 160
+        },
+        {
+          "w": 128,
+          "h": 160,
+          "rw": 128,
+          "rh": 160
+        },
+        {
+          "w": 128,
+          "h": 160,
+          "rw": 128,
+          "rh": 160
+        },
+        {
+          "w": 128,
+          "h": 160,
+          "rw": 128,
+          "rh": 160
+        },
+        {
+          "w": 128,
+          "h": 160,
+          "rw": 128,
+          "rh": 160
+        }
+      ]
+    },
+    "after": {
+      "renderer": 2,
+      "review": true,
+      "geometry": {
+        "x": 240,
+        "y": 460,
+        "w": 128,
+        "h": 160,
+        "displayWidth": 224,
+        "displayHeight": 280,
+        "originX": 0.5,
+        "originY": 0.5,
+        "bodyWidth": 31.5,
+        "bodyHeight": 45.5,
+        "offsetX": 55,
+        "offsetY": 67,
+        "bodyX": 224.25,
+        "bodyY": 437.25
+      },
+      "frames": [
+        {
+          "w": 128,
+          "h": 160,
+          "rw": 128,
+          "rh": 160
+        },
+        {
+          "w": 128,
+          "h": 160,
+          "rw": 128,
+          "rh": 160
+        },
+        {
+          "w": 128,
+          "h": 160,
+          "rw": 128,
+          "rh": 160
+        },
+        {
+          "w": 128,
+          "h": 160,
+          "rw": 128,
+          "rh": 160
+        },
+        {
+          "w": 128,
+          "h": 160,
+          "rw": 128,
+          "rh": 160
+        }
+      ]
+    },
+    "geometryUnchanged": true
+  }
+]
