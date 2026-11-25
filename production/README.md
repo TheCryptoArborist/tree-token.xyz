@@ -1,3 +1,15 @@
+# Approved native database audit: binding unavailable — November 24, 2026
+
+The owner-approved single-binding audit passed eleven local checks but stopped
+before connecting: the named Netlify value is not a parseable URL and the same
+GitHub Actions secret is unavailable. A usable existing game-database binding
+must be added securely as the repository secret `TREEFORCE89_DEV_DATABASE_URL`.
+The deployed native status check remains separate evidence; full catalog parity
+is still unknown. No database connection, migration or deployment occurred.
+Failure receipt and setup: `docs/multichain/generation-milestone/native-database-audit/README.md`.
+
+---
+
 # Native database runtime readiness check — November 24, 2026
 
 The existing canonical status endpoint confirms native schema/payment readiness

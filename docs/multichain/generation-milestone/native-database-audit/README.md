@@ -81,3 +81,41 @@ The owner approved using only `TREEFORCE89_DEV_DATABASE_URL` inside GitHub
 Actions for the read-only audit, without printing or saving the credential.
 This authorizes the narrowed runner and no environment listing, migration,
 application-row read, deployment or gameplay activation.
+
+## Approved audit outcome — November 24, 2026
+
+The single-binding audit was executed after owner approval. All eleven local
+checks passed inside Actions. The final diagnostic run
+[45536657699](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45536657699)
+stopped at `binding-identity`: the named Netlify API value is not parseable as a
+URL, and the same-name GitHub Actions secret is unavailable to that workflow.
+This does not prove the deployed credential is invalid: the earlier in-runtime
+status check succeeded. It establishes that the audit runner lacks a usable
+approved connection value. No hosted database connection was opened, and no
+catalog results or migrations were produced. See `approved-audit-result.json`.
+
+The runner now supports the same approved key directly from Actions secrets,
+with the identical provider/path/database-identity checks. It falls back only
+to the single-key Netlify read; the path allowlist still rejects environment
+listings and other keys. Neither path logs or saves a connection string.
+A read-only attempt to list repository secret **names** returned HTTP 403,
+`Resource not accessible by integration`; this integration cannot configure or
+inspect repository secrets. No broader access was attempted.
+
+### Required secure setup
+
+The repository owner should add the **existing game database connection URL** as
+an Actions repository secret named `TREEFORCE89_DEV_DATABASE_URL` at GitHub →
+TheCryptoArborist/tree-token.xyz → Settings → Secrets and variables → Actions.
+Do not paste it into chat, source, an issue, or a workflow log. Do not use the
+site's default database URL, create a replacement database, or rotate/change the
+live binding to satisfy this audit. If the existing value cannot be recovered
+from its approved secure source, resolve that access first.
+
+After the secret is available, rerun the final diagnostic run above (it contains
+the reviewed single-binding implementation), or make a reviewed audit-marker
+commit. The runner checks identity before connecting and rejects any different
+database. The owner's audit authorization is already recorded; it does not need
+to be requested again. Catalog compatibility and shared-table readiness remain
+unknown until that run succeeds. Existing Sui gameplay/payment behavior and
+shared BNB activation remain unchanged.
