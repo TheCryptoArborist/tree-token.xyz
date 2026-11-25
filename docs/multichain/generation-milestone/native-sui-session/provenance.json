@@ -1,0 +1,52 @@
+{
+  "commit": "9974d7f0b5c03b9621561d15a8040e8bf558e1db",
+  "branch": "feature/treeforce89-leaderboard-achievements",
+  "currentProductionParityVerified": false,
+  "files": [
+    {
+      "path": "netlify/database/migrations/20261016030500_tree_authentication.sql",
+      "snapshot": "upstream/20261016030500_tree_authentication.sql",
+      "sha256": "c98e97212e3b9bc2a8731324f2b11a682cc03fbd6c262fb1ab93ac1aa3076c36"
+    },
+    {
+      "path": "netlify/database/migrations/20261031045000_tree_paid_continue.sql",
+      "snapshot": "upstream/20261031045000_tree_paid_continue.sql",
+      "sha256": "5bb885df440d47c5b491f1ec189d60c901ba6d7d14a68f6a3b219c49ab10a851"
+    },
+    {
+      "path": "netlify/preview-lib/treeforce89-source/game/credential-revocation.mjs",
+      "snapshot": "upstream/credential-revocation.mjs",
+      "sha256": "97865c065d614612ca22917dba8bcbee191bda27a1afea3c4a23e56e2fac6731"
+    },
+    {
+      "path": "netlify/preview-lib/treeforce89-source/game/authenticated-session.mjs",
+      "snapshot": "upstream/authenticated-session.mjs",
+      "sha256": "54e952a9cb5cc5c22cdf314eb90330dca89629777cf20521b1af21993e6a86d8"
+    },
+    {
+      "path": "netlify/preview-lib/treeforce89-source/game/game-run-service.mjs",
+      "snapshot": "upstream/game-run-service.mjs",
+      "sha256": "5442912df513baa2c724d4554ee67ec7999fd8bacffb91e7678f7bcdccef9108"
+    },
+    {
+      "path": "netlify/preview-lib/treeforce89-database.mjs",
+      "snapshot": "upstream/treeforce89-database.mjs",
+      "sha256": "13be161a2f5952b518968aadbb58a80a6b9e471c0aad3f0234abb04e91638e60"
+    },
+    {
+      "path": "netlify/preview-lib/treeforce89-gateway.mjs",
+      "snapshot": "upstream/treeforce89-gateway.mjs",
+      "sha256": "54372023a5dc9f58cf84a2b11cf65321030397bfce98b12395f69c0aa40cc591"
+    },
+    {
+      "path": "netlify/preview-lib/treeforce89-paid-continue.mjs",
+      "snapshot": "upstream/treeforce89-paid-continue.mjs",
+      "sha256": "b8b161d0bb04aae973be84230aa8f118f4601fd2097b636dcf68be14ccba2b52"
+    },
+    {
+      "path": "treeforce89/paid/contract.mjs",
+      "snapshot": "upstream/contract.mjs",
+      "sha256": "598bb7c823910c61eeebc860efdda34fe340b121dec90fcb67ecd924aa81bcc8"
+    }
+  ]
+}

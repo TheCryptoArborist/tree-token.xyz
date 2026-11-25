@@ -1,3 +1,16 @@
+# Native Sui session source recovered — November 24, 2026
+
+The native PostgreSQL gateway source is now pinned and a source-only adapter
+maps its wallet/run IDs while locking the real session row used by logout.
+Fourteen database checks pass, including the unmodified native logout service.
+Current published-package parity is still unverified. Native receipt storage,
+client-reported checkpoints and repeated-continue behavior differ from the earlier
+preview delivery schema; those require coordinated integration before release.
+No production behavior or hosted schema changed. See
+`docs/multichain/generation-milestone/native-sui-session/README.md`.
+
+---
+
 # Shared continue delivery source — November 24, 2026
 
 A proposed v2 consumption record now accepts separately typed Sui TREE and BNB

@@ -27,6 +27,8 @@ on:
       - 'scripts/multichain/sui-bnb-continue-store.mjs'
       - 'scripts/multichain/check-sui-bnb-continue-postgres.mjs'
       - 'scripts/multichain/check-delivery-compatibility-postgres.mjs'
+      - 'scripts/multichain/native-sui-session.mjs'
+      - 'scripts/multichain/check-native-sui-session-postgres.mjs'
       - 'scripts/multichain/shared-continue-delivery.mjs'
       - 'scripts/multichain/check-shared-delivery-postgres.mjs'
       - 'vendor/bnb-continue-store/**'
@@ -78,6 +80,8 @@ on:
       - 'scripts/multichain/sui-bnb-continue-store.mjs'
       - 'scripts/multichain/check-sui-bnb-continue-postgres.mjs'
       - 'scripts/multichain/check-delivery-compatibility-postgres.mjs'
+      - 'scripts/multichain/native-sui-session.mjs'
+      - 'scripts/multichain/check-native-sui-session-postgres.mjs'
       - 'scripts/multichain/shared-continue-delivery.mjs'
       - 'scripts/multichain/check-shared-delivery-postgres.mjs'
       - 'vendor/bnb-continue-store/**'
@@ -178,6 +182,7 @@ jobs:
           BNB_PG_BIN="$(pg_config --bindir)" node scripts/multichain/check-sui-bnb-continue-postgres.mjs
           BNB_PG_BIN="$(pg_config --bindir)" node scripts/multichain/check-delivery-compatibility-postgres.mjs
           BNB_PG_BIN="$(pg_config --bindir)" node scripts/multichain/check-shared-delivery-postgres.mjs
+          BNB_PG_BIN="$(pg_config --bindir)" node scripts/multichain/check-native-sui-session-postgres.mjs
 
       - name: Test and package disabled isolated review endpoint
         run: |

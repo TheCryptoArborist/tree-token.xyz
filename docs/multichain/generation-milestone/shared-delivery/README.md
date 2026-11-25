@@ -70,3 +70,10 @@ No production identity mapping is asserted. This milestone adds no HTTP handler,
 public grants, cleanup job, score submission or wallet transaction.
 
 Hosted [CI 45521980976](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45521980976) passed on source `a7f1b7c`, including the shared checker and existing regression suite. Machine-readable evidence is in `hosted-ci.json`.
+
+## Subsequent native source discovery
+
+The native PostgreSQL session source and tested lock/mapping adapter are now
+available in `../native-sui-session/README.md`. Current runtime parity remains
+unverified. That audit also found native repeated-continue and receipt/checkpoint
+semantics that must be preserved before v2 can replace the Sui delivery path.

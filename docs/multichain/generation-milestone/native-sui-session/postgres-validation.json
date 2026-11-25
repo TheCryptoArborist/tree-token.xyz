@@ -1,0 +1,23 @@
+{
+  "localOnly": true,
+  "passed": 14,
+  "checks": [
+    "all recovered native source hashes match pinned provenance",
+    "12 native binding retries persist one account and one mapped run",
+    "new native run retains wallet account but receives distinct run identity",
+    "foreign credential and mismatched native run cannot acquire mapping",
+    "native session authenticates without inventing reviewed checkpoint",
+    "shared engine refuses native client snapshot by default",
+    "runtime provenance cannot relabel preview as mainnet",
+    "cached ownership is not stamped fresh",
+    "ownership loss denies entitlement",
+    "native Sui consumption change invalidates prepared shared activation",
+    "actual native logout invalidates prepared shared activation",
+    "native logout waits for shared row lock then prevents subsequent admission",
+    "expired bearer cannot create a mapping",
+    "runtime cannot rewrite or delete native identity bindings"
+  ],
+  "nativeSourceCommit": "9974d7f0b5c03b9621561d15a8040e8bf558e1db",
+  "productionParityVerified": false,
+  "liveRestorationEnabled": false
+}
