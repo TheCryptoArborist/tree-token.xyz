@@ -90,3 +90,5 @@ hosted credentials. `schema.sql` is a proposal, outside hosted migrations.
 
 No live transaction, payment, NFT movement, database write, public sale, game,
 score, tournament, deployment or existing authentication behavior changed.
+
+Hosted [CI 45526542284](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45526542284) passed on `4addf69`, including all native/shared payment checks and existing regressions. A previous documentation-commit run failed before tests during PostgreSQL startup; the native runner now uses a private Unix socket and preserves startup diagnostics. See `hosted-ci.json`.
