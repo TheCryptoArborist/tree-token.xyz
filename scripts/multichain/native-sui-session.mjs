@@ -21,6 +21,14 @@ export function createNativeSuiSessionAdapter({verifyRuntime,checkOwnership,read
   return now;
  }
  return Object.freeze({
+  async consumeRun(db,s,{sequence}){
+   check(Number.isSafeInteger(sequence)&&sequence>0,'invalid-continue-sequence');
+   const r=await db.query(`update public.tree_game_sessions set continuation_number=continuation_number+1,
+    game_over=false,continue_pending=false where session_token_hash=$1 and run_id=$2
+    and expires_at>clock_timestamp() and continuation_number=$3 and game_over=true and cleared=false returning session_id`,
+    [s.sessionHash,s.nativeRunId,sequence-1]);
+   check(r.rowCount===1,'native-consumption-conflict');
+  },
   async bind(db,{sessionHash,nativeRunId}){
    check(hash(sessionHash)&&/^grove-[a-f0-9]{32}$/.test(nativeRunId||''),'invalid-native-reference');
    const r=await runtime(db);
@@ -52,7 +60,7 @@ export function createNativeSuiSessionAdapter({verifyRuntime,checkOwnership,read
    const checkpoint=await readReviewedCheckpoint(db,{nativeRunId:row.run_id,runId,accountId:row.account_id,sessionId:row.session_id});
    return {authenticated:true,revoked:false,sessionHash,runId,accountId:row.account_id,suiWallet:row.wallet,
     expiresAt:row.expires_at.getTime(),origin:r.origin,environment:'mainnet',entitled,
-    entitlementCheckedAt:proof?.checkedAt,checkpoint:!row.game_over||row.cleared||row.continuation_number!==0?null:checkpoint,
+    entitlementCheckedAt:proof?.checkedAt,checkpoint:!row.game_over||row.cleared||!checkpoint||JSON.parse(checkpoint.snapshotText).continuesUsed!==row.continuation_number?null:checkpoint,
     nativeRunId:row.run_id,nativeContinuationNumber:row.continuation_number};
   },
  });

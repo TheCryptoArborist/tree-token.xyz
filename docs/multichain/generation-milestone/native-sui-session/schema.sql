@@ -18,4 +18,17 @@ alter table private.arcade_native_sui_runs enable row level security;
 revoke all on private.arcade_native_sui_accounts,private.arcade_native_sui_runs from public,anon,authenticated,service_role;
 grant select,insert on private.arcade_native_sui_accounts,private.arcade_native_sui_runs to service_role;
 -- No privilege changes on native tables. Runtime/session authority remains a release gate.
+-- Recovery journal contains no raw credential or credential hash.
+create table private.arcade_native_paid_recoveries (
+ id bigint generated always as identity primary key,
+ payment_id uuid not null,
+ from_session text not null,to_session text not null,
+ created_at timestamptz not null default clock_timestamp()
+);
+alter table private.arcade_native_paid_recoveries enable row level security;
+revoke all on private.arcade_native_paid_recoveries from public,anon,authenticated,service_role;
+revoke all on sequence private.arcade_native_paid_recoveries_id_seq from public,anon,authenticated,service_role;
+grant select,insert on private.arcade_native_paid_recoveries to service_role;
+grant usage on sequence private.arcade_native_paid_recoveries_id_seq to service_role;
+
 commit;

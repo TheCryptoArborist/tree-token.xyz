@@ -60,11 +60,10 @@ runtime/source verification remain necessary before integration release.
   the shared protocol's independently reviewed checkpoints. No conversion marks
   them validated in this adapter.
 - Native paid continues increment a continuation counter and allow repeated
-  continues. The proposed shared v2 claim currently allows one per run. Preserve
+  continues. The initial proposed shared v2 claim allowed one per run. Preserve
   existing Sui behavior: introduce an explicit continuation sequence and common
-  consumption boundary for both paths before a production cutover. This adapter
-  refuses shared restoration once the native counter is nonzero; this is a
-  fail-closed source limitation, not a change to the running Sui game.
+  consumption boundary for both paths before a production cutover. The repeated-continues milestone now keys claims by sequence and advances the
+  native counter atomically; the running Sui game remains unchanged.
 - Both payment paths must use the common consumption boundary. Session locks alone
   do not prevent a legacy Sui restoration after a new shared consumption commits.
   Recovery after a new signed login must retain the native run identity and avoid
@@ -92,3 +91,5 @@ were read before this inspection. No SDK, wallet, signature or chain-read API wa
 changed; existing pinned dependencies are preserved.
 
 Hosted [CI 45523590260](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45523590260) passed on `2b07a5b`, including the 14 native-session checks and existing regressions. See `hosted-ci.json`.
+
+Subsequent source implementation and expanded tests: [repeated continues and paid recovery](../repeated-continues/README.md). This supersedes the initial one-continue adapter restriction; runtime parity and native receipt/checkpoint integration remain release gates.

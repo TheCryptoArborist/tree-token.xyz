@@ -1,7 +1,7 @@
 # Shared continue delivery v2 — source milestone
 
 This source-only coordinator gives Sui TREE and BNB USDT payments one durable
-consumption record per account/run. It does not enable purchases, restore lives,
+consumption record per account/run/continue sequence. It does not enable purchases, restore lives,
 change the current Sui game, or deploy a database migration. All responses contain
 `restoreAuthorized: false`. The proposed SQL deliberately lives outside migrations.
 
@@ -13,15 +13,15 @@ terms remain 20,000 TREE; BNB terms remain 1 USDT. Account/run/access-wallet bin
 must match the authenticated session. Import retries return the same payment ID.
 
 `prepare` requires a freshly checked entitlement and a reviewed zero-lives,
-unused-continue checkpoint. Both payment sources compete for one account/run
+checkpoint whose used-continue count matches the payment sequence minus one. Both payment sources compete for one account/run/sequence
 claim. A page-bound lease lasts at most two minutes and cannot exceed session
 expiry. Expired leases may be prepared again using the same payment. Another
 payment cannot take over the claim. Both payments remain recorded if a player
 has paid twice; the losing payment requires recovery/refund review. No automatic
 refund or money movement is implemented.
 
-`activate` rechecks session, entitlement, checkpoint and lease, then records one
-consumption and its journal event in the same transaction. Once consumed, retries
+`activate` rechecks session, entitlement, checkpoint and lease, then advances the native run counter through a mandatory trusted writer and records one
+consumption and its journal event in the same transaction. BNB checkout reservations release only against that recorded consumption. Once consumed, retries
 return review-required, including after a lost response. This proves at-most-once
 durable consumption, not exactly-once browser restoration. A future renderer and
 recovery design must handle ambiguous delivery without granting a second continue.
@@ -77,3 +77,5 @@ The native PostgreSQL session source and tested lock/mapping adapter are now
 available in `../native-sui-session/README.md`. Current runtime parity remains
 unverified. That audit also found native repeated-continue and receipt/checkpoint
 semantics that must be preserved before v2 can replace the Sui delivery path.
+
+The subsequent [repeated-continues milestone](../repeated-continues/README.md) extends this source schema and adds native paid-run recovery. Earlier validation receipts above remain historical evidence for their pinned commits.

@@ -35,7 +35,7 @@ export function createPostgresContinueStore({pool, lockSuiRun}) {
       s.accountId===binding.accountId && s.runId===binding.runId && s.suiWallet===binding.suiWallet &&
       s.sequence===binding.sequence && s.deliveryProtocol==='tree-paid-delivery.v1' &&
       Number.isSafeInteger(s.expiresAt) && s.expiresAt>now,'session-or-run-changed');
-    if(access) check(s.lives===0 && s.continuesUsed===0 && s.finished===false &&
+    if(access) check(s.lives===0 && Number.isSafeInteger(s.continuesUsed) && s.continuesUsed>=0 && s.continuesUsed<2147483647 && s.sequence===s.continuesUsed+1 && s.finished===false &&
       s.continueAllowed===true && s.ruleset==='treeforce89.v1','continue-denied');
     return {now,session:s};
   }

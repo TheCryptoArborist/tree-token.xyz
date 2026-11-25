@@ -9,9 +9,9 @@ create table private.arcade_bnb_continue_checkouts (
  terms jsonb not null check(jsonb_typeof(terms)='object' and terms ?& array['id','sessionHash','accountId','runId','payer','suiWallet','sequence','deliveryProtocol','issuedAt','expiresAt','status']),
  payment_terms jsonb not null check(jsonb_typeof(payment_terms)='object'),
  issued_at timestamptz not null, expires_at timestamptz not null,
- status text not null default 'challenge' check(status in ('challenge','open','paid-review')),
+ status text not null default 'challenge' check(status in ('challenge','open','paid-review','consumed')),
  check(isfinite(issued_at) and isfinite(expires_at) and expires_at>issued_at and expires_at<=issued_at+interval '5 minutes'),
- check(terms->>'id'=id and terms->>'sessionHash'=session_hash and terms->>'accountId'=account_id::text and terms->>'runId'=run_id::text and terms->>'payer'=payer)
+ check(terms->>'id'=id and terms->>'sessionHash'=session_hash and terms->>'accountId'=account_id::text and terms->>'runId'=run_id::text and terms->>'payer'=payer and (terms->>'sequence')::integer=sequence)
 );
 -- No expiry predicate: un-reconciled money must not silently allow another charge.
 create unique index arcade_bnb_continue_one_payer on private.arcade_bnb_continue_checkouts(payer) where status in ('open','paid-review');
@@ -37,4 +37,21 @@ revoke all on private.arcade_bnb_continue_checkouts,private.arcade_bnb_continue_
 grant select,insert on private.arcade_bnb_continue_checkouts to service_role;
 grant update(status) on private.arcade_bnb_continue_checkouts to service_role;
 grant select,insert on private.arcade_bnb_continue_receipts,private.arcade_bnb_continue_delivery_pending to service_role;
+-- Consumption requires a matching durable shared claim. Immutable receipts remain.
+create function private.arcade_bnb_consumed_guard() returns trigger language plpgsql set search_path='' as $$
+begin
+ if old.status='consumed' then raise exception 'consumed_checkout_immutable'; end if;
+ if new.status='consumed' then
+  if old.status<>'paid-review' then raise exception 'checkout_not_paid'; end if;
+  if not exists(select 1 from private.arcade_continue_payments_v2 p
+   join private.arcade_continue_claims_v2 c on c.payment_id=p.id
+   where p.source='bnb-usdt' and p.source_id=old.id and c.state='started'
+   and p.account_id=old.account_id and p.run_id=old.run_id and p.sequence=old.sequence) then
+   raise exception 'shared_consumption_required';
+  end if;
+ end if;
+ return new;
+end $$;
+create trigger arcade_bnb_consumed_guard before update on private.arcade_bnb_continue_checkouts for each row execute function private.arcade_bnb_consumed_guard();
+revoke all on function private.arcade_bnb_consumed_guard() from public,anon,authenticated,service_role;
 commit;

@@ -35,7 +35,7 @@ try{
   const f=(await db.query('select * from private.test_sui_flights where id=$1::uuid for update',[runId])).rows[0];
   if(!s||!f||s.account_id!==f.account_id)return null;
   return {authenticated:true,revoked:s.revoked,sessionHash,accountId:s.account_id,runId,suiWallet:s.wallet,
-   sequence:1,deliveryProtocol:'tree-paid-delivery.v1',expiresAt:s.expires_at.getTime(),lives:f.lives,continuesUsed:f.continues,finished:f.finished,continueAllowed:true,ruleset:'treeforce89.v1'};
+   sequence:f.continues+1,deliveryProtocol:'tree-paid-delivery.v1',expiresAt:s.expires_at.getTime(),lives:f.lives,continuesUsed:f.continues,finished:f.finished,continueAllowed:true,ruleset:'treeforce89.v1'};
  }
  const store=createPostgresContinueStore({pool,lockSuiRun});
  async function fixture(overrides={}) {
@@ -46,10 +46,10 @@ try{
  const payment=r=>{const txHash='0x'+hex();return {id:r.id,sessionHash:r.sessionHash,txHash,paymentKey:`56:${txHash}:0`,blockHash:'0x'+hex(),paidAt:Math.ceil(r.issuedAt/1000)*1000};};
  const checkpoints=new Map(),proofs=new Map();
  async function auth(db,h,r){const s=await lockSuiRun(db,h,r);return s?{...s,origin:'https://tree-token.xyz',environment:'mainnet',entitled:true,entitlementCheckedAt:Date.now(),checkpoint:checkpoints.get(r)}:null;}
- const service=createSharedContinueDelivery({pool,lockSessionAndFlight:auth,loadPayment:async(_db,{sourceId})=>proofs.get(sourceId)});
+ const service=createSharedContinueDelivery({pool,lockSessionAndFlight:auth,settlePayment:async()=>{},consumeRun:async(db,s)=>{const r=await db.query('update private.test_sui_flights set continues=continues+1 where id=$1 returning id',[s.runId]);assert.equal(r.rowCount,1);},loadPayment:async(_db,{sourceId})=>proofs.get(sourceId)});
  const policies=(await import('./shared-continue-delivery.mjs')).PAYMENT_TERMS_V2;
  async function run(){const r=await fixture();const snapshotText=JSON.stringify({format:'treeforce89.checkpoint.v1',ruleset:'treeforce89.v1',runId:r.runId,lives:0,continuesUsed:0,wave:1,score:0,scene:{fixture:true}});checkpoints.set(r.runId,{validated:true,snapshotText,hash:sha(snapshotText)});return r;}
- async function pay(r,source){const sourceId=hex();proofs.set(sourceId,{accountId:r.accountId,runId:r.runId,suiWallet:r.suiWallet,receiptId:source+':'+hex(),payment:{...policies[source],payer:source==='sui-tree'?r.suiWallet:r.payer}});return service.importPayment({...r,source,sourceId});}
+ async function pay(r,source){const sourceId=hex();proofs.set(sourceId,{accountId:r.accountId,runId:r.runId,suiWallet:r.suiWallet,sequence:1,receiptId:source+':'+hex(),payment:{...policies[source],payer:source==='sui-tree'?r.suiWallet:r.payer}});return service.importPayment({...r,source,sourceId});}
  const r=await run(),sui=await pay(r,'sui-tree'),bnb=await pay(r,'bnb-usdt');assert.notEqual(sui.paymentId,bnb.paymentId);checks.push('Sui TREE and BNB USDT retain distinct typed payment records for one run');
  const clients=Array.from({length:12},()=>hex());const prepared=await Promise.all(clients.map((clientKey,i)=>service.prepare({...r,paymentId:i%2?sui.paymentId:bnb.paymentId,clientKey})));
  const win=prepared.findIndex(p=>p.status==='prepared');assert.equal(prepared.filter(p=>p.status==='prepared').length,1);const lease=prepared[win];
@@ -75,9 +75,17 @@ try{
  await owner.query('drop trigger reject_shared on private.arcade_continue_events_v2;drop function private.reject_shared_event();');assert.equal((await service.activate(xa)).consumed,true);checks.push('consumption and journal rollback together; retry is recoverable');
  await assert.rejects(pool.query('delete from private.arcade_continue_payments_v2'));await assert.rejects(pool.query('update private.arcade_continue_payments_v2 set payment=payment'));await assert.rejects(pool.query("update private.arcade_continue_claims_v2 set state='prepared' where run_id=$1",[x.runId]));checks.push('runtime cannot rewrite payment or reopen consumed claim');
  // Actual BNB ledger loader, not normalized injected payment evidence.
- const liveAdapter=createSharedContinueDelivery({pool,lockSessionAndFlight:auth});const b=await run();await store.insertChallenge(b);await store.open(b);const tx='0x'+hex();await store.recordPayment({id:b.id,sessionHash:b.sessionHash,txHash:tx,paymentKey:'56:'+tx+':0',blockHash:'0x'+hex(),paidAt:Date.now()});
- const imported=await liveAdapter.importPayment({...b,source:'bnb-usdt',sourceId:b.id});const bp=await liveAdapter.prepare({...b,paymentId:imported.paymentId,clientKey:hex()});assert.equal(bp.status,'prepared');assert.equal(bp.restoreAuthorized,false);checks.push('actual persisted BNB receipt adapter feeds the shared run claim');
+ const liveAdapter=createSharedContinueDelivery({pool,lockSessionAndFlight:auth,consumeRun:async(db,s)=>{await db.query('update private.test_sui_flights set continues=continues+1 where id=$1',[s.runId]);}});const b=await run();await store.insertChallenge(b);await store.open(b);const tx='0x'+hex();await store.recordPayment({id:b.id,sessionHash:b.sessionHash,txHash:tx,paymentKey:'56:'+tx+':0',blockHash:'0x'+hex(),paidAt:Date.now()});
+ const bclient=hex();const imported=await liveAdapter.importPayment({...b,source:'bnb-usdt',sourceId:b.id});const bp=await liveAdapter.prepare({...b,paymentId:imported.paymentId,clientKey:bclient});assert.equal(bp.status,'prepared');assert.equal(bp.restoreAuthorized,false);checks.push('actual persisted BNB receipt adapter feeds the shared run claim');
  const replay=await liveAdapter.importPayment({...b,source:'bnb-usdt',sourceId:b.id});assert.equal(replay.paymentId,imported.paymentId);checks.push('lost import response recovers the same payment identity');
+
+ await assert.rejects(pool.query("update private.arcade_bnb_continue_checkouts set status='consumed' where id=$1",[b.id]),/shared_consumption_required/);
+ await liveAdapter.activate({...b,clientKey:bclient,leaseId:bp.leaseId,checkpointHash:bp.checkpointHash,requestId:randomUUID()});
+ assert.equal((await owner.query('select status from private.arcade_bnb_continue_checkouts where id=$1',[b.id])).rows[0].status,'consumed');
+ await assert.rejects(pool.query("update private.arcade_bnb_continue_checkouts set status='open' where id=$1",[b.id]),/consumed_checkout_immutable/);
+ const b2={...b,id:hex(),sequence:2,status:'challenge'};await store.insertChallenge(b2);await store.open(b2);
+ assert.equal((await owner.query('select count(*)::int n from private.arcade_bnb_continue_receipts where checkout_id=$1',[b.id])).rows[0].n,1);
+ checks.push('only shared consumption releases BNB payer reservation for next sequence and retains receipt');
  const preview=createSharedContinueDelivery({pool,lockSessionAndFlight:async(...args)=>({...await auth(...args),environment:'release-candidate'})});await assert.rejects(preview.importPayment({...b,source:'bnb-usdt',sourceId:b.id}),/invalid-session/);checks.push('preview identity cannot be relabelled as production');
  // Load the exact Sui-only source schema and read its native verified receipt.
  for(const file of ['direct-continue-schema.sql','flight-storage-v1.sql','paid-delivery-v1.sql'])await owner.query(fs.readFileSync('docs/multichain/generation-milestone/delivery-compatibility/upstream/'+file,'utf8'));

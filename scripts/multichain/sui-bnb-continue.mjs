@@ -78,7 +78,7 @@ export function createSuiBnbContinue({readSuiRun, store, readPayment, clock = Da
       hex32(s.suiWallet) && uuid(s.accountId) && uuid(s.runId) && s.deliveryProtocol === 'tree-paid-delivery.v1' &&
       Number.isSafeInteger(s.sequence) && s.sequence > 0 && s.expiresAt > now &&
       at >= started && at <= now && now - started <= 10000, 'invalid-session');
-    if (requireAccess) check(s.entitled === true && s.lives === 0 && s.continueAllowed === true && s.continuesUsed === 0 && s.finished === false && s.ruleset === 'treeforce89.v1', 'continue-denied');
+    if (requireAccess) check(s.entitled === true && s.lives === 0 && s.continueAllowed === true && Number.isSafeInteger(s.continuesUsed) && s.continuesUsed >= 0 && s.continuesUsed < 2147483647 && s.sequence === s.continuesUsed + 1 && s.finished === false && s.ruleset === 'treeforce89.v1', 'continue-denied');
     return s;
   }
   const same = (r, s) => r.accountId === s.accountId && r.deliveryProtocol === s.deliveryProtocol && r.sessionHash === s.sessionHash && r.suiWallet === s.suiWallet && r.runId === s.runId && r.sequence === s.sequence;

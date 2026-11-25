@@ -1,3 +1,16 @@
+# Repeated continues and paid-run recovery source — November 24, 2026
+
+Shared claims now bind payment to account/run/continue sequence. Native counter
+advancement, consumption, BNB reservation release and the consumption journal
+commit together. A fresh same-wallet session can recover an unconsumed paid run;
+consumed or competing payments remain review-only. Local checks passed: 22 native,
+17 shared-delivery, 20 ledger and 41 payment-policy tests. This is source-only:
+no hosted migration, deployment, payment or live gameplay change occurred.
+See `docs/multichain/generation-milestone/repeated-continues/README.md` for setup,
+recovery limits, evidence and remaining native runtime integration.
+
+---
+
 # Native Sui session source recovered — November 24, 2026
 
 The native PostgreSQL gateway source is now pinned and a source-only adapter
