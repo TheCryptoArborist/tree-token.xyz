@@ -98,3 +98,5 @@ and omit `CHROMIUM_PATH`. No hosted credentials are used.
    existing Sui gameplay, scores and tournaments.
 4. Review private canonical-domain acceptance and migrations using a fresh complete
    production inventory. No live activation or release is included here.
+
+The first hosted attempt stopped before browser tests at PostgreSQL startup in an existing checker. All remaining temporary database runners now use private Unix sockets and retain startup diagnostics; 82 affected database checks passed locally. No application SQL changed. See `database-harness-validation.json`.

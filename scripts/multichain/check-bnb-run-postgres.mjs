@@ -4,14 +4,14 @@ import {createHash} from 'node:crypto';
 import {createRunAuthorization} from './bnb-run-authorization.mjs';
 import {createRunHttp,createRunStore,PATH} from './bnb-run-http.mjs';
 const bin=process.env.BNB_PG_BIN;if(!bin)throw Error('Set BNB_PG_BIN to local PostgreSQL binaries');
-const dir=fs.mkdtempSync(path.join(os.tmpdir(),'bnb-run-pg-')),data=path.join(dir,'data'),port=String(55000+Math.floor(Math.random()*500)),env={...Object.fromEntries(Object.entries(process.env).filter(([k])=>!k.startsWith('PG'))),PGHOST:'127.0.0.1',PGPORT:port,PGUSER:os.userInfo().username,PGDATABASE:'postgres',PGPASSWORD:''};
+const dir=fs.mkdtempSync(path.join(os.tmpdir(),'bnb-run-pg-')),data=path.join(dir,'data'),port='5432',env={...Object.fromEntries(Object.entries(process.env).filter(([k])=>!k.startsWith('PG'))),PGHOST:dir,PGPORT:port,PGUSER:os.userInfo().username,PGDATABASE:'postgres',PGPASSWORD:''};
 const exe=n=>path.join(bin,n),checks=[];let started=false;
 const sql=q=>new Promise((resolve,reject)=>{const p=spawn(exe('psql'),['-X','-qAt','-v','ON_ERROR_STOP=1'],{env,stdio:['pipe','pipe','pipe']});let out='',err='';p.stdout.on('data',d=>out+=d);p.stderr.on('data',d=>err+=d);p.on('error',reject);p.on('close',c=>c?reject(Error(err)):resolve(out.trim()));p.stdin.end(q);});
 const sh='a'.repeat(64),wallet='0x'+'1'.repeat(40),hash=n=>n.toString(16).padStart(64,'0');
 const call=(action,row)=>`set role service_role;select public.arcade_bnb_run_review_v1('${action}','${JSON.stringify(row)}'::jsonb);`;
 function row(n){return {hash:hash(n),sessionHash:sh,wallet,chainId:56,scope:'treeforce89-generation-review:v1',generation:'2',issuedAt:Date.now()-100,expiresAt:Date.now()+50000,consumed:false};}
 try{
- const args=['-D',data,'-A','trust','--no-locale','--encoding=UTF8'];if(process.env.BNB_PG_SHARE)args.push('-L',process.env.BNB_PG_SHARE);execFileSync(exe('initdb'),args,{stdio:'pipe'});execFileSync(exe('pg_ctl'),['-D',data,'-l',path.join(dir,'log'),'-o',`-k "" -h 127.0.0.1 -p ${port}`,'-w','start'],{stdio:'pipe'});started=true;
+ const args=['-D',data,'-A','trust','--no-locale','--encoding=UTF8'];if(process.env.BNB_PG_SHARE)args.push('-L',process.env.BNB_PG_SHARE);execFileSync(exe('initdb'),args,{stdio:'pipe'});execFileSync(exe('pg_ctl'),['-D',data,'-l',path.join(dir,'log'),'-o',`-k "${dir}" -h "" -p ${port}`,'-w','start'],{stdio:'pipe'});started=true;
  await sql('create role anon;create role authenticated;create role service_role bypassrls;create schema private;');
  await sql(fs.readFileSync('supabase/migrations/20261120193912_arcade_bnb_test_auth.sql','utf8'));
  const fingerprint="select md5(string_agg(pg_get_functiondef(oid)||coalesce(proacl::text,''),'' order by oid)) from pg_proc where proname like 'arcade_bnb_test_%'";
@@ -51,4 +51,4 @@ try{
  assert.equal(await sql("select count(*) from private.arcade_bnb_run_reviews where expires_at>=statement_timestamp()-interval '7 days'"),keep);assert.equal(await sql(`select count(*) from private.arcade_bnb_test_sessions where token_sha256 in ('${sh}','${hs}')`),'2');checks.push('retention preserves recent tickets and identity sessions');
  await assert.rejects(sql('set role service_role;'+cleanupSql));checks.push('runtime service role cannot execute retention deletion');
  console.log(JSON.stringify({localOnly:true,checks,passed:checks.length},null,2));
-}finally{if(started)execFileSync(exe('pg_ctl'),['-D',data,'-m','immediate','-w','stop'],{stdio:'pipe'});fs.rmSync(dir,{recursive:true,force:true});}
+}catch(error){if(!started&&fs.existsSync(path.join(dir,'log')))process.stderr.write(fs.readFileSync(path.join(dir,'log'),'utf8'));throw error;}finally{if(started)execFileSync(exe('pg_ctl'),['-D',data,'-m','immediate','-w','stop'],{stdio:'pipe'});fs.rmSync(dir,{recursive:true,force:true});}

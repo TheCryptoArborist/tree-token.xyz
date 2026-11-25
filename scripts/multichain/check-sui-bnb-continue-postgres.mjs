@@ -8,13 +8,13 @@ import {Ed25519Keypair} from '@mysten/sui/keypairs/ed25519';import {privateKeyTo
 import {parseAbi,encodeEventTopics,encodeAbiParameters} from 'viem';
 const bin=process.env.BNB_PG_BIN;assert(bin,'Set BNB_PG_BIN');
 const dir=fs.mkdtempSync(path.join(os.tmpdir(),'mixed-continue-pg-')),data=path.join(dir,'data');
-const port=55000+Math.floor(Math.random()*500),exe=n=>path.join(bin,n),checks=[];let started=false,owner,pool;
+const port=5432,exe=n=>path.join(bin,n),checks=[];let started=false,owner,pool;
 const hex=()=>randomBytes(32).toString('hex'),sha=s=>createHash('sha256').update(s).digest('hex');
 const env=Object.fromEntries(Object.entries(process.env).filter(([k])=>!k.startsWith('PG')));
 try{
  const args=['-D',data,'-A','trust','--no-locale','--encoding=UTF8'];if(process.env.BNB_PG_SHARE)args.push('-L',process.env.BNB_PG_SHARE);
- execFileSync(exe('initdb'),args,{env,stdio:'pipe'});execFileSync(exe('pg_ctl'),['-D',data,'-l',path.join(dir,'log'),'-o',`-k "" -h 127.0.0.1 -p ${port}`,'-w','start'],{env,stdio:'pipe'});started=true;
- const config={host:'127.0.0.1',port,user:os.userInfo().username,database:'postgres',password:'',ssl:false,max:20};
+ execFileSync(exe('initdb'),args,{env,stdio:'pipe'});execFileSync(exe('pg_ctl'),['-D',data,'-l',path.join(dir,'log'),'-o',`-k "${dir}" -h "" -p ${port}`,'-w','start'],{env,stdio:'pipe'});started=true;
+ const config={host:dir,port,user:os.userInfo().username,database:'postgres',password:'',ssl:false,max:20};
  owner=new pg.Pool({...config,options:''});await owner.query('create role anon;create role authenticated;create role service_role bypassrls;create schema private;grant usage on schema private to service_role;');
  await owner.query(fs.readFileSync('supabase/migrations/20261120193912_arcade_bnb_test_auth.sql','utf8'));
  const fingerprint="select md5(string_agg(pg_get_functiondef(oid)||coalesce(proacl::text,''),'' order by oid)) as hash from pg_proc where proname like 'arcade_bnb_test_%'";
@@ -94,4 +94,4 @@ try{
  const verified=await service.reconcile({...input,id:challenge.id,txHash:transactionHash});assert.equal(verified.paymentVerified,true);assert.equal(verified.continueAuthorized,false);
  assert.equal((await store.deliveryCandidate({id:challenge.id,sessionHash:sha(token)})).payment.txHash,transactionHash);checks.push('real two-wallet signatures -> coordinator -> PostgreSQL receipt -> typed pending delivery');
  console.log(JSON.stringify({localOnly:true,positivePayment:'synthetic chain receipt; real signatures and PostgreSQL',passed:checks.length,checks,livePaymentsEnabled:false},null,2));
-}finally{await pool?.end();await owner?.end();if(started)execFileSync(exe('pg_ctl'),['-D',data,'-m','immediate','-w','stop'],{env,stdio:'pipe'});fs.rmSync(dir,{recursive:true,force:true});}
+}catch(error){if(!started&&fs.existsSync(path.join(dir,'log')))process.stderr.write(fs.readFileSync(path.join(dir,'log'),'utf8'));throw error;}finally{await pool?.end();await owner?.end();if(started)execFileSync(exe('pg_ctl'),['-D',data,'-m','immediate','-w','stop'],{env,stdio:'pipe'});fs.rmSync(dir,{recursive:true,force:true});}

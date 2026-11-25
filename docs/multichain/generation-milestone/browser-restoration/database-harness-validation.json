@@ -1,0 +1,14 @@
+{
+  "localOnly": true,
+  "failedHostedRun": "https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45528616824",
+  "observedFailure": "pg_ctl failed before shadow-run tests; original startup log was not included",
+  "change": "private Unix socket per disposable database; print startup log on failure",
+  "rerunPassed": {
+    "bnb-run": 18,
+    "bnb-lifecycle": 18,
+    "sui-bnb-continue": 20,
+    "shared-delivery": 17,
+    "delivery-compatibility": 9
+  },
+  "applicationSqlChanged": false
+}
