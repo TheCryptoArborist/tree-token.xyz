@@ -93,6 +93,7 @@ export async function main(mode = process.argv[2]) {
   assert.equal(git('status', '--porcelain', '--untracked-files=no'), '', 'Commit source before releasing.');
   for (const p of SOURCE_PATHS) git('cat-file', '-e', `${sourceCommit}:${p}`);
   const sourceSHA256 = await sourceFingerprint();
+  const candidateTitle = `Profile Studio photo fit source ${sourceCommit}`;
   const changes = Object.fromEntries(await Promise.all(Object.entries(DELIVERY_SOURCES)
     .map(async ([p, source]) => [p, await fs.readFile(path.join(ROOT, source))])));
   const overlays = Object.fromEntries(Object.entries(changes).map(([p, bytes]) => [p, sha(bytes)]));
@@ -161,7 +162,10 @@ export async function main(mode = process.argv[2]) {
   async function preserveCandidate() {
     const d = await deploy(state.id);
     assert.equal(d.state, 'ready'); assert.equal(d.created_at, state.createdAt);
-    assert.equal(d.commit_ref, sourceCommit, 'Candidate source identity changed.');
+    // Manual digest deployments may return null commit_ref. Bind the complete
+    // source SHA in the supported title as well as the exact source/asset hashes.
+    assert.equal(d.title, candidateTitle, 'Candidate source title changed.');
+    if (d.commit_ref != null) assert.equal(d.commit_ref, sourceCommit, 'Candidate source identity changed.');
     compareBackend(d, state.baseline.deploy);
     same(await inventory(state.id), state.files, 'Complete candidate static inventory');
     same(await protectedEnvironment(await api(`sites/${SITE_ID}`)), state.baseline.environment, 'Protected settings/environment/snippets');
@@ -193,7 +197,7 @@ export async function main(mode = process.argv[2]) {
       baseline: { deploy: snapshotDeploy(baseline), files: originalFiles, environment: await protectedEnvironment(site) } };
     await assertBaseline();
     const requestStartedAt = new Date().toISOString();
-    const d = await api(`sites/${SITE_ID}/deploys?title=Profile%20Studio%20photo%20fit`, 'POST', {
+    const d = await api(`sites/${SITE_ID}/deploys?title=${encodeURIComponent(candidateTitle)}`, 'POST', {
       files, functions: Object.fromEntries(baseline.available_functions.map(f => [f.n, f.d])),
       functions_config: functionsConfig(baseline), function_schedules: baseline.function_schedules,
       draft: false, async: false, branch: baseline.branch, commit_ref: sourceCommit,
