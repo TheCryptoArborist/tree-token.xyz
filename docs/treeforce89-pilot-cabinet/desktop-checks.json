@@ -1,0 +1,122 @@
+[
+  {
+    "width": 390,
+    "height": 844,
+    "before": {
+      "width": 390,
+      "height": 585,
+      "top": 73.453125,
+      "bottom": 658.453125,
+      "internalWidth": 480,
+      "internalHeight": 720,
+      "overflow": false
+    },
+    "after": {
+      "width": 390,
+      "height": 585,
+      "top": 73.453125,
+      "bottom": 658.453125,
+      "internalWidth": 480,
+      "internalHeight": 720,
+      "overflow": false
+    },
+    "increasePercent": 0,
+    "errors": []
+  },
+  {
+    "width": 1280,
+    "height": 720,
+    "before": {
+      "width": 348.65625,
+      "height": 522.984375,
+      "top": 107,
+      "bottom": 629.984375,
+      "internalWidth": 480,
+      "internalHeight": 720,
+      "overflow": false
+    },
+    "after": {
+      "width": 391.328125,
+      "height": 586.984375,
+      "top": 79,
+      "bottom": 665.984375,
+      "internalWidth": 480,
+      "internalHeight": 720,
+      "overflow": false
+    },
+    "increasePercent": 12,
+    "errors": []
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "before": {
+      "width": 468.65625,
+      "height": 702.984375,
+      "top": 107,
+      "bottom": 809.984375,
+      "internalWidth": 480,
+      "internalHeight": 720,
+      "overflow": false
+    },
+    "after": {
+      "width": 511.328125,
+      "height": 766.984375,
+      "top": 79,
+      "bottom": 845.984375,
+      "internalWidth": 480,
+      "internalHeight": 720,
+      "overflow": false
+    },
+    "increasePercent": 9,
+    "errors": []
+  },
+  {
+    "width": 1920,
+    "height": 1080,
+    "before": {
+      "width": 528,
+      "height": 792,
+      "top": 107,
+      "bottom": 899,
+      "internalWidth": 480,
+      "internalHeight": 720,
+      "overflow": false
+    },
+    "after": {
+      "width": 631.328125,
+      "height": 946.984375,
+      "top": 79,
+      "bottom": 1025.984375,
+      "internalWidth": 480,
+      "internalHeight": 720,
+      "overflow": false
+    },
+    "increasePercent": 20,
+    "errors": []
+  },
+  {
+    "width": 2560,
+    "height": 1440,
+    "before": {
+      "width": 528,
+      "height": 792,
+      "top": 284.453125,
+      "bottom": 1076.453125,
+      "internalWidth": 480,
+      "internalHeight": 720,
+      "overflow": false
+    },
+    "after": {
+      "width": 858,
+      "height": 1287,
+      "top": 79,
+      "bottom": 1366,
+      "internalWidth": 480,
+      "internalHeight": 720,
+      "overflow": false
+    },
+    "increasePercent": 63,
+    "errors": []
+  }
+]

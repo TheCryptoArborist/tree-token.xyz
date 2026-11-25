@@ -27,7 +27,7 @@ try{for(const width of [320,390,1000]){
  assert.equal(await board.locator('.pilot-badges small').allTextContents().then(a=>a.every(t=>t==='LOCKED')),true);
  assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
  assert.equal(await board.locator('.pilot-table').evaluate(e=>e.scrollWidth<=e.clientWidth),true);
- assert.equal(await p.evaluate(()=>new Promise(resolve=>{const i=new Image();i.onload=()=>resolve(i.naturalWidth>=1200);i.onerror=()=>resolve(false);i.src='/assets/treeforce-achievements/canopy-medals-r19.png'})),true);
+ assert.equal(await p.evaluate(()=>new Promise(resolve=>{const i=new Image();i.onload=()=>resolve(i.naturalWidth>=1200);i.onerror=()=>resolve(false);i.src='/assets/treeforce-achievements/canopy-medals-r19.webp'})),true);
  const insignia=await rows.locator('.pilot-rank-number').evaluateAll(els=>els.map(e=>({art:getComputedStyle(e).backgroundImage,text:e.textContent})));
  assert(insignia[0].art.includes('champion.svg'));assert(insignia[1].art.includes('silver.svg'));assert(insignia[2].art.includes('bronze.svg'));assert(insignia.slice(3).every(e=>e.art.includes('contender.svg')));
  assert.deepEqual(insignia.map(e=>e.text),Array.from({length:10},(_,i)=>String(i+1)));

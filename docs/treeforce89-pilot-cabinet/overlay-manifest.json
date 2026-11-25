@@ -1,0 +1,62 @@
+{
+  "kind": "frontend-overlay-not-full-deployment",
+  "source": "production/treeforce-main-r18",
+  "files": {
+    "/play/treeforce89/assets/index-review-r19.js": {
+      "bytes": 653514,
+      "sha256": "3d03c11abe6b5de83471fffde5227ed81361e35338d7375fcfff331381b3723d"
+    },
+    "/play/treeforce89/assets/arcade-review-r19.js": {
+      "bytes": 1295783,
+      "sha256": "d9deb34ae44b5210260c4ba43336dda460a0da3bc75fa95120cc7be07229d927"
+    },
+    "/play/treeforce89/assets/graphql-review-r19.js": {
+      "bytes": 54746,
+      "sha256": "6a1b224c0517765f5c3592f707beda4f3e57d778cbe6d50ea04242e453bdc727"
+    },
+    "/play/treeforce89/assets/holiday-mode-r19.js": {
+      "bytes": 4718,
+      "sha256": "e90283804080fe03fa056246325aae63664c380fe1d019cb20d173425383ac79"
+    },
+    "/play/treeforce89/assets/sound-identity-r19.js": {
+      "bytes": 4817,
+      "sha256": "1401f39b9cf21c9016b86064815cc2223970065efced1dfe1e8b0d61c02252ca"
+    },
+    "/play/treeforce89/index.html": {
+      "bytes": 4686,
+      "sha256": "1debb518695ac73814e002240f8f530b8fbc134d41d88e331ee054c5414d2474"
+    },
+    "/play/treeforce89/desktop-r19.css": {
+      "bytes": 542,
+      "sha256": "d7a5b22c9bfd57db08ab578a73d8902c85fbd2b35850cdbabe0242553fcff299"
+    },
+    "/play/treeforce89/pilot-cabinet-r19.css": {
+      "bytes": 9250,
+      "sha256": "b699ead250b677a5ee25ebe02a6c764716d557e067923a98b4fc7aaac4de6f73"
+    },
+    "/assets/treeforce-achievements/canopy-medals-r19.webp": {
+      "bytes": 395134,
+      "sha256": "ab0e10f18df6a16b0912de726b4655ecbcc194a6c530efb6c0e28c2a5a9806c7"
+    },
+    "/assets/treeforce-ranks/hall-of-fame.webp": {
+      "bytes": 204934,
+      "sha256": "e5c36f969c1f02de3eec493a31f065d5a929e3f2419836a98c96fe234c04a781"
+    },
+    "/assets/treeforce-ranks/champion.svg": {
+      "bytes": 1340,
+      "sha256": "83e3482e9259380de9762deb44c1417315bc4b8b9b12fb42ffe29204c23ffbc3"
+    },
+    "/assets/treeforce-ranks/silver.svg": {
+      "bytes": 958,
+      "sha256": "5b051a60f34bde16326fd3bec3513a32cde4198578224aba3b9f2bf9ce8b039d"
+    },
+    "/assets/treeforce-ranks/bronze.svg": {
+      "bytes": 958,
+      "sha256": "6d28a85896d073a2c654619c7b9cc581e664b6b8ccf422e4dae1c55a77bc74f9"
+    },
+    "/assets/treeforce-ranks/contender.svg": {
+      "bytes": 889,
+      "sha256": "e7b74708906d36a119795d7f32b446ef21166df62d59c0f53afebfe4e43319d5"
+    }
+  }
+}
