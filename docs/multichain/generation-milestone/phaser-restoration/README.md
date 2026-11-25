@@ -98,3 +98,5 @@ full React/Phaser teardown, existing Sui behavior, scores and tournaments; and
 review consumed-but-unconfirmed recovery. Any release requires a newly captured
 complete inventory and separate approval. No current Sui authentication, game,
 score, payment or tournament behavior changed during this milestone.
+
+Hosted [CI 45531435035](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45531435035) passed on `5f41b6c3`, including release-boundary tests, browser interruption checks, actual Phaser/database integration and existing regressions. See `hosted-ci.json`.
