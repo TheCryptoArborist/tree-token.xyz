@@ -1,3 +1,16 @@
+# Individual inventory requirements and BNB protocol isolation — November 24, 2026
+
+The owner's 5,000-original collection/unique-artwork requirement is now explicit
+in `docs/multichain/generation-milestone/individual-inventory-requirements.md`.
+Each admitted original needs exact identity, artwork and a global one-to-one
+allocation. No batch selection, expanded custody or metadata deployment occurred.
+BNB link/store code now supports explicit v2 configuration while preserving v1
+by default and rejecting cross-protocol signatures/rows. Local checks passed:
+43 unit, 21 database per protocol, and 40 native/shared regression checks.
+No live changes. Evidence: `docs/multichain/generation-milestone/netlify-gateway/link-protocol-v2.md`.
+
+---
+
 # BNB recorded-payment import and recovery journal — November 24, 2026
 
 The shared gateway now imports an already-verified BNB ledger receipt with an

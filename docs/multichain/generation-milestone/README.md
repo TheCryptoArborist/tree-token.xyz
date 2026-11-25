@@ -1,5 +1,6 @@
 # Current status: generation 1 closed; negative wallet review accepted
 
+- [Individual inventory, source pools and unique artwork requirements](./individual-inventory-requirements.md)
 The full private lifecycle completed and independently verified on both chains.
 NFTree #2720 is back in dev wallet 45c4; the empty Sui vault is phase 3/generation
 1; the BNB pass is Retired, purchases paused and nonplayable. Do not repeat any

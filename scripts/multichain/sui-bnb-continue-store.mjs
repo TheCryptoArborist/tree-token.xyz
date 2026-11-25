@@ -14,7 +14,8 @@ const rowValue = row => {
 // lockSuiRun MUST SELECT FOR UPDATE the authoritative session and flight on db,
 // in that order, and retain locks until this transaction commits. No default.
 // It must not call another pool/connection, trust client state or grant access.
-export function createPostgresContinueStore({pool, lockSuiRun}) {
+export function createPostgresContinueStore({pool, lockSuiRun, deliveryProtocol = 'tree-paid-delivery.v1'}) {
+  check(['tree-paid-delivery.v1','tree-paid-delivery.v2'].includes(deliveryProtocol),'unreviewed-delivery-protocol');
   check(typeof pool?.connect === 'function' && typeof lockSuiRun === 'function','authoritative-lock-adapter-required');
   async function transaction(fn) {
     const db=await pool.connect();
@@ -33,7 +34,7 @@ export function createPostgresContinueStore({pool, lockSuiRun}) {
     const now=time.now;
     check(s?.authenticated===true && s.revoked===false && s.sessionHash===binding.sessionHash &&
       s.accountId===binding.accountId && s.runId===binding.runId && s.suiWallet===binding.suiWallet &&
-      s.sequence===binding.sequence && s.deliveryProtocol==='tree-paid-delivery.v1' &&
+      s.sequence===binding.sequence && s.deliveryProtocol===deliveryProtocol && binding.deliveryProtocol===deliveryProtocol &&
       Number.isSafeInteger(s.expiresAt) && s.expiresAt>now,'session-or-run-changed');
     if(access) check(s.lives===0 && Number.isSafeInteger(s.continuesUsed) && s.continuesUsed>=0 && s.continuesUsed<2147483647 && s.sequence===s.continuesUsed+1 && s.finished===false &&
       s.continueAllowed===true && s.ruleset==='treeforce89.v1','continue-denied');
@@ -57,7 +58,7 @@ export function createPostgresContinueStore({pool, lockSuiRun}) {
     async read(id) {return transaction(db=>load(db,id));},
     async insertChallenge(row) {
       check(row && Object.keys(row).length===11 && Object.keys(row).every(k=>['id','sessionHash','suiWallet','accountId','deliveryProtocol','runId','sequence','payer','issuedAt','expiresAt','status'].includes(k)) && hex(row.id) && row.status==='challenge' && address(row.payer,40) && !/^0x0{40}$/.test(row.payer) &&
-        address(row.suiWallet,64) && row.deliveryProtocol==='tree-paid-delivery.v1' &&
+        address(row.suiWallet,64) && row.deliveryProtocol===deliveryProtocol &&
         Number.isSafeInteger(row.sequence) && row.sequence>0 && Number.isSafeInteger(row.issuedAt) && Number.isSafeInteger(row.expiresAt), 'invalid-challenge');
       return transaction(async db=>{
         const {now,session}=await authorize(db,row,true);
@@ -108,8 +109,8 @@ export function createPostgresContinueStore({pool, lockSuiRun}) {
           join private.arcade_bnb_continue_delivery_pending d using(checkout_id) where r.checkout_id=$1 and d.state='pending-review'`,[id]);
         check(row.status==='paid-review' && result.rows.length===1,'payment-not-recorded');
         const r=result.rows[0];
-        return {protocol:'tree-mixed-payment-review.v1',targetDeliveryProtocol:'tree-paid-delivery.v1',
-          deliveryCompatible:false,compatibilityReason:'sui-only-order-and-preview-identity',checkoutId:id,accountId:row.accountId,runId:row.runId,
+        return {protocol:'tree-mixed-payment-review.v1',targetDeliveryProtocol:deliveryProtocol,
+          deliveryCompatible:false,compatibilityReason:deliveryProtocol==='tree-paid-delivery.v2'?'requires-authenticated-shared-import':'sui-only-order-and-preview-identity',checkoutId:id,accountId:row.accountId,runId:row.runId,
           accessWallet:{family:'sui',address:row.suiWallet},payment:{network:'eip155:56',payer:row.payer,
             token:row.paymentTerms.token,amountRaw:row.paymentTerms.amount,recipient:row.paymentTerms.treasury,
             receiptId:r.payment_key,txHash:r.tx_hash,blockHash:r.block_hash},

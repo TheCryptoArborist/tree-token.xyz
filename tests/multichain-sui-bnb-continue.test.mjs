@@ -6,14 +6,14 @@ import {CONTINUE_POLICY as P,createSuiBnbContinue,createContinuePaymentReader,co
 const sha=s=>createHash('sha256').update(s).digest('hex');
 const sui=new Ed25519Keypair(),bnb=privateKeyToAccount('0x'+'12'.repeat(32));
 const sessionToken='a'.repeat(64),txHash='0x'+'b'.repeat(64),blockHash='0x'+'c'.repeat(64);
-function fixture(){
+function fixture(deliveryProtocol='tree-paid-delivery.v1'){
  let now=1800000000000,nonce=0;const rows=new Map(),payments=new Map();
- const s={authenticated:true,revoked:false,sessionHash:sha(sessionToken),suiWallet:sui.toSuiAddress(),accountId:'11111111-1111-4111-8111-111111111111',deliveryProtocol:'tree-paid-delivery.v1',runId:'22222222-2222-4222-8222-222222222222',sequence:1,expiresAt:now+3600000,entitled:true,lives:0,continueAllowed:true,continuesUsed:0,finished:false,ruleset:'treeforce89.v1'};
+ const s={authenticated:true,revoked:false,sessionHash:sha(sessionToken),suiWallet:sui.toSuiAddress(),accountId:'11111111-1111-4111-8111-111111111111',deliveryProtocol,runId:'22222222-2222-4222-8222-222222222222',sequence:1,expiresAt:now+3600000,entitled:true,lives:0,continueAllowed:true,continuesUsed:0,finished:false,ruleset:'treeforce89.v1'};
  const c={s,rows,payments,advance:n=>now+=n};
  // Unit-test store only: durable SQL + actual game adapter are release gates.
  const store={insertChallenge:async r=>{if(rows.has(r.id))return false;rows.set(r.id,structuredClone(r));return true;},read:async id=>structuredClone(rows.get(id)),open:async r=>{const old=rows.get(r.id);if(old.status!=='challenge'||old.expiresAt<=now||s.revoked)return false;if([...rows.values()].some(x=>x.status!=='challenge'&&(x.payer===r.payer||(x.runId===r.runId&&x.sequence===r.sequence))))return false;old.status='open';return true;},recordPayment:async p=>{const old=rows.get(p.id);if(s.revoked||!old||old.sessionHash!==p.sessionHash)return false;const prior=payments.get(p.txHash);if(prior)return prior.id===p.id&&prior.paymentKey===p.paymentKey; if(old.status!=='open')return false;payments.set(p.txHash,p);old.status='paid-review';return true;}};
  c.proof=()=>({chainId:56,transaction:{hash:txHash,blockHash,blockNumber:10n,from:bnb.address.toLowerCase(),to:P.token,input:continueTransferData(),value:0n},receipt:{transactionHash:txHash,blockHash,blockNumber:10n,status:'success',logs:[{address:P.token,removed:false,transactionHash:txHash,blockHash,logIndex:0,topics:encodeEventTopics({abi:parseAbi(['event Transfer(address indexed from,address indexed to,uint256 value)']),eventName:'Transfer',args:{from:bnb.address,to:P.treasury}}),data:encodeAbiParameters([{type:'uint256'}],[BigInt(P.amount)])}]},block:{hash:blockHash,number:10n,timestamp:BigInt(now/1000)},finalized:{number:11n}});
- c.service=createSuiBnbContinue({readSuiRun:async token=>token===sessionToken?{...s,checkedAt:new Date(now).toISOString()}:null,store,readPayment:async()=>c.proof(),clock:()=>now,entropy:()=>Buffer.alloc(32,++nonce)});
+ c.service=createSuiBnbContinue({deliveryProtocol,readSuiRun:async token=>token===sessionToken?{...s,checkedAt:new Date(now).toISOString()}:null,store,readPayment:async()=>c.proof(),clock:()=>now,entropy:()=>Buffer.alloc(32,++nonce)});
  c.input={origin:P.origin,sessionToken,payer:bnb.address.toLowerCase()};
  c.challenge=()=>c.service.challenge(c.input);
  c.sign=async challenge=>({...c.input,id:challenge.id,suiSignature:(await sui.signPersonalMessage(new TextEncoder().encode(challenge.message))).signature,bnbSignature:await bnb.signMessage({message:challenge.message})});
@@ -49,3 +49,6 @@ for(const [name,patch]of [['stale continue sequence',{continuesUsed:1}],['finish
 for(const wrongField of ['from','to'])test('receipt rejects transfer event wrong '+wrongField,async()=>{const c=fixture(),ch=await c.open(),p=c.proof();p.receipt.logs[0].topics=encodeEventTopics({abi:parseAbi(['event Transfer(address indexed from,address indexed to,uint256 value)']),eventName:'Transfer',args:{from:bnb.address,to:P.treasury,[wrongField]:'0x'+'4'.repeat(40)}});c.proof=()=>p;await assert.rejects(c.reconcile(ch.id));});
 
 test('later continue signs its own next sequence',async()=>{const c=fixture();c.s.continuesUsed=2;c.s.sequence=3;const ch=await c.challenge();assert.equal(c.rows.get(ch.id).sequence,3);assert.match(ch.message,/Continue number: 3/);await c.service.open(await c.sign(ch));});
+
+test('explicit v2 checkout verifies both wallets and records payment without gameplay',async()=>{const c=fixture('tree-paid-delivery.v2'),ch=await c.open();assert(ch.message.includes('Delivery protocol: tree-paid-delivery.v2'));const r=await c.reconcile(ch.id);assert.equal(r.paymentVerified,true);assert.equal(r.gameplayAuthorized,false);});
+test('configured v2 refuses a v1 session and arbitrary protocol config',async()=>{const c=fixture('tree-paid-delivery.v2');c.s.deliveryProtocol='tree-paid-delivery.v1';await assert.rejects(c.challenge());assert.throws(()=>fixture('unreviewed-protocol'),/unreviewed-delivery-protocol/);});

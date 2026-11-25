@@ -68,14 +68,15 @@ export function verifyContinuePayment(proof, offer, txHash) {
   return {paymentKey: `56:${txHash}:${log.logIndex}`, txHash, blockHash: block.hash, paidAt};
 }
 
-export function createSuiBnbContinue({readSuiRun, store, readPayment, clock = Date.now, entropy = randomBytes}) {
+export function createSuiBnbContinue({readSuiRun, store, readPayment, clock = Date.now, entropy = randomBytes, deliveryProtocol = 'tree-paid-delivery.v1'}) {
+  check(['tree-paid-delivery.v1','tree-paid-delivery.v2'].includes(deliveryProtocol),'unreviewed-delivery-protocol');
   check(typeof readSuiRun === 'function' && typeof readPayment === 'function' &&
     ['insertChallenge','read','open','recordPayment'].every(k => typeof store?.[k] === 'function'), 'unavailable');
   async function session(input, requireAccess = true) {
     check(input.origin === CONTINUE_POLICY.origin && typeof input.sessionToken === 'string' && /^[a-f0-9]{64}$/.test(input.sessionToken), 'invalid-session');
     const started = clock(), s = await readSuiRun(input.sessionToken), at = Date.parse(s?.checkedAt), now = clock();
     check(s?.authenticated === true && s.revoked === false && s.sessionHash === sha(input.sessionToken) &&
-      hex32(s.suiWallet) && uuid(s.accountId) && uuid(s.runId) && s.deliveryProtocol === 'tree-paid-delivery.v1' &&
+      hex32(s.suiWallet) && uuid(s.accountId) && uuid(s.runId) && s.deliveryProtocol === deliveryProtocol &&
       Number.isSafeInteger(s.sequence) && s.sequence > 0 && s.expiresAt > now &&
       at >= started && at <= now && now - started <= 10000, 'invalid-session');
     if (requireAccess) check(s.entitled === true && s.lives === 0 && s.continueAllowed === true && Number.isSafeInteger(s.continuesUsed) && s.continuesUsed >= 0 && s.continuesUsed < 2147483647 && s.sequence === s.continuesUsed + 1 && s.finished === false && s.ruleset === 'treeforce89.v1', 'continue-denied');

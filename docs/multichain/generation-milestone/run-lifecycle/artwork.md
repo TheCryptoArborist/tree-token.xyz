@@ -47,3 +47,7 @@ does not solve the wallet metadata gap.
 
 This turn records the requirement and source gap; it does not change the deployed
 pass or claim wallet artwork support is already available.
+
+The owner clarified that each of the collection’s described 5,000 originals has
+individual artwork. Expanded custody must account for each admitted object
+separately; see [individual inventory requirements](../individual-inventory-requirements.md).
