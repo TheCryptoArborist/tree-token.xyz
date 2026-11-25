@@ -1,0 +1,27 @@
+{
+  "localOnly": true,
+  "testOnlyResponseInstrumentation": true,
+  "passed": 9,
+  "checks": [
+    "captured files and every unchanged copied module retain exact hashes",
+    "complete at 390px: review lifecycle in preserved runtime, no transaction or unexpected request",
+    "close-sui at 390px: review lifecycle in preserved runtime, no transaction or unexpected request",
+    "switch-sui at 390px: review lifecycle in preserved runtime, no transaction or unexpected request",
+    "switch-bnb at 390px: review lifecycle in preserved runtime, no transaction or unexpected request",
+    "complete at 1000px: review lifecycle in preserved runtime, no transaction or unexpected request",
+    "close-sui at 1000px: review lifecycle in preserved runtime, no transaction or unexpected request",
+    "switch-sui at 1000px: review lifecycle in preserved runtime, no transaction or unexpected request",
+    "switch-bnb at 1000px: review lifecycle in preserved runtime, no transaction or unexpected request"
+  ],
+  "browser": "156.0.8078.79",
+  "limitations": [
+    "Synthetic wallets and API responses; no real signatures, chain verification or payment.",
+    "Checkout opened with a test-only callback and enabled in intercepted bytes only; candidate stays disabled on disk.",
+    "Media stubbed; game-over mechanics and successful paid restoration are not covered."
+  ],
+  "checkedDate": "2026-11-25",
+  "entryOriginalSha256": "a7705718e61fef6c16f2e2a643d1296d560908c1cb49988b56cacd0cafc7128c",
+  "entryCandidateSha256": "0fbcda5b45e026d348d332fa09bddd870d76e62b3f762ba234acfa1d37e21ddb",
+  "offlinePreservationTestsPassed": 12,
+  "published": false
+}

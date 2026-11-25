@@ -1,3 +1,15 @@
+# BNB preserved-runtime review lifecycle — November 25, 2026
+
+Nine local Chromium checks passed: integrity and complete/interrupted BNB review
+flows at phone/desktop widths. Closing or changing wallets while signing removes
+controls/listeners and blocks late verification. Twelve preservation tests passed.
+The enablement/callback exists only in test-intercepted bytes; the saved candidate
+remains disabled. No publication, transaction, NFT or gameplay change. Fresh-cloud
+setup, evidence and remaining work:
+`docs/multichain/generation-milestone/netlify-gateway/preserved-review-lifecycle.md`.
+
+---
+
 # BNB preserved r19 session regression — November 25, 2026
 
 Seven local browser checks passed: hash integrity plus captured/candidate parity

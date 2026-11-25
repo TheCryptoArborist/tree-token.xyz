@@ -71,6 +71,12 @@ browser checks, including pending native recovery and the current paused-run
 expiry behavior. This extends the wallet-gate checks without claiming full game
 or real-wallet coverage.
 
+## Review lifecycle follow-up
+
+See [preserved-runtime review lifecycle](preserved-review-lifecycle.md) for nine
+local browser checks covering complete review and interrupted signing. Enablement
+exists only in intercepted test responses; the candidate remains disabled.
+
 ## Remaining gates
 
 Prove current game behavior and the opt-in review lifecycle in the preserved
