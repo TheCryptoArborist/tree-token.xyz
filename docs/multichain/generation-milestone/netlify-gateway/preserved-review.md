@@ -64,6 +64,13 @@ CHROMIUM_PATH=/usr/bin/chromium node scripts/multichain/check-preserved-bnb-brow
 Use the existing pinned esbuild/Playwright setup. CI runs the offline tests;
 live capture and candidate browser comparison are separate explicit commands.
 
+## Authenticated regression follow-up
+
+See [session regression](preserved-session-regression.md) for seven passing local
+browser checks, including pending native recovery and the current paused-run
+expiry behavior. This extends the wallet-gate checks without claiming full game
+or real-wallet coverage.
+
 ## Remaining gates
 
 Prove current game behavior and the opt-in review lifecycle in the preserved

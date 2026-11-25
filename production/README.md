@@ -1,3 +1,14 @@
+# BNB preserved r19 session regression — November 25, 2026
+
+Seven local browser checks passed: hash integrity plus captured/candidate parity
+for authenticated account switching, expiry suspension and pending native-payment
+recovery at phone/desktop widths. Twelve offline preservation tests also passed.
+Synthetic wallet/server fixtures only; no real payment, publication or activation.
+The current r19 paused-run expiry behavior is preserved. Setup, limitations and
+remaining gates: `docs/multichain/generation-milestone/netlify-gateway/preserved-session-regression.md`.
+
+---
+
 # Isolated BNB r19 preservation candidate — November 25, 2026
 
 A concurrent r19 game release invalidated the old capture; the guard stopped
