@@ -1,3 +1,15 @@
+# Authenticated restore transport source — November 24, 2026
+
+A source-only Fetch handler now carries the native bearer credential into the
+transactional restore checks. Strict origin/body/identity validation and generic
+review-only errors pass 23 HTTP tests plus 11 authorization tests. Both payment
+fixtures traverse the handler, actual PostgreSQL and recovered Phaser game.
+No route, migration, deployment or live behavior changed. Current production
+source parity remains unverified. Evidence and integration gates:
+`docs/multichain/generation-milestone/restore-http/README.md`.
+
+---
+
 # Server restore boundary and Phaser source validation — November 24, 2026
 
 A default-deny server boundary now binds positive restore responses to fresh

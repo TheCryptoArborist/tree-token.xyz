@@ -1,0 +1,42 @@
+✔ default boundary denies before touching delivery (2.425917ms)
+✔ approved policy binds prepare and first consumed activation (0.918779ms)
+✔ release change between prepare and activation blocks consumption (2.360528ms)
+✔ disable after consumption denies grant without pretending rollback (0.375677ms)
+✔ replay review result cannot become a new restore grant (1.147154ms)
+✔ unverified runtime denies preparation (0.180112ms)
+✔ wrong origin denies preparation (0.099791ms)
+✔ unknown checkpoint trust policy denies preparation (0.113631ms)
+✔ native run mismatch cannot be authorized (0.776794ms)
+✔ stale release observation cannot authorize (0.832608ms)
+✔ release change while preparing denies browser grant (0.434557ms)
+✔ prepare forwards only validated fields and bearer hash (37.826268ms)
+✔ activate forwards only validated fields and bearer hash (1.175357ms)
+✔ foreign origin rejected before service call (0.97901ms)
+✔ missing origin rejected before service call (0.662441ms)
+✔ cross-site request rejected before service call (0.885578ms)
+✔ preview host rejected before service call (1.807161ms)
+✔ query credential rejected before service call (0.466265ms)
+✔ GET rejected before service call (0.394627ms)
+✔ no bearer rejected before service call (0.702151ms)
+✔ cookie is not authentication rejected before service call (0.810114ms)
+✔ hash supplied as identity rejected before service call (0.732737ms)
+✔ account supplied as identity rejected before service call (0.638315ms)
+✔ policy supplied by browser rejected before service call (0.475639ms)
+✔ wrong media type rejected before service call (0.55583ms)
+✔ malformed JSON rejected before service call (0.550342ms)
+✔ array body rejected before service call (0.805488ms)
+✔ missing field rejected before service call (0.650232ms)
+✔ invalid UUID rejected before service call (0.733879ms)
+✔ oversize body without content length rejected before service call (0.999951ms)
+✔ WWW accepted only with matching origin (0.764746ms)
+✔ disabled actual authorization never reaches delivery (1.434408ms)
+✔ post-consumption failure is review-only without retry or leaked error (0.704896ms)
+✔ chunked body limit enforced and reader cancelled (1.295868ms)
+ℹ tests 34
+ℹ suites 0
+ℹ pass 34
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 173.981647
