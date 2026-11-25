@@ -1,6 +1,6 @@
 // Disposable database tests against exact recovered native source; no hosted access.
 import {createNativeSharedOffer} from './native-shared-offer.mjs';
-import {createNativeContinueComposition} from './native-continue-composition.mjs';
+import {createNativeContinueHost} from './native-continue-host.mjs';
 import fs from 'node:fs';import os from 'node:os';import path from 'node:path';
 import {execFileSync} from 'node:child_process';import {randomBytes,randomUUID,createHash} from 'node:crypto';import assert from 'node:assert/strict';
 import pg from '../../vendor/bnb-continue-store/node_modules/pg/lib/index.js';
@@ -162,7 +162,8 @@ try{
  const payCase=await paymentFixture();let evidence=payCase.body;
  const reader=createMainnetTransactionReader({network:'mainnet',core:{getTransaction:async()=>structuredClone(evidence)}});
  const recorder=createNativeSuiPaymentRecorder({pool,...options,readTransaction:reader});
- const gateway=createNativeContinueComposition({legacyHandler:()=>assert.fail('no legacy fallback'),readMode:async()=> 'shared',readCutover:async()=>({legacyWritersDrained:true,paymentsPaused:true,runtimeDigest:'1'.repeat(64),databaseIdentity:'2'.repeat(64),checkedAt:Date.now(),expiresAt:Date.now()+30000}),authorization:{prepare:()=>{throw Error('not used');},activate:()=>{throw Error('not used');}},recordPayment:recorder,recoverPayment:recover,nativeOffer:()=>{throw Error('not used');}});
+ const hostDigest='1'.repeat(64);
+ const gateway=createNativeContinueHost({pool,legacyHandler:()=>assert.fail('no legacy fallback'),nativePaidService:{offer:()=>{throw Error('not used');}},verifyRuntime:async()=>({...runtime,runtimeDigest:hostDigest}),checkOwnership:options.checkOwnership,readTransaction:reader,runtimeDigest:hostDigest,databaseIdentity:runtime.databaseIdentity,readMode:async()=> 'shared',readCutover:async()=>({legacyWritersDrained:true,paymentsPaused:true,runtimeDigest:hostDigest,databaseIdentity:runtime.databaseIdentity,checkedAt:Date.now(),expiresAt:Date.now()+30000})});
  const throughGateway=async(action,token,input)=>{
   const response=await gateway(new Request('https://tree-token.xyz/play/treeforce89/api/shared-continue-'+action,{method:'POST',headers:{origin:'https://tree-token.xyz',authorization:'Bearer '+token,'content-type':'application/json'},body:JSON.stringify(input)}));
   assert.equal(response.status,200);const body=await response.json();assert.equal(body.restoreAuthorized,false);assert.equal(body.requiresPayment,false);return body;

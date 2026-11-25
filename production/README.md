@@ -1,3 +1,15 @@
+# Native host assembly and checkout transport — November 24, 2026
+
+The source host assembles shared services against one verified database/runtime
+identity. The canonical browser transport now drives the actual Phaser restore
+fixture. Local checks passed: 66 unit, 37 Netlify-role database/browser, and 34
+original-role database checks. No native game files or live services changed.
+Packaged host/UI integration, full financial E2E and operational drain/fencing
+remain release gates. Evidence and wiring:
+`docs/multichain/generation-milestone/netlify-gateway/host.md`.
+
+---
+
 # Shared gateway composition tested — November 24, 2026
 
 Strict offer, receipt-recording and paid-run recovery adapters now compose with

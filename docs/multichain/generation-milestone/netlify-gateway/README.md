@@ -1,5 +1,7 @@
 # Netlify schema and gateway boundary rehearsal
 
+Latest: [host assembly and canonical checkout transport](host.md).
+
 Follow-on: [authenticated composition and cutover tests](composition.md) now
 implements the HTTP adapters; the earlier remaining-work notes below describe
 the initial dispatcher milestone. Hosted wiring and activation remain pending.
