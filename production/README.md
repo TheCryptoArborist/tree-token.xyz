@@ -1,3 +1,16 @@
+# Native hosted schema audit passed — November 24, 2026
+
+The existing Netlify game branch was audited using its read-only role. All four
+native tables match the verified backend SQL, accounting for PostgreSQL 18's
+validated/enforced NOT NULL catalog entries. Sixteen local guards and the hosted
+audit passed. No player rows were read; no data, schema or deployment changed.
+The seven shared tables, private schema and Supabase-style roles are absent, so
+the proposed SQL needs a Netlify-specific permission/migration review. No owner
+credential setup is needed. This supersedes the binding-access blocker below.
+Evidence: `docs/multichain/generation-milestone/native-database-audit/README.md`.
+
+---
+
 # Approved native database audit: binding unavailable — November 24, 2026
 
 The owner-approved single-binding audit passed eleven local checks but stopped

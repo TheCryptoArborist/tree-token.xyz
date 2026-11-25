@@ -1,121 +1,116 @@
-# Native database compatibility audit
+# Native database compatibility verified — November 24, 2026
 
-This bounded audit reads catalog metadata for the four native authentication,
-session and redemption tables and the seven proposed shared-continuation tables.
-It reads no player rows, tokens, wallet balances or payment records. It applies
-no schema changes and never authorizes a runtime or game restore.
+The hosted read-only audit completed successfully. **No owner credential setup
+is needed.** The prior request to add a GitHub Actions database secret is
+superseded by the existing hosting connection described here.
 
-The connection comes from the existing function-scoped
-`TREEFORCE89_DEV_DATABASE_URL` site binding, resolved inside GitHub Actions using
-the existing Netlify connection. Before connecting, the audit verifies the same
-provider/path and database identity pinned in the reproduced native backend:
-`df2f0abee059d9898495a125018fa0a291d50b9050c0d4557231f409bed53065`.
-It deliberately does not select the site's default production database.
-Credentials are never written to artifacts or logs. Netlify access is GET-only;
-raw failures are suppressed because connection errors can contain credentials.
+[Successful run 45537779169](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45537779169)
+verified source commit `ec38f4f3`. Sixteen disposable audit checks passed first.
+`hosted-catalog-verified.json` retains the actual catalog evidence;
+`hosted-success.json` retains the run/commit receipt.
 
-The PostgreSQL connection defaults to read-only, with bounded statement, lock,
-connection and idle-transaction timeouts. All queries run on one connection in a
-REPEATABLE READ READ ONLY transaction, independently checking that read-only mode
-is on and always rolling back. Queries inspect columns/defaults, constraints,
-indexes, table privileges, RLS, user triggers, policies, proposed table presence,
-private schema permissions and the three roles assumed by the source-only SQL.
+## Findings
 
-`expected-catalog.json` is generated from the two exact pinned native migrations
-in disposable PostgreSQL, not from hosted data. The local checker verifies it and
-exercises real schema drift and PostgreSQL write denial. `local-tests.json`
-records eleven passing checks, including denial of environment listings and unrelated binding paths. Reproduce with Node 24, installed pg in
-`vendor/bnb-continue-store`, and PostgreSQL tools:
+The database identity equals the identity pinned in the byte-for-byte reproduced
+native backend: `df2f0abee059d9898495a125018fa0a291d50b9050c0d4557231f409bed53065`.
+The native package digest and ready/locked deployment
+`6b064f079c4511c1d31205e3` were checked before and after the audit.
+
+All four native tables match the pinned native SQL in columns/defaults,
+constraints, indexes, user triggers, policies, RLS and table kinds. The connection
+used PostgreSQL 18.7 (`server_version_num=180007`). Its table privileges show
+SELECT allowed and INSERT/UPDATE/DELETE denied. No application rows were read.
+
+The seven proposed shared tables are absent:
+
+- `arcade_native_sui_accounts`, `arcade_native_sui_runs`
+- `arcade_native_paid_recoveries`, `arcade_native_sui_payments`
+- `arcade_continue_payments_v2`, `arcade_continue_claims_v2`, `arcade_continue_events_v2`
+
+The `private` schema is absent, as are `anon`, `authenticated` and `service_role`.
+Those roles are assumed by the source-only proposal SQL used in disposable
+fixtures. **Do not apply those proposals unchanged to this database.** The next
+milestone must adapt schema ownership/permissions to Netlify and test them.
+
+This is a point-in-time catalog compatibility finding. It does not verify player
+records, application write-role privileges, frontend behavior, every database
+object, or future deployment state. It does not approve migration, payments,
+restore authorization or gameplay activation. No database settings, player rows,
+schema, deployment, live authentication, game, score or tournament were changed.
+
+## Existing hosting connection
+
+Released source commit `bf4537220bb9a9b096cfaab9598fa2cd13556db9` records the branch
+ID `feature/treeforce89-play-integration` in
+`docs/treeforce89-paid-migrated-isolation.json`. The original native release
+scripts also use Netlify's database branch API. We inspected the current official
+OpenAPI specification at `https://open-api.netlify.com/swagger.json`: its
+`getSiteDatabaseBranch` GET operation supports `role=netlifydb_readonly`.
+
+The audit obtains that **specific existing branch's read-only connection** inside
+Actions using the existing Netlify integration. It validates provider, database
+path, pinned identity and the `netlifydb_readonly` username before connecting.
+No new database, database branch, role or credential is provisioned. The URL is
+never printed, saved to a file or exported to the model/user. The runner no longer
+reads any environment variables from Netlify or a database secret from GitHub.
+
+The HTTP path allowlist permits only the exact site, deploy metadata, and exact
+recorded branch with `role=netlifydb_readonly`. It rejects environment listings,
+individual environment keys, branch listings, other databases and the owner role.
+All requests are GET. The database connection defaults to read-only, with bounded
+connection/statement/lock/idle-transaction timeouts. The catalog is read on one
+connection in a REPEATABLE READ READ ONLY transaction; read-only mode is checked
+and the transaction is always rolled back.
+
+## PostgreSQL catalog compatibility
+
+The first successful connection returned `nativeSchemaMatches=false` solely
+because PostgreSQL 18 adds `pg_constraint.contype='n'` records for NOT NULL.
+PostgreSQL 17's reference represents the same requirement in column nullability.
+The raw first result is preserved in `hosted-catalog-raw.json`.
+
+The comparator now accepts only an exact redundant NOT NULL definition on a
+known column already checked as non-null, and only when validated and enforced.
+It still compares every other constraint, plus all column definitions. Tests
+reject nullable/unknown columns, unvalidated or unenforced NOT NULL, and changed
+columns, keys, indexes and RLS. The reference was regenerated only from the
+unchanged pinned SQL in disposable PostgreSQL; hosted drift was not copied into
+it. Official reference: https://www.postgresql.org/docs/18/catalog-pg-constraint.html .
+
+## Reproduce
+
+With Node 24, pg dependencies in `vendor/bnb-continue-store`, and PostgreSQL tools:
 
 ```sh
 BNB_PG_BIN="$(pg_config --bindir)" node scripts/multichain/check-native-database-audit-local.mjs
 ```
 
-For unpacked tools also set BNB_PG_SHARE. `--write-reference` is only for deliberate
-reference generation from the pinned SQL, never for accepting hosted drift.
+For unpacked tools also set `BNB_PG_SHARE`. `--write-reference` is for deliberate
+regeneration from the pinned migrations, never for accepting a hosted mismatch.
+The hosted workflow runs on the feature branch only with the explicit
+`[approved native binding audit]` commit marker. It uses the existing
+`NETLIFY_AUTH_TOKEN` integration. No extra database secret or owner action is needed.
 
-The hosted workflow triggers only on this feature branch with the explicit
-`[approved native binding audit]` commit marker (requires specific binding-access approval). It validates locally before obtaining
-the runtime binding. It verifies the published native package digest and locked
-ready deploy before and after the audit, refusing concurrent deployment changes.
-The current site binding is evidence, not proof that an unobservable deploy-time
-override is identical. A successful catalog read does not grant production
-activation or prove current frontend compatibility. Recheck at release time.
+Earlier attempts using the site environment value were blocked before connection
+because the returned value was not a parseable URL. An all-environment connector
+listing was rejected by approval review and was not retried. The owner then
+approved a narrow audit. The later direct read-only branch method avoids the
+environment listing entirely and satisfies the same pinned database identity.
+`approved-audit-result.json` and `hosted-attempt.json` retain the historical failed
+attempts; they do not describe the current result. The deployed native status
+check is retained separately in `runtime-status.json`.
 
-## Observed result and limit
+## Next implementation
 
-The initial hosted run `45535811060` passed all ten local tests but stopped in
-`binding` before connecting to PostgreSQL. Its deliberately redacted error does
-not identify the failing binding assertion; no hosted catalog was obtained.
-A subsequent connector request to list environment variables was rejected by
-automatic approval review because it could expose unrelated secrets outside the
-metadata-only audit. That request was not retried.
+Prepare a Netlify-compatible, additive shared-schema proposal outside automatic
+migration directories until reviewed. Choose and test an explicit application
+permission model; do not invent Supabase roles or assume the read-only role can
+write. Preserve the four existing native tables and payment history.
 
-The prepared runner now reads only the named `TREEFORCE89_DEV_DATABASE_URL` key,
-never the environment listing. It has not been run in this form. Its trigger
-was changed so documentation/evidence pushes cannot rerun the rejected listing.
-Specific approval to use that one binding inside the isolated Actions runner
-is the outstanding prerequisite for the complete catalog audit. It will not
-print, save or export the connection string and will retain the same read-only
-transaction and identity checks. Do not use default database credentials as a
-substitute.
-
-A safe alternative check called the existing canonical native status endpoint:
-`POST https://tree-token.xyz/play/treeforce89/api/status` with matching Origin.
-The exact verified handler makes read-only schema checks for this path, without
-wallet/session creation. It returned schemaReady=true, tableCount=4,
-isolationVerified=true, paymentSchemaReady=true and paymentsEnabled=true.
-The last flag describes the existing native Sui payment path; it does not enable
-BNB payments or the shared restore implementation. See `runtime-status.json`.
-
-This runtime response supports compatibility with the existing native schema
-checks and proves the deployed handler can reach its pinned database. It does
-not enumerate current constraints, policies, privileges or the seven proposed
-tables. Their hosted state remains unknown; absence must not be inferred from
-the disposable reference. The coordinated gateway stays source-only pending the
-full audit and migration/activation review.
-
-## Single-binding audit authorization
-
-The owner approved using only `TREEFORCE89_DEV_DATABASE_URL` inside GitHub
-Actions for the read-only audit, without printing or saving the credential.
-This authorizes the narrowed runner and no environment listing, migration,
-application-row read, deployment or gameplay activation.
-
-## Approved audit outcome — November 24, 2026
-
-The single-binding audit was executed after owner approval. All eleven local
-checks passed inside Actions. The final diagnostic run
-[45536657699](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45536657699)
-stopped at `binding-identity`: the named Netlify API value is not parseable as a
-URL, and the same-name GitHub Actions secret is unavailable to that workflow.
-This does not prove the deployed credential is invalid: the earlier in-runtime
-status check succeeded. It establishes that the audit runner lacks a usable
-approved connection value. No hosted database connection was opened, and no
-catalog results or migrations were produced. See `approved-audit-result.json`.
-
-The runner now supports the same approved key directly from Actions secrets,
-with the identical provider/path/database-identity checks. It falls back only
-to the single-key Netlify read; the path allowlist still rejects environment
-listings and other keys. Neither path logs or saves a connection string.
-A read-only attempt to list repository secret **names** returned HTTP 403,
-`Resource not accessible by integration`; this integration cannot configure or
-inspect repository secrets. No broader access was attempted.
-
-### Required secure setup
-
-The repository owner should add the **existing game database connection URL** as
-an Actions repository secret named `TREEFORCE89_DEV_DATABASE_URL` at GitHub →
-TheCryptoArborist/tree-token.xyz → Settings → Secrets and variables → Actions.
-Do not paste it into chat, source, an issue, or a workflow log. Do not use the
-site's default database URL, create a replacement database, or rotate/change the
-live binding to satisfy this audit. If the existing value cannot be recovered
-from its approved secure source, resolve that access first.
-
-After the secret is available, rerun the final diagnostic run above (it contains
-the reviewed single-binding implementation), or make a reviewed audit-marker
-commit. The runner checks identity before connecting and rejects any different
-database. The owner's audit authorization is already recorded; it does not need
-to be requested again. Catalog compatibility and shared-table readiness remain
-unknown until that run succeeds. Existing Sui gameplay/payment behavior and
-shared BNB activation remain unchanged.
+Compose the verified native gateway with shared payment evidence/consumption,
+coordinating Sui redeem/recovery and BNB import so a legacy path cannot grant the
+same sequence after shared consumption. Test permissions, concurrent payments,
+logout, recovery and rollback against the target schema. Preserve the separate
+current game-presentation work, artwork requirements, scoring and tournaments.
+Only after review should the migration be packaged for the proper existing
+branch, with fresh runtime evidence and a complete production-preservation audit.
