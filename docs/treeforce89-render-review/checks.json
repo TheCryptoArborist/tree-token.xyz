@@ -1,0 +1,178 @@
+[
+  {
+    "width": 390,
+    "samples": {
+      "standard": {
+        "buffer": [
+          480,
+          720
+        ],
+        "css": [
+          390,
+          585
+        ],
+        "scale": [
+          480,
+          720,
+          480,
+          720
+        ],
+        "world": [
+          480,
+          720
+        ],
+        "camera": [
+          480,
+          720,
+          1
+        ],
+        "hero": [
+          240,
+          460,
+          128,
+          160,
+          31.5,
+          45.5,
+          55,
+          67
+        ],
+        "renderer": [
+          480,
+          720
+        ]
+      },
+      "hd": {
+        "buffer": [
+          480,
+          720
+        ],
+        "css": [
+          390,
+          585
+        ],
+        "scale": [
+          480,
+          720,
+          480,
+          720
+        ],
+        "world": [
+          480,
+          720
+        ],
+        "camera": [
+          480,
+          720,
+          1
+        ],
+        "hero": [
+          240,
+          460,
+          128,
+          160,
+          31.5,
+          45.5,
+          55,
+          67
+        ],
+        "renderer": [
+          480,
+          720
+        ]
+      }
+    },
+    "logicalGeometryPreserved": true,
+    "pointerCoordinates": true,
+    "pauseResume": true,
+    "keyboard": false,
+    "errors": []
+  },
+  {
+    "width": 1920,
+    "samples": {
+      "standard": {
+        "buffer": [
+          480,
+          720
+        ],
+        "css": [
+          631.328125,
+          946.984375
+        ],
+        "scale": [
+          480,
+          720,
+          480,
+          720
+        ],
+        "world": [
+          480,
+          720
+        ],
+        "camera": [
+          480,
+          720,
+          1
+        ],
+        "hero": [
+          240,
+          460,
+          128,
+          160,
+          31.5,
+          45.5,
+          55,
+          67
+        ],
+        "renderer": [
+          480,
+          720
+        ]
+      },
+      "hd": {
+        "buffer": [
+          960,
+          1440
+        ],
+        "css": [
+          631.328125,
+          946.984375
+        ],
+        "scale": [
+          480,
+          720,
+          480,
+          720
+        ],
+        "world": [
+          480,
+          720
+        ],
+        "camera": [
+          480,
+          720,
+          1
+        ],
+        "hero": [
+          240,
+          460,
+          128,
+          160,
+          31.5,
+          45.5,
+          55,
+          67
+        ],
+        "renderer": [
+          480,
+          720
+        ]
+      }
+    },
+    "logicalGeometryPreserved": true,
+    "pointerCoordinates": true,
+    "pauseResume": true,
+    "keyboard": true,
+    "errors": []
+  }
+]
