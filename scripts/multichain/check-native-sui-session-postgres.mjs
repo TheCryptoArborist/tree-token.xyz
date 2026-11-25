@@ -2,6 +2,8 @@
 import fs from 'node:fs';import os from 'node:os';import path from 'node:path';
 import {execFileSync} from 'node:child_process';import {randomBytes,randomUUID,createHash} from 'node:crypto';import assert from 'node:assert/strict';
 import pg from '../../vendor/bnb-continue-store/node_modules/pg/lib/index.js';
+import {createNativeSuiPaymentRecorder} from './native-sui-payment.mjs';
+import {createMainnetTransactionReader} from '../../docs/multichain/generation-milestone/native-sui-payments/upstream/mainnet-transaction-reader.mjs';
 import {createNativePaidRunRecovery} from './native-paid-run-recovery.mjs';
 import {createNativeSuiSessionAdapter} from './native-sui-session.mjs';
 import {createSharedContinueDelivery,PAYMENT_TERMS_V2} from './shared-continue-delivery.mjs';
@@ -123,5 +125,79 @@ try{
  assert.equal((await seqService.activate({sessionHash:credential,runId:rm.runId,clientKey:newKey,leaseId:newLease.leaseId,checkpointHash:newLease.checkpointHash,requestId:randomUUID()})).sequence,3);checks.push('recovered payment respects old lease then consumes third continue once');
  const after=await fixture(repeat.wallet);assert.equal((await recover({sessionHash:after.sessionHash,paymentId:skip.paymentId})).status,'review-required');
  assert.equal((await owner.query('select session_token_hash from public.tree_game_sessions where session_id=$1',[after.id])).rows[0].session_token_hash,after.sessionHash);checks.push('lost activation response cannot recover consumed payment as a new grant');
+
+ // Actual pinned native reader -> evidence store -> shared claim -> native redemption.
+ const paymentRoot='docs/multichain/generation-milestone/native-sui-payments/';
+ for(const f of JSON.parse(fs.readFileSync(paymentRoot+'provenance.json')).files)assert.equal(sha(fs.readFileSync(paymentRoot+f.snapshot)),f.sha256);
+ await owner.query(fs.readFileSync(paymentRoot+'schema.sql','utf8'));
+ await owner.query('grant select,insert on public.tree_continue_redemptions to service_role'); // local fixture grant only
+ const policy=PAYMENT_TERMS_V2['sui-native-tree'];
+ async function paymentFixture(wallet){
+  const native=await fixture(wallet),mapping=await tx(db=>adapter.bind(db,native)),offerId=hex().slice(0,48),digest='D'+hex().replaceAll('0','1').slice(0,43);
+  await owner.query("update public.tree_game_sessions set continue_pending=true,continue_offer_id=$2,continue_offer_created_at=clock_timestamp()-interval '1 minute',continue_offer_expires_at=clock_timestamp()+interval '1 minute',continue_offer_checkpoint='10',continue_snapshot=$3 where session_id=$1",[native.id,offerId,{runId:native.nativeRunId,fixture:true}]);
+  const body={$kind:'Transaction',Transaction:{digest,status:{success:true},effects:{status:{success:true}},checkpoint:'11',timestampMs:Date.now()-1000,transaction:{sender:native.wallet},balanceChanges:[{coinType:policy.token,address:policy.recipient,amount:policy.amount}]}};
+  return {native,mapping,offerId,digest,body};
+ }
+ const payCase=await paymentFixture();let evidence=payCase.body;
+ const reader=createMainnetTransactionReader({network:'mainnet',core:{getTransaction:async()=>structuredClone(evidence)}});
+ const recorder=createNativeSuiPaymentRecorder({pool,...options,readTransaction:reader});
+ const pi={sessionHash:payCase.native.sessionHash,offerId:payCase.offerId,digest:payCase.digest};
+ const invalid=[
+  x=>x.$kind='FailedTransaction',x=>x.Transaction.effects.status.success=false,
+  x=>x.Transaction.digest='B'.repeat(44),x=>x.Transaction.checkpoint='10',
+  x=>x.Transaction.transaction.sender='0x'+hex(),x=>x.Transaction.balanceChanges[0].amount='1',
+  x=>x.Transaction.balanceChanges[0].coinType='wrong',x=>x.Transaction.timestampMs=Date.now()+60000,
+  x=>x.Transaction.balanceChanges[0].address='0x'+hex(),x=>x.Transaction.timestampMs=Date.now()-180000
+ ];
+ for(const mutate of invalid){evidence=structuredClone(payCase.body);mutate(evidence);await assert.rejects(recorder(pi));}
+ assert.equal((await owner.query('select count(*)::int n from private.arcade_native_sui_payments')).rows[0].n,0);checks.push('native reader and recorder reject failed, mismatched, stale and underpaid Sui evidence');
+ evidence=payCase.body;const recorded=await Promise.all(Array.from({length:12},()=>recorder(pi)));assert(recorded.every(r=>r.restoreAuthorized===false));
+ assert.equal((await owner.query('select count(*)::int n from private.arcade_native_sui_payments')).rows[0].n,1);
+ assert.equal((await owner.query('select continuation_number from public.tree_game_sessions where session_id=$1',[payCase.native.id])).rows[0].continuation_number,0);
+ assert.equal((await owner.query('select count(*)::int n from public.tree_continue_redemptions')).rows[0].n,0);checks.push('12 native verification retries record one receipt without consuming or restoring');
+ const duplicate=await paymentFixture(payCase.native.wallet);evidence={...payCase.body,Transaction:{...payCase.body.Transaction,timestampMs:Date.now()-1000}};
+ await assert.rejects(recorder({sessionHash:duplicate.native.sessionHash,offerId:duplicate.offerId,digest:payCase.digest}));checks.push('same Sui digest cannot fund another native offer or run');
+ evidence=payCase.body;
+ const nativeShared=createSharedContinueDelivery({pool,lockSessionAndFlight:seqAdapter.lockSessionAndFlight,consumeRun:seqAdapter.consumeRun});
+ const sharedInput={sessionHash:payCase.native.sessionHash,runId:payCase.mapping.runId,source:'sui-native-tree',sourceId:payCase.offerId};
+ const paidNative=await nativeShared.importPayment(sharedInput),page=hex(),nativeLease=await nativeShared.prepare({...sharedInput,paymentId:paidNative.paymentId,clientKey:page});
+ const nativeActivation={...sharedInput,clientKey:page,leaseId:nativeLease.leaseId,checkpointHash:nativeLease.checkpointHash,requestId:randomUUID()};
+ await owner.query("create function private.fail_native_redemption() returns trigger language plpgsql as $$ begin raise exception 'redemption failure'; end $$;create trigger fail_redemption before insert on public.tree_continue_redemptions for each row execute function private.fail_native_redemption();");
+ await assert.rejects(nativeShared.activate(nativeActivation),/redemption failure/);
+ assert.equal((await owner.query('select continuation_number from public.tree_game_sessions where session_id=$1',[payCase.native.id])).rows[0].continuation_number,0);
+ await owner.query('drop trigger fail_redemption on public.tree_continue_redemptions;drop function private.fail_native_redemption()');
+ const consumed=await nativeShared.activate(nativeActivation);assert.equal(consumed.consumed,true);assert.equal(consumed.restoreAuthorized,false);
+ assert.equal((await owner.query('select digest from public.tree_continue_redemptions where offer_id=$1',[payCase.offerId])).rows[0].digest,payCase.digest);
+ assert.equal((await nativeShared.importPayment(sharedInput)).paymentId,paidNative.paymentId);
+ assert.equal((await nativeShared.activate(nativeActivation)).status,'review-required');checks.push('native evidence settles once with shared claim and counter; redemption failure rolls all back');
+ const used=await paymentFixture();await owner.query('insert into public.tree_continue_redemptions(digest,session_id,continuation_number,wallet,run_id,offer_id) values($1,$2,0,$3,$4,$5)',[used.digest,used.native.id,used.native.wallet,used.native.nativeRunId,used.offerId]);evidence=used.body;
+ await assert.rejects(recorder({sessionHash:used.native.sessionHash,offerId:used.offerId,digest:used.digest}),/payment-already-redeemed/);checks.push('legacy native redemption cannot be imported as unused payment');
+ const late=await paymentFixture();await owner.query("update public.tree_game_sessions set continue_offer_expires_at=clock_timestamp()-interval '1 second' where session_id=$1",[late.native.id]);late.body.Transaction.timestampMs=Date.now()-2000;evidence=late.body;
+ assert.equal((await recorder({sessionHash:late.native.sessionHash,offerId:late.offerId,digest:late.digest})).status,'recorded');checks.push('timely checkpointed payment remains reconcilable after offer expiry');
+ await assert.rejects(pool.query('update private.arcade_native_sui_payments set received=amount'));await assert.rejects(pool.query('delete from private.arcade_native_sui_payments'));checks.push('runtime cannot rewrite or delete native Sui payment evidence');
+
+ const interrupted=await paymentFixture();evidence=interrupted.body;
+ await createCredentialRevoker(owner).revoke({sessionToken:interrupted.native.token});
+ const loginAgain=await fixture(interrupted.native.wallet);
+ const reconciled=await recorder({sessionHash:loginAgain.sessionHash,offerId:interrupted.offerId,digest:interrupted.digest});
+ const recoveredNative=await recover({sessionHash:loginAgain.sessionHash,paymentId:reconciled.paymentId});
+ assert.equal(recoveredNative.status,'recovered');assert.equal(recoveredNative.runId,interrupted.mapping.runId);assert.equal(recoveredNative.restoreAuthorized,false);
+ assert.equal((await recorder({sessionHash:loginAgain.sessionHash,offerId:interrupted.offerId,digest:interrupted.digest})).paymentId,reconciled.paymentId);
+ checks.push('fresh login reconciles paid native offer and recovers original run without old credential');
+ const overtaken=await paymentFixture();evidence=overtaken.body;
+ await recorder({sessionHash:overtaken.native.sessionHash,offerId:overtaken.offerId,digest:overtaken.digest});
+ await owner.query('insert into public.tree_continue_redemptions(digest,session_id,continuation_number,wallet,run_id,offer_id) values($1,$2,0,$3,$4,$5)',[overtaken.digest,overtaken.native.id,overtaken.native.wallet,overtaken.native.nativeRunId,overtaken.offerId]);
+ await assert.rejects(nativeShared.importPayment({sessionHash:overtaken.native.sessionHash,runId:overtaken.mapping.runId,source:'sui-native-tree',sourceId:overtaken.offerId}),/payment-already-redeemed/);
+ checks.push('native redemption after verification is rejected by shared receipt adapter');
+
+ const atomicPayment=await paymentFixture();evidence=atomicPayment.body;
+ await owner.query("create function private.fail_shared_receipt() returns trigger language plpgsql as $$ begin raise exception 'shared receipt failure'; end $$;create trigger fail_shared_receipt before insert on private.arcade_continue_payments_v2 for each row execute function private.fail_shared_receipt();");
+ await assert.rejects(recorder({sessionHash:atomicPayment.native.sessionHash,offerId:atomicPayment.offerId,digest:atomicPayment.digest}),/shared receipt failure/);
+ assert.equal((await owner.query('select count(*)::int n from private.arcade_native_sui_payments where offer_id=$1',[atomicPayment.offerId])).rows[0].n,0);
+ await owner.query('drop trigger fail_shared_receipt on private.arcade_continue_payments_v2;drop function private.fail_shared_receipt()');
+ assert.equal((await recorder({sessionHash:atomicPayment.native.sessionHash,offerId:atomicPayment.offerId,digest:atomicPayment.digest})).status,'recorded');checks.push('native and shared payment evidence commit or roll back together');
+ const excess=await paymentFixture();excess.body.Transaction.balanceChanges[0].amount=(BigInt(policy.amount)*2n).toString();evidence=excess.body;
+ assert.equal((await recorder({sessionHash:excess.native.sessionHash,offerId:excess.offerId,digest:excess.digest})).sequence,1);
+ const over=(await owner.query('select amount,received from private.arcade_native_sui_payments where offer_id=$1',[excess.offerId])).rows[0];assert.equal(over.amount,policy.amount);assert.equal(over.received,(BigInt(policy.amount)*2n).toString());checks.push('native overpayment remains one continue with excess recorded');
  console.log(JSON.stringify({localOnly:true,passed:checks.length,checks,nativeSourceCommit:provenance.commit,productionParityVerified:false,liveRestorationEnabled:false},null,2));
 }finally{await pool?.end();await owner?.end();if(started)execFileSync(exe('pg_ctl'),['-D',data,'-m','immediate','-w','stop'],{env,stdio:'pipe'});fs.rmSync(dir,{recursive:true,force:true});}

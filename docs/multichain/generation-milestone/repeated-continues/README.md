@@ -98,3 +98,5 @@ network endpoint, contract, wallet or deployed-function change. No user wallet
 transaction is needed for the next source integration steps.
 
 Hosted [CI 45525080280](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45525080280) passed on `51ea37d`, including all repeated-continue checks and existing regressions. Machine-readable evidence is in `hosted-ci.json`.
+
+Subsequent milestone: [native Sui payment evidence](../native-sui-payments/README.md) now separates native verification from consumption and connects native redemption to the shared transaction. HTTP/renderer integration and production parity remain unverified.

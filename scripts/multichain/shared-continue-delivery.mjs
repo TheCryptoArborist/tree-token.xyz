@@ -7,11 +7,22 @@ const hex=v=>typeof v==='string'&&/^[a-f0-9]{64}$/.test(v);
 const SUI_TOKEN='0x6c5a609f6d0288523ce4a6ed87d19ae127f62073ab75fd9b0b1c9b455d4895cf::tree::TREE';
 export const PAYMENT_TERMS_V2=Object.freeze({
  'sui-tree':Object.freeze({network:'sui:mainnet',token:SUI_TOKEN,amount:'20000000000',recipient:'0x6f1020c2fd6c91129f7cb5e0d651295e87f7245f96b7d090715c89b38197e77f'}),
+ 'sui-native-tree':Object.freeze({network:'sui:mainnet',token:SUI_TOKEN,amount:'20000000000',recipient:'0x6f1020c2fd6c91129f7cb5e0d651295e87f7245f96b7d090715c89b38197e77f'}),
  'bnb-usdt':Object.freeze({network:'eip155:56',token:'0x55d398326f99059ff775485246999027b3197955',amount:'1000000000000000000',recipient:'0xc440f06bbc7e58b0d055815f915447e4ae0e3720'}),
 });
 // Returns typed, persisted evidence, never treats BNB Transfer as a Sui event.
 // Run only with a trusted server connection. No user-supplied receipt objects.
 export async function loadRecordedContinuePayment(db,{source,sourceId}) {
+ if(source==='sui-native-tree'){
+  check(/^[a-f0-9]{48}$/.test(sourceId||''),'invalid-payment-reference');
+  const r=(await db.query(`select * from private.arcade_native_sui_payments where offer_id=$1`,[sourceId])).rows[0];
+  check(r,'payment-not-verified');
+  const legacy=(await db.query('select digest from public.tree_continue_redemptions where digest=$1 or offer_id=$2',[r.digest,sourceId])).rows;
+  if(legacy.length)check((await db.query(`select 1 from private.arcade_continue_payments_v2 p join private.arcade_continue_claims_v2 c on c.payment_id=p.id
+   where p.source='sui-native-tree' and p.source_id=$1 and c.state='started'`,[sourceId])).rows.length===1,'payment-already-redeemed');
+  return {accountId:r.account_id,runId:r.run_id,suiWallet:r.wallet,sequence:r.sequence,receiptId:'sui:mainnet:'+r.digest,
+   payment:{...PAYMENT_TERMS_V2['sui-native-tree'],payer:r.wallet}};
+ }
  if(source==='bnb-usdt'){
   check(hex(sourceId),'invalid-payment-reference');
   const r=(await db.query(`select c.terms,c.payment_terms,r.payment_key,r.tx_hash from private.arcade_bnb_continue_checkouts c
@@ -31,7 +42,16 @@ export async function loadRecordedContinuePayment(db,{source,sourceId}) {
   payment:{network:r.terms.network,payer:r.terms.payer,token:r.terms.coinType,amount:r.terms.requiredRaw,recipient:r.terms.recipient}};
 }
 export async function settleRecordedContinuePayment(db,payment) {
- if(payment.source!=='bnb-usdt')return; // Sui-native writer remains a separate integration gate.
+ if(payment.source==='sui-native-tree'){
+  const r=(await db.query('select * from private.arcade_native_sui_payments where offer_id=$1',[payment.source_id])).rows[0];
+  check(r&&payment.receipt_id==='sui:mainnet:'+r.digest,'native-receipt-conflict');
+  const result=await db.query(`insert into public.tree_continue_redemptions(digest,session_id,continuation_number,wallet,run_id,offer_id,snapshot,payment_timestamp_ms,checkpoint)
+   select $1,s.session_id,$2,s.wallet,s.run_id,$3,$4,$5,$6 from public.tree_game_sessions s
+   where s.session_id=$7 and s.run_id=$8 and s.wallet=$9 and s.continuation_number=$10 and not s.game_over and not s.continue_pending returning digest`,
+   [r.digest,r.sequence-1,r.offer_id,r.snapshot,r.timestamp_ms,r.checkpoint,r.native_session_id,r.native_run_id,r.wallet,r.sequence]);
+  check(result.rowCount===1,'native-redemption-conflict');return;
+ }
+ if(payment.source!=='bnb-usdt')return;
  const result=await db.query(`update private.arcade_bnb_continue_checkouts c set status='consumed'
   where c.id=$1 and c.status='paid-review' and exists(select 1 from private.arcade_bnb_continue_receipts r
   where r.checkout_id=c.id and r.payment_key=$2) returning c.id`,[payment.source_id,payment.receipt_id]);
@@ -68,7 +88,7 @@ export function createSharedContinueDelivery({pool,lockSessionAndFlight,loadPaym
     check(p.accountId===s.accountId&&p.runId===s.runId&&p.suiWallet===s.suiWallet&&typeof p.receiptId==='string'&&p.receiptId.length<=200,'payment-owner-mismatch');
     check(Number.isSafeInteger(p.sequence)&&p.sequence>0&&p.sequence<=2147483647,'invalid-payment-sequence');
     const policy=PAYMENT_TERMS_V2[input.source];check(Object.entries(policy).every(([k,v])=>p.payment?.[k]===v),'payment-policy-mismatch');
-    check(input.source==='sui-tree'?p.payment.payer===s.suiWallet:/^0x[a-f0-9]{40}$/.test(p.payment.payer||''),'invalid-payment-payer');
+    check(input.source.startsWith('sui-')?p.payment.payer===s.suiWallet:/^0x[a-f0-9]{40}$/.test(p.payment.payer||''),'invalid-payment-payer');
     const existing=(await db.query('select * from private.arcade_continue_payments_v2 where source=$1 and source_id=$2',[input.source,input.sourceId])).rows[0];
     if(existing){check(existing.account_id===s.accountId&&existing.run_id===s.runId&&existing.receipt_id===p.receiptId&&existing.sequence===p.sequence,'receipt-conflict');return response(s,{paymentId:existing.id,status:'recorded'});}
     const id=randomUUID();await db.query(`insert into private.arcade_continue_payments_v2(id,source,source_id,receipt_id,account_id,run_id,sui_wallet,payment,sequence) values($1,$2,$3,$4,$5,$6,$7,$8,$9)`,[id,input.source,input.sourceId,p.receiptId,s.accountId,s.runId,s.suiWallet,p.payment,p.sequence]);

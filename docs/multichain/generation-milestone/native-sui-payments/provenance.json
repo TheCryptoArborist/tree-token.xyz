@@ -1,0 +1,15 @@
+{
+  "commit": "9974d7f0b5c03b9621561d15a8040e8bf558e1db",
+  "files": [
+    {
+      "path": "treeforce89/paid/mainnet-transaction-reader.mjs",
+      "snapshot": "upstream/mainnet-transaction-reader.mjs",
+      "sha256": "4e2a01fc904601b410231e219ba2c4d40bef1d05bc9b4fe3935d66b2cfbd973f"
+    },
+    {
+      "path": "treeforce89/paid/contract.mjs",
+      "snapshot": "upstream/contract.mjs",
+      "sha256": "598bb7c823910c61eeebc860efdda34fe340b121dec90fcb67ecd924aa81bcc8"
+    }
+  ]
+}

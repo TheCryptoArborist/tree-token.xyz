@@ -2,7 +2,7 @@
 begin;
 create table private.arcade_continue_payments_v2 (
  id uuid primary key,
- source text not null check(source in ('sui-tree','bnb-usdt')),
+ source text not null check(source in ('sui-tree','sui-native-tree','bnb-usdt')),
  source_id text not null,
  receipt_id text not null unique,
  account_id uuid not null, run_id uuid not null,

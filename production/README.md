@@ -1,3 +1,16 @@
+# Native Sui payment evidence source — November 24, 2026
+
+Native Sui TREE verification now records immutable payment evidence and a shared
+sequence-bound payment without restoring a run. Shared consumption writes the
+native redemption atomically with counter/claim/journal updates. Fresh-login
+reconciliation preserves timely payments after native logout or offer expiry.
+The expanded native checker passes 33 tests; 17 shared regressions also pass.
+This remains source-only, with no live endpoint, migration or deployment change.
+Evidence and remaining renderer/runtime gates:
+`docs/multichain/generation-milestone/native-sui-payments/README.md`.
+
+---
+
 # Repeated continues and paid-run recovery source — November 24, 2026
 
 Shared claims now bind payment to account/run/continue sequence. Native counter
