@@ -1,3 +1,66 @@
+# Grove Chess wallet identity and play entry — published November 25, 2026
+
+[Grove Chess](https://tree-token.xyz/play/grove-chess/) clearly identifies the
+connected wallet name and shortened address in the set panel and board access
+card. Selecting Slush alone leaves the wallet disconnected and shows Connect
+Slush. Previously approved wallets can reconnect silently; the panel explains
+this rather than implying that a new approval prompt always occurs.
+
+The panel provides Play chess for verified NFTree holders, Play free / Resume
+free game for eligible guests, and Return to online play for online mode. The
+button closes the panel and brings the board into view using the board’s actual
+access decision. Opening play does not debit a free game, and exhausted trials
+do not receive a free-play offer. Wallet SDK, signatures and trial rules are unchanged.
+
+Locked ready deploy `6b070b7c17a1ca14b8f9a9b5`, source
+`2e5215d084d00ed5564e487ba30d9dd3bb2cb99e` (PR #341).
+[Publication run 45652755185](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45652755185) passed, including canonical checks.
+Fresh baseline `6b0701bd9009c13d1b31b135`; **789 static paths**,
+**785 unrelated paths preserved**, all **62 backend/provider records** and
+**5 schedules** preserved. Only four chess frontend files changed.
+
+Gameplay/access tests, candidate/canonical four-viewport checks, and three-phone
+board-fit checks passed. Browser coverage includes selected-but-disconnected
+Slush, restored Slush identity/address, holder play entry, guest play entry
+without a trial debit, and no free-play offer after two games. Wallet states are
+simulated in automated checks; no real wallet approval or Telegram send occurred.
+
+Full report and static manifest:
+`production/grove-chess-entry-release-20261125.json`.
+Publication artifact #15040563694 SHA256:
+`a84ed8b30a6f2f77012e2ac936aa925a60233954e7dde9bed4f400a564c8642a`.
+Capture a fresh complete live baseline before every subsequent release.
+
+---
+
+# Grove Chess TREE player coins — published November 25, 2026
+
+[Grove Chess](https://tree-token.xyz/play/grove-chess/) now uses an emerald pine
+coin for The Woodland and an ivory coin bearing the leafy Tree Hero emblem for
+the Gardener. Minted rims inherit each side’s selected rarity finish; the coin
+centers retain dark/light team identity. Inline SVGs replace the generic spade
+and club without changing player-row dimensions or adding network assets.
+
+Locked ready deploy `6b0701bd9009c13d1b31b135`, source
+`2f00f42201a1ada1bbc6abc9d018d319c7eba4f2` (PR #339).
+[Publication run 45647651052](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45647651052) passed, including canonical checks.
+Fresh baseline `6b06fcd2dc679f4899d86f5d`; **789 static paths**,
+**787 unrelated paths preserved**, all **62 backend/provider records** and
+**5 schedules** preserved. Only chess HTML and CSS changed.
+
+Candidate and canonical four-viewport game/cabinet checks and three-phone
+board-fit/scroll checks passed. Independent rim-color inheritance and SVG
+presence were inspected locally. Canonical phone screenshots show both coins.
+No leaderboard, game-access, wallet or gameplay changes were made.
+
+Full report, static manifest and canonical mobile results:
+`production/grove-chess-coins-release-20261125.json`.
+Publication artifact #15038881852 SHA256:
+`d8bee761a134bbbe18af34f0e2db08a2b4d6e9f1ad945d6f1b293b1158b4d749`.
+Capture a fresh full live baseline before every subsequent release.
+
+---
+
 # Grove Chess move instructions — published November 25, 2026
 
 [Grove Chess](https://tree-token.xyz/play/grove-chess/) now shows persistent
