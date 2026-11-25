@@ -96,3 +96,5 @@ applied to a hosted database. Local results are saved alongside this document.
 The current Mysten guidance was refreshed; this step makes no Sui SDK, signature,
 network endpoint, contract, wallet or deployed-function change. No user wallet
 transaction is needed for the next source integration steps.
+
+Hosted [CI 45525080280](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45525080280) passed on `51ea37d`, including all repeated-continue checks and existing regressions. Machine-readable evidence is in `hosted-ci.json`.
