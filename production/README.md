@@ -1,3 +1,22 @@
+# Grove Chess team and move clarity — published November 25, 2026
+
+Birch pieces have bright ivory backing and Pine pieces deep emerald backing,
+independent of collectible finish. Computer replies now pause 1.8 seconds rather
+than 400ms. The last departure square has a dashed outline, the arrival a solid
+outline and marker; the piece hint shows the last move until a piece is selected.
+
+Locked ready deploy `6b071b5f54d3a31f704f5d48`, source
+`2b61f2e58ccf98d4edbb3f00de06b6da4110caaa` (PR #348).
+[Publication run 45665232535](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45665232535)
+passed local, candidate and canonical four-viewport and three-phone checks.
+Gameplay tests assert the 1800ms timer; phone checks verify a non-immediate reply,
+both move markers, the description, and stable scrolling. Total 789 static paths;
+787 unrelated paths, all 62 backend/provider records and five schedules preserved.
+Only chess app.js and finishes.css changed. No Telegram send or real wallet approval.
+Full report: [grove-chess-clarity-release-20261125.json](grove-chess-clarity-release-20261125.json).
+
+---
+
 # Grove Chess mobile controls — published November 25, 2026
 
 Game controls above the mobile board opens a dialog containing the existing mode,
