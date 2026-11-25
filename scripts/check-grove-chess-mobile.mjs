@@ -22,12 +22,24 @@ try{for(const [width,height] of [[390,664],[320,568],[430,740]]){
  await page.locator('#undo').tap();assert.equal(await page.evaluate(()=>scrollY),0);
  await page.locator('#flip').tap();assert.equal(await page.evaluate(()=>scrollY),0);
  await page.locator('#flip').tap();
- await page.locator('#mobile-options').tap();await page.waitForTimeout(600);
- await page.selectOption('#mode','local');await page.locator('#mobile-return').tap();await page.waitForTimeout(600);
+ const beforeControls=await page.evaluate(()=>scrollY);
+ await page.locator('#mobile-options').tap();assert(await page.locator('#mobile-controls').evaluate(e=>e.open));
+ assert.equal(await page.locator('#mode').evaluate(e=>e.closest('dialog').id),'mobile-controls');
+ await page.selectOption('#difficulty','1');await page.selectOption('#mode','local');
+ await page.screenshot({path:`.netlify/grove-chess-mobile-controls-${width}.png`});
+ await page.locator('#mobile-controls-close').tap();await page.waitForFunction(()=>!document.querySelector('#mobile-controls').open&&document.querySelector('aside #mode'));
+ assert.equal(await page.evaluate(()=>scrollY),beforeControls,'Closing game choices preserves board position');
+ await page.locator('#mobile-options').tap();await page.locator('#new').tap();assert(await page.locator('#restart').evaluate(e=>e.open));await page.locator('#cancel-new').tap();
+ assert.equal(await page.evaluate(()=>scrollY),beforeControls,'Cancelling new game preserves board position');
+ await page.locator('#mobile-options').tap();await page.keyboard.press('Escape');await page.waitForFunction(()=>!!document.querySelector('aside #mode'));
+ assert.equal(await page.evaluate(()=>scrollY),beforeControls,'Dismissing controls preserves board position');
  const boardY=await page.locator('#board').evaluate(e=>e.getBoundingClientRect().top);assert(boardY>=0&&boardY+rect.height<=height);
  const scroll=await page.evaluate(()=>scrollY);
  for(const sq of ['e2','e4','e7','e5','g1','f3','b8','c6']){const b=await page.locator(`[data-square="${sq}"]`).boundingBox();await page.touchscreen.tap(b.x+b.width/2,b.y+b.height/2);await page.waitForTimeout(70);assert.equal(await page.evaluate(()=>scrollY),scroll,'Local turns must preserve scroll');}
  await page.locator('[data-square="e2"]').focus();await page.keyboard.press('ArrowRight');assert.equal(await page.evaluate(()=>document.activeElement.dataset.square),'f2','Keyboard navigation retained');
+ await page.locator('#mobile-options').tap();await page.selectOption('#mode','online');assert(await page.locator('#online-find').isVisible());assert.equal(await page.locator('#online-panel').evaluate(e=>e.closest('dialog').id),'mobile-controls');
+ await page.selectOption('#mode','local');await page.locator('#mobile-controls-wallet').tap();assert(await page.locator('#finish-dialog').evaluate(e=>e.open));assert(!(await page.locator('#mobile-controls').evaluate(e=>e.open)));await page.locator('#close-finishes').tap();
+ assert.equal(await page.evaluate(()=>scrollY),scroll,'Wallet panel round-trip preserves board position');
  await page.screenshot({path:`.netlify/grove-chess-mobile-play-${width}.png`});results.push({width,height,boardAndControlsVisible:true,touchMovesStable:true,computerReplyStable:true,localMovesStable:true,keyboardNavigation:true});await page.close();
 }}finally{await browser.close()}
 fs.writeFileSync('.netlify/grove-chess-mobile-checks.json',JSON.stringify({base,results},null,2));console.log('Mobile board, controls and scroll stability verified at three phone sizes.');

@@ -1,0 +1,125 @@
+name: Publish Grove Chess Mobile Controls
+
+on:
+  pull_request:
+    paths:
+      - 'play/grove-chess/**'
+      - 'scripts/*grove-chess*'
+      - 'scripts/arcade-grove-chess.js'
+      - 'scripts/arcade-organization.js'
+      - 'styles/arcade-grove-chess.css'
+      - 'tests/grove-chess*'
+      - '.github/workflows/publish-grove-chess-mobile-controls.yml'
+  workflow_dispatch:
+    inputs:
+      expected_deploy:
+        description: Current locked published Netlify deploy ID (stop if changed)
+        required: true
+        type: string
+      publish:
+        description: Publish mobile game controls after preservation checks
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.event_name == 'workflow_dispatch' && 'tree-production-preservation-release' || format('grove-mobile-controls-verify-{0}', github.ref) }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Verify gameplay and release source
+        run: |
+          node tests/grove-chess-gameplay.mjs
+          node --test tests/grove-chess-trial.test.mjs
+          node --test tests/grove-chess-finishes.test.mjs tests/grove-chess-mobile-controls-release.test.mjs
+          node --test tests/grove-chess-release.test.mjs
+          node --check scripts/release-grove-chess-mobile-controls.mjs
+          node --check scripts/check-grove-chess-page.mjs
+          git diff --check
+      - name: Install isolated browser checker
+        run: |
+          npm install --prefix "$RUNNER_TEMP/grove-chess-browser" --ignore-scripts --no-audit --no-fund playwright@1.56.1
+          "$RUNNER_TEMP/grove-chess-browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Check local desktop and touch layouts
+        env:
+          GROVE_CHESS_BROWSER_MODULE: ${{ runner.temp }}/grove-chess-browser/node_modules/playwright/index.mjs
+          GROVE_CHESS_TEST_BASE: http://127.0.0.1:8765
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 > "$RUNNER_TEMP/grove-chess-http.log" 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          GROVE_CHESS_CABINET_FIXTURE=1 node scripts/check-grove-chess-page.mjs
+          node scripts/check-grove-chess-mobile.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: grove-chess-local-browser-${{ github.run_id }}
+          path: |
+            .netlify/grove-chess-*.png
+            .netlify/grove-chess-browser-checks.json
+            .netlify/grove-chess-mobile-checks.json
+            .netlify/grove-chess-cabinet-checks.json
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 7
+  release:
+    needs: verify
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install isolated browser checker
+        run: |
+          npm install --prefix "$RUNNER_TEMP/grove-chess-browser" --ignore-scripts --no-audit --no-fund playwright@1.56.1
+          "$RUNNER_TEMP/grove-chess-browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Capture current site and verify scoped candidate
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          EXPECTED_DEPLOY: ${{ inputs.expected_deploy }}
+          SOURCE_COMMIT: ${{ github.sha }}
+          GROVE_CHESS_BROWSER_MODULE: ${{ runner.temp }}/grove-chess-browser/node_modules/playwright/index.mjs
+        run: |
+          test -n "$NETLIFY_AUTH_TOKEN" || { echo 'Netlify release secret is unavailable.'; exit 1; }
+          test "$(git rev-parse HEAD)" = "$SOURCE_COMMIT"
+          node scripts/release-grove-chess-mobile-controls.mjs candidate
+          node scripts/release-grove-chess-mobile-controls.mjs verify
+      - name: Publish verified new candidate and check canonical route
+        if: inputs.publish
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          EXPECTED_DEPLOY: ${{ inputs.expected_deploy }}
+          SOURCE_COMMIT: ${{ github.sha }}
+          GROVE_CHESS_BROWSER_MODULE: ${{ runner.temp }}/grove-chess-browser/node_modules/playwright/index.mjs
+        run: node scripts/release-grove-chess-mobile-controls.mjs publish
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: grove-chess-mobile-controls-release-${{ github.run_id }}
+          path: |
+            .netlify/grove-chess-mobile-controls-release/report.json
+            .netlify/grove-chess-browser-checks.json
+            .netlify/grove-chess-mobile-checks.json
+            .netlify/grove-chess-cabinet-checks.json
+            .netlify/grove-chess-*.png
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 30
