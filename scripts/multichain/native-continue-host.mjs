@@ -1,5 +1,6 @@
 // Undeployed host assembly. The caller supplies verified native services, never
 // browser configuration. No SDK client, secret lookup or route registration.
+import {createNativePaymentCompletion} from './native-payment-completion.mjs';
 import {createNativeSuiSessionAdapter} from './native-sui-session.mjs';
 import {createNativeSuiPaymentRecorder} from './native-sui-payment.mjs';
 import {createNativePaidRunRecovery} from './native-paid-run-recovery.mjs';
@@ -18,6 +19,7 @@ export function createNativeContinueHost({pool,legacyHandler,nativePaidService,v
  const delivery=createSharedContinueDelivery({pool,lockSessionAndFlight:sessionAdapter.lockSessionAndFlight,consumeRun:sessionAdapter.consumeRun});
  const authorization=createRestoreAuthorization({delivery,readReleasePolicy});
  return createNativeContinueComposition({legacyHandler,readMode,authorization,
+  completePayment:createNativePaymentCompletion({pool,verifyRuntime:verified}),
   recordPayment:createNativeSuiPaymentRecorder({pool,verifyRuntime:verified,readTransaction}),
   recoverPayment:createNativePaidRunRecovery({pool,verifyRuntime:verified,checkOwnership}),
   nativeOffer:createNativeSharedOffer({pool,sessionAdapter,nativeOffer:input=>nativePaidService.offer(input)}),

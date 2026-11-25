@@ -199,9 +199,18 @@ try{
  await assert.rejects(nativeShared.activate(nativeActivation),/redemption failure/);
  assert.equal((await owner.query('select continuation_number from public.tree_game_sessions where session_id=$1',[payCase.native.id])).rows[0].continuation_number,0);
  await owner.query('drop trigger fail_redemption on public.tree_continue_redemptions;drop function private.fail_native_redemption()');
+ assert.equal((await throughGateway('complete',payCase.native.token,{paymentId:paidNative.paymentId})).archiveAllowed,false);
  const consumed=await nativeShared.activate(nativeActivation);assert.equal(consumed.consumed,true);assert.equal(consumed.restoreAuthorized,false);
  assert.equal((await owner.query('select digest from public.tree_continue_redemptions where offer_id=$1',[payCase.offerId])).rows[0].digest,payCase.digest);
  assert.equal((await nativeShared.importPayment(sharedInput)).paymentId,paidNative.paymentId);
+ const completed=await throughGateway('complete',payCase.native.token,{paymentId:paidNative.paymentId});assert.equal(completed.archiveAllowed,true);assert.equal(completed.digest,payCase.digest);
+ const outsider=await fixture();assert.equal((await throughGateway('complete',outsider.token,{paymentId:paidNative.paymentId})).archiveAllowed,false);
+ const newLogin=await fixture(payCase.native.wallet);assert.equal((await throughGateway('complete',newLogin.token,{paymentId:paidNative.paymentId})).archiveAllowed,true);
+ await owner.query('update public.tree_game_sessions set continuation_number=0 where session_id=$1',[payCase.native.id]);
+ assert.equal((await throughGateway('complete',newLogin.token,{paymentId:paidNative.paymentId})).archiveAllowed,false);
+ await owner.query('update public.tree_game_sessions set continuation_number=1 where session_id=$1',[payCase.native.id]);
+ checks.push('completion requires consumed claim plus native redemption/counter; denies foreign wallet and supports fresh same-wallet login');
+
  assert.equal((await nativeShared.activate(nativeActivation)).status,'review-required');checks.push('native evidence settles once with shared claim and counter; redemption failure rolls all back');
  const used=await paymentFixture();await owner.query('insert into public.tree_continue_redemptions(digest,session_id,continuation_number,wallet,run_id,offer_id) values($1,$2,0,$3,$4,$5)',[used.digest,used.native.id,used.native.wallet,used.native.nativeRunId,used.offerId]);evidence=used.body;
  await assert.rejects(recorder({sessionHash:used.native.sessionHash,offerId:used.offerId,digest:used.digest}),/payment-already-redeemed/);checks.push('legacy native redemption cannot be imported as unused payment');

@@ -4,7 +4,7 @@ import {createNativeContinueGateway} from '../scripts/multichain/native-continue
 import {createRestoreHttpHandler} from '../scripts/multichain/continue-restore-http.mjs';
 const url='https://tree-token.xyz/play/treeforce89/api/';
 const request=(name,options={})=>new Request(url+name,{method:'POST',headers:{origin:'https://tree-token.xyz'},...options});
-const handlers=()=>Object.fromEntries(['prepare','activate','record','recover','offer'].map(action=>[action,async()=>Response.json({action})]));
+const handlers=()=>Object.fromEntries(['complete','prepare','activate','record','recover','offer'].map(action=>[action,async()=>Response.json({action})]));
 test('default preserves native requests and blocks shared routes',async()=>{
  let calls=0;const context={};const gateway=createNativeContinueGateway({legacyHandler:async(req,ctx)=>{assert.equal(ctx,context);calls++;return new Response('native');}});
  for(const name of ['status','tree-continue','tree-continue-offer','tree-continue-recover'])assert.equal(await (await gateway(request(name),context)).text(),'native');
@@ -13,7 +13,7 @@ test('default preserves native requests and blocks shared routes',async()=>{
 test('shared mode blocks every legacy payment route while preserving ordinary game paths',async()=>{
  let calls=0;const gateway=createNativeContinueGateway({legacyHandler:async()=>{calls++;return new Response('native');},sharedHandlers:handlers(),readMode:async()=> 'shared'});
  for(const name of ['tree-continue','tree-continue-offer','tree-continue-recover'])assert.equal((await gateway(request(name))).status,409);
- for(const action of ['prepare','activate','record','recover','offer'])assert.equal((await (await gateway(request('shared-continue-'+action))).json()).action,action);
+ for(const action of ['complete','prepare','activate','record','recover','offer'])assert.equal((await (await gateway(request('shared-continue-'+action))).json()).action,action);
  assert.equal(calls,0);await gateway(request('status'));assert.equal(calls,1);
 });
 test('missing adapters, failed policy and handler errors never fall back',async()=>{

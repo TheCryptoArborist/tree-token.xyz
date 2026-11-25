@@ -3,7 +3,7 @@ import {createSharedNativeCheckout,createBrowserSharedNativeCheckout} from '../s
 import {TREE_COIN_TYPE,TREE_RECIPIENT} from '../docs/multichain/generation-milestone/native-sui-payments/upstream/contract.mjs';
 function fixture(){
  let session={wallet:'0x'+'a'.repeat(64),nativeRunId:'grove-'+'b'.repeat(32),sessionToken:'c'.repeat(64),epoch:'one'},signs=0,failRecord=false,failSign=false;
- const data=new Map(),storage={getItem:k=>data.get(k)||null,setItem:(k,v)=>data.set(k,v)};let queue=Promise.resolve();
+ const data=new Map(),storage={getItem:k=>data.get(k)||null,setItem:(k,v)=>data.set(k,v),removeItem:k=>data.delete(k)};let queue=Promise.resolve();
  const locks={request:(k,o,fn)=>{const p=queue.then(fn);queue=p.catch(()=>{});return p;}};
  const offer={enabled:true,recipientConfirmed:true,wallet:session.wallet,runId:session.nativeRunId,network:'sui:mainnet',coinType:TREE_COIN_TYPE,recipient:TREE_RECIPIENT,price:'20000',decimals:6,amountBaseUnits:'20000000000',lives:3,offerId:'d'.repeat(48),expiresAt:Date.now()+60000};
  class Transaction{pure={address:v=>v};coin(v){return v;}transferObjects(){}}
@@ -47,4 +47,21 @@ test('browser wiring uses distinct local and session stores',async()=>{
  const c=createBrowserSharedNativeCheckout(f.options,{localStorage:f.storage,sessionStorage:{getItem:k=>old.get(k)||null},navigator:{locks:f.options.locks}});
  assert.equal(c.pending().kind,'legacy');await assert.rejects(c.pay(f.offer));assert.equal(f.signs(),0);
  old.clear();assert.equal(c.pending().kind,'none');await c.pay(f.offer);assert.equal(f.data.size,1);assert.equal(old.size,0);
+});
+
+function withCompletion(f,change={}){return createSharedNativeCheckout({...f.options,transport:{...f.options.transport,complete:async({paymentId})=>({paymentId,status:'completed',archiveAllowed:true,restoreAuthorized:false,requiresPayment:false,offerId:f.offer.offerId,digest:'D'.repeat(44),nativeRunId:f.offer.runId,...change})}});}
+test('matching server completion archives before removing pending marker',async()=>{
+ const f=fixture();await f.client.pay(f.offer);const c=withCompletion(f);assert.equal((await c.archiveCompleted()).status,'archived');assert.equal(c.pending().canPay,true);assert.equal(f.data.size,1);assert.equal(JSON.parse([...f.data.values()][0]).status,'completed');assert.equal(f.signs(),1);
+});
+test('mismatched or incomplete completion never clears marker',async()=>{
+ for(const change of [{archiveAllowed:false},{status:'review-required'},{digest:'E'.repeat(44)},{offerId:'e'.repeat(48)},{nativeRunId:'grove-'+'e'.repeat(32)},{restoreAuthorized:true}]){
+ const f=fixture();await f.client.pay(f.offer);await assert.rejects(withCompletion(f,change).archiveCompleted());assert.equal(f.client.pending().canPay,false);assert.equal(f.signs(),1);
+ }
+});
+test('archive storage failure retains pending marker',async()=>{
+ const f=fixture();await f.client.pay(f.offer);f.storage.setItem=()=>{};await assert.rejects(withCompletion(f).archiveCompleted(),/durable-archive/);assert.equal(f.client.pending().canPay,false);
+});
+test('wallet rejection is retained as reported cancellation, not permission to repay',async()=>{
+ const f=fixture(),c=createSharedNativeCheckout({...f.options,signAndExecute:async()=>{throw Object.assign(Error('cancelled'),{code:4001});}});
+ await assert.rejects(c.pay(f.offer));assert.equal(c.pending().cancellationReported,true);await assert.rejects(c.pay(f.offer),/recover-existing/);await assert.rejects(c.archiveCompleted());
 });

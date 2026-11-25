@@ -10,7 +10,7 @@ try{
   if(url===base)return route.fulfill({contentType:'text/html',body:`<main></main><script type="module">
  import {mountCheckoutRecoveryControls} from './controls.mjs';
  window.state={kind:'legacy',canPay:false};window.calls=0;window.recovered=0;window.fail=false;
- window.controls=mountCheckoutRecoveryControls({root:document.querySelector('main'),checkout:{pending:()=>state,reconcile:async input=>{calls++;window.input=input;await new Promise(r=>window.release=r);if(fail)throw Error('private detail');state={kind:'shared',canPay:false,hasDigest:true,canRecover:true};return {status:'recorded'};},recoverPending:async()=>({status:'recovered',restoreAuthorized:false,requiresPayment:false})},onRecovered:()=>{recovered++;}});window.ready=true;
+ window.controls=mountCheckoutRecoveryControls({root:document.querySelector('main'),checkout:{pending:()=>state,reconcile:async input=>{calls++;window.input=input;await new Promise(r=>window.release=r);if(fail)throw Error('private detail');state={kind:'shared',canPay:false,hasDigest:true,canRecover:true};return {status:'recorded'};},archiveCompleted:async()=>{state={kind:'none',canPay:true};return {status:'archived'};},recoverPending:async()=>({status:'recovered',restoreAuthorized:false,requiresPayment:false})},onRecovered:()=>{recovered++;}});window.ready=true;
  </script>`});
   external++;return route.abort();
  });
@@ -24,6 +24,7 @@ try{
  await page.evaluate(()=>{fail=false;});await page.getByRole('button',{name:'Verify existing payment'}).click();await page.evaluate(()=>release());
  await page.waitForFunction(()=>document.querySelector('[role=status]').textContent.includes('Payment verified'));assert(await page.getByRole('textbox').isDisabled());assert(!(await page.getByRole('button',{name:'Recover paid run'}).isDisabled()));checks.push('verified payment enables recovery and locks the known digest');
  await page.getByRole('button',{name:'Recover paid run'}).click();await page.waitForFunction(()=>recovered===1);assert((await page.getByRole('status').textContent()).includes('separate review'));checks.push('recovery reports separate restoration review without signing or game activation');
+ await page.getByRole('button',{name:'Check completion'}).click();await page.waitForFunction(()=>document.querySelector('[role=status]').textContent.includes('Completed payment archived'));assert(await page.getByRole('button',{name:'Check completion'}).isDisabled());checks.push('completion control archives only through its service and then disables recovery actions');
  await page.evaluate(()=>controls.destroy());assert.equal(await page.locator('section').count(),0);assert.equal(external,0);checks.push('controls teardown cleanly and make no live requests');
  console.log(JSON.stringify({localOnly:true,browser:browser.version(),passed:checks.length,checks,services:'injected UI fixtures, no wallet or database'},null,2));
 }finally{await browser.close();}

@@ -1,3 +1,15 @@
+# Verified native payment completion — November 24, 2026
+
+A read-only completion action now verifies matching consumed claim, native
+redemption and run counter before the browser archives a pending native payment.
+Reported wallet cancellation retains its marker; it does not authorize repayment.
+Local checks: 83 unit, seven Chromium, 39 Netlify-role database/Phaser and 36
+original-role database checks passed. No live changes. BNB completion, unresolved
+cancellation recovery and release integration remain gated. Evidence:
+`docs/multichain/generation-milestone/netlify-gateway/completion.md`.
+
+---
+
 # Shared checkout recovery controls — November 24, 2026
 
 The opt-in browser adapter now reads both shared localStorage and legacy
