@@ -28,3 +28,9 @@ Run `node scripts/treeforce-local/prepare-pilot-cabinet.mjs [output-directory]` 
 The local assembled preview is `/workspace/treeforce-pilot-preview`, served on port 4205 using `scripts/treeforce-local/serve.mjs`. The browser checks run with `node tests/treeforce-pilot-cabinet-browser.cjs` and only localhost, synthetic API/profile responses and blocked external writes. The existing wallet suite ran with `TREEFORCE_URL=http://127.0.0.1:4205 TREEFORCE_REVISION=r19` in an isolated evidence directory.
 
 The overlay is **not a complete deploy package**. A later bounded release must capture the fresh live inventory, preserve every other static path and the complete current backend/provider/runtime/schedule inventory, and use the established preservation release workflow. No whole-site build is needed. Physical-phone visual readability and loading on a slow mobile connection remain untested; browser viewport checks are not physical-phone testing.
+
+## Competitive rank artwork refinement
+
+Replaced plain rank circles with original scalable SVG insignia: a gold trophy for first, ribboned silver and bronze medals for second and third, and emerald leaf shield crests for fourth through tenth. The numeric rank remains real readable text, separate from decorative background art. First place retains the largest icon and strongest row treatment. Four reusable assets total less than 6 KB; no extra JavaScript or animation loop is required.
+
+The three-width browser check now verifies all four assets load, the correct artwork is assigned to each rank, and numbers 1–10 remain present. All existing local cabinet states still pass with no page errors. The final 320px header adjustment was checked separately for overflow and screenshot readability. This refinement changes only CSS, static artwork and overlay assembly; no wallet or scoring logic changed. Not deployed.

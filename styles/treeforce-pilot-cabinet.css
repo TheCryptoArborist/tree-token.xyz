@@ -44,3 +44,17 @@
 .pilot-board .pilot-badges article{flex-direction:row;text-align:left;min-height:138px}
 .pilot-board .pilot-badges article>div{min-width:0;flex:1}
 .pilot-board .pilot-badges h3{letter-spacing:.3px}
+/* Competitive rank insignia: scalable artwork, with real text rank numbers. */
+.pilot-board thead th:first-child{width:19%}
+.pilot-board thead th:nth-child(2){width:37%}
+.pilot-board .pilot-rank-number{box-sizing:border-box;width:58px;height:64px;max-width:100%;border-radius:0;background:transparent url('/assets/treeforce-ranks/contender.svg') center/contain no-repeat;color:#ecf5d3;font-size:20px;text-shadow:0 2px 2px #03140e;box-shadow:none;padding:0 0 2px}
+.pilot-board .pilot-rank-1 .pilot-rank-number{width:72px;height:80px;background-image:url('/assets/treeforce-ranks/champion.svg');color:#49300a;text-shadow:0 1px #fff2ae;font-size:24px;padding-bottom:23px;filter:drop-shadow(0 3px 7px #f6c74940)}
+.pilot-board .pilot-rank-2 .pilot-rank-number,.pilot-board .pilot-rank-3 .pilot-rank-number{width:64px;height:70px;padding:15px 0 0;font-size:22px;color:#f5fcff;background-image:url('/assets/treeforce-ranks/silver.svg')}
+.pilot-board .pilot-rank-3 .pilot-rank-number{background-image:url('/assets/treeforce-ranks/bronze.svg');color:#fff0d5}
+@media(max-width:650px){
+ .pilot-board .pilot-rank-number{width:44px;height:49px;font-size:15px}
+ .pilot-board .pilot-rank-1 .pilot-rank-number{width:51px;height:57px;font-size:18px;padding-bottom:16px}
+ .pilot-board .pilot-rank-2 .pilot-rank-number,.pilot-board .pilot-rank-3 .pilot-rank-number{width:47px;height:52px;font-size:17px;padding-top:11px}
+}
+.pilot-board thead th:last-child{white-space:nowrap}
+@media(max-width:360px){.pilot-board thead th:last-child{font-size:8px;letter-spacing:0}}

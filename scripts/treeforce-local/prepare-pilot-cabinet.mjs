@@ -25,4 +25,5 @@ html=once(html,'</head>','  <link rel="stylesheet" href="/play/treeforce89/pilot
 put(base+'index.html',html);
 put(base+'pilot-cabinet-r19.css',fs.readFileSync('styles/treeforce-pilot-cabinet.css'));
 put('/assets/treeforce-achievements/canopy-medals-r19.png',fs.readFileSync('assets/treeforce-achievements/canopy-medals-r19.png'));
+for(const name of ['champion','silver','bronze','contender'])put('/assets/treeforce-ranks/'+name+'.svg',fs.readFileSync('assets/treeforce-ranks/'+name+'.svg'));
 console.log(`Prepared presentation overlay: ${output}. Not a full deployment package.`);
