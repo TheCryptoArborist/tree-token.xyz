@@ -1,0 +1,39 @@
+✔ 13 distinct achievements have reachable thresholds (2.172952ms)
+✔ practice and malformed statistics cannot rank (2.500195ms)
+✔ pilot names are bounded plain text (0.643694ms)
+✔ continue contract stays exact and achievements survive authorized resume (0.76134ms)
+✔ the actual campaign routes both bonus types and retains ten combat waves (3.70678ms)
+✔ actual challenge launch clears combat and an entirely missed round exits after all 40 targets (47.880371ms)
+✔ actual challenge target hits award once, skip combat drops and cannot hurt the pilot (2.933912ms)
+✔ perfect completion rewards all targets regardless of extra missed shots, once only (1.502786ms)
+✔ actual shield spends one growth and lasts three seconds, with an expiry cue (0.850979ms)
+✔ original event motifs differ; priority audio preempts shots and independent SFX mute is honored (0.897846ms)
+✔ both bonus intros hold the title for three seconds, then READY and GO; gameplay clocks stay at zero (1.551971ms)
+✔ intro phase boundaries are deterministic, including a slow frame crossing the full sequence (0.181673ms)
+✔ database identity ignores credentials and pooling aliases (2.400853ms)
+✔ database probes require exact integration preview and same-origin POST (24.331556ms)
+✔ collected cores advance all five weapon profiles without skipping tiers (4.385326ms)
+✔ tutorial stays predictable; later attacks include distinct curves and a dodge warning (0.931055ms)
+✔ bonus occurs between waves four/five and eight/nine, never after the final boss (5.976362ms)
+✔ bonus rewards are score and one earned core; no extra lives or token entitlement (0.685811ms)
+✔ uses exact TREE base units and rejects altered snapshots (1.454269ms)
+✔ real SDK transaction is handed to the wallet; authorization is required before acknowledgement (47.596623ms)
+✔ wallet cancellation and failed transactions grant no lives (2.016843ms)
+✔ wrong recipient, amount, network or holder wallet cannot open checkout (0.655502ms)
+✔ double click never submits two wallet transactions (1.617405ms)
+✔ delayed indexing retries only verification and retains the submitted digest (2.244337ms)
+✔ network failure after payment never automatically charges again (1.945982ms)
+✔ account switching after submission preserves recovery but grants no access (1.147755ms)
+✔ refresh recovery uses a fresh authenticated lease, not another payment (2.046155ms)
+✔ unverifiable grants and unknown wallet errors preserve a recoverable checkout (2.502989ms)
+✔ a lost wallet response is recovered automatically without a second signature or manual digest (3.852019ms)
+✔ automatic recovery never authorizes a mismatched candidate or discards a pending offer (3.119473ms)
+✔ an unindexed payment stays recoverable and cannot start another payment (1.361692ms)
+ℹ tests 31
+ℹ suites 0
+ℹ pass 31
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 802.274636

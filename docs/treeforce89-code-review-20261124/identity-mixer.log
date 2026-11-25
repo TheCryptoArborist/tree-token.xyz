@@ -1,0 +1,16 @@
+✔ a hit or kill 20ms after firing remains audible (3.493326ms)
+✔ enemy fire has its own throttle; repeated firing is still capped (0.602623ms)
+✔ kill during upgrade is accepted at reduced volume, without replacing the motif (0.746264ms)
+✔ named cue does not erase a just-triggered impact (0.308552ms)
+✔ impact burst and total voices are bounded; silent effects stay silent (0.40907ms)
+✔ late ended callbacks cannot remove new voices after preemption or stop (1.193873ms)
+✔ expired voices and cooldowns allow subsequent feedback (0.254079ms)
+✔ existing motif inventory and legacy rate limit remain available (0.439395ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 97.209183

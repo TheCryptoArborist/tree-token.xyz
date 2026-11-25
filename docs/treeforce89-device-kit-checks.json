@@ -1,0 +1,45 @@
+{
+  "synthetic": true,
+  "engine": "Chromium",
+  "physicalPhone": false,
+  "writeRequestsBlocked": true,
+  "noAuthenticatedAppIncluded": true,
+  "results": [
+    {
+      "width": 320,
+      "titleToPlay": true,
+      "rotationRoundTrip": true,
+      "autoFireSingleToggle": true,
+      "errors": [],
+      "failed": [],
+      "external": [],
+      "blockedReads": [
+        "/api/treeforce89-leaderboard"
+      ]
+    },
+    {
+      "width": 390,
+      "titleToPlay": true,
+      "rotationRoundTrip": true,
+      "autoFireSingleToggle": true,
+      "errors": [],
+      "failed": [],
+      "external": [],
+      "blockedReads": [
+        "/api/treeforce89-leaderboard"
+      ]
+    },
+    {
+      "width": 430,
+      "titleToPlay": true,
+      "rotationRoundTrip": true,
+      "autoFireSingleToggle": true,
+      "errors": [],
+      "failed": [],
+      "external": [],
+      "blockedReads": [
+        "/api/treeforce89-leaderboard"
+      ]
+    }
+  ]
+}

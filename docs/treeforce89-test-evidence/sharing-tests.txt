@@ -1,0 +1,21 @@
+✔ Canopy completed results bind to the exact wallet; live runs and future/malformed scores reject (2.106308ms)
+✔ Tree Force saved-result identity stays fixed when score or save time changes (0.635017ms)
+✔ completion feed pagination advances and retains only the signed-in player (35.940998ms)
+✔ endpoint authenticates before reading any game data and accepts no client result submissions (4.185343ms)
+✔ endpoint isolates a source outage and never trusts browser wallet or score parameters (3.161694ms)
+✔ only a completed saved result unlocks sharing; first-wave participation does not (2.052395ms)
+✔ signed-out, stale, loading and previous-day results stay locked (0.292725ms)
+✔ result messages name the finished game, fit X, and contain no fabricated scores (0.797655ms)
+✔ the first quest includes all four working games with completion rules (0.723709ms)
+✔ handoff IDs exactly match persisted receipts, including legacy breaker MD5 identity (10.895272ms)
+✔ malformed links and unsupported games cannot select a result (0.682579ms)
+✔ handoff selects the exact older run, rejects a missing run and clears on wallet switch (403.292224ms)
+✔ share handoffs target the main Arcade Daily tab (0.365335ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1487.837373

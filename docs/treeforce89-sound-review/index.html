@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <meta charset="utf-8" /><meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  /><title>Tree Force ’89 · Sound review</title>
+  <style>
+    body {
+      margin: 0;
+      background: #07150e;
+      color: #e8f3da;
+      font: 16px/1.6 system-ui;
+    }
+    main {
+      max-width: 850px;
+      margin: auto;
+      padding: 32px 22px;
+    }
+    h1 {
+      line-height: 1.15;
+      color: #d4ef89;
+    }
+    h2 {
+      font-size: 1.15rem;
+      color: #f2cb65;
+    }
+    section {
+      border: 1px solid #36553c;
+      border-radius: 12px;
+      padding: 18px;
+      margin: 16px 0;
+      background: #102319;
+    }
+    audio {
+      width: 100%;
+    }
+    .tag {
+      color: #f2cb65;
+      letter-spacing: 0.12em;
+      font-size: 0.8rem;
+    }
+    p {
+      max-width: 72ch;
+    }
+    small {
+      color: #bcccb8;
+    }
+    a {
+      color: #d4ef89;
+    }
+  </style>
+  <main>
+    <div class="tag">LOCAL REVIEW · TASK 5 · NOT PUBLISHED</div>
+    <h1>A longer canopy theme.<br />A different sound for each encounter.</h1>
+    <p>
+      Original synthesized Tree Force music and effects. These are reproducible
+      offline renders of the source, not live gameplay recordings. No Galaga
+      audio has been copied.
+    </p>
+    <p>
+      Clips are matched near <strong>−26 LUFS</strong> for comparison. This
+      normalization is only for these listening samples; the game retains its
+      own mix. Start at a comfortable listening volume.
+    </p>
+    <section>
+      <h2>Before · existing 2.4-second loop</h2>
+      <p>Repeated over the same 19.8-second sample duration.</p>
+      <audio controls preload="none" src="previous-music.ogg"></audio>
+    </section>
+    <section>
+      <h2>Normal play · canopy patrol</h2>
+      <p>
+        A 19.2-second phrase with a lighter triangular lead, moving bass and
+        breathing room between notes.
+      </p>
+      <audio controls preload="none" src="normal.ogg"></audio>
+    </section>
+    <section>
+      <h2>Bonus · canopy ascent</h2>
+      <p>
+        A brighter register and major harmony for both challenge and windfall
+        rounds.
+      </p>
+      <audio controls preload="none" src="bonus.ogg"></audio>
+    </section>
+    <section>
+      <h2>Boss · root crown</h2>
+      <p>A lower melody, chromatic tension and a more insistent bass pulse.</p>
+      <audio controls preload="none" src="boss.ogg"></audio>
+    </section>
+    <section>
+      <h2>Combat sounds · before / after</h2>
+      <p>
+        Each set plays: standard shot, piercing shot, heavy shot, turbo shot,
+        enemy fire, hit, ordinary kill, heavy kill. The sequence repeats four
+        times.
+      </p>
+      <p>Before</p>
+      <audio controls preload="none" src="previous-combat.ogg"></audio>
+      <p>After</p>
+      <audio controls preload="none" src="new-combat.ogg"></audio>
+    </section>
+    <h2>What to listen for</h2>
+    <p>
+      Can you identify incoming fire versus your shots? Does an impact feel
+      clear without sounding harsh? Do the three musical moods feel like the
+      same game? Check phone speakers as well as headphones. These isolated
+      clips do not establish balance during dense combat.
+    </p>
+    <p>
+      <small
+        >The 24 named event cues remain unchanged. Pause, interruption, zero
+        volume and destruction checks passed. Musical preference and real-phone
+        listening remain open review items.
+        <a href="loudness.json">Loudness measurements</a> ·
+        <a href="raw-metrics.json">Unnormalized render measurements</a></small
+      >
+    </p>
+  </main>
+  <script>
+    document.querySelectorAll("audio").forEach((player) =>
+      player.addEventListener("play", () =>
+        document.querySelectorAll("audio").forEach((other) => {
+          if (other !== player) other.pause();
+        }),
+      ),
+    );
+  </script>
+</html>

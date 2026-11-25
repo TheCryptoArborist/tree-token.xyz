@@ -1,0 +1,245 @@
+{
+  "synthetic": true,
+  "origin": "http://127.0.0.1:4187",
+  "revision": "r13",
+  "checks": [
+    {
+      "name": "wave 1: warning survives first update",
+      "passed": true,
+      "actual": {
+        "tint": 16769131,
+        "fill": false
+      }
+    },
+    {
+      "name": "wave 1: warning lasts 450ms",
+      "passed": true,
+      "actual": {
+        "tint": 16769131,
+        "fill": false
+      }
+    },
+    {
+      "name": "wave 1: warning ends at dive",
+      "passed": true,
+      "actual": {
+        "tint": 16777215,
+        "fill": false
+      }
+    },
+    {
+      "name": "wave 5: warning survives first update",
+      "passed": true,
+      "actual": {
+        "tint": 16769131,
+        "fill": false
+      }
+    },
+    {
+      "name": "wave 5: warning lasts 650ms",
+      "passed": true,
+      "actual": {
+        "tint": 16769131,
+        "fill": false
+      }
+    },
+    {
+      "name": "wave 5: warning ends at dive",
+      "passed": true,
+      "actual": {
+        "tint": 16777215,
+        "fill": false
+      }
+    },
+    {
+      "name": "nonlethal hit survives first update",
+      "passed": true,
+      "actual": {
+        "tint": 16777215,
+        "fill": true
+      }
+    },
+    {
+      "name": "hit lasts through 54ms",
+      "passed": true,
+      "actual": {
+        "tint": 16777215,
+        "fill": true
+      }
+    },
+    {
+      "name": "hit clears at 55ms",
+      "passed": true,
+      "actual": {
+        "tint": 16777215,
+        "fill": false
+      }
+    },
+    {
+      "name": "older hit callback cannot erase newer hit",
+      "passed": true,
+      "actual": {
+        "tint": 16777215,
+        "fill": true
+      }
+    },
+    {
+      "name": "newest hit clears after its own 55ms",
+      "passed": true,
+      "actual": {
+        "tint": 16777215,
+        "fill": false
+      }
+    },
+    {
+      "name": "warning returns after hit",
+      "passed": true,
+      "actual": {
+        "tint": 16769131,
+        "fill": false
+      }
+    },
+    {
+      "name": "hit takes precedence over stun",
+      "passed": true,
+      "actual": {
+        "tint": 16777215,
+        "fill": true
+      }
+    },
+    {
+      "name": "stun returns after hit",
+      "passed": true,
+      "actual": {
+        "tint": 10354612,
+        "fill": false
+      }
+    },
+    {
+      "name": "stun clears at expiry",
+      "passed": true,
+      "actual": {
+        "tint": 16777215,
+        "fill": false
+      }
+    },
+    {
+      "name": "captor rescue window retains gold",
+      "passed": true,
+      "actual": {
+        "tint": 16769131,
+        "fill": false
+      }
+    },
+    {
+      "name": "captor gold returns after hit",
+      "passed": true,
+      "actual": {
+        "tint": 16769131,
+        "fill": false
+      }
+    },
+    {
+      "name": "captor gold clears when rescue window closes",
+      "passed": true,
+      "actual": {
+        "tint": 16777215,
+        "fill": false
+      }
+    },
+    {
+      "name": "mutation keeps wasp texture without stuck flash",
+      "passed": true,
+      "actual": {
+        "texture": "wasp-flight-1",
+        "tint": 16777215,
+        "fill": false
+      }
+    },
+    {
+      "name": "corrupted identity returns after flash",
+      "passed": true,
+      "actual": {
+        "tint": 16732104,
+        "fill": false
+      }
+    },
+    {
+      "name": "challenge target retains existing gold",
+      "passed": true,
+      "actual": {
+        "tint": 16770195,
+        "fill": false
+      }
+    },
+    {
+      "name": "boss damage color does not erase hit",
+      "passed": true,
+      "actual": {
+        "tint": 16777215,
+        "fill": true
+      }
+    },
+    {
+      "name": "boss hit lasts through 99ms",
+      "passed": true,
+      "actual": {
+        "tint": 16777215,
+        "fill": true
+      }
+    },
+    {
+      "name": "boss phase color returns at 100ms",
+      "passed": true,
+      "actual": {
+        "tint": 16747106,
+        "fill": false
+      }
+    },
+    {
+      "name": "pause holds hit flash",
+      "passed": true,
+      "actual": {
+        "tint": 16777215,
+        "fill": true
+      }
+    },
+    {
+      "name": "resume preserves remaining flash time",
+      "passed": true,
+      "actual": {
+        "tint": 16777215,
+        "fill": true
+      }
+    },
+    {
+      "name": "resumed flash expires normally",
+      "passed": true,
+      "actual": {
+        "tint": 16777215,
+        "fill": false
+      }
+    },
+    {
+      "name": "pause holds dive warning",
+      "passed": true,
+      "actual": {
+        "tint": 16769131,
+        "fill": false
+      }
+    },
+    {
+      "name": "resumed warning ends with actual dive",
+      "passed": true,
+      "actual": {
+        "tint": 16777215,
+        "fill": false
+      }
+    },
+    {
+      "name": "destroyed enemy callback is safe",
+      "passed": true
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,164 @@
+[
+  {
+    "name": "bonus",
+    "original": {
+      "input_i": "-48.06",
+      "input_tp": "-25.26",
+      "input_lra": "1.40",
+      "input_thresh": "-58.16",
+      "output_i": "-26.09",
+      "output_tp": "-4.00",
+      "output_lra": "0.10",
+      "output_thresh": "-36.15",
+      "normalization_type": "dynamic",
+      "target_offset": "0.09"
+    },
+    "normalized": {
+      "input_i": "-26.04",
+      "input_tp": "-3.94",
+      "input_lra": "1.20",
+      "input_thresh": "-36.14",
+      "output_i": "-26.01",
+      "output_tp": "-4.00",
+      "output_lra": "0.10",
+      "output_thresh": "-36.08",
+      "normalization_type": "dynamic",
+      "target_offset": "0.01"
+    }
+  },
+  {
+    "name": "boss",
+    "original": {
+      "input_i": "-49.13",
+      "input_tp": "-26.01",
+      "input_lra": "0.90",
+      "input_thresh": "-59.21",
+      "output_i": "-25.98",
+      "output_tp": "-4.00",
+      "output_lra": "0.40",
+      "output_thresh": "-36.02",
+      "normalization_type": "dynamic",
+      "target_offset": "-0.02"
+    },
+    "normalized": {
+      "input_i": "-25.97",
+      "input_tp": "-3.91",
+      "input_lra": "0.90",
+      "input_thresh": "-36.09",
+      "output_i": "-25.92",
+      "output_tp": "-4.00",
+      "output_lra": "0.30",
+      "output_thresh": "-35.97",
+      "normalization_type": "dynamic",
+      "target_offset": "-0.08"
+    }
+  },
+  {
+    "name": "new-combat",
+    "original": {
+      "input_i": "-50.74",
+      "input_tp": "-21.75",
+      "input_lra": "6.90",
+      "input_thresh": "-60.93",
+      "output_i": "-27.15",
+      "output_tp": "-4.00",
+      "output_lra": "4.00",
+      "output_thresh": "-37.27",
+      "normalization_type": "dynamic",
+      "target_offset": "1.15"
+    },
+    "normalized": {
+      "input_i": "-26.46",
+      "input_tp": "-3.46",
+      "input_lra": "3.30",
+      "input_thresh": "-36.60",
+      "output_i": "-26.66",
+      "output_tp": "-4.00",
+      "output_lra": "2.80",
+      "output_thresh": "-36.78",
+      "normalization_type": "dynamic",
+      "target_offset": "0.66"
+    }
+  },
+  {
+    "name": "normal",
+    "original": {
+      "input_i": "-48.66",
+      "input_tp": "-25.25",
+      "input_lra": "1.10",
+      "input_thresh": "-58.78",
+      "output_i": "-25.99",
+      "output_tp": "-4.00",
+      "output_lra": "0.50",
+      "output_thresh": "-36.03",
+      "normalization_type": "dynamic",
+      "target_offset": "-0.01"
+    },
+    "normalized": {
+      "input_i": "-25.98",
+      "input_tp": "-3.93",
+      "input_lra": "1.50",
+      "input_thresh": "-36.09",
+      "output_i": "-26.00",
+      "output_tp": "-4.00",
+      "output_lra": "0.50",
+      "output_thresh": "-36.04",
+      "normalization_type": "dynamic",
+      "target_offset": "-0.00"
+    }
+  },
+  {
+    "name": "previous-combat",
+    "original": {
+      "input_i": "-49.20",
+      "input_tp": "-21.75",
+      "input_lra": "6.60",
+      "input_thresh": "-59.65",
+      "output_i": "-26.58",
+      "output_tp": "-4.00",
+      "output_lra": "5.10",
+      "output_thresh": "-36.94",
+      "normalization_type": "dynamic",
+      "target_offset": "0.58"
+    },
+    "normalized": {
+      "input_i": "-26.15",
+      "input_tp": "-3.50",
+      "input_lra": "4.90",
+      "input_thresh": "-36.50",
+      "output_i": "-26.53",
+      "output_tp": "-4.00",
+      "output_lra": "4.30",
+      "output_thresh": "-36.86",
+      "normalization_type": "dynamic",
+      "target_offset": "0.53"
+    }
+  },
+  {
+    "name": "previous-music",
+    "original": {
+      "input_i": "-44.84",
+      "input_tp": "-23.45",
+      "input_lra": "1.00",
+      "input_thresh": "-54.88",
+      "output_i": "-26.05",
+      "output_tp": "-4.75",
+      "output_lra": "0.20",
+      "output_thresh": "-36.09",
+      "normalization_type": "dynamic",
+      "target_offset": "0.05"
+    },
+    "normalized": {
+      "input_i": "-26.01",
+      "input_tp": "-4.63",
+      "input_lra": "1.10",
+      "input_thresh": "-36.09",
+      "output_i": "-26.05",
+      "output_tp": "-4.76",
+      "output_lra": "0.20",
+      "output_thresh": "-36.09",
+      "normalization_type": "dynamic",
+      "target_offset": "0.05"
+    }
+  }
+]

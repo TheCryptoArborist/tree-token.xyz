@@ -1,0 +1,25 @@
+✔ a hit or kill 20ms after firing remains audible (7.905563ms)
+✔ enemy fire has its own throttle; repeated firing is still capped (0.469602ms)
+✔ kill during upgrade is accepted at reduced volume, without replacing the motif (0.768283ms)
+✔ named cue does not erase a just-triggered impact (0.597908ms)
+✔ impact burst and total voices are bounded; silent effects stay silent (0.524147ms)
+✔ late ended callbacks cannot remove new voices after preemption or stop (1.483665ms)
+✔ expired voices and cooldowns allow subsequent feedback (0.504737ms)
+✔ existing motif inventory and legacy rate limit remain available (0.352078ms)
+✔ facing follows tangent, with downward flight at zero degrees (1.234596ms)
+✔ poses alternate at 125ms without movement, scale or tint APIs (0.556622ms)
+✔ special identities and stunned enemies retain their current pose (0.304443ms)
+✔ formation entry straightens smoothly during its final fifth (2.75486ms)
+✔ three distinct eight-bar phrases with rests and bounded music density (9.536261ms)
+✔ actual scene flags choose bonus before boss and normal after clear (4.722544ms)
+✔ encounter transitions reset phrase once; pause preserves cursor; reset clears it (0.389376ms)
+✔ reward ducking affects every music layer (0.388467ms)
+✔ combat identities retain two voices and named motifs (0.43615ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 178.234758

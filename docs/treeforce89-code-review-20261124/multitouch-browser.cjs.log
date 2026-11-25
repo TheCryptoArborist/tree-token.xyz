@@ -1,0 +1,3 @@
+both held { drag: true, fire: true, x: 240 }
+fire released { drag: true, fire: false, x: 240 }
+steering after release { drag: true, x: 264.61538461538464 }
