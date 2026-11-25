@@ -9,7 +9,7 @@ import { canonical, fingerprint, environmentFor } from './release-preserved-prod
 import { SITE_ID, ACCOUNT_ID, validateBackend, compareBackend, functionsConfig,
   waitForAllBuilds, storedPlayHTML } from './release-arcade-cutoff.mjs';
 
-export const REVIEWED_BASELINE = '6b067851aece2f26cdeff93a';
+export const REVIEWED_BASELINE = '6b067d4aeb466ab5049cf6d9';
 export const DELIVERY_SOURCES = {
   '/play/profile-studio/index.html': 'production/profile-studio-badge-position-static/index.html',
   '/scripts/tree-profile-studio-v18.js': 'scripts/tree-profile-studio-v18.js',
