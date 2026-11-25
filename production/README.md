@@ -1,3 +1,11 @@
+# Tree Force main game and festive cabinet — published November 24, 2026
+
+Main: https://tree-token.xyz/play/treeforce89/ · Arcade: https://tree-token.xyz/play/
+
+Locked deploy `6b06668752cda878be6a57e9`: 757 paths, 61 backend records and five schedules. Only main game and Arcade HTML changed; seven modules/scripts added. Reviewed r18 is now the main game. [Evidence](../docs/treeforce89-main-publication.md). Capture fresh inventory before any release.
+
+---
+
 # Tree Force holiday UTC labels — published November 24, 2026
 
 Review: https://tree-token.xyz/play/treeforce89/review/holiday/

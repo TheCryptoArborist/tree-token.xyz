@@ -1,0 +1,54 @@
+{
+  "id": "6b06668752cda878be6a57e9",
+  "baseline": "6b0663eb4b2316cfc7ad2bc8",
+  "url": "https://tree-token.xyz/play/treeforce89/",
+  "published": true,
+  "locked": true,
+  "existingPathsPreserved": 748,
+  "addedPaths": 7,
+  "changedExistingPaths": 2,
+  "totalPaths": 757,
+  "backendRecords": 61,
+  "schedules": 5,
+  "uploads": [
+    {
+      "path": "/play/index.html",
+      "bytes": 70600
+    },
+    {
+      "path": "/play/treeforce89/index.html",
+      "bytes": 4544
+    },
+    {
+      "path": "/play/treeforce89/assets/index-review-r18.js",
+      "bytes": 652864
+    },
+    {
+      "path": "/play/treeforce89/assets/arcade-review-r18.js",
+      "bytes": 1295783
+    },
+    {
+      "path": "/play/treeforce89/assets/graphql-review-r18.js",
+      "bytes": 54746
+    },
+    {
+      "path": "/play/treeforce89/assets/sound-identity-r18.js",
+      "bytes": 4817
+    },
+    {
+      "path": "/play/treeforce89/assets/holiday-mode-r18.js",
+      "bytes": 4718
+    },
+    {
+      "path": "/scripts/treeforce-season-r18.mjs",
+      "bytes": 944
+    },
+    {
+      "path": "/scripts/treeforce-cabinet-holiday-r18.mjs",
+      "bytes": 1054
+    }
+  ],
+  "planSha256": "079553c226f102fdc335d2d946339a4fa6643c9e9d4919d0802142a1d448d7bd",
+  "checkedAt": "2026-11-25T04:40:25.963Z",
+  "slushWarningClearance": "Owner verification pending"
+}
