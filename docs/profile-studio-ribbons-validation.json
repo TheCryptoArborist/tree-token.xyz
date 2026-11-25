@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "validated": true,
+  "checkedAt": "2026-11-25T07:07:30.000Z",
+  "candidateId": "6b06878dfd7f410f60dc04f1",
+  "sourceCommit": "99aa74534256219c2b4afbd33d6a606bd5513ea4",
+  "origin": "https://6b06878dfd7f410f60dc04f1--tree-token.netlify.app",
+  "viewportWidths": [
+    375,
+    1348
+  ],
+  "checks": {
+    "sixRibbons": true,
+    "treeElements": true,
+    "textReadable": true,
+    "ribbonPosition": true,
+    "ribbonSize": true,
+    "ribbonReset": true,
+    "ribbonDrag": true,
+    "noPhotoBadgeChanges": true,
+    "profileAndFrameExports": true,
+    "transparentCorners": true,
+    "mobileLayout": true
+  },
+  "exportEvidence": {
+    "profile": {
+      "testedOn": "candidate",
+      "sourceCommit": "99aa74534256219c2b4afbd33d6a606bd5513ea4",
+      "passed": true
+    },
+    "frame": {
+      "testedOn": "candidate",
+      "passed": true
+    },
+    "candidateDeliveryMatchesReviewedSource": true
+  },
+  "exercised": {
+    "designs": [
+      "Merry Christmas",
+      "Happy Thanksgiving",
+      "Happy Holidays",
+      "Tree-Token.xyz",
+      "Buy Tree",
+      "NFTrees · Grow Your Grove"
+    ],
+    "treeDetails": "Each ribbon visibly includes two drawn trees, folded tails, gold trim and leafy or seasonal decoration.",
+    "desktop": "All six styles inspected in local preview; final NFTrees enlarged secondary lettering inspected on the actual candidate with the supplied portrait, Leafy Canopy and Tree Hero.",
+    "independentEdits": "Sliders, resizing, reset, design switching and removal retained exact photo crop and badge values. Direct ribbon drag also passed on the actual candidate.",
+    "phone": "Actual immutable candidate in a 390px iframe with 375px content width. No horizontal overflow. Thanksgiving and final NFTrees artwork inspected; direct dragging, size to 820, edge positioning and reset passed without a photo.",
+    "export": "Both actual candidate downloads are 1024x1024 RGBA; corners and all pixels beyond the circular boundary are transparent. Frame center is transparent, profile center opaque, and the opaque ribbon body pixels match between both downloads."
+  },
+  "photoAndBadgeValues": {
+    "photoZoom": 0.469195266066712,
+    "photoX": 0,
+    "photoY": -65.1465766941335,
+    "badgeX": 0,
+    "badgeY": 319.574275274956,
+    "badgeSize": 280
+  },
+  "exportedRibbon": {
+    "id": "nftrees",
+    "x": -55.1384615384615,
+    "y": -209.107692307692,
+    "width": 650
+  },
+  "exportSHA256": {
+    "profile": "2e0fc0c296f5753cc72d66603f3b70c5bc5f71fbd4829f23ad963eef54da9859",
+    "frame": "f70b6c0b83c6c336e35ee54f7ec4c78ae92b9b6557a8511f2f311c359d64d249"
+  },
+  "limitations": [
+    "Phone-width interaction used browser pointer input; physical iPhone touch gestures were not exercised.",
+    "Wallet access and blockchain transactions were outside this frontend ribbon change."
+  ]
+}
