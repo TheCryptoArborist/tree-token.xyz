@@ -1,0 +1,26 @@
+function installMobileTouchbar(game,mount){
+ const shell=mount?.closest?.('.nftree-game-shell');const viewport=mount?.closest?.('.game-viewport');if(!shell||!viewport)return;
+ const frame=shell.closest('.game-frame');const media=window.matchMedia('(max-width:620px)');
+ const bar=document.createElement('div');bar.className='mobile-touchbar';bar.setAttribute('aria-label','Game actions');bar.hidden=true;
+ const make=(label,kind)=>{const button=document.createElement('button');button.type='button';button.className='mobile-action '+kind;button.setAttribute('aria-label',label);const title=document.createElement('span');title.className='mobile-action-title';title.textContent=label;const status=document.createElement('span');status.className='mobile-action-status';button.append(title,status);bar.append(button);return{button,status}};
+ const auto=make('Auto Fire','mobile-auto'),shield=make('Shield','mobile-shield'),fire=make('Fire','mobile-fire');viewport.after(bar);
+ let pointer=null,destroyed=false;
+ const scene=()=>{try{const s=game.scene.getScene('game');return s?.sys?.isActive()?s:null}catch{return null}};
+ const usable=()=>{const s=scene();return media.matches&&s&&!s.paused?s:null};
+ const release=()=>{const s=scene();if(s){s.fireHeld=false;s.firePointerId=-1}pointer=null};
+ const press=()=>{const s=usable();if(!s)return;s.firePointerId=-2;s.fireHeld=true;s.fire(true)};
+ auto.button.addEventListener('click',()=>{usable()?.toggleAutoFire()});shield.button.addEventListener('click',()=>{usable()?.prune()});
+ fire.button.addEventListener('pointerdown',event=>{if(!usable())return;event.preventDefault();pointer=event.pointerId;try{fire.button.setPointerCapture(pointer)}catch{}press()});
+ for(const type of ['pointerup','pointercancel','lostpointercapture'])fire.button.addEventListener(type,event=>{if(pointer===event.pointerId)release()});
+ fire.button.addEventListener('keydown',event=>{if((event.key===' '||event.key==='Enter')&&!event.repeat){event.preventDefault();press()}});
+ fire.button.addEventListener('keyup',event=>{if(event.key===' '||event.key==='Enter'){event.preventDefault();release()}});fire.button.addEventListener('blur',release);
+ const resize=()=>{release();const height=Math.floor(window.visualViewport?.height||window.innerHeight);if(height>240)frame?.style.setProperty('--tree-mobile-height',height+'px')};
+ const set=(node,value)=>{if(node.textContent!==value)node.textContent=value};
+ const tick=()=>{if(destroyed)return;const s=scene(),active=!!s&&media.matches;bar.hidden=!active;shell.classList.toggle('mobile-play-active',active);frame?.classList.toggle('mobile-play-frame',active);if(!active)return;
+  const paused=!!s.paused;auto.button.disabled=paused;fire.button.disabled=paused;shield.button.disabled=paused||s.stage===0||s.pruneCharge<M.pruneChargeMax;
+  auto.button.setAttribute('aria-pressed',String(!!s.autoFire));set(auto.status,s.autoFire?'ON':'OFF');set(shield.status,s.stage===0?'Grow first':s.pruneCharge>=M.pruneChargeMax?'Ready':'Charging '+Math.round(s.pruneCharge/M.pruneChargeMax*100)+'%');set(fire.status,s.fireText?.text?.split('\n').at(-1)||'Hold / tap');if(paused)release();
+ };
+ const visibility=()=>{if(document.hidden)release()};
+ resize();media.addEventListener('change',resize);window.addEventListener('resize',resize,{passive:true});window.visualViewport?.addEventListener('resize',resize,{passive:true});window.addEventListener('blur',release);document.addEventListener('visibilitychange',visibility);game.events.on('poststep',tick);
+ game.events.once('destroy',()=>{destroyed=true;release();game.events.off('poststep',tick);media.removeEventListener('change',resize);window.removeEventListener('resize',resize);window.visualViewport?.removeEventListener('resize',resize);window.removeEventListener('blur',release);document.removeEventListener('visibilitychange',visibility);bar.remove();shell.classList.remove('mobile-play-active');frame?.classList.remove('mobile-play-frame');frame?.style.removeProperty('--tree-mobile-height')});
+}
