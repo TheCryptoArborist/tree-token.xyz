@@ -25,11 +25,20 @@ export function patchNativeEntry(source){
 export function patchNativeGateway(source){
  if(createHash('sha256').update(source).digest('hex')!==nativeGateway.sha256)throw Error('native-gateway-changed-rebase-required');
  return source.replace("import {useEffect,useRef,useState}","import {useEffect,useMemo,useRef,useState}")
-  .replace('"use client";', '\"use client\";\nimport {createNativeBnbReviewOptions} from \'./bnb-review/bnb-native-host-options.mjs\';')
-  .replace('export default function NFTreeGateway() {','export default function NFTreeGateway({bnbReviewProvider}:{bnbReviewProvider?:any}={}) {')
-  .replace('  const [pending,setPending]', `  const bnbOptions=useMemo(()=>bnbReviewProvider?createNativeBnbReviewOptions({kit,provider:bnbReviewProvider,getNativeSession:()=>sessionRef.current,getSessionEpoch:()=>epoch.current,origin:window.location.origin}):undefined,[kit,bnbReviewProvider]);
+  .replace('"use client";', '\"use client\";\nimport {createNativeBnbReviewOptions} from \'./bnb-review/bnb-native-host-options.mjs\';\nimport {mountBnbProviderPicker} from \'./bnb-review/bnb-provider-picker.mjs\';')
+  .replace('export default function NFTreeGateway() {','export default function NFTreeGateway({bnbReviewProvider,bnbReviewEnabled=false}:{bnbReviewProvider?:any;bnbReviewEnabled?:boolean}={}) {')
+  .replace('  const [pending,setPending]', `  const [chosenBnbProvider,setChosenBnbProvider]=useState<any>(null);
+  const selectedBnbProvider=bnbReviewProvider||(bnbReviewEnabled?chosenBnbProvider:undefined);
+  const bnbOptions=useMemo(()=>selectedBnbProvider?createNativeBnbReviewOptions({kit,provider:selectedBnbProvider,getNativeSession:()=>sessionRef.current,getSessionEpoch:()=>epoch.current,origin:window.location.origin}):undefined,[kit,selectedBnbProvider]);
   const [pending,setPending]`)
-  .replace('<ContinuationReview session={session}', '<ContinuationReview bnbReview={bnbOptions&&!loadPendingContinuation(session.wallet)?bnbOptions:undefined} session={session}');
+  .replace('      {checkoutOpen&&<ContinuationReview', '      {checkoutOpen&&bnbReviewEnabled&&!loadPendingContinuation(session.wallet)&&<BnbProviderChoice onSelected={setChosenBnbProvider} />}\n      {checkoutOpen&&<ContinuationReview')
+  .replace('<ContinuationReview session={session}', '<ContinuationReview bnbReview={bnbOptions&&!loadPendingContinuation(session.wallet)?bnbOptions:undefined} session={session}')+`
+function BnbProviderChoice({onSelected}:{onSelected:(provider:any)=>void}) {
+ const root=useRef<HTMLDivElement|null>(null);
+ useEffect(()=>{if(!root.current)return;const picker=mountBnbProviderPicker({root:root.current,onSelected});return()=>{picker.destroy();onSelected(null);};},[onSelected]);
+ return <div ref={root}/>;
+}
+`;
 }
 export function prepareNativeBnbEntry(output){
  const source=execFileSync('git',['show',`${nativeEntry.commit}:${nativeEntry.path}`],{encoding:'utf8'}),patched=patchNativeEntry(source);
@@ -38,7 +47,7 @@ export function prepareNativeBnbEntry(output){
  fs.mkdirSync(output);const target=path.join(output,'treeforce89/frontend');fs.mkdirSync(target,{recursive:true});fs.writeFileSync(path.join(target,'ContinuationReview.tsx'),patched);
  fs.writeFileSync(path.join(target,'NFTreeGateway.tsx'),gateway);
  const browserDir=fileURLToPath(new URL('./browser/',import.meta.url)),dest=path.join(target,'bnb-review');fs.mkdirSync(dest);
- const modules=['bnb-native-host-options.mjs','native-bnb-review-mount.mjs','native-continue-transport.mjs','bnb-review-wallets.mjs','bnb-connected-review.mjs','bnb-checkout-review.mjs'];for(const name of modules)fs.copyFileSync(path.join(browserDir,name),path.join(dest,name));
+ const modules=['bnb-provider-picker.mjs','bnb-native-host-options.mjs','native-bnb-review-mount.mjs','native-continue-transport.mjs','bnb-review-wallets.mjs','bnb-connected-review.mjs','bnb-checkout-review.mjs'];for(const name of modules)fs.copyFileSync(path.join(browserDir,name),path.join(dest,name));
  const receipt={sourceOnly:true,deployable:false,source:nativeEntry,gateway:{...nativeGateway,candidateSha256:createHash('sha256').update(gateway).digest('hex')},legacyDefault:true,modules,entrySha256:createHash('sha256').update(patched).digest('hex')};fs.writeFileSync(path.join(output,'provenance.json'),JSON.stringify(receipt,null,2)+'\n');return receipt;
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){

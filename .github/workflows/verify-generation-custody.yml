@@ -49,6 +49,8 @@ on:
       - 'scripts/multichain/prepare-native-bnb-entry.mjs'
       - 'tests/multichain-native-bnb-entry.test.mjs'
       - 'scripts/multichain/browser/bnb-native-host-options.mjs'
+      - 'scripts/multichain/browser/bnb-provider-picker.mjs'
+      - 'scripts/multichain/check-bnb-provider-picker-browser.mjs'
       - 'tests/multichain-bnb-native-host-options.test.mjs'
       - 'tests/multichain-bnb-review-wallets.test.mjs'
       - 'scripts/multichain/check-bnb-checkout-review-browser.mjs'
@@ -142,6 +144,8 @@ on:
       - 'scripts/multichain/prepare-native-bnb-entry.mjs'
       - 'tests/multichain-native-bnb-entry.test.mjs'
       - 'scripts/multichain/browser/bnb-native-host-options.mjs'
+      - 'scripts/multichain/browser/bnb-provider-picker.mjs'
+      - 'scripts/multichain/check-bnb-provider-picker-browser.mjs'
       - 'tests/multichain-bnb-native-host-options.test.mjs'
       - 'tests/multichain-bnb-review-wallets.test.mjs'
       - 'scripts/multichain/check-bnb-checkout-review-browser.mjs'
@@ -290,6 +294,7 @@ jobs:
           git fetch --no-tags origin 4cd2119a3fefc3b6078befd01ad4f63fb74a695a
           node --test tests/multichain-native-bnb-entry.test.mjs tests/multichain-bnb-native-host-options.test.mjs
           node scripts/multichain/check-native-bnb-mount-browser.mjs
+          node scripts/multichain/check-bnb-provider-picker-browser.mjs
           node scripts/multichain/check-checkout-recovery-browser.mjs
           node scripts/multichain/check-continue-browser.mjs
           CONTINUE_PHASER_CHECK=1 BNB_PG_BIN="$(pg_config --bindir)" node scripts/multichain/check-native-sui-session-postgres.mjs

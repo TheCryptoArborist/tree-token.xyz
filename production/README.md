@@ -1,3 +1,15 @@
+# Explicit BNB wallet selection candidate — November 25, 2026
+
+The offline gateway candidate now includes an opt-in EIP-6963 wallet picker.
+Only explicit selection requests account access; chain/account changes invalidate
+selection. Default Sui checkout and pending-payment recovery are preserved. No
+app root enables the flag. Passed 20 unit/compiled-source and six picker Chromium
+checks with injected wallets. No live deployment, payment, NFT or gameplay change.
+Setup, evidence and remaining gates:
+`docs/multichain/generation-milestone/netlify-gateway/bnb-provider-choice.md`.
+
+---
+
 # Native BNB session and wallet host candidate — November 25, 2026
 
 The offline candidate now wires the pinned native gateway sessionRef/epoch and

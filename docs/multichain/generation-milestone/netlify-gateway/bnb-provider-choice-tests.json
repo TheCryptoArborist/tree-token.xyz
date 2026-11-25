@@ -1,0 +1,18 @@
+{
+  "sourceOnly": true,
+  "unitTests": 20,
+  "browser": {
+    "localOnly": true,
+    "passed": 6,
+    "checks": [
+      "untrusted labels render as text; duplicate announcements cannot replace provider; discovery does not connect",
+      "rejected connection can be retried explicitly without exposing provider errors",
+      "wrong chain cannot select provider and does not request network switching",
+      "explicit connection selects authorized provider without signing or payment calls",
+      "account change clears selection and requires explicit reselection",
+      "teardown removes even pending connection listeners and rejects late selection; no live requests"
+    ],
+    "browser": "156.0.8078.79",
+    "wallets": "injected EIP-6963/EIP-1193 fixtures"
+  }
+}
