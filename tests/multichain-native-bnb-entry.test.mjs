@@ -23,3 +23,12 @@ test('compiled entry defaults to native checkout; explicit review mounts and cle
  const ordinary=Entry({session,onContinue,onClose});assert.equal(ordinary.type,Native);assert.equal(ordinary.props.session,session);assert.equal(ordinary.props.onContinue,onContinue);assert.equal(mounts,0);
  const review=Entry({session,onContinue,onClose,bnbReview:{origin:'https://tree-token.xyz'}});assert.notEqual(review.type,Native);const tree=review.type(review.props);assert.equal(mounts,1);assert.equal(tree.children.at(-1).props.onClick,onClose);cleanup();assert.equal(destroys,1);
 });
+test('real native gateway candidate compiles and preserves default and pending-payment selection',async()=>{
+ const {patchNativeGateway,nativeGateway}=await import('../scripts/multichain/prepare-native-bnb-entry.mjs');
+ const original=execFileSync('git',['show',`${nativeEntry.commit}:${nativeGateway.path}`],{encoding:'utf8'}),patched=patchNativeGateway(original);
+ await transform(patched,{loader:'tsx',format:'esm'});assert.throws(()=>patchNativeGateway(original+'\n'),/rebase-required/);
+ assert(patched.includes('bnbOptions&&!loadPendingContinuation(session.wallet)?bnbOptions:undefined'));
+ const expression=patched.match(/bnbReview=\{([^}]+)\}/)[1],choose=new Function('loadPendingContinuation','session','bnbOptions','return '+expression),options={};
+ assert.equal(choose(()=>true,{wallet:'sui'},options),undefined);assert.equal(choose(()=>null,{wallet:'sui'},options),options);assert.equal(choose(()=>assert.fail('disabled path must not read pending storage'),{wallet:'sui'},undefined),undefined);
+ const restored=patched.replace("import {createNativeBnbReviewOptions} from './bnb-review/bnb-native-host-options.mjs';\n",'').replace('useEffect,useMemo,useRef,useState','useEffect,useRef,useState').replace('export default function NFTreeGateway({bnbReviewProvider}:{bnbReviewProvider?:any}={}) {','export default function NFTreeGateway() {').replace(/^  const bnbOptions=.*\n/m,'').replace(' bnbReview={bnbOptions&&!loadPendingContinuation(session.wallet)?bnbOptions:undefined}','');assert.equal(restored,original);
+});

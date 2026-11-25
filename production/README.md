@@ -1,3 +1,15 @@
+# Native BNB session and wallet host candidate — November 25, 2026
+
+The offline candidate now wires the pinned native gateway sessionRef/epoch and
+dApp Kit stores into BNB review through an explicit provider prop. Default Sui
+checkout and pending-native-payment recovery remain selected unless separately
+opted in. No caller enables the prop. Passed 20 unit/compiled-source and six
+assembled Chromium checks using store/provider fixtures; actual extensions remain
+untested. Nothing published or enabled. Setup and remaining gates:
+`docs/multichain/generation-milestone/netlify-gateway/bnb-native-host.md`.
+
+---
+
 # Native BNB checkout entry candidate — November 25, 2026
 
 An offline generator now prepares an opt-in patch against the actual pinned native

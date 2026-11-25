@@ -1,0 +1,18 @@
+{
+  "sourceOnly": true,
+  "unitTests": 20,
+  "browser": {
+    "localOnly": true,
+    "passed": 6,
+    "checks": [
+      "mount assembles native host options, transport, context, wallet adapters and controls without replacing checkout",
+      "assembled click flow uses canonical authenticated requests and only personal-message wallet methods",
+      "teardown removes controls and subscriptions while preserving host checkout",
+      "teardown during context load prevents late mounting",
+      "failed context leaves safe status and cleans wallet listeners",
+      "leaving during wallet prompt never remounts or requests another wallet; no live requests"
+    ],
+    "browser": "156.0.8078.79",
+    "evidence": "real assembled modules with injected wallet/provider/server responses; no extensions or chain calls"
+  }
+}

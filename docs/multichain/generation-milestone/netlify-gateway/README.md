@@ -1,5 +1,7 @@
 # Netlify schema and gateway boundary rehearsal
 
+Latest: [native session and dApp Kit host binding](bnb-native-host.md).
+
 Latest: [native checkout entry candidate](bnb-native-entry.md).
 
 Latest: [assembled BNB review mount](bnb-review-mount.md).
