@@ -15,8 +15,8 @@ try{for(const [width,height] of [[390,664],[320,568],[430,740]]){
  const instruction=page.locator('#board-instructions');assert(await instruction.isVisible());assert((await instruction.textContent()).includes('No dragging needed'));const hint=await instruction.boundingBox();assert(hint.y>=0&&hint.y+hint.height<rect.y,'Move instructions visible above the board');
  const retained=await page.locator('[data-square="e2"]').elementHandle();
  const tap=async square=>{const box=await page.locator(`[data-square="${square}"]`).boundingBox();assert(box.y>=0&&box.y+box.height<=height);await page.touchscreen.tap(box.x+box.width/2,box.y+box.height/2);await page.waitForTimeout(80);assert.equal(await page.evaluate(()=>scrollY),0,'Tapping must not move the viewport');};
- await tap('e2');await tap('e4');await page.waitForFunction(()=>document.querySelector('#move-count').textContent==='2 HALF-MOVES');
- assert.equal(await page.evaluate(()=>scrollY),0,'Computer reply must not move the viewport');
+ await tap('e2');await tap('e4');await page.waitForTimeout(500);assert.equal(await page.locator('#move-count').textContent(),'1 HALF-MOVES','Computer reply is not immediate');await page.waitForFunction(()=>document.querySelector('#move-count').textContent==='2 HALF-MOVES');
+ assert.equal(await page.evaluate(()=>scrollY),0,'Computer reply must not move the viewport');assert.equal(await page.locator('.last-from').count(),1);assert.equal(await page.locator('.last-to').count(),1);assert((await page.locator('#piece-tip').textContent()).startsWith('Pine moved '));
  assert(await retained.evaluate(e=>e.isConnected),'Board squares keep their DOM identity between turns');
  assert.equal(await page.locator('#mobile-turn').textContent(),'Your move.');
  await page.locator('#undo').tap();assert.equal(await page.evaluate(()=>scrollY),0);

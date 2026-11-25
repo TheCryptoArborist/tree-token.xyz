@@ -6,12 +6,12 @@ import {createPlayAccess} from '../play/grove-chess/play-access.js';
 import {randomUUID} from 'node:crypto';
 const code=fs.readFileSync(new URL('../play/grove-chess/app.js',import.meta.url),'utf8').replace(/^import .*;$/gm,'');
 function setup(saved=null){
- const nodes=new Map(),timers=new Map();let next=0,data=saved;
+ const nodes=new Map(),timers=new Map(),delays=[];let next=0,data=saved;
  const document={activeElement:null,querySelector(s){if(!nodes.has(s))nodes.set(s,element());return nodes.get(s)},createElement:()=>element()};
  function element(){return {children:[],style:{},dataset:{},attributes:{},value:'1',textContent:'',html:'',get innerHTML(){return this.html},set innerHTML(v){this.html=v;this.children=[]},setAttribute(k,v){this.attributes[k]=v},removeAttribute(k){delete this.attributes[k]},append(c){c.isConnected=true;this.children.push(c)},contains(e){return this.children.includes(e)},querySelector(s){return this.children.find(c=>s.includes('"'+c.dataset.square+'"'))},scrollIntoView(){},focus(){document.activeElement=this},showModal(){this.open=true},close(){this.open=false}}}
- const context=vm.createContext({createOnline:()=>({room:null,activate(){},deactivate(){}}),URLSearchParams,location:{search:""},Chess,createPlayAccess,crypto:{randomUUID},holderAccess:{isHolder:()=>true,state:{busy:false,wallet:null}},onHolderChange(){},document,localStorage:{getItem:()=>data,setItem(k,v){data=v}},setTimeout(fn){timers.set(++next,fn);return next},clearTimeout(id){timers.delete(id)},console,Math});
+ const context=vm.createContext({createOnline:()=>({room:null,activate(){},deactivate(){}}),URLSearchParams,location:{search:""},Chess,createPlayAccess,crypto:{randomUUID},holderAccess:{isHolder:()=>true,state:{busy:false,wallet:null}},onHolderChange(){},document,localStorage:{getItem:()=>data,setItem(k,v){data=v}},setTimeout(fn,delay){delays.push(delay);timers.set(++next,fn);return next},clearTimeout(id){timers.delete(id)},console,Math});
  const run=s=>vm.runInContext(s,context);run(code);
- return {run,nodes,document,timers,saved:()=>data,click:s=>run(`clickSquare('${s}')`),square:s=>nodes.get('#board').children.find(x=>x.dataset.square===s)};
+ return {run,nodes,document,timers,delays,saved:()=>data,click:s=>run(`clickSquare('${s}')`),square:s=>nodes.get('#board').children.find(x=>x.dataset.square===s)};
 }
 const local=setup();local.run("mode='local';render()");
 assert.equal(local.nodes.get('#board').children.length,64);
@@ -25,7 +25,7 @@ local.square('e2').focus();local.square('e2').onkeydown({key:'ArrowUp',preventDe
 local.nodes.get('#flip').onclick();local.square('e3').onkeydown({key:'ArrowUp',preventDefault(){}});assert.equal(local.document.activeElement.dataset.square,'e2');
 local.run("game.reset();['f3','e5','g4','Qh4#'].forEach(m=>game.move(m));render()");assert(local.square('e1').className.includes('in-check'));assert.equal(local.nodes.get('#status').textContent,'Pine wins.');
 local.nodes.get('#confirm-new').onclick();assert.equal(local.run('game.history().length'),0);
-const ai=setup();await ai.click('e2');await ai.click('e4');assert.equal(ai.timers.size,1);
+const ai=setup();await ai.click('e2');await ai.click('e4');assert.equal(ai.timers.size,1);assert.equal(ai.delays.at(-1),1800,'Computer gives the player time to follow their move');
 const reply=[...ai.timers.values()][0];ai.timers.clear();reply();assert.equal(ai.run('game.history().length'),2);assert.equal(ai.run('game.turn()'),'w');
 ai.nodes.get('#undo').onclick();assert.equal(ai.run('game.history().length'),0);
 await ai.click('d2');await ai.click('d4');ai.nodes.get('#confirm-new').onclick();assert.equal(ai.timers.size,0);assert.equal(ai.run('game.history().length'),0);
@@ -39,3 +39,5 @@ assert.equal(local.nodes.get('#bottom-player').style.order,'0');
 assert(local.run("art('q')").includes('QUEEN'));
 assert(local.run("art('p')").includes('tree-crest-pawn.png'));
 console.log('Passed flipped player positions, traditional labels, and illustrated pawn mapping.');
+
+const clarity=setup();clarity.run("mode='local';render()");await clarity.click('e2');await clarity.click('e4');assert(clarity.square('e2').className.includes('last-from'));assert(clarity.square('e4').className.includes('last-to'));assert.equal(clarity.nodes.get('#piece-tip').textContent,'Birch moved Pawn: e2 → e4');
