@@ -1,0 +1,43 @@
+name: Capture Tree Force production inventory (read only)
+on:
+  push:
+    branches: [audit/treeforce-inventory-20261125]
+    paths:
+      - '.github/workflows/treeforce-inventory-audit.yml'
+      - 'scripts/treeforce-local/capture-production-inventory.mjs'
+      - 'tests/treeforce-production-inventory.test.mjs'
+permissions:
+  contents: read
+concurrency:
+  group: tree-production-preservation-release
+  cancel-in-progress: false
+jobs:
+  capture:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Verify read-only and drift guards
+        run: |
+          node --test tests/treeforce-production-inventory.test.mjs
+          git diff --check
+      - name: Capture and independently read back current inventory
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: |
+          test -n "$NETLIFY_AUTH_TOKEN" || { echo 'Existing Netlify audit connection unavailable'; exit 1; }
+          node scripts/treeforce-local/capture-production-inventory.mjs capture --expected-deploy 6b063e9462762ae02c0fd5db --baseline .netlify/treeforce-inventory/baseline.json --report .netlify/treeforce-inventory/capture.json
+          node scripts/treeforce-local/capture-production-inventory.mjs verify --baseline .netlify/treeforce-inventory/baseline.json --report .netlify/treeforce-inventory/verify.json
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: treeforce-production-inventory-${{ github.run_id }}
+          path: .netlify/treeforce-inventory/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30
