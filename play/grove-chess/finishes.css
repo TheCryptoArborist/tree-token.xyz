@@ -45,3 +45,7 @@ body:not([data-finish-w="gold"]) .side-w .hero-base,body:not([data-finish-b="gol
 #board .square.selected{outline:3px solid #fff;outline-offset:-4px;background:#93d5bf}
 #board .square:focus-visible{outline:3px solid #fff;outline-offset:-3px}
 @media(max-width:670px){#board .side-w,#board .side-b{border-width:1px}#board .square.last-to::before{font-size:11px}}
+
+/* Private friend invitations: the player chooses the destination before sharing. */
+#online-sharing{margin:18px 0;padding:14px;border:1px solid #497f61;border-radius:6px;background:#102c20}#online-sharing h3{font-size:16px;color:#caffdd}#online-sharing p{font-size:11px;line-height:1.6;color:#bed4c5}#online-sharing .primary{margin-top:8px;text-align:center}#online-sharing .invite-links{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}#online-sharing .invite-links a{display:flex;align-items:center;justify-content:center;min-height:44px;flex:1 1 90px;padding:8px;border:1px solid #588b6d;border-radius:4px;color:#b9ffd6;text-decoration:none;font-size:12px}#online-invite-link{width:100%;min-width:0;padding:10px;background:#071b12;border:1px solid #588b6d;border-radius:4px;color:#d7f4e0;font-size:12px}#online-share-status{min-height:1.6em}#online-sharing .invite-expiry{font-size:10px}
+#mobile-controls:has(#online-panel:not([hidden])) :is(label[for="difficulty"],#difficulty,#new){display:none}

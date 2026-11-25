@@ -8,18 +8,40 @@ export function mergeOnlineTrial(previous,room){
  return {...previous,used};
 }
 export function createOnline({onRoom}){
- let room=null,active=false,timer,busy=false,studio,generation=0;
+ let room=null,active=false,timer,busy=false,studio,generation=0,sharingRoom=null;
  const note=text=>{$('#online-note').textContent=text;};
  function used(){try{const s=JSON.parse(localStorage.getItem(TRIAL_KEY)||'{"used":0}');return Number.isInteger(s.used)&&s.used>=0&&s.used<=2?s.used:2;}catch{return 2;}}
  function auth(){if(!holderAccess.isHolder())return {};for(const store of [localStorage,sessionStorage]){try{const s=JSON.parse(store.getItem('tree-arcade:daily-growth:session:v1'));if(s?.wallet===holderAccess.state.wallet&&/^[a-f0-9]{64}$/.test(s.token)&&new Date(s.expiresAt).getTime()>Date.now())return {Authorization:'Bearer '+s.token};}catch{}}return {};}
  function paint(){
   $('#online-join').hidden=!room||room.seat!==null||room.status!=='waiting';
-  $('#online-copy').hidden=!room||room.status!=='waiting';
+  paintSharing();
   $('#online-cancel').hidden=!room||!room.seat||room.status!=='waiting';
   $('#online-resign').hidden=!room||!room.seat||room.status!=='playing';
   for(const id of ['#online-find','#online-private']){$(id).disabled=busy;$(id).hidden=Boolean(room&&room.seat&&['waiting','playing'].includes(room.status));}
   $('#online-signin').hidden=!holderAccess.isHolder();
  }
+ function invitation(){
+  if(!room||!room.seat||room.status!=='waiting'||Date.parse(room.expiresAt)<=Date.now())return null;
+  return {title:'Grove Chess · TREE Arcade',text:'Challenge me to Grove Chess 🌳♟️ Your first two games are free—no wallet needed. Take the open seat before this invitation expires!',url:'https://tree-token.xyz/play/grove-chess/?room='+encodeURIComponent(room.id)};
+ }
+ function paintSharing(){
+  const invite=invitation();$('#online-sharing').hidden=!invite;
+  if(!invite){$('#online-invite-link').value='';for(const id of ['#online-sms','#online-x','#online-facebook'])$(id).href='';sharingRoom=null;return;}
+  if(sharingRoom!==room.id){$('#online-share-status').textContent='Choose an app, send a text, or copy your link.';sharingRoom=room.id;}
+  $('#online-share').hidden=typeof globalThis.navigator?.share!=='function';
+  $('#online-invite-link').value=invite.url;
+  const message=encodeURIComponent(invite.text+' '+invite.url);
+  $('#online-sms').href=(/iPad|iPhone|iPod/.test(globalThis.navigator?.userAgent||'')?'sms:&body=':'sms:?body=')+message;
+  $('#online-x').href='https://twitter.com/intent/tweet?text='+encodeURIComponent(invite.text)+'&url='+encodeURIComponent(invite.url);
+  $('#online-facebook').href='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(invite.url);
+ }
+ function shareReady(){const invite=invitation();if(!invite){paintSharing();note('This invitation is no longer open. Create a new match to invite a friend.');}return invite;}
+ $('#online-share').onclick=async()=>{
+  const invite=shareReady();if(!invite)return;
+  try{await navigator.share(invite);$('#online-share-status').textContent='Invitation shared. Keep this game open while your friend joins.';}
+  catch(error){$('#online-share-status').textContent=error.name==='AbortError'?'Sharing cancelled. Your invitation is still ready.':'Sharing is unavailable here. Copy the invitation link or use one of the options below.';}
+ };
+ for(const id of ['#online-sms','#online-x','#online-facebook'])$(id).onclick=event=>{if(!shareReady())event.preventDefault();};
  function accept(next){
   room=next;
   if(room.seat){localStorage.setItem(KEY,room.id);if(!room.holderSeat&&['playing','finished'].includes(room.status)){let previous;try{previous=JSON.parse(localStorage.getItem(TRIAL_KEY))||{used:0,active:null,finished:false};}catch{previous={used:2,active:null,finished:true};}localStorage.setItem(TRIAL_KEY,JSON.stringify(mergeOnlineTrial({...previous,used:used()},room)));}}
@@ -43,7 +65,7 @@ export function createOnline({onRoom}){
  $('#online-resign').onclick=()=>$('#online-resign-dialog').showModal();
  $('#online-resign-no').onclick=()=>$('#online-resign-dialog').close();
  $('#online-resign-yes').onclick=()=>{$('#online-resign-dialog').close();void run('resign',{room:room.id,revision:room.revision});};
- $('#online-copy').onclick=async()=>{try{await navigator.clipboard.writeText(location.origin+'/play/grove-chess/?room='+room.id);note('Match link copied.');}catch{note('Share this link: '+location.origin+'/play/grove-chess/?room='+room.id);}};
+ $('#online-copy').onclick=async()=>{const invite=shareReady();if(!invite)return;try{await navigator.clipboard.writeText(invite.url);$('#online-share-status').textContent='Invitation link copied. Paste it into a text, chat, or social post.';}catch{$('#online-invite-link').focus({preventScroll:true});$('#online-invite-link').select();$('#online-share-status').textContent='Copy the selected invitation link, then paste it into your message.';}};
  $('#online-signin').onclick=async()=>{try{note('Approve the free Arcade sign-in message in your wallet.');if(!studio){const {createStudioAccess}=await import('/scripts/profile-studio-access-v4.js');studio=createStudioAccess();}await studio.signIn();note('Signed in. You can create or join your match.');}catch(e){note(e.message);}};
- return {get room(){return room;},get busy(){return busy;},async activate(){generation++;active=true;$('#online-panel').hidden=false;let id=new URLSearchParams(location.search).get('room');if(!id)try{id=localStorage.getItem(KEY);}catch{}if(id)await run('read',{room:id});else{note('Invite someone to a live match. “Find an opponent” posts the cabinet artwork and a join link in the Arcade Telegram topic.');paint();}void poll();},deactivate(){generation++;active=false;clearTimeout(timer);$('#online-panel').hidden=true;},move(move){if(!room)return;return run('move',{room:room.id,revision:room.revision,...move});}};
+ return {get room(){return room;},get busy(){return busy;},async activate(){generation++;active=true;$('#online-panel').hidden=false;let id=new URLSearchParams(location.search).get('room');if(!id)try{id=localStorage.getItem(KEY);}catch{}if(id)await run('read',{room:id});else{note('Invite a friend privately by text, chat, or social media. Find an opponent announces your match in the Arcade Telegram topic.');paint();}void poll();},deactivate(){generation++;active=false;clearTimeout(timer);$('#online-panel').hidden=true;},move(move){if(!room)return;return run('move',{room:room.id,revision:room.revision,...move});}};
 }

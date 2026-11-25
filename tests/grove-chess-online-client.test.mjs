@@ -10,3 +10,8 @@ test('a delayed old-room poll cannot replace a newly created invitation',async()
  await nodes.get('#online-private').onclick();assert.equal(online.room.id,next.id);
  resolvePoll(Response.json({room:old}));await new Promise(resolve=>setImmediate(resolve));assert.equal(online.room.id,next.id);assert.equal(storage.get('grove-chess:online-room:v1'),next.id);
 });
+test('expired invitations cannot be copied or shared and absent native sharing has a fallback',async()=>{
+ const waiting={...old,status:'waiting',revision:0,expiresAt:new Date(Date.now()+900000).toISOString()};let response=waiting;
+ const {online,nodes,storage}=setup(async()=>Response.json({room:response}));await online.activate();await nodes.get('#online-private').onclick();assert.equal(nodes.get('#online-sharing').hidden,false);assert.equal(nodes.get('#online-share').hidden,true);assert(nodes.get('#online-x').href.includes(encodeURIComponent(waiting.id)));
+ response={...waiting,expiresAt:new Date(Date.now()-1000).toISOString()};await nodes.get('#online-private').onclick();assert.equal(nodes.get('#online-sharing').hidden,true);await nodes.get('#online-copy').onclick();assert(nodes.get('#online-note').textContent.includes('no longer open'));assert.equal(nodes.get('#online-invite-link').value,'');assert.equal(storage.get('trial'),undefined);
+});
