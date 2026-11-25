@@ -1,0 +1,65 @@
+name: Create preserved Tree Force review preview
+on:
+  push:
+    branches: [preview/treeforce-hosted-r15]
+    paths:
+      - '.github/workflows/treeforce-hosted-preview.yml'
+      - 'scripts/treeforce-local/host-preserved-preview.mjs'
+      - 'tests/treeforce-hosted-preview.test.mjs'
+permissions:
+  contents: read
+concurrency:
+  group: tree-production-preservation-release
+  cancel-in-progress: false
+jobs:
+  preview:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Verify preservation guards
+        run: |
+          node --test tests/treeforce-production-inventory.test.mjs tests/treeforce-preserved-candidate.test.mjs tests/treeforce-hosted-preview.test.mjs
+          git diff --check
+      - name: Capture fresh complete baseline
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: node scripts/treeforce-local/capture-production-inventory.mjs capture --expected-deploy 6b0643a31c44395918fb3859 --baseline .netlify/tf-hosted/baseline.json --report .netlify/tf-hosted/capture.json
+      - name: Reconstruct only the pinned game overlay
+        run: |
+          node scripts/treeforce-local/capture.mjs .netlify/tf-original
+          node scripts/treeforce-local/prepare-integrated-review.mjs .netlify/tf-original .netlify/tf-r13
+          node scripts/treeforce-local/prepare-enemy-animation.mjs .netlify/tf-r13 .netlify/tf-r14
+          node scripts/treeforce-local/prepare-impact-effects.mjs .netlify/tf-r14 .netlify/tf-r15
+          node scripts/treeforce-local/prepare-release-overlay.mjs .netlify/tf-r15 .netlify/tf-original .netlify/tf-overlay
+          node scripts/treeforce-local/prepare-preserved-candidate.mjs .netlify/tf-hosted/baseline.json docs/treeforce89-impact-effects-20261124/review.json .netlify/tf-original .netlify/tf-overlay/overlay .netlify/tf-candidate
+      - name: Create and verify unpublished candidate under existing production lock
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: node scripts/treeforce-local/host-preserved-preview.mjs .netlify/tf-candidate
+      - name: Record sanitized review evidence
+        if: always()
+        run: |
+          node --input-type=module - <<'JS'
+          import fs from 'node:fs';import {gzipSync} from 'node:zlib';
+          const files={};
+          for(const name of ['tf-hosted/baseline.json','tf-hosted/baseline.json.sha256','tf-hosted/capture.json','tf-candidate/candidate.json','tf-candidate/candidate.json.sha256','tf-candidate/hosted.json'])
+            if(fs.existsSync('.netlify/'+name))files[name]=fs.readFileSync('.netlify/'+name,'utf8');
+          const encoded=gzipSync(JSON.stringify(files)).toString('base64');
+          for(let i=0;i<encoded.length;i+=2000)console.log('PREVIEW_DATA '+encoded.slice(i,i+2000));
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: treeforce-hosted-review-${{ github.run_id }}
+          path: |
+            .netlify/tf-hosted/*.json*
+            .netlify/tf-candidate/*.json*
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 30
