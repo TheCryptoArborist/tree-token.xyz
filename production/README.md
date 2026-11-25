@@ -1,3 +1,39 @@
+# Grove Chess mobile board — published November 25, 2026
+
+[Grove Chess](https://tree-token.xyz/play/grove-chess/) puts the complete board
+and move controls in view on phones. A compact turn indicator and Settings & sets /
+Back to board navigation keep play accessible. Square buttons retain DOM identity
+between renders, and focus restoration does not scroll the page.
+
+Locked ready deploy `6b06f9ffcbcab3a8de97d4d4`, published
+`2026-11-25T15:09:54.736Z`, source `227da5fb3df500d51218a62676350d1e37a7cbef`
+(PR #335). Fresh baseline `6b06f3d38906e16d06a5ff16`; **789 static paths**,
+**786 unrelated paths preserved**, all **62 backend/provider records** and
+**5 schedules** preserved. Only chess HTML, app.js and style.css changed.
+
+Source and candidate checks passed. [Publication run 45641450694](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45641450694)
+published successfully and verified the locked inventory, then failed during
+canonical browser navigation with ERR_CERT_COMMON_NAME_INVALID. Independent
+canonical checks subsequently passed with the environment proxy certificate
+configured for Chromium; curl verified the hostname and certificate normally.
+All three live file hashes matched, and complete function/schedule records were
+independently compared with the baseline. The failed publication workflow is
+retained as an accurate record; it was not rerun to create another deployment.
+
+Live checks verified full board/control visibility, stable touch moves and AI
+replies, undo/flip, local turns and keyboard navigation at 390×664, 320×568 and
+430×740. The existing four-viewport game/cabinet suite also passed canonically.
+These are browser-emulated phone checks; a physical iPhone in-app browser was not
+tested. Saved games and access rules are unchanged. No Telegram messages sent.
+
+Full static manifest and canonical results:
+`production/grove-chess-mobile-release-20261125.json`.
+Candidate artifact #15035159019 SHA256:
+`9d6ba7ce60586f41d09d8ee0fef8a71e8d7af31012296a200f7cfc8dfc6e2754`.
+Capture a fresh full live baseline before every subsequent release.
+
+---
+
 # Grove Chess access wording and collectible sets — published November 25, 2026
 
 [Grove Chess](https://tree-token.xyz/play/grove-chess/) clearly explains the two
