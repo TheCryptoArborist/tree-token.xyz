@@ -1,3 +1,21 @@
+# Grove Chess clear game controls — published November 25, 2026
+
+The main panel offers Start free game, holder play, or Connect wallet to unlock
+access according to the current game access state. Game mode, Computer difficulty,
+and Start new game replace ambiguous themed controls. Play brings the board into
+view without spending a trial; the first legal move still starts a free game.
+
+Locked ready deploy `6b070f29fc1357e77339f3f3`, source
+`661869f1b337b0f90bebd59f41626f2763da1e83` (PR #343).
+[Publication run 45655743833](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45655743833)
+passed candidate and canonical browser checks at four viewports and three phone
+sizes. Preserved 785 unrelated static paths, all 62 backend/provider records and
+five schedules; total 789 paths. Wallet states were simulated; no wallet approval
+or Telegram notification was sent. Full report:
+[grove-chess-controls-release-20261125.json](grove-chess-controls-release-20261125.json).
+
+---
+
 # Grove Chess wallet identity and play entry — published November 25, 2026
 
 [Grove Chess](https://tree-token.xyz/play/grove-chess/) clearly identifies the

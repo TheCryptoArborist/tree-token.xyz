@@ -36,3 +36,12 @@
 .tree-coin .coin-trunk{fill:#cda94b}.tree-coin .coin-leaves{fill:#42c979;stroke:#e3c766;stroke-width:1.2;stroke-linejoin:round}.tree-coin .coin-veins{fill:none;stroke:#ebcf72;stroke-width:1.7;stroke-linecap:round}.tree-coin .coin-spark{fill:#ffe7a1}
 .tree-coin.birch .coin-leaves{fill:#267643;stroke:#aa8739;stroke-width:1}.tree-coin.birch .coin-trunk{fill:#96732d}.tree-coin.birch .coin-veins{stroke:#96732d;stroke-width:2.5}
 @media(max-width:670px){.player .avatar.tree-coin{border-width:1px}.tree-coin::before{inset:2px}.tree-coin svg{width:80%;height:80%}}
+
+/* Same brand and navigation as the TREE Arcade home, scoped to chess. */
+header.suite-header{height:auto;max-width:none;padding:0;background:#07110eef;border-bottom:1px solid #a9984b2d}
+.suite-header-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;width:min(1440px,calc(100% - 64px));min-height:64px;margin:auto}
+.suite-brand{display:flex;align-items:center;gap:11px;min-height:44px;text-decoration:none;flex-shrink:0}.suite-brand img{width:38px;height:38px;object-fit:contain}.suite-brand>span{display:grid;gap:4px}.suite-brand strong{color:#ffe05e;font-size:12px;letter-spacing:.1em}.suite-brand small{color:#acb3cb;font:10px monospace;letter-spacing:.1em;text-transform:uppercase}
+.suite-header nav{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}.suite-header nav a{display:inline-flex;align-items:center;justify-content:center;gap:4px;min-height:44px;padding:9px 14px;border:1px solid transparent;border-radius:4px;color:#bdc5dc;text-decoration:none;font-size:11px;font-weight:850;letter-spacing:.1em}.suite-header nav a:hover{border-color:#a5acd536;color:#fff}.suite-header nav a[aria-current]{color:#93edbd;border-color:#93edbd4a;background:#93edbd0b}.suite-header #help{min-height:44px;white-space:nowrap}
+@media(max-width:900px){.suite-header-inner{width:calc(100% - 32px);gap:10px}.suite-header nav{gap:1px}.suite-header nav a{padding:9px 10px}}
+@media(max-width:670px){.suite-header-inner{width:calc(100% - 28px);flex-wrap:wrap;gap:0;min-height:92px;padding:2px 0}.suite-brand img{width:32px;height:32px}.suite-brand strong{font-size:11px}.suite-header #help{margin-left:auto;order:1}.suite-header nav{order:2;width:100%;gap:2px;justify-content:space-between}.suite-header nav a{min-width:44px;min-height:44px;padding:8px;font-size:10px;letter-spacing:.03em}.board-frame{max-width:min(100%,calc(100svh - 355px))}}
+@media(max-width:670px) and (max-height:450px){.board-frame{max-width:min(100%,calc(100svh - 40px))}}

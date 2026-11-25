@@ -11,6 +11,12 @@ try{for(const [width,height]of [[1440,1000],[390,844],[320,740],[844,390]]){
  await page.route('**/assets/arcade/arcade-growth-wallet.js',r=>r.fulfill({contentType:'text/javascript',body:`export const getWalletState=()=>({connected:false});export const subscribeWalletState=()=>()=>{};export const getAvailableWallets=()=>[{id:'slush',name:'Slush'}];`}));
  await page.goto(base+'/play/grove-chess/',{waitUntil:'networkidle'});
  await page.locator('.square').last().waitFor();assert.equal(await page.locator('.square').count(),64);
+ const nav=page.locator('nav[aria-label="TREE Arcade navigation"]');
+ assert.deepEqual(await nav.locator('a').allTextContents(),['Home','App','Arcade','Get an NFTree →']);
+ assert.deepEqual(await nav.locator('a').evaluateAll(links=>links.map(a=>a.getAttribute('href'))),['/','/dapp/','/play/','https://nftree.net/mint#mint']);
+ for(const link of await nav.locator('a').all()){assert(await link.isVisible());const r=await link.boundingBox();assert(r.x>=0&&r.x+r.width<=width&&r.y>=0,'Header navigation fits viewport');}
+ assert(await page.locator('.suite-brand img').evaluate(i=>i.complete&&i.naturalWidth>0));
+ await page.locator('#help').click();assert(await page.locator('#help-dialog').evaluate(e=>e.open));await page.locator('.close-help').click();
  assert.equal(await page.locator('.square .hero-base').count(),32);
  assert.equal(await page.locator('.square .hero-base').filter({hasText:'PAWN'}).count(),16);
  assert(await page.locator('.pawn-piece img').first().evaluate(i=>i.complete&&i.naturalWidth>0));
