@@ -1,5 +1,9 @@
 # Netlify schema and gateway boundary rehearsal
 
+Follow-on: [authenticated composition and cutover tests](composition.md) now
+implements the HTTP adapters; the earlier remaining-work notes below describe
+the initial dispatcher milestone. Hosted wiring and activation remain pending.
+
 November 24, 2026 (America/Chicago). Source and disposable local tests only.
 No hosted migration, route registration, deployment or payment activation.
 

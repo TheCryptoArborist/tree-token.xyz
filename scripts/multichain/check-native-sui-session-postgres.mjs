@@ -1,4 +1,6 @@
 // Disposable database tests against exact recovered native source; no hosted access.
+import {createNativeSharedOffer} from './native-shared-offer.mjs';
+import {createNativeContinueComposition} from './native-continue-composition.mjs';
 import fs from 'node:fs';import os from 'node:os';import path from 'node:path';
 import {execFileSync} from 'node:child_process';import {randomBytes,randomUUID,createHash} from 'node:crypto';import assert from 'node:assert/strict';
 import pg from '../../vendor/bnb-continue-store/node_modules/pg/lib/index.js';
@@ -160,6 +162,17 @@ try{
  const payCase=await paymentFixture();let evidence=payCase.body;
  const reader=createMainnetTransactionReader({network:'mainnet',core:{getTransaction:async()=>structuredClone(evidence)}});
  const recorder=createNativeSuiPaymentRecorder({pool,...options,readTransaction:reader});
+ const gateway=createNativeContinueComposition({legacyHandler:()=>assert.fail('no legacy fallback'),readMode:async()=> 'shared',readCutover:async()=>({legacyWritersDrained:true,paymentsPaused:true,runtimeDigest:'1'.repeat(64),databaseIdentity:'2'.repeat(64),checkedAt:Date.now(),expiresAt:Date.now()+30000}),authorization:{prepare:()=>{throw Error('not used');},activate:()=>{throw Error('not used');}},recordPayment:recorder,recoverPayment:recover,nativeOffer:()=>{throw Error('not used');}});
+ const throughGateway=async(action,token,input)=>{
+  const response=await gateway(new Request('https://tree-token.xyz/play/treeforce89/api/shared-continue-'+action,{method:'POST',headers:{origin:'https://tree-token.xyz',authorization:'Bearer '+token,'content-type':'application/json'},body:JSON.stringify(input)}));
+  assert.equal(response.status,200);const body=await response.json();assert.equal(body.restoreAuthorized,false);assert.equal(body.requiresPayment,false);return body;
+ };
+ const newOfferActor=await fixture();let offered=0;
+ const offerWrapper=createNativeSharedOffer({pool,sessionAdapter:adapter,nativeOffer:async input=>{offered++;assert.equal(input.sessionToken,newOfferActor.token);return {enabled:true};}});
+ await Promise.all(Array.from({length:6},()=>offerWrapper({sessionToken:newOfferActor.token,runId:newOfferActor.nativeRunId})));
+ assert.equal(offered,6);assert.equal((await owner.query('select count(*)::int n from private.arcade_native_sui_runs where native_run_id=$1',[newOfferActor.nativeRunId])).rows[0].n,1);
+ await assert.rejects(offerWrapper({sessionToken:newOfferActor.token,runId:'grove-'+hex().slice(0,32)}),/native-run-mismatch/);assert.equal(offered,6);
+ checks.push('offer wrapper persists one authenticated run mapping across retries and rejects mismatched runs before native service');
  const pi={sessionHash:payCase.native.sessionHash,offerId:payCase.offerId,digest:payCase.digest};
  const invalid=[
   x=>x.$kind='FailedTransaction',x=>x.Transaction.effects.status.success=false,
@@ -170,10 +183,10 @@ try{
  ];
  for(const mutate of invalid){evidence=structuredClone(payCase.body);mutate(evidence);await assert.rejects(recorder(pi));}
  assert.equal((await owner.query('select count(*)::int n from private.arcade_native_sui_payments')).rows[0].n,0);checks.push('native reader and recorder reject failed, mismatched, stale and underpaid Sui evidence');
- evidence=payCase.body;const recorded=await Promise.all(Array.from({length:12},()=>recorder(pi)));assert(recorded.every(r=>r.restoreAuthorized===false));
+ evidence=payCase.body;const recorded=await Promise.all(Array.from({length:12},()=>throughGateway('record',payCase.native.token,{offerId:pi.offerId,digest:pi.digest})));assert(recorded.every(r=>r.restoreAuthorized===false));
  assert.equal((await owner.query('select count(*)::int n from private.arcade_native_sui_payments')).rows[0].n,1);
  assert.equal((await owner.query('select continuation_number from public.tree_game_sessions where session_id=$1',[payCase.native.id])).rows[0].continuation_number,0);
- assert.equal((await owner.query('select count(*)::int n from public.tree_continue_redemptions')).rows[0].n,0);checks.push('12 native verification retries record one receipt without consuming or restoring');
+ assert.equal((await owner.query('select count(*)::int n from public.tree_continue_redemptions')).rows[0].n,0);checks.push('12 authenticated gateway verification retries record one receipt without consuming or restoring');
  const duplicate=await paymentFixture(payCase.native.wallet);evidence={...payCase.body,Transaction:{...payCase.body.Transaction,timestampMs:Date.now()-1000}};
  await assert.rejects(recorder({sessionHash:duplicate.native.sessionHash,offerId:duplicate.offerId,digest:payCase.digest}));checks.push('same Sui digest cannot fund another native offer or run');
  evidence=payCase.body;
@@ -199,7 +212,7 @@ try{
  await createCredentialRevoker(owner).revoke({sessionToken:interrupted.native.token});
  const loginAgain=await fixture(interrupted.native.wallet);
  const reconciled=await recorder({sessionHash:loginAgain.sessionHash,offerId:interrupted.offerId,digest:interrupted.digest});
- const recoveredNative=await recover({sessionHash:loginAgain.sessionHash,paymentId:reconciled.paymentId});
+ const recoveredNative=await throughGateway('recover',loginAgain.token,{paymentId:reconciled.paymentId});
  assert.equal(recoveredNative.status,'recovered');assert.equal(recoveredNative.runId,interrupted.mapping.runId);assert.equal(recoveredNative.restoreAuthorized,false);
  assert.equal((await recorder({sessionHash:loginAgain.sessionHash,offerId:interrupted.offerId,digest:interrupted.digest})).paymentId,reconciled.paymentId);
  checks.push('fresh login reconciles paid native offer and recovers original run without old credential');

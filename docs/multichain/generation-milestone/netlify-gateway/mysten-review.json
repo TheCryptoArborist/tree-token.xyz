@@ -1,0 +1,21 @@
+{
+  "readme": "https://raw.githubusercontent.com/MystenLabs/skills/main/README.md",
+  "skill": "https://raw.githubusercontent.com/MystenLabs/skills/main/accessing-data/SKILL.md",
+  "reference": "https://raw.githubusercontent.com/MystenLabs/skills/main/accessing-data/grpc.md",
+  "reviewed": "2026-11-24 America/Chicago",
+  "files": [
+    {
+      "name": "README.md",
+      "sha256": "b39ccef539d067e4a96e5a15dcb34acf0ee2e77b58319fa64ad31f9d4574b5e9"
+    },
+    {
+      "name": "accessing-data/SKILL.md",
+      "sha256": "2f053ad000cd9af41fd3e9884524f067f0ce9bc546b143074cf362966edd15fc"
+    },
+    {
+      "name": "accessing-data/grpc.md",
+      "sha256": "f61036a3aec28b8b876a9e8d5d64d311024f2db191ef7c73525fcdbc96fc2a8c"
+    }
+  ],
+  "scope": "No SDK migration or network-reader changes; pinned services preserved."
+}

@@ -1,3 +1,16 @@
+# Shared gateway composition tested — November 24, 2026
+
+Strict offer, receipt-recording and paid-run recovery adapters now compose with
+prepare/activate. Fifty-two unit checks, 37 Netlify-role database/browser checks
+and 34 original-role database checks pass locally. Actual Phaser restoration
+crosses the composed gateway for both typed payment fixtures. A drain overlap
+test confirms a mode flip cannot cancel an already admitted legacy writer; the
+composition blocks shared mode without a fresh trusted drain attestation.
+No live change occurred. Exact host wiring, checkout client and operational drain
+remain pending: `docs/multichain/generation-milestone/netlify-gateway/composition.md`.
+
+---
+
 # Netlify shared-schema rehearsal — November 24, 2026
 
 The review-only Netlify proposal passed 35 disposable database checks; the

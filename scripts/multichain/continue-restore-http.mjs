@@ -1,8 +1,9 @@
 // Source-only Fetch handler. No route registration, cookie fallback or login issuance.
+import {validateSnapshot} from '../../docs/multichain/generation-milestone/native-sui-payments/upstream/contract.mjs';
 import {createHash} from 'node:crypto';
 const hex=v=>typeof v==='string'&&/^[a-f0-9]{64}$/.test(v);
 const uuid=v=>typeof v==='string'&&/^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/.test(v);
-const fields={prepare:{runId:uuid,paymentId:uuid,clientKey:hex},activate:{runId:uuid,clientKey:hex,leaseId:uuid,checkpointHash:hex,policyDigest:hex,requestId:uuid}};
+const fields={record:{offerId:v=>typeof v==='string'&&/^[a-f0-9]{48}$/.test(v),digest:v=>typeof v==='string'&&/^[1-9A-HJ-NP-Za-km-z]{32,64}$/.test(v)},recover:{paymentId:uuid},offer:{runId:v=>typeof v==='string'&&/^grove-[a-f0-9]{32}$/.test(v),snapshot:v=>v&&typeof v==='object'&&!Array.isArray(v),lives:v=>v===0},prepare:{runId:uuid,paymentId:uuid,clientKey:hex},activate:{runId:uuid,clientKey:hex,leaseId:uuid,checkpointHash:hex,policyDigest:hex,requestId:uuid}};
 export function createRestoreHttpHandler({action,authorization}) {
  if(!Object.hasOwn(fields,action)||typeof authorization?.[action]!=='function')throw Error('restore-http-adapter-required');
  const reply=(body,status)=>Response.json(body,{status,headers:{'Cache-Control':'no-store','X-Robots-Tag':'noindex','X-Content-Type-Options':'nosniff',...(status===405?{Allow:'POST'}:{})}});
@@ -23,11 +24,12 @@ export function createRestoreHttpHandler({action,authorization}) {
    input=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(Buffer.concat(chunks)));
    const schema=fields[action];
    if(!input||Array.isArray(input)||Object.keys(input).length!==Object.keys(schema).length||!Object.entries(schema).every(([k,valid])=>Object.hasOwn(input,k)&&valid(input[k])))throw Error();
+   if(action==='offer')input.snapshot=validateSnapshot(input.snapshot,input.runId);
   }catch{return deny(400,'INVALID_REQUEST');}
   try{
    // Hash only the native bearer. The delivery transaction resolves and locks the
    // authoritative session, payment owner and run; body identity is never trusted.
-   const result=await authorization[action]({...input,sessionHash:createHash('sha256').update(token,'utf8').digest('hex')});
+   const result=await authorization[action]({...input,...(action==='offer'?{sessionToken:token}:{sessionHash:createHash('sha256').update(token,'utf8').digest('hex')})});
    return reply(result,200);
   }catch{
    // A failure may occur after consumption committed. Never leak SQL/credentials,

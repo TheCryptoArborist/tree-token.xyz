@@ -1,5 +1,5 @@
 // Invoked by the disposable native PostgreSQL checker. All browser traffic is intercepted.
-import {createRestoreHttpHandler} from './continue-restore-http.mjs';
+import {createNativeContinueComposition} from './native-continue-composition.mjs';
 import fs from 'node:fs';import path from 'node:path';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
 import {build} from '../../vendor/continue-browser-test/node_modules/esbuild/lib/main.js';
 import {chromium} from '../../vendor/continue-browser-test/node_modules/playwright/index.mjs';
@@ -8,9 +8,11 @@ export async function checkPhaserRestore({authorization,sessionToken,paymentId,s
  for(const f of JSON.parse(fs.readFileSync(root+'provenance.json')).files)assert.equal(createHash('sha256').update(fs.readFileSync(root+f.snapshot)).digest('hex'),f.sha256);
  const bundle=await build({entryPoints:[root+'upstream/arcade.ts'],bundle:true,format:'esm',platform:'browser',write:false,nodePaths:[path.resolve('vendor/continue-browser-test/node_modules')],logLevel:'silent'});
  const moduleText=bundle.outputFiles[0].text;
- const handlers=Object.fromEntries(['prepare','activate'].map(action=>[action,createRestoreHttpHandler({action,authorization})]));
+ const unavailable=async()=>{throw Error('unused fixture action');};
+ const gateway=createNativeContinueComposition({legacyHandler:()=>assert.fail('no legacy fallback'),readMode:async()=> 'shared',readCutover:async()=>({legacyWritersDrained:true,paymentsPaused:true,runtimeDigest:'1'.repeat(64),databaseIdentity:'2'.repeat(64),checkedAt:Date.now(),expiresAt:Date.now()+30000}),authorization,recordPayment:unavailable,recoverPayment:unavailable,nativeOffer:unavailable});
+ const api='https://tree-token.xyz/play/treeforce89/api/shared-continue-';
  const base='https://tree-token.xyz/play/__phaser-restore-test__/';let activations=0,preparations=0,blocked=0;
- const foreign=await handlers.prepare(new Request(base+'prepare',{method:'POST',headers:{origin:'https://tree-token.xyz','content-type':'application/json',authorization:'Bearer '+'0'.repeat(64)},body:JSON.stringify({runId:session.runId,paymentId,clientKey:'1'.repeat(64)})}));
+ const foreign=await gateway(new Request(api+'prepare',{method:'POST',headers:{origin:'https://tree-token.xyz','content-type':'application/json',authorization:'Bearer '+'0'.repeat(64)},body:JSON.stringify({runId:session.runId,paymentId,clientKey:'1'.repeat(64)})}));
  assert.equal(foreign.status,503);assert.equal((await foreign.json()).restoreAuthorized,false);
  const browser=await chromium.launch({headless:true,...(process.env.CHROMIUM_PATH?{executablePath:process.env.CHROMIUM_PATH}:{}),args:['--no-sandbox','--enable-unsafe-swiftshader']});
  const html=`<!doctype html><style>body{margin:0}#game{width:480px;height:720px}</style><div id="game"></div><script type="module">
@@ -35,7 +37,7 @@ export async function checkPhaserRestore({authorization,sessionToken,paymentId,s
    if(['prepare','activate'].includes(name)){
     if(name==='activate')activations++;else preparations++;
     const req=route.request();
-    const response=await handlers[name](new Request(req.url(),{method:req.method(),headers:await req.allHeaders(),body:req.postData()}));
+    const response=await gateway(new Request(api+name,{method:req.method(),headers:await req.allHeaders(),body:req.postData()}));
     return route.fulfill({status:response.status,headers:Object.fromEntries(response.headers),body:await response.text()});
    }
    const files={'controller.mjs':'scripts/multichain/browser/paid-continue-controller.mjs','renderer.mjs':'scripts/multichain/browser/native-continue-renderer.mjs','native.mjs':'docs/multichain/generation-milestone/browser-restoration/upstream/authorized-continue-resume.mjs','progress.mjs':'docs/multichain/generation-milestone/browser-restoration/upstream/progress.mjs'};
@@ -48,6 +50,6 @@ export async function checkPhaserRestore({authorization,sessionToken,paymentId,s
   assert.equal(activations,1);assert.equal(preparations,1);assert.deepEqual(errors,[]);
   await page.evaluate(()=>game.destroy(true));await page.waitForFunction(()=>document.querySelectorAll('canvas').length===0);
   await page.reload();await page.waitForFunction(()=>window.ready);assert.equal((await page.evaluate(()=>resume())).status,'review-required');assert.equal(await page.evaluate(()=>window.mounts),0);assert.equal(activations,1);assert.equal(blocked,0);
-  return {browser:browser.version(),lives:restored.lives,score:restored.run.score,wave:restored.run.wave,mounts:1,activations,refreshBlocked:true,teardownVerified:true,liveRequests:0,foreignCredentialDenied:true,transport:'strict Fetch handler with native bearer hash',assets:'explicit placeholder textures; artwork not validated'};
+  return {browser:browser.version(),lives:restored.lives,score:restored.run.score,wave:restored.run.wave,mounts:1,activations,refreshBlocked:true,teardownVerified:true,liveRequests:0,foreignCredentialDenied:true,transport:'composed gateway and strict Fetch handler with native bearer hash',assets:'explicit placeholder textures; artwork not validated'};
  }finally{await browser.close();}
 }
