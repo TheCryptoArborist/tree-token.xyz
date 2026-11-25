@@ -100,3 +100,5 @@ and omit `CHROMIUM_PATH`. No hosted credentials are used.
    production inventory. No live activation or release is included here.
 
 The first hosted attempt stopped before browser tests at PostgreSQL startup in an existing checker. All remaining temporary database runners now use private Unix sockets and retain startup diagnostics; 82 affected database checks passed locally. No application SQL changed. See `database-harness-validation.json`.
+
+Hosted [CI 45528975439](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45528975439) passed on `8f293a4`, including all 17 Chromium checks, updated database harnesses and existing regressions. Machine-readable evidence is in `hosted-ci.json`.
