@@ -1,3 +1,20 @@
+# Grove Chess friend invitations — published November 25, 2026
+
+Invite a friend creates a private match with native sharing, text-message, X,
+Facebook and copy-link options. Incoming mobile invitations expose Join and return
+to the board after joining. Previews use the cabinet artwork. Expired invitations
+cannot be shared. Trials and the Telegram community option remain unchanged.
+
+Locked ready deploy `6b0725f4dd5e861014294059`, source
+`76439d6908528d4c4a69b0c7b4bf475d8d3d8a48` (PR #350).
+[Publication run 45672852828](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45672852828)
+passed canonical browser, mobile and simulated sharing/join checks. Total 789
+static paths; 784 unrelated paths, all 62 backend/provider records and five
+schedules preserved. No live invitations or messages were sent by these tests.
+Full report: [grove-chess-sharing-release-20261125.json](grove-chess-sharing-release-20261125.json).
+
+---
+
 # Grove Chess team and move clarity — published November 25, 2026
 
 Birch pieces have bright ivory backing and Pine pieces deep emerald backing,

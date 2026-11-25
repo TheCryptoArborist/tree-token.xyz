@@ -1,3 +1,4 @@
+import {gameFacts,syncRecords} from './records.mjs';
 import {createHash,randomBytes,randomUUID} from 'node:crypto';
 import {Chess} from '../../play/grove-chess/vendor/chess.js';
 import {getCanonicalNftreeOwnership} from '../functions/nftree-wallet.ts';
@@ -18,20 +19,21 @@ export function createGroveHandler(deps:any={}){return async(req:Request)=>{
  try{
   const u=new URL(req.url),action=u.searchParams.get('action')||'read',rpc=deps.rpc||database();
   if(action==='invitations'&&req.method==='GET')return json(await rpc('grove_chess_v1',{p_action:action}));
-  if(!['create','join','read','move','resign','cancel'].includes(action)||req.method!==(action==='read'?'GET':'POST'))return json({message:'Not found.'},404);
+  if(!['create','join','read','move','resign','cancel','records'].includes(action)||req.method!==(['read','records'].includes(action)?'GET':'POST'))return json({message:'Not found.'},404);
   const origin=req.headers.get('origin')||u.origin;
   if(!origins.includes(origin)||req.headers.get('sec-fetch-site')==='cross-site')return json({message:'Use the official TREE Arcade.'},403);
   let token=/(?:^|;\s*)__Host-grove-player=([a-f0-9]{64})(?:;|$)/.exec(req.headers.get('cookie')||'')?.[1];
   if(!token){token=randomBytes(32).toString('hex');cookie=`__Host-grove-player=${token}; Path=/; Secure; HttpOnly; SameSite=Lax; Max-Age=31536000`;}
   let b:any={};if(req.method==='POST'){if(!req.headers.get('content-type')?.startsWith('application/json'))throw Error('invalid-request');const raw=await req.text();if(raw.length>2048)throw Error('invalid-request');b=JSON.parse(raw);if(!b||Array.isArray(b)||typeof b!=='object')throw Error('invalid-request');}
-  const room=action==='create'?randomUUID():(b.room||u.searchParams.get('room'));if(!uuid.test(room||''))throw Error('invalid-request');
-  const used=b.used??0;if(!Number.isInteger(used)||used<0||used>2)throw Error('invalid-request');
   let wallet=null;
   const bearer=/^Bearer ([a-f0-9]{64})$/.exec(req.headers.get('authorization')||'');
   if(bearer&&action!=='read'){
    const session=validEventSession(await rpc('arcade_growth_read_session_v1',{p_token_sha256:hash(bearer[1]),p_origin:origin}),origin,Date.now());
-   await requireEventHolder(session,origin,deps.ownership||getCanonicalNftreeOwnership);wallet=session.wallet;
+   if(action!=='records')await requireEventHolder(session,origin,deps.ownership||getCanonicalNftreeOwnership);wallet=session.wallet;
   }
+  if(action==='records'){await syncRecords(rpc);return json(await rpc('grove_chess_records_v1',{p_action:'read',p_actor:hash(token),p_wallet:wallet}));}
+  const room=action==='create'?randomUUID():(b.room||u.searchParams.get('room'));if(!uuid.test(room||''))throw Error('invalid-request');
+  const used=b.used??0;if(!Number.isInteger(used)||used<0||used>2)throw Error('invalid-request');
   const args:any={p_action:action,p_actor:hash(token),p_room:room,p_used:used,p_wallet:wallet};
   if(action==='create')args.p_announce=b.announce===true;
   if(['move','resign','cancel'].includes(action)){
@@ -44,6 +46,7 @@ export function createGroveHandler(deps:any={}){return async(req:Request)=>{
    }
   }
   const r=await rpc('grove_chess_v1',args);
+  if(r.status==='finished'){try{await rpc('grove_chess_records_v1',{p_action:'record',p_room:r.id,p_revision:r.revision,p_pgn:r.pgn,p_facts:gameFacts(r)});}catch{/* A later records read retries the immutable completed game. */}}
   // Never expose player cookie hashes, wallets or authentication material.
   return json({room:{id:r.id,pgn:r.pgn,revision:r.revision,status:(r.status==='playing'&&Date.parse(r.updated_at)<Date.now()-86400000)?'expired':r.status,result:r.result,seat:r.seat,holderSeat:r.seat==='w'?Boolean(r.white_wallet):r.seat==='b'?Boolean(r.black_wallet):false,used:r.used,expiresAt:r.expires_at,updatedAt:r.updated_at}});
  }catch(e){const code=String((e as any).code||(e as Error).message);return json({message:messages[code]||'Online play is temporarily unavailable. Your match is saved.',code:messages[code]?code:'service-unavailable'},messages[code]?409:503);}

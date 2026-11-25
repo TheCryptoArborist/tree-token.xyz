@@ -16,3 +16,7 @@ test('holder access uses a valid signed Arcade session and canonical server owne
  const result=await handler(request('create',{used:2},{Authorization:'Bearer '+'c'.repeat(64)}));assert.equal(result.status,200);assert.equal(written.p_wallet,wallet);
 });
 test('future revisions cannot apply a move computed from an older board',async()=>{const s=setup();assert.equal((await s.handler(request('move',{revision:2,from:'e2',to:'e4'}))).status,409);assert.equal(s.calls.length,1);});
+test('records are derived on the server and use the cookie identity, not query claims',async()=>{
+ const calls=[];const handler=createGroveHandler({rpc:async(name,args)=>{calls.push({name,args});if(args.p_action==='pending')return [];if(args.p_action==='read')return {alias:'Oak-1234567890',leaderboard:[],me:null};throw Error('Unexpected write');}});
+ const response=await handler(new Request('https://tree-token.xyz/api/grove-chess?action=records&actor=forged&wallet=forged',{headers:{Cookie:'__Host-grove-player='+'a'.repeat(64)}}));assert.equal(response.status,200);assert.equal(calls.length,2);assert.equal(calls[1].args.p_wallet,null);assert.match(calls[1].args.p_actor,/^[a-f0-9]{64}$/);assert.notEqual(calls[1].args.p_actor,'a'.repeat(64));assert.deepEqual((await response.json()).leaderboard,[]);
+});
