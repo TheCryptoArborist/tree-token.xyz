@@ -51,4 +51,3 @@ if(new URLSearchParams(location.search).has('room')){$('#mode').value='online';$
 // Explicit navigation only; turn updates never reposition the page.
 $('#mobile-options').onclick=()=>document.querySelector('aside').scrollIntoView({block:'start',behavior:'smooth'});
 $('#mobile-return').onclick=()=>document.querySelector('.play-area').scrollIntoView({block:'start',behavior:'smooth'});
-
