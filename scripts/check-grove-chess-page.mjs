@@ -8,6 +8,7 @@ const browser=await chromium.launch({headless:true,channel:'chromium',...(proces
 try{for(const [width,height]of [[1440,1000],[390,844],[320,740],[844,390]]){
  const page=await browser.newPage({viewport:{width,height},hasTouch:width<900});page.setDefaultTimeout(15000);
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.route('**/assets/arcade/arcade-growth-wallet.js',r=>r.fulfill({contentType:'text/javascript',body:`export const getWalletState=()=>({connected:false});export const subscribeWalletState=()=>()=>{};export const getAvailableWallets=()=>[{id:'slush',name:'Slush'}];`}));
  await page.goto(base+'/play/grove-chess/',{waitUntil:'networkidle'});
  await page.locator('.square').last().waitFor();assert.equal(await page.locator('.square').count(),64);
  assert.equal(await page.locator('.square .hero-base').count(),32);
@@ -18,6 +19,11 @@ try{for(const [width,height]of [[1440,1000],[390,844],[320,740],[844,390]]){
  assert(Math.abs(board.width-board.height)<2,'Board must be square');
  assert(board.x>=frame.x&&board.x+board.width<=frame.x+frame.width,'Board must fit frame');
  assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'No page overflow');
+ await page.click('#browse-finishes');await page.selectOption('#finish-wallets','slush');
+ assert.equal(await page.locator('#finish-connect').textContent(),'Connect Slush');assert(await page.locator('#finish-connect').isEnabled());
+ assert.equal(await page.locator('#finish-connection-label').textContent(),'Wallet not connected');
+ assert.equal(await page.locator('#finish-play').textContent(),'Play free — no wallet needed');
+ await page.click('#finish-play');assert(!(await page.locator('#finish-dialog').evaluate(e=>e.open)));assert.equal(await page.evaluate(()=>localStorage.getItem('grove-chess:trial:v1')),null,'Play entry does not spend a trial');
  await page.selectOption('#mode','local');
  await page.locator('[data-square="e2"]').click();await page.locator('[data-square="e4"]').click();
  assert(await page.locator('[data-square="e4"]').getAttribute('aria-label').then(x=>x.includes('Pawn')));
@@ -45,6 +51,7 @@ try{for(const [width,height]of [[1440,1000],[390,844],[320,740],[844,390]]){
  await page.screenshot({path:`.netlify/grove-chess-trial-gate-${width}.png`});await page.click('#access-close');
  await page.reload({waitUntil:'networkidle'});await page.locator('[data-square="e2"]').click();
  assert(await page.locator('#access-dialog').evaluate(e=>e.open),'Direct route reload cannot reset trial');await page.click('#access-close');
+ await page.click('#browse-finishes');assert(await page.locator('#finish-play').isDisabled(),'No free-play promise after two games');await page.click('#close-finishes');
  assert.deepEqual(errors,[],'Game browser errors');
  if(process.env.GROVE_CHESS_CABINET_FIXTURE==='1'){
   await page.route(base+'/play/',route=>route.fulfill({contentType:'text/html',body:fs.readFileSync('production/arcade-organization-static/index.html','utf8').replace(/<script\b[^>]*>[\s\S]*?<\/script>/g,tag=>/src="\/scripts\/arcade-(organization|navigation-play-share)\.js"/.test(tag)?tag:'')}));
@@ -60,13 +67,16 @@ try{for(const [width,height]of [[1440,1000],[390,844],[320,740],[844,390]]){
  await cabinet.scrollIntoViewIfNeeded();await page.screenshot({path:`.netlify/grove-chess-cabinet-${width}.png`});
  await cabinet.locator('a').click();await page.waitForURL('**/play/grove-chess/');await page.locator('.square').last().waitFor();
  if(width===1440){
-  await page.route('**/assets/arcade/arcade-growth-wallet.js',r=>r.fulfill({contentType:'text/javascript',body:`let address='0x'+'a'.repeat(64),listeners=[];export const getWalletState=()=>({connected:!!address,address});export const subscribeWalletState=f=>(listeners.push(f),()=>{});export const getAvailableWallets=()=>[{id:'test',name:'Test wallet'}];window.testDisconnect=()=>{address=null;listeners.forEach(f=>f());};`}));
+  await page.route('**/assets/arcade/arcade-growth-wallet.js',r=>r.fulfill({contentType:'text/javascript',body:`let address='0x'+'a'.repeat(64),listeners=[];export const getWalletState=()=>({connected:!!address,address,walletName:'Slush',walletId:'test'});export const subscribeWalletState=f=>(listeners.push(f),()=>{});export const getAvailableWallets=()=>[{id:'test',name:'Slush'}];window.testDisconnect=()=>{address=null;listeners.forEach(f=>f());};`}));
   await page.route('**/scripts/profile-studio-access-v4.js',r=>r.fulfill({contentType:'text/javascript',body:`export async function readHeldNFTrees(){return ['common','rare','epic','legendary','mythic','one-of-one'].map(rarity=>({rarity}));}`}));
   await page.reload({waitUntil:'networkidle'});await page.click('#browse-finishes');
   await page.waitForFunction(()=>document.querySelectorAll('[data-apply]:disabled').length===0);
+  assert.equal(await page.locator('#finish-connection-label').textContent(),'Slush connected');assert((await page.locator('#finish-connection-address').textContent()).includes('0xaaaaaa'));
+  assert.equal(await page.locator('#finish-play').textContent(),'Play chess');assert(await page.locator('#finish-play').isEnabled());
+  await page.screenshot({path:'.netlify/grove-chess-connected-play.png'});
   await page.click('[data-apply="rare"]');await page.selectOption('#finish-side','b');await page.click('[data-apply="mythic"]');
   assert.equal(await page.locator('body').getAttribute('data-finish-w'),'rare');assert.equal(await page.locator('body').getAttribute('data-finish-b'),'mythic');
-  await page.click('#close-finishes');
+  await page.click('#finish-play');
   assert.notEqual(await page.locator('[data-square="e2"] .hero-base').evaluate(e=>getComputedStyle(e).borderTopColor),await page.locator('[data-square="e7"] .hero-base').evaluate(e=>getComputedStyle(e).borderTopColor));
   await page.locator('.board-frame').scrollIntoViewIfNeeded();await page.screenshot({path:'.netlify/grove-chess-unlocked-finishes.png'});
   await page.locator('[data-square="e2"]').click();await page.locator('[data-square="e4"]').click();
