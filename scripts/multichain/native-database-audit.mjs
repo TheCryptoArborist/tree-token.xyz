@@ -3,11 +3,15 @@ import {createHash} from 'node:crypto';import assert from 'node:assert/strict';
 export const NATIVE_TABLES=['tree_wallet_challenges','tree_wallet_logins','tree_game_sessions','tree_continue_redemptions'];
 export const PROPOSED_TABLES=['arcade_native_sui_accounts','arcade_native_sui_runs','arcade_native_paid_recoveries','arcade_native_sui_payments','arcade_continue_payments_v2','arcade_continue_claims_v2','arcade_continue_events_v2'];
 export const EXPECTED_IDENTITY='df2f0abee059d9898495a125018fa0a291d50b9050c0d4557231f409bed53065';
+export function inspectNativeDatabaseIdentity(connectionString){
+ let u;try{u=new URL(connectionString);}catch{return {parseable:false,matchesPinnedIdentity:false};}
+ const providerAllowed=['postgres:','postgresql:'].includes(u.protocol)&&u.hostname.endsWith('.db.netlify.com')&&u.pathname==='/netlifydb';
+ const identity=providerAllowed?createHash('sha256').update(u.hostname.replace(/-pooler(?=\.)/,'')+'|'+u.pathname).digest('hex'):null;
+ return {parseable:true,providerAllowed,identity,matchesPinnedIdentity:identity===EXPECTED_IDENTITY};
+}
 export function nativeDatabaseIdentity(connectionString){
- const u=new URL(connectionString);
- assert(['postgres:','postgresql:'].includes(u.protocol)&&u.hostname.endsWith('.db.netlify.com')&&u.pathname==='/netlifydb','database-provider-mismatch');
- const identity=createHash('sha256').update(u.hostname.replace(/-pooler(?=\.)/,'')+'|'+u.pathname).digest('hex');
- assert.equal(identity,EXPECTED_IDENTITY,'database-identity-mismatch');return identity;
+ const check=inspectNativeDatabaseIdentity(connectionString);
+ assert(check.matchesPinnedIdentity,'database-identity-mismatch');return check.identity;
 }
 export async function readNativeCatalog(db){
  const columns=(await db.query(`select table_name,column_name,data_type,udt_name,is_nullable,column_default
