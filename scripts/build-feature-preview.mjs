@@ -1,6 +1,7 @@
 import { cp, mkdir, readFile, readdir, writeFile, lstat } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import assert from 'node:assert/strict';
+import { ADDED_PATHS as groveChessPaths } from './grove-chess-release-plan.mjs';
 import { PREVIEW_PATHS as treeArmyPaths } from './tree-army-release-plan.mjs';
 import { createHash } from 'node:crypto';
 
@@ -21,6 +22,7 @@ const arcadeDirectory = 'production/arcade-organization-static';
 const arcadeRuntime = JSON.parse(await readFile(resolve(root, arcadeDirectory, 'runtime-manifest.json'), 'utf8'));
 const arcadeInventory = JSON.parse(await readFile(resolve(root, 'production/sti-wallet-recovery-release-20261118.json'), 'utf8'));
 const arcadeOverlays = [
+  ...groveChessPaths.map(path => ({path, source:path.slice(1)})),
   ...treeArmyPaths.filter(path => path !== '/scripts/arcade-organization.js').map(path => ({path, source:path.slice(1)})),
   { path: '/play/index.html', source: `${arcadeDirectory}/index.html` },
   { path: '/arcade-review/index.html', source: `${arcadeDirectory}/review.html` },

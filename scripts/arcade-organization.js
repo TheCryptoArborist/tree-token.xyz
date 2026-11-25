@@ -1,3 +1,4 @@
+import { mountGroveChess } from './arcade-grove-chess.js';
 import { mountTreeArmyPreview } from './arcade-tree-army.js';
 import { mountSeasonCountdowns } from './arcade-season-deadline.js';
 import { mountNextMonthUnlocks } from './arcade-next-month-unlocks.js';
@@ -259,6 +260,7 @@ export function mountArcadeOrganization(doc = document, view = window) {
   reflectView();
   updateSignInCopy();
   mountTreeArmyPreview(doc);
+  mountGroveChess(doc);
   root.dataset.arcadeOrganization = 'ready';
   doc.body.classList.add('arcade-organization-page');
   const countdown = mountSeasonCountdowns({ root: doc });
