@@ -123,3 +123,5 @@ The full coordinator path uses real Sui/EVM signatures, the actual store and a
 clearly synthetic chain receipt. **40 existing mixed-chain policy tests passed.**
 `postgres-validation.json` records the database results. CI includes the same
 checker plus existing contract/endpoint regressions.
+
+Hosted [CI 45514471453](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45514471453) passed on `e61f500`, including all 20 new PostgreSQL checks, the existing policy suite, Move/EVM regressions and endpoint/package checks. No hosted database or production release accompanied validation.
