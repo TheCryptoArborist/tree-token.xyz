@@ -9,3 +9,16 @@ test('drift and changing entry are reported without claiming source parity or pe
  let calls=0;const r=await auditNativeFrontend({read:async()=>Buffer.from(++calls===1?'first':'second')});assert.equal(calls,2);assert.equal(r.entryStable,false);assert.equal(r.focusedStaticMatch,false);assert.equal(r.nativeTsxReproducesLiveFrontend,false);assert.equal(r.candidatePublicationAllowed,false);assert.equal(r.fullLiveInventoryChecked,false);
 });
 test('network failure does not become a successful audit receipt',async()=>{await assert.rejects(auditNativeFrontend({read:async()=>{throw Error('unavailable');}}),/unavailable/);});
+test('manifest paths resolve case-only spelling without accepting ambiguous collisions',async()=>{
+ const {recordedHash}=await import('../scripts/multichain/check-native-frontend-release.mjs');
+ assert.equal(recordedHash({'/assets/file.css':'digest'},'/assets/FILE.css'),'digest');
+ assert.throws(()=>recordedHash({'/a.css':'one','/A.css':'two'},'/a.css'),/ambiguous/);assert.throws(()=>recordedHash({},'/missing.css'),/missing/);
+});
+test('reconciliation explanations require exact observed hashes and expected paths',async()=>{
+ const {classify}=await import('../scripts/multichain/reconcile-native-frontend-release.mjs');const proofs={emojiSha:'emoji',historicalEntrySha:'html'};
+ assert.equal(classify({matchesRecordedRelease:true},proofs),'recorded-static-match');
+ assert.equal(classify({path:'/scripts/treeforce-season-r18.mjs',sha256:'emoji'},proofs),'documented-emoji-release');
+ assert.equal(classify({path:'/play/treeforce89/index.html',sha256:'html'},proofs),'matches-historical-served-html');
+ assert.equal(classify({path:'/play/treeforce89/index.html',sha256:'changed'},proofs),'unexplained');
+ assert.equal(classify({path:'/other.js',sha256:'emoji'},proofs),'unexplained');
+});

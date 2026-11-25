@@ -1,0 +1,204 @@
+{
+  "checkedAt": "2026-11-25T18:54:31.534Z",
+  "readOnly": true,
+  "recordedReleaseCommit": "b052f377494d238679525c91c47276c0c588fa33",
+  "emojiCommit": "ade51f373946afa4a3c16811b54de15fec99e368",
+  "historicalUrl": "https://6b06668752cda878be6a57e9--tree-token.netlify.app/play/treeforce89/index.html",
+  "historicalServedSha256": "eaadf252dc080c456606350403bb529224d1183a59394fd8fec87e18a3e0538d",
+  "entryStable": true,
+  "focusedDifferencesExplained": true,
+  "records": [
+    {
+      "path": "/play/treeforce89/index.html",
+      "sha1": "35bbe3a9618a59fd687abe10ee7b6eb8afedb462",
+      "sha256": "eaadf252dc080c456606350403bb529224d1183a59394fd8fec87e18a3e0538d",
+      "bytes": 5116,
+      "matchesRecordedRelease": false,
+      "matchesCommittedPayload": false,
+      "classification": "matches-historical-served-html"
+    },
+    {
+      "path": "/play/treeforce89/assets/index-Bw7NF3rR.css",
+      "sha1": "664e14fb9c90d772eaa3d9dcd756d7a8321b6ea7",
+      "sha256": "96fd9ad080126487bee5f51eca0e70d0584e2ea22967453f57951ad325af4dff",
+      "bytes": 29631,
+      "matchesRecordedRelease": true,
+      "classification": "recorded-static-match"
+    },
+    {
+      "path": "/play/treeforce89/assets/index-review-r18.js",
+      "sha1": "d4e182b32416e89293e2d632d72b875ced86ccc5",
+      "sha256": "4fa9d0a50547285e61bc4c8936dce7c0d421d59618a02b4b2ff84a0d72d6197f",
+      "bytes": 652864,
+      "matchesRecordedRelease": true,
+      "matchesCommittedPayload": true,
+      "classification": "recorded-static-match"
+    },
+    {
+      "path": "/play/treeforce89/mobile-review-r5.css",
+      "sha1": "01f3da1540befa0b552f92b7efd63c3f2c1120c2",
+      "sha256": "3c03a67551fd382424bc1dd8c0cfcd1a8fec75e811805e76f962b23d1ea0ea90",
+      "bytes": 26200,
+      "matchesRecordedRelease": true,
+      "classification": "recorded-static-match"
+    },
+    {
+      "path": "/play/treeforce89/assets/arcade-review-r18.js",
+      "sha1": "a390a31e34b196d49665433fd91a114c732467ef",
+      "sha256": "9ca981e58bd00a37f99c5f88e3f93e812b62b317ca3cafbe2ba39f92b0a78f6b",
+      "bytes": 1295783,
+      "matchesRecordedRelease": true,
+      "matchesCommittedPayload": true,
+      "classification": "recorded-static-match"
+    },
+    {
+      "path": "/play/treeforce89/assets/graphql-review-r18.js",
+      "sha1": "cc920ca5bc27a7e21da47e5b4d828323fdc7e9d5",
+      "sha256": "5f1a14b1bd70316c972c3fa0f718a1678eeeed59b6ff8ce78178a3f3a1a2ed88",
+      "bytes": 54746,
+      "matchesRecordedRelease": true,
+      "matchesCommittedPayload": true,
+      "classification": "recorded-static-match"
+    },
+    {
+      "path": "/scripts/arcade-end-share-prompt.js",
+      "sha1": "bd8f5095e92c24710efba94580392f6c7186635e",
+      "sha256": "f84ae85176c6978b1b5f0ab807fbbd5a751f3f7d467dcc03524477ad3501c3e7",
+      "bytes": 2672,
+      "matchesRecordedRelease": true,
+      "classification": "recorded-static-match"
+    },
+    {
+      "path": "/play/treeforce89/assets/audio-lifecycle-r8.js",
+      "sha1": "146f66d235e8727f200cbcad8352ac27cd73689b",
+      "sha256": "849afabe65c40d93fdf38db7270adc7c2b6f05c066484e3d96068eec07594f4a",
+      "bytes": 4722,
+      "matchesRecordedRelease": true,
+      "classification": "recorded-static-match"
+    },
+    {
+      "path": "/play/treeforce89/assets/christmas-look-r16.js",
+      "sha1": "f075799800c43db8327a0e1610fa3a5439fbced1",
+      "sha256": "0be574d6a5588be14b3a9010e4073f70cae2689ea0c74a02b19cb4e774057528",
+      "bytes": 2181,
+      "matchesRecordedRelease": true,
+      "classification": "recorded-static-match"
+    },
+    {
+      "path": "/play/treeforce89/assets/combat-feedback-r6.js",
+      "sha1": "093af9eb636400e0409a30480cf226767ad2514e",
+      "sha256": "94dcc3a48bda486324177ff2e112fda5de2977a3b695987fc4128d0ab8ac2e8a",
+      "bytes": 6382,
+      "matchesRecordedRelease": true,
+      "classification": "recorded-static-match"
+    },
+    {
+      "path": "/play/treeforce89/assets/enemy-animation-r14.js",
+      "sha1": "09ba43b9107b333e55b9b24e9d409472dcbaae0e",
+      "sha256": "3139d1390da18ca8774b2246739472ea520c75d5230a05ab611dd578d024437b",
+      "bytes": 3433,
+      "matchesRecordedRelease": true,
+      "classification": "recorded-static-match"
+    },
+    {
+      "path": "/play/treeforce89/assets/enemy-feedback-r7.js",
+      "sha1": "b9b26ed776ea594a5c64d3fa37ef751a2dbba0bc",
+      "sha256": "552eda26f2201d24b3edcd0487be769c47c614f6371f4d21e6c98028d0ea9ebd",
+      "bytes": 1565,
+      "matchesRecordedRelease": true,
+      "classification": "recorded-static-match"
+    },
+    {
+      "path": "/play/treeforce89/assets/holiday-mode-r18.js",
+      "sha1": "0c848ecfffac688b5fa305a7954c87266ada9486",
+      "sha256": "e90283804080fe03fa056246325aae63664c380fe1d019cb20d173425383ac79",
+      "bytes": 4718,
+      "matchesRecordedRelease": true,
+      "matchesCommittedPayload": true,
+      "classification": "recorded-static-match"
+    },
+    {
+      "path": "/play/treeforce89/assets/impact-effects-r15.js",
+      "sha1": "dfc4143e18f8b40cf8bfb115e765efd67cae1430",
+      "sha256": "aa4a3e81df82c7c74cd1a585fe11d78ce1d4447689b339aac45ad97336792a1a",
+      "bytes": 2237,
+      "matchesRecordedRelease": true,
+      "classification": "recorded-static-match"
+    },
+    {
+      "path": "/play/treeforce89/assets/round-presentation-r12.js",
+      "sha1": "9aae8fd32096b6991001da5b5852c48f0b370db5",
+      "sha256": "b4ad61a098912fa66a9825175e95207c4b57a95541431b9e64a43389e6cd3cd0",
+      "bytes": 1007,
+      "matchesRecordedRelease": true,
+      "classification": "recorded-static-match"
+    },
+    {
+      "path": "/play/treeforce89/assets/sound-identity-r18.js",
+      "sha1": "ec1c71758916aac0eded9cfaedc54e40528365f8",
+      "sha256": "6d9ec85b8c8a5171c7d572426570356afd0248dbba8cb1f65d63effe44fd207f",
+      "bytes": 4817,
+      "matchesRecordedRelease": true,
+      "matchesCommittedPayload": true,
+      "classification": "recorded-static-match"
+    },
+    {
+      "path": "/play/treeforce89/assets/touchbar-input-r13.js",
+      "sha1": "af134d7cf5c7f0097d20e04f373be1c1ab2c86f6",
+      "sha256": "c27fade88be3fee5d4bc1b27fff73625c83b194daf4997b4979cc92672b8a1ba",
+      "bytes": 1001,
+      "matchesRecordedRelease": true,
+      "classification": "recorded-static-match"
+    },
+    {
+      "path": "/scripts/arcade-result-share-builder.js",
+      "sha1": "8a016a8d0dd59758159c50204d8020e2598427e9",
+      "sha256": "c4cca3826b35b853998329f7b242c1d5a98509b1571ba95683debc5d621a412e",
+      "bytes": 12842,
+      "matchesRecordedRelease": true,
+      "classification": "recorded-static-match"
+    },
+    {
+      "path": "/scripts/arcade-share-handoff.js",
+      "sha1": "de5b5f7fce9abe410c9f8bae5ae4ab3ba9334fae",
+      "sha256": "75ca64b529aa9ccb9e94fd13b329548067ee026bd08222378b6178b061d8f621",
+      "bytes": 2710,
+      "matchesRecordedRelease": true,
+      "classification": "recorded-static-match"
+    },
+    {
+      "path": "/play/treeforce89/assets/combat-visuals-r11.js",
+      "sha1": "0ce3cc5964e4c2c464e5675e703ae8489612cae0",
+      "sha256": "822ee1649b04133e0433cfb644526890935e52b8fbe1ff607a0d42331b5c3447",
+      "bytes": 2853,
+      "matchesRecordedRelease": true,
+      "classification": "recorded-static-match"
+    },
+    {
+      "path": "/scripts/treeforce-season-r18.mjs",
+      "sha1": "a4ab2939dbf716a0ca26ac91e571840814fd211f",
+      "sha256": "2490af1986b844c77df6038a4702ee9a9cdc0ef5936908bd5ded9a724f418265",
+      "bytes": 961,
+      "matchesRecordedRelease": false,
+      "matchesCommittedPayload": false,
+      "classification": "documented-emoji-release"
+    },
+    {
+      "path": "/play/treeforce89/assets/christmas-audio-r16.js",
+      "sha1": "1a63dc47955f64b7577baeb0e2311fab7a330588",
+      "sha256": "f0d4d5bf426ee09eb777b1620fab6a65919b332061615f8189894bb61bdfa366",
+      "bytes": 490,
+      "matchesRecordedRelease": true,
+      "classification": "recorded-static-match"
+    }
+  ],
+  "fullInventoryChecked": false,
+  "currentDeployIdentityChecked": false,
+  "tsxRebuildParity": false,
+  "publicationAllowed": false,
+  "limitations": [
+    "Historical URL is served evidence, not proof of the cause of HTML transformation.",
+    "Literal static references are not a full runtime graph.",
+    "Explained asset differences do not reproduce r18 from the older TSX source."
+  ]
+}

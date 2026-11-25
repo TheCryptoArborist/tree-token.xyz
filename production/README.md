@@ -1,3 +1,15 @@
+# BNB focused frontend reconciliation — November 25, 2026
+
+The 22-path focused check is reconciled: 20 recorded static matches, one documented
+emoji-release match and one historical served-HTML match. The prior CSS drift flag
+was a case-only manifest lookup error; the checker now handles unique case-folded
+paths and rejects collisions. Twelve offline tests passed. This does not prove
+old-TSX rebuild parity or authorize publication; the BNB candidate remains blocked.
+No live bytes, game behavior, payment or NFT state changed. Corrected evidence:
+`docs/multichain/generation-milestone/netlify-gateway/frontend-reconciliation.md`.
+
+---
+
 # BNB frontend release compatibility check — November 25, 2026
 
 Read-only checks inspected 22 live static paths against recorded r18: 19 matched;

@@ -2,6 +2,11 @@
 
 November 25, 2026 (America/Chicago). Read-only public GETs; no deployment.
 
+Correction: [the follow-up reconciliation](frontend-reconciliation.md) found the
+CSS mismatch was a case-only manifest lookup error, not changed CSS. The checker
+now resolves unique case-insensitive manifest paths and rejects collisions. The
+original receipt below is retained as historical evidence, not the current result.
+
 **The current BNB TSX candidate is not established as a safe replacement for the
 live game.** Its source comes from the native integration branch at 4cd2119a.
 The published main entry loads index-review-r18.js. That release was prepared

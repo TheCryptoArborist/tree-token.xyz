@@ -9,12 +9,17 @@ export function staticReferences(text,base){
  else for(const m of text.matchAll(/["'`]((?:\.\.?\/|\/)[^"'`\s\\$]+\.m?js)["'`]/g))add(m[1]);
  return [...refs].sort();
 }
+export function recordedHash(files,requested){
+ const matches=Object.entries(files).filter(([p])=>p.toLowerCase()===requested.toLowerCase());
+ if(matches.length!==1)throw Error('missing-or-ambiguous-recorded-path:'+requested);
+ return matches[0][1];
+}
 export function compareStatic(bytes,expected){return {sha1:hash(bytes,'sha1'),sha256:hash(bytes),bytes:bytes.length,matchesRecordedRelease:typeof expected==='string'&&hash(bytes,'sha1')===expected};}
 export async function auditNativeFrontend({read=async p=>{const response=await fetch('https://tree-token.xyz'+p,{redirect:'error',signal:AbortSignal.timeout(20000)});if(!response.ok)throw Error(`static-read-failed:${p}:${response.status}`);return Buffer.from(await response.arrayBuffer());}}={}){
  const plan=JSON.parse(execFileSync('git',['show',`${releaseCommit}:production/treeforce-main-r18/candidate.json`],{encoding:'utf8'}));
  const entry='/play/treeforce89/index.html',first=await read(entry),queue=[entry],seen=new Set(),records=[];
  while(queue.length){const p=queue.shift();if(seen.has(p))continue;if(seen.size>=100)throw Error('static-reference-limit');seen.add(p);
-  const bytes=p===entry?first:await read(p),record={path:p,...compareStatic(bytes,plan.files[p])};
+  const bytes=p===entry?first:await read(p),record={path:p,...compareStatic(bytes,recordedHash(plan.files,p))};
   if(plan.payload[p]){const committed=execFileSync('git',['show',`${releaseCommit}:production/treeforce-main-r18${p}`],{maxBuffer:16*1024*1024});record.matchesCommittedPayload=hash(committed)===record.sha256;}
   records.push(record);queue.push(...staticReferences(bytes.toString('utf8'),p));
  }
