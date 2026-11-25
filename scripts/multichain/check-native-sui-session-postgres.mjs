@@ -8,6 +8,7 @@ import {createNativePaidRunRecovery} from './native-paid-run-recovery.mjs';
 import {createNativeSuiSessionAdapter} from './native-sui-session.mjs';
 import {createSharedContinueDelivery,PAYMENT_TERMS_V2} from './shared-continue-delivery.mjs';
 import {createCredentialRevoker} from '../../docs/multichain/generation-milestone/native-sui-session/upstream/credential-revocation.mjs';
+const netlifyMode=process.env.NETLIFY_CONTINUE_SCHEMA==='1';
 const bin=process.env.BNB_PG_BIN;assert(bin,'Set BNB_PG_BIN');
 const dir=fs.mkdtempSync(path.join(os.tmpdir(),'mixed-continue-pg-')),data=path.join(dir,'data');
 const port=5432,exe=n=>path.join(bin,n),checks=[];let started=false,owner,pool;
@@ -17,7 +18,9 @@ try{
  const args=['-D',data,'-A','trust','--no-locale','--encoding=UTF8'];if(process.env.BNB_PG_SHARE)args.push('-L',process.env.BNB_PG_SHARE);
  execFileSync(exe('initdb'),args,{env,stdio:'pipe'});execFileSync(exe('pg_ctl'),['-D',data,'-l',path.join(dir,'log'),'-o',`-k "${dir}" -h "" -p ${port}`,'-w','start'],{env,stdio:'pipe'});started=true;
  const config={host:dir,port,user:os.userInfo().username,database:'postgres',password:'',ssl:false,max:20};
- owner=new pg.Pool({...config,options:''});await owner.query('create role anon;create role authenticated;create role service_role bypassrls;create schema private;grant usage on schema private to service_role;');
+ owner=new pg.Pool({...config,options:''});
+ if(netlifyMode){await owner.query('create role netlifydb_owner;create role netlifydb_readonly;grant create on database postgres to netlifydb_owner;grant all on schema public to netlifydb_owner');await owner.end();owner=new pg.Pool({...config,options:'-c role=netlifydb_owner'});}
+ else await owner.query('create role anon;create role authenticated;create role service_role bypassrls;create schema private;grant usage on schema private to service_role;');
 
  const root='docs/multichain/generation-milestone/native-sui-session/';
  const provenance=JSON.parse(fs.readFileSync(root+'provenance.json'));
@@ -25,11 +28,26 @@ try{
  checks.push('all recovered native source hashes match pinned provenance');
  await owner.query(fs.readFileSync(root+'upstream/20261016030500_tree_authentication.sql','utf8'));
  await owner.query(fs.readFileSync(root+'upstream/20261031045000_tree_paid_continue.sql','utf8'));
+ if(netlifyMode){
+  const catalog=()=>owner.query("select c.relname,c.relacl::text,a.attname,a.atttypid,a.attnotnull from pg_class c join pg_namespace n on n.oid=c.relnamespace join pg_attribute a on a.attrelid=c.oid where n.nspname='public' and a.attnum>0 order by c.relname,a.attnum");
+  const nativeBefore=(await catalog()).rows;
+  await assert.rejects(owner.query('select * from private.arcade_accounts_v2'),/does not exist/);
+  await owner.query(fs.readFileSync('docs/multichain/generation-milestone/netlify-gateway/schema.sql','utf8'));
+  assert.deepEqual((await catalog()).rows,nativeBefore);
+  const retry=await owner.connect();try{await assert.rejects(retry.query(fs.readFileSync('docs/multichain/generation-milestone/netlify-gateway/schema.sql','utf8')),/already exists/);await retry.query('rollback');}finally{retry.release();}
+  checks.push('proposal preserves native columns and relation grants; reapplication fails and rolls back');
+  const readonly=new pg.Pool({...config,options:'-c role=netlifydb_readonly'});
+  try{await assert.rejects(readonly.query('select * from private.arcade_accounts_v2'),/permission denied/);}finally{await readonly.end();}
+  assert.equal((await owner.query("select count(*)::int n from pg_roles where rolname in ('anon','authenticated','service_role')")).rows[0].n,0);
+  assert.equal((await owner.query("select rolsuper or rolbypassrls privileged from pg_roles where rolname=current_user")).rows[0].privileged,false);
+  checks.push('Netlify owner is nonsuperuser without bypassrls; readonly denied; no Supabase roles needed');
+ }else{
  await owner.query(fs.readFileSync(root+'schema.sql','utf8'));
  await owner.query(fs.readFileSync('docs/multichain/generation-milestone/shared-delivery/schema.sql','utf8'));
  // Test-only role grant. The proposed schema never grants native session writes.
  await owner.query('grant select,update on public.tree_game_sessions to service_role');
- pool=new pg.Pool({...config,options:'-c role=service_role'});
+ }
+ pool=new pg.Pool({...config,options:netlifyMode?'-c role=netlifydb_owner':'-c role=service_role'});
  const runtime={verified:true,origin:'https://tree-token.xyz',network:'sui:mainnet',databaseIdentity:hex()};
  const options={verifyRuntime:async()=>runtime,checkOwnership:async()=>({owned:true,checkedAt:Date.now()})};
  const adapter=createNativeSuiSessionAdapter(options);
@@ -129,8 +147,9 @@ try{
  // Actual pinned native reader -> evidence store -> shared claim -> native redemption.
  const paymentRoot='docs/multichain/generation-milestone/native-sui-payments/';
  for(const f of JSON.parse(fs.readFileSync(paymentRoot+'provenance.json')).files)assert.equal(sha(fs.readFileSync(paymentRoot+f.snapshot)),f.sha256);
- await owner.query(fs.readFileSync(paymentRoot+'schema.sql','utf8'));
+ if(!netlifyMode){await owner.query(fs.readFileSync(paymentRoot+'schema.sql','utf8'));
  await owner.query('grant select,insert on public.tree_continue_redemptions to service_role'); // local fixture grant only
+ }
  const policy=PAYMENT_TERMS_V2['sui-native-tree'];
  async function paymentFixture(wallet){
   const native=await fixture(wallet),mapping=await tx(db=>adapter.bind(db,native)),offerId=hex().slice(0,48),digest='D'+hex().replaceAll('0','1').slice(0,43);
@@ -174,7 +193,7 @@ try{
  await assert.rejects(recorder({sessionHash:used.native.sessionHash,offerId:used.offerId,digest:used.digest}),/payment-already-redeemed/);checks.push('legacy native redemption cannot be imported as unused payment');
  const late=await paymentFixture();await owner.query("update public.tree_game_sessions set continue_offer_expires_at=clock_timestamp()-interval '1 second' where session_id=$1",[late.native.id]);late.body.Transaction.timestampMs=Date.now()-2000;evidence=late.body;
  assert.equal((await recorder({sessionHash:late.native.sessionHash,offerId:late.offerId,digest:late.digest})).status,'recorded');checks.push('timely checkpointed payment remains reconcilable after offer expiry');
- await assert.rejects(pool.query('update private.arcade_native_sui_payments set received=amount'));await assert.rejects(pool.query('delete from private.arcade_native_sui_payments'));checks.push('runtime cannot rewrite or delete native Sui payment evidence');
+ await assert.rejects(pool.query('update private.arcade_native_sui_payments set received=amount'));await assert.rejects(pool.query('delete from private.arcade_native_sui_payments'));if(netlifyMode)await assert.rejects(pool.query('truncate private.arcade_native_sui_payments'),/immutable/);checks.push('runtime cannot rewrite or delete native Sui payment evidence');
 
  const interrupted=await paymentFixture();evidence=interrupted.body;
  await createCredentialRevoker(owner).revoke({sessionToken:interrupted.native.token});
@@ -218,5 +237,5 @@ try{
   checks.push('Sui and BNB typed payments each traverse real shared PostgreSQL consumption and actual Phaser restore once');
   console.log(JSON.stringify({phaserResults:browserResults,localOnly:true,releasePolicy:'isolated fixture only'},null,2));
  }
- console.log(JSON.stringify({localOnly:true,passed:checks.length,checks,nativeSourceCommit:provenance.commit,productionParityVerified:false,liveRestorationEnabled:false},null,2));
+ console.log(JSON.stringify({localOnly:true,netlifyMode,passed:checks.length,checks,nativeSourceCommit:provenance.commit,productionParityVerified:false,liveRestorationEnabled:false},null,2));
 }catch(error){if(!started&&fs.existsSync(path.join(dir,'log')))process.stderr.write(fs.readFileSync(path.join(dir,'log'),'utf8'));throw error;}finally{await pool?.end();await owner?.end();if(started)execFileSync(exe('pg_ctl'),['-D',data,'-m','immediate','-w','stop'],{env,stdio:'pipe'});fs.rmSync(dir,{recursive:true,force:true});}

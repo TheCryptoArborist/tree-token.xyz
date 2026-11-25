@@ -1,0 +1,18 @@
+[
+  {
+    "path": "native-sui-session/schema.sql",
+    "sha256": "514bdf635b9bd51b9a96d3c72a0b837ec0433352564ecdad1cf1a19094fcbe4d"
+  },
+  {
+    "path": "shared-delivery/schema.sql",
+    "sha256": "9ce6dcec429a4ed65281deaa2394b623673a10b8f215d0111246b57cac6f0c20"
+  },
+  {
+    "path": "native-sui-payments/schema.sql",
+    "sha256": "d88260555125a58eec9ec812f8d1f03ad2d181bf1f8fbc29596f09162830d75f"
+  },
+  {
+    "path": "mixed-chain-store/schema.sql",
+    "sha256": "984b3f7850da5781d64dfe1161a74992031a27a3928446251d88a7025d4a41c6"
+  }
+]

@@ -1,3 +1,14 @@
+# Netlify shared-schema rehearsal — November 24, 2026
+
+The review-only Netlify proposal passed 35 disposable database checks; the
+original role model still passed 33. Five gateway boundary tests passed. The
+owner-role rehearsal caught and fixed native payment-evidence mutation access.
+No hosted database or live game changed. Full gateway adapters and a drained
+legacy-writer cutover remain required before activation. Setup, evidence and
+limits: `docs/multichain/generation-milestone/netlify-gateway/README.md`.
+
+---
+
 # Native hosted schema audit passed — November 24, 2026
 
 The existing Netlify game branch was audited using its read-only role. All four
