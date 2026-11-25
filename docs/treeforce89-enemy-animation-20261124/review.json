@@ -1,0 +1,170 @@
+{
+  "notDeployableStandalone": true,
+  "source": {
+    "origin": "https://tree-token.xyz",
+    "capturedAt": "2026-11-23T05:26:22.759Z",
+    "files": {
+      "/play/treeforce89/": {
+        "path": "/play/treeforce89/index.html",
+        "sha256": "d97e7d17069e7b82e0bb9c83411ea1bf47174f233801094150ba80bd6571ab1b",
+        "bytes": 5107
+      },
+      "/play/treeforce89/assets/index-share-r4.js": {
+        "path": "/play/treeforce89/assets/index-share-r4.js",
+        "sha256": "738c68535a66f68544a9ca30ba0ab6894bca312872568f89910a40954bd741bf",
+        "bytes": 652863
+      },
+      "/play/treeforce89/assets/index-Bw7NF3rR.css": {
+        "path": "/play/treeforce89/assets/index-Bw7NF3rR.css",
+        "sha256": "96fd9ad080126487bee5f51eca0e70d0584e2ea22967453f57951ad325af4dff",
+        "bytes": 29631
+      },
+      "/play/treeforce89/mobile-r1.css": {
+        "path": "/play/treeforce89/mobile-r1.css",
+        "sha256": "dd1952c8f37372bc70821baf5b466722227b890167e1b37312ff65d76a6f6bcd",
+        "bytes": 26144
+      },
+      "/assets/tree-force-89-logo-black.webp": {
+        "path": "/assets/tree-force-89-logo-black.webp",
+        "sha256": "e041b38a8ec251958f33b6eccd89a452b34ffc0e10ae1115e2200cc3c2ce7a52",
+        "bytes": 230226
+      },
+      "/scripts/arcade-end-share-prompt.js": {
+        "path": "/scripts/arcade-end-share-prompt.js",
+        "sha256": "f84ae85176c6978b1b5f0ab807fbbd5a751f3f7d467dcc03524477ad3501c3e7",
+        "bytes": 2672
+      },
+      "/play/treeforce89/assets/arcade-renewal-r3.js": {
+        "path": "/play/treeforce89/assets/arcade-renewal-r3.js",
+        "sha256": "2e9d45ed31189ebaaa7e9d3762ef32295d67a64880f0ec1d2a71aed2f80b8003",
+        "bytes": 1294927
+      },
+      "/play/treeforce89/assets/graphql-mobile-r1.js": {
+        "path": "/play/treeforce89/assets/graphql-mobile-r1.js",
+        "sha256": "45e654d6851f198d4d4d37d9a7d1753aad5985fe7f0c9ccf0154007da0922254",
+        "bytes": 54745
+      },
+      "/play/treeforce89/assets/backgrounds/first-canopy-backdrop.png": {
+        "path": "/play/treeforce89/assets/backgrounds/first-canopy-backdrop.png",
+        "sha256": "e6b2806036604c57bb98ed4721e135744bba4ecf6f0522f84b0ebf83f431362c",
+        "bytes": 594554
+      },
+      "/scripts/arcade-share-handoff.js": {
+        "path": "/scripts/arcade-share-handoff.js",
+        "sha256": "75ca64b529aa9ccb9e94fd13b329548067ee026bd08222378b6178b061d8f621",
+        "bytes": 2710
+      },
+      "/scripts/arcade-result-share-builder.js": {
+        "path": "/scripts/arcade-result-share-builder.js",
+        "sha256": "c4cca3826b35b853998329f7b242c1d5a98509b1571ba95683debc5d621a412e",
+        "bytes": 12842
+      },
+      "/play/treeforce89/assets/index-renewal-r3.js": {
+        "path": "/play/treeforce89/assets/index-renewal-r3.js",
+        "sha256": "43f38393ff65844f372ba94c666380f94f5981cd1d421de8927040a3c9335349",
+        "bytes": 652394
+      },
+      "/play/treeforce89/assets/hero/tree-hero-canonical.jpg": {
+        "path": "/play/treeforce89/assets/hero/tree-hero-canonical.jpg",
+        "sha256": "ce6f88004b784e024e5c4d78b67cae4da3e44d741965d9ca4a49cb2e71265a98",
+        "bytes": 2283
+      },
+      "/play/treeforce89/assets/backgrounds/first-canopy-midground.png": {
+        "path": "/play/treeforce89/assets/backgrounds/first-canopy-midground.png",
+        "sha256": "d190a000775330893693c1cd933f718d11be9c9eba169135ba7d34f8fa803b2a",
+        "bytes": 375040
+      },
+      "/play/treeforce89/assets/backgrounds/first-canopy-foreground.png": {
+        "path": "/play/treeforce89/assets/backgrounds/first-canopy-foreground.png",
+        "sha256": "230f349e93bc493568dc4a939341d3080dafc998db07fd911de975c729ed9999",
+        "bytes": 142735
+      },
+      "/play/treeforce89/assets/powerups/boom-token.png": {
+        "path": "/play/treeforce89/assets/powerups/boom-token.png",
+        "sha256": "7edcb74821052b4bdc2e3409f6f9d10b66342edc723ba071334f6aa809989d98",
+        "bytes": 75277
+      },
+      "/play/treeforce89/assets/arborwing/tree-hero-arborwing-stages-v2.png": {
+        "path": "/play/treeforce89/assets/arborwing/tree-hero-arborwing-stages-v2.png",
+        "sha256": "8b83fae07ba54ff7a2b1d535e7116ff54232e5aa75cad90b5c820898b9a52f89",
+        "bytes": 55137
+      },
+      "/play/treeforce89/assets/index-mobile-r1.js": {
+        "path": "/play/treeforce89/assets/index-mobile-r1.js",
+        "sha256": "cdb7305a4c789f4b185d2b0a1c5327ebf1b55e5fc8d8a9c7752010027a18d137",
+        "bytes": 647301
+      },
+      "/assets/arcade/tree-force-89-poster.webp": {
+        "path": "/assets/arcade/tree-force-89-poster.webp",
+        "sha256": "a5dcc39766a1fbc5aade56530f1e99e364519f91373d5fd7672fdbd4bb2c5d1c",
+        "bytes": 91624
+      },
+      "/assets/arcade/canopy-breaker-game.webp": {
+        "path": "/assets/arcade/canopy-breaker-game.webp",
+        "sha256": "5945590dedb86551e5195f73d3d6eed6359c336fd13f1110d3d20a7d8237c5d7",
+        "bytes": 163582
+      },
+      "/assets/arcade/garden-bot-poster.webp": {
+        "path": "/assets/arcade/garden-bot-poster.webp",
+        "sha256": "e97e173fbe87ceeec3d46689a954f9d35ffbee481e5b99b0a6533c60133663fc",
+        "bytes": 43422
+      },
+      "/assets/arcade/pvp-battle-poster.webp": {
+        "path": "/assets/arcade/pvp-battle-poster.webp",
+        "sha256": "14fc163e97a7be25dc2b0fed16ad386ee6f20c5f4c04e25a02dbedc7a3d199f6",
+        "bytes": 62658
+      },
+      "/play/treeforce89/assets/arcade-mobile-r1.js": {
+        "path": "/play/treeforce89/assets/arcade-mobile-r1.js",
+        "sha256": "3683084258395c95f9013a861fcd093bb0c0cbb13f0d69425092a9d17674d657",
+        "bytes": 1293103
+      }
+    }
+  },
+  "changed": {
+    "/play/treeforce89/assets/index-review-r5.js": "8ef3d85099268ae3945e0216014dea2dedee8a297db7f03ed2f4ad0a7314dc64",
+    "/play/treeforce89/assets/arcade-review-r5.js": "6d6003e2e075e92b0b5bde0040a3565b54f29bfc67cf04009bb04c520b1c6939",
+    "/play/treeforce89/assets/graphql-review-r5.js": "fd99b0257eafe3fde1395c21ef9b828de367a85da83b6b1b73f0493b8041d2b1",
+    "/play/treeforce89/mobile-review-r5.css": "3c03a67551fd382424bc1dd8c0cfcd1a8fec75e811805e76f962b23d1ea0ea90",
+    "/play/treeforce89/assets/combat-feedback-r6.js": "94dcc3a48bda486324177ff2e112fda5de2977a3b695987fc4128d0ab8ac2e8a",
+    "/play/treeforce89/assets/index-review-r6.js": "ac1286d831f07e82180e9d10078e4a61459a80af12b2adbf0b82279ecf7a5df1",
+    "/play/treeforce89/assets/arcade-review-r6.js": "a3160957d6c58892920ca2c47e4a3c7bd0417676b12e46d9c8590d550bcb9f84",
+    "/play/treeforce89/assets/graphql-review-r6.js": "c569e7e5db0a1862f3531a257ce4684659c841da04a69b85c7e445aa3bb9be3d",
+    "/play/treeforce89/assets/enemy-feedback-r7.js": "552eda26f2201d24b3edcd0487be769c47c614f6371f4d21e6c98028d0ea9ebd",
+    "/play/treeforce89/assets/index-review-r7.js": "9c4c2b4a1cb62051d1c3f08fddde8aab739baf4d25754f4b58617ccb0c7b6982",
+    "/play/treeforce89/assets/arcade-review-r7.js": "953804b6611269bc5a5e30a046a360922dbb4356af2362cb7f43a1f5ee353d59",
+    "/play/treeforce89/assets/graphql-review-r7.js": "91d828877c8f480b509c28cf70c904d3f0d3fb78caf1d3726f2a8275ff2bfe96",
+    "/play/treeforce89/assets/audio-lifecycle-r8.js": "849afabe65c40d93fdf38db7270adc7c2b6f05c066484e3d96068eec07594f4a",
+    "/play/treeforce89/assets/index-review-r8.js": "6fcfa8c489e0c4d57ff4f04663a186fc31f9838b202414e36d9551228f3d9f9e",
+    "/play/treeforce89/assets/arcade-review-r8.js": "ba5719533624b6d31b3dcfeefc157167fd146e54d7f4ced58c85858747cd32dc",
+    "/play/treeforce89/assets/graphql-review-r8.js": "d7f61c2b9d7130e77f195ec94b8cf89da849770fd79a53487e6cf2d6ed001aec",
+    "/play/treeforce89/assets/index-review-r9.js": "5bc135dc7cba61e0cf23a01aa0578e905e8824f2ef3a06d40bb8cf57b7a475e0",
+    "/play/treeforce89/assets/arcade-review-r9.js": "181b07189cc24472bd9eb1a6693fb51be424e0608173d7171e51dfbcd8f57a42",
+    "/play/treeforce89/assets/graphql-review-r9.js": "1758d5823a31f3a59e974012b2416417d5993a24a333dd15817241e05087b7e5",
+    "/play/treeforce89/assets/sound-identity-r10.js": "6343ef8be858924ff350f8a8df484edbffa9c73a812fa0be17c5dc0a18ca9b5d",
+    "/play/treeforce89/assets/index-review-r10.js": "9aed4144949a1b0eaa4bc783d6ecafe4ded89485c8537620dbedbad588958a53",
+    "/play/treeforce89/assets/arcade-review-r10.js": "fb97cab6a075b71c0008bd65c46e2828da2c268c9d4252f91492497fad3e8b77",
+    "/play/treeforce89/assets/graphql-review-r10.js": "a33a59ba687e3591c2c35725487defb0d1c4ccd6e8ff2766d05b9f6ce231af43",
+    "/play/treeforce89/assets/combat-visuals-r11.js": "822ee1649b04133e0433cfb644526890935e52b8fbe1ff607a0d42331b5c3447",
+    "/play/treeforce89/assets/index-review-r11.js": "503c9355700b0af65d8372ac2f53bebd04c5d379d57257830c9921306ab9aa17",
+    "/play/treeforce89/assets/arcade-review-r11.js": "c9fe568a1621e401013b829584c1fff023f4c868b4e5721a396ce9911b022e1c",
+    "/play/treeforce89/assets/graphql-review-r11.js": "9f48a58bdb3e7fb46c77a8b565adbb738b4c1a2c6493791d6b517234fd7f0247",
+    "/play/treeforce89/assets/round-presentation-r12.js": "b4ad61a098912fa66a9825175e95207c4b57a95541431b9e64a43389e6cd3cd0",
+    "/play/treeforce89/assets/index-review-r12.js": "f7b6aceac0f1502ecf46c9d4d5665f2cb8ad71fd4e8a95f770e808ee26e62a52",
+    "/play/treeforce89/assets/arcade-review-r12.js": "67a076714bed34e268a6ecb01d3d74b39f13ffb51e0bfe1592e6f5ed3d5424d7",
+    "/play/treeforce89/assets/graphql-review-r12.js": "cbf474d176361f5b342d17b24583e2621e0363b425209635c2d287bea684a931",
+    "/play/treeforce89/assets/touchbar-input-r13.js": "c27fade88be3fee5d4bc1b27fff73625c83b194daf4997b4979cc92672b8a1ba",
+    "/play/treeforce89/assets/index-review-r13.js": "2b87078be22f8d6ce9f80700b15fa361c1d173181fafeb9eb5e9b23d6d60b910",
+    "/play/treeforce89/assets/arcade-review-r13.js": "bc6c62cf59ca9e929b8265221aaa188ca8fc0b7c9439952b85bf1c52f69a9a9b",
+    "/play/treeforce89/assets/graphql-review-r13.js": "52c77cc277735c5967668f81cf6540fb168417c74c5c859446b0623a4d7d6da1",
+    "/play/treeforce89/assets/enemy-animation-r14.js": "3139d1390da18ca8774b2246739472ea520c75d5230a05ab611dd578d024437b",
+    "/play/treeforce89/assets/index-review-r14.js": "8d298f5e4beebf13c82465c8fb372655236c211028385f29670332a7a104f0f8",
+    "/play/treeforce89/assets/arcade-review-r14.js": "31a65c4377305eb296df78043127705b82aad9fa36cccae2ce6c2fc14d08b549",
+    "/play/treeforce89/assets/graphql-review-r14.js": "a78bf413826fa65974ae9a6bb1c661eacc83dedddc3fc8553b6ea2cb1ba8254f"
+  },
+  "scope": "Module references, scoped Phaser canvas selectors, HTML references; retains all old assets; task 1 combat sound categories and bounded impact voices; task 2 enemy warning and hit-flash presentation; task 3 audio ownership, pause and true music mute; task 4 boss vertical clearance and banner position; task 5 original 8-bar encounter score and combat timbres; task 6 path-facing enemies, wing poses and combat contrast; task 7 compact repeat transitions and earned-point attribution; task 8 isolate mobile DOM controls from Phaser window input; six-pose wingbeats and curve-based banking for ordinary bats/wasps",
+  "backendChanges": 0,
+  "gameplayRulesChanged": false,
+  "gameplayGeometryChanged": "Boss settled center moves from 120 to 180; entrance destination 138 to 180. Sprite and hitbox remain aligned. Projectile travel distance decreases; cadence, speed and damage unchanged.",
+  "presentationTimingChanged": "Later clear cards 1800ms; repeat bonus intros 2200ms. First clear, first bonus of each kind, READY/GO, final victory and combat timing unchanged."
+}

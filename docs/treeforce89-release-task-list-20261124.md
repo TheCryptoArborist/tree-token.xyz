@@ -11,7 +11,7 @@ We are at validation and release preparation, not the start of another feature c
 | Order | Task | Completion condition | Status |
 | --- | --- | --- | --- |
 | 1 | Corrected private phone preview | Owner-authenticated HTTP link opens the exact corrected game from a phone | Game running on port 4189; HTTP portal configuration pending |
-| 2 | Graphics comparison with supplied Deluxe Galaga | Compare enemy motion/poses, silhouettes, projectiles/effects, background contrast, HUD and transitions at playing size; address only demonstrated gaps in a bounded visual patch | Comparison complete; targeted enemy-animation polish next |
+| 2 | Graphics comparison with supplied Deluxe Galaga | Compare enemy motion/poses, silhouettes, projectiles/effects, background contrast, HUD and transitions at playing size; address only demonstrated gaps in a bounded visual patch | Comparison and r14 enemy-animation polish complete locally; impact-effects pass next |
 | 3 | Complete preserved release candidate | Capture current full site/backend/schedule inventory; integrate only reviewed Tree Force changes; verify preserved bytes/configuration and authenticated candidate behavior | Queued; no production switch |
 | 4 | Short owner phone review | Practice: controls, sound, visibility and pause/return. Authenticated candidate: Slush expiry/return, wallet switching, saves and existing receipt sharing. Record outcomes and fix only reproduced defects | Queued; no real-payment requirement |
 | 5 | Final approval and release | Present exact candidate, test results and known limitations; publish only after separate explicit owner approval, then verify production and inventory | Not authorized yet |
@@ -45,3 +45,7 @@ This planning update is kept local until the next substantive PR milestone so it
 ## Coordination with separate multichain work
 
 Continue presentation and controls independently. Before task 3 integrates anything, inspect the Sui/BNB Arcade PR/branch and reconcile shared wallet, payment, identity and receipt paths. Do not overwrite that work or certify its behavior based on the current Sui-only mocks.
+
+## Completed enemy-animation polish
+
+The [r14 animation candidate](treeforce89-enemy-animation-20261124.md) adds six wing poses and curve-based banking while preserving all 81 sampled movement/body measurements. Eight unit tests, three browser widths and all 30 enemy-feedback checks passed. The review includes an actual before/after motion clip. Impact effects remain a separate task; phone and multichain integration checks are still open.

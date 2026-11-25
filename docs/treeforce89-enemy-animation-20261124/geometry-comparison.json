@@ -1,0 +1,8 @@
+{
+  "baseline": "150749f r13",
+  "candidate": "r14",
+  "samples": 81,
+  "positionAngleBodyEqual": true,
+  "heroEqual": true,
+  "spriteDimensionsEqual": true
+}

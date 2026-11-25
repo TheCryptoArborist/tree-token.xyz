@@ -1,0 +1,12 @@
+{
+  "uniqueNeutralPoses": {
+    "bat": 6,
+    "wasp": 6
+  },
+  "cacheCountBefore": 138,
+  "cacheCountAfter": 138,
+  "frames": 72,
+  "fps": 24,
+  "errors": [],
+  "synthetic": true
+}
