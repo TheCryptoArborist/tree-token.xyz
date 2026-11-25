@@ -1,0 +1,37 @@
+const {chromium}=require('playwright');const assert=require('node:assert/strict');const fs=require('node:fs');
+(async()=>{const browser=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox']});const out='docs/treeforce89-christmas-selector';fs.mkdirSync(out,{recursive:true});const checks=[];
+try{for(const width of [390,1000]){const page=await browser.newPage({viewport:{width,height:1000}});const errors=[];page.on('pageerror',e=>errors.push(e.stack));
+await page.route('**/*',async route=>{const u=new URL(route.request().url());if(u.origin!=='http://127.0.0.1:4197')return route.abort();if(u.pathname.endsWith('christmas.html')){const response=await route.fetch();return route.fulfill({response,body:(await response.text()).replace('game = createCanopyGame','game = window.__game = createCanopyGame').replace('start("title");','window.__start=start;start("title");')});}return route.continue();});
+await page.goto('http://127.0.0.1:4197/__local/christmas.html?lab=1&revision=r15');
+await page.waitForFunction(()=>window.__game?.scene.isActive('title'));
+const select=page.getByLabel('Game theme');
+await page.evaluate(()=>{__game.registry.get('holidayPolicy').now=()=>Date.parse('2026-11-27T05:59:59.999Z');});
+await page.waitForFunction(()=>document.querySelector('[role="status"]').textContent.includes('unlocks November 27'));
+assert.equal(await select.evaluate(el=>el.options[1].disabled),true);
+const layout=await page.evaluate(()=>{const panel=document.querySelector('.holiday-mode-selector').getBoundingClientRect(),canvas=document.querySelector('#practice canvas').getBoundingClientRect();return {outside:panel.bottom<=canvas.top,overflow:document.documentElement.scrollWidth>innerWidth};});
+assert.equal(layout.outside,true);assert.equal(layout.overflow,false);
+await page.screenshot({path:`${out}/unlock-notice-${width}.png`});
+assert.equal(await page.getByRole('timer').textContent(),'0d 00h 00m 01s');
+// Let a real advancing clock cross opening without a click or reload.
+await page.evaluate(()=>{const start=performance.now();__game.registry.get('holidayPolicy').now=()=>Date.parse('2026-11-27T06:00:00Z')-1100+performance.now()-start;});
+await page.waitForFunction(()=>!document.querySelector('select[aria-label="Game theme"]').options[1].disabled);
+assert.equal(await page.getByRole('timer').getAttribute('aria-label'),'Time remaining in Christmas mode');
+assert.match(await page.getByRole('status').textContent(),/Christmas mode is available for/);
+assert.match(await page.getByRole('timer').textContent(),/^(35d 00h 00m 00s|34d 23h 59m [0-9]{2}s)$/);
+await select.selectOption('christmas');await page.screenshot({path:`${out}/selector-${width}.png`});
+await page.evaluate(()=>__start('game'));await page.waitForFunction(()=>__game.scene.getScene('game')?.player);
+assert.equal(await page.locator('.holiday-mode-selector').count(),1);
+assert.equal(await select.isDisabled(),true);
+assert.equal(await page.evaluate(()=>__game.scene.getScene('game').holidayTheme),'christmas');
+await page.evaluate(()=>{const s=__game.scene.getScene('game');s.guideClose?.();if(s.paused)s.togglePause();});
+await page.waitForTimeout(600);await page.locator('#practice canvas').screenshot({path:`${out}/christmas-${width}.png`});
+await page.evaluate(()=>{__game.scene.stop('game');__game.scene.start('title');});await page.waitForFunction(()=>!document.querySelector('select[aria-label="Game theme"]').disabled);
+await select.selectOption('normal');await page.evaluate(()=>__game.scene.start('game'));await page.waitForFunction(()=>__game.scene.getScene('game').holidayTheme==='normal');
+assert.equal(await page.evaluate(()=>!!__game.scene.getScene('game').children.getByName('christmas-snow')),false);
+await page.evaluate(()=>{__game.scene.stop('game');__game.scene.start('title');__game.registry.get('holidayPolicy').now=()=>Date.parse('2027-01-01T06:00:00Z');});
+await page.waitForFunction(()=>document.querySelector('select[aria-label="Game theme"]').options[1].disabled);
+assert.equal(await page.getByRole('timer',{includeHidden:true}).isHidden(),true);
+assert.match(await page.getByRole('status').textContent(),/season has ended/);
+assert.equal(await select.inputValue(),'normal');await page.evaluate(()=>__game.destroy(true));await page.waitForTimeout(100);assert.deepEqual(errors,[]);checks.push({width,automaticCountdownUnlock:true,openingBoundary:true,noticeOutsideCanvas:true,selection:true,runLocked:true,normalRestored:true,cutoff:true,errors});await page.close();}
+fs.writeFileSync(out+'/checks.json',JSON.stringify(checks,null,2));console.log(checks);
+}finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});
