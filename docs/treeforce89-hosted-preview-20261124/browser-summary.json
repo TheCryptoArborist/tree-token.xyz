@@ -1,0 +1,13 @@
+{
+  "viewports": [
+    320,
+    390,
+    1280
+  ],
+  "checks": 30,
+  "passed": true,
+  "syntheticWalletAndServices": true,
+  "productionPayments": 0,
+  "sandboxHTTPSVerificationBypassed": true,
+  "realSignedOutPageChecked": true
+}

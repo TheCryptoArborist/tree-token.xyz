@@ -61,3 +61,7 @@ The [candidate preparation report](treeforce89-candidate-preparation-20261124.md
 ## Complete local candidate assembled
 
 [Task 2 report](treeforce89-preserved-candidate-20261124.md): 692 existing static files preserved, one game entry replaced and 43 versioned files added. Complete backend/provider, schedule, runtime and API-visible configuration records are retained. Seven assembly tests and ten synthetic browser checks passed. The archive is ready for preservation-aware hosted preview creation; it is not a standalone static-site upload.
+
+## Hosted review preview complete
+
+[Task 3 preview](treeforce89-hosted-preview-20261124.md) is ready at https://6b0644f389c93c42eac2606d--tree-token.netlify.app/play/treeforce89/ . Full inventory/backend/configuration preservation passed, plus 30 simulated browser checks at three widths and a real signed-out smoke check. One unpublished candidate was created; no full site/backend rebuild or production switch occurred. Reuse this preview for owner phone review and batch any fixes to control deployment costs.
