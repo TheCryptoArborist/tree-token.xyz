@@ -35,6 +35,8 @@ on:
       - 'scripts/multichain/native-payment-completion.mjs'
       - 'scripts/multichain/load-native-continue-test-bundle.mjs'
       - 'scripts/multichain/browser/shared-native-checkout.mjs'
+      - 'scripts/multichain/browser/bnb-payment-journal.mjs'
+      - 'tests/multichain-bnb-journal.test.mjs'
       - 'scripts/multichain/browser/checkout-recovery-controls.mjs'
       - 'scripts/multichain/check-checkout-recovery-browser.mjs'
       - 'tests/multichain-shared-checkout.test.mjs'
@@ -113,6 +115,8 @@ on:
       - 'scripts/multichain/native-payment-completion.mjs'
       - 'scripts/multichain/load-native-continue-test-bundle.mjs'
       - 'scripts/multichain/browser/shared-native-checkout.mjs'
+      - 'scripts/multichain/browser/bnb-payment-journal.mjs'
+      - 'tests/multichain-bnb-journal.test.mjs'
       - 'scripts/multichain/browser/checkout-recovery-controls.mjs'
       - 'scripts/multichain/check-checkout-recovery-browser.mjs'
       - 'tests/multichain-shared-checkout.test.mjs'
@@ -251,7 +255,7 @@ jobs:
           node --test tests/multichain-restore-authorization.test.mjs tests/multichain-restore-http.test.mjs
           node scripts/multichain/build-netlify-continue-schema.mjs --check
           git fetch --no-tags origin bf4537220bb9a9b096cfaab9598fa2cd13556db9
-          node --test tests/multichain-shared-checkout.test.mjs
+          node --test tests/multichain-shared-checkout.test.mjs tests/multichain-bnb-journal.test.mjs
           node --test tests/multichain-native-gateway.test.mjs tests/multichain-native-composition.test.mjs tests/multichain-native-host.test.mjs
           NETLIFY_CONTINUE_SCHEMA=1 NATIVE_BUNDLE_CHECK=1 CONTINUE_PHASER_CHECK=1 BNB_PG_BIN="$(pg_config --bindir)" node scripts/multichain/check-native-sui-session-postgres.mjs
           node scripts/multichain/check-checkout-recovery-browser.mjs

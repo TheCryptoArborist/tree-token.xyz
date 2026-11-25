@@ -86,13 +86,15 @@ export function createSharedContinueDelivery({pool,lockSessionAndFlight,loadPaym
    return transact(input,async(db,s)=>{
     const p=await loadPayment(db,{source:input.source,sourceId:input.sourceId});
     check(p.accountId===s.accountId&&p.runId===s.runId&&p.suiWallet===s.suiWallet&&typeof p.receiptId==='string'&&p.receiptId.length<=200,'payment-owner-mismatch');
+    if(input.txHash!==undefined)check(input.source==='bnb-usdt'&&/^0x[a-f0-9]{64}$/.test(input.txHash)&&p.receiptId.split(':')[1]===input.txHash,'payment-transaction-mismatch');
+    const receipt=input.source==='bnb-usdt'?{source:'bnb-usdt',checkoutId:input.sourceId,txHash:p.receiptId.split(':')[1],receiptId:p.receiptId,payer:p.payment.payer,sequence:p.sequence}:{};
     check(Number.isSafeInteger(p.sequence)&&p.sequence>0&&p.sequence<=2147483647,'invalid-payment-sequence');
     const policy=PAYMENT_TERMS_V2[input.source];check(Object.entries(policy).every(([k,v])=>p.payment?.[k]===v),'payment-policy-mismatch');
     check(input.source.startsWith('sui-')?p.payment.payer===s.suiWallet:/^0x[a-f0-9]{40}$/.test(p.payment.payer||''),'invalid-payment-payer');
     const existing=(await db.query('select * from private.arcade_continue_payments_v2 where source=$1 and source_id=$2',[input.source,input.sourceId])).rows[0];
-    if(existing){check(existing.account_id===s.accountId&&existing.run_id===s.runId&&existing.receipt_id===p.receiptId&&existing.sequence===p.sequence,'receipt-conflict');return response(s,{paymentId:existing.id,status:'recorded'});}
+    if(existing){check(existing.account_id===s.accountId&&existing.run_id===s.runId&&existing.receipt_id===p.receiptId&&existing.sequence===p.sequence,'receipt-conflict');return response(s,{...receipt,paymentId:existing.id,status:'recorded'});}
     const id=randomUUID();await db.query(`insert into private.arcade_continue_payments_v2(id,source,source_id,receipt_id,account_id,run_id,sui_wallet,payment,sequence) values($1,$2,$3,$4,$5,$6,$7,$8,$9)`,[id,input.source,input.sourceId,p.receiptId,s.accountId,s.runId,s.suiWallet,p.payment,p.sequence]);
-    return response(s,{paymentId:id,status:'recorded'});
+    return response(s,{...receipt,paymentId:id,status:'recorded'});
    });
   },
   async prepare(input){

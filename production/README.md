@@ -1,3 +1,15 @@
+# BNB recorded-payment import and recovery journal — November 24, 2026
+
+The shared gateway now imports an already-verified BNB ledger receipt with an
+exact transaction-hash check. A separate recovery-only browser journal records,
+recovers and archives matching completed BNB payments without wallet calls.
+Local checks passed: 90 unit, seven Chromium, 41 Netlify-role and 38 original-role
+database checks. The chain receipt is synthetic; live services are unchanged.
+Native v2 checkout/link verification/receipt ingestion and mounted UI remain
+pending. Evidence: `docs/multichain/generation-milestone/netlify-gateway/bnb-journal.md`.
+
+---
+
 # BNB completion verification — November 24, 2026
 
 The read-only completion action now verifies consumed BNB USDT checkout/receipt,

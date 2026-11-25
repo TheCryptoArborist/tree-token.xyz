@@ -3,7 +3,7 @@ import {validateSnapshot} from '../../docs/multichain/generation-milestone/nativ
 import {createHash} from 'node:crypto';
 const hex=v=>typeof v==='string'&&/^[a-f0-9]{64}$/.test(v);
 const uuid=v=>typeof v==='string'&&/^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/.test(v);
-const fields={complete:{paymentId:uuid},record:{offerId:v=>typeof v==='string'&&/^[a-f0-9]{48}$/.test(v),digest:v=>typeof v==='string'&&/^[1-9A-HJ-NP-Za-km-z]{32,64}$/.test(v)},recover:{paymentId:uuid},offer:{runId:v=>typeof v==='string'&&/^grove-[a-f0-9]{32}$/.test(v),snapshot:v=>v&&typeof v==='object'&&!Array.isArray(v),lives:v=>v===0},prepare:{runId:uuid,paymentId:uuid,clientKey:hex},activate:{runId:uuid,clientKey:hex,leaseId:uuid,checkpointHash:hex,policyDigest:hex,requestId:uuid}};
+const fields={'bnb-record':{runId:uuid,checkoutId:hex,txHash:v=>typeof v==='string'&&/^0x[a-f0-9]{64}$/.test(v)},complete:{paymentId:uuid},record:{offerId:v=>typeof v==='string'&&/^[a-f0-9]{48}$/.test(v),digest:v=>typeof v==='string'&&/^[1-9A-HJ-NP-Za-km-z]{32,64}$/.test(v)},recover:{paymentId:uuid},offer:{runId:v=>typeof v==='string'&&/^grove-[a-f0-9]{32}$/.test(v),snapshot:v=>v&&typeof v==='object'&&!Array.isArray(v),lives:v=>v===0},prepare:{runId:uuid,paymentId:uuid,clientKey:hex},activate:{runId:uuid,clientKey:hex,leaseId:uuid,checkpointHash:hex,policyDigest:hex,requestId:uuid}};
 export function createRestoreHttpHandler({action,authorization}) {
  if(!Object.hasOwn(fields,action)||typeof authorization?.[action]!=='function')throw Error('restore-http-adapter-required');
  const reply=(body,status)=>Response.json(body,{status,headers:{'Cache-Control':'no-store','X-Robots-Tag':'noindex','X-Content-Type-Options':'nosniff',...(status===405?{Allow:'POST'}:{})}});

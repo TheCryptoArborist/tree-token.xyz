@@ -2,16 +2,17 @@
 import {createRestoreHttpHandler} from './continue-restore-http.mjs';
 import {createNativeContinueGateway} from './native-continue-gateway.mjs';
 const outputFields={
+ 'bnb-record':['source','status','paymentId','runId','nativeRunId','sequence','checkoutId','txHash','receiptId','payer'],
  complete:['source','checkoutId','txHash','receiptId','payer','status','paymentId','runId','nativeRunId','sequence','offerId','digest','archiveAllowed'],
  record:['status','paymentId','offerId','digest','runId','sequence'],
  recover:['status','paymentId','runId','nativeRunId','sequence'],
  offer:['enabled','recipientConfirmed','offerId','wallet','runId','network','coinType','recipient','price','decimals','amountBaseUnits','lives','expiresAt'],
 };
-export function createNativeContinueComposition({legacyHandler,readMode,authorization,recordPayment,recoverPayment,nativeOffer,completePayment=async()=>{throw Error('completion-disabled');},readCutover=async()=>null,clock=()=>Date.now()}){
- const services={complete:completePayment,prepare:authorization?.prepare?.bind(authorization),activate:authorization?.activate?.bind(authorization),record:recordPayment,recover:recoverPayment,offer:nativeOffer};
+export function createNativeContinueComposition({legacyHandler,readMode,authorization,recordPayment,recoverPayment,nativeOffer,recordBnbPayment=async()=>{throw Error('bnb-record-disabled');},completePayment=async()=>{throw Error('completion-disabled');},readCutover=async()=>null,clock=()=>Date.now()}){
+ const services={'bnb-record':recordBnbPayment,complete:completePayment,prepare:authorization?.prepare?.bind(authorization),activate:authorization?.activate?.bind(authorization),record:recordPayment,recover:recoverPayment,offer:nativeOffer};
  if(!Object.values(services).every(fn=>typeof fn==='function'))throw Error('complete-native-services-required');
  const actions={...services};
- for(const action of ['complete','record','recover','offer'])actions[action]=async input=>{
+ for(const action of ['bnb-record','complete','record','recover','offer'])actions[action]=async input=>{
   const result=await services[action](input);
   if(!result||typeof result!=='object')throw Error('service-result-required');
   // Offer/record/recover never release a checkpoint or expose service credentials.

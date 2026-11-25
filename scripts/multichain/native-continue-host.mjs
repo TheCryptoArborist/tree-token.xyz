@@ -19,6 +19,7 @@ export function createNativeContinueHost({pool,legacyHandler,nativePaidService,v
  const delivery=createSharedContinueDelivery({pool,lockSessionAndFlight:sessionAdapter.lockSessionAndFlight,consumeRun:sessionAdapter.consumeRun});
  const authorization=createRestoreAuthorization({delivery,readReleasePolicy});
  return createNativeContinueComposition({legacyHandler,readMode,authorization,
+  recordBnbPayment:({sessionHash,runId,checkoutId,txHash})=>delivery.importPayment({sessionHash,runId,source:'bnb-usdt',sourceId:checkoutId,txHash}),
   completePayment:createNativePaymentCompletion({pool,verifyRuntime:verified}),
   recordPayment:createNativeSuiPaymentRecorder({pool,verifyRuntime:verified,readTransaction}),
   recoverPayment:createNativePaidRunRecovery({pool,verifyRuntime:verified,checkOwnership}),
