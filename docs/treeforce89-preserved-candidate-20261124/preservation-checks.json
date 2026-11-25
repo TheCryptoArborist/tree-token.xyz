@@ -1,0 +1,17 @@
+{
+  "candidateSha256": "5ecdc1d0c5edd204ac15a3ea87a63e88554a3fb4963aa68476551628410b8df4",
+  "counts": {
+    "baselineFiles": 693,
+    "candidateFiles": 736,
+    "preservedFiles": 692,
+    "replacedFiles": 1,
+    "addedFiles": 43,
+    "functions": 61,
+    "schedules": 5
+  },
+  "allPayloadHashesMatch": true,
+  "allUnrelatedStaticHashesMatch": true,
+  "completeBackendAndConfigurationEqual": true,
+  "servedEntryMatchesApprovedReview": true,
+  "productionWrites": 0
+}

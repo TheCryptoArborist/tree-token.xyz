@@ -12,7 +12,7 @@ We are at validation and release preparation, not the start of another feature c
 | --- | --- | --- | --- |
 | 1 | Corrected private phone preview | Owner-authenticated HTTP link opens the exact corrected game from a phone | Game running on port 4189; HTTP portal configuration pending |
 | 2 | Graphics comparison with supplied Deluxe Galaga | Compare enemy motion/poses, silhouettes, projectiles/effects, background contrast, HUD and transitions at playing size; address only demonstrated gaps in a bounded visual patch | Comparison, r14 enemy animation and r15 impact effects complete locally; phone readability review remains |
-| 3 | Complete preserved release candidate | Capture current full site/backend/schedule inventory; integrate only reviewed Tree Force changes; verify preserved bytes/configuration and authenticated candidate behavior | Combined r15 checks and local overlay complete; fresh inventory captured and verified (693 paths, 61 functions, five schedules); candidate assembly next; no production switch |
+| 3 | Complete preserved release candidate | Capture current full site/backend/schedule inventory; integrate only reviewed Tree Force changes; verify preserved bytes/configuration and authenticated candidate behavior | Complete local digest-based r15 candidate assembled: 736 paths, 61 functions, five schedules; hosted preview verification next; no production switch |
 | 4 | Short owner phone review | Practice: controls, sound, visibility and pause/return. Authenticated candidate: Slush expiry/return, wallet switching, saves and existing receipt sharing. Record outcomes and fix only reproduced defects | Queued; no real-payment requirement |
 | 5 | Final approval and release | Present exact candidate, test results and known limitations; publish only after separate explicit owner approval, then verify production and inventory | Not authorized yet |
 
@@ -57,3 +57,7 @@ The [candidate preparation report](treeforce89-candidate-preparation-20261124.md
 ## Fresh production inventory completed
 
 [Task 1 inventory](treeforce89-production-inventory-20261124.md) now resolves the earlier missing-inventory blocker: 693 static paths, 61 complete backend/provider records, five schedules, runtime and API-visible protected configuration were captured and independently read back on deploy `6b063e9462762ae02c0fd5db`. All 31 audit guards passed. The next task is full candidate assembly against a rechecked baseline; production has not been changed.
+
+## Complete local candidate assembled
+
+[Task 2 report](treeforce89-preserved-candidate-20261124.md): 692 existing static files preserved, one game entry replaced and 43 versioned files added. Complete backend/provider, schedule, runtime and API-visible configuration records are retained. Seven assembly tests and ten synthetic browser checks passed. The archive is ready for preservation-aware hosted preview creation; it is not a standalone static-site upload.

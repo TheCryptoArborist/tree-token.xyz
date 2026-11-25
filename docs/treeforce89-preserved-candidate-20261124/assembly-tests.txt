@@ -1,0 +1,15 @@
+✔ complete inventory retains unrelated files and exact backend/configuration records (15.370769ms)
+✔ upload removes exactly the known delivery insertion and preserves existing stored copies (7.431271ms)
+✔ exact inventory hash validates the observed lowercase CSS lookup (8.820273ms)
+✔ unexpected existing path collisions including case differences fail closed (2.265335ms)
+✔ extra, missing, changed and out-of-scope payloads are rejected (14.131564ms)
+✔ unknown HTML mutation and extra delivered copies cannot be normalized away (1.241738ms)
+✔ a changed original or incomplete backend is rejected (2.981392ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 151.105512
