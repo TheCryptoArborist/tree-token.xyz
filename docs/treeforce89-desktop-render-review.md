@@ -34,3 +34,7 @@ node tests/treeforce-render-review.cjs
 ```
 
 The existing local server serves `/workspace/treeforce-arborwing-preview` on port 4206. Compare `/arborwing-review.html?lab=1&revision=r20&art=after&render=standard` with `render=hd`. This emitted overlay is not a full deployment package; a future authorized release must start from a fresh complete live inventory.
+
+## Follow-up
+
+Growth/capture/rescue/restart evidence is recorded in [the lifecycle review](treeforce89-render-lifecycle.md). See that report for the latest validation scope and remaining release work.

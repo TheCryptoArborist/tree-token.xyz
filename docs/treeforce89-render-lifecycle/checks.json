@@ -1,0 +1,1379 @@
+[
+  {
+    "width": 1920,
+    "mode": "standard",
+    "stages": [
+      {
+        "stage": 0,
+        "frame": 0,
+        "source": 1,
+        "size": [
+          128,
+          160
+        ],
+        "display": [
+          224,
+          280
+        ],
+        "body": [
+          31.5,
+          45.5,
+          55,
+          67
+        ]
+      },
+      {
+        "stage": 1,
+        "frame": 1,
+        "source": 0,
+        "size": [
+          128,
+          160
+        ],
+        "display": [
+          217.6,
+          272
+        ],
+        "body": [
+          38.5,
+          54.25,
+          53,
+          64.5
+        ]
+      },
+      {
+        "stage": 2,
+        "frame": 2,
+        "source": 0,
+        "size": [
+          128,
+          160
+        ],
+        "display": [
+          198.4,
+          248
+        ],
+        "body": [
+          47.25,
+          63,
+          50.5,
+          62
+        ]
+      },
+      {
+        "stage": 3,
+        "frame": 3,
+        "source": 0,
+        "size": [
+          128,
+          160
+        ],
+        "display": [
+          185.6,
+          232
+        ],
+        "body": [
+          56,
+          71.75,
+          48,
+          59.5
+        ]
+      },
+      {
+        "stage": 4,
+        "frame": 4,
+        "source": 0,
+        "size": [
+          128,
+          160
+        ],
+        "display": [
+          172.8,
+          216
+        ],
+        "body": [
+          66.5,
+          80.5,
+          45,
+          57
+        ]
+      }
+    ],
+    "captures": [
+      {
+        "stage": 0,
+        "captured": {
+          "lives": 2,
+          "active": false,
+          "visible": false,
+          "body": false,
+          "frame": 0,
+          "tint": true
+        },
+        "rescued": {
+          "reserve": {
+            "stage": 0,
+            "frame": 0,
+            "body": true
+          },
+          "frame": 0,
+          "grafted": true,
+          "tinted": false,
+          "scoreDelta": 2500,
+          "scale": [
+            1.75,
+            1.75
+          ],
+          "offset": 54
+        },
+        "transitions": {
+          "frames": [
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              2,
+              2,
+              2
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              4,
+              4,
+              4
+            ]
+          ],
+          "damage": [
+            [
+              3,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      {
+        "stage": 1,
+        "captured": {
+          "lives": 2,
+          "active": false,
+          "visible": false,
+          "body": false,
+          "frame": 1,
+          "tint": true
+        },
+        "rescued": {
+          "reserve": {
+            "stage": 0,
+            "frame": 0,
+            "body": true
+          },
+          "frame": 0,
+          "grafted": true,
+          "tinted": false,
+          "scoreDelta": 2500,
+          "scale": [
+            1.75,
+            1.75
+          ],
+          "offset": 54
+        },
+        "transitions": {
+          "frames": [
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              2,
+              2,
+              2
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              4,
+              4,
+              4
+            ]
+          ],
+          "damage": [
+            [
+              3,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      {
+        "stage": 2,
+        "captured": {
+          "lives": 2,
+          "active": false,
+          "visible": false,
+          "body": false,
+          "frame": 2,
+          "tint": true
+        },
+        "rescued": {
+          "reserve": {
+            "stage": 0,
+            "frame": 0,
+            "body": true
+          },
+          "frame": 0,
+          "grafted": true,
+          "tinted": false,
+          "scoreDelta": 2500,
+          "scale": [
+            1.75,
+            1.75
+          ],
+          "offset": 54
+        },
+        "transitions": {
+          "frames": [
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              2,
+              2,
+              2
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              4,
+              4,
+              4
+            ]
+          ],
+          "damage": [
+            [
+              3,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      {
+        "stage": 3,
+        "captured": {
+          "lives": 2,
+          "active": false,
+          "visible": false,
+          "body": false,
+          "frame": 3,
+          "tint": true
+        },
+        "rescued": {
+          "reserve": {
+            "stage": 0,
+            "frame": 0,
+            "body": true
+          },
+          "frame": 0,
+          "grafted": true,
+          "tinted": false,
+          "scoreDelta": 2500,
+          "scale": [
+            1.75,
+            1.75
+          ],
+          "offset": 54
+        },
+        "transitions": {
+          "frames": [
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              2,
+              2,
+              2
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              4,
+              4,
+              4
+            ]
+          ],
+          "damage": [
+            [
+              3,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      {
+        "stage": 4,
+        "captured": {
+          "lives": 2,
+          "active": false,
+          "visible": false,
+          "body": false,
+          "frame": 4,
+          "tint": true
+        },
+        "rescued": {
+          "reserve": {
+            "stage": 0,
+            "frame": 0,
+            "body": true
+          },
+          "frame": 0,
+          "grafted": true,
+          "tinted": false,
+          "scoreDelta": 2500,
+          "scale": [
+            1.75,
+            1.75
+          ],
+          "offset": 54
+        },
+        "transitions": {
+          "frames": [
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              2,
+              2,
+              2
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              4,
+              4,
+              4
+            ]
+          ],
+          "damage": [
+            [
+              3,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        }
+      }
+    ],
+    "restart": {
+      "stage": 0,
+      "lives": 3,
+      "frame": 0,
+      "sources": 2,
+      "buffer": [
+        480,
+        720
+      ]
+    },
+    "errors": []
+  },
+  {
+    "width": 1920,
+    "mode": "hd",
+    "stages": [
+      {
+        "stage": 0,
+        "frame": 0,
+        "source": 1,
+        "size": [
+          128,
+          160
+        ],
+        "display": [
+          224,
+          280
+        ],
+        "body": [
+          31.5,
+          45.5,
+          55,
+          67
+        ]
+      },
+      {
+        "stage": 1,
+        "frame": 1,
+        "source": 0,
+        "size": [
+          128,
+          160
+        ],
+        "display": [
+          217.6,
+          272
+        ],
+        "body": [
+          38.5,
+          54.25,
+          53,
+          64.5
+        ]
+      },
+      {
+        "stage": 2,
+        "frame": 2,
+        "source": 0,
+        "size": [
+          128,
+          160
+        ],
+        "display": [
+          198.4,
+          248
+        ],
+        "body": [
+          47.25,
+          63,
+          50.5,
+          62
+        ]
+      },
+      {
+        "stage": 3,
+        "frame": 3,
+        "source": 0,
+        "size": [
+          128,
+          160
+        ],
+        "display": [
+          185.6,
+          232
+        ],
+        "body": [
+          56,
+          71.75,
+          48,
+          59.5
+        ]
+      },
+      {
+        "stage": 4,
+        "frame": 4,
+        "source": 0,
+        "size": [
+          128,
+          160
+        ],
+        "display": [
+          172.8,
+          216
+        ],
+        "body": [
+          66.5,
+          80.5,
+          45,
+          57
+        ]
+      }
+    ],
+    "captures": [
+      {
+        "stage": 0,
+        "captured": {
+          "lives": 2,
+          "active": false,
+          "visible": false,
+          "body": false,
+          "frame": 0,
+          "tint": true
+        },
+        "rescued": {
+          "reserve": {
+            "stage": 0,
+            "frame": 0,
+            "body": true
+          },
+          "frame": 0,
+          "grafted": true,
+          "tinted": false,
+          "scoreDelta": 2500,
+          "scale": [
+            1.75,
+            1.75
+          ],
+          "offset": 54
+        },
+        "transitions": {
+          "frames": [
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              2,
+              2,
+              2
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              4,
+              4,
+              4
+            ]
+          ],
+          "damage": [
+            [
+              3,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      {
+        "stage": 1,
+        "captured": {
+          "lives": 2,
+          "active": false,
+          "visible": false,
+          "body": false,
+          "frame": 1,
+          "tint": true
+        },
+        "rescued": {
+          "reserve": {
+            "stage": 0,
+            "frame": 0,
+            "body": true
+          },
+          "frame": 0,
+          "grafted": true,
+          "tinted": false,
+          "scoreDelta": 2500,
+          "scale": [
+            1.75,
+            1.75
+          ],
+          "offset": 54
+        },
+        "transitions": {
+          "frames": [
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              2,
+              2,
+              2
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              4,
+              4,
+              4
+            ]
+          ],
+          "damage": [
+            [
+              3,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      {
+        "stage": 2,
+        "captured": {
+          "lives": 2,
+          "active": false,
+          "visible": false,
+          "body": false,
+          "frame": 2,
+          "tint": true
+        },
+        "rescued": {
+          "reserve": {
+            "stage": 0,
+            "frame": 0,
+            "body": true
+          },
+          "frame": 0,
+          "grafted": true,
+          "tinted": false,
+          "scoreDelta": 2500,
+          "scale": [
+            1.75,
+            1.75
+          ],
+          "offset": 54
+        },
+        "transitions": {
+          "frames": [
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              2,
+              2,
+              2
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              4,
+              4,
+              4
+            ]
+          ],
+          "damage": [
+            [
+              3,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      {
+        "stage": 3,
+        "captured": {
+          "lives": 2,
+          "active": false,
+          "visible": false,
+          "body": false,
+          "frame": 3,
+          "tint": true
+        },
+        "rescued": {
+          "reserve": {
+            "stage": 0,
+            "frame": 0,
+            "body": true
+          },
+          "frame": 0,
+          "grafted": true,
+          "tinted": false,
+          "scoreDelta": 2500,
+          "scale": [
+            1.75,
+            1.75
+          ],
+          "offset": 54
+        },
+        "transitions": {
+          "frames": [
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              2,
+              2,
+              2
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              4,
+              4,
+              4
+            ]
+          ],
+          "damage": [
+            [
+              3,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      {
+        "stage": 4,
+        "captured": {
+          "lives": 2,
+          "active": false,
+          "visible": false,
+          "body": false,
+          "frame": 4,
+          "tint": true
+        },
+        "rescued": {
+          "reserve": {
+            "stage": 0,
+            "frame": 0,
+            "body": true
+          },
+          "frame": 0,
+          "grafted": true,
+          "tinted": false,
+          "scoreDelta": 2500,
+          "scale": [
+            1.75,
+            1.75
+          ],
+          "offset": 54
+        },
+        "transitions": {
+          "frames": [
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              2,
+              2,
+              2
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              4,
+              4,
+              4
+            ]
+          ],
+          "damage": [
+            [
+              3,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        }
+      }
+    ],
+    "restart": {
+      "stage": 0,
+      "lives": 3,
+      "frame": 0,
+      "sources": 2,
+      "buffer": [
+        960,
+        1440
+      ]
+    },
+    "errors": []
+  },
+  {
+    "width": 390,
+    "mode": "hd",
+    "stages": [
+      {
+        "stage": 0,
+        "frame": 0,
+        "source": 1,
+        "size": [
+          128,
+          160
+        ],
+        "display": [
+          224,
+          280
+        ],
+        "body": [
+          31.5,
+          45.5,
+          55,
+          67
+        ]
+      },
+      {
+        "stage": 1,
+        "frame": 1,
+        "source": 0,
+        "size": [
+          128,
+          160
+        ],
+        "display": [
+          217.6,
+          272
+        ],
+        "body": [
+          38.5,
+          54.25,
+          53,
+          64.5
+        ]
+      },
+      {
+        "stage": 2,
+        "frame": 2,
+        "source": 0,
+        "size": [
+          128,
+          160
+        ],
+        "display": [
+          198.4,
+          248
+        ],
+        "body": [
+          47.25,
+          63,
+          50.5,
+          62
+        ]
+      },
+      {
+        "stage": 3,
+        "frame": 3,
+        "source": 0,
+        "size": [
+          128,
+          160
+        ],
+        "display": [
+          185.6,
+          232
+        ],
+        "body": [
+          56,
+          71.75,
+          48,
+          59.5
+        ]
+      },
+      {
+        "stage": 4,
+        "frame": 4,
+        "source": 0,
+        "size": [
+          128,
+          160
+        ],
+        "display": [
+          172.8,
+          216
+        ],
+        "body": [
+          66.5,
+          80.5,
+          45,
+          57
+        ]
+      }
+    ],
+    "captures": [
+      {
+        "stage": 0,
+        "captured": {
+          "lives": 2,
+          "active": false,
+          "visible": false,
+          "body": false,
+          "frame": 0,
+          "tint": true
+        },
+        "rescued": {
+          "reserve": {
+            "stage": 0,
+            "frame": 0,
+            "body": true
+          },
+          "frame": 0,
+          "grafted": true,
+          "tinted": false,
+          "scoreDelta": 2500,
+          "scale": [
+            1.75,
+            1.75
+          ],
+          "offset": 54
+        },
+        "transitions": {
+          "frames": [
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              2,
+              2,
+              2
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              4,
+              4,
+              4
+            ]
+          ],
+          "damage": [
+            [
+              3,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      {
+        "stage": 1,
+        "captured": {
+          "lives": 2,
+          "active": false,
+          "visible": false,
+          "body": false,
+          "frame": 1,
+          "tint": true
+        },
+        "rescued": {
+          "reserve": {
+            "stage": 0,
+            "frame": 0,
+            "body": true
+          },
+          "frame": 0,
+          "grafted": true,
+          "tinted": false,
+          "scoreDelta": 2500,
+          "scale": [
+            1.75,
+            1.75
+          ],
+          "offset": 54
+        },
+        "transitions": {
+          "frames": [
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              2,
+              2,
+              2
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              4,
+              4,
+              4
+            ]
+          ],
+          "damage": [
+            [
+              3,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      {
+        "stage": 2,
+        "captured": {
+          "lives": 2,
+          "active": false,
+          "visible": false,
+          "body": false,
+          "frame": 2,
+          "tint": true
+        },
+        "rescued": {
+          "reserve": {
+            "stage": 0,
+            "frame": 0,
+            "body": true
+          },
+          "frame": 0,
+          "grafted": true,
+          "tinted": false,
+          "scoreDelta": 2500,
+          "scale": [
+            1.75,
+            1.75
+          ],
+          "offset": 54
+        },
+        "transitions": {
+          "frames": [
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              2,
+              2,
+              2
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              4,
+              4,
+              4
+            ]
+          ],
+          "damage": [
+            [
+              3,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      {
+        "stage": 3,
+        "captured": {
+          "lives": 2,
+          "active": false,
+          "visible": false,
+          "body": false,
+          "frame": 3,
+          "tint": true
+        },
+        "rescued": {
+          "reserve": {
+            "stage": 0,
+            "frame": 0,
+            "body": true
+          },
+          "frame": 0,
+          "grafted": true,
+          "tinted": false,
+          "scoreDelta": 2500,
+          "scale": [
+            1.75,
+            1.75
+          ],
+          "offset": 54
+        },
+        "transitions": {
+          "frames": [
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              2,
+              2,
+              2
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              4,
+              4,
+              4
+            ]
+          ],
+          "damage": [
+            [
+              3,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      {
+        "stage": 4,
+        "captured": {
+          "lives": 2,
+          "active": false,
+          "visible": false,
+          "body": false,
+          "frame": 4,
+          "tint": true
+        },
+        "rescued": {
+          "reserve": {
+            "stage": 0,
+            "frame": 0,
+            "body": true
+          },
+          "frame": 0,
+          "grafted": true,
+          "tinted": false,
+          "scoreDelta": 2500,
+          "scale": [
+            1.75,
+            1.75
+          ],
+          "offset": 54
+        },
+        "transitions": {
+          "frames": [
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              2,
+              2,
+              2
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              4,
+              4,
+              4
+            ]
+          ],
+          "damage": [
+            [
+              3,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        }
+      }
+    ],
+    "restart": {
+      "stage": 0,
+      "lives": 3,
+      "frame": 0,
+      "sources": 2,
+      "buffer": [
+        480,
+        720
+      ]
+    },
+    "errors": []
+  }
+]
