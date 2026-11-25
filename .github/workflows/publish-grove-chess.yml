@@ -26,7 +26,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: tree-production-preservation-${{ github.event_name == 'workflow_dispatch' && 'release' || github.ref }}
+  group: ${{ github.event_name == 'workflow_dispatch' && 'tree-production-preservation-release' || format('grove-chess-verify-{0}', github.ref) }}
   cancel-in-progress: false
 
 jobs:
