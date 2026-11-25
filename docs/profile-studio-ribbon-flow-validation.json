@@ -1,0 +1,139 @@
+{
+  "candidateId": "6b07390bd4c3075b43e2c541",
+  "sourceCommit": "d74643549e9c31c30e91fc1983a44ed9ca09a320",
+  "origin": "https://6b07390bd4c3075b43e2c541--tree-token.netlify.app",
+  "viewportWidths": [
+    375,
+    1348
+  ],
+  "checks": {
+    "sixRibbons": true,
+    "cryptoLeaves": true,
+    "curvedText": true,
+    "topBottomPlacement": true,
+    "ribbonPosition": true,
+    "ribbonSize": true,
+    "ribbonReset": true,
+    "ribbonDrag": true,
+    "noPhotoBadgeChanges": true,
+    "transparentCorners": true,
+    "mobileLayout": true,
+    "profileAndFrameExports": true
+  },
+  "browserDetails": {
+    "allSixSelected": true,
+    "desktopDrag": {
+      "before": {
+        "x": 0,
+        "y": -332.5
+      },
+      "after": {
+        "x": 68.923076923077,
+        "y": -212.376923076923
+      }
+    },
+    "sizeRange": [
+      420,
+      820
+    ],
+    "resetTop": {
+      "width": 760,
+      "x": 0,
+      "y": -332.5
+    },
+    "bottom": {
+      "width": 820,
+      "x": 0,
+      "y": 358.75
+    },
+    "unchangedControls": {
+      "badgeSize": 280,
+      "badgeX": 0,
+      "badgeY": 319.574275274956,
+      "photoX": 0,
+      "photoY": 0,
+      "photoZoom": 1
+    },
+    "phone": {
+      "viewport": 375,
+      "scrollWidth": 375,
+      "bottomPreset": true
+    },
+    "frame": {
+      "sha256": "7ea63c261314b278fc5c46f88da45e967e70f968a2b945fa8db301b938b06a71",
+      "width": 1024,
+      "height": 1024,
+      "mode": "RGBA",
+      "transparentCorners": true,
+      "transparentCenter": true,
+      "nontransparentPixelsOutsideRadius497": 0,
+      "design": "nftrees",
+      "direction": "top",
+      "ribbonWidth": 760
+    }
+  },
+  "limitations": [
+    "The managed browser's native local file picker is disabled by its administrator. Browser photo upload was not exercised; photo export is verified separately by running the exact source rendering/export functions locally.",
+    "Phone layout was checked at 375 CSS pixels with browser controls; no physical phone touch gesture was exercised."
+  ],
+  "schemaVersion": 1,
+  "validated": true,
+  "checkedAt": "2026-11-25T19:45:04Z",
+  "exportEvidence": {
+    "profile": {
+      "testedOn": "same-source-local",
+      "sourceCommit": "d74643549e9c31c30e91fc1983a44ed9ca09a320",
+      "passed": true,
+      "runtime": {
+        "node": "v24.22.3",
+        "canvasPackage": "@napi-rs/canvas",
+        "canvasPackageVersion": "0.1.100"
+      },
+      "execution": "Complete draw/save/placement/fit function declarations extracted byte-for-byte from committed v20 source, executed in a Node VM with actual imported renderer/helpers and native Canvas toBlob.",
+      "sha256": "7c18b4b730dc59955a16d91200f766484bc4814a93ac255d2b7f26d45f63d12f",
+      "allSixAndBothOrientationsPassed": true,
+      "fixture": "Public Tree Hero artwork"
+    },
+    "frame": {
+      "testedOn": "candidate",
+      "passed": true,
+      "sha256": "7ea63c261314b278fc5c46f88da45e967e70f968a2b945fa8db301b938b06a71"
+    },
+    "candidateDeliveryMatchesReviewedSource": true
+  },
+  "localExportVerification": {
+    "sourceHashes": {
+      "scripts/tree-profile-studio-v20.js": "44914c84d503cbcafa01c8e9116b6eef50cbea92efe02a0bf5a6ed0bc12129a0",
+      "scripts/profile-ribbons-v2.js": "830e55bde2a2b66a20a50f61a7223ff2d312912bc850afbded8dad621e91b67d",
+      "scripts/profile-badge-position.js": "eac62135af6ec9e961b67b5fc24883d2da94ad3755dddd5f8a3e219f87936c90",
+      "scripts/profile-photo-fit.js": "4da39b321a5dee3f1a308434d6f8884674b2110c8acd646c187aaf3fb6b8841d",
+      "scripts/profile-border-fit.js": "1b3ed2cbd674d240952a4e0e52b9aecb3831f5d008ae1a45c02a96babae5d19c",
+      "scripts/profile-partner-medallion.js": "002e4e078201d200e34cc6ffd1a67abb9898ab82ef1ed19afe4f7048fbd1ae86"
+    },
+    "extractedFunctions": {
+      "controls": "b9564addb93bd371ca1dbce9a08eac489a2b0c83998f129eecfad11ebb00b056",
+      "draw": "bccd57201f7c7b5428f401a7bbd984cb077c0aeecc51f5fd26e47c61c5208fa5",
+      "badgePlacement": "842ff0b81b4012e134d69a82c8240c20b3269daa54021b4a605fac01125f52a4",
+      "syncBadgeControls": "25fbb1413b0aadbf728ae3eca45002b81eec8db024ef71aee7903ac55b2b501f",
+      "ribbonPlacement": "c5e7d7bd1131b089441bdf9c44f27866d04b84df0525436eb53299148958ae99",
+      "syncRibbonControls": "9ac883bb6508b0ee3e1a3f99d02bc64e32a1ebcca68a109b7b54ac08c34619a4",
+      "moveRibbon": "bd4e54d1750f4ea135d732a3132be77e9f7cc4fe84e2a1b94280a2e0ed1199d3",
+      "fittedPhoto": "0a2d5e9434ea6d9a9c1644c4eb23993cbb05544541db85d99d022dc37905f70e",
+      "updatePanLimits": "a17f875f1bcb817055bec5dcbfa1b3636dc7f87dd8dbcbc6ff17d257a7bc2d42",
+      "syncCropLabels": "c5096829bf8725bbc8608a59c87e57f8e1bbb7ae19a093f39846b9a4203aec40",
+      "fitPhoto": "c3dbe6391887257351dd4f45aabef890e7c2e2af961615d74e43e04c1f5b84fb",
+      "reset": "c59a463e56a801d770b6f0388ebc7078639db7fc7564b84a26d84bb0a63e752d",
+      "save": "27c0c475d52998d29d8e5b82e6092bc712a4731d9da6d64db1f7d148a936c2ba"
+    },
+    "profilePNGs": 12,
+    "framePNGs": 12,
+    "checks": "1024x1024 RGBA, transparent corners, no paint outside radius 497, opaque profile/transparent frame center, successful real PNG Blob export, independent photo/badge values.",
+    "limitations": [
+      "Native browser file upload was not exercised because the browser administrator disables local file access.",
+      "This is a local rendering/export test, not a browser interaction test. Browser controls, actual frame download and phone layout are reviewed separately.",
+      "Public Tree Hero art was used as the photo fixture; the user portrait was not available after the interrupted workspace expired.",
+      "Canvas font rasterization may differ from Chromium; exact cross-runtime text-pixel parity is not claimed.",
+      "The public Tree Hero access check and browser anchor are test adapters; wallet/NFT gating and operating-system download UI are not exercised."
+    ]
+  }
+}
