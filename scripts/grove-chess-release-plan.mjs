@@ -8,7 +8,7 @@ export const ADDED_PATHS = [
   "/play/grove-chess/assets/woodland-court.png",
   "/play/grove-chess/index.html",
   "/play/grove-chess/style.css",
-  "/play/grove-chess/vendor/LICENSE-chess.js",
+  "/play/grove-chess/vendor/license-chess.txt",
   "/play/grove-chess/vendor/chess.js",
   "/scripts/arcade-grove-chess.js"
 ];
@@ -18,6 +18,7 @@ export function assembleFiles(original, overlays) {
   for (const [path, hash] of Object.entries(REPLACED_HASHES)) assert.equal(original[path], hash, 'Reviewed replacement baseline changed: '+path);
   for (const path of ADDED_PATHS) assert(!Object.hasOwn(original, path), 'New Grove Chess path already exists: '+path);
   for (const [path, hash] of Object.entries(overlays)) {
+    assert.equal(path,path.toLowerCase(),'New delivery paths must use lowercase');
     assert(/^[a-f0-9]{40}$/.test(hash), 'Invalid digest');
     assert.notEqual(original[path], hash, 'Required change missing: '+path);
   }
