@@ -1,3 +1,11 @@
+# Tree Force holiday UTC labels — published November 24, 2026
+
+Review: https://tree-token.xyz/play/treeforce89/review/holiday/
+
+Locked deploy `6b0663eb4b2316cfc7ad2bc8`: 750 paths, 61 backend records, five schedules. Only the existing holiday review entry changed; five module paths added. Main game unchanged. [Evidence](../docs/treeforce89-holiday-utc-publication.md). Capture fresh inventory for any later release.
+
+---
+
 # Tree Force holiday canonical review — published November 24, 2026
 
 https://tree-token.xyz/play/treeforce89/review/holiday/
