@@ -3,8 +3,14 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const width = Number(process.env.TREEFORCE_WIDTH || 390);
 const origin = process.env.TREEFORCE_URL || "http://127.0.0.1:4174";
-if (!/^http:\/\/127\.0\.0\.1:\d+$/.test(origin))
-  throw Error("Local synthetic checks only");
+const previewId = process.env.TREEFORCE_PREVIEW_ID || "";
+const explicitPreview =
+  /^[a-f0-9]{24}$/.test(previewId) &&
+  origin === `https://${previewId}--tree-token.netlify.app`;
+if (!/^http:\/\/127\.0\.0\.1:\d+$/.test(origin) && !explicitPreview)
+  throw Error(
+    "Synthetic checks require localhost or an explicitly pinned preview ID",
+  );
 (async () => {
   const browser = await chromium.launch({
     headless: true,
@@ -12,6 +18,8 @@ if (!/^http:\/\/127\.0\.0\.1:\d+$/.test(origin))
     args: ["--no-sandbox"],
   });
   const page = await browser.newPage({
+    // This isolated runner uses an intercepted HTTPS connection; normal user TLS is unchanged.
+    ignoreHTTPSErrors: explicitPreview,
     viewport: { width, height: 844 },
     isMobile: width < 620,
     hasTouch: width < 620,
@@ -117,26 +125,42 @@ if (!/^http:\/\/127\.0\.0\.1:\d+$/.test(origin))
       return;
     }
     if (/\/assets\/index-.*\.js$/.test(url.pathname)) {
-      const response = await route.fetch();
+      const response = explicitPreview
+        ? await fetch(request.url(), { redirect: "error" })
+        : await route.fetch();
+      assert.equal(explicitPreview ? response.status : response.status(), 200);
       let text = await response.text();
       if (text.includes("(0,b.createRoot)"))
         text = text.replace(
           "(0,b.createRoot)",
           `window.__mounts.push(${JSON.stringify(url.pathname)});window.__kit=vC;window.__wallets=Rc();(0,b.createRoot)`,
         );
-      await route.fulfill({ response, body: text });
+      await route.fulfill({
+        response: explicitPreview ? undefined : response,
+        body: text,
+        contentType: "text/javascript",
+      });
       return;
     }
     if (/\/assets\/arcade-.*\.js$/.test(url.pathname)) {
-      const response = await route.fetch();
+      const response = explicitPreview
+        ? await fetch(request.url(), { redirect: "error" })
+        : await route.fetch();
+      assert.equal(explicitPreview ? response.status : response.status(), 200);
       let text = await response.text();
       text = text.replace(
         "installMobileTouchbar(game,e);",
         "installMobileTouchbar(game,e);window.__games.push(game);",
       );
-      await route.fulfill({ response, body: text });
+      await route.fulfill({
+        response: explicitPreview ? undefined : response,
+        body: text,
+        contentType: "text/javascript",
+      });
       return;
     }
+    if (!["GET", "HEAD"].includes(request.method()))
+      throw Error("Unmocked write blocked");
     await route.continue();
   });
   await page.goto(origin + "/play/treeforce89/");

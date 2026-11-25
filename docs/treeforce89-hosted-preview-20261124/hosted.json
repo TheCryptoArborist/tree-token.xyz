@@ -1,0 +1,23 @@
+{
+  "id": "6b0644f389c93c42eac2606d",
+  "url": "https://6b0644f389c93c42eac2606d--tree-token.netlify.app/play/treeforce89/",
+  "baseline": "6b0643a31c44395918fb3859",
+  "candidateSha256": "67863420c6b7bd732181d852b57ccfc843021dcb5e76b222e0aaa1d3dc66e734",
+  "verified": true,
+  "unpublished": true,
+  "productionChanged": false,
+  "counts": {
+    "baselineFiles": 693,
+    "candidateFiles": 736,
+    "preservedFiles": 692,
+    "replacedFiles": 1,
+    "addedFiles": 43,
+    "functions": 61,
+    "schedules": 5
+  },
+  "completeBackendMatch": true,
+  "completeInventoryMatch": true,
+  "protectedConfigurationMatch": true,
+  "payloadDeliveryMatch": true,
+  "verifiedAt": "2026-11-25T02:16:38.308Z"
+}
