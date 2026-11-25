@@ -1,3 +1,16 @@
+# Shared continue delivery source — November 24, 2026
+
+A proposed v2 consumption record now accepts separately typed Sui TREE and BNB
+USDT receipts. Sixteen disposable PostgreSQL checks cover competing payments,
+activation retries, revocation, expiry, rollback and both persisted receipt
+adapters. This remains a shadow implementation: every response denies live
+restoration. Production session authority, game integration and a coordinated
+cutover of both payment paths remain required. No deployment or hosted migration
+occurred. Setup, evidence and limitations:
+`docs/multichain/generation-milestone/shared-delivery/README.md`.
+
+---
+
 # Mixed-chain delivery compatibility check — November 24, 2026
 
 The inspected delivery schema is Sui TREE-only and the paired identity gateway

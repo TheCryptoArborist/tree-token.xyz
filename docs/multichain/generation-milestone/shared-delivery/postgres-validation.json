@@ -1,0 +1,24 @@
+{
+  "localOnly": true,
+  "passed": 16,
+  "checks": [
+    "existing identity functions and grants unchanged",
+    "Sui TREE and BNB USDT retain distinct typed payment records for one run",
+    "12 competing Sui/BNB preparations share exactly one run claim",
+    "12 activation retries consume once, one journal event, no live restore grant",
+    "another payment or refreshed page cannot reacquire a consumed run",
+    "losing payment remains recorded for recovery/refund review",
+    "unreviewed checkpoint and wrong page cannot consume",
+    "expired page lease can be prepared again without another payment",
+    "revocation committed before activation denies consumption",
+    "consumption and journal rollback together; retry is recoverable",
+    "runtime cannot rewrite payment or reopen consumed claim",
+    "actual persisted BNB receipt adapter feeds the shared run claim",
+    "lost import response recovers the same payment identity",
+    "preview identity cannot be relabelled as production",
+    "native Sui verified receipt feeds shared claim without rewriting Sui terms/order state",
+    "stale entitlement proof cannot prepare or resume"
+  ],
+  "identity": "explicit SQL fixtures; production adapter unresolved",
+  "liveRestorationEnabled": false
+}
