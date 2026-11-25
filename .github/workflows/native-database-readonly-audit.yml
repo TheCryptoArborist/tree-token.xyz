@@ -22,7 +22,6 @@ jobs:
       - name: Read pinned native database catalog only
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          TREEFORCE89_DEV_DATABASE_URL: ${{ secrets.TREEFORCE89_DEV_DATABASE_URL }}
         run: node scripts/multichain/check-native-database-hosted.mjs
       - uses: actions/upload-artifact@v4
         with:

@@ -53,6 +53,6 @@ export async function auditNativeDatabase(db,expected){
 export function assertNativeAuditReadPath(path){
  assert(path==='sites/aa62f324-b880-47d6-85b8-4ba0700ff5bf'||
   /^deploys\/[a-f0-9]{24}$/.test(path)||
-  path==='accounts/69800888d1a3d0483003ae9e/env/TREEFORCE89_DEV_DATABASE_URL?site_id=aa62f324-b880-47d6-85b8-4ba0700ff5bf','audit-path-denied');
+  path==='sites/aa62f324-b880-47d6-85b8-4ba0700ff5bf/database/branch/feature%2Ftreeforce89-play-integration?role=netlifydb_readonly','audit-path-denied');
  return path;
 }
