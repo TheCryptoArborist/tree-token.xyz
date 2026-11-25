@@ -1,3 +1,17 @@
+# Native BNB checkout/session bridge — November 24, 2026
+
+The v2 BNB coordinator now has a source-only bridge to real native session/run
+records and reviewed checkpoints. Disposable database tests exercise real test
+wallet signatures, synthetic receipt verification and idempotent shared import,
+with no native counter change. Invalid credentials/checkpoints, lost entitlement
+and challenge replay deny admission. Local unit, both database permission models
+and Phaser regression checks passed; evidence and remaining HTTP/UI work are in
+`docs/multichain/generation-milestone/netlify-gateway/native-bnb-checkout.md`.
+No hosted migration, deployment, live payment or gameplay activation occurred.
+Individual NFT/artwork requirements remain separate launch gates.
+
+---
+
 # Individual inventory requirements and BNB protocol isolation — November 24, 2026
 
 The owner's 5,000-original collection/unique-artwork requirement is now explicit

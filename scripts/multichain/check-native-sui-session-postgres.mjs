@@ -243,6 +243,35 @@ try{
  assert.equal((await recorder({sessionHash:excess.native.sessionHash,offerId:excess.offerId,digest:excess.digest})).sequence,1);
  const over=(await owner.query('select amount,received from private.arcade_native_sui_payments where offer_id=$1',[excess.offerId])).rows[0];assert.equal(over.amount,policy.amount);assert.equal(over.received,(BigInt(policy.amount)*2n).toString());checks.push('native overpayment remains one continue with excess recorded');
 
+ // Native v2 bridge: real test signatures, actual native tables, synthetic RPC evidence.
+ const {createNativeBnbCheckout}=await import('./native-bnb-checkout.mjs');
+ const {Ed25519Keypair}=await import('@mysten/sui/keypairs/ed25519');
+ const {privateKeyToAccount}=await import('viem/accounts');
+ const {encodeEventTopics,encodeAbiParameters,parseAbi}=await import('viem');
+ const {CONTINUE_POLICY,continueTransferData}=await import('./sui-bnb-continue.mjs');
+ const nativeSuiKey=new Ed25519Keypair(),nativeEvmKey=privateKeyToAccount('0x'+'67'.repeat(32));
+ const linked=await fixture(nativeSuiKey.toSuiAddress()),linkedMap=await tx(db=>adapter.bind(db,linked));
+ let linkedOwnership=true,linkedCheckpoint=true,linkedBadHash=false,linkedProof;
+ const linkedSnapshot=JSON.stringify({format:'treeforce89.checkpoint.v1',ruleset:'treeforce89.v1',runId:linkedMap.runId,lives:0,continuesUsed:0,nativeSnapshot:{runId:linked.nativeRunId,seed:1,score:0,wave:1,kills:0,perfect:0,maxStage:1,shotsFired:0,shotsHit:0,start:1,mode:'ARCADE'}});
+ const nativeBnb=createNativeBnbCheckout({pool,verifyRuntime:options.verifyRuntime,checkOwnership:async()=>({owned:linkedOwnership,checkedAt:Date.now()}),readReviewedCheckpoint:async()=>linkedCheckpoint?{validated:true,snapshotText:linkedSnapshot,hash:linkedBadHash?hex():sha(linkedSnapshot)}:null,readPayment:async()=>linkedProof});
+ const linkedInput={origin:CONTINUE_POLICY.origin,sessionToken:linked.token,payer:nativeEvmKey.address.toLowerCase()};
+ await assert.rejects(nativeBnb.challenge({...linkedInput,sessionToken:'invalid'}),/invalid-session/);
+ linkedBadHash=true;await assert.rejects(nativeBnb.challenge(linkedInput),/continue-denied/);linkedBadHash=false;
+ linkedCheckpoint=false;await assert.rejects(nativeBnb.challenge(linkedInput),/continue-denied/);linkedCheckpoint=true;
+ linkedOwnership=false;await assert.rejects(nativeBnb.challenge(linkedInput),/continue-denied/);linkedOwnership=true;
+ const linkedChallenge=await nativeBnb.challenge(linkedInput);
+ const linkedSigned={...linkedInput,id:linkedChallenge.id,suiSignature:(await nativeSuiKey.signPersonalMessage(new TextEncoder().encode(linkedChallenge.message))).signature,bnbSignature:await nativeEvmKey.signMessage({message:linkedChallenge.message})};
+ linkedOwnership=false;await assert.rejects(nativeBnb.open(linkedSigned),/continue-denied/);linkedOwnership=true;
+ const linkedQuote=await nativeBnb.open(linkedSigned);assert.equal(linkedQuote.paymentEnabled,false);await assert.rejects(nativeBnb.open(linkedSigned));
+ await owner.query('select pg_sleep(1)');
+ const linkedHash='0x'+hex(),linkedBlock='0x'+hex();
+ linkedProof={chainId:56,transaction:{hash:linkedHash,blockHash:linkedBlock,blockNumber:10n,from:linkedInput.payer,to:CONTINUE_POLICY.token,value:0n,input:continueTransferData()},receipt:{transactionHash:linkedHash,blockHash:linkedBlock,blockNumber:10n,status:'success',logs:[{address:CONTINUE_POLICY.token,removed:false,transactionHash:linkedHash,blockHash:linkedBlock,logIndex:0,topics:encodeEventTopics({abi:parseAbi(['event Transfer(address indexed from,address indexed to,uint256 value)']),eventName:'Transfer',args:{from:linkedInput.payer,to:CONTINUE_POLICY.treasury}}),data:encodeAbiParameters([{type:'uint256'}],[BigInt(CONTINUE_POLICY.amount)])}]},block:{hash:linkedBlock,number:10n,timestamp:BigInt(Math.floor(Date.now()/1000))},finalized:{number:11n}};
+ linkedOwnership=false;assert.equal((await nativeBnb.reconcile({...linkedInput,id:linkedChallenge.id,txHash:linkedHash})).paymentVerified,true);linkedOwnership=true;
+ const linkedReceipt=await throughGateway('bnb-record',linked.token,{runId:linkedMap.runId,checkoutId:linkedChallenge.id,txHash:linkedHash});assert.equal(linkedReceipt.source,'bnb-usdt');
+ assert.equal((await throughGateway('bnb-record',linked.token,{runId:linkedMap.runId,checkoutId:linkedChallenge.id,txHash:linkedHash})).paymentId,linkedReceipt.paymentId);
+ assert.equal((await owner.query('select continuation_number from public.tree_game_sessions where session_id=$1',[linked.id])).rows[0].continuation_number,0);
+ checks.push('native v2 sessions and reviewed checkpoint support real wallet-link signatures, synthetic receipt verification and idempotent shared import without restoration');
+ checks.push('native BNB quote/open reject missing checkpoint, lost entitlement and replay; paid receipt remains reconcilable after access loss');
  // Synthetic verified BNB ledger rows; real shared loader, settlement and completion.
  const bnbActor=await fixture(),bnbMap=await tx(db=>adapter.bind(db,bnbActor)),bnbId=hex(),payer='0x'+hex().slice(0,40),bnbHash='0x'+hex(),receiptId='56:'+bnbHash+':0';
  const bnbTerms={id:bnbId,sessionHash:bnbActor.sessionHash,accountId:bnbMap.accountId,runId:bnbMap.runId,payer,suiWallet:bnbActor.wallet,sequence:1,deliveryProtocol:'tree-paid-delivery.v2',issuedAt:Date.now(),expiresAt:Date.now()+60000,status:'paid-review'};

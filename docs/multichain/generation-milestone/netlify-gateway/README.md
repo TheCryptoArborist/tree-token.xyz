@@ -1,5 +1,7 @@
 # Netlify schema and gateway boundary rehearsal
 
+Latest: [native BNB checkout/session bridge](native-bnb-checkout.md).
+
 Latest: [explicit BNB wallet-link protocol isolation](link-protocol-v2.md).
 
 Latest: [BNB recorded-payment import and journal](bnb-journal.md).
