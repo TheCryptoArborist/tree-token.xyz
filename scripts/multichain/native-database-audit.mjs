@@ -16,7 +16,7 @@ export function nativeDatabaseIdentity(connectionString){
 export async function readNativeCatalog(db){
  const columns=(await db.query(`select table_name,column_name,data_type,udt_name,is_nullable,column_default
   from information_schema.columns where table_schema='public' and table_name=any($1::text[]) order by table_name,ordinal_position`,[NATIVE_TABLES])).rows;
- const constraints=(await db.query(`select c.relname as table_name,con.conname as name,con.contype as type,pg_get_constraintdef(con.oid) as definition
+ const constraints=(await db.query(`select c.relname as table_name,con.conname as name,con.contype as type,con.convalidated as validated,coalesce((to_jsonb(con)->>'conenforced')::boolean,true) as enforced,pg_get_constraintdef(con.oid) as definition
   from pg_constraint con join pg_class c on c.oid=con.conrelid join pg_namespace n on n.oid=c.relnamespace
   where n.nspname='public' and c.relname=any($1::text[]) order by c.relname,con.conname`,[NATIVE_TABLES])).rows;
  const indexes=(await db.query(`select tablename as table_name,indexname as name,indexdef as definition from pg_indexes
@@ -40,7 +40,7 @@ export function compareNativeCatalog(actual,expected){
  const constraints=c=>{
   for(const row of c.constraints.filter(r=>r.type==='n')){
    const column=c.columns.find(v=>v.table_name===row.table_name&&v.is_nullable==='NO'&&row.definition==='NOT NULL '+v.column_name);
-   if(!column)return null;
+   if(!column||row.validated!==true||row.enforced!==true)return null;
   }
   return c.constraints.filter(r=>r.type!=='n');
  };

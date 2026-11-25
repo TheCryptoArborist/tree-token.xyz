@@ -20,10 +20,12 @@ try{
    ['RLS','alter table tree_game_sessions enable row level security'],
   ]){await db.query('BEGIN');await db.query(sql);assert.equal(compareNativeCatalog(await readNativeCatalog(db),expected).nativeSchemaMatches,false);await db.query('ROLLBACK');checks.push(name+' drift denied');}
   const newer=structuredClone(expected);
-  newer.constraints.push({table_name:'tree_game_sessions',name:'wallet_not_null',type:'n',definition:'NOT NULL wallet'});
+  newer.constraints.push({table_name:'tree_game_sessions',name:'wallet_not_null',type:'n',validated:true,enforced:true,definition:'NOT NULL wallet'});
   assert(compareNativeCatalog(newer,expected).nativeSchemaMatches);checks.push('PG18 redundant NOT NULL catalog entry matches checked column');
   newer.constraints.at(-1).definition='NOT NULL session_token_hash';assert.equal(compareNativeCatalog(newer,expected).nativeSchemaMatches,false);checks.push('NOT NULL on nullable column is not normalized away');
   newer.constraints.at(-1).definition='NOT NULL unknown_column';assert.equal(compareNativeCatalog(newer,expected).nativeSchemaMatches,false);checks.push('unknown NOT NULL constraint is rejected');
+  newer.constraints.at(-1).definition='NOT NULL wallet';newer.constraints.at(-1).validated=false;assert.equal(compareNativeCatalog(newer,expected).nativeSchemaMatches,false);checks.push('unvalidated NOT NULL is rejected');
+  newer.constraints.at(-1).validated=true;newer.constraints.at(-1).enforced=false;assert.equal(compareNativeCatalog(newer,expected).nativeSchemaMatches,false);checks.push('unenforced NOT NULL is rejected');
   const broken={query:async sql=>{if(sql==='ROLLBACK')return {rows:[]};if(sql.startsWith('BEGIN'))return {rows:[]};return {rows:[{read_only:'off'}]};}};await assert.rejects(auditNativeDatabase(broken,expected),/read-only/);checks.push('read-only mode must be independently observed');
   for(const url of ['postgres://user:secret@other.example/netlifydb','postgres://user:secret@wrong.db.netlify.com/netlifydb','postgres://user:secret@wrong.db.netlify.com/other'])assert.throws(()=>nativeDatabaseIdentity(url));checks.push('wrong provider path and database identity denied');
   let rollback=false;await assert.rejects(auditNativeDatabase({query:async sql=>{if(sql==='ROLLBACK'){rollback=true;return;}if(sql.startsWith('BEGIN'))return {};if(sql.includes('current_setting'))return {rows:[{read_only:'on'}]};throw Error('catalog unavailable');}},expected));assert(rollback);checks.push('catalog failure always rolls back');

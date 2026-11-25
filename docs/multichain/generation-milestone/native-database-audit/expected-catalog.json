@@ -294,60 +294,80 @@
       "table_name": "tree_continue_redemptions",
       "name": "tree_continue_redemptions_pkey",
       "type": "p",
+      "validated": true,
+      "enforced": true,
       "definition": "PRIMARY KEY (digest)"
     },
     {
       "table_name": "tree_continue_redemptions",
       "name": "tree_continue_redemptions_session_id_continuation_number_key",
       "type": "u",
+      "validated": true,
+      "enforced": true,
       "definition": "UNIQUE (session_id, continuation_number)"
     },
     {
       "table_name": "tree_continue_redemptions",
       "name": "tree_continue_redemptions_session_id_fkey",
       "type": "f",
+      "validated": true,
+      "enforced": true,
       "definition": "FOREIGN KEY (session_id) REFERENCES tree_game_sessions(session_id)"
     },
     {
       "table_name": "tree_game_sessions",
       "name": "tree_game_sessions_continuation_number_check",
       "type": "c",
+      "validated": true,
+      "enforced": true,
       "definition": "CHECK ((continuation_number >= 0))"
     },
     {
       "table_name": "tree_game_sessions",
       "name": "tree_game_sessions_pkey",
       "type": "p",
+      "validated": true,
+      "enforced": true,
       "definition": "PRIMARY KEY (session_id)"
     },
     {
       "table_name": "tree_game_sessions",
       "name": "tree_game_sessions_run_id_key",
       "type": "u",
+      "validated": true,
+      "enforced": true,
       "definition": "UNIQUE (run_id)"
     },
     {
       "table_name": "tree_game_sessions",
       "name": "tree_game_sessions_session_token_hash_key",
       "type": "u",
+      "validated": true,
+      "enforced": true,
       "definition": "UNIQUE (session_token_hash)"
     },
     {
       "table_name": "tree_game_sessions",
       "name": "tree_game_sessions_wave_check",
       "type": "c",
+      "validated": true,
+      "enforced": true,
       "definition": "CHECK ((wave >= 0))"
     },
     {
       "table_name": "tree_wallet_challenges",
       "name": "tree_wallet_challenges_pkey",
       "type": "p",
+      "validated": true,
+      "enforced": true,
       "definition": "PRIMARY KEY (challenge_hash)"
     },
     {
       "table_name": "tree_wallet_logins",
       "name": "tree_wallet_logins_pkey",
       "type": "p",
+      "validated": true,
+      "enforced": true,
       "definition": "PRIMARY KEY (token_hash)"
     }
   ],
