@@ -1,3 +1,31 @@
+# Grove Chess TREE player coins — published November 25, 2026
+
+[Grove Chess](https://tree-token.xyz/play/grove-chess/) now uses an emerald pine
+coin for The Woodland and an ivory coin bearing the leafy Tree Hero emblem for
+the Gardener. Minted rims inherit each side’s selected rarity finish; the coin
+centers retain dark/light team identity. Inline SVGs replace the generic spade
+and club without changing player-row dimensions or adding network assets.
+
+Locked ready deploy `6b0701bd9009c13d1b31b135`, source
+`2f00f42201a1ada1bbc6abc9d018d319c7eba4f2` (PR #339).
+[Publication run 45647651052](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45647651052) passed, including canonical checks.
+Fresh baseline `6b06fcd2dc679f4899d86f5d`; **789 static paths**,
+**787 unrelated paths preserved**, all **62 backend/provider records** and
+**5 schedules** preserved. Only chess HTML and CSS changed.
+
+Candidate and canonical four-viewport game/cabinet checks and three-phone
+board-fit/scroll checks passed. Independent rim-color inheritance and SVG
+presence were inspected locally. Canonical phone screenshots show both coins.
+No leaderboard, game-access, wallet or gameplay changes were made.
+
+Full report, static manifest and canonical mobile results:
+`production/grove-chess-coins-release-20261125.json`.
+Publication artifact #15038881852 SHA256:
+`d8bee761a134bbbe18af34f0e2db08a2b4d6e9f1ad945d6f1b293b1158b4d749`.
+Capture a fresh full live baseline before every subsequent release.
+
+---
+
 # Grove Chess move instructions — published November 25, 2026
 
 [Grove Chess](https://tree-token.xyz/play/grove-chess/) now shows persistent
