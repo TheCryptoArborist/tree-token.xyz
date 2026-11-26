@@ -1,0 +1,58 @@
+{
+  "id": "6b0799296da7108e51b1778b",
+  "baseline": "6b076fa002389b9a6af150fc",
+  "url": "https://tree-token.xyz/play/treeforce89/review/arborwing/",
+  "published": true,
+  "locked": true,
+  "existingPathsPreserved": 817,
+  "addedPaths": 11,
+  "changedExistingPaths": 0,
+  "totalPaths": 828,
+  "backendRecords": 62,
+  "schedules": 5,
+  "uploads": [
+    {
+      "path": "/play/treeforce89/assets/index-review-r21.js",
+      "bytes": 653814
+    },
+    {
+      "path": "/play/treeforce89/assets/arcade-review-r21.js",
+      "bytes": 1296143
+    },
+    {
+      "path": "/play/treeforce89/assets/graphql-review-r21.js",
+      "bytes": 54746
+    },
+    {
+      "path": "/play/treeforce89/assets/sound-identity-r21.js",
+      "bytes": 4817
+    },
+    {
+      "path": "/play/treeforce89/assets/desktop-render-review-r21.mjs",
+      "bytes": 3004
+    },
+    {
+      "path": "/play/treeforce89/assets/arborwing-hd-review-r21.mjs",
+      "bytes": 3561
+    },
+    {
+      "path": "/play/treeforce89/assets/render-quality-r21.mjs",
+      "bytes": 690
+    },
+    {
+      "path": "/assets/arborwing-r21/seedling-hd.png",
+      "bytes": 1784053
+    },
+    {
+      "path": "/assets/arborwing-r21/growth-hd.png",
+      "bytes": 1451840
+    },
+    {
+      "path": "/play/treeforce89/review/arborwing/index.html",
+      "bytes": 5009
+    }
+  ],
+  "planSha256": "db16bf3a07b7c31b143c3d7830b0daeef92172f4bbcfb0e7aa5d183e15060cb1",
+  "checkedAt": "2026-11-26T02:28:34.084Z",
+  "slushWarningClearance": "Owner verification pending"
+}

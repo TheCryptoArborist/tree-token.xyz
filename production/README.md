@@ -1,3 +1,9 @@
+# Tree Force Arborwing graphics review — published November 25, 2026
+
+Locked deploy `6b0799296da7108e51b1778b`: **828 static paths, 62 backend records, five schedules**. Review: https://tree-token.xyz/play/treeforce89/review/arborwing/ . Adds all five upgraded hero stages and adaptive desktop resolution in a separate review route. All 817 preceding paths and complete backend/runtime inventory preserved; main game unchanged. Source `730adeb3`, [workflow 45742526041](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45742526041), [evidence](../docs/treeforce89-hosted-arborwing.md). Owner desktop/phone review pending. Capture fresh live inventory before any subsequent release.
+
+---
+
 # Tree Force pilot cabinet and desktop polish — published November 25, 2026
 
 Locked deploy `6b0750990d056f6dd28623fd`: **817 static paths, 62 backend records, five schedules**. Main game: https://tree-token.xyz/play/treeforce89/ . Branded forest leaderboard shows ten pilots with trophy/medal/crest ranks, thirteen illustrated achievement medals, and larger desktop presentation. One main-game HTML changed; thirteen paths added; every other existing path and the complete backend/runtime inventory preserved. Source `fbbf1a2`, workflow [45702944127](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45702944127). [Evidence](../docs/treeforce89-pilot-cabinet.md). Capture a fresh live inventory before subsequent releases.

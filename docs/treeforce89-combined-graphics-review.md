@@ -44,3 +44,7 @@ TREEFORCE_ART=all node tests/treeforce-render-recovery.cjs
 ```
 
 Combined preview: `/arborwing-review.html?lab=1&revision=r20&art=all&render=auto`.
+
+## Hosted review now available
+
+The approved local batch is now available at https://tree-token.xyz/play/treeforce89/review/arborwing/ . See [publication evidence](treeforce89-hosted-arborwing.md). The main game remains unchanged; the combined device review is the next checkpoint.
