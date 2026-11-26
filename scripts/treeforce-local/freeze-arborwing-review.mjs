@@ -1,0 +1,20 @@
+import fs from 'node:fs/promises';import path from 'node:path';import assert from 'node:assert/strict';
+import {loadBaseline,fingerprint} from './capture-production-inventory.mjs';import {digest,storedEntry} from './prepare-preserved-candidate.mjs';
+const baseline=loadBaseline('docs/treeforce89-hosted-arborwing/inventory/baseline.json');
+const root='production/treeforce-arborwing-r21',base='/play/treeforce89/assets/',review='/play/treeforce89/review/arborwing/index.html';
+const files={...baseline.files},payload={};
+async function put(p,bytes){bytes=Buffer.from(bytes);assert(!Object.hasOwn(files,p),'Path already exists: '+p);payload[p]={sha1:digest(bytes,'sha1'),sha256:digest(bytes),bytes:bytes.length};files[p]=payload[p].sha1;await fs.mkdir(path.dirname(root+p),{recursive:true});await fs.writeFile(root+p,bytes)}
+const names=['index-review','arcade-review','graphql-review','holiday-mode','sound-identity'];
+for(const name of names){const p=base+name+'-r19.js';let s=await fs.readFile('production/treeforce-pilot-r19'+p,'utf8');assert.equal(digest(Buffer.from(s),'sha1'),baseline.files[p],'Live source drift: '+p);for(const n of names)s=s.replaceAll(n+'-r19.js',n+'-r21.js');if(name==='arcade-review'){
+const once=(a,b)=>{assert.equal(s.split(a).length,2);s=s.replace(a,b)};
+s='import {installDesktopRenderReview} from "./desktop-render-review-r21.mjs";\nimport {installSeedlingTexture} from "./arborwing-hd-review-r21.mjs";\n'+s;
+once('preload(){this.load.image(`hero-photo`','preload(){this.load.image(`growth-hd-review`,`/assets/arborwing-r21/growth-hd.png`);this.load.image(`seedling-hd-review`,`/assets/arborwing-r21/seedling-hd.png`);this.load.image(`hero-photo`');
+once('installMobileTouchbar(game,e);','installDesktopRenderReview(game);installMobileTouchbar(game,e);');once('create(){X(this);let e=this.game.registry','create(){X(this);installSeedlingTexture(this);let e=this.game.registry');}
+await put(base+name+'-r21.js',s)}
+for(const name of ['desktop-render-review','arborwing-hd-review','render-quality']){let s=await fs.readFile('treeforce89/frontend/game/'+name+'.mjs','utf8');s=s.replaceAll('./render-quality.mjs','./render-quality-r21.mjs');
+s=s.replaceAll("['localhost','127.0.0.1'].includes(location.hostname)","(['localhost','127.0.0.1'].includes(location.hostname)||location.pathname.startsWith('/play/treeforce89/review/arborwing/'))").replaceAll("['127.0.0.1','localhost'].includes(location.hostname)","(['localhost','127.0.0.1'].includes(location.hostname)||location.pathname.startsWith('/play/treeforce89/review/arborwing/'))");
+s=s.replaceAll("new URLSearchParams(location.search).get('art')","(new URLSearchParams(location.search).get('art')||'all')").replaceAll("new URLSearchParams(location.search).get('render')","(new URLSearchParams(location.search).get('render')||'auto')");await put(base+name+'-r21.mjs',s)}
+for(const name of ['seedling-hd','growth-hd'])await put('/assets/arborwing-r21/'+name+'.png',await fs.readFile('assets/arborwing-review/'+name+'.png'));
+const live='/play/treeforce89/index.html';const r=await fetch(`https://${baseline.deployId}--tree-token.netlify.app${live}`,{redirect:'error'});assert.equal(r.status,200);const html=storedEntry(Buffer.from(await r.arrayBuffer()),baseline.files[live]).toString();assert.equal(html.split('index-review-r19.js').length,2);
+await put(review,html.replace('index-review-r19.js','index-review-r21.js').replace('</head>','<meta name="robots" content="noindex,nofollow"><style>.arborwing-review-note{background:#10291c;color:#efd889;text-align:center;padding:8px;font:14px/1.4 system-ui}.arborwing-review-note a{color:#c8eea5}</style></head>').replace('<body>','<body><div class="arborwing-review-note">Arborwing graphics review · <a href="/play/treeforce89/">Main game</a></div>'));
+const plan={baseline,files,payload,reviewPath:review,sourceCommit:'db1f80d'};await fs.writeFile(root+'/candidate.json',JSON.stringify(plan,null,2));await fs.writeFile(root+'/candidate.json.sha256',fingerprint(plan)+'\n');console.log({added:Object.keys(payload).length,preserved:Object.keys(baseline.files).length,total:Object.keys(files).length});

@@ -1,0 +1,104 @@
+{
+  "origin": "http://127.0.0.1:4206",
+  "results": [
+    {
+      "width": 390,
+      "height": 844,
+      "state": {
+        "buffer": [
+          480,
+          720
+        ],
+        "sources": 6,
+        "quality": {
+          "density": 1,
+          "mode": "auto",
+          "fallback": false,
+          "logicalWidth": 480,
+          "logicalHeight": 720
+        },
+        "frames": [
+          [
+            128,
+            160,
+            1
+          ],
+          [
+            128,
+            160,
+            2
+          ],
+          [
+            128,
+            160,
+            3
+          ],
+          [
+            128,
+            160,
+            4
+          ],
+          [
+            128,
+            160,
+            5
+          ]
+        ]
+      },
+      "gated": true,
+      "thirteenBadges": true,
+      "noOverflow": true,
+      "errors": []
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "state": {
+        "buffer": [
+          960,
+          1440
+        ],
+        "sources": 6,
+        "quality": {
+          "density": 2,
+          "mode": "auto",
+          "fallback": false,
+          "logicalWidth": 480,
+          "logicalHeight": 720
+        },
+        "frames": [
+          [
+            128,
+            160,
+            1
+          ],
+          [
+            128,
+            160,
+            2
+          ],
+          [
+            128,
+            160,
+            3
+          ],
+          [
+            128,
+            160,
+            4
+          ],
+          [
+            128,
+            160,
+            5
+          ]
+        ]
+      },
+      "gated": true,
+      "thirteenBadges": true,
+      "noOverflow": true,
+      "errors": []
+    }
+  ],
+  "payment": false
+}
