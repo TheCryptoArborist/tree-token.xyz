@@ -1,0 +1,22 @@
+{
+  "localOnly": true,
+  "passed": 5,
+  "checks": [
+    "captured files and every unchanged copied module retain exact hashes",
+    "restored at 390px: captured and candidate match; native recovery and exact resume snapshot preserved; no transaction or BNB request",
+    "invalid-grant at 390px: captured and candidate match; native recovery and exact resume snapshot preserved; no transaction or BNB request",
+    "restored at 1000px: captured and candidate match; native recovery and exact resume snapshot preserved; no transaction or BNB request",
+    "invalid-grant at 1000px: captured and candidate match; native recovery and exact resume snapshot preserved; no transaction or BNB request"
+  ],
+  "browser": "156.0.8078.79",
+  "limitations": [
+    "Synthetic Wallet Standard signatures and server sessions only; no extension, NFT ownership or backend verification.",
+    "Media stubbed; saved-payment recovery and actual scene state checked. No new purchase, chain payment or full game-mechanics coverage.",
+    "A response-only observation hook exposes the game instance; authorization and resume behavior remain unchanged."
+  ],
+  "checkedDate": "2026-11-27",
+  "entryOriginalSha256": "a7705718e61fef6c16f2e2a643d1296d560908c1cb49988b56cacd0cafc7128c",
+  "entryCandidateSha256": "0fbcda5b45e026d348d332fa09bddd870d76e62b3f762ba234acfa1d37e21ddb",
+  "offlinePreservationTestsPassed": 12,
+  "published": false
+}

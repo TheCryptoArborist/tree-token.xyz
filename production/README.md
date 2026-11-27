@@ -1,3 +1,14 @@
+# BNB candidate native restoration regression — November 27, 2026
+
+Five local browser checks passed: integrity and valid/invalid native payment
+recovery at phone/desktop widths, comparing the captured r19 game and candidate.
+A valid fixture restores three lives and the exact authorized run fields; an
+invalid grant retains the saved receipt. Twelve preservation tests also passed.
+No real payment, publication, NFT movement or activation. Evidence and next gates:
+`docs/multichain/generation-milestone/netlify-gateway/preserved-native-restoration.md`.
+
+---
+
 # BNB preserved-runtime review lifecycle — November 25, 2026
 
 Nine local Chromium checks passed: integrity and complete/interrupted BNB review

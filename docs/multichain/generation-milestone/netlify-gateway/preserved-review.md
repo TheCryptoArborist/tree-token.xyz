@@ -77,6 +77,12 @@ See [preserved-runtime review lifecycle](preserved-review-lifecycle.md) for nine
 local browser checks covering complete review and interrupted signing. Enablement
 exists only in intercepted test responses; the candidate remains disabled.
 
+## Native restoration follow-up
+
+See [native restoration regression](preserved-native-restoration.md) for five
+passing integrity/browser checks, including actual resumed scene state and invalid
+authorization handling. This uses local fixtures, not real payment verification.
+
 ## Remaining gates
 
 Prove current game behavior and the opt-in review lifecycle in the preserved
