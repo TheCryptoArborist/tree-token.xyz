@@ -1,12 +1,11 @@
 name: Publish Tree Force Arborwing firing correction
 on:
   push:
-    branches: [dev/treeforce-arborwing-hd]
+    branches: [archive/treeforce-wing-release-complete]
     paths:
       - '.github/workflows/treeforce-wing-review.yml'
       - 'scripts/treeforce-local/publish-wing-review.mjs'
       - 'tests/treeforce-wing-publication.test.mjs'
-      - 'tests/treeforce-wing-hosted-browser.cjs'
 permissions:
   contents: read
 concurrency:
