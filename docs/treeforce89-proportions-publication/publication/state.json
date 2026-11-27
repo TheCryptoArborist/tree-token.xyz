@@ -1,0 +1,46 @@
+{
+  "id": "6b09dff50becff09e73a838c",
+  "baseline": "6b09dc4244e51c6a022fdcdb",
+  "url": "https://tree-token.xyz/play/treeforce89/review/arborwing/",
+  "published": true,
+  "locked": true,
+  "existingPathsPreserved": 831,
+  "addedPaths": 6,
+  "changedExistingPaths": 1,
+  "totalPaths": 838,
+  "backendRecords": 62,
+  "schedules": 5,
+  "uploads": [
+    {
+      "path": "/play/treeforce89/review/arborwing/index.html",
+      "bytes": 5009
+    },
+    {
+      "path": "/play/treeforce89/assets/index-review-r23.js",
+      "bytes": 653814
+    },
+    {
+      "path": "/play/treeforce89/assets/arcade-review-r23.js",
+      "bytes": 1296212
+    },
+    {
+      "path": "/play/treeforce89/assets/graphql-review-r23.js",
+      "bytes": 54746
+    },
+    {
+      "path": "/play/treeforce89/assets/arborwing-hd-review-r23.mjs",
+      "bytes": 2018
+    },
+    {
+      "path": "/play/treeforce89/assets/arborwing-mounts-r23.mjs",
+      "bytes": 562
+    },
+    {
+      "path": "/assets/arborwing-r23/proportions-hd.png",
+      "bytes": 2028338
+    }
+  ],
+  "planSha256": "ee980bbcf78a6a3d5abf369dad065c08c3382ac77b99efd4e0e46acc0a8f8d13",
+  "checkedAt": "2026-11-27T19:55:14.500Z",
+  "slushWarningClearance": "Owner verification pending"
+}

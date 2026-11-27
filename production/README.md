@@ -1,3 +1,9 @@
+# Tree Hero reference proportions — published November 27, 2026
+
+Current locked deploy `6b09dff50becff09e73a838c`: **838 static paths, 62 backend records, five schedules**. Review: https://tree-token.xyz/play/treeforce89/review/arborwing/ . r23 corrects all five hero stages to the broader reference build and recalibrates glider firing anchors. One review HTML changed, six paths added, all other 831 previous paths and full backend/runtime preserved. Main game unchanged. Source `03174f22`; [workflow 46059853445](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/46059853445), [evidence](../docs/treeforce89-proportions-publication.md). Capture a fresh complete live inventory before later releases.
+
+---
+
 # Arborwing firing correction and latest verified release — November 27, 2026
 
 Current verified locked deploy `6b09dc4244e51c6a022fdcdb`: **832 static paths, 62 backend records, five schedules**. It preserves the r22 Arborwing glider firing correction at https://tree-token.xyz/play/treeforce89/review/arborwing/ and includes a newer Canopy Defense routing change (`/_redirects`). Main Tree Force game unchanged. Our firing patch was published as `6b09db5ff59cecb223b2e431`; final read-only verification [46058436723](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/46058436723) passed against the newer current release. [Full evidence and initial checker failure](../docs/treeforce89-hosted-wing-fix.md). Capture a fresh full inventory before any later release.
