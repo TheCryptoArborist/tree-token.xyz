@@ -1,0 +1,125 @@
+{
+  "initial": {
+    "buffer": [
+      960,
+      1440
+    ],
+    "layouts": [
+      {
+        "source": {
+          "x": 412,
+          "y": 36,
+          "width": 364,
+          "height": 595
+        },
+        "box": {
+          "x": 45,
+          "y": 71,
+          "width": 41,
+          "height": 55
+        },
+        "x": 48.67647058823529,
+        "y": 71,
+        "width": 33.64705882352941,
+        "height": 55,
+        "mountFront": 0.838655462184874
+      },
+      {
+        "source": {
+          "x": 793,
+          "y": 36,
+          "width": 379,
+          "height": 608
+        },
+        "box": {
+          "x": 35,
+          "y": 57,
+          "width": 56,
+          "height": 68
+        },
+        "x": 41.805921052631575,
+        "y": 57,
+        "width": 42.38815789473684,
+        "height": 68,
+        "mountFront": 0.8207236842105263
+      },
+      {
+        "source": {
+          "x": 1193,
+          "y": 36,
+          "width": 436,
+          "height": 608
+        },
+        "box": {
+          "x": 33,
+          "y": 49,
+          "width": 63,
+          "height": 79
+        },
+        "x": 36.17434210526316,
+        "y": 49,
+        "width": 56.651315789473685,
+        "height": 79,
+        "mountFront": 0.8207236842105263
+      },
+      {
+        "source": {
+          "x": 1649,
+          "y": 36,
+          "width": 512,
+          "height": 671
+        },
+        "box": {
+          "x": 21,
+          "y": 25,
+          "width": 84,
+          "height": 110
+        },
+        "x": 21.032786885245905,
+        "y": 25.000000000000014,
+        "width": 83.93442622950819,
+        "height": 109.99999999999999,
+        "mountFront": 0.7436661698956781
+      }
+    ],
+    "sources": 6
+  },
+  "fallback": {
+    "paused": 960,
+    "buffer": [
+      480,
+      720
+    ],
+    "state": {
+      "density": 1,
+      "mode": "auto",
+      "fallback": true,
+      "logicalWidth": 480,
+      "logicalHeight": 720
+    }
+  },
+  "pointer": [
+    239.24563791609947,
+    299.56143679772964
+  ],
+  "pauseResumeAfterFallback": true,
+  "recreated": {
+    "canvases": 1,
+    "sources": 6,
+    "quality": {
+      "density": 2,
+      "mode": "auto",
+      "fallback": false,
+      "logicalWidth": 480,
+      "logicalHeight": 720
+    },
+    "lives": 3
+  },
+  "effects": {
+    "target": [
+      160,
+      180
+    ]
+  },
+  "errors": []
+}

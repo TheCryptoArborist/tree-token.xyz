@@ -5,7 +5,7 @@ function once(s,a,b){assert.equal(s.split(a).length,2,a);return s.replace(a,b)}
 const names=['index-review','arcade-review','graphql-review','holiday-mode','sound-identity'];
 for(const name of names){let s=fs.readFileSync('production/treeforce-pilot-r19'+base+name+'-r19.js','utf8');for(const n of names)s=s.replaceAll(n+'-r19.js',n+'-r20.js');if(name==='arcade-review'){
  s='import {arborwingMount} from "./arborwing-mounts.mjs";\nimport {installDesktopRenderReview} from "./desktop-render-review.mjs";\nimport {installSeedlingTexture} from "./arborwing-hd-review.mjs";\n'+s;
- s=once(s,'preload(){this.load.image(`hero-photo`','preload(){this.load.image(`growth-hd-review`,`/assets/arborwing-review/growth-hd.png`);this.load.image(`seedling-hd-review`,`/assets/arborwing-review/seedling-hd.png`);this.load.image(`hero-photo`');
+ s=once(s,'preload(){this.load.image(`hero-photo`','preload(){this.load.image(`proportions-hd-review`,`/assets/arborwing-review/proportions-hd.png`);this.load.image(`growth-hd-review`,`/assets/arborwing-review/growth-hd.png`);this.load.image(`seedling-hd-review`,`/assets/arborwing-review/seedling-hd.png`);this.load.image(`hero-photo`');
  s=once(s,'branchMount(){return[','branchMount(){const mount=arborwingMount(this);if(mount)return mount;return[');
  s=once(s,'i.setActive(!0).setVisible(!0).setDepth(3).setTexture(t.projectile)','i.setActive(!0).setVisible(!0).setDepth(arborwingMount(this)?5:3).setTexture(t.projectile)');
  s=once(s,'installMobileTouchbar(game,e);','installDesktopRenderReview(game);installMobileTouchbar(game,e);');
@@ -22,3 +22,5 @@ put(base+'render-quality.mjs',fs.readFileSync('treeforce89/frontend/game/render-
 put('/assets/arborwing-review/growth-hd.png',fs.readFileSync('assets/arborwing-review/growth-hd.png'));
 
 put(base+'arborwing-mounts.mjs',fs.readFileSync('treeforce89/frontend/game/arborwing-mounts.mjs'));
+
+put('/assets/arborwing-review/proportions-hd.png',fs.readFileSync('assets/arborwing-review/proportions-hd.png'));

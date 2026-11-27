@@ -1,0 +1,4822 @@
+[
+  {
+    "art": "before",
+    "cases": [
+      {
+        "stage": 0,
+        "weapon": 0,
+        "dual": false,
+        "mount": {
+          "x": 9,
+          "y": 15
+        },
+        "scale": 1.75,
+        "count": 1,
+        "shots": [
+          {
+            "x": 184.25,
+            "y": 486.25,
+            "vx": 0,
+            "vy": -440,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 0,
+        "weapon": 0,
+        "dual": true,
+        "mount": {
+          "x": 9,
+          "y": 15
+        },
+        "scale": 1.75,
+        "count": 2,
+        "shots": [
+          {
+            "x": 184.25,
+            "y": 486.25,
+            "vx": 0,
+            "vy": -440,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          },
+          {
+            "x": 284.25,
+            "y": 486.25,
+            "vx": 0,
+            "vy": -440,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 0,
+        "weapon": 1,
+        "dual": false,
+        "mount": {
+          "x": 9,
+          "y": 15
+        },
+        "scale": 1.75,
+        "count": 1,
+        "shots": [
+          {
+            "x": 200,
+            "y": 483.25,
+            "vx": 0,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              8,
+              18
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 0,
+        "weapon": 1,
+        "dual": true,
+        "mount": {
+          "x": 9,
+          "y": 15
+        },
+        "scale": 1.75,
+        "count": 2,
+        "shots": [
+          {
+            "x": 200,
+            "y": 483.25,
+            "vx": 0,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              8,
+              18
+            ],
+            "depth": 3
+          },
+          {
+            "x": 300,
+            "y": 483.25,
+            "vx": 0,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              8,
+              18
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 0,
+        "weapon": 2,
+        "dual": false,
+        "mount": {
+          "x": 9,
+          "y": 15
+        },
+        "scale": 1.75,
+        "count": 2,
+        "shots": [
+          {
+            "x": 184.25,
+            "y": 486.25,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          },
+          {
+            "x": 215.75,
+            "y": 486.25,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 0,
+        "weapon": 2,
+        "dual": true,
+        "mount": {
+          "x": 9,
+          "y": 15
+        },
+        "scale": 1.75,
+        "count": 4,
+        "shots": [
+          {
+            "x": 184.25,
+            "y": 486.25,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          },
+          {
+            "x": 215.75,
+            "y": 486.25,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          },
+          {
+            "x": 284.25,
+            "y": 486.25,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          },
+          {
+            "x": 315.75,
+            "y": 486.25,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 0,
+        "weapon": 3,
+        "dual": false,
+        "mount": {
+          "x": 9,
+          "y": 15
+        },
+        "scale": 1.75,
+        "count": 2,
+        "shots": [
+          {
+            "x": 187.4,
+            "y": 486.25,
+            "vx": -22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 3
+          },
+          {
+            "x": 212.6,
+            "y": 486.25,
+            "vx": 22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 0,
+        "weapon": 3,
+        "dual": true,
+        "mount": {
+          "x": 9,
+          "y": 15
+        },
+        "scale": 1.75,
+        "count": 4,
+        "shots": [
+          {
+            "x": 187.4,
+            "y": 486.25,
+            "vx": -22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 3
+          },
+          {
+            "x": 212.6,
+            "y": 486.25,
+            "vx": 22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 3
+          },
+          {
+            "x": 287.4,
+            "y": 486.25,
+            "vx": -22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 3
+          },
+          {
+            "x": 312.6,
+            "y": 486.25,
+            "vx": 22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 0,
+        "weapon": 4,
+        "dual": false,
+        "mount": {
+          "x": 9,
+          "y": 15
+        },
+        "scale": 1.75,
+        "count": 3,
+        "shots": [
+          {
+            "x": 188.66,
+            "y": 482.25,
+            "vx": -12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 200,
+            "y": 482.25,
+            "vx": 0,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 211.34,
+            "y": 482.25,
+            "vx": 12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 0,
+        "weapon": 4,
+        "dual": true,
+        "mount": {
+          "x": 9,
+          "y": 15
+        },
+        "scale": 1.75,
+        "count": 6,
+        "shots": [
+          {
+            "x": 188.66,
+            "y": 482.25,
+            "vx": -12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 200,
+            "y": 482.25,
+            "vx": 0,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 211.34,
+            "y": 482.25,
+            "vx": 12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 288.66,
+            "y": 482.25,
+            "vx": -12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 300,
+            "y": 482.25,
+            "vx": 0,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 311.34,
+            "y": 482.25,
+            "vx": 12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 1,
+        "weapon": 0,
+        "dual": false,
+        "mount": {
+          "x": 14,
+          "y": 13
+        },
+        "scale": 1.7,
+        "count": 1,
+        "shots": [
+          {
+            "x": 176.2,
+            "y": 482.1,
+            "vx": 0,
+            "vy": -440,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 1,
+        "weapon": 0,
+        "dual": true,
+        "mount": {
+          "x": 14,
+          "y": 13
+        },
+        "scale": 1.7,
+        "count": 2,
+        "shots": [
+          {
+            "x": 176.2,
+            "y": 482.1,
+            "vx": 0,
+            "vy": -440,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          },
+          {
+            "x": 276.2,
+            "y": 482.1,
+            "vx": 0,
+            "vy": -440,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 1,
+        "weapon": 1,
+        "dual": false,
+        "mount": {
+          "x": 14,
+          "y": 13
+        },
+        "scale": 1.7,
+        "count": 1,
+        "shots": [
+          {
+            "x": 200,
+            "y": 479.1,
+            "vx": 0,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              8,
+              18
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 1,
+        "weapon": 1,
+        "dual": true,
+        "mount": {
+          "x": 14,
+          "y": 13
+        },
+        "scale": 1.7,
+        "count": 2,
+        "shots": [
+          {
+            "x": 200,
+            "y": 479.1,
+            "vx": 0,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              8,
+              18
+            ],
+            "depth": 3
+          },
+          {
+            "x": 300,
+            "y": 479.1,
+            "vx": 0,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              8,
+              18
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 1,
+        "weapon": 2,
+        "dual": false,
+        "mount": {
+          "x": 14,
+          "y": 13
+        },
+        "scale": 1.7,
+        "count": 2,
+        "shots": [
+          {
+            "x": 176.2,
+            "y": 482.1,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          },
+          {
+            "x": 223.8,
+            "y": 482.1,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 1,
+        "weapon": 2,
+        "dual": true,
+        "mount": {
+          "x": 14,
+          "y": 13
+        },
+        "scale": 1.7,
+        "count": 4,
+        "shots": [
+          {
+            "x": 176.2,
+            "y": 482.1,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          },
+          {
+            "x": 223.8,
+            "y": 482.1,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          },
+          {
+            "x": 276.2,
+            "y": 482.1,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          },
+          {
+            "x": 323.8,
+            "y": 482.1,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 1,
+        "weapon": 3,
+        "dual": false,
+        "mount": {
+          "x": 14,
+          "y": 13
+        },
+        "scale": 1.7,
+        "count": 2,
+        "shots": [
+          {
+            "x": 180.96,
+            "y": 482.1,
+            "vx": -22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 3
+          },
+          {
+            "x": 219.04,
+            "y": 482.1,
+            "vx": 22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 1,
+        "weapon": 3,
+        "dual": true,
+        "mount": {
+          "x": 14,
+          "y": 13
+        },
+        "scale": 1.7,
+        "count": 4,
+        "shots": [
+          {
+            "x": 180.96,
+            "y": 482.1,
+            "vx": -22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 3
+          },
+          {
+            "x": 219.04,
+            "y": 482.1,
+            "vx": 22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 3
+          },
+          {
+            "x": 280.96,
+            "y": 482.1,
+            "vx": -22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 3
+          },
+          {
+            "x": 319.04,
+            "y": 482.1,
+            "vx": 22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 1,
+        "weapon": 4,
+        "dual": false,
+        "mount": {
+          "x": 14,
+          "y": 13
+        },
+        "scale": 1.7,
+        "count": 3,
+        "shots": [
+          {
+            "x": 182.864,
+            "y": 478.1,
+            "vx": -12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 200,
+            "y": 478.1,
+            "vx": 0,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 217.136,
+            "y": 478.1,
+            "vx": 12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 1,
+        "weapon": 4,
+        "dual": true,
+        "mount": {
+          "x": 14,
+          "y": 13
+        },
+        "scale": 1.7,
+        "count": 6,
+        "shots": [
+          {
+            "x": 182.864,
+            "y": 478.1,
+            "vx": -12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 200,
+            "y": 478.1,
+            "vx": 0,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 217.136,
+            "y": 478.1,
+            "vx": 12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 282.864,
+            "y": 478.1,
+            "vx": -12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 300,
+            "y": 478.1,
+            "vx": 0,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 317.136,
+            "y": 478.1,
+            "vx": 12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 2,
+        "weapon": 0,
+        "dual": false,
+        "mount": {
+          "x": 18,
+          "y": 8
+        },
+        "scale": 1.55,
+        "count": 1,
+        "shots": [
+          {
+            "x": 172.1,
+            "y": 472.4,
+            "vx": 0,
+            "vy": -440,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 2,
+        "weapon": 0,
+        "dual": true,
+        "mount": {
+          "x": 18,
+          "y": 8
+        },
+        "scale": 1.55,
+        "count": 2,
+        "shots": [
+          {
+            "x": 172.1,
+            "y": 472.4,
+            "vx": 0,
+            "vy": -440,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          },
+          {
+            "x": 272.1,
+            "y": 472.4,
+            "vx": 0,
+            "vy": -440,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 2,
+        "weapon": 1,
+        "dual": false,
+        "mount": {
+          "x": 18,
+          "y": 8
+        },
+        "scale": 1.55,
+        "count": 1,
+        "shots": [
+          {
+            "x": 200,
+            "y": 469.4,
+            "vx": 0,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              8,
+              18
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 2,
+        "weapon": 1,
+        "dual": true,
+        "mount": {
+          "x": 18,
+          "y": 8
+        },
+        "scale": 1.55,
+        "count": 2,
+        "shots": [
+          {
+            "x": 200,
+            "y": 469.4,
+            "vx": 0,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              8,
+              18
+            ],
+            "depth": 3
+          },
+          {
+            "x": 300,
+            "y": 469.4,
+            "vx": 0,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              8,
+              18
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 2,
+        "weapon": 2,
+        "dual": false,
+        "mount": {
+          "x": 18,
+          "y": 8
+        },
+        "scale": 1.55,
+        "count": 2,
+        "shots": [
+          {
+            "x": 172.1,
+            "y": 472.4,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          },
+          {
+            "x": 227.9,
+            "y": 472.4,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 2,
+        "weapon": 2,
+        "dual": true,
+        "mount": {
+          "x": 18,
+          "y": 8
+        },
+        "scale": 1.55,
+        "count": 4,
+        "shots": [
+          {
+            "x": 172.1,
+            "y": 472.4,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          },
+          {
+            "x": 227.9,
+            "y": 472.4,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          },
+          {
+            "x": 272.1,
+            "y": 472.4,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          },
+          {
+            "x": 327.9,
+            "y": 472.4,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 2,
+        "weapon": 3,
+        "dual": false,
+        "mount": {
+          "x": 18,
+          "y": 8
+        },
+        "scale": 1.55,
+        "count": 2,
+        "shots": [
+          {
+            "x": 177.68,
+            "y": 472.4,
+            "vx": -22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 3
+          },
+          {
+            "x": 222.32,
+            "y": 472.4,
+            "vx": 22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 2,
+        "weapon": 3,
+        "dual": true,
+        "mount": {
+          "x": 18,
+          "y": 8
+        },
+        "scale": 1.55,
+        "count": 4,
+        "shots": [
+          {
+            "x": 177.68,
+            "y": 472.4,
+            "vx": -22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 3
+          },
+          {
+            "x": 222.32,
+            "y": 472.4,
+            "vx": 22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 3
+          },
+          {
+            "x": 277.68,
+            "y": 472.4,
+            "vx": -22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 3
+          },
+          {
+            "x": 322.32,
+            "y": 472.4,
+            "vx": 22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 2,
+        "weapon": 4,
+        "dual": false,
+        "mount": {
+          "x": 18,
+          "y": 8
+        },
+        "scale": 1.55,
+        "count": 3,
+        "shots": [
+          {
+            "x": 179.912,
+            "y": 468.4,
+            "vx": -12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 200,
+            "y": 468.4,
+            "vx": 0,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 220.088,
+            "y": 468.4,
+            "vx": 12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 2,
+        "weapon": 4,
+        "dual": true,
+        "mount": {
+          "x": 18,
+          "y": 8
+        },
+        "scale": 1.55,
+        "count": 6,
+        "shots": [
+          {
+            "x": 179.912,
+            "y": 468.4,
+            "vx": -12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 200,
+            "y": 468.4,
+            "vx": 0,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 220.088,
+            "y": 468.4,
+            "vx": 12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 279.912,
+            "y": 468.4,
+            "vx": -12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 300,
+            "y": 468.4,
+            "vx": 0,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 320.088,
+            "y": 468.4,
+            "vx": 12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 3,
+        "weapon": 0,
+        "dual": false,
+        "mount": {
+          "x": 21,
+          "y": 1
+        },
+        "scale": 1.45,
+        "count": 1,
+        "shots": [
+          {
+            "x": 169.55,
+            "y": 461.45,
+            "vx": 0,
+            "vy": -440,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 3,
+        "weapon": 0,
+        "dual": true,
+        "mount": {
+          "x": 21,
+          "y": 1
+        },
+        "scale": 1.45,
+        "count": 2,
+        "shots": [
+          {
+            "x": 169.55,
+            "y": 461.45,
+            "vx": 0,
+            "vy": -440,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          },
+          {
+            "x": 269.55,
+            "y": 461.45,
+            "vx": 0,
+            "vy": -440,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 3,
+        "weapon": 1,
+        "dual": false,
+        "mount": {
+          "x": 21,
+          "y": 1
+        },
+        "scale": 1.45,
+        "count": 1,
+        "shots": [
+          {
+            "x": 200,
+            "y": 458.45,
+            "vx": 0,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              8,
+              18
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 3,
+        "weapon": 1,
+        "dual": true,
+        "mount": {
+          "x": 21,
+          "y": 1
+        },
+        "scale": 1.45,
+        "count": 2,
+        "shots": [
+          {
+            "x": 200,
+            "y": 458.45,
+            "vx": 0,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              8,
+              18
+            ],
+            "depth": 3
+          },
+          {
+            "x": 300,
+            "y": 458.45,
+            "vx": 0,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              8,
+              18
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 3,
+        "weapon": 2,
+        "dual": false,
+        "mount": {
+          "x": 21,
+          "y": 1
+        },
+        "scale": 1.45,
+        "count": 2,
+        "shots": [
+          {
+            "x": 169.55,
+            "y": 461.45,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          },
+          {
+            "x": 230.45,
+            "y": 461.45,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 3,
+        "weapon": 2,
+        "dual": true,
+        "mount": {
+          "x": 21,
+          "y": 1
+        },
+        "scale": 1.45,
+        "count": 4,
+        "shots": [
+          {
+            "x": 169.55,
+            "y": 461.45,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          },
+          {
+            "x": 230.45,
+            "y": 461.45,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          },
+          {
+            "x": 269.55,
+            "y": 461.45,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          },
+          {
+            "x": 330.45,
+            "y": 461.45,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 3,
+        "weapon": 3,
+        "dual": false,
+        "mount": {
+          "x": 21,
+          "y": 1
+        },
+        "scale": 1.45,
+        "count": 2,
+        "shots": [
+          {
+            "x": 175.64,
+            "y": 461.45,
+            "vx": -22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 3
+          },
+          {
+            "x": 224.36,
+            "y": 461.45,
+            "vx": 22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 3,
+        "weapon": 3,
+        "dual": true,
+        "mount": {
+          "x": 21,
+          "y": 1
+        },
+        "scale": 1.45,
+        "count": 4,
+        "shots": [
+          {
+            "x": 175.64,
+            "y": 461.45,
+            "vx": -22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 3
+          },
+          {
+            "x": 224.36,
+            "y": 461.45,
+            "vx": 22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 3
+          },
+          {
+            "x": 275.64,
+            "y": 461.45,
+            "vx": -22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 3
+          },
+          {
+            "x": 324.36,
+            "y": 461.45,
+            "vx": 22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 3,
+        "weapon": 4,
+        "dual": false,
+        "mount": {
+          "x": 21,
+          "y": 1
+        },
+        "scale": 1.45,
+        "count": 3,
+        "shots": [
+          {
+            "x": 178.076,
+            "y": 457.45,
+            "vx": -12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 200,
+            "y": 457.45,
+            "vx": 0,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 221.924,
+            "y": 457.45,
+            "vx": 12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 3,
+        "weapon": 4,
+        "dual": true,
+        "mount": {
+          "x": 21,
+          "y": 1
+        },
+        "scale": 1.45,
+        "count": 6,
+        "shots": [
+          {
+            "x": 178.076,
+            "y": 457.45,
+            "vx": -12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 200,
+            "y": 457.45,
+            "vx": 0,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 221.924,
+            "y": 457.45,
+            "vx": 12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 278.076,
+            "y": 457.45,
+            "vx": -12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 300,
+            "y": 457.45,
+            "vx": 0,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 321.924,
+            "y": 457.45,
+            "vx": 12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 4,
+        "weapon": 0,
+        "dual": false,
+        "mount": {
+          "x": 25,
+          "y": -8
+        },
+        "scale": 1.35,
+        "count": 1,
+        "shots": [
+          {
+            "x": 166.25,
+            "y": 449.2,
+            "vx": 0,
+            "vy": -440,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 4,
+        "weapon": 0,
+        "dual": true,
+        "mount": {
+          "x": 25,
+          "y": -8
+        },
+        "scale": 1.35,
+        "count": 2,
+        "shots": [
+          {
+            "x": 166.25,
+            "y": 449.2,
+            "vx": 0,
+            "vy": -440,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          },
+          {
+            "x": 266.25,
+            "y": 449.2,
+            "vx": 0,
+            "vy": -440,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 4,
+        "weapon": 1,
+        "dual": false,
+        "mount": {
+          "x": 25,
+          "y": -8
+        },
+        "scale": 1.35,
+        "count": 1,
+        "shots": [
+          {
+            "x": 200,
+            "y": 446.2,
+            "vx": 0,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              8,
+              18
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 4,
+        "weapon": 1,
+        "dual": true,
+        "mount": {
+          "x": 25,
+          "y": -8
+        },
+        "scale": 1.35,
+        "count": 2,
+        "shots": [
+          {
+            "x": 200,
+            "y": 446.2,
+            "vx": 0,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              8,
+              18
+            ],
+            "depth": 3
+          },
+          {
+            "x": 300,
+            "y": 446.2,
+            "vx": 0,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              8,
+              18
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 4,
+        "weapon": 2,
+        "dual": false,
+        "mount": {
+          "x": 25,
+          "y": -8
+        },
+        "scale": 1.35,
+        "count": 2,
+        "shots": [
+          {
+            "x": 166.25,
+            "y": 449.2,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          },
+          {
+            "x": 233.75,
+            "y": 449.2,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 4,
+        "weapon": 2,
+        "dual": true,
+        "mount": {
+          "x": 25,
+          "y": -8
+        },
+        "scale": 1.35,
+        "count": 4,
+        "shots": [
+          {
+            "x": 166.25,
+            "y": 449.2,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          },
+          {
+            "x": 233.75,
+            "y": 449.2,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          },
+          {
+            "x": 266.25,
+            "y": 449.2,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          },
+          {
+            "x": 333.75,
+            "y": 449.2,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 4,
+        "weapon": 3,
+        "dual": false,
+        "mount": {
+          "x": 25,
+          "y": -8
+        },
+        "scale": 1.35,
+        "count": 2,
+        "shots": [
+          {
+            "x": 173,
+            "y": 449.2,
+            "vx": -22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 3
+          },
+          {
+            "x": 227,
+            "y": 449.2,
+            "vx": 22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 4,
+        "weapon": 3,
+        "dual": true,
+        "mount": {
+          "x": 25,
+          "y": -8
+        },
+        "scale": 1.35,
+        "count": 4,
+        "shots": [
+          {
+            "x": 173,
+            "y": 449.2,
+            "vx": -22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 3
+          },
+          {
+            "x": 227,
+            "y": 449.2,
+            "vx": 22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 3
+          },
+          {
+            "x": 273,
+            "y": 449.2,
+            "vx": -22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 3
+          },
+          {
+            "x": 327,
+            "y": 449.2,
+            "vx": 22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 4,
+        "weapon": 4,
+        "dual": false,
+        "mount": {
+          "x": 25,
+          "y": -8
+        },
+        "scale": 1.35,
+        "count": 3,
+        "shots": [
+          {
+            "x": 175.7,
+            "y": 445.2,
+            "vx": -12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 200,
+            "y": 445.2,
+            "vx": 0,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 224.3,
+            "y": 445.2,
+            "vx": 12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          }
+        ]
+      },
+      {
+        "stage": 4,
+        "weapon": 4,
+        "dual": true,
+        "mount": {
+          "x": 25,
+          "y": -8
+        },
+        "scale": 1.35,
+        "count": 6,
+        "shots": [
+          {
+            "x": 175.7,
+            "y": 445.2,
+            "vx": -12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 200,
+            "y": 445.2,
+            "vx": 0,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 224.3,
+            "y": 445.2,
+            "vx": 12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 275.7,
+            "y": 445.2,
+            "vx": -12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 300,
+            "y": 445.2,
+            "vx": 0,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          },
+          {
+            "x": 324.3,
+            "y": 445.2,
+            "vx": 12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "art": "proportions",
+    "cases": [
+      {
+        "stage": 0,
+        "weapon": 0,
+        "dual": false,
+        "mount": {
+          "x": 14.4,
+          "y": 45.76859504132233
+        },
+        "scale": 1.75,
+        "count": 1,
+        "shots": [
+          {
+            "x": 174.8,
+            "y": 540.095041322314,
+            "vx": 0,
+            "vy": -440,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 0,
+        "weapon": 0,
+        "dual": true,
+        "mount": {
+          "x": 14.4,
+          "y": 45.76859504132233
+        },
+        "scale": 1.75,
+        "count": 2,
+        "shots": [
+          {
+            "x": 174.8,
+            "y": 540.095041322314,
+            "vx": 0,
+            "vy": -440,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          },
+          {
+            "x": 274.8,
+            "y": 540.095041322314,
+            "vx": 0,
+            "vy": -440,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 0,
+        "weapon": 1,
+        "dual": false,
+        "mount": {
+          "x": 14.4,
+          "y": 45.76859504132233
+        },
+        "scale": 1.75,
+        "count": 1,
+        "shots": [
+          {
+            "x": 200,
+            "y": 537.095041322314,
+            "vx": 0,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              8,
+              18
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 0,
+        "weapon": 1,
+        "dual": true,
+        "mount": {
+          "x": 14.4,
+          "y": 45.76859504132233
+        },
+        "scale": 1.75,
+        "count": 2,
+        "shots": [
+          {
+            "x": 200,
+            "y": 537.095041322314,
+            "vx": 0,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              8,
+              18
+            ],
+            "depth": 5
+          },
+          {
+            "x": 300,
+            "y": 537.095041322314,
+            "vx": 0,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              8,
+              18
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 0,
+        "weapon": 2,
+        "dual": false,
+        "mount": {
+          "x": 14.4,
+          "y": 45.76859504132233
+        },
+        "scale": 1.75,
+        "count": 2,
+        "shots": [
+          {
+            "x": 174.8,
+            "y": 540.095041322314,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          },
+          {
+            "x": 225.2,
+            "y": 540.095041322314,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 0,
+        "weapon": 2,
+        "dual": true,
+        "mount": {
+          "x": 14.4,
+          "y": 45.76859504132233
+        },
+        "scale": 1.75,
+        "count": 4,
+        "shots": [
+          {
+            "x": 174.8,
+            "y": 540.095041322314,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          },
+          {
+            "x": 225.2,
+            "y": 540.095041322314,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          },
+          {
+            "x": 274.8,
+            "y": 540.095041322314,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          },
+          {
+            "x": 325.2,
+            "y": 540.095041322314,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 0,
+        "weapon": 3,
+        "dual": false,
+        "mount": {
+          "x": 14.4,
+          "y": 45.76859504132233
+        },
+        "scale": 1.75,
+        "count": 2,
+        "shots": [
+          {
+            "x": 179.84,
+            "y": 540.095041322314,
+            "vx": -22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 5
+          },
+          {
+            "x": 220.16,
+            "y": 540.095041322314,
+            "vx": 22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 0,
+        "weapon": 3,
+        "dual": true,
+        "mount": {
+          "x": 14.4,
+          "y": 45.76859504132233
+        },
+        "scale": 1.75,
+        "count": 4,
+        "shots": [
+          {
+            "x": 179.84,
+            "y": 540.095041322314,
+            "vx": -22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 5
+          },
+          {
+            "x": 220.16,
+            "y": 540.095041322314,
+            "vx": 22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 5
+          },
+          {
+            "x": 279.84,
+            "y": 540.095041322314,
+            "vx": -22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 5
+          },
+          {
+            "x": 320.16,
+            "y": 540.095041322314,
+            "vx": 22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 0,
+        "weapon": 4,
+        "dual": false,
+        "mount": {
+          "x": 14.4,
+          "y": 45.76859504132233
+        },
+        "scale": 1.75,
+        "count": 3,
+        "shots": [
+          {
+            "x": 181.856,
+            "y": 536.095041322314,
+            "vx": -12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 200,
+            "y": 536.095041322314,
+            "vx": 0,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 218.144,
+            "y": 536.095041322314,
+            "vx": 12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 0,
+        "weapon": 4,
+        "dual": true,
+        "mount": {
+          "x": 14.4,
+          "y": 45.76859504132233
+        },
+        "scale": 1.75,
+        "count": 6,
+        "shots": [
+          {
+            "x": 181.856,
+            "y": 536.095041322314,
+            "vx": -12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 200,
+            "y": 536.095041322314,
+            "vx": 0,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 218.144,
+            "y": 536.095041322314,
+            "vx": 12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 281.856,
+            "y": 536.095041322314,
+            "vx": -12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 300,
+            "y": 536.095041322314,
+            "vx": 0,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 318.144,
+            "y": 536.095041322314,
+            "vx": 12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 1,
+        "weapon": 0,
+        "dual": false,
+        "mount": {
+          "x": 13.458823529411767,
+          "y": 37.12605042016807
+        },
+        "scale": 1.7,
+        "count": 1,
+        "shots": [
+          {
+            "x": 177.12,
+            "y": 523.1142857142858,
+            "vx": 0,
+            "vy": -440,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 1,
+        "weapon": 0,
+        "dual": true,
+        "mount": {
+          "x": 13.458823529411767,
+          "y": 37.12605042016807
+        },
+        "scale": 1.7,
+        "count": 2,
+        "shots": [
+          {
+            "x": 177.12,
+            "y": 523.1142857142858,
+            "vx": 0,
+            "vy": -440,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          },
+          {
+            "x": 277.12,
+            "y": 523.1142857142858,
+            "vx": 0,
+            "vy": -440,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 1,
+        "weapon": 1,
+        "dual": false,
+        "mount": {
+          "x": 13.458823529411767,
+          "y": 37.12605042016807
+        },
+        "scale": 1.7,
+        "count": 1,
+        "shots": [
+          {
+            "x": 200,
+            "y": 520.1142857142858,
+            "vx": 0,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              8,
+              18
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 1,
+        "weapon": 1,
+        "dual": true,
+        "mount": {
+          "x": 13.458823529411767,
+          "y": 37.12605042016807
+        },
+        "scale": 1.7,
+        "count": 2,
+        "shots": [
+          {
+            "x": 200,
+            "y": 520.1142857142858,
+            "vx": 0,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              8,
+              18
+            ],
+            "depth": 5
+          },
+          {
+            "x": 300,
+            "y": 520.1142857142858,
+            "vx": 0,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              8,
+              18
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 1,
+        "weapon": 2,
+        "dual": false,
+        "mount": {
+          "x": 13.458823529411767,
+          "y": 37.12605042016807
+        },
+        "scale": 1.7,
+        "count": 2,
+        "shots": [
+          {
+            "x": 177.12,
+            "y": 523.1142857142858,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          },
+          {
+            "x": 222.88,
+            "y": 523.1142857142858,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 1,
+        "weapon": 2,
+        "dual": true,
+        "mount": {
+          "x": 13.458823529411767,
+          "y": 37.12605042016807
+        },
+        "scale": 1.7,
+        "count": 4,
+        "shots": [
+          {
+            "x": 177.12,
+            "y": 523.1142857142858,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          },
+          {
+            "x": 222.88,
+            "y": 523.1142857142858,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          },
+          {
+            "x": 277.12,
+            "y": 523.1142857142858,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          },
+          {
+            "x": 322.88,
+            "y": 523.1142857142858,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 1,
+        "weapon": 3,
+        "dual": false,
+        "mount": {
+          "x": 13.458823529411767,
+          "y": 37.12605042016807
+        },
+        "scale": 1.7,
+        "count": 2,
+        "shots": [
+          {
+            "x": 181.696,
+            "y": 523.1142857142858,
+            "vx": -22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 5
+          },
+          {
+            "x": 218.304,
+            "y": 523.1142857142858,
+            "vx": 22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 1,
+        "weapon": 3,
+        "dual": true,
+        "mount": {
+          "x": 13.458823529411767,
+          "y": 37.12605042016807
+        },
+        "scale": 1.7,
+        "count": 4,
+        "shots": [
+          {
+            "x": 181.696,
+            "y": 523.1142857142858,
+            "vx": -22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 5
+          },
+          {
+            "x": 218.304,
+            "y": 523.1142857142858,
+            "vx": 22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 5
+          },
+          {
+            "x": 281.696,
+            "y": 523.1142857142858,
+            "vx": -22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 5
+          },
+          {
+            "x": 318.304,
+            "y": 523.1142857142858,
+            "vx": 22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 1,
+        "weapon": 4,
+        "dual": false,
+        "mount": {
+          "x": 13.458823529411767,
+          "y": 37.12605042016807
+        },
+        "scale": 1.7,
+        "count": 3,
+        "shots": [
+          {
+            "x": 183.5264,
+            "y": 519.1142857142858,
+            "vx": -12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 200,
+            "y": 519.1142857142858,
+            "vx": 0,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 216.4736,
+            "y": 519.1142857142858,
+            "vx": 12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 1,
+        "weapon": 4,
+        "dual": true,
+        "mount": {
+          "x": 13.458823529411767,
+          "y": 37.12605042016807
+        },
+        "scale": 1.7,
+        "count": 6,
+        "shots": [
+          {
+            "x": 183.5264,
+            "y": 519.1142857142858,
+            "vx": -12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 200,
+            "y": 519.1142857142858,
+            "vx": 0,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 216.4736,
+            "y": 519.1142857142858,
+            "vx": 12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 283.5264,
+            "y": 519.1142857142858,
+            "vx": -12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 300,
+            "y": 519.1142857142858,
+            "vx": 0,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 316.4736,
+            "y": 519.1142857142858,
+            "vx": 12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 2,
+        "weapon": 0,
+        "dual": false,
+        "mount": {
+          "x": 16.955263157894738,
+          "y": 32.80921052631578
+        },
+        "scale": 1.55,
+        "count": 1,
+        "shots": [
+          {
+            "x": 173.71934210526317,
+            "y": 510.85427631578943,
+            "vx": 0,
+            "vy": -440,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 2,
+        "weapon": 0,
+        "dual": true,
+        "mount": {
+          "x": 16.955263157894738,
+          "y": 32.80921052631578
+        },
+        "scale": 1.55,
+        "count": 2,
+        "shots": [
+          {
+            "x": 173.71934210526317,
+            "y": 510.85427631578943,
+            "vx": 0,
+            "vy": -440,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          },
+          {
+            "x": 273.71934210526314,
+            "y": 510.85427631578943,
+            "vx": 0,
+            "vy": -440,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 2,
+        "weapon": 1,
+        "dual": false,
+        "mount": {
+          "x": 16.955263157894738,
+          "y": 32.80921052631578
+        },
+        "scale": 1.55,
+        "count": 1,
+        "shots": [
+          {
+            "x": 200,
+            "y": 507.85427631578943,
+            "vx": 0,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              8,
+              18
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 2,
+        "weapon": 1,
+        "dual": true,
+        "mount": {
+          "x": 16.955263157894738,
+          "y": 32.80921052631578
+        },
+        "scale": 1.55,
+        "count": 2,
+        "shots": [
+          {
+            "x": 200,
+            "y": 507.85427631578943,
+            "vx": 0,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              8,
+              18
+            ],
+            "depth": 5
+          },
+          {
+            "x": 300,
+            "y": 507.85427631578943,
+            "vx": 0,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              8,
+              18
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 2,
+        "weapon": 2,
+        "dual": false,
+        "mount": {
+          "x": 16.955263157894738,
+          "y": 32.80921052631578
+        },
+        "scale": 1.55,
+        "count": 2,
+        "shots": [
+          {
+            "x": 173.71934210526317,
+            "y": 510.85427631578943,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          },
+          {
+            "x": 226.28065789473683,
+            "y": 510.85427631578943,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 2,
+        "weapon": 2,
+        "dual": true,
+        "mount": {
+          "x": 16.955263157894738,
+          "y": 32.80921052631578
+        },
+        "scale": 1.55,
+        "count": 4,
+        "shots": [
+          {
+            "x": 173.71934210526317,
+            "y": 510.85427631578943,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          },
+          {
+            "x": 226.28065789473683,
+            "y": 510.85427631578943,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          },
+          {
+            "x": 273.71934210526314,
+            "y": 510.85427631578943,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          },
+          {
+            "x": 326.28065789473686,
+            "y": 510.85427631578943,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 2,
+        "weapon": 3,
+        "dual": false,
+        "mount": {
+          "x": 16.955263157894738,
+          "y": 32.80921052631578
+        },
+        "scale": 1.55,
+        "count": 2,
+        "shots": [
+          {
+            "x": 178.97547368421053,
+            "y": 510.85427631578943,
+            "vx": -22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 5
+          },
+          {
+            "x": 221.02452631578947,
+            "y": 510.85427631578943,
+            "vx": 22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 2,
+        "weapon": 3,
+        "dual": true,
+        "mount": {
+          "x": 16.955263157894738,
+          "y": 32.80921052631578
+        },
+        "scale": 1.55,
+        "count": 4,
+        "shots": [
+          {
+            "x": 178.97547368421053,
+            "y": 510.85427631578943,
+            "vx": -22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 5
+          },
+          {
+            "x": 221.02452631578947,
+            "y": 510.85427631578943,
+            "vx": 22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 5
+          },
+          {
+            "x": 278.9754736842105,
+            "y": 510.85427631578943,
+            "vx": -22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 5
+          },
+          {
+            "x": 321.0245263157895,
+            "y": 510.85427631578943,
+            "vx": 22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 2,
+        "weapon": 4,
+        "dual": false,
+        "mount": {
+          "x": 16.955263157894738,
+          "y": 32.80921052631578
+        },
+        "scale": 1.55,
+        "count": 3,
+        "shots": [
+          {
+            "x": 181.07792631578948,
+            "y": 506.85427631578943,
+            "vx": -12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 200,
+            "y": 506.85427631578943,
+            "vx": 0,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 218.92207368421052,
+            "y": 506.85427631578943,
+            "vx": 12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 2,
+        "weapon": 4,
+        "dual": true,
+        "mount": {
+          "x": 16.955263157894738,
+          "y": 32.80921052631578
+        },
+        "scale": 1.55,
+        "count": 6,
+        "shots": [
+          {
+            "x": 181.07792631578948,
+            "y": 506.85427631578943,
+            "vx": -12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 200,
+            "y": 506.85427631578943,
+            "vx": 0,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 218.92207368421052,
+            "y": 506.85427631578943,
+            "vx": 12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 281.07792631578945,
+            "y": 506.85427631578943,
+            "vx": -12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 300,
+            "y": 506.85427631578943,
+            "vx": 0,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 318.92207368421055,
+            "y": 506.85427631578943,
+            "vx": 12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 3,
+        "weapon": 0,
+        "dual": false,
+        "mount": {
+          "x": 22.660526315789475,
+          "y": 33.837171052631575
+        },
+        "scale": 1.45,
+        "count": 1,
+        "shots": [
+          {
+            "x": 167.14223684210526,
+            "y": 509.06389802631577,
+            "vx": 0,
+            "vy": -440,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 3,
+        "weapon": 0,
+        "dual": true,
+        "mount": {
+          "x": 22.660526315789475,
+          "y": 33.837171052631575
+        },
+        "scale": 1.45,
+        "count": 2,
+        "shots": [
+          {
+            "x": 167.14223684210526,
+            "y": 509.06389802631577,
+            "vx": 0,
+            "vy": -440,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          },
+          {
+            "x": 267.14223684210526,
+            "y": 509.06389802631577,
+            "vx": 0,
+            "vy": -440,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 3,
+        "weapon": 1,
+        "dual": false,
+        "mount": {
+          "x": 22.660526315789475,
+          "y": 33.837171052631575
+        },
+        "scale": 1.45,
+        "count": 1,
+        "shots": [
+          {
+            "x": 200,
+            "y": 506.06389802631577,
+            "vx": 0,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              8,
+              18
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 3,
+        "weapon": 1,
+        "dual": true,
+        "mount": {
+          "x": 22.660526315789475,
+          "y": 33.837171052631575
+        },
+        "scale": 1.45,
+        "count": 2,
+        "shots": [
+          {
+            "x": 200,
+            "y": 506.06389802631577,
+            "vx": 0,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              8,
+              18
+            ],
+            "depth": 5
+          },
+          {
+            "x": 300,
+            "y": 506.06389802631577,
+            "vx": 0,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              8,
+              18
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 3,
+        "weapon": 2,
+        "dual": false,
+        "mount": {
+          "x": 22.660526315789475,
+          "y": 33.837171052631575
+        },
+        "scale": 1.45,
+        "count": 2,
+        "shots": [
+          {
+            "x": 167.14223684210526,
+            "y": 509.06389802631577,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          },
+          {
+            "x": 232.85776315789474,
+            "y": 509.06389802631577,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 3,
+        "weapon": 2,
+        "dual": true,
+        "mount": {
+          "x": 22.660526315789475,
+          "y": 33.837171052631575
+        },
+        "scale": 1.45,
+        "count": 4,
+        "shots": [
+          {
+            "x": 167.14223684210526,
+            "y": 509.06389802631577,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          },
+          {
+            "x": 232.85776315789474,
+            "y": 509.06389802631577,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          },
+          {
+            "x": 267.14223684210526,
+            "y": 509.06389802631577,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          },
+          {
+            "x": 332.85776315789474,
+            "y": 509.06389802631577,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 3,
+        "weapon": 3,
+        "dual": false,
+        "mount": {
+          "x": 22.660526315789475,
+          "y": 33.837171052631575
+        },
+        "scale": 1.45,
+        "count": 2,
+        "shots": [
+          {
+            "x": 173.71378947368422,
+            "y": 509.06389802631577,
+            "vx": -22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 5
+          },
+          {
+            "x": 226.28621052631578,
+            "y": 509.06389802631577,
+            "vx": 22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 3,
+        "weapon": 3,
+        "dual": true,
+        "mount": {
+          "x": 22.660526315789475,
+          "y": 33.837171052631575
+        },
+        "scale": 1.45,
+        "count": 4,
+        "shots": [
+          {
+            "x": 173.71378947368422,
+            "y": 509.06389802631577,
+            "vx": -22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 5
+          },
+          {
+            "x": 226.28621052631578,
+            "y": 509.06389802631577,
+            "vx": 22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 5
+          },
+          {
+            "x": 273.7137894736842,
+            "y": 509.06389802631577,
+            "vx": -22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 5
+          },
+          {
+            "x": 326.2862105263158,
+            "y": 509.06389802631577,
+            "vx": 22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 3,
+        "weapon": 4,
+        "dual": false,
+        "mount": {
+          "x": 22.660526315789475,
+          "y": 33.837171052631575
+        },
+        "scale": 1.45,
+        "count": 3,
+        "shots": [
+          {
+            "x": 176.3424105263158,
+            "y": 505.06389802631577,
+            "vx": -12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 200,
+            "y": 505.06389802631577,
+            "vx": 0,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 223.6575894736842,
+            "y": 505.06389802631577,
+            "vx": 12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 3,
+        "weapon": 4,
+        "dual": true,
+        "mount": {
+          "x": 22.660526315789475,
+          "y": 33.837171052631575
+        },
+        "scale": 1.45,
+        "count": 6,
+        "shots": [
+          {
+            "x": 176.3424105263158,
+            "y": 505.06389802631577,
+            "vx": -12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 200,
+            "y": 505.06389802631577,
+            "vx": 0,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 223.6575894736842,
+            "y": 505.06389802631577,
+            "vx": 12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 276.3424105263158,
+            "y": 505.06389802631577,
+            "vx": -12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 300,
+            "y": 505.06389802631577,
+            "vx": 0,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 323.6575894736842,
+            "y": 505.06389802631577,
+            "vx": 12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 4,
+        "weapon": 0,
+        "dual": false,
+        "mount": {
+          "x": 33.57377049180328,
+          "y": 26.8032786885246
+        },
+        "scale": 1.35,
+        "count": 1,
+        "shots": [
+          {
+            "x": 154.67540983606557,
+            "y": 496.18442622950823,
+            "vx": 0,
+            "vy": -440,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 4,
+        "weapon": 0,
+        "dual": true,
+        "mount": {
+          "x": 33.57377049180328,
+          "y": 26.8032786885246
+        },
+        "scale": 1.35,
+        "count": 2,
+        "shots": [
+          {
+            "x": 154.67540983606557,
+            "y": 496.18442622950823,
+            "vx": 0,
+            "vy": -440,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          },
+          {
+            "x": 254.67540983606557,
+            "y": 496.18442622950823,
+            "vx": 0,
+            "vy": -440,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 4,
+        "weapon": 1,
+        "dual": false,
+        "mount": {
+          "x": 33.57377049180328,
+          "y": 26.8032786885246
+        },
+        "scale": 1.35,
+        "count": 1,
+        "shots": [
+          {
+            "x": 200,
+            "y": 493.18442622950823,
+            "vx": 0,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              8,
+              18
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 4,
+        "weapon": 1,
+        "dual": true,
+        "mount": {
+          "x": 33.57377049180328,
+          "y": 26.8032786885246
+        },
+        "scale": 1.35,
+        "count": 2,
+        "shots": [
+          {
+            "x": 200,
+            "y": 493.18442622950823,
+            "vx": 0,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              8,
+              18
+            ],
+            "depth": 5
+          },
+          {
+            "x": 300,
+            "y": 493.18442622950823,
+            "vx": 0,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              8,
+              18
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 4,
+        "weapon": 2,
+        "dual": false,
+        "mount": {
+          "x": 33.57377049180328,
+          "y": 26.8032786885246
+        },
+        "scale": 1.35,
+        "count": 2,
+        "shots": [
+          {
+            "x": 154.67540983606557,
+            "y": 496.18442622950823,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          },
+          {
+            "x": 245.32459016393443,
+            "y": 496.18442622950823,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 4,
+        "weapon": 2,
+        "dual": true,
+        "mount": {
+          "x": 33.57377049180328,
+          "y": 26.8032786885246
+        },
+        "scale": 1.35,
+        "count": 4,
+        "shots": [
+          {
+            "x": 154.67540983606557,
+            "y": 496.18442622950823,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          },
+          {
+            "x": 245.32459016393443,
+            "y": 496.18442622950823,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          },
+          {
+            "x": 254.67540983606557,
+            "y": 496.18442622950823,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          },
+          {
+            "x": 345.32459016393443,
+            "y": 496.18442622950823,
+            "vx": 0,
+            "vy": -520,
+            "damage": 1,
+            "pierce": 0,
+            "body": [
+              6,
+              14
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 4,
+        "weapon": 3,
+        "dual": false,
+        "mount": {
+          "x": 33.57377049180328,
+          "y": 26.8032786885246
+        },
+        "scale": 1.35,
+        "count": 2,
+        "shots": [
+          {
+            "x": 163.74032786885246,
+            "y": 496.18442622950823,
+            "vx": -22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 5
+          },
+          {
+            "x": 236.25967213114754,
+            "y": 496.18442622950823,
+            "vx": 22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 4,
+        "weapon": 3,
+        "dual": true,
+        "mount": {
+          "x": 33.57377049180328,
+          "y": 26.8032786885246
+        },
+        "scale": 1.35,
+        "count": 4,
+        "shots": [
+          {
+            "x": 163.74032786885246,
+            "y": 496.18442622950823,
+            "vx": -22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 5
+          },
+          {
+            "x": 236.25967213114754,
+            "y": 496.18442622950823,
+            "vx": 22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 5
+          },
+          {
+            "x": 263.74032786885243,
+            "y": 496.18442622950823,
+            "vx": -22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 5
+          },
+          {
+            "x": 336.25967213114757,
+            "y": 496.18442622950823,
+            "vx": 22,
+            "vy": -560,
+            "damage": 1,
+            "pierce": 2,
+            "body": [
+              10,
+              18
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 4,
+        "weapon": 4,
+        "dual": false,
+        "mount": {
+          "x": 33.57377049180328,
+          "y": 26.8032786885246
+        },
+        "scale": 1.35,
+        "count": 3,
+        "shots": [
+          {
+            "x": 167.36629508196722,
+            "y": 492.18442622950823,
+            "vx": -12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 200,
+            "y": 492.18442622950823,
+            "vx": 0,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 232.63370491803278,
+            "y": 492.18442622950823,
+            "vx": 12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          }
+        ]
+      },
+      {
+        "stage": 4,
+        "weapon": 4,
+        "dual": true,
+        "mount": {
+          "x": 33.57377049180328,
+          "y": 26.8032786885246
+        },
+        "scale": 1.35,
+        "count": 6,
+        "shots": [
+          {
+            "x": 167.36629508196722,
+            "y": 492.18442622950823,
+            "vx": -12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 200,
+            "y": 492.18442622950823,
+            "vx": 0,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 232.63370491803278,
+            "y": 492.18442622950823,
+            "vx": 12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 267.3662950819672,
+            "y": 492.18442622950823,
+            "vx": -12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 300,
+            "y": 492.18442622950823,
+            "vx": 0,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          },
+          {
+            "x": 332.6337049180328,
+            "y": 492.18442622950823,
+            "vx": 12,
+            "vy": -530,
+            "damage": 2,
+            "pierce": 1,
+            "body": [
+              12,
+              20
+            ],
+            "depth": 5
+          }
+        ]
+      }
+    ]
+  }
+]

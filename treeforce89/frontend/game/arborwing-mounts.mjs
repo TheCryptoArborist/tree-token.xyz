@@ -6,5 +6,5 @@ export function arborwingMount(scene){
  const layout=stage===0?scene.registry.get('seedlingArtLayout'):scene.registry.get('growthArtLayouts')?.[stage-1];
  if(!layout)return null;
  const front=[.868,.865,.865,.82,.82][stage];
- return {x:layout.width*.40,y:layout.y+layout.height*front-80};
+ return {x:layout.width*.40,y:layout.y+layout.height*(layout.mountFront??front)-80};
 }

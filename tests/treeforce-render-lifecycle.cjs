@@ -1,11 +1,11 @@
 const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs');
-const all=process.env.TREEFORCE_ART==='all';
-const out=all?'docs/treeforce89-final-review':'docs/treeforce89-render-lifecycle';fs.mkdirSync(out,{recursive:true});
+const requested=process.env.TREEFORCE_ART;const all=['all','proportions'].includes(requested);
+const out=requested==='proportions'?'docs/treeforce89-proportions-review':all?'docs/treeforce89-final-review':'docs/treeforce89-render-lifecycle';fs.mkdirSync(out,{recursive:true});
 (async()=>{const browser=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox']});const reports=[];
 try{for(const [width,mode] of [[1920,'standard'],[1920,'hd'],[390,'hd']]){
 const page=await browser.newPage({viewport:{width,height:width===390?844:1080}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
 await page.route('**/*',r=>new URL(r.request().url()).origin==='http://127.0.0.1:4206'&&r.request().method()==='GET'?r.continue():r.abort());
-await page.goto(`http://127.0.0.1:4206/arborwing-review.html?lab=1&revision=r20&art=${all?'all':'after'}&render=${mode}`);await page.waitForFunction(()=>window.__game?.scene.getScene('game')?.player);
+await page.goto(`http://127.0.0.1:4206/arborwing-review.html?lab=1&revision=r20&art=${all?requested:'after'}&render=${mode}`);await page.waitForFunction(()=>window.__game?.scene.getScene('game')?.player);
 const prepare=()=>page.evaluate(()=>{const s=__game.scene.getScene('game');if(s.paused)s.togglePause();s.update=()=>{};s.physics.world.pause();s.tweens.killAll();s.enemies.clear(true,true);s.player.setPosition(210,460);s.autoFire=false;s.invincible=true;__game.scale.refresh();});await prepare();
 const stages=await page.evaluate(()=>{const s=__game.scene.getScene('game'),samples=[];for(let stage=0;stage<5;stage++){s.stage=stage;s.applyStage(false);const p=s.player,f=p.frame; samples.push({stage,frame:f.name,source:f.sourceIndex,size:[p.width,p.height],display:[p.displayWidth,p.displayHeight],body:[p.body.width,p.body.height,p.body.offset.x,p.body.offset.y]});}return samples});
 assert.deepEqual(stages.map(x=>x.frame),[0,1,2,3,4]);assert.equal(stages[0].source,1);assert(stages.slice(1).every((x,i)=>x.source===(all?i+2:0)));

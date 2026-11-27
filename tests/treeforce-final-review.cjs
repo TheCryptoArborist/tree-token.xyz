@@ -1,9 +1,9 @@
 const{chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs');
-const out='docs/treeforce89-final-review';fs.mkdirSync(out,{recursive:true});
+const art=process.env.TREEFORCE_ART||'all';const out=art==='proportions'?'docs/treeforce89-proportions-review':'docs/treeforce89-final-review';fs.mkdirSync(out,{recursive:true});
 (async()=>{const b=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox']});const p=await b.newPage({viewport:{width:1920,height:1080}}),errors=[];p.on('pageerror',e=>errors.push(e.message));
 await p.addInitScript(()=>{window.__qualityNow=0});
 await p.route('**/*',async r=>{const u=new URL(r.request().url());if(u.origin!=='http://127.0.0.1:4206'||r.request().method()!=='GET')return r.abort();if(u.pathname.endsWith('/desktop-render-review.mjs')){const response=await r.fetch();return r.fulfill({response,body:(await response.text()).replaceAll('performance.now()','(window.__qualityNow??performance.now())')})}return r.continue()});
-try{await p.goto('http://127.0.0.1:4206/arborwing-review.html?lab=1&revision=r20&art=all&render=auto');await p.waitForFunction(()=>window.__game?.scene.getScene('game')?.player);
+try{await p.goto(`http://127.0.0.1:4206/arborwing-review.html?lab=1&revision=r20&art=${art}&render=auto`);await p.waitForFunction(()=>window.__game?.scene.getScene('game')?.player);
 const initial=await p.evaluate(()=>{const g=__game,s=g.scene.getScene('game');g.loop.sleep();if(!s.paused)s.togglePause();g.scale.refresh();return{buffer:[g.canvas.width,g.canvas.height],layouts:s.registry.get('growthArtLayouts'),sources:g.textures.get('playerSheet').source.length}});
 assert.deepEqual(initial.buffer,[960,1440]);assert.equal(initial.sources,6);for(const l of initial.layouts){assert(l.x>=l.box.x&&l.y>=l.box.y);assert(l.width<=l.box.width+.001&&l.height<=l.box.height+.001);assert(Math.abs(l.width/l.height-l.source.width/l.source.height)<1e-9)}
 // Test the actual renderer callback with a controlled clock, without changing game rules.
