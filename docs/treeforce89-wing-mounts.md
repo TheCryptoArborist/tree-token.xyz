@@ -13,3 +13,7 @@ Verification: `node tests/treeforce-wing-mounts.cjs` passed 50 cases (five growt
 Local preview: `http://127.0.0.1:4206/arborwing-review.html?lab=1&revision=r20&art=all&render=auto`.
 
 This correction is local only. The frozen r21 hosted review and main game have not been modified; no Netlify deployment was made. A hosted update must recapture current inventory and package the corrected engine/import plus mount adapter while preserving newer work elsewhere on the site.
+
+## Hosted follow-up
+
+The correction is now published and verified at the canonical review URL. See [publication evidence](treeforce89-hosted-wing-fix.md); the local-only status above describes the initial implementation checkpoint.

@@ -1,3 +1,9 @@
+# Arborwing firing correction and latest verified release — November 27, 2026
+
+Current verified locked deploy `6b09dc4244e51c6a022fdcdb`: **832 static paths, 62 backend records, five schedules**. It preserves the r22 Arborwing glider firing correction at https://tree-token.xyz/play/treeforce89/review/arborwing/ and includes a newer Canopy Defense routing change (`/_redirects`). Main Tree Force game unchanged. Our firing patch was published as `6b09db5ff59cecb223b2e431`; final read-only verification [46058436723](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/46058436723) passed against the newer current release. [Full evidence and initial checker failure](../docs/treeforce89-hosted-wing-fix.md). Capture a fresh full inventory before any later release.
+
+---
+
 # Tree Force Arborwing graphics review — published November 25, 2026
 
 Locked deploy `6b0799296da7108e51b1778b`: **828 static paths, 62 backend records, five schedules**. Review: https://tree-token.xyz/play/treeforce89/review/arborwing/ . Adds all five upgraded hero stages and adaptive desktop resolution in a separate review route. All 817 preceding paths and complete backend/runtime inventory preserved; main game unchanged. Source `730adeb3`, [workflow 45742526041](https://github.com/TheCryptoArborist/tree-token.xyz/actions/runs/45742526041), [evidence](../docs/treeforce89-hosted-arborwing.md). Owner desktop/phone review pending. Capture fresh live inventory before any subsequent release.
