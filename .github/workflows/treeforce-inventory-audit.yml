@@ -31,7 +31,7 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
         run: |
           test -n "$NETLIFY_AUTH_TOKEN" || { echo 'Existing Netlify audit connection unavailable'; exit 1; }
-          node scripts/treeforce-local/capture-production-inventory.mjs capture --expected-deploy 6b076fa002389b9a6af150fc --baseline .netlify/treeforce-inventory/baseline.json --report .netlify/treeforce-inventory/capture.json
+          node scripts/treeforce-local/capture-production-inventory.mjs capture --expected-deploy 6b0799296da7108e51b1778b --baseline .netlify/treeforce-inventory/baseline.json --report .netlify/treeforce-inventory/capture.json
           node scripts/treeforce-local/capture-production-inventory.mjs verify --baseline .netlify/treeforce-inventory/baseline.json --report .netlify/treeforce-inventory/verify.json
       - name: Retain sanitized inventory through readable audit logs
         run: |
