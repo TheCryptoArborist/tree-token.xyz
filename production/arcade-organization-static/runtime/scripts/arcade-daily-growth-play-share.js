@@ -28,6 +28,7 @@ const GROWTH_ART = {
   'deep-roots': MONTHLY_RANK_PRESENTATION['deep-roots'].art,
   'full-canopy': MONTHLY_RANK_PRESENTATION['full-canopy'].art,
   unknown: '/assets/tree-command-logo-v2-512.png',
+  'grove-chess': '/play/grove-chess/assets/grove-chess-cover.png',
   'arcade-passport': '/assets/tree-command-logo-v2-512.png',
   'garden-bot': '/assets/arcade/garden-bot-poster.webp',
   pvp: '/assets/arcade/pvp-battle-poster.webp',
@@ -36,6 +37,10 @@ const GROWTH_ART = {
   treeforce89: '/assets/arcade/tree-force-89-poster.webp',
 };
 const GAME_COPY = {
+  'grove-chess': {
+    objective: 'Finish one online Grove Chess match. A win, loss, or draw counts.',
+    access: 'Sign in with your NFTree wallet before the match to earn credit.',
+  },
   'canopy-breaker':{objective:'Finish a run. A victory or game over counts; results save automatically.',access:'NFTree access required · Existing continues and payment rules apply'},
   [TREE_FORCE_ID]: {
     objective: 'Finish your run, then save your mission result on the ending screen. Win or lose, it counts.',
@@ -185,6 +190,14 @@ export function createDailyGrowth({
     'badge-preview', 'invitation-open', 'invitation-title', 'invitation-hint', 'details', 'details-label', 'details-hint',
     'month-rail', 'rail-month', 'rail-count', 'rail-note', 'days', 'teaser-badge', 'teaser-kind', 'quest-details', 'calendar-title', 'reward-kind', 'reward-earned', 'collapse',
   ].map((id) => [id, byId(id)]));
+  const findOpponent = root.ownerDocument.createElement('a');
+  findOpponent.className = ui.play.className;
+  findOpponent.href = '/play/grove-chess/?mode=online';
+  findOpponent.target = '_blank';
+  findOpponent.rel = 'noopener noreferrer';
+  findOpponent.textContent = 'Find an opponent ↗';
+  findOpponent.hidden = true;
+  ui.play.after(findOpponent);
   const state = {
     wallet: null, walletId: null, walletReady: false, walletError: false, session: null, progress: null,
     configuration: null, dateKey: null, monthKey: null, busy: 'loading', stale: false,
@@ -665,7 +678,9 @@ export function createDailyGrowth({
   }
 
   function renderProgress() {
-    const completedToday=Boolean(state.completedRuns?.runs?.length && state.completedRuns.dateKey===new Date(now()).toISOString().slice(0,10) && !state.completedRuns.stale);
+    const todayKey = new Date(now()).toISOString().slice(0,10);
+    const chessCompleted = state.progress?.dateKey === todayKey && state.progress.today.gameIds.includes('grove-chess');
+    const completedToday = chessCompleted || Boolean(state.completedRuns?.runs?.length && state.completedRuns.dateKey === todayKey && !state.completedRuns.stale);
     const progress = state.progress;
     const unavailable = state.apiUnavailable || state.stale;
     const next = progress?.milestones.find((milestone) => !milestone.earned && milestone.target > progress.checkedInDays);
@@ -830,7 +845,9 @@ export function createDailyGrowth({
       ? 'Complete a run in Tree Force ’89, Canopy Breaker, Garden Bot, or PvP. Win or lose, save the result.'
       : 'Finish an eligible Garden Battle. Win or lose, it counts.';
     const selected = games.find((game) => game.id === state.selectedGameId);
-    const done = state.completedRuns?.runs?.length>0 && state.completedRuns.dateKey===new Date(now()).toISOString().slice(0,10) && !state.completedRuns.stale;
+    const todayKey = new Date(now()).toISOString().slice(0,10);
+    const chessCompleted = state.progress?.dateKey === todayKey && state.progress.today.gameIds.includes('grove-chess');
+    const done = chessCompleted || (state.completedRuns?.runs?.length > 0 && state.completedRuns.dateKey === todayKey && !state.completedRuns.stale);
     ui['quest-state'].textContent = state.progress ? done ? '1 / 1 · Quest complete ✓' : '0 / 1 · Not completed' : state.apiUnavailable ? 'Progress unavailable' : state.configuration ? 'Sign in to save progress' : 'Checking availability…';
     ui['quest-state'].classList.toggle('is-done', Boolean(done));
     ui['pick-label'].textContent = selected?.id === state.configuration?.todayPick?.id ? 'Today’s pick:' : 'Your choice:';
@@ -840,9 +857,10 @@ export function createDailyGrowth({
     ui.objective.textContent = copy?.objective || 'Follow the selected game’s participation rule, then refresh your progress here.';
     ui['game-access'].textContent = copy?.access || (selected ? 'Check this game’s access and result-saving requirements before playing.' : '');
     ui.play.hidden = !selected;
+    findOpponent.hidden = selected?.id !== 'grove-chess';
     if (selected) {
       const sameTab = selected.id === TREE_FORCE_ID;
-      ui.play.href = selected.href;
+      ui.play.href = selected.id === 'grove-chess' ? '/play/grove-chess/' : selected.href;
       ui.play.target = sameTab ? '_self' : '_blank';
       if (sameTab) ui.play.removeAttribute('rel');
       else ui.play.rel = 'noopener noreferrer';
